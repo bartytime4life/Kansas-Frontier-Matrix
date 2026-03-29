@@ -4,13 +4,13 @@ title: Kubernetes
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
+owners: @bartytime4life
 created: NEEDS_VERIFICATION
 updated: NEEDS_VERIFICATION
-policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../gitops/README.md, ../terraform/README.md, ../local/README.md, ../monitoring/README.md, ../../contracts/, ../../policy/, ../../tests/]
+policy_label: public
+related: [../README.md, ../gitops/README.md, ../terraform/README.md, ../local/README.md, ../compose/README.md, ../monitoring/README.md, ../dashboards/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../contracts/, ../../policy/, ../../tests/]
 tags: [kfm, infra, kubernetes]
-notes: [Live repo file was a placeholder at review time; exact manifests, controllers, clusters, and owners remain NEEDS VERIFICATION.]
+notes: [Current public main confirms `infra/kubernetes/` exists as a README-only scaffold lane; broad `/infra/` CODEOWNERS coverage currently resolves to `@bartytime4life`; live manifests, controller choice, cluster topology, and active workflow gates remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kubernetes
@@ -18,21 +18,23 @@ notes: [Live repo file was a placeholder at review time; exact manifests, contro
 Governed container-orchestrated runtime lane for KFM when declarative cluster operations are justified by service count, operational burden, or reconciliation needs.
 
 > [!IMPORTANT]
-> This file is a replacement-grade expansion of a previously minimal placeholder. It is intentionally **repo-aware but implementation-bounded**: directory purpose and doctrine are stated directly; live manifest inventory, cluster topology, controller choice, and workload details remain **UNKNOWN** until verified from mounted repo/runtime evidence.
+> This revision is intentionally **repo-aware and implementation-bounded**.
+> It preserves the existing doctrinal role of `infra/kubernetes/`, upgrades a few claims from review-time inference to **current public repo evidence**, and keeps live manifests, controller choice, cluster topology, and active workflow gates explicitly **UNKNOWN / NEEDS VERIFICATION** until a mounted checkout or runtime inventory is inspected.
 
 ## Impact block
 
 **Status:** experimental  
-**Owners:** NEEDS VERIFICATION  
-**Truth posture:** CONFIRMED repo path + doctrinal boundary / PROPOSED structure + practices / UNKNOWN live cluster reality  
+**Owners:** `@bartytime4life` *(current public broad `/infra/` CODEOWNERS coverage)*  
+**Truth posture:** CONFIRMED current public path + README-only lane + doctrinal boundary / PROPOSED structure + practices / UNKNOWN live cluster reality  
 **Repo fit:** `infra/kubernetes/` under [`infra/`](../README.md)
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
-![Evidence](https://img.shields.io/badge/evidence-live%20tree%20bounded-blue)
+![Owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
+![Evidence](https://img.shields.io/badge/evidence-public%20main%20inspected-1f6feb)
 ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
-![Scope](https://img.shields.io/badge/scope-infra%2Fkubernetes-0a7ea4)
+![Surface](https://img.shields.io/badge/surface-infra%2Fkubernetes-0a7ea4)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Verification matrix](#verification-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public signal](#current-public-signal) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Verification matrix](#verification-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 ---
 
@@ -75,19 +77,43 @@ It does **not** exist to redefine KFM doctrine, public contract law, source admi
 - [`../../contracts/`](../../contracts/) — shared schemas, API contracts, fixtures, controlled vocabularies
 - [`../../policy/`](../../policy/) — policy bundles, fixtures, and policy tests
 - [`../../tests/`](../../tests/) — contract, policy, integration, and end-to-end validation
+- [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) — current public broad owner routing for `/infra/`
+- [`../../.github/workflows/README.md`](../../.github/workflows/README.md) — public workflow-lane inventory and historical workflow signal
 
 **Adjacent lanes**
 
 - [`../gitops/README.md`](../gitops/README.md) — reconciliation/controller-facing delivery lane
 - [`../terraform/README.md`](../terraform/README.md) — infrastructure provisioning lane
 - [`../local/README.md`](../local/README.md) — local-development or non-cluster runtime lane
-- [`../compose/README.md`](../compose/README.md) — compose/system composition lane
+- [`../compose/README.md`](../compose/README.md) — Compose/system composition lane
 - [`../monitoring/README.md`](../monitoring/README.md) — monitoring-specific assets
 - [`../dashboards/README.md`](../dashboards/README.md) — dashboard surfaces and rendered ops views
 
 **Downstream effect**
 
 Changes here can alter how KFM services are placed, exposed, reconciled, observed, restarted, throttled, or recovered. They must therefore preserve the trust membrane and must never create a bypass from public clients to canonical stores or unpublished runtime scope.
+
+> [!NOTE]
+> `infra/kubernetes/` is only one lane in the public `infra/` subtree. On current public `main`, the sibling set also includes `backup/`, `hosted/`, `systemd/`, and `systemd-or-compose/`; this README should stay narrow enough that Kubernetes does not silently absorb responsibilities those lanes already reserve elsewhere.
+
+[Back to top](#kubernetes)
+
+## Current public signal
+
+The current public repo tells us more than a purely doctrinal rewrite, but still much less than a mounted runtime inspection.
+
+| Public signal | Current visible state | Why it matters |
+|---|---|---|
+| `infra/kubernetes/` lane | Present on public `main` and currently contains `README.md` only | The lane is real, but checked-in manifests are not yet public-main-proven |
+| Parent `infra/` subtree | Sibling lanes visible on public `main`, including `backup/`, `compose/`, `dashboards/`, `gitops/`, `hosted/`, `local/`, `monitoring/`, `systemd/`, `systemd-or-compose/`, and `terraform/` | Kubernetes should be documented as one lane among several, not as the whole infra story |
+| Owner routing | Public `CODEOWNERS` assigns broad `/infra/` coverage to `@bartytime4life` | The owner field can be upgraded from placeholder to current public coverage |
+| Workflow evidence | Public `main` shows `.github/workflows/README.md` only; Actions history shows prior workflow activity and deleted workflow filenames | Historical workflow behavior is visible, but current checked-in workflow YAML gates remain **NEEDS VERIFICATION** |
+
+### Reading rule for this section
+
+- **CONFIRMED** here means *public repo tree evidence on `main`*
+- **PROPOSED** still covers starter subtrees, file families, and operational practices not yet checked in under `infra/kubernetes/`
+- **UNKNOWN / NEEDS VERIFICATION** still covers live cluster topology, controller choice, Helm/Kustomize adoption, actual manifests, secrets strategy, required checks, and runtime behavior
 
 [Back to top](#kubernetes)
 
@@ -141,7 +167,16 @@ The following do **not** belong here:
 
 ## Directory tree
 
-Current live repo evidence showed this directory existed with only a placeholder README at review time. The tree below is therefore a **recommended starter shape**, not a claim of mounted contents.
+### Current verified snapshot
+
+```text
+infra/kubernetes/
+└── README.md
+```
+
+### Starter expansion shape (PROPOSED)
+
+The following is a **recommended next shape**, not a claim of mounted contents.
 
 ```text
 infra/kubernetes/
@@ -177,7 +212,7 @@ Because live cluster/controller reality is **UNKNOWN**, the first useful quickst
 
 1. Read [`../README.md`](../README.md) to confirm infra-wide expectations.
 2. Verify whether Kubernetes is actually an adopted runtime lane for the target environment.
-3. Export the current live contents of `infra/kubernetes/` before adding structure.
+3. Export the current live contents of `infra/kubernetes/` before adding structure. Current public `main` confirms the README, but not a checked-in manifest inventory.
 4. Identify whether delivery is:
    - plain manifests,
    - Helm,
@@ -213,7 +248,7 @@ find infra/terraform -maxdepth 3 -type f | sort
 - reconciliation, rollout control, and drift management matter
 - ingress/TLS/network policy must be reviewed declaratively
 - probe, disruption, backup, or scaling posture must be tracked as code
-- the runtime has grown past a simple single-host or compose-only setup
+- the runtime has grown past a simple single-host or Compose-only setup
 
 ### Prefer another lane when
 
@@ -265,6 +300,8 @@ flowchart LR
 
 | Question | Expected answer | Current status |
 |---|---|---|
+| Is `infra/kubernetes/` present on current public `main`? | Yes | CONFIRMED |
+| Does current public `main` show checked-in manifests below this path? | No; `README.md` only | CONFIRMED |
 | Is Kubernetes confirmed as the default KFM runtime? | No assumption without live verification | UNKNOWN |
 | Is this directory cluster-facing only? | Yes | PROPOSED documentation target |
 | Can public clients reach canonical stores directly? | No | CONFIRMED doctrine |
@@ -273,6 +310,7 @@ flowchart LR
 | Can manifests define business policy meaning? | No | CONFIRMED design boundary |
 | Should rollback and correction be documented here when runtime changes are introduced? | Yes | CONFIRMED doctrine / PROPOSED file practice |
 | Is the live manifest inventory known from current evidence? | No | UNKNOWN |
+| Is a checked-in public workflow YAML gate for this lane proven on current `main`? | No; public workflows lane is README-only | CONFIRMED current snapshot / active gate still UNKNOWN |
 
 ## What belongs where
 
@@ -331,6 +369,10 @@ A Kubernetes-facing change in this directory is not ready until:
 ### Is Kubernetes the default KFM runtime?
 
 Not as a repo-proven fact. Treat Kubernetes here as a supported **infrastructure lane**, not as an automatically verified current deployment standard.
+
+### Does current public `main` prove an active Kubernetes manifest inventory?
+
+No. What is publicly confirmed today is the lane and its README. Manifest families, controller objects, overlays, and cluster-specific files remain **NEEDS VERIFICATION** until they appear in the live checkout.
 
 ### Are Helm or Kustomize required?
 
