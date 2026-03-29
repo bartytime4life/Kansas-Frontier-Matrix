@@ -10,52 +10,62 @@ updated: <REVIEW REQUIRED: YYYY-MM-DD>
 policy_label: <REVIEW REQUIRED: public|restricted|...>
 related: [docs/templates/, contracts/, policy/, tests/]
 tags: [kfm, template, api-contract]
-notes: [Review placeholders retained where live repo metadata was not directly verifiable in this session.]
+notes: [Review placeholders retained where live repo metadata, owners, and path inventory were not directly verifiable.]
 [/KFM_META_BLOCK_V2] -->
 
 # TEMPLATE — API Contract Extension
 
-Governed template for documenting a KFM API contract extension that changes schema, route, policy, fixture, or runtime surface.
+Governed template for documenting a KFM API contract extension that changes schema, route, policy, fixture, proof object, or trust-visible runtime behavior.
 
 | Field | Value |
 | --- | --- |
-| **Status** | **Draft template** |
+| **Status** | **Experimental template · Draft** |
 | **Owners** | `<REVIEW REQUIRED: owner/team>` |
-| **Path** | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` *(target path; verify mounted repo before commit)* |
-| **Repo fit** | Template for contract-bearing API changes that must stay aligned with KFM doctrine, contract families, and trust-visible runtime behavior |
-| **Upstream** | `contracts/`, `policy/`, standards profiles, doctrinal manuals, ADRs |
-| **Downstream** | governed API descriptions, validators, fixtures, tests, UI trust states, runbooks, correction paths |
+| **Path** | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` **— PROPOSED starter path · NEEDS VERIFICATION** |
+| **Repo fit** | Template for contract-bearing API changes that must stay aligned with KFM doctrine, contract families, route families, standards profiles, and trust-visible runtime behavior |
+| **Doctrine baseline** | `KFM_Canonical_Master_Reference_Manual_Integrated_Replacement_2026-03-14.pdf` plus baseline `B0` and doctrinal anchors `D1` / `D2` |
+| **Upstream** | `contracts/`, `policy/`, doctrinal manuals, ADRs, standards-profile decisions, route-family doctrine |
+| **Downstream** | schemas, OpenAPI descriptions, validators, fixtures, tests, EvidenceBundle resolution, RuntimeResponseEnvelope behavior, runbooks, correction paths |
 
-![status](https://img.shields.io/badge/status-draft-lightgrey?style=flat-square)
+![status](https://img.shields.io/badge/status-experimental-lightgrey?style=flat-square)
 ![kind](https://img.shields.io/badge/kind-template-blue?style=flat-square)
 ![posture](https://img.shields.io/badge/posture-contract--first-0f766e?style=flat-square)
-![review](https://img.shields.io/badge/review-placeholders%20active-orange?style=flat-square)
+![trust](https://img.shields.io/badge/trust-evidence--linked-4f46e5?style=flat-square)
+![verification](https://img.shields.io/badge/repo%20paths-needs%20verification-orange?style=flat-square)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Quickstart](#quickstart) · [Contract-family alignment](#contract-family-alignment) · [Route-family alignment](#route-family-alignment) · [Diagram](#diagram) · [Copy-ready template body](#copy-ready-template-body) · [Review gates](#review-gates--definition-of-done) · [Appendix](#appendix)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Doctrine anchors & labeling](#doctrine-anchors--labeling) · [Contract-family alignment](#contract-family-alignment) · [Standards-profile alignment](#standards-profile-alignment) · [Route-family alignment](#route-family-alignment) · [Diagram](#diagram) · [Copy-ready template body](#copy-ready-template-body) · [Task list · Review gates](#task-list--review-gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > Use this template when a change **adds, narrows, versions, deprecates, or otherwise changes** a contract-bearing API surface.  
-> Do **not** use it for product vision, domain onboarding, free-form endpoint brainstorming, or UI-only exploration detached from schemas, fixtures, and tests.
+> Do **not** use it for product vision, free-form endpoint ideation, UI-only exploration, or implementation notes that have no contract consequence.
+
+> [!NOTE]
+> Concrete paths shown in this template are **starter paths unless directly repo-verified**. When a path or artifact is not mounted and confirmed, label it as **PROPOSED starter path** or **NEEDS VERIFICATION** instead of presenting it as current repo reality.
 
 ---
 
 ## Scope
 
-This template exists to keep KFM API contract work **contract-first, evidence-first, and fail-closed**. It is designed for extensions that touch one or more of the following:
+This template keeps KFM API extension work **contract-first, evidence-linked, and fail-closed**.
 
-- JSON Schema or equivalent machine-checkable contract structure
+Use it for extensions that materially affect one or more of the following:
+
+- machine-checkable schema shape
 - OpenAPI or other governed route description
-- decision grammar or policy vocabulary
+- standards-profile alignment
+- policy vocabulary or decision grammar
 - valid / invalid fixtures
-- runtime envelopes, evidence bundles, or correction lineage
-- user-visible trust states that must remain explainable at point of use
+- proof objects and emitted artifacts
+- EvidenceRef → EvidenceBundle behavior
+- trust-visible runtime outcomes
+- rollback, correction, or stale-visible behavior
 
-A completed extension document should make it possible to answer five questions quickly:
+A complete extension document should let a reviewer answer five questions quickly:
 
 1. What changed?
-2. Why does it belong in KFM?
-3. Which base contract family owns the change?
-4. What else must change with it?
+2. Why is it a contract concern?
+3. Which owning contract family is responsible?
+4. Which adjacent artifacts must change with it?
 5. How do we verify it without bluffing?
 
 [Back to top](#template--api-contract-extension)
@@ -64,156 +74,234 @@ A completed extension document should make it possible to answer five questions 
 
 | Area | How this template fits |
 | --- | --- |
-| `docs/templates/` | Home for governed documentation templates, including API-oriented templates |
-| `contracts/` | Primary contract surface for schemas, OpenAPI, vocab, and fixtures |
-| `policy/` | Policy bundles, vocabularies, and decision-grammar consequences |
-| `tests/` | Valid / invalid fixtures, contract tests, policy tests, runtime-negative-path tests |
-| `docs/adr/` | Use an ADR when the extension changes architectural law, ownership boundaries, or long-horizon standards posture |
-| `docs/runbooks/` | Update when the extension affects publication, correction, rollback, stale-visible behavior, or review workflows |
+| `docs/templates/` | Home for governed documentation templates, including API and contract templates |
+| `contracts/` | Primary contract surface for schema families, examples, and machine-checkable structure |
+| `policy/` | Policy bundles, decision grammar, reason/obligation registries, and review-bearing constraints |
+| `tests/` | Valid / invalid fixtures, schema tests, runtime-negative-path tests, correction drills, docs-gate checks |
+| `apis/` | Public and internal API descriptions where route-facing behavior must be made explicit |
+| `docs/runbooks/` | Publication, correction, rollback, stale-visible, and operational procedure deltas |
+| `docs/adr/` | Architectural-law changes, authority shifts, or long-horizon standards / boundary decisions |
 
-**Working rule:** this template documents the extension. It does **not** replace the schema, OpenAPI, fixture, or test artifacts themselves.
+**Working rule:** this template documents the extension; it does **not** replace the schema, OpenAPI, fixture, test, or runbook artifacts themselves.
 
 ## Accepted inputs
 
-Use this file when you have all or most of the following in hand:
+Use this template when you have all or most of the following:
 
-- the owning **base contract family**
-- the extension goal and problem statement
-- the affected **route family** or statement that the change is internal-only
-- the proposed schema delta
-- any OpenAPI or interface-description delta
-- policy implications, including reason / obligation / reviewer-role additions if needed
+- the **owning contract family**
+- a concise extension goal and problem statement
+- the affected **route family**, or an explicit internal-only statement
+- a schema delta or contract-shape delta
+- an OpenAPI or route-description delta where relevant
+- standards-profile impact, if any
+- policy consequences, including reason / obligation / reviewer-role changes where needed
 - valid and invalid fixture expectations
-- negative-path behavior
-- rollback or correction notes
-- explicit `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` labeling where needed
+- expected negative-path behavior
+- rollback / correction notes
+- explicit `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` labeling where required
 
 ## Exclusions
 
-This file is the wrong home for the following work:
-
 | If the work is mainly about… | Put it here instead |
 | --- | --- |
-| product vision, shell choreography, or multi-surface UX direction | `docs/architecture/` |
-| domain onboarding, source-family coverage, or lane-specific sourcing | domain docs / atlas-aligned docs |
-| story-node narrative content | story-node docs under the narrative / reports surface |
+| architectural law, boundary changes, or authority shifts | `docs/adr/` |
 | runbook-only operational procedure | `docs/runbooks/` |
-| architectural law that changes boundaries or authority seams | `docs/adr/` |
-| implementation-only code notes with no contract consequence | code-adjacent docs or implementation comments |
+| product vision, shell choreography, or multi-surface UX direction | architecture / product doctrine docs |
+| implementation-only code notes with no contract consequence | code-adjacent docs or source comments |
+| domain onboarding, source-family coverage, or lane-specific sourcing | domain / atlas-aligned documentation |
+| narrative publication content | story / dossier docs under the relevant publication surface |
 
 > [!WARNING]
-> An API contract extension must not quietly become a substitute for an ADR, a runbook, or a product-spec document. Keep the role crisp.
+> An API contract extension must not quietly become a substitute for an ADR, a runbook, or a product specification. Keep the role crisp.
+
+## Directory tree
+
+Illustrative target placement:
+
+```text
+docs/
+└── templates/
+    └── TEMPLATE__API_CONTRACT_EXTENSION.md
+```
+
+Common companion surfaces (**starter paths only — verify before commit**):
+
+```text
+contracts/
+policy/
+tests/
+apis/public/
+apis/internal/
+docs/runbooks/
+```
 
 ## Quickstart
 
 1. Duplicate this template into a concrete extension document.
-2. Anchor the change to **one primary base contract family** and **one primary route family**.
-3. Fill in the schema, OpenAPI, policy, fixture, and test consequences together.
-4. Mark anything not directly verified as `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
-5. Land the extension only with its negative-path behavior, rollback notes, and documentation delta intact.
+2. Name **one primary owning contract family** and **one primary route family**.
+3. Fill in schema, route, policy, fixture, test, and correction consequences together.
+4. Keep anything not directly verified visible as `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
+5. Do not call the extension ready until negative-path behavior, docs/runbook deltas, and rollback notes are present.
 
 [Back to top](#template--api-contract-extension)
 
+## Doctrine anchors & labeling
+
+### Doctrine anchors
+
+Use this template with the following authority order in mind:
+
+| Level | Role in authoring this template |
+| --- | --- |
+| **Baseline in hand** | Current editable baseline for this documentation task |
+| **Co-primary doctrinal anchors** | KFM truth path, publication law, mission, invariants, metadata spine, product logic |
+| **Freshest realization overlay** | Contract families, standards profile, route classes, proof objects, minimal artifact backlog |
+| **Supporting overlays** | UI doctrine, verification placement, source atlas, source-integrity correction, sequencing, runtime boundaries |
+
+### Labeling legend
+
+| Label | Meaning here | Use it for |
+| --- | --- | --- |
+| **CONFIRMED** | Directly supported by doctrinal source material or standards posture already rechecked in doctrine | Contract-family law, route obligations, verified standards posture |
+| **INFERRED** | Strong doctrinal implication used conservatively to close a necessary structural seam | Missing-but-obvious registries, proof objects, surface-state expectations |
+| **PROPOSED** | Doctrine-aligned recommendation beyond what the source corpus strongly implies | New file proposals, backlog items, starter schemas, route-profile suggestions |
+| **NEEDS VERIFICATION** | Intentionally unresolved until repo inspection confirms it | Paths, owners, exact filenames, mounted inventories, implementation coupling |
+| **UNKNOWN** | Not verified strongly enough to claim as current project fact | Live repo state, schema inventory, CI coverage, manifests, runtime stack |
+
 ## Contract-family alignment
 
-Use the owning family to constrain what the extension may add, what it must preserve, and what must evolve in parallel.
+Pick **one primary owning contract family** first. If the extension touches multiple families, list the rest as affected but secondary.
 
-| Base family | Use this template when the extension mainly affects… | Must still preserve |
+| Contract family | Use this template when the extension mainly affects… | Must still preserve |
 | --- | --- | --- |
-| `SourceDescriptor` | source or endpoint declaration, cadence, rights posture, validation plan, publication intent | explicit identity, stewarding, support, time semantics, validation triggers |
-| `DatasetVersion` | authoritative candidate / promoted subject description | stable identity, time/support semantics, provenance links |
-| `DecisionEnvelope` | machine-readable policy results | finite decision grammar, reason codes, obligation codes, audit linkage |
-| `ReleaseManifest` / `ReleaseProofPack` | release assembly, promotion, rollback, correction linkage | release refs, decision refs, docs / accessibility gate, rollback posture |
-| `EvidenceBundle` | evidence drill-through, claim support packaging, preview-safe reconstruction | bundle identity, scope echo, release refs, lineage summary, rights / sensitivity state |
-| `RuntimeResponseEnvelope` | claim-bearing runtime responses, scoped outcomes, auditability | finite outcomes, citations check, decision ref, surface state, request / evaluation time |
-| `CorrectionNotice` | supersession, withdrawal, narrowing, replacement | visible lineage, affected surfaces, rebuild refs, public note |
+| `SourceDescriptor` | intake contract for a source or endpoint | identity, steward/contact, access mode, rights posture, support, cadence, validation plan, publication intent |
+| `IngestReceipt` | proof that a fetch / landing event occurred | source reference, fetch time, integrity checks, result, output pointers |
+| `ValidationReport` | machine-readable validation outcome | check list, severity, reason codes, subject refs |
+| `DatasetVersion` | authoritative candidate or promoted subject set | stable ID, version ID, support, time semantics, provenance links |
+| `CatalogClosure` | outward metadata closure and lineage linkage | STAC / DCAT / PROV refs, identifiers, release linkage, outward profile refs |
+| `DecisionEnvelope` | machine-readable policy result | subject, action, lane, result, reason codes, obligation codes, policy basis, `audit_ref`, effective window |
+| `ReviewRecord` | human approval / denial / escalation / note | reviewer role, decision, timestamp, refs, comments |
+| `ReleaseManifest` / `ReleaseProofPack` | release assembly and public-safe proof | version refs, catalog refs, decision refs, docs/accessibility gate, rollback/correction posture, bundle plan |
+| `ProjectionBuildReceipt` | proof a derived layer was built from known release scope | release ref, projection type, surface class, build time, freshness basis, stale-after policy |
+| `EvidenceBundle` | support package for a claim, feature, story, export preview, or answer | bundle identity, source basis, dataset refs, lineage summary, preview policy, transform receipts, rights/sensitivity state, `audit_ref` |
+| `RuntimeResponseEnvelope` | trust-bearing runtime response object | schema version, object type, `audit_ref`, `request_id`, `evaluated_at`, surface class/state, result, citations check, decision ref |
+| `CorrectionNotice` | visible lineage under correction, supersession, or withdrawal | affected releases, replacement releases, affected surface classes, rebuild refs, cause, public note |
 
 ### Contract-family cautions
 
-- **Do not** silently repurpose an existing field name.
-- **Do not** add a new public behavior in prose only.
-- **Do not** introduce a free-text reason or obligation where a finite registry is required.
-- **Do not** create a fifth runtime outcome beside `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
+- **Do not** repurpose an existing field name without documenting the meaning change.
+- **Do not** create a public behavior in prose only.
+- **Do not** move policy meanings into free text when a finite registry is required.
+- **Do not** treat derived layers as authoritative truth merely because they are convenient.
+
+## Standards-profile alignment
+
+Use standards where they are the right carrier. Do not force them to compete with KFM-specific policy, review, and correction artifacts.
+
+| Profile | Typical role in extension docs | Use when | Notes |
+| --- | --- | --- | --- |
+| **JSON Schema Draft 2020-12** | machine-validatable contract files and valid/invalid fixtures | schema-bearing contract extensions | Preferred contract-profile language for validation-ready artifacts |
+| **DCAT 3** | outward dataset / distribution discovery metadata | catalog / discovery consequences | Useful for outward dataset and distribution description |
+| **PROV-O** | outward lineage vocabulary | lineage or provenance-facing impacts | Pair with KFM-specific proof and policy artifacts rather than replacing them |
+| **STAC 1.1.0** | spatiotemporal asset / item / scene discovery | item or asset description fits STAC semantics | Best where spatiotemporal assets are the natural outward carrier |
+| **OGC API Features** | feature or subject read boundary profile | outward feature-read routes | Use where the released object behaves like an authoritative feature surface |
+| **OGC API Tiles** | tile / portrayal delivery | tile-bearing outward surfaces | Must inherit release linkage, freshness, and correction state |
+| **OGC API Maps** | rendered map delivery | portrayal-bearing outward surfaces | Use only where map delivery is actually part of the extension |
+| **OGC API Records** | catalog / discovery search | outward discovery routes | Keep identifier consistency and closure explicit |
+| **OpenAPI 3.2.0** | explicit public / internal API contract publication | route-facing changes | Required when request/response/error shapes or policy-visible route behavior change |
 
 ## Route-family alignment
 
 If the extension touches a route-facing API surface, declare the route family explicitly.
 
-| Route family | Typical boundary profile | Extension must preserve |
-| --- | --- | --- |
-| Catalog / discovery | `DCAT`, `STAC`, `OGC API Records`, `OpenAPI` | identifier consistency, outward metadata clarity |
-| Feature / subject read | `OGC API Features` where fit, KFM-specific `OpenAPI` where needed | stable subject ID, support/time semantics, rights posture, release scope |
-| Map / tile / portrayal | `OGC API Maps`, `OGC API Tiles`, internal portrayal contracts | release linkage, policy inheritance, freshness, correction state |
-| Evidence resolution | KFM-specific governed API described in `OpenAPI` | EvidenceRef → EvidenceBundle resolution with visible rights / sensitivity state and audit linkage |
-| Story / dossier / compare | KFM-specific governed API | spatial anchor, temporal anchor, drill-through to evidence |
-| Export and report | KFM-specific governed API plus release-manifest references | exports must not outrun release state, policy posture, or correction linkage |
-| Focus / governed assistance | KFM-specific governed API plus `RuntimeResponseEnvelope` | scope, citations, policy, and audit linkage visible in the same pane |
-| Review / stewardship | internal governed API only | no hidden approvals; all actions emit review and decision artifacts |
-| Ops / status | internal ops surface | must not become a second truth surface |
+| Route family | Primary objects | Boundary profile | Trust obligation |
+| --- | --- | --- | --- |
+| `Catalog and discovery` | release metadata, dataset/distribution discovery, discovery lists | `DCAT 3`, `STAC`, `OGC API Records`, `OpenAPI` | catalog closure and identifier consistency must resolve cleanly |
+| `Feature or subject read` | released authoritative features, place dossiers, claims, detail views | `OGC API Features` where fit; KFM-specific `OpenAPI` where needed | stable subject ID, support/time semantics, rights posture, release scope |
+| `Map / tile / portrayal` | released maps, tiles, legends, styles, portrayals | `OGC API Maps` / `Tiles` plus internal portrayal contracts | release linkage, policy posture, freshness, correction state |
+| `Evidence resolution` | `EvidenceRef -> EvidenceBundle` and related trust objects | KFM-specific governed API in `OpenAPI` | every bundle resolves to admissible published scope with visible rights/sensitivity state and audit linkage |
+| `Story / dossier / compare` | anchored narrative and comparison inputs | KFM-specific governed API | spatial anchor, temporal anchor, drill-through to evidence |
+| `Export and report` | public-safe exports, previews, packaged reports | KFM-specific governed API plus release-manifest refs | exports never outrun release state, policy posture, or correction linkage |
+| `Focus / governed assistance` | bounded natural-language investigation over released scope | KFM-specific governed API plus `RuntimeResponseEnvelope` | scope, citations, policy, and audit linkage stay visible in the same pane |
+| `Review / stewardship` | moderation, quarantine, approval, denial, rollback, rights handling | internal governed API only | no hidden approvals; every action emits review and decision artifacts |
+| `Ops / status` | health, status, metrics, traces, audit joins | internal ops endpoints | must not expose raw canonical data or become a second truth surface |
 
 ## Authoring rules
 
 ### 1) Anchor before you extend
 
-State the **owning base family** first. If the extension touches multiple families, name the primary family and list the others as affected.
+State the **owning contract family** first. If the extension touches multiple families, list one as primary and the rest as affected.
 
 ### 2) Declare change shape explicitly
 
 Use one of these labels:
 
-- **Additive** — existing consumers can ignore the new field or rule
-- **Constraining** — existing shape stays, but validation or interpretation becomes tighter
-- **Breaking** — version bump required
+- **Additive** — existing consumers may ignore the addition
+- **Constraining** — existing shape remains, but validation or interpretation becomes tighter
+- **Breaking** — version bump or explicit migration required
 - **Deprecating** — old meaning remains temporarily but is being retired
 
-### 3) Keep finite outcomes finite
+### 3) Keep runtime outcomes finite
 
-If the extension reaches runtime trust surfaces, it must still preserve:
+If the extension reaches trust-bearing runtime surfaces, preserve the finite result set:
 
 - `ANSWER`
 - `ABSTAIN`
 - `DENY`
 - `ERROR`
 
-No uncited fifth outcome. No “best effort” confidence state.
+No fifth “best-effort” truth state.
 
-### 4) Extend vocabularies deliberately
+### 4) Extend decision grammar deliberately
 
-If the extension adds policy meanings, document whether it requires changes to:
+If the extension changes policy-visible meaning, document whether it requires updates to:
 
 - reason-code registry
 - obligation-code registry
 - reviewer-role registry
 
-### 5) Couple docs to behavior
+### 5) Couple prose to executable artifacts
 
-If behavior changes materially, the extension must call out the exact documentation and runbook delta required.
+A material behavior change is incomplete until it names:
+
+- schema or contract delta
+- OpenAPI delta where relevant
+- valid / invalid fixtures
+- tests and proof objects
+- documentation and runbook delta
+- rollback / correction behavior
 
 ### 6) Keep repo paths honest
 
-Any path shown as a concrete file path should be treated as one of the following:
+Any concrete path should be one of:
 
-- **CONFIRMED** — directly verified
-- **PROPOSED starter path** — doctrine-aligned but not mounted as verified
-- **NEEDS VERIFICATION** — intentionally unresolved
+- **CONFIRMED path**
+- **PROPOSED starter path**
+- **NEEDS VERIFICATION**
+
+### 7) Prove negative paths
+
+Happy-path examples are insufficient. Document deny, abstain, stale-visible, partial, generalized, conflict, correction, and rollback behavior where relevant.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Doctrine and invariants<br/>truth path • trust membrane • finite outcomes] --> B[Base contract family]
-    B --> C[Extension document]
-    C --> D[Schema delta]
+    A[Doctrine anchors<br/>B0 • D1 • D2 • REAL] --> B[Owning contract family]
+    B --> C[Concrete extension document]
+    C --> D[Schema / contract delta]
     C --> E[OpenAPI / route delta]
-    C --> F[Policy / vocab delta]
-    C --> G[Fixture delta]
-    D --> H[Contract validation]
+    C --> F[Policy / decision grammar delta]
+    C --> G[Fixtures / proof objects / tests]
+    D --> H[Verification and review]
     E --> H
     F --> H
     G --> H
-    H --> I[Runtime / UI / runbook consequences]
-    I --> J[Review, release, correction]
+    H --> I[Runtime trust surfaces<br/>EvidenceBundle • RuntimeResponseEnvelope]
+    I --> J[Release • correction • rollback]
 ```
+
+[Back to top](#template--api-contract-extension)
 
 ## Copy-ready template body
 
@@ -245,17 +333,18 @@ notes: [Replace all placeholders before publication.]
 
 <One-line purpose directly below the title.>
 
-## 1. Status
+## 1. Status & truth posture
 
 | Field | Value |
 | --- | --- |
 | Status | draft / review / published |
 | Truth posture | CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION |
 | Change shape | additive / constraining / breaking / deprecating |
-| Owning base family | <e.g. RuntimeResponseEnvelope> |
+| Owning contract family | <e.g. RuntimeResponseEnvelope> |
 | Primary route family | <e.g. Focus / governed assistance> |
+| Standards profile touched | <e.g. JSON Schema 2020-12, OpenAPI 3.2.0, STAC 1.1.0> |
 | Public or internal | public / internal / mixed |
-| Source of authority | <doctrinal anchors and realization overlays> |
+| Source of authority | <baseline + doctrinal anchors + realization overlays> |
 
 ## 2. Summary
 
@@ -265,7 +354,7 @@ State what the extension enables, what it does not enable, and why it belongs in
 ## 3. Problem this extension solves
 
 - Current problem:
-- Why the existing base contract is not enough:
+- Why the existing contract family is not enough:
 - Why this is a contract concern rather than only an implementation concern:
 
 ## 4. Non-goals
@@ -274,29 +363,29 @@ State what the extension enables, what it does not enable, and why it belongs in
 - It must not be read as:
 - It does not authorize:
 
-## 5. Base contract anchoring
+## 5. Contract anchoring
 
 | Item | Value |
 | --- | --- |
-| Base family | |
+| Primary contract family | |
+| Related families touched | |
 | Existing version / schema | |
 | Existing trust obligation | |
-| Related families touched | |
 | Versioning consequence | |
 
 ## 6. Affected artifacts
 
 | Artifact class | Path / identifier | Status | Notes |
 | --- | --- | --- | --- |
-| Schema | `<PROPOSED or CONFIRMED path>` | | |
-| OpenAPI | `<PROPOSED or CONFIRMED path>` | | |
-| Vocab registry | `<PROPOSED or CONFIRMED path>` | | |
-| Valid fixture | `<PROPOSED or CONFIRMED path>` | | |
-| Invalid fixture | `<PROPOSED or CONFIRMED path>` | | |
-| Tests | `<PROPOSED or CONFIRMED path>` | | |
-| Runbook | `<PROPOSED or CONFIRMED path>` | | |
+| Schema / contract | `<CONFIRMED or PROPOSED starter path>` | | |
+| OpenAPI | `<CONFIRMED or PROPOSED starter path>` | | |
+| Policy / registry | `<CONFIRMED or PROPOSED starter path>` | | |
+| Valid fixture | `<CONFIRMED or PROPOSED starter path>` | | |
+| Invalid fixture | `<CONFIRMED or PROPOSED starter path>` | | |
+| Tests / proof objects | `<CONFIRMED or PROPOSED starter path>` | | |
+| Runbook / docs | `<CONFIRMED or PROPOSED starter path>` | | |
 
-## 7. Schema delta
+## 7. Contract and schema delta
 
 ### 7.1 Added fields
 
@@ -327,7 +416,18 @@ Document only if the extension changes a route-facing API surface.
 | Error / negative-path response | | | |
 | Auth / policy consequence | | | |
 
-## 9. Policy and decision-grammar delta
+## 9. Standards-profile delta
+
+| Profile | Add / modify / none | Why this profile applies | Notes |
+| --- | --- | --- | --- |
+| JSON Schema 2020-12 | | | |
+| OpenAPI 3.2.0 | | | |
+| STAC 1.1.0 | | | |
+| DCAT 3 | | | |
+| PROV-O | | | |
+| OGC API family | | | |
+
+## 10. Policy and decision-grammar delta
 
 State whether the extension requires registry additions.
 
@@ -337,19 +437,19 @@ State whether the extension requires registry additions.
 | obligation codes | | | |
 | reviewer roles | | | |
 
-## 10. Evidence and trust consequences
+## 11. Evidence and trust consequences
 
 Answer all of the following:
 
-- Does this extension change EvidenceRef → EvidenceBundle behavior?
-- Does it change what counts as a citation check?
+- Does this extension change `EvidenceRef -> EvidenceBundle` behavior?
+- Does it change what counts as a citations check?
 - Does it alter rights / sensitivity visibility?
-- Does it introduce a new stale-visible, partial, generalized, or withheld state?
-- Does it affect correction lineage?
+- Does it introduce a stale-visible, partial, generalized, withheld, or conflicted state?
+- Does it affect correction lineage or rollback visibility?
 
-## 11. Runtime outcome behavior
+## 12. Runtime outcome behavior
 
-If this extension reaches runtime trust surfaces, document behavior for each relevant outcome.
+If this extension reaches trust-bearing runtime surfaces, document behavior for each relevant outcome.
 
 | Outcome | Behavior | Trigger | Must be visible to user? |
 | --- | --- | --- | --- |
@@ -358,27 +458,30 @@ If this extension reaches runtime trust surfaces, document behavior for each rel
 | DENY | | | |
 | ERROR | | | |
 
-## 12. Fixtures and tests
+## 13. Fixtures, tests, and proof objects
 
-### 12.1 Minimum fixture set
+### 13.1 Minimum fixture set
 
 - one minimal valid fixture
 - one meaningful invalid fixture
-- any required cross-artifact drill fixture
-- any required negative-path runtime fixture
+- one cross-artifact proof fixture where applicable
+- one negative-path runtime fixture where route-facing behavior is affected
 
-### 12.2 Minimum test set
+### 13.2 Minimum test and proof set
 
-| Test family | Required? | Notes |
+| Test / proof family | Required? | Notes |
 | --- | --- | --- |
-| schema validation | yes | |
+| schema and example validation | yes | |
 | valid / invalid fixtures | yes | |
-| policy grammar | if applicable | |
-| catalog / evidence resolution | if applicable | |
-| runtime negative-path | if route-facing | |
-| correction / rollback drill | if release-significant | |
+| catalog-closure integrity | if outward discovery changes | |
+| policy bundle / reason / obligation consistency | if decision grammar changes | |
+| deterministic identity / stale-projection checks | if derived or release-facing behavior changes | |
+| runtime citation-negative and scope-negative tests | if claim-bearing runtime behavior changes | |
+| surface-state tests | if trust-visible UI or runtime state changes | |
+| correction drill / rollback drill | if release-significant | |
+| documentation gate / runbook sync | if behavior changes materially | |
 
-## 13. Backward compatibility and migration
+## 14. Backward compatibility and migration
 
 - Consumer impact:
 - Required version bump:
@@ -386,68 +489,98 @@ If this extension reaches runtime trust surfaces, document behavior for each rel
 - Sunset / deprecation timing:
 - What remains readable from older releases:
 
-## 14. Rollback / correction path
+## 15. Rollback / correction path
 
 Describe how to recover if the extension is wrong, unsafe, or incomplete.
 
 - rollback trigger:
 - correction notice implications:
 - release-manifest implications:
-- whether a UI trust-state change is required:
+- whether a trust-state or UI surface change is required:
 
-## 15. Open questions and verification needs
+## 16. Documentation and runbook delta
+
+Name the exact documentation and operational follow-through required.
+
+| Surface | Required update | Status |
+| --- | --- | --- |
+| Template / docs | | |
+| Runbook | | |
+| Public-facing guidance | | |
+| Internal stewardship procedure | | |
+
+## 17. Open questions and verification needs
 
 | Open item | Why it matters | Required evidence |
 | --- | --- | --- |
 | | | |
 
-## 16. Reviewer checklist
+## 18. Reviewer checklist
 
-- [ ] Base family identified
+- [ ] Owning contract family identified
 - [ ] Route family identified or explicitly marked internal-only
-- [ ] Schema delta documented
+- [ ] Change shape declared
+- [ ] Schema / contract delta documented
 - [ ] OpenAPI delta documented where relevant
+- [ ] Standards-profile impact documented where relevant
 - [ ] Policy vocabulary impact documented
 - [ ] Valid and invalid fixtures specified
 - [ ] Negative-path behavior documented
 - [ ] Rollback / correction path documented
+- [ ] Docs / runbook delta named
 - [ ] UNKNOWNs left visible
 ```
 
-## Review gates & Definition of done
+## Task list · Review gates & definition of done
 
-A concrete extension doc is not ready for merge or ratification until all relevant gates below are satisfied.
+A concrete extension document is not ready for merge or ratification until every relevant gate below is satisfied.
 
 - [ ] The extension is anchored to a named KFM contract family.
 - [ ] Any route-facing change is anchored to a named route family.
 - [ ] The change shape is declared as additive, constraining, breaking, or deprecating.
-- [ ] Schema impact is documented.
+- [ ] Schema / contract impact is documented.
 - [ ] OpenAPI impact is documented where relevant.
+- [ ] Standards-profile impact is documented where relevant.
 - [ ] Reason / obligation / reviewer-role registry impact is documented where relevant.
 - [ ] At least one valid and one invalid fixture are identified.
 - [ ] Negative-path behavior is documented for any claim-bearing runtime surface.
+- [ ] Runtime citation-negative and scope-negative behavior is accounted for where relevant.
 - [ ] Correction / rollback behavior is documented.
-- [ ] Docs and runbook deltas are named.
+- [ ] Documentation and runbook deltas are named.
 - [ ] Remaining unknowns are explicit.
-- [ ] No prose in the document silently implies mounted implementation reality.
+- [ ] No prose silently implies mounted implementation reality that has not been verified.
 
-> [!NOTE]
-> In KFM, a clean-looking extension document without fixtures, tests, and negative-path behavior is still incomplete.
+> [!CAUTION]
+> In KFM, a clean-looking extension document without fixtures, proof objects, negative-path behavior, and correction posture is still incomplete.
 
 [Back to top](#template--api-contract-extension)
+
+## FAQ
+
+### When should this become an ADR instead?
+
+Use an ADR when the change alters architectural law, authority boundaries, or long-horizon standards / platform direction. Use this template when the change is still best understood as a contract-bearing extension with concrete schema, route, policy, fixture, or runtime consequences.
+
+### Can I fill in prose first and add schemas or tests later?
+
+Not for merge-ready work. A contract extension that lacks executable artifacts is still incomplete, even if the prose is polished.
+
+### What if the change is internal-only?
+
+Keep the document. Mark the route family as internal-only where applicable, omit outward OpenAPI details that do not exist, and document the internal proof, policy, and correction consequences explicitly.
 
 ## Appendix
 
 <details>
-<summary><strong>Authoring notes and anti-patterns</strong></summary>
+<summary><strong>Authoring notes, starter registries, and anti-patterns</strong></summary>
 
 ### A. Preferred language
 
 Prefer:
 
 - “This extension affects…”
-- “Owning base family…”
-- “Public or internal route family…”
+- “Owning contract family…”
+- “Primary route family…”
 - “Required evidence to verify…”
 - “PROPOSED starter path…”
 
@@ -455,20 +588,38 @@ Avoid:
 
 - “This definitely exists in the repo” unless directly verified
 - “The system now does…” unless mounted implementation proves it
-- “The extension is self-explanatory”
+- “This is self-explanatory”
 - “Best effort” language for trust-bearing runtime behavior
 
-### B. Anti-patterns to reject
+### B. Starter reason-code examples
+
+| Example reason code | Typical meaning |
+| --- | --- |
+| `rights.unknown` | rights or redistribution posture is unresolved |
+| `sensitivity.exact_location` | exact location is too sensitive for the requested audience |
+| `validation.schema_failed` | required schema or semantic validation failed |
+| `corroboration.conflicted` | independent admissible sources disagree materially |
+
+### C. Anti-patterns to reject
 
 - endpoint prose with no schema delta
 - schema delta with no fixtures
 - happy-path examples only
-- silent policy vocabulary drift
-- hiding rollback/correction notes in implementation tickets
+- silent decision-grammar drift
+- hiding rollback or correction notes in implementation tickets
 - using this template to justify a new public surface without evidence drill-through
 - treating a UI rendering change as sufficient proof of contract correctness
+- presenting starter paths as verified repo facts
 
-### C. Minimum review posture
+### D. Path-label shorthand
+
+| Label | Use it when |
+| --- | --- |
+| **CONFIRMED path** | directly verified in the mounted repo or canonical project artifacts |
+| **PROPOSED starter path** | doctrine-aligned location offered as a practical starting point |
+| **NEEDS VERIFICATION** | the exact path, filename, or adjacent artifact inventory is still unresolved |
+
+### E. Minimum review posture
 
 When in doubt:
 
