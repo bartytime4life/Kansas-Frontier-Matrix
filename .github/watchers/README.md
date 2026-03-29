@@ -485,6 +485,4 @@ This README is grounded in the scaffold drafted in-session, but the following re
 ---
 
 [Back to top](#watchers)
-
-```
 ```
