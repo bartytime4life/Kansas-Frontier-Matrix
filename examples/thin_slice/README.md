@@ -11,7 +11,7 @@ Public-safe, non-authoritative example lane for end-to-end KFM slice walkthrough
 > [!IMPORTANT]
 > This README is intentionally evidence-bounded.
 >
-> `examples/thin_slice/` exists on the current branch, but the local files under this lane are still scaffold-level. Read statements here with KFM discipline:
+> Current public `main` confirms that `examples/thin_slice/` exists and currently contains this `README.md` plus a nested `hydrology/` directory with its own `README.md`. The lane is still README-heavy and light on example assets, so read statements here with KFM discipline:
 >
 > | Label | Meaning here |
 > | --- | --- |
@@ -20,6 +20,9 @@ Public-safe, non-authoritative example lane for end-to-end KFM slice walkthrough
 > | **PROPOSED** | Recommended structure, naming, or usage pattern for future commits |
 > | **UNKNOWN** | Not verified from the current branch view |
 > | **NEEDS VERIFICATION** | Plausible target, but should be checked against the mounted workspace before hardening |
+
+> [!NOTE]
+> The parent `examples/README.md` still carries an older “README.md only” inventory statement, but current public `main` shows the parent example lane now includes `api/`, `story/`, `thin_slice/`, and `ui/` alongside `README.md`. This file inherits the parent lane’s **non-authoritative example rule**, not that stale tree count.
 
 * * *
 
@@ -47,7 +50,9 @@ The current doctrinal center of gravity is **hydrology-first**, but that does **
 | --- | --- |
 | Path | `examples/thin_slice/README.md` |
 | Parent lane | [`examples/`](../README.md) |
+| Sibling example lanes | [`../api/`](../api/) · [`../story/`](../story/) · [`../ui/`](../ui/) *(scaffold-level siblings on current public `main`)* |
 | Current nested pack | [`examples/thin_slice/hydrology/`](./hydrology/README.md) |
+| Owner coverage | `@bartytime4life` via repo-wide fallback in `/.github/CODEOWNERS` |
 | Root doctrine anchor | [`../../README.md`](../../README.md) |
 | Governance / workflow context | [`../../.github/README.md`](../../.github/README.md) |
 | Likely stronger owner surfaces | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) · [`../../tests/`](../../tests/) · [`../../docs/`](../../docs/) · [`../../data/`](../../data/) · [`../../apps/`](../../apps/) |
@@ -60,13 +65,16 @@ This directory sits **below** the repo-wide examples lane and therefore inherits
 
 That makes `examples/thin_slice/` the right place for **instructional slice packs** and the wrong place for **authoritative release memory**.
 
+The parent examples README is still useful for that rule, but its directory inventory lags the current public tree. This README therefore uses the **live branch** for local shape and the **parent lane README** for the governing examples-lane boundary.
+
 ### Current verified shape
 
 At the time of writing, the verified local shape under this lane is intentionally small:
 
 - this README
 - one nested `hydrology/` subdirectory
-- one stub README inside that subdirectory
+- one directory README inside that subdirectory
+- no visible `.example.*`, `.sample.*`, or `.redacted.*` assets yet on current public `main`
 
 That small footprint is a feature, not a defect. It leaves room to add only the files that can remain clearly illustrative.
 
@@ -296,6 +304,7 @@ flowchart TD
 - [ ] Link each example pack to stronger owner surfaces before adding more files
 - [ ] Add at least one negative-path example before calling a slice pack “useful”
 - [ ] Avoid placing merge-blocking fixtures, live manifests, or real proof packs in this lane
+- [ ] Reconcile the parent `examples/README.md` tree note with the current public tree so lane-wide inventory statements stop drifting
 - [ ] Re-check this README whenever `examples/README.md` or owner-surface conventions change
 
 ### Definition of done for a nested slice pack
