@@ -1,13 +1,28 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
+title: packages/indexers
+type: standard
+version: v1
+status: review
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: <NEEDS-VERIFICATION>
+related: [../README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../data/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
+tags: [kfm, packages, indexers]
+notes: [current public main shows a README-only subtree here, owner reflects current /packages/ fallback in .github/CODEOWNERS, doc_id and dates need verification]
+[/KFM_META_BLOCK_V2] -->
+
 # packages/indexers
 
 Shared internal builders for rebuildable search, tile, and other release-linked runtime projections in Kansas Frontier Matrix.
 
 > **Status:** experimental  
 > **Doc state:** review  
-> **Owners:** `@bartytime4life`  
+> **Owners:** `@bartytime4life` *(current `/packages/` fallback in `.github/CODEOWNERS`)*  
 > **Path:** `packages/indexers/README.md`  
 > **Repo fit:** child package guide beneath [`../README.md`](../README.md); upstream authority from [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../data/README.md`](../../data/README.md); downstream verification pressure from [`../../tests/README.md`](../../tests/README.md) and [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
-> **Current public snapshot used for this rewrite:** `packages/indexers/` was visible on `main` and rendered as `README.md` only  
+> **Current public snapshot used for this revision:** `packages/indexers/` was visible on `main` and rendered as `README.md` only  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-packages%2Findexers%2FREADME.md-2f81f7) ![role](https://img.shields.io/badge/role-derived%20projections-6f42c1) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -17,7 +32,7 @@ Shared internal builders for rebuildable search, tile, and other release-linked 
 
 > [!NOTE]
 > This README keeps **current visible state** separate from **doctrine-led intended role**.
-> The public tree that anchored this rewrite proved the package boundary more strongly than the implementation underneath it.
+> The public tree that anchored this revision proved the package boundary more strongly than the implementation underneath it.
 
 ## Scope
 
@@ -37,7 +52,7 @@ This package should help preserve:
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Supported by live repo surfaces inspected for this rewrite or by stable KFM doctrine carried into adjacent repo docs |
+| **CONFIRMED** | Supported by live repo surfaces inspected for this revision or by stable KFM doctrine carried into adjacent repo docs |
 | **INFERRED** | Strongly suggested by neighboring repo docs and current package-boundary language, but not re-proven from deeper package files in this task |
 | **PROPOSED** | Recommended package-local structure or behavior that fits KFM doctrine but is not stated as current branch fact |
 | **UNKNOWN / NEEDS VERIFICATION** | Not established strongly enough from the inspected repo state to present as mounted implementation reality |
@@ -61,7 +76,7 @@ This package should help preserve:
 | Sibling | [`../ingest/README.md`](../ingest/README.md) | Source admission, normalization, and receipt-bearing intake belong there |
 | Sibling | [`../policy/README.md`](../policy/README.md) | Shared internal policy-support code belongs there, not in indexers |
 | Downstream | [`../../tests/README.md`](../../tests/README.md) | Indexer behavior should eventually be pressured by fixtures, stale-path checks, and negative-path verification |
-| Downstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Merge and promotion automation should later validate indexer behavior, even though the public workflow lane was still README-only when this rewrite was anchored |
+| Downstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Merge and promotion automation should later validate indexer behavior, even though the public workflow lane was still README-only when this revision was anchored |
 
 ### Working boundary
 
@@ -107,10 +122,10 @@ Content belongs in `packages/indexers/` when it is shared internal logic for:
 
 ## Current verified snapshot
 
-| Evidence used for this rewrite | Status | Reading rule |
+| Evidence used for this revision | Status | Reading rule |
 |---|---|---|
 | `packages/indexers/` exists on public `main` | **CONFIRMED** | Safe to document the package boundary |
-| The public directory view used for this rewrite showed `README.md` only | **CONFIRMED** | Do not imply deeper files unless the checked-out branch proves them |
+| The public directory view used for this revision showed `README.md` only | **CONFIRMED** | Do not imply deeper files unless the checked-out branch proves them |
 | Parent `packages/README.md` carries the strongest live package-boundary contract | **CONFIRMED** | Treat it as the baseline for this child README |
 | `/packages/` owner fallback is `@bartytime4life` | **CONFIRMED** | Use until narrower path ownership is introduced |
 | Package-local code, manifests, tests, or runtime adoption | **UNKNOWN** | Keep implementation depth visibly bounded |
@@ -127,7 +142,7 @@ packages/indexers/
 
 > [!NOTE]
 > The tree above is intentionally strict.
-> It documents the package surface used to anchor this rewrite, not a hoped-for subtree.
+> It documents the package surface used to anchor this revision, not a hoped-for subtree.
 
 ### Reading rule
 
@@ -140,7 +155,7 @@ Do not silently convert “package exists” into “package is implemented.”
 
 ```bash
 find packages/indexers -maxdepth 4 -type f | sort
-sed -n '1,220p' packages/indexers/README.md
+sed -n '1,240p' packages/indexers/README.md
 ```
 
 ### 2) Recheck the stronger package and repo contracts
@@ -168,8 +183,8 @@ find packages/indexers -maxdepth 5 -type d | sort
 ### 4) Sanity-check vocabulary that often touches indexers
 
 ```bash
-grep -RIn \
-  "SearchProjection\|TilePackage\|ProjectionBuildReceipt\|reindex\|freshness\|vector tile\|PMTiles\|MBTiles" \
+grep -RInE \
+  "search projection|tile package|ProjectionBuildReceipt|reindex|freshness|vector tile|PMTiles|MBTiles" \
   packages docs contracts policy data tests 2>/dev/null || true
 ```
 
@@ -229,8 +244,8 @@ flowchart LR
 
   subgraph IDX["packages/indexers/"]
     BUILD["projection builders"]
-    SEARCH["SearchProjection / index build"]
-    TILE["TilePackage / tile build"]
+    SEARCH["search projection / index build"]
+    TILE["tile package / tile build"]
     RECEIPT["projection / reindex receipt"]
   end
 
@@ -271,15 +286,15 @@ flowchart LR
 | Public access | Stay behind governed runtime surfaces; this package is not a public API |
 | Freshness | Prefer rebuild, mark stale, or withdraw over bluffing that a projection is current |
 | Authority | Never become the source-of-record for truth, rights, policy, or outward release state |
-| Current public tree used for rewrite | README-only |
+| Current public tree used for revision | README-only |
 | Exact engine mix | `NEEDS VERIFICATION` |
 
 ### Doctrine-led object map *(placement guidance, not current file inventory)*
 
 | Object family | How indexers may relate to it | Governing rule |
 |---|---|---|
-| `SearchProjection` / graph / vector index | build or refresh a derived projection | keep release linkage and reindex receipt visible |
-| `TilePackage` (`PMTiles`, `MBTiles`, raster pyramid, vector tiles) | build, rebuild, or republish derived map delivery artifacts | keep release linkage, freshness basis, and projection receipt visible |
+| search projection / graph / vector index | build or refresh a derived projection | keep release linkage and reindex receipt visible |
+| tile package (`PMTiles`, `MBTiles`, raster pyramid, vector tiles) | build, rebuild, or republish derived map delivery artifacts | keep release linkage, freshness basis, and projection receipt visible |
 | projection / reindex receipt | record operational proof of what build ran | explain the derived build without rewriting authoritative truth |
 | stale / superseded projection state | expose or honor it in downstream behavior | do not silently serve withdrawn or superseded state as current |
 
@@ -305,7 +320,8 @@ flowchart LR
 
 ### Is `packages/indexers/` authoritative truth?
 
-No. Its role is derived projection work only.
+No.
+Its role is derived projection work only.
 If something becomes the authoritative source of record, it has crossed the boundary.
 
 ### Can indexers build directly from RAW or WORK data?
@@ -316,7 +332,8 @@ The stronger KFM rule is that projection builders should rebuild from promoted o
 ### Do tiles or search indexes become sovereign truth once they are fast and useful?
 
 No.
-Speed does not change authority. Derived projections remain rebuildable helpers unless explicitly promoted through stronger governance.
+Speed does not change authority.
+Derived projections remain rebuildable helpers unless explicitly promoted through stronger governance.
 
 ### Where should code go if it is really about source admission, evidence resolution, or catalog closure?
 
@@ -329,7 +346,7 @@ Use the sibling package whose boundary already names that job:
 
 ### Why is this README more detailed than the current public subtree?
 
-Because the public package surface that anchored this rewrite was still README-first.
+Because the public package surface that anchored this revision was still README-first.
 The point of this file is to make the boundary legible **without** pretending that deeper implementation has already been proven.
 
 ## Appendix
