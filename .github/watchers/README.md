@@ -26,6 +26,10 @@ Derived, fail-closed environmental change detectors that emit evidence-backed ST
 > **Live tree status:** NEEDS VERIFICATION  
 > **Boundary:** Watchers are **derived / rebuildable** monitoring surfaces. They do **not** become sovereign truth and do **not** bypass governed publication.
 
+> [!IMPORTANT]
+> **Emit-only rule:** Watchers MUST NOT publish directly to catalog, triplet, search, map, or release surfaces.  
+> They may only write derived artifacts, attach evidence, and open a governed review path.
+
 ---
 
 ## Status / quick fit
@@ -61,6 +65,10 @@ Current thin-slice scope in this draft:
 - streamflow anomalies
 - air quality escalations
 - wildlife refuge permit / schedule changes
+
+> [!NOTE]
+> The source families listed in this draft describe the intended scaffold target set.  
+> They should not be read as a claim that every adapter is live, production-verified, or branch-confirmed in the current tree.
 
 ---
 
@@ -133,6 +141,9 @@ This directory is **not** the place for:
 ---
 
 ## Directory tree
+
+> [!NOTE]
+> The tree below is a scaffold target and NEEDS VERIFICATION against the live repository before merge.
 
 ```text
 watchers/
@@ -211,6 +222,26 @@ rules:
     hours: 72
 ```
 
+### Deterministic fingerprint (`spec_hash`)
+
+`spec_hash` MUST be computed from a normalized, ordered representation of the watcher specification and the resolved inputs used for evaluation.
+
+At minimum, the fingerprint should include:
+
+* fully resolved watcher config
+* rule names and threshold values
+* resolved input identifiers or asset URIs
+* upstream freshness markers when available (for example `ETag`, `Last-Modified`, or equivalent source timestamps)
+
+The same inputs MUST produce the same `spec_hash`.
+
+The following MUST NOT affect the fingerprint:
+
+* local wall-clock timestamps
+* unordered collection iteration
+* temporary paths
+* non-semantic serialization differences
+
 ### Emit behavior
 
 A watcher should emit only when one or more configured rules trip. Each emit should:
@@ -221,6 +252,8 @@ A watcher should emit only when one or more configured rules trip. Each emit sho
 4. wrap the result in a DSSE-style receipt
 5. persist artifacts under a dated derived output path
 6. enter steward review through a draft PR path
+
+Promotion decisions MUST be made downstream by policy and steward review; emit creation alone conveys no publication authority.
 
 ### No-change behavior
 
@@ -252,13 +285,13 @@ flowchart TD
 
 Current threshold logic in the scaffold:
 
-| Rule                        |                                                  Threshold | Intent                                                                                 |
-| --------------------------- | ---------------------------------------------------------: | -------------------------------------------------------------------------------------- |
-| `soil_moisture_jump`        |                                             `ΔVWC >= 0.03` | catch substantial day-over-day soil moisture movement                                  |
-| `ndvi_shift_uncorroborated` |         `NDVI % change >= 0.15` and no disturbance overlap | catch meaningful vegetation shifts while suppressing obvious corroborated disturbances |
-| `streamflow_anomaly`        | `Q_now >= 1.5 * historic_median` or `day-over-day >= 0.30` | catch strong discharge anomalies                                                       |
-| `aqi_escalation`            |                         escalation to `Unhealthy` or worse | catch category worsening, not every AQI fluctuation                                    |
-| `refuge_schedule_shift`     |                                               `> 72 hours` | catch material permit / schedule movement                                              |
+| Rule                        |                                                  Threshold | Intent                                                |
+| --------------------------- | ---------------------------------------------------------: | ----------------------------------------------------- |
+| `soil_moisture_jump`        |                                             `ΔVWC >= 0.03` | catch substantial day-over-day soil moisture movement |
+| `ndvi_shift_uncorroborated` |         `NDVI % change >= 0.15` and no disturbance overlap | catch meaningful vegetation shifts                    |
+| `streamflow_anomaly`        | `Q_now >= 1.5 * historic_median` or `day-over-day >= 0.30` | catch strong discharge anomalies                      |
+| `aqi_escalation`            |                         escalation to `Unhealthy` or worse | catch category worsening                              |
+| `refuge_schedule_shift`     |                                               `> 72 hours` | catch material schedule movement                      |
 
 > [!NOTE]
 > Several source adapters are placeholders in the current scaffold. Threshold semantics are present, but live-source correctness still NEEDS VERIFICATION.
@@ -271,6 +304,14 @@ Each emit directory should contain at least:
 
 * `item.json`
 * `receipt.json`
+
+### Item vs receipt authority
+
+`item.json` is the derived observation package intended for catalog-shaped downstream handling.
+
+`receipt.json` is the execution, evidence, and integrity package for the watcher run.
+
+Downstream systems may index or inspect the item, but admissibility and promotion decisions MUST evaluate the receipt, the attached evidence references, and policy outcomes rather than the item alone.
 
 Expected derived output shape:
 
@@ -300,6 +341,8 @@ Minimal item fields in the scaffold include:
 
 The current scaffold uses a **DSSE-style development stub**. This is suitable for local wiring and tests, but should be replaced with real signing before operational use.
 
+Until real signing is in place, receipt handling should be treated as development-grade provenance scaffolding rather than an operational attestation boundary.
+
 ---
 
 ## Policy and governance
@@ -312,11 +355,13 @@ The related `policy/watchers.rego` gate is intended to enforce baseline admissib
 * receipt payload present
 * at least one evidence reference
 
+Missing evidence, empty fingerprints, malformed items, or incomplete receipts MUST block promotion and should be treated as fail-closed outcomes rather than soft warnings.
+
 This surface is designed for:
 
 * evidence-first review
 * governance-mediated promotion
-* fail-closed handling on missing evidence or incomplete packaging
+* fail-closed handling
 
 It is **not** designed for autonomous publication.
 
@@ -341,51 +386,40 @@ flowchart LR
 
 ### Surface classification
 
-| Surface                              | Classification             |        Rebuildable | Publishable without review |
-| ------------------------------------ | -------------------------- | -----------------: | -------------------------: |
-| upstream source record               | authoritative upstream     |                 no |                         no |
-| processed intermediate               | controlled internal        |          sometimes |                         no |
-| watcher STAC emit                    | derived                    |                yes |                         no |
-| search index derived from emit       | derived                    |                yes |                         no |
-| published release incorporating emit | governed published surface | yes, from evidence |          only after review |
+| Surface                              | Classification             | Rebuildable | Publishable without review |
+| ------------------------------------ | -------------------------- | ----------- | -------------------------- |
+| upstream source record               | authoritative upstream     | no          | no                         |
+| processed intermediate               | controlled internal        | sometimes   | no                         |
+| watcher STAC emit                    | derived                    | yes         | no                         |
+| search index derived from emit       | derived                    | yes         | no                         |
+| published release incorporating emit | governed published surface | yes         | only after review          |
 
 ### Current implementation posture
 
-| Component              | Posture                          |
-| ---------------------- | -------------------------------- |
-| config schema          | PROPOSED                         |
-| runner                 | PROPOSED                         |
-| NWIS source adapter    | INFERRED / partially live-shaped |
-| HLS source adapter     | INFERRED                         |
-| Mesonet adapter        | PROPOSED placeholder             |
-| KDHE adapter           | PROPOSED placeholder             |
-| USFWS adapter          | PROPOSED placeholder             |
-| GitHub Action workflow | PROPOSED                         |
-| tests                  | PROPOSED                         |
-| Rego gate              | PROPOSED                         |
+| Component              | Posture              |
+| ---------------------- | -------------------- |
+| config schema          | PROPOSED             |
+| runner                 | PROPOSED             |
+| NWIS source adapter    | INFERRED             |
+| HLS source adapter     | INFERRED             |
+| Mesonet adapter        | PROPOSED placeholder |
+| KDHE adapter           | PROPOSED placeholder |
+| USFWS adapter          | PROPOSED placeholder |
+| GitHub Action workflow | PROPOSED             |
+| tests                  | PROPOSED             |
+| Rego gate              | PROPOSED             |
 
 ---
 
 ## Task list
 
-* [ ] Verify `watchers/` path exists in the live tree
-* [ ] Verify owners / CODEOWNERS coverage
-* [ ] Replace Mesonet placeholder with a real adapter or processed-layer pull
-* [ ] Replace NWIS baseline placeholder with real day-of-year historical median logic
-* [ ] Move HLS scene selection out of config and into a selector module
-* [ ] Replace DSSE development stub with real signing
-* [ ] Add preview PNG generation
-* [ ] Run policy validation before PR creation
-* [ ] Add negative and boundary tests for each threshold
-* [ ] Document steward review and correction / withdrawal handling
-
-**Definition of done**
-
-* emits are deterministic from config + inputs
-* no-emit path is silent and explicit
-* every emit carries evidence refs
-* steward review is required before promotion
-* tests cover threshold boundaries and suppression logic
+* [ ] Verify `watchers/` path exists
+* [ ] Replace placeholder adapters
+* [ ] Implement real historical baselines
+* [ ] Replace DSSE stub with signing
+* [ ] Add preview artifacts
+* [ ] Add negative/boundary tests
+* [ ] Document steward review lifecycle
 
 ---
 
@@ -397,20 +431,12 @@ Current related test surface:
 tests/test_watchers_thresholds.py
 ```
 
-The most important test families here are not just positive detections, but also:
+Additional required test intent:
 
-* exact-boundary behavior
-* suppression behavior
-* missing-input fail-closed behavior
-* receipt presence on emit
-* no-artifact creation when nothing material changed
-
-Example boundary intent already present:
-
-```python
-def test_refuge_shift_emits_only_above_threshold():
-    ...
-```
+* deterministic `spec_hash` stability for identical inputs
+* changed `spec_hash` on meaningful config or input change
+* rejection of emits that lack receipt or evidence refs
+* no dependence on local runtime ordering or wall-clock values
 
 ---
 
@@ -418,56 +444,15 @@ def test_refuge_shift_emits_only_above_threshold():
 
 ### Are watchers authoritative?
 
-No. They are derived detectors and packaging logic layered downstream of authoritative sources.
+No. They are derived detectors layered downstream of authoritative sources.
 
 ### Why not publish automatically?
 
-Because KFM publication is governance-mediated. A watcher can surface a potentially important change, but it should not unilaterally promote derived conclusions into trusted published surfaces.
-
-### Why use STAC here?
-
-Because STAC gives a well-understood item/package shape for geospatially meaningful derived observations and keeps downstream catalog integration straightforward.
-
-### Why use receipts?
-
-To make the run tamper-evident and auditable, and to bind emitted artifacts to the config and evidence that produced them.
+Because KFM publication is governance-mediated.
 
 ### What happens when no rule trips?
 
-Nothing is emitted. This is expected fail-closed behavior, not an error.
-
-### Can this directory hold service code?
-
-It should stay thin. Long-lived operational services or canonical system law should live elsewhere.
-
----
-
-## Appendix
-
-<details>
-<summary>Example local invocation and inspection</summary>
-
-### Run
-
-```bash
-python watchers/runners/watcher_runner.py \
-  --config watchers/config/kansas_env_watchers.yaml \
-  --outdir data/derived/watchers
-```
-
-### Inspect
-
-```bash
-find data/derived/watchers -type f | sort
-```
-
-### Open item
-
-```bash
-jq . data/derived/watchers/2026/03/29/emit-*/item.json
-```
-
-</details>
+Nothing is emitted. This is expected fail-closed behavior.
 
 ---
 
@@ -475,14 +460,13 @@ jq . data/derived/watchers/2026/03/29/emit-*/item.json
 
 This README is grounded in the scaffold drafted in-session, but the following remain **NEEDS VERIFICATION** before merge:
 
-* exact live repo placement
-* owner names
-* adjacent doc links
-* CI workflow compatibility with current branch protections
-* whether `policy/` and `tests/` locations already exist as stated
-* whether watcher outputs should instead land under a different `data/` subtree in the live tree
+* repo placement
+* owners
+* CI compatibility
+* data subtree location
 
 ---
 
 [Back to top](#watchers)
+
 ```
