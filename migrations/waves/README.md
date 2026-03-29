@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
+title: waves
+type: standard
+version: v1
+status: draft
+owners: NEEDS VERIFICATION
+created: YYYY-MM-DD
+updated: 2026-03-29
+policy_label: public
+related: [migrations/README.md, migrations/drills/, migrations/templates/, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md, .github/README.md]
+tags: [kfm, migrations, waves]
+notes: [doc_id and created date require verification; updated reflects this in-session draft revision]
+[/KFM_META_BLOCK_V2] -->
+
 # `waves`
 
 Packetized migration bundles for governed, review-first KFM change waves.
