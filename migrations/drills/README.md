@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
+title: drills
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: NEEDS_VERIFICATION
+updated: NEEDS_VERIFICATION
+policy_label: NEEDS_VERIFICATION
+related: [migrations/README.md, migrations/waves/README.md, migrations/templates/README.md, .github/CODEOWNERS, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
+tags: [kfm, migrations, drills, rollback, restore, correction, verification]
+notes: [meta-block identity and date fields remain NEEDS_VERIFICATION; owner is grounded in current public CODEOWNERS coverage for /migrations/]
+[/KFM_META_BLOCK_V2] -->
+
 # `drills`
 
 Exercised verification, rollback, restore, and correction records for governed KFM migration rehearsals.
@@ -5,13 +20,13 @@ Exercised verification, rollback, restore, and correction records for governed K
 > Status: experimental  
 > Document lifecycle: draft  
 > Authority posture: operational / supporting  
-> Owners: NEEDS VERIFICATION  
+> Owners: `@bartytime4life` (current public `/migrations/` coverage via [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS))  
 > [![status](https://img.shields.io/badge/status-experimental-1f6feb?style=flat-square)](#) [![lifecycle](https://img.shields.io/badge/doc-draft-a371f7?style=flat-square)](#) [![surface](https://img.shields.io/badge/surface-drills-0a7ea4?style=flat-square)](#) [![trust](https://img.shields.io/badge/trust-evidence--bounded-2da44e?style=flat-square)](#) [![repo](https://img.shields.io/badge/repo-public--main-57606a?style=flat-square)](#)  
 > Repo fit: path `migrations/drills/README.md` · parent [`../README.md`](../README.md) · sibling [`../waves/README.md`](../waves/README.md) · sibling [`../templates/README.md`](../templates/README.md)  
 > Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current repo signal](#current-repo-signal) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public repo evidence supports this directory as a real lane, but not yet as a populated drill archive. Treat this README as the governing directory contract until exercised drill packets are surfaced on the active branch.
+> Current public `main` confirms `migrations/drills/` exists and currently exposes `README.md` only. The parent [`../README.md`](../README.md) and sibling [`../waves/README.md`](../waves/README.md) document a starter drill-packet shape, but the branch does not yet prove a populated drill archive, runner hooks, or automated drill gates.
 
 > [!WARNING]
 > A drill is not a migration plan, not a reusable scaffold, and not a quiet ops note. In KFM it is the exercised evidence that rollback, restore, correction, and visible trust-state propagation were actually rehearsed and inspected.
@@ -47,6 +62,8 @@ In KFM terms, `drills/` should help answer questions such as:
 | Parent surface | [`../README.md`](../README.md) |
 | Sibling surfaces | [`../waves/README.md`](../waves/README.md) for packetized change waves · [`../templates/README.md`](../templates/README.md) for reusable starters |
 | Adjacent trust surfaces | [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) |
+| Current public tree state | `migrations/` currently exposes `README.md`, `drills/`, `templates/`, and `waves/`; `migrations/drills/` currently exposes `README.md` only |
+| Ownership signal | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) currently assigns `/migrations/` to `@bartytime4life` |
 | Primary audience | Maintainers, reviewers, platform engineers, data engineers, release stewards, and anyone verifying recovery or correction posture |
 | Update trigger | Any change to drill classes, minimum evidence, visible-state checks, naming rules, or packet layout expectations |
 
@@ -137,9 +154,10 @@ The following do **not** belong in `drills/`:
 | --- | --- | --- |
 | `migrations/` is a real top-level lane with `drills/`, `waves/`, and `templates/` | **CONFIRMED** | This README should behave like a local directory contract, not a standalone essay |
 | `migrations/drills/` currently exposes `README.md` only | **CONFIRMED** | Do not imply a populated drill inventory yet |
-| Parent migration docs already describe a dated drill-packet pattern | **CONFIRMED documented guidance** | Align first real packet structure to parent doctrine unless branch reality proves otherwise |
+| Parent migration docs already describe a date-first drill-packet pattern | **CONFIRMED documented guidance** | Align first real packet structure to parent doctrine unless branch reality proves otherwise |
 | `post-deploy-verification.md` and `correction-visibility.md` are the clearest already-suggested packet files | **CONFIRMED documented guidance** | These are the safest first packet subfiles |
 | `rollback.md`, `restore.md`, `evidence/`, and `screenshots/` as sub-structure | **PROPOSED** | Helpful additions, but not yet proven as mounted convention |
+| Public `CODEOWNERS` assigns `/migrations/` to `@bartytime4life` | **CONFIRMED** | Directory review ownership is visible, though packet-level ownership still needs to be recorded explicitly inside each drill |
 | Executed drill inventory, runner hooks, screenshot baselines, and automated drill gates | **UNKNOWN / NEEDS VERIFICATION** | Keep manual-vs-automated posture explicit in every packet |
 
 ## Directory tree
@@ -192,12 +210,13 @@ git ls-files 'migrations/drills/**' | sort
 find migrations/drills -maxdepth 4 -type f | sort
 ```
 
-Check adjacent migration surfaces:
+Check adjacent migration surfaces and ownership signals:
 
 ```bash
 sed -n '1,220p' migrations/README.md
 sed -n '1,220p' migrations/waves/README.md
 sed -n '1,220p' migrations/templates/README.md
+sed -n '1,160p' .github/CODEOWNERS
 ```
 
 Check whether the branch already contains migration-related automation or fixtures:
@@ -365,7 +384,7 @@ A drill packet is not done until the following checklist is satisfied.
 
 - [ ] Drill class is named clearly.
 - [ ] Exact commit, release, dataset version, or proof-pack refs are captured.
-- [ ] Owner, environment, and date are recorded.
+- [ ] Packet-specific owner, environment, and date are recorded.
 - [ ] Preconditions and stop rule are explicit.
 - [ ] Affected surfaces are listed.
 - [ ] Expected visible states were written **before** execution.
@@ -408,6 +427,12 @@ Yes, especially while the repo remains documentation-first and branch automation
 
 But the packet should say so directly. Do not imply automation that does not exist.
 
+### Does repo ownership in `CODEOWNERS` count as drill ownership?
+
+No.
+
+`CODEOWNERS` tells reviewers who owns the path. A drill packet should still record the people or roles who actually ran, reviewed, or approved the rehearsal. That keeps operational accountability from collapsing into path ownership alone.
+
 ### Should every drill include screenshots?
 
 Not always, but trust-visible surfaces strongly benefit from them. For map, dossier, export, or Focus behavior, screenshots or equivalent captures are usually worth the space.
@@ -434,7 +459,7 @@ id: 20260324_hydrology-release-correction-drill
 class: correction-visibility
 status: partial
 owners:
-  - NEEDS_VERIFICATION
+  - NEEDS_VERIFICATION  # packet-specific operator/reviewer; do not inherit blindly from repo CODEOWNERS
 environment: staging
 related_wave: wave-0001
 related_release: release-2026-03-24
