@@ -11,7 +11,8 @@ Directory guide for Docker Compose–style runtime wiring under `infra/`.
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> **CONFIRMED current state:** the inspected live tree exposed `infra/compose/` as a README-only directory.  
+> **CONFIRMED current public repo state:** `infra/compose/` is present on public `main` and is currently a README-only directory.  
+> **CONFIRMED orchestration context:** [`../systemd-or-compose/`](../systemd-or-compose/) exists as the shared choice surface between native `systemd` and bounded Compose use inside the same `infra/` family.  
 > Treat this file as a **directory contract and evidence boundary**, not as proof that an active Compose stack is already committed here.
 
 ## Scope
@@ -30,7 +31,7 @@ This README uses **CONFIRMED**, **INFERRED**, **PROPOSED**, and **NEEDS VERIFICA
 |---|---|
 | Path | `infra/compose/` |
 | Upstream | [`../README.md`](../README.md) defines the broader infra posture for runtime and delivery mechanics. |
-| Adjacent lanes | Compose is one lane among several. Nearby directories already separate local, systemd, hybrid, hosted, Kubernetes, Terraform, monitoring, and backup concerns. |
+| Adjacent lanes | Compose is one lane among several. Nearby directories already separate local, systemd, hybrid, hosted, Kubernetes, Terraform, backup, dashboards, GitOps, and monitoring concerns. |
 | Shared boundaries | Keep contracts, schemas, policy, tests, and general scripts in their own top-level lanes. |
 | Trust posture | Compose wiring may start services, but client-facing trust still belongs to governed interfaces rather than direct store access. |
 
@@ -93,8 +94,8 @@ Use this only after re-reading the active checkout and choosing one naming conve
 Start with inventory, not assumption.
 
 1. Verify the checkout and inspect the surrounding infra lanes.
-2. Confirm whether Compose manifests already exist elsewhere in the repo before creating new ones.
-3. Read the parent `infra` guidance before editing this subtree.
+2. Confirm whether Compose manifests already exist elsewhere in the repo before creating new ones here.
+3. Read the parent `infra` guidance and the shared orchestration choice guide before editing this subtree.
 4. Only run config validation after a real manifest exists.
 
 ```bash
@@ -104,6 +105,7 @@ find infra -maxdepth 2 -type d | sort
 find infra/compose -maxdepth 3 -type f | sort
 
 sed -n '1,220p' infra/README.md
+sed -n '1,220p' infra/systemd-or-compose/README.md
 ```
 
 If a Compose manifest is present, validate the merged configuration before reviewing runtime behavior:
@@ -211,7 +213,7 @@ Use this as a minimum review gate before treating the directory as more than a p
 
 ### Is Compose the default production path for KFM?
 
-**NEEDS VERIFICATION.** The adjacent infra guidance clearly treats Compose as one lane inside a wider delivery family, not as a synonym for promotion or publication.
+**NEEDS VERIFICATION.** The adjacent infra guidance treats Compose as one lane inside a wider delivery family, and the shared `systemd-or-compose` guide does not position it as the default phase-one runtime choice.
 
 ### Can this directory define policy or schema behavior?
 
