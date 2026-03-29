@@ -1,12 +1,3 @@
-Here’s a **copy-pasteable KFM-style starter** for AI receipts.
-
-The command path is current: Cosign supports creating in-toto attestations with `cosign attest`, and verification with `cosign verify-attestation`. Sigstore documents attestations, bundles, and verification material; in-toto’s attestation framework recommends DSSE envelopes; and JCS remains a solid way to canonicalize JSON before hashing. ([Sigstore][1])
-
----
-
-# `docs/security/ai-receipts/README.md`
-
-````md
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/PLACEHOLDER-AI-RECEIPTS-README
 title: AI Receipts
