@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: public
 related: [../README.md, ../.github/README.md, ../.github/workflows/README.md, ../apps/, ../contracts/, ../schemas/, ../policy/, ../data/, ../data/registry/README.md, ../docs/, ../infra/, ../tests/, ../tools/, ../scripts/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
 tags: [kfm, packages, readme]
-notes: [doc_id and repo-side dates need verification, owner verified against ../.github/CODEOWNERS on public main, public main confirms packages/ plus catalog/, domain/, evidence/, indexers/, ingest/, and policy/ child README surfaces, child package directories remain README-only in public view even though several child READMEs now carry boundary-contract prose]
+notes: [doc_id and repo-side created/updated dates need verification, owner verified against ../.github/CODEOWNERS on current public main, current public main confirms packages/ plus catalog/, domain/, evidence/, indexers/, ingest/, and policy/ child README surfaces, child package directories currently list README.md only in public view]
 [/KFM_META_BLOCK_V2] -->
 
 # `packages/`
@@ -34,24 +34,24 @@ Shared internal packages and reusable module boundaries for KFM’s governed tru
 | Audited public tree | `bartytime4life/Kansas-Frontier-Matrix@main` |
 | Default branch | `main` |
 | Repo fit | Shared internal module boundary between top-level authority surfaces and deployable [`../apps/`](../apps/) |
-| Current repo evidence | `packages/` exists on public `main`; `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` each resolve and currently present README-only package surfaces |
-| Truth posture | `CONFIRMED` current public path and fallback owner · `CONFIRMED` neighboring repo docs and child package README surfaces · `NEEDS VERIFICATION` deeper package-local code, manifests, tests, fixtures, and imports |
+| Current repo evidence | `packages/` exists on public `main`; `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` each resolve and currently expose a README-only package surface in public view |
+| Truth posture | `CONFIRMED` current public path, live tree, and fallback owner · `CONFIRMED` neighboring repo docs and child package README surfaces · `UNKNOWN / NEEDS VERIFICATION` deeper package-local code, manifests, tests, fixtures, imports, and runtime wiring |
 | Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq) |
 
 ---
 
 > [!IMPORTANT]
-> `packages/` is a **governed boundary**, not a general dumping ground.
+> `packages/` is a **governed boundary**, not a general dumping ground.  
 > Shared internal logic may live here. Sovereign truth, public release state, and deployable entrypoints should not.
 
 > [!WARNING]
-> `packages/` must not become a side door around the trust membrane.
+> `packages/` must not become a side door around the trust membrane.  
 > No package should create a hidden client-to-store path, a second policy path, or a shadow truth source.
 
 > [!NOTE]
-> Current public `main` proves the **directory surface** and the child README surfaces.
-> It does **not** prove package-local code, manifests, tests, fixtures, or runtime wiring beneath those directories.
-> Several child READMEs now carry directory-contract prose, but the package family is still **README-first** in public view.
+> Current public `main` proves the **directory surface** and the child README surfaces.  
+> It does **not** prove package-local code, manifests, tests, fixtures, or runtime wiring beneath those directories.  
+> Several child READMEs now carry package-local boundary prose, but the package family is still **README-first / README-only** in public view.
 
 ## Scope
 
@@ -156,7 +156,7 @@ The following do **not** belong in `packages/`:
 | [`./policy/`](./policy/) | Yes | README-only public surface; child boundary README present | Same |
 
 > [!TIP]
-> Right now, the **root** `packages/README.md` still carries the family-level contract.
+> Right now, the **root** `packages/README.md` still carries the family-level contract.  
 > Child READMEs already carry package-local boundary prose, but the public tree still does not prove package-local code, manifests, tests, or fixtures beneath those directories.
 
 ## Directory tree
@@ -181,7 +181,7 @@ packages/
 ```
 
 > [!NOTE]
-> This tree is intentionally conservative.
+> This tree is intentionally conservative.  
 > It proves directory presence and README surfaces on public `main`; it does **not** prove package manifests, `src/` trees, tests, or runtime adoption inside each child package.
 
 ## Quickstart
@@ -473,12 +473,12 @@ Because KFM separates **authoritative policy assets** from **shared internal pol
 
 | Path | Current README footprint |
 |---|---|
-| `packages/catalog/README.md` | README-only public surface; child README frames STAC/DCAT/PROV catalog-closure role |
-| `packages/domain/README.md` | README-only public surface; child README frames semantic-core role |
-| `packages/evidence/README.md` | README-only public surface; child README frames `EvidenceRef` → `EvidenceBundle` role |
-| `packages/indexers/README.md` | README-only public surface; child README frames rebuildable derived-projection role |
-| `packages/ingest/README.md` | README-only public surface; child README frames source-intake / receipt role |
-| `packages/policy/README.md` | README-only public surface; child README frames internal policy-support role |
+| `packages/catalog/README.md` | README-only public surface; child README frames DCAT/STAC/PROV catalog-closure from processed data |
+| `packages/domain/README.md` | README-only public surface; child README frames the stable semantic core role |
+| `packages/evidence/README.md` | README-only public surface; child README frames `EvidenceRef` → `EvidenceBundle` resolution |
+| `packages/indexers/README.md` | README-only public surface; child README frames rebuildable search, tile, and related runtime projections |
+| `packages/ingest/README.md` | README-only public surface; child README frames source intake, normalization, validation, and receipt helpers |
+| `packages/policy/README.md` | README-only public surface; child README frames the internal policy-support boundary |
 
 </details>
 
