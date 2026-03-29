@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: NEEDS_VERIFICATION__YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION__public|restricted|...
-related: [../../README.md, ../README.md, ./README.md, ../standards/README.md, ../standards/markdown-rules.md, ../../.github/CODEOWNERS]
+related: [../../README.md, ../README.md, ./README.md, ../standards/README.md, ../standards/markdown-rules.md, ./TEMPLATE__API_CONTRACT_EXTENSION.md, ./TEMPLATE__STORY_NODE_V3.md, ../../.github/CODEOWNERS]
 tags: [kfm, template, docs, markdown]
-notes: [Reusable scaffold for governed KFM docs; replace placeholders before merge or instantiation; confirm doc_id, dates, policy_label, and any narrower co-owners in the destination document.]
+notes: [Reusable scaffold for governed KFM docs; public-main path and adjacent template surfaces were directly opened during this revision; confirm doc_id, dates, policy_label, branch parity, and any narrower co-owners before merge or instantiation.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Universal Document Template
@@ -19,17 +19,19 @@ Reusable scaffold for governed KFM Markdown docs that need explicit scope, evide
 
 > **Status:** experimental template  
 > **Doc status:** draft scaffold  
-> **Owners:** `@bartytime4life` *(broad `/docs/` owner; add narrower owners only when confirmed)*  
+> **Owners:** `@bartytime4life` *(current broad `/docs/` owner on public `main`; add narrower co-owners only when confirmed)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![kind](https://img.shields.io/badge/kind-universal--doc--template-2f81f7) ![posture](https://img.shields.io/badge/posture-evidence--first-8250df) ![truth](https://img.shields.io/badge/truth-explicit--labels-1f883d) ![meta](https://img.shields.io/badge/meta-KFM__META__BLOCK__V2-9a6700)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Field guide](#field-guide) · [Review checklist](#review-checklist--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` → upstream: [`../../README.md`](../../README.md), [`../README.md`](../README.md), [`./README.md`](./README.md), [`../standards/README.md`](../standards/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream: instantiated standard docs across `docs/` that do not fit a more specialized template.
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence posture](#baseline-and-evidence-posture) · [Evidence boundary](#current-evidence-boundary) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Field guide](#field-guide) · [Review checklist](#review-checklist--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` *(confirmed on public `main`; mounted-checkout parity still **NEEDS VERIFICATION**)* → upstream: [`../../README.md`](../../README.md), [`../README.md`](../README.md), [`./README.md`](./README.md), [`../standards/README.md`](../standards/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream: instantiated standard docs across `docs/` that do not fit a more specialized template.
 
 > [!IMPORTANT]
 > This template standardizes shape, reviewability, and truth posture. It does not authorize facts, replace contracts or policy, or create a second truth path.
 
 ## Scope
 
-Use this template when a KFM document needs one stable, review-friendly structure but does not belong in a more specialized scaffold. It is tuned for architecture notes, standards docs, governance references, runbooks, analyses, and other repo-native Markdown surfaces that must stay downstream of evidence, contracts, policy, tests, and release state.
+Use this template when a KFM document needs one stable, review-friendly structure but does not belong in a more specialized scaffold.
+
+It is tuned for architecture notes, standards docs, governance references, runbooks, analyses, and other repo-native Markdown surfaces that must stay downstream of evidence, contracts, policy, tests, and release state.
 
 A good use of this file makes uncertainty visible, keeps ownership traceable, and gives maintainers one place to find scope, boundaries, verification burden, and open unknowns.
 
@@ -38,6 +40,7 @@ A good use of this file makes uncertainty visible, keeps ownership traceable, an
 | Item | Value |
 | --- | --- |
 | Path | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` |
+| Path status | **CONFIRMED** on public `main`; mounted-checkout parity still **NEEDS VERIFICATION** |
 | Primary role | Reusable standard-doc scaffold for governed KFM Markdown |
 | Best used for | Standard docs that need explicit scope, evidence basis, review hooks, and KFM truth labels |
 | Use instead of this | [`./TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) for contract-extension docs; [`./TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) for Story Node docs |
@@ -68,14 +71,35 @@ A good use of this file makes uncertainty visible, keeps ownership traceable, an
 
 ## Baseline and evidence posture
 
-The structural baseline for this file is the stronger documentation pattern already visible in the repo. This template is intentionally a conservative completion of that pattern, not a claim that every neighboring doc has already reached the same level of detail.
+This revision grows upward from the existing template already present on public `main`, not from a blank page.
+
+For repo-local structure, naming, and visual rhythm, the nearest baseline is the current `docs/` → `docs/templates/` → `docs/standards/` documentation cluster. For doctrine and truth posture, the stronger baseline remains the March 2026 KFM corpus that treats documentation as a governed trust surface and keeps unverified repo shape explicit.
 
 | Source or signal | How this template uses it |
 | --- | --- |
-| `docs/README.md` | Broader documentation posture, quick-jump rhythm, and evidence-boundary discipline |
-| `docs/templates/README.md` | Template boundary, non-canonical role, and specialized-template ecosystem |
-| `docs/standards/README.md` | Adjacent doc rhythm, link conventions, and status styling |
-| `.github/CODEOWNERS` | Broad `/docs/` ownership signal |
+| Current public `main` version of `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Existing baseline being revised in place rather than replaced by a parallel template |
+| `docs/templates/README.md` | Template-boundary rules, reusable-scaffold posture, and local documentation rhythm |
+| `docs/README.md` | Broader documentation-plane posture, verification language, and repo-native GitHub structure |
+| `docs/standards/README.md` | Adjacent standards rhythm, public-main verification posture, and cross-link expectations |
+| `docs/standards/markdown-rules.md` | Authoring protocol, source hierarchy, and `KFM_META_BLOCK_V2` requirement |
+| `.github/CODEOWNERS` | Broad ownership signal for `/docs/` and this path |
+| Attached KFM doctrine corpus | Truth-path discipline, trust membrane, authoritative-versus-derived split, Kansas-first posture, and review-visible uncertainty |
+
+> [!NOTE]
+> Keep public-branch inspection, mounted-checkout inspection, and attached-corpus doctrine as separate evidence layers when access is partial. Do not collapse them into one overconfident “repo reality” claim.
+
+## Current evidence boundary
+
+| Observation | Status | Why it matters here |
+| --- | --- | --- |
+| This exact file is present on public `main` at `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | **CONFIRMED** | The correct move is to revise this template in place, not invent a competing universal template |
+| `docs/templates/README.md` is present and already defines `docs/templates/` as a governed scaffold shelf | **CONFIRMED** | The local template surface is real and should stay the main upstream anchor |
+| `docs/standards/README.md` and `docs/standards/markdown-rules.md` are present on public `main` | **CONFIRMED** | The standards surface and Markdown authoring rules are real, not inferred |
+| `TEMPLATE__API_CONTRACT_EXTENSION.md` and `TEMPLATE__STORY_NODE_V3.md` are present as narrower sibling templates | **CONFIRMED** | This universal template should explicitly steer authors toward more specific scaffolds when they fit better |
+| `.github/CODEOWNERS` currently maps `/docs/` to `@bartytime4life` | **CONFIRMED** | Broad ownership can be named safely in this file |
+| Mounted-checkout parity, file history dates, registry-assigned `doc_id`, KFM `policy_label`, and any narrower co-owners | **NEEDS VERIFICATION** | Keep placeholders visible instead of guessing |
+
+[Back to top](#kfm-universal-document-template)
 
 ## Quickstart
 
@@ -83,13 +107,13 @@ The structural baseline for this file is the stronger documentation pattern alre
 2. If you are instantiating a real document, copy the file to the owning surface and rename it for the real topic.
 3. Replace the KFM meta block placeholders first: `doc_id`, dates, policy label, related links, and owners.
 4. Replace the title and one-line purpose so the document announces its job immediately.
-5. Keep the accountability sections unless there is a strong reason to omit them: Scope, Repo fit, Accepted inputs, Exclusions, the baseline/evidence section, Current evidence boundary, Diagram, and Review checklist.
+5. Keep the accountability sections unless there is a strong reason to omit them: Scope, Repo fit, Baseline and evidence posture, Current evidence boundary, Accepted inputs, Exclusions, Diagram, and Review checklist.
 6. Delete unused optional blocks rather than leaving dead filler in the page.
 7. Link claims to the owning contracts, schemas, policy docs, tests, workflows, or implementation files where possible. When direct proof is missing, keep the claim visibly qualified.
 8. If the instantiated file is also a directory README, add the optional README-like blocks from the appendix.
 
 ```bash
-# illustrative example — adjust the target path before use
+# illustrative example — adjust the destination path before use
 cp docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md docs/architecture/<new-doc>.md
 $EDITOR docs/architecture/<new-doc>.md
 ```
@@ -134,7 +158,7 @@ notes: [Replace placeholders; keep unsupported claims marked CONFIRMED / INFERRE
 > **Doc status:** <draft|review|published>
 > **Owners:** <team or names>
 > ![status](https://img.shields.io/badge/status-<status-slug>-informational) ![posture](https://img.shields.io/badge/posture-evidence--first-8250df) ![truth](https://img.shields.io/badge/truth-explicit--labels-1f883d) ![meta](https://img.shields.io/badge/meta-KFM__META__BLOCK__V2-9a6700)
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence basis](#baseline-and-evidence-basis) · [Diagram](#diagram) · [Review checklist](#review-checklist--definition-of-done) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence basis](#baseline-and-evidence-basis) · [Evidence boundary](#current-evidence-boundary) · [Diagram](#diagram) · [Review checklist](#review-checklist--definition-of-done) · [Appendix](#appendix)
 > **Repo fit:** `<path/to/this/file.md>` → upstream: [`<relative-upstream-doc>`](<relative-upstream-doc>) · downstream: [`<relative-downstream-doc>`](<relative-downstream-doc>)
 
 > [!IMPORTANT]
@@ -150,6 +174,7 @@ notes: [Replace placeholders; keep unsupported claims marked CONFIRMED / INFERRE
 | Item | Value |
 | --- | --- |
 | Path | `<path/to/this/file.md>` |
+| Path status | `<confirmed|needs verification>` |
 | Primary audience | `<engineering|governance|review|ops|public|mixed>` |
 | Upstream sources | `<relative links to baseline docs, ADRs, contracts, schemas, policy docs>` |
 | Downstream readers or consumers | `<who uses this and for what>` |
@@ -330,7 +355,7 @@ Yes, but remove them intentionally. Keep the accountability core unless it truly
 <details>
 <summary><strong>Can this template prove that implementation exists?</strong></summary>
 
-No. The template can only make the verification boundary harder to hide. Mounted repo files, tests, workflows, manifests, logs, and runtime evidence still decide what can be called CONFIRMED.
+No. The template can only make the verification boundary harder to hide. Mounted repo files, tests, workflows, manifests, logs, and runtime evidence still decide what can be called `CONFIRMED`.
 
 </details>
 
