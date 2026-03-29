@@ -3,23 +3,23 @@
 Declarative desired-state and reconciliation surface for KFM runtime promotion, drift control, and cluster-safe change review.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: NEEDS_VERIFICATION](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey) ![Surface: infra/gitops](https://img.shields.io/badge/surface-infra%2Fgitops-111827) ![Evidence: live tree + doctrine](https://img.shields.io/badge/evidence-live%20tree%20%2B%20doctrine-yellow) ![Mode: Controller-neutral](https://img.shields.io/badge/mode-controller--neutral-2563eb) ![Trust: Governed API only](https://img.shields.io/badge/trust-governed%20API%20only-critical)  
+> **Owners:** @bartytime4life  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: bartytime4life](https://img.shields.io/badge/owners-bartytime4life-lightgrey) ![Surface: infra/gitops](https://img.shields.io/badge/surface-infra%2Fgitops-111827) ![Evidence: public main + doctrine](https://img.shields.io/badge/evidence-public%20main%20%2B%20doctrine-yellow) ![Mode: Controller-neutral](https://img.shields.io/badge/mode-controller--neutral-2563eb) ![Trust: Governed API only](https://img.shields.io/badge/trust-governed%20API%20only-critical)  
 > **Repo fit:** `infra/gitops/README.md` *(directory guide for controller-driven desired state if GitOps is adopted; no reconciler choice is assumed here)*  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list and definition of done](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current live repo signal: on `main`, `infra/gitops/` exists but currently contains only `README.md`. Treat any subtree, controller objects, or manifest families described below as **PROPOSED** until they exist in the live checkout.
+> Current public `main` signal: `infra/gitops/` exists, but the checked-in directory currently contains only `README.md`. Treat any subtree, controller objects, or manifest families shown below as **PROPOSED** until they exist in the repo.
 
 > [!NOTE]
-> KFM’s smallest credible runtime remains the phase-one, systemd-first lane described in the parent infrastructure docs. GitOps becomes useful here when desired runtime state is ready to be kept **declarative, reviewed, pull-based, and continuously reconciled**.
+> KFM’s smallest credible runtime remains the phase-one, systemd-first, single-host lane described in the governing manuals and adjacent infrastructure docs. GitOps becomes useful here when desired runtime state is ready to be kept **declarative, reviewed, pull-based, and continuously reconciled**.
 
 > [!WARNING]
 > GitOps must harden the trust membrane, not bypass it. Public clients, public routes, and UI surfaces still go through the **governed API + policy boundary**. Nothing committed here should create a quiet back door to databases, object stores, or model runtimes.
 
 | At a glance | Working rule |
 |---|---|
-| Current live state | `infra/gitops/` is present, but only `README.md` is confirmed today |
+| Current public state | `infra/gitops/` is present, but only `README.md` is confirmed today |
 | Primary job | Keep desired runtime state reviewed, declarative, and reconcilable |
 | Delivery split | CI proves artifact quality; GitOps carries approved runtime intent |
 | Promotion rule | Promote reviewed state descriptors, not environment branches |
@@ -37,22 +37,33 @@ That makes this directory narrower than generic “Kubernetes YAML” and broade
 - cluster configuration with canonical truth
 - controller convenience with policy authority
 
-### Current live signal
+### Current public signal
 
 | Signal | Meaning |
 |---|---|
-| `infra/gitops/` exists on `main` | the GitOps lane is reserved in the repo |
-| current contents are `README.md` only | no live GitOps manifest tree is confirmed yet |
+| `infra/gitops/` exists on public `main` | the GitOps lane is reserved in the repo |
+| current contents are `README.md` only | no checked-in GitOps manifest tree is confirmed yet |
+| `/infra/` is currently covered by public `CODEOWNERS` | owner signal exists even though controller operators and runtime responders remain broader than this directory |
+| `.github/workflows/` is README-only on public `main` | workflow intent/history exists in docs, but a checked-in merge-gate YAML inventory is not confirmed in-tree |
 | parent `infra/` already carries sibling lanes such as `kubernetes/`, `terraform/`, `systemd/`, `systemd-or-compose/`, `local/`, `hosted/`, `compose/`, `monitoring/`, `dashboards/`, and `backup/` | GitOps should complement those lanes, not flatten or duplicate them |
+
+### Evidence boundary used here
+
+| Evidence band | What this README treats as grounded |
+|---|---|
+| **CONFIRMED** | current public tree shape, current public owner signal, and the KFM doctrinal boundary that keeps public surfaces behind governed APIs |
+| **INFERRED** | the architectural split between CI artifact proof and GitOps runtime intent, and the likely file families that would make a GitOps lane useful here |
+| **PROPOSED** | controller-neutral subtree shape, release-descriptor patterns, and review payload minimums for a future reconciler lane |
+| **NEEDS VERIFICATION** | exact controller choice, cluster inventory, secret mechanism, environment descriptors, and any private rulesets or automation not visible in the current public tree |
 
 ### Evidence labels used in this README
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | supported by live repo inspection or by the March 2026 KFM doctrine/manual layer |
-| **INFERRED** | strongly suggested by adjacent repo structure and project doctrine, but not proven by a live manifest tree here |
+| **CONFIRMED** | supported by current public repo inspection or by the attached March 2026 KFM doctrine/manual layer |
+| **INFERRED** | strongly suggested by adjacent repo structure and project doctrine, but not proven by a checked-in manifest tree here |
 | **PROPOSED** | a working directory shape or practice that fits KFM’s doctrine but is not current repo fact |
-| **NEEDS VERIFICATION** | exact owners, controller choice, secret mechanism, and platform settings still need a live checkout or settings audit |
+| **NEEDS VERIFICATION** | exact controller choice, secret mechanism, cluster settings, and live platform posture still need direct repo/runtime verification |
 
 ## Repo fit
 
@@ -63,7 +74,8 @@ Role: explain the GitOps lane without pretending the lane is already implemented
 |---|---|---|
 | Upstream | [`../README.md`](../README.md) | parent `infra/` doctrine, subtree expectations, and operational boundaries |
 | Upstream | [`../../README.md`](../../README.md) | root repo identity, top-level posture, and trust language |
-| Upstream | [`../../.github/README.md`](../../.github/README.md) | review, CI/CD, and merge-gate posture |
+| Upstream | [`../../.github/README.md`](../../.github/README.md) | review, CI/CD, CODEOWNERS, and directory-level governance posture |
+| Upstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | current public workflow-doc signal and the CI/GitOps boundary |
 | Upstream | [`../../docs/`](../../docs/) | architecture, ADRs, runbooks, and longer-form design references |
 | Adjacent | [`../kubernetes/`](../kubernetes/), [`../terraform/`](../terraform/), [`../systemd/`](../systemd/), [`../systemd-or-compose/`](../systemd-or-compose/) | neighboring runtime and delivery lanes GitOps must coordinate with |
 | Adjacent | [`../local/`](../local/), [`../hosted/`](../hosted/), [`../compose/`](../compose/), [`../monitoring/`](../monitoring/), [`../dashboards/`](../dashboards/), [`../backup/`](../backup/) | current parent-tree lanes that already absorb environment, observability, and recovery concerns |
@@ -104,14 +116,14 @@ The following do **not** belong here as their authoritative home.
 | canonical API contracts, schemas, vocabularies, fixtures | [`../../contracts/`](../../contracts/) |
 | policy source bundles, rule law, and policy-test truth | [`../../policy/`](../../policy/) |
 | canonical datasets, catalog objects, EvidenceBundles, or release content themselves | the repo’s data/catalog/evidence/release surfaces |
-| CI workflow logic, build steps, and release automation scripts | [`../../.github/README.md`](../../.github/README.md), `../../scripts/`, `../../configs/` |
+| CI workflow logic, build steps, and release automation scripts | [`../../.github/README.md`](../../.github/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), `../../scripts/`, `../../configs/` |
 | plaintext secrets, private keys, or ambient credentials | external secret systems or encrypted artifacts only |
 | break-glass data repair and incident-only manual operations | runbooks, backup/recovery lanes, or explicit operator procedures outside the steady-state reconciliation loop |
 | branch-only environment truth | directories, overlays, or explicit release/state descriptors |
 
 ## Directory tree
 
-### Confirmed parent context on `main`
+### Confirmed parent context on public `main`
 
 ```text
 infra/
@@ -150,7 +162,7 @@ infra/gitops/
 │   ├── stage/
 │   └── prod/
 ├── apps/
-│   └── <service>/
+│   └── {service}/
 │       ├── base/
 │       └── overlays/
 │           ├── dev/
@@ -187,13 +199,15 @@ Start with inspection, not manifest sprawl.
 git rev-parse --show-toplevel
 
 # 2) Inspect the current parent infra tree
-test -d infra && find infra -maxdepth 2 -print | sort
+find infra -maxdepth 2 -print | sort
 
-# 3) Inspect the live GitOps lane before making claims about it
-test -d infra/gitops && find infra/gitops -maxdepth 3 -print | sort
+# 3) Inspect the current GitOps lane before making claims about it
+find infra/gitops -maxdepth 3 -print | sort
 
-# 4) Read the parent infrastructure guide first
+# 4) Read adjacent doctrine and owner signals first
 sed -n '1,220p' infra/README.md
+sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,240p' .github/workflows/README.md
 
 # 5) Check whether controller-specific manifests already exist
 git grep -nE 'ApplicationSet|AppProject|HelmRelease|Kustomization|Flux|Argo' infra || true
@@ -209,7 +223,7 @@ git branch -a
 
 1. Is this change really **desired runtime state**, or is it CI, app code, policy law, or a runbook?
 2. Is the controller choice already settled, or would this file silently force one?
-3. Does the change alter runtime placement only, or does it also trigger publication/promotion consequences elsewhere?
+3. Does the change alter runtime placement only, or does it also trigger publication or promotion consequences elsewhere?
 4. If this manifest drifted or failed to reconcile, how would rollback remain legible?
 
 ## Usage
@@ -228,8 +242,8 @@ git branch -a
 2. A PR updates desired-state files here: bootstrap, shared controller state, app overlays, or promotion-safe runtime descriptors.
 3. Review covers blast radius, secret handling, policy-controller consequences, health/readiness, and rollback.
 4. After merge, the reconciler pulls the approved state and converges runtime.
-5. Verification checks drift, health, governed API reachability, and any downstream release/correction consequences.
-6. If public meaning changes, follow the release/promotion/correction path; do not pretend a runtime apply is the whole story.
+5. Verification checks drift, health, governed API reachability, and any downstream release or correction consequences.
+6. If public meaning changes, follow the release, promotion, and correction path; do not pretend a runtime apply is the whole story.
 
 > [!NOTE]
 > This README intentionally separates **build artifacts** from **runtime intent**. KFM’s delivery doctrine treats build, deploy, promote, rollback, and correction as distinct acts. GitOps belongs to the “reviewed desired runtime state” portion of that chain.
@@ -240,6 +254,7 @@ git branch -a
 - Keep blast radius visible: separate bootstrap, shared controller state, and app state.
 - Treat repo truth as the normal state path; treat manual cluster edits as exceptions that need an explanation.
 - Keep break-glass operations explicit, reviewed, and rare.
+- Keep the CI/GitOps split architectural and inspectable: CI proves artifacts and evidence; GitOps carries approved runtime state.
 
 [Back to top](#gitops)
 
@@ -273,7 +288,7 @@ flowchart TB
 | Publication and truth-state promotion | Not as sole authority | GitOps may carry reviewed runtime descriptors, but publication still needs proof, policy, and review |
 | Policy law and fixtures | No | deploy policy controllers here if needed, but keep policy source-of-truth elsewhere |
 | Drift reconciliation | Yes | pull-based reconciliation is the distinguishing control-loop behavior |
-| Rollback and correction lineage | Shared | manifests may help placement rollback, but lineage and correction still need runbooks/evidence |
+| Rollback and correction lineage | Shared | manifests may help placement rollback, but lineage and correction still need runbooks and evidence |
 | Incident-only break-glass steps | No | keep them explicit and outside the steady-state loop |
 
 ### Secret posture
@@ -303,17 +318,18 @@ flowchart TB
 
 An `infra/gitops/` change is not done until:
 
-- [ ] the live `infra/gitops/` tree was inspected before new structure or claims were added
+- [ ] the current `infra/gitops/` tree was inspected before new structure or claims were added
+- [ ] adjacent owner and workflow-doc signals were checked before new governance claims were added
 - [ ] the change clearly belongs to **desired runtime state** and not to app code, contracts, policy law, or CI scripting
 - [ ] controller choice is explicit, or the content remains controller-neutral and clearly labeled
 - [ ] environment truth lives in directories, overlays, or release descriptors rather than in long-lived environment branches
-- [ ] no direct UI/public-client bypass of the governed API was introduced
+- [ ] no direct UI or public-client bypass of the governed API was introduced
 - [ ] secret handling is reference-based or encrypted; no plaintext secret material was committed
 - [ ] bootstrap state, shared controller state, and app state are separated enough to keep blast radius understandable
 - [ ] rollout, reconcile, and rollback consequences were documented
 - [ ] any break-glass or incident-only behavior remains outside the steady-state reconciliation loop
-- [ ] if the change affects public meaning, linked release/correction surfaces were updated elsewhere
-- [ ] anything still target-state rather than live repo fact remains visibly labeled **PROPOSED** or **NEEDS VERIFICATION**
+- [ ] if the change affects public meaning, linked release and correction surfaces were updated elsewhere
+- [ ] anything still target-state rather than checked-in repo fact remains visibly labeled **PROPOSED** or **NEEDS VERIFICATION**
 
 ## FAQ
 
@@ -387,7 +403,7 @@ infra/gitops/
 │   └── dev/
 │       └── kustomization.yaml
 └── apps/
-    └── <service>/
+    └── {service}/
         ├── base/
         └── overlays/
 ```
