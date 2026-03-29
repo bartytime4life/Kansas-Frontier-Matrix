@@ -6,11 +6,11 @@ version: v1
 status: review
 owners: @bartytime4life
 created: <YYYY-MM-DD NEEDS VERIFICATION>
-updated: <YYYY-MM-DD NEEDS VERIFICATION>
+updated: 2026-03-28
 policy_label: public
-related: [../README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../evidence/README.md]
+related: [../README.md, ../../README.md, ../../.github/CODEOWNERS, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md]
 tags: [kfm, domain, package]
-notes: [replaces current scaffold README, child-specific ownership and git-history dates need verification, current public-main package surface appears README-only]
+notes: [current public main confirms a README-only package surface here; doc UUID and original created date still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # domain
@@ -18,15 +18,15 @@ notes: [replaces current scaffold README, child-specific ownership and git-histo
 _Stable semantic core for KFM’s shared domain vocabulary, invariants, and cross-package meaning._
 
 > **Status:** `experimental`  
-> **Owners:** `@bartytime4life` _(fallback via `/packages/` CODEOWNERS; child-specific ownership still needs verification)_  
+> **Owners:** `@bartytime4life` _(fallback via [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); child-specific ownership still needs verification)_  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-111111) ![role](https://img.shields.io/badge/role-semantic%20core-6f42c1) ![current-tree](https://img.shields.io/badge/current%20tree-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Path:** `packages/domain/README.md`  
 > **Repo fit:** child of [`../README.md`](../README.md); rooted in [`../../README.md`](../../README.md); adjacent to [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), and sibling package seams under [`../catalog/`](../catalog/), [`../evidence/`](../evidence/), [`../indexers/`](../indexers/), [`../ingest/`](../ingest/), and [`../policy/`](../policy/)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Semantic fit table](#semantic-fit-table) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current repo-visible state should be read conservatively: this package path is present, but the public branch evidence currently proves only a README surface here. This file therefore does two jobs at once:
-> 1. records the package boundary truthfully, and  
+> Current repo-visible state should be read conservatively: this package path is present, but current public `main` proves only a README surface here. This file therefore does two jobs at once:
+> 1. records the package boundary truthfully, and
 > 2. defines the package contract the directory should satisfy as implementation hardens.
 
 > [!NOTE]
@@ -54,16 +54,16 @@ This is **not** the place for deployable side effects, HTTP transport, filesyste
 
 ## Repo fit
 
-The parent package contract already assigns `./domain/` a narrow and useful job: **stable domain vocabulary, invariants, and semantic core**. That role is the anchor for this README.
+The parent package contract on current public `main` already assigns `./domain/` a narrow and useful job: **stable domain vocabulary, invariants, and semantic core**. That role is the anchor for this README.
 
 ### Current repo-visible snapshot
 
 | Concern | Current signal | Status |
 |---|---|---|
-| `packages/domain/` exists | visible package path | **CONFIRMED** |
+| `packages/domain/` exists | current public `main` path resolves | **CONFIRMED** |
 | `README.md` exists | current file is present | **CONFIRMED** |
-| current package content depth | public package surface appears README-only from this path | **CONFIRMED** |
-| broad ownership fallback | inherited from `/packages/` CODEOWNERS | **CONFIRMED** |
+| current package content depth | public `main` currently presents a README-only package surface here | **CONFIRMED** |
+| broad ownership fallback | inherited from `/packages/` in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** |
 | package-local code, manifests, tests, exports | not proven from the visible package subtree used for this draft | **UNKNOWN** |
 | narrower child ownership | not separately confirmed | **NEEDS VERIFICATION** |
 
@@ -160,8 +160,10 @@ find packages/domain -maxdepth 4 -type f | sort
 sed -n '1,220p' packages/domain/README.md
 sed -n '1,260p' packages/README.md
 sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' tests/README.md
+sed -n '1,120p' .github/CODEOWNERS
 
 grep -RIn "domain\|semantic core\|invariant\|lane\|support semantics\|release state" \
   packages contracts schemas policy apps tests docs 2>/dev/null | sed -n '1,200p'
@@ -296,7 +298,7 @@ A change touching `packages/domain/` is not done until the following are satisfi
 - [ ] No stronger authority surface was silently duplicated inside this package.
 - [ ] Invariants or semantic helpers added here have package-local tests.
 - [ ] Any new shared vocabulary is reused by more than one seam or has a written justification.
-- [ ] Owner/fallback information is still accurate.
+- [ ] Owner/fallback information is still accurate against [`.github/CODEOWNERS`](../../.github/CODEOWNERS).
 - [ ] Unknowns remain visible instead of being polished into false certainty.
 
 > [!IMPORTANT]
