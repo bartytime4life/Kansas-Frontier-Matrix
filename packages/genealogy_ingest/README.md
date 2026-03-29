@@ -1,5 +1,3 @@
-Below is a repo-ready starter package you can drop into KFM and refine in-tree.
-
 # `pipelines/genealogy_ingest/` starter
 
 ```text
