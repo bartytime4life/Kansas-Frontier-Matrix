@@ -1,10 +1,99 @@
-# `pipelines/genealogy_ingest/` starter
+<!-- [KFM_META_BLOCK_V2]
+doc_id: <TODO: kfm://doc/<uuid>>
+title: Genealogy Ingest
+type: standard
+version: v1
+status: draft
+owners: <TODO: owners>
+created: <TODO: created-date>
+updated: 2026-03-29
+policy_label: <TODO: policy-label>
+related: [./pyproject.toml, ./schemas/canonical.person.schema.json, ./schemas/canonical.event.schema.json, ./schemas/canonical.relationship.schema.json, ./schemas/canonical.dna_kit.schema.json, ./schemas/canonical.provenance.schema.json, ./src/genealogy_ingest/cli.py]
+tags: [kfm, genealogy, ingest, gedcom, dna]
+notes: [Placeholders remain for doc_id, owners, created date, and policy_label pending repo metadata verification.]
+[/KFM_META_BLOCK_V2] -->
+
+# Genealogy Ingest
+
+Evidence-first ingestion of GEDCOM, vendor CSV, and DNA manifests into a canonical, KFM-aligned genealogy model.
+
+**Status:** experimental  
+**Owners:** `<TODO: owners>`  
+![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Python >=3.11](https://img.shields.io/badge/python-%3E%3D3.11-blue) ![CLI](https://img.shields.io/badge/cli-kfm--ingest--genealogy-success) ![JSON Schema](https://img.shields.io/badge/json%20schema-2020--12-informational)  
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contracts & canonical model](#contracts--canonical-model) · [Hardening gates](#hardening-gates) · [FAQ](#faq)
+
+> [!NOTE]
+> This README is written against the starter files shown for `pipelines/genealogy_ingest/`. It separates **current behavior** from **KFM-aligned hardening work** so reviewers can see what is implemented today, what is only modeled in code, and what still needs verification.
+
+## Scope
+
+This directory is a starter ingest lane for genealogy-shaped inputs. The shown code proves three concrete flows:
+
+1. plain-text GEDCOM parsing into `Person`, `Event`, and `Relationship` objects
+2. fixed-column vendor CSV parsing into the same canonical person/event/relationship shape
+3. raw DNA **manifest** generation that records a checksum and an HMAC-protected kit hash without publishing the raw vendor kit ID
+
+It does **not** yet prove full KFM promotion, catalog closure, signed receipts, consent-aware release, or quarantine workflows.
+
+### Status markers used in this README
+
+| Marker | Meaning here |
+|---|---|
+| **CONFIRMED** | Directly supported by the shown starter files, tests, or schema example |
+| **NEEDS VERIFICATION** | Plausible from the starter, but not directly proven by the shown implementation or tests |
+| **PROPOSED** | KFM-aligned next-step hardening, not current starter behavior |
+| **UNKNOWN** | Not visible in the current evidence |
+
+## Repo fit
+
+| Fit | Current directory role |
+|---|---|
+| **Path** | `pipelines/genealogy_ingest/` |
+| **Upstream readers** | [`gedcom.py`][gedcom], [`vendor_csv.py`][vendor_csv], [`dna_manifest.py`][dna_manifest] |
+| **Core contract/code surfaces** | [`models.py`][models], [`normalize.py`][normalize], [`cli.py`][cli], [`schemas/`][schemas] |
+| **Downstream emitters** | [`cli.py`][cli] writes canonical JSON plus `run_receipt.json`; [`receipts.py`][receipts] provides `spec_hash()` and receipt writing |
+| **Intended next layers** | Catalog, graph projection, search, and governed publication surfaces are **INFERRED** from KFM doctrine and the starter brief; they are not shown as implemented in this directory |
+
+## Inputs
+
+### Accepted inputs
+
+| Input family | Current path | Status | What the starter actually proves |
+|---|---|---:|---|
+| Plain-text GEDCOM (`.ged`) | [`gedcom.py`][gedcom] | **CONFIRMED** | Line-oriented parse of `INDI` and `FAM` records with `NAME`, `SEX`, `BIRT`, `DEAT`, `RESI`, `CENS`, `IMMI`, `HUSB`, `WIFE`, and `CHIL` handling |
+| GEDCOM 5.5.1 core-style tags | [`gedcom.py`][gedcom] | **CONFIRMED** | The parser recognizes a small, common GEDCOM tag subset; it is not a full spec implementation |
+| GEDCOM 7 text exports | [`gedcom.py`][gedcom] | **NEEDS VERIFICATION** | Simple files using the same tags may work, but no GEDCOM 7-specific structures are shown or tested |
+| GEDZip archives | _none shown_ | **PROPOSED** | No archive unpacking or `.gedzip` handling is present |
+| Vendor CSV with `Name,BirthDate,BirthPlace,DeathDate,Spouse` | [`vendor_csv.py`][vendor_csv] | **CONFIRMED** | Column names are hard-coded; this is the only vendor tabular contract currently evidenced |
+| Vendor JSON exports | _none shown_ | **PROPOSED** | Not implemented in the shown code |
+| Consumer raw DNA text export | [`dna_manifest.py`][dna_manifest] | **CONFIRMED** | The file is checksummed and linked to a vendor + HMACed kit hash; genotype rows are not normalized |
+
+### Exclusions
+
+This starter intentionally does **not** own the following work:
+
+- **Raw SNP/genotype normalization or interpretation.**  
+  Keep that in a restricted genomics workflow; this starter only emits a manifest.
+
+- **Cross-source entity resolution or inferred kinship.**  
+  That belongs in a later reconciliation/ER layer, not in the raw ingest adapters.
+
+- **Direct STAC/DCAT/PROV publication.**  
+  This directory emits canonical JSON and a local run receipt, not release-grade catalog closure.
+
+- **Consent adjudication, redistribution review, or public-safe DNA release.**  
+  `Consent` exists as a model, but no review/policy workflow is wired into the shown CLI.
+
+- **Archive unpacking and format brokering.**  
+  GEDZip and vendor JSON would need separate adapters or a packaging layer.
+
+## Directory tree
 
 ```text
 pipelines/
 └── genealogy_ingest/
     ├── README.md
-    ├── pyproject.toml
+    ├── pyproject.toml                    # package metadata + CLI entry point
     ├── schemas/
     │   ├── canonical.person.schema.json
     │   ├── canonical.event.schema.json
@@ -14,780 +103,41 @@ pipelines/
     ├── src/
     │   └── genealogy_ingest/
     │       ├── __init__.py
-    │       ├── cli.py
-    │       ├── models.py
-    │       ├── normalize.py
-    │       ├── gedcom.py
-    │       ├── vendor_csv.py
-    │       ├── dna_manifest.py
-    │       └── receipts.py
+    │       ├── cli.py                    # subcommands: gedcom | csv | dna-manifest
+    │       ├── models.py                 # canonical object families
+    │       ├── normalize.py              # hashing, name cleanup, date normalization
+    │       ├── gedcom.py                 # GEDCOM parser
+    │       ├── vendor_csv.py             # fixed-column CSV parser
+    │       ├── dna_manifest.py           # checksum + HMAC manifest builder
+    │       └── receipts.py               # spec_hash + run_receipt writer
     └── tests/
-        ├── test_dates.py
-        ├── test_gedcom_minimal.py
-        ├── test_vendor_csv.py
-        └── test_dna_manifest.py
+        ├── test_dates.py                 # normalize_date() behaviors
+        ├── test_gedcom_minimal.py        # minimal GEDCOM parse path
+        ├── test_vendor_csv.py            # CSV parse path
+        └── test_dna_manifest.py          # DNA manifest path
 ```
 
----
+## Quickstart
 
-## `README.md`
-
-````md
-# Genealogy Ingest
-
-Evidence-first genealogy and DNA manifest ingestion into a canonical KFM-aligned model.
-
-## Repo fit
-- **Path:** `pipelines/genealogy_ingest/`
-- **Upstream:** raw GEDCOM, GEDCOM 7 / GEDZip, vendor CSV/JSON, raw DNA text exports
-- **Downstream:** catalog, graph projections, search, governed publication surfaces
-
-## Accepted inputs
-- GEDCOM 5.5.1
-- GEDCOM 7.0 / GEDZip
-- vendor genealogy CSV/JSON exports
-- consumer raw DNA text exports (manifest-only by default)
-
-## Exclusions
-- no SNP-row normalization into authoritative truth by default
-- no inferred kinship written as source truth
-- no redistribution of source kit identifiers
-
-## Truth posture
-- **Authoritative:** source facts + normalized events + provenance + evidence refs
-- **Derived:** graph edges, search indexes, clusters, embeddings
-- **Fail-closed:** quarantine malformed dates, broken relationships, missing evidence, unresolved consent
-
-```mermaid
-flowchart LR
-  A[Source edge] --> B[RAW]
-  B --> C[WORK / PARSE]
-  C --> D{Validation}
-  D -- fail --> Q[QUARANTINE]
-  D -- pass --> E[Normalize]
-  E --> F[PROCESSED]
-  F --> G[CATALOG / TRIPLET]
-  G --> H[PUBLISHED]
-````
-
-````
-
----
-
-## `pyproject.toml`
-
-```toml
-[project]
-name = "genealogy-ingest"
-version = "0.1.0"
-description = "GEDCOM, genealogy CSV, and DNA manifest ingestion"
-requires-python = ">=3.11"
-dependencies = [
-  "pydantic>=2.8",
-  "jsonschema>=4.23",
-  "python-dateutil>=2.9"
-]
-
-[project.scripts]
-kfm-ingest-genealogy = "genealogy_ingest.cli:main"
-````
-
----
-
-## `src/genealogy_ingest/models.py`
-
-```python
-from __future__ import annotations
-
-from typing import Literal, Optional
-from pydantic import BaseModel, Field
-
-
-EventType = Literal[
-    "birth", "marriage", "death", "residence", "census", "immigration", "DNA_SAMPLE", "unknown"
-]
-RelationshipType = Literal["parent", "spouse", "child"]
-
-
-class Place(BaseModel):
-    place_name: str
-    lat: Optional[float] = None
-    lon: Optional[float] = None
-    gnis_id: Optional[str] = None
-
-
-class EvidenceRef(BaseModel):
-    source_file: str
-    pointer: str
-    snippet: Optional[str] = None
-
-
-class Provenance(BaseModel):
-    record_id: str
-    vendor: str
-    export_date: Optional[str] = None
-    spec_hash: str
-
-
-class Person(BaseModel):
-    id_hash: str
-    name_norm: Optional[str] = None
-    sex: Optional[str] = None
-    birth_event_id: Optional[str] = None
-    death_event_id: Optional[str] = None
-
-
-class Relationship(BaseModel):
-    id: str
-    type: RelationshipType
-    subject_id: str
-    object_id: str
-    evidence_ref: EvidenceRef
-
-
-class Event(BaseModel):
-    id: str
-    person_id: str
-    type: EventType
-    date_iso8601: Optional[str] = None
-    place: Optional[Place] = None
-    evidence_ref: EvidenceRef
-
-
-class DNAKit(BaseModel):
-    kit_hash: str
-    person_id: Optional[str] = None
-    vendor: str
-    genome_build: Optional[str] = None
-    file_checksum: str
-
-
-class Consent(BaseModel):
-    person_id: str
-    exports_allowed: bool = False
-    redistribution: bool = False
-```
-
----
-
-## `src/genealogy_ingest/normalize.py`
-
-```python
-from __future__ import annotations
-
-import hashlib
-import hmac
-import re
-from datetime import datetime
-from typing import Optional
-
-
-GEDCOM_MONTHS = {
-    "JAN": "01", "FEB": "02", "MAR": "03", "APR": "04",
-    "MAY": "05", "JUN": "06", "JUL": "07", "AUG": "08",
-    "SEP": "09", "OCT": "10", "NOV": "11", "DEC": "12",
-}
-
-
-def stable_hash(value: str) -> str:
-    return hashlib.sha256(value.encode("utf-8")).hexdigest()
-
-
-def hmac_kit_hash(vendor_kit_id: str, salt: bytes) -> str:
-    return hmac.new(salt, vendor_kit_id.encode("utf-8"), hashlib.sha256).hexdigest()
-
-
-def normalize_name(raw: str) -> str:
-    # GEDCOM often uses slashes around surnames: John /Smith/
-    return re.sub(r"\s+", " ", raw.replace("/", "").strip())
-
-
-def normalize_date(raw: Optional[str]) -> Optional[str]:
-    if not raw:
-        return None
-
-    raw = raw.strip().upper()
-
-    # Exact GEDCOM-style date: 12 MAR 1882
-    m = re.fullmatch(r"(\d{1,2})\s+([A-Z]{3})\s+(\d{4})", raw)
-    if m:
-        day, mon, year = m.groups()
-        return f"{year}-{GEDCOM_MONTHS[mon]}-{int(day):02d}"
-
-    # Month year: MAR 1882
-    m = re.fullmatch(r"([A-Z]{3})\s+(\d{4})", raw)
-    if m:
-        mon, year = m.groups()
-        return f"{year}-{GEDCOM_MONTHS[mon]}"
-
-    # Year only
-    m = re.fullmatch(r"\d{4}", raw)
-    if m:
-        return raw
-
-    # About / estimated year
-    m = re.fullmatch(r"(ABT|ABOUT|EST|ESTIMATED)\s+(\d{4})", raw)
-    if m:
-        return m.group(2)
-
-    return None
-
-
-def map_gedcom_event(tag: str) -> str:
-    return {
-        "BIRT": "birth",
-        "MARR": "marriage",
-        "DEAT": "death",
-        "RESI": "residence",
-        "CENS": "census",
-        "IMMI": "immigration",
-    }.get(tag, "unknown")
-```
-
----
-
-## `src/genealogy_ingest/gedcom.py`
-
-```python
-from __future__ import annotations
-
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-
-from .models import Event, EvidenceRef, Person, Relationship, Place
-from .normalize import map_gedcom_event, normalize_date, normalize_name, stable_hash
-
-
-@dataclass
-class IndiRecord:
-    xref: str
-    name: Optional[str] = None
-    sex: Optional[str] = None
-    events: List[Tuple[str, Optional[str], Optional[str], str]] = field(default_factory=list)
-
-
-@dataclass
-class FamRecord:
-    xref: str
-    husb: Optional[str] = None
-    wife: Optional[str] = None
-    chil: List[str] = field(default_factory=list)
-    marr_date: Optional[str] = None
-    marr_place: Optional[str] = None
-
-
-def parse_gedcom(path: str) -> tuple[list[Person], list[Event], list[Relationship]]:
-    text = Path(path).read_text(encoding="utf-8", errors="replace").splitlines()
-
-    indis: Dict[str, IndiRecord] = {}
-    fams: Dict[str, FamRecord] = {}
-
-    current_indi: Optional[IndiRecord] = None
-    current_fam: Optional[FamRecord] = None
-    current_event_tag: Optional[str] = None
-    current_event_date: Optional[str] = None
-    current_event_place: Optional[str] = None
-    current_event_pointer: Optional[str] = None
-
-    def flush_event():
-        nonlocal current_event_tag, current_event_date, current_event_place, current_event_pointer, current_indi
-        if current_indi and current_event_tag:
-            current_indi.events.append(
-                (current_event_tag, current_event_date, current_event_place, current_event_pointer or current_indi.xref)
-            )
-        current_event_tag = None
-        current_event_date = None
-        current_event_place = None
-        current_event_pointer = None
-
-    for line in text:
-        parts = line.split(" ", 2)
-        if len(parts) < 2:
-            continue
-
-        level = parts[0]
-        if len(parts) == 2:
-            tag, value = parts[1], ""
-        else:
-            tag, value = parts[1], parts[2]
-
-        # New top-level record
-        if level == "0":
-            flush_event()
-            current_indi = None
-            current_fam = None
-
-            if len(parts) == 3 and parts[2] in ("INDI", "FAM"):
-                xref = parts[1]
-                rec_type = parts[2]
-                if rec_type == "INDI":
-                    current_indi = indis[xref] = IndiRecord(xref=xref)
-                elif rec_type == "FAM":
-                    current_fam = fams[xref] = FamRecord(xref=xref)
-            continue
-
-        if current_indi:
-            if tag == "NAME":
-                current_indi.name = value
-            elif tag == "SEX":
-                current_indi.sex = value
-            elif tag in {"BIRT", "DEAT", "RESI", "CENS", "IMMI"}:
-                flush_event()
-                current_event_tag = tag
-                current_event_pointer = current_indi.xref
-            elif tag == "DATE" and current_event_tag:
-                current_event_date = value
-            elif tag == "PLAC" and current_event_tag:
-                current_event_place = value
-
-        elif current_fam:
-            if tag == "HUSB":
-                current_fam.husb = value
-            elif tag == "WIFE":
-                current_fam.wife = value
-            elif tag == "CHIL":
-                current_fam.chil.append(value)
-            elif tag == "MARR":
-                current_event_tag = "MARR"
-            elif tag == "DATE" and current_event_tag == "MARR":
-                current_fam.marr_date = value
-            elif tag == "PLAC" and current_event_tag == "MARR":
-                current_fam.marr_place = value
-
-    flush_event()
-
-    persons: list[Person] = []
-    events: list[Event] = []
-    relationships: list[Relationship] = []
-
-    for indi in indis.values():
-        pid = stable_hash(indi.xref)
-        person = Person(
-            id_hash=pid,
-            name_norm=normalize_name(indi.name) if indi.name else None,
-            sex=indi.sex
-        )
-        persons.append(person)
-
-        for idx, (tag, raw_date, raw_place, pointer) in enumerate(indi.events, start=1):
-            eid = stable_hash(f"{indi.xref}:{tag}:{idx}")
-            event = Event(
-                id=eid,
-                person_id=pid,
-                type=map_gedcom_event(tag),
-                date_iso8601=normalize_date(raw_date),
-                place=Place(place_name=raw_place) if raw_place else None,
-                evidence_ref=EvidenceRef(
-                    source_file=Path(path).name,
-                    pointer=pointer,
-                    snippet=f"{tag} {raw_date or ''} {raw_place or ''}".strip(),
-                )
-            )
-            events.append(event)
-            if event.type == "birth":
-                person.birth_event_id = eid
-            elif event.type == "death":
-                person.death_event_id = eid
-
-    for fam in fams.values():
-        if fam.husb and fam.wife:
-            relationships.append(Relationship(
-                id=stable_hash(f"{fam.xref}:spouse:{fam.husb}:{fam.wife}"),
-                type="spouse",
-                subject_id=stable_hash(fam.husb),
-                object_id=stable_hash(fam.wife),
-                evidence_ref=EvidenceRef(source_file=Path(path).name, pointer=fam.xref, snippet="FAM spouse")
-            ))
-
-        for child in fam.chil:
-            if fam.husb:
-                relationships.append(Relationship(
-                    id=stable_hash(f"{fam.xref}:parent:{fam.husb}:{child}"),
-                    type="parent",
-                    subject_id=stable_hash(fam.husb),
-                    object_id=stable_hash(child),
-                    evidence_ref=EvidenceRef(source_file=Path(path).name, pointer=fam.xref, snippet="FAM father-child")
-                ))
-            if fam.wife:
-                relationships.append(Relationship(
-                    id=stable_hash(f"{fam.xref}:parent:{fam.wife}:{child}"),
-                    type="parent",
-                    subject_id=stable_hash(fam.wife),
-                    object_id=stable_hash(child),
-                    evidence_ref=EvidenceRef(source_file=Path(path).name, pointer=fam.xref, snippet="FAM mother-child")
-                ))
-
-    return persons, events, relationships
-```
-
----
-
-## `src/genealogy_ingest/vendor_csv.py`
-
-```python
-from __future__ import annotations
-
-import csv
-from pathlib import Path
-from typing import List, Tuple
-
-from .models import Event, EvidenceRef, Person, Relationship, Place
-from .normalize import normalize_date, stable_hash
-
-
-def parse_vendor_csv(path: str) -> tuple[list[Person], list[Event], list[Relationship]]:
-    persons: list[Person] = []
-    events: list[Event] = []
-    relationships: list[Relationship] = []
-
-    with open(path, newline="", encoding="utf-8") as fh:
-        reader = csv.DictReader(fh)
-        for row_num, row in enumerate(reader, start=2):
-            name = (row.get("Name") or "").strip()
-            if not name:
-                continue
-
-            pid = stable_hash(name)
-            persons.append(Person(id_hash=pid, name_norm=name))
-
-            birth = row.get("BirthDate")
-            birth_place = row.get("BirthPlace")
-            if birth or birth_place:
-                events.append(Event(
-                    id=stable_hash(f"{name}:birth"),
-                    person_id=pid,
-                    type="birth",
-                    date_iso8601=normalize_date(birth),
-                    place=Place(place_name=birth_place) if birth_place else None,
-                    evidence_ref=EvidenceRef(
-                        source_file=Path(path).name,
-                        pointer=f"row:{row_num}",
-                        snippet=f"BirthDate={birth}; BirthPlace={birth_place}"
-                    )
-                ))
-
-            death = row.get("DeathDate")
-            if death:
-                events.append(Event(
-                    id=stable_hash(f"{name}:death"),
-                    person_id=pid,
-                    type="death",
-                    date_iso8601=normalize_date(death),
-                    place=None,
-                    evidence_ref=EvidenceRef(
-                        source_file=Path(path).name,
-                        pointer=f"row:{row_num}",
-                        snippet=f"DeathDate={death}"
-                    )
-                ))
-
-            spouse = (row.get("Spouse") or "").strip()
-            if spouse:
-                relationships.append(Relationship(
-                    id=stable_hash(f"{name}:spouse:{spouse}"),
-                    type="spouse",
-                    subject_id=pid,
-                    object_id=stable_hash(spouse),
-                    evidence_ref=EvidenceRef(
-                        source_file=Path(path).name,
-                        pointer=f"row:{row_num}",
-                        snippet=f"Spouse={spouse}"
-                    )
-                ))
-
-    return persons, events, relationships
-```
-
----
-
-## `src/genealogy_ingest/dna_manifest.py`
-
-```python
-from __future__ import annotations
-
-import hashlib
-from pathlib import Path
-from typing import Optional
-
-from .models import DNAKit
-from .normalize import hmac_kit_hash
-
-
-def sha256_file(path: str) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(65536), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-def build_dna_manifest(path: str, vendor: str, vendor_kit_id: str, salt: bytes, genome_build: Optional[str] = None) -> DNAKit:
-    return DNAKit(
-        kit_hash=hmac_kit_hash(vendor_kit_id, salt),
-        vendor=vendor,
-        genome_build=genome_build,
-        file_checksum=sha256_file(path),
-    )
-```
-
----
-
-## `src/genealogy_ingest/receipts.py`
-
-```python
-from __future__ import annotations
-
-import hashlib
-import json
-from datetime import datetime, UTC
-from pathlib import Path
-
-
-def spec_hash(*parts: str) -> str:
-    joined = "|".join(parts)
-    return hashlib.sha256(joined.encode("utf-8")).hexdigest()
-
-
-def write_run_receipt(out_path: str, payload: dict) -> None:
-    payload = {
-        **payload,
-        "created_at": datetime.now(UTC).isoformat(),
-    }
-    Path(out_path).write_text(json.dumps(payload, indent=2), encoding="utf-8")
-```
-
----
-
-## `src/genealogy_ingest/cli.py`
-
-```python
-from __future__ import annotations
-
-import argparse
-import json
-from pathlib import Path
-
-from .dna_manifest import build_dna_manifest
-from .gedcom import parse_gedcom
-from .receipts import spec_hash, write_run_receipt
-from .vendor_csv import parse_vendor_csv
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Genealogy ingest")
-    sub = parser.add_subparsers(dest="cmd", required=True)
-
-    g = sub.add_parser("gedcom")
-    g.add_argument("input")
-    g.add_argument("--out", required=True)
-
-    c = sub.add_parser("csv")
-    c.add_argument("input")
-    c.add_argument("--out", required=True)
-
-    d = sub.add_parser("dna-manifest")
-    d.add_argument("input")
-    d.add_argument("--vendor", required=True)
-    d.add_argument("--vendor-kit-id", required=True)
-    d.add_argument("--salt-file", required=True)
-    d.add_argument("--genome-build")
-    d.add_argument("--out", required=True)
-
-    args = parser.parse_args()
-    out_dir = Path(args.out)
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    if args.cmd == "gedcom":
-        persons, events, relationships = parse_gedcom(args.input)
-        (out_dir / "persons.json").write_text(json.dumps([p.model_dump() for p in persons], indent=2))
-        (out_dir / "events.json").write_text(json.dumps([e.model_dump() for e in events], indent=2))
-        (out_dir / "relationships.json").write_text(json.dumps([r.model_dump() for r in relationships], indent=2))
-        write_run_receipt(str(out_dir / "run_receipt.json"), {
-            "kind": "gedcom",
-            "input": args.input,
-            "spec_hash": spec_hash("genealogy-ingest", "gedcom", "v0.1.0"),
-            "counts": {"persons": len(persons), "events": len(events), "relationships": len(relationships)},
-        })
-
-    elif args.cmd == "csv":
-        persons, events, relationships = parse_vendor_csv(args.input)
-        (out_dir / "persons.json").write_text(json.dumps([p.model_dump() for p in persons], indent=2))
-        (out_dir / "events.json").write_text(json.dumps([e.model_dump() for e in events], indent=2))
-        (out_dir / "relationships.json").write_text(json.dumps([r.model_dump() for r in relationships], indent=2))
-        write_run_receipt(str(out_dir / "run_receipt.json"), {
-            "kind": "vendor_csv",
-            "input": args.input,
-            "spec_hash": spec_hash("genealogy-ingest", "vendor_csv", "v0.1.0"),
-            "counts": {"persons": len(persons), "events": len(events), "relationships": len(relationships)},
-        })
-
-    elif args.cmd == "dna-manifest":
-        salt = Path(args.salt_file).read_bytes()
-        manifest = build_dna_manifest(
-            args.input,
-            vendor=args.vendor,
-            vendor_kit_id=args.vendor_kit_id,
-            salt=salt,
-            genome_build=args.genome_build,
-        )
-        (out_dir / "dna_manifest.json").write_text(json.dumps(manifest.model_dump(), indent=2))
-        write_run_receipt(str(out_dir / "run_receipt.json"), {
-            "kind": "dna_manifest",
-            "input": args.input,
-            "vendor": args.vendor,
-            "spec_hash": spec_hash("genealogy-ingest", "dna_manifest", "v0.1.0"),
-        })
-```
-
----
-
-## JSON schema example: `schemas/canonical.event.schema.json`
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "CanonicalEvent",
-  "type": "object",
-  "required": ["id", "person_id", "type", "evidence_ref"],
-  "properties": {
-    "id": { "type": "string" },
-    "person_id": { "type": "string" },
-    "type": {
-      "type": "string",
-      "enum": ["birth", "marriage", "death", "residence", "census", "immigration", "DNA_SAMPLE", "unknown"]
-    },
-    "date_iso8601": { "type": ["string", "null"] },
-    "place": {
-      "type": ["object", "null"],
-      "properties": {
-        "place_name": { "type": "string" },
-        "lat": { "type": ["number", "null"] },
-        "lon": { "type": ["number", "null"] },
-        "gnis_id": { "type": ["string", "null"] }
-      },
-      "required": ["place_name"]
-    },
-    "evidence_ref": {
-      "type": "object",
-      "required": ["source_file", "pointer"],
-      "properties": {
-        "source_file": { "type": "string" },
-        "pointer": { "type": "string" },
-        "snippet": { "type": ["string", "null"] }
-      }
-    }
-  }
-}
-```
-
----
-
-## Tests
-
-### `tests/test_dates.py`
-
-```python
-from genealogy_ingest.normalize import normalize_date
-
-
-def test_normalize_exact_date():
-    assert normalize_date("12 MAR 1882") == "1882-03-12"
-
-
-def test_normalize_year_only():
-    assert normalize_date("1882") == "1882"
-
-
-def test_normalize_about_year():
-    assert normalize_date("ABT 1880") == "1880"
-
-
-def test_unparseable_date_returns_none():
-    assert normalize_date("SPRING 1880") is None
-```
-
-### `tests/test_gedcom_minimal.py`
-
-```python
-from pathlib import Path
-from genealogy_ingest.gedcom import parse_gedcom
-
-
-def test_parse_minimal_gedcom(tmp_path: Path):
-    ged = tmp_path / "sample.ged"
-    ged.write_text(
-        "0 @I1@ INDI\n"
-        "1 NAME John /Smith/\n"
-        "1 SEX M\n"
-        "1 BIRT\n"
-        "2 DATE 12 MAR 1882\n"
-        "2 PLAC Ohio\n",
-        encoding="utf-8"
-    )
-
-    persons, events, relationships = parse_gedcom(str(ged))
-    assert len(persons) == 1
-    assert persons[0].name_norm == "John Smith"
-    assert len(events) == 1
-    assert events[0].type == "birth"
-    assert events[0].date_iso8601 == "1882-03-12"
-    assert relationships == []
-```
-
-### `tests/test_vendor_csv.py`
-
-```python
-from pathlib import Path
-from genealogy_ingest.vendor_csv import parse_vendor_csv
-
-
-def test_parse_vendor_csv(tmp_path: Path):
-    csvf = tmp_path / "tree.csv"
-    csvf.write_text(
-        "Name,BirthDate,BirthPlace,DeathDate,Spouse\n"
-        "John Smith,1882,Ohio,1954,Mary Jones\n",
-        encoding="utf-8"
-    )
-
-    persons, events, relationships = parse_vendor_csv(str(csvf))
-    assert len(persons) == 1
-    assert len(events) == 2
-    assert len(relationships) == 1
-```
-
-### `tests/test_dna_manifest.py`
-
-```python
-from pathlib import Path
-from genealogy_ingest.dna_manifest import build_dna_manifest
-
-
-def test_dna_manifest(tmp_path: Path):
-    raw = tmp_path / "dna.txt"
-    raw.write_text("rsid\tchromosome\tposition\tgenotype\n", encoding="utf-8")
-
-    manifest = build_dna_manifest(
-        str(raw),
-        vendor="23andMe",
-        vendor_kit_id="KIT123",
-        salt=b"secret-salt",
-        genome_build="GRCh37",
-    )
-
-    assert manifest.vendor == "23andMe"
-    assert manifest.genome_build == "GRCh37"
-    assert manifest.kit_hash
-    assert manifest.file_checksum
-```
-
----
-
-## Example runs
+1. Create an environment and install the package.
 
 ```bash
+cd pipelines/genealogy_ingest
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+2. Run one of the supported ingest paths.
+
+```bash
+# GEDCOM
 kfm-ingest-genealogy gedcom ./fixtures/family.ged --out ./out/gedcom_run
+
+# Vendor CSV
 kfm-ingest-genealogy csv ./fixtures/vendor.csv --out ./out/csv_run
+
+# DNA manifest only
 kfm-ingest-genealogy dna-manifest ./fixtures/23andme.txt \
   --vendor 23andMe \
   --vendor-kit-id KIT123 \
@@ -796,34 +146,297 @@ kfm-ingest-genealogy dna-manifest ./fixtures/23andme.txt \
   --out ./out/dna_run
 ```
 
----
+3. Optional: run the starter tests.
 
-## KFM-specific hardening gates
+```bash
+# pytest is assumed in the dev environment; it is not declared in the shown pyproject.toml
+python -m pytest tests
+```
 
-Add these before promotion:
+> [!IMPORTANT]
+> The starter ships a `schemas/` directory and declares `jsonschema` as a dependency, but the shown CLI does **not** currently validate emitted JSON against those schema files before writing outputs.
 
-* require `evidence_ref.pointer` on every event and relationship
-* quarantine any date that does not normalize cleanly
-* reject DNA ingest when `vendor_kit_id` is missing
-* forbid raw vendor kit ID from appearing in any published artifact
-* sign `run_receipt.json`
-* store raw DNA only in restricted storage; catalog manifest only
+## Usage
 
----
+### Command surface
 
-## Recommended next layer
+| Subcommand | Input | Output files | Status |
+|---|---|---|---:|
+| `gedcom` | plain-text GEDCOM file | `persons.json`, `events.json`, `relationships.json`, `run_receipt.json` | **CONFIRMED** |
+| `csv` | fixed-column vendor CSV | `persons.json`, `events.json`, `relationships.json`, `run_receipt.json` | **CONFIRMED** |
+| `dna-manifest` | raw DNA text file + vendor metadata + salt file | `dna_manifest.json`, `run_receipt.json` | **CONFIRMED** |
 
-After this ingest, project downstream into:
+### GEDCOM ingest
 
-* `catalog/persons.parquet`
-* `catalog/events.parquet`
-* `catalog/relationships.parquet`
-* optional Neo4j projection:
+```bash
+kfm-ingest-genealogy gedcom ./fixtures/family.ged --out ./out/gedcom_run
+```
 
-  * `(:Person {id_hash})`
-  * `(:Person)-[:PARENT_OF]->(:Person)`
-  * `(:Person)-[:SPOUSE_OF]->(:Person)`
-  * `(:Person)-[:HAS_EVENT]->(:Event)`
+What the current parser emits:
 
-If you want the next step, I’ll turn this into a full **KFM-style Markdown + Meta Block V2 + Mermaid + CI validation doc** for `pipelines/genealogy_ingest/README.md`.
+- `Person.id_hash` from `sha256(xref)`
+- individual events for `BIRT`, `DEAT`, `RESI`, `CENS`, and `IMMI`
+- `spouse` and `parent` relationships from `FAM` records
+- `EvidenceRef` on every emitted event and relationship
 
+What it does **not** currently emit:
+
+- a materialized `marriage` event, even though `MARR` is modeled and partially parsed
+- explicit `child` relationships, even though `child` is included in the `RelationshipType` literal
+- quarantine artifacts for malformed dates or broken relationships
+
+### Vendor CSV ingest
+
+```bash
+kfm-ingest-genealogy csv ./fixtures/vendor.csv --out ./out/csv_run
+```
+
+Expected header contract:
+
+```csv
+Name,BirthDate,BirthPlace,DeathDate,Spouse
+John Smith,1882,Ohio,1954,Mary Jones
+```
+
+Current behavior:
+
+- rows missing `Name` are skipped
+- `Person.id_hash` is `sha256(name)`
+- birth and death events are emitted only when the relevant fields are populated
+- spouse relationships are emitted only when `Spouse` is populated
+
+Current caveat:
+
+- this path is row-oriented and does **not** deduplicate repeated people across rows or across sources
+
+### DNA manifest
+
+```bash
+kfm-ingest-genealogy dna-manifest ./fixtures/23andme.txt \
+  --vendor 23andMe \
+  --vendor-kit-id KIT123 \
+  --salt-file ./secrets/kit_salt.bin \
+  --genome-build GRCh37 \
+  --out ./out/dna_run
+```
+
+Current behavior:
+
+- computes `file_checksum` as a SHA-256 over the raw file
+- computes `kit_hash` as `HMAC-SHA256(vendor_kit_id, salt)`
+- writes `vendor`, optional `genome_build`, and checksum/hash metadata to `dna_manifest.json`
+
+Current safety posture:
+
+- raw `vendor_kit_id` is **not** written to the emitted manifest
+- raw genotype rows are **not** parsed or promoted by this starter
+- consent and redistribution checks are **not** yet enforced by the shown CLI
+
+## Diagram
+
+```mermaid
+flowchart LR
+  A[Source file] --> B{CLI subcommand}
+  B -->|gedcom| C[gedcom.py]
+  B -->|csv| D[vendor_csv.py]
+  B -->|dna-manifest| E[dna_manifest.py]
+
+  C --> F[normalize.py + models.py]
+  D --> F
+  E --> F
+
+  F --> G[persons.json]
+  F --> H[events.json]
+  F --> I[relationships.json]
+  F --> J[dna_manifest.json]
+  F --> K[run_receipt.json]
+
+  G --> L[PROCESSED]
+  H --> L
+  I --> L
+  J --> L
+  K --> L
+
+  L -. KFM-aligned next step .-> M[CATALOG / TRIPLET]
+  M -.-> N[PUBLISHED]
+
+  C -. malformed date / broken family data .-> Q[WORK / QUARANTINE]
+  D -. malformed date / broken row contract .-> Q
+  E -. consent / redistribution gate .-> Q
+
+  classDef proposed stroke-dasharray: 5 5;
+  class M,N,Q proposed;
+```
+
+## Contracts & canonical model
+
+### Canonical object families
+
+| Object family | Defined in | Used by current CLI? | Notes |
+|---|---|---:|---|
+| `Person` | [`models.py`][models] | **Yes** | Carries `id_hash`, optional normalized name, sex, and optional birth/death event IDs |
+| `Event` | [`models.py`][models], [`canonical.event.schema.json`][event_schema] | **Yes** | Current parsers emit `birth`, `death`, `residence`, `census`, `immigration`, and `unknown`; `marriage` and `DNA_SAMPLE` are modeled but not emitted by the shown parsers |
+| `Relationship` | [`models.py`][models] | **Yes** | Literal types include `parent`, `spouse`, `child`; current parsers emit `parent` and `spouse` only |
+| `DNAKit` | [`models.py`][models] | **Yes** | Used only by `dna-manifest`; `person_id` remains optional and is not set by the shown builder |
+| `EvidenceRef` | [`models.py`][models] | **Yes** | Emitted for GEDCOM/CSV events and relationships |
+| `Place` | [`models.py`][models] | **Yes** | Current emitters only populate `place_name`; `lat`, `lon`, and `gnis_id` remain optional |
+| `Provenance` | [`models.py`][models], [`canonical.provenance.schema.json`][prov_schema] | **No** | Model exists, but the shown CLI writes `run_receipt.json` instead of serialized `Provenance` objects |
+| `Consent` | [`models.py`][models] | **No** | Present in code, not yet wired into command execution or outputs |
+
+### Deterministic identity, hashing, and provenance behavior
+
+| Surface | Current strategy | Caveat |
+|---|---|---|
+| GEDCOM person ID | `sha256(xref)` | Stable within a GEDCOM file, but not cross-source identity-safe |
+| GEDCOM event ID | `sha256(f"{xref}:{tag}:{idx}")` | Deterministic for current parse order |
+| GEDCOM relationship ID | `sha256(f"{fam_xref}:{type}:{subject}:{object}")` | Deterministic for emitted family edges |
+| CSV person ID | `sha256(name)` | Cross-row collision risk for repeated names; no disambiguation fields are included |
+| CSV event/relationship IDs | Derived from `name` plus event or relationship role | Inherits the same collision caveat as CSV person IDs |
+| DNA manifest kit hash | `HMAC-SHA256(vendor_kit_id, salt)` | Good for non-public kit identity, but salt handling remains operationally external |
+| Run receipt `spec_hash` | `sha256("genealogy-ingest|<kind>|v0.1.0")` via [`receipts.py`][receipts] | This is a pipeline/version hash, not an input payload digest |
+
+> [!WARNING]
+> Cross-source identity is **not unified** in the shown starter. GEDCOM uses local xrefs; CSV uses names; DNA manifests currently carry no linked `person_id`.
+
+### Date normalization currently proven by tests
+
+| Raw input | Output | Status |
+|---|---|---:|
+| `12 MAR 1882` | `1882-03-12` | **CONFIRMED** |
+| `MAR 1882` | `1882-03` | **CONFIRMED** |
+| `1882` | `1882` | **CONFIRMED** |
+| `ABT 1880` / `ABOUT 1880` / `EST 1880` / `ESTIMATED 1880` | `1880` | **CONFIRMED** |
+| Unhandled forms such as `SPRING 1880` | `None` | **CONFIRMED** |
+
+Current implication: unsupported dates degrade to `null`/`None`; they are **not** automatically quarantined by the shown CLI.
+
+### Output contract by subcommand
+
+| Command | Files written | Receipt payload core |
+|---|---|---|
+| `gedcom` | `persons.json`, `events.json`, `relationships.json`, `run_receipt.json` | `kind`, `input`, `spec_hash`, `counts`, `created_at` |
+| `csv` | `persons.json`, `events.json`, `relationships.json`, `run_receipt.json` | `kind`, `input`, `spec_hash`, `counts`, `created_at` |
+| `dna-manifest` | `dna_manifest.json`, `run_receipt.json` | `kind`, `input`, `vendor`, `spec_hash`, `created_at` |
+
+## Hardening gates
+
+### Definition of done for the next KFM-ready increment
+
+- [x] Current parse paths emit deterministic IDs
+- [x] GEDCOM and CSV events/relationships include `EvidenceRef` with `source_file` and `pointer`
+- [x] DNA manifest output excludes the raw vendor kit ID
+- [x] Minimal tests exist for dates, GEDCOM, vendor CSV, and DNA manifest paths
+- [ ] JSON Schema validation is enforced against the files in [`schemas/`][schemas]
+- [ ] Unsupported dates and broken relationship structures route to `WORK / QUARANTINE` instead of silently returning `null` or being skipped
+- [ ] `Provenance` and/or KFM-style source/ingest/validation artifacts are emitted explicitly
+- [ ] `run_receipt.json` is signed
+- [ ] Consent and redistribution review are enforced before any DNA-derived release beyond manifest-only handling
+- [ ] Catalog closure (`STAC` / `DCAT` / `PROV`) is wired for promotion-ready downstream use
+- [ ] Cross-source identity reconciliation is handled outside adapter-local hashes
+
+### KFM-specific gate review
+
+| Gate | Current starter state | Read it as |
+|---|---|---|
+| Require `evidence_ref.pointer` on every event and relationship | **CONFIRMED** for GEDCOM/CSV emitters | Implemented in current parsers |
+| Quarantine any date that does not normalize cleanly | **NEEDS VERIFICATION** | Current code returns `None`; no quarantine artifact is shown |
+| Reject DNA ingest when `vendor_kit_id` is missing | **CONFIRMED at CLI boundary** | `argparse` requires `--vendor-kit-id`; the library function itself does not separately validate |
+| Forbid raw vendor kit ID from appearing in published artifacts | **CONFIRMED** for current manifest/receipt writes | Only `kit_hash` is emitted |
+| Sign `run_receipt.json` | **PROPOSED** | Not implemented in shown code |
+| Store raw DNA only in restricted storage; catalog manifest only | **PROPOSED** | No storage-class or release-scope controls are shown |
+
+### Review checks before merge
+
+1. Confirm the README does **not** promise GEDZip support, vendor JSON support, marriage-event emission, signed receipts, or catalog closure as current behavior.
+2. Confirm upstream CSV exports match the exact header names expected by [`vendor_csv.py`][vendor_csv].
+3. Confirm salt handling for `--salt-file` stays outside source control and outside example outputs.
+
+[Back to top](#genealogy-ingest)
+
+## FAQ
+
+### Does this starter support GEDCOM 7 or GEDZip?
+
+**GEDCOM 7 text compatibility is not directly proven.** The current parser is a simple line-oriented GEDCOM reader and may work for files that still use the tags it recognizes. **GEDZip archive handling is not implemented** in the shown code.
+
+### Does it emit marriage events?
+
+Not currently. `MARR` is modeled and partially collected inside `FamRecord`, but the shown `parse_gedcom()` implementation does not materialize a marriage `Event` into `events.json`.
+
+### Does it validate outputs against the schema files in `schemas/`?
+
+Not in the shown CLI. The schema directory exists and `jsonschema` is declared as a dependency, but no schema-validation call is shown before outputs are written.
+
+### Does DNA ingest parse or publish genotype rows?
+
+No. The current DNA path is **manifest-only**: checksum the file, HMAC the vendor kit ID, optionally record the genome build, and emit `dna_manifest.json`.
+
+### Can the same person resolve across GEDCOM, CSV, and DNA runs?
+
+Not yet. The current starter uses adapter-local hash inputs (`xref` for GEDCOM, `name` for CSV, optional `person_id` left unset for DNAKit). Cross-source reconciliation is a later concern.
+
+### Are signed receipts, review workflows, and public-safe publication already present here?
+
+No. The shown starter ends at local JSON outputs plus `run_receipt.json`. Promotion-grade review, proof-pack, and publication layers are not evidenced inside this directory.
+
+## Appendix
+
+<details>
+<summary>Illustrative current output shapes</summary>
+
+### `run_receipt.json` for `gedcom` or `csv`
+
+```json
+{
+  "kind": "gedcom",
+  "input": "./fixtures/family.ged",
+  "spec_hash": "<sha256>",
+  "counts": {
+    "persons": 1,
+    "events": 1,
+    "relationships": 0
+  },
+  "created_at": "2026-03-29T00:00:00+00:00"
+}
+```
+
+### `dna_manifest.json`
+
+```json
+{
+  "kit_hash": "<hmac-sha256>",
+  "person_id": null,
+  "vendor": "23andMe",
+  "genome_build": "GRCh37",
+  "file_checksum": "<sha256>"
+}
+```
+
+### Test inventory
+
+| Test file | What it proves |
+|---|---|
+| [`test_dates.py`][test_dates] | date normalization patterns and unsupported-date fallback |
+| [`test_gedcom_minimal.py`][test_gedcom] | one-person GEDCOM parse with normalized name and birth event |
+| [`test_vendor_csv.py`][test_csv] | one-row CSV parse with two events and one spouse relationship |
+| [`test_dna_manifest.py`][test_dna] | file checksum + HMACed manifest generation |
+
+</details>
+
+[Back to top](#genealogy-ingest)
+
+[pyproject]: ./pyproject.toml
+[schemas]: ./schemas/
+[event_schema]: ./schemas/canonical.event.schema.json
+[prov_schema]: ./schemas/canonical.provenance.schema.json
+[cli]: ./src/genealogy_ingest/cli.py
+[models]: ./src/genealogy_ingest/models.py
+[normalize]: ./src/genealogy_ingest/normalize.py
+[gedcom]: ./src/genealogy_ingest/gedcom.py
+[vendor_csv]: ./src/genealogy_ingest/vendor_csv.py
+[dna_manifest]: ./src/genealogy_ingest/dna_manifest.py
+[receipts]: ./src/genealogy_ingest/receipts.py
+[test_dates]: ./tests/test_dates.py
+[test_gedcom]: ./tests/test_gedcom_minimal.py
+[test_csv]: ./tests/test_vendor_csv.py
+[test_dna]: ./tests/test_dna_manifest.py
