@@ -1,16 +1,22 @@
 # ingest
+
 Governed source intake, normalization, validation, and receipt helpers for KFM’s truth path.
 
 > **Status:** experimental  
-> **Owners:** `@bartytime4life`  
+> **Owners:** `@bartytime4life` (fallback via `/packages/` in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); child-specific ownership still needs verification)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![scope](https://img.shields.io/badge/scope-governed%20intake-0a7ea4) ![surface](https://img.shields.io/badge/surface-packages%2Fingest-2f81f7) ![tree](https://img.shields.io/badge/current%20tree-README--only-lightgrey)  
 > **Path:** `packages/ingest/README.md`  
-> **Repo fit:** child package beneath [`../README.md`](../README.md); constrained by [`../../data/registry/README.md`](../../data/registry/README.md), [`../../data/README.md`](../../data/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../policy/README.md`](../../policy/README.md)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Object placement](#object-placement) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** child package beneath [`../README.md`](../README.md); rooted in [`../../README.md`](../../README.md); constrained by [`../../data/registry/README.md`](../../data/registry/README.md), [`../../data/README.md`](../../data/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Current public snapshot:** `packages/ingest/` currently resolves and exposes `README.md` only on public `main`  
+> **Truth posture:** `CONFIRMED` current path, README-only surface, and `/packages/` owner fallback · `PROPOSED` deeper package growth shape · `UNKNOWN / NEEDS VERIFICATION` package-local code, manifests, tests, and workflow enforcement  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Object placement](#object-placement) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> The current public `main` branch confirms that `packages/ingest/` exists, but the visible package surface is still **README-only**.  
-> This file therefore documents the **directory contract first** and keeps package-local implementation claims visibly bounded.
+> Current repo-visible state should be read conservatively: `packages/ingest/` is present on public `main`, but the visible child-package surface is still **README-only**.
+>
+> This file therefore does two jobs at once:
+> 1. record the package boundary truthfully
+> 2. define the directory contract this path should satisfy as implementation hardens
 
 > [!WARNING]
 > `packages/ingest/` is a **shared internal boundary**, not a direct runtime entrypoint.  
@@ -20,9 +26,11 @@ Governed source intake, normalization, validation, and receipt helpers for KFM�
 > In KFM, ingest is not “just fetching files.”  
 > It is the shared seam where source admission, deterministic acquisition, normalization, validation, and receipt-bearing intake stay inspectable before anything can move downstream.
 
+* * *
+
 ## Scope
 
-`packages/ingest/` exists to hold **shared, non-deployable ingest law and helpers** that support KFM’s governed movement from source edge into lifecycle zones such as `RAW`, `WORK / QUARANTINE`, and `PROCESSED`.
+`packages/ingest/` exists to hold **shared, non-deployable ingest helpers and boundary logic** that support KFM’s governed movement from source edge into lifecycle zones such as `RAW`, `WORK / QUARANTINE`, and `PROCESSED`.
 
 This package is the right home for code that needs to be reused across more than one ingest lane or worker **without** taking over the stronger authority held elsewhere in the repository.
 
@@ -55,6 +63,8 @@ If it changes public API behavior, owns canonical schemas, publishes directly, o
 
 | Relationship | Path | Why it matters here | Current posture |
 |---|---|---|---|
+| Root operating frame | [`../../README.md`](../../README.md) | Sets the repo-wide evidence-first, map-first, time-aware posture this package must remain subordinate to | **CONFIRMED** |
+| Repo gatehouse | [`../../.github/README.md`](../../.github/README.md) | Establishes review-routing, ownership, and repo-side control posture that this package must not bypass | **CONFIRMED** |
 | Parent boundary | [`../README.md`](../README.md) | Defines what `packages/` is for and what each child package must not do | **CONFIRMED** |
 | Upstream source registration | [`../../data/registry/README.md`](../../data/registry/README.md) | Governs dataset/source identity, onboarding, cadence, rights, and handoff intent | **CONFIRMED** |
 | Upstream lifecycle zones | [`../../data/README.md`](../../data/README.md) | Owns the truth path and storage-zone semantics | **CONFIRMED** |
@@ -66,7 +76,7 @@ If it changes public API behavior, owns canonical schemas, publishes directly, o
 | Adjacent operator scripts | [`../../scripts/README.md`](../../scripts/README.md) | Entry-point scripts may call ingest helpers, but should not own domain law | **CONFIRMED** |
 | Adjacent workflow surface | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | CI/promotion gates are part of ingest truth, even when YAML inventory remains to be verified | **CONFIRMED** |
 | Lateral sibling packages | [`../catalog/README.md`](../catalog/README.md) · [`../domain/README.md`](../domain/README.md) · [`../evidence/README.md`](../evidence/README.md) · [`../indexers/README.md`](../indexers/README.md) · [`../policy/README.md`](../policy/README.md) | Ingest should hand off cleanly without collapsing boundaries | **CONFIRMED** |
-| Downstream catalog/runtime consumers | [`../../data/catalog/stac/README.md`](../../data/catalog/stac/README.md) · [`../../apps/`](../../apps/) | Ingest prepares material for later catalog and runtime use; it does not replace them | **CONFIRMED / INFERRED** |
+| Downstream catalog/runtime consumers | [`../../data/catalog/stac/README.md`](../../data/catalog/stac/README.md) · [`../../apps/README.md`](../../apps/README.md) | Ingest prepares material for later catalog and runtime use; it does not replace them | **CONFIRMED / INFERRED** |
 
 ### Repo-fit summary
 
@@ -148,7 +158,8 @@ This section describes **what is visible now**, not what the package may eventua
 | Package-local code under `packages/ingest/` | **UNKNOWN / NEEDS VERIFICATION** | Not visible in the inspected package path during this rewrite |
 | Package-local tests / fixtures under this path | **UNKNOWN / NEEDS VERIFICATION** | No package-local inventory was visible here |
 | Parent-package role statement | **CONFIRMED** | Parent docs name ingest as source intake, normalization, validation, and receipt helpers |
-| Fallback owner for `/packages/` | **CONFIRMED** | `@bartytime4life` |
+| Broad `/packages/` owner fallback | **CONFIRMED** | `.github/CODEOWNERS` assigns `/packages/` to `@bartytime4life` on public `main` |
+| Child-specific owner narrower than `/packages/` fallback | **UNKNOWN / NEEDS VERIFICATION** | No public `CODEOWNERS` rule more specific than `/packages/` was verified for this path |
 | Workflow enforcement specific to this package | **UNKNOWN / NEEDS VERIFICATION** | Current public workflow surface is README-first |
 
 ## Directory tree
@@ -182,6 +193,8 @@ sed -n '1,220p' packages/README.md
 sed -n '1,260p' packages/ingest/README.md
 
 # 3) Review the stronger authority surfaces this package must obey
+sed -n '1,260p' README.md
+sed -n '1,220p' .github/README.md
 sed -n '1,260p' data/registry/README.md
 sed -n '1,260p' data/README.md
 sed -n '1,260p' contracts/README.md
@@ -189,6 +202,9 @@ sed -n '1,260p' schemas/README.md
 sed -n '1,260p' policy/README.md
 sed -n '1,220p' tests/README.md
 sed -n '1,220p' .github/workflows/README.md
+
+# 4) Confirm current owner fallback and review routing
+sed -n '1,160p' .github/CODEOWNERS
 ```
 
 Then inventory what is actually present under this path:
@@ -292,6 +308,9 @@ flowchart LR
 
 This section exists to prevent authority drift.
 
+> [!NOTE]
+> The object-family names below are **doctrine-aligned reference names**, not a claim that matching package-local files already exist under `packages/ingest/` today.
+
 | Object family | Stronger home | `packages/ingest/` relationship |
 |---|---|---|
 | `SourceDescriptor` | `data/registry` + contract/schema surfaces | Consume, honor, and help apply; do not quietly redefine |
@@ -374,5 +393,6 @@ If behavior is reusable and important, it should be promoted into a package with
 - Whether workflow YAML already enforces package-specific schema, policy, or receipt checks.
 - Whether a first-wave contract set for ingest objects is already mounted elsewhere in the repo.
 - Whether sibling packages already consume ingest-facing helpers or only document the intended split.
+- Whether child-specific ownership should narrow beyond the current broad `/packages/` fallback in `CODEOWNERS`.
 
 </details>
