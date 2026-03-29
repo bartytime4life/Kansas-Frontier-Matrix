@@ -10,28 +10,31 @@ updated: TODO-YYYY-MM-DD
 policy_label: TODO-POLICY-LABEL
 related: [../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../apps/api/, ../../tests/]
 tags: [kfm, api, examples]
-notes: [Placeholder values retained where current repo evidence did not confirm doc_id, owners, dates, or policy label.]
+notes: [Placeholder values retained where current repo evidence did not confirm doc_id, owners, dates, policy label, or neighboring path existence. Baseline KFM vocabulary and path references were preserved; route examples and starter tree remain illustrative until repository verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # API Examples
 
-Governed request/response examples for the KFM API boundary, kept subordinate to contracts, policy, and tests.
+Governed request/response examples for the KFM API boundary, kept subordinate to contracts, policy, runtime behavior, and tests.
 
 ![Status](https://img.shields.io/badge/status-experimental-lightgrey)
 ![Owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey)
 ![Trust](https://img.shields.io/badge/trust-governed%20API-1f6feb)
 ![Examples](https://img.shields.io/badge/examples-contract--aligned-0a7a5c)
+![Verification](https://img.shields.io/badge/verification-NEEDS_VERIFICATION-orange)
 
 **Status:** experimental  
 **Owners:** NEEDS VERIFICATION  
+**Path:** `examples/api/`  
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference matrix](#reference-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This directory is for **example API boundary artifacts**: request bodies, response envelopes, error/problem examples, evidence-resolution examples, and other contract-aligned payloads that demonstrate how KFM should behave at the governed API edge.  
+> This directory is for **example API boundary artifacts**: request bodies, response envelopes, error/problem examples, evidence-resolution examples, and other contract-aligned payloads that demonstrate how KFM should behave at the governed API edge.
+>
 > It is **not** the source of truth for schemas, policies, runtime code, or canonical data.
 
 > [!NOTE]
-> Where this README suggests starter subfolders or filenames, treat them as a **reviewable convention** until the mounted contents of `examples/api/` are directly verified.
+> This draft preserves the baseline KFM vocabulary present in current evidence, including `EvidenceRef`, `Focus Mode`, STAC-shaped queries, and story-facing payloads. Folder names, route families, ownership metadata, and starter filenames should be treated as **NEEDS VERIFICATION** until the repository sources are directly available.
 
 ---
 
@@ -39,7 +42,7 @@ Governed request/response examples for the KFM API boundary, kept subordinate to
 
 This directory should make the KFM API membrane easier to understand, review, test, and document.
 
-In practice, that means keeping **small, policy-safe, human-readable examples** of outward-facing API behavior close at hand: dataset listings, STAC-shaped queries, EvidenceRef resolution, Focus Mode envelopes, story-facing payloads, pagination, auth failures, denial paths, and citation-safe examples that downstream docs and tests can reuse.
+In practice, that means keeping **small, policy-safe, human-readable examples** of outward-facing API behavior close at hand: dataset listings, STAC-shaped queries, `EvidenceRef` resolution, Focus Mode envelopes, story-facing payloads, pagination, auth failures, denial paths, and citation-safe examples that downstream docs and tests can reuse without becoming a second source of truth.
 
 Examples here should help answer questions like these:
 
@@ -55,22 +58,22 @@ Examples here should help answer questions like these:
 
 **Path:** `examples/api/`
 
-This folder belongs in the repo’s example/sample surface. It should complement, not replace, the authoritative KFM layers that define and enforce API behavior.
+This folder belongs in the repo’s example or sample surface. It should complement, not replace, the authoritative KFM layers that define and enforce API behavior.
 
-**Upstream dependencies**
+### Upstream dependencies
 
-- [`../../contracts/README.md`](../../contracts/README.md) — contract intent and API/source-of-truth guidance
+- [`../../contracts/README.md`](../../contracts/README.md) — contract intent and API source-of-truth guidance
 - [`../../schemas/README.md`](../../schemas/README.md) — machine-checkable shape definitions
 - [`../../policy/README.md`](../../policy/README.md) — deny-by-default and policy vocabulary surfaces
 - [`../../apps/api/`](../../apps/api/) — governed API implementation boundary
 
-**Downstream consumers**
+### Downstream consumers
 
 - [`../../docs/`](../../docs/) — human-facing docs and runbooks
 - [`../../tests/`](../../tests/) — executable fixtures, contract tests, regression suites
-- [`../../apps/ui/`](../../apps/ui/) — public/steward UI surfaces that should consume governed envelopes instead of inventing their own
+- [`../../apps/ui/`](../../apps/ui/) — steward or public UI surfaces that should consume governed envelopes instead of inventing their own
 
-**Why it exists**
+### Why it exists
 
 KFM separates:
 
@@ -80,6 +83,16 @@ KFM separates:
 
 That separation keeps examples useful without letting them quietly become sovereign truth.
 
+### Verification status
+
+| Surface | Status | Current basis |
+|---|---|---|
+| Directory role as a governed API example surface | **CONFIRMED** | Present in the baseline document body |
+| Path `examples/api/` and the related upstream/downstream references | **NEEDS VERIFICATION** | Preserved from the baseline document; repo tree not directly verified here |
+| Example families (`datasets`, `stac`, `evidence`, `focus`, `story`, `shared`) | **INFERRED** | Supported by baseline terminology and the proposed starter layout |
+| Route families shown in Quickstart (`/api/v1/...`) | **PROPOSED / ILLUSTRATIVE** | Useful for discussion, not evidence of live runtime inventory |
+| Metadata values in the KFM block (`doc_id`, owners, dates, policy label) | **UNKNOWN** | No repo evidence confirmed these values |
+
 [Back to top](#api-examples)
 
 ## Inputs
@@ -88,7 +101,7 @@ Accepted inputs for this directory include:
 
 - redacted request examples for governed routes
 - redacted response examples for governed routes
-- example problem/error payloads
+- example problem or error payloads
 - evidence-resolution request/response pairs
 - Focus Mode outcome examples (`answer`, `abstain`, `deny`, `error`)
 - pagination and filter examples
@@ -137,7 +150,7 @@ The following do **not** belong here:
 ## Directory tree
 
 > [!NOTE]
-> **PROPOSED starter layout** below. Confirm current mounted contents before treating any listed file as existing.
+> **PROPOSED starter layout** below. Confirm the actual mounted contents of `examples/api/` before treating any listed subdirectory or filename as existing.
 
 ```text
 examples/api/
@@ -175,9 +188,9 @@ examples/api/
 **Starter layout intent**
 
 - `datasets/` keeps dataset-listing examples and policy-filtered response shapes.
-- `stac/` keeps search/collection/item examples that stay at the API boundary.
+- `stac/` keeps search, collection, and item examples that stay at the API boundary.
 - `evidence/` keeps `EvidenceRef -> EvidenceBundle` illustrations.
-- `focus/` keeps finite outcome examples for Focus Mode.
+- `focus/` keeps finite Focus Mode outcome examples.
 - `story/` keeps story-facing route examples, not the narrative artifacts themselves.
 - `shared/` keeps reusable boundary examples such as headers and pagination.
 - `_index/manifest.md` can provide a compact human index if this folder grows.
@@ -187,7 +200,7 @@ examples/api/
 ## Quickstart
 
 > [!IMPORTANT]
-> The route family below is **illustrative and contract-aligned**, not a claim that every mounted endpoint already exists exactly as shown. Verify the live route inventory before treating any example as executable against a running environment.
+> The route families below are **illustrative and contract-aligned**, not evidence that the mounted API currently exposes these exact endpoints. Verify the live route inventory in contracts, schemas, and `apps/api/` before treating any example as executable.
 
 Set a base URL and token placeholder:
 
@@ -199,6 +212,7 @@ export KFM_TOKEN="REPLACE_ME"
 List datasets:
 
 ```bash
+# ILLUSTRATIVE route family — verify actual path names before use
 curl -sS \
   -H "Authorization: Bearer ${KFM_TOKEN}" \
   "${KFM_BASE_URL}/api/v1/datasets"
@@ -207,6 +221,7 @@ curl -sS \
 Query STAC collections:
 
 ```bash
+# ILLUSTRATIVE route family — verify actual path names before use
 curl -sS \
   -H "Authorization: Bearer ${KFM_TOKEN}" \
   "${KFM_BASE_URL}/api/v1/stac/collections"
@@ -215,6 +230,7 @@ curl -sS \
 Resolve evidence from a saved example body:
 
 ```bash
+# ILLUSTRATIVE route family — verify actual path names before use
 curl -sS -X POST \
   -H "Authorization: Bearer ${KFM_TOKEN}" \
   -H "Content-Type: application/json" \
@@ -222,9 +238,10 @@ curl -sS -X POST \
   --data @examples/api/evidence/resolve.request.json
 ```
 
-Submit a Focus Mode question from a saved example body:
+Submit a Focus Mode request from a saved example body:
 
 ```bash
+# ILLUSTRATIVE route family — verify actual path names before use
 curl -sS -X POST \
   -H "Authorization: Bearer ${KFM_TOKEN}" \
   -H "Content-Type: application/json" \
@@ -263,7 +280,7 @@ Good examples show:
 - response envelope
 - problem payload
 - evidence link fields
-- version / audit / pagination fields when relevant
+- version, audit, or pagination fields when relevant
 
 Good examples do **not** expose internal storage assumptions, unpublished data shortcuts, or implementation-only fields that should never leak.
 
@@ -288,6 +305,10 @@ Avoid:
 
 If a route, envelope, or policy-visible field changes, update the example at the same time. The directory should help catch drift, not become a second drift surface.
 
+### 6. Keep downstream consumers honest
+
+If docs, tests, or UI surfaces reuse examples from this folder, they should **reference** them or derive from them rather than silently copying and drifting. A stale copy elsewhere is harder to review than a single canonical example file here.
+
 [Back to top](#api-examples)
 
 ## Diagram
@@ -305,7 +326,7 @@ flowchart LR
     E1[request examples]
     E2[response envelopes]
     E3[problem paths]
-    E4[evidence + focus outcomes]
+    E4[evidence and focus outcomes]
   end
 
   subgraph D[Downstream reuse]
@@ -313,8 +334,6 @@ flowchart LR
     D2[tests/]
     D3[apps/ui/]
   end
-
-  STORE[(canonical stores)] -. never direct .-> D3
 
   C --> E
   S --> E
@@ -324,6 +343,10 @@ flowchart LR
   E --> D1
   E --> D2
   E --> D3
+
+  D1 -. must not redefine .-> C
+  D2 -. should verify against .-> C
+  D3 -. should consume governed envelopes from .-> R
 ```
 
 **Reading the diagram**
@@ -331,22 +354,22 @@ flowchart LR
 - `contracts/`, `schemas/`, `policy/`, and `apps/api/` define or enforce behavior.
 - `examples/api/` demonstrates that behavior at the governed boundary.
 - `docs/`, `tests/`, and UI surfaces may reuse the same examples.
-- Canonical stores remain behind the trust membrane; examples should not normalize direct access.
+- Downstream consumers should not silently redefine the boundary they are supposed to explain or consume.
 
 [Back to top](#api-examples)
 
 ## Reference matrix
 
 | Example family | What it should prove | Typical companion source | Keep in `examples/api/`? |
-|---|---|---|---:|
+|---|---|---:|---:|
 | Dataset listing | policy-filtered list shape, pagination, version visibility | contracts + API route | Yes |
 | STAC search / collections | outward geospatial query shape | contracts + schemas | Yes |
-| Evidence resolution | `EvidenceRef` request and policy-safe bundle response | evidence contract / resolver docs | Yes |
-| Focus Mode outcome | finite response outcomes and cite-or-abstain behavior | Focus / runtime envelope contract | Yes |
+| Evidence resolution | `EvidenceRef` request and policy-safe bundle response | evidence contract or resolver docs | Yes |
+| Focus Mode outcome | finite response outcomes and cite-or-abstain behavior | runtime envelope or Focus Mode contract | Yes |
 | Story route example | route payload and review-sensitive response shape | story contract + API route | Yes |
 | Raw canonical artifact | truth-path source material | canonical storage + catalog | No |
 | JSON Schema source file | machine-checkable authority | `contracts/`, `schemas/` | No |
-| Policy rule source | executable authorization / obligation logic | `policy/` | No |
+| Policy rule source | executable authorization or obligation logic | `policy/` | No |
 | Merge-gating executable fixture | automated CI asset | `tests/` | Usually no |
 
 [Back to top](#api-examples)
@@ -384,7 +407,7 @@ Yes, but only **sanitized** header shapes, role-sensitive examples, and placehol
 
 ### How is this different from thin-slice or domain examples?
 
-`examples/api/` should stay at the **governed API boundary**. Truth-path artifacts, ingest receipts, dataset versions, catalog closures, and release manifests belong with slice/domain or artifact-specific example areas, not here.
+`examples/api/` should stay at the **governed API boundary**. Truth-path artifacts, ingest receipts, dataset versions, catalog closures, and release manifests belong with slice, domain, or artifact-specific example areas instead.
 
 ### What is the most common failure mode for this folder?
 
