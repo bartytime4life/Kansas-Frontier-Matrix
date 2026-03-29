@@ -10,16 +10,18 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [../README.md, ./README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, migrations, template]
-notes: [Template file for migration-bearing changes; fill commit-time metadata placeholders before merge if the repo adopts strict metadata enforcement.]
+notes: [Template file for migration-bearing changes; fill commit-time metadata placeholders before merge if the repo adopts strict metadata enforcement., Path target and related links remain NEEDS VERIFICATION until the branch is directly inspected.]
 [/KFM_META_BLOCK_V2] -->
 
 # Migration Packet Template
+
 Reviewable packet for KFM migration-bearing changes across schema, data, contracts, policy, release, runtime, and visible correction.
 
-> **Template role:** use this file when a change affects durable structure, trust-bearing objects, migration seams, or public/steward trust state.
-> **Path:** `migrations/templates/migration-packet.md`
-> **Upstream:** [`../README.md`](../README.md) · [`./README.md`](./README.md)
-> **Adjacent verification surfaces:** [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
+> **Status:** `draft`  
+> **Owner:** `@bartytime4life`  
+> **Evidence posture:** **CONFIRMED** doctrine · **INFERRED** starter paths · **UNKNOWN** mounted repo topology in the current session  
+> **Path target:** `migrations/templates/migration-packet.md`  
+> **Related surfaces:** [`../README.md`](../README.md) · [`./README.md`](./README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > **Quick jumps:** [How to use](#how-to-use-this-template) · [Packet header](#packet-header) · [Repo fit](#repo-fit) · [Migration summary](#migration-summary) · [Execution plan](#execution-plan) · [Verification & proof](#verification--proof) · [Rollback / correction](#rollback--supersession--correction) · [Definition of done](#definition-of-done)
 
 > [!IMPORTANT]
@@ -27,6 +29,22 @@ Reviewable packet for KFM migration-bearing changes across schema, data, contrac
 
 > [!NOTE]
 > In KFM, migration is broader than database DDL. Treat schema, data repair/backfill, contract or envelope evolution, policy or registry change, release/proof-pack change, runtime trust behavior, supersession, withdrawal, and visible correction as potentially migration-bearing work.
+
+> [!CAUTION]
+> Current-session evidence did **not** include a mounted repo tree. Treat `migrations/`, neighboring directories, and all path-level claims in this template as reviewable until the branch under change is directly inspected.
+
+## Why this packet exists
+
+KFM treats promotion as a governed state transition, not an informal file copy or deployment side effect. A migration-bearing change is therefore not complete when the transform or script finishes; it is complete when the affected contract objects, review state, proof objects, runtime consequences, and correction posture are inspectable together.
+
+Use this packet when a change touches any of the following:
+
+- durable structure
+- trust-bearing objects
+- release seams
+- runtime interpretation
+- correction lineage
+- public or steward meaning
 
 ## How to use this template
 
@@ -58,7 +76,7 @@ Reviewable packet for KFM migration-bearing changes across schema, data, contrac
 | **Runtime / trust behavior** | Yes | outward result changes, new finite outcomes, stale/generalized handling |
 | **Correction-bearing follow-up** | Yes | supersession, withdrawal, visible correction propagation |
 | **Purely local scratch work** | No | ad hoc analyst SQL, exploratory notebooks, one-off debugging |
-| **UI-only visual polish without trust-state change** | No | styling-only edits that do not alter trust cues, release state, or runtime meaning |
+| **UI-only polish without trust-state change** | No | styling-only edits that do not alter trust cues, release state, or runtime meaning |
 
 [Back to top](#migration-packet-template)
 
@@ -102,16 +120,31 @@ open_unknowns:
 > [!TIP]
 > Keep the header short and stable. Put long explanations in the sections below, not inside the header block.
 
+## Packet-to-proof-object spine
+
+This packet is the review glue across the object families KFM already expects.
+
+| Object family | Typical role in this packet |
+| --- | --- |
+| **SourceDescriptor / source change note** | Declares the source or seam that changed and its intake assumptions |
+| **IngestReceipt / ValidationReport** | Proves fetch, landing, validation, quarantine, or pass when data movement occurred |
+| **DatasetVersion / CatalogClosure** | Shows the authoritative candidate or promoted subject set and outward metadata closure |
+| **DecisionEnvelope / ReviewRecord** | Captures machine-readable policy result and human review where required |
+| **ReleaseManifest / ReleaseProofPack** | Ties publication scope, rollback posture, and release significance together |
+| **ProjectionBuildReceipt** | Proves rebuilds or stale-state consequences for derived delivery layers |
+| **EvidenceBundle / RuntimeResponseEnvelope** | Shows how runtime-facing meaning resolves and fails closed when runtime behavior changes |
+| **CorrectionNotice** | Preserves visible lineage under correction, supersession, withdrawal, or replacement |
+
 ## Repo fit
 
 | Item | Value |
 | --- | --- |
-| **Path** | `migrations/templates/migration-packet.md` |
-| **Role in repo** | Reusable template for reviewable migration packets |
-| **Confirmed local neighbors** | [`./README.md`](./README.md), [`../README.md`](../README.md) |
-| **Confirmed parent migration surfaces** | `../drills/`, `../templates/`, `../waves/` |
-| **Confirmed broader repo surfaces** | `../../contracts/`, `../../policy/`, `../../schemas/`, `../../scripts/`, `../../tests/`, `../../.github/workflows/` |
-| **Likely downstream use** | Copy or adapt into migration wave docs, PR context, or drill notes (**PROPOSED**; verify against the mounted branch before standardizing) |
+| **Path target** | `migrations/templates/migration-packet.md` |
+| **Role in repo** | Reusable packet template for migration-bearing review work |
+| **Mounted repo verification** | **NEEDS VERIFICATION** — current-session evidence did not include a repo checkout |
+| **Task-supplied related links** | [`../README.md`](../README.md), [`./README.md`](./README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| **Broader corroborated doc surfaces** | `contracts/`, `schemas/`, `policy/`, `tests/`, and `.github/workflows/` are described elsewhere in attached repo-grounded evidence, but their mounted branch state remains **NEEDS VERIFICATION** |
+| **Likely downstream use** | Copied into migration wave docs, PR context, release review packets, or drills (**INFERRED**; confirm against the branch before standardizing) |
 
 ## Migration summary
 
@@ -149,9 +182,10 @@ State what must remain true before, during, and after cutover.
 
 | Invariant | Required answer |
 | --- | --- |
-| **Canonical path preserved?** | `<how Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED stays intact>` |
+| **Canonical path preserved?** | `<how Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG (including outward STAC/DCAT/PROV closure where relevant) -> PUBLISHED stays intact>` |
 | **Trust membrane preserved?** | `<how public/steward clients avoid bypassing governed APIs or evidence resolution>` |
 | **Authoritative vs derived split preserved?** | `<what remains authoritative and what must rebuild or warn>` |
+| **Derived layers remain rebuildable?** | `<which search / graph / vector / tile / cache / export layers rebuild from promoted scope only>` |
 | **Build / deploy / promote separated?** | `<how deployment does not silently become publication>` |
 | **Finite outcomes preserved?** | `<what outward negative states remain visible if the cutover fails or narrows scope>` |
 | **Compatibility seam explicit?** | `<dual-read, dual-write, adapter, bridge, or none>` |
@@ -161,28 +195,32 @@ State what must remain true before, during, and after cutover.
 
 Name every trust-bearing artifact that changes with this migration.
 
-| Surface | Paths / artifacts | Current state | Planned change | Posture |
+| Surface family | Paths / artifacts | Current state | Planned change | Posture |
 | --- | --- | --- | --- | --- |
-| Contracts / schemas | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<CONFIRMED|PROPOSED|UNKNOWN>` |
-| Fixtures (valid / invalid) | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Policy bundles / registries | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Data / receipts / catalogs | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Scripts / runners / orchestration | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Workflows / gates | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Runtime surfaces | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Docs / diagrams / runbooks | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Release / proof-pack artifacts | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| SourceDescriptor / source notes | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<CONFIRMED|INFERRED|PROPOSED|UNKNOWN>` |
+| IngestReceipt / ValidationReport | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| DatasetVersion / CatalogClosure | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| DecisionEnvelope / ReviewRecord | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| ReleaseManifest / ReleaseProofPack | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| ProjectionBuildReceipt / delivery artifacts | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| EvidenceBundle / RuntimeResponseEnvelope | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| CorrectionNotice / rollback notes | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| Docs / runbooks / tests | `<fill-me>` | `<fill-me>` | `<fill-me>` | `<...>` |
 
 ### Proof objects that must travel with this change
 
-- [ ] `<schema file or schema_version note>`
-- [ ] `<valid fixture pack>`
-- [ ] `<invalid fixture pack>`
-- [ ] `<validation report or parity check>`
-- [ ] `<release / candidate manifest reference>`
+- [ ] `<source descriptor or source change note>`
+- [ ] `<validation report>`
+- [ ] `<authoritative dataset version reference>`
+- [ ] `<catalog closure reference>`
+- [ ] `<decision envelope>`
+- [ ] `<review record if required>`
+- [ ] `<release manifest or proof-pack reference>`
+- [ ] `<projection build receipt or stale-state note if derived layers change>`
+- [ ] `<evidence bundle example or runtime envelope example if runtime meaning changes>`
 - [ ] `<rollback note>`
 - [ ] `<correction / supersession note if needed>`
-- [ ] `<docs / diagram update>`
+- [ ] `<docs / diagram / runbook update>`
 
 [Back to top](#migration-packet-template)
 
@@ -221,9 +259,10 @@ Record what was checked, how it was checked, and what evidence proves it.
 | Schema / contract validation | `<automated|manual|UNKNOWN>` | `<fill-me>` | `<fill-me>` | `<pass|fail|n/a>` |
 | Policy validation | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
 | Fixture validation (valid / invalid) | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Data parity / backfill verification | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| Deterministic identity / parity verification | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
 | Release / proof-pack completeness | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
-| Post-deploy freshness / smoke / canary | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| Stale-projection / freshness / smoke / canary | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
+| Runtime citation / envelope verification | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
 | Correction visibility check | `<...>` | `<fill-me>` | `<fill-me>` | `<...>` |
 
 ### What public and steward surfaces should show
@@ -240,20 +279,20 @@ Record what was checked, how it was checked, and what evidence proves it.
 
 ```mermaid
 flowchart LR
-    A[Classify migration\nschema / data / contract / policy / runtime / correction] --> B[Prepare migration packet]
-    B --> C[Update companion artifacts\nschemas • fixtures • policy diffs • docs]
-    C --> D[Run gates\nschema • policy • validation • release]
+    A[Classify migration<br/>schema / data / contract / policy / runtime / correction] --> B[Open migration packet]
+    B --> C[Update companion artifacts<br/>descriptors • validation • dataset versions • decisions • release refs]
+    C --> D[Run gates<br/>schema • policy • fixtures • proof • correction checks]
     D --> E{Candidate passes?}
     E -- No --> Q[Hold / Quarantine / Revise]
     Q --> B
     E -- Yes --> F[Review + approval]
-    F --> G[Deploy artifact\nwithout collapsing trust state]
-    G --> H[Promote approved release]
-    H --> I[Post-deploy verification\nsmoke • canary • freshness • trust checks]
+    F --> G[Deploy or apply change<br/>without collapsing publication state]
+    G --> H[Promote governed release]
+    H --> I[Verify derived rebuilds and runtime behavior<br/>freshness • stale-state • answer/abstain/deny/error]
     I --> J{Trust preserved?}
     J -- Yes --> K[Retire seam deliberately]
     J -- No --> L[Rollback / Supersede / Withdraw / Correct]
-    L --> M[Emit correction notice\nand propagate visible state]
+    L --> M[Emit correction notice<br/>and propagate visible state]
 ```
 
 [Back to top](#migration-packet-template)
@@ -288,6 +327,9 @@ flowchart LR
 
 ## Review & approvals
 
+> [!IMPORTANT]
+> Policy-significant release actions should not self-approve. If the same actor authors and approves the packet, record the exception explicitly and surface it in review notes.
+
 | Role | Confirmed signal / expectation | Fill in for this packet |
 | --- | --- | --- |
 | Path owner | `@bartytime4life` | `<acknowledged / pending>` |
@@ -306,7 +348,7 @@ flowchart LR
 
 A migration-bearing change should not be called complete until all applicable boxes below are checked.
 
-- [ ] Branch inventory confirms whether `migrations/` already existed or is being introduced.
+- [ ] Branch inspection confirms whether `migrations/` already existed or is being introduced.
 - [ ] The migration class is named clearly.
 - [ ] Preconditions, compatibility seams, and stop rules are documented.
 - [ ] The canonical path and trust membrane remain intact.
@@ -318,6 +360,7 @@ A migration-bearing change should not be called complete until all applicable bo
 - [ ] Rollback, supersession, withdrawal, or correction posture is explicit.
 - [ ] Relevant public-facing stale, generalized, withheld, superseded, or withdrawn states are handled honestly.
 - [ ] Docs, diagrams, and runbooks changed with the behavior.
+- [ ] Path-level assumptions remain tagged **INFERRED**, **PROPOSED**, `UNKNOWN`, or `NEEDS VERIFICATION` until the mounted branch proves otherwise.
 
 ## Appendix
 
@@ -332,6 +375,7 @@ A migration-bearing change should not be called complete until all applicable bo
 - Which public or steward surface shows honest state if the cutover fails?
 - Is rollback enough, or does this change require supersession, withdrawal, or visible correction?
 - What temporary seam exists, and exactly what retires it?
+- Which proof object is missing that would otherwise make this packet reviewable?
 
 ### Copy-paste notes block
 
