@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
+title: KFM Research — Evaluations README
+type: standard
+version: v1
+status: draft
+owners: NEEDS VERIFICATION
+created: NEEDS VERIFICATION
+updated: NEEDS VERIFICATION
+policy_label: NEEDS VERIFICATION
+related: [../README.md, ../../README.md, ../source_summaries/README.md, ./assets/README.md]
+tags: [kfm]
+notes: [Relative links and subtree shape follow the task-provided baseline for this README; mounted repo tree was not directly reverified in this session.]
+[/KFM_META_BLOCK_V2] -->
+
 <a id="top"></a>
 
 # KFM Research — Evaluations README
@@ -6,8 +21,9 @@ Repeatable evaluation lane for benchmarks, QA summaries, result deltas, and repr
 
 > Status: experimental  
 > Owners: `NEEDS VERIFICATION`  
-> Source posture: directory README aligned to the current branch-visible `docs/research/README.md` and March 2026 KFM doctrine  
+> Path: `docs/research/evaluations/README.md`  
 > Repo role: subtree README for `docs/research/evaluations/`  
+> Source posture: aligned to the task baseline for this subtree and March 2026 KFM doctrine; exact mounted repo tree remains `UNKNOWN` in this session  
 > Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Evaluation packet](#evaluation-packet) · [Task list and definition of done](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 [![Status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square)](#scope)
@@ -48,7 +64,7 @@ An evaluation belongs in this lane when most of the following are true:
 
 ## Repo fit
 
-This README should make the lane legible without pretending the lane is more mature than the visible branch proves.
+This README should make the lane legible without pretending the lane is more mature than the mounted session proves.
 
 | Item | Value |
 |---|---|
@@ -57,8 +73,12 @@ This README should make the lane legible without pretending the lane is more mat
 | Adjacent lane | [`../source_summaries/README.md`](../source_summaries/README.md) |
 | Downstream | [`./assets/README.md`](./assets/README.md) |
 | Promotion destinations | [`../../../tests/`](../../../tests/) · [`../../../contracts/`](../../../contracts/) · [`../../../schemas/`](../../../schemas/) · [`../../../policy/`](../../../policy/) · governed docs under [`../../`](../../) · owning subsystem docs or code surface |
-| Current branch-visible structure | `README.md` plus `assets/README.md` |
+| Task baseline for this subtree | `README.md` plus `assets/README.md` |
+| Mounted-session constraint | Exact repo tree, sibling docs, tests, workflows, and implementation depth were not directly reverified in this session |
 | Why this lane exists | Keep repeatable evaluation work separate from drafts, source summaries, and governed production surfaces |
+
+> [!NOTE]
+> Relative links and subtree shape above follow the task baseline for this README. Recheck them against the mounted branch before commit if the local docs tree has shifted.
 
 ## Accepted inputs
 
@@ -69,7 +89,7 @@ Accepted here:
 - benchmark notes with pinned inputs and run conditions
 - QA summaries for map, dossier, compare, export, review, or adjacent trust surfaces
 - regression writeups with before/after deltas
-- trust-behavior evaluations for abstention, denial, stale-state, conflict, or evidence reconstruction
+- trust-behavior evaluations for abstention, denial, stale state, partial coverage, corroboration conflict, or evidence reconstruction
 - comparison matrices for tools, approaches, or implementation options
 - reproducible evaluation notes tied to releases, candidate builds, datasets, fixtures, or known source sets
 - redacted charts, screenshots, and small static figures stored under [`./assets/`](./assets/README.md)
@@ -110,7 +130,7 @@ Use the same truth-discipline tone that appears elsewhere in KFM’s README fami
 
 ## Directory tree
 
-Current branch-visible structure for this lane:
+Current task baseline for this lane:
 
 ```text
 docs/research/evaluations/
@@ -131,6 +151,13 @@ docs/research/evaluations/
 5. Put only small, redacted supporting figures in [`./assets/`](./assets/README.md).
 6. End with a verdict: keep, change, promote, block, rollback, or re-run.
 7. If the result becomes normative, promote the rule, test, contract, schema, or subsystem behavior to its governed home.
+
+### Illustrative file pattern
+
+```text
+docs/research/evaluations/<topic>-evaluation.md
+docs/research/evaluations/assets/<topic>-chart-01.png
+```
 
 ## Usage
 
@@ -189,19 +216,19 @@ Keep assets named, scoped, and easy to delete or replace when the evaluation cha
 
 ```mermaid
 flowchart TD
-    Q[Question or decision pressure] --> P[Evaluation plan]
-    P --> I[Inputs and provenance]
-    I --> R[Repeatable run or review]
-    R --> A[Redacted figures in assets/]
-    R --> S[Summary, deltas, and verdict]
+    Q[Question or decision pressure] --> P[Plan the evaluation]
+    P --> I[Identify inputs and provenance]
+    I --> R[Run or review in a repeatable way]
+    R --> A[Small redacted support files in assets/]
+    R --> S[Record results, deltas, and verdict]
     A --> S
 
-    S --> N{Normative consequence?}
+    S --> N{Does the result become normative?}
 
-    N -- No --> E[Keep in docs/research/evaluations/]
-    N -- Yes --> T[Promote to tests / contracts / schemas / governed docs / subsystem docs]
+    N -- No --> E[Keep it in docs/research/evaluations/]
+    N -- Yes --> T[Promote to tests / contracts / schemas / policy / governed docs / owning subsystem]
 
-    T --> G[Governed enforcement or approved surface use]
+    T --> G[Governed enforcement or approved outward use]
 ```
 
 [Back to top](#top)
@@ -232,6 +259,7 @@ Use this checklist when opening or reviewing an evaluation note.
 - [ ] The method is rerunnable or reviewable.
 - [ ] Results are recorded as observations, not just impressions.
 - [ ] Interpretation is clearly separated from the measured or observed result.
+- [ ] Any `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` statements are labeled appropriately.
 - [ ] Supporting figures are stored in `./assets/` only when they add real inspection value.
 - [ ] Secrets, credentials, copyrighted bulk copies, or precise sensitive locations are absent.
 - [ ] The note ends with a verdict or next action.
