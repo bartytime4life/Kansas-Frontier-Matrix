@@ -10,77 +10,70 @@ updated: NEEDS_VERIFICATION_YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [../README.md, ../../README.md, ../../../README.md, ../../../../README.md, ../../../../../README.md, ../books/README.md, ../web/README.md]
 tags: [kfm, research, source_summaries, maps]
-notes: [Current branch-visible file was a scaffold before this revision; doc_id and historical created/updated dates need verification before commit.]
+notes: [Supplied file content was the immediate revision baseline; doc_id, historical dates, policy_label, and neighboring-link resolution need verification before commit because the mounted repo tree was not directly visible in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 # maps
 
-Structured summaries of map sources that inform KFM research without becoming governed truth by default.
+Structured summaries of map sources that inform KFM research and later governed work without becoming governed truth by default.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![lane](https://img.shields.io/badge/lane-map%20source%20summaries-1f6feb) ![scope](https://img.shields.io/badge/scope-non--normative-6c757d) ![posture](https://img.shields.io/badge/posture-evidence--led-0a7ea4) ![kfm](https://img.shields.io/badge/kfm-map--first-0a7d5a)  
+> **Repo fit:** Directory README for `docs/research/source_summaries/by_type/maps/` · Upstream: [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) · [`../../../../README.md`](../../../../README.md) · [`../../../../../README.md`](../../../../../README.md) · Adjacent lanes: [`../books/README.md`](../books/README.md) · [`../web/README.md`](../web/README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 >
 > [!IMPORTANT]
-> This lane is **non-normative until promoted**. A summary here may inform contracts, schemas, Story Nodes, UI behavior, or Focus Mode later, but it does **not** define them from this directory.
+> This lane is **non-normative until promoted**. A summary here can influence ETL planning, catalog work, graph linkage, Story work, or Focus Mode later, but it does **not** define those governed surfaces from this directory.
 >
 > [!NOTE]
-> **Current branch signal (CONFIRMED):** this folder is currently visible as a scaffold directory with a single `README.md`. The per-source filename pattern documented below is therefore a **PROPOSED** working shape for future branch use.
+> Maps are both documentary sources and spatial artifacts. A useful summary therefore needs more than a bibliography entry: it should capture provenance, rights posture, spatial and temporal support, and enough cartographic detail to keep later reuse honest.
 
 ## Scope
 
-`maps/` is the by-type lane for one-source markdown summaries whose primary evidence object is a **map**.
+`maps/` is the by-type lane for one-source Markdown summaries whose **primary evidence object is a map**.
 
-Use it when the map itself is what needs to be inspected, described, compared, or routed into later KFM work: a standalone sheet, atlas plate, plat, thematic map, georeferenced scan, participatory sketch map, field map, or a documented snapshot of a web map whose visible cartographic state is itself the source-bearing artifact.
+Use it when the map itself is the thing under inspection: a standalone sheet, atlas plate, plat, georeferenced scan, thematic map PDF, vector map product, or a documented capture of a web-map state whose cartographic view is the source-bearing artifact.
 
-Keep this lane disciplined. It is for **structured source summaries**, not for raw imagery dumps, ad hoc screenshots with no provenance, or normative renderer/style law.
+Keep the lane disciplined. It exists to turn a map into a structured research intake record: what the map is, what it claims, what it can support, what it leaves ambiguous, and what burdens follow it downstream. It is not the place where renderer rules, public narrative claims, contracts, or canonical system behavior become settled law.
 
 ## Repo fit
 
 | Item | Value |
 |---|---|
 | Path | `docs/research/source_summaries/by_type/maps/README.md` |
-| Role | Directory README for map-source summaries inside the research subtree |
+| Role | Directory README for map-type source summaries in the research subtree |
 | Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) · [`../../../../README.md`](../../../../README.md) · [`../../../../../README.md`](../../../../../README.md) |
-| Adjacent by-type lanes | [`../books/README.md`](../books/README.md) · [`../web/README.md`](../web/README.md) |
-| Current branch-visible contents | `README.md` |
-| Recommended additions | **PROPOSED:** `./<source-slug>.md` per summarized map source |
-| Promotion destinations | Governed docs, subsystem docs, Story work, implementation docs, schemas, or app/runtime surfaces after review |
-
-Working routing rule:
-
-- Choose `maps/` when the **map artifact** is what you are summarizing.
-- Choose `books/` when the map is subordinate to a broader book source.
-- Choose `web/` when the primary evidence is a live or documented web surface rather than a map artifact alone.
-
-> [!NOTE]
-> Everything below the confirmed path and sibling-lane structure is a **PROPOSED lane contract** built upward from the current repo shape and the research subtree’s operating rules.
+| Adjacent lanes | [`../books/README.md`](../books/README.md) · [`../web/README.md`](../web/README.md) |
+| Downstream use | May later inform ETL normalization, STAC/DCAT/PROV closure, graph linkage, API delivery, UI overlays, Story Nodes, or Focus Mode **after** review and promotion |
+| Governing posture | Research intake only; promotion is required before this lane has runtime or publication effect |
+| Working filename pattern | **PROPOSED:** one summary file per map source, using a stable slug |
 
 ## Accepted inputs
 
 Accepted here:
 
-- standalone map sheets
-- atlas plates and map folios
-- thematic maps and analytical map figures
+- standalone map sheets and map PDFs
+- atlas plates, folios, and plate-level extracts where the map is the primary source object
 - cadastral maps, plats, parcel or tenure maps
-- historical scanned maps with source metadata
-- documented web-map snapshots where the captured map state is the source
+- thematic or analytical maps
+- historical scans and georeferenced rasters
+- vector map products when the map artifact, not just the underlying dataset, is under review
+- documented snapshots of web maps when the captured map state is itself the evidence-bearing object
 - participatory, sketch, or field maps with provenance and rights notes
-- cartographic exemplars used to study projection, symbolization, annotation, legend design, or evidence cues
 
 ## Exclusions
 
 Do **not** put these here:
 
-- authoritative KFM policy, contract, or schema definitions
-- production style registries, layer metadata contracts, or renderer rules
+- books, papers, or manuals where maps are only embedded illustrations — use [`../books/README.md`](../books/README.md) instead
+- general websites, live map applications, or interaction behavior reviews — use [`../web/README.md`](../web/README.md) instead
+- authoritative KFM policy, schema, or contract definitions
+- production style registries, layer catalogs, or renderer rules
 - raw datasets, tiles, rasters, or vector packages that belong under `data/`
-- large copyrighted copies used as silent surrogates for summary writing
+- large copyrighted copies used as quiet substitutes for a real summary
 - uncited public claims intended for Story Nodes or Focus Mode
-- implementation notes that belong first in subsystem docs, `apps/`, `packages/`, `tests/`, or governed runbooks
-- precise sensitive locations, culturally sensitive directions, or exact-site disclosure that lacks a review posture
+- exact sensitive locations, culturally sensitive directions, or precise-site disclosure without review posture
 
 When in doubt, keep the **summary** here and move only the **promoted rule** elsewhere.
 
@@ -88,11 +81,11 @@ When in doubt, keep the **summary** here and move only the **promoted rule** els
 
 ```text
 docs/research/source_summaries/by_type/maps/
-├── README.md                      # lane contract (CONFIRMED)
-└── <source-slug>.md               # one map-source summary (PROPOSED)
+├── README.md                # lane contract / directory guidance
+└── <source-slug>.md         # one map-source summary (PROPOSED working shape)
 ```
 
-Recommended filename shape:
+Recommended slug shape:
 
 ```text
 <creator-or-institution>--<short-title>--<year>.md
@@ -108,78 +101,81 @@ khs--sanborn-map-topeka-plate-12--1912.md
 
 ## Quickstart
 
-1. Confirm that the **map** is the primary source object.
-2. Create one summary file using the recommended per-source pattern.
-3. Record the source facts first: creator, title, date or edition, place coverage, time coverage, and rights or reuse notes.
-4. Add map-specific inspection notes: projection or CRS if known, scale/support/resolution if known, legend/symbolization observations, georeferencing status, and known limitations.
-5. Separate **fact**, **inference**, and **proposal** before naming any KFM promotion target.
+1. Confirm that the **map** is the primary source object, not merely an illustration inside a broader source.
+2. Create one summary file using a stable slug.
+3. Record source facts first: citation, acquisition path, rights posture, and any repository or accession identifier.
+4. Add map-specific inspection notes: map class, spatial coverage, temporal meaning, scale, CRS/projection/georeferencing status, legend/symbology cues, and known limitations.
+5. Separate **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, and **NEEDS VERIFICATION** statements before naming any downstream KFM use.
 
 > [!TIP]
-> If georeferencing, projection, scale, or rights status is unknown, say so explicitly. A clean uncertainty note is better than a confident fiction.
+> If CRS, georeferencing, scale, rights status, or depicted-time semantics are unclear, say so plainly. Clean uncertainty is better than a confident fiction.
 
 ## Usage
 
 ### Choose the right by-type lane
 
-| Primary evidence object | Use this lane | Typical result |
+| Primary source object | Use this lane | Typical result |
 |---|---|---|
-| Standalone map sheet, atlas plate, plat, or map figure | `maps/` | One-source map summary |
-| Book or manual where maps are embedded within a broader text source | `books/` | Book summary with map references inside it |
-| Live map site, API-driven web map, story map, or other interactive web surface | `web/` | Web-source summary focused on behavior, state, and access pattern |
+| Standalone map sheet, atlas plate, plat, georeferenced scan, or thematic map artifact | `maps/` | One-source map summary |
+| Book or manual with maps embedded in a broader textual source | `books/` | Book summary with map references inside it |
+| Live map site, story map, API-driven map application, or other interactive web surface | `web/` | Web-source summary focused on behavior, state, and access pattern |
 
 ### Minimum summary fields
 
 | Field | Minimum expectation | Why it matters |
 |---|---|---|
 | Source slug | Stable kebab-case identifier | Keeps summaries linkable and reviewable |
-| Source title | As shown on the source | Prevents drift |
-| Creator / publisher | Person, institution, or unknown | Ownership and provenance |
-| Date / edition | Exact if known; otherwise explicit approximation | Time meaning |
-| Geographic coverage | Place, region, extent, or sheet footprint | Spatial scope |
-| Temporal coverage | As-of date, publication date, historical period, or unknown | Interpretation boundary |
-| Source class | Sheet, atlas plate, plat, sketch map, web-map snapshot, etc. | Routing and review |
-| Projection / CRS / georeferencing | Record what is known; mark unknowns | Reuse and alignment |
-| Scale / support / resolution | Numeric if known; otherwise qualitative note | Fitness for use |
-| Legend / symbology notes | Short note on what the map emphasizes | Meaning and comparability |
-| Rights / reuse posture | Public domain, licensed, restricted, unknown, etc. | Publication safety |
-| KFM relevance | Which lane, question, or thin slice it may inform | Promotion routing |
-| Sensitivity / precision notes | Exact locations, tenure, heritage, or cultural concerns | Review burden |
-| Truth posture | Separate observed fact from inference and proposal | KFM discipline |
+| Full citation / source title | Record exactly what the source calls itself | Prevents title drift |
+| Acquisition / repository | Where the map was obtained; accession or catalog ID if known | Preserves provenance |
+| Creator / publisher | Person, institution, or explicit unknown | Ownership and authority context |
+| Date / edition / plate / sheet | Exact if known; otherwise explicit approximation | Time meaning and version control |
+| Source class / source role | Sheet, atlas plate, plat, scan, vector map product, documented snapshot; note observational/interpreted/modeled/derived when known | Keeps source-role discipline visible |
+| Geographic coverage | Place, extent, sheet footprint, or region | Spatial scope |
+| Temporal coverage | Publication time, depicted time, survey time, or unknown | Interpretation boundary |
+| Rights / reuse posture | Public domain, licensed, restricted, unclear, or unknown | Publication safety |
+| CRS / projection / datum / georeferencing | Record what is known; mark unknowns explicitly | Reuse, alignment, and QA |
+| Scale / support / resolution | Printed scale, scan quality, raster resolution, or qualitative note | Fitness for use |
+| Legend / symbology / emphasis | Brief note on what the map foregrounds | Makes cartographic claims inspectable |
+| Candidate KFM relevance | Which place, event, organization, question, or lane this may inform | Promotion routing |
+| Sensitivity / precision note | Exact locations, cultural concerns, archival restrictions, privacy, or none known | Review burden |
+| Truth posture | Keep observed fact separate from inference and proposal | KFM discipline |
 
 ### Working summary shape
 
-A good map summary usually answers five questions quickly:
+A strong map summary usually answers five questions quickly:
 
-1. What is this map?
-2. Who made it, when, and for what audience?
-3. What does it show well?
-4. What does it omit, generalize, or distort?
-5. What, if anything, should KFM do with it next?
+1. **What is this map?**
+2. **Who made it, when, and for what apparent audience or purpose?**
+3. **What does it show especially well?**
+4. **What does it omit, simplify, generalize, or distort?**
+5. **What, if anything, should KFM do with it next?**
 
 ### Map-specific review prompts
 
 Use these prompts while writing:
 
-- Is the source a **map artifact** or merely an illustration inside another source?
+- Is the source a **map artifact** or merely a figure inside another source?
 - Does the map expose or imply a projection, CRS, datum, georeferencing method, or scale?
-- Does the symbolization make a persuasive claim that should be called out explicitly?
+- Are publication time and depicted time the same, or materially different?
+- What symbols, labels, class breaks, or omissions carry the strongest claim?
 - Are there rights, licensing, cultural sensitivity, land-tenure, or exact-location concerns?
-- Would KFM use this source as observational evidence, documentary context, design inspiration, or only as a comparative reference?
+- Should KFM use this as observational evidence, documentary context, design reference, or only comparative background?
 
 ## Diagram
 
 ```mermaid
 flowchart TD
-    A[External source] --> B{Primary evidence object}
+    A[External source] --> B{Primary source object}
     B -->|Standalone map artifact| C[maps/ summary]
-    B -->|Broader book/manual| D[books/ summary]
+    B -->|Broader book or manual| D[books/ summary]
     B -->|Interactive web surface| E[web/ summary]
 
-    C --> F[Record creator, date, place, rights, projection, scale, legend]
-    F --> G[Separate fact / inference / proposal]
-    G --> H{Promotion needed?}
-    H -->|No| I[Remain non-normative research]
-    H -->|Yes| J[Promote into governed docs, contracts, Story work, or implementation docs]
+    C --> F[Capture citation, acquisition, rights, spatial and temporal support, CRS, scale, map intent]
+    F --> G{Promotion needed?}
+    G -->|No| H[Remain non-normative research intake]
+    G -->|Yes| I[ETL + normalization]
+    I --> J[STAC / DCAT / PROV]
+    J --> K[Graph / API / UI / Story / Focus]
 ```
 
 ## Tables
@@ -188,11 +184,11 @@ flowchart TD
 
 | Map source class | Typical use in this lane | Special watchpoints |
 |---|---|---|
-| Reference / topographic map | Orientation, basemap comparison, historical or steward context | Scale, edition date, projection, outdated names |
-| Thematic / analytical map | Understand a claim made through symbolization | Classification choices, legend logic, omitted uncertainty |
-| Cadastral / plat / parcel map | Land-tenure, legal description, parcel or plat context | Rights, identity resolution, review-bearing precision |
-| Historical scan / atlas plate | Archival comparison, boundary history, settlement or infrastructure context | Georeferencing uncertainty, degraded legibility, reuse constraints |
-| Web-map snapshot | Capture a specific visible map state for later evaluation | Date captured, zoom/extent, source credits, reproducibility |
+| Reference / topographic map | Orientation, basemap comparison, steward context, boundary history | Edition date, scale, projection, outdated names |
+| Thematic / analytical map | Understand a claim made through symbolization | Classification logic, legend choices, omitted uncertainty |
+| Cadastral / plat / parcel map | Land-tenure, parcel, survey, or legal-description context | Precision burden, reuse rights, identity resolution |
+| Historical scan / atlas plate | Archival comparison, settlement or infrastructure history | Georeferencing uncertainty, degraded legibility, reuse limits |
+| Web-map snapshot | Capture a visible map state for later evaluation | Capture date, zoom/extent, source credits, reproducibility |
 | Participatory / sketch / field map | Community knowledge, field notes, route or place memory | Sensitivity, authorship, context loss, informal georeferencing |
 
 ### Promotion cues
@@ -203,18 +199,21 @@ flowchart TD
 | Establishing a reusable contract or schema field | Move toward `contracts/` or `schemas/` after review |
 | Supplying evidence for a public narrative or answer path | Move toward Story / Focus / governed evidence flow |
 | Acting as the canonical statement of a Kansas domain fact | Move toward governed domain documentation or data artifacts |
+| Depending on georeferencing, reprojection, or resampling that materially changes support or accuracy | Move toward ETL + catalog + provenance artifacts, not just prose |
 
 ## Task list & definition of done
 
 A map-source summary in this lane is ready for review when:
 
 - [ ] the source is clearly identified and the map is actually the primary evidence object
-- [ ] creator, title, and date or edition are recorded, or explicit unknowns are stated
+- [ ] citation, acquisition path, and creator/publisher are recorded, or explicit unknowns are stated
 - [ ] geographic and temporal scope are named
-- [ ] projection / CRS / georeferencing status is recorded if available
-- [ ] scale / support / resolution is recorded if available
 - [ ] rights / reuse posture is captured
-- [ ] sensitivity, precision, or cultural/heritage concerns are called out
+- [ ] source class and any observational/interpreted/modeled/derived posture are visible
+- [ ] projection / CRS / datum / georeferencing status is recorded if available
+- [ ] scale / support / resolution is recorded if available
+- [ ] known limitations, distortions, or legibility issues are called out
+- [ ] sensitivity, precision, or cultural/heritage concerns are noted where relevant
 - [ ] observed facts are separated from inference and proposal
 - [ ] a plausible KFM relevance note is included
 - [ ] any normative consequence is labeled as a promotion target rather than declared here as settled system law
@@ -223,15 +222,15 @@ A map-source summary in this lane is ready for review when:
 
 ### When should I use `maps/` instead of `books/`?
 
-Use `maps/` when the map itself is the thing you are interrogating. If the real source under review is a whole book or manual, summarize that in `books/` and point to the relevant map there.
+Use `maps/` when the map itself is the thing you are interrogating. If the real source under review is a whole book or manual, summarize that in `books/` and point to the map there.
 
 ### Do screenshots of web maps belong here?
 
-Sometimes. If the captured map state is the source object you need to discuss, document the capture context carefully and summarize it here. If the real subject is the live web surface, interaction model, or service behavior, use `web/` instead.
+Sometimes. If the captured cartographic state is the source object you need to discuss, document the capture context carefully and summarize it here. If the real subject is the live web surface, interaction model, or service behavior, use `web/` instead.
 
-### What if the source does not say which projection or CRS it uses?
+### What if the map does not state which projection or CRS it uses?
 
-Record `UNKNOWN` plainly. Do not infer a projection from appearance unless you label that statement as inference.
+Record `UNKNOWN` plainly. Do not infer analytical correctness from visual alignment alone.
 
 ### Can historical maps be summarized here even if they are not georeferenced?
 
@@ -256,13 +255,15 @@ One-paragraph purpose statement for why this map matters to KFM.
 | Field | Value |
 |---|---|
 | Source slug | `<source-slug>` |
+| Full citation | |
+| Acquisition / repository | |
 | Creator / publisher | |
-| Date / edition | |
-| Source class | |
+| Date / edition / plate / sheet | |
+| Source class / source role | |
 | Geographic coverage | |
 | Temporal coverage | |
 | Rights / reuse posture | |
-| Projection / CRS / georeferencing | |
+| Projection / CRS / datum / georeferencing | |
 | Scale / support / resolution | |
 
 ## What the map shows
@@ -281,13 +282,14 @@ Brief factual summary of the map’s visible content, legend, labels, and emphas
 ## Risks / limits
 
 - uncertainty
-- outdated coverage
+- outdated or partial coverage
 - rights or reuse constraints
 - sensitivity or precision concerns
+- georeferencing or transformation caveats
 
 ## KFM relevance
 
-Which domain lane, thin slice, dossier, Story path, or design question this source could inform.
+Which place, event, organization, dossier, Story path, or design question this source could inform.
 
 ## Promotion note
 
@@ -301,11 +303,11 @@ Which domain lane, thin slice, dossier, Story path, or design question this sour
 <summary>Compact review prompts for map-heavy sources</summary>
 
 - What is the map trying to persuade the reader to see first?
-- Which symbols, labels, or class breaks carry the strongest claim?
-- Is the map more trustworthy as observation, interpretation, advocacy, or design reference?
-- Does the source expose enough metadata to reuse safely?
-- What would be lost if the map were detached from its caption, legend, scale bar, or publication context?
-- Would this source still be useful if KFM had to generalize or withhold exact locations?
+- Which labels, symbols, or class breaks carry the strongest claim?
+- Is the map most trustworthy as observation, interpretation, advocacy, or design reference?
+- What metadata is missing that would block safe reuse?
+- What would be lost if the map were detached from its caption, legend, scale bar, marginalia, or repository record?
+- Would this source still be safe to use if KFM had to generalize or withhold exact locations?
 
 </details>
 
