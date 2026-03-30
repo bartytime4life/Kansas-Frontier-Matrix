@@ -10,102 +10,135 @@ updated: <NEEDS-UPDATED-DATE>
 policy_label: <NEEDS-POLICY-LABEL>
 related: [README.md, .github/workflows/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
 tags: [kfm, docs, repo-structure, scaffolding, readme]
-notes: [doc_id/owners/dates/policy label need verification, current working-tree parity of listed paths needs a fresh recheck]
+notes: [doc_id/owners/dates/policy label need verification, current public-tree check confirms this file exists on main, workflow YAML names preserved below should be read as historical scaffold entries unless regenerated from the live tree]
 [/KFM_META_BLOCK_V2] -->
 
 # README Structure Reconciliation Report
 
-Structural reconciliation snapshot for README-declared tree entries and the concrete paths scaffolded to align the working tree with those declarations.
+Structural reconciliation snapshot for README-declared tree entries, with a current public-tree recheck to separate **historical scaffold inventory** from **still-confirmed public `main` structure**.
 
 ![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Evidence: repo--grounded](https://img.shields.io/badge/evidence-repo--grounded-blue)
-![Parity: needs verification](https://img.shields.io/badge/current%20parity-needs%20verification-red)
+![Evidence: public--tree%20checked](https://img.shields.io/badge/evidence-public--tree%20checked-blue)
+![Snapshot: historical](https://img.shields.io/badge/snapshot-historical-7c3aed)
+![Parity: regenerate](https://img.shields.io/badge/parity-regenerate-red)
 ![Scope: structure only](https://img.shields.io/badge/scope-structure%20only-6b7280)
 
-**Quick jump:** [Repo fit](#repo-fit) · [Method](#method) · [Summary](#summary-of-scaffolded-work) · [High-signal paths](#high-signal-path-families) · [Scaffolded paths](#scaffolded-paths-by-area) · [Verification caveats](#verification-caveats) · [Follow-up](#recommended-follow-up)
+**Quick jump:** [Repo fit](#repo-fit) · [Evidence basis](#evidence-basis) · [Method](#method) · [Current reconciliation status](#current-public-tree-reconciliation-status) · [Snapshot summary](#reported-scaffold-snapshot) · [High-signal paths](#high-signal-path-families) · [Scaffold inventory](#reported-scaffolded-paths-by-area-historical-snapshot) · [Verification caveats](#verification-caveats) · [Follow-up](#recommended-follow-up)
 
 > [!IMPORTANT]
-> This report records **structural alignment** between `README.md` tree declarations and scaffolded paths.  
-> It does **not** certify that listed files are implemented, wired, merge-enforced, policy-executed, or otherwise behaviorally complete.
+> This document should now be read as a **historical scaffold snapshot with a current public-tree correction layer**.  
+> It preserves the structure report already checked into the repo, but it does **not** treat every listed path as current public-tree fact.
 
 > [!CAUTION]
-> Current filesystem parity for every listed path is **NEEDS VERIFICATION**.  
-> Treat this document as a **reported scaffold snapshot** unless it is regenerated from the live working tree.
+> Current path parity remains **NEEDS VERIFICATION** unless this document explicitly marks a point as **CONFIRMED current public-tree evidence**.  
+> In particular, historically reported workflow YAML names under `.github/workflows/` should **not** be read as current checked-in files on public `main` without regeneration.
 
 ## Repo fit
 
 | Item | Value |
 |---|---|
-| Likely target path | `docs/reports/readme-structure-reconciliation.md` **(INFERRED)** |
-| Upstream inputs | Repo `README.md` tree blocks plus adjacent documentation surfaces that shape structural expectations |
-| Downstream use | Reviewer orientation, scaffold verification, documentation reconciliation, and future machine-generated inventory snapshots |
-| Accepted inputs | Code-fenced tree blocks containing concrete `──` entries that resolve to real repo paths |
-| Exclusions | Wildcards, alternation placeholders, self-root aliases, and any claim that scaffolded paths are functionally implemented |
-| Interpretation rule | Presence in this report means **scaffolded to match a declaration**, not **confirmed as operational** |
+| Likely target path | `docs/reports/readme-structure-reconciliation.md` **(CONFIRMED)** |
+| Upstream inputs | Current public `README.md`-adjacent repo surfaces, the checked-in reconciliation report, and nearby README/doc boundaries that define how structural claims should be read |
+| Downstream use | Reviewer orientation, scaffold drift detection, README-tree cleanup, historical audit context, and future regeneration of a live inventory |
+| Accepted inputs | Code-fenced tree blocks, directory READMEs, current public repo listings, and structure-first documentation artifacts |
+| Exclusions | Behavioral completeness claims, merge-enforcement claims, policy-execution claims, route/runtime claims, and any assertion that scaffolded paths are operational without direct re-verification |
+| Interpretation rule | Presence in the scaffold inventory means **reported as scaffolded or declared**, not **confirmed as implemented** |
+
+## Evidence basis
+
+This revision uses a **two-layer evidence model** rather than pretending one snapshot can do both jobs cleanly.
+
+| Evidence layer | Role in this report | Reading rule |
+|---|---|---|
+| Current public-tree evidence | Re-check what public `main` exposes **now** for the target file and nearby structure-defining READMEs | **CONFIRMED** for visible public-tree state only |
+| Checked-in reconciliation report | Preserve the already-recorded scaffold inventory and counts | Treat as a **historical scaffold snapshot** |
+| Repo-grounded sprint summary | Corroborate where staleness and documentary-vs-executable risks were already identified | Useful historical warning, not live-tree proof |
+| KFM doctrinal overlays | Keep truth labels, overclaim protection, and source-discipline language aligned with project doctrine | Use for framing, not for inventing repo state |
 
 ## Method
 
-The reconciliation process used the following rules:
+The reconciliation logic in this revision is intentionally conservative.
 
-- Scanned every `README.md` for code-fenced tree lines containing `──` entries.
-- Resolved each entry relative to the README directory.
-- Ignored wildcard or alternation placeholders such as `*`, `(...)`, and `|`.
-- Ignored self-root aliases that restated the local README directory instead of declaring a child path.
-- Created missing directories and files for concrete paths.
-- Added `.gitkeep` files to otherwise-empty newly created directories so they remain trackable in git.
+1. Preserve the strongest existing substance from the checked-in report.
+2. Re-check the current public `main` tree where adjacent repo surfaces are directly visible.
+3. Reclassify older path inventories as **historical scaffold entries** unless current parity is directly visible.
+4. Surface contradictions instead of smoothing them away.
+5. Keep executable-looking names structurally useful, but not behaviorally over-read.
 
 ```mermaid
 flowchart LR
-    A[Scan README.md tree blocks] --> B[Resolve entries relative to each README directory]
-    B --> C[Filter out wildcards, alternations, and self-root aliases]
-    C --> D[Create missing concrete directories and files]
-    D --> E[Add .gitkeep to otherwise-empty new directories]
-    E --> F[Record scaffolded path inventory]
+    A[Checked-in scaffold report] --> B[Current public-tree recheck]
+    B --> C[Confirm what still exists on public main]
+    C --> D[Flag historical-only or drift-prone entries]
+    D --> E[Preserve useful scaffold inventory]
+    E --> F[Recommend regeneration from live working tree]
 ```
 
 > [!NOTE]
-> `.gitkeep` placements are **implicit companion artifacts** of the scaffold operation and are intentionally omitted from the explicit path inventory below.
+> This revision is a **reconciliation pass**, not a fresh filesystem crawl.  
+> Its job is to stop the document from reading like a live inventory when the visible repo evidence does not justify that reading.
 
-## Summary of scaffolded work
+## Current public-tree reconciliation status
 
-**Reported total:** **130** concrete scaffolded paths  
-**Breakdown:** **80** directories + **50** files  
+The table below is the most important corrective addition in this revision.
+
+| Surface | Current public reading | Consequence for this report | Status |
+|---|---|---|---|
+| `docs/reports/readme-structure-reconciliation.md` | The file exists on public `main` and still presents itself as a structure-only draft with verification caveats | Keep the report, but harden its **historical snapshot** reading | **CONFIRMED** |
+| `.github/workflows/` | Public `main` currently presents `workflows/` as a README-only checked-in surface | Historically named workflow YAMLs preserved below must be read as **historical scaffold/history-derived names**, not current checked-in files | **CONFIRMED** |
+| `contracts/` | Current docs treat machine-contract pathing as still authority-sensitive, with `contracts/` the stronger working signal | Keep contract-looking entries structural; do not claim final authority resolution | **CONFIRMED / PROPOSED** |
+| `schemas/` | Current docs explicitly warn against growing a parallel authoritative schema universe beside `contracts/` | Treat `schemas/*` as boundary/documentary structure unless authority is re-resolved | **CONFIRMED** |
+| `policy/` | Current docs allow executable bundles, fixtures, tests, and vocabularies to belong here | Preserve policy-looking entries as valid structural expectations, but not as executed reality | **CONFIRMED / NEEDS VERIFICATION** |
+| `tests/` | Current docs now name multiple test families and e2e proof lanes | Preserve test-lane shape as meaningful repo intent, but not proof of runnable coverage | **CONFIRMED / NEEDS VERIFICATION** |
+
+## Reported scaffold snapshot
+
+The counts below are preserved from the existing checked-in report and should be read as **historical reported totals from the scaffold pass**, not as a recomputed current-tree count.
+
+**Historical reported total:** **130** concrete scaffolded paths  
+**Historical reported breakdown:** **80** directories + **50** files  
 **Implicit companions not counted:** `.gitkeep` files added to otherwise-empty new directories
 
-| Area | Paths | Files | Directories | Why it matters |
+| Area | Historical reported paths | Files | Directories | Read this as |
 |---|---:|---:|---:|---|
-| `.github` | 24 | 8 | 16 | GitHub-facing scaffolding, action directories, and workflow placeholders |
-| `policy` | 24 | 14 | 10 | Policy bundle surface, registries, runbooks, and review-facing docs |
-| `scripts` | 20 | 18 | 2 | Validator, release, and consistency script placeholders |
-| `infra` | 12 | 0 | 12 | Deployment, monitoring, GitOps, and environment-shape directories |
-| `schemas` | 12 | 0 | 12 | Schema-family surface area only; not proof of mounted schema authority |
-| `examples` | 10 | 6 | 4 | Example objects and validity buckets for future fixtures and reference artifacts |
-| `tools` | 10 | 2 | 8 | Tooling layout and executable-adjacent scaffolding |
-| `brand` | 8 | 0 | 8 | Brand asset, token, and template structure |
-| `data` | 4 | 0 | 4 | DCAT / PROV / STAC / quarantine structure |
-| `tests` | 3 | 0 | 3 | Test-lane placeholders only |
-| `migrations` | 2 | 2 | 0 | Early SQL migration stubs |
-| `configs` | 1 | 0 | 1 | Systemd configuration surface |
+| `.github` | 24 | 8 | 16 | Governance/scaffold snapshot, now partially contradicted by current public workflow inventory |
+| `policy` | 24 | 14 | 10 | Policy surface intent, not proof of mounted executable bundles |
+| `scripts` | 20 | 18 | 2 | Validator/entrypoint intent, not verified runnable commands |
+| `infra` | 12 | 0 | 12 | Deployment-shape scaffolding only |
+| `schemas` | 12 | 0 | 12 | Schema-family surface only; not authoritative schema-home proof |
+| `examples` | 10 | 6 | 4 | Example-object scaffolding |
+| `tools` | 10 | 2 | 8 | Tooling layout intent |
+| `brand` | 8 | 0 | 8 | Asset/token/template structure |
+| `data` | 4 | 0 | 4 | Catalog/provenance/quarantine shape |
+| `tests` | 3 | 0 | 3 | Older narrow test-lane snapshot only |
+| `migrations` | 2 | 2 | 0 | Stub existence reported by scaffold pass |
+| `configs` | 1 | 0 | 1 | Configuration surface only |
 
 ## High-signal path families
 
-Some scaffolded paths are easy to over-read. The table below keeps their meaning disciplined.
+These families are easy to over-read. The table below keeps them disciplined.
 
-| Path family | Why reviewers may over-read it | How this report treats it |
+| Path family | Why reviewers may over-read it | How this revision treats it |
 |---|---|---|
-| `.github/workflows/*.yml` | Looks like active merge gates or release automation | **Structure only** until workflow contents and branch protection behavior are re-verified |
-| `policy/*.rego` and `policy/*.json` | Looks like executable policy bundles and vocabularies | **Scaffold only** until policy loading, tests, and decision outputs are verified |
-| `scripts/*` and `tools/*` | Looks like runnable validators and trusted maintenance entrypoints | **Placeholder surface** until command behavior and CI integration are verified |
-| `migrations/*.sql` | Looks like applied database state | **Stub existence only** until migration order, idempotency, and execution history are verified |
-| `schemas/*` and `contracts/*` adjacent scaffolds | Looks like singular machine-checkable contract authority | **Directory surface only**; schema authority still requires an explicit decision and live files |
-| `examples/*.json`, `tests/*`, `policy/{valid,invalid}` | Looks like active fixtures and negative-path coverage | **Future-proofing structure** until fixture inventory and harnesses are verified |
+| `.github/workflows/*.yml` | Looks like active merge gates or current checked-in automation | **Historical scaffold/history-derived names only** unless rechecked; current public `main` shows a README-only workflow directory |
+| `policy/*.rego` and `policy/*.json` | Looks like executable policy bundles and vocabularies | **Structural policy surface** until real files, tests, and decisions are re-verified |
+| `scripts/*` and `tools/*` | Looks like runnable validators and maintenance entrypoints | **Placeholder or planned executable surface** until command behavior is verified |
+| `migrations/*.sql` | Looks like applied database state | **Stub existence only** until order, execution history, and target DB use are verified |
+| `schemas/*` and `contracts/*` | Looks like settled authoritative machine-contract home | **Authority unresolved in repo docs**; keep both structural but do not infer a live canonical registry from names alone |
+| `examples/*.json`, `tests/*`, `policy/{valid,invalid}` | Looks like active fixtures and test coverage | **Intent-bearing structure** until validators and harnesses are rechecked |
 
-## Scaffolded paths by area
+## Reported scaffolded paths by area (historical snapshot)
+
+The inventories below are preserved because they are still useful as **audit context** and **cleanup targets**. They are intentionally not presented as a fresh live-tree crawl.
 
 ### `.github` and repo-governance surfaces
 
 <details>
-<summary><strong>.github</strong> — 24 paths</summary>
+<summary><strong>.github</strong> — historically reported scaffold entries</summary>
+
+> [!NOTE]
+> Current public `main` confirms `.github/workflows/README.md` as the checked-in workflow surface.  
+> The YAML names below are preserved as **historically reported scaffold entries** and should not be read as current checked-in workflow files without regeneration.
 
 ```text
 .github/ISSUE_TEMPLATE/config.yml
@@ -139,7 +172,7 @@ Some scaffolded paths are easy to over-read. The table below keeps their meaning
 ### Brand, config, and data structure
 
 <details>
-<summary><strong>brand</strong> — 8 paths</summary>
+<summary><strong>brand</strong> — historically reported scaffold entries</summary>
 
 ```text
 brand/LICENSES
@@ -155,7 +188,7 @@ brand/usage
 </details>
 
 <details>
-<summary><strong>configs</strong> — 1 path</summary>
+<summary><strong>configs</strong> — historically reported scaffold entries</summary>
 
 ```text
 configs/systemd
@@ -164,7 +197,7 @@ configs/systemd
 </details>
 
 <details>
-<summary><strong>data</strong> — 4 paths</summary>
+<summary><strong>data</strong> — historically reported scaffold entries</summary>
 
 ```text
 data/dcat
@@ -178,7 +211,7 @@ data/stac
 ### Examples and infrastructure
 
 <details>
-<summary><strong>examples</strong> — 10 paths</summary>
+<summary><strong>examples</strong> — historically reported scaffold entries</summary>
 
 ```text
 examples/catalog_closure.json
@@ -196,7 +229,7 @@ examples/valid
 </details>
 
 <details>
-<summary><strong>infra</strong> — 12 paths</summary>
+<summary><strong>infra</strong> — historically reported scaffold entries</summary>
 
 ```text
 infra/apps
@@ -218,7 +251,7 @@ infra/tests
 ### Migrations and policy
 
 <details>
-<summary><strong>migrations</strong> — 2 paths</summary>
+<summary><strong>migrations</strong> — historically reported scaffold entries</summary>
 
 ```text
 migrations/0001_enable_extensions.sql
@@ -228,7 +261,7 @@ migrations/0002_spatial_indexes.sql
 </details>
 
 <details>
-<summary><strong>policy</strong> — 24 paths</summary>
+<summary><strong>policy</strong> — historically reported scaffold entries</summary>
 
 ```text
 policy/access.rego
@@ -262,7 +295,7 @@ policy/withholding.rego
 ### Schemas, scripts, tests, and tools
 
 <details>
-<summary><strong>schemas</strong> — 12 paths</summary>
+<summary><strong>schemas</strong> — historically reported scaffold entries</summary>
 
 ```text
 schemas/apis
@@ -282,7 +315,7 @@ schemas/valid
 </details>
 
 <details>
-<summary><strong>scripts</strong> — 20 paths</summary>
+<summary><strong>scripts</strong> — historically reported scaffold entries</summary>
 
 ```text
 scripts/attach_evidence.sh
@@ -310,7 +343,7 @@ scripts/write_index_entry.sh
 </details>
 
 <details>
-<summary><strong>tests</strong> — 3 paths</summary>
+<summary><strong>tests</strong> — historically reported scaffold entries</summary>
 
 ```text
 tests/correction
@@ -321,7 +354,7 @@ tests/runtime_proof
 </details>
 
 <details>
-<summary><strong>tools</strong> — 10 paths</summary>
+<summary><strong>tools</strong> — historically reported scaffold entries</summary>
 
 ```text
 tools/attest
@@ -342,39 +375,41 @@ tools/validate
 
 | Label | Meaning in this report |
 |---|---|
-| **CONFIRMED** | The reconciliation method and the explicit scaffold inventory recorded here |
-| **INFERRED** | Editorial grouping, counts, and the likely target location of this report |
-| **PROPOSED** | Follow-up steps that would make this report safer and more durable in the repo |
-| **UNKNOWN** | Anything about mounted implementation, command behavior, file contents, or workflow execution not directly proven here |
-| **NEEDS VERIFICATION** | Current working-tree parity of every listed path, especially high-signal executable-looking files |
+| **CONFIRMED** | Directly visible in the current public-tree check or explicitly stated by the checked-in report |
+| **INFERRED** | Conservative editorial completion used to reconcile historical scaffold language with current repo doctrine |
+| **PROPOSED** | Follow-up or regeneration step that would make this report safer, clearer, or more machine-usable |
+| **UNKNOWN** | Anything about mounted implementation, command behavior, merge settings, branch protection, or runtime execution not directly proven here |
+| **NEEDS VERIFICATION** | Any path-by-path parity claim that was not freshly regenerated from the current working tree |
 
 ## Verification caveats
 
-This report should be read with four constraints in mind:
+This report should be read with five constraints in mind.
 
-1. **Scaffolded is not implemented.**  
-   A path in this report proves that the working tree was brought into alignment with a README declaration at the time of the scaffold pass. It does not prove executable content, valid wiring, or merge-enforced behavior.
+1. **Historical scaffold is not live inventory.**  
+   The inventories below preserve a useful structural memory, but they are not a substitute for a fresh tree-derived report.
 
-2. **Historical drift is possible.**  
-   If files were later removed, renamed, or superseded, this document becomes a historical structure snapshot rather than a live inventory.
+2. **A real divergence is already visible.**  
+   The current public workflow directory snapshot and the older scaffolded workflow names do not line up cleanly. That means other path families may also contain drift.
 
-3. **Executable-looking files carry extra risk.**  
-   Workflow YAML, Rego files, SQL migrations, validators, and tool entrypoints visually imply maturity. This report intentionally avoids making that leap.
+3. **Executable-looking names carry extra risk.**  
+   Workflow YAML, Rego files, SQL migrations, validators, and tool entrypoints visually imply maturity. This report intentionally refuses that implication.
 
-4. **Authoritative inventory should eventually be generated, not narrated.**  
-   For long-horizon maintainability, a machine-generated inventory or verification command should supersede a hand-maintained scaffold report.
+4. **Authority and implementation are different questions.**  
+   `contracts/`, `schemas/`, `policy/`, and `tests/` now communicate stronger repo intent than a generic placeholder reading, but they still do not by themselves prove mounted implementation depth.
+
+5. **Authoritative inventory should be generated.**  
+   Long-term, this report should either become a generated snapshot or be frozen as historical context and linked to a generated source of truth.
 
 ## Recommended follow-up
 
-- [ ] Re-run reconciliation against the **current** working tree and replace this document with a verified snapshot.
-- [ ] Mark this report explicitly as **historical** if it is kept for audit purposes rather than live inventory.
-- [ ] Distinguish future states using separate labels such as **scaffolded**, **implemented**, **wired**, and **verified**.
-- [ ] Pair high-signal path families with real artifacts before treating them as trust-bearing evidence:
-  - workflow YAML with active required checks
-  - schema files with fixtures
-  - policy bundles with tests
-  - script and tool entrypoints with documented commands
-- [ ] Add or link an authoritative inventory source if one becomes available.
+- [ ] Regenerate this report from the **current working tree** and replace historical counts with live counts.
+- [ ] Split “historical scaffold inventory” from “current verified public-tree inventory” if both are still worth keeping.
+- [ ] Replace the historically reported `.github/workflows/*.yml` list with either:
+  - current checked-in workflow files, or
+  - a clearly labeled historical appendix.
+- [ ] Reconcile `contracts/` vs `schemas/` authority in one explicit repo-level decision.
+- [ ] Re-check `policy/`, `tests/`, `scripts/`, and `tools/` path inventories against the actual tree before treating those families as parity-complete.
+- [ ] Add a machine-generated inventory source if the repo wants this report to stay current.
 
 ## Non-goals
 
@@ -382,7 +417,8 @@ This report does **not** attempt to:
 
 - prove that the listed files contain complete or correct contents
 - certify CI/CD behavior, branch protection, or review enforcement
-- resolve contract authority between `contracts/` and `schemas/`
+- prove that any listed script, workflow, tool, policy bundle, or test harness actually runs
+- resolve final machine-contract authority between `contracts/` and `schemas/`
 - prove mounted runtime, database, or release state
 - substitute for a generated repo inventory or verification command
 
@@ -391,13 +427,17 @@ This report does **not** attempt to:
 When this document is updated, prefer one of the following patterns:
 
 1. **Verified snapshot pattern**  
-   Regenerate the list from the current tree, stamp the date, and state that the inventory is current as of that run.
+   Regenerate the inventory from the current tree, stamp the evidence basis, and keep only live entries in the main body.
 
 2. **Historical record pattern**  
-   Freeze the document as a dated scaffold report and point maintainers to the current authoritative inventory source.
+   Freeze this document as a dated scaffold artifact and move all live inventory duties elsewhere.
 
 3. **Hybrid pattern**  
-   Keep this report as historical context, but surface the live inventory elsewhere and link to it prominently.
+   Keep the historical scaffold inventory in an appendix, but surface a generated live inventory at the top.
+
+> [!TIP]
+> The safest next move is the **verified snapshot pattern**.  
+> It removes ambiguity, shortens reviewer time, and stops historical scaffold names from reading like current implementation claims.
 
 ---
 
