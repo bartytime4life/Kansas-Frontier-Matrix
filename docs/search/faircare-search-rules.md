@@ -10,24 +10,29 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [docs/search/README.md, docs/search/semantic-search.md, docs/search/query-language.md, docs/search/index-architecture.md, docs/standards/README.md, docs/standards/faircare/FAIRCARE-GUIDE.md, docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md]
 tags: [kfm, search, faircare, governance]
-notes: [Created date inferred from the first visible scaffold commit for this file; owner grounded from /.github/CODEOWNERS; policy label, durable UUID, and post-merge updated date still need verification; upstream FAIRCARE and sovereignty docs are present but currently scaffold-only.]
+notes: [Owner and created date came from the provided scaffold; durable UUID, policy label, updated date, adjacent-file verification, and mounted enforcement still need confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — FAIR+CARE Search Rules
 
 Search-local operating rules for release-scoped discovery that stays FAIR-aware, CARE-aware, sovereignty-aware, and evidence-bounded.
 
+![Status: draft](https://img.shields.io/badge/status-draft-orange)
+![Type: standard](https://img.shields.io/badge/type-standard-1f6feb)
+![Scope: search](https://img.shields.io/badge/scope-search-6f42c1)
+![Governance: FAIR+CARE](https://img.shields.io/badge/governance-FAIR%2BCARE-2ea44f)
+
 > **Status:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path:** `docs/search/faircare-search-rules.md`  
 > **Repo fit:** search-local rule layer under [`./README.md`](./README.md); complements [`./semantic-search.md`](./semantic-search.md), [`./query-language.md`](./query-language.md), and [`./index-architecture.md`](./index-architecture.md); bridges to [`../standards/README.md`](../standards/README.md), [`../standards/faircare/FAIRCARE-GUIDE.md`](../standards/faircare/FAIRCARE-GUIDE.md), and [`../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md).  
-> **Quick jumps:** [Scope](#scope) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Rule stack](#rule-stack) · [Decision matrix](#retrieval-decision-matrix) · [Source-role handling](#source-role-handling) · [Traversal and expansion limits](#traversal-and-expansion-limits) · [Review & definition of done](#review--definition-of-done) · [Open verification items](#open-verification-items)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Rule stack](#rule-stack) · [Surface-class handling](#surface-class-handling) · [Decision matrix](#retrieval-decision-matrix) · [Source-role handling](#source-role-handling) · [Traversal limits](#traversal-and-expansion-limits) · [Review checklist](#review-checklist--definition-of-done) · [Open verification items](#open-verification-items)
 
 > [!IMPORTANT]
 > Search may widen discovery. It may **not** widen exposure.
 
 > [!NOTE]
-> This file is intentionally **search-local**. It does not replace broader FAIR+CARE, governance, or sovereignty standards. It defines how those obligations shape retrieval, ranking, result shaping, and handoff inside the search subsystem.
+> Truth posture for this file: **CONFIRMED** on doctrine, **INFERRED** on search-local structure, **PROPOSED** on concrete rule phrasing, and **NEEDS VERIFICATION** on mounted enforcement, schemas, fixtures, and workflow gates.
 
 ## Scope
 
@@ -37,30 +42,42 @@ This document applies to release-scoped search and discovery behavior across KFM
 - STAC / DCAT / catalog discovery
 - graph-assisted exploration
 - spatial and temporal retrieval
-- Dossier, Story, Map Explorer, Evidence Drawer, and Focus handoff paths
 - search-derived snippets, previews, rankings, and generalized result displays
+- handoff into Map Explorer, Dossier, Story, Evidence Drawer, Focus Mode, Compare, and export preview flows
 
-This document is **not** a claim that current enforcement is complete. It defines the rule layer that search behavior should follow and that review, fixtures, and later workflow gates should verify.
+This document is **search-local**. It does not replace broader FAIR+CARE, governance, or sovereignty standards. It defines how those obligations shape retrieval, ranking, result shaping, and evidence handoff inside the search subsystem.
+
+## Repo fit
+
+| Item | Role here |
+|---|---|
+| `docs/search/faircare-search-rules.md` | Search-local governance layer for retrieval, ranking, previews, generalization, and handoff. |
+| `./README.md` | Index and local orientation for the search subtree. |
+| `./semantic-search.md` | Retrieval-method detail for vector / hybrid behavior. |
+| `./query-language.md` | User-facing or API-facing query grammar and constraints. |
+| `./index-architecture.md` | Index boundaries, rebuildability rules, and storage/delivery separation. |
+| `../standards/faircare/FAIRCARE-GUIDE.md` | Broader FAIR+CARE doctrine that search must inherit rather than reinterpret ad hoc. |
+| `../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md` | Sovereignty and precision-sensitive handling that search must obey before rendering public output. |
 
 ## Accepted inputs
 
 Content that belongs here includes:
 
 - FAIR+CARE retrieval rules
-- rights, sensitivity, and sovereignty-aware search behavior
+- rights-, sensitivity-, and sovereignty-aware search behavior
 - release-scope filtering rules
 - result shaping and generalization rules
 - provenance-preserving snippet and preview rules
 - graph traversal and query expansion limits
-- evidence-capable handoff rules for Focus, Dossier, Story, and Map Explorer
+- evidence-capable handoff rules for Focus, Dossier, Story, Map Explorer, and Evidence Drawer
 - search review checks, failure conditions, and redaction-safe examples
 
 ## Exclusions
 
 Content that does **not** belong here:
 
-- canonical truth modeling or lifecycle law as a primary topic
-- raw ingest mechanics except where they affect admissibility or search exposure
+- canonical truth modeling or truth-path law as the primary topic
+- raw ingest mechanics except where they affect search admissibility or exposure
 - free-form model behavior detached from retrieval and evidence handoff
 - direct-client bypass patterns
 - exact-location disclosure patterns for sensitive or review-bearing lanes
@@ -70,19 +87,19 @@ Content that does **not** belong here:
 
 ## Why this file exists
 
-The search subsystem is already positioned as a **derived, rebuildable discovery layer**. It improves recall, ranking, navigation, and handoff, but it does not become sovereign truth. That makes FAIR+CARE behavior especially important here:
+The search subsystem is a **derived, rebuildable discovery layer**. It improves recall, ranking, navigation, and handoff, but it does not become sovereign truth. That makes FAIR+CARE behavior especially important here:
 
 - search is often the fastest place to accidentally overexpose sensitive material
 - ranking can silently flatten differences between public-safe, generalized, source-dependent, modeled, and review-bearing material
 - graph and vector expansion can over-connect records that should remain bounded
-- snippets and previews can leak more than the final destination surface would allow
-- “findable” is useful, but KFM needs “findable **within policy and care**”
+- snippets and previews can leak more than the destination surface would allow
+- “findable” is useful, but KFM requires “findable **within policy and care**”
 
-A compact search doctrine sentence:
+A compact doctrine sentence for this file:
 
 > **FAIR makes material discoverable; CARE determines whether discovery may become visible, generalized, withheld, or escalated for review.**
 
-## Governing rule
+## Governing order
 
 Search in KFM follows this priority order:
 
@@ -99,29 +116,56 @@ That means relevance scoring is never the first gate. Admissibility, public-safe
 
 | Gate | Question | Search-side consequence |
 |---|---|---|
-| Release gate | Is the material in promoted, releasable scope for this surface? | Exclude anything outside allowed release scope. |
+| Release gate | Is the material in promoted, releasable scope for this surface and role? | Exclude anything outside allowed release scope. |
 | Rights gate | Is redistribution or outward preview allowed here? | Withhold, narrow, or require review when rights posture is unclear or restrictive. |
-| Sensitivity / care gate | Does the result create privacy, cultural, sovereignty, or exact-location risk? | Generalize, mask, aggregate, or suppress the result before ranking/output. |
+| Sensitivity / care gate | Does the result create privacy, cultural, sovereignty, or exact-location risk? | Generalize, mask, aggregate, or suppress the result before ranking or output. |
 | Precision gate | At what granularity may this result appear? | Prefer public-safe geometry, public-safe excerpts, and coarse location where needed. |
 | Provenance gate | Can the result hand off to inspectable support? | Results that cannot support evidence handoff must not flow into claim-bearing surfaces. |
 | Expansion gate | Is query expansion or graph traversal still within bounded, explainable limits? | Stop traversal, narrow the query, or drop unsafe joins. |
-| Surface gate | Which surface is requesting the result? | Apply stricter shaping for public/civic flows than for steward or review flows. |
+| Surface gate | Which surface is requesting the result? | Apply stricter shaping for public and civic flows than for steward or review flows. |
+
+## Surface-class handling
+
+Search behavior should vary by requesting surface, while preserving one rule everywhere: **search should route toward geography, evidence, and visible trust state rather than detached claim lists**.
+
+| Requesting surface | Search may do | Search may not do |
+|---|---|---|
+| Public / civic search | Return released public-safe results, generalized previews, and evidence-capable destinations | Reveal withheld or review-only material, exact sensitive coordinates, or internal locator details |
+| Map Explorer / Dossier / Story | Return context-preserving, geography-anchored candidates with visible freshness and evidence route | Convert snippets into unsupported claims or blur generalized vs precise state |
+| Focus Mode | Supply scoped candidates and bundle-capable handoff into citation-checked synthesis | Answer solely from ranking or retrieval confidence |
+| Review / stewardship | Expose broader review-bearing candidates with policy state visible | Reuse steward-only previews on public surfaces without separate release gating |
+| Export preview | Return only release-safe selections that can inherit correction and evidence linkage | Generate outward artifacts from search hits that outrun release state |
 
 ## Retrieval decision matrix
 
 > [!TIP]
-> The table below is normative behavior guidance. Exact result-object fields and enforcement hooks remain **NEEDS VERIFICATION** until search contracts and fixtures are directly verified.
+> The matrix below is normative behavior guidance. Exact result-object field names and enforcement hooks remain **NEEDS VERIFICATION** until search contracts and fixtures are directly surfaced.
 
 | Situation | Search behavior | Public result shape | Required visible state |
 |---|---|---|---|
-| Released, public-safe, non-sensitive material | Retrieve, rank, and return normally | Standard result card / snippet / map marker | release-scoped, evidence-capable |
+| Released, public-safe, non-sensitive material | Retrieve, rank, and return normally | Standard result card, snippet, map marker, or geography-anchored hit | release-scoped, evidence-capable |
 | Released material with precision risk | Retrieve, but downgrade to safe precision | generalized location, masked snippet, aggregated bucket, or coarse geometry | generalized |
 | Rights or redistribution unclear | Do not render publicly | no public result, or steward-only holding path | withheld / review required |
 | Cultural, Indigenous, archaeological, oral-history, biodiversity, or exact-location-sensitive material | Prefer suppression or approved generalization over “helpful” detail | generalized preview or no public result | generalized / review required |
-| Modeled, source-dependent, partial, or conflicted material | May be discoverable, but only with explicit status | result remains visibly labeled and may rank below direct observational/statutory support | modeled / source-dependent / partial / conflicted |
+| Modeled, source-dependent, partial, or conflicted material | May be discoverable, but only with explicit state | result remains visibly labeled and may rank below direct observational or statutory support | modeled / source-dependent / partial / conflicted |
 | Graph expansion crosses weakly supported or policy-sensitive joins | Stop traversal or narrow the path | no auto-expanded public path | bounded traversal |
 | Result cannot hand off to inspectable support | Keep out of claim-bearing surfaces | optionally maintainer-only debug visibility; no public claim path | evidence handoff unavailable |
 | Surface requests material outside its allowed audience class | Enforce surface-specific narrowing | public-safe subset only | surface-constrained |
+
+## Search-side obligation outcomes
+
+> [!NOTE]
+> This is a **starter mapping**, not a claim that the mounted repo already exposes these exact bundle keys. It exists to keep search behavior aligned with KFM’s broader reason/obligation grammar.
+
+| Obligation | Search-side consequence |
+|---|---|
+| `generalize` | Serve only coarse geometry, generalized labels, masked excerpts, or aggregated buckets |
+| `withhold` | Return no public result or only a public-safe notice that detail is unavailable |
+| `review_required` | Route to steward/review lane before promotion or outward use |
+| `cite` | Require evidence-capable handoff; no claim-bearing preview without inspectable support |
+| `disclose_partial` | Keep partial-coverage state visible in-place |
+| `disclose_modeled` | Keep modeled / assimilated / source-dependent state visible in-place |
+| `log_audit` | Preserve audit linkage for the search decision and downstream handoff |
 
 ## Source-role handling
 
@@ -130,11 +174,11 @@ Search should not treat every source family as semantically interchangeable.
 | Source role | Search value | Search risk | Required handling |
 |---|---|---|---|
 | Statutory / administrative | Strong anchor for official boundaries, districts, legal records, agency reporting | legal classification can be mistaken for functional capacity | keep legal status explicit; do not over-infer operational reality |
-| Direct observational / instrumented | Strong for measurements, field records, sensor outputs | support, cadence, units, and calibration can be lost in ranking/snippets | preserve support, units, and time semantics in preview and handoff |
-| Modeled / assimilated | Useful for forecasts, scenarios, interpolations, indices | modeled outputs can be mistaken for direct fact | label modeled status in-place; do not bury under neutral prose |
-| Documentary / archival | Important for history, memory, reports, newspapers, scans, transcripts | decontextualized snippets can distort meaning | preserve context, date, provenance, and interpretive status |
+| Direct observational / instrumented | Strong for measurements, field records, and sensor outputs | support, cadence, units, and calibration can be lost in ranking or snippets | preserve support, units, and time semantics in preview and handoff |
+| Modeled / assimilated | Useful for forecasts, scenarios, interpolations, and indices | modeled outputs can be mistaken for direct fact | label modeled state in-place; do not bury it under neutral prose |
+| Documentary / archival | Important for history, memory, reports, newspapers, scans, and transcripts | decontextualized snippets can distort meaning | preserve context, date, provenance, and interpretive state |
 | Community-contributed | Valuable for local knowledge and contributed observations | moderation, confidence, and rights can be uneven | treat as governed input, not automatic truth |
-| Mirror / discovery service | Helpful for discovery and redundancy | can be mistaken for origin authority | keep mirror/origin distinction visible |
+| Mirror / discovery service | Helpful for discovery and redundancy | can be mistaken for origin authority | keep mirror / origin distinction visible |
 
 ## Search-local FAIR+CARE rules
 
@@ -200,18 +244,18 @@ Expansion, synonyming, semantic recall, and generated query broadening must not 
 
 ### 7. Search hands off; it does not conclude
 
-Search returns evidence-capable references, scoped previews, and routeable candidates. Consequential explanation remains downstream of evidence resolution, policy checks, and runtime outcome handling.
+Search returns evidence-capable references, scoped previews, and routeable candidates. Consequential explanation remains downstream of evidence resolution, policy checks, runtime outcome handling, and visible correction state.
 
 ## Traversal and expansion limits
 
-Search components may use full-text, metadata, vector, graph, and hybrid routing/fusion, but the following limits apply:
+Search components may use full-text, metadata, vector, graph, and hybrid routing or fusion, but the following limits apply:
 
 - **Full-text** may rank and filter, but must not overrule care gates.
 - **Vector / semantic recall** may expand candidate sets, but must not be the sole basis for claim-bearing output.
 - **Graph search** must preserve relation type, path length, and provenance hints.
 - **Metadata / STAC / DCAT search** may improve discoverability, but it does not weaken publication classes.
 - **Hybrid fusion** should prefer explainable combinations over opaque “best score wins” behavior.
-- **Generated or hypothetical expansion** must be auditable where it affects outward visibility.
+- **Generated or hypothetical expansion** must be auditable wherever it affects outward visibility.
 
 ### Practical stop conditions
 
@@ -272,33 +316,32 @@ flowchart LR
     EV --> SURF[Map Explorer / Dossier / Story / Focus / Evidence Drawer]
 ```
 
-## Review & definition of done
+## Review checklist & definition of done
 
-A search change touching retrieval, ranking, snippets, previews, graph expansion, or surface handoff should not be considered done until the following checks pass.
+A search change touching retrieval, ranking, snippets, previews, graph expansion, or surface handoff should not be considered done until all of the following are true:
 
-| Check | Expectation |
-|---|---|
-| Release-scope check | Public search cannot retrieve outside promoted scope. |
-| Rights / sensitivity check | Search behavior narrows or withholds when rights or sensitivity posture requires it. |
-| Precision check | Exact-location risk is generalized, aggregated, or withheld. |
-| Provenance check | Result can hand off to inspectable support or stays out of claim-bearing flows. |
-| State-visibility check | generalized / modeled / partial / source-dependent / conflicted states remain visible. |
-| Traversal check | graph/vector expansion is bounded and explainable. |
-| Redaction check | examples and screenshots are public-safe. |
-| Focus handoff check | downstream path still supports answer / abstain / deny / error semantics. |
-| Documentation check | this file and adjacent search docs remain aligned. |
-| Unknowns check | any unverified enforcement claim is still marked NEEDS VERIFICATION rather than implied as live. |
+- [ ] Public search cannot retrieve outside promoted scope.
+- [ ] Rights and sensitivity posture narrows, generalizes, or withholds when required.
+- [ ] Exact-location risk is generalized, aggregated, or withheld.
+- [ ] Every outward-facing result can hand off to inspectable support, or stays out of claim-bearing flows.
+- [ ] `generalized`, `modeled`, `partial`, `source-dependent`, and `conflicted` states remain visible.
+- [ ] Graph and vector expansion stay bounded and explainable.
+- [ ] Examples, screenshots, and fixtures are public-safe.
+- [ ] Focus and related downstream surfaces still support answer / abstain / deny / error behavior.
+- [ ] Adjacent search docs remain terminology-aligned.
+- [ ] Any unverified enforcement claim is still marked **NEEDS VERIFICATION** instead of implied as live.
 
 ## Open verification items
 
 The following items should remain explicit until directly verified in mounted implementation:
 
+- exact repo presence and current substance of the adjacent `docs/search/*.md` and `docs/standards/*` files
 - exact search runtime and engine mix
 - live schema inventory for search result objects
 - fixture coverage for generalized, withheld, partial, and conflicted search outputs
 - merge-blocking workflow coverage for search-local FAIR+CARE checks
 - current reason / obligation registry implementation for search-facing policy outcomes
-- parity between this file and future substantive versions of:
+- parity between this file and any future substantive versions of:
   - `../standards/faircare/FAIRCARE-GUIDE.md`
   - `../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
 
