@@ -6,142 +6,198 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION_DATE
-updated: 2026-03-25
+updated: 2026-03-29
 policy_label: public
-related: [docs/security/README.md, .github/README.md, .github/workflows/README.md, policy/README.md, contracts/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/sigstore-cosign-v3/README.md, docs/security/supply-chain/reference-repos/README.md, docs/security/supply-chain/shai-hulud-2.0/README.md]
+related: [docs/README.md, docs/security/README.md, .github/README.md, .github/actions/README.md, .github/workflows/README.md, .github/SECURITY.md, policy/README.md, policy/bundles/README.md, policy/tests/README.md, tests/README.md, tests/policy/README.md, tests/contracts/README.md, contracts/README.md, schemas/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/sigstore-cosign-v3/README.md, docs/security/supply-chain/reference-repos/README.md, docs/security/supply-chain/shai-hulud-2.0/README.md]
 tags: [kfm, security, supply-chain, provenance, sbom, signing]
-notes: [Current public main branch exposed this target file and four child lane README files as scaffold placeholders; doc_id and created date need repo verification before merge.]
+notes: [Current public main inspection confirms this README plus four child lane README files; dependency-confusion/ and shai-hulud-2.0/ now expose visible subdirectories, while sigstore-cosign-v3/ and reference-repos/ remain README-only; doc_id and created date still need repo verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Supply-Chain Integrity & Release Provenance
+
 Governed documentation hub for dependency trust, digest-first release identity, SBOMs, signatures, attestations, provenance, and rollback-aware release memory under `docs/security/supply-chain/`.
 
 > [!IMPORTANT]
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-docs%2Fsecurity%2Fsupply--chain%2FREADME.md-blue) ![posture](https://img.shields.io/badge/posture-digest--first-informational) ![provenance](https://img.shields.io/badge/provenance-release--memory-success) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Control lanes](#control-lanes) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
->
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-docs%2Fsecurity%2Fsupply--chain%2FREADME.md-blue) ![tree](https://img.shields.io/badge/tree-public--main-0969da) ![posture](https://img.shields.io/badge/posture-digest--first-informational) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Control lanes](#control-lanes) · [Adjacent enforcement signals](#adjacent-enforcement-signals) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
 > [!WARNING]
-> This README is **current-branch grounded** for the public Markdown surfaces that were directly retrievable during drafting, and **doctrine-grounded** for KFM’s long-horizon supply-chain expectations.
-> It does **not** claim that public `main` already has active checked-in workflow YAML for SBOM generation, signing, attestation, or release-proof emission. Public `main` currently exposed `.github/workflows/README.md` and no checked-in workflow YAML there.
+> This README is **public-tree-grounded** for currently visible repo surfaces and **doctrine-grounded** for KFM’s supply-chain law.
+>
+> It does **not** claim that public `main` already has checked-in workflow YAML for SBOM generation, signing, attestation, or release-proof emission. Public `main` still exposes `.github/workflows/README.md` only.
+>
+> It **does** distinguish current control-surface shape from proven executed automation: `.github/actions/` now exposes relevant local-action directories, but inspected supply-chain-significant child action directories remain placeholder-only on public `main`.
 
 ## Scope
-`docs/security/supply-chain/` is the security subtree for build and package trust.
+
+`docs/security/supply-chain/` is the security subtree for build, dependency, artifact, and release trust.
 
 Use this README to answer five questions quickly:
 
-1. Which supply-chain topics belong in this subtree instead of only in `.github/`, `policy/`, or `contracts/`?
+1. Which supply-chain topics belong in this subtree instead of only in `.github/`, `policy/`, `tests/`, `contracts/`, or `schemas/`?
 2. Which child lane owns the topic I am changing?
-3. What can be stated as **current repo reality**, and what is still **target-state doctrine**?
-4. How do SBOMs, signatures, attestations, digests, and release manifests fit KFM’s trust model?
+3. What can be stated as **current public-branch reality**, and what is still **target-state doctrine**?
+4. How do digests, SBOMs, signatures, attestations, release manifests, and rollback memory fit KFM’s trust model?
 5. What has to move together when supply-chain behavior changes?
 
-In KFM, supply-chain security is not just about package hygiene. It is part of governed publication. A release unit that cannot explain its dependency inputs, builder identity, digest, approval posture, or rollback path weakens the same trust system that KFM expects from maps, dossiers, APIs, exports, and runtime answers.
+In KFM, supply-chain security is not a sidecar concern. It is part of governed publication. A release unit that cannot explain its dependency inputs, builder identity, digest, proof objects, approval posture, or rollback path weakens the same trust system that KFM expects from maps, dossiers, exports, and runtime answers.
 
 ### KFM supply-chain rules this README should preserve
 
 | Rule | Practical meaning for this subtree |
 | --- | --- |
 | Trust membrane | Build and release automation must not become a quiet bypass around policy, review, or evidence-bearing promotion. |
-| Fail-closed posture | Missing provenance, unresolved dependency origin, unsigned artifacts, or broken proof linkage should block promotion rather than degrade silently. |
-| Authoritative vs. derived separation | Caches, tiles, indexes, summaries, containers, archives, and packages remain accountable to released scope and release evidence; they are not sovereign truth. |
-| Docs as production surface | Supply-chain-significant changes should update docs, workflows, contracts, policy/tests, and release evidence together. |
+| Fail-closed posture | Missing provenance, unresolved dependency origin, unsigned artifacts, broken proof linkage, or unreviewed release state should block promotion rather than degrade silently. |
+| Authoritative vs. derived separation | Packages, tiles, indexes, search layers, summaries, containers, and archives remain accountable to released scope and release evidence; they are not sovereign truth. |
+| Docs as production surface | Supply-chain-significant changes should update docs, actions/workflows, policy/tests, contracts/schemas, and release evidence together. |
 | Digest-first identity | Mutable tags are convenience pointers; durable trust attaches to digests, typed artifacts, and lineage-bearing manifests. |
-| Correction stays visible | Rollback, withdrawal, supersession, and correction-bearing states must survive beyond the build log and into release memory. |
+| Correction stays visible | Rollback, withdrawal, supersession, and correction-bearing states must survive beyond build logs and into release memory. |
 
 [Back to top](#kfm-supply-chain-integrity--release-provenance)
 
 ## Repo fit
+
 **Path:** `docs/security/supply-chain/README.md`  
-**Role in repo:** subtree README for supply-chain security, release provenance, and dependency-trust lanes under `docs/security/`.
+**Role in repo:** subtree README for supply-chain security, release provenance, dependency trust, and correction-aware delivery lanes under `docs/security/`.
 
 ### Upstream and lateral anchors
 
 | Relation | Path | Why it matters | Current posture |
 | --- | --- | --- | --- |
-| Parent security index | [`../README.md`](../README.md) | Maps the full security subtree and routes readers into this lane | **CONFIRMED** |
-| Root docs index | [`../../README.md`](../../README.md) | Keeps this subtree aligned with the broader docs-as-production posture | **CONFIRMED** |
-| Repo gatehouse | [`../../../.github/README.md`](../../../.github/README.md) | Explains repo-wide review, CI/CD, and delivery controls that may enforce supply-chain obligations | **CONFIRMED** |
-| Workflow lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Current public branch signal for checked-in workflow reality | **CONFIRMED** |
-| Policy surface | [`../../../policy/README.md`](../../../policy/README.md) | Supply-chain docs must not replace executable deny-by-default policy | **CONFIRMED** |
+| Parent security index | [`../README.md`](../README.md) | Maps the broader security subtree and routes readers into this lane | **CONFIRMED** |
+| Root docs index | [`../../README.md`](../../README.md) | Keeps this subtree aligned with the repo’s docs-as-production pattern | **CONFIRMED** |
+| Repo gatehouse | [`../../../.github/README.md`](../../../.github/README.md) | Describes review, automation, CODEOWNERS, and repo-control surfaces | **CONFIRMED** |
+| Local actions lane | [`../../../.github/actions/README.md`](../../../.github/actions/README.md) | Step-level action wrappers and helper seams live here; this is signal, not proof of live workflow execution | **CONFIRMED** |
+| Workflow lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Current public signal for checked-in workflow inventory | **CONFIRMED** |
+| Policy surface | [`../../../policy/README.md`](../../../policy/README.md) | Supply-chain docs must not replace deny-by-default policy or reason/obligation grammar | **CONFIRMED** |
+| Verification surface | [`../../../tests/README.md`](../../../tests/README.md) | Supply-chain claims should eventually land in runnable proof families, not prose alone | **CONFIRMED** |
 | Contract surface | [`../../../contracts/README.md`](../../../contracts/README.md) | Release proof, runtime envelopes, and correction objects rely on typed contract families | **CONFIRMED** |
-| GitHub security policy | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Public disclosure and vulnerability intake should stay canonical there | **CONFIRMED** |
+| Schema boundary | [`../../../schemas/README.md`](../../../schemas/README.md) | Schema-home responsibility remains relevant to supply-chain proof objects and validation | **CONFIRMED** |
+| Public disclosure policy | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Vulnerability reporting and disclosure guidance should stay canonical there | **CONFIRMED** |
 
 ### Downstream lanes currently visible on public `main`
 
-| Path | Role | Current posture |
+| Path | Role | Current public-main posture |
 | --- | --- | --- |
-| [`./dependency-confusion/README.md`](./dependency-confusion/README.md) | Package-origin and namespace-trust lane | **CONFIRMED path; scaffold content** |
-| [`./sigstore-cosign-v3/README.md`](./sigstore-cosign-v3/README.md) | Signing and attestation lane | **CONFIRMED path; scaffold content** |
-| [`./reference-repos/README.md`](./reference-repos/README.md) | Curated examples and comparison lane | **CONFIRMED path; scaffold content** |
-| [`./shai-hulud-2.0/README.md`](./shai-hulud-2.0/README.md) | Experimental / named pattern lane | **CONFIRMED path; scaffold content** |
+| [`./dependency-confusion/README.md`](./dependency-confusion/README.md) | Package-origin and namespace-trust lane | **CONFIRMED** — README plus visible `checks/`, `examples/`, and `policy/` subdirectories |
+| [`./sigstore-cosign-v3/README.md`](./sigstore-cosign-v3/README.md) | Signing and attestation lane | **CONFIRMED** — README-only tree shape on public `main` |
+| [`./reference-repos/README.md`](./reference-repos/README.md) | Curated examples and comparison lane | **CONFIRMED** — README-only tree shape on public `main` |
+| [`./shai-hulud-2.0/README.md`](./shai-hulud-2.0/README.md) | Experimental / named pattern lane | **CONFIRMED** — README plus visible `indicators/`, `protections/`, and `workflows/` subdirectories |
 
 > [!NOTE]
-> The parent `docs/security/README.md` currently references a sibling `../supply-chain.md`, but that file was **not** retrievable from the public `main` branch during this drafting pass. Treat any link to that sibling as **NEEDS VERIFICATION** and repair it in the same PR if the file is still absent.
+> `docs/security/README.md` still references `./supply-chain.md`, but the current public `docs/security/` tree exposes `./supply-chain/` and does not show a sibling `supply-chain.md`. Repair that drift in the same PR as this README.
 
 ## Accepted inputs
+
 Content that belongs in this subtree:
 
 | Input class | What belongs here |
 | --- | --- |
-| Dependency-origin guidance | dependency-confusion notes, namespace trust, registry assumptions, lockfile drift, package-source anomalies, reference patterns for package-origin review |
-| Provenance guidance | digest identity, builder provenance, attestation vocabulary, release-memory linkage, evidence-bearing promotion notes |
-| Artifact-integrity guidance | signing, verification, immutable references, proof-pack expectations, rollback-aware release handling |
-| SBOM guidance | what to generate, what it proves, what it does **not** prove, where reviewers should look, and how to tie SBOMs back to releases |
-| Workflow-adjacent supply-chain notes | documentation that explains what workflows should prove without duplicating the workflow lane as source of truth |
-| Reference-repo curation | bounded examples used for learning, comparison, or hardening patterns |
-| Reviewer/operator notes | merge-time verification checks, release integrity questions, and correction/rollback implications when supply-chain posture changes |
+| Dependency-origin guidance | Dependency confusion notes, namespace trust, registry assumptions, lockfile drift, package-source anomalies, and package-origin review patterns |
+| Provenance guidance | Digest identity, builder provenance, attestation vocabulary, release-memory linkage, and evidence-bearing promotion notes |
+| Artifact-integrity guidance | Signing, verification, immutable references, proof-pack expectations, and rollback-aware release handling |
+| SBOM guidance | What to generate, what it proves, what it does **not** prove, where reviewers should look, and how to tie SBOMs back to releases |
+| Action / workflow interpretation | Documentation that explains what action wrappers or workflows should prove without claiming execution that the reviewed branch does not show |
+| Policy / test linkage notes | How supply-chain expectations connect to policy bundles, fixtures, validator tests, and merge gates |
+| Reference-repo curation | Bounded examples used for learning, comparison, or hardening patterns |
+| Reviewer / operator notes | Merge-time verification checks, release integrity questions, and correction / rollback implications when supply-chain posture changes |
 
 ### What belongs here only as documentation
+
 This subtree explains and cross-links supply-chain controls.
+
 It should **not** pretend that documentation alone is enforcement.
 
 ## Exclusions
 
 | Keep out of `docs/security/supply-chain/` as canonical truth | Put it instead | Why |
 | --- | --- | --- |
-| Private keys, signing secrets, tokens, or live credentials | secret manager / host configuration / CI secret boundary | Docs must never become a secret store |
-| Workflow YAML as the only description of policy | [`../../../.github/workflows/`](../../../.github/workflows/) **plus** policy/docs updates | Enforcement and explanation should move together |
+| Private keys, signing secrets, tokens, or live credentials | Secret manager / host configuration / CI secret boundary | Docs must never become a secret store |
+| Workflow YAML as the only expression of policy | [`../../../.github/workflows/`](../../../.github/workflows/) **plus** policy/tests/docs updates | Enforcement and explanation should move together |
+| Repo-local action implementation as narrative-only copy | [`../../../.github/actions/`](../../../.github/actions/) | Step wrappers belong with the action code or action README |
 | Executable policy bundles or rule fixtures | [`../../../policy/`](../../../policy/) | Policy remains executable and separately reviewable |
-| Canonical schemas, vocabularies, envelopes, and OpenAPI definitions | [`../../../contracts/`](../../../contracts/) | This subtree can explain them, not replace them |
-| Release artifacts, emitted SBOM files, signatures, attestations, or proof bundles as ad hoc checked-in evidence | designated release / proof / artifact surfaces | Keep immutable evidence where release logic expects it |
-| Runtime code, build scripts, or package-manager configuration as narrative-only copy | owning code or automation surface | Supply-chain law should not drift away from the code that enforces it |
+| Canonical schemas, vocabularies, envelopes, and OpenAPI definitions | [`../../../contracts/`](../../../contracts/) and/or [`../../../schemas/`](../../../schemas/) | This subtree can explain them, not replace them |
+| Runnable verification suites as prose-only claims | [`../../../tests/`](../../../tests/) | Trust needs proof families, not just text |
+| Release artifacts, emitted SBOM files, signatures, attestations, or proof bundles as ad hoc checked-in evidence | Designated release / proof / artifact surfaces | Keep immutable evidence where release logic expects it |
+| Runtime code, build scripts, or package-manager configuration as narrative-only copy | Owning code or automation surface | Supply-chain law should not drift away from what enforces it |
 | Public disclosure instructions | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Vulnerability intake should stay canonical there |
 
 [Back to top](#kfm-supply-chain-integrity--release-provenance)
 
 ## Current verified snapshot
-The strongest current-branch claim is intentionally narrow.
 
-| Surface | What was directly retrievable during drafting | What it means |
+The strongest subtree claims are now more specific than a pure scaffold reading, but still narrower than “fully operational.”
+
+| Surface | Current public-main signal | Why it matters |
 | --- | --- | --- |
-| `docs/security/supply-chain/README.md` | Present, but scaffold-only | This file is a real path on public `main`, but it needs substantive content |
-| Child lane README files | `dependency-confusion`, `sigstore-cosign-v3`, `reference-repos`, and `shai-hulud-2.0` each resolved as scaffold placeholders | The subtree footprint exists; the lane content is not yet mature |
-| `.github/workflows/README.md` | Present | Public `main` documents the workflow lane |
-| `.github/workflows/*.yml` or `*.yaml` | Not visible on public `main` during drafting | Do **not** claim active checked-in SBOM/signing workflow YAML here without reinspection |
-| `policy/README.md` and `contracts/README.md` | Present | Adjacent policy and contract surfaces are real and should be linked, not duplicated |
-| `.github/CODEOWNERS` | Present and maps `/docs/` to `@bartytime4life` | Owner placeholder can be retired for this path |
+| `docs/security/supply-chain/README.md` | Present as a substantive README surface | This path is real and already functions as a lane index, but parts of its inventory language need refresh |
+| `dependency-confusion/` | README plus `checks/`, `examples/`, and `policy/` subdirectories visible | This lane now has visible structure beyond a single README |
+| `shai-hulud-2.0/` | README plus `indicators/`, `protections/`, and `workflows/` subdirectories visible | This lane is no longer README-only on the public tree |
+| `sigstore-cosign-v3/` | README-only tree shape visible | Treat this as a current lane anchor, not proof of executed signing controls |
+| `reference-repos/` | README-only tree shape visible | Treat this as a curation lane anchor, not as a populated example corpus |
+| Parent security index | Still points to a missing `./supply-chain.md` sibling | Current cross-link drift should be repaired now, not left to future readers |
 
 ## Directory tree
 
-### Current verified snapshot
+### Current public-main subtree
 
 ```text
 docs/security/supply-chain/
 ├── README.md
 ├── dependency-confusion/
-│   └── README.md
+│   ├── README.md
+│   ├── checks/
+│   ├── examples/
+│   └── policy/
 ├── reference-repos/
 │   └── README.md
 ├── shai-hulud-2.0/
-│   └── README.md
+│   ├── README.md
+│   ├── indicators/
+│   ├── protections/
+│   └── workflows/
 └── sigstore-cosign-v3/
     └── README.md
 ```
 
+### Adjacent enforcement excerpt
+
+```text
+.github/
+├── actions/
+│   ├── action.yml
+│   ├── README.md
+│   ├── metadata-validate/
+│   ├── metadata-validate-v2/
+│   ├── opa-gate/
+│   ├── provenance-guard/
+│   ├── sbom-produce-and-sign/
+│   └── src/
+└── workflows/
+    └── README.md
+
+policy/
+├── README.md
+├── bundles/
+├── fixtures/
+├── policy-runtime/
+└── tests/
+
+tests/
+├── README.md
+├── accessibility/
+├── contracts/
+├── e2e/
+├── integration/
+├── policy/
+├── reproducibility/
+└── unit/
+```
+
 ### Proposed growth shape
-The shape below is a **PROPOSED** documentation contract, not a claim about the current branch.
+The shape below is **PROPOSED** documentation structure, not a claim about the current branch.
 
 ```text
 docs/security/supply-chain/
@@ -163,106 +219,128 @@ docs/security/supply-chain/
 ```
 
 > [!TIP]
-> Grow this subtree only when a narrower lane has a clear owner, a clear reason to exist, and a direct link to contracts, policy, workflows, tests, or release evidence.
+> Add new lanes only when they have a distinct burden, a clear owner, and a direct link to adjacent policy, tests, contracts, actions/workflows, or release evidence.
 
 ## Quickstart
-Start from the repo root and verify the lane before you upgrade any statement from target state to current fact.
+
+Start from the repo root and re-verify the lane before you upgrade any statement from target state to current fact.
 
 ```bash
-# 1) Inspect the security subtree
-sed -n '1,240p' docs/security/README.md
+# 1) Inspect the security subtree and this lane
+sed -n '1,260p' docs/security/README.md
 find docs/security/supply-chain -maxdepth 3 -type f | sort
+find docs/security/supply-chain -maxdepth 3 -type d | sort
 
-# 2) Inspect the supply-chain subtree itself
-sed -n '1,240p' docs/security/supply-chain/README.md
+# 2) Inspect each child lane
+sed -n '1,260p' docs/security/supply-chain/README.md
 sed -n '1,240p' docs/security/supply-chain/dependency-confusion/README.md
 sed -n '1,240p' docs/security/supply-chain/sigstore-cosign-v3/README.md
 sed -n '1,240p' docs/security/supply-chain/reference-repos/README.md
 sed -n '1,240p' docs/security/supply-chain/shai-hulud-2.0/README.md
 
-# 3) Cross-check the enforcement-adjacent surfaces
-sed -n '1,220p' .github/README.md
-sed -n '1,220p' .github/workflows/README.md
-sed -n '1,220p' policy/README.md
-sed -n '1,220p' contracts/README.md
-sed -n '1,200p' .github/CODEOWNERS
+# 3) Cross-check adjacent enforcement-adjacent surfaces
+sed -n '1,240p' .github/README.md
+sed -n '1,240p' .github/actions/README.md
+sed -n '1,240p' .github/workflows/README.md
+find .github/actions -maxdepth 2 \( -type d -o -name 'README.md' -o -name 'action.yml' \) | sort
+find .github/workflows -maxdepth 2 -type f | sort
 
-# 4) Search for supply-chain terms before writing claims
-grep -RIn "SBOM\|sigstore\|cosign\|attest\|provenance\|digest\|dependency confusion" \
-  docs .github policy contracts tests 2>/dev/null || true
+sed -n '1,240p' policy/README.md
+find policy -maxdepth 2 -type f | sort
+
+sed -n '1,240p' tests/README.md
+find tests -maxdepth 2 -type f | sort
+
+sed -n '1,240p' contracts/README.md
+sed -n '1,240p' schemas/README.md
+find contracts schemas -maxdepth 2 -type f | sort
+
+# 4) Search for supply-chain-significant terms before writing claims
+grep -RIn "SBOM\|cosign\|sigstore\|attest\|provenance\|ReleaseManifest\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice" \
+  docs .github policy tests contracts schemas 2>/dev/null || true
 ```
 
 ### Minimal review order
+
 1. Confirm the live subtree and child paths.
 2. Confirm whether public `main` still exposes `.github/workflows/README.md` only or whether checked-in workflow YAML has landed.
-3. Confirm whether policy bundles, contract files, and test fixtures exist for the behavior you are documenting.
-4. Confirm whether release proof, rollback, or correction objects are emitted anywhere real—not just described in doctrine.
-5. Repair stale cross-links in the same PR.
+3. Confirm whether `.github/actions/` contains substantive implementations or placeholder wrappers for the controls you are documenting.
+4. Confirm whether policy bundles, contract files, and test fixtures exist for the behavior you are describing.
+5. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as already operational.
+6. Repair stale cross-links in the same PR.
 
 [Back to top](#kfm-supply-chain-integrity--release-provenance)
 
 ## Usage
+
 Use this README as the **subtree map** for supply-chain work.
 
 ### Start here when you need to…
 
 | Task | Start here | Then go deeper |
 | --- | --- | --- |
-| Explain what “supply-chain security” means in KFM | This README | `.github/README.md`, `policy/README.md`, `contracts/README.md` |
-| Add dependency-origin or registry-trust guidance | This README | `./dependency-confusion/README.md` |
+| Explain what “supply-chain security” means in KFM | This README | `.github/README.md`, `policy/README.md`, `tests/README.md`, `contracts/README.md`, `schemas/README.md` |
+| Add package-origin or registry-trust guidance | This README | `./dependency-confusion/README.md` |
 | Add signing, verification, or attestation guidance | This README | `./sigstore-cosign-v3/README.md` |
 | Curate example repos or external patterns | This README | `./reference-repos/README.md` |
 | Document an experimental named pattern or branch of work | This README | `./shai-hulud-2.0/README.md` |
-| Tie build provenance to release/correction posture | This README | adjacent release-manifest / policy / contract / workflow docs |
+| Tie build provenance to release/correction posture | This README | adjacent policy / tests / contracts / release-manifest docs |
+| Review whether a repo change proves execution or only intent | This README | `.github/actions/README.md`, `.github/workflows/README.md`, `tests/README.md` |
 
 ### Build, prove, promote, and correct are different moves
 
 | Move | What changes | Why this subtree cares |
 | --- | --- | --- |
 | Build | An artifact is assembled from source plus dependencies | Dependency origin and reproducibility questions begin here |
-| Prove | The artifact gains inspectable evidence such as digest, SBOM, signature, or attestation | Trust does not attach to the artifact by filename alone |
+| Prove | The artifact gains inspectable evidence such as digest, SBOM, signature, or attestation | Trust does not attach to the artifact by filename or tag alone |
 | Promote | A candidate changes trust state and becomes publishable or releasable | KFM treats this as a governed transition, not a casual upload |
 | Correct / roll back | A release is superseded, withdrawn, generalized, or reverted | Supply-chain memory must survive beyond the original publish event |
 
 ### Current writing rule for this subtree
-Do not let this README or any child lane imply that KFM has already mounted a full signing/SBOM/attestation pipeline unless the current branch proves it.
-Keep **doctrine**, **current branch evidence**, and **proposed hardening direction** separate.
+
+Do not let this README or any child lane imply that KFM has already mounted a full signing / SBOM / attestation pipeline unless the reviewed branch proves it.
+
+Keep **doctrine**, **current public tree evidence**, and **proposed hardening direction** separate.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Source code + lockfiles + builder inputs] --> B[Build / dependency resolution]
+    A[Source code + lockfiles + build inputs] --> B[Resolve / build]
     L[Dependency-origin review] --> B
 
-    B --> C[Digest-pinned artifact]
+    B --> C[Digest-identified artifact]
     B --> D[SBOM]
     B --> E[Signature / attestation]
+    B --> F[Action or workflow step]
 
-    D --> F[Release manifest / proof pack]
-    E --> F
-    C --> F
+    D --> G[Release manifest / proof pack]
+    E --> G
+    C --> G
+    F --> G
 
-    G[Policy bundles + tests] -. verify .-> F
-    H[.github gatehouse / workflow checks] -. block or permit .-> F
+    H[Policy bundles + tests] -. verify .-> G
+    I[Contracts / schemas] -. validate .-> G
+    J[Review / decision artifacts] -. govern .-> G
 
-    F --> I{Promote?}
-    I -- yes --> J[Publishable release state]
-    I -- no --> K[Hold / deny / revise]
+    G --> K{Promote?}
+    K -- yes --> M[Publishable release state]
+    K -- no --> N[Hold / deny / revise]
 
-    J --> M[Public / steward surfaces]
-    J --> N[Rollback / supersession / correction lineage]
+    M --> O[Map / dossier / export / Focus]
+    M --> P[Rollback / supersession / correction lineage]
 ```
 
 ## Control lanes
 
 | Lane | Core concern | What this subtree should preserve | Closest path |
 | --- | --- | --- | --- |
-| Dependency origin | Can we trust where packages and builders came from? | namespace hygiene, registry assumptions, lockfile discipline, anomaly detection, explicit origin review | `./dependency-confusion/` |
-| Integrity proof | Can we prove a release unit was built by the expected actor and was not silently replaced? | signatures, attestations, digest verification, review guidance, verifier commands | `./sigstore-cosign-v3/` |
-| Release memory | Can later operators explain what shipped and how to reverse it safely? | release manifest linkage, SBOM reference, proof-pack expectations, rollback/correction posture | this README + adjacent release docs |
-| Reference baselines | Which example repos or patterns are worth learning from without importing them blindly? | bounded comparison, rationale for inclusion, and explicit non-authority status | `./reference-repos/` |
-| Experimental patterning | How do we incubate a named supply-chain pattern without pretending it is repo fact? | explicit experimental labeling, narrow scope, and cross-links to the governing lanes | `./shai-hulud-2.0/` |
+| Dependency origin | Can we trust where packages, registries, and names came from? | Namespace hygiene, registry assumptions, lockfile discipline, anomaly detection, explicit origin review | `./dependency-confusion/` |
+| Integrity proof | Can we prove a release unit was built by the expected actor and not silently replaced? | Signatures, attestations, digest verification, verifier commands, public-safe proof linkage | `./sigstore-cosign-v3/` |
+| Release memory | Can later operators explain what shipped, under what posture, and how to reverse it safely? | Release manifests, proof-pack expectations, rollback/correction posture, digest-first identity | this README + adjacent contracts/policy/tests docs |
+| Reference baselines | Which example repos or patterns are worth learning from without importing them blindly? | Bounded comparison, rationale for inclusion, and explicit non-authority status | `./reference-repos/` |
+| Experimental patterning | How do we incubate a named supply-chain pattern without pretending it is already repo fact? | Explicit experimental labeling, narrow scope, and cross-links to governing lanes | `./shai-hulud-2.0/` |
+| Workflow / action seam | Where should “execution intent” be described without overstating current automation reality? | Clear distinction between action wrappers, workflow inventory, and proven execution on the reviewed branch | this README + `../../../.github/actions/README.md` + `../../../.github/workflows/README.md` |
 
 ### Supply-chain claims that should stay explicit
 
@@ -270,63 +348,92 @@ flowchart LR
 | --- | --- |
 | “We generate SBOMs in CI” | Say it only if checked-in workflow or emitted artifact evidence proves it on the reviewed branch |
 | “Artifacts are signed / attestations are published” | Say it only if current release or workflow evidence proves it |
-| “This doc is the enforcement point” | Never — docs explain; workflows, policy, contracts, and tests enforce |
+| “This doc is the enforcement point” | Never — docs explain; actions, workflows, policy, tests, contracts, and review gates enforce |
 | “Tags are enough” | No — durable trust should resolve to digests, manifests, or equivalent immutable identity |
 | “Rollback is just redeploy” | No — KFM expects visible correction, supersession, or withdrawal memory where trust state changes |
 
 [Back to top](#kfm-supply-chain-integrity--release-provenance)
 
-## Task list — definition of done
-A supply-chain doc change is done when it remains inspectable, bounded, and cross-linked to the surfaces that actually enforce behavior.
+## Adjacent enforcement signals
 
-- [ ] The README clearly separates **current branch reality** from **doctrinal target state**.
-- [ ] Every cross-link resolves on the branch being reviewed, or is explicitly marked `NEEDS VERIFICATION`.
-- [ ] Behavior-significant claims about SBOMs, signatures, attestations, digests, or rollback posture are backed by current branch evidence before being stated as present.
-- [ ] The change does not quietly turn `.github/`, `policy/`, `contracts/`, `tests/`, or release-evidence surfaces into undocumented dependencies.
+The table below keeps nearby repo surfaces honest without upgrading them into proof of live automation.
+
+| Surface | Current public signal | Interpret carefully |
+| --- | --- | --- |
+| `.github/workflows/` | README-only on public `main` | No public checked-in YAML proof of live merge-gating or supply-chain execution from this branch view |
+| `.github/actions/` | Named local-action directories are visible, including `opa-gate`, `provenance-guard`, and `sbom-produce-and-sign` | These are current intent/control-surface signals; inspected supply-chain-significant child action READMEs remain placeholder-only on public `main` |
+| `policy/` | `bundles/`, `fixtures/`, `policy-runtime/`, and `tests/` subdirectories are visible | Policy surface is structurally richer than a README-only reading, but executable depth still needs branch/runtime proof |
+| `tests/` | `contracts/`, `policy/`, `e2e/`, `integration/`, `reproducibility/`, `unit/`, and `accessibility/` families are visible | Verification architecture is visibly broader than a single README, but individual case density and CI execution still need proof |
+| `contracts/` | README-only public tree shape | Contract-home intent is real; machine-checkable file inventory still needs verification |
+| `schemas/` | Public tree now shows multiple subdirectories | Treat schema-home claims carefully until adjacent docs and inventories are reconciled |
+
+## Task list — definition of done
+
+A supply-chain doc change is done when it remains inspectable, bounded, cross-linked, and honest about what the reviewed branch actually proves.
+
+- [ ] The README clearly separates **current public-tree reality** from **doctrinal target state**.
+- [ ] Every cross-link resolves on the reviewed branch, or is explicitly marked `NEEDS VERIFICATION`.
+- [ ] Inventory claims about child lanes, `.github/actions/`, `.github/workflows/`, `policy/`, `tests/`, `contracts/`, and `schemas/` match the reviewed branch.
+- [ ] Behavior-significant claims about SBOMs, signatures, attestations, digests, release manifests, or rollback posture are backed by branch evidence before being stated as present.
+- [ ] The change does not quietly turn `.github/`, `policy/`, `tests/`, `contracts/`, or release-evidence surfaces into undocumented dependencies.
 - [ ] If a new child lane is introduced, it has a clear scope, a clear reason to exist, and does not duplicate another lane.
-- [ ] Secrets, public keys not intended for publication, and sensitive operational material stay out of docs.
-- [ ] If `docs/security/README.md` still points at a missing `../supply-chain.md`, that drift is fixed or explicitly documented in the same PR.
+- [ ] If this README mentions current automation, it distinguishes clearly between **visible tree shape**, **placeholder scaffolding**, and **proven executed enforcement**.
+- [ ] Secrets, live verifier keys not intended for publication, and sensitive operational material stay out of docs.
+- [ ] If `docs/security/README.md` still points at a missing `./supply-chain.md`, that drift is fixed or explicitly documented in the same PR.
 - [ ] Rollback, correction, or supersession implications are mentioned whenever the documented change affects trust-bearing release behavior.
 
 ## FAQ
 
-### Does this README prove KFM already has checked-in SBOM/signing workflows?
-No. Current public branch evidence during drafting confirmed the workflow README, but not checked-in workflow YAML for those controls.
+### Does this README prove KFM already has checked-in SBOM / signing workflows?
+No. Current public-tree evidence still shows `.github/workflows/README.md` only.
 
-### Why keep supply-chain docs under `docs/security/` if `.github/` owns workflows?
-Because `.github/` is the gatehouse for repo automation, while this subtree explains the supply-chain trust model, lane ownership, and cross-links needed for reviewable documentation.
+### Why mention `.github/actions/` if `.github/workflows/` is README-only?
+Because named local-action directories are now part of the visible repo surface and they matter for documentation and review. They still do **not** prove that live workflows call them.
 
-### Should emitted SBOMs, signatures, or attestations live in this subtree?
-No. This subtree documents expectations and navigation. Emitted evidence should live with the designated release/proof/artifact surfaces.
+### Are all child lanes equally mature?
+No. Current public tree shape is uneven: `dependency-confusion/` and `shai-hulud-2.0/` expose visible subdirectories, while `sigstore-cosign-v3/` and `reference-repos/` remain README-only.
 
-### Are child lanes allowed to stay scaffold placeholders?
-Only temporarily. A placeholder is acceptable as a directory anchor, but not as a long-term substitute for behavior-significant documentation.
+### Should this subtree define schemas or policy?
+No. It should explain and connect them. Canonical machine-facing artifacts belong in their owning contract, schema, policy, and test surfaces.
 
-### What is the most important anti-pattern here?
-Treating mutable release tags, unverified docs prose, or smooth CI language as if they were equivalent to digest-linked, review-bearing release evidence.
+### What should be repaired first around this lane?
+The stale `./supply-chain.md` link in `docs/security/README.md`, then any adjacent docs that materially misstate current inventory or overclaim execution.
 
 ## Appendix
 
 <details>
-<summary>Evidence boundary, open gaps, and repair list</summary>
+<summary>Evidence boundary, cross-surface drift, and repair queue</summary>
 
 ### Evidence boundary used for this revision
-- **Direct current-branch evidence:** `docs/security/supply-chain/README.md`, four child lane README files, `.github/README.md`, `.github/workflows/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, `docs/README.md`, `policy/README.md`, and `contracts/README.md` were retrievable from the public `main` branch during drafting.
-- **Doctrinal evidence:** March 2026 KFM manuals and repo-grounded synthesis documents establish the trust membrane, fail-closed posture, contract-first release memory, and supply-chain evidence expectations.
-- **Not directly proven here:** active checked-in workflow YAML for SBOM/signing/attestations on public `main`; emitted release artifacts; mounted policy bundles; mounted schema inventory; private GitHub settings.
+
+- **Direct current public-tree evidence:** live GitHub tree inspection of `docs/security/supply-chain/`, its child lanes, `.github/`, `policy/`, `tests/`, `contracts/`, `schemas/`, and adjacent README surfaces.
+- **Doctrinal evidence:** March 2026 KFM manuals and synthesis overlays establish the trust membrane, fail-closed posture, release/correction law, contract-first proof objects, and evidence-bounded runtime expectations.
+- **Not directly proven here:** active checked-in workflow YAML for SBOM/signing/attestations on public `main`; emitted release artifacts; live merge-gate enforcement; runtime resolver behavior; branch protection settings.
+
+### Cross-surface drift this README now keeps explicit
+
+1. `docs/security/README.md` still references `./supply-chain.md`, while the visible tree shows `./supply-chain/`.
+2. The current supply-chain subtree is no longer uniformly README-only: `dependency-confusion/` and `shai-hulud-2.0/` now expose visible subdirectories.
+3. `.github/workflows/` remains README-only, so no current public-tree claim of operational CI signing/SBOM/attestation should be upgraded from intent to fact.
+4. `.github/actions/` now exposes supply-chain-significant local-action directories, but inspected child action READMEs remain placeholder-level and should not be mistaken for proven enforcement.
+5. `policy/` and `tests/` have broader visible family trees than older README-only phrasing suggests, while `contracts/` remains visibly thin and `schemas/` still needs authority reconciliation.
 
 ### Immediate repair candidates
-1. Replace the scaffold content of this README.
-2. Expand or explicitly bound the four child lane README files.
-3. Verify whether `docs/security/README.md` should still link to `../supply-chain.md`.
-4. When workflow YAML lands, update this README so “current reality” reflects it.
-5. Keep any future supply-chain doc changes tied to the matching workflow/policy/contract/test update stream.
+
+1. Add this README revision with an updated public-tree snapshot and KFM meta block.
+2. Repair the stale `./supply-chain.md` link in `docs/security/README.md`.
+3. Reconcile adjacent docs that materially understate or overstate current inventory if they are cited as current branch fact.
+4. When workflow YAML or real proof artifacts land, update this README so “current reality” reflects them.
+5. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as operational fact.
 
 ### Verification backlog
-- Reinspect the live branch checkout and record the exact subtree inventory.
-- Confirm whether workflow YAML exists on another branch or is still README-only on public `main`.
-- Surface at least one real release-proof example before documenting supply-chain controls as operational fact.
-- Verify whether public-key publication is intended anywhere in-repo before documenting verifier-key paths.
-- Reconcile supply-chain docs with any future `ReleaseManifest`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, or correction-object contracts.
+
+- Reinspect the reviewed branch checkout and record the exact subtree inventory, not just public web rendering.
+- Confirm whether checked-in workflow YAML exists on another branch or remains README-only on public `main`.
+- Confirm whether `.github/actions/opa-gate`, `.github/actions/provenance-guard`, and `.github/actions/sbom-produce-and-sign` contain real implementations beyond placeholder README surfaces on the target branch.
+- Surface one real release receipt, proof pack, or attestation chain before upgrading supply-chain execution claims.
+- Reconcile supply-chain docs with any actual `ReleaseManifest`, `EvidenceBundle`, `RuntimeResponseEnvelope`, `DecisionEnvelope`, or `CorrectionNotice` contracts once visible.
 
 </details>
+
+[Back to top](#kfm-supply-chain-integrity--release-provenance)
