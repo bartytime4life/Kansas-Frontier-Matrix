@@ -10,27 +10,30 @@ updated: 2026-03-16
 policy_label: public
 related: [docs/search/drift/README.md, docs/search/drift/stac/README.md, docs/search/drift/graph-queries/README.md, docs/search/drift/examples/README.md, docs/search/drift/hyde/README.md, docs/search/drift/embeddings/README.md]
 tags: [kfm, search, drift, focus-mode, faircare]
-notes: [Grounded in the source-visible docs/search baseline plus March 2026 KFM doctrine; repo support material corroborates docs/search/README.md and the main DRIFT subtree, but the live repo tree was not directly mounted in this session.]
+notes: [Grounded in the preserved 2025-12-13 docs/search baseline plus March 2026 KFM doctrine; live repo tree, CODEOWNERS ownership, schemas, tests, workflows, and deployed search wiring were not directly reverified in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 # 🔍 Kansas Frontier Matrix — Search System Overview
 
 Governed search and discovery for release-scoped documents, datasets, metadata, graph context, spatial layers, and Focus Mode retrieval.
 
-> **Status:** active  
-> **Owners:** `<NEEDS VERIFICATION>`  
+> **Status:** active *(baseline component posture; this 2026 rewrite remains under review)*  
+> **Owners:** `<NEEDS VERIFICATION: docs/search ownership / CODEOWNERS>`  
 > **Path:** `docs/search/README.md`  
-> ![KFM](https://img.shields.io/badge/KFM-Search-blueviolet) ![Layer](https://img.shields.io/badge/Layer-Derived%20%26%20Rebuildable-6f42c1) ![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Policy--Gated-orange) ![Focus Mode](https://img.shields.io/badge/Focus%20Mode-Evidence--Bounded-1f6feb) ![Docs](https://img.shields.io/badge/Docs-README-2ea44f)  
+> ![KFM](https://img.shields.io/badge/KFM-Search-blueviolet) ![Status](https://img.shields.io/badge/Status-Active%20component-brightgreen) ![Layer](https://img.shields.io/badge/Layer-Derived%20%26%20Rebuildable-6f42c1) ![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Policy--Gated-orange) ![Focus Mode](https://img.shields.io/badge/Focus-Evidence--Bounded-1f6feb) ![Docs](https://img.shields.io/badge/Docs-README-2ea44f)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Review & definition of done](#review--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Search in KFM is a **derived, rebuildable discovery layer**. It improves recall, routing, ranking, and navigation, but it does **not** become sovereign truth. Consequential claims still resolve through governed APIs, evidence resolution, policy checks, release state, and inspectable support.
+> Search in KFM is a **derived, rebuildable discovery layer**. It improves recall, routing, ranking, and navigation, but it does **not** become sovereign truth. Consequential claims still resolve through governed APIs, evidence resolution, policy checks, release state, and visible correction lineage.
 
 > [!NOTE]
-> This README is grounded in a source-visible `docs/search/README.md` baseline plus March 2026 KFM doctrine. Repo support material corroborates `docs/search/README.md` and the main DRIFT subtree, but the live repo tree itself was not directly mounted in this session.
+> This README is built from a **preserved 2025-12-13 search baseline** plus **March 2026 doctrine**. The attached corpus confirms the documented search topology and governing rules, but the live repository tree itself was **not** mounted in this session.
+
+> [!NOTE]
+> **Truth posture in this file:** **CONFIRMED** = grounded in the attached corpus or current-session inspection; **INFERRED** = conservative structural completion; **PROPOSED** = recommended design direction; **NEEDS VERIFICATION** / **UNKNOWN** = not directly reverified here.
 
 > [!WARNING]
-> Do not read this file as proof of live search runtime wiring, merge-enforced CI gates, or deployed engine mix. Where the project evidence stays documentary rather than executable, this README keeps those areas visible as **NEEDS VERIFICATION** or **UNKNOWN** instead of smoothing them into implementation fact.
+> Do not read this file as proof of deployed engine mix, merge-enforced CI, runtime wiring, or current in-repo file presence. Those areas remain explicitly marked **NEEDS VERIFICATION** or **UNKNOWN** where the current session did not surface direct implementation evidence.
 
 ## Scope
 
@@ -45,7 +48,7 @@ Its job is to define how KFM discovers release-scoped material while preserving 
 - search hands off **evidence-capable references** or **reference bundles**, not detached claims
 - search remains **inspectable**, **rebuildable**, and **deterministic where required**
 
-In practical terms, this documentation surface covers unified discovery across:
+In practice, this directory covers unified discovery across:
 
 - historical documents
 - datasets and metadata
@@ -63,25 +66,31 @@ KFM search is therefore about **discovery, routing, contextual expansion, and ex
 
 | Direction | Path | Role | Status |
 |---|---|---|---|
-| This file | `docs/search/README.md` | Search-system entrypoint | **CONFIRMED** |
-| Downstream | [`./drift/README.md`](./drift/README.md) | DRIFT hybrid retrieval overview | **CONFIRMED** |
-| Downstream | [`./drift/stac/README.md`](./drift/stac/README.md) | Retrieval-episode STAC / evidence-bundle surface | **CONFIRMED** |
-| Downstream | [`./drift/graph-queries/README.md`](./drift/graph-queries/README.md) | Bounded graph/Cypher precision layer | **CONFIRMED** |
-| Downstream | [`./drift/examples/README.md`](./drift/examples/README.md) | Redaction-safe examples and golden fixtures | **CONFIRMED** |
-| Downstream | [`./drift/hyde/README.md`](./drift/hyde/README.md) | Governed HyDE query expansion | **CONFIRMED** |
-| Downstream | [`./drift/embeddings/README.md`](./drift/embeddings/README.md) | Embedding-oriented retrieval layer | **CONFIRMED** |
-| Upstream | `../README.md` | Parent docs index / docs landing page | **NEEDS VERIFICATION** |
+| This file | `docs/search/README.md` | Search-system entrypoint | **CONFIRMED** in preserved baseline |
+| Sibling | [`./semantic-search.md`](./semantic-search.md) | Semantic/vector-oriented search companion | **CONFIRMED** in preserved baseline; live tree **NEEDS VERIFICATION** |
+| Sibling | [`./query-language.md`](./query-language.md) | Query grammar / structured-search companion | **CONFIRMED** in preserved baseline; live tree **NEEDS VERIFICATION** |
+| Sibling | [`./index-architecture.md`](./index-architecture.md) | Index-family and index-design companion | **CONFIRMED** in preserved baseline; live tree **NEEDS VERIFICATION** |
+| Sibling | [`./faircare-search-rules.md`](./faircare-search-rules.md) | Search-policy / FAIR+CARE companion | **CONFIRMED** in preserved baseline; live tree **NEEDS VERIFICATION** |
+| Downstream | [`./drift/README.md`](./drift/README.md) | DRIFT hybrid retrieval architecture | **CONFIRMED** in preserved baseline |
+| Downstream | [`./drift/stac/README.md`](./drift/stac/README.md) | Retrieval-episode STAC / evidence-bundle surface | **CONFIRMED** in preserved baseline |
+| Downstream | [`./drift/graph-queries/README.md`](./drift/graph-queries/README.md) | Bounded Neo4j/Cypher precision layer | **CONFIRMED** in preserved baseline |
+| Downstream | [`./drift/examples/README.md`](./drift/examples/README.md) | Redaction-safe examples and golden fixtures | **CONFIRMED** in preserved baseline |
+| Downstream | [`./drift/hyde/README.md`](./drift/hyde/README.md) | Governed HyDE expansion layer | **CONFIRMED** in preserved baseline |
+| Downstream | [`./drift/embeddings/README.md`](./drift/embeddings/README.md) | Governed embedding layer | **CONFIRMED** in preserved baseline |
+| Upstream | [`../README.md`](../README.md) | Docs root / parent landing page | **CONFIRMED** as a preserved baseline link; live tree **NEEDS VERIFICATION** |
 
-### Baseline-indexed root docs still needing live-tree verification
+<details>
+<summary><strong>Additional DRIFT companion docs visible in the preserved baseline</strong></summary>
 
-The source-visible search baseline also names these root-level companions under `docs/search/`:
+The preserved 2025-12-13 search bundle also includes these DRIFT companion paths:
 
-- `docs/search/semantic-search.md`
-- `docs/search/query-language.md`
-- `docs/search/index-architecture.md`
-- `docs/search/faircare-search-rules.md`
+- `docs/search/drift/workflows/README.md`
+- `docs/search/drift/synthesis/README.md`
+- `docs/search/drift/provenance/README.md`
 
-These are **baseline-confirmed as named search docs**, but their current live-tree presence remains **NEEDS VERIFICATION** in this session.
+Treat those paths as **CONFIRMED in the preserved baseline**. Treat their **current live-tree presence** as **NEEDS VERIFICATION** until the repo itself is mounted and rechecked.
+
+</details>
 
 ## Accepted inputs
 
@@ -92,8 +101,9 @@ This directory belongs to **governed search inputs and search-system documentati
 | Search doctrine | Search scope, routing rules, explainability posture, derived-layer limits |
 | Retrieval architecture | Hybrid search, DRIFT, graph traversal constraints, vector recall, metadata lookup |
 | Search governance | FAIR+CARE retrieval rules, sovereignty-aware search behavior, sensitivity controls |
-| Search outputs | Result-shape guidance, retrieval episode packaging, provenance expectations, evidence handoff requirements |
+| Search outputs | Result-shape guidance, retrieval-episode packaging, provenance expectations, evidence handoff requirements |
 | Validation material | Golden fixtures, leakage checks, determinism checks, ranking/regression notes |
+| Search operations | Reindex triggers, freshness expectations, telemetry, provenance emission expectations |
 | Surface handoff rules | How search feeds Map Explorer, Story, Dossier, Focus Mode, and the Evidence Drawer |
 | Search-adjacent packaging | Search STAC items, evidence manifests, provenance assets, redaction-safe examples |
 
@@ -115,37 +125,33 @@ This directory should **not** become a dumping ground for broader architecture o
 
 ```text
 docs/search/
-├── README.md                             # This file
-├── drift/
-│   ├── README.md                         # DRIFT hybrid retrieval overview
-│   ├── stac/
-│   │   └── README.md                     # Retrieval-episode STAC / evidence-bundle docs
-│   ├── graph-queries/
-│   │   └── README.md                     # Bounded Neo4j/Cypher precision layer
-│   ├── examples/
-│   │   └── README.md                     # Redaction-safe runs / golden fixtures
-│   ├── hyde/
-│   │   └── README.md                     # Governed HyDE query expansion
-│   └── embeddings/
-│       └── README.md                     # Embedding-oriented retrieval layer
-├── semantic-search.md                    # Baseline-indexed; live-tree verification pending
-├── query-language.md                     # Baseline-indexed; live-tree verification pending
-├── index-architecture.md                 # Baseline-indexed; live-tree verification pending
-└── faircare-search-rules.md              # Baseline-indexed; live-tree verification pending
+├── README.md                                 # This file
+├── semantic-search.md                        # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+├── query-language.md                         # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+├── index-architecture.md                     # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+├── faircare-search-rules.md                  # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+└── drift/
+    ├── README.md                             # DRIFT hybrid retrieval architecture
+    ├── workflows/
+    │   └── README.md                         # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+    ├── hyde/
+    │   └── README.md                         # Governed HyDE query expansion
+    ├── embeddings/
+    │   └── README.md                         # Governed embedding layer
+    ├── graph-queries/
+    │   └── README.md                         # Bounded Neo4j/Cypher precision layer
+    ├── synthesis/
+    │   └── README.md                         # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+    ├── provenance/
+    │   └── README.md                         # CONFIRMED in preserved baseline; live tree NEEDS VERIFICATION
+    ├── examples/
+    │   └── README.md                         # Redaction-safe runs / golden fixtures
+    └── stac/
+        └── README.md                         # Retrieval-episode STAC / evidence-bundle docs
 ```
 
-<details>
-<summary><strong>Additional DRIFT companion docs named in source excerpts</strong></summary>
-
-The broader search baseline also names companion DRIFT docs such as:
-
-- `docs/search/drift/workflows/README.md`
-- `docs/search/drift/synthesis/README.md`
-- `docs/search/drift/provenance/README.md`
-
-These are useful to keep in mind when reconciling this subtree, but they are **not promoted into the main tree above as current-path facts** because their live presence was not independently corroborated in the repo support material available during this session.
-
-</details>
+> [!TIP]
+> The tree above distinguishes **preserved baseline topology** from **current live-tree reality**. That separation is deliberate: it keeps useful path knowledge visible without pretending the unmounted repo was reverified.
 
 ## Quickstart
 
@@ -155,7 +161,7 @@ Use this README as the maintainer’s fast orientation before changing search be
 2. Confirm that the query path stays inside **release scope** and does not bypass governed evidence handling.
 3. Route by **query intent** instead of forcing every request through one retrieval mode.
 4. Use graph and vector retrieval for **hints, expansion, and ranking**—not as sovereign truth.
-5. End with **evidence-capable references**, then let downstream evidence resolution and citation verification decide whether the system can answer or should abstain.
+5. End with **evidence-capable references** or **reference bundles**, then let downstream evidence resolution and citation verification decide whether the system can answer or should abstain.
 
 ### Minimal maintainer checklist
 
@@ -248,9 +254,26 @@ The safe pattern is:
 
 Search should therefore help Focus Mode find the right evidence faster, not quietly turn retrieval outputs into truth.
 
+### Maintenance and reindexing
+
+The preserved baseline names these reindex triggers:
+
+- dataset updates
+- Story Node updates
+- graph migrations
+- embedding/model upgrades *(governed)*
+- release promotions *(staging → production in baseline language)*
+
+The same baseline distinguishes:
+
+- **full reindex**: monthly or upon breaking change
+- **partial reindex**: continuous / event-driven
+
+Treat those as **CONFIRMED baseline guidance** and **NEEDS VERIFICATION** for current live scheduling, automation, and telemetry paths.
+
 ### Steward and maintainer review
 
-Search docs, retrieval fixtures, and retrieval episode records should support review of:
+Search docs, retrieval fixtures, and retrieval-episode records should support review of:
 
 - bounded traversal behavior
 - leakage and redaction safety
@@ -283,7 +306,7 @@ flowchart LR
 
 ### Reading the diagram
 
-The key architectural move is the handoff from **ranked retrieval** to **evidence-capable references**, and then from those references into **evidence resolution**. Search does not end in a claim surface that is already treated as authoritative. That handoff preserves the trust membrane.
+The architectural move that matters most is the handoff from **ranked retrieval** to **evidence-capable references**, and then from those references into **evidence resolution**. Search does not end in a claim surface that is already treated as authoritative. That handoff preserves the trust membrane.
 
 [Back to top](#-kansas-frontier-matrix--search-system-overview)
 
@@ -296,7 +319,7 @@ The key architectural move is the handoff from **ranked retrieval** to **evidenc
 | Full-text search | Lexical discovery, faceting, ranked document lookup | Fast recall across documents and metadata | Not authoritative truth |
 | Semantic vector search | Similarity recall / semantic neighborhood | Natural-language discovery and retrieval grounding | Derived accelerator, never sovereign |
 | Knowledge graph search | Contextual expansion, relationship traversal, multi-hop precision | Connects entities, datasets, provenance, and story context | Traversals must be bounded and policy-gated |
-| Metadata search | Dataset type, bbox, time range, catalog-property lookup | Strong reproducibility and catalog-aware discovery | Does not replace evidence resolution |
+| Metadata / STAC / DCAT search | Dataset type, bbox, time range, catalog-property lookup | Strong reproducibility and catalog-aware discovery | Does not replace evidence resolution |
 | Hybrid routing + fusion | Combines retrieval modes by query type and context | Better recall/precision balance than one-engine forcing | Must stay explainable |
 | DRIFT integration | Global→local hybrid retrieval with governed expansion | Strong for complex discovery and Focus-oriented retrieval | Must preserve provenance-first, CARE-aware behavior |
 
@@ -311,16 +334,29 @@ The key architectural move is the handoff from **ranked retrieval** to **evidenc
 | Evidence Drawer | Open from search-linked claims or features | Version, rights, provenance, redactions, safe previews |
 | Steward / review paths | Fixture, provenance, and policy inspection | What changed, what was filtered, why it is safe |
 
+### Baseline service objectives
+
+> [!NOTE]
+> The targets below are **CONFIRMED in the preserved 2025-12-13 baseline**. Their **current live values and enforcement paths** remain **NEEDS VERIFICATION**.
+
+| Metric | Baseline target | Current posture |
+|---|---|---|
+| Precision@10 | ≥ 0.88 | **CONFIRMED** baseline target; live tuning **NEEDS VERIFICATION** |
+| Recall@50 | ≥ 0.92 | **CONFIRMED** baseline target; live tuning **NEEDS VERIFICATION** |
+| Latency (p95) | < 450 ms | **CONFIRMED** baseline target; runtime enforcement **NEEDS VERIFICATION** |
+| Ethical compliance | 100% | **CONFIRMED** baseline target; current gate implementation **NEEDS VERIFICATION** |
+| Index freshness | < 10 minutes | **CONFIRMED** baseline target; live scheduler / telemetry path **NEEDS VERIFICATION** |
+
 ### Verification posture matrix
 
 | Statement | Status |
 |---|---|
 | Search is a derived, rebuildable discovery layer | **CONFIRMED** |
 | Search may combine full-text, vector, graph, and metadata retrieval | **CONFIRMED** |
-| The documented DRIFT subtree includes overview, STAC, graph queries, examples, HyDE, and embeddings docs | **CONFIRMED** |
-| Root-level sibling docs such as `semantic-search.md` and `query-language.md` are named in the baseline | **CONFIRMED** |
-| Those root-level sibling docs are currently present in the live repo tree | **NEEDS VERIFICATION** |
-| Exact deployed engine mix and current runtime wiring | **UNKNOWN** |
+| The preserved baseline includes root search docs `semantic-search.md`, `query-language.md`, `index-architecture.md`, and `faircare-search-rules.md` | **CONFIRMED** |
+| The preserved baseline includes DRIFT companion docs for overview, workflows, HyDE, embeddings, graph queries, synthesis, provenance, examples, and STAC | **CONFIRMED** |
+| Those paths are all present in the currently mounted live repo tree | **NEEDS VERIFICATION** |
+| Exact deployed engine mix and runtime wiring | **UNKNOWN** |
 | Current merge-blocking workflow, schema, and fixture enforcement for search | **NEEDS VERIFICATION** |
 
 ## Review & definition of done
@@ -330,12 +366,12 @@ This README is ready to ship when the search subtree is both readable and govern
 ### Definition of done
 
 - [ ] The file states plainly that search is **derived**, not sovereign
-- [ ] Repo fit includes the corroborated DRIFT subtree
+- [ ] Repo fit includes both the root search companions and the corroborated DRIFT subtree
 - [ ] Inputs and exclusions are explicit
 - [ ] The hybrid pipeline is diagrammed
 - [ ] FAIR+CARE / sovereignty / sensitivity constraints are documented
 - [ ] Focus Mode handoff is evidence-bounded, not chatbot-shaped
-- [ ] Baseline-indexed but unverified sibling docs are visibly separated from corroborated paths
+- [ ] Preserved-baseline paths are separated from live-tree verification claims
 - [ ] Long reference material is tucked into appendices or details blocks
 - [ ] Open verification items remain visible instead of being silently assumed away
 
@@ -347,7 +383,7 @@ This README is ready to ship when the search subtree is both readable and govern
 | Boundary gate | Does this README imply any direct bypass of governed APIs, evidence handling, or policy enforcement? |
 | Safety gate | Are graph expansion, HyDE, embeddings, examples, and retrieval episodes described with explicit limits? |
 | Surface gate | Does the file connect search to Map, Story, Dossier, Focus, and Evidence instead of treating search as a detached subsystem? |
-| Evidence gate | Are corroborated paths distinguished from baseline-only or unmounted-path claims? |
+| Evidence gate | Are preserved-baseline paths distinguished from live-tree or runtime claims? |
 | Documentation gate | Are **CONFIRMED**, **NEEDS VERIFICATION**, and **UNKNOWN** areas visible enough for a reviewer to challenge? |
 
 [Back to top](#-kansas-frontier-matrix--search-system-overview)
@@ -374,9 +410,13 @@ No. Bounded traversals are a non-negotiable rule for the documented DRIFT graph 
 
 No. Embeddings are useful for recall and similarity, but they remain derived accelerators and never sovereign truth.
 
+### Are `workflows/`, `synthesis/`, and `provenance/` real companion docs or just wish-list paths?
+
+They are **CONFIRMED in the preserved baseline bundle**. Their **current live repo presence** still needs direct verification from the mounted tree.
+
 ### Should this README document the exact live search stack?
 
-Only where directly verified. This file is allowed to document doctrine, subtree intent, and corroborated doc topology, but not to invent current deployment reality.
+Only where directly verified. This file is allowed to document doctrine, preserved-baseline topology, and corroborated doc structure, but not to invent deployment reality.
 
 ## Appendix
 
@@ -391,8 +431,19 @@ Only where directly verified. This file is allowed to document doctrine, subtree
 | **Evidence-capable reference** | A search result object that can still hand off into evidence resolution rather than ending as detached prose |
 | **FAIR+CARE** | Combined metadata and stewardship posture for discoverability, interoperability, rights, and community-sensitive governance |
 | **Focus Mode** | Evidence-bounded synthesis surface for governed Q&A |
-| **Release scope** | The published/promoted boundary within which search results may safely operate |
 | **Reference bundle** | A minimally safe result bundle returned from governed retrieval stages, typically with stable IDs and policy-safe fields |
+| **Release scope** | The published/promoted boundary within which search results may safely operate |
+
+</details>
+
+<details>
+<summary><strong>Preserved baseline lineage</strong></summary>
+
+| Baseline version | Date | What it contributes here |
+|---|---|---|
+| `v11.2.2` | 2025-11-27 | Initial preserved release of the Search System Overview |
+| `v11.2.6` | 2025-12-13 | Preserved root search overview, root companion docs, and DRIFT subtree docs used as the structural baseline for this rewrite |
+| 2026 rewrite | 2026-03-16 | Current KFM Meta Block v2 review draft, updated against March 2026 doctrine and explicit evidence-boundary wording |
 
 </details>
 
@@ -400,12 +451,19 @@ Only where directly verified. This file is allowed to document doctrine, subtree
 <summary><strong>Open verification items</strong></summary>
 
 1. Confirm current owners or CODEOWNERS coverage for `docs/search/`.
-2. Reconcile the visible draft’s `updated: 2026-03-16` value with the repo support index date of `2025-12-13`.
-3. Confirm whether `semantic-search.md`, `query-language.md`, `index-architecture.md`, and `faircare-search-rules.md` are still present at the root of `docs/search/`.
-4. Confirm whether DRIFT companion docs such as `workflows/`, `synthesis/`, and `provenance/` are currently present in the live repo.
-5. Confirm current schema and fixture paths for any search-specific contracts, telemetry, or retrieval-episode artifacts.
-6. Confirm the deployed engine mix for full-text, vector, graph, and metadata search.
-7. Confirm whether any search-specific CI, regression harnesses, or merge-blocking validations are already mounted in the repo.
+2. Confirm whether the mounted live repo still carries the preserved root docs:
+   - `semantic-search.md`
+   - `query-language.md`
+   - `index-architecture.md`
+   - `faircare-search-rules.md`
+3. Confirm whether the mounted live repo still carries the preserved DRIFT companions:
+   - `workflows/`
+   - `synthesis/`
+   - `provenance/`
+4. Confirm current schema and fixture paths for any search-specific contracts, telemetry, or retrieval-episode artifacts.
+5. Confirm the deployed engine mix for full-text, vector, graph, and metadata search.
+6. Confirm whether any search-specific CI, regression harnesses, or merge-blocking validations are already mounted in the repo.
+7. Confirm whether baseline service objectives are enforced in code, dashboards, or workflow gates, or remain documentary targets only.
 
 </details>
 
