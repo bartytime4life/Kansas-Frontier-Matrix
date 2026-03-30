@@ -1,21 +1,36 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<REVIEW-REQUIRED-UUID>
+title: node-forge vulnerability lane
+type: standard
+version: v1
+status: review
+owners: @bartytime4life
+created: REVIEW-REQUIRED
+updated: REVIEW-REQUIRED
+policy_label: public
+related: [docs/security/vulns/README.md, docs/security/README.md, docs/security/vulnerability-management.md, SECURITY.md, .github/SECURITY.md, .github/CODEOWNERS, .github/dependabot.yml, docs/security/vulns/node-forge/CVE-2025-12816.md]
+tags: [kfm, security, vulnerability, node-forge]
+notes: [doc_id and file-history dates need direct commit-history verification; public-main repo evidence used for this revision]
+[/KFM_META_BLOCK_V2] -->
+
 # `node-forge` vulnerability lane
 
 Package-specific triage, verification, and remediation guidance for `node-forge` under KFM’s security vulnerability subtree.
 
 > **Status:** active directory · README revision  
 > **Owners:** `@bartytime4life`  
-> ![status](https://img.shields.io/badge/status-active-0a7d5a) ![package](https://img.shields.io/badge/package-node--forge-1f6feb) ![path](https://img.shields.io/badge/path-docs%2Fsecurity%2Fvulns%2Fnode--forge-8250df) ![trust](https://img.shields.io/badge/trust-fail--closed-red) ![evidence](https://img.shields.io/badge/evidence-repo%20tree%20%2B%20official%20advisories-lightgrey) ![owner](https://img.shields.io/badge/owner-bartytime4life-blue)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/security/vulns/node-forge/README.md` → parent [`../README.md`](../README.md) · security hub [`../../README.md`](../../README.md) · policy context [`../../vulnerability-management.md`](../../vulnerability-management.md) · disclosure policy [`../../../../SECURITY.md`](../../../../SECURITY.md) · child advisory [`./CVE-2025-12816.md`](./CVE-2025-12816.md)
+> ![status](https://img.shields.io/badge/status-active-0a7d5a) ![package](https://img.shields.io/badge/package-node--forge-1f6feb) ![path](https://img.shields.io/badge/path-docs%2Fsecurity%2Fvulns%2Fnode--forge-8250df) ![trust](https://img.shields.io/badge/trust-fail--closed-red) ![evidence](https://img.shields.io/badge/evidence-public%20repo%20tree%20%2B%20official%20advisories-lightgrey) ![owner](https://img.shields.io/badge/owner-bartytime4life-blue)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/security/vulns/node-forge/README.md` → parent [`../README.md`](../README.md) · security hub [`../../README.md`](../../README.md) · lifecycle lane [`../../vulnerability-management.md`](../../vulnerability-management.md) · disclosure surfaces [`../../../../SECURITY.md`](../../../../SECURITY.md) / [`../../../../.github/SECURITY.md`](../../../../.github/SECURITY.md) · child advisory [`./CVE-2025-12816.md`](./CVE-2025-12816.md)
 
 > [!IMPORTANT]
 > This README documents the **`node-forge` vulnerability lane**. It does **not** prove that `node-forge` is currently present in the active KFM dependency graph.
 >
-> Current repo evidence confirms the lane directory, this README path, the child advisory stub, `/docs/` ownership via `/.github/CODEOWNERS`, and npm-focused Dependabot coverage for `/`, `/apps/*`, and `/packages/*`. Direct or transitive package presence still requires branch-local verification against manifests and lockfiles.
+> Current public-main evidence confirms the lane directory, this README, the draft child advisory file, `/docs/` ownership via `/.github/CODEOWNERS`, the parent `docs/security/vulns/` index, and npm-focused Dependabot coverage for `/`, `/apps/*`, and `/packages/*`. Direct or transitive package presence still requires branch-local verification against manifests, lockfiles, SBOM output, or dependency-tree evidence.
 
 ## Scope
 
-This README exists to keep **package-level vulnerability handling** for `node-forge` readable and reviewable without pretending that a package alert is the same thing as a proven runtime exposure.
+This README keeps **package-family vulnerability handling** for `node-forge` readable, reviewable, and repo-native without pretending that an advisory is the same thing as a proven runtime exposure.
 
 Use this file to answer five questions quickly:
 
@@ -25,7 +40,7 @@ Use this file to answer five questions quickly:
 4. What evidence closes the lane: manifest diff, lockfile diff, scan output, test result, release note, or rollback note?
 5. What remains **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** after review?
 
-In KFM terms, this directory is a **security documentation surface**, not a substitute for executable enforcement. The vulnerability lane should stay aligned with the trust membrane, fail-closed publication, release evidence, and correction discipline already established in `docs/security/` and the root security policy.
+In KFM terms, this directory is a **security documentation surface**, not a substitute for executable enforcement. The lane should stay aligned with the trust membrane, fail-closed release behavior, disclosure discipline, correction visibility, and evidence-first review posture already established under `docs/security/` and the repo security policy surfaces.
 
 [Back to top](#node-forge-vulnerability-lane)
 
@@ -33,26 +48,27 @@ In KFM terms, this directory is a **security documentation surface**, not a subs
 
 **Path:** `docs/security/vulns/node-forge/README.md`
 
-**Role in repo:** package-specific vulnerability lane for `node-forge` under the `docs/security/vulns/` subtree.
+**Role in repo:** package-family vulnerability lane for `node-forge` under the governed `docs/security/vulns/` subtree.
 
 | Direction | Path | Status | Why it matters |
 |---|---|---|---|
-| Upstream | [`../README.md`](../README.md) | **CONFIRMED path** · **scaffold content** | Parent vulnerability index currently exists but remains minimal; this lane must therefore carry its own practical context. |
-| Upstream | [`../../README.md`](../../README.md) | **CONFIRMED** | Cross-cutting security doctrine, trust membrane rules, subtree map, and security documentation expectations. |
-| Upstream | [`../../vulnerability-management.md`](../../vulnerability-management.md) | **CONFIRMED path** · **scaffold content** | Future home for broader vulnerability process; keep lane-specific content here until that surface is expanded. |
-| Upstream | [`../../../../SECURITY.md`](../../../../SECURITY.md) | **CONFIRMED** | Public disclosure and coordinated-reporting policy. |
-| Downstream | [`./CVE-2025-12816.md`](./CVE-2025-12816.md) | **CONFIRMED path** · **scaffold content** | Current child advisory file already reserved for the package-specific CVE note. |
-| Adjacent owner surface | [`../../../../.github/CODEOWNERS`](../../../../.github/CODEOWNERS) | **CONFIRMED** | `/docs/` currently resolves to `@bartytime4life`, which is the strongest visible owner signal for this lane. |
+| Upstream | [`../README.md`](../README.md) | **CONFIRMED** | Parent vulnerability index is now substantive and explicitly recognizes `node-forge/README.md` and `node-forge/CVE-2025-12816.md` as current visible example surfaces in the lane. |
+| Upstream | [`../../README.md`](../../README.md) | **CONFIRMED** | Cross-cutting security doctrine, supply-chain posture, and trust-visible security documentation expectations live here. |
+| Upstream | [`../../vulnerability-management.md`](../../vulnerability-management.md) | **CONFIRMED** · **draft lifecycle surface** | Broader intake, triage, remediation, validation, disclosure, and correction guidance belongs there; this file stays dependency-specific. |
+| Upstream | [`../../../../SECURITY.md`](../../../../SECURITY.md) | **CONFIRMED** · **NEEDS VERIFICATION canonical path** | Root security policy exists and routes disclosure posture, but the repo also has `.github/SECURITY.md`; canonical delegation between the two surfaces should stay explicit. |
+| Upstream | [`../../../../.github/CODEOWNERS`](../../../../.github/CODEOWNERS) | **CONFIRMED** | `/docs/` currently resolves to `@bartytime4life`, which is the strongest visible ownership signal for this lane. |
+| Upstream | [`../../../../.github/dependabot.yml`](../../../../.github/dependabot.yml) | **CONFIRMED** | npm dependency-update coverage for `/`, `/apps/*`, and `/packages/*` is the strongest visible public signal for where a `node-forge` alert would likely surface. |
+| Downstream | [`./CVE-2025-12816.md`](./CVE-2025-12816.md) | **CONFIRMED** · **draft advisory note** | Child note is already substantive: it records advisory IDs, minimum fixed version `1.3.2`, impacted modules, and keeps repo impact at `UNKNOWN` until real dependency evidence is attached. |
 
 ### Current truth posture for this lane
 
 | Label | What it means here |
 |---|---|
-| **CONFIRMED** | The repo currently contains `docs/security/vulns/node-forge/`, a scaffold README, a scaffold `CVE-2025-12816.md`, `/docs/` ownership in `CODEOWNERS`, and Dependabot coverage for npm ecosystems in `/`, `/apps/*`, and `/packages/*`. |
-| **INFERRED** | If `node-forge` is present, it is most likely to appear in a JavaScript workspace under root, `apps/`, or `packages/`, because those are the npm-scanned surfaces currently declared in `.github/dependabot.yml`. |
-| **PROPOSED** | Expand this lane from a single-CVE placeholder into a durable package-level review surface that can survive future advisories without restarting from zero. |
-| **UNKNOWN** | Whether the active branch currently ships `node-forge` at all, and if so where it enters the dependency graph. |
-| **NEEDS VERIFICATION** | Exact manifest path, exact lockfile owner, exact runtime exposure, exact remediation PR, and release evidence linkage. |
+| **CONFIRMED** | Public `main` contains `docs/security/vulns/node-forge/`, a substantive package-family README, a draft `CVE-2025-12816.md` advisory note, parent-lane cross-links, `/docs/` ownership in `CODEOWNERS`, and npm Dependabot coverage for `/`, `/apps/*`, and `/packages/*`. |
+| **INFERRED** | If `node-forge` is present, it is most likely to appear in a JavaScript workspace under repo root, `apps/`, or `packages/`, because those are the npm-scanned surfaces currently declared in `.github/dependabot.yml`. |
+| **PROPOSED** | Add child notes for the broader November 2025 `node-forge` ASN.1 advisory cluster only if the package is actually relevant to the checked-out branch. |
+| **UNKNOWN** | Whether the active branch currently ships `node-forge` at all, where it enters the graph, and whether any reachable KFM path accepts vulnerable ASN.1-bearing input through it. |
+| **NEEDS VERIFICATION** | Exact manifest path, exact lockfile owner, exact runtime reachability, exact remediation PR, active alert state, and any merge-blocking automation tied to this lane. |
 
 [Back to top](#node-forge-vulnerability-lane)
 
@@ -60,12 +76,12 @@ In KFM terms, this directory is a **security documentation surface**, not a subs
 
 Content that belongs in this package lane:
 
-- official advisory references for `node-forge` affecting KFM review or remediation
+- official advisory references for `node-forge` that materially affect KFM review or remediation
 - direct vs. transitive dependency findings
-- sanitized manifest or lockfile evidence that proves where the package enters the graph
+- sanitized manifest, lockfile, SBOM, or dependency-tree evidence that proves where the package enters the graph
 - remediation notes tied to a real branch change
-- test, scan, and release evidence that closes the lane
-- rollback or supersession notes if a remediation is reverted or replaced
+- test, scan, validation, and release evidence that closes the lane
+- rollback, supersession, or correction notes if a remediation is reverted or replaced
 - cross-links to package-specific child advisory files in this directory
 
 ## Exclusions
@@ -77,9 +93,25 @@ Content that does **not** belong here:
 | Claims that KFM currently uses `node-forge` without manifest or lockfile proof | Record as **UNKNOWN** until branch-local verification exists |
 | Generic cryptography guidance not tied to `node-forge` review | Broader security docs or architecture references |
 | Secrets, tokens, private incident payloads, or sensitive scan artifacts | Secret-handling boundaries, restricted evidence stores, or steward-only review lanes |
-| Full disclosure policy, inbound reporting mailbox, or SLA details | Root [`SECURITY.md`](../../../../SECURITY.md) |
+| Full disclosure policy, inbound reporting mailbox, or SLA details | Root [`SECURITY.md`](../../../../SECURITY.md) and whichever canonical security-policy surface the repo finalizes |
 | Package-manager-specific commands presented as universal truth | Mark them as illustrative and run only after confirming the active workspace toolchain |
 | Final release proof-pack content | Release evidence, changelog, PR, or owning runbook |
+
+[Back to top](#node-forge-vulnerability-lane)
+
+## Current verified snapshot
+
+This table records the public-branch evidence used to revise this file. It is intentionally narrow.
+
+| Surface | Public `main` state used for this rewrite | Status |
+|---|---|---|
+| `docs/security/vulns/node-forge/README.md` | Present; current file is already a substantive package-family lane README, not only a reserved path | **CONFIRMED** |
+| `docs/security/vulns/node-forge/CVE-2025-12816.md` | Present; child note is a draft but substantive advisory record with fixed floor `1.3.2` and repo impact kept at `UNKNOWN` | **CONFIRMED** |
+| `docs/security/vulns/README.md` | Present; parent lane explicitly lists `node-forge/README.md` and `node-forge/CVE-2025-12816.md` as visible examples | **CONFIRMED** |
+| `/.github/CODEOWNERS` | Present; `/docs/` is assigned to `@bartytime4life` | **CONFIRMED** |
+| `/.github/dependabot.yml` | Present; npm updates are configured for `/`, `/apps/*`, and `/packages/*` | **CONFIRMED** |
+| `/.github/workflows/` automation proving merge-blocking vulnerability checks for this lane | Public `main` does not expose checked-in workflow YAMLs there | **NEEDS VERIFICATION** |
+| Direct or transitive `node-forge` package presence in the active branch | Not proven from current public-main evidence opened for this rewrite | **UNKNOWN** |
 
 [Back to top](#node-forge-vulnerability-lane)
 
@@ -93,7 +125,11 @@ docs/security/vulns/node-forge/
 
 ### Current lane condition
 
-The package lane already exists, but both visible files started as **scaffold-only placeholders**. This README is intended to convert the directory from “path reserved” into “path useful.”
+The package lane already exists, and its visible public-main files are now more than placeholders:
+
+- the family README is already substantive package-level guidance
+- the child CVE note already records advisory facts and the minimum fixed version floor
+- the remaining gap is **dependency-graph proof**, not lane existence
 
 [Back to top](#node-forge-vulnerability-lane)
 
@@ -101,7 +137,7 @@ The package lane already exists, but both visible files started as **scaffold-on
 
 1. **Verify package presence before saying anything stronger than `UNKNOWN`.**
 2. **Determine whether the path is direct, transitive, or absent.**
-3. **Check the official advisory cluster, not just the first CVE you noticed.**
+3. **Check the full official advisory cluster, not just the first CVE you noticed.**
 4. **If present, update the owning manifest or lockfile path and record the evidence here and in the child advisory note(s).**
 5. **Close the lane with validation and release evidence, not only with a version bump.**
 
@@ -151,9 +187,9 @@ Do not leave the lane ambiguous. Either:
 ### Minimum useful change set when `node-forge` is actually present
 
 - owning manifest or lockfile diff
-- this README updated with direct/transitive/absent status
+- this README updated with direct / transitive / absent status
 - child advisory file(s) updated with package-specific notes
-- validation evidence (scan, audit, or `why` / `ls` output)
+- validation evidence such as audit output, `why` / `ls` output, SBOM diff, or equivalent
 - release note, correction note, or rollback note if the change is release-bearing
 
 ## Diagram
@@ -180,23 +216,25 @@ flowchart TD
 | Item | Status | Notes |
 |---|---|---|
 | `docs/security/vulns/node-forge/` directory exists | **CONFIRMED** | Present in the public repo tree. |
-| `README.md` exists | **CONFIRMED** | Started as a scaffold-only file. |
-| `CVE-2025-12816.md` exists | **CONFIRMED** | Started as a scaffold-only file. |
+| `README.md` exists | **CONFIRMED** | Current public file is a substantive package-family README, not just a reserved placeholder. |
+| `CVE-2025-12816.md` exists | **CONFIRMED** | Current public file is a draft but substantive advisory record, not just a stub. |
+| Parent `docs/security/vulns/README.md` references this lane | **CONFIRMED** | The parent lane lists both `node-forge/README.md` and `node-forge/CVE-2025-12816.md` as visible examples. |
 | `/docs/` ownership resolves to `@bartytime4life` | **CONFIRMED** | Current `CODEOWNERS` uses `/docs/ @bartytime4life`. |
-| Dependabot has npm ecosystem coverage for `/`, `/apps/*`, and `/packages/*` | **CONFIRMED** | Good review surface for JavaScript dependency alerts. |
-| Active branch contains `node-forge` | **UNKNOWN** | Must be proven by manifest / lockfile inspection. |
-| Exact owning app or package | **UNKNOWN** | Not visible from current repo-adjacent evidence alone. |
+| Dependabot has npm ecosystem coverage for `/`, `/apps/*`, and `/packages/*` | **CONFIRMED** | Strongest visible review surface for JavaScript dependency alerts. |
+| Public `main` exposes checked-in workflow YAML proving merge-blocking vulnerability automation for this lane | **NEEDS VERIFICATION** | Public `.github/workflows/` is README-only in the evidence opened for this revision. |
+| Active branch contains `node-forge` | **UNKNOWN** | Must be proven by manifest, lockfile, SBOM, or dependency-tree inspection. |
+| Exact owning app or package | **UNKNOWN** | Not visible from current public-main evidence opened for this lane. |
 
 ### Official advisory cluster worth checking
 
 | Advisory | Severity | Affected versions | Patched version | Lane status |
 |---|---:|---|---|---|
-| [`CVE-2025-12816`](./CVE-2025-12816.md) / [`GHSA-5gfm-wpxj-wjgq`][ghsa-12816] | High | `< 1.3.2` | `1.3.2` | **CONFIRMED child path** |
+| [`CVE-2025-12816`](./CVE-2025-12816.md) / [`GHSA-5gfm-wpxj-wjgq`][ghsa-12816] | High | `< 1.3.2` | `1.3.2` | **CONFIRMED child note** |
 | [`CVE-2025-66030`][nvd-66030] / [`GHSA-65ch-62r8-g69g`][ghsa-66030] | Moderate | `< 1.3.2` | `1.3.2` | **PROPOSED child note** |
 | [`CVE-2025-66031`][nvd-66031] / [`GHSA-554w-wpv2-vw27`][ghsa-66031] | High | `< 1.3.2` | `1.3.2` | **PROPOSED child note** |
 
 > [!TIP]
-> For the currently observed late-November 2025 official `node-forge` ASN.1 advisory cluster, **`1.3.2` is the minimum patched floor**. If KFM already targets a newer compatible safe version, prefer the newer reviewed version rather than downgrading back to the minimum.
+> For the currently observed November 2025 official `node-forge` ASN.1 advisory cluster, **`1.3.2` is the minimum patched floor**. If KFM already targets a newer compatible safe version, prefer the newer reviewed version rather than downgrading back to the minimum.
 
 ### Remediation decision matrix
 
@@ -214,7 +252,7 @@ flowchart TD
 
 - [ ] direct / transitive / absent status recorded
 - [ ] owning manifest or lockfile path named if present
-- [ ] official advisory scope checked against the full late-November 2025 `node-forge` cluster, not just one CVE
+- [ ] official advisory scope checked against the full November 2025 `node-forge` cluster, not just one CVE
 - [ ] minimum safe version or reviewed newer safe version recorded
 - [ ] child CVE note(s) updated with package-specific impact or absence findings
 - [ ] validation evidence attached: audit output, `why` / `ls` output, SBOM diff, or equivalent
@@ -234,15 +272,19 @@ The lane exists in the repo, but current evidence does **not** yet prove a direc
 
 ### What version should remediation target?
 
-For the official late-November 2025 `node-forge` advisory cluster referenced here, the minimum patched version is **`1.3.2`**. If the active repo already targets a newer reviewed safe version, use the newer version after normal compatibility review.
+For the official November 2025 `node-forge` advisory cluster referenced here, the minimum patched version is **`1.3.2`**. If the active repo already targets a newer reviewed safe version, use the newer version after normal compatibility review.
 
 ### Why keep a package README when there is already a child CVE file?
 
-Because package lanes age across **multiple advisories**. The README keeps the package-level logic, ownership questions, verification workflow, and remediation matrix in one place, while child files hold alert-specific detail.
+Because package lanes age across **multiple advisories**.
 
-### What if the parent `docs/security/vulns/README.md` stays minimal?
+The README keeps the package-level logic, ownership questions, verification workflow, and remediation matrix in one place, while child files hold alert-specific detail.
 
-That is acceptable for now. This lane README should remain usable on its own, while still linking back to the parent index and wider security subtree.
+### Why does this lane still need to stand on its own if the parent `docs/security/vulns/README.md` is no longer minimal?
+
+Because the parent README is still an index and routing surface.
+
+It should point readers to this lane, but this file remains the home for `node-forge`-specific dependency verification, advisory clustering, and remediation closure criteria.
 
 [Back to top](#node-forge-vulnerability-lane)
 
@@ -269,7 +311,7 @@ The current directory already has one child CVE file.
 
 The next useful expansions are small and concrete:
 
-1. flesh out `./CVE-2025-12816.md`
+1. keep `./CVE-2025-12816.md` synchronized with actual repo impact, remediation, and closure evidence
 2. add child notes for `CVE-2025-66030` and `CVE-2025-66031` if `node-forge` is actually relevant to the active branch
 3. add one short “absence confirmed” note if the package is not present, rather than letting the lane drift silently
 
