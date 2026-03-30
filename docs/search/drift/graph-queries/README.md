@@ -10,7 +10,7 @@ updated: <NEEDS-VERIFICATION-YYYY-MM-DD>
 policy_label: <NEEDS-VERIFICATION-POLICY-LABEL>
 related: [docs/search/drift/README.md (NEEDS VERIFICATION), ../../../../contracts/README.md, ../../../../schemas/README.md, ../../../../policy/README.md, ../../../../.github/workflows/README.md]
 tags: [kfm, search, drift, graph-queries]
-notes: [Target path requested directly; mounted repo tree for this directory was not visible in the current session, so adjacency, owners, and exact downstream file paths remain review items.]
+notes: [Current session evidence was PDF-only; adjacency, owners, exact downstream paths, and mounted implementation depth remain review items. Doctrine in this file is anchored primarily in the March 2026 KFM canonical master manual and supporting repo-grounded summary artifacts.]
 [/KFM_META_BLOCK_V2] -->
 
 # Graph Query Drift
@@ -18,21 +18,21 @@ notes: [Target path requested directly; mounted repo tree for this directory was
 Derived-layer guardrails for graph traversal, expansion, and explanation in KFM search surfaces.
 
 > [!IMPORTANT]
-> This README is **source-bounded**. KFM doctrine in this file is **CONFIRMED** from the attached manuals. Exact neighboring docs, owners, mounted schema locations, workflow hooks, and directory contents for this path remain **UNKNOWN** unless explicitly marked otherwise. Proposed local structure and starter paths are labeled **PROPOSED** or **NEEDS VERIFICATION**.
+> This README is **source-bounded**. KFM doctrine in this file is **CONFIRMED** from the attached March 2026 manuals and repo-grounded summary artifacts. Exact neighboring docs, owners, mounted schema locations, workflow hooks, and directory contents for this path remain **UNKNOWN** unless explicitly marked otherwise.
 
 | Field | Value |
 |---|---|
 | Status | `experimental` *(placeholder; NEEDS VERIFICATION)* |
 | Owners | `<NEEDS VERIFICATION>` |
 | Path | `docs/search/drift/graph-queries/README.md` |
-| Primary role | Explain how graph-query behavior can drift without letting derived graph/search layers become sovereign truth |
-| Truth posture | **CONFIRMED doctrine** · **PROPOSED repo fit** · **UNKNOWN mounted adjacency** |
+| Primary role | Keep graph-query behavior subordinate to released evidence, policy, and visible trust state |
+| Truth posture | **CONFIRMED doctrine** · **INFERRED shell/contract consequences** · **PROPOSED repo fit** · **UNKNOWN mounted adjacency** |
 
 <p>
   <img alt="Status badge" src="https://img.shields.io/badge/status-experimental-yellow" />
-  <img alt="Truth posture badge" src="https://img.shields.io/badge/truth-source--bounded-blue" />
+  <img alt="Doc type badge" src="https://img.shields.io/badge/doc-standard-blue" />
+  <img alt="Truth posture badge" src="https://img.shields.io/badge/truth-source--bounded-1f6feb" />
   <img alt="Scope badge" src="https://img.shields.io/badge/scope-derived_graph_queries-6f42c1" />
-  <img alt="Path badge" src="https://img.shields.io/badge/path-docs%2Fsearch%2Fdrift%2Fgraph--queries-lightgrey" />
   <img alt="Repo fit badge" src="https://img.shields.io/badge/repo_fit-needs_verification-orange" />
 </p>
 
@@ -42,15 +42,22 @@ Derived-layer guardrails for graph traversal, expansion, and explanation in KFM 
 
 ## Scope
 
-This directory documents how **graph-based query behavior** in KFM should be described, reviewed, and kept honest when it is used for:
+This directory explains how **graph-based query behavior** should be described, reviewed, and kept honest when KFM uses graph traversal, expansion, or relationship-heavy retrieval to support outward surfaces.
+
+In KFM, graph retrieval is useful. It is **not** canonical truth.
+
+Graph, search, vector, tile, scene, cache, summary, and embedding layers are all derived and rebuildable by default unless they are explicitly promoted through governed release. This README exists to keep that boundary visible for graph-query work.
+
+### What this README governs
+
+This README is about graph-query behavior in:
 
 - provenance traversal
 - related-document exploration
 - relationship-heavy evidence resolution
 - bounded Focus interactions
 - release-linked graph expansion over promoted scope
-
-In KFM, graph retrieval is useful, but it is **not** canonical truth. Graph, search, vector, tile, scene, cache, and summary layers remain derived and rebuildable by default unless explicitly promoted through governed release. This README exists to keep that boundary visible.
+- outward explanations that rely on graph-assisted retrieval
 
 ### What “drift” means here
 
@@ -58,7 +65,7 @@ For this directory, **drift** means a meaningful gap between:
 
 1. the **promoted release scope** KFM is allowed to use,
 2. the **graph-query behavior** a surface actually performs,
-3. the **evidence/provenance trail** a user can inspect, and
+3. the **evidence and provenance path** a reviewer or user can inspect, and
 4. the **visible runtime state** presented at the point of use.
 
 Typical examples include:
@@ -70,7 +77,17 @@ Typical examples include:
 - derived graph state becoming the only place where meaning survives
 
 > [!NOTE]
-> The drift classes and starter checks below are intentionally practical. They are shaped by **CONFIRMED** KFM doctrine and **PROPOSED** artifactization patterns, not by direct inspection of a mounted implementation for this directory.
+> KFM treats graph retrieval as a useful accelerator for evidence resolution, not as a second truth plane. Any surface that cannot reconstruct its graph-assisted result back to released support should qualify, abstain, deny, error, or surface a visible negative state instead of bluffing.
+
+### Truth labels used in this file
+
+| Label | Meaning here |
+|---|---|
+| **CONFIRMED** | Directly supported by the attached KFM corpus or repo-grounded summary artifacts visible in this session |
+| **INFERRED** | Strongly implied by repeated KFM doctrine, but not verified as mounted implementation |
+| **PROPOSED** | Recommended local structure, artifact, or workflow pattern |
+| **UNKNOWN** | Not verified strongly enough in the current session |
+| **NEEDS VERIFICATION** | A placeholder or path-level claim that should be checked against the mounted repo before commit |
 
 ---
 
@@ -82,32 +99,42 @@ Typical examples include:
 
 ### Upstream
 
-The following parent docs are likely relevant but were **not directly visible** in the mounted workspace during this session:
+The following parent docs are likely relevant, but their mounted adjacency was **not directly verified** in this session:
 
-- `docs/search/drift/README.md` — **NEEDS VERIFICATION**
-- `docs/search/README.md` — **NEEDS VERIFICATION**
-- `docs/README.md` — **NEEDS VERIFICATION**
+- [`../README.md`](../README.md) — `docs/search/drift/README.md` **NEEDS VERIFICATION**
+- [`../../README.md`](../../README.md) — `docs/search/README.md` **NEEDS VERIFICATION**
+- [`../../../README.md`](../../../README.md) — `docs/README.md` **NEEDS VERIFICATION**
 
-### Downstream
+### Downstream and adjacent doctrinal references
 
-Confirmed repo-facing documentation surfaces referenced by the repo-grounded audit materials:
+Repo-grounded summary artifacts indicate that the repo already has documentation surfaces for the following areas. The exact relative paths from this directory should still be checked against the mounted tree before commit:
 
 - [`../../../../contracts/README.md`](../../../../contracts/README.md)
 - [`../../../../schemas/README.md`](../../../../schemas/README.md)
 - [`../../../../policy/README.md`](../../../../policy/README.md)
 - [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md)
 
+### Why this directory belongs here
+
+This path fits the attached KFM search doctrine because graph retrieval is admitted as a **derived retrieval method** with explicit cautions, and because graph expansion is called out as needing drift controls such as expansion history, provenance hints, release linkage, and visible status when relations are source-dependent or conflicted.
+
 ### Operational dependents
 
-The following are **PROPOSED** starter dependents, not confirmed mounted files:
+The items below are **PROPOSED starter dependents**, not mounted repo facts:
 
-- `../../../../contracts/runtime/evidence_bundle.schema.json`
-- `../../../../contracts/runtime/runtime_response_envelope.schema.json`
-- `../../../../contracts/correction/correction_notice.schema.json`
-- `../../../../policy/reason_codes.json`
-- `../../../../policy/obligation_codes.json`
-- `../../../../tests/contracts/*`
-- `../../../../tests/policy/*`
+- `contracts/runtime/evidence_bundle.schema.json`
+- `contracts/runtime/runtime_response_envelope.schema.json`
+- `contracts/correction/correction_notice.schema.json`
+- `contracts/policy/decision_envelope.schema.json`
+- `policy/reason_codes.json`
+- `policy/obligation_codes.json`
+- `tests/contracts/*`
+- `tests/policy/*`
+- `tests/e2e/runtime_proof/*`
+- `tests/ui/surface_state/*`
+
+> [!IMPORTANT]
+> A repo-grounded summary artifact also warns that `contracts/` and `schemas/` may currently behave as dual documentation surfaces. Until the authoritative schema home is directly verified, this README should reference contract families conservatively and avoid implying a singular mounted implementation path.
 
 ---
 
@@ -115,25 +142,27 @@ The following are **PROPOSED** starter dependents, not confirmed mounted files:
 
 ### Accepted inputs
 
-This directory should accept material that helps a reviewer or implementer understand **derived graph-query drift** without blurring authoritative truth and derived convenience layers.
+This directory should accept material that helps a reviewer or implementer understand **graph-query drift** without blurring authoritative truth and derived convenience layers.
 
 | Accepted input | Why it belongs here | Status |
 |---|---|---|
-| Promoted release refs | Graph queries must stay tied to released scope | **CONFIRMED** |
+| Promoted release refs | Graph queries must stay tied to published scope | **CONFIRMED** |
 | EvidenceRef / EvidenceBundle references | Graph-query behavior must remain drill-through capable | **CONFIRMED** |
-| Expansion history / hop history | Drift controls require visible expansion history | **CONFIRMED** |
+| Expansion history / hop history | Multi-hop graph behavior must be inspectable | **CONFIRMED** |
 | Provenance hints / lineage summaries | Required to keep graph acceleration subordinate to evidence | **CONFIRMED** |
 | Source-dependent / conflicted relation flags | Required when graph output depends on unstable or conflicting relations | **CONFIRMED** |
+| Surface-state vocabulary | Needed to keep stale, partial, denied, generalized, or conflicted states visible | **CONFIRMED** |
 | Reason / obligation code mappings | Needed for machine-readable decision grammar | **CONFIRMED doctrine**, mounted files **UNKNOWN** |
 | Positive and negative runtime traces | Needed to prove answer / abstain / deny / error behavior | **PROPOSED** starter evidence |
 | Query-class registry | Needed to keep drift checks stable across surfaces | **PROPOSED** |
 
 ### Good fit examples
 
-- a note explaining why a provenance traversal result became **STALE-VISIBLE**
+- a note explaining why a graph-driven result became **STALE-VISIBLE**
 - a matrix of graph query classes and their minimum release-linkage expectations
-- a worked example showing how `corroboration.conflicted` must remain visible
+- a worked example showing how `corroboration.conflicted` remains visible during traversal
 - a checklist for adding a new graph expansion feature without bypassing `EvidenceBundle` resolution
+- one positive and one negative trace for a graph-assisted Focus interaction
 
 ---
 
@@ -146,11 +175,11 @@ This directory is not the right home for everything related to search, graphs, o
 | Canonical truth mutation logic | This directory is about derived query behavior, not authoritative writes | canonical truth / ingestion / repair lanes |
 | RAW, WORK, or QUARANTINE internals | Public graph-query drift must not bypass the governed truth path | source and intake documentation |
 | Full schema source of truth | This README may reference contracts, but does not own them | `contracts/` and `schemas/` |
-| Policy bundle implementation | This doc can name policy needs, not replace the executable bundle | `policy/` |
-| UI component implementation details | Trust-visible behavior belongs here; component wiring does not | shell/UI architecture docs |
-| Generic search ranking theory | KFM needs release-linked, evidence-linked behavior, not generic IR guidance | broader search docs or research notes |
+| Policy bundle implementation | This doc can name policy needs, not replace executable policy bundles | `policy/` |
+| UI component wiring | Trust-visible behavior belongs here; component implementation does not | shell/UI architecture docs |
+| Generic search ranking theory | KFM needs release-linked, evidence-linked behavior, not generic IR advice | broader search docs or research notes |
 | Hidden approval flows | Review artifacts must stay explicit, not inferred from prose | review / stewardship / release docs |
-| Standalone graph store governance | KFM’s graph layer stays subordinate to release-backed evidence | runtime / platform / architecture docs |
+| Standalone graph-store sovereignty | KFM’s graph layer stays subordinate to release-backed evidence | runtime / platform / architecture docs |
 
 ---
 
@@ -165,10 +194,12 @@ docs/search/drift/graph-queries/
 ├── query-classes.md                    # PROPOSED
 ├── drift-signals.md                    # PROPOSED
 ├── visible-states.md                   # PROPOSED
+├── reason-obligation-crosswalk.md      # PROPOSED
 ├── examples/                           # PROPOSED
 │   ├── positive-release-linked.md      # PROPOSED
 │   ├── negative-conflicted.md          # PROPOSED
-│   └── stale-visible.md                # PROPOSED
+│   ├── stale-visible.md                # PROPOSED
+│   └── correction-linked.md            # PROPOSED
 └── fixtures/                           # PROPOSED
     ├── valid/                          # PROPOSED
     └── invalid/                        # PROPOSED
@@ -178,9 +209,10 @@ A smaller alternative is also acceptable if the repo prefers fewer doc leaves, p
 
 - route-family doctrine
 - contract families
-- policy reason/obligation codes
+- reason / obligation registries
 - one positive trace
 - one negative trace
+- one correction-linked or stale-visible example
 
 ---
 
@@ -189,10 +221,10 @@ A smaller alternative is also acceptable if the repo prefers fewer doc leaves, p
 ### Minimum reading order
 
 1. Start with the **derived-layer rule**: graph/search layers accelerate evidence resolution but do not replace canonical truth.
-2. Confirm the **surface** you are documenting: Focus, Evidence Drawer, export, dossier, compare, or internal review.
+2. Confirm the **surface class** you are documenting: Focus, Evidence Drawer, export, dossier, compare, or internal review.
 3. Confirm the **release scope** the graph query is allowed to touch.
 4. Record the **query class** and the minimum drift controls it requires.
-5. Require visible handling for **source-dependent**, **conflicted**, **stale**, or **policy-blocked** relations.
+5. Require visible handling for **source-dependent**, **conflicted**, **stale**, **partial**, or **policy-blocked** relations.
 6. Link the behavior to an `EvidenceBundle` and an accountable `RuntimeResponseEnvelope`.
 
 ### Illustrative starter record
@@ -200,10 +232,12 @@ A smaller alternative is also acceptable if the repo prefers fewer doc leaves, p
 ```yaml
 # Illustrative starter shape only.
 # NOT a confirmed mounted schema.
+
 query_class: provenance-traversal
 surface_class: focus
 release_ref: <published-release-ref>
 subject_ref: <feature-or-evidence-ref>
+
 drift_controls:
   expansion_history: required
   provenance_hints: required
@@ -211,13 +245,21 @@ drift_controls:
   source_dependent_visibility: required
   conflicted_visibility: required
   citation_check: required
-outcomes:
+
+negative_states:
   allowed:
-    - ANSWER
     - ABSTAIN
     - DENY
     - ERROR
-  notes: "Do not silently continue on unresolved trust state."
+    - STALE_VISIBLE
+    - PARTIAL
+
+runtime_contracts:
+  evidence_bundle: required
+  runtime_response_envelope: required
+  decision_envelope: recommended
+
+notes: "Do not silently continue on unresolved trust state."
 ```
 
 ### Fast review questions
@@ -263,6 +305,7 @@ Reviewers should check:
 - no public-safe surface outrunning release state
 - no graph expansion without provenance hints and expansion history
 - no Focus behavior that hides citation or policy outcomes
+- no correction state hidden behind graph convenience
 
 ---
 
@@ -274,8 +317,9 @@ flowchart LR
     B --> C[EvidenceBundle resolver]
     C --> D[Graph query / expansion]
     D --> E{Drift controls}
+
     E -->|pass| F[RuntimeResponseEnvelope]
-    E -->|partial / blocked / stale| G[Visible negative or qualified state]
+    E -->|partial / stale / conflicted / blocked| G[Visible negative or qualified state]
 
     F --> H[Focus Mode]
     F --> I[Evidence Drawer]
@@ -301,7 +345,7 @@ flowchart LR
 | Canonical entities / observations / claims | System-of-record content | Authoritative | Must not be mutated from graph-query surfaces |
 | Graph projection / graph expansion layer | Traversal and acceleration | Derived / rebuildable | Must stay release-linked and explainable |
 | EvidenceBundle | Support package for a claim / answer / export | Trust object | Must remain resolvable and visible |
-| RuntimeResponseEnvelope | Accountable runtime outcome | Trust object | Must expose result, timing, surface class, citations check, decision ref |
+| RuntimeResponseEnvelope | Accountable runtime outcome | Trust object | Must expose result, timing, surface class, citation state, and decision linkage |
 | Focus Mode result | Bounded synthesis over released scope | Derived runtime output | Must show scope, citations, policy, and audit linkage |
 | Evidence Drawer | Provenance inspection surface | Trust-visible shell element | Must make graph-driven support inspectable |
 
@@ -311,10 +355,10 @@ flowchart LR
 |---|---|---|---|
 | Provenance traversal | Move from claim to evidence, lineage, and related support | expansion history, provenance hints, release linkage | **CONFIRMED** |
 | Related-document exploration | Find nearby support within promoted scope | provenance hints, release linkage, source-dependent visibility | **CONFIRMED** |
-| Relationship-heavy question support | Bound Focus retrieval where graph structure helps narrow scope | citations check, release linkage, conflicted visibility | **CONFIRMED** |
-| Route / path exploration | Ordered path output over graph edges or relation chains | expansion history, policy scope, result qualification | **INFERRED** |
+| Relationship-heavy question support | Bound Focus retrieval where graph structure helps narrow scope | citation check, release linkage, conflicted visibility | **CONFIRMED** |
+| Route / path exploration | Ordered path output over graph edges or relation chains | expansion history, result qualification, policy scope | **INFERRED** |
 | Neighborhood expansion | One-hop / multi-hop local discovery around a released subject | release linkage, source-dependent visibility, stale cues | **PROPOSED** |
-| Scenario-linked graph walk | Scenario-aware traversal that must not masquerade as real-world fact | scenario state, review state, visible modeled-output label | **PROPOSED** |
+| Scenario-linked graph walk | Traversal over modeled or twin-like relations | modeled-state visibility, review state, scenario labeling | **PROPOSED** |
 
 ### Starter drift signal matrix
 
@@ -330,6 +374,24 @@ flowchart LR
 | Stale derived projection | Query uses a graph or index that no longer cleanly matches current release | show stale-visible cue or block where required | **INFERRED** |
 | Hidden correction state | User sees a result without knowing it is superseded, narrowed, or withdrawn | correction linkage must remain visible | **CONFIRMED** |
 
+### Starter reason / obligation crosswalk
+
+| Code | Typical graph-query consequence | Status |
+|---|---|---|
+| `runtime.evidence_missing` | No reconstructible evidence path; do not surface confident result | **CONFIRMED doctrine** |
+| `runtime.citation_failed` | Evidence was retrieved but user-visible claims failed citation verification | **CONFIRMED doctrine** |
+| `policy.denied` | The requested graph-assisted action or surface is blocked | **CONFIRMED doctrine** |
+| `projection.stale` | Derived graph/search projection is older than its freshness basis | **CONFIRMED doctrine** |
+| `cite` | Attach inspectable evidence or fail closed | **CONFIRMED doctrine** |
+| `disclose_partial` | Label partial coverage or incompleteness in place | **CONFIRMED doctrine** |
+| `disclose_modeled` | Label modeled / assimilated / forecast / scenario status in place | **CONFIRMED doctrine** |
+| `review_required` | Escalate before promotion or outward use | **CONFIRMED doctrine** |
+| `generalize` | Serve a generalized representation only | **CONFIRMED doctrine** |
+| `rebuild_projection` | Rebuild graph/search/vector/scene outputs from corrected scope | **CONFIRMED doctrine** |
+| `correction_notice` | Keep correction state visible across affected surfaces | **CONFIRMED doctrine** |
+| `log_audit` | Emit audit linkage and decision trace | **CONFIRMED doctrine** |
+| `withhold` | Do not render or publish on the requested surface | **CONFIRMED doctrine** |
+
 ### Route-family touchpoints
 
 | Route family | Why graph drift matters here | Minimum trust obligation |
@@ -340,6 +402,8 @@ flowchart LR
 | Export and report | Derived outputs can freeze drift into outward artifacts | export must not outrun release, policy, or correction state |
 | Review / stewardship | Internal review may inspect graph drift before public release | no hidden approvals; emit review and decision artifacts |
 
+[Back to top](#graph-query-drift)
+
 ---
 
 ## Task list
@@ -349,7 +413,7 @@ flowchart LR
 - [ ] Owners, dates, policy label, and doc UUID assigned
 - [ ] Parent drift/search docs verified and linked
 - [ ] Query-class registry reviewed and accepted
-- [ ] Drift-signal matrix cross-walked to reason/obligation codes
+- [ ] Drift-signal matrix cross-walked to reason / obligation codes
 - [ ] `EvidenceBundle` and `RuntimeResponseEnvelope` links verified against mounted schema home
 - [ ] One positive graph-query trace added
 - [ ] One negative graph-query trace added
@@ -374,11 +438,11 @@ flowchart LR
 
 ### Is the graph authoritative in KFM?
 
-No. Graph layers are useful, but they remain derived and rebuildable unless explicitly promoted.
+No. Graph layers are useful, but they remain derived and rebuildable unless explicitly promoted through governed release.
 
 ### Is graph-query drift the same thing as data drift?
 
-Not exactly. This README is narrower. It focuses on drift in **derived graph-query behavior** and how that behavior stays aligned with release scope, provenance, and visible trust state.
+No. This README is narrower. It focuses on drift in **derived graph-query behavior** and on how that behavior stays aligned with release scope, provenance, and visible trust state.
 
 ### Can public surfaces use graph queries?
 
@@ -390,7 +454,9 @@ Because graph expansion becomes especially risky when it feeds bounded natural-l
 
 ### Why is 3D mentioned in a graph-query drift doc?
 
-Because KFM explicitly blocks “spectacle-first” escalation. If graph-linked 3D or twin-like behavior is added later, it still inherits the same release, evidence, policy, and correction duties.
+Because KFM explicitly rejects spectacle-first escalation. If graph-linked 3D or twin-like behavior is added later, it still inherits the same release, evidence, policy, and correction duties.
+
+[Back to top](#graph-query-drift)
 
 ---
 
@@ -410,6 +476,8 @@ Because KFM explicitly blocks “spectacle-first” escalation. If graph-linked 
 | Conflicted | A relation or result whose independent admissible sources disagree materially |
 | Stale-visible | A still-readable state that must remain visibly marked as stale rather than silently fresh |
 | Evidence drill-through | The ability to move from a claim or result to the supporting bundle and lineage |
+| Surface state | The user-visible trust state of a map, feature, story, export, or Focus response |
+| Release linkage | The explicit connection between a derived answer and the promoted release scope it uses |
 
 ### Illustrative starter payload
 
@@ -422,6 +490,7 @@ Because KFM explicitly blocks “spectacle-first” escalation. If graph-linked 
   "drift": {
     "expansionHistoryPresent": true,
     "provenanceHintsPresent": true,
+    "releaseLinked": true,
     "sourceDependent": false,
     "conflicted": false,
     "staleVisible": false
@@ -437,10 +506,13 @@ Because KFM explicitly blocks “spectacle-first” escalation. If graph-linked 
 
 ### Suggested companion docs
 
+The following companion docs are useful, but their mounted adjacency should still be verified before commit:
+
 - Parent search/drift index — **NEEDS VERIFICATION**
 - Contract family reference — expected under `contracts/` / `schemas/`
-- Policy reason/obligation registry docs — expected under `policy/`
+- Policy reason / obligation registry docs — expected under `policy/`
 - Focus / Evidence Drawer shell docs — **NEEDS VERIFICATION**
+- Optional retrieval-episode STAC documentation — **PROPOSED**, not confirmed here
 
 [Back to top](#graph-query-drift)
 
