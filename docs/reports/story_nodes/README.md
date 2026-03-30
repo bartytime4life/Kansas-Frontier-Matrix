@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
+doc_id: kfm://doc/UUID-NEEDS-VERIFICATION
 title: Story Nodes
 type: standard
 version: v1
@@ -8,22 +8,25 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../../../README.md, ../../README.md, ../README.md, ../../standards/README.md, ../../governance/README.md, ../../../.github/CODEOWNERS]
+related: [../../../README.md, ../../README.md, ../README.md, ../readme-structure-reconciliation.md, ../../standards/README.md, ../../governance/README.md, ../../../.github/CODEOWNERS]
 tags: [kfm, docs, reports, story-nodes, narrative]
-notes: [Current public main shows a scaffold-only README at this path; doc_id and original file dates need verification before merge.]
+notes: [Public main confirms docs/reports/story_nodes/ as a README-only story directory and confirms /docs/ ownership in CODEOWNERS; doc_id and git-derived file dates still need verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # Story Nodes
 
 Governed report-surface home for human-authored narrative units that stay downstream of evidence, policy, review, and correction.
 
-> Status: experimental  
-> Owners: @bartytime4life (`/docs/` currently routes here in `/.github/CODEOWNERS`; narrower story-node ownership still needs verification)  
+> **Status:** experimental  
+> **Owners:** @bartytime4life (`/.github/CODEOWNERS` currently assigns `/docs/` to this owner on public `main`; no narrower `/docs/reports/story_nodes/` rule is visible)  
 > ![Status](https://img.shields.io/badge/status-experimental-blueviolet?style=flat-square) ![Path](https://img.shields.io/badge/path-docs%2Freports%2Fstory__nodes-0a7bbb?style=flat-square) ![Truth](https://img.shields.io/badge/truth-downstream%20of%20release-2d7d46?style=flat-square) ![Surface](https://img.shields.io/badge/surface-story%20report-6f42c1?style=flat-square) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-333333?style=flat-square)  
-> Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `docs/reports/story_nodes/` is a governed documentation surface, not the canonical home of story truth, not the runtime story API, and not a shortcut around publish gates. In KFM, story-shaped materials remain downstream of promoted release scope, evidence resolution, policy review, and correction visibility.
+
+> [!NOTE]
+> Public `main` confirms this directory exists and currently contains `README.md` only. Mounted-checkout parity, git-derived file dates, and any runtime Story Node implementation still need verification.
 
 > [!NOTE]
 > Status markers used here: **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, **NEEDS VERIFICATION**.
@@ -40,7 +43,7 @@ Its job is to keep narrative material legible and reviewable **without** letting
 |---|---|---|
 | Story surface | CONFIRMED | Human-authored narrative publication inside the governed shell. |
 | Story Node | CONFIRMED doctrine / NEEDS VERIFICATION repo shape | A story-shaped unit that couples narrative with evidence and map/context state. |
-| `docs/reports/story_nodes/` | CONFIRMED on public `main` | The report-surface directory for human-readable story artifacts; current public view is still scaffold-light. |
+| `docs/reports/story_nodes/` | CONFIRMED on public `main` | README-only story directory beneath `docs/reports/`; any runtime or schema depth remains separate and unverified. |
 
 [Back to top](#story-nodes)
 
@@ -51,11 +54,13 @@ Its job is to keep narrative material legible and reviewable **without** letting
 | Path | `docs/reports/story_nodes/README.md` |
 | Path status | **CONFIRMED on public `main`**; mounted-checkout parity still **NEEDS VERIFICATION** |
 | Local role | Directory contract for story-shaped report artifacts under `docs/reports/` |
-| Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) |
+| Parent reports surface | [`../README.md`](../README.md) |
+| Docs hub / root | [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) |
 | Cross-cutting doctrine | [`../../standards/README.md`](../../standards/README.md) · [`../../governance/README.md`](../../governance/README.md) |
 | Adjacent governed boundaries | [`../../../contracts/README.md`](../../../contracts/README.md) · [`../../../schemas/README.md`](../../../schemas/README.md) · [`../../../policy/README.md`](../../../policy/README.md) · [`../../../tests/README.md`](../../../tests/README.md) · [`../../../data/`](../../../data/) |
-| Neighboring report families | [`../audits/`](../audits/) · [`../releases/`](../releases/) · [`../self-validation/`](../self-validation/) · [`../telemetry/`](../telemetry/) · [`../validation/`](../validation/) |
-| Current owner signal | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) currently routes `/docs/` to `@bartytime4life` |
+| Neighboring report families on public `main` | [`../audits/`](../audits/) · [`../releases/`](../releases/) · [`../self-validation/`](../self-validation/) · [`../telemetry/`](../telemetry/) · [`../validation/`](../validation/) |
+| Structural caution | [`../readme-structure-reconciliation.md`](../readme-structure-reconciliation.md) is useful as a scaffold snapshot, not proof of implementation completeness |
+| Current owner signal | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes `/docs/` to `@bartytime4life`; no narrower `/docs/reports/story_nodes/` rule is visible on public `main` |
 
 ## Accepted inputs
 
@@ -102,11 +107,13 @@ What does **not** belong here:
 
 | Surface / signal | Status | Notes |
 |---|---|---|
-| `docs/reports/story_nodes/` | CONFIRMED on public `main` | The directory is present in the current public tree |
-| `docs/reports/story_nodes/README.md` | CONFIRMED on public `main` | The current file was a scaffold-only README before this revision |
-| Additional files under this directory | CONFIRMED current public view = none beyond `README.md` | The public directory view showed only the README at revision time |
-| Story Node publish workflow / story API / story schema | INFERRED doctrine, repo implementation UNKNOWN | Broader KFM materials describe Story Nodes and story routes, but this revision did not confirm live implementation at matching repo paths |
-| Mounted local checkout parity | NEEDS VERIFICATION | This revision used the public GitHub tree and attached corpus, not a mounted local repo checkout |
+| `docs/reports/story_nodes/` | CONFIRMED on public `main` | The directory is present under `docs/reports/`. |
+| `docs/reports/story_nodes/README.md` | CONFIRMED on public `main` | This README is the current directory contract and the only file visible in this directory. |
+| Neighboring report families | CONFIRMED on public `main` | `audits/`, `releases/`, `self-validation/`, `telemetry/`, and `validation/` are present beside `story_nodes/`. |
+| `docs/reports/readme-structure-reconciliation.md` | CONFIRMED on public `main` | Useful as structural context only; it explicitly warns that scaffolded paths are not proof of implementation, wiring, or merge enforcement. |
+| `.github/CODEOWNERS` | CONFIRMED on public `main` | Routes `/docs/` to `@bartytime4life`; no narrower story-node rule is visible in the public file. |
+| Story Node publish workflow / story API / story schema | INFERRED doctrine, repo implementation UNKNOWN | Broader KFM materials describe Story Nodes and story routes, but current public repo evidence did not confirm live implementation at matching repo paths. |
+| Mounted local checkout parity | NEEDS VERIFICATION | This revision used public GitHub plus the attached corpus, not a mounted local checkout. |
 
 ## Directory tree
 
@@ -138,15 +145,16 @@ Use the smallest possible footprint first. KFM should bias toward a small, legib
 
 ### Add the first substantive story node safely
 
-1. Create a human-readable markdown file for the story unit.
-2. Make the time basis explicit near the top.
-3. Link the story to promoted release scope or other admissible evidence.
-4. Keep perspective labels and caveats visible.
-5. Do not merge story prose that cannot resolve its citations or that hides correction state.
+1. Confirm the subject is actually allowed on a public or public-safe docs surface.
+2. Create a human-readable markdown file for the story unit.
+3. Make the time basis explicit near the top.
+4. Link the story to promoted release scope or other admissible evidence.
+5. Keep perspective labels and caveats visible.
+6. Do not merge story prose that cannot resolve its citations or that hides correction state.
 
 ### Illustrative starter template (PROPOSED)
 
-```markdown
+```md
 # <Story title>
 
 - Story state: Draft
@@ -256,7 +264,7 @@ flowchart TD
 - [ ] Machine-readable contracts, policies, and tests stay in their owning directories.
 - [ ] AI-assisted prose, if any, remains citation-resolvable and reviewable.
 - [ ] Sensitive locations, secrets, and privileged endpoints are excluded.
-- [ ] This README does not imply mounted implementation details that were not verified.
+- [ ] Current public-main facts and mounted-checkout unknowns stay visibly separated.
 - [ ] Mermaid, links, tables, and code fences render cleanly in GitHub.
 - [ ] Placeholder values in the KFM meta block are resolved before merge.
 
@@ -292,18 +300,22 @@ No. Large or canonical payloads belong in governed data locations. Story nodes m
 ### What is strong enough to treat as current
 
 - The path `docs/reports/story_nodes/` exists on the public `main` branch.
-- Its current public content is scaffold-only.
+- The directory currently contains `README.md` only.
+- The parent `docs/reports/` surface currently includes `audits/`, `releases/`, `self-validation/`, `story_nodes/`, `telemetry/`, `validation/`, `README.md`, and `readme-structure-reconciliation.md`.
+- `.github/CODEOWNERS` currently routes `/docs/` to `@bartytime4life`; no narrower rule for `story_nodes/` is visible on public `main`.
 - Broader KFM doctrine clearly distinguishes story surfaces from dossiers and Focus Mode.
-- Broader KFM planning material ties Story Nodes to narrative markdown, map state, citation context, and publish gates.
+- Broader KFM doctrine ties story surfaces to evidence-linked excerpts, dates, perspective labels, and correction state.
+- `docs/reports/readme-structure-reconciliation.md` is useful as structural context but explicitly warns that scaffolded paths are not proof of implementation, wiring, or merge enforcement.
 
 ### What still needs verification before merge
 
 - Final `doc_id` value in the KFM meta block
-- Original created / updated dates for this file
+- Original `created` / `updated` dates for this file
 - Whether the repo wants a narrower `story_nodes/` owner than the current `/docs/` fallback
 - Exact story-sidecar filenames or companion-packet conventions
 - Any live runtime route, schema, or publish workflow already implemented for Story Nodes
 - Whether sibling report-family READMEs should cross-link back to this directory in the same PR
+- Whether the parent `docs/reports/README.md` should be updated in the same change stream to reflect the now-visible public `main` directory layout
 
 </details>
 
