@@ -3,14 +3,14 @@ doc_id: kfm://doc/NEEDS-VERIFICATION
 title: KFM Research Evaluation Assets
 type: standard
 version: v1
-status: draft
+status: published
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: 2025-12-20
+updated: 2026-03-25
 policy_label: public
 related: [docs/research/README.md, docs/research/evaluations/README.md, docs/README.md, .github/CODEOWNERS]
 tags: [kfm, research, evaluations, assets]
-notes: [scaffold replacement for a current-branch README-only directory; doc_id and created/updated dates need verification from git history or document registry]
+notes: [doc_id still needs registry verification; created/updated verified from public GitHub history; lifecycle label should be reconciled with any internal document registry if one exists]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Research Evaluation Assets
@@ -19,8 +19,10 @@ Support lane for figures, screenshots, and other local files referenced by evalu
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
+> **Source posture:** current public branch-visible directory README aligned to `docs/research/README.md`, `docs/research/evaluations/README.md`, and March 2026 KFM doctrine  
+> **Repo role:** support-lane README for `docs/research/evaluations/assets/`  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-7a3cff) ![Doc: Evaluation Assets](https://img.shields.io/badge/doc-evaluation%20assets-0a7ea4) ![Surface: Research Support](https://img.shields.io/badge/surface-research%20support-6c757d) ![Branch: main](https://img.shields.io/badge/branch-main-0a7d5a) ![Owner: @bartytime4life](https://img.shields.io/badge/owner-%40bartytime4life-1f6feb)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Evidence labels](#evidence-labels-used-in-this-readme) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `docs/research/` is an **experimental, non-normative** workspace until material is reviewed and promoted.
@@ -31,6 +33,16 @@ Support lane for figures, screenshots, and other local files referenced by evalu
 `docs/research/evaluations/assets/` is the local support lane for static files used by markdown in `../`.
 
 Its job is to keep evaluation-support media close to the writeups they explain, while keeping governed data, contracts, policy, and production procedures in their owning lanes.
+
+## Evidence labels used in this README
+
+| Label | Meaning here |
+|---|---|
+| **CONFIRMED** | Directly supported by the current public repo tree, adjacent research READMEs, or attached KFM doctrine |
+| **INFERRED** | Conservative interpretation that follows from those sources without asserting hidden implementation |
+| **PROPOSED** | Working guidance for this lane that fits KFM doctrine but is not claimed as machine-enforced behavior |
+| **UNKNOWN** | Not supported strongly enough to present as current repo or platform fact |
+| **NEEDS VERIFICATION** | Internal registry values, ownership metadata beyond public files, or private platform settings that were not directly confirmed |
 
 ### Current branch signal
 
