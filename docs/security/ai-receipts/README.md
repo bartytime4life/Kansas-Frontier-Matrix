@@ -8,526 +8,458 @@ owners: [NEEDS VERIFICATION]
 created: 2026-03-28
 updated: 2026-03-28
 policy_label: public
-related:
-  - docs/security/README.md
-  - docs/standards/README.md
-  - policy/
-  - tests/
+related: [docs/security/README.md, docs/standards/README.md, policy/, tests/]
 tags: [kfm, security, provenance, ai, attestations]
-notes: Source-bounded draft. Exact repo paths, owners, workflow names, and artifact references NEED VERIFICATION in a live checkout.
+notes: [Source-bounded draft. Target path, dates, and related links are preserved from the task baseline; owners, mounted repo fit, workflow names, and companion artifact paths still NEED VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # AI Receipts
 
-Governed, signed provenance records for AI-assisted runs and derived outputs.
+Governed receipts for AI-assisted runs, runtime answers, and AI-derived artifacts in Kansas Frontier Matrix.
 
 > [!IMPORTANT]
-> This document is **source-bounded** and **doctrine-aligned**. It proposes a KFM-compatible AI receipt pattern using in-toto attestations, DSSE envelopes, and Sigstore/Cosign verification. Live repo wiring, owners, and workflow paths **NEED VERIFICATION** before merge.
-
----
+> **Source-bounded reading rule:** KFM doctrine around fail-closed publication, proof objects, EvidenceBundle-centered trust, finite runtime outcomes, and bounded AI is **CONFIRMED**. A named `AIReceipt` object family is **PROPOSED** in the March 2026 corpus and is documented here as a standard draft, **not** as mounted implementation fact.
 
 ## Impact
 
-**Status:** draft  
-**Owners:** NEEDS VERIFICATION  
-**Path:** `docs/security/ai-receipts/README.md`  
-**Repo fit:** security / supply-chain governance / derived-output provenance  
-**Truth posture:**  
-- **CONFIRMED:** Cosign supports in-toto attestations and verification. :contentReference[oaicite:1]{index=1}  
-- **CONFIRMED:** in-toto attestation specs recommend DSSE for envelopes. :contentReference[oaicite:2]{index=2}  
-- **CONFIRMED:** JCS defines deterministic JSON canonicalization suitable for hashing. :contentReference[oaicite:3]{index=3}  
-- **PROPOSED:** KFM-specific schema fields, evidence references, and policy gates  
-- **NEEDS VERIFICATION:** exact CI workflows, repo paths, contract files, and test harness locations
+| Item | Value |
+| --- | --- |
+| Status | experimental |
+| Owners | NEEDS VERIFICATION |
+| Path | `docs/security/ai-receipts/README.md` *(target path from task; live repo placement NEEDS VERIFICATION)* |
+| Repo fit | security / provenance / proof objects / bounded AI |
+| Truth posture | doctrine confirmed · receipt family proposed · repo wiring unknown |
 
-![Status](https://img.shields.io/badge/status-draft-orange)
+![Status](https://img.shields.io/badge/status-experimental-orange)
 ![Surface](https://img.shields.io/badge/surface-security-blue)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-red)
 ![Evidence](https://img.shields.io/badge/evidence-source--bounded-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Schema](#minimal-receipt-schema) · [Flow](#flow) · [Quickstart](#quickstart) · [Policy gate](#policy-gate) · [FAQ](#faq)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Where AI receipts fit](#where-ai-receipts-fit) · [Directory tree](#directory-tree) · [Flow](#flow) · [Minimal receipt shape](#minimal-receipt-shape) · [Quickstart](#quickstart) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-This document defines a **minimal, auditable receipt** for AI-assisted execution in KFM.
+This document defines a KFM-aligned standard draft for **AI receipts** as proof-bearing records that accompany AI-assisted work without weakening the trust membrane.
 
-An AI receipt is a signed record that binds:
+It covers four things:
 
-- a canonicalized prompt representation,
-- its cryptographic hash,
-- model/runtime metadata,
-- input/output digests,
-- actor identity,
-- timestamp,
-- review state,
+1. when an AI receipt should exist,
+2. what minimum fields it should carry,
+3. how it relates to adjacent KFM proof objects,
+4. which fail-closed gates should block promotion, publication, or consequential runtime use.
 
-to a derived output artifact.
+This document does **not** claim that a mounted `AIReceipt` schema, workflow, or enforcement path already exists in the live repository.
 
-The receipt is intended to support:
-
-- fail-closed promotion,
-- tamper evidence,
-- reproducible verification,
-- policy enforcement in CI and runtime,
-- evidence drill-through for derived AI outputs.
+[Back to top](#ai-receipts)
 
 ---
 
 ## Repo fit
 
-**Path:** `docs/security/ai-receipts/README.md`  
-**Upstream:**  
-- `docs/security/README.md`
-- `docs/architecture/TRUST_MEMBRANE.md` or equivalent (**NEEDS VERIFICATION**)
-- `docs/architecture/TRUTH_PATH_LIFECYCLE.md` or equivalent (**NEEDS VERIFICATION**)
-- `docs/standards/README.md`
+**Target path:** `docs/security/ai-receipts/README.md`
 
-**Downstream:**  
-- `policy/` attestation gates
-- `tests/policy/` and `tests/e2e/` verification flows
-- release / promotion workflows
-- derived-output publication surfaces
+### Confirmed adjacent documentation surfaces
 
-**Adjacent:**  
-- `contracts/` for JSON Schema / predicate contract (**PROPOSED**)
-- `tools/` for canonicalization / hashing / verification helpers (**PROPOSED**)
-- `scripts/` for thin orchestration entrypoints (**PROPOSED**)
+| Role | Relative path | Status | Why it matters here |
+| --- | --- | --- | --- |
+| Repo identity | [`../../../README.md`](../../../README.md) | CONFIRMED doc surface | Establishes project-level doctrine and trust posture. |
+| Contract surface | [`../../../contracts/README.md`](../../../contracts/README.md) | CONFIRMED doc surface | AI receipts should fit the contract lattice, not bypass it. |
+| Schema surface | [`../../../schemas/README.md`](../../../schemas/README.md) | CONFIRMED doc surface | Any eventual `AIReceipt` schema belongs inside the broader schema discipline. |
+| Policy surface | [`../../../policy/README.md`](../../../policy/README.md) | CONFIRMED doc surface | Deny-by-default policy is a core dependency. |
+| Test surface | [`../../../tests/README.md`](../../../tests/README.md) | CONFIRMED doc surface | Valid/invalid fixtures and negative-path tests are part of the proof story. |
+| Workflow surface | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | CONFIRMED doc surface | Merge gates and verification coverage remain relevant even when workflow YAML is still thin. |
+
+### Proposed companion artifacts
+
+| Likely companion | Status | Why it is adjacent |
+| --- | --- | --- |
+| `../../../contracts/runtime/ai_receipt.schema.json` | PROPOSED | Makes the receipt machine-checkable. |
+| `../../../fixtures/valid/ai_receipt.*` | PROPOSED | Positive examples for schema and policy gates. |
+| `../../../fixtures/invalid/ai_receipt.*` | PROPOSED | Negative examples proving fail-closed behavior. |
+| `../../../tests/policy/ai_receipts/*` | PROPOSED | Conftest/OPA gate coverage. |
+| `../../../evidence/` or PR-scoped evidence bundle layout | PROPOSED | Reviewable storage for receipts, checksums, and attestation pointers. |
+
+> [!NOTE]
+> The relative links above are intentionally conservative. They point only to surfaces that were explicitly reported as repo-visible documentation areas, while companion paths remain marked **PROPOSED** until a live checkout confirms them.
 
 ---
 
 ## Accepted inputs
 
-This surface expects, at minimum:
+An AI receipt should be able to bind an AI-assisted action to **released scope**, **policy state**, and **audit linkage**.
 
-- a canonicalizable prompt payload,
-- a model identifier or version string,
-- a deterministic config representation or config hash,
-- digests for governed input and output artifacts,
-- actor identity,
-- timestamp,
-- review state,
-- subject artifact reference for attestation.
+| Input | Why it belongs here | Posture |
+| --- | --- | --- |
+| `subject_ref` or artifact reference | Ties the receipt to the thing produced, evaluated, or surfaced. | PROPOSED |
+| `spec_hash` or equivalent canonical digest | Supports determinism, replay checks, and review diffing. | PROPOSED |
+| Model / adapter identity | Distinguishes AI configuration from authoritative Kansas truth. | PROPOSED |
+| Evidence or release references | Keeps AI downstream of admissible released scope. | CONFIRMED doctrine / PROPOSED field shape |
+| Decision / review references | Prevents AI receipts from becoming a shadow approval path. | CONFIRMED doctrine / PROPOSED field shape |
+| Output digests and attestation pointers | Make provenance portable and later-verifiable. | PROPOSED |
+| `audit_ref` | Joins logs, policy, release, and runtime surfaces. | CONFIRMED doctrine / PROPOSED field shape |
+| Runtime result or surface state | Preserves finite outcomes and negative-path visibility. | CONFIRMED doctrine / PROPOSED field shape |
 
 ---
 
 ## Exclusions
 
-This document does **not** authorize:
+AI receipts are **not** the right place for several other KFM concerns.
 
-- treating AI outputs as authoritative truth,
-- storing raw secrets in prompts or receipts,
-- publishing unsigned or unverifiable derived artifacts,
-- bypassing governed APIs, evidence resolution, or policy checks,
-- burying canonical contract truth in ad hoc scripts,
-- using receipts as a substitute for rights, sensitivity, or sovereignty review.
+| Does **not** belong here | Handle it through |
+| --- | --- |
+| Raw source-fetch proof | `IngestReceipt` + `ValidationReport` |
+| Authoritative dataset identity and release promotion | `DatasetVersion` + `ReleaseManifest` / `ReleaseProofPack` |
+| Full request-time support package | `EvidenceBundle` |
+| Canonical request-time answer object | `RuntimeResponseEnvelope` |
+| Human approval or denial | `ReviewRecord` + `DecisionEnvelope` |
+| Correction lineage after publication | `CorrectionNotice` |
+| Raw secrets, private prompts, or unrestricted canonical store access | Never publish them; keep them behind governed internal handling |
 
 > [!CAUTION]
-> AI receipts apply to **derived** artifacts. They do not elevate an AI result to authoritative status.
+> An AI receipt must never be treated as an authority upgrade. It records **how** AI participated; it does not convert AI output into authoritative truth.
+
+---
+
+## Where AI receipts fit
+
+KFM already has a confirmed doctrine for adjacent proof objects. `AIReceipt` should therefore be treated as an **extension** that fits **beside** them, not as a replacement for them.
+
+| Object family | Primary seam | What it already does | How AI receipts relate |
+| --- | --- | --- | --- |
+| `IngestReceipt` | source edge → RAW | proves fetch and landing | AI receipts do **not** replace raw ingest proof. |
+| `DecisionEnvelope` | policy mediation | records allow/deny/obligation logic | AI receipts should point to policy outcome, not restate policy as prose. |
+| `ReviewRecord` | human review boundary | records approval, denial, escalation, note | AI receipts should reference review where materiality requires it. |
+| `ReleaseManifest` / `ReleaseProofPack` | CATALOG → PUBLISHED | assembles public-safe release and proof | AI receipts can be included or referenced inside the proof pack when AI contributed. |
+| `EvidenceBundle` | runtime evidence resolution | packages support for a claim, export, story, or answer | AI receipts must not substitute for supporting evidence. |
+| `RuntimeResponseEnvelope` | request-time output | preserves finite runtime outcome | AI receipts may supplement persisted or audited AI actions, but the envelope remains the runtime contract. |
+| `CorrectionNotice` | post-release change | preserves visible lineage under correction | AI-derived outputs still need visible correction, supersession, or withdrawal paths. |
+
+### Emission matrix
+
+| Situation | Emit AI receipt? | Also emit |
+| --- | --- | --- |
+| AI-assisted derived artifact intended for review or release | **Yes — recommended** | `DecisionEnvelope`, `ReviewRecord` where needed, `ReleaseManifest` / `ReleaseProofPack` |
+| AI-assisted runtime answer retained for audit, steward review, or consequential export | **Policy-dependent — recommended when persisted** | `EvidenceBundle`, `RuntimeResponseEnvelope` |
+| Pure source ingest or canonical transformation with **no** AI step | **No** | `IngestReceipt`, `ValidationReport`, `DatasetVersion` |
+| Human-authored story or dossier with no AI assistance | **No** | existing publication and evidence objects |
+| Experimental model evaluation in a sandbox | **Yes — recommended** | test evidence, checksums, validation outputs |
+
+[Back to top](#ai-receipts)
 
 ---
 
 ## Directory tree
 
 ```text
-docs/security/ai-receipts/        # this document and examples (PROPOSED)
-contracts/ai-receipts/            # predicate schema(s) (PROPOSED)
-policy/ai-receipts/               # OPA / Conftest rules (PROPOSED)
-tools/ai-receipts/                # canonicalization / verification helpers (PROPOSED)
-tests/policy/ai-receipts/         # negative and positive policy cases (PROPOSED)
-tests/e2e/ai-receipts/            # promotion / tamper / missing-attestation flows (PROPOSED)
-````
+docs/security/ai-receipts/
+├── README.md                       # this standard draft
+├── examples/                       # PROPOSED
+│   ├── ai_receipt.min.json         # PROPOSED
+│   ├── ai_receipt.focus.answer.json# PROPOSED
+│   └── ai_receipt.blocked.json     # PROPOSED
+├── schemas/                        # PROPOSED local examples only if repo pattern allows
+└── notes/                          # PROPOSED review aids or migration notes
 
----
-
-## Minimal receipt schema
-
-Receipt payload example embedded as an in-toto predicate:
-
-```json
-{
-  "_type": "https://in-toto.io/Statement/v1",
-  "subject": [
-    {
-      "name": "kfm://artifact/output/<sha256>",
-      "digest": {
-        "sha256": "<OUTPUT_SHA256>"
-      }
-    }
-  ],
-  "predicateType": "https://kfm.dev/ai-receipt/v1",
-  "predicate": {
-    "prompt_hash": "<PROMPT_SHA256>",
-    "canonicalized_prompt_ref": "kfm://evidence/prompt/<PROMPT_SHA256>",
-    "model_version": "model-name-or-version",
-    "model_config_hash": "<CONFIG_SHA256>",
-    "input_digest": "sha256:<INPUT_SHA256>",
-    "output_digest": "sha256:<OUTPUT_SHA256>",
-    "actor_id": "service://kfm/ai-runner",
-    "timestamp": "2026-03-28T00:00:00Z",
-    "human_review_flag": false
-  }
-}
+contracts/                          # CONFIRMED doc surface; mounted schema inventory unknown
+schemas/                            # CONFIRMED doc surface; mounted schema inventory unknown
+policy/                             # CONFIRMED doc surface; mounted Rego bundles unknown
+tests/                              # CONFIRMED doc surface; runnable coverage unknown
+.github/workflows/                  # CONFIRMED doc surface; active merge-gate YAML unknown
 ```
-
-### Field notes
-
-| Field                      | Purpose                                            | Posture  |
-| -------------------------- | -------------------------------------------------- | -------- |
-| `prompt_hash`              | Stable digest of canonicalized prompt payload      | PROPOSED |
-| `canonicalized_prompt_ref` | Evidence-store reference to governed prompt record | PROPOSED |
-| `model_version`            | Model identity used for the run                    | PROPOSED |
-| `model_config_hash`        | Digest of effective model/runtime config           | PROPOSED |
-| `input_digest`             | Digest of governed input                           | PROPOSED |
-| `output_digest`            | Digest of produced output                          | PROPOSED |
-| `actor_id`                 | Service or human principal responsible for the run | PROPOSED |
-| `timestamp`                | RFC 3339 run time                                  | PROPOSED |
-| `human_review_flag`        | Review state for policy gates                      | PROPOSED |
-
-> [!NOTE]
-> The outer structure is a v1 in-toto statement. Cosign supports generating and verifying in-toto attestations around a supplied predicate. ([Sigstore][1])
 
 ---
 
 ## Flow
 
 ```mermaid
-flowchart TD
-    A[Prompt / Request] --> B[Canonicalize + Redact]
-    B --> C[SHA-256 prompt_hash]
-    C --> D[Model Run]
-    D --> E[Output Digest]
-    C --> F[Build Receipt Predicate]
-    E --> F
-    F --> G[Cosign Attest]
-    G --> H[DSSE Envelope]
-    H --> I[Transparency Log / Bundle]
-    I --> J[Verify Signature + Inclusion]
-    J --> K{Policy Pass?}
-    K -- yes --> L[Promote / Publish Derived Output]
-    K -- no --> M[Block / Withdraw / Abstain]
+flowchart LR
+    A[Released scope or steward-safe scope] --> B[Evidence resolution]
+    B --> C[AI-assisted action]
+    C --> D[AIReceipt draft]
+    D --> E[Policy + review checks]
+    E -->|pass| F[RuntimeResponseEnvelope or derived artifact]
+    E -->|fail| G[ABSTAIN / DENY / ERROR / hold]
+    F --> H[ReleaseManifest / ProofPack]
+    F --> I[Evidence Drawer / Focus / Export]
+    H --> J[CorrectionNotice if later changed]
 ```
+
+### Working interpretation
+
+The important KFM rule is not “AI produced a result.” The important rule is:
+
+1. the action stayed inside governed scope,
+2. the evidence route remained inspectable,
+3. the result passed finite-outcome handling,
+4. the release or runtime surface can explain what happened later.
 
 ---
 
-## Diagram
+## Minimal receipt shape
 
-```mermaid
-sequenceDiagram
-    participant U as User / Caller
-    participant R as AI Runner
-    participant E as Evidence Store
-    participant C as Cosign / Sigstore
-    participant P as Policy Gate
-    participant Pub as Publish Step
+> [!NOTE]
+> The object below is an **illustrative starter**, not a mounted repo contract. It is shaped to fit confirmed KFM proof-object doctrine while keeping `AIReceipt` itself explicitly **PROPOSED**.
 
-    U->>R: governed request
-    R->>R: canonicalize + hash prompt
-    R->>E: store canonicalized prompt
-    R->>R: run model, digest inputs/outputs
-    R->>C: attest predicate
-    C-->>R: signed DSSE attestation + verification material
-    R->>P: submit artifact + attestation
-    P->>P: verify signature, inclusion, policy
-    P-->>Pub: allow or deny
-```
-
----
-
-## Quickstart
-
-### 1) Canonicalize the prompt
-
-Use a deterministic canonicalization scheme for structured JSON inputs. RFC 8785 defines the JSON Canonicalization Scheme (JCS), which produces a stable, hashable JSON representation. ([RFC Editor][2])
-
-Python example:
-
-```python
-import hashlib
-import json
-
-def canonicalize_json(obj: dict) -> str:
-    return json.dumps(obj, sort_keys=True, separators=(",", ":"))
-
-def sha256_hex(text: str) -> str:
-    return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-prompt = {
-    "text": "Analyze Kansas hydrology deltas",
-    "params": {"temperature": 0.2}
+```json
+{
+  "kind": "AIReceipt",
+  "schema_version": "0.1.0",
+  "receipt_id": "ar.example.2026-03-28.001",
+  "subject_ref": "dv.hydrology.example.2026-03-28.v1",
+  "artifact_digest": "sha256:...",
+  "spec_hash": "sha256:...",
+  "model": {
+    "adapter_id": "adapter.local.example",
+    "model_id": "model.example",
+    "model_checksum": "sha256:..."
+  },
+  "scope": {
+    "lane": "hydrology",
+    "surface_class": "focus",
+    "release_window": "rel.example.2026-03-28",
+    "time_basis": "2026-03-28T00:00:00Z"
+  },
+  "evidence_refs": [
+    "eb.example.2026-03-28.001"
+  ],
+  "input_refs": [
+    "input.example.001"
+  ],
+  "output_refs": [
+    "output.example.001"
+  ],
+  "decision_ref": "de.example.2026-03-28.001",
+  "review_ref": null,
+  "result": "answer",
+  "citations_check": "passed",
+  "obligations": [],
+  "attestations": [
+    {
+      "type": "attestation.pointer",
+      "ref": "att.example.001"
+    }
+  ],
+  "audit_ref": "audit:ai:2026-03-28:001",
+  "created_at": "2026-03-28T00:00:00Z"
 }
-
-canonicalized = canonicalize_json(prompt)
-prompt_hash = sha256_hex(canonicalized)
-
-print(canonicalized)
-print(prompt_hash)
 ```
 
-### 2) Create the predicate file
+### Field notes
 
-Save a predicate like the example above as `receipt.json`.
-
-### 3) Sign and attach the attestation
-
-Cosign documents attestation creation like this: `cosign attest --predicate <file> --key cosign.key <image>`. ([Sigstore][1])
-
-```bash
-cosign attest \
-  --predicate receipt.json \
-  --type https://kfm.dev/ai-receipt/v1 \
-  --key cosign.key \
-  <artifact-ref>
-```
-
-### 4) Verify before promotion
-
-Cosign documents attestation verification with `cosign verify-attestation`. ([Sigstore][1])
-
-```bash
-cosign verify-attestation \
-  --type https://kfm.dev/ai-receipt/v1 \
-  --key cosign.pub \
-  <artifact-ref> > attestation.json
-```
-
-### 5) Validate the statement payload
-
-```bash
-jq -r '.[0].payload' attestation.json | base64 -d > statement.json
-jq . statement.json
-```
-
-> [!WARNING]
-> CLI flags can vary across Cosign releases. Verify against the version pinned by your repo or toolchain before merge. The general attestation flow is current, but exact flags and bundle behaviors may differ by release. ([Sigstore][1])
+| Field family | Why it matters | Posture |
+| --- | --- | --- |
+| `receipt_id`, `schema_version`, `kind` | Makes the object identifiable and evolvable. | PROPOSED |
+| `subject_ref`, `artifact_digest` | Binds the receipt to the thing that was produced or surfaced. | PROPOSED |
+| `spec_hash` | Supports deterministic replay and diffability. | PROPOSED |
+| `model.*` | Separates runtime configuration from Kansas truth objects. | PROPOSED |
+| `scope.*` | Prevents scope drift across place, lane, surface, and release. | PROPOSED |
+| `evidence_refs` | Keeps the receipt downstream of admissible evidence. | CONFIRMED doctrine / PROPOSED field shape |
+| `decision_ref`, `review_ref` | Preserves policy and review traceability. | CONFIRMED doctrine / PROPOSED field shape |
+| `result`, `citations_check` | Keeps finite outcomes and citation-negative behavior visible. | CONFIRMED doctrine / PROPOSED field shape |
+| `attestations`, `audit_ref` | Supports portable provenance and operational explainability. | PROPOSED / CONFIRMED doctrine for audit linkage |
 
 ---
 
 ## Policy gate
 
-Example Rego policy:
+An AI receipt should **fail closed** if any of the following are true.
 
-```rego
-package kfm.ai_receipts
+| Gate | Minimum check | Consequence |
+| --- | --- | --- |
+| Scope gate | Subject is not tied to released or explicitly allowed steward scope | hold / deny |
+| Evidence gate | Evidence or release references do not resolve | abstain / deny |
+| Policy gate | No `DecisionEnvelope`, or decision result conflicts with requested action | deny |
+| Review gate | Materiality requires human review and no `ReviewRecord` exists | hold / deny |
+| Determinism gate | Missing `spec_hash`, unstable digest chain, or non-replayable object identity | deny |
+| Citation gate | Runtime or export action failed citation checks | abstain / deny |
+| Rights/sensitivity gate | Public-safe state is unresolved or obligations are missing | deny / generalize |
+| Correction gate | Receipt points to superseded or withdrawn release scope without visible correction handling | stale-visible / deny |
 
-default allow = false
+### Minimal rule of thumb
 
-allow {
-  input.predicateType == "https://kfm.dev/ai-receipt/v1"
-  input.predicate.prompt_hash != ""
-  input.predicate.output_digest != ""
-  startswith(input.predicate.actor_id, "service://kfm/")
-}
+AI receipts should be **strict enough** that they increase trust, but **narrow enough** that they do not duplicate every other KFM object.
 
-deny[msg] {
-  input.predicate.prompt_hash == ""
-  msg := "missing prompt_hash"
-}
+That usually means:
 
-deny[msg] {
-  input.predicate.output_digest == ""
-  msg := "missing output_digest"
-}
-
-deny[msg] {
-  input.predicate.model_version == "experimental"
-  input.predicate.human_review_flag == false
-  msg := "experimental model requires human review"
-}
-```
-
-Conftest example:
-
-```bash
-conftest test statement.json
-```
-
-### Fail-closed expectations
-
-Promotion or publication should be blocked when:
-
-* attestation is missing,
-* signature verification fails,
-* transparency verification material is missing where required by policy,
-* predicate type is wrong,
-* required fields are empty,
-* prompt hash does not recompute,
-* review requirements are unmet,
-* rights / sovereignty / sensitivity gates remain unresolved.
+- keep support in `EvidenceBundle`,
+- keep policy in `DecisionEnvelope`,
+- keep approval in `ReviewRecord`,
+- keep outward release assembly in `ReleaseManifest` / `ReleaseProofPack`,
+- let the AI receipt record the AI-assisted step that connected those things.
 
 ---
 
-## Usage guidance
+## Quickstart
 
-### Canonicalization
+### Smallest credible starter path
 
-Prefer:
+1. **Emit AI receipts in reviewable evidence bundles first.**  
+   Start in PR- or branch-scoped evidence layouts, not in a silent publish path.
 
-* secret-redacted prompt structures,
-* deterministic key ordering,
-* normalized whitespace rules,
-* normalized numeric / boolean encoding,
-* explicit versioning for canonicalization logic.
+2. **Validate structure before meaning.**  
+   A starter schema plus valid/invalid fixtures should exist before policy claims become merge expectations.
 
-Avoid:
+3. **Gate with policy-as-code.**  
+   Deny by default if receipt structure, review refs, evidence refs, or attestation pointers are missing.
 
-* hashing raw, unredacted prompt text with secrets,
-* mixing multiple incompatible canonicalization rules,
-* mutable prompt records after receipt issuance.
+4. **Pair with existing proof objects.**  
+   Do not publish an AI receipt by itself for release-worthy work; link it to the surrounding proof pack.
 
-### Evidence storage
+5. **Add one positive and one negative example.**  
+   The fastest trust-bearing proof is one passing case and one blocked case.
 
-Store:
+### Illustrative evidence layout
 
-* canonicalized prompt record,
-* prompt hash,
-* receipt predicate,
-* signed attestation or bundle,
-* verification result,
-* policy decision outcome.
+```text
+evidence/
+├── run_manifest.json
+├── ai_receipt.json
+├── checksums.txt
+├── attestation.pointer.json
+└── decision.pointer.json
+```
 
-Do not require downstream clients to trust the AI system by assertion alone; they should be able to verify cryptographic and policy evidence.
+### Illustrative local gate
 
-### Trust membrane
+```bash
+# Illustrative only — exact repo commands and filenames NEED VERIFICATION
+conftest test evidence/ai_receipt.json -p policy/
+```
 
-Receipts should remain inside governed publication and verification flows. Clients should not bypass governed APIs or runtime policy to fetch or trust unsigned AI outputs.
+> [!WARNING]
+> This section is intentionally **illustrative**. The current session did not expose mounted schema files, runnable policy bundles, or active workflow YAML implementing this path.
+
+[Back to top](#ai-receipts)
+
+---
+
+## Usage
+
+### When to emit
+
+Emit an AI receipt when AI materially influences:
+
+- a **derived artifact** under review,
+- a **bounded runtime answer** retained for audit or consequential use,
+- a **proposal or patch** whose governance story must remain portable,
+- a **release proof pack** that later reviewers may need to reconstruct.
+
+### When not to emit
+
+Do **not** emit an AI receipt merely to decorate low-risk activity logs or to create the appearance of governance. If AI did not meaningfully participate, use the ordinary proof objects and skip the extra surface.
+
+### Review principle
+
+An AI receipt is most useful when a reviewer can answer all three of these questions quickly:
+
+1. **What happened?**
+2. **What evidence and release scope allowed it?**
+3. **What stops this from becoming hidden authority?**
 
 ---
 
 ## Tables
 
-### Verification checklist
+### Standards-profile fit
 
-| Check                                       | Required         | Notes       |
-| ------------------------------------------- | ---------------- | ----------- |
-| Signature valid                             | Yes              | Fail closed |
-| Attestation type matches expected predicate | Yes              | Fail closed |
-| Subject digest matches artifact             | Yes              | Fail closed |
-| `prompt_hash` present                       | Yes              | Fail closed |
-| Recomputed prompt hash matches              | Yes              | Fail closed |
-| `output_digest` present and matches         | Yes              | Fail closed |
-| Actor identity allowed by policy            | Yes              | Fail closed |
-| Human review satisfied where required       | Policy-dependent | Fail closed |
-| Rights / sensitivity obligations cleared    | Policy-dependent | Fail closed |
+| Profile family | Why it matters here | Posture |
+| --- | --- | --- |
+| JSON Schema Draft 2020-12 | Natural fit for machine-validatable contract files and fixtures | CONFIRMED standards direction |
+| STAC | Outward asset linkage when the AI-assisted result is spatiotemporal | CONFIRMED standards direction |
+| DCAT 3 | Outward dataset/distribution discovery where releases are published | CONFIRMED standards direction |
+| PROV-O | Lineage vocabulary for activities, entities, and agents | CONFIRMED standards direction |
+| Attestation / signature profile | Portable provenance and verification path | PROPOSED KFM realization detail |
 
-### Negative outcomes are valid
+### Definition-of-done matrix
 
-| Condition                         | Outcome              |
-| --------------------------------- | -------------------- |
-| Missing attestation               | deny                 |
-| Invalid signature                 | deny                 |
-| Missing evidence ref              | abstain / deny       |
-| Review not completed              | deny                 |
-| Post-publication error discovered | withdraw / supersede |
-| Sensitivity conflict detected     | generalize / deny    |
+| Criterion | Done means |
+| --- | --- |
+| Contract | `AIReceipt` schema exists and validates examples |
+| Fixtures | At least one valid and one invalid fixture are committed |
+| Policy | A deny-by-default rule bundle evaluates receipt presence and minimum refs |
+| Proof | One reviewable PR evidence bundle contains `run_manifest` + `ai_receipt` + checksums |
+| Negative path | One blocked example proves hold/deny/abstain behavior |
+| Linkage | Receipt points to decision/review/release objects without duplicating them |
+| Docs | This README and adjacent contract/policy/test docs stay in sync |
+| Surface behavior | Evidence Drawer / Focus / review UI can show receipt presence or absence clearly |
 
 ---
 
 ## Task list
 
-* [ ] Verify live repo path placement
-* [ ] Add contract schema under `contracts/`
-* [ ] Add example predicate fixtures
-* [ ] Add canonicalization helper under `tools/` or `packages/`
-* [ ] Add OPA / Conftest rule bundle
-* [ ] Add CI gate for verify-attestation
-* [ ] Add negative tests for missing / tampered receipts
-* [ ] Confirm release artifact references and subject naming
-* [ ] Confirm owner metadata and policy labels
-* [ ] Confirm whether keyless signing is allowed in this repo
+- [ ] Verify live repo placement for `docs/security/ai-receipts/README.md`
+- [ ] Confirm whether `AIReceipt` should be its own top-level schema or a proof-pack subprofile
+- [ ] Add a starter `AIReceipt` schema and fixture pair
+- [ ] Add policy tests proving deny-by-default behavior on missing refs
+- [ ] Add one positive example linked to release-worthy proof objects
+- [ ] Add one blocked negative example showing missing evidence, review, or attestation
+- [ ] Confirm whether request-time Focus answers persist only through `RuntimeResponseEnvelope` or also emit `AIReceipt`
+- [ ] Confirm signing / attestation expectations by materiality class
+- [ ] Add documentation links from security, contracts, policy, and tests surfaces
+- [ ] Add rollback / correction guidance for AI-derived outputs
 
 ---
 
 ## FAQ
 
-### Why not just log prompts in a database?
+### Why not put everything in `RuntimeResponseEnvelope`?
 
-A database record is useful operationally, but it is not enough for portable, cryptographically verifiable provenance. DSSE-wrapped attestations and Sigstore verification material are designed for independent verification and policy enforcement. ([GitHub][3])
+Because runtime envelopes answer a different question: **what was returned at request time?** An AI receipt is more useful when it records the AI-assisted step itself and links outward to policy, review, and release objects.
 
-### Why use in-toto?
+### Is an AI receipt authoritative truth?
 
-The in-toto attestation framework is built for authenticated metadata intended to be consumed by automated policy engines. It supports custom predicates, which makes it a good fit for an AI receipt schema. ([GitHub][4])
+No. It is a **governance object**. It proves participation, not authority.
 
-### Why canonicalize before hashing?
+### Does every AI-assisted action need human review?
 
-Without deterministic canonicalization, logically identical prompts can hash differently. JCS addresses that for JSON by defining a canonical, hashable representation. ([RFC Editor][2])
+Not necessarily. The corpus strongly supports policy and review linkage, but it still leaves the mandatory review boundary open by lane and materiality.
 
-### Do we need DSSE?
+### Should AI receipts exist for non-release experiments?
 
-The in-toto attestation framework recommends DSSE for envelopes. That is the standard path for portable, interoperable attestations. ([GitHub][3])
+Often yes, when you need replayability, audit linkage, or sandbox evaluation evidence. In that case, keep them clearly separate from public-safe release artifacts.
 
-### Does this make AI output authoritative?
-
-No. In KFM terms, AI outputs remain **derived**. Receipts prove provenance and policy posture; they do not convert derived content into sovereign truth.
+[Back to top](#ai-receipts)
 
 ---
 
 ## Appendix
 
 <details>
-<summary>Minimal shell flow</summary>
+<summary>Open verification items</summary>
 
-```bash
-# 1. Prepare receipt predicate
-cat > receipt.json <<'JSON'
-{
-  "_type": "https://in-toto.io/Statement/v1",
-  "subject": [
-    {
-      "name": "kfm://artifact/output/<sha256>",
-      "digest": { "sha256": "<OUTPUT_SHA256>" }
-    }
-  ],
-  "predicateType": "https://kfm.dev/ai-receipt/v1",
-  "predicate": {
-    "prompt_hash": "<PROMPT_SHA256>",
-    "canonicalized_prompt_ref": "kfm://evidence/prompt/<PROMPT_SHA256>",
-    "model_version": "model-name-or-version",
-    "model_config_hash": "<CONFIG_SHA256>",
-    "input_digest": "sha256:<INPUT_SHA256>",
-    "output_digest": "sha256:<OUTPUT_SHA256>",
-    "actor_id": "service://kfm/ai-runner",
-    "timestamp": "2026-03-28T00:00:00Z",
-    "human_review_flag": false
-  }
-}
-JSON
+### Current-session limits
 
-# 2. Attest
-cosign attest \
-  --predicate receipt.json \
-  --type https://kfm.dev/ai-receipt/v1 \
-  --key cosign.key \
-  <artifact-ref>
+The current session did **not** surface:
 
-# 3. Verify
-cosign verify-attestation \
-  --type https://kfm.dev/ai-receipt/v1 \
-  --key cosign.pub \
-  <artifact-ref> > attestation.json
+- a mounted repo tree under the target path,
+- a confirmed `AIReceipt` schema file,
+- confirmed workflow YAML enforcing receipt gates,
+- a mounted policy bundle proving current receipt checks,
+- a mounted proof pack that already includes AI receipts.
 
-# 4. Decode statement
-jq -r '.[0].payload' attestation.json | base64 -d > statement.json
+### What to verify next
 
-# 5. Gate with policy
-conftest test statement.json
-```
+1. Whether the repository already has a preferred proof-object directory for AI/runtime artifacts.
+2. Whether receipt examples belong under `docs/`, `contracts/`, `fixtures/`, or a shared `evidence/` pattern.
+3. Whether release-significant AI receipts must carry attestation pointers, signed blobs, or both.
+4. Whether steward-only flows require a stricter receipt profile than public-safe exports.
+5. Whether Focus Mode needs a persistent AI receipt or only an auditable runtime envelope.
 
 </details>
 
----
+<details>
+<summary>Why this document is intentionally conservative</summary>
 
-## Evidence notes
+The KFM corpus is strongest when it separates:
 
-This draft relies on official Sigstore, in-toto, and RFC sources for the attestation, DSSE, bundle, and canonicalization claims. Exact KFM repo integration points remain **NEEDS VERIFICATION** in a live tree. ([Sigstore][1])
+- **confirmed doctrine**,
+- **proposed realization**,
+- **unknown mounted implementation**.
 
-```
+This README keeps that distinction visible on purpose. Its job is to make a future `AIReceipt` implementation easier to review, not easier to overclaim.
 
-A good companion file would be `contracts/ai-receipts/receipt.schema.json` plus two tests: one valid fixture and one tampered `prompt_hash` fixture.
-::contentReference[oaicite:14]{index=14}
-```
+</details>
 
-[1]: https://docs.sigstore.dev/cosign/verifying/attestation/?utm_source=chatgpt.com "In-Toto Attestations"
-[2]: https://www.rfc-editor.org/rfc/rfc8785?utm_source=chatgpt.com "RFC 8785: JSON Canonicalization Scheme (JCS)"
-[3]: https://github.com/in-toto/attestation/blob/main/spec/v1/envelope.md?utm_source=chatgpt.com "envelope.md - in-toto/attestation"
-[4]: https://github.com/in-toto/attestation/blob/main/spec/README.md?utm_source=chatgpt.com "attestation/spec/README.md at main · in-toto/attestation"
+[Back to top](#ai-receipts)
