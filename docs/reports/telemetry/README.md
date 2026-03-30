@@ -10,7 +10,7 @@ updated: NEEDS_VERIFICATION__YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION__public_or_restricted
 related: [../README.md, ../../README.md, ../readme-structure-reconciliation.md, ../../../.github/workflows/README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md]
 tags: [kfm, telemetry, reports, observability]
-notes: [Current public main inspection showed docs/reports/telemetry/ as README-only before this revision; doc_id, dates, and policy_label still need direct verification.]
+notes: [Public main confirms docs/reports/telemetry/ as a README-only directory; doc_id, created, updated, and policy_label remain unresolved on direct public evidence and should be verified before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # telemetry
@@ -22,7 +22,8 @@ Governed index for report-facing telemetry rollups, trend summaries, and audit-l
 > **Owners:** `@bartytime4life`  
 > ![status: experimental](https://img.shields.io/badge/status-experimental-informational) ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-8250df) ![scope: telemetry reports](https://img.shields.io/badge/scope-telemetry%20reports-1f883d) ![truth: explicit labels](https://img.shields.io/badge/truth-explicit%20labels-9a6700)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/reports/telemetry/README.md` → upstream: [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) · downstream: telemetry rollups, trust summaries, and release-linked trend notes that live under `docs/reports/telemetry/`
+> **Repo fit:** `docs/reports/telemetry/README.md` → upstream: [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) · downstream: telemetry rollups, trust summaries, and release-linked trend notes that live under `docs/reports/telemetry/`  
+> **Related:** [`../readme-structure-reconciliation.md`](../readme-structure-reconciliation.md) *(structural alignment snapshot only; not proof of implemented telemetry machinery)*  
 >
 > [!IMPORTANT]
 > This directory is for governed, human-readable telemetry reporting. It is **not** the authoritative home for raw logs, traces, metrics, policy decision streams, machine-enforced contracts, or internal operational endpoints.
@@ -44,7 +45,9 @@ Use this directory when telemetry needs to be explained to humans in Git-tracked
 | Path | `docs/reports/telemetry/README.md` |
 | Local role | Directory contract for telemetry-shaped report surfaces |
 | Upstream docs | [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) |
+| Related reconciliation artifact | [`../readme-structure-reconciliation.md`](../readme-structure-reconciliation.md) *(structural alignment only; do not treat scaffolded paths as implemented behavior)* |
 | Adjacent governed boundaries | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md) |
+| Current public sibling report families | `audits/`, `releases/`, `self-validation/`, `story_nodes/`, `telemetry/`, `validation/` |
 | Primary readers | Maintainers, release reviewers, stewardship readers, and operators who need docs-facing summaries rather than raw telemetry streams |
 | Core operating rule | Telemetry in this directory stays **derived**, **release-aware**, **drill-through friendly**, and **safe to expose in documentation** |
 
@@ -77,15 +80,20 @@ Accepted inputs are intentionally narrow.
 
 | Path or signal | Status | Notes |
 |---|---|---|
-| `docs/reports/telemetry/README.md` | **CONFIRMED** | Public `main` inspection for this revision showed the directory with `README.md` only |
-| `../README.md` | **CONFIRMED** | Parent reports README exists and already names telemetry as a report family for governance-safe rollups and trends |
+| `docs/reports/telemetry/README.md` | **CONFIRMED** | Public `main` inspection showed the directory with `README.md` only |
+| `../README.md` | **CONFIRMED** | Parent reports README exists and keeps telemetry positioned as one report family inside a broader reports surface |
+| `../readme-structure-reconciliation.md` | **CONFIRMED** | Related structure report exists, but it explicitly treats scaffolded paths as **not** equivalent to implemented behavior or current parity |
+| Current public sibling report families | **CONFIRMED** | Public `docs/reports/` currently includes `audits/`, `releases/`, `self-validation/`, `story_nodes/`, `telemetry/`, and `validation/` |
 | Additional child files under `docs/reports/telemetry/` | **UNKNOWN** | No extra mounted child inventory was verified here beyond `README.md` |
 | Report-specific workflow automation | **UNKNOWN** | Public `.github/workflows/` inspection showed `README.md` only |
-| Authoritative telemetry schema home | **NEEDS VERIFICATION** | Public `schemas/` inspection did not prove mounted telemetry schema files |
-| Executable telemetry policy/runtime bundle inventory | **NEEDS VERIFICATION** | Public `policy/` and related surfaces are documented, but this revision does not prove mounted executable inventory |
+| Authoritative telemetry schema home | **NEEDS VERIFICATION** | Public `schemas/` now exposes multiple subtrees, but this revision still does not prove a telemetry-specific schema home or mounted telemetry schema files |
+| Executable telemetry policy/runtime bundle inventory | **NEEDS VERIFICATION** | Public `policy/` now exposes bundle-, fixture-, runtime-, and test-shaped subtrees, but this revision does not prove telemetry-specific policy/runtime assets or runnable enforcement for this directory |
 
 > [!WARNING]
 > The current public `main` inspection that grounded this revision showed `docs/reports/telemetry/` as a README-only directory. This file therefore defines the directory contract without claiming that a live telemetry pipeline, mounted child inventory, or release automation already exists.
+
+> [!NOTE]
+> [`../readme-structure-reconciliation.md`](../readme-structure-reconciliation.md) is useful for structural orientation, but it explicitly warns that scaffolded paths are **not** proof of implementation, wiring, merge enforcement, or live parity. Treat direct tree inspection as the stronger signal.
 
 ## Directory tree
 
@@ -100,16 +108,18 @@ No additional child paths are asserted here as current repo fact.
 
 ## Quickstart
 
-Read the local contract first, then step outward to the parent reports surface, workflow boundary, and adjacent contract/policy/test surfaces.
+Read the local contract first, then step outward to the parent reports surface, the related reconciliation report, the workflow boundary, and adjacent contract/policy/test surfaces.
 
 ```bash
 # from repo root
 
 sed -n '1,260p' docs/reports/telemetry/README.md
 sed -n '1,260p' docs/reports/README.md
+sed -n '1,260p' docs/reports/readme-structure-reconciliation.md
 sed -n '1,260p' docs/README.md
 
 find docs/reports/telemetry -maxdepth 3 -type f | sort
+find docs/reports -maxdepth 2 -type d | sort
 
 sed -n '1,220p' .github/workflows/README.md
 sed -n '1,220p' contracts/README.md
