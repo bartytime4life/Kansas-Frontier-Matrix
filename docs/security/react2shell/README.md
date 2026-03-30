@@ -10,21 +10,27 @@ updated: 2026-03-25
 policy_label: <NEEDS_VERIFICATION>
 related: [../README.md, ../threat-model.md, ../vulnerability-management.md, ../react2shell-advisory/README.md, ../../README.md, ../../../README.md, ../../../SECURITY.md, ../../../apps/explorer-web/README.md, ../../../apps/governed-api/README.md]
 tags: [kfm, security, react2shell, react-server-components, nextjs]
-notes: [Target file existed as scaffold-only content on public main at review time; exact package, route, runtime, and deployment impact remain verification-bounded.]
+notes: [Lane contract plus reviewer guide; exact package, route, runtime, and deployment impact remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # React2Shell
 
-KFM security lane for the React Server Components / downstream Next.js “React2Shell” issue family, routed through shell, governed API, advisory, and remediation surfaces.
+KFM security lane for interpreting the React Server Components / downstream framework “React2Shell” issue family as a shell-to-server trust-boundary problem, not only a dependency bulletin.
 
 > [!WARNING]
-> This directory is currently only minimally evidenced in the public repo surface. Treat this README as the **lane contract and reviewer guide**, not as proof that KFM currently runs an affected React Server Components or Next.js App Router stack.
+> This README is intentionally evidence-bounded.
 >
-> Keep exact version matrices, package evidence, exploit chronology, and patch bulletins in the sibling advisory leaf: [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md).
+> The current session exposed KFM doctrine PDFs and the target scaffold text for this file, **not** a mounted repo tree, lockfiles, workflow YAML, or deployed runtime proof. Treat this file as the **lane contract and reviewer guide** for `docs/security/react2shell/README.md`, not as proof that KFM currently runs an affected React Server Components or Next.js stack.
+>
+> Keep exact package evidence, fixed-version matrices, exploit chronology, and patch bulletins in the sibling advisory leaf: [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md).
 
-**Status:** experimental  
-**Owners:** `@bartytime4life`  
-**Repo fit:** `docs/security/react2shell/README.md` → upstream security doctrine and lifecycle docs; adjacent advisory leaf; downstream shell, API, contracts, policy, and tests
+> [!IMPORTANT]
+> **Status:** experimental  
+> **Owners:** `@bartytime4life`  
+> **Repo fit:** `docs/security/react2shell/README.md`  
+> **Upstream / downstream:** [`../README.md`](../README.md) · [`../threat-model.md`](../threat-model.md) · [`../vulnerability-management.md`](../vulnerability-management.md) · [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) · [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) · [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md)  
+> **Truth labels used here:** `CONFIRMED` · `INFERRED` · `PROPOSED` · `UNKNOWN` · `NEEDS VERIFICATION`  
+> **Current evidence boundary:** doctrine PDFs + target scaffold text; exact repo tree, manifests, lockfiles, CI gates, and deployment state remain `UNKNOWN`
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
 ![Path](https://img.shields.io/badge/path-docs%2Fsecurity%2Freact2shell%2FREADME.md-blue)
@@ -39,40 +45,35 @@ KFM security lane for the React Server Components / downstream Next.js “React2
 
 ## Scope
 
-This directory documents the **React2Shell** lane inside KFM security.
+This directory defines the **React2Shell** lane inside KFM security.
 
-In repo terms, “React2Shell” is the working name for the upstream **React Server Components** server-execution issue family and its downstream framework advisories. For KFM, the important question is not only whether a package is vulnerable. It is whether a **public shell route, server-rendered surface, or server-side React boundary** can become a trust-bearing execution path that crosses into server behavior, secrets, unpublished scope, or policy-bypassing behavior.
+In KFM terms, this lane matters when a shell-facing flaw stops being “just frontend” and becomes a **server-side trust event**. The important question is not only whether a package is vulnerable. The important question is whether a public shell route, server-rendered surface, or server-side React boundary can weaken one or more of the following:
 
-This lane therefore covers four things:
+1. **Governed API mediation**  
+   The shell must not become a side door around the trust membrane.
 
-1. **Public-shell boundary meaning**  
-   When a UI issue is actually a server-side trust issue.
+2. **Released-scope narrowing**  
+   Public routes must stay downstream of admissible published scope.
 
-2. **Membrane preservation**  
-   How KFM’s governed API boundary still constrains shell-facing remediation.
+3. **Evidence and citation visibility**  
+   Consequential shell behavior must remain one hop away from inspectable evidence.
 
-3. **Lane vs. advisory split**  
-   Why this README should explain the KFM-facing boundary while the sibling advisory records exact version and package facts.
+4. **Correction and rollback lineage**  
+   Patching, redeploying, narrowing, withdrawing, or superseding a surface must stay visible.
 
-4. **Release and correction consequences**  
-   When patching, rollback, redeploy, visible correction, or advisory publication must move together.
+### What this README owns
 
-### KFM reading rule for this lane
+This file should own the **KFM-facing meaning** of the issue family:
 
-Use this README to keep the **KFM-facing interpretation** of the issue family stable:
-
-- what this issue means for the public shell
-- how it interacts with the governed API membrane
+- why a shell/RSC issue can become a trust-boundary issue
+- how shell remediation must preserve governed API mediation
 - what must change together when trust behavior changes
-- where exact package/advisory detail belongs
+- where to place lane-specific review guidance
 
-Use the sibling leaf at [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) for:
+This file should **not** become the sovereign source for version truth, package matrices, or exploit chronology.
 
-- exact CVE and framework matrices
-- mounted manifest / lockfile evidence
-- package-level remediation notes
-- chronology, disclosure, and patch checkpoints
-- not-applicable findings when mounted evidence disproves impact
+> [!NOTE]
+> Use this README to explain **KFM boundary meaning**. Use the sibling advisory leaf to carry **moving vendor/package truth**.
 
 [Back to top](#react2shell)
 
@@ -80,28 +81,25 @@ Use the sibling leaf at [`../react2shell-advisory/README.md`](../react2shell-adv
 
 ## Repo fit
 
-| Item | Value |
-|---|---|
-| **Path** | `docs/security/react2shell/README.md` |
-| **Primary role** | README-like lane index and reviewer guide |
-| **Upstream docs** | [`../README.md`](../README.md) · [`../threat-model.md`](../threat-model.md) · [`../vulnerability-management.md`](../vulnerability-management.md) · [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) · [`../../../SECURITY.md`](../../../SECURITY.md) |
-| **Adjacent confirmed leaf** | [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) |
-| **Downstream implementation surfaces** | [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) · [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
-| **Shared proof surfaces** | [`../../../contracts/README.md`](../../../contracts/README.md) · [`../../../policy/README.md`](../../../policy/README.md) · [`../../../tests/README.md`](../../../tests/README.md) |
-| **What this file should do** | Explain the KFM-facing trust boundary, routing, remediation coupling, and disclosure/correction expectations for this issue family |
-| **What this file must not do** | Duplicate the exact vendor version matrix, claim mounted impact without proof, or replace the advisory leaf or executable controls |
+| Item | Role in this file | Status |
+|---|---|---|
+| `docs/security/react2shell/README.md` | Lane README and reviewer guide | **Target scaffold / NEEDS VERIFICATION** |
+| [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) | Advisory leaf for exact package, CVE, patch, and chronology detail | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| [`../README.md`](../README.md) | Security-lane parent context | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| [`../threat-model.md`](../threat-model.md) | Security consequence framing | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| [`../vulnerability-management.md`](../vulnerability-management.md) | Lifecycle, correction, and release handling | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) | Expected shell-side implementation surface | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) | Expected API-membrane implementation surface | **Referenced by target scaffold / NEEDS VERIFICATION** |
+| KFM doctrine corpus | Confirms map-first shell, Evidence Drawer, Focus Mode, governed APIs, runtime envelopes, and correction lineage | **CONFIRMED** |
 
 ### Boundary rule
 
-This lane should interpret **how the issue touches KFM**. It should not become the sovereign source for:
+This lane should interpret **how the issue family touches KFM**. It should not replace:
 
-- exact dependency truth
-- deployed-version truth
-- hotfix chronology
-- exploit detail
-- release-specific package inventory
-
-Those belong in the advisory leaf, the mounted repo, release evidence, or steward-only review material.
+- the sibling advisory leaf as the source of exact advisory truth
+- mounted manifest or lockfile evidence as the source of dependency truth
+- shell or API docs as the source of implementation truth
+- policy, contract, or test surfaces as the source of executable enforcement
 
 [Back to top](#react2shell)
 
@@ -112,31 +110,32 @@ Those belong in the advisory leaf, the mounted repo, release evidence, or stewar
 This directory is the right place for:
 
 - official upstream advisory references that define the issue family
-- KFM shell-boundary notes for server-side React / RSC exposure
-- threat-model mappings for trust-membrane or public-route consequences
+- KFM shell-boundary notes for server-side React or downstream framework exposure
+- threat-model mappings for public-route, server-boundary, or membrane consequences
 - remediation coupling guidance across docs, policy, contracts, tests, runbooks, and release evidence
-- correction / rollback / disclosure expectations when released surfaces may have been affected
-- reviewer-facing rules for how to document “affected”, “not affected”, “contained”, “corrected”, or “NEEDS VERIFICATION”
+- correction / rollback / disclosure expectations when released shell surfaces may have been affected
+- reviewer-facing guidance for “affected”, “not affected”, “contained”, “corrected”, and `NEEDS VERIFICATION`
 
 ### Input classes
 
-| Input class | Examples | Why it matters here |
+| Input class | Examples | Why it belongs here |
 |---|---|---|
-| **Upstream advisory evidence** | React and framework security advisories, vendor patch guidance | Defines the external issue family and official remediation posture |
-| **Repo/package evidence** | `package.json`, lockfiles, route inventory, SSR/RSC usage notes | Determines whether KFM is actually in scope |
-| **Runtime/release evidence** | deployment notes, image inventory, release manifests, correction notes | Determines whether correction or advisory publication is required |
-| **KFM trust-boundary evidence** | shell docs, governed API docs, threat-model notes, denial/rollback rules | Keeps the issue framed as trust-boundary work, not only dependency work |
+| **Upstream advisory evidence** | React / framework security advisories, vendor patch guidance | Defines the external issue family and official remediation posture |
+| **Repo/package evidence** | `package.json`, lockfiles, route inventory, SSR/RSC notes | Determines whether KFM is actually in scope |
+| **Runtime/release evidence** | deploy notes, image inventories, release manifests, correction notes | Determines whether visible correction or advisory publication is required |
+| **KFM trust-boundary evidence** | shell doctrine, governed API doctrine, threat-model notes, rollback rules | Keeps the issue framed as trust work, not only dependency work |
 
 ### Minimum trust questions
 
-Before this lane is treated as complete, reviewers should be able to answer:
+Before this lane is considered stable, reviewers should be able to answer:
 
-- Does the mounted repo actually use a server-side React Server Components path?
+- Does the mounted repo actually use a server-side React / RSC / downstream affected path?
 - If yes, which public or steward-facing surface is in scope?
-- Does any affected route stay downstream of the governed API membrane?
-- Are exact package and version claims stored in the advisory leaf rather than drifting through multiple docs?
-- If public exposure was possible, is visible correction or advisory publication required?
-- If a downstream framework requires it, were redeploy and secret review/rotation considered before closure?
+- Does that path stay downstream of governed API mediation?
+- Where is the exact package/advisory truth recorded?
+- If public exposure was possible, what correction, narrowing, withdrawal, or advisory lineage now exists?
+
+[Back to top](#react2shell)
 
 ---
 
@@ -146,22 +145,20 @@ This lane is **not** the right place for the following:
 
 | Keep out of this file | Put it here instead | Why |
 |---|---|---|
-| **Exact fixed-version matrices** | [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) | They are issue-specific, vendor-specific, and likely to evolve |
-| **Mounted manifest or lockfile truth copied into prose** | The actual repo artifacts and the advisory leaf | Avoid stale duplication |
-| **Live exploit payloads, sensitive traces, or secret-bearing incident detail** | Steward-only evidence/review lanes | This doc must not become a leak surface |
-| **Executable policy, gate code, or schema bodies** | [`../../../policy/README.md`](../../../policy/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../tests/README.md`](../../../tests/README.md) | Reviewer guidance belongs here; enforcement does not |
-| **Broad React or Next.js architecture guidance unrelated to this issue family** | app docs or broader security docs | Keep the lane narrow |
-| **Unverified repo, runtime, or deployment claims** | Mark as `UNKNOWN` / `NEEDS VERIFICATION` until proven | KFM requires visible uncertainty |
+| Exact fixed-version matrices | [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) | They are fast-moving vendor facts |
+| Lockfile or manifest truth copied into prose | Actual repo artifacts + advisory leaf | Avoid stale duplication |
+| Live exploit payloads, sensitive traces, or secret-bearing incident detail | Steward-only review lanes | This README must not become a leak surface |
+| Executable policy, gate code, or schema bodies | Owning policy / contract / test surfaces | Guidance belongs here; enforcement does not |
+| Broad React / Next.js architecture guidance unrelated to this issue family | App docs or broader security docs | Keep the lane narrow |
+| Unverified repo, runtime, or deployment claims | Leave as `UNKNOWN` / `NEEDS VERIFICATION` | KFM requires visible uncertainty |
 
 ### Placement logic
 
-This README should orient the lane. It should **not** become a hand-maintained version bulletin.
+If mounted evidence proves:
 
-If the mounted repo proves:
-
-- **no affected server-side RSC/App Router usage** → record that in the advisory leaf as a bounded “not applicable” result
-- **affected usage** → keep package/remediation facts in the advisory leaf, and keep KFM boundary consequences here
-- **public trust-surface impact** → update this lane, the advisory leaf, and the owning shell/API/policy/test surfaces together
+- **no affected server-side path** → record bounded non-applicability in the advisory leaf
+- **an affected path exists** → keep package truth in the advisory leaf and KFM boundary consequences here
+- **a released shell surface was exposed** → update this lane, the advisory leaf, and the owning shell/API/policy/test surfaces together
 
 [Back to top](#react2shell)
 
@@ -169,7 +166,7 @@ If the mounted repo proves:
 
 ## Directory tree
 
-### CONFIRMED current footprint
+### Scaffold-level expected footprint
 
 ```text
 docs/security/
@@ -181,7 +178,9 @@ docs/security/
 
 ### Interpretation rule
 
-At review time, both README surfaces existed but were placeholder-level. Treat this file as the **lane contract** and the sibling leaf as the **advisory destination**; verify both again in the mounted checkout before merge.
+This is an **expected lane/advisory split** derived from the target scaffold, not a current-session repo-tree confirmation.
+
+Re-check the mounted checkout before merge. If the real directory shape differs, preserve the lane/advisory split concept and revise the path-level details rather than forcing the repo to mirror placeholder prose.
 
 [Back to top](#react2shell)
 
@@ -191,13 +190,13 @@ At review time, both README surfaces existed but were placeholder-level. Treat t
 
 This section is for maintainers reviewing or building this lane in a mounted checkout.
 
-### 1) Re-check the currently mounted lane surfaces
+### 1) Re-check the lane surfaces
 
 ```bash
-find docs/security/react2shell docs/security/react2shell-advisory -maxdepth 2 -type f | sort
+find docs/security/react2shell docs/security/react2shell-advisory -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
-### 2) Verify whether the repo actually uses an affected server-side React / RSC path
+### 2) Verify whether the repo actually uses a relevant server-side React / RSC path
 
 ```bash
 find . -maxdepth 5 \( \
@@ -209,36 +208,33 @@ find . -maxdepth 5 \( \
 ```
 
 ```bash
-grep -RIn "react-server-dom\|\"use server\"\|next" apps packages . 2>/dev/null
+grep -RInE '"use server"|react-server-dom|next|src/app|/app/' . 2>/dev/null | head -200
 ```
 
-### 3) Separate boundary guidance from exact advisory fact
+### 3) Separate boundary guidance from exact advisory truth
 
 - keep **package names, versions, fix levels, and chronology** in `../react2shell-advisory/README.md`
-- keep **KFM shell/API/correction implications** here
+- keep **KFM shell / API / correction implications** here
 - do not let two files compete to be the “real” source for version truth
 
-### 4) Fail closed when public trust is at risk
+### 4) Fail closed when public trust may be at risk
 
 If mounted evidence suggests a plausible public or steward-facing server-side exposure:
 
 - narrow or withdraw unsafe surface behavior first
 - patch and redeploy before broadening exposure again
-- record whether secret review or rotation is required
-- preserve visible advisory/correction lineage rather than silently replacing state
+- review whether secret review or rotation is required as part of closure
+- preserve visible advisory / correction lineage instead of silently replacing state
 
-> [!IMPORTANT]
-> If mounted evidence proves affected downstream framework usage, patching alone may not be enough for closure. Treat redeploy, secret review, and visible lineage as part of the response, not optional cleanup.
+### 5) Update coupled proof surfaces together
 
-### 5) Update proof surfaces together
-
-When behavior changes materially, the preferred KFM move is one governed change set across:
+When trust behavior changes materially, the preferred KFM move is one governed change set across:
 
 - this lane README
 - the sibling advisory leaf
 - affected shell or API docs
 - policy / contract / test surfaces
-- runbooks or release evidence if public trust behavior changed
+- runbooks, release evidence, and correction notes where needed
 
 [Back to top](#react2shell)
 
@@ -250,31 +246,32 @@ When behavior changes materially, the preferred KFM move is one governed change 
 
 Use this README when a change does any of the following:
 
-- introduces or confirms a React Server Components / server-rendered trust boundary
+- introduces or confirms a server-side React / RSC trust boundary
 - changes how the public shell reaches server behavior
 - changes how shell routes consume governed API payloads after remediation
-- requires a KFM explanation for why a package issue is also a trust-boundary issue
-- requires visible correction or advisory handling for a public-facing shell surface
+- needs a KFM explanation for why a package issue is also a trust-boundary issue
+- requires visible correction, narrowing, withdrawal, or advisory handling for a shell surface
 
 ### When to route work elsewhere
 
 | When you need to… | Start here | Then go deeper |
 |---|---|---|
-| Explain why React2Shell matters to KFM’s shell/API boundary | This README | [`../threat-model.md`](../threat-model.md), [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md), [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
-| Record exact CVE, framework, package, or fixed-version facts | This README for placement logic | [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) |
+| Explain why React2Shell matters to KFM shell/API trust | This README | [`../threat-model.md`](../threat-model.md), [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md), [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
+| Record exact advisory, package, or fixed-version facts | This README for placement logic | [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md) |
 | Decide whether rollback, visible correction, or disclosure is required | This README | [`../vulnerability-management.md`](../vulnerability-management.md) |
-| Update denial, correction, or proof behavior | This README for coupling expectations | [`../../../policy/README.md`](../../../policy/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../tests/README.md`](../../../tests/README.md) |
-| Change the actual public shell implementation | This README for trust consequences | [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) |
-| Change API-side boundary enforcement or payload shaping | This README for trust consequences | [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
+| Change the actual shell implementation | This README for trust consequences | [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) |
+| Change API boundary enforcement or payload shaping | This README for trust consequences | [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
 
-### How to use it in review
+### Review flow
 
-1. Start with **mounted package and route evidence**, not with assumptions.
-2. Decide whether any **server-side public route** is actually in scope.
+1. Start with mounted package and route evidence, not assumptions.
+2. Decide whether any public or steward-facing server-side path is in scope.
 3. Separate **package fact** from **trust consequence**.
-4. Keep exact remediation facts in the **advisory leaf**.
-5. Keep shell/API/correction implications in this **lane README**.
+4. Keep exact remediation truth in the advisory leaf.
+5. Keep shell/API/correction meaning in this lane README.
 6. If not affected, say so explicitly in the advisory leaf instead of leaving placeholder language behind.
+
+[Back to top](#react2shell)
 
 ---
 
@@ -282,30 +279,36 @@ Use this README when a change does any of the following:
 
 ```mermaid
 flowchart LR
-    User[Public request] --> Shell[Explorer shell route]
-    Shell -->|client-only rendering| Safe[Normal UI path]
-    Shell -->|server-side React / RSC path| Boundary[React2Shell risk boundary]
+    User[Public request] --> Shell[Explorer shell / story / focus surface]
+
+    Shell -->|client-only rendering| UIOnly[UI-only issue path]
+    Shell -->|server-side React / RSC path| Boundary[React2Shell trust boundary]
 
     Boundary --> API[Governed API]
-    API --> Published[Released / policy-safe scope]
+    API --> Resolver[Evidence resolution]
+    Resolver --> Published[Released admissible scope]
 
-    Boundary -. must not bypass .-> Canonical[RAW / WORK / unpublished / canonical stores]
-    Boundary -. must not bypass .-> Runtime[Direct model runtime / secret material]
+    Boundary -. must not bypass .-> Canonical[RAW / WORK / canonical stores]
+    Boundary -. must not bypass .-> Runtime[Unscoped model runtime / secrets]
 
-    Lane[react2shell lane README] --> Boundary
-    Advisory[react2shell-advisory leaf] --> Boundary
+    Lane[react2shell/README.md] --> Boundary
+    Advisory[react2shell-advisory/README.md] --> Boundary
     Threat[threat-model.md] --> Boundary
     Lifecycle[vulnerability-management.md] --> Advisory
+    Correction[CorrectionNotice / rollback lineage] --> Shell
 ```
 
-### Reading the flow
+### Read the flow
 
-The issue becomes KFM-relevant when a shell-facing route is also a **server-side execution boundary**. At that point, the question is not only package hygiene. It is whether the route still preserves:
+The issue becomes KFM-relevant when a shell-facing route is also a **server-side execution boundary**.
+
+At that point the problem is no longer only dependency hygiene. It becomes a question of whether the route still preserves:
 
 - the trust membrane
 - governed API mediation
 - released-scope narrowing
-- visible correction/advisory lineage
+- evidence visibility
+- correction and rollback lineage
 
 [Back to top](#react2shell)
 
@@ -317,31 +320,29 @@ The issue becomes KFM-relevant when a shell-facing route is also a **server-side
 
 | Observation | Status | Consequence for this README |
 |---|---|---|
-| `docs/security/react2shell/README.md` exists | **CONFIRMED** | Expand it as a real lane README rather than leaving scaffold text |
-| `docs/security/react2shell-advisory/README.md` exists | **CONFIRMED** | Keep exact advisory/package truth in the sibling leaf |
-| Security subtree index routes to both paths | **CONFIRMED** | Preserve the split between lane guidance and advisory detail |
-| `apps/explorer-web/README.md` documents a persistent map-first shell | **CONFIRMED** | Public-shell consequences are a real doc-level concern |
-| `apps/governed-api/README.md` documents the trust membrane and no direct client bypass | **CONFIRMED** | Shell-facing remediation must preserve API mediation |
-| Actual use of affected RSC / App Router / framework packages in mounted repo | **UNKNOWN / NEEDS VERIFICATION** | Do not claim KFM is affected without manifest/lockfile/runtime proof |
-| Exact deployed versions, CI enforcement, release proof, and correction inventory | **UNKNOWN / NEEDS VERIFICATION** | Keep all runtime and deployment claims bounded |
+| KFM doctrine confirms a map-first shell with trust-visible surfaces such as Map Explorer, Evidence Drawer, Story, Focus Mode, Review, and Export | **CONFIRMED** | Shell-facing security consequences are first-class KFM documentation work |
+| KFM doctrine confirms governed route families for evidence resolution and governed assistance behind the API membrane | **CONFIRMED** | Shell-facing remediation must preserve API mediation and evidence resolution |
+| KFM doctrine confirms first-class contract families including `EvidenceBundle`, `RuntimeResponseEnvelope`, and `CorrectionNotice` | **CONFIRMED** | Patch / redeploy / withdrawal / correction work must preserve inspectable runtime and release lineage |
+| The target scaffold references a sibling advisory leaf and adjacent security/shell/API docs | **INFERRED / NEEDS VERIFICATION** | Preserve the lane/advisory split, but re-check mounted paths before merge |
+| Exact repo tree, lockfiles, framework packages, server-side routes, CI gates, and deployment exposure | **UNKNOWN / NEEDS VERIFICATION** | Do not claim KFM is affected without mounted evidence |
 
 ### KFM-aligned response matrix
 
 | Finding posture | Meaning in KFM | Minimum response |
 |---|---|---|
-| Mounted evidence shows **no affected server-side RSC/App Router path** | Likely not applicable | Record bounded non-applicability in the advisory leaf; keep this lane README focused on boundary rules |
+| Mounted evidence shows **no affected server-side path** | Likely non-applicable to KFM runtime | Record bounded non-applicability in the advisory leaf; keep this README focused on boundary rules |
 | Package or route evidence is **unclear**, but a public server-side path is plausible | Partial trust | Contain or narrow exposure while review continues; do not overclaim safety |
-| Public or steward-facing affected path is **confirmed** | Trust-boundary issue, not only dependency issue | Patch, redeploy, review secrets, update advisory/correction lineage, and validate negative paths |
-| Fix is applied and validated | Safe re-entry may be possible | Preserve lineage through advisory/correction notes; do not silently replace prior trust state |
+| Public or steward-facing affected path is **confirmed** | Trust-boundary incident, not only dependency issue | Patch, redeploy, review secrets if warranted, update advisory/correction lineage, and validate negative paths |
+| Fix is applied and validated | Safe re-entry may be possible | Preserve lineage through advisory/correction notes; rebuild derived outputs if release scope changed |
 
-### Lane ownership matrix
+### Document ownership split
 
 | Surface | Owns what | Must not own |
 |---|---|---|
-| `react2shell/README.md` | KFM-facing boundary meaning, routing, remediation coupling, disclosure/correction expectations | Exact version matrix, incident archive, hotfix chronology |
-| `react2shell-advisory/README.md` | Exact advisory facts, affected-package truth, version matrix, not-applicable findings, patch checkpoints | Broader KFM shell or API doctrine |
+| `react2shell/README.md` | KFM-facing boundary meaning, routing, remediation coupling, disclosure/correction expectations | Exact version matrices, exploit chronology, hotfix bulletin detail |
+| `react2shell-advisory/README.md` | Exact advisory facts, package truth, fixed-version checkpoints, bounded “not applicable” results | Broader KFM shell or API doctrine |
 | `apps/explorer-web/README.md` | Public shell implementation and UI/runtime composition | Advisory truth or policy authority |
-| `apps/governed-api/README.md` | API membrane, payload shaping, finite outcomes, evidence mediation | UI-local rendering or package bulletin content |
+| `apps/governed-api/README.md` | API membrane, payload shaping, evidence mediation, finite outcomes | UI-local rendering detail or vulnerability bulletin content |
 
 [Back to top](#react2shell)
 
@@ -351,25 +352,25 @@ The issue becomes KFM-relevant when a shell-facing route is also a **server-side
 
 ### Minimum completion conditions for this lane
 
-- [ ] Confirm whether the mounted repo actually uses an affected server-side React / RSC / App Router path.
-- [ ] Keep exact CVE, package, and fixed-version facts in [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md).
-- [ ] Verify which public or steward-facing shell routes are in scope before claiming impact.
-- [ ] Verify whether redeploy, secret review, or secret rotation is part of closure.
-- [ ] Update shell/API/policy/contract/test surfaces together if trust behavior changes.
-- [ ] Preserve visible advisory, correction, rollback, or withdrawal lineage where released surfaces were affected.
-- [ ] Keep any unresolved runtime or deployment claims marked as `UNKNOWN` / `NEEDS VERIFICATION`.
+- [ ] Re-check that the expected lane/advisory path split exists in the mounted checkout.
+- [ ] Confirm whether the repo actually uses a relevant server-side React / RSC / framework path.
+- [ ] Keep exact package and advisory truth in [`../react2shell-advisory/README.md`](../react2shell-advisory/README.md).
+- [ ] Verify which public or steward-facing routes are in scope before claiming impact.
+- [ ] Decide whether patch, redeploy, secret review, rollback, or visible correction must move together.
+- [ ] Update shell/API/policy/test surfaces together if trust behavior changes.
+- [ ] Keep unresolved runtime or deployment claims marked as `UNKNOWN` / `NEEDS VERIFICATION`.
 
 ### Recommended definition of done
 
 A reviewer should be able to answer all of these without guessing:
 
-- What exact upstream issue family does this lane refer to?
+- What exact issue family does this lane refer to?
 - Does the mounted repo actually use an affected server-side path?
 - Which document owns the version matrix?
 - Which document owns the KFM trust-boundary interpretation?
-- If the surface was exposed, what visible correction or advisory lineage now exists?
+- If a released surface was affected, what visible correction or advisory lineage now exists?
 
-If any answer is “we assume,” this lane is not done.
+If any answer is “we assume”, this lane is not done.
 
 [Back to top](#react2shell)
 
@@ -379,23 +380,27 @@ If any answer is “we assume,” this lane is not done.
 
 ### Is every React application in scope for this lane?
 
-No. This lane is about the **server-side React Server Components issue family** and downstream server-rendered framework exposure, not about React usage in general.
+No. This lane is about the **server-side React / RSC issue family and downstream shell exposure**, not React usage in general.
 
-### Why does this README avoid carrying the exact fixed-version matrix?
+### Why does this README avoid the exact fixed-version matrix?
 
-Because exact package and framework fix levels are issue-specific and can evolve. This file should stay stable as the **KFM-facing lane contract** while the sibling advisory holds moving vendor/package detail.
-
-### Does a pure client-only map shell belong here?
-
-Usually no. If mounted evidence proves there is no affected server-side RSC or App Router path, record that in the advisory leaf and keep this README focused on the boundary rule.
+Because exact package and framework fix levels are fast-moving vendor facts. This file should stay stable as the **KFM-facing lane contract** while the sibling advisory leaf carries the moving matrix.
 
 ### Can this README say KFM is “not affected” on its own?
 
 No. “Not affected” should come from mounted manifest, lockfile, route, or runtime evidence, then be recorded in the advisory leaf.
 
+### What if the shell is client-only?
+
+If mounted evidence proves there is no affected server-side path, record that bounded result in the advisory leaf and keep this README focused on the boundary rule.
+
 ### Why is this treated as a trust-boundary issue and not only a dependency issue?
 
-Because once a public shell route becomes a server-side execution boundary, KFM must reason about policy mediation, evidence scope, secrets, correction visibility, and membrane preservation, not only package versions.
+Because once a public shell route becomes a server-side execution boundary, KFM has to reason about policy mediation, evidence scope, secrets, correction visibility, and membrane preservation, not only package versions.
+
+### Does this README prove KFM runs Next.js or an affected RSC stack today?
+
+No. The current session did not directly verify repo tree, dependency inventory, or deployed runtime state.
 
 [Back to top](#react2shell)
 
@@ -404,30 +409,41 @@ Because once a public shell route becomes a server-side execution boundary, KFM 
 ## Appendix
 
 <details>
-<summary>Truth labels and minimum evidence to retire UNKNOWNs</summary>
+<summary>Truth labels, verification burden, and handoff rules</summary>
 
 ### Truth labels used in this README
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly verified in the current public repo surface or strongly established by adjacent repo-native docs |
-| **INFERRED** | Conservative completion that follows KFM doctrine and repo structure but is not directly proven as mounted implementation |
-| **PROPOSED** | Repo-ready direction for this lane |
+| **CONFIRMED** | Directly supported by the current-session KFM doctrine corpus or by the target scaffold where its role is explicit |
+| **INFERRED** | Conservative structural completion that follows KFM doctrine and the target scaffold, but is not mounted implementation proof |
+| **PROPOSED** | Recommended lane behavior or reviewer workflow |
 | **UNKNOWN** | Not verified strongly enough to claim as current repo or runtime fact |
-| **NEEDS VERIFICATION** | Should be checked in the mounted checkout, manifests, deployment evidence, or runtime proof before merge |
+| **NEEDS VERIFICATION** | Should be checked in the mounted checkout, manifests, CI, or runtime proof before merge |
 
-### Minimum evidence to move this lane from placeholder to stable
+### Minimum evidence to retire current UNKNOWNs
 
-- mounted `package.json` / lockfile / image inventory proving or disproving affected packages
-- route inventory showing whether a server-side RSC or App Router path exists
-- deployment or release evidence showing patched version, redeploy state, and correction/advisory status
-- test or proof artifacts showing the boundary is contained and visible negative paths remain honest
+- mounted repo tree showing the actual security-doc layout
+- manifest / lockfile proof for relevant framework packages
+- route inventory showing whether a server-side shell path exists
+- release or deployment evidence showing patched state and redeploy status
+- proof of any required correction, narrowing, withdrawal, or rollback lineage
 - verified metadata values for `doc_id`, `created`, and `policy_label`
+
+### Handoff rule between this lane and the advisory leaf
+
+When official advisory facts move:
+
+1. update the **advisory leaf** first
+2. update this lane README only if the **KFM interpretation** changes
+3. avoid copying version truth into both places
+4. keep public-facing correction language aligned with actual release state
 
 ### Reading rule
 
-A clean public shell does not prove a safe server boundary.  
-In KFM, trust is preserved when package fact, route fact, policy fact, test fact, and visible correction/advisory lineage remain consistent.
+A clean-looking public shell does not prove a safe server boundary.
+
+In KFM, trust is preserved only when package fact, route fact, policy fact, runtime fact, and correction lineage remain consistent.
 
 </details>
 
