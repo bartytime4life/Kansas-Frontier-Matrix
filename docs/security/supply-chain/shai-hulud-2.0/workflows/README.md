@@ -4,314 +4,371 @@ title: Shai-Hulud 2.0 Workflows
 type: standard
 version: v1
 status: draft
-owners: <NEEDS VERIFICATION>
+owners: @bartytime4life
 created: <NEEDS VERIFICATION>
 updated: <NEEDS VERIFICATION>
 policy_label: <NEEDS VERIFICATION>
-related: [../../../../../.github/workflows/README.md, ../../../../../contracts/README.md, ../../../../../schemas/README.md, ../../../../../policy/README.md, ../../../../../tests/README.md]
-tags: [kfm, security, supply-chain, workflows]
-notes: [Path-level directory contents, owners, and live workflow filenames were not directly verified in the current session.]
+related: [../README.md, ../protections/README.md, ../indicators/README.md, ../../../../../.github/workflows/README.md, ../../../../../.github/CODEOWNERS, ../../../../../.github/PULL_REQUEST_TEMPLATE.md, ../../../../../contracts/README.md, ../../../../../schemas/README.md, ../../../../../policy/README.md, ../../../../../tests/README.md]
+tags: [kfm, security, supply-chain, workflows, shai-hulud-2.0]
+notes: [Owner is grounded from current public CODEOWNERS fallback for /docs/; current public inventory for this leaf is README-only; doc_id, created, updated, and policy_label still need repo-local verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Shai-Hulud 2.0 Workflows
 
-Governed supply-chain workflow guidance for artifact verification, attestation, and fail-closed merge behavior in KFM.
-
-| Field | Value |
-|---|---|
-| Status | **Experimental** |
-| Owners | **NEEDS VERIFICATION** |
-| Badges | ![status: experimental](https://img.shields.io/badge/status-experimental-orange) ![evidence: pdf-bounded](https://img.shields.io/badge/evidence-pdf--bounded-blue) ![trust: fail-closed](https://img.shields.io/badge/trust-fail--closed-darkgreen) ![repo state: needs verification](https://img.shields.io/badge/repo%20state-needs%20verification-lightgrey) |
-| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) |
-
-> [!WARNING]
-> **Current-session evidence limit:** this README was drafted from KFM doctrine and repo-grounded audit material, not from a mounted checkout of this exact directory. Exact workflow filenames, owners, and intra-directory structure that are not already visible elsewhere in the repo are marked **NEEDS VERIFICATION**.
+Governed workflow-choreography surface for the `shai-hulud-2.0` supply-chain lane.
 
 > [!IMPORTANT]
-> **Notation used in this file:** **CONFIRMED** = supported by current-session project evidence; **INFERRED** = conservative structural completion; **PROPOSED** = recommended design direction; **NEEDS VERIFICATION** = path-, owner-, or implementation-specific detail not directly confirmed.
+> **Status:** experimental · **Doc maturity:** draft  
+> **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` fallback for `/docs/`; verify if the checked-out branch narrows ownership)*  
+> **Path:** `docs/security/supply-chain/shai-hulud-2.0/workflows/README.md`  
+> ![status](https://img.shields.io/badge/status-experimental-orange)
+> ![doc](https://img.shields.io/badge/doc-draft-lightgrey)
+> ![lane](https://img.shields.io/badge/lane-shai--hulud%202.0-6f42c1)
+> ![surface](https://img.shields.io/badge/surface-workflows-0a7ea4)
+> ![current public inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)
+> ![executable yaml home](https://img.shields.io/badge/executable_YAML-.github%2Fworkflows-0969da)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!WARNING]
+> Current public `main` confirms this leaf directory exists and currently contains `README.md` only. This file documents workflow meaning, handoff boundaries, and review expectations; it does **not** by itself prove checked-in GitHub Actions YAML, emitted SBOMs, live attestations, or merge-blocking enforcement.
 
 ## Scope
 
-This directory documents the workflow layer for the `docs/security/supply-chain/shai-hulud-2.0/workflows/` surface.
+`workflows/` is the leaf README for **gate sequence**, **proof linkage**, **promotion handoff**, **rollback / correction choreography**, and **where workflow claims must hand off to executable repo surfaces**.
 
-In KFM terms, this is not “just CI.” It is the documentation surface for **fail-closed**, **machine-checkable**, **artifact-linked** workflow behavior: build evidence, attach or verify supply-chain proofs, evaluate policy, and block merges or promotion when trust requirements are not met.
+Use this file to answer three questions quickly:
 
-**CONFIRMED doctrinal role**
+1. What workflow-bearing meaning belongs in this leaf README instead of in sibling `protections/` or `indicators/` docs?
+2. Which adjacent executable surfaces must be re-checked before workflow prose changes?
+3. Which statements are safe to present as **CONFIRMED** on the current public tree, and which must stay **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION**?
 
-- Workflows should reinforce the trust membrane rather than bypass it.
-- Negative outcomes are first-class: deny, abstain, hold, quarantine, stale-visible, and correction-linked paths are valid system behavior.
-- Contract-first progress outranks shell polish or implementation theater.
-- Generated supply-chain evidence should remain linked forward into release, audit, and correction surfaces instead of becoming an isolated CI side channel.
+In the local Shai-Hulud split:
+
+- `protections/` explains **guardrails and intended controls**
+- `workflows/` explains **how those controls are exercised, checked, promoted, rolled back, or corrected**
+- `indicators/` explains **what measurable assurance looks like and how to interpret it**
+
+### Truth posture used in this README
+
+| Label | Meaning here |
+|---|---|
+| **CONFIRMED** | Visible in the current public repo tree or explicitly established by adjacent repo docs |
+| **INFERRED** | Strongly suggested by the lane structure and nearby repo context, but not directly proven as checked-in executable behavior |
+| **PROPOSED** | Recommended documentation shape, handoff, or growth path |
+| **NEEDS VERIFICATION** | Load-bearing detail that should be checked against the real checked-out branch before merge |
 
 ## Repo fit
 
-**Path:** `docs/security/supply-chain/shai-hulud-2.0/workflows/README.md`
+This README sits **below** the lane root and **beside** its sibling child docs. It should stay specific to workflow choreography while refusing to become a second home for YAML, policy logic, schemas, fixtures, or release artifacts.
 
-| Direction | Surface | Role |
+| Relation | Link | Why it matters here |
 |---|---|---|
-| Upstream | [`../../../../../contracts/README.md`](../../../../../contracts/README.md) | Contract and schema intent surface. |
-| Upstream | [`../../../../../schemas/README.md`](../../../../../schemas/README.md) | Schema/contract documentation surface; avoid duplicate schema definitions here. |
-| Upstream | [`../../../../../policy/README.md`](../../../../../policy/README.md) | Deny-by-default policy intent and decision-language context. |
-| Upstream | [`../../../../../tests/README.md`](../../../../../tests/README.md) | Fixture and negative-path test expectations. |
-| Upstream | [`../../../../../tools/README.md`](../../../../../tools/README.md) | Validator/tooling surface. |
-| Upstream | [`../../../../../scripts/README.md`](../../../../../scripts/README.md) | Script entrypoints and supporting automation notes. |
-| Adjacent / consuming | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) | GitHub Actions workflow surface and status notes. |
-| Adjacent / consuming | [`../../../../../.github/PULL_REQUEST_TEMPLATE.md`](../../../../../.github/PULL_REQUEST_TEMPLATE.md) | Review-facing trust checklist and proof expectations. |
-| Downstream | `<workflow-yaml entrypoints in this directory>` | **NEEDS VERIFICATION** — live filenames were not directly inspected. |
-| Downstream | `<release proof-pack / attestation / audit surfaces>` | **NEEDS VERIFICATION** — final storage and handoff points were not directly inspected. |
-
-### Repo-fit note
-
-This README is intended to sit between the **canonical contract/policy surfaces** and the **operational workflow surface**. It should explain how workflow stages consume shared contracts and vocabularies, and how they emit reviewable proof instead of best-effort success claims.
+| Upstream | [`../README.md`](../README.md) | Defines the Shai-Hulud 2.0 lane and the protections / workflows / indicators split. |
+| Upstream | [`../../README.md`](../../README.md) | Broader supply-chain framing belongs there. |
+| Upstream | [`../../../README.md`](../../../README.md) | Security subtree doctrine and documentation posture. |
+| Upstream | [`../../../../README.md`](../../../../README.md) | `docs/` root role, exclusions, and documentation expectations. |
+| Sibling | [`../protections/README.md`](../protections/README.md) | Put guardrail intent and control shape there, not here. |
+| Sibling | [`../indicators/README.md`](../indicators/README.md) | Put measurable assurance and interpretation there, not here. |
+| Adjacent executable surface | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) | Current checked-in GitHub Actions inventory and workflow-lane caveats live there. |
+| Adjacent review surface | [`../../../../../.github/PULL_REQUEST_TEMPLATE.md`](../../../../../.github/PULL_REQUEST_TEMPLATE.md) | PR guardrails define the review burden for trust-bearing changes. |
+| Adjacent ownership surface | [`../../../../../.github/CODEOWNERS`](../../../../../.github/CODEOWNERS) | Owner fallback and review routing come from here. |
+| Adjacent typed-object surface | [`../../../../../contracts/README.md`](../../../../../contracts/README.md) | Trust objects, release/correction objects, and runtime envelopes belong there. |
+| Adjacent schema boundary | [`../../../../../schemas/README.md`](../../../../../schemas/README.md) | Documentary schema boundary and schema-home caution live there. |
+| Adjacent policy surface | [`../../../../../policy/README.md`](../../../../../policy/README.md) | Deny-by-default rules, reasons, obligations, and policy fixtures belong there. |
+| Adjacent verification surface | [`../../../../../tests/README.md`](../../../../../tests/README.md) | Fixtures, negative-path checks, correction drills, and verification families belong there. |
 
 ## Inputs
 
 ### Accepted inputs
 
-This directory should accept or reference workflow-facing material such as:
+Content that belongs here includes:
 
-- **CONFIRMED / INFERRED:** artifact digests, SBOM references, provenance or attestation references, policy decision outputs, proof-pack references, and audit linkage identifiers.
-- **PROPOSED:** validator entrypoints, workflow-stage notes, reusable workflow conventions, merge-gate expectations, and failure-mode documentation.
-- **NEEDS VERIFICATION:** exact local workflow YAML names, reusable workflow structure, and any path-local helper assets.
+- workflow-choreography notes for **verify**, **gate**, **promote**, **reconcile**, **rollback**, and **correction**
+- cross-links to the checked-in GitHub Actions inventory under `.github/workflows/`
+- public-safe notes about digests, SBOMs, signatures, attestations, receipts, or proof linkage
+- narrow documentation for how workflow claims interact with contracts, policy, tests, and release evidence
+- lane-local cautions against overclaiming enforcement
+- minimal examples that help a reviewer understand **what a workflow is supposed to prove**
 
 ### Input posture
 
-A workflow in this directory should be able to answer three questions quickly:
+A strong change in this leaf should make three things clearer, not blurrier:
 
-1. What artifact is under test?
-2. What proof must exist before trust is granted?
-3. What artifact survives as evidence of the decision?
+1. **What is being proven**
+2. **What can block progression**
+3. **Which artifact or record carries the decision forward**
 
 ## Exclusions
 
-This directory is **not** the source of truth for:
+| This does **not** belong here | Put it here instead |
+|---|---|
+| Checked-in GitHub Actions YAML as the canonical workflow inventory | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) and the owning workflow files |
+| Executable policy bundles, rule fixtures, reason/obligation vocabularies, or policy tests | [`../../../../../policy/README.md`](../../../../../policy/README.md) and owning policy/test surfaces |
+| Canonical machine-readable trust objects or schema definitions | [`../../../../../contracts/README.md`](../../../../../contracts/README.md) and [`../../../../../schemas/README.md`](../../../../../schemas/README.md) |
+| Runnable verification suites, invalid fixtures, correction drills, or regression harnesses | [`../../../../../tests/README.md`](../../../../../tests/README.md) |
+| Emitted SBOMs, signatures, attestations, receipts, release manifests, or proof packs as ad hoc storage | Their governed artifact, release-evidence, or proof surface |
+| Broad supply-chain doctrine | Parent lane and upstream security / supply-chain docs |
+| Claims that enforcement is live when the visible repo state does not prove it | Keep the statement **PROPOSED** or **NEEDS VERIFICATION** until an executable surface proves it |
 
-- Canonical JSON Schemas or contract families — keep those in the contract/schema surface, not here.
-- Policy vocabularies as free-floating copies — shared reason / obligation / reviewer-role vocabularies should live in one canonical surface (**exact path NEEDS VERIFICATION**).
-- Generated SBOMs, attestations, signatures, or other build outputs — reference them; do not archive them here as authoritative artifacts.
-- Secrets, signing keys, tokens, or environment-specific credentials.
-- Runtime API behavior documentation — this directory describes workflow control, not the full governed runtime surface.
-- Release manifests or correction notices as their canonical storage location unless the repo explicitly chooses this docs tree as a mirrored reference (**NEEDS VERIFICATION**).
+## Current verified snapshot
+
+The current public `main` branch safely supports the following statements without widening them into stronger implementation claims.
+
+| Surface | Status | Safe statement | Why it matters here |
+|---|---|---|---|
+| `docs/security/supply-chain/shai-hulud-2.0/workflows/` | **CONFIRMED** | Public `main` exposes `README.md` only in this leaf directory. | This leaf is currently documentation-only in the visible tree. |
+| `docs/security/supply-chain/shai-hulud-2.0/` | **CONFIRMED** | The lane root exposes `protections/`, `workflows/`, and `indicators/`, with `samples/` and `signatures/` beneath `indicators/`. | This README should stay scoped to choreography rather than whole-lane doctrine. |
+| `.github/workflows/README.md` | **CONFIRMED** | The current public workflow directory is also README-only and explicitly separates current inventory from historically observed workflow names. | Do not imply active checked-in GitHub Actions YAML without separate proof. |
+| `contracts/README.md` + `schemas/README.md` | **CONFIRMED** / **NEEDS VERIFICATION** | Both current public lanes are README-only; schema-home authority is still unresolved. | Workflow prose must route to typed-object surfaces without inventing a second registry. |
+| `policy/README.md` | **CONFIRMED** | Policy is framed as deny-by-default and execution-oriented, but mounted `.rego` bundles and runnable policy tests are not proven by current public tree evidence alone. | Keep executable enforcement claims bounded. |
+| `tests/README.md` | **CONFIRMED** | The public test taxonomy includes contract, policy, e2e, reproducibility, and correction families. | Negative-path proof belongs there when it lands. |
+| `.github/PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** | PR guardrails explicitly require truth-path preservation, trust-membrane preservation, cite-or-abstain where relevant, fail-closed behavior where relevant, and same-change-set doc/test/runbook updates when behavior changes. | This README should stay aligned with actual review expectations. |
+| `.github/CODEOWNERS` | **CONFIRMED** | Current public `CODEOWNERS` uses a global fallback and assigns `/docs/` to `@bartytime4life`. | The owner field here can be grounded without inventing a narrower lane rule. |
 
 ## Directory tree
 
-**Expected shape only — NEEDS VERIFICATION**
+### Current public leaf snapshot
 
 ```text
 docs/security/supply-chain/shai-hulud-2.0/workflows/
+└── README.md
+```
+
+### Current public lane context
+
+```text
+docs/security/supply-chain/shai-hulud-2.0/
 ├── README.md
-├── *.yml / *.yaml                 # workflow entrypoints (NEEDS VERIFICATION)
-├── reusable/                      # shared workflow logic (NEEDS VERIFICATION)
-├── examples/ or fixtures/ links   # local references only; canonical fixtures may live elsewhere
-└── notes/ or runbooks/            # optional support docs (NEEDS VERIFICATION)
+├── protections/
+│   └── README.md
+├── workflows/
+│   └── README.md
+└── indicators/
+    ├── README.md
+    ├── samples/
+    │   └── README.md
+    └── signatures/
+        └── README.md
 ```
 
 > [!NOTE]
-> Until the mounted repo tree is inspected, treat the tree above as a **PROPOSED documentation scaffold**, not an asserted inventory.
-
-## Quickstart
-
-1. Verify the live contents of this directory and update placeholders in this README.
-2. Confirm the canonical contract surface and policy-vocabulary surface before wiring any workflow.
-3. Ensure the workflow fails closed on invalid artifacts, missing citations, invalid fixtures, or unresolved policy decisions.
-4. Prove one real path end to end before broadening the workflow pack: build → verify → policy gate → proof linkage → merge/promotion outcome.
-5. Record every workflow outcome in a way that can be tied back to a release or correction trail.
-
-### Illustrative local checks
-
-```bash
-# Illustrative only — align to mounted repo scripts and versions before commit
-IMAGE="${IMAGE:?set IMAGE to a pinned digest or image ref}"
-
-# SBOM
-syft "$IMAGE" -o cyclonedx-json > sbom.cdx.json
-
-# Signature / provenance verification
-cosign verify "$IMAGE"
-cosign verify-attestation \
-  --type https://slsa.dev/provenance \
-  --output-file slsa.att.json \
-  "$IMAGE"
-
-# Policy gate
-conftest test --policy <policy-dir-needs-verification> slsa.att.json sbom.cdx.json
-```
-
-### Illustrative workflow shape
-
-```yaml
-# Illustrative only — verify file names, triggers, and tool setup against the mounted repo
-name: supply-chain-gate
-
-on:
-  pull_request:
-
-jobs:
-  gate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate contracts and fixtures
-        run: <validator-entrypoint-needs-verification>
-      - name: Verify attestations
-        run: <attestation-verification-needs-verification>
-      - name: Run policy gate
-        run: <policy-gate-needs-verification>
-```
+> The tree above is intentionally limited to what is visible on the current public branch. If the checked-out branch or a private remote differs, reconcile this section against the mounted repo before merge.
 
 [Back to top](#shai-hulud-20-workflows)
 
+## Quickstart
+
+1. Re-read the parent lane before changing this leaf.
+2. Re-check the current public workflow, ownership, contract, schema, policy, test, and PR-guardrail surfaces.
+3. Search for lane-coupled trust objects and supply-chain terms before introducing new prose.
+4. Keep every newly added statement explicit as **CONFIRMED**, **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION**.
+5. Do not move executable logic, emitted artifacts, or secret material into this docs leaf.
+
+```bash
+# 1) Inspect the lane and its immediate parent
+ls -la docs/security/supply-chain/shai-hulud-2.0
+ls -la docs/security/supply-chain/shai-hulud-2.0/workflows
+
+# 2) Read the local lane docs first
+sed -n '1,240p' docs/security/supply-chain/shai-hulud-2.0/README.md
+sed -n '1,240p' docs/security/supply-chain/shai-hulud-2.0/protections/README.md
+sed -n '1,240p' docs/security/supply-chain/shai-hulud-2.0/workflows/README.md
+sed -n '1,260p' docs/security/supply-chain/shai-hulud-2.0/indicators/README.md
+
+# 3) Re-check adjacent executable and review surfaces
+sed -n '1,240p' .github/workflows/README.md
+sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,200p' .github/PULL_REQUEST_TEMPLATE.md
+sed -n '1,260p' contracts/README.md
+sed -n '1,220p' schemas/README.md
+sed -n '1,280p' policy/README.md
+sed -n '1,260p' tests/README.md
+
+# 4) Inventory actual GitHub Actions files, if any exist on the checked-out branch
+find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | sort
+
+# 5) Search for lane-coupled trust objects and supply-chain terms
+git grep -nE 'Shai-Hulud|sbom|attest|signature|cosign|digest|DecisionEnvelope|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|ReleaseManifest' -- docs .github policy contracts schemas tests 2>/dev/null || true
+```
+
 ## Usage
 
-Use this directory to document how workflow stages behave, not to silently redefine the canonical security model.
-
-### 1. Build and pin
-
-Document how an artifact becomes addressable by **digest**, not just by mutable tag.
-
-### 2. Attach or resolve proof material
-
-Document how SBOM, provenance, attestation, or equivalent proof material is attached or retrieved for evaluation.
-
-### 3. Verify before trust
-
-Document the verification step explicitly. “Built” is not the same as “trusted.”
-
-### 4. Evaluate policy
-
-Document the rule set that can block progression. This is where deny-by-default becomes operational.
-
-### 5. Emit proof linkage
-
-Document how the workflow links forward into a release proof-pack, correction lineage, audit trail, or review artifact.
-
-### 6. Fail closed
-
-Document what happens on missing proof, failed verification, failed fixture, missing citations, or unresolved policy vocabulary.
+Use this README when the work is about **workflow meaning**, **gate sequencing**, **proof linkage**, or **which adjacent surfaces must move together**.
 
 > [!TIP]
-> A workflow doc in KFM is stronger when it explains **what object is being proven**, **what failure blocks progression**, and **what artifact proves the decision**.
+> A workflow documentation change is incomplete if it silently shifts trust-bearing meaning without re-checking `.github/workflows`, `policy/`, `contracts/`, `schemas/`, `tests/`, and PR guardrails in the same review window.
+
+| You need to… | Start here | Then re-check |
+|---|---|---|
+| document a gate sequence or workflow handoff | this README | `.github/workflows/README.md`, `policy/README.md`, `contracts/README.md`, `tests/README.md` |
+| describe a fail-closed decision or obligation vocabulary | `policy/README.md` | this README only for choreography and linkage |
+| define a trust object or payload shape | `contracts/README.md` and `schemas/README.md` | this README only for where the object is used in workflow prose |
+| define fixtures, correction drills, or regression burden | `tests/README.md` | this README only for why the check matters in the lane |
+| store emitted evidence or proof artifacts | governed release/proof surfaces | this README only for links and interpretation |
+| change owner or review-routing expectations | `.github/CODEOWNERS` and `.github/PULL_REQUEST_TEMPLATE.md` | this README only for mirrored routing context |
+
+### Workflow documentation rule of thumb
+
+1. Name the **object under test**.
+2. Name the **gate that can block progression**.
+3. Name the **typed object or report that carries the decision**.
+4. Route executable workflow files to `.github/workflows/`.
+5. Route rule bodies to `policy/`, typed objects to `contracts/` / `schemas/`, and proof burden to `tests/`.
+6. Keep rollback, correction, and supersession visible instead of burying them under “success” language.
+
+<details>
+<summary><strong>Historically observed public workflow names from <code>.github/workflows/README.md</code></strong></summary>
+
+These names are history-derived, **not** current checked-in inventory on public `main`:
+
+- `verify-contracts-and-policy.yml`
+- `verify-docs.yml`
+- `verify-runtime.yml`
+- `verify-tests-and-reproducibility.yml`
+- `release-evidence.yml`
+- `promote-and-reconcile.yml`
+
+Use them as reconstruction clues or naming context only after checking the real branch and workflow history.
+
+</details>
 
 ## Diagram
 
 ```mermaid
-flowchart LR
-    A[Build artifact<br/>digest-pinned] --> B[Generate / resolve SBOM]
-    A --> C[Generate / resolve provenance]
-    B --> D[Verification stage]
-    C --> D
-    D --> E{Policy gate}
-    E -- pass --> F[Proof linkage<br/>release / audit / correction references]
-    F --> G[Merge or promotion candidate]
-    E -- fail --> H[DENY / HOLD / FIX]
-    D -- missing evidence --> H
-    G --> I[Visible release state]
-    I --> J[Correction / supersession path]
+flowchart TB
+    DOC["docs/security/supply-chain/shai-hulud-2.0/workflows/README.md<br/>workflow choreography + boundary guidance"]
+    GH[".github/workflows/<br/>checked-in GitHub Actions inventory"]
+    POL["policy/<br/>reasons · obligations · fail-closed rules"]
+    CTR["contracts/ + schemas/<br/>trust objects · schema-home decision"]
+    TST["tests/<br/>fixtures · negative paths · correction drills"]
+    PROOF["release evidence / proof linkage"]
+    CORR["rollback / correction / supersession visibility"]
+
+    DOC --> GH
+    DOC --> POL
+    DOC --> CTR
+    DOC --> TST
+
+    GH --> PROOF
+    POL --> PROOF
+    CTR --> PROOF
+    TST --> PROOF
+
+    GH --> CORR
+    POL --> CORR
+    CTR --> CORR
+    TST --> CORR
 ```
 
 [Back to top](#shai-hulud-20-workflows)
 
 ## Tables
 
-### Workflow matrix
+### Workflow documentation handoff matrix
 
-| Workflow concern | Minimum expectation | Typical proof object or linkage | Status in current evidence |
+| Concern | Canonical home | What this leaf README should do | Main overclaim risk |
 |---|---|---|---|
-| Artifact identity | Digest-pinned build input or output | Digest / manifest reference | **PROPOSED** |
-| SBOM handling | SBOM generated or resolved before trust | SBOM reference / attached artifact | **PROPOSED** |
-| Provenance / attestation | Attestation verified before merge or promotion | Provenance predicate / attestation reference | **PROPOSED** |
-| Policy gate | Fail-closed decision based on shared grammar | Decision artifact / machine-readable validator report | **PROPOSED** |
-| Contract / fixture validation | Valid + invalid examples enforced | Validator report / CI check | **CONFIRMED as doctrinal need; live workflow NEEDS VERIFICATION** |
-| Runtime trust alignment | Workflow outputs do not contradict finite runtime outcomes | Runtime-facing contract alignment | **CONFIRMED as doctrinal need** |
-| Release linkage | Workflow result feeds proof-pack / release evidence | Release manifest / proof-pack reference | **PROPOSED** |
-| Correction linkage | Supersession or withdrawal stays visible | Correction notice / replacement linkage | **PROPOSED** |
+| Checked-in GitHub Actions YAML | `.github/workflows/` | Explain what a workflow is meant to prove and which adjacent surfaces it must honor | Pretending YAML exists under `docs/security/.../workflows/` |
+| Allow / deny / obligation grammar | `policy/` | Describe where workflow prose must link to policy results | Free-text policy drift |
+| Typed trust objects | `contracts/` + `schemas/` | Reference the objects that workflow stages should emit or consume | Growing a second contract registry in docs |
+| Fixtures and drills | `tests/` | State the proof burden and negative-path expectations | Implying mounted tests exist when only doctrine is visible |
+| Emitted proof artifacts | release-evidence / proof surfaces | Describe linkage and review meaning | Turning docs into ad hoc artifact storage |
+| Owner and review routing | `.github/CODEOWNERS` + PR template | Mirror review touchpoints without inventing narrower rules | Unverified owner drift |
 
-### Contract and artifact touchpoints
+### Trust-object touchpoints
 
-| Touchpoint | Why workflows care | Canonical home |
+| Object | Why workflow docs mention it | Working home |
 |---|---|---|
-| `DecisionEnvelope` | Machine-readable allow / deny / obligation result | `contracts/` + policy surface |
-| `EvidenceBundle` | Inspectability anchor for evidence-linked review and drill-through | `contracts/` / runtime contract surface |
-| `RuntimeResponseEnvelope` | Finite outcomes and cite-or-abstain semantics | `contracts/` / runtime contract surface |
-| `ReleaseManifest` / `ReleaseProofPack` | Promotion, rollback, and release evidence linkage | release/control-plane surface |
-| `CorrectionNotice` | Visible supersession, withdrawal, narrowing, or reissue lineage | correction/control-plane surface |
-| Reason / obligation / reviewer-role vocabularies | Prevent free-text policy drift | **NEEDS VERIFICATION** — shared canonical vocab home must be confirmed |
-| Valid / invalid fixtures | Prove accept + reject behavior | `tests/` surface; exact local mirror **NEEDS VERIFICATION** |
+| `DecisionEnvelope` | Capture allow / deny / obligation results machine-readably | `contracts/` + `policy/` |
+| `EvidenceBundle` | Explain what support a workflow-bearing claim should resolve to | `contracts/` / runtime evidence surfaces |
+| `RuntimeResponseEnvelope` | Keep finite outcomes visible if workflow prose affects runtime trust behavior | `contracts/` / runtime surfaces |
+| `ReleaseManifest` / `ReleaseProofPack` | Link workflow outcomes into promotion, rollback, and outward proof | release / proof surfaces |
+| `CorrectionNotice` | Preserve rollback, supersession, withdrawal, or narrowing lineage | correction / review / release surfaces |
 
-## Task list
+## Task list / definition of done
 
-A workflow pack in this directory is not “done” because YAML exists. It is done when the following are all true:
+This leaf README is not done because it looks polished. It is done when the repo-facing meaning is accurate, bounded, and coupled to the right surfaces.
 
-- [ ] Exact workflow filenames in this directory have been verified against the mounted repo.
-- [ ] Canonical schema home and canonical policy-vocabulary home are linked without duplication.
-- [ ] A merge-blocking or promotion-blocking path exists and fails closed.
-- [ ] Valid and invalid fixtures are wired into the workflow or a linked validator.
-- [ ] Artifact verification is explicit, not implied.
-- [ ] Policy results use stable shared vocabularies, not free-text drift.
-- [ ] One proof object or proof linkage is retained for review.
-- [ ] Documentation matches live workflow behavior.
-- [ ] Negative-path behavior is documented: missing proof, failed proof, denied policy, stale artifact, and correction handoff.
-- [ ] Owners, dates, and policy label placeholders in this README are resolved.
+- [ ] Owner, `doc_id`, `created`, `updated`, and `policy_label` fields are resolved from repo-local evidence.
+- [ ] The checked-out branch has been reconciled against the current public snapshot in this README.
+- [ ] No section implies checked-in workflow YAML under this docs leaf.
+- [ ] Any workflow names mentioned are either **current checked-in inventory**, **history-derived**, or **PROPOSED** — and labeled accordingly.
+- [ ] Claims about allow / deny / obligation behavior route to `policy/` without duplicating rule bodies.
+- [ ] Claims about trust objects route to `contracts/` / `schemas/` without duplicating schemas.
+- [ ] Claims about fixtures, negative paths, and correction drills route to `tests/`.
+- [ ] Any added example is clearly public-safe, non-authoritative, and not mistaken for emitted release evidence.
+- [ ] Merge, promotion, rollback, and correction language matches the adjacent workflow, policy, contract, test, and PR-guardrail surfaces.
 
 ## FAQ
 
-### Is this directory the canonical home for contract schemas?
+### Does this directory contain executable workflow YAML?
 
-No. This README assumes the canonical contract surface lives elsewhere in the repo and should be referenced here rather than copied.
+Not on the current public `main` branch. This leaf currently exposes `README.md` only.
 
-### Are these workflows confirmed to be live right now?
+### Where do checked-in GitHub Actions files belong?
 
-No. Current-session repo-grounded evidence supports the existence of workflow-related documentation surfaces, but it does **not** prove active merge-gate YAML files in this exact directory.
+In `.github/workflows/`, not in this docs leaf.
 
-### Why is this README so explicit about fail-closed behavior?
+### Does this README prove merge-blocking enforcement?
 
-Because KFM treats workflow enforcement as part of the trust model, not as optional CI convenience.
+No. It is a documentation surface. Enforcement must be proven by checked-in workflow files, policy bundles, tests, receipts, or release evidence.
 
-### Why are there so many `NEEDS VERIFICATION` markers?
+### Can this lane store SBOMs, signatures, or attestations?
 
-Because the mounted evidence for this task was doctrine-heavy and repo-path-light. Path-level precision that is not directly visible should stay visibly unresolved until the repo is inspected.
+It can document **how to read** or **how to link to** public-safe examples, but it should not become the canonical storage location for emitted proof artifacts.
 
-### Is `shai-hulud-2.0` a verified product meaning or just a path label?
+### Is `shai-hulud-2.0` a verified incident taxonomy or just a local lane name?
 
-In this session, it is only verified as the requested documentation path. Any expanded semantic meaning is **NEEDS VERIFICATION**.
+In this repo-ready draft, it is only verified as a named local documentation lane. Any deeper program or incident meaning still needs explicit verification.
+
+### Why keep so many bounded labels?
+
+Because the visible public tree currently proves more about **documentation boundaries** than about **mounted executable enforcement**. The labels prevent prose from outrunning evidence.
 
 [Back to top](#shai-hulud-20-workflows)
 
 ## Appendix
 
 <details>
-<summary><strong>Starter artifact expectations for this workflow surface</strong></summary>
+<summary><strong>Review questions before merge</strong></summary>
 
-This README is strongest when the live directory eventually documents, or links to, a small but real workflow chain:
+Use these questions during review:
 
-1. contract/fixture validator
-2. artifact proof generation or resolution
-3. attestation verification
-4. policy gate
-5. proof-pack / release linkage
-6. correction-aware handoff
-
-A minimal workflow note set usually needs to answer:
-
-- What is the artifact under test?
-- What digest or immutable identifier anchors it?
-- What proof material must exist?
-- What validator fails the build?
-- What policy decision blocks progression?
-- What proof object survives after success?
-- What visible lineage exists after correction or supersession?
+1. Does any new sentence imply executable workflow inventory that the checked-out branch does not actually contain?
+2. Does any new sentence copy policy, schema, or test content instead of linking to the owning surface?
+3. Does the change name what object is being proven, what blocks progression, and what carries the decision?
+4. Does the change preserve rollback, correction, or supersession visibility?
+5. Does any example risk being mistaken for live release evidence or secret-bearing material?
 
 </details>
 
 <details>
-<summary><strong>Review checklist for the next edit pass</strong></summary>
+<summary><strong>Illustrative gate chain only — not current checked-in inventory</strong></summary>
 
-- Replace placeholder owners, dates, and policy label.
-- Replace the directory tree with the mounted file inventory.
-- Confirm whether shared vocabularies live under `policy/`, `contracts/`, or another canonical surface.
-- Confirm whether this directory contains entrypoint workflows, reusable workflows, or both.
-- Link to the actual validator command, not an illustrative placeholder.
-- Add any repo-native examples already present in mounted scripts or workflow YAML.
-- Remove any section that becomes redundant once the live workflow inventory is visible.
+```yaml
+# Pseudocode only.
+# Current public `main` does not prove this file exists.
+name: shai-hulud-workflow-gate
+
+on:
+  pull_request:
+
+jobs:
+  trust-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate contracts / fixtures
+        run: <validator-entrypoint>
+      - name: Verify digest / attestation subject
+        run: <verification-entrypoint>
+      - name: Evaluate deny-by-default policy
+        run: <policy-entrypoint>
+      - name: Retain proof linkage for review
+        run: <proof-linkage-entrypoint>
+      - name: Surface rollback / correction references
+        run: <correction-entrypoint>
+```
+
+This snippet is here only to keep the choreography legible during review. Actual workflow files belong under `.github/workflows/`.
 
 </details>
