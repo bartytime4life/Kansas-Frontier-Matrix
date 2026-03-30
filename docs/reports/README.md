@@ -4,13 +4,13 @@ title: reports
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
-created: <YYYY-MM-DD NEEDS VERIFICATION>
-updated: <YYYY-MM-DD NEEDS VERIFICATION>
+owners: @bartytime4life
+created: 2026-02-14
+updated: 2026-03-16
 policy_label: public
-related: [docs/reports/readme-structure-reconciliation.md, ../README.md, ../governance/, ../standards/, ../../contracts/, ../../schemas/, ../../policy/]
+related: [docs/reports/readme-structure-reconciliation.md, ../README.md, ../governance/, ../standards/, ../runbooks/, ../../data/, ../../contracts/, ../../schemas/, ../../policy/, ../../tests/, ../../.github/workflows/README.md]
 tags: [kfm, docs, reports, governance]
-notes: [Live repo ownership, dates, and full child inventory were not directly mounted in this session; placeholders remain intentionally reviewable.]
+notes: [Owner is grounded in the current public CODEOWNERS fallback for /docs/; created date reflects the current file lineage after a visible delete/recreate cycle and should be rechecked if the project prefers first-ever path appearance instead.]
 [/KFM_META_BLOCK_V2] -->
 
 # reports
@@ -18,16 +18,18 @@ notes: [Live repo ownership, dates, and full child inventory were not directly m
 Governed index for human-readable report artifacts, review-facing summaries, and report-adjacent evidence surfaces in Kansas Frontier Matrix (KFM).
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION — confirm docs / platform / domain ownership from live governance or ownership files  
+> **Doc status:** draft  
+> **Owners:** `@bartytime4life` via current public `/.github/CODEOWNERS` fallback for `/docs/`  
 > ![Status](https://img.shields.io/badge/status-experimental-orange)
+> ![Doc](https://img.shields.io/badge/doc-draft-lightgrey)
 > ![Scope](https://img.shields.io/badge/scope-docs%2Freports-blue)
 > ![Trust](https://img.shields.io/badge/trust-governed%20surface-6f42c1)
-> ![Evidence](https://img.shields.io/badge/evidence-release--linked-success)
-> ![Owners](https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-lightgrey)  
+> ![Evidence](https://img.shields.io/badge/evidence-current%20public%20main-success)
+> ![Owner](https://img.shields.io/badge/owner-bartytime4life-181717)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `docs/reports/` is a **governed documentation surface**, not a bypass around contracts, policy, release manifests, proof packs, or governed APIs. Reports may explain, summarize, validate, review, or contextualize released scope, but they do **not** create new authoritative truth on their own.
+> `docs/reports/` is a governed documentation surface, not a bypass around contracts, policy, release manifests, proof packs, or governed APIs. Reports may explain, summarize, validate, review, or contextualize released scope, but they do **not** create new authoritative truth on their own.
 
 **Status markers used in this README:** **CONFIRMED** · **INFERRED** · **PROPOSED** · **UNKNOWN** · **NEEDS VERIFICATION**
 
@@ -53,7 +55,8 @@ This directory should **not** become a shadow data lake, schema registry, policy
 | Local role | Directory contract and navigation index for report-shaped documentation under `docs/` |
 | Upstream links | [`../README.md`](../README.md) · [`../governance/`](../governance/) · [`../standards/`](../standards/) · [`../runbooks/`](../runbooks/) |
 | Adjacent governed boundaries | [`../../data/`](../../data/) · [`../../schemas/`](../../schemas/) · [`../../contracts/`](../../contracts/) · [`../../policy/`](../../policy/) · [`../../tests/`](../../tests/) |
-| Related report evidence | `docs/reports/readme-structure-reconciliation.md` is a known report-surface artifact and should be treated cautiously if it outruns retrievable repo reality |
+| Workflow-scaffolding context | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Related report evidence | [`readme-structure-reconciliation.md`](./readme-structure-reconciliation.md) is a known structural reconciliation artifact and should be treated cautiously if it outruns retrievable repo reality |
 | Core rule | Reports stay **downstream** of governed release scope and preserve drill-through to evidence, release state, caveat state, and correction context |
 
 ## Accepted inputs
@@ -83,44 +86,39 @@ This directory should **not** become a shadow data lake, schema registry, policy
 
 | Path / signal | Status | Notes |
 |---|---|---|
-| `docs/reports/readme-structure-reconciliation.md` | **CONFIRMED** | Explicitly named in repo-grounded audit material; also flagged there as a possible source of stale or over-optimistic inventory claims |
-| `docs/reports/README.md` | **INFERRED / TARGET PATH** | This file is the intended directory contract path for the reports surface, but the live mounted repo tree was not directly enumerated in this session |
-| Additional child paths under `docs/reports/` | **NEEDS VERIFICATION** | No direct mounted checkout was available to enumerate the live directory contents |
-| Report-specific automation / CI | **UNKNOWN** | Workflow scaffolding is discussed elsewhere, but report-specific active workflow YAML was not directly verified here |
-| Expansion layout below | **PROPOSED** | Intended shape only; add families when the repo actually materializes them |
+| `docs/reports/README.md` | **CONFIRMED** | Present on current public `main` as the directory contract for this lane |
+| `docs/reports/readme-structure-reconciliation.md` | **CONFIRMED** | Present on current public `main`; the document itself warns that it records structural alignment, not functional completeness |
+| First-level child lanes `audits/`, `releases/`, `self-validation/`, `story_nodes/`, `telemetry/`, and `validation/` | **CONFIRMED** | Visible in the current public `main` listing for `docs/reports/`; deeper contents were not re-enumerated in this README |
+| `daily/` | **PROPOSED** | Not visible in the current public `main` listing; add only if a recurring report family truly materializes |
+| Report-specific automation / CI | **UNKNOWN** | Workflow documentation exists, but this README does not verify report-specific merge or publish gates |
+
+> [!NOTE]
+> The snapshot above is grounded in the current public `main` listing for `docs/reports/`. Path presence should **not** be read as proof of implemented behavior, populated child inventories, or active automation.
 
 ## Directory tree
 
-### Current repo-grounded view
+### Current public `main` snapshot
 
 ```text
 docs/reports/
-├── README.md                           # target directory contract (this file)
-└── readme-structure-reconciliation.md  # confirmed related artifact; may be stale relative to live repo state
+├── audits/
+├── releases/
+├── self-validation/
+├── story_nodes/
+├── telemetry/
+├── validation/
+├── README.md
+└── readme-structure-reconciliation.md
 ```
 
 <details>
-<summary><strong>Proposed expansion footprint</strong> (add only when the repo actually materializes the need)</summary>
+<summary><strong>Interpretation notes and restrained future additions</strong></summary>
 
-```text
-docs/reports/
-├── README.md
-├── readme-structure-reconciliation.md
-├── story_nodes/        # PROPOSED / NEEDS VERIFICATION
-├── releases/           # PROPOSED / human-readable release summaries
-├── daily/              # PROPOSED / periodic rollups when justified by real workflow demand
-├── validation/         # PROPOSED / domain-facing validation report families
-├── self-validation/    # PROPOSED / docs-facing lint and contract summaries
-├── audits/             # PROPOSED / review, correction, or supersession summaries
-└── telemetry/          # PROPOSED / governance-safe rollups and trends
-```
-
-**Guidance**
-
-- `story_nodes/` appears repeatedly in broader KFM materials, but is **not asserted here as mounted repo reality** unless verified from the live tree.
-- `releases/`, `daily/`, `validation/`, `self-validation/`, `audits/`, and `telemetry/` are **PROPOSED** families for report-shaped artifacts only.
+- The first-level lanes above are **CONFIRMED** as visible paths on current public `main`.
+- Their presence does **not** by itself prove completed family inventories, active automation, or review-ready behavioral depth.
+- `daily/` is **not** visible in the current public snapshot. Keep it **PROPOSED** unless a recurring report family actually materializes.
+- When a reconciliation note and the live repo listing disagree, verified inventory wins.
 - New top-level families should be rare. The default bias is to keep this directory small, legible, and intentionally governed.
-- When a prior reconciliation note and the live repo disagree, **verified inventory wins**.
 
 </details>
 
@@ -133,11 +131,14 @@ sed -n '1,260p' docs/reports/README.md
 # inspect the related reconciliation note
 sed -n '1,260p' docs/reports/readme-structure-reconciliation.md
 
-# list what currently exists under docs/reports
-find docs/reports -maxdepth 3 -type f | sort
+# verify current owner coverage
+sed -n '1,200p' .github/CODEOWNERS
+
+# list first-level report lanes and files
+find docs/reports -maxdepth 1 -mindepth 1 | sort
 
 # inspect workflow-scaffolding claims before assuming automation exists
-sed -n '1,220p' .github/workflows/README.md
+sed -n '1,260p' .github/workflows/README.md
 
 # find report content that claims evidence or release linkage
 rg -n "EvidenceBundle|EvidenceRef|ReleaseManifest|ProofPack|CorrectionNotice|ValidationReport|reports/" docs/reports docs
@@ -152,7 +153,7 @@ rg -n "EvidenceBundle|EvidenceRef|ReleaseManifest|ProofPack|CorrectionNotice|Val
 3. Keep modeled, generalized, partial, stale, withdrawn, or correction-pending states visible rather than smoothing them away.
 4. Put the authoritative machine-readable object somewhere else when that object already has a canonical home.
 5. Update this README if the addition introduces a stable new report family rather than a one-off file.
-6. Prefer a **verified inventory update** over prose that implies child families or automation that are not yet actually present.
+6. Prefer a verified inventory update over prose that implies child families or automation that are not yet actually present on the branch you are editing.
 
 ### Recommended minimum trust block inside any consequential report
 
@@ -173,6 +174,7 @@ That block is not a substitute for real contracts. It is a reader-facing reminde
 - the family has a stable reader need and a stable trust contract
 - the content cannot live more clearly under an existing child family
 - the new family does not duplicate `data/`, `schemas/`, `contracts/`, `policy/`, or `tests/`
+- the family is not already present in the current branch inventory
 - this README is updated in the same change
 
 ## Diagram
@@ -197,6 +199,18 @@ flowchart TD
 ```
 
 ## Reference tables
+
+### Current public first-level lanes
+
+| Lane | Current public visibility | Review note |
+|---|---|---|
+| [`audits/`](./audits/) | Present | Path presence is confirmed; functional completeness is not implied |
+| [`releases/`](./releases/) | Present | Path presence is confirmed; treat it as a report-family lane rather than a release authority store |
+| [`self-validation/`](./self-validation/) | Present | Path presence is confirmed; keep docs-facing validation summaries downstream of canonical validators |
+| [`story_nodes/`](./story_nodes/) | Present | Path presence is confirmed; deeper Story Node inventory is outside this README’s current verified scope |
+| [`telemetry/`](./telemetry/) | Present | Path presence is confirmed; any rollups here should remain public-safe and derivative |
+| [`validation/`](./validation/) | Present | Path presence is confirmed; report summaries must still point back to authoritative validation objects |
+| `daily/` | Not present on current public `main` | Keep **PROPOSED** until a recurring report family is real |
 
 ### Report classes at a glance
 
@@ -232,12 +246,13 @@ flowchart TD
 ## Task list
 
 - [ ] The file states what belongs here and what does not.
+- [ ] Current public snapshot and directory tree stay synchronized with the branch being documented.
 - [ ] Reports are kept downstream of governed release scope rather than acting as source-of-truth stores.
 - [ ] Every consequential report shows a time basis and evidence route.
 - [ ] Sensitive locations, secrets, tokens, and signed URLs are excluded.
 - [ ] Generalized / withheld / stale / correction states are visible where relevant.
 - [ ] New top-level report families update this index in the same change.
-- [ ] This README does not imply active automation or mounted child paths without verification.
+- [ ] This README distinguishes visible path presence from functional completeness or active automation.
 - [ ] Reconciliation prose does not outrun the verified inventory.
 - [ ] Links, code fences, and Mermaid all render cleanly.
 - [ ] Any machine-readable companion is clearly derivative and points back to the authoritative object.
@@ -254,7 +269,7 @@ Yes, but only when it remains explicitly downstream of admissible scope, evidenc
 
 ### Where should Story Nodes live?
 
-Broader KFM materials repeatedly associate Story Nodes with report-oriented documentation surfaces, commonly under `docs/reports/story_nodes/`, but that path remains **NEEDS VERIFICATION** until confirmed in the live repo tree.
+The current public `main` tree shows `docs/reports/story_nodes/` as a first-level child of `docs/reports/`. That confirms the lane exists at path level. Deeper Story Node inventory, conventions, and behavioral claims should still be verified from the working branch before this README says more than path presence.
 
 ### Can this directory hold large exports or raw dumps?
 
@@ -262,7 +277,7 @@ No. Large or canonical payloads belong in governed data locations. Reports may r
 
 ### Does this README replace the older reconciliation note?
 
-This file should function as the **current directory contract** once adopted. If `readme-structure-reconciliation.md` remains in the repo, it should be treated as historical or diagnostic unless it is kept synchronized with verified inventory.
+This file is the current directory contract on public `main`. `readme-structure-reconciliation.md` remains useful as a structural/scaffold report, but it should not outrank verified live inventory or this README’s direct directory contract.
 
 ## Appendix
 
@@ -297,7 +312,7 @@ A report should help a reader answer:
 
 ### Verification discipline
 
-When the mounted repo and a planning or reconciliation document disagree, prefer:
+When the mounted repo, the current public branch listing, and a planning or reconciliation document disagree, prefer:
 
 1. directly retrievable repo inventory
 2. current authoritative directory contract
