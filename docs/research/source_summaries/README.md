@@ -10,32 +10,33 @@ updated: YYYY-MM-DD
 policy_label: NEEDS VERIFICATION
 related: [NEEDS VERIFICATION]
 tags: [kfm, research, source-summaries]
-notes: [Target path supplied by request; repo-local owners, dates, related links, and exact neighboring docs require direct repo verification.]
+notes: [Root README path supplied by request; attached source-summary drafts support a by_type subtree and child guides, but repo-local existence, owners, dates, and adjacent canonical paths require direct repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Research Source Summaries
 
-Derived, evidence-linked working summaries for individual sources used in KFM research, design, and implementation planning.
+Derived, evidence-linked working summaries for external sources used in KFM research, design, and implementation planning.
 
 > [!IMPORTANT]
 > **Status:** experimental  
 > **Owners:** NEEDS VERIFICATION  
-> **Repo fit:** `docs/research/source_summaries/README.md`  
 > **Badges:**  
 > ![Status](https://img.shields.io/badge/status-experimental-blueviolet?style=flat-square)
 > ![KFM](https://img.shields.io/badge/KFM-evidence--first-1f4d78?style=flat-square)
 > ![Trust posture](https://img.shields.io/badge/trust-derived%20not%20canonical-6b7280?style=flat-square)
-> ![Repo verification](https://img.shields.io/badge/repo%20fit-needs%20verification-lightgrey?style=flat-square)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![Repo fit](https://img.shields.io/badge/repo%20fit-needs%20verification-lightgrey?style=flat-square)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!NOTE]
-> This draft is intentionally source-bounded. The target path was provided in the request, but the mounted repo tree for this directory was not directly verified in this session. Keep placeholders visible until repo-local ownership, neighboring links, and file layout are confirmed.
+> This README is intentionally source-bounded. The target path `docs/research/source_summaries/README.md` was supplied in the request, but the mounted repo tree was not directly visible in this session. The strongest structural cue in the attached corpus is a `by_type/` subtree with child guides for source kinds such as books, maps, and web. Treat those paths as **INFERRED / NEEDS VERIFICATION** until checked in the repo.
+>
+> Attached March 2026 KFM doctrine also warns against hardening older file references into project fact without direct repo verification. Any neighboring path mentioned below is therefore a reviewable candidate, not a settled repo claim.
 
 ---
 
 ## Scope
 
-This directory is for **human-readable, per-source Markdown summaries**.
+This area is for **human-readable, per-source Markdown summaries**.
 
 Its job is to help maintainers answer five practical questions quickly:
 
@@ -45,17 +46,28 @@ Its job is to help maintainers answer five practical questions quickly:
 4. What does it **not** establish?
 5. Where should a reviewer go next?
 
-These summaries are **derived working artifacts**. They support research, synthesis, design review, and implementation planning. They do **not** replace canonical source files, machine-checkable contracts, policy decisions, catalog metadata, or release proof.
+These summaries are **research artifacts**. They do not directly change runtime behavior, but they can justify and motivate later changes to governed docs, schemas, pipelines, ontology, APIs, UI patterns, and story work.
+
+### Root README vs. child guides
+
+When the stronger `by_type/` pattern is present, this area should behave as a small hierarchy:
+
+| Layer | Role | Typical content |
+| --- | --- | --- |
+| **This README** | Area charter | Scope, boundaries, review rules, maintenance expectations |
+| **`by_type/README.md`** | Organizational guide | Default conventions shared across source types |
+| **Type README** | Source-kind specifics | Extra rules for books, maps, web, papers, datasets, standards, and related source families |
+| **Leaf summary file** | One source at a time | Citation, takeaways, KFM relevance, constraints, caveats, and links |
 
 ### Directory truth posture
 
-| Label | Use inside this directory | Do not use it for |
+| Label | Use inside this area | Do not use it for |
 | --- | --- | --- |
-| **CONFIRMED** | Claims directly supported by the summarized source or directly verified repo evidence | Smooth assumptions, guessed implementation, or optimistic paraphrase |
-| **INFERRED** | Small, clearly bounded synthesis that connects the source to KFM doctrine | Inventing current repo state |
-| **PROPOSED** | Adoption guidance, follow-on work, or recommended use in KFM | Backfilling missing evidence |
-| **UNKNOWN** | Gaps that the source does not resolve | Hidden uncertainty |
-| **NEEDS VERIFICATION** | Repo-local paths, owners, dates, adjacent docs, automation, or implementation details not directly checked | Cosmetic TODO noise |
+| **CONFIRMED** | Claims directly supported by the summarized source or directly verified project evidence | Guessing current repo shape, runtime behavior, or enforcement |
+| **INFERRED** | Small, bounded synthesis that connects a source to KFM doctrine or uses an attached draft pattern to suggest structure | Presenting unverified file paths as settled repo fact |
+| **PROPOSED** | Recommended organization, follow-on work, or adoption guidance | Smuggling target-state design in as current implementation |
+| **UNKNOWN** | Gaps the current session did not verify | Quietly flattening uncertainty |
+| **NEEDS VERIFICATION** | Repo-local owners, dates, adjacent docs, path existence, automation, and current canonical filenames | Cosmetic TODO noise with no review value |
 
 ### What “good” looks like here
 
@@ -66,6 +78,7 @@ A strong source summary is:
 - honest about limits
 - explicit about rights, caveats, and uncertainty
 - easy to trace back to the upstream source
+- clear about which part of KFM it informs
 
 [Back to top](#research-source-summaries)
 
@@ -76,16 +89,26 @@ A strong source summary is:
 | Field | Current draft |
 | --- | --- |
 | **Path** | `docs/research/source_summaries/README.md` |
-| **Role** | Directory charter and maintenance guide for per-source summaries |
-| **Upstream links** | **NEEDS VERIFICATION** — add repo-relative links to the nearest research index, source register, evidence intake guide, or domain/source atlas entry |
-| **Downstream links** | **NEEDS VERIFICATION** — add repo-relative links to dossiers, ADRs, runbooks, source atlases, or thin-slice packages that consume these summaries |
-| **Boundary** | This directory belongs on the **derived documentation** side of the trust membrane; it must not become a second source of truth for catalog, policy, or release state |
+| **Role** | Root charter and maintenance guide for source-summary docs |
+| **Upstream** | **NEEDS VERIFICATION** — likely a research index under `docs/research/` |
+| **Downstream** | **INFERRED / NEEDS VERIFICATION** — likely `by_type/` guides, per-source leaf summaries, Story Node/report consumers, and governed docs that reuse extracted constraints |
+| **Boundary** | Derived research layer only; this area must not become the canonical home for source binaries, policy, schemas, release manifests, or runtime truth |
 
-### Intended relationship to adjacent work
+### Likely adjacent artifacts to verify
 
-- **Upstream:** source files, source inventories, evidence intake notes, atlas/domain references
-- **Here:** compact human summaries of one source at a time
-- **Downstream:** synthesis dossiers, architecture docs, ADRs, planning docs, and implementation notes that cite the summary *and* the underlying source where needed
+These are the strongest neighboring candidates visible in the attached corpus, but they should be linked only after repo inspection confirms them.
+
+| Candidate path | Why it likely matters | Status |
+| --- | --- | --- |
+| `docs/research/source_summaries/by_type/README.md` | Parent organizational guide for type-based source-summary structure | **INFERRED / NEEDS VERIFICATION** |
+| `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Default governed template referenced by attached source-summary drafts | **INFERRED / NEEDS VERIFICATION** |
+| `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative template referenced when a source feeds story work | **INFERRED / NEEDS VERIFICATION** |
+| `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Referenced in attached drafts when extracted constraints imply API/contract work | **INFERRED / NEEDS VERIFICATION** |
+| `docs/reports/story_nodes/` | Likely downstream home for narrative consumers of some summaries | **INFERRED / NEEDS VERIFICATION** |
+| Current canonical master/guide path | Attached draft materials reference older `MASTER_GUIDE_v12` paths; current canonical equivalent requires repo check | **NEEDS VERIFICATION** |
+
+> [!NOTE]
+> Attached source-summary drafts reference older guide/template paths. Until the repo is inspected directly, do not treat those older references as the current canonical doc map.
 
 [Back to top](#research-source-summaries)
 
@@ -98,26 +121,40 @@ A strong source summary is:
 | Input | Required | Notes |
 | --- | --- | --- |
 | One Markdown file per source or source edition | Yes | Prefer one source, one edition, one summary |
-| Source identity | Yes | Title, edition/date, author/org, access note |
-| Summary of what the source covers | Yes | Concise, not promotional |
-| KFM relevance | Yes | Name the lane, seam, workflow, or design pressure it informs |
-| Caveats / limitations | Yes | Scope limits, rights limits, version drift, or quality issues |
-| Traceability pointers | Yes | Link or reference the upstream source artifact where possible |
-| Truth posture labels | Yes | Use `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` deliberately |
-| Rights / reuse note | Recommended | Especially for books, archives, scans, oral histories, or screenshots |
-| Structured facts worth reusing | Recommended | Terms, standards, models, constraints, key examples |
-| Open questions | Recommended | Keep unresolved issues visible |
+| Exact source identity | Yes | Title, author/editor/org, year/edition, and access note |
+| Citation or identifier | Yes | DOI, URL, ISBN, archive ID, or in-repo source location when applicable |
+| Source type | Yes | Book, map, paper, dataset, web source, standard, archive, talk, etc. |
+| Key takeaways | Yes | Compact, source-grounded bullets or short paragraphs |
+| KFM relevance | Yes | Which lane, pipeline stage, component, or design pressure it informs |
+| Claims / constraints | Yes | Extract reusable requirements, cautions, assumptions, or limitations clearly |
+| What the source does **not** establish | Yes | Make limits visible rather than implied |
+| Rights / reuse / sensitivity note | Recommended | Especially important for maps, archival scans, oral histories, and sensitive locations |
+| Open questions | Recommended | Preserve unresolved issues instead of smoothing them over |
 
-### Recommended minimum snapshot for each summary
+### Minimum per-source snapshot
 
 | Field | Why it matters |
 | --- | --- |
-| Source type | Prevents mixing books, manuals, datasets, archives, papers, and websites |
+| Source type | Prevents mixing books, maps, papers, sites, standards, and datasets without context |
 | Edition / date | Prevents silent version drift |
-| Domain lane(s) | Helps route the summary into KFM’s Kansas-first operating lanes |
-| Spatial / temporal support | Keeps scale and time semantics visible |
-| Trust posture | Prevents persuasive overclaiming |
-| Reuse constraints | Helps avoid rights mistakes |
+| Creator / steward | Clarifies provenance and citation |
+| Access note | Helps a reviewer find the source again |
+| KFM lanes / components | Makes reuse easier across Catalog / Graph / API / UI / Story |
+| Rights / sensitivity posture | Prevents accidental over-sharing or misuse |
+| Truth posture | Keeps certainty proportionate to evidence |
+
+### Preferred section set for a leaf summary
+
+| Section | Purpose | Required |
+| --- | --- | --- |
+| `Citation / Snapshot` | Fast source identity and access metadata | Yes |
+| `Key takeaways` | Compact extracted value | Yes |
+| `KFM relevance` | Connects the source to actual KFM work | Yes |
+| `Claims / constraints` | Pulls reusable implications into view | Yes |
+| `What this source does not establish` | Keeps limits visible | Yes |
+| `Rights, caveats, and sensitivity` | Prevents governance drift | Yes |
+| `Open questions` | Preserves follow-up work | Recommended |
+| `Links` | DOI/URL, in-repo source path if present, related docs | Yes |
 
 [Back to top](#research-source-summaries)
 
@@ -125,20 +162,21 @@ A strong source summary is:
 
 ## Exclusions
 
-This directory should **not** become the dumping ground for every research artifact.
+This area should **not** become the dumping ground for every research artifact.
 
 | Not here | Put it where it belongs instead | Why |
 | --- | --- | --- |
 | Raw source files (PDFs, scans, datasets, media) | Source storage / evidence references / canonical data lanes | A summary is not the source |
-| Machine-readable catalog artifacts | Authoritative STAC / DCAT / PROV homes | Catalog closure must stay machine-checkable |
-| Policy bundles, reason codes, obligation codes | Authoritative policy home | Policy meaning must remain executable and reviewable |
-| JSON Schemas / API contracts | Authoritative contract/schema home | Summary prose must not compete with validation artifacts |
-| Release proof packs, correction notices, rollback records | Release / correction / runbook homes | Publication governance must remain operational |
-| Broad multi-source synthesis docs | Research dossiers / ADRs / architecture docs | This directory is **per-source**, not cross-source doctrine |
-| Unbounded AI notes or free-form “takeaways” with no traceability | Separate working notes, or do not keep them | KFM prefers cite-or-abstain over impressionistic summaries |
+| STAC / DCAT / PROV artifacts | Authoritative catalog / provenance homes | Machine-checkable metadata must stay stronger than prose |
+| Policy bundles, decision envelopes, obligation/reason registries | Authoritative policy home | Policy meaning must remain executable and reviewable |
+| JSON Schemas / API contracts | Contract/schema home | Summary prose must not compete with validation artifacts |
+| Release manifests, proof packs, correction notices | Release / correction / runbook homes | Publication governance must stay operational |
+| Story Nodes or Focus narratives | Story/report homes | Narrative work is downstream, not the summary itself |
+| Broad multi-source synthesis docs | Dossiers / ADRs / architecture docs | This area is **per-source**, not cross-source doctrine |
+| Unsourced notes or impressionistic takeaways | Drafts / scratch notes, or discard | KFM prefers cite-or-abstain over unsupported prose |
 
 > [!WARNING]
-> If a summary starts behaving like policy, schema, release state, or canonical metadata, move that content out. This directory is for **navigation and interpretation**, not sovereign truth.
+> If a summary starts behaving like canonical metadata, policy, release state, or runtime truth, move that content out. This area is for **navigation and interpretation**, not sovereign truth.
 
 [Back to top](#research-source-summaries)
 
@@ -146,25 +184,49 @@ This directory should **not** become the dumping ground for every research artif
 
 ## Directory tree
 
-**Proposed minimal shape — update after repo inspection**
+**Preferred shape — source-supported, repo-local existence NEEDS VERIFICATION**
 
 ```text
 docs/
 └── research/
     └── source_summaries/
         ├── README.md
-        ├── <source-slug>.md
-        ├── <source-slug>__<edition-or-date>.md
-        └── _template.md                # optional; NEEDS VERIFICATION
+        └── by_type/
+            ├── README.md
+            ├── books/
+            │   ├── README.md
+            │   └── <year>-<first-author-lastname>-<short-title>.md
+            ├── maps/
+            │   ├── README.md
+            │   └── <year>-<first-author-lastname>-<short-title>.md
+            ├── web/
+            │   ├── README.md
+            │   └── <year>-<first-author-lastname>-<short-title>.md
+            ├── papers/
+            │   └── <year>-<first-author-lastname>-<short-title>.md
+            └── <other-type>/
+                └── <year>-<first-author-lastname>-<short-title>.md
 ```
+
+### Source-type folders
+
+| Type folder | Use for | Current evidence status |
+| --- | --- | --- |
+| `books/` | Monographs, edited volumes, manuals treated primarily as books | Source-supported |
+| `maps/` | Historic maps, atlas plates, scanned sheets, georeferenced map products | Source-supported |
+| `web/` | Websites, web documentation, online references | Source-supported |
+| `papers/` | Journal and conference papers | **INFERRED** from parent draft examples |
+| `datasets/` | Dataset-level external sources described as research references rather than stored data | **INFERRED** from parent draft scope |
+| `standards/` | Specs, standards, and formal reference materials | **INFERRED** from parent draft scope |
 
 ### Naming guidance
 
 | Pattern | Use when |
 | --- | --- |
-| `<source-slug>.md` | The source has one stable, unambiguous edition in use |
-| `<source-slug>__<edition-or-date>.md` | Different editions or snapshots may coexist |
-| Avoid | `notes.md`, `random.md`, `summary-final-final.md` |
+| `<year>-<first-author-lastname>-<short-title>.md` | Default slug pattern for a single source |
+| `<year>-<org>-<short-title>.md` | More natural than author-lastname for organizational sources |
+| `<year>-<maker>-<map-title>.md` | Acceptable for map/cartographic sources when creator naming reads better |
+| Avoid | `notes.md`, `random.md`, `summary-final-final.md`, and slugs with no date or creator cue |
 
 [Back to top](#research-source-summaries)
 
@@ -172,47 +234,17 @@ docs/
 
 ## Quickstart
 
-1. Choose **one source**.
-2. Create **one summary file**.
-3. Fill the required snapshot fields first.
-4. Separate **what the source says** from **what you think it implies**.
-5. Record caveats, rights notes, and open questions before calling the file “done”.
-6. Add or update the index entry in this README if this directory grows beyond a handful of files.
-
-### Minimal starter scaffold
-
-```md
-# <Source title>
-
-One-sentence purpose.
-
-## Snapshot
-
-| Field | Value |
-| --- | --- |
-| Source type | |
-| Edition / date | |
-| Author / steward | |
-| Access note | |
-| KFM lanes | |
-| Trust posture | |
-
-## What this source establishes
-
-## What it does not establish
-
-## Why it matters to KFM
-
-## Caveats, rights, and reuse notes
-
-## Open questions
-
-## Links
-```
+1. Pick the correct source-type folder under `by_type/` when that subtree exists.
+2. Create **one summary file per source** using a stable slug.
+3. Record the exact citation, identifier, and access note first.
+4. Add key takeaways, KFM relevance, and extracted claims / constraints.
+5. Separate what the source supports from what it does **not** support.
+6. Add rights, caveats, and sensitivity notes before calling the file done.
+7. If the source affects story or Focus work, make sure the downstream narrative references the source directly or through an evidence-bearing artifact.
 
 ### Quick review rule
 
-Before you commit a summary, ask:
+Before you commit a new summary, ask:
 
 - Can a reader tell **which exact source** this file refers to?
 - Can they tell **why KFM cares**?
@@ -225,34 +257,36 @@ Before you commit a summary, ask:
 
 ## Usage
 
-### How this directory should be used
+### How this area should be used
 
-Use these summaries to:
+Use source summaries to:
 
 - orient a maintainer before they open a long source
-- reduce duplicate re-reading of the same book/manual/source
+- reduce duplicate re-reading of the same external material
 - keep reusable facts, caveats, and terminology close at hand
 - support later synthesis without flattening uncertainty
 
-Do **not** use these summaries to:
+Do **not** use source summaries to:
 
 - claim current implementation
 - replace source-specific citation work
 - launder speculation into doctrine
 - hide rights or sensitivity issues behind polished prose
 
-### Recommended section shape for each source summary
+### Research-artifact rule
 
-| Section | Purpose | Required |
-| --- | --- | --- |
-| `Snapshot` | Fast identity and reuse metadata | Yes |
-| `What this source establishes` | Source-grounded claims only | Yes |
-| `What it does not establish` | Explicit limits | Yes |
-| `Why it matters to KFM` | Connect the source to lanes, seams, or design decisions | Yes |
-| `Reusable facts / patterns` | High-value extracted takeaways | Recommended |
-| `Caveats, rights, and reuse notes` | Keep risk visible | Yes |
-| `Open questions` | Preserve unresolved issues | Recommended |
-| `Links` | Upstream pointer, adjacent docs, related artifacts | Yes |
+Source summaries are part of the **research and rationale layer**. They can motivate later changes to governed docs, schemas, pipelines, ontology, APIs, UI patterns, and story work, but they are not themselves the stronger authority for those artifacts.
+
+### AI support and guardrails
+
+AI assistance is useful here only when it stays subordinate to source truth.
+
+| Allowed | Not allowed |
+| --- | --- |
+| Summarization | Policy generation |
+| Structure extraction | Inferring sensitive locations |
+| Translation | Fabricating missing geospatial metadata |
+| Keyword indexing | Inventing unsupported claims or identifiers |
 
 ### One source, one file, one center of gravity
 
@@ -265,14 +299,6 @@ Prefer this rule unless there is a strong reason not to:
 
 That keeps search, review, and later refactoring sane.
 
-### Writing style inside summaries
-
-- quote sparingly
-- prefer compact paraphrase
-- keep terminology stable
-- identify edition/version drift early
-- treat caveats as first-class content, not footnotes
-
 [Back to top](#research-source-summaries)
 
 ---
@@ -281,16 +307,15 @@ That keeps search, review, and later refactoring sane.
 
 ```mermaid
 flowchart LR
-    A[Source document / archive / dataset / manual] --> B[Per-source summary .md]
-    B --> C[Research synthesis / dossier / ADR draft]
-    C --> D[Design, planning, or implementation work]
+    A[External source<br/>paper / book / map / dataset / web source] --> B[Per-source summary<br/>docs/research/source_summaries]
+    B --> C[Governed docs / standards]
+    B --> D[Story Nodes / reports / Focus-support artifacts]
+    C --> E[Implementation work<br/>schemas / data / APIs / UI]
+    E --> F[Catalog / Graph / API / UI]
 
-    A --> E[Canonical evidence / data / catalog path]
-    E --> F[Governed publication surfaces]
-
-    B -. derived support only .-> F
-    B -. never replaces .-> E
-    B -. must not become .-> G[Policy / schema / release proof]
+    A --> G[Canonical source file<br/>or evidence reference]
+    B -. derived support only .-> G
+    B -. must not replace .-> H[Policy / schema / release proof]
 ```
 
 ### Reading the diagram
@@ -298,8 +323,8 @@ flowchart LR
 The summary sits in a useful but subordinate position:
 
 - it helps people navigate evidence
-- it may feed later synthesis
-- it must **not** bypass canonical evidence, catalog, policy, or release logic
+- it may feed later design and story work
+- it must **not** bypass canonical evidence, machine-readable metadata, policy, or release logic
 
 [Back to top](#research-source-summaries)
 
@@ -307,33 +332,30 @@ The summary sits in a useful but subordinate position:
 
 ## Tables
 
+### Area responsibility matrix
+
+| Layer | Main job | Truth status |
+| --- | --- | --- |
+| Root README | Set area boundaries and maintenance rules | Derived guidance |
+| `by_type/README.md` | Provide default organization and cross-type conventions | Derived guidance |
+| Type README | Adapt rules to a source family | Derived guidance |
+| Leaf summary | Capture one external source and its KFM relevance | Derived, evidence-linked |
+| STAC / DCAT / PROV / schemas / manifests | Carry authoritative machine-readable truth | Stronger than summaries |
+
 ### Summary maturity levels
 
-| Maturity | Meaning | Expected quality bar |
+| Maturity | Meaning | Expected bar |
 | --- | --- | --- |
-| `seed` | Bare minimum identity and purpose captured | Enough to prevent rediscovery work |
-| `working` | Core claims, caveats, and KFM relevance captured | Reusable by maintainers |
-| `reviewed` | Checked for drift, duplication, and unsupported claims | Suitable to cite from adjacent docs |
-| `stale` | Source or summary likely needs re-checking | Keep visible; do not silently trust |
+| `seed` | Source identity and purpose captured | Enough to prevent rediscovery work |
+| `working` | Key takeaways, caveats, and KFM relevance captured | Reusable by maintainers |
+| `reviewed` | Checked for drift, duplication, and unsupported claims | Safe to cite from adjacent docs |
+| `stale` | Source or summary likely needs re-checking | Visible, but not silently trusted |
 
-### Suggested index table for this directory
+### Suggested registry row for this area
 
-When this folder contains multiple summaries, maintain a compact registry like this:
-
-| Source | Type | Edition / date | KFM lanes | Summary file | Status |
+| Source | Type | Edition / date | KFM relevance | Summary file | Status |
 | --- | --- | --- | --- | --- | --- |
-| `<source title>` | manual / book / paper / archive | `YYYY` | hydrology / archives / UI / etc. | `<file>.md` | seed / working / reviewed / stale |
-
-### Review heuristics
-
-| Check | Pass condition |
-| --- | --- |
-| Source identity | Exact source is unambiguous |
-| Scope | Summary covers a bounded source, not a vague topic |
-| Truth posture | Unsupported claims are visibly marked |
-| KFM fit | Lane, seam, or workflow relevance is named |
-| Rights / caveats | Reuse constraints are not buried |
-| Duplication | No near-duplicate summary already exists |
+| `<source title>` | book / map / paper / web / dataset | `YYYY` | Catalog / Graph / API / UI / Story / lane | `<slug>.md` | seed / working / reviewed / stale |
 
 [Back to top](#research-source-summaries)
 
@@ -343,23 +365,24 @@ When this folder contains multiple summaries, maintain a compact registry like t
 
 ### Definition of done for one new summary
 
-- [ ] Source title, edition/date, and steward/author are captured
-- [ ] The summary clearly identifies what the source is about
-- [ ] `What this source establishes` is separated from `What it does not establish`
-- [ ] KFM relevance is stated in lane/seam terms
-- [ ] Rights, caveats, and version concerns are visible
-- [ ] The file does not claim mounted repo state without direct verification
-- [ ] The file is named consistently and does not duplicate an existing summary
-- [ ] The directory index row is added or updated when applicable
+- [ ] Exact source identity is captured
+- [ ] Citation or identifier is present
+- [ ] Key takeaways are source-grounded
+- [ ] KFM relevance is explicit
+- [ ] Claims / constraints are separated from summary prose
+- [ ] Limits are visible under “does not establish” or equivalent
+- [ ] Rights, caveats, and sensitivity notes are not buried
+- [ ] The file uses a stable slug and does not duplicate an existing summary
+- [ ] Story/Focus references are added only when provenance remains clear
 
-### Review gates for this README
+### Review gates for this root README
 
 - [ ] Replace placeholder owners
-- [ ] Replace placeholder related links
-- [ ] Verify whether `_template.md` or another local template already exists
-- [ ] Align the directory tree with the real repo
-- [ ] Confirm upstream/downstream relative links
-- [ ] Confirm whether this directory is already indexed elsewhere in `docs/`
+- [ ] Confirm path existence in the mounted repo
+- [ ] Confirm whether the `by_type/` subtree already exists
+- [ ] Reconcile older guide/template references with current canonical repo paths
+- [ ] Convert likely adjacent artifacts into real relative links only after verification
+- [ ] Confirm whether this area is already indexed from `docs/research/`
 
 [Back to top](#research-source-summaries)
 
@@ -369,19 +392,23 @@ When this folder contains multiple summaries, maintain a compact registry like t
 
 ### Are source summaries authoritative?
 
-No. They are **derived navigation aids**. The source remains stronger than the summary, and canonical KFM artifacts remain stronger than both when publication, policy, and runtime behavior are involved.
+No. They are **derived navigation aids** and research artifacts. The source itself remains stronger than the summary, and canonical KFM artifacts remain stronger than both when publication, policy, schemas, or runtime behavior are involved.
 
-### Can one summary cover multiple sources?
+### Should one summary cover multiple sources?
 
-Only if the file is explicitly framed as a **comparative** or **synthesis** document and named that way. This directory’s default mode is still **one source, one file**.
+Usually no. The default is **one source, one file**. Comparative or synthesis work belongs in a differently named document with an explicitly broader role.
 
-### Can AI draft a summary?
+### Where do books that contain maps belong?
 
-Yes, as a bounded helper. Human review is still required, and unsupported claims must remain visibly marked rather than polished into false confidence.
+Treat the **primary artifact** as the deciding factor. If the source is mainly a book, place the summary under `books/` and reference any important map assets inside the summary. If the source itself is a map product, place it under `maps/`.
 
-### Should every summary repeat long quotations?
+### Can AI draft a source summary?
 
-No. Summaries should be readable. Quote only when wording itself matters; otherwise paraphrase cleanly and keep the traceability path obvious.
+Yes, as a bounded helper. Human review is still required, and unsupported claims must remain visible rather than polished into false certainty.
+
+### Should summaries quote long passages?
+
+No. Quote sparingly. Prefer compact paraphrase, precise citation, and clear traceability.
 
 [Back to top](#research-source-summaries)
 
@@ -390,43 +417,42 @@ No. Summaries should be readable. Quote only when wording itself matters; otherw
 ## Appendix
 
 <details>
-<summary><strong>Template for a new per-source summary</strong></summary>
+<summary><strong>Starter template for a leaf source summary</strong></summary>
 
 ```md
 # <Source title>
 
 One-line purpose.
 
-## Snapshot
+## Citation / Snapshot
 
 | Field | Value |
 | --- | --- |
-| Source type | book / manual / paper / site / archive / dataset |
+| Source type | book / map / paper / site / dataset / standard |
+| Creator / steward | |
 | Edition / date | |
-| Author / steward | |
-| Access note | local PDF / external site / archive / upload |
-| KFM lanes | |
-| Spatial support | |
-| Temporal support | |
-| Trust posture | CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION |
+| Identifier | DOI / ISBN / URL / archive ID / repo-local source path |
+| Access note | local file / external site / archive / upload |
+| KFM relevance | Catalog / Graph / API / UI / Story / lane |
+| Truth posture | CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION |
 
-## What this source establishes
+## Key takeaways
 
 - 
 
-## What it does not establish
+## KFM relevance
 
 - 
 
-## Why it matters to KFM
+## Claims / constraints
 
 - 
 
-## Reusable facts, patterns, or cautions
+## What this source does not establish
 
 - 
 
-## Caveats, rights, and reuse notes
+## Rights, caveats, and sensitivity
 
 - 
 
@@ -443,15 +469,13 @@ One-line purpose.
 </details>
 
 <details>
-<summary><strong>Maintenance notes for future cleanup</strong></summary>
+<summary><strong>Verification backlog for repo cleanup</strong></summary>
 
-When the repo is directly visible, tighten this README in the following order:
-
-1. verify neighboring docs and replace placeholder repo-fit links
-2. confirm owners and dates for the meta block
-3. add an index table if the directory already contains summaries
-4. remove any speculative tree entries that do not exist
-5. align naming guidance with actual local conventions if they differ
+1. Confirm whether `docs/research/source_summaries/README.md` already exists and whether this draft is a revision or a new file.
+2. Confirm whether `by_type/README.md` and child guides for `books/`, `maps/`, and `web/` are present.
+3. Check whether older `MASTER_GUIDE_v12` and template references from attached drafts still match the current repo’s canonical file map.
+4. Replace placeholder owners, dates, and related-doc metadata.
+5. Convert likely adjacent paths into real relative links only after the repo tree is visible.
 
 </details>
 
