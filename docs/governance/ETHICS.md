@@ -10,7 +10,7 @@ updated: 2026-03-22
 policy_label: NEEDS_VERIFICATION
 related: [docs/governance/README.md, docs/governance/ROOT_GOVERNANCE.md, docs/governance/SOVEREIGNTY.md, CODE_OF_CONDUCT.md, SECURITY.md]
 tags: [kfm, governance, ethics, public-consequence, trust]
-notes: [doc_id placeholder until registry-backed ID is assigned, policy_label requires repo confirmation, owner reflects current broad CODEOWNERS fallback]
+notes: [doc_id placeholder until registry-backed ID is assigned, policy_label requires repo confirmation, owner is confirmed only as the current broad CODEOWNERS fallback, created and updated dates were confirmed from current public file history]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Ethics
@@ -18,25 +18,26 @@ notes: [doc_id placeholder until registry-backed ID is assigned, policy_label re
 Ethical and public-consequence guardrails for how KFM presents, narrows, withholds, explains, and corrects evidence-bearing claims.
 
 > **Status:** Draft  
-> **Owners:** `@bartytime4life` *(broad CODEOWNERS fallback; governance-specific owner mapping needs verification)*  
+> **Owners:** `@bartytime4life` *(confirmed broad `CODEOWNERS` fallback; governance-specific owner mapping still needs verification)*  
 > **Repo fit:** `docs/governance/ETHICS.md`  
-> **Related:** [`./README.md`](./README.md) · [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · [`/CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) · [`/SECURITY.md`](../../SECURITY.md)  
-> **Quick jump:** [Scope](#scope) · [Ethical commitments](#ethical-commitments) · [Public-consequence guardrails](#public-consequence-guardrails) · [Sensitive knowledge](#people-communities-and-sensitive-knowledge) · [AI and scoring](#ai-ranking-scoring-and-derived-judgment) · [Decision flow](#ethics-decision-flow) · [Definition of done](#definition-of-done)
+> **Related:** [`./README.md`](./README.md) · [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · [`../../CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) · [`../../SECURITY.md`](../../SECURITY.md)  
+> **Quick jump:** [Scope](#scope) · [Evidence basis](#evidence-basis) · [Ethical commitments](#ethical-commitments) · [Public-consequence guardrails](#public-consequence-guardrails) · [Sensitive knowledge](#people-communities-and-sensitive-knowledge) · [AI and scoring](#ai-ranking-scoring-and-derived-judgment) · [Decision flow](#ethics-decision-flow) · [Definition of done](#definition-of-done)
 
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Doc type](https://img.shields.io/badge/doc-standard-blue)
-![Layer](https://img.shields.io/badge/layer-governance-5b6cff)
-![Scope](https://img.shields.io/badge/scope-public--consequence-critical)
-![Truth posture](https://img.shields.io/badge/truth-cite%20or%20abstain-1f883d)
+![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square)
+![Doc type](https://img.shields.io/badge/doc-standard-blue?style=flat-square)
+![Layer](https://img.shields.io/badge/layer-governance-5b6cff?style=flat-square)
+![Scope](https://img.shields.io/badge/scope-public--consequence-critical?style=flat-square)
+![Truth posture](https://img.shields.io/badge/truth-cite%20or%20abstain-1f883d?style=flat-square)
 
 > [!IMPORTANT]
 > This file governs **ethical and public-consequence behavior** in KFM. It is about how the system should behave when evidence, people, communities, uncertainty, publication, and persuasive presentation intersect.
 >
 > It does **not** replace:
-> - contributor conduct rules in [`/CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md)
-> - security controls and incident handling in [`/SECURITY.md`](../../SECURITY.md)
+> - contributor conduct rules in [`../../CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md)
+> - security controls and incident handling in [`../../SECURITY.md`](../../SECURITY.md)
 > - sovereignty- or sensitivity-specific handling in [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
-> - machine-checkable policy bundles, schemas, fixtures, or CI gates, which belong in contracts/policy/test surfaces
+> - machine-checkable policy bundles in [`../../policy/`](../../policy/)
+> - contract, schema, fixture, and test-backed enforcement surfaces in [`../../contracts/`](../../contracts/) and [`../../tests/`](../../tests/)
 
 ---
 
@@ -55,7 +56,7 @@ This file exists for changes that affect:
 
 This file should be the first stop for work involving:
 
-- public-facing maps, stories, dossiers, exports, or Focus/assistant responses
+- public-facing maps, stories, dossiers, exports, or Focus / assistant responses
 - decisions about what is shown, hidden, generalized, narrowed, or withheld
 - interaction design that can influence interpretation or action
 - language, labels, warnings, caveats, confidence cues, or uncertainty handling
@@ -66,9 +67,9 @@ This file should be the first stop for work involving:
 This file is not the right home for:
 
 - interpersonal behavior expectations between contributors  
-  → use [`/CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md)
+  → use [`../../CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md)
 - infrastructure hardening, credential handling, or vulnerability reporting  
-  → use [`/SECURITY.md`](../../SECURITY.md)
+  → use [`../../SECURITY.md`](../../SECURITY.md)
 - sovereignty-, repatriation-, tribal-, or culturally specific release handling details  
   → use [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
 - implementation-only schemas, registries, or fixture files  
@@ -85,7 +86,20 @@ This file is not the right home for:
 | Upstream inputs | KFM doctrine, governance docs, product-surface design, policy posture, sensitivity handling |
 | Downstream effects | UI behavior, copy, defaults, review gates, release posture, escalation, correction behavior |
 | Closest adjacent docs | `docs/governance/README.md`, `docs/governance/ROOT_GOVERNANCE.md`, `docs/governance/SOVEREIGNTY.md` |
+| Machine companions | `../../policy/` · `../../contracts/` · `../../tests/` |
 | Cross-cutting consumers | product, UX, data, review/stewardship, API/runtime, story/editorial, release governance |
+
+---
+
+## Evidence basis
+
+This file keeps certainty narrow on purpose. It is grounded in visible repo surfaces and repeated KFM doctrine, and it leaves unresolved implementation detail visible instead of smoothing it into confident prose.
+
+| Evidence layer | What this file treats as grounded |
+|---|---|
+| **Current public repo surfaces** | `docs/governance/ETHICS.md`, `./README.md`, `./ROOT_GOVERNANCE.md`, `./SOVEREIGNTY.md`, `.github/CODEOWNERS`, `../../CODE_OF_CONDUCT.md`, and `../../SECURITY.md` confirm the target path, governance cluster, broad owner fallback, and the distinct roles of conduct and security surfaces. |
+| **Doctrinal anchors carried through this directory** | The truth path, trust membrane, authoritative-versus-derived split, evidence one hop away, finite governed outcomes, and visible correction lineage remain load-bearing for any ethics rule stated here. |
+| **Still unresolved before merge** | Registry-backed `doc_id`, canonical `policy_label`, governance-specific owners beyond the broad fallback, canonical public security-doc path, and any active GitHub rulesets or workflow enforcement that are not derivable from public files alone. |
 
 ---
 
@@ -95,7 +109,7 @@ Use the labels below literally.
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Grounded in visible project doctrine or repo-adjacent evidence |
+| **CONFIRMED** | Grounded in visible project doctrine or current public repo evidence |
 | **INFERRED** | Strongly implied by project doctrine, but not directly proven as mounted implementation |
 | **PROPOSED** | Recommended guardrail or workflow shape that fits KFM doctrine |
 | **UNKNOWN** | Not verified strongly enough to state as current project fact |
@@ -168,7 +182,7 @@ Derived layers are useful, but they must not quietly become sovereign:
 - dashboards
 - AI answers
 - cached rankings
-- scene/3D projections
+- scene / 3D projections
 - exports assembled from derived material
 
 ### 5. Do not make policy refusal invisible
@@ -190,7 +204,7 @@ If something is narrowed, blocked, generalized, or withheld for rights, sensitiv
 | **Exact sensitive-location exposure by default** | Creates preventable harm. |
 | **“Best effort” publication under rights ambiguity** | KFM should default to hold/quarantine, not leak-forward. |
 | **Dark patterns in review or release** | Weakens stewardship and encourages accidental publication. |
-| **Frictionless confidence in Focus/AI surfaces** | Violates bounded-answer doctrine. |
+| **Frictionless confidence in Focus / AI surfaces** | Violates bounded-answer doctrine. |
 
 ---
 
@@ -219,7 +233,7 @@ Uncertainty should be shown when it is load-bearing, including:
 - known data-quality caveats
 - cross-source conflict
 - withheld or generalized detail
-- OCR/transcription ambiguity
+- OCR / transcription ambiguity
 - unresolved rights or reuse limits
 
 ### Language rules
@@ -358,7 +372,7 @@ That means:
 - generalized, partial, stale, modeled, disputed, or blocked states are labeled in-place
 - non-color-only encoding is used for important state distinctions
 - reduced-motion mode preserves meaning, not just aesthetics
-- search lands in geography/context, not detached evidence-free fragments
+- search lands in geography / context, not detached evidence-free fragments
 
 ### Behavioral design prohibitions
 
@@ -424,9 +438,9 @@ Open or refresh ethics review when a change affects any of the following:
 - whether a result appears more complete than before
 - whether a sensitive location becomes more precise
 - whether narrative context is compressed
-- whether scoring/ranking changes meaning
+- whether scoring / ranking changes meaning
 - whether AI surfaces can answer more broadly than before
-- whether a release/correction state becomes less visible
+- whether a release / correction state becomes less visible
 - whether a user can no longer reach evidence in one hop
 - whether a design change improves aesthetics by hiding friction, warnings, or caveats
 
@@ -499,11 +513,11 @@ Because a trust cue that some users cannot perceive is not actually a trustworth
 
 | Item | Current state |
 |---|---|
-| Governance-specific owner mapping for this doc | **NEEDS VERIFICATION** |
-| Registry-backed `doc_id` for meta block | **NEEDS VERIFICATION** |
+| Governance-specific owner mapping beyond broad `CODEOWNERS` fallback | **NEEDS VERIFICATION** |
+| Registry-backed `doc_id` for the meta block | **NEEDS VERIFICATION** |
 | Canonical `policy_label` value for this doc | **NEEDS VERIFICATION** |
-| Future machine-readable policy surface that should mirror this doc | **UNKNOWN** |
-| Whether `ROOT_GOVERNANCE.md` and `SOVEREIGNTY.md` will become normative companions or index files | **UNKNOWN** |
+| Exact machine-readable policy or contract surfaces that operationalize this doc on public `main` | **UNKNOWN** |
+| Canonical public security-policy path for the related-links block (`SECURITY.md` vs `.github/SECURITY.md`) | **NEEDS VERIFICATION** |
 
 ---
 
