@@ -10,26 +10,31 @@ updated: 2026-03-25
 policy_label: NEEDS_VERIFICATION
 related: [../README.md, ../readme-structure-reconciliation.md, ../../governance/README.md, ../../runbooks/README.md, ../../../.github/CODEOWNERS]
 tags: [kfm, docs, reports, audits]
-notes: [broad /docs/ ownership is confirmed in CODEOWNERS; audit-specific owner split still needs verification, doc_id and created date are placeholders pending repo verification]
+notes: [broad /docs/ ownership is confirmed in public CODEOWNERS; audit-specific owner split, doc_id, created date, and policy_label still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # audits
 
 Governed landing page for audit-shaped report summaries in Kansas Frontier Matrix (KFM): human-readable findings, follow-up, correction, and trust-surface review notes that stay downstream of evidence, policy, and release state.
 
-> Status: experimental directory · draft README revision  
-> Owners: `@bartytime4life` for broad `/docs/` coverage · narrower audit-specific split: `NEEDS VERIFICATION`  
-> [![status: experimental](https://img.shields.io/badge/status-experimental-orange)](./README.md)
-> [![surface: docs/reports/audits](https://img.shields.io/badge/surface-docs%2Freports%2Faudits-4f46e5)](./README.md)
-> [![truth: downstream only](https://img.shields.io/badge/truth-downstream%20only-2563eb)](../README.md)
-> [![live tree: verified](https://img.shields.io/badge/live_tree-verified-16a34a)](./README.md)
-> [![owners: docs](https://img.shields.io/badge/owners-%40bartytime4life-lightgrey)](../../../.github/CODEOWNERS)
-> Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Status:** experimental directory  
+> **Doc status:** draft  
+> **Owners:** `@bartytime4life` via current public `/.github/CODEOWNERS` coverage for `/docs/` · audit-specific split `NEEDS VERIFICATION`  
+> ![Status](https://img.shields.io/badge/status-experimental-orange)  
+> ![Doc](https://img.shields.io/badge/doc-draft-lightgrey)  
+> ![Scope](https://img.shields.io/badge/scope-docs%2Freports%2Faudits-blue)  
+> ![Trust](https://img.shields.io/badge/trust-downstream%20surface-6f42c1)  
+> ![Evidence](https://img.shields.io/badge/evidence-current%20public%20main-success)  
+> ![Owner](https://img.shields.io/badge/owner-bartytime4life-181717)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `docs/reports/audits/` is a documentation surface for human-readable audit summaries. It does not replace `data/`, `contracts/`, `schemas/`, `policy/`, `tests/`, release manifests, correction notices, or any other authoritative proof object.
+> `docs/reports/audits/` is a documentation surface for human-readable audit summaries. It does **not** replace `data/`, `contracts/`, `schemas/`, `policy/`, `tests/`, release manifests, correction notices, or any other authoritative proof object.
 
-Status markers used in this README: **CONFIRMED · INFERRED · PROPOSED · UNKNOWN · NEEDS VERIFICATION**
+> [!NOTE]
+> This README is public-`main`-grounded for visible tree facts and KFM-doctrine-aligned for trust posture. It does **not** claim audit-specific CI wiring, fine-grained owner splits, or platform settings that were not directly visible.
+
+**Status markers used in this README:** **CONFIRMED** · **INFERRED** · **PROPOSED** · **UNKNOWN** · **NEEDS VERIFICATION**
 
 ## Scope
 
@@ -56,12 +61,14 @@ Typical content includes:
 | Local role | Directory contract and navigation index for audit-shaped reports under `docs/reports/` |
 | Upstream links | [reports index](../README.md) · [docs index](../../README.md) · [governance](../../governance/) · [runbooks](../../runbooks/) |
 | Adjacent governed boundaries | [data](../../../data/) · [contracts](../../../contracts/) · [schemas](../../../schemas/) · [policy](../../../policy/) · [tests](../../../tests/) |
+| Workflow-scaffolding context | [`.github/workflows/README.md`](../../../.github/workflows/README.md) |
 | Related report families | [releases](../releases/) · [validation](../validation/) · [self-validation](../self-validation/) · [telemetry](../telemetry/) · [story nodes](../story_nodes/) |
+| Related report evidence | [reports reconciliation note](../readme-structure-reconciliation.md) |
 | Owner source | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) |
 | Current live contents | `README.md` only |
 | Core rule | Audits document findings, limits, repair direction, and correction posture; they do not become a second truth path |
 
-## Inputs
+## Accepted inputs
 
 | Input type | Belongs here? | Notes |
 |---|---|---|
@@ -88,23 +95,36 @@ Typical content includes:
 
 | Path / signal | Status | Notes |
 |---|---|---|
-| `docs/reports/audits/` exists in the live public repo tree | CONFIRMED | Current directory listing shows the folder |
-| `docs/reports/audits/README.md` exists | CONFIRMED | The current file is scaffold-only and needs a real directory contract |
-| Additional files under `docs/reports/audits/` | CONFIRMED none visible | No child files were visible beyond `README.md` in the current listing |
-| Parent `docs/reports/README.md` report contract | CONFIRMED | It frames reports as downstream documentation surfaces and identifies `audits/` as the home for review, correction, or supersession summaries |
-| `docs/reports/readme-structure-reconciliation.md` | CONFIRMED | Useful as a diagnostic artifact, but it can outrun live repo reality if left unverified |
-| Audit-specific automation / CI | UNKNOWN / NEEDS VERIFICATION | No audit-specific workflow wiring is asserted here |
+| `docs/reports/audits/` exists on current public `main` | **CONFIRMED** | The public repo tree shows the directory |
+| `docs/reports/audits/README.md` exists and is the only visible child file | **CONFIRMED** | Current public listing shows `README.md` only |
+| `docs/reports/README.md` exists and acts as the parent report contract | **CONFIRMED** | The parent index frames reports as downstream documentation surfaces and lists the current first-level report lanes |
+| First-level sibling lanes `releases/`, `self-validation/`, `story_nodes/`, `telemetry/`, and `validation/` are visible under `docs/reports/` | **CONFIRMED** | Use the parent index as the navigation anchor for related report families |
+| `docs/reports/readme-structure-reconciliation.md` exists and explicitly warns that it records structural alignment, not functional completeness | **CONFIRMED** | Treat it as structural or historical unless regenerated from the live tree |
+| Broad `/docs/` ownership in current public `/.github/CODEOWNERS` maps to `@bartytime4life` | **CONFIRMED** | Narrower audit-specific split still needs verification |
+| Audit-specific automation / CI | **UNKNOWN / NEEDS VERIFICATION** | No audit-specific merge or publish gate was directly verified from public files alone |
 
 > [!WARNING]
-> The live repo tree wins over older reconciliation prose. If `../readme-structure-reconciliation.md` and the current directory listing disagree, update the historical note or mark it historical; do not let audit prose imply files, automation, or coverage that are not actually present.
+> The live public repo tree wins over older reconciliation prose. If `../readme-structure-reconciliation.md` and the current directory listing disagree, update the historical note or mark it historical; do not let audit prose imply files, automation, or coverage that are not actually present.
 
 ## Directory tree
 
-### Current live view
+### Current public view
 
 ```text
 docs/reports/audits/
-└── README.md   # current directory contract; previously scaffold-only
+└── README.md
+```
+
+### Confirmed sibling report lanes on current public `main`
+
+```text
+docs/reports/
+├── audits/
+├── releases/
+├── self-validation/
+├── story_nodes/
+├── telemetry/
+└── validation/
 ```
 
 ### Stable footprint this README supports
@@ -112,13 +132,14 @@ docs/reports/audits/
 ```text
 docs/reports/audits/
 ├── README.md
-└── YYYY-MM-DD-<audit-scope>.md   # PROPOSED / one consequential audit per file
+├── YYYY-MM-DD-<audit-scope>.md
+└── YYYY-MM-DD-<audit-scope>-followup.md
 ```
 
 Guidance:
 
 - Keep this directory small, legible, and easy to scan.
-- Prefer one audit file per consequential review event over nested subtrees.
+- Prefer one consequential audit per file over nested subtrees.
 - Split further only when repeated reader need and repeated file volume make it necessary.
 - If a future audit family becomes large enough to deserve its own subtree, update both this README and `../README.md` in the same change.
 
@@ -127,6 +148,9 @@ Guidance:
 ```bash
 # inspect the audit directory contract
 sed -n '1,260p' docs/reports/audits/README.md
+
+# inspect broad owner coverage for docs surfaces
+sed -n '1,160p' .github/CODEOWNERS
 
 # list what currently exists in the audit surface
 find docs/reports/audits -maxdepth 2 -type f | sort
@@ -138,7 +162,7 @@ sed -n '1,260p' docs/reports/README.md
 sed -n '1,260p' docs/reports/readme-structure-reconciliation.md
 
 # trace audit-linked trust objects and report surfaces
-rg -n "audit_ref|CorrectionNotice|ReleaseManifest|ValidationReport|DecisionEnvelope|RuntimeResponseEnvelope|docs/reports/audits" docs contracts schemas policy tests
+rg -n "CorrectionNotice|ReleaseManifest|ValidationReport|DecisionEnvelope|RuntimeResponseEnvelope|docs/reports/audits" docs contracts schemas policy tests
 ```
 
 ## Usage
@@ -171,7 +195,7 @@ rg -n "audit_ref|CorrectionNotice|ReleaseManifest|ValidationReport|DecisionEnvel
 > **Sensitivity posture:** public-safe / generalized / restricted / withheld  
 > **Follow-up state:** open / mitigated / closed / superseded
 
-That block is not a substitute for real contracts or proof objects. It is a reader-facing reminder that audits remain downstream of governed evidence and release state.
+That block is not a substitute for real contracts or proof objects. It is a reader-facing reminder that audits remain downstream of governed evidence, release state, and correction visibility.
 
 ## Diagram
 
@@ -192,7 +216,7 @@ flowchart TD
     class D,E report;
 ```
 
-## Tables
+## Reference tables
 
 ### Audit classes at a glance
 
@@ -203,6 +227,18 @@ flowchart TD
 | Correction / supersession audit | Explain how a known issue propagates through docs or report surfaces | correction notice, affected surfaces, replacement path | Quietly hide or absorb the correction |
 | Trust-surface audit | Review reader-facing behavior such as caveat visibility, state cues, or drill-through | runtime or docs evidence, affected surfaces, visible state | Turn UX commentary into source-of-truth claims |
 | Validation coverage audit | Explain what was checked and where coverage is still missing | validator, fixtures, run receipt, or linked summary | Stand in for the validator itself |
+
+### Current sibling report lanes
+
+| Lane | Current public status | Typical fit |
+|---|---|---|
+| `audits/` | **CONFIRMED** | audit-shaped review, correction, or supersession summaries |
+| `releases/` | **CONFIRMED** | human-readable release-facing summaries |
+| `self-validation/` | **CONFIRMED** | docs-facing self-check and consistency summaries |
+| `story_nodes/` | **CONFIRMED** | story/report-adjacent narrative surfaces under reports |
+| `telemetry/` | **CONFIRMED** | governance-safe rollups and trends |
+| `validation/` | **CONFIRMED** | validation-facing summaries for docs readers |
+| `daily/` | **PROPOSED** | add only if a recurring report family actually materializes |
 
 ### Minimum outward cues for any consequential audit
 
@@ -230,13 +266,13 @@ flowchart TD
 A change to this directory is ready when:
 
 - [ ] the file says what belongs here and what does not
-- [ ] current live contents are separated from proposed future patterns
+- [ ] current public contents are separated from proposed future patterns
 - [ ] every consequential audit pattern stays downstream of evidence, release, correction, and policy state
 - [ ] no prose implies automation, child files, or owners that were not actually verified
 - [ ] links, tables, code fences, and Mermaid render cleanly on GitHub
 - [ ] any new stable audit pattern updates this README in the same change
 - [ ] sensitive detail, secrets, or internal-only endpoints are excluded
-- [ ] the older reconciliation note is treated as diagnostic or historical when it disagrees with the verified tree
+- [ ] the reconciliation note is treated as structural or historical when it disagrees with the verified tree
 - [ ] audit files point back to authoritative objects instead of replacing them
 
 ## FAQ
@@ -251,7 +287,7 @@ Use `docs/reports/audits/` when the output is meant to be a human-readable audit
 
 ### Does this directory replace `../readme-structure-reconciliation.md`?
 
-No. That file remains a useful diagnostic or historical artifact. This README is the current directory contract. When the two disagree, verified inventory should win.
+No. That file remains a useful structural or historical artifact. This README is the current directory contract. When the two disagree, verified inventory should win.
 
 ### Can an audit include AI-assisted material?
 
@@ -260,7 +296,7 @@ Yes, but only when it remains explicitly downstream of admissible evidence, poli
 ## Appendix
 
 <details>
-<summary>Suggested filename patterns and a minimal audit stub</summary>
+<summary>Suggested filename patterns and minimal audit stub</summary>
 
 ### Suggested filename patterns
 
@@ -298,7 +334,7 @@ Audit summary for `<scope>`.
 
 | Finding | Status | Evidence route | Recommended repair |
 |---|---|---|---|
-| | CONFIRMED / UNKNOWN / NEEDS VERIFICATION | | |
+| | CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION | | |
 
 ## Follow-up
 
