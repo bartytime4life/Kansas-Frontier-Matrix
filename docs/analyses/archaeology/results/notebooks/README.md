@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [NEEDS_VERIFICATION]
 tags: [kfm, archaeology, notebooks]
-notes: [Target path and notebook-index role are source-grounded in attached project materials; owners, dates, policy label, related links, and mounted repo adjacency need direct verification.]
+notes: [Target path, notebook-index role, and core notebook family layout are source-grounded in the attached KFM corpus; current owners, dates, policy label, related links, and live repo adjacency still need direct verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,7 +26,7 @@ Central index and operating guide for archaeology analysis notebooks and their d
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Notebook contract](#notebook-contract) · [Diagram](#diagram) · [Notebook families](#notebook-families) · [Review gates](#review-gates) · [FAQ](#faq)
 
 > [!NOTE]
-> This README keeps **CONFIRMED**, **INFERRED**, **PROPOSED**, and **UNKNOWN** visible where the current session could not directly inspect a mounted repository tree.
+> This README preserves source-grounded archaeology notebook purpose and directory logic from the attached KFM corpus while keeping mounted-repo unknowns explicit. Current owners, dates, policy label, sibling README inventory, validation hooks, and live notebook counts still need direct repository verification before merge.
 
 ---
 
@@ -48,10 +48,11 @@ Within KFM, archaeology notebooks should be treated as:
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus or current-session inspection |
-| **INFERRED** | Strongly implied by the attached archaeology notebook draft and KFM doctrine, but not verified in a mounted repo |
+| **CONFIRMED** | Directly supported by the attached KFM corpus available in this session |
+| **INFERRED** | Strongly implied by attached source material, but not directly reverified in a mounted repo |
 | **PROPOSED** | Starter structure or workflow guidance added to make this README commit-ready |
 | **UNKNOWN** | Not directly verifiable in the current session |
+| **NEEDS VERIFICATION** | A value that should be checked in the live repository before commit |
 
 [Back to top](#top)
 
@@ -63,23 +64,21 @@ Within KFM, archaeology notebooks should be treated as:
 |---|---|
 | **Path** | `docs/analyses/archaeology/results/notebooks/README.md` |
 | **Role** | README-like directory index for archaeology analysis notebooks |
-| **Upstream** | `docs/analyses/archaeology/results/README.md` *(INFERRED — verify in repo)* |
-| **Downstream** | Notebook files under this directory, plus derived archaeology result surfaces and governed KFM product surfaces *(INFERRED / PROPOSED — verify in repo)* |
+| **Upstream** | [`../README.md`](../README.md) *(NEEDS VERIFICATION — expected parent results index, not directly mounted in this session)* |
+| **Downstream** | [`./spatial/`](./spatial/) · [`./temporal/`](./temporal/) · [`./environmental/`](./environmental/) · [`./cultural-landscapes/`](./cultural-landscapes/) · [`./artifacts/`](./artifacts/) · [`./geophysics/`](./geophysics/) · [`./predictive/`](./predictive/) *(source-grounded legacy layout; live repo verification pending)* |
 
-### Likely neighboring archaeology result lanes
+### Directory role in the larger KFM flow
 
-The attached archaeology draft materials suggest that this README sits beside archaeology result lanes such as:
+This directory sits in the **derived analysis layer** of archaeology results.
 
-- [`../site-distributions/`](../site-distributions/) *(INFERRED — verify in repo)*
-- [`../cultural-landscapes/`](../cultural-landscapes/) *(INFERRED — verify in repo)*
-- [`../stratigraphy/`](../stratigraphy/) *(INFERRED — verify in repo)*
-- [`../artifacts/`](../artifacts/) *(INFERRED — verify in repo)*
-- [`../geophysics/`](../geophysics/) *(INFERRED — verify in repo)*
-- [`../paleoenvironment/`](../paleoenvironment/) *(INFERRED — verify in repo)*
-- [`../ai-interpretations/`](../ai-interpretations/) *(INFERRED — verify in repo)*
+It should help reviewers answer three questions quickly:
+
+1. Which notebooks exist?
+2. What kind of archaeology work does each notebook support?
+3. What review, provenance, and public-safe controls apply before notebook outputs move outward?
 
 > [!CAUTION]
-> Relative links above are **not** asserted as mounted repo fact. They reflect the strongest archaeology draft structure visible in the current source corpus and should be checked against the live repository before merge.
+> The path above is source-grounded, but the current session did **not** include a mounted repository tree. Relative links should be checked against the live repo before merge.
 
 [Back to top](#top)
 
@@ -90,9 +89,9 @@ The attached archaeology draft materials suggest that this README sits beside ar
 This directory should contain materials that belong to the **analysis-notebook layer** of archaeology results, such as:
 
 - Jupyter notebooks (`.ipynb`) used to produce archaeology result artifacts
-- notebook-local markdown or image assets that explain method, assumptions, or output interpretation
-- lightweight parameter snapshots, run notes, or result manifests that make a notebook reproducible
-- public-safe previews or summaries of notebook outputs
+- notebook-local markdown, diagrams, or image assets that explain method, assumptions, or output interpretation
+- lightweight parameter snapshots, run notes, or result manifests that make a notebook rerunnable
+- reviewable previews or summaries of notebook outputs
 - notebook-side provenance notes linking outputs to source descriptors, dataset versions, or equivalent evidence references
 - analysis-specific helper materials that are tightly coupled to notebook execution and not better housed in a shared library
 
@@ -101,9 +100,9 @@ This directory should contain materials that belong to the **analysis-notebook l
 - clear purpose
 - visible source basis
 - method and parameter disclosure
-- reproducible execution posture
+- rerunnable execution posture
 - public-safe sensitivity handling
-- derived-output labeling
+- explicit derived-output labeling
 
 ---
 
@@ -117,12 +116,12 @@ The following do **not** belong in this directory.
 | **Exact sensitive site coordinates** | Archaeology and exact-location cases require precision controls and review | Generalized or steward-only handling paths |
 | **Raw human-remains datasets** | Too sensitive for public-safe notebook surfaces | Restricted stewardship lanes |
 | **Restricted tribal or culturally sensitive knowledge** | CARE-style obligations remain first-class | Steward-reviewed, access-controlled lanes |
-| **Canonical schemas, policy bundles, and proof objects** | Those are system-wide trust artifacts, not notebook-local convenience files | Top-level contract / schema / policy areas *(INFERRED — verify in repo)* |
-| **Final story, dossier, or export artifacts** | Those belong to downstream publication surfaces | Governed surface / release paths *(UNKNOWN in mounted repo)* |
+| **Canonical schemas, policy bundles, and proof objects** | Those are system-wide trust artifacts, not notebook-local convenience files | Contract / schema / policy areas *(exact paths NEED VERIFICATION)* |
+| **Final story, dossier, export, or public release artifacts** | Those belong to downstream publication surfaces | Governed release / publication paths |
 | **Ad hoc experiments with no provenance or review notes** | They weaken reproducibility and trust posture | Keep out of this tree until documented |
 
 > [!WARNING]
-> A notebook result is not automatically fit for public use simply because it runs. Public-facing use still depends on release state, evidence linkage, sensitivity handling, and downstream review.
+> A notebook result is not automatically fit for public use simply because it runs. Outward-facing use still depends on evidence linkage, sensitivity handling, review state, and downstream release controls.
 
 [Back to top](#top)
 
@@ -130,18 +129,18 @@ The following do **not** belong in this directory.
 
 ## Directory tree
 
-Current project draft materials indicate the following internal layout for this directory.
+Current attached archaeology notebook material supports the following internal layout:
 
 ```text
 docs/analyses/archaeology/results/notebooks/
 ├── README.md
-├── spatial/                  # H3, KDE, GIS workflows, spatial clustering, surface generation
-├── temporal/                 # Chronology, interval reasoning, sequence and phase testing
-├── environmental/            # Climate, hydrology, soils, paleoenvironmental correlation
-├── cultural-landscapes/      # Route, movement, territoriality, settlement reconstruction
-├── artifacts/                # Lithic, ceramic, faunal, and other artifact analyses
-├── geophysics/               # Magnetometry, GPR, resistivity, interpreted anomaly notebooks
-└── predictive/               # Predictive modeling, GAM/ML experiments, validation notebooks
+├── spatial/                  # Spatial notebooks: H3/KDE/GIS workflows and map analysis
+├── temporal/                 # Chronology, interval reasoning, and sequence testing
+├── environmental/            # Climate, hydrology, soils, and ecological correlation
+├── cultural-landscapes/      # Corridor, interaction-sphere, and landscape modeling
+├── artifacts/                # Lithic, ceramic, faunal, and related artifact analyses
+├── geophysics/               # Magnetometry, GPR, resistivity, and anomaly review
+└── predictive/               # Predictive modeling notebooks and validation runs
 ```
 
 If the live repo differs, prefer the mounted repo over this draft structure and update this README accordingly.
@@ -157,7 +156,7 @@ Use this directory when you need to **find**, **review**, **run**, or **audit** 
 1. Confirm that the notebook’s inputs are admissible for notebook use.
 2. Confirm that the notebook’s sensitivity posture is explicit.
 3. Run the notebook top-to-bottom in a clean environment.
-4. Record methods, parameters, outputs, and redaction/generalization choices.
+4. Record methods, parameters, outputs, and any masking/generalization choices.
 5. Keep derived outputs visibly separate from canonical truth objects.
 6. Route outward-facing artifacts through the appropriate downstream review path.
 
@@ -170,9 +169,9 @@ jupyter lab docs/analyses/archaeology/results/notebooks/
 
 ### Before you press “Run”
 
-- Verify input data scope and date range.
-- Verify whether the notebook uses observed, interpreted, or modeled inputs.
-- Verify whether any output needs coordinate masking, aggregation, or withholding.
+- Verify input data scope and time basis.
+- Verify whether the notebook uses observed, interpreted, modeled, or mixed inputs.
+- Verify whether any output needs masking, aggregation, redaction, or withholding.
 - Verify whether the notebook is producing internal exploratory work or review-ready outputs.
 
 [Back to top](#top)
@@ -196,7 +195,7 @@ Every notebook in this directory should make these things easy to answer on insp
 | **What is its sensitivity posture?** | Redaction, masking, generalization, or withholding rules |
 | **Can it be rerun?** | Environment notes, order of execution, and reproducibility cues |
 
-### Starter opening cell template *(PROPOSED)*
+### Suggested opening cell template *(PROPOSED)*
 
 ```markdown
 # Notebook purpose
@@ -215,7 +214,7 @@ Every notebook in this directory should make these things easy to answer on insp
 - **Reviewer notes:** Open cautions, known gaps, and verification needs
 ```
 
-### Reproducibility rules
+### Reproducibility and evidence rules
 
 A notebook in this directory should:
 
@@ -234,19 +233,19 @@ A notebook in this directory should:
 flowchart LR
     A[Released or review-authorized archaeology inputs] --> B[Analysis notebook]
     B --> C[Derived notebook outputs]
-    C --> D[Provenance + methods + parameters recorded]
+    C --> D[Methods + parameters + provenance recorded]
     D --> E[Review / sensitivity / generalization check]
     E --> F[Archaeology results directories]
-    E --> G[Downstream KFM surfaces<br/>dossier / story / Focus / export]
+    E --> G[Downstream governed surfaces<br/>story / dossier / export / runtime answer]
 
-    X[RAW / WORK / QUARANTINE / restricted exact-location material] -->|not stored here| Y[Steward-only or canonical lanes]
-    B -. may reference, but must not bypass governance .-> Y
+    X[RAW / WORK / QUARANTINE / restricted exact-location material] -->|not stored here| Y[Canonical or steward-only lanes]
+    B -. may reference through governed paths .-> Y
 ```
 
 ### Reading the flow
 
 - The notebook is a **derived analysis step**.
-- Provenance and parameter recording are part of the notebook contract, not a later afterthought.
+- Method and provenance recording are part of the notebook contract, not a later afterthought.
 - Review and sensitivity handling sit **between** notebook output and outward use.
 - Restricted or unpublished material should not quietly live in this directory as if it were ordinary results.
 
@@ -258,13 +257,13 @@ flowchart LR
 
 | Family | Typical work | Typical outputs | Key caution |
 |---|---|---|---|
-| **Spatial** | Site clustering, KDE, H3-based aggregation, spatial overlay, proximity, terrain-aware correlation | GeoJSON, vector layers, density rasters, figures | Do not expose exact sensitive locations |
+| **Spatial** | Site clustering, density work, overlay analysis, proximity, terrain-aware correlation | GeoJSON, vectors, rasters, figures | Do not expose exact sensitive locations |
 | **Temporal** | Chronology testing, phase sequencing, interval comparison, event ordering | Time tables, phase diagrams, comparison charts | Make time basis and uncertainty explicit |
-| **Environmental** | Climate, hydrology, soils, vegetation, or paleoenvironment correlation | Correlation tables, overlay maps, GeoTIFF/COG surfaces | Keep observed and modeled inputs distinct |
-| **Cultural landscapes** | Movement, corridors, interaction spheres, territorial or settlement reconstruction | Route models, regional polygons, map series | Generalize sensitive boundaries where required |
-| **Artifacts** | Typology, patterning, temporal distribution, assemblage comparison | Charts, distribution maps, summary tables | Exclude restricted items and any raw human-remains data |
-| **Geophysics** | Magnetometry, GPR, resistivity, anomaly review, cross-sensor synthesis | Feature maps, depth slices, anomaly summaries | Avoid structure or burial inference in public-safe outputs |
-| **Predictive** | Suitability, probability, GAM/ML experiments, validation runs | Probability surfaces, metrics tables, model cards, summaries | No speculative certainty; keep validation visible |
+| **Environmental** | Climate, hydrology, soils, vegetation, or paleoenvironment correlation | Correlation tables, overlay maps, raster products | Keep observed and modeled inputs distinct |
+| **Cultural landscapes** | Movement, corridors, interaction spheres, territorial or settlement reconstruction | Route models, generalized polygons, map series | Do not drift into cultural-identity inference |
+| **Artifacts** | Typology, patterning, temporal distribution, assemblage comparison | Charts, distributions, summary tables | Exclude restricted items and sensitive raw records |
+| **Geophysics** | Magnetometry, GPR, resistivity, anomaly review, cross-sensor synthesis | Feature maps, slices, anomaly summaries | Avoid burial or structure claims beyond support |
+| **Predictive** | Suitability, probability, GAM/ML experiments, validation runs | Probability surfaces, metrics tables, model summaries | No speculative certainty; keep validation visible |
 
 ### 3D and volumetric work
 
@@ -273,16 +272,14 @@ flowchart LR
 A 3D notebook should state:
 
 - why 2D was insufficient
-- what additional governance burden the notebook introduces
+- what additional review burden the notebook introduces
 - how georeferencing, provenance, and correction visibility are preserved
 - whether the result is interpretive, measured, or modeled
 
 > [!NOTE]
-> In KFM doctrine, archaeology-related 3D is allowed only when it materially improves reasoning and still inherits the same evidence, policy, and correction model as other surfaces.
+> In KFM doctrine, 3D is conditional and burden-bearing. It inherits the same evidence, policy, and correction obligations as 2D surfaces and should never be used as default spectacle.
 
----
-
-## Public-safe controls
+### Public-safe controls
 
 | Control area | Expectation for notebook outputs |
 |---|---|
@@ -291,7 +288,7 @@ A 3D notebook should state:
 | **Restricted cultural knowledge** | Do not expose; escalate for review |
 | **Modeled results** | Keep clearly labeled as modeled, inferred, or interpretive |
 | **Observed vs interpreted data** | Do not blur the distinction |
-| **External AI assistance** | Never use it to speculate beyond evidence; keep sensitive-site inference prohibited |
+| **AI-assisted interpretation** | Never use it to speculate beyond evidence or infer restricted site locations |
 | **Derived status** | Do not let notebook outputs masquerade as canonical truth |
 
 [Back to top](#top)
@@ -302,7 +299,7 @@ A 3D notebook should state:
 
 A notebook or notebook update is ready for review when all of the following are true:
 
-- [ ] Purpose, scope, and lane are visible at the top of the notebook
+- [ ] Purpose, scope, and notebook family are visible at the top of the notebook
 - [ ] Inputs are identified with source references or equivalent provenance handles
 - [ ] Methods and parameters are documented clearly enough to rerun
 - [ ] The notebook executes cleanly in declared order
@@ -333,17 +330,17 @@ No. They are derived analysis surfaces. They may support downstream KFM surfaces
 
 ### Can a notebook in this directory use unpublished candidate data?
 
-Only if that use is separately governed and does not collapse this directory into a RAW / WORK / QUARANTINE bypass. This README assumes **results notebooks**, not unpublished source-edge storage.
+Only through separately governed paths. This README assumes **results notebooks**, not a RAW / WORK / QUARANTINE bypass.
 
 ### When is 3D acceptable?
 
-When 2D is materially insufficient and the notebook explicitly records the added governance burden, provenance handling, and interpretive limits.
+When 2D is materially insufficient and the notebook explicitly records the added review burden, provenance handling, and interpretive limits.
 
 ### What should never appear in public-safe notebook outputs?
 
 At minimum: exact sensitive site coordinates, raw human-remains datasets, and restricted tribal or culturally sensitive knowledge.
 
-### Can notebook outputs feed Focus Mode, stories, or dossiers?
+### Can notebook outputs feed Focus, stories, dossiers, or export surfaces?
 
 Yes, but only as downstream, reviewable, evidence-linked inputs. A notebook output is not an automatic publication event.
 
