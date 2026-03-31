@@ -10,58 +10,67 @@ updated: <REVIEW-REQUIRED>
 policy_label: <REVIEW-REQUIRED: public|restricted|mixed>
 related: [<REVIEW-REQUIRED: ../README.md>, <REVIEW-REQUIRED: ./site-distributions/README.md>, <REVIEW-REQUIRED: ./notebooks/README.md>]
 tags: [kfm, archaeology, results]
-notes: [Mounted repo not directly inspected in this session; child paths, owners, and dates require verification before commit.]
+notes: [Current-session workspace evidence was PDF-only; mounted repo paths, owners, dates, and related links require verification before commit.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Archaeology Results
 
-Public-safe index for promoted archaeology result surfaces, their publication boundaries, and their governed use inside KFM.
+Public-safe index for promoted archaeology result surfaces and their governed publication boundaries inside KFM.
 
 | Field | Value |
 | --- | --- |
 | Status | `experimental` |
-| Owners | `<REVIEW-REQUIRED>` |
-| Badges | ![status](https://img.shields.io/badge/status-experimental-orange) ![policy](https://img.shields.io/badge/policy-verify-lightgrey) ![evidence](https://img.shields.io/badge/evidence-PDF%20corpus%20only-lightgrey) ![care](https://img.shields.io/badge/CARE-governed-orange) ![precision](https://img.shields.io/badge/precision-generalized%2Fstewarded-blue) |
-| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Flow](#flow) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
+| Owners | `<REVIEW-REQUIRED: archaeology stewards>` |
+| Badges | ![status](https://img.shields.io/badge/status-experimental-orange) ![policy](https://img.shields.io/badge/policy-verify-lightgrey) ![evidence](https://img.shields.io/badge/evidence-PDF%20corpus%20only-lightgrey) ![precision](https://img.shields.io/badge/precision-generalized%2Fstewarded-blue) ![3D](https://img.shields.io/badge/3D-burden--bearing-purple) |
+| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
-> This README is doctrine-grounded, but **mounted repository verification was not available in this session**. Treat child paths, owners, identifiers, and timestamps marked `REVIEW-REQUIRED`, `INFERRED`, or `UNKNOWN` as commit-review items rather than settled repo fact.
+> This README is doctrine-grounded, but **mounted repository verification was not available in this session**. Treat all path, ownership, timestamp, and child-directory details marked `INFERRED`, `UNKNOWN`, `NEEDS VERIFICATION`, or `REVIEW-REQUIRED` as commit-review items rather than settled repo fact.
 
 ## Scope
 
-This directory is the results-layer landing zone for **promoted archaeology outputs** that are safe to index, describe, compare, and route onward into governed KFM surfaces.
+This directory is the results-layer landing zone for **promoted archaeology outputs** that are safe to index, describe, compare, and route into governed KFM surfaces.
 
-At this layer, archaeology is not treated as a loose bundle of maps, notebooks, or illustrations. Results are expected to remain downstream of evidence, provenance, policy, review, and release state. This README therefore acts as an index and a guardrail, not as a substitute for canonical records, EvidenceBundles, or steward review.
+At this layer, archaeology is not a loose collection of maps, notebooks, figures, or scene files. Results remain downstream of evidence, rights, sensitivity handling, review, release state, and correction lineage. This README therefore acts as both an index and a publication-boundary guardrail.
 
-### Status posture used here
+### Results-layer posture used here
 
-| Layer | Status | Meaning |
+| Area | Status | Meaning in this draft |
 | --- | --- | --- |
-| Governing archaeology publication doctrine | `CONFIRMED` | Supported by the visible KFM corpus |
-| Results-root child structure | `INFERRED` | Strongly suggested by archaeology planning material, but not repo-verified here |
-| Mounted repo topology and neighboring files | `UNKNOWN` | Not directly inspectable in this session |
-| Placeholder metadata values in the KFM meta block | `NEEDS VERIFICATION` | Must be filled from mounted repo truth before commit |
+| KFM archaeology publication doctrine | `CONFIRMED` | Supported by the visible KFM corpus |
+| Archaeology rights / sensitivity burden | `CONFIRMED` | Public-safe release must tolerate generalization, withholding, or review escalation |
+| Current repo topology and adjacent files | `UNKNOWN` | No mounted repo tree was directly inspectable in this session |
+| `docs/analyses/archaeology/results/README.md` as exact mounted path | `INFERRED` | Strongly suggested by the provided target and supporting archaeology materials, but not repo-verified here |
+| `site-distributions/` and `notebooks/` as child modules | `INFERRED` | Supported by the user-provided baseline and supporting archaeology materials, but not mounted-path verified |
+| Meta-block placeholders | `NEEDS VERIFICATION` | Must be replaced from mounted repo truth before commit |
+
+### What belongs here, in one sentence
+
+**Promoted, public-safe, evidence-linked archaeology result surfaces** belong here.
 
 [Back to top](#top)
 
 ## Repo fit
 
-**Path:** `docs/analyses/archaeology/results/README.md`
+**Path:** `docs/analyses/archaeology/results/README.md` — `INFERRED`
 
-**Upstream:** `../README.md` — `NEEDS VERIFICATION`
+**Upstream:** `../README.md` — `NEEDS VERIFICATION`  
+**Downstream:** `./site-distributions/README.md`, `./notebooks/README.md` — `INFERRED`
 
-**Downstream:**  
-- `./site-distributions/README.md` — `INFERRED` from archaeology planning material  
-- `./notebooks/README.md` — `INFERRED` from archaeology planning material
+### Role in the repository
 
-### What this README does in the repo
+This README should help maintainers and reviewers answer four questions quickly:
 
-- gives maintainers a stable entry point for archaeology result surfaces
-- distinguishes what belongs in public-safe result docs from what belongs in steward-only or pre-release layers
-- keeps precision, provenance, and publication burdens visible at the point of navigation
-- prevents result summaries from quietly replacing governed evidence objects
+1. Is this archaeology output **promoted** or still a working candidate?
+2. Is it safe to expose at this results layer, or does it belong in a steward-restricted lane?
+3. Is the result **generalized, partial, modeled, or interpretive** in a way that must remain visible?
+4. Does the result link onward to governed evidence, rather than quietly replacing it?
+
+### Repo-native expectation
+
+This directory should behave as an **index of bounded result surfaces**, not as a sovereign source of archaeological truth.
 
 [Back to top](#top)
 
@@ -72,23 +81,33 @@ At this layer, archaeology is not treated as a loose bundle of maps, notebooks, 
 This directory may contain or index:
 
 - promoted archaeology result summaries
-- generalized spatial pattern outputs
-- public-safe distribution analyses
-- release-backed result notes with provenance context
-- result-level README files for cleared child modules
+- generalized site-distribution outputs
+- public-safe density, cluster, or pattern surfaces
+- result-level README files for steward-cleared child modules
 - notebook indexes **only when their exposure class is explicit**
-- links to related schemas, manifests, or proof artifacts **once verified in the mounted repo**
+- links to release-backed manifests, proofs, or evidence hooks **once mounted paths are verified**
+- bounded 2.5D / 3D result surfaces **only when 2D is materially insufficient and the same evidence/policy/correction burdens still apply**
 
 ### Minimum expectations for anything linked here
 
-Any child result surface should make these items inspectable:
+Any child result surface should make these items easy to inspect:
 
-1. what the result represents
-2. what publication class applies
-3. what precision controls were applied
-4. what provenance or evidence path supports it
-5. whether the result is observational, analytical, modeled, or interpretive
-6. what remains withheld, generalized, or unavailable
+| Expectation | Why it matters |
+| --- | --- |
+| What the result represents | prevents vague or decorative publication |
+| Whether it is observational, analytical, modeled, or interpretive | keeps method and claim type visible |
+| What publication class applies | avoids accidental exposure drift |
+| What precision controls were used | especially important for archaeological sensitivity |
+| What was generalized, withheld, or omitted | prevents exactness from being implied |
+| What evidence / provenance route supports it | keeps inspectability alive |
+| What review or release state applies | shows whether the result is stable, draft, or pending |
+
+### Typical input examples
+
+- generalized density or distribution outputs
+- result notes derived from steward-reviewed trench, site, or survey material
+- publication-safe figures or derivative rasters
+- bounded notebook indexes pointing to released analysis artifacts
 
 [Back to top](#top)
 
@@ -97,23 +116,23 @@ Any child result surface should make these items inspectable:
 This directory is **not** the place for:
 
 - RAW, WORK, or QUARANTINE archaeology material
-- exact find spots or precision that exceeds the approved publication class
-- unpublished candidate analyses
-- unreviewed notebook snapshots
-- excavation working notes
-- derived narratives without evidence linkage
-- AI-generated interpretation that adds speculation, re-attribution, or unverified claims
-- 3D outputs published merely because they are visually impressive
+- exact site coordinates or other precision beyond the approved publication class
+- unreviewed notebooks or exploratory scratch outputs
+- unpublished candidate interpretations
+- raw trench photography or raw geophysics deliverables awaiting steward review
+- direct dumps of derived AI output without evidence linkage and review context
+- spectacle-first 3D scenes published merely because they are visually impressive
 
 ### Put these elsewhere instead
 
-| Material | Keep out of `results/` because... | Put it in... |
+| Material | Keep it out of `results/` because... | Put it in... |
 | --- | --- | --- |
-| Raw field captures, trench logs, ingestion outputs | not yet publication-safe | upstream intake / working lanes |
-| Precise sensitive coordinates | may create site, rights, or stewardship risk | steward-restricted surfaces |
-| Candidate notebooks and intermediate models | not yet governed outputs | internal analysis or methods lanes |
-| Release evidence, manifests, receipts | trust objects, not result prose | release / catalog / proof-pack surfaces |
-| Public stories or map apps | downstream delivery surfaces | governed product surfaces |
+| RAW captures, field notes, trench logs, draft ingest outputs | not publication-safe | upstream intake / working lanes |
+| Exact locations and other sensitive coordinates | may create stewardship or exposure risk | steward-restricted surfaces |
+| Unreviewed notebooks and intermediate models | not yet promoted | internal analysis or methods lanes |
+| Release proofs, manifests, receipts | these are trust objects, not result prose | release / catalog / proof-pack surfaces |
+| Public stories, civic explainers, or app views | downstream publication surfaces | governed product surfaces |
+| Human remains or otherwise restricted materials without explicit steward clearance | sensitivity and rights burden is higher | steward-only review lanes |
 
 [Back to top](#top)
 
@@ -123,36 +142,39 @@ This directory is **not** the place for:
 docs/analyses/archaeology/results/
 ├── README.md                         # this file
 ├── site-distributions/               # INFERRED; verify mounted path
-│   └── README.md                     # generalized site-distribution results
+│   └── README.md                     # generalized distributions, clusters, density surfaces
 └── notebooks/                        # INFERRED; verify mounted path
-    └── README.md                     # index for archaeology analysis notebooks
+    └── README.md                     # index of publication-safe or explicitly bounded notebooks
 ```
 
 > [!NOTE]
-> The two child modules above are included because archaeology planning material names them explicitly. Their **mounted existence, exact path spelling, and local section conventions still need repo verification**.
+> The tree above is intentionally conservative. Supporting archaeology materials suggest additional result families may exist or may be planned, but only the two child modules named in the user-provided baseline are kept in the main tree until the mounted repo confirms more.
 
 [Back to top](#top)
 
 ## Quickstart
 
-### Add a new result module safely
+### Add a new archaeology result module safely
 
 1. Confirm the source output is **promoted**, not merely generated.
 2. Confirm the publication class and precision controls are explicit.
-3. Create or update the child README for the result family.
-4. Add the child module to the table in [Known result modules](#known-result-modules).
-5. State what was generalized, withheld, or left unresolved.
-6. Link outward only to governed, reviewable artifacts.
+3. Decide whether the result belongs here or in a steward-restricted lane.
+4. Create or update the child README for that result family.
+5. State whether the result is observational, analytical, modeled, or interpretive.
+6. Declare what was generalized, withheld, or left unresolved.
+7. Link only to governed, reviewable artifacts.
+8. Add or update the module entry in [Known result modules](#known-result-modules).
 
-### Review this root README before commit
+### Commit-review checklist
 
 ```bash
-# Review checklist (illustrative; adjust to mounted repo reality)
-# 1. Replace REVIEW-REQUIRED placeholders
+# Illustrative review checklist — verify against mounted repo reality
+# 1. Replace REVIEW-REQUIRED placeholders in the meta block
 # 2. Verify upstream/downstream relative links
 # 3. Confirm child directories actually exist
-# 4. Confirm exposure class for each child module
-# 5. Confirm this README does not imply exact locations are public
+# 4. Confirm policy label and exposure class
+# 5. Confirm no exact-location disclosure is implied
+# 6. Confirm modeled / generalized / partial states are labeled in-place
 ```
 
 [Back to top](#top)
@@ -161,43 +183,43 @@ docs/analyses/archaeology/results/
 
 ### For maintainers
 
-Use this README as the first stop when adding a new archaeology result surface. The goal is to decide whether the material is:
+Use this README as the first stop when adding a new archaeology result surface. The question is not just “does this look useful?” but also:
 
-- ready for public-safe indexing,
-- only fit for steward or internal use,
-- still a candidate output,
-- or blocked pending rights, sensitivity, or provenance review.
+- is it promoted,
+- is it public-safe,
+- is its precision appropriate,
+- and does it stay downstream of governed evidence?
 
 ### For reviewers
 
-Review this directory as a **publication boundary**, not just a documentation folder. A good review asks:
+Review this directory as a **publication boundary**, not just a docs folder. Good review questions include:
 
-- Is the result clearly downstream of governed evidence?
-- Is the precision appropriate to the publication class?
+- Does the result inherit the truth path rather than bypass it?
 - Is the exposure class obvious?
-- Does the doc distinguish observed findings from modeled or interpretive outputs?
-- Does it avoid letting convenience layers become sovereign truth?
+- Are generalized and withheld aspects visible?
+- Does the result distinguish observed findings from modeled or interpretive overlays?
+- Does any 3D or 2.5D material carry real reasoning burden rather than visual surplus?
 
-### For product and UX work
+### For product / UX work
 
-Treat this directory as a content registry for archaeology result surfaces that may later appear in map, dossier, story, compare, or export contexts. The README should make those surfaces easier to govern, not easier to overstate.
+Treat this README as an index of archaeology result surfaces that may later appear in map, dossier, story, compare, or export contexts. Those downstream surfaces should gain clarity from this registry, not permission to overstate what archaeology evidence can support.
 
 [Back to top](#top)
 
-## Flow
+## Diagram
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Promoted archaeology evidence] --> B[Result package]
-    B --> C{Rights / sensitivity / publication review}
+    B --> C{Rights / sensitivity / precision review}
     C -->|public-safe| D[Generalized result surface]
-    C -->|restricted| E[Steward-only or withheld surface]
+    C -->|restricted or unresolved| E[Steward-only / withheld surface]
     D --> F[Archaeology Results index]
-    F --> G[Site distributions]
-    F --> H[Notebook index]
-    G --> I[Map / dossier / story / export]
-    H --> J[Internal analysis or bounded summaries]
-    E --> K[Not linked publicly from this index]
+    F --> G[site-distributions/]
+    F --> H[notebooks/]
+    G --> I[Map / Dossier / Story / Export]
+    H --> J[Bounded notebook summaries]
+    E --> K[Not linked from public-safe index]
 ```
 
 [Back to top](#top)
@@ -208,31 +230,43 @@ flowchart TD
 
 | Rule | Why it matters |
 | --- | --- |
-| Results stay downstream of governed evidence | prevents summary prose from replacing canonical truth |
-| Public-safe archaeology outputs must tolerate precision reduction | protects sensitive locations and stewardship obligations |
-| Generalization must be visible, not implied away | keeps users from mistaking redacted outputs for exact records |
+| Results stay downstream of evidence and release state | prevents summaries from replacing canonical support |
+| Promotion is required; generation alone is not enough | generated output is not automatically publishable |
+| Generalization must be visible, not implied away | readers should not mistake safe outputs for exact records |
 | Notebook indexes need an explicit exposure class | avoids accidental publication through documentation |
-| 2D remains the default explanatory surface | keeps visual escalation proportional to actual analytical need |
-| 3D requires burden-bearing justification | avoids conflating spectacle with evidence |
+| 2D remains the default explanatory surface | lowers governance burden for public reasoning |
+| 3D or 2.5D must justify itself | archaeology volumetrics should improve reasoning, not just presentation |
+| Exact-location risk must fail closed | archaeology sensitivity is not a cosmetic concern |
+
+### Publication state cues
+
+| Surface cue | Use it when... | Reader takeaway |
+| --- | --- | --- |
+| `promoted` | the result passed its release boundary | safe to treat as governed output within stated scope |
+| `generalized` | precision was intentionally reduced | do not treat as exact location or exact geometry |
+| `partial` | coverage or interpretation is incomplete | absence may reflect incomplete scope, not nonexistence |
+| `modeled` | the output is analytical or simulated | useful, but not a direct observation |
+| `restricted / withheld` | public exposure would be unsafe or unresolved | steward review is still carrying the burden |
+| `source-dependent` | the result relies on external or still-bounded support | confidence and reuse should stay proportional |
 
 ### Known result modules
 
 | Module | Intended role | Exposure | Status in this draft | Notes |
 | --- | --- | --- | --- | --- |
-| `site-distributions/` | generalized spatial distributions, clusters, density patterns, interaction zones | public-safe | `INFERRED` | archaeology planning material suggests public/generalized use |
-| `notebooks/` | index of archaeology analysis notebooks | mixed / likely internal-first | `INFERRED` | planning material suggests a notebook index with stronger restrictions |
-| additional result families | future promoted result sets | TBD | `UNKNOWN` | do not add ad hoc; verify against mounted repo and publication burden |
+| `site-distributions/` | generalized site distributions, clusters, density, probability-style surfaces | public-safe / generalized | `INFERRED` | supporting archaeology material suggests generalized outputs here |
+| `notebooks/` | index of archaeology notebooks or notebook-backed outputs | mixed / likely internal-first | `INFERRED` | only publication-safe notebooks or bounded notebook indexes should appear |
+| additional result families | future promoted archaeology result sets | TBD | `UNKNOWN` | verify mounted repo before adding to main tree |
 
 ### Result-doc content expectations
 
 | Section | Keep it concise | Why it belongs |
 | --- | --- | --- |
-| Purpose | yes | tells readers what the result is actually for |
+| Purpose | yes | clarifies what the result is actually for |
 | Method / basis | yes | distinguishes observed vs modeled vs interpretive |
-| Publication limits | yes | makes redaction and withholding visible |
-| Provenance / evidence hooks | yes | keeps inspectability alive |
-| Status / review state | yes | shows whether the result is stable, draft, or pending |
-| Related modules | yes | helps GitHub navigation without duplicating evidence objects |
+| Publication limits | yes | makes generalization and withholding visible |
+| Evidence / provenance hooks | yes | preserves inspectability |
+| Status / review state | yes | avoids false finality |
+| Related modules | yes | helps GitHub navigation without duplicating canonical records |
 
 [Back to top](#top)
 
@@ -241,13 +275,13 @@ flowchart TD
 - [ ] Verify whether `docs/analyses/archaeology/results/README.md` already exists in the mounted repo.
 - [ ] Confirm the exact upstream archaeology README path.
 - [ ] Confirm whether `site-distributions/` exists and is still the preferred public-safe result module name.
-- [ ] Confirm whether `notebooks/` belongs under `results/` in the mounted repo, and whether its exposure class is internal.
+- [ ] Confirm whether `notebooks/` belongs under `results/` in the mounted repo, and whether its exposure class is internal, mixed, or public-safe.
 - [ ] Replace all `REVIEW-REQUIRED` placeholders in the KFM meta block.
 - [ ] Confirm owners, dates, UUID, and policy label from mounted repo truth.
+- [ ] Verify whether additional archaeology result families exist beside the two named child modules.
 - [ ] Add verified links to manifests, schemas, or proof artifacts only after path confirmation.
-- [ ] Confirm whether this root README should be `public`, `restricted`, or `mixed`.
-- [ ] Check neighboring docs for local badge, heading, and metadata conventions.
-- [ ] Run commit review for terminology drift: `generalized`, `withheld`, `promoted`, `publication class`, `steward review`.
+- [ ] Confirm whether this root README should be labeled `public`, `restricted`, or `mixed`.
+- [ ] Check neighboring docs for local badge, heading, metadata, and README conventions.
 
 [Back to top](#top)
 
@@ -255,19 +289,23 @@ flowchart TD
 
 ### Why are generalized results acceptable here, but exact records are not?
 
-Because archaeology publication burden is not only technical. It includes rights, sensitivity, and location-risk considerations. This directory should therefore favor public-safe, generalized result surfaces over precise disclosures.
+Because archaeology publication burden is not only technical. It includes rights, sensitivity, precision, and stewardship risk. This layer should therefore prefer generalized, public-safe results over exact disclosures.
 
 ### Do notebooks belong in `results/`?
 
-Sometimes. A notebook **index** may belong here if its exposure class is explicit and its linked artifacts are publication-safe. Unreviewed notebooks or sensitive notebook outputs should not be indexed here.
+Sometimes. A notebook **index** may belong here if its exposure class is explicit and the linked artifacts are publication-safe. Unreviewed notebooks or sensitive notebook outputs should not be indexed here.
 
 ### When should a result use 3D?
 
-Only when 2D is materially insufficient and the additional governance burden has been accepted. The default posture remains 2D-first.
+Only when 2D is materially insufficient and the additional governance burden has been accepted. Archaeology can justify 3D for trench, stratigraphic, or subsurface reasoning, but that does not relax evidence, policy, or correction requirements.
 
 ### Can this README link directly to maps, stories, or exports?
 
 Yes, but only when those surfaces are governed, reviewable, and consistent with the same publication class and precision rules described here.
+
+### Is this directory the same thing as the archaeology datasets lane?
+
+No. Datasets, evidence objects, manifests, and proofs remain distinct from result-oriented navigation. This README should point toward them, not absorb their role.
 
 [Back to top](#top)
 
@@ -282,16 +320,17 @@ Yes, but only when those surfaces are governed, reviewable, and consistent with 
 - precision policy is explicit
 - result type is explicit: observational / analytical / modeled / interpretive
 - provenance or evidence route is named
-- withheld or generalized material is declared
-- links do not bypass governed surfaces
+- generalized or withheld material is declared
+- linked surfaces do not bypass governed publication surfaces
 - status language does not imply mounted implementation that has not been verified
+- any 3D / 2.5D reasoning burden is explained
 
 ### Language to avoid
 
 - “authoritative map” for a derived result surface
 - “complete” when coverage is partial
 - “exact” when coordinates were generalized
-- “verified” when only planning material is visible
+- “verified” when only planning or doctrine material is visible
 - “safe to publish” without a stated publication basis
 
 </details>
@@ -301,16 +340,34 @@ Yes, but only when those surfaces are governed, reviewable, and consistent with 
 
 | Label | Use here |
 | --- | --- |
-| `CONFIRMED` | directly supported by the visible KFM corpus |
-| `INFERRED` | strongly suggested by project planning material, but not mounted-path verified |
-| `PROPOSED` | recommended structure or workflow shape |
+| `CONFIRMED` | directly supported by visible KFM corpus evidence |
+| `INFERRED` | strongly suggested by the visible corpus or user-provided baseline, but not mounted-path verified |
+| `PROPOSED` | recommended structure or future-safe packaging move |
 | `UNKNOWN` | not directly verified in this session |
 | `NEEDS VERIFICATION` | must be checked against the mounted repo before commit |
 
 </details>
 
+<details>
+<summary><strong>Possible future sibling result families mentioned in supporting archaeology material (`INFERRED` only)</strong></summary>
+
+The following families appeared in supporting archaeology planning material, but **are not treated as mounted repo fact in this README**:
+
+| Candidate module | Likely role | Caution |
+| --- | --- | --- |
+| `cultural-landscapes/` | movement, settlement, territorial, or route reconstructions | likely needs strong generalization and interpretation labeling |
+| `stratigraphy/` | layer sequencing, phased sections, chronology surfaces | trench/unit precision may require tighter controls |
+| `artifacts/` | artifact distributions, classifications, typology results | restricted or human-remains-related material may need exclusion or steward review |
+| `geophysics/` | interpreted GPR / magnetometry outputs | raw grids and donor-restricted materials may not be public-safe |
+| `paleoenvironment/` | eco-sample and environmental context correlations | licensing and sampling sensitivity may vary |
+| `ai-interpretations/` | bounded, evidence-linked archaeology summaries | must stay clearly downstream of evidence and review |
+
+If these modules exist in the mounted repo, add them only after verifying paths, exposure class, and local naming conventions.
+
+</details>
+
 ---
 
-Built for a KFM review posture: doctrine first, precision visible, and publication claims kept proportional to evidence.
+Built for a KFM archaeology review posture: doctrine first, precision visible, and public-safe result claims kept proportional to evidence.
 
 [Back to top](#top)
