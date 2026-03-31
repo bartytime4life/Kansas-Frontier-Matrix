@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
-related: ["../README.md", "../architecture/", "../governance/", "../standards/", "../../apps/", "../../packages/", "../../contracts/", "../../policy/", "../../data/", "../../tests/", "../../tools/", "../../scripts/", "../../.github/workflows/"]
+related: ["../README.md", "../architecture/", "../governance/", "../standards/", "../runbooks/", "./ssurgo_to_catchment.md", "../../apps/", "../../packages/", "../../contracts/", "../../schemas/", "../../policy/", "../../data/", "../../tests/", "../../tools/", "../../scripts/", "../../examples/thin_slice/README.md", "../../examples/thin_slice/hydrology/README.md", "../../.github/workflows/"]
 tags: [kfm, pipelines, docs]
-notes: ["Grounded in current public repo surfaces plus March 2026 KFM doctrine.", "doc_id, created, updated, and policy_label need direct repo or steward verification before merge.", "Historical or support-corpus pipeline paths outside the currently verified public tree remain explicitly labeled as SOURCE-REPORTED or NEEDS VERIFICATION."]
+notes: ["Grounded in current public repo surfaces plus March 2026 KFM doctrine.", "Current public docs/pipelines/ tree verifies README.md plus ssurgo_to_catchment.md.", "doc_id, created, updated, and policy_label need direct steward verification before merge.", "Support-corpus or historical pipeline paths outside the currently verified public tree remain INFERRED / NEEDS VERIFICATION."]
 [/KFM_META_BLOCK_V2] -->
 
 # pipelines
@@ -18,12 +18,12 @@ notes: ["Grounded in current public repo surfaces plus March 2026 KFM doctrine."
 Governed pipeline documentation for KFM: what a pipeline does, what it emits, what gates it must pass, and what it must never quietly imply.
 
 > [!IMPORTANT]
-> This directory is part of KFM’s **governed documentation surface**, not a loose notes folder. Pipeline docs here should strengthen inspectability across source intake, validation, promotion, publication, correction, and rollback.
+> This directory is part of KFM's **governed documentation surface**, not a loose notes folder. Pipeline docs here should strengthen inspectability across source intake, validation, promotion, publication, correction, and rollback.
 
 > [!NOTE]
 > This README is intentionally evidence-bounded. It distinguishes between:
 > - **CONFIRMED** current public repo structure
-> - **SOURCE-REPORTED** paths seen in project support material
+> - **INFERRED** support-corpus, historical, or doctrine-consistent references not reverified in the current public tree
 > - **PROPOSED** structure or conventions that fit KFM doctrine
 > - **UNKNOWN / NEEDS VERIFICATION** implementation details not proven in the current visible repo state
 
@@ -48,14 +48,14 @@ This directory is for **pipeline-facing documentation** inside the `docs/` gover
 Use it for material such as:
 
 - pipeline specifications
-- operator runbooks
+- operator runbooks or runbook pointers tied to one pipeline or family
 - source onboarding notes tied to one pipeline or family
 - validation and promotion criteria
 - artifact and receipt expectations
 - replay, rollback, and correction guidance
 - human-readable links between source intake, governed processing, catalog closure, and published outputs
 
-The emphasis is not “how to improvise a script.” The emphasis is **how a pipeline participates in KFM’s governed truth path** and what must stay visible under review.
+The emphasis is not "how to improvise a script." The emphasis is **how a pipeline participates in KFM's governed truth path** and what must stay visible under review.
 
 [Back to top](#pipelines)
 
@@ -69,17 +69,28 @@ The emphasis is not “how to improvise a script.” The emphasis is **how a pip
 - [`../architecture/`](../architecture/) — architectural doctrine and system placement
 - [`../governance/`](../governance/) — policy, stewardship, review, and release controls
 - [`../standards/`](../standards/) — shared conventions and document rules
+- [`../runbooks/`](../runbooks/) — operator procedure home when guidance becomes lifecycle-operational
+
+### Current verified local neighbors
+
+| Path | Current role |
+|---|---|
+| [`./README.md`](./README.md) | Directory contract and index for pipeline docs |
+| [`./ssurgo_to_catchment.md`](./ssurgo_to_catchment.md) | Draft child pipeline doc for a focused soil-to-catchment derivation lane |
 
 ### Adjacent repository surfaces
 
 - [`../../apps/`](../../apps/) — runnable user-facing or operator-facing app surfaces
 - [`../../packages/`](../../packages/) — reusable implementation modules and business-law surfaces
-- [`../../contracts/`](../../contracts/) — contract surfaces and machine-readable interface expectations
+- [`../../contracts/`](../../contracts/) — machine-readable contract surfaces and interface expectations
+- [`../../schemas/`](../../schemas/) — supporting schema surface; do not let it fork contract law
 - [`../../policy/`](../../policy/) — governed policy logic and decision posture
 - [`../../data/`](../../data/) — lifecycle zones, catalog artifacts, and publish-facing outputs
 - [`../../tests/`](../../tests/) — verification, negative paths, release/correction drills
 - [`../../tools/`](../../tools/) — validators, diff/probe tooling, and support utilities
 - [`../../scripts/`](../../scripts/) — repeatable repo-local execution entrypoints
+- [`../../examples/thin_slice/README.md`](../../examples/thin_slice/README.md) — public-safe, non-authoritative thin-slice examples
+- [`../../examples/thin_slice/hydrology/README.md`](../../examples/thin_slice/hydrology/README.md) — current hydrology example lane
 - [`../../.github/workflows/`](../../.github/workflows/) — CI/CD workflow surface
 
 ### What this README is for
@@ -111,8 +122,8 @@ Link to those surfaces. Do not duplicate them casually.
 Belongs here when it is a **human-readable** pipeline-facing document, such as:
 
 - a pipeline family README
-- a pipeline spec
-- an ingestion runbook
+- a focused child pipeline spec for one transform or derivation lane
+- an ingestion runbook or runbook pointer
 - an artifact guide for vectors, rasters, tiles, catalogs, receipts, or provenance bundles
 - a replay / rollback / supersession note
 - a review checklist for publish readiness
@@ -135,10 +146,11 @@ Does **not** belong here:
 |---|---|---|
 | Runnable implementation code | `../../packages/` or `../../apps/` | Code should live with its owning module or runtime |
 | Machine-readable schemas | `../../contracts/` and related canonical schema surface(s) | This directory documents schemas; it should not fork contract law |
-| Executable policy bundles | `../../policy/` | Policy must stay reviewable and testable in its owning layer |
+| Executable policy bundles and policy fixtures | `../../policy/` | Policy must stay reviewable and testable in its owning layer |
 | Canonical lifecycle artifacts | `../../data/` | Docs are not the authoritative artifact store |
-| Validation harnesses and regression fixtures | `../../tests/` | Verification needs its own governed surface |
+| Validation harnesses, fixtures, and regression suites | `../../tests/` | Verification needs its own governed surface |
 | One-off helper scripts | `../../scripts/` or `../../tools/` | Operational code should not hide in docs |
+| Illustrative sample payloads, walkthrough packs, or public-safe thin-slice explainer material | `../../examples/thin_slice/` | Examples are for explanation, not for silently becoming contract or release truth |
 | Claims about live runtime or deployment state without proof | mark as `UNKNOWN` / `NEEDS VERIFICATION` | KFM prefers explicit incompleteness over persuasive overclaiming |
 
 [Back to top](#pipelines)
@@ -150,14 +162,15 @@ Does **not** belong here:
 ```text
 docs/
 └── pipelines/
-    └── README.md
+    ├── README.md
+    └── ssurgo_to_catchment.md
 ```
 
-That is the only pipeline-doc subtree **CONFIRMED** in the current visible public branch.
+The current public lane is small but not empty: it contains this directory contract plus one sibling draft child doc.
 
-### Source-reported / historical / proposed expansion shapes
+### Support-corpus / historical / proposed expansion shapes
 
-The broader KFM support corpus points to pipeline materials such as the following, but these should be treated as **SOURCE-REPORTED** or **NEEDS VERIFICATION** until rechecked in the active branch or local checkout:
+The broader KFM support corpus points to pipeline materials such as the following, but these should be treated as **INFERRED / NEEDS VERIFICATION** until rechecked in the active branch or a mounted checkout:
 
 ```text
 docs/pipelines/
@@ -168,7 +181,7 @@ docs/pipelines/
 ```
 
 ```text
-historical-or-implementation-side examples
+historical-or-support-corpus examples
 ├── src/pipelines/hydrology/nwis_watcher/README.md
 ├── src/pipelines/air_quality/fusion/
 ├── src/pipelines/air_quality/INGEST_FLOW.md
@@ -176,7 +189,7 @@ historical-or-implementation-side examples
 ```
 
 > [!CAUTION]
-> The public repo surface verified in this review does **not** establish a top-level `src/` directory. References to `src/pipelines/**` therefore belong to historical/source-reported context, not to the current confirmed tree.
+> The current public repo surface verified in this revision does **not** establish `docs/pipelines/soil/**` or `src/pipelines/**` as live public-tree facts. Keep those references visibly labeled as **INFERRED / NEEDS VERIFICATION** until rechecked.
 
 [Back to top](#pipelines)
 
@@ -186,11 +199,11 @@ historical-or-implementation-side examples
 
 1. Start from the **owning contract and lifecycle question**, not from formatting.
 2. Confirm what is actually visible in the current repo surface.
-3. Link the relevant contract, policy, data, test, and tooling surfaces.
-4. State the pipeline’s place in the truth path clearly.
+3. Link the relevant contract, policy, data, test, tooling, and runbook surfaces.
+4. State the pipeline's place in the truth path clearly.
 5. Document what the pipeline emits and what must pass before promotion.
 6. Name failure states, correction behavior, and replay/rollback expectations.
-7. Mark anything not directly verified as `SOURCE-REPORTED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
+7. Mark anything not directly verified as `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
 
 ### Minimal starter outline
 
@@ -223,6 +236,7 @@ Prefer links to:
 - the validation harness
 - the operator tool or script
 - the release or proof object surface
+- a public-safe example lane when illustration helps but canonical truth should stay elsewhere
 
 That keeps docs aligned to repo truth and reduces drift.
 
@@ -253,6 +267,10 @@ A strong doc in this directory should make the following explicit:
 - where machine-readable truth lives
 - what remains unverified
 
+### Example material without truth drift
+
+Use [`../../examples/thin_slice/`](../../examples/thin_slice/) for public-safe walkthroughs, sample payloads, and thin-slice explainers. Keep `docs/pipelines/` focused on requirements, review burden, and authoritative links into the governing surfaces.
+
 ### Naming guidance
 
 Prefer names that reveal **function + source family**:
@@ -262,6 +280,7 @@ Prefer names that reveal **function + source family**:
 - `soil_artifacts`
 - `nwis-watcher`
 - `drift-monitor`
+- `ssurgo_to_catchment`
 
 Avoid vague buckets such as:
 
@@ -279,12 +298,13 @@ Avoid vague buckets such as:
 flowchart LR
     A[Source family docs<br/>and onboarding notes]
     B[docs/pipelines/**<br/>human-readable pipeline contract]
-    C[contracts/<br/>schemas / envelopes / payloads]
+    C[contracts / schemas<br/>machine-readable law]
     D[policy/<br/>deny-by-default / reasons / obligations]
     E[data/<br/>truth path + artifacts + catalogs]
     F[tests + tools + scripts<br/>verification and operator support]
     G[apps / packages<br/>runnable governed behavior]
     H[.github/workflows/<br/>CI surface]
+    X[examples/thin_slice/**<br/>public-safe examples]
 
     A --> B
     C --> B
@@ -293,6 +313,7 @@ flowchart LR
     F --> B
     G --> B
     H --> B
+    X -.-> B
 
     B --> I[contributors]
     B --> J[reviewers]
@@ -303,7 +324,7 @@ flowchart LR
 
 ### Interpretation
 
-This directory is the **human-readable bridge** between implementation, contracts, policy, lifecycle artifacts, and review. It is important, but it is not the runtime source of truth.
+This directory is the **human-readable bridge** between implementation, contracts, policy, lifecycle artifacts, and review. It is important, but it is not the runtime source of truth. Example lanes may support explanation, but they do not lower the publication or proof burden.
 
 [Back to top](#pipelines)
 
@@ -313,7 +334,7 @@ This directory is the **human-readable bridge** between implementation, contract
 
 | Section | Required | Why |
 |---|---:|---|
-| Purpose | Yes | The reader should know the pipeline’s job immediately |
+| Purpose | Yes | The reader should know the pipeline's job immediately |
 | Repo fit | Yes | Keeps boundaries and ownership visible |
 | Inputs | Yes | Prevents source-role drift |
 | Outputs | Yes | Clarifies emitted artifacts |
@@ -328,8 +349,8 @@ This directory is the **human-readable bridge** between implementation, contract
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the current visible repo surface or attached project doctrine |
-| **SOURCE-REPORTED** | Mentioned in support material, inventories, or older/historical project packages |
+| **CONFIRMED** | Directly supported by the current visible public repo surface or current doctrinal source material |
+| **INFERRED** | Strongly implied by support material, adjacent repo context, or doctrine, but not directly reverified as current implementation fact |
 | **PROPOSED** | Recommended structure or behavior consistent with KFM doctrine |
 | **UNKNOWN** | Not verified strongly enough in the current session |
 | **NEEDS VERIFICATION** | Must be checked before merge, release, or broad reuse |
@@ -339,20 +360,22 @@ This directory is the **human-readable bridge** between implementation, contract
 | Path | Current status | Notes |
 |---|---|---|
 | `docs/pipelines/README.md` | **CONFIRMED** | Present in current public `docs/pipelines/` |
-| `docs/pipelines/soil/sda-weekly/README.md` | **SOURCE-REPORTED / NEEDS VERIFICATION** | Present in support corpus, not confirmed in current public tree |
-| `docs/pipelines/soil/differential-updates/README.md` | **SOURCE-REPORTED / NEEDS VERIFICATION** | Same |
-| `docs/pipelines/soil/soil_artifacts.md` | **SOURCE-REPORTED / NEEDS VERIFICATION** | Same |
-| `src/pipelines/hydrology/nwis_watcher/README.md` | **SOURCE-REPORTED / historical** | Not part of the current verified public root structure |
-| `src/pipelines/air_quality/fusion/` | **SOURCE-REPORTED / historical** | Same |
-| `src/pipelines/air_quality/drift_monitor/README.md` | **SOURCE-REPORTED / historical** | Same |
+| `docs/pipelines/ssurgo_to_catchment.md` | **CONFIRMED** | Present in current public `docs/pipelines/`; local contract/policy/test claims inside that doc remain its own review burden |
+| `docs/pipelines/soil/sda-weekly/README.md` | **INFERRED / NEEDS VERIFICATION** | Mentioned in support material, not reverified in current public tree |
+| `docs/pipelines/soil/differential-updates/README.md` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `docs/pipelines/soil/soil_artifacts.md` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `src/pipelines/hydrology/nwis_watcher/README.md` | **INFERRED / NEEDS VERIFICATION** | Historical or support-corpus mention; not part of the current verified public root structure |
+| `src/pipelines/air_quality/fusion/` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `src/pipelines/air_quality/drift_monitor/README.md` | **INFERRED / NEEDS VERIFICATION** | Same |
 
 ### Current repo-fit cautions
 
 | Caution | Why it matters |
 |---|---|
-| `contracts/` and `schemas/` coexist in the repo ecosystem | Do not silently declare one as authoritative in this README unless an ADR or repo rule confirms it |
-| `.github/workflows/` is currently a documentation surface in the visible public branch | Do not imply active merge-gate YAML here unless separately verified |
-| `docs/pipelines/` currently verifies only this README | Child docs should be added deliberately, not assumed into existence |
+| `contracts/` and `schemas/` both exist publicly | Do not fork machine truth across both surfaces or casually restate contract law here |
+| `.github/workflows/` currently presents as a documentation/history surface in public `main` | Do not imply checked-in merge-gate YAML from this README alone |
+| `docs/pipelines/` currently verifies a directory README plus one sibling draft child doc | Describe the lane as small, not empty |
+| `examples/thin_slice/` exists as a public-safe example lane | Use it for illustration, not as proof of release, policy enforcement, or mounted runtime behavior |
 
 [Back to top](#pipelines)
 
@@ -369,13 +392,14 @@ A directory-level pipeline README or child pipeline doc is ready when:
 - [ ] promotion / publish conditions are documented
 - [ ] rollback / replay / correction behavior is documented
 - [ ] evidence posture is explicit
-- [ ] any historical or source-reported paths are labeled honestly
+- [ ] any historical or support-corpus paths are labeled honestly
 - [ ] no section implies mounted implementation that was not actually checked
+- [ ] any illustrative example links point to public-safe example lanes rather than masquerading as canonical proof
 - [ ] at least one meaningful diagram improves comprehension
 - [ ] the file remains readable in GitHub without external explanation
 
 > [!CAUTION]
-> “Looks right” is not a Definition of Done in KFM. A shorter doc with visible uncertainty is safer than a polished doc that quietly upgrades assumptions into fact.
+> "Looks right" is not a Definition of Done in KFM. A shorter doc with visible uncertainty is safer than a polished doc that quietly upgrades assumptions into fact.
 
 [Back to top](#pipelines)
 
@@ -396,6 +420,10 @@ No. A pipeline doc is documentation evidence, not implementation proof.
 ### Where should operational runbooks live?
 
 Use the nearest stable home consistent with local repo convention. Shared runbooks may belong in [`../runbooks/`](../runbooks/); pipeline-specific runbooks may live beside the relevant pipeline doc when that improves review and operator clarity.
+
+### Where should illustrative payloads or thin-slice walkthroughs live?
+
+Use [`../../examples/thin_slice/`](../../examples/thin_slice/) and its nested lanes for public-safe examples. Keep this directory focused on governed requirements, proof burden, and boundary guidance.
 
 ### What is the safest default when rights, sensitivity, or source trust is unclear?
 
@@ -445,6 +473,7 @@ Avoid these:
 - documenting derived surfaces as authoritative by omission
 - naming a target-state workflow as if it were confirmed current CI behavior
 - mixing doctrine, implementation, and speculation without labels
+- using example lanes as if they were release proof or policy evidence
 
 </details>
 
@@ -456,7 +485,8 @@ A good pipelines directory does not need to be large to be useful. In the curren
 - defining the boundary
 - naming the trust posture
 - pointing to the real governing surfaces
-- creating a stable place for future pipeline specs when they are actually verified and ready
+- carrying one or more focused child docs when a pipeline lane deserves isolated review
+- keeping illustrative walkthrough material in separate example lanes
 
 That is a stronger starting point than a busy subtree full of stale assumptions.
 
