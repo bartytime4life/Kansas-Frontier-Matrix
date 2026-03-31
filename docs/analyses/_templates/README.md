@@ -6,25 +6,28 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS-VERIFICATION>
-updated: <YYYY-MM-DD-NEEDS-VERIFICATION>
+updated: 2026-03-31
 policy_label: <NEEDS-VERIFICATION>
 related: [docs/analyses/README.md, docs/templates/README.md, docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md, docs/standards/markdown-rules.md, .github/CODEOWNERS]
 tags: [kfm, analyses, templates, markdown]
-notes: [Live repo inspection confirmed that this directory currently contains README.md only. Parent analyses docs reference analysis_readme.md, but its mounted presence still needs verification.]
+notes: [Current session directly confirms the target README content; broader directory inventory and file-history details still need mounted-checkout verification. Recent project-context inspection reported README.md present here and a parent reference to docs/analyses/_templates/analysis_readme.md.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Analysis Templates
 
-Reusable analysis-local scaffolds for KFM analysis documentation, kept narrow, evidence-first, and honest about live inventory.
+Reusable analysis-local scaffolds for KFM analysis documentation, kept narrow, evidence-first, and honest about inventory state.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Badges:** ![Status](https://img.shields.io/badge/status-experimental-informational) ![Scope](https://img.shields.io/badge/scope-analysis--templates-blue) ![Doctrine](https://img.shields.io/badge/doctrine-evidence--first-0a7b83) ![Surface](https://img.shields.io/badge/surface-markdown--scaffolds-6f42c1)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Template registry](#template-registry) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Evidence posture:** **CONFIRMED** live directory README surface · **INFERRED** parent-referenced analysis scaffold path · **NEEDS VERIFICATION** exact future template inventory
+> **Evidence posture:** **CONFIRMED** target README surface supplied in this session · **INFERRED** recent README-only directory inventory from project context · **INFERRED** parent-referenced `analysis_readme.md` scaffold path · **NEEDS VERIFICATION** current mounted inventory beyond this file
 
 > [!IMPORTANT]
 > This directory is an **analysis-local scaffold shelf**, not a second truth path. Templates here should help authors produce better governed analysis docs; they must not become a dumping ground for filled-in reports, notebook output, policy bundles, schema truth, or uncited prose.
+
+> [!NOTE]
+> This rewrite directly confirms the target README content supplied in the current session. Broader directory inventory should still be re-checked in a mounted checkout before copy paths or file counts are treated as settled repo fact.
 
 ## Scope
 
@@ -100,31 +103,33 @@ The following do **not** belong here:
 | Markdown work rules / authoring doctrine | `docs/standards/` |
 | Contracts, schemas, vocab registries | `contracts/`, `schemas/`, `policy/` |
 | Tests, fixtures, validators | `tests/`, `tools/`, `scripts/` |
-| Release-backed evidence objects | release/canonical surfaces, not template shelves |
+| Release-backed evidence objects | catalog / release / evidence-bearing surfaces, not template shelves |
 
 [Back to top](#kansas-frontier-matrix--analysis-templates)
 
 ## Directory tree
 
-### Live repo surface
+### Current-session-confirmed target surface
 
 ```text
 docs/analyses/_templates/
 └── README.md
 ```
 
-### Upstream-referenced scaffold surface
+### Parent-referenced scaffold surface
 
-The parent analyses index references an analysis README scaffold path. Treat that reference as **expected design intent**, not as confirmed mounted inventory.
+The parent analyses index reportedly points at an analysis README scaffold path. Treat that reference as intended design until a mounted checkout re-verifies the file.
 
 ```text
 docs/analyses/_templates/
 └── analysis_readme.md   # INFERRED / NEEDS VERIFICATION
 ```
 
+A recent project-context inspection also reported no additional files in this directory, but treat that broader inventory as **NEEDS VERIFICATION** until it is rechecked in a mounted checkout.
+
 ## Quickstart
 
-Start by verifying what is actually mounted before you write or copy anything.
+In a mounted checkout, start by verifying what is actually present before you write or copy anything.
 
 ```bash
 ls -la docs/analyses/_templates
@@ -194,12 +199,14 @@ flowchart LR
   G --> J["story / dossier / focus / export surfaces"]
 ```
 
+Above: analysis-local scaffolds sit between the parent analyses contract and repo-wide standards, then fan outward into per-module analysis READMEs that should link to methods, results, and validation without becoming shadow policy or contract surfaces.
+
 ## Template registry
 
 | Template surface | Status | Purpose | Notes |
 |---|---|---|---|
-| `README.md` | **CONFIRMED** | Directory contract for the analysis-local template shelf. | Live repo inventory shows this file. |
-| `analysis_readme.md` | **INFERRED / NEEDS VERIFICATION** | Expected scaffold for per-module analysis READMEs. | Referenced by the parent analyses index, but not confirmed in the live directory inventory seen during review. |
+| `README.md` | **CONFIRMED** | Directory contract for the analysis-local template shelf. | Target file supplied in the current session. |
+| `analysis_readme.md` | **INFERRED / NEEDS VERIFICATION** | Expected scaffold for per-module analysis READMEs. | Reportedly referenced by the parent analyses index, but not directly re-verified in a mounted checkout during this rewrite. |
 
 ### Promotion rule for adding more templates here
 
@@ -213,6 +220,7 @@ Add another file here only when all of the following are true:
 
 ## Task list
 
+- [ ] Re-verify current mounted contents of `docs/analyses/_templates/`.
 - [ ] Verify whether `docs/analyses/_templates/analysis_readme.md` exists in the mounted repo.
 - [ ] If missing, decide whether to add it here or update `docs/analyses/README.md` to the real scaffold path.
 - [ ] Keep this directory limited to analysis-local reusable scaffolds.
@@ -229,7 +237,7 @@ Because some documentation patterns are shared across the repo, while others are
 
 ### Does `analysis_readme.md` exist today?
 
-Maybe, but this README should not pretend that it does. The parent analyses index references it; the live directory inventory reviewed for this rewrite did not confirm it.
+A recent project-context inspection did not directly re-verify it in a mounted checkout, even though the parent analyses index reportedly points to it. Treat it as an intended scaffold path until the file is rechecked directly.
 
 ### Should templates here contain STAC, DCAT, PROV, policy, or schema truth?
 
@@ -248,7 +256,7 @@ Two common ones: a template shelf that silently becomes a miscellaneous dump, an
 ## Appendix
 
 <details>
-<summary>Illustrative opener for a future <code>analysis_readme.md</code> scaffold (PROPOSED, not confirmed live inventory)</summary>
+<summary>Illustrative opener for a future <code>analysis_readme.md</code> scaffold (PROPOSED, not confirmed mounted inventory)</summary>
 
 ```markdown
 # <Analysis Module Title>
