@@ -4,27 +4,30 @@ title: Kansas Frontier Matrix — Root Governance
 type: standard
 version: v1
 status: draft
-owners: TBD-VERIFY-.github-CODEOWNERS
-created: TBD-VERIFY-first-commit-date
-updated: 2026-03-26
+owners: @bartytime4life
+created: TBD-VERIFY-first-file-commit-date
+updated: 2026-03-31
 policy_label: TBD-VERIFY-public-or-restricted
 related: [./README.md, ./ETHICS.md, ./SOVEREIGNTY.md, ../../policy/README.md, ../../contracts/README.md, ../../tests/README.md, ../../.github/PULL_REQUEST_TEMPLATE.md, ../../CONTRIBUTING.md, ../../SECURITY.md]
 tags: [kfm, governance, review, publication, policy, correction, trust-system]
-notes: [Revised from a scaffold-only placeholder using the March 2026 KFM doctrine corpus. Owners, created date, policy label, and live repo link targets still need direct branch verification.]
+notes: [Current public main confirms this file path, the governance sibling docs, and linked README surfaces; current public main also confirms `.github/workflows/README.md` but not checked-in workflow YAML gates, branch rulesets, or environment approvals. `doc_id`, `created`, and `policy_label` still need direct maintainer verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Root Governance
 
 Core governance law and review triggers for KFM trust state, publication, runtime behavior, and correction.
 
-> **Status:** Draft / needs repo verification  
-> **Owners:** TBD-VERIFY — check `.github/CODEOWNERS`  
-> ![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square) ![Owners](https://img.shields.io/badge/owners-TBD-lightgrey?style=flat-square) ![Doc](https://img.shields.io/badge/doc-root%20governance-0a7ea4?style=flat-square) ![Trust](https://img.shields.io/badge/trust-membrane-6f42c1?style=flat-square) ![Publication](https://img.shields.io/badge/publication-governed-0a7d00?style=flat-square) ![Review](https://img.shields.io/badge/review-required-f59e0b?style=flat-square) ![Evidence](https://img.shields.io/badge/evidence-one%20hop%20away-2ea043?style=flat-square)  
+> **Status:** draft standard · public `main` path and linked doc surfaces verified · workflow/ruleset enforcement still needs direct verification  
+> **Owners:** `@bartytime4life`  
+> ![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square) ![Branch](https://img.shields.io/badge/branch-main-24292f?style=flat-square) ![Doc](https://img.shields.io/badge/doc-root%20governance-0a7ea4?style=flat-square) ![Trust](https://img.shields.io/badge/trust-membrane-6f42c1?style=flat-square) ![Publication](https://img.shields.io/badge/publication-governed-0a7d00?style=flat-square) ![Review](https://img.shields.io/badge/review-required-f59e0b?style=flat-square) ![Evidence](https://img.shields.io/badge/evidence-one%20hop%20away-2ea043?style=flat-square)  
 > **Quick jump:** [Scope](#scope) · [Verification posture](#verification-posture) · [Authority order](#authority-order-for-this-file) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Governance law](#governance-law) · [Review triggers](#review-triggers-and-escalation) · [Objects](#governance-objects-and-what-they-protect) · [Outcomes](#allowed-outcomes-and-visible-negative-states) · [Surface obligations](#trust-visible-surface-obligations) · [Diagram](#diagram) · [Adjacent surfaces](#adjacent-surfaces-and-handoffs) · [Quickstart](#quickstart) · [Change matrix](#change-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/governance/ROOT_GOVERNANCE.md` · upstream [`./README.md`](./README.md) · expected sibling docs [`./ETHICS.md`](./ETHICS.md) and [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
+> **Repo fit:** `docs/governance/ROOT_GOVERNANCE.md` · upstream [`./README.md`](./README.md) · sibling docs [`./ETHICS.md`](./ETHICS.md) and [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
 
 > [!IMPORTANT]
 > This file states **governing law**, not implementation theater. In KFM, a successful build or deployment is not automatically a publishable trust state. Evidence, policy, review, release, and correction all remain in play.
+
+> [!NOTE]
+> Current public `main` now confirms this directory context and the linked documentation surfaces: `docs/governance/README.md`, `docs/governance/ETHICS.md`, `docs/governance/SOVEREIGNTY.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `contracts/README.md`, `policy/README.md`, `tests/README.md`, `CONTRIBUTING.md`, and `SECURITY.md`. Keep branch protections, required checks, environment approvals, and any checked-in workflow YAML gates marked `NEEDS VERIFICATION` until directly reverified.
 
 | At a glance | Working rule |
 |---|---|
@@ -58,7 +61,7 @@ This file is intentionally narrower than the full architectural corpus and broad
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Directly supported by KFM doctrine or currently visible workspace evidence. |
+| **CONFIRMED** | Directly supported by March 2026 KFM doctrine or by current public repo evidence inspected on `main`. |
 | **INFERRED** | Strongly implied by repeated doctrine and adjacent documentation, but not directly re-verified as mounted implementation. |
 | **PROPOSED** | Repo-ready realization guidance consistent with doctrine, but not proven as active implementation. |
 | **UNKNOWN** | Not verified strongly enough in the current session to present as fact. |
@@ -71,9 +74,9 @@ This file is intentionally narrower than the full architectural corpus and broad
 
 | Priority | Source class | How this file should use it |
 |---|---|---|
-| **1** | Baseline-in-hand and co-primary doctrinal anchors | Anchor non-negotiable governance law, trust posture, and contradiction handling. |
-| **2** | Supporting March 2026 overlays | Deepen route families, verification placement, runtime outcomes, Evidence Drawer / Focus obligations, and delivery or correction seams without outranking doctrine. |
-| **3** | Current visible workspace evidence | Confirm local file roles, neighboring docs, and any directly inspectable repo-native patterns. |
+| **1** | Replacement-grade master doctrine and canonical master reference | Anchor non-negotiable governance law, trust posture, contradiction handling, and fail-closed behavior. |
+| **2** | Supporting March 2026 overlays | Deepen route families, verification placement, runtime outcomes, Evidence Drawer / Focus obligations, and correction seams without outranking doctrine. |
+| **3** | Current public repo evidence on `main` | Confirm local file roles, neighboring governance docs, `CODEOWNERS`, PR template, and public documentation surfaces. |
 | **4** | Official external rechecks | Use only for version-sensitive standards or boundary facts; never let them silently override KFM doctrine. |
 
 If direct branch evidence later conflicts with inferred packaging here, keep the doctrine and downgrade the packaging claim until the branch-local fact is re-verified. Do not force code or docs to mimic placeholder paths just because they appeared in a doctrine-driven draft.
@@ -85,8 +88,8 @@ If direct branch evidence later conflicts with inferred packaging here, keep the
 | Path | `docs/governance/ROOT_GOVERNANCE.md` |
 | Role | Core governance law and review-trigger document for the governance directory |
 | Upstream | [`./README.md`](./README.md) |
-| Expected sibling docs | [`./ETHICS.md`](./ETHICS.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) |
-| Expected downstream implementation surfaces | [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../tests/README.md`](../../tests/README.md) |
+| Verified sibling docs | [`./ETHICS.md`](./ETHICS.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) |
+| Verified downstream documentation surfaces | [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../tests/README.md`](../../tests/README.md) |
 | Review and control-plane links | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) · [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../../SECURITY.md`](../../SECURITY.md) |
 | This file does **not** replace | policy bundles, schemas, fixtures, workflow YAML, test harnesses, or incident runbooks |
 
@@ -94,8 +97,19 @@ This file should remain the place contributors read first when they need to answ
 
 **“What has to remain true before KFM is allowed to change trust state?”**
 
+### Current public repo signals
+
+| Surface | What current public `main` confirms | What it does **not** confirm |
+|---|---|---|
+| `docs/governance/` | `README.md`, `ROOT_GOVERNANCE.md`, `ETHICS.md`, and `SOVEREIGNTY.md` are present | additional governance files beyond the visible set |
+| `.github/workflows/` | `README.md` is present | checked-in workflow YAML gates, required checks, environment approvals, or rulesets |
+| `contracts/` | `README.md` is present | populated schema registry, valid/invalid fixtures, or mounted contract files |
+| `policy/` | `README.md` is present | mounted `.rego` bundles, runnable policy tests, or verified runtime package boundaries |
+| `tests/` | `README.md` is present | active harnesses, end-to-end proof suites, or CI-exercised runs |
+| `.github/CODEOWNERS` | global fallback `* @bartytime4life` and `/docs/ @bartytime4life` are visible | narrower governance-specific ownership below `/docs/` |
+
 > [!NOTE]
-> Link targets above follow the current governance directory draft and corpus-referenced repo homes. Confirm live presence before publication if the branch is still incomplete.
+> Current public `main` confirms the linked governance, policy, contract, test, contributing, and security documentation surfaces. Keep merge-gate, ruleset, and environment-approval claims as `NEEDS VERIFICATION` unless branch-local evidence is surfaced.
 
 [Back to top](#kansas-frontier-matrix--root-governance)
 
@@ -140,6 +154,7 @@ This file should **not** become:
 | **Evidence stays one hop away** | Consequential claims must retain drill-through to admissible support at the point of use. | Deny, abstain, or revert to draft/review state. |
 | **`EvidenceRef` must resolve to `EvidenceBundle`** | Trust-bearing answers, exports, stories, and detail views must resolve to governed evidence with visible rights/sensitivity and audit linkage. | Abstain, deny, error, or withhold the surface. |
 | **Keep authoritative and derived layers distinct** | Graphs, search, vector, tile, cache, summary, scene, export, and model layers remain subordinate unless explicitly promoted. | Label, rebuild, restrict, or block publication. |
+| **Kansas-first lanes carry burden** | Water, hazards, agriculture, transportation, ecology, land tenure, archives, biodiversity, and service geography are operating burdens, not decorative tags; lane-specific publication rules must stay explicit. | Escalate to the relevant lane-specific review path and keep uncertainty, restriction, or generalization visible. |
 | **Publication is a governance event** | Deployment success does not overrule policy, review, release proof, or correction readiness. | Treat the release as incomplete. |
 | **No hidden approvals** | Policy-significant publication, review, denial, rollback, and correction actions should emit visible artifacts. | Freeze the change until review artifacts exist. |
 | **Finite runtime outcomes only** | Trust-bearing runtime behavior converges on `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` rather than vague graceful prose. | Fail closed and surface the finite outcome. |
@@ -159,6 +174,7 @@ This file should **not** become:
 | **Policy or release-gate changes** | new reason codes, obligation codes, promotion criteria, review thresholds | policy update + tests + runbook note | default deny |
 | **Runtime or AI behavior changes** | scope widening, citation handling, answer formatting, fallback logic | governance review + runtime fixtures + citation-negative tests | abstain, deny, or freeze rollout |
 | **Correction-path changes** | withdrawal, supersession, stale-visible, narrowed replacement | correction object + surface-state update + rollback path | do not publish silently |
+| **Kansas operating-lane expansion or burden change** | new archaeology, biodiversity, migration, oral-history, service-geography, or controlled-3D publication surfaces | lane-specific burden note + governance review + ethics/sovereignty companions where relevant | hold until the burden is explicit |
 | **Trust-membrane bypass risk** | direct client → store, direct client → model runtime, unreviewed publish shortcut | security review + architecture correction | reject until removed |
 
 ### Escalate immediately when…
@@ -255,9 +271,9 @@ flowchart TD
 | [`./README.md`](./README.md) | Directory contract and entry point; use it for navigation, this file for governing law. |
 | [`./ETHICS.md`](./ETHICS.md) | Adds public-consequence, persuasive-behavior, and uncertainty-display guardrails. |
 | [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) | Adds rights, sensitivity, CARE-style handling, and exact-location exposure rules. |
-| [`../../policy/README.md`](../../policy/README.md) | Governing policy becomes executable there. |
-| [`../../contracts/README.md`](../../contracts/README.md) | Trust objects become machine-checkable there. |
-| [`../../tests/README.md`](../../tests/README.md) | Proof burdens, negative-path fixtures, and correction drills live there. |
+| [`../../policy/README.md`](../../policy/README.md) | Governing policy is expected to become executable there; current public `main` confirms the README boundary surface, not checked-in bundle inventory. |
+| [`../../contracts/README.md`](../../contracts/README.md) | Trust objects become machine-checkable there; current public `main` confirms the boundary doc surface, not a populated contract registry. |
+| [`../../tests/README.md`](../../tests/README.md) | Proof burdens, negative-path fixtures, and correction drills belong there; current public `main` confirms the README surface, not runnable suite inventory. |
 | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | PR-level review expectations and evidence checklist. |
 | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor process, review routing, and change hygiene. |
 | [`../../SECURITY.md`](../../SECURITY.md) | Coordinated handling for trust-boundary or exposure failures. |
@@ -347,10 +363,9 @@ Because governance law should stay readable and stable even while machine-readab
 - confirm created date and final `doc_id`
 - confirm the intended `policy_label`
 - confirm whether additional governance surfaces should be linked here
-- confirm live workflow names, required checks, and branch-protection behavior before stating them as fact
-- confirm exact schema, policy-bundle, and fixture inventories before naming them as mounted implementation
-- confirm whether narrower CODEOWNERS routing exists below `/docs/`
-- confirm live presence of the linked ethics, sovereignty, policy, contracts, tests, contributing, and security docs
+- confirm branch protections, rulesets, required checks, and environment approvals before stating them as fact
+- confirm exact schema, policy-bundle, fixture, and runnable test inventories before naming them as mounted implementation
+- confirm whether governance-specific ownership narrower than `/docs/ @bartytime4life` is intended
 
 </details>
 
