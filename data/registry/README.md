@@ -1,323 +1,415 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-UUID>
-title: Data Registry Schemas
+doc_id: kfm://doc/TODO-VERIFY
+title: Data Registry
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-02-14
 updated: 2026-03-22
-policy_label: <TODO: verify public|restricted|...>
-related: [../README.md, ../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../tests/README.md, ../../../policy/README.md, ../../../.github/workflows/README.md, ../../../.github/CODEOWNERS]
-tags: [kfm, data, registry, schemas]
-notes: [Created/updated dates grounded from current public GitHub file history; current public main shows a README-only schema subtree; doc_id and policy_label remain unverified and should be replaced before merge]
+policy_label: TODO-VERIFY
+related: [../README.md, ./schemas/README.md, ../catalog/README.md, ../catalog/stac/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/README.md, ../../docs/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
+tags: [kfm, data, registry, onboarding, catalog, provenance]
+notes: [doc_id and policy_label still need verification; created and updated dates were verified from public GitHub history for data/registry/README.md; current public main confirms data/registry contains README.md plus schemas/README.md only; authoritative registry-schema home remains unresolved]
 [/KFM_META_BLOCK_V2] -->
 
-# Data Registry Schemas
+# Data Registry
+Governed source-registration surface for KFM dataset identity, onboarding, and catalog handoff.
 
-Registry-local schema surface for KFM dataset and source registration entries, kept intentionally narrow so shared contract authority does not drift.
-
-> **Status:** `experimental`  
-> **Owners:** `@bartytime4life`  
-> **Repo fit:** `data/registry/schemas/README.md`  
-> **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-blue) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-informational) ![path](https://img.shields.io/badge/path-data%2Fregistry%2Fschemas-blueviolet) ![authority](https://img.shields.io/badge/schema_authority-needs--verification-red)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Definition of done](#definition-of-done) · [FAQ](#faq)
-
+> **Status:** experimental  
+> **Owners:** `@bartytime4life` *(per current public `.github/CODEOWNERS` coverage for `/data/`)*  
+> **Path:** `data/registry/README.md`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-data%20registry-0a7ea4) ![tree](https://img.shields.io/badge/current%20tree-README%20%2B%20schemas%2FREADME-lightgrey) ![onboarding](https://img.shields.io/badge/onboarding-governed-0a7d5a) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20NEEDS--VERIFICATION-2ea043)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** parent [`../README.md`](../README.md) · local [`./schemas/README.md`](./schemas/README.md) · catalog parent [`../catalog/README.md`](../catalog/README.md) · catalog STAC [`../catalog/stac/README.md`](../catalog/stac/README.md) · shared contracts [`../../contracts/README.md`](../../contracts/README.md) · schema boundary [`../../schemas/README.md`](../../schemas/README.md) · policy [`../../policy/README.md`](../../policy/README.md) · tests [`../../tests/README.md`](../../tests/README.md) · tooling [`../../tools/README.md`](../../tools/README.md) · docs [`../../docs/README.md`](../../docs/README.md) · workflows [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
+>
 > [!IMPORTANT]
-> Current public `main` shows `data/registry/schemas/` as a scaffolded directory containing `README.md` only. Treat any concrete schema filenames in this subtree as **NEEDS VERIFICATION** until the checked-out branch proves them.
-
+> Current public `main` confirms that `data/registry/` currently contains `README.md` and `schemas/README.md` only.  
+> The same public inspection also confirms the adjacent documentation surfaces this README depends on: `data/README.md`, `data/catalog/README.md`, `data/catalog/stac/README.md`, `contracts/README.md`, `schemas/README.md`, `policy/README.md`, `tests/README.md`, `tools/README.md`, `docs/README.md`, `.github/workflows/README.md`, and `.github/CODEOWNERS`.
+>
 > [!CAUTION]
-> KFM already has stronger shared schema/contract responsibility maps in [Contracts][contracts-readme] and [Schemas][schemas-readme]. Keep this directory local and narrow; do not let it become a third competing authority layer.
-
----
+> Treat dataset entry inventories, fixtures, runnable validators, and the final authoritative registry-schema home as **PROPOSED** or **NEEDS VERIFICATION** until the active branch proves them.
 
 ## Scope
+`data/registry/` is the KFM lane where source admission becomes reviewable before publication work begins.
 
-This directory is for machine-readable schemas that validate registry-local entries and closely related local fragments. It exists to make source and dataset registration reviewable, machine-checkable, and easy to keep adjacent to the registry surface they govern.
+In practical terms, this directory should capture the stable identity and governance posture of a dataset or source family: what it is, who publishes it, how it is acquired, what rights or restrictions apply, what cadence is expected, what policy label is the default starting point, and which downstream catalog or processing surfaces it is meant to feed.
 
-This directory is **not** the default home for the shared KFM trust lattice. Release, runtime, correction, and other cross-cutting trust objects should stay in the repo’s authoritative shared schema or contract home.
+It is **not** a data lake, a runtime database, or a place to drop raw downloads “for now.” Registry material should stay small, explicit, diffable, and PR-reviewable.
 
-| Status label | Meaning here |
-| --- | --- |
-| **CONFIRMED** | The current public tree or adjacent repo docs clearly show it now |
-| **INFERRED** | Strong continuity signal from adjacent docs, but not proven in this subtree on current public `main` |
-| **PROPOSED** | Recommended local shape that fits current doctrine but is not yet proven in-tree |
-| **NEEDS VERIFICATION** | Must be checked against the live branch before treating as implemented |
+### Truth labels used here
 
-[Back to top](#data-registry-schemas)
+| Label | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Directly supported by current public repo evidence or stable March 2026 KFM doctrine |
+| **INFERRED** | Strongly suggested by adjacent repo docs or continuity artifacts, but not freshly proven from a mounted local checkout in this session |
+| **PROPOSED** | Doctrine-consistent target shape or working rule that fits KFM but is not yet proven as current branch reality |
+| **NEEDS VERIFICATION** | A path, owner, schema-home choice, command, or implementation detail that should be checked before merge |
+| **UNKNOWN** | Not supported strongly enough in this session to present as current repo fact |
+
+### Current evidence boundary
+
+| Signal | Current reading |
+|---|---|
+| Public repo tree | **CONFIRMED:** `data/registry/README.md` exists and `data/registry/` currently shows `README.md` plus `schemas/README.md` |
+| Current repo neighbors | **CONFIRMED:** `data/README.md`, `../catalog/README.md`, `../catalog/stac/README.md`, `../../contracts/README.md`, `../../schemas/README.md`, `../../policy/README.md`, `../../tests/README.md`, `../../tools/README.md`, `../../docs/README.md`, `../../.github/workflows/README.md`, and `../../.github/CODEOWNERS` all exist on current public `main` |
+| Owner routing | **CONFIRMED:** current public `.github/CODEOWNERS` routes `/data/` to `@bartytime4life` |
+| Strong doctrine | **CONFIRMED:** KFM treats source onboarding as contract-bearing, uses a governed truth path, requires catalog-triplet closure before publication, and prefers deterministic version identity tied to `spec_hash` |
+| Not proven here | **NEEDS VERIFICATION:** current dataset entry inventory, live fixtures, runnable validators, merge-blocking workflow YAML, and the final authoritative home for registry-entry schemas |
+
+[Back to top](#data-registry)
 
 ## Repo fit
+`data/registry/` sits at the seam between **source onboarding** and the broader **truth path**.
 
-### Path and role
+It should describe what KFM intends to integrate and under what governance, while downstream zones and services prove acquisition, transformation, catalog closure, evidence resolution, and public-safe release.
 
-| Item | Value |
-| --- | --- |
-| Path | `data/registry/schemas/README.md` |
-| Local role | Registry-local schema/index surface |
-| Parent | [`../README.md`][registry-readme] |
-| Wider data lifecycle | [`../../README.md`][data-readme] |
-| Shared contract authority | [`../../../contracts/README.md`][contracts-readme] |
-| Shared schema authority | [`../../../schemas/README.md`][schemas-readme] |
+| Relation | Path | Status here | Why it matters |
+|---|---|---|---|
+| Parent | [`../README.md`](../README.md) | **CONFIRMED** | `data/` defines the governed lifecycle surface and already points to `./registry/README.md` as the likely registration lane |
+| Local | [`./schemas/README.md`](./schemas/README.md) | **CONFIRMED** | Registry-local schema boundary exists publicly, but the subtree is README-only today |
+| Sibling | [`../catalog/README.md`](../catalog/README.md) | **CONFIRMED** | Catalog lane exists publicly, and current public `main` shows `dcat/`, `prov/`, and `stac/` child lanes beneath it |
+| Sibling | [`../catalog/stac/README.md`](../catalog/stac/README.md) | **CONFIRMED** | STAC lane exists publicly, though it remains README-first on current `main` |
+| Shared machine contract lane | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Strongest current public signal for versioned machine contracts and fixture-linked enforcement planning |
+| Top-level schema boundary | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Keeps schema-home ambiguity visible and explicitly warns against parallel authority |
+| Shared policy lane | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Default-deny, reasons/obligations, and finite outcomes should shape registry review and downstream access |
+| Verification lane | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Registry contracts should eventually be exercised by fixtures and negative-path validation |
+| Tooling lane | [`../../tools/README.md`](../../tools/README.md) | **CONFIRMED** | Validators, diff helpers, and registry-health tooling belong there rather than inside registry entries |
+| Docs index | [`../../docs/README.md`](../../docs/README.md) | **CONFIRMED** | Root documentation index exists publicly and keeps doctrine, architecture, and standards discoverable |
+| Workflow lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED** | Current public workflow lane is README-only, so any enforcement described here remains target-state until YAML gates land |
+| Owner routing | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** | Current public owner routing assigns `/data/` to `@bartytime4life`, making the owner line here traceable |
+| Downstream consumers | governed APIs, evidence resolution, catalog builders, release proof packs | **PROPOSED** | Registry entries should feed these surfaces, not replace them |
 
-### Upstream and downstream links
+### Working interpretation
+A good `data/registry/` README does three jobs at once:
 
-| Direction | Link | Why it matters |
-| --- | --- | --- |
-| Upstream | [Registry README][registry-readme] | Owns registry entries that local schemas would validate |
-| Upstream | [Data README][data-readme] | Defines the governed truth path and wider `data/` responsibilities |
-| Upstream | [Contracts README][contracts-readme] | Owns the shared trust-bearing contract lattice |
-| Upstream | [Schemas README][schemas-readme] | Describes shared schema-home placement rules and drift hazards |
-| Constraint | [Policy README][policy-readme] | Carries deny-by-default and outcome vocabulary expectations |
-| Downstream | [Tests README][tests-readme] | Fixtures and proof surfaces should follow schema work |
-| Downstream | [Workflows README][workflows-readme] | Enforcement belongs here once real validator and merge/block workflows are mounted |
-| Ownership | [CODEOWNERS][codeowners] | Review routing for `/data/` |
+1. make the current public tree legible without exaggerating maturity,
+2. define what a source or dataset registration surface is responsible for, and
+3. prevent silent drift between registry-local notes, shared contracts, policy, and the governed runtime.
 
-### Path resolution rule
+[Back to top](#data-registry)
 
-If the checked-out branch keeps registry-entry schemas local, this README acts as the narrow home for that family.
+## Accepted inputs
+The following belong in `data/registry/` or in immediately adjacent registry-owned subpaths when the repo chooses to grow them.
 
-If the branch has consolidated those schemas into the shared repo-wide schema or contract surface, this README should remain as a small signpost and should not duplicate that authority.
+| Belongs here | Why it belongs here | Current posture |
+|---|---|---|
+| Registry README and boundary notes | The lane exists publicly today and needs an explicit operating contract | **CONFIRMED** |
+| One file per dataset or source registration entry | Small, reviewable identity and governance records are the core purpose of the registry lane | **PROPOSED** |
+| Registry-local schema notes or entry schemas | Useful only if the repo explicitly assigns local authority here instead of a shared top-level contract home | **NEEDS VERIFICATION** |
+| Tiny valid/invalid fixtures for registry-entry validation | Keep onboarding reviewable and fail-closed once validators exist | **PROPOSED** |
+| Controlled vocab references or narrowly scoped registry vocab files | Useful when they stabilize registry fields such as acquisition method or cadence without creating a second uncontrolled vocabulary universe | **PROPOSED** |
+| Cross-links to pipeline spec, connector contract, or downstream catalog targets | Registry entries should point to the governed path they expect to feed | **PROPOSED** |
+| Steward notes and governance flags tied directly to a dataset entry | Rights, sensitivity, and escalation information belong close to admission records | **PROPOSED** |
 
-[Back to top](#data-registry-schemas)
+### Minimum intent for a registry entry
+A registry entry should be able to answer these questions without requiring a reviewer to reverse-engineer the whole system:
 
-## Inputs
+- What is this dataset or source called in KFM?
+- Who publishes or controls it?
+- How is it acquired?
+- What formats and cadence are expected?
+- What rights or restrictions apply?
+- What default policy label or review posture applies before promotion?
+- What canonical spec or connector definition will eventually drive version identity?
+- Where should catalog closure and release evidence land downstream?
 
-### Accepted inputs
-
-- Registry-entry JSON Schema files that validate dataset, source, or closely related registry records
-- Registry-local shared fragments used only by those entry families
-- Small compatibility notes for field evolution that are specific to registry-entry validation
-- Human guidance that explains how local schemas relate to shared contract authority
-
-### Preferred naming
-
-| Pattern | Use |
-| --- | --- |
-| `<entry_family>.schema.json` | Canonical local schema filename |
-| `<entry_family>.example.<validity>.json` | Review fixtures when examples live beside the schema |
-| `fragments/<name>.schema.json` | Registry-local fragments only when reuse is truly local |
-
-### Continuity signals
-
-- `dataset_entry.schema.json` is a strong **INFERRED** candidate name because adjacent KFM documentation and earlier repo-aligned materials reference it, but the current public `main` tree does not prove it exists in this directory now.
-- Any additional local family should be added only after checking that it is not already owned by the shared schema or contract surface.
+[Back to top](#data-registry)
 
 ## Exclusions
+The registry lane should stay focused. The following do **not** belong here as authoritative storage or control surfaces.
 
-This directory should not contain:
+| Exclusion | Goes instead | Why |
+|---|---|---|
+| Raw downloads, acquisition snapshots, and checksum manifests | `../raw/` or the storage analogue the repo uses for RAW | Registry records describe admission; they are not the captured bytes |
+| Work outputs, QA scratch files, redaction experiments, or temporary joins | `../work/` or `../quarantine/` analogue | Reviewable transformation state belongs in lifecycle zones, not registry definitions |
+| Canonical processed artifacts and published dataset versions | `../processed/` and `../published/` analogues | Registry entries should point to governed outputs, not become them |
+| DCAT, STAC, and PROV closure artifacts | `../catalog/` | Catalog triplet records are boundary artifacts of releasable scope |
+| Executable policy bundles, deny rules, and decision tests | `../../policy/` | Policy should remain separately reviewable and executable |
+| Shared contract law duplicated across multiple homes | one canonical shared contract home | Duplicated authority is drift, not resilience |
+| Runtime API handlers, UI payloads, or evidence resolvers | `../../apps/` or `../../packages/` | Registry is admission and identity, not runtime behavior |
+| Secrets, tokens, signed URLs, or sensitive acquisition credentials | protected config or secret-management surfaces | Public repo docs must not become secret-handling channels |
+| Free-text policy labels, rights buckets, or acquisition methods that bypass controlled vocabularies | canonical vocab registry once chosen | Governance becomes untestable when field values drift into prose |
 
-- Shared KFM trust-object schemas such as `DecisionEnvelope`, `EvidenceBundle`, `RuntimeResponseEnvelope`, `CorrectionNotice`, or `ReleaseManifest`
-- Policy bundles, reason registries, obligation registries, or deny-by-default rule files
-- Emitted registry entries, catalogs, proof packs, receipts, or published artifacts
-- STAC, DCAT, or PROV outputs
-- Outward API DTOs or OpenAPI source files
-- Duplicate copies of schemas already treated as authoritative under [Contracts][contracts-readme] or [Schemas][schemas-readme]
+> [!WARNING]
+> The most likely failure mode here is **parallel authority**: a registry-local schema or vocabulary quietly drifting away from the top-level contract or policy lane.  
+> Until the repo lands an explicit ADR or equivalent decision, treat shared machine-readable law as singular, not duplicated.
 
-> [!NOTE]
-> The easiest way to create schema drift is to let local convenience copies accumulate here after a shared contract home already exists elsewhere.
-
-[Back to top](#data-registry-schemas)
+[Back to top](#data-registry)
 
 ## Directory tree
 
-### Current public `main` snapshot
+### Current verified snapshot
 
 ```text
-data/
-└── registry/
-    ├── README.md
-    └── schemas/
-        └── README.md
+data/registry/
+├── README.md
+└── schemas/
+    └── README.md
 ```
 
-### Narrow local shape if this subtree becomes active
+### Doctrine-aligned target shape *(PROPOSED)*
 
 ```text
-data/registry/schemas/
+data/registry/
 ├── README.md
-├── dataset_entry.schema.json          # INFERRED continuity signal; verify on branch
-├── fragments/                         # PROPOSED; only for registry-local reuse
-│   └── <name>.schema.json
-├── examples/                          # PROPOSED; keep valid/invalid examples reviewable
+├── schemas/
+│   ├── README.md
+│   └── dataset_entry.schema.json        # only if registry-local schema authority is explicit
+├── datasets/
+│   └── <dataset_slug>.yml
+├── fixtures/
 │   ├── valid/
 │   └── invalid/
-└── migrations/                        # PROPOSED; only when field changes need explicit notes
+├── vocab/
+│   ├── acquisition_method.yml
+│   ├── cadence.yml
+│   └── policy_label.yml
+└── examples/
+    └── public_sample_dataset.yml
 ```
 
-### Reading rule
+> [!NOTE]
+> The current public repo gives a stronger signal for **shared** machine contracts in [`../../contracts/`](../../contracts/README.md) than for a second authoritative contract universe under `data/registry/`.  
+> Use the target shape above only after the repo makes ownership explicit.
 
-| Tree view | Status | How to read it |
-| --- | --- | --- |
-| `README.md` only | **CONFIRMED** | Present on current public `main` |
-| `dataset_entry.schema.json` local file | **INFERRED / NEEDS VERIFICATION** | Strong continuity signal, not current public-tree proof |
-| `fragments/`, `examples/`, `migrations/` | **PROPOSED** | Helpful local structure only if the branch actually activates this subtree |
+[Back to top](#data-registry)
 
 ## Quickstart
-
-### 1) Inspect the live branch before assuming local schema authority
+Start with inspection, not assumption.
 
 ```bash
-find data/registry -maxdepth 3 -print | sort
+# inspect the current registry lane
+find data/registry -maxdepth 3 -type f | sort
 
-sed -n '1,220p' data/registry/README.md
+# read the local and shared boundary docs side by side
+sed -n '1,240p' data/registry/README.md
 sed -n '1,240p' data/registry/schemas/README.md
+sed -n '1,240p' data/README.md
+sed -n '1,240p' data/catalog/README.md
+sed -n '1,240p' data/catalog/stac/README.md
+sed -n '1,240p' contracts/README.md
+sed -n '1,240p' schemas/README.md
+sed -n '1,240p' policy/README.md
+sed -n '1,240p' tests/README.md
+sed -n '1,240p' tools/README.md
+sed -n '1,240p' .github/workflows/README.md
+sed -n '1,200p' .github/CODEOWNERS
 
-sed -n '1,260p' contracts/README.md
-sed -n '1,260p' schemas/README.md
-sed -n '1,220p' policy/README.md
-sed -n '1,220p' tests/README.md
-sed -n '1,220p' .github/workflows/README.md
-
-find .github/workflows -maxdepth 1 -type f | sort
+# search the repo for registry-relevant vocabulary
+grep -RIn "dataset_entry\|source registry\|spec_hash\|policy_label\|EvidenceBundle" \
+  data contracts schemas policy docs tests tools 2>/dev/null || true
 ```
 
-### 2) Check whether a local registry-entry schema already exists
+### Minimal review order
+1. Confirm what currently exists under `data/registry/` on the active branch.
+2. Confirm current owner routing and review expectations from `.github/CODEOWNERS` and the PR template.
+3. Confirm where the authoritative registry-entry schema is supposed to live.
+4. Confirm which controlled vocabularies are already canonical versus still documentary.
+5. Confirm whether any validator, fixture, or workflow gate already consumes this directory.
+6. Only then add entry files, local schemas, or fixtures.
 
-```bash
-find data/registry/schemas -maxdepth 2 -type f | sort
+> [!TIP]
+> If a new registry field requires a shared contract, vocabulary, or policy change, update the owning lane in the same change set rather than hiding the meaning inside one README.
 
-test -f data/registry/schemas/dataset_entry.schema.json \
-  && sed -n '1,200p' data/registry/schemas/dataset_entry.schema.json \
-  || echo "dataset_entry.schema.json is not proven on this branch"
-```
-
-### 3) Make the smallest safe change
-
-```bash
-# Good first pass:
-# - decide whether local authority is still needed
-# - if yes, add one local schema family plus examples
-# - if no, keep this README as a narrow index and point to the shared schema home
-```
-
-[Back to top](#data-registry-schemas)
+[Back to top](#data-registry)
 
 ## Usage
 
-### Working rules
+### Add a new registry entry safely
+1. Choose a **stable** `dataset_slug` and `dataset_id`.
+2. Record publisher/owner, acquisition method, expected formats, expected cadence, and contact/escalation details.
+3. Capture rights, redistribution posture, and the default policy label or review-needed posture.
+4. Link the canonical intake/connector/pipeline spec that will eventually participate in version identity.
+5. Record planned catalog handoff targets or catalog family ownership, even if generation is not implemented yet.
+6. Add or update the canonical schema and fixture surfaces that prove the entry is reviewable.
+7. Open a PR with evidence, review notes, and any sensitivity/redaction obligations called out explicitly.
 
-1. Decide local versus shared authority first.
-2. Keep registry entries one level up in [Registry README][registry-readme]; keep only their validation contracts here.
-3. Move schema, examples, tests, and documentation together.
-4. Prefer additive evolution and explicit migration notes over silent field breakage.
-5. If this directory remains scaffold-only, say so plainly rather than implying executable authority.
+### Starter registry-entry contract
+Use the table below as a **minimum working contract** until the repo’s authoritative schema home is fixed and published.
 
-### What “good” looks like
+| Field | Minimum posture | Why it matters |
+|---|---|---|
+| `dataset_slug` | Required | Stable short name for filenames, IDs, and review conversations |
+| `dataset_id` | Required | Canonical KFM identifier for the dataset/source lane |
+| `title` | Required | Human-readable name used in review and downstream discovery |
+| `description` | Required | Explains what the dataset/source is and what it is for |
+| `publisher` or `owner` | Required | Identifies the upstream publisher or controlling steward |
+| `acquisition_method` | Required | Makes fetch/upload expectations reviewable |
+| `expected_formats` | Required | Helps validate intake and downstream artifact expectations |
+| `expected_cadence` or `static_snapshot` | Required | Clarifies freshness expectations and versioning posture |
+| `spatial_coverage` | Required | States geography, grain, or bounds of relevance |
+| `temporal_coverage` | Required | States time bounds or the absence of time semantics |
+| `rights` / `license` capture | Required | Promotion should fail closed if rights are unclear |
+| `default_policy_label` | Required | Establishes the first review posture before runtime filtering or release |
+| `contact` / `escalation` | Required | Gives reviewers and operators a real owner path |
+| `pipeline_spec_ref` or `connector_ref` | Required | Links registry identity to the governed build path that will create versioned outputs |
+| `catalog_targets` | Recommended | Prevents registry work from stopping at admission without a discoverable handoff |
+| `notes` / `governance` | Recommended | Preserves special handling, redaction duties, or steward guidance |
 
-- A reviewer can tell in under a minute whether this subtree is active or only an index.
-- If active, one registry-entry family has a clearly named schema and review examples.
-- If inactive, the README still prevents drift by pointing contributors to the authoritative shared home.
-- No file here duplicates cross-cutting families already governed elsewhere.
+### Identity, versioning, and `spec_hash`
+KFM’s doctrine is consistent on this point: stable dataset identity should be separate from **version identity**, and version identity should be deterministic enough to audit and rebuild.
+
+**Working rules:**
+
+- Keep `dataset_slug` stable, lowercase, and date-free.
+- Use a stable dataset identifier family such as `kfm://dataset/<slug>`.
+- Derive `dataset_version_id` from a canonical spec and its `spec_hash`, not from ephemeral runtime details.
+- Include registry identity fields and transform rules that change output meaning in the hash input.
+- Exclude run IDs, staging paths, and non-semantic timestamps from the hash input.
+- Store the exact canonicalized spec next to the computed hash whenever the implementation lands.
+
+**Illustrative identifier families:**
+
+```text
+kfm://dataset/<slug>
+kfm://run/<run_id>
+kfm://artifact/sha256:<digest>
+kfm://evidence/<resolver_safe_token>
+```
+
+[Back to top](#data-registry)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    Entry["Registry entry<br/>dataset/source record"] --> Local["data/registry/schemas/<br/>registry-local validation"]
-    Shared["../../../contracts/ + ../../../schemas/<br/>shared trust lattice"] -. constrains .-> Local
-    Policy["../../../policy/<br/>deny-by-default reasons / obligations"] -. constrains .-> Local
-    Tests["../../../tests/<br/>fixtures + contract/policy proof"] -. proves .-> Local
-    Workflows["../../../.github/workflows/<br/>merge/block when mounted"] -. enforces .-> Local
-    Local --> Review["Registry review / source admission"]
-    Review --> Flow["RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED"]
+    R[Registry entry<br/>dataset_id, rights, cadence, policy_label] --> S[Connector or intake spec]
+    S --> H[spec_hash<br/>version identity]
+    H --> RAW[RAW acquisition<br/>manifest + checksums]
+    RAW --> W[WORK / QUARANTINE<br/>QA, redaction, fixes]
+    W --> P[PROCESSED<br/>immutable dataset version]
+    P --> C[CATALOG closure<br/>DCAT + STAC + PROV]
+    C --> E[Evidence resolution<br/>EvidenceRef -> EvidenceBundle]
+    E --> A[Governed API]
+    A --> U[Map / Story / Focus]
+    POL[Policy + review gates] -. admission and promotion .-> R
+    POL -. release readiness .-> C
 ```
+
+This is the operating intent: registry work should start the governed path, not replace it.
+
+[Back to top](#data-registry)
 
 ## Tables
 
-### Current evidence snapshot
+### Admission and promotion gates that matter to the registry lane
 
-| Claim | Status | Notes |
-| --- | --- | --- |
-| `data/registry/schemas/` exists on current public `main` | **CONFIRMED** | Directory is visible in the repo tree |
-| This subtree currently shows `README.md` only | **CONFIRMED** | No concrete schema files are visible in the current public tree |
-| `data/registry/` currently shows `README.md` and `schemas/README.md` only | **CONFIRMED** | Parent registry lane is present, but current public tree still reads as scaffold-first |
-| `data/registry/README.md` currently owns the local registry description | **CONFIRMED** | Parent surface exists and is now documented as the source-registration lane |
-| The repo already has shared `contracts/README.md` and `schemas/README.md` boundary surfaces | **CONFIRMED** | Stronger global placement guidance already exists |
-| `.github/workflows/` currently shows `README.md` only | **CONFIRMED** | Current public listing does not show checked-in workflow YAML files |
-| A local `dataset_entry.schema.json` family is still mounted here | **NEEDS VERIFICATION** | Referenced in continuity materials, not proven in the current public tree |
+| Gate | Minimum proof | Registry implication | Block if |
+|---|---|---|---|
+| A — Identity and versioning | stable `dataset_id`, version rule, `spec_hash`, naming discipline | Registry entries must not allow unstable or duplicate identity | identity is missing, duplicated, or semantically unstable |
+| B — Rights and license clarity | explicit license/rights basis, source-terms capture, obligations | Registry entry must make rights posture reviewable before promotion | rights are missing, unclear, or incompatible |
+| C — Sensitivity and redaction | classification, default policy label, redaction/generalization plan when needed | Registry entry must surface whether review stops, narrows, or generalizes output | sensitivity is unresolved or no handling plan exists |
+| D — Catalog triplet validity | `DCAT + STAC + PROV` generated, valid, and cross-linked | Registry should point toward catalog closure instead of stopping at admission | catalog closure is missing or inconsistent |
+| E — Run receipt and checksums | acquisition manifest, run receipt, output digests | Registry should tie identity to replayable build memory | lineage cannot be reconstructed |
+| F — Policy and contract tests | schema, policy, link, and negative-path checks pass | Registry entry must be exercisable by validation, not prose-only | any blocking validation or policy failure remains |
+| G — Operational readiness | owner, rollback path, monitoring/review posture | Registry should not feed public release lanes without named responsibility | owner, rollback, or support posture is missing |
 
-### Placement matrix
+### Authority split to retire explicitly
 
-| Schema kind | Best home | Why |
-| --- | --- | --- |
-| Registry-entry validation | `data/registry/schemas/` only when proven local | Keeps entry rules close to the registry surface |
-| Shared trust-bearing object families | Shared authority in `contracts/` and/or top-level `schemas/` | Prevents parallel schema universes |
-| Policy vocab / deny-by-default rules | `policy/` | Policy should stay executable and separately reviewable |
-| API/public payload shapes | Shared API/schema home | Keeps external surface contracts centralized |
-| Emitted metadata artifacts | `data/catalog/` or generated outputs | These are outputs, not local entry-validation schemas |
+| Concern | Current confirmed signal | Working rule until the repo decides |
+|---|---|---|
+| Shared machine contract home | [`../../contracts/README.md`](../../contracts/README.md) is the strongest current public signal for versioned machine contracts | Treat shared registry-entry schemas as belonging to the canonical shared home once chosen; do not duplicate by habit |
+| Top-level schema boundary | [`../../schemas/README.md`](../../schemas/README.md) exists publicly and warns against parallel schema authority | Keep `schemas/` as a boundary surface, not a second silent registry of truth |
+| Registry-local schema lane | `data/registry/schemas/README.md` exists publicly but is README-only today | Add local schema files only with an explicit ownership note or ADR |
+| Controlled vocab ownership | Doctrine strongly wants controlled vocabularies; public tree does not yet prove one settled home for every registry-related value set | Pick one canonical home per vocabulary and link to it; avoid shadow copies |
+| Validation ownership | `../../tests/README.md`, `../../tools/README.md`, and `.github/workflows/README.md` describe validation families, helper tooling, and workflow gates as separate surfaces | Registry README should describe the burden, not quietly own executable validation logic |
 
-### Candidate local wave if authority stays here
+[Back to top](#data-registry)
 
-| Candidate | Status | Purpose | Notes |
-| --- | --- | --- | --- |
-| `dataset_entry.schema.json` | **INFERRED** | Validate registry-entry shape | Verify on branch before treating as active |
-| `fragments/<name>.schema.json` | **PROPOSED** | Local enums or reusable local fragments | Only if reuse is truly local |
-| `examples/valid/*` | **PROPOSED** | Positive review fixtures | Can live here or point to the testing surface |
-| `examples/invalid/*` | **PROPOSED** | Negative review fixtures | Must fail deterministically and legibly |
+## Task list & definition of done
 
-## Definition of done
+### Definition of done for this README
+- [ ] KFM Meta Block v2 is present, and unresolved identifiers or policy labels remain honestly marked.
+- [ ] Current public-tree fact is clearly separated from doctrine-aligned target shape.
+- [ ] Upstream, sibling, and downstream links resolve relative to `data/registry/README.md`.
+- [ ] Schema-home ambiguity is made explicit instead of glossed over.
+- [ ] No sentence implies live CI gates, validators, or fixtures unless they are branch-confirmed.
+- [ ] Commands are either verified shell inspection steps or clearly marked illustrative.
+- [ ] Long-form reference material stays in the appendix, not in the scanning path.
 
-- [ ] Verify whether this subtree is still an active schema home on the checked-out branch
-- [ ] If active, add the first confirmed local schema family with at least one valid and one invalid example
-- [ ] If inactive, keep this README narrow and link contributors to the shared authority surface
-- [ ] Confirm `doc_id` and `policy_label` in the meta block before merge
-- [ ] Ensure parent and sibling READMEs do not contradict this placement rule
-- [ ] Do not claim merge-blocking validation until a real workflow YAML and validator path are visible
-- [ ] Keep local names, examples, and migration notes in sync in the same PR
+### Definition of done for a registry-entry PR
+- [ ] The entry validates against the **canonical** schema home.
+- [ ] Rights/license posture is explicit and reviewable.
+- [ ] Default policy label or review-needed posture is recorded.
+- [ ] Source owner/publisher and escalation contact are named.
+- [ ] Canonical pipeline/connector spec reference is present.
+- [ ] Planned catalog handoff is named.
+- [ ] Any sensitivity or redaction obligations are stated explicitly.
+- [ ] At least one validation path, fixture, or downstream proof obligation is referenced.
+- [ ] The PR keeps `CONFIRMED`, `INFERRED`, `PROPOSED`, and `NEEDS VERIFICATION` claims honest.
 
-[Back to top](#data-registry-schemas)
+[Back to top](#data-registry)
 
 ## FAQ
 
-### Why not put every KFM schema under `data/registry/schemas/`?
+### Does current public `main` already expose dataset entry files here?
+No. Current public `main` shows `data/registry/` with `README.md` and `schemas/README.md` only.
 
-Because the repo already has shared contract/schema guidance at higher levels. Putting every family here would blur local registry-entry validation with the repo-wide trust lattice.
+### Does this directory store datasets?
+No. The registry lane should store **registration records and boundary guidance**, not the raw or processed dataset payloads themselves.
 
-### Does current public `main` prove `dataset_entry.schema.json` lives here?
+### Is a registry entry the same thing as a published dataset version?
+No. A registry entry is an admission and identity artifact. Publication still depends on acquisition, QA, processed outputs, catalog closure, policy/review, receipts, and release proof.
 
-No. It is a continuity signal, not current-tree proof.
+### Should registry-entry schemas live in `data/registry/schemas/`?
+Not automatically. The current public repo exposes that path, but the stronger current signal for shared machine contracts is still `../../contracts/`. Treat local schema placement as **NEEDS VERIFICATION** until the repo makes authority explicit.
 
-### When should a schema live here instead of in the shared schema or contract home?
+### Can the UI or API read registry files directly?
+Not as a trust shortcut. Runtime claim surfaces should still go through governed APIs, policy mediation, catalog closure, and evidence resolution.
 
-Only when it validates registry-local entry shapes and does not create duplicate authority for a shared KFM object family.
+### What should happen when rights or sensitivity are unclear?
+Fail closed. Keep the work out of release surfaces until the rights posture and required handling plan are explicit.
 
-### Why are `doc_id` and `policy_label` still placeholders?
-
-Because the current public repo evidence confirms the file, owner, neighboring lanes, and file history, but it does not surface a verified document UUID or an explicit policy label for this README. Those values should be resolved on the working branch before merge.
-
-### Where should fixtures live?
-
-Prefer the repo’s testing/proof surfaces when they already exist. If a branch deliberately keeps tiny local examples beside a schema for reviewer clarity, make that choice explicit and non-authoritative.
+[Back to top](#data-registry)
 
 ## Appendix
 
 <details>
-<summary><strong>Verification backlog</strong></summary>
+<summary><strong>Illustrative starter registry entry (example only — adapt field names to the canonical schema home before commit)</strong></summary>
 
-| Question | Why it matters | Current posture |
-| --- | --- | --- |
-| Is `data/registry/schemas/` meant to stay active on the working branch? | Determines whether this README is a local home or just an index | **NEEDS VERIFICATION** |
-| Does `dataset_entry.schema.json` exist here on the working branch? | Confirms whether the older registry-entry pattern still holds | **NEEDS VERIFICATION** |
-| Where do valid/invalid fixtures live now? | Needed to avoid splitting examples across competing homes | **NEEDS VERIFICATION** |
-| Is there a mounted validator command for registry-entry schemas? | Needed before calling anything enforced | **NEEDS VERIFICATION** |
-| Do actual workflow YAMLs exist for this surface on the working branch? | Needed before claiming CI gate behavior | **NEEDS VERIFICATION** |
+```yaml
+dataset_slug: ks_census_1870_population
+dataset_id: kfm://dataset/ks_census_1870_population
+title: Kansas 1870 Census Population by County
+description: County-level population counts for Kansas from the 1870 census.
+publisher: IPUMS NHGIS
+acquisition_method: bulk_download
+expected_formats:
+  - csv
+  - parquet
+expected_cadence: static_snapshot
+spatial_coverage:
+  grain: county
+  area: Kansas
+temporal_coverage:
+  start: 1870-01-01
+  end: 1870-12-31
+rights:
+  license: US-PD
+  rights_holder: IPUMS NHGIS
+  attribution: IPUMS NHGIS / source publication
+default_policy_label: public
+contact:
+  steward: TODO-VERIFY
+  escalation: TODO-VERIFY
+pipeline_spec_ref: <VERIFY-CANONICAL-SCHEMA-HOME-AND-PATH>
+catalog_targets:
+  dcat: <VERIFY>
+  stac_collection: <VERIFY>
+  prov: <VERIFY>
+notes:
+  - Example only; keep field names aligned to the canonical registry-entry schema.
+  - Do not commit unresolved rights or sensitivity as if they were public-safe facts.
+```
+
+### Quick reviewer prompts
+- Does the entry describe a **source or dataset lane**, not a runtime payload?
+- Are rights, cadence, and policy posture explicit?
+- Is the version-identity path (`spec_hash` / canonical spec) understandable?
+- Does the entry point toward catalog closure and evidence resolution rather than stopping at acquisition?
+- Would a steward know who to contact if something is wrong?
 
 </details>
 
-<details>
-<summary><strong>Continuity note</strong></summary>
-
-Older repo-aligned materials and KFM compendium passages referenced a registry-entry schema such as `dataset_entry.schema.json`. That is useful as a continuity hint, but this README intentionally does not promote it to **CONFIRMED** unless the checked-out branch proves the file is present and still authoritative.
-
-</details>
-
----
-
-[registry-readme]: ../README.md
-[data-readme]: ../../README.md
-[contracts-readme]: ../../../contracts/README.md
-[schemas-readme]: ../../../schemas/README.md
-[policy-readme]: ../../../policy/README.md
-[tests-readme]: ../../../tests/README.md
-[workflows-readme]: ../../../.github/workflows/README.md
-[codeowners]: ../../../.github/CODEOWNERS
+[Back to top](#data-registry)
