@@ -21,15 +21,19 @@ Placement, exposure, and progression rules for how KFM runs without weakening th
 > **Owners:** @bartytime4life  
 > **Repo fit:** `docs/architecture/DEPLOYMENT_TOPOLOGY.md`  
 > **Upstream / adjacent:** [`./README.md`](./README.md) · [`../../infra/README.md`](../../infra/README.md) · [`../../apps/README.md`](../../apps/README.md) · [`../../packages/README.md`](../../packages/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
-> **Compact badges:** ![Status](https://img.shields.io/badge/status-draft-orange) ![Evidence](https://img.shields.io/badge/evidence-repo%20%2B%20doctrine-blue) ![Topology](https://img.shields.io/badge/topology-governed-informational) ![Runtime](https://img.shields.io/badge/runtime-phase--aware-6f42c1)  
-> **Quick jump:** [Scope](#scope) · [Current public-main snapshot](#current-public-main-snapshot) · [Topology law](#topology-law) · [Deployment profiles](#deployment-profiles) · [Diagram](#diagram) · [Exposure rules](#exposure-and-bind-rules) · [Verification quickstart](#verification-quickstart) · [Definition of done](#definition-of-done)
+> **Compact badges:** ![Status](https://img.shields.io/badge/status-draft-orange) ![Evidence](https://img.shields.io/badge/evidence-doctrine%20%2B%20repo--grounded-blue) ![Topology](https://img.shields.io/badge/topology-governed-informational) ![Runtime](https://img.shields.io/badge/runtime-phase--aware-6f42c1)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current repo-grounded snapshot](#current-repo-grounded-snapshot) · [Topology law](#topology-law) · [Deployment profiles](#deployment-profiles) · [Diagram](#diagram) · [Exposure and bind rules](#exposure-and-bind-rules) · [Verification quickstart](#verification-quickstart) · [Definition of done](#definition-of-done)
 
 > [!IMPORTANT]
-> This document is intentionally **repo-aware** and **evidence-bounded**. It combines:
-> 1. **CONFIRMED** public-repo structure visible on current public `main`, and
-> 2. **CONFIRMED doctrine / PROPOSED realization** from the attached KFM architecture corpus.
+> This document is intentionally **evidence-bounded**.
 >
-> It does **not** claim that mounted manifests, live ports, workflow YAML, or current production wiring were directly verified.
+> It separates:
+>
+> 1. **CONFIRMED doctrine** from the attached KFM architecture corpus,
+> 2. **CONFIRMED repo-grounded public-main evidence** from attached repo summary artifacts, and
+> 3. **PROPOSED realization guidance** where manifests, units, bind addresses, workflow YAML, or live runtime behavior were **not** directly reverified in this session.
+>
+> It does **not** claim direct verification of mounted deployment manifests, live ports, runtime logs, or current production wiring.
 
 ## Scope
 
@@ -39,20 +43,20 @@ It covers:
 
 - runtime placement by responsibility
 - exposure and bind discipline
-- topology progression from smallest credible local slice to stronger separation
-- mapping between KFM's architectural planes and repo/runtime surfaces
-- verification checkpoints for converting doctrine into mounted implementation guidance
+- progression from the smallest credible governed slice to stronger separation
+- mapping between KFM's operational planes and deployable surfaces
+- verification checkpoints for turning doctrine into mounted implementation fact
 
 It does **not** redefine:
 
-- truth-path semantics
-- contract family contents
-- policy rule language
-- UI choreography
-- data modeling specifics
-- infrastructure vendor selection in full detail
+- source admission law
+- contract-family contents
+- policy-bundle semantics
+- detailed UI choreography
+- lane-specific publication rules in full
+- vendor-by-vendor infrastructure implementation
 
-For those, use the adjacent architecture and surface docs first.
+Use adjacent architecture, policy, contract, and infrastructure docs for those.
 
 [Back to top](#deployment-topology)
 
@@ -60,90 +64,94 @@ For those, use the adjacent architecture and surface docs first.
 
 | Topic | Lives here | Why this file exists |
 |---|---|---|
-| Deployment placement and exposure | `docs/architecture/DEPLOYMENT_TOPOLOGY.md` | Names the runtime shape, boundaries, and progression rules |
-| Infra inventory and environment surfaces | [`../../infra/README.md`](../../infra/README.md) | Repo-facing entry point for infra directories and environment lanes |
-| App surfaces and shell responsibilities | [`../../apps/README.md`](../../apps/README.md) | Defines user/operator-facing runtimes and shell expectations |
-| Shared package boundaries | [`../../packages/README.md`](../../packages/README.md) | Defines reusable law and internal responsibility seams |
-| Policy runtime surfaces | [`../../policy/README.md`](../../policy/README.md) | Defines deny-by-default policy posture and policy package scope |
-| Contract surfaces | [`../../contracts/README.md`](../../contracts/README.md) | Defines contract intent and warns against overstating live schema inventory |
-| Workflow evidence | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public-main workflow visibility boundary |
+| Deployment placement and exposure | `docs/architecture/DEPLOYMENT_TOPOLOGY.md` | Names the runtime shape, hard boundaries, and progression rules |
+| Architecture index and neighboring doctrine | [`./README.md`](./README.md) | Nearby entry point for architecture docs |
+| Infrastructure lanes | [`../../infra/README.md`](../../infra/README.md) | Environment wiring, ops surfaces, and deployable lanes |
+| Application surfaces | [`../../apps/README.md`](../../apps/README.md) | User, review, API, CLI, and worker-facing runtime roles |
+| Shared package boundaries | [`../../packages/README.md`](../../packages/README.md) | Shared law, adapters, and reusable seams |
+| Policy runtime surfaces | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default posture, reason/obligation grammar, and policy packages |
+| Contract surfaces | [`../../contracts/README.md`](../../contracts/README.md) | Contract families, schemas, and outward trust objects |
+| Workflow evidence boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public-tree workflow visibility and gate posture |
 
 ### Accepted inputs
 
 This file should accept material such as:
 
 - deployment profiles and progression rules
-- service placement by plane or trust obligation
-- bind/exposure rules
-- ingress / egress notes
-- local-first vs hosted split guidance
+- plane-to-runtime placement guidance
+- bind / ingress / egress discipline
+- exposure prohibitions
 - topology diagrams
-- verification checklists for manifests, services, and overlays
-- environment-class distinctions that affect placement but not doctrine
+- phase-one local runtime guidance
+- hosted separation guidance
+- verification commands and review checklists
 
 ### Exclusions
 
 This file should **not** become the dumping ground for:
 
 - full Kubernetes manifests
-- full Terraform module docs
-- runbook step-by-step recovery procedures
-- deep package API docs
+- full Terraform module documentation
+- host hardening runbooks in full
 - route-by-route OpenAPI detail
-- policy bundle semantics
-- speculative production claims not backed by mounted evidence
+- detailed policy bundle logic
+- lane-specific source atlases
+- speculative “current production” claims not backed by direct evidence
 
-Those belong in `infra/`, `docs/runbooks/`, `contracts/`, `policy/`, or the relevant app/package docs instead.
+Those belong in `infra/`, `policy/`, `contracts/`, `docs/runbooks/`, and the relevant lane or app docs instead.
 
 [Back to top](#deployment-topology)
 
-## Current public-main snapshot
+## Current repo-grounded snapshot
 
-The current public repository surface confirms the broad shape of the project, but not the mounted runtime wiring.
+The attached repo-grounded materials confirm broad public-repo shape and several documentation/control surfaces, but they do **not** prove mounted runtime wiring.
 
-| Area | Current public-main evidence | Deployment consequence |
-|---|---|---|
-| Target file | This file was a scaffold placeholder before this revision | A topology doc was expected, but not yet developed |
-| `apps/` | `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `workers/` | App-facing topology should distinguish user, review, API, and worker roles |
-| `packages/` | `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, `policy/` | Shared logic already groups around trust-bearing seams |
-| `infra/` | `backup/`, `compose/`, `dashboards/`, `gitops/`, `hosted/`, `kubernetes/`, `local/`, `monitoring/`, `systemd-or-compose/`, `systemd/`, `terraform/` | The repo deliberately keeps multiple deployment lanes visible |
-| `policy/` | `bundles/`, `fixtures/`, `policy-runtime/`, `tests/` | Policy is intended as a first-class runtime/deployment concern |
-| `contracts/` | Public main currently shows `README.md` only | Do not overclaim live schema inventory from repo layout alone |
-| `.github/workflows/` | Public main currently shows `README.md` only | Do not claim active checked-in workflow YAML on public main without re-verification |
+| Surface | Current evidence in hand | Deployment consequence | Confidence |
+|---|---|---|---|
+| Repo-root structure | `apps/`, `packages/`, `contracts/`, `policy/`, `data/`, `infra/`, `docs/`, `tools/`, `tests/`, `configs/`, `scripts/`, `migrations/`, and `examples/` are described in repo-grounded inventory | This topology doc can safely speak about **root responsibility bands** | **CONFIRMED** at repo root |
+| Governance scaffolding | `.github/CODEOWNERS` and `.github/PULL_REQUEST_TEMPLATE.md` are reported present | Deployment must preserve review and trust checks, not just service reachability | **CONFIRMED** |
+| Workflow visibility | `.github/workflows/README.md` is reported present, and repo-grounded review warns against claiming active workflow YAML merge gates from the visible tree | Do **not** claim mounted merge-blocking workflow YAML as current fact | **CONFIRMED** visibility; **UNKNOWN** executable gate inventory |
+| Contract / schema / policy docs | `contracts/README.md`, `schemas/README.md`, `policy/README.md`, `tests/README.md`, `tools/README.md`, and `scripts/README.md` are reported present | Control surfaces are documented; exact executable coverage remains separate verification work | **CONFIRMED** docs; **UNKNOWN** full implementation depth |
+| Runtime proof objects | Repo-grounded materials do **not** confirm real proof packs, mounted response envelopes, live Rego bundles, or checked-in policy tests as implemented runtime fact | Keep release proof, negative-path runtime behavior, and mounted policy execution visibly unverified | **UNKNOWN** |
+| Public-main freshness | The freshest repo-grounded summary in hand is dated **2026-03-22 UTC** | Prefer it over older repo summaries when describing visible current-state limits | **CONFIRMED** |
 
 > [!NOTE]
-> The public repo shows the **shape of responsibility** clearly enough to ground a topology doc. It does **not** by itself prove active service graphs, open ports, ingress methods, or deployment maturity.
+> This section is intentionally narrower than a real tree walk.
+>
+> It is grounded in attached **repo-grounded summaries**, not in a directly mounted checkout of the repository at response time.
 
 ### Working interpretation
 
-- **CONFIRMED from repo:** top-level app/package/infra/policy responsibility zones exist.
-- **CONFIRMED from doctrine:** KFM expects deployment to preserve the truth path, trust membrane, EvidenceBundle-centered inspectability, and bounded AI.
-- **NEEDS VERIFICATION:** exact manifests, bind addresses, ingress controllers, timers/services, workflow gates, and live environment classes.
+- **CONFIRMED from doctrine:** KFM expects topology to preserve the truth path, trust membrane, evidence resolution, fail-closed behavior, and correction visibility.
+- **CONFIRMED from repo-grounded evidence:** public-main includes the expected root responsibility zones and governance/documentation scaffolding.
+- **NEEDS VERIFICATION:** exact app internals, bind addresses, reverse proxies, systemd units, compose files, Kubernetes overlays, workflow YAML, listening ports, and current deployment maturity.
 
 [Back to top](#deployment-topology)
 
 ## Topology law
 
-Deployment topology is part of the **trust model**, not a late infra appendix.
+Deployment topology is part of the **trust model**, not a late infrastructure appendix.
 
 ### Governing rules
 
 | Rule | Meaning | Consequence |
 |---|---|---|
-| Governed API is the normal truth boundary | Clients read through governed interfaces, not raw stores | No direct browser/client path to canonical DB, artifact roots, or local model runtime |
-| Deployment does not replace promotion | A service being reachable is not the same as an artifact being publishable | Release state, policy, evidence resolution, and correction still govern outward use |
-| Derived delivery stays downstream | Maps, tiles, search, graph, vector, scene, and exports remain subordinate unless explicitly promoted | Delivery caches and projections must not silently become authority |
-| Smallest credible runtime first | KFM should prove one governed slice before scaling deployment complexity | Local-first phase-one topology is preferred before full hosted separation |
-| Exposure is phase-aware | Bind to the narrowest scope that satisfies the current deployment phase | Loopback and private bindings are preferred until public edge behavior is justified |
-| Correction is topology-relevant | Correction visibility must survive runtime placement changes | Public surfaces must still show stale, superseded, withdrawn, narrowed, or denied states visibly |
+| Governed APIs are the normal edge | Clients read through governed interfaces, not raw canonical stores | No standard browser or public client path to PostgreSQL / PostGIS, artifact zones, or model runtime |
+| Reachability is not publication | A service being reachable is not the same thing as an object being releasable | Review, policy, evidence resolution, and release state still govern outward use |
+| Derived delivery stays downstream | Tiles, search, graph, vector, scene, export, and summary layers remain rebuildable by default | Fast layers must not quietly become authority |
+| Smallest credible runtime first | KFM should prove one governed slice before multiplying infra complexity | Local-first and thin-slice deployment is the default starting posture |
+| Exposure is phase-aware | Bind as narrowly as the current deployment phase allows | Loopback and private bindings come before public ingress |
+| Correction is topology-relevant | Correction, supersession, narrowing, and withdrawal must stay visible after deployment changes | Public-safe surfaces still need lineage and status cues |
+| Focus stays behind the membrane | Governed assistance is bounded by scope, evidence, policy, and citations | Public clients never talk to model serving directly |
+| 2D stays default | Deployment should not force 3D-first product behavior | 3D remains conditional, burden-bearing, and subject to the same evidence rules |
 
 ### Non-negotiable posture
 
 - **Truth path stays explicit:** `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
-- **Trust membrane stays explicit:** no convenience bypass from UI or clients into stores or model runtimes
-- **Map-first shell stays explicit:** deployment should support Explorer/Timeline/Dossier/Evidence Drawer/Focus without splitting trust cues into disconnected products
-- **2D remains default:** topology must not bias the product toward spectacle-first 3D deployment
-- **Negative outcomes remain first-class:** abstain, deny, stale-visible, withdrawn, and error are valid runtime states
+- **Trust membrane stays explicit:** no convenience bypass from UI or public clients into stores, policy engines, or model serving
+- **Authoritative-vs-derived split stays explicit:** graph, search, tiles, scenes, summaries, and caches remain rebuildable unless explicitly promoted
+- **Negative outcomes stay first-class:** hold, quarantine, abstain, deny, stale-visible, withdrawn, superseded, and error are valid runtime states
+- **Promotion stays governed:** deployment success does not equal trusted publication
 
 [Back to top](#deployment-topology)
 
@@ -151,113 +159,121 @@ Deployment topology is part of the **trust model**, not a late infra appendix.
 
 The corpus points to a progression, not a single mandatory final form.
 
-| Profile | Public exposure | Governed API | Canonical DB + artifact tree | Model runtime | Best use |
+| Profile | Public exposure | Governed API | Canonical truth + artifact zones | Model runtime | Best fit |
 |---|---|---|---|---|---|
-| **Local-only** | None | Loopback only | Local only; explicit lifecycle zones | Loopback only | Thin-slice proof, development, doctrine-to-runtime validation |
-| **Private-remote** | No public edge; VPN / overlay only | Private address only | Private only | Private only | Small trusted review/operator access before public exposure |
+| **Local-only** | None | Loopback only | Local only; explicit lifecycle zones | Loopback only | Thin-slice proof, doctrine-to-runtime validation, single-host development |
+| **Private-remote** | No public edge; trusted VPN / overlay only | Private address only | Private only | Private only | Trusted collaborator or steward access without public ingress |
 | **Small hosted split-edge** | Public UI and/or public-safe API edge | Public-safe edge for approved scope | Private or more tightly controlled | Usually private | First meaningful hosted public surface without exposing canon |
-| **More separated production** | Intentional public edge | Edge/API separation by responsibility | Separate stores/services by plane where warranted | Separate only when justified | Stronger blast-radius control, scale, operational ownership, SLOs |
+| **More separated production** | Intentional public edge | Edge/API separation by responsibility | Separate stores/services by plane where justified | Separate where burden warrants | Stronger blast-radius control, operational ownership, and scale |
 
 ### Profile selection rule
 
-Choose the **smallest profile that preserves the trust membrane and meets the current operational burden**.
+Choose the **smallest profile that preserves the trust membrane and meets the actual burden**.
 
-Do not jump to orchestration, public ingress, or service multiplication merely because those tools are available in `infra/`.
+Do not jump to orchestration, public ingress, or service multiplication merely because infrastructure lanes exist in the repo.
+
+### Home-to-hosted progression
+
+| Step | Expected bind posture | What changes | What must stay true |
+|---|---|---|---|
+| Local-only | `localhost` / private container network | Single-host proof slice | Plane boundaries still visible |
+| Private-remote | VPN / overlay addresses | Trusted off-host access | No public direct path into canon or model serving |
+| Small hosted | Public-safe UI/API edge + private core | First public entry point | Sensitive lanes stay private; release law unchanged |
+| Production-grade separation | Edge, identity, policy, API, workers, stores, model serving separated | Stronger scale + blast-radius control | Same truth path, same trust membrane, same correction discipline |
 
 [Back to top](#deployment-topology)
 
 ## Diagram
 
+> [!NOTE]
+> The diagram below shows **doctrinal component families and placement rules**. It is not a claim that every box is already a mounted service in the current repo.
+
 ### Plane-aware deployment topology
 
 ```mermaid
 flowchart LR
-    subgraph Clients["Client / operator surfaces"]
+    subgraph Users["Client and operator surfaces"]
         U["Public user"]
         S["Steward / reviewer"]
-        O["Operator / CLI user"]
+        O["Operator / CLI"]
     end
 
-    subgraph Apps["Repo-aligned app surfaces"]
-        EW["apps/explorer-web"]
-        RC["apps/review-console"]
-        CLI["apps/cli"]
-        API["apps/governed-api"]
-        WK["apps/workers"]
+    subgraph Edge["Runtime and trust surfaces"]
+        MAP["Map / Timeline / Dossier / Story shell"]
+        FOCUS["Focus Mode"]
+        API["Governed API"]
+        REVIEW["Review / stewardship surface"]
+        EXPORT["Export surface"]
     end
 
-    subgraph Control["Control-plane services"]
-        POL["policy/bundles + policy-runtime"]
-        EV["packages/evidence"]
-        CAT["packages/catalog"]
-        IDX["packages/indexers"]
-        DOM["packages/domain"]
-        ING["packages/ingest"]
+    subgraph Control["Catalog / policy / review plane"]
+        EVID["Evidence resolver"]
+        CATALOG["Catalog compiler / closure"]
+        POLICY["Policy engine / decision grammar"]
+        RECEIPTS["Review, release, and correction artifacts"]
     end
 
-    subgraph Canon["Canonical truth + artifact zones"]
+    subgraph Canon["Canonical truth plane"]
         DB["PostgreSQL / PostGIS"]
-        RAW["data/raw"]
-        WORK["data/work"]
-        Q["data/quarantine"]
-        PROC["data/processed"]
-        CATALOG["data/catalog"]
-        PUB["data/published"]
-        PROOFS["data/proofs"]
+        ART["Artifact tree\nRAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED"]
+    end
+
+    subgraph Derived["Derived delivery plane"]
+        TILES["Tiles / portrayals"]
+        SEARCH["Search / ranking"]
+        GRAPH["Graph / traversal"]
+        VECTOR["Vector / embedding stores"]
+        SCENE["3D / scene packages"]
     end
 
     subgraph Assist["Bounded assistance"]
-        OLL["Local/private Ollama adapter"]
+        MODEL["Local/private model runtime\nbehind adapter"]
     end
 
-    U --> EW
-    S --> RC
-    O --> CLI
+    U --> MAP
+    U --> EXPORT
+    S --> REVIEW
+    O --> API
 
-    EW --> API
-    RC --> API
-    CLI --> API
-    API --> POL
-    API --> EV
-    API --> CAT
-    API --> DOM
+    MAP --> API
+    FOCUS --> API
+    REVIEW --> API
+    EXPORT --> API
 
-    WK --> ING
-    WK --> DOM
-    WK --> CAT
-    WK --> IDX
-    WK --> POL
+    API --> EVID
+    API --> POLICY
+    API --> CATALOG
+    API --> RECEIPTS
 
-    ING --> RAW
-    ING --> WORK
-    ING --> Q
-    WK --> PROC
-    WK --> CATALOG
-    WK --> PUB
-    WK --> PROOFS
+    CATALOG --> DB
+    CATALOG --> ART
+    POLICY --> RECEIPTS
+    EVID --> ART
+    EVID --> DB
 
-    API --> PUB
-    API --> PROOFS
-    WK --> DB
-    API --> DB
+    DB --> TILES
+    DB --> SEARCH
+    DB --> GRAPH
+    DB --> VECTOR
+    DB --> SCENE
 
-    API --> OLL
+    API --> MODEL
 
-    classDef caution fill:#fff4e5,stroke:#b26a00,color:#3f2a00;
     classDef trust fill:#eef7ff,stroke:#1f6feb,color:#083a75;
+    classDef caution fill:#fff4e5,stroke:#b26a00,color:#3f2a00;
 
-    class API,POL,EV,CAT trust;
-    class DB,RAW,WORK,Q,OLL caution;
+    class API,EVID,CATALOG,POLICY,RECEIPTS trust;
+    class DB,ART,MODEL caution;
 ```
 
 ### Progression ladder
 
 ```mermaid
 flowchart LR
-    A["Local-only<br/>loopback API + loopback model + local canon"] --> 
-    B["Private-remote<br/>VPN / overlay reachability only"] --> 
-    C["Small hosted split-edge<br/>public-safe edge, private canon"] --> 
-    D["More separated production<br/>edge / API / workers / stores split by burden"]
+    A["Local-only<br/>loopback API + local canon + loopback model"] -->
+    B["Private-remote<br/>VPN / overlay only"] -->
+    C["Small hosted split-edge<br/>public-safe UI/API edge, private core"] -->
+    D["Production-grade separation<br/>edge / identity / policy / API / workers / stores"]
 ```
 
 [Back to top](#deployment-topology)
@@ -266,22 +282,25 @@ flowchart LR
 
 | KFM plane | Main responsibility | Likely runtime placement | Must not bypass |
 |---|---|---|---|
-| Source and intake plane | source descriptors, raw capture, ingest receipts, validation, quarantine routing | worker jobs, ingest services, source connectors | public browser paths; canonical writes from UI |
-| Canonical truth plane | canonical entities, observations, claims, immutable versions, processed artifacts | PostgreSQL/PostGIS plus controlled builders and approved repair lanes | direct client reads; derived write-back |
-| Catalog / policy / review plane | closure, rights, sensitivity, review, release, correction | catalog compiler, policy runtime, review-facing services | public publication without gates; policy-significant self-approval |
-| Derived delivery plane | maps, tiles, search, graph, vector, exports, scenes | projection/build workers, caches, delivery services | silent authority promotion |
-| Runtime and trust-surfaces plane | governed API, evidence resolution, shell, Focus coordination, review console | governed API plus app surfaces | store bypass, uncited answer path, hidden correction state |
+| Source and intake plane | source descriptors, raw capture, ingest receipts, validation, quarantine routing | connectors, ingest jobs, admission tooling | public browser paths; canonical writes from UI |
+| Canonical truth plane | canonical entities, observations, features, claims, immutable dataset versions, processed artifacts | PostgreSQL / PostGIS plus controlled builders and approved repair lanes | direct client reads; derived write-back |
+| Catalog / policy / review plane | closure, rights, sensitivity, review, release, correction | catalog compiler, policy runtime, stewardship surfaces, decision stores | public publication without gates; policy-significant self-approval |
+| Derived delivery plane | maps, tiles, search, graph, vector, exports, scenes | projection workers, caches, portrayal bundles, rebuildable delivery services | silent authority promotion |
+| Runtime and trust-surfaces plane | governed API, evidence resolution, shell, Focus coordination, review console, ops/status | governed API plus public/steward/operator surfaces | store bypass, uncited answer path, hidden correction state |
 
-### Repo-aligned reading
+### Route-family exposure matrix
 
-A repo-aligned topology for current public `main` maps cleanly to:
-
-- `apps/governed-api/` → runtime and trust-surfaces plane
-- `apps/workers/` → intake, canonical build, projection, and packaging execution
-- `apps/explorer-web/` and `apps/review-console/` → trust-visible shell surfaces
-- `packages/ingest/`, `packages/domain/`, `packages/catalog/`, `packages/evidence/`, `packages/policy/`, `packages/indexers/` → reusable control/data-plane law
-- `policy/` and `contracts/` → cross-cutting control surfaces
-- `infra/` → environment wiring, not business meaning
+| Route family | Normal exposure | Trust obligation |
+|---|---|---|
+| Catalog and discovery | Public-safe after release | Catalog closure and identifier consistency must resolve cleanly |
+| Feature or subject read | Public-safe after release | Stable subject ID, support/time semantics, rights posture, and release scope are mandatory |
+| Map / tile / portrayal | Public-safe after release | Must inherit release linkage, policy posture, freshness, and correction state |
+| Evidence resolution | Governed API only | Every EvidenceRef must resolve to admissible published scope with audit linkage |
+| Story / dossier / compare | Governed API only | Must preserve spatial anchor, temporal anchor, and drill-through to evidence |
+| Export and report | Governed API only | Exports may not outrun release state, policy posture, or correction linkage |
+| Focus / governed assistance | Governed API only | Scope, citations, policy, and audit linkage must stay visible in the same pane |
+| Review / stewardship | Internal / private only | No hidden approvals; every action emits review and decision artifacts |
+| Ops / status | Internal only | Must not become a second truth surface |
 
 [Back to top](#deployment-topology)
 
@@ -295,85 +314,83 @@ Bind every service to the **narrowest scope** that still satisfies the current d
 |---|---|---|---|
 | Governed API | Loopback | Not public in phase one | Keeps the normal truth boundary explicit while local |
 | PostgreSQL / PostGIS | Unix socket or loopback | Must not be public | Canonical truth store is not a client surface |
-| Artifact roots / lifecycle zones | Filesystem only | Must not be public | Lifecycle stages are not outward truth surfaces |
-| Ollama / model runtime | Loopback only | Must not be public | Bounded assistance stays behind the membrane |
-| Policy bundles / contract registries | Local/private only | Must not be public | Trust grammar should not be casually exposed as an admin surface |
-| Review / stewardship internals | Private only unless intentionally split and strongly gated | Not public by default | Stewardship is not a convenience mirror of public UX |
-| Public reverse proxy | None in phase one | Only when a public edge is intentional | Public edge is a later stage, not a starting assumption |
+| Artifact tree | Filesystem only | Must not be public | Lifecycle zones are not outward truth surfaces |
+| Model runtime | Loopback only | Must not be public | Assistance stays subordinate to evidence and policy |
+| Policy / review stores | Local or private only | Must not be public | Control-plane state is not a casual admin surface |
+| Review / stewardship UI | Private only unless deliberately split and strongly gated | Not public by default | Stewardship is not a convenience mirror of public UX |
+| Public reverse proxy / edge | None in phase one | Added only when public edge is intentional | Public ingress is a later burden, not a starting assumption |
 
 ### Must-never-be-directly-internet-exposed
 
 - canonical PostgreSQL / PostGIS
 - RAW / WORK / QUARANTINE artifact stages
-- direct filesystem access to artifact roots
-- local Ollama runtime
-- graph / vector / search admin surfaces
-- policy bundles and contract registries
-- review/steward-only internals unless deliberately separated and strongly gated
+- direct filesystem access to lifecycle zones
+- local/private model runtime
+- policy bundles and review-state stores
+- steward-only moderation or approval internals
+- any direct path that allows public clients to skip evidence resolution or policy evaluation
 
 > [!WARNING]
-> A home router, NAT, or “it’s only on the LAN” posture is not enough to weaken these boundaries. KFM's topology rules treat convenience exposure as architectural debt.
+> “It is only on the LAN” is not a topology argument.
+>
+> KFM treats convenience exposure that weakens the trust membrane as architectural debt.
 
 ### Public edge rule
 
 When a public edge exists, it should expose only:
 
-- the public-safe governed API
 - the intended user-facing UI
-- public TLS termination and request forwarding
-- structured request identifiers needed for audit joining
+- the public-safe governed API surface
+- TLS termination and request forwarding
+- traceable request identifiers needed for audit joining
 
-It should **not** create a hidden convenience path into canon, unpublished artifacts, or model serving.
+It should **not** create a hidden convenience path into canonical truth, unpublished artifacts, or direct model serving.
 
 [Back to top](#deployment-topology)
 
 ## Current repo-aligned topology map
 
-This section translates current public repo structure into a deployment-reading aid.
+This section translates current attached repo-grounded evidence into a deployment-reading aid.
 
-| Repo surface | Current public evidence | Topology role | Confidence |
+| Repo-adjacent surface | Current evidence basis | Topology role | Confidence |
 |---|---|---|---|
-| `apps/explorer-web/` | present | public shell surface | CONFIRMED path, PROPOSED runtime wiring |
-| `apps/governed-api/` | present | governed truth boundary | CONFIRMED path, PROPOSED bind/exposure |
-| `apps/review-console/` | present | steward/review shell variation | CONFIRMED path, PROPOSED separation level |
-| `apps/workers/` | present | ingestion/build/projection execution | CONFIRMED path, PROPOSED job topology |
-| `apps/cli/` | present | operator / local admin entry | CONFIRMED path, PROPOSED commands and privileges |
-| `packages/catalog/` | present | closure / outward metadata logic | CONFIRMED path |
-| `packages/domain/` | present | canonical/domain law | CONFIRMED path |
-| `packages/evidence/` | present | evidence resolution / trust linkage | CONFIRMED path |
-| `packages/indexers/` | present | derived search/indexing | CONFIRMED path |
-| `packages/ingest/` | present | intake and source-landed movement | CONFIRMED path |
-| `packages/policy/` | present | policy runtime support | CONFIRMED path |
-| `policy/` | present with bundles/fixtures/policy-runtime/tests | first-class policy surface | CONFIRMED path family |
-| `infra/` | present with local/systemd/compose/kubernetes/terraform etc. | environment-specific wiring lanes | CONFIRMED path family |
-| `.github/workflows/` | README visible; no workflow YAML publicly visible at review time | workflow evidence boundary | CONFIRMED public-tree visibility only |
-| `contracts/` | README visible publicly | contract-intent surface | CONFIRMED path, NEEDS VERIFICATION for live inventory |
+| `apps/` | Reported present at repo root | Runnable surfaces: UI, API, CLI, workers, or comparable app-family boundaries | **CONFIRMED** at root; internals **NEEDS VERIFICATION** |
+| `packages/` | Reported present at repo root | Shared law, adapters, catalogs, evidence, domain, policy, or other reusable modules | **CONFIRMED** at root; internals **NEEDS VERIFICATION** |
+| `contracts/` + `schemas/` | Reported as doc surfaces; schema inventory not confirmed as live `.json` files in reviewed tree | Contract/control surface, not proof of mounted execution by itself | **CONFIRMED** docs; executable depth **UNKNOWN** |
+| `policy/` | `policy/README.md` reported present | First-class deny-by-default policy surface | **CONFIRMED** doc surface |
+| `data/` | Reported present at repo root | Lifecycle zones, sample artifacts, catalogs, or manifests may live nearby | **CONFIRMED** root path; exact substructure **NEEDS VERIFICATION** |
+| `infra/` | Reported present at repo root | Environment wiring, deployment lanes, and ops assets | **CONFIRMED** root path; exact manifests **NEEDS VERIFICATION** |
+| `tools/` + `scripts/` | README surfaces reported present | Validators and automation entrypoints are intended, but current mounted executability was not proved in this session | **CONFIRMED** doc surface; runtime depth **UNKNOWN** |
+| `tests/` | README surface reported present | Test taxonomy exists as documentation; runnable harness coverage remains unverified | **CONFIRMED** doc surface; harness coverage **UNKNOWN** |
+| `.github/CODEOWNERS` + `.github/PULL_REQUEST_TEMPLATE.md` | Reported present | Review and governance scaffolding | **CONFIRMED** |
+| `.github/workflows/README.md` | Reported present; active workflow YAML merge gates not confirmed in reviewed tree | Workflow evidence boundary and honesty constraint | **CONFIRMED** visibility; gate inventory **UNKNOWN** |
 
 ### Reading rule for maintainers
 
-Use this file to answer **where** responsibilities should run and **what may be exposed**.
+Use this file to answer **where responsibilities should run** and **what may be exposed**.
 
-Use the runtime inventory, manifests, units, overlays, and workflow files to answer **how this repo currently does it**.
+Use the actual manifests, units, overlays, route definitions, and workflow files to answer **how the repo currently does it**.
 
-If those two disagree, fix the disagreement openly. Do not paper over it in prose.
+If those disagree, fix the disagreement openly. Do not smooth it away in prose.
 
 [Back to top](#deployment-topology)
 
 ## Verification quickstart
 
-Use these checks before upgrading any statement in this file from **PROPOSED** to **implementation-confirmed**.
+Use these checks before upgrading any statement here from **PROPOSED** to **implementation-confirmed**.
 
-### 1) Inventory actual runtime artifacts
+### 1) Inventory the visible repo shape
 
 ```bash
 git rev-parse --show-toplevel
-find infra apps packages policy .github/workflows -maxdepth 3 -print | sort
+find apps packages contracts schemas policy data infra docs tools tests configs scripts migrations examples .github \
+  -maxdepth 3 -print | sort
 ```
 
-### 2) Surface manifests, units, and overlays
+### 2) Surface manifests, units, workflows, and overlays
 
 ```bash
-find infra -type f \( \
+find infra .github/workflows -type f \( \
   -name '*.service' -o \
   -name '*.timer' -o \
   -name '*.socket' -o \
@@ -385,28 +402,36 @@ find infra -type f \( \
 \) | sort
 ```
 
-### 3) Find bind / port / exposure clues
+### 3) Find bind / ingress / exposure clues
 
 ```bash
-grep -RInE 'localhost|127\.0\.0\.1|0\.0\.0\.0|listen|port|ingress|LoadBalancer|NodePort|proxy_pass|wg-quick|wireguard' \
-  apps infra configs scripts packages 2>/dev/null
+grep -RInE 'localhost|127\.0\.0\.1|0\.0\.0\.0|listen|port|ingress|LoadBalancer|NodePort|proxy_pass|wireguard|wg-quick' \
+  apps infra configs scripts packages policy 2>/dev/null
 ```
 
-### 4) Check trust-membrane vocabulary against runtime
+### 4) Check trust-membrane vocabulary against mounted implementation
 
 ```bash
-grep -RInE 'EvidenceBundle|EvidenceRef|governed-api|policy|abstain|deny|withdrawn|stale|release_manifest|catalog_closure' \
-  apps packages contracts policy docs tests 2>/dev/null
+grep -RInE 'EvidenceBundle|EvidenceRef|RuntimeResponseEnvelope|CorrectionNotice|governed-api|governed API|abstain|deny|release_manifest|catalog_closure|proof_pack' \
+  apps packages contracts schemas policy docs tests 2>/dev/null
 ```
 
-### 5) Confirm workflow reality
+### 5) Confirm workflow reality instead of assuming it
 
 ```bash
 find .github/workflows -maxdepth 2 -type f | sort
 ```
 
+### 6) Check whether contract and policy starter artifacts are real or still documentary
+
+```bash
+find contracts schemas policy tests -maxdepth 4 -type f | sort
+```
+
 > [!TIP]
-> Treat these as **verification** commands, not blind refactor prompts. Inventory first. Rename and move later.
+> Treat these as **verification commands**, not refactor prompts.
+>
+> Inventory first. Promote confidence later.
 
 [Back to top](#deployment-topology)
 
@@ -414,36 +439,36 @@ find .github/workflows -maxdepth 2 -type f | sort
 
 A deployment-topology doc is in good shape when all of the following are true:
 
-- [ ] current public repo structure and doctrine are separated cleanly
+- [ ] doctrine and repo-grounded current-state evidence are separated cleanly
 - [ ] at least one meaningful Mermaid diagram explains real boundary logic
 - [ ] bind and exposure rules are explicit
-- [ ] deployment profiles are phase-aware and smallest-first
-- [ ] direct-public exposure prohibitions are named clearly
-- [ ] current repo surfaces (`apps/`, `packages/`, `infra/`, `policy/`, `contracts/`) are mapped to topology roles
-- [ ] `.github/workflows/` visibility limits are stated honestly
-- [ ] no claim implies live manifests or production wiring that were not directly verified
-- [ ] verification commands are provided
-- [ ] open unknowns remain visible instead of being smoothed away
+- [ ] phase progression is smallest-first
+- [ ] public-edge and never-expose rules are named clearly
+- [ ] repo-adjacent surfaces are mapped without overstating unverified internals
+- [ ] workflow visibility limits are stated honestly
+- [ ] no claim implies mounted manifests or production wiring that were not directly reverified
+- [ ] verification commands are present
+- [ ] unknowns remain visible instead of being polished away
 
 [Back to top](#deployment-topology)
 
 ## FAQ
 
-### Why start local-first instead of orchestrated-first?
+### Why start local-first instead of orchestration-first?
 
-Because KFM's first burden is proving governed behavior, not demonstrating infrastructure fashion. A single-host governed slice can preserve the trust membrane more honestly than a prematurely elaborate stack.
+Because KFM's first burden is proving governed behavior, not proving infrastructure ambition. A single-host governed slice can preserve the trust membrane more honestly than a prematurely elaborate stack.
 
-### Does this document rule out Kubernetes, Terraform, or GitOps?
+### Does this rule out Kubernetes, Terraform, GitOps, or multi-service deployment?
 
-No. It says they should be introduced when their operational value exceeds their governance burden, not before.
+No. It says they should be introduced when they carry real operational value and still preserve the same trust law.
 
 ### Why is deployment topology in `docs/architecture/` instead of only `infra/`?
 
-Because placement and exposure decisions change trust behavior. In KFM, that is architecture, not merely ops plumbing.
+Because placement and exposure decisions change trust behavior. In KFM, that is architecture, not just ops plumbing.
 
-### Why are model runtimes treated so strictly?
+### Why is model runtime placement treated so strictly?
 
-Because bounded synthesis is admitted only as a subordinate method. Public clients should not talk to model serving directly, and assistance should not gain a hidden path around policy or evidence resolution.
+Because governed assistance is subordinate to released evidence and policy. Public clients should not talk to model serving directly, and model runtime must not become a hidden shortcut around evidence resolution.
 
 [Back to top](#deployment-topology)
 
@@ -454,18 +479,20 @@ Because bounded synthesis is admitted only as a subordinate method. Public clien
 
 | Item | Why it matters | What resolves it |
 |---|---|---|
-| Actual service units / manifests | Converts profile guidance into mounted runtime fact | Surface `systemd`, `compose`, `kubernetes`, `terraform`, or hosted overlays now in use |
-| Actual bind addresses and ports | Determines whether exposure discipline is truly enforced | Inspect configs, unit files, ingress/proxy config, and listening sockets |
+| Actual service units / manifests | Converts profile guidance into mounted runtime fact | Surface real `systemd`, `compose`, `kubernetes`, `terraform`, or hosted overlays now in use |
+| Exact bind addresses and ports | Determines whether exposure discipline is truly enforced | Inspect configs, unit files, reverse proxies, and listening sockets |
 | Current workflow YAML | Determines whether topology checks are machine-enforced | Surface checked-in workflow files and recent run evidence |
-| Current contract inventory | Determines how much runtime trust behavior is already executable | Surface real schemas, fixtures, and validation entrypoints |
-| Exact owners / document dates / UUID | Needed for final metadata hygiene | Fill at commit time from repo conventions and review outcome |
-| Public edge behavior | Needed before claiming hosted/public-safe route maturity | Verify reverse proxy, TLS, auth, policy, and audit joining behavior |
+| Real contract inventory | Determines how much trust behavior is executable vs documentary | Surface actual schema files, fixtures, validators, and policy tests |
+| Release proof packs / manifests | Determines whether promotion is operational rather than rhetorical | Surface one real release receipt, proof pack, or release manifest |
+| Runtime response envelope examples | Needed before claiming answer / abstain / deny / error as mounted runtime behavior | Surface one contract plus one evaluated sample |
+| Rights / sensitivity workflow samples | Needed before strong claims about review-safe public release for sensitive lanes | Surface public/generalized vs restricted/steward examples |
+| Exact owners / doc_id / dates | Needed for metadata hygiene | Fill at commit time from repo conventions and review outcome |
 
 </details>
 
 <details>
 <summary><strong>Authoring note</strong></summary>
 
-This document is intentionally stronger than the old scaffold but still conservative about implementation certainty. Its job is to make topology legible without pretending the mounted runtime has already been audited.
+This document intentionally upgrades a scaffold placeholder into a doctrine-led topology standard without pretending that live deployment evidence was fully reverified. It should help maintainers reason about placement, exposure, and progression **while keeping current mounted implementation gaps visible**.
 
 </details>
