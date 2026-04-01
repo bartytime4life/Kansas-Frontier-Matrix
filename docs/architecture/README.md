@@ -231,7 +231,6 @@ docs/architecture/
 ├── TRUTH_PATH_LIFECYCLE.md        # substantive lifecycle note
 ├── canonical_vs_rebuildable.md    # substantive authority/derived note
 ├── system_overview.md             # substantive overview bridge
-└── trust_membrane.md              # lowercase duplicate / casing-drift candidate
 ```
 
 ### Closely related sibling surface outside this subtree
