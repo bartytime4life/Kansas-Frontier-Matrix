@@ -4,13 +4,13 @@ title: configs/security/
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life (inherited from /configs/ in .github/CODEOWNERS; verify if a narrower owner is added)
+owners: @bartytime4life
 created: TODO-VERIFY
-updated: 2026-03-22
+updated: TODO-VERIFY-LIVE-GIT-DATE
 policy_label: public
-related: [../README.md, ../../policy/README.md, ../../contracts/README.md, ../../.github/workflows/README.md, ../../.github/SECURITY.md, ../../tools/README.md, ../../tests/README.md, ../../scripts/README.md]
+related: [../README.md, ../../policy/README.md, ../../contracts/README.md, ../../.github/workflows/README.md, ../../.github/SECURITY.md, ../../SECURITY.md, ../../tools/README.md, ../../tests/README.md, ../../scripts/README.md]
 tags: [kfm, configs, security, supply-chain, thresholds, waivers]
-notes: [Current public-main tree shows this directory as README-only; this document strengthens the lane without presenting unverified internal files as settled fact.]
+notes: [Current public main shows this directory as README-only; both .github/SECURITY.md and root SECURITY.md exist and should stay aligned; exact UUID and git-tracked dates still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # configs/security/
@@ -20,6 +20,7 @@ _Repo-visible, non-secret security thresholds, waivers, and scan-facing configur
 > **Status:** `experimental`  
 > **Owners:** `@bartytime4life` *(inherited from `/configs/` in `.github/CODEOWNERS`; verify if a narrower owner is later added)*  
 > **Path:** `configs/security/README.md`  
+> **Repo fit:** security-config lane inside [`../README.md`](../README.md); upstream from [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../../.github/SECURITY.md`](../../.github/SECURITY.md), [`../../SECURITY.md`](../../SECURITY.md), [`../../policy/README.md`](../../policy/README.md), and [`../../contracts/README.md`](../../contracts/README.md); downstream into [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), and [`../../tests/README.md`](../../tests/README.md)  
 > ![status](https://img.shields.io/badge/status-experimental-orange)
 > ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
 > ![path](https://img.shields.io/badge/path-configs%2Fsecurity%2FREADME.md-1f6feb)
@@ -66,10 +67,10 @@ Typical examples include threshold files, allow/review/deny posture maps, short-
 | --- | --- |
 | **Path** | `configs/security/README.md` |
 | **Role** | Directory README for the security-specific slice of the repo-visible `configs/` lane |
-| **Upstream** | [`../README.md`](../README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · [`../../.github/SECURITY.md`](../../.github/SECURITY.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) |
+| **Upstream** | [`../README.md`](../README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · [`../../.github/SECURITY.md`](../../.github/SECURITY.md) · [`../../SECURITY.md`](../../SECURITY.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) |
 | **Downstream** | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · [`../../tools/README.md`](../../tools/README.md) · [`../../scripts/README.md`](../../scripts/README.md) · [`../../tests/README.md`](../../tests/README.md) |
-| **Why it exists** | To keep non-secret security behavior explicit without collapsing policy, contracts, workflows, tooling, and secrets into one blurry surface |
-| **Handoff rule** | If a file starts expressing executable allow/deny logic, schema authority, or secret-bearing host values, it belongs somewhere else |
+| **Why it exists** | To keep non-secret security behavior explicit without collapsing policy, contracts, workflows, tooling, disclosure posture, and secrets into one blurry surface |
+| **Handoff rule** | If a file starts expressing executable allow/deny logic, schema authority, disclosure policy, or secret-bearing host values, it belongs somewhere else |
 
 ## Accepted inputs
 
@@ -94,15 +95,16 @@ These do **not** belong here.
 | **Executable policy bundles or `.rego` rules** | KFM keeps config separate from executable deny/allow logic | [`../../policy/README.md`](../../policy/README.md) |
 | **Machine-readable contracts and schemas** | Contracts are a stronger trust surface than runtime knobs | [`../../contracts/README.md`](../../contracts/README.md) |
 | **Workflow orchestration YAML** | Workflow files are the automation lane, not the config lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| **Disclosure instructions, reporting contacts, or coordination timelines** | Public reporting posture is a security-policy surface, not an operational threshold file | [`../../.github/SECURITY.md`](../../.github/SECURITY.md) and [`../../SECURITY.md`](../../SECURITY.md) |
 | **Generated reports, SBOMs, attestations, telemetry outputs** | Emitted artifacts are outputs, not source config | Workflow-managed report / release / evidence surfaces |
 | **Security tool implementation code** | Code belongs with tooling or script entrypoints | [`../../tools/README.md`](../../tools/README.md) or [`../../scripts/README.md`](../../scripts/README.md) |
 | **Business or domain law hiding as “settings”** | Slow-moving truth-bearing rules should not disappear into mutable config | Promote to contracts, policy, or package-level code after review |
 
 ## Current snapshot
 
-The safest current statement is deliberately narrow:
+The safest current statement is deliberately narrow.
 
-### Confirmed public-main state
+### Confirmed current public `main` state
 
 ```text
 configs/security/
@@ -112,6 +114,13 @@ configs/security/
 That means this README must do two jobs at once:
 1. document what the lane is for, and
 2. avoid pretending that a richer internal subtree is already proven in the visible branch.
+
+### Confirmed adjacent security-doc context
+
+| Path | Current public signal | Why it matters here |
+| --- | --- | --- |
+| `.github/SECURITY.md` | GitHub-facing security policy says this is the intended canonical path | Disclosure posture stays separate from operational config |
+| `SECURITY.md` | Secondary public path also exists | It should delegate or remain text-aligned instead of being redefined here |
 
 ### Confirmed parent-lane context
 
@@ -167,6 +176,10 @@ sed -n '1,200p' policy/README.md
 sed -n '1,200p' .github/workflows/README.md
 sed -n '1,200p' contracts/README.md
 
+# 3b) Keep disclosure policy separate from config
+sed -n '1,200p' .github/SECURITY.md
+sed -n '1,200p' SECURITY.md
+
 # 4) Keep review focused on this lane
 git diff -- configs/security/
 ```
@@ -217,7 +230,7 @@ git diff -- configs/security/
 flowchart LR
     A[policy/] -->|normative law| B[configs/security/]
     C[contracts/] -->|schema / contract boundaries| B
-    D[.github/SECURITY.md] -->|public reporting posture| B
+    D[.github/SECURITY.md + SECURITY.md] -->|reporting / disclosure posture| B
 
     B --> E[.github/workflows/]
     B --> F[tools/]
@@ -234,7 +247,7 @@ flowchart LR
     S[(Secrets / vault / host-local)] -. never committed .-> B
 ```
 
-A useful mental model is simple: `configs/security/` tunes **non-secret security behavior**, but it should not replace policy, contracts, or secret management.
+A useful mental model is simple: `configs/security/` tunes **non-secret security behavior**, but it should not replace policy, contracts, disclosure policy, or secret management.
 
 ## Tables
 
@@ -248,6 +261,7 @@ A useful mental model is simple: `configs/security/` tunes **non-secret security
 | Attestation / provenance posture | Maybe | require signatures, checksum presence, telemetry toggles | **PROPOSED** |
 | Runtime hardening defaults | Maybe | non-secret exposure flags, TLS minima, header toggles | **NEEDS VERIFICATION** |
 | Rego bundles / executable allow-deny logic | No | policy rules, tests, decision grammar | **EXCLUDED** |
+| Disclosure / reporting policy | No | reporting channels, coordination rules, public security policy | **EXCLUDED** |
 | Secret material | No | tokens, passwords, private certs | **EXCLUDED** |
 
 ### Review triggers
@@ -269,6 +283,7 @@ A useful mental model is simple: `configs/security/` tunes **non-secret security
 - [ ] Threshold changes are paired with test or consumer validation.
 - [ ] The change does not smuggle executable policy into config.
 - [ ] The change does not create a parallel schema or contract authority.
+- [ ] The change does not create a second disclosure-policy surface inside `configs/security/`.
 - [ ] Proposed file names and paths were checked against the live tree before merge.
 - [ ] This README stays honest about **CONFIRMED** versus **PROPOSED** structure.
 
@@ -289,6 +304,10 @@ Not confirmed from the current public tree. They are useful **PROPOSED** starter
 ### Can a config here block CI?
 
 Yes, but only through a consuming workflow, tool, script, or runtime. Config alone is not enforcement.
+
+### Should disclosure policy or vulnerability reporting contacts live here?
+
+No. Keep public reporting and coordinated disclosure rules in [`../../.github/SECURITY.md`](../../.github/SECURITY.md). The root [`../../SECURITY.md`](../../SECURITY.md) should delegate or remain text-aligned; this directory is for non-secret operational settings, not public reporting policy.
 
 ### When should a file leave this directory?
 
