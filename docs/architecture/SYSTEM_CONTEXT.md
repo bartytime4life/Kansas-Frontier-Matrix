@@ -1,16 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<NEEDS_VERIFICATION__uuid>
+doc_id: kfm://doc/NEEDS_VERIFICATION__uuid
 title: System Context
 type: standard
 version: v1
 status: review
-owners: NEEDS_VERIFICATION__see_CODEOWNERS
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+owners: @bartytime4life
+created: NEEDS_VERIFICATION__git_history_date
+updated: NEEDS_VERIFICATION__commit_or_merge_date
 policy_label: NEEDS_VERIFICATION__public_or_restricted
-related: [./README.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./DEPLOYMENT_TOPOLOGY.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
+related: [./README.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./DEPLOYMENT_TOPOLOGY.md, ./system_overview.md, ./canonical_vs_rebuildable.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, architecture, system-context]
-notes: [Promotes prior scaffold into a source-bounded architecture document; owner, uuid, dates, and policy label require direct repo verification before publish.]
+notes: [Owner confirmed from current public CODEOWNERS; doc_id, dates, and policy_label still require direct repo or file-history verification before publish.]
 [/KFM_META_BLOCK_V2] -->
 
 # System Context
@@ -18,7 +18,8 @@ notes: [Promotes prior scaffold into a source-bounded architecture document; own
 KFM's logical boundary, surrounding actors, and non-bypass rules for crossing the trust membrane.
 
 > **Status:** review  
-> **Owners:** NEEDS VERIFICATION — confirm against `../../.github/CODEOWNERS`  
+> **Owners:** `@bartytime4life`  
+> **Repo fit:** `docs/architecture/SYSTEM_CONTEXT.md` · logical boundary and actor/context anchor inside `docs/architecture/`  
 > ![Doc: standard](https://img.shields.io/badge/doc-standard-0f766e) ![Status: review](https://img.shields.io/badge/status-review-2563eb) ![Truth: source--bounded](https://img.shields.io/badge/truth-source--bounded-f59e0b) ![Scope: architecture](https://img.shields.io/badge/scope-architecture-7c3aed)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Context model](#logical-context-model) · [Boundary rules](#boundary-rules-that-cannot-be-bypassed) · [Context diagram](#context-diagram) · [Open verification backlog](#open-verification-backlog)
 
@@ -45,7 +46,7 @@ This is intentionally a **boundary and context** document, not a full deployment
 | **Path** | `docs/architecture/SYSTEM_CONTEXT.md` |
 | **Primary role** | Context anchor for KFM system boundary, actor map, trust-critical crossings, and adjacent architecture surfaces |
 | **Upstream doctrine** | `../../README.md`, `../README.md`, `./README.md`, and the March 2026 replacement-grade KFM manuals |
-| **Downstream architecture docs** | `./TRUST_MEMBRANE.md`, `./TRUTH_PATH_LIFECYCLE.md`, `./DEPLOYMENT_TOPOLOGY.md`, plus ADRs and diagrams when those paths are verified and promoted |
+| **Downstream architecture docs** | `./TRUST_MEMBRANE.md`, `./TRUTH_PATH_LIFECYCLE.md`, `./DEPLOYMENT_TOPOLOGY.md`, plus companion architecture notes once those paths are verified and promoted |
 | **Adjacent machine surfaces** | `../../contracts/README.md`, `../../policy/README.md`, `../../schemas/README.md`, `../../tests/README.md`, `../../.github/workflows/README.md` |
 | **Main audience** | Maintainers, architecture reviewers, contributors, stewards, and any implementer who needs to know what must never bypass KFM governance |
 
@@ -78,19 +79,22 @@ This document should **not** become the home for:
 
 | Baseline type | Used here for | Notes |
 |---|---|---|
-| **Repo-local baseline** | `./README.md` and the prior `./SYSTEM_CONTEXT.md` scaffold | Supplies local path role, exclusions, and directory-native documentation conventions |
+| **Repo-local baseline** | current public `./SYSTEM_CONTEXT.md` review draft plus `./README.md` | Supplies the current structure, local path role, and directory-native documentation conventions |
 | **Doctrinal baseline** | March 2026 KFM replacement-grade master manuals | Supplies system identity, trust membrane, truth path, shell/surface family, and contract/accountability doctrine |
-| **Current workspace signal** | Publicly visible repository surfaces and readmes | Used only for what appears to exist now; not treated as proof of unmounted runtime reality |
+| **Current workspace signal** | Publicly visible repository surfaces, readmes, and sibling architecture files | Used only for what appears to exist now; not treated as proof of unmounted runtime reality |
 
 ### Evidence basis used in this file
 
 | Evidence class | What it supports | Status used here |
 |---|---|---|
-| Current public repository structure | Paths, sibling docs, visible readmes, current scaffold state | **CONFIRMED** for public `main` only |
+| Current public repository readmes and sibling architecture files | Paths, owner signal, visible readmes, sibling maturity cues, and current public-`main` drift signals | **CONFIRMED** for public `main` only |
 | Attached March 2026 KFM manuals | Durable architecture doctrine and governing direction | **CONFIRMED** doctrine |
 | Logical joins required to make doctrine coherent | Layering, actor grouping, context packaging | **INFERRED** |
 | Recommended next clarifications | Review checklist, verification backlog, context split guidance | **PROPOSED** |
 | Mounted runtime/service details not directly inspected here | Live topology, route inventory, manifest reality, exact enforcement | **UNKNOWN** |
+
+> [!NOTE]
+> Current public-`main` architecture signals are slightly inconsistent. `docs/architecture/README.md` still classifies `SYSTEM_CONTEXT.md`, `DEPLOYMENT_TOPOLOGY.md`, and `canonical_vs_rebuildable.md` as scaffold placeholders, while those file paths now resolve to substantive review-stage content on public `main`. Treat that as **directory-index drift** to reconcile, not as proof of mounted runtime reality.
 
 ## Current evidence boundary
 
@@ -115,7 +119,7 @@ This document should **not** become the home for:
 - authoritative schema home resolution between `contracts/` and `schemas/`
 - real emitters for `EvidenceBundle` and `RuntimeResponseEnvelope`
 - exact proof-pack, correction, and rollback artifact locations
-- owner, UUID, dates, and policy label for this file
+- `doc_id`, `created`, `updated`, and `policy_label` for this file
 
 ## System context at a glance
 
@@ -162,6 +166,8 @@ KFM's context is easiest to read as a small set of interacting layers.
 | `../../README.md` | states project identity and top-level trust posture | visible and substantive |
 | `../README.md` | frames `docs/` as governed documentation rather than decoration | visible and substantive |
 | `./README.md` | defines local architecture-doc role, inputs, exclusions, and current directory snapshot | visible and substantive |
+| `./system_overview.md` | provides a shorter whole-system bridge between doctrine and deeper architecture surfaces | visible and substantive |
+| `./canonical_vs_rebuildable.md` | sharpens the authoritative-versus-derived split that this file depends on | visible and substantive |
 | `../../contracts/README.md` | contract publication and machine-readable trust-object reference surface | visible; executable schema authority still not fully resolved here |
 | `../../schemas/README.md` | schema-namespace documentation surface | visible; warns against parallel authoritative schema universes |
 | `../../policy/README.md` | policy doctrine, finite runtime outcomes, deny-by-default posture | visible and substantive |
@@ -287,8 +293,10 @@ behind governed API"]
 | What is KFM inside the boundary? | this file | `../../README.md`, `../README.md` |
 | What must never bypass governance? | `./TRUST_MEMBRANE.md` | `../../policy/README.md` |
 | How does truth move through state? | `./TRUTH_PATH_LIFECYCLE.md` | `../../contracts/README.md`, `../../tests/README.md` |
+| How do I decide whether a layer or artifact is authoritative or derived? | `./canonical_vs_rebuildable.md` | `../../contracts/README.md`, `../../schemas/README.md` |
 | Where do context claims become machine-checkable? | `../../contracts/README.md` | `../../schemas/README.md`, `../../tests/README.md` |
 | Where do enforcement and merge gates live? | `../../.github/workflows/README.md` | `../../tests/README.md`, `../../policy/README.md` |
+| Where is the short whole-system bridge? | `./system_overview.md` | `../../README.md`, `./README.md` |
 | Where should verified runtime/deployment specifics land? | `./DEPLOYMENT_TOPOLOGY.md` | `../../infra/`, `../../apps/`, `../../packages/` once directly confirmed |
 | How should public surfaces stay honest? | this file and `../../policy/README.md` | evidence/resolver contracts and surface-specific payload docs |
 
@@ -296,11 +304,13 @@ behind governed API"]
 
 Before treating this file as publish-ready, confirm the following:
 
-- [ ] KFM meta block fields have real `doc_id`, `owners`, `created`, `updated`, and `policy_label`
+- [ ] KFM meta block fields have real `doc_id`, `created`, `updated`, and `policy_label`
+- [ ] owner remains aligned with `../../.github/CODEOWNERS`
 - [ ] all relative links resolve in the checked-out branch, not only in public `main`
 - [ ] no section silently upgrades doctrine into mounted implementation fact
 - [ ] shell/surface names still match current architecture vocabulary
 - [ ] context diagram still matches verified boundary logic
+- [ ] `docs/architecture/README.md` no longer mislabels this file or sibling promoted companions as scaffold-only, or the mismatch is explicitly documented
 - [ ] any newly verified deployment specifics are moved into `./DEPLOYMENT_TOPOLOGY.md`
 - [ ] any changes to trust rules are reflected across `../../policy/`, `../../contracts/`, `../../tests/`, and workflow enforcement
 - [ ] placeholder or duplicate sibling files in `docs/architecture/` have been reconciled or explicitly left visible as placeholders
@@ -309,14 +319,14 @@ Before treating this file as publish-ready, confirm the following:
 
 | Unknown | Why it matters | Direct verification needed |
 |---|---|---|
-| Exact owner for this file | ownership should not be guessed from broad repo patterns | inspect `../../.github/CODEOWNERS` and any docs ownership rules |
+| Exact `doc_id`, `created`, `updated`, and `policy_label` for this file | standard-doc metadata should not be guessed or backfilled loosely | inspect file history, repo metadata rules, and any document registry or publication-label conventions |
 | Checked-out branch vs. public `main` | public GitHub view may lag, differ, or omit local changes | inspect current branch tree directly |
 | Exact runtime/service topology | system context must stay logical until real service boundaries are known | inspect `../../apps/`, `../../packages/`, `../../infra/`, manifests, and running services |
 | Active workflow gates | context and enforcement claims should line up | inspect actual workflow YAML and required-check settings |
 | Authoritative schema home | dual authority between `contracts/` and `schemas/` creates drift risk | inspect current schema inventory and decide one authoritative landing zone |
 | Real emitters for `EvidenceBundle` / `RuntimeResponseEnvelope` | these objects are central to runtime accountability | surface routes, contracts, examples, and tests proving they are emitted |
 | Release proof packs and correction drills | context should align to real rollback/correction behavior | surface one release proof artifact and one correction path sample |
-| Sibling architecture file maturity | this file should not link as if every adjacent file is already substantive | inspect each linked sibling and mark placeholder vs. authoritative state explicitly |
+| Architecture index snapshot drift | `docs/architecture/README.md` currently lags some sibling maturity states on public `main` | reconcile current snapshot tables against actual sibling file contents and intended authoritative status |
 
 [Back to top](#system-context)
 
@@ -331,6 +341,7 @@ Promotion rules for later revisions:
 - Move confirmed runtime shape into `./DEPLOYMENT_TOPOLOGY.md` instead of overloading context.
 - Move machine-readable detail into `../../contracts/`, `../../schemas/`, `../../policy/`, and `../../tests/`.
 - Prefer explicit `UNKNOWN` and `NEEDS VERIFICATION` markers over persuasive smoothing.
+- Reconcile `docs/architecture/README.md` snapshot tables when this file or sibling maturity changes.
 - Treat any duplicate casing, placeholder sibling files, or unresolved path drift in `docs/architecture/` as cleanup work, not as hidden noise.
 
 A strong `SYSTEM_CONTEXT.md` should help a reviewer answer:  
