@@ -10,7 +10,7 @@ updated: <YYYY-MM-DD>
 policy_label: <NEEDS POLICY LABEL>
 related: [<NEEDS-VERIFIED-RELATED-PATHS>]
 tags: [kfm, remote-sensing, change-detection]
-notes: [Current-session evidence was PDF-only; repo topology, owners, and local paths require verification.]
+notes: [Grounded in the March 2026 KFM PDF corpus; a historical Dec 2025 in-corpus draft names this file path, but current repo topology, owners, and local links still require verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Remote Sensing Change Detection
@@ -18,19 +18,21 @@ notes: [Current-session evidence was PDF-only; repo topology, owners, and local 
 Evidence-first guidance for detecting, validating, interpreting, and publishing spatial change without letting derivative maps or summaries quietly become sovereign truth.
 
 > [!IMPORTANT]
-> This README is grounded in attached KFM and geospatial source documents, but the mounted repository tree was not directly visible in the current session. Any local path, sibling-doc link, owner, or child-directory reference below is explicitly marked **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION** where appropriate.
+> This README is grounded in the March 2026 KFM PDF corpus and preserves continuity with an older in-corpus draft that named this file path. The mounted repository tree was not directly visible in the current session, so current owners, sibling-doc links, child directories, and implementation depth remain **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION** where marked.
 
 ## Impact
 
-**Status:** `draft`  
+**Status:** `experimental`  
 **Owners:** `NEEDS VERIFICATION`  
-**Path:** `docs/analyses/remote-sensing/change-detection/README.md`
+**Path:** `docs/analyses/remote-sensing/change-detection/README.md`  
+**Role:** directory README / working contract for change-detection analysis
 
-![Status](https://img.shields.io/badge/status-draft-orange)
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Doc State](https://img.shields.io/badge/doc-draft-lightgrey)
 ![Owners](https://img.shields.io/badge/owners-needs%20verification-lightgrey)
 ![Scope](https://img.shields.io/badge/scope-remote--sensing-blue)
 ![KFM](https://img.shields.io/badge/KFM-evidence--first-0b7285)
-![Repo State](https://img.shields.io/badge/repo%20evidence-PDF--only-lightgrey)
+![Session Evidence](https://img.shields.io/badge/repo%20evidence-PDF--corpus%20only-lightgrey)
 
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow diagram](#workflow-diagram) · [Tables](#tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -39,7 +41,7 @@ Evidence-first guidance for detecting, validating, interpreting, and publishing 
 | Label | Meaning here |
 |---|---|
 | **CONFIRMED** | Supported by attached doctrine or other session-visible source material. |
-| **INFERRED** | Strong doctrinal completion that fits KFM architecture, but is not mounted repo fact. |
+| **INFERRED** | Strong doctrinal completion that fits KFM architecture, but is not mounted-repo fact in this session. |
 | **PROPOSED** | Recommended local structure, workflow, or file placement for this directory. |
 | **NEEDS VERIFICATION** | Repo-specific detail not directly proven in the current session. |
 
@@ -47,21 +49,24 @@ Evidence-first guidance for detecting, validating, interpreting, and publishing 
 
 This directory README defines the **working contract** for change-detection analysis inside KFM’s remote-sensing layer.
 
-In this context, **change detection** means disciplined comparison across time for features or conditions such as hydrology, vegetation, land cover, settlement growth, thermal stress, flood extent, erosion, or infrastructure change. The emphasis is not just on producing a delta surface, but on making the comparison basis, dates, preprocessing, uncertainty, and evidence trail inspectable.
+In this context, **change detection** means disciplined comparison across time for features or conditions such as hydrology, vegetation, land cover, settlement growth, thermal stress, flood extent, erosion, or infrastructure change. The emphasis is not just on producing a delta surface, but on making the comparison basis, dates, preprocessing, support, uncertainty, and evidence trail inspectable.
 
 This README does **not** replace KFM’s higher-order doctrine for the truth path, publication law, correction law, or trust-visible shell behavior. It narrows those rules into a change-detection-specific operating surface.
+
+> [!NOTE]
+> March 2026 KFM doctrine explicitly names **vegetation-change packaging** as an active Kansas data-gap closure item. This README therefore treats change-detection packaging as a real backlog candidate, not decorative analytical prose.
 
 ## Repo fit
 
 | Item | Value |
 |---|---|
-| **Current path** | `docs/analyses/remote-sensing/change-detection/README.md` |
-| **Upstream** | [`../README.md`](../README.md) — remote-sensing analyses index (**INFERRED**, **NEEDS VERIFICATION**) |
-| **Adjacent** | [`../multispectral/README.md`](../multispectral/README.md), [`../time-series/README.md`](../time-series/README.md), [`../validation/README.md`](../validation/README.md) (**INFERRED sibling modules**, **NEEDS VERIFICATION**) |
-| **Downstream** | [`./methods/`](./methods/), [`./results/`](./results/), [`./reports/`](./reports/), [`./governance.md`](./governance.md) (**PROPOSED local structure**, **NEEDS VERIFICATION**) |
+| **Current path** | `docs/analyses/remote-sensing/change-detection/README.md` (**historical draft evidence**, current mount **NEEDS VERIFICATION**) |
+| **Historical continuity** | A prior in-corpus draft already named this exact file path and role; this version rebuilds it against the March 2026 doctrine rather than treating the older draft as current repo proof. |
+| **Upstream** | [`../README.md`](../README.md) — remote-sensing analyses index (**INFERRED from historical draft continuity**, **NEEDS VERIFICATION**) |
+| **Downstream** | [`./methods/`](./methods/), [`./results/`](./results/), [`./reports/`](./reports/), [`./governance.md`](./governance.md) (**PROPOSED starter structure**) |
 | **Primary repo role** | Describe how change-detection work is framed, documented, reviewed, and handed off inside KFM. |
-| **Downstream influence** | Method notes, validation reports, derived raster/vector outputs, story/export preparation, and Focus/Drawer-ready evidence packaging. |
-| **Upstream dependency** | KFM doctrine for evidence, publication, correction, rights/sensitivity, and trust-visible UI. |
+| **Upstream dependency** | KFM doctrine for evidence, publication, correction, rights/sensitivity, verification, and trust-visible UI behavior. |
+| **Downstream consumers** | Compare views, map layers, dossier/story surfaces, Evidence Drawer payloads, and exports (**INFERRED doctrinal consumers**, current wiring **NEEDS VERIFICATION**) |
 
 ## Inputs
 
@@ -70,10 +75,10 @@ Accepted inputs for this directory include the following:
 | Accepted input | What belongs here |
 |---|---|
 | **Multi-epoch imagery** | Optical, SAR, thermal, aerial, orthophoto, DEM/DSM-difference, or other time-separated remotely sensed surfaces. |
-| **Derived analytical rasters** | Classified land cover, water masks, burn severity, thermal surfaces, NDVI/NBR/NDWI deltas, coherence products, or other promoted analytical intermediates. |
-| **AOI and mask geometry** | Study areas, exclusion masks, cloud/shadow masks, waterbody masks, or comparison extents. |
-| **Acquisition and processing metadata** | Sensor, date/time, support, CRS/datum, radiometric or classification assumptions, preprocessing notes. |
-| **Validation material** | Field points, interpreted control samples, authoritative comparison layers, photo logs, steward review notes. |
+| **Derived analytical rasters** | Classified land cover, water masks, burn severity, thermal surfaces, NDVI/NBR/NDWI deltas, coherence products, or other analytical intermediates. |
+| **AOI and mask geometry** | Study areas, exclusion masks, cloud/shadow masks, waterbody masks, training/validation extents, or comparison footprints. |
+| **Acquisition and processing metadata** | Sensor or product family, acquisition date/time, support/resolution, CRS/datum, radiometric assumptions, classification logic, resampling, masking, and preprocessing notes. |
+| **Validation material** | Field points, interpreted control samples, authoritative comparison layers, photo logs, steward review notes, or conflict notes. |
 | **Evidence references** | EvidenceBundle links, release references, validation reports, correction references, or other KFM trust objects. |
 
 ## Exclusions
@@ -82,12 +87,13 @@ This README should **not** become a catch-all for nearby work.
 
 | Exclusion | Put it here instead | Status |
 |---|---|---|
-| **Raw source onboarding, fetch logic, or ingest mechanics** | Source onboarding / ingest documentation owned above this analysis layer | **CONFIRMED doctrine**, local path **NEEDS VERIFICATION** |
-| **Generic spectral-index documentation** | [`../multispectral/README.md`](../multispectral/README.md) | **INFERRED** |
-| **Long-horizon monitoring or dense temporal stacks** | [`../time-series/README.md`](../time-series/README.md) | **INFERRED** |
-| **Field-survey and accuracy protocol detail** | [`../validation/README.md`](../validation/README.md) | **INFERRED** |
-| **Public narrative packaging or civic story copy** | Story/export surface docs higher in the repo | **CONFIRMED doctrine**, local path **NEEDS VERIFICATION** |
-| **Core publication/correction law** | KFM canonical doctrine and release/correction runbooks | **CONFIRMED doctrine** |
+| **Raw source onboarding, fetch logic, or ingest mechanics** | Source onboarding / ingest documentation above this analysis layer | **CONFIRMED doctrine**, local path **NEEDS VERIFICATION** |
+| **Generic spectral-index explanation** | Remote-sensing index or multispectral reference docs upstream | **INFERRED**, local path **NEEDS VERIFICATION** |
+| **Dense monitoring and long-horizon temporal stacks** | Time-series / monitoring docs or a dedicated monitoring lane | **INFERRED** |
+| **Field protocol detail and scoring methodology** | Validation / ground-truth documentation | **INFERRED** |
+| **Public narrative packaging or civic story copy** | Story/export surface docs and publication runbooks | **CONFIRMED doctrine**, local path **NEEDS VERIFICATION** |
+| **Core publication, correction, or policy law** | KFM canonical doctrine and release/correction runbooks | **CONFIRMED doctrine** |
+| **Model cards, forecasting, or simulation doctrine** | Model/runtime and scenario documentation | **CONFIRMED doctrine**, local path **NEEDS VERIFICATION** |
 
 ## Directory tree
 
@@ -100,7 +106,7 @@ docs/
             ├── methods/           # PROPOSED: method notes, thresholds, parameter docs
             ├── results/           # PROPOSED: derived figures, maps, tables, approved outputs
             ├── reports/           # PROPOSED: validation, interpretation, and review memos
-            └── governance.md      # PROPOSED: rights, sensitivity, precision, release notes
+            └── governance.md      # PROPOSED: rights, sensitivity, precision, and release notes
 ```
 
 > [!NOTE]
@@ -108,10 +114,12 @@ docs/
 
 ## Quickstart
 
-Use this directory when the core question is not “what does this sensor measure?” but rather **“what changed, compared to what, under which assumptions, and how confident are we?”**
+Use this directory when the core question is not “what does this sensor measure?” but rather:
+
+**What changed, compared to what, under which assumptions, with what support, and how confidently can KFM expose that change downstream?**
 
 1. **State the decision question first.**  
-   Define the phenomenon of interest: flood extent, vegetation loss, channel migration, urban growth, burn scar, thermal change, or something else.
+   Define the phenomenon of interest: flood extent, vegetation loss, channel migration, urban growth, burn scar, thermal change, shoreline movement, or something else.
 
 2. **Declare the comparison basis.**  
    Choose one explicitly:
@@ -122,19 +130,22 @@ Use this directory when the core question is not “what does this sensor measur
    - `time_series_handoff`
 
 3. **Register both epochs clearly.**  
-   Record source, acquisition date/time, sensor or product family, support/resolution, and masking assumptions.
+   Record source, acquisition date/time, sensor or product family, support/resolution, CRS/datum, masking assumptions, and any rights or sensitivity notes.
 
 4. **Harmonize before comparing.**  
-   Review CRS, datum, extent, resampling, pixel support, cloud/shadow handling, classification schema, and any threshold logic.
+   Review CRS, datum, extent, resampling, pixel support, cloud/shadow handling, seasonal comparability, classification schema, and threshold logic.
 
-5. **Generate a candidate change surface.**  
-   Produce the smallest useful derived output first, not the most decorative one.
+5. **Generate the smallest useful candidate change surface.**  
+   Produce the least elaborate product that can answer the question honestly before moving to summaries, tiles, or story-facing assets.
 
 6. **Validate and interpret.**  
-   Use field points, interpreted samples, authoritative references, or steward review. Separate “signal” from “artifact.”
+   Use field points, interpreted samples, authoritative references, steward review, or conflict notes. Separate “signal” from “artifact.”
 
-7. **Package evidence before public exposure.**  
-   The output is not ready for broader KFM surfaces until its dates, assumptions, uncertainty, and evidence references are visible.
+7. **Package the release-linked evidence.**  
+   A change surface does not become outward-facing KFM material just because it renders well. Dates, assumptions, uncertainty, and evidence linkage must be visible enough for downstream surfaces to remain honest.
+
+> [!IMPORTANT]
+> In KFM, corroboration is more than “two files say roughly the same thing.” Before claiming confirmation, check source independence, identity alignment, spatial support compatibility, temporal support compatibility, method and unit comparability, and explicit conflict handling.
 
 ### Illustrative comparison scaffold
 
@@ -146,18 +157,24 @@ change_detection_run:
     source: "<sensor/product>"
     acquired_at: "<timestamp>"
     support: "<resolution/support>"
+    crs: "<required>"
   epoch_b:
     source: "<sensor/product>"
     acquired_at: "<timestamp>"
     support: "<resolution/support>"
+    crs: "<required>"
   harmonization:
-    crs_review: "<done>"
     masks_review: "<done>"
+    seasonal_review: "<done>"
+    reprojection_or_resampling: "<required if used>"
     preprocessing_notes: "<required>"
   validation:
-    method: "<field|interpreted|authoritative reference>"
+    method: "<field|interpreted|authoritative reference|review>"
     limitations: "<required>"
-  release_scope: "<candidate | promoted>"
+  release_linkage:
+    dataset_version: "<required before outward release>"
+    projection_build_receipt: "<required for derived change map/export>"
+    evidence_bundle: "<required for claim-bearing surface>"
 ```
 
 ## Usage
@@ -185,7 +202,7 @@ This family is useful for:
 - built/non-built transitions
 - feature presence/absence comparison
 
-The main risk is **classification drift**: the “change” may reflect different class logic, training data, or thresholding rather than genuine landscape change.
+A simple map-to-map result can be extremely readable — for example, a binary or ternary raster where values encode loss, no change, and gain — but it is also fragile. If the two dates, class logic, or training assumptions drift, the change output will inherit that drift.
 
 ### Image-to-image analytical differencing
 
@@ -198,18 +215,18 @@ This family is useful for:
 - DEM subtraction
 - moisture or water-surface change
 
-This can preserve more nuance than map-to-map comparison, but it demands tighter control over radiometry, masks, and support.
+This can preserve more nuance than map-to-map comparison, but it demands tighter control over radiometry, masks, co-registration, support, and temporal comparability.
 
 ### Hydrology and hazard review
 
-KFM doctrine explicitly favors **hydrology as the preferred first thin slice** because it is public-safe, place/time-rich, and operationally legible. This README is broader than hydrology alone, but hydrologic change is the clearest lane for early, disciplined use:
+KFM doctrine explicitly favors **hydrology as the preferred first thin slice** because it is public-safe, place/time-rich, and operationally legible. This README is broader than hydrology alone, but hydrologic change remains the clearest early lane for disciplined, governed use:
 - flood extent comparison
 - reservoir stage-area change
 - channel migration
 - watershed disturbance
 - wetland gain/loss
 
-Use this directory to keep hydrologic change products from drifting into “pretty flood maps” without date, support, uncertainty, and evidence state.
+Use this directory to keep hydrologic change products from drifting into “persuasive flood maps” without date, support, uncertainty, and evidence state.
 
 ### Monitoring handoff
 
@@ -221,33 +238,39 @@ A good rule of thumb:
 - **field truth and scoring discipline** → validation
 
 > [!WARNING]
-> A change surface is not self-authenticating. Differences in sensor family, acquisition season, cloud treatment, pixel support, resampling, class definitions, or threshold logic can produce visible “change” that is really workflow drift.
+> A change surface is not self-authenticating. Different sensor families, acquisition seasons, masking choices, georegistration quality, pixel support, resampling, class definitions, or threshold logic can all create visible “change” that is really workflow drift.
 
 ## Workflow diagram
 
 ```mermaid
 flowchart LR
-    A["Epoch A source"] --> C["Harmonize<br/>CRS • support • masks • extent"]
+    A["Epoch A source"] --> C["Source admission<br/>SourceDescriptor"]
     B["Epoch B source"] --> C
-    C --> D["Choose method family"]
-    D --> E["Candidate change surface"]
-    E --> F["Validation & interpretation"]
-    F --> G["Evidence package<br/>metadata • limitations • review refs"]
-    G --> H["Derived outputs"]
-    H --> I["Map / Dossier / Story / Focus / Export"]
-    G --> J["Correction / rebuild path"]
+    C --> D["WORK / QUARANTINE<br/>masking • reprojection • support checks"]
+    D --> E["Candidate change method<br/>map-to-map • image-to-image • object-based"]
+    E --> F["ValidationReport<br/>samples • cross-checks • limitations"]
+    F --> G{"Publish ready?"}
+    G -- No --> H["Hold / quarantine / rebuild / correction"]
+    G -- Yes --> I["DatasetVersion<br/>canonical candidate or promoted product"]
+    I --> J["ProjectionBuildReceipt<br/>derived change raster/vector/export"]
+    J --> K["CatalogClosure<br/>STAC • DCAT • PROV"]
+    K --> L["EvidenceBundle<br/>map • compare • story • export"]
+    L --> M["Trust-visible surfaces"]
 ```
+
+> [!IMPORTANT]
+> In KFM terms, a candidate change raster or polygon layer stays **derived** until it is tied to release-linked metadata, evidence packaging, and visible correction behavior.
 
 ## Tables
 
-### Method matrix
+### Method family matrix
 
 | Method family | Best for | Typical strengths | Common failure mode | Typical outputs |
 |---|---|---|---|---|
 | **Map-to-map** | Comparing two already classified products | Easy to explain; strong for category transitions | Different class logic creates fake change | Transition grids, gain/loss rasters, polygons |
 | **Image-to-image** | Spectral, thermal, radar, or elevation change | Preserves more signal; useful before heavy categorization | Date/support/radiometry mismatch | Delta rasters, thresholded anomalies, summary stats |
 | **Class-transition** | Land-cover or land-use change across stable classes | Strong for reporting and policy summaries | Training data drift or class collapse | Transition matrix, class-change map, area totals |
-| **Object-based** | Feature-level change such as waterbodies, buildings, parcels, patches | Better feature semantics than per-pixel alone | Segmentation differences create unstable objects | Change objects, counts, object attributes |
+| **Object-based** | Feature-level change such as waterbodies, buildings, parcels, or patches | Better feature semantics than per-pixel alone | Segmentation differences create unstable objects | Change objects, counts, object attributes |
 | **Time-series handoff** | Many dates, ongoing monitoring, repeated events | Reduces snapshot bias; can evolve toward monitoring | Overloading this directory with monitoring logic | Change flags, anomaly timelines, handoff memo |
 
 ### Minimum metadata and evidence fields
@@ -256,27 +279,41 @@ flowchart LR
 |---|---|
 | **Comparison basis** | Without this, reviewers cannot tell what “change” actually means. |
 | **Epoch A / Epoch B acquisition date** | Time is part of the claim, not decoration. |
+| **Valid time / issue time / correction time** | KFM treats time semantics explicitly; do not collapse observation time and publication time. |
 | **Source sensor or product lineage** | Sensor family affects comparability. |
-| **CRS / datum / support** | Spatial mismatch can create false movement or false area change. |
-| **Preprocessing notes** | Cloud masks, atmospheric correction, coregistration, resampling, and filtering materially affect output. |
-| **Thresholds or class logic** | Needed to distinguish measured change from analyst choice. |
+| **CRS / datum / support / resampling** | Spatial mismatch can create false movement, false area change, or silent support drift. |
 | **AOI and masks** | Declares what was and was not eligible for comparison. |
-| **Validation method** | Field points, interpreted samples, or reference surfaces should be explicit. |
+| **Preprocessing notes** | Cloud masks, atmospheric correction, co-registration, filtering, and classification assumptions materially affect output. |
+| **Thresholds or class logic** | Needed to distinguish measured change from analyst choice. |
+| **Validation method** | Field points, interpreted samples, or authoritative comparison surfaces should be explicit. |
 | **Known limitations** | Public-facing explanation should not erase uncertainty. |
-| **Rights / sensitivity / precision posture** | Exact locations and sensitive ecological or heritage areas may require generalization or restricted handling. |
-| **Release scope / correction link** | Derived outputs must stay tied to release and correction lineage. |
+| **Rights / sensitivity / precision posture** | Exact locations and sensitive ecological or heritage areas may require generalization, restricted handling, or withholding. |
+| **Release linkage / correction linkage** | Derived outputs must stay tied to release and correction lineage. |
+
+### Governed handoff object matrix
+
+| Object family | Change-detection role | Typical contents | Status in this README |
+|---|---|---|---|
+| **SourceDescriptor** | Declares the intake contract for imagery or derived upstream products | source identity, cadence, rights posture, time support, validation intent | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **ValidationReport** | Records what preprocessing and QC passed, failed, or quarantined | check list, severity, subject refs, conflict notes | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **DatasetVersion** | Carries the canonical candidate or promoted change product | stable ID, version ID, support, time semantics, provenance links | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **ProjectionBuildReceipt** | Proves a derived raster/vector/export was built from a known release scope | release ref, projection type, build time, freshness basis | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **CatalogClosure** | Publishes outward metadata closure for the released product | STAC / DCAT / PROV refs, identifiers, release linkage | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **EvidenceBundle** | Packages support for map, compare, story, export, or answer surfaces | source basis, lineage summary, preview policy, rights/sensitivity state | **CONFIRMED doctrine**, local use **PROPOSED** |
+| **CorrectionNotice** | Preserves visible lineage under supersession, narrowing, or withdrawal | affected releases, rebuild refs, cause, public note | **CONFIRMED doctrine**, local use **PROPOSED** |
 
 ### Output classes and KFM posture
 
 | Output | Primary role | Default KFM posture |
 |---|---|---|
 | **Change raster or vectorized change polygons** | Analytical result | **Derived** until explicitly packaged and released under governed evidence flow |
-| **Summary charts / area tables** | Human-readable reporting | **Derived convenience surface** |
+| **Transition tables / area summaries / charts** | Human-readable reporting | **Derived convenience surface** |
 | **Map tiles / thumbnails / preview images** | Delivery and browsing | **Derived convenience surface** |
 | **Validation report** | Review and confidence support | Trust-bearing support object |
-| **Evidence bundle or equivalent support pack** | Inspectable provenance at point of use | Trust-bearing support object |
-| **Focus / story explanation** | Narrative or bounded synthesis | Must remain downstream of evidence and review state |
-| **Correction note / rebuild note** | Visible lineage under change | Trust-bearing operational object |
+| **Catalog closure package** | Outward discoverability and lineage | Trust-bearing closure object |
+| **Evidence bundle** | Inspectable provenance at point of use | Trust-bearing support object |
+| **Compare / story / export surface** | Public or steward-facing interpretation | Must remain downstream of release state and evidence packaging |
+| **Correction or rebuild notice** | Visible lineage under change | Trust-bearing operational object |
 
 ## Definition of done
 
@@ -284,13 +321,13 @@ A change-detection deliverable in this directory is ready for handoff only when 
 
 - [ ] The comparison basis is explicit.
 - [ ] Both epochs have visible source identity and acquisition time.
-- [ ] CRS, support, extent, and mask decisions are recorded.
+- [ ] CRS, datum, support, extent, mask, and resampling decisions are recorded.
 - [ ] Method rationale and threshold or class logic are documented.
 - [ ] Validation method and limitations are attached.
-- [ ] The output can be traced to evidence and release context.
+- [ ] Corroboration claims, if any, have passed independence and comparability checks.
+- [ ] The output can be traced to release-linked evidence and a correction path.
 - [ ] Rights, sensitivity, and precision posture have been reviewed.
-- [ ] Story / Focus / export surfaces can show dates and uncertainty without bluffing.
-- [ ] A correction or rebuild path has been identified.
+- [ ] Story / compare / export surfaces can show dates and uncertainty without bluffing.
 - [ ] The deliverable does not overclaim beyond what the inputs support.
 
 ## FAQ
@@ -301,15 +338,19 @@ Change detection usually compares selected epochs or bounded windows. Time-serie
 
 ### Can I compare data from different sensors?
 
-Yes, but only if the harmonization logic is made explicit. Different sensors, support, radiometry, or class schemes can create visible deltas that are methodological rather than environmental.
+Yes, but only if the harmonization logic is made explicit. Different sensors, support, radiometry, geometry, or class schemes can create visible deltas that are methodological rather than environmental.
 
 ### Is NDVI differencing enough?
 
-Sometimes. It can be useful for vegetation questions, but it is not a universal proxy for all change. Use a method that matches the phenomenon, not the one that is simply easiest to compute.
+Sometimes. It can be useful for vegetation questions, but it is not a universal proxy for all change. Use a method that matches the phenomenon, not simply the index that is easiest to compute.
 
 ### When does a change map become publishable in KFM?
 
-Not when it looks persuasive. It becomes publishable only when its comparison basis, dates, assumptions, uncertainty, and evidence linkage are explicit enough for downstream surfaces to remain honest.
+Not when it looks persuasive. It becomes publishable only when its comparison basis, dates, assumptions, uncertainty, rights posture, and evidence linkage are explicit enough for downstream surfaces to remain honest.
+
+### Why is hydrology mentioned so often in a broader change-detection README?
+
+Because March 2026 KFM doctrine treats hydrology as the preferred first thin slice. It is narrow enough to govern end to end, public-safe often enough to expose, and demanding enough to exercise the hard seams around time, units, release linkage, and correction.
 
 ### Does this README assume specific scripts or mounted folders?
 
@@ -338,23 +379,26 @@ Ask these before approving any outward-facing result:
 1. Is the comparison really like-for-like?
 2. Are the dates close enough in seasonality and acquisition conditions?
 3. Does the method detect the phenomenon of interest, or just contrast?
-4. Can a reviewer trace the result back to source epochs and preprocessing?
-5. Would a user understand the uncertainty from the surface alone?
+4. Can a reviewer trace the result back to source epochs, preprocessing, and release linkage?
+5. Would a user understand the uncertainty and scope from the surface alone?
 
-### Illustrative handoff bundle
+### Illustrative governed handoff bundle
 
 The structure below is illustrative and not a claimed mounted repo artifact.
 
 ```text
 change-detection-handoff/
+├── source_descriptor.yaml
 ├── comparison_basis.md
 ├── epoch_a_metadata.json
 ├── epoch_b_metadata.json
 ├── harmonization_notes.md
-├── change_surface.tif
-├── validation_report.md
-├── evidence_links.md
-└── release_or_correction_notes.md
+├── validation_report.json
+├── dataset_version.json
+├── projection_build_receipt.json
+├── catalog_closure.json
+├── evidence_bundle.json
+└── correction_notice.md
 ```
 
 </details>
