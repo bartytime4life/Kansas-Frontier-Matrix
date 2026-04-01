@@ -14,6 +14,7 @@ notes: [Current-session doctrine is CONFIRMED from attached March 2026 KFM manua
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture Diagrams
+
 Diagram registry, authoring rules, and working guidance for KFM architecture visuals.
 
 | Impact block | Value |
@@ -22,7 +23,7 @@ Diagram registry, authoring rules, and working guidance for KFM architecture vis
 | Owners | `TODO — owners not directly visible in current session` |
 | Path | `docs/architecture/diagrams/README.md` |
 | Badges | ![Status](https://img.shields.io/badge/status-experimental-orange) ![Evidence](https://img.shields.io/badge/evidence-PDF--grounded-blue) ![Repo%20state](https://img.shields.io/badge/repo%20state-needs%20verification-yellow) ![UI](https://img.shields.io/badge/ui-map--first%20%2B%20time--aware-0a6) |
-| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
+| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > This README is doctrine-grounded but repo-topology-bounded. The attached March 2026 KFM manuals clearly confirm the architecture subjects that belong in this directory, but the mounted repository tree for `docs/architecture/diagrams/` was not directly visible in the current session. Anything about current file inventory, local owners, or adjacent links is therefore marked **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** rather than being presented as settled repo fact.
@@ -41,18 +42,23 @@ In practice, that means diagrams here should center the subjects the corpus trea
 
 The diagram subjects below were grounded primarily in these attached KFM documents:
 
-- `KFM_Master_Design_Manual_2026-03-20.pdf`
+- `KFM_Replacement_Grade_Blueprint_Expanded_Final.pdf`
 - `kfm_unified_geospatial_architecture_manual_extended.pdf`
 - `KFM_MapLibre_UI_Architecture_and_Governed_Interaction_Design.pdf`
-- `KFM_Components_Pass_5_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf`
-- `KFM_expanded_replacement_grade_manual.pdf`
-- `KFM_Canonical_Master_Reference_Manual_Integrated_Replacement_2026-03-14.pdf`
+- `kfm_components_pass_8_idea_index_category_atlas_expansion_dossier.pdf`
+- `Kansas Frontier Matrix Repo-Grounded Deep Research Sprint.pdf`
+
+Supporting ecosystem context used cautiously:
+
+- `MapLibre Ecosystem Research Dossier.pdf`
+- `Cesium Ecosystem Technical Knowledge Base Dossier.pdf`
 
 ### Reading key
 
 | Label | Meaning in this README |
 | --- | --- |
 | **CONFIRMED** | Directly supported by the attached KFM doctrine and architecture manuals visible in this session. |
+| **INFERRED** | Strongly implied by repeated KFM doctrine, but not directly verified as mounted implementation in the current session. |
 | **PROPOSED** | Recommended directory shape, filename, or maintenance pattern that fits the doctrine but was not directly verified in a mounted repo tree. |
 | **UNKNOWN** | The current repo state could not be confirmed from directly visible workspace evidence. |
 | **NEEDS VERIFICATION** | A specific value should be checked against the mounted repository before commit. |
@@ -71,13 +77,13 @@ This README is the working index for the architecture-diagram layer of the repo.
 
 ### Upstream links
 
-- **NEEDS VERIFICATION:** add the parent architecture index once the mounted tree is visible.
-- **NEEDS VERIFICATION:** add the central design/manual mirror used by the repo's documentation navigation.
+- **NEEDS VERIFICATION:** parent architecture index (`<parent-architecture-index-to-confirm>`)
+- **NEEDS VERIFICATION:** central architecture/manual index used by repo navigation
 
 ### Downstream links
 
-- **NEEDS VERIFICATION:** link the actual diagram source files that live beside this README.
-- **NEEDS VERIFICATION:** link rendered exports only after they are confirmed to be generated from the governed source diagrams, not edited by hand.
+- **NEEDS VERIFICATION:** actual diagram source files beside this README
+- **NEEDS VERIFICATION:** rendered exports only after they are confirmed to be generated from governed diagram sources rather than edited by hand
 
 ### Fit with the wider architecture set
 
@@ -96,7 +102,7 @@ Accepted inputs for this directory should be narrow and architecture-bearing.
 ### What belongs here
 
 - Diagram sources that explain **authority**, **flow**, **boundary**, **surface**, or **artifact** relationships.
-- Short diagram-adjacent notes that say what is **CONFIRMED**, **PROPOSED**, and **UNKNOWN**.
+- Short diagram-adjacent notes that say what is **CONFIRMED**, **INFERRED**, **PROPOSED**, and **UNKNOWN**.
 - Release-linked exports of those diagrams when the export is reproducible from the diagram source.
 - Diagram packs for thin-slice review, especially where they help teams inspect the hydrology-first path end to end.
 
@@ -153,17 +159,17 @@ docs/
     └── diagrams/
         ├── README.md
         ├── context/                  # PROPOSED: system-level context and authority diagrams
-        │   ├── kfm-five-plane-authority.mmd
-        │   ├── kfm-truth-path-lifecycle.mmd
-        │   └── kfm-shell-surface-family.mmd
+        │   ├── kfm-context-five-plane-authority.mmd
+        │   ├── kfm-context-truth-path-lifecycle.mmd
+        │   └── kfm-context-shell-surface-family.mmd
         ├── delivery/                 # PROPOSED: source→delivery→style→renderer→UX and projection flow
-        │   ├── kfm-delivery-stack.mmd
-        │   └── kfm-projection-build-flow.mmd
+        │   ├── kfm-delivery-source-to-renderer-stack.mmd
+        │   └── kfm-delivery-projection-build-flow.mmd
         ├── contracts/                # PROPOSED: artifact lattice and runtime outcome diagrams
-        │   ├── kfm-contract-lattice.mmd
-        │   └── kfm-runtime-outcomes.mmd
+        │   ├── kfm-contracts-artifact-lattice.mmd
+        │   └── kfm-contracts-runtime-outcomes.mmd
         ├── slices/                   # PROPOSED: thin-slice diagrams such as hydrology-first
-        │   └── kfm-hydrology-first-thin-slice.mmd
+        │   └── kfm-slices-hydrology-first-thin-slice.mmd
         └── exports/                  # PROPOSED: rendered SVG or PNG outputs derived from sources above
 ```
 
@@ -178,17 +184,17 @@ docs/
 
 1. Start from one architecture question, not from a blank canvas.
 2. Pull the smallest relevant doctrine set first.
-3. Separate **CONFIRMED** doctrine from **PROPOSED** implementation shape.
+3. Separate **CONFIRMED** doctrine from **INFERRED** or **PROPOSED** implementation shape.
 4. Keep the trust membrane, truth path, and authoritative-versus-derived split visible if they matter to the subject.
 5. Register the diagram in the table below before expanding it into variants.
 6. Render-check the diagram in GitHub and confirm the text still reads clearly without color alone.
 
 ### Copy/paste starter block for a new diagram note
 
-````md
+~~~md
 ### <diagram-id>
 
-- Status: CONFIRMED / PROPOSED / UNKNOWN
+- Status: CONFIRMED / INFERRED / PROPOSED / UNKNOWN
 - Primary question: <what reviewer question this diagram answers>
 - Source basis: <attached KFM docs or verified repo docs>
 - Non-goals: <what the diagram intentionally omits>
@@ -200,7 +206,7 @@ flowchart LR
   B --> C[Renderer]
   C --> D[Trust-visible surface]
 ```
-````
+~~~
 
 ### First-pass review rule
 
@@ -240,9 +246,27 @@ A good KFM architecture diagram should do at least one of these jobs well:
 
 ## Diagram
 
-The three diagrams below are intentionally compact. They are meant to establish the directory's visual and doctrinal center of gravity, not to exhaust the full system.
+The four diagrams below are intentionally compact. They are meant to establish the directory's visual and doctrinal center of gravity, not to exhaust the full system.
 
-### 1) Five-plane authority model
+### 1) Truth path lifecycle
+
+```mermaid
+flowchart LR
+    SE[Source edge]
+    RAW[RAW]
+    WQ[WORK / QUARANTINE]
+    PROC[PROCESSED evidence]
+    CAT[CATALOG / release-scoped records]
+    PUB[PUBLISHED]
+    CN[CorrectionNotice]
+
+    SE --> RAW --> WQ --> PROC -->|governed promotion| CAT -->|publication gate| PUB
+    PUB -. supersession / narrowing / withdrawal .-> CN
+    CN -. visible correction lineage .-> PUB
+    PROC -. no public bypass .-> PUB
+```
+
+### 2) Five-plane authority model
 
 ```mermaid
 flowchart LR
@@ -267,7 +291,7 @@ flowchart LR
 
     subgraph P4[Derived projection plane]
         PB[ProjectionBuildReceipt]
-        DP[Tiles / search / exports / scenes / vectors / summaries]
+        DP[Tiles / search / graph / exports / scenes / summaries]
     end
 
     subgraph P5[Experience surfaces plane]
@@ -292,7 +316,7 @@ flowchart LR
     SHELL -. no direct truth-store bypass .-> DV
 ```
 
-### 2) Source → delivery → style → renderer → UX
+### 3) Source → delivery → style → renderer → UX
 
 ```mermaid
 flowchart LR
@@ -312,7 +336,7 @@ flowchart LR
     UX -. trust cues and evidence access stay shell-owned .-> META
 ```
 
-### 3) Governed shell surface family
+### 4) Governed shell surface family
 
 ```mermaid
 flowchart TB
@@ -354,18 +378,18 @@ flowchart TB
 
 | Diagram ID *(PROPOSED filename stem)* | Corpus status | What it must keep visible | Companion artifact(s) to expect | Current repo state |
 | --- | --- | --- | --- | --- |
-| `kfm-five-plane-authority` | **CONFIRMED** subject / **PROPOSED** file | Evidence plane, authoritative truth, policy/review, derived projections, experience surfaces, and forbidden bypasses | plane-to-service matrix, route-family notes, proof-pack references | **UNKNOWN** |
-| `kfm-truth-path-lifecycle` | **CONFIRMED** subject / **PROPOSED** file | `Source edge → RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED` plus correction loop | source-descriptor note, release/correction note | **UNKNOWN** |
-| `kfm-shell-surface-family` | **CONFIRMED** subject / **PROPOSED** file | Map-first shell, timeline coequality, Evidence Drawer, Focus, Review, Compare, Export | shell-state contract, Evidence Drawer payload, dossier payload | **UNKNOWN** |
-| `kfm-delivery-stack` | **CONFIRMED** subject / **PROPOSED** file | Source → delivery → style → renderer → UX ordering and where business meaning lives | layer metadata contract, style registry note, renderer adapter note | **UNKNOWN** |
-| `kfm-contract-lattice` | **CONFIRMED** subject / **PROPOSED** file | SourceDescriptor through CorrectionNotice, with EvidenceBundle and RuntimeResponseEnvelope explicit | first schema wave, valid/invalid fixtures | **UNKNOWN** |
-| `kfm-hydrology-first-thin-slice` | **CONFIRMED** priority / **PROPOSED** file | End-to-end proof of one public-safe slice from source admission to map, drawer, and correction | lane note, proof-pack checklist, correction drill | **UNKNOWN** |
+| `kfm-context-five-plane-authority` | **CONFIRMED** subject / **PROPOSED** file | Evidence plane, authoritative truth, policy/review, derived projections, experience surfaces, and forbidden bypasses | plane-to-service matrix, route-family notes, proof-pack references | **UNKNOWN** |
+| `kfm-context-truth-path-lifecycle` | **CONFIRMED** subject / **PROPOSED** file | `Source edge → RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED` plus correction loop | source-descriptor note, release/correction note | **UNKNOWN** |
+| `kfm-context-shell-surface-family` | **CONFIRMED** subject / **PROPOSED** file | Map-first shell, timeline coequality, Evidence Drawer, Focus, Review, Compare, Export | shell-state contract, Evidence Drawer payload, dossier payload | **UNKNOWN** |
+| `kfm-delivery-source-to-renderer-stack` | **CONFIRMED** subject / **PROPOSED** file | Source → delivery → style → renderer → UX ordering and where business meaning lives | layer metadata contract, style registry note, renderer adapter note | **UNKNOWN** |
+| `kfm-contracts-artifact-lattice` | **CONFIRMED** subject / **PROPOSED** file | SourceDescriptor through CorrectionNotice, with EvidenceBundle and RuntimeResponseEnvelope explicit | first schema wave, valid/invalid fixtures | **UNKNOWN** |
+| `kfm-slices-hydrology-first-thin-slice` | **CONFIRMED** priority / **PROPOSED** file | End-to-end proof of one public-safe slice from source admission to map, drawer, and correction | lane note, proof-pack checklist, correction drill | **UNKNOWN** |
 
 ### Diagram review matrix
 
 | Review lens | What reviewers should ask | Fail signal |
 | --- | --- | --- |
-| Truth posture | Does the diagram distinguish **CONFIRMED** doctrine from **PROPOSED** repo shape? | It presents guessed services or files as current reality. |
+| Truth posture | Does the diagram distinguish **CONFIRMED** doctrine from **INFERRED** or **PROPOSED** repo shape? | It presents guessed services or files as current reality. |
 | Boundary discipline | Does it keep authoritative truth stronger than derived delivery? | A tile/search/vector/scene layer looks like the source of truth. |
 | Trust visibility | Does it keep evidence access, freshness, review state, or policy context visible where needed? | Trust cues vanish at the point of use. |
 | Accessibility | Is the diagram readable without color alone and with GitHub's Mermaid renderer? | Meaning depends on color, animation, or off-page explanation. |
@@ -387,7 +411,7 @@ flowchart TB
 
 - [ ] The diagram answers one clear architecture question.
 - [ ] Every consequential arrow can be explained in terms of KFM doctrine, contracts, or proof objects.
-- [ ] Unverified repo paths, component names, and route trees are marked **PROPOSED** or **UNKNOWN**.
+- [ ] Unverified repo paths, component names, and route trees are marked **INFERRED**, **PROPOSED**, or **UNKNOWN**.
 - [ ] The trust membrane and authoritative-versus-derived split are visible where relevant.
 - [ ] Negative outcomes are shown when the subject includes runtime or publication behavior.
 - [ ] The diagram renders correctly in GitHub.
