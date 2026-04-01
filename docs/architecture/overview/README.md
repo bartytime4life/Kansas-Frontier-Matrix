@@ -10,67 +10,63 @@ updated: YYYY-MM-DD
 policy_label: public
 related: [../README.md, ../system_overview.md, ../SYSTEM_CONTEXT.md, ../TRUST_MEMBRANE.md, ../TRUTH_PATH_LIFECYCLE.md, ../DEPLOYMENT_TOPOLOGY.md, ../canonical_vs_rebuildable.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../tests/README.md]
 tags: [kfm, architecture, overview, docs]
-notes: [current public main exposed this lane as scaffold-only at authoring time; owner/date/doc_id require direct branch verification before merge]
+notes: [owner/date/doc_id require direct branch verification before merge; active-branch architecture subtree was not directly mounted in this authoring session; current-state claims are intentionally conservative]
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture Overview
 
-Reader-first summary lane for Kansas Frontier Matrix (KFM): what the system is, how trust state moves, and which deeper architecture surfaces to open next.
+Reader-first entry point to Kansas Frontier Matrix (KFM): what the system is, how trust moves, and which deeper architecture surfaces to open next.
 
-> Status: experimental
->  
-> Owners: `NEEDS VERIFICATION` — sibling architecture docs on current public `main` use `@bartytime4life`; confirm against [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) before merge
->  
-> Repo fit: `docs/architecture/overview/README.md` → upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md) · adjacent [`../system_overview.md`](../system_overview.md), [`../SYSTEM_CONTEXT.md`](../SYSTEM_CONTEXT.md), [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md), [`../TRUTH_PATH_LIFECYCLE.md`](../TRUTH_PATH_LIFECYCLE.md), [`../DEPLOYMENT_TOPOLOGY.md`](../DEPLOYMENT_TOPOLOGY.md), [`../canonical_vs_rebuildable.md`](../canonical_vs_rebuildable.md)
->  
+> **Status:** experimental  
+> **Owners:** `NEEDS VERIFICATION` — confirm against [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) before merge  
+> **Repo fit:** `docs/architecture/overview/README.md` → upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md) · adjacent [`../system_overview.md`](../system_overview.md), [`../SYSTEM_CONTEXT.md`](../SYSTEM_CONTEXT.md), [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md), [`../TRUTH_PATH_LIFECYCLE.md`](../TRUTH_PATH_LIFECYCLE.md), [`../DEPLOYMENT_TOPOLOGY.md`](../DEPLOYMENT_TOPOLOGY.md), [`../canonical_vs_rebuildable.md`](../canonical_vs_rebuildable.md)  
 > ![status](https://img.shields.io/badge/status-experimental-f59e0b?style=flat-square)
 > ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-6b7280?style=flat-square)
 > ![surface](https://img.shields.io/badge/surface-architecture--overview-0f766e?style=flat-square)
 > ![posture](https://img.shields.io/badge/posture-evidence--first-2563eb?style=flat-square)
 > ![trust](https://img.shields.io/badge/trust-governed-7c3aed?style=flat-square)
-> ![checkout](https://img.shields.io/badge/check-current_public_main-1f2937?style=flat-square)
->  
-> Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> ![lane](https://img.shields.io/badge/lane-reader--first-1f2937?style=flat-square)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Authoring-time snapshot](#authoring-time-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `docs/architecture/overview/` is a summary lane, not a second source of truth. It should make KFM easier to enter while keeping architecture law in [`../README.md`](../README.md), whole-system detail in [`../system_overview.md`](../system_overview.md), and machine-enforced behavior in [`../../../contracts/`](../../../contracts/), [`../../../schemas/`](../../../schemas/), [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md).
+> `docs/architecture/overview/` is a summary lane, not a second source of truth. It should reduce entry friction while leaving architecture law in [`../README.md`](../README.md), deeper whole-system detail in [`../system_overview.md`](../system_overview.md), and machine-facing enforcement in [`../../../contracts/`](../../../contracts/), [`../../../schemas/`](../../../schemas/), [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md).
 
 ## Scope
 
-`docs/architecture/overview/` is the reader-first entry point inside the architecture subtree.
+`docs/architecture/overview/` is the shortest architecture entry lane inside the KFM docs tree.
 
 Its job is to answer three questions quickly:
 
 1. What is KFM, in one stable mental model?
-2. Which architecture files are already useful today, and which are still scaffold-level?
-3. Where should a contributor go next before changing something consequential?
+2. Which architecture laws are load-bearing enough that no contributor should bypass them?
+3. Which file should a reader open next before changing something consequential?
 
-This README should stay shorter and more legible than the deeper architecture leaves. It is a routing surface for whole-system understanding, not the place where every law is restated in full.
+This README should stay lighter than the deeper architecture leaves it points to. It is a routing surface for whole-system understanding, not the place where every contract, workflow, or runtime detail is restated.
 
 ### Truth posture used here
 
 | Marker | Meaning in this README |
 |---|---|
-| `CONFIRMED` | Directly supported by current public-repo inspection or repeated March 2026 KFM doctrine |
-| `INFERRED` | Strongly suggested by adjacent repo docs or repeated doctrine, but not re-opened deeply enough here to claim full implementation maturity |
-| `PROPOSED` | Repo-ready wording, organization, or next-step guidance that fits doctrine but is not proven as mounted implementation reality |
-| `UNKNOWN` | Not established strongly enough to present as current fact |
-| `NEEDS VERIFICATION` | Exact owner, date, label, workflow, or mounted-runtime detail should be checked before merge |
+| `CONFIRMED` | Directly supported by the attached KFM doctrine corpus or by repo-grounded attached evidence used in this session |
+| `INFERRED` | Strongly implied by repeated KFM doctrine and architecture logic, but not directly verified as mounted implementation reality here |
+| `PROPOSED` | Recommended wording, structure, path, or next-step guidance consistent with KFM doctrine |
+| `UNKNOWN` | Not established strongly enough in this session to present as current fact |
+| `NEEDS VERIFICATION` | Exact owner, date, UUID, active-branch file content, or implementation detail should be checked before merge |
 
 ### One stable mental model
 
-KFM is best read as a governed spatial evidence system whose primary value unit is the **inspectable claim**.
+KFM is best read as a governed spatial evidence system whose value unit is the **inspectable claim**.
 
 | Topic | Working rule |
 |---|---|
-| System identity | Governed, map-first, time-aware spatial evidence system |
-| Value unit | The inspectable claim, not merely a layer, dashboard, export, or fluent answer |
+| System identity | Governed, Kansas-first, map-first, time-aware, evidence-bearing publication system |
+| Value unit | Inspectable claim rather than fluent answer, pretty map, or derived layer |
 | Canonical lifecycle | `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` |
 | Trust boundary | Public and steward surfaces cross governed APIs; they do not directly touch canonical stores or model runtimes |
 | Runtime answer posture | Cite or abstain; fail closed; keep negative outcomes visible |
-| Shell posture | One map-first, time-aware operating shell with evidence drill-through and correction-visible state |
-| 3D posture | 2D default; 3D is conditional and burden-bearing |
-| Documentation posture | Docs move with behavior-significant changes; prose must not outrun enforcement |
+| Shell posture | One time-aware geographic shell with map, timeline, dossier, story, Evidence Drawer, Focus, review, compare, and export as coordinated surfaces |
+| 3D posture | 2D default; 3D only when it carries real interpretive burden and inherits the same evidence/policy/correction model |
+| Documentation posture | Docs should clarify architecture without outrunning contracts, policy, proof objects, or branch reality |
 
 [Back to top](#architecture-overview)
 
@@ -83,34 +79,33 @@ KFM is best read as a governed spatial evidence system whose primary value unit 
 | Primary upstream anchors | [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md) |
 | Primary companion leaves | [`../system_overview.md`](../system_overview.md), [`../SYSTEM_CONTEXT.md`](../SYSTEM_CONTEXT.md), [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md), [`../TRUTH_PATH_LIFECYCLE.md`](../TRUTH_PATH_LIFECYCLE.md), [`../DEPLOYMENT_TOPOLOGY.md`](../DEPLOYMENT_TOPOLOGY.md), [`../canonical_vs_rebuildable.md`](../canonical_vs_rebuildable.md) |
 | Machine-facing neighbors to re-check before claiming enforcement | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) |
-| Current public-main posture | This lane existed, but the directly fetched file was scaffold-only; this revision turns it into a substantive overview surface |
-| Why this file matters | It keeps the architecture legible without forcing reviewers to start at the deepest law files or quietly treating placeholders as completed architecture |
+| Intended audience | Maintainers, reviewers, contributors, architects, stewards, and technically literate readers entering KFM architecture for the first time |
+| Why this file matters | It keeps KFM legible without forcing readers to start from the deepest doctrinal manuals or to mistake placeholder docs for completed implementation |
 
 ### Relationship map
 
-This lane sits between **directory-level navigation** and **deeper architecture law**:
+This lane sits between **directory navigation** and **deep architecture law**:
 
-- the repo root explains project identity and whole-repo posture
+- the repo root explains overall project posture
 - `docs/README.md` explains the documentation boundary
-- `docs/architecture/README.md` explains architecture subtree law and maturity
+- `docs/architecture/README.md` should act as the subtree index and maturity guide
 - `docs/architecture/overview/README.md` gives the short whole-system reading path
-- `docs/architecture/system_overview.md` carries the deeper high-level bridge
+- deeper architecture leaves should own narrowed topics
 - machine-facing proof still lives outside this lane in contracts, schemas, policy, tests, and workflows
 
 [Back to top](#architecture-overview)
 
 ## Accepted inputs
 
-Content that belongs in this lane includes:
+Content that belongs here includes:
 
-- high-level architecture summaries and entry-point reading guides
-- concise whole-system maps that connect truth path, trust membrane, repo lanes, and public surfaces
-- reader-first crosswalks to deeper architecture files
-- architecture overview diagrams that clarify sequence, responsibility, and boundaries
-- current public-main maturity notes when they materially affect safe documentation
-- short tables that help reviewers decide which file to open next
-- conservative status notes for scaffold-first versus substantive leaves
-- explanation of how architecture docs relate to machine-facing governance surfaces
+- concise whole-system summaries
+- architecture reading guides
+- overview diagrams that connect truth path, trust membrane, shell surfaces, and proof surfaces
+- conservative maturity notes when documentation and implementation depth differ
+- crosswalks to deeper architecture leaves
+- short reference tables that help readers choose the next file to open
+- authoring-time caveats that prevent overview prose from becoming trust theater
 
 ## Exclusions
 
@@ -118,46 +113,48 @@ The following do **not** belong here as their authoritative home:
 
 | Do not put this here | Keep it instead |
 |---|---|
-| Policy rule bodies, deny-by-default logic, obligation fixtures, runtime decision code | [`../../../policy/`](../../../policy/) |
-| Canonical OpenAPI, JSON Schemas, shared vocabularies, runtime envelope definitions | [`../../../contracts/`](../../../contracts/) and [`../../../schemas/`](../../../schemas/) |
-| Runtime code, worker logic, UI components, adapters, service-local behavior | owning code lanes under the repo root |
-| Deployment manifests, ingress overlays, secrets posture presented as verified fact | runtime / infra surfaces plus direct mounted evidence |
-| Proof objects, manifests, receipts, release artifacts as live operational outputs | governed data / release / evidence surfaces |
-| Service-local tutorials or route-by-route implementation notes | service-local docs or runbooks |
-| Prose that upgrades a plausible folder name into “already implemented” reality | keep it explicitly `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` |
+| Policy rule bodies, deny-by-default logic, reason/obligation definitions, decision tests | [`../../../policy/`](../../../policy/) |
+| Canonical OpenAPI, JSON Schema, standards profiles, contract examples, fixture inventories | [`../../../contracts/`](../../../contracts/) and [`../../../schemas/`](../../../schemas/) |
+| Runtime code, adapters, service behavior, UI component internals | owning code lanes under the repo root |
+| Workflow YAML, deployment manifests, systemd/Kubernetes overlays presented as already mounted fact | runtime / infra surfaces plus direct branch verification |
+| Live proof objects, release packs, receipts, audit payloads, correction traces | governed release, runtime, and evidence lanes |
+| Detailed topic law that already belongs in a narrower architecture leaf | the relevant leaf under `docs/architecture/` |
+| Confident prose that upgrades a likely path or future artifact into current implementation reality | keep it `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` |
 
 > [!NOTE]
-> This lane may explain architecture. It must not silently replace the contract, policy, or test artifact that actually governs behavior.
+> This overview may explain KFM architecture. It must not silently replace the contract, policy, test, or release artifact that actually governs behavior.
 
-## Current public-main snapshot
+## Authoring-time snapshot
 
-This section is here for one reason: to prevent overview prose from outrunning the branch.
+This section is intentionally conservative. It captures what the attached doctrine and repo-grounded evidence support in this session, plus the explicit target-path context of this task.
 
-| Surface | Status | Current reading | Working use today |
+| Surface | Status | What can be said safely | Working use |
 |---|---|---|---|
-| `docs/architecture/overview/README.md` | `CONFIRMED` | directly fetched as scaffold-only before this revision | this revision promotes the lane into a substantive overview surface |
-| [`../README.md`](../README.md) | `CONFIRMED` | substantive architecture index and maturity guide | start here for subtree law and boundary reading |
-| [`../system_overview.md`](../system_overview.md) | `CONFIRMED` | substantive high-level bridge | use when you need truth path, five-plane view, and repo-lane mapping |
-| [`../SYSTEM_CONTEXT.md`](../SYSTEM_CONTEXT.md), [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md), [`../TRUTH_PATH_LIFECYCLE.md`](../TRUTH_PATH_LIFECYCLE.md), [`../DEPLOYMENT_TOPOLOGY.md`](../DEPLOYMENT_TOPOLOGY.md), [`../canonical_vs_rebuildable.md`](../canonical_vs_rebuildable.md) | `CONFIRMED` | present but scaffold-first | keep deeper claims bounded until those leaves are filled |
-| [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | `CONFIRMED` | README-only at last public-main check | do not describe merge-blocking YAML as already present without recheck |
-| [`../../../contracts/README.md`](../../../contracts/README.md) + [`../../../schemas/README.md`](../../../schemas/README.md) | `CONFIRMED` | documented machine-facing lanes; authority split still matters | point to them without pretending the lattice is already fully executable |
-| [`../../../policy/README.md`](../../../policy/README.md) + [`../../../tests/README.md`](../../../tests/README.md) | `CONFIRMED` | documented governance and proof surfaces | behavior-significant overview changes should still name policy and proof burden |
+| `docs/architecture/overview/README.md` | `NEEDS VERIFICATION` | The task context exposes this lane as an overview README that needs substantive reader-first content | treat this revision as the intended overview lane, then recheck active-branch content before merge |
+| [`../../../contracts/README.md`](../../../contracts/README.md) + [`../../../schemas/README.md`](../../../schemas/README.md) | `CONFIRMED` | Contracts and schemas exist as documented repo surfaces | point readers here for machine-facing authority; do not imply a verified live schema inventory |
+| [`../../../policy/README.md`](../../../policy/README.md) + [`../../../tests/README.md`](../../../tests/README.md) | `CONFIRMED` | Policy and tests exist as README-first governance surfaces | point here for policy/test intent; do not imply mounted Rego bundles or runnable suites |
+| [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS), [`../../../.github/PULL_REQUEST_TEMPLATE.md`](../../../.github/PULL_REQUEST_TEMPLATE.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | `CONFIRMED` | Governance scaffolding and a workflows README exist | use them as review and CI pointers; do not imply active merge-blocking YAML gates without branch recheck |
+| Companion architecture leaves listed in this file | `NEEDS VERIFICATION` | The target brief names them as adjacent architecture surfaces | resolve and inspect each leaf before describing its depth or maturity |
+| Real `.json` schemas, `.rego` bundles, runnable fixtures, release proof packs, runtime envelope examples, workflow YAML merge gates | `UNKNOWN` | This session did not directly verify them as mounted implementation artifacts | overview prose should not describe them as already real |
 
 > [!CAUTION]
-> The highest-risk failure for this file is **trust theater**: a confident summary that sounds more complete than the checked branch actually is.
+> The easiest way to damage this file is to let it sound more implemented than the evidence allows. The overview should clarify KFM, not improvise missing repo reality.
 
 [Back to top](#architecture-overview)
 
 ## Directory tree
 
-### Current directly fetched lane
+> [!WARNING]
+> The trees below reflect the target path, the user-supplied related links, and repo-grounded README surfaces. Recheck the active branch before treating them as a verified live tree.
+
+### Target lane
 
 ```text
 docs/architecture/overview/
 └── README.md
 ```
 
-### Closest overview neighbors
+### Expected adjacent architecture surfaces
 
 ```text
 docs/architecture/
@@ -176,90 +173,100 @@ docs/architecture/
     └── README.md
 ```
 
-### Working interpretation rule
+### Machine-facing neighbors that should anchor stronger claims
 
-- a directly fetched scaffold file is a **real path reservation**, not a completed architecture document
-- a deeper companion file may exist and still remain **non-authoritative in content depth**
-- this overview lane should **route** readers toward the right file, not flatten all files into one
-- if a sibling leaf becomes substantive, this README should point to it and stop duplicating its job
+```text
+.
+├── contracts/
+│   └── README.md
+├── schemas/
+│   └── README.md
+├── policy/
+│   └── README.md
+├── tests/
+│   └── README.md
+└── .github/
+    ├── CODEOWNERS
+    ├── PULL_REQUEST_TEMPLATE.md
+    └── workflows/
+        └── README.md
+```
+
+### Interpretation rule
+
+- a path reservation is not the same as a mature architecture leaf
+- a README surface is not the same as an executable inventory
+- this lane should route readers to the right authority, not flatten all authorities into one page
+- when a deeper leaf becomes substantive, this overview should point to it and stop duplicating its job
 
 ## Quickstart
 
 Use a verification-first loop before editing this lane again.
 
 ```bash
-# 1) Re-check the overview lane and nearby architecture subtree
-find docs/architecture/overview docs/architecture -maxdepth 3 \( -type f -o -type d \) | sort
+# 1) Recheck architecture and neighboring governance surfaces
+git ls-files \
+  'docs/architecture/**' \
+  'contracts/**' \
+  'schemas/**' \
+  'policy/**' \
+  'tests/**' \
+  '.github/**' | sort
 
-# 2) Re-open the summary surfaces first
-sed -n '1,220p' docs/architecture/overview/README.md
+# 2) Re-open the short architecture entry surfaces first
+sed -n '1,240p' docs/architecture/overview/README.md
 sed -n '1,260p' docs/architecture/README.md
 sed -n '1,260p' docs/architecture/system_overview.md
 
-# 3) Inspect companion leaves for scaffold-vs-substantive status
+# 3) Re-open machine-facing neighbors before upgrading confidence
 for f in \
-  docs/architecture/SYSTEM_CONTEXT.md \
-  docs/architecture/TRUST_MEMBRANE.md \
-  docs/architecture/TRUTH_PATH_LIFECYCLE.md \
-  docs/architecture/DEPLOYMENT_TOPOLOGY.md \
-  docs/architecture/canonical_vs_rebuildable.md
+  contracts/README.md \
+  schemas/README.md \
+  policy/README.md \
+  tests/README.md \
+  .github/workflows/README.md
 do
   printf '\n=== %s ===\n' "$f"
-  sed -n '1,120p' "$f"
+  sed -n '1,220p' "$f"
 done
 
-# 4) Re-check machine-facing neighbors before claiming enforcement
-sed -n '1,220p' contracts/README.md
-sed -n '1,220p' schemas/README.md
-sed -n '1,220p' policy/README.md
-sed -n '1,220p' tests/README.md
-sed -n '1,220p' .github/workflows/README.md
-
-# 5) Pressure-test vocabulary drift
-grep -RIn "trust membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abstain\|fail-closed" \
+# 4) Pressure-test doctrinal vocabulary and trust terms
+grep -RIn \
+  "trust membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abstain\|fail-closed\|Evidence Drawer" \
   docs contracts schemas policy tests apps packages 2>/dev/null || true
 ```
 
 > [!WARNING]
-> These commands are the right **next verification steps** in a mounted checkout. They are not proof that every path or implementation detail was directly inspected in the workspace used to draft this README.
+> These commands are the right next checks in a mounted checkout. They are not evidence that every path above was directly inspected in this authoring session.
 
 ## Usage
 
 ### Reading order for reviewers
 
-1. Read this file for the short whole-system picture.
-2. Read [`../README.md`](../README.md) for subtree boundary law and maturity rules.
-3. Read [`../system_overview.md`](../system_overview.md) for the deeper architecture bridge.
-4. Open companion leaves only when the question has narrowed:
-   - context → [`../SYSTEM_CONTEXT.md`](../SYSTEM_CONTEXT.md)
-   - trust boundary → [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md)
-   - lifecycle law → [`../TRUTH_PATH_LIFECYCLE.md`](../TRUTH_PATH_LIFECYCLE.md)
-   - deployment boundary → [`../DEPLOYMENT_TOPOLOGY.md`](../DEPLOYMENT_TOPOLOGY.md)
-   - authority split → [`../canonical_vs_rebuildable.md`](../canonical_vs_rebuildable.md)
-5. When a claim sounds enforceable, re-check [`../../../contracts/`](../../../contracts/), [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md).
+1. Read this file for the shortest stable picture.
+2. Read [`../README.md`](../README.md) for architecture subtree boundary and maturity rules.
+3. Read [`../system_overview.md`](../system_overview.md) for the deeper whole-system bridge.
+4. Open narrower leaves only when the question has narrowed enough to justify them.
+5. When a claim sounds enforceable, re-check [`../../../contracts/`](../../../contracts/), [`../../../schemas/`](../../../schemas/), [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md).
 
 ### Reading order for authors
 
 1. Verify the live subtree you are about to change.
-2. Decide whether the change belongs in:
-   - this reader-first overview lane
-   - the architecture directory index
-   - a deeper architecture leaf
-   - a machine-facing surface outside `docs/`
-3. Keep tree and maturity claims conservative unless the active branch proves them.
-4. Update links, tables, and diagrams when path shape changes.
-5. If the change affects behavior, trust state, or release posture, move docs, contracts, policy, tests, and workflow notes together.
+2. Decide whether the change belongs in this overview lane, a deeper architecture leaf, or a machine-facing surface outside `docs/`.
+3. Keep repo-shape and maturity claims conservative unless the active branch proves them.
+4. Update links, tables, and diagrams when path shape or terminology changes.
+5. If the change affects behavior, trust state, or release posture, move docs, contracts, policy, tests, and runbooks together.
 
 ### When to use this file versus other leaves
 
 | If your question is… | Open first | Why |
 |---|---|---|
 | “What is KFM in one page?” | this file | shortest stable summary |
-| “How does the architecture subtree work?” | [`../README.md`](../README.md) | directory law, maturity, and path rules |
-| “What is the whole-system architecture?” | [`../system_overview.md`](../system_overview.md) | truth path, five-plane view, repo lanes |
-| “What is the runtime/public request path?” | [`../system_overview.md`](../system_overview.md) then machine-facing neighbors | bridge first, proof second |
-| “What is actually enforced today?” | contracts / schemas / policy / tests / workflows | overview prose is not enforcement |
-| “Can I promote a scaffold path into authority?” | this file and [`../README.md`](../README.md) | both lanes must stay explicit about maturity |
+| “What are the architecture rules?” | [`../README.md`](../README.md) | subtree law and navigation |
+| “How does the whole system hang together?” | [`../system_overview.md`](../system_overview.md) | deeper bridge across lifecycle, routes, and shell |
+| “What is actually enforceable?” | contracts / schemas / policy / tests / workflows | overview prose is not enforcement |
+| “Where do Focus, Evidence Drawer, and trust-visible shell behavior live?” | this file, then UI/architecture leaves | overview first, then narrowed shell doctrine |
+| “Can I claim this path is implemented today?” | machine-facing neighbors plus active-branch inspection | branch reality outranks plausible prose |
 
 [Back to top](#architecture-overview)
 
@@ -272,10 +279,10 @@ flowchart TB
   Arch --> Overview["overview/README.md<br/>reader-first overview lane"]
 
   Overview --> Sys["../system_overview.md<br/>whole-system bridge"]
-  Overview --> Ctx["../SYSTEM_CONTEXT.md<br/>system context"]
-  Overview --> Mem["../TRUST_MEMBRANE.md<br/>trust law"]
-  Overview --> Path["../TRUTH_PATH_LIFECYCLE.md<br/>truth-path law"]
-  Overview --> Topo["../DEPLOYMENT_TOPOLOGY.md<br/>deployment boundary"]
+  Overview --> Context["../SYSTEM_CONTEXT.md<br/>context leaf"]
+  Overview --> Membrane["../TRUST_MEMBRANE.md<br/>trust-boundary leaf"]
+  Overview --> Path["../TRUTH_PATH_LIFECYCLE.md<br/>truth-path leaf"]
+  Overview --> Topology["../DEPLOYMENT_TOPOLOGY.md<br/>deployment boundary"]
   Overview --> Canon["../canonical_vs_rebuildable.md<br/>authority split"]
 
   Sys --> Contracts["../../../contracts/ + ../../../schemas/"]
@@ -283,48 +290,48 @@ flowchart TB
   Sys --> Tests["../../../tests/"]
   Sys --> Workflows["../../../.github/workflows/README.md"]
 
-  Contracts --> Runtime["../../../apps/ + ../../../packages/ + ../../../data/ + ../../../infra/"]
+  Contracts --> Runtime["apps/ + packages/ + data/ + infra/ <br/>NEEDS VERIFICATION"]
   Policy --> Runtime
   Tests --> Runtime
   Workflows -. when implemented .-> Runtime
 ```
 
-This lane is intentionally positioned as a **reading bridge**. It should reduce entry friction without collapsing the distinction between overview prose, deeper architecture law, and machine-facing enforcement.
+This lane is intentionally a **bridge**. It should lower entry friction without collapsing the distinction between overview prose, deeper architecture law, and machine-facing proof.
 
 ## Reference tables
 
-### KFM architecture laws this overview keeps visible
+### Architecture laws this overview keeps visible
 
 | Law | Minimum implication for this lane |
 |---|---|
-| Trust membrane | overview prose should never imply direct client access to stores or model runtimes |
-| Truth path | every system summary should preserve the lifecycle order `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` |
-| Authoritative vs derived | tiles, graphs, scenes, summaries, and indexes stay subordinate to stronger release-linked authority |
-| Cite-or-abstain | claim-bearing runtime behavior is evidence-bounded, not fluency-bounded |
-| Fail-closed posture | broken evidence, rights ambiguity, or missing policy should narrow trust state, not be smoothed over |
-| Map-first, time-aware shell | place and chronology remain first-class, not side panels added after the fact |
-| Placeholder honesty | scaffold files stay visibly scaffold-level until replaced with substantive content |
-| Docs as production surface | behavior-significant changes move with related docs, contracts, policy, tests, and runbooks |
+| Truth path | Preserve `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` in every whole-system summary |
+| Trust membrane | Never imply direct client access to canonical stores or model runtimes |
+| Authoritative vs derived | Graph/search/vector/tile/scene/cache/summary layers stay subordinate unless explicitly promoted |
+| Cite-or-abstain posture | Runtime claims remain evidence-bounded rather than fluency-bounded |
+| Fail-closed posture | Missing evidence, rights uncertainty, or policy mismatch should narrow trust state rather than be hidden |
+| Map-first, time-aware shell | Geography and chronology stay first-class across UI and documentation |
+| 2D default / 3D burden | 3D must justify its burden and inherit the same trust model |
+| Docs as production surface | Behavior-significant changes should move with related docs, contracts, policy, tests, and runbooks |
 
-### Overview leaf map
+### Overview lane map
 
-| Surface | Role | Current signal | Use when |
+| Surface | Role | Status signal to use here | Use when |
 |---|---|---|---|
-| this file | shortest architecture entry surface | substantive after this revision | you need the system in one pass |
-| [`../README.md`](../README.md) | architecture subtree law and navigation | substantive | you need boundary rules and maturity handling |
-| [`../system_overview.md`](../system_overview.md) | deeper whole-system bridge | substantive | you need five-plane view, repo surface map, request path |
-| companion leaf docs | narrowed architecture topics | scaffold-first unless later filled | your question is specific enough to justify a deeper file |
-| machine-facing lanes | enforcement and proof | outside this lane | the question is “what is actually executable?” |
+| this file | shortest architecture entry surface | substantive by design, conservative by evidence | you need the system in one pass |
+| [`../README.md`](../README.md) | architecture subtree law and navigation | recheck on active branch | you need boundary rules and doc placement logic |
+| [`../system_overview.md`](../system_overview.md) | deeper whole-system bridge | recheck on active branch | you need broader architecture explanation |
+| companion leaves | narrowed topic ownership | varies; recheck before describing | the question is specific enough to justify a leaf |
+| machine-facing lanes | proof, contracts, policy, tests, workflows | strongest for executable claims | the question is “what is actually mounted or enforceable?” |
 
 ### Change-impact matrix
 
 | Change type | Examples | Coordinated updates |
 |---|---|---|
-| overview wording change | new top-level mental model, renamed lane, changed reading path | this file, [`../README.md`](../README.md), possibly [`../../README.md`](../../README.md) |
-| architecture law change | trust membrane, lifecycle rule, authoritative-vs-derived rule | deeper architecture leaves, contracts, policy, tests, runbooks |
-| maturity-state change | scaffold promoted to substantive, new lane added, stale link removed | tree blocks, snapshot table, quickstart, task list |
-| enforcement-sensitive claim | runtime outcomes, route families, merge gates | machine-facing surfaces must be re-opened before the claim is upgraded |
-| ownership/metadata change | owners, dates, doc UUID, policy label | KFM meta block plus sibling architecture metadata where relevant |
+| overview wording change | renamed lane, revised mental model, changed reading path | this file, [`../README.md`](../README.md), possibly [`../../README.md`](../../README.md) |
+| doctrinal architecture change | trust membrane, lifecycle, authority split, shell law | deeper architecture docs plus contracts, policy, tests, and runbooks |
+| maturity-state change | scaffold promoted, stale link removed, new leaf added | snapshot table, trees, quickstart, FAQ |
+| enforcement-sensitive claim | runtime outcome, route family, merge gate, proof pack | machine-facing surfaces must be re-opened before upgrading confidence |
+| metadata change | owners, dates, UUID, policy label | KFM meta block plus any matching doc registry or template surface |
 
 [Back to top](#architecture-overview)
 
@@ -332,95 +339,91 @@ This lane is intentionally positioned as a **reading bridge**. It should reduce 
 
 ### Highest-value next tasks
 
-- keep this overview lane aligned with [`../README.md`](../README.md) and [`../system_overview.md`](../system_overview.md)
-- replace or reconcile the remaining scaffold-first companion leaves under `docs/architecture/`
-- resolve any duplicate trust-membrane leaf naming into one clearly canonical path
-- re-check [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) once real workflow YAML appears
-- keep overview language synchronized with whichever lane becomes the authoritative schema home
-- add or update overview-friendly diagrams whenever repo lane names or trust boundaries change
+- keep this overview aligned with the governing architecture index and whole-system bridge
+- replace or reconcile scaffold-thin companion leaves once their live branch content is verified
+- confirm owner metadata, `doc_id`, and dates against actual repo records before merge
+- keep overview claims synchronized with contracts, policy, tests, and workflow reality
+- make trust-visible shell concepts easier to cross-link without duplicating the UI doctrine
+- keep architecture tree blocks conservative unless the active branch proves more
 
 ### Definition of done for this file
 
 This file is in good standing when:
 
-- all path claims are either directly re-checked or explicitly labeled
+- all path and maturity claims are either directly rechecked or explicitly labeled
 - overview prose does not outrun contracts, policy, tests, or workflow evidence
-- the diagram and tables still match the active branch
-- companion leaf links resolve
+- the diagram and tables still match the active branch closely enough to be useful
+- companion links resolve, or unresolved links are caught before merge
 - owners, dates, and `doc_id` are synchronized with real repo records
-- scaffold promotion is explicit when a placeholder becomes substantive
-- the overview remains shorter and more readable than the deeper architecture leaves it points to
+- the overview remains shorter and more legible than the deeper leaves it points to
+- no section quietly upgrades a target-state idea into present implementation fact
 
 ## FAQ
 
-### Why does this lane exist if `../system_overview.md` already exists?
+### Why does this lane exist if a deeper system overview also exists?
 
 Because the architecture subtree benefits from two different entry depths:
 
 - this file is the shortest stable overview
-- [`../system_overview.md`](../system_overview.md) is the deeper architecture bridge
+- the deeper whole-system bridge should carry more detail
 
 They should complement each other, not compete.
 
-### Is this file authoritative architecture law?
+### Is this file architecture law?
 
-No. It is an overview surface.
+Not by itself.
 
-Use it to enter the architecture safely, then step into the deeper leaf or machine-facing lane that actually owns the question.
+It is a routing surface. Use it to enter the architecture safely, then step into the narrower leaf or machine-facing surface that actually owns the question.
 
-### Can this file claim merge gates, route inventories, or runtime behavior as already implemented?
+### Can this file claim route inventories, merge gates, or runtime behavior as already implemented?
 
-Not unless the active branch was re-checked directly. Overview prose must stay conservative when machine-facing proof is still README-first or otherwise unverified.
+Only when the active branch was rechecked directly. Overview prose must stay conservative when proof remains README-first, PDF-only, or otherwise unverified.
 
 ### What is the smallest stable mental model for KFM?
 
-Use these four together:
+Use these together:
 
 1. the truth path
 2. the trust membrane
 3. the authoritative-versus-derived split
 4. the map-first, time-aware shell
+5. evidence-bounded runtime outcomes
 
-If a proposal breaks one of those, it is probably breaking KFM.
+If a proposal breaks one of those, it is probably bending KFM in the wrong direction.
 
-### Which trust-membrane file should I trust if both names exist?
+### Why keep saying “NEEDS VERIFICATION”?
 
-Treat canonical naming as `NEEDS VERIFICATION` until the lane is reconciled. Use the architecture index and current tree inspection before normalizing cross-links.
+Because overview docs are part of the trust surface. In KFM, honest incompleteness is preferable to polished overclaiming.
 
 [Back to top](#architecture-overview)
 
 ## Appendix
 
 <details>
-<summary>Source basis, drafting rule, and maintenance note</summary>
+<summary>Source basis, maintenance rule, and editing stance</summary>
 
 ### Source basis used for this overview lane
 
 This README is intentionally grounded in two evidence classes:
 
-1. **current public-repo inspection**
-   - repo root README
-   - `docs/README.md`
-   - `docs/architecture/README.md`
-   - `docs/architecture/overview/README.md`
-   - `docs/architecture/system_overview.md`
+1. **attached KFM doctrinal architecture corpus**
+   - central replacement-grade KFM manuals
+   - geospatial architecture and UI/shell doctrine
+   - domain/source atlas and verification overlays
 
-2. **March 2026 KFM doctrinal anchors**
-   - replacement-grade master design / master reference materials
-   - unified geospatial architecture material
-   - MapLibre UI architecture guidance
-   - repo-grounded deep-research and documentation inventory materials where they sharpen repo-shape reading
+2. **attached repo-grounded current-state evidence**
+   - repo-grounded deep research sprint material describing what was and was not confirmed in the public repo at authoring time
 
 ### Maintenance rule
 
 Revise this file whenever any of the following changes:
 
 - architecture subtree shape
-- whole-system mental model
+- KFM’s central mental model
+- shell surface naming or trust-visible behavior
+- contract-family framing that changes what “overview” must point toward
 - companion-leaf maturity
-- schema-home authority decision
-- workflow evidence posture
-- trust-boundary wording that affects public or steward expectations
+- branch evidence that upgrades a current `UNKNOWN` or `NEEDS VERIFICATION`
 
 ### Editing stance
 
@@ -430,6 +433,6 @@ When in doubt:
 - keep the truth posture narrower
 - link outward instead of pretending to own everything
 - verify the branch before upgrading confidence
-- update neighboring docs in the same governed stream when behavior changes
+- treat repo reality as stronger than elegant prose
 
 </details>
