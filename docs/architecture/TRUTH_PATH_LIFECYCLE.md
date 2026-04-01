@@ -8,9 +8,9 @@ owners: <NEEDS_VERIFICATION>
 created: <NEEDS_VERIFICATION>
 updated: <NEEDS_VERIFICATION>
 policy_label: <NEEDS_VERIFICATION>
-related: [../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md, ../reports/readme-structure-reconciliation.md]
+related: [README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md, ../reports/readme-structure-reconciliation.md]
 tags: [kfm, architecture, truth-path, lifecycle]
-notes: [Target path requested in current task; lifecycle doctrine is strong, but mounted repo shape and the existence of this exact file were not directly verified in-session.]
+notes: [Current public main confirms this file path and its substantive role inside docs/architecture; executable contract inventory, workflow enforcement depth, non-public GitHub controls, owners, dates, and policy label remain NEEDS_VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # Truth Path Lifecycle
@@ -20,16 +20,17 @@ The governed state model by which KFM material moves from source-edge capture to
 **Quick jump:** [Truth posture](#truth-posture-used-here) · [Lifecycle at a glance](#lifecycle-at-a-glance) · [State ledger](#lifecycle-state-ledger) · [Planes and write-rights](#plane-ownership-and-write-rights) · [Artifact spine](#artifact-spine-across-the-lifecycle) · [Route families](#downstream-route-families-after-publication) · [Promotion gates](#promotion-gates-and-fail-closed-conditions) · [Correction](#correction-supersession-and-rollback) · [Repo fit](#repo-fit-and-adjacent-surfaces) · [Open verification](#open-verification-items)
 
 > [!IMPORTANT]
-> This document is **doctrine-strong** and **implementation-bounded**. The truth-path law, trust membrane, authoritative-versus-derived split, and lifecycle artifact families are treated here as **CONFIRMED doctrine**. Exact mounted schemas, workflows, manifests, runtime traces, and the current existence of this exact file remain **UNKNOWN** until directly surfaced from the repo.
+> This file is now **repo-visible and doctrine-strong**. Current public `main` confirms that `docs/architecture/TRUTH_PATH_LIFECYCLE.md` exists and that `docs/architecture/README.md` treats it as a substantive lifecycle companion. The lifecycle law, trust membrane, and authoritative-versus-derived split remain **CONFIRMED doctrine**. Executable schema inventory, merge-blocking workflow depth, non-public GitHub rulesets, manifests, proof packs, and runtime traces remain **NEEDS VERIFICATION**.
 
 ## Truth posture used here
 
 | Label | Meaning in this document |
 |---|---|
-| **CONFIRMED** | Repeatedly established in the attached KFM doctrinal corpus or repo-grounded project evidence. |
+| **CONFIRMED** | Directly supported by the attached KFM doctrinal corpus or by currently visible public-repo evidence. |
 | **INFERRED** | Structural completion that the corpus strongly implies should exist for the lifecycle to remain coherent. |
-| **PROPOSED** | Recommended starter shape, path, or artifact set that fits doctrine but is not proven as mounted implementation. |
-| **UNKNOWN** | Not directly verified strongly enough in this session to present as current repo or runtime reality. |
+| **PROPOSED** | Recommended starter shape, path, or artifact set that fits doctrine but is not proven as mounted implementation reality. |
+| **UNKNOWN** | Not directly verified strongly enough in the current session to present as current repo, runtime, schema, workflow, or platform fact. |
+| **NEEDS VERIFICATION** | A bounded repo or platform detail that has some visible signal, but still requires direct implementation or operational proof before it should be treated as settled. |
 
 ## Lifecycle at a glance
 
@@ -99,7 +100,7 @@ The lifecycle ends, in strict authoritative terms, at **PUBLISHED**. Everything 
    Supersession, narrowing, withdrawal, and replacement travel forward through the same object graph and remain visible across surfaces.
 
 > [!WARNING]
-> Naming an artifact in doctrine does **not** prove a mounted implementation already exists. This document uses artifact families because the corpus repeatedly treats them as the operational form of trust, but exact schemas, files, validators, and workflows remain subject to repo verification.
+> Naming an artifact family in doctrine does **not** prove a mounted implementation already exists. This document names artifact families because the corpus repeatedly treats them as the machine-readable edge of trust, but exact checked-in schemas, validators, proof packs, and workflow enforcement remain bounded to visible repo evidence.
 
 ## Plane ownership and write-rights
 
@@ -134,10 +135,9 @@ KFM repeatedly treats named, typed objects as the machine-readable edge of gover
 | **CatalogClosure** | CATALOG | That outward metadata, identifiers, provenance, and publication context resolve cleanly. | Prevents “published” from outrunning discoverability and provenance closure. |
 | **DecisionEnvelope** | CATALOG / policy / review | Machine-readable policy decision with result, reason codes, obligation codes, and audit linkage. | Keeps rights, sensitivity, and review decisions inspectable and enforceable. |
 | **ReviewRecord** | CATALOG / policy / review | Human or role-bearing review action, rationale, and outcome. | Preserves separation of duty and visible approval logic. |
-| **ReleaseManifest** | CATALOG / PUBLISHED | What is in a release, what references it depends on, and what outward surfaces it authorizes. | Defines the scope that delivery and runtime may expose. |
-| **Release proof pack / release receipt** | PUBLISHED | Promotion evidence, rollback reference, and publication proof. | Makes promotion testable, reviewable, and reversible. |
+| **ReleaseManifest / ReleaseProofPack** | CATALOG / PUBLISHED | What is in a release, what references it depends on, and what outward surfaces it authorizes. | Defines the scope that delivery and runtime may expose. |
 | **ProjectionBuildReceipt** | Derived delivery | Which promoted scope produced a derived map/tile/export/index/scene. | Prevents delivery layers from drifting away from release truth. |
-| **EvidenceBundle** | Runtime trust surfaces | Request-time package of supporting records, release references, rights/sensitivity state, and preview policy. | Keeps evidence operational at the point of use. |
+| **EvidenceBundle** | Runtime trust surfaces | Request-time package of supporting records, release references, rights/sensitivity state, transform receipts, and preview policy. | Keeps evidence operational at the point of use. |
 | **RuntimeResponseEnvelope** | Runtime trust surfaces | Governed answer/result object with finite outcomes and audit linkage. | Prevents smooth but uncited runtime improvisation. |
 | **CorrectionNotice** | Correction / PUBLISHED | Supersession, withdrawal, replacement, narrowing, or generalization action. | Preserves lineage across public and steward-facing surfaces. |
 
@@ -183,7 +183,7 @@ A release-worthy transition normally needs, at minimum:
 - release manifest or proof pack
 - evidence-resolution pass or equivalent sample proof
 - rollback note
-- synchronized contract/example/runbook updates when behavior changes
+- synchronized contract, example, and runbook updates when behavior changes
 
 ## Correction, supersession, and rollback
 
@@ -207,33 +207,36 @@ A correction travels **forward** through the same object graph: release referenc
 
 ## Repo fit and adjacent surfaces
 
-This file is intended for `docs/architecture/TRUTH_PATH_LIFECYCLE.md`. Because the mounted checkout was not directly exposed in-session, repo fit is expressed conservatively and tied only to surfaces evidenced elsewhere in project materials.
+Current public `main` shows that this file already exists inside `docs/architecture/`, and `docs/architecture/README.md` treats it as a **substantive lifecycle/state-model note** rather than a placeholder. Repo-fit claims below stay limited to what is visible in the public tree and to doctrine corroborated by the mounted corpus.
 
-| Repo surface | Why it matters to this document | Verification state |
-|---|---|---|
-| [`../../contracts/README.md`](../../contracts/README.md) | Lifecycle law eventually becomes machine-checkable through contract families such as `SourceDescriptor`, `DatasetVersion`, `EvidenceBundle`, and `RuntimeResponseEnvelope`. | **CONFIRMED as repo surface**; exact live schema inventory remains **UNKNOWN**. |
-| [`../../schemas/README.md`](../../schemas/README.md) | This doc should not ignore the repo’s current dual schema-surface reality. Lifecycle implementation must not create a “parallel schema universe.” | **CONFIRMED as repo surface**; authoritative schema home remains **NEEDS VERIFICATION**. |
-| [`../../policy/README.md`](../../policy/README.md) | Promotion, deny-by-default, rights, sensitivity, and decision grammar are lifecycle gates, not post hoc notes. | **CONFIRMED as repo surface**; live bundles/tests remain **UNKNOWN**. |
-| [`../../tests/README.md`](../../tests/README.md) | The lifecycle requires negative-path tests, fixtures, correction drills, and citation-negative runtime proofs. | **CONFIRMED as repo surface**; runnable mounted suites remain **UNKNOWN**. |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Promotion is not real until at least some merge-blocking lifecycle checks exist. | **CONFIRMED as repo surface**; active YAML merge gates were **not evidenced** in the reviewed materials. |
-| [`../reports/readme-structure-reconciliation.md`](../reports/readme-structure-reconciliation.md) | Useful as historical documentation, but this lifecycle doc should not repeat claims that outrun live artifacts. | **CONFIRMED as repo surface**; current accuracy should be rechecked before relying on it. |
+| Repo surface | Current public-main signal | Why it matters here | Verification state |
+|---|---|---|---|
+| [`../../README.md`](../../README.md) | Repo-level identity centers the **inspectable claim**, the canonical truth path, the governed trust boundary, and cite-or-abstain runtime behavior. | This file should stay aligned with top-level system identity rather than becoming a disconnected architecture essay. | **CONFIRMED** as current public-main surface. |
+| [`README.md`](README.md) | `docs/architecture/README.md` classifies this file as a substantive lifecycle companion and directs adjacent review toward contracts, policy, tests, and workflow surfaces. | Establishes local doc role, neighbor relationships, and the boundary between doctrine and machine-facing enforcement claims. | **CONFIRMED** as current public-main surface. |
+| [`../../contracts/README.md`](../../contracts/README.md) | Contract surfaces exist in the public tree and are where lifecycle law is expected to become machine-checkable. | Lifecycle claims eventually need contract families such as `SourceDescriptor`, `DatasetVersion`, `EvidenceBundle`, and `RuntimeResponseEnvelope`. | **CONFIRMED** as public-tree surface; live schema inventory remains **NEEDS VERIFICATION**. |
+| [`../../schemas/README.md`](../../schemas/README.md) | A second schema-oriented surface still exists. | This doc should not pretend the authoritative schema home is already singular if the public tree still exposes both `contracts/` and `schemas/`. | **CONFIRMED** as public-tree surface; authoritative schema home remains **NEEDS VERIFICATION**. |
+| [`../../policy/README.md`](../../policy/README.md) | Policy doctrine surface exists in the public tree. | Promotion, deny-by-default behavior, rights, sensitivity, and decision grammar are lifecycle gates, not post hoc decoration. | **CONFIRMED** as public-tree surface; executable bundles/tests remain **UNKNOWN**. |
+| [`../../tests/README.md`](../../tests/README.md) | A tests surface exists and describes intended verification structure. | The lifecycle requires negative-path tests, correction drills, citation-negative runtime proofs, and surface-state checks. | **CONFIRMED** as public-tree surface; runnable suites remain **NEEDS VERIFICATION**. |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public `main` exposes a workflow README surface, but not checked-in public YAML proof of merge-blocking lifecycle enforcement in the reviewed view. | This document should not claim active public-main workflow gates unless they are directly surfaced. | **CONFIRMED** README surface; actual enforcement depth remains **NEEDS VERIFICATION**. |
+| [`../reports/readme-structure-reconciliation.md`](../reports/readme-structure-reconciliation.md) | Historical documentation helper surface remains adjacent. | Useful for continuity, but should not outrank current public-tree evidence or doctrinal anchors. | **CONFIRMED** as adjacent report surface; current factual accuracy remains **NEEDS VERIFICATION**. |
 
 ### Repo-facing consequences
 
-- This document should stay aligned with the eventual authoritative schema home.
-- It should not claim mounted workflows, manifests, or proof packs unless directly surfaced.
-- If repo inspection later shows different file names or responsibility splits, keep the doctrinal lifecycle and revise only the file-level fit notes.
+- Keep the lifecycle doctrine stable even if implementation paths shift.
+- Revise file-level fit notes against surfaced repo evidence instead of forcing code to mimic placeholder prose.
+- Do not upgrade documentation placeholders into enforcement claims.
+- When machine-facing artifacts become real, tighten this file by linking actual contracts, fixtures, tests, workflow YAML, proof packs, and runtime examples rather than broadening doctrine further.
 
 ## Open verification items
 
-- [ ] Confirm whether `docs/architecture/TRUTH_PATH_LIFECYCLE.md` is net-new, replacing an older file, or consolidating multiple existing docs.
-- [ ] Verify the current `docs/architecture/` directory inventory and add grounded sibling links if they exist.
+- [ ] Confirm `doc_id`, owners, created date, updated date, and policy label for the KFM meta block.
+- [ ] Confirm whether non-public rulesets or required checks provide enforcement beyond the public README-only workflow inventory currently visible on `main`.
 - [ ] Resolve the authoritative schema home (`contracts/` vs `schemas/`) before this doc starts naming canonical schema paths as if settled.
-- [ ] Surface at least one mounted schema for a lifecycle artifact family, ideally `SourceDescriptor`, `DatasetVersion`, `EvidenceBundle`, or `RuntimeResponseEnvelope`.
-- [ ] Surface one active workflow YAML or equivalent merge gate that exercises lifecycle validation.
-- [ ] Surface one release receipt or proof pack and one positive/negative `EvidenceBundle` trace.
+- [ ] Surface at least one checked-in schema for a lifecycle artifact family, ideally `SourceDescriptor`, `DatasetVersion`, `EvidenceBundle`, or `RuntimeResponseEnvelope`.
+- [ ] Surface one real release receipt or proof pack and one positive/negative `EvidenceBundle` trace.
+- [ ] Surface one contract and one evaluated sample for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
 - [ ] Verify correction implementation paths: supersession, withdrawal, stale-visible behavior, and rollback.
-- [ ] Confirm whether hydrology remains the preferred first thin slice in the mounted repo plan.
+- [ ] Confirm whether hydrology still remains the preferred first thin slice in current planning and implementation, not only in doctrine.
 
 > [!TIP]
 > The smallest high-value next move is not a broader prose rewrite. It is making the lifecycle executable: one authoritative schema home, a first wave of contract artifacts, valid/invalid fixtures, and one governed thin slice that proves promotion and correction on real evidence.
