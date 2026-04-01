@@ -4,38 +4,46 @@ title: UI Configuration
 type: standard
 version: v1
 status: draft
-owners: <NEEDS VERIFICATION>
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: <NEEDS VERIFICATION>
-related: [<NEEDS VERIFICATION: ../README.md>, <NEEDS VERIFICATION: ../../apps/explorer-web/README.md>, <NEEDS VERIFICATION: ../../styles/README.md>, <NEEDS VERIFICATION: ../../contracts/README.md>]
+related: [../README.md, ../../apps/explorer-web/README.md, ../../apps/ui/README.md, ../../contracts/README.md, ../../brand/README.md]
 tags: [kfm, ui, config, maplibre, shell]
-notes: [Target file requested at configs/ui/README.md; configs/ is source-grounded, but configs/ui/ subtree, owners, and related-path exactness require mounted repo verification.]
+notes: [Current public main confirms configs/ui/ exists and currently exposes README.md only; created/updated placeholders need git-history verification; previous ../../styles/README.md assumption removed because that path is not present on public main.]
 [/KFM_META_BLOCK_V2] -->
 
 # UI Configuration
 
 Declarative, reviewable UI wiring for the KFM shell, renderer adapters, trust-visible presentation defaults, and accessibility-safe surface behavior.
 
-> **Status:** experimental · **Doc state:** draft · **Owners:** `<NEEDS VERIFICATION>`  
-> ![status](https://img.shields.io/badge/status-draft-lightgrey) ![scope](https://img.shields.io/badge/scope-ui%20configuration-6f42c1) ![evidence](https://img.shields.io/badge/evidence-PDF--grounded-1f6feb) ![runtime](https://img.shields.io/badge/runtime-MapLibre%202D%20default-2da44e) ![3d](https://img.shields.io/badge/3D-burden--bearing-orange)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree-proposed) · [Quickstart](#quickstart) · [Config domains](#config-domains) · [Diagram](#diagram) · [Gates](#change-gates-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Status:** experimental · **Doc state:** draft · **Owners:** `@bartytime4life` *(current public `/configs/` owner via `.github/CODEOWNERS`; narrower split not yet verified)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![public-tree](https://img.shields.io/badge/public%20tree-README--only-lightgrey) ![runtime](https://img.shields.io/badge/runtime-MapLibre%202D%20default-2da44e) ![scope](https://img.shields.io/badge/scope-non--secret%20UI%20config-1f6feb)  
+> **Repo fit:** `configs/ui/README.md` · parent [`../README.md`](../README.md) · primary consumer [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) · governed boundary [`../../contracts/README.md`](../../contracts/README.md) · presentation neighbor [`../../brand/README.md`](../../brand/README.md)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Config domains](#config-domains) · [Diagram](#diagram) · [Current public inventory](#current-public-inventory) · [Gates](#change-gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `configs/ui/` exists to express **UI wiring and presentation defaults**. It must not become a side door for policy, canonical-write logic, evidence resolution, secrets, or hidden admin behavior.
+> Current public `main` confirms that `configs/ui/` is a real repo subtree, but the visible inventory is currently `README.md` only. This file therefore distinguishes **CONFIRMED current public inventory** from a **PROPOSED interior working shape**.
 
 > [!WARNING]
-> The file shape below is a **PROPOSED starter contract** for `configs/ui/`. The March 2026 source corpus confirms the broader `configs/` family and KFM’s UI/configuration boundaries, but the mounted repo tree was not directly visible in this session. Treat exact filenames, owners, and neighboring paths as **NEEDS VERIFICATION**.
+> `configs/ui/` must never become a side door for policy, evidence resolution, canonical writes, secrets, or hidden steward-only behavior.
 
 ---
 
 ## Scope
 
-This directory should hold **non-secret, reviewable, declarative UI configuration** for the KFM shell.
+`configs/ui/` is the repo-visible home for **non-secret, shell-facing UI configuration**.
 
-That includes shell-level defaults, renderer adapter settings, view presets, layer-presentation defaults, accessibility and motion behavior, locale/display conventions, and other UI-facing configuration that can be validated early at process start.
+In KFM, that means wiring the governed shell in a way that stays explicit, reviewable, and subordinate to stronger seams such as contracts, policy, evidence resolution, and publication law. This lane exists to make UI behavior legible in Git, not to let frontend convenience quietly redefine truth.
 
-It does **not** own KFM doctrine. It does **not** decide what is publishable, what is authoritative, or what evidence means. It only helps the UI present already-governed data and already-governed state in a consistent way.
+### Truth posture used here
+
+| Label | How it applies in this README |
+| --- | --- |
+| **CONFIRMED** | `configs/ui/README.md` exists on public `main`; `configs/`, `apps/explorer-web/`, `apps/ui/`, `contracts/`, `policy/`, `schemas/`, and `brand/` are visible repo lanes or docs. |
+| **INFERRED** | `configs/ui/` is intended to hold non-secret shell/runtime configuration consumed by governed UI surfaces. |
+| **PROPOSED** | Interior file shapes such as `ui.schema.json`, `shell.defaults.yaml`, or per-surface presets that are not yet visible in the public subtree. |
+| **UNKNOWN / NEEDS VERIFICATION** | Actual loader paths, real validation entrypoints, non-public CI settings, git-history dates, and any unpublished runtime behavior. |
 
 ### What this directory is for
 
@@ -48,8 +56,9 @@ It does **not** own KFM doctrine. It does **not** decide what is publishable, wh
 ### What this directory is not for
 
 - silent policy overrides
-- data-admission rules
+- source-admission rules
 - evidence-resolution logic
+- canonical-write behavior
 - secrets
 - hidden feature toggles that weaken trust posture
 
@@ -59,41 +68,48 @@ It does **not** own KFM doctrine. It does **not** decide what is publishable, wh
 
 ## Repo fit
 
-**Target path:** `configs/ui/README.md`  
-**Directory family:** `configs/`  
-**Audience:** UI engineers, app engineers, configuration maintainers, policy/security reviewers, and docs maintainers
-
 ### Path placement
 
 | Item | Value | Status |
-|---|---|---|
-| Target README path | `configs/ui/README.md` | **PROPOSED** target path requested for this task |
-| Parent directory family | `configs/` | **CONFIRMED** directory family in project documentation |
-| `configs/ui/` subtree existence | Needs mounted repo verification | **NEEDS VERIFICATION** |
-| Main runtime consumer | KFM shell / explorer web app | **PROPOSED** |
-| Closest doctrine neighbors | package-boundary docs, route-family docs, styles registry, contracts | **PROPOSED / INFERRED** |
+| --- | --- | --- |
+| Target README path | `configs/ui/README.md` | **CONFIRMED** on public `main` |
+| Parent directory family | `configs/` | **CONFIRMED** |
+| Current visible subtree inventory | `README.md` only | **CONFIRMED** |
+| Primary consumer doc | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | **CONFIRMED** doc exists; runtime depth remains **UNKNOWN** |
+| Secondary / scaffold surface | [`../../apps/ui/README.md`](../../apps/ui/README.md) | **CONFIRMED** scaffold exists |
+| Governed backend neighbor | [`../../apps/governed-api/`](../../apps/governed-api/) | **CONFIRMED** lane exists |
+| Contract / policy boundaries | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** |
+| Schema authority context | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** doc exists; final schema-home decision still unresolved |
+| Brand / presentation neighbor | [`../../brand/README.md`](../../brand/README.md) | **CONFIRMED** |
+| `../../styles/README.md` | not present on public `main` | **CONFIRMED** absence for that specific path |
 
-### Upstream and downstream references
+### Upstream and downstream links
 
-| Relationship | Path | Status | Why it matters |
-|---|---|---:|---|
-| Parent config family | [`../`](../) | NEEDS VERIFICATION | This README should align with broader config conventions. |
-| Primary shell consumer | [`../../apps/explorer-web/`](../../apps/explorer-web/) | PROPOSED | The March 2026 manuals point to a map-first explorer shell as the main UI runtime. |
-| Alternate/legacy UI surface | [`../../apps/ui/`](../../apps/ui/) | INFERRED | Secondary repo-shape material mentions `apps/ui`; mounted reality still needs checking. |
-| Contracts boundary | [`../../contracts/`](../../contracts/) | PROPOSED | UI config should reference schemas and payload contracts, not replace them. |
-| Styles and portrayal | [`../../styles/`](../../styles/) | PROPOSED | Renderer/style assets should remain explicit neighbors, not be hidden inside app code. |
-| Docs for boundaries | [`../../docs/`](../../docs/) | PROPOSED | Package and route-family rules should stay near the repo center. |
+| Relationship | Path | Why it matters |
+| --- | --- | --- |
+| Parent config lane | [`../README.md`](../README.md) | Defines the broader non-secret configuration boundary. |
+| Runtime shell consumer | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Documents the persistent, map-first shell that would consume these defaults. |
+| Secondary UI scaffold | [`../../apps/ui/README.md`](../../apps/ui/README.md) | Confirms a second app-side UI subtree exists today. |
+| Governed API boundary | [`../../apps/governed-api/`](../../apps/governed-api/) | UI config must stay downstream of governed payloads. |
+| Contract boundary | [`../../contracts/README.md`](../../contracts/README.md) | UI config may reference machine law, but must not replace it. |
+| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | Reasons, obligations, and deny-by-default behavior stay here. |
+| Schema context | [`../../schemas/README.md`](../../schemas/README.md) | Keeps schema-home ambiguity visible instead of hidden. |
+| Presentation / identity neighbor | [`../../brand/README.md`](../../brand/README.md) | Shared brand assets and tokens should stay separate from shell wiring. |
+| Adjacent doctrine / ADRs | [`../../docs/`](../../docs/) | Route families, runbooks, ADRs, and taxonomy docs belong here. |
 
 ### Why this path fits KFM
 
-KFM’s March 2026 architecture sources consistently separate:
+KFM’s March 2026 doctrine consistently separates:
 
 - **shell** from **renderer**
 - **configuration** from **governance logic**
-- **delivery/style assets** from **canonical truth**
+- **delivery and portrayal assets** from **canonical truth**
 - **public surface behavior** from **policy enforcement**
 
-A UI-specific config directory fits that boundary model well, as long as it remains declarative, validated, non-secret, and non-authoritative.
+That makes `configs/ui/` a good fit for shell defaults, renderer adapter knobs, trust-cue display settings, and accessibility-safe behavior — as long as the directory remains declarative, non-secret, validated early, and visibly subordinate to stronger boundaries.
+
+> [!NOTE]
+> A dedicated root-level `styles/` lane is **not** a current public repo fact. If one is created later, add it in the same change stream that updates this README and its relative links.
 
 [Back to top](#ui-configuration)
 
@@ -101,18 +117,19 @@ A UI-specific config directory fits that boundary model well, as long as it rema
 
 ## Accepted inputs
 
-Use this directory for UI-facing inputs that are safe to review, validate, and version in Git.
+Use this directory for **UI-facing inputs that are safe to review, validate, and version in Git**.
 
 | Accepted input | What belongs here | Typical examples | Status |
-|---|---|---|---|
-| Shell defaults | Default surface mode, persistent layout behavior, trust cue visibility | default surface, panel layout, initial map/timeline behavior | **CONFIRMED fit** |
+| --- | --- | --- | --- |
+| Shell defaults | Default surface mode, panel behavior, trust-cue visibility | initial surface, panel layout, map/timeline defaults | **CONFIRMED fit** |
 | Renderer adapter config | Renderer selection and non-secret adapter knobs | MapLibre default, controlled 3D toggle, interaction caps | **CONFIRMED fit** |
-| View presets | Surface-specific presentation defaults | Explorer, Story, Compare, Dossier, Focus view presets | **PROPOSED fit** |
-| Layer presentation defaults | Ordering, visibility, legend behavior, opacity defaults | initial visible layers, grouped legends, compare mode layer pairing | **PROPOSED fit** |
-| Accessibility config | Reduced motion, keyboard hints, focus outline policy, contrast-safe toggles | motion behavior, keyboard affordance visibility | **CONFIRMED fit** |
-| Locale/display config | Locale-safe formatting and display presets | date/time display, measurement display conventions, BCP 47 locale keys | **PROPOSED fit** |
-| Trust-cue display config | How release state, correction state, and evidence affordances are shown | chips, banners, drawer triggers, scope echo placement | **CONFIRMED fit** |
-| Non-secret feature flags | UI-only rollout controls that do not weaken doctrine | gated panel visibility, layout experiments, staged compare tools | **PROPOSED fit** |
+| View presets | Surface-specific presentation defaults | Explorer, Story, Compare, Dossier, Focus presets | **PROPOSED fit** |
+| Layer presentation defaults | Ordering, grouping, legend behavior, opacity defaults | grouped legends, default visibility, compare pairings | **PROPOSED fit** |
+| Accessibility config | Reduced motion, keyboard hints, focus behavior, contrast-safe toggles | motion policy, persistent focus outlines | **CONFIRMED fit** |
+| Locale / display config | Locale-safe formatting and display presets | BCP 47 locale keys, number/date display choices | **PROPOSED fit** |
+| Trust-cue display config | How release, correction, generalization, and evidence affordances render | chips, banners, drawer triggers, scope echo placement | **CONFIRMED fit** |
+| Non-secret feature flags | UI-only rollout controls that do not weaken doctrine | panel experiments, staged compare tools | **PROPOSED fit** |
+| Theme / token references | Reference-only pointers to already-governed brand tokens or presentation IDs | theme keys, density presets, token names | **INFERRED fit** |
 
 ### Good input characteristics
 
@@ -134,27 +151,44 @@ A good `configs/ui/` input is:
 These items do **not** belong in `configs/ui/`.
 
 | Not here | Put it in instead | Why |
-|---|---|---|
-| Source admission rules | contracts / source registry / policy bundles | Admission is trust-bearing law, not UI wiring. |
-| Canonical write logic | workers / canonical-model packages | Browser-facing config must not own authoritative mutation. |
-| Evidence resolution logic | governed API / resolver packages | The Evidence Drawer displays resolution results; it does not compute them here. |
-| Policy reasons and obligations | policy bundles / governed API decisions | UI config may render them, but must not define them. |
-| Secrets, tokens, private endpoints | secret store / env references | Client-visible or committed UI config must remain non-secret. |
-| Hidden admin or steward bypasses | governed API + review surface | KFM rejects alternate truth systems hidden behind convenience paths. |
-| Domain truth objects | canonical stores / catalogs / released artifacts | UI config points at truth-bearing artifacts; it is not one. |
-| Arbitrary model/runtime selection from the browser | governed API adapters and server-side allow-lists | Bounded synthesis must remain behind governed interfaces. |
+| --- | --- | --- |
+| Source admission rules | [`../../contracts/README.md`](../../contracts/README.md) + [`../../policy/README.md`](../../policy/README.md) | Admission is trust-bearing law, not UI wiring. |
+| Canonical write logic | [`../../apps/workers/`](../../apps/workers/) or dedicated backend packages | Browser-facing config must not own authoritative mutation. |
+| Evidence resolution logic | [`../../apps/governed-api/`](../../apps/governed-api/) or resolver packages | The Evidence Drawer renders results; it does not compute them here. |
+| Policy reasons and obligations | [`../../policy/README.md`](../../policy/README.md) | UI config may render them, but must not define them. |
+| Secrets, tokens, private endpoints | host-local secret files or secret manager surfaces | Committed UI config must remain non-secret. |
+| Shared logos, icons, seals, or token source files | [`../../brand/README.md`](../../brand/README.md) | Keep identity assets distinct from shell wiring. |
+| Hidden admin or steward bypasses | governed API + role-gated review surfaces | KFM rejects alternate truth systems hidden behind convenience paths. |
+| Domain truth objects | canonical stores / catalogs / released artifacts | UI config may point at truth-bearing artifacts; it is not one. |
+| Arbitrary model/runtime selection from the browser | server-side allow-lists and governed adapters | Bounded synthesis must stay behind governed interfaces. |
 | Renderer-specific business meaning | contracts, metadata, governed payloads | The renderer should not become the authority layer. |
 
-> [!NOTE]
-> A useful rule of thumb: if changing a file in `configs/ui/` would alter publication state, evidence admissibility, or rights enforcement, the file is probably in the wrong directory.
+> [!CAUTION]
+> If changing a file in `configs/ui/` would alter publication state, evidence admissibility, rights enforcement, or deny/allow semantics, the file is probably in the wrong directory.
 
 [Back to top](#ui-configuration)
 
 ---
 
-## Directory tree (proposed)
+## Directory tree
 
-The following is a **starter shape**, not a confirmed mounted inventory.
+### Current public snapshot (**CONFIRMED**)
+
+```text
+configs/
+├── README.md
+├── env.schema.json
+├── deployment/
+├── env/
+├── observability/
+├── security/
+└── ui/
+    └── README.md
+```
+
+### Interior working shape (**PROPOSED starter pattern**)
+
+The shape below is **review-ready starter structure**, not current public-tree inventory.
 
 ```text
 configs/
@@ -189,16 +223,19 @@ configs/
 ### Suggested file roles
 
 | File / folder | Purpose | Notes |
-|---|---|---|
-| `ui.schema.json` | Validation contract for the directory | Validate early at process start. |
+| --- | --- | --- |
+| `ui.schema.json` | Validation contract for the directory | Introduce only with a real validator path. |
 | `shell.defaults.yaml` | Global shell defaults | Must remain non-secret and environment-safe. |
 | `trust-cues.yaml` | Display defaults for release/correction/evidence cues | Renders trust state; does not define it. |
 | `views/` | Surface-local defaults | Explorer, Story, Compare, Export, Focus, Dossier. |
 | `renderers/maplibre.yaml` | MapLibre adapter config | 2D-first default path. |
 | `renderers/controlled-3d.yaml` | Controlled 3D opt-in config | Keep separate and burden-bearing. |
-| `layers/` | Layer ordering/presentation defaults | No truth semantics here. |
+| `layers/` | Layer ordering and presentation defaults | No truth semantics here. |
 | `accessibility/` | Motion, keyboard, contrast behavior | Treat as structural, not polish. |
 | `locales/` | Locale/display conventions | Keep display formatting explicit. |
+
+> [!TIP]
+> Current public `main` does **not** expose any of the proposed files above. Create them only in the same change that adds consumer wiring and early validation.
 
 [Back to top](#ui-configuration)
 
@@ -206,9 +243,24 @@ configs/
 
 ## Quickstart
 
-This section shows a **minimal starter pattern** for treating UI config as a validated input at boot, not as an ad hoc runtime surprise.
+This section shows the **smallest trustworthy path** for turning `configs/ui/` from documentation into a real config surface.
 
-### 1) Declare one reviewable shell config
+### 1) Inspect the live lane before editing
+
+```bash
+find configs/ui -maxdepth 3 -type f | sort
+find configs -maxdepth 2 -type d | sort
+```
+
+### 2) Trace likely consumers and trust cues
+
+```bash
+git grep -nE 'configs/ui|shell\.defaults|trustCues|allowControlled3D|reducedMotion|EvidenceDrawer' -- apps packages tests tools scripts
+```
+
+### 3) Add one non-secret starter file
+
+> **Illustrative starter example:** current public `main` does not yet expose this file.
 
 ```yaml
 # configs/ui/shell.defaults.yaml
@@ -235,12 +287,13 @@ accessibility:
   persistentFocusOutline: true
 ```
 
-### 2) Validate it before UI boot
+### 4) Validate before UI boot
 
 ```ts
-// illustrative starter example
+// illustrative starter example — adapt import paths to the actual app package
 import fs from "node:fs";
 import path from "node:path";
+import YAML from "yaml";
 
 type UiConfig = {
   shell: {
@@ -258,11 +311,10 @@ type UiConfig = {
 
 function readUiConfig(filePath: string): UiConfig {
   const raw = fs.readFileSync(filePath, "utf8");
+  const parsed = YAML.parse(raw) as UiConfig;
 
-  // Replace this with the repo's actual schema-validation entrypoint.
-  // The important rule is: validate before boot, fail closed on invalid config.
-  const parsed = JSON.parse(JSON.stringify(require("yaml").parse(raw))) as UiConfig;
-
+  // Replace this guard with the repo's actual schema-validation entrypoint
+  // once a checked-in `ui.schema.json` and validator command exist.
   if (parsed.renderer.primary !== "maplibre") {
     throw new Error("Unsupported primary renderer in starter contract.");
   }
@@ -276,11 +328,11 @@ const uiConfig = readUiConfig(configPath);
 export default uiConfig;
 ```
 
-### 3) Keep renderer wiring separate from shell law
+### 5) Keep renderer wiring separate from shell law
 
 ```ts
 // illustrative starter example
-import uiConfig from "../configs/ui";
+import uiConfig from "../config/ui-config";
 
 export function createRendererAdapter() {
   if (uiConfig.renderer.primary !== "maplibre") {
@@ -294,8 +346,8 @@ export function createRendererAdapter() {
 }
 ```
 
-> [!TIP]
-> The boot rule is simple: **invalid UI config should fail fast**, and **valid UI config should still be incapable of weakening doctrine**.
+> [!NOTE]
+> Invalid UI config should fail fast, and valid UI config should still be incapable of weakening doctrine.
 
 [Back to top](#ui-configuration)
 
@@ -315,7 +367,7 @@ Use `configs/ui/` to make shell behavior explicit at application start:
 
 ### Runtime usage
 
-Use this directory to drive UI behavior that is:
+Use this directory to drive behavior that is:
 
 - presentational
 - declarative
@@ -329,15 +381,15 @@ Examples:
 - Focus mode inheriting shell scope echoes rather than inventing them
 - Export preview surfacing which cues remain attached
 
-### What runtime code should *not* do
+### What runtime code should **not** do
 
 Runtime code should not quietly “help” by:
 
 - switching to unpublished scope
-- hiding stale/generalized/correction state
+- hiding stale, generalized, or correction state
 - reordering trust cues only for cosmetic convenience
 - binding directly to canonical stores
-- embedding secrets or policy logic into frontend configuration
+- embedding policy logic or secrets into frontend configuration
 
 [Back to top](#ui-configuration)
 
@@ -346,15 +398,16 @@ Runtime code should not quietly “help” by:
 ## Config domains
 
 | Domain | Should define | Must not define | Primary consumer |
-|---|---|---|---|
-| Shell | Mode defaults, panel layout, trust affordance presence | Publication law, evidence meaning | Shell app |
-| Renderer | Adapter selection, safe non-secret knobs | Authority over truth objects | Renderer adapter |
+| --- | --- | --- | --- |
+| Shell | Mode defaults, panel layout, trust affordance presence | Publication law, evidence meaning | shell app |
+| Renderer | Adapter selection, safe non-secret knobs | Authority over truth objects | renderer adapter |
 | Views | Per-surface layout defaults | Hidden role escalation | Explorer / Story / Compare / Focus / Review |
-| Layers | Ordering, visibility, grouping, legend defaults | Canonical metadata truth | Layer manager / map runtime |
-| Trust cues | Display defaults for chips, banners, drawer triggers | Reason/obligation semantics | Shared UI state |
-| Accessibility | Reduced motion, keyboard affordances, focus behavior | Security or policy exceptions | All surfaces |
-| Locales | Display formatting and locale handling | Domain-level temporal semantics | Formatting layer |
-| Feature flags | UI-only staged rollout | Backdoor policy, rights, or evidence changes | App boot + shell store |
+| Layers | Ordering, visibility, grouping, legend defaults | Canonical metadata truth | layer manager / map runtime |
+| Trust cues | Display defaults for chips, banners, drawer triggers | Reason / obligation semantics | shared UI state |
+| Accessibility | Reduced motion, keyboard affordances, focus behavior | Security or policy exceptions | all surfaces |
+| Locales | Display formatting and locale handling | Domain-level temporal semantics | formatting layer |
+| Feature flags | UI-only staged rollout | Backdoor policy, rights, or evidence changes | app boot + shell store |
+| Theme / token references | names or IDs of already-governed tokens | raw asset source files or seal artwork | shell theme layer |
 
 [Back to top](#ui-configuration)
 
@@ -364,55 +417,79 @@ Runtime code should not quietly “help” by:
 
 ```mermaid
 flowchart LR
-    subgraph C["configs/ui/*"]
-        A["shell defaults"]
-        B["view presets"]
-        D["renderer adapter config"]
-        E["accessibility + locale config"]
-        F["layer presentation defaults"]
+    subgraph CURRENT["CONFIRMED current public repo"]
+        C["configs/ui/README.md"]
+        P["../README.md"]
+        E["../../apps/explorer-web/README.md"]
+        U["../../apps/ui/README.md (scaffold)"]
+        K["../../contracts/README.md"]
+        G["../../apps/governed-api/"]
+        B["../../brand/README.md"]
     end
 
-    C --> V["startup validation"]
-    V --> S["shell state store"]
-    S --> X["Explorer / Story / Dossier / Compare / Export / Focus / Review"]
-    S --> T["trust cues + Evidence Drawer triggers"]
+    subgraph WORKING["PROPOSED interior config shape"]
+        S["shell defaults"]
+        T["trust-cues"]
+        R["renderer adapter config"]
+        V["view presets"]
+        L["layer presentation defaults"]
+        A["accessibility + locale config"]
+    end
 
-    D --> M["MapLibre 2D adapter"]
-    D -. controlled and burden-bearing .-> Z["3D adapter (optional)"]
+    C --> WORKING
+    P --> WORKING
+    WORKING --> VALIDATE["startup validation"]
+    VALIDATE --> SHELL["trust-visible shell state"]
 
-    F --> M
-    F --> Z
+    SHELL --> E
+    SHELL --> U
+    SHELL -. consumes governed payloads .-> G
+    SHELL -. references contracts, not policy logic .-> K
+    SHELL -. may reference shared brand tokens .-> B
 
-    M --> Y["delivery artifacts + style assets"]
-    Z --> Y
-    Y --> G["governed API + released artifacts"]
-
-    G --> T
-
-    P["policy bundles"] -. not here .-> C
-    R["evidence resolver"] -. not here .-> C
-    W["canonical write logic"] -. not here .-> C
+    X["policy / evidence resolution / canonical writes"] -. not here .-> WORKING
 ```
 
 ### Reading the diagram
 
-The key idea is not complexity. It is **boundary clarity**:
+The goal is not complexity. It is **boundary clarity**:
 
 - `configs/ui/*` feeds validated shell and renderer wiring
 - the shell owns persistent UX continuity
-- the renderer consumes delivery artifacts and style assets
-- governed APIs and released artifacts remain downstream truth-bearing inputs
-- policy, evidence resolution, and canonical writes stay outside this directory
+- the UI stays downstream of governed API payloads
+- contracts and policy remain stronger seams than config
+- shared identity assets stay in `brand/`, not in ad hoc UI config files
 
 [Back to top](#ui-configuration)
 
 ---
 
-## Change gates (definition of done)
+## Current public inventory
+
+| Path | Current public state | Why it matters |
+| --- | --- | --- |
+| `configs/ui/README.md` | present | The UI config boundary already exists as a doc surface. |
+| Additional files under `configs/ui/` | not visible on public `main` | Interior filenames below remain **PROPOSED**, not current fact. |
+| `../env.schema.json` | present in parent `configs/` | There is already a config-schema naming precedent at the parent lane. |
+| `../../apps/explorer-web/README.md` | present | The primary shell-consumer doc already exists. |
+| `../../apps/ui/` | `src/`, `tests/`, `README.md` scaffold visible | A secondary UI subtree is already present and should not be invented away. |
+| `../../contracts/README.md` | present | Machine-law boundary exists and should stay separate. |
+| `../../policy/README.md` | present | Executable governance boundary exists and should stay separate. |
+| `../../brand/` | `assets/`, `icons/`, `logos/`, `source/`, `templates/`, `tokens/`, `usage/`, `README.md` visible | `brand/` is the closest confirmed identity/presentation neighbor today. |
+| `../../styles/README.md` | absent on public `main` | Do not link this as current fact until the lane actually exists. |
+
+> [!NOTE]
+> Absence of a public root-level `styles/` lane does **not** forbid one later. It only means this README should not pretend that the path already exists.
+
+[Back to top](#ui-configuration)
+
+---
+
+## Change gates / definition of done
 
 A change in `configs/ui/` is ready only when the following are true:
 
-- [ ] The change remains **non-secret** and safe to review in Git.
+- [ ] The change remains non-secret and safe to review in Git.
 - [ ] A schema or typed validation contract exists, or the existing one is updated.
 - [ ] Boot-time validation behavior is documented.
 - [ ] No policy logic, evidence-resolution logic, or canonical-write behavior was introduced.
@@ -421,17 +498,20 @@ A change in `configs/ui/` is ready only when the following are true:
 - [ ] Any new renderer behavior preserves shell-vs-renderer separation.
 - [ ] Any new 3D-related toggle references a burden review and does **not** become the default path.
 - [ ] Any new feature flag includes rollback intent and does not weaken doctrine.
+- [ ] Broken relative links are removed or replaced with real repo paths.
+- [ ] If config starts referencing `brand/` tokens or a future portrayal lane, ownership and fallback behavior are documented.
 - [ ] Adjacent docs are updated if the change affects route families, view taxonomy, or package boundaries.
 
 ### Merge blockers worth enforcing
 
 | Gate | Why it matters |
-|---|---|
+| --- | --- |
 | Schema validation | Invalid config must fail before UI boot. |
 | No-secrets check | UI config must stay reviewable and non-sensitive. |
-| Forbidden-import / boundary lint | Prevent frontend convenience from importing trust-bearing write logic. |
-| Visual regression on trust cues | Release/correction/evidence cues must survive UI changes. |
+| Boundary lint | Prevent frontend convenience from importing trust-bearing write logic. |
+| Visual regression on trust cues | Release, correction, and evidence cues must survive UI changes. |
 | Accessibility regression | Keyboard continuity and reduced motion are structural obligations. |
+| Link integrity | Broken local links are repo drift, not harmless polish issues. |
 
 [Back to top](#ui-configuration)
 
@@ -441,7 +521,7 @@ A change in `configs/ui/` is ready only when the following are true:
 
 ### Can this directory store API keys, tokens, or private endpoints?
 
-No. Secrets belong in secret stores or environment references, not in committed UI config.
+No. Secrets belong in host-local secret files or secret-manager surfaces, not in committed UI config.
 
 ### Can this directory define why publication was allowed or denied?
 
@@ -455,9 +535,13 @@ No. It may reference released artifacts and presentation defaults, but authorita
 
 Not in the default KFM posture. 2D remains the normal operating surface; any 3D path is controlled, explicit, and burden-bearing.
 
-### Can this directory hide correction state for cleaner screenshots?
+### Where should shared logos, icons, or brand tokens live?
 
-No. KFM treats correction visibility as part of trust, not optional chrome.
+In the current public repo, shared identity assets belong under [`../../brand/README.md`](../../brand/README.md). `configs/ui/` may reference them, but should not absorb them.
+
+### Why is this README not linking `../../styles/README.md`?
+
+Because that path is not a current public repo fact. Add the link only when the lane exists.
 
 [Back to top](#ui-configuration)
 
@@ -471,12 +555,13 @@ No. KFM treats correction visibility as part of trust, not optional chrome.
 ### Naming rules
 
 | Pattern | Use |
-|---|---|
-| `*.schema.json` | validation contracts |
+| --- | --- |
+| `*.schema.json` | validation contracts that follow the parent config-schema naming precedent |
 | `*.defaults.yaml` | default non-secret values |
 | `views/*.yaml` | per-surface presentation defaults |
 | `renderers/*.yaml` | adapter-specific runtime config |
-| `accessibility/*.yaml` | motion, keyboard, contrast, focus rules |
+| `layers/*.yaml` | layer presentation defaults |
+| `accessibility/*.yaml` | motion, keyboard, contrast, and focus rules |
 | `locales/*.yaml` | locale/display conventions |
 
 ### Review hints
@@ -487,7 +572,7 @@ When reviewing a UI config change, ask:
 2. If this config is wrong, does the app fail early or drift quietly?
 3. Would a screenshot still preserve enough scope, time, and trust context after this change?
 4. Did the change make the shell clearer, or merely more decorative?
-5. If this renderer/tool were replaced, would the public contract remain stable?
+5. If this renderer or theme mechanism were replaced later, would the public contract remain stable?
 
 ### Anti-patterns to reject
 
@@ -496,8 +581,15 @@ When reviewing a UI config change, ask:
 - hiding release or correction state for visual neatness
 - allowing feature flags to weaken cite-or-abstain behavior
 - making renderer settings the source of domain truth
+- copying schema law into app-local config files
+- linking to nonexistent repo paths as though they were current fact
 - letting 3D spectacle outrank inspectability
-- environment-specific toggles that silently change trust behavior
+
+### If a dedicated portrayal or `styles/` lane appears later
+
+1. Create the lane in the same PR that adds the link.
+2. Move shared style JSON, sprites, glyph manifests, or asset-home docs there explicitly.
+3. Keep `configs/ui/` reference-only for those assets unless a stronger reason is documented.
 
 </details>
 
