@@ -10,7 +10,7 @@ updated: <NEEDS VERIFICATION>
 policy_label: <NEEDS VERIFICATION>
 related: [docs/analyses/remote-sensing/README.md (NEEDS VERIFICATION), docs/analyses/remote-sensing/validation/results/README.md (PROPOSED), docs/analyses/remote-sensing/validation/governance.md (PROPOSED)]
 tags: [kfm, remote-sensing, validation, qa]
-notes: [Current-session workspace evidence was PDF-only; adjacent repo paths, owners, dates, and automation entrypoints need verification.]
+notes: [Current-session workspace evidence was PDF-only; target path is task-specified, not repo-verified; a remote-sensing/time-series namespace appears in attached ideation material, but adjacent repo files, owners, dates, and automation entrypoints still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Remote Sensing Validation & Quality Assurance
@@ -23,13 +23,13 @@ Govern release-bearing remote-sensing outputs with explicit metrics, provenance,
 > ![KFM](https://img.shields.io/badge/KFM-evidence--first%20%7C%20map--first-1f6feb)
 > ![Remote sensing](https://img.shields.io/badge/domain-remote--sensing-0a7f5a)
 > ![Repo fit](https://img.shields.io/badge/repo%20fit-needs%20verification-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Quickstart](#quickstart) · [Workflow](#workflow) · [Validation minimums](#validation-minimums) · [Artifacts](#artifact-and-traceability-model) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Quickstart](#quickstart) · [Workflow](#workflow) · [Validation minimums](#validation-minimums) · [Artifacts](#artifacts--traceability) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 > [!IMPORTANT]
 > Current-session workspace evidence for adjacent repo files was **PDF-only**. This README keeps KFM doctrine **CONFIRMED** where the attached corpus is explicit, and marks directory layout, filenames, automation commands, and neighboring docs as **PROPOSED** or **NEEDS VERIFICATION** until the mounted repository is inspected.
 
 > [!NOTE]
-> In KFM, validation is not a cosmetic scorecard added after analysis. It is the governed step that decides whether a remote-sensing output can move from candidate artifact to public-safe release-bearing material.
+> Remote sensing is treated here as **measurement**, not decorative backdrop. For this document, **support** means the unit or grain at which a value is legitimately meaningful: pixel, scene, polygon, transect, county rollup, or time window.
 
 ## Scope
 
@@ -39,22 +39,23 @@ It exists to make the following things inspectable before publication or downstr
 
 - what was validated
 - how it was validated
-- which metrics and checks passed, failed, or remained partial
+- which checks passed, failed, or remained partial
 - what uncertainty remains
-- whether the output is fit for the intended support, scale, audience, and release surface
+- whether the output is fit for its intended support, scale, audience, and release surface
 
-**CONFIRMED doctrine**
+### CONFIRMED doctrine carried into this directory
 
-- Validation is cross-cutting in KFM and belongs across intake, canonical truth, catalog/policy/review, derived delivery, and runtime trust surfaces.
-- Negative outcomes are first-class: quarantine, deny, abstain, stale-visible, generalized, superseded, withdrawn, and errored states are valid governed outcomes.
-- Remote-sensing outputs must remain subordinate to evidence, policy, release state, and correction lineage.
+- Validation is cross-cutting in KFM and attaches to intake, canonical truth, catalog/policy/review, derived delivery, and runtime trust surfaces.
+- Promotion is a governed state change, not a cosmetic file move.
+- Correction must preserve lineage through supersession, generalization, withdrawal, narrowing, or replacement.
+- Remote-sensing or model-assisted outputs remain subordinate to evidence, policy, release state, and correction discipline.
 
-**What this README does**
+### What this README does
 
 - defines what belongs in this directory
-- stabilizes the minimum validation bundle for remote-sensing work
-- gives maintainers a readable checklist for review and release readiness
-- makes room for both automated and steward-reviewed validation workflows
+- stabilizes a **PROPOSED** minimum validation bundle for remote-sensing work
+- gives maintainers a readable review checklist for release readiness
+- creates a home for both automated and steward-reviewed validation workflows
 
 [↑ Back to top](#remote-sensing-validation--quality-assurance)
 
@@ -62,29 +63,31 @@ It exists to make the following things inspectable before publication or downstr
 
 | Item | Value |
 |---|---|
-| Path | `docs/analyses/remote-sensing/validation/README.md` |
-| Role in repo | Directory README for validation methods, results, reports, and governance notes |
-| Likely upstream | `docs/analyses/remote-sensing/README.md` **NEEDS VERIFICATION** |
-| Likely downstream | `methods/`, `results/`, `reports/`, `governance.md` **PROPOSED / NEEDS VERIFICATION** |
+| Target path | `docs/analyses/remote-sensing/validation/README.md` *(task-specified; repo presence needs verification)* |
+| Role in repo | Directory README for validation methods, result indexes, release checks, and governance notes |
+| Likely upstream | [`../README.md`](../README.md) *(NEEDS VERIFICATION)* |
+| Likely downstream | [`methods/README.md`](methods/README.md), [`results/README.md`](results/README.md), [`governance.md`](governance.md) *(PROPOSED / NEEDS VERIFICATION)* |
+| Indirect sibling signal | [`../time-series/README.md`](../time-series/README.md) *(INDIRECT from attached ideation material; not mounted-repo proof)* |
 | Primary audience | Remote-sensing engineering, science QA reviewers, release managers, governance reviewers |
-| Adjacent contract families | `ValidationReport`, `DatasetVersion`, `CatalogClosure`, `ReleaseManifest` / `ReleaseProofPack`, `ProjectionBuildReceipt`, `EvidenceBundle`, `CorrectionNotice` |
+| Contract families most relevant here | `ValidationReport`, `DatasetVersion`, `DecisionEnvelope`, `ReviewRecord`, `CatalogClosure`, `ReleaseManifest` / `ReleaseProofPack`, `ProjectionBuildReceipt`, `EvidenceBundle`, `CorrectionNotice` |
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| **CONFIRMED** | Explicitly supported by the attached KFM/source corpus in the current session |
+| **CONFIRMED** | Explicitly supported by the attached corpus in the current session |
+| **INFERRED** | Strongly implied by the corpus, but not stated as mounted implementation fact |
 | **PROPOSED** | A doctrine-consistent starter pattern or recommended implementation shape |
-| **NEEDS VERIFICATION** | Not proven in the mounted repository during this session |
 | **UNKNOWN** | No reliable current-session evidence |
+| **NEEDS VERIFICATION** | Path, owner, date, command, or adjacent repo detail not proven from the mounted repository |
 
-## Inputs
+## Accepted inputs
 
 Accepted inputs for this directory include:
 
 | Input class | What belongs here | Minimum expectation |
 |---|---|---|
-| Candidate remote-sensing outputs | classified rasters, change maps, NDVI/vegetation products, thermal surfaces, flood extents, forecast-like modeled surfaces | clear subject, support, time window, CRS, and provenance |
+| Candidate remote-sensing outputs | classified rasters, change maps, NDVI or vegetation products, thermal surfaces, flood extents, forecast-like modeled surfaces | clear subject, support, time window, CRS, and provenance |
 | Reference / truth material | training and testing samples, field checks, review notes, external label sources, steward annotations | source basis and method documented |
 | Validation artifacts | confusion matrices, per-class metrics, threshold tables, QA summaries, validation logs | reproducible method and result context |
 | Method notes | metric definitions, acceptance rules, failure thresholds, known limitations | readable, versioned, reviewable |
@@ -98,35 +101,36 @@ This directory does **not** own the following by default:
 | Excluded material | Why it does not belong here | Where it should go instead |
 |---|---|---|
 | Raw source onboarding contracts | validation is downstream of intake | source/onboarding or ingest documentation |
-| Canonical release registry for the whole repo | this directory may reference releases but does not replace repo-wide release documentation | release / publication documentation |
-| Public storytelling or narrative interpretation | validation supports public narrative but is not the narrative itself | story/report surfaces |
-| Secrets, signed URLs, tokens, credentials | never publish operational secrets in docs or validation outputs | secret management / runtime config |
-| Sensitive exact-location disclosure | public validation docs must not become a location-leak vector | generalized/public-safe surfaces with review |
-| Unbounded “AI summary” text without source linkage | KFM does not admit uncited summary as truth | governed runtime with evidence-linked outputs |
+| Canonical repo-wide release registry | this directory may reference releases but does not replace release governance | release / publication documentation |
+| Public storytelling or narrative interpretation | validation supports public narrative but is not the narrative | story, report, or governed runtime surfaces |
+| Secrets, signed URLs, tokens, credentials | never publish operational secrets in docs or QA outputs | secret management / runtime config |
+| Sensitive exact-location disclosure | validation docs must not become a location-leak vector | generalized public-safe surfaces with review |
+| Unbounded “AI summary” prose without source linkage | KFM does not admit uncited summary as truth | governed runtime with evidence-linked outputs |
 
 ## Directory tree
 
 > [!NOTE]
-> The tree below is a **starter layout** inferred from project materials. Verify against the mounted repo before treating it as final.
+> The tree below is a **PROPOSED starter layout** inferred from the attached corpus. Verify against the mounted repo before treating it as final.
 
 ```text
-docs/analyses/remote-sensing/validation/
-├── README.md
-├── methods/
-│   ├── README.md
-│   ├── metrics/
-│   ├── scripts/
-│   └── thresholds/
-├── results/
-│   ├── README.md
-│   ├── confusion-matrices/
-│   ├── metrics/
-│   └── summaries/
-├── reports/
-│   ├── README.md
-│   ├── daily/
-│   └── releases/
-└── governance.md
+docs/analyses/remote-sensing/
+└── validation/
+    ├── README.md
+    ├── methods/
+    │   ├── README.md
+    │   ├── metrics/
+    │   ├── scripts/
+    │   └── thresholds/
+    ├── results/
+    │   ├── README.md
+    │   ├── confusion-matrices/
+    │   ├── metrics/
+    │   └── summaries/
+    ├── reports/
+    │   ├── README.md
+    │   ├── daily/
+    │   └── releases/
+    └── governance.md
 ```
 
 ## Quickstart
@@ -135,15 +139,15 @@ docs/analyses/remote-sensing/validation/
 
 1. Identify the candidate output and its intended use.
 2. Confirm the candidate has source, time, support, CRS, and method context.
-3. Run the validation harness or manual review path.
-4. Produce a `ValidationReport`.
-5. Attach or reference the candidate `DatasetVersion`.
+3. Run the validation harness or the steward/manual review path.
+4. Produce or update a `ValidationReport`.
+5. Link the report to the candidate `DatasetVersion`.
 6. Decide whether the output is:
    - releasable
-   - partial/stale-visible
-   - modeled-only and clearly labeled
+   - releasable only as **generalized**, **partial**, or **modeled**
+   - **stale-visible** with explicit limits
    - quarantined for rework
-7. Link downstream results to release/correction lineage.
+7. Preserve downstream release and correction linkage.
 
 ### Starter commands
 
@@ -154,23 +158,22 @@ make docs-validate
 ```
 
 > [!TIP]
-> If these entrypoints do not exist in the mounted repo, keep the artifact model and gate logic intact, then update only the invocation layer after inspection.
+> If these entrypoints do not exist in the mounted repo, keep the artifact model and gate logic intact and change only the invocation layer after inspection.
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-    A[Candidate remote-sensing output] --> B[Preflight checks]
-    B --> C[Method-specific validation]
+    A[Candidate output / DatasetVersion] --> B[Preflight: support, CRS, time, provenance]
+    B --> C[Method-specific validation + reference-data checks]
     C --> D[ValidationReport]
-    D --> E{Gate result}
-    E -->|pass| F[DatasetVersion + release linkage]
-    E -->|partial| G[stale-visible / generalized / modeled labeling]
-    E -->|fail| H[quarantine / correction / rework]
-    F --> I[Catalog / report / result bundle]
+    D --> E[ReviewRecord + DecisionEnvelope]
+    E -->|approved| F[CatalogClosure + ReleaseManifest]
+    E -->|approved with limits| G[generalized / partial / modeled / stale-visible release]
+    E -->|denied or quarantined| H[rework / correction path]
+    F --> I[EvidenceBundle + ProjectionBuildReceipt]
     G --> I
-    H --> J[re-run validation]
-    I --> K[EvidenceBundle-ready downstream use]
+    H --> C
 ```
 
 ### Reading rule
@@ -183,17 +186,19 @@ It is not a sidecar.
 
 ## Validation minimums
 
+The matrix below is a **PROPOSED KFM starter minimum** for remote-sensing validation. It combines **CONFIRMED** KFM contract doctrine with remote-sensing method guidance from the attached corpus.
+
 | Check family | What to validate | Why it matters |
 |---|---|---|
 | Provenance | source basis, acquisition window, processing lineage, operator/reviewer context | without this, the output cannot be interpreted honestly |
 | Spatial semantics | CRS, datum, projection, pixel alignment, support/resolution, extent | spatial outputs become misleading when support is unclear |
 | Temporal semantics | acquisition date, composite window, seasonality, stale tolerance, as-of meaning | snapshot bias is a recurring failure mode |
-| Radiometric / spectral context | cloud masking, scaling, emissivity/scaling assumptions, sensor mix, spectral meaning | remote-sensing outputs are measurements, not just pictures |
+| Radiometric / spectral context | cloud masking, scaling, emissivity assumptions, sensor mix, spectral meaning | remote-sensing outputs are measurements, not just pictures |
 | Geometry / topology / alignment | vector validity, edge continuity, raster/vector alignment, seam handling | invalid or misaligned geometry can quietly corrupt downstream analysis |
 | Reference data quality | label source, sampling logic, field checks, steward review, class balance | a metric without trustworthy reference data can be worse than no metric |
-| Classification quality | confusion matrix, overall accuracy, producer’s accuracy, user/consumer accuracy, kappa, class-level error analysis | these are core release checks for labeled outputs |
+| Classification quality | confusion matrix, overall accuracy, producer’s accuracy, user’s / consumer’s accuracy, kappa, class-level error analysis | these are core release checks for labeled outputs |
 | Generalization performance | train/test gap, leakage risk, spatial autocorrelation, holdout logic | prevents “good-looking” overfit models from being released |
-| Aggregation discipline | unit of support, rollup logic, what heterogeneity is hidden | aggregation can suppress hotspots and local variation |
+| Aggregation discipline | unit of support, rollup logic, and what heterogeneity is hidden | aggregation can suppress hotspots and local variation |
 | Publication safety | modeled-output labeling, uncertainty disclosure, generalized coordinates, rights/sensitivity checks | a technically valid output can still be unsafe to publish |
 
 ## Metrics and interpretation
@@ -207,78 +212,81 @@ It is not a sidecar.
 | Producer’s accuracy | how well real instances of a class were captured | check omission risk |
 | User’s / consumer’s accuracy | how reliable the predicted class is | check commission risk |
 | Kappa | agreement beyond chance | treat as contextual, not sovereign |
-| Precision / recall / F1 | useful where class imbalance matters or workflow is not limited to raster-classification convention | document explicitly if used |
+| Precision / recall / F1 | useful when class imbalance or workflow design makes them more legible than classic remote-sensing naming | document explicitly if used |
 
 ### Interpretation rules
 
 - A strong training score with a weaker test score is a warning sign, not a success story.
-- Spatial autocorrelation can make validation look stronger than it really is when training and testing data are too close.
-- A high-resolution product is not automatically a high-quality product.
-- A single-date product can be analytically wrong if the decision requires seasonal or multi-date context.
-- A ward-, county-, or basin-level rollup can hide within-unit heterogeneity.
+- Training and testing samples that are too close in space can inflate apparent accuracy.
+- A higher-resolution product is not automatically a higher-quality product.
+- A single-date output can be analytically wrong when the decision needs seasonal or multi-date context.
+- Ward-, county-, basin-, or district-level rollups can hide within-unit heterogeneity.
 
 > [!WARNING]
-> Do not publish a confident narrative from a smooth metric alone. KFM requires visible uncertainty, visible method, and visible evidence route.
+> Do not publish a confident narrative from a smooth metric alone. KFM requires visible uncertainty, visible method, and a visible evidence route.
 
-## Artifact and traceability model
+## Artifacts & traceability
 
 The table below grounds this directory in KFM’s broader artifact system.
 
 | Artifact family | Remote-sensing use in or around this directory | Status |
 |---|---|---|
-| `SourceDescriptor` | declares the scene/source or upstream endpoint contract | **CONFIRMED doctrine** / usually upstream |
-| `IngestReceipt` | proves fetch/landing of source material | **CONFIRMED doctrine** / usually upstream |
+| `SourceDescriptor` | declares the scene, sensor, or upstream endpoint contract | **CONFIRMED doctrine** / usually upstream |
+| `IngestReceipt` | proves fetch and landing of source material | **CONFIRMED doctrine** / usually upstream |
 | `ValidationReport` | primary validation object for this directory | **CONFIRMED doctrine** |
-| `DatasetVersion` | candidate or promoted output that the validation applies to | **CONFIRMED doctrine** |
-| `CatalogClosure` | outward metadata/lineage closure where release-bearing publication occurs | **CONFIRMED doctrine** |
+| `DatasetVersion` | candidate or promoted output to which validation applies | **CONFIRMED doctrine** |
+| `DecisionEnvelope` | machine-readable release or denial outcome for the candidate | **CONFIRMED doctrine** |
+| `ReviewRecord` | human review, escalation, or approval for consequential releases | **CONFIRMED doctrine** |
+| `CatalogClosure` | outward metadata and lineage closure where publication becomes inspectable | **CONFIRMED doctrine** |
 | `ReleaseManifest` / `ReleaseProofPack` | binds validation to publication readiness | **CONFIRMED doctrine** |
-| `ProjectionBuildReceipt` | records derived map/tile/export builds from released scope | **CONFIRMED doctrine** |
-| `EvidenceBundle` | supports downstream claim/report/export use | **CONFIRMED doctrine** |
-| `RuntimeResponseEnvelope` | relevant when validation outputs are surfaced in governed runtime responses | **CONFIRMED doctrine** / often downstream |
+| `ProjectionBuildReceipt` | records derived map, tile, export, or preview builds from released scope | **CONFIRMED doctrine** |
+| `EvidenceBundle` | supports downstream claim, story, export, or answer use | **CONFIRMED doctrine** |
 | `CorrectionNotice` | preserves visible lineage when a validated product is replaced, generalized, or withdrawn | **CONFIRMED doctrine** |
 
-### Remote-sensing-specific minimum bundle
+### Smallest useful remote-sensing bundle
 
 For most release-bearing outputs, the smallest useful bundle is:
 
 - candidate output reference
 - method summary
 - validation metrics
-- reference data/source note
+- reference data / truth note
 - uncertainty note
-- public-safe publication note
-- correction path
+- publication-safety note
+- release or correction linkage
 
 ## Governance and publication
 
-### Publication posture
+### Trust-visible release states
 
-Remote-sensing validation artifacts should make these states explicit in-place:
+Use explicit surface-state labels whenever they change meaning:
 
-- **observed**
-- **derived**
-- **modeled**
-- **generalized**
-- **partial**
-- **stale-visible**
-- **withdrawn**
-- **superseded**
+| State | Meaning | Release consequence |
+|---|---|---|
+| **observed** | directly tied to measured/observed source material | may be publishable if other gates pass |
+| **derived** | analytically transformed from released source material | must remain visibly derived |
+| **modeled** | inferred, forecast-like, simulated, or predictive | must stay visibly tagged as modeled |
+| **generalized** | precision intentionally reduced | acceptable for public-safe release where exactness is risky |
+| **partial** | incomplete by support, time, coverage, or method | cannot read as complete |
+| **stale-visible** | still shown, but beyond declared freshness tolerance | must remain visibly stale |
+| **withdrawn** | no longer fit for use | keep visible lineage, do not silently erase |
+| **superseded** | replaced by a later version | preserve the replacement path |
 
 ### FAIR+CARE / sensitivity rules
 
 | Rule | Practical consequence |
 |---|---|
-| Publish only public-safe or explicitly generalized scopes when precision is risky | avoid “how to locate” instructions and unnecessary precise coordinates |
+| Publish only public-safe or explicitly generalized scopes when precision is risky | avoid “how to locate” instructions and unnecessary exact coordinates |
 | Treat ecological, archaeological, Indigenous, biodiversity, or exact-location-sensitive outputs as review-bearing | validation can pass technically and still fail publication review |
-| Keep modeled outputs visibly tagged as modeled | forecast-like or inferred surfaces must not read like observations |
+| Keep modeled outputs visibly tagged as modeled | inferred surfaces must not read like observations |
 | Fail closed when governance status is unclear | do not silently publish because a result exists |
 | Keep review and correction visible | validation does not erase later correction obligations |
 
 ### Remote-sensing honesty rules
 
 - Document acquisition dates and composite windows.
-- State when cloud cover, sensor substitution, or gap-filling changes interpretation.
-- Do not flatten field observations, remote sensing, and administrative records into the same evidentiary class.
+- State when cloud cover, sensor substitution, emissivity assumptions, or gap-filling changes interpretation.
+- Do not flatten field observations, remote sensing, and administrative records into one evidentiary class.
 - When rollups are used, name the support unit and what fine-grained variation is lost.
 
 ## Usage
@@ -305,16 +313,16 @@ Remote-sensing validation artifacts should make these states explicit in-place:
 A remote-sensing validation package is ready for downstream use only when all relevant gates below are satisfied.
 
 - [ ] candidate output is identified unambiguously
-- [ ] source / acquisition / processing context is recorded
+- [ ] source, acquisition, and processing context are recorded
 - [ ] CRS, extent, support, and temporal window are documented
 - [ ] method and threshold logic are readable and reviewable
 - [ ] `ValidationReport` exists or is explicitly linked
 - [ ] required metrics are attached
 - [ ] class-level or product-level failure modes are noted
-- [ ] train/test and leakage risks are addressed where applicable
+- [ ] train/test separation and leakage risks are addressed where applicable
 - [ ] uncertainty or modeled-output status is visible
 - [ ] publication-safety review is complete for the intended surface
-- [ ] downstream release/correction linkage is explicit
+- [ ] downstream release and correction linkage are explicit
 
 ## FAQ
 
@@ -328,7 +336,7 @@ No. KFM validation is broader than model scoring. A product can score well and s
 
 ### Can aggregated outputs hide important problems?
 
-Yes. Electoral wards, counties, basins, and other administrative rollups can hide heterogeneity that remains visible at image resolution or local support.
+Yes. Wards, counties, basins, and other rollups can hide heterogeneity that remains visible at image or local support.
 
 ### What if a result is useful but incomplete?
 
@@ -359,23 +367,23 @@ In downstream reports, stories, or governed runtime surfaces that stay linked to
 
 ### B. Product families this directory should handle well
 
-- land-cover / class maps
-- NDVI / vegetation condition
-- thermal / LST products
+- land-cover and class maps
+- NDVI and vegetation condition
+- thermal or LST products
 - flood extent and water masks
 - change-detection outputs
 - composite imagery summaries
 - forecast-like derived surfaces
 - remote-sensing-backed environmental indicators
 
-### C. Initial cleanup items after mounted repo inspection
+### C. First cleanup tasks after mounted-repo inspection
 
 1. Replace owner placeholders.
-2. Confirm neighboring doc paths.
-3. Confirm actual automation entrypoints.
-4. Confirm whether `methods/`, `results/`, `reports/`, and `governance.md` already exist.
-5. Replace any inferred path strings with real repo paths.
-6. Add direct links to the authoritative contract/schema locations once verified.
+2. Confirm whether `../README.md`, `methods/`, `results/`, and `governance.md` exist.
+3. Confirm actual automation entrypoints and validation commands.
+4. Replace inferred path strings with real repo paths.
+5. Link direct contract or schema locations once verified.
+6. Add one real example `ValidationReport` bundle if it exists.
 
 </details>
 
