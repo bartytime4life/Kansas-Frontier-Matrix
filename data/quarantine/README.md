@@ -4,79 +4,92 @@ title: data/quarantine
 type: standard
 version: v1
 status: draft
-owners: <REVIEW: owner(s) pending>
+owners: <REVIEW: data stewardship / intake / policy owner(s) pending>
 created: <REVIEW: YYYY-MM-DD pending>
 updated: <REVIEW: YYYY-MM-DD pending>
 policy_label: <REVIEW: policy label pending>
 related: [../../README.md, <REVIEW: adjacent data-zone docs pending verification>]
 tags: [kfm, data, quarantine]
-notes: [Grounded in current KFM doctrine and repo-grounded inventory; mounted subtree details, owners, and adjacent README coverage remain NEEDS VERIFICATION.]
+notes: [Grounded in current KFM doctrine and repo-grounded summary evidence; exact mounted subtree, owners, dates, and adjacent README coverage remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # data/quarantine
 
-Fail-closed holding zone for material that has entered KFM but cannot advance safely without review, clarification, or revalidation.
+Fail-closed holding zone for material that has entered KFM but cannot advance safely without review, clarification, repair, or revalidation.
 
 > **Status:** active  
-> **Owners:** `<REVIEW: data stewardship / intake / policy owners pending>`  
-> ![status-active](https://img.shields.io/badge/status-active-0f766e?style=flat-square) ![zone-data%2Fquarantine](https://img.shields.io/badge/zone-data%2Fquarantine-92400e?style=flat-square) ![truth-mixed](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20PROPOSED%20layout%20%7C%20UNKNOWN%20mounted%20details-6b7280?style=flat-square) ![owners-pending](https://img.shields.io/badge/owners-review%20pending-lightgrey?style=flat-square)  
+> **Doc maturity:** draft / verification-bounded  
+> **Owners:** `<REVIEW: data stewardship / intake / policy owner(s) pending>`  
+> ![status-active](https://img.shields.io/badge/status-active-0f766e?style=flat-square) ![zone-data%2Fquarantine](https://img.shields.io/badge/zone-data%2Fquarantine-92400e?style=flat-square) ![truth-CONFIRMED%20doctrine%20%7C%20PROPOSED%20starter%20shape%20%7C%20UNKNOWN%20mounted%20tree-6b7280?style=flat-square) ![review-fail--closed](https://img.shields.io/badge/review-fail--closed-7c2d12?style=flat-square) ![owners-review%20pending-lightgrey](https://img.shields.io/badge/owners-review%20pending-lightgrey?style=flat-square)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `data/quarantine/` is a governed workflow state, not a convenience dump folder. Material lands here when rights are unclear, validation fails, sensitivity is unresolved, or review blocks promotion. Nothing in this zone should be treated as warning-only pseudo-production.
+> `data/quarantine/` is a governed lifecycle state, not a convenience dump folder. Material lands here when KFM must remain honest about uncertainty, policy burden, or validation failure instead of smoothing it into premature publication.
 
 > [!NOTE]
-> This README is written to be repo-ready without overstating mounted implementation. KFM doctrine strongly establishes the **role** of quarantine. Actual subtree layout, local helper scripts, active CI enforcement, and owner assignments still need mounted repo verification.
+> This README keeps **doctrinal certainty** separate from **mounted-repo certainty**. KFM doctrine strongly establishes the role of quarantine. Exact subtree layout, helper scripts, owner assignments, and active enforcement details still require direct repo verification.
 
 ## Scope
 
-`data/quarantine/` exists to isolate ambiguity and failure without hiding either one. In KFM terms, it is where the system remains honest when material is too real to ignore and too uncertain to promote.
+Quarantine is where KFM keeps blocked material **visible, inspectable, and contained** without granting it more trust than it has earned.
 
-| Claim | Status | Meaning here |
+| Statement | Status | Why it matters |
 |---|---|---|
-| Quarantine is part of the core truth path. | **CONFIRMED** | It is a first-class lifecycle state, not an ad hoc exception. |
-| Quarantine holds blocked or unresolved material. | **CONFIRMED** | Typical triggers include unclear rights, schema failure, sensitivity uncertainty, and review-blocked submissions. |
-| Quarantine must not behave like pseudo-production. | **CONFIRMED** | No catalog completion, no public exposure, no silent promotion. |
-| This directory should live beside other explicit data zones. | **PROPOSED** | The replacement-grade repo model keeps zone directories visible even if storage later maps to object stores or databases. |
-| The exact mounted file layout under `data/quarantine/` is known. | **UNKNOWN / NEEDS VERIFICATION** | This README avoids claiming an internal subtree that was not directly inspected. |
+| Quarantine is part of the canonical governed path. | **CONFIRMED** | It appears inside the core truth path rather than as an ad hoc side lane. |
+| Quarantine is for blocked, failed, ambiguous, or review-held material. | **CONFIRMED** | Validation, rights, sensitivity, and review all have fail-closed consequences in KFM doctrine. |
+| Quarantine must not act like pseudo-production. | **CONFIRMED** | Derived/public surfaces must not outrun release state, policy, or evidence status. |
+| Review and stewardship operations include quarantine inspection, denial, promotion, rollback, and rights handling. | **CONFIRMED** | Quarantine is an operational review surface, not just a storage location. |
+| The exact mounted subtree under `data/quarantine/` is known in this session. | **UNKNOWN / NEEDS VERIFICATION** | Current evidence did not directly inspect the repo tree. |
+
+### What quarantine is for
+
+`data/quarantine/` exists to isolate uncertainty without hiding it. It is the place to hold material that is:
+
+- too important to discard,
+- too unresolved to publish,
+- too risky to expose directly,
+- or too incomplete to treat as canonical.
+
+That makes it a **truth-preserving** zone rather than a failure byproduct.
 
 ## Repo fit
 
 **Path:** `data/quarantine/README.md`  
-**Repo root:** [`../../README.md`](../../README.md)
+**Upstream:** [`../../README.md`](../../README.md)  
+**Lifecycle context:** doctrinally tied to `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`; exact mounted sibling docs and directory coverage remain **NEEDS VERIFICATION**.
 
-This README fits the top-level `data/` area, which project inventory documents describe as the home for registry entries, example datasets, catalog artifacts, and zone manifests. The quarantine lane sits inside the broader governed truth path rather than beside it.
-
-| Relationship | Path | Role | Confidence |
+| Relationship | Reference | Role here | Verification posture |
 |---|---|---|---|
-| Self | `data/quarantine/README.md` | This directory contract and operating guide | Target path confirmed |
-| Parent surface | `data/` | Data zones, dataset-facing storage semantics, and related manifests | **CONFIRMED** doctrinally / mounted subtree details **NEEDS VERIFICATION** |
-| Upstream | `data/raw/` | Immutable acquisition captures | **CONFIRMED** doctrine / local path **NEEDS VERIFICATION** |
-| Peer | `data/work/` | Repeatable transform and QA staging | **CONFIRMED** doctrine / local path **NEEDS VERIFICATION** |
-| Downstream | `data/processed/` | Canonical publishable artifacts | **CONFIRMED** doctrine / local path **NEEDS VERIFICATION** |
-| Downstream | `data/catalog/` | DCAT/STAC/PROV closure surfaces | **CONFIRMED** doctrine / local path **NEEDS VERIFICATION** |
-| Downstream | `data/published/` | Governed exposure state | **CONFIRMED** doctrine / local path **NEEDS VERIFICATION** |
-| Adjacent proof storage | `data/proofs/` | Proof, receipt, and related release evidence | **PROPOSED** replacement-grade skeleton |
+| Self | `data/quarantine/README.md` | Directory contract and operating guide for quarantine handling | Target path supplied by task |
+| Repo root | `../../README.md` | Higher-level repo orientation and cross-repo navigation | Linked path supplied by task |
+| Lifecycle upstream | `data/raw/`, `data/work/` | Intake and transform staging before or beside quarantine routing | **CONFIRMED** as doctrine / mounted paths **NEEDS VERIFICATION** |
+| Lifecycle downstream | `data/processed/`, `data/catalog/`, `data/published/` | Canonical, closure, and outward release states that quarantine must not bypass | **CONFIRMED** as doctrine / mounted paths **NEEDS VERIFICATION** |
+| Stewardship surface | review / policy / release artifacts | Human and machine review path for promotion, denial, rollback, and correction | **CONFIRMED** doctrinally / exact repo locations **UNKNOWN** |
+
+> [!WARNING]
+> Do not normalize quarantine into “just another intermediate folder.” In KFM, lifecycle state changes are governance events.
 
 ## Inputs
 
 ### Accepted inputs
 
-Only material that is **blocked, ambiguous, or explicitly under review** belongs here.
+Only material that is **blocked, ambiguous, explicitly under review, or awaiting safe transformation** belongs here.
 
-| Accepted input | Why it belongs here | Minimum companion material |
+| Accepted input | Why it belongs here | Minimum companion context |
 |---|---|---|
-| Validation-failed transform output | It cannot advance to canonical publishable state. | Source or batch reference, failure summary, validation evidence |
-| Rights-unclear material | KFM defaults to fail-closed on ambiguous rights. | Source terms snapshot or rights note, reviewer needed |
-| Sensitivity-unclear material | Exposure cannot proceed until redaction/generalization or restriction is decided. | Sensitivity note, review requirement, public-safe handling note |
-| Review-blocked submission | Human review has not cleared publication or promotion. | Decision context, blocking reason, next reviewer |
-| Contributor upload awaiting steward review | Intake occurred, but publication safety is unresolved. | Metadata manifest, source description, intake reference |
-| Redaction/generalization candidates | Transform work exists, but public-safe form is not yet approved. | Transform note, comparison context, approval requirement |
-| QA evidence and triage artifacts tied to blocked material | They explain why an item is quarantined and what must happen next. | Stable case ID or subject ref, timestamps, author/reviewer context |
+| Validation-failed candidate artifacts | They cannot advance to canonical truth or outward release yet. | Subject/source reference, failure summary, validation evidence |
+| Rights-unclear material | KFM fails closed when redistribution or publication posture is unresolved. | Rights note or source terms snapshot, steward review need |
+| Sensitivity-unclear material | Exact-location, privacy, sovereignty, or cultural-sensitivity risk may still be unresolved. | Sensitivity note, public-safe handling note, review requirement |
+| Review-blocked submissions | A human or policy lane has not cleared advancement. | Blocking reason, reviewer role, next action |
+| Candidate redaction/generalization outputs | A safer representation may exist, but has not yet been approved. | Comparison context, transform note, review requirement |
+| Correction or rollback candidates | A release or candidate may need narrowing, withdrawal, or replacement. | Affected release/candidate reference, correction note |
+| QA and triage artifacts for blocked material | They explain why a case is quarantined and what has to happen next. | Stable case/subject reference, timestamps, author/reviewer context |
 
 ### Input rule of thumb
 
-If the artifact can already be defended as canonical and publishable, it does **not** belong here. If it cannot yet be defended but must remain inspectable and governable, it probably does.
+If the artifact can already be defended as **public-safe, released, and authoritative**, it does **not** belong here.
+
+If it cannot yet be defended that way but must remain visible, governable, and reviewable, it probably does.
 
 ## Exclusions
 
@@ -84,31 +97,30 @@ If the artifact can already be defended as canonical and publishable, it does **
 
 | Excluded material | Where it should go instead | Why |
 |---|---|---|
-| Immutable upstream fetches and original payloads | `data/raw/` | Raw capture must remain append-only and intact. |
-| Ordinary transform scratch that is not blocked or ambiguous | `data/work/` | Not all intermediate work is quarantine work. |
-| Canonical, publishable artifacts with stable identity | `data/processed/` | Processed is for publishable outputs, not uncertain ones. |
-| Triplet closure artifacts (DCAT/STAC/PROV) for releasable scope | `data/catalog/` | Catalog closure implies a stronger readiness state. |
-| Runtime/public-facing outputs | `data/published/` | Published exposure happens only after promotion gates pass. |
-| Proof packs, release manifests, or attestation bundles | `data/proofs/` or other verified proof location | Quarantine explains blocked state; it is not the default home for release proof. |
-| Personal scratch notes, one-off experiments, or undocumented local temp files | Local scratch space outside governed data lanes | They do not carry governed lifecycle meaning. |
+| Immutable source captures and original payloads | `data/raw/` | Raw capture should remain source-faithful and append-only. |
+| Ordinary transform scratch that is not blocked or ambiguous | `data/work/` | Not every intermediate is a quarantine case. |
+| Canonical candidates that have passed required validation and review | `data/processed/` | Processed is for authoritative candidate/published truth states, not unresolved material. |
+| Outward metadata closure objects | `data/catalog/` | STAC/DCAT/PROV closure implies a stronger readiness state. |
+| Public-safe published outputs | `data/published/` | Published exposure follows promotion, not uncertainty. |
+| Release proof packs or release manifests for approved outward releases | The release/review path the repo actually uses | Quarantine explains blocked state; it should not become the default proof store for trusted release artifacts. |
+| Personal scratch notes or undocumented local temp files | Local scratch outside governed lanes | They carry no governed lifecycle meaning. |
 
-> [!WARNING]
-> Do not use quarantine as a long-term shadow publication surface. “We know it is questionable, but let’s expose it anyway” is exactly what this zone is meant to prevent.
+> [!CAUTION]
+> “We know it is questionable, but let's expose it anyway” is exactly the failure mode quarantine is designed to stop.
 
 ## Directory tree
 
-The exact mounted subtree was not directly inspectable. The safest repo-ready view is therefore the **zone map** KFM doctrine expects contributors to understand.
+The exact mounted subtree was not directly inspected in this session. The safest useful view is therefore the **doctrinal zone map** that contributors need to understand first.
 
 ```text
 data/
-├── raw/          # immutable acquisition captures
-├── work/         # repeatable transform + QA staging
+├── raw/          # source-native captures
+├── work/         # transform / QA staging
 ├── quarantine/   # blocked / ambiguous / review-held material
 │   └── README.md
-├── processed/    # canonical publishable artifacts
-├── catalog/      # DCAT/STAC/PROV closure surfaces
-├── published/    # governed exposure state
-└── proofs/       # proof / receipt / release evidence
+├── processed/    # authoritative candidate or promoted subject sets
+├── catalog/      # outward STAC / DCAT / PROV closure
+└── published/    # public-safe outward release state
 ```
 
 <details>
@@ -117,15 +129,15 @@ data/
 ```text
 data/quarantine/
 └── <case_or_subject_id>/
-    ├── manifest.json                # intake or transfer note
-    ├── triage.yaml                  # why the item is blocked
-    ├── validation/                  # failed checks, QA output, diffs
-    ├── review/                      # decision notes or review artifacts
-    ├── payload/                     # blocked or review-held material
-    └── transforms/                  # candidate redaction/generalization outputs
+    ├── payload/                  # blocked or review-held artifact(s)
+    ├── triage.yaml               # why this case is here
+    ├── validation/               # failed checks, diffs, QA evidence
+    ├── review/                   # notes, decisions, escalation context
+    ├── transforms/               # redaction/generalization candidates
+    └── manifest.json             # transfer/intake note
 ```
 
-Use this only after checking the mounted repo and any existing house conventions.
+Use this only after checking the mounted repo and any established local conventions.
 
 </details>
 
@@ -133,26 +145,26 @@ Use this only after checking the mounted repo and any existing house conventions
 
 Use quarantine when an item **must not move forward yet**, but also **must not disappear into undocumented limbo**.
 
-1. Create or select a stable quarantine case identifier.
-2. Place the blocked material and its minimum context in the case folder.
-3. Record *why* promotion is blocked.
-4. Record *who* must review it and *what* must change for it to leave quarantine.
-5. Keep it off catalog and published surfaces until a new validation and decision path is complete.
+1. Create or select a stable case or subject identifier.
+2. Place the blocked artifact and its minimum context in the case folder.
+3. Record why promotion is blocked.
+4. Record who must review it and what must change before it can leave quarantine.
+5. Keep it off catalog and published surfaces until revalidation and review are complete.
 
 ```bash
-# Illustrative only — verify actual helper scripts, validators, and naming rules first.
+# Illustrative only — verify actual repo conventions before use.
 CASE_ID="q-YYYYMMDD-example-001"
 mkdir -p "data/quarantine/${CASE_ID}"
 
 # Add the blocked artifact
-cp /path/to/candidate-artifact.ext "data/quarantine/${CASE_ID}/"
+cp /path/to/candidate-artifact.ext "data/quarantine/${CASE_ID}/payload/"
 
 # Add a minimal triage note
 cat > "data/quarantine/${CASE_ID}/triage.yaml" <<'YAML'
 case_id: q-YYYYMMDD-example-001
 status: quarantine
 reason_codes:
-  - rights_unclear
+  - rights_unknown
 source_ref: raw:source-or-batch-ref
 required_review:
   - steward
@@ -163,39 +175,56 @@ YAML
 
 ## Usage
 
-### Entry rule
+### Entry triggers
 
 Move material into quarantine when one or more of the following is true:
 
 1. **Validation failed**
-2. **Rights are unclear**
-3. **Sensitivity is unresolved**
+2. **Rights are unknown or not yet cleared**
+3. **Sensitivity or precision handling is unresolved**
 4. **Review explicitly blocked advancement**
-5. **The artifact cannot honestly support outward identifiers yet**
+5. **A correction, rollback, or narrowing path is being assembled**
+6. **The item cannot yet support outward identifiers, closure, or public-safe release**
 
-### Exit rule
+### Minimum quarantine case record
+
+A quarantine case should carry enough information that another steward can understand the block **without guessing**.
+
+| Minimum record | Why it is needed | Confidence |
+|---|---|---|
+| Source or subject reference | Keeps the case tied to an upstream intake, batch, release, or candidate | **CONFIRMED** doctrinal need |
+| Plain-language block reason | Makes the fail-closed state legible | **CONFIRMED** doctrinal need |
+| Validation or review evidence | Proves the block is inspectable, not hand-wavy | **CONFIRMED** doctrinal need |
+| Rights / sensitivity posture | Explains why public exposure is blocked or limited | **CONFIRMED** doctrinal need |
+| Reviewer / steward responsibility | Prevents silent long-term limbo | **CONFIRMED** doctrinal need |
+| Next action | Makes the exit path explicit | **CONFIRMED** doctrinal need |
+| Candidate safer representation (if any) | Supports redaction/generalization review | **PROPOSED** when applicable |
+
+> [!TIP]
+> KFM doctrine confirms object families such as `SourceDescriptor`, `IngestReceipt`, `ValidationReport`, `DecisionEnvelope`, `ReviewRecord`, `EvidenceBundle`, `ReleaseManifest / ReleaseProofPack`, and `CorrectionNotice`. Exact local filenames for those objects are not yet verified for this repo.
+
+### Exit paths
 
 Material should leave quarantine only through a new governed transition, not through quiet folder reshuffling.
 
-Illustrative exit paths:
-
 | Exit path | When to use it | Expected evidence before exit |
 |---|---|---|
-| Return to `work/` | More transform or repair work is needed before revalidation | Clear next-step note, retained case history |
-| Promote toward `processed/` | Validation and review now support canonical publishable status | Updated validation evidence and decision context |
-| Withdraw or reject | Rights, policy, or quality issues cannot be resolved | Decision note or correction/withdrawal reference |
-| Retain in quarantine | The case is still open | Current status note, owner/reviewer, next review date |
+| Return to `work/` | More repair or transform work is needed before revalidation | Clear next-step note, retained case history |
+| Promote toward `processed/` | Validation and review now support authoritative candidate or promoted state | Updated validation evidence, decision context, no unresolved block reason |
+| Issue correction / replacement path | A prior release or candidate must be narrowed, replaced, or superseded | Correction context, affected release refs, rebuild/replacement notes |
+| Withdraw / reject | Rights, quality, or sensitivity issues cannot be resolved | Decision note, reason code, retained lineage |
+| Remain in quarantine | The case is still open | Current status, owner/reviewer, visible next step |
 
 ### Illustrative triage document
 
 ```yaml
-# Illustrative example only — field names are starter guidance, not a confirmed mounted schema.
+# Illustrative example only — field names are starter guidance, not a confirmed repo schema.
 case_id: q-2026-03-22-demo-001
 subject_ref: raw:hydro.batch.0001
 status: quarantine
 reason_codes:
-  - schema_failure
-  - review_blocked
+  - validation.schema_failed
+  - rights.unknown
 required_review:
   - data_steward
   - policy_review
@@ -209,30 +238,29 @@ notes: >
 ```mermaid
 flowchart LR
     A[RAW] --> B[WORK]
-    B -->|passes validation + policy| C[PROCESSED]
-    B -->|rights unclear<br/>schema failure<br/>sensitivity unclear<br/>review block| Q[QUARANTINE]
-    Q -->|resolved + revalidated| B
-    C --> D[CATALOG / TRIPLET]
+    B -->|passes validation + review| C[PROCESSED]
+    B -->|validation failure<br/>rights unknown<br/>sensitivity unresolved<br/>review block| Q[QUARANTINE]
+    Q -->|repair / revalidation / review| B
+    C --> D[CATALOG]
     D --> E[PUBLISHED]
-    E --> G[Governed API / UI]
 
-    Q -. no direct catalog or public exposure .-> G
+    Q -. no direct catalog or public path .-> E
 ```
 
-The main operating idea is simple: **quarantine keeps uncertainty visible and contained** until the system can either advance safely or refuse cleanly.
+The operating idea is simple: **quarantine keeps uncertainty visible and contained until the system can either advance safely or refuse cleanly**.
 
 ## Tables
 
 ### Zone behavior at a glance
 
-| Zone | What it is for | What must not happen |
+| Zone | Primary purpose | What must not happen |
 |---|---|---|
-| `raw/` | Immutable source capture | In-place mutation or public exposure |
+| `raw/` | Source-faithful intake and capture | In-place mutation or publication-by-accident |
 | `work/` | Repeatable transform and QA staging | Silent promotion without gates |
 | `quarantine/` | Isolation of blocked, ambiguous, or review-held material | Warning-only pseudo-production |
-| `processed/` | Canonical publishable artifacts | Publishing artifacts that cannot support valid closure |
-| `catalog/` | Cross-linked metadata and lineage closure | Marking a version complete when closure is missing |
-| `published/` | Governed exposure state | Treating publication as a file copy instead of a state transition |
+| `processed/` | Authoritative candidate or promoted subject state | Carrying unresolved uncertainty as if it were settled |
+| `catalog/` | STAC/DCAT/PROV outward closure and release linkage | Declaring closure before release and lineage are ready |
+| `published/` | Public-safe outward exposure | Treating publication as a file copy instead of a governed transition |
 
 ### Allowed vs blocked operations in `data/quarantine/`
 
@@ -240,10 +268,10 @@ The main operating idea is simple: **quarantine keeps uncertainty visible and co
 |---|---|---|
 | Store blocked material with context | Yes | This is the core purpose of the zone. |
 | Add failure evidence, review notes, and triage context | Yes | Quarantine should increase clarity, not reduce it. |
-| Re-run validation or prepare candidate redaction/generalization outputs | Yes | Keep the work inspectable. |
-| Attach catalog closure and outward public identifiers | No | Not before the material is resolved. |
-| Serve the material to normal UI or public API surfaces | No | Quarantine is not a trust membrane bypass. |
-| Quietly move content forward without updated evidence | No | Every exit must be legible. |
+| Prepare candidate redactions or safer generalized outputs | Yes | Keep them inspectable and clearly non-final. |
+| Attach outward catalog closure and public-safe release identifiers | No | Closure belongs downstream after gates pass. |
+| Serve quarantine material through normal public UI or public API routes | No | That would violate the trust membrane. |
+| Quietly move content forward without updated evidence and review context | No | Every exit must be legible. |
 
 ## Task list
 
@@ -251,34 +279,38 @@ Use this as the minimum definition-of-done for a quarantine case.
 
 - [ ] Stable case or subject reference recorded
 - [ ] Block reason recorded in plain language
-- [ ] Supporting machine-readable or reviewable artifact attached
+- [ ] Validation and/or review evidence attached
 - [ ] Rights and sensitivity posture noted
-- [ ] Required reviewer or steward named
-- [ ] Public exposure explicitly marked **blocked**
-- [ ] Next action recorded: repair, review, revalidate, reject, or withdraw
+- [ ] Required reviewer or steward identified
+- [ ] Public exposure explicitly marked **blocked** or otherwise constrained
+- [ ] Next action recorded: repair, review, revalidate, reject, withdraw, or replace
 - [ ] Exit decision captured before any move toward `processed/`, `catalog/`, or `published/`
 
 ## FAQ
 
 ### Is quarantine just for “bad data”?
 
-No. It is also for **unclear rights**, **uncertain sensitivity**, and **review-blocked** material. KFM uses quarantine to keep ambiguity explicit instead of smoothing it into publication.
+No. It is also for unclear rights, unresolved sensitivity, blocked review, correction work, and other cases where KFM must fail closed instead of pretending the material is ready.
 
 ### Can something stay here for a while?
 
-Yes, but it should not stay here **silently**. Long-lived quarantine cases need current ownership, current reason codes, and a visible next step.
+Yes, but not silently. Long-lived quarantine cases need visible ownership, a current reason, and a current next step.
 
 ### Can the UI or API read directly from quarantine?
 
-Normal governed exposure should come from promoted outputs, not from quarantine. This zone exists specifically to prevent ambiguous material from leaking into outward trust surfaces.
+Normal public or standard user surfaces should not. Quarantine exists precisely to prevent blocked or ambiguous material from leaking into outward trust surfaces.
 
 ### Is quarantine the same as `work/`?
 
-No. `work/` is general transform and QA staging. `quarantine/` is the stricter fail-closed lane for material that is blocked, ambiguous, or awaiting review.
+No. `work/` is general transform and QA staging. `quarantine/` is the stricter lane for material that is blocked, ambiguous, or awaiting review.
 
-### Why not just fix the issue in place downstream?
+### Why not just fix the issue downstream?
 
-Because KFM treats lifecycle states as governed transitions, not as magic folders. Once a zone implies stronger trust, repair should create a new legible transition rather than erase the fact that the item was previously blocked.
+Because lifecycle states in KFM are governed transitions, not magic folders. Repair should create a legible path forward rather than erasing the fact that the item was previously blocked.
+
+### Where should proof for an approved release live?
+
+With the release/review path the repo actually uses. This README does not assert a specific proof directory that was not directly verified.
 
 ## Appendix
 
@@ -287,10 +319,11 @@ Because KFM treats lifecycle states as governed transitions, not as magic folder
 
 | Label | Meaning |
 |---|---|
-| **CONFIRMED** | Supported directly by current project doctrine or repo-grounded inventory |
-| **PROPOSED** | Safe starter pattern recommended by the doctrine but not verified as mounted implementation |
-| **UNKNOWN** | Not directly proven from currently visible evidence |
-| **NEEDS VERIFICATION** | A practical check should be made in the mounted repo before treating the detail as settled |
+| **CONFIRMED** | Supported directly by current KFM doctrine or repo-grounded summary evidence |
+| **INFERRED** | Strongly implied structural completion, but not verified as current repo reality |
+| **PROPOSED** | Safe starter pattern or recommended implementation direction |
+| **UNKNOWN** | Not directly proven in the current session |
+| **NEEDS VERIFICATION** | A direct repo check should be made before treating the detail as settled |
 
 </details>
 
@@ -299,22 +332,23 @@ Because KFM treats lifecycle states as governed transitions, not as magic folder
 
 | Reason code | Use when |
 |---|---|
-| `schema_failure` | Structure, type, geometry, or validation checks failed |
-| `rights_unclear` | License, terms, or redistribution basis is unresolved |
-| `sensitivity_unclear` | Exposure risk is unclear and needs review or redaction |
-| `review_blocked` | Steward or policy review explicitly blocked advancement |
-| `provenance_incomplete` | Source or lineage context is not sufficient yet |
-| `withdrawal_pending` | The item is retained temporarily while a rejection or correction path is finalized |
+| `validation.schema_failed` | Structure, type, geometry, or semantic validation failed |
+| `rights.unknown` | License, terms, or redistribution basis is unresolved |
+| `sensitivity.exact_location` | Exact location is too sensitive for the requested audience |
+| `corroboration.conflicted` | Independent admissible sources disagree materially |
+| `review.blocked` | A steward or policy review explicitly blocked advancement |
+| `correction.pending` | A correction, rollback, or replacement path is being assembled |
 
 </details>
 
 <details>
 <summary><strong>Maintenance notes for future editors</strong></summary>
 
-1. Keep terminology stable with the wider KFM truth path.
-2. Do not upgrade this README from doctrinal guidance to implementation certainty without checking the mounted repo.
-3. If local scripts, schemas, or fixtures are later added for quarantine handling, document them here with exact paths.
+1. Keep lifecycle terminology stable with the wider KFM truth path.
+2. Do not upgrade this README from doctrinal guidance to implementation certainty without direct repo verification.
+3. If local scripts, schemas, validators, or fixtures are added for quarantine handling, document them here with exact verified paths.
 4. When behavior changes, update this README in the same change set.
+5. Prefer showing one real proof object or example over adding more abstract prose.
 
 </details>
 
