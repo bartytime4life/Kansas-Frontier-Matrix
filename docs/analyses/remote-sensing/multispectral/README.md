@@ -10,92 +10,95 @@ updated: <YYYY-MM-DD-NEEDS-VERIFICATION>
 policy_label: <POLICY_LABEL-NEEDS-VERIFICATION>
 related: [../../README.md, ../README.md, ../change-detection/, ../time-series/, ../validation/, ../../../contracts/, ../../../schemas/, ../../../policy/]
 tags: [kfm, remote-sensing, multispectral, analysis]
-notes: [path confirmed via live repo tree; owners, dates, policy label, and module-local internals need checkout verification]
+notes: [Grounded in March 2026 KFM doctrine plus attached remote-sensing draft precedent; current session did not expose a mounted repo checkout, so owners, dates, policy label, exact sibling paths, and module-local internals remain needs-verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Multispectral Analysis
 
-Governed working index for optical multi-band remote-sensing analysis, derived products, and downstream reuse in KFM.
+Governed working index for optical multi-band remote-sensing analysis, derivative surfaces, and downstream reuse in KFM.
 
-> **Status:** experimental — path and surrounding repo context are live-verified; module-local internals still need checkout confirmation  
+> **Status:** experimental  
 > **Owners:** `<OWNERS-NEEDS-VERIFICATION>`  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-A3A3A3) ![Surface: Analysis](https://img.shields.io/badge/surface-analysis-2563EB) ![Domain: Remote sensing](https://img.shields.io/badge/domain-remote--sensing-0F766E) ![Module: Multispectral](https://img.shields.io/badge/module-multispectral-4F46E5) ![Evidence: Mixed](https://img.shields.io/badge/evidence-doctrine%20%2B%20repo%20tree-6B7280) ![Checkout: Partial](https://img.shields.io/badge/live%20checkout-partial-7C3AED)  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-A3A3A3) ![Surface: Analysis](https://img.shields.io/badge/surface-analysis-2563EB) ![Domain: Remote sensing](https://img.shields.io/badge/domain-remote--sensing-0F766E) ![Lane: Multispectral](https://img.shields.io/badge/lane-multispectral-4F46E5) ![Evidence: Doctrine + draft precedent](https://img.shields.io/badge/evidence-doctrine%20%2B%20draft%20precedent-6B7280) ![Checkout: PDF only](https://img.shields.io/badge/checkout-pdf--only-7C3AED)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Evidence posture:** repo path and parent documentation pattern are **CONFIRMED**; module-local substructure, owners, and workflow hooks below are a mix of **INFERRED**, **PROPOSED**, and **NEEDS VERIFICATION**.
+> **Statement labels used here:** **CONFIRMED** · **INFERRED** · **PROPOSED** · **UNKNOWN** · **NEEDS VERIFICATION**
 
 > [!IMPORTANT]
-> The current live checkout confirmed the `docs/analyses/remote-sensing/` lane and its `multispectral/` directory, but this session did not expose the current contents of this folder. Treat any module-local tree, workflow, or registry described below as **INFERRED starter structure** unless and until it is checked against the mounted checkout.
+> This README is grounded in the attached March 2026 KFM doctrinal corpus plus an attached historical remote-sensing draft that names this path and adjacent lanes. The current session did **not** expose a mounted repo checkout for this directory, so owners, dates, policy label, exact sibling files, and module-local subfolders remain **NEEDS VERIFICATION**.
 
 ## Scope
 
-This module is the KFM working surface for multispectral remote-sensing analysis: optical or closely coupled multi-band imagery used to build composites, indices, masks, classifications, and feature stacks that can later feed change detection, time series work, dossiers, stories, and governed exports.
+**CONFIRMED** KFM treats analytical derivatives as subordinate to authoritative truth. Multispectral outputs therefore belong here as inspectable, method-bound working products rather than as sovereign truth objects.
 
-**CONFIRMED**
+**CONFIRMED** Remote-sensing work is most useful when acquisition date, spectral meaning, radiometric or quality handling, and classification assumptions stay visible. Clean imagery alone is not an adequate analytical record.
 
-- `docs/analyses/` module READMEs are expected to carry purpose and scope, input links, output families, method and parameter summaries, validation and uncertainty, sensitivity and rights posture, provenance and release links, and downstream reuse rules.
-- KFM treats derived analytical layers as subordinate to authoritative truth. This folder is therefore for interpretable, traceable analysis outputs, not sovereign truth.
-- Multispectral work is only useful when the analysis keeps acquisition date, spectral meaning, quality handling, and classification assumptions visible.
+**INFERRED** This lane is the optical-band entry point for:
 
-**INFERRED**
+- band-aware composites
+- spectral indices
+- QA masks and validity surfaces
+- feature stacks for downstream comparison or modeling
+- classification-ready or classification-derived products that remain visibly modeled
 
-- This folder should be the optical-band entry point for single-window composites, spectral indices, and multispectral classifications before adjacent modules consume those outputs.
-- The most useful role of this README is not to duplicate textbook remote sensing, but to standardize what maintainers need to know to review, reuse, challenge, or republish a multispectral result.
+### What this lane is for
+
+This folder should help a reviewer answer five practical questions quickly:
+
+1. What source imagery or collection was used?
+2. Which bands, masks, and preprocessing steps shaped the signal?
+3. What derivative surface or table was produced?
+4. How was it checked?
+5. Where does it go next inside KFM?
+
+> [!CAUTION]
+> A visually persuasive composite is not a sufficient record. If the band choice, QA logic, date window, or modeled/not-modeled status is missing, the package is not review-ready.
 
 ## Repo fit
 
-| Item | Value |
-| --- | --- |
-| Path | `docs/analyses/remote-sensing/multispectral/README.md` |
-| Upstream | [`../../README.md`](../../README.md) · [`../README.md`](../README.md) |
-| Adjacent analysis lanes | [`../change-detection/`](../change-detection/) · [`../time-series/`](../time-series/) · [`../validation/`](../validation/) |
-| Cross-cutting surfaces | [`../../../contracts/`](../../../contracts/) · [`../../../schemas/`](../../../schemas/) · [`../../../policy/`](../../../policy/) |
-| Primary job | Keep multispectral work reviewable, bounded, and reusable without letting derived imagery products quietly become canonical truth. |
+| Item | Value | Current evidence state |
+| --- | --- | --- |
+| Path | `docs/analyses/remote-sensing/multispectral/README.md` | **INFERRED** |
+| Upstream | [`../../README.md`](../../README.md) · [`../README.md`](../README.md) | **INFERRED** |
+| Adjacent lanes | [`../change-detection/`](../change-detection/) · [`../time-series/`](../time-series/) · [`../validation/`](../validation/) | **INFERRED** |
+| Cross-cutting references | [`../../../contracts/`](../../../contracts/) · [`../../../schemas/`](../../../schemas/) · [`../../../policy/`](../../../policy/) | **INFERRED** |
+| Doctrinal fit | Derived outputs stay governed, inspectable, and downstream of evidence, policy, and release state. | **CONFIRMED** |
 
-### What belongs here
+### Upstream / downstream relationship
 
-- Sensor-scoped multispectral analysis notes for collections such as Landsat, Sentinel-2, MODIS, Resourcesat, NAIP, or other documented optical multi-band sources.
-- Band selections, composite recipes, QA masks, cloud or saturation handling, reprojection or resampling notes, and spectral feature engineering.
-- Derived raster or feature outputs such as indices, class rasters, sampled feature tables, and per-feature summaries produced from multispectral imagery.
-- Validation, uncertainty, and downstream handoff notes for later change, time, or publication surfaces.
-
-### What this file should help a reviewer answer
-
-1. What sensor or collection was used?
-2. Which bands and quality flags mattered?
-3. What preprocessing changed the signal?
-4. What derived artifact was produced?
-5. How was it checked, limited, and handed downstream?
+- **Upstream:** imagery references, metadata, masks, and source admission records should originate outside this lane.
+- **This lane:** documents single-window multispectral interpretation and derivative production.
+- **Downstream:** comparison, monitoring, validation, dossier, story, and export surfaces consume outputs from here only when caveats remain attached.
 
 ## Inputs
 
-| Accepted input | Why it belongs here | Minimum note to record |
+| Accepted input | Why it belongs here | Minimum record to keep |
 | --- | --- | --- |
-| Released or admissible imagery references | Keeps analysis tied to a known source and date window | Collection or asset ID, provider, acquisition window |
-| Band selections and spectral meaning | Multispectral interpretation depends on the bands used | Band list, wavelength meaning, intended use |
-| QA and masking rules | Cloud, haze, saturation, and no-data handling materially affect interpretation | QA band(s), mask logic, exclusion notes |
-| Composite or mosaicking logic | Different compositing rules produce different analytical surfaces | Reducer, temporal window, tie-break rules |
-| Spectral indices or feature stacks | Common multispectral outputs are derived band-math products | Formula, units, normalization, threshold notes |
-| Classification or segmentation setup | Many multispectral workflows end in labels or masks | Training source, class schema, model or rule family |
-| Validation material | KFM requires visible uncertainty, not polished confidence | Reference data, holdout logic, error summary |
-| Downstream reuse links | Multispectral work is often an input to later modules | Consumer module, release linkage, caveats |
+| Documented multispectral imagery references | Keeps analysis tied to source and date | collection or asset ID, provider, acquisition date or window |
+| Band selections and spectral meaning | Interpretation depends on what each band represents | band list, role, intended analytical use |
+| Quality and masking rules | Cloud, haze, saturation, and no-data handling can change conclusions | QA fields, mask logic, exclusion notes |
+| Composite or mosaicking logic | Different reducers produce materially different surfaces | reducer, temporal window, tie-break rules |
+| Derived band math | Common multispectral products are explicit transformations | formula, scaling, thresholds, normalization notes |
+| Feature stacks or sampled tables | Many downstream tasks consume structured rather than raw raster outputs | fields included, sampling grain, join basis |
+| Validation material | KFM expects visible uncertainty and challengeability | reference data, sampling design, summary findings |
+| Release and reuse links | Prevents orphan derivatives | downstream lane, release linkage, caveats |
 
 ## Exclusions
 
-| Excluded from this folder | Why excluded | Put it where instead |
+| Do **not** keep this here | Why not | Put it where instead |
 | --- | --- | --- |
-| Raw ingest packages, source descriptors, or canonical dataset-version artifacts | Those are truth-path and contract objects, not analysis notes | Source/data/contracts surfaces |
-| SAR-only or LiDAR-only workflows | Different signal physics and quality rules apply | Dedicated modality-specific analysis surface |
-| Hyperspectral-first workflows | This module is for multispectral practice, not broad-band hyperspectral exploitation | Separate hyperspectral lane if admitted |
-| Long-horizon change products | Comparative change needs explicit chronology and comparison logic | [`../change-detection/`](../change-detection/) or [`../time-series/`](../time-series/) |
-| Story, dossier, or export-ready public artifacts | Publication happens downstream of analysis | Story / dossier / export surfaces |
-| Free-standing AI summaries without evidence links | KFM requires retrieve-cite-verify or abstain | Do not admit until evidence-linked and policy-checked |
+| Raw ingest packages or source-admission packets | Those are truth-path onboarding artifacts, not analysis notes | source / contract / ingest surfaces |
+| Long-horizon change products | Comparative logic deserves its own chronology and thresholds | [`../change-detection/`](../change-detection/) or [`../time-series/`](../time-series/) |
+| Publication-ready story or export assets | Publication is downstream of analysis and review | story / dossier / export surfaces |
+| Free-floating AI summaries with no evidence linkage | KFM does not admit uncited interpretation as authority | do not publish until evidence-linked and policy-checked |
+| Hyperspectral-first, SAR-first, or LiDAR-first workflows | Different signal physics and review burdens apply | dedicated lane if admitted |
+| Modeled labels presented as settled fact | Classification outputs remain modeled unless specifically promoted | keep modeled status visible or route to validation |
 
 > [!NOTE]
-> Thermal, radar, or fused products may be referenced here when they are clearly subordinate inputs to a multispectral package, but this folder should not become a catch-all for every remote-sensing mode.
+> Thermal or fused inputs may appear in a multispectral package when they are clearly subordinate to the analysis, but they should not silently widen this lane into a catch-all remote-sensing bucket.
 
 ## Directory tree
 
-### Confirmed parent context
+### Attached-draft lane context
 
 ```text
 docs/analyses/remote-sensing/
@@ -106,90 +109,95 @@ docs/analyses/remote-sensing/
 └── validation/
 ```
 
-### INFERRED starter shape for this module
+### Current minimum safe assumption for this directory
 
 ```text
 docs/analyses/remote-sensing/multispectral/
-├── README.md
-├── methods/
-├── datasets/
-├── notebooks/
-├── results/
-└── validation/
+└── README.md
 ```
 
-Use the second tree as a reviewable starter shape only after checkout verification.
+Additional module-local subfolders such as `methods/`, `results/`, `reports/`, or `governance.md` appeared in attached remote-sensing draft material for sibling lanes, but they are **NEEDS VERIFICATION** for this specific directory before being stated as current repo fact.
 
 ## Quickstart
 
-1. Start from an imagery reference, not an orphan raster file.
-2. Record sensor, bands, acquisition window, spatial resolution, CRS, and QA fields before interpretation.
-3. Document preprocessing openly: masking, scaling, reprojection, resampling, compositing, clipping.
-4. Name every derived artifact in a way that makes its method legible.
-5. Attach validation, uncertainty, rights, and downstream reuse notes before treating the output as review-ready.
+1. Start from a documented imagery reference, not an orphan raster.
+2. Record the acquisition window, CRS, nominal resolution, bands, and QA fields before interpretation.
+3. Declare preprocessing openly: scaling, masking, clipping, reprojection, resampling, and compositing.
+4. Name each derivative so its method is legible.
+5. Link validation, uncertainty, and downstream reuse before treating the package as review-ready.
 
-### Illustrative module record
+### Illustrative package stub
 
 ```yaml
 analysis_id: <ANALYSIS_ID-NEEDS-VERIFICATION>
-scope:
-  place: <PLACE>
-  time_window: <START>/<END>
-input_imagery:
-  - sensor: Sentinel-2 MSI
-    collection_or_asset: <COLLECTION-ID>
-    bands: [B2, B3, B4, B8]
-    qa_bands: [QA60]
-    nominal_resolution_m: 10
+place: <PLACE_OR_AOI>
+time_window: <START>/<END>
+
+source_imagery:
+  - collection_or_asset: <SOURCE_ID>
+    provider: <PROVIDER>
+    sensor: <SENSOR_NAME>
+    bands: [<BAND_1>, <BAND_2>, <BAND_3>]
+    qa_fields: [<QA_FIELD_1>]
+    nominal_resolution_m: <RESOLUTION>
+
 preprocess:
-  cloud_mask: <METHOD>
-  reprojection: <CRS-OR-NATIVE>
+  scaling: <SCALE_OR_NONE>
+  masking: <MASK_LOGIC>
+  reprojection: <CRS_OR_NATIVE>
   resampling: <METHOD>
-  compositing: <MEDIAN|BEST_PIXEL|OTHER>
+  compositing: <NONE|MEDIAN|BEST_PIXEL|OTHER>
+
 derived_outputs:
-  - name: ndvi_composite
-    type: raster
-    formula: "(NIR - Red) / (NIR + Red)"
+  - name: <OUTPUT_NAME>
+    type: <RASTER|TABLE|FEATURE_STACK>
+    method: <INDEX|COMPOSITE|CLASSIFICATION|SAMPLING>
+    notes: <SHORT_METHOD_NOTE>
+
 validation:
-  approach: <HOLDOUT|FIELD_CHECK|CROSS_SOURCE>
-  notes: <SHORT-SUMMARY>
-rights_and_sensitivity:
-  policy_posture: <PUBLIC|RESTRICTED|NEEDS-REVIEW>
+  approach: <REFERENCE_DATA|HOLDOUT|FIELD_CHECK|CROSS_SOURCE>
+  summary: <SHORT_SUMMARY>
+
 downstream_links:
   - ../change-detection/
+  - ../time-series/
   - ../validation/
 ```
+
+> [!TIP]
+> Keep examples here illustrative unless the repo checkout confirms specific sensors, naming templates, or contract fields.
 
 ## Usage
 
 ### Common work types
 
-| Work type | Typical inputs | Typical outputs | Typical downstream use |
+| Work type | Typical inputs | Typical outputs | Usual downstream use |
 | --- | --- | --- | --- |
-| Band-aware visualization | Landsat, Sentinel-2, MODIS, Resourcesat, NAIP | True-color or false-color composites | Review, interpretation, story support |
-| Spectral index generation | Red / NIR / SWIR / green combinations | NDVI-like or water / built-up / moisture indices | Thematic screening, feature engineering |
-| Masking and pixel-quality control | QA bands, image metadata, cloud summaries | Cleaned imagery, validity masks, exclusion maps | Trustworthy composites and later statistics |
-| Feature-stack preparation | Multiple bands plus indices | Multi-band raster stack or sampled features | Classification, regression, zonal summaries |
-| Supervised or unsupervised classification | Training samples or clustering rules | Class rasters, polygons, summaries | Change detection, environmental quality, reporting |
-| Per-feature sampling | Released vector features + multispectral raster | Joined tables or feature attributes | Dossiers, compare surfaces, export bundles |
+| Band-aware visualization | multi-band optical imagery | true-color or false-color composites | inspection, review, story support |
+| Spectral index generation | selected visible / NIR / SWIR bands | vegetation, water, built-up, or moisture indices | screening, thematic context, feature engineering |
+| QA and validity masking | QA bands, metadata, scene masks | cleaned composites, exclusion masks | safer statistics and later comparison |
+| Feature-stack preparation | bands plus derived indices | sampled tables or stack rasters | classification, regression, zonal summaries |
+| Modeled classification | training labels or rule sets plus multispectral inputs | class rasters, class summaries, labeled features | comparison, validation, reporting |
+| Per-feature sampling | released vector features plus raster inputs | joined attributes or zonal summaries | dossiers, compare views, exports |
 
 ### Working rules
 
-- Prefer declared band meaning over aesthetic-looking imagery.
-- Record image-level and per-pixel quality cues when available.
-- Keep acquisition date visible; multispectral interpretation without time context is weak.
-- Treat derived class labels as modeled outputs, not self-validating truth.
-- Hand downstream modules enough context to rebuild or challenge the result.
+- Prefer spectral meaning over aesthetic appearance.
+- Keep time explicit; single-date imagery without date context is weak evidence.
+- Record the cost of preprocessing choices such as reprojection, resampling, and cloud removal.
+- Treat class outputs as modeled outputs unless validation and release state justify stronger language.
+- Route publication-ready claims through release-linked provenance, not ad hoc screenshots or orphan files.
+- Mark rights, sensitivity, or geoprivacy constraints visibly when ecological, cultural, or site-level exposure could matter.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Approved imagery refs<br/>Landsat · Sentinel-2 · MODIS · Resourcesat] --> B[Metadata capture<br/>sensor · bands · dates · CRS · rights]
-    B --> C[QA + preprocessing<br/>cloud mask · quality flags · reprojection · resampling]
-    C --> D[Multispectral analysis<br/>composites · indices · feature stacks · classification]
-    D --> E[Validation + uncertainty<br/>holdout · field check · cross-source comparison]
-    E --> F[Release-backed derived artifacts]
+    A[Admissible imagery refs] --> B[Metadata capture<br/>date · bands · CRS · rights]
+    B --> C[QA + preprocessing<br/>masking · scaling · compositing]
+    C --> D[Multispectral derivation<br/>composites · indices · feature stacks]
+    D --> E[Validation + uncertainty<br/>reference data · cross-source checks]
+    E --> F[Governed downstream reuse]
     F --> G[Change detection]
     F --> H[Time series]
     F --> I[Story / Dossier / Export]
@@ -198,111 +206,124 @@ flowchart LR
 
 ## Reference tables
 
-### Minimum recording contract for a multispectral package
+### Minimum recording contract
 
 | Record this | Why it matters |
 | --- | --- |
-| Sensor / collection / provider | Different sensors carry different band sets, revisit logic, and QA conventions |
-| Acquisition date or temporal window | Remote-sensing interpretation is time-sensitive |
-| Bands used and spectral meaning | The same composite can mean very different things depending on band choice |
-| Nominal resolution and reprojection | Scale and resampling affect interpretation and comparability |
-| QA, cloud, haze, saturation, and no-data handling | Clean-looking imagery can still be analytically unsafe |
-| Composite / mosaic rule | Median, best-pixel, percentile, and single-scene outputs are not interchangeable |
-| Index formulas or class schema | Derived outputs need explicit method identity |
-| Validation method and uncertainty | KFM prefers cite-or-abstain over unsupported confidence |
-| Rights / sensitivity posture | Some derived views may still require restriction or generalization |
-| Downstream reuse targets | Keeps later change, time, and publication surfaces traceable |
+| Source collection / asset / provider | Preserves traceability to admissible evidence |
+| Acquisition date or time window | Remote sensing is time-sensitive |
+| Bands used and spectral meaning | Interpretation depends on the signal, not just the picture |
+| Resolution and CRS | Scale and reprojection affect comparability |
+| QA / cloud / no-data handling | Clean-looking imagery can still be analytically unsafe |
+| Composite rule | Median, best-pixel, percentile, and single-scene outputs are not interchangeable |
+| Index formula or class schema | Derivative products need explicit method identity |
+| Validation method and uncertainty | KFM prefers inspectable limits over polished confidence |
+| Rights / sensitivity posture | Some layers require masking, restriction, or generalization |
+| Downstream handoff | Prevents later modules from guessing method context |
 
-### Boundary matrix
+### Handoff matrix
+
+| Handoff target | What this lane should pass forward |
+| --- | --- |
+| `change-detection/` | baseline imagery window(s), preprocessing notes, index definitions, thresholds used |
+| `time-series/` | per-date derivation logic, cadence, aggregation rules, missing-data notes |
+| `validation/` | truth data sources, sample design, error summaries, unresolved caveats |
+| story / dossier / export surfaces | release-safe renderings, legend logic, public-facing caveats, freshness basis |
+
+### Boundary checks
 
 | Question | Keep it here? | Reason |
 | --- | --- | --- |
-| Single-window NDVI or band composite | Yes | Core multispectral analysis product |
-| Cloud-mask method notes | Yes | Critical for interpretation |
-| Training labels and classifier summary | Yes | Method identity belongs with the analysis |
-| Year-over-year vegetation loss map | Usually no | Prefer change-detection or time-series |
-| Published story chapter using the output | No | Publication surface, not analysis surface |
-| Raw source admission packet | No | Truth-path onboarding object |
-| SAR-only flood classification | No | Different modality and quality logic |
-
-### Multispectral module vs adjacent remote-sensing lanes
-
-| Lane | Best fit | Not its job |
-| --- | --- | --- |
-| `multispectral/` | Band-aware interpretation, indices, composites, classifications, feature stacks | Long-horizon comparative change or modality-general catch-all |
-| `change-detection/` | Before/after or rolling change logic | Single-window multispectral authoring |
-| `time-series/` | Temporal trajectories, monitoring, repeated observations | One-off derived surface without chronology |
-| `validation/` | Accuracy, error, corroboration, and challenge records | Primary analysis narrative |
+| Single-window NDVI or false-color composite | Yes | Core multispectral derivative |
+| Cloud-mask and saturation notes | Yes | Critical to interpretation |
+| Confusion matrix for a multispectral classifier | Yes, with validation linkage | Method quality belongs with the analysis |
+| Year-over-year vegetation loss map | Usually no | Prefer explicit comparative lanes |
+| Public narrative chapter based on the output | No | Publication surface, not analysis lane |
+| Raw source admission packet | No | Truth-path onboarding artifact |
 
 ## Task list
 
 ### Definition of done
 
-- [ ] Source imagery reference is explicit.
-- [ ] Acquisition date or temporal window is explicit.
-- [ ] Band list and spectral meaning are explicit.
-- [ ] Resolution, CRS, reprojection, and resampling are explicit.
+- [ ] Source imagery is explicit.
+- [ ] Acquisition date or time window is explicit.
+- [ ] Bands and spectral meaning are explicit.
+- [ ] CRS, resolution, and any reprojection or resampling are explicit.
 - [ ] QA and masking logic are explicit.
-- [ ] Derived outputs have names, units, or class schema.
-- [ ] Validation and uncertainty are explicit.
-- [ ] Rights and sensitivity posture are explicit.
+- [ ] Derived outputs have clear method identity.
+- [ ] Validation and uncertainty are visible.
+- [ ] Rights and sensitivity posture are visible.
 - [ ] Downstream reuse links are explicit.
-- [ ] Any unresolved weaknesses are left visible, not polished away.
+- [ ] Unresolved weaknesses remain visible instead of being polished away.
 
-### Review gates for maintainers
+### Review gates
 
+- [ ] Can a reviewer reconstruct the derivative from source imagery and preprocessing notes?
 - [ ] Does the package explain what the signal means, not just what the map looks like?
-- [ ] Can a reviewer trace each derived surface back to source imagery and preprocessing?
-- [ ] Would a downstream change or time-series module know how to reuse this safely?
-- [ ] Are modeled labels presented as modeled labels?
-- [ ] Would a public-facing surface be able to expose caveats without re-authoring the analysis?
+- [ ] Are modeled outputs labeled modeled?
+- [ ] Would an adjacent lane know how to reuse this safely?
+- [ ] Are release, policy, or sensitivity constraints visible enough for public-surface review?
 
 ## FAQ
 
 ### Does this folder hold raw imagery?
 
-No. This folder is for analysis documentation and derived multispectral work, not raw source admission or canonical storage.
+No. This lane is for multispectral analysis documentation and derivative products, not raw source admission or canonical storage.
 
-### Can this folder hold hyperspectral analysis?
+### Are all classification products acceptable here?
 
-Not as a default. Hyperspectral work should stay separate unless the repo intentionally widens this lane and updates the scope, methods, and review burden.
+Only when they stay visibly modeled and method-bound. A class raster without method, validation, or caveats is not review-ready.
 
-### Is NDVI enough as validation?
-
-No. An index may be useful, but KFM review still expects visible method, uncertainty, and corroboration logic.
-
-### Where should year-over-year or rolling monitoring outputs go?
+### Where should longitudinal monitoring outputs go?
 
 Prefer [`../change-detection/`](../change-detection/) or [`../time-series/`](../time-series/) once the work becomes explicitly comparative or longitudinal.
 
+### Is a visually strong composite enough for publication?
+
+No. Date, band meaning, QA logic, and validation context still matter.
+
 ### Are multispectral outputs authoritative truth?
 
-No. They are derived analytical artifacts by default and must remain linked to their source imagery, method, and validation trail.
+Not by default. They are derivative analytical products unless a later governed promotion says otherwise.
 
 ## Appendix
 
 <details>
-<summary><strong>Illustrative review questions for a multispectral package</strong></summary>
+<summary><strong>Illustrative review questions</strong></summary>
 
-1. What physical signal is this analysis trying to make legible?
-2. Which band choices make that interpretation plausible?
-3. Which QA fields or masks could materially change the output?
-4. What happens if the same method is applied at a different date window or resolution?
-5. Is the output a screening layer, a decision-support layer, or a publication candidate?
-6. What would cause this package to abstain, hold, or request more evidence?
+1. What physical signal is this package trying to make legible?
+2. Which bands or derived indices make that interpretation plausible?
+3. Which QA or masking choices could change the outcome materially?
+4. What would change if the same method were rerun at another date window or resolution?
+5. Is this a screening layer, a decision-support layer, or a publication candidate?
+6. What would cause this package to hold, abstain, or request more evidence?
 
 </details>
 
 <details>
 <summary><strong>Illustrative output naming patterns</strong></summary>
 
+- `<place>_<sensor>_<date-window>_truecolor`
 - `<place>_<sensor>_<date-window>_falsecolor`
-- `<place>_<sensor>_<date-window>_ndvi`
+- `<place>_<sensor>_<date-window>_<index-name>`
 - `<place>_<sensor>_<date-window>_feature-stack`
-- `<place>_<sensor>_<date-window>_landcover-v<version>`
+- `<place>_<sensor>_<date-window>_<class-schema>-v<version>`
 - `<place>_<sensor>_<date-window>_qa-mask`
 
-Use repo-verified naming conventions in preference to these placeholders once the checkout is inspected.
+Use repo-verified naming rules in preference to these placeholders once the mounted checkout is inspected.
+
+</details>
+
+<details>
+<summary><strong>Illustrative derivative families</strong></summary>
+
+| Family | Examples | Notes |
+| --- | --- | --- |
+| Composites | true-color, false-color, band ratios | Keep band order explicit |
+| Indices | vegetation, water, moisture, built-up | Record formula and thresholds |
+| Masks | cloud, shadow, saturation, validity | Record exclusion cost, not just logic |
+| Feature stacks | bands + indices + terrain or contextual covariates | Keep provenance of non-multispectral additions explicit |
+| Model-backed outputs | classifications, probability rasters, sampled predictions | Keep modeled status visible |
 
 </details>
 
