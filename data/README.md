@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: NEEDS VERIFICATION
 created: NEEDS_VERIFICATION_YYYY-MM-DD
-updated: 2026-03-21
+updated: 2026-04-01
 policy_label: NEEDS VERIFICATION
-related: [../README.md, ./registry/README.md, ./specs/README.md, ./catalog/README.md, ./catalog/stac/README.md]
+related: [../README.md, ./registry/README.md, ./catalog/README.md, ./catalog/stac/README.md, ./processed/README.md]
 tags: [kfm, data, truth-path, catalog, provenance]
-notes: [Baseline doctrine grounded mainly in March 2026 KFM master manuals; continuity artifacts document repo-root data/ plus data/registry/README.md and data/catalog/stac/README.md at an earlier commit, but the mounted live checkout was not available in this session.]
+notes: [Grounded in attached March 2026 KFM master manuals plus current public main tree evidence for data/ and selected child README surfaces; no local mounted checkout was available in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 # `data/`
@@ -26,23 +26,24 @@ Governed storage, lifecycle, and release-artifact surface for KFM evidence-beari
 > ![owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey)
 > ![truth_path](https://img.shields.io/badge/truth_path-governed-0a7d5a)
 > ![catalog](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb)
-> ![checkout](https://img.shields.io/badge/checkout-unmounted-lightgrey)
-> ![path_evidence](https://img.shields.io/badge/path_evidence-continuity__artifact-yellow)  
+> ![public_main](https://img.shields.io/badge/public__main-tree__confirmed-brightgreen)
+> ![workspace](https://img.shields.io/badge/workspace-public__repo%20%2B%20attached__PDFs-6f42c1)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README keeps three evidence layers separate on purpose:
+> This README keeps four evidence layers separate on purpose:
 >
 > - **CONFIRMED doctrine** for KFM lifecycle law, trust boundaries, artifact families, catalog closure, and promotion posture.
-> - **INFERRED continuity** for `data/` as a documented repo-root surface and for a small number of neighboring README and schema paths described in continuity artifacts.
-> - **PROPOSED starter shape** for concrete zone directories that align strongly with doctrine but were **not** reverified from a mounted live checkout in this session.
+> - **CONFIRMED current public tree** for `data/` as a live repo-root surface on public `main`, including top-level lifecycle directories and selected child README surfaces.
+> - **PROPOSED deeper shape** for exact pack layouts, emitted artifact filenames, proof-pack internals, and validator wiring not proven by tree inspection alone.
+> - **UNKNOWN / NEEDS VERIFICATION** for branch-only paths, local-only contents, owners, CI enforcement, proof objects, and any path not shown in the current public tree.
 
 > [!NOTE]
 > This file uses **CATALOG** for the lifecycle state and **catalog triplet** for the linked `DCAT + STAC + PROV` closure that makes a version discoverable, traceable, and evidence-resolvable.
 
 ## Scope
 
-In continuity artifacts, `data/` is described at repo root as the surface for **registry entries, example datasets, catalog artifacts, and zone manifests**. In March 2026 doctrine, that practical repo role is widened into the explicit KFM truth-path model:
+In the current public branch, `data/` is a repo-root surface that includes lifecycle and release-adjacent directories such as `raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `receipts/`, `published/`, `proofs/`, and `registry/`. In March 2026 doctrine, that practical repo role is widened into the explicit KFM truth-path model:
 
 `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
 
@@ -53,19 +54,20 @@ That makes `data/` more than storage. In KFM, it is the governed surface where i
 This file is meant to help maintainers do four things quickly:
 
 1. understand what belongs in `data/`,
-2. distinguish **CONFIRMED doctrine** from **INFERRED / PROPOSED repo shape**,
+2. distinguish **CONFIRMED doctrine** from **CONFIRMED public-tree evidence** and **PROPOSED deeper shape**,
 3. keep storage responsibilities separate from contracts, policy, and governed APIs,
-4. extend the live tree without quietly weakening KFM’s trust posture.
+4. extend the tree without quietly weakening KFM’s trust posture.
 
 ### Evidence posture for this README
 
 | Layer | Status | How to read it |
 |---|---|---|
 | Truth path, trust membrane, authoritative-versus-derived split, catalog triplet, promotion/correction posture | **CONFIRMED** | Safe to treat as current project doctrine. |
-| `data/` as a documented repo-root surface | **INFERRED** | Supported by continuity artifacts, but not reverified from a mounted checkout in this run. |
-| `data/registry/README.md` and `data/catalog/stac/README.md` | **INFERRED** | Documented at an earlier repo state in continuity artifacts; current checkout still needs direct verification. |
-| `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/receipts/`, `data/published/`, `data/proofs/` | **PROPOSED** | Doctrine-aligned starter skeleton; not live-tree fact here. |
-| `data/specs/README.md` and `data/catalog/README.md` | **NEEDS VERIFICATION** | Retained because task metadata expects them, but their live presence was not proven in this session. |
+| `data/` as a repo-root surface on the current public branch | **CONFIRMED** | Current public `main` shows the path directly. |
+| `data/registry/README.md`, `data/catalog/README.md`, `data/catalog/stac/README.md`, and `data/processed/README.md` | **CONFIRMED** | Public branch confirms these documentation surfaces exist. |
+| `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/receipts/`, `data/published/`, `data/proofs/`, and `data/registry/` | **CONFIRMED** | Public tree confirms the directories exist; deeper contents still need inspection. |
+| Exact internal filenames, emitted proof packs, real receipts, release examples, and validator/test wiring inside those zones | **NEEDS VERIFICATION** | Tree presence is not the same as emitted artifact proof. |
+| `data/specs/` or `data/specs/README.md` | **UNKNOWN** | Not visible in the current public `data/` tree; verify the target branch before adding links or claims. |
 
 [Back to top](#data)
 
@@ -77,27 +79,30 @@ This file is meant to help maintainers do four things quickly:
 
 | Relation | Surface | Posture | Why it matters |
 |---|---|---|---|
-| Upstream | [`../README.md`](../README.md) | **NEEDS VERIFICATION** | Expected repo-wide overview and navigation surface. |
-| Upstream | [`../packages/`](../packages/) | **INFERRED** | Shared reusable law should stay in packages rather than leaking into ad hoc storage layouts. |
-| Upstream | [`../contracts/`](../contracts/) | **INFERRED** | Shared schemas, profiles, and controlled vocabularies should remain explicit rather than hiding inside data zones. |
-| Upstream | [`../policy/`](../policy/) | **INFERRED** | Rights, sensitivity, deny-by-default rules, and review obligations belong in executable policy as well as prose. |
-| Upstream | [`../docs/`](../docs/) | **INFERRED** | Architecture docs, ADRs, templates, and runbooks should track behavior-significant changes to the data surface. |
-| Lateral | [`./registry/README.md`](./registry/README.md) | **INFERRED** | Continuity artifacts point here as the likely source and dataset registration surface. |
-| Lateral | [`./catalog/stac/README.md`](./catalog/stac/README.md) | **INFERRED** | Continuity artifacts point here as the likely STAC-facing catalog surface. |
-| Lateral | [`./catalog/README.md`](./catalog/README.md) | **NEEDS VERIFICATION** | Doctrine-aligned adjacency, but not proven live in this session. |
-| Lateral | [`./specs/README.md`](./specs/README.md) | **NEEDS VERIFICATION** | Kept because task metadata names it, but `../contracts/` still appears stronger for shared schema authority unless the checkout proves otherwise. |
-| Downstream | [`../apps/`](../apps/) | **INFERRED** | Public and role-limited surfaces should consume promoted scope through governed APIs, not direct storage reads. |
-| Downstream | [`../tools/`](../tools/) | **INFERRED** | Validators, link checks, catalog QA, and evidence linting should prove the data surface rather than merely describe it. |
-| Downstream | [`../tests/`](../tests/) | **INFERRED** | Schema, catalog, policy, freshness, correction, and replay tests should enforce this surface. |
-| Downstream | [`../infra/`](../infra/) | **INFERRED** | Deployment, backup, restore, correction, and reconciliation logic must preserve the trust membrane. |
+| Upstream | [`../README.md`](../README.md) | **CONFIRMED path** | Expected repo-wide overview and navigation surface. |
+| Upstream | [`../packages/`](../packages/) | **CONFIRMED path / INFERRED role** | Shared reusable law should stay in packages rather than leaking into ad hoc storage layouts. |
+| Upstream | [`../contracts/`](../contracts/) | **CONFIRMED path / INFERRED role** | Shared schemas, profiles, and controlled vocabularies should remain explicit rather than hiding inside data zones. |
+| Upstream | [`../schemas/`](../schemas/) | **CONFIRMED path / NEEDS VERIFICATION for any specific family used here** | Public root confirms the directory exists; use direct branch evidence before treating it as the canonical home of any particular schema family. |
+| Upstream | [`../policy/`](../policy/) | **CONFIRMED path / INFERRED role** | Rights, sensitivity, deny-by-default rules, and review obligations belong in executable policy as well as prose. |
+| Upstream | [`../docs/`](../docs/) | **CONFIRMED path / INFERRED role** | Architecture docs, ADRs, templates, and runbooks should track behavior-significant changes to the data surface. |
+| Lateral | [`./registry/README.md`](./registry/README.md) | **CONFIRMED path** | Current public branch confirms this as the registration-facing documentation surface. |
+| Lateral | [`./registry/schemas/`](./registry/schemas/) | **CONFIRMED path** | Registry-local schema material has a live subtree; exact contents still need inspection. |
+| Lateral | [`./catalog/README.md`](./catalog/README.md) | **CONFIRMED path** | Current public branch confirms the catalog boundary README. |
+| Lateral | [`./catalog/stac/README.md`](./catalog/stac/README.md) | **CONFIRMED path** | Current public branch confirms the STAC-facing README surface. |
+| Lateral | [`./processed/README.md`](./processed/README.md) | **CONFIRMED path** | Current public branch confirms a processed-zone README surface. |
+| Lateral | `data/specs/` | **UNKNOWN / not visible on current public main** | Do not add or link this as a current fact unless the target branch proves it. |
+| Downstream | [`../apps/`](../apps/) | **CONFIRMED path / INFERRED role** | Public and role-limited surfaces should consume promoted scope through governed APIs, not direct storage reads. |
+| Downstream | [`../tools/`](../tools/) | **CONFIRMED path / INFERRED role** | Validators, link checks, catalog QA, and evidence linting should prove the data surface rather than merely describe it. |
+| Downstream | [`../tests/`](../tests/) | **CONFIRMED path / INFERRED role** | Schema, catalog, policy, freshness, correction, and replay tests should enforce this surface. |
+| Downstream | [`../infra/`](../infra/) | **CONFIRMED path / INFERRED role** | Deployment, backup, restore, correction, and reconciliation logic must preserve the trust membrane. |
 
 ### Repo-fit summary
 
 | Question | Answer |
 |---|---|
-| What is `data/` for? | Governed intake, lifecycle state, catalog closure, release evidence, and repo-facing data surfaces such as registry entries and catalog artifacts. |
+| What is `data/` for? | Governed intake, lifecycle state, catalog closure, release evidence, and repo-facing data surfaces such as registry entries, catalog artifacts, and processed or publish-adjacent zones. |
 | What is `data/` **not**? | Not the trust membrane, not the public API surface, and not a license to expose RAW, WORK, QUARANTINE, or unpublished candidates directly. |
-| What stays adjacent instead of buried here? | Shared contracts, executable policy, app routes, worker logic, and most implementation law. |
+| What stays adjacent instead of buried here? | Shared contracts, shared schema registries, executable policy, app routes, worker logic, and most implementation law. |
 
 [Back to top](#data)
 
@@ -115,7 +120,7 @@ The following belong in or immediately around `data/` when KFM doctrine is being
 | Run receipts, validation reports, and audit-ready process memory | Replay, rollback, and correction fail without durable process evidence | WORK / receipts |
 | `DCAT + STAC + PROV` closure artifacts | Catalog closure is part of release truth, not decorative metadata | CATALOG |
 | Release manifests, proof packs, and integrity objects | Promotion is a governed transition and should leave receipts | Release boundary |
-| Zone manifests, public-safe exemplars, and example datasets | Continuity artifacts describe these as part of the repo-facing role of `data/` | Reference / exemplar |
+| Zone manifests, public-safe exemplars, and example datasets | Repo-grounded summaries describe these as part of the repo-facing role of `data/` | Reference / exemplar |
 
 ### Artifact families at a glance
 
@@ -142,7 +147,7 @@ The following belong in or immediately around `data/` when KFM doctrine is being
 | Proof / attestation pack | `data/proofs/` or equivalent release bundle | Promotion evidence, integrity, and rollback traceability |
 
 > [!TIP]
-> `data/` may **consume** shared schemas from `../contracts/`, but that is different from treating `data/` as the canonical home for every shared schema, vocabulary, or standards profile.
+> `data/` may **consume** shared schemas from `../contracts/` or `../schemas/`, but that is different from treating `data/` as the canonical home for every shared schema, vocabulary, or standards profile.
 
 [Back to top](#data)
 
@@ -154,7 +159,7 @@ The following do **not** belong here as sovereign truth or as the normal public 
 |---|---|---|
 | Direct client reads from canonical stores or unpublished artifacts | Governed APIs and trust-visible app surfaces | Storage is not the trust membrane. |
 | Secrets, credentials, tokens, or host-specific secret material | Runtime secret management / deployment layer | `data/` is evidence-bearing, not secret-bearing. |
-| Shared schemas and standards profiles | `../contracts/` | Keeps machine-readable contract authority explicit and reviewable. |
+| Shared schemas and standards profiles | `../contracts/` and/or `../schemas/` | Keeps machine-readable contract authority explicit and reviewable. |
 | Policy bundles, reason registries, and deny-by-default logic | `../policy/` | Policy should remain executable, testable, and independently reviewable. |
 | Unreviewed analyst scratch outputs presented as publishable truth | `work/` or quarantine | Exploration is valid; silent publication is not. |
 | Derived layers treated as authority by convenience | Rebuildable downstream layers | Search, graph, tile, vector, scene, cache, and summary layers remain downstream of stronger truth. |
@@ -167,115 +172,123 @@ The following do **not** belong here as sovereign truth or as the normal public 
 
 ## Directory tree
 
-### Continuity-artifact paths *(INFERRED; mounted checkout still needs verification)*
-
-```text
-data/
-├── registry/
-│   └── schemas/
-└── catalog/
-    └── stac/
-```
-
-### Doctrine-aligned starter skeleton *(PROPOSED)*
+### Current public branch snapshot *(CONFIRMED path evidence)*
 
 ```text
 data/
 ├── README.md
-├── registry/                # source and dataset registration surfaces
-├── raw/                     # immutable source-native capture
-├── work/                    # transforms, QA, and reproducible intermediate work
-├── quarantine/              # unresolved rights / sensitivity / validation hold
-├── processed/               # canonical publishable derivatives and dataset versions
-├── catalog/                 # catalog closure boundary
+├── catalog/
+│   ├── README.md
+│   ├── dcat/
+│   ├── prov/
+│   └── stac/
+│       └── README.md
+├── processed/
+│   └── README.md
+├── proofs/
+├── published/
+├── quarantine/
+├── raw/
+├── receipts/
+├── registry/
+│   ├── README.md
+│   └── schemas/
+└── work/
+```
+
+### Doctrine-aligned deeper pack shape *(PROPOSED below the confirmed tree)*
+
+```text
+data/
+├── raw/<source>/<run>/                    # immutable source-native capture
+├── work/<lane>/<run>/                     # transforms, QA, redaction, and intermediate work
+├── quarantine/<reason>/<subject>/         # unresolved rights / sensitivity / validation holds
+├── processed/<theme>/<dataset>/<version>/ # canonical dataset versions
+├── catalog/
 │   ├── dcat/
 │   ├── stac/
 │   └── prov/
-├── receipts/                # run receipts, validation reports, and audit-ready process memory
-├── published/               # optional materialized release scope; publication remains a state first
-└── proofs/                  # release manifests, proof packs, attestations, and correction trace
+├── receipts/<lane>/<run>/                 # process-memory artifacts
+├── published/<release>/                   # optional materialized release scope
+└── proofs/<release>/                      # manifests, proof packs, attestations, correction trace
 ```
 
 ### Path posture
 
 | Path claim | Status | Reading rule |
 |---|---|---|
-| `data/` is a documented repo-root area | **INFERRED** | Supported by continuity artifacts; verify live presence in checkout. |
-| `data/registry/` and `data/catalog/stac/` exist as documented continuity subpaths | **INFERRED** | Earlier audited materials point to both; current checkout still needs verification. |
-| `data/registry/schemas/` carries registry schema material | **INFERRED** | A continuity artifact points to `data/registry/schemas/dataset_entry.schema.json`; verify live tree before wiring automation. |
-| `data/raw/`, `data/work/`, `data/processed/`, `data/catalog/`, and possibly `data/receipts/` are part of the documented lifecycle shape | **NEEDS VERIFICATION** | Strong continuity support exists, but exact live naming and placement still need direct checkout confirmation. |
-| `data/quarantine/`, `data/published/`, and `data/proofs/` exist today as real directories | **PROPOSED** | Strong doctrine-aligned starter skeleton; not live-tree fact in this session. |
-| `data/specs/` is canonical | **UNKNOWN** | Keep only as a task-level adjacency until the mounted repo proves it. |
+| `data/` exists as a repo-root path on current public `main` | **CONFIRMED** | Treat as current public tree fact. |
+| `data/registry/README.md`, `data/catalog/README.md`, `data/catalog/stac/README.md`, and `data/processed/README.md` exist on current public `main` | **CONFIRMED** | Path-level documentation surfaces are public-tree facts. |
+| `data/raw/`, `data/work/`, `data/quarantine/`, `data/receipts/`, `data/published/`, and `data/proofs/` exist as top-level directories on current public `main` | **CONFIRMED** | Tree presence is proven; deep contents are not. |
+| `data/catalog/dcat/` and `data/catalog/prov/` exist as catalog subdirectories on current public `main` | **CONFIRMED** | Tree presence is proven; deeper README or file inventories were not reviewed here. |
+| Exact artifact filenames, emitted release examples, proof packs, and validator wiring within these directories are already present | **NEEDS VERIFICATION** | Inspect branch contents before documenting emitted objects as fact. |
+| `data/specs/` is a current path | **UNKNOWN** | Not visible in the current public `data/` tree; verify the target branch before adding links or schema-home claims. |
 
 ### What this README intentionally does *not* assert
 
-- any specific worker, package, or service already wired to every zone,
-- any exact filename convention below the zone level,
-- any guarantee that `published/`, `proofs/`, or `receipts/` are already materialized directories in the live checkout,
-- any claim that `data/catalog/README.md` or `data/specs/README.md` currently exist.
+- that every tree-confirmed directory already contains emitted production artifacts,
+- that public `main` proves non-public branch contents or active CI enforcement,
+- that real proof packs, runtime response envelopes, or resolver traces have already been surfaced in-repo,
+- that `data/specs/` exists,
+- that current public tree confirmation alone proves end-to-end operational maturity.
 
 [Back to top](#data)
 
 ## Quickstart
 
-Before trusting any path-level claim in this README, inspect the live checkout.
+Start by separating **tree confirmation** from **artifact confirmation**.
 
 ```bash
-# Confirm the target surface exists
-pwd
-find data -maxdepth 4 -print 2>/dev/null | sort
+# Inspect the current local checkout of the data surface
+find data -maxdepth 3 -print 2>/dev/null | sort
 
-# Read local README files if present
-test -f data/README.md && sed -n '1,240p' data/README.md
-test -f data/registry/README.md && sed -n '1,220p' data/registry/README.md
-test -f data/catalog/README.md && sed -n '1,220p' data/catalog/README.md
-test -f data/catalog/stac/README.md && sed -n '1,220p' data/catalog/stac/README.md
-test -f data/specs/README.md && sed -n '1,220p' data/specs/README.md
+# Read confirmed README surfaces if present
+for f in \
+  data/README.md \
+  data/registry/README.md \
+  data/catalog/README.md \
+  data/catalog/stac/README.md \
+  data/processed/README.md
+do
+  test -f "$f" && { echo "===== $f"; sed -n '1,220p' "$f"; }
+done
 
-# Inspect registry-local schema evidence if present
-test -f data/registry/schemas/dataset_entry.schema.json && \
-  sed -n '1,120p' data/registry/schemas/dataset_entry.schema.json
-
-# Inspect artifact-shaped files if present
-find data -maxdepth 6 -type f \
-  \( -iname '*manifest*' -o -iname '*receipt*' -o -iname '*proof*' -o -iname '*catalog*' -o -iname '*.json' -o -iname '*.jsonld' -o -iname '*.prov' -o -iname '*.yaml' -o -iname '*.yml' \) \
-  2>/dev/null | sort | sed -n '1,240p'
-```
-
-### Minimal verification pass
-
-```bash
-# Confirm or downgrade the continuity and starter-shape claims
+# Confirm top-level lifecycle and release-adjacent directories
 for p in \
-  data \
-  data/registry \
-  data/registry/schemas \
-  data/catalog \
-  data/catalog/stac \
   data/raw \
   data/work \
   data/quarantine \
   data/processed \
+  data/catalog \
   data/receipts \
   data/published \
   data/proofs \
-  data/specs
+  data/registry
 do
   test -e "$p" && echo "FOUND $p" || echo "MISSING $p"
 done
 
-# Check whether catalog-triplet artifacts exist
-find data -type f 2>/dev/null | grep -Ei '/(stac|dcat|prov)/|catalog' || true
+# Treat branch-only or historical paths as unverified until shown by the checkout
+test -d data/specs && echo "FOUND data/specs" || echo "data/specs not present in current public main tree"
+```
 
-# Check whether receipt/proof-bearing artifacts are already emitted somewhere under data/
-find data -type f 2>/dev/null | grep -Ei 'receipt|manifest|proof|attest|bundle|correction|checksum' || true
+### Inspect deeper artifact evidence
 
-# If data/specs is absent, compare with contracts/
-test -d data/specs && echo "FOUND data/specs" || echo "VERIFY ../contracts before creating data/specs"
+```bash
+# Look for manifest / receipt / proof / catalog-shaped files
+find data -maxdepth 6 -type f \
+  \( -iname '*manifest*' -o -iname '*receipt*' -o -iname '*proof*' -o -iname '*catalog*' -o -iname '*.json' -o -iname '*.jsonld' -o -iname '*.prov' -o -iname '*.yaml' -o -iname '*.yml' \) \
+  2>/dev/null | sort | sed -n '1,240p'
+
+# If a processed zone exists, inspect whether version-like packs are materialized
+find data/processed -maxdepth 5 -print 2>/dev/null | sort | sed -n '1,240p'
+
+# If receipts/proofs exist as directories, check whether they already contain emitted artifacts
+find data/receipts data/proofs -maxdepth 5 -print 2>/dev/null | sort | sed -n '1,240p'
 ```
 
 > [!TIP]
-> If the checkout shows `../contracts/` as the canonical home for shared schemas and vocabularies, keep `./specs/README.md` as a documentation adjacency only, not as a prompt to create drift.
+> Public-tree confirmation is helpful, but KFM doctrine still requires **artifact-level proof** before stronger claims like “release-ready,” “policy-enforced,” or “resolver-backed” become fair.
 
 [Back to top](#data)
 
@@ -312,6 +325,10 @@ A version is not outward-ready until `DCAT + STAC + PROV` can cross-link identif
 ### 8. Keep proofs attached to the exact release they justify
 
 Checksums, manifests, proof packs, attestations, and correction evidence should remain linked to the exact dataset version or release scope they support. Detached proof objects are much less useful during rollback, audit, or dispute.
+
+### 9. Read current tree shape and operational maturity separately
+
+The current public branch already materializes the top-level `data/` zones. That is useful. It is **not** the same thing as proving that each zone already contains complete receipts, manifests, closures, proof objects, and correction drills.
 
 ### Illustrative artifact chain
 
@@ -375,10 +392,11 @@ flowchart LR
 
 | Surface | Status | Role | Caution |
 |---|---|---|---|
-| `receipts/` | **NEEDS VERIFICATION as directory / CONFIRMED as artifact family** | Run receipts, validation reports, and audit-ready process memory | Exact placement may differ even if receipt artifacts are already part of the doctrine |
-| `published/` | **PROPOSED directory / CONFIRMED state concept** | Optional materialized release scope for governed outputs | Publication itself still must be treated as a transition, not a folder copy |
-| `proofs/` | **PROPOSED** | Release manifests, proof packs, attestations, signatures, correction trace | Proof objects must stay linked to the release or dataset version they justify |
-| Dataset version README | **PROPOSED** | Human-readable summary of method, CRS, units, caveats, license, and links | Do not let README prose replace machine-checkable manifests or catalog closure |
+| `receipts/` | **CONFIRMED directory / NEEDS VERIFICATION emitted contents** | Run receipts, validation reports, and audit-ready process memory | Top-level presence is proven; actual emitted inventory still needs inspection. |
+| `published/` | **CONFIRMED directory / CONFIRMED state concept** | Optional materialized release scope for governed outputs | Publication itself still must be treated as a transition, not a folder copy. |
+| `proofs/` | **CONFIRMED directory / NEEDS VERIFICATION emitted contents** | Release manifests, proof packs, attestations, signatures, correction trace | Proof objects must stay linked to the release or dataset version they justify. |
+| `processed/README.md` | **CONFIRMED README surface** | Path-level guidance for the processed zone | Documentation does not itself prove emitted dataset versions. |
+| Dataset version README | **PROPOSED** | Human-readable summary of method, CRS, units, caveats, license, and links | Do not let README prose replace machine-checkable manifests or catalog closure. |
 
 ### Minimum gates before outward trust widens
 
@@ -399,13 +417,14 @@ flowchart LR
 
 | Claim | Status | Safer wording |
 |---|---|---|
-| `data/` exists as a repo-root path | **INFERRED** | “documented repo-root surface; verify in mounted checkout” |
+| `data/` exists as a repo-root path | **CONFIRMED** | “current public `main` path” |
 | `data/` is governed by the canonical truth path | **CONFIRMED** | “load-bearing KFM doctrine” |
-| `data/registry/README.md` exists | **INFERRED** | “documented in continuity artifact; current checkout still needs verification” |
-| `data/catalog/stac/README.md` exists | **INFERRED** | “documented in continuity artifact; current checkout still needs verification” |
-| `data/raw/`, `data/work/`, `data/processed/`, `data/catalog/`, and maybe `data/receipts/` are already live | **NEEDS VERIFICATION** | “continuity artifacts suggest these zones; verify actual subpaths” |
-| `data/quarantine/`, `data/published/`, and `data/proofs/` exist today | **PROPOSED** | “starter skeleton from March 2026 manuals; verify live tree” |
-| `data/specs/` is canonical | **UNKNOWN** | “requested adjacency; verify against `../contracts/` and the live tree” |
+| `data/registry/README.md` exists | **CONFIRMED** | “current public `main` documentation surface” |
+| `data/catalog/README.md` exists | **CONFIRMED** | “current public `main` documentation surface” |
+| `data/catalog/stac/README.md` exists | **CONFIRMED** | “current public `main` documentation surface” |
+| `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/receipts/`, `data/published/`, and `data/proofs/` are already live directories | **CONFIRMED** | “top-level public-tree fact; inspect deeper contents before stronger claims” |
+| Specific release manifests, proof packs, receipts, or resolver traces already exist under those zones | **NEEDS VERIFICATION** | “inspect branch contents before documenting emitted objects” |
+| `data/specs/` is canonical | **UNKNOWN** | “not visible on current public `main`; verify target branch before teaching it” |
 
 [Back to top](#data)
 
@@ -413,23 +432,23 @@ flowchart LR
 
 ### Definition of done for this README
 
-- [ ] The file clearly separates **CONFIRMED doctrine** from **INFERRED / PROPOSED repo shape**.
+- [ ] The file clearly separates **CONFIRMED doctrine** from **CONFIRMED public-tree evidence**, **PROPOSED deeper shape**, and **UNKNOWN / NEEDS VERIFICATION**.
 - [ ] `data/` is described as a governed truth-path surface, not a generic storage bucket.
 - [ ] Accepted inputs and exclusions are explicit.
-- [ ] The tree distinguishes continuity-artifact paths from the March 2026 starter skeleton.
+- [ ] The tree distinguishes **current public branch facts** from **deeper target-state pack shapes**.
 - [ ] The README makes clear that storage is not the trust membrane.
 - [ ] At least one Mermaid diagram explains real KFM structure.
-- [ ] Verification steps tell a maintainer how to confirm or downgrade path claims in a live checkout.
+- [ ] Verification steps tell a maintainer how to confirm or downgrade artifact-level claims in a working checkout.
 
 ### Review checks before merge
 
 - [ ] Replace placeholder `doc_id`, owners, created date, and policy label with repo-backed values.
-- [ ] Verify all relative links against the actual checkout.
-- [ ] Confirm whether shared schemas belong under `data/specs/` or `../contracts/`.
-- [ ] Confirm whether `data/quarantine/` is a sibling directory or nested under `data/work/` in the live tree.
-- [ ] Confirm whether `data/receipts/`, `data/published/`, and `data/proofs/` are real directories or only conceptual support surfaces.
+- [ ] Keep **current public branch facts** and **target-branch facts** separate when editing this file.
+- [ ] Verify whether `data/specs/` exists on the target branch before adding any direct link or schema-home claim.
+- [ ] Inspect deeper contents of `raw/`, `work/`, `quarantine/`, `receipts/`, `published/`, and `proofs/` before documenting emitted artifacts.
 - [ ] Add one real emitted artifact path once a live release lane is visible.
 - [ ] Keep terminology aligned with KFM doctrine: truth path, trust membrane, authoritative vs derived, catalog closure, EvidenceBundle, promotion, correction.
+- [ ] Do not let current public tree confirmation be misread as proof of full operational maturity.
 
 [Back to top](#data)
 
@@ -437,27 +456,27 @@ flowchart LR
 
 ### Is `published` a directory?
 
-By doctrine, **published** is first a governed release state. `data/published/` is a plausible support directory for materialized release scope, but publication is still not reducible to “copy files somewhere.”
+Yes on the current public branch. By doctrine, though, **published** is first a governed release state. `data/published/` can materialize release scope, but publication is still not reducible to “copy files somewhere.”
+
+### Are `data/registry/README.md`, `data/catalog/README.md`, and `data/catalog/stac/README.md` already real?
+
+Yes on the current public branch. That confirms the documentation surfaces exist. It does **not** by itself prove deep emitted artifacts, runtime resolvers, or merge gates behind them.
+
+### Is `data/specs/` real?
+
+Not in the current public `data/` tree reviewed for this pass. Treat it as **UNKNOWN** until the target branch or local checkout proves it.
+
+### Does top-level tree confirmation mean the lane is operational?
+
+No. It proves path existence, not emitted receipts, release manifests, correction drills, policy bundles, or runtime proof objects.
 
 ### Is `receipts` different from `proofs`?
 
-Yes, conceptually. **Receipts** are process-memory artifacts such as ingest receipts, validation reports, and run records. **Proofs** are release-significant objects such as manifests, attestations, and correction trace. The exact live directory placement for either still needs verification.
-
-### Are `data/registry/README.md` and `data/catalog/stac/README.md` already real?
-
-They are **INFERRED**, not currently mounted facts. Continuity artifacts point to both paths at an earlier repo state, but this session did not expose a live checkout to verify them directly.
-
-### Where should schemas live: `data/specs/` or `../contracts/`?
-
-The strongest current-session evidence still favors `../contracts/` for shared schema authority. A narrow registry-local schema surface under `data/registry/schemas/` may exist for dataset-entry validation, but that does not automatically make `data/specs/` canonical.
+Yes, conceptually. **Receipts** are process-memory artifacts such as ingest receipts, validation reports, and run records. **Proofs** are release-significant objects such as manifests, attestations, and correction trace. The exact emitted contents of either still need inspection.
 
 ### Are per-version dataset READMEs expected?
 
 They are **PROPOSED**, but strongly aligned with the corpus. Dataset-gate design packs recommend a `README.md` beside promoted dataset artifacts describing source, method, CRS, units, caveats, license, and links to STAC/DCAT/PROV.
-
-### Do graph, search, vector, tile, or scene layers belong under `data/`?
-
-They may exist as downstream artifacts or build products, but they must remain explicitly downstream of approved release scope and must not become sovereign truth by convenience.
 
 [Back to top](#data)
 
@@ -485,12 +504,12 @@ They may exist as downstream artifacts or build products, but they must remain e
 
 | Item | Why it matters |
 |---|---|
-| Actual `data/` tree snapshot | Converts documented target shape into inspectable repo fact |
+| Actual target-branch `data/` tree snapshot | Prevents public-main facts from being misread as the full working branch shape |
 | Owners / dates / policy label / doc UUID | Lets the meta block stop carrying placeholders |
-| Real placement of `data/catalog/README.md` and `data/specs/README.md` | Prevents relative-link drift and schema-surface confusion |
-| Whether `quarantine/` is nested or sibling | Avoids teaching the wrong tree shape |
-| Whether `receipts/`, `published/`, and `proofs/` are materialized | Clarifies state-versus-directory behavior for release support |
+| Deeper contents of `raw/`, `work/`, `quarantine/`, `receipts/`, `published/`, and `proofs/` | Converts tree presence into inspectable artifact fact |
+| Whether `data/specs/` exists on the working branch | Prevents broken links and schema-surface drift |
 | One emitted dataset pack with manifest + triplet + receipts/proof objects | Grounds examples in real artifacts rather than doctrine alone |
+| One runtime resolver trace and one negative-path sample | Proves EvidenceBundle and RuntimeResponseEnvelope behavior rather than leaving them conceptual |
 
 </details>
 
@@ -499,15 +518,20 @@ They may exist as downstream artifacts or build products, but they must remain e
 
 - [`../README.md`](../README.md)
 - [`./registry/README.md`](./registry/README.md)
-- [`./specs/README.md`](./specs/README.md)
+- [`./registry/schemas/`](./registry/schemas/)
 - [`./catalog/README.md`](./catalog/README.md)
+- [`./catalog/dcat/`](./catalog/dcat/)
+- [`./catalog/prov/`](./catalog/prov/)
 - [`./catalog/stac/README.md`](./catalog/stac/README.md)
-- [`../packages/`](../packages/)
+- [`./processed/README.md`](./processed/README.md)
 - [`../contracts/`](../contracts/)
+- [`../schemas/`](../schemas/)
 - [`../policy/`](../policy/)
 - [`../docs/`](../docs/)
 - [`../tools/`](../tools/)
 - [`../tests/`](../tests/)
+- [`../apps/`](../apps/)
+- [`../infra/`](../infra/)
 
 </details>
 
