@@ -4,13 +4,13 @@ title: data/raw/
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../work/README.md, ../quarantine/README.md, ../processed/README.md, ../catalog/README.md, ../receipts/README.md, ../published/README.md, ../proofs/README.md, ../../contracts/README.md, ../../policy/README.md]
+related: [../README.md, ../registry/README.md, ../work/README.md, ../quarantine/README.md, ../processed/README.md, ../catalog/README.md, ../receipts/README.md, ../published/README.md, ../proofs/README.md, ../../contracts/README.md, ../../policy/README.md]
 tags: [kfm, data, raw, truth-path]
-notes: [Metadata placeholders retained where live repo evidence did not confirm UUID, owners, dates, or policy label.]
+notes: [Owner grounded to current public CODEOWNERS for /data/; UUID, dates, and policy label still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # data/raw/
@@ -19,14 +19,14 @@ Immutable, source-native intake zone for KFM evidence-bearing inputs.
 
 > **Status:** experimental  
 > **Doc state:** draft  
-> **Owners:** NEEDS VERIFICATION  
+> **Owners:** `@bartytime4life`  
 > **Path target:** `data/raw/README.md`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-directory__README-blue) ![zone](https://img.shields.io/badge/zone-RAW-1f6feb) ![truth-path](https://img.shields.io/badge/truth--path-stage__RAW-6f42c1) ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-directory__README-blue) ![zone](https://img.shields.io/badge/zone-RAW-1f6feb) ![truth-path](https://img.shields.io/badge/truth--path-stage__RAW-6f42c1) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-0a7d5a)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README keeps three layers separate on purpose:
-> - **CONFIRMED** current repo fact: `data/raw/` exists as a live top-level zone in the `data/` surface.
+> - **CONFIRMED** current public `main` fact: `data/raw/` exists as a live top-level zone in the `data/` surface and currently contains `README.md` only.
 > - **CONFIRMED** KFM doctrine already surfaced in adjacent docs: RAW is the source-native, immutable intake stage in the truth path.
 > - **PROPOSED** lower-level batch layout inside `data/raw/`: per-source folders, manifests, checksums, and rights snapshots. Treat those as starter patterns until a mounted checkout or ADR proves a stricter convention.
 
@@ -57,6 +57,7 @@ That makes RAW a memory surface as much as a storage surface.
 | Relation | Surface | Why it matters here |
 |---|---|---|
 | Upstream | [`../README.md`](../README.md) | Governs the broader `data/` lifecycle and explains how RAW fits into adjacent zones. |
+| Lateral | [`../registry/README.md`](../registry/README.md) | Source registration and source-admission records belong there; raw batch folders should preserve acquisition evidence, not replace the registry identity contract. |
 | Lateral | [`../work/README.md`](../work/README.md) | Use `work/` for repeatable transforms, QA staging, and normalization work that must **not** happen in place under RAW. |
 | Lateral | [`../quarantine/README.md`](../quarantine/README.md) | Use `quarantine/` when rights, schema, policy, or review ambiguity blocks safe forward movement. |
 | Downstream | [`../processed/README.md`](../processed/README.md) | Publishable canonical artifacts belong there, not here. |
@@ -90,6 +91,7 @@ The easiest way to damage this zone is to let it quietly become a convenience wo
 |---|---|
 | Normalized or cleaned outputs | [`../work/README.md`](../work/README.md) during transformation, then [`../processed/README.md`](../processed/README.md) when canonical and publishable |
 | Reprojected, re-encoded, tiled, generalized, or enriched artifacts | `../work/` or `../processed/`, depending on stage |
+| Shared source-registration entries or admission records | [`../registry/README.md`](../registry/README.md) |
 | Catalog closure artifacts (DCAT / STAC / PROV) | [`../catalog/README.md`](../catalog/README.md) |
 | Release manifests, proof packs, or publication evidence | `../receipts/`, `../proofs/`, or release-oriented surfaces |
 | Shared schemas, vocabularies, or contract definitions | [`../../contracts/README.md`](../../contracts/README.md) |
@@ -102,7 +104,7 @@ The easiest way to damage this zone is to let it quietly become a convenience wo
 
 ## Directory tree
 
-### Current live review snapshot — CONFIRMED
+### Current public `main` snapshot — CONFIRMED
 
 ```text
 data/raw/
@@ -265,7 +267,7 @@ flowchart LR
 
 | Path pattern | Confidence | Notes |
 |---|---|---|
-| `data/raw/README.md` | CONFIRMED | Live repo path reviewed |
+| `data/raw/README.md` | CONFIRMED | Live public `main` path reviewed |
 | `data/raw/<source_id>/...` | PROPOSED | Starter convention only; not directly proven as the mounted standard |
 | `manifest.json` / `checksums.sha256` filenames | PROPOSED | Useful defaults; exact canonical naming still needs repo verification |
 | per-batch `rights_snapshot/` and `request/` folders | PROPOSED | Included to operationalize intake traceability without overclaiming mounted practice |
@@ -284,11 +286,11 @@ flowchart LR
 
 ### Review checks before merge
 
-- [ ] Replace `NEEDS VERIFICATION` metadata placeholders if authoritative values are available
+- [ ] Replace remaining metadata placeholders (`doc_id`, dates, `policy_label`) if authoritative values are available
 - [ ] Confirm whether the repository wants this meta block on README-like docs in committed form
 - [ ] Verify whether `manifest.json` and `checksums.sha256` are the preferred canonical filenames
 - [ ] Verify whether rights snapshots are mandatory for all raw batches or only for source classes that need them
-- [ ] Confirm whether a source-admission packet is referenced from `data/raw/` directly or only via adjacent contract surfaces
+- [ ] Confirm whether source-admission packets link from `data/raw/` via `data/registry/`, shared contracts, or both
 
 ## FAQ
 
