@@ -4,13 +4,13 @@ title: data/processed/
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../catalog/, ../receipts/, ../proofs/, ../published/, ../../contracts/, ../../policy/]
+related: [../README.md, ../raw/README.md, ../work/README.md, ../quarantine/, ../catalog/, ../receipts/, ../proofs/, ../published/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, data, processed, lifecycle, readme]
-notes: [Current live file is a minimal scaffold; placeholders retained where ownership, dates, and policy metadata are not yet proven.]
+notes: [Owner grounded from current public CODEOWNERS coverage for /data/; doc_id, created, updated, and policy_label still need branch-history or project-metadata verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -19,16 +19,18 @@ notes: [Current live file is a minimal scaffold; placeholders retained where own
 
 Governed processed-zone guide for stable dataset versions, manifests, and release-adjacent evidence in KFM.
 
-> Status: experimental  
-> Doc state: draft  
-> Owners: NEEDS VERIFICATION  
-> Path target: `data/processed/README.md`  
+> **Status:** experimental  
+> **Doc state:** draft  
+> **Owners:** `@bartytime4life`  
+> **Path target:** `data/processed/README.md`  
 > [![Status: experimental](https://img.shields.io/badge/status-experimental-informational)](#top)
 > [![Doc: draft](https://img.shields.io/badge/doc-draft-orange)](#top)
-> [![Owners: NEEDS_VERIFICATION](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey)](#top)
+> [![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0a7d5a)](#top)
 > [![Zone: processed](https://img.shields.io/badge/zone-processed-0f766e)](#scope)
-> [![Catalog: STAC+DCAT+PROV](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-blue)](#tables)  
-> Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> [![Catalog: STAC+DCAT+PROV](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-blue)](#tables)
+> [![Repo: public main](https://img.shields.io/badge/repo-public%20main-brightgreen)](#directory-tree)
+> [![Inventory: README only](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)](#directory-tree)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `data/processed/` is **not** the public edge.
@@ -38,7 +40,7 @@ Governed processed-zone guide for stable dataset versions, manifests, and releas
 > [!NOTE]
 > This README keeps three layers separate on purpose:
 >
-> - **CONFIRMED**: the path exists in the live repo today.
+> - **CONFIRMED current public-main fact**: `data/processed/` exists, and the currently visible checked-in tree shows `README.md` only.
 > - **CONFIRMED doctrine**: `PROCESSED` is where stable dataset versions and release-adjacent artifacts harden.
 > - **PROPOSED starter shape**: a per-version pack such as `data/processed/<theme>/<dataset>/<version>/`.
 
@@ -75,21 +77,23 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 
 ### Path + adjacent surfaces
 
-| Relation | Surface | Why it matters |
-| --- | --- | --- |
-| Parent | [`../README.md`](../README.md) | Parent lifecycle law for `data/` as a whole. |
-| Lateral | [`../raw/`](../raw/) | Immutable source captures stay there, not here. |
-| Lateral | [`../work/`](../work/) | In-progress transforms stay there until stable. |
-| Lateral | [`../quarantine/`](../quarantine/) | Rights-unclear, invalid, or blocked material stays there. |
-| Lateral | [`../catalog/`](../catalog/) | STAC / DCAT / PROV closure should resolve back to processed versions. |
-| Lateral | [`../receipts/`](../receipts/) | Ingest and validation memory should be linkable from processed versions. |
-| Lateral | [`../proofs/`](../proofs/) | Release and trust evidence should stay attachable and discoverable. |
-| Lateral | [`../published/`](../published/) | Publication is a governed state transition, not a synonym for “processed.” |
-| Upstream | [`../../contracts/`](../../contracts/) | Shared contract and schema authority should not be redefined locally here. |
-| Upstream | [`../../policy/`](../../policy/) | Deny-by-default and release-scope decisions belong there. |
-| Downstream | [`../../apps/`](../../apps/) | UI and public-safe surfaces should consume governed outputs, not direct storage assumptions. |
-| Downstream | [`../../tests/`](../../tests/) | Validation, fixture, and regression checks should exercise this zone. |
-| Downstream | [`../../tools/`](../../tools/) | Validators, lints, and packaging helpers should target this zone without redefining it. |
+| Relation | Surface | Status | Why it matters |
+| --- | --- | --- | --- |
+| Parent | [`../README.md`](../README.md) | **CONFIRMED** | Parent lifecycle law for `data/` as a whole. |
+| Lateral | [`../raw/README.md`](../raw/README.md) | **CONFIRMED** | Immutable source captures stay there, not here. |
+| Lateral | [`../work/README.md`](../work/README.md) | **CONFIRMED** | In-progress transforms stay there until stable. |
+| Lateral | [`../quarantine/`](../quarantine/) | **CONFIRMED (path)** | Rights-unclear, invalid, or blocked material stays there. |
+| Lateral | [`../catalog/`](../catalog/) | **CONFIRMED (path)** | STAC / DCAT / PROV closure should resolve back to processed versions. |
+| Lateral | [`../receipts/`](../receipts/) | **CONFIRMED (path)** | Ingest and validation memory should be linkable from processed versions. |
+| Lateral | [`../proofs/`](../proofs/) | **CONFIRMED (path)** | Release and trust evidence should stay attachable and discoverable. |
+| Lateral | [`../published/README.md`](../published/README.md) | **CONFIRMED** | Publication is a governed state transition, not a synonym for “processed.” |
+| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Shared contract authority should not be redefined locally here. |
+| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema-home and inventory authority should stay explicit rather than fork into zone-local copies. |
+| Upstream | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Deny-by-default and release-scope decisions belong there. |
+| Downstream | [`../../apps/`](../../apps/) | **CONFIRMED (path)** | UI and public-safe surfaces should consume governed outputs, not direct storage assumptions. |
+| Downstream | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Validation, fixture, and regression checks should exercise this zone. |
+| Downstream | [`../../tools/`](../../tools/) | **CONFIRMED (path)** | Validators, lints, and packaging helpers should target this zone without redefining it. |
+| Adjacent control lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED / NEEDS VERIFICATION** | The workflow documentation surface is present on public `main`, but checked-in merge-blocking YAML depth is not exposed there today. |
 
 ### Repo-fit summary
 
@@ -128,11 +132,11 @@ These do **not** belong in `data/processed/` as the normal case.
 
 | Exclusion | Put it under or behind | Why |
 | --- | --- | --- |
-| Raw source captures | [`../raw/`](../raw/) | Raw evidence should remain immutable and separately governed. |
-| Half-finished transforms | [`../work/`](../work/) | `processed/` is not a scratchpad. |
+| Raw source captures | [`../raw/README.md`](../raw/README.md) | Raw evidence should remain immutable and separately governed. |
+| Half-finished transforms | [`../work/README.md`](../work/README.md) | `processed/` is not a scratchpad. |
 | Rights-unclear or sensitivity-blocked material | [`../quarantine/`](../quarantine/) | Block first; do not normalize blocked material into “stable.” |
-| Shared schemas and vocabularies | [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) | Keep contract authority singular. |
-| Executable policy logic | [`../../policy/`](../../policy/) | Policy should not fork into folder-local rules. |
+| Shared schemas and vocabularies | [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) | Keep contract authority singular. |
+| Executable policy logic | [`../../policy/README.md`](../../policy/README.md) | Policy should not fork into folder-local rules. |
 | Secrets, credentials, tokens | environment / secret stores | This zone is versionable evidence, not secret storage. |
 | Detached proof packs with no release linkage | [`../proofs/`](../proofs/) | Keep release proof discoverable and traceable by release context. |
 | “Convenience copies” for direct public serving | governed API and release surfaces | Processed storage is not the trust membrane. |
@@ -146,9 +150,9 @@ These do **not** belong in `data/processed/` as the normal case.
 
 ## Directory tree
 
-### Live path evidence
+### Current public-main path evidence
 
-The current live repo proves this path exists, but it is still minimal.
+The current public `main` branch proves this path exists, and the currently visible checked-in inventory is still minimal.
 
 ```text
 data/processed/
@@ -157,7 +161,7 @@ data/processed/
 
 ### Doctrine-aligned starter skeleton
 
-Use this as a **starter shape**, not as a claim that every subtree already exists in the mounted repo.
+Use this as a **starter shape**, not as a claim that every subtree already exists in the checked-in repo today.
 
 ```text
 data/processed/
@@ -174,7 +178,7 @@ data/processed/
 
 ### Related closure shape
 
-Catalog, receipt, and proof surfaces should stay resolvable rather than being silently absorbed into the version folder.
+The current public `data/` tree already exposes sibling surfaces such as `catalog/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/`. The closure shape below shows the subset most directly tied to processed version packs.
 
 ```text
 data/
@@ -349,10 +353,11 @@ flowchart LR
 
 ### Definition of done for this zone README
 
+- [ ] KFM Meta Block v2 is present and synchronized with the visible document role.
 - [ ] States what `data/processed/` is for.
 - [ ] States what does **not** belong here.
 - [ ] Links to parent and sibling lifecycle surfaces.
-- [ ] Separates live repo evidence from doctrine-aligned starter shape.
+- [ ] Separates current public-main path evidence from doctrine-aligned starter shape.
 - [ ] Includes at least one meaningful lifecycle diagram.
 - [ ] Makes direct-public-path assumptions explicit and rejectable.
 
@@ -400,7 +405,11 @@ No. KFM keeps authoritative versus derived distinctions visible. A processed art
 
 ### Is a `<theme>/<dataset>/<version>` layout mandatory?
 
-Treat it as the preferred starter shape unless a stronger mounted convention is directly proven in the live repo.
+Treat it as the preferred starter shape unless a stronger checked-in convention is directly proven in the live repo.
+
+### Does current public `main` already contain processed version packs?
+
+No. The currently visible public-main inventory for `data/processed/` is README-only. The per-version pack layout shown here is a doctrine-aligned starter shape, not a claim of existing checked-in datasets.
 
 [Back to top](#top)
 
