@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../../README.md, ../README.md, ./README.md, ./SYSTEM_CONTEXT.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./DEPLOYMENT_TOPOLOGY.md, ./canonical_vs_rebuildable.md, ../../apps/README.md, ../../packages/README.md, ../../data/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../infra/README.md, ../../.github/workflows/README.md]
+related: [../../README.md, ../README.md, ./README.md, ./SYSTEM_CONTEXT.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./DEPLOYMENT_TOPOLOGY.md, ./canonical_vs_rebuildable.md, ./threat-model/README.md, ../../apps/README.md, ../../apps/governed-api/README.md, ../../apps/api/src/api/README.md, ../../web/README.md, ../../packages/README.md, ../../data/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../infra/README.md, ../../.github/README.md, ../../.github/workflows/README.md]
 tags: [kfm, architecture, system-overview, truth-path, trust-membrane, map-first]
-notes: [doc_id placeholder pending UUID assignment, created/updated placeholders pending git-history verification, built from March 2026 doctrine plus current public-main repo inspection]
+notes: [doc_id placeholder pending UUID assignment, created/updated placeholders pending git-history verification, policy_label inherited from task baseline and not independently reverified here, revised from March 2026 doctrine plus current public-main repo inspection]
 [/KFM_META_BLOCK_V2] -->
 
 # System Overview
@@ -26,15 +26,15 @@ _High-level architecture bridge for Kansas Frontier Matrix (KFM): truth path, tr
 > ![posture](https://img.shields.io/badge/posture-evidence--first-0a7d5a)
 > ![shell](https://img.shields.io/badge/shell-map--first%20%2B%20time--aware-6f42c1)
 > ![trust](https://img.shields.io/badge/trust-membrane-critical)
-> ![public main](https://img.shields.io/badge/public_main-repo--inspected-brightgreen)
-> ![runtime](https://img.shields.io/badge/runtime-governed%20API%20required-5b8cff)
+> ![public main](https://img.shields.io/badge/public_main-tree--inspected-brightgreen)
+> ![runtime](https://img.shields.io/badge/runtime-mixed--topology--visible-lightgrey)
 > **Quick jumps:** [At a glance](#at-a-glance) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Governing law](#governing-law) · [Five-plane view](#five-plane-view) · [Repo surface map](#repo-surface-map) · [Quickstart](#quickstart) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This file is **doctrine-grounded and repo-aware**.
 >
 > It treats March 2026 KFM architecture law as stable, uses the current public `main` tree for path and maturity signals, and keeps deeper mounted-runtime claims explicitly bounded.  
-> It should make the system legible **without** turning placeholders, README-only lanes, or uninspected runtime depth into false certainty.
+> It should make the system legible **without** turning placeholders, README-only lanes, or mixed-topology public signals into false certainty.
 
 ## At a glance
 
@@ -49,7 +49,7 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 | Runtime answer posture | Cite-or-abstain, fail closed, and keep negative outcomes visible |
 | Shell posture | One map-first, time-aware operating shell with evidence drill-through and correction-visible state |
 | 3D posture | 2D default; 3D is conditional and burden-bearing |
-| Repo posture | Current public `main` shows real lane structure, but several architecture companions remain scaffold-first |
+| Repo posture | Current public `main` shows real lane structure, but not every lane is equally implementation-deep or topology-stable |
 
 ### Truth posture used here
 
@@ -68,12 +68,12 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 | Field | Value |
 |---|---|
 | Path | `docs/architecture/system_overview.md` |
-| Primary role | One-page architecture bridge between doctrine and the deeper architecture / runtime / policy surfaces |
+| Primary role | One-page architecture bridge between doctrine and deeper architecture / runtime / policy surfaces |
 | Upstream anchors | [repo root][repo-root] · [docs index][docs-root] · [architecture index][arch-index] |
-| Companion architecture docs | [SYSTEM_CONTEXT.md][system-context] · [TRUST_MEMBRANE.md][trust-membrane] · [TRUTH_PATH_LIFECYCLE.md][truth-path] · [DEPLOYMENT_TOPOLOGY.md][deployment-topology] · [canonical_vs_rebuildable.md][canonical-vs-rebuildable] |
+| Companion architecture docs | [SYSTEM_CONTEXT.md][system-context] · [TRUST_MEMBRANE.md][trust-membrane] · [TRUTH_PATH_LIFECYCLE.md][truth-path] · [DEPLOYMENT_TOPOLOGY.md][deployment-topology] · [canonical_vs_rebuildable.md][canonical-vs-rebuildable] · [threat-model/README.md][threat-model] |
 | Adjacent machine-facing surfaces | [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [workflows README][workflows-readme] |
-| Adjacent runtime surfaces | [apps][apps-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root] |
-| Why this file matters | It gives contributors a stable whole-system reading before they descend into a single contract family, runtime lane, policy bundle, or lifecycle zone |
+| Adjacent runtime surfaces | [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root] |
+| Why this file matters | It gives contributors a stable whole-system reading before they descend into a single contract family, runtime lane, policy bundle, lifecycle zone, or public shell surface |
 
 ### What this file should do
 
@@ -85,7 +85,7 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 ### What this file should not do
 
 - Replace machine-readable contracts, policy bundles, or tests.
-- Pretend a README-only or scaffold-first lane is already operational.
+- Pretend a README-first or scaffold-first lane is already operationally complete.
 - Freeze the exact runtime topology if the live checkout later proves a different shape.
 - Reintroduce stack claims that the current public tree or doctrine layer does not support.
 
@@ -97,7 +97,7 @@ Content that belongs here includes:
 - truth-path ordering and trust-membrane rules
 - five-plane or equivalent architecture summaries
 - map-first shell posture and runtime-boundary law
-- repo-lane maps that connect `data/`, `packages/`, `apps/`, `contracts/`, `policy/`, `tests/`, `infra/`, and `.github/`
+- repo-lane maps that connect `data/`, `packages/`, `apps/`, `contracts/`, `policy/`, `tests/`, `infra/`, `.github/`, and relevant parallel runtime doc roots
 - architecture diagrams that explain responsibility, not just boxes
 - current public-main maturity notes when they materially affect safe documentation
 - cross-links to deeper architecture files, ADR lanes, threat models, and interface registries
@@ -110,30 +110,31 @@ The following do **not** belong here as the authoritative source of truth:
 |---|---|
 | Policy rule bodies, reason / obligation registries, deny-by-default fixtures | [policy][policy-root] |
 | Canonical object schemas, OpenAPI, shared vocabularies | [contracts][contracts-root] and [schemas][schemas-root] |
-| Runtime code, worker implementations, UI component logic | [apps][apps-root] and [packages][packages-root] |
+| Runtime code, worker implementations, UI component logic | [apps][apps-root], [web][web-root], and [packages][packages-root] |
 | Deployment manifests, ingress details, secrets posture as if verified here | [infra][infra-root] plus mounted runtime evidence |
 | Service-local tutorials or route-by-route implementation notes | service-local docs and runbooks |
-| Any claim that upgrades README-only or scaffold-only surfaces into “already working” architecture | keep it `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until rechecked |
+| Any claim that upgrades README-first or scaffold-first surfaces into “already working” architecture | keep it `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until rechecked |
 
 ## Current public-main snapshot
 
 > [!NOTE]
-> This section records the **public `main` inspection used for this draft**.
+> This section records the **current public `main` inspection used for this revision**.
 >
 > Re-check it whenever the tree changes.  
-> The point is not to fossilize the current branch. The point is to stop architecture prose from outrunning the evidence.
+> The point is not to fossilize the branch. The point is to stop architecture prose from outrunning the evidence.
 
-| Surface | Authoring-time public-main state | How to read it |
+| Surface | Current public `main` state | How to read it |
 |---|---|---|
-| `docs/architecture/README.md` | Substantive directory index | Use it as the local boundary map and navigation hub |
-| `docs/architecture/system_overview.md` | Scaffold placeholder at authoring time | This revision promotes that path into a substantive architecture leaf |
-| `docs/architecture/SYSTEM_CONTEXT.md`, `TRUST_MEMBRANE.md`, `TRUTH_PATH_LIFECYCLE.md`, `DEPLOYMENT_TOPOLOGY.md`, `canonical_vs_rebuildable.md` | Present but scaffold-only | Keep this file high-level; do not pretend deeper companion docs are already filled |
-| `apps/` | Named runtime lanes visible: `explorer-web`, `governed-api`, `review-console`, `workers`, `cli` | Directory structure is real; exact framework, routing, and runtime depth still need deeper inspection |
-| `packages/` | Named shared-module lanes visible: `catalog`, `domain`, `evidence`, `indexers`, `ingest`, `policy` | Shared-law seam is real; package-local implementation maturity varies |
-| `data/` | Lifecycle-aligned directories visible: `registry`, `raw`, `work`, `quarantine`, `processed`, `catalog`, `receipts`, `proofs`, `published` | The repo surface reflects the truth-path model in a concrete way |
-| `tests/` | Verification families visible: `accessibility`, `contracts`, `e2e`, `integration`, `policy`, `reproducibility`, `unit` | Verification is a first-class lane, not an afterthought |
-| `.github/workflows/` | `README.md` only on authoring-time public `main` inspection | Do **not** document merge-blocking YAML as already present unless rechecked |
-| `contracts/` + `schemas/` | Both lanes exist | Keep schema-home authority explicit; avoid creating two competing machine-contract universes |
+| Repo root | `.github`, `apps`, `brand`, `configs`, `contracts`, `data`, `docs`, `examples`, `infra`, `migrations`, `packages`, `policy`, `schemas`, `scripts`, `tests`, `tools`, plus root governance/docs files | Core monorepo lanes are real and broader than the subset this file summarizes |
+| `docs/architecture/` | Mixed subtree: substantive docs (`README.md`, `TRUST_MEMBRANE.md`, `TRUTH_PATH_LIFECYCLE.md`, `system_overview.md`, `threat-model/README.md`), thinner/scaffold-style leaves (`SYSTEM_CONTEXT.md`, `DEPLOYMENT_TOPOLOGY.md`, `canonical_vs_rebuildable.md`, `trust_membrane.md`), and scaffold-lane dirs (`adr/`, `decisions/`, `diagrams/`, `enforcement/`, `interfaces/`, `overview/`, `registries/`, `templates/`) | Keep this file bridge-like; do not pretend every architecture leaf is equally mature |
+| `apps/` | `cli`, `explorer-web`, `governed-api`, `review-console`, `workers` | Preferred app-lane names are now public-tree facts |
+| Parallel UI / API docs | `web/README.md` and `apps/api/src/api/README.md` are also visible on current public `main` | Runtime topology is mixed; convergence should stay explicit rather than silently canonicalized |
+| `packages/` | `catalog`, `domain`, `evidence`, `genealogy_ingest`, `indexers`, `ingest`, `policy` | Shared-law seam is real; child package public surfaces are still mostly README-first |
+| `data/` | `catalog`, `processed`, `proofs`, `published`, `quarantine`, `raw`, `receipts`, `registry`, `work` | The truth-path skeleton is visible in the public tree, not just doctrine |
+| `policy/` | `bundles`, `fixtures`, `policy-runtime`, `tests` | Policy is a real lane with implementation-shaped substructure, even though executable depth still needs deeper inspection |
+| `tests/` | `accessibility`, `contracts`, `e2e`, `integration`, `policy`, `reproducibility`, `unit` | Verification is a first-class lane, not an afterthought |
+| `.github/` | `ISSUE_TEMPLATE/`, `actions/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, `dependabot.yml` | Repo-side gatehouse is already substantial |
+| `.github/workflows/` | `README.md` only on current public `main`; workflow README preserves historical workflow filenames as deleted / prior public signals | Keep current inventory and historical signal separate |
 
 [Back to top](#system-overview)
 
@@ -158,7 +159,7 @@ KFM is **not**:
 
 | Invariant | Practical meaning | What must never happen |
 |---|---|---|
-| Truth path | Data changes state through governed lifecycle transitions | Ad hoc publication from notebooks, staging zones, or unpublished working state |
+| Truth path | Data changes state through governed lifecycle transitions | Ad hoc publication from notebooks, transient transforms, or unpublished working state |
 | Trust membrane | Public and role-limited surfaces cross governed interfaces | Direct client access to canonical stores, raw zones, or model runtimes |
 | Authoritative vs derived | Release-linked authoritative data stays stronger than projections | Tiles, graphs, summaries, scenes, or caches presented as sovereign truth |
 | Cite-or-abstain | Claim-bearing surfaces resolve evidence or narrow / refuse | Fluent unsupported output presented as fact |
@@ -177,12 +178,12 @@ flowchart LR
     P4["4. Derived delivery<br/>Release-linked projections only<br/><br/>Repo surfaces:<br/>data/published · data/proofs · packages/catalog · packages/indexers · apps/workers"]
     P5["5. Runtime and trust surfaces<br/>Public and steward behavior with evidence drill-through<br/><br/>Repo surfaces:<br/>apps/explorer-web · apps/governed-api · apps/review-console · apps/cli"]
     T["tests/<br/>accessibility · contracts · e2e · integration · policy · reproducibility · unit"]
-    W[".github/workflows/<br/>authoring-time public-main inspection: README-only"]
+    G[".github/<br/>actions · workflows README-only on current public main · CODEOWNERS · PR template"]
 
     P1 --> P2 --> P3 --> P4 --> P5
     T -. verifies .-> P1
     T -. verifies .-> P5
-    W -. governs when implemented .-> P3
+    G -. governs when configured .-> P3
 ```
 
 ### Plane responsibilities
@@ -200,7 +201,7 @@ flowchart LR
 A normal outward read should be understood in this order:
 
 1. The shell establishes **place**, **time**, **layer scope**, and **role context**.
-2. The request crosses **`apps/governed-api/`**, not canonical stores directly.
+2. The request crosses a **governed API boundary**, not canonical stores directly.
 3. The API resolves **release-linked data, catalog closure, policy state, and evidence drill-through**.
 4. Any derived delivery surface inherits **freshness**, **release linkage**, and **correction behavior**.
 5. Any bounded runtime assistance returns finite outcomes such as **answer**, **abstain**, **deny**, or **error** instead of bluffing.
@@ -210,6 +211,11 @@ A normal outward read should be understood in this order:
 >
 > That rule matters because it prevents style, tiles, and client state from becoming accidental authority.
 
+> [!NOTE]
+> Current public `main` shows the preferred app-lane grouping above **and** still exposes parallel runtime-doc roots under [`web/`](../../web/README.md) and [`apps/api/src/api/`](../../apps/api/src/api/README.md).
+>
+> Treat the five-plane runtime rows as the primary architectural grouping, not proof that topology convergence is complete.
+
 [Back to top](#system-overview)
 
 ## Repo surface map
@@ -217,15 +223,15 @@ A normal outward read should be understood in this order:
 | Repo surface | Current visible lanes | System role | Reading rule |
 |---|---|---|---|
 | [`data/`][data-root] | `registry`, `raw`, `work`, `quarantine`, `processed`, `catalog`, `receipts`, `proofs`, `published` | Governed lifecycle, storage, receipts, and release-artifact surface | Start here when the question is “what changed state?” |
-| [`packages/`][packages-root] | `catalog`, `domain`, `evidence`, `indexers`, `ingest`, `policy` | Shared internal module boundary between top-level authority surfaces and deployable runtimes | Shared logic may live here; sovereign truth and public release state should not |
-| [`apps/`][apps-root] | `explorer-web`, `governed-api`, `review-console`, `workers`, `cli` | Trust-visible runtime shell, governed API mediation, review surfaces, workers, and narrow operator tooling | Exact stack, routes, and mounted runtime wiring still need deeper inspection |
-| [`contracts/`][contracts-root] | README-visible lane | Machine-readable contract backbone | Treat as the home of typed trust objects unless schema authority is explicitly changed |
-| [`schemas/`][schemas-root] | README-visible lane | Boundary / authority guide while schema-home ambiguity remains visible | Do not duplicate authoritative object families across `contracts/` and `schemas/` |
-| [`policy/`][policy-root] | README-visible lane | Executable governance surface for deny-by-default, reasons, obligations, runtime trust, and correction | UI reflects policy; it does not replace it |
+| [`contracts/`][contracts-root] + [`schemas/`][schemas-root] | Publicly README-first from the current docs surface | Machine-readable contract backbone and schema authority lanes | Do not spread contract truth ad hoc into apps, docs, or data |
+| [`policy/`][policy-root] | `bundles`, `fixtures`, `policy-runtime`, `tests` | Executable governance surface for deny-by-default, reasons, obligations, runtime trust, and correction | UI reflects policy; it does not replace it |
+| [`packages/`][packages-root] | `catalog`, `domain`, `evidence`, `genealogy_ingest`, `indexers`, `ingest`, `policy` | Shared reusable logic and shared law seams | Shared logic may live here; sovereign truth and public release state should not |
+| [`apps/`][apps-root] | `cli`, `explorer-web`, `governed-api`, `review-console`, `workers` | Trust-visible runtime shell, governed API mediation, review surfaces, workers, and narrow operator tooling | Preferred lane names are visible, but deeper runtime wiring still needs inspection |
+| [`web/`][web-root] | React + TypeScript MapLibre UI surface still visible | Parallel UI doc/runtime surface | Reconcile with `apps/explorer-web/` before freezing one canonical UI root |
+| [`apps/api/src/api/`][apps-legacy-api] | Older-path governed API doc still visible | Parallel API doc/runtime surface | Reconcile with `apps/governed-api/` before freezing one canonical API root |
 | [`tests/`][tests-root] | `accessibility`, `contracts`, `e2e`, `integration`, `policy`, `reproducibility`, `unit` | Governed verification and proof burdens | A green check is insufficient if it cannot explain trust state |
-| [`infra/`][infra-root] | README-visible lane | Bring-up, deployment, restore, rollback, exposure, and observability boundary | Preserve the trust membrane; do not relocate business law here |
-| [`docs/`][docs-root] | architecture, governance, standards, runbooks, domains, research, search, security, templates, ADR-related lanes | Human-readable operating layer | Explanation stays downstream of contracts, policy, and release evidence |
-| [`/.github/workflows/`][workflows-readme] | README only at authoring-time public-main inspection | CI/CD and release-control lane | Recheck before claiming merge-blocking automation exists in-tree |
+| [`/.github/`][github-root] | `actions/`, `workflows/`, templates, ownership, security, automation scaffolding | Repo-side control and review plane | Separate checked-in files from unverified branch protection or platform settings |
+| [`docs/`][docs-root] | architecture, governance, standards, runbooks, domains, research, search, security, templates, and adjacent lanes | Human-readable operating layer | Explanation stays downstream of contracts, policy, and release evidence |
 
 ## Quickstart
 
@@ -236,30 +242,36 @@ Use a verification-first loop before editing this file again.
 find docs/architecture -maxdepth 3 \( -type f -o -type d \) | sort
 
 # Re-check the repo lanes summarized here
-find apps packages data tests -maxdepth 2 -type d | sort
+find apps packages data policy tests .github -maxdepth 2 -type d | sort
 
 # Re-open the boundary docs this overview depends on
 sed -n '1,240p' README.md
 sed -n '1,240p' docs/README.md
-sed -n '1,260p' docs/architecture/README.md
-sed -n '1,240p' apps/README.md
-sed -n '1,240p' packages/README.md
-sed -n '1,240p' data/README.md
-sed -n '1,240p' contracts/README.md
-sed -n '1,240p' schemas/README.md
-sed -n '1,240p' policy/README.md
-sed -n '1,240p' tests/README.md
-sed -n '1,240p' .github/workflows/README.md
+sed -n '1,320p' docs/architecture/README.md
+sed -n '1,260p' docs/architecture/system_overview.md
+sed -n '1,220p' apps/README.md
+sed -n '1,220p' apps/explorer-web/README.md 2>/dev/null || true
+sed -n '1,220p' apps/governed-api/README.md 2>/dev/null || true
+sed -n '1,220p' web/README.md 2>/dev/null || true
+sed -n '1,220p' apps/api/src/api/README.md 2>/dev/null || true
+sed -n '1,220p' packages/README.md
+sed -n '1,220p' data/README.md
+sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
+sed -n '1,220p' policy/README.md
+sed -n '1,220p' tests/README.md
+sed -n '1,220p' .github/README.md
+sed -n '1,260p' .github/workflows/README.md
 ```
 
 ```bash
 # Pressure-test vocabulary drift before widening certainty
 grep -RIn "truth membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abstain\|fail-closed" \
-  docs contracts policy tests packages apps 2>/dev/null || true
+  docs contracts policy tests packages apps web 2>/dev/null || true
 ```
 
 > [!WARNING]
-> Do not upgrade a statement from `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` to `CONFIRMED` just because the folder names look plausible.
+> Do not upgrade a statement from `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` to `CONFIRMED` just because folder names look plausible.
 >
 > Re-check the actual branch first.
 
@@ -269,12 +281,15 @@ grep -RIn "truth membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abst
 
 ### Highest-value next tasks
 
-- [ ] Replace or reconcile the remaining scaffold-only companion docs under `docs/architecture/`.
+- [ ] Replace or reconcile the remaining thin/scaffold-style architecture leaves under `docs/architecture/`.
 - [ ] Resolve the authoritative schema-home split between `contracts/` and `schemas/`.
-- [ ] Recheck `.github/workflows/` and record the real workflow catalog once YAML exists.
-- [ ] Publish mounted route-family and runtime-envelope evidence for `apps/governed-api/`.
-- [ ] Add one positive and one negative end-to-end trace showing evidence resolution and finite runtime outcomes.
+- [ ] Reconcile the parallel UI roots (`web/` and `apps/explorer-web/`) into one explicit public-shell story.
+- [ ] Reconcile the parallel API docs (`apps/api/src/api/` and `apps/governed-api/`) into one explicit governed-boundary story.
+- [ ] Publish mounted route-family and runtime-envelope evidence for the active governed API boundary.
+- [ ] Decide whether `packages/genealogy_ingest/` is a durable first-class lane in the whole-system package map or a lane-specific exception that needs clearer placement.
+- [ ] Recheck `.github/workflows/` and record the real workflow catalog once checked-in YAML returns.
 - [ ] Reconcile the duplicate trust-membrane leaf paths (`TRUST_MEMBRANE.md` vs `trust_membrane.md`) into one canonical architecture reference.
+- [ ] Add one positive and one negative end-to-end trace showing evidence resolution and finite runtime outcomes.
 - [ ] Keep the repo-surface tables here aligned with real lane names on the active branch.
 
 ### Definition of done for this file
@@ -285,14 +300,15 @@ This file is in good standing when:
 - [ ] the diagram and tables still match the active repo tree
 - [ ] current public-main maturity signals are re-verified before merge
 - [ ] architecture claims do not outrun contracts, policy, tests, or workflow evidence
+- [ ] mixed-topology caveats remain visible until convergence is verified
 - [ ] cross-links resolve
-- [ ] dates, owners, and doc UUID are synchronized with the real repo record
+- [ ] dates, owner record, and doc UUID are synchronized with the real repo record
 
 ## FAQ
 
 ### Is this the final runtime topology?
 
-No. This is the **short-form architecture contract**, not a claim that every mounted service, route, or deployment overlay has been re-inspected. Use it to keep the whole-system order clear, then verify runtime detail in the live tree.
+No. This is the **short-form architecture bridge**, not a claim that every mounted service, route, or deployment overlay has been re-inspected. Use it to keep the whole-system order clear, then verify runtime detail in the live tree.
 
 ### What is the smallest stable mental model for KFM?
 
@@ -316,26 +332,47 @@ Because tiles, graphs, search indexes, scenes, caches, and summaries are useful 
 
 Because KFM’s doctrine is 2D-first. 3D is allowed when it carries real explanatory or analytic burden, but it adds governance cost and cannot be admitted simply because it looks impressive.
 
+### Why call out mixed runtime topology explicitly?
+
+Because current public `main` already shows both the newer `apps/*` grouping and parallel runtime-doc roots elsewhere in the tree. Hiding that fact would make the file cleaner-looking but less truthful.
+
 [Back to top](#system-overview)
 
 ## Appendix
 
 <details>
-<summary><strong>Companion architecture surfaces and authoring-time state</strong></summary>
+<summary><strong>Companion architecture surfaces and current public-main state</strong></summary>
 
-| Path | Authoring-time state | Intended use |
+| Path | Current public-main state | Intended use |
 |---|---|---|
 | [`./README.md`][arch-index] | substantive | architecture index and local boundary map |
-| [`./SYSTEM_CONTEXT.md`][system-context] | scaffold-only | deeper system-context description |
-| [`./TRUST_MEMBRANE.md`][trust-membrane] | scaffold-only | focused trust-boundary law |
-| [`./TRUTH_PATH_LIFECYCLE.md`][truth-path] | scaffold-only | lifecycle-specific detail |
-| [`./DEPLOYMENT_TOPOLOGY.md`][deployment-topology] | scaffold-only | runtime / environment topology |
-| [`./canonical_vs_rebuildable.md`][canonical-vs-rebuildable] | scaffold-only | authoritative-versus-derived detail |
-| `./trust_membrane.md` | scaffold-only duplicate path on authoring-time public `main` | reconcile with uppercase canonical path |
-| [`./decisions/README.md`](./decisions/README.md) | scaffold-only | local decision-record lane |
-| [`./diagrams/README.md`](./diagrams/README.md) | scaffold-only | diagram lane |
-| [`./interfaces/README.md`](./interfaces/README.md) | scaffold-only | interface registry lane |
-| `./adr/`, `./enforcement/`, `./overview/`, `./registries/`, `./templates/`, `./threat-model/` | present on authoring-time public `main`; contents not re-opened deeply here | recheck before using as current content authority |
+| [`./system_overview.md`](./system_overview.md) | substantive | short-form whole-system bridge |
+| [`./TRUST_MEMBRANE.md`][trust-membrane] | substantive companion | focused trust-boundary law |
+| [`./TRUTH_PATH_LIFECYCLE.md`][truth-path] | substantive companion | lifecycle-specific detail |
+| [`./threat-model/README.md`][threat-model] | substantive companion | threat-model lane entry point |
+| [`./SYSTEM_CONTEXT.md`][system-context] | thin / scaffold-style | deeper system-context description |
+| [`./DEPLOYMENT_TOPOLOGY.md`][deployment-topology] | thin / scaffold-style | runtime / environment topology |
+| [`./canonical_vs_rebuildable.md`][canonical-vs-rebuildable] | thin / scaffold-style | authoritative-versus-derived detail |
+| `./trust_membrane.md` | thin duplicate path on current public `main` | reconcile with uppercase canonical path |
+| [`./decisions/README.md`](./decisions/README.md) | scaffold-lane index | local decision-record lane |
+| [`./diagrams/README.md`](./diagrams/README.md) | scaffold-lane index | diagram lane |
+| [`./interfaces/README.md`](./interfaces/README.md) | scaffold-lane index | interface registry lane |
+| `./adr/`, `./enforcement/`, `./overview/`, `./registries/`, `./templates/` | present on current public `main`; not treated here as mature content authorities | recheck before using as current content authority |
+
+</details>
+
+<details>
+<summary><strong>Parallel runtime-path signals worth rechecking before stronger claims</strong></summary>
+
+| Path | Why it matters |
+|---|---|
+| [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Public app-lane surface that matches the newer `apps/*` grouping |
+| [`../../web/README.md`](../../web/README.md) | Parallel UI surface still visible in the repo |
+| [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | Public governed API surface that matches the newer `apps/*` grouping |
+| [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) | Parallel API surface still visible under an older path |
+| [`../../apps/review-console/README.md`](../../apps/review-console/README.md) | Review surface anchor for steward-facing trust operations |
+| [`../../apps/workers/README.md`](../../apps/workers/README.md) | Derived-delivery and batch-work lane anchor |
+| [`../../apps/cli/README.md`](../../apps/cli/README.md) | Narrow operator/tooling lane anchor |
 
 </details>
 
@@ -344,12 +381,14 @@ Because KFM’s doctrine is 2D-first. 3D is allowed when it carries real explana
 
 | Item | Why it matters |
 |---|---|
-| Mounted route inventory behind `apps/governed-api/` | This file should not invent route families or DTOs that the live tree does not prove |
+| Mounted route inventory behind the active governed API boundary | This file should not invent route families or DTOs the live tree does not prove |
+| Runtime topology convergence | Public `main` still shows parallel UI/API roots |
 | Workflow catalog and required checks | Architecture claims about enforcement become misleading if workflow state is guessed |
 | Evidence resolver examples | KFM’s runtime trust model depends on real evidence drill-through, not just prose |
-| Deployment overlays and runtime manifests | System overview should not hard-code topology that the live checkout disproves |
+| Deployment overlays and runtime manifests | System overview should not hard-code topology the live checkout disproves |
 | Schema-home decision | The `contracts/` / `schemas/` boundary affects where architecture links point |
 | Companion architecture leaf completion | This file should remain the bridge, not the only substantive architecture doc |
+| Actual git-history dates and UUID assignment | Required to finalize the KFM Meta Block v2 |
 
 </details>
 
@@ -358,8 +397,8 @@ Because KFM’s doctrine is 2D-first. 3D is allowed when it carries real explana
 
 - Upstream: [repo root][repo-root] · [docs index][docs-root] · [architecture index][arch-index]
 - Machine surfaces: [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [workflows README][workflows-readme]
-- Runtime surfaces: [apps][apps-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root]
-- Companion architecture docs: [system context][system-context] · [trust membrane][trust-membrane] · [truth path lifecycle][truth-path] · [deployment topology][deployment-topology] · [canonical vs rebuildable][canonical-vs-rebuildable]
+- Runtime surfaces: [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root]
+- Companion architecture docs: [system context][system-context] · [trust membrane][trust-membrane] · [truth path lifecycle][truth-path] · [deployment topology][deployment-topology] · [canonical vs rebuildable][canonical-vs-rebuildable] · [threat model][threat-model]
 
 </details>
 
@@ -371,7 +410,11 @@ Because KFM’s doctrine is 2D-first. 3D is allowed when it carries real explana
 [truth-path]: ./TRUTH_PATH_LIFECYCLE.md
 [deployment-topology]: ./DEPLOYMENT_TOPOLOGY.md
 [canonical-vs-rebuildable]: ./canonical_vs_rebuildable.md
+[threat-model]: ./threat-model/README.md
 [apps-root]: ../../apps/README.md
+[apps-gov-api]: ../../apps/governed-api/README.md
+[apps-legacy-api]: ../../apps/api/src/api/README.md
+[web-root]: ../../web/README.md
 [packages-root]: ../../packages/README.md
 [data-root]: ../../data/README.md
 [contracts-root]: ../../contracts/README.md
@@ -379,4 +422,5 @@ Because KFM’s doctrine is 2D-first. 3D is allowed when it carries real explana
 [policy-root]: ../../policy/README.md
 [tests-root]: ../../tests/README.md
 [infra-root]: ../../infra/README.md
+[github-root]: ../../.github/README.md
 [workflows-readme]: ../../.github/workflows/README.md
