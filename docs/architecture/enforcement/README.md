@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: 2026-03-01
+updated: 2026-03-26
 policy_label: <TODO-VERIFY-POLICY-LABEL>
 related: [docs/README.md, docs/architecture/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md, .github/workflows/README.md, apps/governed-api/README.md, apps/review-console/README.md, packages/policy/README.md]
 tags: [kfm]
-notes: [owners verified from CODEOWNERS; this path existed as a scaffold placeholder on current public-main evidence; doc_id, dates, and policy_label need direct repo verification before publish]
+notes: [owners verified from current public-main CODEOWNERS; created and updated derived from GitHub file history on public main; doc_id and policy_label still need direct repo doc-record confirmation; docs/architecture/README.md still classifies this lane as scaffold-level and should be reconciled]
 [/KFM_META_BLOCK_V2] -->
 
 # Enforcement
@@ -21,7 +21,7 @@ Architecture boundary map for how Kansas Frontier Matrix turns doctrine into mac
 > **Owners:** `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-architecture--enforcement-2f81f7) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-1f6feb) ![posture](https://img.shields.io/badge/posture-evidence--first-lightgrey) ![boundary](https://img.shields.io/badge/boundary-docs%20%E2%89%A0%20enforcement-critical)  
 > **Repo fit:** `docs/architecture/enforcement/README.md` → upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../governance/README.md`](../../governance/README.md), [`../../runbooks/README.md`](../../runbooks/README.md), [`../../standards/README.md`](../../standards/README.md) · enforcement-adjacent machine surfaces [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) · runtime consumers [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md), [`../../../apps/review-console/README.md`](../../../apps/review-console/README.md), [`../../../packages/policy/README.md`](../../../packages/policy/README.md)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Enforcement points](#enforcement-points) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence basis](#evidence-basis) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Enforcement points](#enforcement-points) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README explains where enforcement **must live** in KFM. It does **not** become a second enforcement engine.  
@@ -48,7 +48,7 @@ It should help a reviewer answer four questions quickly:
 | **INFERRED** | Strongly implied by multiple KFM sources, but not directly proven as mounted implementation | Cross-surface handoffs, likely enforcement seams |
 | **PROPOSED** | Recommended repo-ready shape consistent with KFM doctrine | Starter review flow, future hardening tasks, expansion guidance |
 | **UNKNOWN** | Not directly verified in the currently visible repo/workspace evidence | Live workflow catalog, mounted proof objects, runtime emitters |
-| **NEEDS VERIFICATION** | Important enough to call out before treating as settled repo fact | Dates, policy label, schema-home authority, branch-local inventory |
+| **NEEDS VERIFICATION** | Important enough to call out before treating as settled | `doc_id`, `policy_label`, schema-home authority, active-branch inventory, runtime depth |
 
 ### Working rule
 
@@ -86,6 +86,27 @@ A healthy KFM enforcement doc should make it easier to answer:
 - **What gets denied at runtime?**
 - **What gets surfaced as abstain/deny/error instead of bluffing?**
 - **What evidence and correction objects must remain visible when the system says “no”?**
+
+[Back to top](#enforcement)
+
+---
+
+## Evidence basis
+
+| Evidence layer | Status | Used here for |
+|---|---|---|
+| Current public `main` `docs/architecture/enforcement/README.md` | **CONFIRMED** | current lane text, section rhythm, relative links, and lane-level claims |
+| GitHub history for this path | **CONFIRMED** | `created` / `updated` date derivation and visible scaffold → substantive transition on public `main` |
+| Current public `main` `.github/CODEOWNERS` | **CONFIRMED** | owner verification for `@bartytime4life` |
+| Current public `main` adjacent README surfaces | **CONFIRMED** | neighbor responsibilities, README-only vs substantive posture, and cross-surface terminology |
+| March 2026 KFM doctrine corpus | **CONFIRMED** | trust membrane, truth path, authoritative-versus-derived split, finite runtime outcomes, proof-object families, and hydrology-first sequencing |
+| Branch protection rules, required checks, mounted policy bundles, runtime emitters, proof packs, and deployment manifests | **UNKNOWN** | not presented here as current implementation fact without mounted proof |
+
+### Interpretation rule
+
+Use the public tree for **what exists now**, GitHub history for **this file’s visible document timeline**, and the March 2026 doctrine corpus for **what these surfaces are supposed to mean**.
+
+When those layers diverge, keep the mismatch visible instead of smoothing it into certainty.
 
 [Back to top](#enforcement)
 
@@ -136,16 +157,20 @@ The current public-main signal for this lane is uneven on purpose: some surfaces
 
 | Surface | Current signal | How to read it safely |
 |---|---|---|
-| `docs/architecture/enforcement/README.md` | Path exists, but the fetched content was scaffold-level | Treat the path as reserved and now upgraded by this README draft |
-| `docs/architecture/README.md` | Substantive architecture index | Use it as the primary navigation anchor for architecture doc intent |
-| `contracts/README.md` | Substantive boundary README | Strong on role; live schema inventory still unresolved here |
-| `schemas/README.md` | Parallel schema surface exists | Schema-home authority still needs explicit confirmation before strong claims |
-| `policy/README.md` | Substantive policy doctrine README | Strong on deny-by-default posture; not proof of live bundle inventory |
+| `docs/architecture/enforcement/README.md` | Substantive README on current public `main`; visible history shows scaffold creation on `2026-03-01` and a clarity/detail revision on `2026-03-26` | Treat this file as the specific lane source; treat older scaffold references elsewhere as reconciliation work, not lane truth |
+| `docs/architecture/README.md` | Substantive architecture index, but its current snapshot still classifies `enforcement/README.md` as scaffold-level | Use it as the directory navigation anchor, but prefer this file for lane detail until the index is reconciled |
+| `contracts/README.md` | Substantive boundary README; current public tree for this lane remains README-only | Strong on role; not proof of a live contract registry |
+| `schemas/README.md` | Substantive boundary README; current public tree remains README-only and schema-home authority is still pending | Keep schema authority singular and explicit before making stronger claims |
+| `policy/README.md` | Substantive policy doctrine README | Strong on deny-by-default posture; not proof of mounted `.rego` bundles or policy tests |
 | `tests/README.md` | Substantive verification README | Strong on proof burdens; not proof of full runnable suite depth |
-| `.github/workflows/README.md` | README present | Do **not** infer checked-in merge-blocking workflow YAML without recheck |
-| `apps/governed-api/README.md` | Substantive boundary README | Runtime trust seam is named; mounted route and emitter depth still needs proof |
-| `apps/review-console/README.md` | Substantive boundary README | Review is shell variation, not a separate truth system |
+| `.github/workflows/README.md` | README present; current public tree for the workflow lane is README-only | Do **not** infer checked-in merge-blocking YAML from historical Actions activity alone |
+| `apps/governed-api/README.md` | Substantive boundary README | Runtime trust seam is named; route family, response-envelope depth, and even path continuity still need proof |
+| `apps/review-console/README.md` | Substantive boundary README | Review is shell variation, not a separate truth system; child routes, panels, and fixtures remain unverified |
 | `packages/policy/README.md` | Substantive cautionary README | Internal package support is not the authoritative policy home |
+
+> [!CAUTION]
+> Current public `main` contains a real cross-doc drift: this file is substantive, while `docs/architecture/README.md` still reports `enforcement/README.md` as scaffold-level in its snapshot table.  
+> Treat the child README as the specific lane source and queue index reconciliation in the same change stream.
 
 ### Reading consequence
 
@@ -199,7 +224,7 @@ Use this sequence before claiming that “enforcement exists” for any change.
 # 1) Re-check the docs lane
 sed -n '1,220p' docs/README.md
 sed -n '1,260p' docs/architecture/README.md
-sed -n '1,240p' docs/architecture/enforcement/README.md
+sed -n '1,260p' docs/architecture/enforcement/README.md
 
 # 2) Re-check machine-enforced neighbors
 sed -n '1,240p' contracts/README.md
@@ -378,9 +403,11 @@ The most important edge is the one KFM refuses to hide:
 
 ### This README is in good standing when
 
-- [ ] `doc_id`, `created`, `updated`, and `policy_label` are retired from placeholder state
+- [ ] `doc_id` and `policy_label` are retired from placeholder state
+- [ ] `created` and `updated` stay synchronized with Git history on the active branch
 - [ ] all relative links resolve on the active branch
 - [ ] the “Current public-main snapshot” section has been rechecked against current reality
+- [ ] the current snapshot in `docs/architecture/README.md` is reconciled so this lane is not simultaneously labeled scaffold-level there
 - [ ] any enforcement-significant architecture change updates this file and the neighboring authoritative surface docs together
 - [ ] no prose here implies merge-blocking automation, live bundles, or runtime emitters without direct evidence
 
@@ -429,25 +456,24 @@ Treat README intent as if it were already executable reality, or treat runtime c
 <details>
 <summary><strong>What this README can safely say today</strong></summary>
 
-- This path exists and was previously scaffold-level.
-- The architecture index is already the stronger architecture navigation surface.
-- Contracts, policy, tests, workflows, governed API, review console, and packages/policy all have visible README-defined roles.
-- The repo already distinguishes docs from executable enforcement surfaces.
-- The strongest safe use for this file right now is as a boundary guide and review aid.
+- This path exists on current public `main`.
+- GitHub history shows a visible scaffold-to-substantive transition for this lane during March 2026.
+- The architecture index is still the stronger directory navigation surface, but it currently needs reconciliation because it still classifies this lane as scaffold-level.
+- Contracts, policy, tests, workflows, governed API, review console, and `packages/policy/` all have visible README-defined roles.
+- The strongest safe use for this file right now is as a boundary guide, review aid, and cross-surface sync point.
 
 </details>
 
 <details>
 <summary><strong>What still needs direct repo verification before publish</strong></summary>
 
-- exact file history for `created` and `updated`
 - stable KFM document UUID for this lane
 - policy label for this document
 - whether `docs/architecture/enforcement/` should remain README-only or gain child docs
 - authoritative schema home and actual `.schema.json` inventory
 - actual workflow YAML inventory and which gates are required
 - actual policy bundle / fixture / test inventory
-- actual governed API envelope emitters and route-family evidence
+- actual governed API route families, response envelopes, and emitter depth
 - actual correction / rollback proof traces
 
 </details>
