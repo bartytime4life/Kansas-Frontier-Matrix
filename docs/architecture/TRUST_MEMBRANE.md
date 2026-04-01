@@ -18,11 +18,11 @@ notes: [Current-session workspace evidence was PDF-only; owner, related-path, an
 Architectural law for keeping public and role-limited KFM surfaces downstream of governed evidence, policy, release, and correction state.
 
 > [!IMPORTANT]
-> **CONFIRMED doctrine:** the trust membrane blocks direct client or UI bypass of governed APIs, policy evaluation, and evidence resolution.
+> **CONFIRMED doctrine:** the trust membrane is a core KFM invariant. Public and role-limited trust-visible surfaces do **not** bypass governed APIs, policy evaluation, or evidence resolution.
 >
-> **NEEDS VERIFICATION:** current-session workspace evidence was PDF-only. Exact repo-local bindings, filenames, owners, route trees, schemas, workflows, and manifests remain **UNKNOWN** unless directly verified in mounted code.
+> **NEEDS VERIFICATION:** current-session direct workspace evidence was PDF-only. Exact repo-local owners, route trees, schema files, workflow YAMLs, manifests, and runtime traces remain **UNKNOWN** unless directly reverified in mounted repository code.
 
-**Quick jump:** [Definition](#definition) · [Boundary model](#boundary-model) · [Non-negotiable rules](#non-negotiable-rules) · [Allowed vs blocked flows](#allowed-vs-blocked-flows) · [Trust objects](#trust-objects-that-cross-the-membrane) · [Verification](#verification-checklist) · [Open verification items](#open-verification-items)
+**Quick jump:** [Definition](#definition) · [Five-plane boundary model](#five-plane-boundary-model) · [Dependency laws](#dependency-laws) · [Allowed vs blocked flows](#allowed-vs-blocked-flows) · [Trust objects](#trust-objects-that-cross-the-membrane) · [Surface consequences](#surface-consequences) · [Verification checklist](#verification-checklist) · [Open verification items](#open-verification-items)
 
 ---
 
@@ -30,20 +30,29 @@ Architectural law for keeping public and role-limited KFM surfaces downstream of
 
 | Item | Status | Meaning here |
 | --- | --- | --- |
-| Doctrinal status | **CONFIRMED** | The membrane is a core KFM invariant, not an optional hardening layer. |
-| Repo-local attachment | **PROPOSED / NEEDS VERIFICATION** | Suggested paths and follow-on artifacts are starter placements, not mounted facts. |
-| Implementation depth | **UNKNOWN** | No repo checkout, schema inventory, workflow YAML, or runtime logs were directly inspected in this session. |
-| Primary outward outcomes | **CONFIRMED** | Runtime trust surfaces emit only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
-| Product consequence | **CONFIRMED** | Map, timeline, dossier, Evidence Drawer, Focus, export, and review surfaces inherit the membrane. |
-| Immediate next proving move | **PROPOSED** | Contract core + policy registries + fixtures + one hydrology thin slice. |
+| Doctrinal status | **CONFIRMED** | The membrane is a load-bearing KFM law, not an optional hardening layer. |
+| Recent corpus reinforcement | **CONFIRMED** | Recent March 2026 overlays intensify artifactization, Evidence Drawer centrality, bounded Focus behavior, and hydrology-first proof sequencing. |
+| Repo-fit precision | **PARTIALLY CONFIRMED** | Attached repo-grounded evidence confirms several documentation surfaces, but not executable schema or CI proof. |
+| Live implementation depth | **UNKNOWN** | No mounted repo checkout, runtime logs, deployment manifests, or emitted proof objects were directly inspected in this session. |
+| Immediate proving move | **PROPOSED** | Contract core + policy registries + valid/invalid fixtures + one hydrology thin slice. |
+
+## Truth posture used in this document
+
+| Label | How it is used here |
+| --- | --- |
+| **CONFIRMED** | Directly supported by the attached KFM corpus or the attached repo-grounded summary artifact. |
+| **INFERRED** | Conservative structural completion strongly implied by repeated KFM doctrine, but not directly verified as mounted implementation. |
+| **PROPOSED** | Recommended realization, starter artifact family, or sequencing move. |
+| **UNKNOWN** | Not verified strongly enough in the current session to claim as current repo or runtime fact. |
+| **NEEDS VERIFICATION** | Important enough to name now, but still waiting on mounted code, tests, manifests, or live proof objects. |
 
 ---
 
 ## Definition
 
-The **trust membrane** is the governed boundary between KFM internals and every outward-facing value the system emits: map portrayals, dossier fields, story excerpts, export previews, and bounded runtime answers.
+The **trust membrane** is the governed boundary between KFM internals and every outward-facing value the system emits: map portrayals, dossier fields, story excerpts, exports, and bounded runtime answers.
 
-It is not only a network rule, and not only an API design style. It is the combined law that says outward behavior must pass through:
+It is not only a network rule and not only an API style. It is the combined law that says outward behavior must remain downstream of:
 
 1. **promoted scope**
 2. **policy evaluation**
@@ -54,11 +63,9 @@ It is not only a network rule, and not only an API design style. It is the combi
 
 If any of those are missing, stale, unresolved, or policy-unsafe, the system fails closed instead of improvising.
 
----
-
 ## Why the membrane exists
 
-KFM treats the inspectable claim as the unit of value, not the dashboard card, tile, search hit, graph edge, model answer, or 3D scene. The trust membrane exists so that convenience layers never quietly become sovereign truth.
+KFM treats the **inspectable claim** as the unit of value, not the tile, chart, card, graph edge, summary, or answer. The membrane exists so convenience layers never quietly become sovereign truth.
 
 Without it:
 
@@ -66,13 +73,13 @@ Without it:
 - a derived cache can be mistaken for authority because it is fast
 - a model runtime can emit plausible prose without inspectable support
 - a correction can remain invisible while stale claims stay live
-- publication can look successful even when review, rights, or evidence state are unresolved
+- publication can look successful even when review, rights, sensitivity, or documentation gates are unresolved
 
-With it, outward confidence stays subordinate to evidence, policy, and release state.
+With it, outward confidence stays subordinate to evidence, policy, release state, and correction state.
 
 ---
 
-## Boundary model
+## Five-plane boundary model
 
 ```mermaid
 flowchart LR
@@ -81,22 +88,22 @@ flowchart LR
     end
 
     subgraph P2["2. Canonical truth plane"]
-        CANON["Authoritative dataset versions"]
+        CANON["Authoritative entities, observations, claims, versions"]
     end
 
     subgraph P3["3. Catalog / policy / review plane"]
         CAT["Catalog closure"]
-        POL["Policy decisions"]
-        REV["Review records"]
+        POL["Decision / obligation grammar"]
+        REV["Review + release state"]
     end
 
     subgraph P4["4. Derived delivery plane"]
-        DER["Tiles / search / graph / exports / scenes"]
+        DER["Tiles / vectors / search / graph / exports / scenes"]
     end
 
     subgraph MEM["Trust membrane"]
         API["Governed API"]
-        ER["Evidence resolver"]
+        RES["Evidence resolver"]
         PDP["Policy + review gate"]
         ENV["RuntimeResponseEnvelope"]
     end
@@ -116,61 +123,51 @@ flowchart LR
     CANON --> DER
     DER --> API
     PDP --> API
-    API --> ER --> ENV
+    API --> RES --> ENV
     ENV --> MAP
     ENV --> ED
     ENV --> FOCUS
     ENV --> EXP
 
-    UIB["Direct UI/client -> canonical DB"] -. BLOCKED .-> CANON
-    RAWB["Direct UI/client -> RAW / WORK / QUARANTINE"] -. BLOCKED .-> RAW
-    MB["Direct UI/client -> model runtime"] -. BLOCKED .-> FOCUS
-    WB["Derived layer -> canonical write-back"] -. BLOCKED .-> CANON
+    B1["Browser / client -> canonical DB"] -. BLOCKED .-> CANON
+    B2["Browser / client -> RAW / WORK / QUARANTINE"] -. BLOCKED .-> RAW
+    B3["Browser / client -> model runtime"] -. BLOCKED .-> FOCUS
+    B4["Derived layer -> canonical write-back"] -. BLOCKED .-> CANON
 ```
 
----
+## Plane responsibilities and write rights
 
-## Five-plane interaction table
-
-| Plane | Primary responsibility | Who may write | Membrane consequence |
+| Plane | Primary responsibility | Who may write | Must not bypass or mutate |
 | --- | --- | --- | --- |
 | **1. Source & intake** | Source descriptors, raw captures, ingest receipts, validation, quarantine routing | Connectors and ingestion workers only | No public reads. No direct browser path. No canonical write from UI. |
-| **2. Canonical truth** | Authoritative entities, observations, features, claims, immutable dataset versions | Canonical pipelines and approved repair lanes only | No direct client reads. No derived write-back into authority. |
-| **3. Catalog / policy / review** | Catalog closure, rights/sensitivity decisions, review records, release manifests, correction governance | Catalog compiler, policy lane, approver roles only | No publication without gate closure. No self-approval on policy-significant actions. |
-| **4. Derived delivery** | Maps, tiles, search, graph, vectors, scenes, exports, projection receipts | Projection and packaging workers only | Derived materializations must never silently become authoritative truth. |
-| **5. Runtime & trust-visible surfaces** | Governed API, EvidenceBundle resolution, Focus coordination, shell, review console, ops endpoints | Runtime services may emit response and audit objects; no canonical writes | No store bypass. No uncited answer path. No hidden correction state. |
+| **2. Canonical truth** | Canonical entities, observations, features, claims, immutable dataset versions | Canonical pipelines and approved repair lanes only | No direct client reads. No derived write-back into authority. |
+| **3. Catalog / policy / review** | Catalog closure, rights and sensitivity decisions, review records, release manifests, correction governance | Catalog compiler, policy lane, and approver roles only | No public publication without gate closure. No self-approval on policy-significant actions. |
+| **4. Derived delivery** | Maps, tiles, search, graph, vector, scene, export, projection receipts | Projection and packaging workers only | Derived materializations may not silently become authoritative truth. |
+| **5. Runtime and trust-surfaces** | Governed API, `EvidenceBundle` resolution, Focus coordination, web shell, review console, ops endpoints | Runtime services may emit response and audit objects; no canonical writes | No store bypass. No uncited answer path. No hidden correction state. |
 
 ---
+
+## Dependency laws
+
+The membrane stays real only when these laws remain intact:
+
+- Public or external surfaces may read **only** through the governed API and **only** within promoted scope.
+- Derived delivery depends on authoritative versions and release state; authoritative truth never depends on derived caches for its own validity.
+- Policy and review outputs must exist **before** public-safe publication, not as retroactive annotations.
+- Runtime answering depends on resolved evidence, citation checks, and policy checks **before** synthesis or abstention.
+- Correction travels forward through the same object graph and remains visible at trust surfaces.
 
 ## Non-negotiable rules
 
-### 1. Public and role-limited surfaces read through governed APIs only
-
-No browser, public client, classroom surface, story surface, or Focus pane should speak directly to canonical stores, RAW buckets, WORK areas, or unpublished candidates.
-
-### 2. Evidence is operational, not decorative
-
-The membrane is not satisfied by attaching provenance “later.” Every consequential outward value must remain one hop away from inspectable evidence.
-
-### 3. Policy gates publication, not just writes
-
-A successful query does **not** equal a publishable claim. Rights, sensitivity, freshness, review state, and public-safe transformation still apply.
-
-### 4. Derived layers stay derived
-
-Tiles, vectors, search indexes, graph projections, scenes, caches, embeddings, and summaries are rebuildable convenience layers unless explicitly promoted through governed state change.
-
-### 5. Focus remains evidence-bounded
-
-Focus is not a free-form assistant tab. It is a scoped runtime surface behind the membrane, constrained by evidence resolution, citation verification, policy checks, and finite outcomes.
-
-### 6. Correction remains visible
-
-Supersession, narrowing, withdrawal, replacement, and generalization must propagate forward to trust-visible surfaces rather than disappearing behind a silent data fix.
-
-### 7. 3D does not weaken the membrane
-
-Controlled 3D inherits the same Evidence Drawer, audit linkage, policy chips, release state, and correction state as 2D. It never creates a special truth regime.
+| Rule | Operational consequence |
+| --- | --- |
+| **Governed API only** | Public and role-limited surfaces do not read canonical stores, raw zones, or unpublished candidates directly. |
+| **Evidence is operational** | Every consequential outward value remains one hop away from inspectable evidence. |
+| **Derived layers stay derived** | Graph, search, vector, tile, scene, cache, and summary layers remain rebuildable unless explicitly promoted. |
+| **Focus remains bounded** | Focus is retrieval-bounded, citation-checked, policy-checked, and limited to finite outcomes. |
+| **Promotion gates publication** | A successful query is not enough; release, review, rights, sensitivity, freshness, and documentation gates still apply. |
+| **Correction remains visible** | Supersession, withdrawal, narrowing, replacement, and stale-visible states must propagate to trust-visible surfaces. |
+| **3D inherits the same burden** | Controlled 3D never becomes a second, looser truth regime; it carries the same evidence, audit, release, and correction requirements as 2D. |
 
 ---
 
@@ -180,22 +177,22 @@ Controlled 3D inherits the same Evidence Drawer, audit linkage, policy chips, re
 
 | Flow | Why it is allowed |
 | --- | --- |
-| Public shell → governed API → EvidenceBundle-backed response | Keeps outward claims downstream of promoted scope and evidence resolution. |
-| Review shell → governed API → policy/review plane | Allows authorized moderation, denial, promotion, and rollback without bypassing governance. |
-| Projection worker → promoted release scope → tile/search/vector/scene outputs | Derived delivery is allowed when it depends only on promoted scope. |
+| Public shell → governed API → evidence-backed response | Keeps outward claims downstream of promoted scope and evidence resolution. |
+| Review shell → governed API → catalog/policy/review plane | Allows moderation, denial, promotion, rollback, and rights handling without membrane bypass. |
+| Projection worker → promoted release scope → tile/search/vector/scene outputs | Derived delivery is allowed when it is provably downstream of promoted scope. |
 | Focus request → resolver + policy checks + citation verification → runtime envelope | Bounded synthesis is allowed when the membrane stays intact. |
-| Export request → release scope + preview policy + correction linkage | Outward artifact generation is allowed only as public-safe publication. |
+| Export request → release scope + preview policy + correction linkage | Artifact generation is allowed only as public-safe outward publication. |
 
 ### Blocked
 
 | Flow | Why it is blocked |
 | --- | --- |
-| Browser/UI → PostgreSQL/PostGIS canonical truth plane | Bypasses governed API, policy, and evidence resolution. |
+| Browser/UI → canonical PostgreSQL/PostGIS or equivalent truth store | Bypasses governed API, policy, and evidence resolution. |
 | Browser/UI → RAW / WORK / QUARANTINE files or object store | Exposes source-native or candidate material outside governed publication state. |
 | Browser/UI → model runtime directly | Allows uncited or policy-unchecked answers to appear authoritative. |
-| Derived delivery layer → canonical write-back | Collapses authoritative and derived layers. |
-| Story/Focus/export surface → uncited best-effort claim | Violates cite-or-abstain and fail-closed posture. |
-| Hidden correction that leaves stale public surfaces unchanged | Breaks lineage and operational trust. |
+| Derived delivery layer → canonical write-back | Collapses authority and derivative convenience into one layer. |
+| Story / Focus / export surface → uncited best-effort claim | Violates cite-or-abstain and fail-closed posture. |
+| Hidden correction that leaves stale public surfaces unchanged | Breaks visible lineage and operational trust. |
 
 ---
 
@@ -205,22 +202,22 @@ The membrane is easiest to govern when it is crossed by typed, inspectable objec
 
 | Trust object | Minimum job | Why it matters at the membrane |
 | --- | --- | --- |
-| `SourceDescriptor` | Declares source identity, cadence, rights, semantics, validation plan | Prevents unknown or ambiguous intake assumptions from leaking downstream. |
+| `SourceDescriptor` | Declares source identity, access mode, rights posture, support, cadence, validation plan, publication intent | Prevents unknown intake assumptions from leaking downstream. |
 | `IngestReceipt` | Proves fetch and landing occurred | Gives the membrane a reconstructible intake trail. |
 | `ValidationReport` | Records checks passed, failed, or quarantined | Supports fail-closed publication and review. |
 | `DatasetVersion` | Carries authoritative candidate or promoted subject set | Keeps outward claims tied to versioned authority. |
-| `CatalogClosure` | Publishes STAC / DCAT / PROV linkage | Makes discovery and lineage resolvable instead of rhetorical. |
-| `DecisionEnvelope` | Records policy result, reason codes, obligation codes, audit linkage | Makes “why this was allowed / denied / generalized” machine-readable. |
+| `CatalogClosure` | Publishes STAC / DCAT / PROV closure and outward linkage | Makes discovery and lineage resolvable instead of rhetorical. |
+| `DecisionEnvelope` | Records machine-readable policy result, reason codes, obligation codes, audit linkage | Makes “why this was allowed / denied / generalized” explicit. |
 | `ReviewRecord` | Captures human approval, denial, escalation, or note | Preserves separation of duty and visible governance. |
-| `ReleaseManifest` / `ReleaseProofPack` | Assembles public-safe release and its proof | Prevents publication from becoming “query succeeded.” |
-| `ProjectionBuildReceipt` | Proves a derived layer was built from known release scope | Keeps tiles/search/scene outputs subordinate to release state. |
+| `ReleaseManifest` / `ReleaseProofPack` | Assembles public-safe release and proof | Prevents publication from collapsing into “query succeeded.” |
+| `ProjectionBuildReceipt` | Proves a derived layer was built from known release scope | Keeps maps, search, graph, vectors, exports, and scenes subordinate to release state. |
 | `EvidenceBundle` | Packages support for a claim, feature, story, export preview, or answer | This is the membrane’s central explainability object. |
-| `RuntimeResponseEnvelope` | Makes runtime outcome accountable | Carries result, surface class, citations check, decision ref, and audit ref. |
+| `RuntimeResponseEnvelope` | Makes runtime outcome accountable | Carries result, surface class, surface state, citation check, decision ref, and audit ref. |
 | `CorrectionNotice` | Preserves visible lineage under change | Forces correction to travel forward across trust surfaces. |
 
 ---
 
-## Runtime outcomes and fail-closed behavior
+## Runtime outcomes and visible surface states
 
 ### Primary outward outcomes
 
@@ -229,7 +226,7 @@ The membrane is easiest to govern when it is crossed by typed, inspectable objec
 | `ANSWER` | Evidence-backed, policy-safe, citation-checked response |
 | `ABSTAIN` | Scope is too weak, partial, unresolved, or unsupported for a valid answer |
 | `DENY` | Policy blocks the requested action or surface |
-| `ERROR` | System could not complete the request within governed constraints |
+| `ERROR` | The system could not complete the request within governed constraints |
 
 ### Surface states that must remain visible
 
@@ -240,20 +237,23 @@ The membrane is easiest to govern when it is crossed by typed, inspectable objec
 
 ---
 
-## UI consequences
+## Surface consequences
 
-The trust membrane is visible in the shell. It is not a backend-only concept.
+> [!TIP]
+> In product terms, the **Evidence Drawer** is the trust membrane made inspectable.
 
 | Surface | Membrane consequence |
 | --- | --- |
-| **Map Explorer** | Must show time scope, layer state, freshness, and route to evidence. |
+| **Map Explorer** | Must show time scope, layer state, freshness, and a route to evidence. |
 | **Timeline** | Must expose valid-time labels, event grain, compare anchors, and stale-state cues. |
 | **Dossier** | Must stay tied to identity, dependencies, service areas, hazard/water context, gap notes, and evidence links. |
 | **Story surface** | Must remain evidence-linked, dated, review-aware, and correction-aware. |
-| **Evidence Drawer** | Must expose EvidenceBundle members, quote context, transforms, release state, and preview limits. |
-| **Focus** | Must remain scoped, citation-checked, audit-linked, and limited to finite outcomes. |
-| **Review / Stewardship** | Must expose policy labels, review notes, receipts, and no hidden approvals. |
+| **Evidence Drawer** | Must expose `EvidenceBundle` members, quote context, transforms, release state, and preview limits. |
+| **Focus Mode** | Must remain scoped, citation-checked, audit-linked, and limited to finite outcomes. |
+| **Review / Stewardship** | Must expose policy labels, review notes, diffs, receipts, and no hidden approvals. |
+| **Compare** | Must preserve explicit geography/time anchor and explicit comparison basis. |
 | **Export** | Must inherit release scope, evidence linkage, preview policy, and correction linkage. |
+| **Classroom / Civic variant** | Must follow the same truth rules on a simplified but not epistemically separate substrate. |
 | **Controlled 3D** | Must inherit the same evidence, audit, policy, release, and correction semantics as 2D. |
 
 ---
@@ -262,15 +262,15 @@ The trust membrane is visible in the shell. It is not a backend-only concept.
 
 ### Network and service posture
 
-The membrane implies that public surfaces, public APIs, and model-enabled runtime features may be externally reachable **only** through governed interfaces. Canonical databases, source-native stores, and local model runtimes stay private, loopback-bound, or otherwise restricted behind the membrane.
+The membrane implies that public surfaces, governed public APIs, and model-enabled runtime features may be externally reachable **only** through governed interfaces. Canonical databases, source-native stores, raw zones, and local model runtimes stay private, loopback-bound, or otherwise restricted behind the membrane.
 
 ### Local-first phase-one posture
 
-A smallest credible early runtime keeps:
+A smallest credible first runtime keeps:
 
-- canonical truth in PostgreSQL/PostGIS
+- canonical truth in PostgreSQL/PostGIS or another governed canonical store
 - artifact zones separated across `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
-- one governed API on loopback
+- one governed API on loopback or private network
 - ingest/build/publish/projection work in explicit jobs
 - local-only model runtime behind a replaceable adapter
 - **no direct client path** to canonical storage, artifact tree, or model runtime
@@ -288,7 +288,30 @@ As maturity grows, the membrane should make it easier to separate:
 - derived delivery
 - model serving
 
-without weakening doctrine.
+without weakening doctrine or blurring accountability.
+
+---
+
+## Repo attachment notes (verification required)
+
+> [!NOTE]
+> The table below mixes **CONFIRMED repo documentation surfaces** from the attached repo-grounded summary with **PROPOSED first executable artifacts** from the doctrine corpus. It is a placement aid, not a claim that every listed file already exists.
+
+| Confidence | Candidate path or surface | Why it belongs near the membrane |
+| --- | --- | --- |
+| **CONFIRMED repo doc surface** | `contracts/` | Existing documentation surface; likely one candidate home for the contract lattice. |
+| **CONFIRMED repo doc surface** | `schemas/` | Existing documentation surface; authority vs `contracts/` remains unresolved. |
+| **CONFIRMED repo doc surface** | `policy/` | Existing documentation surface for deny-by-default posture and decision grammar. |
+| **CONFIRMED repo doc surface** | `tests/` | Existing intent surface for fixtures, negative-path proofs, and runtime proof families. |
+| **CONFIRMED repo doc surface** | `.github/workflows/` | Existing workflow intent surface; merge-blocking YAML gate remains unverified. |
+| **PROPOSED first executable file** | `contracts/runtime/evidence_bundle.schema.json` | Makes evidence drill-through machine-checkable. |
+| **PROPOSED first executable file** | `contracts/runtime/runtime_response_envelope.schema.json` | Makes outward runtime outcomes testable. |
+| **PROPOSED first executable file** | `contracts/policy/decision_envelope.schema.json` | Makes allow / deny / generalize decisions explicit. |
+| **PROPOSED first executable file** | `contracts/correction/correction_notice.schema.json` | Makes visible lineage under change enforceable. |
+| **PROPOSED first executable file** | `policy/reason_codes.json` | Stabilizes why something was denied, generalized, or held. |
+| **PROPOSED first executable file** | `policy/obligation_codes.json` | Stabilizes what the system must do next: `generalize`, `withhold`, `cite`, `review_required`, and related obligations. |
+| **PROPOSED first executable file** | `ui/trust_states.md` | Keeps the shell from bluffing when trust is partial. |
+| **PROPOSED first executable file** | `ui/evidence_drawer_payloads.json` | Forces the Evidence Drawer to stay contract-backed rather than ad hoc. |
 
 ---
 
@@ -303,7 +326,7 @@ Use this as the minimum review gate for membrane-related work.
 - [ ] `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are all exercised and inspectable.
 - [ ] Surface states such as `generalized`, `partial`, `stale-visible`, `denied`, and `withdrawn` are visible in-place.
 - [ ] Derived layers prove release linkage and do not back-write authority.
-- [ ] Correction propagates across map, dossier, story, export, and Focus surfaces.
+- [ ] Correction propagates across map, dossier, story, export, compare, and Focus surfaces.
 - [ ] Rights, sensitivity, and precision controls are tested on public-safe and generalized cases.
 - [ ] Documentation, accessibility, and release gates block publication when required proof objects are missing.
 
@@ -311,39 +334,18 @@ Use this as the minimum review gate for membrane-related work.
 
 ## Open verification items
 
-These remain explicit because current-session workspace evidence did **not** include a mounted repo checkout.
+These remain explicit because current-session direct workspace evidence did **not** include a mounted repo checkout.
 
 | Item | Why it matters | Direct verification needed |
 | --- | --- | --- |
 | Current repo tree and module inventory | Path-level statements remain speculative until code is visible. | Surface the current repository tree and module list. |
 | Current schema and contract inventory | Executable contract claims remain target state until real files are visible. | Surface schema directories, valid examples, invalid fixtures, and validation tests. |
-| Workflow / CI inventory | Merge-blocking trust checks remain unknown. | Export workflow catalog and recent run evidence. |
-| Deployment manifests / overlays | Ingress, rollout, and secret posture are unverified. | Surface Compose, systemd, Helm, or Kubernetes manifests. |
-| `EvidenceBundle` / `EvidenceRef` resolver | Central to runtime explainability. | Publish resolver contracts, schemas, and one positive + one negative trace. |
+| Workflow / CI inventory | Merge-blocking trust checks remain unknown. | Export CI configs, workflow catalog, and recent run evidence. |
+| Deployment manifests / overlays | Ingress, rollout, and secrets posture are unverified. | Surface Compose, systemd, Helm, or Kubernetes manifests and overlays. |
+| `EvidenceBundle` / `EvidenceRef` resolver | Central to runtime explainability and abstention/denial behavior. | Publish resolver contracts, schemas, and one positive + one negative trace. |
 | Release proof-pack implementation | Promotion and rollback remain conceptual without one real proof artifact. | Surface one real release receipt or proof pack. |
-| Runtime response envelope samples | Answer/abstain/deny/error behavior needs direct proof. | Surface one evaluated sample for each primary outcome. |
-| Rights / sensitivity workflows | Public-safe release depends on them. | Surface publication classes, steward payloads, and generalized-vs-precise comparison flow. |
-
----
-
-## Proposed repo-local attachment points (starter only)
-
-> [!NOTE]
-> The following are **starter attachment points**, not asserted mounted repo facts. Use them only after direct workspace verification.
-
-| Proposed artifact | Purpose |
-| --- | --- |
-| `contracts/runtime/evidence_bundle.schema.json` | Typed evidence package for outward claims and surfaces |
-| `contracts/runtime/runtime_response_envelope.schema.json` | Accountable outward runtime result |
-| `contracts/policy/decision_envelope.schema.json` | Machine-readable policy outcome |
-| `contracts/correction/correction_notice.schema.json` | Visible lineage under change |
-| `policy/reason_codes.json` | Stable deny / abstain / stale / docs-gate / evidence reason vocabulary |
-| `policy/obligation_codes.json` | Stable obligation vocabulary such as `generalize`, `withhold`, `cite`, `review_required` |
-| `apis/public/openapi.yaml` | Public membrane contract publication |
-| `tests/e2e/runtime_proof/*` | Negative-path and citation-proof tests |
-| `tests/e2e/correction/*` | Correction visibility and lineage tests |
-| `ui/trust_states.md` | Shell-visible state grammar |
-| `ui/evidence_drawer_payloads.json` | Starter payload contract for drill-through evidence |
+| Runtime response envelope samples | Cite-or-abstain / deny / error semantics need direct proof. | Surface one evaluated sample for each primary outcome. |
+| Rights / sensitivity workflows | Public-safe release depends on them, especially for archaeology, biodiversity, oral history, and exact-location cases. | Surface publication classes, steward drawer payloads, and generalized-vs-precise comparison flow. |
 
 ---
 
@@ -377,7 +379,7 @@ These remain explicit because current-session workspace evidence did **not** inc
 </details>
 
 <details>
-<summary><strong>Appendix B — example membrane walkthrough</strong></summary>
+<summary><strong>Appendix B — example membrane walkthroughs</strong></summary>
 
 ### Example: map click to Evidence Drawer
 
