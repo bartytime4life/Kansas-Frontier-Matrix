@@ -4,53 +4,54 @@ title: configs/
 type: standard
 version: v1
 status: review
-owners: TODO(verify platform/config owners from CODEOWNERS or lane ownership docs)
-created: TODO(verify YYYY-MM-DD)
-updated: TODO(verify YYYY-MM-DD)
+owners: @bartytime4life
+created: TODO(verify YYYY-MM-DD from git history)
+updated: TODO(verify YYYY-MM-DD from git history)
 policy_label: TODO(verify directory classification)
-related: [../README.md, ../apps/, ../packages/, ../contracts/README.md, ../policy/README.md, ../infra/, ../tests/README.md, ../tools/README.md, ../scripts/README.md, ../migrations/, ../examples/]
+related: [../README.md, ../apps/, ../packages/, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../infra/, ../tests/README.md, ../tools/README.md, ../scripts/README.md, ../migrations/, ../examples/, ./deployment/README.md, ./env/README.md, ./observability/README.md, ./security/README.md, ./ui/README.md, ./env.schema.json]
 tags: [kfm, configs, runtime, deployment, observability, trust-boundaries]
-notes: [Root-level sibling links are grounded in March 2026 repo-inventory documents. Owners, UUID, dates, policy label, and the live configs/ subtree still require direct checkout verification before merge.]
+notes: [Owners are confirmed from .github/CODEOWNERS on public main. The current public tree confirms deployment/, env/, observability/, security/, ui/, and env.schema.json. UUID, git-history dates, and policy label still need direct verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # configs/
 
-_Repo-visible, non-secret configuration surfaces for KFM runtime wiring, deployment, observability, and shell-facing defaults._
+_Repo-visible, non-secret configuration surfaces for KFM runtime wiring, deployment, observability, UI defaults, and scan-facing security thresholds._
 
 > **Status:** experimental  
-> **Owners:** TODO(verify platform / config owners)  
+> **Owners:** `@bartytime4life`  
 > **Path:** `configs/README.md`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-TODO-lightgrey) ![path](https://img.shields.io/badge/path-configs%2FREADME.md-blue) ![scope](https://img.shields.io/badge/scope-non--secret%20config-informational) ![truth](https://img.shields.io/badge/truth-source--bounded-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree-root-lane-confirmed-interior-working-shape-still-to-verify) · [Quickstart](#quickstart) · [Usage rules](#usage-rules) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Current public tree state:** `deployment/`, `env/`, `observability/`, `security/`, `ui/`, and `env.schema.json` are present on `main`; the child lanes are currently README-led scaffolds and `env.schema.json` is a placeholder.  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-bartytime4life-blue) ![path](https://img.shields.io/badge/path-configs%2FREADME.md-blue) ![tree](https://img.shields.io/badge/tree-scaffold--first-lightgrey) ![scope](https://img.shields.io/badge/scope-non--secret%20config-informational) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage rules](#usage-rules) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is **repo-aware and source-grounded**, but it is not a substitute for a live checkout inspection. The attached March 2026 KFM manuals and repo-grounded audit documents confirm a root-level `configs/` lane and strong configuration/package-boundary doctrine. They do **not** prove the exact current contents of `configs/` in the mounted repository. Internal subpaths below are therefore marked **CONFIRMED**, **PROPOSED**, or **NEEDS VERIFICATION** inline.
+> This README is grounded in two evidence layers at once: March 2026 KFM doctrine and the current public `main` tree. The root `configs/` lane and its child directories are no longer hypothetical; they are visible in the public repo. What still needs verification is deeper than lane existence: exact runtime consumers, branch-local differences, validation wiring, and how much of the lane is still scaffold versus actively consumed.
 
 ## Scope
 
-In KFM, configuration is not a miscellaneous settings bucket. It is a **trust-bearing operational surface**: it influences how governed services bind, where workers run, how shell defaults behave, how observability joins are emitted, and whether fail-closed behavior survives deployment changes.
+In KFM, configuration is not a miscellaneous settings bucket. It is a **trust-bearing operational surface**. It influences how governed services bind, where workers run, how observability joins are emitted, how the shell presents already-governed state, and whether fail-closed behavior survives deployment changes.
 
-This `configs/` README covers the **repo-visible subset** of that space:
+This `configs/` lane covers the **repo-visible, non-secret subset** of that space:
 
-- non-secret templates
-- validated or reviewable environment schemas
+- environment schema and examples
 - deployment/runtime value surfaces
-- shell-facing defaults that do not become contract law
-- observability settings worth diffing in Git
+- observability defaults worth diffing in Git
+- UI-facing defaults that do not become policy or contract law
+- non-secret security thresholds, waivers, and scan-facing settings
 
-It does **not** flatten KFM’s stronger seams. Contracts, executable policy bundles, canonical data, review/release proof artifacts, and secret-bearing host files remain separate on purpose.
+It does **not** flatten KFM’s stronger seams. Contracts, executable policy bundles, canonical truth objects, release-proof artifacts, and secret-bearing host files remain separate on purpose.
 
 ### Truth posture for this README
 
 | Label | How it applies here |
 | --- | --- |
-| **CONFIRMED** | A root-level `configs/` lane is documented in repo-inventory material, and March 2026 KFM doctrine explicitly treats configuration/package boundaries as trust-bearing. |
-| **INFERRED** | `configs/` is intended to hold repo-visible, non-secret runtime/deployment/configuration material used by apps, packages, infra, and verification surfaces. |
-| **PROPOSED** | Internal subdirectories, exact file names beyond explicitly named artifacts, and validation command shapes not directly proven in the mounted checkout. |
-| **UNKNOWN** | Live `configs/` tree contents, owners, exact loader paths, exact CI wiring, and exact enforcement depth in the current checkout. |
-| **NEEDS VERIFICATION** | Any literal subpath, badge target, owner assignment, git-tracked file date, or validation command that depends on the live repo rather than the attached evidence corpus. |
+| **CONFIRMED** | The current public `main` tree contains `configs/README.md`, `configs/env.schema.json`, and the child lanes `deployment/`, `env/`, `observability/`, `security/`, and `ui/`. |
+| **INFERRED** | The lane’s intended role is repo-visible, non-secret runtime/deployment/observability/UI/security wiring subordinate to stronger law-bearing surfaces. |
+| **PROPOSED** | Future file additions inside the child lanes, deeper validator commands, and any expansion beyond the current scaffold state. |
+| **UNKNOWN** | Exact runtime loader paths, exact CI enforcement depth, non-public consumers, and any branch-local divergence from the inspected public tree. |
+| **NEEDS VERIFICATION** | UUID, git-history dates, policy label, and the repo’s final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
 
 ## Repo fit
 
@@ -58,39 +59,41 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | --- | --- |
 | Path | `configs/README.md` |
 | Directory role | Repo-visible home for non-secret configuration surfaces and reviewed runtime wiring |
-| Baseline doctrine | `KFM_Master_Design_Manual_2026-03-20.pdf` section **Configuration and package architecture** |
-| Supporting doctrine | KFM unified geospatial architecture, expanded working manual, Pass 5 synthesis, and repo-grounded March 2026 inventory/audit documents |
-| Main consumers | `apps/`, `packages/`, `infra/`, `tests/`, `tools/`, `scripts/` |
-| Review posture | Config changes deserve architecture review when they alter exposure, publication, policy behavior, citation behavior, release scope, or visible failure semantics |
+| Current public snapshot | Root README + `env.schema.json` + five child lanes: `deployment/`, `env/`, `observability/`, `security/`, `ui/` |
+| Main consumers | `../apps/`, `../packages/`, `../infra/`, `../tests/`, `../tools/`, `../scripts/` |
+| Governing posture | Config remains subordinate to contracts, policy, review, release state, and correction discipline |
+| Review posture | Treat config edits as architecture-significant when they alter exposure, policy behavior, citation behavior, release scope, stale-state behavior, or trust-visible UX |
 
 ### Upstream / downstream links
 
 | Relationship | Paths | Status |
 | --- | --- | --- |
-| Governance and machine-law sources | [`../contracts/README.md`](../contracts/README.md) · [`../policy/README.md`](../policy/README.md) | **CONFIRMED as repo docs** |
-| Main runtime consumers | [`../apps/`](../apps/) · [`../packages/`](../packages/) · [`../infra/`](../infra/) | **CONFIRMED as root lanes** |
-| Verification and tooling companions | [`../tests/README.md`](../tests/README.md) · [`../tools/README.md`](../tools/README.md) · [`../scripts/README.md`](../scripts/README.md) | **CONFIRMED as repo docs / lanes** |
-| Neighboring operational lanes | [`../migrations/`](../migrations/) · [`../examples/`](../examples/) | **CONFIRMED as root lanes** |
 | Root context | [`../README.md`](../README.md) | **CONFIRMED** |
-| Host-local companions | `/etc/kfm/*.env` | **Documented runtime pattern; not a repo path** |
+| Runtime consumers | [`../apps/`](../apps/) · [`../packages/`](../packages/) · [`../infra/`](../infra/) | **CONFIRMED** |
+| Verification and tooling companions | [`../tests/README.md`](../tests/README.md) · [`../tools/README.md`](../tools/README.md) · [`../scripts/README.md`](../scripts/README.md) | **CONFIRMED** |
+| Governance and law-bearing surfaces | [`../contracts/README.md`](../contracts/README.md) · [`../schemas/README.md`](../schemas/README.md) · [`../policy/README.md`](../policy/README.md) | **CONFIRMED**, but singular schema authority still **NEEDS VERIFICATION** |
+| Neighboring operational lanes | [`../migrations/`](../migrations/) · [`../examples/`](../examples/) | **CONFIRMED** |
+| Local child lanes | [`./deployment/README.md`](./deployment/README.md) · [`./env/README.md`](./env/README.md) · [`./observability/README.md`](./observability/README.md) · [`./security/README.md`](./security/README.md) · [`./ui/README.md`](./ui/README.md) | **CONFIRMED** |
+| Host-local companions | `/etc/kfm/*.env` | Documented runtime pattern; not a repo path |
 
 ## Accepted inputs
 
-| Category | Typical contents | Why it belongs here |
-| --- | --- | --- |
-| Environment schemas and examples | `env.schema.json`, `.env.example`-style templates, non-secret defaults | Makes runtime wiring reviewable without committing secrets |
-| Runtime and deployment values | bind/port settings, service parameters, environment-class defaults, deploy-facing values | Keeps environment-specific wiring explicit and diffable |
-| Observability defaults | log field maps, collector/exporter config, join-key defaults, non-secret alert thresholds | Preserves operational evidence without burying it in code |
-| Shell / renderer defaults | portrayal flags, map/shell defaults, feature switches that do **not** redefine truth | Lets UI behavior vary without moving governance into the frontend |
-| Operational thresholds | non-secret security or validation thresholds, waivers, scan/config tolerances | Useful when kept separate from executable policy bundles |
+| Path or class | Current public state | What belongs here | Why it belongs here |
+| --- | --- | --- | --- |
+| `env.schema.json` | **CONFIRMED file**, currently placeholder content | process-start environment schema and early validation anchor | Keeps runtime wiring explicit and machine-checkable once populated |
+| `env/` | **CONFIRMED lane**, current public view is README-led | non-secret env examples, defaults, and environment guidance | Lets contributors wire runtimes without committing secrets |
+| `deployment/` | **CONFIRMED lane**, current public view is README-led | deploy-facing values, overlays, and runtime-profile defaults | Keeps environment-specific wiring reviewable and diffable |
+| `observability/` | **CONFIRMED lane**, current public view is README-led | collector/exporter config, log field maps, join-key defaults, trace/receipt helpers | Preserves operational evidence without burying it in app code |
+| `ui/` | **CONFIRMED lane**, current public view is README-led | declarative shell/renderer defaults and accessibility-safe presentation behavior | Lets the shell vary presentation without moving governance into the frontend |
+| `security/` | **CONFIRMED lane**, current public view is README-led | non-secret thresholds, waivers, scanner-facing config, and hardening defaults | Useful when clearly separated from executable policy and secret material |
 
 ### What belongs here in practice
 
-- non-secret env examples
-- process-start configuration schema
-- deployment overlays or value files
-- observability defaults
-- shell-facing defaults
+- non-secret env examples and defaults
+- early-start configuration schemas
+- deployment/runtime value surfaces
+- observability settings with named consumers
+- UI-facing declarative defaults
 - non-secret operational thresholds
 - documentation-backed configuration examples that help contributors wire the system correctly
 
@@ -99,62 +102,68 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | Do **not** keep here | Put it instead | Why |
 | --- | --- | --- |
 | Credentials, tokens, private keys, live DSNs with secrets | host-local secret files or secret manager surfaces such as `/etc/kfm/*.env` | `configs/` must stay repo-visible and non-secret |
-| JSON Schemas, OpenAPI contracts, controlled vocabularies acting as machine law | [`../contracts/README.md`](../contracts/README.md) | Contracts need a single authoritative home |
-| Executable policy bundles, deny/allow rules, reason/obligation logic | [`../policy/README.md`](../policy/README.md) | Governance must stay explicit, testable, and separately reviewable |
+| Executable deny/allow logic, policy bundles, reason/obligation evaluation, policy tests | [`../policy/README.md`](../policy/README.md) | Governance must remain explicit, testable, and separately reviewable |
+| Machine-law schemas, OpenAPI contracts, controlled vocabularies, contract fixtures | the repo’s authoritative schema/contract home in [`../contracts/README.md`](../contracts/README.md) or [`../schemas/README.md`](../schemas/README.md) | `configs/` must not become a third schema authority |
 | Database migrations | [`../migrations/`](../migrations/) | Schema evolution needs replay discipline |
 | Generated caches, temp files, build output, local state | ignored runtime/build/cache locations | Reviewable config should remain intentional and stable |
 | Canonical truth objects or release-backed evidence artifacts | governed data / catalog / release-proof surfaces | Config may point at them, but does not replace them |
-| Frontend-only heuristics that become trust logic | shell code or governed API, depending the concern | Trust behavior must not hide in convenience toggles |
+| Frontend-only heuristics that become trust logic | shell code or governed API, depending on the concern | Trust behavior must not hide in convenience toggles |
 
 > [!WARNING]
-> A file that changes schema law, evidence law, policy semantics, or publication criteria is almost never “just config” in KFM.
+> The public repo currently exposes both `contracts/` and `schemas/`. Until the singular machine-law authority is explicitly settled, `configs/` should not accumulate contract-like files “temporarily.”
 
-## Directory tree (root lane confirmed; interior working shape still to verify)
+## Directory tree
 
 ```text
 configs/
 ├── README.md
-├── env.schema.json              # PROPOSED named artifact in March 2026 design docs
-├── env/                         # PROPOSED non-secret examples/defaults
-├── deployment/                  # PROPOSED runtime/deploy value surfaces
-├── observability/               # PROPOSED collector/log/join config
-├── ui/                          # PROPOSED shell or renderer defaults
-└── security/                    # PROPOSED non-secret operational thresholds only
+├── env.schema.json                  # CONFIRMED file; current public content is {}
+├── deployment/
+│   └── README.md                    # CONFIRMED scaffold lane
+├── env/
+│   └── README.md                    # CONFIRMED scaffold lane
+├── observability/
+│   └── README.md                    # CONFIRMED scaffold lane
+├── security/
+│   └── README.md                    # CONFIRMED scaffold lane
+└── ui/
+    └── README.md                    # CONFIRMED scaffold lane
 ```
 
 How to read this tree:
 
-- The **root lane** `configs/` is source-grounded.
-- `env.schema.json` is the one internal artifact explicitly named in the March 2026 design material.
-- The listed subdirectories are a **doctrine-consistent working shape**, not a mounted-fact claim.
-- `security/` here means **non-secret operational settings**, not executable policy bundles.
+- The **root lane and child lanes are current public facts**, not just doctrinal expectations.
+- `env.schema.json` is also a **current public fact**, but its current contents are only `{}`. Treat it as a placeholder until a real schema and validator path land.
+- The child lanes are present **scaffold-first**. Their existence is confirmed; their deeper file inventories are still intentionally small.
+- Growing a child lane should be deliberate: name the consumer, name the validator, and keep the file subordinate to stronger law-bearing surfaces.
 
 ## Quickstart
 
 1. Inspect the live `configs/` tree before editing anything.
-2. Decide whether the change is truly configuration, or whether it belongs in `contracts/`, `policy/`, `migrations/`, or host-local secret surfaces.
+2. Decide whether the change is truly configuration, or whether it belongs in `contracts/`, `schemas/`, `policy/`, `migrations/`, or host-local secret surfaces.
 3. Make the smallest useful non-secret change.
 4. Run the repo’s **actual** validation path before merge.
 
 ```bash
-# Inspect the live config lane.
+# Inspect the current config lane.
 find configs -maxdepth 3 -type f | sort
 ```
 
 ```bash
 # Trace likely config consumers and named config seams.
-git grep -nE 'env\.schema|KFM_(ARTIFACT_ROOT|POLICY_DIR|DB_DSN|MODEL_ADAPTER_URL|PUBLISHED_ONLY|CITATIONS_REQUIRED|BIND)' -- .
+git grep -nE 'env\.schema|KFM_(ARTIFACT_ROOT|POLICY_DIR|DB_DSN|MODEL_ADAPTER_URL|PUBLISHED_ONLY|CITATIONS_REQUIRED|BIND)|trace_id|audit_ref|otel|logfmt' -- .
 ```
 
 ```bash
-# Look for boundary and validation hooks already present in the repo.
-git grep -nE '(forbidden import|dependency graph|route-family|config schema|validate_contracts|schema-lint)' -- .
+# Look for overlap with contract, schema, and policy surfaces before adding new files.
+git grep -nE '(decision_envelope|evidence_bundle|runtime_response_envelope|correction_notice|reason_codes|obligation_codes|published_only|citations_required)' -- contracts schemas policy apps packages infra tests tools scripts
 ```
 
 Illustrative environment key surface:
 
 ```dotenv
-# Illustrative names from source docs — verify against the live repo before use.
+# Illustrative names from KFM runtime/config guidance.
+# Verify the merge target before treating these as active implementation keys.
 
 KFM_ARTIFACT_ROOT=/srv/kfm
 KFM_POLICY_DIR=/etc/kfm/policy
@@ -188,55 +197,70 @@ A small config diff can widen network exposure, weaken citation behavior, loosen
 
 Hidden fallback defaults are especially dangerous in governed systems. Configuration should be parsed, validated, and rejected early rather than silently tolerated.
 
-### 5) Keep one canonical home per concern
+### 5) Do not create a third schema authority
 
-If the same rule appears in `configs/`, `contracts/`, `policy/`, app code, and deployment overlays, drift is almost guaranteed.
+The repo already exposes both `contracts/` and `schemas/`. Until that authority is formally narrowed, `configs/` should stay out of machine-law territory.
 
-### 6) Preserve package and route boundaries
+### 6) Expand scaffold lanes deliberately
+
+A child lane should gain substantive files only when three things are visible together:
+
+- the primary consumer
+- the validation or lint path
+- the reason this file does **not** belong in a stronger home
+
+### 7) Preserve package and route boundaries
 
 Config should reinforce the separation of shell, renderer, style, server, workers, contracts, policy, and evidence resolution — not blur them.
 
 > [!CAUTION]
-> Any toggle that weakens citation, publication, rights handling, or scope handling is not a convenience setting. It is a governance change.
+> Any toggle that weakens citation, publication, rights handling, scope handling, or stale-state visibility is not a convenience setting. It is a governance change.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    C["configs/"] --> E["env schema + non-secret examples"]
-    C --> R["runtime / deployment values"]
-    C --> O["observability defaults"]
-    C --> U["shell / renderer defaults"]
+    C["configs/ (repo-visible, non-secret)"]
 
-    E --> A["apps/ + packages/"]
-    R --> I["infra/ + scripts/"]
+    C --> ES["env.schema.json\n(currently placeholder)"]
+    C --> E["env/"]
+    C --> D["deployment/"]
+    C --> O["observability/"]
+    C --> S["security/"]
+    C --> U["ui/"]
+
+    E --> AP["apps/ + packages/"]
+    D --> INF["infra/ + scripts/"]
     O --> T["tests/ + tools/"]
-    U --> S["governed shell surfaces"]
+    U --> SHELL["shell / renderer surfaces"]
+    S --> OPS["ops / scanners / hardening defaults"]
 
-    C -. "not secrets" .-> H["/etc/kfm/*.env"]
-    C -. "not machine law" .-> K["contracts/"]
-    C -. "not executable governance" .-> P["policy/"]
-    C -. "must not replace canonical truth" .-> D["RAW → WORK/Quarantine → PROCESSED → CATALOG → PUBLISHED"]
+    C -. "not secrets" .-> HOST["/etc/kfm/*.env"]
+    C -. "not machine law" .-> LAW["contracts/ + schemas/"]
+    C -. "not executable governance" .-> POLICY["policy/"]
+    C -. "subordinate to truth path" .-> FLOW["RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED"]
 ```
 
 ## Reference tables
 
-### Config lanes at a glance
+### Current lane snapshot
 
-| Lane | What it holds | Status | Primary consumers |
+| Path | Current public state | Intended role | Notes |
 | --- | --- | --- | --- |
-| `env.schema.json` | process-start config schema / validation anchor | **PROPOSED named artifact** | apps, workers, validation tooling |
-| `env/` | non-secret examples and defaults | **PROPOSED** | apps, packages, scripts |
-| `deployment/` | runtime/deploy-facing values | **PROPOSED** | infra, scripts, ops |
-| `observability/` | log/join/exporter defaults | **PROPOSED** | infra, tools, tests |
-| `ui/` | shell/renderer defaults without truth-law drift | **PROPOSED** | UI shell, portrayal layers |
-| `security/` | non-secret operational thresholds only | **PROPOSED** | CI, ops, scan tooling |
+| `configs/README.md` | **CONFIRMED** | root lane doctrine and contributor guidance | already present on public `main` |
+| `configs/env.schema.json` | **CONFIRMED file** | env/config schema anchor | current public content is `{}` |
+| `configs/deployment/README.md` | **CONFIRMED** | deployment-lane guidance | current public lane appears scaffold-first |
+| `configs/env/README.md` | **CONFIRMED** | environment-lane guidance | current public lane appears scaffold-first |
+| `configs/observability/README.md` | **CONFIRMED** | observability-lane guidance | current public lane appears scaffold-first |
+| `configs/security/README.md` | **CONFIRMED** | security-lane guidance | current public lane appears scaffold-first |
+| `configs/ui/README.md` | **CONFIRMED** | UI-configuration guidance | current public lane appears scaffold-first |
 
 ### “What lives where” matrix
 
 | Concern | Preferred home | Must not hide in |
 | --- | --- | --- |
 | Source admission rules | `contracts/` + `policy/` | UI config or ad hoc scripts |
+| Contract fixtures and schema law | current authoritative schema/contract lane | `configs/` |
 | Canonical write logic | workers / canonical-model packages | browser code |
 | Evidence resolution | governed API and resolver packages | renderer components |
 | Styles, sprites, portrayal assets | style registry / delivery assets | canonical business tables as unexplained blobs |
@@ -254,69 +278,88 @@ flowchart LR
 | New worker or scheduler config | runtime + provenance review | Can alter rebuild, correction, or freshness semantics |
 | New observability join key or retention setting | ops + audit review | Can affect traceability |
 | New threshold / waiver config | operational risk review | Tolerance drift can silently weaken gates |
+| Turning `env.schema.json` into an active validator surface | schema + CI review | Empty placeholder → authoritative gate is a major state change |
 
 ## Task list / definition of done
 
 - [ ] No secrets, tokens, or private credentials are committed
 - [ ] Every new config file names its primary consumer
-- [ ] Configuration does not encode contract law or policy logic that belongs elsewhere
+- [ ] New files are placed in the correct lane instead of drifting into `configs/` as a catch-all
+- [ ] `configs/` does not encode contract law or executable policy logic that belongs elsewhere
 - [ ] Host-local secret-bearing files stay outside versioned `configs/`
-- [ ] Config is validated early or linked to a real validation path
+- [ ] `env.schema.json` is either still intentionally placeholder or is backed by a real validation path
 - [ ] Any trust-affecting toggle is documented as a governance-significant change
-- [ ] The live `configs/` subtree is rechecked before merge
+- [ ] Scaffold lanes only gain substantive files with named consumers and validators
 - [ ] Owners, UUID, dates, and policy label in the meta block are verified or intentionally left as placeholders
-- [ ] Neighboring docs and lane links are confirmed against the mounted checkout
+- [ ] Neighboring docs and lane links are rechecked against the target merge branch
 
 ## FAQ
 
-### Why is this README strict about `configs/` versus `contracts/` and `policy/`?
+### Is `configs/` actually confirmed now?
 
-Because KFM’s trust model depends on visible separation between wiring, machine-readable law, and executable governance.
+Yes. The current public `main` tree confirms the root lane and its child directories.
 
-### Is all KFM configuration supposed to live under `configs/`?
+### Are the child lanes active implementation surfaces?
 
-No. This README covers the **repo-visible, non-secret subset** only. Host-local secrets and some deployment/runtime details intentionally live elsewhere.
+They are **real lanes**, but the current public tree shows them as scaffold-first, README-led directories. Presence is confirmed; deep usage still depends on the target checkout.
 
-### Are the internal subdirectories above confirmed?
+### Why mention both `contracts/` and `schemas/`?
 
-No. The **root lane** is confirmed by repo-grounded inventory material. The interior working shape is still a review-ready proposal until the live tree is checked.
+Because the repo currently exposes both. Until their singular authority split is explicitly resolved, this README should not pretend only one of them exists.
+
+### Is `env.schema.json` authoritative today?
+
+The file exists, but its current public contents are only `{}`. Treat it as a placeholder until a validator path and active consumers are surfaced.
 
 ### Why mention `/etc/kfm/*.env` in a repo README?
 
-Because KFM’s host-runtime guidance explicitly separates repo-visible configuration from secret-bearing local environment files.
+Because KFM’s runtime guidance explicitly separates repo-visible configuration from secret-bearing local environment files.
 
 ### Can `configs/` change user-visible behavior?
 
-Yes. Bind scope, published-only behavior, shell defaults, stale-state handling, and observability can all change user-visible behavior. That is why config deserves review discipline.
+Yes. Bind scope, published-only behavior, shell defaults, stale-state handling, and observability can all change visible system behavior. That is why config deserves review discipline.
 
 ## Appendix
 
 <details>
-<summary><strong>Documented examples in the current source corpus</strong></summary>
+<summary><strong>Current public snapshot used for this README</strong></summary>
+
+| Path | Public-main observation |
+| --- | --- |
+| `configs/` | root lane exists |
+| `configs/deployment/` | present |
+| `configs/env/` | present |
+| `configs/observability/` | present |
+| `configs/security/` | present |
+| `configs/ui/` | present |
+| `configs/env.schema.json` | present and currently `{}` |
+| `.github/CODEOWNERS` | `/configs/` covered by `@bartytime4life` |
+
+</details>
+
+<details>
+<summary><strong>Documented runtime patterns in the March 2026 source corpus</strong></summary>
 
 | Example | What it shows | Status |
 | --- | --- | --- |
-| `configs/env.schema.json` | Explicitly named environment-schema artifact in March 2026 design material | **PROPOSED named artifact** |
-| `/etc/kfm/kfm-api.env` | host-local API environment file pattern | **Documented runtime pattern** |
-| `/etc/kfm/kfm-worker.env` | host-local worker environment file pattern | **Documented runtime pattern** |
-| `/etc/kfm/kfm-publish.env` | host-local publish/runtime environment file pattern | **Documented runtime pattern** |
-| `/etc/kfm/ollama.override.env` | local model runtime override pattern | **Documented runtime pattern** |
-| `KFM_ARTIFACT_ROOT`, `KFM_POLICY_DIR`, `KFM_DB_DSN`, `KFM_MODEL_ADAPTER_URL`, `KFM_PUBLISHED_ONLY`, `KFM_CITATIONS_REQUIRED`, `KFM_BIND` | illustrative environment-key family | **PROPOSED names from runtime docs** |
+| `/etc/kfm/kfm-api.env` | host-local API environment file pattern | documented runtime pattern |
+| `/etc/kfm/kfm-worker.env` | host-local worker environment file pattern | documented runtime pattern |
+| `/etc/kfm/kfm-publish.env` | host-local publish/runtime environment file pattern | documented runtime pattern |
+| `/etc/kfm/ollama.override.env` | local model runtime override pattern | documented runtime pattern |
+| `KFM_ARTIFACT_ROOT`, `KFM_POLICY_DIR`, `KFM_DB_DSN`, `KFM_MODEL_ADAPTER_URL`, `KFM_PUBLISHED_ONLY`, `KFM_CITATIONS_REQUIRED`, `KFM_BIND` | illustrative environment-key family | documented as illustrative / still verify against merge target |
 
 </details>
 
 <details>
 <summary><strong>Verification checklist before merge</strong></summary>
 
-Verify at least the following against the live checkout:
-
-1. Whether `configs/README.md` already exists and has local style conventions worth preserving.
-2. Whether `configs/env.schema.json` exists already, or whether another file currently plays that role.
-3. Which internal `configs/` lanes actually exist.
-4. Whether there is already a real validator command for config/schema checks.
-5. Whether sibling lane READMEs already link back to `configs/`.
-6. Whether CODEOWNERS or another ownership surface names a `configs/` owner.
-7. Whether any config toggles currently influence trust behavior and should be documented more explicitly.
+1. Confirm the target branch still matches the public `main` tree inspected for this draft.
+2. Verify `git log` dates for `configs/README.md` before replacing the meta-block placeholders.
+3. Confirm whether `env.schema.json` is intentionally placeholder or should now carry a real schema.
+4. Verify whether any child lane has gained substantive files beyond its current README-led scaffold.
+5. Verify whether the authoritative machine-law home is `contracts/`, `schemas/`, or a formally split arrangement.
+6. Check whether any config toggles now influence trust behavior strongly enough to deserve more explicit documentation.
+7. Reconfirm owner coverage if CODEOWNERS becomes narrower than the current global `/configs/` assignment.
 
 </details>
 
