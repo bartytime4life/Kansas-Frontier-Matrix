@@ -8,38 +8,49 @@ owners: <NEEDS-VERIFICATION>
 created: <YYYY-MM-DD NEEDS VERIFICATION>
 updated: <YYYY-MM-DD NEEDS VERIFICATION>
 policy_label: <NEEDS-VERIFICATION>
-related: [../../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../reports/readme-structure-reconciliation.md, <PROPOSED: docs/adr/index.md>, <PROPOSED: docs/adr/traceability-table.md>]
+related: [../../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../reports/readme-structure-reconciliation.md, <PROPOSED: ../../adr/index.md>, <PROPOSED: ../../adr/traceability-table.md>]
 tags: [kfm, adr, architecture, governance]
-notes: [Mounted repo tree was not directly inspected in this session; the current task targets docs/architecture/adr/README.md, while March 2026 manuals also propose docs/adr/* and that directory choice must be reconciled before merge.]
+notes: [No mounted repo tree was directly inspected in this session; attached repo-grounded summaries indicate adjacent README/doc surfaces exist, but ADR inventory, owners, dates, policy label, and the canonical ADR directory still need direct verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 > [!IMPORTANT]
-> **Status:** Experimental *(PROPOSED until mounted-tree verification)*  
+> **Status:** Experimental *(directory README shape is intentional; mounted-tree verification still required before merge)*  
 > **Owners:** `<NEEDS-VERIFICATION>`  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Truth%20posture](https://img.shields.io/badge/truth%20posture-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-blue) ![ADR%20role](https://img.shields.io/badge/role-governed%20architecture%20memory-5b6cff) ![Repo%20fit](https://img.shields.io/badge/repo%20fit-README%20for%20ADR%20directory-lightgrey)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Priority first ADR set](#priority-first-adr-set) · [FAQ](#faq)
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-directory%20README-blue) ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-5b6cff) ![Role](https://img.shields.io/badge/role-governed%20architecture%20memory-6f42c1)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Priority ADR candidates](#priority-adr-candidates-proposed) · [FAQ](#faq)
 
 # Architecture Decision Records (ADRs)
 
-Freeze cross-cutting KFM architecture choices as governed, traceable memory for contracts, tests, runbooks, and later correction.
+Freeze cross-cutting KFM architecture choices as governed, traceable memory for contracts, tests, runbooks, release review, and correction.
 
-This README is for the ADR directory targeted by the current work item: `docs/architecture/adr/README.md`. It is doctrine-first and source-bounded: it preserves KFM’s trust posture, keeps implementation uncertainty visible, and avoids turning unverified repo details into accidental law.
+This README is written for the directory targeted by the current work item: `docs/architecture/adr/README.md`. It stays doctrine-first and evidence-bounded: where the attached KFM corpus is strong, it states project law; where the mounted tree was not directly inspected, it keeps uncertainty visible instead of turning guessed paths into accidental doctrine.
 
 > [!WARNING]
-> **Directory choice needs verification.** The March 2026 manuals propose ADR artifacts under `docs/adr/`, while the current task targets `docs/architecture/adr/`. Keep one canonical location only, and reconcile that choice against the mounted tree before merge.
+> **Canonical location still needs verification.**  
+> The current task targets `docs/architecture/adr/README.md`, but attached March 2026 planning material also points toward `docs/adr/*` as a possible ADR home. Do not keep two canonical ADR locations alive after merge. Reconcile the directory choice against the mounted tree first.
 
 ## Scope
 
-Use ADRs to record **cross-cutting, hard-to-reverse, trust-bearing** decisions.
+ADRs belong here when a decision is **cross-cutting**, **hard to reverse**, and **trust-bearing**.
 
-In KFM, ADRs are not generic architecture essays. They exist to lock down the seams that change system meaning: authority boundaries, truth-path rules, contract grammar, surface obligations, policy grammar, thin-slice sequencing, correction propagation, and observability joins.
+In KFM, an ADR is not a generic architecture essay. It is a durable record for the seams that change what the system is allowed to mean: truth-path transitions, trust boundaries, contract grammar, route-family obligations, shell trust states, runtime outcomes, promotion rules, correction behavior, and lane-admission burdens.
 
-### What an ADR is for in KFM
+### Truth posture used in this README
 
-- Freezing a decision before local implementation habits spread
-- Linking doctrine to concrete contracts, tests, and runbooks
-- Preserving decision lineage through supersession rather than silent rewrites
-- Making invisible authority assumptions visible and reviewable
+| Label | Meaning here |
+| --- | --- |
+| **CONFIRMED** | Directly supported by the attached KFM corpus or by the attached repo-grounded summary artifacts |
+| **INFERRED** | Conservative structural completion strongly implied by the corpus, but not presented as mounted implementation reality |
+| **PROPOSED** | Recommended directory shape, workflow, or ADR seed topic that fits KFM doctrine but is not verified as existing |
+| **UNKNOWN** | Not verified strongly enough in this session to claim as current repo or runtime fact |
+| **NEEDS VERIFICATION** | Explicit review marker for fields, paths, ownership, or inventory that should be checked before commit |
+
+### What ADRs do in KFM
+
+- Preserve decisions that would otherwise get re-litigated across docs, packages, routes, and reviews
+- Tie doctrine to concrete consequences in contracts, fixtures, tests, runbooks, and proof objects
+- Make invisible authority assumptions reviewable before they leak into implementation
+- Preserve supersession history instead of letting architecture memory disappear inside edits
 
 [Back to top](#architecture-decision-records-adrs)
 
@@ -49,67 +60,67 @@ In KFM, ADRs are not generic architecture essays. They exist to lock down the se
 | --- | --- |
 | **Path** | `docs/architecture/adr/README.md` |
 | **Role** | Directory guide and operating contract for KFM architecture decision records |
-| **Upstream doctrine** | [Repo root](../../../README.md) · [Contracts](../../../contracts/README.md) · [Schemas](../../../schemas/README.md) · [Policy](../../../policy/README.md) · [Tests](../../../tests/README.md) · [PR template](../../../.github/PULL_REQUEST_TEMPLATE.md) · [Workflows README](../../../.github/workflows/README.md) · [Structure reconciliation report](../../reports/readme-structure-reconciliation.md) |
-| **Downstream artifacts** | `ADR-00x-*.md` files in this directory **or** `docs/adr/*` if that location is confirmed as canonical |
-| **Current evidence posture** | **CONFIRMED:** the repo has README/doc surfaces for contracts, schemas, policy, tests, tools, scripts, PR workflow scaffolding, and structure reconciliation. **UNKNOWN:** mounted ADR inventory, exact canonical ADR directory, active workflow YAML gates, and any existing ADR traceability files. |
+| **Upstream doctrine** | [Repo root](../../../README.md) · [Contracts](../../../contracts/README.md) · [Schemas](../../../schemas/README.md) · [Policy](../../../policy/README.md) · [Tests](../../../tests/README.md) · [Structure reconciliation report](../../reports/readme-structure-reconciliation.md) |
+| **Downstream artifacts** | `ADR-*.md` files in this directory; optionally an ADR index and traceability table once the canonical ADR location is verified |
+| **Current evidence posture** | **CONFIRMED in attached repo-grounded summary:** the repo already has documentation surfaces for `contracts/`, `schemas/`, `policy/`, `tests/`, CODEOWNERS, a PR template, and a `.github/workflows/README.md` placeholder. **UNKNOWN until direct tree inspection:** the live ADR inventory, exact canonical ADR directory, merge-blocking workflow YAMLs, and any existing ADR index/traceability files. |
 
-## Inputs
+## Accepted inputs
 
-Accept material here when the decision:
+Put material here when the decision changes shared meaning across the system.
 
 | Accepted input | Typical examples |
 | --- | --- |
-| Changes who may write, publish, promote, or correct | five-plane authority model; allowed writes |
-| Changes lifecycle law | truth-path stage transitions; release/correction rules |
-| Changes cross-package or cross-route meaning | contract header grammar; route family registry |
-| Changes trust-visible surface obligations | Evidence Drawer payload; Focus envelope; 2D/3D burden |
-| Changes policy execution semantics | reason/obligation registries; policy engine choice |
-| Changes first-slice sequencing or exit criteria | hydrology-first implementation path |
-| Changes observability or rollback semantics | audit join keys; proof-pack composition; correction propagation |
+| Authority or write-boundary rules | five-plane boundaries, allowed-write surfaces, steward-only actions |
+| Lifecycle law | truth-path state transitions, promotion rules, rollback/correction posture |
+| Cross-package contract meaning | contract families, standards profile, runtime envelope grammar |
+| Trust-visible shell obligations | Evidence Drawer payloads, Focus outcome rules, surface-state behavior |
+| Route and API boundary choices | public vs internal route families, evidence resolution obligations |
+| Verification burden | proof-pack minimums, correction drills, citation-negative tests |
+| Thin-slice sequencing | hydrology-first exit criteria, lane-admission prerequisites |
 
 ## Exclusions
 
-Do **not** put the following here:
+Do **not** use ADRs for everything architecture-adjacent.
 
 | Exclusion | Put it there instead |
 | --- | --- |
-| Tickets, sprint tasks, or local implementation chores | issue tracker or execution planning docs |
-| Runbooks and drills | `docs/runbooks/*` or equivalent |
-| Contract specs, fixtures, and examples | `contracts/`, `schemas/`, `fixtures/`, `tests/` |
-| Product copy, flow polish, or isolated UI tweaks | UI or surface-taxonomy docs |
-| Repo-state claims that are not directly verified | verification backlog or review notes |
-| Generic tool tutorials | dedicated docs, not ADR memory |
+| Tickets, sprint tasks, or execution checklists | issue tracker, project board, or implementation plan |
+| Runbooks and drills | `docs/runbooks/*` or the repo’s runbook area |
+| Schema files, fixtures, or policy bundles themselves | `contracts/`, `schemas/`, `fixtures/`, `policy/`, `tests/` |
+| Local implementation notes for one package | package-local docs, code comments, or module README |
+| Exploratory research notes without a governing decision | `docs/reports/*`, research notes, or working dossiers |
+| UI polish notes that do not alter system law | shell/UI docs, not ADR memory |
+
+[Back to top](#architecture-decision-records-adrs)
 
 ## Directory tree
 
-**PROPOSED target shape** for this directory, normalized to the current work item path:
+**PROPOSED** target shape, normalized to the path in this work item:
 
 ```text
 docs/architecture/adr/
 ├── README.md
-├── ADR-001-five-plane-authority-model.md            # PROPOSED
-├── ADR-002-truth-path-stage-transition-registry.md  # PROPOSED
-├── ADR-003-shared-contract-header-grammar.md        # PROPOSED
-├── ADR-004-evidence-drawer-payload.md               # PROPOSED
-├── ADR-005-focus-envelope-and-citation-policy.md    # PROPOSED
-├── ADR-006-route-family-registry.md                 # PROPOSED
-├── ADR-00x-*.md                                     # PROPOSED; continue in dependency order
-├── index.md                                         # PROPOSED / NEEDS VERIFICATION
-└── traceability-table.md                            # PROPOSED / NEEDS VERIFICATION
+├── ADR-001-*.md                      # PROPOSED placeholder numbering only
+├── ADR-002-*.md                      # PROPOSED
+├── ADR-003-*.md                      # PROPOSED
+├── ADR-00x-*.md                      # PROPOSED continuation in dependency order
+├── index.md                          # PROPOSED / NEEDS VERIFICATION
+└── traceability-table.md             # PROPOSED / NEEDS VERIFICATION
 ```
 
 > [!NOTE]
-> March 2026 manuals also propose `docs/adr/index.md` and `docs/adr/traceability-table.md`. Do not keep both directory schemes alive long-term.
+> Keep the tree small and dependency-ordered. The attached doctrine repeatedly favors the smallest useful artifact set over broad speculative expansion.
 
 ## Quickstart
 
-1. Decide whether the topic is truly **ADR-worthy**. If it changes trust, contracts, policy, authority, sequencing, or correction, it probably is.
-2. Draft the decision in **dependency order**: authority -> truth path -> contracts -> surfaces -> runtime -> operations.
-3. Link the ADR to the **real downstream obligations**: contracts, tests, fixtures, runbooks, rollback, correction.
-4. Reconcile duplicates before merge. Do not create a new ADR if an existing one already governs the same seam.
-5. Supersede explicitly. Never erase older decision memory.
+1. Decide whether the topic is truly **ADR-worthy**. If it changes trust, contracts, policy, route classes, release behavior, or correction lineage, it probably is.
+2. Check for overlap first. Supersede an existing ADR if the seam already has governing memory.
+3. Draft in **dependency order**: doctrine -> contracts -> route families -> shell obligations -> runtime outcomes -> correction.
+4. Link the ADR to the consequences that make it real: contracts, fixtures, tests, runbooks, review artifacts, and rollback posture.
+5. Mark the status clearly. Do not smuggle a draft in as settled law.
+6. Preserve history. When the governing choice changes, supersede; do not quietly rewrite the old decision.
 
-### PROPOSED starter template
+### Starter ADR template
 
 ```md
 # ADR-00X — Concrete decision title
@@ -120,24 +131,25 @@ docs/architecture/adr/
 - Superseded by: <none>
 
 ## Decision pressure
-What ambiguity, risk, or conflict forced this ADR?
+What ambiguity, conflict, or governance risk forced this ADR?
 
 ## Decision
-What is being decided, in concrete terms?
+What is being decided, in concrete and testable terms?
 
 ## Consequences
-What becomes easier, harder, narrower, or forbidden?
+What becomes required, forbidden, narrower, or more expensive?
 
-## Affected contracts, tests, and runbooks
-- Contracts:
+## Affected artifacts
+- Contracts / schemas:
 - Tests / fixtures:
 - Runbooks / drills:
+- Review / release objects:
 
 ## Evidence basis
-List the governing KFM docs and any mounted repo evidence used.
+List the governing KFM documents and any directly verified repo evidence used.
 
 ## Rollback and correction implications
-How is this reversed, superseded, or corrected without erasing lineage?
+How is this superseded, rolled back, or corrected without erasing lineage?
 ```
 
 [Back to top](#architecture-decision-records-adrs)
@@ -146,165 +158,167 @@ How is this reversed, superseded, or corrected without erasing lineage?
 
 ### Workflow
 
-1. **Open** an ADR when the decision would otherwise be re-litigated across multiple files or teams.
-2. **Name** it concretely. “Five-plane authority model” is better than “architecture overview.”
+1. **Open** an ADR when the decision spans multiple directories, services, route families, or public trust surfaces.
+2. **Name** it concretely. Prefer a seam name over a vague umbrella title.
 3. **State the pressure** that forced the decision.
-4. **Record the decision** and its consequences.
-5. **Attach traceability** to affected contracts, tests, fixtures, runbooks, and rollback paths.
-6. **Review** it as part of architecture change control.
-7. **Supersede** it with a new ADR when needed; do not rewrite history.
+4. **Record the decision** and the consequences together.
+5. **Attach traceability** to contracts, tests, fixtures, review artifacts, and rollback/correction behavior.
+6. **Review** it with the same seriousness as a contract or policy change.
+7. **Supersede** when the governing answer changes.
 
-### PROPOSED lifecycle language
+### Suggested lifecycle language
 
 | Status | Meaning | Use when |
 | --- | --- | --- |
-| Proposed | Draft under review | the decision is not yet governing |
-| Accepted | Current governing decision | the team has chosen and adopted it |
-| Superseded | Preserved, but replaced | a newer ADR now governs the seam |
-| Rejected | Considered, not adopted | the decision path matters, but the option lost |
+| **Proposed** | Under review; not yet governing | the team is evaluating the seam |
+| **Accepted** | Current governing decision | the seam now sets project law |
+| **Superseded** | Preserved, but replaced | a later ADR now governs the seam |
+| **Rejected** | Considered and intentionally not adopted | the losing option still matters historically |
 
-### Traceability minimums
+### Minimum traceability for every ADR
 
-| ADR field | Why it matters in KFM |
+| Field | Why it matters in KFM |
 | --- | --- |
 | Decision pressure | keeps the tradeoff visible |
 | Decision | freezes the governing choice |
-| Consequences | shows what becomes required or forbidden |
-| Affected contracts | connects architecture to machine-readable edges |
-| Affected tests / fixtures | makes the decision falsifiable |
-| Affected runbooks / drills | keeps operations aligned with doctrine |
-| Rollback / correction | preserves lineage under change |
-| Supersession | prevents silent memory loss |
+| Consequences | shows what becomes mandatory or forbidden |
+| Affected contracts | turns doctrine into diffable structure |
+| Affected tests / fixtures | makes the choice falsifiable |
+| Affected runbooks / drills | keeps operations aligned |
+| Review / release implications | connects architecture to governance |
+| Rollback / correction posture | preserves lineage under change |
+| Supersession links | prevents silent memory loss |
 | Evidence basis | separates doctrine from invention |
 
 ## Diagram
 
 ```mermaid
 flowchart TD
-    A[Doctrine / invariants] --> B[ADR]
-    B --> C[Contracts & schemas]
-    B --> D[Policy grammar]
-    B --> E[Tests & fixtures]
-    B --> F[Runbooks / drills]
-    C --> G[Implementation]
-    D --> G
-    E --> H[CI / verification]
-    F --> I[Operations / correction]
-    G --> H
-    H --> J[Release / correction memory]
+    D[Doctrine / invariants] --> A[ADR]
+    A --> B[Contracts & schemas]
+    A --> C[Policy grammar]
+    A --> E[Tests & fixtures]
+    A --> F[Runbooks / correction]
+    A --> G[Review / release artifacts]
+    B --> H[Implementation]
+    C --> H
+    E --> I[CI / verification]
+    F --> J[Operations]
+    G --> J
+    H --> I
+    I --> K[Promotion / correction lineage]
 ```
 
 ## Tables
 
-### What belongs in an ADR
+### When to use an ADR
 
 | Use an ADR when… | Keep it elsewhere when… |
 | --- | --- |
-| the decision changes authority, policy, release, correction, or public trust behavior | the change is a local refactor with no cross-cutting consequence |
-| multiple packages or surfaces need the same answer | the note is only useful to one file or one component |
-| contracts, tests, or runbooks must move with the decision | the change is a one-off implementation detail |
-| the choice is expensive to reverse later | the choice is exploratory and not yet governing |
+| the decision changes trust, policy, release, correction, or public meaning | the change is a local refactor or package-only detail |
+| multiple packages or surfaces need the same answer | the note matters to one file only |
+| contracts, fixtures, tests, or runbooks must move with the choice | the change is exploratory and not yet governing |
+| the decision is expensive to reverse later | the choice is still sandbox-only and disposable |
 
-### Priority first ADR set
+## Priority ADR candidates (PROPOSED)
 
-The March 2026 manuals point to the following **first-wave** ADR topics.
+The list below is a **doctrine-shaped starter set**, not a confirmed inventory. Candidate numbering is placeholder-only until the current ADR directory is directly verified.
 
-| Seed | Decision to freeze | Why early |
+| Candidate ID* | Decision seam to freeze | Why early |
 | --- | --- | --- |
-| ADR-001 | Five-plane authority model and allowed writes | Freezes the main authority grammar |
-| ADR-002 | Truth-path stage-transition registry | Turns lifecycle doctrine into machine-checkable law |
-| ADR-003 | Shared contract header grammar and first schema wave | Enables validation and diffable interfaces |
-| ADR-004 | Evidence Drawer payload and visibility tiers | Keeps evidence operational at point of use |
-| ADR-005 | Focus envelope, finite outcomes, and citation policy | Bounds AI before broad adoption |
-| ADR-006 | Route family registry and trust obligations | Stabilizes public vs steward vs review boundaries |
-| Seed topic | Authoritative-versus-derived rules | Prevents projections from drifting into sovereign truth |
-| ADR-008 | MapLibre-centered 2D shell and controlled 3D burden rubric | Locks renderer placement and 3D discipline |
-| ADR-009 | Policy engine choice and reason/obligation registries | Makes policy executable and reviewable |
-| ADR-010 | Hydrology-first thin slice and exit criteria | Turns doctrine into a credible first implementation path |
-| Seed topic | Release proof-pack composition | Makes release evidence reviewable |
-| Seed topic | Correction propagation | Preserves visible lineage under change |
-| Seed topic | Package boundaries | Keeps trust seams aligned with ownership |
-| Seed topic | Observability join keys | Keeps audit, runtime, and correction traces joinable |
+| ADR-001 | Five-plane system model and write-boundary rules | Stabilizes who may write where before local shortcuts spread |
+| ADR-002 | Truth-path stage transitions and promotion law | Turns lifecycle doctrine into something machine-checkable |
+| ADR-003 | First schema wave and shared contract grammar | Locks the contract lattice before parallel schema drift grows |
+| ADR-004 | EvidenceBundle, Evidence Drawer, and evidence-resolution obligations | Keeps evidence operational at point of use |
+| ADR-005 | RuntimeResponseEnvelope, finite outcomes, and citation-negative behavior | Bounds Focus/runtime behavior before wider AI adoption |
+| ADR-006 | Route families and trust obligations | Separates discovery, read, portrayal, evidence, export, Focus, and review surfaces cleanly |
+| ADR-007 | Verification families, proof-pack minimums, and correction drills | Makes fail-closed behavior testable rather than rhetorical |
+| ADR-008 | Hydrology-first thin-slice exit criteria | Anchors sequencing in a public-safe, place/time-rich proof lane |
 
-> [!IMPORTANT]
-> The manuals explicitly number some early ADRs, but the mounted ADR inventory was not directly inspected in this session. Reconcile numbering before creating duplicates.
+\* Placeholder numbering only. Reconcile against the real ADR inventory before creating files.
 
 ### Review gate for a new ADR
 
 | Check | Definition of done |
 | --- | --- |
-| Title | concrete, not generic |
+| Title | concrete seam, not generic “architecture overview” wording |
 | Scope | cross-cutting and trust-bearing |
-| Pressure | written down explicitly |
-| Traceability | contracts, tests, runbooks, rollback listed |
+| Pressure | stated explicitly |
+| Evidence | doctrine and repo evidence named separately |
+| Traceability | contracts, tests, runbooks, and review/release consequences listed |
 | Status | current and unambiguous |
-| Supersession | recorded if applicable |
-| Evidence | source basis named |
-| Duplication | existing design fragments checked first |
+| Supersession | linked if applicable |
+| Duplication check | prior ADRs and nearby design fragments reviewed first |
+| Rollback / correction | visible, not implied |
 
 [Back to top](#architecture-decision-records-adrs)
 
 ## Task list
 
-- [ ] Reconcile the canonical ADR directory: `docs/architecture/adr/` vs `docs/adr/`
-- [ ] Inventory any existing ADRs, design notes, or README fragments before writing duplicates
+- [ ] Reconcile the canonical ADR location: `docs/architecture/adr/` vs `docs/adr/`
+- [ ] Directly inspect the mounted tree for existing ADR files before adding numbers
+- [ ] Verify repo-relative links in this README against the live repo
+- [ ] Replace placeholder owners, dates, policy label, and doc ID
+- [ ] Decide whether `index.md` and `traceability-table.md` already exist or should be created
 - [ ] Publish the first dependency-ordered ADR wave
-- [ ] Add an ADR index and a traceability table
 - [ ] Require every accepted ADR to name affected contracts, tests, and runbooks
-- [ ] Verify repo-relative links in this README against the mounted tree
-- [ ] Replace placeholder owners, dates, and metadata values
+- [ ] Add a simple ADR traceability view once the inventory is stable
 - [ ] Add correction and supersession guidance to architecture review practice
 
 ## FAQ
 
 ### Why not keep architecture memory in one big design note?
 
-Because KFM’s highest-risk seams are not “general architecture.” They are specific, review-bearing decisions that need stable titles, consequences, and supersession history.
+Because KFM’s highest-risk seams are specific, review-bearing choices. They need stable names, consequences, supersession history, and artifact traceability.
 
 ### When should I supersede instead of edit?
 
-Supersede when the governing choice changes. Edit only for wording, typos, or clarity that does **not** change the decision.
+Supersede when the governing choice changes. Edit only for wording, clarity, or typo fixes that do **not** change the decision.
 
-### Can an ADR claim a route, file path, or package exists?
+### Can an ADR claim that a path, route, or workflow already exists?
 
-Not unless the mounted tree or other direct evidence confirms it. Otherwise keep it **INFERRED**, **PROPOSED**, or **UNKNOWN**.
+Only when the mounted tree or other direct repo evidence confirms it. Otherwise keep the claim marked **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ### Do ADRs replace contracts, tests, or runbooks?
 
-No. They govern them. An ADR should point to the contracts, tests, fixtures, and runbooks that make the decision real.
+No. They govern them. An ADR should point to the contracts, fixtures, tests, runbooks, and review artifacts that make the decision real.
+
+### Why is the README so explicit about uncertainty?
+
+Because KFM’s doctrine treats overclaiming as a trust failure. A visible unknown is better than a polished false fact.
 
 [Back to top](#architecture-decision-records-adrs)
 
 ## Appendix
 
 <details>
-<summary><strong>PROPOSED starter fields for the ADR traceability table</strong></summary>
+<summary><strong>PROPOSED fields for an ADR traceability table</strong></summary>
 
 | Field | Purpose |
 | --- | --- |
 | ADR ID | stable decision identifier |
-| Title | concrete decision name |
+| Title | concrete seam name |
 | Status | Proposed / Accepted / Superseded / Rejected |
 | Supersedes | backward link |
 | Superseded by | forward link |
-| Affected contracts | schema or payload surface changed |
-| Affected tests | validation burden changed |
+| Affected contracts | schema or payload surfaces changed |
+| Affected tests | falsifiability burden changed |
 | Affected runbooks | operational practice changed |
-| Related policy objects | reason/obligation registries or rules affected |
-| Notes | migration or correction consequences |
+| Related policy objects | reason codes, obligation codes, review roles, or bundles affected |
+| Notes | migration, rollback, or correction consequences |
 
 </details>
 
 <details>
-<summary><strong>PROPOSED authoring rules for new ADR files</strong></summary>
+<summary><strong>Suggested authoring rules for new ADR files</strong></summary>
 
-1. Start with a concrete title.
-2. Keep the decision pressure short and specific.
+1. Start with a seam-specific title.
+2. Keep decision pressure short, concrete, and reviewable.
 3. State the decision in language that can be tested.
-4. Record consequences, not just intent.
-5. Link the ADR to contracts, fixtures, tests, and runbooks in the same pull request when possible.
+4. Record consequences, not just intentions.
+5. Link the ADR to contracts, fixtures, tests, and runbooks in the same change if possible.
 6. Prefer supersession over silent replacement.
-7. Keep implementation claims proportional to visible evidence.
+7. Keep repo-state claims proportional to directly visible evidence.
 
 </details>
 
@@ -312,11 +326,12 @@ No. They govern them. An ADR should point to the contracts, tests, fixtures, and
 <summary><strong>NEEDS VERIFICATION before commit</strong></summary>
 
 - Canonical ADR directory location
-- Existing ADR inventory, if any
+- Existing ADR inventory and numbering
 - Owners for this directory
 - Meta block identifiers and dates
+- Whether local conventions in `docs/architecture/` require a different section order
 - Whether `index.md` and `traceability-table.md` already exist
-- Whether local README conventions in `docs/architecture/` differ from this structure
+- Whether adjacent README files use an additional status/ownership pattern
 
 </details>
 
