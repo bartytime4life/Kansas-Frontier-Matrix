@@ -10,7 +10,7 @@ updated: <NEEDS_VERIFICATION__YYYY-MM-DD>
 policy_label: <NEEDS_VERIFICATION__public|restricted|...>
 related: [../README.md, ../../README.md, ../../../README.md, ../../governance/README.md, ../../standards/README.md, ../../runbooks/README.md, ../../templates/README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../.github/workflows/README.md]
 tags: [kfm, architecture, interfaces]
-notes: [Current public main shows this directory as a README-only scaffold lane; owner is inherited from /docs/ CODEOWNERS; doc_id, dates, and policy_label still need direct branch verification.]
+notes: [Current public `main` shows this directory as a README-only scaffold lane; owner is inherited from broad `/docs/` CODEOWNERS; doc_id, dates, and policy_label still need direct branch-history verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # interfaces
@@ -54,7 +54,7 @@ Do **not** treat this directory as the place where interface truth becomes execu
 | Primary upstream anchors | [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../governance/README.md`](../../governance/README.md), [`../../standards/README.md`](../../standards/README.md), [`../../runbooks/README.md`](../../runbooks/README.md), [`../../templates/README.md`](../../templates/README.md) |
 | Adjacent sibling lanes | [`../decisions/README.md`](../decisions/README.md), [`../diagrams/README.md`](../diagrams/README.md) |
 | Architecture-adjacent machine surfaces | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) |
-| Current public-main posture | Directory exists and currently renders as `README.md` only |
+| Current public-main posture | Directory exists and currently contains `README.md` only |
 | Why this directory matters | KFM’s trust membrane is not fully reviewable unless interface boundaries stay legible without turning prose into a second truth path |
 
 ### Repo relationship map
@@ -94,20 +94,19 @@ Architecture docs sit between doctrine and execution:
 
 ### Baseline document
 
-- **INFERRED / collective baseline:** no substantive in-directory baseline exists yet on current public `main`; the working baseline for this README is therefore collective:
-  - [`../README.md`](../README.md) supplies the immediate architecture-lane rules
-  - [`../../README.md`](../../README.md) supplies the broader docs-plane posture
-  - [`../../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`](../../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md) supplies the standardized KFM doc scaffold
-  - KFM doctrine manuals supply the route-family, governed-API, evidence-resolution, and finite-outcome obligations this directory should make reviewable
+- **CONFIRMED baseline:** the current public [`docs/architecture/interfaces/README.md`](./README.md) is the redesign baseline for this revision.
+- **Supporting anchors:** [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`](../../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md), and the March 2026 KFM doctrine corpus.
 
 ### Evidence used in this revision
 
 | Evidence layer | What it contributed |
 | --- | --- |
-| Current public repo surface | Confirmed this directory exists, currently contains `README.md` only, and sits beneath a substantive `docs/architecture/README.md` |
-| Adjacent repo documentation | Confirmed the neighboring documentation rhythm, quick-jump style, directory-tree pattern, and machine-surface boundaries |
-| KFM doctrine corpus | Confirmed route families, trust obligations, shell mediation, EvidenceBundle resolution, and finite runtime outcomes |
-| Current public `CODEOWNERS` | Confirmed broad `/docs/` ownership by `@bartytime4life` |
+| Current public `docs/architecture/interfaces/README.md` | Baseline wording, local terminology, and the existing lane contract being revised in place |
+| Current public `docs/architecture/README.md` | Scaffold-lane classification, parent directory tree, and architecture-lane expectations |
+| Current public `docs/README.md`, `docs/governance/README.md`, `docs/standards/README.md`, `docs/runbooks/README.md`, and `docs/templates/README.md` | Documentation-plane rhythm, adjacent navigation surfaces, and local README conventions |
+| Current public `contracts/README.md`, `schemas/README.md`, `policy/README.md`, `tests/README.md`, and `.github/workflows/README.md` | Machine-surface boundaries, current maturity signals, and review-adjacent links |
+| Current public `.github/CODEOWNERS` | Broad ownership signal for `/docs/` |
+| March 2026 KFM doctrine corpus | Route-family doctrine, shell mediation, `EvidenceBundle` resolution, finite runtime outcomes, and trust-boundary expectations |
 
 ### Truth labels used in this document
 
@@ -123,15 +122,15 @@ Architecture docs sit between doctrine and execution:
 
 | Signal | Status | Working interpretation |
 | --- | --- | --- |
-| `docs/architecture/interfaces/README.md` exists on current public `main` | `CONFIRMED` | The path is real |
-| The current file body is still scaffold-grade | `CONFIRMED` | This README should fill the lane without pretending the lane was already mature |
-| Parent `docs/architecture/README.md` classifies `interfaces/README.md` as a scaffold starter lane | `CONFIRMED` | The directory is reserved and named, but not yet fully authored |
+| `docs/architecture/interfaces/README.md` exists on current public `main` | `CONFIRMED` | The path is real and the lane README is already substantive enough to revise in place |
+| Parent `docs/architecture/README.md` classifies `interfaces/README.md` as a scaffold starter lane | `CONFIRMED` | Treat the directory as a reserved interface lane, not as a mature endpoint inventory |
 | The current public subtree under `docs/architecture/interfaces/` shows `README.md` only | `CONFIRMED` | No child interface notes are currently claimed here |
-| `/docs/` ownership maps to `@bartytime4life` in current `CODEOWNERS` | `CONFIRMED` | Broad ownership is known; narrower lane ownership still may need branch-local confirmation |
+| `/docs/` ownership maps to `@bartytime4life` in current `CODEOWNERS` | `CONFIRMED` | Broad ownership is known; narrower lane ownership still needs branch-local confirmation |
 | Exact route names, auth middleware, gateway rules, emitted envelopes, and child interface-doc inventory | `UNKNOWN` / `NEEDS VERIFICATION` | Do not document them as live repo facts yet |
 
 > [!NOTE]
-> The parent architecture README explicitly warns against treating directly fetched scaffold files as completed architecture law. This README follows that rule: it upgrades the lane into a useful index, but it still keeps mounted implementation gaps visible.
+> The parent architecture README still classifies this directory as a scaffold lane even though the current `README.md` now works as a real lane index.
+> Keep that distinction visible: the directory is reserved and named, but exact interface inventory still remains branch-sensitive and incomplete.
 
 [Back to top](#interfaces)
 
@@ -149,16 +148,16 @@ docs/architecture/interfaces/
 ```text
 docs/architecture/interfaces/
 ├── README.md
-├── <route-family-note>.md
-├── <public-vs-internal-boundary>.md
-├── <evidence-resolution-note>.md
-└── <runtime-envelope-guide>.md
+├── route-family-note.md
+├── public-vs-internal-boundary.md
+├── evidence-resolution-note.md
+└── runtime-envelope-guide.md
 ```
 
 ### Working interpretation rule
 
 - the tree above has **one** currently confirmed child: `README.md`
-- placeholder filenames in the second tree are **doc classes**, not asserted current files
+- the suggested filenames are **doc classes**, not asserted current files
 - add a child note only when a real review burden exists and the note can point downstream to contracts, policy, tests, or workflows
 
 ## Quickstart
