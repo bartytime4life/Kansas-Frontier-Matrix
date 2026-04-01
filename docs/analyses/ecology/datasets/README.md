@@ -4,23 +4,24 @@ title: Kansas Frontier Matrix — Ecology Datasets
 type: standard
 version: v1
 status: draft
-owners: <owners-NEEDS-VERIFICATION>
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: <policy_label-NEEDS-VERIFICATION>
 related: [../README.md, ../../README.md, ../../../README.md, ../../../../README.md, ./derived/README.md]
 tags: [kfm, ecology, datasets, analyses]
-notes: [Current public main shows this directory as scaffold-light; owners, dates, and policy label still need verification.]
+notes: [Current public main confirms this directory is scaffold-light and broad /docs/ CODEOWNERS coverage points to @bartytime4life; doc UUID, dates, policy label, and path-specific ecology stewardship still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Kansas Frontier Matrix — Ecology Datasets
+
 Directory index for ecology dataset-facing analysis docs, derived-output registries, and geoprivacy-aware reuse boundaries under `docs/analyses/ecology/datasets/`.
 
 | Status | Owners | Current live footprint |
 |---|---|---|
-| **experimental** | **`<owners-NEEDS-VERIFICATION>`** | `README.md`, `derived/README.md` |
+| **experimental** | **`@bartytime4life`** | `README.md`, `derived/README.md` |
 
 ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![Lane: ecology](https://img.shields.io/badge/lane-ecology-2f855a)
