@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: <created-NEEDS-VERIFICATION>
+updated: <updated-AT-MERGE>
 policy_label: <policy_label-NEEDS-VERIFICATION>
 related: [../README.md, ./datasets/README.md, ./datasets/derived/README.md, ../../domains/README.md, ../../../contracts/, ../../../policy/, ../../../schemas/]
 tags: [kfm, ecology, analyses, biodiversity, geoprivacy]
-notes: [owner verified from CODEOWNERS; live subtree is currently scaffold-sized; doc_id, metadata dates, and policy label need verification before merge]
+notes: [owner confirmed from .github/CODEOWNERS on public main; public history shows 2025 creation, 2025 deletion, and 2026 scaffold reintroduction; doc_id, policy_label, and merge-time metadata dates need verification before merge]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -24,7 +24,7 @@ Directory README for ecology analysis surfaces, dataset registries, and future r
 > **Owners:** `@bartytime4life`  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: Ecology](https://img.shields.io/badge/lane-ecology-2f855a) ![Doctrine: Evidence-first](https://img.shields.io/badge/doctrine-evidence--first-1f6feb) ![Product: Map-first](https://img.shields.io/badge/product-map--first-0ea5e9) ![Disclosure: Geoprivacy-aware](https://img.shields.io/badge/disclosure-geoprivacy--aware-8b5cf6)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Current posture:** **CONFIRMED** live subtree = `README.md`, `datasets/`, and `datasets/derived/README.md`; **INFERRED** richer ecology modules may return later; **NEEDS VERIFICATION** `doc_id`, metadata dates, policy label, and ecology-specific release/provenance link targets.
+> **Current posture:** **CONFIRMED** public-branch owner = `@bartytime4life`; **CONFIRMED** live subtree = `README.md`, `datasets/`, and `datasets/derived/README.md`; **CONFIRMED** public history shows an earlier 2025 ecology README, later deletion, and scaffold reintroduction on `2026-03-22`; **NEEDS VERIFICATION** `doc_id`, `policy_label`, and final merge-time metadata dates for this revision.
 
 > [!IMPORTANT]
 > Ecology is a higher-sensitivity lane. Rare-species and culturally sensitive locations are not publish-by-default material here; generalization, withholding, or denial should be explicit and reviewable, not buried inside narrative prose.
@@ -42,10 +42,12 @@ This folder should stay downstream of governed evidence and release posture. It 
 | Aspect | Value |
 | --- | --- |
 | Path | `docs/analyses/ecology/README.md` |
+| Branch basis | Current public `main` |
 | Upstream | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
 | Downstream | [`./datasets/README.md`](./datasets/README.md), [`./datasets/derived/README.md`](./datasets/derived/README.md) |
 | Adjacent governed layers | [`../../domains/README.md`](../../domains/README.md), [`../../../contracts/`](../../../contracts/), [`../../../policy/`](../../../policy/), [`../../../schemas/`](../../../schemas/) |
 | Role in repo | Explain what belongs in the ecology analysis lane, keep sensitivity posture visible, and help future ecology docs reuse KFM’s evidence, release, and correction discipline. |
+| Parent drift to watch | The current public [`../README.md`](../README.md) still carries an inferred ecology tree that names historical leaf docs. Treat this file as the live subtree reference until the parent index is reconciled. |
 
 ## Inputs
 
@@ -75,7 +77,7 @@ Representative source families for this lane include GBIF, iNaturalist, eBird, P
 
 ## Directory tree
 
-Only the live subtree is listed below. Historical ecology files are noted in the appendix as history, not current inventory.
+Only the live subtree is listed below.
 
 ```text
 docs/analyses/ecology/
@@ -87,7 +89,7 @@ docs/analyses/ecology/
 ```
 
 > [!NOTE]
-> The tree above is intentionally narrow. It reflects confirmed live paths, not older ecology files visible only in commit history.
+> The tree above is intentionally narrow. It reflects the current public branch, not the older inferred ecology leaf files still visible in the parent analyses index.
 
 ## Quickstart
 
@@ -167,7 +169,7 @@ flowchart LR
 
 | Label | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Verified by current repository evidence or authoritative KFM doctrine |
+| **CONFIRMED** | Verified by current public-branch repository evidence or authoritative KFM doctrine |
 | **INFERRED** | Conservative structural completion strongly suggested, but not directly mounted here |
 | **PROPOSED** | Recommended future module or workflow pattern |
 | **UNKNOWN** | Not verified strongly enough to claim as current repo fact |
@@ -176,15 +178,16 @@ flowchart LR
 ## Task list
 
 - [ ] Verify and replace the KFM meta block placeholders for `doc_id`, `created`, `updated`, and `policy_label`.
-- [ ] Decide whether historical ecology modules should be recreated as new reviewed docs.
-- [ ] Align [`../README.md`](../README.md) so its ecology directory tree matches the current live subtree.
+- [ ] Decide whether `created` should reflect the first 2025 ecology README or the 2026 scaffold reintroduction of the current subtree.
+- [ ] Reconcile [`../README.md`](../README.md) so its ecology directory tree no longer presents historical leaf files as live current structure.
+- [ ] Decide whether historical filenames such as `ecosystem-services.md`, `landcover-analysis.md`, or `species-distribution-modeling.md` should return as new reviewed docs.
 - [ ] Add ecology-specific source registries and derived dataset links once live artifacts exist.
 - [ ] Document explicit geoprivacy and withholding rules before any exact occurrence coordinates become public-facing.
-- [ ] Confirm whether ecology analysis docs need separate validation or governance companion pages in this subtree.
+- [ ] Confirm whether ecology analysis docs need separate validation, proof-pack, or governance companion pages in this subtree.
 
 **Definition of done**
 
-- No deleted file is referenced as though it were live.
+- No deleted or historical ecology file is referenced as though it were live current inventory.
 - Every new ecology doc declares inputs, method, uncertainty, and sensitivity posture.
 - Downstream links resolve or are clearly marked `NEEDS VERIFICATION`.
 - Modeled layers and direct observations are never flattened into one undifferentiated claim.
@@ -211,7 +214,13 @@ Yes, but treat them as new reviewed docs, not as automatically valid carryovers 
 ## Appendix
 
 <details>
-<summary><strong>Historical signals and open verification items</strong></summary>
+<summary><strong>Public-branch history, historical signals, and open verification items</strong></summary>
+
+### Public-branch history relevant to this README
+
+- `2025-11-09`: an ecology `README.md` was first created in the ecology subtree.
+- `2025-12-27`: the `docs/analyses/ecology/` directory was deleted.
+- `2026-03-22`: the current scaffold-sized ecology subtree was reintroduced on public `main`.
 
 ### Historical signals
 
@@ -222,9 +231,9 @@ Yes, but treat them as new reviewed docs, not as automatically valid carryovers 
 ### Open verification items
 
 - KFM document UUID and policy label for this README.
-- Merge-time `created` and `updated` metadata values.
+- Final `created` and `updated` date semantics for the current meta block.
 - Whether ecology-specific release manifests, proof packs, or EvidenceBundle examples already exist elsewhere in the repo.
-- Whether the parent analyses index should be corrected immediately in the same PR or coordinated with broader analyses-tree cleanup.
+- Whether the parent analyses index should be corrected in the same PR or coordinated with broader analyses-tree cleanup.
 
 </details>
 
