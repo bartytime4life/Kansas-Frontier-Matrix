@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: <TODO: verify YYYY-MM-DD>
-updated: <TODO: verify YYYY-MM-DD>
+created: 2026-02-14
+updated: 2026-03-22
 policy_label: <TODO: verify public|restricted|...>
 related: [../README.md, ../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../tests/README.md, ../../../policy/README.md, ../../../.github/workflows/README.md, ../../../.github/CODEOWNERS]
 tags: [kfm, data, registry, schemas]
-notes: [Owner grounded from /data/ CODEOWNERS; current public main shows scaffold-only subtree; replace placeholders before merge]
+notes: [Created/updated dates grounded from current public GitHub file history; current public main shows a README-only schema subtree; doc_id and policy_label remain unverified and should be replaced before merge]
 [/KFM_META_BLOCK_V2] -->
 
 # Data Registry Schemas
@@ -69,7 +69,7 @@ This directory is **not** the default home for the shared KFM trust lattice. Rel
 | Upstream | [Schemas README][schemas-readme] | Describes shared schema-home placement rules and drift hazards |
 | Constraint | [Policy README][policy-readme] | Carries deny-by-default and outcome vocabulary expectations |
 | Downstream | [Tests README][tests-readme] | Fixtures and proof surfaces should follow schema work |
-| Downstream | [Workflows README][workflows-readme] | Enforcement belongs here once merge/block workflows are mounted |
+| Downstream | [Workflows README][workflows-readme] | Enforcement belongs here once real validator and merge/block workflows are mounted |
 | Ownership | [CODEOWNERS][codeowners] | Review routing for `/data/` |
 
 ### Path resolution rule
@@ -86,7 +86,7 @@ If the branch has consolidated those schemas into the shared repo-wide schema or
 
 - Registry-entry JSON Schema files that validate dataset, source, or closely related registry records
 - Registry-local shared fragments used only by those entry families
-- Small compatibility notes for field evolution that is specific to registry-entry validation
+- Small compatibility notes for field evolution that are specific to registry-entry validation
 - Human guidance that explains how local schemas relate to shared contract authority
 
 ### Preferred naming
@@ -167,6 +167,8 @@ sed -n '1,260p' schemas/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' tests/README.md
 sed -n '1,220p' .github/workflows/README.md
+
+find .github/workflows -maxdepth 1 -type f | sort
 ```
 
 ### 2) Check whether a local registry-entry schema already exists
@@ -228,8 +230,10 @@ flowchart LR
 | --- | --- | --- |
 | `data/registry/schemas/` exists on current public `main` | **CONFIRMED** | Directory is visible in the repo tree |
 | This subtree currently shows `README.md` only | **CONFIRMED** | No concrete schema files are visible in the current public tree |
-| `data/registry/README.md` currently owns the local registry description | **CONFIRMED** | Parent surface exists and is currently stubbed |
-| The repo already has shared schema/contract README surfaces | **CONFIRMED** | Stronger global placement guidance already exists |
+| `data/registry/` currently shows `README.md` and `schemas/README.md` only | **CONFIRMED** | Parent registry lane is present, but current public tree still reads as scaffold-first |
+| `data/registry/README.md` currently owns the local registry description | **CONFIRMED** | Parent surface exists and is now documented as the source-registration lane |
+| The repo already has shared `contracts/README.md` and `schemas/README.md` boundary surfaces | **CONFIRMED** | Stronger global placement guidance already exists |
+| `.github/workflows/` currently shows `README.md` only | **CONFIRMED** | Current public listing does not show checked-in workflow YAML files |
 | A local `dataset_entry.schema.json` family is still mounted here | **NEEDS VERIFICATION** | Referenced in continuity materials, not proven in the current public tree |
 
 ### Placement matrix
@@ -256,7 +260,7 @@ flowchart LR
 - [ ] Verify whether this subtree is still an active schema home on the checked-out branch
 - [ ] If active, add the first confirmed local schema family with at least one valid and one invalid example
 - [ ] If inactive, keep this README narrow and link contributors to the shared authority surface
-- [ ] Confirm ownership, dates, and policy label in the meta block
+- [ ] Confirm `doc_id` and `policy_label` in the meta block before merge
 - [ ] Ensure parent and sibling READMEs do not contradict this placement rule
 - [ ] Do not claim merge-blocking validation until a real workflow YAML and validator path are visible
 - [ ] Keep local names, examples, and migration notes in sync in the same PR
@@ -277,6 +281,10 @@ No. It is a continuity signal, not current-tree proof.
 
 Only when it validates registry-local entry shapes and does not create duplicate authority for a shared KFM object family.
 
+### Why are `doc_id` and `policy_label` still placeholders?
+
+Because the current public repo evidence confirms the file, owner, neighboring lanes, and file history, but it does not surface a verified document UUID or an explicit policy label for this README. Those values should be resolved on the working branch before merge.
+
 ### Where should fixtures live?
 
 Prefer the repo’s testing/proof surfaces when they already exist. If a branch deliberately keeps tiny local examples beside a schema for reviewer clarity, make that choice explicit and non-authoritative.
@@ -292,7 +300,7 @@ Prefer the repo’s testing/proof surfaces when they already exist. If a branch 
 | Does `dataset_entry.schema.json` exist here on the working branch? | Confirms whether the older registry-entry pattern still holds | **NEEDS VERIFICATION** |
 | Where do valid/invalid fixtures live now? | Needed to avoid splitting examples across competing homes | **NEEDS VERIFICATION** |
 | Is there a mounted validator command for registry-entry schemas? | Needed before calling anything enforced | **NEEDS VERIFICATION** |
-| Is merge/block workflow YAML present for this surface? | Needed before claiming CI gate behavior | **NEEDS VERIFICATION** |
+| Do actual workflow YAMLs exist for this surface on the working branch? | Needed before claiming CI gate behavior | **NEEDS VERIFICATION** |
 
 </details>
 
