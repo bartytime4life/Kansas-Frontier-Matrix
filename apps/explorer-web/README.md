@@ -4,47 +4,48 @@ title: KFM Explorer Web
 type: standard
 version: v1
 status: draft
-owners: <NEEDS_VERIFICATION>
-created: <YYYY-MM-DD NEEDS VERIFICATION>
-updated: <YYYY-MM-DD NEEDS VERIFICATION>
-policy_label: <NEEDS_VERIFICATION>
-related: [../../README.md, ../README.md, ../../web/README.md, ../api/src/api/README.md, ../../contracts/, ../../policy/, ../../docs/, ../../tests/]
+owners: @bartytime4life
+created: 2026-03-22
+updated: 2026-03-22
+policy_label: public
+related: [../../README.md, ../README.md, ../../web/README.md, ../governed-api/README.md, ../api/src/api/README.md, ../review-console/README.md, ../workers/README.md, ../cli/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, explorer-web, maplibre, evidence, shell]
-notes: [New README for the expected apps/explorer-web boundary; current repo still contains a parallel ../../web/README.md UI surface doc; keep both aligned until runtime topology is reverified.]
+notes: [UUID still needs authoritative allocation; dates reflect the last confirmed public file-history date; current public main proves the directory exists, but deeper runtime contents remain verification-bounded.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Explorer Web
 
 Persistent, map-first, time-aware, trust-visible shell for Kansas Frontier Matrix exploration, dossier inspection, evidence drill-through, and bounded Focus flows.
 
+> **Status:** `experimental`  
+> **Owners:** `@bartytime4life`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![tree](https://img.shields.io/badge/tree-public%20README--only-lightgrey) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![trust](https://img.shields.io/badge/trust-visible%20evidence-1f6feb) ![3D](https://img.shields.io/badge/3D-burden--bearing%20only-6b7280)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Surface matrix](#surface-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `apps/explorer-web/README.md` — shell-boundary README inside `apps/`, kept aligned with `../../web/README.md` and adjacent app/runtime boundary docs.
+
 > [!IMPORTANT]
-> This README is intentionally verification-bounded. It documents the **expected** `apps/explorer-web/` runtime boundary in repo-native KFM terms, while keeping live implementation claims explicitly limited. Where the current repository does **not** prove a subtree, manifest, route, or test harness, this file marks it as **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** rather than smoothing it into false certainty.
+> Current public `main` proves that `apps/explorer-web/` exists as a real repo path and currently exposes `README.md`. What remains unverified is the deeper runtime subtree: manifests, app code, routes, tests, fixtures, and dev wiring. This README therefore documents a **confirmed boundary** plus a **proposed realization**, without smoothing the difference away.
 
 | Field | Value |
 |---|---|
-| Status | `experimental` |
-| Owners | `<NEEDS_VERIFICATION>` |
-| Truth posture | `CONFIRMED doctrine` / `PROPOSED realization` / `UNKNOWN mounted implementation depth` |
-| Repo fit | `apps/explorer-web/` within `apps/`, aligned with `../../web/README.md` until topology is reverified |
+| Path | `apps/explorer-web/README.md` |
+| Primary role | Persistent shell boundary for KFM’s trust-visible web experience |
+| Truth posture | `CONFIRMED doctrine` / `CONFIRMED public path` / `PROPOSED realization` / `UNKNOWN mounted implementation depth` |
 | Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) |
-| Downstream | [`../api/src/api/README.md`](../api/src/api/README.md) · `../../contracts/` · `../../policy/` · `../../tests/` |
-
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![KFM](https://img.shields.io/badge/kfm-map--first%20shell-0b7285)
-![Trust](https://img.shields.io/badge/trust-visible%20evidence-1f6feb)
-![Renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6)
-![3D](https://img.shields.io/badge/3D-burden--bearing%20only-6b7280)
-![Owners](https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-lightgrey)
-
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Surface matrix](#surface-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+| Parallel | [`../../web/README.md`](../../web/README.md) |
+| Sibling app docs | [`../governed-api/README.md`](../governed-api/README.md) · [`../review-console/README.md`](../review-console/README.md) · [`../workers/README.md`](../workers/README.md) · [`../cli/README.md`](../cli/README.md) |
+| Deeper API doc | [`../api/src/api/README.md`](../api/src/api/README.md) |
+| Adjacent governed roots | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 
 ---
 
 ## Scope
 
-`apps/explorer-web/` is the expected home for the **persistent governed shell** that turns KFM doctrine into a runnable web surface. In KFM terms, this is not “just a frontend.” It is the place where map state, time scope, trust cues, evidence access, release context, and bounded synthesis remain coordinated instead of fragmenting into disconnected screens.
+`apps/explorer-web/` is the shell-side boundary where KFM doctrine becomes user-facing product behavior.
 
-At this boundary, the web explorer is expected to hold together:
+In KFM terms, this is not “just a frontend.” It is the place where geography, time scope, trust cues, evidence access, release context, and bounded synthesis stay coordinated instead of fragmenting into disconnected views.
+
+At minimum, this boundary is expected to hold together:
 
 - **Explore** as the default map-first discovery surface
 - **Timeline** as a coequal operating control, not a hidden filter
@@ -54,43 +55,53 @@ At this boundary, the web explorer is expected to hold together:
 - **Focus** as governed bounded synthesis inside the same shell
 - **Compare**, **Export**, and role-gated **Review** as shell variations rather than separate truth systems
 
-This README covers the **app-side shell boundary** and its adjacent contracts. It does **not** claim that every component below already exists in the mounted repo.
+This README documents the **shell boundary** and its adjacent contracts. It does **not** claim that the full runtime subtree beneath this directory is already populated on the checked-out working branch.
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Repo fit
 
-### Path and role
+### Current public snapshot
 
-- **Expected path:** `apps/explorer-web/`
-- **Parent boundary:** [`../README.md`](../README.md)
-- **Root doctrine and repo framing:** [`../../README.md`](../../README.md)
-- **Parallel current UI doc to keep aligned:** [`../../web/README.md`](../../web/README.md)
-- **Primary downstream governed interface:** [`../api/src/api/README.md`](../api/src/api/README.md)
-
-### Why this doc exists
-
-The current repo’s `apps/` boundary doc explicitly expects a local README for the persistent shell runtime and names **`apps/explorer-web/README.md` or `apps/web/README.md`** as the place where shell continuity, trust-visible UX, and map/timeline behavior should be documented. This file fills that role without pretending the subtree is already fully verified.
-
-### Upstream and downstream links
-
-| Direction | Path | Why it matters here |
+| Signal | Current public `main` | Posture |
 |---|---|---|
-| Upstream | [`../../README.md`](../../README.md) | Repo-wide trust posture, source discipline, and architecture framing |
-| Upstream | [`../README.md`](../README.md) | `apps/` boundary, verification-first runtime documentation rule |
-| Parallel | [`../../web/README.md`](../../web/README.md) | Current UI-specific README with shell/runtime guidance that should stay aligned |
-| Downstream | [`../api/src/api/README.md`](../api/src/api/README.md) | Governed API boundary; explorer-web should consume policy-safe payloads only |
-| Adjacent | `../../contracts/` | Shared JSON Schema / OpenAPI / fixtures boundary |
-| Adjacent | `../../policy/` | Deny-by-default policy bundles and vocabularies |
-| Adjacent | `../../tests/` | Cross-cutting contract, policy, e2e, and regression expectations |
-| Adjacent | `../../styles/` or equivalent | **PROPOSED** style registry and governed portrayal assets |
-| Adjacent | `../../docs/` | ADRs, runbooks, verification notes, and surface taxonomy docs |
+| Directory path | `apps/explorer-web/` exists | **CONFIRMED** |
+| Current file inventory in this directory | `README.md` only | **CONFIRMED** |
+| Parent `apps/` listing | `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `workers/`, `README.md` | **CONFIRMED** |
+| Deeper API-shaped doc surface | `apps/api/src/api/README.md` is also present | **CONFIRMED** |
+| Child manifests, runtime entrypoints, tests, fixtures | not proven from current public snapshot | **NEEDS VERIFICATION** |
+
+> [!NOTE]
+> The parent `apps/README.md` still describes `apps/explorer-web/README.md` as part of a proposed local README coverage set. The public tree now proves the path exists. The deeper implementation is what remains open.
+
+### Boundary links
+
+| Relation | Path | Why it matters |
+|---|---|---|
+| Parent boundary | [`../README.md`](../README.md) | Defines `apps/` as the runtime-facing surface family |
+| Root posture | [`../../README.md`](../../README.md) | Establishes the repo-wide trust path, verification posture, and monorepo frame |
+| Parallel UI doctrine | [`../../web/README.md`](../../web/README.md) | Current UI-specific README with concrete UI contract guidance |
+| Sibling API boundary | [`../governed-api/README.md`](../governed-api/README.md) | App-level governed API boundary on current public `main` |
+| Deeper API contract surface | [`../api/src/api/README.md`](../api/src/api/README.md) | Contract-first `src/api` enforcement README on current public `main` |
+| Review-bearing sibling | [`../review-console/README.md`](../review-console/README.md) | Keeps review as a shell variation, not a detached product |
+| Worker boundary | [`../workers/README.md`](../workers/README.md) | Export, projection, validation, and correction-adjacent jobs |
+| Operator CLI boundary | [`../cli/README.md`](../cli/README.md) | Human-invoked governed operational flows |
+| Shared contracts | [`../../contracts/README.md`](../../contracts/README.md) | Trust-bearing payload families belong there, not as app-local copies |
+| Shared policy | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default and obligation logic stay outside React components |
+| Shared verification | [`../../tests/README.md`](../../tests/README.md) | E2E, accessibility, negative-path, and release/correction proof burdens |
+| Workflow surface | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public workflow lane is still README-only, so shell claims must stay verification-bounded |
 
 ### Boundary rule
 
-This app should own **shell composition**, **interaction continuity**, and **UI-local rendering behavior**. It should **not** become the owner of canonical truth, evidence resolution law, policy adjudication, or unrestricted data access.
+This directory should own **shell composition**, **interaction continuity**, and **UI-local rendering behavior**.
+
+It should **not** become the owner of canonical truth, evidence resolution law, policy adjudication, release authority, or unrestricted data access.
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Accepted inputs
 
@@ -102,19 +113,24 @@ Only the following kinds of work belong here.
 | Map runtime integration | Yes | MapLibre-centered 2D portrayal and interaction layer |
 | Evidence Drawer consumers | Yes | App-side rendering of already-governed evidence payloads |
 | Dossier / Story / Focus presentation | Yes | UI composition and state transitions |
-| Layer metadata consumers | Yes | Read-only, governed portrayal metadata usage |
+| View-state and replay helpers | Yes | Public-safe, serializable shell-state objects used for replay and scope grounding |
+| Client-side contract adapters | Yes | View-state, citation, evidence, and Focus DTOs that stay aligned with governed API contracts |
+| Client service adapters | Yes | Explicit network boundary for governed API access only |
 | Export preview UI | Yes | Outward artifact preview with trust cues intact |
 | Accessibility and reduced-motion handling | Yes | First-class acceptance burden |
 | Saved-view hydration | Yes | Policy-safe rehydration only |
-| Route-family rehydration | Yes | Public-read, bounded-synthesis, compare, review views |
+| Route-family rehydration | Yes | Public-read, bounded-synthesis, compare, and review views |
 | On-map provenance/status overlays | Maybe | **PROPOSED** extension; only if governed APIs already provide safe payloads |
 | Canonical evidence resolution logic | No | Must stay behind governed API / resolver layers |
 | Policy bundle authoring | No | Lives in shared policy boundary |
 | Source onboarding / ingest / promotion | No | Worker / pipeline / data boundaries |
 | Raw or unpublished data inspection from browser | No | Explicitly excluded |
 | Direct model-runtime invocation from browser | No | Focus remains a governed API flow |
+| Hidden network calls inside components | No | Network I/O should stay in an explicit client-service layer |
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Exclusions
 
@@ -122,113 +138,137 @@ This directory is **not** the place for convenience shortcuts that punch through
 
 | Exclusion | Why it does not belong here | Put it here instead |
 |---|---|---|
-| Direct database access | Breaks governed API boundary | `apps/governed-api/` or shared backend packages |
+| Direct database access | Breaks governed API boundary | Governed API or shared backend packages |
 | Direct object-store reads for restricted assets | Bypasses policy and evidence mediation | Governed API / signed delivery path |
 | Direct access to RAW / WORK / QUARANTINE / unpublished data | Violates KFM truth path | Worker / data / review flows |
-| Policy decision logic in React components | Causes drift between UI and enforcement | `../../policy/` + backend enforcement |
+| Policy decision logic in React components | Causes drift between UI and enforcement | [`../../policy/`](../../policy/) + backend enforcement |
 | Hidden alternate admin truth surface | Violates shell continuity and trust visibility | Role-gated shell variation |
 | Renderer-owned domain truth | Reverses KFM ordering | Keep meaning in contracts + metadata |
 | Default 3D showcase mode | KFM remains 2D-first by default | Controlled, burden-bearing route only |
 | Restricted payload caching in browser storage | Can leak sensitive or stale state | Server-mediated, scoped hydration only |
 | Free-form AI assistant UX detached from evidence | Violates cite-or-abstain and bounded runtime outcomes | Governed Focus flow |
 | Ad hoc schema copies in the app | Creates parallel contract universes | Shared contracts directory |
+| “Helpful” direct fetches from components | Hides trust-boundary violations in presentation code | Explicit service layer only |
 
 > [!WARNING]
 > This app must not quietly become the easiest place to bypass policy, evidence, or release context. In KFM, the last mile is part of publication, not cosmetic packaging.
 
 [Back to top](#kfm-explorer-web)
 
+---
+
 ## Directory tree
 
-### Current surroundings that are **CONFIRMED**
+### Current public-main snapshot (**CONFIRMED**)
 
 ```text
-.
+apps/
 ├─ README.md
-├─ apps/
+├─ cli/
 │  └─ README.md
-├─ contracts/
-├─ docs/
-├─ policy/
-├─ tests/
-└─ web/
+├─ explorer-web/
+│  └─ README.md
+├─ governed-api/
+│  └─ README.md
+├─ review-console/
+│  └─ README.md
+└─ workers/
    └─ README.md
 ```
 
-### Expected local subtree for `apps/explorer-web/` (**PROPOSED / NEEDS VERIFICATION**)
+> [!NOTE]
+> A deeper API-shaped documentation surface is also reachable at `apps/api/src/api/README.md` on current public `main`. Keep that link visible until the checked-out branch settles which API boundary is authoritative.
+
+### Proposed local runtime subtree (**PROPOSED / NEEDS VERIFICATION**)
+
+This starter shape aligns the explorer boundary with the currently published `web/README.md` guidance, without claiming that the subtree is already mounted as shown below.
 
 ```text
 apps/explorer-web/
 ├─ README.md
-├─ package.json                       # NEEDS VERIFICATION
-├─ tsconfig.json                      # NEEDS VERIFICATION
-├─ public/                            # PROPOSED
-├─ src/
-│  ├─ app/                            # PROPOSED route + shell entry
-│  ├─ components/
-│  │  ├─ shell/
-│  │  ├─ map/
-│  │  ├─ timeline/
-│  │  ├─ dossier/
-│  │  ├─ story/
-│  │  ├─ evidence/
-│  │  ├─ focus/
-│  │  ├─ compare/
-│  │  └─ export/
-│  ├─ contracts/                      # PROPOSED app-local type bindings only
-│  ├─ hooks/
-│  ├─ services/                       # PROPOSED governed API client adapters
-│  ├─ state/
-│  ├─ styles/
-│  ├─ test/
-│  └─ util/
-├─ e2e/                               # PROPOSED
-└─ __fixtures__/                      # PROPOSED
+├─ package.json                      # NEEDS VERIFICATION
+├─ tsconfig.json                     # NEEDS VERIFICATION
+├─ .env.example                      # PROPOSED
+├─ public/                           # PROPOSED
+│  └─ ...
+└─ src/
+   ├─ main.tsx                       # PROPOSED bootstrap
+   ├─ app/
+   │  ├─ App.tsx
+   │  ├─ router.tsx
+   │  └─ layout/
+   ├─ contracts/
+   │  ├─ viewstate.ts
+   │  ├─ citations.ts
+   │  ├─ evidence.ts
+   │  └─ api.ts
+   ├─ services/
+   │  ├─ apiClient.ts
+   │  ├─ focusClient.ts
+   │  ├─ evidenceResolver.ts
+   │  └─ auditClient.ts
+   ├─ components/
+   │  ├─ map/
+   │  ├─ story/
+   │  ├─ focus/
+   │  ├─ evidence/
+   │  └─ audit/
+   ├─ features/
+   ├─ hooks/
+   ├─ styles/
+   ├─ assets/
+   ├─ test/
+   └─ __tests__/
 ```
 
 ### Interpretation rule
 
-- The **surroundings** above are grounded in the current repo.
-- The **local subtree** is a **starter shape**, not a claim of current implementation.
-- If a live runtime already exists under another path such as `apps/web/` or `web/`, that reality wins. This README should then be migrated or reconciled rather than duplicated indefinitely.
+- The **current public-main snapshot** above is grounded in the currently visible public tree.
+- The **proposed subtree** is a buildable target shape, not a claim of present implementation.
+- If the checked-out branch uses a different runtime root such as `apps/web/` or `web/`, that reality wins and this README should be reconciled rather than duplicated.
 
 [Back to top](#kfm-explorer-web)
 
+---
+
 ## Quickstart
 
-This project’s current documentation posture favors **verification-first inspection** over speculative startup instructions.
+This repo’s current posture favors **verification-first inspection** over speculative startup commands.
 
 ### 1) Confirm the live runtime shape
 
 ```bash
-pwd
-git rev-parse --show-toplevel
-find apps -maxdepth 3 -type f -name "README.md" | sort
-find . -maxdepth 3 \( -name "package.json" -o -name "pnpm-workspace.yaml" -o -name "turbo.json" -o -name "nx.json" \) | sort
-```
-
-### 2) Check whether `apps/explorer-web/` exists yet
-
-```bash
+git rev-parse HEAD 2>/dev/null || true
 find apps -maxdepth 2 -type d | sort
 find apps/explorer-web -maxdepth 3 -print 2>/dev/null || true
 ```
 
-### 3) Inspect neighboring boundaries before editing code
+### 2) Inspect neighboring boundaries before editing code
 
 ```bash
-sed -n '1,220p' apps/README.md
+sed -n '1,240p' apps/README.md
 sed -n '1,260p' web/README.md 2>/dev/null || true
-sed -n '1,240p' apps/api/src/api/README.md 2>/dev/null || true
+sed -n '1,260p' apps/governed-api/README.md 2>/dev/null || true
+sed -n '1,260p' apps/api/src/api/README.md 2>/dev/null || true
+sed -n '1,260p' apps/review-console/README.md 2>/dev/null || true
+sed -n '1,260p' apps/workers/README.md 2>/dev/null || true
+sed -n '1,260p' apps/cli/README.md 2>/dev/null || true
+```
+
+### 3) Inventory contracts, policy surfaces, and tests that this shell depends on
+
+```bash
 find contracts -maxdepth 3 -type f | sort | head -200
 find policy -maxdepth 3 -type f | sort | head -200
-find tests -maxdepth 3 -type f | sort | head -200
+find tests -maxdepth 4 -type f | sort | head -200
+find .github/workflows -maxdepth 2 -type f | sort
 ```
 
 ### 4) Search for trust-critical vocabulary already in use
 
 ```bash
-grep -RIn "Evidence Drawer\|Focus Mode\|RuntimeResponseEnvelope\|CorrectionNotice\|MapLibre\|Timeline" . | head -200
+grep -RInE 'ViewState|Citation|EvidenceBundle|EvidenceRef|Evidence Drawer|RuntimeResponseEnvelope|CorrectionNotice|Focus|ABSTAIN|DENY|audit_ref|MapLibre|Timeline' \
+  apps web contracts policy tests .github 2>/dev/null | head -200
 ```
 
 ### 5) Only then decide which runtime root is authoritative
@@ -238,26 +278,30 @@ Possible current outcomes:
 - `apps/explorer-web/` is the active app root
 - `apps/web/` is the active app root
 - `web/` is still the active UI root
-- multiple UI roots exist and need explicit convergence
+- multiple UI or API boundary docs coexist and need explicit convergence
 
 > [!NOTE]
-> The correct first action is often **inventory**, not `npm install`.
+> The correct first action is usually **inventory**, not `npm install`.
 
 ### Optional local startup block (**NEEDS VERIFICATION**)
 
-Use this only after confirming the live workspace manager and app path.
+Use this only after confirming the real workspace manager and app path.
 
 ```bash
-# Examples only — adapt after verifying the real workspace shape.
+# Examples only — adapt after verifying the workspace shape.
 pnpm install
 pnpm --filter explorer-web dev
+
 # or
 pnpm --dir apps/explorer-web dev
+
 # or
 npm run dev --workspace apps/explorer-web
 ```
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Usage
 
@@ -283,6 +327,16 @@ The renderer owns **portrayal and interaction mechanics**.
 
 The governed API owns **truth mediation, policy safety, evidence resolution, and bounded synthesis outcomes**.
 
+### Client-side placement rules
+
+| Concern | Expected home | Why |
+|---|---|---|
+| Network I/O | explicit service layer only | keeps trust-boundary behavior reviewable |
+| View-state and citation DTOs | client contract types | preserves deterministic replay and evidence resolution expectations |
+| Presentation components | component layer only | prevents hidden fetches and local policy drift |
+| Policy decisions | never the browser | backend and shared policy remain authoritative |
+| Restricted payload persistence | nowhere in browser storage | deny-by-default and no-reconstruction rules stay intact |
+
 ### State ownership rule
 
 | State kind | Owner |
@@ -304,9 +358,15 @@ At minimum, the explorer should keep these visible during consequential flows:
 - release or freshness context
 - policy posture where relevant
 - route back to evidence
+- `audit_ref` where applicable
 - correction / supersession signal when applicable
 
+> [!NOTE]
+> Current public `main` proves a directory contract here, not a mounted runnable shell. That makes boundary discipline more important, not less: future code should land in a way that keeps this README true.
+
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Diagram
 
@@ -316,42 +376,50 @@ flowchart LR
     S --> M[MapLibre 2D Runtime]
     S --> T[Timeline Rail]
     S --> R[Right Inspection Stack]
+
     R --> D[Dossier]
     R --> E[Evidence Drawer]
     R --> F[Focus Pane]
+    R --> A[Audit / Status Views]
 
-    S --> API[Governed API]
+    S --> C[Client Service Layer]
+    C --> API[Governed API]
+
     API --> POL[Policy Runtime]
     API --> EVR[Evidence Resolver]
     API --> DEL[Delivery Artifacts]
+    API --> OUT{Finite outcome}
+
+    OUT --> OK[ANSWER]
+    OUT --> AB[ABSTAIN]
+    OUT --> DN[DENY]
+    OUT --> ER[ERROR]
 
     DEL --> M
     EVR --> E
     API --> F
-
-    F --> OUT{Finite outcome}
-    OUT --> A[ANSWER]
-    OUT --> AB[ABSTAIN]
-    OUT --> DN[DENY]
-    OUT --> ER[ERROR]
+    API --> A
 
     classDef shell fill:#eef6ff,stroke:#1f6feb,color:#0b1f33;
     classDef governed fill:#eefbf3,stroke:#2b8a3e,color:#14361d;
     classDef caution fill:#fff6e5,stroke:#b7791f,color:#4b3200;
 
-    class S,M,T,R,D,E,F shell;
+    class S,M,T,R,D,E,F,A,C shell;
     class API,POL,EVR,DEL governed;
-    class OUT,A,AB,DN,ER caution;
+    class OUT,OK,AB,DN,ER caution;
 ```
 
 ### Reading the diagram
 
 - The **shell** is the persistent user-facing operating field.
 - **MapLibre** is the 2D runtime inside the shell, not the shell itself.
-- The **governed API** remains the only trust-bearing way to retrieve evidence, policy-safe portrayal inputs, and Focus outcomes.
+- The **client service layer** is the only acceptable browser-side network boundary.
+- The **governed API** remains the trust-bearing way to retrieve evidence, policy-safe portrayal inputs, and Focus outcomes.
 - The explorer should never talk directly to canonical/internal stores.
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Surface matrix
 
@@ -362,32 +430,39 @@ flowchart LR
 | Dossier | Durable inspected object | evidence, release, correction, policy | behave like a throwaway modal |
 | Story | Guided narrative | citations, map continuity, time continuity | sever itself from current scope |
 | Evidence Drawer | Inspectable support route | provenance, freshness, rights, audit linkage | collapse into decorative “source notes” |
-| Focus | Bounded synthesis | scope echo, citations, finite outcomes | act as unconstrained chat |
+| Focus | Bounded synthesis | scope echo, citations, finite outcomes, `audit_ref` | act as unconstrained chat |
 | Compare | Side-by-side contextual comparison | lhs/rhs time basis and release context | flatten asymmetry or hide basis |
 | Export | Outward artifact preview | trust cues, manifest, obligations | silently strip provenance context |
 | Review | Role-gated action overlay | decision context, correction route | become a separate hidden truth system |
 
 [Back to top](#kfm-explorer-web)
 
+---
+
 ## Contract touchpoints
 
-The explorer should consume a small set of shared contracts before broad UI expansion.
+The explorer should consume a compact set of shared contracts before broad UI expansion.
 
 | Contract / artifact | Role in explorer-web | Status here |
 |---|---|---|
-| `shell_state` | Rehydrate scope, mode, selected object, compare anchors, local non-sensitive preferences | **PROPOSED** |
+| `ViewStateV1` | Rehydrate time range, bbox, active layers, story anchor, and replay-safe shell scope | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
+| `Citation` | Keep Focus and Story claims resolvable to human-readable evidence | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
+| `FocusQueryV1` / `FocusAnswerV1` | Render bounded Q&A with citations and `audit_ref` | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
+| `shell_state` | Local non-sensitive continuity state for mode, selection, compare anchors, and panel openness | **PROPOSED explorer-web-local naming** |
 | `evidence_drawer_payload` | Render inspectable support and provenance depth | **PROPOSED** |
 | `dossier_payload` | Durable object view for place/feature inspection | **PROPOSED** |
 | `layer_metadata` | Explain portrayal meaning outside style JSON | **PROPOSED** |
-| `Focus envelope` | Render scope, evidence pool, finite outcome, citations, audit refs | **PROPOSED** |
-| `RuntimeResponseEnvelope` | Common bounded runtime outcome pattern | **CONFIRMED doctrine / NEEDS VERIFICATION in app usage** |
-| `CorrectionNotice` | Preserve correction lineage in visible surfaces | **CONFIRMED doctrine / NEEDS VERIFICATION in app usage** |
+| `EvidenceBundle` | Deliver policy-shaped evidence drill-through to the UI | **CONFIRMED doctrine / mounted emitter NEEDS VERIFICATION** |
+| `RuntimeResponseEnvelope` | Preserve finite accountable outcomes across runtime surfaces | **CONFIRMED doctrine / mounted usage NEEDS VERIFICATION** |
+| `CorrectionNotice` | Preserve correction lineage in visible surfaces | **CONFIRMED doctrine / mounted usage NEEDS VERIFICATION** |
 
 ### Contract rule of thumb
 
 A lean, fixture-backed first wave is better than ambitious UI breadth with no trustworthy payload boundaries.
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Quick reference tables
 
@@ -401,6 +476,7 @@ A lean, fixture-backed first wave is better than ambitious UI breadth with no tr
 | Review chip | Draft / quarantined / reviewed / promoted / withdrawn / superseded |
 | Knowledge marker | Observed / documentary / derived / modeled / generalized |
 | AI badge | Model-assisted synthesis is present |
+| `audit_ref` hook | Stable route back to the governed runtime event |
 | Correction marker | Claim lineage changed after release |
 
 ### 2D / 3D rule
@@ -412,13 +488,16 @@ A lean, fixture-backed first wave is better than ambitious UI breadth with no tr
 
 [Back to top](#kfm-explorer-web)
 
+---
+
 ## Task list
 
 ### Definition of done for the README boundary
 
-- [ ] Confirm whether `apps/explorer-web/` is now a real mounted subtree.
-- [ ] Confirm whether `web/` remains the active UI root, a parallel root, or a legacy root.
-- [ ] Reconcile this file with [`../../web/README.md`](../../web/README.md) so shell law is stated once and repeated carefully.
+- [ ] Replace `<NEEDS_UUID>` with an authoritative document ID.
+- [ ] Confirm whether `apps/explorer-web/` now contains manifests, source files, tests, or fixtures beyond `README.md`.
+- [ ] Confirm whether `../../web/README.md` remains the primary parallel UI doc or should be folded into this boundary.
+- [ ] Reconcile current dual API doc surfaces: `apps/governed-api/README.md` and `apps/api/src/api/README.md`.
 - [ ] Verify active package manager, workspace tool, and dev entrypoint.
 - [ ] Verify whether shared contracts already exist under `contracts/` and update links accordingly.
 - [ ] Verify whether accessibility and reduced-motion checks are already wired in `tests/` or CI.
@@ -429,24 +508,33 @@ A lean, fixture-backed first wave is better than ambitious UI breadth with no tr
 
 - [ ] Explorer, Timeline, Dossier, Story, Focus, Compare, Export, and Review behave as one shell family.
 - [ ] Every consequential claim remains one interaction away from inspectable evidence.
-- [ ] Focus renders explicit `ANSWER / ABSTAIN / DENY / ERROR` outcomes.
+- [ ] Focus renders explicit `ANSWER / ABSTAIN / DENY / ERROR` outcomes with citations or explicit negative state.
 - [ ] Exports preserve trust cues and do not silently drop provenance context.
 - [ ] Renderer and shell remain separate concerns.
 - [ ] No direct client access exists to canonical/internal stores.
+- [ ] Network calls are confined to an explicit client-service layer.
 - [ ] Keyboard use, reduced motion, and screen-reader labeling are verified across major shell states.
 - [ ] Visual regression coverage exists for trust cues under pan / zoom / filter / compare transitions.
 
 [Back to top](#kfm-explorer-web)
 
+---
+
 ## FAQ
 
 ### Does this README prove that `apps/explorer-web/` exists right now?
 
-No. It documents the **expected** boundary and keeps the current mounted reality explicitly open until the live subtree is reverified.
+Yes. Current public `main` proves that the directory exists and currently exposes `README.md`.
 
-### Why does this README link to `../../web/README.md`?
+What it does **not** prove is a deeper runtime subtree, manifests, scripts, tests, or live route inventory under that directory.
 
-Because the current repo already contains a UI-specific README under `web/`, and it is the strongest repo-native runtime document to keep aligned with this expected app boundary.
+### Why does this README still link to `../../web/README.md`?
+
+Because the repo still exposes a parallel UI-oriented README under `web/`, and it contains concrete UI contract guidance that this shell boundary should not silently drift away from.
+
+### Why are there two API-shaped links?
+
+Current public `main` exposes both an app-level API boundary README at `apps/governed-api/README.md` and a deeper contract-first README at `apps/api/src/api/README.md`. This file keeps both visible until the checked-out branch settles which boundary is authoritative.
 
 ### Can explorer-web call PostGIS, object storage, or unpublished artifacts directly?
 
@@ -465,6 +553,8 @@ Only conditionally. KFM remains **2D-first**. Any 3D mode must carry explicit ex
 No. It may compress or move into a sheet/full-page view, but consequential claims must remain inspectable.
 
 [Back to top](#kfm-explorer-web)
+
+---
 
 ## Appendix
 
@@ -526,8 +616,8 @@ Before treating this README as implementation-descriptive rather than boundary-d
 4. Confirm contract filenames and fixture paths.
 5. Confirm current tests and workflows.
 6. Confirm whether any parallel `web/` and `apps/*web*` docs need consolidation.
-7. Replace all placeholder metadata with confirmed values.
-8. Narrow every `PROPOSED` path or component name that the repo disproves.
+7. Replace all remaining placeholders in the meta block if stronger authority becomes available.
+8. Narrow every `PROPOSED` path or component name that the checked-out branch disproves.
 
 </details>
 
