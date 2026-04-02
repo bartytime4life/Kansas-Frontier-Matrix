@@ -4,13 +4,13 @@ title: Kansas Frontier Matrix
 type: standard
 version: v1
 status: review
-owners: TBD-VERIFY-.github-CODEOWNERS
+owners: @bartytime4life
 created: TBD-VERIFY-first-commit-date
-updated: 2026-03-28
-policy_label: TBD-VERIFY-public-or-restricted
-related: [./docs/, ./contracts/, ./schemas/, ./policy/, ./data/, ./apps/, ./packages/, ./tests/, ./infra/, ./tools/, ./scripts/, TBD-VERIFY-./CONTRIBUTING.md, TBD-VERIFY-./SECURITY.md, TBD-VERIFY-./.github/CODEOWNERS]
+updated: 2026-04-02
+policy_label: public
+related: [./.github/, ./.github/README.md, ./.github/CODEOWNERS, ./.github/PULL_REQUEST_TEMPLATE.md, ./.github/workflows/README.md, ./apps/, ./brand/, ./configs/, ./contracts/, ./data/, ./docs/, ./examples/, ./infra/, ./migrations/, ./packages/, ./policy/, ./schemas/, ./scripts/, ./tests/, ./tools/, ./CODE_OF_CONDUCT.md, ./CONTRIBUTING.md, ./LICENSE, ./SECURITY.md]
 tags: [kfm, root-doc, governance, evidence-first, map-first, trust-system]
-notes: [Root README revision candidate grounded in the attached March 2026 KFM doctrine plus the attached 2026-03-22 repo-grounded sprint; live branch tree, owners, commit history, workflow YAML inventory, and adjacent root files still require direct verification.]
+notes: [Root README revision candidate grounded in March 2026 KFM doctrine, corroborating repo-grounded sprint material, and the current public main tree; private GitHub settings, non-public branches, workflow rulesets, deployment manifests, and runtime proof objects still require direct verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix
@@ -18,22 +18,24 @@ notes: [Root README revision candidate grounded in the attached March 2026 KFM d
 Governed, evidence-first, map-first, time-aware repository for Kansas spatial evidence, publication, and trust-visible product surfaces.
 
 > **Status:** Experimental  
-> **Owners:** TBD-VERIFY — `.github/CODEOWNERS` is referenced in attached repo-grounded material, but was not directly opened from a mounted checkout in this session  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: TBD](https://img.shields.io/badge/owners-TBD-lightgrey) ![Scope: Root README](https://img.shields.io/badge/scope-root%20README-6f42c1) ![Posture: Evidence-first](https://img.shields.io/badge/posture-evidence--first-success) ![Trust: Governed](https://img.shields.io/badge/trust-governed-blue) ![Verification: Branch needed](https://img.shields.io/badge/verification-active%20branch%20needed-yellow)  
+> **Owners:** `@bartytime4life`  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: bartytime4life](https://img.shields.io/badge/owners-bartytime4life-lightgrey) ![Scope: Root README](https://img.shields.io/badge/scope-root%20README-6f42c1) ![Posture: Evidence-first](https://img.shields.io/badge/posture-evidence--first-success) ![Trust: Governed](https://img.shields.io/badge/trust-governed-blue) ![Visibility: Public main](https://img.shields.io/badge/visibility-public%20main-2ea44f)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `/README.md` *(root orientation surface; live branch verification still required)*
+> **Repo fit:** `/README.md` · control plane [./.github/](./.github/) · doctrine/docs [./docs/](./docs/) · contract/policy [./contracts/](./contracts/), [./schemas/](./schemas/), [./policy/](./policy/) · runtime/data [./apps/](./apps/), [./packages/](./packages/), [./data/](./data/)  
+> **Accepted here:** root identity, public-tree navigation, doctrine summary, verification-first inspection path  
+> **Not here:** full schema catalogs, full policy text, route-by-route runtime claims, or unstaged implementation certainty
 
 > [!IMPORTANT]
-> This README is intentionally **verification-first**. It is grounded in the attached March 2026 KFM doctrine, architecture, UI, atlas, and planning corpus, plus an attached repo-grounded sprint that reports specific root and near-root documentation/control surfaces. The current session did **not** expose a mounted branch checkout, workflow YAML inventory, runtime manifests, or live test results. Treat branch-level and implementation-shaped statements here as bounded until the active repository is inspected directly.
+> This README is intentionally verification-first. It is grounded in the March 2026 KFM doctrine plus the current public `main` tree. It does **not** claim direct verification of non-public branches, GitHub rulesets, required checks, environment approvals, deployment manifests, or runtime proof objects.
 
 | At a glance | Working rule |
 |---|---|
 | System identity | Governed Kansas spatial evidence system |
 | Value unit | The inspectable claim, not merely the map, graph, dashboard, or fluent answer |
-| Truth path | `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
+| Truth path | `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED` |
+| Catalog closure | Outward STAC / DCAT / PROV triplet plus release linkage |
 | Trust boundary | Governed APIs plus evidence resolution, not direct client access to stores |
 | Runtime rule | Cite or abstain |
-| Publication rule | Promotion changes trust state; deployment should apply already approved intent |
 | Surface rule | One map-first, time-aware shell with trust-visible evidence and negative states |
 | 3D rule | 2D default; 3D is conditional and burden-bearing |
 
@@ -44,29 +46,29 @@ This README covers the **repo-root identity and operating posture** of Kansas Fr
 Use it for:
 
 - root-level mission, boundaries, and non-negotiable invariants
-- verification-first navigation across doctrine, contracts, schemas, policy, data, testing, apps, packages, and operations
-- a source-bounded map of the documented repo shape
+- verification-first navigation across the public repo root
+- a source-bounded map of what exists now on public `main`
 - the minimum path from clone to trustworthy local inspection
 
 Do not use it for:
 
-- full contract text that belongs in `./contracts/` or `./schemas/`
-- full policy rules that belong in `./policy/`
-- domain-by-domain source depth that belongs in `./docs/` and the domain/source atlas
-- implementation certainty that has not been re-verified on the active branch
+- full contract text that belongs in [`./contracts/`](./contracts/) or [`./schemas/`](./schemas/)
+- full policy rules that belong in [`./policy/`](./policy/)
+- lane-by-lane source depth that belongs in [`./docs/`](./docs/) and the domain/source atlas
+- runtime certainty that has not been re-verified on the exact branch or commit under review
 
 ### Evidence posture used in this README
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Supported by the attached March 2026 KFM corpus, the attached repo-grounded sprint, or direct current-session evidence. |
-| **INFERRED** | Strongly implied by repeated corpus patterns or documented repo inventories, but not directly branch-inspected in this session. |
-| **PROPOSED** | A recommended realization or repo pattern that fits doctrine but is not proven as current implementation reality. |
-| **NEEDS VERIFICATION** | A likely repo-local fact, path, or control point that should be checked on the active branch before being treated as current reality. |
-| **UNKNOWN** | Not supported strongly enough in this session to state as a live repo or runtime fact. |
+| **CONFIRMED** | Supported by attached March 2026 KFM doctrine, corroborating repo-grounded sprint material, or the current public `main` tree. |
+| **INFERRED** | Strongly implied by repeated doctrine or by current public path names, but not directly proven as detailed implementation behavior. |
+| **PROPOSED** | A recommended realization or starter pattern that fits doctrine but is not yet proven as current implementation reality. |
+| **UNKNOWN** | Not supported strongly enough to state as a live repo, runtime, or platform fact. |
+| **NEEDS VERIFICATION** | A path, owner, ruleset, or behavior that should be checked on the exact working branch before merge. |
 
 > [!NOTE]
-> KFM’s strongest attached manuals are explicit about this boundary on purpose: doctrine can be stated confidently, but live repo topology, CI gates, route inventories, manifests, and runtime depth should remain visible as **UNKNOWN** until directly inspected.
+> Public `main` is a helpful current baseline, but the branch you are changing outranks it. Treat local branch evidence as the decisive source when it is available.
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -75,41 +77,40 @@ Do not use it for:
 **Path:** `/README.md`  
 **Role:** Root orientation document and verification-first operating index for Kansas Frontier Matrix.
 
-The strongest root-shape evidence in hand comes from two layers:
+This file should do three jobs well:
 
-1. **Doctrinal / architecture corpus** describing the intended governed monorepo shape.
-2. **Attached repo-grounded sprint evidence** naming specific root and near-root surfaces that were inspected in that run.
+1. explain what KFM is and is not
+2. mark the verification boundary honestly
+3. route readers into the correct repo surfaces without duplicating their owning docs
 
-Because this session did not mount the live checkout, this README keeps those layers separate instead of collapsing them into one unsupported active-branch claim.
+### Current public root snapshot
 
-| Direction | Documented path | Status | Why it matters |
+| Surface family | Current public state | Why it matters |
+|---|---|---|
+| Root governance docs | `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `LICENSE` | Public onboarding, conduct, disclosure, and legal posture are visible at repo root. |
+| Control plane | `/.github/`, `/.github/CODEOWNERS`, `/.github/PULL_REQUEST_TEMPLATE.md`, `/.github/README.md`, `/.github/workflows/README.md` | Review routing, templates, ownership, and workflow documentation already exist as repo surfaces. |
+| Core system directories | `/apps/`, `/contracts/`, `/data/`, `/docs/`, `/infra/`, `/packages/`, `/policy/`, `/schemas/`, `/tests/`, `/tools/`, `/scripts/` | The public tree already exposes the main code, contract, policy, and verification lanes. |
+| Supporting directories | `/brand/`, `/configs/`, `/examples/`, `/migrations/` | The public tree shows additional identity, configuration, example, and evolution surfaces. |
+
+### Working interpretation of the root
+
+| Group | Paths | Status | Working interpretation |
 |---|---|---|---|
-| Root | [`./README.md`](./README.md) | **CONFIRMED** | Root identity and operating index surface. |
-| Control plane | [`./.github/`](./.github/) | **CONFIRMED** | Review routing, templates, ownership, and workflow scaffolding live here. |
-| Adjacent | [`./.github/CODEOWNERS`](./.github/CODEOWNERS) | **CONFIRMED / NEEDS VERIFICATION** | Existence is repo-grounded; exact owners still need direct branch inspection. |
-| Adjacent | [`./.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md) | **CONFIRMED** | Trust checklist and PR evidence expectations are part of the documented repo posture. |
-| Adjacent | [`./.github/workflows/`](./.github/workflows/) | **CONFIRMED / NEEDS VERIFICATION** | A workflows README is reported; active merge-blocking YAMLs still need direct verification. |
-| Upstream | [`./docs/`](./docs/) | **INFERRED** | Architecture, governance, ADRs, runbooks, and domain depth. |
-| Upstream | [`./contracts/`](./contracts/) | **CONFIRMED** | Contract documentation surface is repo-grounded and central to trust-bearing implementation. |
-| Upstream | [`./schemas/`](./schemas/) | **CONFIRMED** | Separate schema documentation surface is repo-grounded; real schema inventory still needs verification. |
-| Upstream | [`./policy/`](./policy/) | **CONFIRMED** | Deny-by-default policy doctrine and decision grammar are documented here. |
-| Downstream | [`./data/`](./data/) | **INFERRED** | Lifecycle zones, registry entries, catalog artifacts, and receipts. |
-| Downstream | [`./apps/`](./apps/) | **INFERRED** | Deployable runtime surfaces such as API, UI, and workers. |
-| Downstream | [`./packages/`](./packages/) | **INFERRED** | Shared reusable law and libraries: ingest, evidence, catalog, policy, delivery. |
-| Downstream | [`./tests/`](./tests/) | **CONFIRMED** | Tests README is repo-grounded; runnable harness depth still needs verification. |
-| Downstream | [`./infra/`](./infra/) | **INFERRED** | Deployment, environment wiring, observability, and release mechanics. |
-| Downstream | [`./tools/`](./tools/) | **CONFIRMED** | Validator/tooling intent is repo-grounded, though executable depth remains unverified. |
-| Downstream | [`./scripts/`](./scripts/) | **CONFIRMED** | Supporting entrypoint/script intent is repo-grounded, though executable depth remains unverified. |
-| Adjacent | `./CONTRIBUTING.md` | **NEEDS VERIFICATION** | Mentioned as a likely neighbor, but not directly verified in this session. |
-| Adjacent | `./SECURITY.md` | **NEEDS VERIFICATION** | Likely relevant root policy surface, but not directly verified in this session. |
+| Root gatehouse | [`./README.md`](./README.md), [`./.github/`](./.github/) | **CONFIRMED** | Repo landing, review routing, ownership, contributor intake, and automation scaffolding begin here. |
+| Public governance neighbors | [`./CONTRIBUTING.md`](./CONTRIBUTING.md), [`./SECURITY.md`](./SECURITY.md), [`./CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md), [`./LICENSE`](./LICENSE) | **CONFIRMED** | Public contributor, disclosure, conduct, and licensing surfaces are checked in. |
+| Contract and policy surfaces | [`./contracts/`](./contracts/), [`./schemas/`](./schemas/), [`./policy/`](./policy/) | **CONFIRMED** | KFM expects machine-checkable structure and deny-by-default policy to live here. |
+| Runtime and shared code | [`./apps/`](./apps/), [`./packages/`](./packages/), [`./infra/`](./infra/) | **CONFIRMED** path / **INFERRED** detailed role | Public tree confirms these surfaces exist; exact route, service, and deployment depth still need branch-level inspection. |
+| Evidence, docs, and verification | [`./data/`](./data/), [`./docs/`](./docs/), [`./examples/`](./examples/), [`./tests/`](./tests/) | **CONFIRMED** path / mixed depth | Public tree confirms evidence, documentation, example, and test surfaces, but not full implementation maturity. |
+| Support and evolution | [`./brand/`](./brand/), [`./configs/`](./configs/), [`./migrations/`](./migrations/), [`./scripts/`](./scripts/), [`./tools/`](./tools/) | **CONFIRMED** path / **INFERRED** detailed role | Public tree confirms these supporting surfaces exist; exact contents and operational burden still need direct inspection. |
 
-KFM is easiest to understand as a **truth path → catalog / evidence → governed API → trust-visible surface** system. The root README exists to keep that order visible before contributors descend into lane-, app-, or contract-specific detail.
+> [!TIP]
+> This README should point outward. When deeper detail becomes stable enough to own itself, link to the owning file or directory instead of re-explaining it here.
 
 [Back to top](#kansas-frontier-matrix)
 
 ## Accepted inputs
 
-At repo root, this README should summarize the input families KFM is built to admit and govern, while pushing detailed schemas, source registers, and ingestion rules into their owning docs.
+At repo root, this README should summarize the **input families KFM is built to admit and govern**, while pushing detailed schemas, source registers, and connector rules into their owning docs.
 
 | Input family | What belongs in KFM | Expected governed lane | Where detailed treatment should live |
 |---|---|---|---|
@@ -135,60 +136,71 @@ These do **not** belong in the governed publication path, and this root README s
 | Uncited Story or Focus claims | Violates cite-or-abstain. | Draft or internal review states only |
 | Fine-grained restricted location exposure | Risks policy leakage and unsafe precision. | Restricted lanes or generalized public-safe outputs |
 | Docs that imply live behavior without proof | Weakens trust through overclaiming. | Keep the statement `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` |
-| Detached reviewer/admin tools that sever geography, time, or evidence context | Breaks the governed shell model. | Review and stewardship as shell variation, not a separate truth system |
+| Detached reviewer or admin tools that sever geography, time, or evidence context | Breaks the governed shell model. | Review and stewardship as shell variation, not a separate truth system |
 
 [Back to top](#kansas-frontier-matrix)
 
 ## Directory tree
 
-### Documented root shape *(repo-grounded summary + doctrine; active branch NEEDS VERIFICATION)*
+### Current public root snapshot
 
 ```text
 <repo-root>/
-├── README.md
 ├── .github/
-├── docs/
-├── contracts/
-├── schemas/
-├── policy/
-├── data/
 ├── apps/
-├── packages/
-├── tests/
+├── brand/
+├── configs/
+├── contracts/
+├── data/
+├── docs/
+├── examples/
 ├── infra/
-├── tools/
+├── migrations/
+├── packages/
+├── policy/
+├── schemas/
 ├── scripts/
-└── ... additional root files and directories require direct branch verification
+├── tests/
+├── tools/
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+└── SECURITY.md
 ```
 
 ### Top-level role map
 
-| Path target | Status | Expected repo role |
+| Path target | Status | Working role |
 |---|---|---|
-| `./README.md` | **CONFIRMED** | Root identity, navigation, and doctrine summary surface |
-| `./.github/` | **CONFIRMED / NEEDS VERIFICATION** | Workflow scaffolding, templates, ownership, and merge discipline |
-| `./docs/` | **INFERRED** | Architecture, governance, domain, ADR, diagram, and runbook documentation |
-| `./contracts/` | **CONFIRMED** | Contract documentation surface and shared object families |
-| `./schemas/` | **CONFIRMED / NEEDS VERIFICATION** | Schema documentation surface; real file inventory still needs direct inspection |
-| `./policy/` | **CONFIRMED** | Policy bundles, fixtures, deny-by-default rules, and decision grammar |
-| `./data/` | **INFERRED** | Registry entries, lifecycle zones, catalog artifacts, and receipts |
-| `./apps/` | **INFERRED** | Deployable user- and operator-facing runtime surfaces |
-| `./packages/` | **INFERRED** | Shared reusable law and supporting libraries |
-| `./tests/` | **CONFIRMED / NEEDS VERIFICATION** | Test intent surface; runnable suites still need direct verification |
-| `./infra/` | **INFERRED** | Environment wiring, deployment, dashboards, and release mechanics |
-| `./tools/` | **CONFIRMED / NEEDS VERIFICATION** | Validators and helper tooling, though executable depth remains unverified |
-| `./scripts/` | **CONFIRMED / NEEDS VERIFICATION** | Supporting script/entrypoint surface, though executable depth remains unverified |
+| `./.github/` | **CONFIRMED** | Governance boundary, templates, ownership, and workflow-facing control plane |
+| `./apps/` | **CONFIRMED** path / **INFERRED** detailed role | Deployable user- and operator-facing runtime surfaces |
+| `./brand/` | **CONFIRMED** path / **INFERRED** detailed role | Visual identity, brand, or presentation assets |
+| `./configs/` | **CONFIRMED** path / **INFERRED** detailed role | Shared configuration and environment-shaping surfaces |
+| `./contracts/` | **CONFIRMED** | Contract documentation and shared object families |
+| `./data/` | **CONFIRMED** path / **INFERRED** detailed role | Lifecycle zones, registries, catalog artifacts, and receipts |
+| `./docs/` | **CONFIRMED** path / **INFERRED** detailed role | Architecture, governance, ADRs, runbooks, and lane depth |
+| `./examples/` | **CONFIRMED** path / **INFERRED** detailed role | Thin slices, demonstrations, and sample proof flows |
+| `./infra/` | **CONFIRMED** path / **INFERRED** detailed role | Environment wiring, delivery surfaces, and operational scaffolding |
+| `./migrations/` | **CONFIRMED** path / **INFERRED** detailed role | State evolution and migration-bearing change surfaces |
+| `./packages/` | **CONFIRMED** path / **INFERRED** detailed role | Shared reusable libraries and domain-support packages |
+| `./policy/` | **CONFIRMED** | Deny-by-default policy doctrine, bundles, fixtures, and decision grammar |
+| `./schemas/` | **CONFIRMED** | Schema documentation and validation-facing object definitions |
+| `./scripts/` | **CONFIRMED** path / **INFERRED** detailed role | Supporting entrypoints, glue code, and helper commands |
+| `./tests/` | **CONFIRMED** | Test-facing structure, fixtures, and verification surfaces |
+| `./tools/` | **CONFIRMED** | Validation tooling and helper utilities |
+| Root docs | **CONFIRMED** | Public-facing governance, onboarding, conduct, and licensing surfaces |
 
 ### What remains `UNKNOWN` or `NEEDS VERIFICATION`
 
-- exact active-branch root file set
-- exact `.github` inventory, including current required workflows and review routing
-- exact owner map inside `.github/CODEOWNERS`
+- exact non-public branch deltas from public `main`
+- GitHub rulesets, required checks, environment approvals, and private-reporting settings
+- actual checked-in workflow YAML inventory beyond what public `main` exposes now
 - real JSON Schema inventory versus README references only
-- actual mounted Rego/policy bundle inventory
-- runnable test entrypoints, harnesses, and merge-blocking checks
-- exact route tree, DTO inventory, and runtime negative-path coverage
-- actual deployment overlays, observability stack, and emitted proof objects
+- mounted policy bundle inventory and policy test harnesses
+- runnable test entrypoints, merge-blocking checks, and emitted proof objects
+- exact route trees, DTO inventories, and runtime negative-path coverage
+- deployment overlays, observability joins, and release proof packs
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -201,23 +213,29 @@ The safest root-level quickstart is **verification-first**, not assumption-first
 git rev-parse HEAD 2>/dev/null || echo "Not inside a Git checkout"
 
 # inspect the root and near-root directory shape
-find . -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,180p'
+find . -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,200p'
 
 # inspect likely control-plane and documentation surfaces
-find .github contracts schemas policy tests tools scripts docs apps packages data infra \
-  -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,320p'
+find .github apps brand configs contracts data docs examples infra migrations packages policy schemas scripts tests tools \
+  -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,360p'
 
-# inspect GitHub control-plane files if present
+# inspect root governance neighbors if present
 ls -la .github 2>/dev/null || true
 ls -la .github/workflows 2>/dev/null || true
+ls -la CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md LICENSE 2>/dev/null || true
+
+# inspect ownership and workflow-facing docs first
+sed -n '1,160p' .github/CODEOWNERS 2>/dev/null || true
+sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || true
+sed -n '1,240p' .github/workflows/README.md 2>/dev/null || true
 
 # pressure-test trust, contract, and evidence vocabulary
 grep -RIn "EvidenceBundle\|EvidenceRef\|RuntimeResponseEnvelope\|DecisionEnvelope\|CorrectionNotice\|truth membrane\|cite-or-abstain" \
-  docs contracts schemas policy tests tools scripts 2>/dev/null | sed -n '1,220p'
+  docs contracts schemas policy tests tools scripts apps packages 2>/dev/null | sed -n '1,240p'
 
 # pressure-test shell and trust-visible surface vocabulary
 grep -RIn "Map Explorer\|Evidence Drawer\|Focus Mode\|Story\|Dossier\|Review\|Stewardship" \
-  docs apps packages ui 2>/dev/null | sed -n '1,220p'
+  docs apps packages ui 2>/dev/null | sed -n '1,240p'
 ```
 
 > [!TIP]
@@ -239,13 +257,13 @@ make catalog-validate
 
 ### Before documenting branch behavior as fact
 
-1. Confirm what exists on this branch now.
-2. Confirm which checks actually block merges.
-3. Confirm which contracts, schemas, policies, and validations are enforced today.
-4. Confirm that at least one end-to-end governed slice exists from source admission to evidence-backed public read.
-5. Confirm whether public surfaces expose evidence, freshness, and policy-visible negative states rather than hiding them.
-6. Confirm whether rollback, correction, and supersession are visible and evidenced rather than implied.
-7. Confirm whether `.github/CODEOWNERS`, root-doc neighbors, and README links match the active branch.
+1. Confirm what exists on the branch you are actually changing.
+2. Reconcile that branch against the current public `main` snapshot.
+3. Confirm which checks actually block merges.
+4. Confirm which contracts, schemas, policies, and validations are enforced today.
+5. Confirm that at least one end-to-end governed slice exists from source admission to evidence-backed public read.
+6. Confirm whether public surfaces expose evidence, freshness, and policy-visible negative states rather than hiding them.
+7. Confirm whether rollback, correction, and supersession are visible and evidenced rather than merely implied.
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -278,7 +296,8 @@ KFM is **not**:
 
 | Invariant | Status | Practical meaning | What must never happen |
 |---|---|---|---|
-| Truth path | **CONFIRMED doctrine** | Data moves through `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. | Ad hoc publication from notebooks, transient transforms, or unpublished working states |
+| Truth path | **CONFIRMED doctrine** | Data moves through `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED`. | Ad hoc publication from notebooks, transient transforms, or unpublished working states |
+| Catalog closure | **CONFIRMED doctrine** | Outward publication closes through STAC / DCAT / PROV plus release linkage. | Public claims with broken lineage or missing release references |
 | Trust membrane | **CONFIRMED doctrine** | Public and role-limited access crosses governed APIs, policy, and evidence resolution. | Direct UI or external access to canonical stores, raw buckets, or model runtimes |
 | Cite-or-abstain | **CONFIRMED doctrine** | Story, map, dossier, export, and Focus claims resolve to evidence or abstain. | Plausible uncited output presented as fact |
 | Fail-closed posture | **CONFIRMED doctrine** | Unclear rights, unresolved sensitivity, or broken evidence blocks release. | “Best effort” publication under ambiguity |
@@ -300,6 +319,7 @@ KFM is **not**:
 | Focus Mode | **CONFIRMED doctrine** | Natural-language investigation **without bypassing evidence or policy** |
 | Review / Stewardship | **CONFIRMED doctrine / PROPOSED packaging** | Inspect, approve, restrict, correct, supersede, or withdraw within the same governed shell |
 | Compare / Export | **CONFIRMED doctrine / PROPOSED packaging** | Compare release contexts and preview what leaves the system without dropping trust cues |
+| Controlled 3D | **CONFIRMED doctrine / conditional mode** | Add burden-bearing 3D context without breaking the same evidence flow |
 
 ### Kansas operating lanes at a glance
 
@@ -314,7 +334,7 @@ KFM is **not**:
 
 ### Preferred first governed slice
 
-A strong first slice is **hydrology-first**:
+A strong first slice remains **hydrology-first**:
 
 1. one released hydrology dataset family with stable source descriptors
 2. one map + timeline surface that opens directly into an Evidence Drawer
@@ -328,17 +348,20 @@ A strong first slice is **hydrology-first**:
 
 ```mermaid
 flowchart LR
-    A[Source edge] --> B[RAW]
-    B --> C[WORK / QUARANTINE]
-    C --> D[PROCESSED]
-    D --> E[CATALOG / TRIPLET]
-    E --> F[DECISION / REVIEW / RELEASE]
-    F --> G[GOVERNED API + EVIDENCE RESOLVER]
+    subgraph Evidence_Path
+      A[Source edge] --> B[RAW]
+      B --> C[WORK / QUARANTINE]
+      C --> D[PROCESSED]
+      D --> E[CATALOG]
+      E --> F[PUBLISHED]
+    end
+
+    F --> G[GOVERNED API + policy + evidence resolver]
     G --> H[Map Explorer]
     G --> I[Timeline / Dossier / Story]
     G --> J[Evidence Drawer]
     G --> K[Focus Mode]
-    G --> L[Review / Stewardship]
+    G --> L[Review / Compare / Export]
 ```
 
 This is the root promise of the repo: every public or role-limited surface remains downstream of acquisition, policy checks, provenance capture, review state, release state, and evidence resolution.
@@ -357,19 +380,9 @@ Promotion is not a file copy. It is a governed state transition.
 | Rights and license | rights snapshot, attribution basis, reuse posture | Hold or quarantine when rights are unclear |
 | Sensitivity and generalization | policy label, obligations, generalization or redaction plan | Restrict, generalize, or block publication |
 | Schema and QA | schema validity, spatial/time/unit checks, domain QC | Route to `WORK/QUARANTINE` on blocking failure |
-| Catalog closure | linked catalog, lineage, and release linkage | Block if metadata and lineage do not resolve coherently |
+| Catalog closure | linked catalog, lineage, release linkage | Block if metadata and lineage do not resolve coherently |
 | Receipt and review | run receipt, decision/review evidence, release inventory | Block if required review or proof objects are absent |
 | Release and correction readiness | release manifest / proof pack, rollback and correction hooks | Block promotion until public-safe scope is inspectable and reversible |
-
-### Release taxonomy
-
-| Term | Meaning in KFM |
-|---|---|
-| Continuous integration | Proves a candidate change is buildable, testable, schema-valid, provenance-aware, and policy-checkable before trust widens |
-| Continuous delivery | Assembles a releasable, immutable unit whose integrity, inventory, and provenance are explicit |
-| Deployment | Applies already-approved desired state to a runtime surface |
-| Promotion | Governs the transition from one trust state to another |
-| Rollback / correction | Reverses or supersedes a prior decision **without erasing evidence** |
 
 ### Canonical vs rebuildable rule
 
@@ -378,18 +391,27 @@ Promotion is not a file copy. It is a governed state transition.
 | **Canonical / authoritative** | `RAW`, `PROCESSED`, catalog-closure objects, review/decision artifacts, release manifests, correction notices |
 | **Rebuildable / derived** | tiles, search indexes, graphs, caches, summaries, scenes, denormalized projections, embeddings |
 
-### Documented first implementation wave *(plan documented, branch completion UNKNOWN)*
+### Current public control-plane snapshot
 
-| Work package | Documented intent | What it proves |
+| Surface | Current public state | Why it matters |
 |---|---|---|
-| WP-01 | Spec hashing + controlled vocab validation | Stable identity and drift blocking |
-| WP-02 | Catalog validators + link checker | Catalog closure and broken-link gating |
-| WP-03 | Policy pack + fixture tests | Default-deny policy enforcement |
-| WP-04 | Evidence resolver service | `EvidenceRef → EvidenceBundle` resolution |
-| WP-05 | Dataset registry + discovery endpoints | Policy-filtered dataset discovery |
-| WP-06 | Map Explorer baseline UI | Evidence Drawer, license/version visibility, keyboard navigation |
-| WP-07 | Story publication workflow | Review state + resolvable citation gates |
-| WP-08 | Focus Mode MVP + evaluation harness | Cite-or-abstain synthesis with regression control |
+| `./.github/CODEOWNERS` | Present with broad root and major-directory coverage | Review routing exists as a checked-in public surface |
+| `./.github/PULL_REQUEST_TEMPLATE.md` | Present | Contributor and review checklist surface exists |
+| `./.github/workflows/README.md` | Present | Workflow directory is documented and intentionally scoped |
+| `./.github/workflows/*.yml` / `*.yaml` | Not visible on current public `main` listing | Current checked-in workflow inventory still needs branch-level verification |
+| Public Actions history | Mentioned by `./.github/workflows/README.md` as historical signal | Useful for reconstruction, not a substitute for current inventory |
+
+### Documented next move *(starter-shape only)*
+
+> [!NOTE]
+> The file and folder names below are **starter-state** and should not overrule observed repo reality. If the active branch already uses different paths, keep the doctrine and update the file map.
+
+| Priority | Starter shape | Why it matters | Status |
+|---|---|---|---|
+| 1 | contract core + schema lattice under `contracts/`, `schemas/`, and fixture/test surfaces | Turns doctrine into machine-checkable structure | **PROPOSED** |
+| 2 | policy registries, reason/obligation vocabularies, valid/invalid fixtures, CI gates | Makes deny-by-default behavior executable and reviewable | **PROPOSED** |
+| 3 | one hydrology thin slice with descriptors, receipts, catalog closure, release manifest, and evidence bundle | Proves one governed slice end to end on a public-safe lane | **PROPOSED** |
+| 4 | trust-visible shell payloads and state examples for Evidence Drawer, Focus outcomes, and correction cues | Prevents UI surfaces from bluffing when trust is partial | **PROPOSED** |
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -397,40 +419,43 @@ Promotion is not a file copy. It is a governed state transition.
 
 Use this as the minimum repo-root gate list for substantial work.
 
-- [ ] active-branch evidence baseline exists: repo tree, manifests, schema inventory, workflow inventory, and sample proof objects
-- [ ] `.github/CODEOWNERS`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/workflows/README.md`, `contracts/README.md`, `schemas/README.md`, `policy/README.md`, `tests/README.md`, `tools/README.md`, and `scripts/README.md` are rechecked against the active branch
+- [ ] active working branch is compared against the current public `main` root snapshot
+- [ ] `README.md`, `.github/CODEOWNERS`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/workflows/README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, and `LICENSE` are all rechecked before merge
+- [ ] current public path existence and claimed branch-local contents are not conflated
 - [ ] first-wave contract files exist as real machine-checkable schemas, not only README references
 - [ ] valid and invalid fixtures validate in CI
 - [ ] deny-by-default policy bundles and policy tests exist for integrity, provenance, rights/sensitivity, and runtime negative states
-- [ ] at least one merge-blocking workflow YAML enforces contract, policy, and fixture validation
+- [ ] any actual workflow YAML inventory is reconciled with `.github/workflows/README.md`
+- [ ] at least one merge-blocking workflow enforces contract, policy, and fixture validation
 - [ ] release candidates emit validation, catalog-closure, manifest, and proof-pack artifacts
 - [ ] `EvidenceBundle` drill-through works from consequential visible claims
 - [ ] `RuntimeResponseEnvelope`-style negative-state grammar is visible and testable
-- [ ] Map Explorer, Timeline, Dossier, Story, Focus, and Review surfaces expose trust-visible state where relevant
-- [ ] Evidence Drawer drill-through works from the same governed shell
+- [ ] Map Explorer, Timeline, Dossier, Story, Focus, Review, Compare, and Export surfaces expose trust-visible state where relevant
 - [ ] Focus either cites with audit linkage or abstains cleanly
 - [ ] derived freshness, correction, supersession, withdrawal, and stale-visible states remain explicit
 - [ ] behavior-significant changes update docs, contracts, examples, diagrams, and runbooks in the same governed stream
 - [ ] one hydrology-first slice proves descriptor → ingest → validation → dataset version → catalog closure → decision/review → release → map/read surface → correction
 - [ ] one rollback or correction drill is rehearsed and leaves evidence-bearing output behind
 
+[Back to top](#kansas-frontier-matrix)
+
 ## FAQ
 
-### Why is KFM stricter than a normal map portal?
+### Why is this README stricter than a normal project landing page?
 
-Because KFM is designed as a **trust system**, not just a presentation layer. Provenance, policy, review, and evidence resolution are runtime obligations, not decoration.
+Because KFM is designed as a **trust system**, not just a code host or presentation layer. Provenance, policy, review, and evidence resolution are runtime obligations, not decoration.
 
-### Why does this README keep saying `UNKNOWN` or `NEEDS VERIFICATION`?
+### Why keep saying `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`?
 
-Because repo size and documentation density do not prove runtime governance. Branch-local facts should be verified from the active repo and live artifacts, not inferred from persuasive prose.
+Because repo size and documentation density do not prove runtime governance. KFM’s own doctrine treats overclaiming as a trust failure.
+
+### Why mention public `main` separately from the branch being edited?
+
+Because public `main` is observable now, while a local or unpublished working branch may differ materially. Root docs should make that boundary obvious.
 
 ### Why are Evidence Bundles, catalogs, and receipts treated as first-class?
 
 Because discoverability, reproducibility, review, and public trust depend on resolvable metadata and lineage, not just attractive maps or fluent answers.
-
-### Why keep observed, documentary, derived, modeled, and AI-synthesized outputs distinct?
-
-Because KFM must preserve the difference between what was observed, what was recorded, what was derived, what was modeled, and what was synthesized for explanation.
 
 ### Why start with a narrow slice?
 
@@ -438,15 +463,15 @@ Because one fully governed slice proves the architecture honestly. Many half-gov
 
 ### Why is hydrology the preferred first slice?
 
-Because the attached doctrine repeatedly treats hydrology as the cleanest **public-safe, place/time-rich, operationally legible** thin slice for proving the system end to end.
+Because the doctrine repeatedly treats hydrology as the cleanest **public-safe, place/time-rich, operationally legible** thin slice for proving the system end to end.
 
 ### Why is 2D the default operating surface?
 
 Because 2D keeps geography, chronology, evidence, and state easier to govern. 3D is allowed only when it adds real explanatory value and still returns users to the same evidence flow.
 
-### Why are some repo paths still marked `TBD-VERIFY` or `NEEDS VERIFICATION`?
+### Why are some details still placeholders?
 
-Because the current session exposed doctrine and a repo-grounded sprint summary, not a mounted branch checkout. Root-doc adjacency and implementation claims should be verified against the active repository, not inferred from polished prose alone.
+Because `doc_id` and original creation date are not derivable from the evidence opened here without a dedicated history pass, and private GitHub settings remain outside current public-tree visibility.
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -455,29 +480,37 @@ Because the current session exposed doctrine and a repo-grounded sprint summary,
 <details>
 <summary>Open the root-doc verification appendix</summary>
 
-### Working basis for this README candidate
+### Working basis for this README revision
 
-This README is aligned to the attached March 2026 KFM authority layer, with the strongest weighting given to the replacement-grade KFM manuals, the canonical master reference, the unified geospatial architecture manual, the MapLibre shell/UI doctrine, the domains/source atlas, the components/pass dossiers, and the attached repo-grounded sprint.
+This README is aligned to the strongest March 2026 KFM authority layer, with added weight from the replacement-grade blueprint, canonical master reference, unified geospatial architecture manual, MapLibre shell/UI doctrine, domain/source atlas, and the current public `main` tree.
 
 ### Why placeholders remain in the meta block
 
-The following values still require direct repo or history verification before publication:
+The following values still require direct history verification before publication is final:
 
 - `doc_id`
-- owners / `.github/CODEOWNERS`
-- created date
-- policy label
-- exact adjacent root-doc links such as `CONTRIBUTING.md` and `SECURITY.md`
+- `created`
 
-### First verification targets after repo mount
+### First verification targets after local checkout or richer connector access
 
-- root repo tree and package/workspace inventory
-- `.github` inventory, especially `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, and merge-blocking workflows
+- branch-local root tree and package/workspace inventory
+- actual workflow YAML inventory, rulesets, required checks, and environment approvals
 - schema directories, fixtures, and registry versions
 - actual policy bundle inventory and policy test harnesses
 - route inventory, DTO inventory, and runtime negative-path coverage
 - `EvidenceBundle` resolver contracts and traces
 - correction / rollback evidence and surface behavior
+
+### Confirmed public root neighbors worth keeping linked
+
+- [`./.github/README.md`](./.github/README.md)
+- [`./.github/CODEOWNERS`](./.github/CODEOWNERS)
+- [`./.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md)
+- [`./.github/workflows/README.md`](./.github/workflows/README.md)
+- [`./CONTRIBUTING.md`](./CONTRIBUTING.md)
+- [`./SECURITY.md`](./SECURITY.md)
+- [`./CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)
+- [`./LICENSE`](./LICENSE)
 
 ### Root README maintenance rule
 
