@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../apps/, ../../packages/]
+related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../watchers/README.md, ../dependabot.yml, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../apps/, ../../packages/]
 tags: [kfm, github, workflows, ci-cd, docops]
-notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; doc_id, created/updated dates, and policy_label still need repo confirmation.]
+notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; doc_id, created/updated dates, and policy_label still need repo confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -22,7 +22,7 @@ Governed GitHub Actions surface for validation, promotion, release evidence, and
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `.github/workflows/README.md`  
-> **Repo fit:** workflow orchestration lane inside the `.github` gatehouse; upstream from [`../README.md`](../README.md), [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../actions/README.md`](../actions/README.md), and [`../SECURITY.md`](../SECURITY.md); downstream into contracts, policy, tests, docs, apps, packages, and release evidence.  
+> **Repo fit:** workflow orchestration lane inside the `.github` gatehouse; upstream from [`../README.md`](../README.md), [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../actions/README.md`](../actions/README.md), [`../watchers/README.md`](../watchers/README.md), [`../dependabot.yml`](../dependabot.yml), and [`../SECURITY.md`](../SECURITY.md); downstream into contracts, policy, tests, docs, apps, packages, and release evidence.  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-success) ![visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![actions-history](https://img.shields.io/badge/actions_history-visible-0969da)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow model](#workflow-model) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -30,7 +30,7 @@ Governed GitHub Actions surface for validation, promotion, release evidence, and
 > Current public `main` inspection confirms `.github/workflows/` contains `README.md` only.
 
 > [!NOTE]
-> Public GitHub Actions history also shows prior workflow activity and deleted workflow filenames such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml`.
+> Public GitHub UI still shows recent Actions activity and deleted workflow filenames such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml`.
 >
 > Treat that as **historical signal**, not as proof that those YAML files are checked in on current `main`.
 
@@ -73,6 +73,8 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | PR evidence template | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Keeps workflow changes aligned with proof links, truth labels, and rollback expectations |
 | GitHub security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps workflow and repo security guidance close to the same governance boundary |
 | Reusable repo-local actions | [`../actions/README.md`](../actions/README.md) | Composite or reusable action logic belongs there, not in this directory |
+| Adjacent automation scaffolds | [`../watchers/README.md`](../watchers/README.md) | Watcher documentation may point toward future orchestration seams, but does not by itself prove current workflow inventory |
+| Dependency update automation | [`../dependabot.yml`](../dependabot.yml) | Dependency update policy already lives under `.github/`, but it is configuration rather than workflow orchestration |
 | Root operating index | [`../../README.md`](../../README.md) | Defines monorepo posture, evidence model, and top-level directory contract |
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
 | Canonical verification surfaces | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Workflows may verify these surfaces, but they do not replace them |
@@ -86,6 +88,8 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | `./README.md` | Present | **CONFIRMED** |
 | `./*.yml` / `./*.yaml` workflow files | Not visible in the current public `main` directory listing | **CONFIRMED** current snapshot |
 | Public Actions history | GitHub’s public Actions UI shows prior workflow activity and deleted workflow filenames | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
+| `.github/actions/` local action inventory | Repo-local action surfaces exist under `../actions/` | **CONFIRMED** adjacent implementation seam |
+| `.github/watchers/README.md` references | Adjacent docs mention watcher-related workflow scaffolding such as `watchers-kansas-env.yml` | **CONFIRMED** adjacent doc signal / **NEEDS VERIFICATION** as current or historical workflow inventory |
 | `../CODEOWNERS` workflow ownership | Current parent-path coverage assigns `/.github/` to `@bartytime4life`; `/.github/workflows/` is not called out separately | **CONFIRMED** parent coverage / **INFERRED** workflow-path coverage |
 | Exact required checks / rulesets / environment approvals | Not derivable from public directory contents alone | **UNKNOWN** |
 
@@ -111,6 +115,10 @@ The following do **not** belong here as the canonical source of truth:
 
 - Composite action implementations  
   → place under [`../actions/`](../actions/)
+- Long-lived watcher behavior or watcher-specific operational doctrine  
+  → place under [`../watchers/`](../watchers/)
+- Dependabot configuration policy as workflow orchestration  
+  → keep in [`../dependabot.yml`](../dependabot.yml) unless a separate workflow truly needs to coordinate around it
 - Policy rule bodies, rule fixtures, or policy decision logic  
   → place under [`../../policy/`](../../policy/)
 - Schema definitions, OpenAPI documents, catalog profiles, or vocabularies  
@@ -147,6 +155,14 @@ release-evidence.yml
 promote-and-reconcile.yml
 ```
 
+### Adjacent documented scaffold signal
+
+The path below is **not** part of the current confirmed inventory here. It appears only as an adjacent documentation reference in `.github/watchers/README.md` and therefore remains a reconciliation clue rather than a checked-in fact for this directory.
+
+```text
+watchers-kansas-env.yml
+```
+
 ### Starter reconstitution shape
 
 The shape below is **PROPOSED** as the smallest history-aware reconstitution contract for this directory. It preserves the currently visible historical lane names and adds one explicit correction drill lane that is doctrinally warranted even though it was not visible in the historical filename set.
@@ -176,22 +192,29 @@ Use the smallest possible inspection loop before changing anything here.
 ls -la .github/workflows
 
 # 2) Read the parent governance surface
-sed -n '1,240p' .github/README.md
+sed -n '1,260p' .github/README.md
 
 # 3) Confirm review ownership and path coverage
-sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,240p' .github/CODEOWNERS
 grep -n "/.github" .github/CODEOWNERS || true
 
 # 4) Inventory actual workflow files, if any exist
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | sort
 
-# 5) Cross-check repo surfaces workflows are expected to verify
+# 5) Inspect repo-local reusable actions before inventing workflow step glue
+ls -la .github/actions
+find .github/actions -maxdepth 2 -type f | sort | sed -n '1,120p'
+
+# 6) Check adjacent watcher docs for scaffold references that may need reconciliation
+sed -n '1,260p' .github/watchers/README.md 2>/dev/null || true
+
+# 7) Cross-check repo surfaces workflows are expected to verify
 ls -la contracts schemas policy tests docs apps packages 2>/dev/null || true
 
-# 6) Search workflow-local docs for release-, policy-, or evidence-facing terms
+# 8) Search workflow-local docs for release-, policy-, or evidence-facing terms
 grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom" .github/workflows 2>/dev/null || true
 
-# 7) If the lane is being reconstructed, inspect git history instead of guessing
+# 9) If the lane is being reconstructed, inspect git history instead of guessing
 git log --name-status -- .github/workflows
 ```
 
@@ -201,9 +224,10 @@ git log --name-status -- .github/workflows
 2. Confirm the real workflow inventory before documenting or tightening gates.
 3. If a workflow lane is being reintroduced, inspect git history before choosing filenames or responsibilities.
 4. Verify ownership and merge-blocking assumptions against [`../CODEOWNERS`](../CODEOWNERS) and repo settings.
-5. Check that contracts, policy, docs, tests, apps, and packages stay in the same governed stream as workflow edits.
-6. Change the smallest possible workflow surface.
-7. Re-check rollback, correction, and contributor ergonomics after adding or tightening gates.
+5. Check whether repo-local actions under [`../actions/`](../actions/) already cover reusable workflow behavior.
+6. Treat watcher-local scaffold references as clues to reconcile, not as proof of current YAML presence.
+7. Change the smallest possible workflow surface.
+8. Re-check rollback, correction, and contributor ergonomics after adding or tightening gates.
 
 ---
 
@@ -243,6 +267,27 @@ Keep the boundary sharp:
 - **`../../policy/`**, **`../../contracts/`**, **`../../schemas/`**, and **`../../tests/`** remain the canonical surfaces being checked.
 
 A workflow may *enforce* those surfaces. It should not become a shadow copy of them.
+
+### Distinguishing Actions UI surfaces from checked-in YAML
+
+The public Actions UI may show workflow surfaces such as platform-managed entries, historical deleted lanes, or recently removed workflow names. That is useful operational signal, but it should not overwrite the checked-in tree as the source of truth for current inventory.
+
+Reading rule:
+
+- **Directory listing first** for current `main`
+- **Git history second** for reconstruction
+- **Actions UI third** for activity clues and cleanup signal
+
+### Reusing repo-local actions before creating new workflow glue
+
+The public `.github/actions/` tree already exposes local reusable action surfaces. Prefer consuming those seams before embedding repeated shell logic directly in future workflow YAML.
+
+That keeps:
+
+- workflow files smaller,
+- review more focused,
+- policy and provenance checks more reusable, and
+- orchestration separate from step implementation.
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
 
@@ -285,6 +330,7 @@ Reading rule: **promotion is a trust-state change, not a blind deploy step**.
 | `verify-tests-and-reproducibility.yml` | Candidate changes remain testable and repeatable | failed tests, reproducibility drift, missing proof of deterministic behavior | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `release-evidence.yml` | Candidate proof objects are assembled before promotion | missing manifests, missing validation summaries, absent attestation refs | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `promote-and-reconcile.yml` | Already-reviewed state moves into publishable scope and any required reconciliation runs | missing approvals, missing release evidence, unresolved policy blockers | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `watchers-kansas-env.yml` | Environment or watcher-oriented automation suggested by adjacent watcher docs | stale scaffold refs, undocumented orchestration, confusion with current inventory | **CONFIRMED** adjacent scaffold reference / **INFERRED** role / **NEEDS VERIFICATION** current or historical file status |
 | `rehearse-rollback-and-correction.yml` | Recovery and visible correction behavior become explicit and testable | failed rollback lineage, silent overwrite, missing correction drills | **PROPOSED** doctrinal addition |
 
 ### Naming guidance
@@ -306,9 +352,12 @@ Definition of done for changes in `.github/workflows/`:
 
 - [ ] The actual current workflow inventory is listed exactly.
 - [ ] Historical workflow signal is kept separate from current checked-in inventory.
+- [ ] Platform-visible Actions UI entries are not silently rewritten as checked-in YAML facts.
 - [ ] Every blocking workflow states what it proves.
 - [ ] Permissions are explicit and minimal.
 - [ ] Required checks and review boundaries are verified against active repo settings where relevant.
+- [ ] Repo-local actions are inspected before repeated step logic is added directly into YAML.
+- [ ] Adjacent watcher scaffold references are reconciled instead of being copied forward as assumed facts.
 - [ ] Docs, examples, and templates change in the same governed stream as workflow behavior.
 - [ ] A reintroduced lane is marked as a historical reconstitution or a net-new lane.
 - [ ] New automation begins in draft, shadow, dry-run, or PR-only mode unless a narrower approval lane is explicitly documented.
@@ -332,6 +381,10 @@ Because public Actions history is a real repo signal. It helps maintainers recon
 ### Does this README claim those historical workflow files still exist?
 
 No. It explicitly distinguishes **current checked-in inventory** from **historical public signal**.
+
+### Why does the Actions tab still show workflow surfaces if the directory is README-only?
+
+Because GitHub can surface platform-managed entries, historical runs, and deleted workflow names in the Actions UI. That activity is useful evidence of prior automation, but it is not proof of a current checked-in YAML file on `main`.
 
 ### Can workflow automation self-approve policy-significant or public-truth changes?
 
