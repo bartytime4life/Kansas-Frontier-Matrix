@@ -8,34 +8,41 @@ owners: @bartytime4life
 created: TODO(verify-created-date)
 updated: TODO(verify-updated-date)
 policy_label: TODO(verify-policy-label)
-related: [configs/README.md, configs/env.schema.json, .github/CODEOWNERS, contracts/README.md, policy/README.md, tools/README.md, tests/README.md]
+related: [configs/README.md, configs/env.schema.json, .github/CODEOWNERS, contracts/README.md, schemas/README.md, policy/README.md, tools/README.md, scripts/README.md, tests/README.md]
 tags: [kfm, observability, configs]
-notes: [repo-grounded rewrite of a scaffold README; owner derived from current /configs/ CODEOWNERS coverage; internal observability lanes remain PROPOSED until committed]
+notes: [repo-grounded revision of the current scaffold README, public main still shows a README-only lane, owner is confirmed from current /configs/ CODEOWNERS coverage, child observability artifacts remain PROPOSED until committed, schema-home authority remains unresolved between contracts and schemas]
 [/KFM_META_BLOCK_V2] -->
 
 # observability/
 
 Repo-visible, non-secret observability configuration and runbook entrypoint for KFM runtime, pipelines, and governed delivery surfaces.
 
-> **Status:** experimental directory · scaffold-only current tree · README expansion  
-> **Owners:** `@bartytime4life` (current `/configs/` CODEOWNERS coverage)  
+> **Status:** experimental directory · current public `main` lane is README-only · repo-grounded README revision  
+> **Owners:** `@bartytime4life` (confirmed current `/configs/` CODEOWNERS coverage)  
 > **Path:** `configs/observability/README.md`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-configs%2Fobservability%2FREADME.md-0a7d5a) ![scope](https://img.shields.io/badge/scope-observability%20config-informational) ![truth](https://img.shields.io/badge/truth-repo--grounded%20%2B%20doctrine--bounded-6f42c1) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
+> **Repo fit:** child lane of [`../README.md`](../README.md) · schema anchor [`../env.schema.json`](../env.schema.json) · law / verification neighbors [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-configs%2Fobservability%2FREADME.md-0a7d5a) ![branch](https://img.shields.io/badge/branch-main-success) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![scope](https://img.shields.io/badge/scope-observability%20config-informational) ![truth](https://img.shields.io/badge/truth-repo--grounded%20%2B%20doctrine--bounded-6f42c1) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This directory is **currently scaffold-only** in the public repo.  
+> This directory is **currently scaffold-only** on public `main`.
+>
 > This README therefore does two jobs at once:
 > 1. state what is **CONFIRMED** about the current lane;
 > 2. define the **PROPOSED** working contract for what may be added here next without blurring KFM’s stronger seams.
 
 > [!NOTE]
 > Use these labels throughout this file:
-> - **CONFIRMED** — directly supported by current repo evidence or repeated KFM doctrine
+> - **CONFIRMED** — directly supported by current public repo evidence or repeated KFM doctrine
 > - **INFERRED** — strongly suggested by adjacent repo structure or doctrine, but not yet proven here as a committed artifact
 > - **PROPOSED** — recommended next shape for this lane
 > - **UNKNOWN** — not yet demonstrated in the current repo
 > - **NEEDS VERIFICATION** — merge-time detail that should be rechecked before landing
+
+> [!NOTE]
+> Current public `main` also exposes both [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) as boundary surfaces.
+>
+> This README keeps that ambiguity visible rather than quietly hardening a second or competing schema home inside `configs/observability/`.
 
 ## Scope
 
@@ -62,6 +69,8 @@ This lane should therefore hold only the subset of observability material that i
 | Parent schema anchor | [`../env.schema.json`](../env.schema.json) exists | **CONFIRMED** |
 | Parent schema depth | current file content is minimal and should not be treated as a mature config contract yet | **CONFIRMED** |
 | Owner coverage | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) currently assigns `/configs/` to `@bartytime4life` | **CONFIRMED** |
+| Sibling schema boundary | [`../../schemas/README.md`](../../schemas/README.md) exists as a boundary guide while schema-home authority remains unresolved | **CONFIRMED** |
+| Final singular machine-law authority | current public repo still does not make one schema/contract home singular enough to treat as settled | **NEEDS VERIFICATION** |
 | Collector, metrics, traces, dashboards, alerts, runbooks inside this lane | no committed internal inventory is visible here yet | **UNKNOWN** |
 
 ### Upstream / downstream links
@@ -70,11 +79,12 @@ This lane should therefore hold only the subset of observability material that i
 | --- | --- | --- | --- |
 | Upstream | [`../README.md`](../README.md) | parent `configs/` contract and local style baseline | **CONFIRMED** |
 | Upstream | [`../env.schema.json`](../env.schema.json) | current config-schema anchor at the parent lane | **CONFIRMED** |
-| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | top-level machine-law surface; this lane must not compete with it | **CONFIRMED** |
+| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | current strongest machine-contract surface in public view | **CONFIRMED**, but singular authority still **NEEDS VERIFICATION** |
+| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | keeps schema-home ambiguity visible and guards against parallel authority | **CONFIRMED** |
 | Upstream | [`../../policy/README.md`](../../policy/README.md) | executable governance belongs there, not here | **CONFIRMED** |
 | Sidecar | [`../../tools/README.md`](../../tools/README.md) | validators and config-check tooling should point here, not bury config rules in prose | **CONFIRMED** |
-| Sidecar | [`../../tests/README.md`](../../tests/README.md) | alert, retention, and leakage rules need test hooks | **CONFIRMED** |
-| Sidecar | [`../../scripts/README.md`](../../scripts/README.md) | operational helpers may consume this lane, but should not become its hidden source of truth | **CONFIRMED** |
+| Sidecar | [`../../tests/README.md`](../../tests/README.md) | alert, retention, leakage, and negative-path behavior need test hooks | **CONFIRMED** |
+| Sidecar | [`../../scripts/README.md`](../../scripts/README.md) | thin operator wrappers may consume this lane, but must not become its hidden source of truth | **CONFIRMED** |
 | Downstream | `apps/`, `packages/`, `infra/` | likely consumers of observability config once this lane grows beyond scaffold | **INFERRED** |
 
 ## Accepted inputs
@@ -109,7 +119,7 @@ The following content belongs here when it is **non-secret**, **reviewable**, an
 | Application instrumentation code | service or package source trees | code belongs with the runtime that emits it |
 | Business or product analytics events | separate product analytics lane or app code | do not mix governance telemetry with product analytics |
 | Raw sensitive records, precise restricted coordinates, restricted geometries | governed data / audit / evidence surfaces | observability must not become a leakage side channel |
-| Top-level JSON Schemas, OpenAPI, vocabularies acting as machine law | [`../../contracts/README.md`](../../contracts/README.md) | KFM needs a visible, singular contract authority |
+| Top-level JSON Schemas, OpenAPI contracts, or vocabularies acting as machine law | the repo’s authoritative contract/schema home in [`../../contracts/README.md`](../../contracts/README.md) or [`../../schemas/README.md`](../../schemas/README.md), pending explicit resolution | this lane must not compete with repo-wide machine-law authority |
 | Executable governance logic, deny/allow bundles, reason/obligation registries | [`../../policy/README.md`](../../policy/README.md) | policy belongs in policy |
 | Generated caches, temp logs, agent state, build output | ignored runtime state outside Git | reviewable config should stay intentional |
 | Release evidence, correction notices, rollback manifests | designated evidence / release surfaces | observability may point to them, not replace them |
@@ -149,7 +159,7 @@ configs/observability/
 - The **current** repo only proves the directory and this README.
 - The **proposed** subpaths are here to make future growth orderly.
 - Add a subdirectory only when the first real committed artifact for that concern lands.
-- If a future artifact would silently compete with top-level `contracts/` or `policy/`, stop and move it there instead.
+- If a future artifact would silently compete with top-level `contracts/`, `schemas/`, or `policy/`, stop and move it there instead.
 
 [Back to top](#observability)
 
@@ -162,7 +172,7 @@ Before adding the first real observability artifact, inspect current reality.
 find configs/observability -maxdepth 3 -type f | sort
 
 # 1) Re-read the parent config contract and owner coverage.
-sed -n '1,240p' configs/README.md
+sed -n '1,260p' configs/README.md
 sed -n '1,160p' .github/CODEOWNERS
 cat configs/env.schema.json
 
@@ -170,7 +180,7 @@ cat configs/env.schema.json
 git grep -nE 'audit_ref|correlation_id|request_id|release_id|dataset_version_id|decision_id|bundle_id|projection_build_id|otel|opentelemetry|prometheus|grafana|tempo|loki' -- .
 
 # 3) Check whether the concern actually belongs here.
-git grep -nE 'schema|contract|openapi|policy|rego|retention|redaction|readiness|health' -- contracts policy apps packages tools tests scripts
+git grep -nE 'schema|contract|openapi|policy|rego|retention|redaction|readiness|health' -- contracts schemas policy apps packages tools tests scripts
 ```
 
 ### First useful move
@@ -251,7 +261,7 @@ Avoid:
 
 ### 6) Do not create a second schema universe
 
-The repo already carries stronger top-level authority surfaces for contracts and policy.
+The repo currently exposes `contracts/` as the stronger working contract surface and `schemas/` as a boundary guide while authority is being retired.
 
 If this lane later gets `contracts/`, keep it explicitly narrow:
 - local observability field guidance
@@ -278,7 +288,8 @@ flowchart LR
     J --> O
 
     O -. "non-secret only" .-> S["host-local secret surfaces"]
-    O -. "not top-level contract law" .-> K["../../contracts/"]
+    O -. "not contract authority" .-> K["../../contracts/"]
+    O -. "not parallel schema authority" .-> Z["../../schemas/"]
     O -. "not executable governance" .-> Y["../../policy/"]
 
     C --> X["operators / stewards / reviewers"]
@@ -296,6 +307,7 @@ flowchart LR
 | Lane existence | `configs/observability/` exists in the live repo | **CONFIRMED** |
 | Lane depth | current lane is scaffold-only | **CONFIRMED** |
 | Parent config doctrine | `configs/` is the repo-visible, non-secret configuration home | **CONFIRMED** |
+| Schema-home posture | current public repo exposes both `contracts/` and `schemas/` boundary docs | **CONFIRMED** visibility / **NEEDS VERIFICATION** singular authority |
 | Current internal observability inventory | committed collectors, dashboards, alert rules, traces, runbooks | **UNKNOWN** |
 | Future local lane shape | organized subpaths under this directory | **PROPOSED** |
 | Actual deployed observability stack | Grafana / Prometheus / OTel / Tempo / Loki or alternatives | **UNKNOWN** |
@@ -334,7 +346,7 @@ flowchart LR
 - [ ] Any joined identifier added here is documented and stable
 - [ ] Any redaction or retention rule change includes reviewer-visible rationale
 - [ ] Alert-routing changes include a runbook update in the same change stream
-- [ ] No local file here competes with top-level contract or policy authority
+- [ ] No local file here competes with top-level contract, schema, or policy authority
 - [ ] Meta-block placeholders were verified or intentionally kept as placeholders
 - [ ] Relative links to parent and adjacent repo docs were rechecked against the live tree
 
@@ -400,7 +412,7 @@ find configs/observability -maxdepth 3 -type f | sort
 sed -n '1,120p' .github/CODEOWNERS
 
 # Reconfirm parent config context.
-sed -n '1,240p' configs/README.md
+sed -n '1,260p' configs/README.md
 cat configs/env.schema.json
 
 # Reconfirm whether any real observability artifacts now exist elsewhere.
