@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION
+title: Review Console
+type: standard
+version: v1
+status: draft
+owners: NEEDS_VERIFICATION
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: NEEDS_VERIFICATION
+related: [NEEDS_VERIFICATION]
+tags: [kfm]
+notes: [Target path is apps/review-console/README.md; doc_id, owners, dates, policy_label, and related links need direct repo verification.]
+[/KFM_META_BLOCK_V2] -->
+
 # Review Console
 
 Governed reviewer and steward surface for promotion approval, policy assignment, QA inspection, and correction workflow.
@@ -10,7 +25,7 @@ Governed reviewer and steward surface for promotion approval, policy assignment,
 ![policy](https://img.shields.io/badge/policy-review--bearing-f59e0b)
 ![correction](https://img.shields.io/badge/correction-visible-bd561d)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 | Field | Value |
 |---|---|
@@ -18,16 +33,16 @@ Governed reviewer and steward surface for promotion approval, policy assignment,
 | Owners | `NEEDS VERIFICATION` |
 | Path | `apps/review-console/README.md` |
 | Repo fit | Directory README for the review-bearing app boundary inside `apps/` |
-| Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) · [`../../.github/README.md`](../../.github/README.md) |
-| Downstream | `NEEDS VERIFICATION` — active child routes, panels, tests, and fixtures in this directory were not confirmed during this revision |
+| Upstream | [apps-root][] · [repo-root][] · [github-gatehouse][] *(recheck on branch)* |
+| Downstream | `NEEDS VERIFICATION` — no local route, panel, fixture, or test inventory was directly reverified in this revision |
 | Primary role | Keep approval, denial, hold, QA, and correction work inside the same trust-visible shell family as the rest of KFM |
 | Working posture | **CONFIRMED doctrine** · **INFERRED local fit** · **PROPOSED realization** · **UNKNOWN mounted implementation depth** |
 
 > [!IMPORTANT]
-> This README is intentionally **verification-bounded**. It documents what this directory is for, what must remain true if it grows, and what should be verified before claiming live implementation details. It should not be used to imply that routes, panels, workflows, or tests already exist here unless the active branch confirms them.
+> This README is intentionally **verification-bounded**. It documents what this directory is for, what must remain true if it grows, and what should be rechecked before anyone claims live route, panel, test, or workflow coverage.
 
 > [!NOTE]
-> The strongest current doctrinal rule for this surface is simple: **review must remain a shell variation, not a hidden alternate truth system**. This directory should stay downstream of governed APIs, release-backed evidence, policy decisions, and correction lineage.
+> In KFM doctrine, review is a **shell variation**, not a second product and not a hidden authority layer. Approval, denial, hold, rollback, and correction work remain downstream of governed APIs, review artifacts, release state, and evidence drill-through.
 
 ## Scope
 
@@ -55,6 +70,7 @@ In practice, that makes this directory a **boundary README first** and an implem
 This directory is the right home for review-bearing UI concerns such as:
 
 - promotion approval and denial flows
+- hold, escalate, and re-review flows
 - policy assignment and review-state presentation
 - QA inspection against candidate or promoted artifacts
 - evidence drill-through during review
@@ -63,18 +79,26 @@ This directory is the right home for review-bearing UI concerns such as:
 
 ### Why this is an app surface
 
-KFM doctrine repeatedly separates:
+KFM doctrine repeatedly separates truth-bearing backend artifacts from shell-owned state. This directory should own the second category, not the first.
 
-- **truth-bearing backend artifacts** such as contracts, policy bundles, release manifests, review records, and evidence bundles
-- **shell-owned state** such as selected subject, compare state, drawer openness, active panel, and operator navigation context
+Truth-bearing artifacts stay elsewhere: contracts, policy bundles, release manifests, review records, evidence bundles, catalog closures, and correction notices.
 
-This directory should own the second category, not the first.
+Shell-owned state belongs here: selected subject, compare state, drawer openness, active panel, actor mode, time scope, and operator navigation context.
+
+### Shell inheritance that should survive review mode
+
+| Shared shell region | Why review mode still needs it |
+|---|---|
+| Top command bar | keep global search, scope badges, saved views, role context, and alerts visible |
+| Left rail | retain layers, domains, filters, compare controls, and review queue visibility for authorized roles |
+| Map canvas | preserve geography as the operating anchor and direct evidence launch point |
+| Bottom timeline rail | keep valid-time framing, compare anchors, chronology, and as-of inspection visible |
 
 ### Nearby docs that should stay in sync
 
-- [`../README.md`](../README.md) — app boundary and runtime grouping
-- [`../../README.md`](../../README.md) — repo posture, trust model, and current evidence boundary
-- [`../../.github/README.md`](../../.github/README.md) — contributor/review workflow posture
+- [apps-root][] — app boundary and runtime grouping
+- [repo-root][] — repo posture, trust model, and current evidence boundary
+- [github-gatehouse][] — contributor and review workflow posture
 
 [Back to top](#review-console)
 
@@ -85,21 +109,21 @@ The review console should accept **review-shaped inputs**, not raw canonical mut
 | Input family | What it looks like here | Status |
 |---|---|---|
 | Review queue items | candidate releases, held items, approval-needed work, correction-needed work | **PROPOSED local realization** |
-| Policy decisions | deny / hold / generalize / restrict / approve outcomes with reasons and obligations | **CONFIRMED doctrinal need** |
-| QA and validation signals | structural, temporal, spatial, CRS, rights, or catalog findings | **CONFIRMED doctrinal need** |
-| Evidence drill-through payloads | Evidence Drawer, citation targets, lineage pointers, proof-pack references | **CONFIRMED doctrinal need** |
+| Policy decisions | approve / deny / hold / generalize / restrict outcomes with reasons and obligations | **CONFIRMED doctrinal need** |
+| QA and validation signals | structural, temporal, spatial, CRS, rights, accessibility, or catalog findings | **CONFIRMED doctrinal need** |
+| Evidence drill-through payloads | Evidence Drawer targets, EvidenceBundle refs, lineage pointers, proof-pack references | **CONFIRMED doctrinal need** |
 | Release context | release ID, dataset version, review state, promotion readiness, correction status | **CONFIRMED doctrinal need** |
 | Shell state | selected subject, compare mode, active panel, actor role, time scope | **INFERRED local fit** |
-| Restricted review actions | review-action and release-action family behaviors | **PROPOSED local route realization** |
+| Restricted review actions | action payloads that emit review and decision artifacts rather than hidden mutations | **CONFIRMED doctrinal need** |
 
 ### Good examples of content for this directory
 
 - review panels and routes
 - shell-state adapters for review mode
 - review-specific tests and fixtures
-- accessibility checks for approval/correction flows
-- visual states for hold, deny, partial, stale, superseded, and withdrawn conditions
-- local README/docs explaining how review behavior stays governed
+- accessibility checks for approval and correction flows
+- visual states for hold, deny, partial, stale, superseded, withdrawn, and generalized conditions
+- local docs explaining how review behavior stays governed
 
 [Back to top](#review-console)
 
@@ -111,15 +135,15 @@ This directory should **not** become the quiet place where canonical law hides.
 |---|---|---|
 | Canonical schemas and vocabularies | review screens consume them; they do not define them | `contracts/` and related schema surfaces |
 | Policy source of truth | the review console presents and applies policy outcomes; it should not become the policy registry | `policy/` |
-| Raw or unpublished source storage | this surface must not become a direct path to canonical or unpublished stores | governed backend/data zones |
-| Evidence resolution law | UI should call it, not re-implement it | package/service boundary for evidence resolution |
-| Promotion manifests / release proof generation logic | review can trigger or inspect, but not silently own artifact law | release/build/promotion packages or services |
+| Raw or unpublished source storage | this surface must not become a direct path to canonical or unpublished stores | governed backend and data zones |
+| Evidence resolution law | UI should call it, not re-implement it | package or service boundary for evidence resolution |
+| Promotion manifests / release proof generation logic | review can inspect or trigger, but it must not silently own artifact law | release/build/promotion packages or services |
 | Detached chatbot behavior | review-focused synthesis must remain bounded, cited, and subordinate to evidence | governed Focus/runtime surfaces |
 | Public discovery UI | this surface is steward/reviewer-facing, not the default public exploration mode | explorer/public shell surfaces |
 | Hidden write paths to truth stores | breaks the trust membrane | governed API only |
 
 > [!WARNING]
-> If this directory starts owning domain rules, policy grammar, or release proof composition directly, it has crossed the boundary from **review surface** into **hidden authority layer**.
+> If this directory starts owning domain rules, policy grammar, or release proof composition directly, it has crossed from **review surface** into **hidden authority layer**.
 
 [Back to top](#review-console)
 
@@ -127,7 +151,7 @@ This directory should **not** become the quiet place where canonical law hides.
 
 ### Current local signal
 
-The strongest safe statement for this revision is that this directory is still a **scaffold boundary**.
+The current-session workspace evidence for this revision did **not** include a directly mounted repo tree. The only safe path-level statement in hand is the target README itself, so the tree stays intentionally minimal until the active branch is re-inspected.
 
 ```text
 apps/
@@ -137,7 +161,7 @@ apps/
 
 ### Why the tree is kept minimal here
 
-The active branch should decide the real child layout. This README should not pretend those files already exist.
+This README should not pretend that routes, panels, tests, or fixtures already exist unless the active branch confirms them.
 
 <details>
 <summary>PROPOSED future subtree once the active branch grows beyond the scaffold</summary>
@@ -156,7 +180,8 @@ apps/
    │  ├─ evidence-drawer/
    │  ├─ release-summary/
    │  ├─ diff-inspection/
-   │  └─ obligations/
+   │  ├─ obligations/
+   │  └─ correction-lineage/
    ├─ state/
    │  ├─ shell/
    │  └─ review-session/
@@ -189,28 +214,28 @@ This section is intentionally **read-only and verification-first**. Do not treat
 ```bash
 git rev-parse --show-toplevel
 git rev-parse --short HEAD
-find apps/review-console -maxdepth 4 -print | sort
+find apps/review-console -maxdepth 5 -print | sort
 ```
 
 ### 2) Confirm which KFM review terms already appear in code and docs
 
 ```bash
-grep -RInE 'ReviewRecord|DecisionEnvelope|ReleaseManifest|CorrectionNotice|Evidence Drawer|review-action|release-action|approve|deny|hold|rollback|supersed' \
+grep -RInE 'ReviewRecord|DecisionEnvelope|ReleaseManifest|ReleaseProofPack|CorrectionNotice|EvidenceBundle|review-action|release-action|approve|deny|hold|rollback|supersed|withdraw' \
   apps packages contracts policy docs tests 2>/dev/null
 ```
 
-### 3) Confirm whether this directory has real tests, fixtures, or routes yet
+### 3) Confirm whether this directory has real routes, tests, or fixtures yet
 
 ```bash
 find apps/review-console -maxdepth 5 \
-  \( -name '*.test.*' -o -name '*.spec.*' -o -name '*.stories.*' -o -name '*fixture*' -o -name 'fixtures' -o -name 'routes' \) \
+  \( -name 'app' -o -name 'pages' -o -name '*.tsx' -o -name '*.ts' -o -name '*.test.*' -o -name '*.spec.*' -o -name 'fixtures' \) \
   -print | sort
 ```
 
 ### 4) Confirm whether review behavior is wired only through governed surfaces
 
 ```bash
-grep -RInE '/review|/policy|/audit|/promotions|EvidenceBundle|audit_ref|policy_label' \
+grep -RInE 'EvidenceRef|EvidenceBundle|audit_ref|policy_label|ReviewRecord|DecisionEnvelope|RuntimeResponseEnvelope' \
   apps packages contracts docs tests 2>/dev/null
 ```
 
@@ -225,7 +250,7 @@ Use the results above to replace placeholders such as:
 - missing downstream references
 
 > [!TIP]
-> Prefer one small follow-up commit that updates the tree, owners, and exact route names after inspection over a broad speculative rewrite.
+> Prefer one small follow-up commit that updates owners, child tree, exact route names, and test paths after inspection over a broad speculative rewrite.
 
 [Back to top](#review-console)
 
@@ -238,7 +263,7 @@ The review console should be used as a **governed inspection-and-decision surfac
 A healthy review pass looks like this:
 
 1. open the candidate subject, release, or correction case
-2. keep place, time scope, and release context visible
+2. keep geography, time scope, and release context visible
 3. open supporting evidence without leaving the shell family
 4. inspect QA and policy-bearing facts before acting
 5. approve, deny, hold, generalize, restrict, or escalate with explicit rationale
@@ -246,7 +271,7 @@ A healthy review pass looks like this:
 
 ### What good use looks like
 
-- a reviewer can move from map/dossier context into review work without losing trust cues
+- a reviewer can move from map or dossier context into review work without losing trust cues
 - every consequential claim has a route back to evidence
 - approval is never just a button; it is an action with visible support, obligations, and lineage
 - denial is not hidden or collapsed into a generic error state
@@ -255,7 +280,7 @@ A healthy review pass looks like this:
 ### What bad use looks like
 
 - approving from an isolated table with no evidence access
-- policy assignment without visible rights/sensitivity context
+- policy assignment without visible rights or sensitivity context
 - correction screens that silently overwrite what happened before
 - review-only UI that fetches directly from canonical stores
 - an operator surface that can drift away from the shell grammar used elsewhere
@@ -266,47 +291,56 @@ A healthy review pass looks like this:
 
 ```mermaid
 flowchart LR
-    A[Reviewer / steward] --> B[Review Console<br/>shell variation]
-    B --> C[Governed API]
-    C --> D[Evidence resolution]
-    C --> E[Policy runtime]
-    C --> F[Validation / QA state]
-    C --> G[Catalog / release context]
-    C --> H[Correction lineage]
+    R[Reviewer / steward] --> S[Review Console<br/>shell variation]
 
-    D --> B
-    E --> B
-    F --> B
-    G --> B
-    H --> B
+    S --> API[Internal governed API]
+    API --> EV[EvidenceRef → EvidenceBundle]
+    API --> PO[Policy runtime]
+    API --> QA[Validation / QA state]
+    API --> RL[Catalog / release context]
+    API --> CL[Correction lineage]
 
-    B --> I[Approve / promote]
-    B --> J[Deny / hold / escalate]
-    B --> K[Correct / supersede / withdraw]
+    EV --> S
+    PO --> S
+    QA --> S
+    RL --> S
+    CL --> S
 
-    I --> L[ReviewRecord + release-backed state]
-    J --> M[DecisionEnvelope + obligations]
-    K --> N[CorrectionNotice + visible lineage]
+    S --> D1[Approve / promote]
+    S --> D2[Hold / deny / escalate]
+    S --> D3[Correct / supersede / withdraw]
+
+    D1 --> O1[DecisionEnvelope<br/>ReviewRecord<br/>ReleaseManifest]
+    D2 --> O2[DecisionEnvelope<br/>ReviewRecord]
+    D3 --> O3[CorrectionNotice<br/>rebuild refs<br/>visible lineage]
 ```
 
 ### Reading rule for the diagram
 
-The review console is **not** the place where truth originates. It is the place where already-governed evidence, policy, validation, and release context are made inspectable enough for human review actions.
+The review console is **not** the place where truth originates. It is the place where already-governed evidence, policy, validation, and release context become inspectable enough for human review actions.
 
 [Back to top](#review-console)
 
 ## Reference tables
 
-### Primary review duties
+### Shared shell regions that review should inherit
 
-| Duty | What must be visible | Why it matters |
+| Region | Shared responsibility in review mode | Status |
 |---|---|---|
-| Promotion approval | release context, candidate scope, evidence access, QA state, policy posture | prevents “ship because the build passed” failures |
-| Policy assignment / confirmation | rights, sensitivity, obligations, role, visibility class | keeps review actions explainable and auditable |
-| QA inspection | validation findings, geometry/time/CRS issues, reproducibility clues | prevents late-stage truth drift |
-| Correction workflow | supersession chain, withdrawal notes, retained support links | makes trust survive change |
-| Denial / hold | reason, obligation, effective state, next action | fail-closed behavior must stay legible |
-| Evidence drill-through | dataset version, lineage, citations, proof pointers | keeps claims inspectable at point of use |
+| Top command bar | global search, mode switching, scope badges, saved views, role context, alerts | **CONFIRMED shell doctrine** |
+| Left rail | layers, domains, filters, compare controls, story chapter lists, review queue visibility for authorized roles | **CONFIRMED shell doctrine** |
+| Map canvas | primary geography surface, selection anchor, story playback surface, direct evidence launch point | **CONFIRMED shell doctrine** |
+| Bottom timeline rail | valid-time framing, playback, compare anchors, as-of inspection, visible chronology | **CONFIRMED shell doctrine** |
+
+### Review-bearing artifact families
+
+| Artifact family | Why this surface cares | Status |
+|---|---|---|
+| `DecisionEnvelope` | machine-readable policy result for action, lane, result, reason codes, obligation codes, and audit linkage | **CONFIRMED doctrinal dependency** |
+| `ReviewRecord` | captures approval, denial, escalation, or note with reviewer role, time, and refs | **CONFIRMED doctrinal dependency** |
+| `ReleaseManifest` / `ReleaseProofPack` | packages the public-safe release and its proof posture for approval-ready work | **CONFIRMED doctrinal dependency** |
+| `EvidenceBundle` | provides drill-through support for a claim, feature, export preview, or review decision | **CONFIRMED doctrinal dependency** |
+| `CorrectionNotice` | preserves visible lineage under supersession, withdrawal, replacement, or narrowing | **CONFIRMED doctrinal dependency** |
 
 ### Trust cues that must not disappear in review mode
 
@@ -324,10 +358,11 @@ The review console is **not** the place where truth originates. It is the place 
 
 | Topic | Status |
 |---|---|
-| Review console is a necessary KFM surface concept | **CONFIRMED doctrine** |
-| Review console should cover promotion approval, policy assignment, QA inspection, and correction workflow | **CONFIRMED doctrine** |
-| Review must remain a shell variation, not an alternate truth system | **CONFIRMED doctrine** |
-| This exact directory currently acts as a scaffold boundary | **CONFIRMED current signal** |
+| Review / stewardship is a necessary KFM surface concept | **CONFIRMED doctrine** |
+| Review remains a shell variation, not an alternate truth system | **CONFIRMED doctrine** |
+| Review is an internal governed route family, not a public route family | **CONFIRMED doctrine** |
+| Review actions must emit review and decision artifacts | **CONFIRMED doctrine** |
+| This exact directory path is the intended README target | **CONFIRMED task context** |
 | Exact child files, routes, panels, tests, fixtures, and owners | **UNKNOWN / NEEDS VERIFICATION** |
 | Proposed future subtree and local file names in this README | **PROPOSED** |
 
@@ -341,7 +376,7 @@ The review console is **not** the place where truth originates. It is the place 
 - [ ] Re-inspect the active branch and update the directory tree.
 - [ ] Replace proposed child paths with confirmed local files, or delete them.
 - [ ] Link exact review routes or entrypoints if they now exist.
-- [ ] Confirm whether review uses the shared shell state or a separate local store.
+- [ ] Confirm whether review uses shared shell state or a separate local store.
 - [ ] Confirm whether approval, denial, hold, and correction payloads are documented elsewhere.
 - [ ] Add exact test paths once accessibility, evidence-drill-through, and correction tests exist.
 - [ ] Remove any statement that has become stale after implementation lands.
@@ -388,10 +423,9 @@ The **Evidence Drawer** or equivalent drill-through path. Review without inspect
 
 ### What is safe to claim here
 
-- this directory exists
-- its current README started as a scaffold
-- the apps boundary README expects a child README here to explain reviewer/steward overlays and approval/correction work
-- KFM doctrine treats review as part of the same governed shell family
+- this README target exists in the task context at `apps/review-console/README.md`
+- KFM doctrine treats review / stewardship as part of the same governed shell family
+- review is an internal governed route family, not a public one
 - exact implementation depth remains branch-dependent and must be re-verified
 
 ### What should be checked before the next rewrite
@@ -408,6 +442,7 @@ The **Evidence Drawer** or equivalent drill-through path. Review without inspect
 ### Maintenance rule
 
 When this directory gains real code, update this README in the same change set that adds:
+
 1. child tree changes
 2. route names
 3. test paths
