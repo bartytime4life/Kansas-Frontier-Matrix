@@ -1,297 +1,275 @@
 <!--
-doc_id: NEEDS VERIFICATION
-title: Proposed Pipeline Folder — WBD HUC-12 Watcher
+doc_id: KFM-HYDRO-WBD-WATCHER-PIPELINE
+title: WBD HUC-12 Watcher Pipeline
 type: standard
 version: v1
 status: draft
-owners: [@bartytime4life, NEEDS VERIFICATION]
+owners: [@bartytime4life]  # NEEDS VERIFICATION
 created: 2026-04-02
 updated: 2026-04-02
 policy_label: restricted
 related:
   - docs/domains/hydrology/wbd-huc12-watcher.md
-  - docs/operations/emit-only-watchers/README.md
+  - docs/governance/ROOT_GOVERNANCE.md
   - docs/operations/emit-only-watchers/REGISTRY.md
   - docs/operations/emit-only-watchers/SCHEMA_STUBS.md
-  - docs/operations/emit-only-watchers/NEXT_STEPS.md
+tags: [kfm, hydrology, pipeline, watcher, wbd, huc12]
 notes:
-  - Runtime paths below are PROPOSED.
-  - Exact schema/contract homes remain NEEDS VERIFICATION.
+  - Pipeline path is PROPOSED until verified in repo
 -->
 
-# Proposed pipeline folder
+# 🌊 WBD HUC-12 Watcher Pipeline
 
-**Recommended path:** `pipelines/wbd-huc12-watcher/`
-
-This keeps the runtime shape short, dataset-specific, and aligned with the watcher framing already present in `docs/operations/emit-only-watchers/`, where registry, contract stubs, and implementation sequencing are already being defined as watcher-oriented governance material. The watcher docs explicitly describe registry inputs, EvidenceBundle outputs, DecisionEnvelope records, and correction lineage as the expected operational substrate rather than direct public publication. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+**Purpose:** Runtime pipeline that detects meaningful WBD HUC-12 changes and emits evidence-backed hydrologic impact events.
 
 ---
 
-## Directory tree
+## 🚦 Status
 
-```text
-pipelines/
-└── wbd-huc12-watcher/
-    ├── README.md
-    ├── pyproject.toml
-    ├── Makefile
-    ├── .env.example
-    ├── watcher.yaml
-    │
-    ├── src/
-    │   └── wbd_huc12_watcher/
-    │       ├── __init__.py
-    │       ├── cli.py
-    │       ├── config.py
-    │       ├── runner.py
-    │       ├── logging.py
-    │       │
-    │       ├── ingest/
-    │       │   ├── __init__.py
-    │       │   ├── wbd_snapshot.py
-    │       │   ├── gages.py
-    │       │   └── nwis_daily.py
-    │       │
-    │       ├── normalize/
-    │       │   ├── __init__.py
-    │       │   ├── geometry.py
-    │       │   ├── attributes.py
-    │       │   └── ids.py
-    │       │
-    │       ├── diff/
-    │       │   ├── __init__.py
-    │       │   ├── geom_diff.py
-    │       │   ├── attr_diff.py
-    │       │   ├── thresholds.py
-    │       │   └── hashes.py
-    │       │
-    │       ├── classify/
-    │       │   ├── __init__.py
-    │       │   ├── perennial_ephemeral.py
-    │       │   └── metrics.py
-    │       │
-    │       ├── evidence/
-    │       │   ├── __init__.py
-    │       │   ├── bundle.py
-    │       │   ├── refs.py
-    │       │   ├── decision.py
-    │       │   └── correction.py
-    │       │
-    │       ├── joins/
-    │       │   ├── __init__.py
-    │       │   └── gage_join.py
-    │       │
-    │       ├── storage/
-    │       │   ├── __init__.py
-    │       │   ├── baseline_store.py
-    │       │   ├── snapshot_store.py
-    │       │   └── event_store.py
-    │       │
-    │       └── schemas/
-    │           ├── change_event.schema.json
-    │           ├── classification_artifact.schema.json
-    │           └── watcher_config.schema.json
-    │
-    ├── tests/
-    │   ├── conftest.py
-    │   ├── fixtures/
-    │   │   ├── wbd/
-    │   │   │   ├── unchanged/
-    │   │   │   ├── geom_changed/
-    │   │   │   └── attrs_changed/
-    │   │   ├── nwis/
-    │   │   │   ├── perennial/
-    │   │   │   └── ephemeral/
-    │   │   └── expected/
-    │   │       ├── decision_envelopes/
-    │   │       ├── evidence_bundles/
-    │   │       └── classification_artifacts/
-    │   ├── test_hashes.py
-    │   ├── test_geom_diff.py
-    │   ├── test_attr_diff.py
-    │   ├── test_thresholds.py
-    │   ├── test_gage_join.py
-    │   ├── test_classification.py
-    │   ├── test_evidence_bundle.py
-    │   └── test_runner_no_emit.py
-    │
-    ├── data/
-    │   ├── raw/              # local/dev only; do not treat as sovereign
-    │   ├── work/
-    │   ├── processed/
-    │   └── baselines/
-    │
-    ├── scripts/
-    │   ├── run_local.sh
-    │   ├── seed_baseline.py
-    │   └── replay_fixture.py
-    │
-    └── docs/
-        ├── CONTRACTS.md
-        ├── FIXTURES.md
-        ├── RUNBOOK.md
-        └── CHANGELOG.md
-```
+| Field | Value |
+|------|------|
+| Status | 🧪 draft |
+| Owners | @bartytime4life *(NEEDS VERIFICATION)* |
+| Runtime Path | `pipelines/wbd-huc12-watcher/` *(PROPOSED)* |
+| Trust Mode | Emit-only / Evidence-first |
 
 ---
 
-## Why this shape
+## ⚡ Quick Navigation
 
-### 1) It matches the watcher doctrine already visible in-repo
-The current watcher planning docs separate:
-- registry / dataset identity,
-- threshold evaluation,
-- EvidenceBundle,
-- DecisionEnvelope,
-- correction lineage.  
-
-That means the runtime folder should not just be a poller with one script; it should carry explicit seams for diffing, evidence packaging, and finite outcomes. :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3}
-
-### 2) It keeps hydrology-specific logic small and movable
-The `classify/`, `joins/`, and `ingest/` modules are hydrology-lane specifics.  
-The `evidence/`, `storage/`, and `schemas/` parts are generic watcher substrate that can later be copied or extracted for soils, air, or vegetation watchers. That follows the “one authoritative pilot lane first, then generalize” sequencing described in the watcher next-steps document. :contentReference[oaicite:4]{index=4}
-
-### 3) It respects the truth path
-The repo doctrine repeatedly treats source-edge → RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED as the governing lifecycle, and warns against letting derived layers silently become sovereign truth. The `data/` and `storage/` split above is meant to preserve that posture instead of collapsing fetch, baseline, and publication into one opaque runtime cache. :contentReference[oaicite:5]{index=5} :contentReference[oaicite:6]{index=6}
+- [Scope](#scope)
+- [Repo Fit](#repo-fit)
+- [Inputs](#inputs)
+- [Exclusions](#exclusions)
+- [Directory Structure](#directory-structure)
+- [Quickstart](#quickstart)
+- [Execution Flow](#execution-flow)
+- [Configuration](#configuration)
+- [Outputs](#outputs)
+- [Trust & Governance](#trust--governance)
+- [Definition of Done](#definition-of-done)
 
 ---
 
-## Minimum file contents to create first
+# 📌 Scope
 
-### `README.md`
-Use this as the runtime-facing entrypoint:
-- title
-- one-line purpose
-- repo fit
-- accepted inputs
-- exclusions
-- directory tree
-- quickstart
-- one mermaid control-flow diagram
-- trust notes
+This pipeline:
 
-### `watcher.yaml`
-Keep this as the human-editable runtime config:
-- dataset id
-- source locator
-- threshold values
-- authority class
-- policy class
-- Kansas classifier settings
-- output store locations
-
-### `src/wbd_huc12_watcher/runner.py`
-Single orchestration path:
-1. fetch or load WBD snapshot
-2. load accepted baseline
-3. normalize + hash
-4. diff
-5. threshold gate
-6. join gages
-7. recompute classification
-8. build evidence bundle
-9. build decision envelope
-10. persist immutable outputs
-
-### `tests/fixtures/`
-Start here before expanding runtime complexity:
-- unchanged WBD fixture
-- geometry-changed fixture
-- attribute-changed fixture
-- perennial flow fixture
-- ephemeral flow fixture
+- Watches **WBD HUC-12 snapshots**
+- Detects **geometry + attribute changes**
+- Applies **threshold gating**
+- Joins **USGS gages to impacted HUCs**
+- Recomputes **Kansas perennial vs ephemeral classification**
+- Emits:
+  - EvidenceBundle
+  - DecisionEnvelope
 
 ---
 
-## Recommended first-create subset
+# 🔗 Repo Fit
 
-If you do **not** want to create the whole tree yet, create this thinner slice first:
+| Layer | Path | Role |
+|------|------|------|
+| Domain Spec | `docs/domains/hydrology/wbd-huc12-watcher.md` | Authority + rules |
+| Pipeline | `pipelines/wbd-huc12-watcher/` | Runtime execution |
+| Catalog | `data/catalog/hydrology/` *(PROPOSED)* | Evidence persistence |
+| API | `services/hydrology-api/` *(PROPOSED)* | External access |
+
+---
+
+# 📥 Inputs
+
+| Source | Type |
+|-------|------|
+| WBD snapshot | Polygon dataset |
+| USGS gage index | Point dataset |
+| NWIS daily flow | Time series |
+
+---
+
+# 🚫 Exclusions
+
+- No silent updates
+- No direct geometry overrides
+- No derived truth replacing authoritative WBD
+- No emit without threshold trigger
+
+---
+
+# 📂 Directory Structure
 
 ```text
 pipelines/wbd-huc12-watcher/
 ├── README.md
 ├── watcher.yaml
-├── src/wbd_huc12_watcher/
-│   ├── cli.py
-│   ├── runner.py
-│   ├── ingest/wbd_snapshot.py
-│   ├── diff/geom_diff.py
-│   ├── diff/attr_diff.py
-│   ├── diff/hashes.py
-│   ├── joins/gage_join.py
-│   ├── classify/perennial_ephemeral.py
-│   └── evidence/bundle.py
+├── src/
+│   └── wbd_huc12_watcher/
+│       ├── runner.py
+│       ├── ingest/
+│       ├── diff/
+│       ├── joins/
+│       ├── classify/
+│       └── evidence/
 └── tests/
-    ├── fixtures/
-    ├── test_geom_diff.py
-    ├── test_classification.py
-    └── test_runner_no_emit.py
 ```
 
-That is the best first thin slice because it proves:
-- deterministic diffs,
-- emit-vs-no-emit behavior,
-- evidence packaging,
-- Kansas hydrology-specific recomputation.
+---
+
+# ⚙️ Quickstart
+
+```bash
+# install deps (PROPOSED)
+pip install -e .
+
+# run watcher
+python -m wbd_huc12_watcher.cli run --config watcher.yaml
+```
 
 ---
 
-## Naming notes
-
-### Folder name
-**Use:** `wbd-huc12-watcher`
-
-### Python package name
-**Use:** `wbd_huc12_watcher`
-
-### Config file
-**Use:** `watcher.yaml`
-
-These keep path names human-readable while preserving Python import safety.
-
----
-
-## Example control flow
+# 🔄 Execution Flow
 
 ```mermaid
 flowchart TD
-    A[Load WBD snapshot] --> B[Normalize geometry + attrs]
-    B --> C[Hash + compare to baseline]
-    C --> D{Meaningful change?}
+    A[Load WBD snapshot] --> B[Normalize]
+    B --> C[Hash baseline compare]
+    C --> D{Change detected?}
     D -- No --> E[Record check only]
-    D -- Yes --> F[Join affected gages]
-    F --> G[Recompute perennial/ephemeral classification]
-    G --> H[Build EvidenceBundle]
-    H --> I[Build DecisionEnvelope]
-    I --> J[Persist event + lineage]
+    D -- Yes --> F[Apply thresholds]
+    F --> G[Join gages]
+    G --> H[Recompute classification]
+    H --> I[Build EvidenceBundle]
+    I --> J[Build DecisionEnvelope]
+    J --> K[Persist outputs]
 ```
 
 ---
 
-## Recommended adjacent doc link
+# ⚙️ Configuration
 
-Add this line to `docs/domains/hydrology/wbd-huc12-watcher.md`:
+## `watcher.yaml` (example)
 
-```md
-**Implementation path (PROPOSED):** `pipelines/wbd-huc12-watcher/`
-```
+```yaml
+dataset: wbd_huc12
 
-And add this line to the pipeline `README.md`:
+source:
+  type: usgs_tnm
+  product: wbd
 
-```md
-**Domain specification:** `docs/domains/hydrology/wbd-huc12-watcher.md`
+thresholds:
+  area_pct: 0.1
+  centroid_shift_m: 25
+  topology_change: true
+
+classification:
+  zero_flow_pct_max: 5
+  min_active_months: 8
+
+outputs:
+  event_store: data/catalog/hydrology/events/
+  baseline_store: data/catalog/hydrology/baselines/
 ```
 
 ---
 
-## Definition of done for folder creation
+# 📦 Outputs
 
-- [ ] folder exists at `pipelines/wbd-huc12-watcher/`
-- [ ] runtime `README.md` exists
-- [ ] config stub exists
-- [ ] one runner entrypoint exists
-- [ ] deterministic hash tests exist
-- [ ] no-emit fixture test exists
-- [ ] one emitted EvidenceBundle example exists
-- [ ] one emitted DecisionEnvelope example exists
-- [ ] all path claims remain marked `PROPOSED` or `NEEDS VERIFICATION` until live-verified
+## 1. Change Event
+
+- HUC-12 ID
+- delta metrics
+- affected gages
+- classification update
+- outcome (ANSWER / ABSTAIN / ERROR)
+
+## 2. EvidenceBundle
+
+- snapshot references
+- diff metrics
+- classification inputs
+- lineage
+
+---
+
+# 🧠 Core Logic
+
+```python
+def run():
+    snapshot = load_wbd()
+    baseline = load_baseline()
+
+    delta = diff(snapshot, baseline)
+
+    if not triggers(delta):
+        return no_emit()
+
+    gages = join_gages(snapshot)
+    classification = classify(snapshot, gages)
+
+    evidence = build_evidence(snapshot, delta, classification)
+    decision = build_decision(delta, evidence)
+
+    persist(evidence, decision)
+```
+
+---
+
+# 🔐 Trust & Governance
+
+## Truth Labels
+
+| Label | Meaning |
+|------|--------|
+| CONFIRMED | Source datasets |
+| INFERRED | Classification outputs |
+| PROPOSED | Thresholds + pipeline design |
+| NEEDS VERIFICATION | Paths / owners |
+
+---
+
+## Rules
+
+- Emit-only behavior (no silent mutation)
+- Evidence required for every event
+- Finite outcomes enforced:
+  - ANSWER
+  - ABSTAIN
+  - DENY
+  - ERROR
+
+---
+
+# 🧪 Tests
+
+Minimum required:
+
+- deterministic geometry hash
+- geometry diff correctness
+- attribute diff correctness
+- no-change → no emit
+- change → emit
+- classification reproducibility
+
+---
+
+# ✅ Definition of Done
+
+- [ ] Pipeline executes end-to-end
+- [ ] Deterministic diffs validated
+- [ ] EvidenceBundle emitted
+- [ ] DecisionEnvelope emitted
+- [ ] No false-positive events
+- [ ] No silent updates
+- [ ] Reproducible classification
+
+---
+
+# 📎 Notes
+
+- Pipeline is subordinate to domain spec
+- Domain spec defines truth — pipeline enforces it
+- All outputs must be traceable
+
+---
+
+⬆️ Back to top
