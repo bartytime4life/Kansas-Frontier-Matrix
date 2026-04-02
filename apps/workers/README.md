@@ -10,7 +10,7 @@ updated: <NEEDS_VERIFICATION>
 policy_label: <NEEDS_VERIFICATION>
 related: [../../README.md, ../README.md, ../../packages/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, workers]
-notes: [doc_id placeholder until registry-backed assignment exists, created/updated dates need git-history verification, worker topology beyond this README remains source-bounded]
+notes: [doc_id placeholder until registry-backed assignment exists, created/updated dates need git-history verification, current public main confirms sibling app surfaces while worker-local tree remains README-only]
 [/KFM_META_BLOCK_V2] -->
 
 # Workers Runtime Boundary
@@ -18,8 +18,7 @@ Governed background-job boundary for KFM release-backed builds, validation helpe
 
 **Status:** experimental  
 **Owners:** `@bartytime4life`  
-**Badges:** ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![repo](https://img.shields.io/badge/repo-Kansas--Frontier--Matrix-24292f) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![boundary](https://img.shields.io/badge/boundary-workers%20runtime-6f42c1) ![truth](https://img.shields.io/badge/truth-source--bounded-f2cc60)
-
+**Badges:** ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![repo](https://img.shields.io/badge/repo-Kansas--Frontier--Matrix-24292f) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![boundary](https://img.shields.io/badge/boundary-workers%20runtime-6f42c1) ![truth](https://img.shields.io/badge/truth-source--bounded-f2cc60)  
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 | Field | Value |
@@ -27,15 +26,18 @@ Governed background-job boundary for KFM release-backed builds, validation helpe
 | Path | `apps/workers/README.md` |
 | Repo fit | Child boundary README for `apps/` |
 | Upstream | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
-| Downstream | **NEEDS VERIFICATION** — no confirmed child worker lanes are present here yet |
+| Worker-local downstream | **NEEDS VERIFICATION** — no confirmed child worker lanes are present here yet |
 | Accepted inputs | Release-backed work orders, validation-safe helper tasks, projection/export requests, correction-aware follow-on jobs |
 | Exclusions | Browser UI ownership, direct client exposure, canonical truth rewrites, hidden policy bypasses, ad hoc business law in scripts |
-| Current live-tree signal | `apps/workers/` is present; this README is the only confirmed file in the directory |
-| Adjacent roots | [`../../packages/README.md`](../../packages/README.md), `../../contracts/`, `../../policy/`, `../../data/`, `../../tests/`, `../../infra/` |
-| Evidence boundary | Live public repo tree plus March 2026 KFM doctrine; deeper worker topology remains source-bounded |
+| Current public-main signal | `apps/` currently exposes `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, and `workers/`; inside `apps/workers/`, this README is the only confirmed file |
+| Adjacent authority / control roots | [`../../packages/README.md`](../../packages/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Evidence boundary | Current public `main` tree plus March 2026 KFM doctrine; deeper worker-local topology remains source-bounded |
 
 > [!IMPORTANT]
-> Treat this file as a **boundary contract first** and an **implementation index second**. The directory itself is real, but worker depth, schedulers, manifests, queue backends, and concrete job lanes remain **NEEDS VERIFICATION** until they are visible in the live tree and wired into the repo’s actual runtime surfaces.
+> Treat this file as a **boundary contract first** and an **implementation index second**.
+
+> [!NOTE]
+> The worker subtree itself is still README-only in current public view. That stronger app-family visibility does **not** turn worker-local schedulers, manifests, queue backends, tests, or concrete job lanes into proven implementation.
 
 ## Scope
 
@@ -43,7 +45,7 @@ This README defines what `apps/workers/` is for, what it must not become, and ho
 
 At this path, “workers” means **app-adjacent background execution**: jobs that help move already-governed material forward through release-backed or policy-safe steps such as validation support, projection/export builds, correction propagation, and other bounded follow-on work.
 
-This file does **not** claim that those job lanes are already implemented here. It only states the boundary they must respect if and when they land here.
+This file does **not** claim that those job lanes are already implemented here. It states the boundary they must respect if and when they land here.
 
 [Back to top](#workers-runtime-boundary)
 
@@ -53,13 +55,23 @@ This file does **not** claim that those job lanes are already implemented here. 
 
 | Relationship | What it means here |
 |---|---|
-| Parent boundary | [`../README.md`](../README.md) defines `apps/` as a runtime surface family and already reserves room for a worker/workflow lane. |
+| Parent boundary | [`../README.md`](../README.md) defines `apps/` as a runtime surface family and reserves room for a worker / workflow lane. |
 | Root posture | [`../../README.md`](../../README.md) keeps the repo verification-first and source-bounded. |
 | Shared law | Reusable domain, validation, policy, evidence, and catalog logic belongs in [`../../packages/README.md`](../../packages/README.md) and related package directories, not duplicated here. |
-| Shared contracts | Any trust-bearing payloads, examples, enums, and schemas belong in `../../contracts/` and `../../schemas/` if those are the repo’s active contract homes. |
-| Policy boundary | Worker behavior must consume policy/runtime decisions from `../../policy/` or equivalent governed surfaces; it must not invent its own publication law. |
-| Test burden | Worker lanes should be paired with contract, policy, e2e, regression, or fixture coverage in `../../tests/`. |
+| Shared contracts | Trust-bearing payloads, examples, enums, and schemas belong in [`../../contracts/README.md`](../../contracts/README.md) and adjacent schema surfaces, not as undocumented worker-local ad hoc blobs. |
+| Policy boundary | Worker behavior must consume policy/runtime decisions from [`../../policy/README.md`](../../policy/README.md) or equivalent governed surfaces; it must not invent its own publication law. |
+| Test burden | Worker lanes should be paired with contract, policy, e2e, regression, or fixture coverage in [`../../tests/README.md`](../../tests/README.md). |
+| Workflow / CI doc lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) is the current public workflow-doc surface; it should be treated as context, not as proof of active worker automation YAMLs on `main`. |
 | Infra boundary | Queue wiring, service managers, schedules, secrets, and deployment mechanics belong in `../../infra/` and config surfaces, not hidden inside worker code. |
+
+### Current sibling runtime surfaces
+
+| Sibling surface | Why it matters to `apps/workers/` |
+|---|---|
+| [`../cli/README.md`](../cli/README.md) | Human-invoked promotion, migration, validation, and receipt inspection belong in CLI lanes before they become unattended worker execution. |
+| [`../explorer-web/README.md`](../explorer-web/README.md) | Browser shell ownership stays outside workers. |
+| [`../governed-api/README.md`](../governed-api/README.md) | Request-time policy mediation, evidence resolution, and trust-bearing API behavior stay outside workers. |
+| [`../review-console/README.md`](../review-console/README.md) | Review UX, approval / denial state, and correction UI must remain trust-visible rather than buried in job side effects. |
 
 ### What belongs here
 
@@ -76,6 +88,8 @@ Do **not** use this directory for:
 
 - generic reusable libraries;
 - browser-facing UI components;
+- request-time API mediation;
+- human-invoked steward commands that already fit the CLI surface;
 - direct canonical write logic hidden in scripts;
 - private admin shortcuts that bypass review or policy;
 - undocumented cron jobs with no receipts, fixtures, or failure posture.
@@ -113,6 +127,8 @@ The fastest way to weaken this directory is to let it absorb responsibilities th
 | Exclusion | Why it is out of scope | Where it goes instead |
 |---|---|---|
 | Direct browser traffic | Workers are not the public trust surface. | Governed API and web/review apps |
+| Request-time API mediation | Request-time trust, policy, and evidence shaping should stay synchronous and inspectable at the API boundary. | [`../governed-api/README.md`](../governed-api/README.md) |
+| Human-invoked steward commands | Interactive operator flows should stay explicit and receipted, not drift into unattended worker glue. | [`../cli/README.md`](../cli/README.md) |
 | Canonical truth rewrites from ad hoc jobs | Canonical writes must stay explicit and reviewable. | Canonical model + governed workers/packages |
 | Policy authorship by convenience | Workers consume policy; they do not redefine it. | `../../policy/` and governed review flows |
 | Hidden release promotion | Publication is a governance event, not a side effect. | Release/policy/review lanes |
@@ -126,13 +142,27 @@ The fastest way to weaken this directory is to let it absorb responsibilities th
 
 ## Directory tree
 
-### Current live tree
+### Current public `main` app-family snapshot
 
 ```text
 apps/
 ├─ README.md
+├─ cli/
+├─ explorer-web/
+├─ governed-api/
+├─ review-console/
 └─ workers/
    └─ README.md
+```
+
+> [!NOTE]
+> The snapshot above confirms the current public app family and the worker-local README. It does **not** claim deeper sibling inventories beyond the README surfaces already visible on public `main`.
+
+### Worker-local tree
+
+```text
+apps/workers/
+└─ README.md
 ```
 
 ### Documented expansion slots
@@ -157,17 +187,23 @@ These commands are intentionally **read-only**. They help reviewers verify what 
 # from repo root
 git rev-parse --short HEAD
 
-printf '\n== apps tree ==\n'
-find apps -maxdepth 2 -type f | sort
+printf '\n== app surface directories ==\n'
+find apps -maxdepth 1 -mindepth 1 -type d | sort
+
+printf '\n== app surface READMEs ==\n'
+find apps -maxdepth 2 -type f -name README.md | sort
 
 printf '\n== worker boundary ==\n'
-sed -n '1,200p' apps/workers/README.md
+sed -n '1,240p' apps/workers/README.md
 
 printf '\n== parent apps boundary ==\n'
 sed -n '1,240p' apps/README.md
 
 printf '\n== package boundary ==\n'
 sed -n '1,240p' packages/README.md
+
+printf '\n== workflow doc lane ==\n'
+sed -n '1,220p' .github/workflows/README.md
 
 printf '\n== worker mentions across repo ==\n'
 grep -RIn "workers" README.md apps packages docs contracts policy tests infra .github 2>/dev/null || true
@@ -177,10 +213,10 @@ grep -RIn "workers" README.md apps packages docs contracts policy tests infra .g
 
 ```bash
 # confirm whether real worker lanes exist before linking to them
-find apps/workers -maxdepth 2 -mindepth 1 -type d | sort
+find apps/workers -maxdepth 2 -mindepth 1 | sort
 ```
 
-If that command returns nothing, keep this README focused on the boundary and avoid pretending deeper structure is already mounted.
+If that command returns only `apps/workers/README.md`, keep this README focused on the boundary and avoid pretending deeper structure is already mounted.
 
 [Back to top](#workers-runtime-boundary)
 
@@ -190,14 +226,16 @@ Use this file in three modes.
 
 ### 1. As a boundary guide
 
-Before adding code under `apps/workers/`, check that the job really belongs in an app runtime surface and not in a reusable package, contract family, policy bundle, or infra schedule.
+Before adding code under `apps/workers/`, check that the job really belongs in an app runtime surface and not in a reusable package, contract family, policy bundle, CLI lane, review surface, or infra schedule.
 
 ### 2. As an onboarding map
 
 When a contributor asks “where should this background job live?”, this README should steer them toward the right seam:
 
 - **package** if the logic is reusable law;
-- **worker app lane** if it is runtime execution around that law;
+- **worker app lane** if it is unattended runtime execution around that law;
+- **CLI** if it is human-invoked steward/operator command work;
+- **governed API** if it is request-time trust mediation;
 - **infra/config** if it is scheduling, secrets, or deployment wiring;
 - **tests/fixtures** if it is proof of behavior.
 
@@ -211,7 +249,8 @@ Every new worker lane added here should document:
 - emitted artifacts or receipts;
 - failure posture;
 - rollback/correction behavior;
-- neighboring tests and fixtures.
+- neighboring tests and fixtures;
+- why it is a worker lane rather than a CLI or request-time API concern.
 
 ## Diagram
 
@@ -230,8 +269,9 @@ flowchart LR
     I --> J
 
     K[Canonical truth] -. read only through governed seams .-> B
-    L[Public browser surface] -. no direct worker ownership .-> B
-    M[Policy authorship] -. must not live here .-> B
+    L[apps/governed-api] -. request-time mediation belongs there .-> B
+    M[apps/cli] -. human-invoked steward work belongs there .-> B
+    N[apps/explorer-web + apps/review-console] -. shell and review UI ownership stay outside workers .-> B
 ```
 
 ### Reading rule for the diagram
@@ -249,7 +289,7 @@ flowchart LR
 | Export jobs | Release-backed outward deliverables and their proof objects | Invent policy or bypass restrictions | **PROPOSED** |
 | Correction propagation | Supersession, withdrawal, and lineage-visible follow-ons | Silently overwrite history | **PROPOSED** |
 | Intake orchestration | App-adjacent intake only if the mounted topology keeps it here | Replace canonical intake law with app-local shortcuts | **PROPOSED / NEEDS VERIFICATION** |
-| One-off operator tooling | Small helper entrypoints only when documented and non-authoritative | Become the hidden system of record | **NEEDS VERIFICATION** |
+| Interactive operator work | Prefer `apps/cli/` when the action is human-invoked and review-facing | Become the hidden system of record by masquerading as a worker | **CONFIRMED sibling / PROPOSED local split** |
 
 ### Artifact expectations
 
@@ -272,6 +312,9 @@ flowchart LR
 | Reusable domain/job law | packages | app-local worker glue |
 | Task contracts and examples | contracts / schemas / fixtures | inline undocumented JSON blobs |
 | Scheduling and secrets | infra / configs / service manager surfaces | hard-coded worker modules |
+| Human-invoked operator commands | `apps/cli/` | background workers |
+| Request-time trust mediation | `apps/governed-api/` | worker side effects |
+| Browser shell / review UI | `apps/explorer-web/`, `apps/review-console/` | worker lanes |
 | Public trust cues | governed API + UI surfaces | background workers alone |
 | Derived rebuild logic | worker lanes | browser code |
 | Canonical write authority | explicit governed components | hidden helper scripts |
@@ -288,6 +331,7 @@ flowchart LR
 - [ ] Inputs, outputs, and fail-closed behavior are documented.
 - [ ] Contracts, fixtures, and neighboring tests are linked.
 - [ ] The lane states what it must never touch directly.
+- [ ] The lane states why it is a worker lane rather than `apps/cli/` or `apps/governed-api/`.
 - [ ] Scheduling/deployment wiring is documented outside the worker code itself.
 - [ ] Any release-backed assumptions are explicit.
 - [ ] Correction and rollback posture are visible.
@@ -298,6 +342,8 @@ flowchart LR
 - [ ] No undocumented child links.
 - [ ] No business law stranded in shell scripts.
 - [ ] No browser-only code imported into worker logic.
+- [ ] No request-time API mediation drifting into workers.
+- [ ] No interactive steward flow misfiled here if it belongs in `apps/cli/`.
 - [ ] No worker path implies publication authority by accident.
 - [ ] No status text claims implementation that the live tree does not show.
 
@@ -305,11 +351,11 @@ flowchart LR
 
 ### Is `apps/workers/` confirmed to host runnable worker code today?
 
-No. The directory is real, but the currently visible live tree confirms only this README here. Treat deeper worker lanes as unverified until they exist in the tree.
+No. The directory is real, but the currently visible worker-local tree confirms only this README here. Treat deeper worker lanes as unverified until they exist in the tree.
 
 ### Why document a nearly empty directory?
 
-Because the parent `apps/` boundary already reserves a worker/workflow lane, and documenting the seam early reduces future drift.
+Because the current public `apps/` family is real and already contains distinct sibling runtime surfaces. Documenting the worker seam early reduces drift between background execution, CLI work, request-time API mediation, and review/UI responsibilities.
 
 ### Should KFM keep workers under `apps/workers/` forever?
 
@@ -321,31 +367,41 @@ They should not do so implicitly or opportunistically. Any truth-changing behavi
 
 ### What is the fastest way to make this README stale?
 
-Adding child directories or job lanes without updating the current tree, inputs/exclusions, and the “must never” rules.
+Adding child directories or job lanes without updating the current tree, sibling-boundary cues, inputs/exclusions, and the “must never” rules.
 
 [Back to top](#workers-runtime-boundary)
 
 ## Appendix
 
 <details>
-<summary><strong>Status legend and maintenance notes</strong></summary>
+<summary><strong>Status legend, sibling-boundary cues, and maintenance notes</strong></summary>
 
 ### Status legend
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly visible in the live repo tree or directly anchored by repeated KFM doctrine |
+| **CONFIRMED** | Directly visible in the current public repo tree or directly anchored by repeated KFM doctrine |
 | **INFERRED** | Strong fit with adjacent repo docs, but still not a mounted implementation fact |
 | **PROPOSED** | Recommended future placement or role consistent with doctrine |
 | **UNKNOWN** | Not verified from the live tree or current bounded evidence |
 | **NEEDS VERIFICATION** | Reviewer should inspect the mounted repo, manifests, tests, or schedules before treating the item as settled |
+
+### Current sibling-boundary reminders
+
+| Sibling | Default burden |
+|---|---|
+| `apps/cli/` | Human-invoked steward/operator commands |
+| `apps/governed-api/` | Request-time policy, trust, and evidence mediation |
+| `apps/explorer-web/` | Browser shell and public exploration surface |
+| `apps/review-console/` | Review-visible approval, denial, QA, and correction UI |
+| `apps/workers/` | Unattended, bounded, background execution only |
 
 ### Maintenance rules for this README
 
 1. Prefer **tree truth** over ambition.
 2. Add a child link only after the child path exists.
 3. Keep worker law small here and move reusable logic into packages.
-4. If the repo topology changes, update **Repo fit**, **Directory tree**, and **FAQ** together.
+4. If the app-family topology changes, update **Repo fit**, **Directory tree**, and sibling-boundary references together.
 5. If this directory becomes implementation-heavy, keep the top block concise and push long operational detail into child READMEs or runbooks.
 
 ### Good future neighbor docs
