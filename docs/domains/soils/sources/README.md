@@ -1,5 +1,3 @@
-# File: docs/domains/soils/sources/README.md
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: Kansas Frontier Matrix — Soils — Sources
