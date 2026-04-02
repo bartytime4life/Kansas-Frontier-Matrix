@@ -7,19 +7,19 @@ status: draft
 owners: [@bartytime4life, NEEDS VERIFICATION]
 created: 2026-04-01
 updated: 2026-04-02
-policy_label: NEEDS-VERIFICATION
+policy_label: public
 related: [
   "../README.md",
   "../../pipelines/ssurgo_to_catchment.md",
   "../../governance/ROOT_GOVERNANCE.md",
   "../../governance/ETHICS.md",
-  "NEEDS VERIFICATION: soil-specific contracts, schemas, and policy bundles"
+  "NEEDS VERIFICATION: contracts and policy paths for soil-derived surfaces"
 ]
 tags: [kfm, domains, soils, ssurgo, gssurgo, gnatsgo, agriculture, hydrology, provenance]
 notes: [
   "Target path requested by user: docs/domains/soils/README.md.",
-  "Current-session evidence boundary: attached PDFs and the uploaded baseline draft were visible; the live repo tree was not directly mounted in this run.",
-  "Relative links are preserved as repo-fit cues, but exact path existence and neighbor-file placement remain NEEDS VERIFICATION until checked against the live repository."
+  "Mounted repo evidence confirms a domains root README and a soil-related pipeline document, but does not confirm this exact lane path as already present.",
+  "This page preserves KFM doctrine: authoritative soil truth stays upstream; derived soil layers remain subordinate, rebuildable, and evidence-linked."
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -27,21 +27,29 @@ notes: [
 
 Domain README for soil truth, soil-derived surfaces, and the publication burden that follows when KFM turns authoritative soil records into usable Kansas context.
 
-| Status | Owners | Badges | Quick jumps |
-|---|---|---|---|
-| `draft` | `@bartytime4life`, `NEEDS VERIFICATION` | ![Status: Draft](https://img.shields.io/badge/status-draft-orange) ![Doctrine: Evidence First](https://img.shields.io/badge/doctrine-evidence--first-blue) ![Lane: Soils](https://img.shields.io/badge/lane-soils-6b8e23) ![Repo: Needs Verification](https://img.shields.io/badge/repo-needs%20verification-lightgrey) | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
+![Status: Draft](https://img.shields.io/badge/status-draft-orange)
+![Doctrine: Evidence First](https://img.shields.io/badge/doctrine-evidence--first-blue)
+![Surface: Soil Lane](https://img.shields.io/badge/lane-soils-6b8e23)
+![Repo Shape: Needs Verification](https://img.shields.io/badge/repo-needs%20verification-lightgrey)
 
-**Purpose:** define what belongs in the KFM soils lane, which source roles must remain distinct, and how soil outputs stay auditable rather than quietly becoming sovereign convenience layers.
+## At a glance
 
-**Repo fit:** target file requested as `docs/domains/soils/README.md`; intended as a lane-level companion to [`../README.md`](../README.md).  
-**Accepted inputs:** authoritative soil survey records, soil geometry and attributes, rebuildable soil derivatives, evidence-linked overlay methods, and soil publication/review notes.  
-**Exclusions:** this file is not a source dump, not a contract registry, not a raw SSURGO mirror, and not a license to flatten authoritative and modeled soil layers together.
+**Status:** `draft`  
+**Owners:** `@bartytime4life`, `NEEDS VERIFICATION`  
+**Path:** `docs/domains/soils/README.md`  
+**Purpose:** define what belongs in the KFM soils lane, which source roles must remain distinct, and how soil outputs stay auditable rather than quietly becoming sovereign convenience layers.  
+**Repo fit:** lane-level companion to [`../README.md`](../README.md)  
+**Related soil pipeline evidence:** [`../../pipelines/ssurgo_to_catchment.md`](../../pipelines/ssurgo_to_catchment.md)  
+**Accepted inputs:** authoritative soil survey records, soil geometry and attributes, rebuildable soil derivatives, evidence-linked overlay methods, and soil publication/review notes  
+**Exclusions:** this file is not a source dump, not a contract registry, not a raw SSURGO mirror, and not a license to flatten authoritative and modeled soil layers together
+
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > **Authority rule:** SSURGO-class soil records are the upstream soil authority. KFM soil summaries, overlays, and raster products remain **derived** unless explicitly promoted by doctrine and release controls.
 
 > [!NOTE]
-> **Evidence boundary:** this revision was grounded in attached KFM manuals, attached supporting soil notes, and the uploaded baseline draft. The live repository tree was **not** directly visible in this run, so exact path existence, neighboring file placement, and local ownership markers remain `NEEDS VERIFICATION`.
+> **Path posture:** the user requested `docs/domains/soils/README.md`. The mounted repo evidence visible in this session confirms a domains root README and soil-related pipeline material, but does **not** confirm that this exact lane path already exists. Treat the path as **PROPOSED / NEEDS VERIFICATION** until the live tree is checked.
 
 ---
 
@@ -61,9 +69,9 @@ This lane exists to keep several distinctions visible:
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Supported by attached KFM documentation visible in this session |
-| **INFERRED** | Strongly implied by KFM doctrine and supporting materials, but not directly reverified as live implementation |
-| **PROPOSED** | Recommended packaging, structure, or maintainer guidance added to make this file repo-ready |
+| **CONFIRMED** | Supported by repo-visible KFM documentation available in this session |
+| **INFERRED** | Strongly implied by KFM doctrine and visible docs, but not directly verified as live implementation |
+| **PROPOSED** | Recommended lane packaging or documentation structure added to make this file merge-ready |
 | **UNKNOWN** | Not verified strongly enough in this session |
 | **NEEDS VERIFICATION** | Concrete path, owner, contract, workflow, or enforcement detail requiring live repo confirmation |
 
@@ -86,14 +94,14 @@ This lane should help maintainers answer these questions quickly:
 |---|---|
 | **Target path for this file** | `docs/domains/soils/README.md` |
 | **Role** | Lane README for soil authority, derivative classes, publication burden, and cross-lane coupling |
-| **Upstream** | [`../README.md`](../README.md) *(NEEDS VERIFICATION in live tree)* |
-| **Adjacent soil pipeline reference** | [`../../pipelines/ssurgo_to_catchment.md`](../../pipelines/ssurgo_to_catchment.md) *(NEEDS VERIFICATION in live tree)* |
-| **Governance anchors** | `../../governance/ROOT_GOVERNANCE.md` · `../../governance/ETHICS.md` *(NEEDS VERIFICATION in live tree)* |
+| **Upstream** | [`../README.md`](../README.md) |
+| **Related soil pipeline evidence** | [`../../pipelines/ssurgo_to_catchment.md`](../../pipelines/ssurgo_to_catchment.md) |
+| **Governance anchors** | `../../governance/ROOT_GOVERNANCE.md` · `../../governance/ETHICS.md` *(paths NEEDS VERIFICATION in live tree)* |
 | **Expected downstream docs** | `./sources/README.md`, `./derived/README.md`, `./validation/README.md`, `./publication/README.md` *(PROPOSED / NEEDS VERIFICATION)* |
-| **Current-session subtree certainty** | **UNKNOWN** for this exact local lane path because the live repo tree was not mounted in this run |
+| **Mounted subtree reality** | **UNKNOWN** for this exact lane path in the current session |
 
 > [!TIP]
-> The strongest project evidence says KFM treats Kansas domain lanes as operating burdens rather than decorative topics. This page should preserve that burden even if the final local tree uses a broader agriculture/soils placement.
+> The strongest visible repo evidence says KFM already treats **agriculture / soils** as a distinct domain burden and already carries a soil-derived pipeline document. This page should preserve that burden even if the final tree ends up under a different normalized lane name.
 
 [Back to top](#kansas-frontier-matrix--soils)
 
@@ -120,7 +128,7 @@ The following belong in or immediately beneath the soils lane:
 | **gSSURGO** | gridded derivative of SSURGO-class content | raster workflows, statewide analytical stacks | **CONFIRMED** |
 | **gNATSGO** | national gridded fallback / continuity surface | gap-filling at broader scale where applicable | **INFERRED** |
 | **Soil Data Access (SDA)** | authoritative query/access surface | extraction and reproducible SQL-driven acquisition | **INFERRED** |
-| **Kansas/state mirrors or portals** | discovery and access convenience | lookup and distribution | **INFERRED** |
+| **Kansas/state mirrors or portals** | discovery and access convenience | easier lookup and distribution | **INFERRED** |
 | **Derived KFM overlays** | subordinate, rebuildable interpretation layers | catchment soil summaries, hydrologic joins, story cards | **CONFIRMED** for class, **NEEDS VERIFICATION** for exact implementations |
 
 ### Typical soil-derived outputs
@@ -162,7 +170,7 @@ This README should not become a warehouse for everything adjacent to soils.
 
 ### Current-session path certainty
 
-The live repo tree was not directly visible in this run. The structure below is therefore a **PROPOSED** normalized shape rather than a confirmed current subtree.
+The live repo confirms a domains root README and a soil-related pipeline doc, but does **not** confirm the exact local subtree for a soils lane in this session. The tree below is therefore a **PROPOSED** normalized shape.
 
 ### Recommended normalized subtree (`PROPOSED / NEEDS VERIFICATION`)
 
@@ -214,10 +222,52 @@ Use this sequence when creating or revising soil-lane documentation.
 5. Name the lane’s public-safe default and the conditions that trigger downgrade, generalization, or block.
 6. Link out to pipeline, contract, policy, and evidence surfaces rather than duplicating them.
 
+### Minimal lane stub
+
+```md
+# Kansas Frontier Matrix — Soils
+
+One-line purpose for the soil lane.
+
 > [!NOTE]
-> Keep the KFM truth path visible whenever soil outputs are discussed:
->
-> `source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED`
+> **Lane posture:** authoritative upstream soil truth · derived downstream rollups · visible uncertainty and provenance
+
+## Purpose
+What the lane covers and what it does not.
+
+## Source roles
+- authoritative soil survey record
+- gridded derivative
+- access/query surface
+- discovery mirror
+- KFM derived overlay
+- modeled soil-adjacent surface
+
+## Representative sources
+- SSURGO
+- gSSURGO
+- gNATSGO
+- SDA
+- Kansas/state soil access portals
+
+## Publication posture
+- default public-safe form:
+- restricted / downgraded cases:
+- modeled-vs-surveyed disclosure rule:
+- review triggers:
+
+## Cross-lane couplings
+- hydrology:
+- agriculture:
+- hazards:
+- ecology:
+- dossier/story relevance:
+
+## Verification and release notes
+- validation gates:
+- evidence requirements:
+- open NEEDS VERIFICATION items:
+```
 
 ### Ready-before-merge check
 
@@ -270,25 +320,6 @@ A lane doc should make it impossible to confuse:
 - inferred or predicted soil-adjacent surfaces
 - analytical convenience layers
 - narrative interpretations downstream of those layers
-
-### Public-safe defaults
-
-These are good default outward forms when soil detail needs to stay interpretable and bounded:
-
-- generalized soil context for a place, catchment, or corridor
-- dominant or mixed soil group with share/confidence
-- area-weighted summary values with clear evidence access
-- interpreted but bounded prose such as “soil context suggests…”
-
-### Review-bearing or downgrade-prone cases
-
-These deserve extra caution, generalization, or explicit review before outward publication:
-
-- weak dominance or mixed classes hidden by simplification
-- incomplete coverage not surfaced clearly
-- soil-derived suitability claims that imply more certainty than support allows
-- modeled erosion / moisture / productivity outputs presented as survey truth
-- joins that materially change meaning across hydrology, ecology, or agricultural lanes
 
 [Back to top](#kansas-frontier-matrix--soils)
 
@@ -400,7 +431,7 @@ Yes, but as **derived/gridded soil products**, not as replacements for the autho
 
 ### Why is hydrology mentioned so often in a soils lane?
 
-Because one of the strongest visible project examples is a soil-to-catchment overlay pipeline, and because runoff, drainage, infiltration, and watershed reasoning are major places where soil derivatives become operationally useful.
+Because one of the strongest visible repo examples is a soil-to-catchment overlay pipeline, and because runoff, drainage, infiltration, and watershed reasoning are major places where soil derivatives become operationally useful.
 
 ### Does this lane include agricultural context too?
 
@@ -438,6 +469,26 @@ Not by default. It should point to them once verified. This README should preser
 - Reconcile this lane README with `../../pipelines/ssurgo_to_catchment.md`
 - Confirm whether additional soil-derived pipelines exist
 - Confirm whether EvidenceRef / EvidenceBundle contract paths are already documented in-repo
+
+</details>
+
+<details>
+<summary><strong>Suggested publication defaults</strong></summary>
+
+### Public-safe by default
+
+- generalized soil context for a place, catchment, or corridor
+- dominant or mixed soil group with share/confidence
+- area-weighted summary values with clear evidence access
+- interpreted but bounded prose such as “soil context suggests…”
+
+### Review-bearing or downgrade-prone cases
+
+- weak dominance or mixed classes hidden by simplification
+- incomplete coverage not surfaced clearly
+- soil-derived suitability claims that imply more certainty than support allows
+- modeled erosion / moisture / productivity outputs presented as survey truth
+- joins that materially change meaning across hydrology, ecology, or agricultural lanes
 
 </details>
 
