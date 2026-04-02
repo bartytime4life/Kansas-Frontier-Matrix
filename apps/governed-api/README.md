@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [../../contracts/, ../../schemas/, ../../policy/, ../../packages/, ../../docs/]
 tags: [kfm, governed-api, api, trust-membrane]
-notes: [Path/name, owners, dates, and policy label require live repo verification.]
+notes: [Requested target path is apps/governed-api/README.md, but March 2026 repo-grounded material also references apps/api; owners, dates, and policy label require live repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Governed API
@@ -19,26 +19,41 @@ Trust-bearing API boundary for KFM reads, evidence resolution, bounded assistanc
 
 > **Status:** experimental  
 > **Owners:** NEEDS VERIFICATION  
-> **Path:** `apps/governed-api/README.md`  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![KFM](https://img.shields.io/badge/KFM-governed%20API-1f4d78) ![Truth%20posture](https://img.shields.io/badge/truth%20posture-source--bounded-blue) ![Implementation](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Path:** `apps/governed-api/README.md` *(requested target path; live repo path still needs verification)*  
+> ![Component](https://img.shields.io/badge/component-experimental-orange) ![Doctrine](https://img.shields.io/badge/doctrine-trust--membrane-1f4d78) ![Runtime](https://img.shields.io/badge/runtime-finite%20outcomes-blue) ![Repo%20fit](https://img.shields.io/badge/repo%20fit-needs%20verification-lightgrey)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This application is the KFM trust membrane in product form. Client surfaces consume governed API responses; they do **not** talk directly to canonical stores, object storage, raw lifecycle zones, or unpublished artifacts.
+> In KFM, the governed API is part of the trust membrane. Public and normal UI clients consume governed responses; they do **not** bypass policy evaluation, evidence resolution, release state, or correction visibility.
+
+> [!NOTE]
+> This README separates **CONFIRMED doctrine** from **NEEDS VERIFICATION repo topology**. March 2026 repo-grounded material mentions `apps/api` and `apps/api/src/api/README.md`; the requested destination here is `apps/governed-api/README.md`. Until a live repo tree is rechecked, that rename should not be stated as settled fact.
 
 ## Scope
 
-This directory is the API-side boundary for KFM’s governed read, explain, export, and stewardship flows.
+This directory owns the edge-facing contract between KFM clients and release-scoped, policy-shaped, evidence-resolvable outputs.
 
-At a doctrinal level, this application exists to keep five things true at once:
+The strongest March 2026 KFM manuals are consistent on the core point: KFM is a governed spatial evidence system, and the runtime edge must preserve the truth path, the trust membrane, authoritative-versus-derived separation, fail-closed behavior, visible correction lineage, and bounded runtime outcomes. This README therefore documents the API boundary as a **trust surface**, not as generic transport plumbing.
 
-1. **Public and internal requests stay policy-shaped.**
-2. **Evidence drill-through stays operational at point of use.**
-3. **Released scope stays distinct from raw, working, or candidate scope.**
-4. **Finite outcomes replace silent failure or fluent overclaiming.**
-5. **Publication, correction, and review remain governed state transitions, not convenience side effects.**
+### Current reading
 
-In practice, this means the governed API is where KFM’s route families, policy checks, evidence resolution, and response envelopes meet.
+| Signal | Reading |
+|---|---|
+| Doctrine role of a governed API boundary | **CONFIRMED** |
+| Need for `EvidenceRef → EvidenceBundle` resolution and runtime envelopes | **CONFIRMED** |
+| Path `apps/api` in older repo-grounded docs | **INFERRED** from March 2026 repo-grounded documentation snapshots |
+| Path `apps/governed-api` as mounted repo reality | **NEEDS VERIFICATION** |
+| Live endpoint inventory | **UNKNOWN** |
+| Live contract/schema inventory in code | **UNKNOWN** |
+
+### What this README is for
+
+It should let reviewers answer four questions quickly:
+
+1. What belongs in the edge-facing KFM API boundary?
+2. What must stay outside it?
+3. Which request families are public-safe versus internal-only?
+4. What still needs proof before this directory can claim maturity?
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
@@ -47,23 +62,22 @@ In practice, this means the governed API is where KFM’s route families, policy
 | Item | Value |
 |---|---|
 | File | `apps/governed-api/README.md` |
-| Directory role | Application-facing API boundary for KFM trust, policy, and evidence resolution |
-| Upstream dependencies | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) · [`../../packages/`](../../packages/) |
-| Downstream consumers | [`../`](../) · [`../../docs/`](../../docs/) · [`../../tests/`](../../tests/) |
-| Path/name status | **NEEDS VERIFICATION** — current repo-grounded material confirms `apps/` at repo root, but older API-shaped references surfaced as `apps/api/...`, not definitively as `apps/governed-api/` |
-| Contract posture | Contract-first, policy-aware, source-bounded |
-| Truth posture | **CONFIRMED** doctrine / **PROPOSED** starter layout / **UNKNOWN** mounted implementation depth |
+| Directory role | Trust-bearing API boundary for governed reads, evidence resolution, bounded assistance, exports, and steward-only operations |
+| Working path status | **NEEDS VERIFICATION** — older repo-grounded material references `apps/api` and `apps/api/src/api/README.md`; this README uses the requested target path without asserting a live rename |
+| Upstream doctrinal / contract neighbors | [contracts], [schemas], [policy], [packages], [docs] |
+| Older repo-grounded adjacent references | `packages/evidence`, `packages/policy`, and `contracts/openapi` |
+| Downstream consumers | Map / Story / Dossier / Focus / Review / Export shells and variants on the governed substrate (**NEEDS VERIFICATION** exact app paths) |
+| Edge rule | Public clients talk to governed API surfaces, not directly to canonical stores, artifact trees, model runtimes, or unpublished scope |
+| Evidence posture | **CONFIRMED** doctrine, **INFERRED** repo-adjacent fragments, **UNKNOWN** live implementation depth |
 
-### What this README is for
+### Local fit note
 
-This README is meant to make the governed API’s role unambiguous even before every mounted implementation detail is verified.
+This README is intentionally written to fit either of two realities:
 
-It should help reviewers answer:
+1. the requested destination `apps/governed-api/README.md`, or
+2. an older still-live `apps/api/...` placement that has not yet been renamed in the mounted repo.
 
-- What belongs in this application?
-- What must stay outside it?
-- Which request families are public-safe versus internal-only?
-- What proof objects and gates must exist before the directory can claim maturity?
+If live verification shows the older path is still canonical, move or alias this README rather than rewriting its doctrinal substance.
 
 ## Accepted inputs
 
@@ -71,298 +85,301 @@ This area should accept or orchestrate the following request classes.
 
 | Input class | Belongs here? | Notes |
 |---|---:|---|
-| Catalog and discovery requests | Yes | Released metadata, discovery lists, catalog closures, release-scoped discovery |
-| Feature or subject reads | Yes | Released authoritative features, place dossiers, claim/detail reads |
-| Map / tile / portrayal reads | Yes | Public-safe map, tile, style, legend, and portrayal responses |
-| Evidence resolution requests | Yes | `EvidenceRef -> EvidenceBundle` drill-through and related trust objects |
-| Story / dossier / compare reads | Yes | Requests that remain anchored to the same released shell context |
-| Export / report requests | Yes | Public-safe exports and package manifests that inherit release/policy state |
-| Focus / governed assistance requests | Yes | Bounded natural-language requests over released scope only |
-| Review / stewardship actions | Yes, internal only | Approval, denial, rollback, quarantine inspection, rights handling |
-| Ops / status endpoints | Yes, internal only | Health, traces, metrics, audit joins, runtime status |
-| Policy-evaluation adapters | Yes | Whether in-process or delegated, the governed API owns the request boundary |
+| Catalog and discovery requests | Yes | Release-scoped discovery, catalog closure reads, outward metadata resolution |
+| Feature / subject / place reads | Yes | Released authoritative reads only |
+| Map / tile / style / legend / portrayal reads | Yes | Public-safe delivery over released scope |
+| `EvidenceRef` resolution | Yes | Request-time drill-through to `EvidenceBundle` |
+| Story / dossier / compare reads | Yes | Must stay anchored to the same geography/time/release shell |
+| Export / report requests | Yes | Public-safe outward artifacts that inherit release, policy, and correction state |
+| Focus / governed assistance requests | Yes | Bounded synthesis over admissible released evidence only |
+| Review / stewardship actions | Yes, internal only | Approval, denial, rollback, quarantine inspection, rights/sensitivity handling |
+| Ops / status endpoints | Yes, internal only | Health, traces, audit joins, runtime status; no shadow truth surface |
+| Raw store paths, DB credentials, unpublished candidate artifacts | No | Trust-membrane violation |
+| Free-form uncited assistant behavior | No | KFM doctrine prohibits it |
 
 ## Exclusions
 
-The following do **not** belong here.
-
 | Out of scope | Why it stays out | Where it goes instead |
 |---|---|---|
-| Direct access to raw/work/quarantine storage | Breaks the trust membrane | `../../data/` plus governed workers and review flows |
-| Canonical truth writes from browser clients | Public clients must not mutate authoritative stores directly | governed internal review / promotion routes |
-| Contract source-of-truth documents | This app consumes contracts; it does not replace them | [`../../contracts/`](../../contracts/) and authoritative schema home once verified |
-| Policy bundle authorship | This app enforces policy but should not become policy’s sovereign source | [`../../policy/`](../../policy/) |
-| Shared domain logic | Prevents app-local drift and copy-paste divergence | [`../../packages/`](../../packages/) |
-| UI rendering behavior | The frontend owns presentation; the API owns payload truth and enforcement | sibling app surfaces under `../` and repo UI areas |
-| Free-form uncited assistant behavior | Violates cite-or-abstain and bounded assistance doctrine | not allowed |
-| “Secret” second truth surfaces in telemetry or ops | Status must not become a bypass or hidden database mirror | internal ops routes with governed shaping only |
+| Direct browser/client access to RAW, WORK, QUARANTINE, canonical stores, or artifact trees | Collapses the trust membrane | Intake, canonical, catalog/review, and projection planes behind governed services |
+| Canonical writes from ordinary clients | Public clients are not authority writers | Steward-only review / repair / promotion lanes |
+| Shared domain logic ownership | Avoids app-local drift and copy-paste contracts | [packages] |
+| Policy bundle authorship | This app enforces policy; it should not become policy’s sovereign home | [policy] and package-level policy surfaces |
+| Schema / standards-profile source of truth | This app consumes and validates against them | [contracts] and [schemas] |
+| Hidden correction or rollback behavior | KFM requires visible correction lineage | release / correction runbooks and proof objects |
+| “Secret” second truth in telemetry or ops | Status endpoints must not become a bypass database | governed ops routes with shaped outputs only |
 
 > [!WARNING]
-> This directory must not become a quiet dumping ground for “temporary” bypasses, hand-shaped payloads, or undocumented route behavior. In KFM, undocumented convenience is usually hidden governance debt.
-
-<p align="right"><a href="#governed-api">Back to top ↑</a></p>
+> Do not let this directory become a convenience bypass. In KFM, undocumented edge behavior is usually governance debt in disguise.
 
 ## Directory tree
 
-_Proposed starter shape — not a confirmed mounted tree._
+### Corpus-observed March 2026 path fragments
+
+_This is **not** a live tree dump. It reflects repo-grounded March 2026 documents, not direct mounted checkout evidence._
+
+```text
+.
+├── apps/
+│   ├── api/
+│   │   └── src/api/README.md          # older repo-grounded reference
+│   └── ui/                            # older repo-grounded reference
+├── contracts/
+│   └── openapi/                       # older repo-grounded reference
+├── packages/
+│   ├── evidence/                      # older repo-grounded reference
+│   └── policy/                        # older repo-grounded reference
+├── policy/
+├── schemas/
+└── tests/
+```
+
+### Requested target placement
 
 ```text
 apps/
 └── governed-api/
-    ├── README.md
-    ├── src/                         # NEEDS VERIFICATION
-    │   ├── routes/
-    │   │   ├── catalog/
-    │   │   ├── feature-read/
-    │   │   ├── map-portrayal/
-    │   │   ├── evidence/
-    │   │   ├── story-compare/
-    │   │   ├── export/
-    │   │   ├── focus/
-    │   │   ├── review/
-    │   │   └── ops/
-    │   ├── policy/
-    │   ├── resolvers/
-    │   ├── services/
-    │   ├── telemetry/
-    │   └── contracts/
-    ├── tests/                       # NEEDS VERIFICATION
-    │   ├── contract/
-    │   ├── integration/
-    │   └── fixtures/
-    ├── docs/                        # optional, NEEDS VERIFICATION
-    └── runtime-manifest             # package.json / pyproject.toml / equivalent
+    └── README.md
 ```
 
-### Why this starter shape is useful
+### Working implication
 
-It keeps three boundaries crisp:
-
-- **route family surface** at `src/routes/`
-- **trust mechanics** at `src/policy/` and `src/resolvers/`
-- **proof and regression burden** at `tests/`
-
-That structure matters because KFM’s doctrine repeatedly prefers named, typed, inspectable artifacts over hand-wavy behavior.
-
-## Quickstart
-
-### Verification-first quickstart
-
-Before treating this application as real and governable, verify these in order:
-
-1. **Confirm the path/name.** Determine whether the live repo uses `apps/governed-api/`, `apps/api/`, or another approved API location.
-2. **Confirm schema authority.** Resolve whether `../../contracts/` or `../../schemas/` is the canonical machine-validated home.
-3. **Confirm the first merge gate.** Verify that a real, required workflow exists rather than placeholder workflow documentation.
-4. **Confirm first-wave artifacts.** Surface real schema files, valid/invalid fixtures, and a deterministic validator command.
-5. **Confirm route inventory.** Document which route families are live, partial, or still planned.
-
-### Starter commands
-
-```bash
-# pseudocode — replace with the repo's actual task runner and script names
-repo verify-contracts
-repo test governed-api
-repo run governed-api
-```
-
-### Minimum local review loop
-
-```bash
-# pseudocode — intended review sequence, not a confirmed script set
-repo lint governed-api
-repo verify-contracts
-repo test governed-api --contract --integration
-repo smoke governed-api
-```
-
-> [!NOTE]
-> Exact package manager, runtime, and command names are intentionally left unclaimed here until the live repo proves them.
+The safer documentation move is to keep the boundary description stable while leaving path migration explicit. That prevents the README from turning a requested rename into an unsupported claim.
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
+## Quickstart
+
+### Verification-first starter loop
+
+1. Verify whether the live repo still uses `apps/api`, has already renamed to `apps/governed-api`, or uses both during transition.
+2. Verify whether public and internal route contracts live under `contracts/openapi/`, another contract surface, or both.
+3. Verify whether `EvidenceBundle`, `RuntimeResponseEnvelope`, `DecisionEnvelope`, `ReleaseManifest`, and `CorrectionNotice` exist as real schemas, examples, or DTOs.
+4. Verify whether current CI actually enforces any merge-blocking contract, policy, or docs gates.
+5. Update the path, owners, dates, and policy label in this README only after that live check.
+
+### Illustrative local verification commands
+
+```bash
+# illustrative only — replace with the repo's actual task runner and local conventions
+git grep -n "apps/api/src/api/README.md\|apps/governed-api"
+git grep -n "EvidenceBundle\|RuntimeResponseEnvelope\|DecisionEnvelope\|ReleaseManifest\|CorrectionNotice"
+git grep -n "focus/ask\|stac/items\|datasets\|EvidenceRef"
+find contracts schemas policy tests .github/workflows -maxdepth 3 -type f | sort
+```
+
+### Minimum review pass before editing this README again
+
+```bash
+# illustrative review sequence
+git grep -n "README.md" apps packages contracts policy docs
+git diff --name-only HEAD~1..HEAD
+# then re-check whether any path, contract, or route claim in this README needs promotion or downgrade
+```
+
+> [!NOTE]
+> The March 2026 corpus is much stronger on doctrine and required proof objects than on mounted commands, entrypoints, or route filenames. Keep command snippets illustrative until the live repo proves them.
+
 ## Usage
 
-### Route-family overview
+### Boundary responsibilities
 
-The governed API should expose route families by responsibility, not by framework fashion.
+The governed API should expose request families by responsibility, not by framework fashion.
 
-| Route family | Primary objects | Boundary profile | What the route family owes callers |
-|---|---|---|---|
-| Catalog and discovery | release metadata, dataset/distribution discovery, catalog closures | public governed | identifier consistency, release scope, machine-readable discovery |
-| Feature or subject read | authoritative released features, place dossiers, claim/detail views | public governed | stable IDs, support/time semantics, rights posture, release linkage |
-| Map / tile / portrayal | released maps, tiles, legends, styles, portrayals | public governed | release linkage, policy posture, freshness, correction visibility |
-| Evidence resolution | `EvidenceRef -> EvidenceBundle` and related trust objects | public governed | admissible published scope, visible rights/sensitivity, audit linkage |
-| Story / dossier / compare | narrative/comparison inputs anchored in the same shell | public governed | stable spatial and temporal anchor, evidence drill-through |
-| Export and report | public-safe exports, previews, packaged report objects | public governed | no export outruns release, policy, or correction state |
-| Focus / governed assistance | bounded natural-language investigation over released scope | public governed | finite outcome, citations, policy-visible reasoning, audit linkage |
-| Review / stewardship | moderation, quarantine inspection, approval, denial, rollback, rights handling | internal governed | explicit review/decision artifacts, no hidden approvals |
-| Ops / status | health, metrics, traces, audit joins | internal governed | no raw canonical exposure, no second truth surface |
+| Route family | Public or internal | What it owes callers |
+|---|---|---|
+| Catalog and discovery | Public governed | release scope, stable identifiers, outward metadata closure |
+| Feature / subject / place reads | Public governed | support/time semantics, rights posture, release linkage, correction visibility |
+| Map / tile / portrayal | Public governed | release linkage, freshness basis, policy posture |
+| Evidence resolution | Public governed | `EvidenceRef → EvidenceBundle`, preview policy, rights/sensitivity state, audit linkage |
+| Story / dossier / compare | Public governed | anchored geography/time shell, drill-through to evidence |
+| Export / report | Public governed | no export outruns release, policy, or correction state |
+| Focus / governed assistance | Public governed | finite outcome, citation check, policy-visible reasoning boundary, audit linkage |
+| Review / stewardship | Internal governed | explicit decision artifacts, no hidden approvals |
+| Ops / status | Internal governed | health and explainability without raw-store exposure |
 
-### Request handling rules
+### Request handling rule of thumb
 
-Every consequential request should pass through a sequence like this:
-
-1. **Context and identity**
-2. **Policy pre-check**
-3. **Release-scope narrowing**
-4. **Evidence or catalog resolution**
-5. **Response shaping**
-6. **Finite outcome emission**
-7. **Telemetry / audit linkage**
+1. establish request context and audience;
+2. apply policy pre-checks;
+3. narrow to release-scoped admissible material;
+4. resolve evidence or catalog objects;
+5. shape the response into a bounded runtime result;
+6. attach decision and audit linkage;
+7. preserve visible correction and stale-state cues.
 
 ### Public-safe outcomes
 
-| Outcome shape | Public-safe? | Minimum burden |
+| Outcome | Allowed? | Minimum burden |
 |---|---:|---|
-| Cited answer / cited payload | Yes | resolvable evidence, policy-allowed scope, release linkage |
-| Abstain / deny | Yes | named reason, bounded scope, calm failure language |
-| Review-required escalation | Internal or gated | explicit review path and decision artifact |
+| Evidence-linked read | Yes | resolvable support, policy-allowed scope, release linkage |
+| `ANSWER` | Yes | evidence resolution + citation checks |
+| `ABSTAIN` | Yes | explicit bounded reason, calm failure language |
+| `DENY` | Yes | policy reason + obligation visibility where applicable |
+| `ERROR` | Yes | machine-meaningful failure without bluffing |
 | Silent fallback to uncited prose | No | prohibited |
-| Direct object-store / DB pass-through | No | prohibited |
+| Direct DB / object-store pass-through | No | prohibited |
 
 ## Diagram
 
 ```mermaid
 flowchart LR
     subgraph Clients["Client surfaces"]
-        Map["Map / Story / Focus / Steward UIs"]
-        Other["Other governed clients"]
+        Map["Map / Story / Dossier / Focus / Steward clients"]
     end
 
-    subgraph API["apps/governed-api/"]
-        Routes["Route families"]
-        Policy["Policy evaluation"]
+    subgraph Runtime["Runtime & trust-surfaces plane"]
+        API["Governed API"]
         Resolver["EvidenceRef → EvidenceBundle"]
-        Runtime["Finite response envelopes"]
+        Envelope["Runtime outcomes\nANSWER / ABSTAIN / DENY / ERROR"]
     end
 
-    subgraph TruthPath["KFM truth path"]
-        RAW["RAW"]
-        WORK["WORK / Quarantine"]
-        PROC["PROCESSED"]
-        CAT["CATALOG"]
-        PUB["PUBLISHED"]
+    subgraph Control["Catalog / policy / review plane"]
+        Policy["DecisionEnvelope / policy evaluation"]
+        Review["Review / release / correction"]
     end
 
-    Map --> Routes
-    Other --> Routes
+    subgraph Data["Published and authoritative scope"]
+        Published["PUBLISHED scope"]
+        Closure["STAC / DCAT / PROV closure"]
+    end
 
-    Routes --> Policy
-    Routes --> Resolver
-    Resolver --> CAT
-    Routes --> PUB
-    Routes --> Runtime
+    subgraph NonPublic["Non-public planes"]
+        Raw["RAW / WORK / QUARANTINE"]
+        Canon["Canonical truth"]
+    end
 
-    RAW --> WORK --> PROC --> CAT --> PUB
+    Map --> API
+    API --> Policy
+    API --> Resolver
+    Resolver --> Published
+    Resolver --> Closure
+    Policy --> Review
+    API --> Envelope
 
-    Map -. no direct access .-> RAW
-    Map -. no direct access .-> WORK
-    Map -. no direct access .-> PROC
-    Map -. no direct access .-> CAT
+    Map -. no direct client path .-> Raw
+    Map -. no direct client path .-> Canon
 ```
 
 ### Reading the diagram
 
-The point is not that the API “owns” the whole truth path. It does not.
-
-The point is that client-visible access should enter through governed route families, inherit policy and release context, and only then resolve toward the published/evidence-bearing side of the system.
+The API does not “own” the whole system. It owns the public and steward edge where request context, policy evaluation, evidence resolution, and bounded runtime results meet. That edge must stay downstream of release, review, and correction rather than becoming a shortcut around them.
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
 ## Tables
 
-### Trust-bearing objects this app is expected to touch
+### Core trust-bearing objects this boundary is expected to touch
 
-| Object | Why it matters here | Status |
+| Object family | Why it matters here | Status |
 |---|---|---|
-| `EvidenceBundle` | makes evidence drill-through operational | doctrinally strong; mounted implementation UNKNOWN |
-| `RuntimeResponseEnvelope` | prevents free-form response drift | doctrinally strong; mounted implementation UNKNOWN |
-| `ReleaseManifest` | ties outward payloads to release state | doctrinally strong; mounted implementation UNKNOWN |
-| `CorrectionNotice` | keeps rollback/withdrawal visible | doctrinally strong; mounted implementation UNKNOWN |
-| review / decision artifacts | keep approval and denial inspectable | doctrinally strong; mounted implementation UNKNOWN |
+| `EvidenceBundle` | makes drill-through operational at point of use | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
+| `RuntimeResponseEnvelope` | keeps runtime outcomes finite and auditable | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
+| `DecisionEnvelope` | makes policy results machine-readable | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
+| `ReleaseManifest` / proof pack | ties outward payloads to release state | **CONFIRMED** doctrinal object; live files **UNKNOWN** |
+| `CorrectionNotice` | keeps rollback, supersession, narrowing, and withdrawal visible | **CONFIRMED** doctrinal object; live files **UNKNOWN** |
+| review / approval artifacts | prevents silent approvals | **CONFIRMED** doctrinal object; live workflow evidence **UNKNOWN** |
 
-### Build-vs-boundary matrix
+### Boundary ownership matrix
 
-| Concern | Belongs in this app | Belongs elsewhere |
-|---|---:|---:|
-| Request authentication / policy boundary | ✓ |  |
-| Evidence resolution orchestration | ✓ |  |
-| Release-aware payload shaping | ✓ |  |
-| Shared domain model ownership |  | ✓ |
-| Policy bundle authoring |  | ✓ |
-| Catalog authoring and dataset packaging |  | ✓ |
-| Frontend rendering and interaction chrome |  | ✓ |
-| Direct canonical store access from clients |  | ✓ (prohibited) |
+| Concern | This app owns it | This app consumes it | This app must not replace it |
+|---|---:|---:|---:|
+| Request authentication / policy edge | ✓ |  |  |
+| Evidence resolution orchestration | ✓ |  |  |
+| Runtime envelope emission | ✓ |  |  |
+| Shared domain model ownership |  | ✓ | ✓ |
+| Policy bundle authoring |  | ✓ | ✓ |
+| Catalog closure authoring |  | ✓ | ✓ |
+| Canonical source-of-truth writes |  |  | ✓ |
+| Derived map/search/scene rebuild logic |  | ✓ | ✓ |
+
+### Evidence and freshness posture
+
+| Statement type | What to surface |
+|---|---|
+| Released, public-safe read | release linkage, provenance, freshness basis, correction state |
+| Modeled / derived content | modeled status, limits, and release linkage |
+| Partial coverage | explicit partial-state cue, not silent omission |
+| Stale projection | visible stale cue or fail-closed denial depending on policy |
+| Rights / sensitivity constrained read | denial or generalized output with stated obligation |
 
 ## Task list
 
 ### Definition of done for this directory
 
-- [ ] Path/name is verified against the live repo (`apps/governed-api` vs current API location).
-- [ ] One canonical schema authority is declared and referenced here consistently.
-- [ ] A real merge-blocking contracts gate exists and is required on merges.
-- [ ] First-wave schema files exist as real artifacts, not only README references.
-- [ ] Valid and invalid fixtures exist for the first response families.
-- [ ] `EvidenceRef -> EvidenceBundle` positive and negative traces are stored as proof artifacts.
-- [ ] Focus/governed-assistance responses are finite and citation-bearing.
-- [ ] Review/stewardship routes are explicitly internal-only.
-- [ ] UI bypass of storage/canonical stores is tested and blocked.
-- [ ] Correction and rollback behavior is visible, not silent.
-- [ ] Owners, dates, policy label, and related links in the meta block are verified and filled.
+- [ ] Live path is verified (`apps/governed-api` vs `apps/api` or other).
+- [ ] Owners, created date, updated date, and policy label in the meta block are filled from live repo authority.
+- [ ] One public contract surface for governed reads is linked from this README.
+- [ ] One internal/steward contract surface is linked from this README.
+- [ ] One positive `EvidenceRef → EvidenceBundle` trace is surfaced.
+- [ ] One negative runtime trace is surfaced for each of `ABSTAIN`, `DENY`, and `ERROR`.
+- [ ] One correction / rollback example is linked.
+- [ ] CI evidence is verified for contract or policy gating, or this README keeps that maturity explicitly marked **UNKNOWN**.
+- [ ] Path links in this file are updated to actual repo neighbors after live verification.
 
 ### First high-value gates
 
 - [ ] **contracts gate** — schema compile + valid/invalid fixtures + non-zero CI failure
-- [ ] **policy gate** — deny-by-default vocab and reason handling
-- [ ] **resolver gate** — evidence bundle drill-through with policy-safe denial path
-- [ ] **runtime gate** — finite envelope validation for positive and negative outcomes
+- [ ] **policy gate** — deny-by-default reason / obligation grammar
+- [ ] **resolver gate** — positive and negative `EvidenceBundle` traces
+- [ ] **runtime gate** — finite envelope validation for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
+- [ ] **correction gate** — visible supersession / withdrawal / rollback behavior
+- [ ] **docs gate** — this README and adjacent runbooks stay aligned with actual route / contract / correction behavior
+
+<p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
 ## FAQ
 
-### Why is this a “governed” API instead of just “the backend”?
+### Why “governed API” instead of just “backend”?
 
-Because KFM treats the API boundary as part of the trust model, not just transport plumbing. Public and steward surfaces are supposed to inherit policy, release state, evidence drill-through, and correction behavior at the request boundary.
+Because KFM treats the API boundary as part of the trust model. It is where public or steward requests inherit release state, evidence drill-through, policy posture, and fail-closed runtime behavior.
 
 ### Why can’t the UI call the database or object store directly?
 
-Because that would collapse the trust membrane. KFM doctrine repeatedly treats direct client access to canonical or storage surfaces as a bypass of policy, provenance, and evidence guarantees.
+Because that would collapse the trust membrane. KFM repeatedly treats direct client access to canonical or storage surfaces as a bypass of policy, provenance, and evidence guarantees.
 
 ### Is Focus Mode just another chat endpoint?
 
-No. It is a bounded request family over released scope. It must remain subordinate to evidence, policy, and finite outcomes, rather than acting as a free-form truth source.
+No. It is a bounded runtime surface inside the governed shell. It must remain subordinate to admissible evidence, policy, release state, and finite outcomes.
 
-### Why does this README keep saying “NEEDS VERIFICATION”?
+### Why is path naming still marked NEEDS VERIFICATION?
 
-Because the current evidence base is stronger on doctrine than on mounted implementation. This file is written to be commit-ready **without** pretending that unverified paths, scripts, or route trees are already proven.
+Because March 2026 corpus evidence is stronger on doctrine than on live repo topology. Older repo-grounded material mentions `apps/api`; the current user request asks for `apps/governed-api`. This README keeps that distinction visible instead of choosing one path by confidence alone.
 
 ## Appendix
 
 <details>
-<summary><strong>Status legend and working vocabulary</strong></summary>
+<summary><strong>Status legend, vocabulary, and path note</strong></summary>
 
-### Truth labels used in this README
+### Truth labels used here
 
-| Label | Meaning here |
+| Label | Meaning |
 |---|---|
-| **CONFIRMED** | grounded in visible doctrine or repo-root evidence surfaced in current materials |
-| **INFERRED** | strongly implied by multiple sources but not directly proven as mounted implementation |
-| **PROPOSED** | recommended starter shape for this directory |
-| **UNKNOWN** | not verified strongly enough to claim as implemented |
-| **NEEDS VERIFICATION** | specifically requires live repo inspection before becoming normative |
+| **CONFIRMED** | directly supported by the March 2026 KFM corpus in this session |
+| **INFERRED** | strongly implied by repeated corpus patterns, but not directly mounted as implementation |
+| **PROPOSED** | a recommended starter shape or sequencing move |
+| **UNKNOWN** | not verified strongly enough to claim as live repo or runtime fact |
+| **NEEDS VERIFICATION** | a field or path that should be confirmed against live repo authority before publication |
 
-### Short glossary
+### Working vocabulary
 
-| Term | Meaning |
+| Term | Meaning in this README |
 |---|---|
-| **Trust membrane** | architectural boundary that prevents clients from bypassing governed APIs |
-| **EvidenceRef** | outward-facing reference to evidence-bearing material |
-| **EvidenceBundle** | resolved, inspectable evidence package with policy-safe context |
-| **RuntimeResponseEnvelope** | bounded response object for governed runtime outcomes |
-| **CorrectionNotice** | explicit supersession / withdrawal / correction artifact |
+| **Trust membrane** | the boundary that prevents public or ordinary UI paths from bypassing governed services |
+| **EvidenceRef** | outward-facing reference to support-bearing material |
+| **EvidenceBundle** | request-time package of support, lineage hints, rights/sensitivity state, and preview policy |
+| **DecisionEnvelope** | machine-readable policy result with reason and obligation codes |
+| **RuntimeResponseEnvelope** | bounded runtime result object carrying outcome, audit linkage, and surface state |
+| **CorrectionNotice** | visible lineage object for supersession, withdrawal, narrowing, or replacement |
 
-### Read this README with one rule in mind
+### Path note
 
-A polished shell does not prove a trustworthy system. In KFM, trust is carried by contracts, evidence objects, review artifacts, and governed transitions.
+Treat `apps/governed-api/README.md` as the requested working destination for this file. Treat `apps/api` and `apps/api/src/api/README.md` as older March 2026 repo-grounded references until a live checkout confirms whether the rename is real, partial, or still pending.
 
-<p align="right"><a href="#governed-api">Back to top ↑</a></p>
 </details>
+
+[contracts]: ../../contracts/
+[schemas]: ../../schemas/
+[policy]: ../../policy/
+[packages]: ../../packages/
+[docs]: ../../docs/
