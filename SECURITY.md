@@ -32,7 +32,7 @@ Security reporting, coordinated disclosure, release protection, and trust-bounda
 | **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Current repo-grounded signals](#current-repo-grounded-signals) · [Security model](#security-model-at-a-glance) · [Report a vulnerability](#report-a-vulnerability) · [Verification gates](#security-verification-and-release-gates) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) |
 
 > [!WARNING]
-> This file is intentionally evidence-bounded and is **not publish-ready as-is**. The current session exposed a mounted PDF corpus and an attached repo-grounded summary artifact, but **not** a directly mounted repository checkout, live workflow inventory, manifests, dashboards, or runtime logs. Replace every `REVIEW-REQUIRED`, `UNKNOWN`, `INFERRED`, or `NEEDS VERIFICATION` marker before public publication.
+> This file is intentionally evidence-bounded and is **not publish-ready as-is**. The current session exposed an attached PDF corpus and an attached repo-grounded summary artifact, but **not** a directly mounted repository checkout, workflow YAML inventory, manifests, dashboards, or runtime logs. Replace every `REVIEW-REQUIRED`, `INFERRED`, `UNKNOWN`, or `NEEDS VERIFICATION` marker before public publication.
 
 ## Scope
 
@@ -48,7 +48,7 @@ Use this policy for reports involving any of the following:
 - uncited, unresolved, out-of-scope, or policy-bypassing AI or retrieval behavior
 - secrets exposure, dependency or build compromise, supply-chain risk, unsafe runtime exposure, or unsafe deployment configuration
 - release-integrity failures such as missing manifests, missing proof objects, missing rollback posture, missing correction readiness, or policy-bundle drift
-- stale, superseded, withdrawn, or correction-pending content still appearing current on user-facing surfaces
+- stale, superseded, withdrawn, generalized, or correction-pending content still appearing current on user-facing surfaces
 - denial-of-service, resource exhaustion, or failures that materially threaten governed publication, correction capability, or reviewability
 - rights, sensitivity, exact-location exposure, redaction, generalization, or publication-lane failures that could expose protected information
 
@@ -59,6 +59,8 @@ Use this policy for reports involving any of the following:
 | **Path** | `REVIEW-REQUIRED: confirm canonical public security-policy path in the live tree` |
 | **Upstream links** | [README.md](README.md) · [.github/CODEOWNERS](.github/CODEOWNERS) · [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
 | **Downstream links** | [policy/README.md](policy/README.md) · [contracts/README.md](contracts/README.md) · [schemas/README.md](schemas/README.md) · [.github/workflows/README.md](.github/workflows/README.md) |
+| **Accepted inputs** | Private vulnerability reports, confidential trust-failure reports, release-integrity evidence, policy-bypass evidence, runtime-boundary issues, and governed disclosure coordination |
+| **Exclusions** | Ordinary support, feature requests, generic roadmap discussion, routine non-security data corrections, speculative low-detail claims, public exploit drops, and unauthorized destructive testing |
 | **Canonical-source rule** | Keep **one** authoritative security policy. If a second path exists for platform compatibility, it should delegate to the canonical file rather than drift independently. |
 
 > [!NOTE]
@@ -71,13 +73,15 @@ The table below uses the attached repo-grounded sprint summary as the strongest 
 | Signal | Status | Current consequence |
 | --- | --- | --- |
 | `.github/CODEOWNERS` | **CONFIRMED** by attached repo-grounded summary | Ownership mapping appears to exist and should be linked from this policy after direct recheck. |
-| `.github/PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** by attached repo-grounded summary | Pull-request flow reportedly already carries trust/proof language. |
+| `.github/PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** by attached repo-grounded summary | Pull-request flow reportedly already carries trust/proof language and review expectations. |
 | `.github/workflows/README.md` | **CONFIRMED** by attached repo-grounded summary | Workflow scaffolding appears to exist, but active merge-blocking YAML was **not** confirmed in-tree. |
-| `policy/README.md` | **CONFIRMED** by attached repo-grounded summary | Deny-by-default policy posture appears documented. |
-| `contracts/README.md` and `schemas/README.md` | **CONFIRMED** by attached repo-grounded summary | Contract/schema intent exists, but real machine-readable schema inventory was not confirmed. |
-| Mounted `.rego` bundles / tests | **UNKNOWN** | The attached summary did not confirm live `.rego` files or exercised policy tests. |
+| `policy/README.md` | **CONFIRMED** by attached repo-grounded summary | Deny-by-default posture and reason/obligation language appear documented. |
+| `contracts/README.md` and `schemas/README.md` | **CONFIRMED** by attached repo-grounded summary | Contract/schema intent exists, but a real machine-checkable schema inventory was **not** confirmed. |
+| `tests/README.md` | **CONFIRMED** by attached repo-grounded summary | Test taxonomy intent appears documented, but runnable suites/harnesses were **not** confirmed. |
+| `tools/README.md` and `scripts/README.md` | **CONFIRMED** by attached repo-grounded summary | Validator/entrypoint intent appears documented, but executable enforcement was **not** confirmed. |
+| Mounted `.rego` bundles / tests | **UNKNOWN** | The attached summary did not confirm live `.rego` policy bundles or executed policy tests. |
 | Implemented signing / attestation / SBOM pipeline | **UNKNOWN** | The attached summary did not confirm a live signing, attestation, or SBOM pipeline. |
-| Branch protection / required reviewers | **UNKNOWN** | Not directly knowable from the attached corpus alone. |
+| Branch protection / required reviewers | **UNKNOWN** | Not directly knowable from the current mounted evidence alone. |
 
 ## Accepted inputs
 
@@ -88,7 +92,7 @@ This file accepts:
 - disclosure-coordination requests
 - evidence showing release-integrity, policy, review, or correction failures
 - reports involving direct model exposure, direct canonical-store exposure, or public bypass paths
-- reports showing stale, generalized, superseded, or withdrawn states being misrepresented as current trust
+- reports showing stale, generalized, superseded, withdrawn, or restricted states being misrepresented as current trust
 
 ## Exclusions
 
@@ -224,7 +228,7 @@ No explicit confidential reporting address, SLA, or advisory configuration was c
 | **Coordinated disclosure target** | `NEEDS VERIFICATION` |
 
 > [!NOTE]
-> Until these values are verified and published, do **not** post exploit details in issues, discussions, pull requests, or public chat.
+> Until these values are verified and published, do **not** post exploit details in issues, discussions, pull requests, code review comments, or public chat.
 
 ### What to include in a report
 
@@ -294,7 +298,7 @@ In KFM, verification is not late QA. It is a cross-cutting control layer attache
 | Gate | What it proves | Fail-closed consequence |
 | --- | --- | --- |
 | **Source and intake gate** | admissibility, fetch integrity, descriptor completeness, replayability, and quarantine routing | reject, hold, quarantine, or retry |
-| **Canonical truth gate** | deterministic identity, schema validity, CRS/units/time correctness, and controlled authoritative write | no canonical write |
+| **Canonical truth gate** | deterministic identity, schema validity, unit discipline, support/time semantics, and controlled authoritative write | no canonical write |
 | **Catalog / policy / review gate** | metadata closure, rights and sensitivity posture, separation of duty, release readiness, and correction governance | deny, hold, generalize, or no publication |
 | **Release proof-pack gate** | manifest, validation outputs, policy/review references, catalog closure, digests/attestations where adopted, and rollback/correction posture are complete | block promotion |
 | **Derived delivery gate** | freshness, release linkage, and inherited policy boundaries for search, graph, tile, export, summary, or cache layers | block release, mark stale-visible, or rebuild |
@@ -443,7 +447,7 @@ Yes. KFM is fail closed. Safe negative outcomes are first-class security outcome
 - supported release / version matrix
 - GitHub private advisory configuration
 - acknowledgement and disclosure SLAs
-- whether the live repo still contains the linked `.github/*`, `policy/*`, `contracts/*`, and `schemas/*` paths
+- whether the live repo still contains the linked `.github/*`, `policy/*`, `contracts/*`, `schemas/*`, `tests/*`, `tools/*`, and `scripts/*` paths
 - whether a repo-local `CODEOWNERS` file still maps the intended owners
 - whether incident runbooks or advisory templates already exist and should be linked here
 - whether existing labels, issue forms, or automation already define the reporting lane
