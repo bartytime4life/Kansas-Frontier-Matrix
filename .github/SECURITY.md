@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: <NEEDS-VERIFICATION-DATE>
-updated: <NEEDS-VERIFICATION-DATE>
+created: 2026-03-15
+updated: 2026-03-28
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, ../SECURITY.md]
 tags: [kfm, security, github, disclosure]
-notes: [UUID and dates need verification, root ../SECURITY.md currently exists and should delegate or remain text-aligned with this file, GitHub private vulnerability reporting is visible in the current public Security tab, fallback inbox/SLA/platform settings still need verification]
+notes: [UUID still needs verification, created/updated dates are based on current public Git history for .github/SECURITY.md, GitHub Security page currently renders .github/SECURITY.md and exposes private reporting, both .github/SECURITY.md and root SECURITY.md still exist, fallback inbox/SLA/rulesets/branch protection still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM GitHub Security Policy
@@ -22,7 +22,7 @@ Private-first vulnerability reporting, safe handling, and coordinated disclosure
 | Status | `experimental` *(document status: `draft`)* |
 | Owners | `@bartytime4life` *(confirmed by [`./CODEOWNERS`](./CODEOWNERS); broad single-owner baseline at current repo scope)* |
 | Badges | ![Status badge][badge-status] ![Owners badge][badge-owners] ![Path badge][badge-path] ![Reporting badge][badge-reporting] ![Posture badge][badge-posture] ![Trust badge][badge-trust] |
-| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) |
+| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) · [Appendix](#appendix) |
 | Intended path | `.github/SECURITY.md` |
 | Canonical disclosure path | `.github/SECURITY.md` *(root [`../SECURITY.md`](../SECURITY.md) also exists today; keep it delegating or text-aligned to avoid drift)* |
 
@@ -30,7 +30,7 @@ Private-first vulnerability reporting, safe handling, and coordinated disclosure
 > The current public GitHub Security tab exposes **Report a vulnerability**. Use that lane first. Keep `.github/SECURITY.md` as the canonical public policy, and keep the root [`../SECURITY.md`](../SECURITY.md) delegating or text-aligned so disclosure guidance does not drift.
 
 > [!NOTE]
-> This draft is intentionally strict about uncertainty. GitHub private vulnerability reporting is visible in the current repo UI, but monitored fallback inboxes, acknowledgement windows, rulesets, required checks, branch-protection settings, and any alternate confidential escalation path still need verification before this document is treated as fully publication-ready.
+> This draft is intentionally strict about uncertainty. GitHub private vulnerability reporting is visible in the current public repo UI, but monitored fallback inboxes, acknowledgement windows, rulesets, required checks, branch-protection settings, and any alternate confidential escalation path still need verification before this document is treated as fully publication-ready.
 
 ## Scope
 
@@ -111,6 +111,9 @@ Repository release support still needs explicit maintainer definition, but sever
 
 > [!NOTE]
 > The absence of published GitHub Releases does not by itself define the supported-version policy. Maintainers should publish an explicit support window here if support is narrower than “current `main` branch plus unreleased repository state.”
+
+> [!NOTE]
+> Current public `main` shows `.github/workflows/README.md` only. Public GitHub Actions history remains visible, but that history should be treated as historical signal rather than proof of currently checked-in workflow YAML, required checks, or platform-side rules.
 
 ## Report a vulnerability
 
@@ -344,7 +347,8 @@ Before merging this file, verify and complete the following:
 - [ ] Recheck live rulesets, branch protection, required status checks, signed-commit settings, and CODEOWNERS enforcement expectations referenced by this policy.
 - [ ] Recheck the live `.github/workflows/` inventory and any platform-side required checks before linking security expectations to specific workflow gates elsewhere.
 - [ ] Ensure public issue-intake guidance continues to route undisclosed security findings away from public issues.
-- [ ] Set the final KFM metadata UUID and commit-time dates in the meta block.
+- [ ] Set the final KFM metadata UUID in the meta block.
+- [ ] Reconfirm the `updated:` value in the meta block if this file changes again before merge.
 - [ ] Recheck all relative links against the live checkout before commit.
 
 </details>
