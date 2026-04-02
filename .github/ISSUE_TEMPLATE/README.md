@@ -4,328 +4,313 @@ title: KFM Issue Template Directory
 type: standard
 version: v1
 status: draft
-owners: <owners-NEEDS_VERIFICATION>
+owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS_VERIFICATION>
 updated: <YYYY-MM-DD-NEEDS_VERIFICATION>
 policy_label: <policy_label-NEEDS_VERIFICATION>
-related: [.github/ISSUE_TEMPLATE/, ../PULL_REQUEST_TEMPLATE.md (NEEDS VERIFICATION), ../../docs/ (NEEDS VERIFICATION)]
+related: [./config.yml, ../README.md, ../PULL_REQUEST_TEMPLATE.md, ../SECURITY.md, ../../CONTRIBUTING.md, ../../docs/, ../../policy/, ../../contracts/, ../../schemas/]
 tags: [kfm, github, contributor-intake, governance]
-notes: [Evidence-bounded draft; current-session workspace inspection surfaced the attached KFM PDF corpus under /mnt/data but did not surface a mounted repo checkout, so sibling template filenames, chooser config, owners, labels, and adjacent repo paths remain NEEDS VERIFICATION.]
+notes: [Public-main-grounded revision; current public tree confirms README.md plus zero-byte config.yml only inside .github/ISSUE_TEMPLATE; doc UUID, created/updated dates, and policy label still need merge-time verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Issue Template Directory
 
-Contributor intake guidance for GitHub issues that should enter Kansas Frontier Matrix through an evidence-first, review-bearing, PR-first workflow.
+Current public guidance for contributor issue intake inside KFM’s `.github` gatehouse.
 
-> **Status:** experimental  
-> **Owners:** `<owners-NEEDS_VERIFICATION>`  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![KFM](https://img.shields.io/badge/KFM-evidence--first-1f6feb) ![Workflow](https://img.shields.io/badge/workflow-PR--first-6f42c1) ![Docs](https://img.shields.io/badge/docs-production--surface-0a7f5a) ![Repo state](https://img.shields.io/badge/repo%20state-NEEDS%20VERIFICATION-lightgrey)  
+> **Status:** experimental directory · draft README revision  
+> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` coverage for `/.github/`)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![repo](https://img.shields.io/badge/repo-public-1f6feb) ![tree](https://img.shields.io/badge/tree-README%20%2B%20config-lightgrey) ![templates](https://img.shields.io/badge/templates-none%20visible%20on%20public%20main-lightgrey)  
 > **Repo fit:** `.github/ISSUE_TEMPLATE/README.md`  
-> **Upstream:** GitHub new-issue chooser → `./config.yml` (**NEEDS VERIFICATION**)  
-> **Downstream:** triage → `../PULL_REQUEST_TEMPLATE.md` (**NEEDS VERIFICATION**) → review/docs sync → `../../docs/` (**NEEDS VERIFICATION**)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Template matrix](#template-matrix) · [Task list](#task-list--definition-of-done) · [FAQ](#faq)
+> **Upstream:** [`../README.md`](../README.md) · [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../SECURITY.md`](../SECURITY.md)  
+> **Downstream:** GitHub issue creation UI via [`./config.yml`](./config.yml) · issue triage · [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) · [`../../docs/`](../../docs/) · [`../../policy/`](../../policy/) · [`../../contracts/`](../../contracts/)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#current-public-inventory--proposed-template-pack) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is intentionally evidence-bounded. Current-session review confirmed the attached KFM PDF corpus and did **not** confirm a mounted repository tree, so sibling filenames, chooser wiring, owners, labels, and adjacent repo paths stay visible as **NEEDS VERIFICATION** instead of being presented as settled repo fact.
+> Current public `main` shows `.github/ISSUE_TEMPLATE/` containing **only** `README.md` and `config.yml`. No checked-in Markdown issue templates or YAML issue forms are visible in this directory on public `main`, and `config.yml` is currently an empty placeholder.
 
----
+> [!NOTE]
+> This README is public-tree-grounded. It documents the checked-in directory honestly, but it does not claim GitHub platform settings, labels, assignees, required checks, private issue-management features, or chooser behavior that cannot be proven from public repo contents alone.
 
 ## Scope
 
-This directory exists to make issue intake structured, reviewable, and aligned with KFM’s governed documentation and delivery posture.
+`.github/ISSUE_TEMPLATE/` is KFM’s repo-local issue-intake lane.
 
-In practice, templates here should help contributors submit enough context to:
+Right now, that lane is intentionally thin: documentation plus a chooser/config seam, not a populated library of checked-in issue forms. Its job is still important. This is where contributor intake should become structured enough to protect review quality, evidence handling, and security routing before work widens into policy, contracts, runtime changes, or public-facing consequence.
 
-- describe a problem, proposal, or drift clearly
-- preserve source, time, rights, and sensitivity context when those matter
-- route meaningful work into review-bearing pull requests instead of comment-thread improvisation
-- keep documentation, policy, and implementation changes visibly connected
+### Truth posture used in this README
 
-> [!NOTE]
-> Template fields in this directory should preserve four KFM signals: intake is a contract rather than a casual upload, trust-affecting changes move through PR review, documentation is part of the working system, and public intake fails safe around rights, sensitivity, and exact-location exposure.
-
-### Working status labels used in this README
-
-| Label | Meaning here |
+| Label | Use in this README |
 |---|---|
-| **CONFIRMED** | Supported by attached project sources or direct current-session workspace inspection |
-| **INFERRED** | Strongly suggested by project materials, but not directly re-verified in a mounted repo tree |
-| **PROPOSED** | Recommended directory behavior or template pattern aligned to current KFM doctrine |
-| **UNKNOWN** | Not verified strongly enough in the current session to present as current repo reality |
-| **NEEDS VERIFICATION** | Repo-specific path, file, owner, label, chooser, or workflow detail not directly inspected |
+| **CONFIRMED** | Directly supported by the current public repo tree, current public repo Markdown, or attached KFM doctrine |
+| **INFERRED** | Conservative interpretation that follows from confirmed repo/doctrine evidence |
+| **PROPOSED** | Recommended future template or chooser behavior not yet proven as checked-in on public `main` |
+| **UNKNOWN** | Not established strongly enough to present as current repo or GitHub-platform fact |
+| **NEEDS VERIFICATION** | Merge-time placeholder for IDs, dates, labels, owners beyond current public evidence, or platform settings |
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Repo fit
 
-| Item | Value | Status |
+| Item | Current reading | Status |
 |---|---|---|
-| Target path | `.github/ISSUE_TEMPLATE/README.md` | **CONFIRMED** task target |
-| Directory role | Contributor-facing GitHub issue intake surface for KFM | **INFERRED** |
-| Upstream trigger | GitHub “New issue” chooser, likely via `./config.yml` | **NEEDS VERIFICATION** |
-| Primary downstream path | issue → triage → scoped PR → checks / review / docs sync | **PROPOSED** |
-| Likely PR handoff file | `../PULL_REQUEST_TEMPLATE.md` | **INFERRED / NEEDS VERIFICATION** |
-| Longer-form governed docs | `../../docs/` | **INFERRED / NEEDS VERIFICATION** |
-| Governance-adjacent paths | `../../policy/`, `../../contracts/`, `../../schemas/`, `../../runbooks/` | **INFERRED / NEEDS VERIFICATION** |
-| Sensitive-report redirect | private disclosure or stewarded path | **INFERRED / NEEDS VERIFICATION** |
+| Path | `.github/ISSUE_TEMPLATE/README.md` | **CONFIRMED** |
+| Current directory inventory | `README.md`, `config.yml` | **CONFIRMED** |
+| Chooser/config surface | `./config.yml` exists, but is empty on public `main` | **CONFIRMED** |
+| Checked-in issue forms (`*.yml`) | none visible in this directory on public `main` | **CONFIRMED** |
+| Checked-in Markdown issue templates (`*.md`) | none visible besides this README | **CONFIRMED** |
+| Adjacent PR handoff | `../PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** |
+| Adjacent security redirect | `../SECURITY.md` | **CONFIRMED** |
+| Secondary public security surface | `../../SECURITY.md` also exists at repo root; keep it delegating or text-aligned with `../SECURITY.md` | **CONFIRMED** existence |
+| Broader contribution rulebook | `../../CONTRIBUTING.md` | **CONFIRMED** |
+| Broader doctrine / doc surfaces | `../../docs/`, `../../contracts/`, `../../policy/`, `../../schemas/` | **CONFIRMED** path presence |
+| GitHub issue labels, assignees, blank-issue behavior, platform-side chooser settings | not provable from public checked-in files alone | **UNKNOWN / NEEDS VERIFICATION** |
+
+### Why this directory exists even in a minimal state
+
+A minimal issue-template directory still matters because it names the seam where KFM expects contributor intake to become review-bearing rather than improvised. In KFM terms, intake is not separate from governance. It is part of the same trust membrane that later shows up in PR review, policy gates, docs sync, disclosure flow, and correction readiness.
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Inputs
 
-The following content belongs here:
+What belongs **in this directory**:
 
-| Accepted input | What it should capture | Status |
+| Input class | What belongs here | Status |
 |---|---|---|
-| Bug / regression reports | expected vs actual behavior, affected surface, reproduction clues, evidence links, screenshots or logs where safe | **PROPOSED** |
-| Feature or workflow proposals | goal, user lane, affected subsystem, acceptance criteria, risks, docs impact | **PROPOSED** |
-| Data addition requests | source identity, license/rights posture, temporal coverage, spatial scope, intended use, sensitivity notes | **INFERRED** |
-| Documentation / governance drift reports | affected path or surface, observed mismatch, supporting evidence, review urgency | **PROPOSED** |
+| Directory README | contributor-intake guidance, routing rules, evidence posture, security redirect, future template conventions | **CONFIRMED** |
+| Chooser/config file | `config.yml` controlling or documenting GitHub issue-creation behavior | **CONFIRMED** file presence |
+| Future issue templates | checked-in YAML issue forms or Markdown issue templates when the repo is ready to expose them | **PROPOSED** |
+| Public-safe intake rules | required fields or prompts that gather enough context for triage without soliciting secrets or restricted detail | **INFERRED / PROPOSED** |
 
-### Why these inputs matter
+### What future templates should ask for
 
-KFM treats intake quality as an early governance concern. A vague issue becomes review drift; a structured issue becomes a usable entry point into policy, documentation, validation, and implementation work.
+When this directory grows beyond its current minimal state, template fields should stay small and triage-critical:
+
+- what changed or went wrong
+- what repo surface or behavior is affected
+- what evidence, logs, links, or screenshots are safe to share
+- whether docs, policy, contracts, or security routing are implicated
+- what should be redirected to private handling instead of public issue text
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Exclusions
 
-The following content does **not** belong in this directory:
+What does **not** belong here as canonical truth:
 
-| Exclusion | Why it does not belong here | Put it here instead |
-|---|---|---|
-| Pull request review checklists | PR review happens after issue intake | `../PULL_REQUEST_TEMPLATE.md` (**NEEDS VERIFICATION**) |
-| Private security disclosures | Public issue threads are the wrong place for sensitive reporting | `../SECURITY.md` or project disclosure channel (**NEEDS VERIFICATION**) |
-| Credentials, tokens, or private access details | Public issue intake must not become a leakage path | private disclosure path (**NEEDS VERIFICATION**) |
-| Exact restricted locations or rights-unclear raw materials | Public issue intake should route stewardship safely, not bypass it | stewarded review path (**NEEDS VERIFICATION**) |
-| Canonical policy / schema definitions | Templates should reference rules, not replace them | `../../policy/`, `../../contracts/`, `../../schemas/` (**NEEDS VERIFICATION**) |
-| Long-form runbooks, ADRs, or architecture manuals | Those are governed documents, not intake forms | `../../docs/` or adjacent governance docs (**NEEDS VERIFICATION**) |
+| Exclusion | Keep it here instead |
+|---|---|
+| Pull-request review checklist or merge-readiness contract | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) |
+| Private vulnerability reporting, disclosure workflow, coordinated security guidance | [`../SECURITY.md`](../SECURITY.md) |
+| Canonical policy bodies, reason codes, obligation registries, policy tests | [`../../policy/`](../../policy/) |
+| Canonical schemas, envelopes, machine-readable contracts, vocabularies | [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) |
+| Runtime code, UI code, evidence resolvers, data loaders, automation logic | repo app/package/script surfaces, not `.github/ISSUE_TEMPLATE/` |
+| Secrets, tokens, unpublished review material, exact restricted coordinates, rights-unclear raw files | never in public issue intake; route through stewarded or private paths |
 
 > [!CAUTION]
-> Do not use public issue templates to submit exact restricted coordinates, unpublished raw files, confidential review material, or secrets. Public intake should capture enough detail to route work safely, not enough detail to bypass policy, stewardship, or quarantine behavior.
+> Public issue intake should capture enough detail to route work safely, not enough detail to leak secrets, disclose unpublished material, or bypass KFM’s review and stewardship controls.
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Directory tree
 
-Expected reviewable shape for this directory:
+Current public `main`:
 
 ```text
 .github/
 └── ISSUE_TEMPLATE/
-    ├── README.md                           # this file
-    ├── bug_report.(md|yml)                 # NEEDS VERIFICATION
-    ├── feature_request.(md|yml)            # NEEDS VERIFICATION
-    ├── data_addition_request.(md|yml)      # INFERRED / NEEDS VERIFICATION
-    ├── docs_governance_drift.(md|yml)      # PROPOSED
-    └── config.yml                          # NEEDS VERIFICATION
+    ├── README.md
+    └── config.yml   # present, zero-byte placeholder on current public main
 ```
 
-The tree above is a **directory contract draft**, not a claim that every file already exists.
+There are **no** additional checked-in issue templates or issue forms visible in this directory on current public `main`.
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Quickstart
 
-### Reporter path
+### Contributor path — current public state
 
-1. Choose the smallest issue type that matches your intent.
-2. Fill only the fields needed for triage, not the entire implementation design.
-3. Attach evidence links, screenshots, logs, or source references when safe.
-4. For source- or data-related requests, include identity, rights/license posture, and time basis early.
-5. Move substantial implementation work into a pull request rather than resolving it in issue comments.
+1. Open the repo’s issue flow from GitHub.
+2. Do not assume a checked-in issue form exists in this directory just because `ISSUE_TEMPLATE/` exists.
+3. Include the essentials manually: summary, affected repo surface, safe evidence links, expected vs actual behavior, and whether docs, policy, or security are involved.
+4. If the report is security-sensitive or disclosure-sensitive, stop and use [`../SECURITY.md`](../SECURITY.md) instead of a public issue.
+5. When the work becomes implementation-bearing, carry it into [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md).
 
-### Maintainer path
+### Maintainer path — when adding the first real templates
 
-1. Keep each template focused on intake rather than release approval.
-2. Require fields that preserve KFM context when it matters: source, time basis, rights, sensitivity, and acceptance criteria.
-3. Redirect sensitive or non-public material away from public issue threads.
-4. Update this README when template classes, chooser behavior, or contributor gates change.
-5. Keep template, PR, and docs behavior synchronized in the same review stream.
+1. Decide whether the repo should use YAML issue forms, Markdown templates, or both.
+2. Replace the empty [`./config.yml`](./config.yml) with explicit chooser behavior.
+3. Keep public templates triage-focused and public-safe.
+4. Update this README, the PR template, and security/disclosure guidance in the same change set when intake behavior changes.
+5. Verify the actual GitHub issue-creation UX after merge; checked-in files do not prove platform behavior by themselves.
 
-### Illustrative issue-form fragment
+### Illustrative manual issue skeleton
 
-```yaml
-# Illustrative only — exact filenames, labels, and field set NEEDS VERIFICATION
-name: Data Addition Request
-description: Propose a new source or dataset for governed onboarding
-title: "[data-addition] "
-labels:
-  - data
-  - intake
+```md
+## Summary
+What is the problem, proposal, or drift?
 
-body:
-  - type: input
-    id: source_name
-    attributes:
-      label: Source name
-      placeholder: Kansas Historical Society / USGS / county GIS / archive collection
-    validations:
-      required: true
+## Affected surface
+Which path, package, workflow, doc, policy, or UI surface is involved?
 
-  - type: input
-    id: source_url
-    attributes:
-      label: Source URL or catalog reference
-    validations:
-      required: true
+## Evidence
+Safe links, logs, screenshots, repro steps, or related docs.
 
-  - type: textarea
-    id: temporal_coverage
-    attributes:
-      label: Temporal coverage
-      description: What dates or time span does this source cover?
-    validations:
-      required: true
+## Expected vs actual
+What should happen? What is happening instead?
 
-  - type: input
-    id: rights_license
-    attributes:
-      label: Rights / license / agreement posture
-      placeholder: public domain, CC-BY, restricted, unknown
-    validations:
-      required: true
-
-  - type: textarea
-    id: sensitivity_notes
-    attributes:
-      label: Sensitivity or stewardship notes
-      description: Include location sensitivity, privacy, archival restrictions, or uncertainty.
+## Governance notes
+Docs impact, policy impact, contract impact, or security redirect needed?
 ```
 
-> [!NOTE]
-> A Markdown template (`.md`) and an issue-form template (`.yml`) can both serve this directory’s job. The repo’s actual choice is **NEEDS VERIFICATION**.
+[Back to top](#kfm-issue-template-directory)
 
 ## Usage
 
-### Intake flow
+### Current public behavior
 
-1. A contributor opens a new issue and selects the closest template.
-2. The template gathers just enough structure to keep the request reviewable.
-3. Triage decides whether the issue is:
-   - ready for implementation work
-   - missing required evidence or scope
-   - out of scope for public issue intake
-   - better handled as policy, security, or stewardship review
-4. Substantial change moves into a pull request with checks, review, and docs updates in the same governed stream.
+The current checked-in directory does **not** yet define specific issue classes in code. That means this README should describe the lane honestly:
 
-### Proposed template design rules
+- there is a directory
+- there is a config seam
+- there are no visible checked-in issue forms/templates beyond this README
+- structured intake is still more of a documented contract than a fully materialized chooser/template pack on public `main`
 
-The following rules are **PROPOSED** directory behavior aligned to current KFM doctrine:
+### Design rules for future template additions
 
-| Rule | Why it exists | Typical fields |
-|---|---|---|
-| Ask only for triage-critical information | Intake should structure work, not replace design or review docs | summary, affected surface, evidence links, urgency |
-| Require source identity, rights, and time basis when onboarding data | KFM treats source admission as a contract, not a casual upload | source name, source URL, license/rights, temporal coverage |
-| Avoid public solicitation of sensitive detail | Public issue threads must not become a leak path | generalized location, steward note, redirect guidance |
-| Route meaningful change into PR review | Trust-affecting changes should be review-bearing and reversible | acceptance criteria, downstream PR link, rollback notes where relevant |
-| Keep docs in the same change stream as workflow changes | Contributor guidance is part of the working system | docs impact, related README/runbook/ADR updates |
+When templates are added here, keep them aligned with KFM’s repo-wide contribution and review posture:
 
-### Reporter guidance
+| Rule | Why it matters |
+|---|---|
+| Ask only for triage-critical information | issue intake should structure work, not replace design docs or PR review |
+| Keep security-sensitive paths out of public issues | sensitive routing already has a dedicated surface |
+| Link changes forward into PR review | KFM is PR-first for behavior-significant change |
+| Treat docs as part of the working system | intake changes should update adjacent guidance in the same stream |
+| Preserve KFM truth labels where uncertainty matters | contributor guidance should not pretend unknown platform state is confirmed |
 
-Use this directory when you need to:
+### Suggested first template lanes
 
-- report a defect in a KFM-facing surface or workflow
-- propose a new capability or refinement
-- request governed onboarding of a dataset or source family
-- flag drift between documented behavior and observed behavior
+These are **PROPOSED**, not current checked-in files:
 
-Do **not** use this directory as a substitute for:
+- bug / regression
+- docs / governance drift
+- feature / workflow proposal
+- data or source-onboarding request, only if public-safe and stewarded enough for issue intake
 
-- formal release approval
-- schema or policy definition
-- restricted-source submission
-- ad hoc chat-based triage without a review trail
+[Back to top](#kfm-issue-template-directory)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Contributor opens New issue] --> B{Public-safe intake?}
+    A[Contributor opens Issues] --> B{Checked-in template exists on public main?}
 
-    B -- No: sensitive, rights-unclear, or exact restricted location --> C[Redirect to private security or stewarded path]
-    B -- Yes --> D[Choose issue template]
+    B -- No --> C[Manual issue intake]
+    B -- Future yes --> D[Issue form or Markdown template]
 
-    D --> E{Issue class}
-    E --> F[Bug / regression]
-    E --> G[Feature / workflow]
-    E --> H[Data addition]
-    E --> I[Docs / governance drift]
+    C --> E[Triage]
+    D --> E
 
-    H --> J[Source / rights / time / sensitivity review]
-    F --> K[Triage]
-    G --> K
-    I --> K
-    J --> K
+    E --> F{Security or sensitive disclosure?}
+    F -- Yes --> G[Redirect to ../SECURITY.md]
+    F -- No --> H[Scope change and review path]
 
-    K --> L{Ready for review-bearing change?}
-    L -- No --> M[Clarify / redirect / close]
-    L -- Yes --> N[Open or link PR]
-
-    N --> O[Checks + docs sync + review]
-    O --> P[Merge / correction / follow-up]
+    H --> I[Use ../PULL_REQUEST_TEMPLATE.md for implementation-bearing change]
+    I --> J[Docs / policy / contracts / code updated in one governed stream]
 ```
 
-## Template matrix
+[Back to top](#kfm-issue-template-directory)
 
-| Template lane | Use when | Minimum fields | Why it matters | Status |
-|---|---|---|---|---|
-| Bug / regression | Something no longer behaves as expected | summary, expected vs actual, affected surface, reproduction clues, evidence or log links | Keeps defects concrete and reviewable | **PROPOSED** |
-| Feature / workflow proposal | A contributor wants a new capability, refinement, or delivery improvement | goal, audience lane, constraints, acceptance criteria, docs impact | Prevents feature requests from staying vague | **PROPOSED** |
-| Data addition request | A source or dataset should enter governed onboarding | source info, rights/license, temporal coverage, spatial scope, intended use, sensitivity notes | Aligns intake with evidence-first source onboarding | **INFERRED** |
-| Docs / governance drift | Documented behavior and observed behavior no longer match | affected path, mismatch summary, evidence, severity, review need | Treats docs as part of the working system | **PROPOSED** |
+## Current public inventory & proposed template pack
+
+### Current public inventory
+
+| Item | What it tells us | Status |
+|---|---|---|
+| `README.md` | this directory is documented, not absent | **CONFIRMED** |
+| `config.yml` | GitHub chooser/config seam exists as a checked-in file | **CONFIRMED** |
+| empty `config.yml` | chooser behavior is not materially defined by checked-in content yet | **CONFIRMED** |
+| no `*.yml` issue forms visible | public template library is not yet checked in here | **CONFIRMED** |
+| no extra `*.md` templates visible | README is currently the only Markdown file in this directory | **CONFIRMED** |
+
+### Proposed first template pack
+
+| Proposed lane | Suggested file | Why it is a reasonable first addition | Status |
+|---|---|---|---|
+| Bug / regression | `bug_report.yml` | gives defects a repeatable intake shape | **PROPOSED** |
+| Docs / governance drift | `docs_governance_drift.yml` | lets contributors flag mismatch between checked-in guidance and observed repo behavior | **PROPOSED** |
+| Feature / workflow proposal | `feature_request.yml` | keeps proposals tied to affected surfaces and downstream docs/PR review | **PROPOSED** |
+| Public-safe data/source intake | `data_addition_request.yml` | matches KFM’s source-onboarding-as-contract doctrine, but only if the lane is safe for public issue intake | **PROPOSED / lane-sensitive** |
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Task list & Definition of Done
 
-A healthy issue-template directory should meet all of the following:
+A healthy issue-template directory for this repo should meet all of the following:
 
-- [ ] Each public issue type captures enough information to route work without guesswork.
-- [ ] Data-oriented intake asks for source identity, rights/license posture, and temporal coverage.
-- [ ] Public templates avoid prompting contributors to paste credentials, restricted coordinates, or sensitive raw material.
-- [ ] Meaningful contributor workflow changes point toward pull-request review instead of replacing it.
-- [ ] Security-sensitive reports are redirected away from public issue threads.
-- [ ] Template, chooser, and PR-handoff changes are reflected in docs in the same governed change stream.
-- [ ] This README matches the actual files present in `.github/ISSUE_TEMPLATE/`.
-- [ ] Any chooser config, labels, owners, and handoff links referenced here are verified against the mounted repo.
-- [ ] Review gates and downstream docs references are current, not historical leftovers.
+- [x] The directory README exists.
+- [x] The chooser/config file exists.
+- [x] This README reflects the current public `main` inventory instead of a hypothetical template pack.
+- [ ] `config.yml` is made explicit rather than empty.
+- [ ] The repo decides whether it wants YAML issue forms, Markdown issue templates, or a deliberately minimal manual issue flow.
+- [ ] Any future public template pack is wired to redirect sensitive/security reports to [`../SECURITY.md`](../SECURITY.md).
+- [ ] Any future public template pack points implementation-bearing changes toward [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md).
+- [ ] Labels, assignees, blank-issue posture, and chooser behavior are verified on the live GitHub side before this README is treated as fully settled.
+- [ ] Owners, dates, and policy label in the meta block are finalized at merge time.
+
+[Back to top](#kfm-issue-template-directory)
 
 ## FAQ
 
-### Why ask for source, license, and temporal coverage so early?
+### Why does this directory exist if it only has two files?
 
-Because KFM treats intake as a governed step, not a casual upload. If a proposed source cannot be described in terms of identity, rights, and time basis, it is not ready for clean onboarding.
+Because the issue-intake seam is real even before the full template library exists. In KFM, documentation, routing, and review boundaries are part of the system, not decoration.
 
-### Why is so much marked **NEEDS VERIFICATION**?
+### Does `config.yml` prove the GitHub issue chooser is fully configured?
 
-Because the current session exposed the attached KFM source corpus but not a mounted repository tree. This README is meant to be commit-friendly and honest, not persuasive by omission.
+No. It proves the checked-in config file exists. It does **not** prove the chooser is materially configured when the file is empty, or that any platform-side behavior matches future expectations.
 
-### Should security issues go here?
+### Where should sensitive reports go?
 
-No. Public issue intake is the wrong place for sensitive disclosures. Route them through the project’s verified security or private disclosure path once that path is confirmed.
+Use [`../SECURITY.md`](../SECURITY.md), not a public issue.
 
-### Does this directory replace pull request templates?
+### Does this directory replace the PR template?
 
-No. It should feed into them. Issue templates structure intake; pull request templates structure implementation review and merge readiness.
+No. Issues shape intake. [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) shapes implementation review and merge-readiness.
 
-### Why mention docs so explicitly in an issue-template README?
+### Why are the future template filenames marked as proposed?
 
-Because in KFM, contributor workflow guidance is part of the working system. If intake behavior changes, the documentation that explains intake should change with it.
+Because no such files are currently visible in this directory on public `main`. This README should not turn a reasonable design direction into false checked-in fact.
+
+[Back to top](#kfm-issue-template-directory)
 
 ## Appendix
 
 <details>
-<summary>Appendix — evidence-bounded drafting notes</summary>
+<summary>Appendix A — evidence boundary and revision rationale</summary>
 
-### Confirmed doctrine signals carried into this README
+This revision intentionally changes the directory tree from a speculative contract draft to the **actual current public-main tree**.
 
-- KFM documentation is treated as part of the governed system, not decoration.
-- KFM’s contributor and automation posture strongly favors review-bearing pull requests over silent background mutation for trust-affecting change.
-- Source onboarding is treated as a contract process that preserves source identity, rights, sensitivity, and temporal meaning.
-- Public-facing behavior should fail safe when rights, evidence, or sensitivity are incomplete.
+That produces three concrete improvements:
 
-### Historically explicit collaboration-template precedent
+1. owner coverage is no longer blank at the README surface
+2. adjacent PR and security paths are no longer treated as hypothetical
+3. template filenames that are not checked in move out of the directory tree and into a clearly marked proposed pack
 
-- Earlier KFM design material explicitly described issue and pull-request templates in `.github/ISSUE_TEMPLATE` and `PULL_REQUEST_TEMPLATE`.
-- That same material explicitly named a **Data Addition Request** issue type that asks for source info, license, and temporal coverage.
-- Those older references are treated here as useful continuity, **not** as proof that the mounted repo currently has the same files or wording.
+</details>
 
-### Explicit unknowns left visible on purpose
+<details>
+<summary>Appendix B — merge-time verification checklist</summary>
 
-- exact issue-template filenames
-- whether the repo currently uses Markdown templates, issue forms, or both
-- current labels, owners, assignees, and chooser configuration
-- existence and wording of `SECURITY.md`
-- exact adjacency to the mounted pull request template and contributor docs
+Before merge, verify the following repo/platform details that public file inspection alone cannot settle:
+
+- issue chooser behavior in the live GitHub UI
+- blank-issue posture
+- labels and default assignees
+- whether zero-byte `config.yml` is intentional or accidental
+- whether `.github/SECURITY.md` should remain canonical while root `SECURITY.md` delegates
+- doc UUID, created date, updated date, and policy label for the meta block
 
 </details>
 
