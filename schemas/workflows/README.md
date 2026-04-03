@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <NEEDS_VERIFICATION_YYYY-MM-DD>
 updated: <NEEDS_VERIFICATION_YYYY-MM-DD>
 policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
-related: [schemas/README.md, contracts/README.md, .github/workflows/README.md, tests/README.md, docs/standards/README.md, policy/README.md]
+related: [schemas/README.md, schemas/contracts/README.md, schemas/standards/README.md, schemas/tests/README.md, contracts/README.md, .github/README.md, .github/workflows/README.md, tests/README.md, docs/standards/README.md, policy/README.md]
 tags: [kfm, schemas, workflows, contracts, ci-cd]
-notes: [current public subtree is scaffold-only for this lane, owner is confirmed from current public .github/CODEOWNERS global fallback, doc_id/dates/policy_label still need repo-history or governance verification]
+notes: [public-main body preserved from the current README, owner is confirmed from current public .github/CODEOWNERS global fallback, doc_id/dates/policy_label still need repo-history or governance verification]
 [/KFM_META_BLOCK_V2] -->
 
 # Workflow Schemas
@@ -20,7 +20,7 @@ Boundary guide for the `schemas/workflows/` scaffold while KFM keeps workflow au
 > **Status:** experimental · **Doc status:** draft  
 > **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` global fallback; no narrower `/schemas/` or `/schemas/workflows/` rule is visible on public `main`)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![doc status](https://img.shields.io/badge/doc%20status-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-schemas%2Fworkflows-6f42c1) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
-> **Repo fit:** path `schemas/workflows/README.md` · parent [`../README.md`](../README.md) · current machine-contract lane [`../../contracts/README.md`](../../contracts/README.md) · executable workflow lane [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · fixtures and drills [`../../tests/README.md`](../../tests/README.md) · policy surface [`../../policy/README.md`](../../policy/README.md)  
+> **Repo fit:** path `schemas/workflows/README.md` · parent [`../README.md`](../README.md) · gatehouse [`../../.github/README.md`](../../.github/README.md) · current machine-contract lane [`../../contracts/README.md`](../../contracts/README.md) · executable workflow lane [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · fixtures and drills [`../../tests/README.md`](../../tests/README.md) · policy surface [`../../policy/README.md`](../../policy/README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -34,6 +34,10 @@ Boundary guide for the `schemas/workflows/` scaffold while KFM keeps workflow au
 > [!NOTE]
 > [`../../.github/workflows/README.md`](../../.github/workflows/README.md) records historical workflow activity and deleted workflow filenames as **historical signal only**.
 > That is useful context, but it is **not** proof that those YAML files are currently checked in on public `main`.
+
+> [!NOTE]
+> Public `.github/` is now a substantive gatehouse surface with visible `actions/`, `watchers/`, and `workflows`.
+> That makes it easier to keep executable automation and watcher behavior out of this schema-boundary lane.
 
 > [!NOTE]
 > The parent [`../README.md`](../README.md) still carries older inventory language that describes `schemas/` as `README.md`-only.
@@ -80,6 +84,7 @@ In other words, this README should help maintainers distinguish four different t
 | Role | Directory README for the workflow-oriented schema scaffold under `schemas/` |
 | Current public `main` snapshot | `schemas/workflows/` contains `README.md` only |
 | Parent lane | [`../README.md`](../README.md) documents `schemas/` as a boundary surface while schema-home authority remains unresolved |
+| Gatehouse context | [`../../.github/README.md`](../../.github/README.md) makes workflow and watcher surfaces part of the broader repository control boundary |
 | Stronger current machine-contract signal | [`../../contracts/README.md`](../../contracts/README.md) |
 | Workflow execution surface | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 | Verification surface | [`../../tests/README.md`](../../tests/README.md) |
@@ -93,6 +98,7 @@ In other words, this README should help maintainers distinguish four different t
 | Relation | Path | Why it matters |
 | --- | --- | --- |
 | Upstream | [`../README.md`](../README.md) | Sets the `schemas/` boundary and warns against parallel schema law |
+| Adjacent | [`../../.github/README.md`](../../.github/README.md) | Shows the gatehouse context around workflow and watcher surfaces |
 | Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | Current strongest lane for machine-readable contract publication |
 | Adjacent | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Separates executable automation from schema/topic documentation |
 | Adjacent | [`../../policy/README.md`](../../policy/README.md) | Keeps policy bundles and outcome vocabularies out of schema drift |
@@ -151,6 +157,7 @@ In other words, this README should help maintainers distinguish four different t
 | `schemas/contracts/` | `README.md` visible | A contract-adjacent schema sublane exists, but that does **not** settle canonical contract authority |
 | `schemas/standards/` | `README.md` visible | A standards-adjacent schema sublane exists, but it is boundary-only today |
 | `schemas/tests/` | `README.md` plus `fixtures/` scaffold visible | Maturity already varies across nested schema sublanes; `workflows/` should remain explicitly boundary-first unless authority changes |
+| `.github/` | Gatehouse with visible `ISSUE_TEMPLATE/`, `actions/`, `watchers/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, and `dependabot.yml` | Workflow execution lives inside a broader repository control boundary, not inside `schemas/workflows/` |
 | `.github/workflows/` | `README.md` only on public `main`; historical workflow names are documented as historical signal only | No checked-in workflow YAML was directly evidenced on public `main` in this review |
 | `contracts/` | Real top-level lane with substantive README | Current strongest narrative signal for machine-contract publication |
 | `tests/` | Real top-level lane with substantive README and visible verification subdirectories | The repo has a stronger verified verification surface than the `schemas/workflows/` scaffold |
@@ -219,9 +226,10 @@ sed -n '1,220p' schemas/contracts/README.md
 sed -n '1,220p' schemas/standards/README.md
 sed -n '1,260p' schemas/tests/README.md
 
-# 3) Read the stronger current machine-contract lane and its execution / proof neighbors
-sed -n '1,260p' contracts/README.md
+# 3) Read the gatehouse and the stronger current machine-contract lane
+sed -n '1,260p' .github/README.md
 sed -n '1,240p' .github/workflows/README.md
+sed -n '1,260p' contracts/README.md
 sed -n '1,260p' tests/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' docs/standards/README.md
