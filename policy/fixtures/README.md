@@ -278,16 +278,16 @@ find . -type f \
 
 ```mermaid
 flowchart LR
-    A[contracts / vocab] --> B[policy bundles]
-    B --> C[policy fixtures]
-    C --> D[policy-local tests<br/>(policy/tests)]
-    C --> E[repo-facing policy tests<br/>(tests/policy)]
-    D --> F[merge gates / workflows]
+    A["contracts / vocab"] --> B["policy bundles"]
+    B --> C["policy fixtures"]
+    C --> D["policy-local tests<br/>(policy/tests)"]
+    C --> E["repo-facing policy tests<br/>(tests/policy)"]
+    D --> F["merge gates / workflows"]
     E --> F
-    B --> G[policy runtime<br/>(current public lane: policy/policy-runtime)]
-    G --> H[DecisionEnvelope / ReviewRecord / RuntimeResponseEnvelope]
-    H --> I[trust-visible surfaces]
-    J[CorrectionNotice] --> H
+    B --> G["policy runtime<br/>(current public lane: policy/policy-runtime)"]
+    G --> H["DecisionEnvelope / ReviewRecord / RuntimeResponseEnvelope"]
+    H --> I["trust-visible surfaces"]
+    J["CorrectionNotice"] --> H
     J --> I
 ```
 
