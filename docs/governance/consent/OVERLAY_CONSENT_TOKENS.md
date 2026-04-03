@@ -1,224 +1,394 @@
-<!--
-doc_id: NEEDS VERIFICATION
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/REVIEW_REQUIRED_UUID
 title: KFM Overlay Consent Tokens & Revocation Enforcement
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life (NEEDS VERIFICATION)
+owners: @bartytime4life
 created: 2026-04-01
-updated: 2026-04-01
-policy_label: public (NEEDS VERIFICATION)
-related: [docs/governance/ROOT_GOVERNANCE.md, docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md]
-tags: [kfm, overlays, consent, governance, geoprivacy, security, odrl]
-notes: [Baseline PROPOSED until in‑repo enforcement visible; integrate with EvidenceBundle receipts]
--->
+updated: 2026-04-03
+policy_label: public
+related: [docs/governance/README.md, docs/governance/ROOT_GOVERNANCE.md, docs/governance/ETHICS.md, docs/governance/SOVEREIGNTY.md, docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md, policy/README.md, contracts/README.md, schemas/README.md, tests/README.md]
+tags: [kfm, governance, consent, overlays, geoprivacy, revocation, proof-objects]
+notes: [doc_id remains review-required; public-main path is confirmed; mounted contracts, policy bundles, KMS wiring, and revocation services remain unverified]
+[/KFM_META_BLOCK_V2] -->
 
 # KFM Overlay Consent Tokens & Revocation Enforcement
 
-> One‑line: **Short‑lived, scope‑bounded consent tokens, verified at read/publish time, with fail‑closed revocation and run receipts that carry consent provenance.**
+_Governed consent and revocation rules for sensitive overlays, with KFM doctrine kept separate from realization guidance._
 
----
+> **Status:** draft standard · public `main` path verified · mounted enforcement depth still unknown  
+> **Owners:** `@bartytime4life` *(broad `/docs/` CODEOWNERS fallback confirmed on public `main`; narrower consent-lane ownership still needs verification)*  
+> **Repo fit:** `docs/governance/consent/OVERLAY_CONSENT_TOKENS.md` · governance law [`../ROOT_GOVERNANCE.md`](../ROOT_GOVERNANCE.md) · sensitivity [`../SOVEREIGNTY.md`](../SOVEREIGNTY.md) · ethics [`../ETHICS.md`](../ETHICS.md) · authoring protocol [`../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md) · machine-check neighbors [`../../../policy/README.md`](../../../policy/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../tests/README.md`](../../../tests/README.md)  
+> ![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square) ![Doc type](https://img.shields.io/badge/doc-standard-blue?style=flat-square) ![Lane](https://img.shields.io/badge/lane-consent-6f42c1?style=flat-square) ![Trust](https://img.shields.io/badge/trust-governed%20release-0a7d00?style=flat-square) ![Precision](https://img.shields.io/badge/precision-exact--location--sensitive-bd561d?style=flat-square) ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-1f6feb?style=flat-square)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Verification posture](#verification-posture) · [Confirmed requirements](#confirmed-governance-requirements) · [Proposed realization](#proposed-tokenized-realization) · [Proof objects](#proof-objects-and-receipts) · [Validation](#validation-and-gates) · [Decision flow](#decision-flow) · [Migration](#migration-and-rollback) · [Definition of done](#definition-of-done) · [Open verification](#open-verification)  
+> [!IMPORTANT]
+> This file separates **CONFIRMED** KFM governance law from a **PROPOSED** consent-token realization. Sensitive overlays already require governed rights, sensitivity, precision, release, and correction handling. The token, manifest, introspection, and receipt shapes below are one candidate way to make those burdens executable.
+>
+> [!WARNING]
+> Current public `main` confirms the path and directory placement for this standard. It does **not** by itself prove mounted policy bundles, workflow gates, KMS integration, revocation services, or consent-aware runtime contracts for this lane.
 
-## 1) Scope
-- **Applies to:** Any KFM map/timeline overlay that could reveal sensitive location, person, species, site, or cultural information.
-- **Out of scope:** Internal non‑materialized debug layers; synthetic fixtures that cannot map back to real world subjects (document any exceptions explicitly).
+## Scope
 
-## 2) Problem (Why this exists)
-We must not publish or materialize overlays unless the data subject(s) or steward(s) have granted consent **for a specific place, time, and use**—and we must be able to **revoke** that permission later with visible evidence.
+This standard governs how KFM should handle **overlay-specific consent** when a map, timeline, Story, Dossier, export, or other overlay-bearing surface could expose sensitive location, person, species, site, stewardship, or cultural context.
 
-## 3) Design (High level)
-We issue **KMS‑signed, short‑lived consent tokens** (JWT‑style) that carry only minimal claims. Every overlay build/read/publish path:
-1) **Validates signature + expiry.**
-2) **Asserts scope** (geographic bucket, time window, overlay IDs, permitted uses).
-3) **Checks revocation** (daily manifest + realtime introspection).
-4) **Emits a run receipt** that embeds consent metadata and the *checked* revocation root.
-5) **Fails closed** if anything is invalid or revoked.
+It applies most strongly to overlays that are:
 
----
+- precision-sensitive
+- rights- or steward-review-bearing
+- derived from released evidence but still capable of widening exposure
+- visible on public or ordinary steward-facing surfaces
 
-## 4) Token Format (Minimal Claims)
-**Token header**
-- `alg`: signing algorithm (e.g., ES256)
-- `kid`: KMS key id
-- `typ`: `JWT`
+It does **not** govern:
 
-**Token claims (payload)**
-| Claim | Type | Required | Notes |
-|---|---:|:---:|---|
-| `iss` | str | ✓ | Issuer (KFM consent service) |
-| `sub` | str | ✓ | Subject (steward record id or bundle id) |
-| `aud` | str | ✓ | `kfm/overlays` |
-| `overlay_ids` | array<str> | ✓ | Allowed overlay identifiers |
-| `geobucket` | obj | ✓ | Coarse geography only (e.g., `{"standard":"geohash","precision":5}` or `{"standard":"us_admin","level":"county"}`) |
-| `time_window` | obj | ✓ | `{ "start":"YYYY-MM-DD", "end":"YYYY-MM-DD" }` |
-| `permitted_uses` | array<str> | ✓ | e.g., `["research-generalized","steward-review"]` |
-| `obligations` | array<obj> | ✓ | ODRL‑style (see §6) |
-| `iat` | int | ✓ | Issued at (epoch seconds) |
-| `exp` | int | ✓ | Short TTL (e.g., <= 7 days) |
-| `spec_hash` | str | ✓ | Hash of this spec version adhered to |
-| `consent_token_hash` | str | ✓ | Self‑hash for receipts (redundant but helpful) |
+- generic user/session authentication
+- purely internal fixtures that cannot map back to real subjects
+- non-spatial permissions already owned by a stronger auth or role-control surface
+- machine-readable policy bundles or schemas that should live in `policy/`, `contracts/`, `schemas/`, or `tests/`
 
-> **IMPORTANT**  
-> - **No precise geometry** in the token.  
-> - Geobucket precision must be **coarser than any published map scale** unless a restricted path is proven.
+## Repo fit
 
----
+| Item | Value |
+| --- | --- |
+| Path | `docs/governance/consent/OVERLAY_CONSENT_TOKENS.md` |
+| Path status | **CONFIRMED** on public `main` |
+| Role | Governance standard for overlay-specific consent, revocation, and public-safe precision control |
+| Upstream context | [`../README.md`](../README.md) · [`../ROOT_GOVERNANCE.md`](../ROOT_GOVERNANCE.md) · [`../ETHICS.md`](../ETHICS.md) · [`../SOVEREIGNTY.md`](../SOVEREIGNTY.md) |
+| Adjacent authoring/control surfaces | [`../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md) · [`../../../policy/README.md`](../../../policy/README.md) · [`../../../contracts/README.md`](../../../contracts/README.md) · [`../../../schemas/README.md`](../../../schemas/README.md) · [`../../../tests/README.md`](../../../tests/README.md) |
+| Current public signal | The `docs/governance/consent/` lane exists on public `main` and already contains this file; revise here rather than creating a parallel authority document |
+| Trust boundary | This file explains the rule set; it does **not** replace machine-checkable policy, contracts, fixtures, or runtime emitters |
 
-## 5) Revocation (Fail‑closed)
-Two complementary checks **every time** before materializing/publishing:
-1) **Daily Revocation Manifest**  
-   - Signed file containing: `revocation_root` (Merkle root), optional Bloom filter or explicit TRL (token revocation list), issuance timestamp.
-   - Bundled into builds; stored next to receipts.
-2) **Realtime Introspection Endpoint**  
-   - Input: `consent_token_hash`  
-   - Output: `{ status: active|revoked|unknown, seen_at: ts, revocation_root: hash }`
+## Accepted inputs
 
-**Rule:** If **either** check indicates revoked or unknown → **DENY** (fail‑closed).
+The following material belongs in this standard:
 
----
+- governance law about release, review, exact-location exposure, correction, and negative states
+- sovereignty and rights guidance that changes whether an overlay may be public-safe, generalized, withheld, or denied
+- proof-object expectations for `EvidenceBundle`, decision, receipt, and correction linkage
+- overlay-specific obligations that must survive build, publish, runtime, and rollback
+- review-facing guidance for how consent interacts with steward decisions
 
-## 6) Obligations (ODRL‑style mini‑schema)
-Each obligation is an object with:
+## Exclusions
+
+This standard should not quietly absorb other authority surfaces.
+
+| Does not belong here | Put it here instead |
+| --- | --- |
+| Executable Rego / policy bundles | [`../../../policy/`](../../../policy/) |
+| JWT/JWS schema files, JSON Schemas, fixtures | [`../../../contracts/`](../../../contracts/) and [`../../../schemas/`](../../../schemas/) |
+| Valid / invalid examples and negative-path drills | [`../../../tests/`](../../../tests/) |
+| KMS secret material, key-management procedures, or deployment-specific credentials | owning ops / infra surfaces |
+| Claims that token services or runtime gates already exist | keep those `UNKNOWN` or `PROPOSED` until branch-verified |
+
+## Verification posture
+
+Use the same truth labels KFM applies elsewhere.
+
+| Label | Meaning in this file |
+| --- | --- |
+| **CONFIRMED** | Directly supported by current public repo docs or the March–April 2026 KFM doctrine surfaced in this session |
+| **INFERRED** | Conservative interpretation strongly implied by repeated KFM governance and sovereignty rules |
+| **PROPOSED** | A repo-ready realization shape that fits doctrine but is not yet proven as mounted implementation |
+| **UNKNOWN** | Not verified strongly enough to present as live repo, runtime, contract, or service fact |
+| **NEEDS VERIFICATION** | Path, owner, UUID, workflow, policy bundle, service endpoint, or contract detail that should be checked before merge |
+
+## Confirmed governance requirements
+
+KFM doctrine already imposes the following burdens on sensitive overlays.
+
+| Governance requirement | Overlay consequence |
+| --- | --- |
+| **Release is a governed state change** | A successful render, export, or build does **not** by itself authorize overlay publication. |
+| **Precision is conditional** | Exact coordinates, detailed geometry, or revealing context may need to be generalized, role-gated, withheld, or denied. |
+| **Derived layers stay subordinate** | Tiles, search projections, graph projections, scenes, and overlays do not silently inherit sovereign authority. |
+| **Evidence stays one hop away** | A consequential overlay should still route back to released evidence and visible release state. |
+| **Negative states are valid** | `generalized`, `withheld`, `denied`, `partial`, `stale-visible`, `withdrawn`, and similar outcomes are legitimate governed outcomes, not UX failures. |
+| **Correction remains visible** | If a previously allowed overlay must be narrowed or revoked, the correction path should remain inspectable after the fact. |
+
+### Overlay-specific interpretation
+
+The doctrine above implies a stronger burden for overlay surfaces than for generic browse-only metadata.
+
+| Material family | Minimum public-safe posture | Status |
+| --- | --- | --- |
+| Rare species, archaeology, culturally sensitive places, oral-history-linked sites | Prefer generalized or withheld publication unless exact exposure is explicitly justified and reviewed | **INFERRED** |
+| Person- or household-adjacent points, routes, or descriptive overlays | Do not publish precise location or revealing detail merely because the underlying record exists | **INFERRED** |
+| Synthetic, non-linkable fixtures | May be outside this lane if they cannot map back to real subjects and do not widen exposure | **INFERRED** |
+
+> [!NOTE]
+> KFM doctrine strongly confirms the **problem** this standard is solving. It does **not** yet prove that the mounted repo already exposes a finished consent-token contract, revocation API, or consent-aware receipt schema.
+
+## Proposed tokenized realization
+
+Everything in this section is **PROPOSED** unless a stronger mounted contract or policy bundle proves otherwise.
+
+### Design overview
+
+A small, machine-checkable consent layer can make overlay release burdens operational without turning consent into a silent bypass.
+
+| Proposed component | Minimal job | Should feed or attach to |
+| --- | --- | --- |
+| `ConsentToken` | Scope-bounded grant for a specific overlay set, geography bucket, time window, and permitted use | `DecisionEnvelope`, runtime checks |
+| `ConsentStewardRecord` | Private steward-side record linking token hash, scope, obligations, and issuance context | review lane / steward tools |
+| `ConsentRevocationManifest` | Offline-suitable revocation snapshot for build and publish jobs | publish-time and batch checks |
+| `ConsentIntrospectionResult` | Near-real-time status check for revoked / unknown / active state | runtime or publish-time evaluation |
+| `OverlayConsentDecision` | Final per-run interpretation of token + obligations + surface scope | `DecisionEnvelope`, `ProjectionBuildReceipt`, `RuntimeResponseEnvelope` |
+| `ConsentCorrectionNotice` | Visible correction or rollback trail when a once-allowed overlay becomes narrowed, withdrawn, or denied | `CorrectionNotice` / rollback artifacts |
+
+### Minimal token claims
+
+The token should stay narrow. It is a scope carrier, not a sovereign truth object.
+
+| Claim | Type | Required | Why it exists |
+| --- | --- | :---: | --- |
+| `iss` | `string` | ✓ | Issuer identity |
+| `sub` | `string` | ✓ | Subject or steward-side binding reference |
+| `aud` | `string` | ✓ | Overlay consent audience, e.g. `kfm/overlays` |
+| `overlay_ids` | `string[]` | ✓ | Explicit overlay identifiers covered by the grant |
+| `geobucket` | `object` | ✓ | Coarse spatial scope, not precise geometry |
+| `time_window` | `object` | ✓ | Temporal scope for use |
+| `permitted_uses` | `string[]` | ✓ | What the token actually allows |
+| `obligations` | `object[]` | ✓ | Redaction / generalization / retention duties |
+| `iat` | `integer` | ✓ | Issued-at timestamp |
+| `exp` | `integer` | ✓ | Short-lived expiry |
+| `spec_hash` | `string` | ✓ | Version anchor for the governing spec |
+| `consent_token_hash` | `string` | ✓ | Stable receipt / revocation join key |
+
+### Precision and scope rules
+
+The overlay-specific consent token should follow four tight rules.
+
+1. **No precise geometry in the token.** Carry a `geobucket`, not point/line/polygon detail.
+2. **Public scope cannot outrun token scope.** A renderer, tiler, or export job should fail closed if the requested precision is finer than the token permits.
+3. **Time scope matters.** A token that is valid for one release window, replay range, or study period should not silently widen to another.
+4. **Short lifetime beats broad reuse.** Re-issuance is safer than indefinite scope creep.
+
+> [!IMPORTANT]
+> Geobucket precision should be **coarser than or equal to** the finest public-safe release precision. A public surface should never recover more detail than the consent scope intended.
+
+### Revocation model
+
+Revocation should support both build-time and near-line checks.
+
+| Check | Purpose | Required reaction |
+| --- | --- | --- |
+| `ConsentRevocationManifest` | Gives offline or batch jobs a signed revocation snapshot | If the token is present and revoked or unknown, do not publish |
+| `ConsentIntrospectionResult` | Gives interactive or near-line jobs a fresher status read | If the token is revoked or unknown, deny or withhold immediately |
+| Manifest / introspection disagreement | Signals trust-state conflict | Fail closed, emit review-bearing evidence, and stop outward release |
+
+**Working rule:** if any required revocation check yields `revoked` or `unknown`, the outward result should not become a normal public overlay.
+
+### Obligations mini-schema
+
+An obligation object should remain small enough to test and strict enough to enforce.
+
+| Field | Purpose |
+| --- | --- |
+| `action` | What must happen: `redact`, `generalize`, `retain-until`, `provenance`, `purge-on-revoke` |
+| `target` | What it applies to: `geometry`, `attributes`, `evidence_links`, `run_artifacts` |
+| `params` | Narrow parameter set for the action |
+
+<details>
+<summary>Illustrative obligation JSON</summary>
+
 ```json
 {
-  "action": "redact|generalize|retain-until|provenance|purge-on-revoke",
-  "target": "geometry|attributes|evidence_links|run_artifacts",
-  "params": { "retain_until": "YYYY-MM-DD", "generalize_to": "geohash/5|county", "redact_fields": ["owner_name","precise_coord"] }
-}
-```
-**Enforcement points**
-- **At build:** apply `generalize`/`redact` before writing tiles/frames.
-- **At publish:** assert obligations satisfied (policy gate).
-- **On revocation:** execute `purge-on-revoke` and emit a **rollback run receipt**.
-
----
-
-## 7) Steward Record + Verify Checklist (UI‑light, mandatory)
-Store alongside token (keyed by `consent_token_hash`):
-
-- **Steward record (required fields)**
-  - `consent_token_hash`
-  - `issuer`
-  - `spec_hash`
-  - `scope`: `{ geobucket, time_window, overlay_ids }`
-  - `permitted_uses[]`
-  - `obligations[]`
-  - `issued_at`, `expires_at`
-  - `revocation_root_at_issue`
-
-- **Verification steps (must pass)**
-  1. Verify **signature** with KMS public key (by `kid`).
-  2. Assert **geobucket enforcement** matches requested output scale(s).
-  3. Run **revocation checks** (daily manifest + introspection).
-  4. Embed **consent metadata** in every **run receipt**.
-  5. On **revocation event**: emit **rollback run receipt**; execute obligations (purge/generalize/redact); log retention actions.
-
----
-
-## 8) Run Receipt (what we write every time)
-A `run_receipt.json` (or YAML) adjacent to outputs:
-
-```json
-{
-  "run_id": "UUID",
-  "when": "2026-04-01T12:34:56Z",
-  "inputs": ["EvidenceBundle:..."],
-  "outputs": ["tiles://...","frames://..."],
-  "consent": {
-    "consent_token_hash": "sha256-...",
-    "issuer": "kfm-consent",
-    "scope": { "overlay_ids": ["..."], "geobucket": {"standard":"geohash","precision":5}, "time_window": {"start":"...","end":"..."} },
-    "permitted_uses": ["research-generalized"],
-    "obligations": [{"action":"generalize","target":"geometry","params":{"generalize_to":"geohash/5"}}],
-    "token_status": "active|revoked|unknown",
-    "revocation_root_checked": "merkle-root-hex"
-  },
-  "policy": {
-    "spec_hash": "sha256-...",
-    "checks": ["sig_ok","scope_ok","revocation_ok","obligations_ok"],
-    "decision": "ANSWER|ABSTAIN|DENY|ERROR"
+  "action": "generalize",
+  "target": "geometry",
+  "params": {
+    "generalize_to": "geohash/5"
   }
 }
 ```
 
-**Publish rule:** If `token_status != active` → **block publishing**.
+</details>
 
----
+### Decision mapping
 
-## 9) CI & Runtime Policy Gates
-- **Conftest/OPA Gate (CI):**  
-  - Regressions fail if receipts are missing consent blocks, if scope > allowed output precision, or if a revoked token appears.
-- **Runtime PDP/PEP:**  
-  - PDP evaluates consent + obligations + scope.  
-  - PEP in publishers/renderers **enforces** the decision; **no bypass**.
+Do not collapse release decisions and runtime outcomes into one ambiguous field.
 
----
+| Condition | Proposed decision result | Public surface state | Runtime outcome when interactive |
+| --- | --- | --- | --- |
+| Token active, scope fits, obligations satisfied | `allow` or `generalize` | `public-safe` or `generalized` | `ANSWER` |
+| Token active but steward review still required | `review-required` | `withheld` pending review | `ABSTAIN` or `DENY` |
+| Token expired, revoked, or unknown | `deny` | `denied` or `withdrawn` | `DENY` |
+| Policy or evidence service unavailable | `hold` / `error` | `source-dependent` or error state | `ABSTAIN` or `ERROR` |
 
-## 10) Implementation Sketch (INFERRED)
-```mermaid
-flowchart TD
-  A[Request overlay build/read] --> B[Load consent token]
-  B --> C[Verify KMS sig + exp]
-  C --> D[Assert scope: overlay_ids, geobucket, time window]
-  D --> E[Revocation checks: daily manifest + introspection]
-  E -->|revoked/unknown| X[DENY (fail-closed)]
-  E -->|active| F[Apply obligations (redact/generalize)]
-  F --> G[Materialize outputs]
-  G --> H[Write run_receipt with consent + revocation root]
-  H --> I[OPA/Conftest gate]
-  I -->|pass| J[Publish]
-  I -->|fail| X
+> [!NOTE]
+> KFM’s outward runtime contract stays `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. Overlay-specific release language such as `allow`, `generalize`, or `review-required` should sit **under** that runtime envelope, not replace it.
+
+## Proof objects and receipts
+
+KFM already expects typed proof objects. A consent realization should plug into them rather than inventing a parallel trust vocabulary.
+
+| Object family | Why this matters for consent | Status |
+| --- | --- | --- |
+| `EvidenceBundle` | Keeps the overlay claim one hop from released evidence and visible scope | **CONFIRMED** doctrine |
+| `DecisionEnvelope` | Carries allow / generalize / review-required / deny reasoning and obligations | **CONFIRMED** doctrine |
+| `ReviewRecord` | Makes steward review explicit where consent or sensitivity requires it | **CONFIRMED** doctrine |
+| `ProjectionBuildReceipt` / `ReleaseManifest` | Proves the derived overlay was built from known, released scope | **CONFIRMED** doctrine |
+| `RuntimeResponseEnvelope` | Keeps interactive surface outcomes finite and auditable | **CONFIRMED** doctrine |
+| Consent-specific binding schema | Connects token hash, revocation state, obligations, and overlay scope into the existing proof lattice | **PROPOSED** |
+
+### Steward-side record
+
+A steward-side record is the private counterpart to a public-safe token hash.
+
+Minimum useful fields:
+
+- `consent_token_hash`
+- `issuer`
+- `spec_hash`
+- `scope`
+- `permitted_uses`
+- `obligations`
+- `issued_at`
+- `expires_at`
+- `revocation_root_at_issue`
+- `review_ref` or equivalent steward decision reference when required
+
+### Illustrative consent-aware run receipt
+
+<details>
+<summary>Illustrative JSON receipt</summary>
+
+```json
+{
+  "run_id": "UUID",
+  "audit_ref": "AUDIT-REF",
+  "inputs": {
+    "evidence_bundle_refs": ["EvidenceBundle:..."],
+    "dataset_version_refs": ["DatasetVersion:..."]
+  },
+  "overlay": {
+    "overlay_ids": ["overlay.example"],
+    "requested_surface": "map"
+  },
+  "overlay_consent": {
+    "consent_token_hash": "sha256-...",
+    "issuer": "kfm-consent",
+    "token_status": "active|revoked|unknown",
+    "scope": {
+      "overlay_ids": ["overlay.example"],
+      "geobucket": { "standard": "geohash", "precision": 5 },
+      "time_window": { "start": "2026-04-01", "end": "2026-04-30" }
+    },
+    "permitted_uses": ["research-generalized"],
+    "obligations": [
+      {
+        "action": "generalize",
+        "target": "geometry",
+        "params": { "generalize_to": "geohash/5" }
+      }
+    ],
+    "revocation_root_checked": "sha256-..."
+  },
+  "decision": {
+    "decision_result": "allow|generalize|review-required|deny",
+    "reason_codes": ["rights_missing", "sensitivity_unresolved"],
+    "obligation_codes": ["generalize_geometry"],
+    "review_required": true
+  },
+  "surface_state": "public-safe|generalized|withheld|denied",
+  "runtime_outcome": "ANSWER|ABSTAIN|DENY|ERROR",
+  "correction_ref": "CorrectionNotice:..."
+}
 ```
 
----
+</details>
 
-## 11) Security & Privacy Notes
-- **Short TTLs** reduce blast radius; rely on re‑issuance for extended work.
-- **Coarse geobuckets** by default; precise views must route through **restricted** paths with additional policy and logging.
-- **No subject PII** in tokens; steward records keep linkage privately.
-- **Receipts are evidence**—do not ship without them.
+## Validation and gates
 
----
+### Minimum checks
 
-## 12) Ops Playbook (Day‑2)
-- Rotate KMS keys quarterly; pin acceptable `kid` set in policy.
-- Regenerate and publish **revocation manifest** daily (or more often).
-- Alert if an introspection says `unknown` for any in‑flight run.
-- Periodic audit: sample receipts; replay OPA decisions; verify purge on historical revocations.
+| Gate | What must be proven | Status |
+| --- | --- | --- |
+| Contract validation | Token, steward record, receipt, and revocation payloads parse and validate | **PROPOSED** |
+| Precision rule | Requested output precision does not outrun token scope | **PROPOSED** |
+| Revocation rule | `revoked` or `unknown` blocks outward release | **PROPOSED** |
+| Evidence rule | Receipt points back to released evidence and visible decision state | **INFERRED** from doctrine |
+| Negative-path tests | Generalize / withhold / deny / rollback paths are all tested, not just allow paths | **INFERRED** from verification doctrine |
+| Correction drill | Revoked overlays emit visible narrowing / withdrawal lineage | **INFERRED** from governance and correction doctrine |
 
----
+### Proposed CI and runtime gates
 
-## 13) Interfaces (PROPOSED)
-- **POST** `/consent/introspect` → `{consent_token_hash} -> {status, revocation_root, seen_at}`
-- **GET** `/consent/revocation-manifest.json` → `{revocation_root, bloom|trl, issued_at, sig}`
+1. **Policy / CI gate**
+   - fail when consent blocks are missing for overlays that require them
+   - fail when scope is finer than the token allows
+   - fail when `token_status` is `revoked` or `unknown`
+   - fail when receipt objects omit evidence, decision, or correction linkage
 
----
+2. **Runtime gate**
+   - verify signature, expiry, scope, and revocation before answer or publish
+   - preserve no-bypass behavior in publishers, renderers, and outward APIs
+   - return finite negative outcomes instead of silently hiding the policy result
 
-## 14) Migration Guidance
-- Start by wrapping **publishers** first (fail‑closed at the edge).
-- Backfill **run_receipts** for recent outputs; mark legacy items as `UNKNOWN` status and quarantine if necessary.
-- Add **geobucket assertions** to all renderer configs (unit tests + policy tests).
+3. **Review gate**
+   - where consent is unresolved or precision risk is high, require an explicit review-bearing decision rather than a silent default
 
----
+### Suggested test families
 
-## 15) FAQs
-**Q: Why both manifest and introspection?**  
-A: Defense‑in‑depth. Manifests cover offline/air‑gapped runs; introspection covers near‑real‑time revocations.
+- valid / invalid token fixtures
+- over-precision request fixtures
+- revoked / unknown manifest fixtures
+- missing evidence-link fixtures
+- negative-path UI or API fixtures proving `DENY`, `ABSTAIN`, generalized, and withdrawn states remain visible
 
-**Q: Can a single token cover multiple overlays?**  
-A: Yes, but list them explicitly in `overlay_ids` and keep TTL short.
+## Decision flow
 
-**Q: What if obligations conflict with a renderer capability?**  
-A: DENY and open a remediation ticket; never silently degrade obligations.
+```mermaid
+flowchart TD
+  A[Overlay request or publish job] --> B[Resolve released scope + EvidenceBundle]
+  B --> C[Load proposed ConsentToken]
+  C --> D[Verify signature + expiry + overlay scope]
+  D --> E[Check revocation: manifest + introspection]
+  E -->|active| F[Apply obligations: generalize / redact / retain]
+  E -->|revoked or unknown| G[DENY or WITHHOLD]
+  F --> H[Emit DecisionEnvelope + ProjectionBuildReceipt]
+  H --> I[Publish or answer through governed surface]
+  G --> J[Emit review-bearing evidence]
+  J --> K[CorrectionNotice / rollback receipt if previously released]
+```
 
----
+## Migration and rollback
 
-## 16) Definition of Done (for adoption)
-- [ ] Conftest/OPA policies merged; CI fails on missing/invalid consent blocks  
-- [ ] Publishers call introspection and verify manifest root  
-- [ ] Run receipts emitted and archived for every run  
-- [ ] Purge/generalization job wired for `purge-on-revoke`  
-- [ ] Ops rotation + alerting in place
+Start small and fail closed.
 
----
+1. **Wrap publishers first.** The publish edge is the narrowest, highest-value place to enforce consent scope before widening to readers or Story surfaces.
+2. **Backfill trust state for recent sensitive overlays.** If historic overlays cannot reconstruct consent posture, mark them `UNKNOWN` and move them to steward review, generalized release, or withholding rather than silently treating them as public-safe.
+3. **Add proof objects before UX breadth.** A token without receipt, decision, and correction linkage is still too weak to carry merge-gate weight.
+4. **Wire revocation to rollback.** A later revocation should not just stop future release; it should emit visible correction or withdrawal lineage for already released derived overlays.
+5. **Only then widen to interactive surfaces.** Story, Focus, Compare, and export surfaces should inherit the same checked result instead of bypassing it.
+
+## Related standards
+
+- [`../ROOT_GOVERNANCE.md`](../ROOT_GOVERNANCE.md)
+- [`../ETHICS.md`](../ETHICS.md)
+- [`../SOVEREIGNTY.md`](../SOVEREIGNTY.md)
+- [`../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](../../standards/KFM_MARKDOWN_WORK_PROTOCOL.md)
+- [`../../../policy/README.md`](../../../policy/README.md)
+- [`../../../contracts/README.md`](../../../contracts/README.md)
+- [`../../../schemas/README.md`](../../../schemas/README.md)
+- [`../../../tests/README.md`](../../../tests/README.md)
+
+## Definition of done
+
+- [ ] The file keeps **CONFIRMED** doctrine separate from **PROPOSED** implementation detail
+- [ ] Consent-bearing overlays can be mapped to explicit public-safe, generalized, withheld, denied, or withdrawn states
+- [ ] A consent-aware proof path exists from overlay surface back to `EvidenceBundle`, decision, and correction linkage
+- [ ] Negative-path tests exist for revoked, unknown, expired, over-precision, and review-required cases
+- [ ] Review-bearing or correction-bearing outcomes remain visible after release changes
+- [ ] Any mounted service names, policy bundle paths, UUIDs, or schema filenames are verified on the working branch before merge
+
+## Open verification
+
+The following remain intentionally visible:
+
+- real `doc_id` / UUID and any stronger document registry rule
+- whether `docs/governance/consent/README.md` is intended to stay placeholder-only or become a substantive lane index
+- actual contract filenames and fixture paths for this lane
+- mounted policy bundles, workflow gates, and required checks for consent-aware promotion
+- actual KMS integration, revocation manifest publication path, and introspection service wiring
+- whether any existing release or runtime envelopes already carry a consent block in the active branch
+
 [Back to top](#kfm-overlay-consent-tokens--revocation-enforcement)
