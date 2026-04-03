@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <NEEDS_VERIFICATION: YYYY-MM-DD>
 updated: <SET_ON_MERGE: YYYY-MM-DD>
 policy_label: public
-related: [../README.md, ../bundles/README.md, ../policy-runtime/README.md, ../tests/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../tests/README.md, ../../tests/policy/README.md, ../../.github/workflows/README.md]
+related: [../README.md, ../bundles/README.md, ../bundles/runtime/README.md, ../policy-runtime/README.md, ../tests/README.md, ../../packages/policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../tests/README.md, ../../tests/policy/README.md, ../../.github/workflows/README.md]
 tags: [kfm, policy, fixtures, governance, verification]
-notes: [Current public `main` confirms `policy/fixtures/README.md` as the only visible file in this directory; `/policy/` ownership is publicly routed to `@bartytime4life` via `/.github/CODEOWNERS`; doc_id and dates still need repo-backed verification.]
+notes: [Current public `main` confirms `policy/fixtures/README.md` as the only visible file in this directory; `/policy/` ownership is publicly routed to `@bartytime4life` via `/.github/CODEOWNERS`; public `main` also exposes `policy/policy-runtime/`, `policy/bundles/runtime/`, and `packages/policy/` as documentation-heavy adjacent seams; doc_id and dates still need repo-backed verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # fixtures
@@ -66,6 +66,7 @@ Do **not** treat this directory as a generic examples bucket. In KFM, fixtures a
 | `/.github/CODEOWNERS` | Public ownership currently routes `/policy/` to `@bartytime4life`, which is strong enough to carry that owner value in this README until narrower path ownership is checked in. |
 | `policy/README.md` | The parent directory explicitly assigns `policy/` responsibility for executable bundles, fixtures, tests, reasons, obligations, and finite policy/result grammar. |
 | `policy/tests/README.md`, `tests/policy/README.md`, and `.github/workflows/README.md` | Fixture cases have distinct downstream proof lanes: bundle-local policy tests, repo-facing policy verification, and workflow/documented gate scaffolding should stay separate rather than being silently collapsed into this directory. |
+| `policy/policy-runtime/README.md`, `policy/bundles/runtime/README.md`, and `packages/policy/README.md` | Current public `main` now exposes three related runtime/support seams; fixtures should stay repo-authoritative semantic cases and should not hard-code a runtime home until the reviewed branch proves one. |
 | March 2026 KFM doctrine + repo-grounded sprint | Policy fixtures are load-bearing verification artifacts tied to `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, `RuntimeResponseEnvelope`, and visible correction lineage; the next enforcement slice still depends on valid/invalid fixtures plus a deterministic validator and merge gate. |
 
 <p align="right"><a href="#fixtures">Back to top</a></p>
@@ -80,7 +81,9 @@ This README sits below the human-facing `policy/README.md` surface and above any
 | --- | --- | --- |
 | `policy/fixtures/` | README only, currently the note "Scaffold directory defined from repository README guidance." | The directory is real, but mounted fixture inventory beyond this scaffold is not yet evidenced. |
 | `policy/` | `README.md`, `bundles/`, `fixtures/`, `policy-runtime/`, `tests/` | Fixtures are meant to live beside policy bundles and policy-local tests, not as an orphaned examples folder. |
-| `policy/policy-runtime/` | Present as a public repo lane | The public tree currently shows a runtime-adjacent seam under `policy/`, even though doctrine also sketches a broader `packages/policy-runtime/` direction. This README should not silently resolve that tension. |
+| `policy/policy-runtime/` | Present as a public repo lane | The public tree currently shows a runtime-adjacent seam under `policy/`, even though doctrine also sketches a broader package/runtime direction. This README should not silently resolve that tension. |
+| `policy/bundles/runtime/` | Present as a public scaffold with a one-line README | Runtime-specific bundle placement is now a visible repo seam, even if it is still scaffold-level. |
+| `packages/policy/` | Present as a public package boundary with `README.md` only | The repo now also distinguishes repo-authoritative policy lanes from package-local policy-support code; fixtures should stay on the authoritative side of that split. |
 
 ### Upstream and downstream links
 
@@ -88,8 +91,10 @@ This README sits below the human-facing `policy/README.md` surface and above any
 | --- | --- | --- |
 | Upstream | [`../README.md`](../README.md) | Parent policy boundary, result grammar, and repo-grounded evidence posture. |
 | Lateral | [`../bundles/README.md`](../bundles/README.md) | Canonical place for executable policy rules. Fixtures should prove bundle meaning, not replace it. |
+| Lateral | [`../bundles/runtime/README.md`](../bundles/runtime/README.md) | Public scaffold for runtime-specific bundle placement when fixture cases target `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
 | Lateral | [`../policy-runtime/README.md`](../policy-runtime/README.md) | Current public runtime-adjacent seam under `policy/`; verify whether it stays here or moves elsewhere. |
 | Lateral | [`../tests/README.md`](../tests/README.md) | Policy-local test lane that should consume or validate fixture packs. |
+| Lateral | [`../../packages/policy/README.md`](../../packages/policy/README.md) | Shared internal policy-support boundary; fixtures remain repo-authoritative semantic cases, not package-local helpers. |
 | Lateral | [`../../contracts/README.md`](../../contracts/README.md) | Contract and vocabulary boundary. Schema authority must not drift into fixture-only examples. |
 | Lateral | [`../../schemas/README.md`](../../schemas/README.md) | Keeps schema-home ambiguity visible and prevents parallel registries. |
 | Downstream | [`../../tests/README.md`](../../tests/README.md) | Repo-wide verification families, correction drills, and proof expectations. |
@@ -98,6 +103,9 @@ This README sits below the human-facing `policy/README.md` surface and above any
 
 > [!NOTE]
 > `policy/README.md` already treats `allow`, `deny`, `generalize`, `restrict`, `needs-review`, `withdraw`, and `supersede` as the core fixture-worthy policy states. This README keeps that grammar stable rather than inventing a competing one.
+
+> [!NOTE]
+> Current public `main` exposes both top-level `policy/policy-runtime/` and package-level `packages/policy/` seams. Keep fixture guidance runtime-home-neutral until the reviewed branch proves where real loaders, adapters, and decision mediators actually live.
 
 ## Accepted inputs
 
@@ -126,7 +134,7 @@ The safest reading is: keep `policy/fixtures/` compact, machine-reviewable, and 
 | Does **not** belong here | Put it instead | Why |
 | --- | --- | --- |
 | Executable policy rule bodies | [`../bundles/`](../bundles/) | Bundles own rule logic; fixtures only prove rule behavior. |
-| Runtime loaders, adapters, or decision assembly code | [`../policy-runtime/`](../policy-runtime/) or the verified runtime package | Execution glue is adjacent to fixtures, but it is not the fixture surface itself. |
+| Runtime loaders, adapters, or decision assembly code | [`../policy-runtime/`](../policy-runtime/), [`../../packages/policy/`](../../packages/policy/), or the verified runtime package | Execution glue is adjacent to fixtures, but it is not the fixture surface itself. |
 | Canonical JSON Schema / OpenAPI definitions | [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) | Shared object shape and schema authority must not drift into fixture cases. |
 | Repo-facing policy proof suites, e2e drills, or broader correction/release verification | [`../../tests/policy/`](../../tests/policy/) and [`../../tests/`](../../tests/) | `policy/fixtures/` should stay focused on semantic cases, not absorb broader verification ownership. |
 | RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED data | `../../data/` | Policy governs exposure and movement, but it is not the canonical store. |
@@ -141,12 +149,19 @@ The safest reading is: keep `policy/fixtures/` compact, machine-reviewable, and 
 policy/
 ├── README.md
 ├── bundles/
+│   ├── README.md
+│   └── runtime/
+│       └── README.md
 ├── fixtures/
+│   └── README.md
 ├── policy-runtime/
+│   └── README.md
 └── tests/
+    └── README.md
 
-policy/fixtures/
-└── README.md
+packages/
+└── policy/
+    └── README.md
 ```
 
 ### Doctrine-aligned starter shape (**PROPOSED**)
@@ -194,9 +209,11 @@ policy/fixtures/sensitivity/
 find . -maxdepth 5 \
   \( -path './policy/fixtures' \
    -o -path './policy/bundles' \
+   -o -path './policy/bundles/runtime' \
    -o -path './policy/policy-runtime' \
    -o -path './policy/tests' \
    -o -path './tests/policy' \
+   -o -path './packages/policy' \
    -o -path './contracts' \
    -o -path './schemas' \
    -o -path './.github/workflows' \) \
@@ -308,6 +325,7 @@ Fixtures matter because they sit between abstract rule text and claim-bearing ou
 
 - [ ] Replace `doc_id` and date placeholders with repo-backed values.
 - [ ] Verify whether the public `policy/policy-runtime/` lane is intentional long-term structure or a temporary scaffold.
+- [ ] Reconcile `policy/policy-runtime/`, `policy/bundles/runtime/`, and `packages/policy/` before fixtures start depending on runtime-home assumptions.
 - [ ] Confirm the real fixture runner / validator command before documenting it as current truth.
 - [ ] Ensure at least one positive and one negative case exist for every mounted fixture family.
 - [ ] Keep reason / obligation vocabulary ownership explicit and non-duplicative.
@@ -332,6 +350,10 @@ It is a strong design fit in doctrine and repo guidance, but this README should 
 ### How is this different from `policy/tests/` or `tests/policy/`?
 
 `policy/fixtures/` owns semantic cases. `policy/tests/` owns bundle-local assertions close to the rule seam. `tests/policy/` is the repo-facing proof lane that shows those semantics survive broader verification pressure, gates, and downstream trust surfaces.
+
+### Why mention both `policy/policy-runtime/` and `packages/policy/`?
+
+Because current public `main` exposes both as distinct documentation seams. `policy/policy-runtime/` is the top-level runtime-policy boundary under the repo-authoritative `policy/` lane, while `packages/policy/` is the shared internal policy-support package boundary. Until the reviewed branch proves real loaders, adapters, and decision mediators, fixtures should not assume either one is the final mounted runtime home.
 
 ### Why not put all fixtures under `tests/` and keep `policy/fixtures/` empty?
 
