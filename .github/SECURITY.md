@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-15
-updated: 2026-03-28
+updated: 2026-04-03
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, ../SECURITY.md]
-tags: [kfm, security, github, disclosure]
-notes: [UUID still needs verification, created/updated dates are based on current public Git history for .github/SECURITY.md, GitHub Security page currently renders .github/SECURITY.md and exposes private reporting, both .github/SECURITY.md and root SECURITY.md still exist, fallback inbox/SLA/rulesets/branch protection still need verification]
+related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, ../SECURITY.md, ./ISSUE_TEMPLATE/README.md, ./workflows/README.md]
+tags: [kfm, security, github, disclosure, private-reporting]
+notes: [UUID still needs verification, created date is confirmed from .github/SECURITY.md history, updated date reflects this proposed revision and should be kept in sync on merge, GitHub Security tab currently renders .github/SECURITY.md and exposes private reporting, root SECURITY.md also exists and currently delegates to this file, public issue-template chooser is still effectively unconfigured on public main (README.md plus empty config.yml only), fallback inbox/SLA/rulesets/branch protection still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM GitHub Security Policy
@@ -20,17 +20,17 @@ Private-first vulnerability reporting, safe handling, and coordinated disclosure
 | Field | Value |
 |---|---|
 | Status | `experimental` *(document status: `draft`)* |
-| Owners | `@bartytime4life` *(confirmed by [`./CODEOWNERS`](./CODEOWNERS); broad single-owner baseline at current repo scope)* |
+| Owners | `@bartytime4life` *(confirmed by [`./CODEOWNERS`](./CODEOWNERS); current public baseline remains broad and single-owner)* |
 | Badges | ![Status badge][badge-status] ![Owners badge][badge-owners] ![Path badge][badge-path] ![Reporting badge][badge-reporting] ![Posture badge][badge-posture] ![Trust badge][badge-trust] |
-| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) · [Appendix](#appendix) |
+| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Current public signals](#current-public-signals) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) · [Appendix](#appendix) |
 | Intended path | `.github/SECURITY.md` |
-| Canonical disclosure path | `.github/SECURITY.md` *(root [`../SECURITY.md`](../SECURITY.md) also exists today; keep it delegating or text-aligned to avoid drift)* |
+| Canonical disclosure path | `.github/SECURITY.md` *(root [`../SECURITY.md`](../SECURITY.md) currently acts as a short public entrypoint and hands off here)* |
 
 > [!IMPORTANT]
-> The current public GitHub Security tab exposes **Report a vulnerability**. Use that lane first. Keep `.github/SECURITY.md` as the canonical public policy, and keep the root [`../SECURITY.md`](../SECURITY.md) delegating or text-aligned so disclosure guidance does not drift.
+> The current public GitHub Security tab exposes **Report a vulnerability** and renders `/.github/SECURITY.md` as the repository policy. Use that lane first. Keep this file authoritative, and keep the root [`../SECURITY.md`](../SECURITY.md) aligned as a short handoff surface.
 
 > [!NOTE]
-> This draft is intentionally strict about uncertainty. GitHub private vulnerability reporting is visible in the current public repo UI, but monitored fallback inboxes, acknowledgement windows, rulesets, required checks, branch-protection settings, and any alternate confidential escalation path still need verification before this document is treated as fully publication-ready.
+> Current public `main` still shows `.github/ISSUE_TEMPLATE/README.md` plus an empty `config.yml`, with no checked-in issue forms or chooser routing visible. Treat the Security tab and the two `SECURITY.md` files as the confirmed public reporting surfaces, not the issue-creation UI.
 
 ## Scope
 
@@ -51,12 +51,13 @@ KFM treats security as part of the governed publication system, not as a detache
 - [`../CONTRIBUTING.md`](../CONTRIBUTING.md) — normal contribution flow for non-security changes
 - [`./README.md`](./README.md) — `.github/` operating context
 - [`./CODEOWNERS`](./CODEOWNERS) — review ownership boundary
-- [`../SECURITY.md`](../SECURITY.md) — current secondary public security-policy path that should delegate here or remain text-aligned
+- [`../SECURITY.md`](../SECURITY.md) — root-level public entrypoint that currently hands off to this file
 
 ### Downstream effect
 
 - GitHub private vulnerability intake through the Security tab
-- public issue intake that should redirect sensitive disclosures away from [`./ISSUE_TEMPLATE/README.md`](./ISSUE_TEMPLATE/README.md)
+- public security-policy handoff between this file and [`../SECURITY.md`](../SECURITY.md)
+- issue-intake docs and templates that should keep undisclosed findings out of public issues
 - maintainer triage and containment
 - governed remediation, mitigation, rollback, or correction
 - release / correction evidence updates
@@ -64,6 +65,21 @@ KFM treats security as part of the governed publication system, not as a detache
 
 > [!WARNING]
 > Treat any unpublished fallback inbox, escalation alias, ruleset assumption, required-check claim, or branch-protection expectation as a merge-time verification item, not as a settled repo fact.
+
+## Current public signals
+
+| Signal | Status | Why it matters |
+|---|---|---|
+| GitHub Security tab exposes **Report a vulnerability** | `CONFIRMED` | GitHub-native private reporting is available now. |
+| GitHub Security page renders `/.github/SECURITY.md` | `CONFIRMED` | This file is the GitHub-facing canonical policy surface. |
+| Root [`../SECURITY.md`](../SECURITY.md) exists and currently hands off to this file | `CONFIRMED` | The two public security surfaces should stay aligned, with this file authoritative. |
+| `.github/CODEOWNERS` gives global fallback and `/.github/` coverage to `@bartytime4life` | `CONFIRMED` | Review routing exists, but it is broad and single-owner. |
+| `.github/workflows/` contains `README.md` only on public `main` | `CONFIRMED` | Do not overclaim checked-in workflow YAMLs, required checks, or platform-side enforcement. |
+| `.github/ISSUE_TEMPLATE/` contains `README.md` plus empty `config.yml`, with no visible issue forms on public `main` | `CONFIRMED` | Do not assume the issue chooser will reroute a sensitive report away from public issues. |
+| GitHub Releases currently shows no releases published | `CONFIRMED` | Support policy still needs an explicit maintained version matrix. |
+
+> [!WARNING]
+> Platform state is not the same thing as repo state. Checked-in Markdown can describe intended disclosure posture, but it does not by itself prove rulesets, required checks, environment approvals, fallback inboxes, or other platform-only settings.
 
 ## Accepted inputs
 
@@ -99,7 +115,7 @@ Repository release support still needs explicit maintainer definition, but sever
 | Scope | Current posture |
 |---|---|
 | Default branch / active maintenance line | `main` |
-| GitHub Releases view | `No releases currently visible` |
+| GitHub Releases view | `No releases published` |
 | Exact supported-version matrix | `NEEDS VERIFICATION` |
 | Repository surfaces that affect governed publication, policy, verification, runtime trust, or release integrity | In scope |
 | GitHub workflow, ruleset, CODEOWNERS, secret, attestation, or branch-protection paths that can weaken trust or release integrity | In scope |
@@ -113,7 +129,7 @@ Repository release support still needs explicit maintainer definition, but sever
 > The absence of published GitHub Releases does not by itself define the supported-version policy. Maintainers should publish an explicit support window here if support is narrower than “current `main` branch plus unreleased repository state.”
 
 > [!NOTE]
-> Current public `main` shows `.github/workflows/README.md` only. Public GitHub Actions history remains visible, but that history should be treated as historical signal rather than proof of currently checked-in workflow YAML, required checks, or platform-side rules.
+> Current public `main` shows `.github/workflows/README.md` only. Public GitHub Actions history remains visible, but that history should be treated as historical signal rather than proof of currently checked-in workflow YAMLs, required checks, or platform-side rules.
 
 ## Report a vulnerability
 
@@ -296,7 +312,7 @@ Use this list for any change that can affect trust, exposure, release integrity,
 
 ### Can I open a public issue?
 
-Not for undisclosed security findings. Use a private reporting path instead. The current public issue-intake guidance already treats security disclosures as out-of-band from normal issue flow.
+Not for undisclosed security findings. Use the Security tab or the canonical policy instead. Current public `main` does not show checked-in issue forms or chooser text that would safely reroute a vulnerability report for you.
 
 ### Is GitHub private vulnerability reporting currently available here?
 
@@ -341,12 +357,13 @@ Before merging this file, verify and complete the following:
 
 - [ ] Reconfirm that GitHub private vulnerability reporting remains enabled and visible in the public Security tab.
 - [ ] Confirm the private reporting inbox or maintainers’ fallback contact, if any exists beyond the GitHub advisory lane.
-- [ ] Decide whether the root [`../SECURITY.md`](../SECURITY.md) should become a short pointer to this file or remain text-aligned with it.
+- [ ] Reconfirm that the root [`../SECURITY.md`](../SECURITY.md) remains a short delegating entrypoint to this file, and keep the two public surfaces aligned.
+- [ ] Decide whether the currently empty [`./ISSUE_TEMPLATE/config.yml`](./ISSUE_TEMPLATE/config.yml) should stay intentionally minimal or gain explicit security-routing text; until then, do not rely on issue UI steering for private disclosure.
 - [ ] Replace acknowledgement, status-update, and coordinated-disclosure placeholders with real maintained values.
 - [ ] Confirm whether the repo offers encryption guidance, a reward program, or neither.
 - [ ] Recheck live rulesets, branch protection, required status checks, signed-commit settings, and CODEOWNERS enforcement expectations referenced by this policy.
 - [ ] Recheck the live `.github/workflows/` inventory and any platform-side required checks before linking security expectations to specific workflow gates elsewhere.
-- [ ] Ensure public issue-intake guidance continues to route undisclosed security findings away from public issues.
+- [ ] If issue forms or chooser config are later added, keep them aligned with the private-reporting posture in this file.
 - [ ] Set the final KFM metadata UUID in the meta block.
 - [ ] Reconfirm the `updated:` value in the meta block if this file changes again before merge.
 - [ ] Recheck all relative links against the live checkout before commit.
