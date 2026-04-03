@@ -4,13 +4,13 @@ title: Changelog
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life (default CODEOWNERS owner) — verify area-specific ownership
-created: 2026-03-14
-updated: 2026-03-18
-policy_label: TBD — verify
-related: [README.md, CONTRIBUTING.md, .github/README.md, .github/SECURITY.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/README.md]
+owners: @bartytime4life (confirmed current CODEOWNERS owner for /CHANGELOG.md; narrower future ownership splits NEEDS VERIFICATION)
+created: 2025-12-21
+updated: 2026-04-03
+policy_label: TBD — verify canonical policy label
+related: [README.md, CONTRIBUTING.md, SECURITY.md, .github/README.md, .github/SECURITY.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/README.md]
 tags: [kfm, changelog, release-notes, governance]
-notes: [This root changelog is intentionally conservative and evidence-led; current-session repo verification was indirect via repo-grounded audit documents rather than a mounted git checkout; historical release inventory, policy label, and area-specific ownership still need verification.]
+notes: [Created date confirmed from current public-main CHANGELOG history; updated date reflects this draft revision; doc_id and policy_label still need verification; GitHub Releases currently shows no public releases.]
 [/KFM_META_BLOCK_V2] -->
 
 # Changelog
@@ -20,17 +20,17 @@ Repository-level record of notable, behavior-significant changes to Kansas Front
 | Field | Value |
 |---|---|
 | **Status** | Draft |
-| **Owners** | `@bartytime4life` *(default CODEOWNERS owner; area-specific ownership NEEDS VERIFICATION)* |
+| **Owners** | `@bartytime4life` *(confirmed current CODEOWNERS owner for `/CHANGELOG.md`; narrower future ownership splits NEEDS VERIFICATION)* |
 | **Badges** | ![status](https://img.shields.io/badge/status-draft-orange) ![history](https://img.shields.io/badge/history-verified--only-lightgrey) ![semver](https://img.shields.io/badge/versioning-contract--first-blue) ![governance](https://img.shields.io/badge/governance-release--aware-5b6ee1) |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Format](#format) · [Unreleased](#unreleased) · [Historical backfill](#historical-backfill-needed) · [Entry authoring gate](#entry-authoring-gate) · [FAQ](#faq) |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Current public signals](#current-public-signals) · [Format](#format) · [Unreleased](#unreleased) · [Historical backfill](#historical-backfill-needed) · [Entry authoring gate](#entry-authoring-gate) · [FAQ](#faq) |
 
 > [!IMPORTANT]
 > This file is **verified-history only**.
->  
+>
 > Do **not** backfill older entries from memory, doctrine manuals, roadmap prose, or inferred repo state. Add or amend history only from auditable repository evidence such as tags, release manifests, proof packs, merged pull requests, correction notices, or equivalent reviewed artifacts.
 
 > [!NOTE]
-> Current-session evidence confirms adjacent governance docs and changelog doctrine, but does **not** prove an already-wired set of active merge-blocking workflow YAML gates in-tree. Treat the checklists below as required review posture unless and until CI enforcement is directly verified.
+> This revision is grounded in the current public `main` tree plus attached KFM doctrine. It confirms direct adjacency with `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and the `.github/` gatehouse, but still does **not** prove protected-branch settings, required checks, GitHub rulesets, environment approvals, or active merge-blocking workflow YAML on public `main`.
 
 ## Scope
 
@@ -62,7 +62,7 @@ This changelog records **repository-level** changes that materially affect KFM b
 |---|---|
 | **Path** | `CHANGELOG.md` |
 | **Role in repo** | Root-level governance and release-memory ledger |
-| **Upstream docs** | [`README.md`](README.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`.github/README.md`](.github/README.md), [`.github/CODEOWNERS`](.github/CODEOWNERS), [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md), [`.github/SECURITY.md`](.github/SECURITY.md), [`.github/workflows/README.md`](.github/workflows/README.md) |
+| **Upstream docs** | [`README.md`](README.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`.github/README.md`](.github/README.md), [`.github/CODEOWNERS`](.github/CODEOWNERS), [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md), [`.github/SECURITY.md`](.github/SECURITY.md), [`.github/workflows/README.md`](.github/workflows/README.md) |
 | **Downstream artifacts** | Release manifests, proof packs, correction notices, schema diffs, reviewed PRs, steward review records, promotion artifacts *(canonical paths still NEED VERIFICATION in the current session)* |
 
 ### Accepted inputs
@@ -90,13 +90,14 @@ This file is **not** the home for:
 
 ## Directory tree
 
-Confirmed adjacent doc surfaces visible in repo-grounded evidence:
+Confirmed adjacent doc surfaces visible in current public-main inspection:
 
 ```text
 .
 ├── CHANGELOG.md
 ├── README.md
 ├── CONTRIBUTING.md
+├── SECURITY.md
 └── .github/
     ├── README.md
     ├── CODEOWNERS
@@ -108,6 +109,18 @@ Confirmed adjacent doc surfaces visible in repo-grounded evidence:
 
 > [!TIP]
 > Keep this root changelog short and navigable. Deep technical detail should live in the artifact or document that proves the change; this file should link or point outward, not duplicate that material.
+
+## Current public signals
+
+| Signal | What it supports | Status |
+|---|---|---|
+| `CHANGELOG.md` is checked in on public `main` | The root changelog is an active repo surface, not only a planning artifact | **CONFIRMED** |
+| Public file history shows repeated create / revise / delete cycles back to `2025-12-21` | The file has its own visible lineage and should not be treated as disposable scaffolding | **CONFIRMED** |
+| GitHub Releases currently shows no visible releases | Historical backfill cannot rely on a public Releases page alone | **CONFIRMED** |
+| `.github/workflows/` is README-only on current public `main` | Merge-blocking workflow enforcement must stay unclaimed until separately verified | **CONFIRMED** |
+
+> [!WARNING]
+> The changelog file's own commit history is **not** release history. Treat it as documentary context only, never as a substitute for tags, manifests, proof packs, reviewed PRs, or correction notices.
 
 ## Quickstart
 
@@ -295,9 +308,11 @@ Until that backfill is complete, older releases should remain absent rather than
 
 ### Historical status in this revision
 
-- A historical `CHANGELOG.md` path is evidenced in repo-grounded research.
-- Its **full historical inventory was not re-enumerated from mounted git history in this session**.
-- Absence of older entries in this draft therefore means **NEEDS VERIFICATION**, not “no prior history exists.”
+- `CHANGELOG.md` is present on current public `main`.
+- Public file history shows visible activity back to `2025-12-21`.
+- GitHub Releases currently shows no visible public releases.
+- Changelog self-history does **not** by itself prove repository-level release units.
+- Absence of older repo-level entries in this draft therefore means **NEEDS VERIFICATION**, not “no prior history exists.”
 
 [Back to top](#changelog)
 
@@ -342,6 +357,10 @@ No. Append a new correction entry that preserves lineage.
 ### What if the only evidence is a doctrine manual or planning note?
 
 Do not log it as history. Doctrine can define expectations, but it does not by itself prove a release happened.
+
+### Can the changelog file's own commit history stand in for release history?
+
+No. It proves the document changed; it does **not** by itself prove a repository-level release, promotion event, or publishable change unit.
 
 ### Where should lane-specific change logs live?
 
