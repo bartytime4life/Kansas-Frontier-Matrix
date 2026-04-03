@@ -10,22 +10,24 @@ updated: 2026-03-22
 policy_label: NEEDS_VERIFICATION
 related: [docs/governance/README.md, docs/governance/ROOT_GOVERNANCE.md, docs/governance/SOVEREIGNTY.md, CODE_OF_CONDUCT.md, SECURITY.md]
 tags: [kfm, governance, ethics, public-consequence, trust]
-notes: [doc_id placeholder until registry-backed ID is assigned, policy_label requires repo confirmation, owner is confirmed only as the current broad CODEOWNERS fallback, created and updated dates were confirmed from current public file history]
+notes: [doc_id placeholder until registry-backed ID is assigned, policy_label requires repo confirmation, owner is confirmed only as the current broad CODEOWNERS fallback, created and updated dates were carried from the attached ethics baseline and should be rechecked against git history before merge, canonical public security-policy path still needs verification]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Ethics
 
 Ethical and public-consequence guardrails for how KFM presents, narrows, withholds, explains, and corrects evidence-bearing claims.
 
-> **Status:** Draft  
-> **Owners:** `@bartytime4life` *(confirmed broad `CODEOWNERS` fallback; governance-specific owner mapping still needs verification)*  
+> **Status:** `draft standard` · public `main` path and linked governance surfaces verified · operationalization depth still needs direct branch/platform verification  
+> **Owners:** `@bartytime4life` *(confirmed broad `.github/CODEOWNERS` fallback; governance-specific owner mapping still needs verification)*  
 > **Repo fit:** `docs/governance/ETHICS.md`  
 > **Related:** [`./README.md`](./README.md) · [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · [`../../CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) · [`../../SECURITY.md`](../../SECURITY.md)  
-> **Quick jump:** [Scope](#scope) · [Evidence basis](#evidence-basis) · [Ethical commitments](#ethical-commitments) · [Public-consequence guardrails](#public-consequence-guardrails) · [Sensitive knowledge](#people-communities-and-sensitive-knowledge) · [AI and scoring](#ai-ranking-scoring-and-derived-judgment) · [Decision flow](#ethics-decision-flow) · [Definition of done](#definition-of-done)
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence basis](#evidence-basis) · [Authority order](#authority-order-for-this-file) · [Ethical commitments](#ethical-commitments) · [Governed outcomes](#default-governed-outcomes) · [Public-consequence guardrails](#public-consequence-guardrails) · [AI and scoring](#ai-ranking-scoring-and-derived-judgment) · [Decision flow](#ethics-decision-flow) · [Definition of done](#definition-of-done) · [Open verification items](#open-verification-items)
 
 ![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square)
 ![Doc type](https://img.shields.io/badge/doc-standard-blue?style=flat-square)
 ![Layer](https://img.shields.io/badge/layer-governance-5b6cff?style=flat-square)
+![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square)
+![Branch](https://img.shields.io/badge/branch-main-24292f?style=flat-square)
 ![Scope](https://img.shields.io/badge/scope-public--consequence-critical?style=flat-square)
 ![Truth posture](https://img.shields.io/badge/truth-cite%20or%20abstain-1f883d?style=flat-square)
 
@@ -38,6 +40,14 @@ Ethical and public-consequence guardrails for how KFM presents, narrows, withhol
 > - sovereignty- or sensitivity-specific handling in [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
 > - machine-checkable policy bundles in [`../../policy/`](../../policy/)
 > - contract, schema, fixture, and test-backed enforcement surfaces in [`../../contracts/`](../../contracts/) and [`../../tests/`](../../tests/)
+
+| At a glance | Working rule |
+|---|---|
+| **Ethical center** | Public-facing claims must stay reconstructable to evidence, scope, policy posture, and correction lineage. |
+| **Surface default** | Trust should stay visible, calm, bounded, and one hop from evidence. |
+| **Negative-state rule** | `ABSTAIN`, `DENY`, `HOLD`, `QUARANTINE`, `GENERALIZE`, `WITHHOLD`, and `WITHDRAW` are valid governed outcomes. |
+| **Derived-output rule** | AI, graph, search, tiles, dashboards, scenes, and scores stay visibly non-sovereign unless explicitly promoted. |
+| **Review trigger** | Any change that shifts public meaning, precision, uncertainty, or evidence reachability belongs in ethics review. |
 
 ---
 
@@ -98,8 +108,26 @@ This file keeps certainty narrow on purpose. It is grounded in visible repo surf
 | Evidence layer | What this file treats as grounded |
 |---|---|
 | **Current public repo surfaces** | `docs/governance/ETHICS.md`, `./README.md`, `./ROOT_GOVERNANCE.md`, `./SOVEREIGNTY.md`, `.github/CODEOWNERS`, `../../CODE_OF_CONDUCT.md`, and `../../SECURITY.md` confirm the target path, governance cluster, broad owner fallback, and the distinct roles of conduct and security surfaces. |
+| **Current public operationalization lanes** | `../../policy/README.md`, `../../contracts/README.md`, `../../tests/README.md`, and `.github/PULL_REQUEST_TEMPLATE.md` confirm that policy, contract, verification, and review-routing surfaces are present as repo lanes, but they do **not** prove active merge-blocking enforcement on the working branch. |
 | **Doctrinal anchors carried through this directory** | The truth path, trust membrane, authoritative-versus-derived split, evidence one hop away, finite governed outcomes, and visible correction lineage remain load-bearing for any ethics rule stated here. |
 | **Still unresolved before merge** | Registry-backed `doc_id`, canonical `policy_label`, governance-specific owners beyond the broad fallback, canonical public security-doc path, and any active GitHub rulesets or workflow enforcement that are not derivable from public files alone. |
+
+---
+
+## Authority order for this file
+
+Read this document in the following order whenever wording, repo signals, and implementation claims drift apart.
+
+| Tier | Source class | How it should govern this file |
+|---|---|---|
+| **1** | Checked-out target branch and adjacent governance docs | Decisive for exact path, nearby links, wording deltas, and branch-specific updates once they are directly available. |
+| **2** | Governance doctrine in this directory | [`./README.md`](./README.md), [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md), and [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) govern ethical law, publication posture, and handoffs. |
+| **3** | Current public repo surfaces | `.github/CODEOWNERS`, `../../CODE_OF_CONDUCT.md`, `../../SECURITY.md`, and the current public `main` tree confirm visible paths and broad posture, but not off-tree GitHub settings or hidden runtime behavior. |
+| **4** | Machine companions | `../../policy/`, `../../contracts/`, and `../../tests/` are where this doctrine should become executable, typed, and testable; path presence alone does not equal enforcement proof. |
+| **5** | Everything else | Use only as corroboration or implementation pressure. Do not let historical references or convenience layers outrank current doctrine and directly verified repo evidence. |
+
+> [!NOTE]
+> Public `main` is a useful baseline, not a substitute for the exact branch under review. If branch-local evidence contradicts a public-tree assumption, the checked-out branch wins.
 
 ---
 
@@ -133,6 +161,22 @@ KFM is not just expected to be useful. It is expected to stay **truthful under p
 
 > [!NOTE]
 > KFM should prefer **auditable incompleteness** over impressive but weakly supported completeness.
+
+---
+
+## Default governed outcomes
+
+These are ethical outcomes, not UX defects.
+
+| Outcome | When it is ethically appropriate | What must stay visible |
+|---|---|---|
+| **ANSWER** | Released, inspectable, policy-safe support is present. | Scope, evidence route, uncertainty, and release state. |
+| **ABSTAIN** | Support is insufficient for a trustworthy answer. | Why the released scope is insufficient. |
+| **DENY** | Rights, safety, sensitivity, or policy prohibit the requested output. | The refusal posture and any safe next step that can be shown. |
+| **HOLD / QUARANTINE** | Review, provenance, rights, or validation is unresolved. | Current state, reason, and review path. |
+| **GENERALIZE / RESTRICT / WITHHOLD** | Public release would be too precise, unsafe, or rights-incompatible. | What was reduced, hidden, or redirected. |
+| **STALE-VISIBLE / PARTIAL** | The evidence is usable but materially constrained by freshness or coverage. | The limiting condition itself, in-place. |
+| **WITHDRAW / SUPERSEDE** | A public interpretation is no longer safe, accurate, or policy-valid. | Lineage to correction, replacement, or withdrawal notice. |
 
 ---
 
@@ -513,10 +557,11 @@ Because a trust cue that some users cannot perceive is not actually a trustworth
 
 | Item | Current state |
 |---|---|
-| Governance-specific owner mapping beyond broad `CODEOWNERS` fallback | **NEEDS VERIFICATION** |
+| Documented operationalization lanes on public `main` (`policy/README.md`, `contracts/README.md`, `tests/README.md`, `.github/PULL_REQUEST_TEMPLATE.md`) | **CONFIRMED path / NEEDS VERIFICATION enforcement depth** |
+| Governance-specific owner mapping beyond broad `.github/CODEOWNERS` fallback | **NEEDS VERIFICATION** |
 | Registry-backed `doc_id` for the meta block | **NEEDS VERIFICATION** |
 | Canonical `policy_label` value for this doc | **NEEDS VERIFICATION** |
-| Exact machine-readable policy or contract surfaces that operationalize this doc on public `main` | **UNKNOWN** |
+| Exact machine-readable policy bundles, contract files, or tests that operationalize this doc on the working branch | **UNKNOWN** |
 | Canonical public security-policy path for the related-links block (`SECURITY.md` vs `.github/SECURITY.md`) | **NEEDS VERIFICATION** |
 
 ---
