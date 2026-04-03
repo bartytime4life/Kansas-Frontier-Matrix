@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-03-24
+updated: 2026-04-03
 policy_label: public
-related: [policy/README.md, policy/bundles/README.md, policy/fixtures/README.md, policy/policy-runtime/README.md, tests/README.md, tests/policy/README.md, .github/workflows/README.md, contracts/README.md, schemas/README.md]
+related: [policy/README.md, policy/bundles/README.md, policy/fixtures/README.md, policy/policy-runtime/README.md, tests/README.md, tests/policy/README.md, tests/e2e/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/release_assembly/README.md, tests/e2e/correction/README.md, .github/workflows/README.md, contracts/README.md, schemas/README.md]
 tags: [kfm, policy, tests, governance, verification]
-notes: [doc_id and original created date need verification; current public main shows this README updated on 2026-03-24; the directory remains README-only on public main]
+notes: [doc_id and original created date need verification; updated reflects this 2026-04-03 draft revision; current public main still shows policy/tests as a README-first lane]
 [/KFM_META_BLOCK_V2] -->
 
 # Policy tests
@@ -32,7 +32,7 @@ Bundle-local policy verification lane for KFM deny-by-default rules, fixture-bac
 > [!NOTE]
 > Current public `main` confirms that this directory exists and is currently **README-only**.
 > That proves the lane is real.
-> It does **not** prove executable policy-test inventory, runner choice, fixture density, required checks, or merge-blocking workflow wiring on the branch you are reviewing.
+> It does **not** prove executable policy-test inventory, runner choice, fixture density, exact required checks, branch protection, or merge-blocking workflow wiring on the branch you are reviewing.
 
 ---
 
@@ -97,7 +97,7 @@ Questions that belong here include:
 | `policy/fixtures/README.md` | present | confirms fixture lane exists, even though mature fixture inventory is not yet evidenced |
 | `policy/policy-runtime/README.md` | present | confirms current runtime-adjacent seam under `policy/` |
 | `tests/policy/README.md` | present | confirms repo-facing policy proof lane exists |
-| `tests/e2e/README.md` | present with visible `runtime_proof/`, `release_assembly/`, and `correction/` leaf families | confirms broader whole-path proof lanes that local exclusions escalate into |
+| `tests/e2e/README.md` | present with visible `runtime_proof/`, `release_assembly/`, and `correction/` leaf families; each visible leaf has its own `README.md` on public `main` | confirms broader whole-path proof lanes that local exclusions escalate into |
 | `.github/workflows/README.md` | present; workflows directory is README-only on public `main` | confirms workflow-lane visibility without proving active checked-in YAML merge gates |
 
 ### Path reconciliation note
@@ -165,8 +165,11 @@ tests/
 └── e2e/
     ├── README.md
     ├── correction/
+    │   └── README.md
     ├── release_assembly/
+    │   └── README.md
     └── runtime_proof/
+        └── README.md
 
 .github/
 └── workflows/
@@ -223,7 +226,7 @@ sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 sed -n '1,260p' .github/workflows/README.md 2>/dev/null || true
 
 # trace trust objects and governed outcome grammar across policy-facing surfaces
-grep -RIn 'DecisionEnvelope\|ReviewRecord\|RuntimeResponseEnvelope\|CorrectionNotice\|ANSWER\|ABSTAIN\|DENY\|ERROR\|reason_codes\|obligation_codes' \
+grep -RIn 'DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|ReleaseProofPack\|RuntimeResponseEnvelope\|CorrectionNotice\|ANSWER\|ABSTAIN\|DENY\|ERROR\|reason_codes\|obligation_codes' \
   policy tests contracts docs 2>/dev/null || true
 ```
 
@@ -340,7 +343,7 @@ If a fixture is reusable or review-significant, keep it under [`../fixtures/`](.
 
 No.
 
-Current public repo inspection still shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) as the visible workflow lane and does not, by itself, prove active checked-in workflow YAML or protected-branch settings.
+Current public repo inspection still shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) as the visible workflow lane and does not, by itself, prove active checked-in workflow YAML, protected-branch settings, or platform rulesets.
 
 ### Is a specific policy engine confirmed here?
 
@@ -377,5 +380,21 @@ find policy/tests policy/bundles policy/fixtures -maxdepth 3 -type f 2>/dev/null
 # replace this with the repo's real local policy-test entrypoint once verified
 <policy-test-command>
 ```
+
+</details>
+
+<details>
+<summary>Historical workflow names are not current-tree proof</summary>
+
+Current public `.github/workflows/README.md` documents historically observed public workflow names such as:
+
+- `verify-contracts-and-policy.yml`
+- `verify-docs.yml`
+- `verify-runtime.yml`
+- `verify-tests-and-reproducibility.yml`
+- `release-evidence.yml`
+- `promote-and-reconcile.yml`
+
+Treat those names as history, not as proof that the YAML files are currently checked in on the branch you are reviewing.
 
 </details>
