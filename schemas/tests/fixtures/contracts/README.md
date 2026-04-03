@@ -6,139 +6,194 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-22
-updated: 2026-03-24
+updated: 2026-04-03
 policy_label: <TODO: verify policy label>
-related: [../../../../README.md, ../../../README.md, ../../../../contracts/README.md, ../../../../tests/README.md, ../../../../policy/README.md, ../../../../.github/workflows/README.md]
+related: [../../../../README.md, ../../../README.md, ../../README.md, ../README.md, ./v1/README.md, ../../../../contracts/README.md, ../../../../tests/README.md, ../../../../tests/contracts/README.md, ../../../../policy/README.md, ../../../../docs/standards/README.md, ../../../../.github/workflows/README.md]
 tags: [kfm, schemas, tests, fixtures, contracts]
-notes: [Current public main now materializes this README path; doc_id and policy_label still need repo-backed values; keep this surface non-authoritative and synchronized with sibling schema-lane docs.]
+notes: [doc_id and policy_label still need repo-backed values; current public main now exposes a local v1 scaffold with valid/invalid child lanes under this path; schema-home and canonical fixture-home authority remain unresolved and must stay explicit.]
 [/KFM_META_BLOCK_V2] -->
 
 # Contract Fixtures — Schema-Side Boundary Guide
 
-Non-authoritative boundary README for schema-side contract-fixture notes, while KFM keeps canonical machine contracts in `/contracts` and canonical verification fixtures in `/tests`.
+Boundary-and-inventory README for the live `schemas/tests/fixtures/contracts/` scaffold, keeping local visibility clear without quietly declaring canonical contract or fixture authority.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `schemas/tests/fixtures/contracts/README.md`  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Authority: pointer--only](https://img.shields.io/badge/authority-pointer--only-lightgrey) ![Contracts: canonical in /contracts](https://img.shields.io/badge/contracts-canonical%20in%20%2Fcontracts-blue) ![Fixtures: canonical in /tests](https://img.shields.io/badge/fixtures-canonical%20in%20%2Ftests-brightgreen) ![Path: live on main](https://img.shields.io/badge/path-live%20on%20main-success)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Authority matrix](#authority-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![authority](https://img.shields.io/badge/authority-unresolved-red) ![role](https://img.shields.io/badge/role-boundary%20%2B%20local%20scaffold-8250df) ![inventory](https://img.shields.io/badge/inventory-v1%20%2F%20valid%20%2F%20invalid%20visible-1f6feb) ![workflow lane](https://img.shields.io/badge/workflows-README--only-lightgrey)  
+> **Repo fit:** path `schemas/tests/fixtures/contracts/README.md` · parent scaffold index [`../README.md`](../README.md) · parent schema-test lane [`../../README.md`](../../README.md) · parent schema boundary [`../../../README.md`](../../../README.md) · stronger contract lane [`../../../../contracts/README.md`](../../../../contracts/README.md) · stronger verification lanes [`../../../../tests/README.md`](../../../../tests/README.md) and [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) · policy lane [`../../../../policy/README.md`](../../../../policy/README.md) · standards routing [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) · workflow gate lane [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Authority matrix](#authority-matrix) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public `main` already includes `schemas/tests/fixtures/contracts/README.md`.
-> That does **not** change the authority rule: this surface should remain a **pointer/boundary README**, not a second authoritative schema home and not a second canonical fixture home.
+> Current public `main` now shows this path as more than a single pointer README: the local subtree visibly includes `./v1/README.md` plus `./v1/valid/README.md` and `./v1/invalid/README.md`.
+> That is **real local scaffold inventory**, not proof that this path has become the canonical fixture home.
+
+> [!WARNING]
+> `contracts/README.md` still presents `/contracts` as the stronger current machine-contract lane, `tests/README.md` still presents `/tests` as the stronger governed verification surface, and `.github/workflows/README.md` still records `.github/workflows/` as README-only on current public `main`.
+> Do not let branch-visible scaffold files silently outrank those stronger neighboring surfaces.
 
 > [!NOTE]
-> This file should stay synchronized with `../../../README.md`.
-> If sibling docs still describe the `schemas/` lane as effectively README-only, update that wording in the same PR so the repo stops mixing older snapshot language with the live boundary path.
+> The `schemas/**` family is at mixed freshness. Parent and sibling READMEs now acknowledge live child scaffolds in some places and older README-only inventory language in others.
+> Keep this file synchronized with `../../README.md`, `../README.md`, and `../../../README.md` in the same PR whenever subtree reality changes.
 
 ## Scope
 
 This README is intentionally narrow.
 
-Its job is to hold one line clearly: **schema-side documentation is not the same thing as canonical machine contracts, and it is not the same thing as canonical fixture ownership**. In current public `main`, this file already exists as a boundary note. Its continued role should be to point contributors toward the right homes, record transition rules, and prevent drift between sibling surfaces.
+Its job is to make one boundary legible: **schema-side fixture scaffolds are not automatically the same thing as canonical contract law, and they are not automatically the same thing as the repo’s governed fixture home**.
 
-In practice, this README should help with four things:
+At current public-branch depth, this file should help reviewers answer four questions quickly:
 
-- keeping `schemas/` side notes from silently becoming a second contract registry
-- keeping fixture ownership anchored to `tests/`
-- keeping authority language synchronized with sibling docs
-- making schema-home and fixture-home decisions easy to audit in Git review
+1. What is actually visible under `schemas/tests/fixtures/contracts/` right now?
+2. Which changes are safe here without creating second-authority drift?
+3. Which stronger neighboring surfaces still own machine-contract, policy, and verification law?
+4. What still needs explicit verification before anyone treats this subtree as canonical?
+
+### Truth labels used here
+
+| Label | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Directly visible on current public `main` or directly stated in the checked-in repo docs inspected for this revision |
+| **INFERRED** | Conservative interpretation of confirmed repo structure and adjacent README language |
+| **PROPOSED** | Repo-native next shape or rule that fits KFM doctrine but is not yet proven as mounted implementation law |
+| **UNKNOWN / NEEDS VERIFICATION** | Not directly verified strongly enough to present as settled current reality |
 
 [Back to top](#contract-fixtures--schema-side-boundary-guide)
 
 ## Repo fit
 
-**Repo fit:** path `schemas/tests/fixtures/contracts/README.md`  
-**Upstream:** [`../../../README.md`](../../../README.md)  
-**Canonical contracts:** [`../../../../contracts/README.md`](../../../../contracts/README.md)  
-**Canonical tests:** [`../../../../tests/README.md`](../../../../tests/README.md)  
-**Policy posture:** [`../../../../policy/README.md`](../../../../policy/README.md)  
-**Workflow gate lane:** [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md)  
-**Root posture:** [`../../../../README.md`](../../../../README.md)
+**Path:** `schemas/tests/fixtures/contracts/README.md`  
+**Role:** local boundary-and-inventory README for the contract-flavored scaffold inside `schemas/tests/fixtures/`
 
-| Surface | Role in repo | Status for this doc |
+| Direction | Path | Why it matters here |
 |---|---|---|
-| `../../../README.md` | Schema-lane boundary guidance | Upstream sibling |
-| `../../../../contracts/README.md` | Strongest working signal for machine-readable contract ownership | Canonical reference |
-| `../../../../tests/README.md` | Verification, negative-path proof, drill burden, and fixture-facing test organization | Canonical reference |
-| `../../../../policy/README.md` | Deny-by-default policy posture, reasons/obligations, finite outcomes | Canonical reference |
-| `../../../../.github/workflows/README.md` | Workflow gate lane and CI documentation boundary | Downstream gate lane |
-| `schemas/tests/fixtures/contracts/README.md` | Live boundary/pointer README on current public `main` | **This file** |
+| Parent | [`../README.md`](../README.md) | Documents the immediate `schemas/tests/fixtures/` scaffold and keeps this subtree from silently becoming canonical |
+| Parent | [`../../README.md`](../../README.md) | Records the wider `schemas/tests/` lane and explicitly notes the visible `fixtures/contracts/v1/{valid,invalid}` scaffold |
+| Parent | [`../../../README.md`](../../../README.md) | Keeps the broader `schemas/` boundary and schema-home caution visible |
+| Stronger lateral surface | [`../../../../contracts/README.md`](../../../../contracts/README.md) | Stronger current machine-contract lane |
+| Stronger lateral surface | [`../../../../tests/README.md`](../../../../tests/README.md) | Stronger current governed verification surface |
+| Stronger lateral surface | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) | Contract-facing verification family inside `/tests` |
+| Lateral surface | [`../../../../policy/README.md`](../../../../policy/README.md) | Deny-by-default posture, reasons, obligations, and policy-owned behavior |
+| Lateral surface | [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) | Standards routing and profile placement |
+| Lateral surface | [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) | Workflow and merge-gate lane; still README-only on public `main` |
+| Downstream | [`./v1/README.md`](./v1/README.md) | Current versioned local scaffold |
+| Downstream | [`./v1/valid/README.md`](./v1/valid/README.md) | Placeholder positive lane |
+| Downstream | [`./v1/invalid/README.md`](./v1/invalid/README.md) | Placeholder negative lane |
 
 ### Reading rule
 
-When these surfaces disagree, prefer this order unless a later ADR says otherwise:
+When these surfaces disagree, prefer this order unless a later ADR or equivalent repo decision says otherwise:
 
 1. root trust posture and repo-grounded evidence
-2. `contracts/` for machine-readable contract law
-3. `tests/` for fixture burden and negative-path proof
-4. `policy/` for enforcement posture
-5. `schemas/` for boundary notes and pointer-style guidance
+2. `contracts/` for stronger current machine-contract guidance
+3. `tests/` for stronger governed verification burden
+4. `policy/` for executable policy posture and consequences
+5. `schemas/` child lanes for local scaffold inventory, migration notes, and boundary control
+
+### Path reconciliation note
+
+This subtree is no longer just hypothetical.
+
+What remains unresolved is **authority**, not **visibility**. This README should therefore describe the live local tree honestly **without** implying that the repo has already settled canonical schema-home or canonical fixture-home law.
 
 ## Accepted inputs
 
-Only the following belong here:
+Use this path for material that explains or safely stages the local scaffold **without** creating a second canonical truth system.
 
-| Input class | Belongs here? | Notes |
-|---|---|---|
-| Boundary notes about where contract fixtures belong | Yes | Keep concise and directional |
-| Pointer-style migration notes between `schemas/`, `contracts/`, and `tests/` | Yes | Especially useful during authority cleanup |
-| Non-authoritative examples that explain path relationships | Yes, sparingly | Label them clearly as non-canonical |
-| README-only maintenance notes for this local path | Yes | This is the primary intended content |
-| Canonical schema-home / fixture-home decision references | Yes | Link to the ADR or sibling authoritative README |
+### Belongs here
+
+| Accept here | Why it belongs |
+|---|---|
+| Path-local `README.md` files | They explain what the visible subtree means and what it does not mean |
+| Versioned `valid/` and `invalid/` folders that are explicitly scaffold or derived mirrors | They can keep local shape legible without silently becoming canonical |
+| Migration notes between `schemas/`, `contracts/`, and `tests/` | They reduce boundary drift during tree changes |
+| Cross-links to stronger contract, test, policy, and workflow docs | They make authority visible at the point of confusion |
+| Tiny, clearly labeled illustrative examples | They can clarify structure when marked **non-authoritative** |
+| Notes about local version lanes such as `v1/` | They help reviewers distinguish visible inventory from settled law |
 
 ### Minimum bar
 
 Anything added here should:
 
-- state whether it is **CONFIRMED**, **PROPOSED**, or **NEEDS VERIFICATION**
-- point to the canonical sibling surface instead of restating it at length
-- avoid creating a new source of machine-readable truth
-- stay lightweight enough to become a stable pointer if the repo later narrows `schemas/` further
+- state whether it is **CONFIRMED**, **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION**
+- say whether it is **scaffold**, **illustrative**, **derived**, or **canonical**
+- route readers back to the stronger sibling surface instead of restating it at length
+- avoid creating a new primary machine-truth surface by quiet accretion
+- stay small enough that a reviewer can scan the whole local role in one pass
 
 ## Exclusions
 
-This path is **not** the place for authoritative assets.
+This path is **not** the default home for authoritative assets.
 
-| Does **not** belong here | Put it here instead |
+| Does **not** belong here by default | Put it here instead |
 |---|---|
-| Authoritative `*.schema.json` contract families | `../../../../contracts/` |
-| Canonical valid / invalid contract fixture packs | `../../../../tests/` |
-| Policy bundles, policy fixtures, policy tests | `../../../../policy/` |
-| Workflow YAML or merge-gate wiring | `../../../../.github/workflows/` |
-| Validator commands and runtime tooling | `../../../../tools/` or `../../../../scripts/` |
-| Runtime emitters, resolvers, DTOs, or service code | app/package code surfaces |
-| Large mirrored contract examples that can drift from canonical files | canonical contract / fixture homes |
+| Canonical `*.schema.json` contract families | `../../../../contracts/` or the explicitly declared canonical schema home once resolved |
+| Broad executable verification suites or harnesses | `../../../../tests/` and especially `../../../../tests/contracts/` |
+| Policy bundles, policy fixtures, policy tests, reason codes, or obligation registries | `../../../../policy/` |
+| Workflow YAML, merge gates, required-check definitions, or runner logic | `../../../../.github/workflows/` |
+| Runtime emitters, adapters, DTOs, or service code | app/package/runtime code surfaces |
+| Large mirrored fixture packs presented as primary truth | the explicitly declared canonical fixture home |
+| Assertions that this subtree is already singularly canonical | an ADR or equivalent authority decision, then synchronized README updates |
 
-> [!WARNING]
-> Do **not** land new authoritative schema families here “temporarily.”
-> In KFM, temporary duplicate authority becomes long-lived ambiguity.
+> [!CAUTION]
+> Branch-visible machine files or fixture folders can still be the wrong authority surface.
+> In KFM, duplicate authority is usually worse than visible incompleteness.
+
+[Back to top](#contract-fixtures--schema-side-boundary-guide)
+
+## Current verified snapshot
+
+| Item | Status | Why it matters |
+|---|---|---|
+| `schemas/tests/fixtures/contracts/README.md` exists on current public `main` | **CONFIRMED** | This file is not hypothetical |
+| `schemas/tests/fixtures/contracts/v1/README.md` exists | **CONFIRMED** | The subtree now has a versioned local scaffold lane |
+| `schemas/tests/fixtures/contracts/v1/valid/README.md` and `.../invalid/README.md` exist | **CONFIRMED** | Positive/negative local scaffold lanes are visible, even if minimal |
+| `schemas/tests/README.md` explicitly describes `fixtures/contracts/v1/{valid,invalid}` as scaffold-only | **CONFIRMED** | Parent lane now recognizes the visible local subtree |
+| `contracts/README.md` still describes `/contracts` as the stronger current machine-contract lane | **CONFIRMED / INFERRED** | Local scaffold must not silently outrank the stronger contract surface |
+| `tests/README.md` still describes `/tests` as the stronger governed verification surface | **CONFIRMED** | Verification burden still routes more strongly through `/tests` |
+| `tests/contracts/` exists on public `main` but is README-only in the current public tree | **CONFIRMED** | Contract-facing verification is visible as a family, but executable depth is not proven from current public tree alone |
+| `.github/workflows/` contains `README.md` only on current public `main` | **CONFIRMED** | Do not claim active checked-in workflow YAMLs from this README |
+| `tests/fixtures/contracts/` as a public-main path | **NEEDS VERIFICATION** | This inspection did not directly verify that root-level fixture path |
+| This subtree is the singular canonical fixture home | **UNKNOWN / NEEDS VERIFICATION** | Current public docs do not yet settle that law |
 
 [Back to top](#contract-fixtures--schema-side-boundary-guide)
 
 ## Directory tree
 
-### Current confirmed neighboring surfaces on public `main`
+### Current confirmed visible tree
 
 ```text
 repo-root/
 ├── schemas/
 │   ├── README.md
-│   └── tests/
-│       └── fixtures/
-│           └── contracts/
-│               └── README.md
+│   ├── contracts/
+│   │   ├── README.md
+│   │   ├── v1/
+│   │   └── vocab/
+│   ├── standards/
+│   │   └── README.md
+│   ├── tests/
+│   │   ├── README.md
+│   │   └── fixtures/
+│   │       ├── README.md
+│   │       └── contracts/
+│   │           ├── README.md
+│   │           └── v1/
+│   │               ├── README.md
+│   │               ├── invalid/
+│   │               │   └── README.md
+│   │               └── valid/
+│   │                   └── README.md
+│   └── workflows/
+│       └── README.md
 ├── contracts/
 │   └── README.md
 ├── tests/
 │   ├── README.md
-│   ├── accessibility/
 │   ├── contracts/
+│   │   └── README.md
+│   ├── accessibility/
 │   ├── e2e/
-│   │   ├── README.md
-│   │   ├── correction/
-│   │   ├── release_assembly/
-│   │   └── runtime_proof/
 │   ├── integration/
 │   ├── policy/
 │   ├── reproducibility/
@@ -150,17 +205,23 @@ repo-root/
         └── README.md
 ```
 
-### Current live role of this path (`CONFIRMED`)
+### Current live role of this local subtree
 
 ```text
 schemas/
 └── tests/
     └── fixtures/
         └── contracts/
-            └── README.md   # boundary / pointer note only
+            ├── README.md        # local boundary + inventory README
+            └── v1/
+                ├── README.md    # scaffold version lane
+                ├── valid/
+                │   └── README.md
+                └── invalid/
+                    └── README.md
 ```
 
-### Recommended canonical fixture shape (`PROPOSED`, not yet asserted as mounted reality)
+### Potential canonical fixture shape after authority resolution (`PROPOSED`)
 
 ```text
 tests/
@@ -171,53 +232,30 @@ tests/
             └── invalid/
 ```
 
-### Recommended canonical schema shape (`PROPOSED`, aligned to sibling docs)
-
-```text
-contracts/
-├── README.md
-├── v1/
-│   ├── common/
-│   │   └── header_profile.schema.json
-│   ├── policy/
-│   │   └── decision_envelope.schema.json
-│   ├── evidence/
-│   │   └── evidence_bundle.schema.json
-│   ├── runtime/
-│   │   └── runtime_response_envelope.schema.json
-│   ├── correction/
-│   │   └── correction_notice.schema.json
-│   ├── release/
-│   │   └── release_manifest.schema.json
-│   ├── source/
-│   │   └── source_descriptor.schema.json
-│   └── data/
-│       └── dataset_version.schema.json
-└── vocab/
-```
+That shape remains a **candidate**, not a current public-main fact proven by this revision.
 
 ## Quickstart
 
-Use this path only after you answer the boundary question first.
+Inspect first. Reclassify later.
 
 ```bash
-# 1) Inspect the neighboring authority surfaces
-find schemas contracts tests policy .github/workflows -maxdepth 4 -type f 2>/dev/null | sort
+# 1) Inspect the immediate local scaffold and child lanes
+find schemas/tests/fixtures/contracts -maxdepth 4 -type f 2>/dev/null | sort
 
-# 2) Inspect the live boundary path on the checked-out branch
-find schemas/tests/fixtures/contracts -maxdepth 2 -type f 2>/dev/null | sort
+# 2) Inspect the stronger neighboring surfaces before changing authority language
+find contracts tests tests/contracts policy .github/workflows -maxdepth 3 -type f 2>/dev/null | sort
 
-# 3) Inspect current contract-facing test families
-find tests/contracts tests/e2e tests/policy -maxdepth 3 -type d 2>/dev/null | sort
+# 3) Re-open the parent schema-test lane and fixture scaffold docs together
+sed -n '1,220p' schemas/tests/README.md schemas/tests/fixtures/README.md schemas/tests/fixtures/contracts/README.md
 ```
 
 ### Safe startup sequence
 
-1. Confirm whether an ADR or equivalent repo decision has already settled the **authoritative schema home**.
-2. Confirm whether the branch in hand already materializes a fixture home under `tests/`.
-3. If edits here are only for documentation clarity, keep them **README-only**.
-4. Update sibling docs in the same PR so contributors never see competing authority.
-5. Do not describe workflow gates here as live unless the checked-in workflow files prove they exist.
+1. Confirm whether an ADR or equivalent repo decision has already settled canonical schema-home or canonical fixture-home law.
+2. Confirm whether the local `v1/valid/invalid` paths are meant to stay **scaffold-only**, become **derived mirrors**, or eventually be promoted.
+3. Keep edits here README-first unless the owning authority decision is explicitly documented.
+4. Update `../README.md`, `../../README.md`, and `../../../README.md` in the same PR if local inventory or boundary wording changes.
+5. Do not describe workflow gates here as live unless the checked-in workflow files prove them.
 
 ## Usage
 
@@ -225,148 +263,166 @@ find tests/contracts tests/e2e tests/policy -maxdepth 3 -type d 2>/dev/null | so
 
 Edit this README when one of these changes:
 
-- the authoritative schema home is clarified, changed, or deprecated
-- the canonical fixture home is clarified, changed, or deprecated
-- validator path or gate naming changes in a way contributors must know
-- `schemas/` is narrowed to a pointer-only role
-- this path is being removed and needs an archival redirect note
+- the local `v1/` scaffold changes shape
+- `valid/` or `invalid/` gains or loses local examples
+- the repo explicitly settles schema-home or fixture-home authority
+- sibling docs change the contract, policy, or verification routing that this file depends on
+- this subtree is narrowed, promoted, mirrored, or retired
 
 ### Contributor rules
 
-- Prefer **one authoritative schema home**.
-- Prefer **one canonical fixture home**.
-- Prefer **one validator path**.
-- Keep **one clearly documented sibling pointer** instead of parallel contract law.
-- Treat `schemas/` notes as navigational help, not as permission to duplicate trust-bearing artifacts.
+- Prefer **one explicit authority story**.
+- Prefer **one clearly named canonical fixture home**.
+- Treat branch-visible local scaffolds as **inventory**, not automatic law.
+- Keep the stronger sibling links easy to find.
+- If a file here starts to behave like canonical truth, stop and move the decision upstream.
 
-### Practical authoring rule
+### Practical authoring test
 
-If you are about to place a new file under this path, ask:
+Before adding a file under this path, ask:
 
-> Is this file pointing to canonical truth, or is it trying to become canonical truth?
+> Is this file here to explain the local scaffold, or is it trying to become the repo’s primary contract or fixture record?
 
-If the second answer is even partly true, move the file elsewhere.
+If the second answer is even partly true, this is probably the wrong directory.
+
+[Back to top](#contract-fixtures--schema-side-boundary-guide)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    R["repo root<br/>trust posture"] --> S["schemas/README.md<br/>boundary lane"]
-    R --> C["contracts/<br/>canonical machine contracts"]
-    R --> T["tests/<br/>canonical verification surface"]
-    R --> P["policy/<br/>policy posture + enforcement"]
-    R --> W[".github/workflows/<br/>gate lane"]
+    R["repo root<br/>verification-first posture"] --> S["schemas/<br/>boundary + scaffold lane"]
+    R --> C["contracts/<br/>stronger current machine-contract lane"]
+    R --> T["tests/<br/>stronger governed verification surface"]
+    R --> TC["tests/contracts/<br/>contract-facing verification family"]
+    R --> P["policy/<br/>deny-by-default policy surface"]
+    R --> W[".github/workflows/<br/>README-only on public main"]
 
-    S --> X["schemas/tests/fixtures/contracts/README.md<br/>pointer only"]
-    X -. points to .-> C
-    X -. points to .-> T
+    S --> ST["schemas/tests/<br/>nested schema-test lane"]
+    ST --> F["schemas/tests/fixtures/<br/>local scaffold index"]
+    F --> X["schemas/tests/fixtures/contracts/<br/>this README"]
+    X --> V1["v1/<br/>local version lane"]
+    V1 --> VAL["valid/<br/>placeholder positive lane"]
+    V1 --> INV["invalid/<br/>placeholder negative lane"]
 
-    C --> C1["contracts/v1/...schema.json"]
-    C --> V["contracts/vocab/*.json"]
-    T --> F["tests/fixtures/contracts/v1/{valid,invalid}"]
-    P --> PF["policy fixtures / bundles / tests"]
-    W --> G["merge-blocking validation gate"]
-
-    G -. validates .-> C1
-    G -. validates .-> F
+    X -. route contract authority to .-> C
+    X -. route verification burden to .-> T
+    X -. route contract-facing tests to .-> TC
+    X -. keep workflow claims bounded by .-> W
+    X -. keep policy consequences aligned with .-> P
 
     style X stroke-dasharray: 5 5
 ```
 
 ## Authority matrix
 
-| Surface | What it should own | What it should not absorb |
+| Surface | What it should own | What it should not silently absorb |
 |---|---|---|
-| `contracts/` | Machine-readable contract families, shared header grammar, authoritative vocab registries where declared | Runtime code, policy bundles, duplicate fixture homes |
-| `tests/` | Fixtures, negative-path tests, correction drills, contract-facing proof burden | Canonical contract ownership |
-| `policy/` | Executable policy, policy fixtures, reason/obligation enforcement behavior | Duplicate schema ownership |
-| `.github/workflows/` | Merge gates, verification orchestration, required check behavior | Hidden contract law, hidden policy logic |
-| `schemas/tests/fixtures/contracts/` | Pointer notes, migration notes, sibling references | Authoritative schemas, valid/invalid packs, workflow files, policy bundles |
+| `contracts/` | Stronger current machine-contract guidance and human-readable contract routing | Verification harnesses, workflow wiring, second policy system |
+| `tests/` | Stronger governed verification burden across proof objects, negative paths, and release/correction drills | Canonical contract law by itself |
+| `tests/contracts/` | Contract-facing verification family inside `/tests` | Hidden schema-home decisions or workflow certainty not backed by the current tree |
+| `policy/` | Executable policy posture, reasons, obligations, and policy-owned behavior | Duplicate schema authority |
+| `.github/workflows/` | Workflow documentation and, when present, checked-in automation | Silent contract law or unverified workflow claims |
+| `schemas/tests/fixtures/` | Local scaffold documentation and subtree routing | Repo-wide canonical fixture ownership |
+| `schemas/tests/fixtures/contracts/` | Local boundary, inventory, and migration guidance for this subtree | Automatic canonical status merely because local `v1/valid/invalid` paths exist |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` | Local versioned scaffold lanes | Unlabeled canonical example packs |
 
 ### Current posture snapshot
 
 | Statement | Posture |
 |---|---|
-| `schemas/` is a visible repo lane | CONFIRMED |
-| `schemas/tests/fixtures/contracts/README.md` exists on current public `main` | CONFIRMED |
-| `contracts/` is the stronger working signal for machine-readable contract authority | CONFIRMED / INFERRED from sibling docs |
-| `tests/` is the verification surface and carries negative-path burden | CONFIRMED |
-| Exact mounted fixture pack under `tests/fixtures/contracts/` exists today | NEEDS VERIFICATION |
-| Active merge-blocking workflow YAMLs are checked in under `.github/workflows/` | NEEDS VERIFICATION |
-| This path should remain non-authoritative | PROPOSED |
+| `schemas/tests/fixtures/contracts/README.md` exists on current public `main` | **CONFIRMED** |
+| A local `v1/` scaffold is visible under this path | **CONFIRMED** |
+| `valid/` and `invalid/` child lanes are visible under that local `v1/` scaffold | **CONFIRMED** |
+| `schemas/tests/README.md` already describes this nested subtree as scaffold-only | **CONFIRMED** |
+| `contracts/` remains the stronger current machine-contract surface | **CONFIRMED / INFERRED** |
+| `tests/` remains the stronger current governed verification surface | **CONFIRMED** |
+| `tests/contracts/` is visible as a family on public `main` | **CONFIRMED** |
+| Checked-in workflow YAMLs are visible under `.github/workflows/` on public `main` | **NOT CONFIRMED** |
+| This subtree is already the singular canonical fixture home | **UNKNOWN / NEEDS VERIFICATION** |
 
-## Task list
+## Task list & definition of done
 
-- [ ] Retire placeholder `doc_id` and `policy_label` values in the KFM meta block.
-- [ ] Keep this file README-only unless an ADR explicitly expands its role.
-- [ ] Verify sibling links after any tree move.
-- [ ] Synchronize `../../../README.md` if it still carries older README-only schema-lane wording.
-- [ ] Keep `contracts/`, `schemas/`, `tests/`, `policy/`, and workflow docs coherent in the same PR.
-- [ ] Do **not** add `*.schema.json` files here.
-- [ ] Do **not** add canonical valid / invalid fixture packs here.
-- [ ] Do **not** describe merge gates here as real unless checked-in workflow files prove them.
-- [ ] If authority is resolved permanently, narrow this file further or delete it and leave a redirect note in the parent lane.
+- [ ] Replace placeholder `doc_id` and `policy_label` values in the KFM meta block.
+- [ ] Synchronize this file with `../README.md`, `../../README.md`, and `../../../README.md` so the `schemas/**` inventory story stops drifting.
+- [ ] Decide whether local `v1/valid/invalid` is **scaffold-only**, **derived mirror**, or a future promotion candidate, then document that explicitly.
+- [ ] Keep `contracts/`, `tests/`, `tests/contracts/`, `policy/`, and workflow docs coherent in the same change stream.
+- [ ] Do **not** add canonical `*.schema.json` families here unless schema-home authority is explicitly changed and documented.
+- [ ] Do **not** describe merge gates here as live unless checked-in workflow files prove them.
+- [ ] If a root-level canonical fixture home is later verified or adopted, narrow this README further into a pointer or migration note.
 
 ### Definition of done
 
 This README is done when:
 
-1. it clearly prevents second-authority drift
-2. it points contributors to the canonical homes fast
-3. it does not overclaim mounted implementation
-4. it stays synchronized with sibling README surfaces
-5. a reviewer can tell, in one screen, what belongs here and what does not
+1. it records the live local scaffold truthfully
+2. it does not let scaffold visibility masquerade as canonical authority
+3. it routes contributors to stronger sibling surfaces fast
+4. it keeps current-tree facts, inferences, and proposed next shapes visibly separate
+5. a reviewer can tell in one screen what belongs here, what does not, and what still needs verification
 
 [Back to top](#contract-fixtures--schema-side-boundary-guide)
 
 ## FAQ
 
-### Why keep a README under `schemas/...` at all?
+### Why keep this README if stronger lanes already exist elsewhere?
 
-To preserve navigational clarity during a transition or boundary-cleanup phase. This is useful when a visible public lane exists, but machine-readable authority should live elsewhere.
+Because the subtree now exists visibly on public `main`. Once a local scaffold is real, leaving it undocumented invites silent drift.
 
-### Does this make `schemas/` the canonical home for trust-bearing contract files?
+### Do `v1/valid/invalid` make this path canonical?
 
-No. This file is written specifically to avoid that interpretation.
+No. They prove local scaffold visibility, not authority.
 
-### Can valid / invalid fixtures live here?
+### Where should executable contract validation live today?
 
-Not as canonical fixtures. Keep canonical fixture packs in the test surface.
+Route that burden more strongly through `../../../../tests/` and especially `../../../../tests/contracts/`, while keeping machine-contract guidance aligned with `../../../../contracts/`.
 
-### Can generated outputs live here?
+### Can this lane hold illustrative examples?
 
-Only if they are explicitly labeled **non-authoritative**, reproducible from canonical inputs, and clearly subordinate to the canonical source path.
+Yes, but only when they are explicitly labeled as scaffold, illustrative, generated, or otherwise non-authoritative.
 
-### What if the repo later chooses a different schema-home rule?
+### What if the repo later makes this subtree canonical?
 
-Update the ADR and the sibling README surfaces together. Do not let this file drift into “historical truth” that contradicts the live repo.
+Document that decision explicitly, then synchronize this README with the parent `schemas/**` docs, the stronger sibling surfaces, and any ADR or policy decision that changes authority.
 
 ## Appendix
 
 <details>
-<summary><strong>Evidence boundary and migration notes</strong></summary>
+<summary><strong>Evidence boundary, sync pressure, and review prompts</strong></summary>
 
 ### Current working interpretation
 
 This revision assumes the following until repo-backed evidence says otherwise:
 
-- current public `main` already materializes this pointer README under `schemas/tests/fixtures/contracts/`
-- `contracts/` is the stronger working signal for machine-readable contract publication
-- `tests/` is the stronger working signal for fixture burden and negative-path proof
-- `policy/` owns executable policy behavior, not just prose
-- workflow-gate reality must be proven by checked-in YAML, not by aspirational README wording
+- current public `main` materially exposes this subtree, including `v1/valid/invalid`
+- the local subtree is still best read as **scaffold inventory plus boundary guidance**
+- `contracts/` remains the stronger current machine-contract lane
+- `tests/` remains the stronger current governed verification lane
+- `tests/contracts/` is the more natural public-facing contract-test family than this schema-side scaffold
+- workflow-gate reality must still be proven by checked-in YAML, not by historical or aspirational README language
 
 ### Placeholder fields to retire before merge
 
 - `doc_id`
 - `policy_label`
 
+### Sync checklist for the same PR
+
+- `../../../README.md`
+- `../../README.md`
+- `../README.md`
+- `../../../../contracts/README.md`
+- `../../../../tests/README.md`
+- `../../../../tests/contracts/README.md`
+- `../../../../.github/workflows/README.md`
+
 ### Review prompts
 
-- Does this file accidentally create a second truth surface?
-- Do the sibling links still resolve correctly?
-- Does any statement here outrun current branch evidence?
-- Should this file be narrowed further into a one-paragraph pointer after schema-home ADR closure?
+- Does this file describe live local inventory accurately?
+- Does any sentence here turn local scaffold into silent canonical authority?
+- Are stronger sibling links still correct after the change?
+- Are current-tree facts, inferences, and proposed next shapes visibly separated?
+- Should this file be narrowed further if authority is later settled elsewhere?
 
 </details>
 
