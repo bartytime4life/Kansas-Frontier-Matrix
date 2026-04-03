@@ -31,24 +31,27 @@ Helpful references:
 - SECURITY.md
 -->
 
-<!-- Keep this template synchronized with README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/SECURITY.md, SECURITY.md, and .github/CODEOWNERS on the same branch. -->
+<!-- Keep this template synchronized with README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, and SECURITY.md on the same branch. -->
 
-> Fill every applicable section.  
-> Use `N/A` rather than deleting sections.  
-> Keep truth labels honest and keep `UNKNOWN` / `NEEDS VERIFICATION` visible until closed.  
-> Link validation evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.  
-> If the working branch proves repo state that public `main` docs do not yet show, say so explicitly below.
+> **Use this template completely.**
+>
+> Write `N/A` instead of deleting sections.
+> Keep truth labels explicit.
+> Link evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.
+> If working-branch evidence proves something that public `main` docs do not yet show, state that explicitly.
 
 ## Summary
-- What changed:
-- Why:
-- Linked issue / ADR / discussion:
-- Evidence / proof-pack / run links:
-- Working-branch evidence delta (if public `main` is stale for this PR):
+
+- **What changed:**
+- **Why:**
+- **Linked issue / ADR / discussion:**
+- **Evidence / proof-pack / run links:**
+- **Working-branch evidence delta (if public `main` is stale for this PR):**
 
 ---
 
 ## Change type
+
 - [ ] Documentation
 - [ ] API / contract / schema
 - [ ] Policy / governance
@@ -60,6 +63,7 @@ Helpful references:
 - [ ] Breaking / migration-significant
 
 ## Affected repo surfaces
+
 - [ ] `.github/`
 - [ ] `apps/`
 - [ ] `brand/`
@@ -84,6 +88,7 @@ Helpful references:
 ## KFM doctrine impact
 
 ### Truth path touched
+
 - [ ] Source edge / RAW
 - [ ] WORK / QUARANTINE
 - [ ] PROCESSED
@@ -92,6 +97,7 @@ Helpful references:
 - [ ] None
 
 ### Guardrails
+
 - [ ] Truth path preserved
 - [ ] Trust membrane preserved
 - [ ] Cite-or-abstain preserved where relevant
@@ -100,51 +106,60 @@ Helpful references:
 - [ ] No new direct client -> store or client -> model-runtime bypass
 
 ### Public claim surface
+
 - [ ] No public claim surface affected
 - [ ] Public claim surface affected (described below)
 
 ### Authoritative vs derived boundary
+
 - [ ] No authoritative / derived boundary affected
 - [ ] Authoritative / derived boundary affected (described below)
 
 ### Runtime outcome surface
+
 - [ ] No runtime answer / abstain / deny / error behavior affected
 - [ ] Runtime answer / abstain / deny / error behavior affected (described below)
 
 ### Truth posture summary
+
 Fill only the labels that apply to this PR.
 
-- CONFIRMED:
-- INFERRED:
-- PROPOSED:
-- UNKNOWN:
-- NEEDS VERIFICATION:
+- **CONFIRMED:**
+- **INFERRED:**
+- **PROPOSED:**
+- **UNKNOWN:**
+- **NEEDS VERIFICATION:**
 
 ---
 
 ## What changed
 
 ### Behavior
+
 - N/A
 
 ### Files / paths / contracts
+
 - N/A
 
 ### User-visible or operator-visible impact
+
 - N/A
 
 ### Evidence / publication impact
-- Authoritative / derived boundary impact:
-- Evidence / citation path:
-- Runtime answer / abstain / deny / error impact:
-- Policy / review / release state impact:
-- Correction / supersession implications:
+
+- **Authoritative / derived boundary impact:**
+- **Evidence / citation path:**
+- **Runtime answer / abstain / deny / error impact:**
+- **Policy / review / release state impact:**
+- **Correction / supersession implications:**
 
 ---
 
 ## Validation
 
 ### Checks run
+
 - [ ] Docs / link check
 - [ ] Lint / format / type check
 - [ ] Unit tests
@@ -157,17 +172,19 @@ Fill only the labels that apply to this PR.
 - [ ] Not applicable (explained below)
 
 ### Evidence
-- CI / workflow / report links:
-- Proof pack / manifest / attestation links:
-- Commands / jobs / reports:
-- Sample inputs / fixtures:
-- Screenshots / visual diffs / recordings:
-- Negative-path coverage (deny / abstain / stale / generalized / rollback / correction):
-- Not applicable / gaps still open:
+
+- **CI / workflow / report links:**
+- **Proof pack / manifest / attestation links:**
+- **Commands / jobs / reports:**
+- **Sample inputs / fixtures:**
+- **Screenshots / visual diffs / recordings:**
+- **Negative-path coverage (deny / abstain / stale / generalized / rollback / correction):**
+- **Not applicable / gaps still open:**
 
 ---
 
 ## Docs, contracts, and policy
+
 - [ ] CHANGELOG updated or explicitly not needed
 - [ ] README / docs updated
 - [ ] Runbook / ADR update included
@@ -175,22 +192,25 @@ Fill only the labels that apply to this PR.
 - [ ] Policy bundle / fixtures / decision logic updated
 - [ ] No docs / contract / policy change required (explained below)
 
-Explanation:
+**Explanation:**
+
 - N/A
 
 ---
 
 ## Risk, rollout, and rollback
-- Risk level: low / medium / high
-- Rollout plan:
-- Rollback plan:
-- Correction / supersession / quarantine implications:
-- Operational impact:
-- Public / trust-surface implications:
+
+- **Risk level:** low / medium / high
+- **Rollout plan:**
+- **Rollback plan:**
+- **Correction / supersession / quarantine implications:**
+- **Operational impact:**
+- **Public / trust-surface implications:**
 
 ---
 
 ## Review routing
+
 - [ ] CODEOWNERS review required
 - [ ] Steward / governance review required
 - [ ] Product / UX review required
@@ -283,6 +303,7 @@ Explanation:
 ---
 
 ## Definition of done
+
 - [ ] Smallest reasonable change for the problem
 - [ ] Reversible or rollback described
 - [ ] Truth posture stated honestly
