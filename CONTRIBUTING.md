@@ -3,14 +3,14 @@ doc_id: kfm://doc/<NEEDS-UUID>
 title: CONTRIBUTING
 type: standard
 version: v1
-status: draft
-owners: <NEEDS-VERIFICATION>
+status: review
+owners: @bartytime4life
 created: YYYY-MM-DD
-updated: YYYY-MM-DD
+updated: 2026-04-03
 policy_label: <NEEDS-VERIFICATION>
-related: [README.md, .github/README.md, CODE_OF_CONDUCT.md, SECURITY.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/, apps/, brand/, configs/, contracts/, data/, docs/, examples/, infra/, migrations/, packages/, policy/, schemas/, scripts/, tests/, tools/]
+related: [README.md, .github/README.md, .github/workflows/README.md, .github/watchers/README.md, CODE_OF_CONDUCT.md, SECURITY.md, .github/SECURITY.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/, .github/watchers/, apps/, brand/, configs/, contracts/, data/, docs/, examples/, infra/, migrations/, packages/, pipelines/, policy/, schemas/, scripts/, tests/, tools/]
 tags: [kfm, contributing, governance, evidence-first, docs]
-notes: [Current-session evidence confirmed the public GitHub root and .github inventory plus the attached KFM doctrine corpus; owners, dates, policy label, exact required checks, branch protections, nested manifests, and local command surface still need direct verification.]
+notes: [Target path inferred from the supplied CONTRIBUTING baseline draft and the current public-main repo surface; file ownership is confirmed from .github/CODEOWNERS; canonical UUID, creation date, policy label, exact required checks, and platform-only GitHub settings still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Contributing to Kansas Frontier Matrix
@@ -18,18 +18,19 @@ notes: [Current-session evidence confirmed the public GitHub root and .github in
 Build KFM upward without weakening the governed truth path, trust membrane, or evidence contract.
 
 > [!IMPORTANT]
-> This guide is repo-grounded and evidence-bounded. In this session, the public GitHub repository was inspected for root-level structure and `.github/` control surfaces, and the attached March 2026 KFM doctrine corpus was reviewed. Exact workflow YAML contents, required checks, branch protection, nested package/app inventories, local commands, and runtime behavior still need direct checkout verification.
+> This guide is repo-grounded and evidence-bounded. Current public `main` confirms a richer repo surface than older PDF-only evidence windows: the root now visibly includes `pipelines/`, and `.github/` now includes both `watchers/` and `workflows/`. On current public `main`, both of those `.github/` lanes are README-only. Treat them as governance and scaffolding surfaces, not as proof of live checked-in automation. Exact workflow YAML contents, required checks, branch protection, environment approvals, OIDC wiring, nested package/app inventories, local commands, and runtime behavior still need direct checkout or platform verification.
 
 ## Impact block
 
 **Status:** active  
-**Owners:** `NEEDS VERIFICATION`  
+**Owners:** `@bartytime4life`  
 **Path:** `./CONTRIBUTING.md`
 
 ![Status](https://img.shields.io/badge/status-active-success)
+![Owners](https://img.shields.io/badge/owners-bartytime4life-blueviolet)
 ![Evidence](https://img.shields.io/badge/evidence-first-blue)
 ![Governance](https://img.shields.io/badge/governance-review--bounded-orange)
-![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
+![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
 ![Branch](https://img.shields.io/badge/branch-main-black)
 ![Docs](https://img.shields.io/badge/docs-production%20surface-purple)
 
@@ -39,7 +40,7 @@ Build KFM upward without weakening the governed truth path, trust membrane, or e
 
 ## Scope
 
-This guide sets the contribution rules for code, contracts, datasets, stories, UI work, policy changes, docs, workflows, and runtime-facing changes in Kansas Frontier Matrix.
+This guide sets the contribution rules for code, contracts, datasets, stories, UI work, policy changes, docs, workflows, watcher scaffolds, and runtime-facing changes in Kansas Frontier Matrix.
 
 It is written for contributors, reviewers, stewards, and operators who need one practical rulebook for making changes without weakening evidence, review, publication discipline, or correction lineage.
 
@@ -73,24 +74,26 @@ It is written for contributors, reviewers, stewards, and operators who need one 
 | Item | Value |
 |---|---|
 | **Path** | `./CONTRIBUTING.md` |
-| **Role in repo** | Root-level contributor and review guide |
+| **Role in repo** | Root-level contributor and review guide, paired with the repository gatehouse under [`.github/`](.github/) |
 | **Upstream** | [README.md](README.md) |
-| **Adjacent governance surfaces** | [.github/README.md](.github/README.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) · [.github/CODEOWNERS](.github/CODEOWNERS) · [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
-| **Adjacent control-plane directories** | [.github/workflows/](.github/workflows/) · [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) · [.github/actions/](.github/actions/) |
-| **Confirmed root directories** | [apps/](apps/) · [brand/](brand/) · [configs/](configs/) · [contracts/](contracts/) · [data/](data/) · [docs/](docs/) · [examples/](examples/) · [infra/](infra/) · [migrations/](migrations/) · [packages/](packages/) · [policy/](policy/) · [schemas/](schemas/) · [scripts/](scripts/) · [tests/](tests/) · [tools/](tools/) |
+| **Adjacent governance surfaces** | [.github/README.md](.github/README.md) · [.github/workflows/README.md](.github/workflows/README.md) · [.github/watchers/README.md](.github/watchers/README.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) · [.github/SECURITY.md](.github/SECURITY.md) · [.github/CODEOWNERS](.github/CODEOWNERS) · [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
+| **Adjacent control-plane directories** | [.github/workflows/](.github/workflows/) · [.github/watchers/](.github/watchers/) · [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) · [.github/actions/](.github/actions/) |
+| **Confirmed root directories** | [apps/](apps/) · [brand/](brand/) · [configs/](configs/) · [contracts/](contracts/) · [data/](data/) · [docs/](docs/) · [examples/](examples/) · [infra/](infra/) · [migrations/](migrations/) · [packages/](packages/) · [pipelines/](pipelines/) · [policy/](policy/) · [schemas/](schemas/) · [scripts/](scripts/) · [tests/](tests/) · [tools/](tools/) |
 
 ### Current evidence boundary for this file
 
 | Evidence layer | Status | What this guide treats as settled |
 |---|---|---|
-| Public GitHub root inventory | **CONFIRMED** | Root-level directories and governance files listed in this document |
-| Public `.github/` inventory | **CONFIRMED** | Presence of `ISSUE_TEMPLATE/`, `actions/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, and `dependabot.yml` |
-| Attached KFM doctrine corpus | **CONFIRMED** | Truth path, trust membrane, cite-or-abstain, fail-closed posture, docs-as-production-surface |
+| Public GitHub root inventory | **CONFIRMED** | Root-level directories and governance files listed in this document, including `pipelines/` |
+| Public `.github/` gatehouse inventory | **CONFIRMED** | Presence of `ISSUE_TEMPLATE/`, `actions/`, `watchers/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `.github/SECURITY.md`, and `dependabot.yml` |
+| Public gatehouse docs | **CONFIRMED** | `.github/watchers/README.md` and `.github/workflows/README.md` are the visible checked-in contents for those directories on current public `main` |
+| Current `CODEOWNERS` baseline | **CONFIRMED** | `@bartytime4life` is the global fallback owner and current owner for `/CONTRIBUTING.md` |
+| Attached KFM doctrine corpus | **CONFIRMED** | Truth path, trust membrane, cite-or-abstain, fail-closed posture, docs-as-production-surface, and review-bounded promotion |
 | Exact workflow YAML set and required checks | **UNKNOWN / NEEDS VERIFICATION** | Do not name required checks, merge gates, or deployment approvals as facts until re-read from the checkout or GitHub settings |
-| Nested app/package/contract/data structure | **INFERRED / PROPOSED** | Treat deeper inventories as working expectations, not settled repo fact |
+| Nested app/package/contract/data/runtime structure | **INFERRED / PROPOSED** | Treat deeper inventories as working expectations, not settled repo fact |
 
 > [!NOTE]
-> This revision corrects the biggest repo-fit weakness in the prior draft: the current public repository confirms a richer root layout than the old “PROPOSED until mounted” tree implied. Nested inventories still need direct verification before they are promoted to **CONFIRMED**.
+> Keep three things separate: current checked-in public tree, README-described scaffolding, and platform-only GitHub settings. Do not silently merge them into one certainty level.
 
 [Back to top](#contributing-to-kansas-frontier-matrix)
 
@@ -105,6 +108,7 @@ This file accepts contributor guidance for:
 - policy, verification, and release-gate changes
 - UI, map, story, Evidence Drawer, dossier, and Focus Mode work
 - documentation, ADR, runbook, and workflow updates
+- watcher and gatehouse documentation grounded in current public-tree evidence
 - infrastructure, delivery, security, and observability changes
 
 ### What belongs here
@@ -114,6 +118,7 @@ This file accepts contributor guidance for:
 | **Contracts and policies** | schema updates, route-boundary changes, policy bundles, fixtures, reason/obligation vocabularies |
 | **Runtime surfaces** | API changes, UI shell changes, Focus behavior, Evidence Drawer payloads |
 | **Governed data work** | source descriptors, ingest rules, validation logic, release-bearing derived artifacts |
+| **Watcher and automation scaffolds** | `.github/watchers/README.md` alignment, workflow-inventory corrections, historical-signal clarifications, no-overclaim repairs |
 | **Docs and governance memory** | ADRs, runbooks, architecture docs, contributor guidance, correction procedures |
 | **Delivery and operations** | CI/CD, rollback mechanics, observability joins, release proof-pack updates |
 
@@ -137,9 +142,10 @@ This file must **not** become:
 | exact API or schema content | `contracts/`, `schemas/`, and their owning docs |
 | policy rule bodies or fixtures | `policy/` and policy-focused docs |
 | environment or deployment wiring | `infra/`, `configs/`, runbooks, or security docs |
+| exact current workflow or watcher inventory | `.github/workflows/`, `.github/watchers/`, and the exact checked-in files inside them |
 | release notes or historical changes | `CHANGELOG.md` |
 | conduct expectations | `CODE_OF_CONDUCT.md` |
-| disclosure and security reporting | `SECURITY.md` |
+| disclosure and security reporting | `SECURITY.md` and `.github/SECURITY.md` |
 
 [Back to top](#contributing-to-kansas-frontier-matrix)
 
@@ -147,14 +153,17 @@ This file must **not** become:
 
 ## Directory tree
 
-Below is the **current confirmed root shape** plus the **confirmed `.github/` surface** visible from the public repository.
+Below is the **current confirmed root shape** plus the **currently visible `.github/` surface** on public `main`.
 
 ```text
 .
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   ├── actions/
+│   ├── watchers/
+│   │   └── README.md
 │   ├── workflows/
+│   │   └── README.md
 │   ├── CODEOWNERS
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   ├── README.md
@@ -170,6 +179,7 @@ Below is the **current confirmed root shape** plus the **confirmed `.github/` su
 ├── infra/
 ├── migrations/
 ├── packages/
+├── pipelines/
 ├── policy/
 ├── schemas/
 ├── scripts/
@@ -183,6 +193,9 @@ Below is the **current confirmed root shape** plus the **confirmed `.github/` su
 └── SECURITY.md
 ```
 
+> [!NOTE]
+> Current public `main` shows `.github/watchers/README.md` and `.github/workflows/README.md`, but not checked-in watcher adapters or workflow YAMLs in those directories. Keep README-described files, deleted workflow names, and platform history clearly separated from current branch inventory.
+
 ### Doctrine-shaped nested areas that still need direct checkout verification
 
 | Area | Common KFM-shaped expectation | Status |
@@ -193,6 +206,7 @@ Below is the **current confirmed root shape** plus the **confirmed `.github/` su
 | `data/` | RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PUBLISHED, receipts, proofs | **NEEDS VERIFICATION** |
 | `docs/` | architecture, governance, domains, runbooks, ADRs, verification | **NEEDS VERIFICATION** |
 | `infra/` | local, hosted, dashboards, delivery wiring | **NEEDS VERIFICATION** |
+| `pipelines/` | orchestration entrypoints, run profiles, deterministic transforms, thin-slice execution lanes | **NEEDS VERIFICATION** |
 
 > [!NOTE]
 > Keep the split visible: the tree above is the confirmed repo surface; the table below it is the strongest doctrine-shaped expectation. Do not silently merge the two.
@@ -210,21 +224,22 @@ Use the repo’s own verification-first inspection loop before promoting assumpt
 git rev-parse HEAD 2>/dev/null || echo "Not inside a Git checkout"
 
 # inspect the repo root and near-root shape
-find . -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,160p'
+find . -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,180p'
 
-# inspect GitHub control-plane files if present
-find .github -maxdepth 3 -type f 2>/dev/null | sort
-ls -la .github/workflows 2>/dev/null || true
+# inspect GitHub gatehouse files if present
+find .github -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,220p'
+ls -la .github/watchers .github/workflows 2>/dev/null || true
 
-# inspect likely contract, policy, data, and test surfaces
-find contracts policy data tests tools -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,220p'
+# inspect likely contract, policy, data, test, and pipeline surfaces
+find contracts policy data tests tools pipelines -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,260p'
 
-# inspect documentation, apps, packages, and infra
-find docs apps packages infra -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,260p'
+# inspect docs, apps, packages, and infra
+find docs apps packages infra -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,320p'
 
 # pressure-test trust and evidence vocabulary
 grep -RIn "EvidenceBundle\|EvidenceRef\|RuntimeResponseEnvelope\|truth membrane\|cite-or-abstain" docs contracts policy apps packages tests 2>/dev/null || true
 grep -RIn "Map Explorer\|Evidence Drawer\|Focus Mode\|Story\|Dossier\|Review" docs apps packages 2>/dev/null || true
+grep -RIn "watchers\|emit-only\|promote-and-reconcile\|release-evidence\|verify-docs" .github docs tests policy 2>/dev/null || true
 ```
 
 ### 2) Read the governing docs first
@@ -234,9 +249,12 @@ Start with:
 1. [README.md](README.md)
 2. [CONTRIBUTING.md](CONTRIBUTING.md)
 3. [.github/README.md](.github/README.md)
-4. [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-5. [SECURITY.md](SECURITY.md)
-6. the owning docs nearest your change in `docs/`, `contracts/`, `policy/`, `schemas/`, `apps/`, or `packages/`
+4. [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
+5. [.github/workflows/README.md](.github/workflows/README.md)
+6. [.github/watchers/README.md](.github/watchers/README.md)
+7. [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+8. [SECURITY.md](SECURITY.md) and [.github/SECURITY.md](.github/SECURITY.md)
+9. the owning docs nearest your change in `docs/`, `contracts/`, `policy/`, `schemas/`, `apps/`, `packages/`, or `pipelines/`
 
 ### 3) Run repo-local validators and smoke tests
 
@@ -247,6 +265,7 @@ Start with:
 <run-schema-and-contract-validation>
 <run-policy-tests>
 <run-app-or-package-tests>
+<run-pipeline-or-watcher-tests-if-affected>
 <run-e2e-or-surface-tests-if-affected>
 ```
 
@@ -276,13 +295,14 @@ Good starter scopes include:
 - one source admission packet and one deterministic receipt path
 - one Evidence Drawer payload improvement
 - one policy rule with passing and failing fixtures
+- one watcher or workflow README repair that reduces overclaiming
 - one contributor-facing documentation repair tied to real repo evidence
 
 ### Keep companion artifacts in the same PR
 
 A KFM contribution is rarely “just code.”
 
-If your change touches behavior-significant architecture, policy, data lifecycle, evidence handling, runtime outcomes, public surfaces, or contributor workflow, update the corresponding docs, tests, contracts, fixtures, and runbooks in the **same** PR unless you explicitly justify why not.
+If your change touches behavior-significant architecture, policy, data lifecycle, evidence handling, runtime outcomes, public surfaces, contributor workflow, or gatehouse automation surfaces, update the corresponding docs, tests, contracts, fixtures, and runbooks in the **same** PR unless you explicitly justify why not.
 
 ### Contribution lanes
 
@@ -354,6 +374,18 @@ Do **not** introduce:
 - polished states that conceal missing evidence or unresolved policy
 - UI shortcuts around governed APIs
 
+#### Watchers and workflow scaffolds
+
+Current public `main` exposes [`.github/watchers/`](.github/watchers/) and [`.github/workflows/`](.github/workflows/) as documentation-first lanes.
+
+Treat them accordingly:
+
+- preserve the **emit-only** watcher rule
+- keep workflow and watcher claims tied to exact checked-in files or clearly labeled as historical signal
+- do not describe a watcher or workflow as live on current public `main` unless the exact file or platform setting proves it
+- when renaming, adding, or deleting a gatehouse file, update the adjacent README, review-routing assumptions, and PR guidance in the same change set
+- keep deleted workflow names, Actions history, and README-described scaffolds visibly separate from current checked-in inventory
+
 #### Infra, runtime, and delivery
 
 Delivery is part of KFM governance, not a detached ops lane.
@@ -395,20 +427,22 @@ flowchart LR
     C -->|contracts or policy| D[Update contracts or policy + fixtures + docs]
     C -->|apps or packages| E[Update code + docs + tests]
     C -->|data onboarding| F[Source packet + receipts + validation plan]
-    C -->|infra or delivery| G[Rollback note + observability + docs]
+    C -->|watchers or workflows| G[Update gatehouse docs + inventory truth + adjacent proof notes]
+    C -->|infra or delivery| H[Rollback note + observability + docs]
 
-    D --> H[Run local validation]
-    E --> H
-    F --> H
-    G --> H
+    D --> I[Run local validation]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
 
-    H --> I[Open PR with truth posture + rollback path]
-    I --> J[CODEOWNERS + CI + steward or reviewer checks]
-    J --> K{Passes and approved?}
+    I --> J[Open PR with truth posture + rollback path]
+    J --> K[CODEOWNERS + CI + steward or reviewer checks]
+    K --> L{Passes and approved?}
 
-    K -->|No| L[Revise, narrow scope, or quarantine]
-    K -->|Yes| M[Governed merge / promotion]
-    M --> N[Visible release, correction lineage, or internal completion]
+    L -->|No| M[Revise, narrow scope, or quarantine]
+    L -->|Yes| N[Governed merge / promotion]
+    N --> O[Visible release, correction lineage, or internal completion]
 ```
 
 ---
@@ -421,9 +455,12 @@ flowchart LR
 |---|---|---|
 | Public repository on default branch `main` | **CONFIRMED** | PR-based contribution flow is the normal operating assumption |
 | Root-level `CONTRIBUTING.md`, `README.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` exist | **CONFIRMED** | contributor guidance and governance docs are first-class repo surfaces |
-| `.github/README.md`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, and `workflows/` exist | **CONFIRMED** | review-routing and CI/CD are not hypothetical |
-| Exact workflow YAML names and required merge checks | **UNKNOWN / NEEDS VERIFICATION** | do not claim required checks without direct reinspection |
-| Exact nested app/package/schema inventories | **UNKNOWN / NEEDS VERIFICATION** | contributor docs should not overstate implementation depth |
+| Current public `CODEOWNERS` baseline assigns global fallback and `/CONTRIBUTING.md` ownership to `@bartytime4life` | **CONFIRMED** | owners no longer need to remain a placeholder in this file |
+| `.github/README.md`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `watchers/`, and `workflows/` exist | **CONFIRMED** | review-routing, gatehouse docs, and automation scaffolding are real public-tree surfaces |
+| `.github/watchers/` and `.github/workflows/` are README-only on public `main` | **CONFIRMED** | contributor docs must not overstate live checked-in automation |
+| Workflow names described in README or visible in historical Actions activity are historical signal, not current checked-in inventory | **CONFIRMED / INFERRED** | protects the file from claiming YAMLs that are not present on current public `main` |
+| Exact workflow YAML names, required merge checks, and non-public GitHub settings | **UNKNOWN / NEEDS VERIFICATION** | do not claim required checks or platform settings without direct reinspection |
+| Exact nested app/package/schema/pipeline inventories | **UNKNOWN / NEEDS VERIFICATION** | contributor docs should not overstate implementation depth |
 
 ### Change types and minimum companion artifacts
 
@@ -434,6 +471,7 @@ flowchart LR
 | **New policy rule** | rule body or bundle, passing and failing fixtures, steward rationale, docs |
 | **UI feature** | design notes, accessibility considerations, tests, docs |
 | **Story publication path** | citations, review notes, publish gate expectations |
+| **Watcher or workflow doc change** | README alignment, history-vs-current distinction, adjacent review-routing or proof notes |
 | **Infra or delivery change** | rollback plan, monitoring or observability note, docs |
 
 ### Validation and review matrix
@@ -441,6 +479,7 @@ flowchart LR
 | If your PR changes… | Expect to provide… |
 |---|---|
 | **Docs** | terminology consistency, adjacent doc updates, link sanity |
+| **`.github/` / gatehouse docs** | README alignment, CODEOWNERS awareness, history-vs-current distinction, no-overclaiming platform settings |
 | **Contracts / schemas** | valid examples, invalid fixtures, compatibility note |
 | **Policy** | passing and failing fixtures, stable reason/obligation vocabulary |
 | **Dataset onboarding** | descriptor, raw snapshot plan, validation logic, publication intent |
@@ -463,6 +502,7 @@ flowchart LR
 - [ ] Truth posture is explicit: **CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION**
 - [ ] No shortcut breaks the truth path
 - [ ] No shortcut breaks the trust membrane
+- [ ] README-only workflow or watcher lanes are not described as live checked-in automation without proof
 - [ ] Docs, tests, fixtures, and contracts were updated together where behavior changed
 - [ ] Rollback or correction path is stated
 - [ ] Review burden is explicit
@@ -478,6 +518,7 @@ flowchart LR
 - [ ] Contract drift is intentional and documented
 - [ ] Runtime or delivery changes include rollback and observability notes
 - [ ] Behavior-significant changes did not leave docs or runbooks behind
+- [ ] Gatehouse README changes still distinguish current tree, historical signal, and platform-only unknowns
 
 ### Definition of done
 
@@ -522,9 +563,16 @@ Not on its own. PR-based automation is useful; self-approving policy-significant
 </details>
 
 <details>
+<summary><strong>Does the presence of <code>.github/workflows/</code> or <code>.github/watchers/</code> mean the automation is live on current public <code>main</code>?</strong></summary>
+
+No. Current public <code>main</code> shows those directories as README-only lanes. Treat described filenames, deleted workflow names, or Actions history as current inventory only when the exact checked-in file or platform setting proves it.
+
+</details>
+
+<details>
 <summary><strong>Why does this file still contain <code>NEEDS VERIFICATION</code> placeholders?</strong></summary>
 
-Because contributor guidance should not pretend platform settings, workflow names, owners, or local commands that were not directly rechecked in the current session.
+Because contributor guidance should not pretend platform settings, workflow names, policy labels, owners beyond current CODEOWNERS evidence, or local commands that were not directly rechecked in the current session.
 
 </details>
 
@@ -557,17 +605,17 @@ make catalog-validate
 </details>
 
 <details>
-<summary><strong>What to verify before replacing placeholders</strong></summary>
+<summary><strong>What to verify before replacing remaining placeholders</strong></summary>
 
 - canonical doc UUID
-- owners and stewardship group
-- created / updated dates
+- whether any additional stewards should be listed beyond the current `CODEOWNERS` baseline
+- created date for this file
 - policy label for this file
 - exact workflow YAML inventory in `.github/workflows/`
+- exact watcher file inventory in `.github/watchers/`
 - exact required GitHub checks and branch protection rules
-- exact `CODEOWNERS` handles and review routing
 - exact local install / lint / validate / test commands
-- actual nested structure of `apps/`, `packages/`, `contracts/`, `schemas/`, `data/`, and `infra/`
+- actual nested structure of `apps/`, `packages/`, `contracts/`, `schemas/`, `data/`, `infra/`, and `pipelines/`
 - whether environment approvals, OIDC, signing, or deploy gates are already configured
 
 </details>
