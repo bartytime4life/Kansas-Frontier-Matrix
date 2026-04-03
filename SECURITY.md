@@ -112,9 +112,9 @@ Use this entrypoint for private reports involving the following categories.
 
 ```mermaid
 flowchart LR
-    A[/SECURITY.md<br/>root entrypoint] --> B[/.github/SECURITY.md<br/>canonical policy]
-    B --> C[GitHub Security tab<br/>Report a vulnerability]
-    B --> D[Triage → contain → fix → verify → disclose]
+    A["/SECURITY.md<br>root entrypoint"] --> B["/.github/SECURITY.md<br>canonical policy"]
+    B --> C["GitHub Security tab<br>Report a vulnerability"]
+    B --> D["Triage → contain → fix → verify → disclose"]
 ```
 
 ## Canonical policy
