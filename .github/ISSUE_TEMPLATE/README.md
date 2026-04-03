@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS_VERIFICATION>
 updated: <YYYY-MM-DD-NEEDS_VERIFICATION>
 policy_label: <policy_label-NEEDS_VERIFICATION>
-related: [./config.yml, ../README.md, ../PULL_REQUEST_TEMPLATE.md, ../SECURITY.md, ../../CONTRIBUTING.md, ../../docs/, ../../policy/, ../../contracts/, ../../schemas/]
+related: [./config.yml, ../README.md, ../PULL_REQUEST_TEMPLATE.md, ../SECURITY.md, ../../SECURITY.md, ../../CONTRIBUTING.md, ../../docs/, ../../policy/, ../../contracts/, ../../schemas/]
 tags: [kfm, github, contributor-intake, governance]
-notes: [Public-main-grounded revision; current public tree confirms README.md plus zero-byte config.yml only inside .github/ISSUE_TEMPLATE; doc UUID, created/updated dates, and policy label still need merge-time verification.]
+notes: [Public-main-grounded revision; current public tree confirms README.md plus zero-byte config.yml only inside .github/ISSUE_TEMPLATE; root SECURITY.md still needs explicit delegation or text alignment with .github/SECURITY.md; doc UUID, created/updated dates, and policy label still need merge-time verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Issue Template Directory
@@ -22,11 +22,11 @@ Current public guidance for contributor issue intake inside KFM’s `.github` ga
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![repo](https://img.shields.io/badge/repo-public-1f6feb) ![tree](https://img.shields.io/badge/tree-README%20%2B%20config-lightgrey) ![templates](https://img.shields.io/badge/templates-none%20visible%20on%20public%20main-lightgrey)  
 > **Repo fit:** `.github/ISSUE_TEMPLATE/README.md`  
 > **Upstream:** [`../README.md`](../README.md) · [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../SECURITY.md`](../SECURITY.md)  
-> **Downstream:** GitHub issue creation UI via [`./config.yml`](./config.yml) · issue triage · [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) · [`../../docs/`](../../docs/) · [`../../policy/`](../../policy/) · [`../../contracts/`](../../contracts/)  
+> **Downstream:** GitHub issue creation UI via [`./config.yml`](./config.yml) · issue triage · [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) · [`../../docs/`](../../docs/) · [`../../policy/`](../../policy/) · [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#current-public-inventory--proposed-template-pack) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public `main` shows `.github/ISSUE_TEMPLATE/` containing **only** `README.md` and `config.yml`. No checked-in Markdown issue templates or YAML issue forms are visible in this directory on public `main`, and `config.yml` is currently an empty placeholder.
+> Current public `main` shows `.github/ISSUE_TEMPLATE/` containing **only** `README.md` and `config.yml`. No checked-in Markdown issue templates or YAML issue forms are visible in this directory on public `main`, and `config.yml` is currently a zero-byte placeholder.
 
 > [!NOTE]
 > This README is public-tree-grounded. It documents the checked-in directory honestly, but it does not claim GitHub platform settings, labels, assignees, required checks, private issue-management features, or chooser behavior that cannot be proven from public repo contents alone.
@@ -58,11 +58,11 @@ Right now, that lane is intentionally thin: documentation plus a chooser/config 
 | Chooser/config surface | `./config.yml` exists, but is empty on public `main` | **CONFIRMED** |
 | Checked-in issue forms (`*.yml`) | none visible in this directory on public `main` | **CONFIRMED** |
 | Checked-in Markdown issue templates (`*.md`) | none visible besides this README | **CONFIRMED** |
-| Adjacent PR handoff | `../PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** |
-| Adjacent security redirect | `../SECURITY.md` | **CONFIRMED** |
-| Secondary public security surface | `../../SECURITY.md` also exists at repo root; keep it delegating or text-aligned with `../SECURITY.md` | **CONFIRMED** existence |
-| Broader contribution rulebook | `../../CONTRIBUTING.md` | **CONFIRMED** |
-| Broader doctrine / doc surfaces | `../../docs/`, `../../contracts/`, `../../policy/`, `../../schemas/` | **CONFIRMED** path presence |
+| Adjacent PR handoff | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | **CONFIRMED** |
+| Canonical public security redirect | route sensitive disclosure to [`../SECURITY.md`](../SECURITY.md) | **CONFIRMED** |
+| Root security doc | [`../../SECURITY.md`](../../SECURITY.md) also exists, but the two current public security-policy files are not yet fully aligned; keep issue-intake routing anchored to [`../SECURITY.md`](../SECURITY.md) until delegation is explicit | **CONFIRMED** |
+| Broader contribution rulebook | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | **CONFIRMED** |
+| Broader doctrine / doc surfaces | [`../../docs/`](../../docs/), [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/) | **CONFIRMED** path presence |
 | GitHub issue labels, assignees, blank-issue behavior, platform-side chooser settings | not provable from public checked-in files alone | **UNKNOWN / NEEDS VERIFICATION** |
 
 ### Why this directory exists even in a minimal state
@@ -73,7 +73,7 @@ A minimal issue-template directory still matters because it names the seam where
 
 ## Inputs
 
-What belongs **in this directory**:
+Accepted inputs for this directory:
 
 | Input class | What belongs here | Status |
 |---|---|---|
@@ -256,6 +256,7 @@ A healthy issue-template directory for this repo should meet all of the followin
 - [ ] The repo decides whether it wants YAML issue forms, Markdown issue templates, or a deliberately minimal manual issue flow.
 - [ ] Any future public template pack is wired to redirect sensitive/security reports to [`../SECURITY.md`](../SECURITY.md).
 - [ ] Any future public template pack points implementation-bearing changes toward [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md).
+- [ ] Root [`../../SECURITY.md`](../../SECURITY.md) explicitly delegates to [`../SECURITY.md`](../SECURITY.md), or the two public security-policy files are otherwise text-aligned enough that issue-intake routing cannot drift.
 - [ ] Labels, assignees, blank-issue posture, and chooser behavior are verified on the live GitHub side before this README is treated as fully settled.
 - [ ] Owners, dates, and policy label in the meta block are finalized at merge time.
 
@@ -290,13 +291,14 @@ Because no such files are currently visible in this directory on public `main`. 
 <details>
 <summary>Appendix A — evidence boundary and revision rationale</summary>
 
-This revision intentionally changes the directory tree from a speculative contract draft to the **actual current public-main tree**.
+This revision intentionally keeps the directory tree anchored to the **actual current public-main tree**.
 
-That produces three concrete improvements:
+That produces four concrete improvements:
 
 1. owner coverage is no longer blank at the README surface
 2. adjacent PR and security paths are no longer treated as hypothetical
-3. template filenames that are not checked in move out of the directory tree and into a clearly marked proposed pack
+3. template filenames that are not checked in stay out of the directory tree and remain a clearly marked proposed pack
+4. root-versus-`.github` security-policy drift is named as an open coordination item instead of being treated as already resolved
 
 </details>
 
@@ -309,7 +311,7 @@ Before merge, verify the following repo/platform details that public file inspec
 - blank-issue posture
 - labels and default assignees
 - whether zero-byte `config.yml` is intentional or accidental
-- whether `.github/SECURITY.md` should remain canonical while root `SECURITY.md` delegates
+- whether `.github/SECURITY.md` remains canonical and root `SECURITY.md` delegates explicitly
 - doc UUID, created date, updated date, and policy label for the meta block
 
 </details>
