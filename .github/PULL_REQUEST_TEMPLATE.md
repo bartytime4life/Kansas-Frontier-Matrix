@@ -8,7 +8,7 @@ owners: @bartytime4life
 created: REVIEW-REQUIRED
 updated: REVIEW-REQUIRED
 policy_label: public
-related: [README.md, CONTRIBUTING.md, .github/README.md, SECURITY.md, .github/CODEOWNERS]
+related: [README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, SECURITY.md]
 tags: [kfm, github, pull-request, governance]
 notes: [doc_id and created/updated remain REVIEW-REQUIRED until canonical doc registry and target-branch git history are verified.]
 [/KFM_META_BLOCK_V2] -->
@@ -19,28 +19,32 @@ Kansas Frontier Matrix pull request contract.
 Complete every section that applies.
 If a section does not apply, write "N/A" rather than deleting it.
 Keep the change small, reversible, and explicit about what is CONFIRMED, INFERRED, PROPOSED, UNKNOWN, or NEEDS VERIFICATION.
-For undisclosed security findings, use SECURITY.md rather than describing exploit details in a public PR.
+For undisclosed security findings or exploit details, use the private reporting lane described in `.github/SECURITY.md` rather than describing them in a public PR.
 
 Helpful references:
 - README.md
+- CHANGELOG.md
 - CONTRIBUTING.md
 - .github/README.md
-- SECURITY.md
 - .github/CODEOWNERS
+- .github/SECURITY.md
+- SECURITY.md
 -->
 
-<!-- Keep this template synchronized with README.md, CONTRIBUTING.md, .github/README.md, SECURITY.md, and .github/CODEOWNERS on the same branch. -->
+<!-- Keep this template synchronized with README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/SECURITY.md, SECURITY.md, and .github/CODEOWNERS on the same branch. -->
 
 > Fill every applicable section.  
 > Use `N/A` rather than deleting sections.  
 > Keep truth labels honest and keep `UNKNOWN` / `NEEDS VERIFICATION` visible until closed.  
-> Link validation evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.
+> Link validation evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.  
+> If the working branch proves repo state that public `main` docs do not yet show, say so explicitly below.
 
 ## Summary
 - What changed:
 - Why:
 - Linked issue / ADR / discussion:
 - Evidence / proof-pack / run links:
+- Working-branch evidence delta (if public `main` is stale for this PR):
 
 ---
 
@@ -58,6 +62,7 @@ Helpful references:
 ## Affected repo surfaces
 - [ ] `.github/`
 - [ ] `apps/`
+- [ ] `brand/`
 - [ ] `configs/`
 - [ ] `contracts/`
 - [ ] `data/`
@@ -66,6 +71,7 @@ Helpful references:
 - [ ] `infra/`
 - [ ] `migrations/`
 - [ ] `packages/`
+- [ ] `pipelines/`
 - [ ] `policy/`
 - [ ] `schemas/`
 - [ ] `scripts/`
@@ -162,6 +168,7 @@ Fill only the labels that apply to this PR.
 ---
 
 ## Docs, contracts, and policy
+- [ ] CHANGELOG updated or explicitly not needed
 - [ ] README / docs updated
 - [ ] Runbook / ADR update included
 - [ ] OpenAPI / schema / contract updated
@@ -202,6 +209,16 @@ Explanation:
 - [ ] Paths / links / commands checked
 - [ ] Screenshots / diagrams / examples updated if described behavior changed
 - [ ] No wording silently overclaims mounted implementation, enforcement, or automation
+
+</details>
+
+<details>
+<summary>Gatehouse / <code>.github</code> / control plane</summary>
+
+- [ ] Current public `main` facts and working-branch-only facts are kept distinct
+- [ ] `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `.github/README.md`, `.github/CODEOWNERS`, and security-routing docs stay aligned where touched
+- [ ] Workflow / action / watcher claims do not overstate rulesets, required checks, OIDC wiring, or other platform-only settings
+- [ ] No review, policy, or release-evidence bypass was introduced
 
 </details>
 
@@ -257,7 +274,7 @@ Explanation:
 
 - [ ] No direct exposure of canonical stores, restricted artifacts, or model runtime
 - [ ] Rights / redaction / generalization impact reviewed
-- [ ] Security disclosure concerns handled through `SECURITY.md` if needed
+- [ ] Security disclosure concerns handled through `.github/SECURITY.md` if needed
 - [ ] Sensitive data / precise-location exposure reviewed
 - [ ] Threat-model impact reviewed where relevant
 
