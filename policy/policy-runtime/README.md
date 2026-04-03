@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-22
-updated: 2026-03-23
+updated: 2026-04-03
 policy_label: public
-related: [../README.md, ../bundles/README.md, ../bundles/runtime/README.md, ../fixtures/README.md, ../tests/README.md, ../../tests/README.md, ../../tests/policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../.github/workflows/README.md]
+related: [../README.md, ../bundles/README.md, ../bundles/runtime/README.md, ../fixtures/README.md, ../tests/README.md, ../../tests/README.md, ../../tests/policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../packages/policy/README.md, ../../apps/api/src/api/README.md, ../../.github/workflows/README.md]
 tags: [kfm, policy, runtime]
-notes: [doc_id placeholder pending repo-backed document registry verification, dates grounded in current public file history on main, owner grounded in .github/CODEOWNERS]
+notes: [doc_id placeholder pending repo-backed document registry verification, created date grounded in current public file history on main, updated date reflects this draft revision and should be reconciled to the actual merge date if committed later, owner grounded in .github/CODEOWNERS, current packages/policy neighbor confirmed on public main, dedicated packages/policy-runtime path remains unverified]
 [/KFM_META_BLOCK_V2] -->
 
 # Policy Runtime
@@ -19,18 +19,29 @@ _Runtime-facing policy semantics, decision coordination, and CI/runtime parity f
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
-> ![status](https://img.shields.io/badge/status-experimental-blue) ![surface](https://img.shields.io/badge/surface-policy--runtime-1f6feb) ![posture](https://img.shields.io/badge/posture-deny--by--default-bd561d) ![outcomes](https://img.shields.io/badge/runtime-finite_outcomes-6f42c1) ![verification](https://img.shields.io/badge/public--main-repo--scaffold-orange)
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-policy%2Fruntime-1f6feb) ![posture](https://img.shields.io/badge/posture-deny--by--default-critical) ![outcomes](https://img.shields.io/badge/runtime-finite_outcomes-6f42c1) ![inventory](https://img.shields.io/badge/public_main-README--first-lightgrey)
 >
-> **Repo fit:** `policy/policy-runtime/README.md` · Up: [`../README.md`](../README.md) · Related: [`../bundles/README.md`](../bundles/README.md), [`../bundles/runtime/README.md`](../bundles/runtime/README.md), [`../fixtures/README.md`](../fixtures/README.md), [`../tests/README.md`](../tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
+> **Repo fit:** `policy/policy-runtime/README.md`  
+> **Upstream:** [`../README.md`](../README.md)  
+> **Adjacent policy + proof lanes:** [`../bundles/README.md`](../bundles/README.md), [`../bundles/runtime/README.md`](../bundles/runtime/README.md), [`../fixtures/README.md`](../fixtures/README.md), [`../tests/README.md`](../tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md)  
+> **Current shared/runtime neighbors:** [`../../packages/policy/README.md`](../../packages/policy/README.md), [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
 >
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#runtime-policy-shape) · [Tables](#boundary-matrix) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This directory is a **runtime-policy documentation and coordination seam**, not proof of a mounted runtime implementation.
+> This directory is a **runtime-policy documentation and coordination seam**.
+>
+> It does **not** prove:
+> 1. a mounted policy decision point,
+> 2. a route-handling runtime implementation,
+> 3. a shared internal helper package beyond the repo-visible `packages/policy/` boundary, or
+> 4. a dedicated `packages/policy-runtime/` split.
 >
 > Keep a hard boundary between:
-> 1. **policy artifacts** such as rule packs, fixtures, and policy tests, and
-> 2. **runtime glue** such as bundle loaders, decision mediators, or request adapters, which belong in a verified runtime package path only after the repo proves them.
+> - **top-level policy artifacts** such as rule packs, fixtures, and policy tests,
+> - **shared internal policy-support helpers** that may live in [`../../packages/policy/README.md`](../../packages/policy/README.md),
+> - **governed API/runtime entrypoints** that belong in verified app surfaces such as [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md), and
+> - **any future dedicated runtime package split**, which remains **PROPOSED / NEEDS VERIFICATION** until the active branch proves it.
 
 ---
 
@@ -45,7 +56,7 @@ This README exists to keep the policy/runtime boundary inspectable. It is the pl
 - reason and obligation vocabulary expectations
 - CI/runtime semantic parity
 - explainability and audit-link expectations
-- handoff points between policy bundles, fixtures, tests, contracts, schemas, and any future runtime package
+- handoff points between policy bundles, fixtures, tests, contracts, schemas, shared internal policy helpers, and outward API/runtime envelopes
 
 ### Status posture used here
 
@@ -65,7 +76,7 @@ This README exists to keep the policy/runtime boundary inspectable. It is the pl
 
 ### Why this README exists
 
-The public repo exposes `policy/` as a first-class top-level area, and the current `main` branch also exposes a dedicated `policy/policy-runtime/` subtree. At the same time, the adjacent policy and test docs repeatedly warn against converting documentation seams into unverified implementation claims.
+The public repo exposes `policy/` as a first-class top-level area, and the current `main` branch also exposes a dedicated `policy/policy-runtime/` subtree. At the same time, adjacent policy, package, API, and test docs repeatedly warn against converting documentation seams into unverified implementation claims.
 
 That makes this file responsible for one thing above all:
 
@@ -83,8 +94,24 @@ That makes this file responsible for one thing above all:
 | `tests/policy/README.md` | Repo-facing policy behavior proof lane | **CONFIRMED path / README-only current snapshot** |
 | `../../contracts/README.md` | Stronger working signal for machine-readable trust-bearing contracts | **CONFIRMED** |
 | `../../schemas/README.md` | Secondary schema surface with explicit drift cautions | **CONFIRMED** |
+| `../../packages/policy/README.md` | Current shared internal policy-support boundary | **CONFIRMED path / README-only current snapshot** |
+| `../../apps/api/src/api/README.md` | Current governed API enforcement boundary for outward runtime surfaces | **CONFIRMED path / draft boundary README** |
 | `../../.github/workflows/README.md` | Workflow policy/documentation seam; current public `main` shows README only | **CONFIRMED path / README-only current snapshot** |
-| `packages/policy-runtime/` | Possible future runtime implementation seam for loaders/mediators/adapters | **PROPOSED** |
+| `packages/policy-runtime/` | Sometimes implied as a future dedicated runtime package split | **PROPOSED / NEEDS VERIFICATION** |
+
+### Current verification delta worth carrying forward
+
+This revision preserves the strong boundary-first shape of the checked-in file, but it sharpens two repo-visible neighbors that are easy to under-model:
+
+- **`packages/policy/` is current and real** as the shared internal policy-support boundary.
+- **`apps/api/src/api/` is current and real** as the governed API enforcement boundary for outward runtime behavior.
+
+That means this README should no longer force every runtime-adjacent implementation thought into a single future `packages/policy-runtime/` seam. The repo already shows a better current distinction:
+
+- top-level `policy/` explains and governs policy,
+- `packages/policy/` may hold shared internal policy-support helpers,
+- `apps/api/src/api/` owns outward route and enforcement behavior,
+- and any dedicated `packages/policy-runtime/` split remains a future boundary decision until proven.
 
 ### Practical interpretation
 
@@ -92,11 +119,17 @@ Use this directory to explain runtime policy behavior and to point maintainers t
 
 Do **not** use it to imply that the repo already contains:
 
-- a mounted policy decision point
-- request-time bundle loaders
-- live OPA/Rego wiring
-- merge-blocking runtime policy workflows on the current public branch
-- a verified `packages/policy-runtime/` implementation
+- a mounted policy decision point,
+- request-time bundle loaders,
+- live OPA/Rego wiring,
+- merge-blocking runtime policy workflows on the current public branch,
+- or a verified `packages/policy-runtime/` implementation.
+
+Also do **not** use this directory to blur the current difference between:
+
+- `policy/policy-runtime/` as a **documentation and coordination seam**,
+- `packages/policy/` as a **shared internal support boundary**,
+- and `apps/api/src/api/` as a **governed outward enforcement boundary**.
 
 [Back to top](#policy-runtime)
 
@@ -112,6 +145,7 @@ The following content belongs here:
 - explain-trace expectations for request-time decisions
 - CI/runtime parity notes for policy evaluation
 - references to runtime-focused bundle packs, fixtures, and tests
+- boundary notes that keep `policy/`, `packages/policy/`, and outward API/runtime surfaces distinct
 - review checklists for runtime-significant policy changes
 - correction and withdrawal behavior where runtime decisions affect public meaning
 
@@ -120,7 +154,8 @@ The following content belongs here:
 - “What does `DENY` mean on a public request surface?”
 - “Which obligations must survive into the outward envelope?”
 - “Which fixtures prove runtime abstention behavior?”
-- “Where do runtime policy bundles live versus contract files?”
+- “Which package path is current today: `packages/policy/` or `packages/policy-runtime/`?”
+- “Which outward runtime fields must stay explicit at the governed API boundary?”
 - “How should a corrected or withdrawn release affect runtime answers?”
 
 [Back to top](#policy-runtime)
@@ -138,9 +173,11 @@ The following do **not** belong in this directory:
 | Bundle-local policy assertions | [`../tests/README.md`](../tests/README.md) |
 | Repo-facing policy behavior proofs | [`../../tests/policy/README.md`](../../tests/policy/README.md) |
 | Canonical contract authority for shared runtime objects | [`../../contracts/README.md`](../../contracts/README.md) |
-| Competing schema families that drift from contract authority | Reconcile at `../../contracts/` first |
+| Competing schema families that drift from contract authority | Reconcile at [`../../contracts/README.md`](../../contracts/README.md) first |
+| Shared internal policy-support adapters, obligation helpers, or decision normalizers | [`../../packages/policy/README.md`](../../packages/policy/README.md) |
+| Governed API route handlers, request mediation, outward error mapping, or public runtime entrypoints | [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) or other verified app surfaces |
+| A dedicated runtime package split that is not yet visible on the working branch | Document the split only after `packages/policy-runtime/` is actually present |
 | Secrets, tokens, policy credentials, signing material | Secret manager / verified infra path |
-| HTTP handlers, bundle loaders, decision mediators, adapter code | Verified runtime package such as `packages/policy-runtime/` |
 | Product-surface copy and interaction design | Product/app/UI docs |
 | Ad hoc scratch notes or one-off experiments | issue / ADR / runbook / draft location with explicit scope |
 
@@ -175,6 +212,22 @@ tests/
 └── policy/
     └── README.md
 
+contracts/
+└── README.md
+
+schemas/
+└── README.md
+
+packages/
+└── policy/
+    └── README.md
+
+apps/
+└── api/
+    └── src/
+        └── api/
+            └── README.md
+
 .github/
 └── workflows/
     └── README.md
@@ -202,22 +255,29 @@ tests/
 └── policy/               # repo-facing policy behavior proofs and trust-bearing regressions
 
 contracts/
-├── v1/                   # canonical object shapes and contract families
-├── fixtures/             # contract-level valid / invalid examples
-└── README.md
+└── README.md             # canonical shared runtime object and vocabulary authority
 
 schemas/
 └── README.md             # secondary schema surface; drift risk if treated as co-equal authority
 
 packages/
-└── policy-runtime/       # PROPOSED runtime loader / mediator / adapter package
+└── policy/
+    └── README.md         # current shared internal policy-support boundary
+
+apps/
+└── api/src/api/
+    └── README.md         # current outward enforcement boundary
+
+packages/
+└── policy-runtime/       # PROPOSED dedicated runtime split only if the active branch proves it
 ```
 
 > [!NOTE]
 > The map above is intentionally mixed:
-> - the **current public-main tree** is repo-visible
-> - the **responsibility split** is doctrine-aligned
-> - the **runtime package seam** remains **PROPOSED** until a mounted implementation proves it
+> - the **current public-main tree** is repo-visible,
+> - the **responsibility split** is doctrine-aligned,
+> - the **current shared internal package** is `packages/policy/`,
+> - and the **dedicated runtime package split** remains **PROPOSED / NEEDS VERIFICATION** until the active branch proves it.
 
 [Back to top](#policy-runtime)
 
@@ -250,28 +310,37 @@ find tests -maxdepth 4 \
 find contracts schemas -maxdepth 4 -type f | sort
 ```
 
-### 4) Search for finite runtime outcomes and policy vocabulary
+### 4) Inspect the current shared internal policy-support and outward API seams
 
 ```bash
-grep -RInE 'ANSWER|ABSTAIN|DENY|ERROR|reason_codes|obligation_codes|policy_bundle_version|audit_ref' \
-  policy tests contracts schemas .github 2>/dev/null
+sed -n '1,260p' packages/policy/README.md
+sed -n '1,260p' apps/api/src/api/README.md
 ```
 
-### 5) Check whether workflow-backed policy gates are actually present
+### 5) Search for finite runtime outcomes and policy vocabulary
+
+```bash
+grep -RInE 'ANSWER|ABSTAIN|DENY|ERROR|reason_codes|obligation_codes|policy_bundle_version|audit_ref|RuntimeResponseEnvelope|EvidenceBundle' \
+  policy tests contracts schemas packages apps .github 2>/dev/null
+```
+
+### 6) Check whether workflow-backed policy gates are actually present
 
 ```bash
 find .github/workflows -maxdepth 2 -type f | sort
 grep -RInE 'opa|rego|conftest|policy' .github/workflows 2>/dev/null
 ```
 
-### 6) Confirm whether a runtime implementation seam exists before documenting it as fact
+### 7) Confirm whether a dedicated runtime package split exists before documenting it as fact
 
 ```bash
-find packages -maxdepth 3 -type d -name 'policy-runtime' 2>/dev/null
+find packages -maxdepth 3 \
+  \( -type d -name 'policy' -o -type d -name 'policy-runtime' \) \
+  -print | sort
 ```
 
 > [!WARNING]
-> If the mounted checkout does **not** prove a runtime package, keep all package-level references in this README marked **PROPOSED** or **NEEDS VERIFICATION**.
+> If the mounted checkout does **not** prove a dedicated `packages/policy-runtime/` path, keep that split marked **PROPOSED** or **NEEDS VERIFICATION** and avoid confusing it with the current `packages/policy/` boundary.
 
 [Back to top](#policy-runtime)
 
@@ -283,13 +352,15 @@ find packages -maxdepth 3 -type d -name 'policy-runtime' 2>/dev/null
 
 1. Update the adjacent policy docs first so runtime meaning stays aligned with [`policy/README.md`](../README.md).
 2. Reconcile outward semantics with `contracts/` before adding local prose.
-3. Add or update fixtures for:
+3. Recheck [`../../packages/policy/README.md`](../../packages/policy/README.md) if the change affects shared internal reason/obligation handling.
+4. Recheck [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) if the change affects outward envelopes, route behavior, or error shaping.
+5. Add or update fixtures for:
    - allow / answer
    - abstain
    - deny
    - error
    - correction-sensitive cases where applicable
-4. Check that docs, fixtures, and tests still describe the same finite grammar.
+6. Check that docs, fixtures, and tests still describe the same finite grammar.
 
 ### When you add a runtime-focused policy family
 
@@ -297,7 +368,9 @@ find packages -maxdepth 3 -type d -name 'policy-runtime' 2>/dev/null
 2. Put examples and negative cases in `../fixtures/`.
 3. Put bundle-local assertions in `../tests/`.
 4. Put repo-facing trust and regression proof in `../../tests/policy/` when the new family affects cross-surface runtime behavior.
-5. Add a short entry here only if the new rule family changes how runtime decisions are interpreted by Explore, Dossier, Story, Focus, Compare, Export, or review surfaces.
+5. Update `packages/policy/` only if the new family introduces **shared internal** helpers.
+6. Update outward app/runtime docs only if the new family changes governed API behavior.
+7. Add a short entry here only if the new rule family changes how runtime decisions are interpreted by Explore, Dossier, Story, Focus, Compare, Export, or review surfaces.
 
 ### When CI and runtime semantics drift
 
@@ -305,21 +378,22 @@ Treat that as a trust failure, not a wording issue.
 
 Use this directory to record:
 
-- what drift occurred
-- which path was stronger (`CI`, `runtime`, or contract authority)
-- what fixtures were added to prevent recurrence
-- whether the incident requires correction or withdrawal behavior in public surfaces
+- what drift occurred,
+- which path was stronger (`CI`, `runtime`, or contract authority),
+- what fixtures were added to prevent recurrence,
+- whether shared internal helpers or outward API boundaries were affected,
+- and whether the incident requires correction or withdrawal behavior in public surfaces.
 
 ### When public meaning can change
 
 If a runtime decision changes what a user can see or rely on, document the expected relationship between:
 
-- decision
-- obligation
-- outward envelope
-- evidence linkage
-- audit linkage
-- correction or withdrawal behavior
+- decision,
+- obligation,
+- outward envelope,
+- evidence linkage,
+- audit linkage,
+- and correction or withdrawal behavior.
 
 [Back to top](#policy-runtime)
 
@@ -348,15 +422,23 @@ flowchart TD
     O[policy/fixtures] --> C
     P[policy/tests] --> C
     Q[tests/policy] --> C
-    R[packages/policy-runtime]
-    R -. PROPOSED runtime loader / mediator seam .-> D
+
+    R[packages/policy]
+    R -. current shared internal helpers .-> C
+
+    S[apps/api/src/api]
+    S -. outward enforcement boundary .-> B
+
+    T[packages/policy-runtime]
+    T -. PROPOSED dedicated runtime split .-> D
 ```
 
 ### Reading rule for the diagram
 
 - **Solid lines** represent the runtime-policy meaning this README should describe.
-- **Dashed line** represents a likely implementation seam that must stay **PROPOSED** until verified.
+- **Dashed lines** represent current adjacent boundaries or future split points that must stay explicitly labeled.
 - **Finite outcome set** is intentional: runtime trust depends on explicit negative states, not fallback prose.
+- **Current `packages/policy/`** and **future `packages/policy-runtime/`** are not interchangeable.
 
 [Back to top](#policy-runtime)
 
@@ -373,8 +455,10 @@ flowchart TD
 | `tests/policy/` | Hold repo-facing policy behavior proofs | Drift from contract/runtime semantics while still passing prose review | **CONFIRMED path / README-only current snapshot** |
 | `contracts/` | Own canonical shared object shapes and vocabularies | Be bypassed by local one-off schemas | **CONFIRMED** |
 | `schemas/` | Remain a secondary schema surface unless authority is explicitly redefined | Drift into a competing schema universe | **CONFIRMED risk seam** |
+| `packages/policy/` | Hold shared internal policy-support helpers | Quietly become a second policy authority or a route-facing runtime surface | **CONFIRMED path / README-only current snapshot** |
+| `apps/api/src/api/` | Enforce outward request/response behavior at the governed API edge | Become the sovereign home for policy rules or shared vocabularies | **CONFIRMED path / draft boundary README** |
 | `.github/workflows/` | Carry workflow-backed gates when they exist | Be described here as current enforcement if only README scaffolding is present | **CONFIRMED path / README-only current snapshot** |
-| `packages/policy-runtime/` | Load bundles, mediate decisions, adapt to runtime request flow | Be documented here as implemented without proof | **PROPOSED** |
+| `packages/policy-runtime/` | Hold a future dedicated runtime-package split if the branch introduces one | Be documented here as current implementation without proof | **PROPOSED / NEEDS VERIFICATION** |
 
 [Back to top](#policy-runtime)
 
@@ -407,6 +491,9 @@ If a case does not qualify as `ANSWER`, it must remain visibly negative, constra
 | `obligation_codes` | Carries required follow-on behavior | shared vocab / contract authority |
 | `policy_bundle_version` | Lets runtime behavior be traced to a specific rule set | policy + contract seam |
 | `audit_ref` | Connects user-visible behavior to runtime and review history | runtime / audit seam |
+| `dataset_version_id` | Keeps outward responses tied to promoted scope instead of ambient data state | governed API response contract |
+| artifact digests / checksums | Make outward payloads auditable and correction-ready | response contract + catalog closure |
+| `policy_label` | Keeps user-visible restriction state explicit rather than implied | response contract + policy surface |
 | evidence refs | Prevent unsupported “citation-like” prose | contracts + evidence resolver seam |
 | correction / withdrawal refs | Keep change visible instead of silent | correction / release seam |
 | finite outcome enum | Preserves fail-closed behavior | outward response contract |
@@ -421,11 +508,13 @@ If a case does not qualify as `ANSWER`, it must remain visibly negative, constra
 
 - [ ] Mounted checkout inspected before claiming implementation facts.
 - [ ] All relative links in this README resolve.
-- [ ] Any mention of runtime glue remains **PROPOSED** unless the package path is confirmed.
+- [ ] Current `packages/policy/README.md` and `apps/api/src/api/README.md` neighbors are still present and still the right links.
+- [ ] Any mention of a dedicated `packages/policy-runtime/` split remains **PROPOSED** or **NEEDS VERIFICATION** unless the active branch proves it.
 - [ ] Any mention of OPA/Rego stays scoped as starter direction unless actual mounted bundles/tests are visible.
 - [ ] `contracts/` remains the named authority for shared runtime object shapes.
 - [ ] `schemas/` is not silently treated as a second sovereign schema home.
-- [ ] Runtime outcome grammar here matches adjacent policy and contract docs.
+- [ ] Shared internal helper placement and outward API placement stay explicitly distinct.
+- [ ] Runtime outcome grammar here matches adjacent policy, contract, and outward API docs.
 - [ ] At least one negative-path example exists for deny or abstain behavior before this README is called “stable.”
 - [ ] CI/runtime parity expectations are documented without implying checked-in workflow YAML that is not present.
 - [ ] Correction-sensitive runtime behavior is described where public meaning can change.
@@ -437,7 +526,8 @@ If a case does not qualify as `ANSWER`, it must remain visibly negative, constra
 - [ ] `policy/tests/` contains bundle-local parity or regression checks.
 - [ ] `tests/policy/` contains repo-facing policy behavior proofs.
 - [ ] `contracts/` contains the canonical runtime envelope and decision-related artifacts.
-- [ ] The mounted workspace confirms whether `packages/policy-runtime/` exists and what it owns.
+- [ ] The mounted workspace confirms what belongs in current `packages/policy/` and whether any separate `packages/policy-runtime/` split exists.
+- [ ] `apps/api/src/api/` documents or proves the outward envelope fields this README names.
 - [ ] This README no longer has to rely on scaffold-only neighbor directories for context.
 
 [Back to top](#policy-runtime)
@@ -450,12 +540,19 @@ If a case does not qualify as `ANSWER`, it must remain visibly negative, constra
 
 No. This path is the **documentation and coordination surface** for runtime policy semantics. Engine code, bundle loading, request mediation, or adapter logic must be verified elsewhere before being documented as implementation fact.
 
-### Is `policy/policy-runtime/` the same thing as `packages/policy-runtime/`?
+### Is `policy/policy-runtime/` the same thing as `packages/policy/` or `packages/policy-runtime/`?
 
 No.
 
-`policy/policy-runtime/` is a repo-visible documentation seam under `policy/`.  
-`packages/policy-runtime/` is a **PROPOSED** implementation seam commonly referenced by nearby doctrine. Treat them as related but not interchangeable.
+- `policy/policy-runtime/` is a repo-visible documentation seam under top-level `policy/`.
+- `packages/policy/` is the current repo-visible shared internal policy-support boundary.
+- `packages/policy-runtime/` is a **PROPOSED / NEEDS VERIFICATION** future split sometimes implied by nearby doctrine.
+
+Treat them as related but not interchangeable.
+
+### Why mention `apps/api/src/api/` here?
+
+Because outward runtime behavior is not just a package concern. The current repo also exposes a governed API enforcement boundary for request validation, policy-safe response shaping, evidence resolution orchestration, and outward error handling. If runtime semantics change what the user sees, that API seam matters.
 
 ### Does this README prove executable runtime policy files already exist?
 
@@ -473,7 +570,7 @@ No. Put canonical shared object shapes under `contracts/`, then link to them fro
 
 ### What is the main failure mode to avoid?
 
-The main failure mode is **trust theater**: rich prose that makes runtime governance sound implemented when the mounted repo has not yet proven bundles, fixtures, tests, loaders, or workflow gates.
+The main failure mode is **trust theater**: rich prose that makes runtime governance sound implemented when the mounted repo has not yet proven bundles, fixtures, tests, loaders, helper placement, outward API behavior, or workflow gates.
 
 [Back to top](#policy-runtime)
 
@@ -493,7 +590,9 @@ The main failure mode is **trust theater**: rich prose that makes runtime govern
 | Are runtime fixtures present under `policy/fixtures/` beyond README guidance? | **NEEDS VERIFICATION** |
 | Are bundle-local runtime policy tests present under `policy/tests/`? | **NEEDS VERIFICATION** |
 | Are repo-facing runtime behavior proofs present under `tests/policy/`? | **NEEDS VERIFICATION** |
-| Does a real `packages/policy-runtime/` package exist? | **NEEDS VERIFICATION** |
+| What shared internal runtime-adjacent behavior, if any, already belongs in `packages/policy/`? | **NEEDS VERIFICATION** |
+| Does a real `packages/policy-runtime/` package exist on the working branch? | **NEEDS VERIFICATION** |
+| Which outward envelope fields are canonical in `apps/api/src/api/` versus illustrative draft text? | **NEEDS VERIFICATION** |
 | Are merge-blocking runtime policy workflows checked in on the mounted branch? | **NEEDS VERIFICATION** |
 | Which shared contracts are authoritative for runtime outcomes and decision semantics? | **NEEDS VERIFICATION** |
 
@@ -509,15 +608,18 @@ find tests/policy -maxdepth 5 -print | sort
 # 3) contract / schema overlap
 find contracts schemas -maxdepth 5 -print | sort
 
-# 4) runtime package seam
-find packages -maxdepth 5 -print | sort | grep 'policy-runtime' || true
+# 4) current package and possible runtime split
+find packages -maxdepth 5 -print | sort | grep -E 'packages/(policy|policy-runtime)' || true
 
-# 5) workflow evidence
+# 5) outward API boundary
+find apps/api/src/api -maxdepth 5 -print | sort
+
+# 6) workflow evidence
 find .github/workflows -maxdepth 3 -type f | sort
 
-# 6) vocabulary and outcome semantics
-grep -RInE 'ANSWER|ABSTAIN|DENY|ERROR|reason_codes|obligation_codes|policy_bundle_version' \
-  policy tests contracts schemas .github 2>/dev/null
+# 7) vocabulary and outcome semantics
+grep -RInE 'ANSWER|ABSTAIN|DENY|ERROR|reason_codes|obligation_codes|policy_bundle_version|audit_ref|dataset_version_id|policy_label' \
+  policy tests contracts schemas packages apps .github 2>/dev/null
 ```
 
 ### PROPOSED runtime artifact families to reconcile against contracts
@@ -534,11 +636,13 @@ Keep this README short on implementation claims and strong on boundaries.
 
 When the mounted repo proves more, move authority outward to:
 
-- `contracts/` for shared shapes
-- `policy/bundles/runtime/` for executable bundle packs
-- `policy/tests/` for bundle-local parity assertions
-- `tests/policy/` for repo-facing runtime behavior proof
-- `packages/policy-runtime/` for runtime glue
+- `contracts/` for shared shapes,
+- `policy/bundles/runtime/` for executable bundle packs,
+- `policy/tests/` for bundle-local parity assertions,
+- `tests/policy/` for repo-facing runtime behavior proof,
+- `packages/policy/` for shared internal helpers that are actually present,
+- `apps/api/src/api/` for outward route and envelope behavior,
+- and `packages/policy-runtime/` only if the active branch explicitly introduces that split.
 
 Then reduce the explanatory weight here instead of duplicating it.
 
