@@ -10,7 +10,7 @@ updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
 related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../watchers/README.md, ../dependabot.yml, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../apps/, ../../packages/]
 tags: [kfm, github, workflows, ci-cd, docops]
-notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; doc_id, created/updated dates, and policy_label still need repo confirmation.]
+notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; the public Actions page and adjacent `.github/actions/` tree provide reconstruction clues but do not prove current checked-in YAML inventory; doc_id, created/updated dates, and policy_label still need repo confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -30,9 +30,12 @@ Governed GitHub Actions surface for validation, promotion, release evidence, and
 > Current public `main` inspection confirms `.github/workflows/` contains `README.md` only.
 
 > [!NOTE]
-> Public GitHub UI still shows recent Actions activity and deleted workflow filenames such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml`.
+> Public GitHub Actions surfaces still carry useful reconstruction clues, but they must be read carefully:
 >
-> Treat that as **historical signal**, not as proof that those YAML files are checked in on current `main`.
+> - the Actions sidebar currently shows UI workflow surfaces such as `Copilot coding agent` and `Dependabot Updates`
+> - public delete-run history still exposes removed lane names such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml`
+>
+> Treat all of that as **historical or platform signal**, not as proof that those YAML files are checked in on current `main`.
 
 ---
 
@@ -70,7 +73,7 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | --- | --- | --- |
 | Parent governance surface | [`../README.md`](../README.md) | Explains `.github/` as the repository-side gatehouse for review, verification, and governed delivery |
 | Review ownership | [`../CODEOWNERS`](../CODEOWNERS) | Makes review boundaries executable |
-| PR evidence template | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Keeps workflow changes aligned with proof links, truth labels, and rollback expectations |
+| PR evidence template | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Keeps workflow changes aligned with proof links, truth labels, validation links, and rollback expectations |
 | GitHub security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps workflow and repo security guidance close to the same governance boundary |
 | Reusable repo-local actions | [`../actions/README.md`](../actions/README.md) | Composite or reusable action logic belongs there, not in this directory |
 | Adjacent automation scaffolds | [`../watchers/README.md`](../watchers/README.md) | Watcher documentation may point toward future orchestration seams, but does not by itself prove current workflow inventory |
@@ -87,8 +90,10 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | --- | --- | --- |
 | `./README.md` | Present | **CONFIRMED** |
 | `./*.yml` / `./*.yaml` workflow files | Not visible in the current public `main` directory listing | **CONFIRMED** current snapshot |
-| Public Actions history | GitHub’s public Actions UI shows prior workflow activity and deleted workflow filenames | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
-| `.github/actions/` local action inventory | Repo-local action surfaces exist under `../actions/` | **CONFIRMED** adjacent implementation seam |
+| Actions sidebar workflow list | Public Actions page currently lists `Copilot coding agent` and `Dependabot Updates` | **CONFIRMED** UI surface / **UNKNOWN** checked-in YAML provenance |
+| Public delete-run history | Public Actions page currently shows delete-run entries involving `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
+| Delete-run `View workflow file` links | Some public delete-run entries expose per-run workflow-file snapshots | **CONFIRMED** historical reconstruction clue / **NEEDS VERIFICATION** before reuse |
+| `.github/actions/` local action inventory | Public tree shows `metadata-validate-v2/`, `metadata-validate/`, `opa-gate/`, `provenance-guard/`, `sbom-produce-and-sign/`, `src/`, `README.md`, and `action.yml` under `../actions/` | **CONFIRMED** adjacent implementation seam |
 | `.github/watchers/README.md` references | Adjacent docs mention watcher-related workflow scaffolding such as `watchers-kansas-env.yml` | **CONFIRMED** adjacent doc signal / **NEEDS VERIFICATION** as current or historical workflow inventory |
 | `../CODEOWNERS` workflow ownership | Current parent-path coverage assigns `/.github/` to `@bartytime4life`; `/.github/workflows/` is not called out separately | **CONFIRMED** parent coverage / **INFERRED** workflow-path coverage |
 | Exact required checks / rulesets / environment approvals | Not derivable from public directory contents alone | **UNKNOWN** |
@@ -198,31 +203,37 @@ sed -n '1,260p' .github/README.md
 sed -n '1,240p' .github/CODEOWNERS
 grep -n "/.github" .github/CODEOWNERS || true
 
-# 4) Inventory actual workflow files, if any exist
+# 4) Read the PR evidence template that governs review language
+sed -n '1,260p' .github/PULL_REQUEST_TEMPLATE.md
+
+# 5) Inventory actual workflow files, if any exist
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | sort
 
-# 5) Inspect repo-local reusable actions before inventing workflow step glue
-ls -la .github/actions
-find .github/actions -maxdepth 2 -type f | sort | sed -n '1,120p'
+# 6) Inspect current repo-local actions before inventing new workflow step glue
+find .github/actions -maxdepth 1 -mindepth 1 -type d | sort
+find .github/actions -maxdepth 2 -name 'action.yml' | sort
 
-# 6) Check adjacent watcher docs for scaffold references that may need reconciliation
+# 7) Check adjacent watcher docs for scaffold references that may need reconciliation
 sed -n '1,260p' .github/watchers/README.md 2>/dev/null || true
 
-# 7) Cross-check repo surfaces workflows are expected to verify
+# 8) Cross-check repo surfaces workflows are expected to verify
 ls -la contracts schemas policy tests docs apps packages 2>/dev/null || true
 
-# 8) Search workflow-local docs for release-, policy-, or evidence-facing terms
+# 9) Search workflow-local docs for release-, policy-, or evidence-facing terms
 grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom" .github/workflows 2>/dev/null || true
 
-# 9) If the lane is being reconstructed, inspect git history instead of guessing
+# 10) If the lane is being reconstructed, inspect git history instead of guessing
 git log --name-status -- .github/workflows
 ```
 
+> [!TIP]
+> If public Actions history shows a delete-run for a lane you need to restore, use the run’s **View workflow file** snapshot as a last-known clue, then verify it against git history and current canonical repo surfaces before reintroducing anything.
+
 ### Minimal review order
 
-1. Read this file, then read [`../README.md`](../README.md), then read [`../../README.md`](../../README.md).
+1. Read this file, then read [`../README.md`](../README.md), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), and [`../../README.md`](../../README.md).
 2. Confirm the real workflow inventory before documenting or tightening gates.
-3. If a workflow lane is being reintroduced, inspect git history before choosing filenames or responsibilities.
+3. If a workflow lane is being reintroduced, inspect public delete-run clues and git history before choosing filenames or responsibilities.
 4. Verify ownership and merge-blocking assumptions against [`../CODEOWNERS`](../CODEOWNERS) and repo settings.
 5. Check whether repo-local actions under [`../actions/`](../actions/) already cover reusable workflow behavior.
 6. Treat watcher-local scaffold references as clues to reconcile, not as proof of current YAML presence.
@@ -244,6 +255,15 @@ Preferred posture:
 3. Keep the first reintroduced version PR-only, shadow, draft, or dry-run where possible.
 4. Declare explicit permissions.
 5. Update README, templates, and adjacent docs in the same PR.
+
+### Using public Actions history safely
+
+Keep the signals separated:
+
+- sidebar workflow labels such as `Copilot coding agent` and `Dependabot Updates` are **UI surfaces**, not checked-in inventory assertions for this directory
+- delete-run entries are stronger reconstruction clues because they reference actual workflow filenames
+- **View workflow file** snapshots are useful last-known YAML evidence, but they still need git-history and current-surface comparison before reuse
+- the first restored lane should still be the smallest reviewable version, not a maximal rewrite
 
 ### Editing blocking workflow gates
 
@@ -270,7 +290,12 @@ A workflow may *enforce* those surfaces. It should not become a shadow copy of t
 
 ### Distinguishing Actions UI surfaces from checked-in YAML
 
-The public Actions UI may show workflow surfaces such as platform-managed entries, historical deleted lanes, or recently removed workflow names. That is useful operational signal, but it should not overwrite the checked-in tree as the source of truth for current inventory.
+The public Actions UI may show workflow surfaces such as sidebar entries, historical deleted lanes, or recently removed workflow names. That is useful operational signal, but it should not overwrite the checked-in tree as the source of truth for current inventory.
+
+Current public examples:
+
+- sidebar entries: `Copilot coding agent`, `Dependabot Updates`
+- delete-run history: `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, `promote-and-reconcile.yml`
 
 Reading rule:
 
@@ -280,7 +305,15 @@ Reading rule:
 
 ### Reusing repo-local actions before creating new workflow glue
 
-The public `.github/actions/` tree already exposes local reusable action surfaces. Prefer consuming those seams before embedding repeated shell logic directly in future workflow YAML.
+The public `.github/actions/` tree already exposes reusable local seams such as:
+
+- `metadata-validate-v2`
+- `metadata-validate`
+- `opa-gate`
+- `provenance-guard`
+- `sbom-produce-and-sign`
+
+Prefer consuming those seams before embedding repeated shell logic directly in future workflow YAML.
 
 That keeps:
 
@@ -352,11 +385,12 @@ Definition of done for changes in `.github/workflows/`:
 
 - [ ] The actual current workflow inventory is listed exactly.
 - [ ] Historical workflow signal is kept separate from current checked-in inventory.
-- [ ] Platform-visible Actions UI entries are not silently rewritten as checked-in YAML facts.
+- [ ] Sidebar workflow labels and platform-visible Actions UI entries are not silently rewritten as checked-in YAML facts.
 - [ ] Every blocking workflow states what it proves.
 - [ ] Permissions are explicit and minimal.
 - [ ] Required checks and review boundaries are verified against active repo settings where relevant.
 - [ ] Repo-local actions are inspected before repeated step logic is added directly into YAML.
+- [ ] If public delete-run clues are used, the resulting YAML is compared against git history and current canonical repo surfaces before merge.
 - [ ] Adjacent watcher scaffold references are reconciled instead of being copied forward as assumed facts.
 - [ ] Docs, examples, and templates change in the same governed stream as workflow behavior.
 - [ ] A reintroduced lane is marked as a historical reconstitution or a net-new lane.
@@ -382,9 +416,9 @@ Because public Actions history is a real repo signal. It helps maintainers recon
 
 No. It explicitly distinguishes **current checked-in inventory** from **historical public signal**.
 
-### Why does the Actions tab still show workflow surfaces if the directory is README-only?
+### Why mention `Copilot coding agent` and `Dependabot Updates` if they are not listed in the directory tree?
 
-Because GitHub can surface platform-managed entries, historical runs, and deleted workflow names in the Actions UI. That activity is useful evidence of prior automation, but it is not proof of a current checked-in YAML file on `main`.
+Because the public Actions page currently exposes them as workflow-like UI surfaces. That is operationally useful context, but it is not the same thing as a checked-in `.github/workflows/*.yml` file on current `main`.
 
 ### Can workflow automation self-approve policy-significant or public-truth changes?
 
@@ -401,6 +435,44 @@ Only what the public repo tree, checked-in files, or current public GitHub UI vi
 ---
 
 ## Appendix
+
+<details>
+<summary><strong>Current public adjacent action directories (CONFIRMED)</strong></summary>
+
+```text
+.github/actions/
+├── metadata-validate-v2/
+├── metadata-validate/
+├── opa-gate/
+├── provenance-guard/
+├── sbom-produce-and-sign/
+├── src/
+├── README.md
+└── action.yml
+```
+
+Use this inventory as a step-level reuse clue. It does **not** by itself prove which historical workflow lane called which action, or whether every action is complete enough for reuse without inspection.
+
+</details>
+
+<details>
+<summary><strong>Current public Actions UI clues (CONFIRMED as UI signal, not checked-in inventory)</strong></summary>
+
+Current public UI clues worth treating carefully:
+
+- sidebar workflow labels currently visible: `Copilot coding agent`, `Dependabot Updates`
+- delete-run history currently visible for:
+  - `verify-docs.yml`
+  - `verify-contracts-and-policy.yml`
+  - `verify-runtime.yml`
+  - `verify-tests-and-reproducibility.yml`
+  - `release-evidence.yml`
+  - `promote-and-reconcile.yml`
+- some delete-run entries expose **View workflow file** links that may help recover last-known YAML snapshots
+
+Safe use rule: treat these as recovery clues and compare them against git history and current canonical repo surfaces before restoring or tightening anything.
+
+</details>
 
 <details>
 <summary><strong>Illustrative starter workflow skeleton (PROPOSED)</strong></summary>
