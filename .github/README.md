@@ -6,11 +6,11 @@ version: v2
 status: draft
 owners: @bartytime4life
 created: 2026-03-15
-updated: 2026-04-02
+updated: 2026-04-03
 policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../CONTRIBUTING.md, ../SECURITY.md, ../docs/governance/, ../docs/architecture/, ../docs/domains/, ../docs/runbooks/, ../docs/adr/, ../contracts/, ../policy/, ../data/registry/, ../apps/, ../packages/, ../infra/, ../tools/, ../scripts/, ../tests/, ./ISSUE_TEMPLATE/, ./actions/, ./watchers/, ./workflows/, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./SECURITY.md, ./dependabot.yml]
-tags: [kfm, github, governance, ci-cd, verification, review, delivery, dependabot, watchers]
-notes: [Created date preserved from the supplied baseline record; updated date reflects this draft revision; current public main now includes .github/watchers/; ISSUE_TEMPLATE/config.yml and actions/action.yml remain empty on current public main; workflows/ remains README-only; .github/SECURITY.md and ../SECURITY.md are not yet fully aligned; GitHub rulesets, required checks, environment approvals, and app/OIDC permissions remain NEEDS VERIFICATION.]
+related: [../README.md, ../CONTRIBUTING.md, ../SECURITY.md, ../docs/governance/, ../docs/architecture/, ../docs/domains/, ../docs/runbooks/, ../docs/adr/, ../contracts/, ../schemas/, ../policy/, ../data/registry/, ../apps/, ../packages/, ../pipelines/, ../infra/, ../scripts/, ../tests/, ../tools/, ./ISSUE_TEMPLATE/, ./actions/, ./watchers/, ./workflows/, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./SECURITY.md, ./dependabot.yml]
+tags: [kfm, github, governance, ci-cd, review, disclosure, dependabot, watchers]
+notes: [Created date preserved from the current checked-in baseline; updated date reflects this draft revision; current public main root includes pipelines/ with visible soils/gssurgo-ks and wbd-huc12-watcher lanes; checked-in dependabot.yml does not currently name /pipelines/* in its directory globs; ISSUE_TEMPLATE/config.yml and actions/action.yml are empty on current public main; workflows/ and watchers/ remain README-only on current public main; .github/SECURITY.md and ../SECURITY.md are not yet fully aligned; GitHub rulesets, required checks, environment approvals, monitored fallback channels, and app/OIDC permissions remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <div align="center">
@@ -27,7 +27,7 @@ Repository-wide governance, contributor intake, review routing, automation scaff
 ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da)
 ![repo](https://img.shields.io/badge/repo-public-1f6feb)
 ![branch](https://img.shields.io/badge/default%20branch-main-0a7d5a)
-![truth](https://img.shields.io/badge/truth-public%20tree%20inspected%20%7C%20KFM%20doctrine-6f42c1)
+![truth](https://img.shields.io/badge/truth-public%20tree%20inspected-6f42c1)
 ![delivery](https://img.shields.io/badge/delivery-gatehouse-0a7d5a)
 
 | Field | Value |
@@ -39,59 +39,38 @@ Repository-wide governance, contributor intake, review routing, automation scaff
 | Visibility | public |
 | Audience | maintainers, reviewers, contributors, release stewards |
 | Repo role | gatehouse for intake, review boundaries, local GitHub automation, workflow documentation, dependency-update policy, disclosure/release-control surfaces, and emit-only watcher scaffolding |
-| Trust posture | **CONFIRMED** current public repo tree and public Markdown surfaces · **CONFIRMED** KFM doctrine language already used in-repo · **UNKNOWN** GitHub rulesets, required checks, environment approvals, app permissions, OIDC wiring, and other platform-only settings |
+| Trust posture | **CONFIRMED** checked-in public tree and public Markdown surfaces · **UNKNOWN** GitHub rulesets, required checks, environment approvals, app permissions, OIDC wiring, and other platform-only settings |
 | Current public tree state | `.github/` contains `ISSUE_TEMPLATE/`, `actions/`, `watchers/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, and `dependabot.yml`; `ISSUE_TEMPLATE/config.yml` and `actions/action.yml` are empty; `watchers/` and `workflows/` are README-only on public `main` |
+| Current public root execution neighbor | repo root also includes `pipelines/` with visible `soils/gssurgo-ks/` and `wbd-huc12-watcher/`; `.github` should gate those trust-bearing changes without claiming to own their runtime code |
 
 **Quick jump:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Current public inventory](#current-public-inventory--control-surfaces) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This revision remains **public-tree-grounded** rather than merely documentary.
+> This README is intentionally **public-tree-grounded** rather than platform-assumptive.
 >
-> It keeps the strong structure of the current checked-in README, but updates it for the now-visible `.github/watchers/` lane, keeps workflow-YAML claims conservative, and makes the current security-path drift impossible to miss.
->
-> Use these labels throughout this file:
-> - **CONFIRMED** — directly supported by the current public repo tree or checked-in Markdown surfaces
-> - **INFERRED** — conservative interpretation that follows from confirmed repo evidence
-> - **PROPOSED** — doctrine-consistent realization guidance not yet proven as checked-in behavior
-> - **UNKNOWN** — not established strongly enough to present as current repo or platform reality
-> - **NEEDS VERIFICATION** — placeholder or platform detail that should be checked before merge
+> Use these labels consistently:
+> - **CONFIRMED** — directly supported by the current public repo tree or checked-in docs
+> - **INFERRED** — conservative interpretation of confirmed repo evidence
+> - **PROPOSED** — doctrine-consistent guidance not yet proven as current checked-in behavior
+> - **UNKNOWN** — not verified strongly enough to present as current reality
+> - **NEEDS VERIFICATION** — explicit review placeholder
 
 ## Scope
 
 `.github/` is KFM’s repository-level **gatehouse**.
 
-This is where contributor intake, review routing, ownership boundaries, disclosure posture, update automation, and workflow-bearing delivery controls become explicit repo surfaces instead of ambient intention. In KFM terms, `.github/` is one of the clearest repository expressions of the **trust membrane**: the place where changes are supposed to cross review, verification, and release-bearing gates before they widen into outward-facing consequence.
+This is where contributor intake, ownership boundaries, disclosure posture, dependency automation, and workflow-bearing delivery controls become explicit repo surfaces instead of ambient convention. In KFM terms, `.github/` is one of the clearest repository expressions of the **trust membrane**: the point where changes are expected to cross review, verification, and release-bearing gates before they widen into outward consequence.
 
-A strong `.github/` tree does more than “host CI.” It keeps responsibility visible. It shapes intake before drift spreads. It helps documentation, templates, policy checks, and release evidence move through one governed stream rather than fragment into side channels.
-
-Current public `main` also shows a second, more unusual role: `.github/` now hosts a small **watcher** lane. That lane is still docs-only in the checked-in tree, but it makes the gatehouse responsible not just for review and automation scaffolding, but also for describing how derived monitoring surfaces must remain **emit-only**, **rebuildable**, and **review-bearing** rather than silently publishing themselves.
+Current public `main` also gives `.github/` a second role: it now hosts a small **watcher** lane. That lane is still docs-only in the checked-in tree, but it matters architecturally because it makes the gatehouse responsible not only for review and automation scaffolding, but also for stating how derived monitoring surfaces remain **emit-only**, **rebuildable**, and **review-bearing**.
 
 ### Evidence boundary used here
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED doctrine language already present in-repo** | truth path, trust membrane, authoritative-versus-derived split, cite-or-abstain posture, fail-closed defaults, promotion as governed state transition, and documentation as a trust surface |
-| **CONFIRMED current public repo tree** | exact checked-in `.github/` inventory on public `main`, including `ISSUE_TEMPLATE/`, `actions/`, `watchers/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, and `dependabot.yml` |
-| **CONFIRMED current public adjacent docs** | root `README.md`, `CONTRIBUTING.md`, root `SECURITY.md`, and visible repo-root directories under `docs/`, `data/`, `policy/`, `contracts/`, `tests/`, and `tools/` |
-| **UNKNOWN / NEEDS VERIFICATION** | protected branches, required checks, rulesets, environment approvals, private reporting switches, GitHub App permissions, OIDC trust relationships, unpublished workflow history, and any non-public deployment or release controls |
-
-### Current public signals worth carrying forward
-
-| Public signal | What it supports | Status |
-|---|---|---|
-| Public repo with default branch `main` | GitHub is the active repo-facing control plane | CONFIRMED |
-| `.github/` includes intake, ownership, security, actions, watchers, workflow, and dependency-update surfaces | the gatehouse is real and non-trivial in the checked-in tree | CONFIRMED |
-| `.github/workflows/` contains `README.md` only | current public `main` does **not** expose checked-in workflow YAMLs in that directory | CONFIRMED |
-| `.github/workflows/README.md` documents prior workflow activity and deleted YAML names | historical workflow signal exists, but it is not proof of current checked-in YAML inventory | CONFIRMED |
-| `.github/actions/` contains multiple local action directories plus docs | reusable repo-local automation scaffolding exists even without checked-in workflow YAMLs on public `main` | CONFIRMED |
-| `.github/watchers/` exists with `README.md` only | the gatehouse now includes a docs-only derived monitoring lane | CONFIRMED |
-| `CODEOWNERS` assigns global fallback and `/.github/` coverage to `@bartytime4life` | review routing exists, but is currently broad and single-owner | CONFIRMED |
-| `PULL_REQUEST_TEMPLATE.md` requires truth labels, evidence links, doctrine impact, and validation structure | PR review is explicitly shaped around KFM governance language | CONFIRMED |
-| `dependabot.yml` is checked in | dependency-update policy is part of the repo-side control surface | CONFIRMED |
-| both `.github/SECURITY.md` and `../SECURITY.md` exist | disclosure guidance still needs one clearly aligned public path | CONFIRMED existence / NEEDS VERIFICATION alignment |
-
-> [!NOTE]
-> Platform state is not the same thing as repo state. A checked-in file can describe required checks or disclosure posture, but it cannot by itself prove that GitHub settings, rulesets, reviewer gates, or private-reporting switches currently match the prose.
+| **CONFIRMED doctrine language already present in-repo** | truth path, trust membrane, authoritative-versus-derived split, cite-or-abstain posture, fail-closed defaults, promotion as governed state transition |
+| **CONFIRMED current public repo tree** | exact checked-in `.github/` inventory on public `main`, visible repo-root directories, and the presence of `pipelines/` |
+| **CONFIRMED current public adjacent docs** | root `README.md`, root `SECURITY.md`, `.github` docs, and visible root surfaces under `docs/`, `data/`, `policy/`, `contracts/`, `schemas/`, `tests/`, `tools/`, and `pipelines/` |
+| **UNKNOWN / NEEDS VERIFICATION** | protected branches, required checks, rulesets, environment approvals, private reporting switches, GitHub App permissions, OIDC trust relationships, unpublished workflow YAMLs or deployment overlays, and non-public release controls |
 
 ## Current public deltas
 
@@ -99,12 +78,15 @@ These are the concrete public-tree changes and tensions that make this revision 
 
 | Delta | Why it matters now | Status |
 |---|---|---|
-| `.github/watchers/` now exists on public `main` | the gatehouse now includes a watcher lane that the earlier README inventory did not name | CONFIRMED |
-| `watchers/` is README-only | current public tree proves documentation/scaffold presence, not mounted watcher jobs here | CONFIRMED |
-| `.github/SECURITY.md` claims the canonical public disclosure path is `.github/SECURITY.md` | the gatehouse security doc is trying to become authoritative | CONFIRMED doc claim |
-| root `../SECURITY.md` still says the canonical public security-policy path is `REVIEW-REQUIRED` | the two public security-policy files are not yet fully aligned | CONFIRMED conflict |
-| `.github/workflows/` remains README-only while `workflows/README.md` records historical deleted workflow filenames | historical automation signal exists, but current checked-in workflow inventory is still docs-only | CONFIRMED |
-| `ISSUE_TEMPLATE/config.yml` and `actions/action.yml` are still empty | two entrypoint/config paths exist only as placeholders on current public `main` | CONFIRMED |
+| `.github/watchers/` is present on public `main` | the gatehouse now includes a watcher lane that earlier inventories could easily miss | CONFIRMED |
+| `watchers/` is README-only | public `main` proves documentation/scaffold presence, not mounted watcher jobs here | CONFIRMED |
+| `.github/workflows/` is README-only | current public `main` does **not** expose checked-in workflow YAMLs in that directory | CONFIRMED |
+| `.github/workflows/README.md` names deleted workflow files | historical automation signal exists, but it is not proof of current checked-in YAML inventory | CONFIRMED |
+| `ISSUE_TEMPLATE/config.yml` and `actions/action.yml` are empty | two entrypoint/config paths remain placeholders on current public `main` | CONFIRMED |
+| `.github/SECURITY.md` now presents itself as the canonical public disclosure path | the gatehouse security doc is trying to become authoritative | CONFIRMED doc claim |
+| root `../SECURITY.md` still carries `REVIEW-REQUIRED` for canonical-path choice | the two public security-policy files are not yet fully aligned | CONFIRMED conflict |
+| repo root now includes `pipelines/` with visible `soils/gssurgo-ks/` and `wbd-huc12-watcher/` lanes | `.github` docs should route pipeline-facing trust changes without pretending pipeline code lives under `.github/` | CONFIRMED |
+| checked-in `dependabot.yml` does not currently name `/pipelines/*` in its directory globs | dependency-update policy is active, but pipeline lanes are not explicitly named in that config | CONFIRMED |
 
 [Back to top](#github)
 
@@ -114,7 +96,7 @@ These are the concrete public-tree changes and tensions that make this revision 
 
 **Role in repo:** directory README for repository-wide governance, contributor intake, review boundaries, reusable GitHub automation, workflow documentation, watcher-boundary guidance, disclosure posture, and dependency-update policy.
 
-**Why it exists:** explain how repository-side control surfaces preserve KFM’s truth path without pretending that `.github/` is the canonical home of contracts, policy bundles, runtime code, data artifacts, or long-form doctrine.
+**Why it exists:** explain how repository-side control surfaces preserve KFM’s truth path without pretending that `.github/` is the canonical home of contracts, policy bundles, runtime code, pipeline code, data artifacts, or long-form doctrine.
 
 ### Upstream and downstream anchors
 
@@ -129,8 +111,10 @@ These are the concrete public-tree changes and tensions that make this revision 
 | Upstream | [`../docs/runbooks/`](../docs/runbooks/) | operator and rollback/correction procedure home | CONFIRMED path |
 | Upstream | [`../docs/adr/`](../docs/adr/) | decision records that should travel with behavior-significant governance change | CONFIRMED path |
 | Upstream | [`../contracts/`](../contracts/) | canonical machine-readable contracts and schemas | CONFIRMED path |
+| Upstream | [`../schemas/`](../schemas/) | schema surface adjacent to contract and policy enforcement | CONFIRMED path |
 | Upstream | [`../policy/`](../policy/) | executable policy bundles, fixtures, and tests | CONFIRMED path |
 | Upstream | [`../data/registry/`](../data/registry/) | source descriptors and intake registry material | CONFIRMED path |
+| Upstream | [`../pipelines/`](../pipelines/) | public execution lanes that `.github` may gate but does not canonically own | CONFIRMED path |
 | Downstream | [`./CODEOWNERS`](./CODEOWNERS) | executable review boundary map | CONFIRMED |
 | Downstream | [`./ISSUE_TEMPLATE/`](./ISSUE_TEMPLATE/) | contributor issue-intake surface | CONFIRMED |
 | Downstream | [`./PULL_REQUEST_TEMPLATE.md`](./PULL_REQUEST_TEMPLATE.md) | PR review contract and doctrine checklist | CONFIRMED |
@@ -156,6 +140,7 @@ repo/
 ├── infra/
 ├── migrations/
 ├── packages/
+├── pipelines/
 ├── policy/
 ├── schemas/
 ├── scripts/
@@ -175,13 +160,13 @@ repo/
 
 ## Accepted inputs
 
-The following content belongs in `.github/` when it applies across the repository rather than to one package or application.
+The following content belongs in `.github/` when it applies across the repository rather than to one package or lane.
 
 | Input class | What belongs here | Why it belongs here |
 |---|---|---|
-| Review-boundary files | `CODEOWNERS`, repo-wide review-routing notes, path ownership, self-protection rules | review is part of KFM’s trust system |
+| Review-boundary files | `CODEOWNERS`, repo-wide review-routing notes, self-protection rules | review is part of KFM’s trust system |
 | Structured contributor intake | issue-template chooser files, issue-template docs, PR templates, merge-readiness checklists | intake should be shaped before change widens |
-| Reusable repo-local automation | composite actions, setup helpers, policy/install helpers, provenance or metadata guards | keeps repeated steps reviewable and local to the repo |
+| Reusable repo-local automation | composite actions, setup helpers, policy/install helpers, metadata or provenance guards | keeps repeated steps reviewable and local to the repo |
 | Workflow definitions and workflow docs | CI, validation, promotion, correction, rollback, reconciliation, and release-control lanes | repo-wide control and trust-state transitions live here when checked in |
 | Watcher control docs | emit-only rules, materiality thresholds, receipt/open-PR conventions, and review-bearing watcher guidance | keeps monitoring surfaces derived, rebuildable, and steward-reviewed |
 | Security and disclosure entrypoints | `SECURITY.md`, disclosure flow docs, safe-harbor guidance, automation-identity notes | trust-bearing reporting needs a clear repo-level home |
@@ -196,8 +181,8 @@ The following content belongs in `.github/` when it applies across the repositor
 | machine-readable schemas, envelopes, OpenAPI specs, vocabularies | [`../contracts/`](../contracts/) and [`../schemas/`](../schemas/) |
 | policy bodies, reason-code registries, fixtures, decision tests | [`../policy/`](../policy/) |
 | canonical data artifacts, source descriptors, lifecycle-zone payloads, receipts, published datasets | [`../data/`](../data/) and [`../data/registry/`](../data/registry/) |
-| runtime services, UI logic, ingestion code, evidence resolvers | [`../apps/`](../apps/) and [`../packages/`](../packages/) |
-| publishable watcher outputs, canonical source captures, or long-running domain ETL | [`../data/`](../data/), [`../apps/`](../apps/), [`../packages/`](../packages/), or [`../scripts/`](../scripts/) |
+| runtime services, UI logic, ingestion code, pipeline execution code, evidence resolvers | [`../apps/`](../apps/), [`../packages/`](../packages/), [`../pipelines/`](../pipelines/), or [`../scripts/`](../scripts/) |
+| publishable watcher outputs, canonical source captures, or long-running domain ETL | [`../data/`](../data/), [`../apps/`](../apps/), [`../packages/`](../packages/), [`../pipelines/`](../pipelines/), or [`../scripts/`](../scripts/) |
 | long-form doctrine, ADRs, standards, runbooks, architecture manuals | [`../docs/`](../docs/) |
 | secrets, private vulnerability details, unpublished review material, exact restricted coordinates | never in public `.github/`; route through stewarded or private paths |
 | release artifacts, immutable manifests, proof packs | owning artifact home or designated release/evidence path, not ad hoc `.github/` storage |
@@ -234,7 +219,7 @@ Current public `main` shows the following checked-in `.github/` layout.
 ```
 
 > [!TIP]
-> The most important tree correction in this revision is simple: `watchers/` is now visibly part of `.github/` on public `main`, so the directory README must account for it explicitly.
+> The most important tree correction in this revision is simple: `watchers/` is visibly part of `.github/`, and the broader public root context also includes `pipelines/`, so the directory README should account for both without collapsing their ownership boundaries.
 
 ## Quickstart
 
@@ -271,6 +256,8 @@ find docs -maxdepth 2 -type d | sort | sed -n '1,160p'
 find data -maxdepth 2 -type d | sort | sed -n '1,160p'
 find policy -maxdepth 2 -type d | sort | sed -n '1,160p'
 find contracts -maxdepth 2 -type f | sort | sed -n '1,120p'
+find schemas -maxdepth 2 -type f | sort | sed -n '1,120p'
+find pipelines -maxdepth 3 | sort | sed -n '1,160p'
 find tests -maxdepth 2 -type d | sort | sed -n '1,160p'
 
 # 6) Platform-state checks happen outside the repo tree:
@@ -288,43 +275,26 @@ Use this README as the responsibility map for repo-side governance work.
 1. **Inspect before editing.** Confirm the live tree, not just remembered structure or historical discussion.
 2. **Map the change to trust impact.** Ask whether the edit changes intake, ownership, merge-blocking logic, disclosure flow, dependency automation, watcher behavior, release evidence, or correction posture.
 3. **Keep trust-bearing automation review-bearing.** KFM doctrine prefers visible deltas, attached evidence, and reversible changes whenever automation could change trust state.
-4. **Update adjacent docs in the same change stream.** If review routing, disclosure posture, automation lanes, watcher rules, or dependency policy change, the corresponding README, template, or runbook should travel with the same PR.
+4. **Update adjacent docs in the same change stream.** If review routing, disclosure posture, automation lanes, watcher rules, dependency policy, or pipeline-facing gate behavior change, the corresponding README, template, or runbook should travel with the same PR.
+
+### Gatehouse vs. neighboring execution lanes
+
+| Surface | Canonical home | `.github` role |
+|---|---|---|
+| Review routing and contributor intake | `.github/` | own it directly |
+| Workflow orchestration and dependency policy | `.github/` | own it directly when checked in |
+| Runtime code and package logic | `../apps/`, `../packages/` | gate via review, CI, and policy |
+| Pipeline code and long-running watchers | `../pipelines/` or other owning runtime paths | gate via review, docs, and future workflow/promotion surfaces |
+| Canonical data, contracts, policy bundles, receipts | `../data/`, `../contracts/`, `../schemas/`, `../policy/` | validate and route, but do not replace |
 
 ### Build, watch, deploy, and promote are different moves
 
 | Move | What changes | Why `.github/` cares |
 |---|---|---|
 | **Build** | a versioned artifact or proof object exists | repo automation, metadata guards, and attest/review surfaces often begin here |
-| **Watch** | a derived monitoring surface detects change and emits a candidate | `.github/watchers/` must remain emit-only, evidence-backed, and PR/review-bearing |
+| **Watch** | a derived monitoring surface detects change and emits a candidate | watcher guidance must remain emit-only, evidence-backed, and PR/review-bearing |
 | **Deploy** | runtime placement or hosted execution changes | environment approvals, rollback readiness, and post-deploy checks may be triggered here |
 | **Promote** | trust state changes from candidate to releasable/publishable | policy, docs, review, and proof obligations become mandatory here |
-
-### Current public-main reading of the gatehouse
-
-| Surface family | Current public `main` state | Consequence |
-|---|---|---|
-| Contributor issue intake | `ISSUE_TEMPLATE/` exists, but current visible files are `README.md` plus an empty `config.yml` | intake directory is present, but no checked-in issue forms are visible on public `main` |
-| PR review intake | `PULL_REQUEST_TEMPLATE.md` is present and substantial | PRs already carry structured KFM review prompts |
-| Review ownership | `CODEOWNERS` uses broad single-owner coverage with explicit `/.github/` self-protection | routing exists, but granularity is intentionally conservative |
-| Local action scaffolding | multiple repo-local action directories are checked in | repeated workflow steps are intended to stay local and reviewable |
-| Watcher lane | `watchers/README.md` is present, but no additional watcher files are visible beneath it | watcher behavior is described, but current public `main` proves only a docs/scaffold lane here |
-| Workflow lane | `workflows/README.md` is present, but no `.yml` or `.yaml` files are visible in that directory on public `main` | current public branch shows documented intent rather than checked-in workflow definitions |
-| Dependency automation | `dependabot.yml` is present and multi-ecosystem | dependency update policy is active as repo config |
-| Security disclosure | both `.github/SECURITY.md` and root `SECURITY.md` exist, but they are not yet fully aligned | canonical disclosure wording still needs one decisive public answer |
-
-> [!NOTE]
-> `./workflows/README.md` currently records historical GitHub Actions activity and deleted workflow filenames such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, and `release-evidence.yml`. Treat that as **history**, not as proof that those YAMLs are currently checked in.
-
-### When this file should change
-
-- when `.github/` inventory changes
-- when workflow YAML files are added, removed, or renamed
-- when watcher scaffolding changes, expands, or moves
-- when issue or PR intake surfaces change
-- when security-path canonicalization changes
-- when local action scaffolding changes materially
-- when dependency-update policy changes
-- when GitHub-settings verification steps need sharper guidance
 
 [Back to top](#github)
 
@@ -358,10 +328,8 @@ flowchart LR
 
     G2 --> H[Required review routing]
     G3 --> I[Merge-readiness structure]
-    G5 -. intended callers .-> G7
     G6 --> J[Derived change candidate<br/>with evidence]
     G8 --> K[Automated dependency PRs]
-    G9 --> L[Disclosure handling]
 
     H --> M{Trust state can widen?}
     I --> M
@@ -372,6 +340,14 @@ flowchart LR
     M -->|no| O[Clarify / revise / redirect]
 
     N --> P[Merge / correction / follow-up]
+
+    subgraph R["Adjacent root execution neighbors"]
+      R1["pipelines/<br/>soils/gssurgo-ks"]
+      R2["pipelines/<br/>wbd-huc12-watcher"]
+    end
+
+    P -. gates changes in .github .-> R1
+    P -. gates changes in .github .-> R2
     P -. platform settings still need direct GitHub verification .-> Q[Rulesets / required checks / environments]
 ```
 
@@ -380,7 +356,7 @@ flowchart LR
 | Surface | Current evidence status | Primary role | Why it is sensitive |
 |---|---|---|---|
 | [`./README.md`](./README.md) | CONFIRMED | repo-side responsibility map | drift here blurs the control plane |
-| [`./CODEOWNERS`](./CODEOWNERS) | CONFIRMED | executable review routing; current broad ownership coverage | changes approval scope and separation of duty |
+| [`./CODEOWNERS`](./CODEOWNERS) | CONFIRMED | executable review routing | changes approval scope and separation of duty |
 | [`./PULL_REQUEST_TEMPLATE.md`](./PULL_REQUEST_TEMPLATE.md) | CONFIRMED | structured PR intake with truth labels, evidence links, doctrine impact, and validation structure | weak PR prompts degrade review quality |
 | [`./ISSUE_TEMPLATE/README.md`](./ISSUE_TEMPLATE/README.md) | CONFIRMED | issue-intake guidance | contributor intake should stay governed rather than improvised |
 | [`./ISSUE_TEMPLATE/config.yml`](./ISSUE_TEMPLATE/config.yml) | CONFIRMED current file presence | issue chooser config path | currently an empty placeholder on public `main` |
@@ -394,37 +370,23 @@ flowchart LR
 | [`./dependabot.yml`](./dependabot.yml) | CONFIRMED | dependency update automation policy | bot-driven dependency PRs still affect trust and delivery posture |
 | GitHub rulesets / required checks / env approvals | UNKNOWN in this README | platform enforcement | cannot be proven from checked-in files alone |
 
-### Current public scaffolding-only surfaces
+### Current public root execution neighbors
 
-| Path | Observed state | Practical reading |
+| Path | Observed state | Why `.github` still cares |
 |---|---|---|
-| `./ISSUE_TEMPLATE/config.yml` | empty file | chooser path exists, but public `main` does not yet prove template options here |
-| `./actions/action.yml` | empty file | root action manifest path exists, but public `main` does not prove implementation at that level |
-| `./watchers/README.md` | docs-only | watcher rules are documented, but no checked-in watcher jobs are visible beneath this path |
-| `./workflows/README.md` | docs-only | workflow lane is documented, but no checked-in workflow YAMLs are visible here |
-
-### Current public action inventory
-
-| Path | Observed state | Posture |
-|---|---|---|
-| `./actions/metadata-validate-v2/` | present | CONFIRMED path |
-| `./actions/metadata-validate/` | present | CONFIRMED path |
-| `./actions/opa-gate/` | present | CONFIRMED path |
-| `./actions/provenance-guard/` | present | CONFIRMED path |
-| `./actions/sbom-produce-and-sign/` | present | CONFIRMED path |
-| `./actions/src/` | present | CONFIRMED path |
-| `./actions/README.md` | present | CONFIRMED path |
-| `./actions/action.yml` | present, empty on current public `main` | CONFIRMED current snapshot |
+| [`../pipelines/`](../pipelines/) | present at repo root with visible `soils/gssurgo-ks/` and `wbd-huc12-watcher` subdirectories | pipeline-facing changes still traverse `CODEOWNERS`, PR templates, disclosure posture, and any future workflow or promotion gates |
 
 ### Current public dependency-update coverage
 
 | Ecosystem | Paths | Schedule (UTC) |
 |---|---|---|
-| `github-actions` | `/` | weekly · Monday · 06:00 |
 | `docker` | `/`, `/apps/*`, `/packages/*`, `/infra/*` | weekly · Monday · 06:30 |
 | `npm` | `/`, `/apps/*`, `/packages/*` | weekly · Tuesday · 06:00 |
 | `pip` | `/`, `/apps/*`, `/packages/*` | weekly · Wednesday · 06:00 |
 | `cargo` | `/`, `/apps/*`, `/packages/*` | weekly · Thursday · 06:00 |
+
+> [!NOTE]
+> Current checked-in directory globs do **not** name `/pipelines/*`. That is a confirmed config fact, not proof that pipeline lanes definitely require Dependabot coverage today. Review and extend the config only when supported ecosystems in `../pipelines/` actually need that coverage.
 
 [Back to top](#github)
 
@@ -437,6 +399,8 @@ flowchart LR
 - [ ] `watchers/` was checked for any new files or jobs beyond `README.md`, or this README was updated in the same PR.
 - [ ] `workflows/` was checked for actual `.yml` / `.yaml` files before any workflow claim was merged.
 - [ ] Any empty placeholders (`ISSUE_TEMPLATE/config.yml`, `actions/action.yml`) remain intentional and documented, or they were replaced with real content.
+- [ ] Root repo context still includes `pipelines/`, or the broader repo tree above was updated in the same PR.
+- [ ] If dependency-bearing files were added or changed under `../pipelines/`, checked-in `dependabot.yml` coverage was reviewed and either extended or intentionally left unchanged with explanation.
 - [ ] `CODEOWNERS` coverage still matches the review expectations described here.
 - [ ] `.github/SECURITY.md` and `../SECURITY.md` are either text-aligned or one clearly delegates to the other.
 - [ ] Branch protection, rulesets, required checks, environment approvals, and private-reporting settings were verified in GitHub settings when relevant.
@@ -451,7 +415,7 @@ Not in the public directory listing inspected for this revision. `./workflows/RE
 
 ### What is `.github/watchers/` right now?
 
-Current public `main` shows `./watchers/README.md` only. Its own checked-in guidance describes watchers as **derived**, **fail-closed**, and **emit-only** monitoring surfaces that must open a governed review path instead of publishing directly.
+Current public `main` shows `./watchers/README.md` only. Its checked-in guidance describes watchers as **derived**, **fail-closed**, and **emit-only** monitoring surfaces that must open a governed review path instead of publishing directly.
 
 ### Does current public `main` expose issue-form templates?
 
@@ -461,13 +425,21 @@ The issue-template directory exists, but the visible checked-in files are `READM
 
 Current public `CODEOWNERS` assigns the global fallback to `@bartytime4life` and explicitly assigns `/.github/` plus `/.github/CODEOWNERS` to `@bartytime4life`.
 
+### Does current public `main` expose pipeline lanes outside `.github`?
+
+Yes. Repo root currently exposes `pipelines/`, with visible `soils/gssurgo-ks/` and `wbd-huc12-watcher` subdirectories. `.github` should gate those lanes, not absorb them.
+
+### Does current checked-in `dependabot.yml` explicitly name `pipelines/*`?
+
+No. Current globs name `/`, `/apps/*`, `/packages/*`, and `/infra/*` for Docker, and `/`, `/apps/*`, `/packages/*` for npm/pip/cargo. `pipelines/*` is not currently named.
+
 ### Is the public security-policy path resolved?
 
 Not yet. `.github/SECURITY.md` currently presents itself as the canonical public disclosure path, but root `SECURITY.md` still says the canonical public path is `REVIEW-REQUIRED`. Those two files should be aligned or delegated cleanly.
 
 ### What remains unverified after this revision?
 
-GitHub private-reporting settings beyond what the checked-in docs say, protected-branch rules, required checks, rulesets, environment approvals, GitHub App permissions, OIDC trust relationships, and any non-public release or deployment controls.
+GitHub private-reporting fallback channels beyond what checked-in docs say, protected-branch rules, required checks, rulesets, environment approvals, GitHub App permissions, OIDC trust relationships, and any non-public release or deployment controls.
 
 ## Appendix
 
@@ -484,13 +456,13 @@ GitHub private-reporting settings beyond what the checked-in docs say, protected
 
 ### Adjacent repo paths confirmed during this revision
 
-- root directories: `apps/`, `brand/`, `configs/`, `contracts/`, `data/`, `docs/`, `examples/`, `infra/`, `migrations/`, `packages/`, `policy/`, `schemas/`, `scripts/`, `tests/`, `tools/`
+- root directories: `apps/`, `brand/`, `configs/`, `contracts/`, `data/`, `docs/`, `examples/`, `infra/`, `migrations/`, `packages/`, `pipelines/`, `policy/`, `schemas/`, `scripts/`, `tests/`, `tools/`
+- visible pipeline lanes: `pipelines/soils/gssurgo-ks/` and `pipelines/wbd-huc12-watcher/`
 - repo-root docs: `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `LICENSE`, `README.md`, `SECURITY.md`
-- `docs/`, `data/`, `policy/`, `contracts/`, `tests/`, and `tools/` are all visibly present at repo root and remain the more natural homes for canonical doctrine, data, policy, contracts, validation, and tooling
 
 ### Practical reading rule
 
-This directory is currently strongest as a **repo-side control map**, **local automation scaffold**, and **review-bearing watcher boundary**. The biggest public-tree gaps are still the absence of checked-in workflow YAMLs under `.github/workflows/` and the unresolved duplication of the public security-policy path.
+This directory is currently strongest as a **repo-side control map**, **local automation scaffold**, and **review-bearing watcher boundary**. The biggest public-tree gaps are still the absence of checked-in workflow YAMLs under `.github/workflows/`, the unresolved duplication of the public security-policy path, and the fact that `dependabot.yml` still follows an older root-directory taxonomy that does not explicitly name `/pipelines/*`.
 
 </details>
 
@@ -518,8 +490,9 @@ That is useful context for recovery, archaeology, or reconstitution work, but it
 3. Choose and enforce one canonical public security-policy path, or explicitly delegate from one file to the other.
 4. Recheck `CODEOWNERS` granularity if ownership expands beyond the current broad single-owner baseline.
 5. Export or inspect GitHub rulesets, required checks, environment approvals, app permissions, OIDC trust bindings, and private vulnerability-reporting settings.
-6. Reconcile `.github/README.md`, `.github/workflows/README.md`, `.github/actions/README.md`, `.github/watchers/README.md`, root `README.md`, `CONTRIBUTING.md`, and both security-policy files so they describe the same current control-plane reality.
+6. Reconcile `.github/README.md`, `.github/ISSUE_TEMPLATE/README.md`, `.github/actions/README.md`, `.github/workflows/README.md`, `.github/watchers/README.md`, root `README.md`, `CONTRIBUTING.md`, and both security-policy files so they describe the same current control-plane reality.
 7. Retire UNKNOWN items only when direct repo or platform evidence is attached to the same PR.
+8. Review whether `../pipelines/` needs explicit Dependabot directory coverage once supported manifests there are confirmed.
 
 </details>
 
