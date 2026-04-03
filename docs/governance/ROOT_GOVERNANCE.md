@@ -5,29 +5,29 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: TBD-VERIFY-first-file-commit-date
-updated: 2026-03-31
+created: TBD-VERIFY-first-commit-date
+updated: TBD-VERIFY-last-reviewed-date
 policy_label: TBD-VERIFY-public-or-restricted
-related: [./README.md, ./ETHICS.md, ./SOVEREIGNTY.md, ../../policy/README.md, ../../contracts/README.md, ../../tests/README.md, ../../.github/PULL_REQUEST_TEMPLATE.md, ../../CONTRIBUTING.md, ../../SECURITY.md]
-tags: [kfm, governance, review, publication, policy, correction, trust-system]
-notes: [Current public main confirms this file path, the governance sibling docs, and linked README surfaces; current public main also confirms `.github/workflows/README.md` but not checked-in workflow YAML gates, branch rulesets, or environment approvals. `doc_id`, `created`, and `policy_label` still need direct maintainer verification.]
+related: [./README.md, ./ETHICS.md, ./SOVEREIGNTY.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/PULL_REQUEST_TEMPLATE.md, ../../policy/README.md, ../../contracts/README.md, ../../tests/README.md, ../../CONTRIBUTING.md, ../../SECURITY.md]
+tags: [kfm, governance, trust-system, review, publication, correction, policy]
+notes: [Current public main confirms this file path, sibling governance docs, broad CODEOWNERS coverage, the .github gatehouse README, and linked README surfaces; current public main also confirms `.github/workflows/README.md` and README-only workflow inventory, but not required checks, rulesets, environment approvals, or non-public platform settings. `doc_id`, `created`, `updated`, and `policy_label` still need direct maintainer verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Root Governance
 
 Core governance law and review triggers for KFM trust state, publication, runtime behavior, and correction.
 
-> **Status:** draft standard · public `main` path and linked doc surfaces verified · workflow/ruleset enforcement still needs direct verification  
-> **Owners:** `@bartytime4life`  
+> **Status:** draft standard · current public `main` path, sibling governance docs, broad ownership, and linked doc surfaces verified · platform enforcement still needs direct verification  
+> **Owners:** `@bartytime4life` *(broad current public `CODEOWNERS` coverage confirmed; narrower governance-only ownership is not exposed on public `main`)*  
 > ![Status](https://img.shields.io/badge/status-draft-orange?style=flat-square) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square) ![Branch](https://img.shields.io/badge/branch-main-24292f?style=flat-square) ![Doc](https://img.shields.io/badge/doc-root%20governance-0a7ea4?style=flat-square) ![Trust](https://img.shields.io/badge/trust-membrane-6f42c1?style=flat-square) ![Publication](https://img.shields.io/badge/publication-governed-0a7d00?style=flat-square) ![Review](https://img.shields.io/badge/review-required-f59e0b?style=flat-square) ![Evidence](https://img.shields.io/badge/evidence-one%20hop%20away-2ea043?style=flat-square)  
 > **Quick jump:** [Scope](#scope) · [Verification posture](#verification-posture) · [Authority order](#authority-order-for-this-file) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Governance law](#governance-law) · [Review triggers](#review-triggers-and-escalation) · [Objects](#governance-objects-and-what-they-protect) · [Outcomes](#allowed-outcomes-and-visible-negative-states) · [Surface obligations](#trust-visible-surface-obligations) · [Diagram](#diagram) · [Adjacent surfaces](#adjacent-surfaces-and-handoffs) · [Quickstart](#quickstart) · [Change matrix](#change-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/governance/ROOT_GOVERNANCE.md` · upstream [`./README.md`](./README.md) · sibling docs [`./ETHICS.md`](./ETHICS.md) and [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md)
+> **Repo fit:** `docs/governance/ROOT_GOVERNANCE.md` · upstream [`./README.md`](./README.md) · sibling docs [`./ETHICS.md`](./ETHICS.md) and [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · gatehouse [`../../.github/README.md`](../../.github/README.md)
 
 > [!IMPORTANT]
 > This file states **governing law**, not implementation theater. In KFM, a successful build or deployment is not automatically a publishable trust state. Evidence, policy, review, release, and correction all remain in play.
 
 > [!NOTE]
-> Current public `main` now confirms this directory context and the linked documentation surfaces: `docs/governance/README.md`, `docs/governance/ETHICS.md`, `docs/governance/SOVEREIGNTY.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `contracts/README.md`, `policy/README.md`, `tests/README.md`, `CONTRIBUTING.md`, and `SECURITY.md`. Keep branch protections, required checks, environment approvals, and any checked-in workflow YAML gates marked `NEEDS VERIFICATION` until directly reverified.
+> Current public `main` confirms this directory context, sibling governance docs, the `.github` gatehouse surfaces, and the linked documentation boundaries: `docs/governance/README.md`, `docs/governance/ETHICS.md`, `docs/governance/SOVEREIGNTY.md`, `.github/README.md`, `.github/CODEOWNERS`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/workflows/README.md`, `contracts/README.md`, `policy/README.md`, `tests/README.md`, `CONTRIBUTING.md`, and `SECURITY.md`. Keep required checks, rulesets, environment approvals, OIDC wiring, and other platform-only controls marked `NEEDS VERIFICATION` until branch-local evidence exists.
 
 | At a glance | Working rule |
 |---|---|
@@ -55,13 +55,13 @@ Use it when a change could alter:
 This file is intentionally narrower than the full architectural corpus and broader than any one subsystem. It sits above machine-readable policy, contracts, and tests, but below the complete architecture manuals and adjacent governance docs.
 
 > [!WARNING]
-> Do not use this document to imply that policy bundles, schemas, workflow gates, or runtime emitters already exist unless that implementation is directly verified in the repo.
+> Do not use this document to imply that policy bundles, schemas, workflow gates, runtime emitters, or platform enforcement already exist unless that implementation is directly verified in the working branch.
 
 ## Verification posture
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Directly supported by March 2026 KFM doctrine or by current public repo evidence inspected on `main`. |
+| **CONFIRMED** | Directly supported by March–April 2026 KFM doctrine or by current public repo evidence inspected on `main`. |
 | **INFERRED** | Strongly implied by repeated doctrine and adjacent documentation, but not directly re-verified as mounted implementation. |
 | **PROPOSED** | Repo-ready realization guidance consistent with doctrine, but not proven as active implementation. |
 | **UNKNOWN** | Not verified strongly enough in the current session to present as fact. |
@@ -75,8 +75,8 @@ This file is intentionally narrower than the full architectural corpus and broad
 | Priority | Source class | How this file should use it |
 |---|---|---|
 | **1** | Replacement-grade master doctrine and canonical master reference | Anchor non-negotiable governance law, trust posture, contradiction handling, and fail-closed behavior. |
-| **2** | Supporting March 2026 overlays | Deepen route families, verification placement, runtime outcomes, Evidence Drawer / Focus obligations, and correction seams without outranking doctrine. |
-| **3** | Current public repo evidence on `main` | Confirm local file roles, neighboring governance docs, `CODEOWNERS`, PR template, and public documentation surfaces. |
+| **2** | Supporting March–April 2026 overlays | Deepen route families, verification placement, runtime outcomes, Evidence Drawer / Focus obligations, and correction seams without outranking doctrine. |
+| **3** | Current public repo evidence on `main` | Confirm local file roles, neighboring governance docs, `CODEOWNERS`, gatehouse surfaces, PR template, and public documentation boundaries. |
 | **4** | Official external rechecks | Use only for version-sensitive standards or boundary facts; never let them silently override KFM doctrine. |
 
 If direct branch evidence later conflicts with inferred packaging here, keep the doctrine and downgrade the packaging claim until the branch-local fact is re-verified. Do not force code or docs to mimic placeholder paths just because they appeared in a doctrine-driven draft.
@@ -89,8 +89,9 @@ If direct branch evidence later conflicts with inferred packaging here, keep the
 | Role | Core governance law and review-trigger document for the governance directory |
 | Upstream | [`./README.md`](./README.md) |
 | Verified sibling docs | [`./ETHICS.md`](./ETHICS.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) |
+| Verified gatehouse surfaces | [`../../.github/README.md`](../../.github/README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) |
 | Verified downstream documentation surfaces | [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../tests/README.md`](../../tests/README.md) |
-| Review and control-plane links | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) · [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../../SECURITY.md`](../../SECURITY.md) |
+| Review and contributor surfaces | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../../SECURITY.md`](../../SECURITY.md) |
 | This file does **not** replace | policy bundles, schemas, fixtures, workflow YAML, test harnesses, or incident runbooks |
 
 This file should remain the place contributors read first when they need to answer a simple question with large consequences:
@@ -102,14 +103,15 @@ This file should remain the place contributors read first when they need to answ
 | Surface | What current public `main` confirms | What it does **not** confirm |
 |---|---|---|
 | `docs/governance/` | `README.md`, `ROOT_GOVERNANCE.md`, `ETHICS.md`, and `SOVEREIGNTY.md` are present | additional governance files beyond the visible set |
+| `.github/` gatehouse | `README.md`, `PULL_REQUEST_TEMPLATE.md`, `SECURITY.md`, `CODEOWNERS`, `actions/`, `watchers/`, `workflows/`, `ISSUE_TEMPLATE/`, and `dependabot.yml` are present | platform-only settings, permissions, secrets, rulesets, or non-public automation behavior |
 | `.github/workflows/` | `README.md` is present | checked-in workflow YAML gates, required checks, environment approvals, or rulesets |
 | `contracts/` | `README.md` is present | populated schema registry, valid/invalid fixtures, or mounted contract files |
 | `policy/` | `README.md` is present | mounted `.rego` bundles, runnable policy tests, or verified runtime package boundaries |
 | `tests/` | `README.md` is present | active harnesses, end-to-end proof suites, or CI-exercised runs |
-| `.github/CODEOWNERS` | global fallback `* @bartytime4life` and `/docs/ @bartytime4life` are visible | narrower governance-specific ownership below `/docs/` |
+| `.github/CODEOWNERS` | broad fallback and explicit top-level coverage point to `@bartytime4life`, including `/.github/`, `/docs/`, `/contracts/`, `/policy/`, and `/tests/` | narrower governance-specific ownership below `/docs/governance/` |
 
-> [!NOTE]
-> Current public `main` confirms the linked governance, policy, contract, test, contributing, and security documentation surfaces. Keep merge-gate, ruleset, and environment-approval claims as `NEEDS VERIFICATION` unless branch-local evidence is surfaced.
+> [!WARNING]
+> Current public `SECURITY.md` exists, but that file still marks canonical security-policy path and publication readiness as review-required. Governance changes that depend on final disclosure routing or settled security-surface authority should keep that uncertainty visible rather than treating security closure as already finished.
 
 [Back to top](#kansas-frontier-matrix--root-governance)
 
@@ -122,7 +124,7 @@ This file accepts governance-facing material such as:
 - negative outcome definitions and visibility rules
 - separation-of-duty expectations for promotion, denial, and correction
 - root governance objects and the trust they protect
-- cross-links to adjacent ethics, sovereignty, policy, contract, test, and security surfaces
+- cross-links to adjacent ethics, sovereignty, policy, contract, test, security, and gatehouse surfaces
 
 ## Exclusions
 
@@ -142,6 +144,7 @@ This file should **not** become:
 | proof burdens, fixtures, and drills | `../../tests/` |
 | disclosure, coordinated security handling, trust-boundary failure | `../../SECURITY.md` |
 | contributor process and PR expectations | `../../CONTRIBUTING.md` and `../../.github/PULL_REQUEST_TEMPLATE.md` |
+| repo-level gatehouse, workflow inventory, watcher scaffolding, ownership boundaries | `../../.github/README.md` and `../../.github/CODEOWNERS` |
 | domain-specific publication burdens | lane-specific docs and source-atlas-linked materials |
 
 ## Governance law
@@ -174,6 +177,7 @@ This file should **not** become:
 | **Policy or release-gate changes** | new reason codes, obligation codes, promotion criteria, review thresholds | policy update + tests + runbook note | default deny |
 | **Runtime or AI behavior changes** | scope widening, citation handling, answer formatting, fallback logic | governance review + runtime fixtures + citation-negative tests | abstain, deny, or freeze rollout |
 | **Correction-path changes** | withdrawal, supersession, stale-visible, narrowed replacement | correction object + surface-state update + rollback path | do not publish silently |
+| **Gatehouse or review-routing changes** | `CODEOWNERS`, PR template, workflow inventory docs, watcher scaffolding with review consequences | governance review + contributor/control-plane docs + ownership check | hold until routing stays explicit |
 | **Kansas operating-lane expansion or burden change** | new archaeology, biodiversity, migration, oral-history, service-geography, or controlled-3D publication surfaces | lane-specific burden note + governance review + ethics/sovereignty companions where relevant | hold until the burden is explicit |
 | **Trust-membrane bypass risk** | direct client → store, direct client → model runtime, unreviewed publish shortcut | security review + architecture correction | reject until removed |
 
@@ -184,7 +188,7 @@ This file should **not** become:
 - a modeled or summarized layer may be mistaken for authority
 - exact coordinates could expose a sensitive place, site, person, or ecology record
 - a correction path is missing but publication is still being proposed
-- a workflow or release change weakens review, proof, or rollback behavior
+- a workflow, ownership, or release change weakens review, proof, or rollback behavior
 
 [Back to top](#kansas-frontier-matrix--root-governance)
 
@@ -248,7 +252,7 @@ flowchart TD
     B -->|Yes| D[Apply ROOT_GOVERNANCE]
 
     D --> E[Classify impact\npublic claim · policy · rights · runtime · correction]
-    E --> F[Pull required companion surfaces\nETHICS · SOVEREIGNTY · policy · contracts · tests · security]
+    E --> F[Pull required companion surfaces\nETHICS · SOVEREIGNTY · .github · policy · contracts · tests · security]
     F --> G{Are evidence, policy, review, and release conditions satisfied?}
 
     G -->|Yes| H[Promotion / release path]
@@ -271,12 +275,14 @@ flowchart TD
 | [`./README.md`](./README.md) | Directory contract and entry point; use it for navigation, this file for governing law. |
 | [`./ETHICS.md`](./ETHICS.md) | Adds public-consequence, persuasive-behavior, and uncertainty-display guardrails. |
 | [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) | Adds rights, sensitivity, CARE-style handling, and exact-location exposure rules. |
+| [`../../.github/README.md`](../../.github/README.md) | Repository-side gatehouse; use it when governance changes cross into workflow inventory, watcher scaffolding, or review-routing behavior. |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current public review-routing boundary and broad ownership baseline. |
+| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | PR-level review expectations and evidence checklist. |
 | [`../../policy/README.md`](../../policy/README.md) | Governing policy is expected to become executable there; current public `main` confirms the README boundary surface, not checked-in bundle inventory. |
 | [`../../contracts/README.md`](../../contracts/README.md) | Trust objects become machine-checkable there; current public `main` confirms the boundary doc surface, not a populated contract registry. |
 | [`../../tests/README.md`](../../tests/README.md) | Proof burdens, negative-path fixtures, and correction drills belong there; current public `main` confirms the README surface, not runnable suite inventory. |
-| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | PR-level review expectations and evidence checklist. |
 | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor process, review routing, and change hygiene. |
-| [`../../SECURITY.md`](../../SECURITY.md) | Coordinated handling for trust-boundary or exposure failures. |
+| [`../../SECURITY.md`](../../SECURITY.md) | Current public security surface exists, but it still carries canonical-path and publication-readiness uncertainty; use it as a live boundary surface, not settled closure. |
 
 ## Quickstart
 
@@ -286,15 +292,17 @@ When a proposed change feels “small” but could still weaken trust, use this 
 2. Read this file first.
 3. Pull in [`./ETHICS.md`](./ETHICS.md) for public-consequence or persuasive-behavior changes.
 4. Pull in [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) for rights, sensitivity, or exact-location questions.
-5. Check whether contracts, policy bundles, tests, or security surfaces must change with it.
-6. Decide the allowed outcome **before** implementation: publish, hold, quarantine, generalize, restrict, deny, abstain, withdraw, supersede, or error.
-7. Update docs, contracts, fixtures, tests, and runbooks in the same governed change stream.
+5. Check gatehouse surfaces — [`../../.github/README.md`](../../.github/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), and [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) — if review routing, ownership, or automation-adjacent behavior may change.
+6. Check whether contracts, policy bundles, tests, or security surfaces must change with it.
+7. Decide the allowed outcome **before** implementation: publish, hold, quarantine, generalize, restrict, deny, abstain, withdraw, supersede, or error.
+8. Update docs, contracts, fixtures, tests, and runbooks in the same governed change stream.
 
 ## Change matrix
 
 | Change class | Minimum required evidence | Typical review path |
 |---|---|---|
 | Documentation-only wording with no trust change | checked paths, honest truth labels, no overclaiming | normal docs review |
+| Gatehouse / review-routing change | path evidence, ownership impact, PR-template or workflow-doc delta | governance + contributor/control-plane review |
 | Public claim or trust-surface change | linked evidence path, visible caveat logic, screenshot or sample payload | governance review |
 | Policy-significant change | reason/obligation impact, fixture updates, negative-path coverage | governance + policy review |
 | Contract or envelope change | schema delta, example valid/invalid cases, compatibility note | contracts + tests + governance |
@@ -314,6 +322,7 @@ A governance-affecting change is ready when:
 - [ ] new or changed negative outcomes are explicit in contracts, tests, and UX copy where relevant
 - [ ] no new client → store or client → model-runtime bypass is introduced
 - [ ] correction, supersession, or withdrawal behavior is visible where a change could require it later
+- [ ] gatehouse, ownership, and PR-template surfaces stay aligned when review routing changes
 - [ ] placeholders and `NEEDS VERIFICATION` markers are retired where direct repo evidence now exists
 - [ ] unresolved implementation gaps remain visible instead of being polished away
 
@@ -360,12 +369,13 @@ Because governance law should stay readable and stable even while machine-readab
 <details>
 <summary><strong>Open verification items before publication</strong></summary>
 
-- confirm created date and final `doc_id`
+- confirm created date, last-reviewed date, and final `doc_id`
 - confirm the intended `policy_label`
-- confirm whether additional governance surfaces should be linked here
-- confirm branch protections, rulesets, required checks, and environment approvals before stating them as fact
+- confirm whether additional governance or gatehouse surfaces should be linked here
+- confirm branch protections, rulesets, required checks, environment approvals, and OIDC trust relationships before stating them as fact
 - confirm exact schema, policy-bundle, fixture, and runnable test inventories before naming them as mounted implementation
-- confirm whether governance-specific ownership narrower than `/docs/ @bartytime4life` is intended
+- confirm whether governance-specific ownership narrower than the current broad `CODEOWNERS` baseline is intended
+- confirm the canonical public security-policy path before treating security routing as fully settled
 
 </details>
 
@@ -376,6 +386,7 @@ Keep this file in the review loop whenever a PR:
 
 - changes public claim wording or visibility
 - changes review or promotion authority
+- changes gatehouse ownership, review routing, or workflow documentation with governance consequences
 - changes runtime answer behavior or citation handling
 - changes correction, withdrawal, or supersession logic
 - introduces a new public surface or review console path
