@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO-VERIFY-CREATED-DATE>
-updated: <TODO-SET-ON-MERGE>
+updated: 2026-04-03
 policy_label: <TODO-VERIFY-POLICY-LABEL>
-related: [schemas/README.md, schemas/contracts/README.md, schemas/standards/README.md, schemas/tests/README.md, schemas/workflows/README.md, contracts/README.md, docs/standards/README.md, tests/README.md, .github/workflows/README.md, policy/README.md]
+related: [schemas/README.md, schemas/contracts/README.md, schemas/standards/README.md, schemas/tests/README.md, schemas/tests/fixtures/README.md, schemas/workflows/README.md, contracts/README.md, docs/standards/README.md, tests/README.md, tests/contracts/README.md, .github/workflows/README.md, policy/README.md]
 tags: [kfm, schemas, boundary-readme, scaffold, non-canonical]
-notes: [doc_id placeholder not yet verified from repo evidence, created/updated dates need repo-side confirmation, policy label not directly evidenced in inspected public sources]
+notes: [doc_id placeholder not yet verified from repo evidence, created date still needs repo-side confirmation, updated date reflects this draft revision, policy label not directly evidenced in inspected public sources]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -23,7 +23,7 @@ _Boundary README for the `schemas/schemas/` scaffold so this nested lane stays d
 > **Doc status:** draft  
 > **Owners:** `@bartytime4life` *(current public fallback owner; no narrower `/schemas/` rule was directly verified)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-orange) ![surface](https://img.shields.io/badge/surface-schemas%2Fschemas-6f42c1) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![authority](https://img.shields.io/badge/schema_home-unresolved-red) ![posture](https://img.shields.io/badge/posture-boundary%20README-blue)  
-> **Repo fit:** path `schemas/schemas/README.md` · parent [`../README.md`](../README.md) · sibling scaffold lanes [`../contracts/README.md`](../contracts/README.md), [`../standards/README.md`](../standards/README.md), [`../tests/README.md`](../tests/README.md), [`../workflows/README.md`](../workflows/README.md) · stronger machine-contract lane [`../../contracts/README.md`](../../contracts/README.md) · standards index [`../../docs/standards/README.md`](../../docs/standards/README.md) · repo-wide tests [`../../tests/README.md`](../../tests/README.md) · workflow execution lane [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Repo fit:** path `schemas/schemas/README.md` · parent [`../README.md`](../README.md) · sibling scaffold lanes [`../contracts/README.md`](../contracts/README.md), [`../standards/README.md`](../standards/README.md), [`../tests/README.md`](../tests/README.md), [`../workflows/README.md`](../workflows/README.md) · repo-wide contract authority signal [`../../contracts/README.md`](../../contracts/README.md) · standards index [`../../docs/standards/README.md`](../../docs/standards/README.md) · repo-wide tests [`../../tests/README.md`](../../tests/README.md) · workflow execution lane [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -34,6 +34,9 @@ _Boundary README for the `schemas/schemas/` scaffold so this nested lane stays d
 
 > [!NOTE]
 > The parent [`../README.md`](../README.md) still carries older inventory wording that describes `schemas/` as `README.md`-only. The live public tree now shows visible scaffold siblings `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows`; keep parent and child inventory language synchronized when tree-shape prose changes.
+
+> [!TIP]
+> Current public `main` also shows two nearby, more concrete nested scaffolds: `schemas/contracts/` exposes `README.md`, `v1/`, and `vocab/`, while `schemas/tests/fixtures/contracts/v1/` exposes `valid/` and `invalid/`. That makes `schemas/schemas/` more valuable as a boundary lane, not less.
 
 ## Scope
 
@@ -78,11 +81,11 @@ It is useful when a contributor asks one of these questions:
 | Direction | Surface | Relationship |
 |---|---|---|
 | Upstream | [`../README.md`](../README.md) | Parent lane overview for the nested `schemas/` scaffold |
-| Sideways | [`../contracts/README.md`](../contracts/README.md) | Nested contract-adjacent boundary lane |
+| Sideways | [`../contracts/README.md`](../contracts/README.md) | Nested contract lane with currently visible `v1/` and `vocab/` subtrees |
 | Sideways | [`../standards/README.md`](../standards/README.md) | Nested standards/schema guidance lane |
 | Sideways | [`../tests/README.md`](../tests/README.md) | Nested fixtures/examples/testing lane |
 | Sideways | [`../workflows/README.md`](../workflows/README.md) | Nested workflow-shape guidance lane |
-| Stronger repo-wide machine-contract signal | [`../../contracts/README.md`](../../contracts/README.md) | Current stronger place to reason about trust-bearing machine contracts |
+| Stronger repo-wide machine-contract signal | [`../../contracts/README.md`](../../contracts/README.md) | Current repo-wide authority / routing signal for trust-bearing machine contracts, even though current public inventory there is README-only |
 | Stronger repo-wide standards signal | [`../../docs/standards/README.md`](../../docs/standards/README.md) | Human-readable standards index; routes API endpoint schemas and machine contracts away from standards prose |
 | Stronger repo-wide verification signal | [`../../tests/README.md`](../../tests/README.md) | Repo-wide test surface |
 | Workflow execution surface | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Public workflow inventory / execution-lane docs |
@@ -96,6 +99,7 @@ It is useful when a contributor asks one of these questions:
 | Is it safe to call this the canonical schema home? | **NO — NEEDS VERIFICATION** |
 | Should trust-bearing machine contracts be duplicated here by default? | **NO** |
 | Can this directory hold narrow boundary/index material? | **INFERRED:** yes, if it stays explicit and non-authoritative |
+| Is there a more concrete nested contract scaffold nearby? | **CONFIRMED:** yes — `../contracts/` currently shows `README.md`, `v1/`, and `vocab/` |
 
 [Back to top](#top)
 
@@ -126,7 +130,7 @@ This directory should stay strict.
 
 | Do **not** put this here | Better home | Why |
 |---|---|---|
-| Canonical trust-bearing machine contracts | [`../../contracts/README.md`](../../contracts/README.md) | Stronger repo-wide contract signal already exists there |
+| Canonical trust-bearing machine contracts | [`../../contracts/README.md`](../../contracts/README.md) and [`../contracts/README.md`](../contracts/README.md) | Repo-wide authority and a more specific nested contract scaffold both outrank this lane |
 | Nested contract-boundary material | [`../contracts/README.md`](../contracts/README.md) | More specific sibling lane |
 | Standards prose or standards-profile docs | [`../../docs/standards/README.md`](../../docs/standards/README.md) | Standards belong in the standards docs lane |
 | Standards-adjacent machine notes | [`../standards/README.md`](../standards/README.md) | More specific sibling lane |
@@ -289,10 +293,10 @@ flowchart TD
 |---|---|---|
 | `schemas/schemas/` | README-only | This lane is still a scaffold boundary, not a proven schema registry |
 | `schemas/` | Visible nested scaffold with `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows` | Parent/child inventory prose must stay synchronized |
-| `schemas/contracts/` | Has `README.md`, `v1/`, `vocab/` | More specific nested lane already exists for contract-adjacent material |
+| `schemas/contracts/` | Has `README.md`, `v1/`, `vocab/` | Nearby nested lane already exposes a more concrete contract-shaped scaffold than `schemas/schemas/` |
 | `schemas/tests/` | Has `README.md` and `fixtures/` | Fixture intent already has a more specific home |
 | `schemas/tests/fixtures/contracts/v1/` | `valid/` and `invalid/` subdirs are visible | Even nested fixture routing is already more specific than this lane |
-| Top-level `contracts/` | Substantive repo-wide contract README exists | Stronger current machine-contract signal sits outside this nested lane |
+| Top-level `contracts/` | Substantive README-only repo-wide contract surface | Stronger authority / routing signal sits outside this nested lane even though current public inventory there is still thin |
 | `docs/standards/` | Standards README explicitly routes API endpoint schemas and machine contracts away from standards prose | Avoids conflating standards documentation with schema authority |
 | `.github/workflows/` | Public README surface visible; workflow YAML not publicly evidenced in that lane here | Do not imply merge-gate reality from docs alone |
 
@@ -300,7 +304,7 @@ flowchart TD
 
 | Candidate addition | Put it in `schemas/schemas/` now? | Better home | Decision rule |
 |---|---|---|---|
-| `runtime_response_envelope.schema.json` | **No** | [`../../contracts/README.md`](../../contracts/README.md) | Trust-bearing machine contract |
+| `runtime_response_envelope.schema.json` | **No** | [`../../contracts/README.md`](../../contracts/README.md) and [`../contracts/README.md`](../contracts/README.md) | Repo-wide authority and the current nested contract scaffold both outrank this lane |
 | `decision_envelope` examples | **No** | [`../tests/README.md`](../tests/README.md) or [`../../tests/README.md`](../../tests/README.md) | Fixtures belong with tests/validation surfaces |
 | Standards profile note for STAC / DCAT / PROV fit | **Usually no** | [`../standards/README.md`](../standards/README.md) and [`../../docs/standards/README.md`](../../docs/standards/README.md) | Standards-facing guidance already has a lane |
 | Workflow note about schema linting | **No** | [`../workflows/README.md`](../workflows/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Execution / validation plumbing is not this lane |
@@ -328,6 +332,7 @@ flowchart TD
 - [x] Define exclusions and where those artifacts go instead
 - [x] Include at least one meaningful Mermaid decision diagram
 - [x] Include compact tables for routing and review
+- [x] Keep the difference between repo-wide authority signals and nested scaffold signals visible
 - [x] Keep schema-home authority unresolved unless repo evidence changes
 - [ ] Re-sync parent `schemas/README.md` inventory wording if/when tree-shape prose is revised again
 - [ ] Revisit this README if the repo lands a written schema-home decision or real validator/workflow artifacts
@@ -350,6 +355,10 @@ Only if you can explain, in the same change, why it does **not** belong in a mor
 
 Because “misc” becomes shadow authority surprisingly fast. KFM’s trust posture works better when ownership is explicit.
 
+### Why not route everything straight to `schemas/contracts/`?
+
+Because the repo still carries two different contract signals. `schemas/contracts/` is the more concrete nested scaffold today, but `../../contracts/README.md` is still the stronger repo-wide authority and routing surface. Read both before landing trust-bearing contract material, and do not use `schemas/schemas/` as a shortcut around that tension.
+
 ### What if the parent `schemas/README.md` and this child README drift apart?
 
 Update them together. This child should not silently correct the parent forever.
@@ -366,6 +375,7 @@ Update them together. This child should not silently correct the parent forever.
 - **UNKNOWN / NEEDS VERIFICATION:** whether this lane should remain README-only after schema-home authority is formally resolved
 - **UNKNOWN / NEEDS VERIFICATION:** whether a narrower `/schemas/` ownership rule should be added to `.github/CODEOWNERS`
 - **UNKNOWN / NEEDS VERIFICATION:** whether future validators, fixtures, or workflow gates will ever point to this lane directly
+- **UNKNOWN / NEEDS VERIFICATION:** whether the current nested `schemas/contracts/` scaffold will converge into top-level `contracts/`, the top-level lane will absorb it, or both will be reshaped together
 - **PROPOSED review rule:** if the first non-README file lands here, require the PR to explain why it does not belong in:
   - `../contracts/`
   - `../standards/`
