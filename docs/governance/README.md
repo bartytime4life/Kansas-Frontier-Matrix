@@ -4,67 +4,87 @@ title: Kansas Frontier Matrix — Governance
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: NEEDS VERIFICATION
-related: [./ROOT_GOVERNANCE.md, ./ETHICS.md, ./SOVEREIGNTY.md]
+policy_label: NEEDS_VERIFICATION
+related: [../README.md, ../../README.md, ./ROOT_GOVERNANCE.md, ./ETHICS.md, ./SOVEREIGNTY.md, ./consent/OVERLAY_CONSENT_TOKENS.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../tests/README.md]
 tags: [kfm, governance]
-notes: [Target path, owners, dates, policy label, and linked companion-file presence still need live repo verification.]
+notes: [Owner is confirmed via public CODEOWNERS coverage for /docs/; doc_id, dates, and policy_label still need branch-level verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix — Governance
 
-*Directory index for the policy, review, sensitivity, and publication rules that keep KFM evidence-governed.*
+*Directory index for the policy, review, consent, sensitivity, and publication rules that keep KFM evidence-governed.*
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![Directory](https://img.shields.io/badge/directory-governance-0a7d00?style=flat-square) ![Status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![Trust](https://img.shields.io/badge/trust-membrane-6f42c1?style=flat-square) ![Policy](https://img.shields.io/badge/policy-deny--by--default-9a6700?style=flat-square) ![Evidence](https://img.shields.io/badge/evidence-cite%20or%20abstain-1f6feb?style=flat-square) ![Repo](https://img.shields.io/badge/repo-needs%20verification-8b949e?style=flat-square)  
-> **Quick jump:** [Scope](#scope) · [Verification posture](#verification-posture) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life` *(confirmed public `/.github/CODEOWNERS` coverage for `/docs/`; no narrower governance-only owner rule is visible on public `main`)*  
+> ![directory](https://img.shields.io/badge/directory-governance-0a7d00?style=flat-square) ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square) ![trust](https://img.shields.io/badge/trust-membrane-6f42c1?style=flat-square) ![policy](https://img.shields.io/badge/policy-deny--by--default-9a6700?style=flat-square) ![evidence](https://img.shields.io/badge/evidence-cite%20or%20abstain-2ea043?style=flat-square) ![branch](https://img.shields.io/badge/branch-main-24292f?style=flat-square)  
+> **Quick jump:** [Scope](#scope) · [Verification posture](#verification-posture) · [Repo fit](#repo-fit) · [Governance surface](#current-public-governance-surface) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/governance/README.md` · upstream [`../README.md`](../README.md) · core law [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) · companion burdens [`./ETHICS.md`](./ETHICS.md), [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · consent sublane [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md)
 
 > [!IMPORTANT]
-> This README is grounded in the March 2026 KFM doctrine corpus and an attached repo-grounded audit summary. KFM’s governance law is strong and repeated. Live repo file presence for this directory, named owners, exact dates, and active merge-gate wiring still need direct workspace verification before merge.
+> This README is a **directory contract and routing surface**, not the whole law set.
+>
+> Public `main` now confirms the path and its core companion files. Platform-only settings—required checks, rulesets, environment approvals, app permissions, OIDC wiring, and any non-public workflow behavior—still need direct branch/platform verification before merge.
 
 ## Scope
 
 This directory is the human navigation layer for KFM governance.
 
-Use it to find the rules that decide whether a claim, layer, dossier, story, export, or runtime answer is allowed to move forward, must be generalized, needs steward review, or must fail closed. In KFM, governance is not decorative values language layered on top of implementation. It is the first architectural dependency: truth path before delivery, policy before publication, review before trust, correction before silent replacement.
+Use it to find the rules that decide whether a claim, layer, dossier, story, export, overlay, or runtime answer is allowed to move forward, must be generalized, needs steward review, or must fail closed.
 
-This README should stay compact and directional. Governing law belongs in the companion governance documents and in machine-readable policy, contract, schema, fixture, and test surfaces elsewhere in the repo.
+In KFM, governance is not decorative values language layered on top of implementation. It is a load-bearing dependency: truth path before delivery, policy before publication, review before trust, correction before silent replacement.
 
 ## Verification posture
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached March 2026 KFM doctrine corpus or by the attached repo-grounded audit summary. |
-| **INFERRED** | Structurally implied by repeated KFM doctrine and added only where the directory contract would otherwise stay incomplete. |
-| **PROPOSED** | Repo-ready packaging or wording that fits KFM doctrine but was not proven as mounted implementation in this session. |
-| **UNKNOWN** | Not supported strongly enough in the current session to present as live repo or runtime fact. |
-| **NEEDS VERIFICATION** | Exact file presence, owners, dates, policy labels, and active automation that should be rechecked in the real repository before merge. |
+| **CONFIRMED** | Directly supported by current public `main` or repeated KFM doctrine already surfaced in checked-in docs. |
+| **INFERRED** | Conservative interpretation that follows from confirmed repo evidence or repeated doctrine, but is not directly proven as detailed implementation behavior. |
+| **PROPOSED** | Repo-native packaging, wording, or routing improvement added in this revision. |
+| **UNKNOWN** | Not established strongly enough to present as current branch, platform, or runtime fact. |
+| **NEEDS VERIFICATION** | A value or behavior that should be checked on the exact working branch, commit, or GitHub settings before merge. |
 
 > [!CAUTION]
-> Do not smooth **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** material into implementation fact. The attached corpus repeatedly warns against turning polished prose into false repo certainty.
+> Do not smooth **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** material into implementation fact. KFM’s doctrine repeatedly treats polished overclaiming as a trust failure, not a documentation style choice.
 
 ## Repo fit
 
 | Item | Value |
 |---|---|
-| Target file | `docs/governance/README.md` **(PROPOSED / NEEDS VERIFICATION)** |
-| Upstream | [Repository README][repo-root] |
-| Primary downstream companions | [ROOT_GOVERNANCE.md][root-governance] · [ETHICS.md][ethics] · [SOVEREIGNTY.md][sovereignty] **(paths NEEDS VERIFICATION)** |
-| Role in repo | Human-facing directory index for governance law, review boundaries, sensitivity rules, publication posture, and correction guidance |
-| Must stay aligned with | [policy/README.md][policy-readme] · [contracts/README.md][contracts-readme] · [schemas/README.md][schemas-readme] · [tests/README.md][tests-readme] · [tools/README.md][tools-readme] · [scripts/README.md][scripts-readme] · [PR template][pr-template] · [workflow README][workflows-readme] |
-| Useful documentation neighbor | [readme-structure-reconciliation.md][readme-recon] |
+| Path | `docs/governance/README.md` |
+| Path status | **CONFIRMED** on public `main`; working-branch parity still needs verification |
+| Role in repo | Directory index for governance law, review routing, rights/sensitivity handling, consent-aware release boundaries, and correction posture |
+| Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) |
+| Primary downstream companions | [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) · [`./ETHICS.md`](./ETHICS.md) · [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) · [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md) |
+| Adjacent machine-checkable surfaces | [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Ownership signal | Public `/.github/CODEOWNERS` routes both global fallback and `/docs/` coverage to `@bartytime4life` |
+| Working boundary | Use this README to route decisions; keep executable enforcement in policy, contracts, schemas, tests, and workflow-bearing surfaces |
+
+## Current public governance surface
+
+| Surface | Current public `main` state | Role |
+|---|---|---|
+| [`README.md`](./README.md) | Present | Directory contract and entrypoint |
+| [`ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) | Present | Root governance law and review triggers |
+| [`ETHICS.md`](./ETHICS.md) | Present | Ethical and public-consequence guardrails |
+| [`SOVEREIGNTY.md`](./SOVEREIGNTY.md) | Present | Rights, sensitivity, precision, and steward obligations |
+| [`consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md) | Present | Overlay consent, revocation, obligations, and receipt rules |
+| [`consent/README.md`](./consent/README.md) | Present but currently empty on public `main` | Placeholder/index slot for a consent sublane that is not yet documented here |
+
+> [!NOTE]
+> The consent sublane is now part of the visible governance tree. Treat it as real path inventory, not as a speculative appendix. What remains unproven is how widely that sublane is already wired into branch-level enforcement and release flows.
 
 ## Inputs
 
 Accepted material for this directory includes:
 
 - governance law and directory-level navigation
-- review triggers and approval boundaries
+- review triggers and escalation rules
 - ethics, public-consequence, and trust-visible UX obligations
-- sovereignty, rights, sensitivity, and exact-location exposure rules
+- sovereignty, rights, sensitivity, exact-location, and stewardship rules
+- consent, revocation, and obligation-carrying release boundaries when overlays or limited-visibility surfaces are involved
 - publication blockers, withdrawal, supersession, and correction posture
 - links to adjacent contracts, schemas, policy bundles, tests, runbooks, and review surfaces when governance changes imply machine-checkable consequences
 
@@ -72,92 +92,112 @@ Accepted material for this directory includes:
 
 This directory should not absorb everything important.
 
-- Machine-readable policy bundles, reason-code registries, and obligation registries belong under policy surfaces, not here.
-- Schemas, valid/invalid fixtures, and validator expectations belong under contracts, schemas, fixtures, and tests.
-- Subsystem runbooks belong in runbook surfaces, even when governance depends on them.
-- Domain-specific source inventories, ingestion details, or analytical method notes belong in their lane docs.
-- Exploratory ideas, draft experiments, or ungated pattern notes belong in research or draft areas, not here as governing law.
+| Keep out of this README | Why it stays out | Where it goes instead |
+|---|---|---|
+| Machine-readable policy bundles, reason-code registries, and obligation registries | Governance prose should not silently replace executable gates. | [`../../policy/`](../../policy/) |
+| Schemas, fixtures, and validator expectations | Trust-bearing structures need machine-checkable homes. | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../tests/`](../../tests/) |
+| Runtime code, worker logic, or service behavior | This is a navigation surface, not the runtime. | Owning code surfaces under `apps/`, `packages/`, `infra/`, or `pipelines/` |
+| Subsystem runbooks | Operational instructions should stay with runbooks. | [`../runbooks/`](../runbooks/) and owning ops surfaces |
+| Exploratory notes or ungated ideas | Governance law should not be diluted by draft experimentation. | Research, draft, or planning surfaces |
+| Platform-only certainty | Public docs cannot prove protected branch rules, required checks, environment approvals, or non-public app permissions. | Direct GitHub/project verification on the active branch |
 
 ## Directory tree
 
-Baseline-linked governance set for this directory:
-
 ```text
 docs/governance/
-├── README.md              # Directory contract and navigation (target file)
-├── ROOT_GOVERNANCE.md     # Core governance law and review triggers
-├── ETHICS.md              # Ethical and public-consequence guardrails
-└── SOVEREIGNTY.md         # Rights, sensitivity, stewardship, and location-exposure rules
+├── README.md
+├── ROOT_GOVERNANCE.md
+├── ETHICS.md
+├── SOVEREIGNTY.md
+└── consent/
+    ├── README.md
+    └── OVERLAY_CONSENT_TOKENS.md
 ```
 
 > [!NOTE]
-> The README target path above is **PROPOSED / NEEDS VERIFICATION**. The companion filenames are treated as the working governance set because they recur in KFM materials, but their live presence in the mounted repo was not directly reverified in this session.
+> `consent/README.md` is currently present but empty on public `main`. Until it gains real content, route readers directly to [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md) when consent scope, revocation, or overlay publication rights are material.
 
 ## Quickstart
 
-Start here whenever a change could alter public trust, public scope, or release meaning.
+### Re-verify the branch before editing
 
-```text
-Open together:
-1. ./ROOT_GOVERNANCE.md
-2. ../../policy/README.md
-3. ../../contracts/README.md and ../../schemas/README.md
-4. ../../tests/README.md
-5. ../../.github/PULL_REQUEST_TEMPLATE.md
-6. ../../.github/workflows/README.md
+```bash
+sed -n '1,220p' docs/governance/README.md
+find docs/governance -maxdepth 3 -type f | sort
+
+sed -n '1,220p' docs/governance/ROOT_GOVERNANCE.md
+sed -n '1,220p' docs/governance/ETHICS.md
+sed -n '1,220p' docs/governance/SOVEREIGNTY.md
+sed -n '1,220p' docs/governance/consent/OVERLAY_CONSENT_TOKENS.md
+
+sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md
+sed -n '1,220p' .github/workflows/README.md
 ```
 
-Then use this sequence:
+### Triage sequence
 
-1. Classify the change: admission, review, promotion, delivery, runtime behavior, or correction.
-2. Read [ROOT_GOVERNANCE.md][root-governance] first.
-3. Add [ETHICS.md][ethics] when the change affects people, persuasion, civic consequence, or how uncertainty is shown.
-4. Add [SOVEREIGNTY.md][sovereignty] when the change touches culturally sensitive material, rare-species data, oral histories, archaeology, exact locations, or any other steward-sensitive lane.
-5. Check whether the change must also update [policy/README.md][policy-readme], [contracts/README.md][contracts-readme], [schemas/README.md][schemas-readme], or [tests/README.md][tests-readme].
-6. Keep the allowed outcome explicit: **allow/publish**, **review-required**, **hold**, **quarantine**, **generalize**, **deny**, **abstain**, **withdraw**, **supersede**, or **correct**.
-7. Update docs, examples, fixtures, tests, and runbooks in the same governed change stream.
+1. Classify the change: admission, review, promotion, delivery, runtime behavior, consent/revocation, or correction.
+2. Read [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) first.
+3. Add [`./ETHICS.md`](./ETHICS.md) when the change affects people, persuasion, omission risk, public framing, uncertainty cues, or ranking/scoring behavior.
+4. Add [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) when the change touches rights, repatriation, culturally sensitive material, rare-species data, archaeology, exact locations, or steward-restricted knowledge.
+5. Add [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md) when overlay visibility, short-lived access, revocation, or use-scoped permissions are part of the decision.
+6. Re-check adjacent machine surfaces: [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md).
+7. Keep the allowed outcome explicit: **allow/publish**, **review-required**, **hold**, **quarantine**, **generalize**, **deny**, **abstain**, **withdraw**, **supersede**, or **correct**.
+8. Update docs, examples, fixtures, tests, and runbooks in the same governed change stream when behavior shifts.
 
 ## Usage
 
+### Read this lane in this order
+
+| Read this file | When it should lead |
+|---|---|
+| [`./ROOT_GOVERNANCE.md`](./ROOT_GOVERNANCE.md) | Always start here for base law, review triggers, and permitted outcomes |
+| [`./ETHICS.md`](./ETHICS.md) | Public consequence, framing, omission risk, trust-visible UX, ranking, or AI-mediated explanation |
+| [`./SOVEREIGNTY.md`](./SOVEREIGNTY.md) | Rights, sensitivity, exact-location, steward obligations, culturally specific release risk |
+| [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md) | Overlay-specific consent, revocation, obligation enforcement, and receipt-bearing release control |
+
 ### Start here when…
 
-- a map, timeline, dossier, story, export, or Focus answer could present a new public claim
-- a change affects release state, review state, or freshness meaning
-- a source or lane raises rights, sensitivity, or exact-location exposure questions
-- a derived layer risks being mistaken for authoritative truth
-- a correction, withdrawal, or supersession path needs to be defined or updated
-- a contributor wants to change how public-safe failure states are shown
+- a map, timeline, dossier, story, export, or Focus/assistant answer could present a new public claim
+- a change affects release state, review state, correction state, or freshness meaning
+- a source or derived layer risks being mistaken for authoritative truth
+- an overlay or limited-visibility surface needs consent, revocation, or obligation-bearing release control
+- a contributor wants to change how `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` become visible on user-facing surfaces
 
 ### Escalate immediately when…
 
-- exact coordinates, geometry, or descriptive detail could expose sensitive places, species, sites, or people
-- runtime behavior could return uncited or over-scoped prose instead of **ANSWER / ABSTAIN / DENY / ERROR**
-- a convenience path bypasses the governed API, policy evaluation, review boundary, or evidence resolution path
-- a public surface proposes to hide stale, partial, generalized, withdrawn, or corrected state
-- a policy-significant change is documented here but not reflected in adjacent policy, contract, schema, or test surfaces
+- exact coordinates, geometry, or descriptive detail could expose sensitive places, species, people, sites, or community-held knowledge
+- runtime behavior could return uncited or over-scoped prose instead of finite governed outcomes
+- a convenience path bypasses governed APIs, policy evaluation, evidence resolution, or review state
+- a public surface proposes to hide stale, generalized, withdrawn, superseded, or corrected state
+- an overlay would be materialized or published without consent scope, revocation checks, or attached run receipts where those are required
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Source / change / runtime request] --> B[ROOT_GOVERNANCE]
-    A --> C[ETHICS]
-    A --> D[SOVEREIGNTY]
+    A[Change / request / runtime question] --> B[Governance triage]
+    B --> C[ROOT_GOVERNANCE]
+    B --> D[ETHICS]
+    B --> E[SOVEREIGNTY]
+    B --> F[consent/OVERLAY_CONSENT_TOKENS]
 
-    B --> E{Decision}
-    C --> E
-    D --> E
+    C --> G{Decision}
+    D --> G
+    E --> G
+    F --> G
 
-    E --> F[policy/README.md]
-    E --> G[contracts/README.md + schemas/README.md]
-    E --> H[tests/README.md]
-    E --> I[PR template + workflow README]
+    G --> H[policy/README.md]
+    G --> I[contracts/README.md + schemas/README.md]
+    G --> J[tests/README.md]
+    G --> K[PR template + workflows/README.md]
 
-    E -->|publishable| J[PUBLISHED surfaces]
-    J --> K[Map · Timeline · Dossier · Story · Evidence Drawer · Focus · Export]
+    G -->|publishable| L[PUBLISHED surfaces]
+    L --> M[Map · Timeline · Dossier · Story · Evidence Drawer · Focus · Export]
 
-    E -->|fail closed| L[Hold · Quarantine · Generalize · Deny · Abstain]
-    E -->|post-release| M[Correct · Withdraw · Supersede]
+    G -->|negative| N[Hold · Quarantine · Generalize · Deny · Abstain]
+    G -->|post-release| O[Correct · Withdraw · Supersede]
 ```
 
 ## Tables
@@ -166,90 +206,92 @@ flowchart LR
 
 | Seam | Governance meaning | Typical fail-closed outcome |
 |---|---|---|
-| **Admission** | Unresolved rights, sensitivity, or source admissibility blocks intake from becoming governed truth | hold · quarantine |
-| **Promotion** | Missing review, closure, proof, or synced documentation blocks publication | review-required · hold |
-| **Delivery** | Stale or unlinked derived projections must not silently appear current | stale-visible · withhold · rebuild |
+| **Admission** | Unresolved rights, sensitivity, admissibility, or consent scope blocks intake from becoming governed truth | hold · quarantine |
+| **Promotion** | Missing review, proof, policy closure, or synchronized docs/tests blocks publication | review-required · hold |
+| **Delivery** | Stale or insufficiently linked derived projections must not silently appear current | stale-visible · withhold · rebuild |
 | **Runtime** | Missing admissible evidence or failed citation checks must not produce confident prose | abstain · deny · error |
+| **Consent / revocation** | Invalid, expired, unknown, or revoked permission must block materialization or release | deny · rollback · purge/generalize |
 
 ### Trust-visible surfaces
 
 | Surface | Governance must make visible |
 |---|---|
-| **Map Explorer** | time scope, layer state, freshness, route to evidence |
-| **Timeline** | valid-time framing, event grain, stale-state cues, comparison basis |
-| **Dossier** | identity, dependencies, service context, hazard/water context, evidence links |
+| **Map Explorer** | layer state, time scope, freshness, route to evidence |
+| **Timeline** | valid-time framing, event grain, comparison basis, stale-state cues |
+| **Dossier** | identity, evidence links, service/hazard/water context, correction state |
 | **Story** | evidence-linked excerpts, dates, perspective labels, review/correction state |
-| **Evidence Drawer** | EvidenceBundle members, transform context, release state, preview limits |
-| **Focus Mode** | scoped retrieval, citation verification, audit linkage, **ANSWER / ABSTAIN / DENY / ERROR** |
-| **Review / Stewardship** | diff, gate results, policy labels, review notes, receipts, no hidden approvals |
-| **Export** | release scope, evidence linkage, preview policy, correction linkage |
+| **Evidence Drawer** | `EvidenceRef → EvidenceBundle` resolution, transform context, release state |
+| **Focus Mode / assistant** | scoped retrieval, citation verification, audit linkage, finite outcomes |
+| **Review / stewardship** | diff, gate results, policy labels, notes, receipts, no hidden approvals |
+| **Export** | release scope, evidence linkage, preview policy, correction lineage |
+| **Consent-bound overlays** | permission scope, obligations, revocation posture, receipt-bearing publication trail |
 
-### Cross-repo touchpoints
+### Adjacent handoffs
 
-| Surface | Why governance should link to it | Current evidence posture |
+| Surface | Why governance should link to it | Current public reading |
 |---|---|---|
-| [policy/README.md][policy-readme] | deny-by-default posture, reasons/obligations grammar, finite outcomes | **CONFIRMED** in attached repo-grounded summary |
-| [contracts/README.md][contracts-readme] + [schemas/README.md][schemas-readme] | keeps governance prose aligned with contract and schema language | **CONFIRMED** in attached repo-grounded summary |
-| [tests/README.md][tests-readme] | keeps governance changes paired with fixture/test expectations | **CONFIRMED** in attached repo-grounded summary |
-| [tools/README.md][tools-readme] + [scripts/README.md][scripts-readme] | relevant when governance changes imply validator or entrypoint updates | **CONFIRMED** in attached repo-grounded summary |
-| [PR template][pr-template] | contributor review checklist, cite-or-abstain reminder, proof/fixtures/tests expectations | **CONFIRMED** in attached repo-grounded summary |
-| [workflow README][workflows-readme] | documents CI/workflow scaffolding; do not assume active merge gates without recheck | **CONFIRMED** in attached repo-grounded summary |
-| [readme-structure-reconciliation.md][readme-recon] | useful structure reference, but treat with caution because attached audit flagged staleness risk | **CONFIRMED** file reference; content needs verification |
+| [`../../policy/README.md`](../../policy/README.md) | deny-by-default posture, reasons/obligations grammar, finite outcomes | present |
+| [`../../contracts/README.md`](../../contracts/README.md) + [`../../schemas/README.md`](../../schemas/README.md) | keeps governance prose aligned with contract and schema language | present |
+| [`../../tests/README.md`](../../tests/README.md) | pairs governance changes with fixtures, proof drills, and negative-path expectations | present |
+| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | contributor review checklist, truth labels, validation evidence, risk/rollback prompts | present |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | documents workflow lane intent and current public inventory limits | present, README-only on public `main` |
 
 ### Decision outcomes
 
 | Outcome | Use it when | Do not treat it as |
 |---|---|---|
 | **allow / publish** | evidence, policy, review, and release conditions are satisfied | default entitlement |
-| **review-required** | machine checks are not enough and steward or reviewer judgment is required | optional paperwork |
-| **hold** | readiness is incomplete but may become publishable | failure |
-| **quarantine** | rights, sensitivity, or admissibility is unresolved | invisible backlog |
-| **generalize** | precise detail would create exposure or interpretive harm | mere cartographic styling |
-| **deny** | the request or change exceeds policy or allowed scope | a UX nuisance |
-| **abstain** | runtime cannot support the answer safely from admissible evidence | poor assistant performance |
-| **withdraw / supersede / correct** | published material later proves unsafe, wrong, over-scoped, or stale | history to hide |
+| **review-required** | machine checks are insufficient and steward/reviewer judgment is required | optional paperwork |
+| **hold** | readiness is incomplete but may become publishable | silent backlog |
+| **quarantine** | rights, sensitivity, admissibility, or source integrity is unresolved | a mere staging delay |
+| **generalize** | precise detail would create exposure or interpretive harm | decorative cartography |
+| **deny** | the request exceeds policy, scope, or permission | a UX nuisance |
+| **abstain** | runtime cannot support the answer safely from admissible evidence | assistant weakness |
+| **withdraw / supersede / correct** | published material later proves unsafe, stale, wrong, or over-scoped | history to hide |
 
-## Task list
-
-### Definition of done
+## Task list & definition of done
 
 A governance-directory change is ready when:
 
-- [ ] the directory contract still matches what governance is supposed to decide
-- [ ] companion governance docs are linked or intentionally flagged as **NEEDS VERIFICATION**
+- [ ] the path and subtree still match the branch being changed
+- [ ] companion law docs and the consent sublane link correctly
 - [ ] governance-significant changes are reflected in adjacent policy, contract, schema, and test surfaces where applicable
-- [ ] PR review language and workflow notes are updated when review or gate behavior changes
-- [ ] truth posture stays explicit; no line upgrades **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** text into repo fact
-- [ ] rights, sensitivity, exact-location, and correction posture are visible where they change outcomes
+- [ ] review-language and workflow notes are updated when gate expectations change
 - [ ] negative outcomes remain first-class, readable, and testable
-- [ ] placeholder values for `doc_id`, owners, dates, and policy label are either retired or intentionally left visible
+- [ ] rights, sensitivity, exact-location, consent, revocation, and correction posture stay visible where they change outcomes
+- [ ] no line upgrades **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** into implementation fact
+- [ ] placeholder metadata values are either retired or intentionally left visible
 
-### Open verification items
+<details>
+<summary><strong>Open verification items</strong></summary>
 
-- [ ] confirm the live repo path for this directory and whether `docs/governance/README.md` already exists
-- [ ] confirm the live presence of `ROOT_GOVERNANCE.md`, `ETHICS.md`, and `SOVEREIGNTY.md`
-- [ ] replace placeholder `doc_id`, owners, `created`, `updated`, and `policy_label`
-- [ ] confirm whether additional governance docs or runbooks in this area should be linked here
-- [ ] verify whether CI/workflow behavior has changed since the attached repo-grounded audit
-- [ ] verify whether governance changes should currently update any live schema, policy bundle, or fixture inventory beyond documentation surfaces
+- Confirm canonical `doc_id`, `created`, `updated`, and `policy_label` values for the meta block.
+- Confirm whether `docs/governance/consent/README.md` should remain empty, become an index, or be removed.
+- Confirm whether additional governance child lanes exist on the working branch beyond what is visible on public `main`.
+- Confirm platform-only merge gates, required checks, rulesets, environment approvals, app permissions, and any non-public workflow behavior before presenting them as live governance enforcement.
+- Confirm whether any governance change in this branch also requires runbook updates under `../runbooks/` or standards updates under `../standards/`.
+
+</details>
+
+[Back to top](#kansas-frontier-matrix--governance)
 
 ## FAQ
 
 ### Is governance just security?
 
-No. Security is one governed concern, but KFM governance also covers publication, admissibility, rights, sensitivity, exact-location exposure, review authority, runtime failure semantics, and correction lineage.
+No. Security is one governed concern, but KFM governance also covers admissibility, rights, sensitivity, exact-location exposure, consent, review authority, publication posture, runtime failure semantics, and correction lineage.
 
 ### Why keep ethics and sovereignty separate from root governance?
 
-Because KFM repeatedly treats public consequence, rights, cultural sensitivity, stewardship, and exact-location exposure as decision-bearing burdens, not footnotes. Keeping them separate improves review clarity without letting them drift away from core governance law.
+Because KFM treats public consequence, rights, cultural sensitivity, stewardship, and exact-location exposure as decision-bearing burdens, not footnotes. Separate companion files make those burdens easier to review without letting them drift away from core law.
+
+### Where does consent fit?
+
+Consent belongs in governance when release or read-time visibility depends on explicit, scoped, revocable permission. In the current public tree, that specialized work is routed through [`./consent/OVERLAY_CONSENT_TOKENS.md`](./consent/OVERLAY_CONSENT_TOKENS.md).
 
 ### Why are deny and abstain healthy outcomes?
 
-Because KFM is designed to fail closed. A visible refusal is more trustworthy than persuasive prose with no admissible evidence path.
-
-### Why is this README still marked experimental?
-
-Because the governance doctrine is well supported, but the current session exposed doctrine PDFs and an attached repo-grounded audit summary rather than a live repo checkout. Exact file presence, owners, dates, and merge-gate state still need direct verification.
+Because KFM is designed to fail closed. A visible refusal is more trustworthy than persuasive prose or a polished overlay with no admissible evidence or valid permission path behind it.
 
 ## Appendix
 
@@ -258,13 +300,13 @@ Because the governance doctrine is well supported, but the current session expos
 
 | Term | Working meaning in this directory |
 |---|---|
-| **Truth path** | `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED` |
-| **Trust membrane** | The governed boundary that keeps public clients and normal UI surfaces from bypassing governed APIs, policy evaluation, and evidence resolution |
-| **Authoritative vs derived** | Canonical truth carries governance burden; derived tiles, graphs, indexes, scenes, caches, and summaries remain subordinate unless explicitly promoted |
+| **Truth path** | `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
+| **Trust membrane** | The governed boundary that keeps public clients and ordinary UI surfaces from bypassing governed APIs, policy evaluation, and evidence resolution |
+| **Authoritative vs derived** | Canonical truth carries governance burden; tiles, graphs, scenes, caches, indexes, and summaries stay subordinate unless explicitly promoted |
 | **EvidenceRef** | Stable support reference used across KFM trust surfaces |
 | **EvidenceBundle** | The governed support payload used to explain a claim, feature, story, export, or runtime answer |
 | **Promotion** | A governed state transition, not a file copy |
-| **Correction lineage** | The visible chain linking supersession, withdrawal, narrowing, or replacement across affected surfaces |
+| **Correction lineage** | The visible chain linking narrowing, supersession, withdrawal, or replacement across affected surfaces |
 
 </details>
 
@@ -273,10 +315,10 @@ Because the governance doctrine is well supported, but the current session expos
 
 - new public claims or new public claim presentation
 - changes to publication classes or release scope
-- changes to rights, sensitivity, or exact-location handling
+- changes to rights, sensitivity, exact-location, or consent handling
 - changes to reviewer roles, steward boundaries, or no-self-approve expectations
 - runtime behavior changes affecting citation checks or negative outcomes
-- correction, withdrawal, or supersession behavior changes
+- correction, withdrawal, supersession, or revocation behavior changes
 - governance prose drifting away from policy, contracts, schemas, fixtures, or tests
 
 </details>
@@ -284,26 +326,10 @@ Because the governance doctrine is well supported, but the current session expos
 <details>
 <summary><strong>Authoring guardrails for this directory</strong></summary>
 
-- Prefer precise burden language over abstract values language.
+- Prefer burden language over abstract values language.
 - Link to executable surfaces when governance has machine-checkable consequences.
-- Keep live repo uncertainty visible instead of smoothing it away.
-- Do not let derived delivery, AI output, or UI polish outrank evidence, policy, review, or correction.
+- Keep branch/platform uncertainty visible instead of smoothing it away.
+- Do not let derived delivery, AI output, or UI polish outrank evidence, policy, review, consent, or correction.
 - When in doubt, make the safer outcome legible.
 
 </details>
-
-[Back to top](#kansas-frontier-matrix--governance)
-
-[repo-root]: ../../README.md
-[root-governance]: ./ROOT_GOVERNANCE.md
-[ethics]: ./ETHICS.md
-[sovereignty]: ./SOVEREIGNTY.md
-[policy-readme]: ../../policy/README.md
-[contracts-readme]: ../../contracts/README.md
-[schemas-readme]: ../../schemas/README.md
-[tests-readme]: ../../tests/README.md
-[tools-readme]: ../../tools/README.md
-[scripts-readme]: ../../scripts/README.md
-[pr-template]: ../../.github/PULL_REQUEST_TEMPLATE.md
-[workflows-readme]: ../../.github/workflows/README.md
-[readme-recon]: ../reports/readme-structure-reconciliation.md
