@@ -3,14 +3,14 @@ doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
 title: Policy
 type: standard
 version: v1
-status: draft
-owners: NEEDS VERIFICATION
+status: review
+owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-03-22
+updated: 2026-04-03
 policy_label: public
-related: ["../README.md", "../CONTRIBUTING.md", "../.github/README.md", "../contracts/README.md", "../data/README.md", "../apps/api/README.md"]
-tags: [kfm, policy, governance, opa, rego]
-notes: ["doc_id, owners, and created date require repo-backed verification before merge", "updated reflects 2026-03-22 repo-grounded evidence that policy/README.md was recently revised, not a verified front-matter field from the mounted checkout", "task-supplied relative links below must be reconciled with the real checkout before merge", "current session evidence confirms a policy/README.md documentation surface but does not confirm mounted .rego bundles, runnable policy tests, or an implemented policy-runtime package", "OPA/Rego is treated here as the strongest documented starter direction, not as confirmed mounted adoption"]
+related: ["../README.md", "../CONTRIBUTING.md", "../.github/README.md", "../.github/workflows/README.md", "../contracts/README.md", "../schemas/README.md", "../data/README.md", "../packages/policy/README.md", "../tests/policy/README.md", "./bundles/README.md", "./fixtures/README.md", "./policy-runtime/README.md", "./tests/README.md"]
+tags: [kfm, policy, governance, trust, review]
+notes: ["doc_id and created date require repo-backed verification before merge", "updated reflects this 2026-04-03 revision draft", "current public main confirms policy/, policy/bundles/, policy/fixtures/, policy/policy-runtime/, policy/tests/, packages/policy/, and tests/policy/ documentation surfaces", "inspected child policy lanes and .github/workflows remain README-only on public main", "OPA/Rego is treated here as a documented starter direction, not as confirmed checked-in bundle adoption"]
 [/KFM_META_BLOCK_V2] -->
 
 # Policy
@@ -18,13 +18,13 @@ notes: ["doc_id, owners, and created date require repo-backed verification befor
 _Governed, executable policy surface for KFM publication, runtime trust, rights and sensitivity handling, and visible correction._
 
 > **Status:** `experimental`  
-> **Owners:** `NEEDS VERIFICATION`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-policy-blue) ![posture](https://img.shields.io/badge/posture-deny--by--default-critical) ![trust](https://img.shields.io/badge/trust-cite--or--abstain-5b8cff) ![repo](https://img.shields.io/badge/repo%20evidence-README%20present-lightgrey) ![engine](https://img.shields.io/badge/policy%20engine-OPA%2FRego%20starter-lightgrey)  
-> **Repo fit:** `policy/README.md` · current session evidence confirms a policy README surface and a recent policy-doc revision, but does **not** confirm mounted `.rego` bundles, runnable policy tests, or a verified runtime package boundary  
+> **Owners:** `@bartytime4life`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da) ![surface](https://img.shields.io/badge/surface-policy-blue) ![inventory](https://img.shields.io/badge/inventory-lane%20visible%20on%20public%20main-lightgrey) ![posture](https://img.shields.io/badge/posture-deny--by--default-critical) ![engine](https://img.shields.io/badge/engine-OPA%2FRego%20starter-lightgrey)  
+> **Repo fit:** `policy/README.md` · parent lane for [`./bundles/README.md`](./bundles/README.md), [`./fixtures/README.md`](./fixtures/README.md), [`./policy-runtime/README.md`](./policy-runtime/README.md), and [`./tests/README.md`](./tests/README.md) · adjacent machine-contract and authority boundaries at [`../contracts/README.md`](../contracts/README.md) and [`../schemas/README.md`](../schemas/README.md) · adjacent shared internal support at [`../packages/policy/README.md`](../packages/policy/README.md) · broader proof lane at [`../tests/policy/README.md`](../tests/policy/README.md) · workflow guardrail at [`../.github/workflows/README.md`](../.github/workflows/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Policy seams](#policy-seams) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Gates and definition of done](#gates-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README deliberately separates **CONFIRMED** repo-grounded evidence from **INFERRED** and **PROPOSED** target structure. In the current session, the strongest repo-state evidence is documentary, not a mounted checkout with executable policy assets.
+> Current public `main` now confirms `policy/` as a real top-level lane with child policy surfaces and adjacent package/test boundaries. The inspected public tree is still documentation-heavy, though: the child policy lanes and `packages/policy/` are README surfaces, and `.github/workflows/` is README-only on public `main`. Keep **current-tree facts** separate from **proposed executable fill**.
 
 ## Scope
 
@@ -32,30 +32,21 @@ _Governed, executable policy surface for KFM publication, runtime trust, rights 
 
 In KFM, policy is not a detached compliance appendix. It is the gate layer that shapes source admission, rights handling, sensitivity and redaction, review and release, runtime answers, correction and withdrawal, and the trust cues users see in the shell.
 
-### Evidence labels used in this README
+### Evidence posture used here
 
-| Label | Meaning in this file |
+| Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus or by repo-grounded evidence visible in this session |
-| **INFERRED** | Conservative structural completion strongly implied by repeated KFM doctrine, but not verified as mounted implementation |
-| **PROPOSED** | Doctrine-consistent target structure, starter path, or realization move not yet verified in a mounted checkout |
-| **UNKNOWN** | Not supported strongly enough in this session to present as current repo/runtime fact |
-| **NEEDS VERIFICATION** | Placeholder or unresolved detail that must be checked in the real repository before merge |
-
-### Baseline used for this revision
-
-| Role | Source posture | Why it anchors this README |
-|---|---|---|
-| Current repo-state anchor | Repo-grounded evidence | Establishes what is actually evidenced now: `policy/README.md` exists as a documentation surface; active workflow YAML gates and mounted `.rego` bundles were not confirmed |
-| Master doctrine | Canonical KFM master reference | Supplies the strongest dependency-ordered statement of trust membrane, contract families, route families, finite runtime outcomes, and policy/test expectations |
-| Supporting doctrine | UI / verification / atlas overlays | Deepens shell trust visibility, verification placement, Kansas operating lanes, and sensitivity burdens |
-| Expansion pressure | Repo-grounded sprint + March idea corpus | Sharpens the next artifact wave: schemas, registries, fixtures, tests, receipts, and fail-closed policy behavior |
+| **CONFIRMED** | Directly supported by attached KFM doctrine or the current public `main` tree |
+| **INFERRED** | Strongly implied by repeated doctrine or adjacent repo docs, but not re-proven as checked-in implementation behavior |
+| **PROPOSED** | Commit-ready structure or practice that fits KFM doctrine but is not asserted as current repo reality |
+| **UNKNOWN** | Not supported strongly enough to present as current branch or runtime fact |
+| **NEEDS VERIFICATION** | Placeholder, branch-specific, or platform-only detail that should be checked before merge |
 
 ### Load-bearing commitments preserved here
 
 | Commitment | Practical consequence |
 |---|---|
-| Default deny / fail closed | Missing rights, missing evidence linkage, unresolved sensitivity, or absent policy artifacts must end in a governed negative outcome rather than a silent allow |
+| Default deny / fail closed | Missing rights, missing evidence linkage, unresolved sensitivity, or missing review posture should end in a governed negative outcome rather than a silent allow |
 | Reasons and obligations stay explicit | Policy should emit stable vocabularies instead of drifting into prose-only decisions |
 | Publication is a governance event | Publishable output must be explainable through decision, review, release, and correction artifacts |
 | Runtime outcomes stay finite | Claim-bearing runtime behavior should converge on explicit outcomes, not graceful-looking ambiguity |
@@ -66,35 +57,40 @@ In KFM, policy is not a detached compliance appendix. It is the gate layer that 
 
 ## Repo fit
 
-The strongest current picture is a split between a **documented repo surface** and a **doctrine-aligned target surface**.
+The earlier “README-only / target-shape only” picture is no longer accurate for public `main`. The current public tree proves a fuller policy lane, but it still does **not** prove populated rule packs, fixture cases, runnable policy suites, or checked-in workflow YAML under `.github/workflows/`.
 
-The current evidence safely supports this much: `policy/README.md` exists as a repo documentation surface; policy doctrine is already framed around **deny by default**, **reasons and obligations**, and **finite outcomes**; workflow scaffolding is documented but active merge-blocking workflow YAML was not evidenced in the session material; and mounted `.rego` bundles/tests were not confirmed.
+### Current public snapshot
 
-### Current repo evidence
-
-| Concern | Evidence posture |
-|---|---|
-| `policy/README.md` exists as a documented surface | **CONFIRMED** |
-| Policy documentation was recently revised for clarity/governance detail | **CONFIRMED** |
-| `.github/workflows/README.md` documents scaffolding rather than proving active YAML merge gates in-tree | **CONFIRMED** |
-| `contracts/README.md`, `schemas/README.md`, `tests/README.md`, `tools/README.md`, and `scripts/README.md` exist as documentation surfaces | **CONFIRMED** |
-| Executable policy bundles in the mounted repo | **UNKNOWN** |
-| Mounted `.rego` files or policy tests | **NOT CONFIRMED** |
-| Runtime package seam such as `packages/policy-runtime/` | **UNKNOWN** |
-
-### Repo fit links
-
-| Direction | Intended neighbor | Why it matters |
+| Surface | Current public `main` | What that proves |
 |---|---|---|
-| Upstream | [`../README.md`](../README.md) | Root system identity, doctrine, and repo navigation |
+| `policy/README.md` | Present | `policy/` is a real repo-root lane, not a hypothetical target |
+| `policy/bundles/README.md` | Present; directory is README-only | The executable bundle lane exists publicly, but populated bundle artifacts are not evidenced here |
+| `policy/fixtures/README.md` | Present; directory is README-only | The fixture lane exists publicly, but fixture cases are not evidenced here |
+| `policy/policy-runtime/README.md` | Present; directory is README-only | Runtime-policy coordination is documented, but mounted runtime glue is not proven here |
+| `policy/tests/README.md` | Present; directory is README-only | Bundle-local verification is documented as a separate surface |
+| `packages/policy/README.md` | Present; package directory is README-only in inspected surface | A separate shared internal policy-support boundary is documented under `packages/` |
+| `tests/policy/README.md` | Present; directory is README-only in inspected surface | Repo-facing policy behavior proof is documented separately from `policy/tests/` |
+| `.github/workflows/README.md` | Present; workflow lane is README-only | Workflow claims must stay conservative on public `main` |
+
+### Upstream, lateral, and downstream links
+
+| Direction | Surface | Why it matters |
+|---|---|---|
+| Upstream | [`../README.md`](../README.md) | Root system identity, doctrine summary, and public-tree navigation |
 | Upstream | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Review discipline for policy-significant change |
-| Lateral | [`../contracts/README.md`](../contracts/README.md) | Contract families, schema ownership, and example/fixture relationships |
-| Lateral | [`../data/README.md`](../data/README.md) | Truth-path zones and authoritative-versus-derived boundaries that policy governs |
-| Downstream | [`../apps/api/README.md`](../apps/api/README.md) | Governed API neighbor; reconcile with the real tree before merge |
-| Downstream | [`../.github/README.md`](../.github/README.md) | Workflow, gate, and promotion context |
+| Lateral | [`../contracts/README.md`](../contracts/README.md) | Current machine-contract lane for trust-bearing objects such as `DecisionEnvelope`, `EvidenceBundle`, and `RuntimeResponseEnvelope` |
+| Lateral | [`../schemas/README.md`](../schemas/README.md) | Authority/boundary guide that keeps schema-home ambiguity visible |
+| Lateral | [`../data/README.md`](../data/README.md) | Truth-path zones and release-adjacent data surfaces policy governs but does not own |
+| Lateral | [`./bundles/README.md`](./bundles/README.md) | Seam-local rule-pack lane |
+| Lateral | [`./fixtures/README.md`](./fixtures/README.md) | Seam-local positive/negative example lane |
+| Lateral | [`./tests/README.md`](./tests/README.md) | Bundle-local assertion lane |
+| Lateral | [`./policy-runtime/README.md`](./policy-runtime/README.md) | Runtime-policy coordination lane inside top-level `policy/` |
+| Downstream | [`../packages/policy/README.md`](../packages/policy/README.md) | Shared internal code boundary that should remain subordinate to repo-authoritative policy |
+| Downstream | [`../tests/policy/README.md`](../tests/policy/README.md) | Broader repo-facing proof that policy behavior survives into runtime, release, and correction lanes |
+| Guardrail | [`../.github/workflows/README.md`](../.github/workflows/README.md) | Documents current workflow-lane visibility and future merge-gate expectations |
 
 > [!WARNING]
-> The relative links above are retained because the task supplied them. They still need reconciliation against the mounted checkout before merge.
+> Do not let `policy/` quietly resolve `contracts/` versus `schemas/` by duplication. Current public docs keep `contracts/` as the machine-contract lane while `schemas/` exists specifically to keep schema-home authority explicit and singular.
 
 [Back to top](#policy)
 
@@ -104,113 +100,165 @@ The current evidence safely supports this much: `policy/README.md` exists as a r
 
 | Input class | What belongs here | Typical examples |
 |---|---|---|
-| Executable policy bundles | Shared rules for admission, rights, sensitivity, review, release, runtime, correction, and export | `*.rego`, bundle manifests, machine-readable rule packs |
-| Policy fixtures | Positive and negative examples that prove fail-closed behavior | `allow`, `deny`, `generalize`, `restrict`, `needs-review`, `withdraw`, `supersede` cases |
-| Policy tests | Assertions specific to policy behavior | Conftest/OPA checks, outcome regression packs, bundle unit tests |
-| Policy vocabularies | Stable reason/obligation or rights/sensitivity registries when the repo keeps them with policy | `reason_codes.*`, `obligation_codes.*`, `reviewer_roles.*` |
-| Steward docs | Minimal human-readable notes needed to review the bundle | bundle READMEs, glossary fragments, review notes |
+| Bundle rule packs | Rule families that decide one trust seam or seam family | seam-local `*.rego`, helper modules, bundle manifests |
+| Policy fixtures | Positive and negative cases that prove deny-by-default behavior | `allow`, `deny`, `generalize`, `restrict`, `needs-review`, `withdraw`, `supersede` examples |
+| Bundle-local assertions | Checks that prove one bundle family behaves as documented | Conftest/OPA checks, seam-local regression packs, outcome grammar assertions |
+| Runtime-policy coordination notes | Small docs that explain how policy semantics should be consumed without relocating policy authority | decision assembly notes, runtime parity notes, mediation guidance |
+| Shared internal support code | Package code that helps governed runtimes consume policy consistently | loaders, adapters, mediation helpers under `../packages/policy/` |
+| Steward-facing notes | Minimal human-readable notes needed to review policy-significant changes | glossary notes, dependency maps, review notes |
+
+### Working placement rule
+
+If the change mostly defines **policy law**, it belongs under `./bundles/`, `./fixtures/`, or `./tests/`.  
+If it mostly defines **shared internal code**, it belongs under [`../packages/policy/README.md`](../packages/policy/README.md).  
+If it mostly proves **repo-facing policy behavior under pressure**, it belongs under [`../tests/policy/README.md`](../tests/policy/README.md).
 
 ## Exclusions
 
 | Does **not** belong in `policy/` | Put it instead | Why |
 |---|---|---|
-| Canonical JSON Schema / OpenAPI definitions | [`../contracts/`](../contracts/) or verified schema location | Shared object shape should not be duplicated inside rule packs |
-| Runtime loaders, decision mediators, or API adapters | Verified runtime package boundary | Execution glue is adjacent to policy, but it is not the bundle itself |
-| App handlers, UI-only conditionals, or workers | App/package boundary | Enforcement code is not the same artifact as the policy pack |
-| RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED data | [`../data/`](../data/) | Policy governs movement and exposure; it is not the canonical store |
-| Secrets, keys, `.env` files, or live credentials | Secret manager / host configuration | Sensitive operational material must not live in the policy tree |
-| Long operational runbooks unrelated to policy behavior | `docs/runbooks/` or verified runbook path | Keep this directory focused on executable governance |
+| Canonical JSON Schema / OpenAPI definitions | [`../contracts/`](../contracts/) | Shared trust-object shape should not drift into rule-pack lanes |
+| A second authoritative schema registry | [`../schemas/README.md`](../schemas/README.md) boundary guidance | Parallel schema homes increase ambiguity, not resilience |
+| Shared internal package code treated as repo-authoritative policy | [`../packages/policy/README.md`](../packages/policy/README.md) | Support code should stay subordinate to the top-level policy lane |
+| Broader repo-facing policy proof | [`../tests/policy/README.md`](../tests/policy/README.md) | `policy/tests/` and `tests/policy/` have different scopes |
+| API handlers, workers, or UI conditionals | governed app/package boundaries under `../apps/` and `../packages/` | Enforcement code is not the same artifact as the policy pack |
+| RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED artifacts | [`../data/README.md`](../data/README.md) | Policy governs movement and exposure; it is not the canonical store |
+| Workflow orchestration or platform settings | [`../.github/workflows/README.md`](../.github/workflows/README.md) and GitHub platform settings | Public docs do not yet prove checked-in YAML gate coverage |
+| Secrets, keys, `.env` files, or live credentials | secret manager / host configuration | Sensitive operational material must not live in the policy tree |
 
 [Back to top](#policy)
 
 ## Directory tree
 
-### Current repo-grounded evidence (**CONFIRMED**)
-
-```text
-policy/
-└── README.md
-```
-
-That is the strongest safe path-level claim from this session.
-
-### Doctrine-aligned target shape (**PROPOSED**)
+### Current public `main` (**CONFIRMED**)
 
 ```text
 policy/
 ├── README.md
 ├── bundles/
+│   └── README.md
 ├── fixtures/
+│   └── README.md
+├── policy-runtime/
+│   └── README.md
 └── tests/
+    └── README.md
 ```
 
-### Frequently implied adjacent seam (**INFERRED / PROPOSED**)
+### Adjacent verified policy-facing surfaces (**CONFIRMED**)
 
 ```text
 packages/
-└── policy-runtime/
+└── policy/
+    └── README.md
+
+tests/
+└── policy/
+    └── README.md
+
+.github/
+└── workflows/
+    └── README.md
 ```
 
-> [!NOTE]
-> Treat the trees above as different claim strengths, not one blended assertion. The first is current evidence. The others are doctrine-consistent starter shapes.
+<details>
+<summary><strong>Possible next executable fill (PROPOSED)</strong></summary>
+
+```text
+policy/
+├── bundles/
+│   ├── shared/
+│   ├── admission/
+│   ├── rights/
+│   ├── sensitivity/
+│   ├── review/
+│   ├── release/
+│   ├── runtime/
+│   └── correction/
+├── fixtures/
+│   ├── allow/
+│   ├── deny/
+│   ├── generalize/
+│   ├── restrict/
+│   ├── needs-review/
+│   └── correction/
+├── tests/
+│   ├── decision-grammar/
+│   ├── seam-local-regression/
+│   └── runtime-parity/
+└── policy-runtime/
+    └── coordination-notes/
+```
+
+This is a starter fill pattern, not a claim about the checked-out branch.
+</details>
+
+[Back to top](#policy)
 
 ## Policy seams
 
-Policy is most useful when it is organized by trust seam rather than by implementation fashion.
+Policy is most useful when it is organized by **responsibility seam** and kept honest about what each lane does.
 
-| Policy seam | What it decides | Trust objects it should touch | Fail-closed expectation |
+| Surface / seam | Current public state | Why it exists | What it still does **not** prove |
 |---|---|---|---|
-| Source admission | Whether a source may enter the truth path and under what conditions | `SourceDescriptor`, `IngestReceipt`, `ValidationReport` | Unresolved rights, malformed shape, or unsupported cadence/support should quarantine or deny |
-| Rights and sensitivity | Whether scope may stay precise, must generalize, must restrict, or must withhold | `DecisionEnvelope`, `ReviewRecord`, transform receipts | Exact-location or reuse risk should never fall through to public-safe output silently |
-| Review and release | Whether promoted scope may publish and under what obligations | `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest` / `ReleaseProofPack` | No silent publish path |
-| Runtime answer handling | Whether a request may answer, abstain, deny, or error | `EvidenceBundle`, `RuntimeResponseEnvelope` | Empty scope, stale support, unresolved policy, or uncited output should produce a governed negative outcome |
-| Correction and withdrawal | How supersession, withdrawal, narrowing, and rollback remain visible | `CorrectionNotice`, release refs, rebuild refs | Correction must propagate visibly rather than erasing history |
+| `./bundles/` | README-only | Holds seam-local rule packs and finite decision grammar | Checked-in `.rego` or equivalent rule files |
+| `./fixtures/` | README-only | Holds positive and negative examples that make deny-by-default behavior reviewable | Mounted fixture payloads or case inventory |
+| `./tests/` | README-only | Holds bundle-local assertions close to the policy lane | Runnable suite depth or actual toolchain |
+| `./policy-runtime/` | README-only | Documents runtime-facing policy semantics and coordination inside top-level `policy/` | Mounted runtime glue, loaders, or adapters |
+| `../packages/policy/` | README-only in inspected surface | Holds shared internal policy-support code that should stay subordinate to repo-authoritative policy | Populated package code or resolved import shape |
+| `../tests/policy/` | README-only in inspected surface | Holds broader repo-facing proof that policy behavior survives into runtime, release, and correction lanes | End-to-end coverage or current runner wiring |
+| `../.github/workflows/` | README-only | Holds workflow expectations and release/promotion guardrail documentation | Checked-in merge-blocking workflow YAML on current public `main` |
+
+### Trust seams policy should ultimately govern
+
+| Trust seam | Primary objects policy should touch | Fail-closed expectation |
+|---|---|---|
+| Source admission | `SourceDescriptor`, `IngestReceipt`, `ValidationReport` | Unresolved rights, malformed shape, or unsupported support/cadence should quarantine or deny |
+| Rights and sensitivity | `DecisionEnvelope`, `ReviewRecord`, transform receipts | Exact-location or reuse risk should never fall through to public-safe output silently |
+| Review and release | `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest` / `ReleaseProofPack` | No silent publish path |
+| Runtime answer handling | `EvidenceBundle`, `RuntimeResponseEnvelope` | Empty scope, stale support, unresolved policy, or uncited output should produce a governed negative outcome |
+| Correction and withdrawal | `CorrectionNotice`, release refs, rebuild refs | Correction must propagate visibly rather than erasing history |
 
 [Back to top](#policy)
 
 ## Quickstart
 
-### 1) Inspect the real policy surface
+### 1) Inspect the current policy-facing surfaces
 
 ```bash
-find . -maxdepth 4 \
-  \( -path './policy' -o -path './packages/policy-runtime' -o -path './tests/policy' -o -path './contracts' \) \
-  -print 2>/dev/null
+find policy packages/policy tests/policy .github/workflows -maxdepth 3 -type f 2>/dev/null | sort
 ```
 
-### 2) Check whether executable policy files actually exist
+### 2) Inspect the current contract and schema boundaries
 
 ```bash
-find . -type f \
-  \( -name '*.rego' -o -name '*policy*' -o -name '*reason*' -o -name '*obligation*' \) \
-  | sort
+find contracts schemas -maxdepth 3 -type f 2>/dev/null | sort
 ```
 
-### 3) Trace trust-bearing joins
+### 3) Trace trust-bearing object names across repo surfaces
 
 ```bash
-grep -R -nE \
-  'DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|reason_codes|obligation_codes|policy_bundle_version|rights_class|sensitivity_class' \
-  policy packages contracts tests docs apps 2>/dev/null || true
+grep -RInE \
+  'DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|reason_codes|obligation_codes|rights_class|sensitivity_class' \
+  policy packages tests contracts schemas docs apps 2>/dev/null || true
 ```
 
-### 4) Inspect workflow and gate wiring
+### 4) Inspect workflow claims before assuming checked-in gates
 
 ```bash
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
-grep -R -nE 'opa|rego|conftest|policy|RuntimeResponseEnvelope|DecisionEnvelope|CorrectionNotice' \
-  .github/workflows policy tests docs 2>/dev/null || true
 ```
 
-### 5) Sanity-check runtime outcome grammar
+### 5) Surface any checked-in policy rule or registry files
 
 ```bash
-grep -R -nE 'ANSWER|ABSTAIN|DENY|ERROR|allow|deny|generalize|restrict|STEWARD_REVIEW|withdraw|supersede' \
-  policy packages contracts tests docs apps 2>/dev/null || true
+find . -type f \
+  \( -name '*.rego' -o -name '*reason_codes*' -o -name '*obligation_codes*' -o -name '*reviewer_roles*' \) \
+  | sort
 ```
 
 > [!NOTE]
-> These commands are discovery helpers, not proof by themselves. Update this README only after reconciling its claims against the mounted checkout.
+> These are discovery commands, not proof by themselves. Update this README against the checked-out branch before letting its claims harden into review or release assumptions.
 
 [Back to top](#policy)
 
@@ -219,18 +267,18 @@ grep -R -nE 'ANSWER|ABSTAIN|DENY|ERROR|allow|deny|generalize|restrict|STEWARD_RE
 ### Add or change a policy family
 
 1. Start with the seam, not the filename: admission, rights, sensitivity, review, release, runtime, export, or correction.
-2. Update the shared vocabulary first, or explicitly point to the registry that already owns the change.
-3. Add paired fixtures: at least one happy path and one negative path. Include transform, restrict, or review-required cases when the seam calls for them.
-4. Verify that the meaning survives into downstream trust objects such as `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, or `RuntimeResponseEnvelope`.
-5. Make sure the same semantics survive both CI and runtime. KFM treats policy guarantees as system-level guarantees, not best-effort guidance.
-6. Keep the doc honest: mark what is **CONFIRMED**, what is **INFERRED**, and what still needs verification.
+2. Decide whether the change belongs in `./bundles/`, `./fixtures/`, `./tests/`, `./policy-runtime/`, `../packages/policy/`, or `../tests/policy/`.
+3. Keep machine-contract and schema authority singular: point to `../contracts/` and `../schemas/` instead of re-inventing their ownership inside `policy/`.
+4. Pair every bundle-significant change with fixtures and bundle-local assertions.
+5. If runtime, release, or correction behavior changes, extend the broader proof lane in `../tests/policy/` or the relevant end-to-end surface.
+6. Document which downstream trust objects must reflect the result.
 
 ### Keep reasons and obligations stable
 
 - **Reasons** explain why a result occurred.
 - **Obligations** explain what must happen next.
 - Semantically changing a reason or obligation code should version the relevant bundle or registry.
-- Transform obligations should create explicit receipts or visible consequences, not invisible UI behavior.
+- Transform obligations should create explicit receipts or visible downstream consequences, not invisible UI behavior.
 - Exception handling must stay review-bearing. No quiet override path belongs in normal flow.
 
 ### Illustrative starter decision (**PROPOSED**)
@@ -240,7 +288,7 @@ input:
   actor_role: public
   surface_class: focus
   action: answer
-  release_id: rel.2026-03-20.public.v1
+  release_id: rel.example.public.v1
   rights_class: open
   sensitivity_class: public
 
@@ -253,7 +301,7 @@ decision:
     - RECORD_AUDIT
 ```
 
-Use this as a starter fixture shape, not as proof that the mounted repo already emits this exact payload.
+Use this as a starter fixture shape, not as proof that the checked-out branch already emits this exact payload.
 
 ### What policy should prove before broader expansion
 
@@ -262,7 +310,7 @@ Use this as a starter fixture shape, not as proof that the mounted repo already 
 | Review / release | Publish or block through explicit `DecisionEnvelope` and, where required, `ReviewRecord` |
 | Runtime ask | No uncited fifth outcome; only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
 | Generalization | A visible transform path with obligation handling and receipt linkage |
-| Correction | Withdrawal/supersession remains inspectable after release |
+| Correction | Withdrawal and supersession remain inspectable after release |
 | CI / runtime parity | The same core semantics survive both pull-request gates and live requests |
 
 [Back to top](#policy)
@@ -271,33 +319,39 @@ Use this as a starter fixture shape, not as proof that the mounted repo already 
 
 ```mermaid
 flowchart LR
-  Source[Source admission] --> Validate[Validation / quarantine]
-  Vocab[Reason / obligation / rights / sensitivity vocab] --> Bundle[Policy bundle]
-  Validate --> Bundle
-  Bundle --> Decision[DecisionEnvelope]
-  Decision --> Review[ReviewRecord<br/>when required]
-  Review --> Release[ReleaseManifest / ReleaseProofPack]
-  Release --> Evidence[EvidenceBundle]
-  Evidence --> Runtime[RuntimeResponseEnvelope]
-  Runtime --> Surfaces[Map / Dossier / Story / Focus / Export]
-  Correction[CorrectionNotice] --> Release
-  Correction --> Surfaces
+  Root["../README.md"] --> Policy["policy/README.md"]
+  Policy --> Bundles["./bundles/"]
+  Policy --> Fixtures["./fixtures/"]
+  Policy --> PolicyTests["./tests/"]
+  Policy --> PolicyRuntime["./policy-runtime/"]
+
+  Contracts["../contracts/README.md"] --> TrustObjects["DecisionEnvelope<br/>ReviewRecord<br/>ReleaseManifest / ReleaseProofPack<br/>EvidenceBundle<br/>RuntimeResponseEnvelope<br/>CorrectionNotice"]
+  Schemas["../schemas/README.md"] -. boundary / authority .-> Contracts
+
+  Bundles --> Fixtures
+  Fixtures --> PolicyTests
+  PolicyRuntime --> PackageSupport["../packages/policy/"]
+  PolicyTests --> RepoProof["../tests/policy/"]
+  RepoProof --> Workflows["../.github/workflows/README.md"]
+  TrustObjects --> Surfaces["Map / Dossier / Story / Focus / Export"]
 ```
 
-Policy is the bridge between intake, review, release, runtime, and visible correction—not a detached checklist.
+Above: the boxes are the **currently verified documentation surfaces**; the trust objects and outward surfaces are the doctrine-bearing downstream responsibilities those lanes are expected to serve.
 
 ## Tables
 
-### Route families and trust obligations
+### Lane responsibilities
 
-| Route family | Primary objects | Trust obligation |
+| Surface | Owns what | Should stay out of |
 |---|---|---|
-| Catalog and discovery | Release metadata, dataset/distribution discovery, catalog closures | Catalog closure and identifier consistency must resolve cleanly |
-| Feature or subject read | Released authoritative features, place dossiers, claims, detail views | Stable subject ID, support/time semantics, rights posture, and release scope are mandatory |
-| Map / tile / portrayal | Released maps, tiles, legends, styles, portrayals | Must inherit release linkage, policy posture, freshness, and correction state |
-| Evidence resolution | `EvidenceRef -> EvidenceBundle` and related trust objects | Every bundle must resolve to admissible published scope with visible rights/sensitivity state and audit linkage |
-| Focus / governed assistance | Bounded natural-language investigation over released scope | Scope, citations, policy, and audit linkage must be visible in the same pane |
-| Review / stewardship | Moderation, quarantine inspection, approval, denial, rollback, rights handling | No hidden approvals; every action must emit review and decision artifacts |
+| `policy/README.md` | Parent lane contract and current-state guide | Shadow runtime code or shadow schema authority |
+| `policy/bundles/` | Rule families and finite decision grammar | Generic fixtures, generic tests, and app glue |
+| `policy/fixtures/` | Small positive/negative examples | Canonical contracts or runtime code |
+| `policy/tests/` | Bundle-local assertions | Broader repo-facing proof responsibilities |
+| `policy/policy-runtime/` | Runtime-policy coordination notes | Claiming mounted runtime glue before branch proof |
+| `packages/policy/` | Shared internal support code | Replacing top-level policy as repo-authoritative surface |
+| `tests/policy/` | Repo-facing proof that policy behavior survives under pressure | Becoming a second bundle tree |
+| `.github/workflows/` | Workflow-lane documentation and future gate burden | Being treated as checked-in YAML proof when only README is visible |
 
 ### Policy result grammar
 
@@ -307,7 +361,7 @@ Policy is the bridge between intake, review, release, runtime, and visible corre
 | `deny` | Rights, sensitivity, actor, or release posture blocks the action | Explicit denial with stable reason |
 | `generalize` | Exposure is allowed only after masking, aggregation, or geometry reduction | Visible transform state and receipt linkage |
 | `restrict` | Surface is limited to a narrower actor or mode | Role-aware exposure; no quiet public fallback |
-| `needs-review` / `STEWARD_REVIEW` | Machine gate cannot safely resolve the case alone | Route to steward queue with reason and audit refs |
+| `needs-review` / `STEWARD_REVIEW` | Machine gate cannot safely resolve the case alone | Route to steward review with reason and audit refs |
 | `withdrawn` / `superseded` | Trust state changed after release | Preserve lineage and correction visibility |
 
 ### Runtime envelope outcomes
@@ -319,94 +373,81 @@ Policy is the bridge between intake, review, release, runtime, and visible corre
 | `DENY` | Policy blocks the request | Calm refusal with accountable reason |
 | `ERROR` | Technical failure prevented reliable governed handling | Explicit failure without pretending policy or evidence passed |
 
-### Current repo evidence versus doctrinal target
-
-| Concern | Current repo-grounded evidence | Doctrine-aligned target |
-|---|---|---|
-| README surface | `policy/README.md` exists | Keep it as the human-facing entry point |
-| Executable policy assets | Not confirmed in reviewed repo artifacts | Bundles + registries + fixtures + tests |
-| Runtime seam | Not confirmed | `packages/policy-runtime/` or verified equivalent |
-| Merge gates | Workflow scaffolding documented; active YAML merge gate not evidenced | Merge-blocking policy/contract validation |
-| Rule engine | OPA/Rego treated as starter direction | Use only after checkout proves actual adoption |
-
 [Back to top](#policy)
 
 ## Gates and definition of done
 
-- [ ] The mounted checkout was inspected and the real `policy/` surface was documented.
-- [ ] `doc_id`, owners, and created date were replaced with repo-backed values.
-- [ ] The relationship between `policy/` and any runtime seam was verified in the real tree.
-- [ ] Registry ownership is clear: no duplicate reason/obligation or rights/sensitivity vocabularies drift between `policy/` and `contracts/`.
-- [ ] Fixtures cover at least `allow`, `deny`, `generalize`, `restrict`, `needs-review`, `withdraw`, and `supersede` behavior where applicable.
-- [ ] Runtime outcomes align with the same visible trust grammar: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`.
-- [ ] `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, and `RuntimeResponseEnvelope` are either emitted or explicitly tracked as gaps.
-- [ ] No silent override path exists; exceptions remain review-bearing and auditable.
-- [ ] CI or local harness checks exist for policy bundles and fixtures, or the missing checks are explicitly tracked.
-- [ ] Any mention of `OPA/Rego` remains tagged as a documented starter direction unless the mounted repo proves actual adoption.
-- [ ] This README does not imply mounted routes, schemas, workflows, or package names that the checkout does not prove.
+- [ ] `doc_id` and `created` were replaced with repo-backed values.
+- [ ] `policy/README.md` stays aligned with the **current branch**, not just public `main`.
+- [ ] Claims about `policy/bundles/`, `policy/fixtures/`, `policy/tests/`, `policy/policy-runtime/`, `packages/policy/`, and `tests/policy/` match the checked-out tree exactly.
+- [ ] New policy law changes pair with fixtures and bundle-local assertions.
+- [ ] Broader runtime/release/correction behavior changes extend `tests/policy/` or the relevant end-to-end proof lane.
+- [ ] No second authoritative contract or schema home grows inside `policy/`.
+- [ ] Any runtime glue claims point to the verified package or app seam that actually owns them.
+- [ ] Workflow claims stay bounded to what the branch proves in `.github/workflows/`.
+- [ ] Runtime outcomes remain finite: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`.
+- [ ] Correction and review remain visible and audit-bearing.
+- [ ] Any mention of `OPA/Rego` stays explicitly documented as starter direction unless the branch proves checked-in adoption.
 
 [Back to top](#policy)
 
 ## FAQ
 
-### Does this README prove that executable policy bundles already exist in the repo?
+### Does current public `main` prove that `policy/` is more than a single README?
 
-No. Current evidence confirms the README surface and policy doctrine wording, but it does **not** confirm mounted `.rego` bundles or runnable policy tests.
+Yes. Public `main` now confirms `policy/` plus child lanes for `bundles/`, `fixtures/`, `policy-runtime/`, and `tests/`, along with adjacent `packages/policy/` and `tests/policy/` documentation surfaces.
 
-### Is `OPA/Rego` confirmed?
+### Does current public `main` prove executable policy bundles or runnable suites?
 
-It is the strongest documented starter direction in the current evidence. It is **not** confirmed here as a mounted implementation fact.
+No. The inspected child policy lanes are still README-only on public `main`, so checked-in rule packs, fixture payloads, and runnable assertions still need branch-level verification.
 
-### Is a `policy-runtime` package confirmed?
+### Are `policy/tests/` and `tests/policy/` the same thing?
 
-No. It is a doctrine-consistent seam, not a verified current repo fact in this session.
+No. `policy/tests/` is the bundle-local verifier lane. `tests/policy/` is the broader repo-facing proof lane for policy behavior under runtime, release, and correction pressure.
 
-### Do CI and runtime share policy?
+### Is `packages/policy/` confirmed?
 
-They should. KFM doctrine treats policy guarantees as system-level guarantees, so CI and runtime should share core semantics and fixtures—or at minimum the same tested decision grammar.
+Yes, as a documented package boundary. That confirms a shared internal support seam exists publicly. It does **not** by itself prove populated package code.
 
-### What should block publication?
+### Does `.github/workflows/` prove checked-in merge-gate YAML on current public `main`?
 
-Missing rights or sensitivity handling, unresolved evidence, missing review or release artifacts, failed policy fixtures, absent correction lineage, and any bounded-synthesis path that cannot answer with valid evidence or abstain honestly.
+No. Current public `main` documents `.github/workflows/` as `README.md` only. Treat workflow references here as proof burden, not as already-checked-in gate coverage.
+
+### Is `OPA/Rego` confirmed as mounted adoption?
+
+Not from the inspected public tree. It remains the strongest documented starter direction for policy-as-code, but this README should not present it as a checked-in fact unless the active branch proves it.
 
 ## Appendix
 
 <details>
-<summary><strong>Verification backlog and first-wave artifact set</strong></summary>
+<summary><strong>Lowest-friction next executable fill (PROPOSED)</strong></summary>
 
-### Highest-priority verification checks
-
-1. Inspect the mounted repo and confirm whether the policy surface is README-only, partially materialized, or already split into bundles, fixtures, and tests.
-2. Verify whether runtime loading lives in a dedicated package, an app seam, or not yet at all.
-3. Confirm where shared vocabularies really live: `policy/`, `contracts/`, or another documented location.
-4. Surface the real policy entrypoints, fixture inventory, local commands, and CI jobs.
-5. Replace placeholders in the meta block before merge.
-
-### First-wave artifact order (**PROPOSED**)
-
-| Priority | Artifact | Why it comes first |
+| Current lane | First evidence-bearing addition | Why it is the smallest useful move |
 |---|---|---|
-| 1 | `source_descriptor.schema.json`, `dataset_version.schema.json`, `decision_envelope.schema.json`, `release_manifest.schema.json`, `evidence_bundle.schema.json`, `runtime_response_envelope.schema.json`, `correction_notice.schema.json` | Turns doctrine into machine-checkable structure |
-| 1 | Reason / obligation / reviewer registries | Prevents free-text drift and stabilizes decision grammar |
-| 1 | Valid / invalid fixtures | Proves fail-closed behavior instead of merely describing it |
-| 2 | Policy bundle tests + route family proofs | Makes decision grammar and negative-path behavior executable |
-| 2 | One hydrology thin slice | Proves end-to-end governance on a public-safe, place/time-rich lane |
-| 3 | Runtime profile and trust-visible surface examples | Prevents UI or runtime from bluffing before evidence/policy are real |
+| `policy/bundles/` | One seam-local bundle plus a versioned manifest | Converts the lane from descriptive to executable |
+| `policy/fixtures/` | One positive and one negative case for the same seam | Makes deny-by-default behavior inspectable |
+| `policy/tests/` | One seam-local assertion pack | Proves the bundle does what the README says |
+| `tests/policy/` | One runtime-outcome or correction-parity pack | Proves bundle semantics survive broader verification pressure |
+| `policy/policy-runtime/` | One coordination note pointing to the actual consuming package/app seam | Prevents “runtime” from staying abstract |
+| `packages/policy/` | One shared internal adapter or loader boundary | Gives runtime consumers a real place to stay consistent without relocating policy authority |
 
-### Starter bundle families (**PROPOSED**)
+### Starter families worth proving first
 
-| Family | What it covers |
+| Family | Why it is a good first wave |
 |---|---|
-| Admission | Source admissibility and intake-side checks |
-| Rights | License, access posture, and release eligibility |
-| Sensitivity | Redaction, masking, exact-location restrictions, public-safe generalization |
-| Review / release | Promotion gates, review-required mappings, proof readiness |
-| Runtime | Claim-bearing response shaping, citation verification, finite outcomes |
-| Correction | Withdrawal, supersession, stale-visible handling, correction propagation |
+| Admission | Makes source intake governable early |
+| Rights | Prevents casual release drift |
+| Sensitivity | Forces visible generalize/restrict behavior |
+| Review / release | Makes promotion and hold states explicit |
+| Runtime | Enforces finite outward outcomes |
+| Correction | Keeps withdrawal and supersession visible instead of implicit |
 
-### Why `OPA/Rego` stays marked as starter direction
+### Practical reminder
 
-The current evidence supports it as the strongest policy-as-code fit in doctrine and in several starter patterns. That is strong enough to shape this README. It is not strong enough to claim mounted adoption without checkout inspection.
+Touch `../contracts/README.md` and `../schemas/README.md` whenever a policy change:
+- introduces a new trust-bearing object family,
+- changes who owns a shared vocabulary,
+- or starts sounding like a second authoritative schema home.
 
 </details>
 
