@@ -3,326 +3,442 @@ doc_id: kfm://doc/<TODO-UUID>
 title: KFM CLI
 type: standard
 version: v1
-status: draft
-owners: <TODO: confirm owners>
-created: <TODO: confirm YYYY-MM-DD>
-updated: <TODO: confirm YYYY-MM-DD>
-policy_label: <TODO: confirm public|restricted|...>
-related: [../../README.md, ../../data/, ../../contracts/, ../../policy/, ../../docs/, ../../tests/]
-tags: [kfm, cli, governance, promotion, migration]
-notes: [Mounted apps/cli subtree was not directly visible in this session; apps/cli is named in the corpus as a CLI surface for promotion and migration, but exact command inventory, local files, owners, and tests still need live-repo verification.]
+status: review
+owners: @bartytime4life
+created: <TODO: confirm first-commit date>
+updated: 2026-04-04
+policy_label: public
+related: [../README.md, ../workers/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/README.md, ../explorer-web/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../packages/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
+tags: [kfm, apps, cli, governance, operator-lane, promotion]
+notes: [Current public main confirms apps/cli exists and is README-only at this path. Owner is derived from public CODEOWNERS coverage for /apps. Executable entrypoint, tests, and deeper CLI-local topology still need active-branch verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM CLI
 
-_Governed command-line surface for promotion, migration, validation, and receipt-bearing operational work in Kansas Frontier Matrix._
+Governed operator-lane boundary for local tooling, diagnostics, proof-pack helpers, and any future CLI surfaces under `apps/cli/`.
+
+**Status:** experimental **Owners:** [`@bartytime4life`](../../.github/CODEOWNERS) **Badges:** ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![repo](https://img.shields.io/badge/repo-Kansas--Frontier--Matrix-24292f) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![boundary](https://img.shields.io/badge/boundary-cli%20runtime-6f42c1) ![truth](https://img.shields.io/badge/truth-source--bounded-f2cc60) ![public-main](https://img.shields.io/badge/public__main-README__only-orange)
+
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 | Field | Value |
 |---|---|
-| Status | **experimental** |
-| Owners | **TODO — confirm** |
-| Repo path | `apps/cli/README.md` |
-| Working posture | **CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION** |
-| Merge readiness | **Requires subtree verification before commit** |
-
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![Path](https://img.shields.io/badge/path-apps%2Fcli-blue)
-![Role](https://img.shields.io/badge/role-governed%20ops-1f6feb)
-![Verification](https://img.shields.io/badge/verification-subtree%20required-red)
-
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+| Path | `apps/cli/README.md` |
+| Repo fit | Child boundary README for `apps/` |
+| Upstream | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
+| CLI-local downstream | **NEEDS VERIFICATION** — no confirmed child CLI lanes are present here yet |
+| Accepted inputs | Release-backed identifiers, artifact refs, migration targets, validation-safe diagnostics, receipt lookup context |
+| Exclusions | Public request handling, hidden publish paths, unattended worker jobs, ad hoc business law, generic utility sprawl |
+| Current public-main signal | `apps/cli/` exists on public `main`; `README.md` is the only confirmed file at this path |
+| Adjacent runtime surfaces | [`../explorer-web/README.md`](../explorer-web/README.md), [`../governed-api/README.md`](../governed-api/README.md), [`../api/README.md`](../api/README.md), [`../review-console/README.md`](../review-console/README.md), [`../workers/README.md`](../workers/README.md) |
+| Evidence boundary | March–April 2026 KFM doctrine plus current public-main repo inspection; local-branch executable depth remains source-bounded |
 
 > [!IMPORTANT]
-> This README is doctrine-grounded, but the mounted `apps/cli/` subtree was **not** directly visible in this session. Treat concrete filenames, command names, owners, package-manager assumptions, and sibling links below as **review-ready scaffolding** until checked against the live repository.
+> Treat this file as a **boundary contract first** and an **implementation index second**. Current public `main` proves that the CLI lane exists, but it does **not** yet prove a checked-in entrypoint, package-manager choice, command inventory, tests, or emitted proof objects under `apps/cli/`.
 
 > [!NOTE]
-> In KFM, a CLI is not a convenience bypass. It should help enforce the truth path, promotion gates, receipts, and release discipline—not silently route around them.
+> Human-invoked operator work belongs here. Request-time public traffic belongs in governed APIs, and unattended background execution belongs in worker or workflow lanes.
+
+---
 
 ## Scope
 
-The role of this directory is narrow on purpose: it is the steward-facing or operator-facing command surface for governed operational work.
+`apps/cli/` is the operator-facing command-line boundary inside the runtime family documented by [`../README.md`](../README.md).
 
-**CONFIRMED**
+On current public `main`, two things are directly visible here:
 
-A current KFM documentation compendium explicitly names `apps/cli` as the place for **CLI tools for data promotion, migration, etc.** That aligns with the broader KFM doctrine that promotion is a governed state change, not an informal file move.
+1. `apps/cli/` is a real named app lane under `apps/`.
+2. The directory is currently README-only in public view.
 
-**CONFIRMED**
+That means this README should do the honest thing: define what the lane is for, what it must never bypass, and what evidence must exist before command-specific documentation becomes more concrete.
 
-KFM’s canonical truth path is staged:
+### Stable laws carried into this boundary
 
-`Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
+| Stable law | Why it matters here |
+|---|---|
+| **CONFIRMED:** CLI is steward/operator-facing, not a public request surface | End-user traffic stays in governed API and UI surfaces. |
+| **CONFIRMED:** Promotion is a governed state transition | A command finishing successfully is not publish authority by itself. |
+| **CONFIRMED:** Contracts, schemas, policy, and shared packages own durable business law | CLI work should orchestrate against those surfaces, not replace them. |
+| **CONFIRMED:** Receipts, manifests, review state, and correction lineage stay visible | Release-significant operator work must remain auditable. |
+| **INFERRED:** Human-invoked command work and unattended background work should stay separate | Background retries, schedules, and projection jobs fit [`../workers/README.md`](../workers/README.md) or workflow lanes better. |
 
-Promotion across that path is expected to carry typed artifacts such as dataset versions, catalog closure, decision records, release manifests, evidence bundles, and correction notices.
+### What this README is not
 
-**INFERRED**
+This file is **not** proof that current public `main` already contains:
 
-Given that doctrine, `apps/cli/` is best treated as the human-invoked operational surface that coordinates validation, migration, promotion, and audit-bearing maintenance work across data, contracts, policy, and release artifacts.
+- a checked-in executable under `apps/cli/`
+- a real subcommand tree
+- app-local tests or fixtures under this directory
+- a specific package manager, runtime, or build tool
+- active workflow wiring or release automation bound to this path
 
-**PROPOSED**
+Use this README to keep the boundary honest until the active branch proves more.
 
-This README assumes the CLI remains a **steward tool**, not a public interface and not the normal access path for standard clients.
+[Back to top](#kfm-cli)
+
+---
 
 ## Repo fit
 
-These path expectations follow the requested target path and the corpus’s documented module surfaces. Verify the actual neighboring tree before merge.
+`apps/cli/` sits inside the runtime-facing `apps/` family, so it should behave like an app boundary, not like a generic scripts bucket.
 
-### Path
+### Boundary-first rule
 
-`apps/cli/README.md`
+1. Human-invoked operator flows stay explicit and receipted.
+2. Request-time client traffic stays in governed APIs and shells.
+3. Unattended background execution stays in worker or workflow lanes.
+4. Reusable business law stays in packages, contracts, schemas, and policy.
+5. Command docs remain source-bounded until a real entrypoint exists.
 
-### Upstream surfaces
+### Upstream and downstream links
 
-| Surface | Link | Why it is upstream |
+| Direction | Path | Role |
 |---|---|---|
-| Root project context | [`../../README.md`](../../README.md) | System identity, doctrine, and high-level lifecycle. |
-| Contracts | [`../../contracts/`](../../contracts/) | Shared machine-checkable contract families and examples. |
-| Policy | [`../../policy/`](../../policy/) | Reason codes, obligation logic, deny-by-default evaluation, and release constraints. |
-| Data | [`../../data/`](../../data/) | Truth-path zones, versioned artifacts, catalog material, and publishable outputs. |
-| Docs | [`../../docs/`](../../docs/) | Runbooks, ADRs, architecture notes, and steward guidance. |
+| Upstream | [../README.md](../README.md) | Parent app-family boundary and shell law |
+| Upstream | [../../README.md](../../README.md) | Repo-root posture and system identity |
+| Upstream | [../../docs/README.md](../../docs/README.md) | Architecture, doctrine, ADRs, and runbooks |
+| Upstream | [../../packages/README.md](../../packages/README.md) | Shared reusable logic boundary |
+| Upstream | [../../contracts/README.md](../../contracts/README.md) | Contract families and examples |
+| Upstream | [../../schemas/README.md](../../schemas/README.md) | Machine-checkable schema boundary |
+| Upstream | [../../policy/README.md](../../policy/README.md) | Deny-by-default and obligation logic |
+| Upstream | [../../tests/README.md](../../tests/README.md) | Verification burden and test placement |
+| Upstream | [../../.github/workflows/README.md](../../.github/workflows/README.md) | Current public workflow-doc surface |
+| Upstream | [../../infra/README.md](../../infra/README.md) | Deployment, queue, and environment-facing documentation |
+| Downstream | [../explorer-web/README.md](../explorer-web/README.md) | Browser shell boundary |
+| Downstream | [../review-console/README.md](../review-console/README.md) | Review and stewardship shell boundary |
+| Downstream | [../governed-api/README.md](../governed-api/README.md) | Governed API boundary |
+| Downstream | [../api/README.md](../api/README.md) | Public-main API lane root |
+| Downstream | [../workers/README.md](../workers/README.md) | Background execution boundary |
 
-### Downstream surfaces
+> [!WARNING]
+> Current public `main` exposes both `apps/governed-api/README.md` and an `apps/api/` path family. Keep CLI links explicit and treat final naming authority as **NEEDS VERIFICATION** on the active branch.
 
-| Surface | Link | Why it is downstream |
+### Current sibling runtime surfaces
+
+| Sibling surface | Why it matters to `apps/cli/` |
+|---|---|
+| [`../explorer-web/README.md`](../explorer-web/README.md) | Browser ownership stays outside CLI. |
+| [`../review-console/README.md`](../review-console/README.md) | Approval, denial, rollback, and correction UI must remain trust-visible rather than buried in commands. |
+| [`../governed-api/README.md`](../governed-api/README.md) and [`../api/README.md`](../api/README.md) | Request-time policy mediation, evidence shaping, and normal client access stay outside CLI. |
+| [`../workers/README.md`](../workers/README.md) | Once work becomes unattended, scheduled, or queue-driven, it belongs there instead of here. |
+
+[Back to top](#kfm-cli)
+
+---
+
+## Inputs
+
+The following inputs are appropriate for a CLI lane **if** code lands here.
+
+| Input type | Status | Why it belongs |
 |---|---|---|
-| Tests | [`../../tests/`](../../tests/) | CLI behavior should be exercised by contract, policy, integration, and end-to-end checks. |
-| Tools | [`../../tools/`](../../tools/) | Validators, hashers, and support utilities are likely called by or alongside CLI flows. |
-| Infra | [`../../infra/`](../../infra/) | Promotion and migration eventually intersect deployment and release-bearing infrastructure. |
-| Published runtime surfaces | `../../data/` and governed APIs | CLI-driven promotion should feed governed publication, not replace it. |
-| Adjacent `apps/` surfaces | **NEEDS VERIFICATION** | Exact sibling links should be added after the mounted `apps/` tree is inspected. |
+| Release-backed identifiers (`dataset_id`, version refs, release refs, run IDs) | **CONFIRMED doctrine / local placement INFERRED** | CLI work should target governed objects, not ad hoc local state. |
+| Artifact references (processed outputs, manifests, receipts, catalog paths) | **CONFIRMED doctrine / local placement INFERRED** | Operator flows frequently need to inspect or move proof-bearing artifacts. |
+| Migration targets and environment selectors | **CONFIRMED doctrine / local placement INFERRED** | Migration is explicitly part of the documented CLI role. |
+| Validation-safe diagnostic requests | **INFERRED** | Operator-facing diagnostics fit CLI better than public UI or request-time API lanes. |
+| Receipt / audit lookup context | **INFERRED** | CLI is a natural place to inspect run context, rollback references, and audit summaries. |
+| Fixture-backed examples | **PROPOSED** | Sample inputs and expected receipts make future commands reviewable and testable. |
 
-## Accepted inputs
+### Accepted-input checklist
 
-This directory should accept or coordinate the kinds of inputs that matter in governed release flow.
+A CLI-bound command should usually answer these questions up front:
 
-| Belongs here | Examples | Posture |
-|---|---|---|
-| Release-bearing identifiers | `dataset_id`, `dataset_version_id`, run IDs, release IDs | **CONFIRMED fit** |
-| Artifact references | processed outputs, manifests, receipts, catalog paths | **CONFIRMED fit** |
-| Contract references | schema targets, standards profiles, payload examples | **INFERRED fit** |
-| Policy references | policy labels, obligations, reviewer context, redaction requirements | **INFERRED fit** |
-| Migration targets | environment class, store target, schema or data migration intent | **CONFIRMED fit** |
-| Audit context | reviewer identity, promotion reason, rollback reference, release notes | **INFERRED fit** |
+1. What governed object or release-backed scope does it touch?
+2. Which contract, schema, or policy version defines the payload?
+3. Which artifacts may it read?
+4. Which receipts, manifests, or reports may it emit?
+5. What is the fail-closed or rollback path if it misfires?
+
+---
 
 ## Exclusions
 
-This directory should **not** become a dumping ground for unrelated scripts or an ungoverned operator backdoor.
+The easiest way to weaken this directory is to let it become an operator backdoor.
 
-| Does **not** belong here | Where it goes instead | Why |
+| Exclusion | Why it is out of scope | Where it goes instead |
 |---|---|---|
-| Public or end-user request handling | Governed API / UI surfaces | CLI is not a public truth surface. |
-| Silent publication without gates | Nowhere | KFM promotion is governed, reviewable, and receipt-backed. |
-| Long-lived business rules hidden only in scripts | `../../contracts/`, `../../policy/`, shared packages | KFM keeps law in explicit contracts and policy surfaces, not shell glue alone. |
-| Normal client access that bypasses policy | Forbidden by design | Trust membrane rules apply to public and standard client access. |
-| Flat utility sprawl (`misc`, `helpers`, `random-scripts`) | Structured command groups with docs and tests | Prevents drift, weak ownership, and undocumented side effects. |
+| Public or end-user request handling | CLI is not the public truth surface. | Governed API and app shell surfaces |
+| Unattended background jobs | Human-invoked and background execution should stay distinct. | [`../workers/README.md`](../workers/README.md) and workflow lanes |
+| Hidden publication without gates | Publication is a governance event, not a side effect. | Release, review, and policy-governed lanes |
+| Durable business law embedded only in scripts | KFM keeps law explicit and inspectable. | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), shared packages |
+| Direct client or store bypasses | Trust membrane rules still apply here. | Governed APIs and promoted artifact paths |
+| Generic `misc/` or `helpers/` sprawl | Weak ownership and undocumented side effects accumulate fast. | Structured command groups with docs and tests once real code exists |
+
+> [!WARNING]
+> A CLI that can silently publish, silently “heal” missing proof, or silently bypass review is not a convenience. It is a trust-boundary bug.
+
+[Back to top](#kfm-cli)
+
+---
 
 ## Directory tree
 
-Mounted subtree visibility was unavailable, so this is a **review scaffold**, not a claimed live inventory.
+### Current public `main` app-family snapshot
+
+```text
+apps/
+├─ README.md
+├─ cli/
+│  └─ README.md
+├─ explorer-web/
+├─ governed-api/
+├─ review-console/
+└─ workers/
+```
+
+> [!NOTE]
+> The snapshot above reflects the current public app-family view that is directly visible without claiming deeper sibling inventories.
+
+### CLI-local tree
 
 ```text
 apps/cli/
-├── README.md                        # this document
-├── <entrypoint>                     # UNKNOWN — verify actual executable surface
-├── <command-groups/>                # INFERRED — promote / migrate / validate / receipts
-├── <examples-or-fixtures/>          # PROPOSED — minimal operator examples
-└── <docs-or-command-notes/>         # PROPOSED — per-command notes if the surface grows
+└─ README.md
 ```
 
-> [!TIP]
-> If the live repo already places some CLI-adjacent logic outside `apps/cli/`, revise this tree to match the mounted structure instead of forcing the code to mimic placeholder documentation.
+### Documented expansion slots
+
+The slots below are **not** confirmed live subdirectories. They are the most likely future fits if CLI code stays under `apps/cli/`.
+
+| Candidate path | Status | Intended role |
+|---|---|---|
+| `apps/cli/commands/` | **PROPOSED** | Grouped command modules once a real entrypoint exists |
+| `apps/cli/fixtures/` | **PROPOSED** | Reviewable sample inputs, receipts, and golden outputs |
+| `apps/cli/docs/` | **PROPOSED** | Command-specific notes if the lane grows past one README |
+| `apps/cli/tests/` | **PROPOSED / NEEDS VERIFICATION** | App-local smoke tests only if this repo keeps CLI tests here instead of `../../tests/` |
+
+---
 
 ## Quickstart
 
-> [!CAUTION]
-> The commands below are **pseudocode**. Replace `<cli>` with the verified entrypoint, package manager, and flag names from the mounted repository before merge.
+These commands are intentionally **read-only**. They verify what exists before anyone documents more than the tree supports.
 
 ```bash
-# PSEUDOCODE — verify actual entrypoint in the live repo
-<cli> --help
+# from repo root
+git rev-parse --short HEAD
 
-# Validate a release-bearing artifact or spec
-<cli> validate --artifact <path/to/artifact-or-spec>
+printf '\n== app surface directories ==\n'
+find apps -maxdepth 1 -mindepth 1 -type d | sort
 
-# Promote a dataset version through governed gates
-<cli> promote \
-  --dataset-id <dataset_id> \
-  --dataset-version-id <dataset_version_id>
+printf '\n== cli-local inventory ==\n'
+find apps/cli -maxdepth 2 -mindepth 1 | sort
 
-# Run or inspect a migration
-<cli> migrate --target <environment-or-store>
+printf '\n== current cli boundary doc ==\n'
+sed -n '1,240p' apps/cli/README.md
 
-# Inspect receipts or audit context for a prior run
-<cli> receipts show --run <run_id>
+printf '\n== parent apps boundary ==\n'
+sed -n '1,240p' apps/README.md
+
+printf '\n== nearby operator and workflow seams ==\n'
+sed -n '1,220p' apps/workers/README.md
+sed -n '1,220p' .github/workflows/README.md
+
+printf '\n== search for concrete CLI entrypoints before documenting commands ==\n'
+find . -maxdepth 4 \
+  \( -path './.git' -prune \) -o \
+  \( -type f \( -name 'package.json' -o -name 'pyproject.toml' -o -name 'go.mod' -o -name 'Cargo.toml' -o -name 'Justfile' -o -name 'Makefile' \) -print \) | sort
+
+printf '\n== search for CLI-adjacent vocabulary ==\n'
+grep -RInE '\b(cli|promote|promotion|migrate|migration|receipt|run_receipt|release_manifest|catalog_closure|validate)\b' \
+  apps packages docs contracts policy tests tools scripts .github 2>/dev/null | head -n 200
 ```
 
-### Expected operator preconditions
+### Sanity check before documenting real commands
 
-1. Work from a clean, reviewable branch.
-2. Confirm the command maps to a governed artifact flow, not an ad hoc shortcut.
-3. Ensure required contracts, policy bundles, and validation assets are present.
-4. Capture receipts, manifests, and any release evidence the flow emits.
-5. Do not treat a successful local run as publish authorization by itself.
+```bash
+# confirm whether active-branch CLI code exists before adding help/install snippets
+find apps/cli -maxdepth 3 -mindepth 1 | sort
+```
+
+If that command returns only `apps/cli/README.md`, keep this README focused on the boundary and avoid pretending deeper structure is already mounted.
+
+[Back to top](#kfm-cli)
+
+---
 
 ## Usage
 
-The exact subcommand inventory remains **NEEDS VERIFICATION**, but the directory’s likely command families can still be organized around KFM’s release discipline.
+Use this file in three modes.
 
-| Command family | Why it belongs | Expected outputs / side effects | Posture |
-|---|---|---|---|
-| `promote` | Move validated artifacts through governed promotion steps | receipts, release-manifest references, catalog updates, audit trail | **CONFIRMED fit** |
-| `migrate` | Handle schema or data lifecycle evolution with rollback awareness | migration records, reviewable logs, reversible change notes | **CONFIRMED fit** |
-| `validate` | Run contract, catalog, quality, and gate checks before promotion | validation reports, failure details, machine-readable pass/fail | **INFERRED fit** |
-| `receipts` / `audit` | Inspect or emit receipt-bearing operator evidence | run records, audit references, provenance links | **INFERRED / PROPOSED** |
-| `policy` | Trigger or summarize deny-by-default policy evaluations | obligation results, deny reasons, gate summaries | **INFERRED / PROPOSED** |
-| `doctor` / `status` | Give maintainers a safe preflight view of local operator state | environment summary, missing inputs, blocked gates | **PROPOSED** |
+### 1. As a placement guide
 
-### Working rule
+Before adding code under `apps/cli/`, verify that the work is truly **human-invoked operator work** and not:
 
-A CLI command here should answer at least one of these questions:
+- reusable domain law for `../../packages/`
+- request-time API logic for `../governed-api/` or `../api/`
+- browser or review UI ownership
+- unattended background execution for `../workers/`
 
-- What is being promoted or migrated?
-- Which gates were checked?
-- Which receipts or manifests were emitted?
-- What failed, and where is the review trail?
-- How is rollback or correction kept visible?
+### 2. As an onboarding map
 
-If a command cannot answer those questions, it likely belongs elsewhere or needs a stronger contract.
+When a contributor asks, “Where should this operator flow live?”, this README should steer them toward the right seam:
+
+- **CLI** if it is human-invoked, explicit, receipted operator work
+- **Workers** if it is unattended background execution
+- **Governed API** if it is request-time trust mediation
+- **Packages / contracts / policy** if it is reusable law or machine-checkable structure
+- **Tests / fixtures** if it is proof of behavior
+
+### 3. As a review checklist
+
+Any real CLI lane added here should document:
+
+- entrypoint and runtime
+- accepted payload contract
+- emitted receipts, manifests, or reports
+- upstream dependencies
+- failure posture
+- rollback or correction path
+- neighboring tests and fixtures
+- why the work belongs in CLI rather than workers or API
+
+### Command responsibilities once code lands
+
+Literal subcommand names remain **UNKNOWN** on current public `main`, but the responsibility lanes are still clear.
+
+| Responsibility lane | Current status | What a future CLI surface should emit or respect |
+|---|---|---|
+| Promotion orchestration | **CONFIRMED doctrine / command name UNKNOWN** | Run receipts, release-manifest refs, policy results, catalog-closure refs |
+| Migration orchestration | **CONFIRMED doctrine / command name UNKNOWN** | Migration logs, rollback refs, target version notes |
+| Validation preflight | **INFERRED local fit** | Validation reports, failure details, digest summaries |
+| Receipt and audit inspection | **INFERRED local fit** | Run lookup, provenance refs, review-trail summaries |
+| Environment / dependency diagnostics | **PROPOSED** | Blocked-gate summaries, missing tooling hints, safe preflight checks |
+
+---
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    subgraph U["Upstream governed surfaces"]
-        D["data/"]
-        C["contracts/"]
-        P["policy/"]
-        Docs["docs/"]
-    end
+    A[Human steward / operator] --> B[apps/cli]
 
-    CLI["apps/cli"]
-    V["Validation & gate checks"]
-    R["Receipts / audit trail"]
-    T["CATALOG closure<br/>(DCAT + STAC + PROV)"]
-    M["Release manifest"]
-    Pub["PUBLISHED scope"]
-    API["Governed API / UI"]
+    C[Contracts + schemas] --> B
+    D[Policy bundles] --> B
+    E[Packages + tools] --> B
 
-    D --> CLI
-    C --> CLI
-    P --> CLI
-    Docs --> CLI
+    B --> F[Validation / diagnostics]
+    B --> G[Promotion or migration orchestration]
 
-    CLI --> V
-    V --> R
-    R --> T
-    T --> M
-    M --> Pub
-    Pub --> API
+    F --> H[Reports / receipts]
+    G --> H
+    H --> I[Governed review / publish surfaces]
 
-    Clients["Clients / standard UI traffic"] -. "must not bypass policy" .-> Stores["Canonical stores / artifact roots"]
-    API -. "governed access only" .-> Stores
+    J[apps/governed-api or apps/api] -. request-time mediation stays there .-> B
+    K[apps/workers] -. unattended background execution stays there .-> B
+    L[Canonical stores and promoted artifacts] -. crossed through governed seams, not hidden CLI shortcuts .-> I
 ```
 
-## Tables
+### Reading rule for the diagram
 
-### Artifact touchpoints
+`apps/cli/` may participate in governed flow, but it should stay **human-invoked**, **boundary-aware**, and **downstream of contracts and policy**. It is not the sovereign truth layer, and it is not a hidden publish tunnel.
 
-| Artifact | CLI relationship | Required before publish | Notes |
-|---|---|---|---|
-| Dataset spec / registry entry | Input | Yes | Identity and spec context should be stable before promotion. |
-| Policy label / obligations | Input / gate | Yes, when applicable | Sensitivity and redaction cannot be bolted on after release. |
-| Validation report | Output | Yes | Failed checks should stop the flow cleanly. |
-| Run receipt / audit record | Output | Yes | KFM treats these as operational trust objects. |
-| Catalog closure / triplet | Output / validation target | Yes | Discovery, asset access, and lineage closure stay cross-linked. |
-| Release manifest | Output | Yes | Promotion should be recorded as a governed event. |
-| Rollback / correction reference | Output when relevant | Situational but critical | Destructive or release-significant actions need a reversal story. |
+---
 
-### Claim posture in this README
+## Reference tables
 
-| Claim type | How this README treats it |
-|---|---|
-| `apps/cli` as a documented CLI surface for promotion and migration | **CONFIRMED** |
-| KFM truth path, promotion discipline, fail-closed posture, and receipt-bearing release expectations | **CONFIRMED** |
-| Exact command names, flags, local files, and executable entrypoint | **UNKNOWN / NEEDS VERIFICATION** |
-| Validation, receipts, and policy evaluation as likely CLI-adjacent responsibilities | **INFERRED / PROPOSED** |
-| Local subtree shape shown above | **PROPOSED** |
+### Current public-main CLI inventory
+
+| Path | Current public-main signal | Interpretation |
+|---|---|---|
+| `apps/cli/` | Present | Named operator lane is real on current public `main` |
+| `apps/cli/README.md` | Present | Boundary doc exists and should stay truthful about what is not yet proven |
+| Other files under `apps/cli/` | None confirmed on public `main` | Do not invent entrypoints, flags, fixtures, or tests |
+| `apps/README.md` | Present | Parent runtime boundary already reserves room for a CLI / operator lane |
+| `../../.github/workflows/README.md` | Present | Public workflow-doc context exists, but that is not the same thing as proven CLI automation |
+
+### Proof objects a CLI lane should respect
+
+| Proof object | Why it matters | Posture |
+|---|---|---|
+| Release / dataset version refs | Target scope for governed promotion or migration | **CONFIRMED doctrine** |
+| `validation_report` or equivalent gate output | Fail-closed evidence before movement | **CONFIRMED doctrine / local file UNKNOWN** |
+| `run_receipt` | Operator audit trail and repeatability anchor | **CONFIRMED doctrine** |
+| `release_manifest` | Release-scoped outward event record | **CONFIRMED doctrine** |
+| Catalog closure / STAC–DCAT–PROV linkage | Publish-readiness boundary | **CONFIRMED doctrine** |
+| Rollback or correction reference | Visible reversal story for release-significant work | **CONFIRMED doctrine** |
+
+[Back to top](#kfm-cli)
+
+---
 
 ## Task list
 
-### Definition of done for this README before merge
+### Definition of done before merge
 
-- [ ] Confirm the mounted `apps/cli/` subtree exists and replace the scaffolded tree with the real one.
-- [ ] Replace all placeholder metadata in the KFM meta block.
-- [ ] Replace pseudocode commands with the actual verified entrypoint and flags.
-- [ ] Confirm exact upstream/downstream sibling links inside `apps/`.
-- [ ] Add real badge targets if CI or status endpoints exist.
-- [ ] Verify whether receipt or provenance-oriented CLI work lives in `apps/cli/`, another package surface, or both.
-- [ ] Make sure no documented command implies silent bypass of policy, receipts, or release manifests.
-- [ ] Add at least one CLI-specific test, example, or runbook link from `../../tests/` or adjacent docs.
+- [ ] Confirm whether the active branch still leaves `apps/cli/` README-only.
+- [ ] Replace the meta-block placeholder `doc_id` and confirm the first-commit date.
+- [ ] If a real entrypoint now exists, replace the verification-first quickstart with actual install/help commands.
+- [ ] Confirm whether CLI-local tests live under `apps/cli/`, `../../tests/`, or both.
+- [ ] Confirm whether receipt or proof-pack helpers live here, in `../../packages/`, or in `../../tools/`.
+- [ ] Add real badge targets only after CI or release endpoints are verified.
+- [ ] Keep any documented command from implying direct client/public access or silent publish behavior.
 
 ### Review gates this directory should honor
 
-- [ ] Fail closed when contract or policy checks are missing.
-- [ ] Emit or reference receipts for release-significant operations.
-- [ ] Keep destructive migration paths paired with rollback notes.
-- [ ] Preserve the truth path; do not jump straight from ad hoc state to publication.
-- [ ] Keep business rules in explicit packages, contracts, or policy surfaces.
+- [ ] Human-invoked flows stay distinct from worker/scheduler flows.
+- [ ] Commands fail closed when required contracts, schemas, or policy bundles are missing.
+- [ ] Release-significant operations emit or reference receipts and reviewable artifacts.
+- [ ] Migration paths carry rollback notes or correction references.
+- [ ] Reusable law stays in shared packages, contracts, schemas, or policy rather than drifting into CLI-only logic.
+
+---
 
 ## FAQ
 
-### Is this a public interface?
+### Is `apps/cli/` confirmed on current public `main`?
 
-No. This directory is for steward-facing or operator-facing command-line work, not for normal end-user request traffic.
+Yes. The path exists, and the public directory view confirms a `README.md` at this location.
 
-### Is the CLI allowed to publish directly from raw state?
+### Is there a confirmed executable under `apps/cli/` right now?
 
-No. KFM’s truth path is staged. A CLI may orchestrate movement, but it should not erase the distinction between `RAW`, `WORK / QUARANTINE`, `PROCESSED`, `CATALOG`, and `PUBLISHED`.
+Not on the current public-main evidence reviewed for this revision. The path is real, but the CLI-local inventory is still README-only.
 
-### Why are the command examples generic?
+### Does CLI replace governed API or workers?
 
-Because the mounted subtree was not directly visible in this session. This README avoids inventing a fake command surface.
+No. CLI is the human-invoked operator lane. Governed APIs handle request-time trust mediation, and workers handle unattended background execution.
 
-### Why is hydrology mentioned in a CLI README?
+### Can the CLI publish directly from raw or ad hoc state?
 
-Because current KFM doctrine repeatedly treats hydrology as the preferred first governed thin slice: public-safe, place/time-rich, and operationally legible. That affects which end-to-end CLI flows should likely be proven first.
+No. KFM’s truth path remains staged, and promotion remains governed.
 
-### What is the biggest anti-pattern for this directory?
+### What is the biggest anti-pattern here?
 
-Turning it into an operator backdoor: a place where unpublished, policy-sensitive, or release-significant actions happen without explicit contracts, receipts, or review context.
+Turning `apps/cli/` into an operator backdoor that can bypass policy, skip receipts, or silently mutate release-bearing state.
+
+---
 
 ## Appendix
 
 <details>
-<summary><strong>Open verification checklist</strong></summary>
+<summary><strong>Active-branch verification checklist</strong></summary>
 
-### Must verify in the mounted repo
+### Confirm on the exact branch before expanding this README
 
-- Actual executable entrypoint name and runtime
-- Whether commands are grouped by subdirectory or exposed through one entry surface
-- Whether local tests or examples already exist
-- Whether this directory owns validation directly or shells out to `../../tools/`
-- Whether adjacent app-plane directories should be linked explicitly
-- Whether any existing README template or badge pattern should be mirrored here
+- Real executable entrypoint name
+- Runtime / package-manager truth
+- Installed command groups or subcommands
+- Whether app-local tests or fixtures exist
+- Whether any CLI-local docs beyond this README exist
+- Whether `apps/governed-api/` or `apps/api/` is the final canonical neighbor name for outward API authority
+- Whether proof-pack helpers live here or in shared packages/tools
 
 ### Safe replacement targets
 
-Replace these placeholders first:
+Replace these first when the active branch proves them:
 
 - `<TODO-UUID>`
-- owners
-- created / updated dates
-- policy label
-- pseudocode command names
-- proposed subtree placeholders
+- `<TODO: confirm first-commit date>`
+- Any future command examples
+- Any future CLI-local tree entries beyond `README.md`
 
-### Neighboring docs worth wiring once confirmed
+</details>
 
-- `../../README.md`
-- `../../docs/`
-- `../../contracts/`
-- `../../policy/`
-- `../../data/`
-- `../../tests/`
+<details>
+<summary><strong>When to keep this README small</strong></summary>
+
+If `apps/cli/` stays README-only, keep this file boundary-focused.
+
+If real CLI code lands, move command-specific detail into the code-owning paths and let this file stay the lane-level index.
 
 </details>
 
