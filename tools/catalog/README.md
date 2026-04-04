@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS_VERIFICATION
 updated: NEEDS_VERIFICATION
 policy_label: public
-related: [../README.md, ../../data/README.md, ../../data/catalog/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../.github/README.md, ../../.github/CODEOWNERS]
+related: [../README.md, ../../data/README.md, ../../data/catalog/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, tools, catalog]
-notes: [doc_id placeholder pending repo-internal registration, created/updated need live file-history verification]
+notes: [doc_id placeholder pending repo-internal registration, created/updated need live file-history verification, ownership grounded by visible CODEOWNERS fallback for /tools/]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -25,9 +25,9 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 >
 > Repo fit: repo-root lane `tools/catalog/` · target file `tools/catalog/README.md` · parent [../README.md](../README.md) · metadata seam [../../data/catalog/README.md](../../data/catalog/README.md) · adjacent [../../scripts/README.md](../../scripts/README.md) · downstream [../../.github/README.md](../../.github/README.md)
 >
-> Evidence posture: repo-grounded for current public `main` plus March 2026 KFM doctrine; any deeper helper inventory below is explicitly marked `PROPOSED` or `NEEDS VERIFICATION`
+> Evidence posture: repo-grounded for current public `main` plus March–April 2026 KFM doctrine; any deeper helper inventory below is explicitly marked `PROPOSED` or `NEEDS VERIFICATION`
 >
-> Current public snapshot: `tools/catalog/` currently renders as `README.md` only on public `main`; the parent `tools/` lane already exists alongside sibling families such as `attest/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`
+> Current public snapshot: `tools/catalog/` currently renders as `README.md` only on public `main`; the parent `tools/` lane already exists alongside sibling families such as `attest/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`, and the visible child lanes remain README-first in public view
 >
 > ![status: experimental](https://img.shields.io/badge/status-experimental-orange) ![doc: draft](https://img.shields.io/badge/doc-draft-blue) ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![lane: tools/catalog](https://img.shields.io/badge/lane-tools%2Fcatalog-0a7ea4) ![truth: evidence bounded](https://img.shields.io/badge/truth-evidence--bounded-555555)
 >
@@ -82,10 +82,11 @@ This file is meant to help maintainers do four things quickly:
 |---|---|---|
 | Parent lane | [../README.md](../README.md) | Defines the broader `tools/` contract and helper-family expectations |
 | Upstream metadata seam | [../../data/catalog/README.md](../../data/catalog/README.md) | Owns the governed `DCAT + STAC + PROV` closure surface that this lane should inspect, not replace |
-| Parent lifecycle contract | [../../data/README.md](../../data/README.md) | Defines the `raw -> work/quarantine -> processed -> catalog -> published` truth path |
+| Parent lifecycle contract | [../../data/README.md](../../data/README.md) | Defines the `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` truth path |
 | Adjacent orchestration | [../../scripts/README.md](../../scripts/README.md) | Thin wrappers and CI entrypoints may call catalog helpers, but reusable logic should not be buried there |
 | Shared object law | [../../contracts/README.md](../../contracts/README.md) and [../../schemas/README.md](../../schemas/README.md) | Helpers may validate declared authority, but must not silently define schema authority |
 | Policy boundary | [../../policy/README.md](../../policy/README.md) | Rights, sensitivity, and deny-by-default rules belong there, even when helpers evaluate them |
+| Verification surface | [../../tests/README.md](../../tests/README.md) | Fixtures and assertions should prove helper behavior instead of leaving README prose as the only evidence |
 | Repo governance | [../../.github/README.md](../../.github/README.md) and [../../.github/CODEOWNERS](../../.github/CODEOWNERS) | Review boundaries, owner map, and merge posture live here |
 
 ### Operating rule
@@ -150,6 +151,7 @@ The following do **not** belong here:
 | `tools/` exists on public `main` with sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | `CONFIRMED` | grounds this file as one lane inside a broader helper family |
 | `tools/catalog/` exists and currently shows `README.md` only | `CONFIRMED` | prevents overclaiming executable helper inventory |
 | `data/catalog/` exists with `dcat/`, `prov/`, and `stac/` child surfaces | `CONFIRMED` | grounds the adjacent metadata seam this lane should support |
+| `tests/` exists as a top-level governed verification surface on public `main` | `CONFIRMED` | grounds the expectation that helpers should land with fixtures or assertions instead of prose alone |
 | `/tools/` is owned by `@bartytime4life` in `/.github/CODEOWNERS` | `CONFIRMED` | grounds the owner line for this subtree |
 | mounted executable files under `tools/catalog/` beyond `README.md` | `UNKNOWN` | keeps deeper tool-family claims explicitly bounded |
 | exact file-history dates and repo-internal document ID for this README | `NEEDS VERIFICATION` | left as placeholders in the KFM meta block above |
@@ -211,18 +213,19 @@ Run these inventory-first commands before adding or moving anything under `tools
 find tools/catalog -maxdepth 3 -print 2>/dev/null | sort
 ```
 
-2. Re-read the parent helper contract and adjacent metadata seam.
+2. Re-read the parent helper contract and adjacent metadata / verification seams.
 
 ```bash
 sed -n '1,240p' tools/README.md 2>/dev/null
 sed -n '1,260p' data/catalog/README.md 2>/dev/null
 sed -n '1,260p' scripts/README.md 2>/dev/null
+sed -n '1,260p' tests/README.md 2>/dev/null
 ```
 
 3. Search for current callers and references before inventing names.
 
 ```bash
-rg -n "catalog|stac|dcat|prov" tools scripts tests .github docs data policy contracts schemas -S 2>/dev/null
+rg -n "catalog|stac|dcat|prov" tools scripts tests .github docs data policy contracts schemas pipelines -S 2>/dev/null
 ```
 
 4. Inspect executable reality instead of assuming it exists.
