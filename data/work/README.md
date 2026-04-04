@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-22
-updated: 2026-03-22
+updated: 2026-04-01
 policy_label: <TBD-NEEDS-VERIFICATION>
-related: [../README.md, ../raw/, ../quarantine/, ../processed/, ../catalog/, ../catalog/stac/, ../catalog/dcat/, ../catalog/prov/, ../receipts/, ../proofs/, ../published/, ../registry/]
+related: [../README.md, ../raw/README.md, ../quarantine/README.md, ../processed/README.md, ../catalog/README.md, ../catalog/stac/README.md, ../catalog/dcat/README.md, ../catalog/prov/README.md, ../receipts/README.md, ../proofs/README.md, ../published/README.md, ../registry/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/README.md, ../../scripts/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, data, work, staging, provenance]
-notes: [Grounded to current public main plus March 2026 doctrine; created/updated reflect current public-main file history for this path; doc_id and policy_label still need verification.]
+notes: [Grounded to current public main, March-April 2026 doctrine, and visible public-main commit history for this path; updated reflects the current public-main Apr 1 2026 edit; created is treated as the current-file incarnation after the Mar 21 deletion / Mar 22 reintroduction sequence; doc_id and policy_label still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # `data/work`
@@ -18,9 +18,10 @@ notes: [Grounded to current public main plus March 2026 doctrine; created/update
 Repeatable, non-public staging zone for governed intermediate transforms, validation artifacts, and promotion handoff material.
 
 > **Status:** `active directory` · **Doc state:** `draft`  
-> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` coverage for `/data/`)*  
+> **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` coverage for `/data/`)*  
 > **Path:** `data/work/README.md`  
 > **Current public tree:** `data/work/` contains `README.md` only on public `main`  
+> **Repo fit:** parent [`../README.md`](../README.md) · upstream [`../raw/README.md`](../raw/README.md) · lateral [`../quarantine/README.md`](../quarantine/README.md) · downstream [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md), [`../published/README.md`](../published/README.md), [`../registry/README.md`](../registry/README.md) · shared controls [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
 > [![Status: active directory](https://img.shields.io/badge/status-active%20directory-0a7d5a)](#scope)
 > [![Doc: draft](https://img.shields.io/badge/doc-draft-8250df)](#scope)
 > [![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0969da)](#repo-fit)
@@ -45,6 +46,8 @@ Repeatable, non-public staging zone for governed intermediate transforms, valida
 `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
 
 Within that path, `data/work/` is the operational zone for **repeatable transformation, normalization, enrichment, QA staging, and handoff preparation** before outputs can support stable dataset-version identity, catalog closure, release evidence, or governed publication.
+
+In KFM terms, material leaving this lane should do so through a **governed state transition**, not a convenience copy. `data/work/` reduces ambiguity; it does not declare outward truth.
 
 ### Evidence posture used in this README
 
@@ -85,26 +88,28 @@ Within that path, `data/work/` is the operational zone for **repeatable transfor
 |---|---|
 | **Path** | `data/work/README.md` |
 | **Current public tree state** | `data/work/` currently shows `README.md` only |
-| **Owner coverage** | `/data/` is assigned to `@bartytime4life` in the current public `CODEOWNERS` file |
+| **Owner coverage** | `/data/` is assigned to `@bartytime4life` in the current public `.github/CODEOWNERS` file |
 | **Parent surface** | [`../README.md`](../README.md) defines the wider `data/` lifecycle |
-| **Lifecycle position** | between [`../raw/`](../raw/) and [`../processed/`](../processed/), with [`../quarantine/`](../quarantine/) as the fail-closed sibling lane |
+| **Lifecycle position** | between [`../raw/README.md`](../raw/README.md) and [`../processed/README.md`](../processed/README.md), with [`../quarantine/README.md`](../quarantine/README.md) as the fail-closed sibling lane |
+| **Current public README history** | latest visible public-main update on `2026-04-01`; current-file reintroduction visible on `2026-03-22` after a `2026-03-21` deletion |
+| **Why the history note matters** | it keeps the KFM meta block dates reviewable instead of implied |
 
 ### Adjacency and flow
 
 | Direction | Surface | Why it matters here | Status |
 |---|---|---|---|
-| Upstream | [`../raw/`](../raw/) | Immutable, source-native intake for evidence-bearing inputs | **CONFIRMED** |
-| Lateral | [`../quarantine/`](../quarantine/) | Explicit fail-closed lane for blocked, ambiguous, or review-held material | **CONFIRMED** |
-| Downstream | [`../processed/`](../processed/) | Stable dataset versions and release-adjacent processed artifacts | **CONFIRMED** |
-| Downstream | [`../catalog/`](../catalog/) | Catalog-closure parent for outward `DCAT + STAC + PROV` metadata | **CONFIRMED** |
-| Downstream | [`../catalog/stac/`](../catalog/stac/) | Spatial and temporal asset discovery | **CONFIRMED** |
-| Downstream | [`../catalog/dcat/`](../catalog/dcat/) | Dataset and distribution discovery | **CONFIRMED** |
-| Downstream | [`../catalog/prov/`](../catalog/prov/) | Catalog-facing lineage and provenance bundles | **CONFIRMED** |
-| Adjacent process memory | [`../receipts/`](../receipts/) | Central receipt placement for run memory, validation context, and replay/audit support | **CONFIRMED** |
-| Adjacent release evidence | [`../proofs/`](../proofs/) | Release manifests, proof packs, attestations, and rollback/correction evidence | **CONFIRMED** |
-| Adjacent publication state | [`../published/`](../published/) | Optional materialized surface for already release-backed scope | **CONFIRMED** |
-| Adjacent registration | [`../registry/`](../registry/) | Source admission, dataset identity, and onboarding guidance | **CONFIRMED** |
-| Shared controls | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) · [`../../tests/`](../../tests/) · [`../../tools/`](../../tools/) · [`../../scripts/`](../../scripts/) | Contracts, schema-home boundary, policy posture, validation, and local helper surfaces | **CONFIRMED public doc surfaces** |
+| Upstream | [`../raw/README.md`](../raw/README.md) | Immutable, source-native intake for evidence-bearing inputs | **CONFIRMED** |
+| Lateral | [`../quarantine/README.md`](../quarantine/README.md) | Explicit fail-closed lane for blocked, ambiguous, or review-held material | **CONFIRMED** |
+| Downstream | [`../processed/README.md`](../processed/README.md) | Stable dataset versions and release-adjacent processed artifacts | **CONFIRMED** |
+| Downstream | [`../catalog/README.md`](../catalog/README.md) | Catalog-closure parent for outward `DCAT + STAC + PROV` metadata | **CONFIRMED** |
+| Downstream | [`../catalog/stac/README.md`](../catalog/stac/README.md) | Spatial and temporal asset discovery | **CONFIRMED** |
+| Downstream | [`../catalog/dcat/README.md`](../catalog/dcat/README.md) | Dataset and distribution discovery | **CONFIRMED** |
+| Downstream | [`../catalog/prov/README.md`](../catalog/prov/README.md) | Catalog-facing lineage and provenance bundles | **CONFIRMED** |
+| Adjacent process memory | [`../receipts/README.md`](../receipts/README.md) | Central receipt placement for run memory, validation context, and replay/audit support | **CONFIRMED** |
+| Adjacent release evidence | [`../proofs/README.md`](../proofs/README.md) | Release manifests, proof packs, attestations, and rollback/correction evidence | **CONFIRMED** |
+| Adjacent publication state | [`../published/README.md`](../published/README.md) | Optional materialized surface for already release-backed scope | **CONFIRMED** |
+| Adjacent registration | [`../registry/README.md`](../registry/README.md) | Source admission, dataset identity, and onboarding guidance | **CONFIRMED** |
+| Shared controls | [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../tools/README.md`](../../tools/README.md) · [`../../scripts/README.md`](../../scripts/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Contract surfaces, schema-home boundary, policy posture, validation, helper lanes, workflow control, and review ownership | **CONFIRMED public surfaces** |
 
 ### Upstream / downstream rule of thumb
 
@@ -161,15 +166,15 @@ An artifact likely belongs in `data/work/` if all five checks pass:
 
 | Excluded content | Why it does not belong here | Put it here instead |
 |---|---|---|
-| Immutable upstream captures | Intake must stay source-native and append-friendly | [`../raw/`](../raw/) |
-| Blocked, ambiguous, or review-held material | Work is not the fail-closed holding lane | [`../quarantine/`](../quarantine/) |
-| Canonical processed artifacts | `data/work/` is pre-release staging, not the stable processed zone | [`../processed/`](../processed/) |
-| STAC / DCAT / PROV closure files | Outward discovery and lineage belong downstream of processed handoff | [`../catalog/`](../catalog/) |
-| Central run receipts that must stay queryable across runs | Process memory should remain easy to resolve during replay, correction, and audit | [`../receipts/`](../receipts/) |
-| Release manifests, proof packs, attestations, rollback evidence | Release proof is a separate trust surface | [`../proofs/`](../proofs/) |
-| Materialized published scope | Publication is a governed state, not a convenience copy out of work | [`../published/`](../published/) |
-| Source-registration entries or identity schemas | Onboarding and dataset identity should stay small, explicit, and diffable | [`../registry/`](../registry/) |
-| Policy bundles, contract schemas, or runtime code | Preserve lane boundaries instead of hiding control-plane assets in staging | [`../../policy/`](../../policy/) · [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · app/package surfaces |
+| Immutable upstream captures | Intake must stay source-native and append-friendly | [`../raw/README.md`](../raw/README.md) |
+| Blocked, ambiguous, or review-held material | Work is not the fail-closed holding lane | [`../quarantine/README.md`](../quarantine/README.md) |
+| Canonical processed artifacts | `data/work/` is pre-release staging, not the stable processed zone | [`../processed/README.md`](../processed/README.md) |
+| STAC / DCAT / PROV closure files | Outward discovery and lineage belong downstream of processed handoff | [`../catalog/README.md`](../catalog/README.md) |
+| Central run receipts that must stay queryable across runs | Process memory should remain easy to resolve during replay, correction, and audit | [`../receipts/README.md`](../receipts/README.md) |
+| Release manifests, proof packs, attestations, rollback evidence | Release proof is a separate trust surface | [`../proofs/README.md`](../proofs/README.md) |
+| Materialized published scope | Publication is a governed state, not a convenience copy out of work | [`../published/README.md`](../published/README.md) |
+| Source-registration entries or identity schemas | Onboarding and dataset identity should stay small, explicit, and diffable | [`../registry/README.md`](../registry/README.md) |
+| Policy bundles, contract schemas, or runtime code | Preserve lane boundaries instead of hiding control-plane assets in staging | [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · app/package surfaces |
 
 > [!WARNING]
 > “Useful for an analyst right now” is **not** enough. If the artifact weakens reproducibility, obscures provenance, or tempts direct UI/runtime consumption, it does not belong here in unmanaged form.
@@ -223,7 +228,7 @@ data/work/
 ```
 
 > [!NOTE]
-> Avoid inventing a pseudo-quarantine subtree under `data/work/`. If a run becomes blocked by rights, sensitivity, validation, or review, move or reference it explicitly in [`../quarantine/`](../quarantine/).
+> Avoid inventing a pseudo-quarantine subtree under `data/work/`. If a run becomes blocked by rights, sensitivity, validation, or review, move or reference it explicitly in [`../quarantine/README.md`](../quarantine/README.md).
 
 ### Naming guidance
 
@@ -244,6 +249,16 @@ Prefer deterministic, boring names over clever names.
 
 ```bash
 find data/work -maxdepth 2 -print | sort
+```
+
+### Inspect the surrounding lane contract
+
+```bash
+sed -n '1,220p' data/README.md
+sed -n '1,220p' data/raw/README.md
+sed -n '1,220p' data/quarantine/README.md
+sed -n '1,220p' data/processed/README.md
+sed -n '1,220p' data/work/README.md
 ```
 
 ### Create a starter run area
@@ -277,7 +292,7 @@ mkdir -p "data/quarantine/${CASE_ID}"
 
 ### Validate with confirmed local tooling only
 
-Use the checked-out command set documented in [`../../tools/`](../../tools/) and [`../../scripts/`](../../scripts/) **after** those files are verified on the active branch. Do not assume an unverified `promote` or `gate` CLI exists just because doctrine or earlier planning documents mention one.
+Use the checked-out command set documented in [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), and any narrower helper-lane README that the active branch actually exposes. Do not assume an unverified `promote`, `gate`, or `publish` CLI exists just because doctrine or earlier planning documents mention one.
 
 [Back to top](#datawork)
 
@@ -287,7 +302,7 @@ Use the checked-out command set documented in [`../../tools/`](../../tools/) and
 
 ### 1. Admit from raw, do not reinvent raw
 
-Start from admitted source material in [`../raw/`](../raw/). `data/work/` should never become a shadow raw archive.
+Start from admitted source material in [`../raw/README.md`](../raw/README.md). `data/work/` should never become a shadow raw archive.
 
 ### 2. Transform in small, reviewable steps
 
@@ -299,15 +314,17 @@ If a normalization decision, reprojection, filter threshold, enrichment step, or
 
 ### 4. Escalate failure or ambiguity to quarantine
 
-When rights are unclear, validation fails, sensitivity is unresolved, or review blocks advancement, use [`../quarantine/`](../quarantine/) rather than leaving “temporary” blocked material mixed into normal work runs.
+When rights are unclear, validation fails, sensitivity is unresolved, or review blocks advancement, use [`../quarantine/README.md`](../quarantine/README.md) rather than leaving “temporary” blocked material mixed into normal work runs.
 
 ### 5. Keep receipts and proofs adjacent, not hidden
 
-If process memory needs to stay centrally queryable, place it in [`../receipts/`](../receipts/). If evidence belongs to release proof, use [`../proofs/`](../proofs/). `data/work/` should not become a junk drawer for all governance artifacts.
+Receipts preserve **process memory**. Proofs preserve **release evidence**. If process memory needs to stay centrally queryable, place it in [`../receipts/README.md`](../receipts/README.md). If evidence belongs to release proof, use [`../proofs/README.md`](../proofs/README.md). `data/work/` should not become a junk drawer for all governance artifacts.
 
 ### 6. Hand off cleanly to processed
 
 Promotion out of `data/work/` should reduce ambiguity, not move it downstream. By the time material leaves this lane, its target processed identity, validation context, and downstream catalog intent should be clear.
+
+[Back to top](#datawork)
 
 ---
 
@@ -351,18 +368,25 @@ The key relationship is not just left-to-right flow. It is the **blocked path**:
 | `data/catalog/` | `DCAT + STAC + PROV` closure | Indirect only | Make release-backed truth discoverable, traceable, and cross-linkable |
 | `data/published/` | Optional materialized published scope | Indirect only | Materialize only already governed, release-backed scope |
 
+### Receipts vs proofs at this boundary
+
+| Surface | Primary job | Keep it here when... |
+|---|---|---|
+| `data/receipts/` | Queryable process memory | the artifact explains fetch, run, validation, replay, audit, or correction context across runs |
+| `data/proofs/` | Release evidence | the artifact proves promotion, release meaning, rollback, correction, withdrawal, or supersession |
+
 ### Current public sibling surfaces relevant to `data/work/`
 
 | Sibling | Current public state | Why `data/work/` maintainers should care |
 |---|---|---|
-| [`../raw/`](../raw/) | README-backed live lane | Defines where source-native inputs start |
-| [`../quarantine/`](../quarantine/) | README-backed live lane | Prevents blocked work from leaking forward |
-| [`../processed/`](../processed/) | README-backed live lane | Defines the immediate downstream handoff target |
-| [`../catalog/`](../catalog/) | Live parent with `dcat/`, `stac/`, and `prov/` | Clarifies where closure happens after processed handoff |
-| [`../receipts/`](../receipts/) | README-backed live lane | Separates process memory from payload staging |
-| [`../proofs/`](../proofs/) | README-backed live lane | Separates release proof from in-flight work |
-| [`../published/`](../published/) | README-backed live lane | Reminds maintainers that publication is downstream, not implicit |
-| [`../registry/`](../registry/) | README-backed live lane | Keeps source/dataset identity out of staging clutter |
+| [`../raw/README.md`](../raw/README.md) | README-backed live lane | Defines where source-native inputs start |
+| [`../quarantine/README.md`](../quarantine/README.md) | README-backed live lane | Prevents blocked work from leaking forward |
+| [`../processed/README.md`](../processed/README.md) | README-backed live lane | Defines the immediate downstream handoff target |
+| [`../catalog/README.md`](../catalog/README.md) | Live parent with `dcat/`, `stac/`, and `prov/` | Clarifies where closure happens after processed handoff |
+| [`../receipts/README.md`](../receipts/README.md) | README-backed live lane | Separates process memory from payload staging |
+| [`../proofs/README.md`](../proofs/README.md) | README-backed live lane | Separates release proof from in-flight work |
+| [`../published/README.md`](../published/README.md) | README-backed live lane | Reminds maintainers that publication is downstream, not implicit |
+| [`../registry/README.md`](../registry/README.md) | README-backed lane; current public tree also shows `data/registry/schemas/README.md` | Keeps source/dataset identity out of staging clutter |
 
 ### Typical starter artifact classes
 
@@ -375,6 +399,8 @@ The key relationship is not just left-to-right flow. It is the **blocked path**:
 | `run_manifest.json` | file inventory + digests + roles | **PROPOSED starter pattern** |
 | `validation_report.json` | structured validation result | **PROPOSED starter pattern** |
 | `checksums.txt` | quick integrity check | **PROPOSED starter pattern** |
+
+[Back to top](#datawork)
 
 ---
 
@@ -389,6 +415,7 @@ A work run is ready to leave `data/work/` only when the following are satisfied:
 - [ ] The intended target in `data/processed/` is named.
 - [ ] Receipt placement is clear if process memory must be retained centrally in `data/receipts/`.
 - [ ] Release-evidence placement is clear if the work is approaching proof-bearing promotion in `data/proofs/`.
+- [ ] Promotion is being treated as a governed state transition rather than as a convenience folder copy.
 - [ ] No outward catalog or published scope is being generated directly from `data/work/`.
 - [ ] Any blocked subset has been moved or referenced to `data/quarantine/`.
 - [ ] Local validators, scripts, and conventions used by the run have been verified on the active branch.
@@ -413,7 +440,7 @@ A work run is ready to leave `data/work/` only when the following are satisfied:
 
 ### Is `data/work/` the same as `data/quarantine/`?
 
-No. `data/work/` is the normal repeatable transform and QA lane. [`../quarantine/`](../quarantine/) is the stricter fail-closed lane for blocked, ambiguous, or review-held material.
+No. `data/work/` is the normal repeatable transform and QA lane. [`../quarantine/README.md`](../quarantine/README.md) is the stricter fail-closed lane for blocked, ambiguous, or review-held material.
 
 ### Why can’t we publish directly from `data/work/`?
 
@@ -421,11 +448,11 @@ Because KFM treats publication as a governed trust-state change, not a convenien
 
 ### Where should receipts go?
 
-If receipts need to remain centrally queryable across runs, corrections, or audits, use [`../receipts/`](../receipts/). Keep only local, run-specific context in the work run itself unless branch conventions say otherwise.
+If receipts need to remain centrally queryable across runs, corrections, or audits, use [`../receipts/README.md`](../receipts/README.md). Keep only local, run-specific context in the work run itself unless branch conventions say otherwise.
 
 ### Where should proof packs and attestations go?
 
-Use [`../proofs/`](../proofs/) for release-significant evidence. `data/work/` is not the release-evidence home.
+Use [`../proofs/README.md`](../proofs/README.md) for release-significant evidence. `data/work/` is not the release-evidence home.
 
 ### Does “README-only on public main” mean the lane is unused?
 
@@ -434,6 +461,8 @@ No. It only means the **currently visible public subtree** is documentation-ligh
 ### Can normal UI or API surfaces read previews from here?
 
 Not as a normal governed path. Any preview behavior still has to respect the trust membrane and should not normalize direct reads from `data/work/`.
+
+[Back to top](#datawork)
 
 ---
 
@@ -447,7 +476,9 @@ Not as a normal governed path. Any preview behavior still has to respect the tru
 - `data/` currently shows `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, `work/`, and `README.md`.
 - `data/work/` currently shows `README.md` only.
 - `data/catalog/` currently shows `dcat/`, `stac/`, and `prov/`.
-- Public `CODEOWNERS` coverage assigns `/data/` to `@bartytime4life`.
+- `data/registry/` currently shows `README.md` and `schemas/README.md`.
+- Public `.github/CODEOWNERS` coverage assigns `/data/` to `@bartytime4life`.
+- The public file history for `data/work/README.md` shows a current-main update on `2026-04-01`, plus a `2026-03-21` deletion / `2026-03-22` reintroduction sequence for the current-file incarnation.
 
 ### Why that matters here
 
@@ -483,6 +514,7 @@ This README can now distinguish:
 
 - final `doc_id` for the KFM meta block
 - final `policy_label` for this directory
+- whether `created:` should remain pinned to the current-file `2026-03-22` reintroduction or instead trace back to the earlier January path history
 - whether branch-local working runs already use a stricter naming convention
 - whether any branch-side automation writes receipts locally vs centrally to `data/receipts/`
 - whether release-adjacent proof placement is fully standardized in branch-local tooling
