@@ -10,7 +10,7 @@ updated: 2026-03-28
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../validators/README.md, ../diff/README.md, ../../scripts/README.md, ../../tests/README.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md]
 tags: [kfm, tools, probes]
-notes: [doc_id and created date remain placeholders pending direct repo/document record verification, owner is inherited from current /tools/ CODEOWNERS coverage]
+notes: [doc_id and created date remain placeholders pending direct history verification; updated date is grounded in current public file history; owner is inherited from current /tools/ CODEOWNERS coverage]
 [/KFM_META_BLOCK_V2] -->
 
 # probes
@@ -23,6 +23,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 > **Repo fit:** child lane under [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · governance [`../../.github/README.md`](../../.github/README.md) · owner map [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · adjacent [`../validators/README.md`](../validators/README.md) · [`../diff/README.md`](../diff/README.md) · [`../../scripts/README.md`](../../scripts/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for current public `main` subtree fact · deeper local checkout, workflow settings, and mounted runtime remain bounded  
 > **Current public snapshot:** `tools/probes/` currently contains `README.md` only on public `main`  
+> **Current public file state:** `tools/probes/README.md` is already substantive on public `main`; future edits should revise it in place rather than reset it to generic scaffold text  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![role](https://img.shields.io/badge/role-bounded%20probes-4051b5) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/probes%20tree-README--only-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -136,6 +137,7 @@ A probe is a good fit when the main question sounds like one of these:
 | --- | --- | --- |
 | `tools/probes/README.md` exists | **CONFIRMED** | This file is a real lane surface, not a hypothetical path |
 | No additional public files are currently visible under `tools/probes/` | **CONFIRMED** | Prevents overclaiming executable probe inventory |
+| The current public `tools/probes/README.md` is already a substantive family README, not a placeholder scaffold | **CONFIRMED** | Future edits should revise upward instead of resetting the lane to generic scaffold prose |
 | The live public `tools/` directory listing confirms sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | **CONFIRMED** | Grounds relative links and family context from the current tree itself |
 | `/tools/` ownership is covered by current visible `CODEOWNERS` | **CONFIRMED** | Grounds the owners line for this README |
 | Public `.github/workflows/` remains README-first in visible `main` | **CONFIRMED** | Keeps CI caller claims bounded |
