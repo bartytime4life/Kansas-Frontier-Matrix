@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: TODO(verify-created-date)
 updated: TODO(verify-updated-date)
 policy_label: TODO(verify-policy-label)
-related: [configs/README.md, configs/env.schema.json, .github/CODEOWNERS, contracts/README.md, schemas/README.md, policy/README.md, tools/README.md, scripts/README.md, tests/README.md]
+related: [configs/README.md, configs/env.schema.json, .github/CODEOWNERS, contracts/README.md, schemas/README.md, schemas/contracts/README.md, docs/standards/README.md, policy/README.md, tools/README.md, scripts/README.md, tests/README.md]
 tags: [kfm, observability, configs]
-notes: [repo-grounded revision of the current scaffold README, public main still shows a README-only lane, owner is confirmed from current /configs/ CODEOWNERS coverage, child observability artifacts remain PROPOSED until committed, schema-home authority remains unresolved between contracts and schemas]
+notes: [repo-grounded revision of the current scaffold README, public main still shows a README-only lane here, owner is confirmed from current /configs/ CODEOWNERS coverage, local observability artifacts remain PROPOSED until committed, root contracts/ guidance and live schemas/contracts/ scaffold now coexist while canonical schema-home authority remains unresolved]
 [/KFM_META_BLOCK_V2] -->
 
 # observability/
@@ -20,7 +20,7 @@ Repo-visible, non-secret observability configuration and runbook entrypoint for 
 > **Status:** experimental directory · current public `main` lane is README-only · repo-grounded README revision  
 > **Owners:** `@bartytime4life` (confirmed current `/configs/` CODEOWNERS coverage)  
 > **Path:** `configs/observability/README.md`  
-> **Repo fit:** child lane of [`../README.md`](../README.md) · schema anchor [`../env.schema.json`](../env.schema.json) · law / verification neighbors [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md)  
+> **Repo fit:** child lane of [`../README.md`](../README.md) · schema anchor [`../env.schema.json`](../env.schema.json) · adjacent authority surfaces [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../docs/standards/README.md`](../../docs/standards/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-configs%2Fobservability%2FREADME.md-0a7d5a) ![branch](https://img.shields.io/badge/branch-main-success) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![scope](https://img.shields.io/badge/scope-observability%20config-informational) ![truth](https://img.shields.io/badge/truth-repo--grounded%20%2B%20doctrine--bounded-6f42c1) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -40,9 +40,9 @@ Repo-visible, non-secret observability configuration and runbook entrypoint for 
 > - **NEEDS VERIFICATION** — merge-time detail that should be rechecked before landing
 
 > [!NOTE]
-> Current public `main` also exposes both [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) as boundary surfaces.
+> Current public `main` no longer shows `schemas/` as a README-only warning surface. The parent `schemas/` lane has visible children, and `schemas/contracts/` now carries machine-file-bearing scaffold paths even while `contracts/README.md` and `docs/standards/README.md` still route machine-contract authority more strongly toward root `contracts/`.
 >
-> This README keeps that ambiguity visible rather than quietly hardening a second or competing schema home inside `configs/observability/`.
+> This README keeps that split visible instead of treating either side as silently settled.
 
 ## Scope
 
@@ -67,9 +67,12 @@ This lane should therefore hold only the subset of observability material that i
 | Current contents | `README.md` only | **CONFIRMED** |
 | Parent config lane | [`../README.md`](../README.md) exists and already defines `configs/` as a trust-bearing, non-secret config surface | **CONFIRMED** |
 | Parent schema anchor | [`../env.schema.json`](../env.schema.json) exists | **CONFIRMED** |
-| Parent schema depth | current file content is minimal and should not be treated as a mature config contract yet | **CONFIRMED** |
+| Parent schema depth | current file content is `{}` and should not be treated as a mature config contract yet | **CONFIRMED** |
 | Owner coverage | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) currently assigns `/configs/` to `@bartytime4life` | **CONFIRMED** |
-| Sibling schema boundary | [`../../schemas/README.md`](../../schemas/README.md) exists as a boundary guide while schema-home authority remains unresolved | **CONFIRMED** |
+| Root contract lane | [`../../contracts/README.md`](../../contracts/README.md) is present and substantive, but the visible top-level `contracts/` tree remains README-only on current public `main` | **CONFIRMED** |
+| Schema subtree reality | [`../../schemas/README.md`](../../schemas/README.md) is no longer README-only; `schemas/contracts/` now exposes a live machine-file scaffold | **CONFIRMED** |
+| Live schema scaffold maturity | currently opened machine files under `schemas/contracts/` are placeholder-bodied scaffold files, not settled contract law | **CONFIRMED** |
+| Standards routing signal | [`../../docs/standards/README.md`](../../docs/standards/README.md) still routes machine contracts more strongly toward root `contracts/` | **CONFIRMED** |
 | Final singular machine-law authority | current public repo still does not make one schema/contract home singular enough to treat as settled | **NEEDS VERIFICATION** |
 | Collector, metrics, traces, dashboards, alerts, runbooks inside this lane | no committed internal inventory is visible here yet | **UNKNOWN** |
 
@@ -79,9 +82,11 @@ This lane should therefore hold only the subset of observability material that i
 | --- | --- | --- | --- |
 | Upstream | [`../README.md`](../README.md) | parent `configs/` contract and local style baseline | **CONFIRMED** |
 | Upstream | [`../env.schema.json`](../env.schema.json) | current config-schema anchor at the parent lane | **CONFIRMED** |
-| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | current strongest machine-contract surface in public view | **CONFIRMED**, but singular authority still **NEEDS VERIFICATION** |
-| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | keeps schema-home ambiguity visible and guards against parallel authority | **CONFIRMED** |
-| Upstream | [`../../policy/README.md`](../../policy/README.md) | executable governance belongs there, not here | **CONFIRMED** |
+| Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | stronger human-readable contract route and current doctrinal machine-contract signal | **CONFIRMED**, but canonical authority still **NEEDS VERIFICATION** |
+| Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | parent boundary for the now-live `schemas/` subtree | **CONFIRMED** |
+| Adjacent | [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) | live machine-file-bearing scaffold lane that makes schema-home ambiguity operational instead of theoretical | **CONFIRMED** |
+| Adjacent | [`../../docs/standards/README.md`](../../docs/standards/README.md) | shared standards lane that still routes machine-contract authority toward root `contracts/` | **CONFIRMED** |
+| Adjacent | [`../../policy/README.md`](../../policy/README.md) | executable governance belongs there, not here | **CONFIRMED** |
 | Sidecar | [`../../tools/README.md`](../../tools/README.md) | validators and config-check tooling should point here, not bury config rules in prose | **CONFIRMED** |
 | Sidecar | [`../../tests/README.md`](../../tests/README.md) | alert, retention, leakage, and negative-path behavior need test hooks | **CONFIRMED** |
 | Sidecar | [`../../scripts/README.md`](../../scripts/README.md) | thin operator wrappers may consume this lane, but must not become its hidden source of truth | **CONFIRMED** |
@@ -100,7 +105,7 @@ The following content belongs here when it is **non-secret**, **reviewable**, an
 | Dashboard definitions | persona-scoped dashboard JSON or equivalent | diagnostics should be diffable and reviewed |
 | Alert routing config | severity maps, routing groups, silence defaults, escalation paths | pager behavior is trust-impacting |
 | Runbooks | P0/P1 response guides, audit reconstruction steps, correction-response steps | alerting without response guidance is incomplete |
-| Local observability field guidance | naming rules, joined-identifier tables, field expectations for logs/metrics/traces | useful here only if kept subordinate to top-level contract authority |
+| Local field guidance | naming rules, joined-identifier tables, field expectations for logs/metrics/traces | useful here only if kept subordinate to repo-level contract and schema authority |
 
 ### What belongs here in practice
 
@@ -119,7 +124,7 @@ The following content belongs here when it is **non-secret**, **reviewable**, an
 | Application instrumentation code | service or package source trees | code belongs with the runtime that emits it |
 | Business or product analytics events | separate product analytics lane or app code | do not mix governance telemetry with product analytics |
 | Raw sensitive records, precise restricted coordinates, restricted geometries | governed data / audit / evidence surfaces | observability must not become a leakage side channel |
-| Top-level JSON Schemas, OpenAPI contracts, or vocabularies acting as machine law | the repo’s authoritative contract/schema home in [`../../contracts/README.md`](../../contracts/README.md) or [`../../schemas/README.md`](../../schemas/README.md), pending explicit resolution | this lane must not compete with repo-wide machine-law authority |
+| Top-level JSON Schemas, shared vocab registries, or trust-bearing machine contracts | the repo’s authoritative contract/schema home across [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), pending explicit resolution | this lane must not compete with repo-wide machine-law authority |
 | Executable governance logic, deny/allow bundles, reason/obligation registries | [`../../policy/README.md`](../../policy/README.md) | policy belongs in policy |
 | Generated caches, temp logs, agent state, build output | ignored runtime state outside Git | reviewable config should stay intentional |
 | Release evidence, correction notices, rollback manifests | designated evidence / release surfaces | observability may point to them, not replace them |
@@ -150,7 +155,7 @@ configs/observability/
 ├── traces/                # PROPOSED: sampling and processors
 ├── dashboards/            # PROPOSED: steward / operator / product views
 ├── runbooks/              # PROPOSED: alert-linked response docs
-├── contracts/             # PROPOSED: local field guidance only, not a second top-level schema authority
+├── fields/                # PROPOSED: local naming tables and joined-ID guidance only
 └── deploy/                # PROPOSED: env-specific wiring for this lane
 ```
 
@@ -159,7 +164,7 @@ configs/observability/
 - The **current** repo only proves the directory and this README.
 - The **proposed** subpaths are here to make future growth orderly.
 - Add a subdirectory only when the first real committed artifact for that concern lands.
-- If a future artifact would silently compete with top-level `contracts/`, `schemas/`, or `policy/`, stop and move it there instead.
+- If a future artifact would silently compete with root `contracts/`, parent `schemas/`, live `schemas/contracts/`, or `policy/`, stop and move it there instead.
 
 [Back to top](#observability)
 
@@ -176,11 +181,17 @@ sed -n '1,260p' configs/README.md
 sed -n '1,160p' .github/CODEOWNERS
 cat configs/env.schema.json
 
-# 2) Find likely observability consumers and existing signal vocabulary.
+# 2) Re-read the current machine-law routing surfaces.
+sed -n '1,280p' contracts/README.md
+sed -n '1,280p' schemas/README.md
+sed -n '1,280p' schemas/contracts/README.md
+sed -n '1,260p' docs/standards/README.md
+
+# 3) Find likely observability consumers and existing signal vocabulary.
 git grep -nE 'audit_ref|correlation_id|request_id|release_id|dataset_version_id|decision_id|bundle_id|projection_build_id|otel|opentelemetry|prometheus|grafana|tempo|loki' -- .
 
-# 3) Check whether the concern actually belongs here.
-git grep -nE 'schema|contract|openapi|policy|rego|retention|redaction|readiness|health' -- contracts schemas policy apps packages tools tests scripts
+# 4) Check whether the concern actually belongs here.
+git grep -nE 'schema|contract|openapi|policy|rego|retention|redaction|readiness|health' -- contracts schemas docs/standards policy apps packages tools tests scripts
 ```
 
 ### First useful move
@@ -259,16 +270,24 @@ Prefer:
 Avoid:
 - `alert rule now, runbook later`
 
-### 6) Do not create a second schema universe
+### 6) Do not create a local second contract lane
 
-The repo currently exposes `contracts/` as the stronger working contract surface and `schemas/` as a boundary guide while authority is being retired.
+Current public `main` already carries multiple machine-law signals:
 
-If this lane later gets `contracts/`, keep it explicitly narrow:
+- root [`../../contracts/README.md`](../../contracts/README.md)
+- parent [`../../schemas/README.md`](../../schemas/README.md)
+- live [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md)
+- shared standards routing in [`../../docs/standards/README.md`](../../docs/standards/README.md)
+
+This lane should not add a fourth ambiguous home such as `configs/observability/contracts/`.
+
+If this lane later needs helper validation fragments, keep them explicitly narrow:
+
 - local observability field guidance
 - schema fragments for dashboard or config object validation
 - migration notes for observability-only changes
 
-Do **not** let it become a competing source of truth for repo-wide contract law.
+Do **not** let those helpers become a competing source of truth for repo-wide contract law.
 
 > [!CAUTION]
 > A local observability helper schema is acceptable.  
@@ -283,19 +302,22 @@ flowchart LR
     O --> M["metrics + alerts<br/>(PROPOSED)"]
     O --> T["traces<br/>(PROPOSED)"]
     O --> D["dashboards + runbooks<br/>(PROPOSED)"]
+    O --> F["fields<br/>(PROPOSED local guidance only)"]
 
     A["apps/ + packages/ + infra/"] --> J["joined IDs<br/>request_id · audit_ref · release_id · dataset_version_id · decision_id · bundle_id · projection_build_id"]
     J --> O
 
     O -. "non-secret only" .-> S["host-local secret surfaces"]
     O -. "not contract authority" .-> K["../../contracts/"]
-    O -. "not parallel schema authority" .-> Z["../../schemas/"]
+    O -. "not schema-home authority" .-> Z["../../schemas/"]
+    O -. "not live machine-contract home" .-> SC["../../schemas/contracts/"]
     O -. "not executable governance" .-> Y["../../policy/"]
 
     C --> X["operators / stewards / reviewers"]
     M --> X
     T --> X
     D --> X
+    F --> X
 ```
 
 ## Reference tables
@@ -307,7 +329,7 @@ flowchart LR
 | Lane existence | `configs/observability/` exists in the live repo | **CONFIRMED** |
 | Lane depth | current lane is scaffold-only | **CONFIRMED** |
 | Parent config doctrine | `configs/` is the repo-visible, non-secret configuration home | **CONFIRMED** |
-| Schema-home posture | current public repo exposes both `contracts/` and `schemas/` boundary docs | **CONFIRMED** visibility / **NEEDS VERIFICATION** singular authority |
+| Schema-home posture | root `contracts/` is still README-only human-readable contract guidance, while `schemas/` now exposes a live `schemas/contracts/` scaffold with placeholder machine files | **CONFIRMED** visibility / **NEEDS VERIFICATION** canonical authority |
 | Current internal observability inventory | committed collectors, dashboards, alert rules, traces, runbooks | **UNKNOWN** |
 | Future local lane shape | organized subpaths under this directory | **PROPOSED** |
 | Actual deployed observability stack | Grafana / Prometheus / OTel / Tempo / Loki or alternatives | **UNKNOWN** |
@@ -333,6 +355,7 @@ flowchart LR
 | `traces/` sampling config | keeps privacy and cost visible | **PROPOSED** |
 | `dashboards/` definitions | prevents “mystery dashboard” sprawl | **PROPOSED** |
 | `runbooks/` | keeps alert response coupled to alert creation | **PROPOSED** |
+| `fields/` guidance | keeps local naming and joined-ID rules reviewable without creating a second contract lane | **PROPOSED** |
 | `deploy/` wiring | makes per-env rollout shape explicit | **PROPOSED** |
 
 [Back to top](#observability)
@@ -346,7 +369,7 @@ flowchart LR
 - [ ] Any joined identifier added here is documented and stable
 - [ ] Any redaction or retention rule change includes reviewer-visible rationale
 - [ ] Alert-routing changes include a runbook update in the same change stream
-- [ ] No local file here competes with top-level contract, schema, or policy authority
+- [ ] No local file here competes with root `contracts/`, parent `schemas/`, live `schemas/contracts/`, or `policy/`
 - [ ] Meta-block placeholders were verified or intentionally kept as placeholders
 - [ ] Relative links to parent and adjacent repo docs were rechecked against the live tree
 
@@ -357,6 +380,12 @@ flowchart LR
 Because observability still needs a reviewable home for non-secret config, dashboards, rules, and runbooks.
 
 What this lane must **not** do is pretend observability is separate from contracts, policy, release evidence, or correction logic.
+
+### Why avoid proposing `configs/observability/contracts/`?
+
+Because current public `main` already splits contract meaning across root `contracts/` and live `schemas/contracts/`, while `docs/standards/README.md` still routes machine-contract authority toward root `contracts/`.
+
+Reusing the noun locally inside `configs/observability/` would add more ambiguity before the repo finishes canonical-home resolution.
 
 ### Why not keep all dashboards and alerts under `infra/` instead?
 
@@ -415,8 +444,14 @@ sed -n '1,120p' .github/CODEOWNERS
 sed -n '1,260p' configs/README.md
 cat configs/env.schema.json
 
+# Reconfirm the current machine-law routing split.
+sed -n '1,280p' contracts/README.md
+sed -n '1,280p' schemas/README.md
+sed -n '1,280p' schemas/contracts/README.md
+sed -n '1,260p' docs/standards/README.md
+
 # Reconfirm whether any real observability artifacts now exist elsewhere.
-git grep -nE 'otel|opentelemetry|prometheus|grafana|tempo|loki|alertmanager|audit_ref|correlation_id' -- .
+git grep -nE 'otel|opentelemetry|prometheus|grafana|tempo|loki|alertmanager|audit_ref|correlation_id|schemas/contracts|reason_codes|obligation_codes' -- .
 ```
 
 </details>
