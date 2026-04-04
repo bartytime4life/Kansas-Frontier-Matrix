@@ -6,11 +6,11 @@ version: v1
 status: review
 owners: @bartytime4life
 created: <YYYY-MM-DD NEEDS VERIFICATION>
-updated: 2026-03-28
+updated: 2026-04-04
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/CODEOWNERS, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md]
 tags: [kfm, domain, package]
-notes: [current public main confirms a README-only package surface here; doc UUID and original created date still need verification]
+notes: [current public main confirms a README-only package surface here; broad /packages/ ownership is confirmed in CODEOWNERS; doc UUID and original created date still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # domain
@@ -64,8 +64,12 @@ The parent package contract on current public `main` already assigns `./domain/`
 | `README.md` exists | current file is present | **CONFIRMED** |
 | current package content depth | public `main` currently presents a README-only package surface here | **CONFIRMED** |
 | broad ownership fallback | inherited from `/packages/` in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** |
+| broader package-family context | the wider `packages/` lane now visibly includes additional sibling surface beyond the original README-first cluster, but this path remains README-only | **CONFIRMED** |
 | package-local code, manifests, tests, exports | not proven from the visible package subtree used for this draft | **UNKNOWN** |
 | narrower child ownership | not separately confirmed | **NEEDS VERIFICATION** |
+
+> [!NOTE]
+> The broader `packages/` lane is no longer perfectly uniform. That makes `packages/domain/`’s narrow, pure boundary more—not less—important: it should stay the semantic-core seam, not drift toward an ingest starter or runtime convenience layer.
 
 ### Upstream and downstream relationship map
 
@@ -339,6 +343,22 @@ No. It proves the package path exists and documents the boundary it should satis
 packages/domain/
 └── README.md
 ```
+
+### Broader visible `packages/` family context
+
+```text
+packages/
+├── catalog/
+├── domain/
+├── evidence/
+├── genealogy_ingest/
+├── indexers/
+├── ingest/
+├── policy/
+└── README.md
+```
+
+The wider `packages/` lane now includes more than the original README-first shared seam cluster. That does **not** change the directly confirmed state of `packages/domain/`, which still renders as `README.md` only on current public `main`.
 
 ### Still needs verification
 
