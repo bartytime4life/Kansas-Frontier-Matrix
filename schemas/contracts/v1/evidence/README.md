@@ -6,28 +6,34 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: TODO-VERIFY-CREATED-DATE
-updated: 2026-03-28
+updated: 2026-04-03
 policy_label: TODO-VERIFY-POLICY-LABEL
-related: [./evidence_bundle.schema.json, ../README.md, ../../README.md, ../../../README.md, ../../../../contracts/README.md, ../../../../policy/README.md, ../../../../tests/README.md, ../../../../.github/workflows/README.md, ../../../../docs/standards/README.md]
+related: [./evidence_bundle.schema.json, ../README.md, ../../README.md, ../../../README.md, ../../../tests/README.md, ../../../tests/fixtures/contracts/v1/README.md, ../../../../contracts/README.md, ../../../../policy/README.md, ../../../../tests/README.md, ../../../../tests/contracts/README.md, ../../../../.github/workflows/README.md, ../../../../docs/standards/README.md]
 tags: [kfm, schemas, contracts, evidence, evidence-bundle]
-notes: [Global CODEOWNERS fallback owner is visible on public main, current public schema body is placeholder {}, authoritative schema-home remains unresolved across adjacent docs]
+notes: [Current public lane is real, local schema body is still placeholder {}, current public tree also exposes nested schema-side fixture scaffolds plus a sharper root tests/contracts lane, narrower /schemas/ ownership and canonical schema-home authority remain unresolved]
 [/KFM_META_BLOCK_V2] -->
 
 # `schemas/contracts/v1/evidence`
 
-Boundary README for the public `EvidenceBundle` contract family in the visible `schemas/contracts/v1/` lane.
+Boundary README for the public `EvidenceBundle` contract family in the live `schemas/contracts/v1/` subtree.
+
+> [!NOTE]
+> The KFM Meta Block v2 above keeps `doc_id`, `created`, and `policy_label` as reviewable placeholders because those values were not directly confirmed from the current public repo surfaces inspected for this revision.
 
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(repo-wide fallback; narrower path ownership needs verification)*  
-> **Repo fit:** `schemas/contracts/v1/evidence/`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![schema](https://img.shields.io/badge/schema_body-%7B%7D-lightgrey) ![authority](https://img.shields.io/badge/schema_home-NEEDS__VERIFICATION-yellow) ![owner](https://img.shields.io/badge/owner-bartytime4life-blue)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Field map](#evidencebundle-starter-field-map) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life` *(repo-wide fallback; narrower `/schemas/` ownership still needs verification)*  
+> **Repo fit:** path `schemas/contracts/v1/evidence/README.md` · local schema `./evidence_bundle.schema.json`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![schema](https://img.shields.io/badge/schema_body-%7B%7D-lightgrey) ![fixtures](https://img.shields.io/badge/fixtures-scaffold__split-lightgrey) ![workflow](https://img.shields.io/badge/workflows-README--only-lightgrey) ![authority](https://img.shields.io/badge/schema_home-NEEDS__VERIFICATION-yellow) ![owner](https://img.shields.io/badge/owner-bartytime4life-blue)  
+> **Quick jump:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Field map](#evidencebundle-starter-field-map) · [Example and validation routing](#example-and-validation-routing) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public main shows this family directory as real, but `./evidence_bundle.schema.json` is still a placeholder body. Treat this README as boundary truth and review guidance, not as proof that the bundle contract is already enforcement-ready.
+> Current public `main` shows this family directory as real, but `./evidence_bundle.schema.json` is still a placeholder body. Treat this README as boundary truth and review guidance, not as proof that the bundle contract is already enforcement-ready.
 
 > [!WARNING]
-> Schema-home authority is still unresolved across adjacent docs. `schemas/contracts/v1/` is materially present, while other nearby docs still route some machine-contract readers toward root `contracts/`. Keep that tension visible until the repo resolves it explicitly.
+> Schema-home authority is still unresolved across adjacent docs. `schemas/contracts/v1/` is materially present, while other nearby docs still route machine-contract readers toward root `contracts/`. Keep that tension visible until the repo resolves it explicitly.
+
+> [!TIP]
+> Current public repo surfaces now show **two** verification-adjacent paths that matter here: a nested schema-side scaffold under `schemas/tests/fixtures/contracts/v1/` and a sharper root `tests/contracts/` family. This README should keep that split explicit instead of letting valid/invalid examples drift silently between two quiet homes.
 
 ## Scope
 
@@ -40,16 +46,30 @@ This README should answer four practical questions:
 3. What the current repo visibly proves today.
 4. What still needs verification before this lane can be called enforcement-ready.
 
+## Current public deltas
+
+| Delta | Why it matters here | Status |
+| --- | --- | --- |
+| `schemas/contracts/v1/evidence/` is publicly visible with `README.md` and `evidence_bundle.schema.json` | This lane is real and reviewable on public `main`, not hypothetical | **CONFIRMED** |
+| `evidence_bundle.schema.json` still has body `{}` | Human boundary guidance is ahead of machine-encoded contract detail | **CONFIRMED** |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible and scaffold-only | A schema-side landing zone for examples exists, but it is not yet proof-bearing by itself | **CONFIRMED** |
+| `tests/contracts/README.md` exists as a sharper current contract-facing verification family | Canonical contract-proof examples should not drift away from the stronger root verification lane without an explicit repo decision | **CONFIRMED** |
+| `.github/workflows/` is still README-only on current public `main` | Merge-blocking validation depth remains unproven from checked-in YAML | **CONFIRMED** |
+| Root `contracts/README.md` still frames `contracts/` as the stronger human-readable machine-contract backbone | Authority language and machine-file placement are still split across roots | **CONFIRMED / NEEDS VERIFICATION** |
+
 ## Repo fit
 
 | Dimension | Value |
 | --- | --- |
-| Path | `schemas/contracts/v1/evidence/` |
+| Path | `schemas/contracts/v1/evidence/README.md` |
 | Local artifact | [`./evidence_bundle.schema.json`](./evidence_bundle.schema.json) |
 | Upstream family doc | [`../README.md`](../README.md) |
 | Boundary docs | [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) |
-| Cross-repo-adjacent guidance | [`../../../../contracts/README.md`](../../../../contracts/README.md) · [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) |
-| Downstream review surfaces | [`../../../../policy/README.md`](../../../../policy/README.md) · [`../../../../tests/README.md`](../../../../tests/README.md) · [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
+| Adjacent doctrinal contract lane | [`../../../../contracts/README.md`](../../../../contracts/README.md) |
+| Nested schema-side fixture scaffold | [`../../../tests/README.md`](../../../tests/README.md) · [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) |
+| Root contract-proof lane | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) |
+| Broader verification / policy / workflow surfaces | [`../../../../tests/README.md`](../../../../tests/README.md) · [`../../../../policy/README.md`](../../../../policy/README.md) · [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
+| Standards routing context | [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) |
 | Closest sibling families | [`../source/README.md`](../source/README.md) · [`../data/README.md`](../data/README.md) · [`../policy/README.md`](../policy/README.md) · [`../release/README.md`](../release/README.md) · [`../runtime/README.md`](../runtime/README.md) · [`../correction/README.md`](../correction/README.md) · [`../common/README.md`](../common/README.md) |
 
 ### Current verified snapshot
@@ -63,9 +83,15 @@ Use KFM truth labels literally here: **CONFIRMED**, **INFERRED**, **PROPOSED**, 
 | Local schema file exists | **CONFIRMED** | `evidence_bundle.schema.json` is checked in here |
 | Local schema body is implementation-ready | **CONFIRMED placeholder only** | Current checked-in body is still `{}` |
 | Wider `schemas/contracts/v1/` lane exists | **CONFIRMED** | The parent lane is materially present with family subdirectories |
+| Nested schema-side fixture scaffold exists | **CONFIRMED scaffold only** | `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible, but current public leaves remain README-only |
+| Root contract-facing verification family exists | **CONFIRMED** | `tests/contracts/README.md` is present as a sharper contract-proof lane |
+| Current public workflow lane proves checked-in merge-blocking validation YAML for this family | **UNKNOWN** | Public `.github/workflows/` remains documentary unless reverified elsewhere |
 | Authoritative schema home is reconciled across docs | **NEEDS VERIFICATION** | Adjacent docs still show unresolved authority between `schemas/` and root `contracts/` |
-| Merge-blocking workflow coverage for this family is proven from current public tree | **UNKNOWN** | Public `workflows/` remains documentary unless reverified elsewhere |
-| Narrow path-specific ownership under `/schemas/` | **NEEDS VERIFICATION** | Repo-wide fallback owner is visible, narrower rules are not confirmed here |
+| Narrow path-specific ownership under `/schemas/` | **NEEDS VERIFICATION** | Repo-wide fallback owner is visible, but no narrower `/schemas/` rule is confirmed here |
+
+### Working reading rule
+
+`EvidenceBundle` is the **support package**. It is downstream of governed source, data, policy, release, and transform objects, and upstream of trust-visible surfaces such as Evidence Drawer, Focus Mode, export preview, and story/dossier support. It is **not** the runtime answer envelope, and it is **not** the public release record.
 
 ## Accepted inputs
 
@@ -78,6 +104,7 @@ This directory is the right home for material that clarifies or constrains the *
 | Illustrative bundle examples | Helps reviewers reason about bundle shape before runtime integration |
 | Preview-policy and audit-link expectations | These are part of the support package, not an afterthought |
 | Links to transform receipts or dataset refs | `EvidenceBundle` is about resolved support, so these references matter |
+| Boundary notes about example / fixture placement | This family now sits next to both schema-side scaffold fixtures and the sharper root `tests/contracts/` proof lane |
 
 ## Exclusions
 
@@ -92,14 +119,31 @@ Keep this directory narrow. Putting too much here makes `EvidenceBundle` a bypas
 | Runtime answer envelopes | [`../runtime/`](../runtime/README.md) |
 | Correction lineage objects | [`../correction/`](../correction/README.md) |
 | Shared headers or family-wide profile fragments | [`../common/`](../common/README.md) |
+| Canonical valid/invalid proof packs intended to back blocking gates | Prefer the sharper root contract-proof lane at [`../../../../tests/contracts/`](../../../../tests/contracts/README.md) unless repo law later settles another home |
 | Non-contract tutorials or wide standards commentary | [`../../../../docs/standards/`](../../../../docs/standards/README.md) or root docs |
 
 ## Directory tree
+
+### Local lane
 
 ```text
 schemas/contracts/v1/evidence/
 ├── README.md
 └── evidence_bundle.schema.json
+```
+
+### Relevant nearby proof scaffolds
+
+```text
+schemas/tests/fixtures/contracts/v1/
+├── README.md
+├── invalid/
+│   └── README.md
+└── valid/
+    └── README.md
+
+tests/contracts/
+└── README.md
 ```
 
 ## Quickstart
@@ -121,8 +165,13 @@ sed -n '1,220p' contracts/README.md
 # inspect the current local schema body
 cat schemas/contracts/v1/evidence/evidence_bundle.schema.json
 
-# check whether tests/workflows now reference this family
-grep -R "evidence_bundle" tests .github/workflows scripts tools 2>/dev/null || true
+# inspect the current schema-side fixture scaffold and root contract-proof lane
+sed -n '1,220p' schemas/tests/README.md
+sed -n '1,220p' schemas/tests/fixtures/contracts/v1/README.md
+sed -n '1,220p' tests/contracts/README.md
+
+# check whether examples or validators now reference this family
+grep -R "evidence_bundle" schemas/tests tests .github/workflows scripts tools 2>/dev/null || true
 ```
 
 ## Usage
@@ -135,6 +184,7 @@ Edit this README when one of these changes:
 2. Adjacent family ownership changes.
 3. A review burden becomes explicit enough to document.
 4. The repo resolves schema-home authority and this file needs to say so plainly.
+5. The repo makes a clearer decision about where canonical valid/invalid contract proof packs should live.
 
 ### When to edit `evidence_bundle.schema.json`
 
@@ -151,9 +201,10 @@ That normally means:
 
 1. Re-open the parent lane README.
 2. Re-open `schemas/README.md` and root `contracts/README.md`.
-3. Decide whether the change is **local field shape**, **family boundary**, or **authority resolution**.
-4. Change the smallest thing that makes the lane more explicit.
-5. Leave unresolved repo-wide authority questions visible if they are still unresolved.
+3. Re-open `schemas/tests/README.md`, `schemas/tests/fixtures/contracts/v1/README.md`, and `tests/contracts/README.md`.
+4. Decide whether the change is **local field shape**, **family boundary**, **fixture-home routing**, or **authority resolution**.
+5. Change the smallest thing that makes the lane more explicit.
+6. Leave unresolved repo-wide authority questions visible if they are still unresolved.
 
 ## Diagram
 
@@ -207,12 +258,26 @@ Use this table to keep `evidence/` narrow.
 | `correction/` | Supersession, replacement, narrowing, withdrawal | Carry affected support safely; do not own correction lineage |
 | `common/` | Shared structural fragments or cross-family profiles | Reuse shared shapes once they exist; do not fork them locally |
 
+## Example and validation routing
+
+Use the current split deliberately instead of letting fixture placement drift.
+
+| Need | Prefer this surface | Why |
+| --- | --- | --- |
+| Human boundary explanation for the family | This README | Keeps the family legible without inventing implementation |
+| Local schema body for `EvidenceBundle` | [`./evidence_bundle.schema.json`](./evidence_bundle.schema.json) | The machine-file placeholder already exists here |
+| Canonical contract-facing valid/invalid cases | [`../../../../tests/contracts/`](../../../../tests/contracts/README.md) *(until repo law says otherwise)* | Current public tree already exposes it as the sharper contract-proof lane |
+| Nested schema-side mirrors or illustrative scaffolds | [`../../../tests/fixtures/contracts/v1/`](../../../tests/fixtures/contracts/v1/README.md) | Current nested scaffold exists, but it should stay clearly non-authoritative unless repo law changes |
+| Merge / blocking automation | [`../../../../.github/workflows/`](../../../../.github/workflows/README.md) | Validation depth belongs in workflows, not in boundary prose |
+| Policy grammar, reasons, obligations, withholding rules | [`../../../../policy/`](../../../../policy/README.md) | Evidence support should consume policy outcomes, not redefine them |
+
 ## Task list & definition of done
 
 ### Task list
 
-- [ ] Keep the current repo state honest: local schema body, authority drift, and workflow uncertainty should remain visible until resolved.
+- [ ] Keep the current repo state honest: local schema body, authority drift, fixture-home ambiguity, and workflow uncertainty should remain visible until resolved.
 - [ ] Add at least one valid bundle example and one invalid bundle example when the local schema stops being `{}`.
+- [ ] Make the canonical proof-lane choice explicit if real valid/invalid examples land in either `schemas/tests/**` or `tests/contracts/**`.
 - [ ] Add a deterministic validation path before claiming enforcement readiness.
 - [ ] Reconcile cross-links if root `contracts/` and `schemas/contracts/v1/` authority changes.
 - [ ] Keep downstream consumer language aligned with Evidence Drawer, Focus, export, and story/dossier support use.
@@ -224,6 +289,7 @@ Use this table to keep `evidence/` narrow.
 | --- | --- |
 | Structure | `evidence_bundle.schema.json` is either real or explicitly still placeholder without ambiguity |
 | Examples | Valid/invalid fixtures exist and are reviewable |
+| Fixture-home clarity | `schemas/tests/**` versus `tests/contracts/**` no longer drifts silently for this family |
 | Validation | A deterministic command checks this family without manual interpretation |
 | Cross-doc consistency | Parent and adjacent docs no longer contradict this README silently |
 | Consumer clarity | Reviewers can tell what feeds Evidence Drawer, Focus, export, and story support without reading unrelated families |
@@ -242,6 +308,10 @@ No. A checked-in filename is not the same as an implemented contract. Right now 
 ### How is `EvidenceBundle` different from `RuntimeResponseEnvelope`?
 
 `EvidenceBundle` is the support package. `RuntimeResponseEnvelope` is the accountable runtime outcome. The bundle can feed Focus and other trust surfaces, but it does not replace the answer/abstain/deny/error envelope.
+
+### Where should valid and invalid `EvidenceBundle` examples go right now?
+
+Current public repo evidence shows two useful but different surfaces: a nested schema-side scaffold under `schemas/tests/fixtures/contracts/v1/` and a sharper root `tests/contracts/` family. Until repo law makes one home canonical, prefer `tests/contracts/` for contract-facing proof packs and keep any schema-side examples clearly labeled as illustrative, generated, or mirror-only.
 
 ### Should raw or restricted material live directly inside the bundle?
 
