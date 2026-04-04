@@ -10,7 +10,7 @@ updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
 related: [../README.md, ../raw/README.md, ../work/README.md, ../quarantine/, ../catalog/, ../receipts/, ../proofs/, ../published/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, data, processed, lifecycle, readme]
-notes: [Owner grounded from current public CODEOWNERS coverage for /data/; doc_id, created, updated, and policy_label still need branch-history or project-metadata verification.]
+notes: [Owner grounded from current public CODEOWNERS coverage for /data/; path role grounded by current public main and the uploaded draft; doc_id, created, updated, and policy_label still need branch-history or project-metadata verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -23,6 +23,7 @@ Governed processed-zone guide for stable dataset versions, manifests, and releas
 > **Doc state:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path target:** `data/processed/README.md`  
+> **Repo fit:** [../README.md](../README.md) → [../catalog/](../catalog/) · [../receipts/](../receipts/) · [../proofs/](../proofs/) → [../../apps/](../../apps/)  
 > [![Status: experimental](https://img.shields.io/badge/status-experimental-informational)](#top)
 > [![Doc: draft](https://img.shields.io/badge/doc-draft-orange)](#top)
 > [![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0a7d5a)](#top)
@@ -40,9 +41,9 @@ Governed processed-zone guide for stable dataset versions, manifests, and releas
 > [!NOTE]
 > This README keeps three layers separate on purpose:
 >
-> - **CONFIRMED current public-main fact**: `data/processed/` exists, and the currently visible checked-in tree shows `README.md` only.
-> - **CONFIRMED doctrine**: `PROCESSED` is where stable dataset versions and release-adjacent artifacts harden.
-> - **PROPOSED starter shape**: a per-version pack such as `data/processed/<theme>/<dataset>/<version>/`.
+> - **CONFIRMED current public-main fact:** `data/processed/` exists, and the currently visible checked-in tree shows `README.md` only.
+> - **CONFIRMED doctrine:** `PROCESSED` is where stable dataset versions and release-adjacent artifacts harden.
+> - **PROPOSED starter shape:** a per-version pack such as `data/processed/<theme>/<dataset>/<version>/`.
 
 ---
 
@@ -83,7 +84,7 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 | Lateral | [`../raw/README.md`](../raw/README.md) | **CONFIRMED** | Immutable source captures stay there, not here. |
 | Lateral | [`../work/README.md`](../work/README.md) | **CONFIRMED** | In-progress transforms stay there until stable. |
 | Lateral | [`../quarantine/`](../quarantine/) | **CONFIRMED (path)** | Rights-unclear, invalid, or blocked material stays there. |
-| Lateral | [`../catalog/`](../catalog/) | **CONFIRMED (path)** | STAC / DCAT / PROV closure should resolve back to processed versions. |
+| Lateral | [`../catalog/`](../catalog/) | **CONFIRMED (path)** | `STAC + DCAT + PROV` closure should resolve back to processed versions. |
 | Lateral | [`../receipts/`](../receipts/) | **CONFIRMED (path)** | Ingest and validation memory should be linkable from processed versions. |
 | Lateral | [`../proofs/`](../proofs/) | **CONFIRMED (path)** | Release and trust evidence should stay attachable and discoverable. |
 | Lateral | [`../published/README.md`](../published/README.md) | **CONFIRMED** | Publication is a governed state transition, not a synonym for “processed.” |
@@ -93,7 +94,7 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 | Downstream | [`../../apps/`](../../apps/) | **CONFIRMED (path)** | UI and public-safe surfaces should consume governed outputs, not direct storage assumptions. |
 | Downstream | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Validation, fixture, and regression checks should exercise this zone. |
 | Downstream | [`../../tools/`](../../tools/) | **CONFIRMED (path)** | Validators, lints, and packaging helpers should target this zone without redefining it. |
-| Adjacent control lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED / NEEDS VERIFICATION** | The workflow documentation surface is present on public `main`, but checked-in merge-blocking YAML depth is not exposed there today. |
+| Adjacent control lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED README surface / NEEDS VERIFICATION workflow depth** | Public workflow docs are present; current public `main` treats the workflow directory as README-only, and any historical workflow names from the Actions UI remain reconstruction clues rather than current checked-in inventory. |
 
 ### Repo-fit summary
 
@@ -102,6 +103,9 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 | What belongs here? | Stable processed artifacts, immutable version folders, manifests, checksums, human-readable version READMEs, and resolvable links into catalog / receipt / proof surfaces. |
 | What does **not** belong here? | Raw captures, unstable transforms, quarantined material, shared schemas, policy bundles, secrets, or direct-public serving assumptions. |
 | What is the downstream contract? | A processed version should be understandable, verifiable, and linkable into `STAC + DCAT + PROV`, receipts, and release evidence. |
+
+> [!NOTE]
+> Treat the checked-in tree as the source of truth for **what exists now**. Use adjacent workflow docs and public Actions history only to understand what may need reconstruction, not to imply current live automation.
 
 [Back to top](#top)
 
@@ -120,7 +124,7 @@ These are the kinds of artifacts that belong in, or directly as part of, the pro
 | `README.md` | Human-readable method, caveat, CRS, rights, and citation memory. | One README per version folder |
 | `LICENSE.txt` or equivalent rights note | Keeps release-facing rights context close to the version pack. | Machine-readable SPDX-compatible notice where possible |
 | Stable QA or release-adjacent outputs | Some final validation artifacts may need to remain resolvable from the version pack. | Summaries, reports, or references to sibling receipt/proof surfaces |
-| Resolvable sibling links | Processed versions should point to catalog, receipt, and proof surfaces without duplicating their full logic. | Links or references to STAC / DCAT / PROV / receipts / proofs |
+| Resolvable sibling links | Processed versions should point to catalog, receipt, and proof surfaces without duplicating their full logic. | Links or references to `STAC + DCAT + PROV` / receipts / proofs |
 
 [Back to top](#top)
 
@@ -202,10 +206,13 @@ data/
 
 ### 1) Inspect the live surface first
 
-Before asserting layout or automation facts, inspect the current checkout.
+Before asserting layout or automation facts, inspect the current checkout and its nearest control surfaces.
 
 ```bash
 find data/processed -maxdepth 4 -print 2>/dev/null | sort
+sed -n '1,220p' data/README.md
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+sed -n '1,120p' .github/CODEOWNERS 2>/dev/null || true
 ```
 
 ### 2) Create a version pack
