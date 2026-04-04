@@ -8,7 +8,7 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
-related: [tests/README.md, tests/e2e/README.md, contracts/README.md, policy/README.md, schemas/README.md, .github/workflows/README.md]
+related: [README.md, CONTRIBUTING.md, tests/README.md, tests/e2e/README.md, contracts/README.md, policy/README.md, schemas/README.md, docs/README.md, .github/CODEOWNERS, .github/workflows/README.md]
 tags: [kfm, tests, e2e, runtime-proof]
 notes: [doc_id, created, updated, and policy_label need verification; owner is derived from the current public-main /tests/ CODEOWNERS mapping]
 [/KFM_META_BLOCK_V2] -->
@@ -24,7 +24,7 @@ _End-to-end runtime proof surface for KFM request-time evidence resolution, cita
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/runtime_proof/README.md`  
-> **Repo fit:** leaf end-to-end proof family under [`../README.md`](../README.md) for request-time governed outcomes; downstream of [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../docs/README.md`](../../../docs/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), and [`../../../CONTRIBUTING.md`](../../../CONTRIBUTING.md)  
+> **Repo fit:** leaf end-to-end proof family under [`../README.md`](../README.md) for request-time governed outcomes; downstream of [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../docs/README.md`](../../../docs/README.md), [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), and [`../../../CONTRIBUTING.md`](../../../CONTRIBUTING.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![public inventory](https://img.shields.io/badge/current%20public%20inventory-directory%20visible-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 >
@@ -135,7 +135,11 @@ The current public-branch evidence used for this revision supports the following
 - `/tests/` ownership currently resolves to `@bartytime4life`.
 - Public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML and merge-blocking automation are **not** proven from the visible public tree alone.
 - `.github/workflows/README.md` also records prior workflow activity and deleted workflow filenames as historical reconstruction clues, but that history is **signal**, not proof of current checked-in YAML.
+- Root `README.md` and `CONTRIBUTING.md` both treat public `main` as a useful baseline rather than final branch truth; the checked-out branch under review should outrank it when available.
 - Exact runner/toolchain, executable suite depth, fixture density, emitted proof objects, screenshot baseline inventory, and required checks remain **NEEDS VERIFICATION**.
+
+> [!IMPORTANT]
+> Public `main` is a useful baseline, not the final merge authority. Reconcile this README against the checked-out branch, local inventory, and real runner surface before treating any path, command, or workflow claim as settled.
 
 > [!NOTE]
 > This README intentionally does **not** claim that `runtime_proof/` already contains mature executable coverage. It documents the family boundary honestly so executable proof can grow into it without overclaiming.
@@ -168,12 +172,15 @@ These commands are safe because they inspect the current branch shape and vocabu
 find tests/e2e/runtime_proof -maxdepth 4 -type d 2>/dev/null | sort
 find tests/e2e/runtime_proof -maxdepth 4 -type f 2>/dev/null | sort
 
-# re-read the governing test-family map before adding cases
+# re-read the governing repo and test-family map before adding cases
+sed -n '1,220p' README.md 2>/dev/null || true
+sed -n '1,260p' CONTRIBUTING.md 2>/dev/null || true
 sed -n '1,260p' tests/README.md 2>/dev/null || true
 sed -n '1,260p' tests/e2e/README.md 2>/dev/null || true
 sed -n '1,220p' contracts/README.md 2>/dev/null || true
 sed -n '1,220p' policy/README.md 2>/dev/null || true
 sed -n '1,220p' schemas/README.md 2>/dev/null || true
+sed -n '1,220p' docs/README.md 2>/dev/null || true
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
 
 # inspect ownership and visible workflow adjacency
@@ -198,13 +205,14 @@ grep -RIn \
 
 ### First local review pass
 
-1. Confirm whether the checked-out branch still matches the public `tests/e2e/runtime_proof/` shape.
-2. Confirm whether this family contains executable cases or only documentation scaffolding.
-3. Confirm the actual runner/toolchain before documenting any execution command.
-4. Confirm whether the case is honestly request-time proof or belongs in `contracts/`, `policy/`, `integration/`, `reproducibility/`, or `accessibility/`.
-5. Confirm whether negative paths exist, not only happy-path success.
-6. Confirm whether emitted traces preserve scope, citations, decision linkage, and `audit_ref`.
-7. Confirm whether runtime proof stays inside the governed API path and does not bypass release, policy, or evidence resolution.
+1. Confirm whether the checked-out branch intentionally differs from public `main`, and update this README if it does.
+2. Confirm whether the checked-out branch still matches the public `tests/e2e/runtime_proof/` shape.
+3. Confirm whether this family contains executable cases or only documentation scaffolding.
+4. Confirm the actual runner/toolchain before documenting any execution command.
+5. Confirm whether the case is honestly request-time proof or belongs in `contracts/`, `policy/`, `integration/`, `reproducibility/`, or `accessibility/`.
+6. Confirm whether negative paths exist, not only happy-path success.
+7. Confirm whether emitted traces preserve scope, citations, decision linkage, and `audit_ref`.
+8. Confirm whether runtime proof stays inside the governed API path and does not bypass release, policy, or evidence resolution.
 
 > [!TIP]
 > Inspection-first is safer than guessing a toolchain. Do not document `npm`, `pnpm`, `pytest`, browser harness, or GitHub required-check commands here until the checked-out branch proves them directly.
@@ -266,6 +274,7 @@ flowchart LR
 ## Tables
 
 ### Outcome burden matrix
+
 _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS VERIFICATION** until mounted contracts and examples are inspected._
 
 | Outcome | What must be proven | Typical trigger | Minimum outward cues |
@@ -295,6 +304,7 @@ _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS V
 - [ ] A technical failure case proves that resolver or proof-object failure emits `ERROR`, not polished bluffing.
 - [ ] Each case preserves visible request-time linkage such as `bundle_ref`, `release_ref`, decision linkage, or `audit_ref`, where the current runtime contract expects them.
 - [ ] The checked-out branch proves the actual runner/toolchain before this README names any execution command.
+- [ ] The checked-out branch has been reconciled against the public-main baseline, and any local deltas are explicit in this README or the corresponding PR.
 - [ ] If UI or screenshot evidence is used, outward trust cues remain legible without relying on color alone.
 - [ ] Parent docs stay synchronized when this leaf’s meaning or local structure changes.
 - [ ] No scenario bypasses the governed API or promoted scope.
@@ -317,6 +327,9 @@ It should not. KFM doctrine treats negative outcomes as first-class trust-preser
 
 ### Should this README document concrete runner commands?
 Only after the checked-out branch proves them. This document stays inspection-first until a mounted checkout, workflow catalog, and local runner surface are directly verified.
+
+### Does public `main` settle the final runtime-proof inventory?
+No. Use public `main` as a baseline when a local checkout is unavailable, but the checked-out branch under review is the stronger source of truth for merge decisions.
 
 ### Does every runtime-proof case need UI screenshots?
 No. Use the smallest honest proof surface. But when a trust cue is user-visible — especially for abstained, denied, stale-visible, or errored states — outward evidence should remain reviewable.
