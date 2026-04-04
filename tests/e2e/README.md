@@ -1,6 +1,24 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS-VERIFICATION
+title: e2e
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: NEEDS_VERIFICATION
+related: [tests/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/release_assembly/README.md, tests/e2e/correction/README.md, .github/CODEOWNERS, .github/workflows/README.md]
+tags: [kfm, tests, e2e, verification]
+notes: [doc_id, created, updated, and policy_label are placeholders pending git-history or governance-record verification]
+[/KFM_META_BLOCK_V2] -->
+
 # e2e
 
 End-to-end proof surface for KFM runtime outcomes, release assembly, and correction lineage.
+
+> [!NOTE]
+> The KFM meta block above keeps reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` until git history or governance records are reverified.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
@@ -44,6 +62,7 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 | **CONFIRMED — ownership** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) assigns `/tests/` to `@bartytime4life`. |
 | **CONFIRMED — leaf directory state** | Public `main` now exposes checked-in `README.md` files under `./correction/`, `./release_assembly/`, and `./runtime_proof/`; the three visible leaf directories are still `README.md`-only in the public tree. |
 | **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone. |
+| **CONFIRMED — historical workflow signal** | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) now records deleted workflow-lane names visible through public Actions history, but it explicitly treats them as reconstruction clues rather than current checked-in inventory. |
 | **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, required checks, screenshot baseline inventory, proof-pack emitters, and whether runtime/release/correction drills are exercised on the checked-out branch. |
 
 ## Repo fit
@@ -114,9 +133,10 @@ The current public `main` branch proves the following:
 - `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
 - `tests/e2e/README.md` is **not** a one-line scaffold on public `main`; it is already a multi-section directory guide.
 - [`./correction/`](./correction/), [`./release_assembly/`](./release_assembly/), and [`./runtime_proof/`](./runtime_proof/) each currently expose `README.md` only in the public tree.
-- Those leaf READMEs are not identical in maturity or wording: `runtime_proof/` and `release_assembly/` already read as burden-specific guides, while `correction/README.md` still explicitly describes its checked-in page as scaffold-like.
+- Those leaf READMEs are not identical in emphasis: `runtime_proof/` is request-time outcome focused, `release_assembly/` is promotion and publish-path focused, and `correction/` is correction-lineage focused. What remains unproven is executable depth, not leaf meaning.
 - The parent [`../README.md`](../README.md) already assigns those three visible leaf families clear meanings.
 - Public `.github/workflows/` currently exposes `README.md` only; no checked-in workflow YAML files are visible there from the public tree.
+- Public `.github/workflows/README.md` now explicitly separates current `README.md`-only tree state from historically visible deleted workflow lanes in the Actions UI; treat those lane names as reconstruction clues, not current inventory.
 - `/tests/` ownership currently resolves to `@bartytime4life`.
 
 > [!CAUTION]
@@ -167,9 +187,11 @@ sed -n '1,220p' tests/e2e/release_assembly/README.md 2>/dev/null || true
 sed -n '1,220p' tests/e2e/correction/README.md 2>/dev/null || true
 
 # inspect ownership and workflow adjacency
+sed -n '1,260p' .github/README.md 2>/dev/null || true
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
-sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+sed -n '1,260p' .github/workflows/README.md 2>/dev/null || true
+git log --name-status -- .github/workflows 2>/dev/null | sed -n '1,120p' || true
 
 # search for KFM runtime/release/correction vocabulary before inventing new names
 grep -RIn \
@@ -320,7 +342,7 @@ flowchart LR
 - [ ] Any screenshot or outward cue is paired with explicit state assertions where relevant.
 - [ ] No claim of merge-blocking automation, required checks, or mature suite depth is made without direct evidence.
 - [ ] Adjacent docs are updated when case placement or family boundaries change.
-- [ ] This file’s current snapshot is updated whenever a leaf directory stops being `README.md`-only or a leaf README materially changes maturity or burden language.
+- [ ] This file’s current snapshot is updated whenever a leaf directory stops being `README.md`-only, a leaf README materially changes emphasis, or workflow-history reconstruction rules materially change in [`../../.github/workflows/README.md`](../../.github/workflows/README.md).
 
 ## FAQ
 
@@ -338,9 +360,15 @@ The current public tree proves the directory and its visible leaf families, not 
 
 ### Are the visible leaf families still scaffold-only?
 
-Not in one flat sense.
+No.
 
-The public tree still shows each leaf directory as `README.md`-only, but the leaf pages themselves are no longer uniform placeholders. `runtime_proof/` and `release_assembly/` now carry burden-specific multi-section guides, while `correction/README.md` still explicitly describes its checked-in page as scaffold-like in current public-tree terms.
+The public tree still shows each leaf directory as `README.md`-only, but all three leaf pages now read as burden-specific guides with different emphases. `runtime_proof/` is request-time focused, `release_assembly/` is publish-path focused, and `correction/` is correction-lineage focused. What remains unproven is executable case depth, not the documented burden of the leafs themselves.
+
+### Can public Actions run names prove current checked-in e2e automation?
+
+No.
+
+Use the current directory listing and [`../../.github/workflows/README.md`](../../.github/workflows/README.md) for current-tree truth. Public Actions history can help reconstruct deleted lanes, but it is historical or platform signal rather than proof that those workflow YAML files are checked in on current `main`.
 
 ### Can `ABSTAIN`, `DENY`, or `ERROR` be passing outcomes?
 
@@ -379,7 +407,7 @@ One narrow, public-safe scenario per visible leaf family is safer than a sprawli
 
 ### Sync rule
 
-If a future refactor renames or expands the visible e2e leaf families — or if a leaf directory stops being `README.md`-only, or a leaf README materially shifts from placeholder framing to fuller guidance — update [`../README.md`](../README.md) and this file in the same change so parent and child placement rules do not drift.
+If a future refactor renames or expands the visible e2e leaf families — or if a leaf directory stops being `README.md`-only, a leaf README materially shifts emphasis, or workflow-history handling changes materially — update [`../README.md`](../README.md) and this file in the same change so parent and child placement rules do not drift.
 
 </details>
 
