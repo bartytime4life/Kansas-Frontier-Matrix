@@ -4,58 +4,57 @@ title: DCAT Catalog Directory
 type: standard
 version: v1
 status: draft
-owners: TODO(owners-needs-verification)
-created: TODO(YYYY-MM-DD)
-updated: TODO(YYYY-MM-DD)
+owners: @bartytime4life
+created: TODO(YYYY-MM-DD; needs first-commit verification)
+updated: 2026-04-04
 policy_label: TODO(policy-label-needs-verification)
-related: [TODO(related-paths-needs-verification)]
+related: [../../README.md, ../README.md, ../stac/README.md, ../prov/README.md, ../../../docs/standards/KFM_DCAT_PROFILE.md]
 tags: [kfm, dcat, catalog, metadata]
-notes: [Current-session evidence was PDF-bounded; direct repo tree, existing sibling docs, and local ownership metadata remain NEEDS VERIFICATION.]
+notes: [Current public main confirms this lane exists and is README-only; exact payload subtree, emitters, validators, creation date, and policy label remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # DCAT Catalog Directory
 
 _Outward dataset and distribution discovery for the KFM catalog-closure layer._
 
-> **Status:** `TODO — needs verification`  
-> **Owners:** `TODO — needs verification`  
-> **Path:** `data/catalog/dcat/`  
-> **Role:** DCAT-facing portion of KFM’s outward STAC/DCAT/PROV closure
+> **Status:** `experimental catalog lane (INFERRED) · draft README revision`  
+> **Owners:** `@bartytime4life` *(broad `/data/` CODEOWNERS fallback)*  
+> **Path:** `data/catalog/dcat/README.md`  
+> **Repo fit:** dataset/distribution lane inside [`data/catalog/`](../README.md), alongside [`stac/`](../stac/README.md) and [`prov/`](../prov/README.md)
 
-![Status](https://img.shields.io/badge/status-TODO-lightgrey)
-![Owners](https://img.shields.io/badge/owners-TODO-lightgrey)
-![Evidence](https://img.shields.io/badge/evidence-PDF--bounded-blue)
-![DCAT](https://img.shields.io/badge/profile-DCAT%203-0A7BBB)
-![Truth%20posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20UNKNOWN-6A5ACD)
+![status](https://img.shields.io/badge/status-experimental-blue)
+![doc](https://img.shields.io/badge/doc-draft-lightgrey)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-24292f)
+![catalog](https://img.shields.io/badge/catalog-DCAT%20%2B%20STAC%20%2B%20PROV-0A7BBB)
+![public-main](https://img.shields.io/badge/public_main-checked-2ea44f)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20UNKNOWN-6A5ACD)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--release-gates) · [FAQ](#faq) · [Appendix](#appendix)
-
-> [!NOTE]
-> This README is intentionally source-bounded. The mounted corpus in this session established KFM doctrine and several path examples, but **did not** expose a directly inspectable repository tree, existing adjacent README files, live schemas, CI workflows, or runtime manifests. File-level details that were not explicitly evidenced remain **NEEDS VERIFICATION**.
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--release-gates) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> The mounted corpus uses **two sibling catalog topologies** in different places:  
-> `data/catalog/stac/` + `data/catalog/prov/` **and** `data/stac/` + `data/prov/`.  
-> This README keeps `data/catalog/dcat/` fixed because that is the requested target path, and marks sibling-path references as **NEEDS VERIFICATION** instead of pretending the discrepancy does not exist.
+> Current public `main` resolves the visible catalog triplet as `data/catalog/dcat/`, `data/catalog/stac/`, and `data/catalog/prov/`. This lane currently shows a checked-in `README.md`, but the inspected public tree does **not** yet prove checked-in DCAT payload files, validators, or emitted public conformance for this lane.
+
+> [!NOTE]
+> This README keeps three evidence layers separate on purpose: **CONFIRMED doctrine**, **CONFIRMED current public-main tree**, and **PROPOSED starter layout** where the checked-in tree has not yet materialized.
+
+> [!CAUTION]
+> Use **profile fit** language by default. Do **not** claim mounted DCAT conformance unless emitted records, fixtures, validators, and release-gate evidence are checked in and reviewable.
 
 ---
 
 ## Scope
 
-This directory is the **DCAT discovery face** of KFM’s catalog layer.
+`data/catalog/dcat/` is KFM’s **dataset- and distribution-facing catalog lane**.
 
-In KFM doctrine, **DCAT does not replace STAC or PROV**. It carries the outward dataset/distribution view, while STAC carries spatiotemporal asset description and PROV carries lineage. KFM is strongest when those three move together as a catalog-closure set rather than competing for authority.
+Its job is narrow and important: make released or release-candidate scope outwardly discoverable **without** replacing canonical truth, flattening policy, or bypassing release discipline. In KFM terms, this lane belongs to `CatalogClosure`, where outward `DCAT + STAC + PROV` metadata closes over release-backed truth after `PROCESSED` and before or alongside `PUBLISHED`.
 
-This README therefore treats `data/catalog/dcat/` as the place where maintainers curate or validate **dataset-level discovery records** that are expected to remain:
+In plain language, this directory exists so maintainers can keep dataset/distribution discovery:
 
-- downstream of canonical processing and release discipline,
-- cross-linked to sibling catalog artifacts,
-- policy-aware,
-- publication-aware,
-- and suitable for governed discovery surfaces.
-
-> [!CAUTION]
-> A DCAT record is **not** a publication bypass. In KFM, outward catalog material stays subject to rights, sensitivity, review, release, and correction rules.
+- downstream of canonical processing,
+- linked to sibling STAC and PROV views,
+- explicit about rights and access posture,
+- aligned to release artifacts,
+- and honest about what is confirmed now versus merely proposed.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -63,29 +62,41 @@ This README therefore treats `data/catalog/dcat/` as the place where maintainers
 
 ## Repo fit
 
-### Path
+### Path and adjacency
 
-`data/catalog/dcat/`
-
-### Upstream / downstream placement
-
-| Relationship | Path / surface | Status | Why it matters |
+| Relationship | Surface | Status | Why it matters |
 | --- | --- | --- | --- |
-| Upstream canonical payloads | `data/processed/<theme>/<dataset>/<version>/` | **INFERRED** | Mounted workflow notes point here for processed outputs and manifests; this is the likely dataset payload source for a DCAT entry. |
-| Upstream release/governance artifacts | `DatasetVersion`, `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, related proof objects | **CONFIRMED doctrine / UNKNOWN file paths** | KFM treats release as a governed state change, not a file copy. DCAT sits downstream of that release discipline. |
-| Peer metadata layers | STAC and PROV artifacts | **CONFIRMED concept / NEEDS VERIFICATION on exact sibling paths** | DCAT is one third of the outward STAC/DCAT/PROV triplet. |
-| Downstream trust-visible surfaces | discovery routes, export surfaces, Focus, Evidence Drawer, governed APIs | **CONFIRMED doctrine / UNKNOWN implementation depth** | Public reading is reconstructed from released scope through governed interfaces, not direct store access. |
+| Parent lifecycle | [../../README.md](../../README.md) | **CONFIRMED** | Defines the wider `data/` truth path and explains where `CATALOG` sits between `PROCESSED` and `PUBLISHED`. |
+| Parent catalog lane | [../README.md](../README.md) | **CONFIRMED** | Defines the shared catalog boundary and the `DCAT + STAC + PROV` triplet. |
+| Sibling lane | [../stac/README.md](../stac/README.md) | **CONFIRMED** | STAC carries item/asset discovery and map/timeline-facing asset description. |
+| Sibling lane | [../prov/README.md](../prov/README.md) | **CONFIRMED** | PROV carries outward lineage, activity, and agent traceability. |
+| Upstream standards doc | [../../../docs/standards/KFM_DCAT_PROFILE.md](../../../docs/standards/KFM_DCAT_PROFILE.md) | **CONFIRMED** | Checked-in prose standard for KFM’s outward DCAT profile. |
+| Machine contracts | [../../../contracts/](../../../contracts/) | **CONFIRMED path / INFERRED role** | Likely home for machine-facing schemas, vocabularies, and profile fixtures. |
+| Policy | [../../../policy/](../../../policy/) | **CONFIRMED path / INFERRED role** | Rights, sensitivity, and fail-closed publication rules should live in executable policy as well as prose. |
+| Tooling / validation | [../../../tools/](../../../tools/), [../../../scripts/](../../../scripts/), [../../../tests/](../../../tests/) | **CONFIRMED path / NEEDS VERIFICATION entrypoints** | Public root confirms these surfaces exist, but exact DCAT validator wiring is not yet proven from the inspected tree. |
+| Ownership surface | [../../../.github/CODEOWNERS](../../../.github/CODEOWNERS) | **CONFIRMED** | Current public CODEOWNERS gives `/data/` a broad fallback owner. |
 
-### Repo fit summary
+### Current verified snapshot
 
-Use this directory for **high-level dataset/distribution discovery records** that point outward and cross-reference the rest of the release closure.
+| Surface | Current public-main content | Reading rule |
+| --- | --- | --- |
+| `data/catalog/` | `dcat/`, `stac/`, `prov/`, `README.md` | **CONFIRMED** checked-in parent catalog lane. |
+| `data/catalog/dcat/` | `README.md` | **CONFIRMED** lane existence; **UNKNOWN** deeper checked-in payload inventory. |
+| `data/catalog/stac/` | `README.md` | Confirms the sibling STAC lane exists now. |
+| `data/catalog/prov/` | `README.md` | Confirms the sibling PROV lane exists now. |
+| `docs/standards/KFM_DCAT_PROFILE.md` | checked-in standards doc | Confirms a prose DCAT profile exists and should inform this directory. |
+| Repo automation / gate proof | README surfaces and root directories are visible; exact lane-specific validators/workflows are not | Keep validator and conformance claims conservative. |
 
-Do **not** treat this directory as:
+### Repo-fit summary
+
+Use this lane for **outward discovery metadata** that stays explicitly tied to release-backed scope.
+
+Do **not** use it as:
 
 - the canonical data payload,
-- the lineage store,
-- the place where raw or quarantined materials live,
-- or a substitute for review/release artifacts.
+- the place where raw or quarantine material lives,
+- a substitute for review or proof artifacts,
+- or a backdoor around governed APIs and release controls.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -93,25 +104,26 @@ Do **not** treat this directory as:
 
 ## Accepted inputs
 
-The mounted corpus supports the following kinds of content as fitting this directory.
+The following content belongs here when it is release-linked, public-safe, and aligned to the checked-in standards posture.
 
-| Accepted content | What belongs here | Status |
+| Accepted input | Belongs here when… | Status |
 | --- | --- | --- |
-| DCAT dataset records | Dataset-level JSON-LD or equivalent outward discovery records | **CONFIRMED** |
-| Distribution metadata | Download/API/service distribution references for released scope | **CONFIRMED** |
-| Dataset descriptors | Title, description, publisher, license, keywords, temporal/spatial coverage, update cadence | **CONFIRMED** |
-| Cross-links | References to STAC, PROV, manifests, and related release artifacts | **CONFIRMED / INFERRED** |
-| Access / policy metadata | Public-safe access posture such as `dct:accessRights` and related policy annotations | **INFERRED from mounted workflow notes** |
-| Dataset-specific additions | Profile-conformant KFM extensions coordinated through profile work, not ad hoc field drift | **INFERRED** |
+| `README.md` orientation material | it explains this lane honestly against current repo evidence | **CONFIRMED current pattern** |
+| DCAT dataset records | they describe released or release-candidate dataset scope | **CONFIRMED doctrine / NEEDS VERIFICATION current-tree presence** |
+| Distribution metadata | each public-safe artifact class or service endpoint needs outward discovery | **INFERRED from profile + doctrine** |
+| Release linkage | the outward record points back to release-manifest, catalog-closure, or sibling proof artifacts | **CONFIRMED doctrine** |
+| STAC / PROV cross-links | discovery must continue into asset and lineage views cleanly | **CONFIRMED doctrine** |
+| Rights / access posture | public-safe license, rights, and access conditions must remain visible | **CONFIRMED doctrine / INFERRED field mapping** |
+| Correction / supersession links | outward discovery must preserve visible lineage when releases change | **CONFIRMED doctrine** |
 
 ### What “accepted” means in KFM terms
 
-Accepted material here should describe a dataset that is:
+Accepted material here should be:
 
-- outward-facing enough to be discoverable,
-- still tied to release scope,
-- cross-linked to lineage,
-- and not detached from review, policy, or correction posture.
+- downstream of `PROCESSED`,
+- compatible with `CatalogClosure`,
+- explicit enough to support fail-closed discovery,
+- and restrained enough that the catalog does not outrun upstream evidence.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -121,16 +133,16 @@ Accepted material here should describe a dataset that is:
 
 | Not here | Goes instead | Why |
 | --- | --- | --- |
-| Raw source-native files | `data/raw/...` | Raw acquisition is upstream of catalog closure. |
-| Intermediate or quarantined work | `data/work/...` or quarantine lane | Not public-safe discovery material. |
-| Canonical processed payloads | `data/processed/<theme>/<dataset>/<version>/` | DCAT should describe them, not replace them. |
-| STAC items / collections | `data/catalog/stac/...` **or** `data/stac/...` | STAC is the asset/time carrier. Exact local path is **NEEDS VERIFICATION**. |
-| PROV bundles | `data/catalog/prov/...` **or** `data/prov/...` | PROV is the lineage carrier. Exact local path is **NEEDS VERIFICATION**. |
-| Review / policy / correction records as primary storage | Governed artifact families outside this directory | DCAT may reference them, but should not silently absorb them. |
-| Direct UI or client-side publication shortcuts | Governed APIs and release paths | KFM’s trust membrane blocks catalog material from becoming a bypass route. |
+| Raw acquisitions and source-native dumps | `../../raw/` | Discovery is not intake. |
+| Scratch transforms or unreleased work | `../../work/` or `../../quarantine/` | This lane should not make provisional material look publishable. |
+| Canonical processed payloads | `../../processed/` | DCAT describes released scope; it does not replace the payload. |
+| STAC Items / Collections | `../stac/` | STAC remains the primary item/asset discovery carrier. |
+| PROV bundles | `../prov/` | PROV remains the primary lineage carrier. |
+| Internal-only policy bundles or reviewer workflows | `../../../policy/` and review artifacts | These may be linked, but should not be flattened into DCAT as sovereign truth. |
+| Runtime envelopes, resolver contracts, or feature APIs | contract / API surfaces outside this lane | DCAT is a catalog edge vocabulary, not the runtime truth surface. |
 
 > [!WARNING]
-> If a record would publish unresolved rights, exact-location-sensitive detail, or unreleased scope, it does **not** belong here as a public-safe DCAT artifact.
+> If a record would expose unresolved rights, exact-location-sensitive detail, unreleased scope, or a distribution that is not actually public-safe, it does **not** belong here.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -138,16 +150,28 @@ Accepted material here should describe a dataset that is:
 
 ## Directory tree
 
-The mounted corpus did **not** expose the actual local tree for this directory. The following is a **minimal illustrative shape** based on mounted workflow examples and should be verified against the repository before commit.
+### Current verified public-main shape
+
+```text
+data/catalog/dcat/
+└── README.md
+```
+
+The inspected public tree currently proves the lane exists, but it does **not** yet prove a checked-in payload subtree under this path.
+
+<details>
+<summary><strong>Proposed starter shape for first payload-bearing adoption (NEEDS VERIFICATION)</strong></summary>
 
 ```text
 data/catalog/dcat/
 ├── README.md
-└── datasets/                     # NEEDS VERIFICATION
+└── datasets/
     └── <dataset>__<version>.jsonld
 ```
 
-Possible additional files or subdirectories remain **UNKNOWN** in the current session.
+Use a starter subtree like this only after the target branch, owner, and validator path are reverified.
+
+</details>
 
 [Back to top](#dcat-catalog-directory)
 
@@ -155,54 +179,45 @@ Possible additional files or subdirectories remain **UNKNOWN** in the current se
 
 ## Quickstart
 
-The commands below are **illustrative**. They are drawn from mounted workflow notes and should be reconciled against the actual repository before use.
-
-1. Add or update the dataset record.
+### 1) Read the parent and standards surfaces first
 
 ```bash
-# illustrative path — verify locally before use
+sed -n '1,220p' data/catalog/README.md
+sed -n '1,220p' data/catalog/dcat/README.md
+sed -n '1,260p' docs/standards/KFM_DCAT_PROFILE.md
+```
+
+### 2) Confirm the checked-in catalog shape before adding payload files
+
+```bash
+git ls-files 'data/catalog/**'
+```
+
+### 3) Search the repo for DCAT/profile/closure references before inventing paths
+
+```bash
+git grep -n 'DCAT\|CatalogClosure\|dcat:Dataset\|dcat:Distribution' \
+  docs/standards data/catalog contracts policy tools scripts tests
+```
+
+### 4) Only introduce first payload files after subtree shape is verified
+
+```bash
+# PROPOSED starter pattern — verify on the target branch before using
+mkdir -p data/catalog/dcat/datasets
 $EDITOR data/catalog/dcat/datasets/<dataset>__<version>.jsonld
 ```
 
-2. Validate the DCAT record.
+### 5) Treat validator wiring as branch-specific until proven
 
 ```bash
-# illustrative command — verify script location and arguments locally
-scripts/catalog/validate_jsonld.sh \
-  data/catalog/dcat/datasets/<dataset>__<version>.jsonld
-```
-
-3. Check STAC/DCAT/PROV cross-link consistency.
-
-```bash
-# illustrative command — mounted docs show this shape, but sibling paths need verification
-scripts/evidence/crosslink_consistency.py \
-  --stac data/catalog/stac/items/<dataset>__<version>.json \
-  --dcat data/catalog/dcat/datasets/<dataset>__<version>.jsonld \
-  --prov data/catalog/prov/<dataset>__<version>.prov.json \
-  --manifest data/processed/<theme>/<dataset>/<version>/manifest.json
-```
-
-4. Run policy checks against the outward record.
-
-```bash
-# illustrative command — verify repo-local policy bundle and paths
-conftest test -p policy/ \
-  data/catalog/dcat/datasets/<dataset>__<version>.jsonld
-```
-
-5. Reconcile sibling path conventions before publish.
-
-```bash
-# manual verification step
-# confirm whether the repo uses:
-#   data/catalog/stac + data/catalog/prov
-# or
-#   data/stac + data/prov
+# Current public main confirms tools/, scripts/, and tests/ exist,
+# but does not yet prove the exact DCAT validator entrypoint.
+# Reverify before claiming mounted conformance or merge-gate coverage.
 ```
 
 > [!TIP]
-> Treat path reconciliation as a release hygiene step, not as a cosmetic cleanup. The mounted corpus is explicit that identifier consistency and catalog closure must resolve cleanly.
+> The safest first change in this lane is often a **doc + standards + fixtures** change set, not a bare JSON-LD payload dropped without profile, tests, or release linkage.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -210,61 +225,70 @@ conftest test -p policy/ \
 
 ## Usage
 
-### When to add a DCAT record
+### When to touch this lane
 
-Add or revise a DCAT record when a dataset needs a **discoverable outward description**:
+Revise `data/catalog/dcat/` when you need to:
 
-- after processed scope has been assembled,
-- when distributions or service endpoints need catalog visibility,
-- when a release should be discoverable outside the spatiotemporal asset view,
-- or when an evidence artifact needs the same public discovery treatment as any other governed dataset.
+- clarify directory intent against current repo evidence,
+- introduce or update outward dataset/distribution discovery,
+- keep DCAT aligned with sibling STAC and PROV records,
+- add correction-visible links after release changes,
+- or tighten profile-fit language before mounted emitters land.
 
 ### How DCAT should behave in KFM
 
 DCAT records here should remain:
 
 - **discovery-oriented**, not payload-heavy,
-- **linked**, not isolated,
-- **release-aware**, not premature,
-- **policy-aware**, not silent on access posture,
-- and **correction-friendly**, not brittle.
+- **release-linked**, not free-floating prose,
+- **profile-aware**, not ad hoc,
+- **rights-visible**, not silent on access posture,
+- and **correction-friendly**, not lineage-erasing.
 
-### Illustrative lifecycle
+### Profile-aligned pseudocode shape
 
-```text
-Source edge
-  -> RAW
-  -> WORK / QUARANTINE
-  -> PROCESSED
-  -> catalog closure (STAC + DCAT + PROV)
-  -> PUBLISHED / governed discovery
-```
+The following is a **pseudocode sketch**, not a proven emitted fixture from the current public tree.
 
-### Illustrative JSON-LD shape
-
-This is a **pseudocode sketch**, not a verified repo fixture.
-
-```json
+```jsonc
 {
   "@type": "dcat:Dataset",
+  "dct:identifier": "TODO(stable-dataset-id)",
   "dct:title": "TODO",
   "dct:description": "TODO",
-  "dct:publisher": "TODO",
-  "dct:license": "TODO",
-  "dct:spatial": "TODO",
-  "dct:temporal": "TODO",
-  "dct:accrualPeriodicity": "TODO",
+  "dct:license": { "@id": "TODO(resolvable-license-IRI)" },
+  "dct:rights": "TODO(optional-human-rights-note)",
+  "dct:spatial": { "@type": "dct:Location", "locn:geometry": "TODO(public-safe-geometry)" },
+  "dct:temporal": {
+    "@type": "dct:PeriodOfTime",
+    "time:hasBeginning": { "@type": "time:Instant", "time:inXSDDateTime": "TODO" },
+    "time:hasEnd": { "@type": "time:Instant", "time:inXSDDateTime": "TODO" }
+  },
+  "dct:conformsTo": [
+    { "@id": "https://www.w3.org/TR/vocab-dcat-3/" },
+    { "@id": "TODO(kfm-profile-iri-or-doc-ref)" }
+  ],
+  "dct:relation": [
+    "TODO(release-manifest-ref)",
+    "TODO(stac-ref)",
+    "TODO(prov-ref)"
+  ],
+  "dct:provenance": "TODO(outward-prov-ref)",
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
-      "dcat:accessURL": "TODO"
+      "dcat:downloadURL": { "@id": "TODO(actual-downloadable-artifact)" },
+      "dcat:mediaType": "TODO(explicit-media-type)"
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dcat:accessURL": { "@id": "TODO(service-or-mediated-access-point)" },
+      "dcat:mediaType": "TODO(service-media-type)"
     }
-  ],
-  "prov:wasGeneratedBy": "TODO"
+  ]
 }
 ```
 
-Use the actual KFM DCAT profile, local schema, and repo conventions where present. Do **not** copy this verbatim into production without verification.
+Use `downloadURL` only for an **actual downloadable artifact**. Use `accessURL` when the outward object is a **service, viewer, or mediated access point**.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -273,29 +297,32 @@ Use the actual KFM DCAT profile, local schema, and repo conventions where presen
 ## Diagram
 
 ```mermaid
-flowchart LR
-    A[Source edge] --> B[RAW]
-    B --> C[WORK / QUARANTINE]
-    C --> D[PROCESSED]
-    D --> E[Catalog closure]
+flowchart TD
+    A[RAW] --> B[WORK / QUARANTINE]
+    B --> C[PROCESSED]
+    C --> D[DatasetVersion]
+    D --> E[CatalogClosure]
 
-    E --> F[STAC]
-    E --> G[DCAT]
-    E --> H[PROV]
+    E --> F[data/catalog/dcat/]
+    E --> G[data/catalog/stac/]
+    E --> H[data/catalog/prov/]
+    E --> I[ReleaseManifest / ProofPack]
 
-    G --> I[Dataset / distribution discovery]
-    F --> J[Asset / time discovery]
-    H --> K[Lineage / audit context]
+    F --> J[Dataset / distribution discovery]
+    G --> K[Asset / time discovery]
+    H --> L[Lineage / activity / agent traceability]
 
-    E --> L[PUBLISHED scope]
-    L --> M[Governed APIs]
-    L --> N[Export surfaces]
-    L --> O[Focus / Evidence Drawer]
+    J --> M[Governed public discovery]
+    K --> M
+    L --> M
+    I --> M
 
-    classDef confirmed fill:#eef7ff,stroke:#4b7bec,color:#1f2d3d;
-    classDef caution fill:#fff7e6,stroke:#e6a23c,color:#5c3b00;
-
-    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O confirmed;
+    classDef seam fill:#eef6ff,stroke:#4a74a8,stroke-width:2px,color:#1f2d3d;
+    classDef lane fill:#fff7e6,stroke:#c9871a,stroke-width:1.5px,color:#5c3b00;
+    classDef sibling fill:#eef9ef,stroke:#3d8b50,stroke-width:1.5px,color:#183d23;
+    class E seam;
+    class F lane;
+    class G,H sibling;
 ```
 
 [Back to top](#dcat-catalog-directory)
@@ -304,44 +331,39 @@ flowchart LR
 
 ## Reference tables
 
-### Minimum DCAT content
+### Current verified snapshot
 
-The table below combines the mounted minimum-field guidance with KFM’s outward-discovery posture.
-
-| Field / family | Why it belongs | Status |
+| Surface | What is currently visible on public `main` | Maintenance consequence |
 | --- | --- | --- |
-| `dct:title` | Human-readable dataset identity | **CONFIRMED** |
-| `dct:description` | Discovery and reuse context | **CONFIRMED** |
-| `dct:publisher` | Steward/publisher identity | **CONFIRMED** |
-| `dct:license` | Rights / reuse posture | **CONFIRMED** |
-| `dct:spatial` | Spatial coverage or admin extent | **CONFIRMED** |
-| `dct:temporal` | Time span / interval | **CONFIRMED** |
-| `dct:accrualPeriodicity` | Update cadence | **CONFIRMED** |
-| `dcat:distribution` | Download/API/service discovery | **CONFIRMED** |
-| `prov:wasGeneratedBy` | Linkage to lineage activity | **CONFIRMED** |
-| Keywords | Discovery and topical indexing | **CONFIRMED** |
-| `dct:accessRights` | Public / restricted / controlled access posture | **INFERRED from workflow notes** |
-| Source back-links | Focus/readiness and provenance discoverability | **INFERRED from workflow notes** |
+| `data/catalog/dcat/` | `README.md` only | Treat payload subtree shape as **NEEDS VERIFICATION** until rechecked on the target branch. |
+| `data/catalog/` | parent `README.md` plus `dcat/`, `stac/`, `prov/` | The catalog triplet is a real checked-in surface, not just PDF doctrine. |
+| `docs/standards/KFM_DCAT_PROFILE.md` | checked-in standards prose | Use it as the nearest repo-native guide for field rules and conformance language. |
+| `/.github/CODEOWNERS` | broad `/data/` fallback to `@bartytime4life` | Owner line in this README can be grounded instead of left blank. |
+| `tools/`, `scripts/`, `tests/` | confirmed root surfaces | Search these before inventing validator paths; exact DCAT entrypoints remain unproven here. |
 
-### Cross-link expectations
+### Minimum outward dataset / distribution expectations
 
-| From DCAT | Target | Expectation | Status |
+| Concern | Carrier | Status | KFM consequence |
 | --- | --- | --- | --- |
-| Dataset | Distribution | Include outward download/API/service references | **CONFIRMED** |
-| Dataset | STAC record or underlying asset discovery | Point discovery users to the spatiotemporal carrier where relevant | **CONFIRMED** |
-| Dataset | PROV activity / bundle | Preserve lineage visibility | **CONFIRMED** |
-| Dataset | Release / proof context | Stay downstream of review and release artifacts | **CONFIRMED doctrine / UNKNOWN local implementation** |
-| Dataset | Policy/access metadata | Make public-safe posture visible | **INFERRED** |
+| Stable dataset identity | `dct:identifier`, title, description | **INFERRED** | Identity drift breaks discovery, lineage, and correction. |
+| Release linkage | `dct:relation` and/or companion release links | **CONFIRMED** | Public discovery must not outrun release state. |
+| Profile refs | `dct:conformsTo` | **CONFIRMED** | Readers and validators need explicit standard/profile pins. |
+| Lineage continuation | `dct:provenance` plus sibling PROV links | **CONFIRMED** | DCAT must participate in the triplet, not stand alone. |
+| Rights posture | `dct:license`, `dct:rights` | **CONFIRMED** | Unknown rights should block outward publication. |
+| Public-safe extent | `dct:spatial`, `dct:temporal` | **INFERRED** | Discovery needs honest scope without leaking unsafe precision. |
+| One distribution per artifact class | `dcat:distribution` | **INFERRED** | Do not flatten COG, GeoParquet, PMTiles, CSV, and service endpoints into one ambiguous object. |
+| Download vs access URL discipline | `dcat:downloadURL` / `dcat:accessURL` | **INFERRED** | Use the URL type that matches the actual outward artifact class. |
+| Correction visibility | outward links to supersession / replacement | **CONFIRMED doctrine** | Corrections must preserve visible lineage. |
 
-### Path-certainty matrix
+### Avoid patterns
 
-| Path pattern seen in mounted corpus | Confidence | README treatment |
-| --- | --- | --- |
-| `data/catalog/dcat/datasets/<dataset>__<version>.jsonld` | **High** | Used as the primary illustrative local path |
-| `data/catalog/stac/...` | **Medium** | Marked **NEEDS VERIFICATION** |
-| `data/catalog/prov/...` | **Medium** | Marked **NEEDS VERIFICATION** |
-| `data/stac/...` | **Medium** | Marked **NEEDS VERIFICATION** |
-| `data/prov/...` | **Medium** | Marked **NEEDS VERIFICATION** |
+| Avoid | Why |
+| --- | --- |
+| Treating DCAT as canonical truth | KFM refuses outward metadata to become sovereign truth. |
+| Claiming conformance because a standard is a good fit | KFM separates **profile fit** from **mounted adoption**. |
+| Publishing a public DCAT record without rights/review closure | Fail-closed behavior must stay real. |
+| Letting DCAT, STAC, and PROV disagree on identity or release scope | Catalog closure stops being trustworthy when the triplet drifts. |
+| Minting ad hoc KFM extension predicates in prose | Extension drift becomes catalog drift. |
 
 [Back to top](#dcat-catalog-directory)
 
@@ -349,29 +371,29 @@ The table below combines the mounted minimum-field guidance with KFM’s outward
 
 ## Task list / release gates
 
-Use this as the review checklist for changes in this directory.
+Use this checklist for changes in this lane.
 
-- [ ] DCAT record exists for the dataset/version being published.
-- [ ] Title, description, publisher, license, spatial, temporal, cadence, and distribution fields are present.
-- [ ] Distribution links point only to released or otherwise allowed scope.
-- [ ] STAC/DCAT/PROV cross-links resolve cleanly.
-- [ ] Access-rights / policy posture is visible where the profile expects it.
-- [ ] Identifier consistency is preserved across sibling artifacts.
-- [ ] JSON-LD validation passes.
-- [ ] Policy checks pass.
-- [ ] Any dataset README / release documentation required by local policy is present.
-- [ ] Path conventions (`data/catalog/stac` vs `data/stac`, `data/catalog/prov` vs `data/prov`) have been reconciled in the local repo.
-- [ ] This README still matches the actual local directory shape after the change.
+- [ ] The README still reflects the **current checked-in tree**, not only older doctrine PDFs.
+- [ ] Any new outward record is tied to a released or release-candidate scope.
+- [ ] Stable identifier, title, description, and explicit release linkage are present.
+- [ ] STAC / DCAT / PROV companion links resolve cleanly.
+- [ ] Rights and access posture are explicit enough to support fail-closed behavior.
+- [ ] No `dcat:Distribution` points at `RAW`, `WORK`, or `QUARANTINE`.
+- [ ] `downloadURL` vs `accessURL` choice matches the actual outward artifact class.
+- [ ] Public-safe temporal/spatial extent has been reviewed for precision and sensitivity.
+- [ ] Correction or supersession behavior remains visible from the outward record.
+- [ ] No line in this README claims mounted conformance unless the repo now exposes emitters, validators, fixtures, and reviewable proof.
 
 ### Definition of done
 
 A change in `data/catalog/dcat/` is closer to done when it is:
 
-- valid,
+- repo-grounded,
+- release-linked,
 - link-resolvable,
 - policy-aware,
-- release-aware,
-- and honest about any remaining uncertainty.
+- correction-preserving,
+- and explicit about anything still **UNKNOWN** or **NEEDS VERIFICATION**.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -381,23 +403,23 @@ A change in `data/catalog/dcat/` is closer to done when it is:
 
 ### Why does KFM need DCAT if it already has STAC?
 
-Because they do different jobs. In KFM doctrine, **STAC** is the carrier for spatiotemporal items/assets, **DCAT** is the carrier for outward dataset/distribution discovery, and **PROV** is the carrier for lineage.
+Because the two lanes do different jobs. **STAC** is the item/asset discovery carrier. **DCAT** is the dataset/distribution discovery carrier. **PROV** carries lineage. KFM is strongest when those three stay linked inside `CatalogClosure`.
 
-### Is this directory authoritative truth?
+### Does current public `main` already prove emitted DCAT payloads?
 
-No. KFM’s authoritative truth remains upstream of outward catalog material. This directory is part of **catalog closure**, not the replacement for canonical processing or release governance.
+No. Current public `main` proves the lane exists and that `README.md` is checked in here. It does **not** yet prove emitted dataset JSON-LD, validators, fixtures, or public conformance for this lane.
 
-### Can a DCAT record expose something that is still under review?
+### Where should machine-readable schemas live?
 
-It should not silently outrun release state. Rights, sensitivity, review, and correction posture still apply.
+Use the repo’s contract surface, not this README, as the likely machine authority. This README should explain behavior and review posture; it should not quietly become the schema registry.
 
-### Should DCAT duplicate full asset metadata?
+### Should this lane ever point to unreleased or non-public-safe material?
 
-Generally no. DCAT should provide the outward discovery frame and point toward the appropriate detail carriers and payloads.
+No. Outward discovery metadata must remain downstream of release, rights, and sensitivity handling.
 
-### Are the sibling paths in this README final?
+### How should corrections appear here?
 
-No. The mounted corpus disagrees on some sibling catalog paths, so those references are intentionally marked **NEEDS VERIFICATION**.
+Do not erase the old outward trail. Link supersession, withdrawal, or replacement forward so a reader starting from the catalog can still follow the lineage.
 
 [Back to top](#dcat-catalog-directory)
 
@@ -406,39 +428,40 @@ No. The mounted corpus disagrees on some sibling catalog paths, so those referen
 ## Appendix
 
 <details>
-<summary><strong>Appendix A — Known path discrepancies in the mounted corpus</strong></summary>
+<summary><strong>Appendix A — Historical path ambiguity, now retired by the visible public tree</strong></summary>
 
-The current-session corpus includes both of the following catalog patterns:
+Older March 2026 corpus material referenced both of the following patterns:
 
 - `data/catalog/dcat/`, `data/catalog/stac/`, `data/catalog/prov/`
 - `data/catalog/dcat/`, `data/stac/`, `data/prov/`
 
-This README does **not** choose a winner for the unverified sibling paths. It keeps the requested target path fixed and makes the discrepancy visible so a maintainer can reconcile it against the actual repository.
+The current inspected public `main` tree resolves the **visible checked-in catalog triplet** under `data/catalog/`. Treat split-path references as historical document evidence until they are reverified on the specific branch you are changing.
 
 </details>
 
 <details>
-<summary><strong>Appendix B — What this README assumes conservatively</strong></summary>
+<summary><strong>Appendix B — Open verification backlog</strong></summary>
 
-This README assumes:
+Still needs direct branch or runtime inspection:
 
-1. `data/catalog/dcat/` is intended to hold DCAT-facing outward discovery artifacts.
-2. The local repo likely contains sibling STAC and PROV locations, but their exact paths are not yet verified here.
-3. Validation and policy gates probably exist in script/workflow form because the mounted corpus names them repeatedly.
-4. Owners, dates, policy label, and related links should be updated from the actual repository before publication.
+- first checked-in DCAT payload subtree below `data/catalog/dcat/`,
+- exact validator or fixture entrypoints for lane-specific DCAT checks,
+- whether `contracts/` is now the single authoritative machine-schema home,
+- mounted emitters and proof needed for any public conformance claim,
+- final `doc_id`, `created` date, and `policy_label` values for the meta block.
 
 </details>
 
 <details>
-<summary><strong>Appendix C — Review notes for the maintainer who verifies this file</strong></summary>
+<summary><strong>Appendix C — Maintainer review prompts</strong></summary>
 
-Before committing this README, check:
+Before you merge a substantive change here, ask:
 
-- whether `datasets/` is the actual subdirectory name,
-- whether sibling paths use `data/catalog/*` or split between `data/*` and `data/catalog/*`,
-- whether the repo already has `KFM_DCAT_PROFILE.*` or equivalent schema/profile files,
-- whether badge targets and owners can be made concrete,
-- and whether any adjacent README files should be linked directly.
+1. Is this a **doc-only clarification**, or are we introducing the first checked-in DCAT payloads?
+2. If payloads are being added, has the target-branch subtree shape been reverified?
+3. Does the outward record point to **real** release-backed scope?
+4. Would a user starting from DCAT still be able to reach sibling STAC, PROV, and correction context without guessing?
+5. Are we using **profile fit** language honestly, or accidentally claiming mounted conformance?
 
 </details>
 
