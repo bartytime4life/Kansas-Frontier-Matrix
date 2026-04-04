@@ -4,13 +4,13 @@ title: Governed API
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: NEEDS_VERIFICATION
-related: [../../contracts/, ../../schemas/, ../../policy/, ../../packages/, ../../docs/]
+owners: @bartytime4life
+created: <NEEDS_VERIFICATION_DATE>
+updated: 2026-04-04
+policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
+related: [../README.md, ../api/src/api/README.md, ../explorer-web/README.md, ../review-console/README.md, ../workers/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../schemas/contracts/README.md, ../../policy/README.md, ../../packages/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, governed-api, api, trust-membrane]
-notes: [Requested target path is apps/governed-api/README.md, but March 2026 repo-grounded material also references apps/api; owners, dates, and policy label require live repo verification.]
+notes: [Current public-main confirms apps/governed-api/ exists; a parallel deeper API doc surface also exists at apps/api/src/api/README.md; created date, doc UUID, and policy label still need repo-authoritative confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 # Governed API
@@ -18,42 +18,29 @@ notes: [Requested target path is apps/governed-api/README.md, but March 2026 rep
 Trust-bearing API boundary for KFM reads, evidence resolution, bounded assistance, exports, and steward-only actions.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> **Path:** `apps/governed-api/README.md` *(requested target path; live repo path still needs verification)*  
-> ![Component](https://img.shields.io/badge/component-experimental-orange) ![Doctrine](https://img.shields.io/badge/doctrine-trust--membrane-1f4d78) ![Runtime](https://img.shields.io/badge/runtime-finite%20outcomes-blue) ![Repo%20fit](https://img.shields.io/badge/repo%20fit-needs%20verification-lightgrey)  
+> **Owners:** `@bartytime4life`  
+> **Path:** `apps/governed-api/README.md`  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Trust](https://img.shields.io/badge/trust-membrane-1f4d78) ![Boundary](https://img.shields.io/badge/boundary-governed%20API-blue) ![Repo](https://img.shields.io/badge/public--main-confirmed-success)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> In KFM, the governed API is part of the trust membrane. Public and normal UI clients consume governed responses; they do **not** bypass policy evaluation, evidence resolution, release state, or correction visibility.
+> In KFM, the API boundary is part of the trust model. Public and steward-facing shells consume governed responses; they do **not** bypass policy evaluation, evidence resolution, release state, or correction visibility.
 
 > [!NOTE]
-> This README separates **CONFIRMED doctrine** from **NEEDS VERIFICATION repo topology**. March 2026 repo-grounded material mentions `apps/api` and `apps/api/src/api/README.md`; the requested destination here is `apps/governed-api/README.md`. Until a live repo tree is rechecked, that rename should not be stated as settled fact.
+> Current public-main evidence confirms that `apps/governed-api/` exists. It also confirms a parallel, deeper API-shaped doc surface at `apps/api/src/api/README.md`. This README should stay **boundary-first** and **repo-fit aware** until canonical ownership between those two surfaces is explicitly settled.
 
 ## Scope
 
-This directory owns the edge-facing contract between KFM clients and release-scoped, policy-shaped, evidence-resolvable outputs.
+This directory documents the edge-facing contract boundary between KFM clients and released, policy-shaped, evidence-resolvable outputs.
 
-The strongest March 2026 KFM manuals are consistent on the core point: KFM is a governed spatial evidence system, and the runtime edge must preserve the truth path, the trust membrane, authoritative-versus-derived separation, fail-closed behavior, visible correction lineage, and bounded runtime outcomes. This README therefore documents the API boundary as a **trust surface**, not as generic transport plumbing.
+The point of this README is not to describe transport plumbing in the abstract. It is to document how KFM keeps the trust membrane intact at the public and steward edge: requests come in through governed surfaces, narrow to admissible released scope, resolve support-bearing objects, and leave through bounded runtime outcomes rather than uncited improvisation.
 
-### Current reading
+### What this README must answer
 
-| Signal | Reading |
-|---|---|
-| Doctrine role of a governed API boundary | **CONFIRMED** |
-| Need for `EvidenceRef → EvidenceBundle` resolution and runtime envelopes | **CONFIRMED** |
-| Path `apps/api` in older repo-grounded docs | **INFERRED** from March 2026 repo-grounded documentation snapshots |
-| Path `apps/governed-api` as mounted repo reality | **NEEDS VERIFICATION** |
-| Live endpoint inventory | **UNKNOWN** |
-| Live contract/schema inventory in code | **UNKNOWN** |
-
-### What this README is for
-
-It should let reviewers answer four questions quickly:
-
-1. What belongs in the edge-facing KFM API boundary?
+1. What belongs in the governed API boundary?
 2. What must stay outside it?
-3. Which request families are public-safe versus internal-only?
-4. What still needs proof before this directory can claim maturity?
+3. How does this boundary fit the current repo?
+4. What is confirmed today versus still unresolved?
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
@@ -62,22 +49,38 @@ It should let reviewers answer four questions quickly:
 | Item | Value |
 |---|---|
 | File | `apps/governed-api/README.md` |
-| Directory role | Trust-bearing API boundary for governed reads, evidence resolution, bounded assistance, exports, and steward-only operations |
-| Working path status | **NEEDS VERIFICATION** — older repo-grounded material references `apps/api` and `apps/api/src/api/README.md`; this README uses the requested target path without asserting a live rename |
-| Upstream doctrinal / contract neighbors | [contracts], [schemas], [policy], [packages], [docs] |
-| Older repo-grounded adjacent references | `packages/evidence`, `packages/policy`, and `contracts/openapi` |
-| Downstream consumers | Map / Story / Dossier / Focus / Review / Export shells and variants on the governed substrate (**NEEDS VERIFICATION** exact app paths) |
-| Edge rule | Public clients talk to governed API surfaces, not directly to canonical stores, artifact trees, model runtimes, or unpublished scope |
-| Evidence posture | **CONFIRMED** doctrine, **INFERRED** repo-adjacent fragments, **UNKNOWN** live implementation depth |
+| Directory role | Boundary-level README for the governed API surface |
+| Current public-main state | Directory exists and is currently README-only |
+| Nearby API doc surface | `apps/api/src/api/README.md` currently exists and carries deeper route/middleware-oriented API detail |
+| Upstream neighbors | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../packages/README.md`](../../packages/README.md), [`../../tests/README.md`](../../tests/README.md) |
+| Downstream / sibling consumers | [`../explorer-web/README.md`](../explorer-web/README.md), [`../review-console/README.md`](../review-console/README.md), [`../workers/README.md`](../workers/README.md), [`../cli/README.md`](../cli/README.md) |
+| Trust rule | Client surfaces talk to governed API layers, not directly to canonical stores, raw artifact trees, or unpublished scope |
+| Evidence posture | Boundary doctrine **CONFIRMED**; current public repo placement **CONFIRMED**; runtime depth, populated contracts, and enforcement maturity remain mixed |
 
-### Local fit note
+### Current public-main snapshot
 
-This README is intentionally written to fit either of two realities:
+| Surface | Current signal | What that means here |
+|---|---|---|
+| `apps/governed-api/` | `README.md` only | This directory is currently a documentation-bearing boundary surface |
+| `apps/api/src/api/` | `README.md`, `middleware/`, `routes/` | Deeper API topology already exists elsewhere in the repo |
+| `contracts/` | root README visible | Human-readable contract law exists as a neighboring lane |
+| `schemas/contracts/` | `v1/`, `vocab/`, README visible | Machine-file scaffolding exists nearby and should be referenced, not reinvented |
+| `policy/` | `bundles/`, `fixtures/`, `policy-runtime/`, `tests/` visible | Policy enforcement is an adjacent concern this boundary consumes |
+| `tests/` | `contracts/`, `e2e/`, `policy/`, `reproducibility/`, etc. visible | Verification families are repo-native, even where individual public subtrees are still README-only |
+| `.github/workflows/` | README-only on public main | Merge-blocking workflow depth must not be overstated here |
 
-1. the requested destination `apps/governed-api/README.md`, or
-2. an older still-live `apps/api/...` placement that has not yet been renamed in the mounted repo.
+### Boundary-first reading
 
-If live verification shows the older path is still canonical, move or alias this README rather than rewriting its doctrinal substance.
+This file should describe:
+
+- the API as a trust-bearing boundary,
+- the repo neighbors it depends on,
+- the contract and proof objects it is expected to touch,
+- and the open reconciliation work between `apps/governed-api/` and `apps/api/src/api/`.
+
+It should **not** duplicate route-by-route implementation notes better housed in `apps/api/src/api/README.md`.
+
+<p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
 ## Accepted inputs
 
@@ -95,7 +98,7 @@ This area should accept or orchestrate the following request classes.
 | Review / stewardship actions | Yes, internal only | Approval, denial, rollback, quarantine inspection, rights/sensitivity handling |
 | Ops / status endpoints | Yes, internal only | Health, traces, audit joins, runtime status; no shadow truth surface |
 | Raw store paths, DB credentials, unpublished candidate artifacts | No | Trust-membrane violation |
-| Free-form uncited assistant behavior | No | KFM doctrine prohibits it |
+| Free-form uncited assistant behavior | No | Prohibited by KFM doctrine |
 
 ## Exclusions
 
@@ -103,82 +106,136 @@ This area should accept or orchestrate the following request classes.
 |---|---|---|
 | Direct browser/client access to RAW, WORK, QUARANTINE, canonical stores, or artifact trees | Collapses the trust membrane | Intake, canonical, catalog/review, and projection planes behind governed services |
 | Canonical writes from ordinary clients | Public clients are not authority writers | Steward-only review / repair / promotion lanes |
-| Shared domain logic ownership | Avoids app-local drift and copy-paste contracts | [packages] |
-| Policy bundle authorship | This app enforces policy; it should not become policy’s sovereign home | [policy] and package-level policy surfaces |
-| Schema / standards-profile source of truth | This app consumes and validates against them | [contracts] and [schemas] |
+| Shared domain model ownership | Prevents app-local drift and duplicated contract semantics | [`../../packages/README.md`](../../packages/README.md) |
+| Policy bundle authorship | This boundary enforces policy; it should not become policy’s sovereign home | [`../../policy/README.md`](../../policy/README.md) |
+| Schema / standards-profile source of truth | This boundary consumes and validates against them | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) |
 | Hidden correction or rollback behavior | KFM requires visible correction lineage | release / correction runbooks and proof objects |
-| “Secret” second truth in telemetry or ops | Status endpoints must not become a bypass database | governed ops routes with shaped outputs only |
+| “Secret” second truth in telemetry or ops | Status endpoints must not become a bypass database | shaped governed ops surfaces only |
+| Endpoint-detail duplication already maintained elsewhere | Creates drift between boundary docs and handler/module docs | [`../api/src/api/README.md`](../api/src/api/README.md) |
 
 > [!WARNING]
 > Do not let this directory become a convenience bypass. In KFM, undocumented edge behavior is usually governance debt in disguise.
 
+<p align="right"><a href="#governed-api">Back to top ↑</a></p>
+
 ## Directory tree
 
-### Corpus-observed March 2026 path fragments
-
-_This is **not** a live tree dump. It reflects repo-grounded March 2026 documents, not direct mounted checkout evidence._
-
-```text
-.
-├── apps/
-│   ├── api/
-│   │   └── src/api/README.md          # older repo-grounded reference
-│   └── ui/                            # older repo-grounded reference
-├── contracts/
-│   └── openapi/                       # older repo-grounded reference
-├── packages/
-│   ├── evidence/                      # older repo-grounded reference
-│   └── policy/                        # older repo-grounded reference
-├── policy/
-├── schemas/
-└── tests/
-```
-
-### Requested target placement
+### Current public-main app snapshot
 
 ```text
 apps/
-└── governed-api/
+├── README.md
+├── cli/
+│   └── README.md
+├── explorer-web/
+│   └── README.md
+├── governed-api/
+│   └── README.md
+├── review-console/
+│   └── README.md
+└── workers/
     └── README.md
+```
+
+### Parallel deeper API doc surface
+
+```text
+apps/
+└── api/
+    ├── README.md
+    ├── src/
+    │   └── api/
+    │       ├── README.md
+    │       ├── middleware/
+    │       └── routes/
+    └── tests/
+```
+
+### Adjacent contract / policy / verification surfaces
+
+```text
+contracts/
+└── README.md
+
+schemas/
+├── README.md
+└── contracts/
+    ├── README.md
+    ├── v1/
+    │   ├── common/
+    │   ├── correction/
+    │   ├── data/
+    │   ├── evidence/
+    │   ├── policy/
+    │   ├── release/
+    │   ├── runtime/
+    │   └── source/
+    └── vocab/
+
+policy/
+├── README.md
+├── bundles/
+├── fixtures/
+├── policy-runtime/
+└── tests/
+
+tests/
+├── README.md
+├── accessibility/
+├── contracts/
+├── e2e/
+├── integration/
+├── policy/
+├── reproducibility/
+└── unit/
 ```
 
 ### Working implication
 
-The safer documentation move is to keep the boundary description stable while leaving path migration explicit. That prevents the README from turning a requested rename into an unsupported claim.
+The repo now shows **two** API-facing documentation surfaces:
+
+1. `apps/governed-api/README.md` — boundary-facing, trust-first, repo-fit README.
+2. `apps/api/src/api/README.md` — deeper API module surface with route and middleware adjacency.
+
+That is a documentation split to reconcile, not a fact to hide.
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
 ## Quickstart
 
-### Verification-first starter loop
+### Verification-first review loop
 
-1. Verify whether the live repo still uses `apps/api`, has already renamed to `apps/governed-api`, or uses both during transition.
-2. Verify whether public and internal route contracts live under `contracts/openapi/`, another contract surface, or both.
-3. Verify whether `EvidenceBundle`, `RuntimeResponseEnvelope`, `DecisionEnvelope`, `ReleaseManifest`, and `CorrectionNotice` exist as real schemas, examples, or DTOs.
-4. Verify whether current CI actually enforces any merge-blocking contract, policy, or docs gates.
-5. Update the path, owners, dates, and policy label in this README only after that live check.
+1. Read this file as the **boundary README** for the governed API surface.
+2. Read [`../api/src/api/README.md`](../api/src/api/README.md) as the current deeper API-module surface.
+3. Check [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) before making any contract claim here.
+4. Check [`../../policy/README.md`](../../policy/README.md) and [`../../tests/README.md`](../../tests/README.md) before claiming enforcement depth.
+5. Promote or downgrade wording in this README only after those neighbors agree.
 
-### Illustrative local verification commands
-
-```bash
-# illustrative only — replace with the repo's actual task runner and local conventions
-git grep -n "apps/api/src/api/README.md\|apps/governed-api"
-git grep -n "EvidenceBundle\|RuntimeResponseEnvelope\|DecisionEnvelope\|ReleaseManifest\|CorrectionNotice"
-git grep -n "focus/ask\|stac/items\|datasets\|EvidenceRef"
-find contracts schemas policy tests .github/workflows -maxdepth 3 -type f | sort
-```
-
-### Minimum review pass before editing this README again
+### Useful local inspection commands
 
 ```bash
-# illustrative review sequence
-git grep -n "README.md" apps packages contracts policy docs
-git diff --name-only HEAD~1..HEAD
-# then re-check whether any path, contract, or route claim in this README needs promotion or downgrade
+find apps/governed-api -maxdepth 2 -type f | sort
+find apps/api/src/api -maxdepth 2 -type f | sort
+find contracts -maxdepth 2 -type f | sort
+find schemas/contracts -maxdepth 3 -type f | sort
+find policy -maxdepth 2 -type f | sort
+find tests -maxdepth 2 -type f | sort
+find .github/workflows -maxdepth 2 -type f | sort
 ```
 
-> [!NOTE]
-> The March 2026 corpus is much stronger on doctrine and required proof objects than on mounted commands, entrypoints, or route filenames. Keep command snippets illustrative until the live repo proves them.
+### Minimal review pass before editing boundary claims
+
+```bash
+sed -n '1,220p' apps/governed-api/README.md
+sed -n '1,260p' apps/api/src/api/README.md
+sed -n '1,220p' contracts/README.md
+sed -n '1,260p' schemas/contracts/README.md
+sed -n '1,220p' policy/README.md
+sed -n '1,220p' tests/README.md
+```
+
+> [!TIP]
+> The repo now proves more than the March 2026 PDF-only boundary did, but it still does **not** justify overclaiming active workflow enforcement, populated runtime contracts, or endpoint maturity where current public files are scaffold-state or README-only.
 
 ## Usage
 
@@ -194,7 +251,7 @@ The governed API should expose request families by responsibility, not by framew
 | Evidence resolution | Public governed | `EvidenceRef → EvidenceBundle`, preview policy, rights/sensitivity state, audit linkage |
 | Story / dossier / compare | Public governed | anchored geography/time shell, drill-through to evidence |
 | Export / report | Public governed | no export outruns release, policy, or correction state |
-| Focus / governed assistance | Public governed | finite outcome, citation check, policy-visible reasoning boundary, audit linkage |
+| Focus / governed assistance | Public governed | finite outcome, citation checks, policy-visible reasoning boundary, audit linkage |
 | Review / stewardship | Internal governed | explicit decision artifacts, no hidden approvals |
 | Ops / status | Internal governed | health and explainability without raw-store exposure |
 
@@ -220,26 +277,55 @@ The governed API should expose request families by responsibility, not by framew
 | Silent fallback to uncited prose | No | prohibited |
 | Direct DB / object-store pass-through | No | prohibited |
 
+### Boundary README vs module README
+
+| Surface | Best use |
+|---|---|
+| `apps/governed-api/README.md` | explain trust obligations, repo fit, accepted inputs, exclusions, proof expectations, adjacent ownership |
+| `apps/api/src/api/README.md` | explain middleware, route groups, `/api/v1` shaping, implementation-facing handler organization |
+| `contracts/README.md` | explain human-readable contract law and contract families |
+| `schemas/contracts/README.md` | explain machine-file contract scaffolding and vocabulary adjacency |
+| `policy/README.md` | explain policy-runtime, bundle, and fixture lanes |
+| `tests/README.md` | explain verification families and proof expectations |
+
+### Repo-facing guidance
+
+This README should remain the calm, high-signal answer to:
+
+- “What is the governed API surface for?”
+- “What does it protect?”
+- “What does it consume?”
+- “What must not bypass it?”
+
+It should not become the place where route-by-route handler mechanics drift away from the actual API module docs.
+
+<p align="right"><a href="#governed-api">Back to top ↑</a></p>
+
 ## Diagram
 
 ```mermaid
 flowchart LR
-    subgraph Clients["Client surfaces"]
-        Map["Map / Story / Dossier / Focus / Steward clients"]
+    subgraph Clients["Client and operator surfaces"]
+        Explorer["apps/explorer-web"]
+        Review["apps/review-console"]
+        CLI["apps/cli"]
+        Workers["apps/workers"]
     end
 
-    subgraph Runtime["Runtime & trust-surfaces plane"]
-        API["Governed API"]
+    subgraph APIPlane["Governed API plane"]
+        Boundary["apps/governed-api\nboundary README"]
+        Module["apps/api/src/api\nmodule README + routes + middleware"]
         Resolver["EvidenceRef → EvidenceBundle"]
         Envelope["Runtime outcomes\nANSWER / ABSTAIN / DENY / ERROR"]
     end
 
-    subgraph Control["Catalog / policy / review plane"]
-        Policy["DecisionEnvelope / policy evaluation"]
-        Review["Review / release / correction"]
+    subgraph Control["Contract / policy / verification"]
+        Contracts["contracts/ + schemas/contracts/"]
+        Policy["policy/"]
+        Tests["tests/ + .github/actions"]
     end
 
-    subgraph Data["Published and authoritative scope"]
+    subgraph Data["Released scope"]
         Published["PUBLISHED scope"]
         Closure["STAC / DCAT / PROV closure"]
     end
@@ -249,21 +335,28 @@ flowchart LR
         Canon["Canonical truth"]
     end
 
-    Map --> API
-    API --> Policy
-    API --> Resolver
+    Explorer --> Boundary
+    Review --> Boundary
+    CLI --> Boundary
+    Workers --> Boundary
+
+    Boundary --> Module
+    Module --> Resolver
+    Module --> Envelope
+    Module --> Contracts
+    Module --> Policy
+    Module --> Tests
     Resolver --> Published
     Resolver --> Closure
-    Policy --> Review
-    API --> Envelope
 
-    Map -. no direct client path .-> Raw
-    Map -. no direct client path .-> Canon
+    Explorer -. no direct client path .-> Raw
+    Explorer -. no direct client path .-> Canon
+    Review -. no hidden approval bypass .-> Canon
 ```
 
 ### Reading the diagram
 
-The API does not “own” the whole system. It owns the public and steward edge where request context, policy evaluation, evidence resolution, and bounded runtime results meet. That edge must stay downstream of release, review, and correction rather than becoming a shortcut around them.
+The API does not “own” the whole system. It owns the public and steward edge where request context, policy evaluation, evidence resolution, and bounded runtime results meet. In the current repo, that edge is represented by a **boundary README surface** in `apps/governed-api/` and a **deeper API module surface** in `apps/api/src/api/`.
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
@@ -271,14 +364,14 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 ### Core trust-bearing objects this boundary is expected to touch
 
-| Object family | Why it matters here | Status |
+| Object family | Why it matters here | Current public signal |
 |---|---|---|
-| `EvidenceBundle` | makes drill-through operational at point of use | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
-| `RuntimeResponseEnvelope` | keeps runtime outcomes finite and auditable | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
-| `DecisionEnvelope` | makes policy results machine-readable | **CONFIRMED** doctrinal object; live schema/DTO **UNKNOWN** |
-| `ReleaseManifest` / proof pack | ties outward payloads to release state | **CONFIRMED** doctrinal object; live files **UNKNOWN** |
-| `CorrectionNotice` | keeps rollback, supersession, narrowing, and withdrawal visible | **CONFIRMED** doctrinal object; live files **UNKNOWN** |
-| review / approval artifacts | prevents silent approvals | **CONFIRMED** doctrinal object; live workflow evidence **UNKNOWN** |
+| `EvidenceBundle` | makes drill-through operational at point of use | doctrine is strong; adjacent evidence contract family exists under `schemas/contracts/v1/evidence/`; populated schema content still needs verification |
+| `RuntimeResponseEnvelope` | keeps runtime outcomes finite and auditable | runtime contract family exists under `schemas/contracts/v1/runtime/`; representative public schema bodies are scaffold-state |
+| `DecisionEnvelope` | makes policy results machine-readable | policy-related contract lane exists; exact populated envelope shape needs verification |
+| `ReleaseManifest` / proof pack | ties outward payloads to release state | release contract lane exists; proof-pack depth needs verification |
+| `CorrectionNotice` | keeps rollback, supersession, narrowing, and withdrawal visible | correction contract lane exists; concrete public examples still need verification |
+| reason / obligation / reviewer vocabularies | keeps policy results stable and machine-readable | `schemas/contracts/v1/vocab/` files are visible on public main, but representative bodies are currently scaffold-state |
 
 ### Boundary ownership matrix
 
@@ -292,6 +385,7 @@ The API does not “own” the whole system. It owns the public and steward edge
 | Catalog closure authoring |  | ✓ | ✓ |
 | Canonical source-of-truth writes |  |  | ✓ |
 | Derived map/search/scene rebuild logic |  | ✓ | ✓ |
+| Route/middleware implementation detail |  | ✓ | ✓ |
 
 ### Evidence and freshness posture
 
@@ -303,19 +397,31 @@ The API does not “own” the whole system. It owns the public and steward edge
 | Stale projection | visible stale cue or fail-closed denial depending on policy |
 | Rights / sensitivity constrained read | denial or generalized output with stated obligation |
 
+### Current public verification posture
+
+| Area | Current repo-visible signal | Safe reading |
+|---|---|---|
+| `schemas/contracts/v1/*` | subtree visible | contract families exist |
+| representative runtime schema files | visible but scaffold-state | do not imply enforcement-grade content yet |
+| `policy/` subtree | visible with bundles / fixtures / runtime / tests lanes | policy structure exists |
+| `tests/contracts/` | public subtree currently README-only | contract-test intent exists; populated test depth still needs proof |
+| `.github/workflows/` | public subtree currently README-only | workflow enforcement depth remains unproven from public main alone |
+
+<p align="right"><a href="#governed-api">Back to top ↑</a></p>
+
 ## Task list
 
 ### Definition of done for this directory
 
-- [ ] Live path is verified (`apps/governed-api` vs `apps/api` or other).
-- [ ] Owners, created date, updated date, and policy label in the meta block are filled from live repo authority.
-- [ ] One public contract surface for governed reads is linked from this README.
-- [ ] One internal/steward contract surface is linked from this README.
-- [ ] One positive `EvidenceRef → EvidenceBundle` trace is surfaced.
-- [ ] One negative runtime trace is surfaced for each of `ABSTAIN`, `DENY`, and `ERROR`.
+- [ ] Canonical relationship between `apps/governed-api/README.md` and `apps/api/src/api/README.md` is explicitly documented.
+- [ ] Owners, created date, doc UUID, and policy label in the meta block are filled from repo-authoritative sources.
+- [ ] One public governed-read contract surface is linked from this README.
+- [ ] One internal / steward contract surface is linked from this README.
+- [ ] One positive `EvidenceRef → EvidenceBundle` trace is linked.
+- [ ] One negative runtime trace is linked for each of `ABSTAIN`, `DENY`, and `ERROR`.
 - [ ] One correction / rollback example is linked.
-- [ ] CI evidence is verified for contract or policy gating, or this README keeps that maturity explicitly marked **UNKNOWN**.
-- [ ] Path links in this file are updated to actual repo neighbors after live verification.
+- [ ] Public claims about CI gates are kept aligned with actual workflow files, not just README intent.
+- [ ] Route-level duplication between this file and `apps/api/src/api/README.md` is reduced or explicitly partitioned.
 
 ### First high-value gates
 
@@ -324,7 +430,15 @@ The API does not “own” the whole system. It owns the public and steward edge
 - [ ] **resolver gate** — positive and negative `EvidenceBundle` traces
 - [ ] **runtime gate** — finite envelope validation for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
 - [ ] **correction gate** — visible supersession / withdrawal / rollback behavior
-- [ ] **docs gate** — this README and adjacent runbooks stay aligned with actual route / contract / correction behavior
+- [ ] **docs gate** — boundary README, module README, runbooks, and actual route/contract behavior stay aligned
+
+### Immediate repo-fit follow-ups
+
+- [ ] Decide whether `apps/governed-api/` remains README-only, becomes a parent app shell, or eventually absorbs code from `apps/api/`.
+- [ ] Confirm whether `schemas/contracts/` or another path is the durable machine-file authority for runtime and evidence contracts.
+- [ ] Replace scaffold-state representative files before claiming “implemented contract family” depth in prose.
+- [ ] Confirm whether `.github/workflows/README.md` reflects hidden/private enforcement or merely intended future structure.
+- [ ] Add narrower `CODEOWNERS` coverage if `apps/governed-api/` needs review routing more specific than `/apps/`.
 
 <p align="right"><a href="#governed-api">Back to top ↑</a></p>
 
@@ -336,15 +450,23 @@ Because KFM treats the API boundary as part of the trust model. It is where publ
 
 ### Why can’t the UI call the database or object store directly?
 
-Because that would collapse the trust membrane. KFM repeatedly treats direct client access to canonical or storage surfaces as a bypass of policy, provenance, and evidence guarantees.
+Because that would collapse the trust membrane. Browser shells are supposed to inherit governed evidence, policy, and correction behavior — not bypass them.
 
-### Is Focus Mode just another chat endpoint?
+### Why are there two API-facing documentation surfaces right now?
 
-No. It is a bounded runtime surface inside the governed shell. It must remain subordinate to admissible evidence, policy, release state, and finite outcomes.
+Because the current public repo shows both `apps/governed-api/README.md` and `apps/api/src/api/README.md`. The first is best read as a boundary README. The second already behaves like a deeper API module surface. The split is real and should be documented rather than blurred.
 
-### Why is path naming still marked NEEDS VERIFICATION?
+### Is `apps/governed-api/` currently code-bearing on public main?
 
-Because March 2026 corpus evidence is stronger on doctrine than on live repo topology. Older repo-grounded material mentions `apps/api`; the current user request asks for `apps/governed-api`. This README keeps that distinction visible instead of choosing one path by confidence alone.
+Not from current public-main inspection. The visible subtree is README-only.
+
+### Where should endpoint-level details live?
+
+Today, the least-drifty place is `apps/api/src/api/README.md` and its adjacent `middleware/` and `routes/` structure, unless the repo later consolidates that ownership.
+
+### Are runtime contracts already enforcement-grade?
+
+Not safe to claim from current public-main evidence alone. Contract families are visible, but representative public schema files are scaffold-state, and public workflow depth is still limited in several subtrees.
 
 ## Appendix
 
@@ -355,11 +477,11 @@ Because March 2026 corpus evidence is stronger on doctrine than on live repo top
 
 | Label | Meaning |
 |---|---|
-| **CONFIRMED** | directly supported by the March 2026 KFM corpus in this session |
-| **INFERRED** | strongly implied by repeated corpus patterns, but not directly mounted as implementation |
-| **PROPOSED** | a recommended starter shape or sequencing move |
+| **CONFIRMED** | directly supported by the current public repo and/or the attached KFM corpus |
+| **INFERRED** | strongly implied by repeated repo/corpus patterns, but not directly proven as live behavior |
+| **PROPOSED** | a recommended starter shape or reconciliation move |
 | **UNKNOWN** | not verified strongly enough to claim as live repo or runtime fact |
-| **NEEDS VERIFICATION** | a field or path that should be confirmed against live repo authority before publication |
+| **NEEDS VERIFICATION** | a field or authority source that should be confirmed before publication |
 
 ### Working vocabulary
 
@@ -374,12 +496,38 @@ Because March 2026 corpus evidence is stronger on doctrine than on live repo top
 
 ### Path note
 
-Treat `apps/governed-api/README.md` as the requested working destination for this file. Treat `apps/api` and `apps/api/src/api/README.md` as older March 2026 repo-grounded references until a live checkout confirms whether the rename is real, partial, or still pending.
+Treat `apps/governed-api/README.md` as a confirmed current public-main directory path.
+
+Treat `apps/api/src/api/README.md` as a confirmed parallel deeper API module documentation surface until the repo explicitly consolidates those roles.
 
 </details>
 
-[contracts]: ../../contracts/
-[schemas]: ../../schemas/
-[policy]: ../../policy/
-[packages]: ../../packages/
+<details>
+<summary><strong>Current public-main inspection checklist</strong></summary>
+
+```bash
+# app surfaces
+find apps -maxdepth 3 -type f | sort
+
+# deeper API surface
+find apps/api/src/api -maxdepth 3 -type f | sort
+
+# contracts and schemas
+find contracts -maxdepth 2 -type f | sort
+find schemas/contracts -maxdepth 3 -type f | sort
+
+# policy and tests
+find policy -maxdepth 3 -type f | sort
+find tests -maxdepth 3 -type f | sort
+
+# workflow visibility
+find .github/workflows -maxdepth 3 -type f | sort
+```
+
+</details>
+
+[contracts]: ../../contracts/README.md
+[schemas]: ../../schemas/README.md
+[policy]: ../../policy/README.md
+[packages]: ../../packages/README.md
 [docs]: ../../docs/
