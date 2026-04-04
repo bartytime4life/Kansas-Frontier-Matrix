@@ -6,9 +6,9 @@ Governed slices across real boundaries for KFM behavior that is broader than a s
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/integration/README.md`  
-> **Repo fit:** downstream of [`tests/README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../docs/README.md`](../../docs/README.md), [`../../.github/README.md`](../../.github/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md); upstream of future executable slices under `tests/integration/**` and any escalation into [`../e2e/`](../e2e/).  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-governed%20slice-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN%20%7C%20NEEDS%20VERIFICATION-6f42c1)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** downstream of [`tests/README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../docs/README.md`](../../docs/README.md), [`../../.github/README.md`](../../.github/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md); upstream of future executable slices under `tests/integration/**` and any escalation into [`../e2e/`](../e2e/).  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-governed%20slice-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN%20%7C%20NEEDS%20VERIFICATION-6f42c1)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Authority routing](#authority-routing) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > The parent [`tests/README.md`](../README.md) keeps `integration/` as a first-class repo family.
@@ -17,7 +17,7 @@ Governed slices across real boundaries for KFM behavior that is broader than a s
 > [!CAUTION]
 > Current public `main` proves that `tests/integration/` exists and currently exposes `README.md` only.
 > It does **not** yet prove an executable suite, fixture layout, local runner, required check, or checked-in workflow YAML for this family.
-> Everything below that boundary stays marked **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** on purpose.
+> Everything below that boundary stays marked **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** on purpose.
 
 ---
 
@@ -28,6 +28,7 @@ Governed slices across real boundaries for KFM behavior that is broader than a s
 | Marker | Meaning in this README |
 | --- | --- |
 | **CONFIRMED** | Visible on the current public branch or directly grounded in adjacent repo documentation |
+| **INFERRED** | Strongly supported by adjacent repo docs or parent-lane coverage, but not re-proven as mounted executable behavior |
 | **PROPOSED** | Recommended shape or first-slice pattern that fits KFM doctrine but is not asserted as current repo fact |
 | **UNKNOWN** | Not verified strongly enough in this session to present as current repo reality |
 | **NEEDS VERIFICATION** | A path, command, runner, protection rule, or workflow detail that should be checked before merge |
@@ -49,8 +50,9 @@ Good integration slices are small, named, and burden-led. They prove one consequ
 ### Upstream authorities
 
 - [`../README.md`](../README.md) — test-family purpose, placement boundaries, and public-tree vocabulary
-- [`../../contracts/README.md`](../../contracts/README.md) — contract-source direction and schema-authority caution
-- [`../../policy/README.md`](../../policy/README.md) — deny-by-default posture and starter policy-engine framing
+- [`../../contracts/README.md`](../../contracts/README.md) — human-readable contract doctrine, trust-object list, and split-state warning
+- [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) — live machine-file-bearing contract subtree when a slice depends on a specific family or registry lane
+- [`../../policy/README.md`](../../policy/README.md) — deny-by-default posture and top-level policy-lane routing
 - [`../../schemas/README.md`](../../schemas/README.md) — schema-home ambiguity and current public inventory boundary
 - [`../../docs/README.md`](../../docs/README.md) — documentation as a production-facing trust surface, not executable authority
 - [`../../.github/README.md`](../../.github/README.md) — repo gatehouse for review routing, workflow-bearing control, and governance intake
@@ -62,6 +64,7 @@ Good integration slices are small, named, and burden-led. They prove one consequ
 
 - Future `tests/integration/**` executable slices should live here.
 - Escalate to [`../e2e/`](../e2e/) when a proof needs public/runtime route flow, release assembly, or multi-surface correction behavior.
+- Prefer specific end-to-end families such as [`../e2e/correction/`](../e2e/correction/), [`../e2e/release_assembly/`](../e2e/release_assembly/), or [`../e2e/runtime_proof/`](../e2e/runtime_proof/) when the burden is clearly correction, release, or request-time runtime proof.
 - Fall back to [`../unit/`](../unit/), [`../contracts/`](../contracts/), or [`../policy/`](../policy/) when the seam is isolated enough to be proved more cheaply and more honestly there.
 
 ## Accepted inputs
@@ -72,6 +75,7 @@ Content that belongs in this directory includes:
 | --- | --- | --- |
 | Representative multi-boundary fixtures | A small, consequential slice that crosses at least one real seam | Prefer one slice with a clear burden over many decorative stubs. |
 | Cross-family examples | Contract examples, policy decisions, or evidence objects reused from their authoritative homes | Reuse; do not duplicate authority. |
+| Exact references into live authority lanes | A slice may name the specific `schemas/contracts/` or `policy/` seam it depends on | Name the seam; do not fork it locally. |
 | Negative-path scenarios | `deny`, `abstain`, `error`, stale-visible, generalized, superseded, or withdrawn behavior where relevant | Fail-closed behavior is part of the proof, not an afterthought. |
 | Freshness and lineage-sensitive cases | Examples where release, correction, or projection state changes outward behavior | Especially important when surfaces can otherwise bluff. |
 | Thin-slice lanes with strong place/time semantics | **PROPOSED:** one representative lane such as hydrology-first | A lane example belongs here only when it proves a real boundary. |
@@ -83,8 +87,9 @@ What does **not** belong here, and where it should go instead:
 | Exclusion | Keep it out of `tests/integration/` | Put it here instead |
 | --- | --- | --- |
 | Pure function or local utility checks | No real cross-boundary behavior | [`../unit/`](../unit/) |
-| Schema-shape-only validation | Contract structure without runtime coupling | [`../contracts/`](../contracts/) plus authoritative homes in [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) |
+| Schema-shape-only validation | Contract structure without runtime coupling | [`../contracts/`](../contracts/) plus authoritative guidance in [`../../contracts/README.md`](../../contracts/README.md) and the current machine-file-bearing lane at [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) |
 | Policy bundle grammar or reason-code-only checks | Decision logic with no broader slice | [`../policy/`](../policy/) plus authoritative policy sources in [`../../policy/`](../../policy/) |
+| Test-local copies of contract or policy source files | Silent divergence across `contracts/`, `schemas/contracts/`, `policy/`, and this directory | Their owning repo surfaces |
 | Full public-surface or release-proof sweeps | Multi-boundary runtime proof with publication consequences | [`../e2e/`](../e2e/) |
 | Accessibility-only behavior | Surface readability, motion, keyboard, or contrast checks with no broader integration burden | [`../accessibility/`](../accessibility/) |
 | Reproducibility or determinism-only checks | Repeatability without broader slice behavior | [`../reproducibility/`](../reproducibility/) |
@@ -101,6 +106,8 @@ The current public `main` branch proves the following:
 | `tests/integration/` currently exposes `README.md` only | **CONFIRMED** | Do not imply executable coverage that the tree does not prove. |
 | `/tests/` is covered by `@bartytime4life` in `.github/CODEOWNERS` | **CONFIRMED** | Reuse the same owner marker here unless repo ownership changes. |
 | `.github/workflows/` is currently README-only on public `main` | **CONFIRMED** | Treat CI wiring for this family as **UNKNOWN** or **NEEDS VERIFICATION** until a checked-out branch proves more. |
+| `policy/` is a real top-level lane with `bundles/`, `fixtures/`, `policy-runtime/`, `tests/`, and `README.md` | **CONFIRMED** | Integration slices can reuse policy-side seams rather than recreating them here. |
+| `contracts/` remains README-only while `schemas/contracts/` now exposes `v1/` and `vocab/` | **CONFIRMED** | Cases that depend on contract shape should point at the exact lane they exercise. |
 | The broader `tests/` surface lists `integration/` beside `accessibility/`, `contracts/`, `e2e/`, `policy/`, `reproducibility/`, and `unit/` | **CONFIRMED** | Integration is a first-class placement decision, not a leftover bucket. |
 
 > [!WARNING]
@@ -154,12 +161,21 @@ sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md
 sed -n '1,220p' .github/workflows/README.md
 sed -n '1,220p' CONTRIBUTING.md
 sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/contracts/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' schemas/README.md
 sed -n '1,220p' docs/README.md
 ```
 
-### 3) Search for KFM object families and fail-closed outcomes before inventing new test language
+### 3) Inspect the live machine-file and policy-side seams before inventing local copies
+
+```bash
+find schemas/contracts -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,160p'
+find policy -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,160p'
+find tests/contracts tests/policy -maxdepth 3 -type f 2>/dev/null | sort
+```
+
+### 4) Search for KFM object families and fail-closed outcomes before inventing new test language
 
 ```bash
 grep -RIn \
@@ -178,7 +194,7 @@ grep -RIn \
   tests contracts policy schemas docs .github 2>/dev/null || true
 ```
 
-### 4) Start with one slice that proves a real seam
+### 5) Start with one slice that proves a real seam
 
 Do **not** widen this directory just to make the tree look mature.
 
@@ -193,6 +209,20 @@ Use `tests/integration/` when the smallest honest proof has to cross a real boun
 - evidence resolution drives visible surface state
 - projection freshness, generalization, or correction state must be preserved across a boundary
 - a representative lane slice proves a governed path better than isolated tests can
+
+### Authority routing
+
+Current public `main` shows a split contract signal:
+
+- [`../../contracts/README.md`](../../contracts/README.md) remains the human-readable contract guide.
+- [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) is a live machine-file-bearing scaffold with `v1/` and `vocab/`.
+
+When a slice depends on contract shape, make two things explicit:
+
+1. which human-readable guide or lane boundary explains the burden, and
+2. which exact machine-file-bearing or policy-side seam the slice is exercising.
+
+Do **not** let `tests/integration/` become the place where unresolved contract-home questions are accidentally decided by convenience.
 
 ### Naming guidance
 
@@ -230,12 +260,14 @@ Escalate from integration to end-to-end when the proof must include:
 - role-gated review or stewardship workflow
 - multiple independent boundaries that would make a so-called “integration test” indistinguishable from a full system proof
 
+When the burden is already clearly narrowed to correction, release assembly, or request-time runtime proof, prefer the specific downstream family under [`../e2e/`](../e2e/) instead of widening this directory.
+
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[contracts/ + schemas/] --> I[Integration slice]
-    B[policy/] --> I
+    A[contracts/ guide<br/>+ schemas/contracts/*] --> I[Integration slice]
+    B[policy/ lane<br/>+ policy-side fixtures/runtime notes] --> I
     C[authoritative fixtures<br/>or representative examples] --> I
     D[owning implementation boundary<br/>adapter / repo / surface logic] --> I
 
@@ -254,8 +286,8 @@ flowchart LR
 | If you need to prove... | Best home | Why |
 | --- | --- | --- |
 | Pure local logic | [`../unit/`](../unit/) | Cheapest convincing proof wins. |
-| Contract shape and valid/invalid examples | [`../contracts/`](../contracts/) | Keep structure validation separate from broader behavior. |
-| Policy grammar, reason codes, obligation codes, or bundle logic | [`../policy/`](../policy/) | Decision grammar should stay explicit and isolated when possible. |
+| Contract shape and valid/invalid examples | [`../contracts/`](../contracts/) plus the exact owning machine-file lane under [`../../schemas/contracts/`](../../schemas/contracts/) when relevant | Keep structure validation separate from broader behavior, and name the real source of shape truth. |
+| Policy grammar, reason codes, obligation codes, or bundle logic | [`../policy/`](../policy/) plus owning surfaces under [`../../policy/`](../../policy/) | Decision grammar should stay explicit and isolated when possible. |
 | A governed slice across real boundaries | `tests/integration/` | This directory exists for cross-boundary proof. |
 | Full runtime/public behavior, release proof, or multi-surface correction | [`../e2e/`](../e2e/) | That burden is broader than one integration slice. |
 | Accessibility-only behavior | [`../accessibility/`](../accessibility/) | Keep readability and interaction proof first-class, not incidental. |
@@ -282,6 +314,7 @@ flowchart LR
 - [ ] Confirm whether an existing repo-wide runner, fixture convention, or workflow already governs this directory.
 - [ ] Add one real slice before adding broad subtrees.
 - [ ] Reuse authoritative contract and policy language instead of cloning it into test-local copies.
+- [ ] Name the exact contract or policy lane consumed whenever a slice relies on the current `contracts/` ↔ `schemas/contracts/` split state.
 - [ ] Include at least one fail-closed expectation whenever the scenario can deny, abstain, error, stale, generalize, or supersede.
 - [ ] Record how the slice is invoked locally if CI wiring is still **UNKNOWN** or **NEEDS VERIFICATION**.
 - [ ] Update adjacent docs when this directory stops being README-only.
@@ -305,6 +338,10 @@ Because not every cross-boundary proof needs full public/runtime sweep, release 
 ### Does the current repo prove executable integration coverage?
 
 No. The current repo-visible snapshot proves the directory and this README, not a runnable suite.
+
+### Why mention `schemas/contracts/` in an integration README?
+
+Because current public `main` now exposes a real machine-file-bearing contract subtree there, while `contracts/README.md` remains the human-readable contract guide. Integration slices should point at the exact surfaces they depend on instead of silently choosing an authority by convenience.
 
 ### Can `tests/integration/` own canonical schemas or policy bundles?
 
