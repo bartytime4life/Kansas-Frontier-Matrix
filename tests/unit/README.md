@@ -1,13 +1,33 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
+title: unit
+type: standard
+version: v1
+status: published
+owners: @bartytime4life
+created: 2026-01-28
+updated: 2026-03-28
+policy_label: public
+related: [tests/README.md, .github/CODEOWNERS, .github/workflows/README.md, CONTRIBUTING.md]
+tags: [kfm, tests, unit, verification]
+notes: [doc_id placeholder pending registry assignment, created date reflects earliest visible public path history and the path has delete/recreate cycles]
+[/KFM_META_BLOCK_V2] -->
+
 # unit
 
 Deterministic local-behavior verification family for Kansas Frontier Matrix.
 
+> [!NOTE]
+> The meta block’s `status: published` records this README as a checked-in public document.
+> The impact block below describes the **current maturity of the `tests/unit/` surface itself**, which remains experimental.
+
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/unit/README.md`  
+> **Public path history:** first visible create `2026-01-28` · latest visible update `2026-03-28`  
 > **Repo fit:** smallest proof family under [`../README.md`](../README.md); current public `main` shows this directory containing `README.md` only  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-deterministic%20local%20behavior-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Public history signal](#public-history-signal) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-deterministic%20local%20behavior-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 
 > [!IMPORTANT]
 > `tests/unit/` is where KFM should prove the smallest trustworthy behaviors first: fast, isolated, deterministic checks that fail loudly when local assumptions drift.
@@ -40,6 +60,7 @@ Examples above are **illustrative placement guidance**, not claims about current
 | **CONFIRMED — parent tests contract** | [`../README.md`](../README.md) defines `unit/` as the family for deterministic local behavior and separates it from integration, contract, policy, accessibility, reproducibility, and end-to-end proof burdens. |
 | **CONFIRMED — ownership** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) assigns `/tests/` to `@bartytime4life`. |
 | **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone. |
+| **CONFIRMED — public path history** | Public history for `tests/unit/` includes scaffold, delete, recreate, and README-revision events; path age alone is therefore a weak maturity signal. |
 | **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, local fixture inventory, required checks, and whether this family is exercised on the checked-out branch. |
 
 ### Status markers used here
@@ -70,6 +91,18 @@ Examples above are **illustrative placement guidance**, not claims about current
 | Sibling family | [`../accessibility/README.md`](../accessibility/README.md) | accessibility-critical trust-surface behavior should stay explicit | **CONFIRMED** |
 | Sibling family | [`../reproducibility/README.md`](../reproducibility/README.md) | digest, count, or bounded-rebuild stability belongs there | **CONFIRMED** |
 | Local contents | [`./README.md`](./README.md) | currently the only confirmed file in this directory on public `main` | **CONFIRMED** |
+
+## Current verified snapshot
+
+The current public `main` branch proves the following:
+
+- `tests/unit/` exists as a real directory.
+- `tests/unit/` currently exposes `README.md` only.
+- The parent `tests/` surface currently exposes sibling families for `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
+- `.github/workflows/` currently exposes `README.md` only on public `main`, so merge-blocking automation for this family is still **not** proven from visible tree state alone.
+
+> [!CAUTION]
+> Directory presence is not the same thing as executable proof depth. This snapshot is useful because it narrows what can be said honestly, not because it implies maturity.
 
 ## Accepted inputs
 
@@ -119,6 +152,20 @@ As this family matures, it should accumulate executable local suites, tiny deter
 
 </details>
 
+## Public history signal
+
+The public path history is useful here because it explains **why path presence should not be over-read**.
+
+| Date | Public history signal | Why it matters |
+|---|---|---|
+| 2026-03-28 | `Add newline at end of README.md` | latest visible path update is editorial, not suite-depth proof |
+| 2026-03-24 | `Enhance README.md for unit testing directory` | current family guidance was materially revised |
+| 2026-03-22 | `Scaffold repository structure from README-defined layout` | current directory presence is compatible with scaffold-first growth |
+| 2026-03-21 | `Delete tests/unit directory` | continuity on this path has breaks, so path age alone is a weak maturity signal |
+
+> [!NOTE]
+> Earlier public history also shows additional create, delete, scaffold, and README-focused updates. Read that history as a documentation-and-structure signal, not as proof that executable unit suites currently exist.
+
 [Back to top](#unit)
 
 ## Quickstart
@@ -145,6 +192,10 @@ sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
 
+# inspect local path history before claiming maturity or continuity
+git log --oneline -- tests/unit 2>/dev/null | sed -n '1,20p'
+git log --oneline -- tests/unit/README.md 2>/dev/null | sed -n '1,20p'
+
 # discover actual local test tooling before documenting it
 find . -maxdepth 3 \( -name "package.json" -o -name "pyproject.toml" -o -name "Cargo.toml" \) 2>/dev/null | sort
 grep -RIn "describe\\|it\\(|test\\(|pytest\\|vitest\\|jest\\|node --test\\|cargo test" . 2>/dev/null || true
@@ -157,6 +208,7 @@ grep -RIn "describe\\|it\\(|test\\(|pytest\\|vitest\\|jest\\|node --test\\|cargo
 3. Confirm whether the behavior under test is truly local and deterministic.
 4. Confirm whether the same change also needs sibling proof in `integration/`, `contracts/`, `policy/`, `accessibility/`, `reproducibility/`, or `e2e/`.
 5. Confirm that negative cases exist, not only happy-path confirmation.
+6. Confirm whether current branch history changes the maturity story relative to public `main`.
 
 > [!TIP]
 > Inspection-first is safer than guessing a toolchain. Do not paste `npm test`, `pytest`, `cargo test`, or any other runner command into this README until the active branch proves that choice.
@@ -235,6 +287,7 @@ flowchart LR
 | Fixture size | keep fixtures tiny and local; do not smuggle canonical artifacts in here |
 | Placement honesty | move the test if the proof question becomes boundary-heavy |
 | Documentation honesty | do not claim runner, coverage, or merge-gate behavior without direct branch evidence |
+| History honesty | do not turn scaffold or README churn into claims of executable depth |
 
 [Back to top](#unit)
 
@@ -246,6 +299,7 @@ flowchart LR
 - [ ] Any real boundary proof was placed in the sibling family that owns it.
 - [ ] Fixtures stay tiny and local.
 - [ ] Commands or runner references were verified from the checked-out branch.
+- [ ] History was checked before claiming continuity, maturity, or suite depth.
 - [ ] No claim of merge-blocking, coverage depth, or mature CI automation is made without direct evidence.
 - [ ] Adjacent docs were updated if the boundary between families changed.
 
@@ -254,6 +308,10 @@ flowchart LR
 ### Is `tests/unit/` currently a populated executable suite?
 
 Not from the current public `main` evidence used for this revision. Public branch inspection shows `tests/unit/` with `README.md` only.
+
+### Why does this README mention public history at all?
+
+Because public history for this path shows scaffold, delete, recreate, and README-focused edits. That makes history useful for **bounding claims**, even though it does not by itself prove executable depth.
 
 ### Can I test `ABSTAIN`, `DENY`, or `ERROR` behavior here?
 
