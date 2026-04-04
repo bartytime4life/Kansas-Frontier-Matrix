@@ -1,20 +1,36 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
+title: ci
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: NEEDS_VERIFICATION_DATE
+updated: NEEDS_VERIFICATION_DATE
+policy_label: public
+related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md]
+tags: [kfm, tools, ci]
+notes: [README-like lane contract; hidden metadata uses placeholders where current public evidence does not confirm a stable document record]
+[/KFM_META_BLOCK_V2] -->
+
 # ci
 
 Reusable CI-facing helpers for reviewer-readable summaries, annotations, and compact gate output over already-governed artifacts.
 
 > **Status:** experimental  
-> **Owners:** inherited from [`/tools/` ownership in `../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
+> **Owners:** `@bartytime4life` *(via current public `/tools/` coverage in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); no narrower `/tools/ci/` rule directly verified)*  
 > **Path:** [`tools/ci/README.md`](./README.md)  
-> **Repo fit:** child lane of [`../README.md`](../README.md); intended callers are workflow definitions in [`../../.github/workflows/README.md`](../../.github/workflows/README.md) and thin orchestration in [`../../scripts/`](../../scripts/); canonical law stays upstream in [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/), and [`../../tests/`](../../tests/)  
-> **Current public snapshot:** `tools/ci/` is **README-only** on the current public tree; this document defines the lane contract and growth rules without pretending a helper inventory is already present  
-> **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![current%20public%20tree](https://img.shields.io/badge/current%20public%20tree-README--only-lightgrey)](./README.md)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
+> **Evidence posture:** doctrine-grounded · public-`main` repo-grounded for visible tree state · exact helper inventory, live callers, rulesets, and platform settings remain bounded  
+> **Current public snapshot:** `tools/ci/` is **README-only** on the current public tree; public `.github/workflows/` is also README-only, so this file defines the lane contract without pretending checked-in callers are already proven  
+> **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20public%20tree](https://img.shields.io/badge/current%20public%20tree-README--only-lightgrey)](./README.md)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `tools/ci/` is the reusable helper boundary for **rendering** gate results, not the authority boundary for **deciding** them. Workflow orchestration belongs in [`../../.github/workflows/`](../../.github/workflows/) or [`../../scripts/`](../../scripts/). Canonical schema, policy, release, and truth-bearing logic remain upstream.
 
 > [!NOTE]
-> On the current public branch this directory exposes only this README. That is intentional in this file: the lane contract is stronger than the currently surfaced helper inventory so later additions do not become a miscellaneous CI junk drawer.
+> On the current public branch this directory exposes only this README. That is intentional here: the lane contract is stronger than the currently surfaced helper inventory so later additions do not become a miscellaneous CI junk drawer.
 
 > [!WARNING]
 > Helpers in `tools/ci/` should be deterministic, read-only by default, and safe to print in logs. Never leak tokens, unpublished evidence, policy-review internals, or trust-bearing state changes through convenience output.
@@ -37,26 +53,38 @@ Do **not** use this lane when the job is to:
 - replace workflow orchestration with hidden shell logic
 - smuggle business meaning into “just CI glue”
 
+### Truth labels used here
+
+| Label | Meaning in this file |
+| --- | --- |
+| **CONFIRMED** | Directly supported by the current public repo tree, checked-in public Markdown, or attached KFM doctrine |
+| **INFERRED** | Conservative interpretation of adjacent repo evidence or repeated doctrine, but not proven as current checked-in helper reality |
+| **PROPOSED** | Recommended landing shape or operating rule consistent with KFM doctrine |
+| **UNKNOWN** | Not verified strongly enough to present as current repo fact |
+| **NEEDS VERIFICATION** | Explicit placeholder that should be checked against the working branch or platform settings before merge |
+
 [Back to top](#ci)
 
 ## Repo fit
 
-| Direction | Path / surface | Why it matters |
-|---|---|---|
-| Parent | [`../README.md`](../README.md) | Defines the overall `tools/` contract and family boundaries. |
-| Ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Review ownership for `/tools/` flows through here. |
+| Direction | Surface | Why it matters |
+| --- | --- | --- |
+| Parent lane | [`../README.md`](../README.md) | Defines the overall `tools/` contract and family boundaries. |
+| Root posture | [`../../README.md`](../../README.md) | Sets the repo-wide evidence-first, map-first, trust-visible identity. |
+| Ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current public owner coverage for `/tools/` flows through here. |
 | Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow YAML should stay thin and call stable helpers instead of embedding large scripts. |
-| Likely callers | [`../../scripts/`](../../scripts/), [`../../tests/`](../../tests/), [`../../.github/workflows/`](../../.github/workflows/) | These surfaces typically produce or invoke the artifacts that `tools/ci/` renders. |
-| Upstream truth law | [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/) | Canonical machine-checkable rules live here, not in CI presentation helpers. |
-| Neighbor lanes | [`../validators/`](../validators/), [`../diff/`](../diff/), [`../attest/`](../attest/), [`../docs/`](../docs/), [`../probes/`](../probes/), [`../catalog/`](../catalog/) | Adjacent reusable helpers may feed inputs into `tools/ci/` summaries. |
-| Downstream consumers | Pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
+| Step-level reuse seam | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Repo-local actions are the step-wrapper surface; `tools/ci/` should not duplicate action metadata or orchestration. |
+| Thin orchestration | [`../../scripts/README.md`](../../scripts/README.md) | Local/operator entrypoints may call `tools/ci` helpers, but reusable review rendering should not be buried in `scripts/`. |
+| Upstream truth law | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Canonical machine-checkable rules, fixtures, and proof burdens live here, not in CI presentation helpers. |
+| Neighbor lanes | [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../attest/README.md`](../attest/README.md), [`../docs/README.md`](../docs/README.md), [`../probes/README.md`](../probes/README.md), [`../catalog/README.md`](../catalog/README.md) | Adjacent reusable helpers may feed inputs into `tools/ci/` summaries. |
+| Downstream consumers | pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
 
 ## Inputs
 
 ### Accepted inputs
 
 | Input class | Examples | Why it belongs here |
-|---|---|---|
+| --- | --- | --- |
 | Structured check results | contract validation, policy evaluation, docs/accessibility checks, geospatial validation, unit/contract/policy/e2e results | `tools/ci/` is the right place to compact and present these for reviewers. |
 | Receipts and manifests | candidate summaries, release manifests, proof-pack indexes, correction or rollback receipts | Reviewer-facing CI often needs links and short context around trust objects. |
 | Diff context | changed files, affected packages, affected route families, doc surfaces touched | Helps render “what changed” without re-implementing git or policy logic. |
@@ -73,14 +101,28 @@ Do **not** use this lane when the job is to:
 ## Exclusions
 
 | Does **not** belong here | Put it here instead | Why |
-|---|---|---|
-| Workflow orchestration YAML | [`../../.github/workflows/`](../../.github/workflows/) | Workflow sequencing and trigger logic should stay visible at the workflow boundary. |
+| --- | --- | --- |
+| Workflow orchestration YAML | [`../../.github/workflows/`](../../.github/workflows/) | Workflow sequencing, permissions, and trigger logic should stay visible at the workflow boundary. |
+| Repo-local composite action metadata or workflow-step wrappers | [`../../.github/actions/`](../../.github/actions/) | Step-wrapper contracts belong in the gatehouse action lane; `tools/ci/` should stay as reusable helper surface callable locally and from CI. |
 | Large orchestration scripts, retries, or state transitions | [`../../scripts/`](../../scripts/) | `scripts/` is the better home for orchestration; `tools/ci/` should stay reusable and narrow. |
 | Canonical JSON Schema and OpenAPI truth | [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) | CI helpers may report on contract law, but must not become its hidden home. |
 | Machine-readable policy bundles or decision grammar | [`../../policy/`](../../policy/) | Deny-by-default logic belongs in policy assets and tests, not summary renderers. |
-| Trust-bearing domain logic | packages or workers under the repo’s main implementation structure | Business meaning should not hide inside “utility” helpers. |
+| Trust-bearing domain logic | packages, pipelines, or workers under the repo’s main implementation structure | Business meaning should not hide inside “utility” helpers. |
 | Durable proof objects, releases, or authoritative outputs | the repo’s release / data / proof surfaces | CI summaries may link to proof objects; they should not silently become them. |
 | Long-form runbooks and doctrine | [`../../docs/`](../../docs/) | Keep this lane focused on executable CI support rather than narrative documentation. |
+
+## Current verified snapshot
+
+| Evidence item | Status | CI-lane consequence |
+| --- | --- | --- |
+| `tools/ci/` currently exposes `README.md` only on public `main` | **CONFIRMED** | This lane contract must not imply landed helper binaries or scripts. |
+| Parent `tools/` currently exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, `validators/`, and `README.md` | **CONFIRMED** | `ci/` is one of seven visible helper families, not an ad hoc directory. |
+| Current public `/tools/` ownership flows through broad `/tools/` coverage in `CODEOWNERS` | **CONFIRMED** | Owner wording should stay conservative until a narrower `/tools/ci/` rule exists. |
+| `.github/workflows/` contains `README.md` only on current public `main` | **CONFIRMED** | Current checked-in workflow caller inventory remains bounded. |
+| Public Actions history exposes historical workflow names such as `verify-docs.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED historical signal** / **NEEDS VERIFICATION** current | Useful reconstruction clue, not proof of current checked-in callers. |
+| `.github/actions/` is visible and placeholder-heavy on current public `main` | **CONFIRMED** | Step-level reuse exists as a neighboring lane, but direct `tools/ci` caller maturity is not yet proven. |
+| Current public repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
+| Exact required checks, rulesets, environment approvals, OIDC wiring, and platform-only settings are not derivable from the public tree alone | **UNKNOWN** | Keep platform claims out of this README unless re-verified against live settings. |
 
 [Back to top](#ci)
 
@@ -123,14 +165,16 @@ Start with inventory, not invention.
 ls -la tools/ci
 sed -n '1,260p' tools/README.md
 sed -n '1,260p' .github/workflows/README.md
+sed -n '1,260p' .github/actions/README.md
 sed -n '1,220p' .github/CODEOWNERS
+sed -n '1,220p' scripts/README.md
 
 # Find existing references before adding a helper
 git grep -n "tools/ci" -- . || true
-git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial" -- .github scripts tests tools docs || true
+git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|GITHUB_STEP_SUMMARY" -- .github scripts tests tools docs || true
 
 # Inspect likely producers of CI-facing artifacts
-find tests tools scripts -maxdepth 3 -type f | sort
+find .github/actions tools scripts tests -maxdepth 3 -type f | sort
 ```
 
 Before adding a helper, answer four questions:
@@ -138,7 +182,7 @@ Before adding a helper, answer four questions:
 1. What single review problem does it solve?
 2. What declared inputs does it consume?
 3. What exact outputs does it emit?
-4. Why does this belong in `tools/ci/` instead of `scripts/`, `policy/`, `contracts/`, or a package?
+4. Why does this belong in `tools/ci/` instead of `scripts/`, `.github/actions/`, `policy/`, `contracts/`, or a package?
 
 ## Usage
 
@@ -150,6 +194,15 @@ A good `tools/ci/` helper follows this shape:
 2. **Normalize** them into a compact internal status model.
 3. **Render** human-facing and machine-facing outputs separately.
 4. **Exit** with helper-status semantics, not hidden policy semantics.
+
+### Choose the right boundary
+
+| Surface | Primary job | Good fit | Do **not** hide here |
+| --- | --- | --- | --- |
+| `.github/workflows/` | job ordering, triggers, permissions, required gates | orchestration, sequencing, blocking review flow | reusable helper internals |
+| `.github/actions/` | repeated workflow steps with stable inputs/outputs | thin step wrappers | whole reviewer-summary families |
+| `../../scripts/` | local/operator entrypoints and staged orchestration | sequencing, convenience wrappers, operator-safe entrypoints | canonical decisions or buried reusable renderers |
+| `tools/ci/` | reviewer-readable summaries, annotations, compact digests | rendering already-produced artifacts for humans and CI | policy law, schema law, release authority |
 
 ### Practical rules
 
@@ -191,28 +244,38 @@ tools/ci/emit-annotations \
 
 ```mermaid
 flowchart LR
-    WF[".github/workflows/*<br/>(or equivalent CI caller)"]
+    WF[".github/workflows/*<br/>or equivalent CI caller"]
+    AC[".github/actions/*<br/>thin repeated steps"]
     SC["scripts/*<br/>thin orchestration only"]
+
     VA["tools/validators/*"]
     DF["tools/diff/*"]
+    CA["tools/catalog/*"]
+    AT["tools/attest/*"]
     TS["tests/*"]
     PO["policy/*"]
     CO["contracts/* / schemas/*"]
+    PI["pipelines/*<br/>or build reports"]
 
-    IN1["validation / test / policy artifacts"]
+    IN1["declared reports / manifests / receipts"]
     CI["tools/ci/*<br/>summary + annotation helpers"]
     OUT1["PR summary<br/>check-run text<br/>compact gate digest"]
     OUT2["annotations<br/>review breadcrumbs"]
     NO["authoritative truth / promotion / policy law"]
 
+    WF --> AC
     WF --> CI
+    AC --> CI
     SC --> CI
 
     VA --> IN1
     DF --> IN1
+    CA --> IN1
+    AT --> IN1
     TS --> IN1
     PO --> IN1
     CO --> IN1
+    PI --> IN1
 
     IN1 --> CI
     CI --> OUT1
@@ -226,7 +289,7 @@ flowchart LR
 ## Helper matrix
 
 | Helper family | Primary job | Typical inputs | Typical outputs | Status |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Summary helpers | Produce reviewer-readable run summaries | structured validator / test / policy / docs outputs | Markdown or plain-text summaries | **PROPOSED** |
 | Annotation helpers | Surface file- or line-scoped problems | structured failures with file context | platform-specific annotations | **PROPOSED** |
 | Gate-compaction helpers | Collapse many checks into one small digest | multiple report files | compact JSON or terse status blocks | **PROPOSED** |
@@ -247,7 +310,8 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 - [ ] It is read-only by default.
 - [ ] It does not leak secrets or unpublished evidence into logs.
 - [ ] It can be run locally with the same contract used in CI.
-- [ ] Its tests and fixtures live in the repo’s test surfaces, not in ad hoc scratch files.
+- [ ] If a workflow or repo-local action calls it, that caller remains a thin wrapper rather than the only place helper behavior exists.
+- [ ] Its tests and fixtures live in the repo’s shared test surfaces, not in ad hoc scratch files.
 - [ ] It links back to real artifacts, receipts, manifests, or reports where useful.
 - [ ] Failure semantics are explicit: helper failure is different from gate failure.
 
@@ -256,6 +320,10 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 ### Why is this not `.github/workflows/`?
 
 Because workflow YAML is orchestration. `tools/ci/` is for reusable helpers that workflows call. Keeping that boundary visible makes review easier and reduces hidden logic in workflow files.
+
+### Why is this not `.github/actions/`?
+
+Because repo-local actions are the thin step-wrapper seam inside the `.github` gatehouse. `tools/ci/` helpers should remain runnable outside GitHub Actions and should not require `action.yml` metadata just to render a summary or emit annotations.
 
 ### Why is this not `scripts/`?
 
