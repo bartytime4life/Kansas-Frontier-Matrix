@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-03-28
+updated: 2026-04-04
 policy_label: public
-related: [tests/README.md, tests/integration/README.md, tests/policy/README.md, tests/reproducibility/README.md, tests/unit/README.md, contracts/README.md, schemas/README.md, policy/README.md, .github/workflows/README.md, .github/PULL_REQUEST_TEMPLATE.md, .github/CODEOWNERS]
+related: [tests/README.md, tests/accessibility/README.md, tests/e2e/README.md, tests/integration/README.md, tests/policy/README.md, tests/reproducibility/README.md, tests/unit/README.md, contracts/README.md, schemas/README.md, policy/README.md, .github/workflows/README.md, .github/PULL_REQUEST_TEMPLATE.md, .github/CODEOWNERS]
 tags: [kfm, tests, contracts, verification, schema-drift, fail-closed]
-notes: [doc_id and created date need verification; current public main shows README-only inventory for this directory]
+notes: [doc_id and created date need verification; updated date reflects this draft revision; current public main shows README-only inventory for this directory]
 [/KFM_META_BLOCK_V2] -->
 
 # contracts
@@ -20,7 +20,7 @@ Contract-facing verification family for KFM schema drift, valid/invalid example 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/contracts/README.md`  
-> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); lateral to [`../policy/`](../policy/), [`../integration/`](../integration/), [`../reproducibility/`](../reproducibility/), and [`../unit/`](../unit/); upstream of future executable cases under `tests/contracts/**` and any escalation into [`../integration/`](../integration/) or [`../e2e/`](../e2e/).  
+> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); lateral to [`../policy/`](../policy/), [`../integration/`](../integration/), [`../reproducibility/`](../reproducibility/), [`../accessibility/`](../accessibility/), and [`../e2e/`](../e2e/); upstream of future executable cases under `tests/contracts/**` and any escalation into [`../integration/`](../integration/) or [`../e2e/`](../e2e/).  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
@@ -28,7 +28,7 @@ Contract-facing verification family for KFM schema drift, valid/invalid example 
 > ![owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1)
 > ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey)
 > ![workflow lane](https://img.shields.io/badge/workflows-README--only-lightgrey)
-> ![truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
+> ![truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
 > ![contract wave](https://img.shields.io/badge/contracts-wave%2001%20pending-lightgrey)
 
 > [!IMPORTANT]
@@ -42,6 +42,8 @@ Contract-facing verification family for KFM schema drift, valid/invalid example 
 ## Scope
 
 `tests/contracts/` is the contract-facing verification family inside KFM’s governed `tests/` surface.
+
+In KFM terms, this is one of the smallest places where the inspectable-claim doctrine becomes executable. If a trust-bearing object cannot survive contract validation here, later integration, runtime, release, and UI surfaces should not be allowed to smooth over that failure.
 
 Its job is specific: prove that trust-bearing objects are shaped correctly, reject invalid states deterministically, and fail closed when required evidence, policy, or correction fields are missing. This family should help the repo answer a harder question than “did the test pass?”:
 
@@ -72,6 +74,7 @@ Its job is specific: prove that trust-bearing objects are shaped correctly, reje
 | Label | Meaning here |
 | --- | --- |
 | **CONFIRMED** | Directly visible in the current public repo tree or in adjacent repo documentation |
+| **INFERRED** | Conservative interpretation that bridges confirmed repo evidence and repeated KFM doctrine without asserting mounted implementation |
 | **PROPOSED** | Strong repo- and doctrine-aligned starter shape not yet verified as mounted implementation |
 | **UNKNOWN** | Not proven from current public repo evidence |
 | **NEEDS VERIFICATION** | A detail that should be checked against the active checkout, runner, or platform settings before merge |
@@ -288,6 +291,8 @@ find tests/contracts -maxdepth 4 -type f | sort
 
 # inspect sibling test-family docs to keep placement honest
 sed -n '1,220p' tests/README.md
+sed -n '1,220p' tests/accessibility/README.md
+sed -n '1,220p' tests/e2e/README.md
 sed -n '1,220p' tests/integration/README.md
 sed -n '1,220p' tests/policy/README.md
 sed -n '1,220p' tests/reproducibility/README.md
@@ -540,11 +545,12 @@ This revision is grounded first in the current public repo surfaces that define 
 
 - `tests/contracts/README.md`
 - `tests/README.md`
+- `tests/accessibility/README.md`
+- `tests/e2e/README.md`
 - `tests/integration/README.md`
 - `tests/policy/README.md`
 - `tests/reproducibility/README.md`
 - `tests/unit/README.md`
-- `tests/accessibility/README.md`
 - `contracts/README.md`
 - `schemas/README.md`
 - `policy/README.md`
