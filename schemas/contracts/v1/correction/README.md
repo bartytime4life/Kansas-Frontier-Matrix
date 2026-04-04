@@ -4,134 +4,387 @@ title: Correction Contracts v1
 type: standard
 version: v1
 status: draft
-owners: <NEEDS-VERIFICATION>
+owners: @bartytime4life
 created: <NEEDS-VERIFICATION-YYYY-MM-DD>
 updated: <NEEDS-VERIFICATION-YYYY-MM-DD>
 policy_label: <NEEDS-VERIFICATION>
-related: [schemas/contracts/v1/correction/, <NEEDS-VERIFICATION: sibling contract-family docs>, <NEEDS-VERIFICATION: correction runbook>]
+related: [schemas/contracts/v1/README.md, schemas/contracts/v1/correction/correction_notice.schema.json, tests/contracts/README.md, tests/e2e/correction/README.md, schemas/tests/fixtures/contracts/v1/README.md, .github/workflows/README.md]
 tags: [kfm, contracts, schemas, correction, correction-notice]
-notes: [Current-session workspace evidence was PDF-only; exact repo owners, dates, sibling paths, and mounted schema files still need direct verification.]
+notes: [Current public main confirms this lane and local schema file exist; correction_notice.schema.json is still `{}`; schema-home authority, dates, doc_id, and policy label still need direct branch-level verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Correction Contracts v1
 
-Versioned schema namespace for visible supersession, withdrawal, narrowing, and reissue artifacts.
+Boundary-and-inventory README for the live `schemas/contracts/v1/correction/` lane and the current public state of `correction_notice.schema.json`.
 
 > [!IMPORTANT]
-> This README is source-grounded, but the current-session workspace exposed **PDF evidence only**. Exact sibling files, owners, dates, fixtures, and CI entrypoints remain **NEEDS VERIFICATION** unless directly rechecked in the mounted repository.
+> **Status:** experimental  
+> **Doc status:** draft  
+> **Owners:** `@bartytime4life` *(current strongest visible signal is the public `.github/CODEOWNERS` global fallback; no narrower `/schemas/contracts/v1/correction/` owner rule was directly verified on public `main`)*  
+> **Path:** `schemas/contracts/v1/correction/README.md`  
+> **Family file:** [`./correction_notice.schema.json`](./correction_notice.schema.json)  
+> ![Status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![Doc](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square) ![Lane](https://img.shields.io/badge/lane-correction-6f42c1?style=flat-square) ![Schema body](https://img.shields.io/badge/correction__notice-placeholder_%7B%7D-yellow?style=flat-square) ![Schema home](https://img.shields.io/badge/schema__home-NEEDS__VERIFICATION-red?style=flat-square) ![Branch](https://img.shields.io/badge/branch-main-0a7d5a?style=flat-square)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contract shape](#contract-shape) · [Validation & gates](#validation--gates) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
-> **Status:** draft · experimental  
-> **Owners:** `<NEEDS-VERIFICATION>`  
-> ![status](https://img.shields.io/badge/status-draft-lightgrey) ![maturity](https://img.shields.io/badge/maturity-experimental-orange) ![schema](https://img.shields.io/badge/schema-JSON%20Schema%202020--12-blue) ![contract](https://img.shields.io/badge/contract-CorrectionNotice-6f42c1) ![evidence](https://img.shields.io/badge/evidence-PDF--only%20workspace%20verified-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Contract shape](#contract-shape) · [Diagram](#diagram--correction-flow) · [Validation](#validation--gates) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> [!WARNING]
+> Current public `main` proves this correction lane is real, but adjacent repo docs still do **not** settle whether `schemas/` or `contracts/` is the authoritative machine-contract home. The local `correction_notice.schema.json` file is currently placeholder-only `{}`.
+
+> [!NOTE]
+> The KFM Meta Block v2 above uses reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` because those values were not directly confirmed from the public repo surfaces reviewed for this revision.
+
+| At a glance | Working rule |
+|---|---|
+| Family role | Preserve visible lineage under supersession, withdrawal, narrowing, or reissue |
+| Current local inventory | `README.md` + `correction_notice.schema.json` |
+| Current schema body | Placeholder `{}` |
+| Stronger neighboring proof surfaces | [`tests/contracts/`](../../../../tests/contracts/README.md) for contract-facing validation; [`tests/e2e/correction/`](../../../../tests/e2e/correction/README.md) for whole-path correction proof |
+| Local schema-side fixture scaffold | [`schemas/tests/fixtures/contracts/v1/`](../../../tests/fixtures/contracts/v1/README.md) exists generically, but no correction-specific fixture leaf was directly verified here |
+| Authority posture | **UNKNOWN / NEEDS VERIFICATION** between `schemas/` and `contracts/` |
 
 ## Scope
 
-This directory is the **correction-family** contract namespace for KFM’s versioned schema layer.
+`schemas/contracts/v1/correction/` is the correction-family lane inside the public `schemas/contracts/v1/` subtree.
 
-Its primary job is to make **post-publication change visible and machine-checkable**. In KFM, correction is not a quiet overwrite, a file replacement, or a UI-only warning. It is a governed state transition that preserves lineage across released objects and public-facing surfaces.
+Its job is narrow but consequential: make correction semantics legible, keep post-publication change visible, and prevent contributors from confusing a visible scaffold with a finished trust-bearing contract. In KFM doctrine, correction is not a hidden overwrite, a quiet file replacement, or a UI-only warning. It is a governed state transition that preserves lineage across released objects and outward-facing surfaces.
 
-This README treats **`CorrectionNotice`** as the central contract in this namespace.
+This README should do four jobs well:
 
-### Truth posture used in this README
+1. describe what the current public tree actually proves about this lane
+2. preserve doctrinal minimums for `CorrectionNotice`
+3. keep schema-home ambiguity visible instead of smoothing it away
+4. point correction work toward the right neighboring proof surfaces
 
-| Label | Meaning here |
+### Truth posture used here
+
+| Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus. |
-| **INFERRED** | Strongly implied by the corpus, but not directly proven as mounted repo reality in this session. |
-| **PROPOSED** | A recommended working shape that fits KFM doctrine but is not confirmed implementation. |
-| **NEEDS VERIFICATION** | A repo-specific detail not directly rechecked in the mounted workspace. |
+| **CONFIRMED** | Directly visible in the current public repo surface, or directly anchored in stable KFM doctrine already used by adjacent docs |
+| **INFERRED** | Strongly suggested by neighboring repo docs or doctrine, but not directly proven from this specific path |
+| **PROPOSED** | Safe next-step structure or maintenance guidance, not current-state fact |
+| **UNKNOWN** | Not directly verified from the reviewed public evidence |
+| **NEEDS VERIFICATION** | A specific value, ownership detail, authority decision, or enforcement claim must be checked before treating it as settled |
 
 [Back to top](#correction-contracts-v1)
 
 ## Repo fit
 
-**Path:** `schemas/contracts/v1/correction/`  
-**Upstream:** [Lifecycle context](#lifecycle-context) · [Validation & gates](#validation--gates)  
-**Downstream:** [Surface propagation](#surface-propagation) · [Task list](#task-list--definition-of-done)
+| Field | Value |
+|---|---|
+| **Path** | `schemas/contracts/v1/correction/README.md` |
+| **Purpose** | Boundary README for the correction-family lane under the public `schemas/contracts/v1/` tree |
+| **Immediate parent** | [`../README.md`](../README.md) |
+| **Parent contract lane** | [`../../README.md`](../../README.md) |
+| **Parent schema root** | [`../../../README.md`](../../../README.md) |
+| **Root repo posture** | [`../../../../README.md`](../../../../README.md) |
+| **Stronger current doctrinal contract signal** | [`../../../../contracts/README.md`](../../../../contracts/README.md) |
+| **Stronger repo-wide verification signal** | [`../../../../tests/README.md`](../../../../tests/README.md) |
+| **Contract-facing verification signal** | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) |
+| **Whole-path correction proof signal** | [`../../../../tests/e2e/correction/README.md`](../../../../tests/e2e/correction/README.md) |
+| **Schema-side fixture scaffold** | [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) |
+| **Workflow / merge-gate signal** | [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
+| **Local family file** | [`./correction_notice.schema.json`](./correction_notice.schema.json) |
+| **Audience** | Maintainers working on correction-family contract definition, schema-home reconciliation, fixture/test follow-through, and fail-closed correction semantics |
+| **Authority posture** | **UNKNOWN / NEEDS VERIFICATION** |
 
-### Path note
+### Path reconciliation note
 
-The attached doctrine frequently describes starter artifact paths under a non-versioned placeholder such as `contracts/correction/correction_notice.schema.json`. This README adopts the **user-specified target path** `schemas/contracts/v1/correction/` without claiming that the older placeholder path was mounted repo reality.
+Earlier doctrine and starter examples sometimes name non-versioned placeholder paths such as `contracts/correction/correction_notice.schema.json`.
 
-### Upstream / downstream relationship map
+Current public `main` now proves a live `schemas/contracts/v1/correction/` lane exists. That visibility matters. It still does **not** settle canonical authority by itself, because neighboring `schemas/` and `contracts/` docs continue to describe schema-home authority as unresolved.
 
-| Direction | Relationship | Why it touches this directory | Status |
+### Upstream and downstream links
+
+| Direction | Surface | Why it matters | Status |
 |---|---|---|---|
-| Upstream | `ReleaseManifest` / `ReleaseProofPack` | Correction is post-release governance, so it attaches to released scope rather than bypassing it. | **CONFIRMED** |
-| Upstream | `DecisionEnvelope` / `ReviewRecord` | Policy-significant change must remain review-bearing and auditable. | **CONFIRMED** |
-| Downstream | map / tile / portrayal surfaces | Correction state must propagate so stale or superseded claims do not persist invisibly. | **CONFIRMED** |
-| Downstream | dossier / story / export / Focus surfaces | KFM requires visible correction lineage across trust-visible public surfaces. | **CONFIRMED** |
-| Adjacent | valid / invalid fixtures, policy registries, correction drills | These make the contract executable instead of purely documentary. | **PROPOSED** |
-| Adjacent | runbooks and e2e correction tests | These keep documentation synchronized with correction behavior. | **PROPOSED** |
+| Upstream | [`../README.md`](../README.md) | Defines the `v1` family lattice and the current public placeholder state of first-wave schema files | **CONFIRMED** |
+| Upstream | [`../../../../contracts/README.md`](../../../../contracts/README.md) | Keeps correction aligned with KFM’s stronger current human-readable contract doctrine | **CONFIRMED** |
+| Upstream | [`../../../../README.md`](../../../../README.md) | Preserves repo-root truth path, trust membrane, and inspectable-claim posture | **CONFIRMED** |
+| Lateral | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) | Sharper current home for contract-facing validation and valid/invalid case burden | **CONFIRMED** |
+| Lateral | [`../../../../tests/e2e/correction/README.md`](../../../../tests/e2e/correction/README.md) | Sharper current home for visible correction, stale-state, and supersession drills | **CONFIRMED** |
+| Lateral | [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) | Generic schema-side fixture scaffold exists, but authority remains unresolved | **CONFIRMED** |
+| Lateral | [`../../../../policy/README.md`](../../../../policy/README.md) | Correction may carry deny-by-default, narrowing, or review-bearing consequences | **CONFIRMED** |
+| Lateral | [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) | Bounds workflow claims to public checked-in evidence | **CONFIRMED** |
+| Downstream | `map`, `dossier`, `story`, `export`, `Focus` surfaces | Correction state must remain visible where users encounter released meaning | **CONFIRMED doctrinally** |
+| Downstream | future executable correction drills | This family should eventually feed real contract validation and whole-path proof | **PROPOSED** |
 
 [Back to top](#correction-contracts-v1)
 
 ## Accepted inputs
 
-This directory should contain or describe only **correction-family** material for this schema version.
+This directory should accept only material that clearly belongs to the correction-family contract lane.
 
-Accepted inputs include:
+### Belongs here
 
-- JSON Schema files for correction-family contracts in this namespace
-- correction-specific example payloads or references to repo-wide fixture locations
-- documentation that explains correction semantics, lifecycle placement, and propagation expectations
-- references to shared vocabularies only when the vocabulary is owned elsewhere and **not duplicated** here
-
-### What belongs here
-
-| Belongs here | Why |
+| Accepted here | Why it belongs here |
 |---|---|
-| `CorrectionNotice` schema material | It is the correction-family contract expressly named in KFM doctrine. |
-| Correction field semantics | This directory is where contract meaning should stay close to machine-checkable shape. |
-| Version-specific compatibility notes | Breaking or additive evolution rules belong close to the versioned schema family. |
-| Links to correction drills / examples | Correction must be testable, not only described. |
+| Version-local README improvements | Keeps the family lane reviewable and truthful |
+| Family-level notes about `CorrectionNotice` semantics | Makes correction doctrine legible without inventing implementation maturity |
+| Links to local family files already present in this directory | Keeps navigation local and predictable |
+| Authority-resolution notes specific to the correction family | This lane sits inside an unresolved schema-home boundary |
+| Explicit status notes about placeholder bodies, missing fixtures, or missing gates | Reduces trust theater |
+| Clearly labeled illustrative examples or pointers | Safe only when they do **not** masquerade as canonical emitted correction evidence |
+
+### Minimum bar before this lane becomes strong
+
+If this lane is going to become more than scaffold, four things need to become visible together:
+
+1. one authoritative schema-home decision
+2. a substantive `correction_notice.schema.json` body
+3. contract-facing valid and invalid cases that prove the family matters operationally
+4. whole-path correction proof that exercises visible downstream state
+
+[Back to top](#correction-contracts-v1)
 
 ## Exclusions
 
-This directory should **not** become a catch-all for every release or runtime artifact.
+This directory should stay small, explicit, and hard to misread.
 
-| Excluded here | Goes elsewhere instead |
-|---|---|
-| `ReleaseManifest` / `ReleaseProofPack` | release-family contract namespace |
-| `RuntimeResponseEnvelope` | runtime-family contract namespace |
-| `EvidenceBundle` | runtime / evidence-family contract namespace |
-| reason / obligation / rights / sensitivity registries | shared policy / vocabulary layer |
-| lane-specific operator procedures | runbooks / operational docs |
-| UI-only copy or alert text without contract linkage | trust-surface docs, not schema namespace |
+| Excluded from this path | Put it here instead | Why |
+|---|---|---|
+| Emitted correction notices, release proof packs, signed bundles, rollback drill outputs | release / proof / runtime artifact lanes *(path still needs direct verification by branch)* | This path is for contract shape, not emitted evidence |
+| Policy bundles, decision logic, or reviewer workflow definitions | [`../../../../policy/`](../../../../policy/) | Policy must stay executable and reviewable |
+| Contract-facing valid/invalid packs intended to back real runners | [`../../../../tests/contracts/`](../../../../tests/contracts/) | Verification belongs with the stronger test lane unless authority is explicitly changed |
+| Whole-path supersession or stale-visible drills | [`../../../../tests/e2e/correction/`](../../../../tests/e2e/correction/) | End-to-end burden belongs in the correction proof leaf |
+| Workflow YAML and merge-gate orchestration | [`../../../../.github/workflows/`](../../../../.github/workflows/) | Enforcement belongs with workflow inventory |
+| Runtime DTOs, API handlers, or shell payload renderers | app / package / runtime implementation surfaces | Consumers should depend on contracts, not live inside them |
+| Duplicate authoritative copies of the same trust-bearing family under both `schemas/` and `contracts/` | one canonical root plus any explicitly documented pointer / mirror strategy | Parallel schema law creates drift |
+| UI-only warning text without contract linkage | trust-surface docs or product-surface lanes | Correction semantics must stay machine-checkable |
 
-> [!NOTE]
-> A correction contract may reference these adjacent families, but it should not redefine their responsibilities here.
+> [!CAUTION]
+> A tidy directory is not the same thing as a governed correction surface.
+
+[Back to top](#correction-contracts-v1)
+
+## Current verified snapshot
+
+| Surface | Current public `main` state | Working meaning |
+|---|---|---|
+| `schemas/contracts/v1/correction/` | **CONFIRMED** present | The correction-family lane is a real checked-in public path |
+| `./README.md` | **CONFIRMED** present | This directory already has a substantive family README surface |
+| `./correction_notice.schema.json` | **CONFIRMED** present | The family filename is materialized |
+| `./correction_notice.schema.json` body | **CONFIRMED** current body is `{}` | The local schema is still placeholder-only, not enforcement-grade |
+| [`../../../../tests/e2e/correction/README.md`](../../../../tests/e2e/correction/README.md) | **CONFIRMED** present; current public leaf is README-only | Whole-path correction proof has a named home, but executable depth remains **NEEDS VERIFICATION** |
+| [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) | **CONFIRMED** present and explicitly names `CorrectionNotice` in the family role | Stronger contract-facing validation surface exists outside this schema lane |
+| [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) plus `valid/` and `invalid/` leaves | **CONFIRMED** present as generic schema-side fixture scaffold | Versioned generic fixture scaffolding exists, but no correction-specific fixture payloads were directly verified here |
+| [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) | **CONFIRMED** present and states current public `.github/workflows/` is README-only | Public workflow documentation exists, but no checked-in public workflow YAML gate is proven from this revision |
+| [`../../../../contracts/README.md`](../../../../contracts/README.md) and [`../../../README.md`](../../../README.md) | **CONFIRMED** both visible; authority remains unresolved | Do not treat path visibility here as proof that the repo has settled canonical schema home |
+| `.github/CODEOWNERS` | **CONFIRMED** global fallback covers the repo; no narrower correction-path rule was directly verified | `@bartytime4life` is the strongest visible owner signal, but narrower ownership remains **NEEDS VERIFICATION** |
+
+### Working interpretation
+
+Right now this lane proves five things and no more:
+
+1. the correction family name is real in the public tree
+2. the local README is substantive
+3. the local schema filename exists
+4. adjacent correction-proof and contract-validation lanes exist elsewhere in the repo
+5. local contract implementation maturity is still incomplete because the checked-in schema body is `{}`
 
 [Back to top](#correction-contracts-v1)
 
 ## Directory tree
 
+### Current public snapshot
+
 ```text
 schemas/contracts/v1/correction/
 ├── README.md
-└── correction_notice.schema.json              # PROPOSED / NEEDS VERIFICATION
+└── correction_notice.schema.json
 
-tests/fixtures/contracts/v1/correction/        # PROPOSED / NEEDS VERIFICATION
+tests/contracts/
+└── README.md
+
+tests/e2e/correction/
+└── README.md
+
+schemas/tests/fixtures/contracts/v1/
+├── README.md
 ├── valid/
+│   └── README.md
 └── invalid/
-
-tests/e2e/correction/                          # PROPOSED / NEEDS VERIFICATION
+    └── README.md
 ```
 
-If the mounted repo uses different fixture or test paths, update this tree to match the repo while preserving the same doctrinal roles.
+### Reading rule for the tree
+
+- The local correction lane is **CONFIRMED**.
+- The local schema file body is currently placeholder-only `{}`.
+- The public repo currently proves a correction-specific e2e leaf and a stronger contract-facing verification family.
+- The public repo also proves a generic schema-side `valid/` / `invalid/` scaffold, but not a correction-specific fixture leaf inside it.
+- None of the above silently resolves canonical contract-home or canonical fixture-home law.
+
+[Back to top](#correction-contracts-v1)
 
 ## Quickstart
 
-Use this namespace when a **released** public-safe object needs a visible post-publication change state.
+Use this path as an **inspection lane first**.
 
-1. Add or update the correction-family schema for this version.
-2. Keep contract evolution additive by default.
-3. Add **valid** and **invalid** fixtures.
-4. Add at least one correction drill that proves downstream visibility.
-5. Update this README whenever the contract role, required fields, or propagation expectations change.
+```bash
+# 1) Re-open the local correction family
+sed -n '1,260p' schemas/contracts/v1/correction/README.md
+cat schemas/contracts/v1/correction/correction_notice.schema.json
 
-### Illustrative example payload
+# 2) Re-open the boundary docs that govern how this lane should be read
+sed -n '1,260p' schemas/contracts/v1/README.md
+sed -n '1,220p' schemas/contracts/README.md
+sed -n '1,220p' schemas/README.md
+sed -n '1,220p' contracts/README.md
+
+# 3) Inspect adjacent proof surfaces before editing the schema body
+sed -n '1,240p' tests/contracts/README.md
+sed -n '1,260p' tests/e2e/correction/README.md
+sed -n '1,240p' schemas/tests/README.md
+sed -n '1,240p' schemas/tests/fixtures/contracts/v1/README.md
+sed -n '1,220p' .github/workflows/README.md
+
+# 4) Verify current visible ownership signal
+sed -n '1,120p' .github/CODEOWNERS
+```
+
+### Safe review sequence
+
+1. Re-read the parent `schemas/` and `contracts/` boundary docs.
+2. Confirm whether an ADR or equivalent repo decision has resolved schema-home authority.
+3. Inspect the raw body of `correction_notice.schema.json` instead of assuming it is substantive.
+4. Check whether the active branch contains correction-specific cases under the stronger validation or e2e lanes.
+5. Only then decide whether the change belongs here, in `contracts/`, in `tests/contracts/`, in `tests/e2e/correction/`, or in a non-schema lane.
+
+> [!TIP]
+> If you cannot answer “which directory is authoritative?” before editing a trust-bearing family, pause there first.
+
+[Back to top](#correction-contracts-v1)
+
+## Usage
+
+### Recommended use right now
+
+Use this README as:
+
+- a correction-family index for the current public `schemas/contracts/v1/correction/` lane
+- a warning surface against schema-home drift
+- a contributor checkpoint before expanding `correction_notice.schema.json`
+- a reminder that visible correction lineage is downstream of release scope, review, policy, and proof
+
+### When to issue a correction doctrinally
+
+A correction-family contract is appropriate when a **released** object needs one of the following visible state changes:
+
+- **SUPERSEDE** — a newer release or corrected object replaces the prior one
+- **WITHDRAW** — the prior object must no longer be public-safe
+- **NARROW** — exposure must be reduced, generalized, or otherwise made safer
+- **REISSUE** — a corrected release replaces the original while preserving lineage
+
+> [!NOTE]
+> Those type labels are useful starter language, but the exact enum remains **PROPOSED / NEEDS VERIFICATION** until the local schema body or an explicit shared vocabulary proves it.
+
+### What the contract must protect
+
+Correction should preserve all of the following:
+
+- lineage to the affected release or artifact
+- a visible public note or outward-facing explanation
+- downstream rebuild references where derived delivery must change
+- surface-state propagation so stale claims do not persist
+- audit linkage for review, policy, and rollback investigation
+
+### Working local rule
+
+Route work by burden, not by convenience:
+
+| If the change is mainly about… | Prefer this lane |
+|---|---|
+| local family semantics, boundary wording, or schema-shape guidance | `schemas/contracts/v1/correction/` |
+| valid / invalid object shape proof | [`tests/contracts/`](../../../../tests/contracts/README.md) |
+| visible supersession, stale-state, or correction propagation end to end | [`tests/e2e/correction/`](../../../../tests/e2e/correction/README.md) |
+| schema-side illustrative or mirror fixture scaffolds | [`schemas/tests/`](../../../tests/README.md) |
+| policy consequence, reason codes, or narrowing obligations | [`policy/`](../../../../policy/README.md) |
+
+[Back to top](#correction-contracts-v1)
+
+## Diagram
+
+```mermaid
+flowchart LR
+    A[Published release] --> B[Issue detected]
+    B --> C[Correction review]
+    C --> D[CorrectionNotice]
+    D --> E[Visible surface state]
+    D --> F[Replacement / withdrawal lineage]
+    D --> G[Contract validation]
+    D --> H[Whole-path correction proof]
+
+    G --> G1[tests/contracts/]
+    H --> H1[tests/e2e/correction/]
+
+    subgraph Surfaces
+      S1[Map / portrayal]
+      S2[Dossier / story]
+      S3[Export / report]
+      S4[Focus]
+    end
+
+    E --> S1
+    E --> S2
+    E --> S3
+    E --> S4
+    D -. schema-home unresolved .-> U[schemas/ vs contracts/ authority check]
+```
+
+> [!NOTE]
+> The diagram shows doctrinal dependencies and current repo-facing proof lanes. It does **not** claim that executable validators or e2e drills are already mounted on current public `main`.
+
+[Back to top](#correction-contracts-v1)
+
+## Contract shape
+
+### What current public `main` proves locally
+
+| Local fact | Meaning |
+|---|---|
+| `correction_notice.schema.json` exists | The family filename is materialized in the `schemas/` lane |
+| `correction_notice.schema.json` currently equals `{}` | The local field list is **not** yet encoded here as a substantive schema |
+| this README already contains doctrinal field guidance | The repo has contract intent documented even though machine enforcement is not yet proven locally |
+
+### Confirmed doctrinal minimum contract floor
+
+These are the **CONFIRMED doctrinal minimums** for `CorrectionNotice`.
+
+| Field or concept | Why it matters |
+|---|---|
+| affected releases | identifies what changed |
+| replacement releases | points to the authoritative replacement when one exists |
+| affected surface classes | forces propagation beyond storage-only corrections |
+| rebuild refs | ties correction to derived rebuild work where needed |
+| cause | preserves the reason for change |
+| public note | gives outward users visible explanation |
+
+### Strong candidate first-wave additions
+
+These are **PROPOSED** but strong candidates for the first executable contract wave.
+
+| Proposed field | Why it is useful |
+|---|---|
+| `correction_id` | stable identity for audit, references, and diffs |
+| `correction_type` | structured supersede / withdraw / narrow / reissue handling |
+| `targets` | explicit target list for release IDs, dataset IDs, or artifact IDs |
+| `reason_code` | aligns correction to shared policy vocabulary instead of free text |
+| `issued_at` / `effective_at` | separates issuance from effect time |
+| `audit_ref` | joins correction to logs, policy decisions, and review evidence |
+| `replaces` / `replaced_by` | makes bidirectional lineage machine-readable |
+
+### Surface propagation
+
+A correction is incomplete if it updates storage but leaves public surfaces unchanged.
+
+| Surface | Why propagation matters |
+|---|---|
+| map / tile / portrayal | prevents stale visual claims from persisting |
+| dossier | prevents detail views from presenting outdated released state |
+| story | preserves narrative trust and avoids silent historical drift |
+| export / report | keeps packaged outward artifacts aligned with release truth |
+| Focus / governed assistance | forces runtime surfaces to show superseded, withdrawn, or correction-pending state |
+
+### Illustrative payload
 
 The example below is **illustrative**, not a confirmed mounted payload.
 
@@ -168,100 +421,7 @@ The example below is **illustrative**, not a confirmed mounted payload.
 }
 ```
 
-## Usage
-
-### When to issue a correction
-
-A correction-family contract is appropriate when a **released** object needs one of the following visible state changes:
-
-- **SUPERSEDE** — a newer release or corrected object replaces the prior one
-- **WITHDRAW** — the prior object must no longer be public-safe
-- **NARROW** — exposure must be reduced, generalized, or otherwise made safer
-- **REISSUE** — a corrected release replaces the original while preserving lineage
-
-These type labels are useful, but the exact enum remains **PROPOSED / NEEDS VERIFICATION** until the mounted schema is surfaced.
-
-### What the contract must protect
-
-Correction must preserve all of the following:
-
-- lineage to the affected release or artifact
-- visible public note or outward-facing explanation
-- downstream rebuild references where derived delivery must change
-- surface-state propagation so stale claims do not persist
-- audit linkage for review, policy, and rollback investigation
-
-## Contract shape
-
-### Confirmed minimum contract floor
-
-These are the **CONFIRMED doctrinal minimums** for `CorrectionNotice`.
-
-| Field or concept | Why it matters |
-|---|---|
-| affected releases | identifies what changed |
-| replacement releases | points to the authoritative replacement when one exists |
-| affected surface classes | forces propagation beyond storage-only corrections |
-| rebuild refs | ties correction to derived rebuild work where needed |
-| cause | preserves the reason for change |
-| public note | gives outward users visible explanation |
-
-### Repo-sharpening additions
-
-These are **PROPOSED** but strong candidates for the first executable contract wave.
-
-| Proposed field | Why it is useful |
-|---|---|
-| `correction_id` | stable identity for audit, references, and diffs |
-| `correction_type` | structured supersede / withdraw / narrow / reissue handling |
-| `targets` | explicit target list for release IDs, dataset IDs, or artifact IDs |
-| `reason_code` | aligns correction to shared policy vocabulary instead of free text |
-| `issued_at` / `effective_at` | separates issuance from effect time |
-| `audit_ref` | joins correction to logs, policy decisions, and review evidence |
-| `replaces` / `replaced_by` | makes bidirectional lineage machine-readable |
-
-### Surface propagation
-
-A correction is incomplete if it updates storage but leaves public surfaces unchanged.
-
-At minimum, a correction notice should be able to affect:
-
-| Surface | Why propagation matters |
-|---|---|
-| map / tile / portrayal | prevents stale visual claims from persisting |
-| dossier | prevents detail views from presenting outdated released state |
-| story | preserves narrative trust and avoids silent historical drift |
-| export / report | keeps packaged outward artifacts aligned with release truth |
-| Focus / governed assistance | forces runtime surfaces to show superseded, withdrawn, or correction-pending state |
-
 [Back to top](#correction-contracts-v1)
-
-## Diagram — correction flow
-
-```mermaid
-flowchart LR
-    A[Published release] --> B[Issue detected]
-    B --> C[Correction case opened]
-    C --> D[Triaged + approved]
-    D --> E[CorrectionNotice published]
-    E --> F[Surface propagation]
-    E --> G[Rebuild jobs]
-    G --> H[Rebuild receipts]
-    F --> I[Visible public state]
-    I --> J[Superseded / Withdrawn / Generalized / Correction-pending]
-
-    subgraph Surfaces
-      F1[Map / portrayal]
-      F2[Dossier / story]
-      F3[Export]
-      F4[Focus]
-    end
-
-    F --> F1
-    F --> F2
-    F --> F3
-    F --> F4
-```
 
 ## Lifecycle context
 
@@ -276,7 +436,9 @@ The correction-family lifecycle is not free-form.
 | rebuild complete | affected derived delivery has been updated where required |
 | closed | the correction workflow has finished with lineage preserved |
 
-### Emitted event intent
+### Event intent
+
+These event families are doctrine-aligned starter language. They are **not** presented here as a confirmed current checked-in event registry.
 
 | Event family | Why it matters |
 |---|---|
@@ -288,14 +450,24 @@ The correction-family lifecycle is not free-form.
 
 ## Validation & gates
 
+### Current public proof surfaces
+
+| Surface | Current public signal | Working use |
+|---|---|---|
+| [`tests/contracts/`](../../../../tests/contracts/README.md) | README-bearing family explicitly names `CorrectionNotice` in contract-facing validation scope | strong candidate home for valid / invalid case packs and shape validation |
+| [`tests/e2e/correction/`](../../../../tests/e2e/correction/README.md) | README-bearing correction proof leaf exists | strong candidate home for visible supersession / stale-state drills |
+| [`schemas/tests/fixtures/contracts/v1/`](../../../tests/fixtures/contracts/v1/README.md) | generic schema-side `valid/` / `invalid/` scaffold exists | possible local mirror / illustrative scaffold, not a settled canonical fixture home |
+| [`.github/workflows/README.md`](../../../../.github/workflows/README.md) | workflow lane is documented, but current public tree is README-only there | bounds any merge-gate or validator claim to **NEEDS VERIFICATION** |
+
 ### Schema posture
 
 | Rule | Status |
 |---|---|
-| JSON Schema Draft 2020-12 should be the contract dialect | **CONFIRMED** |
-| additive evolution should be the default | **CONFIRMED** |
-| breaking changes should be deliberate, versioned, and paired with fixture + doc updates | **CONFIRMED** |
+| JSON Schema Draft 2020-12 should be the contract dialect | **CONFIRMED doctrinally** |
+| additive evolution should be the default | **CONFIRMED doctrinally** |
+| breaking changes should be deliberate, versioned, and paired with fixture + doc updates | **CONFIRMED doctrinally** |
 | fail-closed field discipline (`additionalProperties: false` or equivalent) is a strong starter posture | **PROPOSED** |
+| the local schema body is already substantive on current public `main` | **FALSE / not supported** |
 
 ### Minimum executable proof
 
@@ -305,38 +477,40 @@ A correction-family contract is not operational until it can prove all of the fo
 - valid fixtures pass
 - invalid fixtures fail
 - one correction drill shows visible downstream state change
-- at least one post-correction runtime or outward-facing sample reflects the corrected state
+- at least one post-correction outward-facing sample reflects the corrected state
+- the active branch shows where contract validation and whole-path proof actually run
 
-### Illustrative validator invocation
+### Illustrative validator shape
 
-The command below is **illustrative pseudocode**. Exact repo paths and validator entrypoints remain **NEEDS VERIFICATION**.
+The command below is **illustrative only**. It should not be treated as a current repo entrypoint until a real validator, fixture home, and authoritative schema source are checked in together.
 
 ```bash
-python tools/validators/validate_contracts.py \
-  --contracts-root <repo-root>/schemas/contracts/v1 \
-  --fixtures-root <repo-root>/tests/fixtures/contracts/v1 \
-  --vocab-root <repo-root>/contracts/vocab
+python -m jsonschema \
+  -i <authoritative-fixture-home>/correction_notice.supersession.valid.json \
+  schemas/contracts/v1/correction/correction_notice.schema.json
 ```
 
-### Recommended correction drill
+### Minimum correction drill
 
-A minimal correction drill should prove three linked objects:
+A thin but honest correction drill should prove three linked objects:
 
-1. a **previous** `ReleaseManifest` fixture  
-2. a `CorrectionNotice` fixture that **supersedes** or **withdraws** it  
-3. a **post-correction** outward-facing sample that shows a finite visible state such as `SUPERSEDED`, `WITHDRAWN`, or `CORRECTION-PENDING`
+1. a **previous** release-backed object
+2. a `CorrectionNotice` object that **supersedes**, **withdraws**, **narrows**, or **reissues** it
+3. a **post-correction** outward-facing sample that shows a finite visible state such as `SUPERSEDED`, `WITHDRAWN`, `STALE-VISIBLE`, or `CORRECTION-PENDING`
+
+[Back to top](#correction-contracts-v1)
 
 ## Task list — definition of done
 
-- [ ] correction-family schema compiles under JSON Schema Draft 2020-12
-- [ ] valid fixture set exists
-- [ ] invalid fixture set exists
-- [ ] at least one correction drill proves supersession or withdrawal visibility
-- [ ] shared reason-code vocabulary is referenced instead of copied into this namespace
-- [ ] README reflects the current field set and propagation rules
-- [ ] any breaking change is versioned and paired with updated fixtures
-- [ ] outward-facing public note semantics are documented
-- [ ] mounted repo paths and owners have been reverified before claiming this namespace is stable
+- [ ] one authoritative schema-home decision is recorded or explicitly linked
+- [ ] `correction_notice.schema.json` grows beyond `{}` under JSON Schema Draft 2020-12
+- [ ] contract-facing valid / invalid cases exist in the authoritative verification lane
+- [ ] any schema-side `valid/` / `invalid/` mirrors are explicitly marked non-authoritative, generated, or pointer-only
+- [ ] at least one correction drill exists under `tests/e2e/correction/**`
+- [ ] shared reason / obligation vocabulary is referenced instead of copied into this namespace
+- [ ] this README, parent boundary docs, and sibling lanes agree on schema-home and fixture-home language
+- [ ] workflow docs and active gates are reverified before anyone calls this lane enforced
+- [ ] outward-facing correction-state semantics are documented and stable
 
 [Back to top](#correction-contracts-v1)
 
@@ -346,29 +520,37 @@ A minimal correction drill should prove three linked objects:
 
 Because KFM treats correction as a governed publication change, not as a hidden replacement. A dedicated contract makes lineage, cause, and downstream propagation inspectable.
 
+### Why does this README keep talking about authority?
+
+Because the public repo currently exposes a real `schemas/contracts/v1/` subtree **and** a stronger root `contracts/` doctrine surface at the same time. Until the repo resolves which one is canonical, a correction-family README that ignores that split becomes misleading.
+
 ### Is correction only for withdrawal?
 
-No. The correction family must handle supersession, narrowing/generalization, reissue, and withdrawal without erasing prior public state.
+No. The family must handle supersession, narrowing / generalization, reissue, and withdrawal without erasing prior public state.
 
 ### Are the filenames in this README fixed?
 
-No. The **object role** is the important part. Exact filenames and directory layout remain subject to mounted repo verification.
+No. The object role matters more than the literal filename. What **is** fixed today is only the current public path visibility reviewed for this revision.
 
 ### Can a correction exist without downstream rebuild work?
 
-Sometimes yes, but only if no derived delivery surface is affected. If a public map, portrayal, export, or runtime surface changes meaning, rebuild linkage should remain visible.
+Sometimes yes, but only if no derived delivery surface is affected. If a public map, portrayal, export, dossier, or runtime surface changes meaning, rebuild linkage should remain visible.
+
+[Back to top](#correction-contracts-v1)
 
 ## Appendix
 
 <details>
 <summary><strong>Open verification items</strong></summary>
 
-1. Confirm whether `correction_notice.schema.json` is already mounted in this directory.
-2. Confirm whether fixtures live under `tests/fixtures/`, `fixtures/`, or another repo convention.
-3. Confirm the exact correction-type enum and whether it is registry-backed.
-4. Confirm owners, policy label, created date, and updated date for the meta block.
-5. Confirm whether a correction runbook already exists and where it lives.
-6. Confirm whether correction drills are colocated with contract tests or live under an e2e namespace.
+1. Confirm whether `schemas/` or `contracts/` is the authoritative machine-contract home for `CorrectionNotice`.
+2. Confirm whether `correction_notice.schema.json` should stay here, become a pointer, or become a generated mirror if authority resolves elsewhere.
+3. Confirm the exact `correction_type` enum and whether it is registry-backed.
+4. Confirm the authoritative correction fixture home between `tests/contracts/**`, `tests/e2e/correction/**`, `schemas/tests/**`, and any branch-local alternative.
+5. Confirm the actual validator entrypoint, runner, and merge-gate workflow behavior on the active branch.
+6. Confirm whether a correction runbook already exists under `docs/` or another human-guidance surface.
+7. Confirm `doc_id`, `created`, `updated`, and `policy_label` values for the KFM meta block.
+8. Confirm whether narrower path ownership than the public global CODEOWNERS fallback exists on the checked-out branch.
 
 </details>
 
@@ -377,9 +559,11 @@ Sometimes yes, but only if no derived delivery surface is affected. If a public 
 
 - Keep doctrinal claims stronger than path claims.
 - Prefer stable semantics over brittle filename mythology.
-- Do not collapse superseded, withdrawn, generalized, or correction-pending into one generic warning state.
-- Do not let runtime or UI language outrun what the correction contract can actually prove.
-- When mounted repo evidence appears, replace placeholders with verified values rather than expanding inference.
+- Do not collapse superseded, withdrawn, narrowed, reissued, stale-visible, or correction-pending into one generic warning state.
+- Do not let runtime or UI language outrun what the correction contract and proof lanes can actually prove.
+- When branch-level evidence strengthens a claim, update the README in the same change stream as the schema, tests, or workflow surfaces that justify it.
+- If schema-home or fixture-home authority is resolved, reconcile this file with `schemas/README.md`, `schemas/contracts/README.md`, `schemas/contracts/v1/README.md`, `contracts/README.md`, and adjacent `tests/` docs together.
+- Do not let a schema-side scaffold quietly harden into canonical law by inertia.
 
 </details>
 
