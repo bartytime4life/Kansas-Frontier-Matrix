@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-22
-updated: 2026-03-22
+updated: 2026-04-02
 policy_label: public
-related: [../../README.md, ../README.md, ../../web/README.md, ../governed-api/README.md, ../api/src/api/README.md, ../review-console/README.md, ../workers/README.md, ../cli/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
+related: [../../README.md, ../README.md, ../../web/README.md, ../governed-api/README.md, ../api/src/api/README.md, ../review-console/README.md, ../workers/README.md, ../cli/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../data/README.md, ../../pipelines/README.md, ../../.github/workflows/README.md]
 tags: [kfm, explorer-web, maplibre, evidence, shell]
-notes: [UUID still needs authoritative allocation; dates reflect the last confirmed public file-history date; current public main proves the directory exists, but deeper runtime contents remain verification-bounded.]
+notes: [UUID still needs authoritative allocation; created/updated dates follow current public directory history visible on main; current public main confirms the directory and README, while deeper runtime contents remain verification-bounded.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Explorer Web
@@ -21,7 +21,7 @@ Persistent, map-first, time-aware, trust-visible shell for Kansas Frontier Matri
 > **Owners:** `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![tree](https://img.shields.io/badge/tree-public%20README--only-lightgrey) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![trust](https://img.shields.io/badge/trust-visible%20evidence-1f6feb) ![3D](https://img.shields.io/badge/3D-burden--bearing%20only-6b7280)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Surface matrix](#surface-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `apps/explorer-web/README.md` — shell-boundary README inside `apps/`, kept aligned with `../../web/README.md` and adjacent app/runtime boundary docs.
+> **Repo fit:** `apps/explorer-web/README.md` — shell-boundary README inside `apps/`, kept aligned with `../../web/README.md`, the governed API boundary docs, and adjacent verification/policy surfaces.
 
 > [!IMPORTANT]
 > Current public `main` proves that `apps/explorer-web/` exists as a real repo path and currently exposes `README.md`. What remains unverified is the deeper runtime subtree: manifests, app code, routes, tests, fixtures, and dev wiring. This README therefore documents a **confirmed boundary** plus a **proposed realization**, without smoothing the difference away.
@@ -35,7 +35,7 @@ Persistent, map-first, time-aware, trust-visible shell for Kansas Frontier Matri
 | Parallel | [`../../web/README.md`](../../web/README.md) |
 | Sibling app docs | [`../governed-api/README.md`](../governed-api/README.md) · [`../review-console/README.md`](../review-console/README.md) · [`../workers/README.md`](../workers/README.md) · [`../cli/README.md`](../cli/README.md) |
 | Deeper API doc | [`../api/src/api/README.md`](../api/src/api/README.md) |
-| Adjacent governed roots | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Adjacent governed roots | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../data/README.md`](../../data/README.md) · [`../../pipelines/README.md`](../../pipelines/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 
 ---
 
@@ -70,7 +70,9 @@ This README documents the **shell boundary** and its adjacent contracts. It does
 | Directory path | `apps/explorer-web/` exists | **CONFIRMED** |
 | Current file inventory in this directory | `README.md` only | **CONFIRMED** |
 | Parent `apps/` listing | `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `workers/`, `README.md` | **CONFIRMED** |
+| Parallel UI doc surface | `web/README.md` exists and currently carries concrete UI contract guidance | **CONFIRMED** |
 | Deeper API-shaped doc surface | `apps/api/src/api/README.md` is also present | **CONFIRMED** |
+| Visible directory history | public commit history is visible on `2026-03-22` and `2026-04-02` | **CONFIRMED** |
 | Child manifests, runtime entrypoints, tests, fixtures | not proven from current public snapshot | **NEEDS VERIFICATION** |
 
 > [!NOTE]
@@ -82,7 +84,7 @@ This README documents the **shell boundary** and its adjacent contracts. It does
 |---|---|---|
 | Parent boundary | [`../README.md`](../README.md) | Defines `apps/` as the runtime-facing surface family |
 | Root posture | [`../../README.md`](../../README.md) | Establishes the repo-wide trust path, verification posture, and monorepo frame |
-| Parallel UI doctrine | [`../../web/README.md`](../../web/README.md) | Current UI-specific README with concrete UI contract guidance |
+| Parallel UI doctrine | [`../../web/README.md`](../../web/README.md) | Current UI-root README with concrete shell, contract, and local-dev guidance |
 | Sibling API boundary | [`../governed-api/README.md`](../governed-api/README.md) | App-level governed API boundary on current public `main` |
 | Deeper API contract surface | [`../api/src/api/README.md`](../api/src/api/README.md) | Contract-first `src/api` enforcement README on current public `main` |
 | Review-bearing sibling | [`../review-console/README.md`](../review-console/README.md) | Keeps review as a shell variation, not a detached product |
@@ -91,7 +93,21 @@ This README documents the **shell boundary** and its adjacent contracts. It does
 | Shared contracts | [`../../contracts/README.md`](../../contracts/README.md) | Trust-bearing payload families belong there, not as app-local copies |
 | Shared policy | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default and obligation logic stay outside React components |
 | Shared verification | [`../../tests/README.md`](../../tests/README.md) | E2E, accessibility, negative-path, and release/correction proof burdens |
+| Shared data / catalog lane | [`../../data/README.md`](../../data/README.md) | Truth-path zones and catalog closure stay upstream of app rendering |
+| Pipeline lane root | [`../../pipelines/README.md`](../../pipelines/README.md) | Source intake and packaging lanes should hand off review-bearing artifacts rather than browser-owned source logic |
 | Workflow surface | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public workflow lane is still README-only, so shell claims must stay verification-bounded |
+
+### Verified carry-forward from `../../web/README.md`
+
+Current public `main` still exposes a parallel UI-root README at `web/README.md`. Until the active branch explicitly consolidates or supersedes it, explorer-web should preserve the following already-documented UI rules.
+
+| Carry-forward rule | Public evidence | Explorer-web reading |
+|---|---|---|
+| React + TypeScript UI root is currently documented under `web/` | **CONFIRMED there** | Treat framework-specific subtree names here as **PROPOSED** until branch-local files confirm them |
+| Network I/O lives only in an explicit service layer | **CONFIRMED there** | Keep fetch logic out of components, hooks, and render helpers |
+| Focus is cite-or-abstain and returns `audit_ref` | **CONFIRMED there** | Keep explicit negative states and review hooks first-class |
+| `ViewStateV1`, `Citation`, and `Focus*V1` DTOs are named contracts | **CONFIRMED there** | Reuse or converge on existing vocabulary rather than inventing shell-local synonyms |
+| `citation.ref` should resolve to a human-readable evidence view in `≤ 2` API calls | **CONFIRMED there** | Treat evidence-resolution fan-out as an acceptance criterion, not a polish task |
 
 ### Boundary rule
 
@@ -140,7 +156,7 @@ This directory is **not** the place for convenience shortcuts that punch through
 |---|---|---|
 | Direct database access | Breaks governed API boundary | Governed API or shared backend packages |
 | Direct object-store reads for restricted assets | Bypasses policy and evidence mediation | Governed API / signed delivery path |
-| Direct access to RAW / WORK / QUARANTINE / unpublished data | Violates KFM truth path | Worker / data / review flows |
+| Direct access to RAW / WORK / QUARANTINE / unpublished data | Violates KFM truth path | [`../../data/`](../../data/) review path, workers, or governed delivery surfaces |
 | Policy decision logic in React components | Causes drift between UI and enforcement | [`../../policy/`](../../policy/) + backend enforcement |
 | Hidden alternate admin truth surface | Violates shell continuity and trust visibility | Role-gated shell variation |
 | Renderer-owned domain truth | Reverses KFM ordering | Keep meaning in contracts + metadata |
@@ -149,6 +165,7 @@ This directory is **not** the place for convenience shortcuts that punch through
 | Free-form AI assistant UX detached from evidence | Violates cite-or-abstain and bounded runtime outcomes | Governed Focus flow |
 | Ad hoc schema copies in the app | Creates parallel contract universes | Shared contracts directory |
 | “Helpful” direct fetches from components | Hides trust-boundary violations in presentation code | Explicit service layer only |
+| Browser-owned ingest or diff logic | Reverses the trust path and proof burden | [`../../pipelines/`](../../pipelines/) or workers |
 
 > [!WARNING]
 > This app must not quietly become the easiest place to bypass policy, evidence, or release context. In KFM, the last mile is part of publication, not cosmetic packaging.
@@ -253,7 +270,12 @@ sed -n '1,260p' apps/api/src/api/README.md 2>/dev/null || true
 sed -n '1,260p' apps/review-console/README.md 2>/dev/null || true
 sed -n '1,260p' apps/workers/README.md 2>/dev/null || true
 sed -n '1,260p' apps/cli/README.md 2>/dev/null || true
+sed -n '1,260p' data/README.md 2>/dev/null || true
+sed -n '1,260p' pipelines/README.md 2>/dev/null || true
 ```
+
+> [!NOTE]
+> The current parallel `web/README.md` documents a React + TypeScript UI root, a service-only network boundary, named view/citation/focus contracts, and an npm-based local startup path. Carry those forward deliberately; do not assume they have already migrated into `apps/explorer-web/` without branch-local proof.
 
 ### 3) Inventory contracts, policy surfaces, and tests that this shell depends on
 
@@ -288,15 +310,17 @@ Possible current outcomes:
 Use this only after confirming the real workspace manager and app path.
 
 ```bash
-# Examples only — adapt after verifying the workspace shape.
-pnpm install
-pnpm --filter explorer-web dev
+# Parallel /web root (CONFIRMED there, not here)
+cd web
+cp .env.example .env
+npm install
+npm run dev
 
-# or
-pnpm --dir apps/explorer-web dev
-
-# or
+# If apps/explorer-web becomes the active root, verify the actual package manager first.
 npm run dev --workspace apps/explorer-web
+
+# or
+pnpm --filter explorer-web dev
 ```
 
 [Back to top](#kfm-explorer-web)
@@ -448,6 +472,7 @@ The explorer should consume a compact set of shared contracts before broad UI ex
 | `ViewStateV1` | Rehydrate time range, bbox, active layers, story anchor, and replay-safe shell scope | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
 | `Citation` | Keep Focus and Story claims resolvable to human-readable evidence | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
 | `FocusQueryV1` / `FocusAnswerV1` | Render bounded Q&A with citations and `audit_ref` | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
+| `citation.ref` resolution budget | Keep evidence drill-through fast and inspectable | **CONFIRMED in parallel UI doc / NEEDS VERIFICATION here** |
 | `shell_state` | Local non-sensitive continuity state for mode, selection, compare anchors, and panel openness | **PROPOSED explorer-web-local naming** |
 | `evidence_drawer_payload` | Render inspectable support and provenance depth | **PROPOSED** |
 | `dossier_payload` | Durable object view for place/feature inspection | **PROPOSED** |
@@ -502,6 +527,7 @@ A lean, fixture-backed first wave is better than ambitious UI breadth with no tr
 - [ ] Verify whether shared contracts already exist under `contracts/` and update links accordingly.
 - [ ] Verify whether accessibility and reduced-motion checks are already wired in `tests/` or CI.
 - [ ] Verify whether any 3D route or experiment currently exists and, if so, gate it behind a burden rubric.
+- [ ] Confirm which upstream data and pipeline README links should stay visible here once the active branch settles.
 - [ ] Add relative links to actual ADRs/runbooks once present.
 
 ### Definition of done for the runtime
@@ -509,6 +535,7 @@ A lean, fixture-backed first wave is better than ambitious UI breadth with no tr
 - [ ] Explorer, Timeline, Dossier, Story, Focus, Compare, Export, and Review behave as one shell family.
 - [ ] Every consequential claim remains one interaction away from inspectable evidence.
 - [ ] Focus renders explicit `ANSWER / ABSTAIN / DENY / ERROR` outcomes with citations or explicit negative state.
+- [ ] Citation clicks resolve to human-readable evidence without a hidden request waterfall.
 - [ ] Exports preserve trust cues and do not silently drop provenance context.
 - [ ] Renderer and shell remain separate concerns.
 - [ ] No direct client access exists to canonical/internal stores.
@@ -530,7 +557,7 @@ What it does **not** prove is a deeper runtime subtree, manifests, scripts, test
 
 ### Why does this README still link to `../../web/README.md`?
 
-Because the repo still exposes a parallel UI-oriented README under `web/`, and it contains concrete UI contract guidance that this shell boundary should not silently drift away from.
+Because the repo still exposes a parallel UI-oriented README under `web/`, and it now documents concrete UI contract guidance: React + TypeScript, a service-only network boundary, cite-or-abstain Focus behavior, and named shell DTOs. This boundary should not silently drift away from that surface until convergence is explicit on the active branch.
 
 ### Why are there two API-shaped links?
 
