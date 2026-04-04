@@ -113,7 +113,7 @@ Within the broader repo, that family sits inside the `tests/e2e/` verification l
 
 Future executable cases, proof objects, archived drill evidence, and runner-local helpers that are specific to release proof belong under this directory **only when** the checked-out branch proves they exist.
 
-### Current local footprint
+### Current public footprint
 
 As of the current public branch view, the only confirmed file in this directory is:
 
@@ -158,6 +158,7 @@ Keep the following elsewhere:
 | Long-form operations manuals or release runbooks | `docs/` or `docs/runbooks/` once verified |
 | Runtime service code or release builders themselves | app/package/runtime locations, not `tests/e2e/` |
 | Scratch logs, ad hoc screenshots, manual exports | ephemeral local artifacts, not committed test surfaces |
+| Historical workflow names without current-branch proof | `.github/workflows/README.md` or review notes as signal, not release proof |
 
 [Back to top](#release-assembly)
 
@@ -166,10 +167,11 @@ Keep the following elsewhere:
 The following is safe to say from current public repo evidence:
 
 - `tests/e2e/release_assembly/` exists.
-- The public branch currently shows this directory as README-only.
+- The current public tree shows this directory as README-only.
 - `tests/e2e/` also contains `runtime_proof/` and `correction/`.
 - `tests/e2e/README.md` and `tests/README.md` both assign `release_assembly/` the release / promotion / publish-path proof role.
 - `/.github/workflows/` is documented, but current public `main` does not show checked-in workflow YAML there.
+- `.github/workflows/README.md` explicitly records historical delete-run workflow names such as `release-evidence.yml` and `promote-and-reconcile.yml`.
 - `/tests/` ownership is currently assigned to `@bartytime4life`.
 
 The following are **not** yet proven from current public evidence:
@@ -181,6 +183,10 @@ The following are **not** yet proven from current public evidence:
 - required checks
 - branch protection / merge-blocking settings
 - archived release receipts or drill evidence
+- current branch-local replacements, if any, for the deleted historical workflow names
+
+> [!NOTE]
+> Historical workflow names are useful branch-review clues, but they do **not** prove current checked-in YAML, current enforcement, or current merge blocking.
 
 > [!WARNING]
 > A placeholder directory can still carry a very real architectural burden.
@@ -236,7 +242,7 @@ sed -n '1,240p' tests/e2e/README.md
 sed -n '1,240p' tests/e2e/release_assembly/README.md
 
 sed -n '1,220p' .github/README.md
-sed -n '1,240p' .github/workflows/README.md
+sed -n '1,260p' .github/workflows/README.md
 sed -n '1,200p' .github/CODEOWNERS
 
 find .github/workflows -maxdepth 2 -type f | sort
@@ -250,6 +256,8 @@ grep -RIn \
   -e 'RuntimeResponseEnvelope' \
   -e 'EvidenceBundle' \
   -e 'CorrectionNotice' \
+  -e 'release-evidence.yml' \
+  -e 'promote-and-reconcile.yml' \
   -e 'audit_ref' \
   -e 'docs_gate' \
   -e 'projection.stale' \
@@ -261,8 +269,9 @@ grep -RIn \
 1. Confirm the directory still matches the public snapshot or explicitly record the branch delta.
 2. Read [`../README.md`](../README.md) and [`../../README.md`](../../README.md) first so family boundaries stay stable.
 3. Inspect [`../../../.github/README.md`](../../../.github/README.md) and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) before claiming any CI or promotion gate behavior.
-4. Check whether this branch introduces actual release fixtures, proof objects, or archived negative-path examples.
-5. Refuse to call a case “release assembly” unless it proves something about promotion, publishability, release evidence, or post-promotion lineage.
+4. Treat historical workflow names as archaeology, not proof, unless the checked-out branch now contains their successors.
+5. Check whether this branch introduces actual release fixtures, proof objects, or archived negative-path examples.
+6. Refuse to call a case “release assembly” unless it proves something about promotion, publishability, release evidence, or post-promotion lineage.
 
 ### Safe first executable target
 
@@ -375,6 +384,7 @@ flowchart LR
 | Directory exists | Yes | **CONFIRMED** |
 | Parent `e2e` family names this burden | Yes | **CONFIRMED** |
 | `tests/README.md` names this burden | Yes | **CONFIRMED** |
+| Historical release-related workflow names surface in public workflow docs | `release-evidence.yml` and `promote-and-reconcile.yml` are named as removed lanes | **CONFIRMED historical signal** |
 | Checked-in executable release-assembly suite | Not shown on public `main` | **UNKNOWN** |
 | Checked-in workflow YAML for release gating | Not shown on public `main` | **NEEDS VERIFICATION** |
 | Proof-pack examples committed in this directory | Not shown on public `main` | **UNKNOWN** |
@@ -392,6 +402,7 @@ flowchart LR
 - [ ] Make audit and release references visible enough to inspect during review.
 - [ ] Keep runtime-answer concerns in `runtime_proof/` unless they are specifically release-coupled.
 - [ ] Keep correction-propagation concerns in `correction/` unless they are specifically release-assembly prerequisites.
+- [ ] Keep historical workflow archaeology visibly separate from claims about current enforcement.
 - [ ] Keep quickstart commands runner-safe until the active harness is verified.
 - [ ] Leave `UNKNOWN` items visible when branch evidence is missing.
 
@@ -420,6 +431,10 @@ Correction is its own lifecycle burden. This directory may prove that a release 
 
 No. A deploy can succeed while promotion, publishability, documentation, policy linkage, or correction posture is still incomplete.
 
+### Do deleted workflow names prove current release gating?
+
+No. They are useful historical or platform signals only. Current checked-in YAML, rulesets, required checks, and branch-local wiring still need direct verification on the branch under review.
+
 ### What should the very first committed test here prove?
 
 Start with the smallest case that distinguishes **candidate** from **publishable release**. If a test cannot show that difference, it is probably in the wrong family.
@@ -434,10 +449,11 @@ Because this directory’s risk is overclaiming. A release-assembly lane that so
 
 ### Evidence basis used for this README revision
 
-This README was revised against two evidence layers:
+This README was revised against three evidence layers:
 
-1. the current public repo shape and adjacent README conventions, and
-2. the supplied March 2026 KFM doctrinal manuals that give this directory its release-proof, fail-closed, and correction-aware burden.
+1. the current public repo shape and adjacent README conventions,
+2. the current public workflow-lane documentation and visible delete-run history signals, treated as historical/platform clues rather than present-tree proof, and
+3. the supplied March 2026 KFM doctrinal manuals that give this directory its release-proof, fail-closed, and correction-aware burden.
 
 ### Direct verification still needed before stronger claims
 
@@ -449,6 +465,7 @@ Before upgrading this README from burden-first scaffold to implementation-report
 - whether release-proof objects or fixtures are already committed elsewhere
 - whether archived release, rollback, or correction drills exist
 - whether this branch introduces deeper subpaths under `tests/e2e/release_assembly/`
+- whether the historical release-related workflow names now map to current equivalents elsewhere in the checked-out branch
 
 ### Reconciliation rule if the checked-out branch differs
 
@@ -457,7 +474,8 @@ If the checked-out branch contains more than the public scaffold:
 1. keep the family boundary and burden language,
 2. update the tree and quickstart first,
 3. replace any `UNKNOWN` item with direct evidence,
-4. do **not** force code or files to mimic placeholder documentation paths.
+4. keep historical workflow signal clearly labeled as historical unless the branch proves current files,
+5. do **not** force code or files to mimic placeholder documentation paths.
 
 ### Maintenance note
 
