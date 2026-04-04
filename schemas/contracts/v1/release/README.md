@@ -8,67 +8,102 @@ owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS-VERIFICATION>
 updated: <YYYY-MM-DD-NEEDS-VERIFICATION>
 policy_label: <NEEDS-VERIFICATION>
-related: [schemas/README.md, schemas/contracts/README.md, schemas/contracts/v1/README.md, contracts/README.md, schemas/contracts/v1/release/release_manifest.schema.json]
+related: [schemas/README.md, schemas/contracts/README.md, schemas/contracts/v1/README.md, schemas/contracts/v1/release/release_manifest.schema.json, schemas/tests/README.md, tests/contracts/README.md, contracts/README.md, .github/workflows/README.md]
 tags: [kfm, schemas, contracts, release]
-notes: [owner inherited from current visible lane docs, schema-home authority unresolved, current public release README was scaffold-only at review time, local release_manifest.schema.json body is currently placeholder-only]
+notes: [current public release lane is real and already carries substantive boundary guidance, release_manifest.schema.json remains placeholder-only, schema-home authority remains unresolved, meta-block placeholders retained for unverified document-record fields]
 [/KFM_META_BLOCK_V2] -->
 
 # Release contracts
 
-Versioned boundary README for the `schemas/contracts/v1/release/` lane and the current public state of `release_manifest.schema.json`.
+Boundary README for the public `schemas/contracts/v1/release/` family lane and the current checked-in state of `release_manifest.schema.json`.
 
-> Status: experimental  
-> Doc status: draft  
-> Owners: `@bartytime4life` *(current strongest visible signal; narrower path ownership remains NEEDS VERIFICATION)*  
-> Path: `schemas/contracts/v1/release/README.md`  
-> Family file: `./release_manifest.schema.json`  
-> ![Status](https://img.shields.io/badge/status-experimental-informational?style=flat-square) ![Doc](https://img.shields.io/badge/doc-draft-orange?style=flat-square) ![Lane](https://img.shields.io/badge/lane-release-6f42c1?style=flat-square) ![Schema%20body](https://img.shields.io/badge/release__manifest-placeholder_%7B%7D-yellow?style=flat-square) ![Schema%20home](https://img.shields.io/badge/schema__home-NEEDS__VERIFICATION-red?style=flat-square) ![Truth](https://img.shields.io/badge/truth-evidence--first-blue?style=flat-square)  
-> Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> [!NOTE]
+> The KFM Meta Block v2 above keeps `doc_id`, `created`, `updated`, and `policy_label` as reviewable placeholders because those values were not directly confirmed from the current public repo surfaces inspected for this revision.
+> The impact block below describes the maturity of the `release/` surface itself.
+
+> **Status:** experimental  
+> **Doc status:** draft  
+> **Owners:** `@bartytime4life` *(via current public `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule was directly verified on public `main`)*  
+> **Path:** `schemas/contracts/v1/release/README.md`  
+> **Schema family:** `ReleaseManifest` *(with `ReleaseProofPack` kept visible as a doctrinally adjacent object, not yet directly verified here as a local schema file)*  
+> **Current schema body:** placeholder (`{}`)  
+> **Schema-home authority:** `UNKNOWN / NEEDS VERIFICATION`  
+> ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![doc](https://img.shields.io/badge/doc-draft-orange?style=flat-square) ![family](https://img.shields.io/badge/family-ReleaseManifest-2563eb?style=flat-square) ![schema body](https://img.shields.io/badge/schema_body-placeholder_%7B%7D-b91c1c?style=flat-square) ![fixtures](https://img.shields.io/badge/fixtures-scaffold__split-lightgrey?style=flat-square) ![workflow lane](https://img.shields.io/badge/workflows-README--only-lightgrey?style=flat-square) ![schema home](https://img.shields.io/badge/schema_home-UNKNOWN%20%2F%20NEEDS%20VERIFICATION-6b7280?style=flat-square)  
+> **Quick jumps:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> The `release/` family is publicly visible on `main`, but current repo docs still do **not** settle whether `schemas/` or `contracts/` is the authoritative machine-contract home. This README should behave as a boundary and inventory guide, not as a premature declaration that the authority question is closed.
+> Current public `main` shows this lane as **real and already documented**, but the checked-in machine contract is still only `./release_manifest.schema.json` with body `{}`. Treat this README as boundary truth and review guidance, not as proof that release-family contract enforcement is already mounted.
 
 > [!WARNING]
-> The local `release_manifest.schema.json` file is currently placeholder-only. A present filename is **not** proof of operational contract maturity.
+> Schema-home authority is still unresolved across adjacent docs. The visible `schemas/contracts/v1/` subtree is real; nearby contract and standards docs still stop short of declaring it the singular canonical machine-contract home.
+
+> [!TIP]
+> Two verification-adjacent paths matter here right now: a nested schema-side scaffold under `schemas/tests/fixtures/contracts/v1/{valid,invalid}/`, and a sharper root `tests/contracts/` family. Keep that split explicit so valid/invalid examples do not drift silently between two quiet homes.
 
 ---
 
 ## Scope
 
-`schemas/contracts/v1/release/` is the release-family lane inside the public `schemas/contracts/v1/` subtree. Its job is narrow but important: make the release-family surface legible, preserve unresolved schema-home authority, and keep contributors from confusing a visible scaffold with a completed trust-bearing contract.
+`schemas/contracts/v1/release/` is the release-family lane inside the live public `schemas/contracts/v1/` subtree.
 
-At KFM doctrine level, the release family sits on the closure seam between `CATALOG` and `PUBLISHED`. A `ReleaseManifest` is part of the object family that makes outward release inspectable rather than rhetorical. If release closure artifacts are missing, outward trust should fail closed rather than being implied.
+In KFM doctrine, this is the contract-family edge where outward release stops being implied and becomes inspectable. The release family sits on the closure seam between `CATALOG` and `PUBLISHED`: if release scope, proof, or correction posture cannot be reconstructed, outward trust should fail closed instead of being polished into a best-effort bluff.
 
-### Truth posture used here
+This README therefore has to do four jobs well:
 
-| Marker | Meaning in this README |
+1. record what the public tree actually contains,
+2. keep schema-home ambiguity visible rather than smoothing it away,
+3. prevent silent duplication between `schemas/` and `contracts/`, and
+4. state what still must be surfaced before stronger implementation claims become safe.
+
+### Truth labels used here
+
+| Label | How to read it in this file |
 |---|---|
-| **CONFIRMED** | Directly visible in the current public repo surface, or directly anchored in stable KFM doctrine already used by adjacent docs |
-| **INFERRED** | Strongly suggested by adjacent repo docs or doctrine, but not directly proven from this specific path |
-| **PROPOSED** | Safe next-step structure or maintenance guidance, not current-state fact |
-| **UNKNOWN** | Not directly verified from the reviewed public evidence |
-| **NEEDS VERIFICATION** | A specific value, ownership detail, authority decision, or enforcement claim must be checked before treating it as settled |
+| **CONFIRMED** | Directly visible in the current public repo tree or directly stated in adjacent public repo docs reopened for this revision |
+| **INFERRED** | Conservative interpretation that fits the visible tree and repeated KFM doctrine, but is not itself a checked-in authority decision |
+| **PROPOSED** | Repo-native next-step guidance that fits KFM doctrine and the current public tree, but is not asserted as current implementation fact |
+| **UNKNOWN** | Not verified strongly enough from current public evidence |
+| **NEEDS VERIFICATION** | A review placeholder important enough to block stronger claims until directly checked |
+
+[Back to top](#release-contracts)
+
+## Current public deltas
+
+| Delta | Why it matters here | Status |
+|---|---|---|
+| `schemas/contracts/v1/release/` is publicly visible with `README.md` and `release_manifest.schema.json` | This lane is real and reviewable on public `main`, not hypothetical | **CONFIRMED** |
+| `release_manifest.schema.json` still has body `{}` | Human boundary guidance is ahead of machine-encoded contract detail | **CONFIRMED** |
+| The family README is already substantive boundary guidance on current public `main` | This revision should strengthen and align the lane, not describe it as scaffold-only | **CONFIRMED** |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible and scaffold-only | A schema-side landing zone for examples exists, but it is not proof-bearing by itself | **CONFIRMED** |
+| `tests/contracts/README.md` exists as a sharper current contract-facing verification family | Canonical contract-proof examples should not drift away from the stronger root verification lane without an explicit repo decision | **CONFIRMED** |
+| `.github/workflows/` is still README-only on current public `main` | Merge-blocking validation depth remains unproven from checked-in YAML | **CONFIRMED** |
+| Root `contracts/README.md` still frames `contracts/` as the machine-readable contract backbone while `schemas/contracts/v1/` materially exists | Authority language and machine-file placement remain split across roots | **CONFIRMED / NEEDS VERIFICATION** |
 
 [Back to top](#release-contracts)
 
 ## Repo fit
 
-| Field | Value |
+### Path map
+
+| Dimension | Value |
 |---|---|
 | Path | `schemas/contracts/v1/release/README.md` |
-| Purpose | Boundary README for the release-family contract lane under the public `schemas/contracts/v1/` tree |
-| Immediate parent | [`../README.md`](../README.md) |
-| Parent boundary lane | [`../../README.md`](../../README.md) |
-| Parent schema root | [`../../../README.md`](../../../README.md) |
-| Stronger current working contract signal | [`../../../../contracts/README.md`](../../../../contracts/README.md) |
+| Local artifact | [`./release_manifest.schema.json`](./release_manifest.schema.json) |
+| Upstream family doc | [`../README.md`](../README.md) |
+| Boundary docs | [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) |
+| Adjacent doctrinal contract lane | [`../../../../contracts/README.md`](../../../../contracts/README.md) |
+| Nested schema-side fixture scaffold | [`../../../tests/README.md`](../../../tests/README.md) · [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) |
+| Root contract-proof lane | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) |
+| Broader verification / policy / workflow surfaces | [`../../../../tests/README.md`](../../../../tests/README.md) · [`../../../../policy/README.md`](../../../../policy/README.md) · [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
 | Standards routing context | [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) |
-| Adjacent enforcement surfaces | [`../../../../tests/README.md`](../../../../tests/README.md), [`../../../../policy/README.md`](../../../../policy/README.md), [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
-| Local schema file | [`./release_manifest.schema.json`](./release_manifest.schema.json) |
-| Audience | Maintainers working on release-family contract definition, schema-home reconciliation, fixture/test follow-through, and fail-closed release semantics |
+| Closest sibling families | [`../common/README.md`](../common/README.md) · [`../correction/README.md`](../correction/README.md) · [`../data/README.md`](../data/README.md) · [`../evidence/README.md`](../evidence/README.md) · [`../policy/README.md`](../policy/README.md) · [`../runtime/README.md`](../runtime/README.md) · [`../source/README.md`](../source/README.md) |
+| Audience | Maintainers working on release-family contract definition, schema-home reconciliation, fixture routing, policy adjacency, and fail-closed release semantics |
 
 ### Repo fit, in plain language
 
-This path is **not** where emitted release evidence should accumulate. It is where the **contract shape** for release closure belongs if this `schemas/`-side lane remains active. Right now, the safer reading is:
+This path is **not** where emitted release evidence should accumulate.
+
+It is where the **contract shape** for release closure belongs if this `schemas/`-side lane remains active. The safest current reading is still:
 
 1. the lane is real,
 2. the family name is real,
@@ -83,16 +118,17 @@ This path is **not** where emitted release evidence should accumulate. It is whe
 
 | Accepted here | Why it belongs here |
 |---|---|
-| Version-local README improvements | Keeps the family lane navigable and reviewable |
-| Family-level notes about `ReleaseManifest` and `ReleaseProofPack` semantics | Helps readers understand the release seam without inventing implementation |
+| Version-local README improvements | Keeps the family lane navigable, reviewable, and synchronized with sibling family docs |
+| Family-level notes about `ReleaseManifest` and `ReleaseProofPack` semantics | Helps readers understand the closure seam without inventing implementation |
 | Links to local family files already present in this directory | Keeps navigation local and predictable |
 | Authority-resolution notes specific to the release family | This lane sits inside an unresolved schema-home boundary |
-| Explicit status notes about placeholder bodies, missing fixtures, or missing gates | Useful because they reduce trust theater |
+| Explicit status notes about placeholder bodies, missing fixtures, missing gates, or split proof surfaces | Useful because they reduce trust theater |
 | Clearly labeled non-authoritative examples or pointers | Safe only when they do **not** masquerade as canonical release evidence |
+| Updates that reconcile tree snapshots across sibling `schemas/contracts/v1/*` lanes | Stale inventory language is itself a form of drift |
 
-### Minimum bar before this lane becomes strong
+### Expected inputs before this lane becomes strong
 
-If this lane is going to become more than scaffold, four things need to become visible together:
+If this family is going to become more than scaffold, four things need to become visible together:
 
 1. one authoritative schema-home decision,
 2. a substantive `release_manifest.schema.json` body,
@@ -103,13 +139,14 @@ If this lane is going to become more than scaffold, four things need to become v
 
 ## Exclusions
 
-This directory should not become a catch-all “release stuff” folder.
+This directory should stay narrow. It is a family boundary, not a catch-all “release stuff” folder.
 
 | Excluded from this path | Put it here instead | Why |
 |---|---|---|
 | Emitted release manifests, proof packs, signed bundles, rollback drill outputs | Release assembly / proof-pack lanes defined by release and operations docs *(path NEEDS VERIFICATION)* | This path is for contract shape, not emitted evidence |
 | Policy bundles, decision logic, or reviewer workflows | [`../../../../policy/`](../../../../policy/) | Policy must stay executable and reviewable |
-| Fixture inventories, regression packs, or runnable schema harnesses | [`../../../../tests/`](../../../../tests/) | Verification belongs with tests |
+| Contract-facing valid/invalid fixture packs meant to back real runners | [`../../../../tests/contracts/`](../../../../tests/contracts/) | The repo already exposes a sharper contract-proof lane |
+| Nested schema-side scaffolds treated as canonical proof by default | Keep them explicitly scaffold-only under [`../../../tests/README.md`](../../../tests/README.md), or retire them once fixture authority is settled | Prevents a second quiet fixture home |
 | Merge-gate workflow YAML and validator orchestration | [`../../../../.github/workflows/`](../../../../.github/workflows/) | Enforcement belongs with workflow inventory |
 | Runtime DTOs, API handlers, shell payload renderers | App / runtime implementation surfaces | Consumers should depend on contracts, not live inside them |
 | Competing canonical copies of the same trust-bearing family in both `schemas/` and `contracts/` | Resolve schema authority first | Parallel schema law creates drift |
@@ -121,22 +158,7 @@ This directory should not become a catch-all “release stuff” folder.
 
 ## Directory tree
 
-### Parent family map
-
-```text
-schemas/contracts/v1/
-├── README.md
-├── common/
-├── correction/
-├── data/
-├── evidence/
-├── policy/
-├── release/
-├── runtime/
-└── source/
-```
-
-### Local zoom-in
+### Current local tree
 
 ```text
 schemas/contracts/v1/release/
@@ -144,12 +166,32 @@ schemas/contracts/v1/release/
 └── release_manifest.schema.json
 ```
 
+### Adjacent verification surfaces worth reviewing with this lane
+
+```text
+schemas/tests/
+└── fixtures/
+    └── contracts/
+        └── v1/
+            ├── valid/
+            │   └── README.md
+            └── invalid/
+                └── README.md
+
+tests/contracts/
+└── README.md
+
+.github/workflows/
+└── README.md
+```
+
 ### Reading rule for the tree
 
 - Tree presence is **CONFIRMED**.
 - Tree presence is **not** the same thing as substantive release-contract maturity.
 - The local schema file exists, but current public evidence still shows a placeholder body.
-- No separate `ReleaseProofPack` schema file was directly verified in this directory during review.
+- Nested schema-side fixture scaffolds are visible, but they are still scaffold-only.
+- No separate `ReleaseProofPack` schema file was directly verified in this local lane during review.
 
 [Back to top](#release-contracts)
 
@@ -159,18 +201,21 @@ Use this path as an **inspection lane first**.
 
 ```bash
 # 1) Re-open the local release family
-sed -n '1,220p' schemas/contracts/v1/release/README.md
+sed -n '1,240p' schemas/contracts/v1/release/README.md
 cat schemas/contracts/v1/release/release_manifest.schema.json
 
-# 2) Re-open the boundary docs that govern how this lane should be read
-sed -n '1,260p' schemas/contracts/v1/README.md
-sed -n '1,260p' schemas/contracts/README.md
+# 2) Re-open the authority chain that governs how this lane should be read
 sed -n '1,260p' schemas/README.md
+sed -n '1,260p' schemas/contracts/README.md
+sed -n '1,260p' schemas/contracts/v1/README.md
 sed -n '1,260p' contracts/README.md
+sed -n '1,240p' docs/standards/README.md
 
-# 3) Inspect adjacent trust surfaces before editing the schema body
-find tests -maxdepth 4 -type f | sort
-find policy -maxdepth 4 -type f | sort
+# 3) Inspect both visible proof-adjacent paths before editing the schema body
+sed -n '1,240p' schemas/tests/README.md
+sed -n '1,260p' tests/contracts/README.md
+find schemas/tests -maxdepth 6 -type f | sort
+find tests/contracts -maxdepth 6 -type f | sort
 find .github/workflows -maxdepth 3 -type f | sort
 ```
 
@@ -179,8 +224,9 @@ find .github/workflows -maxdepth 3 -type f | sort
 1. Re-read the parent `schemas/` and `contracts/` boundary docs.
 2. Confirm whether an ADR or equivalent repo decision has resolved schema-home authority.
 3. Inspect the raw body of `release_manifest.schema.json` instead of assuming it is substantive.
-4. Check for fixtures, policy references, and workflow gates that prove the file matters operationally.
-5. Only then decide whether the change belongs here, in `contracts/`, or in a non-schema lane.
+4. Check both `schemas/tests/` and `tests/contracts/` before deciding where valid/invalid release examples belong.
+5. Verify whether workflow evidence exists or keep any enforcement claims marked `UNKNOWN / NEEDS VERIFICATION`.
+6. Only then decide whether the change belongs here, in `contracts/`, or in a non-schema lane.
 
 > [!TIP]
 > If you cannot answer “which directory is authoritative?” before editing a trust-bearing family, pause there first. Silent duplication is harder to unwind than a deliberate delay.
@@ -189,14 +235,14 @@ find .github/workflows -maxdepth 3 -type f | sort
 
 ## Usage
 
-### Recommended use right now
+### Current default mode: boundary-first
 
 Use this README as:
 
 - a release-family index for the current public `schemas/contracts/v1/release/` lane,
 - a warning surface against schema-home drift,
 - a contributor checkpoint before expanding `release_manifest.schema.json`, and
-- a reminder that emitted release evidence is downstream of closure, policy, and review.
+- a reminder that emitted release evidence is downstream of closure, policy, review, and visible correction.
 
 ### What this family is supposed to carry doctrinally
 
@@ -206,29 +252,30 @@ The release-family contract should eventually make space for at least these conc
 
 - version and release references,
 - catalog linkage,
-- policy and review linkage,
-- docs/accessibility gate linkage where required,
+- decision and review linkage,
+- docs / accessibility gate linkage where required,
 - rollback or correction posture,
-- profile/version metadata, and
+- outward profile or version linkage, and
 - proof bundle planning.
 
-### What this local lane currently proves
+### If you are strengthening `release_manifest.schema.json`
 
-Very little — and that honesty matters.
+Do all of the following together:
 
-Right now this local family lane proves only that:
+1. Replace the placeholder body with substantive JSON Schema content.
+2. Update this README’s current-state tables in the same change.
+3. Add or link valid and invalid fixtures.
+4. Link or surface the validation path.
+5. Re-check whether the lane is still boundary-only or has crossed into enforcement-bearing territory.
 
-- the directory exists,
-- the README exists,
-- the schema filename exists, and
-- the repo has started exposing first-wave family names on the `schemas/` side.
+### Example and validation routing
 
-It does **not** yet prove:
+There are currently **two** example-adjacent paths in play, and they should not be blurred:
 
-- substantive schema fields,
-- fixture-backed validation,
-- release-proof assembly automation, or
-- merge-blocking enforcement for this family.
+- `schemas/tests/fixtures/contracts/v1/{valid,invalid}/` is a **visible nested schema-side scaffold**.
+- `tests/contracts/` is the **sharper current contract-facing verification family**.
+
+Until the repo explicitly settles fixture-home and schema-home authority, any example or validation snippet in this README should stay clearly labeled as **illustrative**, **non-authoritative**, **generated**, or **mirror** where appropriate.
 
 ### Illustrative validation shape
 
@@ -260,10 +307,11 @@ flowchart LR
     E --> H[RuntimeResponseEnvelope behavior<br/>public/steward read-paths]
     E --> I[CorrectionNotice<br/>post-release change]
 
-    J[schemas/contracts/v1/release/] --> E
+    J[schemas/contracts/v1/release/<br/>this family lane] --> E
     J --> K[release_manifest.schema.json<br/>current local file]
 
-    L[tests/] --> M[fixtures and validators]
+    S[schemas/tests/<br/>nested schema-side scaffold] --> M[illustrative valid/invalid examples]
+    T[tests/contracts/<br/>root contract-proof lane] --> M
     N[policy/] --> O[decision logic]
     P[.github/workflows/] --> Q[merge gates]
 
@@ -273,6 +321,8 @@ flowchart LR
 
     style J fill:#e8f1fb,stroke:#3b82f6,color:#111
     style K fill:#fff3cd,stroke:#b58900,color:#333
+    style S fill:#eef7ee,stroke:#2e8b57,color:#111
+    style T fill:#eef2ff,stroke:#4f46e5,color:#111
     style Q fill:#fde2e2,stroke:#c0392b,color:#111
 ```
 
@@ -280,35 +330,46 @@ flowchart LR
 
 The diagram is intentionally conservative:
 
-- `schemas/contracts/v1/release/` is shown as a **real** public lane,
+- `schemas/contracts/v1/release/` is shown as a **real** public family lane,
 - `ReleaseManifest` is shown as a **closure-plane** dependency,
-- `ReleaseProofPack`, projection builds, runtime behavior, and correction are shown as **adjacent obligations**, not as already-proven local implementation, and
-- tests, policy, and workflows remain separate surfaces that must exist before this lane can honestly be called enforced.
+- `ReleaseProofPack`, projection builds, runtime behavior, and correction are shown as **adjacent obligations**, not as already-proven local implementation,
+- the nested schema-side scaffold and the root contract-proof lane are shown as **separate** proof-adjacent paths, and
+- policy and workflows remain separate surfaces that must exist before this lane can honestly be called enforced.
 
 [Back to top](#release-contracts)
 
-## Tables
+## Reference tables
 
 ### Current verified snapshot
 
-| Surface | Current visible state | Status | Why it matters |
-|---|---|---|---|
-| `schemas/contracts/v1/release/` | Directory present | **CONFIRMED** | The family lane is real on the public branch |
-| `README.md` | Present, but current public content is scaffold-only | **CONFIRMED** | This file needs real boundary guidance, not placeholder text |
-| `release_manifest.schema.json` | Present; raw body currently `{}` | **CONFIRMED** | The filename exists, but the contract body is still placeholder-only |
-| Separate `ReleaseProofPack` schema file in this local lane | Not directly verified here | **UNKNOWN / NEEDS VERIFICATION** | The doctrinal family is paired, but the local file inventory is not |
-| Fixtures linked to the release family | Not directly verified from this path | **UNKNOWN** | Without fixtures, contract claims are still documentary |
-| Merge-blocking workflow YAML proving release-family enforcement | Not directly verified from this path | **UNKNOWN** | Enforcement cannot be assumed from directory presence |
+| Item | Status | What the repo visibly shows |
+|---|---|---|
+| Family directory exists on public `main` | **CONFIRMED** | `schemas/contracts/v1/release/` is present |
+| Family README exists | **CONFIRMED** | `README.md` exists here and already carries substantive boundary guidance |
+| Local schema file exists | **CONFIRMED** | `release_manifest.schema.json` is checked in here |
+| Local schema body is implementation-ready | **CONFIRMED placeholder only** | Current checked-in body is still `{}` |
+| Wider `schemas/contracts/v1/` lane exists | **CONFIRMED** | The parent lane is materially present with eight family subdirectories |
+| Nested schema-side fixture scaffold exists | **CONFIRMED scaffold only** | `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible, but current public leaves remain README-only |
+| Root contract-facing verification family exists | **CONFIRMED** | `tests/contracts/README.md` is present as a sharper contract-proof lane |
+| Current public workflow lane proves checked-in merge-blocking validation YAML for this family | **UNKNOWN** | Public `.github/workflows/` remains documentary unless reverified elsewhere |
+| Separate local `ReleaseProofPack` schema file exists | **UNKNOWN / NEEDS VERIFICATION** | The doctrinal family is paired, but the local file inventory is not |
+| Authoritative schema home is reconciled across docs | **NEEDS VERIFICATION** | Adjacent docs still show unresolved authority between `schemas/` and root `contracts/` |
 
-### Release-family contract load
+### `ReleaseManifest` starter concern map
 
-| Artifact or dependency | Plane / seam | What this path should help define | Fail-closed consequence if absent |
-|---|---|---|---|
-| `ReleaseManifest` | Closure, `CATALOG -> PUBLISHED` | Public-safe release scope, release linkage, policy/review linkage, rollback/correction posture | No trusted outward release |
-| `ReleaseProofPack` | Closure | Proof package for releases where materiality or audit burden requires more than the manifest alone | Publication remains rhetorical |
-| `ProjectionBuildReceipt` | Delivery | Release linkage for PMTiles, vectors, exports, search, graph, and other derived surfaces | Derived outputs must go stale-visible, rebuild, or be withheld |
-| `RuntimeResponseEnvelope` behavior | Runtime | Public/steward read-paths should reconstruct release scope instead of bluffing | No fallback fluency |
-| `CorrectionNotice` | Closure -> Delivery -> Runtime | Visible lineage when a release is narrowed, superseded, withdrawn, or corrected | No silent overwrite |
+> [!NOTE]
+> This is a **starter concern map**, not a statement of current checked-in schema fields.
+> It reflects doctrinal minimums carried by the release family in the attached KFM corpus and should not be mistaken for a verified local JSON Schema body.
+
+| Concern area | Why it belongs in the release family | Current local status |
+|---|---|---|
+| Version refs | Outward release scope should be pinned to explicit version identity | Not encoded locally yet; schema body is `{}` |
+| Catalog refs | Release scope should resolve back to outward catalog closure | Not encoded locally yet; README only |
+| Decision / review refs | Publish state should remain connected to decision and review objects | Not encoded locally yet; README only |
+| Docs / accessibility gate | Material public release may require visible release-quality checks beyond raw data presence | Not encoded locally yet; README only |
+| Rollback / correction posture | Release should remain retractable, narrowable, or supersedable without silent overwrite | Not encoded locally yet; README only |
+| Profile versions | Public-safe release should stay reconstructable against declared outward profiles | Not encoded locally yet; README only |
+| Bundle plan / proof-pack planning | Higher-materiality releases need a path from manifest to proof | Not encoded locally yet; README only |
 
 ### Release family versus emitted evidence
 
@@ -317,7 +378,7 @@ The diagram is intentionally conservative:
 | `release_manifest.schema.json` | **Yes** | It is the local machine-contract file |
 | This README | **Yes** | It explains the family boundary and current state |
 | A published release manifest instance | **No** | That is emitted evidence, not schema source |
-| A release proof pack bundle | **No** | That is downstream release evidence |
+| A release proof-pack bundle | **No** | That is downstream release evidence |
 | Signed attestation bundles | **No** | They belong with release proof, audit, or provenance surfaces |
 | Rollback drill output | **No** | It is operational evidence, not family schema law |
 
@@ -333,6 +394,7 @@ The diagram is intentionally conservative:
 - [ ] `release_manifest.schema.json` placeholder state is called out directly
 - [ ] Relative links point to the actual adjacent repo docs
 - [ ] The doc distinguishes schema source from emitted release evidence
+- [ ] The split between nested schema-side fixture scaffolds and the root contract-proof lane remains explicit
 - [ ] The Mermaid diagram still reflects current boundary conditions
 - [ ] No section implies fixtures, policy bundles, or workflow gates that were not verified
 - [ ] Future authority resolution can be merged in without rewriting the whole file
@@ -341,10 +403,10 @@ The diagram is intentionally conservative:
 
 - [ ] Resolve schema-home authority explicitly
 - [ ] Replace placeholder `{}` with a substantive `ReleaseManifest` schema body
+- [ ] Decide whether `ReleaseProofPack` receives a separate schema, shared profile, or remains implied by release docs
 - [ ] Add at least one valid and one invalid release-family fixture
 - [ ] Link the first real validator command and workflow file
-- [ ] Decide whether `ReleaseProofPack` gets a separate schema, shared profile, or remains implied by release docs
-- [ ] Update parent `schemas/` docs if their tree snapshot no longer matches public reality
+- [ ] Update parent and sibling `schemas/contracts/v1/*` docs if their tree snapshot or authority language no longer matches public reality
 
 [Back to top](#release-contracts)
 
@@ -358,9 +420,13 @@ The diagram is intentionally conservative:
 
 No. The local raw file is currently placeholder-only. The filename is meaningful; the body is not yet substantive.
 
-### Why talk about `ReleaseProofPack` if this directory only shows `release_manifest.schema.json`?
+### Why keep `ReleaseProofPack` visible if this directory only shows `release_manifest.schema.json`?
 
 Because the doctrinal object family is paired: release closure includes the manifest and, where significance requires it, a proof package. This README should keep that adjacency visible even before the local file layout is complete.
+
+### Where should valid and invalid examples go right now?
+
+Treat that as **open routing**, not settled law. A nested schema-side scaffold is visible under `schemas/tests/fixtures/contracts/v1/{valid,invalid}/`, and a sharper contract-proof family is visible under `tests/contracts/`. Do not silently make either path canonical without an explicit repo decision.
 
 ### Should emitted release manifests or proof bundles be stored here?
 
@@ -379,10 +445,17 @@ No. This path is for the **contract definition**, not the emitted release eviden
 <details>
 <summary><strong>Observed public files and open verification items</strong></summary>
 
-### Observed directly
+### Observed directly in this lane
 
 - `./README.md`
 - `./release_manifest.schema.json`
+
+### Observed directly in adjacent proof surfaces
+
+- `schemas/tests/README.md`
+- `schemas/tests/fixtures/contracts/v1/README.md`
+- `tests/contracts/README.md`
+- `.github/workflows/README.md`
 
 ### Current local schema body
 
@@ -401,9 +474,9 @@ No. This path is for the **contract definition**, not the emitted release eviden
 ### Contributor checklist before editing this family
 
 1. Re-open `schemas/README.md`, `schemas/contracts/README.md`, `schemas/contracts/v1/README.md`, and `contracts/README.md`.
-2. Confirm whether schema-home authority is still unresolved.
-3. Inspect the raw body of `release_manifest.schema.json`.
-4. Check `tests/`, `policy/`, and `.github/workflows/` for enforcement surfaces.
+2. Re-open `schemas/tests/README.md`, `tests/contracts/README.md`, and `.github/workflows/README.md`.
+3. Confirm whether schema-home and fixture-home authority are still unresolved.
+4. Inspect the raw body of `release_manifest.schema.json`.
 5. Update this README in the same change if public-tree reality or authority posture changes.
 
 </details>
