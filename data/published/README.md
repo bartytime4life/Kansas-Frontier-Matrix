@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
-related: [README.md, data/README.md, data/processed/README.md, data/catalog/README.md, data/receipts/README.md, data/proofs/README.md]
+related: [README.md, data/README.md, data/processed/README.md, data/catalog/README.md, data/catalog/stac/README.md, data/receipts/README.md, data/proofs/README.md, .github/CODEOWNERS, .github/workflows/README.md, tests/README.md]
 tags: [kfm, data, published]
-notes: [current public main confirms data/published exists with README only; doc_id, created, updated, and policy_label need repo-side verification before merge]
+notes: [public-main inspection confirms `data/published/` exists and currently shows `README.md` only; `doc_id`, `created`, `updated`, and `policy_label` still need repo-side verification before merge]
 [/KFM_META_BLOCK_V2] -->
 
 # Published Release Scope (`data/published/`)
@@ -21,7 +21,7 @@ Release-backed, governed materialization surface for KFM public-safe or steward-
 > **Doc state:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path target:** `data/published/README.md`  
-> **Repo fit:** upstream [`../README.md`](../README.md), [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md) · downstream [`../../apps/`](../../apps/), [`../../tests/`](../../tests/), [`../../docs/`](../../docs/)  
+> **Repo fit:** upstream [`../README.md`](../README.md), [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../catalog/stac/README.md`](../catalog/stac/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md) · shared control [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../tests/README.md`](../../tests/README.md) · downstream [`../../apps/`](../../apps/), [`../../docs/README.md`](../../docs/README.md)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-directory__README-blue) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0a7d5a) ![surface](https://img.shields.io/badge/surface-published-6f42c1) ![publication](https://img.shields.io/badge/publication-state--first-0a7d5a) ![trust](https://img.shields.io/badge/trust-release--backed-5b4bdb) ![tree](https://img.shields.io/badge/public__main-published%2FREADME--only-lightgrey)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-tree snapshot](#current-public-tree-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -31,9 +31,9 @@ Release-backed, governed materialization surface for KFM public-safe or steward-
 > In KFM, publication is a **governed trust state first**. This directory is the optional materialized surface for scope that is already release-backed, catalog-closed, policy-shaped, and fit to reference from governed APIs.
 
 > [!NOTE]
-> This revision is **public-tree-grounded** rather than continuity-only.
+> This README is intentionally **public-tree-grounded**.
 >
-> Current public `main` confirms that `data/published/` exists and that `README.md` is its only visible child. The broader `data/` tree already includes `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/`. Deeper `published/` conventions still remain **UNKNOWN / NEEDS VERIFICATION** until a checked-out branch or richer subtree is inspected directly.
+> Current public `main` confirms that `data/published/` exists and that `README.md` is its only visible child. The broader `data/` tree already includes `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/`. Deeper `published/` conventions still remain **UNKNOWN / NEEDS VERIFICATION** until the checked-out branch is inspected directly.
 
 | At a glance | Working rule |
 |---|---|
@@ -55,7 +55,8 @@ This README exists to make one boundary easy to review in GitHub:
 - what may be materialized here,
 - what must remain upstream,
 - what stays adjacent instead of collapsing into this directory,
-- and what still needs explicit verification before it is documented as current branch fact.
+- what current public `main` actually proves,
+- and what still needs explicit verification before it is documented as branch fact.
 
 ### Evidence posture used in this README
 
@@ -63,12 +64,12 @@ This README exists to make one boundary easy to review in GitHub:
 |---|---|---|
 | `data/published/` exists on current public `main` | **CONFIRMED** | Safe to treat as a live repo path. |
 | `data/published/README.md` is the only visible child in this directory on current public `main` | **CONFIRMED** | Avoid inventing deeper live bundle layout. |
-| `data/` currently contains sibling lifecycle directories `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/` | **CONFIRMED** | These are no longer merely starter-shape proposals on the public tree. |
+| `data/` currently contains sibling lifecycle directories `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/` | **CONFIRMED** | These are current public-tree facts, not just starter-shape proposals. |
 | `data/catalog/` currently contains `dcat/`, `stac/`, and `prov/` | **CONFIRMED** | Catalog closure is already a distinct sibling surface. |
-| `PUBLISHED` is the governed public- or steward-facing release scope | **CONFIRMED doctrine** | Safe to treat as KFM design law. |
+| `PUBLISHED` is the governed outward release scope in KFM doctrine | **CONFIRMED doctrine** | Safe to treat as KFM design law. |
 | `data/published/` is an optional **materialized** scope and publication remains **state first** | **INFERRED from doctrine + adjacent docs** | Strong doctrinal reading; exact local bundle conventions still need branch inspection. |
-| `public/` and `steward/` lanes under `data/published/` | **PROPOSED** | Useful conservative starter split, not current public-main fact. |
-| Bundle-specific manifests or pointer files already checked in under `data/published/` | **UNKNOWN / NEEDS VERIFICATION** | Do not imply filenames or contents that were not seen in the current public tree. |
+| `public/` and `steward/` lanes under `data/published/` | **PROPOSED** | Useful starter split, not current public-main fact. |
+| Bundle-specific manifests or pointer files already checked in under `data/published/` | **UNKNOWN / NEEDS VERIFICATION** | Do not imply filenames or contents that were not directly seen in the current public tree. |
 
 [Back to top](#published-release-scope-datapublished)
 
@@ -92,9 +93,11 @@ This README exists to make one boundary easy to review in GitHub:
 | Upstream | [`../proofs/README.md`](../proofs/README.md) | **CONFIRMED** | Release manifests, proof packs, attestations, and correction trace should remain explicit. |
 | Shared control | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Publication-facing trust objects and machine-readable shapes should stay reviewable and explicit. |
 | Shared control | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Publishability, rights, sensitivity, and deny-by-default decisions should remain executable. |
-| Downstream | [`../../apps/`](../../apps/) | **CONFIRMED path / UNKNOWN depth** | Governed APIs and trust-visible surfaces may reference published scope, but storage is not the public contract. |
-| Downstream | [`../../tests/`](../../tests/) | **CONFIRMED path / UNKNOWN depth** | Publication checks, correction-path tests, and proof drills should verify this surface. |
-| Downstream | [`../../docs/`](../../docs/) | **CONFIRMED path / UNKNOWN depth** | Runbooks, ADRs, and release notes should explain behavior-significant changes here. |
+| Shared control | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** | Current public ownership of `/data/` resolves to `@bartytime4life`. |
+| Shared control | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED README surface / UNKNOWN workflow depth** | Workflow documentation exists, but current public `main` shows the workflow lane as `README.md`-only. |
+| Shared control | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Verification is a governed surface in this repo, not a generic QA bucket. |
+| Downstream | [`../../apps/`](../../apps/) | **CONFIRMED path / UNKNOWN depth** | Governed APIs and trust-visible product surfaces may reference published scope, but storage is not the public contract. |
+| Downstream | [`../../docs/README.md`](../../docs/README.md) | **CONFIRMED** | Behavior-significant changes here should be legible in runbooks, standards, and architecture docs. |
 | Upstream root | [`../../README.md`](../../README.md) | **CONFIRMED** | Root repo posture keeps the trust membrane and verification-first reading rule visible. |
 
 ### Repo-fit summary
@@ -116,7 +119,7 @@ Only material that is already admissible for outward use should land here.
 | Accepted input | Status | Why it belongs here | What should already exist upstream |
 |---|---|---|---|
 | Release-backed public-safe materialized scope | **INFERRED** | This is the most natural role of the directory. | `DatasetVersion`, catalog closure, release evidence, policy-safe scope |
-| Steward-facing published scope where policy allows | **CONFIRMED doctrine / PROPOSED foldering** | KFM doctrine explicitly allows published scope to be public or steward-facing. | Review or policy decisions, release evidence, scope restrictions |
+| Role-limited outward scope where policy allows | **INFERRED** | KFM doctrine repeatedly separates public-safe, generalized, withheld, and review-bearing states. | Review or policy decisions, release evidence, scope restrictions |
 | Lightweight access copies or outward bundles that retain release linkage | **PROPOSED** | Outward consumption may benefit from stable materialization when lineage stays intact. | Stable identifiers, catalog refs, evidence linkage |
 | Human-readable landing docs for a published bundle or lane | **PROPOSED** | GitHub review improves when bundle intent, caveats, and scope are visible beside the materialized surface. | Release context, caveats, sensitivity posture |
 | Public-safe exemplars tied to a published release | **INFERRED** | The parent `data/` README already allows public-safe exemplars as repo-facing data material. | Release or proof linkage, public-safe review |
@@ -161,6 +164,8 @@ The following do **not** belong here as normal practice.
 | `data/published/README.md` is the only visible child | The doc should stay strong on boundaries and weak on invented subtree detail. |
 | `data/` also shows `catalog/`, `processed/`, `proofs/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/` | Release truth, process memory, and intake surfaces are already distinct siblings. |
 | `data/catalog/` shows `dcat/`, `stac/`, and `prov/` | Catalog closure is materially separate from published storage. |
+| `.github/workflows/` currently shows `README.md` only | Public workflow docs exist, but checked-in workflow automation for this surface is not evidenced on public `main`. |
+| `tests/` currently shows `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/` | Repo-level verification families exist even though published-surface coverage still needs direct inspection. |
 | Public `CODEOWNERS` maps `/data/` to `@bartytime4life` | An owner signal exists for this lane even though finer-grained subpath ownership is not yet visible here. |
 
 [Back to top](#published-release-scope-datapublished)
@@ -319,7 +324,7 @@ flowchart LR
 |---|---|---|
 | Is the artifact backed by a release or equivalent proof object? | It may be eligible for materialization. | Stop; it is too early for `data/published/`. |
 | Is the relevant catalog closure already in place? | Outward discoverability and lineage can stay legible. | Stop; closure belongs upstream first. |
-| Is the scope public-safe or steward-safe at the intended precision? | Materialize into the matching outward lane. | Generalize, narrow, quarantine, or hold. |
+| Is the scope public-safe or role-safe at the intended precision? | Materialize into the matching outward lane. | Generalize, narrow, quarantine, or hold. |
 | Does the artifact retain release and evidence linkage? | It remains inspectable enough to serve. | Do not publish convenience copies. |
 | Is the correction path clear? | Visible supersession, withdrawal, or replacement remains possible. | Do not make outward meaning harder to reverse. |
 
@@ -330,7 +335,8 @@ flowchart LR
 | Directory presence | `data/published/` exists | None for path presence itself |
 | Visible child inventory | `README.md` only | Any deeper branch-only subtree or ignored/generated artifacts |
 | Sibling release-truth lanes | `processed/`, `catalog/`, `receipts/`, and `proofs/` are present | Actual emitted artifact inventories, validators, and proofs |
-| Workflow pressure | A workflows README exists | Merge-blocking YAMLs, required checks, environment approvals, and promotion automation |
+| Workflow pressure | A workflows README exists, but the directory is README-only | Merge-blocking YAMLs, required checks, environment approvals, and promotion automation |
+| Verification pressure | Repo-level test families exist | Published-surface-specific tests, fixtures, and proof drills |
 | Ownership signal | `/data/` is owned by `@bartytime4life` in public `CODEOWNERS` | Finer-grained subpath owners or additional reviewer rules |
 
 [Back to top](#published-release-scope-datapublished)
@@ -343,6 +349,7 @@ flowchart LR
 - [ ] Verify that any artifact materialized here retains release, catalog, and evidence linkage.
 - [ ] Verify that no RAW, WORK, QUARANTINE, or unreleased PROCESSED candidates are parked here.
 - [ ] Verify that outward consumption still routes through governed APIs rather than direct client-to-storage reads.
+- [ ] Verify whether any release-proof or correction-path tests already exercise this surface.
 - [ ] Add or wire tests if this surface becomes release-bearing in practice.
 
 ### Definition of done
