@@ -1,20 +1,48 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<TODO-VERIFY-UUID>
+title: common
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: <TODO-VERIFY-CREATED-DATE>
+updated: 2026-04-04
+policy_label: <TODO-VERIFY-POLICY-LABEL>
+related: [../../../README.md, ../../README.md, ../README.md, ../runtime/README.md, ../evidence/README.md, ../policy/README.md, ../release/README.md, ../source/README.md, ../data/README.md, ../correction/README.md, ../../vocab/README.md, ../../../tests/fixtures/contracts/v1/README.md, ../../../../contracts/README.md, ../../../../docs/standards/README.md, ../../../../tests/README.md, ../../../../tests/contracts/README.md, ../../../../.github/workflows/README.md, ./header_profile.schema.json]
+tags: [kfm, schemas, contracts, common]
+notes: [Target path inferred from the supplied common-lane draft; doc_id, created, and policy_label need repo-backed verification; current public main shows a substantive README plus placeholder header_profile.schema.json; schema-home authority between contracts and schemas remains unresolved.]
+[/KFM_META_BLOCK_V2] -->
+
 # `common`
+
 Shared contract primitives and header-profile guidance for the `schemas/contracts/v1/common/` lane.
 
+> [!NOTE]
+> The KFM Meta Block V2 above uses reviewable placeholders for `doc_id`, `created`, and `policy_label` because those values were not directly confirmed from the current public repo surfaces inspected for this revision.
+
 > [!IMPORTANT]
-> **Status:** experimental · **Doc status:** draft · **Owners:** `@bartytime4life` *(via `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule is separately verified on public `main`)* · **Path:** `schemas/contracts/v1/common/README.md`
+> **Status:** experimental  
+> **Doc status:** draft  
+> **Owners:** `@bartytime4life` *(via public `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule was directly verified on current public `main`)*  
+> **Path:** `schemas/contracts/v1/common/README.md`  
 >
-> **Repo fit:** child lane of [`../README.md`](../README.md) inside the live `schemas/contracts/v1/` inventory; broader boundary docs in [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../../contracts/README.md`](../../../../contracts/README.md), and [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md); sibling family lanes in [`../runtime/README.md`](../runtime/README.md), [`../evidence/README.md`](../evidence/README.md), [`../policy/README.md`](../policy/README.md), [`../release/README.md`](../release/README.md), [`../source/README.md`](../source/README.md), [`../data/README.md`](../data/README.md), and [`../correction/README.md`](../correction/README.md); vocab lane in [`../../vocab/README.md`](../../vocab/README.md); fixture landing zone in [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md)
+> ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
+> ![lane](https://img.shields.io/badge/lane-common-blue?style=flat-square)
+> ![schema](https://img.shields.io/badge/schema-header__profile-lightgrey?style=flat-square)
+> ![authority](https://img.shields.io/badge/authority-needs%20verification-red?style=flat-square)
+> ![tree](https://img.shields.io/badge/public_tree-live%20README%20%2B%20placeholder%20schema-brightgreen?style=flat-square)  
 >
-> ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![lane](https://img.shields.io/badge/lane-common-blue?style=flat-square) ![schema](https://img.shields.io/badge/schema-header__profile-lightgrey?style=flat-square) ![authority](https://img.shields.io/badge/authority-needs%20verification-red?style=flat-square) ![public tree](https://img.shields.io/badge/public_tree-lane%20materialized-brightgreen?style=flat-square)
->
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list and definition of done](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
->
-> Current public `main` already materializes this lane with `README.md` and `header_profile.schema.json`, but `header_profile.schema.json` is still placeholder-only (`{}`).
+> **Repo fit:** child lane of [`../README.md`](../README.md) inside the live `schemas/contracts/v1/` inventory; broader boundary docs in [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../../contracts/README.md`](../../../../contracts/README.md), and [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md); sibling family lanes in [`../runtime/README.md`](../runtime/README.md), [`../evidence/README.md`](../evidence/README.md), [`../policy/README.md`](../policy/README.md), [`../release/README.md`](../release/README.md), [`../source/README.md`](../source/README.md), [`../data/README.md`](../data/README.md), and [`../correction/README.md`](../correction/README.md); vocab lane in [`../../vocab/README.md`](../../vocab/README.md); fixture landing zone in [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md)  
+> **Accepted inputs:** shared cross-family header/profile grammar, small reusable schema fragments, cross-family identity/version/audit/time-role guidance, authority notes, and links outward to vocab, fixture, policy, and workflow surfaces  
+> **Exclusions:** family-specific payload semantics, executable policy logic, full fixture packs as primary record, runtime implementation code, transport/header concerns, and claims of merge-blocking enforcement not proven by the checked-out branch  
+> **Quick jumps:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list and definition of done](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!IMPORTANT]
+> Current public `main` already materializes this lane with a **substantive README** and `header_profile.schema.json`, but the machine schema body is still placeholder-only (`{}`).
 
 > [!WARNING]
 > Public-tree materialization is **not** the same thing as settled canonical authority.
-> Adjacent repo docs still either route machine contracts more strongly toward `contracts/` or explicitly keep schema-home authority unresolved. This README must document the live branch-visible lane **without** quietly declaring that split finished.
+> Adjacent repo docs still either route machine contracts more strongly toward `contracts/` or explicitly keep schema-home authority unresolved. This README should document the live branch-visible lane **without** quietly declaring that split is finished.
 
 > [!NOTE]
 > `common` here means **shared contract-object header / profile grammar**, not HTTP request headers, transport metadata, or framework-specific wire concerns.
@@ -44,11 +72,25 @@ It should help sibling families stay coherent without flattening them into one m
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Directly visible in the current public repo surface |
+| **CONFIRMED** | Directly visible in the current public repo surface or directly stated in adjacent public repo docs reopened for this revision |
 | **INFERRED** | Strongly suggested by adjacent docs, but not directly proven here |
 | **PROPOSED** | Recommended working pattern, not current-state fact |
-| **UNKNOWN** | Not verified from the current public evidence reviewed for this revision |
+| **UNKNOWN** | Not verified strongly enough to present as current checked-in or platform reality |
 | **NEEDS VERIFICATION** | A specific value or authority decision is still open and should be checked before treating it as settled |
+
+[Back to top](#common)
+
+## Current public deltas
+
+| Delta | Why it matters now | Status |
+|---|---|---|
+| `README.md` in this lane is already a real boundary guide | This revision should correct stale self-descriptions instead of pretending the lane is still blank | **CONFIRMED** |
+| `header_profile.schema.json` still has body `{}` | Human explanation and machine contract remain at different maturity levels | **CONFIRMED** |
+| Parent `schemas/contracts/v1/README.md` now documents a live family lane with eight subdirectories | `common/` should align to the visible family split, not invent a new one | **CONFIRMED** |
+| `schemas/contracts/vocab/` now materially exposes JSON registries | Shared enums already have a visible machine-readable home distinct from `common/` | **CONFIRMED** |
+| The schema-side fixture lane under `schemas/tests/fixtures/contracts/v1/` is visible | A nearby versioned landing zone exists for valid/invalid examples, even though example payload depth is still limited | **CONFIRMED** |
+| `.github/workflows/` is still README-only on current public `main` | Merge-gate and validator enforcement depth cannot be claimed from current public workflow YAML | **CONFIRMED** |
+| Root `contracts/README.md` still frames `contracts/` as the machine-readable contract backbone while `schemas/contracts/` exposes real machine-file scaffolds | Common-lane docs must keep the authority split visible instead of normalizing it away | **CONFIRMED** |
 
 [Back to top](#common)
 
@@ -57,34 +99,40 @@ It should help sibling families stay coherent without flattening them into one m
 | Aspect | Value |
 |---|---|
 | **Lane path** | `schemas/contracts/v1/common/` |
+| **Audience** | Maintainers working on shared machine-readable contract grammar, schema-home reconciliation, fixture alignment, policy adjacency, and workflow-proof follow-through |
 | **Parent inventory** | [`../README.md`](../README.md) |
 | **Broader boundary docs** | [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../../contracts/README.md`](../../../../contracts/README.md), [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) |
 | **Sibling family lanes** | [`../runtime/README.md`](../runtime/README.md), [`../evidence/README.md`](../evidence/README.md), [`../policy/README.md`](../policy/README.md), [`../release/README.md`](../release/README.md), [`../source/README.md`](../source/README.md), [`../data/README.md`](../data/README.md), [`../correction/README.md`](../correction/README.md) |
 | **Vocab lane** | [`../../vocab/README.md`](../../vocab/README.md) |
 | **Validation surfaces** | [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md), [`../../../../tests/README.md`](../../../../tests/README.md), [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md), [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
 | **Machine file in this lane** | [`./header_profile.schema.json`](./header_profile.schema.json) |
-| **Current public signal** | The lane is branch-visible on public `main` with a checked-in schema placeholder |
+| **Current public path signal** | The lane is branch-visible on public `main` with a checked-in schema placeholder |
+| **Current public body signal** | The README in this lane is already substantive boundary guidance |
 | **Current authority posture** | **UNKNOWN / NEEDS VERIFICATION** |
-| **Reading rule** | Treat branch-visible machine files as current inventory truth; do **not** mistake them for proof that canonical-home law or enforcement depth is settled |
+| **Working rule** | Treat branch-visible machine files as current inventory truth; do **not** mistake them for proof that canonical-home law or enforcement depth is settled |
 
 ### Current verified snapshot
 
 | Observation | Status | Why it matters |
 |---|---|---|
 | `schemas/contracts/v1/common/` exists on the current public branch | **CONFIRMED** | This lane is real, not hypothetical |
-| `README.md` currently contains scaffold-only placeholder text | **CONFIRMED** | This file needs a real family explanation |
+| `README.md` in this lane is already substantive boundary guidance | **CONFIRMED** | Revision work should improve and correct the lane, not replace it with a generic rewrite |
 | `header_profile.schema.json` exists | **CONFIRMED** | A machine-file scaffold is already present where this lane expects it |
 | `header_profile.schema.json` currently has body `{}` | **CONFIRMED** | Shared contract grammar is not yet encoded at field level on the public branch |
 | Parent `schemas/contracts/v1/` inventory exists and lists all first-wave family lanes | **CONFIRMED** | `common/` should align to the visible `v1/` family split, not invent a new one |
-| `schemas/contracts/vocab/` is visible with starter JSON registries | **CONFIRMED** | Shared enums and registries already have a lane that is *not* `common/` |
-| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible | **CONFIRMED** | This lane has a branch-visible fixture landing zone nearby |
+| `schemas/contracts/vocab/` is visible with `reason_codes.json`, `obligation_codes.json`, and `reviewer_roles.json` | **CONFIRMED** | Shared enums and registries already have a lane that is *not* `common/` |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is visible nearby | **CONFIRMED** | This lane has a branch-visible fixture landing zone close at hand |
 | `tests/contracts/README.md` exists as a contract-facing verification family | **CONFIRMED** | Verification already has a repo-visible human surface even though runner depth remains unproven |
-| Public `main` proves an active merge-blocking workflow for this lane | **UNKNOWN** | `.github/workflows/` is still README-only on the current public branch |
+| Current public `.github/workflows/` exposes checked-in workflow YAML proving enforcement for this lane | **CONFIRMED** | **No** — current public inspection still shows `README.md` only in that directory |
+| Narrower `/schemas/` ownership under `CODEOWNERS` is directly visible on public `main` | **NEEDS VERIFICATION** | The public file shows a global fallback and top-level rules, but no narrower `/schemas/` rule was directly confirmed |
 | Canonical schema authority between `contracts/` and `schemas/` is fully settled | **NEEDS VERIFICATION** | Adjacent docs still keep that decision open |
 
 > [!TIP]
 > Keep `common/` **boring**.
 > If a field is only meaningful to one family, it probably does **not** belong here.
+
+> [!NOTE]
+> When broader inventory prose and the mounted branch tree diverge, prefer the most specific current lane docs plus the visible tree, then keep any remaining disagreement visible as `NEEDS VERIFICATION`.
 
 [Back to top](#common)
 
@@ -196,7 +244,7 @@ schemas/contracts/v1/common/
 Inspect the lane exactly as the checked-out branch exposes it:
 
 ```bash
-sed -n '1,240p' schemas/contracts/v1/common/README.md
+sed -n '1,260p' schemas/contracts/v1/common/README.md
 cat schemas/contracts/v1/common/header_profile.schema.json
 ```
 
@@ -210,12 +258,14 @@ sed -n '1,260p' contracts/README.md
 sed -n '1,220p' docs/standards/README.md
 ```
 
-Inspect the shared vocab and fixture landing zones this lane should stay aligned with:
+Inspect the shared vocab, fixture, and ownership surfaces this lane should stay aligned with:
 
 ```bash
 sed -n '1,220p' schemas/contracts/vocab/README.md
+sed -n '1,240p' schemas/tests/fixtures/contracts/v1/README.md
 sed -n '1,240p' tests/contracts/README.md
-find schemas/tests/fixtures/contracts/v1 -maxdepth 2 -type d | sort
+sed -n '1,120p' .github/CODEOWNERS
+find schemas/tests/fixtures/contracts/v1 -maxdepth 2 -type f | sort
 ```
 
 Search for downstream references before changing names or semantics:
@@ -249,7 +299,7 @@ A safe reading order is:
 2. read [`../README.md`](../README.md) for version-lane context;
 3. inspect [`./header_profile.schema.json`](./header_profile.schema.json);
 4. inspect [`../../vocab/README.md`](../../vocab/README.md);
-5. inspect [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) and [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md); and
+5. inspect [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) and [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md); and
 6. inspect [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) before claiming automation coverage.
 
 ### Evolve `header_profile.schema.json` safely
@@ -304,9 +354,9 @@ The point of `common/` is not to prove the whole object. The point is to give si
 ```mermaid
 flowchart LR
     A[schemas/contracts/v1/common/header_profile.schema.json]
-    B[policy/decision_envelope.schema.json]
+    B[runtime/runtime_response_envelope.schema.json]
     C[evidence/evidence_bundle.schema.json]
-    D[runtime/runtime_response_envelope.schema.json]
+    D[policy/decision_envelope.schema.json]
     E[release/release_manifest.schema.json]
     F[correction/correction_notice.schema.json]
     G[source/source_descriptor.schema.json]
