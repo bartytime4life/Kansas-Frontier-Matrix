@@ -6,11 +6,11 @@ version: v1
 status: published
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-03-22
+updated: 2026-04-04
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../docs/README.md]
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../schemas/contracts/README.md, ../schemas/tests/README.md, ../docs/README.md, ./e2e/README.md, ./policy/README.md]
 tags: [kfm, tests, verification, readme]
-notes: [doc_id and created date still need live-repo verification; owner is confirmed by current CODEOWNERS for /tests/; this revision aligns the README to the current public main-branch tests tree and adds current workflow-lane visibility while keeping deeper suite depth and platform-level gating explicitly bounded]
+notes: [doc_id and created date still need live-repo verification; owner remains confirmed by current CODEOWNERS coverage for /tests/; this revision preserves the strong existing tests README structure while updating the top-level index for the visible tests/policy/genealogy child lane and current schema-side adjacency under schemas/contracts and schemas/tests without overstating suite depth or merge-gate enforcement]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
@@ -18,7 +18,7 @@ notes: [doc_id and created date still need live-repo verification; owner is conf
 Governed verification surface for KFM proof objects, trust cues, negative paths, and release/correction drills.
 
 > [!NOTE]
-> The meta-block value `status: published` preserves the supplied document-record baseline.
+> The meta-block value `status: published` preserves the current document-record baseline.
 > The impact block below describes the current maturity of the `tests/` surface itself.
 
 > **Status:** experimental  
@@ -58,11 +58,12 @@ That is broader than “do the tests pass?” The stronger questions are:
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms the current family layout, confirms `tests/e2e/` leaf directories, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, and `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS`. |
+| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms the current family layout, confirms `tests/e2e/` leaf directories, confirms the visible `tests/policy/genealogy/` child lane, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, and `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS`. |
 | **CONFIRMED — current public workflow lane** | The public `main` branch exposes `.github/workflows/README.md`, and the visible `.github/workflows/` tree currently shows `README.md` only. No checked-in workflow YAML files are asserted here as public-main truth. |
+| **CONFIRMED — current public schema adjacency** | `schemas/` is no longer effectively README-only on public `main`. Visible adjacent lanes now include `schemas/contracts/`, `schemas/contracts/v1/`, and `schemas/tests/`, which materially affect how contract-facing verification should be described even though schema-home and fixture-home authority are still unresolved. |
 | **CONFIRMED — March 2026 KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, and hydrology-first thin-slice proof are all part of the KFM verification model. |
-| **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different branch-visible names. |
-| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, required checks, branch protection/rulesets, screenshot baseline inventory, fixture density, and whether rollback/correction drills have been exercised on the checked-out branch. |
+| **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different branch-visible names and now does so alongside visible schema-side scaffolds. |
+| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, required checks, branch protection/rulesets, screenshot baseline inventory, fixture density, whether schema-side fixtures feed blocking runners, and whether rollback/correction drills have been exercised on the checked-out branch. |
 
 > [!CAUTION]
 > Directory presence is **not** the same thing as mature coverage.
@@ -94,7 +95,10 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`../.github/workflows/README.md`](../.github/workflows/README.md) | public workflow-lane surface and current checked-in automation visibility | **CONFIRMED** |
 | [`../contracts/README.md`](../contracts/README.md) | authoritative contract-source layer that tests should consume, not replace | **CONFIRMED** |
 | [`../policy/README.md`](../policy/README.md) | policy and governance posture that tests should exercise rather than restate | **CONFIRMED** |
-| [`../schemas/README.md`](../schemas/README.md) | schema-home ambiguity and contract-shape boundaries that verification should pressure-test | **CONFIRMED** |
+| [`../schemas/README.md`](../schemas/README.md) | parent schema boundary, subtree index, and schema-home caution | **CONFIRMED** |
+| [`../schemas/contracts/README.md`](../schemas/contracts/README.md) | live schema-side contract scaffold lane that now sits adjacent to contract-facing verification | **CONFIRMED** |
+| [`../schemas/contracts/v1/README.md`](../schemas/contracts/v1/README.md) | visible first-wave machine-contract family split that tests may pressure-test without silently canonizing it | **CONFIRMED** |
+| [`../schemas/tests/README.md`](../schemas/tests/README.md) | nested schema-side fixture scaffold that must stay distinct from repo-wide governed verification | **CONFIRMED** |
 | [`../docs/README.md`](../docs/README.md) | governed documentation index and runbook surface | **CONFIRMED** |
 
 ### Confirmed downstream surfaces
@@ -105,17 +109,27 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`./contracts/`](./contracts/) | contract-facing test family |
 | [`./e2e/`](./e2e/) | end-to-end verification family |
 | [`./integration/`](./integration/) | integration-slice verification family |
-| [`./policy/`](./policy/) | policy and governance behavior family |
+| [`./policy/`](./policy/) | policy and governance behavior family with a visible child lane |
 | [`./reproducibility/`](./reproducibility/) | reproducibility and bounded-regression family |
 | [`./unit/`](./unit/) | deterministic local-behavior family |
 | [`./e2e/correction/`](./e2e/correction/) | correction and supersession drill family |
 | [`./e2e/release_assembly/`](./e2e/release_assembly/) | release / promotion / publish-path proof family |
 | [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time runtime and outcome-proof family |
+| [`./policy/genealogy/`](./policy/genealogy/README.md) | genealogy-specific policy-behavior child lane for consent, living-person, DNA, provenance, and publication-control negative tests |
 
 > [!NOTE]
 > The current public `.github/workflows/` lane matters to `tests/` even though it sits outside this directory.
 > Public `main` currently shows `.github/workflows/README.md` and no checked-in workflow YAML files there.
 > That sharpens the README’s stance: **test families are visible, but merge-blocking automation still needs platform-level or branch-local verification**.
+
+### Current adjacent schema-side signals
+
+| Surface | Current public reading | Why `tests/` has to care |
+|---|---|---|
+| [`../schemas/`](../schemas/README.md) | no longer a one-file warning surface; now a real parent subtree | top-level verification language must stop pretending adjacent schema lanes are absent |
+| [`../schemas/contracts/`](../schemas/contracts/README.md) | visible machine-file-bearing scaffold with `v1/` and `vocab/` | `tests/contracts/` now sits next to a real schema-side lane and should describe that tension honestly |
+| [`../schemas/contracts/v1/`](../schemas/contracts/v1/README.md) | visible first-wave machine-contract families such as `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, and `source/` | contract-facing tests now have adjacent family names and placeholder schema files to pressure-test |
+| [`../schemas/tests/`](../schemas/tests/README.md) | visible nested fixture scaffold with `fixtures/` | top-level `tests/` should distinguish repo-wide governed verification from schema-side scaffold mirrors or nested fixture experiments |
 
 ### Path reconciliation note
 
@@ -128,6 +142,13 @@ The public repo and the March 2026 manuals are directionally aligned, but not id
 | integration slices | `tests/integration/` | sometimes absorbed into general verification/e2e doctrine | keep the explicit integration family |
 | reproducibility / bounded regression | `tests/reproducibility/` | often described as `regression` or reproducibility burden | keep current repo naming and describe the doctrinal burden clearly |
 | release proof / runtime proof / correction | `tests/e2e/...` | `tests/e2e/` plus doctrinal drill language | current repo and doctrine are closely aligned here |
+
+A second reconciliation tension now matters too:
+
+| Verification / fixture pressure | Current branch-visible repo path | Why it is not the same thing as settled authority | Working rule |
+|---|---|---|---|
+| schema-side machine contracts | `schemas/contracts/**` | visible files exist, but current repo docs still keep canonical schema-home authority unresolved | acknowledge the live lane without silently moving authority |
+| nested schema-side fixture scaffolds | `schemas/tests/**` | visible fixture scaffolds exist, but top-level `tests/` remains the stronger repo-wide governed verification index | keep nested scaffold language explicit and do not flatten it into repo-wide test truth |
 
 > [!TIP]
 > Prefer **current repo names** over manual shorthand when writing commit-ready README text.
@@ -143,7 +164,8 @@ Content that belongs in `tests/` includes:
 - integration tests for governed slices across real boundaries
 - contract-validation tests for envelopes, examples, and schema drift
 - policy tests for allow / deny / abstain / hold behavior
-- negative-path tests for evidence failure, citation failure, rights failure, and stale-state handling
+- child-family indexes and narrowly scoped leaf readmes for currently visible sublanes such as `tests/policy/genealogy/`
+- negative-path tests for evidence failure, citation failure, rights failure, stale-state handling, and correction visibility
 - end-to-end release-assembly tests
 - runtime-proof suites for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
 - correction, supersession, withdrawal, and stale-visibility drills
@@ -170,6 +192,9 @@ The following do **not** belong here as authoritative source of truth:
 - long-form narrative guidance, incident playbooks, or architecture rationale  
   → keep them under `../docs/`
 
+- nested schema-lane fixture scaffolds as the implied singular repo-wide verification home  
+  → keep `../schemas/tests/` explicit as a nested scaffold unless repo law changes
+
 - large raw datasets or branch-local scratch dumps  
   → keep them out of `tests/`; use governed data zones or local ignored paths instead
 
@@ -179,16 +204,22 @@ The current public `main` branch proves the following:
 
 - `tests/` exists as a real top-level repo surface.
 - `tests/README.md` exists.
-- The branch-visible family set includes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
-- The currently visible public-main pages for `tests/accessibility/`, `tests/contracts/`, `tests/integration/`, `tests/policy/`, `tests/reproducibility/`, and `tests/unit/` each expose `README.md`.
+- The branch-visible top-level family set includes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
+- The currently visible public-main pages for `tests/accessibility/`, `tests/contracts/`, `tests/integration/`, `tests/reproducibility/`, and `tests/unit/` each expose `README.md` only.
+- `tests/policy/` is **not** README-only on current public `main`; it exposes `README.md` plus `genealogy/`.
+- `tests/policy/genealogy/README.md` is publicly visible as a checked-in child README.
 - `tests/e2e/` exposes `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/`.
 - The currently visible public-main pages for `tests/e2e/correction/`, `tests/e2e/release_assembly/`, and `tests/e2e/runtime_proof/` each expose `README.md`.
+- `schemas/` is no longer effectively README-only on public `main`; it currently exposes `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows/`, and `README.md`.
+- `schemas/contracts/` currently exposes `README.md`, `v1/`, and `vocab/`.
+- `schemas/contracts/v1/` currently exposes `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, `source/`, and `README.md`.
+- `schemas/tests/` currently exposes `README.md` and `fixtures/`.
 - `/tests/` is assigned to `@bartytime4life` in `.github/CODEOWNERS`.
 - `.github/workflows/` currently exposes `README.md` only on public `main`; no checked-in workflow YAML files are asserted here as public-main truth.
 
 > [!WARNING]
 > What is still **not** proven here:
-> exact test runner(s), actual executable case depth inside each family, required checks and branch-protection settings, screenshot baseline coverage, fixture density, and whether restore / rollback / correction drills have been exercised on a checked-out branch.
+> exact test runner(s), actual executable case depth inside each family, required checks and branch-protection settings, screenshot baseline coverage, fixture density, whether nested schema-side fixtures feed blocking runners, and whether restore / rollback / correction drills have archived evidence on a checked-out branch.
 
 ## Directory tree
 
@@ -212,6 +243,8 @@ tests/
 ├── integration/
 │   └── README.md
 ├── policy/
+│   ├── genealogy/
+│   │   └── README.md
 │   └── README.md
 ├── reproducibility/
 │   └── README.md
@@ -219,15 +252,43 @@ tests/
     └── README.md
 ```
 
+### Current adjacent schema-side signal that affects test placement language
+
+```text
+schemas/
+├── README.md
+├── contracts/
+│   ├── README.md
+│   ├── v1/
+│   │   ├── README.md
+│   │   ├── common/
+│   │   ├── correction/
+│   │   ├── data/
+│   │   ├── evidence/
+│   │   ├── policy/
+│   │   ├── release/
+│   │   ├── runtime/
+│   │   └── source/
+│   └── vocab/
+├── tests/
+│   ├── fixtures/
+│   └── README.md
+├── schemas/
+├── standards/
+└── workflows/
+```
+
 ### Reading rule
 
-Use the tree above for **current public-main truth**.
+Use the trees above for **current public-main truth**.
 
 Do **not** silently convert visible README-bearing family presence into claims of mature, merge-blocking, or end-to-end verified coverage.
 
+Do **not** let adjacent schema-side scaffold presence settle canonical schema-home or fixture-home authority by inertia.
+
 ### What deeper maturity would look like (`PROPOSED` / `NEEDS VERIFICATION`)
 
-As this surface matures, family directories should accumulate executable cases, valid and invalid fixtures, golden examples, screenshot baselines, query packs, runner-specific configuration, and archived drill evidence that map directly to repo contracts, policy bundles, runtime boundaries, and correction paths.
+As this surface matures, family directories should accumulate executable cases, valid and invalid fixtures, golden examples, screenshot baselines, query packs, runner-specific configuration, and archived drill evidence that map directly to repo contracts, policy bundles, runtime boundaries, correction paths, and any explicitly sanctioned schema-side mirrors.
 
 [Back to top](#tests)
 
@@ -251,11 +312,24 @@ sed -n '1,220p' .github/README.md 2>/dev/null || true
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
 sed -n '1,220p' CONTRIBUTING.md 2>/dev/null || true
 
-# inspect end-to-end family placement
+# inspect the current e2e leaf family placement
 find tests/e2e -maxdepth 3 -type f 2>/dev/null | sort
+
+# inspect the visible policy child-lane placement
+find tests/policy -maxdepth 3 -type f 2>/dev/null | sort
 
 # inspect workflow lane contents directly
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+
+# inspect adjacent schema-side contract and fixture scaffolds
+find schemas/contracts -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
+find schemas/tests -maxdepth 5 -type f 2>/dev/null | sort | sed -n '1,240p'
+
+# read the schema-side boundary docs that now affect contract-facing verification language
+sed -n '1,220p' schemas/README.md 2>/dev/null || true
+sed -n '1,220p' schemas/contracts/README.md 2>/dev/null || true
+sed -n '1,220p' schemas/contracts/v1/README.md 2>/dev/null || true
+sed -n '1,220p' schemas/tests/README.md 2>/dev/null || true
 
 # inspect likely KFM verification vocabulary without assuming a runner
 grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|ABSTAIN\|DENY\|ERROR" \
@@ -265,11 +339,12 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotic
 ### First local review pass
 
 1. Verify which family directories contain executable suites rather than scaffold README placeholders.
-2. Verify whether the checked-out branch still matches the current public tree for `tests/` and `.github/workflows/`.
-3. Verify which checks actually block merges on the active branch.
-4. Verify whether contract, policy, docs, and tests move together in the same change stream.
-5. Verify whether negative paths exist, not only happy-path confirmation.
-6. Verify whether runtime evidence, abstention, denial, stale visibility, and correction behavior are exercised end to end.
+2. Verify whether `tests/policy/genealogy/` on the checked-out branch is still a README-only child lane or has accumulated executable cases.
+3. Verify whether the checked-out branch still matches the current public tree for `tests/`, `schemas/`, and `.github/workflows/`.
+4. Verify which checks actually block merges on the active branch.
+5. Verify whether contract, policy, docs, schemas, and tests move together in the same change stream.
+6. Verify whether negative paths exist, not only happy-path confirmation.
+7. Verify whether runtime evidence, abstention, denial, stale visibility, and correction behavior are exercised end to end.
 
 > [!TIP]
 > Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands.
@@ -305,7 +380,8 @@ Use the smallest fitting existing family before inventing a new top-level folder
 | [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate | visible as a README-bearing family |
 | [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, or projection | visible as a README-bearing family |
 | [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift | visible as a README-bearing family |
-| [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior | visible as a README-bearing family |
+| [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior across the broader policy family | visible as a README-bearing family with a visible child lane |
+| [`./policy/genealogy/`](./policy/genealogy/README.md) | the change is genealogy-specific consent, living-person, DNA, provenance, or publication-control policy behavior | visible as a README-bearing child lane under `./policy/` |
 | [`./accessibility/`](./accessibility/) | trust-visible interaction, keyboard flow, reduced-friction inspection, or calm failure is the main risk | visible as a README-bearing family |
 | [`./reproducibility/`](./reproducibility/) | stable digests, counts, or bounded metrics matter most | visible as a README-bearing family |
 | [`./e2e/release_assembly/`](./e2e/release_assembly/) | promotion, release evidence, or publish-path integrity is the question | visible as a README-bearing leaf family |
@@ -318,11 +394,14 @@ A present directory is **not** the same thing as an active suite.
 
 If a family currently contains only a placeholder README or thin scaffold, treat it as a documented contract boundary waiting for executable proof, not as coverage already earned.
 
+If a schema-side scaffold exists nearby under `schemas/`, treat that as **adjacent signal** until repo law explicitly says it is canonical for the same burden.
+
 ## Diagram
 
 ```mermaid
 flowchart LR
-    C["contracts/ + schemas/"] --> T["tests/ families"]
+    C["contracts/ + human-readable doctrine"] --> T["tests/ families"]
+    SC["schemas/contracts/ + schemas/tests/"] --> T
     P["policy/"] --> T
     A["apps/ + packages/ + infra/"] --> T
     D["docs/ + runbooks"] --> T
@@ -334,6 +413,7 @@ flowchart LR
       E["e2e/"]
       I["integration/"]
       PO["policy/"]
+      PG["policy/genealogy/"]
       R["reproducibility/"]
       U["unit/"]
       EC["e2e/correction/"]
@@ -342,6 +422,7 @@ flowchart LR
     end
 
     T --> F
+    PO --> PG
     F --> G
     G --> Q{"trust-preserving?"}
 
@@ -351,6 +432,7 @@ flowchart LR
 
     RT -. stale-state, rollback, and correction drills .-> EC
     W -. current public main: README only .-> G
+    SC -. adjacent scaffold, not silently canonical .-> T
 ```
 
 ## Operating tables
@@ -363,13 +445,24 @@ flowchart LR
 | `contracts/` | Yes | `README.md` | envelope, schema, and example validation | current repo uses plural path; some manuals use singular shorthand |
 | `e2e/` | Yes | `README.md` plus three leaf families | end-to-end verification umbrella | current repo and doctrine are closely aligned here |
 | `integration/` | Yes | `README.md` | governed slices across real boundaries | current repo keeps this family explicit |
-| `policy/` | Yes | `README.md` | allow / deny / abstain / hold behavior | directly aligns with policy-gate doctrine |
+| `policy/` | Yes | `README.md` plus visible `genealogy/` child lane | allow / deny / abstain / hold behavior | parent family is no longer README-only on public `main` |
+| `policy/genealogy/` | Yes | `README.md` | consent, living-person, DNA, provenance, and publication-control negative tests | visible child lane should be indexed honestly without inflating executable depth |
 | `reproducibility/` | Yes | `README.md` | stable digests, counts, and bounded regression | overlaps with what some manuals describe as regression / rebuild burden |
 | `unit/` | Yes | `README.md` | deterministic local behavior | directly matches manual doctrine |
 | `e2e/correction/` | Yes | `README.md` | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
 | `e2e/release_assembly/` | Yes | `README.md` | promotion and publish-path proof | strongly aligned with release-proof doctrine |
 | `e2e/runtime_proof/` | Yes | `README.md` | `ANSWER / ABSTAIN / DENY / ERROR` proof | strongly aligned with runtime outcome doctrine |
 | `regression/` | No current branch evidence | — | doctrinal shorthand for some UI / map / rebuild burdens | keep this as doctrine, not current path claim |
+
+### Adjacent schema-side signals that now influence test-language accuracy
+
+| Surface | Current public evidence | Why it matters to `tests/` |
+|---|---|---|
+| `schemas/` | real parent subtree, not just `README.md` | top-level test docs should stop describing adjacent schema lanes as absent |
+| `schemas/contracts/` | `README.md` plus `v1/` and `vocab/` | contract-facing verification now has visible machine-file adjacency |
+| `schemas/contracts/v1/` | eight family subdirectories plus `README.md` | tests can now refer to visible first-wave family names without inventing them |
+| `schemas/tests/` | `README.md` plus `fixtures/` | nested schema-side fixture scaffolds exist, but still should not silently replace repo-wide governed verification |
+| `schemas/contracts/*` bodies | still scaffold-heavy and authority-sensitive | file presence should not be confused with enforcement-grade maturity |
 
 ### Public-main workflow adjacency
 
@@ -384,10 +477,11 @@ flowchart LR
 |---|---|
 | contracts / schemas | valid examples, invalid fixtures, version note, and no silent envelope drift |
 | policy / governance | allow + deny cases, negative fixtures, rationale alignment, and default-deny still intact |
+| schema-side scaffolds / fixture mirrors | keep authority wording explicit, avoid quiet duplicate truth, and update both schema-side and test-side indexes if placement language changes |
 | source onboarding or transforms | deterministic manifest/checksum behavior, validation checks, and at least one representative integration slice |
 | evidence behavior | `EvidenceRef` / bundle resolution path, negative tests, and policy-safe denials |
 | story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
-| docs describing behavior | linked updates, no contradiction with tests / contracts / policy, and no overclaiming branch reality |
+| docs describing behavior | linked updates, no contradiction with tests / contracts / policy / schemas, and no overclaiming branch reality |
 | release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
 | workflow / required-check posture | confirm checked-in automation, platform rules, and whether public-tree signals still match effective merge gates |
 
@@ -398,6 +492,7 @@ flowchart LR
 | citation verification failure | prevents plausible but unsupported output |
 | evidence-bundle resolution failure | proves trust is operational, not decorative |
 | policy denial for restricted material | enforces fail-closed behavior under ambiguity |
+| rights / consent denial on sensitive content | proves domain-specific child lanes do not quietly widen publication |
 | stale projection warning | prevents quietly outdated derived layers |
 | correction / supersession drill | prefers visible correction to confident confusion |
 | accessibility failure on trust surface | prevents “verified” behavior that users cannot actually inspect |
@@ -409,7 +504,9 @@ Treat this README as healthy only when the directory contract stays both readabl
 - [ ] Keep current public-main structure separate from assumptions about suite depth
 - [ ] Keep owners aligned with `../.github/CODEOWNERS`
 - [ ] Update this README whenever a test family is added, renamed, removed, or materially repurposed
+- [ ] Update this README whenever a visible child lane such as `tests/policy/genealogy/` is added, removed, or materially repurposed
 - [ ] Update this README whenever current public workflow-lane evidence changes in a way that affects test-gate expectations
+- [ ] Update cross-lane notes here whenever adjacent schema-side scaffolds change in a way that affects contract-facing verification placement language
 - [ ] Do not describe a family as active coverage unless the branch actually contains executable cases
 - [ ] Prefer negative-path proof for trust-sensitive changes, not just happy-path confirmation
 - [ ] Keep `contracts/`, `schemas/`, `policy/`, `docs/`, and `tests/` coherent in the same PR when behavior changes
@@ -426,9 +523,17 @@ Because KFM treats verification as part of publication, runtime trust, and corre
 
 Because repo-native truth outranks cleaner theory. The manuals are valuable for burden language, but current public paths such as `tests/contracts/`, `tests/accessibility/`, `tests/integration/`, and `tests/reproducibility/` should not be silently rewritten into something the branch does not use.
 
+### Why does this README now mention `tests/policy/genealogy/`?
+
+Because current public `main` exposes it. A top-level index that ignores a visible child lane is now less truthful than one that records it conservatively.
+
+### Why mention schema-side scaffolds in a `tests/` README?
+
+Because current public `main` now exposes adjacent machine-file and fixture scaffolds under `schemas/`. That changes how contract-facing verification should be explained, even though it does **not** settle canonical schema-home or fixture-home authority.
+
 ### Does the current branch prove merge-blocking coverage?
 
-No. The public tree proves directory presence, README-bearing family placement, ownership boundaries, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
+No. The public tree proves directory presence, README-bearing family placement, ownership boundaries, visible child lanes, adjacent schema-side scaffolds, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
 
 ### Where should accessibility and reproducibility work live right now?
 
@@ -451,6 +556,7 @@ This revision is grounded in three evidence layers:
    - top-level repo presence of `tests/`, `contracts/`, `docs/`, `.github/`, and contributor-facing root docs
    - the current `tests/` family tree
    - the current `tests/e2e/` leaf family tree
+   - the current visible `tests/policy/genealogy/` child lane
    - current ownership mapping from `.github/CODEOWNERS`
    - the current public `.github/workflows/` tree, which shows `README.md` only
 
@@ -462,6 +568,9 @@ This revision is grounded in three evidence layers:
    - `contracts/README.md`
    - `policy/README.md`
    - `schemas/README.md`
+   - `schemas/contracts/README.md`
+   - `schemas/contracts/v1/README.md`
+   - `schemas/tests/README.md`
    - `docs/README.md`
 
 3. **March 2026 KFM doctrinal manuals**, especially the layers that sharpen:
@@ -481,11 +590,12 @@ Before treating this README as fully settled local-checkout documentation, verif
 - the exact contents of each current family directory
 - whether the checked-out branch still matches the public `main` tree summarized here
 - the test runner(s), config files, and invocation surface
-- the actual required checks and GitHub rulesets/branch protection
+- the actual required checks and GitHub rulesets / branch protection
 - screenshot baseline presence, if any
 - fixture placement and density
+- whether nested schema-side fixtures are mirror-only or active runner inputs
 - whether rollback, restore, or correction drills have archived evidence
-- whether any future refactor intends to consolidate split families
+- whether any future refactor intends to consolidate split families or settle schema-home / fixture-home authority
 
 </details>
 
@@ -497,7 +607,8 @@ If the checked-out branch later differs from the public tree used here:
 1. keep **burden-first** language intact
 2. replace path claims with branch-visible paths immediately
 3. preserve the distinction between **current repo truth** and **manual shorthand**
-4. downgrade anything unsupported by the checked-out branch to **UNKNOWN** or **NEEDS VERIFICATION**
+4. preserve the distinction between **adjacent schema-side scaffold reality** and **settled canonical authority**
+5. downgrade anything unsupported by the checked-out branch to **UNKNOWN** or **NEEDS VERIFICATION**
 
 The goal is not to preserve a guessed tree.  
 The goal is to preserve truthful verification law.
@@ -505,7 +616,7 @@ The goal is to preserve truthful verification law.
 </details>
 
 <details>
-<summary><strong>Appendix D — Why this README keeps both repo reality and doctrine visible</strong></summary>
+<summary><strong>Appendix D — Why this README keeps repo reality, child-lane visibility, and schema-side adjacency all in view</strong></summary>
 
 The repo and the March 2026 manuals are aligned on principle:
 
@@ -514,7 +625,12 @@ The repo and the March 2026 manuals are aligned on principle:
 - release, runtime, and correction are one governance story
 - proof objects matter
 
-They diverge mainly in **how families are named and split** on disk.
-This README keeps both visible so contributors do not have to choose between repo truth and doctrinal clarity.
+What changed is the visible branch shape:
+
+- `tests/policy/` now has a visible `genealogy/` child lane
+- `schemas/` now has visible contract and fixture scaffolds
+- `.github/workflows/` is still publicly README-only
+
+This README keeps all three visible so contributors do not have to choose between repo truth, doctrinal clarity, and current scaffold reality.
 
 </details>
