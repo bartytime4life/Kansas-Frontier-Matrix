@@ -4,13 +4,13 @@ title: STAC Catalog Surface
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: NEEDS VERIFICATION
 updated: NEEDS VERIFICATION
 policy_label: NEEDS VERIFICATION
-related: [../../../README.md, ../../README.md, ../README.md, ../dcat/README.md, ../prov/README.md, ../../../docs/standards/README.md, ../../../docs/standards/KFM_STAC_PROFILE.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../scripts/README.md, ../../../tests/README.md, ../../../tools/README.md]
+related: [../../../README.md, ../../README.md, ../README.md, ../dcat/README.md, ../prov/README.md, ../../../docs/standards/README.md, ../../../docs/standards/KFM_STAC_PROFILE.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tools/catalog/README.md, ../../../tools/validators/README.md, ../../../tests/README.md, ../../../.github/workflows/README.md]
 tags: [kfm, stac, catalog, geospatial, metadata]
-notes: [Target path is confirmed on public main; owners, dates, policy label, and doc UUID require repo-side verification before publish.]
+notes: [Target path is confirmed on current public main; owners are grounded in the current broad /data/ CODEOWNERS fallback; doc UUID, created/updated dates, and policy label still require repo-side verification before publish.]
 [/KFM_META_BLOCK_V2] -->
 
 # STAC Catalog Surface
@@ -19,19 +19,25 @@ _Governed STAC-facing catalog surface for KFM spatial and temporal assets, relea
 
 > **Status:** experimental  
 > **Doc state:** draft  
-> **Owners:** `NEEDS VERIFICATION`  
+> **Owners:** `@bartytime4life` *(current broad `/data/` CODEOWNERS fallback on public `main`)*  
 > **Path:** `data/catalog/stac/README.md`  
 > **Repo fit:** STAC member of the KFM catalog triplet (`DCAT + STAC + PROV`), sitting under [`data/`](../../README.md) and [`data/catalog/`](../README.md), and feeding governed discovery, timeline, and map-facing surfaces.  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status: experimental](https://img.shields.io/badge/status-experimental-orange) ![doc: draft](https://img.shields.io/badge/doc-draft-blue) ![surface: STAC](https://img.shields.io/badge/surface-STAC-6f42c1) ![catalog triplet](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb) ![truth labels](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20NEEDS--VERIFICATION-2ea043)
+> **Current public evidence:** this file already exists as a substantive draft README on public `main`; what remains thin in public view is deeper checked-in STAC payload inventory plus concrete validator and workflow entrypoints.  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public evidence snapshot](#current-public-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![doc: draft](https://img.shields.io/badge/doc-draft-blue?style=flat-square) ![surface: STAC](https://img.shields.io/badge/surface-STAC-6f42c1?style=flat-square) ![catalog triplet](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-2d6cdf?style=flat-square) ![public main: checked](https://img.shields.io/badge/public__main-substantive%20draft-2ea043?style=flat-square) ![truth posture](https://img.shields.io/badge/truth-verification__first-57606a?style=flat-square)
 
 > [!IMPORTANT]
 > `data/catalog/stac/` is a **catalog** surface, not the canonical truth store.
-> 
-> In KFM, STAC records describe **released** spatial or temporal assets after `PROCESSED` and as part of the `CATALOG` state. They must not become a shortcut around `RAW`, `WORK`, `QUARANTINE`, review, policy, or correction handling.
+>
+> In KFM, STAC records describe **released** spatial or temporal assets after `PROCESSED` and within `CATALOG` closure. They must not become a shortcut around `RAW`, `WORK`, `QUARANTINE`, review, policy, release evidence, or correction handling.
 
 > [!NOTE]
-> Public `main` currently confirms that `data/catalog/stac/` exists but still contains only a scaffold `README.md`. This document therefore upgrades a confirmed path with a doctrine-grounded README, while keeping subtree layout, validator entrypoints, and publication mode explicitly separated into **CONFIRMED**, **PROPOSED**, and **NEEDS VERIFICATION** statements.
+> Current public `main` no longer supports a “scaffold-only” reading of this lane.  
+> What is still **not** confirmed from public-tree inspection alone is the deeper checked-in payload shape under `data/catalog/stac/`, the canonical machine-contract home for STAC validation, and any live workflow YAML or runtime-backed STAC API behavior.
+
+> [!TIP]
+> Keep **field-level STAC law** in [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md).  
+> This README is the **directory guide and boundary document**, not the hidden schema authority.
 
 ---
 
@@ -43,18 +49,19 @@ It exists to make released geospatial assets discoverable, map-friendly, timelin
 
 - **STAC belongs to the catalog triplet**, alongside DCAT and PROV.
 - **STAC is for spatial/temporal asset description and discovery**, not for replacing canonical processed artifacts.
-- **STAC should remain downstream of governed release**, not upstream of validation or policy.
-- **STAC should stay link-rich**, so a user or service can move from asset discovery to lineage and outward dataset description without guessing.
+- **STAC stays downstream of governed release**, not upstream of validation or policy.
+- **STAC should stay link-rich**, so a user or service can move from asset discovery to lineage and outward dataset description without guesswork.
 
 ### Evidence boundary used in this README
 
 | Layer | Status | What this README treats as true |
 |---|---|---|
-| Public `main` repo tree | **CONFIRMED** | `data/catalog/stac/` exists today; current checked-in content is scaffold-light. |
-| March 2026 KFM doctrine | **CONFIRMED** | Truth path, catalog triplet, authoritative-vs-derived split, trust membrane, map-first delivery logic, and fail-closed posture. |
-| Current STAC / OGC standards model | **CONFIRMED** | STAC still centers on Catalog, Collection, and Item objects, with STAC API as a separate service-layer concern. |
-| Local subtree beyond current scaffold | **PROPOSED** | `collections/` and `items/` as the starter checked-in file shape. |
-| Exact validators, merge gates, and branch-side enforcement | **NEEDS VERIFICATION** | Use only after direct branch inspection confirms the scripts and workflows actually exist. |
+| Current public `main` repo tree | **CONFIRMED** | `data/catalog/stac/` exists, and `data/catalog/stac/README.md` is already a substantive draft directory guide. |
+| Current public catalog tree depth | **CONFIRMED / NEEDS VERIFICATION** | Parent catalog surfaces and sibling README lanes are visible; deeper checked-in STAC Collection / Item payloads are not yet visible from the inspected public tree. |
+| March–April 2026 KFM doctrine | **CONFIRMED** | Truth path, catalog triplet closure, authoritative-vs-derived separation, trust membrane, map-first delivery logic, 2D-by-default reasoning, and fail-closed posture. |
+| Current public standards / helper surfaces | **CONFIRMED path / NEEDS VERIFICATION executable depth** | `docs/standards/KFM_STAC_PROFILE.md`, `tools/catalog/README.md`, `tools/validators/README.md`, `tests/README.md`, and `.github/workflows/README.md` exist; their machine-enforcement depth is not yet proven from public `main` alone. |
+| Starter subtree beyond the README | **PROPOSED** | `collections/` and `items/` as the first checked-in file-first STAC shape. |
+| Exact validators, branch protections, and workflow YAMLs | **UNKNOWN / NEEDS VERIFICATION** | Public `main` does not presently prove concrete STAC validator files, required checks, or checked-in workflow YAML for this lane. |
 
 ### What this README is for
 
@@ -63,7 +70,7 @@ This README is for maintainers who need to answer four practical questions quick
 1. What belongs in `data/catalog/stac/`?
 2. What does **not** belong here?
 3. How should STAC relate to sibling DCAT and PROV records?
-4. How should this lane stay useful to map/timeline surfaces without becoming sovereign truth?
+4. How should this lane stay useful to map and timeline surfaces without becoming sovereign truth?
 
 [Back to top](#stac-catalog-surface)
 
@@ -73,20 +80,23 @@ This README is for maintainers who need to answer four practical questions quick
 
 ### Path and adjacency
 
-`data/catalog/stac/` is one lane inside the broader `data/catalog/` surface.
+`data/catalog/stac/` is one lane inside the broader `data/catalog/` metadata seam.
 
 | Direction | Surface | Role here |
 |---|---|---|
-| Upstream | [`../../README.md`](../../README.md) | Governs the wider data lifecycle and explains how `CATALOG` fits between `PROCESSED` and `PUBLISHED`. |
-| Upstream | [`../README.md`](../README.md) | Parent catalog lane; should explain shared triplet logic and sibling responsibilities. |
+| Upstream | [`../../README.md`](../../README.md) | Governs the wider `data/` lifecycle and explains how `CATALOG` sits between `PROCESSED` and `PUBLISHED`. |
+| Upstream | [`../README.md`](../README.md) | Parent catalog lane; explains the shared triplet closure and metadata-seam role. |
 | Lateral | [`../dcat/README.md`](../dcat/README.md) | Dataset-level outward metadata sibling. |
 | Lateral | [`../prov/README.md`](../prov/README.md) | Lineage and provenance sibling. |
-| Upstream | [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md) | Intended standards/profile surface for KFM-specific STAC rules. |
-| Upstream | [`../../../contracts/README.md`](../../../contracts/README.md) | Machine-contract surface; this README should not quietly become the schema authority. |
-| Upstream | [`../../../policy/README.md`](../../../policy/README.md) | Rights, sensitivity, publication, and deny-by-default constraints that catalog records must obey. |
-| Downstream | [`../../../scripts/README.md`](../../../scripts/README.md) | Expected wrapper/validator entrypoints when branch-side tooling is present. |
-| Downstream | [`../../../tools/README.md`](../../../tools/README.md) | Reusable validation and inspection tools. |
-| Downstream | [`../../../tests/README.md`](../../../tests/README.md) | Fixtures and negative-path expectations for catalog validation. |
+| Upstream | [`../../../docs/standards/README.md`](../../../docs/standards/README.md) | Routing surface for standards ownership and profile placement. |
+| Upstream | [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md) | Dedicated standards home for KFM-specific STAC rules. |
+| Authority neighbor | [`../../../contracts/README.md`](../../../contracts/README.md) | Contract lane for machine-readable trust objects; this README must not quietly replace it. |
+| Authority neighbor | [`../../../schemas/README.md`](../../../schemas/README.md) | Live schema scaffold with unresolved schema-home authority; relevant when deciding where STAC machine validation really lives. |
+| Authority neighbor | [`../../../policy/README.md`](../../../policy/README.md) | Rights, sensitivity, publication, reason, obligation, and fail-closed control layer. |
+| Helper lane | [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md) | Catalog QA, cross-link, and reviewer-facing helper surface. |
+| Helper lane | [`../../../tools/validators/README.md`](../../../tools/validators/README.md) | Fail-closed validator-family surface for long-lived trust-bearing checks. |
+| Verification lane | [`../../../tests/README.md`](../../../tests/README.md) | Fixtures, proof drills, and negative-path expectations. |
+| Automation lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Workflow-control surface; currently README-only on public `main`, so automation intent is visible but checked-in YAML depth is still bounded. |
 
 ### Why this directory matters
 
@@ -97,18 +107,19 @@ KFM doctrine is unusually strict about the difference between:
 - **metadata surfaces**
 - **runtime presentation surfaces**
 
-`data/catalog/stac/` sits in the metadata layer. It should help discovery and rendering without blurring those boundaries.
+`data/catalog/stac/` sits in the metadata layer. It should help discovery and handoff without blurring those boundaries.
 
-### Current verified snapshot
+### Repo-fit summary
 
-The public branch currently shows:
+Use this directory when you need a **release-linked spatial/temporal discovery carrier**.
 
-- `data/catalog/README.md`
-- `data/catalog/dcat/README.md`
-- `data/catalog/prov/README.md`
-- `data/catalog/stac/README.md`
+Do **not** use it as:
 
-The STAC lane is therefore **present and intentional**, but still **under-built** as a checked-in surface.
+- a surrogate data lake,
+- a place to hide policy decisions,
+- a replacement for `contracts/` or `schemas/`,
+- a miscellaneous validator bin,
+- or a backdoor publication surface for unreleased material.
 
 [Back to top](#stac-catalog-surface)
 
@@ -121,12 +132,12 @@ The following belong here when they are **release-linked**, **policy-safe**, and
 | Accepted input | Belongs here when… | Notes |
 |---|---|---|
 | STAC Collection JSON | it describes a releasable dataset or product family with spatial/temporal extent | Typical shape for one recurring dataset family or product line |
-| STAC Item JSON | it describes a released spatial/temporal asset, version, scene, granule, year, quad, or similar unit | Granularity should follow source reality, not convenience alone |
-| Asset metadata | it points to released processed assets and includes stable roles / media typing / link targets | Metadata belongs here; the heavy asset does not |
-| Spatial and temporal coverage | it captures bbox / geometry / datetime or interval as applicable | Keep discovery useful without inventing false precision |
-| Provider / keyword / instrument / projection details | they materially improve interpretation or filtering | Add only when applicable; do not pad records with empty noise |
+| STAC Item JSON | it describes a released spatial/temporal asset, version, scene, granule, year, quad, tile, or similar unit | Granularity should follow source reality, not convenience alone |
+| Asset metadata | it points to released processed artifacts and includes stable roles, media typing, and link targets | Metadata belongs here; the heavy asset does not |
+| Spatial and temporal coverage | it captures `bbox`, geometry, and time semantics that make the release unit actually discoverable | Keep discovery useful without inventing false precision |
+| Provider / keyword / instrument / projection detail | it materially improves interpretation or filtering | Add only when applicable; do not pad records with empty noise |
 | Cross-links to PROV and sibling catalog surfaces | they resolve outward description and lineage cleanly | STAC should not be a dead end |
-| KFM-specific profile declarations | they are part of emitted STAC records and align with the standards/profile lane | The profile should be documented in standards, not improvised ad hoc per item |
+| Profile declarations / extension references | they align with the standards lane and are appropriate for emitted STAC records | Extension and profile law should still route back to the standards surface |
 
 ### Minimum practical rule
 
@@ -146,15 +157,37 @@ These do **not** belong here.
 | Work-in-progress or quarantined derivatives | Unreleased candidates must not be cataloged as if publishable | `data/work/` or `data/quarantine/` |
 | Authoritative processed payloads themselves | This lane stores metadata, not the primary artifact body | `data/processed/` |
 | Policy bundles, allow/deny rules, reason vocabularies | Catalog metadata must obey policy, not replace it | `policy/` |
-| Contract schemas as the source of truth | README prose is not machine authority | `contracts/` and any schema-authority ADR/profile lane |
+| Contract schemas as the source of truth | README prose is not machine authority | `contracts/` and the eventual settled schema-authority lane |
 | PROV lineage documents | STAC should link to lineage, not absorb it | `data/catalog/prov/` |
 | DCAT dataset records | STAC is the spatial/temporal member of the triplet, not the whole triplet | `data/catalog/dcat/` |
-| Map style JSON, renderer config, popup logic, UI state | Rendering and interaction belong to delivery/runtime layers | standards, app, or renderer-specific surfaces |
+| Catalog QA helpers or validator code | Release metadata and helper logic should stay separate | `tools/catalog/` or `tools/validators/` |
+| Workflow YAML or automation-control prose | This README should not quietly become the CI surface | `.github/workflows/` |
+| Map style JSON, renderer config, popup logic, UI state | Rendering and interaction belong to delivery/runtime layers | app, portrayal, standards, or renderer-specific surfaces |
 | Unvalidated or rights-unclear records | Discovery metadata must not outrun governance | hold back until validated and policy-cleared |
-| API behavior documentation | Static file layout and live service behavior are related but not identical | governed API/runtime docs |
+| API behavior documentation | Static file layout and live service behavior are related but not identical | governed API / runtime docs |
 
 > [!WARNING]
 > Do not use this directory to smuggle unpublished material into a discoverable surface by way of “temporary” Item JSON. In KFM, temporary publication shortcuts become permanent trust debt.
+
+[Back to top](#stac-catalog-surface)
+
+---
+
+## Current public evidence snapshot
+
+| Surface | Current public `main` state | Why it matters here |
+|---|---|---|
+| [`README.md`](./README.md) | Present, substantive draft directory guide | This file should be revised in place, not replaced by a parallel STAC guide. |
+| [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md) | Present, substantive draft standard | STAC rule ownership already has a dedicated home. |
+| [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md) | Present, README-first helper lane | Catalog QA belongs there, not beside release metadata. |
+| [`../../../tools/validators/README.md`](../../../tools/validators/README.md) | Present, README-first validator lane | Fail-closed trust checks should route there when entrypoints land. |
+| [`../../../tests/README.md`](../../../tests/README.md) | Present, substantive directory index | Verification is treated as governed proof, not generic QA. |
+| [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Present, README-only workflow lane | Automation intent is visible, but concrete checked-in YAML depth is still not a current public-main fact. |
+
+### Why this snapshot matters
+
+The main documentation job here is no longer “replace a placeholder.”  
+It is to keep the STAC lane **accurate to the current public tree**, route contributors to the right adjacent authority surfaces, and leave unresolved machine-enforcement depth visible instead of smoothing it away.
 
 [Back to top](#stac-catalog-surface)
 
@@ -193,8 +226,8 @@ data/catalog/stac/
 The following are **NEEDS VERIFICATION** before they should be treated as standard:
 
 - a checked-in root `catalog.json`
+- example fixtures colocated in this directory rather than under `tests/`
 - API landing-page material generated elsewhere and copied here
-- extension-specific subfolders or example fixtures colocated in this directory
 - branch-side generation-only outputs that are not meant to be committed
 
 If those choices matter, write them down explicitly in standards or ADR surfaces rather than letting the directory drift into accidental convention.
@@ -211,15 +244,21 @@ If those choices matter, write them down explicitly in standards or ADR surfaces
 # inspect the current catalog lane
 find data/catalog -maxdepth 3 -type f | sort
 
-# inspect adjacent guidance surfaces
+# inspect the data lifecycle boundary around it
 sed -n '1,220p' data/README.md
 sed -n '1,220p' data/catalog/README.md
 sed -n '1,220p' data/catalog/stac/README.md
+
+# inspect the adjacent authority and helper lanes
+sed -n '1,220p' docs/standards/README.md
 sed -n '1,220p' docs/standards/KFM_STAC_PROFILE.md
 sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
-sed -n '1,220p' scripts/README.md
+sed -n '1,220p' tools/catalog/README.md
+sed -n '1,220p' tools/validators/README.md
 sed -n '1,220p' tests/README.md
+sed -n '1,220p' .github/workflows/README.md
 ```
 
 ### First authoring pass
@@ -230,17 +269,17 @@ sed -n '1,220p' tests/README.md
    - a single **Item-only** publication shape with the omission explicitly justified.
 3. Draft the STAC record so it points to **released processed artifacts**, not raw or work-state material.
 4. Cross-link it to sibling **DCAT** and **PROV** records.
-5. Only then wire it into validators, fixtures, and any governed API exposure.
+5. Only then wire it into the standards, helper, validator, and test lanes.
 
 ### Illustrative validation lane
 
-The command names below are **PROPOSED** until your checked-out branch proves they exist:
-
 ```bash
-python scripts/catalog/validate_stac.py data/catalog/stac/items/<dataset>__<version>.json
+# inspect currently documented helper and validator surfaces first
+find tools/catalog tools/validators tests -maxdepth 3 -type f | sort
 
-test -f data/catalog/stac/collections/<dataset>.json \
-  || echo "no collection file present; verify that omission is intentional"
+# once a concrete validator lands, run it against the candidate STAC record
+# illustrative placeholder only — verify the exact entrypoint before use:
+python <validator-entrypoint> data/catalog/stac/items/<dataset>__<version>.json
 ```
 
 > [!TIP]
@@ -270,17 +309,25 @@ That does **not** make it the strongest truth surface in the system. KFM still e
 
 This README governs the **checked-in STAC file lane** under `data/catalog/stac/`.
 
-If KFM also exposes a STAC API, that API is a **downstream governed service surface**. It should mirror or derive from approved release metadata, but it should not be treated as the same thing as the checked-in directory.
-
-A useful mental split:
+If KFM also exposes a STAC API, that API is a **downstream governed service surface**. It may derive from approved release metadata, but it should not be treated as the same thing as the checked-in directory.
 
 | Concern | File lane here | API lane elsewhere |
 |---|---|---|
 | Checked-in Collection / Item JSON | yes | maybe derived from here |
-| Root landing behavior | optional / undecided | yes, if STAC API is exposed |
+| Root landing behavior | optional / undecided | yes, if a STAC API is exposed |
 | `conformsTo` and endpoint behavior | no | yes |
 | `/collections` / search endpoints | no | yes |
-| Release-linked metadata ownership | yes | should stay downstream of this |
+| Release-linked metadata ownership | yes | should stay downstream of this lane |
+
+### Where the field-level rules live
+
+This README should stay **directory-focused**.
+
+Field-by-field requirements, extension policy, and profile rules belong in:
+
+- [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md)
+- relevant machine contracts once the canonical contract/schema home is settled
+- policy and validator surfaces that can fail closed
 
 ### Collection versus Item granularity
 
@@ -339,18 +386,22 @@ Keep these boundaries clean:
 
 ```mermaid
 flowchart LR
-    A[Released processed asset] --> B[STAC Collection]
-    A --> C[STAC Item]
-    A --> D[DCAT dataset record]
-    A --> E[PROV entities and activities]
+    A[Released processed asset] --> B[Catalog closure]
+    B --> C[STAC Collection]
+    B --> D[STAC Item]
+    B --> E[DCAT dataset record]
+    B --> F[PROV entities and activities]
 
-    B --> C
-    C -. derived_from .-> E
-    D -. same released artifact .-> C
+    G[tools/catalog/] -. QA and cross-link review .-> C
+    G -. QA and cross-link review .-> D
+    H[tools/validators/] -. fail-closed checks .-> C
+    H -. fail-closed checks .-> D
+    I[.github/workflows/] -. when concrete YAML lands .-> G
+    I -. when concrete YAML lands .-> H
 
-    C --> F[Governed API or search surface]
-    F --> G[Map or timeline surface]
-    G --> H[Evidence-aware user flow]
+    D --> J[Governed API or search surface]
+    J --> K[Map or timeline surface]
+    K --> L[Evidence-aware user flow]
 ```
 
 [Back to top](#stac-catalog-surface)
@@ -375,17 +426,29 @@ These are **starter expectations**, not a substitute for a formal profile.
 |---|---|---|
 | Collection | stable `id`, human-readable title/description, license, spatial extent, temporal extent, providers/keywords where relevant | lets the dataset family be found and understood before drilling into items |
 | Item | stable `id`, geometry, `bbox`, `datetime` (or equivalent temporal handling), relevant properties, assets with roles and resolvable targets | makes the release unit inspectable and machine-usable |
-| Links | `self`, `collection` when used, and lineage-facing links such as `derived_from` where KFM uses them | prevents metadata dead ends |
-| Assets | point to released processed artifacts and related metadata/previews only | keeps the catalog release-safe |
+| Links | `self`, `collection` when used, plus any approved lineage-facing links | prevents metadata dead ends |
+| Assets | point to released processed artifacts and related metadata or previews only | keeps the catalog release-safe |
 | KFM alignment | cross-link cleanly to sibling DCAT and PROV records | preserves triplet integrity |
 
-### GeoJSON versus tiles versus hybrid — implication for STAC authoring
+### Delivery choice versus STAC emphasis
 
 | Delivery choice | What STAC should emphasize | Authoring caution |
 |---|---|---|
 | GeoJSON-first | direct feature asset description and modest interaction scope | avoid pretending large client-heavy payloads are free |
 | Tiles-first | delivery artifact identity, rebuildability, and release linkage | keep source semantics separate from renderer convenience |
 | Hybrid | authoritative release artifact plus interaction-friendly derivative references | be explicit about which asset is canonical and which is derived |
+
+### Adjacent-lane routing rule
+
+| Need | Primary lane | Why |
+|---|---|---|
+| Field-level STAC rules | `docs/standards/KFM_STAC_PROFILE.md` | standards belong in standards |
+| Machine-readable trust objects | `contracts/` / settled schema home | prose is not schema authority |
+| Policy decisions and fail-closed reasons | `policy/` | catalog metadata should obey policy, not redefine it |
+| Catalog QA helpers | `tools/catalog/` | helper logic should stay separate from release metadata |
+| Validator entrypoints | `tools/validators/` | trust-bearing checks need a dedicated fail-closed family |
+| Negative-path fixtures and proof drills | `tests/` | verification belongs in governed proof surfaces |
+| Workflow control | `.github/workflows/` | automation should remain explicit and reviewable |
 
 [Back to top](#stac-catalog-surface)
 
@@ -395,33 +458,34 @@ These are **starter expectations**, not a substitute for a formal profile.
 
 ### Immediate
 
-- [ ] Replace the scaffold with this README and verify local formatting/rendering
-- [ ] Confirm `owners`, `doc_id`, `created`, `updated`, and `policy_label` in the meta block
-- [ ] Confirm whether this lane is intended to be file-first, API-derived, or hybrid
+- [ ] Reconcile this README’s current-public snapshot with the checked-out branch before merge
+- [ ] Confirm `doc_id`, `created`, `updated`, and `policy_label` in the meta block
+- [ ] Confirm whether `@bartytime4life` remains the intended broad `/data/` owner or whether a narrower path owner should be added
 
 ### Structural
 
-- [ ] Decide and document the standard checked-in subtree for STAC records
-- [ ] Expand [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md) beyond scaffold status
-- [ ] Confirm whether a root catalog file belongs here or only Collection / Item records
+- [ ] Decide and document the standard checked-in subtree for STAC records (`collections/`, `items/`, and optional root `catalog.json`)
+- [ ] Reconcile [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md) with current public-main inspection and remove any stale “PDF-only” framing that no longer fits the visible tree
+- [ ] Add at least one representative STAC Collection / Item pair, or document explicitly why the lane remains guide-only for now
 
 ### Validation and governance
 
-- [ ] Verify the authoritative machine-contract home for STAC validation rules
-- [ ] Add or confirm Collection / Item validation entrypoints
+- [ ] Confirm canonical machine authority across `contracts/` versus `schemas/`
+- [ ] Land a concrete catalog QA helper under [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md) and/or a fail-closed validator under [`../../../tools/validators/README.md`](../../../tools/validators/README.md)
 - [ ] Add or confirm cross-link checks against sibling DCAT and PROV records
-- [ ] Add negative-path tests so invalid links, raw-path leakage, and release-state mistakes fail closed
+- [ ] Add negative-path tests so invalid links, raw/work leakage, rights gaps, and release-state mistakes fail closed
+- [ ] Reconcile any future workflow automation with [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) and keep public-main versus platform-only behavior visibly separate
 
 ### Definition of done
 
 This lane is in good standing when:
 
-- the README is no longer scaffold-only
-- at least one representative STAC record exists or the empty-state intent is documented
-- profile and validation surfaces are discoverable
+- this README matches current public-tree reality
+- standards, helper, validation, and workflow routes are discoverable
+- at least one representative STAC payload exists or the empty-state intent is explicit
 - STAC ↔ DCAT ↔ PROV cross-links are clean
 - no record quietly points to raw, work, or quarantined material
-- branch-side validation behavior is documented or directly runnable
+- concrete validator or workflow entrypoints are documented or checked in without overclaiming what public `main` actually shows
 
 [Back to top](#stac-catalog-surface)
 
@@ -435,11 +499,11 @@ No. STAC is a catalog/discovery layer over release-linked spatial and temporal a
 
 ### Does every KFM dataset need STAC?
 
-No. STAC is strongest where a dataset has meaningful spatial and/or temporal asset structure. DCAT still matters more generally at the dataset level.
+No. STAC is strongest where a dataset has meaningful spatial and/or temporal asset structure. DCAT still matters more generally at the dataset / distribution level.
 
 ### Should this directory store the actual data files?
 
-No. Store metadata records here; keep released artifacts in the appropriate processed/published lanes.
+No. Store metadata records here; keep released artifacts in the appropriate processed or published lanes.
 
 ### Should a STAC Item ever point directly to raw or work-state material?
 
@@ -451,7 +515,11 @@ Either can be valid. This README governs the checked-in file lane. Live API beha
 
 ### Where should KFM-specific STAC rules really live?
 
-In standards/contracts/policy surfaces, with this README acting as the directory guide rather than the hidden authority.
+In standards, contracts, policy, and validator surfaces, with this README acting as the directory guide rather than the hidden authority.
+
+### Does public `main` currently prove executable STAC validation?
+
+No. Public `main` proves the adjacent helper, validator, test, and workflow README lanes. It does not yet prove the exact checked-in STAC validator files or workflow YAMLs this directory might eventually use.
 
 [Back to top](#stac-catalog-surface)
 
@@ -465,8 +533,10 @@ In standards/contracts/policy surfaces, with this README acting as the directory
 | Label | Meaning in this README |
 |---|---|
 | **CONFIRMED** | directly supported by current public repo inspection or attached KFM doctrine |
+| **INFERRED** | conservative interpretation from adjacent confirmed repo or doctrinal evidence |
 | **PROPOSED** | doctrine-aligned starter pattern not yet proven as checked-in branch reality |
-| **NEEDS VERIFICATION** | should not be treated as settled until direct branch/workspace inspection confirms it |
+| **UNKNOWN** | not verified strongly enough to present as settled current reality |
+| **NEEDS VERIFICATION** | placeholder or repo/platform detail that should be checked before merge |
 
 </details>
 
@@ -481,8 +551,9 @@ Before treating a STAC record as ready, verify:
 - sibling DCAT and PROV records exist where required
 - lineage links are not broken
 - no rights or sensitivity rule is violated by link targets or precision
-- profile/validator checks pass
+- profile and validator checks pass
 - omission of Collection or root catalog files is intentional and documented
+- the README does not claim a helper, validator, or workflow file that the checked-out branch does not actually contain
 
 </details>
 
@@ -494,7 +565,11 @@ Good follow-on cleanup candidates:
 - [`../README.md`](../README.md)
 - [`../dcat/README.md`](../dcat/README.md)
 - [`../prov/README.md`](../prov/README.md)
+- [`../../../docs/standards/README.md`](../../../docs/standards/README.md)
 - [`../../../docs/standards/KFM_STAC_PROFILE.md`](../../../docs/standards/KFM_STAC_PROFILE.md)
+- [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md)
+- [`../../../tools/validators/README.md`](../../../tools/validators/README.md)
+- [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md)
 
 </details>
 
