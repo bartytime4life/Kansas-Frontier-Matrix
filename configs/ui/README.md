@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: <NEEDS VERIFICATION>
-related: [../README.md, ../../apps/explorer-web/README.md, ../../apps/ui/README.md, ../../contracts/README.md, ../../brand/README.md]
+related: [../README.md, ../../apps/explorer-web/README.md, ../../apps/ui/README.md, ../../apps/governed-api/README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../brand/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, ui, config, maplibre, shell]
-notes: [Current public main confirms configs/ui/ exists and currently exposes README.md only; created/updated placeholders need git-history verification; previous ../../styles/README.md assumption removed because that path is not present on public main.]
+notes: [Current public main confirms configs/ui/ exists and currently exposes README.md only; current public policy/ and schemas/ parent lanes are now visibly richer than README-only and are reflected here as boundary context; created/updated placeholders need git-history verification; ../../styles/README.md is still absent on public main.]
 [/KFM_META_BLOCK_V2] -->
 
 # UI Configuration
@@ -19,7 +19,7 @@ Declarative, reviewable UI wiring for the KFM shell, renderer adapters, trust-vi
 
 > **Status:** experimental · **Doc state:** draft · **Owners:** `@bartytime4life` *(current public `/configs/` owner via `.github/CODEOWNERS`; narrower split not yet verified)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![public-tree](https://img.shields.io/badge/public%20tree-README--only-lightgrey) ![runtime](https://img.shields.io/badge/runtime-MapLibre%202D%20default-2da44e) ![scope](https://img.shields.io/badge/scope-non--secret%20UI%20config-1f6feb)  
-> **Repo fit:** `configs/ui/README.md` · parent [`../README.md`](../README.md) · primary consumer [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) · governed boundary [`../../contracts/README.md`](../../contracts/README.md) · presentation neighbor [`../../brand/README.md`](../../brand/README.md)  
+> **Repo fit:** `configs/ui/README.md` · parent [`../README.md`](../README.md) · shell consumer [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) · governed boundaries [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md) · schema context [`../../schemas/README.md`](../../schemas/README.md) · presentation neighbor [`../../brand/README.md`](../../brand/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Config domains](#config-domains) · [Diagram](#diagram) · [Current public inventory](#current-public-inventory) · [Gates](#change-gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -75,12 +75,14 @@ In KFM, that means wiring the governed shell in a way that stays explicit, revie
 | Target README path | `configs/ui/README.md` | **CONFIRMED** on public `main` |
 | Parent directory family | `configs/` | **CONFIRMED** |
 | Current visible subtree inventory | `README.md` only | **CONFIRMED** |
+| Owner coverage | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** parent-lane `/configs/` rule to `@bartytime4life`; narrower `/configs/ui` split remains **UNKNOWN** |
 | Primary consumer doc | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | **CONFIRMED** doc exists; runtime depth remains **UNKNOWN** |
 | Secondary / scaffold surface | [`../../apps/ui/README.md`](../../apps/ui/README.md) | **CONFIRMED** scaffold exists |
-| Governed backend neighbor | [`../../apps/governed-api/`](../../apps/governed-api/) | **CONFIRMED** lane exists |
-| Contract / policy boundaries | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** |
-| Schema authority context | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** doc exists; final schema-home decision still unresolved |
-| Brand / presentation neighbor | [`../../brand/README.md`](../../brand/README.md) | **CONFIRMED** |
+| Governed backend neighbor | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | **CONFIRMED** current public lane exists |
+| Contract boundary | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** current public doc exists |
+| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** current public parent lane and child policy surfaces are visible |
+| Schema authority context | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** current public parent subtree is visible; final schema-home decision remains unresolved |
+| Brand / presentation neighbor | [`../../brand/README.md`](../../brand/README.md) | **CONFIRMED** current public identity subtree exists |
 | `../../styles/README.md` | not present on public `main` | **CONFIRMED** absence for that specific path |
 
 ### Upstream and downstream links
@@ -90,11 +92,12 @@ In KFM, that means wiring the governed shell in a way that stays explicit, revie
 | Parent config lane | [`../README.md`](../README.md) | Defines the broader non-secret configuration boundary. |
 | Runtime shell consumer | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Documents the persistent, map-first shell that would consume these defaults. |
 | Secondary UI scaffold | [`../../apps/ui/README.md`](../../apps/ui/README.md) | Confirms a second app-side UI subtree exists today. |
-| Governed API boundary | [`../../apps/governed-api/`](../../apps/governed-api/) | UI config must stay downstream of governed payloads. |
+| Governed API boundary | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | UI config must stay downstream of governed payloads. |
 | Contract boundary | [`../../contracts/README.md`](../../contracts/README.md) | UI config may reference machine law, but must not replace it. |
-| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | Reasons, obligations, and deny-by-default behavior stay here. |
-| Schema context | [`../../schemas/README.md`](../../schemas/README.md) | Keeps schema-home ambiguity visible instead of hidden. |
+| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | Reasons, obligations, and deny-by-default behavior stay there; UI config renders results but does not define them. |
+| Schema context | [`../../schemas/README.md`](../../schemas/README.md) | The parent schema subtree is now visibly present, but this README still avoids inventing a singular schema home by assumption. |
 | Presentation / identity neighbor | [`../../brand/README.md`](../../brand/README.md) | Shared brand assets and tokens should stay separate from shell wiring. |
+| Review ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Owner badges here are grounded only at the parent `/configs/` rule. |
 | Adjacent doctrine / ADRs | [`../../docs/`](../../docs/) | Route families, runbooks, ADRs, and taxonomy docs belong here. |
 
 ### Why this path fits KFM
@@ -250,6 +253,7 @@ This section shows the **smallest trustworthy path** for turning `configs/ui/` f
 ```bash
 find configs/ui -maxdepth 3 -type f | sort
 find configs -maxdepth 2 -type d | sort
+grep -n "/configs/" .github/CODEOWNERS || true
 ```
 
 ### 2) Trace likely consumers and trust cues
@@ -422,9 +426,12 @@ flowchart LR
         P["../README.md"]
         E["../../apps/explorer-web/README.md"]
         U["../../apps/ui/README.md (scaffold)"]
+        A["../../apps/governed-api/README.md"]
         K["../../contracts/README.md"]
-        G["../../apps/governed-api/"]
+        Y["../../policy/README.md"]
+        Z["../../schemas/README.md"]
         B["../../brand/README.md"]
+        O["../../.github/CODEOWNERS"]
     end
 
     subgraph WORKING["PROPOSED interior config shape"]
@@ -433,9 +440,10 @@ flowchart LR
         R["renderer adapter config"]
         V["view presets"]
         L["layer presentation defaults"]
-        A["accessibility + locale config"]
+        X["accessibility + locale config"]
     end
 
+    O -. parent-lane owner coverage .-> C
     C --> WORKING
     P --> WORKING
     WORKING --> VALIDATE["startup validation"]
@@ -443,11 +451,13 @@ flowchart LR
 
     SHELL --> E
     SHELL --> U
-    SHELL -. consumes governed payloads .-> G
-    SHELL -. references contracts, not policy logic .-> K
+    SHELL -. consumes governed payloads .-> A
+    SHELL -. references contracts, not contract-law copies .-> K
+    SHELL -. renders policy outcomes, not policy logic .-> Y
+    WORKING -. validator contract may refer outward .-> Z
     SHELL -. may reference shared brand tokens .-> B
 
-    X["policy / evidence resolution / canonical writes"] -. not here .-> WORKING
+    DENY["policy / evidence resolution / canonical writes / secrets"] -. not here .-> WORKING
 ```
 
 ### Reading the diagram
@@ -455,9 +465,10 @@ flowchart LR
 The goal is not complexity. It is **boundary clarity**:
 
 - `configs/ui/*` feeds validated shell and renderer wiring
+- current public owner coverage is explicit only at the parent `/configs/` rule
 - the shell owns persistent UX continuity
 - the UI stays downstream of governed API payloads
-- contracts and policy remain stronger seams than config
+- contracts, policy, and schema authority remain stronger seams than config
 - shared identity assets stay in `brand/`, not in ad hoc UI config files
 
 [Back to top](#ui-configuration)
@@ -470,16 +481,19 @@ The goal is not complexity. It is **boundary clarity**:
 | --- | --- | --- |
 | `configs/ui/README.md` | present | The UI config boundary already exists as a doc surface. |
 | Additional files under `configs/ui/` | not visible on public `main` | Interior filenames below remain **PROPOSED**, not current fact. |
-| `../env.schema.json` | present in parent `configs/` | There is already a config-schema naming precedent at the parent lane. |
+| `../env.schema.json` | present in parent `configs/` and currently `{}` | There is already a config-schema naming precedent at the parent lane, but it is still placeholder-state. |
+| `../../.github/CODEOWNERS` | global fallback plus explicit `/configs/ @bartytime4life` | The owner badge here is grounded at parent-lane scope only. |
 | `../../apps/explorer-web/README.md` | present | The primary shell-consumer doc already exists. |
 | `../../apps/ui/` | `src/`, `tests/`, `README.md` scaffold visible | A secondary UI subtree is already present and should not be invented away. |
-| `../../contracts/README.md` | present | Machine-law boundary exists and should stay separate. |
-| `../../policy/README.md` | present | Executable governance boundary exists and should stay separate. |
-| `../../brand/` | `assets/`, `icons/`, `logos/`, `source/`, `templates/`, `tokens/`, `usage/`, `README.md` visible | `brand/` is the closest confirmed identity/presentation neighbor today. |
+| `../../apps/governed-api/README.md` | present | The governed runtime boundary is a real public lane, even though deeper endpoint/runtime detail remains unknown. |
+| `../../contracts/README.md` | present; current public `contracts/` lane is still README-only | Machine-law boundary exists and should stay separate. |
+| `../../policy/` | `bundles/`, `fixtures/`, `policy-runtime/`, `tests/`, `README.md` visible | Policy is now a real parent lane with child surfaces; UI config may render outcomes, but must not own them. |
+| `../../schemas/` | `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows/`, `README.md` visible | Schema context is now live enough to cite, but not settled enough to collapse schema-home ambiguity. |
+| `../../brand/` | `assets/`, `icons/`, `logos/`, `official-seal/`, `source/`, `templates/`, `tokens/`, `usage/`, `README.md` visible | `brand/` is the closest confirmed identity/presentation neighbor today. |
 | `../../styles/README.md` | absent on public `main` | Do not link this as current fact until the lane actually exists. |
 
 > [!NOTE]
-> Absence of a public root-level `styles/` lane does **not** forbid one later. It only means this README should not pretend that the path already exists.
+> Absence of a public root-level `styles/` lane does **not** forbid one later. It only means this README should not pretend that the path already exists. The same rule applies to any future attempt to collapse policy or schema authority into `configs/ui/` by convenience.
 
 [Back to top](#ui-configuration)
 
@@ -499,6 +513,7 @@ A change in `configs/ui/` is ready only when the following are true:
 - [ ] Any new 3D-related toggle references a burden review and does **not** become the default path.
 - [ ] Any new feature flag includes rollback intent and does not weaken doctrine.
 - [ ] Broken relative links are removed or replaced with real repo paths.
+- [ ] Parent-lane ownership and review routing still match the touched paths.
 - [ ] If config starts referencing `brand/` tokens or a future portrayal lane, ownership and fallback behavior are documented.
 - [ ] Adjacent docs are updated if the change affects route families, view taxonomy, or package boundaries.
 
