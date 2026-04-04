@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <NEEDS CREATION DATE VERIFICATION>
-updated: 2026-03-22
+updated: 2026-04-02
 policy_label: <NEEDS POLICY LABEL VERIFICATION>
 related: [../README.md, ../../README.md, ../../infra/README.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, deployment, configs, review-needed]
-notes: [Owner comes from current public /configs/ CODEOWNERS fallback; public main confirms configs/deployment/ exists and currently contains README.md only; created date and policy label still need verification.]
+notes: [Owner comes from current public /configs/ CODEOWNERS fallback; public main confirms configs/deployment/ exists and currently contains README.md only; visible public path history shows activity on 2026-03-15, 2026-03-21, 2026-03-22, and 2026-04-02; created date and policy label still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Deployment Configuration
@@ -21,6 +21,7 @@ Deployment-facing configuration guidance for KFM rollout parameters, environment
 > **Owners:** `@bartytime4life` *(via current public `/configs/` CODEOWNERS coverage; no narrower `/configs/deployment/` rule was verified on public `main`)*  
 > **Path:** `configs/deployment/README.md`  
 > **Current public tree state:** `README.md` only on `main`  
+> **Current public history signal:** visible path history shows activity on `2026-03-15`, `2026-03-21`, `2026-03-22`, and `2026-04-02`; the clean creation date for the current incarnation still needs verification  
 > **Repo fit:** child lane of [`../README.md`](../README.md), configuration-facing companion to [`../../infra/`](../../infra/), not a replacement for it
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
@@ -74,7 +75,7 @@ In KFM terms, this lane should help contributors answer four practical questions
 | [`../../infra/`](../../infra/) | **CONFIRMED** | Deployment and operations lane for infrastructure, overlays, runtime bring-up, monitoring, restore, and rollback |
 | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Policy posture, deny-by-default logic, reason/obligation semantics, runtime negative outcomes |
 | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Contract surface documentation and machine-readable trust objects |
-| [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema-lane boundary guide; exact single-authority split with `contracts/` still needs verification |
+| [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema-lane parent boundary and live-tree index; exact single-authority split with root `contracts/` still needs verification |
 | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Governed verification, fixtures, negative paths, and proof expectations |
 | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED** | Workflow-lane documentation; current public `main` still shows README only inside `.github/workflows/` |
 
@@ -200,12 +201,13 @@ sed -n '1,220p' contracts/README.md
 sed -n '1,220p' schemas/README.md
 sed -n '1,220p' tests/README.md
 ls -la .github/workflows
+sed -n '1,240p' .github/workflows/README.md
 
 # 3) pressure-test whether the config has a named consumer and real references
 grep -RIn "configs/deployment\|profile_id\|service_ref\|workflow_ref\|rollback_ref" \
   apps packages infra tests tools scripts 2>/dev/null || true
 
-# 4) inspect path history before inventing filenames or responsibilities
+# 4) inspect path history before inventing filenames, dates, or responsibilities
 git log --name-status -- configs/deployment
 ```
 
@@ -390,7 +392,7 @@ No. It can reference policy surfaces, but deny/allow logic, rights handling, rev
 
 ### Can this directory become the source of truth for schemas?
 
-No. API and object contracts belong in the contract/schema lanes, and the exact authoritative split between `contracts/` and `schemas/` still needs verification.
+No. API and object contracts belong in the contract/schema lanes. Current public `main` shows an evolving `schemas/` parent subtree, but the exact authoritative split between root `contracts/` and the `schemas/` family still needs verification.
 
 ### Should workflow names be documented here?
 
@@ -414,11 +416,11 @@ This README should be tightened after working-checkout inspection retires the fo
 - exact parity between public `main` and the working branch
 - actual files and subdirectories under `configs/deployment/`
 - actual runtime consumers and loader paths
-- actual deployment workflow YAML names, if any
+- actual deployment workflow YAML names, if any, and whether they are checked-in files or historical reconstruction clues
 - actual infra overlays or runtime targets referenced from this lane
 - actual secret-handling mechanism
 - whether `contracts/` or `schemas/` is authoritative for deployment-related schemas
-- correct `doc_id`, `created`, and `policy_label` values
+- correct `doc_id`, `created` value for the current incarnation, and `policy_label`
 
 </details>
 
@@ -428,7 +430,7 @@ This README should be tightened after working-checkout inspection retires the fo
 ```yaml
 profile_id: <name>
 owner: <team-or-person>
-environment_class: <local|systemd|systemd-or-compose|hosted|kubernetes>
+environment_class: <local|systemd|systemd-or-compose|compose|hosted|kubernetes|gitops>
 service_ref: ../../apps/<service-or-surface>
 workflow_ref: ../../.github/workflows/<workflow>.yml
 infra_ref: ../../infra/<area-or-overlay>
