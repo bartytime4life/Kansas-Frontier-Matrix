@@ -18,11 +18,16 @@ notes: [owners confirmed from /.github/CODEOWNERS broad /data/ ownership; doc_id
 Governed catalog-closure surface for DCAT, STAC, and PROV metadata inside the KFM data lifecycle.
 
 > **Status:** experimental  
+> **Doc state:** draft  
 > **Owners:** `@bartytime4life` *(broad `/data/` CODEOWNERS fallback)*  
 > **Path:** `data/catalog/README.md`  
 > **Repo fit:** [`../README.md`](../README.md) → [`./dcat/`](./dcat/) · [`./stac/`](./stac/) · [`./prov/`](./prov/)  
-> ![status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![doc: draft](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square) ![catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-2d6cdf?style=flat-square) ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square) ![public main: checked](https://img.shields.io/badge/public__main-checked-2ea043?style=flat-square)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Catalog crosswalk](#catalog-crosswalk) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
+> ![doc: draft](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square)
+> ![catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-2d6cdf?style=flat-square)
+> ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square)
+> ![public main: checked](https://img.shields.io/badge/public__main-checked-2ea043?style=flat-square)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `data/catalog/` is a **catalog surface**, not a canonical data zone. In KFM, authority is stabilized upstream through `RAW -> WORK / QUARANTINE -> PROCESSED`, then closed into outward `DCAT + STAC + PROV` metadata for discovery, lineage, and policy-visible release behavior.
@@ -75,7 +80,7 @@ Use this file to answer four questions quickly:
 | Shared control surfaces | [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/), [`../../tests/`](../../tests/), [`../../tools/`](../../tools/) |
 | Downstream consumers | governed APIs, discovery/read routes, Evidence Drawer flows, map/timeline/dossier/story/focus surfaces |
 
-### Current verified snapshot
+### Current public evidence snapshot *(CONFIRMED)*
 
 | Surface | Current public-main content | What that means |
 |---|---|---|
