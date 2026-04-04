@@ -4,681 +4,450 @@ title: Policy Tests: Genealogy
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: 2026-03-29
-updated: 2026-03-29
+updated: 2026-04-04
 policy_label: restricted
 related:
-  - policy/genealogy/README.md
-  - docs/connectors/genealogy/README.md
-  - contracts/genealogy/
   - tests/policy/README.md
+  - tests/README.md
+  - docs/connectors/genealogy/README.md
+  - policy/README.md
+  - .github/CODEOWNERS
+  - .github/workflows/README.md
 tags: [kfm, genealogy, policy, tests]
-notes: Source-bounded; no mounted repo checkout in this session; live paths/workflows/owners NEED VERIFICATION before merge.
+notes: Current public main confirms this README path and adjacent genealogy connector doc; executable genealogy-specific bundle and contract subpaths remain proposed or need verification.
 [/KFM_META_BLOCK_V2] -->
 
 # Policy Tests: Genealogy
 
-Purpose: governed negative-test and admission-test surface for genealogy policy bundles.
+Purpose: repo-facing verification contract for genealogy policy behavior, negative outcomes, and future parity checks.
 
-> [!IMPORTANT]
-> **Truth posture:** **PROPOSED**
-> **Evidence posture:** Source-bounded in this session; no mounted repo checkout; live paths, workflow names, policy packaging conventions, and fixture-loading mechanics **NEED VERIFICATION** before merge.
-> **Architecture fit:** `tests/` is a governed verification surface, not a generic QA bucket. These tests prove fail-closed behavior for consent, living-person handling, DNA restrictions, provenance completeness, and publication controls.
-
-## Impact
-
-**Status:** `experimental`
-**Owners:** `NEEDS VERIFICATION`
-**Path:** `tests/policy/genealogy/README.md`
-**Surface:** governed verification / fail-closed policy testing
-**Upstream:** `policy/genealogy/`, `contracts/genealogy/`, connector receipts, normalized bundles
-**Downstream:** CI promotion gates, runtime admission checks, release/publication blocking, audit/correction workflows
+> Status: `experimental`  
+> Owners: `@bartytime4life` (current `/.github/CODEOWNERS` fallback for `/tests/`)  
+> Path: `tests/policy/genealogy/README.md`  
+> Repo fit: narrow genealogy-specific policy-verification surface under [`../README.md`](../README.md), paired with [`../../../docs/connectors/genealogy/README.md`](../../../docs/connectors/genealogy/README.md), and subordinate to the repo-wide policy and contract lanes in [`../../../policy/README.md`](../../../policy/README.md) and [`../../../contracts/README.md`](../../../contracts/README.md)  
+> Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
-![Policy](https://img.shields.io/badge/policy-fail--closed-red)
-![Surface](https://img.shields.io/badge/surface-tests%2Fpolicy-blue)
-![Posture](https://img.shields.io/badge/posture-source--bounded-lightgrey)
-![Verification](https://img.shields.io/badge/live_tree-NEEDS_VERIFICATION-yellow)
+![Owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
+![Surface](https://img.shields.io/badge/surface-tests%2Fpolicy%2Fgenealogy-1f6feb)
+![Publication](https://img.shields.io/badge/publication-restricted-red)
+![Repo%20evidence](https://img.shields.io/badge/repo__evidence-public__main%20README--only-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory sketch](#directory-sketch) · [Quickstart](#quickstart) · [CLI examples](#cli-examples) · [Expected outcomes matrix](#expected-outcomes-matrix) · [CI integration](#ci-integration) · [Definition of done](#definition-of-done) · [Open verification items](#open-verification-items)
+> [!IMPORTANT]
+> Current public `main` confirms this directory and this README. It does **not** currently expose checked-in sibling test files in `tests/policy/genealogy/`, and it does **not** prove a public `policy/genealogy/` or `contracts/genealogy/` subtree. This README therefore documents a **real repo path** with a **partly proposed executable target state**.
 
 ---
 
 ## Scope
 
-This test surface validates the **genealogy policy bundle** for:
+`tests/policy/genealogy/` is the genealogy-specific edge of KFM’s policy-behavior proof lane.
 
-* consent enforcement
-* revocation fail-closed behavior
-* living-person redaction and publication blocking
-* DNA-sensitive handling restrictions
-* provenance completeness requirements
-* release/publication admission decisions
+The job of this directory is not to redefine policy law. Its job is to make policy behavior inspectable under pressure: consent failure, living-person restrictions, DNA-sensitive handling, provenance incompleteness, runtime dependency loss, and public-vs-restricted publication outcomes.
 
-These tests exist to prove that KFM does the correct thing when conditions are unsafe, incomplete, or rights-constrained.
+### Evidence boundary used here
 
-This surface should heavily favor **negative tests** over happy-path demonstrations.
+| Label | What this README treats as settled |
+|---|---|
+| **CONFIRMED** | Current public `main` exposes `tests/policy/genealogy/README.md`, the parent verification lanes under `tests/`, the top-level `policy/` lane, the companion genealogy connector doc, and broad `CODEOWNERS` coverage for `/tests/` and `/policy/`. |
+| **INFERRED** | Genealogy-specific proof needs should align with the repo’s broader `tests/policy/` and `policy/` taxonomy even when exact file placement is not yet branch-visible. |
+| **PROPOSED** | Executable genealogy-specific bundle, fixture, contract, and parity artifacts that fit current doctrine but are not directly visible on public `main`. |
+| **UNKNOWN / NEEDS VERIFICATION** | Checked-out branch contents beyond public `main`, exact OPA / Conftest versions, actual workflow YAML, private rulesets, and the final home of genealogy-specific bundle fixtures and contracts. |
 
-### What this test surface proves
+### What this surface must prove
 
-| Proof target               | What must be demonstrated                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------- |
-| Consent                    | Missing, invalid, revoked, or mismatched consent blocks admission                     |
-| Trust membrane             | Public publication is denied when restricted genealogy content would cross boundaries |
-| Living persons             | Living and unknown-living-status records do not leak to public surfaces               |
-| DNA sensitivity            | Raw DNA, matches, and segments stay restricted                                        |
-| Provenance                 | Incomplete evidence/provenance fails closed                                           |
-| Runtime dependency posture | Missing revocation manifest or equivalent policy state blocks progression             |
-| Policy composition         | Combined deny logic still behaves deterministically when multiple violations coexist  |
+| Proof burden | What must be demonstrated |
+|---|---|
+| Consent | Missing, invalid, revoked, or mismatched consent blocks admission. |
+| Trust membrane | Public publication is denied when restricted genealogy content would cross into outward-facing surfaces. |
+| Living persons | Living and unknown-living-status records do not leak to public surfaces. |
+| DNA sensitivity | Raw DNA, kits, matches, and segments remain restricted by default. |
+| Provenance | Incomplete evidence, missing refs, or weak coverage fail closed. |
+| Runtime dependency posture | Missing revocation state or missing runtime context blocks progression. |
+| Composition | Multiple simultaneous violations still produce deterministic, visible outcomes. |
+
+[Back to top](#policy-tests-genealogy)
 
 ---
 
 ## Repo fit
 
-**Proposed path:** `tests/policy/genealogy/README.md`
+Path: `tests/policy/genealogy/README.md`  
+Role in repo: directory-level contract for genealogy-specific policy verification.
 
-### Upstream
+### Current public-main snapshot
 
-* `policy/genealogy/`
-* `contracts/genealogy/*.schema.json`
-* connector receipts and normalized bundles
-* consent / revocation-state injection contract
-* release candidate bundle inputs
+| Surface | Public `main` status | What that proves |
+|---|---|---|
+| `tests/policy/genealogy/README.md` | Present | This directory is real, checked in, and already documented. |
+| Other files under `tests/policy/genealogy/` | Not visible on public `main` | The current public surface is README-only. |
+| [`../README.md`](../README.md) | Present | The parent `tests/policy/` lane already defines repo-facing policy verification boundaries. |
+| [`../../README.md`](../../README.md) | Present | The broader `tests/` taxonomy is already established. |
+| [`../../../docs/connectors/genealogy/README.md`](../../../docs/connectors/genealogy/README.md) | Present | A companion genealogy intake/governance document already exists. |
+| [`../../../policy/README.md`](../../../policy/README.md) | Present | Top-level policy ownership belongs upstream from this directory. |
+| `../../../policy/bundles/`, `../../../policy/fixtures/`, `../../../policy/tests/` | Present as documented child lanes | Current repo shape favors top-level policy sublanes rather than a visible `policy/genealogy/` subtree. |
+| `policy/genealogy/` | Not visible on public `main` | Any genealogy-specific bundle root under that exact path remains **PROPOSED**. |
+| `contracts/genealogy/` | Not visible on public `main` | Any genealogy-specific contract sublane remains **PROPOSED**. |
+| [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Present; workflow lane documented as README-only on public `main` | CI references here are proof burdens, not proof of checked-in merge-gate YAML. |
+| [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Present | Broad ownership coverage exists for `/tests/` and `/policy/`. |
 
-### Downstream
+### Upstream, lateral, and downstream links
 
-* CI promotion gates
-* runtime admission checks
-* release/publish blocking
-* audit and correction workflows
-
-### Adjacent surfaces
-
-| Path                                  | Role                                                              |
-| ------------------------------------- | ----------------------------------------------------------------- |
-| `policy/genealogy/`                   | Canonical genealogy policy bundle under test                      |
-| `contracts/genealogy/`                | Schema contracts that should be validated before policy admission |
-| `docs/connectors/genealogy/README.md` | Connector + ingest architecture                                   |
-| `tests/contracts/genealogy/`          | Contract validation surface                                       |
-| `tests/e2e/genealogy/`                | End-to-end admission / publish proofs                             |
+| Direction | Surface | Why it matters |
+|---|---|---|
+| Upstream | [`../README.md`](../README.md) | Defines the narrower `tests/policy/` verification boundary this directory extends. |
+| Upstream | [`../../../docs/connectors/genealogy/README.md`](../../../docs/connectors/genealogy/README.md) | Defines connector/intake posture, source families, and publication risk. |
+| Lateral | [`../../../policy/README.md`](../../../policy/README.md) | Owns executable policy law and top-level policy-lane structure. |
+| Lateral | [`../../../contracts/README.md`](../../../contracts/README.md) | Owns machine-contract lanes that genealogy policy should eventually consume. |
+| Lateral | [`../../../schemas/README.md`](../../../schemas/README.md) | Keeps schema-home authority explicit instead of duplicating it here. |
+| Guardrail | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Captures the current public workflow visibility boundary. |
+| Downstream | release, runtime, and correction surfaces | This lane should prove behavior that later gates admission, publication, rollback, and trust-visible correction. |
 
 > [!NOTE]
-> Exact paths above are **PROPOSED** and **NEED VERIFICATION** against the live repo tree.
+> Keep bundle law upstream and proof here. If a change mostly defines policy law, it belongs under the top-level `policy/` child lanes. If it proves policy behavior against realistic genealogy cases, it belongs here.
+
+[Back to top](#policy-tests-genealogy)
 
 ---
 
 ## Inputs
 
-This test surface accepts:
+Current public `main` does **not** yet show checked-in executable genealogy test artifacts here. The table below defines the intended input contract for this surface once it grows beyond README-only status.
 
-* Rego policy modules
-* JSON fixtures representing ingest and publish inputs
-* optional release candidate JSON documents
-* optional runtime-like context injection for revocation state and target visibility
+| Input class | What belongs here | Status |
+|---|---|---|
+| Repo-facing outcome fixtures | Small, explicit cases that prove `allow`, `deny`, `restrict`, `generalize`, `needs-review`, or similar behavior for genealogy-specific inputs | **PROPOSED** |
+| Runtime parity checks | Cases that prove release/runtime outcomes stay aligned with policy meaning | **PROPOSED** |
+| Decision-grammar checks | Assertions over deny reasons, obligation codes, and stable outcome vocabularies | **PROPOSED** |
+| Correction / withdrawal drills | Cases where trust state changes after publication and must remain visible | **PROPOSED** |
+| Tiny seam notes | Minimal docs that explain fixture intent, parity expectations, or runner assumptions | **PROPOSED** |
 
-### Minimum tested input sections
+### Minimum data shape for meaningful cases
 
-| Section             | Why it matters                           |
-| ------------------- | ---------------------------------------- |
-| `mode`              | Distinguishes ingest vs publish behavior |
-| `target.visibility` | Determines public/restricted logic       |
-| `artifact`          | Binds hash/class/source checks           |
-| `consent`           | Consent validity and permissions         |
-| `bundle`            | Living-person and DNA-content checks     |
-| `provenance`        | Completeness enforcement                 |
-| `runtime`           | Revocation-state fail-closed behavior    |
+| Section | Why it matters |
+|---|---|
+| `mode` | Distinguishes ingest vs publish behavior. |
+| `target.visibility` | Separates public from restricted handling. |
+| `artifact` | Binds class, source, and hash-sensitive checks. |
+| `consent` | Carries validity, redistribution, and DNA-permission signals. |
+| `bundle` | Carries living-person and DNA-sensitive content. |
+| `provenance` | Carries completeness, refs, and coverage semantics. |
+| `runtime` | Carries revocation-state and dependency posture where required. |
 
-### Accepted inputs
-
-| Input class                 | Typical format      | Notes                                  |
-| --------------------------- | ------------------- | -------------------------------------- |
-| Policy modules              | `.rego`             | OPA / Conftest compatible              |
-| Fixtures                    | `.json`             | Minimal, explicit, reproducible        |
-| Candidate admission bundles | `.json`             | Release/runtime-like evaluation inputs |
-| Test wrappers               | Make/task/CI config | **NEEDS VERIFICATION** in live tree    |
+[Back to top](#policy-tests-genealogy)
 
 ---
 
 ## Exclusions
 
-This test surface does **not**:
+This directory should stay narrow.
 
-* validate GEDCOM parser correctness in depth
-* test canonical schema semantics beyond policy-relevant structure
-* prove connector OAuth logic
-* prove media rights-clearing workflows
-* replace schema contract tests
-* replace end-to-end ingestion tests
+| Does **not** belong here | Put it here instead | Why |
+|---|---|---|
+| Executable policy bundle law | [`../../../policy/README.md`](../../../policy/README.md) and its child lanes | Bundle law and repo-facing proof are adjacent, not identical. |
+| Canonical contracts or shared schema definitions | [`../../../contracts/README.md`](../../../contracts/README.md) | This directory should consume contracts, not fork them. |
+| Schema-home doctrine | [`../../../schemas/README.md`](../../../schemas/README.md) | Schema ownership should stay singular. |
+| Connector intake architecture | [`../../../docs/connectors/genealogy/README.md`](../../../docs/connectors/genealogy/README.md) | Ingest design and test proof are different surfaces. |
+| Runtime glue, loaders, or mediators | package/runtime seams verified elsewhere | Verification should not become shadow implementation. |
+| End-to-end release artifacts as the authoritative record | broader `tests/e2e/` and release-proof surfaces | This lane may test those behaviors, but it does not own their primary record. |
+| Generic GEDCOM parser correctness | contract, parser, or ingestion tests | Policy behavior is the focus here. |
 
-Those belong in adjacent surfaces such as:
-
-* `tests/contracts/genealogy/`
-* `tests/e2e/genealogy/`
-* connector-specific integration tests
+[Back to top](#policy-tests-genealogy)
 
 ---
 
-## Directory sketch
+## Directory tree
+
+### Current public branch
 
 ```text
 tests/
   policy/
     genealogy/
       README.md
-      consent_test.rego
-      living_persons_test.rego
-      dna_sensitive_test.rego
-      provenance_test.rego
-      publication_test.rego
-      fixtures/                 # optional local mirror if repo prefers test-local fixtures
+```
 
+### Target executable split (PROPOSED)
+
+```text
 policy/
-  genealogy/
-    helpers.rego
-    consent.rego
-    living_persons.rego
-    dna_sensitive.rego
-    provenance.rego
-    publication.rego
-    fixtures/
+  bundles/
+    genealogy/
+      consent.rego
+      living_persons.rego
+      dna_sensitive.rego
+      provenance.rego
+      publication.rego
+  fixtures/
+    genealogy/
       valid_ingest.json
       missing_consent.json
+      revoked_consent.json
       living_publish_leak.json
       dna_publication_leak.json
-      revoked_consent.json
       missing_provenance.json
+  tests/
+    genealogy/
+      bundle_outcomes.rego
+
+tests/
+  policy/
+    genealogy/
+      README.md
+      runtime_parity.md
+      release_parity.md
+      correction_parity.md
+      fixtures/   # only if repo-facing verification truly needs local copies
 ```
 
 > [!WARNING]
-> The layout above is a **PROPOSED** sketch only. Verify exact repo placement, filenames, and fixture-loading conventions before merge.
+> The target buildout above is intentionally aligned to the **current visible top-level `policy/` taxonomy** rather than to a non-visible `policy/genealogy/` subtree. Use the active checkout—not this README alone—to decide final placement.
+
+[Back to top](#policy-tests-genealogy)
 
 ---
 
 ## Quickstart
 
-Run the genealogy policy checks in three layers:
+### 1) Confirm the currently checked-in genealogy surfaces
 
 ```bash
-# 1) compile and run rego tests
-opa test policy/genealogy tests/policy/genealogy
+# run from repo root
+ls tests/policy/genealogy
+ls docs/connectors/genealogy
+ls policy
+ls policy/bundles policy/fixtures policy/tests 2>/dev/null || true
 
-# 2) check known-good restricted fixture
-conftest test policy/genealogy/fixtures/valid_ingest.json --policy policy/genealogy
-
-# 3) inspect deny output for a known-bad public leak
-opa eval \
-  --data policy/genealogy \
-  --input policy/genealogy/fixtures/dna_publication_leak.json \
-  "data.kfm.genealogy.publication.deny"
+# explicitly verify any branch-local genealogy-specific paths before using them
+ls policy/genealogy 2>/dev/null || true
+ls contracts/genealogy 2>/dev/null || true
+ls tests/contracts/genealogy 2>/dev/null || true
+ls tests/e2e/genealogy 2>/dev/null || true
 ```
+
+### 2) Read the three docs that already define the seam
+
+1. [`../README.md`](../README.md)
+2. [`../../../docs/connectors/genealogy/README.md`](../../../docs/connectors/genealogy/README.md)
+3. [`../../../policy/README.md`](../../../policy/README.md)
+
+### 3) Only then wire executable targets
+
+Add the first negative fixture only after the active checkout proves where bundle law, fixtures, and repo-facing assertions actually live.
 
 > [!CAUTION]
-> Command names, policy roots, and target package names are **NEEDS VERIFICATION** in the live repository.
+> Do **not** paste path-specific `opa` or `conftest` commands into CI until you have reverified the real genealogy bundle root on the active branch.
+
+[Back to top](#policy-tests-genealogy)
 
 ---
 
-## Test families
+## Usage
 
-### 1) Consent tests
+Use this directory to prove behavior, not merely to declare aspirations.
 
-Focus: **admission is impossible without valid consent**.
+### Working rule
 
-Required negative cases:
+If a new artifact mostly defines policy law, place it under the top-level `policy/` child lanes.  
+If it proves that genealogy policy survives into repo-facing outcomes—release, runtime, correction, or public-vs-restricted parity—it belongs here.
 
-* consent object missing
-* consent present flag false
-* invalid signature
-* revoked consent
-* artifact hash mismatch
-* DNA content present but `allow_dna_processing=false`
-* public publication attempted with `redistribution=false`
+### Core test families
 
-Representative assertions:
+| Family | Must fail closed on | Must expose clearly |
+|---|---|---|
+| Consent | missing consent, invalid signature, revoked consent, hash mismatch, redistribution/publication conflict | stable deny reason or obligation code |
+| Living persons | living or unknown-living-status material on public targets; living-person processing blocked by consent | public deny, plus any permitted restricted redaction obligation |
+| DNA sensitivity | raw DNA, kits, matches, segments, or DNA processing without permission | deny plus any explicit restricted-handling obligation |
+| Provenance | missing provenance block, incomplete coverage, missing refs | provenance-specific deny behavior |
+| Runtime dependency | missing revocation manifest, missing visibility target, absent runtime context | deny rather than silent warn-only downgrade |
+| Composition | multiple simultaneous violations | deterministic multi-reason outcomes |
 
-* `allow == false`
-* `deny` contains explicit fail-closed reason
-* warnings/obligations are present only when appropriate
+### Operating guidance
 
----
+- Favor **negative** cases over happy-path accumulation.
+- Keep public and restricted targets explicit in every consequential fixture.
+- Prefer structured reason and obligation codes over prose-only assertions.
+- Treat missing context as unsafe.
+- Keep correction-bearing states visible; do not collapse `withdrawn`, `superseded`, or narrowed-visibility behavior into a generic pass/fail blur.
 
-### 2) Living-person policy tests
-
-Focus: **no public leakage of living or unresolved-living-status persons**.
-
-Required negative cases:
-
-* living person in public publish bundle
-* unknown living status in public publish bundle
-* ingest containing living persons while consent forbids living-person processing
-
-Required obligation/redaction cases:
-
-* living person on restricted internal surface produces redaction obligation if pipeline design allows partial continuation
-* unknown living status on public target yields deny, not warn-only
-
-Representative assertions:
-
-* public target denied
-* redaction obligations emitted for affected `person_id`s
-* deny text points to living-person restriction rather than a generic failure only
+[Back to top](#policy-tests-genealogy)
 
 ---
 
-### 3) DNA-sensitive tests
-
-Focus: **DNA data remains restricted**.
-
-Required negative cases:
-
-* raw DNA bundle on public target
-* DNA kits on public target
-* segment records on public target
-* match records on public target
-* DNA content present but consent denies DNA processing
-
-Required obligation cases:
-
-* restricted DNA bundle emits `dna_sensitive_restriction` obligation or equivalent
-
-Representative assertions:
-
-* public DNA publication denied
-* segment leakage specifically denied
-* match leakage specifically denied
-* bundle labels such as `dna_sensitive` are respected even if arrays are empty but artifact class is DNA-related
-
----
-
-### 4) Provenance tests
-
-Focus: **authoritative genealogy bundles cannot proceed with incomplete evidence**.
-
-Required negative cases:
-
-* provenance block missing entirely
-* completeness flag false
-* missing field refs present
-* record coverage below threshold
-* authoritative records lacking evidence links
-
-Representative assertions:
-
-* denial on incomplete provenance
-* denial text identifies provenance completeness
-* coverage threshold failure is explicit and machine-readable if possible
-
----
-
-### 5) Publication composition tests
-
-Focus: **composed policy behavior remains deterministic**.
-
-These tests combine multiple violations in one input, for example:
-
-* public DNA bundle with revoked consent
-* living-person public bundle with redistribution false
-* public bundle with missing provenance and missing revocation manifest
-
-Representative assertions:
-
-* `allow == false`
-* multiple deny reasons may coexist
-* the presence of one deny does not suppress other critical deny outputs unless the repo intentionally short-circuits
-* obligation output does not mask deny results
-
----
-
-### 6) Runtime dependency tests
-
-Focus: **policy state dependencies fail closed**.
-
-Required negative cases:
-
-* revocation manifest unavailable
-* required target visibility missing
-* required runtime context absent
-* publication target shape malformed
-
-Representative assertions:
-
-* missing runtime dependency blocks progression
-* failure reason is visible and not silently downgraded to warn
-
----
-
-## Execution model
-
-The most useful execution model has **three layers**:
-
-```mermaid
-flowchart TD
-  A[Fixture JSON] --> B[Schema Validation]
-  B --> C[Policy Unit Tests]
-  C --> D[Admission Checks]
-  D --> E[CI Gate / Runtime Gate]
-```
-
-### Layer 1: schema sanity
-
-Validate fixtures or candidate bundles against JSON Schema first, where applicable.
-
-### Layer 2: policy unit tests
-
-Run Rego tests that directly assert deny/allow/obligation behavior on known fixtures.
-
-### Layer 3: admission checks
-
-Run `conftest` or `opa eval` against actual bundle-shaped inputs exactly as CI/runtime will.
-
-This layered approach catches:
-
-* malformed fixtures
-* broken policy modules
-* integration mismatches between modules and real input shapes
-
----
-
-## CLI examples
-
-### Run policy tests
-
-```bash
-opa test policy/genealogy tests/policy/genealogy
-```
-
-### Run Conftest against a fixture
-
-```bash
-conftest test policy/genealogy/fixtures/valid_ingest.json --policy policy/genealogy
-```
-
-### Evaluate allow decision directly
-
-```bash
-opa eval \
-  --data policy/genealogy \
-  --input policy/genealogy/fixtures/valid_ingest.json \
-  "data.kfm.genealogy.publication.allow"
-```
-
-### Evaluate deny set directly
-
-```bash
-opa eval \
-  --data policy/genealogy \
-  --input policy/genealogy/fixtures/living_publish_leak.json \
-  "data.kfm.genealogy.publication.deny"
-```
-
-### Example make-style wrapper (PROPOSED)
-
-```bash
-make test-policy-genealogy
-```
-
----
-
-## Fixture strategy
-
-Fixtures should be **small, explicit, and single-purpose** unless testing policy composition.
-
-### Fixture design rules
-
-| Rule                                                    | Why                        |
-| ------------------------------------------------------- | -------------------------- |
-| Prefer one clear violation per negative fixture         | Easier diagnosis           |
-| Keep fields minimal but realistic                       | Easier maintenance         |
-| Include explicit `mode` and `target.visibility`         | Avoids ambiguous branching |
-| Preserve stable identifiers                             | Reproducible assertions    |
-| Use dedicated composition fixtures for multi-deny cases | Deterministic review       |
-
-### Recommended fixture families
-
-| Fixture                            | Purpose                        |
-| ---------------------------------- | ------------------------------ |
-| `valid_ingest.json`                | Known-good restricted ingest   |
-| `missing_consent.json`             | Consent fail-closed            |
-| `invalid_signature.json`           | Signature fail-closed          |
-| `artifact_hash_mismatch.json`      | Binding fail-closed            |
-| `revoked_consent.json`             | Revocation fail-closed         |
-| `living_publish_leak.json`         | Public living-person block     |
-| `unknown_living_publish.json`      | Public unknown-status block    |
-| `dna_publication_leak.json`        | Public DNA block               |
-| `dna_processing_not_allowed.json`  | DNA ingest blocked by consent  |
-| `missing_provenance.json`          | Provenance fail-closed         |
-| `missing_revocation_manifest.json` | Runtime dependency fail-closed |
-| `multi_violation_publication.json` | Composed deny set              |
-
-> [!TIP]
-> Not all recommended fixtures above have been generated in this session. Treat several as **PROPOSED additions** to strengthen the suite.
-
----
-
-## Expected outcomes matrix
-
-| Scenario                               | Allow | Deny |  Warn |                           Obligation |
-| -------------------------------------- | ----: | ---: | ----: | -----------------------------------: |
-| valid restricted ingest                |   yes |   no | maybe |                                maybe |
-| missing consent                        |    no |  yes |    no |                                   no |
-| invalid signature                      |    no |  yes |    no |                                   no |
-| revoked consent                        |    no |  yes |    no |                                   no |
-| artifact hash mismatch                 |    no |  yes |    no |                                   no |
-| public living-person bundle            |    no |  yes |    no |          optional redaction metadata |
-| public unknown-living bundle           |    no |  yes |    no |          optional redaction metadata |
-| public DNA bundle                      |    no |  yes |    no | maybe restricted-handling obligation |
-| DNA ingest without DNA permission      |    no |  yes |    no |                                   no |
-| incomplete provenance                  |    no |  yes |    no |                                   no |
-| research-only restricted ingest        |   yes |   no |   yes |                                  yes |
-| redistribution false on public publish |    no |  yes | maybe |                                   no |
-
----
-
-## Suggested test file responsibilities
-
-### `consent_test.rego`
-
-Should cover:
-
-* consent presence
-* signature validity
-* revocation handling
-* artifact hash matching
-* redistribution/publication interaction
-
-### `living_persons_test.rego`
-
-Should cover:
-
-* public living-person denial
-* public unknown-living denial
-* restricted redaction obligations
-* consent interaction for living-person processing
-
-### `dna_sensitive_test.rego`
-
-Should cover:
-
-* public DNA denial
-* segment prohibition
-* match prohibition
-* DNA consent gating
-* DNA obligation emission
-
-### `provenance_test.rego`
-
-Should cover:
-
-* complete vs incomplete provenance
-* missing refs
-* threshold checks
-* missing provenance block entirely
-
-### `publication_test.rego`
-
-Should cover:
-
-* composed deny aggregation
-* final `allow` result
-* deny set stability
-* obligation propagation from child modules
-
----
-
-## CI integration
-
-Recommended CI sequence:
+## Diagram
 
 ```mermaid
 flowchart LR
-  A[Schema checks] --> B[OPA unit tests]
-  B --> C[Conftest fixture checks]
-  C --> D[Candidate bundle admission]
-  D --> E[Promote or Fail Closed]
+  A[docs/connectors/genealogy] --> B[policy child lanes<br/>bundles / fixtures / tests]
+  B --> C[tests/policy/genealogy]
+  C --> D[CI / runtime gate]
+  D --> E[release / publish / correction surfaces]
+
+  style A fill:#f6f8fa,stroke:#8b949e
+  style B fill:#fff8c5,stroke:#8b949e
+  style C fill:#ddf4ff,stroke:#8b949e
+  style D fill:#fde68a,stroke:#8b949e
+  style E fill:#fce7f3,stroke:#8b949e
 ```
+
+**Reading rule:** on current public `main`, the connector doc and this README are directly visible; the top-level `policy/` lane is visible; genealogy-specific executable subpaths under that lane remain proposed until reverified on the active checkout.
+
+[Back to top](#policy-tests-genealogy)
+
+---
+
+## Tables
+
+### Expected outcomes matrix
+
+| Scenario | Allow | Deny | Warn | Obligation |
+|---|---:|---:|---:|---:|
+| valid restricted ingest | yes | no | maybe | maybe |
+| missing consent | no | yes | no | no |
+| invalid signature | no | yes | no | no |
+| revoked consent | no | yes | no | no |
+| artifact hash mismatch | no | yes | no | no |
+| public living-person bundle | no | yes | no | optional redaction metadata |
+| public unknown-living bundle | no | yes | no | optional redaction metadata |
+| public DNA bundle | no | yes | no | maybe restricted-handling obligation |
+| DNA ingest without DNA permission | no | yes | no | no |
+| incomplete provenance | no | yes | no | no |
+| research-only restricted ingest | yes | no | yes | yes |
+| redistribution false on public publish | no | yes | maybe | no |
 
 ### Minimum CI gates
 
-| Gate                                          | Required |
-| --------------------------------------------- | -------- |
-| Rego compilation succeeds                     | yes      |
-| Unit tests pass                               | yes      |
-| Known-bad fixtures denied                     | yes      |
-| Known-good restricted fixture allowed         | yes      |
-| Candidate publish bundle free of deny results | yes      |
-| Evaluation errors treated as failures         | yes      |
+| Gate | Required |
+|---|---|
+| Policy compiles cleanly | yes |
+| Unit / bundle-local assertions pass | yes |
+| Known-bad genealogy fixtures deny | yes |
+| At least one restricted, consent-valid case passes | yes |
+| Candidate publish input is free of deny results | yes |
+| Evaluation errors fail closed | yes |
 
-### Fail-closed CI rule
-
-Any of the following should fail the job:
-
-* policy compile error
-* test failure
-* missing fixture required by test target
-* runtime context not injected when required
-* inability to load revocation state
-* ambiguous `allow`/`deny` result due to input shape drift
+[Back to top](#policy-tests-genealogy)
 
 ---
 
-## Diagram: where this surface sits
+## Task list / definition of done
 
-```mermaid
-flowchart LR
-  A[Connector Intake / Upload] --> B[Canonical Bundle]
-  B --> C[Schema Validation]
-  C --> D[Policy Tests]
-  D --> E[Admission Gate]
-  E --> F[Processed / Published]
-  D --> G[Fail Closed]
-```
+A merge-ready genealogy policy proof surface should satisfy all of the following:
 
----
+- [ ] Current public-main README-only state has been replaced by at least one real proof artifact on the active checkout.
+- [ ] Bundle law, fixture placement, and repo-facing verification placement are reverified against the active branch.
+- [ ] Every deny family has at least one explicit negative case.
+- [ ] Public living-person leakage is covered.
+- [ ] Public DNA leakage is covered.
+- [ ] Missing provenance is covered.
+- [ ] Missing revocation state is covered.
+- [ ] At least one composition case exists.
+- [ ] One restricted, consent-valid case passes.
+- [ ] CI wiring exists or is explicitly stubbed and marked `NEEDS VERIFICATION`.
+- [ ] The README explains how to reproduce failures without implying nonexistent paths.
 
-## Definition of done
-
-A merge-ready genealogy policy test surface should satisfy all of the following:
-
-* policy modules compile cleanly
-* every deny family has at least one explicit negative test
-* public living-person leakage is covered
-* public DNA leakage is covered
-* missing provenance is covered
-* missing revocation state is covered
-* at least one composition test exists
-* one restricted, consent-valid ingest fixture passes
-* CI wiring exists or is clearly stubbed and marked **NEEDS VERIFICATION**
-* test docs explain how to reproduce failures locally
-
-### Task list
-
-* [ ] Verify live repo paths for `policy/genealogy/` and `tests/policy/genealogy/`
-* [ ] Add missing negative fixtures for invalid signature and hash mismatch
-* [ ] Add composition fixture covering multiple simultaneous denies
-* [ ] Wire `opa test` into CI
-* [ ] Wire `conftest test` candidate-bundle admission into CI
-* [ ] Confirm deny message / obligation code stability expectations
-* [ ] Add CODEOWNERS coverage if missing
-* [ ] Mark all unverified paths and targets before merge
-
----
-
-## Usage notes
-
-### Prefer negative tests
-
-This surface is trust-bearing. It is more important to prove **unsafe inputs are blocked** than to collect many happy-path examples.
-
-### Keep deny messages stable
-
-If downstream CI or receipts depend on deny strings or obligation codes, avoid churn. Prefer structured obligation codes where possible.
-
-### Test exact publication targets
-
-Public vs restricted behavior is central here. Do not rely on implicit defaults in fixtures.
-
-### Treat missing context as unsafe
-
-If the policy expects `runtime.revocation_manifest_loaded` and it is absent, tests should verify deny—not implicit permissive behavior.
+[Back to top](#policy-tests-genealogy)
 
 ---
 
 ## FAQ
 
-### Why so many negative tests?
+### Why keep so many negative cases?
 
-Because this surface handles rights-sensitive genealogy and DNA data. KFM doctrine allows negative outcomes as first-class valid behavior: deny, abstain, generalize, withdraw, supersede.
+Because genealogy and DNA surfaces are rights-sensitive. In KFM, `deny`, `abstain`, `generalize`, `withdraw`, and `supersede` are valid trust-preserving outcomes, not embarrassing edge cases.
 
-### Why test public vs restricted separately?
+### Why not author bundle law here?
 
-Because the trust membrane depends on that distinction. Restricted internal processing may be allowed while public release is still prohibited.
+Because the current repo already separates top-level `policy/` ownership from repo-facing proof under `tests/policy/`. This directory should prove behavior, not become a second policy-authority lane.
 
-### Should these tests validate schema too?
+### Why separate public from restricted targets every time?
 
-Only lightly. Full schema conformance belongs in contract tests. Here, the goal is policy behavior over policy-relevant shapes.
+Because the trust membrane depends on that distinction. Restricted internal handling can still coexist with public denial.
 
-### Should derived graph/search outputs be tested here?
+### Why are so many paths still marked `NEEDS VERIFICATION`?
 
-Only if publication policy directly governs them. Otherwise, test them in their own derived-surface policy or e2e suites.
+Because current public `main` proves this README and adjacent directory docs, but it does not yet prove the active branch’s exact executable genealogy bundle, fixture, or workflow layout.
 
----
-
-## Open verification items
-
-These items are **NEEDS VERIFICATION** before merge:
-
-* exact live path of the genealogy policy bundle
-* whether policy fixtures live under `policy/` or `tests/`
-* current OPA / Conftest versions in CI
-* test naming conventions already used in `tests/policy/`
-* whether deny/warn/obligation shapes match repo-wide policy standards
-* whether release admission uses `publication.allow` or a different package entrypoint
-* whether a Makefile, task runner, or CI workflow target already exists for policy tests
-* current CODEOWNERS for `policy/` and `tests/policy/`
+[Back to top](#policy-tests-genealogy)
 
 ---
 
-## Appendix: example local workflow
+## Appendix
+
+<details>
+<summary><strong>Suggested seam names and responsibilities</strong></summary>
+
+These names are kept stable here even if the active checkout shifts the exact file location.
+
+| Seam | Responsibility |
+|---|---|
+| `consent` | consent presence, signature validity, revocation handling, artifact-hash binding, redistribution/publication interaction |
+| `living_persons` | public living-person denial, unknown-status denial, restricted redaction obligations, consent interaction |
+| `dna_sensitive` | public DNA denial, kit/match/segment prohibition, DNA consent gating, obligation emission |
+| `provenance` | complete vs incomplete provenance, missing refs, threshold checks, missing provenance block entirely |
+| `publication` | composed deny aggregation, final `allow` result, deny-set stability, obligation propagation |
+| `runtime_dependency` | revocation manifest presence, target visibility presence, runtime context parity, malformed target-shape handling |
+
+</details>
+
+<details>
+<summary><strong>Fixture starter list</strong></summary>
+
+Use stable names even if the active checkout places fixtures under `policy/fixtures/genealogy/`, `tests/policy/genealogy/fixtures/`, or another verified lane.
+
+| Fixture | Purpose |
+|---|---|
+| `valid_ingest.json` | Known-good restricted ingest |
+| `missing_consent.json` | Consent fail-closed |
+| `invalid_signature.json` | Signature fail-closed |
+| `artifact_hash_mismatch.json` | Binding fail-closed |
+| `revoked_consent.json` | Revocation fail-closed |
+| `living_publish_leak.json` | Public living-person block |
+| `unknown_living_publish.json` | Public unknown-status block |
+| `dna_publication_leak.json` | Public DNA block |
+| `dna_processing_not_allowed.json` | DNA ingest blocked by consent |
+| `missing_provenance.json` | Provenance fail-closed |
+| `missing_revocation_manifest.json` | Runtime dependency fail-closed |
+| `multi_violation_publication.json` | Composed deny set |
+
+</details>
+
+<details>
+<summary><strong>Illustrative local loop (PROPOSED after paths are verified)</strong></summary>
 
 ```bash
-# compile and run tests
-opa test policy/genealogy tests/policy/genealogy
+# substitute real verified paths from your checkout
+OPA_BUNDLE_ROOT="<verify-on-checkout>"
+FIXTURE_ROOT="<verify-on-checkout>"
 
-# inspect a passing fixture
-opa eval \
-  --data policy/genealogy \
-  --input policy/genealogy/fixtures/valid_ingest.json \
-  "data.kfm.genealogy.publication.allow"
+opa test "$OPA_BUNDLE_ROOT" tests/policy/genealogy
+conftest test "$FIXTURE_ROOT/valid_ingest.json" --policy "$OPA_BUNDLE_ROOT"
 
-# inspect a failing fixture
 opa eval \
-  --data policy/genealogy \
-  --input policy/genealogy/fixtures/missing_consent.json \
+  --data "$OPA_BUNDLE_ROOT" \
+  --input "$FIXTURE_ROOT/living_publish_leak.json" \
   "data.kfm.genealogy.publication.deny"
 ```
 
----
+Use this only after confirming the actual bundle and fixture roots on the active branch.
 
-**Bottom line:** this test surface is the proof that genealogy policy is not aspirational prose. It is executable, reproducible, fail-closed enforcement at the exact boundary where consent, privacy, provenance, and publication risk meet.
+</details>
+
+<details>
+<summary><strong>Open verification items</strong></summary>
+
+- exact active-branch home of genealogy bundle law
+- exact active-branch home of genealogy fixtures
+- whether repo-facing genealogy wrappers should live here or under `policy/tests/`
+- current OPA / Conftest versions
+- current merge-blocking workflow YAML and required checks
+- actual deny / warn / obligation shapes used by the active policy runtime
+- whether genealogy-specific contract subpaths exist on the active branch
+- whether end-to-end genealogy proof drills already exist elsewhere in the checkout
+
+</details>
+
+**Bottom line:** this directory should remain the smallest repo-facing proof that genealogy policy is operational, fail-closed, and reviewable—without pretending the active checkout exposes more executable surface than the current public evidence actually proves.
 
 [Back to top](#policy-tests-genealogy)
