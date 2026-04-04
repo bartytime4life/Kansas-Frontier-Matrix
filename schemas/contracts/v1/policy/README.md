@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-03-28
+updated: 2026-04-03
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../../README.md, ../../../README.md, ../../../../README.md, ../../../../contracts/README.md, ../../../../policy/README.md, ../../../../tests/contracts/README.md, ../../../../tests/policy/README.md, ../../../../tests/e2e/runtime_proof/README.md, ../../../../tests/e2e/correction/README.md, ../../../../.github/workflows/README.md, ../../vocab/README.md, ../../vocab/reason_codes.json, ../../vocab/obligation_codes.json, ../../vocab/reviewer_roles.json]
+related: [../README.md, ../../README.md, ../../../README.md, ../../../../README.md, ../../../../contracts/README.md, ../../../../docs/standards/README.md, ../../../../policy/README.md, ../../../../tests/contracts/README.md, ../../../../tests/policy/README.md, ../../../../tests/e2e/runtime_proof/README.md, ../../../../tests/e2e/correction/README.md, ../../../../.github/README.md, ../../../../.github/CODEOWNERS, ../../../../.github/workflows/README.md, ../../vocab/README.md, ../../vocab/reason_codes.json, ../../vocab/obligation_codes.json, ../../vocab/reviewer_roles.json]
 tags: [kfm, schemas, contracts, v1, policy]
-notes: [Owner uses CODEOWNERS global fallback; doc_id and created date need verification; public main currently exposes this README plus decision_envelope.schema.json; schema-home authority remains unresolved and the checked-in schema body is still placeholder-only.]
+notes: [Owner currently comes from `.github/CODEOWNERS` global fallback; doc_id, created date, and policy_label still need verification; current public main shows a substantive README in this lane plus placeholder `decision_envelope.schema.json`; adjacent vocab JSON files also remain `{}`; schema-home authority remains unresolved.]
 [/KFM_META_BLOCK_V2] -->
 
 # `schemas/contracts/v1/policy`
@@ -30,7 +30,7 @@ Family-level boundary and current-state guide for the schema-side policy contrac
 ![Public%20tree](https://img.shields.io/badge/public_tree-README%2Bschema_visible-informational)
 ![Schema%20body](https://img.shields.io/badge/schema_body-placeholder--only-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contract minimum](#contract-minimum) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contract minimum](#contract-minimum) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
@@ -72,6 +72,9 @@ That makes this folder the natural place to explain the policy-contract boundary
 | **PROPOSED** | Recommended next shape or documentation move |
 | **UNKNOWN / NEEDS VERIFICATION** | Not strong enough to claim from current evidence |
 
+> [!NOTE]
+> This revision is grounded in two evidence layers: current public `main` for local inventory and neighboring README surfaces, and the March 2026 KFM contract corpus for starter contract-family minimums. It does **not** claim branch-local, non-public, or platform-setting certainty.
+
 [Back to top](#schemascontractsv1policy)
 
 ---
@@ -88,6 +91,7 @@ That makes this folder the natural place to explain the policy-contract boundary
 | **Upstream context** | [`../../README.md`](../../README.md) · [`../../../README.md`](../../../README.md) · [`../../../../README.md`](../../../../README.md) · [`../../../../contracts/README.md`](../../../../contracts/README.md) · [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) |
 | **Adjacent governed areas** | [`../../vocab/README.md`](../../vocab/README.md) · [`../../vocab/reason_codes.json`](../../vocab/reason_codes.json) · [`../../vocab/obligation_codes.json`](../../vocab/obligation_codes.json) · [`../../vocab/reviewer_roles.json`](../../vocab/reviewer_roles.json) · [`../../../../policy/README.md`](../../../../policy/README.md) |
 | **Adjacent verification lanes** | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) · [`../../../../tests/policy/README.md`](../../../../tests/policy/README.md) · [`../../../../tests/e2e/runtime_proof/README.md`](../../../../tests/e2e/runtime_proof/README.md) · [`../../../../tests/e2e/correction/README.md`](../../../../tests/e2e/correction/README.md) · [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
+| **Ownership signal** | [`../../../../.github/CODEOWNERS`](../../../../.github/CODEOWNERS) currently supplies the public owner fallback; no narrower `/schemas/` or `/schemas/contracts/` rule is directly visible on public `main` |
 
 ### Upstream / downstream reading order
 
@@ -183,14 +187,15 @@ These are plausible here **only after** higher-level docs are reconciled:
 | Observation | Status | Notes |
 |---|---|---|
 | `schemas/contracts/v1/policy/` directory exists | **CONFIRMED** | Public branch-visible family lane |
-| `README.md` exists in this folder | **CONFIRMED** | Current checked-in body is still scaffold-thin |
+| `README.md` exists in this folder | **CONFIRMED** | Current checked-in body is already substantive on public `main` |
 | `decision_envelope.schema.json` exists | **CONFIRMED** | Present in public tree |
 | Current raw schema body is `{}` | **CONFIRMED** | Placeholder-only at time of inspection |
-| Shared vocab JSON files exist under `schemas/contracts/vocab/` | **CONFIRMED** | `reason_codes.json`, `obligation_codes.json`, `reviewer_roles.json` all visible |
+| Shared vocab JSON files exist under `schemas/contracts/vocab/` | **CONFIRMED** | `reason_codes.json`, `obligation_codes.json`, and `reviewer_roles.json` are all visible |
 | Current raw vocab bodies are `{}` | **CONFIRMED** | Registry lane exists, content still placeholder-only |
+| `.github/CODEOWNERS` exists and provides a global fallback owner | **CONFIRMED** | No narrower `/schemas/` or `/schemas/contracts/` rule was directly verified on public `main` |
 | `tests/contracts/README.md` exists | **CONFIRMED** | Verification lane documented |
 | `tests/policy/README.md` exists | **CONFIRMED** | Policy-behavior lane documented |
-| `.github/workflows/README.md` exists | **CONFIRMED** | Public workflow tree currently exposes README-only |
+| `.github/workflows/README.md` exists | **CONFIRMED** | Current workflow directory is README-only on public `main`; historical Actions UI traces should not be treated as current checked-in YAML proof |
 | Canonical schema-home decision is settled | **UNKNOWN** | Public docs still show tension between `contracts/` and `schemas/` |
 | Family-specific fixtures / validators are present here | **UNKNOWN** | Not directly evidenced in current public tree |
 
@@ -202,10 +207,12 @@ These are plausible here **only after** higher-level docs are reconciled:
 | `../../README.md` | `schemas/contracts/` is now materially real on public `main`, but authority is still unresolved |
 | `../../../README.md` | `schemas/` remains cautionary and warns against parallel schema universes |
 | `../../../../contracts/README.md` | Repo-wide contract doctrine still leans toward `contracts/` as the stronger authority lane |
+| `../../../../docs/standards/README.md` | Cross-cutting standards routing still sends API endpoint schemas and machine contracts toward `contracts/` and an eventual authoritative schema home |
 | `../../../../policy/README.md` | Executable policy, deny-by-default posture, reason/obligation logic, and finite outcomes belong there |
 | `../../vocab/README.md` | Shared policy registries live adjacent to this family, not inside it |
 | `../../../../tests/contracts/README.md` | Shape validation belongs in tests, not in the schema folder |
 | `../../../../tests/policy/README.md` | Behavior verification belongs in policy tests, not in this folder |
+| `../../../../.github/workflows/README.md` | Current workflow inventory is README-only on public `main`; any historical workflow names visible in Actions history remain reconstruction clues, not checked-in current-state proof |
 
 ### Working interpretation
 
@@ -279,13 +286,17 @@ sed -n '1,220p' schemas/contracts/v1/README.md
 sed -n '1,220p' schemas/contracts/README.md
 sed -n '1,220p' schemas/README.md
 
+# Check the ownership signal this README relies on
+cat .github/CODEOWNERS
+
 # Read adjacent shared registries
 sed -n '1,220p' schemas/contracts/vocab/README.md
 cat schemas/contracts/vocab/reason_codes.json
 cat schemas/contracts/vocab/obligation_codes.json
 cat schemas/contracts/vocab/reviewer_roles.json
 
-# Read verification and workflow lanes
+# Read standards, verification, and workflow lanes before claiming maturity
+sed -n '1,220p' docs/standards/README.md
 sed -n '1,220p' tests/contracts/README.md
 sed -n '1,220p' tests/policy/README.md
 sed -n '1,220p' .github/workflows/README.md
@@ -295,9 +306,10 @@ sed -n '1,220p' .github/workflows/README.md
 
 1. confirm what files are actually present,
 2. inspect raw JSON bodies before making maturity claims,
-3. check parent docs for authority signals,
-4. check test/workflow docs before mentioning enforcement,
-5. only then update this README.
+3. confirm the owner signal in `.github/CODEOWNERS`,
+4. check parent and standards docs for authority signals,
+5. check test/workflow docs before mentioning enforcement,
+6. only then update this README.
 
 > [!TIP]
 > When in doubt, keep this README stronger on **boundaries** than on **promises**.
@@ -315,7 +327,7 @@ Use this README as:
 - the **entry point** for the policy schema family,
 - the **warning surface** against schema-home drift,
 - the **contributor checkpoint** before editing `decision_envelope.schema.json`,
-- the **cross-link hub** to vocab, policy, tests, and workflows.
+- the **cross-link hub** to vocab, policy, tests, workflows, and the current owner signal.
 
 ### Update rules
 
@@ -325,6 +337,7 @@ When editing this file:
 - keep uncertainty labels explicit,
 - describe the visible tree first,
 - separate **doctrinal minimum** from **current checked-in body**,
+- sync owner language with `.github/CODEOWNERS` if public routing changes,
 - update exclusions whenever adjacent lanes become clearer.
 
 ### When this README should get stronger
@@ -367,6 +380,7 @@ flowchart LR
     H1[contracts/README.md] -. stronger repo-wide doctrine .-> A
     H2[schemas/README.md] -. caution about parallel schema universes .-> A
     H3[schemas/contracts/v1/README.md] -. local family inventory context .-> A
+    H4[docs/standards/README.md] -. standards routing and authoritative-home caution .-> A
 
     classDef local fill:#e8f0fe,stroke:#4c78ff,color:#111;
     classDef adjacent fill:#eef7ee,stroke:#4c9f70,color:#111;
@@ -374,7 +388,7 @@ flowchart LR
 
     class A,B local;
     class V,P,TC,TP,RT,EV,R,E adjacent;
-    class H1,H2,H3 caution;
+    class H1,H2,H3,H4 caution;
 ```
 
 ### Reading the diagram
@@ -435,6 +449,7 @@ That means this README should present the table above as **doctrinal minimum** a
 - [ ] Current family contents are described honestly
 - [ ] `decision_envelope.schema.json` presence is noted
 - [ ] Placeholder-only current body is called out when still true
+- [ ] Ownership language matches the current public `CODEOWNERS` signal
 - [ ] Shared vocab, executable policy, tests, and workflows are clearly separated
 - [ ] Relative links resolve from this directory
 - [ ] Tree reflects the current public snapshot
@@ -449,6 +464,7 @@ That means this README should present the table above as **doctrinal minimum** a
 | **Truth gate** | Does every claim about current repo state match visible files? |
 | **Boundary gate** | Does the file keep schema, vocab, policy, tests, and workflow responsibilities distinct? |
 | **Inventory gate** | Does the tree match the public branch snapshot? |
+| **Owner gate** | Does the owner language match the public `CODEOWNERS` signal without inventing narrower path rules? |
 | **Doctrine gate** | Are policy-result minimums preserved without overstating current implementation? |
 | **Drift gate** | Would a new contributor know where **not** to put executable policy or fixtures? |
 
@@ -474,6 +490,10 @@ Because visible directories are not the same thing as mature trust artifacts. Pl
 ### Where do shared reason / obligation / reviewer code registries live?
 
 Currently in [`../../vocab/`](../../vocab/), not in this family directory.
+
+### How are owners inferred here?
+
+From [`../../../../.github/CODEOWNERS`](../../../../.github/CODEOWNERS) on current public `main`. At the time of this revision, that file exposes a global fallback plus narrower `/.github/` and repo-root rules, but no narrower `/schemas/` or `/schemas/contracts/` path rule was directly verified.
 
 ### Is `ReviewRecord` part of this folder?
 
@@ -516,10 +536,15 @@ Start higher when the change is really about repo-wide doctrine, schema-home aut
 - `schemas/contracts/README.md`
 - `schemas/README.md`
 - `contracts/README.md`
+- `docs/standards/README.md`
 - `policy/README.md`
 - `tests/contracts/README.md`
 - `tests/policy/README.md`
 - `.github/workflows/README.md`
+
+### Ownership signal used here
+
+- `.github/CODEOWNERS`
 
 </details>
 
@@ -552,10 +577,12 @@ This example is **illustrative only**. It is here to show the family boundary an
 
 1. Read `contracts/README.md`, `schemas/README.md`, and `schemas/contracts/v1/README.md`.
 2. Inspect the raw JSON file body before making maturity claims.
-3. Check whether related vocab files remain placeholders.
-4. Check `tests/contracts/README.md` and `tests/policy/README.md` before discussing validation.
-5. Check `.github/workflows/README.md` before mentioning merge gates.
-6. Keep `DecisionEnvelope` and `ReviewRecord` distinct unless a higher-level contract decision explicitly merges them.
+3. Confirm the owner signal in `.github/CODEOWNERS` if this README names owners.
+4. Check whether related vocab files remain placeholders.
+5. Read `docs/standards/README.md` if you need the current standards-routing posture.
+6. Check `tests/contracts/README.md` and `tests/policy/README.md` before discussing validation.
+7. Check `.github/workflows/README.md` before mentioning merge gates.
+8. Keep `DecisionEnvelope` and `ReviewRecord` distinct unless a higher-level contract decision explicitly merges them.
 
 </details>
 
