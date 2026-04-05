@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS VERIFICATION
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: public
-related: [migrations/README.md, migrations/templates/migration-packet.md, migrations/waves/README.md, migrations/drills/README.md, docs/templates/README.md, contracts/README.md, schemas/README.md, policy/README.md, scripts/README.md, tests/README.md, .github/workflows/README.md]
+related: [migrations/README.md, migrations/templates/migration-packet.md, migrations/waves/README.md, migrations/drills/README.md, docs/templates/README.md, contracts/README.md, schemas/README.md, policy/README.md, scripts/README.md, tests/README.md, .github/workflows/README.md, .github/CODEOWNERS]
 tags: [kfm, migrations, templates, readme]
-notes: [doc_id placeholder pending assignment, created date needs verification, owners follow current /migrations/ CODEOWNERS coverage on public main]
+notes: [doc_id placeholder pending assignment, created date needs git-history verification, owner is grounded in current public /migrations/ CODEOWNERS coverage, workflow and script lanes are README-only on current public main]
 [/KFM_META_BLOCK_V2] -->
 
 # `migrations/templates`
@@ -20,7 +20,7 @@ Reusable migration-packet and review scaffold shelf for Kansas Frontier Matrix.
 > **Status:** `experimental`  
 > **Owners:** `@bartytime4life`  
 > ![Status](https://img.shields.io/badge/status-experimental-informational) ![Docs](https://img.shields.io/badge/docs-directory%20README-blue) ![Inventory](https://img.shields.io/badge/inventory-README%20%2B%20migration--packet-1f6feb) ![Truth posture](https://img.shields.io/badge/truth-public--tree%20%2B%20doctrine-8a2be2) ![Lane](https://img.shields.io/badge/lane-migration%20templates-555555)  
-> **Repo fit:** `migrations/templates/README.md` · upstream: [`../README.md`](../README.md) · siblings: [`../waves/README.md`](../waves/README.md), [`../drills/README.md`](../drills/README.md) · local starter: [`./migration-packet.md`](./migration-packet.md) · related docs: [`../../docs/templates/README.md`](../../docs/templates/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Repo fit:** `migrations/templates/README.md` · upstream: [`../README.md`](../README.md) · siblings: [`../waves/README.md`](../waves/README.md), [`../drills/README.md`](../drills/README.md) · local starter: [`./migration-packet.md`](./migration-packet.md) · related docs: [`../../docs/templates/README.md`](../../docs/templates/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Template registry](#template-registry) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -64,6 +64,7 @@ In plain terms: a migration packet starter may live here; the packet for one spe
 | Upstream doctrine | [`../README.md`](../README.md) |
 | Sibling migration lanes | [`../waves/README.md`](../waves/README.md), [`../drills/README.md`](../drills/README.md) |
 | Broader verification surfaces | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Ownership boundary | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) |
 | Primary audience | Maintainers, reviewers, platform engineers, data engineers, release stewards |
 
 ### Current public-main signal
@@ -74,8 +75,10 @@ In plain terms: a migration packet starter may live here; the packet for one spe
 | `migration-packet.md` exists locally | **CONFIRMED** | One starter scaffold is already available |
 | `migrations/waves/` and `migrations/drills/` exist as sibling lanes | **CONFIRMED** | Planning and exercised evidence already have separate homes |
 | Additional companion starters such as `verify.md` or `rollback.md` are checked in here | **PROPOSED** | Do not imply they exist until the branch shows them |
-| Checked-in merge-blocking workflow YAML gates on public `main` | **UNKNOWN / NEEDS VERIFICATION** | Template docs must not promise automation the visible tree does not prove |
-| Runnable script inventory beyond `scripts/README.md` | **UNKNOWN / NEEDS VERIFICATION** | Keep command examples illustrative unless the branch carries the helpers |
+| `.github/workflows/` is README-only on current public `main` | **CONFIRMED** | Do not present checked-in workflow YAML gates as current-tree fact |
+| Public Actions history exposes removed workflow names such as `verify-docs.yml` or `release-evidence.yml` | **CONFIRMED historical signal** | Useful context, but not proof that those YAML files still exist on `main` |
+| `scripts/` is README-only on current public `main` | **CONFIRMED** | Keep command examples illustrative unless the branch adds real helper entrypoints |
+| `scripts/README.md` frames `scripts/` as a thin entrypoint lane, not a sovereign implementation surface | **CONFIRMED** | Templates should point to helpers without pretending a durable script inventory already exists |
 
 ### Why this lane matters
 
@@ -190,9 +193,11 @@ git ls-files 'migrations/**' | sort
 find migrations -maxdepth 3 \( -type f -o -type d \) | sort
 ```
 
-### 3) Confirm the broader verification surfaces you plan to link
+### 3) Read the control-lane boundaries before you imply automation
 
 ```bash
+sed -n '1,220p' scripts/README.md
+sed -n '1,220p' .github/workflows/README.md
 find contracts schemas policy scripts tests .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
@@ -265,7 +270,13 @@ A good starter in this directory:
 - does not claim a runner, validator, or merge gate that the branch cannot actually show
 
 > [!IMPORTANT]
-> Current public `main` does not prove checked-in workflow YAML gates or a non-README `scripts/` inventory. Template text should name validations as **actual**, **manual**, or **proposed**—never as magically automated.
+> Current public `main` is narrower and sharper than earlier README-only assumptions:
+>
+> - `.github/workflows/` is a documented control lane, but it is still README-only on the inspected public tree
+> - public Actions history exposes removed workflow names, which are useful reconstruction clues but not current-tree proof
+> - `scripts/` is also README-only on the inspected public tree and is explicitly framed as a thin entrypoint lane
+>
+> Template text should name validations as **actual**, **manual**, **historical signal**, or **proposed**—never as magically automated.
 
 [Back to top](#migrationstemplates)
 
@@ -336,6 +347,10 @@ Because migration starters are tightly coupled to the special rules of `migratio
 ### Why is `migration-packet.md` marked **CONFIRMED** while most other names stay **PROPOSED**?
 
 Because the current public tree already contains `migration-packet.md`, but it does not yet show the rest of the companion starter inventory.
+
+### Why mention workflows and scripts if those lanes are README-only on public `main`?
+
+Because migration packets still need to link to the control and entrypoint surfaces that would own automation once the branch or future main-tree fills them in. The README names those lanes, but it now does so with sharper status labels so readers can distinguish current-tree fact from historical signal and future fill.
 
 ### Why do the sibling links point to `waves/` and `drills/` instead of `notes/`, `postgres/`, and `postgis/`?
 
