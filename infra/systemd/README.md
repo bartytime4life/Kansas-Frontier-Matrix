@@ -4,106 +4,117 @@ title: infra/systemd
 type: standard
 version: v1
 status: draft
-owners: TODO-VERIFY-OWNERS
+owners: @bartytime4life
 created: TODO-VERIFY-YYYY-MM-DD
 updated: TODO-VERIFY-YYYY-MM-DD
-policy_label: TODO-VERIFY-POLICY-LABEL
-related: [TODO-VERIFY-RELATED-PATHS]
+policy_label: public
+related: [README.md, infra/README.md, infra/systemd-or-compose/README.md, infra/compose/README.md, infra/local/README.md]
 tags: [kfm, infra, systemd, linux, ubuntu, operations]
-notes: [Target path was user-provided; freshest mounted KFM runtime starter paths point to runtime/phase1/*; no repo tree was directly visible in this session, so placement, owners, dates, and related links require verification.]
+notes: [Current public main confirms infra/systemd/ exists and is README-only; current public CODEOWNERS coverage for /infra/ points to @bartytime4life; doc_id and created/updated dates still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # infra/systemd
 
-Ubuntu/systemd host wiring for the KFM phase-one runtime, when this repository chooses to place that material under `infra/systemd/`.
+Native Ubuntu/systemd lane for KFM’s single-host, loopback-bounded runtime profile.
 
 > **Status:** experimental  
-> **Owners:** `TODO-VERIFY-OWNERS`  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Evidence: PDF corpus only](https://img.shields.io/badge/evidence-pdf--corpus--only-blue) ![Runtime: Ubuntu LTS](https://img.shields.io/badge/runtime-Ubuntu%20LTS-6f42c1) ![Init: systemd-first](https://img.shields.io/badge/init-systemd--first-1f6feb)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life` *(current public `/infra/` `CODEOWNERS` coverage)*  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Surface: infra/systemd](https://img.shields.io/badge/surface-infra%2Fsystemd-1f6feb) ![Evidence: public main + corpus](https://img.shields.io/badge/evidence-public--main%20%2B%20corpus-blue) ![Current tree: README-only](https://img.shields.io/badge/tree-README--only-lightgrey)  
+> **Repo fit:** `infra/systemd/README.md` → upstream [../README.md](../README.md) and [../../README.md](../../README.md) · adjacent [../systemd-or-compose/README.md](../systemd-or-compose/README.md), [../compose/README.md](../compose/README.md), [../local/README.md](../local/README.md)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is intentionally source-bounded. The mounted March 2026 KFM corpus confirms a **systemd-first**, **Ubuntu-first**, **localhost-first** phase-one runtime posture. It does **not** confirm that the live repo currently exposes `infra/systemd/`, nor that the unit files shown below already exist here. The freshest corpus starter paths point instead to `runtime/phase1/*`, so this file should remain at `infra/systemd/` only if the mounted repo intentionally maps that runtime material into `infra/`.
+> Current public `main` confirms that `infra/systemd/` is a real repo surface, but the directory is presently **README-only**. This file should therefore behave as a directory contract and evidence boundary, not as proof that checked-in unit files, override snippets, or host examples already exist here.
 
-> [!WARNING]
-> Treat every path, filename, owner, and install command in this document as **CONFIRMED**, **INFERRED**, **PROPOSED**, or **UNKNOWN** according to the evidence available in this session. No mounted repo tree, workflow inventory, manifest set, or live unit files were directly inspected here.
+> [!NOTE]
+> The March–April 2026 KFM corpus still governs the runtime doctrine behind this lane: the thinnest credible phase-one profile is **systemd-first**, **Ubuntu-first**, **local-first**, and **loopback-bounded**, with the governed API in front of canonical stores and any local model runtime.
 
 ## Scope
 
-This directory is the host-wiring layer for KFM services that run as native `systemd` units on Ubuntu. When this path is the repo’s chosen home for host wiring, it is where unit files, override snippets, environment-file examples, and operational notes should live.
+`infra/systemd/` is the repository surface for native `systemd` host wiring when KFM runs as a single-machine or otherwise systemd-managed stack.
 
-Three KFM ideas make this directory consequential rather than incidental:
+In KFM, that makes this directory more than a place to drop unit files. Host wiring either preserves the trust membrane or quietly dissolves it. A service that binds too broadly, a worker that writes outside its stage, or a model runtime exposed for convenience can collapse the same governed boundaries the rest of the architecture is trying to protect.
 
-- the governed API is the public-facing truth boundary;
-- canonical stores, artifact roots, and local model runtime stay behind that boundary;
-- service identity, write scope, restart behavior, and logging are part of the trust system, not mere ops trivia.
+### Current evidence snapshot
 
-### Truth posture for this document
+| Item | Status | Meaning here |
+| --- | --- | --- |
+| `infra/systemd/` path on public `main` | **CONFIRMED** | The lane exists in the live public repo. |
+| Current checked-in contents | **CONFIRMED** | Public `main` shows `README.md` only. |
+| `runtime/phase1/*` starter artifact family in attached doctrine | **CONFIRMED** doctrine | The manuals still use that artifact family as the strongest phase-one runtime placeholder set. |
+| Checked-in unit files, env examples, or overrides under this path | **PROPOSED** | They are described here as the natural next contents, but not yet proven in the live public tree. |
+| Active host usage, deployment manifests, systemd state, secrets handling, and runtime proof objects | **UNKNOWN / NEEDS VERIFICATION** | Those require a working checkout, host evidence, or non-public platform inspection. |
 
-| Posture | Meaning here |
-| --- | --- |
-| **CONFIRMED** | The corpus supports a single-host Ubuntu phase-one runtime, systemd-first packaging, loopback-only governed API, loopback-only Ollama, local-only PostgreSQL/PostGIS, and explicit lifecycle zones such as `raw`, `work`, `quarantine`, `processed`, `catalog`, and `published`. |
-| **INFERRED** | `infra/systemd/` is a repo-local remap of the fresher corpus starter shape under `runtime/phase1/systemd_units/*`. |
-| **PROPOSED** | Exact file layout, service filenames, example install commands, and sibling documentation placement in this directory. |
-| **UNKNOWN** | Whether the mounted repo already contains this path, these files, matching CI checks, or a different host-runtime directory convention. |
+[Back to top](#infrasystemd)
 
 ## Repo fit
 
-### Path resolution note
+Path: `infra/systemd/README.md`  
+Role: directory README for native systemd runtime wiring under `infra/`.
 
-The target path for this file was user-provided: `infra/systemd/`.
+This file should do four jobs cleanly:
 
-The freshest runtime-oriented starter paths in the mounted KFM corpus are:
+1. mark what is **currently true** about the public tree,
+2. preserve the stronger **runtime doctrine** from the attached corpus,
+3. separate **checked-in reality** from **proposed expansion**, and
+4. route maintainers to sibling infra lanes without letting them drift into contradictory runtime stories.
 
-- `runtime/phase1/local_ubuntu_profile.md`
-- `runtime/phase1/systemd_units/*`
-- `runtime/phase1/ollama_adapter_contract.md`
-- `runtime/phase1/api_membrane.md`
+### Upstream, adjacent, and downstream anchors
 
-That means this README is best understood as one of two things:
-
-1. a valid directory README for a repo that intentionally places phase-one Ubuntu wiring under `infra/systemd/`, or
-2. a near-final draft that should move to the verified runtime path once the actual tree is inspected.
-
-### Repo fit matrix
-
-| Field | Value |
-| --- | --- |
-| **Path** | `infra/systemd/` |
-| **Role in repo** | Native Ubuntu/systemd host wiring for KFM phase-one runtime. |
-| **Freshest corpus starter paths** | `runtime/phase1/*` (**CONFIRMED** as doctrinal placeholders, not mounted repo fact). |
-| **Upstream inputs** | `apps/` entrypoints or binaries, policy/config surfaces, service-account expectations, artifact-root layout, publication scope rules. **NEEDS VERIFICATION** against the live repo. |
-| **Downstream targets** | `/etc/systemd/system/`, `/etc/systemd/system/ollama.service.d/`, `/etc/kfm/*.env`, journald, loopback binds, firewall/VPN policy, and host-owned lifecycle directories such as `/srv/kfm/*`. |
-| **Upstream links** | `TODO-VERIFY-UPSTREAM-LINKS` |
-| **Downstream links** | `TODO-VERIFY-DOWNSTREAM-LINKS` |
-
-## Inputs
-
-What belongs here:
-
-| Input class | Examples | Why it belongs |
+| Relation | Surface | Why it matters |
 | --- | --- | --- |
-| Unit files | `kfm-api.service`, `kfm-ingest@.service`, `kfm-build@.service`, `kfm-publish@.service`, `kfm-project@.service` | These are the explicit service families proposed in the mounted Ubuntu/systemd runtime guidance. |
-| Override snippets | `ollama.service.d/override.conf` | The corpus explicitly calls for a local-only Ollama override surface. |
-| Environment examples | `env/kfm-api.env.example`, `env/kfm-worker.env.example`, `env/kfm-publish.env.example`, `env/ollama.override.env.example` | KFM host docs name the `/etc/kfm/*.env` pattern; repo copies should remain sanitized examples only. |
-| Operator notes | install, reload, journal, verification, rollback, and hardening guidance | This is the layer where host wiring becomes reviewable and auditable instead of folk knowledge. |
+| Upstream | [../../README.md](../../README.md) | Root identity, trust posture, and verification-first navigation. |
+| Upstream | [../README.md](../README.md) | Parent infra doctrine for runtime, rollback, restore, exposure, and observability. |
+| Adjacent | [../systemd-or-compose/README.md](../systemd-or-compose/README.md) | Shared choice surface for when KFM stays native `systemd` and when bounded Compose is acceptable. |
+| Adjacent | [../compose/README.md](../compose/README.md), [../local/README.md](../local/README.md) | Sibling local-first runtime lanes that must stay consistent with this directory. |
+| Downstream | host-managed `/etc/systemd/system/`, `/etc/kfm/*.env`, journald, and bounded runtime state | These are the actual operational targets this directory is expected to describe and eventually version. |
+| Shared boundaries | `../../contracts/`, `../../policy/`, `../../schemas/`, `../../tests/` | This lane should consume those trust-bearing surfaces, not redefine them. |
+
+### Current public deltas
+
+| Delta | Why it matters now | Status |
+| --- | --- | --- |
+| The path is real, not hypothetical | This README no longer needs to speak as though `infra/systemd/` might not exist. | **CONFIRMED** |
+| The directory is still README-only | Any unit names, host paths, or install commands remain starter guidance rather than checked-in runtime fact. | **CONFIRMED** |
+| `infra/systemd-or-compose/` is already the shared lane-choice document | Cross-lane rules should live there instead of being silently duplicated here. | **CONFIRMED** |
+| The attached doctrine still points to `runtime/phase1/*` starter artifacts | Keep those paths visible as doctrinal input; the current public root snapshot does not expose that starter family as checked-in top-level inventory. | **CONFIRMED doctrine / not current-tree fact** |
+
+## Accepted inputs
+
+Use this lane for files and notes that exist because native `systemd` is the chosen runtime surface.
+
+| Belongs here | Typical contents | Status in current public tree | Why it belongs |
+| --- | --- | --- | --- |
+| Unit files | `kfm-api.service`, `kfm-ingest@.service`, `kfm-build@.service`, `kfm-publish@.service`, `kfm-project@.service` | **PROPOSED** | These are the most natural native-service families implied by the phase-one runtime doctrine. |
+| Override snippets | `ollama.service.d/override.conf`, service drop-ins, bind rules | **PROPOSED** | Local-only overrides are exactly the kind of host wiring this lane should own. |
+| Non-secret env examples | `env/kfm-api.env.example`, `env/kfm-worker.env.example`, `env/kfm-publish.env.example`, `env/ollama.override.env.example` | **PROPOSED** | Repo-tracked examples help operators wire a host without committing live values. |
+| Lane-local operator notes | install, reload, journal, verification, and rollback steps that are specific to native units | **PARTIALLY CONFIRMED** (`README.md` only) | Runtime-affecting instructions should travel with the lane they describe. |
+| Host-hardening notes | sandboxing flags, service users, `ReadWritePaths=`, restart posture | **INFERRED / PROPOSED** | Least-privilege service wiring is a trust-bearing concern in KFM, not optional polish. |
 
 ## Exclusions
 
-What does **not** belong here:
+What this lane should **not** become is just as important as what it should contain.
 
 | Keep out of `infra/systemd/` | Put it here instead | Why |
 | --- | --- | --- |
-| Policy logic and reason/obligation law | `policy/` | Policy is shared backend law, not host glue. |
-| Schemas, OpenAPI, vocabularies, fixtures | `contracts/` or `schemas/` | Contract surfaces need independent versioning and validation. |
-| App code, workers’ business logic, domain transforms | `apps/` or `packages/` | Infra should not become the hiding place for real domain behavior. |
-| Canonical datasets, receipts, or released artifacts | governed lifecycle zones and release-bearing stores | Unit files may mount or reference these, but they do not define them. |
-| Real secrets or live credentials | host-only `/etc/kfm/*.env` or approved secret mechanism | The repo may hold examples, never live values. |
-| Reverse-proxy publication policy | runtime/edge docs or verified hosted deployment docs | Phase one is explicitly local-first, not “open the port and hope.” |
+| App code, worker business logic, model adapters, or domain transforms | `../../apps/` or `../../packages/` | Native-service wiring must not become a hiding place for actual system behavior. |
+| Policy law, Rego bundles, reason grammar, or exception semantics | `../../policy/` | Policy needs independent review and test surfaces. |
+| Contracts, schemas, OpenAPI, or shared fixtures | `../../contracts/` and `../../schemas/` | Unit files should consume those boundaries, not redefine them. |
+| Published evidence, release proof, catalog truth, or EvidenceBundles themselves | the project’s governed data, release, and catalog surfaces | Runtime is downstream of release-bearing truth. |
+| Real secrets, live credentials, or committed host tokens | secret-management paths or local untracked files | Never turn repo plaintext into secret storage. |
+| Cross-lane orchestration doctrine | [../systemd-or-compose/README.md](../systemd-or-compose/README.md) | Shared rules belong in the shared decision surface. |
+| Public-edge or hosted exposure policy | sibling hosted / Kubernetes / Terraform / edge docs | Phase-one native systemd guidance is not a substitute for hosted exposure design. |
 
 ## Directory tree
 
-**PROPOSED** starter shape if the repo keeps phase-one host wiring here:
+### Current public tree (**CONFIRMED** on public `main`)
+
+```text
+infra/systemd/
+└── README.md
+```
+
+### Proposed expansion sketch (**illustrative only**)
 
 ```text
 infra/systemd/
@@ -122,40 +133,50 @@ infra/systemd/
     └── override.conf
 ```
 
-A lean tree is a feature here. A reviewer should be able to answer three questions in under a minute:
-
-1. Which services exist?
-2. What is each service allowed to start, read, write, and restart?
-3. Which live host-owned files must exist outside Git before any of this becomes real?
-
-> [!NOTE]
-> If adjacent docs already use `units/` or `runtime/phase1/systemd_units/` instead of a flat layout, prefer the established local pattern over this draft tree.
+Use the expansion sketch only after re-reading the active checkout and deciding whether KFM will keep native-host wiring here, redirect it to another existing lane, or pull shared rules upward into `infra/systemd-or-compose/`.
 
 ## Quickstart
 
-### 1) Verify this path against the real repo
+Start with inventory, not installation.
+
+### 1) Verify the checkout and the neighboring infra lanes
 
 ```bash
-# REVIEW ONLY
-find infra/systemd -maxdepth 2 -type f | sort
+# REPO ROOT + LANE INVENTORY
+git rev-parse --show-toplevel
+find infra -maxdepth 2 -type d | sort
+find infra/systemd -maxdepth 3 -type f | sort
 
-# ALSO CHECK THE FRESHER CORPUS STARTER SHAPE
-find runtime/phase1 -maxdepth 2 -type f | sort
+# READ THE PARENT AND SHARED-CHOICE DOCS FIRST
+sed -n '1,220p' infra/README.md
+sed -n '1,240p' infra/systemd-or-compose/README.md
+sed -n '1,240p' infra/systemd/README.md
 ```
 
-If the mounted repo already uses `runtime/phase1/`, move or cross-link this README instead of duplicating doctrine.
-
-### 2) Validate unit syntax before install
+### 2) Check whether doctrine-only starter paths already exist somewhere else in the working checkout
 
 ```bash
-# REVIEW ONLY
-systemd-analyze verify infra/systemd/*.service
+# ATTACHED DOCTRINE MENTIONS runtime/phase1/* AS A STARTER ARTIFACT FAMILY
+find runtime -maxdepth 3 -type f 2>/dev/null | sort || true
 ```
 
-### 3) Install example units on a host
+If a working branch already carries native-host runtime assets outside `infra/systemd/`, reconcile those paths explicitly instead of cloning doctrine into two places.
+
+### 3) Validate unit syntax only after actual unit files exist
 
 ```bash
-# EXAMPLE ONLY — adjust paths, users, groups, and ExecStart values before use
+# ILLUSTRATIVE EXAMPLE ONLY — THIS FAILS CLEANLY IF NO UNITS EXIST YET
+if find infra/systemd -maxdepth 1 -name '*.service' | grep -q .; then
+  systemd-analyze verify infra/systemd/*.service
+else
+  echo 'No checked-in systemd unit files under infra/systemd/ yet.'
+fi
+```
+
+### 4) Install illustrative files on a host only after the lane carries real files
+
+```bash
+# EXAMPLE ONLY — ADJUST PATHS, USERS, GROUPS, AND EXECSTART VALUES BEFORE USE
 sudo install -m 0644 infra/systemd/*.service /etc/systemd/system/
 
 sudo install -d -m 0750 /etc/kfm
@@ -172,10 +193,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now kfm-api.service
 ```
 
-### 4) Inspect live status, logs, and bind scope
+### 5) Inspect live status, logs, and bind scope
 
 ```bash
-# REVIEW / OPERATIONS
 systemctl status kfm-api.service
 systemctl status ollama.service
 
@@ -187,18 +207,32 @@ ss -lntp | grep -E '127\.0\.0\.1:(8080|11434)'
 
 ## Usage
 
-### Unit strategy
+### Use this lane when
+
+- KFM is running natively on Ubuntu and `systemd` is the authoritative service manager.
+- You need loopback-bounded host profiles that keep the governed API, PostgreSQL/PostGIS, and local model runtime behind explicit service rules.
+- You want service identity, restart behavior, filesystem write scope, and journald continuity to be reviewable in Git.
+- You are proving the thinnest credible single-host slice before moving into broader hosted or reconciled environments.
+
+### Do not use this lane to
+
+- redefine policy, schema, release truth, or public-surface behavior;
+- bypass the governed API with direct client paths to canonical stores or model runtimes;
+- hide long-lived business rules inside unit files or shell glue; or
+- duplicate lane-choice doctrine that already belongs in `infra/systemd-or-compose/`.
+
+### Proposed service family strategy
 
 Use long-running units for stable runtime surfaces and bounded units for explicit jobs.
 
-- **Long-running:** governed API and any always-on support service that should survive operator login/logout.
-- **One-shot or bounded batch:** ingest, build, publish, and projection work where a run should either complete or fail closed with diagnosable evidence.
+- **Long-running:** the governed API and any always-on helper surface that must survive operator login/logout.
+- **One-shot or bounded batch:** ingest, build, publish, and projection work where the run should either complete or fail closed with diagnosable evidence.
 
-### Network posture
+### Host boundary rules
 
-Phase-one KFM is explicitly **not** a “just expose the service” design.
+The phase-one KFM posture is explicitly **not** “just expose the service.”
 
-- Bind the governed API to loopback in the thinnest phase-one profile.
+- Bind the governed API to loopback in the thinnest native profile.
 - Keep PostgreSQL/PostGIS on Unix socket or localhost only.
 - Keep Ollama on loopback only.
 - Keep RAW / WORK / QUARANTINE and direct artifact-root access off the public network.
@@ -279,24 +313,33 @@ journalctl -u kfm-api.service -b --no-pager | tail -n 50
 
 ```mermaid
 flowchart TB
-  subgraph Repo["Repository (placement NEEDS VERIFICATION)"]
-    R1["infra/systemd/"]
-    R2["*.service"]
-    R3["env/*.example"]
-    R4["ollama.service.d/override.conf"]
+  subgraph Repo["Current public repo state"]
+    R0["infra/systemd/\nREADME.md only"]
+    R1["directory contract\n(current file)"]
+    R2["future unit/example files\nPROPOSED"]
   end
 
-  subgraph Host["Ubuntu host"]
+  subgraph Doctrine["Attached phase-one runtime doctrine"]
+    D1["runtime/phase1/local_ubuntu_profile.md"]
+    D2["runtime/phase1/systemd_units/*"]
+    D3["ollama_adapter_contract.md\napi_membrane.md"]
+  end
+
+  subgraph Host["Ubuntu host target surface"]
     H1["/etc/systemd/system/"]
     H2["/etc/kfm/*.env"]
     H3["journald"]
     H4["/srv/kfm/{raw,work,quarantine,processed,catalog,published}"]
   end
 
-  R1 --> R2 --> H1
-  R1 --> R3 --> H2
-  R1 --> R4 --> H1
+  R0 --> R1
+  R1 --> R2
+  D1 --> R1
+  D2 --> R2
+  D3 --> R2
 
+  R2 --> H1
+  R2 --> H2
   H1 --> API["kfm-api.service"]
   H1 --> ING["kfm-ingest@.service"]
   H1 --> BLD["kfm-build@.service"]
@@ -305,9 +348,7 @@ flowchart TB
 
   API --> GOV["Governed API\n127.0.0.1 only"]
   GOV --> DB["PostgreSQL/PostGIS\nlocal-only"]
-  GOV --> PUBS["Published scope only"]
   GOV --> OLL["Ollama\n127.0.0.1:11434"]
-
   ING --> H4
   BLD --> H4
   PUB --> H4
@@ -318,20 +359,24 @@ flowchart TB
   BLD --> H3
   PUB --> H3
   PRJ --> H3
-
-  EXT["User / reviewer / edge traffic"] --> GOV
-  DB -. no direct client path .- EXT
-  OLL -. no direct client path .- EXT
-  H4 -. no direct client path .- EXT
 ```
 
-## Tables
+## Operating tables
 
-### Unit family matrix
+### Current public lane inventory
+
+| Surface | Current public state | Why it matters |
+| --- | --- | --- |
+| `infra/systemd/README.md` | **CONFIRMED** | The lane already has a checked-in directory guide. |
+| Checked-in unit files | **Not present on public `main`** | Runtime examples and service names remain starter guidance, not current-tree fact. |
+| Checked-in env examples or override snippets | **Not present on public `main`** | Secret boundaries and host examples should remain explicit once the lane grows. |
+| Sibling decision surface | [../systemd-or-compose/README.md](../systemd-or-compose/README.md) | Lane-choice rules already have a dedicated home. |
+
+### Proposed unit family matrix
 
 | Unit family | Service shape | Purpose | Expected write scope | Posture |
 | --- | --- | --- | --- | --- |
-| `kfm-api.service` | long-running | governed API | runtime state, logs, limited catalog/published reads, explicit small writes only | unit name **PROPOSED**, role **CONFIRMED** |
+| `kfm-api.service` | long-running | governed API | runtime state, logs, limited catalog/published reads, explicit small writes only | unit name **PROPOSED**, role **INFERRED** |
 | `kfm-ingest@.service` | templated one-shot | intake and landing | `raw/` and `work/` writes only | **PROPOSED** |
 | `kfm-build@.service` | templated one-shot | build / transform / projection work | `processed/` and related derived writes as required | **PROPOSED** |
 | `kfm-publish@.service` | bounded batch | catalog closure and publication movement | `catalog/` and `published/` only | **PROPOSED** |
@@ -342,12 +387,12 @@ flowchart TB
 | Order | Why it matters |
 | --- | --- |
 | Database before governed API | The API should not advertise readiness against a missing canonical store. |
-| Artifact mounts before workers | Intake/build/publish jobs need known paths before they start. |
+| Artifact mounts before workers | Intake/build/publish/projection jobs need known paths before they start. |
 | Policy/config readability before API readiness | KFM does not treat policy as decorative. |
-| Local model runtime before AI-enabled answer path | AI support is subordinate, but if enabled it must be reachable through the governed adapter. |
+| Local model runtime before AI-enabled answer path | AI support is subordinate, but if enabled it must still sit behind the governed adapter. |
 | Projection rebuilds only after a published release exists | Derived layers trail release-bearing truth; they do not race ahead of it. |
 
-### Environment and managed directories
+### Host-managed surfaces
 
 | Surface | Example | Notes |
 | --- | --- | --- |
@@ -356,51 +401,56 @@ flowchart TB
 | State directory | `StateDirectory=kfm-api` | durable service-owned state when needed |
 | Logs directory | `LogsDirectory=kfm-api` | pair with journald-driven inspection |
 | Explicit writes | `ReadWritePaths=/run/kfm /var/lib/kfm-api /srv/kfm/catalog /srv/kfm/published` | narrow write scope is preferred over broad ownership |
-| Lifecycle roots | `/srv/kfm/raw`, `/srv/kfm/work`, `/srv/kfm/quarantine`, `/srv/kfm/processed`, `/srv/kfm/catalog`, `/srv/kfm/published` | example host pattern from the mounted corpus; actual host path choice is **NEEDS VERIFICATION** |
+| Lifecycle roots | `/srv/kfm/raw`, `/srv/kfm/work`, `/srv/kfm/quarantine`, `/srv/kfm/processed`, `/srv/kfm/catalog`, `/srv/kfm/published` | example host pattern from the attached doctrine; exact live host paths still need verification |
 
 ### Host validation signals
 
 | Check | Healthy signal | Why it matters |
 | --- | --- | --- |
-| `systemctl is-active` | `active` for long-running units | Running process is necessary, not sufficient |
-| Bind scope | API and Ollama listen on `127.0.0.1` only | Prevents trust-boundary collapse |
-| Published scope | mounted and readable | UI/runtime surfaces should not read unpublished scope |
-| Policy/config | readable at boot | readiness should fail closed without them |
-| Journald continuity | persistent logs available after reboot | keeps runtime evidence reconstructable |
-| Worker behavior | bounded success or fail-closed logs | prevents silent retry loops and hidden data drift |
+| `systemctl is-active` | `active` for long-running units | Running process is necessary, not sufficient. |
+| Bind scope | API and Ollama listen on `127.0.0.1` only | Prevents trust-boundary collapse. |
+| Published scope | mounted and readable | UI/runtime surfaces should not read unpublished scope. |
+| Policy/config | readable at boot | readiness should fail closed without them. |
+| Journald continuity | persistent logs available after reboot | keeps runtime evidence reconstructable. |
+| Worker behavior | bounded success or fail-closed logs | prevents silent retry loops and hidden data drift. |
 
 ## Task list
 
 | Gate | Done when | Evidence to capture |
 | --- | --- | --- |
-| Path fit | The mounted repo confirms whether `infra/systemd/` is the right home, or this README is moved to the verified runtime path. | repo tree snapshot or PR diff |
-| Ownership | `TODO-VERIFY-OWNERS` is replaced with real team or names. | README update |
-| Unit realism | `ExecStart`, `WorkingDirectory`, user, and group map to real binaries and host paths. | reviewed unit files + `systemd-analyze verify` |
-| Secret boundary | Live values are outside Git and repo copies are example-only. | host permissions + sanitized examples |
-| Loopback discipline | API, DB, and Ollama exposure match approved host boundary. | bind config + firewall / VPN review |
+| Public-tree accuracy | The README reflects that the lane exists and is currently README-only on public `main`. | tree snapshot or PR diff |
+| Ownership | Owners and any narrower path coverage are aligned to current `CODEOWNERS`. | README update + codeowner diff if needed |
+| First checked-in runtime artifact | The directory contains at least one real unit or host example, not just descriptive prose. | added file(s) + review notes |
+| Unit realism | `ExecStart`, `WorkingDirectory`, user, group, and write scope map to real binaries and host paths. | reviewed unit files + `systemd-analyze verify` |
+| Secret boundary | Live values are outside Git and repo copies are example-only. | sanitized examples + host permission notes |
+| Loopback discipline | API, DB, and Ollama exposure match the approved host boundary. | bind config + firewall / VPN review |
 | Least privilege | Service users and `ReadWritePaths=` reflect stage-specific rights. | unit review + filesystem permissions |
 | Logging | Operators can inspect health and failure via journald without guesswork. | `systemctl`, `journalctl`, joined IDs visible |
-| Rollback readiness | Disable/stop/reload steps exist and do not depend on folklore. | runbook note or PR checklist |
+| Runtime/phase1 reconciliation | Any relationship between this lane and the attached `runtime/phase1/*` starter paths is resolved explicitly. | cross-link, ADR, or path decision note |
 
 ### Definition of done
 
-- [ ] Repo path and local directory convention verified against the mounted tree.
-- [ ] Owners, dates, and related links replaced with real values.
-- [ ] Unit names, paths, and environment examples aligned to real binaries and directories.
-- [ ] Host-only env files and service users documented with verified permissions.
-- [ ] At least one long-running unit and one one-shot template verified end to end.
-- [ ] Journald inspection and rollback steps exercised once on a non-production host.
-- [ ] Any conflict between `infra/systemd/` and `runtime/phase1/*` is resolved explicitly, not silently.
+- [ ] The file no longer implies that `infra/systemd/` is an unverified path.
+- [ ] Current public tree state and proposed expansion are separated clearly.
+- [ ] Owners, dates, and related links reflect verified repo evidence or explicit placeholders.
+- [ ] At least one real checked-in unit, env example, or override snippet exists before this lane claims more than README-only maturity.
+- [ ] Host-only env files and service users are documented with verified permissions when they become real.
+- [ ] One long-running unit and one bounded job unit are verified end to end before the lane claims operational completeness.
+- [ ] Any conflict between `infra/systemd/` and attached `runtime/phase1/*` starter paths is resolved explicitly, not silently.
 
 ## FAQ
 
-### Why is the path itself flagged?
+### Is `infra/systemd/` a real repo path now?
 
-Because the user provided `infra/systemd/`, but the freshest mounted runtime placeholders in the corpus point to `runtime/phase1/*`. The doctrine is strong; the live repo placement is not verified in this session.
+Yes. Current public `main` confirms the path exists. What remains unverified is lane maturity: the checked-in public tree is still README-only, and active host/runtime evidence is not exposed here.
+
+### Why keep `runtime/phase1/*` in view if this repo already has `infra/systemd/`?
+
+Because the attached doctrine still uses that artifact family as the strongest phase-one runtime placeholder set. This README should preserve that design pressure without pretending the current public repo already exposes those files.
 
 ### Why systemd here instead of a container-first README?
 
-Because the current KFM Linux guidance treats **systemd-first packaging** as the thinnest credible phase-one start on Ubuntu. It keeps loopback and Unix-socket boundaries simple while the governed path is still being proven.
+Because the current KFM runtime doctrine treats **systemd-first packaging** as the thinnest credible phase-one start on Ubuntu. It keeps loopback and Unix-socket boundaries simple while the governed path is still being proven.
 
 ### Why keep real secrets out of this directory?
 
