@@ -8,7 +8,7 @@ owners: @bartytime4life (CODEOWNERS fallback)
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [packages/README.md, policy/README.md, policy/policy-runtime/README.md, apps/api/src/api/README.md, tests/README.md, .github/README.md]
+related: [packages/README.md, contracts/README.md, schemas/README.md, policy/README.md, policy/bundles/README.md, policy/fixtures/README.md, policy/policy-runtime/README.md, policy/tests/README.md, tests/policy/README.md, pipelines/README.md, apps/api/src/api/README.md, .github/README.md]
 tags: [kfm, packages, policy, internal-boundary]
 notes: [doc_id and date fields need repo-backed values; owners use current public CODEOWNERS fallback]
 [/KFM_META_BLOCK_V2] -->
@@ -33,8 +33,9 @@ Shared internal policy-support boundary for KFM package code that helps governed
 | Owners | [`@bartytime4life`](../../.github/CODEOWNERS) *(fallback owner verified in `CODEOWNERS`)* |
 | Path | [`packages/policy/README.md`](./README.md) |
 | Baseline | [`../README.md`](../README.md) for package-boundary law, plus [`../../policy/README.md`](../../policy/README.md) for the repo-authoritative policy lane |
-| Adjacent seams | [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md) for current runtime-policy documentation under top-level `policy/`; [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) for the governed API boundary |
-| Repo fit | child package boundary inside [`../`](../) that should remain subordinate to [`../../policy/`](../../policy/), [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), and governed runtime surfaces under [`../../apps/`](../../apps/) |
+| Adjacent policy proof lanes | [`../../policy/bundles/README.md`](../../policy/bundles/README.md) · [`../../policy/fixtures/README.md`](../../policy/fixtures/README.md) · [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md) · [`../../policy/tests/README.md`](../../policy/tests/README.md) · [`../../tests/policy/README.md`](../../tests/policy/README.md) |
+| Downstream execution context | [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) · [`../../pipelines/README.md`](../../pipelines/README.md) *(current public execution lanes that may consume shared helpers; actual imports remain `UNKNOWN`)* |
+| Repo fit | child package boundary inside [`../`](../) that should remain subordinate to [`../../policy/`](../../policy/), [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), and governed runtime or execution surfaces under [`../../apps/`](../../apps/) and [`../../pipelines/`](../../pipelines/) |
 | Current repo evidence | `packages/policy/` resolves on current public `main` and currently contains `README.md` only; package-local manifests, source files, fixtures, tests, examples, and consumer imports are not yet confirmed |
 | Truth posture | `CONFIRMED` current path + adjacent docs · `INFERRED` package-local role · `PROPOSED` deeper growth shape |
 | Quick jump | [Scope](#scope) · [Evidence posture](#evidence-posture-used-in-this-readme) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Boundary matrix](#boundary-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
@@ -45,16 +46,16 @@ Shared internal policy-support boundary for KFM package code that helps governed
 > `packages/policy/` is **not** the repo’s authoritative policy home. In the current repo, that role stays with [`../../policy/`](../../policy/). This package is for shared internal policy-support logic, not for a second policy source of truth.
 
 > [!WARNING]
-> Do **not** use this directory as a side door around the trust membrane. No package-local code here should create a hidden client-to-store path, a shadow policy path, or public route behavior that bypasses the governed API boundary documented under [`../../apps/api/src/api/`](../../apps/api/src/api/README.md) or other governed app surfaces under [`../../apps/`](../../apps/).
+> Do **not** use this directory as a side door around the trust membrane. No package-local code here should create a hidden client-to-store path, a shadow policy path, or outward app/pipeline behavior that bypasses top-level policy, contract, schema, or governed review surfaces documented under [`../../policy/`](../../policy/), [`../../apps/api/src/api/`](../../apps/api/src/api/), or [`../../pipelines/`](../../pipelines/).
 
 > [!NOTE]
-> Current public branch inspection confirms adjacent documentation seams at [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md) and [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md), but it still does **not** confirm a package manifest, `src/`, tests, fixtures, examples, or consumer imports beneath this directory. Keep package-internal implementation claims at `UNKNOWN` or `NEEDS VERIFICATION` until the active branch proves them.
+> Current public branch inspection confirms adjacent documentation seams at [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md), [`../../policy/tests/README.md`](../../policy/tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md), and [`../../pipelines/README.md`](../../pipelines/README.md), but it still does **not** confirm a package manifest, `src/`, tests, fixtures, examples, or consumer imports beneath this directory. Keep package-internal implementation claims at `UNKNOWN` or `NEEDS VERIFICATION` until the active branch proves them.
 
 ## Scope
 
 `packages/policy/` should hold **shared internal policy adapters, obligation helpers, decision normalizers, and other policy-support logic** used by governed KFM runtimes.
 
-Its job is to keep reusable policy-aware behavior bounded, inspectable, and reviewable without smearing that behavior across deployable apps or quietly relocating authority away from top-level policy, contracts, schemas, and governed data surfaces.
+Its job is to keep reusable policy-aware behavior bounded, inspectable, and reviewable without smearing that behavior across deployable apps or quietly relocating authority away from top-level policy, contracts, schemas, governed data surfaces, or lane-local execution surfaces.
 
 A healthy package here stays:
 
@@ -82,9 +83,12 @@ A healthy package here stays:
 | Parent package contract | [`../README.md`](../README.md) | package-family boundary law and child-package expectations | `CONFIRMED` |
 | Repo root posture | [`../../README.md`](../../README.md) | repo-wide verification-first operating frame | `CONFIRMED` |
 | Policy authority | [`../../policy/README.md`](../../policy/README.md) | repo-authoritative policy surface | `CONFIRMED` |
+| Bundle / fixture / local policy tests | [`../../policy/bundles/README.md`](../../policy/bundles/README.md) · [`../../policy/fixtures/README.md`](../../policy/fixtures/README.md) · [`../../policy/tests/README.md`](../../policy/tests/README.md) | top-level rule-pack, fixture, and bundle-local assertion seams that stay authoritative outside this package | `CONFIRMED` |
 | Runtime-policy documentation seam | [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md) | current repo-visible documentation and coordination seam for request-time policy semantics under top-level `policy/` | `CONFIRMED` |
 | Contract neighbors | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) | canonical machine-contract and schema-adjacent lanes | `CONFIRMED` |
+| Repo-facing policy behavior proof | [`../../tests/policy/README.md`](../../tests/policy/README.md) | broader proof lane showing policy consequences beyond one package boundary | `CONFIRMED` |
 | Governed API boundary | [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) | runtime-facing enforcement boundary that documents policy evaluation, evidence resolution, and audit behavior | path + role `CONFIRMED` · imports `UNKNOWN` |
+| Execution lanes | [`../../pipelines/README.md`](../../pipelines/README.md) | lane-level execution surface that may consume shared helpers without becoming the package’s canonical home | path `CONFIRMED` · imports `UNKNOWN` |
 | Verification + governance | [`../../tests/README.md`](../../tests/README.md) · [`../../.github/README.md`](../../.github/README.md) | tests, review, ownership, and merge-gate context | `CONFIRMED` |
 
 ### Naming note
@@ -108,6 +112,7 @@ The following belong here when they are real, shared, and package-scoped:
 - shared helpers for finite policy outcomes and policy-safe error shaping
 - import-safe wrappers that help governed runtimes consume top-level policy or contract surfaces
 - narrow shared types that preserve visible `reason_codes`, `obligation_codes`, and outcome state without relocating authority
+- shared helper seams that more than one governed execution surface would otherwise duplicate, including app and pipeline lanes, provided the logic stays internal and non-sovereign
 - package-local fixtures, examples, and tests that prove this package’s own contract
 - export maps and local docs that explain the package boundary clearly
 
@@ -116,9 +121,12 @@ The following belong here when they are real, shared, and package-scoped:
 | Do **not** put this here | Put it here instead | Why |
 |---|---|---|
 | repo-authoritative policy bundles, rule files, fixtures, or canonical policy docs | [`../../policy/`](../../policy/) | keeps one visible policy authority surface |
+| bundle-local rule packs, fixtures, or seam-local policy assertions | [`../../policy/bundles/README.md`](../../policy/bundles/README.md) · [`../../policy/fixtures/README.md`](../../policy/fixtures/README.md) · [`../../policy/tests/README.md`](../../policy/tests/README.md) | keeps executable rule families and their immediate proof lanes visibly authoritative at the top level |
 | runtime-policy documentation or coordination seams | [`../../policy/policy-runtime/`](../../policy/policy-runtime/) and related top-level policy docs | keeps request-time policy semantics visible at the top level rather than buried in a package |
+| repo-facing policy behavior proof across runtime / release / correction lanes | [`../../tests/policy/README.md`](../../tests/policy/README.md) | avoids collapsing broader policy consequences into package-unit tests |
 | canonical schemas, vocabularies, or contract families | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) | avoids parallel schema or vocabulary universes |
 | public or internal API routes, app entrypoints, workers, or CLI runtime boundaries | [`../../apps/`](../../apps/) | deployable runtime surfaces belong in app lanes |
+| lane-local pipeline recipes, watcher configs, fetch / normalize / validate / emit scripts, or one-off staged execution code | [`../../pipelines/README.md`](../../pipelines/README.md) | shared helpers may live here, but lane execution belongs with the lane |
 | repo-wide policy gates, workflow wiring, or merge controls | [`../../tests/`](../../tests/) · [`../../.github/`](../../.github/) | verification and CI/CD should stay visible and centralized |
 | release artifacts, receipts, evidence bundles, catalogs, or published data | [`../../data/`](../../data/) | package code is not the release-bearing artifact home |
 | environment-specific wiring, secrets, or infrastructure overlays | [`../../infra/`](../../infra/) or external secret management | package code must remain portable and auditable |
@@ -130,7 +138,7 @@ The following belong here when they are real, shared, and package-scoped:
 | [`./README.md`](./README.md) | Yes | substantive boundary README; directory otherwise appears README-only on current public `main` | safe to refine as a boundary doc, but do not imply package internals that are not present |
 | package manifest (`package.json`, `pyproject.toml`, etc.) | `NEEDS VERIFICATION` | not visible in the current public inspection | do not document install/build commands as current reality |
 | `src/`, `tests/`, `fixtures/`, or `examples/` | `NEEDS VERIFICATION` | not visible in the current public inspection | keep deeper layout claims labeled `PROPOSED` |
-| real consumer imports from `apps/` or other packages | `UNKNOWN` | not proven in the current inspection | link adjacent consumers as plausible surfaces, not as a confirmed import graph |
+| real consumer imports from `apps/` or `pipelines/` | `UNKNOWN` | not proven in the current inspection | link adjacent consumers as plausible surfaces, not as a confirmed import graph |
 
 ## Directory tree
 
@@ -179,9 +187,14 @@ find packages/policy -maxdepth 4 -type f | sort
 # read the local and neighboring boundary docs
 sed -n '1,260p' packages/policy/README.md
 sed -n '1,320p' packages/README.md
-sed -n '1,260p' policy/README.md
-sed -n '1,220p' policy/policy-runtime/README.md
-sed -n '1,260p' apps/api/src/api/README.md
+sed -n '1,320p' policy/README.md
+sed -n '1,260p' policy/bundles/README.md
+sed -n '1,260p' policy/fixtures/README.md
+sed -n '1,260p' policy/policy-runtime/README.md
+sed -n '1,260p' policy/tests/README.md
+sed -n '1,260p' tests/policy/README.md
+sed -n '1,240p' pipelines/README.md
+sed -n '1,220p' apps/api/src/api/README.md
 sed -n '1,260p' tests/README.md
 sed -n '1,120p' .github/CODEOWNERS
 
@@ -194,10 +207,13 @@ find packages/policy -maxdepth 4 \
 find contracts -maxdepth 2 -type f | sort
 find schemas -maxdepth 2 -type f | sort
 
+# inspect lane-local execution surfaces separately rather than inferring imports
+find pipelines -maxdepth 3 -type f | sort
+
 # trace policy-facing vocabulary across the repo
 grep -RIn \
   'DecisionEnvelope\|RuntimeResponseEnvelope\|EvidenceBundle\|reason_codes\|obligation_codes\|policy-runtime' \
-  packages policy contracts schemas apps tests docs 2>/dev/null || true
+  packages policy contracts schemas apps pipelines tests docs 2>/dev/null || true
 ```
 
 [Back to top](#top)
@@ -224,8 +240,8 @@ Good code in `packages/policy/` is usually:
 3. **Keep exports narrow.**  
    A healthy package surface is small, typed, and obviously internal.
 
-4. **Keep public behavior in app surfaces.**  
-   Routes, review flows, and runtime entrypoints belong in `apps/`, even when they reuse helpers from this directory.
+4. **Keep public behavior and lane-local execution in app or pipeline surfaces.**  
+   Routes, review flows, runtime entrypoints, watcher recipes, and lane-specific emitters belong in `apps/` or `pipelines/`, even when they reuse helpers from this directory.
 
 5. **Keep `policy/policy-runtime/` and `packages/policy/` distinct.**  
    The former is currently a top-level documentation and coordination seam under `policy/`; this package remains the child package boundary for shared internal helpers.
@@ -275,7 +291,11 @@ flowchart LR
   subgraph Authority["Top-level authority surfaces"]
     Root["../../README.md"]
     Policy["../../policy/"]
+    Bundles["../../policy/bundles/"]
+    Fixtures["../../policy/fixtures/"]
     RuntimeDoc["../../policy/policy-runtime/"]
+    PolicyTests["../../policy/tests/"]
+    RepoPolicyTests["../../tests/policy/"]
     Contracts["../../contracts/"]
     Schemas["../../schemas/"]
   end
@@ -284,9 +304,9 @@ flowchart LR
     Pkg["packages/policy/"]
   end
 
-  subgraph Runtime["Governed runtime lane"]
+  subgraph Execution["Governed execution lanes"]
     API["../../apps/api/src/api/"]
-    Apps["../../apps/"]
+    Pipelines["../../pipelines/"]
   end
 
   subgraph Verify["Verification + governance"]
@@ -296,11 +316,15 @@ flowchart LR
 
   Root -. repo posture .-> Pkg
   Policy --> Pkg
-  Policy --> RuntimeDoc
+  Bundles -. rule packs stay top-level .-> Pkg
+  Fixtures -. fixtures stay top-level .-> Pkg
+  RuntimeDoc --> Pkg
+  PolicyTests -. bundle assertions stay top-level .-> Pkg
+  RepoPolicyTests -. behavior proof surrounds .-> Pkg
   Contracts --> Pkg
   Schemas --> Pkg
   Pkg -. shared helpers may flow into .-> API
-  API --> Apps
+  Pkg -. shared helpers may flow into .-> Pipelines
   Tests -. validate .-> Pkg
   GitHub -. gate .-> Pkg
 ```
@@ -314,7 +338,10 @@ Diagram note: the arrows show the **intended boundary direction** for this READM
 | shared policy adapters and helper functions | Yes | keep them internal and reusable |
 | decision / reason / obligation normalization | Yes | helper logic only; do not redefine canonical registries silently |
 | package-local tests and fixtures | Yes | especially for negative paths and fail-closed behavior |
+| shared helpers reused by both app and pipeline lanes | Maybe | only when the surface stays obviously internal, import-safe, and subordinate to stronger top-level authority |
 | thin wrappers that expose top-level policy outputs to package consumers | Maybe | only if they stay subordinate to top-level policy authority and keep imports obvious |
+| bundle-local rule packs, fixtures, or assertions | No | current repo keeps those visibly authoritative under top-level `policy/` and `tests/policy/` lanes |
+| pipeline-local fetch / normalize / emit / watcher code | No | current lane-local execution home is [`../../pipelines/`](../../pipelines/) |
 | runtime-policy documentation seam or authoritative bundle coordination | No | current repo keeps that visibility under [`../../policy/policy-runtime/`](../../policy/policy-runtime/) and broader [`../../policy/`](../../policy/) |
 | `.rego` bundles, canonical rule files, or authoritative fixtures | No | top-level `policy/` remains the authoritative lane |
 | public route handlers or runtime entrypoints | No | deployable surfaces belong in `apps/` |
@@ -339,11 +366,13 @@ Diagram note: the arrows show the **intended boundary direction** for this READM
 
 - [ ] Reinspect the directory contents before claiming implementation depth.
 - [ ] Keep top-level [`../../policy/`](../../policy/) as the authoritative policy surface.
+- [ ] Keep bundle, fixture, and top-level policy-test authority in [`../../policy/`](../../policy/) and [`../../tests/policy/`](../../tests/policy/).
 - [ ] Keep [`../../policy/policy-runtime/`](../../policy/policy-runtime/) and `packages/policy/` distinct unless an explicit boundary change is reviewed.
 - [ ] Add package-local tests and fixtures before broadening package responsibility.
+- [ ] Reinspect [`../../pipelines/`](../../pipelines/) before documenting any pipeline consumer or execution claim.
 - [ ] Document real consumers once imports exist.
 - [ ] Update [`../README.md`](../README.md) if this package’s role changes materially.
-- [ ] Update [`../../policy/README.md`](../../policy/README.md) and [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md) if authority or runtime seams move.
+- [ ] Update [`../../policy/README.md`](../../policy/README.md), [`../../policy/policy-runtime/README.md`](../../policy/policy-runtime/README.md), and other top-level policy proof-lane docs if authority or runtime seams move.
 - [ ] Raise an ADR if this package starts owning bundle loading, public-contract behavior, or runtime-policy orchestration.
 - [ ] Replace the KFM meta-block placeholders with repo-backed values before publishing.
 
@@ -360,6 +389,10 @@ No. The current repo has **`packages/policy/`** as the child package path and **
 ### Can this package own public request behavior?
 
 No. Public and steward-facing request families belong in governed app surfaces. This package may supply helpers, adapters, or shared types, but not the public runtime boundary itself.
+
+### Can a pipeline lane consume this package?
+
+Potentially yes, but only for **shared internal helpers**. Lane-local fetch / validate / emit / watcher logic still belongs in [`../../pipelines/`](../../pipelines/), and current public imports into or out of this package remain `UNKNOWN`.
 
 ### What would count as real implementation proof here?
 
@@ -385,6 +418,8 @@ A visible package manifest, source files, tests or fixtures, and at least one re
 
 - confirm whether the mounted working tree contains package code beyond `README.md`
 - confirm whether any real imports target `packages/policy/`
+- confirm whether any `apps/` or `pipelines/` lanes consume this package
+- confirm whether top-level bundle / fixture / test lanes now depend on shared helpers here
 - decide whether a future `packages/policy-runtime/` seam is needed now that `policy/policy-runtime/` exists as a current documentation lane
 - add package-specific execution or test commands only after a real package manifest appears
 - replace KFM meta-block placeholders with repo-backed `doc_id`, `created`, and `updated` values
