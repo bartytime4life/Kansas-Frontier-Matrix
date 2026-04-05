@@ -10,7 +10,7 @@ updated: <YYYY-MM-DD-NEEDS-VERIFICATION>
 policy_label: <policy_label-NEEDS-VERIFICATION>
 related: [../, ./dashboards/, ./otel/, ../../docs/runbooks/]
 tags: [kfm, monitoring, observability]
-notes: [Mounted repo tree was not directly visible in this session; target path is user-requested, while adjacent monitoring/observability paths remain NEEDS VERIFICATION.]
+notes: [Target path inferred from uploaded draft because the task path was omitted; mounted repo tree was not directly visible in this session; owners, dates, policy label, and adjacent paths remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # Monitoring
@@ -19,10 +19,10 @@ Operational monitoring for KFM’s trust-bearing runtime, release, rollback, and
 
 | Impact | Value |
 | --- | --- |
-| **Status** | `experimental` *(repo verification pending)* |
+| **Status** | `experimental` *(path and tree verification pending)* |
 | **Owners** | `<ops/platform/security-NEEDS-VERIFICATION>` |
-| **Badges** | ![status](https://img.shields.io/badge/status-draft-orange) ![scope](https://img.shields.io/badge/scope-monitoring%20%26%20operational%20evidence-blue) ![truth](https://img.shields.io/badge/truth-pdf--grounded-yellow) ![repo](https://img.shields.io/badge/repo-not%20mounted-lightgrey) ![kfm](https://img.shields.io/badge/kfm-trust--visible-0b7285) |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
+| **Badges** | ![status](https://img.shields.io/badge/status-draft-orange) ![scope](https://img.shields.io/badge/scope-monitoring%20%26%20operational%20evidence-blue) ![truth](https://img.shields.io/badge/truth-doctrine--grounded-yellow) ![repo](https://img.shields.io/badge/repo-needs%20verification-lightgrey) ![kfm](https://img.shields.io/badge/kfm-trust--visible-0b7285) |
+| **Quick jumps** | [Truth legend](#truth-legend) · [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Contract edge](#contract-edge) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
 
 ## Truth legend
 
@@ -50,7 +50,7 @@ In KFM, monitoring is not only about uptime, saturation, or error counts. It is 
 That makes monitoring a **trust-bearing operational surface**, not a generic ops folder.
 
 > [!IMPORTANT]
-> Dashboards, alerts, logs, and traces are diagnostic and explanatory surfaces. They help operators reconstruct behavior, but they do **not** replace canonical data, release artifacts, policy decisions, review records, or correction notices.
+> Monitoring in KFM is explanatory operational evidence. Dashboards, alerts, logs, and traces help operators reconstruct behavior, but they do **not** replace canonical data, release artifacts, policy decisions, review records, or correction notices.
 
 ### What this README is for
 
@@ -68,7 +68,7 @@ Use this file to define the monitoring contract for KFM’s operating environmen
 
 | Field | Value |
 | --- | --- |
-| **Path** | `infra/monitoring/README.md` |
+| **Path** | `infra/monitoring/README.md` *(INFERRED from uploaded draft; NEEDS VERIFICATION against the actual repo tree)* |
 | **Role in repo** | README-like directory contract for monitoring / observability concerns |
 | **Upstream** | [`../`](../) *(parent `infra/` directory; actual contents NEED VERIFICATION)* |
 | **Downstream** | [`./dashboards/`](./dashboards/) *(PROPOSED / NEEDS VERIFICATION)* · [`./otel/`](./otel/) *(PROPOSED / NEEDS VERIFICATION)* · [`../../docs/runbooks/`](../../docs/runbooks/) *(PROPOSED / NEEDS VERIFICATION)* |
@@ -111,6 +111,25 @@ This directory should accept materials that help answer operational trust questi
 
 ---
 
+## Contract edge
+
+Monitoring does not own KFM’s proof objects, but it must be able to **see enough of them** to reconstruct runtime and release behavior under stress.
+
+| Proof object family | Monitoring question it should answer | Minimum operational joins | Status |
+| --- | --- | --- | --- |
+| `IngestReceipt` / `ValidationReport` | Did intake fail, quarantine, or validate cleanly? | source ref, fetch time, subject refs, reason codes | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `DecisionEnvelope` | Which policy result or obligation shaped the observed behavior? | `decision_ref`, `audit_ref`, result, reason codes, obligation codes | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `ReleaseManifest` / `ReleaseProofPack` | Which promoted scope is implicated? | `release_id`, catalog refs, decision refs, rollback/correction posture | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `ProjectionBuildReceipt` | Is derived delivery stale, broken, or built from the wrong release scope? | release ref, projection type, build time, freshness basis, stale-after policy | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `EvidenceBundle` | What evidence supported the outward claim or export? | `bundle_id`, dataset refs, lineage summary, `audit_ref` | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `RuntimeResponseEnvelope` | Why did the runtime answer, abstain, deny, or error? | `request_id`, `audit_ref`, evaluated time, result, citations check, `decision_ref` | **CONFIRMED doctrine / implementation UNKNOWN** |
+| `CorrectionNotice` | What was superseded, withdrawn, rebuilt, or narrowed? | correction ref, affected releases, replacement releases, rebuild refs, public note | **CONFIRMED doctrine / implementation UNKNOWN** |
+
+> [!NOTE]
+> The monitoring layer should point operators back to these objects. It should not silently replace them with screenshots, dashboard guesses, or tool-local state.
+
+---
+
 ## Exclusions
 
 What does **not** belong here, and where it should go instead.
@@ -133,7 +152,7 @@ What does **not** belong here, and where it should go instead.
 
 ## Directory tree
 
-The mounted repository tree was **not** directly visible in this session, so the shape below is a **PROPOSED adapter** for the requested `infra/monitoring/` home.
+The mounted repository tree was **not** directly visible in this session, so the shape below is a **PROPOSED adapter** for the inferred `infra/monitoring/` home.
 
 ```text
 infra/
@@ -178,7 +197,10 @@ Start with inspection, not assumption.
 find infra/monitoring observability docs/runbooks -maxdepth 3 -type f 2>/dev/null | sort
 
 # Look for cross-plane join keys and accountability fields
-grep -RInE 'request_id|audit_ref|release_id|decision_ref|bundle_id|RuntimeResponseEnvelope|EvidenceBundle|CorrectionNotice' .
+grep -RInE 'request_id|audit_ref|release_id|decision_ref|bundle_id|projection_build_id|correction_ref' .
+
+# Look for typed proof objects that monitoring should be able to reconstruct
+grep -RInE 'IngestReceipt|ValidationReport|DecisionEnvelope|ReleaseManifest|ReleaseProofPack|ProjectionBuildReceipt|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice' .
 
 # Look for stale, correction, rollback, or negative-path handling
 grep -RInE 'stale|rollback|correction|withdrawn|abstain|deny|error|citation_failed|evidence_missing' .
@@ -190,11 +212,12 @@ grep -RInE 'observability|monitoring|otel|OpenTelemetry|trace|metric|log|alert|h
 ### Minimum first-pass review
 
 1. Confirm what actually exists under `infra/monitoring/` and whether `observability/` also exists.
-2. Confirm whether request, audit, release, and policy identifiers are already emitted anywhere.
+2. Confirm whether request, audit, release, projection, and policy identifiers are already emitted anywhere.
 3. Verify whether readiness checks prove **trust-bearing dependencies**, not just process liveness.
 4. Verify whether stale projection and correction states are visible to operators.
 5. Verify whether each meaningful alertable condition has a linked runbook or explicit response note.
 6. Verify whether ops/status surfaces are internal-only and do not expose canonical truth directly.
+7. Verify whether signal ownership is explicit for each alert family, dashboard, or collector path.
 
 ### Suggested first mounted outputs to capture
 
@@ -342,6 +365,19 @@ These are **PROPOSED** starters for a first useful monitoring baseline.
 | Delivery | cache hit rate, projection rebuild counts |
 | Policy | deny counts by rule family, review-required counts |
 
+### Proposed alertable conditions
+
+These are **PROPOSED** starters for the first alert set that matters in KFM terms.
+
+| Condition | Why it matters | First governed response |
+| --- | --- | --- |
+| Release scope resolution failure | a public-safe surface may no longer be reconstructable | inspect release manifest / proof pack; stop rollout or narrow scope |
+| Projection stale-after breach | derived delivery may look current when it is not | switch to stale-visible, rebuild, or suppress affected surface |
+| Evidence-resolution degradation | outward claims may lose inspectable support | inspect `EvidenceBundle` path or narrow outward behavior |
+| Citation verification failure | runtime may leak unsupported prose | force `ABSTAIN`, `DENY`, or `ERROR`; inspect runtime envelope |
+| Missing audit or request joins | a disputed action cannot be reconstructed | fail readiness until emitters restore correlation fields |
+| Correction visibility mismatch | superseded or withdrawn state may remain hidden | inspect `CorrectionNotice` propagation and rollback/correction workflow |
+
 ---
 
 ## Task list
@@ -357,6 +393,7 @@ Definition of done for monitoring work in this directory.
 - [ ] One stale projection or freshness-path example documented
 - [ ] One correction or rollback drill linked to a runbook or proof artifact
 - [ ] Alertable trust-bearing conditions mapped to runbooks
+- [ ] Signal ownership documented for each major alert or metric family
 - [ ] Ops/status surfaces reviewed to ensure they do not expose raw canonical truth
 - [ ] Retention expectations documented for logs, traces, metrics, and receipts
 - [ ] README rechecked after repo mount so placeholders can be retired or narrowed
@@ -376,6 +413,10 @@ It must help answer trust questions, not only resource questions. A green proces
 ### Are dashboards authoritative?
 
 No. Dashboards are inspection tools. They should point back to release linkage, evidence objects, policy outcomes, and audit joins rather than replacing them.
+
+### Should this directory own the proof objects?
+
+No. Monitoring should join to proof objects and reference them, but the authoritative release, review, policy, evidence, and correction artifacts remain owned by their governing directories.
 
 ### What should definitely be joinable?
 
@@ -420,6 +461,20 @@ Suggested first additions:
 </details>
 
 <details>
+<summary><strong>PROPOSED starter retention lens</strong></summary>
+
+Until mounted policy and ops settings are visible, prefer **retention ordering by trust consequence** rather than by tool default.
+
+- **Metrics** — enough history for trend detection and SLO review
+- **Traces** — enough history to reconstruct recent failures and release regressions
+- **Logs** — enough joined windows to explain incidents and disputed outcomes
+- **Receipts / proof references / correction joins** — the longest-lived class, because they preserve release and correction lineage
+
+Specific durations remain **NEEDS VERIFICATION**.
+
+</details>
+
+<details>
 <summary><strong>Review checklist for maintainers</strong></summary>
 
 Before approving changes under this directory, verify:
@@ -429,6 +484,7 @@ Before approving changes under this directory, verify:
 - health checks do not confuse process liveness with trust-bearing readiness
 - dashboards make stale, denied, abstained, and corrected states visible where relevant
 - release, correction, and rollback context stay queryable
+- signal ownership is explicit for key alerts, metrics, and traces
 - runbooks, alerts, and docs move together
 
 </details>
@@ -441,6 +497,7 @@ Before approving changes under this directory, verify:
 - Are dashboards provisioned from code, generated, or externalized?
 - What request/audit/release identifiers already exist in code and tests?
 - Do any current workflows already emit stale-projection, correction, or runtime-envelope artifacts?
+- Which proof-object families already exist as code, schema, or fixture?
 - What retention and access rules are already documented elsewhere in the repo?
 
 </details>
