@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: <TODO: owners>
 created: <TODO: created-date>
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: <TODO: policy-label>
-related: [./pyproject.toml, ./schemas/canonical.person.schema.json, ./schemas/canonical.event.schema.json, ./schemas/canonical.relationship.schema.json, ./schemas/canonical.dna_kit.schema.json, ./schemas/canonical.provenance.schema.json, ./src/genealogy_ingest/cli.py]
+related: [../README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ./pyproject.toml, ./schemas/canonical.person.schema.json, ./schemas/canonical.event.schema.json, ./schemas/canonical.relationship.schema.json, ./schemas/canonical.dna_kit.schema.json, ./schemas/canonical.provenance.schema.json, ./src/genealogy_ingest/cli.py]
 tags: [kfm, genealogy, ingest, gedcom, dna]
-notes: [Placeholders remain for doc_id, owners, created date, and policy_label pending repo metadata verification.]
+notes: [Path presence on current public main, doc_id, owners, created date, and policy_label remain to be verified. This README is intentionally starter-lane-grounded rather than public-main-assumptive.]
 [/KFM_META_BLOCK_V2] -->
 
 # Genealogy Ingest
@@ -19,75 +19,92 @@ Evidence-first ingestion of GEDCOM, vendor CSV, and DNA manifests into a canonic
 
 **Status:** experimental  
 **Owners:** `<TODO: owners>`  
-![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Python >=3.11](https://img.shields.io/badge/python-%3E%3D3.11-blue) ![CLI](https://img.shields.io/badge/cli-kfm--ingest--genealogy-success) ![JSON Schema](https://img.shields.io/badge/json%20schema-2020--12-informational)  
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contracts & canonical model](#contracts--canonical-model) · [Hardening gates](#hardening-gates) · [FAQ](#faq)
+![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Python >=3.11](https://img.shields.io/badge/python-%3E%3D3.11-blue) ![CLI](https://img.shields.io/badge/cli-kfm--ingest--genealogy-success) ![JSON Schema](https://img.shields.io/badge/json%20schema-2020--12-informational) ![Truth posture](https://img.shields.io/badge/truth-starter--evidence-blueviolet)  
+**Repo fit:** Starter lane under [`../README.md`](../README.md) · Path: `pipelines/genealogy_ingest/README.md` *(NEEDS VERIFICATION on current public-main tree)* · Upstream: [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md) · Downstream: local canonical JSON now; governed catalog / triplet / published surfaces later  
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contracts & canonical model](#contracts--canonical-model) · [Task list / hardening gates](#task-list--hardening-gates) · [FAQ](#faq)
 
 > [!NOTE]
-> This README is written against the starter files shown for `pipelines/genealogy_ingest/`. It separates **current behavior** from **KFM-aligned hardening work** so reviewers can see what is implemented today, what is only modeled in code, and what still needs verification.
+> This README is intentionally written as a **starter-lane README**. It preserves the strongest material from the current draft while making the evidence boundary more explicit, so reviewers can distinguish starter behavior from KFM-aligned next-step hardening.
+
+> [!IMPORTANT]
+> Treat this file as documentation for a lane that still needs direct tree verification. KFM doctrine informs the hardening backlog below, but it does **not** convert branch-local or not-yet-surfaced files into checked-in public-main fact.
 
 ## Scope
 
-This directory is a starter ingest lane for genealogy-shaped inputs. The shown code proves three concrete flows:
+This README documents a starter ingest lane for genealogy-shaped inputs. The documented starter flow proves three concrete ideas:
 
 1. plain-text GEDCOM parsing into `Person`, `Event`, and `Relationship` objects
-2. fixed-column vendor CSV parsing into the same canonical person/event/relationship shape
+2. fixed-column vendor CSV parsing into the same canonical person / event / relationship shape
 3. raw DNA **manifest** generation that records a checksum and an HMAC-protected kit hash without publishing the raw vendor kit ID
 
 It does **not** yet prove full KFM promotion, catalog closure, signed receipts, consent-aware release, or quarantine workflows.
+
+### Evidence boundary used here
+
+| Evidence layer | How this README treats it |
+|---|---|
+| Starter-lane evidence | The command surface, file names, schema names, test names, and output shapes below are documented as **starter-slice behavior** and should be re-opened against code before merge. |
+| Adjacent repo doctrine | `pipelines/`, contracts, policy, schemas, and tests define the guardrails this lane should obey if it is surfaced. |
+| KFM doctrine | Truth path, evidence-first posture, fail-closed behavior, and governed promotion shape the hardening backlog rather than backfilling missing implementation proof. |
+| **UNKNOWN / NEEDS VERIFICATION** | Current checked-in path presence, narrower ownership, workflow coverage, schema enforcement, receipt signing, and release wiring. |
 
 ### Status markers used in this README
 
 | Marker | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the shown starter files, tests, or schema example |
-| **NEEDS VERIFICATION** | Plausible from the starter, but not directly proven by the shown implementation or tests |
-| **PROPOSED** | KFM-aligned next-step hardening, not current starter behavior |
-| **UNKNOWN** | Not visible in the current evidence |
+| **CONFIRMED** | Directly supported by the shown starter slice or by adjacent checked-in KFM doctrine |
+| **INFERRED** | Conservative interpretation of starter evidence or repo-adjacent doctrine |
+| **NEEDS VERIFICATION** | Plausible, but not directly re-opened against checked-in lane files in the current session |
+| **PROPOSED** | KFM-aligned hardening or graduation work, not documented starter behavior |
+| **UNKNOWN** | Not visible strongly enough to present as current reality |
 
 ## Repo fit
 
-| Fit | Current directory role |
+| Fit | Current reading |
 |---|---|
-| **Path** | `pipelines/genealogy_ingest/` |
-| **Upstream readers** | [`gedcom.py`][gedcom], [`vendor_csv.py`][vendor_csv], [`dna_manifest.py`][dna_manifest] |
-| **Core contract/code surfaces** | [`models.py`][models], [`normalize.py`][normalize], [`cli.py`][cli], [`schemas/`][schemas] |
-| **Downstream emitters** | [`cli.py`][cli] writes canonical JSON plus `run_receipt.json`; [`receipts.py`][receipts] provides `spec_hash()` and receipt writing |
-| **Intended next layers** | Catalog, graph projection, search, and governed publication surfaces are **INFERRED** from KFM doctrine and the starter brief; they are not shown as implemented in this directory |
+| **Path** | `pipelines/genealogy_ingest/` *(starter path; NEEDS VERIFICATION on current public main)* |
+| **Upstream guardrails** | [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md) |
+| **Core starter surfaces** | [`models.py`][models], [`normalize.py`][normalize], [`cli.py`][cli], [`schemas/`][schemas] |
+| **Starter outputs** | [`cli.py`][cli] is documented as writing canonical JSON plus `run_receipt.json`; [`receipts.py`][receipts] is documented as providing `spec_hash()` and receipt writing |
+| **Intended next layers** | Catalog, graph projection, search, and governed publication surfaces are **INFERRED** from KFM doctrine and the starter brief; they are not proven here as surfaced lane reality |
+| **Neighbor doc follow-up** | If this lane is committed, add it to the current lane map in [`../README.md`](../README.md) in the same PR |
 
 ## Inputs
 
 ### Accepted inputs
 
-| Input family | Current path | Status | What the starter actually proves |
+| Input family | Current path | Status | What the starter evidence describes |
 |---|---|---:|---|
 | Plain-text GEDCOM (`.ged`) | [`gedcom.py`][gedcom] | **CONFIRMED** | Line-oriented parse of `INDI` and `FAM` records with `NAME`, `SEX`, `BIRT`, `DEAT`, `RESI`, `CENS`, `IMMI`, `HUSB`, `WIFE`, and `CHIL` handling |
 | GEDCOM 5.5.1 core-style tags | [`gedcom.py`][gedcom] | **CONFIRMED** | The parser recognizes a small, common GEDCOM tag subset; it is not a full spec implementation |
-| GEDCOM 7 text exports | [`gedcom.py`][gedcom] | **NEEDS VERIFICATION** | Simple files using the same tags may work, but no GEDCOM 7-specific structures are shown or tested |
-| GEDZip archives | _none shown_ | **PROPOSED** | No archive unpacking or `.gedzip` handling is present |
-| Vendor CSV with `Name,BirthDate,BirthPlace,DeathDate,Spouse` | [`vendor_csv.py`][vendor_csv] | **CONFIRMED** | Column names are hard-coded; this is the only vendor tabular contract currently evidenced |
-| Vendor JSON exports | _none shown_ | **PROPOSED** | Not implemented in the shown code |
-| Consumer raw DNA text export | [`dna_manifest.py`][dna_manifest] | **CONFIRMED** | The file is checksummed and linked to a vendor + HMACed kit hash; genotype rows are not normalized |
+| GEDCOM 7 text exports | [`gedcom.py`][gedcom] | **NEEDS VERIFICATION** | Simple files using the same tags may work, but no GEDCOM 7-specific structures are documented as tested here |
+| GEDZip archives | _none shown_ | **PROPOSED** | No archive unpacking or `.gedzip` handling is documented in the starter slice |
+| Vendor CSV with `Name,BirthDate,BirthPlace,DeathDate,Spouse` | [`vendor_csv.py`][vendor_csv] | **CONFIRMED** | Column names are hard-coded; this is the only vendor tabular contract evidenced here |
+| Vendor JSON exports | _none shown_ | **PROPOSED** | Not documented as implemented |
+| Consumer raw DNA text export | [`dna_manifest.py`][dna_manifest] | **CONFIRMED** | The file is checksummed and linked to a vendor plus an HMACed kit hash; genotype rows are not normalized |
 
 ### Exclusions
 
 This starter intentionally does **not** own the following work:
 
-- **Raw SNP/genotype normalization or interpretation.**  
+- **Raw SNP / genotype normalization or interpretation**  
   Keep that in a restricted genomics workflow; this starter only emits a manifest.
 
-- **Cross-source entity resolution or inferred kinship.**  
-  That belongs in a later reconciliation/ER layer, not in the raw ingest adapters.
+- **Cross-source entity resolution or inferred kinship**  
+  That belongs in a later reconciliation / ER layer, not in the raw ingest adapters.
 
-- **Direct STAC/DCAT/PROV publication.**  
-  This directory emits canonical JSON and a local run receipt, not release-grade catalog closure.
+- **Direct STAC / DCAT / PROV publication**  
+  This lane ends at canonical JSON plus a local run receipt, not release-grade catalog closure.
 
-- **Consent adjudication, redistribution review, or public-safe DNA release.**  
-  `Consent` exists as a model, but no review/policy workflow is wired into the shown CLI.
+- **Consent adjudication, redistribution review, or public-safe DNA release**  
+  `Consent` is documented as a model, but no review / policy workflow is wired into the starter CLI evidence shown here.
 
-- **Archive unpacking and format brokering.**  
+- **Archive unpacking and format brokering**  
   GEDZip and vendor JSON would need separate adapters or a packaging layer.
 
 ## Directory tree
+
+### Starter tree shown in current evidence
 
 ```text
 pipelines/
@@ -128,7 +145,7 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-2. Run one of the supported ingest paths.
+2. Run one of the documented starter paths.
 
 ```bash
 # GEDCOM
@@ -154,7 +171,7 @@ python -m pytest tests
 ```
 
 > [!IMPORTANT]
-> The starter ships a `schemas/` directory and declares `jsonschema` as a dependency, but the shown CLI does **not** currently validate emitted JSON against those schema files before writing outputs.
+> The starter ships a `schemas/` directory and documents `jsonschema` as a dependency, but the shown CLI is **not** documented here as validating emitted JSON against those schema files before writing outputs.
 
 ## Usage
 
@@ -172,14 +189,14 @@ python -m pytest tests
 kfm-ingest-genealogy gedcom ./fixtures/family.ged --out ./out/gedcom_run
 ```
 
-What the current parser emits:
+Documented starter behavior:
 
 - `Person.id_hash` from `sha256(xref)`
 - individual events for `BIRT`, `DEAT`, `RESI`, `CENS`, and `IMMI`
 - `spouse` and `parent` relationships from `FAM` records
 - `EvidenceRef` on every emitted event and relationship
 
-What it does **not** currently emit:
+What is **not** documented here as emitted:
 
 - a materialized `marriage` event, even though `MARR` is modeled and partially parsed
 - explicit `child` relationships, even though `child` is included in the `RelationshipType` literal
@@ -198,7 +215,7 @@ Name,BirthDate,BirthPlace,DeathDate,Spouse
 John Smith,1882,Ohio,1954,Mary Jones
 ```
 
-Current behavior:
+Documented starter behavior:
 
 - rows missing `Name` are skipped
 - `Person.id_hash` is `sha256(name)`
@@ -220,7 +237,7 @@ kfm-ingest-genealogy dna-manifest ./fixtures/23andme.txt \
   --out ./out/dna_run
 ```
 
-Current behavior:
+Documented starter behavior:
 
 - computes `file_checksum` as a SHA-256 over the raw file
 - computes `kit_hash` as `HMAC-SHA256(vendor_kit_id, salt)`
@@ -272,33 +289,33 @@ flowchart LR
 
 ### Canonical object families
 
-| Object family | Defined in | Used by current CLI? | Notes |
+| Object family | Defined in | Used by starter CLI? | Notes |
 |---|---|---:|---|
-| `Person` | [`models.py`][models] | **Yes** | Carries `id_hash`, optional normalized name, sex, and optional birth/death event IDs |
-| `Event` | [`models.py`][models], [`canonical.event.schema.json`][event_schema] | **Yes** | Current parsers emit `birth`, `death`, `residence`, `census`, `immigration`, and `unknown`; `marriage` and `DNA_SAMPLE` are modeled but not emitted by the shown parsers |
-| `Relationship` | [`models.py`][models] | **Yes** | Literal types include `parent`, `spouse`, `child`; current parsers emit `parent` and `spouse` only |
-| `DNAKit` | [`models.py`][models] | **Yes** | Used only by `dna-manifest`; `person_id` remains optional and is not set by the shown builder |
-| `EvidenceRef` | [`models.py`][models] | **Yes** | Emitted for GEDCOM/CSV events and relationships |
-| `Place` | [`models.py`][models] | **Yes** | Current emitters only populate `place_name`; `lat`, `lon`, and `gnis_id` remain optional |
+| `Person` | [`models.py`][models] | **Yes** | Carries `id_hash`, optional normalized name, sex, and optional birth / death event IDs |
+| `Event` | [`models.py`][models], [`canonical.event.schema.json`][event_schema] | **Yes** | Documented starter parsers emit `birth`, `death`, `residence`, `census`, `immigration`, and `unknown`; `marriage` and `DNA_SAMPLE` are modeled but not documented here as emitted |
+| `Relationship` | [`models.py`][models] | **Yes** | Literal types include `parent`, `spouse`, `child`; starter behavior documents `parent` and `spouse` only |
+| `DNAKit` | [`models.py`][models] | **Yes** | Used only by `dna-manifest`; `person_id` remains optional and is not documented here as set by the shown builder |
+| `EvidenceRef` | [`models.py`][models] | **Yes** | Documented for GEDCOM / CSV events and relationships |
+| `Place` | [`models.py`][models] | **Yes** | Starter emitters only populate `place_name`; `lat`, `lon`, and `gnis_id` remain optional |
 | `Provenance` | [`models.py`][models], [`canonical.provenance.schema.json`][prov_schema] | **No** | Model exists, but the shown CLI writes `run_receipt.json` instead of serialized `Provenance` objects |
-| `Consent` | [`models.py`][models] | **No** | Present in code, not yet wired into command execution or outputs |
+| `Consent` | [`models.py`][models] | **No** | Present in code according to the starter slice, not yet wired into command execution or outputs |
 
 ### Deterministic identity, hashing, and provenance behavior
 
-| Surface | Current strategy | Caveat |
+| Surface | Starter strategy | Caveat |
 |---|---|---|
 | GEDCOM person ID | `sha256(xref)` | Stable within a GEDCOM file, but not cross-source identity-safe |
 | GEDCOM event ID | `sha256(f"{xref}:{tag}:{idx}")` | Deterministic for current parse order |
 | GEDCOM relationship ID | `sha256(f"{fam_xref}:{type}:{subject}:{object}")` | Deterministic for emitted family edges |
 | CSV person ID | `sha256(name)` | Cross-row collision risk for repeated names; no disambiguation fields are included |
-| CSV event/relationship IDs | Derived from `name` plus event or relationship role | Inherits the same collision caveat as CSV person IDs |
+| CSV event / relationship IDs | Derived from `name` plus event or relationship role | Inherits the same collision caveat as CSV person IDs |
 | DNA manifest kit hash | `HMAC-SHA256(vendor_kit_id, salt)` | Good for non-public kit identity, but salt handling remains operationally external |
-| Run receipt `spec_hash` | `sha256("genealogy-ingest|<kind>|v0.1.0")` via [`receipts.py`][receipts] | This is a pipeline/version hash, not an input payload digest |
+| Run receipt `spec_hash` | `sha256("genealogy-ingest|<kind>|v0.1.0")` via [`receipts.py`][receipts] | This is a pipeline / version hash, not an input payload digest |
 
 > [!WARNING]
-> Cross-source identity is **not unified** in the shown starter. GEDCOM uses local xrefs; CSV uses names; DNA manifests currently carry no linked `person_id`.
+> Cross-source identity is **not unified** in the documented starter flow. GEDCOM uses local xrefs; CSV uses names; DNA manifests currently carry no linked `person_id`.
 
-### Date normalization currently proven by tests
+### Date normalization documented as tested
 
 | Raw input | Output | Status |
 |---|---|---:|
@@ -308,7 +325,7 @@ flowchart LR
 | `ABT 1880` / `ABOUT 1880` / `EST 1880` / `ESTIMATED 1880` | `1880` | **CONFIRMED** |
 | Unhandled forms such as `SPRING 1880` | `None` | **CONFIRMED** |
 
-Current implication: unsupported dates degrade to `null`/`None`; they are **not** automatically quarantined by the shown CLI.
+Current implication: unsupported dates degrade to `null` / `None`; they are **not** documented here as automatically quarantined by the starter CLI.
 
 ### Output contract by subcommand
 
@@ -318,54 +335,60 @@ Current implication: unsupported dates degrade to `null`/`None`; they are **not*
 | `csv` | `persons.json`, `events.json`, `relationships.json`, `run_receipt.json` | `kind`, `input`, `spec_hash`, `counts`, `created_at` |
 | `dna-manifest` | `dna_manifest.json`, `run_receipt.json` | `kind`, `input`, `vendor`, `spec_hash`, `created_at` |
 
-## Hardening gates
+## Task list / hardening gates
 
 ### Definition of done for the next KFM-ready increment
 
-- [x] Current parse paths emit deterministic IDs
-- [x] GEDCOM and CSV events/relationships include `EvidenceRef` with `source_file` and `pointer`
+- [x] Starter parse paths emit deterministic IDs
+- [x] GEDCOM and CSV events / relationships include `EvidenceRef` with `source_file` and `pointer`
 - [x] DNA manifest output excludes the raw vendor kit ID
 - [x] Minimal tests exist for dates, GEDCOM, vendor CSV, and DNA manifest paths
 - [ ] JSON Schema validation is enforced against the files in [`schemas/`][schemas]
 - [ ] Unsupported dates and broken relationship structures route to `WORK / QUARANTINE` instead of silently returning `null` or being skipped
-- [ ] `Provenance` and/or KFM-style source/ingest/validation artifacts are emitted explicitly
+- [ ] `Provenance` and / or KFM-style source / ingest / validation artifacts are emitted explicitly
 - [ ] `run_receipt.json` is signed
 - [ ] Consent and redistribution review are enforced before any DNA-derived release beyond manifest-only handling
 - [ ] Catalog closure (`STAC` / `DCAT` / `PROV`) is wired for promotion-ready downstream use
 - [ ] Cross-source identity reconciliation is handled outside adapter-local hashes
+- [ ] This lane is added to [`../README.md`](../README.md) when the directory is surfaced
 
 ### KFM-specific gate review
 
 | Gate | Current starter state | Read it as |
 |---|---|---|
-| Require `evidence_ref.pointer` on every event and relationship | **CONFIRMED** for GEDCOM/CSV emitters | Implemented in current parsers |
-| Quarantine any date that does not normalize cleanly | **NEEDS VERIFICATION** | Current code returns `None`; no quarantine artifact is shown |
-| Reject DNA ingest when `vendor_kit_id` is missing | **CONFIRMED at CLI boundary** | `argparse` requires `--vendor-kit-id`; the library function itself does not separately validate |
-| Forbid raw vendor kit ID from appearing in published artifacts | **CONFIRMED** for current manifest/receipt writes | Only `kit_hash` is emitted |
-| Sign `run_receipt.json` | **PROPOSED** | Not implemented in shown code |
-| Store raw DNA only in restricted storage; catalog manifest only | **PROPOSED** | No storage-class or release-scope controls are shown |
+| Require `evidence_ref.pointer` on every event and relationship | **CONFIRMED** for documented GEDCOM / CSV emitters | Implemented in starter behavior as described |
+| Quarantine any date that does not normalize cleanly | **NEEDS VERIFICATION** | Starter behavior returns `None`; no quarantine artifact is shown here |
+| Reject DNA ingest when `vendor_kit_id` is missing | **CONFIRMED at CLI boundary** | `argparse` requires `--vendor-kit-id`; the library function itself is not separately re-opened here |
+| Forbid raw vendor kit ID from appearing in published artifacts | **CONFIRMED** for documented manifest / receipt writes | Only `kit_hash` is emitted |
+| Sign `run_receipt.json` | **PROPOSED** | Not documented as implemented |
+| Store raw DNA only in restricted storage; catalog manifest only | **PROPOSED** | No storage-class or release-scope controls are shown here |
 
 ### Review checks before merge
 
 1. Confirm the README does **not** promise GEDZip support, vendor JSON support, marriage-event emission, signed receipts, or catalog closure as current behavior.
 2. Confirm upstream CSV exports match the exact header names expected by [`vendor_csv.py`][vendor_csv].
 3. Confirm salt handling for `--salt-file` stays outside source control and outside example outputs.
+4. Re-open the actual lane files and update any `CONFIRMED` claims that were only documented in the starter draft rather than reverified in code.
 
 [Back to top](#genealogy-ingest)
 
 ## FAQ
 
+### Is this lane already surfaced in the checked-in public `pipelines/` tree?
+
+**NEEDS VERIFICATION.** This README is written as a starter-lane document. If the directory is being added or restored, update [`../README.md`](../README.md) in the same PR so the lane map stays truthful.
+
 ### Does this starter support GEDCOM 7 or GEDZip?
 
-**GEDCOM 7 text compatibility is not directly proven.** The current parser is a simple line-oriented GEDCOM reader and may work for files that still use the tags it recognizes. **GEDZip archive handling is not implemented** in the shown code.
+**GEDCOM 7 text compatibility is not directly proven.** The current parser is described as a simple line-oriented GEDCOM reader and may work for files that still use the tags it recognizes. **GEDZip archive handling is not documented as implemented**.
 
 ### Does it emit marriage events?
 
-Not currently. `MARR` is modeled and partially collected inside `FamRecord`, but the shown `parse_gedcom()` implementation does not materialize a marriage `Event` into `events.json`.
+Not currently in the documented starter behavior. `MARR` is modeled and partially collected inside `FamRecord`, but the shown `parse_gedcom()` implementation is not documented here as materializing a marriage `Event` into `events.json`.
 
 ### Does it validate outputs against the schema files in `schemas/`?
 
-Not in the shown CLI. The schema directory exists and `jsonschema` is declared as a dependency, but no schema-validation call is shown before outputs are written.
+Not in the documented starter CLI. The schema directory exists in the starter tree and `jsonschema` is described as a dependency, but no schema-validation call is shown before outputs are written.
 
 ### Does DNA ingest parse or publish genotype rows?
 
@@ -373,30 +396,30 @@ No. The current DNA path is **manifest-only**: checksum the file, HMAC the vendo
 
 ### Can the same person resolve across GEDCOM, CSV, and DNA runs?
 
-Not yet. The current starter uses adapter-local hash inputs (`xref` for GEDCOM, `name` for CSV, optional `person_id` left unset for DNAKit). Cross-source reconciliation is a later concern.
+Not yet. The documented starter flow uses adapter-local hash inputs (`xref` for GEDCOM, `name` for CSV, optional `person_id` left unset for `DNAKit`). Cross-source reconciliation is a later concern.
 
 ### Are signed receipts, review workflows, and public-safe publication already present here?
 
-No. The shown starter ends at local JSON outputs plus `run_receipt.json`. Promotion-grade review, proof-pack, and publication layers are not evidenced inside this directory.
+No. The documented starter flow ends at local JSON outputs plus `run_receipt.json`. Promotion-grade review, proof-pack, and publication layers are not evidenced here as current starter behavior.
 
 ## Appendix
 
 <details>
-<summary>Illustrative current output shapes</summary>
+<summary>Illustrative starter output shapes</summary>
 
 ### `run_receipt.json` for `gedcom` or `csv`
 
 ```json
 {
-  "kind": "gedcom",
-  "input": "./fixtures/family.ged",
+  "kind": "<gedcom-or-csv>",
+  "input": "./fixtures/<input-file>",
   "spec_hash": "<sha256>",
   "counts": {
     "persons": 1,
     "events": 1,
     "relationships": 0
   },
-  "created_at": "2026-03-29T00:00:00+00:00"
+  "created_at": "<ISO-8601>"
 }
 ```
 
@@ -425,7 +448,6 @@ No. The shown starter ends at local JSON outputs plus `run_receipt.json`. Promot
 
 [Back to top](#genealogy-ingest)
 
-[pyproject]: ./pyproject.toml
 [schemas]: ./schemas/
 [event_schema]: ./schemas/canonical.event.schema.json
 [prov_schema]: ./schemas/canonical.provenance.schema.json
