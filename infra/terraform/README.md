@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../README.md, ../../README.md, ../../.github/CODEOWNERS, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../apps/api/README.md]
+related: [../README.md, ../../README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../apps/governed-api/README.md, ../../apps/api/README.md]
 tags: [kfm, infra, terraform, iac]
-notes: [Current public main shows infra/terraform contains README.md only; doc_id and dates need verification before publish.]
+notes: [Target path inferred from pasted draft and current public-main file; doc_id and created/updated dates need verification before publish.]
 [/KFM_META_BLOCK_V2] -->
 
 # terraform
@@ -19,15 +19,21 @@ Declarative Infrastructure-as-Code lane for reviewable KFM provisioning, hosted 
 
 > **Status:** experimental  
 > **Owners:** [`@bartytime4life`](../../.github/CODEOWNERS)  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owner: bartytime4life](https://img.shields.io/badge/owner-bartytime4life-blue) ![Surface: infra/terraform](https://img.shields.io/badge/surface-infra%2Fterraform-1f6feb) ![Posture: evidence-bounded](https://img.shields.io/badge/posture-evidence--bounded-6f42c1)  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owner: bartytime4life](https://img.shields.io/badge/owner-bartytime4life-blue) ![Surface: infra/terraform](https://img.shields.io/badge/surface-infra%2Fterraform-1f6feb) ![Inventory: README-only](https://img.shields.io/badge/inventory-README--only-lightgrey) ![Posture: evidence-bounded](https://img.shields.io/badge/posture-evidence--bounded-6f42c1)  
 > **Repo fit:** `infra/terraform/README.md` is the directory guide for the Terraform lane under [`../`](../), alongside [`backup/`](../backup/), [`compose/`](../compose/), [`dashboards/`](../dashboards/), [`gitops/`](../gitops/), [`hosted/`](../hosted/), [`kubernetes/`](../kubernetes/), [`local/`](../local/), [`monitoring/`](../monitoring/), [`systemd-or-compose/`](../systemd-or-compose/), and [`systemd/`](../systemd/).  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > The current public `main` snapshot confirms that `infra/terraform/` exists, but it does **not** currently prove an active Terraform module inventory. At the time of writing, the visible subtree is `infra/terraform/README.md` only. Treat providers, backends, modules, workspaces, `tfvars`, and apply workflows as **NEEDS VERIFICATION** until live Terraform files are present and reviewed.
 
+> [!CAUTION]
+> Current public `main` also keeps [`.github/workflows/`](../../.github/workflows/README.md) as a README-only surface. Do not claim checked-in Terraform CI gates, required checks, or workflow-backed promotion behavior until target-branch evidence or visible workflow YAMLs prove them.
+
 > [!NOTE]
 > Terraform is a **lane**, not the whole infrastructure story. KFM doctrine keeps deployment lanes legible and distinct: local/systemd-first operation, compose, hosted overlays, Kubernetes, GitOps, monitoring, backup, dashboards, rollback, and governed API boundaries should not be collapsed into one generic “infra” bucket.
+
+> [!NOTE]
+> Current public `main` exposes both [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) and [`../../apps/api/README.md`](../../apps/api/README.md). Until the working branch resolves that naming relationship, this README treats both as relevant API-boundary reads rather than assuming one exclusive, final label.
 
 ## Evidence labels used in this README
 
@@ -63,6 +69,7 @@ The parent [`infra/README.md`](../README.md) defines infrastructure as the surfa
 | Upstream | [`../README.md`](../README.md) | Parent infrastructure doctrine, sibling-lane framing, and the broader infra exclusions Terraform must respect. |
 | Upstream | [`../../README.md`](../../README.md) | Root KFM identity, truth posture, and repo-wide governance reading frame. |
 | Ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current public repo ownership mapping for `/infra/`. |
+| Gatehouse | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public `main` documents workflow expectations, but not a visible checked-in workflow YAML inventory for this lane. |
 | Adjacent | [`../hosted/`](../hosted/) | Environment-specific hosted deployment overlays and operational notes. |
 | Adjacent | [`../kubernetes/`](../kubernetes/) | Cluster/runtime substrate once resource wiring hands off to orchestrated workloads. |
 | Adjacent | [`../gitops/`](../gitops/) | Desired-state reconciliation after build/test and environment preparation. |
@@ -73,7 +80,7 @@ The parent [`infra/README.md`](../README.md) defines infrastructure as the surfa
 | Boundary | [`../../policy/README.md`](../../policy/README.md) | Policy meaning, deny-by-default logic, and reviewable decision grammar stay here, not inline in IaC glue. |
 | Boundary | [`../../schemas/README.md`](../../schemas/README.md) | Schema authority/boundary guidance for machine-readable structures. |
 | Boundary | [`../../tests/README.md`](../../tests/README.md) | Verification surfaces for negative paths, fixtures, release/correction drills, and later infra checks. |
-| Boundary | [`../../apps/api/README.md`](../../apps/api/README.md) | Governed API boundary that public/steward surfaces should reach through, rather than bypass via infra shortcuts. |
+| Boundary | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) · [`../../apps/api/README.md`](../../apps/api/README.md) | Current public `main` exposes both API-shaped surfaces; Terraform changes must not create direct client paths that bypass the governed trust boundary they describe. |
 
 ### Upstream / downstream reading order
 
@@ -85,7 +92,10 @@ The parent [`infra/README.md`](../README.md) defines infrastructure as the surfa
 1. [`../../contracts/README.md`](../../contracts/README.md)
 2. [`../../policy/README.md`](../../policy/README.md)
 3. [`../../tests/README.md`](../../tests/README.md)
-4. runtime-adjacent lanes under [`../`](../)
+4. [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md)
+5. [`../../apps/api/README.md`](../../apps/api/README.md)
+6. [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
+7. runtime-adjacent lanes under [`../`](../)
 
 [Back to top](#terraform)
 
@@ -210,7 +220,9 @@ sed -n '1,220p' infra/README.md
 sed -n '1,220p' contracts/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' tests/README.md
+sed -n '1,220p' apps/governed-api/README.md
 sed -n '1,220p' apps/api/README.md
+sed -n '1,220p' .github/workflows/README.md
 ```
 
 If real Terraform files exist in the working branch, switch to a review-first validation loop.
@@ -233,7 +245,7 @@ terraform show -no-color tfplan
 2. **Choose the right lane.** Do not force every infra concern into Terraform if a sibling lane owns it more clearly.
 3. **Keep the change small.** One material infrastructure change class per PR where practical.
 4. **Pair the diff with rollback language.** Reversibility is part of readiness.
-5. **Update adjacent docs.** Infra changes that alter runtime behavior, monitoring, restore, or exposure assumptions should not land silently.
+5. **Update adjacent docs.** Infra changes that alter runtime behavior, monitoring, restore, exposure assumptions, or documented workflow gates should not land silently.
 
 [Back to top](#terraform)
 
@@ -296,6 +308,7 @@ flowchart LR
     POLICY[policy/] --> API
     TESTS[tests/] --> PR
     DOCS[infra/README + runbooks] --> PR
+    GATES[.github/workflows<br/>gate expectations] --> PR
     BACKUP[backup / rollback duties] --> RUNTIME
     OBS[monitoring / dashboards] --> RUNTIME
 
@@ -318,6 +331,8 @@ flowchart LR
 | Is there a dedicated README here? | Yes. | **CONFIRMED** |
 | Are visible `*.tf` files confirmed in this lane? | Not in the current public snapshot used for this guide. | **NEEDS VERIFICATION** |
 | Are providers/backend/modules/workspaces documented by code here? | Not yet visible. | **NEEDS VERIFICATION** |
+| Are public-main workflow YAMLs for this lane confirmed? | No checked-in workflow YAML inventory is visible under `.github/workflows/` on public `main`; workflow enforcement claims remain evidence-bounded. | **NEEDS VERIFICATION** |
+| Are API boundary docs plural on current public `main`? | Yes. Both `apps/governed-api/README.md` and `apps/api/README.md` are visible. | **CONFIRMED paths / NEEDS VERIFICATION naming authority** |
 | Is this lane already integrated with sibling infra docs? | This README can and should align with parent `infra/README.md` and adjacent lane docs. | **INFERRED** |
 | Is Terraform the first KFM thin slice? | No. KFM doctrine prefers hydrology as the first smallest real thing. | **CONFIRMED** |
 
@@ -345,6 +360,7 @@ flowchart LR
 | Secret reference change | external-secret path note, rotation note, environment impact note | Do not merge with plaintext values |
 | Shared module change | consumer impact list, compatibility note, regression coverage | Do not merge without downstream review |
 | Backend/state change | migration plan, lock/ownership note, recovery drill | Treat as high-risk even when the diff looks small |
+| Workflow/gate claim | visible YAML or target-branch proof, review note, docs alignment | Do not merge gate claims that public or target-branch evidence cannot support |
 
 ### Minimal review bundle
 
@@ -357,6 +373,7 @@ flowchart LR
 | Secret posture | No plaintext leakage |
 | Boundary integrity | No bypass of the governed API or policy surfaces |
 | Runtime impact note | Names which sibling lanes or operators are affected |
+| Gate claim posture | Says whether checks are documented, inferred, or still unverified |
 
 [Back to top](#terraform)
 
@@ -373,6 +390,7 @@ A healthy `infra/terraform/` lane should eventually satisfy the following.
 - [ ] Validation commands are documented and runnable.
 - [ ] Rollback notes exist for stateful or blast-radius-heavy changes.
 - [ ] Monitoring and backup consequences are paired with infrastructure changes.
+- [ ] Workflow-backed checks are documented only when visible in-tree or verified on the working branch.
 - [ ] This README is revised again once the lane stops being README-only.
 
 ### Definition of done for a material Terraform PR
@@ -402,7 +420,7 @@ No. Keep secret values out of repository truth. Use reviewed references to an ex
 
 ### Why are so many items marked NEEDS VERIFICATION?
 
-Because the current public `main` snapshot proves the directory, but not a real Terraform file inventory inside it. This guide is meant to be useful now without pretending missing evidence is present.
+Because the current public `main` snapshot proves the directory, but not a real Terraform file inventory inside it. It also does not currently expose checked-in workflow YAMLs for this lane. This guide is meant to be useful now without pretending missing evidence is present.
 
 ### When should a change move out of Terraform?
 
@@ -421,6 +439,8 @@ When it starts carrying business meaning, policy logic, dataset semantics, relea
 - The visible subtree currently confirms `README.md` only.
 - The parent `infra/` surface confirms sibling lanes for backup, compose, dashboards, GitOps, hosted, Kubernetes, local, monitoring, systemd, and systemd-or-compose.
 - The current public lane therefore behaves more like a **boundary guide** than an active Terraform code inventory.
+- Current public `main` also keeps `.github/workflows/` README-only, so public-tree workflow enforcement for this lane is not yet directly proven.
+- Current public `main` exposes both `apps/governed-api/README.md` and `apps/api/README.md`, so boundary-link choices should stay explicit until target-branch reconciliation is complete.
 
 ### Why this README is still worth keeping now
 
@@ -438,11 +458,14 @@ Even before live Terraform files land, the repo benefits from a clear answer to 
 4. How will secrets be referenced?
 5. Which outputs are expected by `hosted/`, `kubernetes/`, `gitops/`, or `monitoring/`?
 6. Which changes require restore drills or state-migration rehearsal?
+7. Which API boundary path should infra cross-link as authoritative in this branch: `apps/governed-api/`, `apps/api/`, or both?
+8. Which workflow checks, if any, are actually checked in for Terraform validation on the target branch?
 
 ### Suggested neighboring link updates once real `.tf` files exist
 
 - add links from [`../README.md`](../README.md) into the first real Terraform modules or env roots
 - add validation snippets to [`../../tests/README.md`](../../tests/README.md) if Terraform checks become part of CI
+- add gate references to [`../../.github/workflows/README.md`](../../.github/workflows/README.md) once Terraform workflow YAMLs are visible and review-backed
 - add policy links from [`../../policy/README.md`](../../policy/README.md) if policy-driven infra gates become executable
 - add runbooks under `docs/` or `infra/` when real backend/state operations exist
 
