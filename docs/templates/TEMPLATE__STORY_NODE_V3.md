@@ -4,13 +4,13 @@ title: TEMPLATE — Story Node v3
 type: standard
 version: v1
 status: draft
-owners: <owners-needs-verification>
-created: <YYYY-MM-DD-needs-verification>
-updated: <YYYY-MM-DD-needs-verification>
+owners: @bartytime4life
+created: 2025-12-17
+updated: 2026-03-29
 policy_label: <policy-label-needs-verification>
-related: [<related-paths-or-kfm-ids-needs-verification>]
+related: [./README.md, ./TEMPLATE__KFM_UNIVERSAL_DOC.md, ../README.md, ../reports/story_nodes/README.md, ../standards/markdown-rules.md, ../../.github/CODEOWNERS]
 tags: [kfm, story-node, template, publication]
-notes: [Source-bounded starter template. Identifiers, owners, dates, policy label, related links, repo-local schema names, and mounted route names require direct repo verification before commit.]
+notes: [Current public-main path, sibling template cluster, story-node report surface, and broad /docs/ ownership are confirmed. Exact story schema names, runtime routes, loader hooks, doc UUID, policy label, and mounted-checkout parity still need verification before commit.]
 [/KFM_META_BLOCK_V2] -->
 
 # TEMPLATE — Story Node v3
@@ -18,28 +18,32 @@ notes: [Source-bounded starter template. Identifiers, owners, dates, policy labe
 Repo-ready starter for governed Story Node authoring in Kansas Frontier Matrix.
 
 ![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Owners: needs verification](https://img.shields.io/badge/owners-needs--verification-lightgrey)
+![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1)
 ![Policy: needs verification](https://img.shields.io/badge/policy-needs--verification-lightgrey)
-![Evidence: source bounded](https://img.shields.io/badge/evidence-source--bounded-blue)
+![Evidence: corpus + public-main](https://img.shields.io/badge/evidence-corpus%20%2B%20public--main-blue)
 ![Shell fit: governed](https://img.shields.io/badge/shell-governed-2b6cb0)
 
 | Field | Value |
 |---|---|
 | Status | `draft` |
-| Owners | `<owners-needs-verification>` |
-| Repo fit | `docs/templates/TEMPLATE__STORY_NODE_V3.md` |
+| Owners | `@bartytime4life` |
+| Path | `docs/templates/TEMPLATE__STORY_NODE_V3.md` |
+| Path status | `CONFIRMED` on public `main`; mounted-checkout parity still `NEEDS VERIFICATION` |
 | Role | `standard template / copy-adapt authoring seed` |
 | Policy label | `<policy-label-needs-verification>` |
-| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Quickstart](#quickstart) · [Authoring rules](#authoring-rules) · [Copy-adapt template](#copy-adapt-story-node-template) · [Sidecar](#proposed-companion-sidecar-starter) · [Publication gate](#publication-gate-checklist) · [FAQ](#faq) |
+| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Current evidence boundary](#current-evidence-boundary) · [Quickstart](#quickstart) · [Authoring rules](#authoring-rules) · [Copy-adapt template](#copy-adapt-story-node-template) · [Sidecar](#proposed-companion-sidecar-starter) · [Publication gate](#publication-gate-checklist) · [FAQ](#faq) |
+
+**Repo anchors:** [templates README](./README.md) · [universal doc template](./TEMPLATE__KFM_UNIVERSAL_DOC.md) · [docs index](../README.md) · [story_nodes README](../reports/story_nodes/README.md) · [markdown rules](../standards/markdown-rules.md) · [CODEOWNERS](../../.github/CODEOWNERS)
 
 > [!IMPORTANT]
 > A Story Node is not free-form narrative. It is a governed publication unit. Claims, dates, map state, perspective, evidence linkage, review state, and correction lineage must remain inspectable at the point of use.
 
 > [!NOTE]
 > **Document posture for this template**
-> - **CONFIRMED doctrine:** Story surfaces stay inside the governed shell; Story Node v3 pairs narrative markdown with map state and citations; publishing requires review state and resolvable citations.
+> - **CONFIRMED public-main repo evidence:** this template exists on public `main`; `docs/templates/` is a governed scaffold surface; `docs/reports/story_nodes/` exists as a story-facing report lane; and current broad `/docs/` ownership routes to `@bartytime4life`.
+> - **CONFIRMED doctrine:** story surfaces stay inside the governed shell; Story Node artifacts keep evidence-linked excerpts, dates, perspective labels, and review or correction state visible; and publication fails closed when review state or citations do not resolve.
 > - **PROPOSED starter shape:** the field names, enums, and sidecar layout below.
-> - **UNKNOWN:** mounted repo-local schema names, route names, loaders, renderer hooks, owners, policy labels, and related paths.
+> - **UNKNOWN / NEEDS VERIFICATION:** exact repo-local schema names, runtime story routes, DTOs, loader hooks, narrower co-owners, policy label, and mounted-checkout parity.
 
 ---
 
@@ -49,77 +53,142 @@ Use this file as the baseline template for a single **Story Node v3** in KFM.
 
 This template is designed for a story surface that remains inside the same governed shell as the map, timeline, dossier, Evidence Drawer, and Focus Mode. It preserves KFM’s evidence-first posture while staying practical for authors, reviewers, and implementers.
 
+This file is a **reusable scaffold**, not a publish target. Keep the template in `docs/templates/`. Instantiate filled Story Node artifacts in the owning story-facing surface instead of turning the template shelf into a second truth path.
+
 ## Repo fit
 
-**Target path:** `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-
-**Document role:** standard template / copy-adapt authoring seed
-
-| Direction | What connects here |
+| Item | Value |
 |---|---|
-| Upstream doctrine | Story surface doctrine; `EvidenceBundle` resolution; `ReviewRecord`, `DecisionEnvelope`, `ReleaseManifest`, and `CorrectionNotice` families; sensitivity/redaction handling; map-state conventions |
-| Downstream consumers | Story read/publish flow, renderer, map-state sidecar loader, Evidence Drawer drill-through, review tooling, export logic |
+| Template path | `docs/templates/TEMPLATE__STORY_NODE_V3.md` |
+| Local role | Reusable Story Node scaffold for governed narrative artifacts |
+| Instantiate into | The owning story-facing surface, not `docs/templates/` |
+| Current public story-facing docs lane | `docs/reports/story_nodes/` |
+| Upstream anchors | [`./README.md`](./README.md) · [`./TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md) · [`../README.md`](../README.md) · [`../standards/markdown-rules.md`](../standards/markdown-rules.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) |
+| Downstream consumers | [`../reports/story_nodes/README.md`](../reports/story_nodes/README.md), review-ready story markdown, map-state sidecars, Evidence Drawer drill-through, release/correction summaries |
+| Runtime/API boundary | Story schemas, routes, DTOs, renderer hooks, and publish automation remain `UNKNOWN` or `NEEDS VERIFICATION` unless directly rechecked outside this template |
 
-**Documented interface example:** `GET/POST /api/v1/story` is described in project documentation, but the exact mounted route tree remains **NEEDS VERIFICATION**.
+### Current sibling template cluster
+
+```text
+docs/templates/
+├── README.md
+├── TEMPLATE__API_CONTRACT_EXTENSION.md
+├── TEMPLATE__KFM_UNIVERSAL_DOC.md
+└── TEMPLATE__STORY_NODE_V3.md
+```
+
+> [!WARNING]
+> Do not let the story surface become a substitute truth system. A Story Node may explain, frame, compare, or guide, but it must not silently replace authoritative records, release state, or evidence paths.
+
+## Current evidence boundary
+
+| Observation | Status | Why it matters here |
+|---|---|---|
+| This exact file is present on public `main` | **CONFIRMED** | The right move is to revise this template in place, not invent a parallel Story Node scaffold |
+| `docs/templates/README.md` defines `docs/templates/` as a governed scaffold shelf | **CONFIRMED** | This file should remain a reusable template, not a filled canonical artifact |
+| `docs/reports/story_nodes/` is present on public `main` | **CONFIRMED** | There is a current story-facing docs lane available for instantiated story markdown |
+| `docs/reports/story_nodes/README.md` describes story artifacts as downstream of evidence, policy, review, and correction | **CONFIRMED** | Filled Story Nodes should keep visible evidence route, time basis, and surface state |
+| `/.github/CODEOWNERS` currently routes `/docs/` to `@bartytime4life` | **CONFIRMED** | Broad ownership can be populated in this template without guessing |
+| Attached KFM doctrine treats the story surface as a shell-native, evidence-linked publication surface | **CONFIRMED** | The template should preserve evidence-linked excerpts, dates, perspective labels, and correction visibility |
+| Exact story schema filenames, route names, DTOs, loader hooks, and publish workflow coverage | **UNKNOWN** | Keep placeholders visible; do not imply implementation state that is not directly verified |
+| `doc_id`, `policy_label`, narrower co-owners, and mounted local checkout parity | **NEEDS VERIFICATION** | These should stay explicit review placeholders until the live repo or governance registry confirms them |
 
 ## Status matrix
 
 | Area | Status | Notes |
 |---|---|---|
-| Story surface as a governed shell surface | **CONFIRMED** | Human-authored narrative stays inside the same trust-visible shell as map, timeline, dossier, Evidence Drawer, and Focus Mode. |
-| Narrative markdown plus companion map/citation structure | **CONFIRMED** | Story Node v3 is documented as narrative markdown with a sidecar capturing map state and citations. |
-| Review state + resolvable citations before publish | **CONFIRMED** | Story publishing must fail closed if those conditions are missing. |
-| Evidence drill-through for consequential claims | **CONFIRMED** | Citations must resolve to inspectable support rather than decorative references. |
-| Exact field names in the template and sidecar below | **PROPOSED** | Adapt to mounted contracts once the schema inventory is directly verified. |
-| Exact repo-local paths, routes, schema filenames, renderer hooks, and owners | **UNKNOWN** | Do not treat placeholders below as settled repo facts. |
+| Story surface as a governed shell surface | **CONFIRMED** | Human-authored narrative stays inside the same trust-visible shell as map, timeline, dossier, Evidence Drawer, and Focus Mode |
+| Narrative markdown plus companion map/citation structure | **CONFIRMED doctrine** | Current public story docs describe Story Nodes as narrative artifacts coupled to evidence and map/context state; exact repo-local packet conventions still need verification |
+| Broad `/docs/` ownership | **CONFIRMED** | Current public `/.github/CODEOWNERS` maps `/docs/` to `@bartytime4life` |
+| Public story-facing docs lane | **CONFIRMED** | `docs/reports/story_nodes/` exists on public `main` and is currently scaffold-light |
+| Review state + resolvable citations before publish | **CONFIRMED** | Story publication must fail closed if those conditions are missing |
+| Evidence drill-through for consequential claims | **CONFIRMED** | Citations must resolve to inspectable support rather than decorative references |
+| Alignment between reader-facing report states and broader doctrinal surface-state grammar | **INFERRED** | Keep the distinction visible instead of flattening multiple state vocabularies into one |
+| Exact field names in the template and sidecar below | **PROPOSED** | Adapt to mounted contracts once the schema inventory is directly verified |
+| Exact repo-local schema names, route names, loader hooks, and policy labels | **UNKNOWN** | Do not treat placeholders below as settled repo facts |
+
+> [!NOTE]
+> **State vocabulary caution**
+>
+> Current public story docs and broader KFM doctrine expose two adjacent state vocabularies:
+>
+> - a **report-facing** set such as `Draft`, `Review`, `Published`, `Superseded`, `Withdrawn`, and `Correction-pending`
+> - a broader **surface-state** set such as `promoted`, `generalized`, `partial`, `stale-visible`, `abstained`, `denied`, and `withdrawn`
+>
+> Keep the distinction explicit in instantiated nodes rather than collapsing one layer into the other without review.
 
 ## Accepted inputs
 
-Use this template when the node includes one or more of the following:
+Use this template when the instantiated Story Node includes one or more of the following:
 
 - human-authored narrative intended for the KFM story surface
 - explicit time scope, event scope, or as-of framing
 - map state, selection state, layer state, or compare state relevant to the story
 - evidence-linked excerpts, claim references, `EvidenceRef`s, or `EvidenceBundle` references
 - review, policy, correction, or public-safe publication notes
+- story-facing documentation artifacts that must stay downstream of evidence, policy, review, and correction
 
 ## Exclusions
 
 This template is **not** for:
 
+- filled Story Node instances that should live in their owning story-facing surface
 - raw source documents or ingest-stage notes
 - unpublished scratchpads with unresolved evidence
 - hidden reviewer commentary that belongs in review artifacts
-- sovereign analysis that bypasses evidence resolution
+- runtime story routes, renderers, workers, or API code
+- schemas, DTOs, OpenAPI surfaces, or machine-validated examples
+- policy bundles, publish rules, or obligation vocabularies
+- canonical data artifacts, receipts, manifests, catalog closure, or `EvidenceBundle` stores
 - exact sensitive directions or location disclosure that violate public-safe handling
 - implementation claims about repo files, endpoints, or workflows that are not directly verified
 
-> [!WARNING]
-> Do not let the story surface become a substitute truth system. A Story Node may explain, frame, compare, or guide, but it must not silently replace authoritative records, release state, or evidence paths.
-
 ## Quickstart
 
-1. Duplicate this template into a working story draft.
-2. Replace every angle-bracket placeholder before review.
-3. Fill **time scope**, **freshness basis**, **support**, **perspective**, and **map state** before polishing prose.
-4. Break narrative into claim-sized blocks and attach `EvidenceRef`s before final editing.
-5. Run the review/publish gate. If citations do not resolve, hold, narrow, abstain, or deny rather than publishing around the gap.
+1. Copy this scaffold into the owning story-facing surface.
+2. Rename it to a stable story slug.
+3. Replace every angle-bracket placeholder before review.
+4. Fill **time scope**, **freshness basis**, **support**, **perspective**, and **map state** before polishing prose.
+5. Break narrative into claim-sized blocks and attach `EvidenceRef`s before final editing.
+6. Run the review/publish gate. If citations do not resolve, hold, narrow, abstain, or deny rather than publishing around the gap.
+
+### Current public-main docs example
+
+```bash
+# Current public-main report-surface example.
+# If the live repo uses a different owning surface, instantiate there instead.
+cp docs/templates/TEMPLATE__STORY_NODE_V3.md \
+  docs/reports/story_nodes/<story-slug>.md
+```
+
+### Minimum instantiation rule
+
+```text
+Template shelf      -> docs/templates/
+Filled Story Node   -> owning story/report surface
+Runtime/API logic   -> contracts/, schemas/, apps/, packages/, or other owning runtime surfaces
+```
 
 ## What must stay visible
 
 | Must stay visible | Why it matters |
 |---|---|
-| Time scope | Prevents snapshot confusion and unsupported historical drift. |
-| Freshness basis | Makes stale-visible or as-of logic legible to the reader. |
-| Support | Keeps claims matched to the grain that makes them meaningful. |
-| Evidence linkage | Preserves reconstructability to inspectable support. |
-| Perspective | Prevents interpretive writing from posing as neutral omniscience. |
-| Correction lineage | Keeps supersession, narrowing, and withdrawal visible in-place. |
-| Map state | Keeps story transitions inside the governed shell rather than detaching into article pages. |
+| Time scope | Prevents snapshot confusion and unsupported historical drift |
+| Freshness basis | Makes stale-visible or as-of logic legible to the reader |
+| Support | Keeps claims matched to the grain that makes them meaningful |
+| Evidence linkage | Preserves reconstructability to inspectable support |
+| Perspective | Prevents interpretive writing from posing as neutral omniscience |
+| Correction lineage | Keeps supersession, narrowing, and withdrawal visible in-place |
+| Map state | Keeps story transitions inside the governed shell rather than detaching into article pages |
+| Release or review state | Prevents a polished draft from being mistaken for a promoted public-safe artifact |
 
 ---
 
 ## Authoring rules
+
+### 0) Instantiate outside `docs/templates`
+
+Copy this scaffold into the owning story-facing surface before you fill it with narrative content. `docs/templates/` is the reusable scaffold shelf; it is not the canonical home of published or review-bearing story artifacts.
 
 ### 1) Keep time explicit
 
@@ -170,6 +239,10 @@ Do not publish the node if any of the following remain unresolved:
 ### 7) Keep map state explicit
 
 Record the extent, selected feature, active layers, time anchor, and any compare or playback anchor that the node assumes. A Story Node belongs in the shell, not as a detached article page.
+
+### 8) Keep surface state and report state legible
+
+If the owning surface distinguishes between internal review state, reader-facing report state, and broader runtime surface state, keep those distinctions visible instead of compressing them into one ambiguous label.
 
 ---
 
@@ -410,6 +483,17 @@ audit:
   audit_ref: "<audit-ref>"
 ```
 
+### Optional state-mapping note
+
+Use this only if the owning surface distinguishes multiple state layers.
+
+```yaml
+state_mapping:
+  report_state: "<draft|review|published|superseded|withdrawn|correction_pending|other>"
+  review_state_source: "<review-record-ref-or-lane>"
+  reader_visible_note: "<optional explanatory note>"
+```
+
 ## Optional geometry / compare hooks (PROPOSED)
 
 Use only when the mounted implementation actually supports them.
@@ -420,7 +504,7 @@ spacetime:
   place_labels:
     - "<regional label>"
   route_ref: "<route-ref-or-null>"
-  compare_geometry_ref: "<compare-geometry-ref-or-null>"
+  compare_geometry_ref: "<compare-ref-or-null>"
 ```
 
 > [!CAUTION]
@@ -432,17 +516,18 @@ spacetime:
 
 ```mermaid
 flowchart LR
-  A[Author draft] --> B[Narrative markdown + map sidecar]
-  B --> C[EvidenceRef resolution]
-  C --> D{Resolvable citations?}
-  D -- No --> E[Fail closed: hold / narrow / abstain / deny]
-  D -- Yes --> F[ReviewRecord + DecisionEnvelope]
-  F --> G{Review state sufficient?}
-  G -- No --> E
-  G -- Yes --> H[ReleaseManifest + publish gate]
-  H --> I[Story surface in governed shell]
-  I --> J[Evidence Drawer drill-through]
-  I --> K[CorrectionNotice if needed]
+  A[Instantiate outside docs/templates] --> B[Author draft]
+  B --> C[Narrative markdown + map sidecar]
+  C --> D[EvidenceRef resolution]
+  D --> E{Resolvable citations?}
+  E -- No --> F[Fail closed: hold / narrow / abstain / deny]
+  E -- Yes --> G[ReviewRecord + DecisionEnvelope]
+  G --> H{Review state sufficient?}
+  H -- No --> F
+  H -- Yes --> I[ReleaseManifest + publish gate]
+  I --> J[Story surface in governed shell]
+  J --> K[Evidence Drawer drill-through]
+  J --> L[CorrectionNotice if needed]
 ```
 
 ## Quick reviewer prompts
@@ -453,11 +538,15 @@ flowchart LR
 - If the node is interpretive, does it say so?
 - If the node is partial, modeled, generalized, stale-visible, or corrected, is that visible in-place?
 - If a citation breaks, does the workflow fail closed instead of publishing theater?
+- Is the instantiated file outside `docs/templates/` and inside the owning story-facing surface?
 
 ## FAQ
 
 **Can a Story Node publish without citations?**  
 No. Publishing is gated by resolvable citations and review state.
+
+**Can a filled Story Node stay in `docs/templates/`?**  
+No. `docs/templates/` is the reusable scaffold shelf. Filled Story Node artifacts belong in the owning story-facing surface.
 
 **Is the companion sidecar optional?**  
 The documented Story Node v3 pattern pairs narrative markdown with map state and citations. Treat the exact sidecar schema as adaptable only after mounted verification.
@@ -477,15 +566,17 @@ No. It is a governed publication surface downstream of evidence and policy, not 
 - hidden sensitivity concerns
 - “to be sourced later” placeholders
 - narrative claims whose evidence cannot be reconstructed
+- runtime or schema claims that were not directly rechecked
 
 ### Suggested editing rhythm
 
-1. Write the narrative in plain language.
-2. Split large assertions into claim-sized units.
-3. Attach evidence refs before polishing prose.
-4. Make time, freshness, and support visible.
-5. Add caveats before review, not after pushback.
-6. Confirm correction state before publish.
+1. Copy this template into the owning story-facing surface.
+2. Write the narrative in plain language.
+3. Split large assertions into claim-sized units.
+4. Attach evidence refs before polishing prose.
+5. Make time, freshness, support, and state visible.
+6. Add caveats before review, not after pushback.
+7. Confirm correction state before publish.
 
 </details>
 
