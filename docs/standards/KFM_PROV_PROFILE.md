@@ -8,28 +8,32 @@ owners: NEEDS_VERIFICATION
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
-related: [NEEDS_VERIFICATION: companion STAC/DCAT profile docs, NEEDS_VERIFICATION: CatalogClosure schema, NEEDS_VERIFICATION: DatasetVersion schema, NEEDS_VERIFICATION: ReleaseManifest schema]
+related: [NEEDS_VERIFICATION: companion STAC profile doc, NEEDS_VERIFICATION: companion DCAT profile doc, NEEDS_VERIFICATION: CatalogClosure schema, NEEDS VERIFICATION: DatasetVersion schema, NEEDS_VERIFICATION: ReleaseManifest schema, NEEDS_VERIFICATION: EvidenceBundle schema]
 tags: [kfm, provenance, prov-o, standards]
-notes: [Grounded in March 2026 KFM corpus; owners, dates, doc_id, related repo paths, and mounted schema filenames require workspace verification.]
+notes: [Grounded in the attached March-April 2026 KFM corpus and the uploaded baseline draft; target repo path, doc_id, owners, dates, policy label, neighboring standards paths, and mounted schema filenames still require verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM PROV Profile
 
 A KFM-specific provenance profile for outward lineage, release traceability, and evidence-linked publication.
 
-| Field | Value |
+*Use this file as a publication-profile standard, not as evidence that mounted PROV emitters, schemas, or repo paths have already been verified in the current workspace.*
+
+**Quick jump:** [Purpose](#1-purpose) · [Scope](#2-scope) · [Architecture position](#4-position-in-kfm-architecture) · [Contract crosswalk](#11-crosswalk-to-kfm-contract-families) · [STAC / DCAT relationship](#12-relationship-to-stac-and-dcat) · [Validation checklist](#17-validation-checklist) · [Open verification items](#21-open-verification-items)
+
+| Signal | Value |
 |---|---|
 | **Document role** | Standard |
-| **Current posture** | **CONFIRMED** doctrine + **PROPOSED** profile details |
+| **Current posture** | **CONFIRMED** doctrine · **PROPOSED** profile details |
 | **Primary semantic base** | W3C PROV-O |
-| **KFM relationship** | Complements STAC and DCAT inside CatalogClosure |
-| **Repo verification** | **UNKNOWN** beyond PDF-visible corpus |
+| **Closure role** | Companion lineage member beside STAC and DCAT inside `CatalogClosure` |
+| **Mounted repo state** | **NEEDS VERIFICATION** |
 | **Intended readers** | Data, platform, catalog, policy, review, and delivery maintainers |
 
 ## At a glance
 
 - **PROV in KFM is outward lineage vocabulary, not sovereign system truth.**
-- **CatalogClosure is the main closure object that carries the STAC / DCAT / PROV triplet.**
+- **`CatalogClosure` is the closure seam that carries the STAC / DCAT / PROV triplet together.**
 - **KFM governance artifacts remain first-class and must not be flattened into generic provenance triples.**
 - **Publication is fail-closed:** unresolved rights, sensitivity, evidence, or closure gaps block outward release.
 - **This file defines a profile shape, not a claim that mounted schemas or emitters already exist.**
@@ -38,7 +42,7 @@ A KFM-specific provenance profile for outward lineage, release traceability, and
 
 ## 1. Purpose
 
-This standard defines how **Kansas Frontier Matrix (KFM)** should use **PROV-O** as its outward provenance and lineage vocabulary for released datasets, artifacts, and publication-safe derivatives.
+This standard defines how **Kansas Frontier Matrix (KFM)** should use **PROV-O** as its outward provenance and lineage vocabulary for released datasets, release-bearing artifacts, and publication-safe derivatives.
 
 It exists to make three things explicit:
 
@@ -51,6 +55,8 @@ It exists to make three things explicit:
 
 ## 2. Scope
 
+### 2.1 Applies to
+
 This profile applies to **released or release-bearing provenance surfaces** associated with:
 
 - `DatasetVersion`
@@ -60,7 +66,9 @@ This profile applies to **released or release-bearing provenance surfaces** asso
 - `EvidenceBundle`
 - `CorrectionNotice`
 
-It does **not** replace:
+### 2.2 Does not replace
+
+This profile does **not** replace:
 
 - policy decisions,
 - review decisions,
@@ -75,11 +83,11 @@ Those remain separate KFM truth and control-plane objects.
 
 | Label | How it is used here |
 |---|---|
-| **CONFIRMED** | Directly supported by the March 2026 KFM corpus. |
+| **CONFIRMED** | Directly supported by the attached March-April 2026 KFM corpus. |
 | **INFERRED** | Structurally necessary completions strongly implied by repeated corpus patterns. |
 | **PROPOSED** | Recommended profile choices that fit KFM doctrine but are not proven as mounted implementation. |
-| **UNKNOWN** | Anything not verified from current-session repo/workspace evidence. |
-| **NEEDS VERIFICATION** | Placeholder repo metadata, file paths, owners, dates, or schema locations that should be corrected against the mounted repository. |
+| **UNKNOWN** | Anything not verified from the current-session mounted workspace. |
+| **NEEDS VERIFICATION** | Placeholder repo metadata, file paths, owners, dates, policy labels, or schema locations that should be corrected against the actual repository. |
 
 ## 4. Position in KFM architecture
 
@@ -123,9 +131,12 @@ flowchart LR
 - the relevant release object,
 - the KFM audit / correction chain where applicable.
 
+> [!NOTE]
+> `CatalogClosure` is the outward seam where discovery and lineage travel together. Decision, review, release, runtime, and correction objects remain adjacent first-class artifacts rather than being absorbed into PROV.
+
 ## 5. Normative standards basis
 
-The KFM corpus explicitly treats the following standards/profile surfaces as current and relevant to machine-validatable contract files and outward discovery:
+The attached KFM corpus treats the following standards/profile surfaces as current and relevant to machine-validatable contract files and outward discovery.
 
 | Standard / profile | Role in this profile |
 |---|---|
@@ -135,7 +146,7 @@ The KFM corpus explicitly treats the following standards/profile surfaces as cur
 | **STAC 1.1.0** | Spatiotemporal asset and scene/package discovery vocabulary |
 
 > [!NOTE]
-> This file treats those standards as the normative external base because the KFM canonical manual already performed the version-sensitive recheck and retained them for KFM use. The exact repo implementation state remains **UNKNOWN**.
+> The attached successor-edition corpus reports a version-sensitive official recheck for these standards. The standards basis is therefore stronger than a generic memory claim, but the exact mounted repo implementation state still remains **UNKNOWN**.
 
 ## 6. Design principles
 
@@ -171,13 +182,13 @@ KFM uses PROV to describe:
 
 | PROV concept | KFM interpretation |
 |---|---|
-| `prov:Entity` | A governed artifact or published/referenced subject in the truth path |
+| `prov:Entity` | A governed artifact or published / referenced subject in the truth path |
 | `prov:Activity` | A named transformation or release-bearing process step |
 | `prov:Agent` | A responsible organization, reviewer, service, or software actor |
-| `prov:used` | Input relation from an activity to source/release-bearing entities |
+| `prov:used` | Input relation from an activity to source / release-bearing entities |
 | `prov:wasGeneratedBy` | Output relation from an entity to the activity that generated it |
-| `prov:wasAssociatedWith` | Operational association between activity and actor/service |
-| `prov:wasAttributedTo` | Accountability or authorship/ownership link for an entity |
+| `prov:wasAssociatedWith` | Operational association between activity and actor / service |
+| `prov:wasAttributedTo` | Accountability or authorship / ownership link for an entity |
 | `prov:wasDerivedFrom` | Content or lineage derivation across entities |
 | `prov:qualifiedAssociation` | Optional refinement where runner role or execution details matter |
 | `prov:qualifiedGeneration` | Optional refinement where generation conditions matter |
@@ -189,13 +200,13 @@ A KFM-conformant outward PROV surface **MUST** do all of the following:
 1. identify the published or release-bearing subject unambiguously;
 2. identify at least one generating or transforming activity;
 3. identify at least one accountable agent;
-4. link the PROV surface to the relevant KFM release/correction context;
+4. link the PROV surface to the relevant KFM release / correction context;
 5. preserve enough lineage for reconstruction and audit;
 6. remain consistent with the matching STAC and DCAT closure;
 7. remain public-safe for the target audience;
 8. remain machine-checkable.
 
-## 9. Minimum required content
+## 9. Minimum outward content
 
 The table below defines the minimum profile content for a KFM outward PROV surface.
 
@@ -210,11 +221,11 @@ The table below defines the minimum profile content for a KFM outward PROV surfa
 | **activities** | At least one named activity with time bounds | **CONFIRMED** concept |
 | **agents** | At least one accountable human, organizational, or software agent | **CONFIRMED** concept |
 | **core relations** | `used`, `wasGeneratedBy`, and one accountability relation | **PROPOSED** minimum set |
-| **time bounds** | Start/end or equivalent generation timing | **PROPOSED** |
+| **time bounds** | Start / end or equivalent generation timing | **PROPOSED** |
 | **digest / integrity echo** | Checksum or digest linkage where the artifact model provides one | **PROPOSED** |
 | **rights / sensitivity echo** | Public-safe state or relevant obligations echoed or linked | **INFERRED** |
 | **correction linkage** | Supersession / replacement / withdrawal linkage where applicable | **INFERRED** |
-| **serialization metadata** | Media type, schema/profile identifier, or linked context | **PROPOSED** |
+| **serialization metadata** | Media type, schema / profile identifier, or linked context | **PROPOSED** |
 
 ## 10. Mandatory relation set
 
@@ -231,7 +242,7 @@ A KFM outward PROV representation **MUST** include enough structure to express:
 For a normal released artifact, the minimum viable set is:
 
 - one `prov:Entity` for the released subject,
-- one `prov:Activity` for the generating/building/cataloging step,
+- one `prov:Activity` for the generating / building / cataloging step,
 - one `prov:Agent`,
 - one `prov:wasGeneratedBy`,
 - one `prov:used`,
@@ -251,13 +262,13 @@ These refinements are useful, but they are not a substitute for the release, aud
 
 ## 11. Crosswalk to KFM contract families
 
-This section is the core repo-facing design guidance.
+This is the highest-value repo-facing bridge in the profile.
 
 | KFM contract family | PROV profile role | Rule |
 |---|---|---|
 | `SourceDescriptor` | Source identity / provenance input context | Linkable input authority description; not replaced by PROV |
-| `IngestReceipt` | Evidence that a fetch/landing event occurred | Should be representable as or referenced by an activity record |
-| `ValidationReport` | Validation outcome for candidate material | Reference or attach as validation-side evidence; do not flatten severity/reason grammar into generic triples only |
+| `IngestReceipt` | Evidence that a fetch / landing event occurred | Should be representable as or referenced by an activity record |
+| `ValidationReport` | Validation outcome for candidate material | Reference or attach as validation-side evidence; do not flatten severity / reason grammar into generic triples only |
 | `DatasetVersion` | Primary released or candidate entity | Core `prov:Entity` subject in most cases |
 | `CatalogClosure` | Outward closure object | Must carry or resolve STAC / DCAT / PROV together |
 | `DecisionEnvelope` | Policy decision control-plane artifact | Must remain first-class; linkable but not absorbed |
@@ -265,11 +276,11 @@ This section is the core repo-facing design guidance.
 | `ReleaseManifest` / `ReleaseProofPack` | Release-bearing publication object | Must be linked from outward provenance |
 | `ProjectionBuildReceipt` | Derived build activity and result | Natural fit for activity + derivative entity linkage |
 | `EvidenceBundle` | Request-time support package | May link to PROV, but is broader than PROV |
-| `RuntimeResponseEnvelope` | Runtime outcome object | Not a substitute for dataset/release provenance |
+| `RuntimeResponseEnvelope` | Runtime outcome object | Not a substitute for dataset / release provenance |
 | `CorrectionNotice` | Correction lineage object | Must remain visible and linkable in correction chains |
 
 > [!IMPORTANT]
-> The KFM corpus is clear that `CatalogClosure` must include **STAC/DCAT/PROV refs**, and that release, review, decision, runtime, and correction artifacts must remain explicit. This file preserves that split.
+> KFM is strongest when `CatalogClosure` carries **STAC / DCAT / PROV** together and when release, review, decision, runtime, and correction artifacts remain explicit alongside that closure.
 
 ## 12. Relationship to STAC and DCAT
 
@@ -286,15 +297,15 @@ KFM is strongest when:
 
 | Closure member | Primary job | KFM expectation |
 |---|---|---|
-| **STAC** | Asset / item / collection discovery | Present when spatiotemporal items/assets are the right carrier |
-| **DCAT** | Dataset / distribution discovery | Present for outward catalog/distribution description |
+| **STAC** | Asset / item / collection discovery | Present when spatiotemporal items or assets are the right carrier |
+| **DCAT** | Dataset / distribution discovery | Present for outward catalog and distribution description |
 | **PROV** | Lineage / activities / agents | Present or resolvable for released artifacts and closures |
 | **KFM governance objects** | Policy, review, release, correction | Must remain first-class |
 
 ### 12.3 Linkage expectations
 
 - A STAC resource **SHOULD** link to provenance-bearing context where relevant.
-- A DCAT dataset/distribution **SHOULD** expose provenance linkage through the closure.
+- A DCAT dataset or distribution **SHOULD** expose provenance linkage through the closure.
 - The PROV bundle **MUST** be consistent with the released identifiers and distribution references used elsewhere in closure.
 
 ## 13. Serialization guidance
@@ -305,10 +316,10 @@ The semantic authority is **PROV-O**.
 
 ### 13.2 Outward serialization stance
 
-The KFM corpus confirms **PROV-O** as the ontology basis, but does not prove one mounted serialization format in the repo. Therefore:
+The attached KFM corpus confirms **PROV-O** as the ontology basis, but does not prove one mounted serialization format in the repo. Therefore:
 
 - **JSON-LD** is the **PROPOSED outward-preferred serialization** for linked catalog interoperability.
-- **PROV-JSON** or equivalent JSON representations are **PROPOSED acceptable internal/tooling serializations** where needed.
+- **PROV-JSON** or equivalent JSON representations are **PROPOSED acceptable internal or tooling serializations** where needed.
 - Additional serializations may be used if they remain semantically equivalent and machine-checkable.
 
 ### 13.3 Validation stance
@@ -321,9 +332,9 @@ The following object classes are recommended for a first-wave profile.
 
 | Object | Meaning | KFM note |
 |---|---|---|
-| `source_capture` | Raw or landed source artifact | Usually tied to ingest / fetch activities |
+| `source_capture` | Raw or landed source artifact | Usually tied to ingest or fetch activities |
 | `dataset_version` | Canonical subject set at a governed version | High-value core entity |
-| `catalog_closure` | Outward closure resource set | Links STAC/DCAT/PROV together |
+| `catalog_closure` | Outward closure resource set | Links STAC / DCAT / PROV together |
 | `release_artifact` | Published or promoted artifact | Links to release proof and audit |
 | `projection_artifact` | Derived output built from promoted scope | Must never outrun release scope |
 | `correction_artifact` | Replacement / supersession / withdrawal object | Preserves lineage |
@@ -344,8 +355,8 @@ A KFM PROV surface **MUST NOT** be published when any of the following are unres
 
 Where a PROV surface is outward-facing, it should either:
 
-- include a public-safe summary of rights/sensitivity state, or
-- link to the governing release/policy object that carries that state.
+- include a public-safe summary of rights / sensitivity state, or
+- link to the governing release or policy object that carries that state.
 
 ## 16. Correction and supersession rules
 
@@ -354,7 +365,7 @@ When a released subject is corrected, generalized, withdrawn, or replaced:
 - provenance **must not** imply silent replacement,
 - the correction chain **must** remain inspectable,
 - affected release references **must** remain resolvable,
-- outward STAC/DCAT/PROV closure **must** be updated coherently.
+- outward STAC / DCAT / PROV closure **must** be updated coherently.
 
 ## 17. Validation checklist
 
@@ -368,12 +379,12 @@ Use this checklist before treating a PROV surface as KFM-conformant.
 - [ ] Time bounds are present where applicable
 - [ ] Release linkage is present
 - [ ] Audit linkage is present or resolvable
-- [ ] STAC/DCAT closure references are coherent
-- [ ] Rights/sensitivity state is public-safe or safely linked
+- [ ] STAC / DCAT closure references are coherent
+- [ ] Rights / sensitivity state is public-safe or safely linked
 - [ ] Correction linkage is present when needed
 - [ ] JSON serialization validates against the chosen profile schema
 - [ ] Identifiers and checksums match the release-bearing subject
-- [ ] No unpublished / unreleased scope leaks into outward provenance
+- [ ] No unpublished or unreleased scope leaks into outward provenance
 
 ### 17.2 Runtime caution
 
@@ -382,7 +393,10 @@ This standard is for **publication and lineage** surfaces. Runtime explainabilit
 ## 18. Illustrative example
 
 > [!NOTE]
-> The example below is **PROPOSED**. It is an illustrative serialization example for this standard and is **not** a confirmed mounted repo fixture.
+> The example below is **PROPOSED**. It is illustrative only and is **not** a confirmed mounted repo fixture or confirmed emitted serialization.
+
+<details>
+<summary>Expand illustrative JSON example</summary>
 
 ```json
 {
@@ -390,10 +404,18 @@ This standard is for **publication and lineage** surfaces. Runtime explainabilit
     "prov": "http://www.w3.org/ns/prov#",
     "kfm": "https://kfm.example/ns#"
   },
-  "profile": "kfm-prov-profile/v1",
+  "profile_version": "kfm-prov-profile/v1",
   "subject_id": "kfm:dataset-version:hydrology:nwis:2026-03-14",
+  "subject_type": "dataset_version",
   "release_ref": "kfm:release:hydrology:2026-03-14",
   "audit_ref": "audit_01HXYZNEEDSVERIFICATION",
+  "closure_refs": {
+    "stac_ref": "kfm:stac:hydrology:nwis:2026-03-14",
+    "dcat_ref": "kfm:dcat:hydrology:nwis:2026-03-14"
+  },
+  "integrity_echo": {
+    "sha256": "NEEDS_VERIFICATION"
+  },
   "entity": {
     "kfm:source:nwis:station-feed": {
       "prov:type": "kfm:SourceCapture",
@@ -446,6 +468,8 @@ This standard is for **publication and lineage** surfaces. Runtime explainabilit
 }
 ```
 
+</details>
+
 ## 19. Recommended profile decisions
 
 These are recommended because they fit the corpus, but they remain **PROPOSED** until verified in mounted implementation.
@@ -455,9 +479,9 @@ These are recommended because they fit the corpus, but they remain **PROPOSED** 
 | Serialization | Prefer JSON-LD for outward profile artifacts |
 | Validation | Validate JSON serializations with JSON Schema Draft 2020-12 |
 | Linking | Require release and audit linkage on outward PROV surfaces |
-| Integrity | Echo digests/checksums where release artifacts already carry them |
-| Closure | Require STAC/DCAT/PROV coherence checks in release validation |
-| Correction | Require explicit replacement / supersession linkage |
+| Integrity | Echo digests or checksums where release artifacts already carry them |
+| Closure | Require STAC / DCAT / PROV coherence checks in release validation |
+| Correction | Require explicit replacement or supersession linkage |
 
 ## 20. What this file deliberately does not do
 
@@ -465,7 +489,7 @@ This profile does **not**:
 
 - declare that the repository already contains mounted PROV schemas,
 - assert exact emitter filenames or directories as fact,
-- replace KFM policy/review/release artifacts with generic provenance triples,
+- replace KFM policy / review / release artifacts with generic provenance triples,
 - define every possible lineage event shape,
 - turn runtime explanation into a provenance-only problem.
 
@@ -473,16 +497,18 @@ This profile does **not**:
 
 The following items should be checked directly against the mounted repository before this draft is promoted.
 
-- [ ] Actual `doc_id`
-- [ ] Owners
-- [ ] Created / updated dates
-- [ ] Policy label
-- [ ] Existing neighboring standards docs
-- [ ] Actual schema filenames and locations
-- [ ] Actual serialization choice(s) in code or fixtures
-- [ ] Existing STAC/DCAT profile docs and cross-links
-- [ ] Existing release proof / catalog emitter implementation
-- [ ] Existing tests for closure integrity
+- [ ] Confirm the target repo path for this file
+- [ ] Confirm the actual `doc_id`
+- [ ] Confirm owners
+- [ ] Confirm created and updated dates
+- [ ] Confirm the policy label
+- [ ] Confirm neighboring standards docs
+- [ ] Confirm actual schema filenames and locations
+- [ ] Confirm actual serialization choice(s) in code or fixtures
+- [ ] Confirm existing STAC and DCAT profile docs and cross-links
+- [ ] Confirm existing release proof or catalog emitter implementation
+- [ ] Confirm existing tests for closure integrity
+- [ ] Confirm whether a repo-wide profile version token already exists for provenance docs
 
 ---
 
@@ -496,16 +522,16 @@ The following items should be checked directly against the mounted repository be
 | Subject | Stable ID, subject class |
 | Lineage core | Entity, Activity, Agent |
 | Core relations | `used`, `wasGeneratedBy`, accountability relation |
-| Time | Start/end or generation timing |
+| Time | Start / end or generation timing |
 | KFM linkage | `release_ref`, `audit_ref` |
-| Closure linkage | STAC/DCAT/PROV coherence |
-| Safety | Public-safe rights/sensitivity posture |
+| Closure linkage | STAC / DCAT / PROV coherence |
+| Safety | Public-safe rights / sensitivity posture |
 | Correction | Replacement / supersession / withdrawal linkage where needed |
 | Validation | Machine-checkable serialization |
 
 </details>
 
-## Appendix B — Authoring note for maintainers
+## Appendix B — Maintainer note
 
 When implementation evidence becomes available, prefer updating this file by replacing **PROPOSED** placeholders with:
 
