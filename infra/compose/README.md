@@ -1,10 +1,25 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/TODO-UUID
+title: compose
+type: standard
+version: v1
+status: review
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public
+related: [infra/README.md, infra/systemd-or-compose/README.md, .github/CODEOWNERS, README.md]
+tags: [kfm, infra, compose, runtime]
+notes: [doc_id placeholder pending repo UUID assignment, created/updated dates need verification against git history, owner value reflects current public CODEOWNERS coverage for /infra/]
+[/KFM_META_BLOCK_V2] -->
+
 # compose
 
 Directory guide for Docker Compose–style runtime wiring under `infra/`.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: NEEDS_VERIFICATION](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey) ![Surface: infra/compose](https://img.shields.io/badge/surface-infra%2Fcompose-6f42c1) ![Lane: compose](https://img.shields.io/badge/lane-compose-0a7d5a) ![Evidence: live repo + Mar 2026 doctrine](https://img.shields.io/badge/evidence-live%20repo%20%2B%20Mar%202026%20doctrine-blue)
+> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` coverage for `/infra/`; narrower lane-specific ownership is still **NEEDS VERIFICATION**)*  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-7d3cff) ![Surface: infra/compose](https://img.shields.io/badge/surface-infra%2Fcompose-6f42c1) ![Lane: compose](https://img.shields.io/badge/lane-compose-0a7d5a) ![Evidence: public main + Mar 2026 corpus](https://img.shields.io/badge/evidence-public%20main%20%2B%20Mar%202026%20corpus-blue)
 >
 > **Repo fit:** Path: `infra/compose/README.md` · Upstream: [`../README.md`](../README.md) · Sibling lanes: [`../local/`](../local/), [`../systemd/`](../systemd/), [`../systemd-or-compose/`](../systemd-or-compose/), [`../hosted/`](../hosted/), [`../kubernetes/`](../kubernetes/), [`../terraform/`](../terraform/) · Shared boundaries: [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/), [`../../tests/`](../../tests/)
 >
@@ -13,6 +28,7 @@ Directory guide for Docker Compose–style runtime wiring under `infra/`.
 > [!IMPORTANT]
 > **CONFIRMED current public repo state:** `infra/compose/` is present on public `main` and is currently a README-only directory.  
 > **CONFIRMED orchestration context:** [`../systemd-or-compose/`](../systemd-or-compose/) exists as the shared choice surface between native `systemd` and bounded Compose use inside the same `infra/` family.  
+> **CONFIRMED public owner coverage:** current public `CODEOWNERS` assigns `/infra/` to `@bartytime4life`.  
 > Treat this file as a **directory contract and evidence boundary**, not as proof that an active Compose stack is already committed here.
 
 ## Scope
@@ -41,7 +57,7 @@ Accepted inputs here are the files and notes that help an operator understand or
 
 | Belongs here | Typical content | Evidence status |
 |---|---|---|
-| Base Compose manifest | Root multi-service graph such as `compose.yaml` or `docker-compose.yml` | **PROPOSED** naming; verify the active checkout before standardizing |
+| Base Compose manifest | Root multi-service graph such as `compose.yaml`, `compose.yml`, or `docker-compose.yml` | **PROPOSED** naming; verify the active checkout before standardizing |
 | Override/profile manifests | Dev, ops, or feature-specific overrides | **PROPOSED** |
 | Non-secret environment examples | `.env.example`, profile variable docs, port maps, local bind notes | **INFERRED** |
 | Compose-specific proxy notes | Reverse-proxy or network notes that only exist because Compose is in play | **INFERRED** |
@@ -143,6 +159,7 @@ When this lane is populated, keep it additive rather than authoritative:
 3. **Deployment is not promotion.** A running stack is runtime placement, not trust-state advancement.
 4. **Examples over secrets.** Commit variable shapes and docs, not live credentials.
 5. **Small helpers only.** If a helper script starts defining domain behavior, move that behavior into a better-owned package or worker.
+6. **Choice must be justified.** When a real manifest lands here, explain why this slice needs Compose instead of staying in the native `systemd` lane.
 
 ## Diagram
 
@@ -188,6 +205,7 @@ flowchart LR
 | Concern | Minimum expectation | State |
 |---|---|---|
 | Service inventory | Every service exists for a named reason | **NEEDS VERIFICATION** for this lane |
+| Lane choice | README or linked runbook states why Compose is preferred over native `systemd` for this slice | **REQUIRED when manifests appear** |
 | Image strategy | Tag or digest posture is documented | **NEEDS VERIFICATION** |
 | Environment handling | Repo contains examples and docs, not secrets | **KFM-safe default** |
 | Network exposure | Binds are private or explicitly justified | **PROPOSED guardrail** |
@@ -199,9 +217,10 @@ flowchart LR
 
 Use this as a minimum review gate before treating the directory as more than a placeholder.
 
-- [ ] Verify owners for `infra/compose/`.
+- [ ] Confirm whether broad `/infra/` `CODEOWNERS` coverage is sufficient or whether this lane needs narrower owners.
 - [ ] Verify whether Compose manifests already exist elsewhere before adding new ones here.
 - [ ] Choose and document one manifest naming convention.
+- [ ] Explain why Compose is the right lane for this slice instead of the native `systemd` lane.
 - [ ] Document ports, binds, volumes, and any health or dependency assumptions.
 - [ ] Keep secrets out of Git; commit examples only.
 - [ ] Show the governed entrypoint and block direct client-to-store patterns.
@@ -213,7 +232,7 @@ Use this as a minimum review gate before treating the directory as more than a p
 
 ### Is Compose the default production path for KFM?
 
-**NEEDS VERIFICATION.** The adjacent infra guidance treats Compose as one lane inside a wider delivery family, and the shared `systemd-or-compose` guide does not position it as the default phase-one runtime choice.
+**CONFIRMED doctrine:** no as the thinnest credible local-first phase-one default. The shared [`../systemd-or-compose/`](../systemd-or-compose/) guide says KFM is `systemd`-first for that slice. **NEEDS VERIFICATION:** the active branch or private runtime may still use Compose in bounded cases.
 
 ### Can this directory define policy or schema behavior?
 
@@ -242,5 +261,6 @@ Ask these before merge:
 4. Are volume names, cleanup steps, and persistence expectations explicit?
 5. Is there a matching README or runbook note for every operator-relevant behavior?
 6. Can another maintainer tell which parts are **CONFIRMED** versus merely **PROPOSED**?
+7. Does the change explain why Compose is justified here instead of the native `systemd` lane?
 
 </details>
