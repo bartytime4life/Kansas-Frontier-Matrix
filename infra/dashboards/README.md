@@ -1,31 +1,61 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
+title: dashboards
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: <NEEDS-VERIFICATION-YYYY-MM-DD>
+updated: <NEEDS-VERIFICATION-YYYY-MM-DD>
+policy_label: <NEEDS-VERIFICATION>
+related: [infra/README.md, infra/monitoring/README.md, .github/workflows/README.md, tests/README.md, policy/README.md, contracts/README.md, schemas/README.md]
+tags: [kfm, infra, dashboards, observability]
+notes: [Target path inferred from uploaded draft; current public tree confirms a README-only directory; doc_id, dates, and policy label still need verification]
+[/KFM_META_BLOCK_V2] -->
+
 # dashboards
 
 Operator-facing dashboards and drill-through observability definitions for Kansas Frontier Matrix.
 
-> Status: experimental  
-> Owners: `@bartytime4life`  
-> ![status: experimental](https://img.shields.io/badge/status-experimental-orange) ![owner: @bartytime4life](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface: infra/dashboards](https://img.shields.io/badge/surface-infra%2Fdashboards-1f6feb) ![role: operator-facing](https://img.shields.io/badge/role-operator--facing-5b6b7a)  
-> Path: `infra/dashboards/README.md`  
-> Repo fit: dashboard-definition lane under [`../README.md`](../README.md); upstream from repo identity in [`../../README.md`](../../README.md); lateral to infra lanes such as [`../monitoring/`](../monitoring/), [`../local/`](../local/), [`../compose/`](../compose/), [`../hosted/`](../hosted/), and [`../systemd-or-compose/`](../systemd-or-compose/); downstream into review and governance surfaces such as [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), and [`../../schemas/README.md`](../../schemas/README.md).  
-> Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Status:** experimental  
+> **Owners:** `@bartytime4life` (current public `CODEOWNERS` coverage for `/infra/`; narrower dashboard-only ownership is **NEEDS VERIFICATION**)  
+> **Path:** `infra/dashboards/README.md`  
+> **Repo fit:** dashboard-definition lane under [`../README.md`](../README.md); upstream from repo identity in [`../../README.md`](../../README.md); lateral to [`../monitoring/README.md`](../monitoring/README.md), [`../local/`](../local/), [`../compose/`](../compose/), [`../hosted/`](../hosted/), and [`../systemd-or-compose/`](../systemd-or-compose/); downstream into review and governance surfaces such as [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), and [`../../schemas/README.md`](../../schemas/README.md)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+![status: experimental](https://img.shields.io/badge/status-experimental-f59e0b)
+![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![branch: main](https://img.shields.io/badge/branch-main-0a7d5a)
+![repo tree: public main](https://img.shields.io/badge/repo%20tree-public%20main-6f42c1)
+![surface: infra/dashboards](https://img.shields.io/badge/surface-infra%2Fdashboards-0a7ea4)
+![role: operator-facing](https://img.shields.io/badge/role-operator--facing-5b6b7a)
+![truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)
 
 > [!IMPORTANT]
-> Current public `main` shows this directory as a scaffold lane. Treat any starter files below beyond `README.md` as **PROPOSED** until the live checkout, dashboard provisioning path, and active operator workflow are inspected.
+> Current public `main` shows `infra/dashboards/` as a **README-only** lane. Treat dashboard provisioning details, live datasources, alert-rule ownership, screenshots, and active operator workflows as **UNKNOWN** or **NEEDS VERIFICATION** until the checked-out branch and runtime evidence are inspected.
 
 ## Scope
 
-This directory is for **dashboard definitions and dashboard-local review guidance** for KFM’s infrastructure and operations layer.
+This directory is for **dashboard definitions** and **dashboard-local review guidance** in KFM’s infrastructure and operations layer.
 
-In KFM terms, dashboards are **derived operational surfaces**. They help operators, reviewers, and stewards see runtime health, promotion state, drill-through evidence links, and failure signals quickly. They are useful because they compress signal. They are not useful when they become a second source of truth.
+In KFM terms, dashboards are **derived operational surfaces**. They help operators, reviewers, and stewards see runtime health, promotion state, drill-through evidence links, stale signals, and correction pressure quickly. They are useful because they compress signal. They stop being useful when they become a second source of truth.
+
+A good dashboard lane stays thin:
+
+- it shows status
+- it preserves joins
+- it points to stronger objects
+- it never quietly absorbs policy, contracts, or business logic
 
 ### Evidence labels used in this README
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Visible in the current public repo or strongly established by adjacent repo docs |
-| **INFERRED** | Careful conclusion drawn from nearby repo structure and documentation pattern |
-| **PROPOSED** | Recommended starter shape for this directory, not yet verified as mounted implementation |
-| **NEEDS VERIFICATION** | Must be checked in the live checkout, runtime, or deployment environment before being treated as operational fact |
+| **CONFIRMED** | Visible in the current public repo tree or directly grounded in stable KFM doctrine |
+| **INFERRED** | Careful conclusion drawn from adjacent repo surfaces or repeated doctrine |
+| **PROPOSED** | Commit-ready starter shape or practice that fits KFM doctrine but is not asserted as current checked-in behavior |
+| **UNKNOWN** | Not verified strongly enough to present as a current repo or runtime fact |
+| **NEEDS VERIFICATION** | Explicit placeholder that should be checked against the checked-out branch, platform settings, or live stack before merge |
 
 [Back to top](#dashboards)
 
@@ -45,11 +75,11 @@ In KFM terms, dashboards are **derived operational surfaces**. They help operato
 | Area | Relationship | Why it matters |
 |---|---|---|
 | [`../README.md`](../README.md) | **Parent authority for infra fit** | Defines infra as the lane for environment wiring, delivery mechanics, observability, rollback, and operational surfaces |
-| [`../monitoring/`](../monitoring/) | **Lateral / NEEDS VERIFICATION** | Likely close in purpose; confirm the live split between monitoring config and dashboard assets before moving files |
+| [`../monitoring/README.md`](../monitoring/README.md) | **Lateral companion lane / NEEDS VERIFICATION on exact split** | Monitoring explains signal capture and joinability; dashboards should explain how operators see and drill through those signals |
 | [`../../policy/README.md`](../../policy/README.md) | **Boundary** | Dashboards may visualize policy outcomes, but policy rules themselves do not belong here |
 | [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) | **Boundary** | Dashboards may consume contract-shaped data, but contract law and schema authority should stay there |
-| [`../../tests/README.md`](../../tests/README.md) | **Review/validation neighbor** | Dashboard changes that affect drill-through, alert semantics, or operator decisions should be testable and reviewable |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **Operational downstream** | Workflow and promotion outputs often feed the dashboards this lane is expected to describe |
+| [`../../tests/README.md`](../../tests/README.md) | **Review / validation neighbor** | Dashboard changes that affect drill-through, thresholds, or operator decisions should still be testable and reviewable |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **Operational downstream** | Workflow and promotion outputs often feed the operator views this lane is expected to describe |
 
 ### Working rule
 
@@ -69,12 +99,12 @@ The following content belongs here when the mounted repo uses this lane for dash
 |---|---|---|
 | Hand-authored dashboard JSON definitions | Yes | Preferred when they stay diffable and environment-neutral |
 | Exported dashboard definitions suitable for review in Git | Yes | Keep them stable, formatted, and named by purpose |
-| Dashboard-local README notes | Yes | Explain panel intent, key joins, and review expectations |
+| Dashboard-local README notes | Yes | Explain panel intent, key joins, thresholds, and review expectations |
 | Query or panel semantics notes | Yes | Especially useful when a panel encodes non-obvious thresholds or drill-through behavior |
-| Screenshot or render references used in PR review | Yes, sparingly | Helpful as review aids, but not as the authoritative asset |
+| Screenshot or render references used in PR review | Yes, sparingly | Useful as review aids, but not as the authoritative asset |
 | Stable drill-through link conventions | Yes | Example: trace → receipt, run → release, alert → runbook |
 | Datasource placeholders / variables | Yes | Keep them non-secret and environment-safe |
-| Alert panel annotations | Yes | Good when they clarify operator action without duplicating alertmanager logic |
+| Alert panel annotations | Yes | Good when they clarify operator action without duplicating alert-engine logic |
 
 ## Exclusions
 
@@ -86,6 +116,7 @@ This directory should stay narrow.
 | Policy rules, exception grammar, Rego bundles | `../../policy/` |
 | Contract schemas, vocabularies, OpenAPI authority | `../../contracts/` or `../../schemas/` |
 | Canonical receipts, evidence bundles, release manifests | Their designated `data/`, catalog, or release/evidence surfaces |
+| Scrape configs, alert rules, collector config, or observability plumbing | `../monitoring/` or the verified runtime lane that owns monitoring configuration |
 | Long-form incident or ops runbooks | `../../docs/` or the repo’s verified runbook lane |
 | Secret datasource credentials, tokens, or URLs with embedded auth | Secret manager / deployment wiring lane |
 | Unexplained one-off screenshots with no asset source | Keep only if paired with the underlying dashboard artifact and review notes |
@@ -93,6 +124,22 @@ This directory should stay narrow.
 
 > [!NOTE]
 > Dashboard files should explain and expose signals. They should not become the place where KFM’s domain law quietly lives.
+
+[Back to top](#dashboards)
+
+## Current verified snapshot
+
+The current public tree supports the following narrow claims:
+
+- **CONFIRMED:** `infra/dashboards/` currently exposes `README.md` only.
+- **CONFIRMED:** the parent [`infra/README.md`](../README.md) explicitly treats dashboards and operator views as accepted infrastructure content.
+- **CONFIRMED:** sibling [`infra/monitoring/README.md`](../monitoring/README.md) exists as a separate lane.
+- **CONFIRMED:** public `.github/workflows/` is currently README-only, so this README should not imply checked-in workflow YAMLs as public-`main` fact.
+- **CONFIRMED:** current public `CODEOWNERS` assigns `/infra/` to `@bartytime4life`.
+- **UNKNOWN / NEEDS VERIFICATION:** active dashboard vendor, provisioning path, datasource conventions, screenshot standards, alert-rule ownership, and live operator workflow depth.
+
+> [!CAUTION]
+> Directory presence is not the same thing as runtime maturity. A README-only lane proves scope and intent, not active dashboard coverage.
 
 [Back to top](#dashboards)
 
@@ -141,14 +188,19 @@ Use this sequence before adding or restructuring anything here.
 # 1) confirm repo root
 git rev-parse --show-toplevel
 
-# 2) inspect the live dashboards lane
+# 2) inspect the live dashboards lane and nearby infra README surfaces
 find infra/dashboards -maxdepth 2 -print | sort
+find infra -maxdepth 2 -type f -name 'README.md' | sort
 
-# 3) inspect parent infra guidance and nearby review lanes
+# 3) inspect parent infra guidance, sibling monitoring, workflow lane, and ownership
 sed -n '1,240p' infra/README.md
+sed -n '1,240p' infra/monitoring/README.md
 sed -n '1,220p' .github/workflows/README.md
 sed -n '1,220p' tests/README.md
 sed -n '1,220p' policy/README.md
+sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
+sed -n '1,200p' .github/CODEOWNERS
 
 # 4) list dashboard-like assets if any have appeared since this README was written
 git ls-files 'infra/dashboards/*'
@@ -205,17 +257,20 @@ Good dashboard changes review well in Git:
 - explicit notes on changed thresholds or joins
 - no secrets embedded in the artifact
 
+When a vendor export is noisy or opaque, pair it with a short sibling note that explains purpose, joins, thresholds, and drill-through behavior in plain language.
+
 ### Use stable identifiers when possible
 
 When the live system supports them, favor stable joins over human guesswork.
 
 Examples of good dashboard-level joins:
 
+- request identifier
+- audit or decision reference
+- trace identifier
 - run identifier
-- dataset identifier
 - release identifier
 - correction identifier
-- trace identifier
 - receipt or evidence reference
 
 If the mounted implementation uses different field names, follow that reality and update this README.
@@ -253,6 +308,15 @@ The dashboard is a **surface**, not a bypass. It can summarize multiple signals,
 | Runtime health | Is a service or worker degraded, stalled, or noisy? | metrics, logs, health probes, queue/latency views | Keep service logic out of the dashboard asset | **INFERRED** |
 | Correction / rollback visibility | What was superseded, corrected, or rolled back? | correction notices, release lineage, incident annotations | Particularly important for trust-visible operations | **PROPOSED** |
 
+### Preferred drill-through targets
+
+| Signal on panel | Prefer linking to | Avoid |
+|---|---|---|
+| Release or promotion state | release manifest, receipt, or review record | panel-only summaries that cannot reconstruct scope |
+| Runtime failure, hold, or denial | trace, audit reference, log bundle, or runbook | screenshot-only proof or unexplained red badges |
+| Correction, rollback, or stale state | correction notice, rollback record, or supersession note | silent replacement of the previous state |
+| Data freshness or evidence lag | source snapshot, evidence-bearing object, or runbook | a green tile that hides stale inputs |
+
 ### Change review matrix
 
 | Change type | Minimum review payload |
@@ -260,7 +324,7 @@ The dashboard is a **surface**, not a bypass. It can summarize multiple signals,
 | New dashboard asset | Purpose note, screenshot or preview, rollback note, ownership note |
 | Query / panel semantic change | Explain changed thresholds, joins, or filters; include expected operator impact |
 | Drill-through link addition | Show target object type and confirm the path remains governed |
-| Sensitive or high-impact visibility change | Confirm policy/privacy implications and whether redaction or aggregation is needed |
+| Sensitive or high-impact visibility change | Confirm policy or privacy implications and whether redaction or aggregation is needed |
 | Removal / deprecation | Explain replacement path and whether any runbook, alert, or review flow must be updated |
 
 ### Heuristics for a healthy dashboard lane
@@ -285,13 +349,13 @@ A dashboard change in this directory is ready when:
 - [ ] no secrets are embedded
 - [ ] any threshold or alert-facing semantics are described
 - [ ] rollback or removal is straightforward
-- [ ] repo-fit is still correct relative to `infra/` and nearby lanes
-- [ ] anything not verified in the live checkout is still labeled **PROPOSED** or **NEEDS VERIFICATION**
+- [ ] repo fit is still correct relative to `infra/` and nearby lanes
+- [ ] anything not verified in the live checkout is still labeled **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**
 
 For this directory itself, “done” means:
 
 - [ ] current live subtree has been inspected
-- [ ] relation to `../monitoring/` is explicit
+- [ ] relation to `../monitoring/README.md` is explicit
 - [ ] at least one real dashboard asset exists, or this README clearly remains a scaffold guide
 - [ ] ownership and review expectations are documented
 - [ ] the lane does not quietly accumulate policy, contract, or business logic
@@ -302,7 +366,11 @@ For this directory itself, “done” means:
 
 ### Is this the same thing as `infra/monitoring/`?
 
-**NEEDS VERIFICATION.** The current public tree shows both `dashboards/` and `monitoring/` under `infra/`, but this README does not assume the exact split until the mounted checkout is inspected.
+**NEEDS VERIFICATION.** The current public tree shows both `dashboards/` and `monitoring/` under `infra/`, but this README does not assume the exact split until the checked-out branch and runtime are inspected.
+
+### Does this lane own dashboard provisioning?
+
+**UNKNOWN / NEEDS VERIFICATION.** This README is written for dashboard definitions and review guidance. Provisioning, collector config, or alert wiring may live elsewhere.
 
 ### Are dashboard files authoritative truth?
 
@@ -325,30 +393,24 @@ Yes. A small, trustworthy dashboard lane is better than a large, stale one.
 ## Appendix
 
 <details>
-<summary><strong>Current evidence snapshot</strong></summary>
-
-- Current public `main` shows `infra/dashboards/README.md` as the only visible file in this directory.
-- The parent `infra/README.md` is materially stronger and should be treated as the current upstream fit document.
-- Nearby infra leaf lanes are still placeholder-like, so this README should avoid pretending the subtree is already operationally rich.
-
-</details>
-
-<details>
 <summary><strong>Verification backlog</strong></summary>
 
-Before promoting this README from scaffold upgrade to stable operational guide, verify:
+Before promoting this README from scaffold guide to stable operational contract, verify:
 
 1. whether live dashboard assets already exist outside public `main`
 2. whether `infra/monitoring/` owns provisioning while `infra/dashboards/` owns definitions
 3. whether screenshots, exports, or datasource conventions are already standardized
 4. whether any dashboard change should be paired with workflow, test, or runbook updates
 5. whether CODEOWNERS should become more specific than the parent `/infra/` rule
+6. the real values for `doc_id`, `created`, `updated`, and `policy_label` in the KFM Meta Block v2
 
 </details>
 
 <details>
 <summary><strong>Editing rule</strong></summary>
 
-When the mounted repo is available, update this file by **mapping current reality first**. Do not normalize the tree from memory, from doctrine alone, or from aesthetic preference.
+When the checked-out repo or live stack is available, update this file by **mapping current reality first**.
+
+Do not normalize the lane from memory, from doctrine alone, or from aesthetic preference.
 
 </details>
