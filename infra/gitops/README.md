@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/UUID-NEEDS-VERIFICATION
+title: gitops
+type: standard
+version: v1
+status: review
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public
+related: [infra/README.md, README.md, .github/README.md, .github/workflows/README.md]
+tags: [kfm, infra, gitops]
+notes: [doc_id and dates need repo verification; README-like directory doc preserved from current public-main baseline]
+[/KFM_META_BLOCK_V2] -->
+
 # gitops
 
 Declarative desired-state and reconciliation surface for KFM runtime promotion, drift control, and cluster-safe change review.
