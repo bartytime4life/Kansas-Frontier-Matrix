@@ -4,50 +4,55 @@ title: waves
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: public
-related: [migrations/README.md, migrations/drills/, migrations/templates/, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md, .github/README.md]
+related: [migrations/README.md, migrations/drills/README.md, migrations/templates/README.md, migrations/templates/migration-packet.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md, .github/README.md, .github/workflows/README.md, .github/CODEOWNERS]
 tags: [kfm, migrations, waves]
-notes: [doc_id and created date require verification; updated reflects this in-session draft revision]
+notes: [doc_id and created date require verification; owners follow current public /migrations/ CODEOWNERS coverage; updated reflects this repo-grounded revision]
 [/KFM_META_BLOCK_V2] -->
 
 # `waves`
 
-Packetized migration bundles for governed, review-first KFM change waves.
+Packetized, review-first migration bundles for governed KFM change seams.
 
 > **Status:** experimental  
 > **Document lifecycle:** draft  
 > **Authority posture:** operational / supporting  
-> **Owners:** **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![surface](https://img.shields.io/badge/surface-migration%20waves-6f42c1) ![repo](https://img.shields.io/badge/repo-public%20main-1f6feb) ![inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)  
-> **Repo fit:** path `migrations/waves/README.md` · parent [`../README.md`](../README.md) · sibling [`../drills/`](../drills/) · sibling [`../templates/`](../templates/)  
+> **Owners:** `@bartytime4life` (current public `/migrations/` coverage via [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS))  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![surface](https://img.shields.io/badge/surface-migration%20waves-6f42c1) ![inventory](https://img.shields.io/badge/current%20wave%20inventory-README--only-lightgrey) ![starter](https://img.shields.io/badge/checked--in%20starter-migration--packet.md-1f6feb) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)  
+> **Repo fit:** path `migrations/waves/README.md` · parent [`../README.md`](../README.md) · siblings [`../drills/README.md`](../drills/README.md), [`../templates/README.md`](../templates/README.md) · local starter [`../templates/migration-packet.md`](../templates/migration-packet.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current repo signal](#current-repo-signal) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 >
 > [!IMPORTANT]
-> Current public `main` confirms that `migrations/waves/` exists and currently exposes `README.md` only. The parent `migrations/README.md` defines a **proposed** packet shape for future wave directories, but the repo does not yet prove a live wave inventory, runner, or merge-blocking migration gate.
+> Current public `main` confirms that `migrations/waves/` is a live lane and currently contains `README.md` only. It also confirms that the only checked-in reusable migration starter in this subtree is [`../templates/migration-packet.md`](../templates/migration-packet.md).
 >
 > [!WARNING]
-> A wave is **not** a shortcut around the canonical truth path, trust membrane, policy review, release proof, or correction lineage. It is the review packet that keeps those obligations visible.
+> The parent [`../README.md`](../README.md) still carries an older illustrative `packets/` sketch. For sibling topology, starter choice, and lane naming, **branch reality wins**: the live checked-in migration lanes are `waves/`, `drills/`, and `templates/`.
+>
+> [!NOTE]
+> A wave is **not** the runner. It is the governed review packet around one migration-bearing change seam.
+
+* * *
 
 ## Scope
 
-`waves/` is the packet lane for **bounded, reviewable migration change bundles**.
+`waves/` is the packet lane for **bounded, reviewable migration change bundles** inside `migrations/`.
 
-The parent `migrations/` guide is intentionally broad: in KFM, migration can span schema, data, contracts, policy, release, runtime trust behavior, rollback, supersession, withdrawal, and visible correction. `waves/` narrows that broader doctrine into one unit of work at a time.
+In KFM, migration is broader than database DDL. A migration-bearing change can affect schema, data repair or backfill, contracts, policy, release state, derived projection freshness, runtime trust behavior, rollback, supersession, withdrawal, and visible correction. `waves/` narrows that broader doctrine into one unit of work at a time.
 
-Use this directory when a single bounded change seam needs its own packet, review surface, proof expectations, and correction posture. A wave is not the execution engine itself. It is the governed bundle that explains the engine-facing mechanism, the affected trust objects, the validation burden, and the visible recovery path.
+Use this directory when one bounded change seam needs its own packet, review surface, proof burden, and correction posture. A wave is the inspectable bundle around the change, not the execution engine itself.
 
 ### Truth posture used in this README
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Supported by current public repo inspection or by KFM doctrine already reflected in adjacent repo READMEs |
-| **INFERRED** | Strongly suggested by the repo and doctrine, but not proven as a mounted execution fact in this session |
-| **PROPOSED** | Recommended packet structure or workflow shape consistent with KFM doctrine |
-| **UNKNOWN** | Not established strongly enough in the current session to present as settled repo/runtime reality |
-| **NEEDS VERIFICATION** | Placeholder value, owner, runner, gate, or repo-local fact that should be checked before merge |
+| **CONFIRMED** | Supported by current public repo inspection or by stronger attached KFM doctrine |
+| **INFERRED** | Strongly suggested by adjacent docs or repo patterns, but not directly proven as current execution reality |
+| **PROPOSED** | Recommended shape or workflow consistent with KFM doctrine, but not yet verified as checked-in law |
+| **UNKNOWN** | Not established strongly enough in the current session to present as settled fact |
+| **NEEDS VERIFICATION** | Placeholder value or repo/runtime fact that should be checked before merge |
 
 ### Working rule for this lane
 
@@ -57,49 +62,38 @@ Treat one wave as **one bounded change seam or one tightly coupled rehearsal**, 
 
 ## Repo fit
 
-**Path:** `migrations/waves/README.md`  
-**Role in repo:** directory README for wave packets under the broader `migrations/` surface.
+`migrations/waves/` is the live packet lane inside the broader `migrations/` surface.
 
 ### Repo fit summary
 
 | Aspect | Guidance |
 |---|---|
 | **Path** | `migrations/waves/README.md` |
-| **Parent contract** | [`../README.md`](../README.md) defines the broader migration posture |
-| **Sibling lanes** | [`../drills/`](../drills/) for exercised verification/correction records · [`../templates/`](../templates/) for reusable packet starters |
-| **Likely downstream shape** | `./0001_<slug>/` packet directories when the branch adopts the documented packet model |
+| **Role in repo** | directory README for bounded, review-first migration packets |
+| **Current local inventory** | `README.md` only |
+| **Checked-in starter** | [`../templates/migration-packet.md`](../templates/migration-packet.md) |
+| **Sibling lanes** | [`../drills/README.md`](../drills/README.md) for exercised evidence · [`../templates/README.md`](../templates/README.md) for reusable starters |
+| **Adjacent trust surfaces** | [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/README.md`](../../.github/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| **Ownership signal** | current public `/.github/CODEOWNERS` assigns `/migrations/` to `@bartytime4life` |
 | **Primary audience** | maintainers, reviewers, platform engineers, data engineers, release stewards |
-| **Update trigger** | packet structure changes, naming convention hardening, definition-of-done changes, new required artifacts, or any shift in how waves relate to drills/templates |
-
-### Upstream and downstream links
-
-| Direction | Path | Why it matters |
-|---|---|---|
-| Upstream | [`../README.md`](../README.md) | Broad migration posture, packet expectations, and correction logic |
-| Lateral | [`../../contracts/README.md`](../../contracts/README.md) | Trust-bearing contract families and envelope expectations |
-| Lateral | [`../../schemas/README.md`](../../schemas/README.md) | Schema-home boundary and authority guardrails |
-| Lateral | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default policy expectations and outcome semantics |
-| Lateral | [`../../tests/README.md`](../../tests/README.md) | Fixture and verification expectations |
-| Lateral | [`../../.github/README.md`](../../.github/README.md) | Merge discipline, CI/CD surfaces, and review routing |
-| Adjacent | [`../drills/`](../drills/) | Post-deploy verification and correction-visibility drill records |
-| Adjacent | [`../templates/`](../templates/) | Reusable scaffolds for repeatable packet structure |
-| Downstream | `./0001_<slug>/` | One concrete wave packet once the branch adopts the packet model |
+| **Update trigger** | packet structure changes, starter-path changes, definition-of-done changes, new required artifacts, or any shift in how `waves/` relates to `drills/` and `templates/` |
 
 ### What this README is for
 
 - defining what belongs in `migrations/waves/`
-- keeping current public branch facts separate from target-state packet guidance
-- making future wave packets structurally consistent
-- linking packet design to contracts, schemas, tests, policy, release proof, and correction
+- separating **current public tree facts** from **starter guidance**
+- making future wave packets structurally consistent without overclaiming existing automation
+- linking packet design to contracts, schemas, policy, tests, release proof, and correction
 - preventing `waves/` from becoming an unstructured dumping ground
 
 ### What this README is not for
 
 - declaring a live migration runner as fact
+- inventing a settled packet naming convention the public tree does not yet prove
 - serving as the authoritative schema registry
 - storing generated proof packs, backups, or exports
-- replacing execution logs or exercised drill records
-- becoming a second doctrine manual when the parent `migrations/` README already carries the broader law
+- replacing exercised drill records
+- becoming a second doctrine manual when the broader law already lives in `../README.md` and the attached KFM corpus
 
 [Back to top](#waves)
 
@@ -109,14 +103,17 @@ The following belong in `waves/` when they are part of one **bounded, reviewable
 
 | Input class | Examples | Why it belongs here |
 |---|---|---|
-| Packet directory | `0001_<slug>/` | Gives one change seam its own reviewable unit |
-| Packet overview | `README.md` inside a wave packet | States purpose, class, scope, and affected surfaces up front |
+| Packet directory | `<wave-id>_<slug>/` | Gives one change seam its own reviewable unit without pretending the naming rule is already settled |
+| Packet overview | `README.md` inside a wave packet, usually seeded from [`../templates/migration-packet.md`](../templates/migration-packet.md) | States purpose, class, scope, affected surfaces, and truth posture up front |
 | Change plan | `plan.md` | Explains intent, sequencing, compatibility window, and stop rule |
-| Companion schema or contract material | `schema/`, linked contract diffs, registry notes | Keeps machine-checkable meaning close to the packet |
-| Fixtures | `fixtures/` with valid / invalid or parity cases | Makes review and later replay concrete |
-| Verification guidance | `verify.md` | Names preconditions, smoke checks, and post-cutover checks |
+| Companion schema or contract context | `schema/`, linked contract diffs, registry notes | Keeps machine-checkable meaning close to the packet |
+| Fixtures | `fixtures/` with valid / invalid / parity cases | Makes review and later replay concrete |
+| Verification guidance | `verify.md` | Names preconditions, smoke checks, post-cutover checks, and visible-state checks |
 | Recovery and correction guidance | `rollback.md`, `correction.md` | Keeps reversal, supersession, withdrawal, and visible correction explicit |
-| Narrow compatibility notes | dual-read, dual-write, adapter, crosswalk, retirement notes | Temporary seams need visible retirement conditions |
+| Narrow compatibility notes | dual-read, dual-write, adapter, crosswalk, deprecation, retirement notes | Temporary seams need visible retirement conditions |
+
+> [!NOTE]
+> The only **confirmed checked-in reusable starter** today is [`../templates/migration-packet.md`](../templates/migration-packet.md). Companion names like `plan.md`, `verify.md`, or `rollback.md` are good packet-level additions, but they are not yet proven as globally templated, lane-wide starters.
 
 ### Minimum bar for anything added here
 
@@ -137,8 +134,8 @@ The following do **not** belong in `waves/`.
 | Exclusion | Why it stays out | Where it goes instead |
 |---|---|---|
 | Free-standing runner implementation | The mechanism is not the packet | engine-specific surfaces, scripts, or runtime code |
-| Rehearsal evidence after execution | Exercised proof should not be mixed with planning packet structure | [`../drills/`](../drills/) |
-| Reusable scaffolds | Template material should remain reusable and generic | [`../templates/`](../templates/) |
+| Rehearsal evidence after execution | Exercised proof should not be mixed with planning packet structure | [`../drills/README.md`](../drills/README.md) |
+| Reusable scaffolds | Template material should remain reusable and generic | [`../templates/README.md`](../templates/README.md) |
 | Generated proof packs, dumps, exports, or backups | Source packet and emitted artifacts are different things | release / recovery artifact surfaces |
 | Ad hoc SQL or analyst notes | Not durable governed packet history | issue discussion, scratch analysis, or owning surface |
 | Pure UI refactor with no trust-state seam | Not every repo change is migration-bearing | app or package docs |
@@ -153,77 +150,110 @@ The following do **not** belong in `waves/`.
 
 | Signal | Status | Practical consequence |
 |---|---|---|
-| `migrations/` now exposes `waves/`, `drills/`, `templates/`, and `README.md` | **CONFIRMED** | The broader migration surface has moved beyond README-only in the public repo |
-| `migrations/waves/` currently shows `README.md` only | **CONFIRMED** | Write this README as a directory contract, not as if packet directories already exist |
-| Parent `migrations/README.md` documents a future packet shape under `waves/` | **CONFIRMED** documented guidance / **PROPOSED** execution shape | This README should align with that shape unless the mounted branch proves a better one |
-| Live wave packet inventory on current public `main` | **CONFIRMED absent in current directory listing** | Do not imply existing `0001_<slug>/` packets until they appear on the branch |
-| Active runner, naming convention, fixture harness, and merge-blocking gate | **UNKNOWN / NEEDS VERIFICATION** | Keep implementation claims proportional and verify before merge |
-| Broad repo posture still points to missing merge-blocking contract/schema enforcement | **INFERRED from adjacent repo docs** | Wave packets should identify manual versus automated gates honestly |
-
-> [!NOTE]
-> The parent `migrations/` README also keeps a strong starter bias toward a **hydrology-first** first real rehearsal. This README preserves that bias as **PROPOSED** guidance, not as a claim that a hydrology wave already exists on the branch.
+| `migrations/` exposes `README.md`, `drills/`, `templates/`, and `waves/` | **CONFIRMED** | The broader migration surface is live in the public tree |
+| `migrations/waves/` currently shows `README.md` only | **CONFIRMED** | Write this file as a directory contract, not as if packet directories already exist |
+| `migrations/templates/migration-packet.md` exists locally | **CONFIRMED** | Seed first packet work from the checked-in starter instead of inventing a blank structure |
+| Parent `migrations/README.md` still shows an older illustrative `packets/` tree | **CONFIRMED** | Treat that as older starter guidance, not as live sibling topology |
+| `migrations/templates/README.md` and `migrations/drills/README.md` already point to `waves/` as the live packet lane | **CONFIRMED** | Keep cross-links anchored to the live tree |
+| `.github/workflows/` currently exposes `README.md` only on public `main` | **CONFIRMED** | Do not imply checked-in merge-blocking YAML gates for wave packets |
+| Active runner, fixture harness, merge-blocking gate, and release-proof emitters | **UNKNOWN / NEEDS VERIFICATION** | Keep implementation claims proportional and verify before merge |
+| Wave packet naming convention | **UNKNOWN / NEEDS VERIFICATION** | Current public docs show more than one illustrative pattern; use neutral placeholders until the branch adopts a rule |
+| Hydrology-first first slice | **PROPOSED guidance with doctrinal backing** | Good default for the first serious rehearsal, but not a current tree fact and not proof of an existing hydrology wave |
 
 [Back to top](#waves)
 
 ## Directory tree
 
-### Current public shape
+### Current public-main shape
 
 ```text
 migrations/
+├── README.md
+├── drills/
+│   └── README.md
+├── templates/
+│   ├── README.md
+│   └── migration-packet.md
 └── waves/
     └── README.md
 ```
 
-### Packet shape documented by the parent guide *(PROPOSED, not current public fact)*
+### Starter packet expansion inside this lane *(PROPOSED, adopt deliberately)*
 
 ```text
 migrations/
 └── waves/
-    └── 0001_<slug>/
-        ├── README.md
-        ├── plan.md
-        ├── schema/
-        ├── fixtures/
-        ├── verify.md
-        ├── rollback.md
-        └── correction.md
+    └── <wave-id>_<slug>/
+        ├── README.md                # usually seeded from ../templates/migration-packet.md
+        ├── plan.md                  # PROPOSED companion
+        ├── schema/                  # packet-local or linked deltas
+        ├── fixtures/                # packet-local valid / invalid / parity cases
+        ├── verify.md                # PROPOSED companion
+        ├── rollback.md              # PROPOSED companion
+        └── correction.md            # PROPOSED companion
 ```
 
-Use the future shape above only if the active branch adopts it deliberately. The point is not to create folders for their own sake. The point is to make a bounded change packet reviewable, reproducible, and correctable.
+### Interpretation rule
+
+- the first tree above is **current public-main inventory**
+- the second tree is **starter expansion guidance**
+- the checked-in reusable starter is currently [`../templates/migration-packet.md`](../templates/migration-packet.md)
+- the older parent `packets/` sketch is still useful as historical guidance, but it is **not** the live sibling topology
+- naming remains intentionally neutral here because the current public docs do **not** yet prove one settled packet-ID convention
+
+[Back to top](#waves)
 
 ## Quickstart
 
-Start by verifying what the branch actually contains.
+### 1) Re-read the lane boundaries before adding anything
+
+```bash
+sed -n '1,240p' migrations/README.md
+sed -n '1,240p' migrations/waves/README.md
+sed -n '1,240p' migrations/drills/README.md
+sed -n '1,240p' migrations/templates/README.md
+sed -n '1,260p' migrations/templates/migration-packet.md
+sed -n '1,240p' .github/README.md
+sed -n '1,240p' .github/workflows/README.md
+```
+
+### 2) Inspect the live inventory before you claim branch reality
 
 ```bash
 # identify the exact revision under review
 git rev-parse HEAD
 
-# inspect current wave-lane inventory
+# inspect current migration-lane inventory
+find migrations -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 find migrations/waves -maxdepth 3 \( -type f -o -type d \) 2>/dev/null | sort
 
-# inspect the parent migration guide and adjacent verification surfaces
-sed -n '1,240p' migrations/README.md
-find migrations -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
+# inspect adjacent verification and control surfaces
 find contracts schemas policy tests .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
-### Illustrative scaffold for the first packet *(PROPOSED — use only if the branch adopts the packet model)*
+### 3) Start from the confirmed starter
 
 ```bash
-WAVE_ID="0001_example"
-mkdir -p "migrations/waves/${WAVE_ID}"/{schema,fixtures}
-touch "migrations/waves/${WAVE_ID}"/{README.md,plan.md,verify.md,rollback.md,correction.md}
+WAVE_DIR="<wave-id>_<slug>"
+mkdir -p "migrations/waves/${WAVE_DIR}"
+cp migrations/templates/migration-packet.md "migrations/waves/${WAVE_DIR}/README.md"
+```
+
+### 4) Add companions deliberately
+
+```bash
+mkdir -p "migrations/waves/${WAVE_DIR}"/{schema,fixtures}
+touch "migrations/waves/${WAVE_DIR}"/{plan.md,verify.md,rollback.md,correction.md}
 ```
 
 ### Verify these before calling a wave “ready”
 
-1. Is this branch actually using `waves/` as the packet lane, or is the parent README still only target-state guidance?
-2. Which runner or mechanism will execute the underlying migration-bearing change?
+1. Is this branch actually using `waves/` as the packet lane for this change?
+2. Which runner or mechanism will execute the underlying migration-bearing work?
 3. Which contracts, schemas, fixtures, or policy bundles change with this packet?
 4. Which proof objects or drill records must exist before promotion?
 5. Which public-safe surface shows stale, superseded, withdrawn, or correction-pending state if the cutover fails?
+6. If this PR adopts a concrete wave-ID convention, was that rule documented and propagated consistently across sibling docs?
 
 [Back to top](#waves)
 
@@ -250,34 +280,44 @@ Do **not** open a wave packet for:
 - isolated script cleanup with no governed cutover
 - generated artifacts that should be emitted after promotion rather than versioned as source packet material
 
+### Naming posture
+
+Current public docs do **not** yet prove one settled wave-packet naming convention. This README therefore uses the neutral placeholder `<wave-id>_<slug>`.
+
+If a branch deliberately adopts a numeric, date-first, or contract-family naming rule, document it in the packet and update neighboring lane docs in the same PR rather than letting examples drift apart.
+
 ### Recommended packet flow
 
 1. **Name the wave.** Give the packet a bounded ID and slug.
 2. **State the seam.** Declare whether the change is schema, data, contract, policy, release, runtime, or correction-bearing.
-3. **Attach the companions.** Keep plan, schema/contract context, fixtures, verification, rollback, and correction nearby.
-4. **Name the proof burden.** List the trust objects, checks, and visible states the packet must prove.
-5. **Record the seam stop rule.** Temporary bridges need retirement conditions.
-6. **Link the rehearsal.** If the packet is exercised, connect it to drill records in `../drills/` rather than hiding the outcome.
+3. **Start from the checked-in starter.** Copy or adapt [`../templates/migration-packet.md`](../templates/migration-packet.md).
+4. **Attach the companions.** Keep plan, schema/contract context, fixtures, verification, rollback, and correction nearby when the change warrants them.
+5. **Name the proof burden.** List the trust objects, checks, and visible states the packet must prove.
+6. **Record the seam stop rule.** Temporary bridges need retirement conditions.
+7. **Link the rehearsal.** If the packet is exercised, connect it to drill records in [`../drills/README.md`](../drills/README.md) rather than hiding the outcome.
 
 > [!TIP]
 > A good wave packet should let a reviewer understand the change **without** reverse-engineering the repo from scattered comments, issue threads, and shell history.
+
+[Back to top](#waves)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Need a governed change] --> B{Does it change\nschema, data, contract,\npolicy, release, runtime,\nor correction behavior?}
+    A[Need a governed change] --> B{Does it change<br/>schema, data, contract,<br/>policy, release, runtime,<br/>or correction behavior?}
     B -- No --> X[Keep work in the owning surface]
-    B -- Yes --> C[Create wave packet\nmigrations/waves/0001_slug/]
-    C --> D[Add plan, companions,\nfixtures, verify, rollback, correction]
-    D --> E[Review + validation gates]
-    E --> F[Run underlying mechanism]
-    F --> G[Promote approved state]
-    G --> H[Record post-deploy verification]
-    H --> I{Trust preserved?}
-    I -- Yes --> J[Retire seam deliberately\nand link drill evidence]
-    I -- No --> K[Rollback / Supersede / Withdraw / Correct]
-    K --> L[Emit visible correction lineage]
+    B -- Yes --> C[Create wave packet<br/>migrations/waves/&lt;wave-id&gt;_slug/]
+    C --> D[Seed README from<br/>migration-packet.md]
+    D --> E[Add companions as needed:<br/>plan, schema, fixtures,<br/>verify, rollback, correction]
+    E --> F[Review + validation gates]
+    F --> G[Run underlying mechanism]
+    G --> H[Promote approved state]
+    H --> I[Record post-deploy verification]
+    I --> J{Trust preserved?}
+    J -- Yes --> K[Retire seam deliberately<br/>and link drill evidence]
+    J -- No --> L[Rollback / Supersede / Withdraw / Correct]
+    L --> M[Emit visible correction lineage]
 
     N[Canonical path preserved]
     O[Trust membrane preserved]
@@ -285,9 +325,9 @@ flowchart LR
     Q[Finite runtime outcomes preserved]
 
     C -. bounded by .-> N
-    E -. bounded by .-> O
-    G -. bounded by .-> P
-    L -. bounded by .-> Q
+    F -. bounded by .-> O
+    H -. bounded by .-> P
+    M -. bounded by .-> Q
 ```
 
 Above: a wave packet is the review envelope around one governed change seam. It gathers companion artifacts before execution, keeps the cutover inspectable, and makes correction lineage explicit if the change fails or narrows scope.
@@ -298,15 +338,15 @@ Above: a wave packet is the review envelope around one governed change seam. It 
 
 ### Wave packet anatomy
 
-| Packet path | Purpose | Expected posture |
+| Packet path | Purpose | Current posture |
 |---|---|---|
-| `README.md` | packet identity, class, scope, affected surfaces, truth labels | required |
-| `plan.md` | sequencing, compatibility window, stop rule, dependencies | required |
-| `schema/` | schema or contract deltas, registry notes, or linked shape changes | required when machine shape changes |
-| `fixtures/` | valid / invalid / parity examples tied to the packet | required when behavior or machine shape changes |
-| `verify.md` | preconditions, smoke tests, post-cutover checks, visible-state checks | required |
-| `rollback.md` | reversal path, fail-forward boundary, operator notes | required |
-| `correction.md` | supersession, withdrawal, correction notice, visible propagation notes | required |
+| `README.md` | packet identity, class, scope, affected surfaces, truth labels | **confirmed starter path** inside each future packet; seed from `migration-packet.md` |
+| `plan.md` | sequencing, compatibility window, stop rule, dependencies | common packet companion; **not** yet a confirmed shared starter |
+| `schema/` | schema or contract deltas, registry notes, or linked shape changes | packet-local addition when machine shape changes |
+| `fixtures/` | valid / invalid / parity examples tied to the packet | packet-local addition when behavior or machine shape changes |
+| `verify.md` | preconditions, smoke tests, post-cutover checks, visible-state checks | useful companion; lane-wide shared starter still **PROPOSED** |
+| `rollback.md` | reversal path, fail-forward boundary, operator notes | useful companion; lane-wide shared starter still **PROPOSED** |
+| `correction.md` | supersession, withdrawal, correction notice, visible propagation notes | useful companion; lane-wide shared starter still **PROPOSED** |
 
 ### Which migration lane should hold what?
 
@@ -321,10 +361,12 @@ Above: a wave packet is the review envelope around one governed change seam. It 
 
 | Expectation | Why it matters |
 |---|---|
-| Prefer a **hydrology-first** rehearsal unless branch evidence proves a stronger first slice already exists | Current KFM doctrine repeatedly uses hydrology as the safest high-value first proof lane |
+| Prefer a **hydrology-first** rehearsal unless branch evidence proves a stronger first slice already exists | Broader KFM doctrine repeatedly uses hydrology as the safest high-value first proof lane |
 | Prove the full object chain from descriptor through correction | A polished cutover without proof objects is trust theater |
 | Exercise both rollback and visible correction | KFM treats recovery as part of the trust model, not as backstage cleanup |
 | Keep public-safe negative states visible | The system must not bluff trust when a packet narrows scope, goes stale, or is superseded |
+
+[Back to top](#waves)
 
 ## Task list / definition of done
 
@@ -333,13 +375,15 @@ A wave packet should not be called complete until the following are true.
 - [ ] The packet ID and slug are bounded and reviewable.
 - [ ] The packet class is named clearly: schema, data, contract, policy, release, runtime, or correction-bearing.
 - [ ] `README.md` states authoritative scope, derived impact, affected surfaces, and truth posture honestly.
-- [ ] `plan.md` names dependencies, compatibility seams, and a clear stop rule.
+- [ ] The packet starter was copied from `migration-packet.md` or intentionally replaced with explanation.
+- [ ] `plan.md` names dependencies, compatibility seams, and a clear stop rule when the change warrants a separate plan.
 - [ ] Required schema/contract context and fixtures are attached or explicitly called out as still missing.
-- [ ] `verify.md` names preconditions, smoke checks, post-cutover checks, and visible user-state checks.
-- [ ] `rollback.md` and `correction.md` are explicit enough for a non-author reviewer to follow.
+- [ ] `verify.md` names preconditions, smoke checks, post-cutover checks, and visible user-state checks when verification is packet-local.
+- [ ] `rollback.md` and `correction.md` are explicit enough for a non-author reviewer to follow when recovery or correction are packet-local.
 - [ ] Build, deploy, and promote are not collapsed into one unreviewed step.
 - [ ] The packet identifies which proof objects must change with it.
-- [ ] The packet does not imply merge-blocking automation, runner choice, or fixture inventory that the branch does not actually prove.
+- [ ] The packet does **not** imply merge-blocking automation, runner choice, or fixture inventory that the branch does not actually prove.
+- [ ] If this PR adopts a concrete naming rule, the rule is documented consistently.
 - [ ] If the packet is exercised, corresponding drill evidence is linked from `../drills/`.
 
 ### Readiness gate before broad wave expansion
@@ -351,6 +395,7 @@ Until the repo proves stronger enforcement, broad `waves/` growth should also sa
 - [ ] Candidate versus release proof-pack expectations are named.
 - [ ] One packet proves the full chain from `source_descriptor` through `correction_notice`.
 - [ ] The packet keeps public-safe negative states honest instead of hiding missing trust.
+- [ ] Sibling docs stay aligned on lane names and starter paths.
 
 ## FAQ
 
@@ -366,39 +411,63 @@ No. In the current KFM migration posture, waves may cover schema, data repair, c
 
 Not in the current public directory view used for this revision. `migrations/waves/` currently exposes `README.md` only.
 
+### Why does the parent guide still mention `packets/`?
+
+Because the live migration subtree has moved faster than every illustrative example inside the broader parent README. Treat the parent `packets/` tree as older starter guidance. Treat the checked-in `waves/`, `drills/`, and `templates/` lanes as the live topology.
+
+### Is `0001_<slug>` the naming convention?
+
+Not yet as a confirmed public-main rule. Current public docs show more than one illustrative pattern, so this README uses `<wave-id>_<slug>` until the branch intentionally adopts a concrete convention.
+
 ### Why keep `drills/` separate from `waves/`?
 
 Because planning and exercised evidence are different artifacts. A packet explains what should happen; a drill record shows what actually happened.
 
 ### Why keep this README cautious?
 
-Because the public repo currently proves the directory boundary more strongly than it proves the execution model behind it. KFM documentation stays trustworthy by keeping that gap visible.
+Because the public repo currently proves directory boundaries, starter files, and docs-only workflow surfaces more strongly than it proves the execution model behind them. KFM documentation stays trustworthy by keeping that gap visible.
 
 [Back to top](#waves)
 
 ## Appendix
 
 <details>
-<summary><strong>Illustrative packet header (PROPOSED)</strong></summary>
+<summary><strong>Illustrative packet header</strong></summary>
 
 ```yaml
-id: 0001_example
-class: schema | data | contract | policy | release | runtime | correction
+id: <fill-me>
+class: <schema|data|contract|policy|release|runtime|correction>
+status: <draft|review|ready|executing|complete|superseded|withdrawn>
 purpose: <one-sentence statement>
-authoritative_scope: <what authoritative state changes>
-derived_scope: <what derived layers must rebuild or warn>
+owners:
+  - @bartytime4life
+linked_prs:
+  - <fill-me or n/a>
+linked_issues:
+  - <fill-me or n/a>
+linked_adrs:
+  - <fill-me or n/a>
+source_basis:
+  - <manual / spec / receipt / issue / dataset / report>
+authoritative_scope:
+  - <what authoritative state changes>
+derived_scope:
+  - <what derived layers rebuild, warn, go stale, or stay unchanged>
+affected_surfaces:
+  - <api|map|detail|focus|export|catalog|worker|ops>
 compatibility_window: <none | bounded window>
+stop_rule: <what retires the seam>
 proof_objects:
-  - <object-family>
+  - <schema / fixture / manifest / report / receipt / attestation>
 verification:
-  - <tests / reports / parity checks>
+  - <tests / reports / parity checks / operator checks>
 rollback: <revert | fail-forward | supersede | withdraw>
 correction_path: <how visible correction propagates>
-affected_surfaces:
-  - <map | detail | export | focus | api>
-notes:
-  - <assumptions / open unknowns>
+open_unknowns:
+  - <fill-me>
 ```
+
+Use the checked-in [`../templates/migration-packet.md`](../templates/migration-packet.md) starter for the full packet body. Keep placeholders honest: write `UNKNOWN` or `NEEDS VERIFICATION` rather than smoothing gaps away.
 
 </details>
 
