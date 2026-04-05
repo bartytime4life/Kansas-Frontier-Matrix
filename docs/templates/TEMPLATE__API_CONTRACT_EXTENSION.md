@@ -8,9 +8,9 @@ owners: <REVIEW REQUIRED: owner/team>
 created: <REVIEW REQUIRED: YYYY-MM-DD>
 updated: <REVIEW REQUIRED: YYYY-MM-DD>
 policy_label: <REVIEW REQUIRED: public|restricted|...>
-related: [docs/templates/, contracts/, policy/, tests/]
+related: [docs/templates/, contracts/, policy/, tests/, docs/runbooks/]
 tags: [kfm, template, api-contract]
-notes: [Review placeholders retained where live repo metadata, owners, and path inventory were not directly verifiable.]
+notes: [Current task baseline was an attached draft; exact checked-in target path, owners, and mounted repo inventory remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # TEMPLATE — API Contract Extension
@@ -22,9 +22,10 @@ Governed template for documenting a KFM API contract extension that changes sche
 | **Status** | **Experimental template · Draft** |
 | **Owners** | `<REVIEW REQUIRED: owner/team>` |
 | **Path** | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` **— PROPOSED starter path · NEEDS VERIFICATION** |
+| **Current-session evidence** | Attached baseline draft plus mounted KFM doctrinal manuals; exact checked-in repo inventory for this template remains **NEEDS VERIFICATION** |
 | **Repo fit** | Template for contract-bearing API changes that must stay aligned with KFM doctrine, contract families, route families, standards profiles, and trust-visible runtime behavior |
-| **Doctrine baseline** | `KFM_Canonical_Master_Reference_Manual_Integrated_Replacement_2026-03-14.pdf` plus baseline `B0` and doctrinal anchors `D1` / `D2` |
-| **Upstream** | `contracts/`, `policy/`, doctrinal manuals, ADRs, standards-profile decisions, route-family doctrine |
+| **Doctrine baseline** | Baseline draft in hand, plus doctrinal anchors centered on the canonical KFM reference manual and the geospatial successor edition |
+| **Upstream** | doctrinal manuals, ADRs, `contracts/`, `policy/`, standards-profile decisions, route-family doctrine |
 | **Downstream** | schemas, OpenAPI descriptions, validators, fixtures, tests, EvidenceBundle resolution, RuntimeResponseEnvelope behavior, runbooks, correction paths |
 
 ![status](https://img.shields.io/badge/status-experimental-lightgrey?style=flat-square)
@@ -33,7 +34,7 @@ Governed template for documenting a KFM API contract extension that changes sche
 ![trust](https://img.shields.io/badge/trust-evidence--linked-4f46e5?style=flat-square)
 ![verification](https://img.shields.io/badge/repo%20paths-needs%20verification-orange?style=flat-square)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Doctrine anchors & labeling](#doctrine-anchors--labeling) · [Contract-family alignment](#contract-family-alignment) · [Standards-profile alignment](#standards-profile-alignment) · [Route-family alignment](#route-family-alignment) · [Diagram](#diagram) · [Copy-ready template body](#copy-ready-template-body) · [Task list · Review gates](#task-list--review-gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Doctrine anchors & labeling](#doctrine-anchors--labeling) · [Contract-family alignment](#contract-family-alignment) · [Standards-profile alignment](#standards-profile-alignment) · [Route-family alignment](#route-family-alignment) · [Authoring rules](#authoring-rules) · [Diagram](#diagram) · [Copy-ready template body](#copy-ready-template-body) · [Task list · Review gates](#task-list--review-gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > Use this template when a change **adds, narrows, versions, deprecates, or otherwise changes** a contract-bearing API surface.  
@@ -56,7 +57,7 @@ Use it for extensions that materially affect one or more of the following:
 - policy vocabulary or decision grammar
 - valid / invalid fixtures
 - proof objects and emitted artifacts
-- EvidenceRef → EvidenceBundle behavior
+- `EvidenceRef -> EvidenceBundle` behavior
 - trust-visible runtime outcomes
 - rollback, correction, or stale-visible behavior
 
@@ -76,7 +77,7 @@ A complete extension document should let a reviewer answer five questions quickl
 | --- | --- |
 | `docs/templates/` | Home for governed documentation templates, including API and contract templates |
 | `contracts/` | Primary contract surface for schema families, examples, and machine-checkable structure |
-| `policy/` | Policy bundles, decision grammar, reason/obligation registries, and review-bearing constraints |
+| `policy/` | Policy bundles, decision grammar, reason / obligation registries, and review-bearing constraints |
 | `tests/` | Valid / invalid fixtures, schema tests, runtime-negative-path tests, correction drills, docs-gate checks |
 | `apis/` | Public and internal API descriptions where route-facing behavior must be made explicit |
 | `docs/runbooks/` | Publication, correction, rollback, stale-visible, and operational procedure deltas |
@@ -116,7 +117,7 @@ Use this template when you have all or most of the following:
 
 ## Directory tree
 
-Illustrative target placement:
+Illustrative target placement (**starter tree only — verify before commit**):
 
 ```text
 docs/
@@ -124,16 +125,41 @@ docs/
     └── TEMPLATE__API_CONTRACT_EXTENSION.md
 ```
 
-Common companion surfaces (**starter paths only — verify before commit**):
+Common companion surfaces (**successor-edition starter tree; all NEED VERIFICATION until directly inspected**):
 
 ```text
 contracts/
+├── source_descriptor/
+├── validation_report/
+├── dataset_version/
+├── catalog_closure/
+├── decision_envelope/
+├── release_manifest/
+├── evidence_bundle/
+├── runtime_response_envelope/
+└── correction_notice/
+
 policy/
+├── bundles/
+├── reason_registry/
+├── obligation_registry/
+└── tests/
+
 tests/
-apis/public/
-apis/internal/
-docs/runbooks/
+├── contracts/
+├── policy/
+└── e2e/
+
+apis/
+├── public/
+└── internal/
+
+docs/
+└── runbooks/
 ```
+
+> [!TIP]
+> Use the more granular tree above to organize thinking, but keep every path labeled as **PROPOSED starter path** until the repository confirms it.
 
 ## Quickstart
 
@@ -162,11 +188,11 @@ Use this template with the following authority order in mind:
 
 | Label | Meaning here | Use it for |
 | --- | --- | --- |
-| **CONFIRMED** | Directly supported by doctrinal source material or standards posture already rechecked in doctrine | Contract-family law, route obligations, verified standards posture |
-| **INFERRED** | Strong doctrinal implication used conservatively to close a necessary structural seam | Missing-but-obvious registries, proof objects, surface-state expectations |
-| **PROPOSED** | Doctrine-aligned recommendation beyond what the source corpus strongly implies | New file proposals, backlog items, starter schemas, route-profile suggestions |
-| **NEEDS VERIFICATION** | Intentionally unresolved until repo inspection confirms it | Paths, owners, exact filenames, mounted inventories, implementation coupling |
-| **UNKNOWN** | Not verified strongly enough to claim as current project fact | Live repo state, schema inventory, CI coverage, manifests, runtime stack |
+| **CONFIRMED** | Directly supported by doctrinal source material or standards posture already rechecked in doctrine | contract-family law, route obligations, verified standards posture |
+| **INFERRED** | Strong doctrinal implication used conservatively to close a necessary structural seam | missing-but-obvious registries, proof objects, surface-state expectations |
+| **PROPOSED** | Doctrine-aligned recommendation beyond what the source corpus strongly implies | new file proposals, backlog items, starter schemas, route-profile suggestions |
+| **NEEDS VERIFICATION** | Intentionally unresolved until repo inspection confirms it | paths, owners, exact filenames, mounted inventories, implementation coupling |
+| **UNKNOWN** | Not verified strongly enough to claim as current project fact | live repo state, schema inventory, CI coverage, manifests, runtime stack |
 
 ## Contract-family alignment
 
@@ -283,6 +309,21 @@ Any concrete path should be one of:
 
 Happy-path examples are insufficient. Document deny, abstain, stale-visible, partial, generalized, conflict, correction, and rollback behavior where relevant.
 
+## Proof-bearing minimums
+
+Use this section as a quick pre-draft filter before you start filling the scaffold.
+
+| Minimum | Why it is non-optional |
+| --- | --- |
+| Named owning contract family | prevents structural drift |
+| Named route family or explicit internal-only statement | prevents surface ambiguity |
+| Schema / contract delta | keeps behavior machine-checkable |
+| Valid + invalid fixtures | proves validation meaning, not just prose intent |
+| Negative-path runtime example where applicable | prevents happy-path bluffing |
+| Policy / decision-grammar impact | keeps reason / obligation semantics finite |
+| Rollback / correction note | keeps failure recoverable and visible |
+| Docs / runbook delta | keeps behavior and operations synchronized |
+
 ## Diagram
 
 ```mermaid
@@ -348,7 +389,7 @@ notes: [Replace all placeholders before publication.]
 
 ## 2. Summary
 
-Describe the change in one short paragraph.
+Describe the change in one short paragraph.  
 State what the extension enables, what it does not enable, and why it belongs in KFM.
 
 ## 3. Problem this extension solves
