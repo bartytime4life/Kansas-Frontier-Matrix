@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS VERIFICATION
-related: [../../README.md, ../README.md, ../systemd/README.md, ../compose/README.md, ../local/README.md, ../../docs/runbooks/README.md, ../../policy/README.md, ../../contracts/README.md]
+related: [../../README.md, ../README.md, ../systemd/README.md, ../compose/README.md, ../local/README.md, ../../docs/runbooks/README.md, ../../policy/README.md, ../../contracts/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, infra, runtime, systemd, compose]
-notes: [Live repo evidence confirms this path exists and is currently README-only; doc_id, dates, policy_label, and owner mapping still need live-repo verification before merge.]
+notes: [Current public main confirms this path exists and the directory is README-only; sibling runtime lanes are also README-only directories, but their README surfaces are substantive. doc_id, created/updated dates, and policy_label still need repo-history verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # systemd-or-compose
@@ -18,16 +18,16 @@ notes: [Live repo evidence confirms this path exists and is currently README-onl
 Shared runtime-orchestration guidance for KFM’s local-first infrastructure lane: when native `systemd` is preferred, when Compose is acceptable, and how the two must stay doctrine-aligned instead of drifting into parallel runtime universes.
 
 > **Status:** experimental  
-> **Owners:** @bartytime4life  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-systemd--or--compose-2d6cdf) ![posture](https://img.shields.io/badge/posture-systemd--first-1f6feb) ![phase](https://img.shields.io/badge/phase-local--first-2ea043) ![truth](https://img.shields.io/badge/truth-evidence%20bounded-lightgrey)  
-> **Repo fit:** `infra/systemd-or-compose/README.md` → upstream [`../README.md`](../README.md) and [`../../README.md`](../../README.md); adjacent [`../systemd/`](../systemd/), [`../compose/`](../compose/), [`../local/`](../local/); downstream trust surfaces include [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/), [`../../tests/`](../../tests/)  
+> **Owners:** `@bartytime4life` *(current public `/infra/` CODEOWNERS coverage; narrower lane-specific ownership still needs verification)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-7d3cff) ![surface](https://img.shields.io/badge/surface-systemd--or--compose-2d6cdf) ![posture](https://img.shields.io/badge/posture-systemd--first-1f6feb) ![phase](https://img.shields.io/badge/phase-local--first-2ea043) ![truth](https://img.shields.io/badge/truth-evidence%20bounded-lightgrey)  
+> **Repo fit:** `infra/systemd-or-compose/README.md` → upstream [`../README.md`](../README.md) and [`../../README.md`](../../README.md); adjacent [`../systemd/`](../systemd/), [`../compose/`](../compose/), [`../local/`](../local/); downstream trust surfaces include [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/), [`../../tests/`](../../tests/), [`../../docs/runbooks/README.md`](../../docs/runbooks/README.md), and [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> **Current repo reality:** this directory is **CONFIRMED** to exist, but it is currently a **README-only scaffold surface**. The same is true for `infra/systemd/` and `infra/local/`. By contrast, `infra/compose/README.md` is already a substantive coordination document, even though `infra/compose/` is also currently README-only.
+> **Current public repo reality:** `infra/systemd-or-compose/`, `infra/compose/`, `infra/systemd/`, and `infra/local/` are all **README-only directories** on public `main`. That is a directory-inventory fact, not a statement that the README surfaces themselves are thin. This guide, the sibling Compose guide, the sibling systemd guide, and the sibling local guide are all substantive README surfaces, but the public tree still does **not** prove active manifests, live deployment use, or branch-specific runtime authority.
 
 > [!NOTE]
-> KFM’s attached doctrine is **systemd-first** for the thinnest credible phase-one runtime on a single Ubuntu host. This directory does **not** assume Compose is the default. It exists to document lane choice, shared invariants, and anti-drift rules across the local-first runtime family.
+> KFM’s attached doctrine remains **systemd-first** for the thinnest credible phase-one runtime on a single Ubuntu host. This directory does **not** assume Compose is the default. It exists to document lane choice, shared invariants, and anti-drift rules across the local-first runtime family.
 
 ## Scope
 
@@ -44,15 +44,28 @@ Its job is to answer four questions clearly:
 
 | Item | Status | Meaning here |
 |---|---|---|
-| `infra/systemd-or-compose/` exists | **CONFIRMED** | This path is present in the live repo. |
-| Target file maturity | **CONFIRMED** | The current file at this path is scaffold-only. |
-| `infra/systemd/` exists | **CONFIRMED** | Present, currently README-only placeholder surface. |
-| `infra/local/` exists | **CONFIRMED** | Present, currently README-only scaffold surface. |
-| `infra/compose/README.md` is already substantive | **CONFIRMED** | Compose is not just a one-line placeholder anymore. |
-| Parent `infra/README.md` treats this lane as part of the infra runtime family | **CONFIRMED** | The parent infra guide names `systemd-or-compose/` alongside the other operational lanes. |
-| This directory should own comparison and lane-selection guidance | **INFERRED** | That is the cleanest role consistent with the current repo split. |
-| Active `.service`, `.timer`, or `compose*.yml` files already live here | **NEEDS VERIFICATION** | Not proven by the current visible repo evidence used for this draft. |
-| Exact authoritative runtime lane in active use on the branch | **NEEDS VERIFICATION** | Doctrine favors `systemd`-first, but the mounted repo evidence does not prove a live runtime choice. |
+| `infra/systemd-or-compose/` exists | **CONFIRMED** | This path is present on public `main`. |
+| `infra/systemd-or-compose/` directory inventory | **CONFIRMED** | The directory currently exposes `README.md` only. |
+| This README is already substantive | **CONFIRMED** | The current public file is a real lane-selection and anti-drift guide, not a one-line placeholder. |
+| `infra/compose/` directory inventory | **CONFIRMED** | Public `main` shows `README.md` only. |
+| `infra/compose/README.md` is a substantive coordination doc | **CONFIRMED** | Compose is documented as its own lane, even though the directory is currently README-only. |
+| `infra/systemd/` directory inventory | **CONFIRMED** | Public `main` shows `README.md` only. |
+| `infra/systemd/README.md` is substantive but source-bounded | **CONFIRMED** | The systemd lane already carries real guidance, even while keeping stronger runtime claims visibly bounded. |
+| `infra/local/` directory inventory | **CONFIRMED** | Public `main` shows `README.md` only. |
+| `infra/local/README.md` is a substantive contributor-facing guide | **CONFIRMED** | The local lane already documents bootstrap and environment mechanics. |
+| Public owner coverage for `/infra/` maps to `@bartytime4life` | **CONFIRMED** | Current public `CODEOWNERS` assigns the broad `/infra/` surface there. |
+| This directory should own comparison and lane-selection guidance | **INFERRED** | That remains the cleanest role consistent with the repo split and sibling-doc responsibilities. |
+| Exact authoritative runtime lane in active use on the checked-out branch | **NEEDS VERIFICATION** | Doctrine favors `systemd`-first, but current public docs do not prove the active branch/runtime choice. |
+| Checked-in `.service`, `.timer`, or Compose manifests that govern current operation | **NEEDS VERIFICATION** | Not proven from the current public directory inventory used for this revision. |
+
+### Current sibling lane snapshot
+
+| Lane | Public-main directory state | README stance | Primary burden |
+|---|---|---|---|
+| `./` | README-only directory | Shared choice + anti-drift guide | Lane arbitration, shared invariants, ownership map |
+| `../compose/` | README-only directory | Compose-specific coordination guide | Compose manifests, overrides, lane-local wiring if adopted |
+| `../systemd/` | README-only directory | Source-bounded native-host guide | Native units, overrides, host wiring if adopted |
+| `../local/` | README-only directory | Contributor-facing local bootstrap guide | Single-machine bootstrap, smoke checks, local environment mechanics |
 
 ### Directory contract
 
@@ -73,9 +86,10 @@ It should **not** quietly become:
 |---|---|
 | Path | `infra/systemd-or-compose/README.md` |
 | Primary role | Shared runtime choice and coordination guide for KFM’s local-first orchestration surfaces |
+| Current public owner coverage | `/infra/` → `@bartytime4life` in public `CODEOWNERS`; narrower lane-specific ownership still needs verification |
 | Upstream context | [`../../README.md`](../../README.md), [`../README.md`](../README.md) |
 | Adjacent runtime docs | [`../systemd/README.md`](../systemd/README.md), [`../compose/README.md`](../compose/README.md), [`../local/README.md`](../local/README.md) |
-| Related trust surfaces | [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/), [`../../tests/`](../../tests/) |
+| Related trust surfaces | [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../schemas/`](../../schemas/), [`../../tests/`](../../tests/), [`../../docs/runbooks/README.md`](../../docs/runbooks/README.md) |
 | Must stay out of scope | App logic, canonical contracts, policy bundles, release proof packs, live secrets, and source-of-truth dataset claims |
 
 ### Why this directory exists even with `systemd/` and `compose/` beside it
@@ -111,6 +125,7 @@ Material belongs here when it helps compare or coordinate the runtime lanes **wi
 | Shared smoke-check guidance | Brief, cross-lane preflight checks fit here, with deeper procedures linked to runbooks. |
 | Migration guidance | Local-only → private remote → hosted split-edge progression belongs here because it affects lane choice. |
 | Comparison snippets | Minimal `systemd` vs Compose examples are acceptable when used to clarify ownership or invariants. |
+| Ownership and review notes for the runtime family | This is the narrowest runtime doc that can explain broad `/infra/` ownership coverage without pretending lane-specific reviewers are already settled. |
 
 ## Exclusions
 
@@ -126,6 +141,7 @@ The following material should live elsewhere.
 | App, worker, or domain code | `../../apps/`, `../../packages/`, or equivalent code surfaces | Infra guidance is not application authority. |
 | Real secrets or live env files | Out-of-repo secret handling | Docs may describe shapes and names, never store live credentials. |
 | Release receipts, correction notices, or publication proof packs | `../../docs/runbooks/` plus release/proof surfaces | Promotion is a governed state transition, not just an infra event. |
+| Broad runtime ownership policy beyond what public `CODEOWNERS` proves | `../../.github/CODEOWNERS` and governance surfaces | This doc may point to coverage; it should not become the hidden owner registry. |
 
 > [!WARNING]
 > If this directory starts carrying actual unit files, Compose manifests, policy logic, and operational procedures at the same time, it has stopped being a coordination surface and become a drift generator.
@@ -160,16 +176,16 @@ infra/
 
 ```text
 infra/compose/
-└── README.md          # substantive coordination doc; directory currently README-only
+└── README.md          # substantive compose lane guide; directory currently README-only
 
 infra/systemd/
-└── README.md          # placeholder surface in current repo
+└── README.md          # substantive but source-bounded systemd lane guide; directory currently README-only
 
 infra/local/
-└── README.md          # scaffold surface in current repo
+└── README.md          # substantive local mechanics guide; directory currently README-only
 
 infra/systemd-or-compose/
-└── README.md          # this shared choice + anti-drift guide
+└── README.md          # substantive shared decision + anti-drift guide; directory currently README-only
 ```
 
 ### Suggested future shape (PROPOSED, not current repo fact)
@@ -218,14 +234,16 @@ find infra \
   \( -name '*.service' -o -name '*.timer' -o -name 'compose*.yml' -o -name 'docker-compose*.yml' -o -name '*.env.example' \) \
   -print | sort
 
-# Cross-check adjacent trust surfaces before inventing runtime claims.
+# Cross-check adjacent trust surfaces and current public owner coverage before inventing runtime claims.
 for p in \
   contracts/README.md \
   schemas/README.md \
   policy/README.md \
-  tests/README.md
+  tests/README.md \
+  docs/runbooks/README.md \
+  .github/CODEOWNERS
 do
-  [ -f "$p" ] && printf '\n### %s ###\n' "$p" && sed -n '1,200p' "$p"
+  [ -f "$p" ] && printf '\n### %s ###\n' "$p" && sed -n '1,220p' "$p"
 done
 ```
 
@@ -234,9 +252,10 @@ done
 A contributor should be able to answer all of these before adding files:
 
 - Which lane currently owns real runtime artifacts?
-- Which runtime directories are still doc-only?
+- Which runtime directories are still directory-only even when their README docs are substantive?
 - Which binds must stay loopback or private in phase one?
 - Where do smoke, restore, rollback, and correction procedures belong?
+- What does current `CODEOWNERS` actually say about `/infra/`?
 - What evidence would justify switching from native services to Compose for a given slice?
 
 [Back to top](#systemd-or-compose)
@@ -277,7 +296,20 @@ Compose is **not** a reason to expose:
 - review internals,
 - or unpublished lifecycle stages.
 
-### 3) Keep this directory as the handoff layer, not the execution bypass
+### 3) Treat `../local/` as bootstrap, not as lane arbitration
+
+`infra/local/` is where contributor-facing local mechanics belong.
+
+That means:
+
+- bootstrap helpers,
+- dev-only persistence notes,
+- smoke/start-stop guidance,
+- and single-machine environment mechanics.
+
+This directory should point to `../local/` when bootstrap is the question, and keep **lane arbitration** here.
+
+### 4) Keep this directory as the handoff layer, not the execution bypass
 
 Use `systemd-or-compose/` to answer:
 
@@ -293,7 +325,7 @@ Do **not** use it to smuggle in:
 - speculative live deployment claims,
 - or public-edge defaults that contradict local-first doctrine.
 
-### 4) Keep progression explicit
+### 5) Keep progression explicit
 
 A clean progression for this guide to describe is:
 
@@ -308,22 +340,29 @@ A clean progression for this guide to describe is:
 
 ```mermaid
 flowchart LR
-    A[infra/systemd-or-compose/] --> B{What does the current slice need?}
+    A[infra/README.md] --> B[infra/systemd-or-compose/]
 
-    B -->|single-host + smallest credible governed runtime| C[systemd-first profile]
-    B -->|bounded local multi-service coordination| D[Compose-assisted profile]
+    B --> C{What is the current burden?}
 
-    C --> E[governed API on loopback/private bind]
-    D --> E
+    C -->|single host + smallest credible governed runtime| D[../systemd/]
+    C -->|bounded multi-service rehearsal| E[../compose/]
+    C -->|bootstrap / contributor mechanics| F[../local/]
 
-    C --> F[systemd services + one-shot jobs]
-    D --> G[compose-defined local service graph]
+    D --> G[governed API on loopback/private bind]
+    E --> G
+    F --> G
 
-    E --> H[no direct client path to DB, model runtime, or artifact roots]
-    F --> I[runbooks + rollback + smoke checks]
-    G --> I
+    G --> H[no direct client path to DB, model runtime, or artifact roots]
 
-    I --> J[escalate to hosted or split-edge only when justified]
+    D --> I[systemd units + one-shot jobs]
+    E --> J[Compose manifests + override profiles]
+    F --> K[bootstrap helpers + smoke checks]
+
+    I --> L[runbooks + rollback + restore]
+    J --> L
+    K --> L
+
+    L --> M[escalate to hosted or split-edge only when justified]
 ```
 
 [Back to top](#systemd-or-compose)
@@ -340,6 +379,15 @@ flowchart LR
 | Generic local-first bootstrap notes | `../local/` | Bootstrap and orchestration are related but not identical concerns. |
 | Hosted or clustered deployment surfaces | `../hosted/`, `../kubernetes/`, `../terraform/`, `../gitops/` | These are later operational surfaces, not the default phase-one answer. |
 
+### Current public sibling posture
+
+| Lane | Public inventory | Current README posture | Safe interpretation |
+|---|---|---|---|
+| `infra/systemd-or-compose/` | README-only directory | Substantive decision guide | Public `main` proves documentation, not live runtime use |
+| `infra/compose/` | README-only directory | Substantive compose lane guide | Public `main` proves lane intent, not an active committed Compose stack |
+| `infra/systemd/` | README-only directory | Substantive but source-bounded systemd lane guide | Public `main` proves the lane exists, not that native units already govern current runtime |
+| `infra/local/` | README-only directory | Substantive local mechanics guide | Public `main` proves bootstrap guidance, not exact branch/runtime defaults |
+
 ### Cross-lane runtime rules
 
 | Concern | `systemd`-first posture | Compose posture | KFM rule |
@@ -347,7 +395,7 @@ flowchart LR
 | Governed API bind | Loopback by default | Loopback/private port map only | Public reachability must be intentional, reviewed, and justified. |
 | PostgreSQL/PostGIS | Unix socket or localhost | Internal/private only | Never direct client-visible. |
 | Ollama / local inference runtime | Loopback only | Private internal only | Never public-facing and never the normal client boundary. |
-| Artifact roots | Filesystem path only | Mounted private volume only | No direct file-sharing exposure of RAW / WORK / QUARANTINE / canonical roots. |
+| Artifact roots | Filesystem path only | Mounted private volume only | No direct file-sharing exposure of `RAW`, `WORK`, `QUARANTINE`, or canonical roots. |
 | One-shot jobs | Native units/timers | Explicit one-off jobs or equivalent | Must fail closed and produce diagnosable results. |
 | Env handling | Root-owned env files / drop-ins | Redacted examples only in repo | No live secrets committed. |
 | Rollback | Unit/service rollback + runbook | Manifest/service rollback + runbook | Runtime rollback must not erase correction lineage. |
@@ -364,15 +412,24 @@ flowchart LR
 | Runbook links for smoke/restore/rollback | `docs/runbooks/` or one canonical runtime surface | Keep a single authoritative copy and link to it. |
 | Hosted/public-edge overlays | `infra/hosted/`, `infra/kubernetes/`, `infra/terraform/`, `infra/gitops/` | Point outward; do not duplicate. |
 
+### Current public ownership note
+
+| Path / concern | Current public evidence | What it does **not** prove |
+|---|---|---|
+| `/infra/` owner coverage | Broad public `CODEOWNERS` coverage maps to `@bartytime4life` | Narrower lane-specific owner assignments, reviewer availability, or required-review settings |
+| This README’s current owner line | Reasonable to align with broad `/infra/` coverage | Final lane-specific stewardship without checkout/platform verification |
+
 ### Confidence table for claims in this README
 
 | Claim family | Current label | Why |
 |---|---|---|
-| Directory existence and current README-only state | **CONFIRMED** | Verified from the live repo. |
-| Parent infra doctrine and systemd-first local-first posture | **CONFIRMED** | Verified from repo-adjacent docs plus attached corpus. |
-| This directory as the canonical shared decision surface | **INFERRED** | Strong fit with repo structure, but not yet implemented as a richer subtree. |
+| Directory existence and current README-only inventory | **CONFIRMED** | Verified from the live public repo. |
+| README maturity across the sibling local runtime lanes | **CONFIRMED** | The sibling directories are README-only, but their README surfaces are substantive. |
+| Parent infra doctrine and systemd-first local-first posture | **CONFIRMED** | Verified from repo-adjacent docs plus the attached corpus. |
+| Broad `/infra/` owner coverage on public `main` | **CONFIRMED** | Current public `CODEOWNERS` assigns that surface to `@bartytime4life`. |
+| This directory as the canonical shared decision surface | **INFERRED** | Strong fit with repo structure, but not yet proven by a richer subtree or active manifest set. |
 | Proposed subpaths, manifest ownership refinements, and expanded handoff patterns | **PROPOSED** | These are build-useful recommendations, not proven current repo reality. |
-| Exact runtime artifacts, actual binds, or live deployment state | **NEEDS VERIFICATION** | Not directly visible in the mounted repo evidence used for this draft. |
+| Exact runtime artifacts, actual binds, or live deployment state | **NEEDS VERIFICATION** | Not directly visible in the current public evidence used for this revision. |
 
 [Back to top](#systemd-or-compose)
 
@@ -381,7 +438,8 @@ flowchart LR
 ### Definition of done for this directory
 
 - [ ] Verify `doc_id`, `created`, `updated`, and `policy_label` in the KFM meta block.
-- [ ] Reconcile `owners` with live repo ownership evidence, not just task-supplied ownership.
+- [ ] Confirm the owner line against live repo ownership evidence, not just broad `/infra/` fallback coverage.
+- [ ] Keep **directory inventory** and **README maturity** distinct in every repo-state claim.
 - [ ] Confirm which lane currently owns real runtime artifacts in the checked-out branch.
 - [ ] If `.service`, `.timer`, or Compose manifests already exist elsewhere, link them here instead of duplicating them.
 - [ ] Keep `systemd`-first doctrine visible for the phase-one single-host slice.
@@ -395,7 +453,7 @@ flowchart LR
 - [ ] **Infra review:** bind scopes and ownership map remain coherent.
 - [ ] **Policy review:** no policy law has leaked into runtime prose without a home in `policy/`.
 - [ ] **Docs review:** adjacent runtime READMEs do not contradict this file.
-- [ ] **Operations review:** rollback, smoke, and migration implications are visible.
+- [ ] **Operations review:** rollback, smoke, migration, and owner-coverage implications are visible.
 
 [Back to top](#systemd-or-compose)
 
@@ -404,6 +462,10 @@ flowchart LR
 ### Why keep this directory if `infra/systemd/` and `infra/compose/` already exist?
 
 Because contributors still need one place that explains **which lane to choose**, **what each lane may own**, and **how not to create duplicate runtime authority**.
+
+### Why distinguish “README-only directory” from “README maturity”?
+
+Because those are different facts. A directory can contain only `README.md` and still have a substantive guide. Conflating inventory with maturity turns accurate repo description into stale or misleading prose.
 
 ### Is Compose forbidden in KFM?
 
@@ -432,8 +494,8 @@ Then this directory can shrink into a brief handoff README—or disappear entire
 |---|---|---|
 | `doc_id` | **NEEDS VERIFICATION** | Allocate the canonical KFM document identifier at merge time. |
 | `created` / `updated` dates | **NEEDS VERIFICATION** | Resolve from commit history before commit. |
-| `policy_label` | **NEEDS VERIFICATION** | Reconcile with live repo labeling convention for infra docs. |
-| Owners beyond task-supplied value | **NEEDS VERIFICATION** | Check live ownership markers and CODEOWNERS coverage. |
+| `policy_label` | **NEEDS VERIFICATION** | Reconcile with the live repo labeling convention for infra docs. |
+| Narrower lane-specific owner mapping | **NEEDS VERIFICATION** | Check whether live ownership controls narrow beyond broad `/infra/` fallback coverage. |
 | Real unit file inventory | **NEEDS VERIFICATION** | Inventory `*.service` and `*.timer` files across `infra/` and related runtime paths. |
 | Real Compose manifest inventory | **NEEDS VERIFICATION** | Inventory `compose*.yml` / `docker-compose*.yml` and note authoritative homes. |
 | Canonical smoke/rollback home | **NEEDS VERIFICATION** | Confirm whether these live under `docs/runbooks/` or a runtime-specific subtree. |
@@ -450,6 +512,7 @@ Then this directory can shrink into a brief handoff README—or disappear entire
 | Compose-assisted | A bounded local multi-service coordination layer that is acceptable only when it preserves the same trust boundaries. |
 | Shared decision surface | A documentation surface that records lane choice, artifact ownership, and anti-drift rules without pretending to be canonical runtime truth. |
 | Anti-drift rule | A rule that prevents duplicate manifests, unit files, or env conventions from turning into conflicting runtime authorities. |
+| README-only directory | A directory-inventory fact that says nothing by itself about how mature the README content is. |
 | Local-first | Start with the smallest bounded runtime that can prove the governed path before adding hosted or cluster complexity. |
 
 </details>
