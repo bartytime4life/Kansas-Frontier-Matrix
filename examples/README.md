@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: 2026-02-21
+updated: 2026-03-29
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ./api/README.md, ./story/README.md, ./thin_slice/README.md, ./thin_slice/hydrology/README.md, ./ui/README.md, ../contracts/, ../schemas/, ../policy/, ../tests/, ../docs/, ../data/, ../apps/]
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ./api/README.md, ./story/README.md, ./thin_slice/README.md, ./thin_slice/hydrology/README.md, ./ui/README.md, ../contracts/, ../schemas/, ../policy/, ../tests/, ../docs/, ../data/, ../apps/, ../pipelines/README.md, ../tools/README.md]
 tags: [kfm, examples, fixtures, readme]
-notes: [Public main confirms scaffolded sublanes api/, story/, thin_slice/, and ui/ under examples/; thin_slice/ currently includes hydrology/; created/updated dates and stable doc_id still need commit-history verification.]
+notes: [Public main confirms scaffolded sublanes api/, story/, thin_slice/, and ui/ under examples/; thin_slice/ currently includes hydrology/; public main also exposes adjacent pipelines/ and tools/ owner lanes; created/updated dates were verified from public commit history; stable doc_id still needs repo ID convention verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # examples
@@ -21,7 +21,7 @@ Public-safe, non-authoritative examples and demo assets for Kansas Frontier Matr
 > Owners: `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-examples%2FREADME.md-2d6cdf) ![shape](https://img.shields.io/badge/shape-scaffold--heavy-lightgrey) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![branch](https://img.shields.io/badge/branch-main-black) ![repo](https://img.shields.io/badge/repo-public-brightgreen)  
 > Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Current public sublanes](#current-public-sublanes) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> Repo fit: `examples/README.md` · upstream [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) · sublanes [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md)
+> Repo fit: `examples/README.md` · upstream [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) · sublanes [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md) · owner lanes [../pipelines/README.md](../pipelines/README.md) · [../tools/README.md](../tools/README.md)
 
 > [!IMPORTANT]
 > This README is **repo-aware** and **evidence-bounded**.
@@ -45,12 +45,12 @@ Public-safe, non-authoritative examples and demo assets for Kansas Frontier Matr
 
 `examples/` is KFM’s **public-safe example surface**.
 
-At this point in the public tree, it has two jobs:
+At the current public-tree level, it has two jobs:
 
 1. act as the **parent routing lane** for the repo’s illustrative example surfaces
 2. keep cross-surface example material obviously **instructional**, **bounded**, and **easy to relocate**
 
-That means `examples/` should not become a shadow data lake, a quiet fixture dump, or a second authority layer. Its job is to help contributors, reviewers, and maintainers understand what KFM artifacts and trust-visible surfaces are supposed to look like **without** confusing sample material with promoted releases, authoritative contracts, or runtime truth.
+That means `examples/` should not become a shadow data lake, a quiet fixture dump, or a second authority layer. Its purpose is to help contributors, reviewers, and maintainers understand what KFM artifacts and trust-visible surfaces are supposed to look like **without** confusing sample material with promoted releases, authoritative contracts, or runtime truth.
 
 The scope stays intentionally narrow:
 
@@ -77,7 +77,7 @@ A healthy `examples/` surface improves contributor understanding while staying e
 | Role | parent example lane and routing surface for public-safe demos, walkthrough payloads, and instructional assets |
 | Upstream anchors | [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) |
 | Nested example lanes | [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md) |
-| Adjacent owner surfaces | [../contracts/](../contracts/) · [../schemas/](../schemas/) · [../policy/](../policy/) · [../tests/](../tests/) · [../docs/](../docs/) · [../data/](../data/) · [../apps/](../apps/) |
+| Adjacent owner surfaces | [../contracts/](../contracts/) · [../schemas/](../schemas/) · [../policy/](../policy/) · [../tests/](../tests/) · [../docs/](../docs/) · [../data/](../data/) · [../apps/](../apps/) · [../pipelines/README.md](../pipelines/README.md) · [../tools/README.md](../tools/README.md) |
 
 ### Current public sublanes
 
@@ -100,6 +100,8 @@ Now that nested example lanes exist, the root `examples/` README has an addition
 - an existing nested example lane because it is **lane-specific**
 - a stronger owner surface because it is **authoritative, executable, or release-bearing**
 
+The current public tree also exposes `../pipelines/` and `../tools/` as adjacent execution and helper lanes. That makes the placement decision sharper: some artifacts start life as examples, then harden into lane-owned execution proof or reusable helper behavior that should move out of `examples/`.
+
 ### Stronger owner surfaces
 
 Use `examples/` only after checking whether one of the owner lanes below is the better home:
@@ -113,6 +115,8 @@ Use `examples/` only after checking whether one of the owner lanes below is the 
 | `../docs/` | walkthroughs, runbooks, ADRs, long-form explanation, screenshots with narrative context | narrative authority belongs in docs |
 | `../data/` | governed manifests, dataset-linked example artifacts, release-linked sample outputs, receipts | examples must not replace the truth path |
 | `../apps/` | runtime-owned UI/API behavior, surface-state examples tied tightly to implementation | app truth should stay near the app that renders or emits it |
+| `../pipelines/` | lane-local execution examples, watcher recipes, slice-specific smoke fixtures, ingest/publish helpers | lane-owned proof should stay with the execution lane that runs or stages it |
+| `../tools/` | reusable validators, probes, diff helpers, attestation helpers, catalog QA helpers | reusable helper behavior is clearer when it lives with the helper surface that enforces or emits it |
 
 > [!TIP]
 > `examples/` is the cross-surface **demo surface**, not the universal home for every sample, fixture, or payload.
@@ -137,6 +141,7 @@ Content that belongs here includes:
 - instructional packs used in onboarding docs, screenshots, tutorials, or diagrams
 - public-safe thin-slice illustrations when they are explicitly marked as **illustrative** and not executable truth
 - temporary cross-surface examples that do not yet have a stronger owner surface, provided they are easy to move later
+- cross-lane walkthrough packs that explain how examples relate to `contracts/`, `tests/`, `pipelines/`, or `tools/` without becoming the executable owner surface
 
 A useful heuristic:
 
@@ -163,6 +168,8 @@ The following do **not** belong here:
 | large binaries, model weights, or convenience dumps | high weight, low review value | owner-specific artifact or storage surface |
 | narrative claims presented as fact without evidence, limits, or provenance context | violates KFM’s cite-or-abstain posture | docs or review drafts until evidence is attached |
 | lane-specific example material dropped at `examples/` root even though an existing sublane fits better | weakens routing clarity and makes the parent lane noisy | `./api/`, `./story/`, `./thin_slice/`, or `./ui/` |
+| lane-local watcher recipes, executable pipeline smoke fixtures, or publish helpers whose real owner is a pipeline lane | these stop being examples once they drive execution or lane proof | `../pipelines/` |
+| reusable validator, diff, attestation, or catalog-QA assets tied to a helper lane | helper behavior should stay reviewable with the helper that emits it | `../tools/` |
 
 > [!WARNING]
 > If a file is needed to make CI fail, policy decide, promotion pass, or runtime truth resolve, it probably has a stronger owner than `examples/`.
@@ -230,8 +237,8 @@ Inspect stronger owner surfaces before adding new example material:
 
 ```bash
 # Check likely owner lanes first
-ls -la contracts schemas policy tests docs data apps
-find contracts schemas policy tests docs data apps -maxdepth 2 -type f | sort | sed -n '1,200p'
+ls -la contracts schemas policy tests docs data apps pipelines tools
+find contracts schemas policy tests docs data apps pipelines tools -maxdepth 2 -type f | sort | sed -n '1,200p'
 ```
 
 Use a verification-first local flow before documenting behavior as fact:
@@ -247,7 +254,7 @@ Before adding a new artifact, answer these questions:
 
 1. Is it public-safe and rights-clear?
 2. Is it obviously non-authoritative?
-3. Does it belong more naturally with `contracts/`, `schemas/`, `policy/`, `tests/`, `docs/`, `data/`, or `apps/`?
+3. Does it belong more naturally with `contracts/`, `schemas/`, `policy/`, `tests/`, `docs/`, `data/`, `apps/`, `pipelines/`, or `tools/`?
 4. Does one of the existing nested example lanes already fit it?
 5. If it demonstrates governed behavior, where is the owner surface that proves it?
 6. Can it be deleted or moved later without breaking the repo’s source of truth?
@@ -266,6 +273,8 @@ Decide where the **source of truth** lives before you decide where the example s
 - Governed data examples and manifest-linked objects usually belong with `../data/`.
 - UI walkthroughs and long-form explanation usually belong with `../docs/`.
 - Runtime-owned behavior examples often belong with `../apps/`.
+- Lane-local execution, watcher, or publish-helper examples often belong with [`../pipelines/README.md`](../pipelines/README.md).
+- Reusable validation, diff, attestation, catalog-QA, or probe examples often belong with [`../tools/README.md`](../tools/README.md).
 
 Put something in `examples/` only when its value is **instructional**, **cross-surface or lane-specific**, and **public-safe**.
 
@@ -333,7 +342,7 @@ flowchart TD
     A[Candidate example asset] --> B{Public-safe and rights-clear?}
     B -- No --> X[Do not store in examples/<br/>Route through intake, review, quarantine, redaction, or no-Git placement]
     B -- Yes --> C{Authoritative,<br/>merge-blocking,<br/>or release-bearing?}
-    C -- Yes --> Y[Store with stronger owner surface<br/>contracts · schemas · policy · tests · docs · data · apps]
+    C -- Yes --> Y[Store with stronger owner surface<br/>contracts · schemas · policy · tests · docs · data · apps · pipelines · tools]
     C -- No --> D{Clearly fits an existing<br/>example sublane?}
     D -- API --> E[examples/api/]
     D -- Story --> F[examples/story/]
@@ -362,6 +371,8 @@ flowchart TD
 | UI shell states, Evidence Drawer walkthroughs, review-state screenshots | `./ui/` | `../apps/`, `../tests/`, or `../docs/` | UI examples should not clutter the parent lane |
 | End-to-end slice walkthroughs | `./thin_slice/` | `../docs/`, `../tests/`, or `../data/` | Slice examples deserve their own nested lane |
 | Hydrology-first instructional examples | `./thin_slice/hydrology/` | `../contracts/`, `../schemas/`, `../tests/`, `../data/`, or `../docs/` | Hydrology already has a nested example lane and remains the clearest first thin slice |
+| Lane-local pipeline walkthrough, watcher artifact, or execution helper demo | `./thin_slice/` only when it is purely explanatory | `../pipelines/` | If it becomes lane-owned proof or runnable lane logic, the pipeline lane is the better home |
+| Reusable validator / diff / attestation / catalog-QA example | `examples/` root only when it is a cross-surface teaching aid | `../tools/` | Reusable helper behavior should harden with the helper surface that actually enforces or emits it |
 | Cross-surface demo pack touching more than one example lane | `examples/` root or a clearly named subpack | varies by artifact family | Keep it at the root only when the pack genuinely spans lanes |
 
 ### Authority placement matrix
@@ -374,6 +385,8 @@ flowchart TD
 | Invalid fixture / failure case | Sometimes | `../tests/` or `../contracts/` | Negative behavior should stay executable somewhere reviewable |
 | Example `EvidenceBundle` / envelope sketch | Yes, if clearly illustrative | `../contracts/`, `../data/`, or runtime docs | Useful for explanation; risky if treated as live truth |
 | Hydrology thin-slice walkthrough asset | Sometimes | `../tests/`, `../data/`, or `../docs/runbooks/` once it hardens | Good for explanation; poor home for executable proof |
+| Lane-local ingest / watcher / publish helper example | Sometimes | `../pipelines/` | Fine as a demo early; should move once it becomes runnable lane proof |
+| Validator / diff / attestation helper example | Sometimes | `../tools/` | Useful for onboarding at first; reusable helper-owned assets belong with the helper lane |
 | Canonical dataset snapshot | No | `../data/` | Examples must not replace governed truth |
 | Release manifest / proof pack / correction artifact | No | release, runtime, or governed data surface | These are operational trust objects |
 | Secret-bearing or rights-unclear material | No | nowhere in Git until resolved | Violates KFM trust posture |
@@ -428,7 +441,7 @@ Because KFM separates examples from authoritative truth. Governed data belongs i
 
 ### Where should executable fixtures live?
 
-With the owner that enforces them. In practice that usually means `../tests/`, `../schemas/`, `../contracts/`, or `../policy/`.
+With the owner that enforces them. In practice that usually means `../tests/`, `../schemas/`, `../contracts/`, or `../policy/`; lane-local pipeline proof may belong with `../pipelines/`, and helper-specific validation assets may belong with `../tools/` when those are the actual enforcing surfaces.
 
 ### Why mention hydrology here at all?
 
@@ -453,7 +466,7 @@ title: Example title
 purpose: Short sentence explaining what this demonstrates
 lane: root | api | story | thin_slice | ui
 authority_status: illustrative
-owner_surface: ../contracts/ | ../schemas/ | ../policy/ | ../tests/ | ../docs/ | ../data/ | ../apps/
+owner_surface: ../contracts/ | ../schemas/ | ../policy/ | ../tests/ | ../docs/ | ../data/ | ../apps/ | ../pipelines/ | ../tools/
 redaction_status: public_safe
 source_links:
   - ../README.md
@@ -479,6 +492,8 @@ Prefer names that tell a reviewer what the asset is doing:
 - `focus-abstain-example.json`
 - `story-citation-example.md`
 - `catalog-closure-example.json`
+- `pipeline-smoke-example.yaml`
+- `validator-failure-example.json`
 - `redacted-feature-example.geojson`
 
 Avoid names that imply authority or production state:
