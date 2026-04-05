@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: NEEDS_VERIFICATION__YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION__public|restricted|...
-related: [../../README.md, ../README.md, ./README.md, ../standards/README.md, ../standards/markdown-rules.md, ./TEMPLATE__API_CONTRACT_EXTENSION.md, ./TEMPLATE__STORY_NODE_V3.md, ../../.github/CODEOWNERS]
+related: [../../README.md, ../README.md, ./README.md, ../standards/README.md, ../standards/KFM_MARKDOWN_WORK_PROTOCOL.md, ../standards/markdown-rules.md, ./TEMPLATE__API_CONTRACT_EXTENSION.md, ./TEMPLATE__STORY_NODE_V3.md, ../../.github/CODEOWNERS]
 tags: [kfm, template, docs, markdown]
-notes: [Reusable scaffold for governed KFM docs; public-main path and adjacent template surfaces were directly opened during this revision; confirm doc_id, dates, policy_label, branch parity, and any narrower co-owners before merge or instantiation.]
+notes: [Reusable scaffold for governed KFM docs; current public-main file plus adjacent template and standards surfaces were directly opened during this revision; confirm doc_id, dates, policy_label, branch parity, and any narrower co-owners before merge or instantiation.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Universal Document Template
@@ -21,7 +21,7 @@ Reusable scaffold for governed KFM Markdown docs that need explicit scope, evide
 > **Doc status:** draft scaffold  
 > **Owners:** `@bartytime4life` *(current broad `/docs/` owner on public `main`; add narrower co-owners only when confirmed)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![kind](https://img.shields.io/badge/kind-universal--doc--template-2f81f7) ![posture](https://img.shields.io/badge/posture-evidence--first-8250df) ![truth](https://img.shields.io/badge/truth-explicit--labels-1f883d) ![meta](https://img.shields.io/badge/meta-KFM__META__BLOCK__V2-9a6700)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence posture](#baseline-and-evidence-posture) · [Evidence boundary](#current-evidence-boundary) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Field guide](#field-guide) · [Review checklist](#review-checklist--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Template selection](#template-selection) · [Evidence posture](#baseline-and-evidence-posture) · [Evidence boundary](#current-evidence-boundary) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Field guide](#field-guide) · [Review checklist](#review-checklist--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` *(confirmed on public `main`; mounted-checkout parity still **NEEDS VERIFICATION**)* → upstream: [`../../README.md`](../../README.md), [`../README.md`](../README.md), [`./README.md`](./README.md), [`../standards/README.md`](../standards/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream: instantiated standard docs across `docs/` that do not fit a more specialized template.
 
 > [!IMPORTANT]
@@ -44,9 +44,21 @@ A good use of this file makes uncertainty visible, keeps ownership traceable, an
 | Primary role | Reusable standard-doc scaffold for governed KFM Markdown |
 | Best used for | Standard docs that need explicit scope, evidence basis, review hooks, and KFM truth labels |
 | Use instead of this | [`./TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) for contract-extension docs; [`./TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) for Story Node docs |
-| Upstream guidance | [`./README.md`](./README.md), [`../README.md`](../README.md), [`../standards/README.md`](../standards/README.md), [`../standards/markdown-rules.md`](../standards/markdown-rules.md), [`../../README.md`](../../README.md) |
+| Upstream guidance | [`./README.md`](./README.md), [`../README.md`](../README.md), [`../standards/README.md`](../standards/README.md), [`../standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](../standards/KFM_MARKDOWN_WORK_PROTOCOL.md), [`../standards/markdown-rules.md`](../standards/markdown-rules.md), [`../../README.md`](../../README.md) |
 | Typical downstream outputs | Architecture references, governance notes, runbooks, standards, analyses, explanatory docs, index docs, and review-ready synthesis docs |
 | Instantiation rule | Copy and rename near the owning surface; do not fill canonical content directly inside `docs/templates/` unless this template itself is being maintained |
+
+## Template selection
+
+| Start here when the document is mainly about... | Prefer | Why |
+| --- | --- | --- |
+| A cross-cutting standard doc, runbook, governance note, analysis, or architecture reference with no narrower local scaffold | `./TEMPLATE__KFM_UNIVERSAL_DOC.md` | This file is the general-purpose governed template for standard KFM docs |
+| A contract-extension or API-shape change note | [`./TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) | The contract-extension scaffold keeps interface and change-surface detail closer to the center |
+| A Story Node authoring surface | [`./TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) | The Story Node template is purpose-built for narrative, evidence, and scene-bearing work |
+| A directory README or index surface with no better local pattern | This file **plus** the README-like add-ons in the appendix | The universal scaffold already includes the accountability core; the appendix supplies tree, quickstart, usage, and FAQ starters |
+
+> [!TIP]
+> Choose the smallest template that still matches the real job of the document. Pull sections forward from this file only when the specialized scaffold would otherwise hide an important evidence or review boundary.
 
 ## Accepted inputs
 
@@ -81,6 +93,7 @@ For repo-local structure, naming, and visual rhythm, the nearest baseline is the
 | `docs/templates/README.md` | Template-boundary rules, reusable-scaffold posture, and local documentation rhythm |
 | `docs/README.md` | Broader documentation-plane posture, verification language, and repo-native GitHub structure |
 | `docs/standards/README.md` | Adjacent standards rhythm, public-main verification posture, and cross-link expectations |
+| `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Repo-native Markdown authoring protocol that clarifies how doctrine, placeholders, and review gates should appear in committed docs |
 | `docs/standards/markdown-rules.md` | Authoring protocol, source hierarchy, and `KFM_META_BLOCK_V2` requirement |
 | `.github/CODEOWNERS` | Broad ownership signal for `/docs/` and this path |
 | Attached KFM doctrine corpus | Truth-path discipline, trust membrane, authoritative-versus-derived split, Kansas-first posture, and review-visible uncertainty |
@@ -94,7 +107,7 @@ For repo-local structure, naming, and visual rhythm, the nearest baseline is the
 | --- | --- | --- |
 | This exact file is present on public `main` at `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | **CONFIRMED** | The correct move is to revise this template in place, not invent a competing universal template |
 | `docs/templates/README.md` is present and already defines `docs/templates/` as a governed scaffold shelf | **CONFIRMED** | The local template surface is real and should stay the main upstream anchor |
-| `docs/standards/README.md` and `docs/standards/markdown-rules.md` are present on public `main` | **CONFIRMED** | The standards surface and Markdown authoring rules are real, not inferred |
+| `docs/standards/README.md`, `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`, and `docs/standards/markdown-rules.md` are present on public `main` | **CONFIRMED** | The standards surface and Markdown authoring rules are real, not inferred, and this template should stay aligned with both the protocol and the rules page |
 | `TEMPLATE__API_CONTRACT_EXTENSION.md` and `TEMPLATE__STORY_NODE_V3.md` are present as narrower sibling templates | **CONFIRMED** | This universal template should explicitly steer authors toward more specific scaffolds when they fit better |
 | `.github/CODEOWNERS` currently maps `/docs/` to `@bartytime4life` | **CONFIRMED** | Broad ownership can be named safely in this file |
 | Mounted-checkout parity, file history dates, registry-assigned `doc_id`, KFM `policy_label`, and any narrower co-owners | **NEEDS VERIFICATION** | Keep placeholders visible instead of guessing |
@@ -104,13 +117,13 @@ For repo-local structure, naming, and visual rhythm, the nearest baseline is the
 ## Quickstart
 
 1. If you are maintaining the template itself, edit this file in place.
-2. If you are instantiating a real document, copy the file to the owning surface and rename it for the real topic.
+2. If you are instantiating a real document, first check whether the API-contract or Story Node template fits better; if not, copy this file to the owning surface and rename it for the real topic.
 3. Replace the KFM meta block placeholders first: `doc_id`, dates, policy label, related links, and owners.
 4. Replace the title and one-line purpose so the document announces its job immediately.
 5. Keep the accountability sections unless there is a strong reason to omit them: Scope, Repo fit, Baseline and evidence posture, Current evidence boundary, Accepted inputs, Exclusions, Diagram, and Review checklist.
 6. Delete unused optional blocks rather than leaving dead filler in the page.
 7. Link claims to the owning contracts, schemas, policy docs, tests, workflows, or implementation files where possible. When direct proof is missing, keep the claim visibly qualified.
-8. If the instantiated file is also a directory README, add the optional README-like blocks from the appendix.
+8. If the instantiated file is also a directory README, add the optional README-like blocks from the appendix and keep the top-of-file impact block intact.
 
 ```bash
 # illustrative example — adjust the destination path before use
@@ -317,6 +330,7 @@ flowchart LR
 | `policy_label` | The owning governance or publication posture | The correct label is still under review | Keep this visible if release posture matters |
 | `related` | Stable relative links to upstream and downstream docs | The owning relationships are not stable yet | Prefer relative links over raw URLs |
 | `status` | Actual lifecycle stage of the instantiated doc | The doc is still in review | Keep top-block status and meta-block status conceptually aligned |
+| Template choice | The real job of the document and the nearest available scaffold | You have not yet checked the specialized siblings | Prefer the specialized template when the document is clearly contract- or Story-Node-shaped |
 | Evidence labels | Verified claim posture | The claim has not been checked yet | Do not flatten `PROPOSED` or `UNKNOWN` into `CONFIRMED` |
 | Repo fit paths | Actual destination path and nearby owning surfaces | The file has not been moved into its final location | Update these links immediately after placement |
 
@@ -359,6 +373,13 @@ No. The template can only make the verification boundary harder to hide. Mounted
 
 </details>
 
+<details>
+<summary><strong>Does the Markdown work protocol replace this template?</strong></summary>
+
+No. [`../standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](../standards/KFM_MARKDOWN_WORK_PROTOCOL.md) explains how KFM Markdown should be authored and reviewed; this file is one reusable scaffold that helps apply those rules in a concrete standard-doc shape.
+
+</details>
+
 [Back to top](#kfm-universal-document-template)
 
 ## Appendix
@@ -366,7 +387,7 @@ No. The template can only make the verification boundary harder to hide. Mounted
 <details>
 <summary><strong>Optional README-like add-ons</strong></summary>
 
-Use these blocks when the instantiated document is also acting as a directory README or index surface.
+Use these blocks when the instantiated document is also acting as a directory README or index surface. Keep the required impact block at the top of the instantiated README even when you trim other sections.
 
 ### Optional directory tree
 
