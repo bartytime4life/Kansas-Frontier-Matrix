@@ -3,10 +3,10 @@
 Public-safe, non-authoritative hydrology thin-slice examples for Kansas Frontier Matrix.
 
 > **Status:** Experimental  
-> **Owners:** `@bartytime4life`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-examples%2Fthin__slice%2Fhydrology-blue) ![trust](https://img.shields.io/badge/trust-non--authoritative-lightgrey) ![slice](https://img.shields.io/badge/slice-hydrology--first-0a7ea4)  
+> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` fallback for `/examples/`; re-check the working branch before merge if narrower ownership lands)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-examples%2Fthin__slice%2Fhydrology-2d6cdf) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![slice](https://img.shields.io/badge/slice-hydrology--first-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `examples/thin_slice/hydrology/README.md` · upstream [../README.md](../README.md) · [../../README.md](../../README.md) · [../../../README.md](../../../README.md) · stronger owner surfaces [../../../contracts/README.md](../../../contracts/README.md) · [../../../schemas/README.md](../../../schemas/README.md) · [../../../tests/README.md](../../../tests/README.md) · [../../../policy/README.md](../../../policy/README.md) · [../../../docs/standards/README.md](../../../docs/standards/README.md)
+> **Repo fit:** path `examples/thin_slice/hydrology/README.md` · parent [../README.md](../README.md) · examples root [../../README.md](../../README.md) · repo root [../../../README.md](../../../README.md) · gatehouse [../../../.github/README.md](../../../.github/README.md) · sibling example lanes [../../api/README.md](../../api/README.md) · [../../story/README.md](../../story/README.md) · [../../ui/README.md](../../ui/README.md) · stronger owner surfaces [../../../contracts/README.md](../../../contracts/README.md) · [../../../schemas/README.md](../../../schemas/README.md) · [../../../tests/README.md](../../../tests/README.md) · [../../../policy/README.md](../../../policy/README.md) · [../../../docs/standards/README.md](../../../docs/standards/README.md)
 
 > [!IMPORTANT]
 > This directory is **example space**, not canonical truth space.
@@ -22,13 +22,16 @@ Public-safe, non-authoritative hydrology thin-slice examples for Kansas Frontier
 > - **UNKNOWN** — cannot be verified from the current visible repo and attached evidence
 > - **NEEDS VERIFICATION** — worth checking at merge time because repo state may have moved
 
+> [!NOTE]
+> This README is grounded in the current public example tree plus March–April 2026 KFM doctrine. The working branch you are changing still outranks public `main` for exact inventory, ownership, and neighboring links.
+
 ---
 
 ## Scope
 
 `examples/thin_slice/hydrology/` is the **illustrative lane** for the KFM hydrology-first thin slice.
 
-Its job is to help contributors, reviewers, and maintainers understand what a real hydrology slice should prove end to end without pretending that this folder is the real runtime, the real publication lane, or the real proof-object registry.
+In doctrine, hydrology is not a decorative topic bucket. It is a Kansas operating lane covering **surface water, groundwater, stream gages, reservoirs, flood stages, water-quality measurements, watersheds, and water governance**. In the example tree, this folder has a narrower job: help contributors, reviewers, and maintainers inspect what a real hydrology slice should prove end to end without pretending that this folder is the runtime, the publication lane, or the proof-object registry.
 
 In practice, that means this directory is a good place for:
 
@@ -45,6 +48,28 @@ This directory is **not** where authoritative hydrology state should live.
 
 ## Repo fit
 
+### Path and role
+
+| Field | Value |
+|---|---|
+| Path | `examples/thin_slice/hydrology/README.md` |
+| Role | Domain-anchored thin-slice example README |
+| Parent lane | [`examples/thin_slice/`](../README.md) |
+| Examples root | [`examples/`](../../README.md) |
+| Repo root doctrine anchor | [`../../../README.md`](../../../README.md) |
+| Gatehouse context | [`../../../.github/README.md`](../../../.github/README.md) · [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) |
+| Stronger owner surfaces | [`../../../contracts/`](../../../contracts/README.md) · [`../../../schemas/`](../../../schemas/README.md) · [`../../../policy/`](../../../policy/README.md) · [`../../../tests/`](../../../tests/README.md) · [`../../../docs/standards/`](../../../docs/standards/README.md) |
+| Sibling example lanes | [`../../api/`](../../api/README.md) · [`../../story/`](../../story/README.md) · [`../../ui/`](../../ui/README.md) |
+
+### Current public context
+
+| Surface | Current public state | Why it matters here |
+|---|---|---|
+| `examples/` | `README.md`, `api/`, `story/`, `thin_slice/`, and `ui/` are visible | Hydrology sits inside a broader example family, not a one-off docs island |
+| `examples/thin_slice/` | `README.md` plus nested `hydrology/` are visible | Hydrology is currently the only confirmed thin-slice sublane on public `main` |
+| `examples/thin_slice/hydrology/` | `README.md` only | Example assets beyond this README are still **PROPOSED** |
+| `/.github/CODEOWNERS` | Current public fallback covers `/examples/` with `@bartytime4life` | The owner label here is grounded, but still worth re-checking on the branch you merge |
+
 ### What this directory is
 
 A compact, repo-local place to document and demonstrate the **hydrology-first** example lane inside `examples/thin_slice/`.
@@ -57,19 +82,8 @@ Not a replacement for:
 - schema governance in [`../../../schemas/`](../../../schemas/README.md)
 - merge-blocking fixtures in [`../../../tests/`](../../../tests/README.md)
 - policy bundle ownership in [`../../../policy/`](../../../policy/README.md)
-- release-bearing docs and standards in [`../../../docs/`](../../../docs/standards/README.md)
+- release-bearing docs and standards in [`../../../docs/standards/`](../../../docs/standards/README.md)
 - runtime behavior owned by apps, services, or governed APIs
-
-### Repo-fit table
-
-| Dimension | This directory | Stronger owner if material becomes authoritative |
-|---|---|---|
-| Role | Example lane for a hydrology thin slice | Varies by artifact family |
-| Trust posture | Non-authoritative, explanatory, public-safe | Governed, machine-checked, release-bearing |
-| Typical contents | Redacted payload examples, screenshots, sequence notes, negative-path examples | Schemas, fixtures, emitters, policies, proofs, release objects |
-| Best audience | Contributors, reviewers, maintainers | Runtime, policy, CI, release, steward workflows |
-| Update rhythm | Lightweight and review-friendly | Gate-driven and compatibility-sensitive |
-| Failure risk | Documentation drift | Trust drift, release drift, policy drift |
 
 ### Why hydrology lives here at all
 
@@ -134,14 +148,21 @@ The following do **not** belong here.
 
 ## Directory tree
 
-### Current verified shape
+### Current public example topology
 
 ```text
 examples/
-└── thin_slice/
-    ├── README.md
-    └── hydrology/
-        └── README.md
+├── README.md
+├── api/
+│   └── README.md
+├── story/
+│   └── README.md
+├── thin_slice/
+│   ├── README.md
+│   └── hydrology/
+│       └── README.md
+└── ui/
+    └── README.md
 ```
 
 ### PROPOSED growth shape for this folder
@@ -187,13 +208,19 @@ That keeps example assets from being mistaken for authoritative artifacts with c
 Use these commands when reviewing or extending this lane.
 
 ```bash
-# Inspect the immediate example lane
+# Inspect the current public example family shape in a checkout
+ls -la examples
+ls -la examples/thin_slice
 ls -la examples/thin_slice/hydrology
 
-# Inspect nearby README surfaces for tone, ownership, and placement
+# Inspect the nearest example README surfaces for tone, ownership, and routing
 sed -n '1,240p' examples/README.md
 sed -n '1,240p' examples/thin_slice/README.md
-sed -n '1,260p' examples/thin_slice/hydrology/README.md
+sed -n '1,280p' examples/thin_slice/hydrology/README.md
+
+# Inspect current owner and gatehouse context
+sed -n '1,120p' .github/CODEOWNERS
+sed -n '1,220p' .github/README.md
 
 # Inspect stronger owner surfaces before adding example files
 sed -n '1,240p' contracts/README.md
@@ -211,7 +238,20 @@ When adding new material, review the owner surface first. If the file should bec
 
 ## Usage
 
-### 1. Start from the governed chain, not the screenshot
+### 1. Pick the right example lane before you add anything
+
+Hydrology belongs here when the point of the example is the **hydrology-first slice** itself.
+
+Use a sibling lane instead when the example is primarily about:
+
+| Example need | Best lane | Why |
+|---|---|---|
+| Governed request/response examples | [`../../api/`](../../api/README.md) | API boundary examples already have their own example lane |
+| Story Node sidecars, citation behavior, or narrative example packs | [`../../story/`](../../story/README.md) | Story-shaped examples belong in the story lane |
+| Trust-visible shell walkthroughs, mock UI states, or view logic demos | [`../../ui/`](../../ui/README.md) | UI-specific illustrative assets belong in the UI lane |
+| Domain-anchored, end-to-end hydrology slice explanation | `./` | This folder exists to explain that thin slice specifically |
+
+### 2. Start from the governed chain, not the screenshot
 
 Any example here should point back to the hydrology-first chain, not just to a polished map.
 
@@ -226,7 +266,7 @@ The minimum story this directory should help a reader understand is:
 7. runtime answers stay finite and honest
 8. correction and rollback remain visible
 
-### 2. Pair happy-path and negative-path examples
+### 3. Pair happy-path and negative-path examples
 
 A trustworthy example pack should never show only the green path.
 
@@ -237,7 +277,7 @@ For every outward-facing example, prefer a paired negative example:
 - **normal detail** paired with **generalized**
 - **current** paired with **superseded** or **correction-pending**
 
-### 3. Keep examples public-safe
+### 4. Keep examples public-safe
 
 Hydrology may be comparatively public-safe, but that does not erase KFM review burdens.
 
@@ -249,7 +289,7 @@ Keep example material:
 - explicit about freshness basis
 - explicit about correction state
 
-### 4. Route examples back to stronger owner surfaces
+### 5. Route examples back to stronger owner surfaces
 
 If you add an example file here, add a short note naming the stronger owner surface.
 
@@ -261,7 +301,7 @@ For example:
 - runbook or merge guidance → `docs/`
 - runtime payload owned by actual service code → app/service package plus contract surface
 
-### 5. Prefer reviewable text first
+### 6. Prefer reviewable text first
 
 Before adding images or binaries, consider whether a compact Markdown table, JSON sample, or Mermaid flow explains the point more clearly.
 
@@ -294,21 +334,31 @@ flowchart LR
         A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K
     end
 
-    subgraph Example_Lane["examples/thin_slice/hydrology/"]
-        X[README + redacted example payloads + public-safe views]
+    subgraph Example_Family["Current example family"]
+        X[examples/]
+        Y[examples/thin_slice/]
+        Z[examples/thin_slice/hydrology/]
+        API[examples/api/]
+        STORY[examples/story/]
+        UI[examples/ui/]
+        X --> Y --> Z
+        X --> API
+        X --> STORY
+        X --> UI
     end
 
-    X -. illustrates .-> A
-    X -. illustrates .-> I
-    X -. illustrates .-> J
-    X -. illustrates .-> K
-    X -. never replaces .-> G
+    Z -. illustrates .-> A
+    Z -. illustrates .-> I
+    Z -. illustrates .-> J
+    Z -. illustrates .-> K
+    Z -. never replaces .-> G
 ```
 
 The key distinction is deliberate:
 
 - the **real governed path** emits trust-bearing objects
-- this **examples lane** only documents and demonstrates those objects
+- this **examples family** documents and demonstrates those objects
+- this **hydrology lane** is only one sublane inside that broader example surface
 
 [Back to top](#hydrology)
 
@@ -357,6 +407,7 @@ A healthy README for this directory should make the following true.
 
 - [ ] The file is no longer a one-line scaffold.
 - [ ] The current verified tree is stated plainly before any proposed growth shape.
+- [ ] The current public sibling lanes are visible enough that contributors do not dump API, story, or UI examples into hydrology by default.
 - [ ] Every future sample file in this directory is labeled **illustrative**, **redacted**, or **example**.
 - [ ] No file here is treated as the sole authoritative source for contracts, policy, releases, or runtime behavior.
 - [ ] Any added runtime examples include at least one honest negative outcome.
@@ -391,6 +442,10 @@ Because it is map-native, time-aware, comparatively public-safe, and strong enou
 ### Should valid/invalid schema fixtures live here?
 
 Only when they are clearly **instructional examples**. Merge-blocking or authoritative fixtures belong in the proper contract/schema/test owner surfaces.
+
+### Should hydrology API examples live here?
+
+Only when the point is the **hydrology slice story** rather than the governed API boundary itself. Generic request/response envelopes, auth examples, or route-shape examples belong in [`../../api/`](../../api/README.md).
 
 ### Should I use canonical artifact filenames here?
 
@@ -437,7 +492,8 @@ Before approving changes under `examples/thin_slice/hydrology/`, ask:
 - Could a reviewer mistake this for an authoritative emitted artifact?
 - Does the example stay public-safe?
 - Does it preserve KFM’s negative-outcome honesty?
-- If repo structure changed, do the upstream/downstream links in this README still resolve?
+- Does this example really belong in hydrology, or did it drift into `examples/api/`, `examples/story/`, or `examples/ui/` territory?
+- If repo structure changed, do the upstream, sibling, and stronger-owner links in this README still resolve?
 
 </details>
 
