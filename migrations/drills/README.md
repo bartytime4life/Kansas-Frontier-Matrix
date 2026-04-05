@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS_VERIFICATION
 updated: NEEDS_VERIFICATION
 policy_label: NEEDS_VERIFICATION
-related: [migrations/README.md, migrations/waves/README.md, migrations/templates/README.md, .github/CODEOWNERS, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
+related: [migrations/README.md, migrations/waves/README.md, migrations/templates/README.md, migrations/templates/migration-packet.md, .github/CODEOWNERS, .github/workflows/README.md, .github/watchers/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
 tags: [kfm, migrations, drills, rollback, restore, correction, verification]
-notes: [meta-block identity and date fields remain NEEDS_VERIFICATION; owner is grounded in current public CODEOWNERS coverage for /migrations/]
+notes: [doc_id, created, updated, and policy_label remain NEEDS_VERIFICATION; owner is grounded in current public CODEOWNERS coverage for /migrations/; current public main confirms drills is README-only while templates already includes migration-packet.md]
 [/KFM_META_BLOCK_V2] -->
 
 # `drills`
@@ -22,11 +22,11 @@ Exercised verification, rollback, restore, and correction records for governed K
 > Authority posture: operational / supporting  
 > Owners: `@bartytime4life` (current public `/migrations/` coverage via [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS))  
 > [![status](https://img.shields.io/badge/status-experimental-1f6feb?style=flat-square)](#) [![lifecycle](https://img.shields.io/badge/doc-draft-a371f7?style=flat-square)](#) [![surface](https://img.shields.io/badge/surface-drills-0a7ea4?style=flat-square)](#) [![trust](https://img.shields.io/badge/trust-evidence--bounded-2da44e?style=flat-square)](#) [![repo](https://img.shields.io/badge/repo-public--main-57606a?style=flat-square)](#)  
-> Repo fit: path `migrations/drills/README.md` · parent [`../README.md`](../README.md) · sibling [`../waves/README.md`](../waves/README.md) · sibling [`../templates/README.md`](../templates/README.md)  
+> Repo fit: path `migrations/drills/README.md` · parent [`../README.md`](../README.md) · sibling [`../waves/README.md`](../waves/README.md) · sibling [`../templates/README.md`](../templates/README.md) · related starter [`../templates/migration-packet.md`](../templates/migration-packet.md)  
 > Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current repo signal](#current-repo-signal) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public `main` confirms `migrations/drills/` exists and currently exposes `README.md` only. The parent [`../README.md`](../README.md) and sibling [`../waves/README.md`](../waves/README.md) document a starter drill-packet shape, but the branch does not yet prove a populated drill archive, runner hooks, or automated drill gates.
+> Current public `main` confirms `migrations/drills/` exists and currently exposes `README.md` only. The parent [`../README.md`](../README.md) and sibling [`../waves/README.md`](../waves/README.md) document a starter drill-packet shape, while [`../templates/migration-packet.md`](../templates/migration-packet.md) is the reusable planning/review starter for migration-bearing change, not the exercised drill record itself.
 
 > [!WARNING]
 > A drill is not a migration plan, not a reusable scaffold, and not a quiet ops note. In KFM it is the exercised evidence that rollback, restore, correction, and visible trust-state propagation were actually rehearsed and inspected.
@@ -61,8 +61,10 @@ In KFM terms, `drills/` should help answer questions such as:
 | Path | `migrations/drills/README.md` |
 | Parent surface | [`../README.md`](../README.md) |
 | Sibling surfaces | [`../waves/README.md`](../waves/README.md) for packetized change waves · [`../templates/README.md`](../templates/README.md) for reusable starters |
+| Related starter scaffold | [`../templates/migration-packet.md`](../templates/migration-packet.md) for review/planning structure that a drill may cite, but must not replace |
 | Adjacent trust surfaces | [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) |
-| Current public tree state | `migrations/` currently exposes `README.md`, `drills/`, `templates/`, and `waves/`; `migrations/drills/` currently exposes `README.md` only |
+| Adjacent control-plane docs | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · [`../../.github/watchers/README.md`](../../.github/watchers/README.md) |
+| Current public tree state | `migrations/` currently exposes `README.md`, `drills/`, `templates/`, and `waves/`; `migrations/templates/` currently exposes `README.md` and `migration-packet.md`; `migrations/drills/` currently exposes `README.md` only |
 | Ownership signal | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) currently assigns `/migrations/` to `@bartytime4life` |
 | Primary audience | Maintainers, reviewers, platform engineers, data engineers, release stewards, and anyone verifying recovery or correction posture |
 | Update trigger | Any change to drill classes, minimum evidence, visible-state checks, naming rules, or packet layout expectations |
@@ -77,6 +79,7 @@ This directory is for exercised records that sit **after** planning and **beside
 - correction visibility checks
 - stale / superseded / withdrawn propagation checks
 - redacted screenshots, evidence pointers, and notes needed to interpret those outcomes
+- links back to the related wave, release packet, or migration packet that defined the seam being exercised
 
 ### What this README must do
 
@@ -95,6 +98,7 @@ This README should make the lane legible even when the directory is still sparse
 | --- | --- | --- |
 | Drill packet directory | `<yyyymmdd>_<slug>/` | Keeps rehearsals grouped as reviewable units |
 | Packet index | `README.md` | Gives a human-readable summary of what was exercised |
+| Related wave or migration-packet refs | links to `../waves/` packets or to a packet derived from [`../templates/migration-packet.md`](../templates/migration-packet.md) | Keeps the exercised outcome joined to the seam that was planned and reviewed |
 | Verification note | `post-deploy-verification.md` | Records cutover checks and visible post-change behavior |
 | Correction note | `correction-visibility.md` | Records whether correction-pending, corrected, withdrawn, or superseded states were actually visible |
 | Rollback note | `rollback.md` | Useful when rollback is the thing being proven |
@@ -136,9 +140,10 @@ The following do **not** belong in `drills/`:
 | Exclusion | Put it here instead | Why |
 | --- | --- | --- |
 | Planned change packet | [`../waves/`](../waves/README.md) | Planning and exercised evidence should stay distinct |
-| Reusable starter skeleton | [`../templates/`](../templates/README.md) | Templates should not be mixed with real outcomes |
+| Reusable starter skeleton | [`../templates/`](../templates/README.md) or [`../templates/migration-packet.md`](../templates/migration-packet.md) | Starters should not be mixed with real outcomes |
 | Canonical release proof pack | release / proof-pack surface | Drill packets may reference proof packs but should not become the release system |
-| Workflow YAML or runner code | `../../.github/workflows/` or script/package surfaces | This directory is evidence-facing, not orchestration-facing |
+| Workflow YAML or runner code | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) or script/package surfaces | This directory is evidence-facing, not orchestration-facing |
+| Watcher scaffolding or emit-only lane docs | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | Packet evidence should not be confused with adjacent control-plane documentation |
 | Secrets, credentials, or live tokens | never commit here | Recovery proof must never require unsafe disclosure |
 | Raw backup blobs or large restore images | designated artifact / storage surfaces | Link to them; do not turn Git into a binary dump |
 | Unexercised ideas about future drills | issue, ADR, or template surfaces | Keep this lane outcome-oriented |
@@ -156,6 +161,8 @@ The following do **not** belong in `drills/`:
 | `migrations/drills/` currently exposes `README.md` only | **CONFIRMED** | Do not imply a populated drill inventory yet |
 | Parent migration docs already describe a date-first drill-packet pattern | **CONFIRMED documented guidance** | Align first real packet structure to parent doctrine unless branch reality proves otherwise |
 | `post-deploy-verification.md` and `correction-visibility.md` are the clearest already-suggested packet files | **CONFIRMED documented guidance** | These are the safest first packet subfiles |
+| `migrations/templates/` currently includes `migration-packet.md` | **CONFIRMED** | A reusable planning/review starter exists nearby, but it does not replace the exercised drill record |
+| Adjacent `.github/workflows/` and `.github/watchers/` lanes are README-only on current public `main` | **CONFIRMED adjacent control-plane signal** | Keep runner hooks and automated drill gates explicit rather than assumed |
 | `rollback.md`, `restore.md`, `evidence/`, and `screenshots/` as sub-structure | **PROPOSED** | Helpful additions, but not yet proven as mounted convention |
 | Public `CODEOWNERS` assigns `/migrations/` to `@bartytime4life` | **CONFIRMED** | Directory review ownership is visible, though packet-level ownership still needs to be recorded explicitly inside each drill |
 | Executed drill inventory, runner hooks, screenshot baselines, and automated drill gates | **UNKNOWN / NEEDS VERIFICATION** | Keep manual-vs-automated posture explicit in every packet |
@@ -170,7 +177,8 @@ migrations/
 ├── drills/
 │   └── README.md
 ├── templates/
-│   └── README.md
+│   ├── README.md
+│   └── migration-packet.md
 └── waves/
     └── README.md
 ```
@@ -195,6 +203,7 @@ migrations/
 - The **current public shape** is a repo-state snapshot.
 - The **suggested first real shape** is a starter pattern.
 - Only the packet directory, `README.md`, `post-deploy-verification.md`, and `correction-visibility.md` are the safest directly aligned guidance.
+- The nearby `migration-packet.md` starter is useful for planning and review context, but should not be copied in place of the drill record.
 - Additional subfiles are intentionally marked **PROPOSED** until branch reality, fixtures, or active runbooks confirm them.
 
 [Back to top](#drills)
@@ -210,19 +219,22 @@ git ls-files 'migrations/drills/**' | sort
 find migrations/drills -maxdepth 4 -type f | sort
 ```
 
-Check adjacent migration surfaces and ownership signals:
+Check adjacent migration surfaces and control-plane signals:
 
 ```bash
 sed -n '1,220p' migrations/README.md
 sed -n '1,220p' migrations/waves/README.md
 sed -n '1,220p' migrations/templates/README.md
+sed -n '1,220p' migrations/templates/migration-packet.md
+sed -n '1,220p' .github/workflows/README.md
+sed -n '1,220p' .github/watchers/README.md
 sed -n '1,160p' .github/CODEOWNERS
 ```
 
 Check whether the branch already contains migration-related automation or fixtures:
 
 ```bash
-git ls-files '.github/workflows/*.yml' '.github/workflows/*.yaml' | sort
+git ls-files '.github/workflows/**' '.github/watchers/**' | sort
 git grep -nE 'rollback|restore|correction|withdraw|supersed|stale|drill' -- . 2>/dev/null
 git ls-files 'tests/**' 'fixtures/**' | sort
 ```
@@ -257,6 +269,7 @@ A single packet may cover more than one class, but the lead class should be obvi
 Every drill should point to the exact seam it exercised:
 
 - related wave
+- related migration packet, if one exists
 - related release
 - related dataset version
 - related proof pack or manifest
@@ -283,6 +296,8 @@ Capture enough evidence to support later review:
 - before / after surface captures
 - linked logs, traces, and metrics
 - proof-object references
+- exact workflow / watcher evidence when automation participated
+- explicit manual execution notes when automation did **not** participate
 - human observations where automation is missing
 
 ### 5. Classify the result honestly
@@ -316,6 +331,7 @@ A useful drill packet ends with consequences:
 ```mermaid
 flowchart LR
     W[Wave or change packet] --> D[Execute drill]
+    P[Related migration packet or review starter] -.context only.-> D
     D --> V[Post-deploy or recovery verification]
     V --> Q{Trust-bearing behavior acceptable?}
 
@@ -358,11 +374,12 @@ The packet should make all four evidence edges legible:
 | `id` | Stable packet identity |
 | `class` | States what is being proven |
 | `date` / `owners` / `environment` | Gives operational accountability |
-| related wave / release / dataset refs | Joins the drill to the governed path |
+| related wave / packet / release / dataset refs | Joins the drill to the governed path |
 | affected surfaces | Keeps trust-visible inspection concrete |
 | preconditions and stop rule | Prevents vague “we tried it” reporting |
 | expected vs observed visible states | Separates intent from reality |
 | evidence refs | Keeps the packet inspectable without duplicating whole systems |
+| manual / workflow / watcher execution posture | Prevents silent inflation of automation confidence |
 | outcome | Forces explicit judgment |
 | follow-up | Converts rehearsal into architecture maintenance |
 
@@ -385,6 +402,7 @@ A drill packet is not done until the following checklist is satisfied.
 - [ ] Drill class is named clearly.
 - [ ] Exact commit, release, dataset version, or proof-pack refs are captured.
 - [ ] Packet-specific owner, environment, and date are recorded.
+- [ ] Related wave or migration-packet refs are recorded when they exist.
 - [ ] Preconditions and stop rule are explicit.
 - [ ] Affected surfaces are listed.
 - [ ] Expected visible states were written **before** execution.
@@ -411,6 +429,12 @@ For a first serious trust-bearing drill, prefer this higher bar:
 No.
 
 `waves/` is for packetized intended change. `drills/` is for exercised evidence after that change path is rehearsed or executed.
+
+### Is a drill the same as the `migration-packet.md` starter?
+
+No.
+
+[`../templates/migration-packet.md`](../templates/migration-packet.md) is a reusable planning/review scaffold for migration-bearing work. A drill packet records what was actually exercised, observed, and proven.
 
 ### Why keep rollback separate from correction?
 
@@ -461,7 +485,9 @@ status: partial
 owners:
   - NEEDS_VERIFICATION  # packet-specific operator/reviewer; do not inherit blindly from repo CODEOWNERS
 environment: staging
+execution_mode: manual  # manual | workflow | watcher | mixed
 related_wave: wave-0001
+related_migration_packet: NEEDS_VERIFICATION
 related_release: release-2026-03-24
 related_proof_objects:
   - release_manifest:<ref>
@@ -516,16 +542,5 @@ notes:
 ```
 
 Use the smallest set that makes the rehearsal inspectable. Do not create empty ceremony files just to make the tree look complete.
-
-</details>
-
-<details>
-<summary><strong>Short review prompts</strong></summary>
-
-- What did this drill prove that was previously only asserted?
-- Which trust-bearing seam is still not exercised?
-- Which visible states were checked, and which were assumed?
-- What would a later reviewer still be unable to reconstruct?
-- What must be automated next because this packet was too manual?
 
 </details>
