@@ -4,13 +4,13 @@ title: hosted
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
+owners: @bartytime4life
 created: NEEDS_VERIFICATION
 updated: NEEDS_VERIFICATION
 policy_label: NEEDS_VERIFICATION
-related: [../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
+related: [../README.md, ../local/README.md, ../systemd-or-compose/README.md, ../kubernetes/README.md, ../terraform/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, infra, hosted, edge, deployment]
-notes: [target path supplied in task; surrounding infra tree and ownership metadata were not reverified from a mounted repo tree in the current session]
+notes: [owner is grounded from current public CODEOWNERS coverage for /infra/; doc_id, created, updated, and policy_label still need repo-record verification]
 [/KFM_META_BLOCK_V2] -->
 
 # hosted
@@ -19,28 +19,36 @@ Hosted split-edge overlays for public or semi-public KFM deployment surfaces.
 
 > [!NOTE]
 > **Status:** experimental deployment lane  
-> **Owners:** **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey) ![scope](https://img.shields.io/badge/scope-hosted%20edge-blue) ![trust](https://img.shields.io/badge/trust-governed-important) ![posture](https://img.shields.io/badge/posture-evidence--bounded-0a7d5a)  
-> **Repo fit:** `infra/hosted/README.md` is the target directory guide for hosted KFM edge overlays that expose a public or semi-public entrypoint while keeping canonical truth, unpublished artifacts, policy internals, and private model runtimes off the direct client path.  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Exposure matrix](#exposure-matrix) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` covers `/infra/`; no narrower `/infra/hosted/` rule was directly reverified)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da) ![scope](https://img.shields.io/badge/scope-hosted%20edge-blue) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![trust](https://img.shields.io/badge/trust-governed-critical)  
+> **Repo fit:** `infra/hosted/README.md` is the directory guide for hosted KFM edge overlays that expose a public or semi-public entrypoint while keeping canonical truth, unpublished artifacts, policy internals, and private model runtimes off the direct client path.  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public snapshot](#current-public-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Exposure matrix](#exposure-matrix) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> **Current evidence boundary:** the target path is explicit in this task, but the surrounding `infra/` subtree was **not** directly reverified from a mounted repo tree in the current session. This README therefore treats exact neighboring infra paths, concrete ingress stacks, environment names, and deployment manifests as **NEEDS VERIFICATION** unless separately surfaced by repo files.
+> **Current evidence boundary:** this revision is grounded in the current public `main` tree **and** the March–April 2026 KFM doctrine corpus. `infra/`, `infra/hosted/`, sibling infra lanes, and current public `CODEOWNERS` coverage for `/infra/` are treated as **CONFIRMED checked-in repo surfaces**. Active deployment manifests, ingress rules, DNS/TLS automation, environment names, workflow gates, and runtime topology remain **UNKNOWN / NEEDS VERIFICATION** until a mounted checkout or runtime inventory is inspected.
 
 > [!WARNING]
-> In KFM, hosted exposure is **not** a shortcut around the trust membrane. A hosted edge may publish a UI and/or governed API, but it must **not** create direct client paths to PostgreSQL/PostGIS, RAW / WORK / QUARANTINE roots, policy bundles, review internals, or private model runtimes.
+> Hosted exposure is a boundary decision, not a convenience shortcut. A hosted edge may publish a public-safe UI and/or governed API, but it must **not** create direct client paths to PostgreSQL/PostGIS, RAW / WORK / QUARANTINE roots, policy bundles, review internals, or private model runtimes.
+
+| At a glance | Current working reading |
+|---|---|
+| Path | `infra/hosted/README.md` |
+| Current public tree state | `infra/hosted/` is present and currently `README.md` only |
+| Parent surface | `infra/` already exposes multiple sibling runtime lanes |
+| Core rule | **Host the edge, not the whole trust system** |
+| Boundary posture | Public-safe UI and/or governed API in front; canonical stores and sensitive internals stay private |
 
 ---
 
 ## Scope
 
-This directory is the repo-facing lane for the hosted posture that KFM doctrine describes more formally as **public edge + private governed core**.
+`infra/hosted/` is the repo-facing lane for the hosted posture that KFM doctrine describes more formally as **public edge + private governed core**.
 
-In other words, `hosted/` is where KFM should explain or configure **how exposure happens**, not where it should quietly relocate truth, policy, or hidden runtime shortcuts.
+That makes this directory the place where KFM explains or configures **how exposure happens**. It is **not** the place to quietly relocate truth, policy, or hidden runtime shortcuts.
 
 Typical material for this lane includes:
 
-- publication maps that make public, private, and steward-only boundaries explicit
+- publication maps that make public, semi-public, VPN-only, and steward-only boundaries explicit
 - reverse-proxy / ingress overlays and hosted routing notes
 - DNS, TLS, and certificate coordination for public-safe surfaces
 - health, readiness, stale-state, rollback, and correction runbooks specific to hosted exposure
@@ -52,27 +60,39 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 
 ## Repo fit
 
-### Confirmed and task-scoped links
+### Path and surrounding surfaces
 
 | Kind | Path | Evidence status | Relationship |
 |---|---|---:|---|
-| Target doc | `infra/hosted/README.md` | task-scoped | This file |
-| Root posture | [`../../README.md`](../../README.md) | CONFIRMED | Repo-level project posture and trust framing |
-| Contracts surface | [`../../contracts/README.md`](../../contracts/README.md) | CONFIRMED | Hosted surfaces must honor contracts, not redefine them |
-| Schemas surface | [`../../schemas/README.md`](../../schemas/README.md) | CONFIRMED | Schema and validation posture for machine-checkable objects |
-| Policy surface | [`../../policy/README.md`](../../policy/README.md) | CONFIRMED | Deny-by-default policy and decision grammar surface |
-| Tests surface | [`../../tests/README.md`](../../tests/README.md) | CONFIRMED | Hosted exposure should be proven, not only described |
-| Workflow intent | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | CONFIRMED | CI/workflow scaffolding context |
+| Target doc | `infra/hosted/README.md` | **CONFIRMED** path | This file |
+| Parent infra guide | [`../README.md`](../README.md) | **CONFIRMED** | Defines the wider runtime and operational-control lane |
+| Root posture | [`../../README.md`](../../README.md) | **CONFIRMED** | Repo-level identity, truth posture, and navigation |
+| Contracts surface | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Hosted surfaces must honor machine contracts rather than redefine them |
+| Schemas surface | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema and validation posture for machine-checkable objects |
+| Policy surface | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Deny-by-default policy and decision grammar surface |
+| Tests surface | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Hosted exposure should be proven, not merely described |
+| Workflow lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED** | Control-plane workflow intent and current public README-only workflow state |
 
-### Adjacent infra paths still needing repo verification
+### Current public snapshot
 
-| Candidate neighbor | Status | Why it is handled cautiously here |
+| Signal | Status | Why it matters here |
 |---|---:|---|
-| `../README.md` | NEEDS VERIFICATION | Parent `infra/` guide was not directly surfaced in current-session repo evidence |
-| `../local/` | NEEDS VERIFICATION | Plausible adjacent lane, but not reverified |
-| `../systemd-or-compose/` | NEEDS VERIFICATION | Plausible adjacent lane, but not reverified |
-| `../terraform/` | NEEDS VERIFICATION | Plausible adjacent lane, but not reverified |
-| `../kubernetes/` | NEEDS VERIFICATION | Plausible adjacent lane, but not reverified |
+| `infra/hosted/` exists on public `main` | **CONFIRMED** | Hosted is a real checked-in lane, not just a PDF concept |
+| `infra/hosted/` contents on public `main` | **CONFIRMED** | The public tree currently shows `README.md` only, so this doc must not imply checked-in manifests that the tree does not prove |
+| `infra/` parent surface is non-trivial | **CONFIRMED** | Hosted sits among multiple sibling lanes and should stay narrow rather than absorbing their roles |
+| `/infra/` owner signal on current public `CODEOWNERS` | **CONFIRMED** | Public owner coverage currently resolves to `@bartytime4life` for `/infra/` |
+
+### Current public infra neighbors
+
+| Neighbor | Current public signal | Hosted relation |
+|---|---|---|
+| [`../local/README.md`](../local/README.md) | **CONFIRMED** path + README | Local-only bring-up lane; earlier phase than hosted exposure |
+| [`../compose/README.md`](../compose/README.md) | **CONFIRMED** path + README-only directory | Compose runtime wiring lane, not the public edge itself |
+| [`../systemd-or-compose/README.md`](../systemd-or-compose/README.md) | **CONFIRMED** path + README-only scaffold | Local orchestration decision lane that should not be confused with hosted publication |
+| [`../kubernetes/README.md`](../kubernetes/README.md) | **CONFIRMED** path + README | Cluster-orchestration lane when service count or reconciliation burden justifies it |
+| [`../terraform/README.md`](../terraform/README.md) | **CONFIRMED** path + README | Provisioning and hosted-environment wiring lane |
+| [`../gitops/README.md`](../gitops/README.md) | **CONFIRMED** path + README-only directory | Desired-state / reconciliation lane if GitOps is adopted |
+| [`../monitoring/README.md`](../monitoring/README.md), [`../dashboards/README.md`](../dashboards/README.md), [`../backup/README.md`](../backup/README.md) | **CONFIRMED** paths + READMEs | Observability, operator views, restore, and rollback neighbors that hosted changes should coordinate with |
 
 ### Upstream / downstream logic
 
@@ -82,6 +102,7 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 - contract and schema obligations
 - policy and review rules
 - test and workflow expectations
+- the broader infra lane under [`../README.md`](../README.md)
 
 **Downstream from `hosted/`**
 
@@ -89,6 +110,40 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 - public-safe UI/API exposure rules
 - rollback and correction handling at the edge
 - hosted observability and operator runbooks
+
+[Back to top](#hosted)
+
+## Current public snapshot
+
+### Current public `infra/` excerpt (**CONFIRMED**)
+
+```text
+infra/
+├── backup/
+├── compose/
+├── dashboards/
+├── gitops/
+├── hosted/
+│   └── README.md
+├── kubernetes/
+├── local/
+├── monitoring/
+├── systemd/
+├── systemd-or-compose/
+├── terraform/
+└── README.md
+```
+
+### Current public `hosted/` reading
+
+The hosted lane is currently **docs-first** on public `main`.
+
+That is useful in one direction and dangerous in another:
+
+- useful, because the lane already exists and can define exposure discipline explicitly
+- dangerous, because a docs-only lane can tempt readers to assume ingress rules, TLS automation, or deployment overlays that the public tree does **not** yet prove
+
+This README should therefore keep checked-in reality and proposed future structure clearly separated.
 
 [Back to top](#hosted)
 
@@ -104,6 +159,7 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 | Rollback and correction runbooks | Hosted rollout without reversal discipline is weak governance |
 | Edge observability notes | Request IDs, audit joins, logs, and stale-state signals matter at the boundary |
 | Firewall / VPN / exposure notes | Hosted changes alter network posture and should be documented visibly |
+| Cross-links to provisioning or orchestration lanes | Hosted changes often depend on `terraform/`, `kubernetes/`, `compose/`, or `systemd/`, but should link outward instead of swallowing those lanes whole |
 
 [Back to top](#hosted)
 
@@ -115,6 +171,10 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 | Policy bundle authority | [`../../policy/README.md`](../../policy/README.md) |
 | Verification strategy as doctrine | [`../../tests/README.md`](../../tests/README.md) plus policy / contract surfaces |
 | Generic CI/workflow scaffolding | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Local-only bootstrap mechanics | [`../local/README.md`](../local/README.md), [`../compose/README.md`](../compose/README.md), [`../systemd/README.md`](../systemd/README.md), or [`../systemd-or-compose/README.md`](../systemd-or-compose/README.md) |
+| Cluster reconciliation mechanics | [`../kubernetes/README.md`](../kubernetes/README.md) or [`../gitops/README.md`](../gitops/README.md) |
+| Provisioning state and IaC details | [`../terraform/README.md`](../terraform/README.md) |
+| Monitoring, dashboards, and restore policy | [`../monitoring/README.md`](../monitoring/README.md), [`../dashboards/README.md`](../dashboards/README.md), or [`../backup/README.md`](../backup/README.md) |
 | Direct database client patterns | Nowhere on the normal public path |
 | Direct private model-runtime exposure | Never on the normal hosted edge |
 | RAW / WORK / QUARANTINE browsing or file sharing | Governed internal runtime/storage paths, not hosted edge docs |
@@ -124,15 +184,13 @@ What it should **not** become is an all-purpose dumping ground for “anything i
 
 ## Directory tree
 
-### Target path under revision (**task-scoped**)
+### Current public hosted tree (**CONFIRMED**)
 
 ```text
 infra/
 └── hosted/
     └── README.md
 ```
-
-This path is the task target. The broader mounted `infra/` tree remains **NEEDS VERIFICATION** in the current session.
 
 ### Illustrative future expansion (**PROPOSED**)
 
@@ -160,7 +218,7 @@ infra/
         └── hosted-constraints.md
 ```
 
-This subtree is intentionally illustrative. Exact file names, stack choices, and environment labels remain **NEEDS VERIFICATION** until direct repo/runtime evidence surfaces them.
+This subtree is intentionally illustrative. Exact file names, stack choices, and environment labels remain **PROPOSED** or **NEEDS VERIFICATION** until direct repo and runtime evidence surface them.
 </details>
 
 [Back to top](#hosted)
@@ -170,20 +228,23 @@ This subtree is intentionally illustrative. Exact file names, stack choices, and
 1. Confirm that hosted exposure is actually needed.  
    KFM does not gain trust merely by becoming internet-reachable.
 
-2. Define the boundary before the stack.  
+2. Start at the parent infra guide.  
+   Read [`../README.md`](../README.md) first so you do not mistake hosted exposure for the whole infra lane.
+
+3. Define the boundary before the stack.  
    Decide what becomes reachable: public-safe UI, governed API, or both.
 
-3. Write one explicit publication map.  
+4. Write one explicit publication map.  
    Public, semi-public, VPN-only, loopback-only, and steward-only surfaces should be named before rollout.
 
-4. Keep the normal public path narrow.  
+5. Keep the normal public path narrow.  
    Edge → public-safe UI and/or governed API only.
 
-5. Pair any hosted change with edge checks and rollback notes.  
+6. Pair any hosted change with edge checks and rollback notes.  
    No hosted lane is credible if it only describes the happy path.
 
-6. Refuse implied maturity.  
-   If manifests, ingress rules, or DNS/TLS automation are not real yet, keep them marked **PROPOSED** or **NEEDS VERIFICATION**.
+7. Refuse implied maturity.  
+   If manifests, ingress rules, DNS/TLS automation, or environment maps are not real yet, keep them marked **PROPOSED** or **NEEDS VERIFICATION**.
 
 ### Minimal hosted review checklist
 
@@ -195,6 +256,7 @@ This subtree is intentionally illustrative. Exact file names, stack choices, and
 [ ] Where are the health/readiness checks?
 [ ] Where is the rollback path?
 [ ] Which tests or checks prove no direct bypass exists?
+[ ] Which sibling infra lanes also changed?
 [ ] Which docs changed so hosted prose still matches hosted reality?
 ```
 
@@ -204,7 +266,7 @@ This subtree is intentionally illustrative. Exact file names, stack choices, and
 
 ### When to use `infra/hosted/`
 
-Use this directory when the change is about **edge exposure** rather than about domain truth.
+Use this directory when the change is primarily about **edge exposure** rather than domain truth or local bootstrap.
 
 Typical examples:
 
@@ -212,6 +274,7 @@ Typical examples:
 - introducing hosted UI and/or governed API exposure
 - documenting split-edge routing, certificates, DNS, or ingress behavior
 - adding hosted rollback, stale-state, or correction handling
+- clarifying how public-safe entrypoints stay separate from canonical stores and private runtimes
 
 ### When **not** to use `infra/hosted/`
 
@@ -221,7 +284,22 @@ Do **not** use this directory when the work is primarily about:
 - schema or contract evolution
 - policy grammar or review semantics
 - evidence resolution logic
-- application/domain behavior that is not specifically about hosted exposure
+- local-only bootstrap or single-machine runtime mechanics
+- provisioning, cluster orchestration, or controller-driven reconciliation that already belongs to a sibling infra lane
+
+### Lane chooser
+
+| If the change is mainly about… | Prefer this lane |
+|---|---|
+| Public-safe exposure, ingress, DNS/TLS, split-edge publication, edge rollback | `infra/hosted/` |
+| Local-only bootstrap and contributor bring-up | `infra/local/` |
+| Compose runtime wiring | `infra/compose/` |
+| Host-native service supervision | `infra/systemd/` |
+| Choosing between local `systemd` and Compose patterns | `infra/systemd-or-compose/` |
+| Cluster orchestration | `infra/kubernetes/` |
+| Declarative provisioning / hosted environment wiring | `infra/terraform/` |
+| Desired-state reconciliation | `infra/gitops/` |
+| Monitoring, dashboards, backup / restore | `infra/monitoring/`, `infra/dashboards/`, `infra/backup/` |
 
 ### Hosted in the KFM deployment ladder
 
@@ -230,7 +308,7 @@ Do **not** use this directory when the work is primarily about:
 | Local-only | Nothing public | Everything except host-local surfaces | Prove the governed slice first | Low |
 | Private remote | VPN / overlay access to intended surfaces | Canonical stores, artifact roots, private runtimes | Controlled remote access | Medium |
 | Public edge + private governed core | Public-safe UI and/or governed API | Canonical truth, unpublished artifacts, policy/review internals, private model runtime | Safe publication boundary | **Primary** |
-| Production-grade separation | Dedicated edge, API, workers, stores, policy, and ops surfaces | Sensitive/internal lanes stay tightly bounded | Blast radius, rollback, ops maturity | High |
+| Production-grade separation | Dedicated edge, identity, API, workers, stores, policy, and ops surfaces | Sensitive/internal lanes stay tightly bounded | Blast radius, rollback, ops maturity | High |
 
 ### Hosted operating rule
 
@@ -316,7 +394,8 @@ A hosted change is not done when the proxy starts. It is done when the hosted su
 - [ ] Correction or stale-state behavior is documented if outward meaning can change.
 - [ ] Documentation does not imply a stronger hosted reality than the repo currently proves.
 - [ ] Any concrete ingress/orchestration choice is documented as an implementation choice, not as KFM doctrine.
-- [ ] Owners and reviewers are explicit or still marked **NEEDS VERIFICATION**.
+- [ ] Owners and reviewers are explicit or intentionally inherited from a verified owner surface such as `CODEOWNERS`.
+- [ ] If the change also touches `terraform/`, `kubernetes/`, `compose/`, `systemd/`, `monitoring/`, `dashboards/`, `backup/`, or `gitops/`, the cross-lane doc links are updated too.
 
 [Back to top](#hosted)
 
@@ -332,15 +411,15 @@ Yes — **behind** it and **not directly on** the public path. The normal client
 
 ### Can we publish directly from a home network?
 
-This README does not normalize that as the default path. KFM doctrine prefers a progression from local-only to private remote to a hosted public edge with a private governed core.
+This directory should not normalize that as the default path. KFM doctrine prefers a progression from local-only to private remote to a small hosted split, then to stronger separation only when the operational burden justifies it.
 
 ### What is the minimum credible hosted shape?
 
 A narrow edge, a public-safe UI and/or governed API, explicit publication mapping, private canonical stores, private runtime dependencies, visible stale/failure states, and rollback/correction discipline.
 
-### Why is this README strict when the surrounding subtree is still only partially verified?
+### Why is this README strict even though more of `infra/` is now visible on public `main`?
 
-Because hosted exposure is exactly where implied maturity becomes dangerous. This doc is meant to keep the exposure boundary inspectable even while surrounding repo details are still being verified.
+Because hosted exposure is the lane where implied maturity becomes dangerous fastest. The public tree now proves the lane exists; it does **not** yet prove active manifests, ingress rules, TLS automation, or live runtime behavior.
 
 [Back to top](#hosted)
 
@@ -350,11 +429,11 @@ Because hosted exposure is exactly where implied maturity becomes dangerous. Thi
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Supported by attached doctrine or repo-grounded evidence surfaced in the current session |
-| **INFERRED** | Strong synthesis from doctrine + task path, but not directly proven as mounted repo implementation |
-| **PROPOSED** | Recommended structure, workflow, or file family |
-| **NEEDS VERIFICATION** | Should be checked against the mounted repo tree, manifests, or runtime evidence |
-| **UNKNOWN** | Not supported strongly enough to present as settled current reality |
+| **CONFIRMED** | Supported by attached doctrine and/or directly inspected current public repo surfaces |
+| **INFERRED** | Conservative structural reading drawn from confirmed doctrine or checked-in path names / README roles |
+| **PROPOSED** | Recommended structure, workflow, or file family not yet proven as checked-in implementation |
+| **NEEDS VERIFICATION** | Should be checked against the mounted repo tree, manifests, or runtime evidence before merge |
+| **UNKNOWN** | Not verified strongly enough in the current session to present as settled reality |
 
 <details>
 <summary>Illustrative publication map template (<strong>PROPOSED</strong>)</summary>
@@ -399,6 +478,7 @@ notes: >
 - What fails closed if the edge is up but evidence resolution is not?
 - How is stale or generalized state made visible instead of hidden?
 - Which rollback path preserves lineage rather than pretending nothing changed?
+- Which sibling infra lanes also need coordinated documentation updates?
 ```
 </details>
 
