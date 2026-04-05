@@ -6,30 +6,30 @@ version: v1
 status: draft
 owners: <NEEDS-VERIFICATION: owner/team>
 created: 2026-03-24
-updated: 2026-03-24
+updated: <NEEDS-VERIFICATION: 2026-04-05 on merge>
 policy_label: <NEEDS-VERIFICATION: public|restricted|...>
-related: [<NEEDS-VERIFICATION: ../governance/ROOT-GOVERNANCE.md>, <NEEDS-VERIFICATION: ../faircare/FAIRCARE-GUIDE.md>]
+related: [../governance/ROOT-GOVERNANCE.md, ../faircare/FAIRCARE-GUIDE.md]
 tags: [kfm, sovereignty, indigenous-data-protection]
-notes: [Workspace evidence for this draft was PDF-only; adjacent repo paths, owners, and policy label require direct repo verification.]
+notes: [Preserves the existing draft as baseline; related paths are historically evidenced in attached in-repo docs, but current-branch existence, owners, and policy_label remain unverified in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 # Indigenous Data Protection
 
-KFM standard for handling Indigenous- or community-sensitive data so publication stays evidence-aware, review-bearing, and fail-closed.
+KFM standard for handling Indigenous- or community-sensitive data so outward publication stays evidence-aware, review-bearing, and fail-closed.
 
 > [!IMPORTANT]
-> This draft is **doctrine-grounded** but **repo-shape-limited**. The current session exposed the KFM PDF corpus, not a mounted repository tree, so file-neighbor links, owners, and existing implementation depth remain **UNKNOWN** until directly verified.
+> This revision is **doctrine-grounded** and **repo-checkout-limited**. The current session exposed attached manuals and an existing draft, but not a mounted repository checkout. Historical in-repo docs in the corpus reference this standard and adjacent governance / FAIR+CARE docs, yet current-branch existence, owner assignment, policy label, and enforcement wiring still **NEED VERIFICATION**.
 
-| Status | Owners | Path | Role |
+| Status | Owners | Intended path | Role |
 |---|---|---|---|
 | `draft` | `NEEDS VERIFICATION` | `docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md` | Sovereignty and publication-control standard |
 
 ![KFM standard](https://img.shields.io/badge/KFM-standard-1f4b7a)
 ![Status](https://img.shields.io/badge/status-draft-orange)
-![Sovereignty](https://img.shields.io/badge/focus-sovereignty-informational)
-![Truth posture](https://img.shields.io/badge/evidence-PDF--only%20workspace-lightgrey)
+![Sovereignty](https://img.shields.io/badge/focus-sovereignty-policy--gated)
+![Evidence posture](https://img.shields.io/badge/evidence-corpus--grounded%20%7C%20repo--checkout%20unverified-lightgrey)
 
-**Quick jump:** [Purpose](#purpose) · [Scope](#scope) · [Core rules](#core-rules) · [Decision flow](#decision-flow) · [Contract touchpoints](#contract-touchpoints) · [Publication classes](#publication-classes) · [Review triggers](#review-triggers) · [Delivery hooks](#delivery-hooks) · [Definition of done](#definition-of-done) · [Appendix](#appendix)
+**Quick jump:** [Purpose](#purpose) · [Status posture](#status-posture) · [Evidence basis](#evidence-basis) · [Scope](#scope) · [Repo fit](#repo-fit) · [Core rules](#core-rules) · [Decision flow](#decision-flow) · [Contract touchpoints](#contract-touchpoints) · [Policy vocabulary](#policy-vocabulary) · [Review triggers](#review-triggers) · [Surface obligations](#surface-obligations) · [Delivery hooks](#delivery-hooks) · [Definition of done](#definition-of-done) · [Appendix](#appendix)
 
 ---
 
@@ -39,13 +39,31 @@ This standard defines how KFM must treat Indigenous data, Indigenous-adjacent ma
 
 The point is not to bolt “care” language onto the edge of a GIS system. The point is to keep sovereignty, rights, provenance, precision, review, and correction inside the operating rules of the system itself.
 
+---
+
 ## Status posture
 
 | Label | Meaning in this document |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus visible in this session |
-| **PROPOSED** | Recommended control or workflow shape that fits the corpus but is not directly proven as mounted implementation |
-| **UNKNOWN** | Not directly verified in the current session |
+| **CONFIRMED** | Directly supported by the attached corpus visible in this session |
+| **INFERRED** | Strongly implied by multiple attached documents or by historical in-repo references, but not directly reverified in a mounted checkout |
+| **PROPOSED** | Recommended control, file shape, or enforcement hook aligned to doctrine but not proven as current implementation |
+| **UNKNOWN** | Not directly visible in this session |
+| **NEEDS VERIFICATION** | Specific path, owner, label, registry, or implementation detail that should be checked in the repo before merge |
+
+---
+
+## Evidence basis
+
+| Evidence layer | Status | Used here for |
+|---|---|---|
+| Existing `Indigenous Data Protection` draft | **CONFIRMED** | Baseline structure, title, intended path, created date, and strongest doctrinal language to preserve |
+| March–April 2026 KFM doctrine manuals | **CONFIRMED** | Truth path, fail-closed posture, contract lattice, runtime outcomes, Evidence Drawer / Focus rules, and lane-specific publication burdens |
+| Historical in-repo docs in the attached corpus | **INFERRED** | Relative-path adjacency for governance, FAIR+CARE, and sovereignty docs |
+| Current repo tree, owners, schemas, fixtures, CI, and review-lane wiring | **UNKNOWN / NEEDS VERIFICATION** | Cannot be claimed from this session |
+
+> [!NOTE]
+> The strongest attached doctrine is consistent on the key point that matters here: public value in KFM is a **governed publication event**, not merely a successful query or a fluent outward surface.
 
 ---
 
@@ -61,7 +79,7 @@ This standard applies whenever KFM handles any of the following:
 
 ### What belongs here
 
-This file should govern:
+This file governs:
 
 - sovereignty-aware admission and publication rules
 - rights and sensitivity handling
@@ -86,20 +104,33 @@ Those belong in governance docs, FAIR+CARE guidance, lane-specific methods, revi
 
 ## Repo fit
 
-**Target location:** `docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
+**Intended location:** `docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
 
 **Upstream relationship:** this standard should sit under the governing doctrine, policy, FAIR+CARE, and verification stack.
 
-**Downstream relationship:** this standard should constrain source onboarding, review lanes, EvidenceBundle assembly, runtime envelopes, Focus responses, story publication, and export/report generation.
+**Downstream relationship:** this standard should constrain source onboarding, review lanes, catalog / policy / review decisions, EvidenceBundle assembly, runtime envelopes, story publication, export generation, and correction visibility.
 
-> [!NOTE]
-> Multiple KFM documents already reference an Indigenous-data-protection standard at this path or an equivalent sovereignty location, which strongly suggests this file is expected in the repo. The exact neighboring files and current link validity still need direct repo verification.
+### Historically referenced adjacent paths
+
+| Path | Status | Why it matters |
+|---|---|---|
+| `../governance/ROOT-GOVERNANCE.md` | **INFERRED** | Governing doctrine anchor historically referenced by attached in-repo docs |
+| `../faircare/FAIRCARE-GUIDE.md` | **INFERRED** | Closest adjacent care / sensitivity guide historically referenced by attached in-repo docs |
+| `./README.md` | **NEEDS VERIFICATION** | A sovereignty directory README would be a natural local index, but current existence is unverified |
+| `policy/reason_codes.json` | **PROPOSED / NEEDS VERIFICATION** | Doctrine supports reason-code registries; current path and implementation remain unverified |
+| `policy/obligation_codes.json` | **PROPOSED / NEEDS VERIFICATION** | Doctrine supports obligation-code registries; current path and implementation remain unverified |
+| `contracts/source/source_descriptor.schema.json` | **PROPOSED / NEEDS VERIFICATION** | The contract lattice strongly supports this file, but current repo presence is unverified |
+
+> [!WARNING]
+> Historical path evidence is stronger than pure speculation, but it is still not the same thing as a mounted current-branch verification pass.
 
 ---
 
 ## Why this standard exists in KFM
 
-KFM’s doctrine is unusually clear that public-facing value is a **publication event**, not merely a successful query. That means outward-facing claims, maps, dossiers, stories, exports, and governed AI responses must all pass rights, sensitivity, provenance, and release-state checks. KFM is also explicit that archives, oral histories, public memory, and heritage are not lightweight narrative garnish; they are operating lanes whose context, rights, reuse constraints, and culturally sensitive material remain first-class. Likewise, biodiversity, archaeology, and exact-location cases require review-bearing workflows rather than convenience publication.
+KFM’s doctrine is unusually clear that public-facing value is a **publication event**, not merely a successful query. That means outward-facing claims, maps, dossiers, stories, exports, and governed AI responses must all pass rights, sensitivity, provenance, and release-state checks.
+
+KFM is also explicit that archives, oral histories, public memory, heritage, archaeology, biodiversity, and land-tenure interpretation are not lightweight narrative garnish. They are operating lanes whose context, rights, reuse constraints, publication burden, and culturally sensitive material remain first-class.
 
 This standard turns that doctrine into an explicit sovereignty control surface.
 
@@ -169,12 +200,12 @@ flowchart TD
     I --> J{Publication allowed?}
 
     J -- No --> K[Deny / hold / restrict]
-    J -- Yes --> L[ReleaseManifest / ReleaseProofPack]
+    J -- Yes --> L[CatalogClosure + ReleaseManifest / ReleaseProofPack]
 
     L --> M[EvidenceBundle + RuntimeResponseEnvelope]
     M --> N[Map / Dossier / Story / Export / Focus]
 
-    N --> O[Surface must show provenance, policy state, and review/correction state]
+    N --> O[Surface must show provenance, policy state, and review / correction state]
     O --> P[CorrectionNotice if later narrowed, withdrawn, generalized, or superseded]
 ```
 
@@ -186,11 +217,11 @@ flowchart TD
 |---|---|---|
 | Oral histories, transcripts, public memory, heritage narratives | **Review-bearing** | Narrative convenience must not erase provenance, context, or culturally sensitive meaning |
 | Archaeology, sacred-place hints, heritage sites | **Generalize or withhold by default** | Exact-location exposure can create irreversible harm |
-| Biodiversity / sensitive-occurrence data with community implications | **Governed generalization** | Sensitive-occurrence lanes are explicitly called out as needing controlled publication |
-| Community-contributed observations | **Moderated governed input** | Community contribution is not automatic truth and needs confidence + rights handling |
-| Documentary / archival scans, maps, reports | **Context-preserving release** | Documentary materials can be interpretive, source-dependent, and rights-constrained |
-| Parcel / deed / cadastral data touching Indigenous or heritage context | **Lane-specific review** | Identity resolution, OCR/geoparsing, and temporal linking are review-bearing |
-| Focus responses, story nodes, exports | **Must inherit released scope and policy posture** | Derived surfaces cannot outrun rights, sensitivity, or correction linkage |
+| Biodiversity or sensitive-occurrence material with community implications | **Governed generalization** | Sensitive-occurrence lanes carry explicit publication burdens |
+| Community-contributed observations | **Moderated governed input** | Community contribution is not automatic truth and needs confidence, provenance, and rights handling |
+| Documentary or archival scans, maps, and reports | **Context-preserving release** | Documentary materials can be interpretive, source-dependent, and rights-constrained |
+| Land tenure, cadastral history, parcels, plats, and deeds touching Indigenous or heritage context | **Lane-specific review** | Identity resolution, OCR / geoparsing, and temporal linking are review-bearing |
+| Focus responses, story nodes, and exports | **Must inherit released scope and policy posture** | Derived surfaces cannot outrun rights, sensitivity, or correction linkage |
 
 ---
 
@@ -201,10 +232,12 @@ KFM’s strongest architecture documents already imply the contract families tha
 | Contract / artifact | Must capture | Sovereignty consequence |
 |---|---|---|
 | **SourceDescriptor** | rights, sensitivity, publication intent, steward/contact, location-precision constraints | No governed admission without an explicit reuse and sensitivity posture |
-| **IngestReceipt** | what was fetched, when, with what integrity result, and copied rights/sensitivity class | Prevents “mystery ingestion” of ambiguous material |
-| **ValidationReport** | schema/semantic checks, quarantine triggers, reason codes | Makes sovereignty failures machine-visible, not editorially implicit |
+| **IngestReceipt** | what was fetched, when, with what integrity result, and copied rights / sensitivity class | Prevents mystery ingestion of ambiguous material |
+| **ValidationReport** | schema / semantic checks, quarantine triggers, reason codes | Makes sovereignty failures machine-visible, not editorially implicit |
+| **DatasetVersion** | stable subject/version identity, support, time semantics, provenance links | Prevents released meaning from floating free of authoritative scope |
+| **CatalogClosure** | outward STAC / DCAT / PROV linkage, identifiers, release linkage, outward profile refs | Keeps public metadata aligned with rights / sensitivity and release state |
 | **DecisionEnvelope** | action, result, reason codes, obligation codes, policy basis, effective window | Enables deny / generalize / restrict / review-required outcomes |
-| **ReviewRecord** | reviewer role, decision, comments, separation-of-duty state | Keeps steward judgment explicit and auditable |
+| **ReviewRecord** | reviewer role, decision, timestamp, refs, comments | Keeps steward judgment explicit and auditable |
 | **ReleaseManifest / ReleaseProofPack** | public-safe scope, checks, rollback posture, accessibility gate | Blocks publication when sovereignty obligations are unmet |
 | **EvidenceBundle** | released scope, rights/sensitivity state, obligations, lineage summary | Public surfaces stay inspectable without direct raw access |
 | **RuntimeResponseEnvelope** | finite outcome, citations check, decision ref, surface state | Focus and other runtime surfaces cannot bluff past sovereignty constraints |
@@ -212,20 +245,52 @@ KFM’s strongest architecture documents already imply the contract families tha
 
 ---
 
-## Publication classes
+## Policy vocabulary
 
-The KFM corpus directly supports a visible distinction between **public-safe**, **generalized**, and **withheld** states. The more detailed class names below are useful starter language, but the exact registry remains **PROPOSED** until repo implementation is verified.
+### Publication classes
+
+The corpus directly supports a visible distinction between **public-safe**, **generalized**, and **withheld** states. The fuller registry below is useful starter language, but exact implementation remains **PROPOSED** until repo verification is complete.
 
 | Class | Meaning | Typical use |
 |---|---|---|
-| **public-safe** | Safe to publish at the requested audience/surface | Non-sensitive released material with clear rights posture |
+| **public-safe** | Safe to publish at the requested audience and surface | Non-sensitive released material with clear rights posture |
 | **generalized** | Publishable only after precision, granularity, or identifying detail is reduced | Sensitive place-based or community-linked material that can still support public explanation |
 | **withheld** | Not publishable on the requested surface | Unclear rights, unresolved sensitivity, or high exact-location risk |
 | **review-required** | Cannot progress automatically | Ambiguous stewardship, uncertain reuse scope, contested interpretation, or unresolved community context |
-| **restricted** | Available only on constrained steward/reviewer surfaces | Materials requiring tighter access than public-safe release |
+| **restricted** | Available only on constrained steward / reviewer surfaces | Materials requiring tighter access than public-safe release |
 
 > [!WARNING]
 > “Generalized” must never mean “we hid the coordinates but left enough clues to locate the place anyway.” The release must be safe in practice, not just cosmetically redacted.
+
+### Example reason codes
+
+These are starter examples aligned to the contract language already present in the corpus.
+
+| Example code | Meaning |
+|---|---|
+| `rights.unknown` | Reuse or redistribution posture is unresolved |
+| `sensitivity.exact_location` | Exact location is too sensitive for the requested audience |
+| `review.required` | Automated publication is not allowed without steward review |
+| `policy.denied` | Policy explicitly blocks the requested action or surface |
+| `validation.schema_failed` | Required contract or semantic validation failed |
+| `corroboration.conflicted` | Admissible sources disagree materially |
+
+### Example obligation codes
+
+These are illustrative starter obligations supported by the broader contract lattice.
+
+| Example code | Consequence |
+|---|---|
+| `generalize` | Serve only a generalized representation for this audience |
+| `withhold` | Do not publish or render the object on the requested surface |
+| `review_required` | Escalate to steward or reviewer lane before promotion or outward use |
+| `cite` | Attach inspectable evidence or fail closed |
+| `correction_notice` | Publish visible correction state across affected surfaces |
+| `disclose_partial` | Label partial coverage or incompleteness in place |
+| `log_audit` | Emit audit linkage and decision trace for the action |
+
+> [!IMPORTANT]
+> Publication class is **not** the same thing as runtime surface state. A released object may later become generalized, source-dependent, conflicted, withdrawn, denied, or abstained at a trust surface, while outward runtime outcomes still remain finite: **ANSWER**, **ABSTAIN**, **DENY**, or **ERROR**.
 
 ---
 
@@ -238,9 +303,10 @@ A steward or equivalent review lane should be mandatory when any of the followin
 - the material contains exact or inferable locations for culturally sensitive, heritage, archaeological, biodiversity, or sacred places
 - the material is documentary or interpretive and could be flattened into false certainty
 - the material includes community-contributed observation without adequate moderation or provenance
+- land-tenure, deed, parcel, or archival interpretation would materially reshape Indigenous or heritage context
 - a story, dossier, export, or Focus response would expose sensitive meaning outside the collection context
 - the requested release would require generalization, withholding, or audience restriction
-- correction, withdrawal, or supersession may materially change prior public meaning
+- correction, withdrawal, narrowing, or supersession may materially change prior public meaning
 
 ---
 
@@ -253,8 +319,8 @@ KFM’s trust-visible surfaces already establish the right pattern: consequentia
 For sovereignty-bearing material, the Evidence Drawer should expose at least:
 
 - source basis
-- rights/sensitivity state
-- whether the visible representation is public-safe, generalized, or withheld upstream
+- rights / sensitivity state
+- whether the visible representation is public-safe, generalized, withheld, or restricted upstream
 - release and correction state
 - transform or redaction notes where those shaped meaning
 
@@ -278,6 +344,16 @@ Governed AI must inherit the same sovereignty controls as any other surface:
 - finite outcomes only: **ANSWER**, **ABSTAIN**, **DENY**, or **ERROR**
 - visible audit linkage and correction visibility
 
+### Review / stewardship surfaces
+
+Internal review surfaces should make governance explicit rather than hidden:
+
+- diff and comparison context
+- policy labels and obligation codes
+- review notes and recorded decisions
+- generalized-vs-precise comparison where release choice depends on de-precision
+- correction and rollback traces where prior public meaning changed
+
 ### Exports and reports
 
 Exports must never outrun:
@@ -286,7 +362,7 @@ Exports must never outrun:
 - correction linkage
 - rights posture
 - sensitivity posture
-- preview/publication policy
+- preview / publication policy
 
 ---
 
@@ -298,23 +374,12 @@ These controls are **PROPOSED** as the minimum repo-facing enforcement shape for
 |---|---|
 | `reason_codes` registry | Prevent free-text drift for sovereignty denials and holds |
 | `obligation_codes` registry | Make required citation, generalization, review, or withholding machine-readable |
-| valid/invalid fixtures | Prove that sovereignty-bearing contracts reject unsafe shapes |
-| leakage tests | Catch coordinates, “how to locate” details, signed URLs, or secrets in outputs |
+| valid / invalid fixtures | Prove that sovereignty-bearing contracts reject unsafe shapes |
+| leakage tests | Catch coordinates, how-to-locate details, signed URLs, or secrets in outputs |
 | deterministic checks | Ensure repeated builds do not quietly alter public meaning |
 | generalized-vs-precise comparison tests | Prove public surfaces are actually safer than internal precise scope |
+| evidence drawer payload samples | Make trust-visible rights / sensitivity state concrete for UI and review |
 | correction tests | Ensure withdrawal, narrowing, and supersession remain visible |
-
-### Example reason codes
-
-These are starter examples aligned to the contract language already present in the corpus:
-
-| Example code | Meaning |
-|---|---|
-| `rights.unknown` | Reuse or redistribution posture is unresolved |
-| `sensitivity.exact_location` | Exact location is too sensitive for the requested audience |
-| `review.required` | Automated publication is not allowed without steward review |
-| `validation.schema_failed` | Required contract or semantic validation failed |
-| `corroboration.conflicted` | Admissible sources disagree materially |
 
 ---
 
@@ -322,11 +387,12 @@ These are starter examples aligned to the contract language already present in t
 
 - [ ] Rights and sensitivity posture is explicit before release
 - [ ] Exact-location risk has been assessed
-- [ ] Public-safe, generalized, withheld, or restricted state is visible
+- [ ] Public-safe, generalized, withheld, restricted, or review-required state is visible
 - [ ] Steward review is recorded where required
+- [ ] CatalogClosure and release artifacts stay aligned with the publication decision
 - [ ] EvidenceBundle remains inspectable from the outward surface
-- [ ] Story/export/Focus output does not erase provenance or interpretive context
-- [ ] Leakage checks prevent coordinates, “how to locate” clues, signed URLs, and secrets
+- [ ] Story / export / Focus output does not erase provenance or interpretive context
+- [ ] Leakage checks prevent coordinates, how-to-locate clues, signed URLs, and secrets
 - [ ] Correction path is ready if release posture later changes
 - [ ] Derived layers inherit, rather than bypass, sovereignty controls
 - [ ] Release proof objects record the publication decision rather than relying on prose alone
@@ -363,6 +429,10 @@ Yes, when a genuinely public-safe generalized representation is possible and the
 
 No. FAIR-style discoverability is useful, but the corpus is explicit that it is not enough where care, sovereignty, privacy, exact-location risk, or cultural sensitivity burdens are present.
 
+### Does this standard claim the current repo already enforces all of this?
+
+No. It states doctrine, identifies minimal contract touchpoints, and marks unverified enforcement details as **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** instead of pretending they already exist.
+
 ---
 
 ## Appendix
@@ -377,17 +447,19 @@ No. FAIR-style discoverability is useful, but the corpus is explicit that it is 
 | **public-safe** | Safe for the requested outward audience and surface |
 | **generalized** | Deliberately de-precised or aggregated to reduce harm |
 | **withheld** | Not outwardly releasable on the requested surface |
-| **review-bearing** | Cannot progress without explicit steward/reviewer action |
+| **restricted** | Available only on constrained steward / reviewer surfaces |
+| **review-bearing** | Cannot progress without explicit steward / reviewer action |
 | **sovereignty-bearing material** | Material whose publication posture depends on stewardship, community context, rights, exact-location risk, or cultural sensitivity |
 
 ### Open verification items
 
-- **UNKNOWN:** exact repo owner/team for this standard
-- **UNKNOWN:** whether `ROOT-GOVERNANCE.md` and `FAIRCARE-GUIDE.md` exist at the inferred neighboring paths
-- **UNKNOWN:** whether the repo already contains a sovereignty directory README or related standards index
-- **UNKNOWN:** whether reason/obligation registries and schema fixtures are already implemented in-tree
-- **UNKNOWN:** whether a formal publication-class vocabulary already exists in policy bundles
-- **UNKNOWN:** whether the repo currently uses this exact title or a nearby variant for sovereignty guidance
+- **NEEDS VERIFICATION:** exact repo owner/team for this standard
+- **NEEDS VERIFICATION:** current-branch existence of `ROOT-GOVERNANCE.md` and `FAIRCARE-GUIDE.md`
+- **NEEDS VERIFICATION:** whether the repo already contains a sovereignty directory README or standards index
+- **NEEDS VERIFICATION:** whether reason / obligation registries and schema fixtures are already implemented in-tree
+- **NEEDS VERIFICATION:** whether a formal publication-class vocabulary already exists in policy bundles
+- **NEEDS VERIFICATION:** whether the repo already ships Evidence Drawer payload samples for rights / sensitivity states
+- **NEEDS VERIFICATION:** whether the current repo uses this exact title or a nearby sovereignty-policy variant
 
 ### Suggested adjacent docs to verify
 
@@ -397,6 +469,14 @@ No. FAIR-style discoverability is useful, but the corpus is explicit that it is 
 - `policy/reason_codes.json`
 - `policy/obligation_codes.json`
 - `contracts/source/source_descriptor.schema.json`
+- `contracts/policy/decision_envelope.schema.json`
+- `contracts/runtime/evidence_bundle.schema.json`
+- `contracts/runtime/runtime_response_envelope.schema.json`
+- `contracts/correction/correction_notice.schema.json`
+
+### Review note for maintainers
+
+If a mounted repo inspection later proves different filenames, ownership markers, or local conventions, keep the doctrinal content of this standard and revise only the path-level and implementation-level assumptions. Do not downgrade the sovereignty controls just to fit a weaker current tree.
 
 </details>
 
