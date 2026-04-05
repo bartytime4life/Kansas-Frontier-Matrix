@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: <NEEDS-VERIFICATION>
-related: [../README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../data/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
+related: [../README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../data/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, packages, indexers]
-notes: [current public main shows a README-only subtree here, owner reflects current /packages/ fallback in .github/CODEOWNERS, doc_id and dates need verification]
+notes: [current public main shows a README-only subtree here, owner reflects current /packages/ fallback in .github/CODEOWNERS, top-level schema authority remains upstream, doc_id and dates need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # packages/indexers
@@ -21,7 +21,7 @@ Shared internal builders for rebuildable search, tile, and other release-linked 
 > **Doc state:** review  
 > **Owners:** `@bartytime4life` *(current `/packages/` fallback in `.github/CODEOWNERS`)*  
 > **Path:** `packages/indexers/README.md`  
-> **Repo fit:** child package guide beneath [`../README.md`](../README.md); upstream authority from [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../data/README.md`](../../data/README.md); downstream verification pressure from [`../../tests/README.md`](../../tests/README.md) and [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Repo fit:** child package guide beneath [`../README.md`](../README.md); upstream authority from [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../data/README.md`](../../data/README.md); downstream verification pressure from [`../../tests/README.md`](../../tests/README.md) and [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > **Current public snapshot used for this revision:** `packages/indexers/` was visible on `main` and rendered as `README.md` only  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-packages%2Findexers%2FREADME.md-2f81f7) ![role](https://img.shields.io/badge/role-derived%20projections-6f42c1) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
@@ -68,6 +68,7 @@ This package should help preserve:
 | Upstream | [`../../README.md`](../../README.md) | Root project posture: governed truth path, trust membrane, and repo-wide verification framing |
 | Upstream | [`../README.md`](../README.md) | Parent package contract; this is the strongest live README baseline for what `indexers` is allowed to own |
 | Upstream | [`../../contracts/README.md`](../../contracts/README.md) | Indexers must consume stronger contract definitions rather than inventing their own canonical shapes |
+| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | If projection builders need machine-readable receipt or derivative metadata shapes, canonical schema authority still belongs upstream rather than in this package |
 | Upstream | [`../../policy/README.md`](../../policy/README.md) | Repo-authoritative policy stays at top level; indexers must remain policy-constrained, not policy-sovereign |
 | Upstream | [`../../data/README.md`](../../data/README.md) | Derived projections should stay linked to released authoritative scope rather than detached internal convenience state |
 | Sibling | [`../domain/README.md`](../domain/README.md) | Stable domain vocabulary and invariants belong there, not here |
@@ -99,7 +100,7 @@ Content belongs in `packages/indexers/` when it is shared internal logic for:
 - package-local tests and fixtures that prove derived-projection behavior
 
 > [!TIP]
-> Examples seen in source-mediated inventories include **spatial search indexes** and **map tile generation**.
+> Examples seen in source-mediated inventories include **occurrence index writers / compaction jobs**, **spatial search indexes**, and **map tile generation**.
 > Treat those as placement guidance, not as proof that the checked-out branch already contains a specific backend mix.
 
 ## Exclusions
@@ -107,7 +108,7 @@ Content belongs in `packages/indexers/` when it is shared internal logic for:
 | This does **not** belong in `packages/indexers/` | Put it here instead |
 |---|---|
 | Canonical dataset truth, release manifests, or authoritative outward metadata | [`../../data/README.md`](../../data/README.md) and the owning release-bearing surface |
-| Shared OpenAPI, schema, or vocabulary authority | [`../../contracts/README.md`](../../contracts/README.md) |
+| Shared OpenAPI, schema, or vocabulary authority | [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) |
 | Repo-authoritative policy bundles, fixtures, and deny-by-default gates | [`../../policy/README.md`](../../policy/README.md) |
 | Source connectors, raw admission logic, normalization pipelines | [`../ingest/README.md`](../ingest/README.md) |
 | Evidence resolution, evidence redaction, bundle shaping | [`../evidence/README.md`](../evidence/README.md) |
@@ -164,6 +165,7 @@ sed -n '1,240p' packages/indexers/README.md
 sed -n '1,260p' packages/README.md
 sed -n '1,220p' README.md
 sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' data/README.md
 sed -n '1,220p' tests/README.md
@@ -184,8 +186,8 @@ find packages/indexers -maxdepth 5 -type d | sort
 
 ```bash
 grep -RInE \
-  "search projection|tile package|ProjectionBuildReceipt|reindex|freshness|vector tile|PMTiles|MBTiles" \
-  packages docs contracts policy data tests 2>/dev/null || true
+  "search projection|occurrence_index|compaction|tile package|ProjectionBuildReceipt|reindex|freshness|vector tile|PMTiles|MBTiles" \
+  packages docs contracts schemas policy data tests 2>/dev/null || true
 ```
 
 ### 5) Before adding code here, answer this
@@ -212,8 +214,13 @@ A derived projection that cannot explain what release it came from is a trust pr
 
 ### Keep backend choice behind a boundary
 
-If this package later wraps PostGIS helpers, SQL DDL, vector-tile builders, PMTiles tooling, or search backends, keep the engine choice behind a narrow internal interface.
+If this package later wraps SQL DDL, vector-tile builders, PMTiles tooling, search backends, or other projection engines, keep the engine choice behind a narrow internal interface.
 The package should own **projection behavior and boundary discipline**, not platform mythology.
+
+### Keep schema authority upstream
+
+If a projection builder needs machine-readable receipt, event, or derivative metadata shapes, import or reference the stronger top-level contract / schema lanes.
+Do not fork canonical schema text into this package just because a backend helper happens to need it.
 
 ### Keep deployable concerns out
 
@@ -238,6 +245,7 @@ flowchart LR
     ROOT["../../README.md"]
     DATA["../../data/"]
     CONTRACTS["../../contracts/"]
+    SCHEMAS["../../schemas/"]
     POLICY["../../policy/"]
     DOMAIN["../domain/"]
   end
@@ -258,6 +266,7 @@ flowchart LR
   ROOT -. posture .-> BUILD
   DATA --> BUILD
   CONTRACTS --> BUILD
+  SCHEMAS -. shape .-> BUILD
   POLICY -. constrains .-> BUILD
   DOMAIN --> BUILD
 
@@ -285,6 +294,7 @@ flowchart LR
 | Outputs | Emit derived, rebuildable projections only |
 | Public access | Stay behind governed runtime surfaces; this package is not a public API |
 | Freshness | Prefer rebuild, mark stale, or withdraw over bluffing that a projection is current |
+| Schema authority | Reference top-level contracts / schemas instead of forking local canonical schema truth |
 | Authority | Never become the source-of-record for truth, rights, policy, or outward release state |
 | Current public tree used for revision | README-only |
 | Exact engine mix | `NEEDS VERIFICATION` |
@@ -335,6 +345,11 @@ No.
 Speed does not change authority.
 Derived projections remain rebuildable helpers unless explicitly promoted through stronger governance.
 
+### Should this package own canonical schemas for receipts or runtime responses?
+
+No.
+If a build helper needs those shapes, point to the stronger top-level contract / schema lanes and keep package-local code subordinate to them.
+
 ### Where should code go if it is really about source admission, evidence resolution, or catalog closure?
 
 Use the sibling package whose boundary already names that job:
@@ -358,8 +373,8 @@ The point of this file is to make the boundary legible **without** pretending th
 
 Examples that fit this package boundary include:
 
+- occurrence index writers / compaction jobs
 - spatial search indexes
-- PostGIS spatial index helpers
 - vector-tile or tile-package generation helpers
 
 Treat those as **placement guidance** for the package, not as branch-proven implementation fact.
@@ -369,9 +384,9 @@ Treat those as **placement guidance** for the package, not as branch-proven impl
 ```text
 packages/indexers/
 ├── README.md
-├── search/          # search / vector / graph index builders
+├── search/          # occurrence index writers, search / vector / graph index builders
 ├── tiles/           # tile package and vector-tile build helpers
-├── sql/             # spatial index DDL or migration-safe SQL helpers
+├── adapters/        # engine adapters kept behind narrow internal interfaces
 ├── receipts/        # projection / reindex receipt helpers
 └── tests/           # package-local fixtures and negative-path checks
 ```
@@ -381,7 +396,7 @@ Until then, keep current-state claims conservative.
 
 ### Naming rule
 
-Prefer crisp sub-boundaries such as `search/`, `tiles/`, `sql/`, or `receipts/`.
+Prefer crisp sub-boundaries such as `search/`, `tiles/`, `adapters/`, or `receipts/`.
 Avoid vague buckets such as `common/`, `misc/`, or `utils/`.
 
 </details>
