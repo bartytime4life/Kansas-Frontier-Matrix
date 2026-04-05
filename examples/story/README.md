@@ -4,13 +4,13 @@ title: story
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: NEEDS-VERIFICATION
-policy_label: NEEDS VERIFICATION
-related: [NEEDS-VERIFICATION]
-tags: [kfm]
-notes: [Target path, adjacent links, owners, dates, and mounted repo shape were not directly verified in this session.]
+policy_label: NEEDS-VERIFICATION
+related: [../README.md, ../api/README.md, ../thin_slice/README.md, ../thin_slice/hydrology/README.md, ../ui/README.md, ../../README.md, ../../CONTRIBUTING.md, ../../.github/README.md]
+tags: [kfm, examples, story]
+notes: [Current public main confirms examples/story/README.md exists as a README-only lane; doc UUID, created/updated dates, and final policy label still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # story
@@ -18,112 +18,106 @@ notes: [Target path, adjacent links, owners, dates, and mounted repo shape were 
 Public-safe, non-authoritative Story Node examples, sidecars, and citation-behavior illustrations for Kansas Frontier Matrix.
 
 > **Status:** Experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![lane](https://img.shields.io/badge/lane-story--examples-6f42c1) ![trust](https://img.shields.io/badge/trust-evidence--visible-blue)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** **INFERRED target path from task:** `examples/story/README.md` · **Upstream / downstream anchors:** NEEDS VERIFICATION · **Stronger owner surfaces (conceptually confirmed; mounted paths NEEDS VERIFICATION):** `contracts/`, `schemas/`, `tests/`, `docs/`, `policy/`, `apps/`, `data/`
+> **Owners:** `@bartytime4life`  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: bartytime4life](https://img.shields.io/badge/owners-bartytime4life-0969da) ![Surface: story](https://img.shields.io/badge/surface-story-6f42c1) ![Authority: non-authoritative](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![Branch: main](https://img.shields.io/badge/branch-main-2ea44f) ![Repo: public](https://img.shields.io/badge/repo-public-1f6feb)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `examples/story/README.md` · parent [`../README.md`](../README.md) · repo doctrine [`../../README.md`](../../README.md), [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md), [`../../.github/README.md`](../../.github/README.md) · sibling lanes [`../api/README.md`](../api/README.md), [`../thin_slice/README.md`](../thin_slice/README.md), [`../ui/README.md`](../ui/README.md) · current thin-slice neighbor [`../thin_slice/hydrology/README.md`](../thin_slice/hydrology/README.md)
 
 > [!IMPORTANT]
-> This README is **evidence-bounded**.
+> This README is public-tree-grounded.
 >
-> Current-session evidence confirmed KFM’s **Story surface doctrine**, **Evidence Drawer**, **Focus Mode**, **EvidenceBundle**, **route-family obligations**, and **fail-closed runtime outcomes**.
->
-> Current-session evidence did **not** directly verify the mounted repository tree, adjacent README files, schemas, tests, workflows, manifests, or runtime logs. Treat path-level details here as:
->
-> - **CONFIRMED** — directly supported by the mounted KFM corpus
-> - **INFERRED** — strongly implied by KFM doctrine, but not directly verified in the repo tree
-> - **PROPOSED** — recommended starter shape consistent with doctrine
-> - **UNKNOWN** — not established strongly enough in this session
-> - **NEEDS VERIFICATION** — placeholder requiring direct repo inspection before merge
+> Current public `main` confirms that `examples/story/` exists and currently contains only this `README.md`.
+> Treat additional filenames below as **PROPOSED** until the working branch proves them.
 
 > [!NOTE]
-> The freshest canonical KFM manual directly proposes a **hydrology thin slice** as the smallest public-safe example-first move. A dedicated `examples/story/` lane is therefore **compatible with doctrine** but still **NEEDS VERIFICATION** as mounted repo reality.
-
----
+> `examples/story/` is for narrative and citation-behavior examples.
+> [`../thin_slice/`](../thin_slice/README.md) and [`../thin_slice/hydrology/`](../thin_slice/hydrology/README.md) are the current public lanes for end-to-end slice walkthroughs, so do not let `story/` absorb thin-slice duties.
 
 ## Scope
 
-`story` is the **story-example lane** for KFM — or, where the lane is not yet mounted, the **intended story-example role** this README describes.
+`examples/story/` is KFM’s nested example lane for Story Node and narrative-behavior examples.
 
-Its job is to help contributors, reviewers, and maintainers understand what a **story-shaped KFM artifact** should look like without confusing example material with:
+Use it to show what story-shaped material should look like inside a governed, map-first, time-aware product without turning this directory into publication truth, fixture truth, or runtime truth.
 
-- authoritative release truth
-- canonical schema or contract law
-- merge-blocking fixtures
-- live runtime payloads
-- review receipts or proof objects
-- rights-unclear or sensitivity-bearing source material
+This lane is best for:
 
-A strong artifact here makes four things legible in one review pass:
+- public-safe story markdown
+- citation and Evidence Drawer handoff examples
+- sidecars that make place, time, and trust state visible
+- paired happy-path and fail-closed narrative examples
+- reviewer-oriented examples of correction, generalization, or stale-visible story behavior
 
-1. **story structure**
-2. **place/time anchor**
-3. **evidence drill-through**
-4. **trust-visible behavior**
-
-A weak artifact here becomes a shadow source of truth.
+A weak story example teaches style without trust.  
+A strong story example keeps the route from claim to evidence obvious.
 
 [Back to top](#story)
 
 ## Repo fit
 
-KFM’s doctrine places **Story** in the same governed shell as **Map Explorer**, **Timeline**, **Dossier**, **Evidence Drawer**, **Focus Mode**, **Review / Stewardship**, **Compare**, and **Export**. Story is not a detached article lane. It is a narrative surface that stays downstream of evidence, release state, policy, and correction visibility.
+### What this directory is
+
+A compact, repo-local lane for narrative examples that sits between the parent `examples/` surface and stronger owner surfaces such as contracts, schemas, policy, tests, docs, data, and apps.
+
+### What this directory is not
+
+Not a replacement for:
+
+- machine-enforced contracts in [`../../contracts/README.md`](../../contracts/README.md)
+- schema-owned valid/invalid examples in [`../../schemas/README.md`](../../schemas/README.md)
+- merge-blocking fixtures in [`../../tests/README.md`](../../tests/README.md)
+- policy bundles or decision grammar in [`../../policy/README.md`](../../policy/README.md)
+- release-bearing narrative docs in [`../../docs/README.md`](../../docs/README.md) or governed data lanes
+- runtime-owned story payloads emitted by apps or governed APIs
+
+### Repo-fit table
 
 | Field | Value |
 | --- | --- |
-| Target path | `examples/story/README.md` (**INFERRED from task**) |
-| Mounted path status | **NEEDS VERIFICATION** |
-| Baseline doctrinal anchor | KFM canonical manual |
-| Story role | human-authored narrative publication in the same shell |
-| Story must carry | evidence-linked excerpts, dates, perspective labels, review/correction state |
-| Trust dependencies | Evidence Drawer, EvidenceBundle, Focus Mode, release state, correction state |
-| Related lane directly proposed in doctrine | `examples/thin_slice/hydrology/` (**PROPOSED in KFM manual**) |
-| Adjacent README links | **NEEDS VERIFICATION** |
+| Path | `examples/story/README.md` |
+| Parent lane | [`../README.md`](../README.md) |
+| Sibling example lanes | [`../api/README.md`](../api/README.md) · [`../thin_slice/README.md`](../thin_slice/README.md) · [`../ui/README.md`](../ui/README.md) |
+| Current thin-slice neighbor | [`../thin_slice/hydrology/README.md`](../thin_slice/hydrology/README.md) |
+| Current visible contents | `README.md` only |
+| Owner coverage | `@bartytime4life` via repo-wide fallback in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) |
+| Root anchors | [`../../README.md`](../../README.md) · [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) · [`../../.github/README.md`](../../.github/README.md) |
+| Stronger owner surfaces | [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../docs/README.md`](../../docs/README.md) · [`../../data/README.md`](../../data/README.md) · [`../../apps/`](../../apps/) |
 
-### Why this lane exists
+### Working interpretation
 
-KFM does **not** treat story as “prose first, evidence maybe later.”
+This lane inherits the parent `examples/` rule: examples explain, illustrate, and de-risk; they do not silently replace canonical, policy-bearing, or release-bearing surfaces.
 
-A story example in this repo should demonstrate how a narrative stays anchored to:
+For story-specific work, that means:
 
-- geography
-- time scope
-- released evidence
-- visible uncertainty
-- fail-closed runtime behavior when support is partial or blocked
-
-That makes this lane useful for onboarding and review, but only when it remains clearly **illustrative**.
+- every consequential claim must still resolve through evidence
+- review state must be visible
+- narrative updates should model versioned correction, not silent rewrite
+- polished prose must not hide missing citations, missing scope, or missing rights cues
 
 [Back to top](#story)
 
 ## Accepted inputs
 
-Content that belongs here includes:
+The following material belongs here when it is small, public-safe, and explicitly instructional:
 
-- tiny, public-safe Story Node examples
-- story markdown illustrating evidence-linked excerpts
-- sidecars that clarify map state, time scope, or citation / EvidenceBundle expectations
-- paired happy-path and fail-closed examples
-- redacted example payloads for Story, Evidence Drawer, or Focus handoff
-- public-safe screenshots or diagrams that explain story behavior without becoming the only proof
-- onboarding examples that teach story-to-evidence routing
-- temporary cross-surface examples that are easy to relocate once a stronger owner exists
+- Story Node example markdown
+- sidecars that carry place, time, evidence-route, or trust-state context
+- citation happy-path and citation-failure examples
+- redacted review-state or correction-state sketches
+- screenshots or diagrams that explain story-to-evidence flow without becoming the only evidence
+- mock or miniature payloads that help reviewers understand Story + Evidence Drawer + Focus handoff
 
 ### Good fit heuristic
 
 A good artifact here is:
 
-- **small**
-- **redacted or public-safe**
-- **obviously illustrative**
-- **easy to delete or move**
-- **cross-linked back to stronger owners**
+- **story-shaped**
+- **clearly illustrative**
+- **public-safe**
+- **easy to review in Git**
+- **easy to relocate once a stronger owner exists**
 
 > [!TIP]
-> Prefer paired examples when the behavior matters:
->
-> - one **publishable / supported** story example
-> - one **unresolved / abstaining / denied / stale-visible** story example
+> If the artifact’s primary value is end-to-end slice proof rather than narrative behavior, route it to [`../thin_slice/`](../thin_slice/README.md) instead.
 
 [Back to top](#story)
 
@@ -131,35 +125,35 @@ A good artifact here is:
 
 The following do **not** belong here:
 
-| Do not store here | Why | Put it instead in… |
+| Do not place here | Why | Put it instead in… |
 | --- | --- | --- |
-| published or release-bearing Story Nodes | examples must not become publication truth | governed publication owner surface |
-| canonical schemas, route contracts, or policy registries | these carry authority, not illustration | `contracts/`, `schemas/`, `policy/` |
-| merge-blocking fixtures | executable proof belongs beside the harness that enforces it | `tests/` |
-| review receipts, release proof packs, or correction notices | these are operational trust artifacts | release / review / correction owner surfaces |
-| exact sensitive locations or rights-unclear media | KFM fails closed under unresolved rights or sensitivity | review, quarantine, generalized release, or no-Git handling |
-| app-owned runtime payloads tightly coupled to live behavior | runtime truth should stay near the governed API or app owner | `apps/` or runtime contract owners |
-| screenshot-only “truth” with no evidence route | presentation must not outrank evidence | docs drafts until evidence linkage exists |
-| examples that are the only place a story rule is documented | examples must not become doctrine by accident | doctrinal docs, contracts, or runbooks |
+| Published or release-bearing Story Nodes | example space must not become publication truth | governed publication owner surface |
+| Canonical schemas, route contracts, or policy registries | these carry authority, not illustration | `../../contracts/` · `../../schemas/` · `../../policy/` |
+| Merge-blocking fixtures or negative-path test packs | executable proof belongs with the harness that enforces it | `../../tests/` |
+| Review receipts, release proof packs, or correction notices | these are operational trust artifacts | review / release / correction owner surfaces |
+| Runtime-owned story payloads tied to implementation | example drift must not become API drift | `../../apps/` or governed API owner surfaces |
+| Sensitive coordinates, rights-unclear media, or exact-location story props | KFM fails closed on unresolved rights or precision risk | stewarded review / quarantine / generalized release lanes |
+| Screenshot-only “truth” with no evidence route | presentation must stay downstream of provenance | `../../docs/` drafts until evidence linkage exists |
+| Files that must make CI fail, satisfy a contract, or unlock promotion | that is stronger-than-example responsibility | contracts / schemas / policy / tests / data |
 
 > [!WARNING]
-> If a file is needed to make CI fail, a policy decision execute, a citation resolve, or a release pass, it probably has a stronger owner than `story`.
+> If a file needs to participate in policy evaluation, evidence resolution, runtime guarantees, or release gates, it almost certainly has a stronger owner than `story`.
 
 [Back to top](#story)
 
 ## Directory tree
 
-### Current session evidence
+### Current verified shape
 
 ```text
-NEEDS VERIFICATION
-(repo tree was not directly mounted in this session)
-
-User-requested target:
-examples/story/README.md
+examples/
+└── story/
+    └── README.md
 ```
 
-### Compatible lane shape
+Current public `main` shows no visible nested folders, no `.sample.*` or `.redacted.*` assets, and no companion example packs under this lane yet.
+
+### PROPOSED example pack if the lane grows
 
 ```text
 examples/story/
@@ -176,180 +170,161 @@ examples/story/
 
 Grow this lane only when the artifact is:
 
-1. clearly story-shaped,
-2. clearly non-authoritative,
-3. clearly public-safe, and
-4. not better owned by a stronger surface.
+1. clearly story-shaped
+2. clearly non-authoritative
+3. clearly public-safe
+4. not better owned by a stronger surface
 
 [Back to top](#story)
 
 ## Quickstart
 
-Start by verifying the repo shape instead of assuming it.
+Start with local inspection rather than assumption.
 
 ```bash
-# Inspect the repo tree first
-pwd
-find . -maxdepth 3 -type f | sort | sed -n '1,200p'
+# Verify the example surfaces present in the checkout
+git ls-files 'examples/**' | sort
 ```
-
-Check stronger owners before adding story-shaped material:
 
 ```bash
-# Verify likely stronger owners before adding examples
-find contracts schemas tests docs policy apps data -maxdepth 4 -type f 2>/dev/null \
-  | grep -Ei 'story|evidence|bundle|citation|focus|drawer|review|manifest|correction'
+# Re-read the adjacent routing docs before adding a story example
+sed -n '1,220p' examples/README.md
+sed -n '1,260p' examples/story/README.md
+sed -n '1,260p' examples/thin_slice/README.md
+sed -n '1,260p' examples/thin_slice/hydrology/README.md
 ```
 
-Use the repo’s **actual** validation commands only after they are directly verified.
+```bash
+# Check stronger owner surfaces for story/evidence/focus/citation material first
+git ls-files 'contracts/**' 'schemas/**' 'policy/**' 'tests/**' 'docs/**' 'data/**' 'apps/**' \
+  | grep -Ei 'story|focus|evidence|bundle|citation|receipt|review|manifest|correction'
+```
 
 ```text
-PSEUDOCODE — replace with repo-verified commands
-<schema validation>
-<policy tests>
-<runtime negative-path tests>
-<docs / accessibility gate>
+Use branch-verified validation commands only.
+Do not invent a story-specific validator if the checkout does not expose one.
 ```
 
 Before adding a file, answer these questions:
 
 1. Is it public-safe and rights-clear?
 2. Is it obviously illustrative rather than authoritative?
-3. Does a stronger owner surface already exist?
-4. If it demonstrates citation or fail-closed behavior, where is the governing source of truth?
-5. Can it be deleted or relocated later without breaking the repo’s trust model?
+3. Would `api/`, `thin_slice/`, `thin_slice/hydrology/`, or `ui/` be a better fit?
+4. Does every consequential claim still have a visible route back to evidence?
+5. If the example models failure, does it show a valid trust-visible outcome instead of a bluff?
 
 [Back to top](#story)
 
 ## Usage
 
-### 1. Start from the stronger owner
+### 1. Choose the right example lane first
 
-A story example should never be the only place where KFM story behavior is explained.
+Use the current public example lanes deliberately:
 
-Check the likely owner first:
+| Lane | Best use | Not for |
+| --- | --- | --- |
+| `story/` | narrative examples, sidecars, citation behavior, correction/generalization storytelling | end-to-end slice proof, contract truth, merge gates |
+| [`../thin_slice/`](../thin_slice/README.md) | small end-to-end walkthroughs | narrative-only story examples |
+| [`../thin_slice/hydrology/`](../thin_slice/hydrology/README.md) | hydrology-first proof and walkthrough examples | generic story examples |
+| [`../api/`](../api/README.md) | governed request/response examples | story prose or UI walkthroughs |
+| [`../ui/`](../ui/README.md) | UI example packs and walkthrough assets | contract or release truth |
 
-- **contracts / schemas** for typed truth
-- **tests** for executable positive and negative cases
-- **docs / runbooks** for explanation and operational guidance
-- **apps / governed API** for runtime-owned payload shape
-- **policy** for denial, generalization, and review logic
-- **data / release artifacts** for promoted scope and outward truth
+If none of these lanes is right, the artifact may belong with a stronger owner instead of `examples/`.
 
-Put something in `story` only when its value is **instructional**, **cross-surface**, and **public-safe**.
+### 2. Keep the claim → evidence route visible
 
-### 2. Keep examples paired across trust states
+A story example should make the trust path legible:
 
-KFM’s outward runtime posture is not “answer at any cost.”
+```text
+story text → citation / EvidenceRef → evidence resolution / EvidenceBundle → release scope → correction or review context
+```
 
-Story examples should teach both:
+If a reader cannot tell where a claim came from, the example is teaching the wrong behavior.
 
-- supported narrative flow
-- fail-closed behavior when evidence, rights, sensitivity, freshness, or citation checks break the path
+### 3. Keep place, time, and review state explicit
 
-Good pairs include:
+A strong story example shows, directly or via sidecar:
 
-- `story-citation-happy-path.md`
-- `story-citation-unresolved.md`
+- the place it speaks about
+- the time window it speaks for
+- whether the content is observed, modeled, generalized, partial, stale-visible, withdrawn, or corrected
+- whether review or publication state affects what can be shown
 
-or:
+This lane should model visible review state, not silent narrative rewriting.
 
-- `story-review-state-example.json`
-- `story-generalized-example.json`
+### 4. Show negative outcomes, not just polished success
 
-### 3. Preserve the evidence route
+KFM’s valid outward states are not limited to success. Story examples are stronger when they also demonstrate one or more of:
 
-A strong story example makes the review path obvious:
+- citation failure
+- abstention
+- denial
+- error
+- generalization
+- stale-visible disclosure
+- correction / replacement
 
-**story text → citation / EvidenceRef → EvidenceBundle → release scope → source / correction context**
+A story lane that only shows polished happy paths encourages uncited helpfulness and weak correction discipline.
 
-If that route disappears, the example is teaching the wrong system.
+### 5. Move examples out when they harden
 
-### 4. Keep place and time visible
-
-KFM doctrine requires story to stay in the same shell as map and time-aware inspection.
-
-A good story example therefore exposes, directly or via sidecar:
-
-- what place it is about
-- what time window it speaks for
-- whether the material is observed, modeled, generalized, partial, stale-visible, or withdrawn
-- how a reader drills into evidence without leaving the governed experience
-
-### 5. Separate current fact from intended shape
-
-Use the vocabulary openly:
-
-- **CONFIRMED** for mounted doctrine or repo evidence
-- **INFERRED** for minimal structural completion
-- **PROPOSED** for recommended starter shape
-- **UNKNOWN** for unresolved repo reality
-- **NEEDS VERIFICATION** for branch-local or path-local facts still to check
-
-### 6. Move examples out when they harden
-
-Move an artifact out of `story` when it becomes:
+Relocate material out of `story` when it becomes:
 
 - authoritative
 - release-bearing
 - merge-blocking
 - tightly runtime-owned
 - the only place an important rule exists
-- too sensitive to remain a public-safe example
+- too sensitive for a public-safe lane
 
 [Back to top](#story)
 
 ## Diagram
 
 ```mermaid
-flowchart LR
-    A[Candidate story artifact] --> B{Public-safe and rights-clear?}
-    B -- No --> X[Do not store here<br/>Route to review, quarantine, generalization, or no-Git handling]
-    B -- Yes --> C{Authoritative, release-bearing,<br/>merge-blocking, or tightly app-owned?}
-    C -- Yes --> Y[Use stronger owner surface<br/>contracts · schemas · tests · docs · policy · apps · data]
-    C -- No --> D[Create a small illustrative pack]
-    D --> E[Story markdown example]
-    D --> F[Map / time / citation sidecar]
-    D --> G[Trust-state example]
-    G --> H{Support resolves cleanly?}
-    H -- Yes --> I[Happy-path example]
-    H -- No --> J[ABSTAIN / DENY / ERROR / stale-visible example]
-    I --> K[Cross-link stronger owners]
-    J --> K
-    K --> L[Keep clearly non-authoritative]
+flowchart TD
+    A[Candidate example artifact] --> B{Primary value?}
+
+    B -- Narrative / citation / Story behavior --> C{Public-safe and non-authoritative?}
+    B -- End-to-end slice walkthrough --> D[Route to ../thin_slice/]
+    B -- Hydrology-first thin-slice proof --> E[Route to ../thin_slice/hydrology/]
+    B -- Request / response example --> F[Route to ../api/]
+    B -- UI walkthrough or state pack --> G[Route to ../ui/]
+
+    C -- No --> H[Use a stronger owner surface<br/>contracts · schemas · policy · tests · docs · data · apps]
+    C -- Yes --> I[Keep in examples/story/]
+
+    I --> J[Story markdown]
+    I --> K[Story sidecar]
+    I --> L[Trust-state or correction example]
+
+    J --> M{Needs to gate CI, satisfy a contract, or unlock release?}
+    K --> M
+    L --> M
+
+    M -- Yes --> H
+    M -- No --> N[Keep small, reviewable, and easy to relocate]
 ```
 
 [Back to top](#story)
 
 ## Tables
 
-### Placement matrix
+### Story placement matrix
 
-| Artifact class | Keep in story lane? | Stronger owner when authoritative | Why |
+| Artifact class | Keep in `story`? | Stronger owner when authoritative | Why |
 | --- | --- | --- | --- |
 | Tiny redacted story markdown | Yes | docs / contracts / app owner | good for review and onboarding |
-| Story sidecar with map/time/citation context | Yes, if public-safe | contracts / apps / tests | useful for explanation, risky as live payload truth |
-| Citation happy-path example | Yes | tests / contracts | teaches supported flow |
-| Unresolved-citation negative example | Yes | tests | teaches fail-closed behavior |
-| Story schema fixture | Sometimes | schemas / tests | canonical validation should not drift into examples |
-| Story review-state sketch | Sometimes | contracts / docs / review owner | explanation aid, not operational truth |
-| Evidence Drawer example launched from story | Yes, if illustrative | apps / contracts / docs | makes provenance route visible |
+| Story sidecar with place/time/citation context | Yes, if public-safe | contracts / apps / tests | useful for explanation, risky as live payload truth |
+| Citation happy-path example | Yes | tests / contracts | teaches supported narrative flow |
+| Citation-failure or abstention example | Yes | tests / policy | teaches fail-closed behavior |
+| Review-state or correction-state sketch | Sometimes | docs / contracts / review owner | explanation aid, not operational truth |
+| Evidence Drawer handoff example | Yes, if illustrative | apps / contracts / docs | keeps provenance route visible |
 | Published story release object | No | publication owner surface | release-bearing objects are not examples |
 | Rights-unclear archival material | No | nowhere public until resolved | violates KFM trust posture |
 | Exact-location narrative example with sensitivity burden | No, unless generalized | review / generalized publication lane | must not leak precision |
 
-### Story example pack rubric
-
-| Review question | Expected answer here |
-| --- | --- |
-| Does it prove a small, complete idea quickly? | yes |
-| Is the authority clearly labeled? | yes — example / illustrative / sample / redacted |
-| Is evidence drill-through visible? | yes |
-| Is a fail-closed or constrained state shown where relevant? | yes |
-| Can a stronger owner be named? | yes |
-| Is deletion or relocation safe later? | yes |
-
-### Trust-state reminders for story examples
+### Trust-state reminders
 
 | State | What a reader should see | What the example should avoid |
 | --- | --- | --- |
@@ -360,6 +335,15 @@ flowchart LR
 | denied / abstained | reasoned non-answer or blocked state | “best-effort” bluffing |
 | withdrawn / corrected | visible lineage and replacement context | erasing history |
 
+### Current public inventory snapshot
+
+| Path | Current visible contents | Working reading |
+| --- | --- | --- |
+| `examples/` | `api/`, `story/`, `thin_slice/`, `ui/`, `README.md` | parent routing lane for example surfaces |
+| `examples/story/` | `README.md` only | story lane exists but is still scaffold-light |
+| `examples/thin_slice/` | `README.md`, `hydrology/README.md` | end-to-end slice lane with a current hydrology-first neighbor |
+| `.github/CODEOWNERS` | `/examples/` owned by `@bartytime4life` | safe owner baseline for this lane until narrower coverage is verified |
+
 [Back to top](#story)
 
 ## Task list / Definition of done
@@ -369,42 +353,43 @@ A contribution to this lane is ready when all relevant checks below are true:
 - [ ] It is public-safe, rights-clear, and small enough to review in one pass.
 - [ ] It is explicitly labeled as illustrative, example, demo, sample, or redacted.
 - [ ] It does not pretend to be canonical story truth, a release object, or a policy artifact.
-- [ ] The stronger owner surface was checked first.
+- [ ] The parent `examples/` README and the stronger owner surfaces were checked first.
+- [ ] The file would not fit better in `api/`, `thin_slice/`, `thin_slice/hydrology/`, or `ui/`.
 - [ ] Place, time, and evidence route are visible.
-- [ ] If it demonstrates behavior, the related contract, policy, test, or runbook is named.
-- [ ] If a negative case matters, a visible fail-closed example exists somewhere reviewable.
+- [ ] Review or correction state is visible where it matters.
+- [ ] If it models failure, it uses a real trust-visible outcome such as Answer, Abstain, Deny, or Error rather than a vague placeholder.
 - [ ] It does not imply screenshots, prose, or layout alone are evidence.
-- [ ] Sensitive places, exact locations, or reuse-unclear source material are excluded or generalized.
+- [ ] Sensitive places, exact locations, or reuse-unclear material are excluded or generalized.
 - [ ] Deletion or relocation will be easy once a stronger owner becomes real.
-- [ ] Any path-level claims beyond this file are marked **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION**.
+- [ ] Any unverified path-local claims are marked **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 [Back to top](#story)
 
 ## FAQ
 
-### Why can this lane stay almost empty?
+### Why is this lane still so small?
 
-Because a good directory README can still do real work: it keeps story examples from drifting into release truth and tells contributors what belongs here versus elsewhere.
+Because current public `main` shows `examples/story/` as a README-only lane. That is acceptable. A small lane is better than a misleading lane.
 
-### Why not store real published stories here?
+### When should I use `thin_slice/` instead of `story/`?
 
-Because KFM separates **illustration** from **governed publication**. Published stories, release state, correction chains, and proof artifacts belong with stronger owner surfaces.
+Use `thin_slice/` when the example’s primary job is to show an end-to-end governed slice. Use `story/` when the example’s primary job is to show narrative, citation, Evidence Drawer, review-state, or trust-visible story behavior.
 
-### Why does this README talk so much about Evidence Drawer and Focus Mode?
+### Why can’t a polished story example stand on its own?
 
-Because KFM story is not a detached essay surface. Story, Evidence Drawer, and Focus live in the same governed shell and share trust obligations.
+Because consequential claims still have to resolve through evidence. Story examples should show the route from claim to evidence rather than replacing provenance with fluent prose.
 
-### Why are negative examples important?
+### Why does this README care about Focus Mode and the Evidence Drawer?
 
-Because KFM treats **ABSTAIN**, **DENY**, **ERROR**, **generalized**, **partial**, and **stale-visible** as valid outward states. A story examples lane that only shows the polished path teaches the wrong system.
+Because current repo guidance treats story, evidence, and bounded question answering as neighboring trust surfaces. A story example that ignores those adjacent surfaces teaches the wrong product behavior.
 
-### Why is the target path marked as INFERRED?
+### Why keep `NEEDS-VERIFICATION` placeholders in the meta block?
 
-Because this session directly verified doctrinal PDFs, not the repo tree. The task names `examples/story/README.md`, but mounted workspace evidence for that exact path still needs direct repo inspection.
+Because the current public tree confirms path and owner coverage, but it does not directly confirm this file’s canonical doc UUID, created date, updated date, or final policy label.
 
-### Why is hydrology mentioned in a story README?
+### Why mention hydrology here at all?
 
-Because the canonical manual directly proposes hydrology as the preferred first thin slice. That matters here: it shows what is actually evidenced today, and it keeps this story lane from overstating its repo reality.
+Because the current public examples tree already includes `../thin_slice/hydrology/` as the hydrology-first teaching lane. Story examples should coexist with that lane, not quietly absorb its purpose.
 
 [Back to top](#story)
 
@@ -413,7 +398,7 @@ Because the canonical manual directly proposes hydrology as the preferred first 
 <details>
 <summary><strong>PROPOSED sidecar fields for story example packs</strong></summary>
 
-Use a sidecar only when the example needs context a filename cannot carry.
+Use a sidecar only when the filename and markdown body cannot carry enough context.
 
 ```yaml
 example_id: NEEDS-VERIFICATION
@@ -421,27 +406,25 @@ title: Story example title
 purpose: Short sentence explaining what this demonstrates
 authority_status: illustrative
 content_kind: story_markdown | story_sidecar | review_state | asset
-owner_surface: NEEDS-VERIFICATION
+owner_surface: examples/story
 redaction_status: public_safe
 citation_mode: resolvable | intentionally_broken | omitted_for_demo
 place_scope: NEEDS-VERIFICATION
 time_scope: NEEDS-VERIFICATION
-trust_state: promoted | generalized | partial | stale_visible | denied | abstained | withdrawn
-evidence_bundle_ref: ./story-sidecar-redacted.json
-validation_links:
-  - NEEDS-VERIFICATION
+trust_state: promoted | generalized | partial | stale_visible | denied | abstained | withdrawn | corrected
+evidence_bundle_ref: NEEDS-VERIFICATION
 notes:
   - Keep narrative claims downstream of evidence and policy
-  - Replace path placeholders after direct repo inspection
+  - Replace placeholders only when the working branch proves them
   - Do not silently upgrade this file into a proof object
 ```
 
 </details>
 
 <details>
-<summary><strong>PROPOSED naming guidance</strong></summary>
+<summary><strong>PROPOSED filename guidance</strong></summary>
 
-Prefer names that tell a reviewer what the file is doing:
+Prefer names that tell a reviewer exactly what the example does:
 
 - `story-citation-happy-path.md`
 - `story-citation-unresolved.md`
@@ -459,20 +442,27 @@ Avoid names that imply authority or production state:
 </details>
 
 <details>
-<summary><strong>Story-specific runtime-state vocabulary to illustrate, not to overclaim</strong></summary>
+<summary><strong>Illustrative story example skeleton</strong></summary>
 
-These are good illustrative states to model in examples when relevant:
+```markdown
+# Example title
 
-| Example code / state | Meaning in story examples |
-| --- | --- |
-| `runtime.evidence_missing` | no reconstructible evidence path |
-| `runtime.citation_failed` | evidence was found but user-visible claim verification failed |
-| `generalize` | only a generalized representation may be shown |
-| `withhold` | do not publish on the requested surface |
-| `disclose_partial` | mark incompleteness in place |
-| `disclose_modeled` | mark modeled or assimilated content in place |
+> Status: Example
+> Trust state: generalized
+> Place scope: county-level
+> Time scope: 1930s drought period
+> Evidence route: EvidenceRef -> EvidenceBundle
 
-Use them as **behavior illustrations**, not as proof that a mounted implementation already exists.
+Narrative text here.
+
+## Why this example exists
+
+Explain the behavior being taught.
+
+## What happens when support fails
+
+Show the visible negative outcome instead of bluffing.
+```
 
 </details>
 
