@@ -4,13 +4,13 @@ title: templates
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life (broad default CODEOWNERS ownership reported; docs/templates-specific mapping NEEDS VERIFICATION)
+owners: @bartytime4life
 created: NEEDS_VERIFICATION
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: NEEDS_VERIFICATION
-related: [../../README.md, ../standards/, ../governance/, ../reports/story_nodes/]
-tags: [kfm, docs, templates, governance]
-notes: [Source-bounded revision from the supplied baseline. Live docs/templates inventory, adjacent README conventions, and directory-specific CODEOWNERS mapping were not re-verified in this revision and should be checked against the active repository before merge.]
+related: [../../README.md, ../README.md, ../../.github/CODEOWNERS, ../standards/README.md, ../standards/markdown-rules.md, ../governance/README.md, ../reports/story_nodes/README.md, ./TEMPLATE__KFM_UNIVERSAL_DOC.md, ./TEMPLATE__STORY_NODE_V3.md, ./TEMPLATE__API_CONTRACT_EXTENSION.md]
+tags: [kfm, docs, templates, markdown, governance]
+notes: [Public-main repo path, local template inventory, and broad /docs/ ownership were re-verified in this revision; repository-assigned doc_id, created date, policy_label, and working-branch parity still need confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 # templates
@@ -18,61 +18,67 @@ notes: [Source-bounded revision from the supplied baseline. Live docs/templates 
 Governed template hub for reusable KFM documentation scaffolds, promotion-ready doc shells, and review-friendly Markdown patterns.
 
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(broad default ownership is source-reported; recheck `../../.github/CODEOWNERS` for any directory-specific mapping before commit)*  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs%2Ftemplates-2f81f7) ![scope](https://img.shields.io/badge/scope-governed%20doc%20templates-8250df) ![truth](https://img.shields.io/badge/truth-source--bounded-0a7d5a) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Directory tree](#current-and-source-reported-footprint) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Template registry](#template-registry) · [Contribution gates](#contribution-gates) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
-
-> [!NOTE]
-> This README is intentionally conservative. It preserves the supplied doctrinal baseline, but live directory inventory, adjacent path presence, and CODEOWNERS mapping were not re-verified in this revision. Those details remain visibly marked `INFERRED` or `NEEDS VERIFICATION`.
+> **Owners:** `@bartytime4life` *(public `/.github/CODEOWNERS` assigns `/docs/` to this owner on public `main`; no narrower `/docs/templates/` rule is visible here)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs%2Ftemplates-2f81f7) ![scope](https://img.shields.io/badge/scope-governed%20doc%20templates-8250df) ![truth](https://img.shields.io/badge/truth-public--tree%20rechecked-1f883d) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-lightgrey) ![meta](https://img.shields.io/badge/meta-KFM__META__BLOCK__V2-9a6700)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Template registry](#template-registry) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/templates/README.md` · upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../standards/README.md`](../standards/README.md), [`../standards/markdown-rules.md`](../standards/markdown-rules.md) · downstream [`./TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md), [`./TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md), [`./TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md), instantiated docs across `docs/`
 
 > [!IMPORTANT]
-> `docs/templates/` is for reusable **documentation scaffolds**. It is not a second truth path.
->
-> Templates can standardize metadata, review sections, promotion reminders, and Markdown structure, but instantiated contracts, policy bodies, Story Nodes, reports, datasets, and runtime artifacts still belong in their owning surfaces.
+> `docs/templates/` standardizes document **shape**, **reviewability**, and **truth posture**. It does not authorize facts, replace contracts or policy, or create a second truth path.
+
+> [!NOTE]
+> This revision is public-tree-grounded. The local template inventory, broad `/docs/` ownership signal, and adjacent consumer surfaces are visible on public `main`; repository-assigned metadata, working-branch parity, and any non-public automation or review settings still need direct branch/platform verification.
 
 ## Scope
 
-`docs/templates/` is the reusable scaffold shelf for KFM’s documentation layer.
+`docs/templates/` is KFM’s reusable scaffold shelf for governed Markdown.
 
-Its job is to make repeatable documentation shapes easy to reuse without letting Markdown drift into unofficial system truth. In practice, that means the files here should help maintainers author README-like docs, governed standards notes, Story Node starting points, and API-change writeups that preserve KFM’s evidence-first posture.
+Its job is to make repeatable documentation shapes easy to reuse without letting Markdown drift into unofficial system truth. In practice, that means the files here should help maintainers author directory READMEs, governed standards notes, Story Node publication units, and contract-extension writeups that stay downstream of evidence, policy, review, and correction.
 
-Use this directory for:
+Use this directory when the need is **reusable**, not merely important.
+
+Use it for:
 
 - reusable Markdown templates that apply across more than one doc or directory
 - shared metadata, status, evidence-boundary, or review scaffolds
-- promotion-aware document shells that clarify required sections and link strategy
+- promotion-aware document shells that make ownership, scope, and verification visible
 - lightweight authoring aids that reduce drift across docs without replacing local meaning
 
-Do not use this directory for:
+Do not use it for:
 
 - filled-in canonical docs that belong in an owning directory
 - policy logic, schema truth, or executable contract definitions
-- generated evidence objects, receipts, manifests, or release artifacts
-- runtime code, UI code, model outputs, data files, or secrets
-- one-off drafts that are not truly reusable templates
+- generated evidence objects, manifests, receipts, release artifacts, or runtime outputs
+- runtime code, UI code, worker logic, model outputs, data files, or secrets
+- one-off drafts that are not actually reusable templates
 
 [Back to top](#templates)
 
 ## Repo fit
 
-**Surface path:** `docs/templates/`  
-**This file:** `docs/templates/README.md`
+| Item | Value |
+|---|---|
+| Path | `docs/templates/README.md` |
+| Path status | **CONFIRMED** on public `main`; working-branch parity still **NEEDS VERIFICATION** |
+| Role in repo | directory README and template-selection guide for KFM’s reusable documentation scaffold surface |
+| Upstream guidance | [`./README.md`](./README.md), [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../standards/README.md`](../standards/README.md), [`../standards/markdown-rules.md`](../standards/markdown-rules.md) |
+| Adjacent consumer surfaces | [`../standards/README.md`](../standards/README.md), [`../governance/README.md`](../governance/README.md), [`../reports/story_nodes/README.md`](../reports/story_nodes/README.md) |
+| Current local inventory | `README.md` plus three checked-in template files under `docs/templates/` |
+| Ownership signal | broad public `CODEOWNERS` coverage routes `/docs/` to `@bartytime4life`; no narrower `docs/templates/` rule is visible on public `main` |
+| Working rule | instantiate templates in the owning surface; keep `docs/templates/` limited to reusable scaffolds |
 
-**Role in repo:** directory README for the governed documentation template surface.
+### Current public template surface
 
-### Upstream and downstream anchors
+| Surface | Current public `main` state | Primary job |
+|---|---|---|
+| [`README.md`](./README.md) | Present | directory contract and selection guide for the template shelf |
+| [`TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md) | Present | general governed-document scaffold with explicit evidence posture, review hooks, and `KFM_META_BLOCK_V2` alignment |
+| [`TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) | Present | Story Node v3 starter for narrative + sidecar + review/publication state |
+| [`TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) | Present | contract-first extension doc scaffold for schema, route, policy, fixture, and rollback-bearing API changes |
 
-| Direction | Surface | Why it matters | Status |
-|---|---|---|---|
-| Current | `docs/templates/` | reusable scaffold surface for documentation patterns | **CONFIRMED** target surface in supplied baseline |
-| Current | [`README.md`](README.md) | directory contract and contributor entrypoint for this surface | **CONFIRMED** target file in supplied baseline |
-| Upstream | [`../../README.md`](../../README.md) | likely root operating posture and trust framing | **INFERRED** / **NEEDS VERIFICATION** |
-| Adjacent | [`../standards/`](../standards/) | likely consumer surface for governed standards docs | **INFERRED** / **NEEDS VERIFICATION** |
-| Adjacent | [`../governance/`](../governance/) | likely consumer surface for ethics, review, and sovereignty docs | **INFERRED** / **NEEDS VERIFICATION** |
-| Adjacent | [`../reports/story_nodes/`](../reports/story_nodes/) | likely home for Story Node instances that consume templates | **INFERRED** / **NEEDS VERIFICATION** |
-| Downstream | `docs/templates/TEMPLATE__*.md` | reusable authoring entrypoints for other documentation surfaces | **INFERRED** / **NEEDS VERIFICATION** |
+### Why this directory matters
 
-This directory matters because the supplied baseline presents KFM documentation as a governed control surface, not a loose collection of prose. Templates help docs stay reviewable, provenance-conscious, and structurally consistent without turning Markdown into an unofficial implementation layer.
+This directory matters because KFM treats documentation as a production-facing trust surface. Templates help docs stay reviewable, provenance-conscious, and structurally consistent without turning prose into an unofficial implementation layer.
 
 ## Accepted inputs
 
@@ -80,11 +86,11 @@ Content that belongs in `docs/templates/` includes:
 
 | Template class | What belongs here | Notes |
 |---|---|---|
-| Directory README scaffolds | reusable index patterns for repo directories | keep scope, exclusions, and evidence posture explicit |
-| Governed document shells | repeatable structures for standards, guidance notes, or operational docs | favor reusable sections over decorative snippets |
-| Promotion-oriented templates | Story Node, API extension, and other doc classes with predictable review sections | only the template lives here; filled-in artifacts belong elsewhere |
-| Authoring aids | placeholder comments, review checklists, metadata scaffolds | keep these lightweight and Markdown-native |
-| Example fragments | small, clearly labeled examples that teach shape or section rhythm | examples should clarify structure, not become hidden truth |
+| Directory README scaffolds | reusable index patterns for repo directories | keep scope, exclusions, repo fit, and evidence posture explicit |
+| Governed document shells | repeatable structures for standards, guidance notes, runbooks, analyses, and other Markdown surfaces that need stable review hooks | use the universal template when no narrower scaffold fits |
+| Story publication scaffolds | Story Node starters with claim, evidence, sidecar, review, and publication sections | keep the reusable shell here; instantiate the real node elsewhere |
+| Contract-extension templates | documentation scaffolds for API or contract changes that affect schema, routes, policy, fixtures, tests, or rollback posture | keep machine truth in contracts, schemas, policy, fixtures, and tests |
+| Authoring aids | metadata comments, checklists, reviewer prompts, and small example fragments | keep them lightweight, repo-native, and obviously reusable |
 
 ## Exclusions
 
@@ -93,132 +99,182 @@ The following do **not** belong here as canonical truth:
 | Does **not** belong here | Keep it here instead |
 |---|---|
 | filled-in governance, standards, runbooks, reports, or architecture docs | owning `docs/` subdirectory |
-| OpenAPI, JSON Schema, vocabularies, or machine-enforced envelopes | `../../contracts/` and `../../schemas/` |
-| policy bundles, deny-by-default logic, executable review rules | `../../policy/` |
-| Story Node instances, published narratives, evidence drawers, or report deliverables | owning narrative/report surface |
-| raw, work, processed, or cataloged datasets and receipts | governed data lifecycle surfaces |
-| runtime code, workers, UI components, or service logic | owning code surface |
+| machine-enforced contracts, schemas, envelopes, DTOs, or controlled vocabularies | [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/) |
+| executable policy bundles, reason/obligation registries, or decision tests | [`../../policy/`](../../policy/) |
+| Story Node instances, published narratives, Evidence Drawer payloads, or report deliverables | owning narrative/report surface such as [`../reports/story_nodes/`](../reports/story_nodes/) |
+| canonical data artifacts, receipts, manifests, release proofs, or published datasets | [`../../data/`](../../data/) or the owning artifact surface |
+| runtime code, workers, UI components, or service logic | owning code surfaces under [`../../apps/`](../../apps/), [`../../packages/`](../../packages/), [`../../pipelines/`](../../pipelines/), or [`../../scripts/`](../../scripts/) |
 | secrets, credentials, signed URLs, or sensitive coordinates | never in docs |
+| one-off scratch notes that are neither reusable nor review-bearing | a working draft or research surface, not the governed template shelf |
 
 ## Evidence labels used here
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | directly supported by the supplied baseline or explicit target surface for this file |
-| **INFERRED** | a reasonable conclusion from supplied baseline language, but not re-enumerated from a live repo tree in this revision |
-| **PROPOSED** | a repo-native improvement or authoring rule added on purpose |
-| **UNKNOWN** | not established strongly enough to present as current fact |
-| **NEEDS VERIFICATION** | placeholder value or detail that should be rechecked against the active repository before merge |
+| **CONFIRMED** | directly supported by the current public repo tree, checked-in docs, or other visible evidence in this revision |
+| **INFERRED** | conservative structural completion supported by repeated project signals, but not directly proven as detailed branch/runtime behavior |
+| **PROPOSED** | a repo-native improvement or future template class suggested here on purpose |
+| **UNKNOWN** | not established strongly enough to present as current project fact |
+| **NEEDS VERIFICATION** | a concrete value or condition that should be checked on the exact working branch before merge |
 
 ## Current evidence boundary
 
-> [!NOTE]
-> The supplied `docs/templates/README.md` draft functions as the redesign baseline for this revision. Where that baseline named paths, files, or ownership without live re-verification, this README keeps uncertainty visible instead of smoothing it away.
+This revision grows upward from the existing `docs/templates/README.md`, not from a blank page.
 
-| Observation | Status | Why it changes this README |
+It keeps the current file’s strongest substance, but upgrades the evidence boundary from “source-reported local inventory” to a verified public-main snapshot.
+
+| Observation | Status | Consequence for this README |
 |---|---|---|
-| The supplied baseline treats `docs/templates/` as a governed documentation surface rather than a scratch folder | **CONFIRMED** | this README should define the directory as an operational authoring surface, not a dumping ground |
-| The supplied baseline names three specific template files under `docs/templates/` | **INFERRED** / **NEEDS VERIFICATION** | those filenames can remain in the registry and tree, but should stay visibly qualified until rechecked |
-| Broad default ownership is reported as `@bartytime4life` | **INFERRED** / **NEEDS VERIFICATION** | owners can be shown, but directory-specific CODEOWNERS mapping should remain qualified |
-| Adjacent surfaces `../standards/`, `../governance/`, and `../reports/story_nodes/` are presented as related consumers or peers | **INFERRED** / **NEEDS VERIFICATION** | cross-links can be preserved, but not upgraded into stronger implementation claims |
-| Live tree inventory, adjacent README conventions, and `.github/CODEOWNERS` were not re-verified in this revision | **CONFIRMED** revision boundary | this README must not imply stronger repository inspection than actually occurred |
+| `docs/templates/` currently contains `README.md` plus three template files on public `main` | **CONFIRMED** | the local inventory can be described directly instead of being left source-reported and tentative |
+| `docs/standards/markdown-rules.md` is present and defines the current Markdown authoring protocol, including `KFM_META_BLOCK_V2` and README rules | **CONFIRMED** | this README should link to it explicitly and stay aligned with it |
+| `docs/standards/README.md`, `docs/governance/README.md`, and `docs/reports/story_nodes/README.md` are present on public `main` | **CONFIRMED** | adjacent consumer surfaces can be named directly in repo-fit and usage guidance |
+| Public `.github/CODEOWNERS` routes `/docs/` to `@bartytime4life` | **CONFIRMED** | the owner line can name the broad docs owner safely |
+| The intended role of each local template file is stated in the template files themselves | **CONFIRMED** | the registry below can describe concrete template roles rather than generic guesses |
+| Repository-assigned `doc_id`, original `created` date, final `policy_label`, any narrower subdirectory co-owner rule, and working-branch parity | **NEEDS VERIFICATION** | keep those values visible as placeholders instead of guessing |
+| Non-public GitHub rulesets, required checks, environment approvals, and other platform-only settings | **UNKNOWN** | this README should not imply review or automation behavior that the public tree does not prove |
 
-## Current and source-reported footprint
+> [!CAUTION]
+> The public tree is a strong baseline, but the branch under review still outranks it. Re-check the exact branch before relying on any path, ownership, or local inventory claim during merge.
 
-### Target surface
+## Directory tree
 
-```text
-docs/
-└── templates/                                    # CONFIRMED target surface
-```
-
-### Source-reported template inventory
+Current public `main` shows the following `docs/templates/` layout:
 
 ```text
 docs/templates/
-├── README.md                                     # CONFIRMED target file
-├── TEMPLATE__KFM_UNIVERSAL_DOC.md                # INFERRED / NEEDS VERIFICATION
-├── TEMPLATE__STORY_NODE_V3.md                    # INFERRED / NEEDS VERIFICATION
-└── TEMPLATE__API_CONTRACT_EXTENSION.md           # INFERRED / NEEDS VERIFICATION
+├── README.md
+├── TEMPLATE__API_CONTRACT_EXTENSION.md
+├── TEMPLATE__KFM_UNIVERSAL_DOC.md
+└── TEMPLATE__STORY_NODE_V3.md
 ```
 
-That split is intentional. This README distinguishes between the **confirmed target surface** and the **source-reported local inventory** so that maintainers can verify live repo state before merge.
+Working rule:
+
+```text
+docs/templates/                   # reusable scaffold shelf
+└── TEMPLATE__*.md               # reusable shells only
+
+docs/<owning-surface>/           # where the real filled-in document belongs
+└── <real-document>.md
+```
+
+> [!TIP]
+> A template succeeds when it reduces drift and review friction without hiding uncertainty or inventing implementation state.
 
 [Back to top](#templates)
 
 ## Quickstart
 
-Use a verify-first sequence before adding or revising templates.
+Use an inspection-first sequence before adding, deleting, or revising templates.
 
 > [!WARNING]
-> The commands below are repo-local inspection examples. They are the right pre-merge checks in a live checkout, but they are not retroactive proof of current inventory unless actually run against the active repository.
+> The commands below are the right pre-merge checks in a real checkout. They are examples of what to verify locally on the active branch, not proof that branch-local state still matches public `main`.
+
+### Re-check the current template surface
 
 ```bash
-# Inspect the current surface
+sed -n '1,260p' docs/templates/README.md
 ls -la docs/templates
 find docs/templates -maxdepth 1 -type f | sort
-sed -n '1,240p' docs/templates/README.md
+```
 
-# Re-check owners and adjacent governed docs surfaces
-sed -n '1,200p' .github/CODEOWNERS 2>/dev/null
-find docs/standards docs/governance docs/reports -maxdepth 2 -type f 2>/dev/null | sort
+### Re-check ownership and governing authoring rules
 
-# Search for template references across docs and workflows
+```bash
+sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,260p' docs/standards/markdown-rules.md
+sed -n '1,220p' docs/standards/README.md
+sed -n '1,220p' docs/governance/README.md
+sed -n '1,220p' docs/reports/story_nodes/README.md
+```
+
+### Open the existing templates before creating a new one
+
+```bash
+sed -n '1,260p' docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md
+sed -n '1,260p' docs/templates/TEMPLATE__STORY_NODE_V3.md
+sed -n '1,260p' docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md
+```
+
+### Search for current references
+
+```bash
 grep -RIn "TEMPLATE__KFM_UNIVERSAL_DOC\|TEMPLATE__STORY_NODE_V3\|TEMPLATE__API_CONTRACT_EXTENSION" docs .github 2>/dev/null
+```
 
-# Re-check broader repo framing before changing template contracts
-sed -n '1,220p' README.md 2>/dev/null
+### Start from the smallest fitting scaffold
+
+```bash
+# general governed doc or README-like standard doc
+cp docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md docs/architecture/TARGET.md
+
+# Story Node publication unit
+cp docs/templates/TEMPLATE__STORY_NODE_V3.md docs/reports/story_nodes/TARGET.md
+
+# contract-bearing API extension note
+cp docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md docs/standards/TARGET.md
 ```
 
 ## Usage
 
-### When to use this directory
+### Choose the smallest fitting scaffold
 
-Reach for `docs/templates/` when the documentation need is **reusable**, not merely important. If more than one doc class needs the same governed skeleton, review hints, evidence-boundary language, or promotion reminders, a template belongs here.
+| Need | Preferred starting point | Why |
+|---|---|---|
+| Directory README or general governed Markdown doc | this local README pattern or [`TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md) | best fit for explicit scope, repo fit, evidence posture, and review hooks |
+| Story Node or story-publication doc | [`TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) | already carries narrative, sidecar, claim, evidence, review, and publication structure |
+| Contract-bearing API change doc | [`TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) | keeps schema, route, policy, fixture, test, and rollback consequences visible |
+| Repeated new doc shape not covered by the three existing templates | new template only after a second real need appears | avoids template sprawl and keeps the shelf purposeful |
 
-### When **not** to use this directory
+### Authoring flow
 
-Do **not** add a template just because a document matters. If the artifact is the actual policy, actual contract, actual Story Node, or actual runbook, it belongs in its owning surface.
-
-### Suggested authoring flow
-
-1. Start in the owning docs surface and confirm the artifact type: directory README, governed standard, runbook, Story Node, or API extension note.
-2. Check whether a reusable template already exists here.
-3. If one exists, instantiate it in the owning surface and keep directory-local meaning there.
-4. If none exists, add a new template here only when the shape is clearly reusable across multiple docs.
-5. Keep behavior-significant doc changes in the same change stream as the contracts, policy, code, or runbooks they explain.
+1. Classify the document first: directory README, standard doc, Story Node, or contract-bearing API extension.
+2. Read [`../standards/markdown-rules.md`](../standards/markdown-rules.md) before changing template protocol or metadata conventions.
+3. Open the nearest existing template and the nearest adjacent README to match local rhythm and terminology.
+4. Copy the chosen template into the owning surface and rename it for the real topic.
+5. Resolve the top-of-file metadata first: status, owners, quick jumps, repo fit, and any `KFM_META_BLOCK_V2` placeholders.
+6. Link behavior-significant claims to the owning contracts, schemas, policy docs, fixtures, tests, workflows, or implementation files where those exist.
+7. Keep `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, and `NEEDS VERIFICATION` visible when certainty is partial.
+8. Update this README in the same change if local template inventory, ownership guidance, or template-selection rules change.
 
 ### Selection rule
 
-Use the smallest template that preserves truth posture. A template succeeds when it reduces drift and review friction without hiding uncertainty or inventing implementation state.
+Use the smallest template that preserves truth posture. A template is doing its job when it standardizes **shape**, **reviewability**, and **handoff clarity** without pretending to be the source of runtime truth.
 
 > [!TIP]
-> A KFM template should standardize **shape**, **reviewability**, and **truth posture**. It should not silently smuggle in system claims the template itself cannot prove.
+> Before creating a fourth template, check whether a directory-local README pattern or the universal template already covers the need.
 
 ## Diagram
 
 ```mermaid
 flowchart TD
     A[Documentation need] --> B{Reusable across multiple docs?}
-    B -- No --> C[Write in owning surface]
-    B -- Yes --> D[Create or revise template in docs/templates/]
-    D --> E[Carry metadata, scope, exclusions, and evidence posture]
-    E --> F[Instantiate in the owning docs surface]
-    F --> G[Link to standards, governance, contracts, or Story Nodes as needed]
-    G --> H[Review, promote, or revise]
+    B -- No --> C[Write in the owning surface]
+    B -- Yes --> D{What kind of scaffold?}
+    D -- Standard doc or README --> E[TEMPLATE__KFM_UNIVERSAL_DOC.md<br/>or the local README pattern]
+    D -- Story publication unit --> F[TEMPLATE__STORY_NODE_V3.md]
+    D -- Contract-bearing API change --> G[TEMPLATE__API_CONTRACT_EXTENSION.md]
+    E --> H[Copy to the owning surface]
+    F --> H
+    G --> H
+    H --> I[Resolve metadata, evidence posture, and review hooks]
+    I --> J[Link contracts, policy, tests, and proof objects]
+    J --> K[Review / promote / correct]
 ```
 
 Templates are an authoring control surface, not a substitute for evidence, policy, or runtime enforcement.
 
 ## Template registry
 
-| Template or pattern | Current status | Intended use | Where the instantiated artifact belongs |
+### Current checked-in inventory
+
+| File | Current public `main` status | Intended use | Where the instantiated artifact belongs |
 |---|---|---|---|
-| Directory README pattern | **PROPOSED** / modeled by this file | directory indexes with scope, repo fit, accepted inputs, exclusions, quickstart, diagram, and review checks | owning directory |
-| `TEMPLATE__KFM_UNIVERSAL_DOC.md` | **INFERRED** / **NEEDS VERIFICATION** | general governed KFM docs that need a repeatable structure | owning `docs/` surface |
-| `TEMPLATE__STORY_NODE_V3.md` | **INFERRED** / **NEEDS VERIFICATION** | provenance-linked Story Node or narrative promotion docs | `docs/reports/story_nodes/` or equivalent owning narrative surface |
-| `TEMPLATE__API_CONTRACT_EXTENSION.md` | **INFERRED** / **NEEDS VERIFICATION** | doc-side extension notes for API or contract changes | contract- or standards-adjacent doc surface |
-| Additional lightweight template classes | **PROPOSED** | only when a doc shape appears often enough to justify maintenance | owning surface after review |
+| [`README.md`](./README.md) | **CONFIRMED** | directory contract and selection guide for this shelf | stays in `docs/templates/` |
+| [`TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md) | **CONFIRMED** | general governed KFM Markdown docs that need explicit evidence posture, reviewability, and repo-native structure | the owning `docs/` surface or other real destination outside `docs/templates/` |
+| [`TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) | **CONFIRMED** | Story Node v3 authoring seed for narrative, sidecar, evidence, and publication state | [`../reports/story_nodes/`](../reports/story_nodes/) or another owning narrative/publication surface |
+| [`TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) | **CONFIRMED** | contract-first documentation for API or contract changes with schema, route, policy, fixture, and rollback consequences | standards-, contract-, or ADR-adjacent owning surface |
+| Additional lightweight template classes | **PROPOSED** | only when a doc shape appears often enough to justify long-term maintenance | owning surface after review and shelf update |
 
 ### What a KFM-friendly template should standardize
 
@@ -227,44 +283,43 @@ Templates are an authoring control surface, not a substitute for evidence, polic
 | Purpose | one-line statement of what the instantiated doc is for |
 | Status + owners | visible near the top |
 | Scope | what belongs and what does not |
-| Evidence boundary | what is confirmed, inferred, proposed, or still unknown |
+| Repo fit | path plus upstream/downstream context |
+| Evidence boundary | what is confirmed, inferred, proposed, unknown, or still needs verification |
 | Relative links | repo-native paths by default |
-| Reviewability | explicit task list, definition of done, or verification backlog |
-| Truth posture | never imply live implementation that has not been verified |
+| Reviewability | explicit checklist, definition of done, or verification backlog |
+| Truth posture | no silent upgrade from partial evidence to confident implementation fact |
 | Promotion path | where the filled-in artifact belongs once it stops being a scaffold |
 
-## Contribution gates
+### When to update this README
 
-A new template should clear all of the following before merge.
+Update this file when any of the following change:
 
-| Gate | Pass condition |
+| Change | Why it belongs here |
 |---|---|
-| Reuse threshold | the pattern is expected to serve more than one doc or directory |
-| Owning surface clarity | the completed artifact’s destination is explicitly named |
-| Truth boundary | the template does not embed unverified implementation claims |
-| Metadata fit | top matter aligns with repo norms or remains clearly placeholdered |
-| Link hygiene | relative links resolve cleanly from `docs/templates/` |
-| Reviewability | the template makes status, owners, scope, and verification work visible |
-| Lifecycle clarity | the template makes promotion or handoff expectations explicit |
-
-## Task list / definition of done
-
-- [ ] The live `docs/templates/` tree was rechecked before merge.
-- [ ] `.github/CODEOWNERS` was reopened and the owners line still matches this README.
-- [ ] Any template filenames named in this README either exist now or remain clearly marked `INFERRED` / `NEEDS VERIFICATION`.
-- [ ] New templates added here are genuinely reusable across more than one doc surface.
-- [ ] No instantiated doc truth, policy body, schema, or release artifact was moved here for convenience.
-- [ ] Relative links render correctly from `docs/templates/README.md`.
-- [ ] Mermaid diagrams render cleanly in GitHub.
-- [ ] Unknowns remain visible instead of being rewritten as certainty.
+| a template file is added, removed, renamed, or retired | this README is the inventory and selection guide |
+| the preferred scaffold for a doc class changes | authors need one stable routing surface |
+| template-boundary rules change | the shelf should describe what belongs here and what does not |
+| `docs/standards/markdown-rules.md` changes template protocol | this README should stay aligned with the governing authoring rules |
+| ownership or review-routing signals change materially | the top impact block and task list should stay honest |
 
 [Back to top](#templates)
 
+## Task list / definition of done
+
+- [ ] The working branch still contains the template inventory described here, or this README is updated in the same change.
+- [ ] `.github/CODEOWNERS` still routes `/docs/` ownership as described here, or the owners line is revised.
+- [ ] `docs/standards/markdown-rules.md` still matches the authoring assumptions this README points to.
+- [ ] New templates are genuinely reusable across more than one doc or directory.
+- [ ] No instantiated doc truth, policy body, schema, release artifact, or runtime output was moved here for convenience.
+- [ ] Relative links render correctly from `docs/templates/README.md`.
+- [ ] Mermaid diagrams render cleanly in GitHub.
+- [ ] Remaining unresolved metadata in the KFM meta block is still intentionally review-visible rather than guessed.
+
 ## FAQ
 
-### Does this README claim those named template files already exist in the live checkout?
+### What is actually confirmed right now?
 
-No. It treats `docs/templates/` and `docs/templates/README.md` as the confirmed target surface for this revision, but keeps the three named template files visibly marked `INFERRED` / `NEEDS VERIFICATION` until the live tree is rechecked.
+On public `main`, `docs/templates/` contains this README plus three template files. Broad ownership of `/docs/` is visible in public `CODEOWNERS`. What still needs branch-level verification is whether the active branch matches that snapshot and whether any narrower local owner rule has been added since.
 
 ### Should a finished Story Node or API contract live here?
 
@@ -272,7 +327,11 @@ No. Only the reusable scaffold belongs here. The instantiated artifact belongs i
 
 ### When is a new template justified?
 
-When the same governed doc shape will be reused across multiple files or directories, and the template reduces drift, review ambiguity, or missing-section risk.
+When the same governed doc shape will be reused across multiple files or directories, and a reusable scaffold will reduce drift, review ambiguity, or missing-section risk.
+
+### Is `docs/standards/markdown-rules.md` optional reading?
+
+No. It is the upstream authoring protocol for Markdown structure, metadata, and review-visible truth posture. Template edits should stay aligned with it.
 
 ### Is this directory allowed to set policy?
 
@@ -281,18 +340,22 @@ No. It can scaffold policy-facing docs, but canonical policy logic still belongs
 ## Appendix
 
 <details>
-<summary>PROPOSED starter checklist for future template files</summary>
+<summary>Starter checklist for future template files</summary>
 
-Use this as a lightweight check when adding a new reusable template:
+Use this as a lightweight screen before adding a new reusable template:
 
 - include a clear title and one-line purpose
 - make status, owners, and intended audience visible
 - state accepted inputs and exclusions
+- include repo fit and destination guidance
 - add evidence-boundary guidance or truth-posture reminders
 - keep relative links repo-native
 - include a review checklist or definition of done
 - point promoted artifacts to their owning surface
-- avoid embedding repo-specific implementation claims the template cannot prove
-- prefer calm placeholders such as `NEEDS VERIFICATION` over invented specificity
+- avoid embedding repo-specific implementation claims the template itself cannot prove
+- prefer review-visible placeholders such as `NEEDS VERIFICATION` over invented specificity
+- update this README in the same change if the local template inventory changes
 
 </details>
+
+[Back to top](#templates)
