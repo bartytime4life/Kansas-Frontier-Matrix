@@ -4,13 +4,13 @@ title: infra
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
+owners: @bartytime4life
 created: NEEDS_VERIFICATION
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../docs/, ../contracts/, ../policy/, ../schemas/, ../tests/, ../apps/, ../.github/]
+related: [../README.md, ../docs/, ../contracts/, ../policy/, ../schemas/, ../tests/, ../apps/, ../packages/, ../pipelines/, ../.github/]
 tags: [kfm, infra, deployment, runtime, operations]
-notes: [Current-session draft revised against the March 2026 KFM corpus plus direct inspection of the current public GitHub repo tree and public infra subtree; no local mounted checkout, private platform settings, deployment manifests, dashboards, or runtime logs were directly verified in-container.]
+notes: [Current-session revision preserves the existing public infra README shape, confirms public-main CODEOWNERS coverage for /infra/, and keeps non-public settings, mounted checkout details, manifests, dashboards, alerts, and runtime logs explicitly unverified.]
 [/KFM_META_BLOCK_V2] -->
 
 # infra
@@ -18,16 +18,16 @@ notes: [Current-session draft revised against the March 2026 KFM corpus plus dir
 Bring-up, deployment, runtime control, exposure management, observability, restore, and rollback surface for Kansas Frontier Matrix.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey) ![evidence](https://img.shields.io/badge/evidence-public--tree%20%2B%20March%202026%20corpus-blue) ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a)  
+> **Owners:** `@bartytime4life`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-bartytime4life-lightgrey) ![branch](https://img.shields.io/badge/branch-main-lightgrey) ![evidence](https://img.shields.io/badge/evidence-public--tree%20%2B%20March--April%202026%20corpus-blue) ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a)  
 > **Repo fit:** `infra/README.md` is the directory guide for runtime-facing infrastructure material that must preserve KFM’s truth path, trust membrane, and governed API boundary.  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is evidence-bounded. In this session, the March 2026 KFM corpus **and** the current public GitHub repo tree were inspected. That means the public `infra/` subtree is **CONFIRMED as a checked-in directory surface on public `main`**, but a local mounted checkout, active deployment manifests, workflow runs, dashboard contents, alert rules, and runtime logs were **not** directly verified here. Treat exact owners, active environment usage, and private operational details as **NEEDS VERIFICATION** until the working checkout and runtime evidence are inspected.
+> This README is evidence-bounded. In this session, the March–April 2026 KFM corpus **and** the current public GitHub repo tree were inspected. That means the public `infra/` subtree is **CONFIRMED as a checked-in directory surface on public `main`**, but a local mounted checkout, active deployment manifests, workflow runs, dashboard contents, alert rules, and runtime logs were **not** directly verified here. Treat lane-level runtime behavior and non-public platform settings as **NEEDS VERIFICATION** until the working checkout and runtime evidence are inspected.
 
 > [!NOTE]
-> The current public tree already carries multiple infra lanes—`backup/`, `compose/`, `dashboards/`, `gitops/`, `hosted/`, `kubernetes/`, `local/`, `monitoring/`, `systemd-or-compose/`, `systemd/`, and `terraform/`. The attached KFM corpus still matters because it explains **why** those lanes exist, how they should be sequenced, and which trust burdens they must preserve.
+> Current public `main` confirms both the infra lane structure and broad owner coverage for `/infra/`: `backup/`, `compose/`, `dashboards/`, `gitops/`, `hosted/`, `kubernetes/`, `local/`, `monitoring/`, `systemd-or-compose/`, `systemd/`, and `terraform/` are present, and public `CODEOWNERS` assigns `/infra/` to `@bartytime4life`. That still does **not** prove lane-by-lane operational ownership, manifest quality, or active environment use.
 
 ---
 
@@ -51,7 +51,7 @@ In KFM, that makes `infra/` more than a generic “ops” folder. Infrastructure
 | Upstream | [`../README.md`](../README.md) | Root doctrine, repo orientation, and global trust posture |
 | Upstream | [`../docs/`](../docs/) | Architecture manuals, ADRs, runbooks, and longer-form operating references |
 | Adjacent | [`../contracts/`](../contracts/), [`../policy/`](../policy/), [`../schemas/`](../schemas/), [`../tests/`](../tests/) | Shared boundaries that infra must preserve rather than redefine |
-| Adjacent | [`../apps/`](../apps/), [`../.github/`](../.github/) | Service-facing repo surfaces and repository-level delivery/governance entrypoints |
+| Adjacent | [`../apps/`](../apps/), [`../packages/`](../packages/), [`../pipelines/`](../pipelines/), [`../.github/`](../.github/) | Service, shared-library, pipeline, and repository-level delivery/governance surfaces that infra changes often intersect with |
 | Downstream | [`./local/`](./local/), [`./systemd/`](./systemd/), [`./compose/`](./compose/), [`./kubernetes/`](./kubernetes/), [`./terraform/`](./terraform/) | Runtime lanes that reconcile approved intent into actual environments |
 
 ### Repo fit notes
@@ -59,6 +59,7 @@ In KFM, that makes `infra/` more than a generic “ops” folder. Infrastructure
 - `infra/` is a top-level peer of the repo’s other major surfaces, not an afterthought directory.
 - The current public tree confirms the lane names; it does **not** by itself prove active deployment usage, manifest quality, or environment maturity.
 - The corpus treats observability, rollback, and correction as trust-bearing concerns, so `infra/` should remain closely coupled to runbooks and proof objects rather than drifting into undocumented operator folklore.
+- Infra changes that alter scheduler, watcher, or job-adjacent behavior should be reviewed with `../pipelines/` and `../.github/`, not in isolation.
 
 ## Accepted inputs
 
@@ -81,7 +82,7 @@ The following do **not** belong here as the authoritative source of truth:
 
 | Keep out of `infra/` | Put it here instead |
 |---|---|
-| Service code, UI code, worker business logic | `../apps/`, `../packages/` |
+| Service code, UI code, worker business logic, or pipeline implementation logic | `../apps/`, `../packages/`, `../pipelines/` |
 | Canonical API contracts and schemas | `../contracts/` and `../schemas/` |
 | Policy rule bodies and policy-test truth | `../policy/` |
 | Dataset descriptors, catalog objects, EvidenceBundles, or release content themselves | the project’s data, catalog, evidence, and release surfaces |
@@ -94,10 +95,10 @@ The following do **not** belong here as the authoritative source of truth:
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Supported by the attached March 2026 corpus, direct public-tree inspection, or both |
+| **CONFIRMED** | Supported by the attached March–April 2026 corpus, direct public-tree inspection, or both |
 | **INFERRED** | A careful conclusion drawn from multiple project documents, but not directly proven in local runtime evidence |
 | **PROPOSED** | A recommended lane behavior, operating pattern, or sequencing move that fits the corpus |
-| **NEEDS VERIFICATION** | Exact owner, contents, active environment usage, or implementation detail not directly confirmed here |
+| **NEEDS VERIFICATION** | Exact contents, active environment usage, or implementation detail not directly confirmed here |
 
 ## Directory tree
 
@@ -174,7 +175,11 @@ find contracts policy schemas tests -maxdepth 2 -type f | sort | sed -n '1,220p'
 # 5) Check repository delivery/governance entrypoints
 find .github -maxdepth 2 -type f | sort
 
-# 6) Confirm whether monitoring and dashboards are split or coupled in this checkout
+# 6) When runtime changes affect jobs, watchers, or scheduled execution,
+#    inspect the adjacent pipeline surface too
+find pipelines -maxdepth 2 -mindepth 1 -type d 2>/dev/null | sort | sed -n '1,120p'
+
+# 7) Confirm whether monitoring and dashboards are split or coupled in this checkout
 find infra/dashboards infra/monitoring -maxdepth 3 -type f 2>/dev/null | sort
 ```
 
@@ -183,7 +188,7 @@ find infra/dashboards infra/monitoring -maxdepth 3 -type f 2>/dev/null | sort
 1. Confirm the actual `infra/` subtree in the working checkout.
 2. Confirm which runtime lane you are touching: local-only, VPN-mediated private remote, hosted split-edge, or more separated production runtime.
 3. Check whether the change affects bind addresses, exposure, service identities, rollback, restore, or correction propagation.
-4. Confirm whether monitoring, dashboards, and runbooks are already split across existing paths.
+4. Confirm whether monitoring, dashboards, runbooks, and any job-adjacent pipeline surfaces are already split across existing paths.
 5. Update docs, runbooks, and verification material in the same change stream.
 
 ## Usage
@@ -319,6 +324,7 @@ An `infra/` change is not done until the following are true:
 - [ ] Build, deploy, promote, projection rebuild, rollback, and correction were not collapsed into one undocumented “deploy” step.
 - [ ] Monitoring and dashboard consequences were reviewed when runtime behavior, alerts, or exposure changed.
 - [ ] Rollback and restore consequences were documented.
+- [ ] If the change affects job scheduling, watcher behavior, or pipeline execution, adjacent `../pipelines/` and `../.github/` surfaces were reviewed together.
 - [ ] Material infra changes include the KFM minimum: manifest or IaC diff, rollback path, monitoring update, and docs or runbook update.
 - [ ] If the change is still target-state architecture rather than mounted reality, it remains visibly labeled **PROPOSED** or **NEEDS VERIFICATION**.
 - [ ] At least one stale-state, rollback, or correction consequence remains explainable at the surface layer—not only in operator notes.
@@ -350,7 +356,16 @@ A hardened Ubuntu host with loopback-only governed API, local-only Ollama, Postg
 <details>
 <summary><strong>Current-session evidence boundary</strong></summary>
 
-This revision is stronger than a corpus-only draft because it also inspected the current public GitHub repo tree and the current public `infra/` subtree. It is still weaker than a full checkout audit because no local mounted repository tree, private GitHub settings, deployment manifests, dashboard contents, alert rules, or runtime logs were directly verified in-container.
+This revision is stronger than a corpus-only draft because it also inspected the current public GitHub repo tree, the current public `infra/` subtree, and the current public `CODEOWNERS` signal for `/infra/`. It is still weaker than a full checkout audit because no local mounted repository tree, private GitHub settings, deployment manifests, dashboard contents, alert rules, or runtime logs were directly verified in-container.
+
+</details>
+
+<details>
+<summary><strong>Current public ownership signal</strong></summary>
+
+Current public `CODEOWNERS` assigns `/infra/` to `@bartytime4life`.
+
+Treat that as **CONFIRMED public-main path coverage**, not as proof that every infra lane already has narrower operational owners, reviewer rotations, or environment-specific stewards on the working branch under review.
 
 </details>
 
@@ -383,7 +398,7 @@ Before changing this shape, confirm whether the working checkout adds hidden fil
 
 Before treating this README as fully checkout-faithful, verify:
 
-1. `CODEOWNERS` or equivalent ownership coverage for infra paths
+1. whether the working-branch `CODEOWNERS` still assigns `/infra/` to `@bartytime4life` or narrows ownership more specifically
 2. whether `.github/workflows/` in the working checkout still contains only documentation or now includes active workflow YAML
 3. the actual contents and intended roles of `backup/`, `gitops/`, `monitoring/`, and `dashboards/`
 4. which manifests are authoritative in each environment: systemd, Compose, Helm, Kustomize, raw Kubernetes, GitOps, or another reconciler
