@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: <created-NEEDS-VERIFICATION>
-updated: 2026-03-29
+created: 2026-03-21
+updated: <updated-ON-MERGE-NEEDS-VERIFICATION>
 policy_label: public
-related: [../README.md, ../../docs/runbooks/README.md, ../../policy/README.md, ../../contracts/README.md]
+related: [../../README.md, ../README.md, ../../docs/runbooks/README.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, infra, backup, restore, recovery]
-notes: [Owners grounded from /.github/CODEOWNERS for /infra/; current public main confirms infra/backup, infra/README.md, docs/runbooks/README.md, policy/README.md, and contracts/README.md; created date still needs history verification.]
+notes: [Created date confirmed from public git history; update date should be set on merge; owners currently grounded by public CODEOWNERS /infra/ coverage; current public main shows a README-only subtree at infra/backup/.]
 [/KFM_META_BLOCK_V2] -->
 
 # infra/backup — Backup, Restore, and Recovery
@@ -21,11 +21,12 @@ Backup, restore, retention, and restore-drill guidance for KFM trust-bearing sys
 > **Owners:** `@bartytime4life`  
 > ![Status](https://img.shields.io/badge/status-experimental-orange)
 > ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-lightgrey)
-> ![Evidence](https://img.shields.io/badge/evidence-public%20tree%20%2B%20March%202026%20corpus-blue)
+> ![Evidence](https://img.shields.io/badge/evidence-public%20main%20%2B%20attached%20corpus-blue)
+> ![Subtree](https://img.shields.io/badge/subtree-README--only-lightgrey)
 > ![Restore Drills](https://img.shields.io/badge/restore%20drills-required-critical)
 >
-> **Repo fit:** path `infra/backup/README.md` · parent [infra index][infra-index] · runbook coordination [docs/runbooks][runbooks] · policy boundary [policy][policy] · contract boundary [contracts][contracts]  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** path `infra/backup/README.md` · parent [infra index][infra-index] · root [repo root][repo-root] · runbook coordination [docs/runbooks][runbooks] · policy boundary [policy][policy] · contract/schema boundary [contracts][contracts] + [schemas][schemas] · workflow posture [workflows][workflows] · ownership [CODEOWNERS][codeowners]  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public file history](#current-public-file-history) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README is **repo-grounded and doctrine-bounded**. Current public `main` confirms `infra/backup/README.md` as a checked-in directory surface beneath the top-level `infra/` tree. It does **not** by itself prove active scheduled backup jobs, tested restore tooling, live environment usage, or private operational material.
@@ -51,7 +52,7 @@ Do not use it for:
 
 - storing live backup payloads
 - replacing `policy/` with backup-local policy law
-- replacing `contracts/` with backup-local schema authority
+- replacing `contracts/` or `schemas/` with backup-local machine authority
 - keeping informal operator lore that never becomes a ratified runbook or reviewed note
 
 In KFM, recovery has to preserve more than bytes on disk. It has to preserve:
@@ -72,13 +73,22 @@ In KFM, recovery has to preserve more than bytes on disk. It has to preserve:
 | Surface | Status | What is currently evidenced |
 |---|---|---|
 | `infra/backup/README.md` | **CONFIRMED** | Public `main` contains this directory and README |
-| Additional checked-in files under `infra/backup/` | **NEEDS VERIFICATION** | No additional files in this subtree were directly opened during this review |
+| Additional checked-in files under `infra/backup/` | **CONFIRMED** for current public `main` / **NEEDS VERIFICATION** for non-public or unmounted branches | Public tree inspection shows no additional files in this subtree beyond `README.md` |
 | [`../README.md`][infra-index] | **CONFIRMED** | `infra/` is already framed as bring-up, deployment, restore, rollback, and operational-correction surface |
-| [`../../docs/runbooks/README.md`][runbooks] | **CONFIRMED** | `docs/runbooks/` exists and explicitly covers recovery, correction, rollback, restore, incident handling, and reliability-trigger response |
-| [`../../policy/README.md`][policy] | **CONFIRMED** | Policy exists as a deny-by-default documentation surface; mounted `.rego` bundles and runnable policy tests remain unverified |
-| [`../../contracts/README.md`][contracts] | **CONFIRMED** | Contract families and proof-object doctrine are documented here |
-| [`../../schemas/README.md`][schemas] | **CONFIRMED** | `schemas/` exists, but authoritative schema-home resolution is still pending |
-| [`../../.github/workflows/README.md`][workflows] | **CONFIRMED** | Workflow orchestration lane exists as a documentation/control surface; active public workflow YAML still needs direct verification |
+| [`../../docs/runbooks/README.md`][runbooks] | **CONFIRMED** | `docs/runbooks/` explicitly covers recovery, correction, rollback, restore, incident handling, and reliability-trigger response |
+| [`../../policy/README.md`][policy] | **CONFIRMED** | `policy/` is presented as a deny-by-default, executable governance surface; current public `main` remains documentation-heavy |
+| [`../../contracts/README.md`][contracts] | **CONFIRMED** | The link target exists on public `main`, but current contract-home language is still authority-sensitive and cross-links heavily into `schemas/` and `tests/` |
+| [`../../schemas/README.md`][schemas] | **CONFIRMED** | `schemas/` is a live subtree on public `main`, yet canonical schema-home authority remains unresolved |
+| [`../../.github/workflows/README.md`][workflows] | **CONFIRMED** | Public `main` exposes a README-only workflow lane; historical workflow names visible in Actions history are platform signal, not current checked-in YAML inventory |
+| [`../../.github/CODEOWNERS`][codeowners] | **CONFIRMED** | Current public `CODEOWNERS` assigns `/infra/` to `@bartytime4life`; no narrower `/infra/backup/` rule is publicly visible |
+
+### Current public file history
+
+| Date | Commit | What public history shows |
+|---|---|---|
+| 2026-03-21 | `4a3f8db` | Initial `README.md` surfaced under `infra/backup/` |
+| 2026-03-23 | `f0ac8ba` | README expanded into backup / restore / recovery guidance |
+| 2026-03-29 | `f96e804` | README revised |
 
 ### Upstream, adjacent, and downstream links
 
@@ -88,10 +98,11 @@ In KFM, recovery has to preserve more than bytes on disk. It has to preserve:
 | Upstream | [infra index][infra-index] | Parent `infra/` rules, peer lanes, and runtime-facing directory logic | **CONFIRMED** |
 | Upstream | [docs/runbooks][runbooks] | Operator procedure surface for restore, rollback, correction, and incident handling | **CONFIRMED** |
 | Adjacent | [policy][policy] | Rights, sensitivity, deny-by-default, correction, and runtime trust consequences | **CONFIRMED** |
-| Adjacent | [contracts][contracts] | Contract families for release proof, evidence, runtime envelopes, and correction lineage | **CONFIRMED** |
-| Adjacent | [schemas][schemas] | Schema-home ambiguity still matters before wiring schema-driven recovery checks | **CONFIRMED** |
+| Adjacent | [contracts][contracts] | Human-readable contract lane, though current authority resolution still cross-links into schema and test surfaces | **CONFIRMED** |
+| Adjacent | [schemas][schemas] | Live schema subtree whose authority relationship to `contracts/` is still unresolved | **CONFIRMED** |
 | Adjacent | [workflow guidance][workflows] | Validation, promotion, release evidence, and correction-ready control surface | **CONFIRMED** |
-| Downstream peers | `../local/`, `../systemd/`, `../compose/`, `../hosted/`, `../kubernetes/`, `../terraform/` | Restore guidance eventually has to reconcile with real environment lanes | **CONFIRMED** as directory surfaces / **NEEDS VERIFICATION** for live use |
+| Adjacent | [CODEOWNERS][codeowners] | Current public owner fallback and review boundary for `/infra/` | **CONFIRMED** |
+| Peer infra lanes | `../local/`, `../systemd/`, `../compose/`, `../hosted/`, `../kubernetes/`, `../terraform/`, `../gitops/`, `../monitoring/`, `../dashboards/` | Recovery eventually touches environment lanes, declarative reconciliation, and operator-visibility surfaces | **CONFIRMED** as directory surfaces / **NEEDS VERIFICATION** for live use |
 
 ### Repo-fit rule
 
@@ -121,7 +132,7 @@ This directory should stay narrow. It is an ops surface, not a catch-all.
 | Exclusion | Why it stays out | Where it goes instead |
 |---|---|---|
 | Authoritative policy rule bodies | Backup docs should not fork deny-by-default law | `policy/` |
-| Authoritative machine contracts and schemas | Backup docs should not create a second trust-object authority surface | `contracts/` and the eventually singular schema home |
+| Authoritative machine contracts and schemas | Backup docs should not create a second trust-object authority surface | `contracts/` and `schemas/`, until canonical authority is fully resolved |
 | Domain/business semantics | Recovery docs should not own business logic | packages, service docs, or domain docs |
 | Live backup payloads and snapshot blobs | Git is not the recovery substrate | controlled backup storage / snapshot systems |
 | Secret values, keys, credentials | Recovery material must not leak privileged access | secret manager / environment-secure storage |
@@ -180,7 +191,7 @@ infra/backup/
 
 ## Quickstart
 
-1. Start with the adjacent trust surfaces: [infra index][infra-index], [docs/runbooks][runbooks], [policy][policy], and [contracts][contracts].
+1. Start with the adjacent trust surfaces: [infra index][infra-index], [repo root][repo-root], [docs/runbooks][runbooks], [policy][policy], [contracts][contracts], and [schemas][schemas].
 2. Inventory every recovery-relevant store, artifact, and repo/control surface.
 3. Classify each one by trust impact and recovery priority.
 4. Write restore order before writing automation.
@@ -308,7 +319,7 @@ A backup is not trustworthy until restore verifies the system KFM actually claim
 A backup lane is not “done” when a snapshot succeeds. It is done when recovery is boring.
 
 - [ ] Protection tiers are mapped to actual KFM stores, proof objects, and repo/control surfaces
-- [ ] Owners are confirmed for this directory and any narrower `/infra/backup/` rule, if one is needed
+- [ ] Any narrower `/infra/backup/` ownership rule is confirmed or intentionally unnecessary
 - [ ] Cadence is documented and environment-specific where needed
 - [ ] Restore order exists for each supported environment class
 - [ ] Post-restore verification proves integrity, lineage, evidence reconstruction, and governed runtime outcomes
@@ -322,6 +333,10 @@ A backup lane is not “done” when a snapshot succeeds. It is done when recove
 ### Does the public repo prove live backup automation already exists?
 
 No. The public repo proves this directory and README exist. It does **not** prove scheduled jobs, tested restore tooling, or private backup storage arrangements.
+
+### Does current public `main` show any additional checked-in material under `infra/backup/` today?
+
+No. Current public-tree inspection shows `README.md` only in this subtree. Treat any narrower runbooks, matrices, manifests, or drill records here as **PROPOSED** until the working checkout proves them.
 
 ### Why does this directory point to `docs/runbooks/` instead of keeping every procedure here?
 
@@ -345,11 +360,12 @@ No. KFM recovery is incomplete until the system can still answer, abstain, deny,
 <summary>Open verification items to retire before calling this directory stable</summary>
 
 1. Confirm whether any additional checked-in files belong under `infra/backup/` beyond the current README.
-2. Confirm the original created date and whether a narrower `/infra/backup/` ownership rule should replace the current `/infra/` fallback.
-3. Confirm environment-specific restore definitions in `../local/`, `../systemd/`, `../compose/`, `../hosted/`, `../kubernetes/`, and related lanes.
+2. Confirm whether a narrower `/infra/backup/` ownership rule should replace or supplement the current `/infra/` fallback.
+3. Confirm environment-specific restore definitions in `../local/`, `../systemd/`, `../compose/`, `../hosted/`, `../kubernetes/`, `../gitops/`, `../monitoring/`, and `../dashboards/` where relevant.
 4. Confirm current RPO/RTO targets and whether they already live in a ratified reliability or SLO surface.
 5. Confirm whether encrypted example manifests, restore-drill reports, or receipt-style recovery artifacts already exist elsewhere in repo or private ops storage.
 6. Resolve the single authoritative contract/schema home before wiring schema-driven recovery gates against both `contracts/` and `schemas/`.
+7. Confirm whether any workflow or release-evidence protections currently gate restore-affecting PRs beyond the public README-only workflow lane.
 
 </details>
 
@@ -379,3 +395,4 @@ No. KFM recovery is incomplete until the system can still answer, abstain, deny,
 [contracts]: ../../contracts/README.md
 [schemas]: ../../schemas/README.md
 [workflows]: ../../.github/workflows/README.md
+[codeowners]: ../../.github/CODEOWNERS
