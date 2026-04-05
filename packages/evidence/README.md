@@ -8,7 +8,7 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
-related: [../../README.md, ../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../apps/api/src/api/README.md, ../../tests/README.md]
+related: [../../README.md, ../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../docs/standards/README.md, ../../apps/api/src/api/README.md, ../../tests/README.md]
 tags: [kfm, evidence, evidence-ref, evidence-bundle, packages]
 notes: [Current public main confirms packages/evidence/README.md and broad /packages/ ownership; doc_id/created/updated/policy_label still need direct repo record verification before merge]
 [/KFM_META_BLOCK_V2] -->
@@ -20,7 +20,7 @@ _Governed `EvidenceRef` → `EvidenceBundle` resolution and policy-safe evidence
 > **Status:** experimental  
 > **Owners:** `@bartytime4life` *(broad `/packages/` coverage is confirmed in `.github/CODEOWNERS`; no narrower `/packages/evidence/` rule was verified on public `main`)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-packages%2Fevidence%2FREADME.md-1f6feb) ![role](https://img.shields.io/badge/role-evidence%20resolver-6f42c1) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/current%20tree-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
-> **Repo fit:** `packages/evidence/README.md` · child of [`../README.md`](../README.md) · repo root [`../../README.md`](../../README.md) · contract neighbor [`../../contracts/README.md`](../../contracts/README.md) · schema boundary [`../../schemas/README.md`](../../schemas/README.md) · policy neighbor [`../../policy/README.md`](../../policy/README.md) · downstream API seam [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) · verification neighbor [`../../tests/README.md`](../../tests/README.md)  
+> **Repo fit:** `packages/evidence/README.md` · child of [`../README.md`](../README.md) · repo root [`../../README.md`](../../README.md) · contract neighbor [`../../contracts/README.md`](../../contracts/README.md) · schema boundary [`../../schemas/README.md`](../../schemas/README.md) · standards neighbor [`../../docs/standards/README.md`](../../docs/standards/README.md) · policy neighbor [`../../policy/README.md`](../../policy/README.md) · downstream API seam [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) · verification neighbor [`../../tests/README.md`](../../tests/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -81,6 +81,22 @@ KFM’s shell, API, story flow, and Focus flow all depend on evidence being reac
 | Package-local code, manifests, tests, fixtures, and import graph | not proven by the visible package subtree | **UNKNOWN** |
 | Narrower child owner than broad `/packages/` owner | not separately evidenced | **UNKNOWN / NEEDS VERIFICATION** |
 
+### Package-family context
+
+| Visible sibling under `packages/` | Current public signal |
+|---|---|
+| `catalog/` | README-bearing sibling lane on public `main` |
+| `domain/` | README-bearing sibling lane on public `main` |
+| `genealogy_ingest/` | README-bearing sibling lane on public `main` |
+| `indexers/` | README-bearing sibling lane on public `main` |
+| `ingest/` | README-bearing sibling lane on public `main` |
+| `policy/` | README-bearing sibling lane on public `main` |
+
+> [!NOTE]
+> The sibling map above is **package-family context only**.
+>
+> It does not prove deeper code, manifests, or executable behavior beneath those sibling READMEs.
+
 ### Upstream and downstream anchors
 
 | Direction | Path | Why it matters |
@@ -90,9 +106,9 @@ KFM’s shell, API, story flow, and Focus flow all depend on evidence being reac
 | Lateral | [`../../contracts/README.md`](../../contracts/README.md) | machine-readable contract backbone that this package should consume, not duplicate |
 | Lateral | [`../../schemas/README.md`](../../schemas/README.md) | schema-home ambiguity boundary; avoid creating a second contract universe here |
 | Lateral | [`../../policy/README.md`](../../policy/README.md) | deny-by-default, reasons/obligations, and finite outcome posture |
+| Adjacent | [`../../docs/standards/README.md`](../../docs/standards/README.md) | STAC/DCAT/PROV and related standards surfaces this package should respect |
 | Downstream | [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) | current substantive runtime seam that expects evidence-resolution behavior |
 | Downstream | [`../../tests/README.md`](../../tests/README.md) | verification families that should pressure-test resolvability, denial, redaction, and drift |
-| Adjacent | [`../../docs/standards/README.md`](../../docs/standards/README.md) | STAC/DCAT/PROV and related standards surfaces this package should respect |
 
 > [!WARNING]
 > `packages/evidence/` must not become a side door around the trust membrane.
@@ -200,6 +216,7 @@ sed -n '1,260p' packages/evidence/README.md
 sed -n '1,260p' contracts/README.md
 sed -n '1,240p' schemas/README.md
 sed -n '1,260p' policy/README.md
+sed -n '1,260p' docs/standards/README.md
 sed -n '1,260p' tests/README.md
 
 # 3) Inspect the current downstream API seam
