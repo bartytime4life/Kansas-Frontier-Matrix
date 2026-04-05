@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <REVIEW_REQUIRED_YYYY-MM-DD>
 updated: 2026-03-25
 policy_label: <REVIEW_REQUIRED_POLICY_LABEL>
-related: [../README.md, ../vulnerability-management.md, ../../../SECURITY.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../.github/workflows/README.md]
+related: [../README.md, ../vulnerability-management.md, ../../../SECURITY.md, ../../../.github/SECURITY.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../.github/workflows/README.md]
 tags: [kfm, security, vulns, advisories]
-notes: [Owner and updated date are confirmed from current public main; created date remains review-required because public file history shows create/delete/recreate path events. doc_id and policy_label still need direct document-record verification.]
+notes: [Owner and updated date are confirmed from current public main in the attached draft baseline; created date remains review-required because public file history shows create/delete/recreate path events. doc_id and policy_label still need direct document-record verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # vulns
@@ -21,7 +21,7 @@ _Governed index for KFM vulnerability notes, advisory leaves, and remediation-li
 > **Owners:** `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-security--vulns-c62828) ![posture](https://img.shields.io/badge/posture-evidence--bearing-success) ![trust](https://img.shields.io/badge/trust-correction--visible-6f42c1) ![repo](https://img.shields.io/badge/repo-public%20main%20visible-brightgreen) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--gates--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `docs/security/vulns/README.md` · upstream [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · root disclosure [`../../../SECURITY.md`](../../../SECURITY.md) · sibling lifecycle lane [`../vulnerability-management.md`](../vulnerability-management.md)
+> **Repo fit:** `docs/security/vulns/README.md` · upstream [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · root disclosure [`../../../SECURITY.md`](../../../SECURITY.md) · canonical disclosure [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) · sibling lifecycle lane [`../vulnerability-management.md`](../vulnerability-management.md)
 >
 > [!IMPORTANT]
 > This README should make the vulnerability lane useful **without overstating implementation maturity**. The lane exists on public `main`, but workflow execution, merge-blocking automation, and remediation depth beyond directly opened files still need verification.
@@ -68,7 +68,8 @@ This directory should stay focused. It is not the whole vulnerability program, a
 |---|---|---|---|
 | Upstream | [`../README.md`](../README.md) | **CONFIRMED** | Security subtree index and cross-cutting security posture |
 | Upstream | [`../../README.md`](../../README.md) | **CONFIRMED** | Wider docs index and docs-as-production posture |
-| Upstream disclosure | [`../../../SECURITY.md`](../../../SECURITY.md) | **CONFIRMED** | Root vulnerability reporting and disclosure policy |
+| Upstream disclosure | [`../../../SECURITY.md`](../../../SECURITY.md) | **CONFIRMED** | Root vulnerability reporting and disclosure surface |
+| Canonical disclosure | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | **CONFIRMED** | GitHub-facing private reporting and coordinated disclosure policy |
 | Adjacent control | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | **CONFIRMED** | Current public ownership inherits from `/docs/` and resolves to `@bartytime4life` |
 | Adjacent control | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | **CONFIRMED** | Public workflow-lane surface; checked-in YAML merge gates still need verification |
 | Sibling | [`../vulnerability-management.md`](../vulnerability-management.md) | **CONFIRMED** | Lifecycle, remediation, and process-facing vulnerability handling |
@@ -81,7 +82,7 @@ This directory should stay focused. It is not the whole vulnerability program, a
 
 ### Why this directory matters
 
-KFM’s security docs already separate **subtree orientation**, **lifecycle/remediation**, **supply-chain controls**, **root disclosure policy**, and **advisory leaves**. This README should preserve that split instead of flattening everything into one long security note.
+KFM’s security docs already separate **subtree orientation**, **lifecycle/remediation**, **supply-chain controls**, **disclosure surfaces**, and **advisory leaves**. This README should preserve that split instead of flattening everything into one long security note.
 
 [Back to top](#vulns)
 
@@ -139,11 +140,12 @@ This table records the current public-branch evidence used to revise this README
 
 | Surface | Current public `main` state used for this revision | Status |
 |---|---|---|
-| [`README.md`](./README.md) | Present; substantive lane index on public `main`, enhanced on 2026-03-25 | **CONFIRMED** |
+| [`README.md`](./README.md) | Present; substantive lane index on public `main` | **CONFIRMED** |
 | [`apache-tika-cve-2025-66516.md`](./apache-tika-cve-2025-66516.md) | Present; flat advisory leaf | **CONFIRMED** |
 | [`node-forge/README.md`](./node-forge/README.md) | Present; family subdirectory index | **CONFIRMED** |
 | [`node-forge/CVE-2025-12816.md`](./node-forge/CVE-2025-12816.md) | Present; nested advisory leaf | **CONFIRMED** |
 | [`../../../SECURITY.md`](../../../SECURITY.md) | Present; root security reporting and disclosure surface | **CONFIRMED** |
+| [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Present; canonical GitHub-facing disclosure and reporting surface | **CONFIRMED** |
 | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Present; `/docs/` ownership resolves to `@bartytime4life` on current public `main` | **CONFIRMED** |
 | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Present; workflow lane is documented, but checked-in YAML merge gates are not evidenced here | **CONFIRMED / NEEDS VERIFICATION** |
 | [`../../../.github/dependabot.yml`](../../../.github/dependabot.yml) | Present; ecosystem update coverage exists for GitHub Actions, Docker, npm, pip, and cargo | **CONFIRMED** |
@@ -227,7 +229,7 @@ touch docs/security/vulns/<identifier-or-slug>.md
 | Explain remediation lifecycle or triage posture | This README | [`../vulnerability-management.md`](../vulnerability-management.md) |
 | Connect an advisory to executable enforcement | This README | [`../../../policy/README.md`](../../../policy/README.md) and [`../../../contracts/README.md`](../../../contracts/README.md) |
 | Connect an advisory to proof burden or negative tests | This README | [`../../../tests/README.md`](../../../tests/README.md) |
-| Report or understand disclosure policy | This README | [`../../../SECURITY.md`](../../../SECURITY.md) |
+| Report or understand disclosure policy | This README | [`../../../SECURITY.md`](../../../SECURITY.md) and [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) |
 | Check inherited ownership / review boundary | This README | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) |
 | Check the public workflow lane before making CI claims | This README | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) |
 | Route a runtime-boundary or bypass issue | This README | [`../threat-model.md`](../threat-model.md) |
@@ -250,7 +252,7 @@ flowchart LR
     D[Package-family README]
     E[Nested advisory leaf]
     F[vulnerability-management.md]
-    G[SECURITY.md]
+    G[SECURITY.md / .github/SECURITY.md]
     H[contracts/ + schemas]
     I[policy/]
     J[tests/]
@@ -411,6 +413,7 @@ Use this lane to keep these rules visible:
 - `docs/security/README.md`
 - `docs/security/vulnerability-management.md`
 - `SECURITY.md`
+- `.github/SECURITY.md`
 - `.github/CODEOWNERS`
 - `.github/workflows/README.md`
 - `.github/dependabot.yml`
