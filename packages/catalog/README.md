@@ -4,212 +4,255 @@ title: Catalog Package
 type: standard
 version: v1
 status: review
-owners: <TBD — NEEDS VERIFICATION>
-created: <YYYY-MM-DD>
-updated: <YYYY-MM-DD>
+owners: @bartytime4life
+created: <TBD — NEEDS VERIFICATION>
+updated: 2026-04-05
 policy_label: <TBD — NEEDS VERIFICATION>
-related: [../../README.md, ../ingest/README.md, ../../contracts/README.md, ../../policy/README.md, ../../data/registry/README.md, ../../data/catalog/stac/README.md, ../../apps/api/src/api/README.md]
-tags: [kfm, catalog, stac, dcat, prov]
-notes: [Target path supplied by task; mounted checkout for packages/catalog was not directly inspectable in this session. UUID, owners, dates, policy label, exact sibling paths, and concrete package internals remain review placeholders.]
+related: [../README.md, ../ingest/README.md, ../evidence/README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../data/catalog/README.md, ../../data/catalog/dcat/README.md, ../../data/catalog/stac/README.md, ../../data/catalog/prov/README.md, ../../data/registry/README.md, ../../apps/api/src/api/README.md, ../../tests/README.md]
+tags: [kfm, packages, catalog, stac, dcat, prov]
+notes: [Current public main confirms packages/catalog/ exists and the visible subtree is README-only. Created date, doc UUID, and policy label still need verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Catalog Package
 
-Builds and validates KFM’s outward catalog closure for promoted dataset versions.
+Shared internal seam for building and validating KFM catalog closure from authoritative dataset versions.
 
 > [!IMPORTANT]
 > **Status:** experimental  
 > **Document status:** review  
-> **Owners:** `TBD — NEEDS VERIFICATION`  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Closure: STAC+DCAT+PROV](https://img.shields.io/badge/closure-STAC%20%7C%20DCAT%20%7C%20PROV-2f6f9f) ![Verification: partial](https://img.shields.io/badge/verification-partial-lightgrey)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life` *(broad `/packages/` CODEOWNERS fallback; child-specific ownership still needs verification)*  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Tree: README-only](https://img.shields.io/badge/tree-README--only-lightgrey) ![Closure: DCAT+STAC+PROV](https://img.shields.io/badge/closure-DCAT%20%7C%20STAC%20%7C%20PROV-2f6f9f) ![Branch: main](https://img.shields.io/badge/branch-main-blue)  
+> **Quick jump:** [Scope](#scope) · [Current public snapshot](#current-public-snapshot) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `packages/catalog/README.md` · child of [`packages/README.md`](../README.md) · feeds [`data/catalog/README.md`](../../data/catalog/README.md) · consumed by [`apps/api/src/api/README.md`](../../apps/api/src/api/README.md)
 
 > [!NOTE]
-> This README is written for the target path `packages/catalog/README.md`, but the mounted checkout was **not** directly inspectable in this session. The doctrine behind the package is strong; the exact package tree, commands, sibling folders, and ownership markers still need checkout verification.
+> Current public `main` proves `packages/catalog/` exists, but the checked-in visible subtree currently exposes `README.md` only. Treat package-local code, manifests, tests, fixtures, and executable entrypoints beneath this path as **UNKNOWN / NEEDS VERIFICATION** until they are verified on the branch under review.
 
 | Field | Value |
 | --- | --- |
 | Path target | `packages/catalog/README.md` |
-| Primary role | Compile and validate KFM `CatalogClosure` objects |
-| Outward metadata family | `STAC` + `DCAT` + `PROV` |
-| Upstream posture | Promoted or promotion-candidate dataset versions, manifests, checksums, rights/sensitivity context |
-| Downstream posture | Policy/review gates, release assembly, governed discovery/read APIs, evidence resolution |
-| Current evidence posture | **CONFIRMED** doctrine · **INFERRED** package seam shape · **UNKNOWN** mounted package contents |
+| Primary role | Shared internal catalog-closure compiler / validator seam |
+| Current public surface | `README.md` only |
+| Upstream posture | Authoritative dataset versions plus registry, policy, and release context |
+| Downstream posture | `data/catalog/{dcat,stac,prov}/` plus governed API and evidence consumers |
+| Current evidence posture | **CONFIRMED** path + adjacent repo surfaces · **INFERRED** package role · **UNKNOWN / NEEDS VERIFICATION** deeper implementation |
 
 ## Scope
 
-In KFM doctrine, `CATALOG` is not a loose metadata afterthought. It is a distinct stage in the truth path, and its closure is expected to carry outward **STAC / DCAT / PROV** references plus release linkage. This package is therefore the catalog-compiler seam: it turns authoritative dataset versions into outward-facing, resolvable metadata that downstream publication and trust-visible surfaces can rely on.
+`packages/catalog/` is the shared internal seam where KFM should compile and validate outward catalog closure from authoritative dataset versions.
 
-**This package should:**
+In KFM doctrine, catalog is a real stage in the truth path, not an afterthought. This package therefore exists to help turn stabilized, release-bearing scope into linked outward `DCAT + STAC + PROV` artifacts without allowing catalog code to become a second truth source, a public-serving shortcut, or a hidden policy path.
 
-- compile outward `CatalogClosure` artifacts from authoritative dataset versions
-- validate identifier parity and cross-link integrity across `STAC`, `DCAT`, and `PROV`
-- preserve lineage, rights, sensitivity, and release linkage in outward metadata
-- fail closed when closure is incomplete, inconsistent, or not publication-ready
+Use this README to answer four questions quickly:
 
-**This package should not:**
-
-- fetch or poll upstream sources
-- normalize RAW or WORK payloads into authoritative dataset versions
-- replace policy review, release assembly, or correction governance
-- serve public client traffic directly
+1. What does this package own?
+2. What does it explicitly not own?
+3. What is actually visible on public `main` today?
+4. How should this package relate to `data/catalog/`, policy/review/release, and governed API consumers?
 
 > [!WARNING]
-> The catalog package is part of KFM’s **catalog / policy / review plane**, but it is **not** the whole plane. Catalog compilation feeds publication; it does not silently self-approve publication.
+> `packages/catalog/` must not become a side door around the trust membrane.  
+>  
+> If this package starts publishing directly, bypassing release review, or manufacturing authoritative truth from convenience inputs, the boundary has already drifted.
+
+## Current public snapshot
+
+| Observation | Status | Why it matters |
+| --- | --- | --- |
+| `packages/catalog/` exists on public `main` | **CONFIRMED** | This path is a live repo surface, not just a doctrine placeholder |
+| The visible subtree currently shows `README.md` only | **CONFIRMED** | Docs here must not imply checked-in package code, fixtures, or build scripts that are not publicly visible |
+| Parent `packages/` currently includes `catalog/`, `domain/`, `evidence/`, `genealogy_ingest/`, `indexers/`, `ingest/`, and `policy/` | **CONFIRMED** | `catalog/` is one reusable internal boundary among several |
+| `data/catalog/` currently includes `dcat/`, `prov/`, `stac/`, and `README.md` | **CONFIRMED** | The outward catalog triplet now exists as real checked-in sibling lanes |
+| `apps/api/src/api/` currently includes `README.md`, `middleware/`, and `routes/` | **CONFIRMED** | There is a real downstream runtime seam that should consume released closure through governed routes |
+| Package-local code, manifests, tests, fixtures, import graph, and executable entrypoints under `packages/catalog/` | **UNKNOWN / NEEDS VERIFICATION** | The current public tree does not prove them |
 
 [Back to top](#catalog-package)
 
 ## Repo fit
 
-**Repo fit:** target path `packages/catalog/README.md`
+### Why this package exists
 
-This README sits at the seam between authoritative dataset versions and public-safe release objects. The related docs below come from the task specification and surrounding corpus, but exact mounted file presence still needs checkout verification.
+`packages/catalog/` belongs between KFM’s stronger top-level authority surfaces and its outward catalog artifacts.
 
-| Direction | Related surface | Why it matters here | Evidence posture |
-| --- | --- | --- | --- |
-| Upstream | [`../ingest/README.md`][ingest-readme] | Ingest and validation lanes produce source-native landings and receipts that later feed authoritative versions and closure work. | Task-supplied path; exact mounted doc needs verification |
-| Upstream | authoritative dataset versions, manifests, checksums | Catalog compilation depends on stable IDs, time semantics, provenance links, and publishable scope. | **CONFIRMED** doctrinal dependency |
-| Lateral | [`../../contracts/README.md`][contracts-readme] | Contract families define what a `CatalogClosure` must contain and how it should validate. | Task-supplied path; doctrinal fit **CONFIRMED** |
-| Lateral | [`../../policy/README.md`][policy-readme] | Rights, sensitivity, reason codes, and obligations constrain what closure may hand forward. | Task-supplied path; doctrinal fit **CONFIRMED** |
-| Lateral | [`../../data/registry/README.md`][registry-readme] | Registry-style metadata is the natural source of identity, steward, cadence, and distribution hints. | Task-supplied path; exact mounted doc needs verification |
-| Downstream | [`../../data/catalog/stac/README.md`][stac-readme] | The task explicitly names a STAC catalog surface downstream of this package. | Task-supplied path |
-| Downstream | [`../../apps/api/src/api/README.md`][api-readme] | Governed discovery and read surfaces should consume published closure, not bypass it. | Task-supplied path; doctrinal fit **CONFIRMED** |
-| Downstream | evidence resolution and trust-visible shell surfaces | Evidence drawers, dossier/read routes, exports, and Focus depend on resolvable published scope. | **CONFIRMED** doctrinal dependency; exact repo paths **UNKNOWN** |
+It is the right home for logic when that logic is:
+
+1. reused by more than one deployable or workflow surface,
+2. non-deployable on its own,
+3. easier to review as a stable internal boundary than as app-local glue,
+4. still subordinate to stronger top-level contract, policy, data, and release authority.
+
+### Upstream / lateral / downstream anchors
+
+| Direction | Surface | Why it matters here |
+| --- | --- | --- |
+| Upstream | [`../../README.md`][repo-root] | Repo-wide truth path, inspectable-claim posture, and catalog-closure doctrine |
+| Upstream | [`../README.md`][packages-root] | Parent package boundary and current child-package map |
+| Upstream | [`../ingest/README.md`][ingest-readme] | Intake / normalization / receipt helpers feed authoritative versions into catalog work |
+| Lateral | [`../../contracts/README.md`][contracts-readme] | Contract families should define closure inputs and outputs rather than leaving them implicit |
+| Lateral | [`../../policy/README.md`][policy-readme] | Rights, sensitivity, obligations, and fail-closed behavior constrain what closure may hand forward |
+| Lateral | [`../../data/registry/README.md`][registry-readme] | Registry identity and onboarding metadata are natural inputs to outward closure |
+| Lateral | [`../../data/catalog/README.md`][data-catalog-readme] | Parent catalog lane defines the checked-in outward `DCAT + STAC + PROV` surface |
+| Downstream | [`../../data/catalog/dcat/README.md`][dcat-readme] | Dataset / distribution discovery surface |
+| Downstream | [`../../data/catalog/stac/README.md`][stac-readme] | Spatial / temporal asset discovery surface |
+| Downstream | [`../../data/catalog/prov/README.md`][prov-readme] | Catalog-facing provenance bundle surface |
+| Downstream | [`../../apps/api/src/api/README.md`][api-readme] | Governed read / discovery boundary that should consume released closure, not bypass it |
+| Verification neighbor | [`../../tests/README.md`][tests-readme] | Positive / negative fixtures and release-significant proof should pressure this seam as it hardens |
+
+### Boundary split that should remain explicit
+
+| Surface | Owns | Does **not** own |
+| --- | --- | --- |
+| `packages/catalog/` | Shared internal compile / validate logic for catalog closure | Sovereign truth, raw/work storage, reviewed release decisions, or public route handlers |
+| `data/catalog/**` | Checked-in outward `DCAT + STAC + PROV` artifacts and lane docs | Shared internal compilation logic or canonical processed payloads |
+| `apps/api/src/api/` | Governed discovery / read behavior over released scope | Direct store access or hidden on-demand closure generation that bypasses review |
+| `policy/` and release-bearing review surfaces | Decisions, obligations, denials, release / correction posture | Serializer-local hidden policy |
 
 ## Accepted inputs
 
-### What belongs in this directory
+Content belongs in `packages/catalog/` when it remains shared internal catalog logic rather than a public artifact or top-level authority surface.
 
-- catalog builders, serializers, and validators centered on `CatalogClosure`
-- cross-link integrity checks for `STAC`, `DCAT`, and `PROV`
-- tests and fixtures for valid and invalid closure states
-- package-local docs describing catalog boundaries, release handoff, and correction-aware behavior
-- code that translates authoritative dataset versions into outward metadata and linkage objects
+### What belongs here
+
+- builders that translate authoritative dataset-version metadata into a linked `CatalogClosure`
+- validators that check identifier parity, cross-link integrity, and release linkage across `DCAT`, `STAC`, and `PROV`
+- shared mappers / serializers that multiple consumers or workflows reuse
+- package-local tests, fixtures, and examples **once they actually exist beneath this path**
+- docs that explain the handoff from package logic into `data/catalog/**` and downstream governed consumers
 
 ### What this package consumes
 
-- authoritative `DatasetVersion`-like inputs or their repo-native equivalent
-- stable identifiers, version IDs, support semantics, and valid-time context
-- manifests, checksums, and other integrity-bearing release inputs
-- lineage/provenance fields that must remain outwardly resolvable
-- rights, sensitivity, and public-safe visibility context supplied by adjacent policy/review lanes
+- authoritative dataset-version or equivalent release-candidate inputs
+- stable identifiers, version ids, support semantics, and valid-time context
+- manifests, checksums, receipts, and other release-bearing metadata
+- rights / sensitivity context supplied by policy and review lanes
+- registry descriptors that help keep outward identity and distribution language consistent
 
 ## Exclusions
 
-| Not here | Goes instead | Why |
+| Not here | Put it here instead | Why |
 | --- | --- | --- |
-| Source polling, connector auth, checkpointing | [`../ingest/README.md`][ingest-readme] and source/intake lanes | Fetching is upstream intake, not catalog closure |
-| RAW / WORK / QUARANTINE handling | lifecycle zones and intake/canonical lanes | Closure describes promotable scope; it does not replace lifecycle staging |
-| Canonical entity repair or authoritative data writes | canonical builder / repair lane | Catalog compilation depends on authoritative versions; it does not create authority by itself |
-| Rights adjudication and approval workflows | [`../../policy/README.md`][policy-readme] and review lanes | Policy must remain explicit and inspectable, not buried inside serializers |
-| Release manifest assembly and correction issuance | release / review / correction lanes | Promotion is a governed state transition, not just successful metadata output |
-| Public API handlers and route behavior | [`../../apps/api/src/api/README.md`][api-readme] | Serving happens downstream of closure |
-| Derived delivery artifacts such as tiles, search indexes, graph projections, scenes | derived delivery / projection workers | Those outputs depend on promoted scope and must remain rebuildable by default |
+| Source polling, connector auth, checkpointing | [`../ingest/README.md`][ingest-readme] | Fetching and source-native intake are upstream concerns |
+| Raw, work, quarantine, or canonical processed payloads | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/` | Catalog logic describes released scope; it does not become the lifecycle zone |
+| Checked-in outward catalog artifacts as primary records | [`../../data/catalog/README.md`][data-catalog-readme] and its child lanes | Package code should emit or validate closure, not silently replace the outward surface |
+| Review decisions, release manifests, correction notices, or proof packs as primary storage | release / review / correction / proofs lanes | Promotion is a governed state transition, not a serializer success |
+| Public API handlers, middleware, or route contracts | [`../../apps/api/src/api/README.md`][api-readme] | Serving remains downstream of released closure |
+| Policy bundles or hidden allow / deny logic | [`../../policy/README.md`][policy-readme] | Policy must stay explicit and inspectable |
+| Evidence-resolution presentation logic as its own parallel authority path | [`../evidence/README.md`][evidence-readme] and governed downstream surfaces | Catalog compilation and evidence resolution should cooperate without collapsing into one package |
 
 ## Directory tree
 
-**Documentation seam map** — review-oriented, **not** a direct `ls` snapshot.
+Current public-tree snapshot, limited to surfaces directly visible from the inspected repo:
 
 ```text
 packages/
+├── README.md
 ├── catalog/
-│   └── README.md                     # this file (task target)
-└── ingest/
-    └── README.md                     # related upstream doc path from task
+│   └── README.md
+├── domain/
+│   └── README.md
+├── evidence/
+│   └── README.md
+├── genealogy_ingest/
+│   └── README.md
+├── indexers/
+│   └── README.md
+├── ingest/
+│   └── README.md
+└── policy/
+    └── README.md
 
-../../
-├── README.md                         # repo root doc path from task
-├── contracts/
-│   └── README.md
-├── policy/
-│   └── README.md
-├── data/
-│   ├── registry/
+data/
+├── catalog/
+│   ├── README.md
+│   ├── dcat/
 │   │   └── README.md
-│   └── catalog/
-│       └── stac/
-│           └── README.md
-└── apps/
-    └── api/
-        └── src/api/
-            └── README.md
+│   ├── prov/
+│   │   └── README.md
+│   └── stac/
+│       └── README.md
+└── registry/
+    └── README.md
+
+apps/api/src/api/
+├── README.md
+├── middleware/
+└── routes/
 ```
 
 > [!TIP]
-> Keep this tree conservative. Add sibling package internals, test folders, or `data/catalog/dcat` / `data/catalog/prov` paths only after checkout verification confirms them.
+> The tree above is intentionally conservative. It reflects current public visibility, not a speculative hidden implementation. Add package-local code, fixtures, or build scripts here only after they are confirmed on the branch under review.
 
 ## Quickstart
 
-### 1. Inspect before you trust
+### 1. Inspect the live boundary before you edit it
 
 ```bash
-# Inspection-first: verify the real package shape before adopting any placeholder path or command.
-# These commands are examples of the *kind* of inspection to do, not a claim that every file exists exactly here.
-
 ls packages/catalog
-find packages/catalog ../../contracts ../../policy ../../tests -maxdepth 3 2>/dev/null | sed -n '1,120p'
-grep -R "catalog" -n Makefile package.json pyproject.toml scripts .github/workflows 2>/dev/null | sed -n '1,120p'
+sed -n '1,160p' .github/CODEOWNERS
+sed -n '1,200p' packages/README.md
 ```
 
-### 2. Run the package’s real validation entrypoint
+### 2. Inspect the outward catalog neighbors this package is supposed to feed
 
 ```bash
-# ILLUSTRATIVE ONLY — replace placeholders with the repo's verified command set.
-# Do not keep this block as-is once the mounted checkout is available.
-
-<catalog-build-command> \
-  --dataset <dataset-id> \
-  --version <version-id>
-
-<catalog-validate-command> \
-  --stac <path/to/stac.json> \
-  --dcat <path/to/dcat.jsonld> \
-  --prov <path/to/prov.json> \
-  --closure <path/to/catalog-closure.json>
+sed -n '1,220p' data/catalog/README.md
+find data/catalog -maxdepth 2 -name README.md | sort
+sed -n '1,160p' data/catalog/stac/README.md
 ```
+
+### 3. Inspect the downstream governed consumer seam
+
+```bash
+sed -n '1,200p' apps/api/src/api/README.md
+sed -n '1,200p' tests/README.md
+git ls-files 'packages/catalog/**'
+```
+
+> [!NOTE]
+> No checked-in public-main build or validate CLI entrypoint is currently confirmed for `packages/catalog/`.
+> Replace inspection-only quickstart steps with exact executable commands only after those commands are visible in the branch or tree being documented.
 
 ## Usage
 
-### 1. Start from authoritative, not convenient, inputs
+### 1. Start from authoritative inputs, not convenient ones
 
-Catalog work starts only after upstream material is authoritative enough to carry stable identity, time semantics, and lineage. A convenient export or ad hoc file drop is not sufficient if support, versioning, or rights posture are still unresolved.
+Catalog work should begin only after upstream materials are authoritative enough to carry stable identity, version, time semantics, and policy-visible scope. Ad hoc exports or unstable scratch objects are not sufficient inputs to closure logic.
 
-### 2. Compile one closure, not three drifting files
+### 2. Compile one linked closure, not three drifting lanes
 
-The unit of work here is the **linked closure**, not disconnected metadata fragments. `STAC`, `DCAT`, and `PROV` should agree on identity, release scope, and outward linkage.
+The internal unit of work here is not “a STAC file”, “a DCAT file”, and “a PROV file” in isolation. It is the linked closure that keeps those three surfaces in identifier, lineage, and release parity.
 
-### 3. Validate both member objects and closure behavior
+### 3. Hand outward artifacts into `data/catalog/**`
 
-Independent schema validity matters, but KFM doctrine also expects **resolution** and **outward-link integrity**. The package is not done when three files merely parse; it is done when the closure resolves cleanly enough to support downstream publication and evidence drill-through.
+This package should emit or validate closure logic, then hand outward artifacts and references into the checked-in catalog lanes. It should not quietly become the public catalog surface itself.
 
-### 4. Hand forward only publishable closure
+### 4. Stay downstream of policy / review / release
 
-After validation, the package hands closure forward to adjacent review/policy/release lanes. Those lanes own approval, denial, correction, rollback, and public-safe publication decisions.
+A package-local validator passing is necessary, not sufficient. Rights, sensitivity, correction, release, and publication posture still belong to explicit review and policy surfaces.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A["RAW / WORK / QUARANTINE"] --> B["PROCESSED<br/>authoritative dataset version"]
-    B --> C["packages/catalog<br/>catalog compiler seam"]
+    A["data/processed/**<br/>authoritative dataset version"] --> B["packages/catalog<br/>shared internal compile / validate logic"]
+    B --> C["data/catalog/dcat/"]
+    B --> D["data/catalog/stac/"]
+    B --> E["data/catalog/prov/"]
 
-    C --> D["STAC refs"]
-    C --> E["DCAT refs"]
-    C --> F["PROV refs"]
+    C --> F["policy / review / release / published state"]
+    D --> F
+    E --> F
 
-    D --> G["CatalogClosure"]
-    E --> G
-    F --> G
+    F --> G["apps/api/src/api<br/>governed discovery / read"]
+    G --> H["map · timeline · story · focus · evidence surfaces"]
 
-    G --> H["policy / review / release assembly"]
-    H --> I["governed API + evidence resolution"]
-    H --> J["derived delivery / exports / portrayal"]
+    I["packages/ingest"] --> A
 
-    style C stroke-width:3px
-    style G stroke-width:3px
+    style B stroke-width:3px
+    style F stroke-width:3px
 ```
 
-Above: the package sits after authoritative versioning and before policy/review/release assembly. It compiles outward closure; it does not bypass governance.
+Above: `packages/catalog/` is the internal compiler / validator seam; `data/catalog/**` is the outward catalog artifact surface; governed publication and API consumption remain downstream.
 
 [Back to top](#catalog-package)
 
@@ -217,66 +260,71 @@ Above: the package sits after authoritative versioning and before policy/review/
 
 ### Closure object map
 
-| Object | Role in doctrine | Package relation |
+| Object | Role in KFM | Package relation |
 | --- | --- | --- |
-| `DatasetVersion` | Authoritative candidate or promoted subject set with stable ID, version ID, support/time semantics, and provenance links | **Primary input** |
-| `CatalogClosure` | Outward metadata closure and lineage linkage containing `STAC / DCAT / PROV` refs, identifiers, release linkage, and outward profile refs | **Primary build + validation object** |
-| `DecisionEnvelope` | Machine-readable policy result | Adjacent/downstream; not the package’s core output |
-| `ReviewRecord` | Human approval, denial, or escalation artifact | Adjacent/downstream |
-| `ReleaseManifest / ReleaseProofPack` | Public-safe release assembly and proof | Downstream handoff |
-| `ProjectionBuildReceipt` | Proof that a derived layer was built from known release scope | Downstream of promotion |
-| `EvidenceBundle` | Request-time support package for claims, exports, stories, or answers | Downstream consumer of published closure |
+| `DatasetVersion` | Authoritative or release-candidate subject with stable id, version, support/time semantics, and provenance links | Primary upstream input |
+| `CatalogClosure` | Linked outward closure that keeps `DCAT`, `STAC`, `PROV`, and release linkage aligned | Primary package output concept |
+| `ReleaseManifest` | Release-bearing scope and publishability record | Downstream / adjacent handoff |
+| `ReviewRecord` | Human review, approval, denial, or escalation | Downstream / adjacent |
+| `EvidenceBundle` | Request-time support object for claims, exports, story / focus, or UI evidence drill-through | Downstream consumer, not this package’s sovereign output |
+| `ProjectionBuildReceipt` | Proof that a derived surface was built from known released scope | Downstream of promotion |
 
-### Outward vocabulary posture used in this README
+### Current public evidence matrix
 
-| Vocabulary | Corpus-level role | Practical consequence here |
+| Concern | Current public `main` signal | Reading rule |
 | --- | --- | --- |
-| `STAC` | Common language for spatiotemporal assets | Closure must expose asset- and scene-facing metadata cleanly |
-| `DCAT` | Dataset and distribution discovery vocabulary | Closure must support dataset/distribution discovery, not just file naming |
-| `PROV` / `PROV-O` | Outward lineage vocabulary | Closure must preserve causality and lineage hints, not only discovery metadata |
-| `JSON Schema` | Machine-validatable contract language | Validators, fixtures, and negative tests should be explicit rather than implied |
+| Path existence | `packages/catalog/README.md` is checked in | **CONFIRMED** |
+| Child package inventory | Visible subtree currently shows `README.md` only | **CONFIRMED** |
+| Parent package contract | `packages/README.md` explicitly treats catalog / triplet build and validation as package-appropriate work | **CONFIRMED** |
+| Outward sibling lanes | `data/catalog/` contains `dcat/`, `stac/`, and `prov/` | **CONFIRMED** |
+| Downstream API seam | `apps/api/src/api/` contains `README.md`, `middleware/`, and `routes/` | **CONFIRMED** |
+| Package-local implementation depth | Code, tests, fixtures, manifests, import graph, entrypoints | **UNKNOWN / NEEDS VERIFICATION** |
 
 ### Boundary questions
 
 | Question | Answer |
 | --- | --- |
-| Does this package create authoritative dataset versions? | No. It consumes them. |
-| Does this package approve publication? | No. Policy/review/release lanes do. |
-| Can the closure be partial and still publish? | Only if adjacent gates explicitly allow that state and keep it visible; otherwise the system should fail closed. |
-| Is the closure just for discovery? | No. In KFM doctrine it also carries lineage and release consequences. |
-| Are map tiles, search indexes, and graph projections owned here? | No. Those are downstream derived delivery artifacts. |
+| Does this package create authoritative dataset versions? | No. It consumes them or logic derived from them. |
+| Does this package replace `data/catalog/**`? | No. It feeds or validates that outward surface. |
+| Does this package approve publication? | No. Policy, review, and release-bearing surfaces do. |
+| Can this package serve public client traffic directly? | It should not. Governed API routes remain downstream. |
+| Can `DCAT`, `STAC`, or `PROV` drift independently if they still validate? | They should not. Closure parity matters, not just file-level syntax. |
 
 ## Task list and definition of done
 
-A change in this package should not be treated as done until these conditions are visible:
+A meaningful change touching `packages/catalog/` is not done until the following are true:
 
-- [ ] an authoritative input object or dataset version is identified
-- [ ] closure members for `STAC`, `DCAT`, and `PROV` are emitted or updated together
-- [ ] each member validates independently
-- [ ] cross-link resolution across the closure passes
-- [ ] identifier parity and release linkage are consistent
-- [ ] rights/sensitivity context survives into outward metadata
-- [ ] invalid fixtures cover broken IDs, broken links, missing policy-bearing fields, and schema failures
-- [ ] downstream release or runtime consumers still resolve published closure correctly
-- [ ] docs are updated when closure semantics, profiles, or handoff behavior change
+- [ ] the package README still matches the current branch tree honestly
+- [ ] an authoritative input object or dataset-version source is identified
+- [ ] closure members for `DCAT`, `STAC`, and `PROV` are emitted or validated together
+- [ ] identifier parity, cross-links, and release linkage are checked together
+- [ ] rights / sensitivity context survives into outward metadata instead of disappearing in serialization
+- [ ] package-local tests / fixtures / examples exist **or** the README continues to state clearly that they are not yet visible
+- [ ] the package does not fetch sources, serve public routes, or absorb explicit policy / release decisions
+- [ ] downstream catalog lanes and governed API consumers still resolve closure without inventing their own parallel truth path
+- [ ] docs and quickstart steps stay synchronized with the actual checked-in tree
 
 ## FAQ
 
-### Why is the package named `catalog` here instead of `catalog-closure`?
+### Why does this README say the package is README-only right now?
 
-Because the task targets `packages/catalog/README.md`. The corpus strongly uses **catalog closure** as the doctrinal concept, but that does not by itself prove a mounted repo rename.
+Because the current inspected public tree for `packages/catalog/` shows `README.md` only. This README should record that state honestly instead of pretending package-local code is already checked in.
 
-### Why is only the STAC data-surface README linked explicitly?
+### Why link both `packages/catalog/` and `data/catalog/**`?
 
-Because the task explicitly named `../../data/catalog/stac/README.md`. In this session, exact `DCAT` and `PROV` README paths were not separately surfaced from a mounted checkout, so they are treated as downstream expectations rather than hard-linked repo facts.
+Because they are different seams. `packages/catalog/` is the shared internal compiler / validator boundary. `data/catalog/**` is the outward catalog artifact surface.
 
-### Does this package publish directly to the public shell?
+### Why are `dcat/` and `prov/` linked explicitly now?
 
-No. Closure feeds policy/review/release assembly first, then governed APIs and downstream trust-visible surfaces.
+Because the current public `data/catalog/` tree confirms both sibling lanes exist, alongside `stac/`.
 
-### Can this package quietly become the source of truth?
+### Why is the owner no longer `TBD`?
 
-No. KFM doctrine separates authoritative versions, catalog closure, derived delivery, and runtime trust surfaces on purpose.
+The strongest public owner signal currently available is the broad `/packages/` fallback in `.github/CODEOWNERS`, which points to `@bartytime4life`. Narrower child-path ownership is still **NEEDS VERIFICATION**.
+
+### Why is there no build command here yet?
+
+No checked-in public-main package CLI or test entrypoint is currently verified under `packages/catalog/`. The quickstart stays inspection-first until those commands are real and reviewable.
 
 ## Appendix
 
@@ -287,40 +335,47 @@ No. KFM doctrine separates authoritative versions, catalog closure, derived deli
 
 | Item | Status | Why |
 | --- | --- | --- |
-| `CATALOG` is a distinct stage in the truth path | **CONFIRMED** | Strongly repeated in the mounted KFM doctrine corpus |
-| `CATALOG` closure includes outward `STAC / DCAT / PROV` references | **CONFIRMED** | Explicit doctrinal statement |
-| `CatalogClosure` is a named contract family | **CONFIRMED** | Explicit doctrinal statement |
-| Exact `packages/catalog/` module inventory | **UNKNOWN** | No mounted checkout was directly inspected |
-| Exact script names, tests, fixtures, and CI entrypoints | **UNKNOWN** | No mounted checkout was directly inspected |
-| Related README paths listed in the task | **TASK-SUPPLIED / NEEDS VERIFICATION** | Useful for repo fit, but still subject to checkout verification |
+| Catalog is a distinct stage in KFM’s truth path | **CONFIRMED** | Repo-root doctrine states `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` |
+| Catalog closure is outward `DCAT + STAC + PROV` plus release linkage | **CONFIRMED** | Repo-root doctrine names catalog closure explicitly |
+| `packages/catalog/` exists as a checked-in public path | **CONFIRMED** | Visible on public `main` |
+| Current visible subtree under `packages/catalog/` is `README.md` only | **CONFIRMED** | Visible on public `main` |
+| `data/catalog/dcat/`, `data/catalog/stac/`, and `data/catalog/prov/` exist as sibling lanes | **CONFIRMED** | Visible on public `main` |
+| Package-local code, manifests, tests, fixtures, and executable entrypoints | **UNKNOWN / NEEDS VERIFICATION** | Not proven by the currently inspected public tree |
+| `CatalogClosure` as a shared internal build object under this package | **INFERRED** | Strongly implied by current doctrine and parent package contract, but not yet re-proven from checked-in child code |
 
-### Verification backlog for maintainers
+### Verification backlog
 
-- Replace review placeholders in the KFM meta block with a real UUID, owners, dates, and policy label.
-- Confirm the mounted `packages/catalog/` tree and add actual package-local files beneath the directory map.
-- Replace illustrative quickstart placeholders with the repo’s real command entrypoints.
-- Confirm whether the repo already has explicit `DCAT` and `PROV` catalog-surface docs.
-- Link this README from adjacent docs once the mounted checkout confirms the surrounding structure.
-- Add concrete tests/fixtures references only after the repo tree proves their exact locations.
+- Replace the review placeholder `doc_id` with a real UUID or equivalent repo-approved identifier.
+- Verify the original document `created` date if this README is being revised rather than created anew.
+- Confirm the intended `policy_label` for README-level metadata in this repo.
+- Add exact package-local commands only after a branch shows real code, fixtures, manifests, or test entrypoints under `packages/catalog/`.
+- Keep `related:` paths synchronized with the live tree if `packages/` or `data/catalog/` is reorganized.
+- Recheck owner scoping if narrower `/packages/catalog/` CODEOWNERS coverage is added later.
 
 ### Terminology crosswalk
 
-| Term | Meaning in this doc |
+| Term | Meaning in this file |
 | --- | --- |
-| `catalog compiler` | The component family that compiles resolvable `STAC / DCAT / PROV` closure and outward metadata |
-| `CatalogClosure` | The outward metadata closure object carrying refs, identifiers, lineage linkage, and release linkage |
-| `catalog closure` | The doctrinal concept behind `CatalogClosure`; often used more broadly than a literal schema name |
-| `outward metadata` | Metadata intended for governed discovery, release, and evidence-aware consumption |
-| `promoted scope` | Scope that has passed the relevant release/publication gates |
+| `CatalogClosure` | The linked outward metadata unit that keeps `DCAT`, `STAC`, `PROV`, and release linkage aligned |
+| `catalog triplet` | The outward `DCAT + STAC + PROV` surface under `data/catalog/**` |
+| `package surface` | The current visible checked-in subtree for `packages/catalog/` |
+| `outward catalog surface` | Checked-in outward metadata lanes under `data/catalog/**` |
+| `inspectable claim` | KFM’s value unit: a statement that can be traced back through released evidence, scope, and lineage |
 
 </details>
 
 [Back to top](#catalog-package)
 
 [repo-root]: ../../README.md
+[packages-root]: ../README.md
 [ingest-readme]: ../ingest/README.md
+[evidence-readme]: ../evidence/README.md
 [contracts-readme]: ../../contracts/README.md
 [policy-readme]: ../../policy/README.md
-[registry-readme]: ../../data/registry/README.md
+[data-catalog-readme]: ../../data/catalog/README.md
+[dcat-readme]: ../../data/catalog/dcat/README.md
 [stac-readme]: ../../data/catalog/stac/README.md
+[prov-readme]: ../../data/catalog/prov/README.md
+[registry-readme]: ../../data/registry/README.md
+[tests-readme]: ../../tests/README.md
 [api-readme]: ../../apps/api/src/api/README.md
