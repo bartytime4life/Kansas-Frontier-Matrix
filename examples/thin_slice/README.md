@@ -11,7 +11,7 @@ Public-safe, non-authoritative example lane for end-to-end KFM slice walkthrough
 > [!IMPORTANT]
 > This README is intentionally evidence-bounded.
 >
-> Current public `main` confirms that `examples/thin_slice/` exists and currently contains this `README.md` plus a nested `hydrology/` directory with its own `README.md`. The lane is still README-heavy and light on example assets, so read statements here with KFM discipline:
+> Current public `main` shows that `examples/thin_slice/` currently contains this `README.md` plus a nested `hydrology/` directory with its own `README.md`. The lane is still README-heavy and light on example assets, so read statements here with KFM discipline:
 >
 > | Label | Meaning here |
 > | --- | --- |
@@ -19,12 +19,12 @@ Public-safe, non-authoritative example lane for end-to-end KFM slice walkthrough
 > | **INFERRED** | Strong local reading from adjacent repo docs, but not yet proven as implemented under this lane |
 > | **PROPOSED** | Recommended structure, naming, or usage pattern for future commits |
 > | **UNKNOWN** | Not verified from the current branch view |
-> | **NEEDS VERIFICATION** | Plausible target, but should be checked against the mounted workspace before hardening |
+> | **NEEDS VERIFICATION** | Plausible target, but should be checked against the active checkout or branch under review before hardening |
 
 > [!NOTE]
-> The parent `examples/README.md` still carries an older “README.md only” inventory statement, but current public `main` shows the parent example lane now includes `api/`, `story/`, `thin_slice/`, and `ui/` alongside `README.md`. This file inherits the parent lane’s **non-authoritative example rule**, not that stale tree count.
+> `examples/README.md` on current public `main` already lists the scaffolded sublanes `api/`, `story/`, `thin_slice/`, and `ui`, and it names `thin_slice/hydrology/` as the first nested pack. Keep this README synchronized with that parent lane instead of preserving older inventory notes.
 
-* * *
+---
 
 ## Scope
 
@@ -50,12 +50,13 @@ The current doctrinal center of gravity is **hydrology-first**, but that does **
 | --- | --- |
 | Path | `examples/thin_slice/README.md` |
 | Parent lane | [`examples/`](../README.md) |
-| Sibling example lanes | [`../api/`](../api/) · [`../story/`](../story/) · [`../ui/`](../ui/) *(scaffold-level siblings on current public `main`)* |
+| Current public contents | `README.md` and [`hydrology/README.md`](./hydrology/README.md) |
+| Sibling example lanes | [`../api/`](../api/) · [`../story/`](../story/) · [`../ui/`](../ui/) |
 | Current nested pack | [`examples/thin_slice/hydrology/`](./hydrology/README.md) |
-| Owner coverage | `@bartytime4life` via repo-wide fallback in `/.github/CODEOWNERS` |
+| Owner coverage | `@bartytime4life` via current `/.github/CODEOWNERS` coverage for `/examples/` |
 | Root doctrine anchor | [`../../README.md`](../../README.md) |
 | Governance / workflow context | [`../../.github/README.md`](../../.github/README.md) |
-| Likely stronger owner surfaces | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) · [`../../tests/`](../../tests/) · [`../../docs/`](../../docs/) · [`../../data/`](../../data/) · [`../../apps/`](../../apps/) |
+| Stronger owner surfaces | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) · [`../../tests/`](../../tests/) · [`../../docs/`](../../docs/) · [`../../data/`](../../data/) · [`../../apps/`](../../apps/) |
 
 ### Working interpretation
 
@@ -65,7 +66,7 @@ This directory sits **below** the repo-wide examples lane and therefore inherits
 
 That makes `examples/thin_slice/` the right place for **instructional slice packs** and the wrong place for **authoritative release memory**.
 
-The parent examples README is still useful for that rule, but its directory inventory lags the current public tree. This README therefore uses the **live branch** for local shape and the **parent lane README** for the governing examples-lane boundary.
+The parent `examples/README.md` now reflects the current public sublane inventory, so this README should stay aligned with it while still keeping its own lane-specific boundary explicit.
 
 ### Current verified shape
 
@@ -168,7 +169,8 @@ Check the surrounding lane rules first:
 ```bash
 sed -n '1,220p' examples/README.md
 sed -n '1,220p' examples/thin_slice/README.md
-sed -n '1,220p' examples/thin_slice/hydrology/README.md
+sed -n '1,260p' examples/thin_slice/hydrology/README.md
+sed -n '1,160p' .github/CODEOWNERS
 ```
 
 Check likely owner surfaces before deciding that an asset belongs here:
@@ -291,21 +293,22 @@ flowchart TD
 | **INFERRED** | The pattern is strongly implied by adjacent repo materials |
 | **PROPOSED** | The structure is recommended but not yet present here |
 | **UNKNOWN** | The repo does not prove the detail yet |
-| **NEEDS VERIFICATION** | The detail might be right, but should be checked against mounted implementation before hardening |
+| **NEEDS VERIFICATION** | The detail might be right, but should be checked against the active checkout before hardening |
 
 [Back to top](#thin-slice)
 
 ## Task list
 
 - [ ] Keep this README synchronized with the actual tree under `examples/thin_slice/`
+- [ ] Keep `examples/README.md` and this README aligned whenever nested-lane inventory changes
 - [ ] Preserve the examples-lane rule that this directory is explanatory, not authoritative
 - [ ] Keep hydrology as the first documented nested slice unless a stronger repo-backed lane supersedes it
 - [ ] Use example naming (`.example.*`, `.sample.*`, `.redacted.*`) for any new small assets added here
 - [ ] Link each example pack to stronger owner surfaces before adding more files
 - [ ] Add at least one negative-path example before calling a slice pack “useful”
 - [ ] Avoid placing merge-blocking fixtures, live manifests, or real proof packs in this lane
-- [ ] Reconcile the parent `examples/README.md` tree note with the current public tree so lane-wide inventory statements stop drifting
-- [ ] Re-check this README whenever `examples/README.md` or owner-surface conventions change
+- [ ] Re-check owner coverage and relative links whenever `CODEOWNERS` or sibling-lane docs move
+- [ ] Re-check this README whenever owner-surface conventions change
 
 ### Definition of done for a nested slice pack
 
@@ -317,6 +320,7 @@ A nested slice pack is ready when:
 - the README names accepted inputs and exclusions
 - the pack shows at least one complete slice path
 - the pack does not contradict stronger repo-visible doctrine
+- the parent `examples/README.md` and this README do not disagree about the visible tree
 
 [Back to top](#thin-slice)
 
@@ -333,6 +337,10 @@ Hydrology is the current doctrinal lead candidate for a first thin slice because
 ### Should real manifests, receipts, and proof packs live here?
 
 No. They may appear here only as explicit examples. Real release-bearing or merge-bearing artifacts belong with their stronger owners.
+
+### Why does this README keep pointing back to stronger owner surfaces?
+
+Because thin-slice teaching value drops the moment an example starts doubling as contract truth, policy truth, or release truth. This lane works best when it stays explanatory and routes hardened artifacts outward early.
 
 ### Why prefer `.example.json` instead of plain `.json`?
 
@@ -370,6 +378,7 @@ notes:
   - Prefer .example.* naming inside this lane.
   - Add a negative-path example before widening scope.
 ```
+
 </details>
 
 <details>
@@ -392,6 +401,18 @@ Avoid:
 - `production.geojson`
 - `approved.json`
 - `current_truth.json`
+
+</details>
+
+<details>
+<summary>Parent-lane sync checklist</summary>
+
+Use this before merging a structural update to the examples lane.
+
+- `examples/README.md` and this README agree on visible sublanes
+- `examples/thin_slice/hydrology/README.md` is still the first nested pack unless a stronger repo-backed replacement exists
+- any new nested slice added here is reflected in the parent `examples/README.md`
+- quickstart commands still match the actual owner surfaces and current tree
 
 </details>
 
