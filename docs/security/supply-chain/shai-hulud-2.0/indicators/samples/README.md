@@ -4,62 +4,64 @@ title: Shai-Hulud 2.0 Indicator Samples
 type: standard
 version: v1
 status: draft
-owners: TODO(verify owners)
-created: TODO(verify from repo history)
-updated: TODO(verify from repo history)
+owners: @bartytime4life
+created: 2025-11-30
+updated: 2026-03-30
 policy_label: TODO(verify policy label)
-related: [../metadata/README.md, ../stac/README.md, ../signatures/samples/README.md, ../../provenance/README.md, ../README.md]
+related: [../README.md, ../signatures/README.md, ../../README.md, ../../../README.md, ../../../../../../.github/CODEOWNERS]
 tags: [kfm, security, supply-chain, indicators, samples, shai-hulud-2.0]
-notes: [This draft is strengthened from attached Shai-Hulud 2.0 sample-registry and companion registry source material; mounted repo inventory, owners, dates, and exact sibling file presence remain reviewable until verified.]
+notes: [Current public main confirms this path exists and currently exposes README.md only; internal doc_id and policy_label remain review placeholders until verified.]
 [/KFM_META_BLOCK_V2] -->
 
 # Shai-Hulud 2.0 Indicator Samples
 
-Controlled, safe, synthetic sample indicators and companion fixtures for documenting, testing, onboarding, and demoing `shai-hulud-2.0` without treating samples as live intelligence.
+Public-safe, sample-only guidance for synthetic and redacted indicator examples under `docs/security/supply-chain/shai-hulud-2.0/indicators/samples/`.
 
 > [!IMPORTANT]
-> **Status:** active *(source baseline; mounted repo confirmation pending)*  
-> **Owners:** TODO(verify owners)  
-> **Review cadence:** Quarterly · Security Guild · FAIR+CARE Council Oversight *(source baseline)*  
-> ![Status](https://img.shields.io/badge/status-active-2ea043) ![Scope](https://img.shields.io/badge/scope-synthetic%20indicator%20samples-1f6feb) ![Catalog](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-6f42c1) ![Verification](https://img.shields.io/badge/verification-repo%20check%20pending-lightgrey)  
+> **Status:** active · **Doc maturity:** draft  
+> **Owners:** `@bartytime4life`  
+> ![Status](https://img.shields.io/badge/status-active-2ea043) ![Doc](https://img.shields.io/badge/doc-draft-6f42c1) ![Path](https://img.shields.io/badge/path-indicators%2Fsamples-1f6feb) ![Tree](https://img.shields.io/badge/tree-README%20only-lightgrey) ![Posture](https://img.shields.io/badge/posture-public--main%20grounded-8250df)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!CAUTION]
-> Treat everything in this directory as **sample-only**. Nothing here should be mistaken for a live indicator, a release-bearing artifact, an incident record, or a canonical source of truth.
+> This directory is for **sample-only** material. Nothing here should be mistaken for a live indicator, a real detection, a release proof, or canonical incident evidence.
+
+> [!NOTE]
+> Current public `main` confirms this path and its `README.md`, but it does **not** currently expose an expanded sample fixture tree here. Treat sample families, extra child folders, and companion overlay lanes as guidance unless the tree itself grows.
 
 ## Scope
 
-This directory is the **sample-only** side of the Shai-Hulud 2.0 indicator system.
+`indicators/samples/` is the release-safe example lane for the `shai-hulud-2.0` indicator subtree.
 
-Its job is to make indicator families inspectable, testable, and discussable in a way that is safe for documentation, CI, onboarding, and review. The point is not to simulate production authority. The point is to preserve structure, lineage habits, and governance cues while removing operational risk.
+Use this README when the goal is to explain or review indicator shape without implying that the reviewed branch already contains live signing, emitted attestations, merge-blocking policy, or release-bearing proof artifacts. In KFM terms, this directory should help a reviewer tell the difference between a control, a measurement, a proof object, and a safe example.
 
 ### Reading rule
 
-| Label | Meaning in this README |
+| Label | Meaning here |
 | --- | --- |
-| **CONFIRMED** | The attached Shai-Hulud source packet treats this path as an indicator sample registry and its companion docs require standards-aware metadata, provenance linkage, and safe synthetic handling. |
-| **INFERRED** | This directory should sit downstream of indicator doctrine and companion registries, and upstream of docs, CI, onboarding, demos, and review workflows. |
-| **PROPOSED** | The exact local subdirectory inventory, naming patterns, and example sidecars below are starter patterns until the mounted repo is directly verified. |
-| **UNKNOWN** | Mounted repo ownership, git history dates, actual file count, exact sibling inventory, and current validator commands were not directly inspectable in this session. |
+| **CONFIRMED** | Directly visible in the current public repo tree, or explicitly supported by the attached Shai-Hulud source packet. |
+| **INFERRED** | Strongly suggested by the visible tree and adjacent README doctrine, but not proven here as executable implementation. |
+| **PROPOSED** | A repo-consistent sample pattern or growth shape that is not yet visible at this path on current public `main`. |
+| **UNKNOWN** | Not verified strongly enough to present as current reality. |
+| **NEEDS VERIFICATION** | A review placeholder that should not be treated as settled fact. |
 
 ### What belongs here
 
-This README is for:
+This lane is for:
 
 - safe synthetic indicator examples
-- redacted or generated fixtures that exercise ingestion and review behavior
-- metadata and catalog examples that teach the expected shape of indicator artifacts
-- provenance-linked sample bundles used in CI, onboarding, or demonstration flows
+- redacted fixtures that exercise review, parsing, or catalog expectations
+- small sample descriptors that make shape and purpose obvious
+- public-safe demo inputs for documentation, onboarding, or review walkthroughs
 
-### What this directory is not
+### What this lane is not
 
-This is **not** a quiet overflow area for:
+This lane is **not** a quiet overflow area for:
 
 - live indicators
-- real incident evidence
-- release manifests
-- proof packs
-- runtime detections
+- incident evidence
+- release manifests or proof packs
+- executable payloads
 - uncited security conclusions
 
 [Back to top](#shai-hulud-20-indicator-samples)
@@ -69,23 +71,34 @@ This is **not** a quiet overflow area for:
 | Item | Value |
 | --- | --- |
 | Path | `docs/security/supply-chain/shai-hulud-2.0/indicators/samples/README.md` |
-| Local role | Registry README for safe, synthetic indicator examples and fixture-like sample artifacts |
-| Confirmed companion | [`../metadata/README.md`](../metadata/README.md) — metadata rules for indicator families *(source-confirmed path; repo verification pending)* |
-| Confirmed companion | [`../stac/README.md`](../stac/README.md) — STAC representation of indicators *(source-confirmed path; repo verification pending)* |
-| Confirmed nearby safe-sample lane | [`../signatures/samples/README.md`](../signatures/samples/README.md) — safe signature-sample artifacts *(source-confirmed path; repo verification pending)* |
-| Confirmed broader provenance lane | [`../../provenance/README.md`](../../provenance/README.md) — lineage / attestation controls *(source-confirmed path; repo verification pending)* |
-| Likely parent | [`../README.md`](../README.md) — indicators root *(NEEDS VERIFICATION)* |
-| Likely downstream uses | CI fixtures, onboarding packs, documentation examples, Story/Focus demonstrations, and review exercises *(actual mounted inventory UNKNOWN)* |
+| Local role | Leaf README for public-safe sample guidance inside the `indicators/` subtree |
+| Parent lane | [`../README.md`](../README.md) — indicator meaning, interpretation boundaries, and child-lane routing |
+| Confirmed sibling | [`../signatures/README.md`](../signatures/README.md) — signature- and attestation-oriented reading notes |
+| Lane root | [`../../README.md`](../../README.md) — named `shai-hulud-2.0` subtree scope and current public lane split |
+| Supply-chain hub | [`../../../README.md`](../../../README.md) — broader supply-chain doctrine and current public verification posture |
+| Ownership surface | [`../../../../../../.github/CODEOWNERS`](../../../../../../.github/CODEOWNERS) — current public owner fallback |
+| Workflow evidence surface | [`../../../../../../.github/workflows/README.md`](../../../../../../.github/workflows/README.md) — workflow inventory and public-main caveats |
+| Policy / contract / schema / test surfaces | [`../../../../../../policy/README.md`](../../../../../../policy/README.md), [`../../../../../../contracts/README.md`](../../../../../../contracts/README.md), [`../../../../../../schemas/README.md`](../../../../../../schemas/README.md), [`../../../../../../tests/README.md`](../../../../../../tests/README.md) |
 
-### Design fit inside KFM
+### Current public snapshot
 
-This directory should remain **downstream** of live indicator definition and **upstream** of safe explanation and testing.
+| Surface | Current public-main state | How to read it |
+| --- | --- | --- |
+| `indicators/` | `README.md`, `samples/`, and `signatures/` are visible | The lane is present and intentionally narrow |
+| `samples/` | `README.md` only | This README is the whole confirmed public lane at this path today |
+| `signatures/` | `README.md` only | Signature-specific guidance exists, but no deeper public child tree is confirmed |
+| Historical or source-packet companion paths | `metadata/`, `stac/`, `signatures/samples/`, and a local `provenance/` lane are **not** currently visible at these public paths | Treat them as historical/proposed references, not current-tree facts |
 
-A good rule of thumb:
+### Working interpretation inside KFM
 
-- use canonical registries to define **what an indicator is**
-- use this directory to show **how an indicator family looks in safe form**
-- use governed release and runtime surfaces to determine **what is true now**
+Within the currently visible subtree:
+
+- `protections/` explains intended guardrails
+- `workflows/` explains gate sequencing and machine-executed behavior
+- `indicators/` explains measurable assurance and interpretation
+- `samples/` and `signatures/` carry release-safe examples and reviewer-facing reading notes
+
+This README should stay narrow enough to remain useful in review, but concrete enough that a contributor can tell whether a proposed example belongs here, belongs in `../signatures/README.md`, or does not belong in the repo at all.
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
@@ -95,40 +108,38 @@ Accepted inputs here are review-safe, synthetic, and explicitly non-live.
 
 | Input class | What belongs here | Minimum expectation |
 | --- | --- | --- |
-| **File-hash samples** | Benign artifacts or descriptors that mimic hash-based indicator structure | Clearly synthetic origin, no executable behavior, companion metadata/provenance note |
-| **Pattern / regex samples** | Safe trigger examples used to test parsing, classification, or rule wiring | Non-harmful content, narrow purpose, expected match behavior |
-| **YARA-like samples** | Redacted or generated text fixtures that exercise rule plumbing without carrying harmful payloads | Safe fixture language, explicit non-operational status |
-| **Structural samples** | Mock dependency graphs, workflow drift examples, manifest anomalies, or DAG-shape examples | Review note explaining what structural property is being exercised |
-| **Heuristic samples** | Small example bundles for thresholding, scoring, or rule combinations | Expected outcome and rationale declared |
-| **Composite samples** | Bundles that combine multiple safe indicator signals | Explicit composition note and safe lineage |
-| **Metadata overlays** | DCAT / STAC / JSON-LD / PROV-O examples tied to a sample artifact | Link back to the sample or say plainly that the payload is illustrative |
-| **Story / Focus demo inputs** | Sample-only evidence trails used to demonstrate narrative behavior safely | Must remain visibly marked as sample-only |
+| **Sample descriptors** | Tiny sidecars that explain what the sample is, why it exists, and why it is safe | Clear purpose, explicit sample-only state, no ambiguity about live status |
+| **Pattern or text fixtures** | Benign strings or redacted snippets used to test parsing, matching, or review behavior | Non-harmful content, narrow purpose, expected outcome explained |
+| **Structural examples** | Mock manifests, dependency graphs, workflow drift fragments, or other shape-only examples | Clearly synthetic, linked to a review question |
+| **Heuristic or composite examples** | Small bundles that illustrate scoring, grouping, or multi-signal reasoning | Expected pass/fail or interpretation note included |
+| **Story / demo inputs** | Public-safe fragments used in docs, onboarding, or Focus/Story demonstrations | Must remain visibly marked as sample-only |
+| **Cross-links** | Pointers to the owning contract, policy, schema, test, or sibling README surface | Should clarify ownership, not duplicate it |
 
 ### Minimum rule for every sample
 
 A reviewer should be able to answer these questions immediately:
 
-1. What indicator family does this sample represent?
+1. What family does this sample represent?
 2. Is it fully synthetic or sufficiently redacted?
 3. What workflow, schema, or review behavior is it proving?
-4. What companion metadata or provenance explains it?
-5. Could anyone mistake it for a live detection?
+4. What explanation or sidecar makes the sample legible?
+5. Could anyone reasonably mistake it for live truth?
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
 ## Exclusions
 
-This directory stays useful only if it remains boringly safe.
+This lane stays useful only if it remains boringly safe.
 
 | Do **not** put this here | Why not | Put it instead |
 | --- | --- | --- |
-| Live indicators or active detection artifacts | Samples must not silently become operational truth | Canonical indicator registries / governed detection surfaces |
-| Incident evidence or root-cause investigation material | Those have a different burden of proof, lineage, and sensitivity handling | [`../../reports/README.md`](../../reports/README.md) *(source-confirmed path; repo verification pending)* |
-| Real secrets, credentials, tokens, or production identifiers | Unsafe for docs, CI, and long-lived history | Secret-management / restricted handling paths |
-| Executable payloads, droppers, loaders, or harmful binaries | Violates the safe-sample posture | Do not commit here |
-| Canonical STAC/DCAT/PROV records for real detections | This path should not become a shadow publication plane | Companion registries and governed publication lanes |
-| Release manifests, proof packs, or attestation bundles for real releases | Those are release-plane objects, not sample fixtures | Governed release / provenance lanes |
-| Unredacted user, vendor, or partner data | Breaks the public-safe, FAIR+CARE posture | Restricted internal review surfaces |
+| Live indicators or active detections | Samples must not silently become operational truth | The governing live indicator or detection surface |
+| Incident evidence or investigation material | Different sensitivity, proof, and correction burden | The verified report or restricted review lane |
+| Signature / attestation walkthroughs that are really about subject binding or verifier output | Better owned by the sibling signature lane | [`../signatures/README.md`](../signatures/README.md) |
+| Real secrets, credentials, partner data, or production identifiers | Unsafe for docs, CI, and long-lived git history | Secure secret-handling or restricted review surfaces |
+| Executable payloads, droppers, loaders, or harmful binaries | Violates the public-safe posture outright | Do not commit them |
+| Canonical STAC / DCAT / PROV records for real detections or releases | This README is not a shadow publication plane | The owning catalog or provenance surface |
+| Unqualified claims that a protection is enforced in runtime | README prose is not enough evidence | The checked-in workflow, policy, contract, test, or release artifact that proves it |
 
 ### Hard stop
 
@@ -144,71 +155,69 @@ A file does **not** belong here if it can plausibly be mistaken for:
 
 ## Directory tree
 
-The tree below is a **PROPOSED working shape** until the mounted repo is directly checked.
+### Current confirmed tree
 
 ```text
 samples/
-├── README.md              # purpose, guardrails, review rules
-├── file-hash/             # PROPOSED: benign hash-shaped fixtures
-├── pattern/               # PROPOSED: regex / text-pattern samples
-├── yara/                  # PROPOSED: safe rule-shape examples
-├── structural/            # PROPOSED: dependency / workflow / manifest anomalies
-├── heuristic/             # PROPOSED: scoring / threshold examples
-├── composite/             # PROPOSED: multi-signal sample bundles
-├── metadata/              # PROPOSED: DCAT / JSON-LD / descriptor overlays
-├── stac/                  # PROPOSED: sample STAC Items / Collections
-├── prov/                  # PROPOSED: redacted lineage bundles
-└── misc/                  # PROPOSED: CI helpers, tiny fixtures, review notes
+└── README.md
 ```
 
-A leaner mounted structure may also be valid. For example:
+<details>
+<summary>Possible future growth shape (PROPOSED, not current public-main inventory)</summary>
 
-- this directory may hold only `README.md` plus a few pointers to `../signatures/samples/`
-- some family-specific fixtures may already live deeper under `signatures/`
-- sample metadata and STAC payloads may be centralized in companion registries instead of duplicated here
+```text
+samples/
+├── README.md
+├── file-hash/     # benign hash-shaped fixtures
+├── pattern/       # safe pattern and parsing examples
+├── structural/    # mock manifests, DAG drift, dependency-shape examples
+├── heuristic/     # scoring / threshold examples
+├── composite/     # multi-signal bundles
+├── metadata/      # sample descriptors or lightweight catalog overlays
+├── stac/          # sample STAC Items or Collections
+└── prov/          # redacted lineage notes
+```
+
+Use a deeper tree only when the repo actually adds those paths and the review burden justifies them.
+
+</details>
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
 ## Quickstart
 
-### 1) Pick the sample family before you create the file
+### 1) Pick the right lane before you make the file
 
-Do not start with the filename. Start with the review purpose.
+Ask one question first:
 
-Common starting questions:
+- if the example is mainly about **signature, attestation, subject identity, digest binding, or verifier output**, start with [`../signatures/README.md`](../signatures/README.md)
+- if it is mainly about **safe example shape, review cues, or public-safe onboarding**, start here
 
-- Is this teaching **identity** (`file-hash`)?
-- Is this teaching **matching behavior** (`pattern` / `yara`)?
-- Is this teaching **shape** (`structural`)?
-- Is this teaching **decision behavior** (`heuristic` / `composite`)?
+### 2) Make it synthetic first, polished second
 
-### 2) Make it synthetic first, pretty second
-
-Before you polish a sample, make sure it is:
+Before you prettify anything, make sure the artifact is:
 
 - non-executable
-- redacted or generated
+- generated or clearly redacted
 - non-live
-- safe for CI and docs
-- impossible to confuse with a real production artifact
+- safe for docs and CI
+- impossible to confuse with a production object
 
 ### 3) Add a tiny descriptor
 
-Use a small sidecar or front matter block so the sample explains itself.
+A small sidecar is usually enough to make the sample self-explaining.
 
 ```json
 {
   "sample_id": "shai-hulud-2.0--pattern--example-001",
-  "indicator_type": "pattern",
-  "sample_family": "indicator",
+  "sample_family": "pattern",
   "synthetic": true,
   "live_indicator": false,
-  "contains_executable_code": false,
+  "contains_executable_content": false,
   "safe_for_ci": true,
   "safe_for_docs": true,
-  "metadata_ref": "./metadata/pattern-example-001.json",
-  "provenance_ref": "./prov/pattern-example-001.jsonld",
-  "stac_ref": "./stac/pattern-example-001.json",
+  "review_purpose": "Demonstrate benign parsing and sample-only review posture",
+  "owner_surface": "../README.md",
   "notes": [
     "illustrative only",
     "not a release-bearing artifact"
@@ -217,26 +226,21 @@ Use a small sidecar or front matter block so the sample explains itself.
 ```
 
 > [!NOTE]
-> The descriptor above is **illustrative only**. It is a starter pattern, not a claimed mounted schema.
+> The descriptor above is **illustrative only**. It is a starter pattern, not a claimed checked-in schema.
 
-### 4) Keep companion overlays close
+### 4) Keep the PR obvious to review
 
-A strong sample is usually easier to review when it carries or references:
+A strong sample PR says:
 
-- a small metadata overlay
-- a small provenance note
-- an optional STAC Item or collection stub
-- a short explanation of the expected review outcome
-
-### 5) Make the PR obvious to review
-
-A good sample PR should tell reviewers:
-
-- why the sample exists
+- why the example exists
 - what family it belongs to
 - why it is safe
-- how it helps docs, CI, onboarding, or demos
-- why it does **not** belong in a live registry instead
+- which owning surface explains it
+- why it does **not** belong in a live or release-bearing lane instead
+
+### 5) Expand the tree only on purpose
+
+Current public `main` confirms `samples/README.md`, not a deeper fixture taxonomy. Do not add folder sprawl just because a conceptual category exists. Add structure only when the repo change actually needs it.
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
@@ -244,38 +248,33 @@ A good sample PR should tell reviewers:
 
 ### Documentation and onboarding
 
-Use this directory to teach shape, naming, review posture, and companion metadata without exposing real incidents or operational artifacts.
+Use this lane to teach naming, sample posture, and review expectations without exposing live incidents or operational artifacts.
 
-### CI and validation
+### Review and CI preparation
 
-Use samples here to exercise:
+Use safe examples here to exercise:
 
-- schema validation
-- catalog ingestion
-- provenance-link expectations
-- Story / Focus demo behavior
-- fail-closed handling of sample-only material
+- schema-shape review
+- PR reading discipline
+- catalog or lineage expectations when lightweight sidecars exist
+- negative-path reasoning about what is **not** proven by a sample
 
 ### Story Node and Focus Mode demos
 
-When samples are surfaced in narrative or demo contexts, they should remain visibly marked as **sample-only**.
+Sample artifacts may appear in demo or training flows only when the UI keeps their state visibly **sample-only**.
 
 That means:
 
-- no “live threat” presentation
-- no operational severity implication beyond the sample’s stated purpose
-- no ambiguous UI state
-- no mixed rendering with real detections unless the surface makes the difference obvious
+- no live-threat framing
+- no severity implication beyond the sample’s stated purpose
+- no mixed presentation that makes a sample look canonical
 
-### Relationship to companion registries
+### Relationship to the sibling signature lane
 
-This directory should complement—not replace—the adjacent registries that govern:
+This directory and [`../signatures/README.md`](../signatures/README.md) should reinforce each other:
 
-- metadata rules
-- STAC publication shape
-- provenance / attestation controls
-
-Samples can help reviewers understand those registries. Samples should not become a parallel authority system.
+- use `samples/` for the safe example itself
+- use `signatures/` when the reviewer needs help reading digest, subject, issuer, attestation, or verification context
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
@@ -283,103 +282,100 @@ Samples can help reviewers understand those registries. Samples should not becom
 
 ```mermaid
 flowchart LR
-    A[Candidate sample] --> B{Synthetic and safe?}
+    A[Candidate example] --> B{Synthetic and public-safe?}
     B -- No --> X[Reject or move to restricted handling]
-    B -- Yes --> C[Declare indicator family]
-    C --> D[Attach metadata note]
-    D --> E[Attach provenance note]
-    E --> F[Optional STAC sample]
-    F --> G[Docs / CI / onboarding / demo use]
-    G --> H[Story or Focus sample-only presentation]
-    H --> I[Never promoted as live indicator truth]
+    B -- Yes --> C{Is the main question about signer / attestation / verifier output?}
+    C -- Yes --> D[Use ../signatures/README.md lane]
+    C -- No --> E[Use samples/ lane]
+    D --> F[Add review note or descriptor]
+    E --> F
+    F --> G[Docs / onboarding / CI / demo use]
+    G --> H[Never promoted as live indicator truth]
 ```
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
 ## Tables
 
-### Sample family matrix
+### Sample family orientation
 
-| Family | What it usually proves | Typical companions | Safety note |
+These families come from the attached Shai-Hulud sample material and remain useful as a review vocabulary even though current public `samples/` does not yet expose a child folder for each one.
+
+| Family | Typical review question | Best current fit | Current public path status |
 | --- | --- | --- | --- |
-| `file-hash` | Deterministic identity shape | metadata + provenance + optional STAC | Never ship real malicious or live production hashes unless that is the governed canonical lane |
-| `pattern` | Match behavior and parsing | descriptor + test note | Keep strings benign and narrow |
-| `yara` | Rule-shape and field expectations | descriptor + optional redacted provenance | Safe structure only; no harmful payloads |
-| `structural` | Dependency or workflow anomaly shape | graph note / manifest note / provenance | Prefer mock manifests, mock DAGs, mock package trees |
-| `heuristic` | Scoring or threshold logic | rationale + expected result | Make expected pass/fail behavior explicit |
-| `composite` | Multi-signal relationships | metadata + provenance + optional STAC | Say which sub-signals are combined and why |
+| `file-hash` | Is the sample teaching benign identity shape or digest semantics? | `samples/` for benign fixtures; `../signatures/README.md` when digest binding is the point | Conceptual only at this path |
+| `pattern` | Is the example about parsing or matching without harmful payloads? | `samples/` | Conceptual only at this path |
+| `structural` | Is the example about manifest, DAG, or dependency-shape drift? | `samples/` | Conceptual only at this path |
+| `heuristic` | Is the example about pass/fail or threshold interpretation? | `samples/` | Conceptual only at this path |
+| `composite` | Is the example about multi-signal grouping? | `samples/` | Conceptual only at this path |
+| `signature-oriented` | Is the example about signatures, attestations, issuers, bundles, or verifier output? | [`../signatures/README.md`](../signatures/README.md) | Confirmed sibling README only |
 
-### Minimum companion fields
+### Recommended sidecar fields
 
-These fields are the strongest source-grounded minimums to keep in mind when building sample overlays. Exact local serialization can vary after repo verification.
+Use these when a sample needs just enough context to be reviewable without inventing a full publication plane.
 
-| Field family | Examples to preserve | Why it matters |
+| Field family | Examples | Why it matters |
 | --- | --- | --- |
-| Core identity | `id`, `title`, `description`, `indicator_type`, `ecosystem` | Prevents ambiguous sample blobs |
-| Temporal | `first_seen`, `last_seen`, `last_updated`, `observation_window` | Keeps even synthetic examples time-aware |
-| Governance | `status`, `review_cycle`, `immutability_status`, `governance_ref` | Makes review posture visible |
-| STAC | `stac_version`, `type`, `properties.datetime`, provenance/metadata assets | Keeps sample publication shape inspectable |
-| DCAT | title/description/license/keywords-style fields | Supports catalog realism without implying live truth |
-| PROV-O | used/generated/attributed/derived links | Preserves lineage habits even for toy examples |
+| Core identity | `id`, `title`, `sample_family`, `review_purpose` | Prevents ambiguous sample blobs |
+| Safety | `synthetic`, `live_indicator`, `contains_executable_content` | Makes the sample-only posture explicit |
+| Temporal | `created_at`, `observation_window`, `last_updated` | Helps reviewers read the sample in time |
+| Ownership | `owner_surface`, `related_surfaces` | Points back to the governing README or contract |
+| Lineage note | `derived_from`, `redaction_note`, `explanation` | Preserves KFM’s lineage habits without overbuilding |
+| Demo cues | `safe_for_ci`, `safe_for_docs`, `sample:true` | Keeps UI and training reuse honest |
 
-### Sample safety gates
+### Safety gates
 
 | Gate | Pass condition | Why it exists |
 | --- | --- | --- |
-| Non-executable | No runnable payloads or harmful code | Keeps the sample lane safe |
-| Non-live | Explicitly marked as sample-only | Prevents authority confusion |
-| Non-sensitive | No real secrets, PII, or unsafe identifiers | Supports public-safe reuse |
-| Provenance-aware | Lineage note or reference is present | Maintains KFM evidence habits |
-| Companion-ready | Metadata / STAC / PROV references are present when relevant | Makes the sample useful beyond eyeballing |
-| Reviewable | Purpose and expected behavior are obvious in one read | Reduces PR ambiguity |
+| Non-executable | No runnable or harmful content | Keeps the lane safe |
+| Non-live | Explicit sample-only wording | Prevents authority confusion |
+| Non-sensitive | No real secrets, PII, or unsafe identifiers | Supports public reuse |
+| Reviewable | Purpose and expected outcome are obvious in one read | Reduces PR ambiguity |
+| Lane-correct | The example is in `samples/` rather than the sibling signature lane only when that is actually the right fit | Prevents subtree drift |
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
 ## Task list
 
-Definition of done for a new sample:
+Definition of done for a new example:
 
-- [ ] The indicator family is declared clearly.
-- [ ] The artifact is synthetic, redacted, or generated specifically for safe use.
-- [ ] The sample contains zero executable code.
-- [ ] The sample cannot be mistaken for a live indicator.
-- [ ] The PR explains what the sample proves.
-- [ ] Companion metadata and/or provenance references are added when relevant.
-- [ ] Any Story / Focus demo use keeps the sample visibly sample-only.
-- [ ] The file adds review value that a schema alone would not provide.
+- [ ] The example is clearly synthetic or clearly redacted.
+- [ ] The example contains zero executable or harmful content.
+- [ ] The example cannot be mistaken for a live indicator or release proof.
+- [ ] The PR states the review purpose and owning surface.
+- [ ] Any descriptor or sidecar keeps the sample-only state obvious.
+- [ ] Signature-specific reading material is routed to `../signatures/README.md` when appropriate.
 
-Definition of done for this README after mounted repo verification:
+Definition of done for future tree expansion:
 
-- [ ] Owners verified from repo governance surfaces
-- [ ] Meta block dates and policy label updated
-- [ ] Actual directory inventory confirmed
-- [ ] Companion links checked in-tree
-- [ ] Repo-local validator commands added only after direct verification
-- [ ] Any overlap with `signatures/samples/` clarified to avoid duplication
+- [ ] A real checked-in need exists for more than `README.md` at this path.
+- [ ] New folders are added because the repo changed, not because a conceptual taxonomy sounded neat.
+- [ ] Ownership, policy, and validation surfaces are linked before new sample categories are treated as settled.
+- [ ] Broken or historical path assumptions are removed when the tree evolves.
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
 ## FAQ
 
-### Why keep indicator samples separate from live indicators?
+### Why keep samples separate from live indicators?
 
-Because the sample lane exists to teach and test safely. Live indicators carry a different burden of authority, provenance, and operational consequence.
+Because this lane exists to teach and review safely. Live indicators carry a different burden of provenance, interpretation, and operational consequence.
 
-### Can a sample begin from a real artifact?
+### Why not keep the older companion links to `metadata/`, `stac/`, or `provenance/` here?
 
-Only after it is minimized, redacted, and clearly relabeled as synthetic or illustrative. A direct copy of a live artifact does not belong here.
+Because current public `main` does not currently expose those paths at this location. This README should link the tree that exists, not the tree we remember.
 
-### Do all samples need STAC, DCAT, and PROV companions?
+### When should a contributor use the sibling `signatures/` lane instead?
 
-Not always as separate files, but samples are more useful when they preserve the habit of catalog and lineage linkage. Tiny overlays are often enough.
+Whenever the example is mostly about digest binding, signer identity, attestation subject, bundle structure, or verifier output rather than about a generic safe sample.
 
-### Can Focus Mode surface these samples?
+### Can Focus Mode surface these examples?
 
 Yes for safe demo or training flows, but not as real threat indicators. The sample-only state must remain visible.
 
-### Should this directory contain incident investigation material?
+### Should this lane ever hold real release artifacts?
 
-No. Investigation material belongs in report or provenance lanes with stronger review and sensitivity handling.
+No. Link to release-bearing proof elsewhere; do not park canonical outputs here.
 
 [Back to top](#shai-hulud-20-indicator-samples)
 
@@ -392,10 +388,9 @@ Prefer names that reveal family and purpose instead of mimicking production iden
 
 Good patterns:
 
-- `file-hash--benign-fixture--sample--v01.json`
-- `pattern--match-shape--sample--v01.txt`
+- `pattern--sample-only--benign-match-shape--v01.json`
 - `structural--workflow-drift--sample--v01.json`
-- `composite--multi-signal-demo--sample--v01.json`
+- `heuristic--threshold-demo--sample--v01.json`
 
 Avoid:
 
@@ -403,36 +398,33 @@ Avoid:
 - `latest`
 - `final`
 - names that look like incident IDs
-- names that imply the sample is a real detection
+- names that imply the sample is canonical truth
 
 </details>
 
 <details>
 <summary>Suggested review prompts</summary>
 
-Ask these before merging a new sample:
+Ask these before merging a new example:
 
-1. Is the family obvious?
-2. Is the sample clearly synthetic?
+1. Is the example obviously synthetic?
+2. Is the lane choice right, or is this really signature material?
 3. Could a non-expert misread it as live intelligence?
-4. Does it teach something a schema alone would not?
-5. Are metadata and provenance habits visible enough for reuse?
-6. Should this live here, or under a more specific family path such as `signatures/samples/`?
+4. Does the sidecar explain what the sample proves?
+5. Does the change add review value without inventing runtime enforcement?
 
 </details>
 
 <details>
 <summary>Open verification items</summary>
 
-This README still needs direct repo verification for:
+This README still needs direct verification for:
 
-- actual owners
-- actual git dates
-- actual policy label
-- whether `samples/` currently exists exactly at this path
-- whether the live tree uses all sample-family folders listed above
-- whether some sample families are intentionally centralized under `signatures/samples/`
-- whether local lint, schema, or Conftest commands already exist for this path
+- the internal KFM document UUID
+- the authoritative `policy_label`
+- whether narrower path ownership will eventually replace the current `/docs/` fallback
+- whether future public branches add child folders under `samples/`
+- whether any new sample catalog or provenance lanes appear and should be linked here
 
 </details>
 
