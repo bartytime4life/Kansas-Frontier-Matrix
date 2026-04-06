@@ -8,7 +8,7 @@ owners: @bartytime4life
 created: <NEEDS VERIFICATION>
 updated: <NEEDS VERIFICATION>
 policy_label: <NEEDS VERIFICATION>
-related: [../README.md, ../protections/README.md, ../indicators/README.md, ../../../../../.github/workflows/README.md, ../../../../../.github/CODEOWNERS, ../../../../../.github/PULL_REQUEST_TEMPLATE.md, ../../../../../contracts/README.md, ../../../../../schemas/README.md, ../../../../../policy/README.md, ../../../../../tests/README.md]
+related: [../README.md, ../../README.md, ../../../README.md, ../../../../README.md, ../protections/README.md, ../indicators/README.md, ../../../../../.github/workflows/README.md, ../../../../../.github/CODEOWNERS, ../../../../../.github/PULL_REQUEST_TEMPLATE.md, ../../../../../contracts/README.md, ../../../../../schemas/README.md, ../../../../../policy/README.md, ../../../../../tests/README.md]
 tags: [kfm, security, supply-chain, workflows, shai-hulud-2.0]
 notes: [Owner is grounded from current public CODEOWNERS fallback for /docs/; current public inventory for this leaf is README-only; doc_id, created, updated, and policy_label still need repo-local verification.]
 [/KFM_META_BLOCK_V2] -->
@@ -119,9 +119,10 @@ The current public `main` branch safely supports the following statements withou
 | `docs/security/supply-chain/shai-hulud-2.0/workflows/` | **CONFIRMED** | Public `main` exposes `README.md` only in this leaf directory. | This leaf is currently documentation-only in the visible tree. |
 | `docs/security/supply-chain/shai-hulud-2.0/` | **CONFIRMED** | The lane root exposes `protections/`, `workflows/`, and `indicators/`, with `samples/` and `signatures/` beneath `indicators/`. | This README should stay scoped to choreography rather than whole-lane doctrine. |
 | `.github/workflows/README.md` | **CONFIRMED** | The current public workflow directory is also README-only and explicitly separates current inventory from historically observed workflow names. | Do not imply active checked-in GitHub Actions YAML without separate proof. |
-| `contracts/README.md` + `schemas/README.md` | **CONFIRMED** / **NEEDS VERIFICATION** | Both current public lanes are README-only; schema-home authority is still unresolved. | Workflow prose must route to typed-object surfaces without inventing a second registry. |
-| `policy/README.md` | **CONFIRMED** | Policy is framed as deny-by-default and execution-oriented, but mounted `.rego` bundles and runnable policy tests are not proven by current public tree evidence alone. | Keep executable enforcement claims bounded. |
-| `tests/README.md` | **CONFIRMED** | The public test taxonomy includes contract, policy, e2e, reproducibility, and correction families. | Negative-path proof belongs there when it lands. |
+| `contracts/README.md` | **CONFIRMED** | The current public `contracts/` directory listing exposes `README.md` only. | Workflow prose can point to a typed-object ownership surface here, but should not imply a current public machine-contract inventory in this root. |
+| `schemas/README.md` | **CONFIRMED** / **NEEDS VERIFICATION** | The current public `schemas/` root is no longer README-only: it exposes nested `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows/` lanes, while schema-home authority is still described as unresolved. | Workflow prose must route to schema surfaces without flattening unresolved authority into a settled registry claim. |
+| `policy/README.md` | **CONFIRMED** | The current public `policy/` root exposes `bundles/`, `fixtures/`, `policy-runtime/`, and `tests/`, but the lane still describes public `main` as documentation-heavy. | Keep executable enforcement claims bounded to what the checked-out branch actually proves. |
+| `tests/README.md` | **CONFIRMED** | The public `tests/` root exposes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`. | Negative-path proof and correction burden belong in governed verification surfaces when they land. |
 | `.github/PULL_REQUEST_TEMPLATE.md` | **CONFIRMED** | PR guardrails explicitly require truth-path preservation, trust-membrane preservation, cite-or-abstain where relevant, fail-closed behavior where relevant, and same-change-set doc/test/runbook updates when behavior changes. | This README should stay aligned with actual review expectations. |
 | `.github/CODEOWNERS` | **CONFIRMED** | Current public `CODEOWNERS` uses a global fallback and assigns `/docs/` to `@bartytime4life`. | The owner field here can be grounded without inventing a narrower lane rule. |
 
@@ -291,6 +292,7 @@ This leaf README is not done because it looks polished. It is done when the repo
 
 - [ ] Owner, `doc_id`, `created`, `updated`, and `policy_label` fields are resolved from repo-local evidence.
 - [ ] The checked-out branch has been reconciled against the current public snapshot in this README.
+- [ ] The current `contracts/` versus `schemas/` asymmetry on public `main` stays visible instead of being flattened into one invented contract-home claim.
 - [ ] No section implies checked-in workflow YAML under this docs leaf.
 - [ ] Any workflow names mentioned are either **current checked-in inventory**, **history-derived**, or **PROPOSED** — and labeled accordingly.
 - [ ] Claims about allow / deny / obligation behavior route to `policy/` without duplicating rule bodies.
