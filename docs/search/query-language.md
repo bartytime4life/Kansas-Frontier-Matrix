@@ -4,13 +4,13 @@ title: Search Query Language
 type: standard
 version: v1
 status: draft
-owners: TODO-OWNER
+owners: <NEEDS VERIFICATION: docs/search ownership / CODEOWNERS>
 created: TODO-YYYY-MM-DD
 updated: TODO-YYYY-MM-DD
-policy_label: TODO-POLICY-LABEL
-related: [contracts/README.md, schemas/README.md, policy/README.md, .github/workflows/README.md]
+policy_label: <NEEDS VERIFICATION: public|restricted|...>
+related: [docs/search/README.md, contracts/README.md, schemas/README.md, policy/README.md, .github/workflows/README.md]
 tags: [kfm, search, query-language, governed-api, evidence]
-notes: [Current-session evidence is PDF-heavy and repo-grounded rather than direct mounted tree inspection; related README surfaces are confirmed, but live parser, endpoint, schema, and CI-gate implementation details remain NEEDS VERIFICATION.]
+notes: [Current public main inspection confirms the docs/search cluster and first-wave schema-side contract scaffolds under schemas/contracts/v1/; parser/tokenizer, endpoint inventory, ranking stack, and merge-blocking workflow YAML remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # Search Query Language
@@ -18,20 +18,21 @@ notes: [Current-session evidence is PDF-heavy and repo-grounded rather than dire
 Governed search over promoted scope, designed to land users in geography, time, and evidence rather than detached result lists.
 
 > **Status:** draft  
-> **Owners:** TODO-OWNER  
+> **Owners:** `<NEEDS VERIFICATION: docs/search ownership / CODEOWNERS>`  
 > **Path:** `docs/search/query-language.md`  
-> **Repo fit:** upstream docs at [contracts/README][contracts-readme], [schemas/README][schemas-readme], [policy/README][policy-readme], and [.github/workflows/README][workflows-readme]; downstream contract and route surfaces are mostly **PROPOSED** in the current evidence set.
+> **Repo fit:** sibling to [docs/search/README][search-readme]; upstream docs at [contracts/README][contracts-readme], [schemas/README][schemas-readme], [policy/README][policy-readme], and [.github/workflows/README][workflows-readme]; current public `main` also exposes first-wave machine-contract scaffolds under `schemas/contracts/v1/**`, while public route publication and runtime wiring remain **PROPOSED** or **NEEDS VERIFICATION**.
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![truth%20posture](https://img.shields.io/badge/truth%20posture-doctrine--grounded-blue)
-![runtime%20shape](https://img.shields.io/badge/runtime%20shape-NEEDS%20VERIFICATION-orange)
+![repo%20surface](https://img.shields.io/badge/repo%20surface-public--main%20docs%20verified-brightgreen)
+![runtime%20wiring](https://img.shields.io/badge/runtime%20wiring-NEEDS%20VERIFICATION-orange)
 ![search%20role](https://img.shields.io/badge/search-derived%20layer-purple)
 ![policy](https://img.shields.io/badge/policy-deny--by--default-red)
 
 **Quick jump:** [Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [Search placement](#search-placement-in-the-shell) · [Operating model](#operating-model) · [Canonical request object](#canonical-request-object-proposed) · [Starter grammar](#starter-grammar-proposed) · [Filter registry](#filter-registry-proposed) · [Runtime outcomes](#runtime-outcomes--surface-states) · [Verification](#open-verification-items)
 
 > [!IMPORTANT]
-> This file defines a **doctrine-aligned search contract** for KFM. It does **not** claim that a mounted parser, tokenizer, endpoint family, or schema inventory already exists in the repository. Where implementation is not directly visible in current-session evidence, this document marks the shape as **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
+> This file defines a **doctrine-aligned search contract** for KFM. Current public `main` confirms that `docs/search/` is a real checked-in subtree and that first-wave schema-side contract scaffolds exist under `schemas/contracts/v1/`. It does **not** prove a mounted parser, tokenizer, endpoint family, ranking stack, or merge-blocking workflow inventory. Where implementation is not directly visible in the inspected public tree or attached doctrine, this document keeps the shape **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ---
 
@@ -57,14 +58,17 @@ In KFM terms, search is a **derived projection** and a **rebuildable accelerator
 | Search belongs inside the map-first, time-aware shell and should keep evidence one hop away | **CONFIRMED** | Interface and contract consequence |
 | Public/external search must operate through governed APIs over outward released scope | **CONFIRMED** | Non-negotiable |
 | Search surfaces must avoid policy leakage through overly specific denials, restricted-object hints, or revealing search counts | **CONFIRMED** | Public-safe behavior rule |
+| Current public `main` exposes a checked-in `docs/search/` cluster including this file, sibling search docs, and `docs/search/drift/` | **CONFIRMED** | Local repo links may be written as real repo-relative paths |
+| Current public `main` exposes first-wave schema-side contract scaffolds under `schemas/contracts/v1/*` and starter vocab files under `schemas/contracts/vocab/*` | **CONFIRMED** | Search-adjacent machine-contract references should prefer visible schema-side paths over older purely PROPOSED root-contract paths |
+| Current public `main` does **not** expose checked-in workflow YAML under `.github/workflows/` | **CONFIRMED** | Do not imply merge-blocking search automation from the public tree alone |
 | The canonical request object, textual grammar, filter registry, and route family implications below | **PROPOSED** | Starter design, not mounted implementation fact |
-| Mounted parser/tokenizer, exact endpoints, schema filenames, ranking stack, and merge-blocking CI coverage | **UNKNOWN / NEEDS VERIFICATION** | Do not present as implemented |
+| Mounted parser/tokenizer, exact endpoints, ranking stack, and merge-blocking CI coverage | **UNKNOWN / NEEDS VERIFICATION** | Do not present as implemented |
 
 ### Reading key
 
 | Label | Meaning in this file |
 | --- | --- |
-| **CONFIRMED** | Directly supported by attached KFM doctrine or repo-grounded evidence artifacts available in this session |
+| **CONFIRMED** | Directly supported by attached KFM doctrine or current public-main repo evidence inspected for this revision |
 | **INFERRED** | Strong architectural consequence implied by repeated KFM doctrine, but not directly surfaced as mounted implementation |
 | **PROPOSED** | Recommended contract or design shape that fits KFM doctrine but is not verified as shipping |
 | **UNKNOWN** | Not supported strongly enough to present as current repo/runtime fact |
@@ -76,18 +80,38 @@ In KFM terms, search is a **derived projection** and a **rebuildable accelerator
 
 | Fit | Item | Status | Role |
 | --- | --- | --- | --- |
+| Parent | [docs/search/README][search-readme] | **CONFIRMED** | Search-system entrypoint and directory boundary |
+| Sibling | [semantic-search.md][semantic-search] | **CONFIRMED** | Semantic/vector-oriented search companion on current public `main` |
+| Sibling | [index-architecture.md][index-architecture] | **CONFIRMED** | Index-family and index-design companion on current public `main` |
+| Sibling | [faircare-search-rules.md][faircare-search-rules] | **CONFIRMED** | Search governance companion on current public `main` |
 | Upstream | [contracts/README][contracts-readme] | **CONFIRMED** | Contract-surface orientation |
 | Upstream | [schemas/README][schemas-readme] | **CONFIRMED** | Schema-surface orientation |
 | Upstream | [policy/README][policy-readme] | **CONFIRMED** | Deny-by-default and decision-grammar orientation |
 | Upstream | [\.github/workflows/README][workflows-readme] | **CONFIRMED** | Workflow surface exists, but active merge-blocking YAML coverage remains unverified |
-| Downstream | `contracts/runtime/runtime_response_envelope.schema.json` | **PROPOSED** | Finite runtime outcomes for Focus/search-adjacent synthesis |
-| Downstream | `contracts/runtime/evidence_bundle.schema.json` | **PROPOSED** | Evidence Drawer drill-through contract |
-| Downstream | `contracts/policy/decision_envelope.schema.json` | **PROPOSED** | Machine-readable policy result |
-| Downstream | `contracts/release/release_manifest.schema.json` | **PROPOSED** | Release linkage on outward search surfaces |
-| Downstream | `contracts/correction/correction_notice.schema.json` | **PROPOSED** | Correction/supersession visibility |
-| Downstream | `policy/reason_codes.json` | **PROPOSED** | Stable reasons for deny/abstain/error/search handling |
-| Downstream | `policy/obligation_codes.json` | **PROPOSED** | Stable obligations such as `cite`, `generalize`, `withhold` |
+| Downstream | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | **CONFIRMED (scaffold-state)** | Finite runtime outcomes for Focus/search-adjacent synthesis |
+| Downstream | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | **CONFIRMED (scaffold-state)** | Evidence Drawer drill-through contract surface |
+| Downstream | `schemas/contracts/v1/policy/decision_envelope.schema.json` | **CONFIRMED (scaffold-state)** | Machine-readable policy result surface |
+| Downstream | `schemas/contracts/v1/release/release_manifest.schema.json` | **CONFIRMED (scaffold-state)** | Release linkage on outward search surfaces |
+| Downstream | `schemas/contracts/v1/correction/correction_notice.schema.json` | **CONFIRMED (scaffold-state)** | Correction / supersession visibility surface |
+| Downstream | `schemas/contracts/v1/source/source_descriptor.schema.json` | **CONFIRMED (scaffold-state)** | Source-edge identity surface relevant to search-adjacent provenance |
+| Downstream | `schemas/contracts/v1/data/dataset_version.schema.json` | **CONFIRMED (scaffold-state)** | Dataset version identity surface relevant to released search results |
+| Downstream | `schemas/contracts/vocab/{reason_codes,obligation_codes,reviewer_roles}.json` | **CONFIRMED (starter registry files)** | Finite starter registries are branch-visible, though semantic completeness remains unverified |
+| Downstream | [docs/search/drift/README][drift-readme] | **CONFIRMED** | Drift-governance sublane for search-derived behavior |
+| Lateral proof surface | `schemas/tests/fixtures/contracts/v1/{valid,invalid}/` | **CONFIRMED (placeholder leaves)** | Fixture lane exists, but not yet a proven governed inventory |
+| Lateral proof surface | `tests/contracts/README.md` | **CONFIRMED** | Root contract-facing verification family is visible, but runnable search-specific cases are not proven from public `main` alone |
 | Downstream | `apis/public/openapi.yaml` | **PROPOSED** | Public search/read/evidence route publication |
+| Downstream | Search parser / tokenizer / ranking stack | **UNKNOWN / NEEDS VERIFICATION** | Runtime implementation remains unverified |
+
+### Current public repo signals
+
+| Current public `main` signal | Status | Why it changes this file |
+| --- | --- | --- |
+| `docs/search/` is a real subtree with `README.md`, `faircare-search-rules.md`, `index-architecture.md`, `query-language.md`, `semantic-search.md`, and `drift/` | **CONFIRMED** | Local relative links should be treated as live repo paths, not just preserved-baseline references |
+| `docs/search/drift/` visibly contains `README.md`, `embeddings/`, `examples/`, `graph-queries/`, `hyde/`, and `stac/` | **CONFIRMED** | Search drift is a current checked-in sublane, not a hypothetical downstream target |
+| `schemas/contracts/v1/*/*.schema.json` exists across common, correction, data, evidence, policy, release, runtime, and source families | **CONFIRMED** | Machine-contract examples in this doc should point to visible scaffold paths |
+| `schemas/contracts/vocab/*.json` exists for reasons, obligations, and reviewer roles | **CONFIRMED** | Registry references can be written against visible starter files |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` exists but remains placeholder-only in current public docs | **CONFIRMED** | This file should not imply mature fixture inventory or search-specific cases |
+| `.github/workflows/README.md` is present, but no `.yml` / `.yaml` files were visible in the inspected public `workflows/` directory | **CONFIRMED** | Keep merge-blocking workflow claims conservative |
 
 ### Accepted inputs
 
@@ -507,18 +531,22 @@ Intended effect: pass a tightly scoped investigation into a governed assistance 
 
 ## Implementation notes
 
-| Artifact | Status | Why it matters |
+| Artifact / surface | Status | Why it matters |
 | --- | --- | --- |
-| `contracts/runtime/runtime_response_envelope.schema.json` | **PROPOSED** | Finite search-adjacent synthesis outcomes |
-| `contracts/runtime/evidence_bundle.schema.json` | **PROPOSED** | Evidence Drawer drill-through |
-| `contracts/policy/decision_envelope.schema.json` | **PROPOSED** | Deny-by-default policy record |
-| `contracts/release/release_manifest.schema.json` | **PROPOSED** | Release linkage on outward surfaces |
-| `contracts/correction/correction_notice.schema.json` | **PROPOSED** | Visible correction lineage |
-| `policy/reason_codes.json` | **PROPOSED** | Stable machine-readable reasons |
-| `policy/obligation_codes.json` | **PROPOSED** | Stable machine-readable obligations |
-| `apis/public/openapi.yaml` | **PROPOSED** | Publishable route-family contract |
-| `tests/fixtures/contracts/{valid,invalid}/` | **PROPOSED** | Prevent grammar and contract drift |
-| `docs/search/drift/provenance/README.md` | **PROPOSED** | Search-provenance follow-on, suggested by later March 2026 idea packets |
+| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | **CONFIRMED (scaffold-state)** | Branch-visible machine contract for finite search-adjacent synthesis outcomes |
+| `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | **CONFIRMED (scaffold-state)** | Evidence Drawer drill-through contract surface is visible on public `main` |
+| `schemas/contracts/v1/policy/decision_envelope.schema.json` | **CONFIRMED (scaffold-state)** | Machine-readable policy result surface is visible on public `main` |
+| `schemas/contracts/v1/release/release_manifest.schema.json` | **CONFIRMED (scaffold-state)** | Release linkage contract surface exists in the inspected tree |
+| `schemas/contracts/v1/correction/correction_notice.schema.json` | **CONFIRMED (scaffold-state)** | Correction / supersession contract surface exists in the inspected tree |
+| `schemas/contracts/v1/source/source_descriptor.schema.json` | **CONFIRMED (scaffold-state)** | Source-edge identity is already represented in the first wave |
+| `schemas/contracts/v1/data/dataset_version.schema.json` | **CONFIRMED (scaffold-state)** | Release-bearing dataset version identity is already represented in the first wave |
+| `schemas/contracts/vocab/{reason_codes,obligation_codes,reviewer_roles}.json` | **CONFIRMED (starter registry files)** | Finite registry leaves exist, though semantic population remains unverified |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}/` | **CONFIRMED (placeholder leaves)** | Fixture lane is visible, but not yet a proven governed inventory |
+| `tests/contracts/README.md` | **CONFIRMED** | Root contract-validation family is visible, but runnable search-specific cases are not proven from public `main` alone |
+| `docs/search/drift/README.md` | **CONFIRMED** | Search-drift governance surface is visible as a real checked-in sublane |
+| Parser / tokenizer / ranking stack | **UNKNOWN / NEEDS VERIFICATION** | Public docs do not prove executable search runtime internals |
+| `.github/workflows/README.md` without visible workflow YAML | **CONFIRMED** | Workflow intent is documented, but merge-blocking search CI cannot be claimed from public `main` alone |
+| `apis/public/openapi.yaml` | **PROPOSED** | Publishable route-family contract is still not directly evidenced in the inspected public tree |
 
 ## Anti-patterns to reject
 
@@ -534,28 +562,28 @@ Intended effect: pass a tightly scoped investigation into a governed assistance 
 
 ## Open verification items
 
-- [ ] Confirm whether a mounted `docs/search/` cluster already exists and align local links to it.
+- [ ] Reconcile this file with [docs/search/README][search-readme] and the current public `docs/search/drift/` listing so preserved-baseline paths and live-tree paths do not drift.
 - [ ] Verify whether the repository already contains an implemented parser or tokenizer.
 - [ ] Verify actual public and internal endpoint names.
 - [ ] Verify which fields are public-safe versus steward-only.
 - [ ] Verify whether discovery is implemented through STAC, OGC APIs, KFM-specific OpenAPI, or a combination.
-- [ ] Verify whether `EvidenceRef -> EvidenceBundle` resolution already has a mounted contract.
-- [ ] Verify whether merge-blocking schema/fixture validation is already wired in CI.
+- [ ] Verify whether `EvidenceRef -> EvidenceBundle` resolution already has a mounted contract and outward resolver route.
+- [ ] Verify whether `schemas/contracts/v1/**` and `schemas/contracts/vocab/**` are already consumed by runtime/tests or remain scaffold-state only.
+- [ ] Verify whether merge-blocking search-related workflow YAML or required checks exist outside the current public `.github/workflows/README` surface.
 - [ ] Verify max page size, cursor semantics, and result ranking strategy.
-- [ ] Verify exact reason/obligation code registries and whether they live under `policy/` or `contracts/`.
-- [ ] Verify whether search provenance and DRIFT-related docs are mounted or still target-state only.
+- [ ] Verify whether additional DRIFT companions such as provenance / synthesis / workflows exist on the active branch even though they were not visible in the inspected public `docs/search/drift/` listing.
 
 ## Definition of done
 
 This document is ready to move from draft toward review when:
 
-- the canonical request object is backed by a schema or OpenAPI component
+- the canonical request object is backed by a schema or OpenAPI component in the authoritative machine-contract lane
 - the starter textual grammar is covered by parser tests or explicitly narrowed
 - search results can link to Evidence Drawer payloads
 - public-safe result cards show release and surface state
 - Focus handoff is backed by `RuntimeResponseEnvelope`
 - valid and invalid fixtures exist for the first search-adjacent contracts
-- this file is linked from the repo’s contract/schema/policy/workflow doc surfaces
+- this file is linked from the repo’s search, contract, schema, policy, and workflow doc surfaces without contradicting current public-tree reality
 
 <details>
 <summary>Appendix — starter implementation checklist</summary>
@@ -585,6 +613,11 @@ This document is ready to move from draft toward review when:
 
 </details>
 
+[search-readme]: ./README.md
+[semantic-search]: ./semantic-search.md
+[index-architecture]: ./index-architecture.md
+[faircare-search-rules]: ./faircare-search-rules.md
+[drift-readme]: ./drift/README.md
 [contracts-readme]: ../../contracts/README.md
 [schemas-readme]: ../../schemas/README.md
 [policy-readme]: ../../policy/README.md
