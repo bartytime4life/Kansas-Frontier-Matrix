@@ -1,20 +1,38 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION
+title: Dependency Confusion Checks
+type: standard
+version: v1
+status: review
+owners: [@bartytime4life]
+created: NEEDS VERIFICATION
+updated: 2026-04-06
+policy_label: public
+related: [docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/dependency-confusion/policy/README.md, docs/security/supply-chain/dependency-confusion/examples/README.md, .github/CODEOWNERS, .github/workflows/README.md]
+tags: [kfm, security, supply-chain, dependency-confusion, checks]
+notes: [doc_id placeholder pending repo UUID assignment, created date needs verification]
+[/KFM_META_BLOCK_V2] -->
+
 # Dependency Confusion Checks
 
-Reviewer-facing check guidance for detecting, documenting, and hardening against dependency-confusion risk under `docs/security/supply-chain/dependency-confusion/checks/`.
+Reviewer-facing check guidance for what to inspect, what evidence to capture, and where dependency-confusion enforcement should live under `docs/security/supply-chain/dependency-confusion/checks/`.
+
+**Repo fit:** `docs/security/supply-chain/dependency-confusion/checks/README.md` → upstream [`../README.md`](../README.md) · adjacent [`../policy/README.md`](../policy/README.md), [`../examples/README.md`](../examples/README.md) · downstream future check pages in this directory.
 
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(broad `/docs/` CODEOWNERS coverage)*  
+> **Owners:** `@bartytime4life` *(confirmed broad `/docs/` CODEOWNERS coverage; any narrower dependency-confusion-specific split remains `NEEDS VERIFICATION`)*  
 > ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 > ![Owner: @bartytime4life](https://img.shields.io/badge/owner-%40bartytime4life-blue)
 > ![Lane: dependency confusion](https://img.shields.io/badge/lane-dependency--confusion-critical)
-> ![Public main: README only](https://img.shields.io/badge/public_main-README--only-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Minimum reviewer questions](#minimum-reviewer-questions) · [Usage](#usage) · [Diagram](#diagram) · [Check families](#check-families) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> ![Tree: README only](https://img.shields.io/badge/tree-README--only-lightgrey)
+> ![Visibility: public main](https://img.shields.io/badge/visibility-public__main-2ea44f)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Minimum reviewer questions](#minimum-reviewer-questions) · [Usage](#usage) · [Diagram](#diagram) · [Check families](#check-families) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This directory is the **checks lane** for dependency confusion. It explains **what to inspect**, **what evidence to capture**, and **where enforcement should live**. It does **not** by itself prove that a workflow, policy bundle, or runnable scanner is already active.
 
 > [!WARNING]
-> Current public `main` shows `README.md` as the only file inside `docs/security/supply-chain/dependency-confusion/checks/`. The sibling `examples/` and `policy/` lanes are visible and should be treated as confirmed anchors. Any deeper filenames listed below **inside `checks/`** remain **INFERRED / NEEDS VERIFICATION** until they are directly visible here.
+> Current public `main` shows `README.md` as the only checked-in file inside `docs/security/supply-chain/dependency-confusion/checks/`. The sibling `examples/` and `policy/` lanes are visible and should be treated as confirmed anchors. Any deeper filenames listed below **inside `checks/`** remain **INFERRED / NEEDS VERIFICATION** until they are directly visible here.
 
 ---
 
@@ -72,6 +90,17 @@ Send the following elsewhere:
 - **broad signing / SBOM / release-integrity guidance not specific to dependency confusion** → higher-level supply-chain docs under [`../../README.md`](../../README.md)
 - **claims of active enforcement** without visible repo evidence
 
+## Current verified snapshot
+
+| Surface | Current public-main evidence | Reading implication |
+| --- | --- | --- |
+| `checks/` local inventory | `README.md` only | Use this lane as reviewer guidance; do not claim mounted child check pages or scanners here |
+| `examples/` sibling lane | `README.md`, `lockfile-drift-attack.md`, and `namespace-collision-basic.md` are visible | Examples are the confirmed teaching and scenario anchors for this lane |
+| `policy/` sibling lane | `README.md` is visible | The policy lane exists as a checked-in docs surface, but local policy implementation still needs separate proof |
+| Broad docs ownership | `.github/CODEOWNERS` routes `/docs/` to `@bartytime4life` | The owner line in this README can safely name current broad docs ownership, but not a narrower split |
+| Public workflow surface | `.github/workflows/README.md` is visible and describes the directory as README-only on public `main` | Historical workflow names or Actions UI signals are not proof of checked-in merge-blocking YAML for this lane |
+| Parent-lane forward references | [`../README.md`](../README.md) points toward future check leaves such as `provenance-hooks.md`, `registry-anomaly-detection.md`, and `local-scan-guidance.md` | Keep those seams visible, but mark them **INFERRED / NEEDS VERIFICATION** until they are directly present here |
+
 ## Directory tree
 
 ### Confirmed current public-main inventory
@@ -93,7 +122,7 @@ docs/security/supply-chain/dependency-confusion/
     └── namespace-collision-basic.md
 ```
 
-### Indexed deeper checks to keep visible
+### Forward seams worth keeping visible
 
 | Candidate doc | Intended role in this lane | Current status |
 | --- | --- | --- |
@@ -104,7 +133,7 @@ docs/security/supply-chain/dependency-confusion/
 ## Quickstart
 
 1. Start from [`../README.md`](../README.md) to confirm the lane-level dependency-confusion purpose.
-2. Decide whether your addition is a **check**, a **policy rule**, or an **example**.
+2. Decide whether your addition is a **check**, a **policy rule**, an **example**, or an **implementation surface**.
 3. If it is a check, document:
    - the threat or failure mode
    - the observable signal
@@ -123,6 +152,16 @@ checks/
 ```
 
 A new check page should be small, specific, and link outward to policy, examples, and implementation surfaces instead of duplicating them.
+
+### Minimum evidence packet
+
+| Signal type | Keep at least |
+| --- | --- |
+| Namespace / source-precedence issue | manifest intent, registry or mirror config, resolver output, expected source owner |
+| Lockfile / resolver drift | before/after lockfile diff, integrity field changes, resolved registry URLs, package metadata |
+| Provenance gap | digest record, attestation or release-proof reference, policy note, subject artifact identifier |
+| Registry anomaly | hostname delta, allowlist comparison, anomaly threshold or reviewer rationale, affected package list |
+| Correction / rollback case | affected release or artifact refs, correction note, rollback or rebuild pointer, retained evidence link |
 
 ## Minimum reviewer questions
 
@@ -222,6 +261,10 @@ Because current public `main` shows this directory as README-only, while adjacen
 
 Because visible public-tree evidence matters. If the checked-in workflow surface is not present in the current tree, this README should not imply that merge-blocking enforcement is already mounted.
 
+### Why not put package-manager-specific rules here?
+
+Because this lane should stay focused on **inspection logic**. The exact decision grammar, allowed registries, exception handling, and merge/publish outcomes belong in the policy lane or in executable enforcement once those surfaces are verified.
+
 ### Where should runnable code or hooks live?
 
 Not in this directory. Put runnable behavior in the repo’s executable surfaces and link to it from here once verified.
@@ -244,6 +287,9 @@ The concrete conditions, fields, files, logs, or diffs a reviewer should inspect
 
 **Required inputs**  
 Configs, lockfiles, registry settings, attestations, manifests, or examples needed to run the check.
+
+**Current evidence state**  
+Mark each linked surface as **CONFIRMED**, **INFERRED**, **PROPOSED**, or **NEEDS VERIFICATION**.
 
 **Manual review flow**  
 1. Inspect source-precedence inputs.  
