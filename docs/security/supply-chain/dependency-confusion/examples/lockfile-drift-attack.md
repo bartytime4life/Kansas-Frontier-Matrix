@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: 2025-11-30
+updated: 2026-03-25
 policy_label: NEEDS-VERIFICATION
-related: [docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md, contracts/README.md, policy/README.md, tests/README.md]
+related: [docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/dependency-confusion/examples/README.md, docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md, docs/security/supply-chain/dependency-confusion/checks/README.md, docs/security/supply-chain/dependency-confusion/policy/README.md, .github/CODEOWNERS, contracts/README.md, policy/README.md, tests/README.md]
 tags: [kfm, security, supply-chain, dependency-confusion, example]
-notes: [doc_id, created, updated, and policy_label require verification before commit]
+notes: [doc_id and policy_label require verification before commit]
 [/KFM_META_BLOCK_V2] -->
 
 # Lockfile Drift Attack
@@ -38,9 +38,10 @@ This file is **illustrative**. It does **not** claim that the current KFM reposi
 | Field | Value |
 | --- | --- |
 | Path | `docs/security/supply-chain/dependency-confusion/examples/lockfile-drift-attack.md` |
+| Current public status | Present on public `main`; linked from [examples README](./README.md) |
 | Upstream | [examples README](./README.md) · [dependency-confusion README](../README.md) · [supply-chain README](../../README.md) · [security README](../../../README.md) |
 | Adjacent example | [namespace-collision-basic.md](./namespace-collision-basic.md) |
-| Should move with | [`../checks/`](../checks/) · [`../policy/`](../policy/) · [`../../../../../contracts/README.md`](../../../../../contracts/README.md) · [`../../../../../policy/README.md`](../../../../../policy/README.md) · [`../../../../../tests/README.md`](../../../../../tests/README.md) |
+| Should move with | [`../checks/README.md`](../checks/README.md) · [`../policy/README.md`](../policy/README.md) · [`../../../../../contracts/README.md`](../../../../../contracts/README.md) · [`../../../../../policy/README.md`](../../../../../policy/README.md) · [`../../../../../tests/README.md`](../../../../../tests/README.md) |
 
 ## Accepted inputs
 
@@ -68,11 +69,12 @@ This file is **not** the right place for:
 
 | Statement | Status | Why it matters here |
 | --- | --- | --- |
-| The dependency-confusion subtree exists and already separates `checks/`, `examples/`, and `policy/`. | **CONFIRMED** | This example should stay aligned to that local structure rather than inventing a new one. |
-| This file previously existed as a scaffold-only placeholder. | **CONFIRMED** | Replacing it with a real example adds value without changing repo topology. |
-| KFM docs are production-facing trust surfaces, not decorative prose. | **CONFIRMED** | The example must support review, correction, and future enforcement work. |
-| A concrete dependency-confusion merge gate is already live in the repo. | **NEEDS VERIFICATION** | Do not imply enforcement that has not been re-proven. |
-| Example-specific denial codes and fixture paths shown below are the current authoritative registry. | **PROPOSED** | Use them as starter language only until verified machine artifacts exist. |
+| The parent dependency-confusion lane currently exposes separate `checks/`, `examples/`, and `policy/` subdirectories. | **CONFIRMED** | This example should stay aligned to the live subtree rather than inventing a new local structure. |
+| `lockfile-drift-attack.md` is a current example file on public `main` and is linked from the examples sublane guide. | **CONFIRMED** | This page is a real checked-in trust surface, not just a hypothetical filename. |
+| Broad `/docs/` coverage in current public `CODEOWNERS` points to `@bartytime4life`. | **CONFIRMED** | Supports the current owner marker without inventing narrower path ownership. |
+| KFM docs are production-facing trust surfaces, not decorative prose. | **CONFIRMED** | The example should stay reviewer-facing, boundary-aware, and correction-friendly. |
+| A concrete dependency-confusion merge gate is already live in the repo. | **NEEDS VERIFICATION** | Do not imply runnable enforcement that current public evidence does not prove. |
+| Example-specific denial codes and fixture paths shown below are the current authoritative registry. | **PROPOSED** | Keep them clearly starter-only until sibling policy and test surfaces prove them. |
 
 ## Attack shape
 
@@ -172,8 +174,8 @@ In KFM, the safe default is not “merge unless obviously broken.” The safe de
 | --- | --- | --- |
 | Unexpected registry or tarball host | **Deny merge** | Diff excerpt, affected package list, reviewer note, explicit source explanation |
 | Source provenance cannot be determined | **Error and stop** | Failing check output; do not rewrite the lockfile in CI |
-| Intentional source migration | **Manual review required** | Explanation of why the source changed, approval note, synchronized updates to checks/policy/examples |
-| Lockfile drift found after release | **Correction path required** | Correction note, rollback or supersession path, visibility of affected builds/releases |
+| Intentional source migration | **Manual review required** | Explanation of why the source changed, approval note, synchronized updates to checks, policy, and examples |
+| Lockfile drift found after release | **Correction path required** | Correction note, rollback or supersession path, visibility of affected builds and releases |
 
 ### PROPOSED starter reason strings
 
@@ -190,8 +192,8 @@ When this example becomes operationally important, these surfaces should usually
 
 | Surface | Why it should move together |
 | --- | --- |
-| `../checks/` | Carries the concrete detection or reviewer checklist |
-| `../policy/` | Carries deny/exception language and approval expectations |
+| `../checks/README.md` | Carries the concrete detection or reviewer checklist |
+| `../policy/README.md` | Carries deny/exception language and approval expectations |
 | `../../../../../contracts/README.md` | Explains where machine-checkable contract authority belongs |
 | `../../../../../policy/README.md` | Connects the example to deny-by-default policy handling |
 | `../../../../../tests/README.md` | Holds fixtures and expected deny/error examples once verified |
@@ -203,7 +205,7 @@ A strong version of this example is not just prose. It should eventually line up
 
 - [ ] Keep this file explicitly illustrative unless a verified incident record is intentionally linked.
 - [ ] Add or update a matching detection note under `../checks/`.
-- [ ] Add or update the matching denial / exception language under `../policy/`.
+- [ ] Add or update matching deny / exception language under `../policy/`.
 - [ ] Ensure the chosen package manager runs in immutable or frozen lockfile mode in CI.
 - [ ] Add at least one negative fixture once the verified test surface is known.
 - [ ] Keep terminology synchronized with KFM trust objects and fail-closed language.
@@ -236,7 +238,7 @@ Because reviewers often need a fast pattern library. The policy says what to do;
 <details>
 <summary>Appendix A — Reviewer prompts</summary>
 
-Use these prompts in code review, incident triage, or after-action clean-up:
+Use these prompts in code review, incident triage, or after-action cleanup:
 
 1. What changed in the lockfile that did **not** have a corresponding manifest explanation?
 2. Did the source host, tarball URL, git reference, or artifact identity change?
