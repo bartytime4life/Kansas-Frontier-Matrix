@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../../README.md, ../README.md, ../threat-model.md, ../vulnerability-management.md, ../prompt-injection/README.md, ../prompt-injection-defense.md, ../supply-chain/README.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../schemas/README.md, ../../../.github/workflows/README.md, ../../../.github/SECURITY.md]
+related: [../../README.md, ../README.md, ../threat-model.md, ../vulnerability-management.md, ../vulns/README.md, ../prompt-injection/README.md, ../prompt-injection-defense.md, ../supply-chain/README.md, ../promotion-contract.md, ../ai-receipts/README.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../schemas/README.md, ../../../.github/actions/README.md, ../../../.github/workflows/README.md, ../../../.github/SECURITY.md]
 tags: [kfm, security, ai, supply-chain, model-runtime, prompt-injection]
-notes: [doc_id and dates require merge-time verification; current public main now shows a substantive README in this directory, but the directory itself is still README-only]
+notes: [doc_id and dates require merge-time verification; current public main shows a substantive README in this directory while the directory itself remains README-only; adjacent ai-receipts and promotion-contract surfaces are now visible and should absorb narrower proof and promotion detail]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM AI Supply-Chain & Governed Model Runtime
@@ -20,7 +20,7 @@ Public-safe guidance for model provenance, adapter boundaries, prompt/input hard
 > Status: `experimental`
 > Owners: `@bartytime4life`
 > Path: `docs/security/ai-supply-chain/README.md`
-> Repo fit: secure-AI lane under [`../README.md`](../README.md), adjacent to [`../ai-receipts/README.md`](../ai-receipts/README.md), prompt-injection, and broader supply-chain docs, downstream into the governed API membrane, contracts, policy, tests, repo-local actions, and workflow gates.
+> Repo fit: secure-AI lane under [`../README.md`](../README.md), adjacent to [`../ai-receipts/README.md`](../ai-receipts/README.md), [`../promotion-contract.md`](../promotion-contract.md), prompt-injection, the narrower vulnerability lane, and broader supply-chain docs, downstream into the governed API membrane, contracts, policy, tests, repo-local actions, and workflow gates.
 >
 > ![Status](https://img.shields.io/badge/status-experimental-9ca3af?style=flat-square)
 > ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-2563eb?style=flat-square)
@@ -62,8 +62,10 @@ This file should help maintainers answer four questions quickly:
 | Docs index | [`../../README.md`](../../README.md) | Wider docs conventions and navigation context | `CONFIRMED` |
 | Parent security index | [`../README.md`](../README.md) | Security subtree map; entry point into secure-AI and adjacent lanes | `CONFIRMED` |
 | Adjacent AI receipts lane | [`../ai-receipts/README.md`](../ai-receipts/README.md) | Keeps signed or attested AI-run provenance detail separate from full model/runtime-lane doctrine | `CONFIRMED` |
+| Adjacent promotion contract | [`../promotion-contract.md`](../promotion-contract.md) | Keeps AI-bearing release-admission, steward approval, and promotion-gate detail in the narrower contract doc instead of expanding this README sideways | `CONFIRMED` |
 | Adjacent threat model | [`../threat-model.md`](../threat-model.md) | Cross-cutting trust boundary, failure-mode, and attack-surface context | `CONFIRMED` |
 | Adjacent vulnerability lane | [`../vulnerability-management.md`](../vulnerability-management.md) | Intake, triage, remediation, and disclosure path for discovered issues | `CONFIRMED` |
+| Adjacent advisory / CVE detail lane | [`../vulns/README.md`](../vulns/README.md) | Keeps issue-specific notes, package-family advisories, and correction-aware leaves out of this doctrinal lane | `CONFIRMED` |
 | Adjacent prompt-injection lane | [`../prompt-injection/README.md`](../prompt-injection/README.md) | Hostile-input, retrieval-scope, and instruction-conflict guidance | `CONFIRMED` |
 | Adjacent prompt defense note | [`../prompt-injection-defense.md`](../prompt-injection-defense.md) | Narrow defensive guidance for input and prompt-boundary controls | `CONFIRMED` |
 | Adjacent broader supply-chain lane | [`../supply-chain/README.md`](../supply-chain/README.md) | Provenance, release integrity, attestation, SBOM, and artifact trust | `CONFIRMED` |
@@ -74,7 +76,7 @@ This file should help maintainers answer four questions quickly:
 | Verification surface | [`../../../tests/README.md`](../../../tests/README.md) | Negative-path, runtime-proof, correction, and reproducibility families are the eventual proof burden for this lane | `CONFIRMED` |
 | Local actions surface | [`../../../.github/actions/README.md`](../../../.github/actions/README.md) | Future AI/runtime gate wrappers belong in repo-local actions rather than buried in lane prose | `CONFIRMED` |
 | Workflow lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Any future merge gates, attestation, eval, or proof automation belong here | `CONFIRMED` |
-| GitHub security policy | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Canonical GitHub-facing disclosure/reporting path | `CONFIRMED` |
+| Gatehouse disclosure surface | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Public disclosure/reporting surface is visible in the gatehouse; keep wording aligned with the wider security docs instead of assuming the canonical-path question is fully settled here | `CONFIRMED surface` |
 
 ### Upstream / downstream reading order
 
@@ -85,8 +87,10 @@ This file should help maintainers answer four questions quickly:
       ├─ ../prompt-injection/README.md
       ├─ ../prompt-injection-defense.md
       ├─ ../ai-receipts/README.md
+      ├─ ../promotion-contract.md
       ├─ ../supply-chain/README.md
       ├─ ../vulnerability-management.md
+      ├─ ../vulns/README.md
       └─ THIS FILE
              ├─ ../../../apps/governed-api/README.md
              ├─ ../../../contracts/README.md
@@ -129,7 +133,9 @@ This lane is **not** the dumping ground for everything adjacent to AI.
 | Generic threat-model text not specific to AI/runtime boundaries | [`../threat-model.md`](../threat-model.md) |
 | Prompt-injection content focused on user input, retrieval attacks, or system-prompt conflict | [`../prompt-injection/README.md`](../prompt-injection/README.md) and [`../prompt-injection-defense.md`](../prompt-injection-defense.md) |
 | AI receipt predicate shape, DSSE / in-toto recipe detail, or receipt-verification how-to | [`../ai-receipts/README.md`](../ai-receipts/README.md) |
+| Promotion contract detail for signatures, referrers, steward approval, or runtime admission recheck | [`../promotion-contract.md`](../promotion-contract.md) |
 | Vulnerability intake, disclosure, or remediation process docs | [`../vulnerability-management.md`](../vulnerability-management.md) |
+| Issue-specific advisory / CVE notes or package-family vulnerability leaves | [`../vulns/README.md`](../vulns/README.md) |
 | Governed API route-family ownership or request-boundary inventory | [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) |
 | Live secrets, endpoints, tokens, hostnames, internal registries, or unpublished incident evidence | keep out of public docs |
 | Machine-readable schemas themselves | [`../../../contracts/README.md`](../../../contracts/README.md) or verified schema home after merge-time confirmation |
@@ -148,7 +154,8 @@ The current public `main` branch now exposes a more useful secure-AI picture tha
 |---|---|
 | `docs/security/ai-supply-chain/README.md` | Substantive lane README visible on public `main`; this revision is an in-place improvement, not a net-new file |
 | `docs/security/ai-supply-chain/` | No additional child files were directly visible from the current directory page |
-| `docs/security/ai-receipts/README.md` | Sibling secure-AI receipt lane is visible and should absorb receipt-shape and attestation-detail drift |
+| `docs/security/ai-receipts/README.md` | Sibling secure-AI receipt lane is visible; it explicitly documents a draft/proposed receipt family and should absorb receipt-shape and attestation-detail drift |
+| `docs/security/promotion-contract.md` | Adjacent promotion and runtime-admission contract is visible on public `main`; AI-bearing release-admission detail should route there instead of widening this README |
 | `apps/governed-api/README.md` | Governed API membrane README is visible and should anchor no-direct-client-to-model claims |
 | `.github/actions/` | Repo-local action directories are visible (`metadata-validate-v2/`, `metadata-validate/`, `opa-gate/`, `provenance-guard/`, `sbom-produce-and-sign/`, plus `src/`) |
 | `.github/workflows/` | README visible; no checked-in workflow YAML is visible on current public `main`; public Actions history is historical signal, not current file inventory |
@@ -158,7 +165,10 @@ The current public `main` branch now exposes a more useful secure-AI picture tha
 | `schemas/` | `README.md` plus `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows/` are visible; schema-home authority still needs explicit resolution |
 
 > [!NOTE]
-> This README should no longer describe itself as replacing a scaffold-only file. The more accurate posture now is: **the lane README exists and is substantive, but the directory itself is still compact, the proof surfaces are distributed across sibling repo lanes, and live workflow YAML for AI/runtime enforcement is still not visible on current public `main`.**
+> This README should no longer describe itself as replacing a scaffold-only file. The more accurate posture now is: **the lane README exists and is substantive, the directory itself is still compact, the proof surfaces are distributed across sibling repo lanes, and live workflow YAML for AI/runtime enforcement is still not visible on current public `main`.**
+
+> [!TIP]
+> The wider `docs/security/` subtree also now exposes `promotion-contract.md` and `vulns/`. Keep this lane narrow: route promotion/runtime-admission depth and advisory leaf detail outward instead of absorbing both here.
 
 [Back to top](#kfm-ai-supply-chain--governed-model-runtime)
 
@@ -188,7 +198,7 @@ docs/security/ai-supply-chain/
 ```
 
 > [!TIP]
-> Keep this lane compact. If a proposed file mostly duplicates prompt-injection, AI-receipt, supply-chain, policy, or vulnerability material, link outward instead of branching inward.
+> Keep this lane compact. If a proposed file mostly duplicates prompt-injection, AI-receipt, promotion-contract, supply-chain, policy, or vulnerability material, link outward instead of branching inward.
 
 [Back to top](#kfm-ai-supply-chain--governed-model-runtime)
 
@@ -203,7 +213,9 @@ Use this sequence before editing or extending the lane.
 sed -n '1,240p' docs/security/README.md
 sed -n '1,240p' docs/security/threat-model.md
 sed -n '1,240p' docs/security/supply-chain/README.md
+sed -n '1,240p' docs/security/promotion-contract.md
 sed -n '1,240p' docs/security/vulnerability-management.md
+sed -n '1,240p' docs/security/vulns/README.md
 
 # 2) Read secure-AI neighbors
 sed -n '1,240p' docs/security/ai-receipts/README.md
@@ -227,6 +239,8 @@ sed -n '1,240p' .github/SECURITY.md
 # 5) Before claiming implementation, verify the tree directly
 git ls-files docs/security/ai-supply-chain
 git ls-files docs/security/ai-receipts
+git ls-files docs/security/promotion-contract.md
+git ls-files docs/security/vulns
 git ls-files apps/governed-api
 git ls-files .github/actions
 git ls-files .github/workflows
@@ -238,12 +252,12 @@ git ls-files tests
 
 ### Minimum review questions
 
-1. Does the change describe a **trust-bearing AI/runtime surface**, or is it really a prompt-injection, supply-chain, AI-receipts, policy, or vulnerability doc?
+1. Does the change describe a **trust-bearing AI/runtime surface**, or is it really a prompt-injection, promotion-contract, supply-chain, AI-receipts, policy, or vulnerability doc?
 2. Does the change keep **implementation claims proportional** to visible repo evidence?
 3. Does the change preserve the **governed API membrane** and fail-closed posture?
 4. Does the change make negative outcomes easier to test and explain?
 5. Does the change avoid creating a second, drifting schema vocabulary?
-6. Does the change leave route-family ownership in `apps/governed-api/` and receipt-shape ownership in `docs/security/ai-receipts/` where those surfaces already exist?
+6. Does the change leave route-family ownership in `apps/governed-api/`, receipt-shape ownership in `docs/security/ai-receipts/`, and release-admission depth in `docs/security/promotion-contract.md` where those surfaces already exist?
 
 [Back to top](#kfm-ai-supply-chain--governed-model-runtime)
 
@@ -256,10 +270,12 @@ git ls-files tests
 | Explain what “AI supply chain” means in KFM | this file | [`../README.md`](../README.md), [`../threat-model.md`](../threat-model.md) |
 | Document model/runtime containment | this file | [`../../../policy/README.md`](../../../policy/README.md), [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md), and branch-local runtime/config surfaces |
 | Document AI receipt / attestation pattern | [`../ai-receipts/README.md`](../ai-receipts/README.md) | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) |
+| Document AI-bearing promotion, release-admission, or runtime revalidation burden | [`../promotion-contract.md`](../promotion-contract.md) | [`../../../policy/README.md`](../../../policy/README.md), [`../../../.github/actions/README.md`](../../../.github/actions/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), and branch-local release evidence |
 | Document prompt-boundary and hostile-input risk | [`../prompt-injection/README.md`](../prompt-injection/README.md) | [`../prompt-injection-defense.md`](../prompt-injection-defense.md), then return here for runtime-chain implications |
 | Document dependency, base-image, attestation, or release provenance concerns | [`../supply-chain/README.md`](../supply-chain/README.md) | [`../../../.github/actions/README.md`](../../../.github/actions/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), and release docs |
 | Map negative-path proof burden | [`../../../tests/README.md`](../../../tests/README.md) | branch-local `tests/policy/`, `tests/e2e/runtime_proof/`, `tests/e2e/correction/`, and reproducibility surfaces |
 | Draft machine-checkable AI/runtime objects | [`../../../contracts/README.md`](../../../contracts/README.md) | [`../../../schemas/README.md`](../../../schemas/README.md) and verified schema location |
+| Record issue-specific advisory or CVE detail | [`../vulns/README.md`](../vulns/README.md) | [`../vulnerability-management.md`](../vulnerability-management.md), relevant supply-chain docs, and release evidence |
 | Describe future merge gates or eval automation | this file for lane intent | [`../../../.github/actions/README.md`](../../../.github/actions/README.md) and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) for actual control-plane placement |
 
 ---
@@ -316,7 +332,8 @@ The diagram is the governing mental model for this lane:
 | Evidence-bounded synthesis | Retrieve, cite, verify, and abstain rather than improvise | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../tests/README.md`](../../../tests/README.md) | `CONFIRMED doctrine` / executable proof depth `UNKNOWN` |
 | Runtime accountability | Emit bounded primary outcomes and visible surface state | this file + contract surfaces | `CONFIRMED doctrine` / schema inventory `UNKNOWN` |
 | AI-run provenance / receipts | Bind derived AI outputs to signed or attested run proof without promoting them to authoritative truth | [`../ai-receipts/README.md`](../ai-receipts/README.md) | sibling lane visible / execution depth `UNKNOWN` |
-| Release and correction | Preserve proof, rollback, stale-state, and correction lineage for AI-bearing surfaces | [`../supply-chain/README.md`](../supply-chain/README.md), [`../vulnerability-management.md`](../vulnerability-management.md) | `CONFIRMED doctrine` / automation `UNKNOWN` |
+| Promotion / runtime admission | Keep AI-bearing release proof, steward approval, and runtime revalidation explicit and fail-closed | [`../promotion-contract.md`](../promotion-contract.md), [`../supply-chain/README.md`](../supply-chain/README.md) | adjacent contract doc visible / automation `UNKNOWN` |
+| Release and correction | Preserve proof, rollback, stale-state, and correction lineage for AI-bearing surfaces | [`../promotion-contract.md`](../promotion-contract.md), [`../supply-chain/README.md`](../supply-chain/README.md), [`../vulnerability-management.md`](../vulnerability-management.md) | `CONFIRMED doctrine` / automation `UNKNOWN` |
 | Dependency/container trust | Watch packages, base images, registries, and build artifacts without confusing them with epistemic trust | [`../supply-chain/README.md`](../supply-chain/README.md) | broader lane `CONFIRMED` |
 | Policy vocab and fixtures | Keep reasons, obligations, valid/invalid samples, and negative-path tests machine-checkable | [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | directory signals visible / enforcement depth `UNKNOWN` |
 
@@ -329,7 +346,7 @@ The diagram is the governing mental model for this lane:
 | `DecisionEnvelope` | Carries machine-readable policy result, reasons, obligations, and audit linkage | doctrinally named; execution surface `UNKNOWN` |
 | `ReleaseManifest` / `ReleaseProofPack` | Prevents AI-bearing release from becoming a trust-the-docs gesture | doctrinally named; checked-in proof example `UNKNOWN` |
 | `CorrectionNotice` | Keeps stale, withdrawn, replaced, or corrected AI-bearing outputs visibly linked | doctrinally named; mounted examples `UNKNOWN` |
-| `AIReceipt` / attestation predicate | Binds AI-assisted derived outputs to auditable run proof where the branch adopts that pattern | sibling lane visible; canonical contract path `NEEDS VERIFICATION` |
+| `AIReceipt` / attestation predicate | Binds AI-assisted derived outputs to auditable run proof where the branch adopts that pattern | sibling lane visible as a draft-standard surface; canonical contract path `NEEDS VERIFICATION` |
 | Valid / invalid fixtures | Proves fail-closed behavior under missing evidence, citation failure, denial, and stale scope | high-priority / mounted depth `UNKNOWN` |
 
 > [!NOTE]
@@ -356,13 +373,14 @@ The diagram is the governing mental model for this lane:
 
 ### Immediate tasks for this README
 
-- [ ] Keep cross-links aligned to live neighbor docs, including `ai-receipts/` and `apps/governed-api/`.
+- [ ] Keep cross-links aligned to live neighbor docs, including `ai-receipts/`, `promotion-contract.md`, and `apps/governed-api/`.
 - [ ] State the current public-branch snapshot plainly.
 - [ ] Preserve the no-direct-client-to-model rule.
 - [ ] Name the trust objects this lane depends on.
 - [ ] Keep workflow, schema, policy, and test claims proportional to visible evidence.
 - [ ] Avoid inventing a second schema-home or duplicate trust vocabulary.
 - [ ] Keep receipt-shape detail in the sibling receipt lane when that lane already exists.
+- [ ] Keep promotion and runtime-admission detail in the narrower promotion contract when that surface already exists.
 - [ ] Keep all mitigation guidance public-safe.
 
 ### Definition of done for this lane
@@ -374,8 +392,8 @@ A change in this directory is ready when all of the following are true:
 | Scope gate | The content is genuinely about AI-bearing trust surfaces, not a duplicate of another security lane |
 | Evidence gate | Confirmed repo state is separated from doctrine and from proposed next steps |
 | Boundary gate | The governed API membrane and fail-closed posture remain explicit |
-| Linkage gate | The lane points readers to contracts, policy, tests, actions/workflows, and adjacent secure-AI docs without inventing implementation |
-| Ownership gate | Receipt details live in `ai-receipts/` and membrane route ownership lives in `apps/governed-api/` where those surfaces exist |
+| Linkage gate | The lane points readers to contracts, policy, tests, actions/workflows, promotion contract, and adjacent secure-AI docs without inventing implementation |
+| Ownership gate | Receipt details live in `ai-receipts/`, promotion details live in `promotion-contract.md`, and membrane route ownership lives in `apps/governed-api/` where those surfaces exist |
 | Testability gate | Negative outcomes, reason/obligation vocab, and proof objects are easier to test after the change |
 | Drift gate | The change does not create a parallel schema, policy, or terminology universe |
 | Publication gate | The document stays public-safe and does not reveal secrets, sensitive endpoints, or unpublished incident evidence |
@@ -396,6 +414,10 @@ No. Dependency and container provenance are part of this lane, but KFM’s AI su
 ### How is this different from `docs/security/ai-receipts/`?
 
 This lane covers the full AI-bearing trust chain. `ai-receipts/` is the narrower proof-bearing lane for signed or attested AI-assisted execution records and derived-output provenance.
+
+### Why route some release detail to `promotion-contract.md`?
+
+Because AI-bearing release and runtime-admission detail should stay machine-checkable and fail-closed in the narrower promotion contract rather than turning this README into a second promotion spec.
 
 ### Does this README prove the repo already runs AI-specific workflow gates?
 
@@ -429,9 +451,11 @@ Because KFM’s model runtime is subordinate to evidence, policy, release state,
 - `docs/security/README.md`
 - `docs/security/threat-model.md`
 - `docs/security/vulnerability-management.md`
+- `docs/security/vulns/README.md`
 - `docs/security/prompt-injection/README.md`
 - `docs/security/prompt-injection-defense.md`
 - `docs/security/supply-chain/README.md`
+- `docs/security/promotion-contract.md`
 - `docs/security/ai-receipts/README.md`
 - `apps/governed-api/README.md`
 - `contracts/README.md`
@@ -442,6 +466,7 @@ Because KFM’s model runtime is subordinate to evidence, policy, release state,
 - `schemas/` directory view
 - `tests/README.md`
 - `tests/` directory view
+- `.github/README.md`
 - `.github/CODEOWNERS`
 - `.github/actions/README.md`
 - `.github/actions/` directory view
@@ -455,6 +480,7 @@ Because KFM’s model runtime is subordinate to evidence, policy, release state,
 - KFM secure-AI / Ollama integration guidance
 - KFM replacement-grade blueprint material
 - KFM components / category atlas material
+- KFM successor geospatial architecture manual
 
 ### Merge-time verification reminders
 
@@ -463,6 +489,7 @@ Because KFM’s model runtime is subordinate to evidence, policy, release state,
 - Re-check whether this directory now contains child files before merging.
 - Re-check whether `.github/workflows/` now contains live YAML so the snapshot text stays truthful.
 - Re-check whether `contracts/` vs `schemas/` schema-home authority has been formally resolved.
-- Re-check whether the sibling `ai-receipts/` lane or governed-API README has moved or been renamed before merge.
+- Re-check whether disclosure-path wording still matches the wider security docs and gatehouse docs.
+- Re-check whether the sibling `ai-receipts/` lane, `promotion-contract.md`, or governed-API README has moved or been renamed before merge.
 
 </details>
