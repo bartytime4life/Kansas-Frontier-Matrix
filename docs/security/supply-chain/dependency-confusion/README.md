@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <REVIEW-REQUIRED-YYYY-MM-DD>
 updated: <REVIEW-REQUIRED-YYYY-MM-DD>
 policy_label: <REVIEW-REQUIRED-policy-label>
-related: [docs/README.md, docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/checks/README.md, docs/security/supply-chain/dependency-confusion/examples/README.md, docs/security/supply-chain/dependency-confusion/policy/README.md, SECURITY.md, .github/CODEOWNERS]
+related: [docs/README.md, docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/checks/README.md, docs/security/supply-chain/dependency-confusion/examples/README.md, docs/security/supply-chain/dependency-confusion/policy/README.md, .github/README.md, .github/workflows/README.md, SECURITY.md, .github/CODEOWNERS]
 tags: [kfm, security, supply-chain, dependency-confusion]
-notes: [owner confirmed from CODEOWNERS; public-main tree confirms README plus checks/examples/policy sublanes; created/updated/doc_id/policy label need verification before merge; parent and child example inventories still need reconciliation]
+notes: [owner confirmed from .github/CODEOWNERS; public-main tree confirms README plus checks/examples/policy sublanes; adjacent lane docs point toward deeper future files but current public-main inventory does not confirm them yet; created/updated/doc_id/policy_label still need review before merge]
 [/KFM_META_BLOCK_V2] -->
 
 # Dependency Confusion
@@ -21,7 +21,7 @@ Evidence-first control surface for preventing wrong-registry package resolution,
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > ![Status](https://img.shields.io/badge/status-experimental-orange) ![Lane](https://img.shields.io/badge/lane-supply--chain-blue) ![Focus](https://img.shields.io/badge/focus-dependency--confusion-critical) ![Posture](https://img.shields.io/badge/posture-fail--closed-darkred) ![Trust](https://img.shields.io/badge/kfm-trust--membrane-1f6feb) ![Owner](https://img.shields.io/badge/owner-bartytime4life-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Controls matrix](#controls-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Controls matrix](#controls-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** `docs/security/supply-chain/dependency-confusion/` → upstream security and supply-chain docs; downstream `checks/`, `examples/`, and `policy` sublanes
 
 > [!WARNING]
@@ -69,10 +69,11 @@ If any of those steps cannot be explained, this lane should assume **partial tru
 | Primary role | README-like lane index and reviewer guide |
 | Upstream docs | [`../../../README.md`](../../../README.md) · [`../../README.md`](../../README.md) · [`../README.md`](../README.md) · [`../../../../SECURITY.md`](../../../../SECURITY.md) |
 | Downstream lane READMEs | [`./checks/README.md`](./checks/README.md) · [`./examples/README.md`](./examples/README.md) · [`./policy/README.md`](./policy/README.md) |
-| Confirmed current local files | `./checks/README.md` · `./examples/README.md` · `./examples/lockfile-drift-attack.md` · `./examples/namespace-collision-basic.md` · `./policy/README.md` |
+| Confirmed current public-main files | `./checks/README.md` · `./examples/README.md` · `./examples/lockfile-drift-attack.md` · `./examples/namespace-collision-basic.md` · `./policy/README.md` |
+| Adjacent enforcement surfaces | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) · [`../../../../../policy/README.md`](../../../../../policy/README.md) · [`../../../../../contracts/README.md`](../../../../../contracts/README.md) · [`../../../../../schemas/README.md`](../../../../../schemas/README.md) · [`../../../../../tests/README.md`](../../../../../tests/README.md) |
 | Current public-main posture | Lane README plus visible `checks/`, `examples`, and `policy` subdirectories; child-lane maturity is uneven |
-| Intended downstream material | lane-specific policy notes, check guidance, and examples for dependency confusion |
-| Enforcement should live in | package-manager config, CI, policy bundles, lockfile review, attestations/SBOM generation, and release proof objects |
+| Intended downstream material | lane-specific policy notes, check guidance, examples, and eventually fixture-backed enforcement support for dependency confusion |
+| Enforcement should live in | package-manager config, CI, policy bundles, lockfile review, attestations/SBOM generation, release proof objects, and correction workflows |
 
 ### Accepted inputs
 
@@ -87,6 +88,7 @@ This directory is the right place for:
 - review checklists for dependency-affecting changes
 - provenance expectations for package resolution
 - SBOM / attestation / digest-link guidance where it directly supports this lane
+- OCI dependency or artifact-reference guidance where wrong-source resolution is materially the same trust problem
 - exception patterns for emergency or steward-reviewed override cases
 - examples showing how a dependency confusion issue would be detected, denied, corrected, and rebuilt
 
@@ -96,6 +98,8 @@ This directory is **not** the right place for:
 
 - live credentials, tokens, `.npmrc` secrets, index URLs, or auth material
 - canonical CI implementation files that belong under `.github/`, `tools/`, `tests/`, `scripts/`, or package-manager config
+- repo-wide policy definitions that should remain authoritative under top-level `policy/`
+- parallel contract or schema authorities that should remain under `contracts/` or `schemas/`
 - broad vulnerability management content that is not specific to dependency confusion
 - incident response details that should remain restricted
 - general package hygiene advice with no KFM trust consequence
@@ -156,6 +160,21 @@ The following common topics are adjacent, but belong elsewhere unless they direc
 
 ---
 
+## Current verified snapshot
+
+| Surface | Current public-main signal | Reading rule |
+| --- | --- | --- |
+| `docs/security/supply-chain/dependency-confusion/README.md` | Present and substantive | Revise in place; do not replace with a parallel document |
+| `docs/security/supply-chain/dependency-confusion/checks/` | `README.md` present | Reviewer guidance exists; deeper check docs are not current repo fact yet |
+| `docs/security/supply-chain/dependency-confusion/examples/` | `README.md`, `lockfile-drift-attack.md`, and `namespace-collision-basic.md` present | Current scenario anchors are real and worth linking |
+| `docs/security/supply-chain/dependency-confusion/policy/` | `README.md` present | Policy specialization exists; local fixtures or exception records remain target-state unless reverified |
+| `.github/CODEOWNERS` | Broad path coverage assigns `@bartytime4life` to `/.github/`, `/docs/`, and other top-level surfaces | Current owner signal is broad, not lane-specific |
+| `.github/workflows/README.md` | Present and states `.github/workflows/` is README-only on public `main` | Do not imply active lane-specific merge gates from lane prose alone |
+
+[Back to top](#dependency-confusion)
+
+---
+
 ## Directory tree
 
 ### CONFIRMED current public-main subtree
@@ -173,16 +192,17 @@ docs/security/supply-chain/dependency-confusion/
     └── README.md
 ```
 
-### Source-reported by parent security index, but NEEDS VERIFICATION here
+### Adjacent checked-in docs point toward deeper files, but current public `main` does not confirm them here
 
-The parent security README reports additional files under this subtree. They should not be treated as current repo fact until directly rechecked in a mounted checkout:
+The sibling lane docs keep a richer future split visible. Treat the shape below as **INFERRED / NEEDS VERIFICATION**, not as current subtree fact:
 
 ```text
 docs/security/supply-chain/dependency-confusion/
 ├── policy/
-│   ├── rules.md
-│   ├── exceptions.md
-│   └── evidence/README.md
+│   ├── fixtures/
+│   │   ├── valid/
+│   │   └── invalid/
+│   └── exceptions/
 ├── checks/
 │   ├── provenance-hooks.md
 │   ├── registry-anomaly-detection.md
@@ -191,18 +211,19 @@ docs/security/supply-chain/dependency-confusion/
     └── typosquat-examples.md
 ```
 
-### Current cross-index drift to resolve
+### Current drift to resolve
 
 | Signal | Why it matters |
 | --- | --- |
-| `examples/namespace-collision-basic.md` is visible in the live subtree, but the parent security index still names `examples/typosquat-examples.md` instead | Parent and child inventories are drifting; readers should not have to guess which file set is authoritative |
-| `checks/README.md` and `policy/README.md` are visible on public `main` | The sublanes are real and worth linking now, even where deeper files remain unverified |
-| Deeper files are still named upstream but not visible here | Keep them queued as source-reported backlog, not as current repo fact |
+| `examples/README.md` still says the parent dependency-confusion README omits `examples/namespace-collision-basic.md`, but the current parent README already lists it | Parent and child docs are drifting in their inventory story |
+| `examples/README.md` keeps `typosquat-examples.md` visible as a queue item | The example backlog is visible, but not yet a current file |
+| `checks/README.md` points toward `provenance-hooks.md`, `registry-anomaly-detection.md`, and `local-scan-guidance.md`, while `checks/` is README-only on public `main` | Future check-page split is documented, but not mounted |
+| `policy/README.md` proposes `fixtures/valid/`, `fixtures/invalid/`, and `exceptions/`, while `policy/` is README-only on public `main` | Policy-local growth shape should stay clearly marked as target-state until reverified |
 
 ### Interpretation rule
 
 Use the confirmed tree for current edits.  
-Use the source-reported tree as a queue for repo verification or follow-on documentation work.
+Use adjacent-documented growth shapes as a reconciliation queue, not as current repo fact.
 
 [Back to top](#dependency-confusion)
 
@@ -218,7 +239,17 @@ This section is for maintainers reviewing or building this lane in a mounted che
 find docs/security/supply-chain/dependency-confusion -maxdepth 3 -type f | sort
 ```
 
-### 2) Locate package ecosystems that could participate in dependency confusion
+### 2) Read adjacent lane and governance docs before tightening claims
+
+```bash
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/checks/README.md
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/examples/README.md
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/policy/README.md
+sed -n '1,260p' .github/CODEOWNERS
+sed -n '1,260p' .github/workflows/README.md
+```
+
+### 3) Locate package ecosystems that could participate in dependency confusion
 
 ```bash
 find . -maxdepth 5 \( \
@@ -234,14 +265,14 @@ find . -maxdepth 5 \( \
 \) | sort
 ```
 
-### 3) Search for registry or source configuration
+### 4) Search for registry or source configuration
 
 ```bash
 grep -RIn "registry\|npmrc\|PIP_INDEX_URL\|index-url\|extra-index-url\|source *= *\"\|replace *= *\"\|registries:" \
   .github apps docs policy schemas scripts tests tools 2>/dev/null
 ```
 
-### 4) Review dependency-affecting diffs together
+### 5) Review dependency-affecting diffs together
 
 ```bash
 git diff -- \
@@ -256,7 +287,7 @@ git diff -- \
   '**/go.mod' 2>/dev/null
 ```
 
-### 5) Fail closed when intent and evidence diverge
+### 6) Fail closed when intent and evidence diverge
 
 If manifest intent, lockfile evidence, registry configuration, and release proof do not line up, the correct KFM default is:
 
@@ -280,6 +311,7 @@ Use this README when a change does any of the following:
 - introduces a private namespace that could collide with a public package name
 - updates a lockfile without clear provenance
 - changes build tooling that resolves packages differently across environments
+- introduces OCI-hosted artifact references into build or release lanes
 - changes release evidence expectations for package-origin proof
 - proposes an exception to strict dependency-source rules
 
@@ -299,7 +331,7 @@ Use this README when a change does any of the following:
 | **INFERRED** | Strongly implied by KFM doctrine, but not directly proven as implemented here |
 | **PROPOSED** | Recommended control shape or directory growth for this lane |
 | **UNKNOWN** | Not yet verified strongly enough to present as current mounted implementation reality |
-| **NEEDS VERIFICATION** | Source-reported by nearby docs, but not directly rechecked before merge |
+| **NEEDS VERIFICATION** | Source-reported or adjacently documented, but not directly rechecked before merge |
 
 ### Change coupling rule
 
@@ -330,11 +362,13 @@ flowchart TD
     E -- No --> X
     E -- Yes --> F{Release evidence can reconstruct resolution?}
     F -- No --> Y
-    F -- Yes --> G[Attach policy / provenance / SBOM / attestation links where adopted]
-    G --> H[Merge / release candidate]
-    H --> I{Post-release anomaly?}
-    I -- Yes --> J[Correction notice / rebuild / rollback path]
-    I -- No --> K[Published state remains explainable]
+    E -- Yes --> G{OCI ref or package source pinned by lockfile, digest, or equivalent carrier?}
+    G -- No --> X
+    G -- Yes --> H[Attach policy / provenance / SBOM / attestation links where adopted]
+    H --> I[Merge / release candidate]
+    I --> J{Post-release anomaly?}
+    J -- Yes --> K[Correction notice / rebuild / rollback path]
+    J -- No --> L[Published state remains explainable]
 ```
 
 ### Reading the flow
@@ -355,7 +389,8 @@ KFM should never treat “the build passed” as sufficient proof that the right
 | Namespace ownership | Which names are private, mirrored, public, or forbidden | policy bundles, package-manager config, review checklist | PROPOSED |
 | Registry precedence | Which source wins, and whether fallback is allowed | package-manager config, CI, environment policy | UNKNOWN |
 | Lockfile discipline | When lockfiles must be regenerated, reviewed, or denied | CI checks, review template, local guidance | INFERRED |
-| Resolution provenance | What evidence proves the package came from the intended source | SBOMs, attestations, release manifests, logs | PROPOSED |
+| Resolution provenance | What evidence proves the package or artifact came from the intended source | SBOMs, attestations, release manifests, logs | PROPOSED |
+| OCI reference discipline | Whether build and release lanes treat mutable tags as non-authoritative and keep digest-linked proof | release manifests, policy bundles, promotion gates | PROPOSED |
 | Exception handling | Who can override, how long, and what evidence is required | review records, policy exceptions, steward workflow | PROPOSED |
 | Local developer safeguards | How to avoid accidental public resolution during local work | local scan guidance, config templates, docs | NEEDS VERIFICATION |
 | Correction path | How a wrong resolution is withdrawn, rebuilt, and surfaced | correction notices, rebuild receipts, release linkage | INFERRED |
@@ -366,7 +401,7 @@ KFM should never treat “the build passed” as sufficient proof that the right
 | --- | --- | --- |
 | `checks/` | `README.md` only | Use as reviewer guidance; do not claim mounted scanners or hooks without separate proof |
 | `examples/` | `README.md`, `lockfile-drift-attack.md`, `namespace-collision-basic.md` | Best place for reviewable scenarios and teaching cases |
-| `policy/` | `README.md` only | Treat decision grammar as starter content until implementation surfaces confirm final rules |
+| `policy/` | `README.md` only | Treat policy specialization as starter content until local fixtures or exception records are actually visible |
 
 ### Current evidence boundary
 
@@ -375,9 +410,9 @@ KFM should never treat “the build passed” as sufficient proof that the right
 | This lane directory exists on public `main` | CONFIRMED | Safe to document as a real subtree |
 | The current lane README is substantive and already functions as a reviewer guide | CONFIRMED | Expand and tighten it rather than replace it with generic prose |
 | `checks/README.md`, `examples/README.md`, `examples/lockfile-drift-attack.md`, `examples/namespace-collision-basic.md`, and `policy/README.md` exist | CONFIRMED | Keep the lane anchored to real child surfaces already present |
-| Parent security indexes still name deeper files not visible here on public `main` | NEEDS VERIFICATION | Keep those files queued as source-reported, not current fact |
-| Parent and child example inventories drift (`namespace-collision-basic.md` live here; `typosquat-examples.md` still named upstream) | CONFIRMED drift | Make the mismatch visible until the indexes are reconciled |
-| Merge-blocking dependency-confusion enforcement is present | UNKNOWN | Do not describe lane-specific CI or runtime enforcement as implemented fact |
+| Adjacent checked-in docs point toward deeper future files | NEEDS VERIFICATION | Keep those names visible as backlog, not current fact |
+| `.github/workflows/README.md` documents current public `main` as README-only for workflows | CONFIRMED | Do not treat lane-specific CI enforcement as already mounted without separate proof |
+| Merge-blocking dependency-confusion enforcement is present | UNKNOWN | Avoid present-tense claims about lane-specific runtime or CI controls |
 
 ### KFM-aligned outcome table
 
@@ -399,8 +434,8 @@ KFM should never treat “the build passed” as sufficient proof that the right
 - [ ] Confirm the actual package ecosystems present in the mounted repo
 - [ ] Confirm authoritative registries or source authorities for each ecosystem
 - [ ] Document namespace ownership and private/public collision rules
-- [ ] Reconcile parent/child inventory drift (`namespace-collision-basic.md` vs `typosquat-examples.md`)
-- [ ] Decide whether source-reported deeper docs (`policy/rules.md`, `policy/exceptions.md`, `policy/evidence/README.md`, `checks/*`, `examples/typosquat-examples.md`) are active next files or stale index residue
+- [ ] Reconcile inventory drift between this README and `examples/README.md`
+- [ ] Decide whether adjacently documented growth shapes are active next files or stale backlog: `policy/fixtures/valid/`, `policy/fixtures/invalid/`, `policy/exceptions/`, `checks/provenance-hooks.md`, `checks/registry-anomaly-detection.md`, `checks/local-scan-guidance.md`, `examples/typosquat-examples.md`
 - [ ] Add or verify a fail-closed review path for manifest + lockfile + registry changes
 - [ ] Add at least one valid and one invalid dependency-confusion example
 - [ ] Add or verify exception handling with visible review ownership
@@ -459,13 +494,13 @@ Start with the smallest reliable chain:
 3. registry/source configuration
 4. release evidence or provenance linkage
 
-### Why does this README separate confirmed tree state from source-reported deeper files?
+### Why does this README keep confirmed tree state separate from adjacent documented growth shapes?
 
-Because the current public tree and the broader security indexes are not perfectly aligned. This file keeps the difference visible so target-state documentation does not silently become current-state fact.
+Because the current public tree and the neighboring lane docs are not fully synchronized. This file keeps the difference visible so target-state documentation does not silently become current-state fact.
 
 ### Does this lane imply that all supply-chain controls already exist in the repo?
 
-No. This README must stay honest about what is current, what is source-reported, and what is still target-state.
+No. This README must stay honest about what is current, what is adjacently documented, and what is still target-state.
 
 [Back to top](#dependency-confusion)
 
@@ -478,22 +513,22 @@ No. This README must stay honest about what is current, what is source-reported,
 
 ### Open verification items
 
-- Actual repo package ecosystems are not confirmed from this README’s source set alone.
+- Actual repo package ecosystems are not confirmed from this README’s current evidence base alone.
 - Current authoritative registry configuration per ecosystem is not yet verified here.
 - It is not yet directly verified whether a merge-blocking dependency-confusion check already exists in `.github/`, `policy/`, `tests/`, `tools/`, or package-manager config.
-- The parent security index still reports deeper files in this subtree that should be rechecked before being treated as current repo fact.
-- The live examples subtree and the parent security index should be reconciled before this lane is treated as stable.
+- Adjacent lane docs point toward deeper files and fixture trees that should be rechecked before being treated as current repo fact.
+- `examples/README.md` and this parent README should be synchronized before this lane is treated as stable.
 - Any future exception process must remain proportional: fail closed by default, but do not create a review burden so heavy that maintainers bypass the lane entirely.
 
-### Suggested follow-on docs
+### Suggested follow-on docs and growth seams
 
-- `./policy/rules.md` — lane rules and decision grammar
-- `./policy/exceptions.md` — steward-reviewed override flow
-- `./policy/evidence/README.md` — evidence expectations and retained proof objects for this lane
-- `./checks/provenance-hooks.md` — where dependency-origin, digest, and attestation checks should hook in
+- `./checks/provenance-hooks.md` — where dependency-origin, digest, attestation, and release-proof checks should hook in
 - `./checks/registry-anomaly-detection.md` — how wrong-source detection is performed
 - `./checks/local-scan-guidance.md` — local developer verification workflow
 - `./examples/typosquat-examples.md` — contrast cases for related attacks
+- `./policy/fixtures/valid/` — positive policy fixtures for allowed source-selection cases
+- `./policy/fixtures/invalid/` — negative policy fixtures for deny or review-required cases
+- `./policy/exceptions/` — time-boxed waiver records with owner, expiry, and rollback path
 
 ### Merge caution
 
@@ -501,7 +536,7 @@ Before marking this README `review` or `published`, verify:
 
 - doc metadata values in the KFM meta block
 - current subtree inventory
-- parent/child index synchronization
+- parent/child README synchronization
 - actual enforcement locations
 - actual package ecosystems present in the mounted repository
 
