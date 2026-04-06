@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION_DATE
-updated: 2026-03-29
+updated: 2026-04-05
 policy_label: public
-related: [docs/README.md, docs/security/README.md, .github/README.md, .github/actions/README.md, .github/workflows/README.md, .github/SECURITY.md, policy/README.md, policy/bundles/README.md, policy/tests/README.md, tests/README.md, tests/policy/README.md, tests/contracts/README.md, contracts/README.md, schemas/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/sigstore-cosign-v3/README.md, docs/security/supply-chain/reference-repos/README.md, docs/security/supply-chain/shai-hulud-2.0/README.md]
+related: [docs/README.md, docs/security/README.md, docs/security/promotion-contract.md, docs/security/ai-supply-chain/README.md, docs/security/ai-receipts/README.md, .github/README.md, .github/CODEOWNERS, .github/actions/README.md, .github/workflows/README.md, .github/SECURITY.md, policy/README.md, policy/bundles/README.md, policy/tests/README.md, tests/README.md, tests/policy/README.md, tests/contracts/README.md, contracts/README.md, schemas/README.md, schemas/contracts/README.md, schemas/tests/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/sigstore-cosign-v3/README.md, docs/security/supply-chain/reference-repos/README.md, docs/security/supply-chain/shai-hulud-2.0/README.md]
 tags: [kfm, security, supply-chain, provenance, sbom, signing]
-notes: [Current public main inspection confirms this README plus four child lane README files; dependency-confusion/ and shai-hulud-2.0/ now expose visible subdirectories, while sigstore-cosign-v3/ and reference-repos/ remain README-only; doc_id and created date still need repo verification before merge.]
+notes: [Current public main inspection confirms this README plus four child lane README files; dependency-confusion/ now exposes checks/examples/policy plus named example docs, while shai-hulud-2.0/ is deeper than earlier root snapshots and visibly routes through protections/, workflows/, indicators/, indicators/samples/, and indicators/signatures/; sigstore-cosign-v3/ and reference-repos/ remain README-only; docs/security/README.md still drifts through ./supply-chain.md; doc_id and created date still need repo verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Supply-Chain Integrity & Release Provenance
@@ -21,6 +21,7 @@ Governed documentation hub for dependency trust, digest-first release identity, 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![path](https://img.shields.io/badge/path-docs%2Fsecurity%2Fsupply--chain%2FREADME.md-blue) ![tree](https://img.shields.io/badge/tree-public--main-0969da) ![posture](https://img.shields.io/badge/posture-digest--first-informational) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
+> **Repo fit:** `docs/security/supply-chain/README.md` → upstream [`../README.md`](../README.md) · sibling lanes [`./dependency-confusion/README.md`](./dependency-confusion/README.md), [`./sigstore-cosign-v3/README.md`](./sigstore-cosign-v3/README.md), [`./reference-repos/README.md`](./reference-repos/README.md), [`./shai-hulud-2.0/README.md`](./shai-hulud-2.0/README.md) · adjacent enforcement surfaces [`../../../.github/README.md`](../../../.github/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Control lanes](#control-lanes) · [Adjacent enforcement signals](#adjacent-enforcement-signals) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!WARNING]
@@ -73,18 +74,26 @@ In KFM, supply-chain security is not a sidecar concern. It is part of governed p
 | Workflow lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Current public signal for checked-in workflow inventory | **CONFIRMED** |
 | Policy surface | [`../../../policy/README.md`](../../../policy/README.md) | Supply-chain docs must not replace deny-by-default policy or reason/obligation grammar | **CONFIRMED** |
 | Verification surface | [`../../../tests/README.md`](../../../tests/README.md) | Supply-chain claims should eventually land in runnable proof families, not prose alone | **CONFIRMED** |
-| Contract surface | [`../../../contracts/README.md`](../../../contracts/README.md) | Release proof, runtime envelopes, and correction objects rely on typed contract families | **CONFIRMED** |
-| Schema boundary | [`../../../schemas/README.md`](../../../schemas/README.md) | Schema-home responsibility remains relevant to supply-chain proof objects and validation | **CONFIRMED** |
+| Contract surface | [`../../../contracts/README.md`](../../../contracts/README.md) | Release proof, runtime envelopes, and correction objects rely on typed contract families, but current contract-home wording still needs reconciliation | **CONFIRMED** path · **NEEDS VERIFICATION** authority cleanup |
+| Schema boundary | [`../../../schemas/README.md`](../../../schemas/README.md) | Schema-home responsibility remains relevant to supply-chain proof objects and validation; current public tree is broader than a single README but still authority-sensitive | **CONFIRMED** |
 | Public disclosure policy | [`../../../.github/SECURITY.md`](../../../.github/SECURITY.md) | Vulnerability reporting and disclosure guidance should stay canonical there | **CONFIRMED** |
+
+### Security-neighbor lanes outside this subtree
+
+| Neighbor | Why it is adjacent but not owned here | Current posture |
+| --- | --- | --- |
+| [`../promotion-contract.md`](../promotion-contract.md) | Promotion and release-state doctrine that this subtree should align with rather than duplicate | **CONFIRMED** |
+| [`../ai-supply-chain/README.md`](../ai-supply-chain/README.md) | AI/runtime/provider provenance and model-supply-chain concerns that sit beside, not inside, generic artifact-trust guidance | **CONFIRMED** |
+| [`../ai-receipts/README.md`](../ai-receipts/README.md) | Receipt and evidence-object guidance that intersects with release proof but has a wider AI/runtime burden | **CONFIRMED** |
 
 ### Downstream lanes currently visible on public `main`
 
 | Path | Role | Current public-main posture |
 | --- | --- | --- |
-| [`./dependency-confusion/README.md`](./dependency-confusion/README.md) | Package-origin and namespace-trust lane | **CONFIRMED** — README plus visible `checks/`, `examples/`, and `policy/` subdirectories |
+| [`./dependency-confusion/README.md`](./dependency-confusion/README.md) | Package-origin and namespace-trust lane | **CONFIRMED** — README plus `checks/`, `examples/`, and `policy/`, with named example docs visible in `examples/` |
 | [`./sigstore-cosign-v3/README.md`](./sigstore-cosign-v3/README.md) | Signing and attestation lane | **CONFIRMED** — README-only tree shape on public `main` |
 | [`./reference-repos/README.md`](./reference-repos/README.md) | Curated examples and comparison lane | **CONFIRMED** — README-only tree shape on public `main` |
-| [`./shai-hulud-2.0/README.md`](./shai-hulud-2.0/README.md) | Experimental / named pattern lane | **CONFIRMED** — README plus visible `indicators/`, `protections/`, and `workflows/` subdirectories |
+| [`./shai-hulud-2.0/README.md`](./shai-hulud-2.0/README.md) | Experimental / named pattern lane | **CONFIRMED** — README plus `protections/`, `workflows/`, and `indicators/`, with nested `indicators/samples/` and `indicators/signatures/` visible beneath the lane |
 
 > [!NOTE]
 > `docs/security/README.md` still references `./supply-chain.md`, but the current public `docs/security/` tree exposes `./supply-chain/` and does not show a sibling `supply-chain.md`. Repair that drift in the same PR as this README.
@@ -132,16 +141,16 @@ The strongest subtree claims are now more specific than a pure scaffold reading,
 
 | Surface | Current public-main signal | Why it matters |
 | --- | --- | --- |
-| `docs/security/supply-chain/README.md` | Present as a substantive README surface | This path is real and already functions as a lane index, but parts of its inventory language need refresh |
-| `dependency-confusion/` | README plus `checks/`, `examples/`, and `policy/` subdirectories visible | This lane now has visible structure beyond a single README |
-| `shai-hulud-2.0/` | README plus `indicators/`, `protections/`, and `workflows/` subdirectories visible | This lane is no longer README-only on the public tree |
+| `docs/security/supply-chain/README.md` | Present as a substantive README surface | This path is real and already functions as a lane index, but parts of its inventory language needed refresh |
+| `dependency-confusion/` | README plus `checks/`, `examples/`, and `policy/`; `examples/` currently includes `lockfile-drift-attack.md` and `namespace-collision-basic.md` | This lane now has concrete review material beyond a lane README |
+| `shai-hulud-2.0/` | README plus child README lanes `protections/`, `workflows/`, and `indicators/`, with nested `indicators/samples/README.md` and `indicators/signatures/README.md` visible | This lane is deeper than a three-directory scaffold and should be documented that way |
 | `sigstore-cosign-v3/` | README-only tree shape visible | Treat this as a current lane anchor, not proof of executed signing controls |
 | `reference-repos/` | README-only tree shape visible | Treat this as a curation lane anchor, not as a populated example corpus |
 | Parent security index | Still points to a missing `./supply-chain.md` sibling | Current cross-link drift should be repaired now, not left to future readers |
 
 ## Directory tree
 
-### Current public-main subtree
+### Current public-main subtree (**CONFIRMED**)
 
 ```text
 docs/security/supply-chain/
@@ -149,15 +158,27 @@ docs/security/supply-chain/
 ├── dependency-confusion/
 │   ├── README.md
 │   ├── checks/
+│   │   └── README.md
 │   ├── examples/
+│   │   ├── README.md
+│   │   ├── lockfile-drift-attack.md
+│   │   └── namespace-collision-basic.md
 │   └── policy/
+│       └── README.md
 ├── reference-repos/
 │   └── README.md
 ├── shai-hulud-2.0/
 │   ├── README.md
 │   ├── indicators/
+│   │   ├── README.md
+│   │   ├── samples/
+│   │   │   └── README.md
+│   │   └── signatures/
+│   │       └── README.md
 │   ├── protections/
+│   │   └── README.md
 │   └── workflows/
+│       └── README.md
 └── sigstore-cosign-v3/
     └── README.md
 ```
@@ -167,36 +188,60 @@ docs/security/supply-chain/
 ```text
 .github/
 ├── actions/
-│   ├── action.yml
 │   ├── README.md
+│   ├── action.yml
 │   ├── metadata-validate/
+│   │   └── README.md
 │   ├── metadata-validate-v2/
+│   │   └── README.md
 │   ├── opa-gate/
+│   │   └── README.md
 │   ├── provenance-guard/
+│   │   └── README.md
 │   ├── sbom-produce-and-sign/
+│   │   └── README.md
 │   └── src/
+│       └── README.md
 └── workflows/
     └── README.md
 
 policy/
 ├── README.md
 ├── bundles/
+│   └── README.md
 ├── fixtures/
+│   └── README.md
 ├── policy-runtime/
+│   └── README.md
 └── tests/
+    └── README.md
 
 tests/
 ├── README.md
 ├── accessibility/
 ├── contracts/
+│   └── README.md
 ├── e2e/
 ├── integration/
 ├── policy/
+│   └── README.md
 ├── reproducibility/
 └── unit/
+
+contracts/
+└── README.md
+
+schemas/
+├── README.md
+├── contracts/
+├── schemas/
+├── standards/
+├── tests/
+└── workflows/
 ```
 
 ### Proposed growth shape
+
 The shape below is **PROPOSED** documentation structure, not a claim about the current branch.
 
 ```text
@@ -228,15 +273,24 @@ Start from the repo root and re-verify the lane before you upgrade any statement
 ```bash
 # 1) Inspect the security subtree and this lane
 sed -n '1,260p' docs/security/README.md
-find docs/security/supply-chain -maxdepth 3 -type f | sort
-find docs/security/supply-chain -maxdepth 3 -type d | sort
+find docs/security/supply-chain -maxdepth 4 -type f | sort
+find docs/security/supply-chain -maxdepth 4 -type d | sort
 
-# 2) Inspect each child lane
+# 2) Inspect each child lane and the now-visible nested leaves
 sed -n '1,260p' docs/security/supply-chain/README.md
 sed -n '1,240p' docs/security/supply-chain/dependency-confusion/README.md
+sed -n '1,220p' docs/security/supply-chain/dependency-confusion/checks/README.md
+sed -n '1,220p' docs/security/supply-chain/dependency-confusion/examples/README.md
+find docs/security/supply-chain/dependency-confusion/examples -maxdepth 1 -type f | sort
+sed -n '1,220p' docs/security/supply-chain/dependency-confusion/policy/README.md
 sed -n '1,240p' docs/security/supply-chain/sigstore-cosign-v3/README.md
 sed -n '1,240p' docs/security/supply-chain/reference-repos/README.md
 sed -n '1,240p' docs/security/supply-chain/shai-hulud-2.0/README.md
+sed -n '1,220p' docs/security/supply-chain/shai-hulud-2.0/protections/README.md
+sed -n '1,220p' docs/security/supply-chain/shai-hulud-2.0/workflows/README.md
+sed -n '1,220p' docs/security/supply-chain/shai-hulud-2.0/indicators/README.md
+sed -n '1,220p' docs/security/supply-chain/shai-hulud-2.0/indicators/samples/README.md
+sed -n '1,220p' docs/security/supply-chain/shai-hulud-2.0/indicators/signatures/README.md
 
 # 3) Cross-check adjacent enforcement-adjacent surfaces
 sed -n '1,240p' .github/README.md
@@ -246,13 +300,19 @@ find .github/actions -maxdepth 2 \( -type d -o -name 'README.md' -o -name 'actio
 find .github/workflows -maxdepth 2 -type f | sort
 
 sed -n '1,240p' policy/README.md
+sed -n '1,220p' policy/bundles/README.md
+sed -n '1,220p' policy/tests/README.md
 find policy -maxdepth 2 -type f | sort
 
 sed -n '1,240p' tests/README.md
+sed -n '1,220p' tests/contracts/README.md
+sed -n '1,220p' tests/policy/README.md
 find tests -maxdepth 2 -type f | sort
 
 sed -n '1,240p' contracts/README.md
 sed -n '1,240p' schemas/README.md
+sed -n '1,220p' schemas/contracts/README.md
+sed -n '1,220p' schemas/tests/README.md
 find contracts schemas -maxdepth 2 -type f | sort
 
 # 4) Search for supply-chain-significant terms before writing claims
@@ -264,10 +324,11 @@ grep -RIn "SBOM\|cosign\|sigstore\|attest\|provenance\|ReleaseManifest\|Evidence
 
 1. Confirm the live subtree and child paths.
 2. Confirm whether public `main` still exposes `.github/workflows/README.md` only or whether checked-in workflow YAML has landed.
-3. Confirm whether `.github/actions/` contains substantive implementations or placeholder wrappers for the controls you are documenting.
-4. Confirm whether policy bundles, contract files, and test fixtures exist for the behavior you are describing.
-5. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as already operational.
-6. Repair stale cross-links in the same PR.
+3. Confirm whether the now-visible nested leaves under `dependency-confusion/` and `shai-hulud-2.0/` materially change the lane summary you are about to write.
+4. Confirm whether `.github/actions/` contains substantive implementations or placeholder wrappers for the controls you are documenting.
+5. Confirm whether policy bundles, contract files, and test fixtures exist for the behavior you are describing.
+6. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as already operational.
+7. Repair stale cross-links in the same PR.
 
 [Back to top](#kfm-supply-chain-integrity--release-provenance)
 
@@ -286,6 +347,7 @@ Use this README as the **subtree map** for supply-chain work.
 | Document an experimental named pattern or branch of work | This README | `./shai-hulud-2.0/README.md` |
 | Tie build provenance to release/correction posture | This README | adjacent policy / tests / contracts / release-manifest docs |
 | Review whether a repo change proves execution or only intent | This README | `.github/actions/README.md`, `.github/workflows/README.md`, `tests/README.md` |
+| Route a neighboring security topic without collapsing lanes | This README | `../promotion-contract.md`, `../ai-supply-chain/README.md`, `../ai-receipts/README.md` |
 
 ### Build, prove, promote, and correct are different moves
 
@@ -361,11 +423,11 @@ The table below keeps nearby repo surfaces honest without upgrading them into pr
 | Surface | Current public signal | Interpret carefully |
 | --- | --- | --- |
 | `.github/workflows/` | README-only on public `main` | No public checked-in YAML proof of live merge-gating or supply-chain execution from this branch view |
-| `.github/actions/` | Named local-action directories are visible, including `opa-gate`, `provenance-guard`, and `sbom-produce-and-sign` | These are current intent/control-surface signals; inspected supply-chain-significant child action READMEs remain placeholder-only on public `main` |
+| `.github/actions/` | Named local-action directories are visible, including `opa-gate`, `provenance-guard`, and `sbom-produce-and-sign`; root `action.yml` is present but placeholder-level | These are current intent/control-surface signals; inspected supply-chain-significant child action READMEs remain placeholder-only on public `main` |
 | `policy/` | `bundles/`, `fixtures/`, `policy-runtime/`, and `tests/` subdirectories are visible | Policy surface is structurally richer than a README-only reading, but executable depth still needs branch/runtime proof |
-| `tests/` | `contracts/`, `policy/`, `e2e/`, `integration/`, `reproducibility/`, `unit/`, and `accessibility/` families are visible | Verification architecture is visibly broader than a single README, but individual case density and CI execution still need proof |
-| `contracts/` | README-only public tree shape | Contract-home intent is real; machine-checkable file inventory still needs verification |
-| `schemas/` | Public tree now shows multiple subdirectories | Treat schema-home claims carefully until adjacent docs and inventories are reconciled |
+| `tests/` | `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/` families are visible | Verification architecture is visibly broader than a single README, but individual case density and CI execution still need proof |
+| `contracts/` | Root tree is README-only; current README still self-identifies with `tests/contracts/README.md` as its path | Contract-home intent is real, but current public contract-home wording still needs reconciliation before it is treated as settled authority |
+| `schemas/` | README plus visible `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows/` child lanes | The public tree is broader than a single README, but visible machine files do not settle schema-home authority on their own |
 
 ## Task list — definition of done
 
@@ -391,10 +453,13 @@ No. Current public-tree evidence still shows `.github/workflows/README.md` only.
 Because named local-action directories are now part of the visible repo surface and they matter for documentation and review. They still do **not** prove that live workflows call them.
 
 ### Are all child lanes equally mature?
-No. Current public tree shape is uneven: `dependency-confusion/` and `shai-hulud-2.0/` expose visible subdirectories, while `sigstore-cosign-v3/` and `reference-repos/` remain README-only.
+No. Current public tree shape is uneven: `dependency-confusion/` and `shai-hulud-2.0/` expose deeper child-lane material, while `sigstore-cosign-v3/` and `reference-repos/` remain README-only.
 
 ### Should this subtree define schemas or policy?
 No. It should explain and connect them. Canonical machine-facing artifacts belong in their owning contract, schema, policy, and test surfaces.
+
+### Why call out contract-home ambiguity here?
+Because supply-chain docs rely on typed trust objects such as release manifests, evidence bundles, runtime envelopes, and correction notices. The current public repo shows both a `contracts/` root lane and a broader `schemas/` tree, while the root `contracts/README.md` still carries path drift. That ambiguity is important enough to keep visible.
 
 ### What should be repaired first around this lane?
 The stale `./supply-chain.md` link in `docs/security/README.md`, then any adjacent docs that materially misstate current inventory or overclaim execution.
@@ -407,24 +472,26 @@ The stale `./supply-chain.md` link in `docs/security/README.md`, then any adjace
 ### Evidence boundary used for this revision
 
 - **Direct current public-tree evidence:** live GitHub tree inspection of `docs/security/supply-chain/`, its child lanes, `.github/`, `policy/`, `tests/`, `contracts/`, `schemas/`, and adjacent README surfaces.
-- **Doctrinal evidence:** March 2026 KFM manuals and synthesis overlays establish the trust membrane, fail-closed posture, release/correction law, contract-first proof objects, and evidence-bounded runtime expectations.
+- **Doctrinal evidence:** March–April 2026 KFM manuals and synthesis overlays establish the trust membrane, fail-closed posture, release/correction law, contract-first proof objects, and evidence-bounded runtime expectations.
 - **Not directly proven here:** active checked-in workflow YAML for SBOM/signing/attestations on public `main`; emitted release artifacts; live merge-gate enforcement; runtime resolver behavior; branch protection settings.
 
 ### Cross-surface drift this README now keeps explicit
 
 1. `docs/security/README.md` still references `./supply-chain.md`, while the visible tree shows `./supply-chain/`.
-2. The current supply-chain subtree is no longer uniformly README-only: `dependency-confusion/` and `shai-hulud-2.0/` now expose visible subdirectories.
+2. The supply-chain subtree is no longer uniformly shallow: `dependency-confusion/` now includes real example docs, and `shai-hulud-2.0/` now exposes nested indicator child lanes.
 3. `.github/workflows/` remains README-only, so no current public-tree claim of operational CI signing/SBOM/attestation should be upgraded from intent to fact.
 4. `.github/actions/` now exposes supply-chain-significant local-action directories, but inspected child action READMEs remain placeholder-level and should not be mistaken for proven enforcement.
-5. `policy/` and `tests/` have broader visible family trees than older README-only phrasing suggests, while `contracts/` remains visibly thin and `schemas/` still needs authority reconciliation.
+5. `policy/`, `tests/`, and `schemas/` all have broader visible family trees than older README-only phrasing suggests.
+6. `contracts/` remains root-README-only on the visible tree, and its current README still carries `tests/contracts/README.md` as the self-reported path. Treat contract-home authority as review-sensitive until that drift is repaired.
 
 ### Immediate repair candidates
 
 1. Add this README revision with an updated public-tree snapshot and KFM meta block.
 2. Repair the stale `./supply-chain.md` link in `docs/security/README.md`.
 3. Reconcile adjacent docs that materially understate or overstate current inventory if they are cited as current branch fact.
-4. When workflow YAML or real proof artifacts land, update this README so “current reality” reflects them.
-5. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as operational fact.
+4. Clarify the public contract-home wording so `contracts/README.md` and adjacent schema/verification docs stop fighting over path identity.
+5. When workflow YAML or real proof artifacts land, update this README so “current reality” reflects them.
+6. Surface at least one real release-proof / attestation example before documenting signing, SBOM, or provenance controls as operational fact.
 
 ### Verification backlog
 
