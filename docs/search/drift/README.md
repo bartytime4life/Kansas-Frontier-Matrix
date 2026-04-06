@@ -4,46 +4,39 @@ title: Search Drift
 type: standard
 version: v1
 status: draft
-owners: REQUIRES-OWNER-VERIFICATION
-created: REQUIRES-DATE-VERIFICATION
-updated: REQUIRES-DATE-VERIFICATION
-policy_label: REQUIRES-POLICY-LABEL
-related: [docs/search/drift/stac/README.md, docs/search/drift/provenance/README.md, REQUIRES-RELATED-ID-VERIFICATION]
+owners: @bartytime4life
+created: 2025-11-26
+updated: 2026-04-06
+policy_label: public
+related: [docs/search/README.md, docs/search/drift/stac/README.md, docs/search/drift/graph-queries/README.md, docs/search/drift/hyde/README.md, docs/search/drift/embeddings/README.md, docs/search/drift/examples/README.md]
 tags: [kfm, search, drift, retrieval, verification]
-notes: [Source-bounded draft; current-session workspace evidence remained PDF-only, and mounted repo paths/owners/dates still need direct verification; preserves prior DRIFT directory terminology found in attached search docs.]
+notes: [Created date grounded in first visible public commit for this path; updated date reflects this review draft; doc UUID is not visible in the current public tree; preserved-baseline DRIFT companions such as provenance/workflows/synthesis are not currently visible on public main.]
 [/KFM_META_BLOCK_V2] -->
 
 # Search Drift
 
 Govern DRIFT and other search-derived surfaces so retrieval, ranking, graph expansion, and evidence bundling stay release-linked, evidence-resolvable, and visibly correctable.
 
+> **Status:** experimental  
+> **Owners:** `@bartytime4life` *(current public `/.github/CODEOWNERS` coverage for `/docs/`; narrower search-specific ownership can be added later if directly verified)*  
+> **Path:** `docs/search/drift/README.md`  
+> ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![scope](https://img.shields.io/badge/scope-search--drift-informational) ![owner](https://img.shields.io/badge/owner-bartytime4life-0969da) ![public-main](https://img.shields.io/badge/public%20main-tree%20checked-2da44e) ![layer](https://img.shields.io/badge/layer-derived%20%26%20rebuildable-6f42c1) ![truth](https://img.shields.io/badge/truth-doctrine%20%2B%20tree--grounded-1f6feb)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Definition of done](#definition-of-done) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+
 > [!IMPORTANT]
-> **Source-bounded posture**
-> This draft is grounded in the attached KFM corpus. The current session did **not** expose a mounted repo tree, workflow YAMLs, tests, manifests, or runtime logs, so file-level and implementation claims below are explicitly labeled **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
-
-## Impact block
-
-**Status:** experimental  
-**Owners:** REQUIRES-OWNER-VERIFICATION  
-**Path:** `docs/search/drift/README.md`
-
-![status](https://img.shields.io/badge/status-experimental-lightgrey)
-![scope](https://img.shields.io/badge/scope-search--drift-informational)
-![repo-evidence](https://img.shields.io/badge/repo%20evidence-PDF--only-orange)
-![continuity](https://img.shields.io/badge/continuity-DRIFT%20directory-blueviolet)
-![truth](https://img.shields.io/badge/truth-source--bounded-blue)
-
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Revision posture**
+> This revision is grounded in the attached KFM corpus **and** direct inspection of the current public `main` `docs/search/` and `docs/search/drift/` trees plus public `/.github/CODEOWNERS`.
+> That is stronger than the earlier PDF-only posture, but it still does **not** prove the exact working branch, hidden GitHub settings, merge-enforced checks, search-specific schemas/tests, or deployed runtime behavior.
 
 ## Truth legend
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus visible in this session |
-| **INFERRED** | Strongly implied by attached KFM doctrine or prior attached search docs, but not directly verified in a mounted repo |
-| **PROPOSED** | Recommended starter shape, control, or workflow |
+| **CONFIRMED** | Directly supported by the attached KFM doctrine or the current public repo tree inspected for this revision |
+| **INFERRED** | Conservative structural completion from confirmed doctrine or confirmed checked-in paths |
+| **PROPOSED** | Recommended starter shape, control, or workflow not yet proven in checked-in implementation |
 | **UNKNOWN** | Not supported strongly enough to present as current project fact |
-| **NEEDS VERIFICATION** | Should be checked against the mounted repo, workflow inventory, schemas, or runtime before treating as settled |
+| **NEEDS VERIFICATION** | Exact working-branch, hidden-platform, or runtime detail that still requires direct checkout or environment proof |
 
 ---
 
@@ -51,20 +44,20 @@ Govern DRIFT and other search-derived surfaces so retrieval, ranking, graph expa
 
 KFM treats **search**, **graph**, **vector**, **tile**, **scene**, **cache**, and **summary** layers as **derived projections**, not sovereign truth. Search drift is therefore broader than “ranking got worse.” It is any divergence between a search-derived surface and the **released, policy-safe, evidence-resolvable scope** it is supposed to represent.
 
-This README covers the governance problem that sits over search-derived behavior:
+This README covers the governance problem sitting over search-derived behavior:
 
 - release-linked search indexes
 - graph expansion and related-document traversal
 - embedding / ANN retrieval acceleration
 - privacy-safe query representation
-- retrieval episode provenance
+- retrieval-episode provenance
 - stale, partial, conflicted, generalized, denied, or withdrawn output states
 - correction, rollback, and rebuild expectations for search-derived layers
 
 It does **not** redefine core KFM doctrine. It applies that doctrine specifically to retrieval and search-adjacent surfaces.
 
 > [!NOTE]
-> Attached search docs also describe this directory as **DRIFT Search Integration**: a hybrid global→local retrieval pattern spanning semantic initialization, embedding/community retrieval, graph-local precision retrieval, and STAC/DCAT context ingestion. This README keeps that continuity, but centers the governing KFM problem the doctrine cares most about: **drift in derived retrieval surfaces**.
+> In the preserved search bundle, **DRIFT Search Integration** names the hybrid global → local retrieval pattern spanning semantic initialization, embedding/community retrieval, graph-local precision retrieval, and STAC/DCAT context ingestion. This README keeps that continuity, but centers the KFM governance problem that matters most: **drift in derived retrieval surfaces**.
 
 ### Search drift at a glance
 
@@ -82,35 +75,54 @@ It does **not** redefine core KFM doctrine. It applies that doctrine specificall
 
 ## Repo fit
 
-| Item | Value |
+`docs/search/drift/README.md` is the drift-governance entrypoint inside KFM’s Search & Discovery System. It should explain how derived retrieval stays subordinate to released evidence, policy, correction, and trust-visible runtime behavior.
+
+### Current checked-in fit
+
+| Direction | Path | Role | Status |
+|---|---|---|---|
+| This file | `docs/search/drift/README.md` | Drift-governance overview for the DRIFT subtree | **CONFIRMED** current public `main` |
+| Upstream | [`../README.md`](../README.md) | Search-system entrypoint | **CONFIRMED** current public `main` |
+| Upstream companions | [`../semantic-search.md`](../semantic-search.md) · [`../query-language.md`](../query-language.md) · [`../index-architecture.md`](../index-architecture.md) · [`../faircare-search-rules.md`](../faircare-search-rules.md) | Search doctrine, grammar, index architecture, and FAIR+CARE routing | **CONFIRMED** current public `main` |
+| Downstream drift companions | [`./stac/README.md`](./stac/README.md) · [`./graph-queries/README.md`](./graph-queries/README.md) · [`./examples/README.md`](./examples/README.md) · [`./hyde/README.md`](./hyde/README.md) · [`./embeddings/README.md`](./embeddings/README.md) | Checked-in drift subdocs currently visible on public `main` | **CONFIRMED** current public `main` |
+| Public owner signal | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | `/docs/` routed to `@bartytime4life` | **CONFIRMED** current public `main` |
+| Preserved-baseline companions not currently visible on public `main` | `docs/search/drift/provenance/README.md` · `docs/search/drift/synthesis/README.md` · `docs/search/drift/workflows/README.md` | Earlier search-bundle lineage that should not be silently upgraded into current-tree fact | **CONFIRMED** baseline lineage · current tree **NEEDS VERIFICATION** |
+| Operational companions | `data/stac/search/drift/` · `data/processed/search/drift/` · `data/processed/prov/search/drift/` · `mcp/runs/search/drift/` | Likely house paths for emitted search-drift artifacts and run traces | **INFERRED** |
+
+### Evidence boundary used in this revision
+
+| Evidence layer | What this README treats as settled |
 |---|---|
-| **Path** | `docs/search/drift/README.md` |
-| **Role** | README-like directory doc for drift governance, DRIFT search continuity, validation expectations, and correction behavior |
-| **Upstream** | [Docs root][docs-root] · [Semantic Search][semantic-search] · [Query Language][query-language] · [Index Architecture][index-architecture] · [FAIR+CARE Search Rules][faircare-search-rules] *(all INFERRED from attached search docs; verify in mounted repo)* |
-| **Downstream** | [DRIFT STAC][drift-stac] · [DRIFT Provenance][drift-provenance] *(INFERRED from attached search docs; verify in mounted repo)* |
-| **Operational companions** | `data/stac/search/drift/` · `data/processed/search/drift/` · `data/processed/prov/search/drift/` · `mcp/runs/search/drift/` *(INFERRED; verify in mounted repo)* |
+| **CONFIRMED doctrine** | Search and graph remain derived, rebuildable accelerators; consequential runtime behavior still resolves through evidence, policy, release state, and correction lineage |
+| **CONFIRMED current public tree** | `docs/search/` and `docs/search/drift/` exist on public `main`, with the currently visible companion docs listed above |
+| **CONFIRMED public ownership signal** | Public `/.github/CODEOWNERS` routes `/docs/` to `@bartytime4life` |
+| **UNKNOWN / NEEDS VERIFICATION** | Exact working-branch parity, hidden GitHub settings, required checks, search-specific schemas/tests/workflow YAMLs, runtime engine mix, telemetry, and deployed indexing services |
 
 ### Current fit statement
 
 **CONFIRMED**
 
 - KFM doctrine keeps search-derived layers subordinate to evidence, policy, release state, and correction lineage.
-- Focus Mode and related runtime surfaces must retrieve admissible evidence, resolve `EvidenceRef` to `EvidenceBundle`, apply policy, and emit only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-- Trust-visible surfaces must expose provenance, freshness, review state, and policy context at the point of use.
+- Public `main` visibly places `docs/search/drift/README.md` inside a broader `docs/search/` subtree rather than as an orphaned document.
+- Public `main` visibly includes checked-in drift companions for **STAC**, **graph queries**, **examples**, **HyDE**, and **embeddings**.
 
 **INFERRED**
 
-- `docs/search/drift/` is the correct doctrinal seam for connecting those rules to DRIFT-style retrieval, graph expansion, index snapshots, and runtime drift handling.
+- This directory is the correct doctrinal seam for connecting those rules to DRIFT-style retrieval, graph expansion, index snapshots, and runtime drift handling.
+- The preserved-but-not-currently-visible `provenance/`, `synthesis/`, and `workflows/` companions are still part of the search-document lineage and should be reconciled before any sweeping cleanup or renaming.
 
 **NEEDS VERIFICATION**
 
-- Mounted repo ownership, actual file inventory, CI entrypoints, schema inventory, workflow names, and current implementation stack.
+- Exact working-branch file inventory
+- Search-specific schemas, fixtures, reports, and runbooks
+- Required checks, hidden GitHub rulesets, OIDC wiring, and workflow enforcement
+- Current implementation stack and emitted runtime proof objects
 
 [Back to top](#search-drift)
 
 ---
 
-## Inputs
+## Accepted inputs
 
 Accepted here:
 
@@ -118,7 +130,7 @@ Accepted here:
 - release-linkage rules for search indexes, graph traversal, reranking, and embedding-backed retrieval
 - privacy-safe query representation rules (`query_hash`, redacted summaries, retention limits)
 - retrieval-episode identity and provenance expectations
-- evidence manifest / `EvidenceBundle` resolution expectations
+- evidence-manifest / `EvidenceBundle` resolution expectations
 - citation-negative, stale-scope, partial-coverage, conflict, and deny-path validation guidance
 - correction, rebuild, rollback, and stale-visible runbooks
 - trust-visible UI expectations for search-derived surface state
@@ -151,18 +163,19 @@ This directory is **not** the place for:
 - UI-only search polish detached from evidence behavior
 - making graph, embeddings, or indexes the only place meaning survives
 - uncited answer generation presented as truth
-- speculative route names, DTOs, service names, or workflow claims presented as settled repo fact
+- speculative route names, DTOs, service names, workflow claims, or engine inventories presented as settled current fact
 
 ### Route elsewhere
 
 | Does not belong here | Goes instead |
 |---|---|
-| Canonical entities, observations, or dataset versions | contract / canonical data surfaces |
+| Canonical entities, observations, or dataset versions | canonical data / contract surfaces |
 | Rights or sensitivity adjudication | policy / review surfaces |
-| Public shell choreography beyond search-specific behavior | UI / shell doctrine docs |
-| Model-runtime installation details | runtime or infrastructure docs |
+| Broader shell choreography beyond search-specific behavior | UI / shell doctrine docs |
+| Model-runtime installation details | runtime / infrastructure docs |
 | Standards-profile implementation details | contracts / profiles / validator docs |
-| Concrete CI wiring or workflow names | mounted workflow files after direct verification |
+| Hidden GitHub controls, required checks, or platform-only settings | direct platform inspection and steward review |
+| Runtime certainty not backed by direct repo or environment evidence | mark as **UNKNOWN** or **NEEDS VERIFICATION** |
 
 [Back to top](#search-drift)
 
@@ -170,26 +183,50 @@ This directory is **not** the place for:
 
 ## Directory tree
 
-**INFERRED / PROPOSED starter tree based on attached DRIFT search docs**
+### Current public `main` subtree
 
 ```text
 docs/search/drift/
-├── README.md                               # this file
-├── workflows/                              # INFERRED: global→local DRIFT execution
-├── hyde/                                   # INFERRED: semantic/query reformulation
-├── embeddings/                             # INFERRED: governed embedding artifacts or configs
-├── graph-queries/                          # INFERRED: graph-local traversal/query templates
-├── stac/
-│   └── README.md                           # INFERRED: retrieval episode STAC guidance
+├── README.md
+├── embeddings/
+│   └── README.md
+├── examples/
+│   └── README.md
+├── graph-queries/
+│   └── README.md
+├── hyde/
+│   └── README.md
+└── stac/
+    └── README.md
+```
+
+### Preserved-baseline lineage not currently visible on public `main`
+
+```text
+docs/search/drift/
 ├── provenance/
-│   └── README.md                           # INFERRED: retrieval episode provenance guidance
-├── fixtures/                               # PROPOSED: golden, stale, partial, conflicted, denied cases
-├── reports/                                # PROPOSED: drift assessments and comparison outputs
-└── runbooks/                               # PROPOSED: rebuild, rollback, stale-visible, correction
+│   └── README.md
+├── synthesis/
+│   └── README.md
+└── workflows/
+    └── README.md
 ```
 
 > [!NOTE]
-> The tree above is a **review shape**, not a claim about current mounted repo contents. It preserves path continuity found in attached search docs while keeping unverified structure visible.
+> The first tree reflects the currently visible public `main` subtree.  
+> The second reflects **preserved search-baseline lineage**, not current checked-in path proof.
+
+### Inferred operational house paths
+
+```text
+data/stac/search/drift/
+data/processed/search/drift/
+data/processed/prov/search/drift/
+mcp/runs/search/drift/
+```
+
+> [!WARNING]
+> These house paths are still **INFERRED**. Keep them clearly labeled until the exact working branch or runtime proves them.
 
 [Back to top](#search-drift)
 
@@ -199,18 +236,29 @@ docs/search/drift/
 
 This quickstart avoids inventing repo-specific scripts or workflow names.
 
-### 1) Verify the mounted structure first
+### 1) Verify exact working-branch reality first
 
 ```bash
-# VERIFY actual mounted paths before treating any path here as current fact
-tree docs/search
-tree docs/search/drift
+git branch --show-current
+git status --short
 
-# FIND adjacent references before editing prose
-rg -n "Search Drift|DRIFT Search|EvidenceBundle|RuntimeResponseEnvelope|Focus Mode" docs src tests .github
+find docs/search/drift -maxdepth 2 -type f | sort
+git log --oneline -- docs/search/drift/README.md | head -n 10
+
+rg -n "Search Drift|DRIFT|EvidenceBundle|RuntimeResponseEnvelope|query_hash|episode_id" \
+  docs contracts policy schemas tests .github
 ```
 
-### 2) Confirm every search-derived surface can answer the same trust questions
+### 2) Reconcile branch-local reality against the confirmed public-main shape
+
+Check these questions before editing prose as if it were settled fact:
+
+1. Does the working branch still match the currently visible public `main` subtree?
+2. Are `provenance/`, `synthesis/`, or `workflows/` present locally even though they are not visible on current public `main`?
+3. Have search-specific schemas, fixtures, runbooks, or tests been added under `contracts/`, `schemas/`, `policy/`, or `tests/`?
+4. Do any local files change the owner, status, or policy label assumptions used here?
+
+### 3) Confirm every search-derived surface can answer the same trust questions
 
 Before treating any search behavior as acceptable, confirm it can answer:
 
@@ -218,9 +266,9 @@ Before treating any search behavior as acceptable, confirm it can answer:
 2. Which **policy bundle** or decision grammar constrained it?
 3. Can consequential outward claims still resolve to an admissible `EvidenceBundle`?
 4. Is the result still within freshness, release, and correction tolerance?
-5. If the result is partial, conflicted, generalized, or denied, does the surface say so plainly?
+5. If the result is partial, conflicted, generalized, stale-visible, abstained, or denied, does the surface say so plainly?
 
-### 3) Run or define the minimum drift suite
+### 4) Run or define the minimum drift suite
 
 At minimum, drift review should exercise:
 
@@ -232,7 +280,7 @@ At minimum, drift review should exercise:
 - query privacy / redaction behavior
 - correction propagation behavior
 
-### 4) Record drift as governed evidence
+### 5) Record drift as governed evidence
 
 A drift review is not a private judgment call. Record:
 
@@ -275,9 +323,7 @@ Treat drift as a **surface-state problem**, not just a backend-quality problem. 
 
 ### For retrieval / platform engineers
 
-Treat indexes, graph projections, embedding stores, rerankers, and query reformulation as **replaceable derived layers**. If the current implementation still uses components such as Neo4j, ANN stores, or LlamaIndex-style retrieval, those remain bounded by release linkage, policy, and evidence resolution rather than becoming truth-bearing systems of record.
-
-[Back to top](#search-drift)
+Treat indexes, graph projections, embedding stores, rerankers, and query reformulation as **replaceable derived layers**. Even when a branch or local environment uses specific graph or embedding components, they remain bounded by release linkage, policy, and evidence resolution rather than becoming truth-bearing systems of record.
 
 ---
 
@@ -325,7 +371,7 @@ flowchart LR
 
 | Drift class | Typical symptom | Why it matters in KFM | Required visible signal | Default correction path |
 |---|---|---|---|---|
-| **Release drift** | Search or retrieval reflects older or mismatched promoted scope | Outward claims may look current while actually being stale | snapshot mismatch, stale flag, rebuild age | rebuild or relink to promoted scope |
+| **Release drift** | Search or retrieval reflects older or mismatched promoted scope | Outward claims may look current while actually be stale | snapshot mismatch, stale flag, rebuild age | rebuild or relink to promoted scope |
 | **Evidence drift** | Result can no longer resolve cleanly to admissible evidence | Violates cite-or-abstain and inspectability | failed `EvidenceRef` → `EvidenceBundle` resolution | abstain, deny, or correct |
 | **Policy drift** | Output outruns rights, sensitivity, or review posture | Public-safe publication may be breached | policy mismatch, obligation failure | deny, narrow, generalize, or escalate |
 | **Provenance drift** | Retrieval run lacks stable episode identity or lineage | Run becomes hard to audit or compare | missing `episode_id`, `query_hash`, snapshot ref, or validation log | fail closed and restore provenance completeness |
@@ -355,14 +401,13 @@ flowchart LR
 
 | Object | Minimum purpose | Minimum fields / state | Status |
 |---|---|---|---|
-| **Query representation** | Privacy-safe seed for reproducible retrieval | `query_hash`; optional redacted summary; raw text only when policy allows | **INFERRED** from attached DRIFT docs |
+| **Query representation** | Privacy-safe seed for reproducible retrieval | `query_hash`; optional redacted summary; raw text only when policy allows | **INFERRED** |
 | **Episode identifier** | Stable identity for a governed retrieval run | deterministic `episode_id` derived from query + constraints + workflow + policy + snapshot basis | **INFERRED** |
 | **Index snapshot reference** | Proves what the retrieval ran against | `index_snapshot_id` or equivalent lineage reference | **INFERRED** |
 | **Evidence manifest / bundle refs** | Preserves drill-through to support | stable evidence refs, release linkage, rights/sensitivity state | **CONFIRMED doctrine / INFERRED packaging** |
 | **Decision envelope ref** | Makes policy result machine-readable | subject, action, result, reason codes, obligation codes, audit ref | **CONFIRMED doctrine** |
-| **Projection build receipt** | Proves search / graph / embedding surface was built from known release scope | release ref, projection type, build time, freshness basis | **CONFIRMED doctrine** |
+| **Projection build receipt** | Proves a derived search / graph / embedding surface was built from known release scope | release ref, projection type, build time, freshness basis | **CONFIRMED doctrine** |
 | **Runtime response envelope** | Makes outward runtime behavior accountable | surface class, surface state, result, citations check, decision ref, audit ref | **CONFIRMED doctrine** |
-| **Provenance bundle** | Preserves run lineage | PROV-O JSON-LD; optional OpenLineage; policy-event summary | **INFERRED** from attached DRIFT provenance docs |
 | **Validation log / drift report** | Shows which suites ran and what failed | test family list, subject refs, pass/fail, reviewer or runner | **PROPOSED packaging** |
 | **Correction notice / rebuild refs** | Preserves visible lineage under change | affected surfaces, rebuild refs, replacement refs, public note | **CONFIRMED doctrine** |
 
@@ -412,8 +457,6 @@ Because search-derived surfaces are rebuildable by default, drift should usually
 
 A system that abstains, denies, or errors honestly when drift prevents a trustworthy answer is behaving correctly.
 
-[Back to top](#search-drift)
-
 ---
 
 ## Trust-visible surface states
@@ -421,8 +464,7 @@ A system that abstains, denies, or errors honestly when drift prevents a trustwo
 A search surface is healthy when the user can tell, without guesswork:
 
 - what release or snapshot basis they are reading from
-- whether the result is promoted, stale-visible, generalized, partial, conflicted, or withdrawn
-- whether the result is source-dependent or modeled
+- whether the result is promoted, generalized, partial, stale-visible, source-dependent, conflicted, withdrawn, denied, or abstained
 - how to open the supporting evidence
 - whether a correction, supersession, or narrowing has already occurred
 
@@ -441,24 +483,23 @@ A search surface is healthy when the user can tell, without guesswork:
 > [!TIP]
 > Search quality and search honesty are different things. KFM needs both.
 
-[Back to top](#search-drift)
-
 ---
 
 ## Definition of done
 
-A search-drift change is ready when all of the following are true:
+A search-drift revision is ready when all of the following are true:
 
+- [ ] exact working-branch reality under `docs/search/drift/` has been reconciled against the current public-main subtree
+- [ ] confirmed current-tree surfaces and preserved-baseline-only companions are clearly separated
+- [ ] owner, policy label, and document UUID are either directly verified or explicitly left reviewable
 - [ ] every governed retrieval run records a stable `episode_id` and privacy-safe query representation
 - [ ] every search-derived surface names its release or snapshot basis
 - [ ] consequential outward results still resolve to admissible evidence
 - [ ] citation-negative and stale-scope tests fail closed
 - [ ] partial, source-dependent, conflicted, denied, and abstained states remain visible at the surface
 - [ ] correction lineage propagates into search, graph, and embedding outputs
-- [ ] raw query text and precise geometry are stored only when policy explicitly allows it
-- [ ] search, graph, vector, cache, or summary layers do not back-write authority
 - [ ] changed thresholds, fixtures, reports, or runbooks move with the behavior
-- [ ] owners, paths, workflow names, schemas, and CI references are verified before being documented as current repo fact
+- [ ] no section quietly upgrades unknown runtime or platform behavior into confident project fact
 
 [Back to top](#search-drift)
 
@@ -468,24 +509,24 @@ A search-drift change is ready when all of the following are true:
 
 ### Immediate
 
-- [ ] verify actual contents of `docs/search/drift/`
-- [ ] verify whether `stac/README.md` and `provenance/README.md` already exist
-- [ ] identify current owners, review cadence, and policy label for this directory
-- [ ] confirm whether the mounted implementation still uses the DRIFT naming and the same retrieval stack assumptions
+- [ ] verify exact working-branch contents of `docs/search/drift/` against the current public `main` tree
+- [ ] confirm whether `provenance/`, `synthesis/`, and `workflows/` exist on the branch being edited or remain baseline-only lineage
+- [ ] confirm final document UUID and whether `public` is the intended policy label for this path
+- [ ] verify whether search-specific schemas, fixtures, reports, or tests now exist under `contracts/`, `schemas/`, `policy/`, `tests/`, or `.github/`
 
 ### Near-term
 
 - [ ] define a golden-query set and a citation-negative set
 - [ ] define stale / partial / conflicted / denied fixtures
 - [ ] define a minimal retrieval-episode report or receipt shape
-- [ ] verify whether snapshot references, policy bundle hashes, and correction refs already exist somewhere else in the repo
+- [ ] align sibling drift docs so their evidence posture matches current public-tree reality instead of older PDF-only wording
 
 ### Later
 
 - [ ] connect drift checks to correction workflows
-- [ ] connect retrieval episodes to STAC / PROV outputs where that pattern is already adopted
+- [ ] connect retrieval episodes to STAC / PROV outputs where that pattern is adopted
 - [ ] align runtime response envelopes, surface-state chips, and reviewer runbooks
-- [ ] publish steward-facing stale-visible, rollback, and rebuild runbooks once mounted paths are known
+- [ ] add or restore branch-local companions such as provenance or workflows only when their paths and roles are directly proved
 
 [Back to top](#search-drift)
 
@@ -499,7 +540,7 @@ Any mismatch between a search-derived surface and the released, policy-safe, evi
 
 ### Is DRIFT the same thing as search drift?
 
-No. In the attached search docs, **DRIFT** names the retrieval architecture pattern and is expanded there as **Dynamic Retrieval Inference Flow Technique**. **Search drift** is the governance problem this README addresses across any such derived retrieval surface.
+No. In the preserved search docs, **DRIFT** names the retrieval architecture pattern. **Search drift** is the governance problem this README addresses across any such derived retrieval surface.
 
 ### Is low relevance enough to call something drift?
 
@@ -507,7 +548,7 @@ Not by itself. In KFM, drift matters most when it affects release linkage, evide
 
 ### Can raw query text be stored?
 
-Only when policy and classification explicitly allow it. The safer default described in attached DRIFT provenance guidance is hash-first representation plus an optional redacted summary.
+Only when policy and classification explicitly allow it. The safer default in the preserved DRIFT lineage is hash-first representation plus an optional redacted summary.
 
 ### Are graph traversal and embeddings allowed?
 
@@ -521,8 +562,6 @@ Sometimes. KFM doctrine permits visible narrowed states such as generalized, par
 
 Prefer **abstain**, **deny**, **review**, or **visible narrowing** over persuasive overclaim.
 
-[Back to top](#search-drift)
-
 ---
 
 ## Appendix
@@ -532,26 +571,35 @@ Prefer **abstain**, **deny**, **review**, or **visible narrowing** over persuasi
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by attached KFM materials visible in this session |
-| **INFERRED** | Strongly implied by repeated doctrine or attached DRIFT search docs, but not directly proven in mounted repo state |
+| **CONFIRMED** | Directly supported by attached KFM materials or by current public-tree inspection |
+| **INFERRED** | Strongly implied by repeated doctrine or preserved search lineage, but not directly proven as exact working-branch reality |
 | **PROPOSED** | Recommended starter shape, runbook, or artifact |
 | **UNKNOWN** | Not verified strongly enough in the current session |
-| **NEEDS VERIFICATION** | Should be checked against the mounted repo, schema inventory, workflows, or runtime before being treated as settled fact |
+| **NEEDS VERIFICATION** | Should be checked against the exact working branch, schema inventory, workflows, or runtime before being treated as settled fact |
+
+</details>
+
+<details>
+<summary><strong>Current public-main observations</strong></summary>
+
+- `docs/search/drift/` is currently visible on public `main`.
+- The currently visible checked-in companions are `embeddings/`, `examples/`, `graph-queries/`, `hyde/`, and `stac/`.
+- Public `docs/search/README.md` positions DRIFT as part of the broader Search & Discovery System.
+- Public `/.github/CODEOWNERS` routes `/docs/` to `@bartytime4life`.
+- The public tree does **not** currently show `docs/search/drift/provenance/`, `docs/search/drift/synthesis/`, or `docs/search/drift/workflows/`, even though preserved search-lineage docs still name those paths.
 
 </details>
 
 <details>
 <summary><strong>Open verification items</strong></summary>
 
-The following remain open because workspace evidence stayed PDF-only:
+The following remain open because public-tree inspection is stronger than the earlier PDF-only posture, but still weaker than direct checkout + runtime proof:
 
-- actual `docs/search/` and `docs/search/drift/` contents
-- current owners, document UUID, dates, and policy label
-- whether the upstream docs linked in older DRIFT headers still exist at the same relative paths
-- whether `stac/README.md` and `provenance/README.md` are present in the mounted repo
-- active schema files, fixtures, reports, and runbooks for retrieval drift
-- CI workflow names and required checks
-- whether the exact Neo4j / LlamaIndex / HyDE stack described in attached older search docs is still the mounted implementation
+- whether the exact working branch matches public `main`
+- whether branch-local `provenance/`, `synthesis/`, or `workflows/` docs exist
+- search-specific schemas, fixtures, reports, and tests
+- required checks, rulesets, OIDC wiring, and hidden GitHub approvals
+- actual runtime engine mix, telemetry, and emitted proof packs
 - whether retrieval episodes currently emit snapshot refs, provenance bundles, or validation logs as operational artifacts
 
 </details>
@@ -562,9 +610,9 @@ The following remain open because workspace evidence stayed PDF-only:
 This README keeps both names on purpose.
 
 - **Search Drift** is the governing KFM problem: derived retrieval surfaces diverging from released, policy-safe, evidence-resolvable scope.
-- **DRIFT** is the directory-continuity term found in attached search docs for the retrieval architecture under this path.
+- **DRIFT** is the directory-continuity term already used for the hybrid retrieval architecture under this path.
 
-That means maintainers can preserve older directory identity and adjacent docs without losing the doctrinal center of gravity KFM cares about most.
+That lets the repo preserve older directory identity and adjacent documentation without losing the doctrinal center of gravity KFM actually cares about most.
 
 </details>
 
@@ -572,22 +620,26 @@ That means maintainers can preserve older directory identity and adjacent docs w
 <summary><strong>Suggested review questions</strong></summary>
 
 1. Does this README keep search subordinate to KFM truth-path law?
-2. Does it preserve the authoritative-versus-derived split instead of letting retrieval layers quietly become truth?
-3. Does it keep current-session verification limits visible?
-4. Does it preserve prior DRIFT directory continuity without overclaiming mounted implementation?
-5. Does it give maintainers a concrete validation and artifact vocabulary rather than only conceptual prose?
-6. Does anything here need to be narrowed once the mounted repo is directly inspected?
+2. Does it separate current public-tree facts from preserved-baseline lineage and from future proposals?
+3. Does it avoid implying that public-main path visibility proves runtime wiring or deployment maturity?
+4. Does it give maintainers concrete validation and artifact vocabulary rather than only conceptual prose?
+5. Does it preserve DRIFT continuity without overclaiming missing `provenance/`, `synthesis/`, or `workflows/` surfaces?
+6. Does anything here still need narrowing once the exact working branch is directly inspected?
 
 </details>
 
 ---
 
-**Current posture:** source-bounded draft rooted in attached KFM doctrine and prior DRIFT search docs; ready for mounted-repo verification and path reconciliation.
+**Current posture:** public-main-tree-grounded revision rooted in attached KFM doctrine and preserved DRIFT lineage; ready for exact-working-branch reconciliation before merge.
 
-[docs-root]: ../README.md
-[semantic-search]: semantic-search.md
-[query-language]: query-language.md
-[index-architecture]: index-architecture.md
-[faircare-search-rules]: faircare-search-rules.md
-[drift-stac]: stac/README.md
-[drift-provenance]: provenance/README.md
+[docs-root]: ../../README.md
+[search-root]: ../README.md
+[semantic-search]: ../semantic-search.md
+[query-language]: ../query-language.md
+[index-architecture]: ../index-architecture.md
+[faircare-search-rules]: ../faircare-search-rules.md
+[drift-stac]: ./stac/README.md
+[drift-graph-queries]: ./graph-queries/README.md
+[drift-examples]: ./examples/README.md
+[drift-hyde]: ./hyde/README.md
+[drift-embeddings]: ./embeddings/README.md
