@@ -10,7 +10,7 @@ updated: 2026-03-25
 policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
 related: [docs/README.md, docs/search/README.md, docs/search/query-language.md, docs/search/index-architecture.md, docs/search/faircare-search-rules.md, docs/search/drift/README.md, docs/search/drift/embeddings/README.md, docs/search/drift/graph-queries/README.md, docs/search/drift/hyde/README.md, docs/search/drift/stac/README.md]
 tags: [kfm, search, semantic-search]
-notes: [Related paths are request-supplied and need mounted repo verification.; Current-session workspace evidence was PDF-only.; doc_id, created date, and policy_label remain unresolved.]
+notes: [Related docs were rechecked against current public main under docs/search/ and docs/search/drift.; Current-session evidence in this revision includes attached KFM doctrine plus direct public-main repo inspection, but deeper runtime/schema/workflow evidence remains unresolved.; doc_id, created date, and policy_label remain unresolved.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Semantic Search
@@ -19,7 +19,8 @@ Boundary and routing doctrine for semantic retrieval in Kansas Frontier Matrix.
 
 > **Status:** draft  
 > **Owners:** `@bartytime4life`  
-> **Target path:** `docs/search/semantic-search.md`  
+> **Path:** `docs/search/semantic-search.md`  
+> **Repo fit:** [Search overview](./README.md) · [Query language](./query-language.md) · [Index architecture](./index-architecture.md) · [FAIR+CARE search rules](./faircare-search-rules.md) · [DRIFT](./drift/README.md)  
 > **Badges:** ![status](https://img.shields.io/badge/status-draft-lightgrey) ![layer](https://img.shields.io/badge/layer-derived%20search-blue) ![truth](https://img.shields.io/badge/posture-source--bounded-0a7ea4) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-6f42c1)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Governing doctrine](#governing-doctrine) · [Routing matrix](#routing-matrix) · [Semantic search flow](#semantic-search-flow) · [Surface integration](#surface-integration) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
@@ -27,7 +28,7 @@ Boundary and routing doctrine for semantic retrieval in Kansas Frontier Matrix.
 Semantic search in KFM is a **derived, rebuildable discovery layer**. It may improve recall, ranking, and cross-document finding, but it does **not** become sovereign truth, bypass release state, or replace evidence resolution.
 
 [!NOTE]
-This document separates **CONFIRMED**, **INFERRED**, **PROPOSED**, and **UNKNOWN / NEEDS VERIFICATION** material. In the current session, the mounted workspace evidence was PDF-only, so doctrinal claims are stronger than repo-shape claims.
+This document separates **CONFIRMED**, **INFERRED**, **PROPOSED**, and **UNKNOWN / NEEDS VERIFICATION** material. In this revision, the evidence basis includes the attached KFM doctrine set plus direct inspection of the current public `main` repo root and `docs/search/` subtree. Deeper runtime wiring, schemas, tests, workers, and non-public GitHub settings remain **UNKNOWN / NEEDS VERIFICATION**.
 
 ## Scope
 
@@ -52,33 +53,38 @@ It does **not** serve as:
 
 | Field | Value | Status |
 |---|---|---|
-| Target repo path | `docs/search/semantic-search.md` | request-supplied |
-| Current-session evidence boundary | Attached KFM PDF corpus only; no mounted repo tree, schemas, tests, workflows, manifests, or runtime logs were directly reverified in this session | **CONFIRMED** |
-| Primary doctrinal anchors used here | KFM canonical manual, KFM comprehensive compendium, unified geospatial architecture manual | **CONFIRMED** |
-| Requested related material | `docs/README.md`, `docs/search/README.md`, `docs/search/query-language.md`, `docs/search/index-architecture.md`, `docs/search/faircare-search-rules.md`, and `docs/search/drift/*` | **NEEDS VERIFICATION** |
-| Primary consumers | search/discovery flows, Focus Mode, Map Explorer, Story, Dossier, Evidence Drawer | **INFERRED** |
-| Primary handoff | Evidence-capable references, release-aware result packaging, governed surface routing | **CONFIRMED doctrine** |
+| Target repo path | `docs/search/semantic-search.md` | **CONFIRMED** on public `main` |
+| Sibling docs | [./README.md](./README.md), [./query-language.md](./query-language.md), [./index-architecture.md](./index-architecture.md), [./faircare-search-rules.md](./faircare-search-rules.md) | **CONFIRMED** on public `main` |
+| Downstream docs | [./drift/README.md](./drift/README.md), [./drift/embeddings/README.md](./drift/embeddings/README.md), [./drift/graph-queries/README.md](./drift/graph-queries/README.md), [./drift/hyde/README.md](./drift/hyde/README.md), [./drift/stac/README.md](./drift/stac/README.md) | **CONFIRMED** on public `main` |
+| Current-session evidence boundary used here | Attached KFM PDF corpus plus direct public-main inspection of repo root and `docs/search/` subtree; deeper runtime, schema, test, and workflow internals remain unverified | **CONFIRMED** boundary |
+| Primary doctrinal anchors used here | KFM canonical doctrine, successor geospatial architecture doctrine, [Search System Overview](./README.md), and [FAIR+CARE Search Rules](./faircare-search-rules.md) | **CONFIRMED** |
+| Primary consumers | search/discovery flows, Focus Mode, Map Explorer, Story, Dossier, Evidence Drawer | **CONFIRMED** in adjacent search docs |
+| Primary handoff | Evidence-capable references, release-aware result packaging, governed surface routing | **CONFIRMED** doctrine |
 
-### Requested adjacency shape
+### Current public-main adjacency shape
 
 ```text
 docs/search/
-├── README.md                           # NEEDS VERIFICATION
-├── semantic-search.md                  # target file
-├── query-language.md                   # NEEDS VERIFICATION
-├── index-architecture.md               # NEEDS VERIFICATION
-├── faircare-search-rules.md            # NEEDS VERIFICATION
+├── README.md
+├── faircare-search-rules.md
+├── index-architecture.md
+├── query-language.md
+├── semantic-search.md
 └── drift/
-    ├── README.md                       # NEEDS VERIFICATION
-    ├── embeddings/README.md            # NEEDS VERIFICATION
-    ├── graph-queries/README.md         # NEEDS VERIFICATION
-    ├── hyde/README.md                  # NEEDS VERIFICATION
-    └── stac/README.md                  # NEEDS VERIFICATION
+    ├── README.md
+    ├── embeddings/
+    ├── examples/
+    ├── graph-queries/
+    ├── hyde/
+    └── stac/
 ```
+
+[!CAUTION]
+Confirmed public-main file presence is still only **documentation evidence**. Do not infer a mounted parser, tokenizer, ANN worker, embedding runtime, merge-enforced CI, or production search route family from docs-tree presence alone.
 
 ## Accepted inputs
 
-These statuses reflect what is supported by the current evidence in this session, not what may already exist in mounted code.
+These statuses reflect what is supported by the current evidence in this revision, not what may already exist in non-public code or runtime.
 
 | Input family | Status | What belongs here |
 |---|---|---|
@@ -110,9 +116,9 @@ These statuses reflect what is supported by the current evidence in this session
 | Semantic search is derived, not sovereign truth | **CONFIRMED** | KFM treats search, graph, vector, tile, scene, cache, and summary layers as rebuildable accelerators by default |
 | Focus Mode relation | **CONFIRMED** | Focus is retrieval-bounded, citation-checked, policy-checked, and limited to answer / abstain / deny / error outcomes |
 | Evidence handoff requirement | **CONFIRMED** | outward runtime behavior depends on evidence resolution, citation checks, and policy checks before synthesis |
-| Hybrid graph + vector + document retrieval pattern | **INFERRED** | supporting KFM corpus describes hybrid retrieval over Neo4j/PostGIS plus document/vector search for governed Q&A |
-| Concrete search-area file inventory | **NEEDS VERIFICATION** | adjacent Markdown files were request-supplied, not repo-verified in this session |
-| Concrete embedding model, chunking rules, ANN store, and reranking stack | **UNKNOWN** | no mounted runtime or repo evidence proved a live implementation |
+| Search subtree inventory on public `main` | **CONFIRMED** | `docs/search/` includes `README.md`, `query-language.md`, `index-architecture.md`, `faircare-search-rules.md`, `semantic-search.md`, and a `drift/` subtree |
+| DRIFT hybrid retrieval family under `docs/search/drift/` | **CONFIRMED** | current public docs describe a hybrid search family spanning HyDE-style expansion, embeddings, graph-local precision retrieval, and STAC/DCAT context ingestion; live runtime enforcement remains **NEEDS VERIFICATION** |
+| Concrete embedding model, chunking rules, ANN store, reranking stack, and worker topology | **UNKNOWN** | no directly reverified runtime or checked-in search implementation proof surfaced here |
 | Routing matrix and starter result object below | **PROPOSED** | editorial structure added here to make the boundary reviewable and implementation-aware |
 
 ## Governing doctrine
@@ -176,7 +182,7 @@ Semantic search must therefore support fail-closed behavior rather than certaint
 | `cite` | attach inspectable evidence or fail closed | require drill-through and citation checks |
 | `review_required` | escalate to steward lane before outward use | no public-safe direct release |
 | `disclose_partial` | label incompleteness in-place | visible partial state |
-| `disclose_modeled` | label modeled / assimilated / forecast status | visible modeled-state cue |
+| `disclose_modeled` | label modeled / assimilated / forecast status in-place | visible modeled-state cue |
 | `log_audit` | emit decision and audit linkage | keep traceable runtime evidence |
 
 [!WARNING]
@@ -285,7 +291,7 @@ Use this page as the **boundary doc** before writing search implementation detai
 3. Limit candidates to promoted, policy-allowed scope before final ranking.
 4. Return evidence-capable result packages, not prose conclusions.
 5. Keep semantic retrieval downstream of release state, citation verification, policy, and correction visibility.
-6. Treat every adjacent path named in this document as **target adjacency** until mounted repo verification proves the file inventory.
+6. Use the confirmed sibling docs in [./README.md](./README.md), [./query-language.md](./query-language.md), [./index-architecture.md](./index-architecture.md), [./faircare-search-rules.md](./faircare-search-rules.md), and [./drift/README.md](./drift/README.md) as the local doctrine mesh; reverify schema, worker, and runtime linkages before widening any implementation claim beyond documentation.
 
 ### Illustrative routing logic
 
@@ -325,8 +331,8 @@ A semantic-search implementation is not done when results merely “feel smart.�
 - [ ] Correction path exists: rebuilt indexes and corrected outputs preserve lineage
 - [ ] Evaluation exists: citation-negative, stale, partial, sensitive, and drift cases are tested
 - [ ] CI / promotion gates exist for the semantic lane when implementation begins
-- [ ] Adjacent docs, contracts, and route descriptions do not contradict this file
-- [ ] Any repo paths named here have been reverified against mounted workspace reality before release
+- [ ] Adjacent search docs on public `main` do not contradict this file
+- [ ] Any implementation claims beyond public documentation have been reverified against mounted repo or runtime evidence before release
 
 ## FAQ
 
@@ -356,7 +362,7 @@ No. Embeddings, chunk stores, HyDE outputs, rerankers, and indexes remain derive
 
 ### Does this document prove a live semantic stack is already mounted?
 
-No. It defines the boundary, trust law, and routing expectations. Concrete stack details remain **UNKNOWN** until mounted repo or runtime evidence is surfaced.
+No. It confirms the public documentation surface under `docs/search/`, and it defines the boundary, trust law, and routing expectations. It does **not** by itself prove a live semantic runtime, engine mix, worker topology, or enforced CI gate set.
 
 [Back to top](#kfm-semantic-search)
 
@@ -427,7 +433,7 @@ No. It defines the boundary, trust law, and routing expectations. Concrete stack
 | Route inventory and outward/internal split | needed for API and policy clarity |
 | Correction-triggered rebuild rules | needed for stale index visibility and repair |
 | Steward tooling for false positives and sensitive collisions | needed for review-bearing semantic operations |
-| Mounted adjacency docs and actual repo placement | needed before treating named related files as confirmed repo reality |
+| Mounted adjacency docs and actual repo placement beyond the public documentation tree | needed before treating named docs as proof of deeper implementation reality |
 
 </details>
 
