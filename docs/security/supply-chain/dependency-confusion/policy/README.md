@@ -4,13 +4,13 @@ title: Dependency Confusion Policy
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: NEEDS_VERIFICATION
-related: [docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/README.md, policy/README.md, contracts/README.md, schemas/README.md, .github/workflows/README.md]
+policy_label: public
+related: [docs/security/README.md, docs/security/supply-chain/README.md, docs/security/supply-chain/dependency-confusion/README.md, docs/security/supply-chain/dependency-confusion/checks/README.md, docs/security/supply-chain/dependency-confusion/examples/README.md, policy/README.md, contracts/README.md, schemas/README.md, schemas/contracts/README.md, .github/CODEOWNERS, .github/workflows/README.md, SECURITY.md]
 tags: [kfm, security, supply-chain, dependency-confusion, policy]
-notes: [Current public-main evidence confirms this file and the wider dependency-confusion subtree exist; the policy subdirectory itself appears README-only on public main, so fixtures, exceptions, and executable enforcement paths below remain proposed until the checked-out branch is reverified.]
+notes: [doc_id and created/updated dates remain placeholders pending commit-time verification; current public-main evidence confirms this file, its sibling dependency-confusion lanes, broad /docs/ owner coverage, and a README-only local policy subtree; current public docs also show a live but authority-sensitive schemas/contracts scaffold, so this README must not become a third contract or vocabulary authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # Dependency Confusion Policy
@@ -19,17 +19,17 @@ Policy rules for preventing untrusted package or artifact resolution from outran
 
 > [!IMPORTANT]
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey) ![Type](https://img.shields.io/badge/type-policy-blue) ![Scope](https://img.shields.io/badge/scope-dependency--confusion-6f42c1) ![KFM](https://img.shields.io/badge/KFM-evidence--first-1f6feb)  
+> **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` gives broad `/docs/` coverage; no narrower dependency-confusion-specific owner split was directly reverified on public `main`)*  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-lightgrey) ![Type](https://img.shields.io/badge/type-policy-blue) ![Scope](https://img.shields.io/badge/scope-dependency--confusion-6f42c1) ![KFM](https://img.shields.io/badge/KFM-evidence--first-1f6feb)  
 > **Repo fit:** `docs/security/supply-chain/dependency-confusion/policy/README.md`  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Core policy rules](#core-policy-rules) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!NOTE]
-> **Evidence posture for this file:** KFM's deny-by-default, contract-first, trust-membrane, proof-object, correction-visible, and finite-outcome doctrine is **CONFIRMED** in current project doctrine and adjacent repo docs. The dependency-confusion-specific rule set, obligation codes, fixture layout, and exception record shape below remain a mix of **CONFIRMED lane intent** and **PROPOSED executable specialization** until the checked-out branch confirms actual package-manager, registry, CI, and policy-bundle implementation details.
+> **Evidence posture for this file:** KFM’s deny-by-default, contract-first, trust-membrane, proof-object, correction-visible, and finite-outcome doctrine is **CONFIRMED** in current doctrine and adjacent checked-in repo docs. Current public `main` also confirms this file, its sibling `checks/` and `examples/` lanes, broad `/docs/` ownership, a README-only local `policy/` subdirectory, a README-only `.github/workflows/` lane, and a live but authority-sensitive `schemas/contracts/` scaffold. Package-manager-specific implementation detail, active merge-blocking workflow YAML, populated reason-code registries, and runtime enforcement remain **UNKNOWN**, **NEEDS VERIFICATION**, or **PROPOSED** until the checked-out branch proves them directly.
 
 ## Scope
 
-This policy covers **dependency confusion** inside Kansas Frontier Matrix (KFM): any condition in which build, install, publish, or runtime resolution could prefer an unintended public, mirror, or wrong-scope package or artifact over the source KFM meant to trust.
+This policy covers **dependency confusion** inside Kansas Frontier Matrix (KFM): any condition in which build, install, publish, or runtime resolution could prefer an unintended public, mirror, wrong-scope package, or wrong-scope artifact over the source KFM meant to trust.
 
 In KFM, this is not a narrow package-manager nuisance. It is a trust-boundary failure. Source selection, namespace ownership, lockfile integrity, release evidence, and correction posture all affect whether a dependency change remains inspectable and governed.
 
@@ -54,14 +54,16 @@ This policy applies to every dependency-bearing surface that can change trust po
 | Adjacent sibling | [`../examples/README.md`](../examples/README.md) | Sanitized scenarios and teaching cases. |
 | Security upstream | [`../../../README.md`](../../../README.md) | Security and supply-chain doctrine entry point. |
 | Supply-chain upstream | [`../../README.md`](../../README.md) | Build, artifact, and release trust subtree entry point. |
-| Root policy upstream | [`../../../../../policy/README.md`](../../../../../policy/README.md) | Repo-wide deny-by-default policy posture. |
-| Contract upstream | [`../../../../../contracts/README.md`](../../../../../contracts/README.md) | Machine-readable contract home. |
-| Schema-adjacent upstream | [`../../../../../schemas/README.md`](../../../../../schemas/README.md) | Schema-surface caution and authority boundary notes. |
-| Workflow upstream | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) | CI and governed automation lane; README-only evidence on public main. |
+| Root policy upstream | [`../../../../../policy/README.md`](../../../../../policy/README.md) | Repo-wide deny-by-default posture and policy-lane routing. |
+| Contract doctrine upstream | [`../../../../../contracts/README.md`](../../../../../contracts/README.md) | Human-readable contract and verification routing; current public docs still describe canonical machine-home as unresolved. |
+| Schema boundary upstream | [`../../../../../schemas/README.md`](../../../../../schemas/README.md) | Parent schema lane; public `main` now shows a real nested subtree, but authority remains unsettled. |
+| Schema contract scaffold upstream | [`../../../../../schemas/contracts/README.md`](../../../../../schemas/contracts/README.md) | Live machine-file scaffold for `v1/` and `vocab/`; this policy lane must not become a competing contract or vocabulary registry. |
+| Owner signal | [`../../../../../.github/CODEOWNERS`](../../../../../.github/CODEOWNERS) | Broad `/docs/` ownership basis for the top-of-file owner line. |
+| Workflow upstream | [`../../../../../.github/workflows/README.md`](../../../../../.github/workflows/README.md) | CI and governed automation lane; current public `main` still shows `README.md` only there. |
 
 ## Current verified snapshot
 
-This section is intentionally narrow. It records what the current public-main evidence supports without implying more branch-local implementation than was actually reverified.
+This section is intentionally narrow. It records what current public-main evidence supports without implying more branch-local implementation than was actually reverified.
 
 | Surface | Current public-main signal | Why it matters here |
 | --- | --- | --- |
@@ -69,13 +71,15 @@ This section is intentionally narrow. It records what the current public-main ev
 | `docs/security/supply-chain/dependency-confusion/README.md` | Present and substantive | The parent lane already frames dependency confusion as a trust-boundary problem. |
 | `docs/security/supply-chain/dependency-confusion/checks/README.md` | Present and substantive | Check guidance belongs in `checks/`, not here. |
 | `docs/security/supply-chain/dependency-confusion/examples/README.md` | Present and substantive | Scenarios and reviewer examples belong in `examples/`, not here. |
-| `docs/security/supply-chain/dependency-confusion/examples/lockfile-drift-attack.md` | Present | Lockfile drift is already treated as a concrete scenario nearby. |
-| `docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md` | Present | Namespace collision is already treated as a concrete scenario nearby. |
+| `docs/security/supply-chain/dependency-confusion/examples/lockfile-drift-attack.md` | Present | Lockfile drift is already treated as a concrete example nearby. |
+| `docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md` | Present | Namespace collision is already treated as a concrete example nearby. |
 | `docs/security/supply-chain/dependency-confusion/policy/` inventory | `README.md` only | Deeper local fixtures, exception records, or executable bundles are not yet public-main facts here. |
-| `policy/README.md` | Present and substantive | Repo-wide deny-by-default policy posture remains upstream of this lane. |
-| `contracts/README.md` | Present and substantive | Contract families live upstream, but machine-readable files are not yet visible here. |
-| `schemas/README.md` | Present and substantive | Avoid creating a parallel schema authority in this subtree. |
-| `.github/workflows/README.md` | Present and substantive | Workflow intent is documented, but active checked-in YAML is not evidenced on current public main. |
+| `.github/CODEOWNERS` | Present with broad `/docs/` coverage under `@bartytime4life` | The owner line can be more specific than `NEEDS VERIFICATION`, even though narrower lane ownership is still unresolved. |
+| `policy/README.md` | Present and substantive | Repo-wide deny-by-default posture remains upstream of this lane. |
+| `contracts/README.md` | Present and substantive | Current public docs still route contract meaning here, but they do not by themselves prove canonical machine-file authority. |
+| `schemas/README.md` | Present and substantive | The schema parent lane is no longer README-only and explicitly warns that visible machine files do not settle authority. |
+| `schemas/contracts/README.md` | Present and substantive | A live machine-file scaffold exists, but it remains scaffold-heavy and authority-sensitive. |
+| `.github/workflows/README.md` | Present and substantive | Workflow intent is documented, but active checked-in YAML is not evidenced on current public `main`. |
 
 ## Accepted inputs
 
@@ -90,7 +94,7 @@ Accepted inputs for this directory and policy surface include:
 | Review criteria | Yes | when a dependency change requires human review |
 | Proof requirements | Yes | lockfile/digest/provenance expectations before merge or promotion |
 | Exception records | Yes | time-boxed waivers with owner, expiry, compensating controls, rollback path |
-| Link-out guidance to adjacent lanes | Yes | references to `../checks/` and `../examples/` without duplicating them |
+| Link-out guidance to adjacent lanes | Yes | references to `../checks/`, `../examples/`, and upstream contract/policy lanes without duplicating them |
 
 ## Exclusions
 
@@ -99,8 +103,8 @@ This README does **not** replace the following:
 | Out of scope here | Where it should live instead |
 | --- | --- |
 | Repository-wide policy posture | `policy/README.md` |
-| Machine-readable contract schemas | `contracts/` |
-| Parallel schema home or duplicate schema registry | `schemas/` should remain cautionary/adjacent unless authority is explicitly unified |
+| Canonical machine-readable contract or vocabulary authority | `contracts/`, `schemas/contracts/`, and the owning validation lanes |
+| Parallel schema home or duplicate registry | `schemas/README.md` and `schemas/contracts/README.md` already document the current authority tension; do not create a third home here |
 | Reviewer checklists and inspection mechanics | `../checks/README.md` |
 | Sanitized scenarios and attack stories | `../examples/README.md` |
 | CI implementation details and merge-gate wiring | `.github/workflows/README.md` and real workflow files when present |
@@ -145,12 +149,17 @@ Use this order when a pull request adds, removes, renames, or retargets a depend
 ### Repo inspection snippet
 
 ```bash
-sed -n '1,220p' docs/security/supply-chain/dependency-confusion/README.md
-sed -n '1,220p' docs/security/supply-chain/dependency-confusion/checks/README.md
-sed -n '1,220p' docs/security/supply-chain/dependency-confusion/examples/README.md
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/README.md
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/checks/README.md
+sed -n '1,260p' docs/security/supply-chain/dependency-confusion/examples/README.md
+sed -n '1,260p' docs/security/README.md
+sed -n '1,260p' docs/security/supply-chain/README.md
 sed -n '1,260p' policy/README.md
 sed -n '1,260p' contracts/README.md
-sed -n '1,220p' .github/workflows/README.md
+sed -n '1,260p' schemas/README.md
+sed -n '1,260p' schemas/contracts/README.md
+sed -n '1,200p' .github/CODEOWNERS
+sed -n '1,260p' .github/workflows/README.md
 find docs/security/supply-chain/dependency-confusion/policy -maxdepth 2 -print | sort
 ```
 
@@ -175,7 +184,8 @@ Use this policy when any of the following happens:
 3. Check whether the dependency identity is pinned.
 4. Check whether the package or artifact name could collide with an unintended external source.
 5. Check whether the PR includes the required proof objects or fixture updates.
-6. Record the result in machine-readable decision grammar where the repo supports it.
+6. Check whether the change accidentally treats this README as the canonical home for contracts or vocabularies that belong upstream.
+7. Record the result in machine-readable decision grammar where the repo supports it.
 
 ### Exception workflow
 
@@ -215,8 +225,18 @@ flowchart TD
 | `../checks/` | inspection cues, observable signals, reviewer-facing check families | policy authority, exception semantics, contract ownership |
 | `../examples/` | sanitized scenarios, attack stories, reviewer drills | normative policy statements or enforcement claims |
 | `../../../../../policy/` | repo-wide deny-by-default grammar, outcome semantics, broader policy seams | dependency-confusion-specific examples or sublane-only rules |
-| `../../../../../contracts/` | `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, `CorrectionNotice` shape authority | prose-only lane doctrine |
+| `../../../../../contracts/` | human-readable contract routing, trust-object vocabulary, and proof-object context | silent machine-home assumptions or parallel schema copies |
+| `../../../../../schemas/contracts/` | live machine-file scaffold and starter vocab registries | prose-only policy doctrine or local duplicate registries |
 | `.github/workflows/` | automation wiring, merge checks, CI realization | policy meaning or contract semantics |
+
+### Current authority-sensitive upstream surfaces
+
+| Surface | Current public-main signal | Why this policy file should care |
+| --- | --- | --- |
+| `contracts/README.md` | Still treated by adjacent public docs as a strong contract-routing signal | This README can reference contract families, but should not pretend current machine authority is already settled there. |
+| `schemas/README.md` | Public `main` now exposes a real nested schema subtree and warns that file presence does not settle authority | Policy language here must stay careful about where canonical schemas and registries actually live. |
+| `schemas/contracts/README.md` | Public `main` confirms a live `v1/` + `vocab/` scaffold, but also calls it authority-sensitive and scaffold-heavy | This policy lane must not invent a third registry or silently harden placeholder files into final law. |
+| `.github/workflows/README.md` | Public `main` still shows `README.md` only in the workflow lane | It is safe to describe workflow intent, but not safe to claim checked-in merge-blocking YAML from this file alone. |
 
 ### Core policy rules
 
@@ -311,6 +331,7 @@ These starter codes are **PROPOSED lane-specialization content**. Final names sh
 - [ ] OCI promotions, where used, reference digests and retain linked provenance or SBOM evidence.
 - [ ] Any exception record includes owner, expiry, compensating controls, and rollback path.
 - [ ] Adjacent `checks/` and `examples/` docs remain aligned when this policy meaning changes.
+- [ ] Contract and schema cross-links still match the current authority story after the change.
 
 ### Review checks
 
@@ -320,6 +341,7 @@ These starter codes are **PROPOSED lane-specialization content**. Final names sh
 - [ ] The proposed control remains compatible with KFM’s contract-first and proof-object posture.
 - [ ] Any new lane-specific reason code or obligation code is reconciled against repo-wide vocabularies.
 - [ ] This README, adjacent lane docs, and upstream contract/policy references do not contradict one another.
+- [ ] The change does not silently shift authority from `contracts/` or `schemas/contracts/` into this README by inertia.
 
 ## FAQ
 
@@ -338,6 +360,10 @@ No. They are important compensating controls after source choice, especially for
 ### Can we approve an exception for one release?
 
 Yes, but only as a visible, time-boxed exception with owner, expiry, compensating controls, and rollback posture.
+
+### Why does this file keep the decision grammar proposed even though `schemas/contracts/` is now visible?
+
+Because current public repo docs still describe contract and schema authority as unresolved. A live scaffold is useful evidence, but it is not by itself proof that the final reason-code or obligation-code home is already settled.
 
 ### Why keep examples and checks outside this policy README?
 
