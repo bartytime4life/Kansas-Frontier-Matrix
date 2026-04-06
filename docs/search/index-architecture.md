@@ -8,31 +8,40 @@ owners: <NEEDS_VERIFICATION>
 created: <NEEDS_VERIFICATION_DATE>
 updated: <NEEDS_VERIFICATION_DATE>
 policy_label: <NEEDS_VERIFICATION>
-related: [<NEEDS_VERIFICATION>]
+related: [docs/search/README.md, docs/search/query-language.md, docs/search/semantic-search.md, docs/search/faircare-search-rules.md, docs/search/drift/README.md]
 tags: [kfm, search, architecture]
-notes: [Target path docs/search/index-architecture.md; attached corpus inspected; repo-local neighbors, owners, dates, and identifiers remain placeholders pending mounted repository verification.]
+notes: [Revised against the current public docs/search tree on public main; doctrinal baseline preserved; owners, dates, policy label, and doc UUID still require mounted-repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Search Index Architecture
 
 Release-backed, evidence-constrained search for KFM’s governed spatial evidence system.
 
+![Status: draft](https://img.shields.io/badge/status-draft-orange)
+![Layer: derived](https://img.shields.io/badge/layer-derived-blue)
+![Truth: release-backed](https://img.shields.io/badge/truth-release--backed-brightgreen)
+![Path: docs/search](https://img.shields.io/badge/path-docs%2Fsearch-lightgrey)
+
 > [!IMPORTANT]
 > In KFM, search is a **derived, rebuildable delivery surface**. It is never canonical truth, never a public bypass around governed APIs, and never the only place where meaning survives.
->
-> Current-session evidence for this note was **PDF-only**. Exact repo-local search paths, schemas, workers, engines, tests, and runtime shape therefore remain **UNKNOWN**.
 
-**Quick jump:** [Purpose](#purpose) · [Authority boundary](#authority-boundary) · [Five-plane placement](#search-in-the-five-plane-model) · [Non-negotiable laws](#non-negotiable-search-laws) · [Search surfaces](#logical-search-surfaces) · [Projection record](#search-projection-record-inferred--proposed) · [Build lifecycle](#build-lifecycle) · [Contracts](#contracts-and-proof-objects) · [Runtime flow](#runtime-flow) · [Review gates](#minimum-review-gates) · [Open verification](#open-verification-items)
+> [!NOTE]
+> This revision preserves the prior doctrinal spine while updating the evidence boundary.
+> **CONFIRMED in this session:** the public `docs/search/` subtree and adjacent search-doc structure on public `main`.
+> **UNKNOWN in this session:** mounted search workers, schemas, route payloads, CI jobs, tests, runtime engine choice, and live freshness thresholds beyond what public documentation proves.
 
 | Field | Value |
 |---|---|
+| Status | **draft** |
+| Owners | `<NEEDS_VERIFICATION>` |
 | Target path | `docs/search/index-architecture.md` |
-| Document role | Standard architecture note for derived search and retrieval surfaces |
-| Current posture | **CONFIRMED** doctrine · **INFERRED** structural completion · **PROPOSED** starter projection shape · **UNKNOWN** mounted implementation |
-| Practical baseline | March 2026 KFM doctrine set, with central search-language reinforced by the attached master-manual overlays |
-| Current-session evidence boundary | Attached corpus only; no directly mounted repo tree, schemas, workflows, tests, manifests, or runtime logs |
+| Repo fit | Architecture note under `docs/search/`; complements [`README.md`](./README.md), [`query-language.md`](./query-language.md), [`semantic-search.md`](./semantic-search.md), [`faircare-search-rules.md`](./faircare-search-rules.md), and [`drift/README.md`](./drift/README.md) |
+| Current posture | **CONFIRMED** doctrine + public search-doc tree · **INFERRED** structural completion · **PROPOSED** starter projection shape · **UNKNOWN** mounted search implementation depth |
+| Practical baseline | March 2026 KFM doctrine set, preserved through the current public `docs/search/` lane |
 | Primary concern | Make search useful without letting it become sovereign truth |
-| Main consumers | Builders, stewards, reviewers, API designers, search/ranking implementers |
+| Main consumers | Builders, stewards, reviewers, API designers, retrieval/ranking implementers |
+
+**Quick jump:** [Purpose](#purpose) · [Repo fit and current public snapshot](#repo-fit-and-current-public-snapshot) · [Authority boundary](#authority-boundary) · [Five-plane placement](#search-in-the-five-plane-model) · [Search laws](#non-negotiable-search-laws) · [Search surfaces](#logical-search-surfaces) · [Projection record](#search-projection-record-inferred--proposed) · [Build lifecycle](#build-lifecycle) · [Contracts](#contracts-and-proof-objects) · [Runtime flow](#runtime-flow) · [Review gates](#minimum-review-gates) · [Open verification](#open-verification-items)
 
 ## Purpose
 
@@ -60,9 +69,43 @@ A KFM search hit is therefore a **navigation and retrieval aid**. It is not proo
 | Source onboarding mechanics | Covered upstream by source and intake architecture |
 | Canonical storage design in full | Covered by canonical data architecture |
 | Free-form assistant UX | Covered by bounded AI / Focus architecture |
-| Exact engine choice | **UNKNOWN** in the mounted repo; doctrine constrains role more than product |
-| Repo-local route names, DTOs, and worker names | Not directly verified in this session |
+| Exact engine choice | Still **UNKNOWN** in the mounted implementation evidence available here |
+| Literal worker names, DTO names, and route payloads | Not directly verified in this session |
 | Ranking experiments in isolation | KFM requires ranking to stay subordinate to evidence, policy, release, and correction rules |
+
+## Repo fit and current public snapshot
+
+This file is the architecture note for the `docs/search/` lane. It should read as a doctrinal sibling to the search overview and behavior docs already present in the same subtree, not as an isolated essay.
+
+| Path | Role here | Relationship |
+|---|---|---|
+| [`./README.md`](./README.md) | search subtree hub | parent orientation and local entry point |
+| [`./faircare-search-rules.md`](./faircare-search-rules.md) | exposure and handling constraints | narrows what search may reveal |
+| [`./query-language.md`](./query-language.md) | user/query semantics | explains how search intent is expressed |
+| [`./semantic-search.md`](./semantic-search.md) | semantic retrieval posture | complements this doc’s bounded-retrieval rules |
+| [`./drift/README.md`](./drift/README.md) | adjacent retrieval-drift / provenance lane | separate but related governed retrieval surface |
+
+### Current public tree snapshot
+
+```text
+docs/
+└── search/
+    ├── README.md
+    ├── faircare-search-rules.md
+    ├── index-architecture.md
+    ├── query-language.md
+    ├── semantic-search.md
+    └── drift/
+        ├── README.md
+        ├── embeddings/
+        ├── examples/
+        ├── graph-queries/
+        ├── hyde/
+        └── stac/
+```
+
+> [!NOTE]
+> The public tree now confirms the neighboring search-doc structure and the existence of a `drift/` documentation lane. That reduces one earlier documentation unknown. It does **not** by itself prove a mounted runtime named “DRIFT Search,” nor any specific worker, endpoint, or engine implementation.
 
 ## Authority boundary
 
@@ -70,16 +113,18 @@ This page is doctrine-led and intentionally conservative about implementation cl
 
 | Boundary | Status | Notes |
 |---|---|---|
-| Search index as a derived / rebuildable layer | **CONFIRMED** | Strongly repeated across the attached KFM manuals |
-| Search, graph, vector, tiles, scenes, dashboards, and summaries as non-sovereign layers | **CONFIRMED** | These surfaces are useful, but may not silently become authority |
-| Search written only by projection / packaging workers from promoted scope | **CONFIRMED** | Search belongs in the derived delivery plane |
-| Search resolution through governed API + evidence resolver | **CONFIRMED** | Consequential outward use must reconstruct trust |
-| Exact contents of `docs/search/` in the repo | **UNKNOWN** | Repo tree was not directly mounted |
-| Existing search workers, schemas, tests, routes, or manifests | **UNKNOWN** | Current-session evidence did not surface them |
-| Documentary repo surfaces such as `contracts/`, `schemas/`, `policy/`, `tests/`, and workflow readmes | **CONFIRMED** via attached repo-grounded summary | Helpful context, but not proof of a search implementation |
+| Search index as a derived / rebuildable layer | **CONFIRMED** | Strongly repeated across KFM doctrine and preserved in current search docs |
+| Search, graph, vector, tiles, scenes, dashboards, and summaries as non-sovereign layers | **CONFIRMED** | Useful surfaces, but not authority |
+| Search written only by projection / packaging workers from promoted scope | **CONFIRMED** doctrine | Search belongs in the derived delivery plane |
+| Search resolution through governed API + evidence resolver | **CONFIRMED** doctrine | Consequential outward use must reconstruct trust |
+| `docs/search/index-architecture.md` exists on public `main` | **CONFIRMED** | This is a revision target, not a net-new invention |
+| Exact neighboring docs under `docs/search/` | **CONFIRMED** | Public-tree inspection now verifies them |
+| `docs/search/drift/` documentation subtree exists | **CONFIRMED** | Architectural adjacency is real; runtime meaning remains separate |
+| Existing search workers, schemas, tests, routes, manifests, or rebuild jobs | **UNKNOWN** | Public documentation does not prove them |
+| Exact search engine choice(s) | **UNKNOWN** | Must not be guessed from doctrine |
 
 > [!NOTE]
-> Where this document proposes structure, it does so as the **smallest plausible completion** of KFM doctrine, not as a claim that the repo already implements it.
+> Where this document proposes structure, it does so as the **smallest plausible completion** of KFM doctrine, not as a claim that the mounted repo already implements it.
 
 ## Search in the five-plane model
 
@@ -87,17 +132,17 @@ KFM’s search architecture only makes sense when placed inside the broader depe
 
 ```mermaid
 flowchart LR
-    A[Source & intake<br/>descriptors, raw captures,<br/>validation, quarantine] --> B[Canonical truth<br/>DatasetVersion-backed<br/>facts and features]
-    B --> C[Catalog / policy / review<br/>CatalogClosure, DecisionEnvelope,<br/>ReviewRecord, ReleaseManifest]
-    C --> D[Projection & packaging workers]
-    D --> E[Search index<br/>derived / rebuildable]
-    D --> F[Vector / embedding index<br/>derived / rebuildable]
-    E --> G[Governed API / evidence resolver]
+    A[Source and intake<br/>descriptors, raw captures,<br/>validation, quarantine] --> B[Canonical truth<br/>DatasetVersion-backed<br/>facts and features]
+    B --> C[Catalog, policy, review<br/>CatalogClosure, DecisionEnvelope,<br/>ReviewRecord, ReleaseManifest]
+    C --> D[Projection and packaging workers]
+    D --> E[Search index<br/>derived and rebuildable]
+    D --> F[Vector or embedding store<br/>derived and rebuildable]
+    E --> G[Governed API and<br/>evidence resolver]
     F --> G
     G --> H[Map shell]
-    G --> I[Dossier / story]
+    G --> I[Dossier and story]
     G --> J[Focus]
-    G --> K[Export / review surfaces]
+    G --> K[Export and review]
 ```
 
 ### Placement rule
@@ -157,11 +202,14 @@ The corpus strongly supports search as a family of derived discovery and retriev
 
 | Surface | Status | Primary role | Truth status | Must resolve to |
 |---|---|---|---|---|
-| Catalog search | **CONFIRMED** | Discover release-backed outward objects | Derived | `CatalogClosure` + release-linked outward metadata |
+| Catalog search | **CONFIRMED** | Discover release-backed outward objects | Derived | `CatalogClosure` plus release-linked outward metadata |
 | Evidence text search | **INFERRED** | Find released evidence packages, excerpts, and inspectable support | Derived | `EvidenceBundle` or release-backed evidence object |
-| Vector / embedding retrieval | **CONFIRMED** doctrine for derived vector stores; **PROPOSED** as a distinct slice here | Accelerate semantic retrieval for bounded assistance | Derived | `EvidenceBundle`, citation checks, release refs |
+| Vector / embedding retrieval | **CONFIRMED** doctrine for derived retrieval layers; **PROPOSED** as a distinct slice here | Accelerate semantic retrieval for bounded assistance | Derived | `EvidenceBundle`, citation checks, release refs |
 | Steward / review search | **PROPOSED** | Compare generalized vs precise, active vs withdrawn, prior vs superseding releases | Derived / review-bearing | `DecisionEnvelope`, `ReviewRecord`, `CorrectionNotice` context |
 | UI-local query state | **INFERRED** | Remember search text, filters, sort, pane state | Ephemeral | UI state only; never truth-bearing |
+
+> [!NOTE]
+> The current public `docs/search/drift/` subtree confirms an adjacent documentation lane for retrieval provenance, drift, and STAC-facing search episodes. This file treats that lane as related architecture, not as proof of a mounted runtime surface.
 
 ### Reading rule
 
@@ -194,7 +242,7 @@ KFM doctrine does not prove a mounted search schema in this session. It does, ho
 | Display-safe title / excerpt / preview | Makes ranking useful without promoting preview to authority |
 | Place / geometry hint | Supports map-first navigation without implying survey-grade certainty |
 | Time basis | Prevents results from drifting away from valid-time meaning |
-| Freshness basis + `stale-after` | Makes staleness explicit instead of silent |
+| Freshness basis + `stale_after` | Makes staleness explicit instead of silent |
 | Correction / lineage state | Preserves supersession, withdrawal, or narrowing visibility |
 | Rights / sensitivity / precision class | Keeps public-safe shaping operational |
 | `ProjectionBuildReceipt` reference | Connects the row back to a provable build event |
@@ -208,8 +256,8 @@ KFM doctrine supports standards-aligned outward discovery where that improves in
 
 | Boundary | Safe architectural reading | Current local status |
 |---|---|---|
-| Outward catalog discovery | Reasonable candidate for standards-aligned catalog search over published closure | **UNKNOWN** route/profile in mounted repo |
-| Search result resolution | Must go through governed API + evidence resolver | **UNKNOWN** payload contract in mounted repo |
+| Outward catalog discovery | Reasonable candidate for standards-aligned catalog search over published closure | **UNKNOWN** route/profile in mounted code |
+| Search result resolution | Must go through governed API + evidence resolver | **UNKNOWN** payload contract in mounted code |
 | Internal ranking / storage engine | Implementation-defined as long as it stays derived, rebuildable, and release-backed | **UNKNOWN** |
 | Focus retrieval handoff | Internal governed route class, not a direct public engine path | **UNKNOWN** |
 
@@ -226,7 +274,7 @@ This document deliberately avoids pretending that doctrine already proves a part
 | External search service | **UNKNOWN** | Acceptable only if it preserves trust membrane, release linkage, and rebuildability |
 
 > [!CAUTION]
-> Search technology is a secondary decision. KFM doctrine constrains **authority**, **freshness**, **correction**, **proof**, and **access path** before it constrains product selection.
+> Search technology is a secondary decision. KFM constrains **authority**, **freshness**, **correction**, **proof**, and **access path** before it constrains product selection.
 
 ## Build lifecycle
 
@@ -285,7 +333,7 @@ Search is only trustworthy when its staleness model is explicit.
 |---|---|
 | Build time recorded | Explains what the index actually reflects |
 | Freshness basis declared | Prevents silent drift |
-| `stale-after` or equivalent policy present | Enables visible stale handling |
+| `stale_after` or equivalent policy present | Enables visible stale handling |
 | Rebuild trigger linked to release / correction events | Keeps search aligned with published scope |
 | Superseded content remains explainable | Preserves lineage instead of erasing history |
 | Public-safe narrowing supported | Lets search degrade safely rather than lie |
@@ -305,7 +353,7 @@ Search is only trustworthy when its staleness model is explicit.
 
 ```mermaid
 sequenceDiagram
-    participant U as User / steward
+    participant U as User or steward
     participant API as Governed API
     participant P as Policy checks
     participant SI as Search index
@@ -330,6 +378,8 @@ sequenceDiagram
 
 Search is part of KFM’s trust system, not just a convenience layer.
 
+**Search may widen discovery. It may not widen exposure.**
+
 | Rule | Architectural consequence |
 |---|---|
 | Governed API only | No direct browser-to-index trust path |
@@ -353,21 +403,23 @@ A search layer should not be considered done merely because queries return fast.
 - [ ] Policy shaping of snippets, previews, and exact-location behavior is tested
 - [ ] No direct frontend, shell, or model-runtime bypass around the governed API
 - [ ] Negative-path behavior is visible and reviewable
+- [ ] Search documentation stays synchronized with sibling `docs/search/` surfaces when behavior changes
 
 ## Open verification items
 
-The following items remain intentionally visible because the mounted repo was not directly inspected in this session.
+The following items remain intentionally visible because public-tree inspection does not prove runtime depth.
 
 | Item | Why it matters | Current status |
 |---|---|---|
-| Exact neighboring docs under `docs/search/` | Needed for native repo fit and local cross-linking | **UNKNOWN** |
+| Exact neighboring docs under `docs/search/` | Needed for repo-native fit and local cross-linking | **CONFIRMED** on public `main` |
+| `docs/search/drift/` documentation subtree | Confirms adjacent retrieval/provenance lane | **CONFIRMED** on public `main`; runtime meaning still **UNKNOWN** |
 | Existing search implementation, if any | Prevents rewriting around phantom or duplicate structures | **UNKNOWN** |
 | Actual engine choice(s) | Needed before documenting operational specifics | **UNKNOWN** |
 | Existing schema files for projection / runtime search objects | Needed for contract-accurate documentation | **UNKNOWN** |
 | Existing tests and fixtures | Needed before claiming verification depth | **UNKNOWN** |
 | Active CI jobs for search rebuild / validation | Needed before documenting automation | **UNKNOWN** |
 | Freshness thresholds per search surface | Needed for truthful stale-state language | **UNKNOWN** |
-| Review-only vs public-safe search behavior in mounted code | Needed for accurate policy surface documentation | **UNKNOWN** |
+| Review-only vs public-safe search behavior in mounted code | Needed for accurate policy-surface documentation | **UNKNOWN** |
 
 ## Non-goals
 
@@ -380,7 +432,7 @@ The following items remain intentionally visible because the mounted repo was no
 ## Illustrative starter decomposition
 
 <details>
-<summary>Open a small starter topology (INFERRED / PROPOSED)</summary>
+<summary><strong>Open a small starter topology (INFERRED / PROPOSED)</strong></summary>
 
 ```text
 promoted release scope
@@ -414,5 +466,7 @@ Search in KFM should be boring in exactly the right way:
 - forced through governed APIs,
 - correction-aware,
 - and always capable of resolving a useful hit into an inspectable, release-backed object.
+
+The public `docs/search/` tree is now directly confirmed. Runtime depth still needs direct verification.
 
 [Back to top](#search-index-architecture)
