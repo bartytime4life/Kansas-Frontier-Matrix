@@ -4,31 +4,32 @@ title: Connectors
 type: standard
 version: v1
 status: draft
-owners: TODO(owners-needs-verification)
+owners: @bartytime4life
 created: TODO(YYYY-MM-DD-needs-verification)
 updated: TODO(YYYY-MM-DD-needs-verification)
 policy_label: TODO(policy-label-needs-verification)
-related: [TODO(verify-related-paths-for-contracts-policy-tests-runbooks)]
+related: [../README.md, ./genealogy/README.md, ../runbooks/README.md, ../standards/README.md, ../pipelines/README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../tools/README.md, ../../.github/README.md]
 tags: [kfm, connectors, ingestion, source-onboarding]
-notes: [Current-session evidence was PDF-only; adjacent repo paths, owners, dates, and mounted implementation depth require direct repo verification.]
+notes: [Owners grounded to the current public CODEOWNERS docs fallback; created/updated/policy label still need direct repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Connectors
 Governed source-onboarding and ingestion guidance for KFM connector work.
 
-| Status | Owners | Repo path | Evidence posture |
-| --- | --- | --- | --- |
-| `draft` | `TODO(owners-needs-verification)` | `docs/connectors/README.md` | **CONFIRMED doctrine** · **PROPOSED local structure** · **UNKNOWN mounted repo depth** |
+| Status | Doc status | Owners | Repo path | Evidence posture |
+| --- | --- | --- | --- | --- |
+| `experimental` | `draft` | `@bartytime4life` | `docs/connectors/README.md` | **CONFIRMED doctrine** · **CONFIRMED public-main directory shape** · **UNKNOWN non-public/runtime depth** |
 
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![kfm: connectors](https://img.shields.io/badge/kfm-connectors-1f6feb)
-![workspace: pdf-only](https://img.shields.io/badge/workspace-PDF--only-lightgrey)
-![verification: needed](https://img.shields.io/badge/verification-needed-yellow)
+![status: experimental](https://img.shields.io/badge/status-experimental-orange)
+![doc: draft](https://img.shields.io/badge/doc-draft-yellow)
+![owner: @bartytime4life](https://img.shields.io/badge/owner-%40bartytime4life-1f6feb)
+![repo: public main checked](https://img.shields.io/badge/repo-public--main%20checked-success)
+![verification: bounded](https://img.shields.io/badge/verification-bounded-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree-proposed) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#reference-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 > [!IMPORTANT]
-> This README is grounded in attached KFM doctrine and source-integration manuals. The current-session workspace evidence was PDF-only, not a mounted repo checkout. Treat exact neighboring file paths, owners, dates, and existing local folder shape as **NEEDS VERIFICATION** until directly confirmed in the repository.
+> This README is grounded in KFM doctrine and direct inspection of the current public `main` tree. The public `docs/connectors/` directory is verified. Non-public branches, workflow enforcement, deployment manifests, emitted proof packs, and runtime maturity remain **UNKNOWN** until directly surfaced.
 
 > [!NOTE]
 > In KFM, a connector is not just code that fetches data. It is a governed intake boundary with declared identity, access pattern, semantics, rights posture, validation rules, lineage expectations, and publication burden.
@@ -66,36 +67,36 @@ Connector-facing documentation for:
 
 | Label | Meaning |
 | --- | --- |
-| **CONFIRMED** | Supported by attached KFM doctrine or source-integration manuals |
-| **PROPOSED** | Recommended README structure, folder shape, or documentation pattern that fits the doctrine |
-| **UNKNOWN** | Not directly verified from the mounted repository in this session |
-| **NEEDS VERIFICATION** | A value that should be filled from the real repo once directly inspected |
+| **CONFIRMED** | Supported by attached KFM doctrine or direct public-main repo evidence |
+| **PROPOSED** | Recommended structure or documentation pattern that fits the doctrine |
+| **UNKNOWN** | Not directly verified in current public repo or attached corpus evidence |
+| **NEEDS VERIFICATION** | A value that should be filled from direct repo or runtime evidence |
 
 [Back to top](#connectors)
 
 ## Repo fit
 
-This README should act as the documentation entry point for the connector layer, not as a substitute for schemas, tests, or runtime code.
+This README is the documentation entry point for the connector layer. It is **not** a substitute for schemas, tests, policy bundles, runtime code, or release proof artifacts.
 
 | Aspect | Guidance |
 | --- | --- |
 | **Path** | `docs/connectors/README.md` |
+| **Verified local child page** | [`./genealogy/README.md`](./genealogy/README.md) |
+| **Upstream docs** | [`../README.md`](../README.md) · [`../standards/README.md`](../standards/README.md) · [`../pipelines/README.md`](../pipelines/README.md) · [`../runbooks/README.md`](../runbooks/README.md) |
+| **Adjacent governed surfaces** | [`../../contracts/README.md`](../../contracts/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../tools/README.md`](../../tools/README.md) · [`../../.github/README.md`](../../.github/README.md) |
 | **Primary role** | README for connector doctrine, onboarding rules, intake expectations, and review discipline |
-| **Upstream dependencies** | Source atlas, provider/source documentation, source-registration inputs, lane publication burdens, contracts, and policy rules |
-| **Downstream consequences** | SourceDescriptor, IngestReceipt, ValidationReport, DatasetVersion, CatalogClosure, review artifacts, release-safe exports, and runtime EvidenceBundle behavior |
-| **Boundary rule** | This directory documents connector behavior and obligations; it should not become the hidden home of live secrets, raw landed data, or public release proofs |
-| **Link status** | Exact adjacent relative links are **NEEDS VERIFICATION** until the mounted repo tree is inspected |
+| **Boundary rule** | This directory documents connector behavior and obligations; it must not become a hidden home for live secrets, raw landed data, or public release proofs |
 
 ### Upstream / downstream map
 
 | Direction | What this README should point toward | Status |
 | --- | --- | --- |
-| Upstream | Source registry, provider notes, rights/sensitivity rules, lane publication guidance | **NEEDS VERIFICATION** |
-| Downstream | Contracts, fixtures, tests, runbooks, release/correction docs, governed APIs | **NEEDS VERIFICATION** |
-| Cross-cutting | Policy reason/obligation registries, standards profile, observability join keys | **NEEDS VERIFICATION** |
+| Upstream | source atlas, provider/source notes, lane publication burdens, standards and runbook guidance | **CONFIRMED path** · **INFERRED relationship** |
+| Downstream | contracts, schemas, policy bundles, tests, tools, release/correction docs, governed APIs | **CONFIRMED path** · **UNKNOWN connector-specific coverage** |
+| Cross-cutting | reason/obligation registries, observability join keys, documentation gates, correction posture | **INFERRED need** |
 
 > [!TIP]
-> Keep this README narrow and connective. It should orient readers to the connector layer and its obligations, then hand off to the more specific contract, policy, and test surfaces once those paths are verified.
+> Keep this README narrow and connective. It should orient readers to the connector layer and its obligations, then hand off to more specific contract, policy, test, and runbook surfaces.
 
 [Back to top](#connectors)
 
@@ -127,6 +128,8 @@ Accepted inputs are the materials needed to describe and review a connector befo
 - proof-object expectations
 - review prompts for lane-specific burdens
 
+[Back to top](#connectors)
+
 ## Exclusions
 
 This directory should **not** become a catch-all for everything adjacent to ingestion.
@@ -146,9 +149,23 @@ This directory should **not** become a catch-all for everything adjacent to inge
 
 [Back to top](#connectors)
 
-## Directory tree (PROPOSED)
+## Directory tree
 
-The exact local shape is **UNKNOWN** in this session. The tree below is a **PROPOSED** working layout for a documentation-first connector directory that stays small and reviewable.
+### Current verified local tree
+
+```text
+docs/connectors/
+├── README.md
+└── genealogy/
+    └── README.md
+```
+
+The tree above is the **current public-main shape that was directly verified**.
+
+<details>
+<summary><strong>Expansion shape (PROPOSED)</strong></summary>
+
+The exact future local shape is still open. If this directory grows, keep it small and reviewable.
 
 ```text
 docs/connectors/
@@ -178,7 +195,11 @@ docs/connectors/
 - Keep this directory **documentation-heavy, code-light**.
 - Add a new subpage only when it reduces ambiguity for multiple connectors.
 - Do not mirror the entire source atlas here.
-- If the repo already has a stronger local structure, preserve that structure and adapt this README to it.
+- If the repo grows a stronger local structure, preserve that structure and adapt this README to it.
+
+</details>
+
+[Back to top](#connectors)
 
 ## Quickstart
 
@@ -186,7 +207,7 @@ Use this path when adding or revising connector documentation.
 
 1. Create or update the connector profile for the source family.
 2. Declare the source identity, access pattern, cadence, and checkpointing approach.
-3. Record semantics explicitly: support/grain, CRS, time semantics, units, modeled-vs-observed status.
+3. Record semantics explicitly: support/grain, CRS, time semantics, units, and modeled-vs-observed status.
 4. Document rights, redistribution posture, precision limits, and review requirements.
 5. Define validation gates and quarantine triggers.
 6. State what proof objects must exist before promotion.
@@ -246,6 +267,11 @@ backfill:
   historical_window: TODO
 ```
 
+> [!TIP]
+> Default outward catalog expectation is `DCAT`. Add `STAC` and `PROV` where the source family carries spatiotemporal asset or lineage burden.
+
+[Back to top](#connectors)
+
 ## Usage
 
 ### When to create a new connector page
@@ -292,27 +318,30 @@ Good connector docs answer:
 
 ```mermaid
 flowchart LR
-    A[Provider / Source Family] --> B[Connector profile]
-    B --> C[Acquisition worker]
-    C --> D[RAW]
-    D --> E[WORK / QUARANTINE]
-    E --> F[PROCESSED]
-    F --> G[CatalogClosure<br/>STAC · DCAT · PROV]
-    G --> H[Review / Policy / Release]
-    H --> I[Governed APIs / Public-safe surfaces]
+    A[Provider / Source Family] --> B[SourceDescriptor]
+    B --> C[Connector profile]
+    C --> D[Acquisition worker]
+    D --> E[RAW]
+    E --> F[WORK / QUARANTINE]
+    F --> G[PROCESSED]
+    G --> H[CatalogClosure<br/>STAC · DCAT · PROV]
+    H --> I[Review / Decision / Release]
+    I --> J[Governed APIs / Public-safe surfaces]
 
-    B --> J[Validation rules]
-    B --> K[Rights / sensitivity rules]
-    J --> E
-    K --> H
-
-    H --> L[EvidenceBundle / RuntimeResponseEnvelope]
+    C --> K[Validation rules]
+    C --> L[Rights / sensitivity rules]
+    K --> F
     L --> I
+
+    I --> M[EvidenceBundle / RuntimeResponseEnvelope]
+    M --> J
 ```
 
 ### Reading the diagram
 
 The connector boundary is upstream of publication. It does **not** publish directly. It feeds the governed path that later supports catalog closure, review, release, and runtime evidence resolution.
+
+[Back to top](#connectors)
 
 ## Reference tables
 
@@ -325,6 +354,9 @@ The connector boundary is upstream of publication. It does **not** publish direc
 | **ValidationReport** | Record of checks passed, failed, or quarantined | Check list, severity, subject refs, reason codes |
 | **DatasetVersion** | Authoritative candidate or promoted subject set | Stable ID, version ID, support, time semantics, provenance |
 | **CatalogClosure** | Outward metadata closure | STAC / DCAT / PROV refs, identifiers, release linkage |
+| **DecisionEnvelope** | Machine-readable policy result on promotion or restriction | Subject, action, lane, result, reason codes, obligation codes, policy basis |
+| **ReviewRecord** | Human approval, denial, escalation, or note | Reviewer role, decision, timestamp, refs, comments |
+| **ReleaseManifest / ReleaseProofPack** | Public-safe release assembly | Version refs, catalog refs, decision refs, rollback/correction posture |
 | **EvidenceBundle** | Runtime support object | Scope echo, evidence members, rights/sensitivity state, lineage summary |
 | **RuntimeResponseEnvelope** | Accountable runtime outcome | Surface class/state, result, citation check, decision ref |
 | **CorrectionNotice** | Visible lineage under change | Affected releases/surfaces, rebuild refs, cause, public note |
@@ -377,6 +409,8 @@ A connector profile is ready for review when all boxes below can be checked with
 > [!NOTE]
 > The smallest KFM-real move is still a contract-first thin slice. This directory should help prove one connector cleanly, not accumulate decorative source notes faster than the governed path can absorb them.
 
+[Back to top](#connectors)
+
 ## FAQ
 
 ### Why is this README in `docs/` instead of beside runtime code?
@@ -393,11 +427,15 @@ Yes, but only if they are labeled clearly as modeled/assimilated and never flatt
 
 ### Are the subfolders in this README final?
 
-No. They are **PROPOSED** starter structure only. Preserve the actual repo shape once directly verified.
+No. The only current public local child page directly verified here is `genealogy/`. Any broader subfolder set remains **PROPOSED** until the repo grows that shape.
 
 ### Do secrets or tokens belong here?
 
 No. Document the auth model here; store secrets only in the verified secret-management surface for the repo/runtime.
+
+### Why are some links real and some values still placeholders?
+
+Because the public repo tree confirms some adjacent paths, while document identifiers, dates, policy labels, and connector-specific contract/test inventories were not directly verified in current evidence.
 
 [Back to top](#connectors)
 
@@ -434,18 +472,18 @@ Before approving a new or revised connector profile, ask:
 </details>
 
 <details>
-<summary><strong>What this README should eventually link to once the repo tree is verified</strong></summary>
+<summary><strong>Connector-specific links to add once directly verified</strong></summary>
 
 Add verified relative links for:
 
-- contract schemas
-- valid/invalid fixtures
-- policy reason/obligation registries
+- connector-specific contract schemas
+- valid / invalid fixtures
+- policy reason / obligation registries
 - connector tests
 - ingestion runbooks
-- release/correction docs
+- release / correction docs
 - source registry or atlas pages
-- lane-specific provider profiles
+- lane-specific provider profiles beyond `genealogy/`
 
 Until then, keep placeholders explicit rather than linking to guessed paths.
 
