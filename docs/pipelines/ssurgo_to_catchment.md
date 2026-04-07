@@ -4,23 +4,30 @@ title: SSURGO to NHD Catchment Overlay Pipeline
 type: standard
 version: v1
 status: draft
-owners: <owners-NEEDS-VERIFICATION>
-created: <YYYY-MM-DD>
-updated: <YYYY-MM-DD>
+owners: @bartytime4life
+created: <YYYY-MM-DD-NEEDS-VERIFICATION>
+updated: 2026-04-07
 policy_label: public
 related:
   - docs/pipelines/README.md
   - docs/architecture/TRUTH_PATH_LIFECYCLE.md
   - docs/architecture/TRUST_MEMBRANE.md
-  - contracts/<path-NEEDS-VERIFICATION>
-  - policy/<path-NEEDS-VERIFICATION>
+  - pipelines/soils/gssurgo-ks/README.md
+  - examples/thin_slice/hydrology/README.md
+  - schemas/contracts/v1/data/README.md
+  - schemas/contracts/v1/evidence/README.md
+  - schemas/contracts/v1/policy/README.md
+  - policy/README.md
+  - tests/README.md
 tags:
   - kfm
   - pipelines
   - soils
   - hydrology
   - provenance
-notes: Source-bounded draft derived from KFM doctrine and session design notes; live repo paths, owners, contracts, and workflow anchors NEED VERIFICATION before merge.
+notes:
+  - Current public /docs/ ownership is confirmed via .github/CODEOWNERS; narrower file ownership beyond that broad rule still needs review.
+  - Exact machine contract filename, executable policy bundle, workflow gate depth, and runtime implementation path remain NEEDS VERIFICATION on current public main.
 [/KFM_META_BLOCK_V2] -->
 
 # SSURGO to NHD Catchment Overlay Pipeline
@@ -28,21 +35,23 @@ notes: Source-bounded draft derived from KFM doctrine and session design notes; 
 Area-weighted derivation of catchment-level soil attributes from SSURGO and NHD catchments for governed hydrologic, erosion, and Story Node use.
 
 > [!IMPORTANT]
-> **Truth posture:** This document is **source-bounded** to KFM doctrine and session design notes. It is written to be repo-ready, but live paths, owners, contract locations, workflow names, and enforcement hooks **NEED VERIFICATION** before merge.
+> **Truth posture:** This document is intentionally source-bounded. It is grounded in the current public repo surface, attached KFM doctrine, and the existing checked-in draft for this lane. Exact machine contract filenames, executable policy bundles, workflow YAML coverage, and runtime entrypoints still need explicit verification before this doc should be treated as implementation proof.
 
-**Status:** draft
-**Owners:** `<owners-NEEDS-VERIFICATION>`
-**Path:** `docs/pipelines/ssurgo_to_catchment.md`
-**Repo fit:** pipeline design + operator reference for a derived, rebuildable publication surface
-**Evidence posture:** evidence-first; fail-closed on missing provenance, insufficient spatial coverage, unresolved joins, or failed validation
+**Status:** draft  
+**Owners:** `@bartytime4life` *(current public `/docs/` CODEOWNERS signal; narrower file ownership not separately verified)*  
+**Path:** `docs/pipelines/ssurgo_to_catchment.md`  
+**Repo fit:** focused child pipeline doc for a soil-to-catchment derivation lane inside KFM’s governed `docs/pipelines/` surface  
+**Evidence posture:** evidence-first; fail-closed on missing provenance, insufficient spatial coverage, geometry failure, unresolved category handling, or unapproved release state  
+**Current public-main snapshot:** this file is present on `main`; [`docs/pipelines/README.md`](README.md) names it as the focused child pipeline doc; adjacent visible public lanes include [`../../pipelines/soils/gssurgo-ks/README.md`](../../pipelines/soils/gssurgo-ks/README.md) and [`../../examples/thin_slice/hydrology/README.md`](../../examples/thin_slice/hydrology/README.md)
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
-![Surface](https://img.shields.io/badge/surface-pipeline-blue)
-![Data%20class](https://img.shields.io/badge/data_class-derived_rebuildable-6f42c1)
+![Surface](https://img.shields.io/badge/surface-pipeline%20doc-blue)
+![Data class](https://img.shields.io/badge/data_class-derived%20%2F%20rebuildable-6f42c1)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-red)
-![Verification](https://img.shields.io/badge/live_tree-NEEDS_VERIFICATION-yellow)
+![Public main](https://img.shields.io/badge/public--main-inspected-2ea043)
+![Workflow depth](https://img.shields.io/badge/workflow%20depth-unproven-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Flow](#pipeline-flow) · [Schema](#catchmentsoils-derived-record-shape) · [EvidenceRef](#evidenceref-pattern) · [Checks](#validation-and-fail-closed-gates) · [Usage](#usage-outline)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public-main snapshot](#current-public-main-snapshot) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Flow](#pipeline-flow) · [Stages](#pipeline-stages) · [Schema](#catchmentsoils-derived-record-shape) · [Evidence](#evidenceref--evidencebundle-pattern) · [Checks](#validation-and-fail-closed-gates) · [Usage](#review-first-quickstart)
 
 ---
 
@@ -50,38 +59,68 @@ Area-weighted derivation of catchment-level soil attributes from SSURGO and NHD 
 
 This pipeline produces a **catchment-level derived soil layer** by spatially overlaying:
 
-* **SSURGO** soil map units and component/horizon attributes
-* **NHD catchments** (or equivalent governed catchment polygons)
+- **SSURGO** soil map units and component/horizon attributes
+- **NHD catchments** or an equivalent governed catchment polygon surface
 
 The output is a rebuildable derived dataset that supports:
 
-* catchment cards in Story Nodes
-* hydrologic and erosion-oriented summaries
-* drill-through provenance and evidence inspection
-* downstream search, graph, and map experiences
+- catchment cards in Story Nodes
+- hydrologic and erosion-oriented summaries
+- drill-through provenance and evidence inspection
+- downstream search, graph, and map experiences
 
-The pipeline is **not** an authoritative soil source and **not** a replacement for SSURGO or NHD. It is a governed projection that must remain downstream of authoritative data and publication policy.
+The output is **not** an authoritative soil source and **not** a replacement for SSURGO or NHD. It is a governed projection that must remain downstream of authoritative data and publication policy.
 
 ---
 
 ## Repo fit
 
-**Primary path:** `docs/pipelines/ssurgo_to_catchment.md`
-**Upstream:** authoritative source acquisition, licensing/rights review, RAW/WORK/PROCESSED soil and hydro layers
-**Downstream:** catalog/triplet registration, governed API publication, Story Nodes, maps, search, graph, and analysis surfaces
-**Adjacent:**
+### Upstream anchors
 
-* `docs/pipelines/README.md`
-* `docs/architecture/TRUTH_PATH_LIFECYCLE.md`
-* `docs/architecture/TRUST_MEMBRANE.md`
-* `docs/governance/README.md`
-* `docs/standards/README.md`
-* `contracts/` *(exact contract path NEEDS VERIFICATION)*
-* `policy/` *(exact policy path NEEDS VERIFICATION)*
-* `tests/` *(validation and release proof anchors NEEDS VERIFICATION)*
+- [`README.md`](../README.md) — docs-wide documentation posture
+- [`../architecture/TRUTH_PATH_LIFECYCLE.md`](../architecture/TRUTH_PATH_LIFECYCLE.md) — truth-path law
+- [`../architecture/TRUST_MEMBRANE.md`](../architecture/TRUST_MEMBRANE.md) — public/internal boundary logic
+- [`../governance/README.md`](../governance/README.md) — review, stewardship, and release consequences
+- [`../standards/README.md`](../standards/README.md) — shared documentation and standards posture
+
+### Current verified local neighbors
+
+- [`README.md`](README.md) — directory contract for pipeline-facing docs
+- `ssurgo_to_catchment.md` — this focused child pipeline doc
+
+### Adjacent repository surfaces
+
+- [`../../pipelines/soils/gssurgo-ks/README.md`](../../pipelines/soils/gssurgo-ks/README.md) — visible public soils ingest recipe
+- [`../../examples/thin_slice/hydrology/README.md`](../../examples/thin_slice/hydrology/README.md) — public-safe hydrology-first example lane
+- [`../../schemas/contracts/v1/data/README.md`](../../schemas/contracts/v1/data/README.md) — dataset-version family boundary
+- [`../../schemas/contracts/v1/evidence/README.md`](../../schemas/contracts/v1/evidence/README.md) — evidence-bundle family boundary
+- [`../../schemas/contracts/v1/policy/README.md`](../../schemas/contracts/v1/policy/README.md) — decision-envelope family boundary
+- [`../../policy/README.md`](../../policy/README.md) — executable policy surface
+- [`../../tests/README.md`](../../tests/README.md) — repo-wide verification surface
+- [`../../tests/contracts/README.md`](../../tests/contracts/README.md) — contract-facing proof lane
 
 > [!NOTE]
-> KFM architecture law still applies here: **authoritative truth remains upstream; derived layers stay rebuildable and downstream**. Clients should consume this surface through governed publication and APIs, not by bypassing the trust membrane to raw intermediates.
+> This file explains a lane and its burden. It is not the authoritative home for executable policy, machine-enforced schemas, workflow YAML, or runtime proof.
+
+---
+
+## Current public-main snapshot
+
+The strongest current public reading is:
+
+| Surface | Current visible state | Why it matters here |
+| --- | --- | --- |
+| `docs/pipelines/ssurgo_to_catchment.md` | present | this lane is a real checked-in child doc, not a hypothetical filename |
+| `docs/pipelines/README.md` | present and names this file as a focused soil-to-catchment derivation lane | the directory contract already recognizes this doc |
+| `pipelines/soils/gssurgo-ks/README.md` | present | a public soils ingest/packaging lane already exists beside this documentation lane |
+| `examples/thin_slice/hydrology/README.md` | present | the repo already frames hydrology as the first illustrative thin slice |
+| `schemas/contracts/v1/data/dataset_version.schema.json` | present but scaffold-state | dataset-version family is visible, but field law is not yet encoded there |
+| `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | present but scaffold-state | evidence-bundle family is visible, but still placeholder-only |
+| `schemas/contracts/v1/policy/decision_envelope.schema.json` | present but scaffold-state | policy contract family is visible, but not yet enforcement-grade |
+| `.github/workflows/` | README-only on public `main` | merge-blocking validation depth for this lane cannot be claimed from checked-in YAML |
+
+> [!CAUTION]
+> Public tree presence is not the same thing as proof of enforcement. Current public scaffolds under `schemas/contracts/v1/` are useful owner signals, but they do **not** settle canonical authority or prove that this lane already has live machine validation.
 
 ---
 
@@ -89,27 +128,27 @@ The pipeline is **not** an authoritative soil source and **not** a replacement f
 
 This pipeline accepts only governed, versioned, provenance-bearing inputs.
 
-| Input                       | Role                                 |  Expected granularity | Notes                                      |
-| --------------------------- | ------------------------------------ | --------------------: | ------------------------------------------ |
-| SSURGO map units            | authoritative soil geometry          |               polygon | base spatial unit for overlay              |
-| SSURGO components           | authoritative soil composition       |          per map unit | used for weighted derivation where needed  |
-| SSURGO horizons             | authoritative depth/property detail  | per component/horizon | optional depending on chosen rollups       |
-| NHD catchments              | authoritative drainage unit geometry |               polygon | target reporting unit                      |
-| CRS metadata                | spatial normalization control        |         dataset-level | must be explicit and validated             |
-| release/version identifiers | provenance anchor                    |         dataset-level | required for EvidenceRef and publish proof |
+| Input | Role | Expected granularity | Notes |
+| --- | --- | ---: | --- |
+| SSURGO map units | authoritative soil geometry | polygon | base spatial unit for overlay |
+| SSURGO components | authoritative soil composition | per map unit | used for weighted derivation where needed |
+| SSURGO horizons | authoritative depth/property detail | per component/horizon | optional depending on chosen rollups |
+| NHD catchments | authoritative drainage unit geometry | polygon | target reporting unit |
+| CRS metadata | spatial normalization control | dataset-level | must be explicit and validated |
+| release/version identifiers | provenance anchor | dataset-level | required for EvidenceRef / EvidenceBundle resolution and publish proof |
 
 ### Expected attributes
 
 The exact field names vary by extraction and normalization strategy, but typical derived candidates include:
 
-* `hsg` or hydrologic soil group
-* `k_factor`
-* `awc`
-* `ksat`
-* `om_pct`
-* `comppct_r`
-* `MUKEY`
-* catchment identifier such as `catchment_id`, `ComID`, or equivalent
+- `hsg` or hydrologic soil group
+- `k_factor`
+- `awc`
+- `ksat`
+- `om_pct`
+- `comppct_r`
+- `MUKEY`
+- a catchment identifier such as `catchment_id`, `ComID`, or equivalent
 
 > [!WARNING]
 > Field names above are **INFERRED**, not asserted as the live KFM schema. Normalize to canonical internal names in a governed processing step rather than leaking source-specific naming downstream.
@@ -120,13 +159,13 @@ The exact field names vary by extraction and normalization strategy, but typical
 
 This pipeline excludes the following:
 
-* direct publication of raw SSURGO or raw NHD intermediate joins
-* undocumented, manual GIS edits without preserved receipts
-* irreversible enrichment that cannot be rebuilt from authoritative inputs
-* policy truth, schema truth, or governance law embedded in convenience scripts
-* client-side derivation that bypasses governed API or evidence resolution
-* unsupported inference beyond the evidence carried in authoritative source data
-* silent filling of missing soil coverage without an explicit confidence downgrade or block
+- direct publication of raw SSURGO or raw NHD intermediate joins
+- undocumented manual GIS edits without preserved receipts
+- irreversible enrichment that cannot be rebuilt from authoritative inputs
+- policy truth, schema truth, or governance law embedded in convenience scripts
+- client-side derivation that bypasses governed API or evidence resolution
+- unsupported inference beyond the evidence carried in authoritative source data
+- silent filling of missing soil coverage without an explicit confidence downgrade or block
 
 ---
 
@@ -134,16 +173,18 @@ This pipeline excludes the following:
 
 Users often reason about water, erosion, habitat, runoff, and upstream/downstream conditions at the **catchment** level, while soil truth is typically managed as **soil map units and components**. This pipeline creates a narrow, governed bridge between those units so downstream experiences can say things like:
 
-* “This catchment is dominated by hydrologic soil group C.”
-* “Mean K-factor suggests elevated erosion sensitivity.”
-* “This statement is backed by these contributing MUKEYs and this overlay method.”
+- “This catchment is dominated by hydrologic soil group C.”
+- “Mean K-factor suggests elevated erosion sensitivity.”
+- “This statement is backed by these contributing MUKEYs and this overlay method.”
 
 That bridge must remain:
 
-* **rebuildable**
-* **explainable**
-* **auditable**
-* **policy-gated**
+- **rebuildable**
+- **explainable**
+- **auditable**
+- **policy-gated**
+
+It also fits the repo’s broader **hydrology-first thin-slice** posture: place-rich, time-rich, operationally legible work that can prove contracts, receipts, and evidence drill-through before broader lane expansion.
 
 ---
 
@@ -183,19 +224,19 @@ Bring SSURGO polygons and catchment polygons into a common, validated CRS approp
 
 Recommended operator stance:
 
-* reject missing CRS metadata
-* reject incompatible or ambiguous geometry types
-* compute areas only after CRS normalization
-* preserve source identifiers throughout transformation
+- reject missing CRS metadata
+- reject incompatible or ambiguous geometry types
+- compute areas only after CRS normalization
+- preserve source identifiers throughout transformation
 
 ### 2) Harmonize SSURGO attribute derivation
 
 Where SSURGO component or horizon detail is required:
 
-* derive component-level values first
-* use `comppct_r` or equivalent component weighting
-* promote to map unit-level attributes before overlay when possible
-* preserve the set of contributing MUKEYs and weights
+- derive component-level values first
+- use `comppct_r` or equivalent component weighting
+- promote to map unit-level attributes before overlay when possible
+- preserve the set of contributing MUKEYs and weights
 
 ### 3) Spatial overlay
 
@@ -203,9 +244,9 @@ Intersect SSURGO map unit geometry with catchment geometry.
 
 For each `(catchment, map unit)` pair:
 
-* compute overlap area
-* compute share of catchment area covered by that overlap
-* retain source identifiers for provenance
+- compute overlap area
+- compute share of catchment area covered by that overlap
+- retain source identifiers for provenance
 
 ### 4) Catchment rollup
 
@@ -213,57 +254,57 @@ Produce catchment-level summaries using area weighting.
 
 Typical rollup strategy:
 
-* **continuous fields** → area-weighted mean
-* **categorical fields** → area-dominant class
-* **mixed outcomes** → explicit “mixed” label when dominance is weak or ties remain unresolved
+- **continuous fields** → area-weighted mean
+- **categorical fields** → area-dominant class
+- **mixed outcomes** → explicit `Mixed` label when dominance is weak or ties remain unresolved
 
-### 5) EvidenceRef assembly
+### 5) Evidence assembly
 
-Emit a provenance object per derived record that captures:
+Emit provenance material per derived record that captures:
 
-* authoritative inputs used
-* method summary
-* contributing source identifiers
-* quality/coverage indicators
-* release/version anchors where available
+- authoritative inputs used
+- method summary
+- contributing source identifiers
+- quality and coverage indicators
+- release/version anchors where available
 
 ### 6) Validation and publish gating
 
 Block or downgrade on:
 
-* missing provenance
-* low source coverage
-* failed geometry integrity
-* required field nulls
-* unresolved category tie without explicit handling
+- missing provenance
+- low source coverage
+- failed geometry integrity
+- required field nulls
+- unresolved category tie without explicit handling
 
 ---
 
 ## Heuristics and rollup rules
 
-These are **PROPOSED** implementation heuristics consistent with the design intent from this session. Treat as doctrine-compatible defaults pending live repo confirmation.
+These are **PROPOSED** implementation heuristics consistent with the design intent of this lane. Treat them as doctrine-compatible defaults pending live repo confirmation.
 
-| Case                             | Recommended handling                                               | Truth posture                      |
-| -------------------------------- | ------------------------------------------------------------------ | ---------------------------------- |
-| multiple components per map unit | weight component-level values by `comppct_r` before promotion      | PROPOSED                           |
-| continuous soil attributes       | area-weighted mean at catchment level                              | CONFIRMED (standard practice)      |
-| categorical soil group           | dominant class by area share                                       | CONFIRMED (common rollup approach) |
-| weak dominance                   | emit `Mixed` if top share is below threshold                       | PROPOSED                           |
-| partial catchment coverage       | carry `soil_coverage_share` and confidence downgrade               | CONFIRMED                          |
-| sliver artifacts                 | threshold/filter or dissolve tiny intersections with receipts      | PROPOSED                           |
-| seam-like discontinuity          | optional neighbor-aware smoothing as secondary analytic layer only | PROPOSED                           |
+| Case | Recommended handling | Truth posture |
+| --- | --- | --- |
+| multiple components per map unit | weight component-level values by `comppct_r` before promotion | PROPOSED |
+| continuous soil attributes | area-weighted mean at catchment level | CONFIRMED (standard practice) |
+| categorical soil group | dominant class by area share | CONFIRMED (common rollup approach) |
+| weak dominance | emit `Mixed` if top share is `< 0.40` | PROPOSED |
+| missing coverage | carry `soil_coverage_share` and downgrade confidence | CONFIRMED |
+| sliver artifacts | threshold, filter, or dissolve tiny intersections with receipts | PROPOSED |
+| seam-like discontinuity | optional neighbor-aware smoothing only as a downstream analytic layer | PROPOSED |
 
 ### Suggested thresholds
 
-| Rule                     |             Suggested value | Effect                                |
-| ------------------------ | --------------------------: | ------------------------------------- |
-| low soil coverage        |                    `< 0.15` | block or mark low confidence          |
-| weak primary category    |                    `< 0.40` | emit `Mixed`                          |
-| tiny sliver contribution | `< 0.01` of catchment share | candidate for suppression/dissolve    |
-| perfect balance tie      |   equal top category shares | emit explicit mixed / dual class note |
+| Rule | Suggested value | Effect |
+| --- | ---: | --- |
+| low soil coverage | `< 0.15` | block or mark low confidence |
+| weak primary category | `< 0.40` | emit `Mixed` |
+| tiny sliver contribution | `< 0.01` of catchment share | candidate for suppression or dissolve |
+| perfect balance tie | equal top category shares | emit explicit mixed / dual-class note |
 
 > [!CAUTION]
-> Thresholds above are **PROPOSED** defaults. They should not be treated as live KFM policy until verified in `policy/`, workflow gates, or adjacent standards docs.
+> Thresholds above are **PROPOSED** defaults. They should not be treated as live KFM policy until verified in machine-readable contract, policy, or test surfaces.
 
 ---
 
@@ -273,125 +314,164 @@ These are **PROPOSED** implementation heuristics consistent with the design inte
 
 **Purpose:** move authoritative source extracts into a deterministic, analysis-ready shape.
 
-**Inputs:** RAW or PROCESSED SSURGO extracts, RAW or PROCESSED catchments
+**Inputs:** RAW or PROCESSED SSURGO extracts, RAW or PROCESSED catchments  
 **Outputs:** normalized GeoDataFrames/tables or equivalent persisted intermediates
+
 **Required invariants:**
 
-* CRS explicit and valid
-* geometries non-empty
-* source identifiers retained
-* extraction/version metadata attached
+- CRS explicit and valid
+- geometries non-empty
+- source identifiers retained
+- extraction/version metadata attached
 
 ### Stage B — Soil attribute derivation
 
 **Purpose:** convert component/horizon detail into a stable map unit attribute surface.
 
-**Inputs:** SSURGO map units + components + optional horizons
+**Inputs:** SSURGO map units + components + optional horizons  
 **Outputs:** map unit attribute table keyed by `MUKEY` or normalized equivalent
+
 **Required invariants:**
 
-* weighting method explicit
-* no hidden field renaming
-* unit semantics preserved
+- weighting method explicit
+- no hidden field renaming
+- unit semantics preserved
 
 ### Stage C — Catchment overlay
 
 **Purpose:** intersect map units with catchments and compute overlap shares.
 
-**Inputs:** normalized map unit polygons, normalized catchment polygons
+**Inputs:** normalized map unit polygons, normalized catchment polygons  
 **Outputs:** `(catchment_id, mukey, overlap_area, area_share, geometry?)`
+
 **Required invariants:**
 
-* area computed in valid projected CRS
-* share calculation transparent
-* topology anomalies captured or rejected
+- area computed in valid projected CRS
+- share calculation transparent
+- topology anomalies captured or rejected
 
 ### Stage D — Derived record build
 
 **Purpose:** produce one derived catchment record per catchment.
 
-**Inputs:** overlay records + map unit attributes
-**Outputs:** `CatchmentSoils` rows + `EvidenceRef`
+**Inputs:** overlay records + map unit attributes  
+**Outputs:** `CatchmentSoils` rows + evidence object
+
 **Required invariants:**
 
-* provenance present
-* coverage present
-* confidence label derivable
-* contract validation pass
+- provenance present
+- coverage present
+- confidence label derivable
+- contract validation pass
 
 ### Stage E — Catalog and publish
 
 **Purpose:** register the derived layer and expose it through governed surfaces.
 
-**Inputs:** validated derived rows
+**Inputs:** validated derived rows  
 **Outputs:** catalog entry, API-serving artifact, Story Node payloads
+
 **Required invariants:**
 
-* release-scoped
-* policy-checked
-* drill-through evidence available
+- release-scoped
+- policy-checked
+- drill-through evidence available
 
 ---
 
-## Directory sketch
+## Contract and proof-object fit
 
-> [!NOTE]
-> This tree is **PROPOSED** and must be aligned to the live repo layout before merge.
+Current public repo context is strong enough to name the **families** this lane should eventually rely on, but not strong enough to claim that the exact catchment-soils file names already exist.
+
+| Concern | Current public surface | Current state | How to read it |
+| --- | --- | --- | --- |
+| derived row shape | this doc only | prose-defined | review-bearing data shape exists here first |
+| dataset version | `../../schemas/contracts/v1/data/` | scaffold visible | family exists, exact catchment-soils contract filename unresolved |
+| evidence bundle | `../../schemas/contracts/v1/evidence/evidence_bundle.schema.json` | placeholder-only | bundle family exists, but machine body is not yet populated |
+| decision envelope | `../../schemas/contracts/v1/policy/decision_envelope.schema.json` | placeholder-only | policy contract family exists, but executable gate details are not proven here |
+| contract proof lane | `../../tests/contracts/` | directory visible | stronger repo-wide proof family exists, lane-local cases not surfaced here |
+| policy proof lane | `../../tests/policy/` | directory visible | behavior verification family exists, lane-local cases not surfaced here |
+| workflow enforcement | `../../.github/workflows/` | README-only on public `main` | merge-gate depth remains unproven from checked-in YAML |
+
+> [!WARNING]
+> Do **not** convert scaffold presence into an implementation claim. Current public machine-file families are useful owner signals, but they are still insufficient proof of live enforcement for this lane.
+
+---
+
+## Current public repo context
+
+### Current verified context
 
 ```text
 docs/
   pipelines/
+    README.md
     ssurgo_to_catchment.md
 
-contracts/
-  soil/
-    catchment_soils.schema.json
+pipelines/
+  soils/
+    gssurgo-ks/
+      README.md
+
+examples/
+  thin_slice/
+    hydrology/
+      README.md
+
+schemas/
+  contracts/
+    v1/
+      data/
+        README.md
+        dataset_version.schema.json          # scaffold-state on current public main
+      evidence/
+        README.md
+        evidence_bundle.schema.json          # scaffold-state on current public main
+      policy/
+        README.md
+        decision_envelope.schema.json        # scaffold-state on current public main
 
 policy/
-  soils/
-    catchment_soils.rego
-
-scripts/
-  soils/
-    build_catchment_soils.py
+  README.md
 
 tests/
+  README.md
   contracts/
-    test_catchment_soils_contract.py
   policy/
-    test_catchment_soils_policy.py
-  integration/
-    test_ssurgo_catchment_overlay.py
-
-data/
-  raw/
-  work/
-  processed/
-  derived/
 ```
+
+### Candidate eventual owner surfaces
+
+The following are still **PROPOSED / NEEDS VERIFICATION**:
+
+- an exact machine-readable row-shape contract for `CatchmentSoils`
+- an exact lane-local execution entrypoint under `pipelines/` or `scripts/`
+- lane-specific valid/invalid examples and integration tests
+- lane-specific merge-gating workflow YAML
+- an exact public route family for `/catchments/{id}/soils`
 
 ---
 
 ## CatchmentSoils derived record shape
 
-Below is a **PROPOSED** logical shape for the derived record. The exact contract path and canonical field names **NEED VERIFICATION**.
+Below is a **PROPOSED** logical shape for the derived record. The exact machine contract filename and canonical field names still need verification.
 
-| Field                 | Type               | Meaning                                           |
-| --------------------- | ------------------ | ------------------------------------------------- |
-| `catchment_id`        | string or integer  | stable catchment identifier from the hydro source |
-| `hsg_primary`         | string             | dominant hydrologic soil group                    |
-| `hsg_share_primary`   | number             | share of catchment area held by primary class     |
-| `hsg_secondary`       | string nullable    | second-ranked soil group when useful              |
-| `hsg_share_secondary` | number nullable    | share held by secondary class                     |
-| `k_factor_mean`       | number             | area-weighted erodibility factor                  |
-| `awc_mean`            | number             | area-weighted available water capacity            |
-| `ksat_mean`           | number             | area-weighted saturated conductivity              |
-| `om_mean_pct`         | number             | area-weighted organic matter percent              |
-| `soil_coverage_share` | number             | SSURGO-covered area divided by catchment area     |
-| `confidence_flag`     | enum               | `high`, `medium`, `low`, or equivalent            |
-| `provenance_ref`      | string or JSON     | serialized EvidenceRef                            |
-| `release_id`          | string nullable    | release-scoped publication anchor                 |
-| `generated_at`        | timestamp nullable | derivation timestamp                              |
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `catchment_id` | string or integer | stable catchment identifier from the hydro source |
+| `hsg_primary` | string | dominant hydrologic soil group |
+| `hsg_share_primary` | number | share of catchment area held by primary class |
+| `hsg_secondary` | string nullable | second-ranked soil group when useful |
+| `hsg_share_secondary` | number nullable | share held by secondary class |
+| `k_factor_mean` | number | area-weighted erodibility factor |
+| `awc_mean` | number nullable | area-weighted available water capacity |
+| `ksat_mean` | number nullable | area-weighted saturated conductivity |
+| `om_mean_pct` | number nullable | area-weighted organic matter percent |
+| `soil_coverage_share` | number | SSURGO-covered area divided by catchment area |
+| `confidence_flag` | enum | `high`, `medium`, `low`, or equivalent |
+| `provenance_ref` | string or JSON | serialized evidence locator or inline evidence object |
+| `release_id` | string nullable | release-scoped publication anchor |
+| `generated_at` | timestamp nullable | derivation timestamp |
 
 ### Example JSON shape
 
@@ -414,21 +494,21 @@ Below is a **PROPOSED** logical shape for the derived record. The exact contract
 
 ---
 
-## EvidenceRef pattern
+## EvidenceRef / EvidenceBundle pattern
 
-Every published derived catchment record should expose evidence sufficient for drill-through and audit.
+Every published derived catchment record should expose enough evidence for drill-through and audit. In current KFM language, that can be a compact `EvidenceRef` that resolves to a stronger `EvidenceBundle`, or an equivalent inline evidence object for low-risk summaries.
 
 ### Minimum expected content
 
-| EvidenceRef key | Meaning                                                       |
-| --------------- | ------------------------------------------------------------- |
-| `source`        | named authoritative datasets                                  |
-| `method`        | concise derivation description                                |
-| `inputs`        | dataset families and key tables/fields                        |
-| `ops`           | ordered processing steps                                      |
-| `catchment.id`  | target catchment identifier                                   |
-| `contributors`  | contributing MUKEYs or normalized source units with shares    |
-| `qc`            | quality indicators such as coverage, category tie, confidence |
+| Key | Meaning |
+| --- | --- |
+| `source` | named authoritative datasets |
+| `method` | concise derivation description |
+| `inputs` | dataset families and key tables/fields |
+| `ops` | ordered processing steps |
+| `catchment.id` | target catchment identifier |
+| `contributors` | contributing MUKEYs or normalized source units with shares |
+| `qc` | quality indicators such as coverage, category tie, and confidence |
 
 ### Example
 
@@ -474,180 +554,27 @@ Every published derived catchment record should expose evidence sufficient for d
 
 ---
 
-## Usage outline
-
-### Quickstart operator outline
-
-```bash
-# 1) prepare normalized sources
-python scripts/soils/build_catchment_soils.py \
-  --ssurgo data/processed/ssurgo_mapunits.parquet \
-  --catchments data/processed/nhd_catchments.parquet \
-  --out data/derived/catchment_soils.parquet
-
-# 2) validate contract
-# command/path NEEDS VERIFICATION
-
-# 3) validate policy gates
-# command/path NEEDS VERIFICATION
-
-# 4) register derived artifact
-# command/path NEEDS VERIFICATION
-```
-
-### Processing logic at a glance
-
-```mermaid
-sequenceDiagram
-    participant S as SSURGO
-    participant H as Catchments
-    participant P as Pipeline
-    participant V as Validation
-    participant C as Catalog/Publish
-
-    S->>P: Map units + components + horizons
-    H->>P: Catchment polygons
-    P->>P: Normalize CRS
-    P->>P: Derive map unit attributes
-    P->>P: Intersect geometry
-    P->>P: Compute area shares
-    P->>P: Roll up per catchment
-    P->>P: Build EvidenceRef
-    P->>V: Derived records
-    V-->>P: Pass / fail
-    P->>C: Validated release-scoped artifact
-```
-
----
-
-## Reference implementation sketch
-
-This is a **PROPOSED** thin orchestration example, suitable for `scripts/` if aligned to the live repo structure.
-
-```python
-import json
-import geopandas as gpd
-import pandas as pd
-
-TARGET_CRS = 5070
-
-def weighted_mean(df: pd.DataFrame, col: str) -> float:
-    x = df[col].fillna(0.0)
-    w = df["area_share"].fillna(0.0)
-    denom = w.sum()
-    if denom == 0:
-        return float("nan")
-    return float((x * w).sum() / denom)
-
-def build_evidence(catchment_id, contributors, coverage, confidence):
-    return json.dumps({
-        "source": "USDA-NRCS SSURGO + USGS NHD catchments",
-        "method": "area-weighted overlay",
-        "catchment": {"id": catchment_id},
-        "contributors": contributors,
-        "qc": {
-            "soil_coverage_share": coverage,
-            "confidence_flag": confidence
-        }
-    })
-
-def dominant_class(df: pd.DataFrame, col: str) -> tuple[str, float]:
-    grouped = (
-        df.groupby(col, dropna=True)["area_share"]
-        .sum()
-        .sort_values(ascending=False)
-    )
-    if grouped.empty:
-        return ("UNKNOWN", 0.0)
-    label = grouped.index[0]
-    share = float(grouped.iloc[0])
-    if share < 0.40:
-        return ("Mixed", share)
-    return (str(label), share)
-
-def main(ssurgo_path: str, catchments_path: str, out_path: str) -> None:
-    ssurgo = gpd.read_parquet(ssurgo_path).to_crs(TARGET_CRS)
-    catchments = gpd.read_parquet(catchments_path).to_crs(TARGET_CRS)
-
-    overlay = gpd.overlay(ssurgo, catchments, how="intersection")
-    overlay["overlap_area"] = overlay.geometry.area
-
-    catchment_area = catchments[["catchment_id", "geometry"]].copy()
-    catchment_area["catchment_area"] = catchment_area.geometry.area
-    catchment_area = catchment_area.drop(columns=["geometry"])
-
-    overlay = overlay.merge(catchment_area, on="catchment_id", how="left")
-    overlay["area_share"] = overlay["overlap_area"] / overlay["catchment_area"]
-
-    rows = []
-    for catchment_id, df in overlay.groupby("catchment_id"):
-        hsg_primary, hsg_share = dominant_class(df, "hsg")
-        coverage = float(df["area_share"].sum())
-
-        confidence = "high"
-        if coverage < 0.15:
-            confidence = "low"
-        elif coverage < 0.75:
-            confidence = "medium"
-
-        contributors = [
-            {"mukey": str(mukey), "area_share": float(share)}
-            for mukey, share in (
-                df.groupby("mukey")["area_share"].sum().sort_values(ascending=False).items()
-            )
-        ]
-
-        rows.append({
-            "catchment_id": catchment_id,
-            "hsg_primary": hsg_primary,
-            "hsg_share_primary": hsg_share,
-            "k_factor_mean": weighted_mean(df, "k_factor"),
-            "awc_mean": weighted_mean(df, "awc"),
-            "ksat_mean": weighted_mean(df, "ksat"),
-            "om_mean_pct": weighted_mean(df, "om_pct"),
-            "soil_coverage_share": coverage,
-            "confidence_flag": confidence,
-            "provenance_ref": build_evidence(
-                catchment_id=catchment_id,
-                contributors=contributors,
-                coverage=coverage,
-                confidence=confidence,
-            ),
-        })
-
-    pd.DataFrame(rows).to_parquet(out_path, index=False)
-
-if __name__ == "__main__":
-    # argument parsing omitted in this sketch
-    pass
-```
-
-> [!WARNING]
-> This code is an implementation sketch, not a claim that these exact paths, field names, or package choices already exist in the live repo.
-
----
-
 ## Validation and fail-closed gates
 
 This pipeline should fail closed when trust-bearing conditions are not met.
 
 ### Minimum gates
 
-| Gate             | Condition                                         | Action                                               |
-| ---------------- | ------------------------------------------------- | ---------------------------------------------------- |
-| provenance gate  | `provenance_ref` missing or malformed             | block                                                |
-| coverage gate    | `soil_coverage_share` below threshold             | block or publish with explicit low-confidence policy |
-| schema gate      | required fields missing or wrong type             | block                                                |
-| geometry gate    | CRS missing, invalid geometry, or area failure    | block                                                |
-| policy gate      | unresolved rights/sensitivity or release mismatch | block                                                |
-| consistency gate | area shares outside expected range                | block                                                |
+| Gate | Condition | Action |
+| --- | --- | --- |
+| provenance gate | `provenance_ref` missing or malformed | block |
+| coverage gate | `soil_coverage_share` below threshold | block or publish with explicit low-confidence policy |
+| schema gate | required fields missing or wrong type | block |
+| geometry gate | CRS missing, invalid geometry, or area failure | block |
+| policy gate | unresolved rights/sensitivity or release mismatch | block |
+| consistency gate | area shares outside expected range | block |
 
 ### Sanity checks
 
-* `0 <= soil_coverage_share <= 1`
-* per catchment, total `area_share` should approximately equal `soil_coverage_share`
-* weighted numeric outputs should remain in plausible physical ranges
-* category ties should be explicit, never silently resolved by unstable ordering
+- `0 <= soil_coverage_share <= 1`
+- per catchment, total `area_share` should approximately equal `soil_coverage_share`
+- weighted numeric outputs should remain in plausible physical ranges
+- category ties should be explicit, never silently resolved by unstable ordering
 
 ### Example policy sketch
 
@@ -672,71 +599,10 @@ deny[msg] {
 
 ---
 
-## Contract sketch
-
-Below is a **PROPOSED** JSON Schema shape for the derived surface.
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "CatchmentSoils",
-  "type": "object",
-  "required": [
-    "catchment_id",
-    "hsg_primary",
-    "k_factor_mean",
-    "soil_coverage_share",
-    "provenance_ref"
-  ],
-  "properties": {
-    "catchment_id": {
-      "type": ["string", "integer"]
-    },
-    "hsg_primary": {
-      "type": "string"
-    },
-    "hsg_share_primary": {
-      "type": "number"
-    },
-    "hsg_secondary": {
-      "type": ["string", "null"]
-    },
-    "hsg_share_secondary": {
-      "type": ["number", "null"]
-    },
-    "k_factor_mean": {
-      "type": "number"
-    },
-    "awc_mean": {
-      "type": ["number", "null"]
-    },
-    "ksat_mean": {
-      "type": ["number", "null"]
-    },
-    "om_mean_pct": {
-      "type": ["number", "null"]
-    },
-    "soil_coverage_share": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1
-    },
-    "confidence_flag": {
-      "type": "string"
-    },
-    "provenance_ref": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false
-}
-```
-
----
-
 ## API and publication posture
 
-This derived layer should be published only through a governed surface.
+> [!NOTE]
+> Exact public route families remain unverified on current public `main`. Treat the pattern below as an **illustrative publication shape**, not as current route inventory.
 
 ### Preferred access pattern
 
@@ -766,10 +632,10 @@ GET /catchments/{id}/soils
 
 ### Publication rules
 
-* derived responses must remain release-scoped
-* evidence must be queryable or embedded
-* no bypass to raw overlay tables from public client surfaces
-* corrections, withdrawals, or superseding releases must be visible
+- derived responses must remain release-scoped
+- evidence must be queryable or embedded
+- no bypass to raw overlay tables from public client surfaces
+- corrections, withdrawals, or superseding releases must be visible
 
 ---
 
@@ -777,19 +643,19 @@ GET /catchments/{id}/soils
 
 A minimal Story Node experience for this layer should present:
 
-* primary soil group summary
-* key numeric rollups
-* confidence badge
-* “View evidence” expansion showing contributors and method
-* drill-through links to source units where policy allows
+- primary soil group summary
+- key numeric rollups
+- confidence badge
+- a “View evidence” expansion showing contributors and method
+- drill-through links to source units where policy allows
 
 ### Example card behavior
 
-| Element         | Example                               |
-| --------------- | ------------------------------------- |
-| headline        | `Hydrologic soil group: C`            |
-| support metric  | `K-factor mean: 0.34`                 |
-| quality line    | `Coverage: 92% · Confidence: high`    |
+| Element | Example |
+| --- | --- |
+| headline | `Hydrologic soil group: C` |
+| support metric | `K-factor mean: 0.34` |
+| quality line | `Coverage: 92% · Confidence: high` |
 | evidence toggle | contributors, method, release context |
 
 > [!NOTE]
@@ -797,55 +663,175 @@ A minimal Story Node experience for this layer should present:
 
 ---
 
-## QA checklist
+## Review-first quickstart
 
-* [ ] live owners verified
-* [ ] final path verified
-* [ ] contract path verified
-* [ ] policy path verified
-* [ ] field names aligned to actual normalized schema
-* [ ] example commands aligned to live scripts/tooling
-* [ ] thresholds approved or replaced with actual policy
-* [ ] at least one integration test present
-* [ ] release proof includes provenance and policy pass
-* [ ] Story Node drill-through verified end-to-end
+### 1) Re-read the current public directory contract
+
+```bash
+sed -n '1,240p' docs/pipelines/README.md
+sed -n '1,240p' docs/architecture/TRUST_MEMBRANE.md
+sed -n '1,240p' docs/architecture/TRUTH_PATH_LIFECYCLE.md
+```
+
+### 2) Inspect adjacent visible public lanes
+
+```bash
+sed -n '1,240p' pipelines/soils/gssurgo-ks/README.md
+sed -n '1,240p' examples/thin_slice/hydrology/README.md
+sed -n '1,220p' schemas/contracts/v1/data/README.md
+sed -n '1,220p' schemas/contracts/v1/evidence/README.md
+sed -n '1,220p' schemas/contracts/v1/policy/README.md
+```
+
+### 3) Widen this lane in the right order
+
+1. confirm the source descriptor and dataset-version story
+2. confirm the evidence-bundle and decision-envelope owner surfaces
+3. add valid/invalid examples and negative-path checks
+4. add contract, policy, and integration proof
+5. only then document or add execution entrypoints
 
 ---
 
-## FAQ
+## Illustrative execution skeleton
 
-### Is this authoritative soil truth?
+> [!WARNING]
+> The sketch below is **illustrative only**. It is not proof that these exact field names, helper functions, or package choices already exist on current public `main`.
 
-No. SSURGO remains authoritative for soil truth. This is a catchment-oriented derived layer.
+```python
+import json
+import geopandas as gpd
+import pandas as pd
 
-### Why area-weighted summaries?
+TARGET_CRS = 5070  # illustrative projected CRS for area calculations
 
-Because the target reporting unit is the catchment, while the soil source unit is typically a map unit polygon. Area weighting provides a transparent bridge between those units.
+def weighted_mean(df: pd.DataFrame, col: str) -> float:
+    x = df[col].fillna(0.0)
+    w = df["area_share"].fillna(0.0)
+    denom = w.sum()
+    if denom == 0:
+        return float("nan")
+    return float((x * w).sum() / denom)
 
-### Why carry `soil_coverage_share`?
+def dominant_class(df: pd.DataFrame, col: str) -> tuple[str, float]:
+    grouped = (
+        df.groupby(col, dropna=True)["area_share"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+    if grouped.empty:
+        return ("UNKNOWN", 0.0)
+    label = grouped.index[0]
+    share = float(grouped.iloc[0])
+    if share < 0.40:
+        return ("Mixed", share)
+    return (str(label), share)
 
-Because some catchments may only partially overlap available soil geometry, and downstream users need to see the quality of the derivation.
+def build_evidence(catchment_id, contributors, coverage, confidence):
+    return json.dumps({
+        "source": "USDA-NRCS SSURGO + USGS NHD catchments",
+        "method": "area-weighted overlay",
+        "catchment": {"id": catchment_id},
+        "contributors": contributors,
+        "qc": {
+            "soil_coverage_share": coverage,
+            "confidence_flag": confidence
+        }
+    })
 
-### Why embed or expose EvidenceRef?
+def derive_catchment_soils(ssurgo_path: str, catchments_path: str, out_path: str) -> None:
+    ssurgo = gpd.read_parquet(ssurgo_path).to_crs(TARGET_CRS)
+    catchments = gpd.read_parquet(catchments_path).to_crs(TARGET_CRS)
 
-Because KFM publication is evidence-first. Derived claims must be inspectable and auditable, not opaque.
+    overlay = gpd.overlay(ssurgo, catchments, how="intersection")
+    overlay["overlap_area"] = overlay.geometry.area
 
-### Can this layer be smoothed or enriched further?
+    catchment_area = catchments[["catchment_id", "geometry"]].copy()
+    catchment_area["catchment_area"] = catchment_area.geometry.area
+    catchment_area = catchment_area.drop(columns=["geometry"])
 
-Yes, but only as additional downstream derived layers. Smoothing should never overwrite the base derived truth without clear lineage.
+    overlay = overlay.merge(catchment_area, on="catchment_id", how="left")
+    overlay["area_share"] = overlay["overlap_area"] / overlay["catchment_area"]
+
+    rows = []
+    for catchment_id, df in overlay.groupby("catchment_id"):
+        hsg_primary, hsg_share = dominant_class(df, "hsg")
+        coverage = float(df["area_share"].sum())
+
+        if coverage < 0.15:
+            confidence = "low"
+        elif coverage < 0.75:
+            confidence = "medium"
+        else:
+            confidence = "high"
+
+        contributors = [
+            {"mukey": str(mukey), "area_share": float(share)}
+            for mukey, share in (
+                df.groupby("mukey")["area_share"].sum().sort_values(ascending=False).items()
+            )
+        ]
+
+        rows.append({
+            "catchment_id": catchment_id,
+            "hsg_primary": hsg_primary,
+            "hsg_share_primary": hsg_share,
+            "k_factor_mean": weighted_mean(df, "k_factor"),
+            "awc_mean": weighted_mean(df, "awc"),
+            "ksat_mean": weighted_mean(df, "ksat"),
+            "om_mean_pct": weighted_mean(df, "om_pct"),
+            "soil_coverage_share": coverage,
+            "confidence_flag": confidence,
+            "provenance_ref": build_evidence(
+                catchment_id=catchment_id,
+                contributors=contributors,
+                coverage=coverage,
+                confidence=confidence,
+            ),
+        })
+
+    pd.DataFrame(rows).to_parquet(out_path, index=False)
+```
+
+### Processing logic at a glance
+
+```mermaid
+sequenceDiagram
+    participant S as SSURGO
+    participant H as Catchments
+    participant P as Pipeline
+    participant V as Validation
+    participant C as Catalog/Publish
+
+    S->>P: Map units + components + horizons
+    H->>P: Catchment polygons
+    P->>P: Normalize CRS
+    P->>P: Derive map unit attributes
+    P->>P: Intersect geometry
+    P->>P: Compute area shares
+    P->>P: Roll up per catchment
+    P->>P: Build EvidenceRef / EvidenceBundle locator
+    P->>V: Derived records
+    V-->>P: Pass / fail
+    P->>C: Validated, release-scoped artifact
+```
 
 ---
 
 ## Known uncertainties
 
-| Item                                        | Status             |
-| ------------------------------------------- | ------------------ |
-| exact repo script path                      | NEEDS VERIFICATION |
-| exact contract file path                    | NEEDS VERIFICATION |
-| exact policy bundle path                    | NEEDS VERIFICATION |
-| exact API path and response envelope        | INFERRED           |
+| Item | Status |
+| --- | --- |
+| exact creation date for this doc | NEEDS VERIFICATION |
+| canonical `doc_id` value | NEEDS VERIFICATION |
+| exact machine contract filename for `CatchmentSoils` | NEEDS VERIFICATION |
+| exact policy bundle path and live deny logic for this lane | NEEDS VERIFICATION |
+| exact execution entrypoint under `pipelines/` or `scripts/` | NEEDS VERIFICATION |
+| exact API path and response envelope | INFERRED |
 | exact field names in normalized soil tables | NEEDS VERIFICATION |
-| exact thresholds used in CI/runtime         | NEEDS VERIFICATION |
+| exact thresholds used in CI/runtime | NEEDS VERIFICATION |
+| public workflow YAML coverage for this lane | NEEDS VERIFICATION |
+| final schema-home authority between root `contracts/` and `schemas/contracts/v1/` | NEEDS VERIFICATION |
 
 ---
 
@@ -853,11 +839,12 @@ Yes, but only as additional downstream derived layers. Smoothing should never ov
 
 When revising this document:
 
-1. preserve the trust membrane language
-2. do not upgrade proposed thresholds to confirmed policy without evidence
-3. keep authoritative vs. derived distinctions explicit
-4. maintain drill-through provenance requirements
-5. verify adjacent links, owners, and enforcement hooks against the live repo before publication
+1. preserve the trust-membrane language
+2. keep authoritative-versus-derived distinctions explicit
+3. do not upgrade proposed thresholds to confirmed policy without machine-readable evidence
+4. do not upgrade scaffold-state schema families to live enforcement without proof
+5. keep drill-through provenance requirements intact
+6. verify relative links, owner signals, and workflow depth against the live repo before publication
 
 ---
 
@@ -868,29 +855,37 @@ When revising this document:
 
 ### Suggested canonical names
 
-* `catchment_id`
-* `mukey`
-* `hsg`
-* `k_factor`
-* `awc`
-* `ksat`
-* `om_pct`
-* `soil_coverage_share`
-* `provenance_ref`
+- `catchment_id`
+- `mukey`
+- `hsg`
+- `k_factor`
+- `awc`
+- `ksat`
+- `om_pct`
+- `soil_coverage_share`
+- `provenance_ref`
 
 ### Recommended confidence derivation
 
-* **high:** coverage ≥ 0.75 and no major tie/anomaly
-* **medium:** coverage between 0.15 and 0.75 or mild ambiguity
-* **low:** coverage < 0.15 or unresolved quality issue
+- **high:** coverage ≥ 0.75 and no major tie or anomaly
+- **medium:** coverage between 0.15 and 0.75 or mild ambiguity
+- **low:** coverage < 0.15 or unresolved quality issue
 
 ### Minimal test cases
 
-* single map unit fully covering one catchment
-* multiple map units with known weighted means
-* category tie producing `Mixed`
-* partial catchment overlap lowering confidence
-* malformed geometry causing fail-closed block
+- single map unit fully covering one catchment
+- multiple map units with known weighted means
+- category tie producing `Mixed`
+- partial catchment overlap lowering confidence
+- malformed geometry causing fail-closed block
+
+### Safe reviewer questions
+
+- Is the doc naming a real checked-in surface or a future one?
+- Does any example command imply a runtime that is not actually verified?
+- Is the evidence drill-through story still explicit?
+- Are proposed thresholds still clearly marked as proposed?
+- Are schema-side scaffold files being described honestly as placeholder-state?
 
 </details>
 
