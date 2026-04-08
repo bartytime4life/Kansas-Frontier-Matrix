@@ -4,401 +4,594 @@ title: pipelines
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life; NEEDS VERIFICATION for narrower /pipelines/ ownership
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public
-related: [../README.md, ../.github/README.md, ../contracts/README.md, ../data/README.md, ../policy/README.md, ../schemas/README.md, ../tests/README.md, ./soils/gssurgo-ks/README.md, ./wbd-huc12-watcher/README.md]
-tags: [kfm, pipelines]
-notes: [Current public-main evidence confirms the directory and two child lane READMEs; narrower ownership, runnable workflow coverage, and internal file inventory still need verification.]
+owners: @bartytime4life
+created: NEEDS-VERIFICATION
+updated: NEEDS-VERIFICATION
+policy_label: NEEDS-VERIFICATION
+related: ["../README.md", "../architecture/", "../governance/", "../standards/", "../runbooks/", "./ssurgo_to_catchment.md", "../../pipelines/README.md", "../../pipelines/soils/gssurgo-ks/README.md", "../../pipelines/wbd-huc12-watcher/README.md", "../../.github/README.md", "../../apps/", "../../packages/", "../../contracts/", "../../schemas/", "../../policy/", "../../data/", "../../tests/", "../../tools/", "../../scripts/", "../../examples/thin_slice/README.md", "../../examples/thin_slice/hydrology/README.md", "../../.github/workflows/"]
+tags: [kfm, pipelines, docs]
+notes: ["Grounded in current public repo surfaces plus March-April 2026 KFM doctrine.", "Current public docs/pipelines/ tree verifies README.md plus ssurgo_to_catchment.md.", "Current public repo root also verifies a sibling /pipelines/ execution surface with README.md plus visible soils/gssurgo-ks and wbd-huc12-watcher child lane READMEs.", "doc_id, created, updated, and policy_label need direct steward verification before merge."]
 [/KFM_META_BLOCK_V2] -->
 
 # pipelines
 
-Governed pipeline lanes for source intake, normalization, validation, packaging, and review-ready promotion work.
+Governed pipeline documentation for KFM: what a pipeline does, what it emits, what gates it must pass, and what it must never quietly imply.
 
 > [!IMPORTANT]
-> `pipelines/` is an execution surface, not a shortcut around KFM governance.
-> Work here should inherit contracts, policy, tests, receipts, catalog closure, and correction behavior rather than bypass them.
+> This directory is part of KFM's **governed documentation surface**, not a loose notes folder. Pipeline docs here should strengthen inspectability across source intake, validation, promotion, publication, correction, and rollback.
 
-## Status snapshot
+> [!NOTE]
+> This README is intentionally evidence-bounded. It distinguishes between:
+> - **CONFIRMED** current public repo structure
+> - **INFERRED** support-corpus, historical, or doctrine-consistent references not reverified in the current public tree
+> - **PROPOSED** structure or conventions that fit KFM doctrine
+> - **UNKNOWN / NEEDS VERIFICATION** implementation details not proven in the current visible repo state
 
-| Field | Value |
-|---|---|
-| **Status** | `experimental` |
-| **Owners** | `@bartytime4life` *(global fallback owner confirmed; narrower `/pipelines/` ownership needs verification)* |
-| **Scope** | lane-level pipeline and watcher surfaces |
-| **Current public-main signal** | `README-only directory index + 2 visible child lane READMEs` |
-| **Trust posture** | **CONFIRMED** current public directory presence; **INFERRED** lane intent from adjacent docs; **PROPOSED** richer starter tree where not directly surfaced |
+**Status:** experimental  
+**Owners:** `@bartytime4life`  
+**Path:** `docs/pipelines/README.md`  
+**Repo role:** directory contract for human-readable pipeline specs, runbooks, artifact expectations, and boundary guidance that sit beside the root `/pipelines/` execution surface
 
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![Scope](https://img.shields.io/badge/scope-pipelines-blue)
-![Repo](https://img.shields.io/badge/repo-public--main-2ea44f)
-![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
-![Primary sequence](https://img.shields.io/badge/sequence-contract--first%20%E2%86%92%20hydrology--first-informational)
+![status](https://img.shields.io/badge/status-experimental-orange)
+![docs](https://img.shields.io/badge/docs-governed-blue)
+![scope](https://img.shields.io/badge/scope-pipeline_docs-informational)
+![execution-neighbor](https://img.shields.io/badge/execution%20neighbor-%2Fpipelines%2F-confirmed-2ea44f)
+![verification](https://img.shields.io/badge/verification-required-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Current lane map](#current-lane-map) · [Task list](#task-list) · [FAQ](#faq)
+**Quick jumps:** [Scope](#scope) Â· [Repo fit](#repo-fit) Â· [Accepted inputs](#accepted-inputs) Â· [Exclusions](#exclusions) Â· [Directory tree](#directory-tree) Â· [Quickstart](#quickstart) Â· [Usage](#usage) Â· [Diagram](#diagram) Â· [Reference tables](#reference-tables) Â· [Task list](#task-list--definition-of-done) Â· [FAQ](#faq) Â· [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-`/pipelines/` is the repository surface for **lane-specific execution work**: fetch, normalize, validate, package, diff, emit receipts, and prepare release-bearing artifacts for governed review and publication.
+This directory is for **pipeline-facing documentation** inside the `docs/` governed surface.
 
-In KFM terms, pipeline work is downstream of doctrine and upstream of outward publication:
+Use it for material such as:
 
-- downstream of **contracts**, **schemas**, **policy bundles**, **tests**, and **runbooks**
-- upstream of **catalog closure**, **review**, **release manifests**, **EvidenceBundle resolution**, and public-safe delivery
+- pipeline specifications
+- operator runbooks or runbook pointers tied to one pipeline or family
+- source onboarding notes tied to one pipeline or family
+- validation and promotion criteria
+- artifact and receipt expectations
+- replay, rollback, and correction guidance
+- human-readable links between source intake, governed processing, catalog closure, and published outputs
 
-This directory should favor the **smallest artifact-bearing move** over speculative breadth. A good lane proves one real slice end to end. A weak lane promises five future systems and proves none.
+The emphasis is not "how to improvise a script." The emphasis is **how a pipeline participates in KFM's governed truth path** and what must stay visible under review.
+
+[Back to top](#pipelines)
 
 ## Repo fit
 
-**Path:** `pipelines/README.md`
+**Path:** `docs/pipelines/README.md`
 
-| Direction | Relationship | Paths |
-|---|---|---|
-| **Upstream doctrine & guardrails** | Defines what pipeline work must obey | [`../README.md`](../README.md), [`../.github/README.md`](../.github/README.md), [`../contracts/README.md`](../contracts/README.md), [`../policy/README.md`](../policy/README.md), [`../schemas/README.md`](../schemas/README.md), [`../tests/README.md`](../tests/README.md) |
-| **Sibling execution context** | Adjacent implementation surfaces pipelines usually depend on | [`../data/README.md`](../data/README.md), [`../packages/README.md`](../packages/README.md), [`../infra/README.md`](../infra/README.md), [`../docs/`](../docs/) |
-| **Downstream lane surfaces** | Current visible child pipeline lanes | [`./soils/gssurgo-ks/README.md`](./soils/gssurgo-ks/README.md), [`./wbd-huc12-watcher/README.md`](./wbd-huc12-watcher/README.md) |
+### Upstream anchors
 
-### Operating reading rule
+- [`../README.md`](../README.md) â docs-wide contract and documentation posture
+- [`../architecture/`](../architecture/) â architectural doctrine and system placement
+- [`../governance/`](../governance/) â policy, stewardship, review, and release controls
+- [`../standards/`](../standards/) â shared conventions and document rules
+- [`../runbooks/`](../runbooks/) â operator procedure home when guidance becomes lifecycle-operational
 
-- **CONFIRMED**: paths and files directly visible on current public `main`
-- **INFERRED**: architectural intent strongly implied by adjacent repo docs or lane READMEs
-- **PROPOSED**: starter structure, commands, or graduation shape not yet surfaced as checked-in reality
-- **UNKNOWN / NEEDS VERIFICATION**: workflow coverage, deployment wiring, hidden branch-local files, runtime maturity, or narrower ownership not directly visible here
+### Current verified local neighbors
 
-## Inputs
-
-The following belong here when they are lane-local and execution-oriented:
-
-- lane README files that define **purpose, source basis, outputs, and constraints**
-- deterministic fetch / transform / validate / emit scripts
-- watcher configs, recipe files, and lightweight orchestration shims
-- lane-local fixtures, thresholds, and smoke tests
-- receipt emitters, diff generators, and catalog-closure helpers
-- stage-oriented artifact helpers for `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, or `CATALOG` transitions
-- pipeline-local docs that explain **how a lane proves trust**, not just how it runs
-
-### Typical good contents
-
-| Kind | Why it belongs here |
+| Path | Current role |
 |---|---|
-| `recipe.sh`, `Makefile`, `watcher.yaml`, `validate.py` | execution and validation are pipeline concerns |
-| lane-local `schema/` or fixtures | acceptable when scoped to that lane’s emitted artifacts |
-| `run_receipt`, diff, or ingest helper code | pipeline evidence objects are part of lane proof |
-| lane smoke tests | they prove the slice, not just describe it |
+| [`./README.md`](./README.md) | Directory contract and index for pipeline docs |
+| [`./ssurgo_to_catchment.md`](./ssurgo_to_catchment.md) | Draft child pipeline doc for a focused soil-to-catchment derivation lane |
+
+### Surface split: `docs/pipelines/` vs `/pipelines/`
+
+| Surface | Current public role | Current visible public-main state |
+|---|---|---|
+| [`docs/pipelines/`](./) | human-readable pipeline contract, review posture, and boundary guidance | `README.md` + `ssurgo_to_catchment.md` |
+| [`../../pipelines/`](../../pipelines/) | lane-local execution surface for fetch / transform / validate / emit work | `README.md` + `soils/gssurgo-ks/README.md` + `wbd-huc12-watcher/README.md` |
+| [`../../.github/README.md`](../../.github/README.md) | repo gatehouse for review, disclosure, workflow documentation, and watcher/control-plane scaffolding | `.github/workflows/` and `.github/watchers/` are README-only on public `main` |
+
+> [!IMPORTANT]
+> These surfaces are related but **not interchangeable**. `docs/pipelines/` explains burden, boundaries, and review. Root `/pipelines/` is where lane-local execution work belongs when it becomes more than documentation.
+
+### Adjacent repository surfaces
+
+- [`../../pipelines/README.md`](../../pipelines/README.md) â execution-family index for lane-local pipeline and watcher work
+- [`../../pipelines/soils/gssurgo-ks/README.md`](../../pipelines/soils/gssurgo-ks/README.md) â current visible soils execution lane
+- [`../../pipelines/wbd-huc12-watcher/README.md`](../../pipelines/wbd-huc12-watcher/README.md) â current visible watcher execution lane
+- [`../../.github/README.md`](../../.github/README.md) â repo-level gatehouse and workflow/watcher boundary guidance
+- [`../../apps/`](../../apps/) â runnable user-facing or operator-facing app surfaces
+- [`../../packages/`](../../packages/) â reusable implementation modules and business-law surfaces
+- [`../../contracts/`](../../contracts/) â machine-readable contract surfaces and interface expectations
+- [`../../schemas/`](../../schemas/) â supporting schema surface; do not let it fork contract law
+- [`../../policy/`](../../policy/) â governed policy logic and decision posture
+- [`../../data/`](../../data/) â lifecycle zones, catalog artifacts, and publish-facing outputs
+- [`../../tests/`](../../tests/) â verification, negative paths, release/correction drills
+- [`../../tools/`](../../tools/) â validators, diff/probe tooling, and support utilities
+- [`../../scripts/`](../../scripts/) â repeatable repo-local execution entrypoints
+- [`../../examples/thin_slice/README.md`](../../examples/thin_slice/README.md) â public-safe, non-authoritative thin-slice examples
+- [`../../examples/thin_slice/hydrology/README.md`](../../examples/thin_slice/hydrology/README.md) â current hydrology example lane
+- [`../../.github/workflows/`](../../.github/workflows/) â CI/CD workflow documentation surface
+
+### What this README is for
+
+This README defines the **directory contract** for pipeline docs:
+
+- what belongs here
+- what should stay elsewhere
+- how to describe gates, outputs, and failure states
+- how to keep pipeline docs useful without overstating mounted implementation
+
+### What it is not
+
+This README is **not** the authoritative source for:
+
+- executable policy
+- machine-readable schemas
+- CI enforcement
+- runtime topology
+- actual deployment state
+- inferred implementation paths not visible in the active repo surface
+
+Link to those surfaces. Do not duplicate them casually.
+
+[Back to top](#pipelines)
+
+## Accepted inputs
+
+Belongs here when it is a **human-readable** pipeline-facing document, such as:
+
+- a pipeline family README
+- a focused child pipeline spec for one transform or derivation lane
+- an ingestion runbook or runbook pointer
+- an artifact guide for vectors, rasters, tiles, catalogs, receipts, or provenance bundles
+- a replay / rollback / supersession note
+- a review checklist for publish readiness
+- a contributor guide for adding or revising one governed pipeline lane
+
+Typical source material for docs in this directory includes:
+
+- implementation notes in [`../../packages/`](../../packages/) or [`../../apps/`](../../apps/)
+- lane-local execution intent in [`../../pipelines/`](../../pipelines/)
+- machine-readable contract references in [`../../contracts/`](../../contracts/)
+- policy rules in [`../../policy/`](../../policy/)
+- test expectations in [`../../tests/`](../../tests/)
+- lifecycle and artifact obligations in [`../../data/`](../../data/)
+- doctrinal guidance from `docs/architecture/`, `docs/governance/`, and related KFM manuals
 
 ## Exclusions
 
-The following do **not** belong here as their canonical home:
+Does **not** belong here:
 
-| Does **not** belong here | Canonical home instead |
-|---|---|
-| repository-wide contract families | [`../contracts/`](../contracts/) |
-| repository-wide schema registries | [`../schemas/`](../schemas/) |
-| shared policy bundles / reason registries / obligation registries | [`../policy/`](../policy/) |
-| published artifacts treated as canonical outputs | [`../data/`](../data/) and governed release/catalog surfaces |
-| shell UI / public route behavior | `../apps/`, `../docs/`, and UI doctrine-bearing docs |
-| secrets, local credentials, ad hoc notebooks, or one-off operator scratch files | not in-repo, or lane-specific ignored local workspace |
-| speculative runtime claims not backed by checked-in evidence | nowhere until verified |
-
-> [!NOTE]
-> A pipeline may **reference** contracts, schemas, policy, and release artifacts, but it should not quietly become their sovereign home unless the repository deliberately chooses that boundary.
-
-## Current lane map
-
-### CONFIRMED on current public `main`
-
-| Lane | Current visible state | Reading posture |
+| Does not belong here | Put it here instead | Why |
 |---|---|---|
-| [`soils/gssurgo-ks/`](./soils/gssurgo-ks/) | README present | Lane intent is visible; richer internal tree remains **PROPOSED** unless surfaced in-branch |
-| [`wbd-huc12-watcher/`](./wbd-huc12-watcher/) | README present | Watcher intent is visible; richer internal tree remains **PROPOSED** unless surfaced in-branch |
-| `pipelines/README.md` | directory-level README path | Should serve as the index and reading guide for the lane family |
+| Lane-local execution code, fetch scripts, watcher configs, or emit helpers | `../../pipelines/` | The public repo now has a dedicated execution-family surface for lane work |
+| Shared runtime or reusable implementation code | `../../packages/` or `../../apps/` | Code should live with its owning module or runtime |
+| Machine-readable schemas | `../../contracts/` and related canonical schema surface(s) | This directory documents schemas; it should not fork contract law |
+| Executable policy bundles and policy fixtures | `../../policy/` | Policy must stay reviewable and testable in its owning layer |
+| Canonical lifecycle artifacts | `../../data/` | Docs are not the authoritative artifact store |
+| Validation harnesses, fixtures, and regression suites | `../../tests/` | Verification needs its own governed surface |
+| One-off helper scripts | `../../scripts/` or `../../tools/` | Operational code should not hide in docs |
+| Illustrative sample payloads, walkthrough packs, or public-safe thin-slice explainer material | `../../examples/thin_slice/` | Examples are for explanation, not for silently becoming contract or release truth |
+| Claims about live runtime or deployment state without proof | mark as `UNKNOWN` / `NEEDS VERIFICATION` | KFM prefers explicit incompleteness over persuasive overclaiming |
 
-### Lane-specific notes
-
-| Lane | What it appears to be for | Current caution |
-|---|---|---|
-| `soils/gssurgo-ks` | Kansas gSSURGO / soils ingest-and-package lane | Do not assume proposed helper files or emitted artifacts are already checked in |
-| `wbd-huc12-watcher` | emit-only watcher lane around HUC-12 change detection / review flow | Do not assume active workflow YAML or runtime scheduler coverage from README prose alone |
+[Back to top](#pipelines)
 
 ## Directory tree
 
-### Current public-main snapshot
+### Current verified documentation tree
 
 ```text
-pipelines/
-├── README.md
-├── soils/
-│   └── gssurgo-ks/
-│       └── README.md
-└── wbd-huc12-watcher/
-    └── README.md
+docs/
+âââ pipelines/
+    âââ README.md
+    âââ ssurgo_to_catchment.md
 ```
 
-### PROPOSED graduation shape for a richer lane family
+The current public documentation lane is small but not empty: it contains this directory contract plus one sibling draft child doc.
+
+### Current verified execution neighbor
 
 ```text
 pipelines/
-├── README.md
-├── soils/
-│   └── gssurgo-ks/
-│       ├── README.md
-│       ├── Makefile
-│       ├── recipe.sh
-│       ├── validate.py
-│       ├── stac_emit.py
-│       ├── schema/
-│       ├── RAW/
-│       ├── WORK/
-│       └── CATALOG/
-└── wbd-huc12-watcher/
-    ├── README.md
-    ├── watcher.yaml
-    ├── src/
-    │   └── wbd_huc12_watcher/
-    └── tests/
+âââ README.md
+âââ soils/
+â   âââ gssurgo-ks/
+â       âââ README.md
+âââ wbd-huc12-watcher/
+    âââ README.md
+```
+
+The current public repo now verifies a sibling execution surface. That makes boundary discipline more important, not less: `docs/pipelines/` should describe and point to that surface without quietly absorbing its implementation role.
+
+### Support-corpus / historical / proposed expansion shapes
+
+The broader KFM support corpus points to materials such as the following, but these should be treated as **INFERRED / NEEDS VERIFICATION** until rechecked in the active branch or a mounted checkout:
+
+```text
+docs/pipelines/
+âââ soil/
+â   âââ sda-weekly/README.md
+â   âââ differential-updates/README.md
+â   âââ soil_artifacts.md
+```
+
+```text
+historical-or-support-corpus examples
+âââ src/pipelines/hydrology/nwis_watcher/README.md
+âââ src/pipelines/air_quality/fusion/
+âââ src/pipelines/air_quality/INGEST_FLOW.md
+âââ src/pipelines/air_quality/drift_monitor/README.md
 ```
 
 > [!CAUTION]
-> The expanded tree above is a **starter target shape**, not a claim about current checked-in reality.
+> The current public repo now verifies **root `/pipelines/`** as the checked-in execution family. Keep older `src/pipelines/**` references visibly labeled as historical/support-corpus material unless the current branch proves that path family is live again.
+
+[Back to top](#pipelines)
 
 ## Quickstart
 
-### 1) Inspect the current public lane surface
+### Inspect both the documentation lane and the execution neighbor
 
 ```bash
+find docs/pipelines -maxdepth 3 -print | sort
 find pipelines -maxdepth 4 -print | sort
 ```
 
-### 2) Read the visible child lane docs first
+### Read the visible child docs first
 
 ```bash
-sed -n '1,240p' pipelines/soils/gssurgo-ks/README.md
-sed -n '1,260p' pipelines/wbd-huc12-watcher/README.md
+sed -n '1,240p' docs/pipelines/ssurgo_to_catchment.md
+sed -n '1,220p' pipelines/README.md
+sed -n '1,220p' pipelines/soils/gssurgo-ks/README.md
+sed -n '1,220p' pipelines/wbd-huc12-watcher/README.md
 ```
 
-### 3) Re-read the repo guardrails before changing a lane
+### Re-read the repo guardrails before changing a lane
 
 ```bash
-sed -n '1,260p' .github/README.md
-sed -n '1,260p' contracts/README.md
-sed -n '1,260p' policy/README.md
-sed -n '1,260p' schemas/README.md
-sed -n '1,260p' tests/README.md
-sed -n '1,260p' data/README.md
+sed -n '1,220p' .github/README.md
+sed -n '1,220p' contracts/README.md
+sed -n '1,220p' policy/README.md
+sed -n '1,220p' schemas/README.md
+sed -n '1,220p' tests/README.md
+sed -n '1,220p' data/README.md
 ```
 
-### 4) Treat README-only lanes as design-bearing until proven executable
+### Add or revise a pipeline doc
 
-A lane graduates from “interesting plan” to “repo-meaningful execution surface” when it can show at least:
+1. Start from the **owning contract and lifecycle question**, not from formatting.
+2. Confirm what is actually visible in the current repo surface.
+3. Link the relevant contract, policy, data, test, tooling, runbook, and execution-lane surfaces.
+4. State the pipeline's place in the truth path clearly.
+5. Document what the pipeline emits and what must pass before promotion.
+6. Name failure states, correction behavior, and replay/rollback expectations.
+7. Mark anything not directly verified as `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
 
-1. one bounded source basis
-2. one deterministic transform or watcher rule
-3. one validation story
-4. one receipt or equivalent evidence object
-5. one reviewable publish candidate or catalog closure path
+### Minimal starter outline
+
+```md
+# <pipeline name>
+
+One-line purpose.
+
+## Scope
+## Repo fit
+## Inputs
+## Outputs
+## Lifecycle placement
+## Validation gates
+## Promotion / publish conditions
+## Failure / rollback / correction
+## Related contracts
+## Related policy
+## Related tests
+## Evidence posture
+```
+
+### Link first, duplicate last
+
+Prefer links to:
+
+- the owning contract
+- the governing policy surface
+- the relevant lifecycle zone
+- the validation harness
+- the operator tool or script
+- the release or proof object surface
+- the relevant root `/pipelines/` lane when one exists
+- a public-safe example lane when illustration helps but canonical truth should stay elsewhere
+
+That keeps docs aligned to repo truth and reduces drift.
+
+[Back to top](#pipelines)
 
 ## Usage
 
-### Add a new lane
+### Reading a pipeline doc
 
-Use a new subdirectory when the work has a distinct **source family**, **publication burden**, and **review story**.
+A useful pipeline doc here should let a maintainer answer five questions quickly:
 
-A good new lane:
+1. What enters the pipeline?
+2. What comes out?
+3. What gates must pass before promotion or publication?
+4. Which proof objects, receipts, or support artifacts should exist?
+5. What happens when validation fails or a correction is required?
 
-1. names the authoritative source family
-2. states what counts as `RAW`, `WORK`, and release-safe output
-3. identifies validation and failure conditions
-4. says what receipt / closure / review object it should emit
-5. links back to contracts, policy, schemas, tests, and runbooks it inherits
+### Writing a pipeline doc
 
-### Revise an existing lane
+A strong doc in this directory should make the following explicit:
 
-Prefer **strengthening evidence** over decorative rewriting.
+- source family or source families
+- dominant artifact grain
+- lifecycle placement
+- whether outputs are authoritative, derived, contextual, or provisional
+- validation and policy gates
+- correction / replay / rollback posture
+- where machine-readable truth lives
+- whether there is a sibling execution lane under root `/pipelines/`
+- what remains unverified
 
-Good revisions usually do one or more of these:
+### Use `docs/pipelines/` and `/pipelines/` together, not interchangeably
 
-- sharpen the source basis
-- separate **current public evidence** from **starter target shape**
-- add missing exclusions
-- add validation, diff, or correction behavior
-- narrow an overclaim about current automation or runtime coverage
+| If the material is mainlyâ¦ | Prefer this home | Why |
+|---|---|---|
+| reviewable explanation, burden, lifecycle, and proof expectations | `docs/pipelines/` | this surface helps humans review and govern the lane |
+| lane-local execution steps, recipes, watchers, emitters, and smoke tests | `/pipelines/` | this is the checked-in execution-family surface on current public `main` |
+| shared runtime code reused across lanes | `/packages/` or `/apps/` | reuse belongs with owning implementation modules |
+| machine-checked contracts or policy law | `/contracts/`, `/schemas/`, `/policy/` | docs should point to law, not replace it |
 
-### Graduate a README-only lane
+> [!TIP]
+> When a document starts to explain commands, config files, and lane-local emit objects more than it explains review burden, that is usually a sign the execution-shaped material belongs under root `/pipelines/`.
 
-When moving from documentation to executable reality, keep the order disciplined:
+### Example material without truth drift
 
-1. **source descriptor / intake shape**
-2. **validation path**
-3. **receipt or dataset version object**
-4. **catalog closure / release-safe packaging**
-5. **review and correction path**
-6. only then broader automation, shell integration, or lane expansion
+Use [`../../examples/thin_slice/`](../../examples/thin_slice/) for public-safe walkthroughs, sample payloads, and thin-slice explainers. Keep `docs/pipelines/` focused on requirements, review burden, and authoritative links into the governing surfaces.
+
+### Naming guidance
+
+Prefer names that reveal **function + source family**:
+
+- `sda-weekly`
+- `differential-updates`
+- `soil_artifacts`
+- `nwis-watcher`
+- `drift-monitor`
+- `ssurgo_to_catchment`
+
+Avoid vague buckets such as:
+
+- `misc`
+- `temp`
+- `new-pipeline`
+- `notes`
+- `pipeline2`
+
+[Back to top](#pipelines)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Source edge] --> B[Lane pipeline in /pipelines]
-    B --> C[RAW]
-    C --> D[WORK / QUARANTINE]
-    D --> E[PROCESSED]
-    E --> F[CATALOG closure]
-    F --> G[PUBLISHED surface]
+    A[architecture / governance / standards]
+    B[docs/pipelines/**<br/>human-readable contract and review burden]
+    C[pipelines/**<br/>lane-local execution surface]
+    D[contracts / schemas<br/>machine-readable law]
+    E[policy/<br/>deny-by-default / reasons / obligations]
+    F[data/<br/>truth path + artifacts + catalogs]
+    G[tests + tools + scripts<br/>verification and operator support]
+    H[.github gatehouse<br/>review + workflow documentation]
+    X[examples/thin_slice/**<br/>public-safe examples]
 
-    H[contracts / schemas] --> B
-    I[policy bundles / reason & obligation vocabularies] --> B
-    J[tests / fixtures / proof lanes] --> B
-    K[.github gatehouse] --> B
+    A --> B
+    D --> B
+    E --> B
+    X -.-> B
 
-    B --> L[IngestReceipt / ValidationReport / run_receipt]
-    F --> M[STAC / DCAT / PROV]
-    G --> N[EvidenceBundle / DecisionEnvelope / correction path]
+    D --> C
+    E --> C
+    G --> C
+    H --> C
+    C --> F
+
+    B -.scope / burden / review .-> C
+    C -.receipts / emit objects / lane proof .-> B
+
+    B --> I[contributors]
+    B --> J[reviewers]
+    C --> K[operators]
+
+    style B stroke-width:3px
+    style C stroke-width:3px
 ```
 
-## Pipeline maturity table
+### Interpretation
 
-| Maturity signal | What reviewers should look for |
+This directory is the **human-readable bridge** between doctrine, implementation, contracts, policy, lifecycle artifacts, and review. It matters because it keeps burden legible. It is not the runtime source of truth, and it should now be read explicitly alongside the sibling root `/pipelines/` execution family.
+
+[Back to top](#pipelines)
+
+## Reference tables
+
+### What a pipeline doc here should carry
+
+| Section | Required | Why |
+|---|---:|---|
+| Purpose | Yes | The reader should know the pipeline's job immediately |
+| Repo fit | Yes | Keeps boundaries and ownership visible |
+| Inputs | Yes | Prevents source-role drift |
+| Outputs | Yes | Clarifies emitted artifacts |
+| Validation gates | Yes | KFM is governed, not optimistic |
+| Promotion / publish conditions | Yes | Release state matters |
+| Failure / rollback / correction | Yes | Fail-closed behavior must be explicit |
+| Related contract / policy / test links | Yes | Docs should point to the authoritative surfaces |
+| Execution-neighbor links | Recommended | Helps readers move from explanation to checked-in lane work without guessing |
+| Evidence posture | Yes | Prevents accidental overclaiming |
+| Worked example | Recommended | Helps maintainers act under pressure |
+
+### Evidence labels used in this directory
+
+| Label | Meaning here |
 |---|---|
-| **Source legibility** | authoritative source named, cadence/support visible, no hidden source switching |
-| **Deterministic identity** | stable IDs, digest or hash logic, explicit diff basis where applicable |
-| **Validation** | clear checks, quarantine or fail behavior, no silent pass-through |
-| **Evidence objects** | receipts, reports, or closure objects are named and scoped |
-| **Governed promotion** | review path exists; no direct publish shortcut implied |
-| **Correction readiness** | supersession, rollback, or stale-visible behavior is acknowledged |
-| **Truth-visible UX handoff** | lane can support Evidence Drawer / Focus / public-safe delivery without bluffing |
+| **CONFIRMED** | Directly supported by the current visible public repo surface or current doctrinal source material |
+| **INFERRED** | Strongly implied by support material, adjacent repo context, or doctrine, but not directly reverified as current implementation fact |
+| **PROPOSED** | Recommended structure or behavior consistent with KFM doctrine |
+| **UNKNOWN** | Not verified strongly enough in the current session |
+| **NEEDS VERIFICATION** | Must be checked before merge, release, or broad reuse |
 
-## Current reading posture for maintainers
+### Path-status matrix
 
-| Statement | Status |
+| Path | Current status | Notes |
+|---|---|---|
+| `docs/pipelines/README.md` | **CONFIRMED** | Present in current public `docs/pipelines/` |
+| `docs/pipelines/ssurgo_to_catchment.md` | **CONFIRMED** | Present in current public `docs/pipelines/`; local contract/policy/test claims inside that doc remain its own review burden |
+| `pipelines/README.md` | **CONFIRMED** | Present in current public repo root as the execution-family index |
+| `pipelines/soils/gssurgo-ks/README.md` | **CONFIRMED** | Present as a visible soils execution lane README |
+| `pipelines/wbd-huc12-watcher/README.md` | **CONFIRMED** | Present as a visible watcher execution lane README |
+| `docs/pipelines/soil/sda-weekly/README.md` | **INFERRED / NEEDS VERIFICATION** | Mentioned in support material, not reverified in current public tree |
+| `docs/pipelines/soil/differential-updates/README.md` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `docs/pipelines/soil/soil_artifacts.md` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `src/pipelines/hydrology/nwis_watcher/README.md` | **INFERRED / NEEDS VERIFICATION** | Historical or support-corpus mention; current public repo instead verifies root `/pipelines/` as the execution family |
+| `src/pipelines/air_quality/fusion/` | **INFERRED / NEEDS VERIFICATION** | Same |
+| `src/pipelines/air_quality/drift_monitor/README.md` | **INFERRED / NEEDS VERIFICATION** | Same |
+
+### Where pipeline-related material belongs
+
+| Material | Best home | Why |
+|---|---|---|
+| Directory contract, burden, review posture, doc-only child specs | `docs/pipelines/` | this surface keeps human-readable obligations visible |
+| Lane-local recipes, watcher configs, emit helpers, and smoke tests | `pipelines/` | current public repo treats this as the execution-family surface |
+| Shared modules reused across multiple lanes | `packages/` or `apps/` | reuse should live with implementation ownership |
+| Canonical contracts, schemas, and envelope shapes | `contracts/` / `schemas/` | these are machine-readable law |
+| Executable policy bundles and policy fixtures | `policy/` | governance must stay testable and enforceable |
+| Truth-path artifacts, receipts, catalog entries, and published datasets | `data/` | docs are not the sovereign artifact store |
+
+### Current repo-fit cautions
+
+| Caution | Why it matters |
 |---|---|
-| `/pipelines/` exists on current public `main` | **CONFIRMED** |
-| two child lanes are visibly documented here | **CONFIRMED** |
-| hydrology-first / contract-first sequencing should shape early lane work | **CONFIRMED doctrinally** |
-| soils is a strong adjacent watcher / packaging candidate after hydrology | **INFERRED from corpus + child lane presence** |
-| current public `main` proves active workflow YAML or runtime scheduling for these lanes | **NOT CONFIRMED** |
-| proposed helper files inside child lanes are already checked in | **NOT CONFIRMED** |
+| The public repo now has both `docs/pipelines/` and root `/pipelines/` | Do not blur review docs and execution lanes into one ambiguous surface |
+| `.github/workflows/` and `.github/watchers/` are README-only on public `main` | Do not imply checked-in workflow YAML or mounted watcher jobs from those paths alone |
+| `contracts/` and `schemas/` both exist publicly | Do not fork machine truth across both surfaces or casually restate contract law here |
+| `docs/pipelines/` currently verifies a directory README plus one sibling draft child doc | Describe the docs lane as small, not empty |
+| `pipelines/` currently verifies a README plus two child lane READMEs | Describe the execution lane as present but still README-light, not fully proved runtime automation |
+| `examples/thin_slice/` exists as a public-safe example lane | Use it for illustration, not as proof of release, policy enforcement, or mounted runtime behavior |
 
-## Tables
+[Back to top](#pipelines)
 
-### What a healthy pipeline lane should emit
+## Task list / Definition of Done
 
-| Object | Why it matters |
-|---|---|
-| **source descriptor** | says what is being admitted and under what burden |
-| **ingest or run receipt** | proves a concrete fetch / watch / build happened |
-| **validation report** | makes failure visible instead of implicit |
-| **dataset version or equivalent lane output** | pins candidate or promoted subject set |
-| **catalog closure** | binds outward metadata and lineage |
-| **review / decision object** | keeps policy and human review explicit |
-| **correction note or rollback hook** | preserves lineage when a surface changes |
+A directory-level pipeline README or child pipeline doc is ready when:
 
-### Review heuristics for this directory
+- [ ] purpose is obvious from the first screen
+- [ ] repo fit and path are explicit
+- [ ] accepted inputs and exclusions are clear
+- [ ] related contract / policy / data / test surfaces are linked
+- [ ] any relevant sibling root `/pipelines/` lane links are included
+- [ ] lifecycle placement is stated
+- [ ] validation gates are documented
+- [ ] promotion / publish conditions are documented
+- [ ] rollback / replay / correction behavior is documented
+- [ ] evidence posture is explicit
+- [ ] docs-vs-execution placement is not ambiguous
+- [ ] any historical or support-corpus paths are labeled honestly
+- [ ] no section implies mounted implementation that was not actually checked
+- [ ] any illustrative example links point to public-safe example lanes rather than masquerading as canonical proof
+- [ ] at least one meaningful diagram improves comprehension
+- [ ] the file remains readable in GitHub without external explanation
 
-| Ask this | Why |
-|---|---|
-| Does this lane prove anything end to end? | README-only ambition is not enough |
-| Does it inherit shared policy/contracts instead of inventing its own doctrine? | prevents drift |
-| Are negative outcomes named? | fail-closed behavior is part of trust |
-| Is current public evidence separated from target shape? | avoids accidental overclaim |
-| Could a reviewer trace source → validation → receipt → publish candidate? | that is the real maturity path |
+> [!CAUTION]
+> "Looks right" is not a Definition of Done in KFM. A shorter doc with visible uncertainty is safer than a polished doc that quietly upgrades assumptions into fact.
 
-## Task list
-
-### Definition of done for a directory-level `pipelines/README.md`
-
-- [ ] indexes the current visible lane family
-- [ ] clearly states what belongs in `/pipelines/`
-- [ ] clearly states what does **not** belong here
-- [ ] links to the child lane READMEs
-- [ ] distinguishes **current public snapshot** from **starter target shape**
-- [ ] includes at least one meaningful pipeline/lifecycle diagram
-- [ ] names trust-bearing artifacts and failure conditions
-- [ ] avoids inventing checked-in workflows, manifests, or runtime coverage
-- [ ] leaves ownership and automation gaps visible where not yet verified
-
-### Definition of done for a child lane graduating beyond README-only
-
-- [ ] authoritative source family identified
-- [ ] lane-local quickstart exists
-- [ ] at least one deterministic validation path exists
-- [ ] at least one receipt / closure / report object is emitted
-- [ ] tests or fixtures exist
-- [ ] publish path is review-bearing
-- [ ] correction or rollback story is visible
-- [ ] public-safe vs steward-only distinctions are explicit where needed
+[Back to top](#pipelines)
 
 ## FAQ
 
-### Why is this directory so strict about overclaiming?
+### Why keep pipeline docs under `docs/` at all?
 
-Because KFM treats pipeline work as part of the evidence system, not merely as automation. A lane that sounds advanced but cannot show its source, checks, receipts, and publish path creates trust debt.
+Because KFM treats documentation as part of the governed delivery surface. Code alone rarely communicates lifecycle placement, promotion burden, correction posture, and trust-visible review obligations well enough.
 
-### Why point back to `contracts/`, `policy/`, `schemas/`, and `tests/` so often?
+### Why do both `docs/pipelines/` and `/pipelines/` exist?
 
-Because pipeline code should **consume** those repo-wide guardrails, not quietly redefine them lane by lane.
+Because they solve different problems. `docs/pipelines/` explains burden, scope, and review. Root `/pipelines/` is the checked-in execution family for lane-local work. Keeping them separate makes it easier to see when prose is describing a lane versus when code, configs, or watcher logic are actually present.
 
-### Why is hydrology the preferred first slice?
+### Should machine-readable schemas be copied into this directory?
 
-Because the doctrine repeatedly favors a public-safe, place/time-rich, operationally legible first proof slice before broader expansion. That sequencing keeps the first real proof tractable.
+No. Link them. Duplication creates drift unless there is a strict synchronization rule.
 
-### Why call out soils here?
+### Does a pipeline doc prove that the pipeline is implemented?
 
-Because the current public tree already includes a soils lane, and the surrounding KFM doctrine treats soils as a strong adjacent candidate after hydrology.
+No. A pipeline doc is documentation evidence, not implementation proof.
 
-### Does a README in a child lane prove runnable automation exists?
+### Where should operational runbooks live?
 
-No. It proves the lane is being shaped and named. Runnable workflow, scheduler, or deployment claims need direct evidence in the branch.
+Use the nearest stable home consistent with local repo convention. Shared runbooks may belong in [`../runbooks/`](../runbooks/); pipeline-specific runbooks may live beside the relevant pipeline doc when that improves review and operator clarity.
 
-### Should a watcher publish directly?
+### Where should illustrative payloads or thin-slice walkthroughs live?
 
-No. A watcher may detect, normalize, diff, and prepare evidence, but publishability still belongs to governed review, closure, and correction-aware release behavior.
+Use [`../../examples/thin_slice/`](../../examples/thin_slice/) and its nested lanes for public-safe examples. Keep this directory focused on governed requirements, proof burden, and boundary guidance.
 
-### Where should lane-specific changelogs or runbooks live?
+### What is the safest default when rights, sensitivity, or source trust is unclear?
 
-Inside the lane or the owning runbook/docs surface, unless the effect is repo-wide enough to belong in a higher-level changelog or architecture document.
+Document the uncertainty, link the governing surface, and default to review-required / fail-closed behavior instead of implying broad publication.
+
+[Back to top](#pipelines)
 
 ## Appendix
 
 <details>
-<summary><strong>Evidence boundary note</strong></summary>
+<summary><strong>Appendix A â Suggested child README pattern</strong></summary>
 
-This README is written to match the current public-main evidence that is directly visible now.
+```md
+# <pipeline slug>
 
-It intentionally avoids claiming:
+One-line purpose.
 
-- active checked-in workflow YAML for pipeline lanes
-- live scheduler coverage
-- branch-local helper files not visible in the current public tree
-- deployment overlays, secrets posture, or runtime health
-- narrower `/pipelines/` ownership beyond what is actually evidenced
+> Status: experimental|active|stable
+> Owners: ...
+> Path: ...
+> Quick jumps: Scope Â· Inputs Â· Outputs Â· Gates Â· Failure Â· Links
+
+## Scope
+## Repo fit
+## Inputs
+## Exclusions
+## Directory tree
+## Quickstart
+## Usage
+## Diagram
+## Reference tables
+## Task list
+## FAQ
+## Appendix
+```
 
 </details>
 
 <details>
-<summary><strong>Suggested review sequence for future maintainers</strong></summary>
+<summary><strong>Appendix B â Pipeline documentation anti-patterns</strong></summary>
 
-1. Read this file.
-2. Read each child lane README.
-3. Re-read `.github/README.md` for gatehouse posture.
-4. Confirm shared contract/policy/schema/test homes before adding lane-local copies.
-5. Only then add or revise execution code.
-6. If a lane starts emitting public-facing artifacts, add the correction and rollback story at the same time.
+Avoid these:
+
+- treating a support-corpus path as a verified live repo path
+- copying schema content into Markdown without a sync rule
+- hiding failure states behind happy-path prose
+- documenting derived surfaces as authoritative by omission
+- naming a target-state workflow as if it were confirmed current CI behavior
+- mixing doctrine, implementation, and speculation without labels
+- using example lanes as if they were release proof or policy evidence
+- describing root `/pipelines/` execution work as if it automatically belongs under `docs/pipelines/`
 
 </details>
 
 <details>
-<summary><strong>Backlog candidates that fit this directory well</strong></summary>
+<summary><strong>Appendix C â Why this directory can stay small</strong></summary>
 
-- a first real hydrology proof lane with receipts and closure objects
-- a stronger soils watcher pilot with deterministic diff and signed receipt
-- lane-local smoke tests that prove fail-closed behavior
-- lane-local examples that show reviewable publish candidates rather than direct mutation
-- directory links to runbooks once those are verified in-branch
+A good pipelines directory does not need to be large to be useful. In the current public tree, this directory is intentionally small and can still do meaningful work by:
+
+- defining the boundary
+- naming the trust posture
+- pointing to the real governing surfaces
+- linking to the sibling execution-family surface at root `/pipelines/`
+- carrying one or more focused child docs when a pipeline lane deserves isolated review
+- keeping illustrative walkthrough material in separate example lanes
+
+That is a stronger starting point than a busy subtree full of stale assumptions.
 
 </details>
-
-[Back to top](#pipelines)
