@@ -346,9 +346,9 @@ flowchart LR
       R2["pipelines/<br/>wbd-huc12-watcher"]
     end
 
-    P -. gates changes in .github .-> R1
-    P -. gates changes in .github .-> R2
-    P -. platform settings still need direct GitHub verification .-> Q[Rulesets / required checks / environments]
+    P -->|"gates changes in .github"| R1
+    P -->|"gates changes in .github"| R2
+    P -->|"platform settings still need direct GitHub verification"| Q[Rulesets / required checks / environments]
 ```
 
 ## Current public inventory & control surfaces
