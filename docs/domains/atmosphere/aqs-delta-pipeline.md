@@ -15,7 +15,7 @@ notes: [Merged from two uploaded drafts on 2026-04-09, broken oaicite placeholde
 
 # EPA AQS Delta Ingestion and Trust-Gated Publication Spec
 
-Detect, classify, and govern meaningful EPA AQS monitor and metadata changes without letting silent upstream drift become downstream truth.
+One-line purpose: detect, classify, and govern meaningful EPA AQS monitor and metadata changes without letting silent upstream drift become downstream truth.
 
 > [!IMPORTANT]
 > This document is a **governed specification**, not a claim of already-verified runtime implementation. Where the current session did not directly verify code, workflows, emitted receipts, or release behavior, the language stays **PROPOSED**, **INFERRED**, or **NEEDS VERIFICATION**.
