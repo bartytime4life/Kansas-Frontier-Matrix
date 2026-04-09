@@ -1,309 +1,331 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<REVIEW-REQUIRED-UUID>
-title: Cultural Landscapes Results
+doc_id: kfm://doc/NEEDS-VERIFICATION
+title: KFM Archaeology Cultural-Landscape Notebooks
 type: standard
 version: v1
-status: review
-owners: <REVIEW-REQUIRED: archaeology stewards>
-created: <REVIEW-REQUIRED: YYYY-MM-DD>
-updated: <REVIEW-REQUIRED: YYYY-MM-DD>
-policy_label: <REVIEW-REQUIRED: public|restricted|mixed>
-related: [../README.md, ../../README.md, ./ecological-affordances/README.md]
-tags: [kfm]
-notes: [Current public repo tree at this path is verified; owners, dates, policy label, and corpus-described expansion modules still need merge-time verification.]
+status: draft
+owners: NEEDS VERIFICATION
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: NEEDS VERIFICATION
+related: [../README.md, ../../README.md, ../../cultural-landscapes/README.md]
+tags: [kfm, archaeology, notebooks, cultural-landscapes, analysis]
+notes: [Current public repo verification confirms this path exists, but owners, dates, policy label, and any child inventory beyond README.md still need direct repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
-# Cultural Landscapes Results
+# KFM Archaeology Cultural-Landscape Notebooks
 
-Public-safe index for generalized cultural-landscape result surfaces and their governed publication boundaries inside KFM.
-
-> **Status:** experimental  
-> **Owners:** `NEEDS VERIFICATION`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![lane](https://img.shields.io/badge/lane-archaeology-8b5e3c) ![precision](https://img.shields.io/badge/precision-generalized%2Fstewarded-blue) ![posture](https://img.shields.io/badge/posture-evidence--first-6f42c1) ![care](https://img.shields.io/badge/CARE-review--bearing-b31d28)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified baseline](#current-verified-baseline) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Evidence posture:** `CONFIRMED` current public repo path + local tree · `CONFIRMED` KFM doctrine on evidence / release / sensitivity · `PROPOSED` expansion candidates from archaeology design docs · `NEEDS VERIFICATION` owners, dates, policy label, and any not-yet-created child modules
+Notebook-lane index for cultural-landscape analyses and their derived, reviewable outputs inside KFM.
 
 > [!IMPORTANT]
-> This root README does two jobs at once:
-> 1. preserve the **current checked-in directory reality**, and  
-> 2. keep the **broader cultural-landscape design direction** visible without pretending that every corpus-described module already exists in the repo.  
-> The main tree below therefore lists only confirmed local paths. Expansion families from the archaeology corpus are staged separately and clearly labeled.
+> **Status:** experimental  
+> **Owners:** NEEDS VERIFICATION  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: cultural-landscape notebooks](https://img.shields.io/badge/lane-cultural--landscape%20notebooks-6f42c1) ![Posture: evidence-linked](https://img.shields.io/badge/posture-evidence--linked-0a7f5a) ![Precision: generalized](https://img.shields.io/badge/precision-generalized-1f6feb)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified baseline](#current-verified-baseline) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/analyses/archaeology/results/notebooks/cultural-landscapes/README.md` → upstream: [`../README.md`](../README.md), [`../../README.md`](../../README.md) · downstream: [`../../cultural-landscapes/README.md`](../../cultural-landscapes/README.md)
+
+> [!NOTE]
+> This directory is the **notebook lane** for cultural-landscape work. It is the place for notebook-side analysis, reviewable derived outputs, and lane guidance — not the final promoted results surface.
+
+> [!WARNING]
+> Current public-tree verification confirms only `README.md` at this path. Any staged notebook families, companion metadata, or deeper subdirectories described below are intentionally marked as **PROPOSED** or **NEEDS VERIFICATION**, not asserted as current tree fact.
 
 ## Scope
 
-`docs/analyses/archaeology/results/cultural-landscapes/` is the result-layer landing zone for **promoted, public-safe, generalized cultural-landscape outputs** inside KFM.
+This directory exists for **cultural-landscape analysis notebooks and notebook-local companions** that still live in the derived, reviewable analysis layer.
 
-At this layer, cultural landscapes are not a loose pile of maps, notebooks, figures, tiles, or atmospheric narrative. They remain downstream of:
+Use this lane for work such as:
 
-- evidence and release state
-- rights, sensitivity, and precision review
-- provenance and correction lineage
-- visible method and uncertainty limits
+- corridor and movement-cost experiments
+- generalized interaction-sphere analysis
+- ecological affordance clustering tied to cultural-landscape questions
+- cultural-region or settlement-tendency notebook work that remains generalized, reviewable, and non-publication-final
 
-In practical terms, this README should make five things easy to answer:
+Keep the lane aligned to the stronger notebook-wide KFM posture already established upstream:
 
-1. What kind of cultural-landscape result is being indexed here?
-2. What is **confirmed in the current repo tree** versus only described in supporting archaeology materials?
-3. What precision, redaction, or withholding posture qualifies reuse?
-4. Which child modules are actually present today?
-5. What should reviewers verify before broadening the lane?
-
-This README should behave as an **index of bounded result surfaces**, not as a sovereign source of archaeological truth.
+- **derived, not sovereign**
+- **evidence-linked, not citation-free**
+- **reviewable, not self-publishing**
+- **public-safe by default**
+- **2D-first unless a real 3D burden is shown**
 
 ## Repo fit
 
-| Item | Value |
-| --- | --- |
-| Path | `docs/analyses/archaeology/results/cultural-landscapes/README.md` |
-| Role | Root index and publication-boundary README for cultural-landscape result surfaces |
-| Upstream | [`../README.md`](../README.md) · [`../../README.md`](../../README.md) |
-| Confirmed downstream | [`./ecological-affordances/README.md`](./ecological-affordances/README.md) |
-| Adjacent sibling lanes | [`../geophysics/`](../geophysics/) · [`../notebooks/`](../notebooks/) · [`../paleoenvironment/`](../paleoenvironment/) |
-| Owning non-result surfaces | route methods, contracts, schemas, policy, release artifacts, and proof objects to their owning repo layers rather than absorbing them here |
-| Corpus-described but not current-tree-confirmed children | `interaction-spheres/`, `corridors/`, `settlement-patterns/`, `temporal/`, `predictive/`, `stac/`, `metadata/`, `provenance/` |
+| Path | Role in the repo | Relationship |
+| --- | --- | --- |
+| `docs/analyses/archaeology/results/notebooks/README.md` | notebook family root | parent index and operating guide for archaeology notebooks |
+| `docs/analyses/archaeology/results/notebooks/cultural-landscapes/README.md` | this file | notebook-lane README for cultural-landscape analysis |
+| `docs/analyses/archaeology/results/cultural-landscapes/README.md` | promoted sibling results lane | use when an output is no longer notebook-side and is ready to behave like a public-safe result surface |
+| `docs/analyses/archaeology/results/notebooks/spatial/README.md` | sibling notebook lane | style and structure reference for a lane-specific notebook README |
+| `docs/analyses/archaeology/results/notebooks/environmental/` | adjacent notebook lane | route work here when the center of gravity is environmental analysis rather than cultural-landscape synthesis |
+| `docs/analyses/archaeology/results/notebooks/predictive/` | adjacent notebook lane | route work here when the notebook is mainly predictive-model-centric rather than cultural-landscape-centric |
 
-### Why this lane exists
-
-The cultural-landscapes lane is where archaeology-facing synthesis becomes navigable **after** it is safe enough to index. That makes it narrower than an archaeology research notebook lane and broader than a single result-family README.
-
-[Back to top](#cultural-landscapes-results)
+[Back to top](#kfm-archaeology-cultural-landscape-notebooks)
 
 ## Accepted inputs
 
-This directory may contain or index:
+This lane should contain **notebook-side materials**, not already-promoted publication artifacts.
 
-- promoted child result-family READMEs
-- generalized cultural-landscape outputs that describe broad spatial tendencies rather than exact sites
-- ecological affordance summaries and similarly bounded environmental-context surfaces
-- result-level STAC, DCAT, or PROV links **when those supporting paths actually exist**
-- uncertainty notes, masking notes, and reuse limits
-- public-safe figures, maps, tiles, or exports that stay consistent with the same sensitivity posture
-- Focus / Story / Dossier support summaries **only when they remain evidence-linked and non-speculative**
-- 2.5D or 3D result surfaces **only when they carry real reasoning burden and do not relax sensitivity rules**
-
-### What a child result surface should make easy to inspect
-
-| Expectation | Why it matters |
-| --- | --- |
-| What the result represents | avoids decorative or vague publication |
-| Whether it is observational, analytical, modeled, or interpretive | keeps claim type visible |
-| What precision controls were applied | archaeology sensitivity is often a location problem |
-| What was generalized, withheld, or excluded | prevents safe outputs from being mistaken for exact records |
-| What evidence / provenance route supports it | preserves inspectability |
-| What review or release state applies | prevents false finality |
+| Accepted input | What belongs here | Notes |
+| --- | --- | --- |
+| Jupyter notebooks | `.ipynb` notebooks whose main analytical subject is cultural-landscape reasoning | Keep them generalized and reviewable |
+| Notebook-local markdown | method notes, assumptions, modeling caveats, reviewer-facing narrative | Prefer short, inspectable companions over hidden notebook prose |
+| Parameter snapshots | run parameters, notebook config exports, threshold notes | Useful for reproducibility and review |
+| Reviewable previews | low-risk plots, generalized maps, comparison figures, residual plots | Must stay public-safe for this lane |
+| Run notes and manifests | notebook run notes, lightweight manifests, reviewer notes | Do not treat these as canonical promotion artifacts unless separately governed |
+| Provenance pointers | links or references to upstream evidence, inputs, and notebook outputs | Keep notebook lineage legible even before promotion |
+| Public-safe derived outputs | generalized rasters, summary tables, map panels, chart exports | Still notebook-side unless promoted outward |
 
 ## Exclusions
 
-This directory is **not** the place for:
+This directory should **not** become a catch-all for archaeology outputs.
 
-- RAW, WORK, or QUARANTINE archaeology material
-- exact site coordinates or other precision beyond the approved publication class
-- sacred or otherwise restricted cultural geographies
-- tribal, ethnic, or cultural-ownership attribution derived from generalized landscape outputs
-- speculative ethnogenesis, unreviewed cultural-boundary reconstruction, or exact travel-route reconstruction
-- unreviewed notebooks, scratch analyses, or unpublished candidate models
-- direct dumps of AI output without evidence linkage and review context
-- operational methods, schema contracts, policy bundles, manifests, or release proofs that belong in their owning repo surfaces
-- spectacle-first 3D scenes published because they are impressive rather than necessary
-
-> [!CAUTION]
-> Public-safe does **not** mean precision-safe by default.  
-> Cultural-landscape outputs should fail closed whenever reuse could imply exact locations, restricted boundaries, sacred landscapes, or culturally sensitive inference.
+| Exclusion | Why it does not belong here | Route instead |
+| --- | --- | --- |
+| Final promoted result surfaces | This lane is notebook-side, not publication-final | [`../../cultural-landscapes/README.md`](../../cultural-landscapes/README.md) |
+| RAW / WORK / QUARANTINE source data | This README is for results notebooks, not intake or controlled staging zones | governed data lanes and source-processing paths |
+| Exact coordinates or precise route reconstructions | Cultural-landscape notebook work must remain generalized and public-safe here | stewarded restricted workflows |
+| Restricted cultural knowledge or identity-bearing inference | Out of bounds for notebook lane publication posture | FAIR+CARE review / restricted documentation surfaces |
+| Canonical policy bundles, contract schemas, release proof packs | Those are governance and release artifacts, not notebook-lane contents | governance / contracts / release lanes |
+| AI-only speculative narrative | KFM notebook outputs must remain evidence-linked and reviewable | withhold until evidence and review catch up |
+| Story / dossier / export-ready presentation packages | Those are downstream delivery surfaces | story, dossier, export, or promoted results lanes |
 
 ## Current verified baseline
 
-| Item | Status | Notes |
+| Item | Status | Meaning for this README |
 | --- | --- | --- |
-| `docs/analyses/archaeology/results/cultural-landscapes/README.md` exists | **CONFIRMED** | current checked-in file is still extremely thin |
-| `ecological-affordances/` exists beneath this path | **CONFIRMED** | the only confirmed child module in the current local tree |
-| `ecological-affordances/README.md` depth | **CONFIRMED** | currently placeholder-level and still needs a governed lane README |
-| broader cultural-landscape family in archaeology design corpus | **PROPOSED** | attached archaeology materials describe additional modules and registries |
-| owners, created date, updated date, policy label, UUID | **NEEDS VERIFICATION** | not carried with enough certainty in the checked-in file to present as settled repo truth |
-| machine-readable support registries (`stac/`, `metadata/`, `provenance/`) under this path | **PROPOSED** | strong corpus fit, but not current-tree fact here |
-
-### Reading rule for this directory
-
-Use **confirmed local tree** for navigation. Use **corpus-described candidates** only as staged expansion guidance until corresponding repo paths actually exist.
+| `docs/analyses/archaeology/results/notebooks/cultural-landscapes/` exists | **CONFIRMED** | The directory is real and should have a lane-specific README |
+| Only `README.md` is currently confirmed inside this path | **CONFIRMED** | The tree below stays exact and minimal |
+| Parent archaeology notebook lane includes `cultural-landscapes/` as a child | **CONFIRMED** | This file should read like a notebook subtree, not a detached one-off |
+| The checked-in file at this path currently reads like a copied results-lane README | **CONFIRMED** | The rewrite corrects scope, routing, and terminology drift |
+| A separate sibling promoted results lane already exists at `../../cultural-landscapes/` | **CONFIRMED** | This file must keep notebook and results responsibilities separate |
+| Path-local child notebook families under this directory | **UNKNOWN / NEEDS VERIFICATION** | Do not present staged leaves as current inventory |
+| Owners, dates, policy label, and final doc ID | **NEEDS VERIFICATION** | Keep placeholders visible instead of inventing values |
 
 ## Directory tree
 
-### Confirmed current tree
+Current public-tree verification supports the following exact inventory:
 
 ```text
-docs/analyses/archaeology/results/cultural-landscapes/
-├── README.md
-└── ecological-affordances/
-    └── README.md
+docs/analyses/archaeology/results/notebooks/cultural-landscapes/
+└── README.md
 ```
 
-> [!NOTE]
-> Keep this section exact to the current tree.  
-> Do **not** silently add corpus-proposed modules here until the repo actually contains them.
+### Staged notebook families (not current-tree fact)
 
-[Back to top](#cultural-landscapes-results)
+The following are **PROPOSED** notebook-family patterns that fit this lane’s role, but they are **not** asserted here as currently mounted subdirectories:
+
+- `corridors/`
+- `interaction-spheres/`
+- `ecological-affordances/`
+- `cultural-regions/`
+- `comparative/`
+- `uncertainty/`
 
 ## Quickstart
 
-### Revise this root index safely
-
-1. Verify the local directory inventory before changing path claims.
-2. Replace merge-time placeholders in the KFM meta block.
-3. Keep the confirmed tree exact.
-4. Move any broader expansion idea into the staged tables or appendix unless the path now exists.
-5. Check that every new link stays consistent with the lane’s public-safe / generalized posture.
-6. Confirm that nothing here quietly upgrades modeled or interpretive outputs into canonical truth.
-
-### Add a new child module
+### 1) Revise this lane safely
 
 ```bash
-# Inspect the live local tree first
-ls docs/analyses/archaeology/results/cultural-landscapes
-
-# Copy the checked-in analysis template when a new child module is approved
-cp docs/analyses/_templates/analysis_readme.md \
-  docs/analyses/archaeology/results/cultural-landscapes/<module>/README.md
+ls docs/analyses/archaeology/results/notebooks/cultural-landscapes
 ```
 
-Then, before linking that module from this root README:
+Check the actual path inventory first. As currently verified, this command should show only `README.md`.
 
-1. confirm the module path exists,
-2. declare whether it is public-safe, mixed, or steward-restricted,
-3. make its generalization / withholding posture explicit,
-4. add evidence and provenance hooks,
-5. mark any unresolved metadata as `NEEDS VERIFICATION`.
+### 2) Keep notebook and results lanes separate
+
+Use this lane when the work is still:
+
+- notebook-side
+- review-bearing
+- generalized
+- method-forward
+- not yet behaving like a promoted public-safe results surface
+
+Move outward to [`../../cultural-landscapes/README.md`](../../cultural-landscapes/README.md) only when the artifact is ready to function as a stable result surface.
+
+### 3) Add a new leaf only after lane-level review
+
+```bash
+mkdir -p docs/analyses/archaeology/results/notebooks/cultural-landscapes/<leaf>
+```
+
+Use this only after the repo owners decide that a new child lane is warranted. Do not pre-document unverified child paths as though they already exist.
 
 ## Usage
 
-### For maintainers
+### When this lane is the right home
 
-Use this README as the first stop when deciding whether a cultural-landscape output belongs here or somewhere else. The main question is not only “is this useful?” but also:
+Use `notebooks/cultural-landscapes/` when a notebook’s center of gravity is one or more of the following:
 
-- is it promoted,
-- is it generalized enough for this lane,
-- does it stay downstream of evidence,
-- and does it avoid accidental precision drift?
+- generalized movement or corridor experiments
+- interaction-sphere affinity analysis
+- eco-hydrological or terrain-linked cultural-landscape synthesis
+- landscape-scale settlement tendency analysis that remains generalized and non-attributional
+- notebook-side comparison work between cultural-landscape hypotheses and environmental evidence
 
-### For reviewers
+### Notebook-side contract
 
-Review this directory as a **publication boundary**, not as a neutral docs folder.
+A notebook in this lane should make the following legible to a reviewer.
 
-Good review questions include:
+| Reviewer question | What the notebook should show |
+| --- | --- |
+| What is being tested? | a narrow cultural-landscape analysis question, not a broad publication claim |
+| What evidence does it use? | admissible source inputs or downstream evidence references |
+| What is the spatial support? | generalized support only; no exact cultural geography leakage |
+| What is the temporal basis? | clear date/phase/window logic, especially for comparative notebooks |
+| What is modeled vs observed? | explicit distinction between observed evidence and modeled surfaces |
+| What is the uncertainty posture? | method limits, uncertainty layers, or reviewer-facing caveats |
+| What happens next? | stay in notebook lane, route to restricted review, or promote to sibling results lane |
 
-- Does the module distinguish environmental affordance from cultural attribution?
-- Does any modeled surface say so plainly?
-- Is uncertainty visible enough to prevent over-reading?
-- Are missing child modules being described as future work rather than current inventory?
-- Are exact-location, route-reconstruction, or identity-inference risks handled fail-closed?
+### Guardrails for cultural-landscape work
 
-### For downstream product surfaces
+This lane is especially sensitive to analytical overreach. Keep the following boundaries explicit:
 
-Story, Focus, Dossier, Compare, or Export surfaces may reuse outputs indexed here only when they preserve the same public-safe, generalized, evidence-linked posture. This README should increase clarity, not widen permission silently.
+- environmental predictors are **not** cultural identity
+- generalized movement surfaces are **not** territorial claims
+- corridor or affinity outputs are **not** exact historical travel paths
+- settlement-tendency patterns are **not** site-level inference
+- generalized regional patterns are **not** sovereignty, ownership, or sacred-geography claims
+
+### 2D-first, 3D-only-when-burdened
+
+Notebook-side cultural-landscape work should default to 2D analysis and review surfaces. Use 3D only when it materially improves interpretation and does not become decorative spectacle.
+
+[Back to top](#kfm-archaeology-cultural-landscape-notebooks)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Promoted archaeology evidence<br/>and reviewed analyses] --> B{Rights / sensitivity / precision review}
-    B -->|public-safe & generalized| C[Cultural Landscapes Results root]
-    B -->|restricted or unresolved| D[Steward-only / withheld surface]
-    C --> E[CONFIRMED<br/>ecological-affordances/]
-    C -. corpus-defined, repo-unverified .-> F[PROPOSED result families]
-    E --> G[Map / Story / Dossier / Focus reuse]
-    F --> H[Create only after repo path exists<br/>and review posture is explicit]
-    D --> I[Do not index from this root]
+    A[Admissible archaeology evidence<br/>and reviewed upstream inputs] --> B[Cultural-landscape notebook]
+    B --> C[Derived notebook outputs<br/>maps, tables, previews, notes]
+    C --> D{Sensitivity, precision,<br/>and review check}
+    D -->|still notebook-side| E[this lane]
+    D -->|public-safe promoted result| F[../../cultural-landscapes/]
+    D -->|restricted or unresolved| G[withhold / steward review]
+    E --> H[review notes<br/>method caveats<br/>provenance pointers]
+    F --> I[story / dossier / export reuse]
 ```
 
 ## Reference tables
 
-### Module matrix
+### Lane routing matrix
 
-| Module | Intended role | Current repo status | Publication posture |
+| Work item | Keep here | Send elsewhere |
+| --- | --- | --- |
+| Notebook draft with generalized corridor experiments | ✅ |  |
+| Reviewer-facing method notes for interaction-sphere analysis | ✅ |  |
+| Public-safe generalized preview maps attached to a notebook review | ✅ |  |
+| Final curated cultural-landscape result registry |  | ✅ `../../cultural-landscapes/` |
+| Exact route reconstruction or precise locational outputs |  | ✅ restricted workflow |
+| Canonical schema or promotion proof pack |  | ✅ governance / contracts / release lanes |
+
+### Staged notebook pattern matrix
+
+| Pattern | Typical notebook-side outputs | Status in this README | Main caution |
 | --- | --- | --- | --- |
-| `ecological-affordances/` | environmental opportunity / constraint summaries across soils, hydrology, vegetation, terrain, climate, or seasonality | **CONFIRMED** local child | generalized / public-safe |
-| `interaction-spheres/` | generalized cultural interaction regions or landscape-scale affinity surfaces | **PROPOSED** from archaeology design docs | generalized / review-bearing |
-| `corridors/` | environmentally grounded movement or corridor affordance models, not exact historical trails | **PROPOSED** from archaeology design docs | generalized / public-safe |
-| `settlement-patterns/` | landscape-scale settlement density, persistence, and environmental correlation summaries | **PROPOSED** from archaeology design docs | generalized / public-safe |
-| `temporal/` | OWL-Time-aligned cultural-landscape sequences and phase transitions | **PROPOSED** from archaeology design docs | generalized / public-safe |
-| `predictive/` | environmental-only predictive cultural-landscape models with uncertainty | **PROPOSED** from archaeology design docs | generalized / review-bearing |
-| `stac/` | machine-readable spatiotemporal registry for result assets | **PROPOSED** from archaeology design docs | mixed / verify before exposure |
-| `metadata/` | DCAT / JSON-LD and related crosswalk material | **PROPOSED** from archaeology design docs | mixed / verify before exposure |
-| `provenance/` | PROV-O lineage, transformation trace, masking lineage, and audit hooks | **PROPOSED** from archaeology design docs | mixed / likely review-bearing |
+| Corridor-cost analysis | cost surfaces, generalized corridor previews, parameter tables | **PROPOSED** | do not overstate modeled routes as historical truth |
+| Interaction-sphere analysis | affinity grids, generalized regional comparisons, uncertainty notes | **PROPOSED** | do not imply tribal or cultural boundaries |
+| Ecological affordance clustering | cluster maps, factor summaries, environmental comparison notes | **PROPOSED** | keep environmental framing explicit |
+| Cultural-region generalization | broad comparative panels, regional summaries, map series | **PROPOSED** | keep claims generalized and review-bearing |
+| Comparative notebook reviews | side-by-side figure sets, method deltas, reviewer notes | **PROPOSED** | do not let comparison artifacts masquerade as promotion-ready outputs |
 
-### Minimum content for any child result README
+### Review signals worth keeping visible
 
-| Section | Keep it concise | Why it belongs |
-| --- | --- | --- |
-| Purpose | yes | tells readers what the result family is for |
-| What it represents | yes | separates landscape tendency from exact record |
-| Inputs / basis | yes | avoids mystery evidence |
-| Method / derivation | yes | keeps analytical vs interpretive state visible |
-| Generalization / withholding | yes | preserves archaeology safety posture |
-| Evidence / provenance links | yes | keeps results reconstructable |
-| Status / review state | yes | avoids overclaiming maturity |
-| Downstream reuse limits | yes | prevents Story / Focus / Export drift |
+| Signal | Why it matters |
+| --- | --- |
+| modeled vs observed | prevents evidence collapse |
+| generalized precision | protects against site-level leakage |
+| reviewer-facing caveats | keeps uncertainty visible |
+| downstream route | reduces notebook/result lane drift |
+| provenance pointers | keeps reruns and promotion inspectable |
 
-### Interpretation cues worth keeping visible
+## Task list — definition of done
 
-| Cue | Use it when | Reader takeaway |
-| --- | --- | --- |
-| `generalized` | spatial precision was intentionally reduced | do not treat as exact location or boundary |
-| `modeled` | output is analytical or predictive | useful, but not a direct observation |
-| `partial` | coverage, chronology, or method is incomplete | absence is not proof of nonexistence |
-| `review-bearing` | steward or FAIR+CARE review still matters | reuse should stay cautious |
-| `withheld` | public exposure would be unsafe or unresolved | this root should not imply public availability |
+A lane update is complete when the following are true:
 
-[Back to top](#cultural-landscapes-results)
+- [ ] The title, scope, and path all describe the **notebook lane**, not the sibling results lane.
+- [ ] The current directory tree is exact and does not invent child entries.
+- [ ] Accepted inputs and exclusions are explicit.
+- [ ] Notebook-side cultural-landscape work is clearly separated from promoted results work.
+- [ ] Generalization and CARE constraints are named in-place.
+- [ ] The document distinguishes environmental predictors from cultural interpretation.
+- [ ] At least one meaningful Mermaid diagram is present.
+- [ ] Staged ideas are labeled **PROPOSED** or **NEEDS VERIFICATION** rather than flattened into fact.
+- [ ] Placeholders remain visible where repo-side verification is still missing.
+- [ ] The file feels native to adjacent notebook documentation instead of copied from a different lane.
 
-## Task list
+### Review checks
 
-- [ ] Replace meta-block placeholders with repo-verified values.
-- [ ] Confirm owners from the live repo’s ownership surface before merge.
-- [ ] Expand `ecological-affordances/README.md` beyond placeholder status.
-- [ ] Decide whether any corpus-described module should be created now, or remain staged only.
-- [ ] Verify whether machine-readable registries (`stac/`, `metadata/`, `provenance/`) belong under this path or elsewhere in the repo.
-- [ ] Add evidence / provenance / manifest links only after those local paths exist.
-- [ ] Confirm whether any cultural-landscape 2.5D / 3D outputs belong here or should stay in a sibling archaeology lane.
-- [ ] Recheck all relative links after any new child module is added.
+Before merging edits here, confirm:
+
+1. no exact coordinates or route-level leakage were introduced
+2. no results-lane paths were silently substituted for notebook-lane paths
+3. no new subdirectories were claimed without tree evidence
+4. any promotion-ready artifacts were routed outward instead of left here by habit
+5. any added notebook family language still preserves non-attributional, generalized framing
 
 ## FAQ
 
-### Why does this README only show one confirmed child module when the archaeology corpus describes many more?
-Because this root index should reflect the **current tree first**. Broader cultural-landscape families are real design signals, but they remain staged until the repo actually contains them.
+### Why does this README stay so strict about tree inventory?
 
-### Are corridor outputs historical trails?
-No. Any corridor family routed from this root should be described as **environmental or analytical affordance models**, not exact reconstructed routes.
+Because the current public repo verification for this path confirms only `README.md`. This file should not imply a richer mounted subtree than the repo currently proves.
 
-### Can this root README link directly to Story or Focus surfaces?
-Yes, but only when those downstream surfaces preserve the same public-safe, generalized, evidence-linked posture.
+### Why not document `ecological-affordances/` here as a current child?
 
-### Does “public-safe” mean “publicly precise”?
-No. Public-safe outputs may still require masking, smoothing, withholding, or uncertainty labeling to prevent location leakage or cultural misinterpretation.
+Because the verified current `ecological-affordances/` lane sits under the **sibling promoted results surface** at `docs/analyses/archaeology/results/cultural-landscapes/`, not under this notebook path.
+
+### Can a notebook here produce maps and rasters?
+
+Yes — but they stay notebook-side, review-bearing, and generalized until there is a deliberate downstream promotion step.
+
+### Is this the place for exact corridor reconstruction?
+
+No. This lane can host generalized movement or cost-surface analysis, but not exact-route claims or restricted geographies.
+
+### Does this lane own STAC / DCAT / PROV directories today?
+
+That is **NEEDS VERIFICATION** for this exact path. The current public tree does not confirm child metadata directories here, so this README treats them as companion concepts, not current inventory.
+
+### Are outputs here authoritative truth?
+
+No. This lane is for derived analysis notebooks and reviewable outputs. Promotion and outward-facing result behavior belong elsewhere.
+
+[Back to top](#kfm-archaeology-cultural-landscape-notebooks)
 
 ## Appendix
 
 <details>
-<summary><strong>Corpus-described expansion candidates (not current-tree fact)</strong></summary>
+<summary><strong>Open verification backlog</strong></summary>
 
-These module families are strong archaeology-lane candidates from the attached design corpus, but they are **not** part of the confirmed current tree at this path.
+### Path-level metadata still needing direct repo verification
 
-### Interaction spheres
-Generalized representations of broad cultural interaction regions, exchange zones, and affinity surfaces. These should stay H3-generalized and avoid cultural-identity attribution.
+- document owner names
+- created / updated dates
+- final `doc_id`
+- final `policy_label`
+- whether any child notebook leaves are already planned but not yet public
+- whether this lane has CODEOWNERS or review-gate automation
+- whether notebook-local metadata companions exist outside the currently visible public tree
 
-### Corridors
-Environmentally favorable movement or travel tendency models derived from cost-distance, hydrology, terrain, vegetation, and similar drivers. These are not exact trails.
+### Safe next expansions
 
-### Settlement patterns
-Landscape-scale density, clustering, persistence, and environmental settlement-correlation summaries. These should remain generalized, uncertainty-labeled, and non-site-specific.
+Add one of these only when the live repo, maintainers, and lane boundaries all agree:
 
-### Temporal landscapes
-Time-sliced or interval-aware cultural-landscape summaries aligned to explicit chronology. These should make temporal scope and incompleteness visible.
+1. a `corridors/README.md` notebook sublane for movement-cost work
+2. a `comparative/README.md` sublane for notebook-to-notebook synthesis
+3. a small example block showing how a notebook should declare:
+   - evidence inputs
+   - modeled outputs
+   - uncertainty posture
+   - downstream routing decision
 
-### Predictive models
-Environmental-only predictive surfaces and uncertainty layers. These should not infer cultural ownership, site-level certainty, or precise settlement placement.
+### Changes this README intentionally does **not** make
 
-### STAC / metadata / provenance registries
-Machine-readable catalog, crosswalk, and lineage surfaces that make results discoverable and auditable. Keep them here only if the repo decides that this lane owns those registries locally.
+- it does **not** invent child paths as current inventory
+- it does **not** fold the notebook lane into the sibling results lane
+- it does **not** claim current CI, schema, or telemetry hooks for this path
+- it does **not** convert generalized cultural-landscape notebook work into identity-bearing or territorial assertions
 
 </details>
-
-[Back to top](#cultural-landscapes-results)
