@@ -182,15 +182,15 @@ jobs:
 
 ```mermaid
 flowchart LR
-    A[Caller workflow<br/>subject + format + optional cosign_key] --> B[Syft<br/>generate sbom.json]
-    B --> C[Export SBOM_PATH<br/>to GITHUB_ENV]
-    B --> D{cosign_key<br/>provided?}
-    D -- yes --> E[Decode base64<br/>to cosign.key]
-    E --> F[Cosign sign-blob<br/>write sbom.sig]
+    A["Caller workflow<br/>subject + format + optional cosign_key"] --> B["Syft<br/>generate sbom.json"]
+    B --> C["Export SBOM_PATH<br/>to GITHUB_ENV"]
+    B --> D{"cosign_key<br/>provided?"}
+    D -- yes --> E["Decode base64<br/>to cosign.key"]
+    E --> F["Cosign sign-blob<br/>write sbom.sig"]
     D -- no --> F
-    F --> G[Write predicate.json<br/>currently {}]
-    G --> H[Cosign attest-blob<br/>type=slsaprovenance<br/>--no-upload]
-    H --> I[Caller workflow decides<br/>store / publish / gate]
+    F --> G["Write predicate.json<br/>currently {}"]
+    G --> H["Cosign attest-blob<br/>type=slsaprovenance<br/>--no-upload"]
+    H --> I["Caller workflow decides<br/>store / publish / gate"]
 ```
 
 ## Current documented contract
