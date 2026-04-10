@@ -1,501 +1,408 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
+doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
 title: Dataset Watch (Receipts Emitter)
 type: standard
 version: v1
 status: draft
-owners: <NEEDS VERIFICATION>
-created: <NEEDS VERIFICATION>
+owners: @bartytime4life
+created: <NEEDS_VERIFICATION_CREATED_DATE>
 updated: 2026-04-10
 policy_label: public
-related: [".github/workflows/ingest-watch.yml", "data/receipts/", "policy/", "tools/attest/"]
-tags: [kfm, receipts, provenance, workflow, monitoring]
-notes: ["Target repo path was not directly surfaced in the current session.", "Owners, canonical doc id, and commit history need verification from the mounted repository."]
+related: [docs/patterns/dataset_watch.md, docs/connectors/README.md, docs/operations/emit-only-watchers/README.md, docs/operations/emit-only-watchers/REGISTRY.md, docs/operations/emit-only-watchers/SCHEMA_STUBS.md, docs/architecture/TRUTH_PATH_LIFECYCLE.md, data/receipts/README.md, tools/attest/README.md, .github/workflows/README.md, .github/watchers/README.md, .github/actions/opa-gate/README.md, .github/actions/sbom-produce-and-sign/README.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md]
+tags: [kfm, patterns, watcher, dataset-watch, receipts, provenance]
+notes: [Mounted repo verification confirms this file path plus adjacent receipts, attest, workflow-doc, watcher-doc, and connector-doc surfaces. No checked-in ingest-watch workflow YAML, webhook receiver, or queue listener runtime was visible in the mounted tree.]
 [/KFM_META_BLOCK_V2] -->
 
-# 📡 Dataset Watch (Receipts Emitter)
+<a id="top"></a>
 
-Deterministically monitors a dataset endpoint for change signals and emits a signed, auditable run receipt.
+# Dataset Watch (Receipts Emitter)
+
+Deterministically observes a dataset endpoint, records change signals, and emits a run receipt without claiming catalog closure, release proof, or publish authority.
+
+> **Status:** experimental pattern · draft  
+> **Owners:** `@bartytime4life` *(broad `/docs/` owner confirmed via [`.github/CODEOWNERS`](../../.github/CODEOWNERS); narrower path ownership was not surfaced)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs%2Fpatterns-1f6feb) ![role](https://img.shields.io/badge/role-receipts__emitter-0a7ea4) ![posture](https://img.shields.io/badge/posture-observe__record__stop-8250df) ![repo](https://img.shields.io/badge/mounted_repo-verified-2ea44f)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Boundary objects](#boundary-objects) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> **Repo fit:** `docs/patterns/dataset_watch.md` → upstream: [`../README.md`](../README.md), [`../connectors/README.md`](../connectors/README.md), [`../architecture/TRUTH_PATH_LIFECYCLE.md`](../architecture/TRUTH_PATH_LIFECYCLE.md), [`../operations/emit-only-watchers/README.md`](../operations/emit-only-watchers/README.md) · adjacent governed surfaces: [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/watchers/README.md`](../../.github/watchers/README.md), [`../../.github/actions/opa-gate/README.md`](../../.github/actions/opa-gate/README.md), [`../../.github/actions/sbom-produce-and-sign/README.md`](../../.github/actions/sbom-produce-and-sign/README.md)  
+> **Accepted here:** read-only dataset observation, deterministic change signals, run receipt semantics, idempotency rules, and handoff guidance into receipts / attestation / policy lanes  
+> **Not here:** checked-in workflow certainty beyond what the tree proves, webhook receiver code, queue consumers, policy ownership, catalog closure, release manifests, or public publication behavior
 
 > [!IMPORTANT]
-> This document is written to preserve the existing **receipts vs proofs** boundary. This workflow emits **run receipts**, not release proofs, policy decisions, or publication closure artifacts.
+> Mounted-repo verification confirms that this pattern document exists and that the repo already has real adjacent surfaces for receipts, attestation helpers, watcher doctrine, and workflow documentation. It does **not** confirm a checked-in `ingest-watch.yml`, a webhook receiver, or a queue-driven runtime in the mounted tree.
 
-**Status:** Experimental  
-**Owners:** NEEDS VERIFICATION  
-![status](https://img.shields.io/badge/status-experimental-orange)
-![posture](https://img.shields.io/badge/posture-read--only_probe-blue)
-![evidence](https://img.shields.io/badge/evidence-run_receipts-green)
-![kfm](https://img.shields.io/badge/kfm-evidence--first-6f42c1)
-![repo-fit](https://img.shields.io/badge/repo_fit-workflow%20%2B%20receipts-lightgrey)
-
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Definition of done](#definition-of-done) · [FAQ](#faq)
-
----
+> [!NOTE]
+> This is the repo-native shape closest to a generic “governed webhook ingestion” draft. In the mounted repo, the strongest verified pattern is still narrower: **observe → receipt → optional signing → downstream governed handoff**.
 
 ## Scope
 
-This workflow exists to observe a remote dataset endpoint, detect change signals, and leave behind a durable receipt of that observation.
+This document defines a small, auditable watcher pattern for dataset observation.
 
-It is designed for a narrow, disciplined job:
+Its job is intentionally narrow:
 
-- poll a dataset URI with `HEAD`
-- extract `ETag` and `Last-Modified`
-- optionally fetch and hash the body as `spec_hash`
-- compute a deterministic `idempotency_key`
-- emit `run_receipt.json`
-- optionally sign the receipt
-- upload or retain the receipt as workflow evidence
+1. probe an endpoint or feed,
+2. capture change signals such as `ETag`, `Last-Modified`, and optional body hash,
+3. compute a deterministic identity for the observed state,
+4. emit a `run_receipt.json`,
+5. optionally hand the receipt to attestation and later policy / release lanes.
 
-> [!NOTE]
-> In KFM terms, this is a **process-memory surface**. It is useful for audit, replay, and downstream orchestration, but it is not itself a promotion decision, catalog closure, or release proof.
+It is **not** an authority-changing surface. In KFM terms, that means this pattern stays upstream of catalog closure, `DecisionEnvelope`, `ReleaseManifest`, `EvidenceBundle`, and outward publication.
 
-[Back to top](#-dataset-watch-receipts-emitter)
+### Truth labels used in this file
 
----
+| Label | Meaning here |
+| --- | --- |
+| **CONFIRMED** | Directly supported by the mounted repo tree or existing checked-in Markdown |
+| **INFERRED** | Conservative conclusion drawn from multiple repo-visible surfaces |
+| **PROPOSED** | Recommended behavior or extension not yet proven as checked-in runtime reality |
+| **UNKNOWN** | Not directly verified strongly enough from the mounted repo |
+| **NEEDS VERIFICATION** | Specific detail that should be checked before merge or implementation claims expand |
+
+[Back to top](#top)
 
 ## Repo fit
 
-**Path:** NEEDS VERIFICATION  
-**Likely execution surface:** `.github/workflows/ingest-watch.yml`  
-**Likely downstream surfaces:** `data/receipts/`, `policy/`, `tools/attest/`
+The mounted repo now provides enough neighboring structure to place this document more precisely than a generic draft.
 
-### Upstream links
+| Surface | Path | Why it matters | Status |
+| --- | --- | --- | --- |
+| Pattern doc | `docs/patterns/dataset_watch.md` | Existing repo-native home for this watcher / receipt pattern | **CONFIRMED** |
+| Connector guidance | [`../connectors/README.md`](../connectors/README.md) | Connector docs already propose fetch patterns such as `listener` and `governed-upload` | **CONFIRMED** |
+| Watcher doctrine | [`../operations/emit-only-watchers/README.md`](../operations/emit-only-watchers/README.md) | Keeps watcher posture emit-only, evidence-first, and non-publishing | **CONFIRMED** |
+| Watcher registry model | [`../operations/emit-only-watchers/REGISTRY.md`](../operations/emit-only-watchers/REGISTRY.md) | Proposed runtime inputs for datasets, thresholds, and snapshot semantics | **CONFIRMED** doc / **PROPOSED** runtime |
+| Watcher contract staging | [`../operations/emit-only-watchers/SCHEMA_STUBS.md`](../operations/emit-only-watchers/SCHEMA_STUBS.md) | Proposed shapes for `CheckRecord`, `EvidenceBundle`, `DecisionEnvelope`, and `CorrectionNotice` | **CONFIRMED** doc / **PROPOSED** schemas |
+| Lifecycle law | [`../architecture/TRUTH_PATH_LIFECYCLE.md`](../architecture/TRUTH_PATH_LIFECYCLE.md) | Confirms receipts are process memory, not the whole release / proof path | **CONFIRMED** |
+| Receipt storage lane | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Real mounted repo surface for centrally stored process receipts | **CONFIRMED** |
+| Attestation helper lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Real mounted repo surface for attest / proof helper logic | **CONFIRMED** |
+| Workflow docs lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Confirms current public / mounted workflow surface is README-only | **CONFIRMED** |
+| Watcher gatehouse lane | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | Confirms `.github/watchers/` is docs-only today | **CONFIRMED** |
+| Policy gate action doc | [`../../.github/actions/opa-gate/README.md`](../../.github/actions/opa-gate/README.md) | Confirms fail-closed policy evaluation is documented as a separate control-plane concern | **CONFIRMED** doc / **NEEDS VERIFICATION** mounted action contract |
+| SBOM/signing action doc | [`../../.github/actions/sbom-produce-and-sign/README.md`](../../.github/actions/sbom-produce-and-sign/README.md) | Confirms signing / attestation is described adjacent to, not inside, the watcher pattern | **CONFIRMED** doc / **NEEDS VERIFICATION** mounted action contract |
 
-- remote HTTP/HTTPS dataset endpoints
-- scheduler triggers (`cron`)
-- ad hoc operator runs (`workflow_dispatch`)
+### Placement rule
 
-### Downstream links
+This file should stay a **pattern / contract note**, not a hidden runtime home.
 
-- `data/receipts/` for stored receipt artifacts
-- policy and attestation lanes that may consume receipts later
-- registry / ingest contracts that may use receipt output as evidence input
+- If the repo later adds a concrete watcher workflow, keep the operational YAML under `.github/workflows/`.
+- If the repo later adds runtime code, keep it under an owning execution surface such as `/pipelines/`, `/scripts/`, or another verified runtime lane.
+- Keep `docs/patterns/dataset_watch.md` as the human-readable explanation of the seam, not the seam itself.
 
-### Accepted inputs
+[Back to top](#top)
 
-This directory or document area should describe only:
+## Accepted inputs
 
-- watcher workflow behavior
-- receipt fields and semantics
-- deterministic change detection rules
-- signing behavior for receipts
-- operational usage for scheduled or manual runs
+The mounted repo and adjacent docs support a narrow set of inputs for this pattern.
 
-### Exclusions
+| Input class | What belongs here | Why it fits |
+| --- | --- | --- |
+| Dataset URI | HTTP/HTTPS endpoint or feed URL to observe | Core subject of the watch pattern |
+| Header validators | `ETag`, `Last-Modified`, content length, other stable response metadata | Cheap, deterministic change signals |
+| Optional body hash | `spec_hash` or equivalent body-level digest | Stronger content drift detection when headers are weak |
+| Schedule / manual trigger metadata | cron-like or operator-triggered run context | Helps form a stable run record without making this file a scheduler spec |
+| Idempotency inputs | dataset URI + validator state + optional body hash | Supports replay safety and dedupe |
+| Receipt output path | central receipts lane or another governed receipt-bearing artifact path | Connects pattern to repo-visible process-memory surfaces |
+| Optional signing handoff | reference to attestation helpers or signing steps | Strengthens receipt integrity without collapsing receipts into proofs |
 
-This document should not become the home for:
+### Good fit examples
 
-- policy enforcement logic
-- schema ownership for wider platform contracts
-- catalog publishing rules
-- release manifest assembly
-- proof-pack semantics
-- mutation of upstream data
-- general CI/CD doctrine unrelated to this watcher
-
-> [!CAUTION]
-> Do not let this workflow silently expand into a publish lane. In KFM, receipts, decisions, catalog closure, and outward release are separate governed objects.
-
-[Back to top](#-dataset-watch-receipts-emitter)
-
----
-
-## Inputs
-
-| Name | Type | Required | Meaning |
-|---|---|---:|---|
-| `DATASET_URI` | string | Yes | HTTP/HTTPS endpoint to observe |
-| `cron` | schedule | No | Recurring execution trigger |
-| `workflow_dispatch` | manual | No | Operator-triggered ad hoc run |
-
-### Expected endpoint behavior
-
-This workflow works best against endpoints that expose one or more of:
-
-- `ETag`
-- `Last-Modified`
-- stable response bodies suitable for hashing
-- reliable conditional fetch semantics
-
-### Input posture
-
-- read-only
-- external-facing
-- deterministic where source behavior is deterministic
-- safe to re-run
-
----
+- a public ArcGIS REST layer with stable headers
+- a STAC item or collection endpoint
+- a Kansas data service with consistent HTTP validators
+- a lightweight source poller used before a larger lane decides whether anything warrants promotion
+- a later push/listener or webhook adaptation that still emits the same receipt boundary
 
 ## Exclusions
 
-This watcher does **not** own the following responsibilities:
+This file should not quietly absorb the stronger surfaces that KFM already names elsewhere.
 
-- deny/allow policy decisions
-- STAC/DCAT/PROV publication
-- release approval
-- review-state transitions
-- correction notices
-- release manifests
-- release proof packs
-- canonical dataset versioning beyond this receipt surface
+| Keep out of this pattern as primary responsibility | Why | Put it here instead |
+| --- | --- | --- |
+| Policy allow / deny logic | Policy remains a separate governed lane | [`../../policy/`](../../policy/) and policy-gate actions |
+| Catalog closure (`STAC` / `DCAT` / `PROV`) | Observation alone is not publication | `data/catalog/` and owning catalog lanes |
+| Release manifests or proof packs | Receipts are process memory, not release truth | `data/proofs/` and release-bearing surfaces |
+| Runtime receiver code, webhook handlers, queue consumers | Mounted repo does not currently prove them here | verified runtime / execution lane |
+| Outward publication or client-facing routes | Violates the receipts-vs-publication boundary | governed API / release surfaces |
+| Secret handling or signing identity ownership | Docs should not become secret or key stores | runtime secret management / control-plane config |
+| “Webhook pipeline” claims that imply a checked-in receiver stack | Not verified in the mounted tree | keep as **PROPOSED** appendix material only |
 
-That separation is intentional.
+> [!WARNING]
+> Do not let a receipt emitter become a stealth publish lane. In KFM, **observation**, **decision**, **release**, and **runtime evidence resolution** are intentionally separate objects and phases.
 
----
+[Back to top](#top)
 
-## Evidence & proof boundary
+## Current verified snapshot
 
-A useful way to read this workflow in KFM:
+Mounted-repo inspection supports the following concrete statements.
 
-| Object | Belongs here? | Why |
-|---|---:|---|
-| `run_receipt.json` | Yes | Proves that this observation run occurred |
-| `idempotency_key` | Yes | Supports replay safety and dedupe |
-| `spec_hash` | Yes | Optional content-level drift signal |
-| signature / transparency evidence | Yes | Strengthens auditability of the receipt |
-| policy result | No | Belongs in a decision envelope or policy lane |
-| release manifest | No | Belongs in outward release assembly |
-| catalog closure | No | Belongs in publishable metadata closure |
-| release proof pack | No | Belongs in promotion / release evidence |
+| Item | Mounted repo state | Reading posture |
+| --- | --- | --- |
+| `docs/patterns/dataset_watch.md` | Present | **CONFIRMED** |
+| `docs/patterns/` children | Only `dataset_watch.md` was visible | **CONFIRMED** |
+| `.github/workflows/README.md` | Present | **CONFIRMED** |
+| `.github/workflows/*.yml` | No `ingest-watch.yml` was visible in the mounted tree listing | **CONFIRMED current absence** |
+| `.github/watchers/README.md` | Present | **CONFIRMED** |
+| `.github/actions/opa-gate/README.md` | Present | **CONFIRMED** |
+| `.github/actions/sbom-produce-and-sign/README.md` | Present | **CONFIRMED** |
+| `data/receipts/README.md` | Present | **CONFIRMED** |
+| `tools/attest/README.md` | Present | **CONFIRMED** |
+| `/docs/` owner mapping in `.github/CODEOWNERS` | `@bartytime4life` | **CONFIRMED** |
+| Checked-in webhook receiver, queue listener, or push handler code | Not surfaced during mounted-repo inspection | **UNKNOWN / NEEDS VERIFICATION** |
+| Merge-blocking workflow / attestation wiring for this exact pattern | Not surfaced as checked-in runtime or YAML | **UNKNOWN / NEEDS VERIFICATION** |
 
-> [!TIP]
-> Keep the watcher small. KFM grows by proving one clean seam at a time.
+## Directory tree
 
-[Back to top](#-dataset-watch-receipts-emitter)
+### Current mounted-repo surfaces that shape this pattern
 
----
+```text
+docs/
+└── patterns/
+    └── dataset_watch.md
 
-## Receipt contract
+.github/
+├── CODEOWNERS
+├── PULL_REQUEST_TEMPLATE.md
+├── actions/
+│   ├── opa-gate/
+│   │   └── README.md
+│   ├── provenance-guard/
+│   │   └── README.md
+│   └── sbom-produce-and-sign/
+│       └── README.md
+├── watchers/
+│   └── README.md
+└── workflows/
+    └── README.md
 
-Each run produces a receipt with a shape along these lines:
+data/
+└── receipts/
+    └── README.md
+
+tools/
+└── attest/
+    └── README.md
+```
+
+### What is *not* currently proven here
+
+```text
+.github/workflows/ingest-watch.yml        # not visible in mounted repo
+docs/connectors/patterns/feed-listener.md # proposed by docs/connectors/README.md, not visible
+runtime/webhook/receiver.py               # not visible
+listener worker / queue consumer          # not visible
+```
+
+[Back to top](#top)
+
+## Quickstart
+
+The mounted repo supports an **inspection-first** quickstart, not a runtime one.
+
+### 1. Inspect the current pattern and adjacent trust surfaces
+
+```bash
+sed -n '1,260p' docs/patterns/dataset_watch.md
+sed -n '1,260p' docs/connectors/README.md
+sed -n '1,260p' docs/operations/emit-only-watchers/README.md
+sed -n '1,260p' data/receipts/README.md
+sed -n '1,260p' tools/attest/README.md
+sed -n '1,260p' .github/workflows/README.md
+```
+
+### 2. Verify the mounted tree before claiming execution details
+
+```bash
+find docs/patterns -maxdepth 2 -type f | sort
+find .github/workflows -maxdepth 2 -type f | sort
+find data/receipts -maxdepth 2 -type f | sort
+find tools/attest -maxdepth 2 -type f | sort
+```
+
+### 3. Only then add a concrete workflow or runtime adapter
+
+```bash
+# illustrative branch-first pattern — do not treat these paths as already present
+mkdir -p .github/workflows
+$EDITOR .github/workflows/<new-watch-workflow>.yml
+```
+
+> [!CAUTION]
+> Keep any runtime quickstart or workflow example tied to files that are actually present on the branch under review. The mounted repo does **not** currently prove `ingest-watch.yml`.
+
+[Back to top](#top)
+
+## Usage
+
+Use this pattern when you need one small, reviewable seam that says:
+
+- a dataset or feed was checked,
+- the observed state can be identified deterministically,
+- a receipt exists for replay or audit,
+- downstream lanes can decide whether anything more consequential should happen.
+
+### Minimal receipt contract
 
 ```json
 {
-  "run_id": "20260410T150000Z-123456",
-  "ts": "20260410T150000Z",
-  "dataset_uri": "https://example.com/data",
+  "run_id": "2026-04-10T15:00:00Z-0001",
+  "timestamp": "2026-04-10T15:00:00Z",
+  "dataset_uri": "https://example.org/data",
   "etag": "\"abc123\"",
-  "last_modified": "Wed, 10 Apr 2026 14:58:00 GMT",
+  "last_modified": "Thu, 10 Apr 2026 14:58:00 GMT",
   "idempotency_key": "sha256(...)",
   "spec_hash": "sha256(...)"
 }
 ```
 
-### Field semantics
+### Field guide
 
-| Field | Meaning |
-|---|---|
-| `run_id` | Unique execution identifier for this watcher run |
-| `ts` | UTC run timestamp |
-| `dataset_uri` | Observed endpoint |
-| `etag` | Header-based change signal |
-| `last_modified` | Secondary change signal |
-| `idempotency_key` | Deterministic identity for the observed state |
-| `spec_hash` | Optional body/content hash |
+| Field | Why it matters |
+| --- | --- |
+| `run_id` | Unique execution identity |
+| `timestamp` | UTC observation time |
+| `dataset_uri` | Subject under watch |
+| `etag` | Cheap header-level drift signal |
+| `last_modified` | Secondary freshness / change signal |
+| `idempotency_key` | Replay-safe identity for the observed state |
+| `spec_hash` | Stronger content signal when body hashing is used |
 
-### KFM alignment note
+### Usage rule
 
-This document intentionally uses `run_receipt` language. Broader KFM manuals describe richer artifact families such as `SourceDescriptor`, `IngestReceipt`, `DatasetVersion`, `CatalogClosure`, `EvidenceBundle`, and `ReleaseManifest`. This watcher should remain a narrow receipt emitter unless and until the repository surfaces a larger verified contract chain.
+The pattern should remain:
 
----
+1. **read-only**,
+2. **deterministic**,
+3. **receipt-bearing**,
+4. **policy-separable**.
 
-## Idempotency model
+If a change would make it decide publication, resolve rights, or silently mutate state, stop and move that behavior to the owning policy / release / runtime surface.
 
-```text
-idempotency_key = sha256(
-  dataset_uri | etag | last_modified
-)
-```
-
-### What this buys you
-
-- same observed state → same deterministic identity
-- safe retry behavior
-- deduplication support
-- downstream change gating without guessing
-
-### What it does not guarantee
-
-- semantic equivalence when source headers are weak or misleading
-- policy correctness
-- release readiness
-- stable content identity unless `spec_hash` is also captured
-
-> [!WARNING]
-> Some endpoints expose weak validators. When header quality is poor, body hashing becomes much more important.
-
-[Back to top](#-dataset-watch-receipts-emitter)
-
----
-
-## Signing & transparency
-
-### Default path
-
-Use Sigstore/Cosign keyless signing when available.
-
-That keeps receipt signing:
-
-- short-lived
-- OIDC-bound
-- transparency-log visible
-- easier to audit than ad hoc local keys
-
-### Fallback path
-
-OpenSSL or other local signing approaches may exist as a fallback, but they do not provide the same transparency properties unless separately integrated.
-
-### Practical stance
-
-The signature strengthens trust in the **receipt artifact**. It does not transform the receipt into a release proof.
-
----
-
-## Directory tree
-
-```text
-<NEEDS-VERIFICATION-REPO-PATH>/
-├── .github/
-│   └── workflows/
-│       └── ingest-watch.yml
-├── data/
-│   └── receipts/
-│       └── <run artifacts>
-├── docs/
-│   └── <optional runbooks or operator notes>
-└── policy/
-    └── <downstream consumers; not owned by this workflow>
-```
-
-> [!NOTE]
-> The exact mounted repository path was not directly surfaced in the current session. The tree above preserves the draft’s implied structure without claiming current repo proof.
-
----
+[Back to top](#top)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-  A[cron / workflow_dispatch] --> B[HEAD request to DATASET_URI]
-  B --> C[Extract ETag + Last-Modified]
-  C --> D[Optional body fetch + spec_hash]
-  D --> E[Compute idempotency_key]
-  E --> F[Emit run_receipt.json]
-  F --> G[Optional signing]
-  G --> H[Upload artifact / store receipt]
-  H --> I[Optional downstream orchestration]
+    A[cron / manual trigger<br/>or later push signal] --> B[Probe dataset endpoint]
+    B --> C[Capture validators<br/>ETag · Last-Modified]
+    C --> D[Optional body fetch<br/>and spec_hash]
+    D --> E[Compute idempotency_key]
+    E --> F[Emit run_receipt.json]
+    F --> G[Optional attest / sign handoff]
+    G --> H[data/receipts or another governed receipt surface]
+    H --> I[Later policy / release / catalog lanes decide what happens next]
 ```
 
-### Interpretation
+### Reading the diagram
 
-The important thing about this flow is not its visual shape. It is its boundary discipline:
+This flow intentionally stops early.
 
-- observe
-- record
-- sign
-- stop
+It does **not** show catalog closure, `DecisionEnvelope`, or release, because those are downstream governed objects with their own lanes and proof burdens.
 
----
+## Boundary objects
 
-## Quickstart
+One source of drift in watcher docs is letting every artifact family blur together. Keep the table below visible.
 
-1. Create the workflow file.
+| Object | Belongs in this pattern? | Why |
+| --- | ---: | --- |
+| `run_receipt.json` | Yes | Process memory for the observation run |
+| `idempotency_key` | Yes | Safe replay and dedupe |
+| `spec_hash` | Yes, when content hashing is used | Stronger drift signal |
+| Signature / bundle ref for the receipt | Optional handoff | Strengthens integrity of the receipt artifact |
+| `CheckRecord` | Adjacent / future fit | Better owned by watcher contract surfaces if formalized |
+| `EvidenceBundle` | No | Stronger downstream proof object |
+| `DecisionEnvelope` | No | Policy result object, not a raw watcher receipt |
+| `ReleaseManifest` / `ReleaseProofPack` | No | Release-bearing objects, not observation records |
+| Catalog closure (`STAC` / `DCAT` / `PROV`) | No | Publication / metadata closure happens later |
 
-```bash
-mkdir -p .github/workflows
-touch .github/workflows/ingest-watch.yml
-```
+## Task list / definition of done
 
-2. Set the endpoint to observe.
+A mounted-repo-grounded revision of this file is ready when:
 
-```yaml
-env:
-  DATASET_URI: "https://your-dataset-url"
-```
+- [x] The file path is confirmed in the mounted repo.
+- [x] Adjacent receipt, attestation, watcher, workflow-doc, and connector-doc surfaces are verified.
+- [x] Current absence of `ingest-watch.yml` is stated explicitly instead of guessed around.
+- [x] Receipts-vs-proofs boundary is preserved.
+- [x] A Mermaid diagram is included and meaningful.
+- [x] Inputs and exclusions are explicit.
+- [ ] Add a concrete workflow example only after a real checked-in YAML exists.
+- [ ] Add tests / fixtures only after their actual paths are visible in `tests/` or another verified lane.
+- [ ] Add a real attestation example only after the mounted repo exposes the concrete helper or workflow contract.
+- [ ] Add a concrete push / listener implementation path only after it lands in a verified runtime surface.
 
-3. Add schedule and manual trigger blocks as needed.
-
-```yaml
-on:
-  schedule:
-    - cron: "*/15 * * * *"
-  workflow_dispatch:
-```
-
-4. Commit and run through a non-destructive test endpoint first.
-
-> [!IMPORTANT]
-> Before treating this as repo-ready, verify the canonical path, owners, badge conventions, and any existing workflow naming conventions in the mounted repository.
-
-[Back to top](#-dataset-watch-receipts-emitter)
-
----
-
-## Usage
-
-### Scheduled mode
-
-The workflow runs on its configured cron and emits a new receipt each time.
-
-### Manual mode
-
-Operators can trigger the watcher ad hoc through GitHub Actions.
-
-### Expected outputs
-
-- `run_receipt.json`
-- optional signed receipt or transparency evidence
-- optional artifact bundle for later review
-
-### Expected operator checks
-
-- endpoint reachable
-- header values captured as expected
-- no secrets leaked in logs
-- receipt uploaded successfully
-- signing path behaves consistently
-
----
-
-## Verification posture
-
-### CONFIRMED from current-session evidence
-
-- the uploaded draft already defines this as a **Dataset Watch (Receipts Emitter)**
-- the draft already places it near `.github/workflows/`, `data/receipts/`, `policy/`, and `tools/attest/`
-- the draft already distinguishes receipts from proofs
-- the draft already uses `ETag`, `Last-Modified`, `spec_hash`, and `idempotency_key`
-
-### PROPOSED in this revision
-
-- KFM meta block
-- explicit repo-fit framing
-- stronger proof-boundary language
-- merge/definition-of-done section
-- verification posture section
-- clearer boundary between this watcher and wider KFM artifact families
-
-### UNKNOWN / NEEDS VERIFICATION
-
-- actual target repo path
-- canonical owners
-- whether `.github/workflows/ingest-watch.yml` already exists
-- whether `data/receipts/` is the actual artifact path in the mounted repo
-- whether attestation, policy, or downstream automation lanes are already implemented
-- badge conventions used by adjacent repo docs
-
----
-
-## Definition of done
-
-A revision to this document is ready when:
-
-- [ ] title and one-line purpose are present
-- [ ] top impact block is present
-- [ ] repo fit is described without inventing repo state
-- [ ] inputs and exclusions are explicit
-- [ ] at least one Mermaid diagram is included
-- [ ] receipt semantics are documented
-- [ ] receipts-vs-proofs boundary is explicit
-- [ ] deterministic/idempotency behavior is described
-- [ ] unknown repo facts remain labeled
-- [ ] adjacent doctrine is linked or named where relevant
-- [ ] the document does not silently claim live implementation beyond visible evidence
-
----
-
-## Task list
-
-### Immediate review gates
-
-- [ ] Verify the intended file path for this README/doc
-- [ ] Verify owners
-- [ ] Verify whether `ingest-watch.yml` is already the canonical workflow name
-- [ ] Verify whether `data/receipts/` is the real artifact location
-- [ ] Verify whether there is an adjacent attestation README that should be linked
-- [ ] Verify whether this doc belongs under a workflow directory, docs directory, or both
-
-### Next useful expansions
-
-- [ ] Add relative links to adjacent ingestion or attestation docs
-- [ ] Add a minimal sample workflow YAML
-- [ ] Add an example signed receipt artifact
-- [ ] Add a downstream contract note for consumers of `run_receipt.json`
-- [ ] Add rollback / stale-source operator notes only if surfaced from repo evidence
-
----
+[Back to top](#top)
 
 ## FAQ
 
-### Is this a proof system?
+### Does the mounted repo already prove a runnable watcher workflow?
 
-No. This emits **process receipts**, not proofs.
+No. The mounted tree confirms the documentation surface and adjacent control-plane docs, but not a checked-in `ingest-watch.yml` or equivalent runtime for this pattern.
 
-### What happens if the dataset does not change?
+### Is this the same as a webhook ingestion pipeline?
 
-The receipt still records the run. The `idempotency_key` may remain stable while `run_id` changes.
+Not yet. In the mounted repo, the verified shape is narrower: a dataset watch / receipt-emitter pattern. A push or webhook listener is still best treated as a **PROPOSED** variation unless the receiver stack and workflow wiring are checked in.
 
-### Why keep both headers and body hash?
+### Why keep receipts separate from proofs?
 
-Because some sources expose unreliable validators. Headers are cheap; body hashing is stronger.
+Because the repo already distinguishes `data/receipts/` from stronger release / proof surfaces. A receipt proves a run occurred; it does not, by itself, authorize publication.
 
-### Does this publish data?
+### Where should policy decisions happen?
 
-No. It observes and records.
+Outside this pattern, in the policy and review / promotion lanes. The mounted repo already documents fail-closed policy and promotion surfaces separately.
 
-### Does this make policy decisions?
+### Can this still be useful if the source does not change?
 
-No. Those belong downstream.
-
-### Can it trigger other pipelines?
-
-Yes, but only through explicit orchestration outside this workflow’s core scope.
-
----
+Yes. Repeated no-change receipts still provide auditability, freshness visibility, and replay context.
 
 ## Appendix
 
 <details>
-<summary><strong>Example dataset URIs</strong></summary>
+<summary><strong>Push / webhook adaptation (PROPOSED)</strong></summary>
+
+The mounted repo already gives a grounded hint for future push-driven variants:
+
+- [`docs/connectors/README.md`](../connectors/README.md) lists proposed fetch patterns `listener` and `governed-upload`.
+- [`docs/operations/emit-only-watchers/README.md`](../operations/emit-only-watchers/README.md) keeps watcher outcomes emit-only and policy-separable.
+
+A later webhook or queue-listener implementation should therefore preserve the same boundary:
 
 ```text
-USGS WBD
-https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6
-
-NHDPlus HR
-https://hydro.nationalmap.gov/arcgis/rest/services/NHDPlus_HR/MapServer
-
-STAC (HLS)
-https://planetarycomputer.microsoft.com/api/stac/v1/collections/hls2-l30/items
+push signal / webhook / queue message
+→ normalize event identity
+→ capture authoritative locator + headers
+→ optional body hash
+→ emit run_receipt.json
+→ optional signing / attestation handoff
+→ stop
 ```
+
+It should **not** embed policy, catalog closure, or release authority inside the receiver.
 
 </details>
 
 <details>
-<summary><strong>Illustrative workflow stub</strong></summary>
+<summary><strong>Illustrative workflow stub (still PROPOSED)</strong></summary>
 
 ```yaml
 name: dataset-watch
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/15 * * * *"
-  workflow_dispatch:
 
 env:
-  DATASET_URI: "https://example.com/data"
+  DATASET_URI: "https://example.org/data"
 
 jobs:
   watch:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Probe dataset headers
-        run: |
-          curl -I "$DATASET_URI"
+        run: curl -I "$DATASET_URI"
 
-      - name: Emit receipt
+      - name: Emit illustrative receipt
         run: |
-          echo '{"status":"illustrative-example-only"}' > run_receipt.json
+          echo '{"status":"illustrative-only"}' > run_receipt.json
 
       - name: Upload receipt
         uses: actions/upload-artifact@v4
@@ -504,13 +411,8 @@ jobs:
           path: run_receipt.json
 ```
 
-</details>
-
-<details>
-<summary><strong>Why this document is intentionally conservative</strong></summary>
-
-This revision avoids claiming current repo paths, tests, manifests, or workflow maturity that were not directly surfaced in the session. It keeps the original draft’s useful structure while tightening it to match KFM’s evidence-first and overclaim-resistant documentation posture.
+Keep this stub out of the main body until a real workflow file exists on the branch under review.
 
 </details>
 
-[Back to top](#-dataset-watch-receipts-emitter)
+[Back to top](#top)
