@@ -1,0 +1,18 @@
+{
+  "kind": "CorrectionNotice",
+  "schema_version": "v1",
+  "correction_id": "cn.example.2026-03-28.002",
+  "correction_type": "SUPERSEDE",
+  "targets": [
+    "rel.example.2026-03-01.v1"
+  ],
+  "affected_surface_classes": [
+    "map",
+    "story"
+  ],
+  "cause": {
+    "reason_code": "validation.schema_failed",
+    "issued_at": "2026-03-28T00:00:00Z"
+  },
+  "public_note": "Replacement release is not provided."
+}

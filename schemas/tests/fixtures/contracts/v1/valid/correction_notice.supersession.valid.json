@@ -1,0 +1,32 @@
+{
+  "kind": "CorrectionNotice",
+  "schema_version": "v1",
+  "correction_id": "cn.example.2026-03-28.001",
+  "correction_type": "SUPERSEDE",
+  "targets": [
+    "rel.example.2026-03-01.v1"
+  ],
+  "replacement_releases": [
+    "rel.example.2026-03-15.v2"
+  ],
+  "affected_surface_classes": [
+    "map",
+    "dossier",
+    "story",
+    "export",
+    "focus"
+  ],
+  "rebuild_refs": [
+    "pbr.example.001"
+  ],
+  "cause": {
+    "reason_code": "validation.schema_failed",
+    "issued_at": "2026-03-28T00:00:00Z",
+    "effective_at": "2026-03-28T00:00:00Z",
+    "audit_ref": "audit:correction:example:001"
+  },
+  "public_note": "This release has been superseded by a corrected release.",
+  "replaces": [
+    "rel.example.2026-03-01.v1"
+  ]
+}

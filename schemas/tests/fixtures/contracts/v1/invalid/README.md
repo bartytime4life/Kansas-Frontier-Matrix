@@ -45,6 +45,9 @@ Negative-example boundary README for `schemas/tests/fixtures/contracts/v1/invali
 > In KFM, an “invalid fixture” is not arbitrary broken JSON.
 > It is a deliberately failing example meant to prove that a named contract, schema, or gate rejects the wrong shape for the right reason — fail-closed, with the owning authority surface still explicit.
 
+> [!IMPORTANT]
+> Current branch now includes `correction_notice.supersession.missing_replacement.invalid.json` as a concrete negative fixture for the correction contract floor.
+
 ## Scope
 
 This README is intentionally leaf-sized and boundary-heavy.
@@ -154,7 +157,7 @@ These do **not** belong here by default.
 | Item | Status | Why it matters |
 |---|---|---|
 | `schemas/tests/fixtures/contracts/v1/invalid/README.md` exists on current public `main` | **CONFIRMED** | This leaf path is real, not speculative |
-| Current public directory inventory is `README.md` only | **CONFIRMED** | Public `main` does **not** currently prove mounted invalid example files here |
+| Current branch inventory includes `README.md` plus a correction notice invalid fixture | **CONFIRMED** | Public `main` does **not** currently prove mounted invalid example files here |
 | [`../README.md`](../README.md) exists | **CONFIRMED** | The version lane is visible |
 | [`../valid/README.md`](../valid/README.md) exists | **CONFIRMED** | Positive/negative leaves are paired in the current tree |
 | Parent `schemas/tests/README.md` describes `fixtures/contracts/v1/{valid,invalid}` as scaffold-only | **CONFIRMED** | This leaf should preserve that boundary language |
@@ -187,7 +190,8 @@ repo-root/
 
 ```text
 schemas/tests/fixtures/contracts/v1/invalid/
-└── README.md   # local negative-example boundary README
+├── README.md
+└── correction_notice.supersession.missing_replacement.invalid.json
 ```
 
 ### Future leaf shape after explicit authority and consumer decisions (**PROPOSED**)

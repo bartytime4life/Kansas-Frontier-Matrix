@@ -41,6 +41,9 @@ Positive-example boundary README for the live `schemas/tests/fixtures/contracts/
 >
 > This leaf can support that pattern as a documented scaffold, but the current public tree does not yet prove mounted positive example files or active workflow enforcement at this path.
 
+> [!IMPORTANT]
+> Current branch now includes `correction_notice.supersession.valid.json` as a concrete positive fixture for the correction contract floor.
+
 ## Scope
 
 `schemas/tests/fixtures/contracts/v1/valid/` is the positive-example leaf inside the visible schema-side contract-fixture scaffold.
@@ -153,7 +156,8 @@ schemas/tests/fixtures/contracts/v1/
 
 ```text
 schemas/tests/fixtures/contracts/v1/valid/
-└── README.md
+├── README.md
+└── correction_notice.supersession.valid.json
 ```
 
 ### Candidate future local shape (`PROPOSED`)
@@ -259,7 +263,7 @@ flowchart TB
 | Statement | Posture | Why it matters |
 |---|---|---|
 | `schemas/tests/fixtures/contracts/v1/valid/README.md` exists on current public `main` | **CONFIRMED** | This leaf is real, not hypothetical |
-| No checked-in positive example files beyond `README.md` were verified in this leaf | **CONFIRMED** | The local positive lane is visible but still placeholder-level |
+| A checked-in positive correction notice fixture now exists in this leaf | **CONFIRMED** | The local positive lane is visible but still placeholder-level |
 | `../invalid/README.md` exists beside this leaf | **CONFIRMED** | The `v1` scaffold has paired positive and negative leaves |
 | `../../README.md` already treats `v1/{valid,invalid}` as local scaffold lanes | **CONFIRMED** | This leaf should describe inventory, not invent canonical authority |
 | `../../../../../../contracts/README.md` remains the stronger current machine-contract surface | **CONFIRMED / INFERRED** | Positive examples here should not silently outrank the contract lane |
