@@ -10,7 +10,7 @@ updated: <NEEDS-VERIFICATION-YYYY-MM-DD>
 policy_label: <NEEDS-VERIFICATION>
 related: [schemas/contracts/v1/README.md, schemas/contracts/v1/correction/correction_notice.schema.json, tests/contracts/README.md, tests/e2e/correction/README.md, schemas/tests/fixtures/contracts/v1/README.md, .github/workflows/README.md]
 tags: [kfm, contracts, schemas, correction, correction-notice]
-notes: [Current public main confirms this lane and local schema file exist; correction_notice.schema.json is still `{}`; schema-home authority, dates, doc_id, and policy label still need direct branch-level verification.]
+notes: [Current branch now includes a Draft 2020-12 starter body in correction_notice.schema.json plus v1 valid/invalid fixtures and a contract-floor unit test; schema-home authority, dates, doc_id, and policy label still need direct branch-level verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Correction Contracts v1
@@ -23,11 +23,11 @@ Boundary-and-inventory README for the live `schemas/contracts/v1/correction/` la
 > **Owners:** `@bartytime4life` *(current strongest visible signal is the public `.github/CODEOWNERS` global fallback; no narrower `/schemas/contracts/v1/correction/` owner rule was directly verified on public `main`)*  
 > **Path:** `schemas/contracts/v1/correction/README.md`  
 > **Family file:** [`./correction_notice.schema.json`](./correction_notice.schema.json)  
-> ![Status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![Doc](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square) ![Lane](https://img.shields.io/badge/lane-correction-6f42c1?style=flat-square) ![Schema body](https://img.shields.io/badge/correction__notice-placeholder_%7B%7D-yellow?style=flat-square) ![Schema home](https://img.shields.io/badge/schema__home-NEEDS__VERIFICATION-red?style=flat-square) ![Branch](https://img.shields.io/badge/branch-main-0a7d5a?style=flat-square)  
+> ![Status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![Doc](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square) ![Lane](https://img.shields.io/badge/lane-correction-6f42c1?style=flat-square) ![Schema body](https://img.shields.io/badge/correction__notice-draft%202020--12%20starter-green?style=flat-square) ![Schema home](https://img.shields.io/badge/schema__home-NEEDS__VERIFICATION-red?style=flat-square) ![Branch](https://img.shields.io/badge/branch-main-0a7d5a?style=flat-square)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Contract shape](#contract-shape) · [Validation & gates](#validation--gates) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!WARNING]
-> Current public `main` proves this correction lane is real, but adjacent repo docs still do **not** settle whether `schemas/` or `contracts/` is the authoritative machine-contract home. The local `correction_notice.schema.json` file is currently placeholder-only `{}`.
+> Current public `main` proves this correction lane is real, but adjacent repo docs still do **not** settle whether `schemas/` or `contracts/` is the authoritative machine-contract home. The local `correction_notice.schema.json` file now contains a Draft 2020-12 starter contract body.
 
 > [!NOTE]
 > The KFM Meta Block v2 above uses reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` because those values were not directly confirmed from the public repo surfaces reviewed for this revision.
@@ -36,7 +36,7 @@ Boundary-and-inventory README for the live `schemas/contracts/v1/correction/` la
 |---|---|
 | Family role | Preserve visible lineage under supersession, withdrawal, narrowing, or reissue |
 | Current local inventory | `README.md` + `correction_notice.schema.json` |
-| Current schema body | Placeholder `{}` |
+| Current schema body | Draft 2020-12 starter schema |
 | Stronger neighboring proof surfaces | [`tests/contracts/`](../../../../tests/contracts/README.md) for contract-facing validation; [`tests/e2e/correction/`](../../../../tests/e2e/correction/README.md) for whole-path correction proof |
 | Local schema-side fixture scaffold | [`schemas/tests/fixtures/contracts/v1/`](../../../tests/fixtures/contracts/v1/README.md) exists generically, but no correction-specific fixture leaf was directly verified here |
 | Authority posture | **UNKNOWN / NEEDS VERIFICATION** between `schemas/` and `contracts/` |
@@ -162,7 +162,7 @@ This directory should stay small, explicit, and hard to misread.
 | `schemas/contracts/v1/correction/` | **CONFIRMED** present | The correction-family lane is a real checked-in public path |
 | `./README.md` | **CONFIRMED** present | This directory already has a substantive family README surface |
 | `./correction_notice.schema.json` | **CONFIRMED** present | The family filename is materialized |
-| `./correction_notice.schema.json` body | **CONFIRMED** current body is `{}` | The local schema is still placeholder-only, not enforcement-grade |
+| `./correction_notice.schema.json` body | **CONFIRMED** Draft 2020-12 starter body is present | The local schema now encodes a first-wave contract floor, but full enforcement maturity still needs broader suite coverage |
 | [`../../../../tests/e2e/correction/README.md`](../../../../tests/e2e/correction/README.md) | **CONFIRMED** present; current public leaf is README-only | Whole-path correction proof has a named home, but executable depth remains **NEEDS VERIFICATION** |
 | [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) | **CONFIRMED** present and explicitly names `CorrectionNotice` in the family role | Stronger contract-facing validation surface exists outside this schema lane |
 | [`../../../tests/fixtures/contracts/v1/README.md`](../../../tests/fixtures/contracts/v1/README.md) plus `valid/` and `invalid/` leaves | **CONFIRMED** present as generic schema-side fixture scaffold | Versioned generic fixture scaffolding exists, but no correction-specific fixture payloads were directly verified here |
@@ -178,7 +178,7 @@ Right now this lane proves five things and no more:
 2. the local README is substantive
 3. the local schema filename exists
 4. adjacent correction-proof and contract-validation lanes exist elsewhere in the repo
-5. local contract implementation maturity is still incomplete because the checked-in schema body is `{}`
+5. local contract implementation maturity is improving with a checked-in starter schema body, but broader cross-family validation is still incomplete
 
 [Back to top](#correction-contracts-v1)
 
@@ -337,12 +337,12 @@ flowchart LR
 
 ## Contract shape
 
-### What current public `main` proves locally
+### What this branch now proves locally
 
 | Local fact | Meaning |
 |---|---|
 | `correction_notice.schema.json` exists | The family filename is materialized in the `schemas/` lane |
-| `correction_notice.schema.json` currently equals `{}` | The local field list is **not** yet encoded here as a substantive schema |
+| `correction_notice.schema.json` now has a Draft 2020-12 body | The local field list now has a machine-checkable starter floor |
 | this README already contains doctrinal field guidance | The repo has contract intent documented even though machine enforcement is not yet proven locally |
 
 ### Confirmed doctrinal minimum contract floor
@@ -503,7 +503,7 @@ A thin but honest correction drill should prove three linked objects:
 ## Task list — definition of done
 
 - [ ] one authoritative schema-home decision is recorded or explicitly linked
-- [ ] `correction_notice.schema.json` grows beyond `{}` under JSON Schema Draft 2020-12
+- [x] `correction_notice.schema.json` now has a JSON Schema Draft 2020-12 starter body
 - [ ] contract-facing valid / invalid cases exist in the authoritative verification lane
 - [ ] any schema-side `valid/` / `invalid/` mirrors are explicitly marked non-authoritative, generated, or pointer-only
 - [ ] at least one correction drill exists under `tests/e2e/correction/**`
