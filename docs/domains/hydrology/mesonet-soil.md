@@ -1,83 +1,109 @@
-<!--
-doc_id: NEEDS VERIFICATION
-title: Kansas Mesonet Soil Moisture Domain Specification
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<REVIEW_REQUIRED_UUID_NOT_CONFIRMED>
+title: Kansas Mesonet Soil Moisture Integration Specification
 type: standard
 version: v1
 status: draft
-owners: [NEEDS VERIFICATION]
-created: 2026-04-01
-updated: 2026-04-01
-policy_label: NEEDS VERIFICATION
-related: [
-  "docs/domains/README.md",
-  "docs/governance/ROOT_GOVERNANCE.md",
-  "docs/governance/ETHICS.md",
-  "docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md",
-  "docs/standards/markdown-rules.md"
-]
-tags: [kfm, hydrology, soils, mesonet, timeseries, provenance, evidence]
-notes: [
-  "Repo paths and adjacent domain conventions NEEDS VERIFICATION.",
-  "This document is scoped to public-facing source integration and does not assert implemented ingestion or publication status.",
-  "Kansas Mesonet field names and API examples were validated against public source documentation on 2026-04-01."
-]
--->
+owners: @bartytime4life
+created: 2026-04-11
+updated: 2026-04-11
+policy_label: public-safe
+related: [docs/domains/README.md, docs/governance/ROOT_GOVERNANCE.md, docs/governance/ETHICS.md, contracts/README.md, data/registry/README.md, data/work/README.md, data/catalog/README.md, policy/README.md]
+tags: [kfm, hydrology, mesonet, soil-moisture, sensorthings, provenance, evidence]
+notes: [Merged from the Kansas Mesonet connector draft and the Kansas Mesonet soil moisture domain specification; repo paths and mounted implementation depth remain unverified in the current session; SensorThings is treated as a downstream serving adapter rather than the canonical store.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Kansas Mesonet Soil Moisture Domain Specification
+# Kansas Mesonet Soil Moisture Integration Specification
 
-**One-line purpose:** Define how Kansas Mesonet soil moisture and related evapotranspiration data should be represented, ingested, validated, governed, and published within KFM.
+**One-line purpose:** Define how Kansas Mesonet soil moisture observations and adjacent evapotranspiration data should be characterized, ingested, validated, governed, and published in KFM, with SensorThings treated only as a downstream serving surface.
 
 **Status:** Draft  
-**Owners:** NEEDS VERIFICATION  
-**Path:** `docs/domains/hydrology/mesonet-soil.md`
+**Owners:** @bartytime4life  
+**Intended path:** `docs/domains/hydrology/mesonet-soil.md` *(NEEDS VERIFICATION)*
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
-![Scope](https://img.shields.io/badge/scope-hydrology%20%7C%20soil-blue)
+![Scope](https://img.shields.io/badge/scope-hydrology%20%7C%20connector-blue)
 ![Data](https://img.shields.io/badge/data-public%20source-green)
 ![Trust](https://img.shields.io/badge/trust-evidence--first-purple)
 ![Repo Fit](https://img.shields.io/badge/repo_fit-NEEDS%20VERIFICATION-lightgrey)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Source profile](#source-profile) · [Acquisition](#acquisition-pattern) · [Schema](#canonical-record-shape) · [QA](#validation-and-quality-rules) · [Publication](#publication-and-trust-surface) · [Tasks](#task-list) · [FAQ](#faq)
+**Quick jumps:** [Scope](#scope) · [Truth posture](#truth-posture) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Source profile](#source-profile) · [Acquisition](#acquisition-pattern) · [Trust flow](#ingestion-and-trust-flow) · [Schema](#canonical-record-shape) · [Connector boundary](#connector-and-sensorthings-boundary) · [QA](#validation-and-quality-rules) · [Publication](#publication-and-trust-surface) · [Tasks](#task-list) · [FAQ](#faq)
 
 ---
 
 ## Scope
 
-This document specifies the **KFM handling model** for Kansas Mesonet soil moisture observations and adjacent evapotranspiration data.
+This document consolidates the strongest parts of the two source drafts into one governed specification for Kansas Mesonet soil moisture in KFM.
 
 It covers:
 
 - public source characterization
-- expected acquisition patterns
-- variable mapping
+- accepted source classes and pull patterns
+- variable and semantic mapping
 - canonical record shape
 - provenance and trust requirements
-- validation and publication rules
+- validation and promotion gates
+- station-first publication posture
+- downstream SensorThings serving boundaries
 - map and time-series use within hydrology-facing surfaces
 
-It does **not** claim that a live ingestion pipeline, catalog entry, or public API route already exists in this repository.
+It does **not** claim that a live ingestion pipeline, catalog entry, deployed API route, or public SensorThings runtime already exists in the repository.
 
 > [!IMPORTANT]
-> **Truth label:** `PROPOSED` for KFM integration shape unless explicitly marked otherwise.  
-> Public Kansas Mesonet field names and endpoint behaviors described here are source-grounded.  
-> In-repo implementation status remains `NEEDS VERIFICATION`.
+> This specification assumes the governed path **Mesonet REST/CSV → RAW → WORK / VALIDATION → PROCESSED → CATALOG / RECEIPTS → published surfaces → downstream SensorThings adapter**. It does **not** assume a direct REST → SensorThings canonical write path.
+
+> [!NOTE]
+> This file should be treated as a **domain-and-integration specification**. Runtime schemas, loaders, validators, and serving adapters should remain separately versioned even if they are derived from the rules defined here.
+
+---
+
+## Truth posture
+
+| Label | Meaning in this merged document |
+|---|---|
+| **CONFIRMED** | Directly supported by visible source documentation or preserved doctrine from the merged drafts |
+| **INFERRED** | Strongly implied by doctrine or source behavior, but not directly verified in-repo |
+| **PROPOSED** | Recommended target shape that fits KFM posture |
+| **UNKNOWN** | No reliable implementation evidence surfaced in the current session |
+| **NEEDS VERIFICATION** | Must be checked in the repository or against the current source before merge or release |
+
+### Current-session posture
+
+| Area | Status | Meaning |
+|---|---|---|
+| Source identity, endpoint family, soil-moisture fields, trust posture | **CONFIRMED** | Supported by the merged drafts |
+| Canonical schema, validation profile, catalog linkage, SensorThings adapter shape | **PROPOSED** | Strongly suggested integration shape |
+| Mounted repo paths, emitted schemas, tests, CI, deployed routes | **UNKNOWN** | Not surfaced in the current workspace |
 
 ---
 
 ## Repo fit
 
-| Item | Value |
+| Area | Fit |
 |---|---|
-| Intended path | `docs/domains/hydrology/mesonet-soil.md` |
-| Upstream doctrine | `docs/governance/ROOT_GOVERNANCE.md` *(NEEDS VERIFICATION)* |
-| Ethics / sensitivity anchor | `docs/governance/ETHICS.md` *(NEEDS VERIFICATION)* |
-| Adjacent domain parent | `docs/domains/README.md` *(NEEDS VERIFICATION)* |
-| Expected downstream consumers | hydrology datasets, time-series services, map surfaces, Focus Mode evidence views *(INFERRED)* |
-| Implementation coupling | low at doc level; moderate for ingestion/catalog contracts *(INFERRED)* |
+| **Intended file/path** | `docs/domains/hydrology/mesonet-soil.md` *(NEEDS VERIFICATION)* |
+| **Role** | Kansas Mesonet soil-moisture domain spec with explicit connector and serving-boundary rules |
+| **Upstream** | External Kansas Mesonet REST and approved CSV exports, plus KFM source registration in `data/registry/` |
+| **Canonical flow** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED` |
+| **Downstream** | `data/work/`, `data/catalog/{stac,dcat,prov}/`, `data/receipts/`, station-facing map/time-series surfaces, and a governed SensorThings-compatible adapter |
+| **Policy boundary** | Policy enforcement belongs to KFM policy and governed APIs, not to the source itself |
+| **Implementation coupling** | Low at document level; moderate for ingestion, catalog, and serving contracts *(INFERRED)* |
 
-This file is intended to sit as a **domain specification**, not as a runtime contract by itself. Runtime schemas, loaders, and publication manifests should remain separately versioned.
+**Adjacent references named by the merged drafts**
+
+- `docs/domains/README.md`
+- `docs/governance/ROOT_GOVERNANCE.md`
+- `docs/governance/ETHICS.md`
+- `contracts/README.md`
+- `data/registry/README.md`
+- `data/work/README.md`
+- `data/catalog/README.md`
+- `policy/README.md`
+
+> [!CAUTION]
+> This specification is not a source-use waiver. Source access, cadence, rights, citation requirements, and release posture must be recorded in KFM before any automated run is treated as a sanctioned integration.
 
 ---
 
@@ -86,7 +112,7 @@ This file is intended to sit as a **domain specification**, not as a runtime con
 This specification is written for the following source classes:
 
 1. **Kansas Mesonet REST CSV responses**
-2. **Kansas Mesonet soil moisture table/CSV exports**
+2. **Kansas Mesonet soil-moisture table/CSV exports**
 3. **Kansas Mesonet evapotranspiration dashboard CSV exports**
 4. **Station registry metadata** including station names, activity windows, and coordinates
 
@@ -102,6 +128,14 @@ Accepted station scopes:
 - comma-separated station list
 - network-level pull where source supports it
 
+### Connector input rules
+
+1. Use **explicit station or network scope**.
+2. Use **explicit observation interval**.
+3. Use **explicit time windows** for replayability.
+4. Treat variable and unit mapping as a contract, not a best-effort guess.
+5. Capture source metadata alongside data pulls so later receipts can resolve provenance cleanly.
+
 ---
 
 ## Exclusions
@@ -114,23 +148,12 @@ This document excludes:
 - 3D subsurface visualization standards
 - unpublished or private source integrations
 - claims of authoritative agronomic thresholds for every crop or soil type
+- scraping undocumented HTML or ad hoc page parsing
+- implicit discovery of stations or variables without recorded configuration
+- direct canonical write into SensorThings
 
 > [!CAUTION]
-> Soil moisture values are **observed at stations**, not universally representative of surrounding parcels or fields.  
-> KFM publication should not overstate spatial precision beyond what observation density and interpolation method can support.
-
----
-
-## Directory context
-
-```text
-docs/
-└── domains/
-    ├── README.md                       # NEEDS VERIFICATION
-    └── hydrology/
-        ├── README.md                   # NEEDS VERIFICATION
-        └── mesonet-soil.md             # this file
-```
+> Soil moisture values are **observed at stations**, not universally representative of surrounding parcels or fields. KFM publication should not overstate spatial precision beyond what observation density and interpolation method can support.
 
 ---
 
@@ -138,12 +161,13 @@ docs/
 
 ```mermaid
 flowchart LR
-    A[Public Source: Kansas Mesonet] --> B[Hydrology Domain Spec]
+    A[Public Source: Kansas Mesonet] --> B[Hydrology Integration Spec]
     B --> C[Acquisition / RAW]
     C --> D[Validation / WORK]
     D --> E[Processed Time Series]
-    E --> F[Catalog / Provenance]
+    E --> F[Catalog / Provenance / Receipts]
     F --> G[Published Map + Time Series Surfaces]
+    G --> H[Governed SensorThings Adapter]
 ```
 
 ---
@@ -171,17 +195,18 @@ Kansas Mesonet should be treated as a **trusted observational source** for stati
 - spatial generalization
 - correction handling
 - publication boundaries
+- downstream policy review
 
 ### Public source facts
 
-**CONFIRMED source facts:**
+**CONFIRMED source facts preserved by the merge:**
 
 - Mesonet exposes a REST page describing CSV access and required query parameters.
 - Station observations are requested through `/rest/stationdata/`.
-- Required stationdata parameters include station or network, interval, start time, and end time.
+- Required `stationdata` parameters include station or network, interval, start time, and end time.
 - Soil moisture is reported at **5 cm, 10 cm, 20 cm, and 50 cm**.
-- Soil moisture page exposes **VWC** and **percent saturation** values, plus **7-day change** fields.
-- Evapotranspiration page includes a downloadable CSV surface.
+- The soil-moisture page exposes **VWC** and **percent saturation** values, plus **7-day change** fields.
+- The evapotranspiration page includes a downloadable CSV surface.
 
 ---
 
@@ -206,18 +231,17 @@ Kansas Mesonet should be treated as a **trusted observational source** for stati
 
 ### ET variables
 
-Mesonet exposes an evapotranspiration dashboard and CSV download surface. This document does **not** lock a canonical ET field list until a source pull is verified against current CSV headers.
+Mesonet exposes an evapotranspiration dashboard and CSV download surface. This merged document does **not** lock a canonical ET field list until a verified header capture is committed into a fixture or schema.
 
 | Group | KFM stance |
 |---|---|
 | ET dashboard availability | CONFIRMED |
 | CSV availability | CONFIRMED |
-| exact ET field registry | NEEDS VERIFICATION |
+| Exact ET field registry | NEEDS VERIFICATION |
 | KFM ET canonical mapping | PROPOSED |
 
 > [!NOTE]
-> ET should be onboarded only after a header-level field capture is committed into an adjacent schema or fixture.  
-> Until then, ET references in this document are intentionally conservative.
+> ET should be onboarded only after a header-level field capture is preserved in an adjacent schema, fixture, or source descriptor update.
 
 ---
 
@@ -229,12 +253,12 @@ Mesonet exposes an evapotranspiration dashboard and CSV download surface. This d
 | Percent saturation | percent scale | expected 0–100, but retain source value verbatim before downstream normalization |
 | 7-day change | source-defined difference metric | retain sign and source units as published |
 | Timestamp | source observation timestamp | preserve exact source timestamp string and normalized UTC form |
-| Station name | Mesonet station identifier/name | preserve raw source station token |
+| Station name | Mesonet station identifier or name token | preserve raw source station token |
 
 ### Semantic cautions
 
-- Percent saturation is a **historically contextualized source-derived measure**, not a universal soil physics constant for arbitrary off-station interpretation.
-- Shallow sensors respond faster to rainfall; deeper sensors respond more slowly and may remain elevated longer.
+- Percent saturation is a **historically contextualized source-derived measure**, not a universal soil-physics constant for arbitrary off-station interpretation.
+- Shallow sensors respond faster to rainfall; deeper sensors often respond more slowly and may remain elevated longer.
 - Station values are affected by soil type, cover, placement, and local conditions.
 
 ---
@@ -249,10 +273,10 @@ Mesonet exposes an evapotranspiration dashboard and CSV download surface. This d
 | `/rest/stationnames/` | station registry / coordinates | CONFIRMED |
 | `/rest/stationactive/` | activity window by station and interval | CONFIRMED |
 | `/rest/mostrecent` | latest ingest timestamp by interval | CONFIRMED |
-| `/agriculture/soilmoist/` | soil moisture dashboard/table/download | CONFIRMED |
+| `/agriculture/soilmoist/` | soil-moisture dashboard/table/download | CONFIRMED |
 | `/agriculture/et/` | evapotranspiration dashboard/download | CONFIRMED |
 
-### Required stationdata parameters
+### Required `stationdata` parameters
 
 | Parameter | Meaning | Example | Status |
 |---|---|---|---|
@@ -304,15 +328,18 @@ flowchart TD
     S[Source Request] --> R[RAW Capture]
     R --> W[WORK / Validation]
     W --> P[Processed Time Series]
-    P --> C[Catalog Registration]
+    P --> C[Catalog / Provenance / Receipts]
     C --> U[Published Surface]
-    U --> E[Evidence Resolution]
+    U --> A[Governed SensorThings Adapter]
+    A --> G[Governed API / UI Surfaces]
 
     R -.stores.-> R1[Source URL]
     R -.stores.-> R2[Retrieval Timestamp]
     R -.stores.-> R3[Raw CSV Payload]
     P -.binds.-> P1[DatasetVersion]
-    U -.shows.-> U1[Observed / Modeled / Stale Flags]
+    U -.shows.-> U1[Observed / Derived / Modeled / Stale Flags]
+    POL[Policy lane] -. release gates .-> C
+    POL -. serving rules .-> A
 ```
 
 ### RAW requirements
@@ -327,6 +354,8 @@ Each acquisition event should preserve:
 - content hash
 - parser version
 - interval and station scope requested
+- approval or rights note
+- run identifier
 
 ### WORK requirements
 
@@ -342,6 +371,7 @@ Minimum checks:
 - numeric coercion result tracking
 - duplicate row handling
 - missingness summary
+- quarantine on malformed or unsupported rows
 
 ### PROCESSED requirements
 
@@ -352,6 +382,7 @@ Processed records should be:
 - source-field-preserving
 - provenance-linked
 - safe for downstream filtering without losing source traceability
+- stable enough to support catalog generation and later correction lineage
 
 ---
 
@@ -411,6 +442,24 @@ Processed records should be:
 }
 ```
 
+### Long-form observation example
+
+For connector-side normalization, a flattened observation view is also acceptable if it resolves back to the same RAW snapshot and run receipt.
+
+```json
+{
+  "source_id": "kansas-mesonet",
+  "station_name": "Ashland Bottoms",
+  "observed_at": "2016-01-01T00:00:00Z",
+  "interval": "day",
+  "variable_code": "VWC5CM",
+  "value": 0.21,
+  "unit": "source-declared",
+  "raw_snapshot_sha256": "<sha256>",
+  "run_receipt_ref": "<run-receipt>"
+}
+```
+
 ### Field mapping table
 
 | KFM field | Source field | Required | Notes |
@@ -457,6 +506,32 @@ Processed records should be:
 
 ---
 
+## Connector and SensorThings boundary
+
+SensorThings belongs in the serving layer, not the canonical truth layer.
+
+### Boundary rules
+
+- no direct Mesonet → public SensorThings shortcut
+- no client bypass of KFM-governed storage and policy
+- no SensorThings object treated as stronger than its underlying evidence and receipt chain
+- no release claim without catalog and provenance closure
+
+### Core mappings
+
+| Mesonet concept | SensorThings entity | Connector note |
+|---|---|---|
+| **Station** | **Thing** | one physical site or station identity per Thing |
+| **Sensor** | **Sensor** | use explicit sensor metadata where available; otherwise emit a clearly labeled logical sensor record |
+| **Variable** | **Datastream** | **PROPOSED v1 key:** station × variable × interval × depth where applicable |
+| **Measurement** | **Observation** | one timestamped measurement per Observation |
+
+### Minimum adapter rule
+
+The SensorThings-compatible adapter should read only from released artifacts produced after validation, not from RAW, ad hoc pulls, or unreviewed WORK outputs.
+
+---
+
 ## Derived metrics
 
 The following metrics are **optional, derived, and subordinate** to source observations.
@@ -470,8 +545,7 @@ The following metrics are **optional, derived, and subordinate** to source obser
 | anomaly score | deviation from local station history | PROPOSED |
 
 > [!WARNING]
-> Derived layers must never silently replace station observations as sovereign truth.  
-> Published surfaces should always distinguish **observed**, **derived**, and **modeled** products.
+> Derived layers must never silently replace station observations as sovereign truth. Published surfaces should always distinguish **observed**, **derived**, and **modeled** products.
 
 ---
 
@@ -481,13 +555,20 @@ The following metrics are **optional, derived, and subordinate** to source obser
 
 | Gate | Rule | Failure posture |
 |---|---|---|
-| source response | non-empty CSV payload | hold in RAW, do not promote |
+| source approval recorded | run has documented rights or consent posture | stop before automation proceeds |
+| RAW snapshot captured | response file + fetch metadata + checksum written | stop; do not normalize |
+| source response | non-empty CSV payload | hold in RAW; do not promote |
 | header integrity | expected key columns present | quarantine pull |
 | timestamp parse | all rows parse or are explicitly marked invalid | narrow or hold invalid rows |
 | station integrity | station token present per row | hold invalid rows |
-| numeric coercion | numeric fields parse or become nullable with error count | continue with warning if below threshold |
+| station identity resolves | station roster or source metadata matches the pull | quarantine unresolved rows |
+| variable and unit mapping resolves | each output row has a declared observable meaning | quarantine unsupported fields |
+| numeric coercion | numeric fields parse or become nullable with error count | continue only if under threshold |
 | duplicate rows | duplicates detected by station + timestamp + interval | de-duplicate with logged rule |
 | schema drift | unseen variables or missing expected variables | mark `NEEDS VERIFICATION` and review |
+| validation report passes | bundle is safe to promote to PROCESSED | remain in WORK / QUARANTINE |
+| receipt + catalog linkage emitted | run can be reconstructed later | do not claim release readiness |
+| adapter remains downstream-only | SensorThings reflects released state only | deny direct canonical shortcut |
 | staleness | lag exceeds publication threshold | publish only with stale flag or abstain |
 
 ### QA notes
@@ -496,6 +577,7 @@ The following metrics are **optional, derived, and subordinate** to source obser
 - Out-of-range values should be flagged, not auto-corrected.
 - Source changes in field naming require explicit registry update.
 - Station-specific sensor anomalies should be tracked as quality annotations, not silently dropped unless policy requires exclusion.
+- A failed run should stop safely without publishing partial truth.
 
 ---
 
@@ -507,9 +589,10 @@ The following metrics are **optional, derived, and subordinate** to source obser
 |---|---|---|
 | station time-series | yes | direct provenance retained |
 | statewide 2D map | yes | interpolation method disclosed |
-| dashboard summary | yes | freshness + uncertainty visible |
+| dashboard summary | yes | freshness and uncertainty visible |
 | parcel-specific claims | constrained | only with explicit caveats and evidence route |
 | 3D subsurface scene | conditional | burden-bearing justification required |
+| SensorThings serving surface | yes | only from released artifacts |
 
 ### Trust flags for consumers
 
@@ -534,6 +617,7 @@ Consequential downstream claims should resolve back to:
 - parser or transform version
 - dataset version
 - validation outcome
+- run receipt or equivalent provenance object
 
 ---
 
@@ -584,8 +668,7 @@ This source is public, but responsible publication still matters.
 
 ### Notable non-sensitive posture
 
-This specification does **not** appear to trigger rare-species geoprivacy or archaeological site precision controls.  
-Even so, hydrology claims should remain evidence-resolvable and uncertainty-visible.
+This specification does **not** appear to trigger rare-species geoprivacy or archaeological site precision controls. Even so, hydrology claims should remain evidence-resolvable and uncertainty-visible.
 
 ---
 
@@ -651,9 +734,10 @@ print(rows[0] if rows else "no rows")
 |---|---|---|
 | dataset schema | canonical time-series contract | PROPOSED |
 | source adapter | Mesonet REST puller | PROPOSED |
-| validation profile | range/missingness/schema drift checks | PROPOSED |
+| validation profile | range, missingness, and schema-drift checks | PROPOSED |
 | fixture CSVs | parser regression and contract testing | PROPOSED |
 | publication manifest | release and trust metadata | PROPOSED |
+| SensorThings adapter | downstream serving compatibility layer | PROPOSED |
 
 ### Suggested naming
 
@@ -667,6 +751,36 @@ print(rows[0] if rows else "no rows")
 > [!NOTE]
 > Key names above are recommendations only and should not be treated as in-repo truth until aligned with visible catalog conventions.
 
+### Illustrative directory shape
+
+**PROPOSED reference shape — illustrative only; not repo-verified**
+
+```text
+<mesonet-soil-root>/
+├── docs/
+│   └── domains/
+│       └── hydrology/
+│           └── mesonet-soil.md
+├── config/
+│   └── mesonet.source.yaml
+├── scripts/
+│   ├── fetch_mesonet_window.py
+│   ├── normalize_mesonet_rows.py
+│   ├── validate_mesonet_bundle.py
+│   └── emit_work_receipt.py
+├── schemas/
+│   ├── station.schema.json
+│   ├── soil_observation.schema.json
+│   └── run_receipt.schema.json
+├── examples/
+│   ├── mesonet-window.csv
+│   └── station-registry.csv
+└── tests/
+    ├── test_station_identity.py
+    ├── test_variable_mapping.py
+    └── test_quarantine_rules.py
+```
+
 ---
 
 ## Task list
@@ -674,15 +788,19 @@ print(rows[0] if rows else "no rows")
 ### Definition of done for an initial integration slice
 
 - [ ] Confirm adjacent hydrology directory conventions in-repo
-- [ ] Capture current stationdata CSV fixture for at least one station and interval
+- [ ] Capture current `stationdata` CSV fixture for at least one station and interval
 - [ ] Capture current station registry fixture
 - [ ] Verify current ET CSV header set
 - [ ] Author canonical schema for soil records
-- [ ] Add parser + validation rules
+- [ ] Add parser and validation rules
 - [ ] Persist RAW payload metadata and content hash
 - [ ] Register dataset version and provenance path
 - [ ] Publish a station-level chart view with trust flags
 - [ ] Document interpolation method before any statewide raster publication
+- [ ] Attach source approval or consent posture to the source descriptor
+- [ ] Emit STAC/DCAT/PROV and run-receipt objects that resolve back to the source snapshot
+- [ ] Keep the SensorThings adapter downstream-only
+- [ ] Prove one thin slice end-to-end before widening scope
 
 ### Merge gates
 
@@ -700,28 +818,49 @@ print(rows[0] if rows else "no rows")
 No. It is authoritative for the network’s published **station observations**, not for every parcel or field in Kansas.
 
 ### Why preserve both VWC and percent saturation?
-They answer different questions. VWC preserves the direct water-content style measure; percent saturation adds source-defined historical context for “how wet vs. dry” a station-depth condition is.
+They answer different questions. VWC preserves the direct water-content style measure; percent saturation adds source-defined historical context for how wet or dry a station-depth condition appears relative to the source’s framing.
 
 ### Can ET be integrated under this spec today?
 Partially. The dashboard and CSV availability are in scope, but the **current ET field registry** still requires a verified header capture before a canonical ET schema is locked.
 
 ### Why separate RAW from processed time series?
-Because KFM trust depends on being able to resolve downstream claims back to original source payloads, parse rules, and validation outcomes.
+Because KFM trust depends on being able to resolve downstream claims back to original source payloads, parse rules, validation outcomes, and later correction lineage.
+
+### Why not write directly from Mesonet into SensorThings?
+Because that would let a serving model become the de facto truth source. KFM doctrine prefers a governed evidence path first, then a serving adapter.
+
+### Is this integration already implemented?
+**UNKNOWN.** The current workspace did not surface repo code, tests, or workflows for this integration. This specification preserves the intended behavior without claiming mounted implementation.
 
 ### Should KFM publish interpolated statewide soil moisture maps?
 Yes, conditionally. They should be clearly marked as generalized surfaces derived from station observations, with method and uncertainty visible.
 
+### What happens when source fields drift?
+The pipeline should fail closed into WORK / QUARANTINE, emit a validation report, and avoid silent promotion.
+
 ---
 
-## Appendix A — Truth labels used in this document
+## Appendix A — Illustrative source descriptor fields
 
-| Label | Meaning |
-|---|---|
-| `CONFIRMED` | directly supported by visible source documentation |
-| `INFERRED` | strongly implied by doctrine or source behavior, not directly verified in-repo |
-| `PROPOSED` | recommended target shape consistent with KFM posture |
-| `UNKNOWN` | no reliable evidence in current session |
-| `NEEDS VERIFICATION` | must be checked in repository or against current source before merge |
+```yaml
+source_id: kansas-mesonet
+source_family: environmental-observation
+access_mode: rest-or-approved-csv
+cadence: 5min|hour|day
+rights_posture: NEEDS_VERIFICATION
+approval_ref: NEEDS_VERIFICATION
+station_scope: explicit
+variable_scope: explicit
+normalization_target: long-form observations
+raw_zone: data/raw/
+work_zone: data/work/
+processed_zone: data/processed/
+catalog_targets:
+  - stac
+  - dcat
+  - prov
+serving_adapter: sensorthings-compatible
+```
 
 ---
 
@@ -740,12 +879,39 @@ Yes, conditionally. They should be clearly marked as generalized surfaces derive
 
 ---
 
-## Appendix C — Public-source limitations
+## Appendix C — Open verification backlog
 
-- Soil moisture history beyond source-exposed online windows may require separate handling.
+- Confirm the actual repo path for this merged specification.
+- Confirm whether implementation belongs under `scripts/`, `tools/`, `apps/`, or `packages/`.
+- Confirm whether a JSON Schema registry already exists for connector receipts and normalized observations.
+- Confirm whether SensorThings is already present as an adapter, contract surface, or only a design target.
+- Confirm whether soil-moisture ingestion uses the Mesonet soil-moisture page CSV, REST variables, or both.
+- Confirm CI gates, policy fixtures, and release manifests once the repo tree is visible.
+- Confirm current ET header set before locking an ET canonical schema.
+
+---
+
+## Appendix D — Public-source limitations
+
+- Soil-moisture history beyond source-exposed online windows may require separate handling.
 - Variable availability may differ by station or interval.
 - Header order is not guaranteed by the source.
 - Source page dashboards may expose values not yet formalized into the REST variable registry.
+
+---
+
+## Appendix E — What stayed intentionally restrained
+
+This merged specification does **not** claim:
+
+- live automation
+- production-ready ingestion
+- enforced policy coverage
+- mounted test suites
+- deployed SensorThings routes
+- exact repo-relative links beyond what the source drafts already named
+
+That restraint is deliberate. The goal is a stronger, consolidated governing document without pretending the implementation evidence is stronger than the current session showed.
 
 ---
 
