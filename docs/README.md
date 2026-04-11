@@ -10,14 +10,14 @@ updated: NEEDS VERIFICATION
 policy_label: NEEDS VERIFICATION
 related: [../README.md, ./governance/, ./runbooks/, ./standards/, ./templates/]
 tags: [kfm, docs, documentation, governance, runbooks, standards, templates]
-notes: [Current session directly verified a PDF-only workspace and a documentation-only evidence boundary; live docs subtree, owners, dates, labels, and exact README presence still require mounted-checkout inspection before commit.]
+notes: [Current session verified a mounted repository checkout. Directory shape is confirmed; many per-file metadata placeholders still require steward verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # docs
 
 Governed documentation index for Kansas Frontier Matrix (KFM): doctrine, architecture, governance, runbooks, templates, and adjacent documentation surfaces that keep the system inspectable.
 
-> **Status:** experimental — live checkout verification still pending  
+> **Status:** experimental — live checkout verified on 2026-04-11  
 > **Owners:** `NEEDS VERIFICATION` — confirm against `../.github/CODEOWNERS` before commit  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-pdf--corpus+manual--verified-lightgrey) ![trust](https://img.shields.io/badge/posture-docs--as--production-blueviolet) ![checkout](https://img.shields.io/badge/live--checkout-NEEDS_VERIFICATION-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Baseline](#baseline-and-doctrinal-anchor) · [Directory tree](#source-reported-docs-footprint) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
@@ -34,7 +34,7 @@ Its job is to make doctrine, architecture, standards, review rules, templates, a
 ## Repo fit
 
 **Path target:** `docs/README.md`  
-**Path status:** `NEEDS VERIFICATION` in a mounted checkout
+**Path status:** present in mounted checkout (metadata fields still include placeholders)
 
 **Upstream neighbors:** [repo root](../README.md) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) · [`../data/`](../data/) · [`../apps/`](../apps/) · [`../packages/`](../packages/) · [`../.github/`](../.github/)
 
@@ -316,10 +316,10 @@ Because KFM doctrine treats trust-visible explanation, evidence access, correcti
 <details>
 <summary>Current-session limits that still matter before merge</summary>
 
-- The directly visible mounted workspace exposed PDFs only.
-- No live repo subtree, `.github/CODEOWNERS`, workflow YAML, schemas, tests, manifests, or runtime logs were directly inspected.
+- The mounted workspace included the repository checkout and was directly inspected.
+- Large portions of the repo tree were directly inspected, but many metadata placeholders and runtime maturity claims remain unverified.
 - This index is therefore **review-ready**, not falsely “fully verified.”
-- Any conflicting live-tree reality should outrank this draft once a mounted checkout is available.
+- Any conflicting branch-local reality should still outrank documentation assumptions.
 
 </details>
 
@@ -333,3 +333,12 @@ Because KFM doctrine treats trust-visible explanation, evidence access, correcti
 </details>
 
 [Back to top](#docs)
+
+## Repository operations addenda
+
+The following repo-level planning/verification docs are now tracked under `docs/`:
+
+- [`./REPO_MAP.md`](./REPO_MAP.md)
+- [`./BUILD_PLAN.md`](./BUILD_PLAN.md)
+- [`./VALIDATION_SUMMARY.md`](./VALIDATION_SUMMARY.md)
+- [`./BACKLOG.md`](./BACKLOG.md)
