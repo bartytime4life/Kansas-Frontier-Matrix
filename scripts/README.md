@@ -549,3 +549,16 @@ Check these against the actual checkout before promoting this README from draft:
 </details>
 
 [Back to top](#scripts)
+
+## Current executable entrypoints (verified 2026-04-11)
+
+The root `Makefile` now standardizes local developer entrypoints that were already referenced by the root README:
+
+- `make bootstrap` → `./scripts/bootstrap.sh`
+- `make validate-schemas` → `python3 ./scripts/validate_schemas.py`
+- `make test` → `python3 -m unittest discover -s tests/contracts -p 'test_*.py' -v`
+- `make dev-up` → `./scripts/dev_up.sh`
+- `make sample-ingest SOURCE=<name>` → `./scripts/sample_ingest.sh <name>`
+- `make catalog-validate` → `python3 ./scripts/catalog_validate.py`
+
+These commands are intentionally conservative and evidence-first; they scaffold repeatable validation without claiming unverified runtime services.
