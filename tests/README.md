@@ -10,7 +10,7 @@ updated: 2026-04-04
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../schemas/contracts/README.md, ../schemas/tests/README.md, ../docs/README.md, ./e2e/README.md, ./policy/README.md]
 tags: [kfm, tests, verification, readme]
-notes: [doc_id and created date still need live-repo verification; owner remains confirmed by current CODEOWNERS coverage for /tests/; this revision preserves the strong existing tests README structure while updating the top-level index for the visible tests/policy/genealogy child lane and current schema-side adjacency under schemas/contracts and schemas/tests without overstating suite depth or merge-gate enforcement]
+notes: [doc_id and created date still need live-repo verification; owner remains confirmed by current CODEOWNERS coverage for /tests/; this revision preserves the strong existing tests README structure while updating the top-level index for the visible tests/policy/genealogy child lane, the no-longer-README-only tests/contracts lane, and current schema-side adjacency under schemas/contracts and schemas/tests without overstating suite depth or merge-gate enforcement]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
@@ -205,7 +205,8 @@ The current public `main` branch proves the following:
 - `tests/` exists as a real top-level repo surface.
 - `tests/README.md` exists.
 - The branch-visible top-level family set includes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
-- The currently visible public-main pages for `tests/accessibility/`, `tests/contracts/`, `tests/integration/`, `tests/reproducibility/`, and `tests/unit/` each expose `README.md` only.
+- The currently visible public-main pages for `tests/accessibility/`, `tests/integration/`, `tests/reproducibility/`, and `tests/unit/` each expose `README.md` only.
+- `tests/contracts/` is **not** README-only on current public `main`; it exposes `README.md` plus `test_correction_notice_contract.py`.
 - `tests/policy/` is **not** README-only on current public `main`; it exposes `README.md` plus `genealogy/`.
 - `tests/policy/genealogy/README.md` is publicly visible as a checked-in child README.
 - `tests/e2e/` exposes `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/`.
@@ -231,7 +232,8 @@ tests/
 ├── accessibility/
 │   └── README.md
 ├── contracts/
-│   └── README.md
+│   ├── README.md
+│   └── test_correction_notice_contract.py
 ├── e2e/
 │   ├── README.md
 │   ├── correction/
@@ -379,7 +381,7 @@ Use the smallest fitting existing family before inventing a new top-level folder
 |---|---|---|
 | [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate | visible as a README-bearing family |
 | [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, or projection | visible as a README-bearing family |
-| [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift | visible as a README-bearing family |
+| [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift | visible as a family with `README.md` plus `test_correction_notice_contract.py` |
 | [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior across the broader policy family | visible as a README-bearing family with a visible child lane |
 | [`./policy/genealogy/`](./policy/genealogy/README.md) | the change is genealogy-specific consent, living-person, DNA, provenance, or publication-control policy behavior | visible as a README-bearing child lane under `./policy/` |
 | [`./accessibility/`](./accessibility/) | trust-visible interaction, keyboard flow, reduced-friction inspection, or calm failure is the main risk | visible as a README-bearing family |
@@ -393,6 +395,8 @@ Use the smallest fitting existing family before inventing a new top-level folder
 A present directory is **not** the same thing as an active suite.
 
 If a family currently contains only a placeholder README or thin scaffold, treat it as a documented contract boundary waiting for executable proof, not as coverage already earned.
+
+Today, `tests/contracts/` is the visible exception to that top-level README-only pattern: the current public tree shows `README.md` plus `test_correction_notice_contract.py`, while the other top-level families listed above still remain README-only.
 
 If a schema-side scaffold exists nearby under `schemas/`, treat that as **adjacent signal** until repo law explicitly says it is canonical for the same burden.
 
@@ -442,7 +446,7 @@ flowchart LR
 | Family | Branch-visible now | Current visible contents | Primary burden | Doctrinal note |
 |---|---|---|---|---|
 | `accessibility/` | Yes | `README.md` | trust-visible accessibility and keyboard-critical flows | repo keeps this burden explicit instead of hiding it under generic regression language |
-| `contracts/` | Yes | `README.md` | envelope, schema, and example validation | current repo uses plural path; some manuals use singular shorthand |
+| `contracts/` | Yes | `README.md` plus `test_correction_notice_contract.py` | envelope, schema, and example validation | current repo uses plural path; some manuals use singular shorthand |
 | `e2e/` | Yes | `README.md` plus three leaf families | end-to-end verification umbrella | current repo and doctrine are closely aligned here |
 | `integration/` | Yes | `README.md` | governed slices across real boundaries | current repo keeps this family explicit |
 | `policy/` | Yes | `README.md` plus visible `genealogy/` child lane | allow / deny / abstain / hold behavior | parent family is no longer README-only on public `main` |
@@ -533,7 +537,7 @@ Because current public `main` now exposes adjacent machine-file and fixture scaf
 
 ### Does the current branch prove merge-blocking coverage?
 
-No. The public tree proves directory presence, README-bearing family placement, ownership boundaries, visible child lanes, adjacent schema-side scaffolds, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
+No. The public tree proves directory presence, README-bearing family placement, ownership boundaries, visible child lanes, adjacent schema-side scaffolds, a visible checked-in contract-facing test file under `tests/contracts/`, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
 
 ### Where should accessibility and reproducibility work live right now?
 
@@ -627,10 +631,11 @@ The repo and the March 2026 manuals are aligned on principle:
 
 What changed is the visible branch shape:
 
+- `tests/contracts/` is no longer README-only and now shows a visible checked-in contract-facing test file
 - `tests/policy/` now has a visible `genealogy/` child lane
 - `schemas/` now has visible contract and fixture scaffolds
 - `.github/workflows/` is still publicly README-only
 
-This README keeps all three visible so contributors do not have to choose between repo truth, doctrinal clarity, and current scaffold reality.
+This README keeps all four visible so contributors do not have to choose between repo truth, doctrinal clarity, and current scaffold reality.
 
 </details>
