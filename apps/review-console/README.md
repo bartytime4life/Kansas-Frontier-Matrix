@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION
-updated: 2026-04-04
+updated: 2026-04-12
 policy_label: NEEDS_VERIFICATION
 related: [../../README.md, ../README.md, ../../.github/README.md]
-tags: [kfm, apps, review-console, stewardship]
-notes: [Target path confirmed on public main; owner confirmed via /.github/CODEOWNERS; doc_id, created date, and policy_label still need direct repo-history or policy-label verification.]
+tags: [kfm, apps, review-console, stewardship, review]
+notes: [Owner confirmed from current public CODEOWNERS broad app ownership; current public app-family inventory reconciled with ../README.md; doc_id, created date, and policy_label still need direct registry or repo-history verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Review Console
@@ -23,7 +23,7 @@ Governed reviewer and steward surface for promotion approval, policy assignment,
 ![trust](https://img.shields.io/badge/trust-shell%20variation-0a7d5a)
 ![evidence](https://img.shields.io/badge/evidence-drill--through%20required-1f6feb)
 ![policy](https://img.shields.io/badge/policy-review--bearing-f59e0b)
-![tree](https://img.shields.io/badge/public--main-path%20inspected-2da44e)
+![tree](https://img.shields.io/badge/tree-public--main%20reconciled-2da44e)
 
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -34,15 +34,18 @@ Governed reviewer and steward surface for promotion approval, policy assignment,
 | Path | `apps/review-console/README.md` |
 | Repo fit | Directory README for the review-bearing app boundary inside `apps/` |
 | Upstream | [apps-root][] · [repo-root][] · [github-gatehouse][] |
-| Downstream | No checked-in child paths beyond `README.md` are visible on current public `main`; branch-local routes, panels, fixtures, and tests remain `UNKNOWN` until re-verified |
+| Downstream | Checked-in public-main baseline remains docs-first; exact branch-local routes, panels, fixtures, and tests stay `UNKNOWN` until re-verified |
 | Primary role | Keep approval, denial, hold, QA, and correction work inside the same trust-visible shell family as the rest of KFM |
-| Working posture | **CONFIRMED doctrine** · **CONFIRMED public-main path evidence** · **PROPOSED future local realization** · **UNKNOWN active-branch implementation depth** |
+| Working posture | **CONFIRMED doctrine** · **CONFIRMED current public-main path evidence** · **PROPOSED future local realization** · **UNKNOWN active-branch implementation depth** |
 
 > [!IMPORTANT]
 > This README is **public-main-grounded for checked-in path claims** and **branch-grounded for merge-time truth**. If the working branch adds code beneath this directory, update the tree, downstream links, and test references in the same PR.
 
 > [!NOTE]
 > In KFM doctrine, review is a **shell variation**, not a second product and not a hidden authority layer. Approval, denial, hold, rollback, and correction work remain downstream of governed APIs, review artifacts, release state, and evidence drill-through.
+
+> [!NOTE]
+> The broader `apps/` boundary now lists `api/` and `ui/` alongside the older sibling set already named here. Keep this file synchronized with `../README.md` rather than freezing an outdated public-main inventory.
 
 ## Scope
 
@@ -89,10 +92,12 @@ Shell-owned state belongs here: selected subject, compare state, drawer openness
 
 | Sibling surface | Current public state | Why it matters here |
 |---|---|---|
+| `../api/` | present in current public-main `apps/` family | keep this README aligned with the broader checked-in app inventory instead of freezing an older sibling list |
 | `../cli/` | present | confirms `apps/` is not only browser UI; operator-adjacent surfaces exist beside review |
 | `../explorer-web/` | present | public exploration stays distinct from review-bearing stewardship work |
 | `../governed-api/` | present | review must remain downstream of governed interfaces rather than embedding hidden authority |
-| `./` | `README.md` only on public `main` | the checked-in review lane is currently docs-first, not proven as a shipped route tree |
+| `./` | checked-in public-main baseline is docs-first | the visible review lane is not yet proven as a shipped route tree |
+| `../ui/` | present in current public-main `apps/` family | current public UI inventory is broader than this directory alone; review still belongs to the same governed shell family |
 | `../workers/` | present | execution and async work stay adjacent to, not collapsed into, review UI concerns |
 
 ### Nearby docs that should stay in sync
@@ -150,20 +155,22 @@ This directory should **not** become the quiet place where canonical law hides.
 
 ## Directory tree
 
-### Current public `main` snapshot
+### Current public-main `apps/` snapshot
 
 ```text
 apps/
 ├─ README.md
+├─ api/
 ├─ cli/
 ├─ explorer-web/
 ├─ governed-api/
 ├─ review-console/
 │  └─ README.md
+├─ ui/
 └─ workers/
 ```
 
-### Current checked-in `review-console/` subtree
+### Current checked-in `review-console/` subtree baseline
 
 ```text
 apps/
@@ -171,14 +178,14 @@ apps/
    └─ README.md
 ```
 
-The public baseline is now directly inspectable: on current public `main`, no checked-in child paths beneath `apps/review-console/` are visible beyond `README.md`. That is useful current evidence, but it is still not a warrant to overclaim what the working branch may already contain.
+The broader app-family snapshot above is reconciled with `apps/README.md`. The local subtree baseline below stays intentionally narrow. Re-check the active branch before presenting either view as merge-time truth.
 
 ### Why the tree is still kept minimal here
 
 This README should not pretend that routes, panels, tests, or fixtures already exist unless the active branch confirms them.
 
 <details>
-<summary>PROPOSED future subtree once the active branch grows beyond the scaffold</summary>
+<summary><strong>PROPOSED</strong> future subtree once the active branch grows beyond the scaffold</summary>
 
 ```text
 apps/
@@ -232,12 +239,12 @@ find apps/review-console -maxdepth 5 -print | sort
 git diff -- apps/review-console
 ```
 
-### 2) Confirm sibling app surfaces still line up with this README
+### 2) Confirm the boundary docs still line up
 
 ```bash
-find apps -maxdepth 2 -mindepth 1 -type d | sort
-sed -n '1,220p' apps/README.md
-sed -n '1,220p' .github/README.md
+sed -n '1,260p' README.md
+sed -n '1,260p' apps/README.md
+sed -n '1,260p' .github/README.md
 ```
 
 ### 3) Confirm which KFM review terms already appear in code and docs
@@ -355,6 +362,14 @@ The review console is **not** the place where truth originates. It is the place 
 | Map canvas | primary geography surface, selection anchor, story playback surface, direct evidence launch point | **CONFIRMED shell doctrine** |
 | Bottom timeline rail | valid-time framing, playback, compare anchors, as-of inspection, visible chronology | **CONFIRMED shell doctrine** |
 
+### Decision lanes and minimum visible outputs
+
+| Review lane | Minimum visible outputs | Why it matters |
+|---|---|---|
+| Approve / promote | `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest` / `ReleaseProofPack` | a public-safe release should not leave review as a hidden click |
+| Hold / deny / escalate | `DecisionEnvelope`, `ReviewRecord`, reason and obligation codes | negative outcomes are first-class review behavior, not embarrassing edge cases |
+| Correct / supersede / withdraw | `CorrectionNotice`, rebuild references, visible lineage | correction must remain inspectable after publication |
+
 ### Review-bearing artifact families
 
 | Artifact family | Why this surface cares | Status |
@@ -386,7 +401,8 @@ The review console is **not** the place where truth originates. It is the place 
 | Review is an internal governed route family, not a public route family | **CONFIRMED doctrine** |
 | Review actions must emit review and decision artifacts | **CONFIRMED doctrine** |
 | This exact directory path is checked in on current public `main` | **CONFIRMED current repo evidence** |
-| Current public `main` shows no checked-in child files here beyond `README.md` | **CONFIRMED current repo evidence** |
+| Current public-main `apps/` inventory includes `api/`, `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `ui/`, and `workers/` | **CONFIRMED current repo evidence** |
+| Current checked-in `review-console/` subtree baseline is still docs-first | **CONFIRMED current repo evidence** |
 | Exact child files, routes, panels, tests, fixtures, and branch-local depth | **UNKNOWN / NEEDS VERIFICATION** |
 | Proposed future subtree and local file names in this README | **PROPOSED** |
 
@@ -396,13 +412,14 @@ The review console is **not** the place where truth originates. It is the place 
 
 ### Merge-time review gates for this README
 
-- [ ] Re-inspect the active branch and reconcile it against the public-main snapshot above.
+- [ ] Re-inspect the active branch and reconcile it against the current public-main snapshot above.
 - [ ] Replace proposed child paths with confirmed local files, or delete them.
 - [ ] Link exact review routes or entrypoints if they now exist.
 - [ ] Confirm whether review uses shared shell state or a separate local store.
 - [ ] Confirm whether approval, denial, hold, and correction payloads are documented elsewhere.
 - [ ] Add exact test paths once accessibility, evidence-drill-through, and correction tests exist.
 - [ ] Reconfirm owner mapping if `/.github/CODEOWNERS` changes.
+- [ ] Reconfirm this file if the public `apps/` family changes again.
 - [ ] Remove any statement that has become stale after implementation lands.
 
 ### Definition of done for the surface itself
@@ -428,7 +445,7 @@ No. This surface should read and act **through governed APIs only**.
 
 ### Does this README prove the review console already has routes and tests?
 
-No. Current public `main` shows only `README.md` under this directory. Exact active-branch implementation depth still needs inspection before merge.
+No. The checked-in public-main baseline is still docs-first. Exact active-branch implementation depth still needs inspection before merge.
 
 ### Should this surface own policy definitions?
 
@@ -443,12 +460,13 @@ The **Evidence Drawer** or equivalent drill-through path. Review without inspect
 ## Appendix
 
 <details>
-<summary>Current evidence boundary and maintenance notes</summary>
+<summary><strong>Current evidence boundary and maintenance notes</strong></summary>
 
 ### What is safe to claim here
 
 - `apps/review-console/README.md` is a checked-in path on current public `main`
-- current public `main` shows no checked-in child entries beneath `apps/review-console/` beyond `README.md`
+- the broader current public-main `apps/` inventory includes `api/`, `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `ui/`, and `workers/`
+- the checked-in `review-console/` baseline is still docs-first
 - KFM doctrine treats review / stewardship as part of the same governed shell family
 - review is an internal governed route family, not a public one
 - active-branch implementation depth remains branch-dependent and must be re-verified
@@ -474,7 +492,6 @@ When this directory gains real code, update this README in the same change set t
 5. any new downstream doc links
 
 That keeps the README from getting ahead of mounted proof.
-
 </details>
 
 [Back to top](#review-console)
