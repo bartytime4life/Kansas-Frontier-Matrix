@@ -3,14 +3,14 @@ doc_id: kfm://doc/NEEDS-VERIFICATION
 title: examples
 type: standard
 version: v1
-status: draft
+status: review
 owners: @bartytime4life
 created: 2026-02-21
-updated: 2026-03-29
+updated: 2026-04-12
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ./api/README.md, ./story/README.md, ./thin_slice/README.md, ./thin_slice/hydrology/README.md, ./ui/README.md, ../contracts/, ../schemas/, ../policy/, ../tests/, ../docs/, ../data/, ../apps/, ../pipelines/README.md, ../tools/README.md]
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ./api/README.md, ./story/README.md, ./thin_slice/README.md, ./thin_slice/hydrology/README.md, ./ui/README.md, ../contracts/, ../schemas/, ../policy/, ../tests/, ../docs/, ../data/, ../apps/, ../pipelines/README.md, ../tools/README.md]
 tags: [kfm, examples, fixtures, readme]
-notes: [Public main confirms scaffolded sublanes api/, story/, thin_slice/, and ui/ under examples/; thin_slice/ currently includes hydrology/; public main also exposes adjacent pipelines/ and tools/ owner lanes; created/updated dates were verified from public commit history; stable doc_id still needs repo ID convention verification.]
+notes: [Created date was verified from public commit history; current public main confirms examples/ is no longer uniformly README-only; api/, story/, and ui/ now expose deeper checked-in example packs while thin_slice/ includes hydrology/ plus a self-named placeholder subdirectory; stable doc_id still needs repo ID convention verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # examples
@@ -19,14 +19,19 @@ Public-safe, non-authoritative examples and demo assets for Kansas Frontier Matr
 
 > Status: Experimental  
 > Owners: `@bartytime4life`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-examples%2FREADME.md-2d6cdf) ![shape](https://img.shields.io/badge/shape-scaffold--heavy-lightgrey) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![branch](https://img.shields.io/badge/branch-main-black) ![repo](https://img.shields.io/badge/repo-public-brightgreen)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-examples%2FREADME.md-2d6cdf) ![shape](https://img.shields.io/badge/shape-mixed--inventory-lightgrey) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![branch](https://img.shields.io/badge/branch-main-black) ![repo](https://img.shields.io/badge/repo-public-brightgreen)  
 > Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Current public sublanes](#current-public-sublanes) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> Repo fit: `examples/README.md` · upstream [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) · sublanes [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md) · owner lanes [../pipelines/README.md](../pipelines/README.md) · [../tools/README.md](../tools/README.md)
+> Repo fit: `examples/README.md` · upstream [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) · [../.github/CODEOWNERS](../.github/CODEOWNERS) · sublanes [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md) · owner lanes [../pipelines/README.md](../pipelines/README.md) · [../tools/README.md](../tools/README.md)
 
 > [!IMPORTANT]
 > This README is **repo-aware** and **evidence-bounded**.
 >
-> The current public `main` branch confirms that `examples/` is no longer a single-file lane. It now contains scaffolded sublanes `api/`, `story/`, `thin_slice/`, and `ui/`, plus this root `README.md`; within `thin_slice/`, a `hydrology/` sublane is also present.
+> The current public `main` branch confirms that `examples/` is no longer a single-file lane and no longer uniformly README-only. It contains scaffolded sublanes `api/`, `story/`, `thin_slice/`, and `ui/`, but those lanes now expose different levels of checked-in depth:
+>
+> - `api/` shows multiple checked-in example-pack directories
+> - `story/` shows both directories and concrete example files
+> - `thin_slice/` shows `hydrology/` plus a self-named placeholder subdirectory
+> - `ui/` shows a broad surface-oriented directory scaffold
 >
 > Read statements here as:
 >
@@ -56,6 +61,7 @@ The scope stays intentionally narrow:
 
 - keep **small, inspectable, instructional** material here
 - route **lane-specific** examples into the existing nested lanes when possible
+- route **pack-specific** material into an already-visible subdirectory when one clearly fits
 - keep **authoritative or executable** material with its owning surface
 - keep **sensitive, rights-unclear, or release-bearing** material out
 - keep example packs obviously **illustrative**, not canonical
@@ -75,7 +81,7 @@ A healthy `examples/` surface improves contributor understanding while staying e
 | Visibility | public |
 | Current contents | `api/`, `story/`, `thin_slice/`, `ui/`, and `README.md` |
 | Role | parent example lane and routing surface for public-safe demos, walkthrough payloads, and instructional assets |
-| Upstream anchors | [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) |
+| Upstream anchors | [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) · [../.github/CODEOWNERS](../.github/CODEOWNERS) |
 | Nested example lanes | [./api/README.md](./api/README.md) · [./story/README.md](./story/README.md) · [./thin_slice/README.md](./thin_slice/README.md) · [./ui/README.md](./ui/README.md) |
 | Adjacent owner surfaces | [../contracts/](../contracts/) · [../schemas/](../schemas/) · [../policy/](../policy/) · [../tests/](../tests/) · [../docs/](../docs/) · [../data/](../data/) · [../apps/](../apps/) · [../pipelines/README.md](../pipelines/README.md) · [../tools/README.md](../tools/README.md) |
 
@@ -85,19 +91,23 @@ The public branch already distinguishes several example lanes. Use them before i
 
 | Sublane | Current visible contents | Intended use |
 | --- | --- | --- |
-| [`./api/`](./api/README.md) | `README.md` | governed request/response examples for the API boundary |
-| [`./story/`](./story/README.md) | `README.md` | Story Node examples, sidecars, and citation-behavior illustrations |
-| [`./thin_slice/`](./thin_slice/README.md) | `README.md` and [`hydrology/README.md`](./thin_slice/hydrology/README.md) | end-to-end slice walkthroughs and thin-slice instructional artifacts |
-| [`./ui/`](./ui/README.md) | `README.md` | UI example packs and walkthrough assets |
+| [`./api/`](./api/README.md) | `README.md`, `_index/`, `datasets/`, `evidence/`, `focus/`, `shared/`, `stac/`, `story/` | governed request/response examples for the API boundary |
+| [`./story/`](./story/README.md) | `README.md`, `assets/`, `story/`, `story-citation-happy-path.md`, `story-citation-unresolved.md`, `story-review-state-example.json`, `story-sidecar-redacted.json` | Story Node examples, sidecars, and citation-behavior illustrations |
+| [`./thin_slice/`](./thin_slice/README.md) | `README.md`, `hydrology/README.md`, and a self-named `thin_slice/README.md` placeholder lane | end-to-end slice walkthroughs and thin-slice instructional artifacts, with hydrology as the first visible domain sublane |
+| [`./ui/`](./ui/README.md) | `README.md`, `api/`, `compare/`, `dossier/`, `evidence-drawer/`, `explorer/`, `export/`, `focus/`, `review/`, `story/`, `thin_slice/`, `timeline/`, `ui/` | UI example packs and walkthrough assets for trust-visible shell surfaces |
+
+> [!CAUTION]
+> Current public `main` also exposes several **self-named nested directories** such as `examples/story/story/`, `examples/thin_slice/thin_slice/`, and `examples/ui/ui/`. Treat their visibility as **CONFIRMED inventory**, not as automatically blessed naming doctrine. Rename, consolidate, or remove them only with explicit rationale.
 
 ### Why this lane exists
 
 KFM’s documentation and contract doctrine repeatedly push toward **named, typed, inspectable artifacts**: envelopes, manifests, bundles, proof objects, example payloads, and trust-visible UI states.
 
-Now that nested example lanes exist, the root `examples/` README has an additional responsibility: it should help contributors decide whether a new example belongs in:
+Now that nested example lanes exist—and several of them now expose deeper checked-in pack families—the root `examples/` README has an additional responsibility: it should help contributors decide whether a new example belongs in:
 
 - the root `examples/` surface because it is **cross-surface**
 - an existing nested example lane because it is **lane-specific**
+- an already-visible subdirectory inside that lane because it is **pack-specific**
 - a stronger owner surface because it is **authoritative, executable, or release-bearing**
 
 The current public tree also exposes `../pipelines/` and `../tools/` as adjacent execution and helper lanes. That makes the placement decision sharper: some artifacts start life as examples, then harden into lane-owned execution proof or reusable helper behavior that should move out of `examples/`.
@@ -149,7 +159,7 @@ A useful heuristic:
 - **redacted or public-safe**
 - **small enough to review quickly**
 - **easy to relocate once a stronger owner exists**
-- **placed in the right existing lane**
+- **placed in the right existing lane or visible pack family**
 
 [Back to top](#examples)
 
@@ -183,32 +193,61 @@ The following do **not** belong here:
 ```text
 examples/
 ├── api/
+│   ├── _index/
+│   ├── datasets/
+│   ├── evidence/
+│   ├── focus/
+│   ├── shared/
+│   ├── stac/
+│   ├── story/
 │   └── README.md
 ├── story/
-│   └── README.md
+│   ├── assets/
+│   ├── story/
+│   ├── README.md
+│   ├── story-citation-happy-path.md
+│   ├── story-citation-unresolved.md
+│   ├── story-review-state-example.json
+│   └── story-sidecar-redacted.json
 ├── thin_slice/
 │   ├── hydrology/
 │   │   └── README.md
+│   ├── thin_slice/
+│   │   └── README.md
 │   └── README.md
 ├── ui/
+│   ├── api/
+│   ├── compare/
+│   ├── dossier/
+│   ├── evidence-drawer/
+│   ├── explorer/
+│   ├── export/
+│   ├── focus/
+│   ├── review/
+│   ├── story/
+│   ├── thin_slice/
+│   ├── timeline/
+│   ├── ui/
 │   └── README.md
 └── README.md
 ```
 
-The current public tree is **scaffold-heavy**. The visible branch proves the example lanes and their README surfaces; it does **not** yet prove a large checked-in example payload inventory on `main`.
+The current public tree is no longer purely scaffold-heavy. It now mixes checked-in starter packs and example files with some clearly placeholder-like, self-named nested directories. The visible branch proves the example lanes and a growing example inventory; it does **not** by itself prove that every nested pack is mature, authoritative, or review-complete.
 
 <details>
 <summary><strong>PROPOSED growth rule</strong></summary>
 
-Grow **inside existing sublanes first**.
+Grow **inside existing sublanes and visible pack families first**.
 
 Use the current tree as the default routing surface:
 
-- add API-boundary examples under `./api/`
-- add story-facing examples under `./story/`
-- add UI walkthrough assets under `./ui/`
+- add API-boundary examples under `./api/`, and prefer `_index/`, `datasets/`, `evidence/`, `focus/`, `shared/`, `stac/`, or `story/` when one clearly fits
+- add story-facing examples under `./story/`, and prefer `assets/` or the current checked-in file families when they fit the artifact
+- add UI walkthrough assets under `./ui/`, and prefer the current surface-named directories
 - add thin-slice walkthrough material under `./thin_slice/`
 - add hydrology-first slice examples under `./thin_slice/hydrology/` when they are clearly instructional and public-safe
+
+Treat self-named placeholder directories such as `story/story/`, `thin_slice/thin_slice/`, or `ui/ui/` as **visible inventory**, not as automatic precedent. Keep them only when their role is explicit; otherwise prefer more descriptive names.
 
 Only add a new top-level sibling under `examples/` when repeated use proves that the current `api/`, `story/`, `thin_slice/`, and `ui/` split is no longer enough.
 </details>
@@ -228,9 +267,9 @@ find examples -maxdepth 4 -type f | sort
 Inspect the current nested example lanes before dropping material at the root:
 
 ```bash
-# Inspect current sublanes
-find examples -maxdepth 2 -type d | sort
-find examples -maxdepth 4 -type f | sort | sed -n '1,200p'
+# Inspect current sublanes and visible packs
+find examples -maxdepth 3 -type d | sort
+find examples -maxdepth 4 -type f | sort | sed -n '1,240p'
 ```
 
 Inspect stronger owner surfaces before adding new example material:
@@ -238,7 +277,7 @@ Inspect stronger owner surfaces before adding new example material:
 ```bash
 # Check likely owner lanes first
 ls -la contracts schemas policy tests docs data apps pipelines tools
-find contracts schemas policy tests docs data apps pipelines tools -maxdepth 2 -type f | sort | sed -n '1,200p'
+find contracts schemas policy tests docs data apps pipelines tools -maxdepth 2 -type f | sort | sed -n '1,240p'
 ```
 
 Use a verification-first local flow before documenting behavior as fact:
@@ -255,7 +294,7 @@ Before adding a new artifact, answer these questions:
 1. Is it public-safe and rights-clear?
 2. Is it obviously non-authoritative?
 3. Does it belong more naturally with `contracts/`, `schemas/`, `policy/`, `tests/`, `docs/`, `data/`, `apps/`, `pipelines/`, or `tools/`?
-4. Does one of the existing nested example lanes already fit it?
+4. Does one of the existing nested example lanes or visible pack families already fit it?
 5. If it demonstrates governed behavior, where is the owner surface that proves it?
 6. Can it be deleted or moved later without breaking the repo’s source of truth?
 
@@ -280,7 +319,7 @@ Put something in `examples/` only when its value is **instructional**, **cross-s
 
 ### 2. Use the existing nested lane before the root
 
-Once something is clearly illustrative rather than authoritative, route it into the best existing example lane:
+Once something is clearly illustrative rather than authoritative, route it into the best existing example lane and then into the most specific visible pack family that obviously fits:
 
 - `./api/` for governed request/response examples
 - `./story/` for Story Node and citation-behavior examples
@@ -343,7 +382,7 @@ flowchart TD
     B -- No --> X[Do not store in examples/<br/>Route through intake, review, quarantine, redaction, or no-Git placement]
     B -- Yes --> C{Authoritative,<br/>merge-blocking,<br/>or release-bearing?}
     C -- Yes --> Y[Store with stronger owner surface<br/>contracts · schemas · policy · tests · docs · data · apps · pipelines · tools]
-    C -- No --> D{Clearly fits an existing<br/>example sublane?}
+    C -- No --> D{Clearly fits an existing<br/>example lane or pack family?}
     D -- API --> E[examples/api/]
     D -- Story --> F[examples/story/]
     D -- UI --> G[examples/ui/]
@@ -409,6 +448,7 @@ A contribution to `examples/` is ready when all relevant checks below are true:
 
 - [ ] It is public-safe, rights-clear, and small enough to review quickly.
 - [ ] It is placed in the correct existing sublane, or at the root only because it is genuinely cross-surface.
+- [ ] It uses an existing visible pack family when one clearly fits, instead of inventing a near-duplicate sibling.
 - [ ] It is labeled as `example`, `demo`, `redacted`, `illustrative`, or equivalent.
 - [ ] It does not pretend to be canonical truth, a promoted dataset, or release evidence.
 - [ ] The stronger owner surface was checked first.
@@ -423,9 +463,9 @@ A contribution to `examples/` is ready when all relevant checks below are true:
 
 ## FAQ
 
-### Why is this directory still scaffold-heavy?
+### Why does this directory still feel partly scaffold-heavy?
 
-Because the public branch already has the right **lane split** even if it does not yet prove a large checked-in payload set. The README-first shape is still useful: it tells contributors where examples belong before example sprawl starts.
+Because the public tree now mixes real checked-in starter packs with placeholder-like directories. The lane split is real and useful, but not every visible nested pack has matured into a clearly documented long-term taxonomy.
 
 ### Why split `examples/` into `api/`, `story/`, `thin_slice/`, and `ui/`?
 
@@ -434,6 +474,10 @@ Because those surfaces already recur elsewhere in KFM doctrine and repo structur
 ### Why not keep all examples at the root?
 
 Because the parent lane should stay readable. Once nested example lanes exist, dropping lane-specific material at the root makes ownership fuzzier and navigation worse.
+
+### Why call out self-named nested directories?
+
+Because the README should reflect the tree contributors can actually navigate today. Visibility is not the same thing as settled naming doctrine, so those directories need to be described honestly rather than silently normalized.
 
 ### Why not store real dataset snapshots here?
 
@@ -445,7 +489,7 @@ With the owner that enforces them. In practice that usually means `../tests/`, `
 
 ### Why mention hydrology here at all?
 
-Because KFM’s March 2026 doctrine repeatedly treats hydrology as the strongest first thin slice. The repo now also includes a nested `examples/thin_slice/hydrology/` scaffold, which makes that emphasis visible without turning the examples lane into the authoritative hydrology implementation.
+Because KFM’s March–April 2026 doctrine repeatedly treats hydrology as the strongest first thin slice, and the repo now includes a nested `examples/thin_slice/hydrology/` lane that makes that emphasis visible without turning the examples lane into the authoritative hydrology implementation.
 
 ### When should something move out of `examples/`?
 
@@ -503,6 +547,12 @@ Avoid names that imply authority or production state:
 - `release-ready.geojson`
 - `truth-layer.parquet`
 - `production-response.json`
+
+Avoid repeating the parent lane name as a child directory unless the placeholder role is explicit and temporary:
+
+- `story/story/`
+- `thin_slice/thin_slice/`
+- `ui/ui/`
 </details>
 
 <details>
@@ -510,7 +560,7 @@ Avoid names that imply authority or production state:
 
 Hydrology remains KFM’s clearest first thin slice because it is public-safe often enough to prove the governed path without immediately forcing the hardest rights burdens.
 
-The current public repo now makes that emphasis visible by including a nested `examples/thin_slice/hydrology/` scaffold.
+The current public repo now makes that emphasis visible by including a nested `examples/thin_slice/hydrology/` lane.
 
 That still does **not** mean `examples/` becomes the hydrology truth lane.
 
