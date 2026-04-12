@@ -6,59 +6,55 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: TODO(verify-created-date)
-updated: 2026-04-04
+updated: 2026-04-12
 policy_label: TODO(verify-policy-label)
-related: [../README.md, ../tools/README.md, ../packages/README.md, ../pipelines/README.md, ../policy/README.md, ../contracts/README.md, ../schemas/README.md, ../tests/README.md, ../.github/actions/README.md, ../.github/workflows/README.md, ../.github/CODEOWNERS]
+related: [../README.md, ../tools/README.md, ../packages/README.md, ../pipelines/README.md, ../policy/README.md, ../contracts/README.md, ../schemas/README.md, ../tests/README.md, ../.github/actions/README.md, ../.github/workflows/README.md, ../.github/CODEOWNERS, ../Makefile]
 tags: [kfm, scripts, automation, validation, promotion, evidence]
-notes: [Current public main inspection showed scripts/ containing README.md only; .github/CODEOWNERS assigns /scripts/ to @bartytime4life; adjacent public docs now also define .github/actions/ as a repo-local action seam, packages/ as a shared module boundary, and pipelines/ as a lane-specific execution surface; deeper executable inventory still needs direct checkout verification.]
+notes: [Public main now exposes checked-in entrypoints under scripts/ in addition to README.md; this revision replaces stale README-only language while keeping the thin-entrypoint boundary explicit.]
 [/KFM_META_BLOCK_V2] -->
 
 # scripts/
 
-Repo-local entrypoints for repeatable, reviewable KFM validation, evidence assembly, promotion support, and operator-safe automation.
+Repo-local entrypoints for repeatable, reviewable KFM validation, scaffold checks, sample ingest, and operator-safe developer tasks.
 
 **Status:** experimental  
 **Owners:** `@bartytime4life`  
 **Path:** `scripts/README.md`  
-![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![tree](https://img.shields.io/badge/public%20main-README--only-lightgrey) ![evidence](https://img.shields.io/badge/evidence-repo--grounded%20%2B%20doctrine-yellow) ![posture](https://img.shields.io/badge/posture-fail--closed-red) ![adjacent](https://img.shields.io/badge/adjacent-actions%20%7C%20packages%20%7C%20pipelines-visible-0969da)  
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth labels](#truth-labels-used-here) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![tree](https://img.shields.io/badge/tree-public%20main%20%E2%80%94%205%20entrypoints%20%2B%20README-lightgrey) ![evidence](https://img.shields.io/badge/evidence-current%20repo%20%2B%20doctrine-yellow) ![posture](https://img.shields.io/badge/posture-thin%20%7C%20fail--closed-red) ![adjacent](https://img.shields.io/badge/adjacent-actions%20%7C%20tools%20%7C%20packages%20%7C%20pipelines-0969da)  
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README is **evidence-bounded**.
 >
-> Current public `main` inspection shows `scripts/` containing `README.md` only. March–April 2026 KFM doctrine and repo docs still support `scripts/` primarily as a **thin entrypoint lane**: a place for bounded wrappers and reviewable invocation surfaces, not a proven public-main executable inventory.
+> Public `main` now exposes `scripts/` as a small but real executable lane: `README.md`, `bootstrap.sh`, `catalog_validate.py`, `dev_up.sh`, `sample_ingest.sh`, and `validate_schemas.py`. That is stronger than a README-only scaffold, but still consistent with KFM's doctrine that `scripts/` should stay **thin, explicit, and non-sovereign**.
 >
-> Current public docs now also make the surrounding boundary clearer than earlier drafts did: `.github/actions/` is the repo-local action seam, `packages/` is the shared internal module boundary, and `pipelines/` is the lane-specific execution surface. That sharpens the role of `scripts/`; it does not widen it.
+> The role of this directory remains narrow: local entrypoints and repeatable wrappers, not hidden policy law, canonical schemas, long-lived runtime services, or lane-owned execution systems.
 
 ## Scope
 
-`scripts/` is the repo surface where KFM turns governed intent into **repeatable entrypoints**.
+`scripts/` is the repo surface where KFM turns a few repeatable developer and maintainer tasks into explicit local entrypoints.
 
-This is the home for thin helpers that make validation, evidence assembly, cross-link checks, catalog closure, promotion support, correction drills, smoke checks, and documentation gates easier to run the same way every time. It is useful precisely because it is **not** where durable business meaning should quietly accumulate.
-
-A strong rule of thumb:
+Today that surface is intentionally conservative. The checked-in helpers do not stand up services, publish datasets, or define new domain law. They verify basic preconditions, parse JSON, check catalog scaffolds, and generate a sample ingest artifact that stays clearly local and reviewable.
 
 > [!TIP]
 > `scripts/` should expose a governed lane, not become the lane’s sovereign owner.
 
-That means two things stay true at the same time:
+That rule still means two things at once:
 
-1. durable meaning belongs in stronger surfaces such as contracts, policy, packages, apps, governed APIs, and lane-specific pipelines
-2. `scripts/` exists to make reviewed transitions and checks repeatable, visible, and fail-closed
+1. durable meaning belongs in stronger surfaces such as contracts, policy, packages, apps, governed APIs, and lane-local pipelines
+2. `scripts/` exists to make bounded checks and developer tasks repeatable, visible, and fail-closed
 
 ### Current public snapshot
 
 | Status | What current evidence supports |
 | --- | --- |
-| **CONFIRMED** | public `main` currently shows `scripts/` containing `README.md` only |
-| **CONFIRMED** | `.github/CODEOWNERS` currently assigns `/scripts/` to `@bartytime4life` |
-| **CONFIRMED** | `.github/workflows/` is a neighboring control lane and currently shows `README.md` only on public `main` |
-| **CONFIRMED** | `.github/actions/` is now a visible adjacent repo-local action seam, but public `main` still shows it as placeholder-heavy rather than fully implemented |
-| **CONFIRMED** | `tools/` is a sibling helper lane; current public tree shows `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, `validators/`, and `README.md` |
-| **CONFIRMED** | `packages/` is a visible shared internal module boundary with public child README surfaces |
-| **CONFIRMED** | `pipelines/` is a visible lane-specific execution surface with `soils/gssurgo-ks/` and `wbd-huc12-watcher/` child lane READMEs |
-| **NEEDS VERIFICATION** | deeper contents inside sibling helper lanes, local checkout parity, and branch-only artifacts not visible on current public `main` |
-| **UNKNOWN** | whether the document-grounded helper names below already exist on a non-public branch, in a local working tree, or only as target-state patterns |
+| **CONFIRMED** | `scripts/` on public `main` contains `README.md`, `bootstrap.sh`, `catalog_validate.py`, `dev_up.sh`, `sample_ingest.sh`, and `validate_schemas.py` |
+| **CONFIRMED** | `.github/CODEOWNERS` assigns `/scripts/` to `@bartytime4life` |
+| **CONFIRMED** | the root `Makefile` standardizes local entrypoints for `bootstrap`, `validate-schemas`, `test`, `dev-up`, `sample-ingest`, and `catalog-validate` |
+| **CONFIRMED** | the checked-in script behaviors stay thin: bootstrap checks for `python3`; `dev_up.sh` explicitly says no long-running services are defined; `catalog_validate.py` checks for catalog README scaffolds; `sample_ingest.sh` writes a local sample JSON plus receipt; `validate_schemas.py` parses repo JSON and checks one schema header |
+| **CONFIRMED** | `.github/actions/` remains a placeholder-heavy adjacent action seam and `.github/workflows/` remains README-only on current public `main` |
+| **CONFIRMED** | `packages/` and `pipelines/` are now visibly real adjacent surfaces, which sharpens the graduation boundary for anything in `scripts/` that stops being entrypoint-sized |
+| **UNKNOWN / NEEDS VERIFICATION** | deeper caller coverage across local checkout state, non-public branches, unpublished automation, and whether additional branch-local scripts exist outside current public `main` |
 
 [Back to top](#scripts)
 
@@ -67,70 +63,56 @@ That means two things stay true at the same time:
 | Field | Value |
 | --- | --- |
 | Target file | `scripts/README.md` |
-| Directory role | Thin, reviewable entrypoints for validation, evidence checks, linting, release support, correction drills, and other operator-safe automation |
-| Current public repo fit | **CONFIRMED:** a documentary lane with README-backed expectations and a currently README-only public tree |
+| Directory role | Thin, reviewable entrypoints for developer bootstrap, schema checks, catalog scaffold checks, sample ingest scaffolding, and other bounded local automation |
+| Current public repo fit | A small checked-in executable lane, still doctrinally **thin** rather than subsystem-sized |
 | Upstream context | [`../README.md`](../README.md) · [`../policy/README.md`](../policy/README.md) · [`../contracts/README.md`](../contracts/README.md) · [`../schemas/README.md`](../schemas/README.md) · [`../tests/README.md`](../tests/README.md) |
-| Sibling helper lane | [`../tools/README.md`](../tools/README.md) — the stronger reusable-helper surface once entrypoints stop being thin |
-| Adjacent shared module surface | [`../packages/README.md`](../packages/README.md) — shared internal logic should graduate here once it becomes imported rather than merely invoked |
-| Adjacent execution surface | [`../pipelines/README.md`](../pipelines/README.md) — lane-specific ingest, watcher, normalize, and package flows belong there when they stop being generic wrappers |
+| Task entrypoint | [`../Makefile`](../Makefile) |
+| Sibling helper lane | [`../tools/README.md`](../tools/README.md) |
+| Shared module boundary | [`../packages/README.md`](../packages/README.md) |
+| Lane-local execution surface | [`../pipelines/README.md`](../pipelines/README.md) |
 | Adjacent control surfaces | [`../.github/actions/README.md`](../.github/actions/README.md) · [`../.github/workflows/README.md`](../.github/workflows/README.md) |
-| Stronger homes for durable logic | governed APIs, contract surfaces, policy bundles, reusable packages, lane-specific pipelines, and long-lived app/runtime code |
-| Governing trust rule | `scripts/` may orchestrate, validate, lint, verify, and emit receipts; it must not silently become the canonical owner of contract law, policy law, runtime truth, or publication authority |
-| Current verification boundary | current public `main` tree plus March–April 2026 KFM doctrine; deeper local checkout parity, non-public branches, and executable coverage remain **NEEDS VERIFICATION** |
+| Governing rule | `scripts/` may wrap checks and local developer flows; it must not silently become the canonical owner of policy, contracts, runtime truth, or publication authority |
 
 ### Why this directory matters in KFM
 
-KFM’s doctrine is unusually clear about **artifactization**: receipts, manifests, proof packs, policy results, release records, and correction objects are not fluff around the system — they are part of the system’s trust model.
+KFM's doctrine is unusually explicit that trust-bearing transitions should be inspectable. Even small local helpers matter because they become the repeated command surfaces maintainers and CI copy into habit. If those entrypoints stay honest, narrow, and evidence-friendly, they strengthen the repo. If they accumulate hidden business law, they weaken it.
 
-`scripts/` is where many of those checks and transitions become operational, provided the logic remains thin, explicit, and reviewable.
+### Actual checked-in entrypoint family
 
-### Adjacent public execution seams now visible
+The current public tree now proves a minimal helper family rather than a README-only placeholder.
 
-These neighboring surfaces matter because they keep `scripts/` honest.
-
-| Surface | Current public role | Consequence for `scripts/` |
+| Entrypoint | Current checked-in behavior | Keep it here because |
 | --- | --- | --- |
-| `.github/actions/` | step-level reuse seam for repo-local workflow actions | if the value is a reusable workflow step rather than a CLI entrypoint, do not hide it in shell glue |
-| `packages/` | shared internal module boundary | if multiple helpers depend on the same imported logic, graduate that logic here |
-| `pipelines/` | lane-specific execution surface | source-local watchers, ingest flows, and package/publish lanes belong there once they become lane-owned |
-| `.github/workflows/` | checked-in automation/control lane | merge-state choreography belongs there when real workflow YAML is present |
-| `tools/` | reusable helper family surface | mature validators, diff helpers, probes, and attestation utilities should graduate there |
+| `bootstrap.sh` | verifies `python3` is present and prints a docs-first bootstrap message | it is a minimal environment sanity check, not an installer or runtime owner |
+| `validate_schemas.py` | parses repo JSON files and checks the correction notice schema's declared `$schema` | it is a thin validation wrapper over visible repo artifacts |
+| `dev_up.sh` | states that no long-running local services are currently defined and points users to validation commands | it preserves an explicit no-service posture instead of implying more runtime than the repo proves |
+| `sample_ingest.sh` | copies a valid correction notice fixture into `data/work/sample_ingest/` and writes a matching receipt JSON | it creates a bounded local scaffold without claiming real source-onboarding or promotion |
+| `catalog_validate.py` | asserts the presence of catalog README scaffolds under `data/catalog/`, `stac/`, `dcat/`, and `prov/` | it enforces visible scaffold integrity rather than catalog law |
+| `make test` | delegates to contract-facing unittest discovery under `tests/contracts/` | it is a repo entrypoint, while the actual proof burden remains in `tests/` |
 
-### Why the `scripts/` / `tools/` / `pipelines/` boundary matters more now
+### Boundary pressure is higher now
 
-Current public repo evidence shows several adjacent seams at once:
+The directory matters more now because the surrounding lanes are clearer than older drafts assumed:
 
-- `scripts/` is still README-only in public view
-- `tools/` is the sibling reusable-helper surface
+- `.github/actions/` is the repo-local reusable step seam
+- `.github/workflows/` is the workflow/control lane, even if it is still README-only on public `main`
 - `packages/` is the shared internal module boundary
 - `pipelines/` is the lane-specific execution surface
-- `.github/actions/` is the repo-local action seam
-- `.github/workflows/` is the checked-in automation lane, even though it is still README-only on current public `main`
+- `tools/` remains the governed helper family surface
 
-That makes graduation rules more important, not less:
-
-- use `scripts/` for thin invocation surfaces and operator-safe wrappers
-- move reusable validator logic, mature CLIs, and family-scale helper behavior into `tools/`
-- move imported shared logic into `packages/`
-- move lane-local ingest/watcher/package behavior into `pipelines/`
-- keep repo-local reusable step logic in `.github/actions/`
-- keep merge-gate choreography in `.github/workflows/` when real workflow YAML appears
+That makes graduation decisions easier, not harder. If a helper becomes imported, shared, lane-owned, or promotion-bearing, it should stop living here.
 
 ## Accepted inputs
 
-The following belong in `scripts/` **when they remain thin entrypoints**.
+The following belong in `scripts/` **when they remain entrypoint-sized**.
 
 | Family | Typical contents | Keep it here when |
 | --- | --- | --- |
-| Bootstrap / environment | CI bootstrap, environment sanity checks, bounded local proof helpers | the script establishes a safe execution surface without owning long-lived runtime behavior |
-| Catalog checks | STAC/DCAT/PROV validation wrappers, cross-link consistency checks | the script enforces or verifies a gate rather than redefining metadata law |
-| Evidence verification | checksum verification, manifest integrity, receipt linkage checks | the script emits or verifies trust-bearing proof objects |
-| Policy gates | deny-by-default wrappers, Focus readiness checks, policy smoke tests | policy semantics live elsewhere and the script makes the policy executable in a repeatable lane |
-| Provenance checks | fingerprint verification, provenance validation, release linkage checks | the script validates lineage instead of inventing it |
-| Documentation gates | README linting, required-section checks, render smoke tests | the helper protects reviewability and consistency |
-| Release support | additive helpers for packaging, signing, attestation, rollback drills, post-deploy checks | the helper supports promotion or correction without becoming the release system itself |
-| Operator utilities | bounded helpers for replay, diffing, auditing, or corrective action | the helper makes a governed action inspectable and repeatable |
-| Local invocation shims | thin wrappers that make a repo-local action, tool, or validator runnable the same way in CI and by maintainers | the wrapper is still only a command surface and the meaning lives elsewhere |
+| Bootstrap / environment | local sanity checks, interpreter presence checks, explicit "nothing to start" developer entrypoints | the command sets expectations without becoming an installer or runtime manager |
+| Validation wrappers | JSON parse checks, scaffold-presence checks, bounded lint or validation entrypoints | the logic is thin and the law lives elsewhere |
+| Sample scaffolds | local example materializations, fixture copies, receipt stubs for review or demo flows | the result is obviously non-authoritative and clearly local |
+| Developer task aliases | Makefile-facing shims that normalize how maintainers call one small task | the wrapper improves repeatability without hiding behavior |
+| Evidence-friendly local utilities | commands that emit receipts or clearly scoped local artifacts | the outputs remain reconstructable and non-sovereign |
 
 ### Minimum bar for anything added here
 
@@ -141,39 +123,36 @@ A new helper should usually satisfy all of the following:
 - it exits non-zero on failure
 - it documents inputs, outputs, and side effects
 - it makes destructive work unmistakable
-- it emits machine-readable evidence when it changes trust state
 - it does not require committed secrets
 - it does not smuggle policy or schema law into shell glue
-- it does not quietly become a lane-specific pipeline or reusable action contract
+- it does not quietly become a reusable action, shared library, or lane-local pipeline
 
 ## Exclusions
 
 | Do not keep here | Better home | Why |
 | --- | --- | --- |
-| Canonical contracts, JSON Schemas, API object law, registry definitions | the **single authoritative schema / contract home** declared by repo governance (`contracts/` is still routed prominently by public root docs; `schemas/` is no longer README-only and authority remains unresolved) | machine-readable law should not hide in helper scripts |
-| Policy bundles, reason codes, obligation codes, review logic | [`../policy/README.md`](../policy/README.md) and its governed descendants | policy must remain explicit, testable, and reviewable |
-| Reusable validator libraries or mature CLIs | [`../tools/README.md`](../tools/README.md) and its sibling helper lanes | shared implementation deserves its own lifecycle, tests, and versioned ownership |
-| Repo-local action contracts or reusable workflow step wrappers | [`../.github/actions/README.md`](../.github/actions/README.md) | step-level reuse should remain visible to reviewers as action contracts, not shell folklore |
-| Workflow choreography, required checks, promotion gates, or merge-blocking automation | [`../.github/workflows/README.md`](../.github/workflows/README.md) and checked-in workflow YAML when present | release-state automation belongs in the control surface, not in README-only invocation glue |
-| Lane-specific ingest, watcher, normalize, or package-and-publish flows | [`../pipelines/README.md`](../pipelines/README.md) and the owning child lane | source-local execution deserves lane-local ownership and evidence |
-| Shared internal modules imported by multiple helpers | [`../packages/README.md`](../packages/README.md) | hidden library behavior inside entrypoints makes review and reuse harder |
-| Long-lived service code, workers, handlers, UI logic | app or runtime/package surfaces | runtime ownership deserves a stronger lifecycle than ad hoc entrypoints |
-| Fixtures, harnesses, or end-to-end proof packs whose main purpose is verification | [`../tests/README.md`](../tests/README.md) and related verification lanes | proof burdens should live near the assertions they serve |
-| Secrets, tokens, workstation overrides, bind-time credentials | secret manager or untracked local secret surfaces | helper directories must never become secret stores |
-| Published proof packs, canonical manifests, authoritative evidence stores | release or catalog surfaces | convenience automation must not masquerade as canonical release truth |
+| Canonical contracts or schema law | [`../contracts/README.md`](../contracts/README.md) and related schema surfaces | machine-readable law should not hide in helper scripts |
+| Policy bundles, allow/deny semantics, obligation logic | [`../policy/README.md`](../policy/README.md) | policy must stay explicit, testable, and independently reviewable |
+| Reusable helper families or mature CLIs | [`../tools/README.md`](../tools/README.md) | shared helper behavior deserves a stronger lifecycle |
+| Reusable workflow-step contracts | [`../.github/actions/README.md`](../.github/actions/README.md) | step-level reuse should stay visible as repo-local action surfaces |
+| Workflow choreography and merge gates | [`../.github/workflows/README.md`](../.github/workflows/README.md) | merge-state automation belongs in checked-in control logic |
+| Lane-local fetch / transform / validate / emit flows | [`../pipelines/README.md`](../pipelines/README.md) | source-local execution deserves lane-local ownership |
+| Imported internal modules | [`../packages/README.md`](../packages/README.md) | hidden library behavior inside entrypoints makes review harder |
+| Long-lived services or operators | app / runtime / infra surfaces | runtime ownership deserves stronger operational discipline |
+| Secrets, tokens, or workstation-only overrides | secret manager or untracked local config | helper directories must never become secret stores |
 
 > [!WARNING]
-> If deleting a script would erase institutional knowledge about what is publishable, how policy decided, or how release evidence is reconstructed, the script is carrying too much meaning and should graduate.
+> If deleting one script would erase important knowledge about what is publishable, what policy decided, or how release truth is reconstructed, the directory is carrying too much meaning.
 
 ## Truth labels used here
 
 | Marker | Meaning in this README |
 | --- | --- |
-| **CONFIRMED** | directly supported by current public repo-tree evidence, current public Markdown, or directly inspectable doctrinal material used in this revision |
+| **CONFIRMED** | directly supported by current public repo-tree evidence, current public Markdown, or directly inspectable checked-in files |
 | **INFERRED** | conservative synthesis from multiple project sources |
-| **PROPOSED** | doctrine-consistent realization or structure not yet verified as current checked-in repo reality |
+| **PROPOSED** | doctrine-consistent realization or improvement not yet verified as current checked-in repo reality |
 | **UNKNOWN** | not established strongly enough in this revision to present as settled fact |
-| **NEEDS VERIFICATION** | a path, filename, owner, or implementation detail that should be checked against the actual checkout, branch history, or live repo settings before merge |
+| **NEEDS VERIFICATION** | a path, behavior, owner, or implementation detail that should be checked against the actual checkout or branch before merge |
 
 ## Directory tree
 
@@ -181,13 +160,15 @@ A new helper should usually satisfy all of the following:
 
 ```text
 scripts/
-└── README.md
+├── README.md
+├── bootstrap.sh
+├── catalog_validate.py
+├── dev_up.sh
+├── sample_ingest.sh
+└── validate_schemas.py
 ```
 
 ### Adjacent public tree cues
-
-> [!NOTE]
-> These are **boundary cues**, not `scripts/` inventory. They are shown here to make the current public separation between entrypoints, reusable helpers, shared modules, and lane-specific execution easier to read.
 
 ```text
 .github/actions/
@@ -207,6 +188,7 @@ packages/
 ├── catalog/
 ├── domain/
 ├── evidence/
+├── genealogy_ingest/
 ├── indexers/
 ├── ingest/
 ├── policy/
@@ -214,31 +196,19 @@ packages/
 
 pipelines/
 ├── README.md
+├── hls-ndvi/
 ├── soils/
-│   └── gssurgo-ks/
-│       └── README.md
+├── ssurgo_to_catchment.md
 └── wbd-huc12-watcher/
-    └── README.md
-
-tools/
-├── attest/
-├── catalog/
-├── ci/
-├── diff/
-├── docs/
-├── probes/
-├── validators/
-└── README.md
 ```
 
-### Document-grounded target entrypoints and examples
+### Document-grounded target/example shape
 
 > [!NOTE]
-> The inventory below is **not** current public-tree proof. These names recur in KFM design notes, gate examples, and doctrinal implementation patterns, so they remain useful as target-state or example entrypoints.
+> These names recur in KFM design notes and example validation lanes. They remain useful as target-state or illustrative entrypoints, but they are **not** current public-tree proof.
 
 ```text
 scripts/
-├── bootstrap_ci.sh
 ├── catalog/
 │   ├── validate_stac.py
 │   └── validate_jsonld.sh
@@ -254,125 +224,83 @@ scripts/
     └── verify_fingerprint.py
 ```
 
-### How to read this tree
-
-Use the split above intentionally:
-
-- the first tree is the **confirmed** current public-tree surface
-- the second tree shows **adjacent confirmed repo cues** that sharpen lane boundaries
-- the third tree is **document-grounded target/example shape**
-- anything beyond that remains **UNKNOWN** until the actual checkout is inspected or a future public tree makes it visible
-
-That distinction matters. KFM is explicit about visible boundedness and visible uncertainty; this README should preserve that posture rather than polishing it away.
-
 [Back to top](#scripts)
 
 ## Quickstart
 
-Use this sequence before adding, renaming, or deleting anything under `scripts/`.
-
-1. Verify what is actually mounted in the checkout.
-2. Compare the current branch against public `main` if branch-local helper growth is expected.
-3. Find every caller before renaming an entrypoint.
-4. Check adjacent action, package, and pipeline seams if the helper might have outgrown `scripts/`.
-5. Syntax-check only what actually exists.
-6. Re-run the relevant gates before merge.
+Use the current checked-in entrypoints first.
 
 ```bash
-# 1) Inspect the lane you are about to change.
-test -d scripts && find scripts -maxdepth 3 -type f | sort || echo "scripts/ not present in this checkout"
+# Bootstrap the local docs-first environment.
+make bootstrap
 
-# 2) Compare current branch against origin/main when git history is available.
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 && \
-  git diff --name-status origin/main...HEAD -- scripts || true
+# Parse every JSON file in the repo and verify the correction notice schema header.
+make validate-schemas
 
-# 3) Find likely callers and references.
+# Run the contract-facing unittest discovery path exposed by the root Makefile.
+make test
+
+# Confirm the current "no local services" posture.
+make dev-up
+
+# Materialize a local sample ingest artifact and matching receipt.
+make sample-ingest SOURCE=example_fixture
+
+# Verify the visible catalog README scaffold.
+make catalog-validate
+```
+
+Inspect what is actually mounted before you change any helper behavior:
+
+```bash
+# Inspect the current lane.
+find scripts -maxdepth 1 -type f | sort
+
+# Review direct script contents.
+sed -n '1,120p' scripts/bootstrap.sh
+sed -n '1,200p' scripts/validate_schemas.py
+sed -n '1,120p' scripts/dev_up.sh
+sed -n '1,200p' scripts/sample_ingest.sh
+sed -n '1,200p' scripts/catalog_validate.py
+
+# Check likely callers before renaming or removing an entrypoint.
 for d in .github docs tests tools policy contracts schemas data apps packages pipelines infra examples; do
   [ -d "$d" ] && grep -R --line-number "scripts/" "$d" || true
 done
-
-# 4) If the change may belong somewhere stronger, inspect the neighboring lanes too.
-for d in .github/actions packages pipelines; do
-  [ -d "$d" ] && find "$d" -maxdepth 3 -type f | sort
-done
-
-# 5) Syntax-check common helper types when present.
-find scripts -type f -name "*.sh" -print0 2>/dev/null | xargs -0 -r -n1 bash -n
-find scripts -type f -name "*.py" -print0 2>/dev/null | xargs -0 -r -n1 python -m py_compile
-
-# 6) Review helper headers before changing behavior.
-find scripts -maxdepth 2 -type f \( -name "*.sh" -o -name "*.py" \) \
-  -exec sh -c 'echo "---- $1"; sed -n "1,40p" "$1"' _ {} \;
-```
-
-Illustrative shell header for a thin entrypoint:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Purpose: one governed transition helper.
-# Inputs: explicit flags or paths only.
-# Output: non-zero exit on failure.
-# Side effects: state changes must be documented below.
 ```
 
 ## Usage
 
-### Current rule
+### Current checked-in behavior
 
-A good script in KFM should do one or more of these well:
+#### `bootstrap.sh`
 
-- normalize a repeated invocation pattern
-- enforce a validation or policy gate
-- emit machine-checkable evidence
-- make an operator workflow safer, clearer, or more repeatable
+This is a minimal environment sanity check. It verifies that `python3` is available and prints a docs-first note that no package install step is currently defined.
 
-It should not become the place where the real product or governance law secretly lives.
+#### `validate_schemas.py`
 
-### Current repo separation
+This script walks every `*.json` file under the repo root, fails on invalid JSON, and performs one explicit schema-header check against `schemas/contracts/v1/correction/correction_notice.schema.json`.
 
-Use the current helper / control split deliberately:
+It is intentionally **not** full JSON Schema enforcement for the entire repo. It is a thin parse plus one focused contract-header assertion.
 
-- `scripts/` stays thin, local, explicit, and entrypoint-sized
-- `tools/` is the sibling lane for reusable helper families and shared CLIs
-- `.github/actions/` is the step-level reuse seam for repo-local workflow steps
-- `.github/workflows/` is the control surface for checked-in automation and merge-gate choreography once YAML is present
-- `packages/` is the shared internal module boundary once logic becomes imported rather than simply invoked
-- `pipelines/` is the lane-specific execution surface for source-local or watcher-local flows
-- `.github/watchers/` is currently a docs-only watcher lane on public `main`; it may describe watcher posture but does not replace runtime or publish authority
-- `tests/` remains the place where proof burdens, fixtures, and verification families become first-class
+#### `dev_up.sh`
 
-### Document-grounded validation lane
+This script is deliberately anti-magical. It says no long-running local services are currently defined and routes the user back to `make test` and `make validate-schemas`.
 
-The following sequence is **document-grounded** and useful as a target pattern for dataset or release checks. Treat it as a verified design/example lane, not as proof that every file already exists in the current checkout.
+#### `sample_ingest.sh`
 
-```bash
-scripts/bootstrap_ci.sh
+This is a bounded local scaffold. It copies `schemas/tests/fixtures/contracts/v1/valid/correction_notice.supersession.valid.json` into `data/work/sample_ingest/` and writes a small receipt JSON beside it.
 
-scripts/evidence/verify_checksums.sh \
-  data/processed/<theme>/<dataset>/<version> \
-  SHA256SUMS.txt
+#### `catalog_validate.py`
 
-scripts/catalog/validate_stac.py \
-  data/catalog/stac/items/<dataset>__<version>.json
+This script checks that the catalog README scaffold exists at:
 
-scripts/catalog/validate_jsonld.sh \
-  data/catalog/dcat/datasets/<dataset>__<version>.jsonld
+- `data/catalog/README.md`
+- `data/catalog/stac/README.md`
+- `data/catalog/dcat/README.md`
+- `data/catalog/prov/README.md`
 
-scripts/provenance/validate_prov.py \
-  data/catalog/prov/<dataset>__<version>.prov.json
-
-scripts/evidence/crosslink_consistency.py \
-  --stac data/catalog/stac/items/<dataset>__<version>.json \
-  --dcat data/catalog/dcat/datasets/<dataset>__<version>.jsonld \
-  --prov data/catalog/prov/<dataset>__<version>.prov.json \
-  --manifest data/processed/<theme>/<dataset>/<version>/manifest.json
-
-scripts/policy/focus_mode_gate.sh \
-  data/catalog/{stac,dcat}/**/* \
-  <dataset>__<version>
-```
+It verifies visible scaffold presence, not full STAC/DCAT/PROV semantic validity.
 
 ### Working rules
 
@@ -394,74 +322,59 @@ When a helper crosses a trust boundary, it should produce stable IDs, receipts, 
 
 #### Graduate on complexity
 
-Move work out of `scripts/` when it starts to need shared internal modules, schema law, policy semantics, durable state, a reusable workflow-step contract, or a lane-specific execution lifecycle that deserves stronger ownership.
+Move work out of `scripts/` when it starts to need shared internal modules, schema law, policy semantics, durable state, a reusable workflow-step contract, or lane-specific execution ownership.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Maintainer / CI / steward] --> B[scripts/ thin entrypoints]
+    A[Maintainer / CI / reviewer] --> B[scripts/ thin entrypoints]
+    B --> C[local checks and bounded scaffolds]
+    C --> D[repo artifacts already owned elsewhere]
 
-    J[.github/actions/<br/>step-level reuse] -. when the unit is a reusable workflow step .-> B
-    F[.github/workflows/<br/>control surface] -. when present .-> B
-    B --> C[validation / policy / provenance wrappers]
-    B --> D[receipts / reports / local proof objects]
-    B -. graduates shared helpers to .-> E[tools/ reusable helper lanes]
-    B -. graduates imported logic to .-> K[packages/ shared modules]
-    B -. graduates lane-local execution to .-> L[pipelines/ source-specific lanes]
+    J[.github/actions/<br/>reusable workflow steps] -. graduate here when step logic becomes reusable .-> B
+    K[tools/<br/>shared helper families] -. graduate here when helpers are reused across lanes .-> B
+    L[packages/<br/>shared internal modules] -. graduate here when logic becomes imported .-> B
+    M[pipelines/<br/>lane-local execution] -. graduate here when work becomes source-owned or watcher-owned .-> B
+    N[policy / contracts / schemas] -. remain the sovereign law .-> B
 
-    C --> G[contracts / catalogs / tests / policy]
-    D --> H[governed release and runtime surfaces]
-
-    E --> F
-    K --> H
-    L --> H
-
-    B -. must not become .-> I[canonical owner of policy, contracts, or truth]
+    B -. must not become .-> O[canonical owner of policy, contracts, or publication authority]
 ```
 
 ## Reference tables
 
-### Script family model
+### Current executable entrypoints
 
-| Family | Primary purpose | Typical proof pressure |
-| --- | --- | --- |
-| Bootstrap / environment | create a repeatable local or CI execution surface | pinned tools, bounded side effects, no accidental authoritative writes |
-| Catalog validation | verify STAC/DCAT/PROV shape and closure | schema checks, cross-link checks, failure on broken metadata |
-| Evidence verification | verify manifests, checksums, receipts, and consistency | digests, linkage, replayability |
-| Policy gating | apply deny-by-default and cite-or-abstain checks | explicit allow/deny, reason codes, negative-path tests |
-| Provenance checks | validate fingerprints and lineage | reproducibility, container/tool/version stamps, drift detection |
-| Documentation gates | stop README or report drift from silently degrading trust | required sections, consistency, renderability |
-| Release / correction support | support governed state transitions and drills | proof packs, review context, rollback visibility |
-| Local invocation shims | normalize how maintainers and CI call the same underlying check | stable CLI surface, bounded side effects, no hidden policy meaning |
+| Command | Underlying file | What it currently does | Truth posture |
+| --- | --- | --- | --- |
+| `make bootstrap` | `./scripts/bootstrap.sh` | checks for `python3` and prints a docs-first bootstrap note | **CONFIRMED** |
+| `make validate-schemas` | `python3 ./scripts/validate_schemas.py` | parses repo JSON and checks the correction notice schema header | **CONFIRMED** |
+| `make test` | `python3 -m unittest discover -s tests/contracts -p 'test_*.py' -v` | runs contract-facing unittest discovery | **CONFIRMED** for the Makefile target; deeper suite breadth remains **NEEDS VERIFICATION** |
+| `make dev-up` | `./scripts/dev_up.sh` | explicitly reports that no long-running local services are defined | **CONFIRMED** |
+| `make sample-ingest SOURCE=<name>` | `./scripts/sample_ingest.sh <name>` | writes a local sample ingest JSON plus receipt under `data/work/sample_ingest/` | **CONFIRMED** |
+| `make catalog-validate` | `python3 ./scripts/catalog_validate.py` | checks for catalog README scaffold presence | **CONFIRMED** |
 
-### Current public state vs target-state reading
+### Public-state reading for this lane
 
 | Layer | Current reading |
 | --- | --- |
-| `scripts/` tree | **CONFIRMED:** current public `main` shows `README.md` only |
+| `scripts/` tree | **CONFIRMED:** current public `main` shows five executable helpers plus `README.md` |
 | `/scripts/` ownership | **CONFIRMED:** `.github/CODEOWNERS` maps `/scripts/` to `@bartytime4life` |
-| `.github/workflows/` | **CONFIRMED:** current public `main` shows `README.md` only; historical workflow activity is not the same thing as current checked-in YAML |
-| `.github/actions/` | **CONFIRMED:** public docs now describe a real but placeholder-heavy repo-local action seam |
-| `tools/` sibling lane | **CONFIRMED:** public tree shows named child directories; deeper contents still need checkout verification |
-| `packages/` | **CONFIRMED:** public docs now describe a shared internal module boundary with visible child README surfaces |
-| `pipelines/` | **CONFIRMED:** public docs now describe a lane-specific execution surface with visible child lane READMEs |
-| concrete script inventory beyond `README.md` | **UNKNOWN** until direct checkout verification or later public-tree evidence |
-| named validation helpers in doctrine and idea packets | **PROPOSED / document-grounded target entrypoints** |
-| policy / contract doctrine behind the lane | **CONFIRMED** at the documentation / doctrine level |
+| checked-in helper depth | **CONFIRMED:** helpers are small, explicit, and bounded |
+| long-running dev services | **CONFIRMED:** `dev_up.sh` states none are currently defined |
+| installer/bootstrap depth | **CONFIRMED:** `bootstrap.sh` only checks for `python3` and prints a docs-first message |
+| richer script families from doctrine | **PROPOSED / document-grounded examples**, not current checked-in public inventory |
 
 ### Graduation rules
 
 | Smell | Better home | Why |
 | --- | --- | --- |
-| multiple helpers need shared implementation | reusable tool or package surface | shared logic deserves tests and versioned ownership |
-| helper defines canonical object law | schema / contract surface | contract law must be machine-checkable and singular |
-| helper decides allow / deny semantics | policy surface | policy must stay explicit and independently reviewable |
+| multiple entrypoints need shared implementation | `tools/` or `packages/` | shared logic deserves tests, ownership, and reuse boundaries |
+| helper defines canonical object law | `contracts/` / schema surfaces | contract law must remain singular and machine-checkable |
+| helper decides allow / deny semantics | `policy/` | policy must stay explicit and independently reviewable |
 | helper becomes a reusable workflow step | `.github/actions/` | step-level reuse should stay visible and reviewable |
-| helper behaves like a service | app / runtime surface | services deserve stronger deployment and operations discipline |
 | helper becomes source-local execution | `pipelines/` | lane-specific runtime deserves its own receipt and publish story |
-| helper only supports tests | tests or dedicated tooling surface | scaffolding should live near the assertions it serves |
-| helper is mainly workflow choreography | `.github/workflows/` | merge-state automation should remain visible as checked-in control logic |
+| helper starts a real service | app / runtime / infra surface | services deserve stronger deployment and operations discipline |
 
 [Back to top](#scripts)
 
@@ -486,41 +399,32 @@ flowchart LR
 
 ### Why keep `scripts/` at all?
 
-Because a small visible entrypoint layer is better than governance-critical commands being scattered across CI YAML, local notes, or one-off operator habits.
+Because a small visible entrypoint layer is better than governance-critical commands being scattered across local notes, ad hoc terminal history, or copy-pasted CI snippets.
 
-### Why is the confirmed tree still so small?
+### What changed from the earlier draft?
 
-Because current public `main` shows `scripts/` containing `README.md` only. Pretending a richer mounted inventory exists would weaken KFM’s truth posture.
+The biggest correction is factual: current public `main` is no longer README-only here. The directory now exposes a small checked-in helper family, and the README should describe that reality directly instead of preserving stale scaffold language.
 
-### Why mention `tools/`, `.github/actions/`, `packages/`, `pipelines/`, and `.github/workflows/` so prominently?
+### Are these scripts already lane-sized automation systems?
 
-Because current repo evidence now makes those boundaries materially important: `tools/` is the sibling reusable-helper surface, `.github/actions/` is the step-level reuse seam, `packages/` is the shared module boundary, `pipelines/` is the lane-specific execution surface, and `.github/workflows/` is the control lane for checked-in automation once workflow YAML is present.
+No. The checked-in helpers are intentionally small. They validate presence, parse JSON, materialize a sample scaffold, or state explicit non-behavior. That is useful, but it is not proof of deep workflow or runtime maturity.
 
-### Why keep document-grounded filenames at all?
+### Should public clients or UI surfaces call these scripts directly?
 
-Because they are already useful design evidence. They show the intended shape of validation and evidence lanes without pretending those files are all checked in today.
+No. KFM’s trust membrane still requires public and normal client surfaces to consume governed APIs and published artifacts, not repo-local helper scripts.
 
-### Should client or public UI code ever call scripts directly?
+### Why keep document-grounded helper names in the appendix?
 
-No. KFM’s trust membrane requires public and normal client surfaces to consume governed APIs and published artifacts, not helper scripts.
-
-### Why mention both `contracts/` and `schemas/`?
-
-Because current public repo evidence still exposes both top-level documentation surfaces, and the authority split remains unresolved enough that the repo itself warns against treating visible machine files as automatic sovereign truth.
-
-### Why call out `pipelines/` now?
-
-Because current public `main` no longer makes source-local execution a hypothetical surface. If a helper starts to look like a lane-specific watcher, ingest, normalize, or package flow, `scripts/` is now clearly the wrong long-term home.
+Because they still capture the intended shape of richer validation and evidence lanes without pretending those files are checked in today.
 
 ## Appendix
 
 <details>
 <summary><strong>Document-grounded helper names already used in KFM examples</strong></summary>
 
-These names are useful because they recur in KFM design notes as part of a one-shot dataset or release gate. They are **document-grounded examples**, not proof that every file already exists in the checked-in public tree.
+These names are useful design evidence. They show the intended shape of validation and evidence lanes without claiming current public-tree presence.
 
 ```text
-scripts/bootstrap_ci.sh
 scripts/catalog/validate_stac.py
 scripts/catalog/validate_jsonld.sh
 scripts/evidence/verify_checksums.sh
@@ -536,29 +440,14 @@ scripts/provenance/verify_fingerprint.py
 <details>
 <summary><strong>Verification backlog before this README is stabilized</strong></summary>
 
-Check these against the actual checkout before promoting this README from draft:
+Check these against the checked-out branch before promoting this README from draft:
 
-- verify the real branch-local `scripts/` tree beyond current public `main`
-- confirm whether the named helpers above are mounted files, stubs, historical remnants, or still target-state only
-- verify caller surfaces under `.github/`, `.github/actions/`, `tests/`, `tools/`, `packages/`, `pipelines/`, `policy/`, `contracts/`, `schemas/`, and any data / catalog lanes
-- confirm whether future workflow YAML appears under `.github/workflows/` and update any README-only language when it does
-- resolve the authoritative machine-schema home if `contracts/` and `schemas/` still coexist as parallel documentation surfaces
 - verify `doc_id`, `created`, and `policy_label` values for the meta block
-- recheck whether sibling helper-lane directory listings and their README narratives still match before merge
+- recheck the exact caller surfaces that reference each checked-in script
+- confirm whether additional non-public or branch-local scripts exist beyond current public `main`
+- decide whether `make test` should remain documented here as a sibling task entrypoint or move entirely into `tests/README.md`
+- resolve whether any current script has outgrown `scripts/` and should graduate into `tools/`, `packages/`, `.github/actions/`, or `pipelines/`
 
 </details>
 
 [Back to top](#scripts)
-
-## Current executable entrypoints (verified 2026-04-11)
-
-The root `Makefile` now standardizes local developer entrypoints that were already referenced by the root README:
-
-- `make bootstrap` → `./scripts/bootstrap.sh`
-- `make validate-schemas` → `python3 ./scripts/validate_schemas.py`
-- `make test` → `python3 -m unittest discover -s tests/contracts -p 'test_*.py' -v`
-- `make dev-up` → `./scripts/dev_up.sh`
-- `make sample-ingest SOURCE=<name>` → `./scripts/sample_ingest.sh <name>`
-- `make catalog-validate` → `python3 ./scripts/catalog_validate.py`
-
-These commands are intentionally conservative and evidence-first; they scaffold repeatable validation without claiming unverified runtime services.
