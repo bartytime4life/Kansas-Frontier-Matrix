@@ -15,13 +15,13 @@ notes: [Current public main confirms configs/env/README.md plus sibling configs/
 
 # configs/env
 
-_Repo-visible environment wiring for KFM runtimes: non-secret, diffable, and explicitly subordinate to contracts, policy, review, release state, and correction discipline._
+_Review surface for non-secret environment wiring in KFM runtimes: diffable, explicit, and subordinate to contracts, policy, review, release state, and correction discipline._
 
-> Status: experimental · current public `main` lane is README-only · repo-grounded README revision  
+> Status: experimental · current public `main` lane is README-only · revised from a repo-grounded baseline  
 > Owners: `@bartytime4life` (via current `/configs/` CODEOWNERS coverage; no narrower `/configs/env/` rule was directly verified on public `main`)  
 > Path: `configs/env/README.md`  
 > Current public tree state: `configs/env/` currently shows `README.md` only; sibling `configs/env.schema.json` exists and current public content is `{}`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-repo--grounded-blue) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![branch](https://img.shields.io/badge/branch-public%20main-brightgreen) ![tree](https://img.shields.io/badge/tree-README__only-lightgrey) ![schema](https://img.shields.io/badge/env.schema.json-%7B%7D-lightgrey) ![secrets](https://img.shields.io/badge/secrets-out__of__repo-blue)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-repo--aligned-blue) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![branch](https://img.shields.io/badge/branch-public%20main-brightgreen) ![tree](https://img.shields.io/badge/tree-README__only-lightgrey) ![schema](https://img.shields.io/badge/env.schema.json-%7B%7D-lightgrey) ![secrets](https://img.shields.io/badge/secrets-out__of__repo-blue)  
 > Repo fit: child lane of [`../README.md`](../README.md) · schema anchor [`../env.schema.json`](../env.schema.json) · consumer families [`../../apps/README.md`](../../apps/README.md), [`../../packages/README.md`](../../packages/README.md), [`../../pipelines/`](../../pipelines/), [`../../infra/README.md`](../../infra/README.md) · verification companions [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md) · law-bearing neighbors [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md)  
 > Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -40,6 +40,8 @@ _Repo-visible environment wiring for KFM runtimes: non-secret, diffable, and exp
 `configs/env/` is the review surface for non-secret environment wiring in KFM.
 
 In practice, that means variable names, grouping, process-start defaults, precedence notes, validation anchors, and host-local companion guidance for runtime surfaces that boot from environment values. It does **not** mean secrets, policy decisions, contract semantics, or ad hoc business logic disguised as configuration.
+
+Configuration here is a support layer for inspectable claims, not a hidden override path around policy or release discipline.
 
 ### Truth posture used in this README
 
