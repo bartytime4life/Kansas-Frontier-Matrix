@@ -8,19 +8,19 @@ owners: @bartytime4life
 created: <NEEDS_VERIFICATION_DATE>
 updated: <NEEDS_VERIFICATION_DATE>
 policy_label: public
-related: [../README.md, ../explorer-web/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/src/api/README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../web/README.md, ../../.github/CODEOWNERS, ../../.github/PULL_REQUEST_TEMPLATE.md]
+related: [../README.md, ../explorer-web/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/README.md, ../api/src/api/README.md, ../api/tests/README.md, ../../README.md, ../../web/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/CODEOWNERS, ../../.github/PULL_REQUEST_TEMPLATE.md]
 tags: [kfm, apps, ui]
-notes: [Current public main shows README-only inventory under apps/ui; reconcile ownership with apps/explorer-web and web before treating this path as the authoritative UI runtime root.]
+notes: [Current public main now lists `apps/ui/` in `apps/README.md` and carries a strengthened `web/README.md`; runtime ownership between `apps/ui/`, `apps/explorer-web/`, and `web/` still needs branch-level reconciliation before this path is treated as a settled runtime root.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM UI Path Boundary
 
-Docs-first boundary README for `apps/ui/` while runtime ownership between the placeholder UI path, the explorer shell, and the parallel `web/` lane is reconciled.
+Docs-first boundary README for `apps/ui/` while runtime ownership between the placeholder UI path, the explorer shell, and the UI-root `web/` lane is reconciled.
 
 > **Status:** `experimental`  
 > **Owners:** `@bartytime4life`  
 > **Path:** `apps/ui/README.md`  
-> **Repo fit:** directory README for the current `apps/ui/` path inside `apps/`; today it is a routing and truth-boundary document before it is a runtime inventory.
+> **Repo fit:** directory README for the current `apps/ui/` path inside `apps/`; today it is still a routing and truth-boundary document before it is a runtime inventory.
 >
 > ![status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
 > ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-blue?style=flat-square)
@@ -31,10 +31,10 @@ Docs-first boundary README for `apps/ui/` while runtime ownership between the pl
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public `main` proves `apps/ui/` exists, but it also proves this path is still **`README.md`-only**. Treat framework choice, manifests, source files, tests, fixtures, and authoritative ownership between `apps/ui/`, `apps/explorer-web/`, and `web/` as **NEEDS VERIFICATION** until the checked-out branch proves them.
+> Current public `main` proves `apps/ui/` exists and is still **`README.md`-only**. It also now proves three nearby facts that this file must reflect honestly: `apps/README.md` lists `ui/` as a placeholder child path, `apps/explorer-web/README.md` is the stronger shell-boundary sibling, and `web/README.md` is now a stronger UI-root guidance surface. Treat framework choice, manifests, source files, tests, fixtures, and final runtime ownership between `apps/ui/`, `apps/explorer-web/`, and `web/` as **NEEDS VERIFICATION** until the checked-out branch proves them.
 
 > [!CAUTION]
-> This file should not become a second, conflicting shell manual. Where the branch reality still routes concrete shell behavior through sibling paths, this README should stay narrow, honest, and explicit about that boundary.
+> This file should not become a second, conflicting shell manual. Where branch reality still routes concrete shell behavior through `apps/explorer-web/` or `web/`, this README should stay narrow, honest, and explicit about that boundary.
 
 ## Scope
 
@@ -52,7 +52,7 @@ KFM’s broader UI law still applies here:
 - review is a shell variation, not a detached admin universe
 - 2D is the default operating surface; 3D is conditional and must inherit the same trust objects
 
-In practice, this means `apps/ui/` should own **composition and rendering behavior** only when that ownership is directly proven by the branch. It should never silently absorb truth authority, policy authority, or release authority.
+In practice, this means `apps/ui/` should own composition and rendering behavior only when that ownership is directly proven by the branch. It should never silently absorb truth authority, policy authority, or release authority.
 
 [Back to top](#kfm-ui-path-boundary)
 
@@ -65,22 +65,23 @@ In practice, this means `apps/ui/` should own **composition and rendering behavi
 | `apps/ui/` path | **CONFIRMED** repo-visible path |
 | Current inventory under `apps/ui/` | **CONFIRMED** `README.md` only |
 | Parent `apps/` tree | **CONFIRMED** includes `ui/` as a directory |
-| Parent app-family summary | **CONFIRMED** currently does **not** list `ui/` among the named current public-main app family surfaces |
+| Parent app-family summary | **CONFIRMED** now lists `ui/` as a placeholder child path in `apps/README.md` |
 | Strongest nearby shell-boundary README | **CONFIRMED** `../explorer-web/README.md` |
 | Review-shell sibling | **CONFIRMED** `../review-console/README.md` |
 | Governed API sibling | **CONFIRMED** `../governed-api/README.md` |
-| Parallel `web/` lane | **CONFIRMED** repo-visible, but currently placeholder-only in its public README |
+| Nearby app-local API lane roots | **CONFIRMED** `../api/README.md`, `../api/src/api/README.md`, and `../api/tests/README.md` |
+| Parallel `web/` lane | **CONFIRMED** repo-visible and now doctrine-heavy, but still not a proven singular runtime root |
 | Local manifests, routes, runtime code, tests, fixtures under `apps/ui/` | **UNKNOWN** |
 
 ### Working interpretation
 
 Until branch-local evidence proves otherwise, the safest repo-native reading is:
 
-- `apps/ui/` is presently a **routing / reconciliation boundary**
+- `apps/ui/` is presently a **routing / reconciliation boundary** and a path-local placeholder
 - `../explorer-web/README.md` is the stronger current sibling for concrete shell-boundary guidance
+- `../../web/README.md` is now a stronger UI-root guidance surface, but not yet proof that `web/` is the sole runtime root
 - `../review-console/README.md` remains the reviewer/steward shell variant
-- `../governed-api/README.md` and `../api/src/api/README.md` remain the right place for API and route-boundary claims
-- `../../web/README.md` should **not** be treated as a concrete source of current UI doctrine unless it is first reconciled and strengthened
+- `../governed-api/README.md`, `../api/README.md`, and `../api/src/api/README.md` remain the right place for API and route-boundary claims
 
 ### Upstream and downstream links
 
@@ -91,11 +92,13 @@ Until branch-local evidence proves otherwise, the safest repo-native reading is:
 | Closest current shell sibling | [`../explorer-web/README.md`](../explorer-web/README.md) | strongest current public shell-boundary README |
 | Review-shell sibling | [`../review-console/README.md`](../review-console/README.md) | review, moderation, and steward-facing shell variation |
 | Governed API boundary | [`../governed-api/README.md`](../governed-api/README.md) | client-facing API trust membrane |
+| App-local API lane root | [`../api/README.md`](../api/README.md) | app-root routing for the `apps/api/` subtree |
 | Deeper API surface | [`../api/src/api/README.md`](../api/src/api/README.md) | route and surface-contract context |
+| App-local API tests | [`../api/tests/README.md`](../api/tests/README.md) | nearby verification surface inside `apps/api/` |
 | Shared contracts | [`../../contracts/README.md`](../../contracts/README.md) | contract families and schema-facing expectations |
 | Shared policy lane | [`../../policy/README.md`](../../policy/README.md) | policy bundles, decision logic, and gates |
 | Shared verification lane | [`../../tests/README.md`](../../tests/README.md) | verification surface and test organization |
-| Parallel placeholder lane | [`../../web/README.md`](../../web/README.md) | reconcile before using as authoritative UI source |
+| Parallel UI-root guidance lane | [`../../web/README.md`](../../web/README.md) | browser-boundary and UI-root guidance surface |
 | Ownership marker | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | current public ownership signal |
 | Review expectations | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | evidence, docs, risk, and verification expectations |
 
@@ -128,10 +131,10 @@ Keep the path narrow. The following do **not** belong here by default.
 | route-by-route API claims | [`../api/src/api/README.md`](../api/src/api/README.md) |
 | source onboarding, ingestion, promotion, receipts | ingest / catalog / runbook lanes, not this UI boundary |
 | detached assistant UX that bypasses evidence | do not add; Focus remains governed and bounded |
-| duplicate shell doctrine already owned by sibling surface docs | route to [`../explorer-web/README.md`](../explorer-web/README.md) unless ownership moves |
+| duplicate shell doctrine already owned by sibling surface docs | route to [`../explorer-web/README.md`](../explorer-web/README.md) or [`../../web/README.md`](../../web/README.md) unless ownership moves |
 | speculative framework or startup instructions | wait until the branch proves manifests and entrypoints |
 | direct browser calls to canonical/internal stores or model runtimes | always route through governed API boundaries |
-| stale carry-forward claims about `../../web/README.md` as concrete UI doctrine | reconcile first, then update docs consistently |
+| stale carry-forward claims that `../../web/README.md` is still placeholder-only | remove them; public docs now treat it as a stronger UI-root guidance surface |
 
 ## Directory tree
 
@@ -142,9 +145,12 @@ apps/
 ├── README.md
 ├── api/
 │   ├── README.md
-│   └── src/
-│       └── api/
-│           └── README.md
+│   ├── src/
+│   │   ├── README.md
+│   │   └── api/
+│   │       └── README.md
+│   └── tests/
+│       └── README.md
 ├── cli/
 │   └── README.md
 ├── explorer-web/
@@ -188,15 +194,15 @@ apps/ui/
 
 ```bash
 git rev-parse --short HEAD 2>/dev/null || true
-find apps -maxdepth 2 -type f -name "README.md" | sort
+find apps -maxdepth 3 -type f -name "README.md" | sort
 find apps/ui -maxdepth 3 -print 2>/dev/null || true
 ```
 
 ### 2. Reconcile nearby shell and API vocabulary
 
 ```bash
-grep -RInE 'Evidence Drawer|Focus Mode|MapLibre|RuntimeResponseEnvelope|CorrectionNotice|audit_ref' \
-  apps docs contracts policy tests 2>/dev/null | sed -n '1,200p'
+grep -RInE 'Evidence Drawer|Focus Mode|MapLibre|RuntimeResponseEnvelope|CorrectionNotice|audit_ref|ViewState|Citation' \
+  apps web docs contracts policy tests 2>/dev/null | sed -n '1,240p'
 ```
 
 ### 3. Upgrade this README only after branch-local proof appears
@@ -254,11 +260,15 @@ The path may eventually own rendering, composition, interaction continuity, and 
 - source onboarding or ingestion logic
 - direct model-runtime control paths
 
+### Neighboring doc rule
+
+Where browser-boundary rules are already stronger in `../../web/README.md`, link there instead of cloning them here. Where shell choreography and runtime-surface framing are already stronger in `../explorer-web/README.md`, link there instead of re-explaining them here.
+
 ## Diagram
 
 ```mermaid
 flowchart LR
-    U[User / reviewer] --> UI[apps/ui<br/>candidate UI boundary]
+    U[User / reviewer] --> UI[apps/ui<br/>candidate local UI boundary]
     UI --> SHELL[Map + timeline + right-stack composition]
     UI --> SVC[Client service layer]
     SVC --> GAPI[Governed API]
@@ -267,12 +277,13 @@ flowchart LR
     EV --> ED[Evidence Drawer payloads]
     EV --> DS[Dossier / Story / Focus payloads]
 
-    UI -. sibling shell guidance .-> EX[apps/explorer-web]
+    UI -. stronger shell-boundary sibling .-> EX[apps/explorer-web]
+    UI -. UI-root guidance sibling .-> WEB[web]
     UI -. review variation .-> RC[apps/review-console]
     GAPI -. route boundary .-> API[apps/api/src/api]
 
     classDef soft fill:#f7f7f7,stroke:#888,color:#222;
-    class UI,SHELL,SVC,GAPI,EV,OUT,ED,DS,EX,RC,API,U soft;
+    class UI,SHELL,SVC,GAPI,EV,OUT,ED,DS,EX,WEB,RC,API,U soft;
 ```
 
 ### Reading the diagram
@@ -280,6 +291,7 @@ flowchart LR
 - `apps/ui/` is modeled here as a **candidate boundary**, not a proven current runtime root.
 - The service layer is explicit because client code should not bypass the governed API.
 - Evidence Drawer, Dossier, Story, and Focus payloads sit on the same trust substrate.
+- `web/README.md` now reads as a stronger UI-root guidance surface, while `apps/explorer-web/README.md` remains the stronger shell-boundary sibling.
 - Review is a sibling shell variation, not a separate epistemic system.
 
 [Back to top](#kfm-ui-path-boundary)
@@ -292,12 +304,12 @@ flowchart LR
 |---|---|---|
 | repo-wide identity and trust posture | [`../../README.md`](../../README.md) | start here for system-level meaning |
 | app-subtree runtime map | [`../README.md`](../README.md) | use as parent boundary |
-| strongest current public shell-boundary doc | [`../explorer-web/README.md`](../explorer-web/README.md) | use unless branch-local proof moves ownership |
+| strongest current public shell-boundary doc | [`../explorer-web/README.md`](../explorer-web/README.md) | use for shell-boundary and choreography claims unless branch-local proof moves ownership |
 | review / stewardship shell | [`../review-console/README.md`](../review-console/README.md) | review is shell variation |
 | governed client API edge | [`../governed-api/README.md`](../governed-api/README.md) | browser-to-runtime trust membrane |
 | deeper route/API boundary | [`../api/src/api/README.md`](../api/src/api/README.md) | route and contract context |
-| this path itself | [`./README.md`](./README.md) | current routing and reconciliation boundary |
-| parallel `web/` lane | [`../../web/README.md`](../../web/README.md) | do not treat as authoritative until reconciled |
+| UI-root browser guidance surface | [`../../web/README.md`](../../web/README.md) | use for browser-boundary rules, but do not treat as exclusive runtime authority until reconciliation |
+| this path itself | [`./README.md`](./README.md) | current local routing, placeholder, and reconciliation boundary |
 
 ### Trust-visible cue set for any future active UI under this path
 
@@ -323,9 +335,9 @@ flowchart LR
 
 ## Task list
 
-- [ ] Confirm whether `apps/ui/` is intended to stay placeholder-only, become a runtime root, or remain a routing handoff to `apps/explorer-web/`.
-- [ ] Reconcile the parent `apps/README.md` app-family list with the visible existence of `apps/ui/`.
-- [ ] Reconcile this path with `../../web/README.md` so public docs name one clear UI-boundary story.
+- [ ] Confirm whether `apps/ui/` is intended to stay placeholder-only, become a runtime root, or remain a routing handoff to `apps/explorer-web/` or `web/`.
+- [ ] Keep `apps/README.md`, `apps/ui/README.md`, `apps/explorer-web/README.md`, and `web/README.md` synchronized when ownership changes.
+- [ ] Decide whether `web/README.md` is guidance-only, the winning UI-root, or a doc that should eventually hand off to `apps/explorer-web/`.
 - [ ] If code exists on the working branch, replace the proposed subtree with the exact verified file inventory.
 - [ ] Add verified quickstart commands only after manifests and entrypoints are directly visible.
 - [ ] Keep client service-layer notes explicit if this path starts calling governed APIs.
@@ -340,7 +352,7 @@ This README is in a good state when:
 - a maintainer can tell exactly what `apps/ui/` does today
 - a contributor knows where to route UI work if this path is still thin
 - any future branch that makes this path real has a clear checklist for upgrading the README
-- neighboring docs do not contradict the story told here
+- neighboring docs tell one consistent UI-boundary story
 
 ## FAQ
 
@@ -348,9 +360,9 @@ This README is in a good state when:
 
 **UNKNOWN** on current public main. The stronger current shell-boundary README is [`../explorer-web/README.md`](../explorer-web/README.md), while `apps/ui/` is currently README-only.
 
-### Why not treat `../../web/README.md` as the concrete UI source of truth?
+### How should `../../web/README.md` be treated now?
 
-Because current public evidence shows that file is still placeholder-level. Until it is reconciled and strengthened, it should not outrank stronger sibling app docs.
+As a stronger **UI-root guidance surface**, not as a placeholder. It now carries substantial browser-boundary doctrine. What it still does **not** prove on its own is that `web/` is the singular runtime root for the active branch.
 
 ### Can this path talk directly to stores, indexes, or model runtimes?
 
@@ -369,16 +381,17 @@ Only if this path actually owns the relevant runtime code. Even then, 3D remains
 
 | Tension | Why it matters |
 |---|---|
-| `apps/ui/` exists, but parent app-family summary omits it | creates ambiguity about whether the path is active, deprecated, or awaiting ownership |
-| `apps/explorer-web/README.md` is concrete, while `apps/ui/` is placeholder-only | suggests the stronger live shell story currently lives elsewhere |
-| `../../web/README.md` is currently placeholder-only | prevents safe carry-forward claims that `web/` still owns concrete UI doctrine |
+| `apps/ui/` exists as a README-only child while `apps/explorer-web/` and `web/` are both stronger doctrinal docs | three UI-boundary docs can drift if ownership is not named explicitly |
+| `apps/README.md` now lists `ui/` as a placeholder child path | one earlier ambiguity is closed, but synchronization pressure is higher |
+| `web/README.md` is now substantial while active runtime-root authority still needs verification | stronger guidance no longer equals settled ownership |
+| `apps/explorer-web/README.md` is concrete while `apps/ui/` remains thin | suggests the stronger live shell story currently lives elsewhere |
 
 ### Safe next move
 
 The smallest safe next move is not a speculative runtime rewrite. It is a reconciliation pass:
 
 1. verify the working branch tree
-2. name one authoritative shell path
+2. name one authoritative UI-root / shell-boundary story
 3. downgrade all others to routing docs or upgrade them with real inventory
 4. keep sibling links synchronized in the same PR
 
