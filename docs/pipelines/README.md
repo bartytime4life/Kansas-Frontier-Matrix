@@ -376,20 +376,20 @@ Avoid vague buckets such as:
 
 ```mermaid
 flowchart LR
-    A[architecture / governance / standards]
-    B[docs/pipelines/**<br/>human-readable contract<br/>and review burden]
-    C[pipelines/**<br/>lane-local execution surface<br/>(when present)]
-    D[contracts / schemas<br/>machine-readable law]
-    E[policy/<br/>deny-by-default / reasons / obligations]
-    F[data/<br/>truth path + artifacts + catalogs]
-    G[tests + tools + scripts<br/>verification and operator support]
-    H[.github gatehouse<br/>review + workflow docs]
-    X[examples/thin_slice/**<br/>public-safe examples]
+    A["architecture / governance / standards"]
+    B["docs/pipelines/**<br/>human-readable contract<br/>and review burden"]
+    C["pipelines/**<br/>lane-local execution surface<br/>when present"]
+    D["contracts / schemas<br/>machine-readable law"]
+    E["policy/<br/>deny-by-default / reasons / obligations"]
+    F["data/<br/>truth path + artifacts + catalogs"]
+    G["tests + tools + scripts<br/>verification and operator support"]
+    H[".github gatehouse<br/>review + workflow docs"]
+    X["examples/thin_slice/**<br/>public-safe examples"]
 
     A --> B
     D --> B
     E --> B
-    X -.illustration only.-> B
+    X -. "illustration only" .-> B
 
     D --> C
     E --> C
@@ -397,12 +397,12 @@ flowchart LR
     H --> C
     C --> F
 
-    B -.scope / burden / review.-> C
-    C -.receipts / emit objects / lane proof.-> B
+    B -. "scope / burden / review" .-> C
+    C -. "receipts / emit objects / lane proof" .-> B
 
-    B --> I[contributors]
-    B --> J[reviewers]
-    C --> K[operators]
+    B --> I["contributors"]
+    B --> J["reviewers"]
+    C --> K["operators"]
 
     style B stroke-width:3px
     style C stroke-width:3px
