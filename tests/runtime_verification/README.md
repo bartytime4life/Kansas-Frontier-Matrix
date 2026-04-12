@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: Runtime Verification Test Suite
+title: Runtime Verification Validator
 type: standard
 version: v1
 status: draft
@@ -8,130 +8,284 @@ owners: @bartytime4life
 created: 2026-04-12
 updated: 2026-04-12
 policy_label: public
-related: [../../contracts/runtime_verification/README.md, ../../schemas/runtime_verification/, ../../tools/attest/README.md, ../../tests/README.md, ../../policy/README.md]
-tags: [kfm, tests, runtime-verification, fixtures, validation, e2e]
-notes: [Target paths, related links, and exact contract names remain NEEDS VERIFICATION until the mounted repo surfaces schemas, fixtures, and CI wiring.]
+related: [../../contracts/runtime_verification/README.md, ../../schemas/runtime_verification/, ../../tests/runtime_verification/README.md, ../../tests/runtime_verification/fixtures/, ../../tools/attest/README.md, ../../policy/README.md]
+tags: [kfm, attest, validator, runtime-verification, receipts, proofs, fail-closed]
+notes: [Exact repo path, schema mount path, workflow wiring, and module format remain NEEDS VERIFICATION; this draft is aligned to corpus doctrine but not direct mounted implementation evidence.]
 [/KFM_META_BLOCK_V2] -->
 
-# Runtime Verification Test Suite
+# Runtime Verification Validator
 
-Deterministic, fail-closed test surface for runtime verification receipts, proofs, fixtures, and end-to-end verification flows.
+Deterministic, read-only validation helpers for runtime verification receipts, proofs, and outcomes.
 
 > [!NOTE]
-> This document defines the **target** test surface for runtime verification. It preserves confirmed KFM verification doctrine, but it does **not** claim that the tree, schemas, fixtures, validators, or CI jobs below are already present in the mounted repository.
-
-**Status:** `draft`  
-**Owners:** `@bartytime4life`  
-![Status: Draft](https://img.shields.io/badge/status-draft-f4c430) ![Surface: Tests](https://img.shields.io/badge/surface-tests-1f6feb) ![Posture: Fail%20Closed](https://img.shields.io/badge/posture-fail--closed-8250df) ![KFM: Evidence First](https://img.shields.io/badge/kfm-evidence--first-238636) ![Verification: Cross-Cutting](https://img.shields.io/badge/verification-cross--cutting-0a60ff)
-
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Outcome grammar](#outcome-grammar-proposed) · [Test families](#test-families) · [Target tree](#target-tree) · [E2E matrix](#e2e-matrix) · [CI integration](#ci-integration)
+> **Status:** `draft`  
+> **Owners:** `@bartytime4life`  
+> ![Status: Draft](https://img.shields.io/badge/status-draft-f4c430) ![Lane: tools/attest](https://img.shields.io/badge/lane-tools%2Fattest-1f6feb) ![Posture: Read Only](https://img.shields.io/badge/posture-read--only-8250df) ![Trust: Fail Closed](https://img.shields.io/badge/trust-fail--closed-238636) ![Repo Paths: Needs Verification](https://img.shields.io/badge/repo%20paths-needs%20verification-9e6a03)  
+> **Quick jumps:** [Purpose](#purpose) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Interface](#interface) · [Rules](#rules) · [CLI shape](#cli-shape) · [Starter implementation](#starter-implementation) · [Merge checklist](#merge-checklist)
 
 ---
 
-## Scope
+## Purpose
 
-This suite exists to make runtime verification artifacts inspectable, machine-checkable, and safe to trust.
+Provide one shared validator surface so the repo does **not** duplicate or drift validation logic across:
 
-It focuses on four things:
+- fixtures
+- CI workflows
+- worker tests
+- promotion inputs
+- downstream attest summaries
 
-- contract-valid fixture coverage
-- explicit receipt vs proof separation
-- finite, fail-closed verification outcomes
-- deterministic end-to-end verification behavior
+This validator is intentionally:
 
-This suite is for **runtime verification artifacts** and their supporting fixtures. It is **not** the place to define broader release proof packs, full shell/UI trust-state coverage, or all promotion choreography across the repo.
+- **read-only**
+- **deterministic**
+- **schema-aware**
+- **fail-closed**
 
-[Back to top](#runtime-verification-test-suite)
+> [!IMPORTANT]
+> This validator is a **narrow supporting tool**, not a replacement for KFM’s broader contract lattice or first schema wave. It should align with the wider proof-object discipline rather than silently redefining it.
+
+[Back to top](#runtime-verification-validator)
+
+---
 
 ## Repo fit
 
-**Target path (INFERRED):** `tests/runtime_verification/README.md`
+| Surface | Relationship | Status |
+|---|---|---|
+| `tools/attest/` | Intended home for reusable validator logic and thin CLI wrappers. | **PROPOSED** |
+| `contracts/runtime_verification/` | Intended grammar and documentation home for this narrow runtime-verification object family. | **NEEDS VERIFICATION** |
+| `schemas/runtime_verification/` | Intended schema authority for receipt / proof / outcome validation. | **NEEDS VERIFICATION** |
+| `tests/runtime_verification/fixtures/` | Intended source of known-good and known-bad examples. | **NEEDS VERIFICATION** |
+| `.github/workflows/` | Should call the validator rather than embedding ad hoc validation logic inline. | **PROPOSED** |
+| Broader KFM proof-object wave | This validator should align with `spec_hash`, `run_receipt`, `ai_receipt`, attestation refs, and adjacent proof objects without claiming to be the whole schema wave. | **CONFIRMED doctrine / NEEDS VERIFICATION exact mapping** |
 
-**Upstream references**
-- [`../../contracts/runtime_verification/README.md`](../../contracts/runtime_verification/README.md)
-- [`../../schemas/runtime_verification/`](../../schemas/runtime_verification/)
-- [`../../policy/README.md`](../../policy/README.md)
+### Architectural guardrail
 
-**Adjacent or downstream references**
-- [`../../tools/attest/README.md`](../../tools/attest/README.md)
-- [`../../tests/README.md`](../../tests/README.md)
+KFM’s wider attached doctrine repeatedly centers a broader contract family such as `SourceDescriptor`, `IngestReceipt`, `ValidationReport`, `DatasetVersion`, `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, `RuntimeResponseEnvelope`, and `CorrectionNotice`. This validator should therefore remain a **supporting helper** beneath that broader wave, not become a silent substitute for it.
 
-### Accepted inputs
+---
 
-This suite should accept:
+## Accepted inputs
 
-- JSON Schemas for runtime verification receipt and proof objects
-- valid and invalid receipt fixtures
-- valid and invalid proof fixtures
-- end-to-end simulation traces or replay inputs
-- policy reason and obligation registries when verification results affect promotion
+This validator accepts:
 
-### Exclusions
+- JSON objects intended to represent a runtime-verification **receipt**
+- JSON objects intended to represent a runtime-verification **proof**
+- JSON strings or values intended to represent a runtime-verification **outcome**
+- `.json` fixture files and fixture directories used by tests and CI
+- promotion-adjacent or attest-adjacent inputs that need deterministic shape and rule checks before later policy decisions
 
-This suite should **not** be the home for:
+## Exclusions
 
-- release-significant proof-pack assembly
-- general shell/UI evidence-drawer behavior
-- domain-lane source onboarding or catalog closure tests
-- signing workflow implementation details that properly belong under `tools/attest/` or release/promotion lanes
+This validator does **not**:
 
-[Back to top](#runtime-verification-test-suite)
+- approve releases
+- decide policy allowability
+- assign reviewer obligations
+- resolve evidence bundles
+- fetch manifests or artifacts
+- compute network digests
+- mutate receipts or proofs
+- replace the broader KFM proof-object schema wave
+- act as a public runtime response envelope or release manifest validator
 
-## Verification posture
+---
 
-The doctrinal center is stable; the local realization details remain partly open.
+## Diagram
 
-| Area | Posture | Meaning here |
-| --- | --- | --- |
-| Verification is cross-cutting | **CONFIRMED** | Runtime verification belongs inside the governed verification stack, not as an afterthought. |
-| Negative outcomes are first-class | **CONFIRMED** | A failed or narrowed result is a valid inspected outcome, not an embarrassing edge case. |
-| Invalid fixtures are required | **CONFIRMED** | Contract tests should prove both valid and invalid cases. |
-| Receipt/proof split | **CONFIRMED doctrine / PROPOSED local rule shape** | KFM clearly separates receipt-like process memory from proof-like release-significant trust objects; exact runtime verification contract boundaries remain to be surfaced. |
-| Exact runtime verification outcome enum below | **PROPOSED** | The finite outcome set in this file is a recommended contract surface, not a surfaced canonical enum from the mounted repo. |
-| Tree, schema names, CI wiring | **NEEDS VERIFICATION** | Current mounted repo evidence did not surface those files directly. |
+```mermaid
+flowchart LR
+    A[JSON input] --> B{Caller kind hint?}
+    B -->|receipt| C[Receipt schema + semantic rules]
+    B -->|proof| D[Proof schema + semantic rules]
+    B -->|outcome| E[Outcome validation]
+    B -->|any / none| F[validateAny classification]
 
-> [!IMPORTANT]
-> In this file, a **receipt** is process-memory evidence emitted during runtime work, while a **proof** is the final verification artifact for one runtime stream or session. That distinction is deliberate: receipts and proofs must not quietly collapse into one object.
+    C --> G[ValidationResult]
+    D --> G
+    E --> G
+    F --> G
 
-## Core contract boundaries
+    G --> H[Fixtures]
+    G --> I[CI checks]
+    G --> J[Promotion inputs]
+    G --> K[Downstream attest summaries]
+```
 
-### Receipt
+---
 
-A runtime verification receipt is the process-memory object emitted during progress or checkpoint phases. It records observable state such as progress, bytes processed, checkpoint status, or stream continuity markers.
+## Interface
 
-A receipt should **not** make the final verification claim.
+### Result shape
 
-### Proof
+```ts
+type ValidationSeverity = "error";
 
-A runtime verification proof is the finalized verification artifact emitted once the runtime stream or session ends. It is the object that carries the final verification outcome and any required digest comparison.
+type ValidationKind = "receipt" | "proof" | "outcome" | "unknown";
 
-### Release proof pack
+type ValidationError = {
+  code: string;
+  message: string;
+  path?: string;
+  severity: ValidationSeverity;
+};
 
-A release proof pack is broader than this suite’s main concern. This README may reference it, but it should be tested elsewhere.
+type ValidationResult = {
+  valid: boolean;
+  kind: ValidationKind;
+  errors: ValidationError[];
+};
+```
 
-[Back to top](#runtime-verification-test-suite)
+### Public API
 
-## Outcome grammar (proposed)
+```ts
+validateOutcome(input: unknown): ValidationResult
+validateReceipt(input: unknown): ValidationResult
+validateProof(input: unknown): ValidationResult
+validateAny(input: unknown): ValidationResult
+```
 
-The exact finite outcome set below is a **proposed** runtime verification proof grammar. It is compatible with KFM’s confirmed fail-closed posture, but it is not presented here as a mounted, checked-in canonical enum.
+### Classification model
 
-| Outcome | Meaning | Minimum rule |
-| --- | --- | --- |
-| `VERIFIED` | Expected and observed verification values align. | Requires all mandatory declaration and observed fields. |
-| `MISMATCH` | Verification completed, but expected and observed values differ. | Requires both expected and observed values. |
-| `MISSING_DECLARATION` | Verification could not complete because an expected declaration was absent. | Must not fabricate the missing declaration. |
-| `INTERRUPTED` | Stream or runtime work ended before final verification could complete. | Must not be upgraded to success. |
-| `ERROR` | Technical failure prevented safe completion. | Must remain explicit and auditable. |
+| Kind | Meaning | Notes |
+|---|---|---|
+| `receipt` | A non-terminal runtime-verification object that records progress or observed state. | Narrow tool-local meaning. Wider KFM mapping remains **NEEDS VERIFICATION**. |
+| `proof` | A terminal runtime-verification object that records verification outcome semantics. | Should remain distinct from release/policy objects. |
+| `outcome` | A finite outcome value used by proof validation. | Must stay small, explicit, and deterministic. |
+| `unknown` | The input could not be classified safely, or classified ambiguously. | Fail closed. |
 
-### Important distinction
+---
 
-These proof outcomes are **not** the same thing as the outward public response grammar used by broader runtime answer envelopes. A proof outcome describes the verification status of a runtime artifact or stream. A public response outcome describes what the system is allowed to say outwardly.
+## Rules
 
-That distinction is intentional and should remain visible in tests, contracts, and docs.
+### Receipt rules
 
-## Target tree
+- must satisfy receipt schema
+- must not include `outcome`
+- must not include `proof_id`
+- must include numeric `bytes_processed`
+- if `partial_digest` exists, it must validate as a digest
+
+### Proof rules
+
+- must satisfy proof schema
+- must not include `receipt_id`
+- must not include `bytes_processed`
+- must not include `checkpoint_index`
+- must include valid finite `outcome`
+
+### Outcome-specific proof rules
+
+| Outcome | Required behavior |
+|---|---|
+| `VERIFIED` | requires both digests and they must be equal |
+| `MISMATCH` | requires both digests and they must be unequal |
+| `MISSING_DECLARATION` | must not fabricate `expected_digest` |
+| `INTERRUPTED` | must not masquerade as completed verified proof |
+| `ERROR` | may include `reason`; must not imply success |
+
+### Guardrail rules
+
+- same input must produce the same result
+- object key order must not affect classification or result
+- missing required information must fail closed
+- ambiguous classification must fail closed
+- validation helpers must not perform network access, writes, or hidden mutation
+- schema failure order should be stable where practical
+
+---
+
+## Error codes
+
+| Code | Meaning |
+|---|---|
+| `SCHEMA_INVALID` | schema validation failed |
+| `INVALID_OUTCOME` | outcome not in allowed registry |
+| `RECEIPT_HAS_OUTCOME` | receipt illegally contains outcome |
+| `RECEIPT_HAS_PROOF_ID` | receipt illegally contains proof identifier |
+| `RECEIPT_MISSING_BYTES` | receipt missing `bytes_processed` |
+| `PROOF_HAS_RECEIPT_ID` | proof illegally contains receipt identifier |
+| `PROOF_HAS_PROGRESS_FIELD` | proof illegally contains receipt-only progress field |
+| `DIGEST_INVALID` | digest object malformed |
+| `PROOF_MISSING_DIGEST` | required digest missing for outcome |
+| `DIGEST_MISMATCH` | verified proof has unequal digests |
+| `DIGEST_EQUAL_WHEN_MISMATCH` | mismatch proof has equal digests |
+| `FABRICATED_EXPECTED_DIGEST` | missing-declaration proof includes expected digest |
+| `AMBIGUOUS_INTERRUPTED_PROOF` | interrupted proof appears completed |
+| `UNKNOWN_KIND` | object could not be classified safely |
+
+---
+
+## CLI shape
+
+A thin CLI wrapper is recommended so workflows can call the validator directly.
+
+### Suggested commands
+
+```bash
+node tools/attest/runtime_verification_validator.mjs validate-file path/to/file.json
+node tools/attest/runtime_verification_validator.mjs validate-dir tests/runtime_verification/fixtures/receipts
+node tools/attest/runtime_verification_validator.mjs validate-dir tests/runtime_verification/fixtures/proofs
+node tools/attest/runtime_verification_validator.mjs summary tests/runtime_verification/fixtures
+```
+
+> [!TIP]
+> A future refinement is to support an explicit `--kind receipt|proof|outcome|any` hint for callers and invalid-fixture directories. That refinement is **PROPOSED**, not assumed by this draft.
+
+### Machine-readable output
+
+```json
+{
+  "valid": false,
+  "kind": "proof",
+  "errors": [
+    {
+      "code": "PROOF_MISSING_DIGEST",
+      "message": "VERIFIED proof requires both expected_digest and observed_digest.",
+      "path": "/",
+      "severity": "error"
+    }
+  ]
+}
+```
+
+[Back to top](#runtime-verification-validator)
+
+---
+
+## Determinism and fail-closed behavior
+
+This validator should preserve the following behaviors:
+
+- same input must produce same result
+- no random IDs, timestamps, or external calls
+- object key order must not affect result
+- failure ordering should be stable where practical
+- unknown or ambiguous classification should be invalid, not silently tolerated
+- malformed or missing required fields should be explicit deny conditions for later gates that depend on this validator
+
+---
+
+## Proposed file layout
 
 ```text
+# Exact mount paths remain NEEDS VERIFICATION.
+
+tools/
+  attest/
+    runtime_verification_validator.mjs
+    runtime_verification_invalid_fixture_check.mjs
+    README.md
+
+schemas/
+  runtime_verification/
+    outcome.schema.json
+    digest.schema.json
+    receipt.schema.json
+    proof.schema.json
+
 tests/
   runtime_verification/
     README.md
@@ -139,308 +293,589 @@ tests/
       receipts/
       proofs/
       invalid/
-    e2e/
-    validators/
 ```
 
-| Path | Intended role |
-| --- | --- |
-| `fixtures/receipts/` | Valid receipt objects and receipt-shape edge cases |
-| `fixtures/proofs/` | Valid finalized proof objects |
-| `fixtures/invalid/` | Known-bad payloads that must fail deterministically |
-| `e2e/` | End-to-end flow simulations and replay tests |
-| `validators/` | Contract assertions, semantic checks, and test helpers |
+---
+
+## Workflow simplification target
+
+After this file lands, the workflow should stop embedding runtime-verification logic inline and instead call the validator.
+
+```yaml
+- name: Install validator dependencies
+  run: npm install --no-save ajv ajv-formats
+
+- name: Validate valid receipt fixtures
+  run: node tools/attest/runtime_verification_validator.mjs validate-dir tests/runtime_verification/fixtures/receipts
+
+- name: Validate valid proof fixtures
+  run: node tools/attest/runtime_verification_validator.mjs validate-dir tests/runtime_verification/fixtures/proofs
+```
+
+For invalid fixtures, use a small negative-test wrapper or a dedicated script that asserts non-zero exit.
+
+---
+
+## Starter implementation
 
 > [!WARNING]
-> Treat this as a **target tree**, not a claim that these directories already exist in the mounted repo.
-
-[Back to top](#runtime-verification-test-suite)
-
-## Test families
-
-| Family | What it proves | Minimum posture |
-| --- | --- | --- |
-| Schema validation | Objects conform to contract shape | Must include valid and invalid fixtures |
-| Outcome enforcement | Final proof outcomes stay finite and explicit | Unknown or implicit success states fail |
-| Receipt vs proof separation | Process-memory and final-claim objects do not blur | Receipt/proof boundaries stay enforceable |
-| Digest semantics | Digests are syntactically valid and semantically interpretable | Success without required digest evidence fails |
-| Fail-closed behavior | Missing, incomplete, or errored states do not become success | Negative states remain first-class |
-| Determinism | Same inputs yield the same proof outcome and semantically equivalent proof | Replay is stable |
-
-### 1) Schema validation
-
-Ensures receipt and proof objects conform strictly to their schemas.
-
-| Test | Expectation |
-| --- | --- |
-| valid receipt | passes |
-| valid proof — verified | passes |
-| valid proof — mismatch | passes |
-| valid proof — missing declaration | passes |
-| valid proof — interrupted | passes |
-| missing required fields | fails |
-| undeclared extra fields in closed schema | fails |
-| invalid digest format | fails |
-
-### 2) Outcome enforcement
-
-Ensures the proof outcome grammar is finite, explicit, and case-stable.
-
-| Test | Expectation |
-| --- | --- |
-| `VERIFIED` valid | passes |
-| `MISMATCH` valid | passes |
-| `MISSING_DECLARATION` valid | passes |
-| `INTERRUPTED` valid | passes |
-| `ERROR` valid | passes |
-| unknown outcome value | fails |
-| lowercase or mixed-case variant | fails |
-| omitted outcome on finalized proof | fails |
-
-### 3) Receipt vs proof separation
-
-Ensures runtime receipts do not masquerade as final proofs and final proofs do not carry receipt-only process state by accident.
-
-| Test | Expectation |
-| --- | --- |
-| receipt contains no final outcome | passes |
-| receipt contains progress or checkpoint state only | passes |
-| proof contains final outcome | passes |
-| receipt masquerading as proof | fails |
-| proof containing receipt-only checkpoint/process fields | fails |
-
-### 4) Digest semantics
-
-Ensures digest syntax and comparison semantics behave predictably.
-
-| Test | Expectation |
-| --- | --- |
-| valid hex length (64) | passes |
-| invalid hex characters | fails |
-| `MISMATCH` with differing digests | passes |
-| `VERIFIED` without both expected and observed digests | fails |
-| fabricated expected digest under `MISSING_DECLARATION` | fails |
-
-### 5) Fail-closed behavior
-
-Ensures ambiguity never upgrades itself into success.
-
-| Test | Expectation |
-| --- | --- |
-| missing expected digest | `MISSING_DECLARATION` |
-| incomplete stream | `INTERRUPTED` |
-| runtime exception during finalization | `ERROR` |
-| truncated artifact | not `VERIFIED` |
-| empty or free-text success string | fails |
-
-### 6) Determinism
-
-Ensures the proof surface is stable enough to be replayed, diffed, and trusted.
-
-| Test | Expectation |
-| --- | --- |
-| same input → same proof outcome | passes |
-| same input → semantically equivalent proof | passes |
-| receipt replay → same finalized outcome | passes |
-| field order irrelevant | passes |
-| excluded volatile fields do not affect equality | passes |
-
-[Back to top](#runtime-verification-test-suite)
-
-## Fixture structure
-
-### Naming convention
-
-```text
-<type>__<scenario>__<status>.json
-```
-
-Examples:
-
-```text
-receipt__checkpoint__valid.json
-receipt__resumed__valid.json
-proof__verified__valid.json
-proof__mismatch__valid.json
-proof__missing-declaration__valid.json
-proof__interrupted__valid.json
-proof__verified__missing-digest.json
-receipt__pretending-proof__invalid.json
-```
-
-### Fixture categories
-
-#### Valid receipts
-- minimal receipt
-- checkpoint receipt
-- resumed receipt
-
-#### Valid proofs
-- verified proof
-- mismatch proof
-- missing declaration proof
-- interrupted proof
-- error proof
-
-#### Invalid payloads
-- missing required fields
-- invalid outcome value
-- invalid digest format
-- proof missing digest
-- receipt with final outcome field
-- proof with receipt-only checkpoint fields
+> The implementation below is **illustrative starter code**, not a claim of mounted repository reality. Exact schema `$id` values, schema paths, package format, and workflow wiring remain **NEEDS VERIFICATION**.
 
 <details>
-<summary><strong>Starter fixture inventory (proposed)</strong></summary>
+<summary><code>tools/attest/runtime_verification_validator.mjs</code> — illustrative starter implementation</summary>
 
-```text
-fixtures/
-  receipts/
-    receipt__minimal__valid.json
-    receipt__checkpoint__valid.json
-    receipt__resumed__valid.json
-  proofs/
-    proof__verified__valid.json
-    proof__mismatch__valid.json
-    proof__missing-declaration__valid.json
-    proof__interrupted__valid.json
-    proof__error__valid.json
-  invalid/
-    receipt__final-outcome__invalid.json
-    proof__missing-digest__invalid.json
-    proof__unknown-outcome__invalid.json
-    proof__bad-digest-format__invalid.json
-    proof__checkpoint-fields__invalid.json
+```js
+#!/usr/bin/env node
+
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+
+const ROOT = process.cwd();
+
+const OUTCOME_VALUES = new Set([
+  "VERIFIED",
+  "MISMATCH",
+  "MISSING_DECLARATION",
+  "INTERRUPTED",
+  "ERROR"
+]);
+
+function makeError(code, message, path = "/") {
+  return { code, message, path, severity: "error" };
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function loadSchemas(baseDir = path.join(ROOT, "schemas", "runtime_verification")) {
+  const files = {
+    outcome: path.join(baseDir, "outcome.schema.json"),
+    digest: path.join(baseDir, "digest.schema.json"),
+    receipt: path.join(baseDir, "receipt.schema.json"),
+    proof: path.join(baseDir, "proof.schema.json")
+  };
+
+  for (const p of Object.values(files)) {
+    if (!fs.existsSync(p)) {
+      throw new Error(`Missing schema file: ${p}`);
+    }
+  }
+
+  const ajv = new Ajv({
+    strict: false,
+    allErrors: true,
+    allowUnionTypes: true
+  });
+  addFormats(ajv);
+
+  const schemas = {
+    outcome: readJson(files.outcome),
+    digest: readJson(files.digest),
+    receipt: readJson(files.receipt),
+    proof: readJson(files.proof)
+  };
+
+  ajv.addSchema(schemas.outcome, schemas.outcome.$id);
+  ajv.addSchema(schemas.digest, schemas.digest.$id);
+  ajv.addSchema(schemas.receipt, schemas.receipt.$id);
+  ajv.addSchema(schemas.proof, schemas.proof.$id);
+
+  return {
+    ajv,
+    schemas,
+    validateOutcomeSchema: ajv.getSchema(schemas.outcome.$id),
+    validateDigestSchema: ajv.getSchema(schemas.digest.$id),
+    validateReceiptSchema: ajv.getSchema(schemas.receipt.$id),
+    validateProofSchema: ajv.getSchema(schemas.proof.$id)
+  };
+}
+
+const ctx = loadSchemas();
+
+function schemaErrorsToValidationErrors(errors) {
+  if (!errors || !errors.length) {
+    return [makeError("SCHEMA_INVALID", "Unknown schema validation failure.", "/")];
+  }
+
+  return errors.map((err) =>
+    makeError(
+      "SCHEMA_INVALID",
+      err.message ? `Schema validation failed: ${err.message}` : "Schema validation failed.",
+      err.instancePath || "/"
+    )
+  );
+}
+
+function isObject(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function digestEqual(a, b) {
+  return !!a && !!b && a.algorithm === b.algorithm && a.hex === b.hex;
+}
+
+function validateDigestSemantics(digest, labelPath) {
+  const errors = [];
+
+  if (!ctx.validateDigestSchema(digest)) {
+    errors.push(
+      ...schemaErrorsToValidationErrors(ctx.validateDigestSchema.errors).map((e) =>
+        makeError("DIGEST_INVALID", e.message, labelPath)
+      )
+    );
+    return errors;
+  }
+
+  if (digest.algorithm === "sha256" && digest.hex.length !== 64) {
+    errors.push(
+      makeError(
+        "DIGEST_INVALID",
+        "Digest hex must be exactly 64 characters for sha256.",
+        `${labelPath}/hex`
+      )
+    );
+  }
+
+  if (digest.hex !== digest.hex.toLowerCase()) {
+    errors.push(
+      makeError("DIGEST_INVALID", "Digest hex must be lowercase.", `${labelPath}/hex`)
+    );
+  }
+
+  return errors;
+}
+
+export function validateOutcome(input) {
+  const errors = [];
+
+  if (!ctx.validateOutcomeSchema(input)) {
+    errors.push(...schemaErrorsToValidationErrors(ctx.validateOutcomeSchema.errors));
+  }
+
+  if (typeof input !== "string" || !OUTCOME_VALUES.has(input)) {
+    errors.push(
+      makeError(
+        "INVALID_OUTCOME",
+        "Outcome must be one of VERIFIED, MISMATCH, MISSING_DECLARATION, INTERRUPTED, ERROR.",
+        "/"
+      )
+    );
+  }
+
+  return {
+    valid: errors.length === 0,
+    kind: "outcome",
+    errors
+  };
+}
+
+export function validateReceipt(input) {
+  const errors = [];
+
+  if (!ctx.validateReceiptSchema(input)) {
+    errors.push(...schemaErrorsToValidationErrors(ctx.validateReceiptSchema.errors));
+  }
+
+  if (!isObject(input)) {
+    return { valid: false, kind: "receipt", errors };
+  }
+
+  if ("outcome" in input) {
+    errors.push(
+      makeError(
+        "RECEIPT_HAS_OUTCOME",
+        "Receipt must not include final proof field `outcome`.",
+        "/outcome"
+      )
+    );
+  }
+
+  if ("proof_id" in input) {
+    errors.push(
+      makeError(
+        "RECEIPT_HAS_PROOF_ID",
+        "Receipt must not include proof identifier `proof_id`.",
+        "/proof_id"
+      )
+    );
+  }
+
+  if (typeof input.bytes_processed !== "number") {
+    errors.push(
+      makeError(
+        "RECEIPT_MISSING_BYTES",
+        "Receipt must include numeric `bytes_processed`.",
+        "/bytes_processed"
+      )
+    );
+  }
+
+  if ("partial_digest" in input && input.partial_digest != null) {
+    errors.push(...validateDigestSemantics(input.partial_digest, "/partial_digest"));
+  }
+
+  return {
+    valid: errors.length === 0,
+    kind: "receipt",
+    errors
+  };
+}
+
+export function validateProof(input) {
+  const errors = [];
+
+  if (!ctx.validateProofSchema(input)) {
+    errors.push(...schemaErrorsToValidationErrors(ctx.validateProofSchema.errors));
+  }
+
+  if (!isObject(input)) {
+    return { valid: false, kind: "proof", errors };
+  }
+
+  if ("receipt_id" in input) {
+    errors.push(
+      makeError(
+        "PROOF_HAS_RECEIPT_ID",
+        "Proof must not include receipt identifier `receipt_id`.",
+        "/receipt_id"
+      )
+    );
+  }
+
+  if ("bytes_processed" in input) {
+    errors.push(
+      makeError(
+        "PROOF_HAS_PROGRESS_FIELD",
+        "Proof must not include receipt-only progress field `bytes_processed`.",
+        "/bytes_processed"
+      )
+    );
+  }
+
+  if ("checkpoint_index" in input) {
+    errors.push(
+      makeError(
+        "PROOF_HAS_PROGRESS_FIELD",
+        "Proof must not include receipt-only progress field `checkpoint_index`.",
+        "/checkpoint_index"
+      )
+    );
+  }
+
+  const outcomeResult = validateOutcome(input.outcome);
+  if (!outcomeResult.valid) {
+    errors.push(
+      makeError(
+        "INVALID_OUTCOME",
+        "Proof must include a valid finite outcome.",
+        "/outcome"
+      )
+    );
+    return { valid: false, kind: "proof", errors };
+  }
+
+  if ("expected_digest" in input && input.expected_digest != null) {
+    errors.push(...validateDigestSemantics(input.expected_digest, "/expected_digest"));
+  }
+
+  if ("observed_digest" in input && input.observed_digest != null) {
+    errors.push(...validateDigestSemantics(input.observed_digest, "/observed_digest"));
+  }
+
+  switch (input.outcome) {
+    case "VERIFIED": {
+      if (!input.expected_digest || !input.observed_digest) {
+        errors.push(
+          makeError(
+            "PROOF_MISSING_DIGEST",
+            "VERIFIED proof requires both expected_digest and observed_digest.",
+            "/"
+          )
+        );
+      } else if (!digestEqual(input.expected_digest, input.observed_digest)) {
+        errors.push(
+          makeError(
+            "DIGEST_MISMATCH",
+            "VERIFIED proof requires equal expected and observed digests.",
+            "/"
+          )
+        );
+      }
+      break;
+    }
+
+    case "MISMATCH": {
+      if (!input.expected_digest || !input.observed_digest) {
+        errors.push(
+          makeError(
+            "PROOF_MISSING_DIGEST",
+            "MISMATCH proof requires both expected_digest and observed_digest.",
+            "/"
+          )
+        );
+      } else if (digestEqual(input.expected_digest, input.observed_digest)) {
+        errors.push(
+          makeError(
+            "DIGEST_EQUAL_WHEN_MISMATCH",
+            "MISMATCH proof requires unequal expected and observed digests.",
+            "/"
+          )
+        );
+      }
+      break;
+    }
+
+    case "MISSING_DECLARATION": {
+      if (input.expected_digest) {
+        errors.push(
+          makeError(
+            "FABRICATED_EXPECTED_DIGEST",
+            "MISSING_DECLARATION proof must not fabricate expected_digest.",
+            "/expected_digest"
+          )
+        );
+      }
+      break;
+    }
+
+    case "INTERRUPTED": {
+      if (
+        input.expected_digest &&
+        input.observed_digest &&
+        digestEqual(input.expected_digest, input.observed_digest)
+      ) {
+        errors.push(
+          makeError(
+            "AMBIGUOUS_INTERRUPTED_PROOF",
+            "INTERRUPTED proof must not appear equivalent to a completed verified proof.",
+            "/"
+          )
+        );
+      }
+      break;
+    }
+
+    case "ERROR":
+      break;
+  }
+
+  return {
+    valid: errors.length === 0,
+    kind: "proof",
+    errors
+  };
+}
+
+export function validateAny(input) {
+  const receipt = validateReceipt(input);
+  const proof = validateProof(input);
+
+  if (receipt.valid && !proof.valid) return receipt;
+  if (proof.valid && !receipt.valid) return proof;
+  if (receipt.valid && proof.valid) {
+    return {
+      valid: false,
+      kind: "unknown",
+      errors: [
+        makeError(
+          "UNKNOWN_KIND",
+          "Input ambiguously validated as both receipt and proof.",
+          "/"
+        )
+      ]
+    };
+  }
+
+  return {
+    valid: false,
+    kind: "unknown",
+    errors: [...receipt.errors, ...proof.errors]
+  };
+}
+
+function walkJsonFiles(targetPath) {
+  const stat = fs.statSync(targetPath);
+  if (stat.isFile()) return [targetPath];
+
+  const out = [];
+  for (const entry of fs.readdirSync(targetPath)) {
+    const full = path.join(targetPath, entry);
+    const st = fs.statSync(full);
+    if (st.isDirectory()) out.push(...walkJsonFiles(full));
+    else if (st.isFile() && full.endsWith(".json")) out.push(full);
+  }
+  return out.sort();
+}
+
+function summarizeResults(results) {
+  return {
+    total: results.length,
+    valid: results.filter((r) => r.result.valid).length,
+    invalid: results.filter((r) => !r.result.valid).length
+  };
+}
+
+function main(argv) {
+  const [, , command, target] = argv;
+
+  if (!command || !target) {
+    console.error("Usage:");
+    console.error("  node tools/attest/runtime_verification_validator.mjs validate-file <file.json>");
+    console.error("  node tools/attest/runtime_verification_validator.mjs validate-dir <dir>");
+    console.error("  node tools/attest/runtime_verification_validator.mjs summary <dir>");
+    process.exit(2);
+  }
+
+  if (!fs.existsSync(target)) {
+    console.error(`Target does not exist: ${target}`);
+    process.exit(2);
+  }
+
+  if (command === "validate-file") {
+    const input = readJson(target);
+    const result = validateAny(input);
+    console.log(JSON.stringify(result, null, 2));
+    process.exit(result.valid ? 0 : 1);
+  }
+
+  if (command === "validate-dir" || command === "summary") {
+    const files = walkJsonFiles(target);
+    const results = files.map((file) => {
+      const input = readJson(file);
+      return {
+        file,
+        result: validateAny(input)
+      };
+    });
+
+    if (command === "validate-dir") {
+      console.log(
+        JSON.stringify(
+          results.map((r) => ({
+            file: r.file,
+            ...r.result
+          })),
+          null,
+          2
+        )
+      );
+      process.exit(results.every((r) => r.result.valid) ? 0 : 1);
+    }
+
+    const summary = summarizeResults(results);
+    console.log(JSON.stringify(summary, null, 2));
+    process.exit(summary.invalid === 0 ? 0 : 1);
+  }
+
+  console.error(`Unknown command: ${command}`);
+  process.exit(2);
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main(process.argv);
+}
 ```
 
 </details>
 
-## Validation rules
+[Back to top](#runtime-verification-validator)
 
-### Core assertions
+---
 
-All fixtures should be subject to:
+## Negative fixture runner
 
-- JSON Schema validation
-- required field presence checks
-- type validation
-- enum validation
-- deterministic field comparison rules where replay matters
+<details>
+<summary><code>tools/attest/runtime_verification_invalid_fixture_check.mjs</code> — illustrative negative-fixture helper</summary>
 
-### Proof-specific rules
+```js
+#!/usr/bin/env node
 
-- `VERIFIED` requires both expected and observed digest values.
-- `MISMATCH` requires both expected and observed digest values.
-- `MISSING_DECLARATION` must not fabricate a missing expected digest.
-- `INTERRUPTED` must remain non-successful even if partial receipt evidence exists.
-- `ERROR` must remain explicit and auditable.
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import { validateAny } from "./runtime_verification_validator.mjs";
 
-### Receipt-specific rules
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
 
-- must not include the final proof outcome
-- should carry process-memory fields only
-- should support deterministic replay and checkpoint assertions
-- should remain distinguishable from finalized proof objects by shape alone
+function walkJsonFiles(targetPath) {
+  const stat = fs.statSync(targetPath);
+  if (stat.isFile()) return [targetPath];
 
-[Back to top](#runtime-verification-test-suite)
+  const out = [];
+  for (const entry of fs.readdirSync(targetPath)) {
+    const full = path.join(targetPath, entry);
+    const st = fs.statSync(full);
+    if (st.isDirectory()) out.push(...walkJsonFiles(full));
+    else if (st.isFile() && full.endsWith(".json")) out.push(full);
+  }
+  return out.sort();
+}
 
-## E2E matrix
+const target = process.argv[2];
+if (!target) {
+  console.error("Usage: node tools/attest/runtime_verification_invalid_fixture_check.mjs <dir>");
+  process.exit(2);
+}
 
-### Runtime flow coverage
+const files = walkJsonFiles(target);
+const failures = [];
 
-| Scenario | Expected proof outcome |
-| --- | --- |
-| full stream verified | `VERIFIED` |
-| digest mismatch | `MISMATCH` |
-| missing declaration | `MISSING_DECLARATION` |
-| interrupted stream | `INTERRUPTED` |
-| worker or finalization error | `ERROR` |
+for (const file of files) {
+  const result = validateAny(readJson(file));
+  if (result.valid) {
+    failures.push(`${file} was expected to be invalid but passed`);
+  }
+}
 
-### Behavioral assertions
+if (failures.length) {
+  for (const failure of failures) console.error(failure);
+  process.exit(1);
+}
 
-| Behavior | Expectation |
-| --- | --- |
-| receipt emitted before proof | required |
-| proof emitted once | required |
-| progress monotonic | required |
-| bytes processed non-decreasing | required |
-| checkpoint intervals respected | required |
-| interrupted runs never promoted to verified | required |
-
-## Diagram
-
-```mermaid
-flowchart LR
-    A[Runtime worker] --> B[Emit receipt]
-    B --> C[Receipt validator]
-    C -->|continue| D[Process stream]
-    C -->|fail| I[Fail-closed / quarantine]
-
-    D --> E[Finalize verification]
-    E --> F[Emit proof]
-    F --> G[Proof validator]
-    G -->|pass| H[Consuming lane / audit surface]
-    G -->|fail| I[Fail-closed / quarantine]
+console.log(`All invalid fixtures were correctly rejected: ${files.length}/${files.length}`);
 ```
 
-## CI integration
+</details>
 
-### Minimum CI checks
+> [!TIP]
+> If invalid fixtures are later split by kind, a kind-aware wrapper is the cleanest next refinement.
 
-- validate all receipt and proof fixtures against schema
-- ensure invalid fixtures fail deterministically
-- enforce finite proof outcome grammar
-- enforce receipt vs proof separation
-- confirm deterministic replay for at least one golden fixture set
-
-### Suggested CI outputs
-
-- pass/fail per fixture
-- semantic diff for proof mismatches
-- deterministic replay summary
-- outcome counts by proof type
-- one compact receipt/proof validation summary suitable for PR review
-
-## Validator interface (proposed)
-
-```ts
-type ValidationResult = {
-  valid: boolean;
-  errors: string[];
-};
-
-function validateReceipt(input: unknown): ValidationResult;
-function validateProof(input: unknown): ValidationResult;
-function validateOutcome(input: unknown): ValidationResult;
-```
+---
 
 ## Merge checklist
 
-- [ ] Target tree is created or intentionally deferred with explanation
-- [ ] Valid receipt fixtures added
-- [ ] Valid proof fixtures added
-- [ ] Invalid fixtures added
-- [ ] Schema validation tests added
-- [ ] Outcome enforcement tests added
-- [ ] Receipt/proof separation tests added
-- [ ] Determinism or replay test added
-- [ ] CI wiring added or explicitly left `NEEDS VERIFICATION`
-- [ ] Related contract, schema, and policy docs updated if behavior changed
+- [ ] add validator file under `tools/attest/`
+- [ ] add dependency note for `ajv` + `ajv-formats`
+- [ ] refactor workflow to call validator file
+- [ ] add negative-fixture runner
+- [ ] align final schema mount paths and `$id` values
+- [ ] add valid and invalid fixtures
+- [ ] add tests for `validateReceipt`, `validateProof`, and `validateAny`
+- [ ] decide whether callers need explicit `--kind` hints
+- [ ] confirm how this helper maps into the broader proof-object family
+- [ ] verify adjacent docs that should link here once the mounted repo is visible
 
-## Definition of done
+---
 
-This document is materially complete when:
+## Open verification items
 
-1. receipt and proof schemas are surfaced or linked directly
-2. valid and invalid fixtures exist for each named test family
-3. one replayable E2E path proves receipt emission, proof finalization, and fail-closed handling
-4. CI rejects malformed fixtures and unexpected outcome drift
-5. adjacent contract and policy docs reflect the same runtime verification vocabulary
+- Does this object family actually live under `contracts/runtime_verification/` and `schemas/runtime_verification/`, or under a different mounted path?
+- Is `receipt` here intended as a narrow overlay, or should it align directly with a wider `run_receipt` / `ValidationReport` / `IngestReceipt` family?
+- Are `proof` and `outcome` lane-local helper concepts, or shared proof-object carriers across multiple runtime surfaces?
+- What are the final schema `$id` values and example fixtures?
+- Which workflow or test surfaces should call `validateAny`, and which should require an explicit kind?
+- Should runtime-verification examples become golden fixtures in CI?
 
 ---
 
 ## One-line summary
 
-This suite makes runtime verification **deterministic, explicit, outcome-finite, and fail-closed** without pretending that current repo wiring has already been verified.
+This validator gives KFM one deterministic, reusable, fail-closed helper for runtime-verification objects across fixtures, CI, and downstream attest surfaces—without claiming broader release authority it does not own.
 
-[Back to top](#runtime-verification-test-suite)
+[Back to top](#runtime-verification-validator)
