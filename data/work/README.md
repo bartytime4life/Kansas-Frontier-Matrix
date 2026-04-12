@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-22
-updated: 2026-04-01
+updated: 2026-04-12
 policy_label: <TBD-NEEDS-VERIFICATION>
 related: [../README.md, ../raw/README.md, ../quarantine/README.md, ../processed/README.md, ../catalog/README.md, ../catalog/stac/README.md, ../catalog/dcat/README.md, ../catalog/prov/README.md, ../receipts/README.md, ../proofs/README.md, ../published/README.md, ../registry/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/README.md, ../../scripts/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, data, work, staging, provenance]
-notes: [Grounded to current public main, March-April 2026 doctrine, and visible public-main commit history for this path; updated reflects the current public-main Apr 1 2026 edit; created is treated as the current-file incarnation after the Mar 21 deletion / Mar 22 reintroduction sequence; doc_id and policy_label still need verification.]
+notes: [Current public main confirms a README-only lane at `data/work/`; `created` stays pinned to the current-file reintroduction date on 2026-03-22; `doc_id` and `policy_label` still need verification; proof-aware carryover notes in this revision are doctrinally supported but still branch-convention-sensitive.]
 [/KFM_META_BLOCK_V2] -->
 
 # `data/work`
@@ -22,12 +22,12 @@ Repeatable, non-public staging zone for governed intermediate transforms, valida
 > **Path:** `data/work/README.md`  
 > **Current public tree:** `data/work/` contains `README.md` only on public `main`  
 > **Repo fit:** parent [`../README.md`](../README.md) · upstream [`../raw/README.md`](../raw/README.md) · lateral [`../quarantine/README.md`](../quarantine/README.md) · downstream [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md), [`../published/README.md`](../published/README.md), [`../registry/README.md`](../registry/README.md) · shared controls [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
-> [![Status: active directory](https://img.shields.io/badge/status-active%20directory-0a7d5a)](#scope)
-> [![Doc: draft](https://img.shields.io/badge/doc-draft-8250df)](#scope)
-> [![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0969da)](#repo-fit)
-> [![Public tree: README only](https://img.shields.io/badge/public%20tree-README--only-lightgrey)](#directory-tree)
-> [![Catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb)](#reference-tables)
-> [![Trust: fail-closed](https://img.shields.io/badge/trust-fail--closed-d73a49)](#scope)
+> ![Status: active directory](https://img.shields.io/badge/status-active%20directory-0a7d5a)
+> ![Doc: draft](https://img.shields.io/badge/doc-draft-8250df)
+> ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0969da)
+> ![Public tree: README only](https://img.shields.io/badge/public%20tree-README--only-lightgrey)
+> ![Catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb)
+> ![Trust: fail-closed](https://img.shields.io/badge/trust-fail--closed-d73a49)
 >
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done--promotion-gates) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -57,7 +57,7 @@ In KFM terms, material leaving this lane should do so through a **governed state
 | **INFERRED** | A role or relationship follows strongly from confirmed sibling READMEs and KFM doctrine, but is not proven by a populated subtree inside `data/work/` itself. |
 | **PROPOSED** | Starter run layout, filename conventions, and working patterns that fit the repo’s doctrine and adjacent docs but are not yet proven as checked-in branch reality. |
 | **UNKNOWN** | Working-branch-only content, emitted artifact inventory, local helper commands, and automation beyond the current public tree. |
-| **NEEDS VERIFICATION** | Any value that should be checked before merge or release, including final `doc_id`, `policy_label`, deeper subtree shape, and local command wiring. |
+| **NEEDS VERIFICATION** | Any value that should be checked before merge or release, including final `doc_id`, `policy_label`, deeper subtree shape, local command wiring, and branch-local proof-object placement. |
 
 ### What this directory is for
 
@@ -150,15 +150,29 @@ Use these as **starter patterns**, not as already-proven branch conventions:
 - `spec_hash.txt`
 - small `manifests/`, `qa/`, and `logs/` subfolders inside a run area
 
+### Proposed proof-aware carryovers
+
+April 2026 KFM doctrine deepening makes a small proof quartet increasingly important: `spec_hash`, `run_receipt`, `ai_receipt`, and attestation references. For `data/work/`, treat those as **PROPOSED carryovers**, not as confirmed local naming or placement standards.
+
+That means:
+
+- a local `spec_hash` file or reference can be a good fit when it helps replay or explain the work
+- `run_receipt` or `ai_receipt` artifacts may appear here only when the active branch confirms that convention
+- attestation references or bundle pointers should stay explicit if they exist, but they do **not** turn `data/work/` into a release-proof lane
+- centrally queryable receipts still belong in [`../receipts/README.md`](../receipts/README.md), and release-significant proof still belongs in [`../proofs/README.md`](../proofs/README.md)
+
 ### Good-fit test
 
-An artifact likely belongs in `data/work/` if all five checks pass:
+An artifact likely belongs in `data/work/` if all six checks pass:
 
 1. It derives from admitted or reviewable upstream material.
 2. It is needed to transform, normalize, enrich, validate, or prepare a handoff.
 3. It remains reproducible enough to replay or explain.
 4. It is **not yet** the stable processed release artifact.
 5. It should **not** be read directly by normal client or runtime surfaces.
+6. If it carries proof-aware context such as `spec_hash`, `run_receipt`, `ai_receipt`, or attestation references, that context is still clearly pre-release and not being mistaken for outward proof.
+
+[Back to top](#datawork)
 
 ---
 
@@ -224,8 +238,14 @@ data/work/
         ├── run_manifest.json
         ├── validation_report.json
         ├── checksums.txt
-        └── spec_hash.txt
+        ├── spec_hash.txt
+        ├── run_receipt.json
+        ├── ai_receipt.json
+        └── attestations/
 ```
+
+> [!NOTE]
+> The deeper `run_receipt.json`, `ai_receipt.json`, and `attestations/` examples above are **PROPOSED proof-aware carryovers**, not confirmed checked-in structure. Avoid adopting them verbatim unless the active branch confirms the convention.
 
 > [!NOTE]
 > Avoid inventing a pseudo-quarantine subtree under `data/work/`. If a run becomes blocked by rights, sensitivity, validation, or review, move or reference it explicitly in [`../quarantine/README.md`](../quarantine/README.md).
@@ -238,6 +258,7 @@ Prefer deterministic, boring names over clever names.
 - `<run-id>`: sortable run key, batch key, or date-based identifier
 - `NOTES.md`: short human-readable explanation of what changed and why
 - `run_*` / `validation_*` files: only after the active branch confirms those names are acceptable
+- proof-aware names such as `run_receipt.json`, `ai_receipt.json`, or attestation bundle pointers: only after the active branch confirms whether this lane keeps local copies, central mirrors, or references only
 
 [Back to top](#datawork)
 
@@ -264,7 +285,7 @@ sed -n '1,220p' data/work/README.md
 ### Create a starter run area
 
 ```bash
-RUN_ID="2026-04-01-example-001"
+RUN_ID="2026-04-12-example-001"
 mkdir -p "data/work/<dataset>/${RUN_ID}"/{staging,qa,logs,manifests}
 ```
 
@@ -294,6 +315,15 @@ mkdir -p "data/quarantine/${CASE_ID}"
 
 Use the checked-out command set documented in [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), and any narrower helper-lane README that the active branch actually exposes. Do not assume an unverified `promote`, `gate`, or `publish` CLI exists just because doctrine or earlier planning documents mention one.
 
+### Keep proof-aware artifacts explicit only when they exist
+
+```bash
+# Illustrative only — verify branch-local naming before adopting.
+touch "data/work/<dataset>/${RUN_ID}/spec_hash.txt"
+```
+
+If the active branch already emits `run_receipt`, `ai_receipt`, or attestation references for the run, keep them explicit and reviewable rather than burying them in free-form notes.
+
 [Back to top](#datawork)
 
 ---
@@ -311,6 +341,8 @@ Prefer a chain of understandable intermediates over one opaque mega-step. This k
 ### 3. Attach evidence while the work is fresh
 
 If a normalization decision, reprojection, filter threshold, enrichment step, or redaction choice matters, capture it here before it becomes tribal memory.
+
+If a run already emits proof-aware support objects such as `spec_hash`, `run_receipt`, `ai_receipt`, or attestation references, record or reference them explicitly so the work stays explainable. Keep their status visible as pre-release support unless and until downstream review promotes them.
 
 ### 4. Escalate failure or ambiguity to quarantine
 
@@ -399,6 +431,10 @@ The key relationship is not just left-to-right flow. It is the **blocked path**:
 | `run_manifest.json` | file inventory + digests + roles | **PROPOSED starter pattern** |
 | `validation_report.json` | structured validation result | **PROPOSED starter pattern** |
 | `checksums.txt` | quick integrity check | **PROPOSED starter pattern** |
+| `spec_hash.txt` | stable spec or input hash carryover | **PROPOSED starter pattern** |
+| `run_receipt.json` | machine-checkable run audit object | **PROPOSED proof-aware carryover** |
+| `ai_receipt.json` | model-mediated proposal or synthesis audit object | **PROPOSED proof-aware carryover** |
+| attestation ref / bundle pointer | integrity or origin evidence for emitted artifacts | **PROPOSED proof-aware carryover** |
 
 [Back to top](#datawork)
 
@@ -415,6 +451,7 @@ A work run is ready to leave `data/work/` only when the following are satisfied:
 - [ ] The intended target in `data/processed/` is named.
 - [ ] Receipt placement is clear if process memory must be retained centrally in `data/receipts/`.
 - [ ] Release-evidence placement is clear if the work is approaching proof-bearing promotion in `data/proofs/`.
+- [ ] If the run emits proof-aware artifacts such as `spec_hash`, `run_receipt`, `ai_receipt`, or attestation refs, their placement and downstream references are explicit.
 - [ ] Promotion is being treated as a governed state transition rather than as a convenience folder copy.
 - [ ] No outward catalog or published scope is being generated directly from `data/work/`.
 - [ ] Any blocked subset has been moved or referenced to `data/quarantine/`.
@@ -430,6 +467,7 @@ A work run is ready to leave `data/work/` only when the following are satisfied:
 | Rights / sensitivity | explicit labels or review notes | default deny |
 | Handoff clarity | processed target and next zone are named | hold |
 | Receipt / proof separation | process memory and release proof are not buried in staging | cleanup before promotion |
+| Proof-aware traceability | any emitted `spec_hash` / receipt / attestation refs are explicit and not confused with release proof | hold / clarify |
 | Reviewability | the run can be explained without guesswork | hold |
 
 [Back to top](#datawork)
@@ -453,6 +491,10 @@ If receipts need to remain centrally queryable across runs, corrections, or audi
 ### Where should proof packs and attestations go?
 
 Use [`../proofs/README.md`](../proofs/README.md) for release-significant evidence. `data/work/` is not the release-evidence home.
+
+### Should `run_receipt.json` or `ai_receipt.json` live here?
+
+Sometimes, but only as **PROPOSED** local carryovers until the active branch confirms naming and placement. If the artifact is needed mainly for centrally queryable process memory, prefer [`../receipts/README.md`](../receipts/README.md). If it is release-significant or promotion-bearing proof, use [`../proofs/README.md`](../proofs/README.md).
 
 ### Does “README-only on public main” mean the lane is unused?
 
@@ -501,7 +543,10 @@ This README can now distinguish:
     "run_manifest.json",
     "validation_report.json",
     "checksums.txt",
-    "spec_hash.txt"
+    "spec_hash.txt",
+    "run_receipt.json",
+    "ai_receipt.json",
+    "attestation-ref-or-bundle-pointer"
   ],
   "note": "Use only after the active branch confirms naming and placement conventions."
 }
@@ -518,6 +563,7 @@ This README can now distinguish:
 - whether branch-local working runs already use a stricter naming convention
 - whether any branch-side automation writes receipts locally vs centrally to `data/receipts/`
 - whether release-adjacent proof placement is fully standardized in branch-local tooling
+- whether `run_receipt` / `ai_receipt` are expected as local carryovers, central mirrors, or reference-only objects on the active branch
 - any active validator or handoff command documented in `tools/` or `scripts/`
 - whether external object storage or runtime packaging mirrors this lane beyond the public repo
 
@@ -525,6 +571,6 @@ This README can now distinguish:
 
 ---
 
-_This README is intentionally trust-visible and verification-first: it preserves the live public path, makes the lifecycle boundary legible, and keeps deeper working shape explicit instead of implied._
+_This README stays trust-visible and verification-first: it preserves the live public path, makes the lifecycle boundary legible, keeps deeper working shape explicit instead of implied, and treats proof-aware carryovers as doctrine-supported but still branch-verification-sensitive._
 
 [Back to top](#datawork)
