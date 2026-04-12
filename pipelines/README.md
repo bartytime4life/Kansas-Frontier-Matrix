@@ -277,20 +277,20 @@ One-line purpose.
 
 ```mermaid
 flowchart LR
-    A[Source edge] --> B[data/raw/]
-    B --> C[/pipelines/*\nfetch • normalize • validate • watch]
-    C --> D[data/work/ or data/quarantine/]
-    D --> E[contracts/ + schemas/]
-    E --> F[policy/]
-    F --> G[tests/ + tools/]
-    G --> H[data/processed/]
-    H --> I[data/catalog/\nSTAC • DCAT • PROV]
-    I --> J[data/published/]
+    A["Source edge"] --> B["data/raw"]
+    B --> C["pipelines lanes: fetch, normalize, validate, watch"]
+    C --> D["data/work or data/quarantine"]
+    D --> E["contracts and schemas"]
+    E --> F["policy"]
+    F --> G["tests and tools"]
+    G --> H["data/processed"]
+    H --> I["data/catalog: STAC, DCAT, PROV"]
+    I --> J["data/published"]
 
-    K[docs/domains/*\ninterpretation + lane burden] -. explains .-> C
-    L[.github/*\nreview + workflow docs] -. governs .-> C
-    M[correction / rollback] -. after release .-> J
-    M -. rebuild / supersede .-> H
+    K["docs/domains: interpretation and lane burden"] -.-> C
+    L[".github: review and workflow docs"] -.-> C
+    M["correction and rollback"] -.-> J
+    M -.-> H
 ```
 
 This diagram is intentionally simple: `/pipelines/` is not the whole system. It is the lane-local execution band between admitted sources and governed outward publication.
