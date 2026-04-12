@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION
+title: Kansas Frontier Matrix Web UI
+type: standard
+version: v1
+status: draft
+owners: NEEDS VERIFICATION
+created: NEEDS VERIFICATION
+updated: 2026-04-12
+policy_label: NEEDS VERIFICATION
+related: [web/README.md, ../README.md, ../apps/README.md, ../apps/explorer-web/README.md, ../apps/governed-api/README.md, ../contracts/README.md, ../policy/README.md, ../tests/README.md, ../data/README.md, ../.github/README.md]
+tags: [kfm]
+notes: [Metadata placeholders remain where the current session exposed the README draft and attached doctrine PDFs but not the mounted repo metadata registry, CODEOWNERS, or verified runtime-root authority.]
+[/KFM_META_BLOCK_V2] -->
+
 # Kansas Frontier Matrix Web UI
 
 Map-first, time-aware, evidence-first UI guidance for KFM-Web and its governed browser boundary.
@@ -7,36 +22,38 @@ Map-first, time-aware, evidence-first UI guidance for KFM-Web and its governed b
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-web--ui-1f6feb) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![focus](https://img.shields.io/badge/focus-cite%20or%20abstain-critical) ![trust membrane](https://img.shields.io/badge/trust%20membrane-governed%20API%20only-16a34a) ![runtime root](https://img.shields.io/badge/runtime%20root-NEEDS__VERIFICATION-lightgrey) ![parallel shell doc](https://img.shields.io/badge/parallel%20shell%20doc-apps%2Fexplorer--web-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** `web/README.md` · root [`../README.md`](../README.md) · runtime family [`../apps/README.md`](../apps/README.md) · parallel shell boundary [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md) · governed API [`../apps/governed-api/README.md`](../apps/governed-api/README.md) · shared law [`../contracts/README.md`](../contracts/README.md), [`../policy/README.md`](../policy/README.md), [`../tests/README.md`](../tests/README.md), [`../data/README.md`](../data/README.md), [`../.github/README.md`](../.github/README.md)  
-> **Accepted here:** UI-root invariants, browser-boundary rules, local verification/startup notes, contract carry-forward, trust-visible shell guidance, and map/runtime integration patterns  
-> **Not here:** canonical policy logic, direct store access, source onboarding, browser-side truth manufacture, or unverified claims about the mounted subtree beneath `web/`
+> **Doctrine anchors:** map-first shell, timeline coequality, mandatory Evidence Drawer, bounded Focus, trust-visible states, governed API only, and 2D-first rules.
 
 > [!IMPORTANT]
-> Current public `main` now exposes both [`web/README.md`](./README.md) and [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md). Treat this file as the **UI-root guidance surface** and `apps/explorer-web` as the **shell-boundary sibling** until the active branch intentionally consolidates or supersedes one of them.
+> Treat this file as the **UI-root guidance surface** and `apps/explorer-web` as the **shell-boundary sibling** until the active branch intentionally consolidates or supersedes one of them.
+
+> [!CAUTION]
+> Current-session evidence for this revision remained PDF-rich. Shell doctrine is strong; mounted repo topology, CODEOWNERS ownership, startup authority, and deeper `web/` subtree contents still need active-branch verification.
 
 > [!NOTE]
-> This revision preserves the strongest substance already carried in `web/README.md`—trust membrane, cite-or-abstain Focus, `audit_ref`, Evidence Drawer, and local-dev guidance—but makes **confirmed public path evidence**, **proposed subtree shape**, and **still-unknown runtime depth** visibly separate.
+> This revision preserves the strongest substance already carried in the supplied `web/README.md` text—trust membrane, cite-or-abstain Focus, `audit_ref`, Evidence Drawer, and local-dev guidance—while making doctrine, proposed structure, and still-unknown runtime depth visibly separate.
 
 ## Scope
 
 `web/` is KFM’s UI-root guidance surface for the browser-facing shell.
 
-In KFM terms, this is not “just frontend notes.” It is the place where the browser-side rules for map-first exploration, timeline coequality, Story playback, Evidence Drawer drill-through, and bounded Focus consumption stay explicit and reviewable without pretending the browser is allowed to decide truth on its own.
+In KFM terms, this is not “just frontend notes.” It is the place where browser-side rules for map-first exploration, timeline coequality, Story playback, Evidence Drawer drill-through, and bounded Focus consumption stay explicit and reviewable without pretending the browser is allowed to decide truth on its own.
 
 Use this README to answer four questions quickly:
 
 1. What is the browser allowed to do?
 2. What must it never do?
 3. How does `web/` relate to `apps/explorer-web/` and the governed API?
-4. Which subtree claims are current public facts, and which are only recommended structure?
+4. Which subtree claims are current facts in this revision, and which are only recommended structure?
 
 ### Evidence labels used here
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by the current public repo surface or by already-published KFM doctrine |
-| **INFERRED** | Conservative interpretation of repeated doctrine or adjacent public docs |
+| **CONFIRMED** | Directly supported by the attached KFM corpus or by the supplied README text in hand |
+| **INFERRED** | Conservative interpretation of repeated doctrine or adjacent documentation patterns |
 | **PROPOSED** | Repo-native guidance that fits KFM law but is not yet proven as current mounted implementation |
-| **UNKNOWN** | Not supported strongly enough to present as current runtime or branch reality |
+| **UNKNOWN** | Not supported strongly enough to present as current runtime or active-branch reality |
 | **NEEDS VERIFICATION** | Explicit placeholder to check on the active branch before merge |
 
 [Back to top](#kansas-frontier-matrix-web-ui)
@@ -46,15 +63,14 @@ Use this README to answer four questions quickly:
 **Path:** `web/README.md`  
 **Role:** UI-root README for KFM-Web and its browser-boundary invariants.
 
-### Current public deltas that matter now
+### Current documentation signals that matter now
 
 | Signal | Why it matters | Status |
 |---|---|---|
-| Top-level `web/` exists on public `main` | `web/README.md` is not hypothetical; it is a real repo surface that needs truthful maintenance | **CONFIRMED** |
-| `web/README.md` already carries concrete client guidance | Strong substance should be preserved, not replaced with generic prose | **CONFIRMED** |
-| `apps/explorer-web/README.md` now exists and explicitly points back to `../../web/README.md` | Parallel shell docs now need intentional alignment instead of accidental drift | **CONFIRMED** |
-| `apps/README.md` now frames `apps/` as the runtime-facing surface family | `web/` should read as a UI-root guidance layer, not as if it is the only runtime boundary in the repo | **CONFIRMED** |
-| Deeper `web/` subtree contents were not re-opened as reliable public-tree facts in this revision | Layout and startup guidance must be split into “current snapshot” vs “proposed working subtree” | **NEEDS VERIFICATION** |
+| The supplied `web/README.md` text is already specific, doctrine-heavy, and not a generic placeholder | Strong substance should be preserved, not replaced with bland rewrite | **CONFIRMED** |
+| A sibling `apps/explorer-web/README.md` is treated as the shell-boundary companion | Cross-links should be deliberate rather than drifting by accident | **NEEDS VERIFICATION** |
+| `apps/README.md` and `apps/governed-api/README.md` are treated as adjacent runtime surfaces | `web/` should read as UI-root guidance, not as if it is the only runtime boundary | **NEEDS VERIFICATION** |
+| Deeper `web/` subtree contents and live runtime-root authority were not directly re-opened in this session | Layout and startup guidance must stay split into “current snapshot” vs “proposed working subtree” | **NEEDS VERIFICATION** |
 
 ### Boundary rule
 
@@ -81,9 +97,9 @@ Use this README to answer four questions quickly:
 |---|---|---|
 | Repo root | [`../README.md`](../README.md) | Repo-wide identity, truth path, and verification posture |
 | Runtime family | [`../apps/README.md`](../apps/README.md) | Places `web/` in the broader runtime/app landscape |
-| Parallel shell boundary | [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md) | The clearest current sibling doc for shell law and runtime boundary framing |
-| Governed API | [`../apps/governed-api/README.md`](../apps/governed-api/README.md) | Browser traffic must cross this boundary, not stores directly |
-| Shared contracts | [`../contracts/README.md`](../contracts/README.md) | Browser DTOs must stay aligned with shared contract law |
+| Parallel shell boundary | [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md) | Closest sibling doc for shell law and runtime-boundary framing |
+| Governed API | [`../apps/governed-api/README.md`](../apps/governed-api/README.md) | Browser traffic should cross this boundary, not stores directly |
+| Shared contracts | [`../contracts/README.md`](../contracts/README.md) | Browser DTOs should stay aligned with shared contract law |
 | Shared policy | [`../policy/README.md`](../policy/README.md) | Default-deny and obligation logic stay outside UI components |
 | Shared data/catalog | [`../data/README.md`](../data/README.md) | Truth-path zones, release artifacts, and catalog closure remain upstream of rendering |
 | Shared verification | [`../tests/README.md`](../tests/README.md) | Negative paths, accessibility, trust cues, and release proof belong here |
@@ -100,14 +116,14 @@ Only the following classes of work belong in `web/README.md`:
 | UI-root shell invariants | Yes | Map-first, time-aware, evidence-first browser rules |
 | Map runtime guidance | Yes | MapLibre-centered 2D portrayal, optional burden-bearing 3D notes |
 | Evidence Drawer consumer guidance | Yes | How governed evidence is rendered, not how it is adjudicated |
-| Focus/Story/Dossier presentation rules | Yes | Shell composition and trust-visible behavior |
-| Browser-side contract carry-forward | Yes | `ViewState`, `Citation`, `Focus`-response expectations |
+| Focus / Story / Dossier presentation rules | Yes | Shell composition and trust-visible behavior |
+| Browser-side contract carry-forward | Yes | `ViewState`, `Citation`, `Focus`-response, and drawer-payload expectations |
 | Local verification and startup notes | Yes | Branch-first inspection, then optional dev commands |
 | Accessibility and trust-cue expectations | Yes | Keyboard, reduced motion, visible negative states |
 | Client-side service-boundary guidance | Yes | Explicit network boundary, no hidden fetches |
-| Canonical evidence resolver rules | No | Belong to governed API/resolver surfaces |
+| Canonical evidence resolver rules | No | Belong to governed API or evidence resolver surfaces |
 | Policy bundle authoring | No | Belongs in `../policy/` |
-| Source onboarding / ingest / promotion | No | Belongs in `../pipelines/`, workers, and governed data surfaces |
+| Source onboarding / ingest / promotion | No | Belongs in pipelines, workers, and governed data surfaces |
 | Browser-side access to raw, work, or unpublished data | No | Explicitly excluded by KFM truth-path law |
 | Direct model-runtime access from browser code | No | Focus stays a governed API flow |
 
@@ -118,33 +134,33 @@ These shortcuts do **not** belong here, and this README should not make them sou
 | Exclusion | Why it stays out | Put it here instead |
 |---|---|---|
 | Direct database, graph, or object-store calls from browser code | Breaks the trust membrane | Governed API / evidence resolver / signed delivery |
-| Browser access to `RAW`, `WORK`, `QUARANTINE`, or unpublished data | Violates the truth path | Governed data/review paths |
-| Policy decisions embedded in components | Creates drift between UI and enforcement | `../policy/` + backend enforcement |
+| Browser access to `RAW`, `WORK`, `QUARANTINE`, or unpublished data | Violates the truth path | Governed data and review paths |
+| Policy decisions embedded in components | Creates drift between UI and enforcement | `../policy/` plus backend enforcement |
 | App-local copies of canonical schemas/contracts | Creates shadow truth | `../contracts/` and shared schema surfaces |
 | Hidden `fetch()` / `axios` calls scattered through components and hooks | Hides trust-boundary violations in presentation code | Explicit service layer only |
 | Restricted payload caching in browser storage | Risks leakage and stale truth | Server-mediated, scoped hydration only |
 | Free-form uncited assistant behavior | Violates cite-or-abstain | Governed Focus flow |
-| Browser-owned ingest, diff, or promotion logic | Reverses the proof burden | Workers / pipelines / data surfaces |
+| Browser-owned ingest, diff, or promotion logic | Reverses the proof burden | Workers, pipelines, and governed release surfaces |
 
 > [!WARNING]
-> The browser is the easiest place to make unsafe shortcuts feel convenient. KFM-Web must resist that pressure on purpose.
+> The browser is the easiest place to make unsafe shortcuts feel convenient. KFM-Web has to resist that pressure on purpose.
 
 [Back to top](#kansas-frontier-matrix-web-ui)
 
 ## Directory tree
 
-### Current confirmed public snapshot
+### Current confirmed revision snapshot
 
 ```text
 web/
 └── README.md
 ```
 
-That is the only subtree fact this revision treats as directly settled here.
+That is the only subtree fact this revision treats as directly settled from the supplied doc in hand.
 
 ### Proposed working subtree
 
-The following shape is still useful, but it must remain visibly **PROPOSED / NEEDS VERIFICATION** until the active branch proves it:
+The following shape is still useful, but it should remain visibly **PROPOSED / NEEDS VERIFICATION** until the active branch proves it:
 
 ```text
 web/
@@ -226,7 +242,7 @@ Use [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md) as the st
 
 ### Example local URLs
 
-Treat these as **examples**, not verified branch facts:
+Treat these as **illustrative defaults**, not verified branch facts:
 
 - Web UI: `http://localhost:3000`
 - API docs: `http://localhost:8000/docs`
@@ -246,11 +262,11 @@ KFM-Web should keep the user inside a repeatable loop where every consequential 
 2. **Set time + place** → scope the current view explicitly
 3. **Inspect features** → expose provenance hooks and evidence routes
 4. **Play Story** → change view state deterministically
-5. **Ask Focus** → return cited synthesis plus `audit_ref`, or abstain/deny/error
+5. **Ask Focus** → return cited synthesis plus `audit_ref`, or abstain / deny / error
 6. **Open evidence** → resolve citations into human-readable evidence views
 7. **Verify integrity** → show digests, manifests, or attestations when present
 
-If any step cannot be supported safely, the UI should degrade gracefully, preserve the audit trail, and avoid making up a smoother answer.
+If any step cannot be supported safely, the UI should degrade gracefully, preserve the audit trail, and avoid manufacturing a smoother answer than the evidence supports.
 
 ### Carry-forward rules that should not drift
 
@@ -258,8 +274,9 @@ If any step cannot be supported safely, the UI should degrade gracefully, preser
 - **Evidence first.** Dataset ID, license, attribution, and sensitivity are not optional metadata.
 - **Cite or abstain.** Focus returns citations and `audit_ref`, or a governed negative outcome.
 - **No client-side bypass.** No direct store access, no stitched-together restricted truth, no “just this once” cache.
+- **Thin client.** The browser consumes prepared descriptors, assets, and trust-bearing payloads; it does not manufacture canonical meaning.
 - **2D first.** MapLibre-centered 2D is the default shell. 3D is conditional and burden-bearing.
-- **Negative states stay visible.** Deny, abstain, stale, partial, restricted, and unavailable states must render plainly.
+- **Negative states stay visible.** Deny, abstain, stale, partial, restricted, generalized, and unavailable states must render plainly.
 
 ### Browser-side implementation rules
 
@@ -268,6 +285,10 @@ If any step cannot be supported safely, the UI should degrade gracefully, preser
 - Treat `ViewState` as public metadata, not as a place to hide secrets or sensitive payloads.
 - Keep Story playback deterministic enough that “replay” means something.
 - Treat evidence-resolution fan-out as a performance and trust problem, not just a convenience problem.
+- Preserve the separation between shell continuity state and trust-bearing state.
+- Keep rendering logic in the renderer, not business meaning in style expressions or component glue.
+
+[Back to top](#kansas-frontier-matrix-web-ui)
 
 ## Diagram
 
@@ -302,8 +323,9 @@ flowchart LR
 | **Map + Timeline** | Show what the user is looking at, with place and time as coequal controls | Hide dataset identity, license, or sensitivity behind “advanced” UI |
 | **Story** | Choreograph shell state deterministically and keep citations inline | Turn narrative into an uncited slide deck |
 | **Evidence Drawer** | Resolve claims into human-readable evidence, provenance, and integrity cues | Become a dead-end metadata panel or a policy bypass |
-| **Focus** | Return bounded synthesis with citations and `audit_ref`, or abstain/deny/error | Behave like a detached free-form assistant |
+| **Focus** | Return bounded synthesis with citations and `audit_ref`, or abstain / deny / error | Behave like a detached free-form assistant |
 | **Review / Compare / Export** | Preserve the same trust cues and role-gating as exploration | Create a second truth regime outside the shell |
+| **Controlled 3D** | Answer a real explanatory burden while preserving the same trust objects | Turn KFM into a spectacle-first 3D shell |
 
 ### Load-bearing UI contracts
 
@@ -311,8 +333,27 @@ flowchart LR
 |---|---|---|
 | **`ViewStateV1`** | Time range, bbox, active layers, optional story/view anchor; no secrets | Drives replay, Focus grounding, and audit context |
 | **`Citation`** | Stable `ref` plus optional human label / locator | Powers cite-or-abstain and evidence resolution |
+| **`EvidenceDrawerPayloadV1`** | Support summary, identity, scope, rights/sensitivity, freshness/review, transform/provenance, and audit linkage | Keeps the drawer trust-bearing rather than decorative |
 | **`FocusAnswerV1`** | `answer_markdown`, `citations[]`, `audit_ref`, optional status | Keeps bounded synthesis inspectable |
 | **Evidence reference schemes** | Keep resolver schemes stable and documented | Avoid drift in evidence plumbing |
+
+### Focus runtime outcomes
+
+| Outcome | Meaning | User next step |
+|---|---|---|
+| **ANSWER** | Structured synthesis with inline citations, scope echo, AI badge, and `audit_ref` | Open cited evidence, refine scope, or export with trust cues |
+| **ABSTAIN** | Insufficient support inside the active scope | Narrow or widen scope explicitly, or inspect the evidence pool preview |
+| **DENY** | Policy-safe refusal without leaking restricted detail | Inspect allowed actions or steward path if authorized |
+| **ERROR** | Runtime or validation failure with shell context preserved | Retry, refine, or inspect audit linkage without losing place or time state |
+
+### State ownership guardrail
+
+| State class | Owner | Rule |
+|---|---|---|
+| **Shell continuity state** | Client shell store | Extent, selected object, active layers, compare anchors, open panels, mode, and local accessibility preferences may live in the shell |
+| **Trust-bearing state** | Governed APIs and backend registries | Evidence state, policy state, review state, freshness, correction lineage, and release truth stay server-owned |
+| **Persisted user products** | Governed services | Saved views, export manifests, review tasks, and compare snapshots may persist, but they rehydrate through current policy and release mediation |
+| **Forbidden client truth** | No browser ownership allowed | Canonical data, unpublished artifacts, policy decisions, precise restricted geometry, and model-runtime internals must never become browser truth by convenience |
 
 ### Evidence reference schemes
 
@@ -362,7 +403,7 @@ flowchart LR
 
 `NEEDS VERIFICATION`.
 
-Current public docs confirm that `web/README.md` exists and that `apps/explorer-web/README.md` exists in parallel. The branch you are actively changing should decide which one is authoritative for runtime startup and subtree claims.
+The current session confirms strong shell doctrine and the presence of a substantive `web/README.md` draft, but it did not directly surface the mounted repo tree needed to settle runtime-root authority.
 
 ### Can browser code call PostGIS, object storage, or graph/search services directly?
 
@@ -451,5 +492,57 @@ git grep -nE 'fetch\(|axios\.|XMLHttpRequest' web ':!web/src/services/**'
 ```
 
 Adapt the path if the active runtime root is `apps/explorer-web/` instead of `web/`.
+
+</details>
+
+<details>
+<summary><strong>Appendix D — Example Evidence Drawer payload sketch</strong></summary>
+
+```ts
+export type EvidenceDrawerPayloadV1 = {
+  claim: {
+    title: string;
+    state:
+      | "supported"
+      | "restricted"
+      | "generalized"
+      | "partial"
+      | "stale"
+      | "conflicted";
+  };
+  support_summary: string;
+  identity: {
+    evidence_ref: string;
+    object_id?: string;
+    dataset_version?: string;
+  };
+  scope: {
+    place?: string;
+    time_basis?: string;
+    opened_from?: "explore" | "dossier" | "story" | "focus" | "export" | "review";
+  };
+  rights: {
+    rights_class: string;
+    sensitivity: string;
+    transform?: string;
+  };
+  freshness_review: {
+    freshness: string;
+    review_state: string;
+    correction_state?: string;
+  };
+  provenance: {
+    transform_summary?: string;
+    lineage_note?: string;
+    resolver_version?: string;
+  };
+  audit: {
+    audit_ref: string;
+    receipt_ref?: string;
+  };
+};
+```
+
+This is illustrative and should stay subordinate to shared contracts if the active branch already defines a richer canonical payload.
 
 </details>
