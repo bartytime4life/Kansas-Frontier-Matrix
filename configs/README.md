@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: review
 owners: @bartytime4life
-created: TODO(verify YYYY-MM-DD from git history)
-updated: TODO(verify YYYY-MM-DD from git history)
-policy_label: TODO(verify directory classification)
+created: 2026-02-21
+updated: 2026-04-04
+policy_label: TODO(verify public|restricted classification)
 related: [../README.md, ../apps/, ../packages/README.md, ../pipelines/README.md, ../infra/README.md, ../data/README.md, ../docs/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../scripts/README.md, ../migrations/, ../examples/, ./deployment/README.md, ./env/README.md, ./observability/README.md, ./security/README.md, ./ui/README.md, ./env.schema.json]
 tags: [kfm, configs, runtime, deployment, observability, trust-boundaries]
-notes: [Owners are confirmed from .github/CODEOWNERS on public main. The current public tree confirms configs/README.md, configs/env.schema.json, and the child lane READMEs under deployment/, env/, observability/, security/, and ui/. UUID, git-history dates, and policy label still need direct verification before merge.]
+notes: [Owners and public-main git-history dates are verified; UUID and explicit policy classification remain review items; current public tree confirms configs/README.md, configs/env.schema.json, and README-led child lanes under deployment/, env/, observability/, security/, and ui/.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -52,7 +52,7 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | **INFERRED** | The lane’s intended role is repo-visible, non-secret runtime/deployment/observability/UI/security wiring subordinate to stronger law-bearing surfaces. |
 | **PROPOSED** | Future file additions inside the child lanes, deeper validator commands, and any expansion beyond the current scaffold-first state. |
 | **UNKNOWN** | Exact runtime loader paths, exact CI enforcement depth, non-public consumers, and any branch-local divergence from the inspected public tree. |
-| **NEEDS VERIFICATION** | UUID, git-history dates, policy label, and the repo’s final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
+| **NEEDS VERIFICATION** | UUID, explicit policy label, and the repo’s final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
 
 ## Repo fit
 
@@ -314,7 +314,8 @@ flowchart LR
 - [ ] `env.schema.json` is either still intentionally placeholder or is backed by a real validation path
 - [ ] Any trust-affecting toggle is documented as a governance-significant change
 - [ ] Scaffold lanes only gain substantive files with named consumers and validators
-- [ ] Owners, UUID, dates, and policy label in the meta block are verified or intentionally left as placeholders
+- [ ] UUID and explicit policy label in the meta block are verified or intentionally left as placeholders
+- [ ] Owners and dates in the meta block still match the target merge branch
 - [ ] Neighboring docs and lane links are rechecked against the target merge branch
 
 ## FAQ
@@ -382,7 +383,7 @@ Yes. Bind scope, published-only behavior, shell defaults, stale-state handling, 
 <summary><strong>Verification checklist before merge</strong></summary>
 
 1. Confirm the target branch still matches the public `main` tree inspected for this draft.
-2. Verify `git log` dates for `configs/README.md` before replacing the meta-block placeholders.
+2. Reconfirm the public-main `git log` dates if the target merge branch has moved since this revision’s snapshot.
 3. Confirm whether `env.schema.json` is intentionally placeholder or should now carry a real schema.
 4. Verify whether any child lane has gained substantive files beyond its current README-led surface.
 5. Verify whether the authoritative machine-law home is `contracts/`, `schemas/`, or a formally split arrangement.
