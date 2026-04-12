@@ -1,0 +1,501 @@
+path,title,parent,heading_count,link_count
+CHANGELOG.md,Changelog,README.md,47,3
+CODE_OF_CONDUCT.md,Code of Conduct,README.md,31,7
+CONTRIBUTING.md,Contributing to Kansas Frontier Matrix,README.md,54,21
+README.md,Kansas Frontier Matrix,_root,60,15
+SECURITY.md,SECURITY,README.md,10,8
+apps/README.md,Apps Runtime Surfaces,README.md,46,18
+apps/api/README.md,apps/api,apps/README.md,39,10
+apps/api/src/README.md,API Source Tree Boundary,apps/api/README.md,33,11
+apps/api/src/api/README.md,apps/api/src/api,apps/api/src/README.md,37,12
+apps/api/src/api/middleware/README.md,API Middleware,apps/api/src/api/README.md,38,8
+apps/api/src/api/routes/README.md,API Routes,apps/api/src/api/README.md,40,0
+apps/api/tests/README.md,API test surface,apps/api/README.md,34,9
+apps/cli/README.md,KFM CLI,apps/README.md,41,14
+apps/explorer-web/README.md,KFM Explorer Web,apps/README.md,49,13
+apps/governed-api/README.md,Governed API,apps/README.md,50,11
+apps/review-console/README.md,Review Console,apps/README.md,45,0
+apps/ui/README.md,KFM UI Path Boundary,apps/README.md,36,11
+apps/workers/README.md,Workers Runtime Boundary,apps/README.md,46,18
+brand/LICENSES/README.md,LICENSES,brand/README.md,32,9
+brand/README.md,brand,README.md,30,4
+brand/assets/README.md,assets,brand/README.md,26,12
+brand/icons/README.md,icons,brand/README.md,29,12
+brand/logos/README.md,logos,brand/README.md,31,10
+brand/official-seal/README.md,official-seal,brand/README.md,28,8
+brand/source/README.md,brand/source,brand/README.md,31,10
+brand/templates/README.md,KFM Brand Templates,brand/README.md,19,0
+brand/tokens/README.md,tokens,brand/README.md,33,14
+brand/usage/README.md,brand/usage,brand/README.md,32,9
+configs/README.md,configs/,README.md,39,20
+configs/deployment/README.md,Deployment Configuration,configs/README.md,40,6
+configs/env/README.md,configs/env,configs/README.md,52,15
+configs/observability/README.md,observability/,configs/README.md,47,9
+configs/security/README.md,configs/security/,configs/README.md,39,8
+configs/ui/README.md,UI Configuration,configs/README.md,45,10
+contracts/README.md,Contracts,README.md,35,1
+contracts/vocab/README.md,Contract Vocabulary Registry,contracts/README.md,27,0
+data/README.md,`data/`,README.md,58,13
+data/catalog/README.md,data/catalog/,data/README.md,41,18
+data/catalog/dcat/README.md,DCAT Catalog Directory,data/catalog/README.md,39,10
+data/catalog/prov/README.md,`data/catalog/prov/`,data/catalog/README.md,44,12
+data/catalog/stac/README.md,STAC Catalog Surface,data/catalog/README.md,55,13
+data/processed/README.md,`data/processed/`,data/README.md,52,14
+data/proofs/README.md,proofs,data/README.md,42,8
+data/published/README.md,Published Release Scope (`data/published/`),data/README.md,39,12
+data/quarantine/README.md,data/quarantine,data/README.md,48,14
+data/raw/README.md,data/raw/,data/README.md,45,15
+data/receipts/README.md,receipts,data/README.md,40,14
+data/registry/README.md,Data Registry,data/README.md,42,19
+data/registry/kansas_sgcn/README.md,Kansas SGCN / SWAP Registry Surface,data/registry/README.md,30,16
+data/registry/kdot-transportation-arcgis/README.md,KDOT Transportation ArcGIS Sources,data/registry/README.md,49,18
+data/registry/schemas/README.md,Data Registry Schemas,data/registry/README.md,47,3
+data/specs/README.md,Data Specs,data/README.md,28,2
+data/work/README.md,`data/work`,data/README.md,54,18
+docs/BACKLOG.md,KFM Backlog,docs/README.md,20,0
+docs/BUILD_PLAN.md,BUILD PLAN,docs/README.md,24,0
+docs/README.md,docs,README.md,34,19
+docs/REPO_MAP.md,Repository Map (Evidence-Based),docs/README.md,32,0
+docs/VALIDATION_SUMMARY.md,Validation Summary,docs/README.md,39,0
+docs/adr/README.md,Architecture Decision Records (ADR),docs/README.md,44,4
+docs/analyses/README.md,Kansas Frontier Matrix — Analyses Index,docs/README.md,23,13
+docs/analyses/_templates/README.md,Kansas Frontier Matrix — Analysis Templates,docs/analyses/README.md,35,4
+docs/analyses/_templates/analysis_readme.md,Analysis Lane README Template,docs/analyses/_templates/README.md,33,0
+docs/analyses/archaeology/README.md,Archaeology Analyses,docs/analyses/README.md,25,4
+docs/analyses/archaeology/results/README.md,Archaeology Results,docs/analyses/archaeology/README.md,37,0
+docs/analyses/archaeology/results/cultural-landscapes/README.md,Cultural Landscapes Results,docs/analyses/archaeology/results/README.md,38,6
+docs/analyses/archaeology/results/cultural-landscapes/ecological-affordances/README.md,🌿🌾 Cultural Landscapes — Ecological Affordance Results,docs/analyses/archaeology/results/cultural-landscapes/README.md,30,1
+docs/analyses/archaeology/results/geophysics/README.md,Archaeology Geophysics Results,docs/analyses/archaeology/results/README.md,39,2
+docs/analyses/archaeology/results/geophysics/electromagnetic/README.md,Kansas Frontier Matrix — Geophysics Results — Electromagnetic Induction (EMI),docs/analyses/archaeology/results/geophysics/README.md,26,1
+docs/analyses/archaeology/results/notebooks/README.md,Kansas Frontier Matrix — Archaeology Analysis Notebooks,docs/analyses/archaeology/results/README.md,33,8
+docs/analyses/archaeology/results/notebooks/artifacts/README.md,📓 Kansas Frontier Matrix — Artifact-Centered Archaeology Notebooks,docs/analyses/archaeology/results/notebooks/README.md,29,3
+docs/analyses/archaeology/results/notebooks/cultural-landscapes/README.md,KFM Archaeology Cultural-Landscape Notebooks,docs/analyses/archaeology/results/notebooks/README.md,35,3
+docs/analyses/archaeology/results/notebooks/environmental/README.md,Environmental Archaeology Notebooks,docs/analyses/archaeology/results/notebooks/README.md,32,11
+docs/analyses/archaeology/results/notebooks/geophysics/README.md,Kansas Frontier Matrix — Archaeology Geophysics Notebooks,docs/analyses/archaeology/results/notebooks/README.md,36,4
+docs/analyses/archaeology/results/notebooks/predictive/README.md,Kansas Frontier Matrix — Archaeology Predictive Notebooks,docs/analyses/archaeology/results/notebooks/README.md,23,2
+docs/analyses/archaeology/results/notebooks/spatial/README.md,KFM Archaeology Spatial Notebooks,docs/analyses/archaeology/results/notebooks/README.md,23,7
+docs/analyses/archaeology/results/notebooks/temporal/README.md,Archaeology Temporal Analysis Notebooks,docs/analyses/archaeology/results/notebooks/README.md,22,1
+docs/analyses/archaeology/results/paleoenvironment/README.md,Kansas Frontier Matrix — Paleoenvironmental Results,docs/analyses/archaeology/results/README.md,28,11
+docs/analyses/archaeology/results/paleoenvironment/climate/README.md,Kansas Frontier Matrix — Paleoenvironmental Climate Results,docs/analyses/archaeology/results/paleoenvironment/README.md,30,9
+docs/analyses/archaeology/results/paleoenvironment/drought-cycles/README.md,Paleoenvironmental Results — Drought Cycles,docs/analyses/archaeology/results/paleoenvironment/README.md,42,6
+docs/analyses/archaeology/results/paleoenvironment/metadata/README.md,Paleoenvironment Metadata,docs/analyses/archaeology/results/paleoenvironment/README.md,27,4
+docs/analyses/archaeology/results/paleoenvironment/paleohydrology/README.md,Kansas Frontier Matrix — Paleoenvironmental Results: Paleohydrology,docs/analyses/archaeology/results/paleoenvironment/README.md,29,11
+docs/analyses/archaeology/results/paleoenvironment/predictive/README.md,Kansas Frontier Matrix — Paleoenvironmental Results: Predictive Models,docs/analyses/archaeology/results/paleoenvironment/README.md,34,11
+docs/analyses/archaeology/results/paleoenvironment/provenance/README.md,Paleoenvironmental Results — Provenance & Lineage,docs/analyses/archaeology/results/paleoenvironment/README.md,31,6
+docs/analyses/archaeology/results/paleoenvironment/seasonality/README.md,Paleoenvironmental Results — Seasonality Reconstructions,docs/analyses/archaeology/results/paleoenvironment/README.md,35,3
+docs/analyses/archaeology/results/paleoenvironment/stac/README.md,Kansas Frontier Matrix — Paleoenvironment STAC,docs/analyses/archaeology/results/paleoenvironment/README.md,23,1
+docs/analyses/archaeology/results/paleoenvironment/uncertainty/README.md,Paleoenvironmental Results — Uncertainty Registry,docs/analyses/archaeology/results/paleoenvironment/README.md,31,7
+docs/analyses/archaeology/results/paleoenvironment/vegetation/README.md,Paleoenvironmental Results — Vegetation & Ecozone Reconstructions,docs/analyses/archaeology/results/paleoenvironment/README.md,32,5
+docs/analyses/ecology/README.md,Kansas Frontier Matrix — Ecology Analyses,docs/analyses/README.md,28,9
+docs/analyses/ecology/datasets/README.md,Kansas Frontier Matrix — Ecology Datasets,docs/analyses/ecology/README.md,33,5
+docs/analyses/ecology/datasets/derived/CHANGE_WATCH_PATTERN.md,Conservation Change-Watch Pattern (NatureServe + IPaC + ECOS),docs/analyses/ecology/datasets/derived/README.md,67,0
+docs/analyses/ecology/datasets/derived/README.md,Kansas Frontier Matrix — Ecology Derived Datasets,docs/analyses/ecology/datasets/README.md,43,3
+docs/analyses/ecology/ecosystem-services.md,Ecosystem Services,docs/analyses/ecology/README.md,35,0
+docs/analyses/ecology/landcover-analysis.md,Kansas Frontier Matrix — Land Cover Analysis,docs/analyses/ecology/README.md,24,10
+docs/analyses/remote-sensing/README.md,Kansas Frontier Matrix — Remote Sensing Analyses,docs/analyses/README.md,38,4
+docs/analyses/remote-sensing/change-detection/README.md,Kansas Frontier Matrix — Remote Sensing Change Detection,docs/analyses/remote-sensing/README.md,34,5
+docs/analyses/remote-sensing/change-detection/governance.md,Remote Sensing Change Detection Governance,docs/analyses/remote-sensing/change-detection/README.md,31,0
+docs/analyses/remote-sensing/change-detection/methods/README.md,methods,docs/analyses/remote-sensing/change-detection/README.md,1,0
+docs/analyses/remote-sensing/change-detection/reports/README.md,Kansas Frontier Matrix — Change Detection Reports,docs/analyses/remote-sensing/change-detection/README.md,31,8
+docs/analyses/remote-sensing/change-detection/results/README.md,Kansas Frontier Matrix — Remote Sensing Change Detection Results,docs/analyses/remote-sensing/change-detection/README.md,25,6
+docs/analyses/remote-sensing/multispectral/README.md,Kansas Frontier Matrix — Multispectral Analysis,docs/analyses/remote-sensing/README.md,30,5
+docs/analyses/remote-sensing/sar-lidar-fusion/README.md,SAR and LiDAR Fusion Methods,docs/analyses/remote-sensing/README.md,34,1
+docs/analyses/remote-sensing/time-series/README.md,Kansas Frontier Matrix — Remote Sensing Time-Series Analysis,docs/analyses/remote-sensing/README.md,53,3
+docs/analyses/remote-sensing/validation/README.md,Remote Sensing Validation & Quality Assurance,docs/analyses/remote-sensing/README.md,39,5
+docs/analyses/remote-sensing/validation/governance.md,Governance,docs/analyses/remote-sensing/validation/README.md,1,0
+docs/analyses/remote-sensing/validation/methods/README.md,Remote Sensing Validation Methods,docs/analyses/remote-sensing/validation/README.md,37,3
+docs/analyses/remote-sensing/validation/results/README.md,Readme,docs/analyses/remote-sensing/validation/README.md,1,0
+docs/architecture/DEPLOYMENT_TOPOLOGY.md,Deployment Topology,docs/architecture/README.md,38,6
+docs/architecture/README.md,Architecture,docs/README.md,53,21
+docs/architecture/SYSTEM_CONTEXT.md,System Context,docs/architecture/README.md,22,0
+docs/architecture/TRUST_MEMBRANE.md,Trust Membrane,docs/architecture/README.md,27,0
+docs/architecture/TRUTH_PATH_LIFECYCLE.md,Truth Path Lifecycle,docs/architecture/README.md,18,7
+docs/architecture/adr/README.md,Architecture Decision Records (ADRs),docs/architecture/README.md,34,6
+docs/architecture/canonical_vs_rebuildable.md,Canonical vs. Rebuildable,docs/architecture/README.md,30,0
+docs/architecture/decisions/README.md,Architecture Decisions,docs/architecture/README.md,56,10
+docs/architecture/diagrams/README.md,Architecture Diagrams,docs/architecture/README.md,44,0
+docs/architecture/enforcement/README.md,Enforcement,docs/architecture/README.md,43,12
+docs/architecture/interfaces/README.md,interfaces,docs/architecture/README.md,37,15
+docs/architecture/overview/README.md,Architecture Overview,docs/architecture/README.md,41,13
+docs/architecture/registries/README.md,Architecture Registries,docs/architecture/README.md,36,10
+docs/architecture/system_overview.md,System Overview,docs/architecture/README.md,33,11
+docs/architecture/templates/README.md,Architecture Templates,docs/architecture/README.md,37,5
+docs/architecture/threat-model/README.md,KFM Threat Model,docs/architecture/README.md,47,8
+docs/connectors/README.md,Connectors,docs/README.md,36,10
+docs/connectors/genealogy/README.md,Genealogy Connectors,docs/connectors/README.md,38,0
+docs/domains/README.md,Kansas Frontier Matrix — Domains,docs/README.md,34,13
+docs/domains/agriculture/README.md,Kansas Frontier Matrix — Agriculture Domain,docs/domains/README.md,40,4
+docs/domains/air/README.md,KFM Air Domain,docs/domains/README.md,31,2
+docs/domains/air/aqs-airnow-hydrologic-baselines.md,🌎 Kansas Air Quality Baseline Specification,docs/domains/air/README.md,50,0
+docs/domains/archives-heritage/README.md,Archives & Heritage,docs/domains/README.md,29,0
+docs/domains/atmosphere/EPA AQS Delta Ingestion and Trust-Gated Publication Spec.md,EPA AQS Delta Ingestion and Trust-Gated Publication Spec,docs/domains/atmosphere/README.md,60,0
+docs/domains/atmosphere/README.md,KFM Atmosphere Domain,docs/domains/README.md,35,7
+docs/domains/atmosphere/aqs-delta-pipeline.md,EPA AQS Delta Ingestion and Trust-Gated Publication Spec,docs/domains/atmosphere/README.md,75,2
+docs/domains/atmosphere/comparability-rules.md,Atmosphere Comparability Rules,docs/domains/atmosphere/README.md,36,0
+docs/domains/atmosphere/kdhe-operational-signals.md,Kansas Frontier Matrix — KDHE Operational Signals,docs/domains/atmosphere/README.md,30,0
+docs/domains/atmosphere/schemas/README.md,KFM Atmosphere Schemas,docs/domains/atmosphere/README.md,30,6
+docs/domains/atmosphere/source-roster.md,KFM Atmosphere Source Roster,docs/domains/atmosphere/README.md,33,2
+docs/domains/ecology/README.md,Ecology Domain,docs/domains/README.md,31,0
+docs/domains/genomics/README.md,Kansas Frontier Matrix — Genomics,docs/domains/README.md,35,4
+docs/domains/genomics/dna-vault/README.md,🧬 DNA Vault — Provenance & Privacy Workflow,docs/domains/genomics/README.md,22,0
+docs/domains/genomics/examples/README.md,Kansas Frontier Matrix — Genomics Examples,docs/domains/genomics/README.md,37,2
+docs/domains/genomics/overlays/README.md,Genomics Overlays,docs/domains/genomics/README.md,29,2
+docs/domains/genomics/publication/README.md,Kansas Frontier Matrix — Genomics — Publication,docs/domains/genomics/README.md,47,0
+docs/domains/genomics/sources/README.md,Kansas Frontier Matrix — Genomics — Sources,docs/domains/genomics/README.md,41,2
+docs/domains/genomics/validation/README.md,Genomics Validation,docs/domains/genomics/README.md,24,0
+docs/domains/hazards/README.md,Hazards Domain,docs/domains/README.md,45,6
+docs/domains/heritage/README.md,KFM Heritage Domain Lane,docs/domains/README.md,10,10
+docs/domains/heritage/entity-and-evidence-model.md,Heritage Entity and Evidence Model,docs/domains/heritage/README.md,5,0
+docs/domains/heritage/examples/README.md,Heritage Examples and Safe Release Patterns,docs/domains/heritage/README.md,37,0
+docs/domains/heritage/fixtures/README.md,Heritage Fixtures and Test Cases,docs/domains/heritage/README.md,23,0
+docs/domains/heritage/gedcom-intake-mapping.md,GEDCOM Intake and Privacy Mapping Standard,docs/domains/heritage/README.md,48,0
+docs/domains/heritage/gedcom-map-timeline-pipeline.md,GEDCOM → Map + Timeline Pipeline,docs/domains/heritage/README.md,18,3
+docs/domains/heritage/publication-and-review.md,Heritage Publication and Review Model,docs/domains/heritage/README.md,13,0
+docs/domains/heritage/rights-and-sensitivity.md,Heritage Rights and Sensitivity Rules,docs/domains/heritage/README.md,18,0
+docs/domains/heritage/roadmap.md,Heritage Lane Roadmap and Verification Backlog,docs/domains/heritage/README.md,23,0
+docs/domains/heritage/sources.md,Heritage Source-Role Discipline,docs/domains/heritage/README.md,23,0
+docs/domains/history-mobility/README.md,History & Mobility,docs/domains/README.md,31,0
+docs/domains/hydrology/README.md,Hydrology Domain,docs/domains/README.md,39,10
+docs/domains/hydrology/mesonet-soil.md,Kansas Mesonet Soil Moisture Integration Specification,docs/domains/hydrology/README.md,81,0
+docs/domains/hydrology/usgs-hydrography-services.md,USGS Hydrography Services (WBD + NHDPlus HR),docs/domains/hydrology/README.md,50,0
+docs/domains/hydrology/usgs-tail-alerts-schema.md,USGS Tail Alerts,docs/domains/hydrology/README.md,63,0
+docs/domains/hydrology/wbd-huc12-watcher.md,🌊 WBD HUC-12 Watcher,docs/domains/hydrology/README.md,36,0
+docs/domains/land-tenure/README.md,Land Tenure,docs/domains/README.md,35,0
+docs/domains/settlement-services/README.md,Settlement & Service Geography,docs/domains/README.md,32,2
+docs/domains/soils/README.md,Kansas Frontier Matrix — Soils,docs/domains/README.md,50,2
+docs/domains/soils/appendices/README.md,Soils Appendices,docs/domains/soils/README.md,35,1
+docs/domains/soils/appendices/source-role-matrix.md,Kansas Frontier Matrix — Soils — Source Role Matrix,docs/domains/soils/appendices/README.md,6,3
+docs/domains/soils/derived/README.md,Kansas Frontier Matrix — Soils — Derived,docs/domains/soils/README.md,17,5
+docs/domains/soils/derived/derived/README.md,Kansas Frontier Matrix — Soils — Derived — Product Docs,docs/domains/soils/derived/README.md,40,10
+docs/domains/soils/derived/kansas-soil-moisture-baseline.md,Kansas Soil Moisture Baseline (SSURGO + SMAP L4),docs/domains/soils/derived/README.md,49,8
+docs/domains/soils/derived/publication/README.md,Kansas Frontier Matrix — Soils — Derived — Publication,docs/domains/soils/derived/README.md,36,6
+docs/domains/soils/derived/validation/README.md,Kansas Frontier Matrix — Soils — Derived — Validation,docs/domains/soils/derived/README.md,27,9
+docs/domains/soils/pipelines/README.md,Soils Pipelines,docs/domains/soils/README.md,33,0
+docs/domains/soils/pipelines/ssurgo_to_catchment.md,Kansas Frontier Matrix — Soils — Pipelines — SSURGO to Catchment,docs/domains/soils/pipelines/README.md,28,8
+docs/domains/soils/publication/README.md,Kansas Frontier Matrix — Soils — Publication,docs/domains/soils/README.md,18,5
+docs/domains/soils/publication/derived/README.md,Soils — Publication / Derived,docs/domains/soils/publication/README.md,29,0
+docs/domains/soils/publication/publication/README.md,Soils Publication,docs/domains/soils/publication/README.md,34,0
+docs/domains/soils/publication/validation/README.md,Kansas Frontier Matrix — Soils — Publication — Validation,docs/domains/soils/publication/README.md,28,10
+docs/domains/soils/sources/README.md,Kansas Frontier Matrix — Soils — Sources,docs/domains/soils/README.md,29,6
+docs/domains/soils/sources/appendices/README.md,Soils Source Appendices,docs/domains/soils/sources/README.md,30,2
+docs/domains/soils/sources/appendices/source-role-matrix.md,Kansas Frontier Matrix — Soils — Source Role Matrix,docs/domains/soils/sources/appendices/README.md,8,0
+docs/domains/soils/sources/derived/README.md,Soils Derived Sources,docs/domains/soils/sources/README.md,40,0
+docs/domains/soils/sources/publication/README.md,Kansas Frontier Matrix — Soils — Sources — Publication,docs/domains/soils/sources/README.md,48,5
+docs/domains/soils/sources/sources/README.md,Soils Source Registry,docs/domains/soils/sources/README.md,41,3
+docs/domains/soils/sources/validation/README.md,Kansas Frontier Matrix — Soils — Source Validation,docs/domains/soils/sources/README.md,54,12
+docs/domains/soils/validation/README.md,Kansas Frontier Matrix — Soils — Validation,docs/domains/soils/README.md,17,3
+docs/domains/soils/validation/publication/README.md,Soils Publication Validation,docs/domains/soils/validation/README.md,30,0
+docs/domains/soils/validation/validation/README.md,validation,docs/domains/soils/validation/README.md,1,0
+docs/domains/transport/README.md,Transport Domain,docs/domains/README.md,25,2
+docs/governance/ETHICS.md,Kansas Frontier Matrix — Ethics,docs/governance/README.md,56,8
+docs/governance/README.md,Kansas Frontier Matrix — Governance,docs/README.md,28,13
+docs/governance/ROOT_GOVERNANCE.md,Kansas Frontier Matrix — Root Governance,docs/governance/README.md,26,8
+docs/governance/SOVEREIGNTY.md,KFM Sovereignty,docs/governance/README.md,27,6
+docs/governance/consent/OVERLAY_CONSENT_TOKENS.md,KFM Overlay Consent Tokens & Revocation Enforcement,docs/governance/consent/README.md,27,9
+docs/governance/consent/README.md,Kansas Frontier Matrix — Consent Governance,docs/governance/README.md,29,9
+docs/operations/README.md,operations,docs/README.md,50,20
+docs/operations/emit-only-watchers/EVIDENCE_PACKAGING.md,Emit-Only Watchers Evidence Packaging,docs/operations/emit-only-watchers/README.md,58,0
+docs/operations/emit-only-watchers/GOVERNANCE_NOTES.md,Emit-Only Watchers Governance Notes,docs/operations/emit-only-watchers/README.md,64,0
+docs/operations/emit-only-watchers/NEXT_STEPS.md,Emit-Only Watchers — Next Logical Steps,docs/operations/emit-only-watchers/README.md,48,0
+docs/operations/emit-only-watchers/README.md,Emit-Only Watchers,docs/operations/README.md,32,13
+docs/operations/emit-only-watchers/REGISTRY.md,Emit-Only Watchers Registry,docs/operations/emit-only-watchers/README.md,33,0
+docs/operations/emit-only-watchers/SCHEMA_STUBS.md,Emit-Only Watchers Schema Stubs,docs/operations/emit-only-watchers/README.md,70,0
+docs/patterns/README.md,Patterns,docs/README.md,38,16
+docs/patterns/dataset_watch.md,Dataset Watch (Receipts Emitter),docs/patterns/README.md,32,9
+docs/pipelines/README.md,pipelines,docs/README.md,73,20
+docs/pipelines/ssurgo_to_catchment.md,SSURGO to NHD Catchment Overlay Pipeline,docs/pipelines/README.md,60,14
+docs/reports/README.md,reports,docs/README.md,38,16
+docs/reports/audits/README.md,audits,docs/reports/README.md,40,15
+docs/reports/markdown-structure-build-2026-04-08.md,Markdown Structure Build Notes (2026-04-08),docs/reports/README.md,3,0
+docs/reports/readme-structure-reconciliation.md,README Structure Reconciliation Report,docs/reports/README.md,18,0
+docs/reports/releases/README.md,Release Reports,docs/reports/README.md,47,0
+docs/reports/self-validation/README.md,Self-Validation Reports,docs/reports/README.md,35,8
+docs/reports/story_nodes/README.md,Story Nodes,docs/reports/README.md,38,16
+docs/reports/telemetry/README.md,telemetry,docs/reports/README.md,30,7
+docs/reports/validation/README.md,validation,docs/reports/README.md,40,14
+docs/research/README.md,KFM Research — README,docs/README.md,27,13
+docs/research/drafts/README.md,KFM Research Drafts,docs/research/README.md,31,5
+docs/research/drafts/assets/README.md,Research Draft Assets,docs/research/drafts/README.md,28,3
+docs/research/drafts/literature/README.md,Research Drafts — Literature,docs/research/drafts/README.md,36,6
+docs/research/evaluations/README.md,KFM Research — Evaluations README,docs/research/README.md,37,9
+docs/research/evaluations/assets/README.md,KFM Research Evaluation Assets,docs/research/evaluations/README.md,28,9
+docs/research/source_summaries/README.md,Research Source Summaries,docs/research/README.md,47,0
+docs/research/source_summaries/_attachments/README.md,Research Source Summaries Attachments,docs/research/source_summaries/README.md,31,2
+docs/research/source_summaries/by_domain/README.md,Research Source Summaries — By Domain,docs/research/source_summaries/README.md,37,9
+docs/research/source_summaries/by_type/README.md,KFM Source Summaries by Type,docs/research/source_summaries/README.md,37,5
+docs/research/source_summaries/by_type/books/README.md,KFM Research Source Summaries — Books,docs/research/source_summaries/by_type/README.md,33,9
+docs/research/source_summaries/by_type/maps/README.md,maps,docs/research/source_summaries/by_type/README.md,32,7
+docs/research/source_summaries/by_type/web/README.md,Web Source Summaries,docs/research/source_summaries/by_type/README.md,41,3
+docs/runbooks/README.md,runbooks,docs/README.md,54,2
+docs/runbooks/correction.md,Correction,docs/runbooks/README.md,1,0
+docs/runbooks/evidence-integrity.md,Evidence Integrity & Run Receipt Diagnostics,docs/runbooks/README.md,34,0
+docs/runbooks/publication.md,Publication,docs/runbooks/README.md,1,0
+docs/runbooks/release-readiness.md,Release Readiness,docs/runbooks/README.md,28,0
+docs/runbooks/reliability/README.md,Reliability Runbooks,docs/runbooks/README.md,36,4
+docs/runbooks/reliability/trigger-mechanisms/README.md,Reliability Trigger Mechanisms,docs/runbooks/reliability/README.md,40,5
+docs/runbooks/rollback.md,Rollback,docs/runbooks/README.md,1,0
+docs/runbooks/stale_projection.md,Stale Projection,docs/runbooks/README.md,1,0
+docs/search/README.md,🔍 Kansas Frontier Matrix — Search System Overview,docs/README.md,43,11
+docs/search/drift/README.md,Search Drift,docs/search/README.md,56,10
+docs/search/drift/embeddings/README.md,Search Drift — Embeddings,docs/search/drift/README.md,52,0
+docs/search/drift/examples/README.md,Search Drift Examples,docs/search/drift/README.md,47,0
+docs/search/drift/graph-queries/README.md,Graph Query Drift,docs/search/drift/README.md,46,6
+docs/search/drift/hyde/README.md,Kansas Frontier Matrix — Governed HyDE Query Expansion,docs/search/drift/README.md,49,1
+docs/search/drift/stac/README.md,STAC,docs/search/drift/README.md,30,7
+docs/search/faircare-search-rules.md,Kansas Frontier Matrix — FAIR+CARE Search Rules,docs/search/README.md,31,7
+docs/search/index-architecture.md,Search Index Architecture,docs/search/README.md,31,5
+docs/search/query-language.md,Search Query Language,docs/search/README.md,49,0
+docs/search/semantic-search.md,KFM Semantic Search,docs/search/README.md,32,9
+docs/security/README.md,Kansas Frontier Matrix Security & Supply Chain Governance,docs/README.md,28,23
+docs/security/ai-receipts/README.md,AI Receipts,docs/security/README.md,46,15
+docs/security/ai-supply-chain/README.md,KFM AI Supply-Chain & Governed Model Runtime,docs/security/README.md,39,15
+docs/security/ai-supply-chain/adapter-boundary.md,Adapter Boundary,docs/security/ai-supply-chain/README.md,1,0
+docs/security/ai-supply-chain/evaluation-and-negative-fixtures.md,Evaluation And Negative Fixtures,docs/security/ai-supply-chain/README.md,1,0
+docs/security/ai-supply-chain/model-origin-and-admission.md,Model Origin And Admission,docs/security/ai-supply-chain/README.md,1,0
+docs/security/ai-supply-chain/provenance-and-correction.md,Provenance And Correction,docs/security/ai-supply-chain/README.md,1,0
+docs/security/ai-supply-chain/runtime-containment.md,Runtime Containment,docs/security/ai-supply-chain/README.md,1,0
+docs/security/bulletins/README.md,bulletins,docs/security/README.md,50,10
+docs/security/bulletins/android/2025-12-android-security-bulletin.md,Android Security Bulletin — December 2025,docs/security/bulletins/android/README.md,28,5
+docs/security/bulletins/android/README.md,Android Security Bulletins,docs/security/bulletins/README.md,41,5
+docs/security/bulletins/android/security/README.md,security,docs/security/bulletins/android/README.md,1,0
+docs/security/bulletins/android/security/bulletins/README.md,bulletins,docs/security/bulletins/android/security/README.md,1,0
+docs/security/bulletins/android/security/bulletins/android/2025-12-android-security-bulletin.md,2025 12 Android Security Bulletin,docs/security/bulletins/android/security/bulletins/android/README.md,1,0
+docs/security/bulletins/android/security/bulletins/android/README.md,android,docs/security/bulletins/android/security/bulletins/README.md,1,0
+docs/security/bulletins/android/security/vulnerability-management.md,Vulnerability Management,docs/security/bulletins/android/security/README.md,1,0
+docs/security/bulletins/android/security/vulns/README.md,vulns,docs/security/bulletins/android/security/README.md,1,0
+docs/security/promotion-contract.md,Promotion Contract,docs/security/README.md,51,9
+docs/security/prompt-injection-defense.md,Prompt Injection Defense,docs/security/README.md,44,0
+docs/security/prompt-injection/README.md,Prompt Injection,docs/security/README.md,36,11
+docs/security/react2shell-advisory/README.md,React2Shell advisory,docs/security/README.md,33,16
+docs/security/react2shell-advisory/api/README.md,api,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/api/src/README.md,src,docs/security/react2shell-advisory/api/README.md,1,0
+docs/security/react2shell-advisory/api/src/api/README.md,api,docs/security/react2shell-advisory/api/src/README.md,1,0
+docs/security/react2shell-advisory/api/tests/README.md,tests,docs/security/react2shell-advisory/api/README.md,1,0
+docs/security/react2shell-advisory/cli/README.md,cli,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/explorer-web/README.md,explorer-web,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/governed-api/README.md,governed-api,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/react2shell-advisory/README.md,react2shell-advisory,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/react2shell/README.md,react2shell,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/review-console/README.md,review-console,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/vulnerability-management.md,Vulnerability Management,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell-advisory/workers/README.md,workers,docs/security/react2shell-advisory/README.md,1,0
+docs/security/react2shell/README.md,React2Shell,docs/security/README.md,49,6
+docs/security/react2shell/react2shell-advisory/README.md,react2shell-advisory,docs/security/react2shell/README.md,1,0
+docs/security/react2shell/react2shell/README.md,react2shell,docs/security/react2shell/README.md,1,0
+docs/security/supply-chain/README.md,KFM Supply-Chain Integrity & Release Provenance,docs/security/README.md,42,13
+docs/security/supply-chain/accessibility/README.md,accessibility,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/actions/README.md,actions,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/actions/metadata-validate-v2/README.md,metadata-validate-v2,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/actions/metadata-validate/README.md,metadata-validate,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/actions/opa-gate/README.md,opa-gate,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/actions/provenance-guard/README.md,provenance-guard,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/actions/sbom-produce-and-sign/README.md,sbom-produce-and-sign,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/actions/src/README.md,src,docs/security/supply-chain/actions/README.md,1,0
+docs/security/supply-chain/attestations/README.md,attestations,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/bundles/README.md,bundles,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/contracts/README.md,contracts,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/dependency-confusion/README.md,Dependency Confusion,docs/security/supply-chain/README.md,51,7
+docs/security/supply-chain/dependency-confusion/checks/README.md,Dependency Confusion Checks,docs/security/supply-chain/dependency-confusion/README.md,28,8
+docs/security/supply-chain/dependency-confusion/examples/README.md,KFM Dependency Confusion Examples,docs/security/supply-chain/dependency-confusion/README.md,42,8
+docs/security/supply-chain/dependency-confusion/examples/lockfile-drift-attack.md,Lockfile Drift Attack,docs/security/supply-chain/dependency-confusion/examples/README.md,21,10
+docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md,Namespace Collision (Basic),docs/security/supply-chain/dependency-confusion/examples/README.md,34,0
+docs/security/supply-chain/dependency-confusion/policy/README.md,Dependency Confusion Policy,docs/security/supply-chain/dependency-confusion/README.md,35,9
+docs/security/supply-chain/e2e/README.md,e2e,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/fixtures/README.md,fixtures,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/integration/README.md,integration,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/policy-runtime/README.md,policy-runtime,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/policy/README.md,policy,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/reference-repos/README.md,Supply-Chain Reference Repos,docs/security/supply-chain/README.md,37,11
+docs/security/supply-chain/reference-repos/_template.md,Template,docs/security/supply-chain/reference-repos/README.md,1,0
+docs/security/supply-chain/reproducibility/README.md,reproducibility,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/rollback-and-release-memory/README.md,rollback-and-release-memory,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/sbom/README.md,sbom,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/schemas/README.md,schemas,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/shai-hulud-2.0/README.md,Shai-Hulud 2.0,docs/security/supply-chain/README.md,35,14
+docs/security/supply-chain/shai-hulud-2.0/indicators/README.md,Shai-Hulud 2.0 Indicators,docs/security/supply-chain/shai-hulud-2.0/README.md,37,12
+docs/security/supply-chain/shai-hulud-2.0/indicators/samples/README.md,Shai-Hulud 2.0 Indicator Samples,docs/security/supply-chain/shai-hulud-2.0/indicators/README.md,38,8
+docs/security/supply-chain/shai-hulud-2.0/indicators/signatures/README.md,Shai-Hulud 2.0 Signature Indicators,docs/security/supply-chain/shai-hulud-2.0/indicators/README.md,37,13
+docs/security/supply-chain/shai-hulud-2.0/protections/README.md,Shai-Hulud 2.0 Protections,docs/security/supply-chain/shai-hulud-2.0/README.md,31,9
+docs/security/supply-chain/shai-hulud-2.0/workflows/README.md,Shai-Hulud 2.0 Workflows,docs/security/supply-chain/shai-hulud-2.0/README.md,35,10
+docs/security/supply-chain/sigstore-cosign-v3/README.md,Sigstore / Cosign v3,docs/security/supply-chain/README.md,46,7
+docs/security/supply-chain/standards/README.md,standards,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/tests/README.md,tests,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/unit/README.md,unit,docs/security/supply-chain/README.md,1,0
+docs/security/supply-chain/workflows/README.md,workflows,docs/security/supply-chain/README.md,1,0
+docs/security/threat-model.md,KFM Threat Model,docs/security/README.md,25,17
+docs/security/vulnerability-management.md,Vulnerability Management,docs/security/README.md,27,17
+docs/security/vulns/README.md,vulns,docs/security/README.md,45,12
+docs/security/vulns/apache-tika-cve-2025-66516.md,Apache Tika CVE-2025-66516,docs/security/vulns/README.md,24,7
+docs/security/vulns/node-forge/CVE-2025-12816.md,CVE-2025-12816 — node-forge ASN.1 Validator Desynchronization,docs/security/vulns/node-forge/README.md,22,0
+docs/security/vulns/node-forge/README.md,`node-forge` vulnerability lane,docs/security/vulns/README.md,31,5
+docs/standards/KFM_DCAT_PROFILE.md,KFM DCAT Profile,docs/standards/README.md,36,12
+docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md,KFM Markdown Work Protocol,docs/standards/README.md,58,8
+docs/standards/KFM_PROV_PROFILE.md,KFM PROV Profile,docs/standards/README.md,45,0
+docs/standards/KFM_STAC_PROFILE.md,KFM STAC Profile,docs/standards/README.md,38,0
+docs/standards/README.md,Standards,docs/README.md,43,23
+docs/standards/entity-publication-extension.md,KFM Entity Publication Extension,docs/standards/README.md,78,0
+docs/standards/faircare/FAIRCARE-GUIDE.md,FAIR+CARE Guide,docs/standards/faircare/README.md,32,7
+docs/standards/faircare/README.md,FAIR+CARE Standards,docs/standards/README.md,36,3
+docs/standards/governance/README.md,Governance Standards,docs/standards/README.md,36,9
+docs/standards/governance/ROOT-GOVERNANCE.md,Root Governance,docs/standards/governance/README.md,1,0
+docs/standards/governance/ROOT_GOVERNANCE.md,ROOT_GOVERNANCE,docs/standards/governance/README.md,39,12
+docs/standards/governed-external-update-flow.md,Governed External Update Flow,docs/standards/README.md,58,0
+docs/standards/markdown-rules.md,markdown-rules,docs/standards/README.md,0,0
+docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md,Indigenous Data Protection,docs/standards/sovereignty/README.md,47,0
+docs/standards/sovereignty/README.md,Sovereignty,docs/standards/README.md,35,12
+docs/standards/stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md,"OGC STAC Community Standards + Copernicus CDSE STAC Deployments — Alignment, Search Behavior, and Cataloging Conventions",docs/standards/stac/README.md,31,5
+docs/standards/stac/README.md,STAC,docs/standards/README.md,37,8
+docs/templates/README.md,templates,docs/README.md,36,18
+docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md,TEMPLATE — API Contract Extension,docs/templates/README.md,62,0
+docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md,KFM Universal Document Template,docs/templates/README.md,46,8
+docs/templates/TEMPLATE__STORY_NODE_V3.md,TEMPLATE — Story Node v3,docs/templates/README.md,47,5
+examples/README.md,examples,README.md,38,16
+examples/api/README.md,API Examples,examples/README.md,46,11
+examples/api/_index/README.md,_index,examples/api/README.md,1,0
+examples/api/_index/manifest.md,Manifest,examples/api/_index/README.md,1,0
+examples/api/datasets/README.md,datasets,examples/api/README.md,1,0
+examples/api/evidence/README.md,evidence,examples/api/README.md,1,0
+examples/api/focus/README.md,focus,examples/api/README.md,1,0
+examples/api/shared/README.md,shared,examples/api/README.md,1,0
+examples/api/stac/README.md,stac,examples/api/README.md,1,0
+examples/api/story/README.md,story,examples/api/README.md,1,0
+examples/story/README.md,story,examples/README.md,41,14
+examples/story/assets/README.md,assets,examples/story/README.md,1,0
+examples/story/assets/redacted/README.md,redacted,examples/story/assets/README.md,1,0
+examples/story/story-citation-happy-path.md,Story Citation Happy Path,examples/story/README.md,1,0
+examples/story/story-citation-unresolved.md,Story Citation Unresolved,examples/story/README.md,1,0
+examples/story/story/README.md,story,examples/story/README.md,1,0
+examples/thin_slice/README.md,thin slice,examples/README.md,32,13
+examples/thin_slice/hydrology/README.md,hydrology,examples/thin_slice/README.md,40,11
+examples/thin_slice/hydrology/api/README.md,api,examples/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/hydrology/story/README.md,story,examples/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/README.md,thin_slice,examples/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/README.md,hydrology thin slice bundle,examples/thin_slice/hydrology/thin_slice/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/query_examples.md,Query Examples,examples/thin_slice/hydrology/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/views/README.md,views,examples/thin_slice/hydrology/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/views/detail.md,Detail,examples/thin_slice/hydrology/thin_slice/hydrology/views/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/views/overview.md,Overview,examples/thin_slice/hydrology/thin_slice/hydrology/views/README.md,1,0
+examples/thin_slice/hydrology/thin_slice/hydrology/views/stale_visible.md,Stale Visible,examples/thin_slice/hydrology/thin_slice/hydrology/views/README.md,1,0
+examples/thin_slice/hydrology/ui/README.md,ui,examples/thin_slice/hydrology/README.md,1,0
+examples/thin_slice/thin_slice/README.md,thin_slice,examples/thin_slice/README.md,1,0
+examples/thin_slice/thin_slice/hydrology/README.md,hydrology,examples/thin_slice/thin_slice/README.md,1,0
+examples/ui/README.md,ui,examples/README.md,43,16
+examples/ui/api/README.md,api,examples/ui/README.md,1,0
+examples/ui/compare/README.md,compare,examples/ui/README.md,1,0
+examples/ui/dossier/README.md,dossier,examples/ui/README.md,1,0
+examples/ui/evidence-drawer/README.md,evidence-drawer,examples/ui/README.md,1,0
+examples/ui/explorer/README.md,explorer,examples/ui/README.md,1,0
+examples/ui/export/README.md,export,examples/ui/README.md,1,0
+examples/ui/focus/README.md,focus,examples/ui/README.md,1,0
+examples/ui/review/README.md,review,examples/ui/README.md,1,0
+examples/ui/story/README.md,story,examples/ui/README.md,1,0
+examples/ui/thin_slice/README.md,thin_slice,examples/ui/README.md,1,0
+examples/ui/thin_slice/hydrology/README.md,hydrology,examples/ui/thin_slice/README.md,1,0
+examples/ui/timeline/README.md,timeline,examples/ui/README.md,1,0
+examples/ui/ui/README.md,ui,examples/ui/README.md,1,0
+examples/ui/ui/compare/README.md,compare,examples/ui/ui/README.md,1,0
+examples/ui/ui/dossier/README.md,dossier,examples/ui/ui/README.md,1,0
+examples/ui/ui/evidence-drawer/README.md,evidence-drawer,examples/ui/ui/README.md,1,0
+examples/ui/ui/evidence-drawer/layer-inspection/README.md,layer-inspection,examples/ui/ui/evidence-drawer/README.md,1,0
+examples/ui/ui/evidence-drawer/place-dossier/README.md,place-dossier,examples/ui/ui/evidence-drawer/README.md,1,0
+examples/ui/ui/evidence-drawer/stale-visible/README.md,stale-visible,examples/ui/ui/evidence-drawer/README.md,1,0
+examples/ui/ui/explorer/README.md,explorer,examples/ui/ui/README.md,1,0
+examples/ui/ui/export/README.md,export,examples/ui/ui/README.md,1,0
+examples/ui/ui/focus/README.md,focus,examples/ui/ui/README.md,1,0
+examples/ui/ui/focus/constrained/README.md,constrained,examples/ui/ui/focus/README.md,1,0
+examples/ui/ui/focus/deny/README.md,deny,examples/ui/ui/focus/README.md,1,0
+examples/ui/ui/focus/happy-path/README.md,happy-path,examples/ui/ui/focus/README.md,1,0
+examples/ui/ui/review/README.md,review,examples/ui/ui/README.md,1,0
+examples/ui/ui/timeline/README.md,timeline,examples/ui/ui/README.md,1,0
+infra/README.md,infra,README.md,41,20
+infra/backup/README.md,"infra/backup — Backup, Restore, and Recovery",infra/README.md,30,0
+infra/compose/README.md,compose,infra/README.md,24,13
+infra/dashboards/README.md,dashboards,infra/README.md,42,11
+infra/gitops/README.md,gitops,infra/README.md,45,17
+infra/hosted/README.md,hosted,infra/README.md,35,16
+infra/kubernetes/README.md,Kubernetes,infra/README.md,45,16
+infra/local/README.md,Local infrastructure (`infra/local`),infra/README.md,41,11
+infra/monitoring/README.md,Monitoring,infra/README.md,39,4
+infra/monitoring/dashboards/README.md,dashboards,infra/monitoring/README.md,1,0
+infra/monitoring/otel/README.md,otel,infra/monitoring/README.md,1,0
+infra/systemd-or-compose/README.md,systemd-or-compose,infra/README.md,44,10
+infra/systemd/README.md,infra/systemd,infra/README.md,57,5
+infra/terraform/README.md,terraform,infra/README.md,47,22
+migrations/README.md,migrations,README.md,53,0
+migrations/drills/README.md,`drills`,migrations/README.md,39,8
+migrations/templates/README.md,`migrations/templates`,migrations/README.md,41,10
+migrations/templates/migration-packet.md,Migration Packet Template,migrations/templates/README.md,31,6
+migrations/waves/README.md,`waves`,migrations/README.md,46,8
+packages/README.md,`packages/`,README.md,55,22
+packages/catalog/README.md,Catalog Package,packages/README.md,37,3
+packages/domain/README.md,domain,packages/README.md,33,12
+packages/evidence/README.md,evidence,packages/README.md,45,10
+packages/genealogy_ingest/README.md,Genealogy Ingest,packages/README.md,42,6
+packages/indexers/README.md,packages/indexers,packages/README.md,42,12
+packages/ingest/README.md,ingest,packages/README.md,41,20
+packages/policy/README.md,`packages/policy/`,packages/README.md,35,17
+pipelines/README.md,`pipelines/`,README.md,52,17
+pipelines/hls-ndvi/README.md,🌾 HLS → NDVI → County/HUC12 Pipeline,pipelines/README.md,49,12
+pipelines/soils/README.md,Soils Pipelines,pipelines/README.md,34,11
+pipelines/soils/gssurgo-ks/README.md,Kansas gSSURGO → GeoParquet Ingest Recipe,pipelines/soils/README.md,27,0
+pipelines/ssurgo_to_catchment.md,ssurgo to catchment,pipelines/README.md,1,0
+pipelines/wbd-huc12-watcher/README.md,WBD HUC-12 Watcher Pipeline,pipelines/README.md,32,5
+policy/README.md,Policy,README.md,43,11
+policy/bundles/README.md,Policy Bundles,policy/README.md,44,10
+policy/bundles/runtime/README.md,Runtime Policy Bundles,policy/bundles/README.md,36,0
+policy/fixtures/README.md,fixtures,policy/README.md,38,10
+policy/policy-runtime/README.md,Policy Runtime,policy/README.md,58,10
+policy/tests/README.md,Policy tests,policy/README.md,38,12
+schemas/README.md,Schemas,README.md,46,13
+schemas/contracts/README.md,schemas/contracts,schemas/README.md,45,9
+schemas/contracts/v1/README.md,`schemas/contracts/v1`,schemas/contracts/README.md,42,18
+schemas/contracts/v1/common/README.md,`common`,schemas/contracts/v1/README.md,41,17
+schemas/contracts/v1/correction/README.md,Correction Contracts v1,schemas/contracts/v1/README.md,49,11
+schemas/contracts/v1/data/README.md,data,schemas/contracts/v1/README.md,43,14
+schemas/contracts/v1/evidence/README.md,`schemas/contracts/v1/evidence`,schemas/contracts/v1/README.md,36,17
+schemas/contracts/v1/policy/README.md,`schemas/contracts/v1/policy`,schemas/contracts/v1/README.md,59,13
+schemas/contracts/v1/release/README.md,Release contracts,schemas/contracts/v1/README.md,49,17
+schemas/contracts/v1/runtime/README.md,`runtime`,schemas/contracts/v1/README.md,36,18
+schemas/contracts/v1/source/README.md,source,schemas/contracts/v1/README.md,41,9
+schemas/contracts/vocab/README.md,schemas/contracts/vocab,schemas/contracts/README.md,37,8
+schemas/schemas/README.md,schemas/schemas,schemas/README.md,40,9
+schemas/standards/README.md,standards,schemas/README.md,40,12
+schemas/tests/README.md,tests,schemas/README.md,40,15
+schemas/tests/fixtures/README.md,fixtures,schemas/tests/README.md,32,10
+schemas/tests/fixtures/contracts/README.md,Contract Fixtures — Schema-Side Boundary Guide,schemas/tests/fixtures/README.md,40,11
+schemas/tests/fixtures/contracts/v1/README.md,Contract Fixtures v1,schemas/tests/fixtures/contracts/README.md,36,20
+schemas/tests/fixtures/contracts/v1/invalid/README.md,invalid,schemas/tests/fixtures/contracts/v1/README.md,34,11
+schemas/tests/fixtures/contracts/v1/valid/README.md,valid,schemas/tests/fixtures/contracts/v1/README.md,39,10
+schemas/workflows/README.md,Workflow Schemas,schemas/README.md,36,7
+scripts/README.md,scripts/,README.md,51,8
+tests/README.md,tests,README.md,51,20
+tests/accessibility/README.md,accessibility,tests/README.md,37,11
+tests/contracts/README.md,contracts,tests/README.md,60,14
+tests/e2e/README.md,e2e,tests/README.md,45,16
+tests/e2e/correction/README.md,correction,tests/e2e/README.md,45,14
+tests/e2e/release_assembly/README.md,release assembly,tests/e2e/README.md,43,8
+tests/e2e/runtime_proof/README.md,runtime_proof,tests/e2e/README.md,37,12
+tests/integration/README.md,integration,tests/README.md,38,16
+tests/policy/README.md,tests/policy,tests/README.md,51,7
+tests/policy/genealogy/README.md,Policy Tests: Genealogy,tests/policy/README.md,35,6
+tests/reproducibility/README.md,Reproducibility Tests,tests/README.md,47,7
+tests/unit/README.md,unit,tests/README.md,35,10
+tools/README.md,tools,README.md,40,16
+tools/air_quality/smoke_gate/README.md,Smoke / PM2.5 Agreement Gate,tools/README.md,33,3
+tools/attest/README.md,attest,tools/README.md,51,17
+tools/catalog/README.md,`tools/catalog/`,tools/README.md,34,8
+tools/ci/README.md,ci,tools/README.md,39,15
+tools/diff/README.md,diff,tools/README.md,35,14
+tools/docs/README.md,Documentation Tooling,tools/README.md,44,5
+tools/ingest/README.md,`tools/ingest`,tools/README.md,33,1
+tools/ingest/genealogy/README.md,"Genealogy / Family-History Ingestion (Proposed Lane, with DNA and Consumer Genomics Controls)",tools/ingest/README.md,43,0
+tools/probes/README.md,probes,tools/README.md,35,9
+tools/probes/hydro-watcher/README.md,Hydrologic Threshold Watcher,tools/probes/README.md,50,0
+tools/probes/hydro-watcher/config/README.md,Hydrologic Threshold Watcher Config,tools/probes/hydro-watcher/README.md,30,4
+tools/probes/hydro-watcher/tests/README.md,Hydrologic Threshold Watcher Tests,tools/probes/hydro-watcher/README.md,24,2
+tools/probes/wbd_huc12_probe/README.md,WBD HUC12 Probe,tools/probes/README.md,28,6
+tools/validators/README.md,tools/validators,tools/README.md,34,10
+ui/README.md,KFM UI,README.md,27,0
+ui/controls/README.md,ui/controls,ui/README.md,31,3
+ui/review/README.md,ui/review,ui/README.md,20,2
+web/README.md,Kansas Frontier Matrix Web UI,README.md,39,8
