@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS-VERIFICATION
+doc_id: kfm://doc/NEEDS-VERIFICATION
 title: migrations
 type: standard
 version: v1
@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: public
 related: [../README.md, ../contracts/README.md, ../schemas/README.md, ../scripts/README.md, ../tests/README.md, ../policy/README.md, ../.github/workflows/README.md, NEEDS-VERIFICATION:../configs/, NEEDS-VERIFICATION:../infra/]
 tags: [kfm, migrations, storage-evolution, proof-objects]
-notes: [target path inferred from the uploaded draft; strongest repo-state signal available to this revision is the 2026-04-03 successor geospatial manual with direct public-main repo-root and .github gatehouse evidence; no mounted checkout, migrations inventory, owners, or metadata dates were directly reverified in this session]
+notes: [target path inferred from the supplied draft as migrations/README.md; strongest current-session support is attached doctrine plus document-reported repo-root evidence that includes a migrations surface, but no mounted checkout or live branch inventory was directly reverified]
 [/KFM_META_BLOCK_V2] -->
 
 # migrations
@@ -21,33 +21,33 @@ Governed change control for durable KFM state, contracts, release seams, and cor
 > **Document lifecycle:** draft  
 > **Authority posture:** supporting directory contract  
 > **Owners:** **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![lifecycle](https://img.shields.io/badge/lifecycle-draft-lightgrey) ![authority](https://img.shields.io/badge/authority-supporting%20directory%20contract-blue) ![repo%20signal](https://img.shields.io/badge/repo%20signal-2026--04--03-blueviolet) ![surface](https://img.shields.io/badge/surface-migrations-6f42c1) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main signal](#current-public-main-signal) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Migration posture](#migration-posture) · [Contracts & proof objects](#contracts--proof-objects) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix--verification-notes)
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![lifecycle](https://img.shields.io/badge/lifecycle-draft-lightgrey) ![authority](https://img.shields.io/badge/authority-supporting%20directory%20contract-blue) ![workspace](https://img.shields.io/badge/workspace-PDF--only-lightgrey) ![surface](https://img.shields.io/badge/surface-migrations-6f42c1) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Migration posture](#migration-posture) · [Contracts & proof objects](#contracts--proof-objects) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix--verification-notes)
 
 > [!IMPORTANT]
-> This README is intentionally **evidence-bounded**. The strongest repo-state signal available to this revision is the **2026-04-03 successor geospatial manual**, which documents direct inspection of the public-main repo root and `.github` gatehouse. That is stronger than the earlier PDF-only boundary, but it is still **not** a mounted checkout of the branch under review.
+> This README stays **evidence-bounded**. The current session exposed a PDF-rich corpus, not a mounted branch checkout, schema registry, workflow YAML inventory, test run, deployment manifest set, dashboard, or runtime trace. Where this file names repo structure or operational machinery, it does so only at the strongest truthful level.
 
 > [!WARNING]
-> In KFM, migration is not just “run the database script.” A migration can change storage, contracts, policy behavior, release state, derived rebuild obligations, runtime trust behavior, rollback posture, or visible correction lineage.
+> In KFM, migration is not merely “run the database script.” A migration can change storage, contracts, policy behavior, release state, derived rebuild obligations, runtime trust behavior, rollback posture, or visible correction lineage.
 
 > [!NOTE]
-> **Baseline determination.** This README treats the uploaded draft as the redesign baseline and updates it against the stronger attached doctrinal layer: the replacement-grade master-reference posture, the 2026-04-03 geospatial successor manual, the Pass 10 category atlas, and the MapLibre shell doctrine. Public-main repo evidence is used for visible path and gatehouse claims only.
+> **Baseline determination.** This README keeps the supplied draft’s role and structure, but tightens it against the freshest directly attached whole-system KFM manuals: the 11 April 2026 successor working edition as the main doctrinal spine, with the March 2026 canonical master reference and architecture/governance/delivery compendium used to sharpen contract language, truth posture, and document-reported repo-root signals.
 
 ## Scope
 
 `migrations/` is the directory contract for **governed change** to durable KFM structures and trust-bearing artifacts.
 
-That includes schema and storage work, but it is intentionally broader. In the strongest attached KFM doctrine, migration spans schema evolution, data repair and backfill, contract and envelope changes, policy and registry changes, release and promotion consequences, projection rebuilds tied to released scope, rollback, supersession, withdrawal, and visible correction.
+That includes schema and storage work, but it is intentionally broader. In the strongest attached KFM doctrine, migration spans schema evolution, data repair and replay, contract and envelope changes, policy and registry changes, release and promotion consequences, projection rebuild obligations tied to released scope, rollback, supersession, withdrawal, and visible correction.
 
 ### Truth markers used in this guide
 
 | Marker | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the attached KFM corpus or by the strongest repo-grounded public-main evidence visible in this session |
-| **INFERRED** | Strongly implied by the corpus, but not directly reverified as mounted branch or runtime reality |
+| **CONFIRMED** | Directly supported by the attached KFM corpus or by current-session document evidence |
+| **INFERRED** | Strongly implied by the corpus, but not directly reverified as mounted branch or runtime fact |
 | **PROPOSED** | Recommended target-state shape or workflow consistent with doctrine, but not verified as current implementation |
 | **UNKNOWN** | Not supported strongly enough in the current session to present as settled fact |
-| **NEEDS VERIFICATION** | Explicit placeholder or repo-specific fact that should be checked on the actual branch before merge |
+| **NEEDS VERIFICATION** | Explicit placeholder or branch-specific fact that should be checked before merge |
 
 ### What this directory is for
 
@@ -81,14 +81,14 @@ This surface should make migration work:
 
 | Aspect | Guidance |
 |---|---|
-| **Path** | `migrations/README.md` |
+| **Path** | `migrations/README.md` *(target path inferred from the supplied draft; document-reported repo-root `migrations/` surface exists, but current branch inventory is not mounted here)* |
 | **Primary audience** | Maintainers, platform engineers, data engineers, reviewers, and stewards |
 | **Repo fit** | This README governs how migration-bearing work should be packaged, reviewed, and verified without overclaiming mounted automation |
 | **Upstream dependencies** | contracts, schemas, policy bundles, fixtures, review logic, release state, and proof-object conventions |
 | **Downstream consequences** | release manifests, projection rebuilds, exports, `EvidenceBundle` resolution, `RuntimeResponseEnvelope` behavior, and correction visibility |
 | **Update trigger** | Any change to authoritative storage, contracts, policy meaning, proof objects, promotion rules, or correction behavior |
 | **Adjacent links** | [repo root][repo-root] · [contracts][contracts-readme] · [schemas][schemas-readme] · [scripts][scripts-readme] · [tests][tests-readme] · [policy][policy-readme] · [workflow docs][workflows-readme] |
-| **Link posture** | Relative links are kept because the draft already positions this file as a directory README; exact branch presence of each linked README should still be rechecked before merge |
+| **Current evidence limit** | No mounted checkout, workflow inventory, validator output, or emitted proof objects were directly surfaced in this session |
 
 ### Why this directory matters in KFM
 
@@ -98,9 +98,27 @@ Migration in KFM is constrained by earlier law:
 - the trust membrane must remain intact
 - authoritative truth must remain stronger than derived layers
 - public-safe release must remain proof-bearing
-- users must see honest states when a cutover fails, narrows scope, is generalized, becomes stale, or is superseded later
+- users must see honest states when a cutover fails, narrows scope, becomes stale, is generalized, or is superseded later
 
 That makes `migrations/` more than a convenience folder. It is where change seams become inspectable.
+
+### Current document-reported repo signal
+
+The strongest current-session repo-structure evidence is still **document-reported**, not mounted. That distinction matters.
+
+| Signal | Current status | Practical consequence |
+|---|---|---|
+| `migrations/` appears in document-reported repo-root inventory | **CONFIRMED** *(document-reported root signal)* | Treat `migrations/` as a plausible top-level surface for this README, but verify actual branch contents before merge. |
+| `configs/`, `scripts/`, and `examples/` are shown adjacent to `migrations/` in the same document-reported root inventory | **CONFIRMED** *(document-reported root signal)* | Relative references to nearby repo surfaces are reasonable, but should still be rechecked against the branch under review. |
+| Broader repo-root surfaces such as `apps/`, `packages/`, `contracts/`, `policy/`, `data/`, `infra/`, `docs/`, `tools/`, and `tests/` are document-reported | **CONFIRMED** *(document-reported root signal)* | This README can speak about migration consequences across those surfaces without claiming specific subpaths or implementations. |
+| Exact files inside `migrations/` on the current branch | **NEEDS VERIFICATION** | Do not imply packet directories, SQL inventory, or helper scripts exist until branch inspection proves them. |
+| Live workflow YAML inventory, merge-blocking checks, starter schema registry, emitted proof packs, and runtime enforcement behavior | **UNKNOWN** | Keep behavior-significant claims proportional and verify before merge. |
+| Single authoritative schema home between `contracts/` and `schemas/` | **NEEDS VERIFICATION** | Avoid amplifying a parallel schema universe until the branch names the authoritative home. |
+
+> [!IMPORTANT]
+> This is the most important repo-fit distinction in the file: **document-reported root signal is not the same as mounted branch proof**.
+
+[Back to top](#migrations)
 
 ## Accepted inputs
 
@@ -115,7 +133,7 @@ The following belong here when they are part of **reviewable, governed migration
 | Release and cutover notes | promotion effects, projection rebuild expectations, stale-state handling | Deployment and publication must stay distinct | release notes, post-deploy verify, rollback/correction note |
 | Compatibility seams | dual-read, dual-write, adapters, bridge layers, temporary facades | Temporary ambiguity must be bounded and retired | stop rule, parity note, removal plan |
 | Correction packets | rollback, supersession, withdrawal, narrowing, replacement notices | KFM requires visible recovery, not silent overwrite | affected surfaces, public note, rebuild refs |
-| Migration-local documentation | packet README, plan, verify steps, rollback runbook | Reviewers need intent and operator guidance | concise purpose, scope, gates, open unknowns |
+| Migration-local documentation | packet README, plan, verify steps, rollback runbook | Reviewers need intent and operator guidance | concise purpose, scope, gates, and open unknowns |
 
 ### Minimum bar for anything added here
 
@@ -137,7 +155,7 @@ The following do **not** belong in `migrations/`.
 | Ad hoc analyst SQL | Not durable governed migration history | notebooks, scratch analysis, issue discussion |
 | Free-standing helper scripts | Not every automation change is migration-bearing | [scripts][scripts-readme], tooling docs |
 | UI-only work with no trust-state seam | Product work is not automatically migration work | app or surface docs |
-| Standalone policy prose with no executable consequence | KFM policy must stay machine-checkable and testable | [policy][policy-readme], registries, contract or schema surfaces |
+| Standalone policy prose with no executable consequence | KFM policy must stay machine-checkable and testable | [policy][policy-readme], registries, or contract/schema surfaces |
 | Duplicate copies of canonical schemas | `migrations/` should reference the authoritative schema home, not create a shadow schema tree | chosen schema home (`contracts/`, `schemas/`, or ADR-backed replacement) |
 | Emitted receipts or proof bundles copied for convenience | Review packets may link proofs, but canonical emitted artifacts should stay in their governed storage location | receipt/provenance storage or release artifact location |
 | Secrets, DSNs, credentials | Never commit secret-bearing material | secret manager or local operator config |
@@ -145,52 +163,36 @@ The following do **not** belong in `migrations/`.
 | Projection rebuilds with no release seam | Rebuildable delivery is not canonical migration by default | projection/build surfaces |
 | Silent overwrite utilities | KFM rejects mutation without lineage as a success condition | explicit correction or governed repair path |
 
-## Current public-main signal
-
-The strongest repo-state signal available in this session is no longer the older repo-grounded sprint alone. The attached 2026-04-03 successor geospatial manual adds **direct public-main repo-root and `.github` gatehouse evidence**, while still keeping non-public or runtime claims explicitly bounded.
-
-### What that means for this README
-
-| Signal | Current status | Practical consequence |
-|---|---|---|
-| Root README frames KFM as governed, evidence-first, map-first, time-aware, and experimental | **CONFIRMED** | Keeping this README in an evidence-bounded, trust-visible posture matches the visible repo identity. |
-| Public-main root tree visibly includes `apps/`, `contracts/`, `data/`, `docs/`, `infra/`, `packages/`, `policy/`, `schemas/`, `tests/`, `tools/`, and a substantial `.github/` gatehouse | **CONFIRMED** | This README can safely speak about those visible repo surfaces without pretending the whole branch tree is mounted here. |
-| Public-main `.github/actions/` visibly includes `metadata-validate-v2`, `metadata-validate`, `opa-gate`, `provenance-guard`, and `sbom-produce-and-sign` lanes | **CONFIRMED** | Migration guidance can name metadata, policy, provenance, and SBOM pressure as real gatehouse themes. |
-| `.github/workflows/` and `.github/watchers/` are README-only on current public main | **CONFIRMED** | Do **not** write this README as if merge-blocking workflow YAMLs or checked-in watcher jobs are already surfaced on the branch. |
-| Exact workflow YAML inventory, live watcher jobs, emitted proof bundles, concrete schema registry contents, deployment overlays, rollback drills, and runtime proof objects | **UNKNOWN** | Keep behavior-significant claims proportional and mark them for branch verification before merge. |
-| Live `migrations/` inventory | **NEEDS VERIFICATION** | Treat the directory contract as useful, but verify actual branch contents before claiming presence or layout. |
-| Single authoritative schema home between `contracts/` and `schemas/` | **NEEDS VERIFICATION** | This README should not amplify a parallel schema universe; the authoritative home must be named on the branch. |
-
-> [!IMPORTANT]
-> The two most important trust risks for migration documentation remain: a visible dual schema-facing surface (`contracts/` and `schemas/`) and gatehouse scaffolding that can outrun surfaced workflow YAML. This README stays explicit about both.
-
-### Visible gatehouse lanes worth checking first
-
-```text
-.github/actions/metadata-validate-v2
-.github/actions/metadata-validate
-.github/actions/opa-gate
-.github/actions/provenance-guard
-.github/actions/sbom-produce-and-sign
-.github/workflows/README.md
-.github/watchers/README.md
-```
-
-Use branch inspection to confirm whether these remain docs-only cues or now have executable counterparts.
-
-[Back to top](#migrations)
-
 ## Directory tree
 
-### Safest current-session shape
+### Repo-root context visible in document evidence
+
+```text
+.
+├── apps/
+├── packages/
+├── contracts/
+├── policy/
+├── data/
+├── infra/
+├── docs/
+├── tools/
+├── tests/
+├── configs/
+├── scripts/
+├── migrations/
+└── examples/
+```
+
+### Safest current-session local shape
 
 ```text
 migrations/
-└── README.md   # this document; PROPOSED until merged
+└── README.md   # this document; draft until merged
 ```
 
 <details>
-<summary>Illustrative future shape (PROPOSED, not current-session fact)</summary>
+<summary><strong>Illustrative future shape (PROPOSED, not current-session fact)</strong></summary>
 
 ```text
 migrations/
@@ -212,7 +214,7 @@ migrations/
     └── migration-packet.md
 ```
 
-Adopt a shape like this only if it matches the mounted repo’s actual execution model. The broader successor manual proposes contract, policy, data, and app trees at repo level; it does **not** by itself prove a checked-in `migrations/` packet hierarchy.
+Adopt a shape like this only if it matches the mounted repo’s actual execution model. The attached corpus strongly supports packetized, reviewable migration work, but it does **not** by itself prove a checked-in `migrations/` packet hierarchy.
 </details>
 
 ## Quickstart
@@ -228,21 +230,13 @@ git ls-files 'migrations/**' 2>/dev/null || true
 find migrations -maxdepth 4 -type f 2>/dev/null | sort
 find migrations -maxdepth 4 -type d 2>/dev/null | sort
 
-# inspect visible root surfaces called out by current public-main evidence
-git ls-files 'apps/**' 'contracts/**' 'data/**' 'docs/**' 'infra/**' \
-  'packages/**' 'policy/**' 'schemas/**' 'tests/**' 'tools/**' \
-  '.github/**' | sed -n '1,200p'
-
-# inspect public gatehouse lanes that the successor manual says are visible
-find .github -maxdepth 2 -type d 2>/dev/null | sort
-git ls-files '.github/actions/**' '.github/workflows/**' '.github/watchers/**' | sort
-
-# verify whether workflows/watchers are still README-only on the branch
-find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
-find .github/watchers -maxdepth 2 -type f 2>/dev/null | sort
+# inspect visible root surfaces called out by document-reported repo evidence
+git ls-files 'apps/**' 'packages/**' 'contracts/**' 'policy/**' 'data/**' \
+  'infra/**' 'docs/**' 'tools/**' 'tests/**' 'configs/**' \
+  'scripts/**' 'migrations/**' 'examples/**' | sed -n '1,240p'
 
 # find contract and proof-object language
-git grep -nE 'SourceDescriptor|IngestReceipt|ValidationReport|DatasetVersion|CatalogClosure|DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|ProjectionBuildReceipt|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|run_manifest|run_receipt|ai_receipt|spec_hash|attestation' -- . 2>/dev/null
+git grep -nE 'SourceDescriptor|IngestReceipt|ValidationReport|DatasetVersion|CatalogClosure|DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|ProjectionBuildReceipt|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|spec_hash|run_receipt|ai_receipt|attestation' -- . 2>/dev/null
 
 # find migration, rollback, correction, and compatibility-seam language
 git grep -nE 'migrat|rollback|supersed|withdraw|compatibility|dual-read|dual-write|deprecat|correction' -- . 2>/dev/null
@@ -268,22 +262,27 @@ git diff --name-only "$BASE_REF"...HEAD \
 2. Which schema home is authoritative for this change: `contracts/`, `schemas/`, or an ADR-backed replacement?
 3. Are valid and invalid fixtures present for the changed contract families?
 4. What proof objects are emitted before and after promotion?
-5. Are `run_manifest` / `run_receipt` / `ai_receipt` applicable here, and if so where are they stored canonically?
+5. Are `spec_hash`, `run_receipt`, `ai_receipt`, and attestation refs applicable here, and if so where are they stored canonically?
 6. What post-deploy checks exist for rollback or correction?
 7. Which public-safe surface shows release and correction state after cutover?
 
 ## Usage
 
-Treat this directory as a **review surface**, not only as a script bucket.
+Treat this directory as a **review surface**, not merely as a script bucket.
 
 1. **Classify the change.** Name it: schema, storage, data, contract, policy, release, projection, runtime, or correction-bearing.
-2. **Assemble the packet.** Pair the migration mechanism with notes, fixtures, and proof-object expectations.
-3. **Declare the seam.** State the compatibility window, bridge strategy, and stop rule.
+2. **Declare the seam.** State the compatibility window, bridge strategy, and stop rule.
+3. **Assemble the packet.** Pair the migration mechanism with notes, fixtures, and proof-object expectations.
 4. **Run the gates.** Record schema, policy, validation, release, and post-deploy checks honestly.
 5. **Close the loop.** Retire the seam deliberately or emit rollback, supersession, withdrawal, or correction artifacts.
 
 > [!NOTE]
 > A migration PR that cannot identify its proof objects, stop rule, and correction path is not ready, even if the underlying script is short.
+
+> [!TIP]
+> Where automation authors or updates migration-bearing work, prefer a reviewable path: draft PRs, receipts, attestations, and policy gates are a better KFM fit than direct protected-branch writes.
+
+[Back to top](#migrations)
 
 ## Migration posture
 
@@ -299,6 +298,20 @@ Treat this directory as a **review surface**, not only as a script bucket.
 | Keep correction first-class | Rollback, supersession, withdrawal, and visible narrowing belong in migration design, not incident afterthoughts. |
 | Do not let temporary seams fossilize | Dual-read, dual-write, adapters need explicit stop rules. |
 | Never let derived layers back-write authority | Projection and packaging workers rebuild from promoted scope only. |
+
+### Proof quartet expectations
+
+Pass 13 and the successor working edition make one cross-cutting point unusually clear: migration-bearing work is easier to govern when it carries a **minimal proof quartet**.
+
+| Proof object | Minimum interpretation | Why it matters in migration |
+|---|---|---|
+| `spec_hash` | Stable digest over a canonicalized input/spec or other explicitly defined carrier | Prevents invisible input drift and gives later receipts a stable anchor |
+| `run_receipt` | Typed record of what one concrete run fetched, transformed, validated, and emitted | Turns migration behavior into a machine-checkable audit object |
+| `ai_receipt` | Typed record of model-mediated proposal or synthesis work when AI materially affected the output | Prevents model involvement from disappearing into fluent prose |
+| Attestation references | Verifiable references that bind artifacts or receipts to origin/integrity checks | Move provenance from descriptive language toward checkable trust support |
+
+> [!IMPORTANT]
+> Do not treat the proof quartet as paperwork theater. Where a release path or policy bundle requires these carriers, missing or malformed members should be treated as deterministic deny reasons.
 
 ### Compatibility and deprecation rules
 
@@ -346,32 +359,21 @@ The KFM corpus is unusually explicit about the object families that make governe
 | `RuntimeResponseEnvelope` | Makes runtime outcomes accountable: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, plus stale or correction-bearing state. |
 | `CorrectionNotice` | Preserves visible lineage under rollback, supersession, withdrawal, or narrowing. |
 
-### Execution augmenters now worth standardizing
+### Starter schema wave worth making explicit
 
-The 2026 successor manual and Pass 10 add a second, smaller family of execution augmenters that intensify the earlier doctrine without replacing it.
-
-| Augmenter | Why it matters |
-|---|---|
-| `spec_hash` | Pins a canonicalized input specification so reruns, PRs, and release comparisons are materially comparable. |
-| `run_manifest` or `run_receipt` | Binds inputs, outputs, digests, actor or workflow identity, and checks to one run. |
-| `ai_receipt` | Separates model/runtime metadata, proposal context, determinism settings, and output digests from the human-readable surface. |
-| Attestation bundle | Carries keyless signing, transparency-log proof, or in-toto-style attestation for release artifacts. |
-| `audit_ref` | Lets logs, policy decisions, releases, and UI behavior join into one reconstructable audit graph. |
-
-### First machine-checkable wave
-
-The strongest attached doctrine still converges on a deliberately small first schema wave. The point is **not** the literal filename. The point is that the contract becomes explicit enough to validate, diff, fixture-test, and review.
+The attached doctrine keeps converging on a deliberately small first schema wave. The point is **not** literal filename dogma. The point is that the contract becomes explicit enough to validate, diff, fixture-test, and review.
 
 ```text
-source_descriptor
-validation_report
-dataset_version
-catalog_closure
-decision_envelope
-release_manifest
-evidence_bundle
-runtime_response_envelope
-correction_notice
+source_descriptor.schema.json
+validation_report.schema.json
+dataset_version.schema.json
+decision_envelope.schema.json
+release_manifest.schema.json
+evidence_bundle.schema.json
+runtime_response_envelope.schema.json
+correction_notice.schema.json
+run_receipt.schema.json
+ai_receipt.schema.json
 ```
 
 ### Why these objects belong in a migrations README
@@ -389,38 +391,40 @@ A migration in KFM is done only when later readers can reconstruct:
 
 ```mermaid
 flowchart LR
-    A[Classify migration<br/>schema • data • contract • policy • runtime] --> B[Prepare migration packet]
+    A[Classify migration<br/>schema • data • contract • policy • runtime] --> B[Define seam + packet]
     B --> C[Update companion artifacts<br/>schemas • fixtures • policy diffs • notes]
-    C --> D[Run gates<br/>schema • policy • validation • release]
-    D --> E{Candidate passes?}
+    C --> D[Attach proof quartet<br/>spec_hash • run_receipt • ai_receipt? • attestation refs]
+    D --> E[Run gates<br/>schema • policy • validation • release]
+    E --> F{Candidate passes?}
 
-    E -- No --> Q[Hold / Quarantine / Revise]
+    F -- No --> Q[Hold / Quarantine / Revise]
     Q --> B
 
-    E -- Yes --> F[Review + approval]
-    F --> G[Deploy change<br/>without collapsing trust state]
-    G --> H[Promote approved release]
-    H --> I[Post-deploy verification<br/>freshness • trust state • correction checks]
-    I --> J{Trust preserved?}
+    F -- Yes --> G[Review + approval]
+    G --> H[Deploy change<br/>without collapsing trust state]
+    H --> I[Promote approved release]
+    I --> J[Rebuild derived delivery<br/>release-scoped only]
+    J --> K[Runtime surfaces resolve<br/>EvidenceBundle + RuntimeResponseEnvelope]
+    K --> L{Trust preserved?}
 
-    J -- Yes --> K[Retire seam deliberately]
-    J -- No --> L[Rollback / Supersede / Withdraw / Correct]
-    L --> M[Emit correction lineage<br/>and propagate visible state]
+    L -- Yes --> M[Retire seam deliberately]
+    L -- No --> N[Rollback / Supersede / Withdraw / Correct]
+    N --> O[Emit CorrectionNotice<br/>and visible state change]
 
     subgraph Guardrails
-      N[Canonical path preserved]
-      O[Trust membrane preserved]
-      P[Authoritative vs derived separation]
-      R[Visible correction lineage]
+      P[Canonical path preserved]
+      R[Trust membrane preserved]
+      S[Authoritative vs derived separation]
+      T[Visible correction lineage]
     end
 
-    B -.bounded by.-> N
-    H -.bounded by.-> O
-    I -.bounded by.-> P
-    M -.bounded by.-> R
+    B -.bounded by.-> P
+    I -.bounded by.-> R
+    J -.bounded by.-> S
+    O -.bounded by.-> T
 ```
 
-Above: a governed migration flow in which change is paired with contract updates, fixtures, review, promotion, post-deploy verification, and explicit correction lineage.
+Above: a governed migration flow in which change is paired with packetization, proof carriers, review, promotion, runtime accountability, and explicit correction lineage.
 
 ## Tables
 
@@ -431,7 +435,7 @@ Above: a governed migration flow in which change is paired with contract updates
 | Authoritative schema or storage evolution | **Yes** | High; verify fixtures, compatibility, rollback |
 | Data repair or backfill tied to authoritative state | **Yes** | High; validate lineage and correction implications |
 | Contract or envelope migration | **Yes** | High; additive evolution, versioning, negative-state review |
-| Policy or registry migration affecting runtime outcomes | **Yes** | High; tests, reason or obligation stability, steward review |
+| Policy or registry migration affecting runtime outcomes | **Yes** | High; tests, reason/obligation stability, steward review |
 | Release or cutover packet | **Yes** | High; release linkage, proof objects, post-deploy verify |
 | Correction, withdrawal, or supersession packet | **Yes** | High; visible lineage and downstream rebuild implications |
 | Projection-only rebuild with no trust-state seam | **Usually no** | Keep in projection/build surfaces unless part of governed cutover |
@@ -486,8 +490,9 @@ Until stronger executable evidence exists, broad migration work should also sati
 - [ ] The single authoritative schema home is explicitly named.
 - [ ] The first merge-blocking contract or policy gate is real, not README-only scaffolding.
 - [ ] One real release proof object or proof pack is surfaced.
+- [ ] One positive and one negative runtime evidence or resolver trace is surfaced.
 - [ ] One real `RuntimeResponseEnvelope` sample or equivalent negative-path trace is surfaced.
-- [ ] If automation or AI touched the change, `run_manifest` / `run_receipt` / `ai_receipt` expectations are explicit.
+- [ ] If automation or AI touched the change, `spec_hash`, `run_receipt`, `ai_receipt`, and attestation expectations are explicit where applicable.
 - [ ] This README does not imply mounted automation that the repo does not yet prove.
 
 ### Stronger definition of done for the first real rehearsal
@@ -527,15 +532,15 @@ A non-trivial migration PR should include, at minimum:
 
 ### Is `migrations/` only for database work?
 
-No. In the strongest KFM doctrine visible in this session, migration is broader than database schema change. It includes storage evolution, data repair/backfill, contract and envelope evolution, policy and registry change, release and promotion consequences, runtime trust behavior, and post-publication correction or supersession.
+No. In the strongest KFM doctrine visible in this session, migration is broader than database schema change. It includes storage evolution, data repair or replay, contract and envelope evolution, policy and registry change, release and promotion consequences, runtime trust behavior, and post-publication correction or supersession.
 
-### Is a live `migrations/` inventory already confirmed in the repo?
+### Is a live `migrations/` inventory already confirmed on the current branch?
 
-No. The attached successor manual strengthens public-main repo evidence at the repo root and `.github` gatehouse, but it still does **not** directly reverify a live `migrations/` inventory on the branch under review. Treat the path as **NEEDS VERIFICATION** until branch inspection proves it.
+No. What is confirmed in this session is **document-reported repo-root evidence** that a `migrations/` surface exists in the broader KFM repo model. That is not the same thing as a direct branch inventory for the exact revision under review.
 
 ### Why is this README more cautious than a typical migrations guide?
 
-Because the current session still does not expose a mounted branch checkout or runtime. The doctrine set is strong, and public-main repo evidence is stronger than before, but neither should be flattened into claims about files, workflow YAML, emitted proofs, or automation that were not directly surfaced here.
+Because the current session still does not expose a mounted checkout or runtime. The doctrine set is strong, and the document-reported repo-root signal is stronger than zero, but neither should be flattened into claims about current branch files, workflow enforcement, emitted proofs, or automation that were not directly surfaced here.
 
 ### Why keep rollback and correction so close together?
 
@@ -548,13 +553,13 @@ Not only that the mechanism works, but that KFM can attach contracts, fixtures, 
 ## Appendix — verification notes
 
 <details>
-<summary>Open verification questions</summary>
+<summary><strong>Open verification questions</strong></summary>
 
 1. Does `migrations/` already exist in the mounted repo, or is this README introducing the directory?
 2. Which directory is authoritative for machine-checkable schemas: `contracts/`, `schemas/`, or something else?
 3. Which runner or mechanism is actually used for migration-bearing changes?
 4. Are there any live migration packets, or only documentation and placeholders?
-5. Which first-wave schemas and valid or invalid fixtures already exist on disk?
+5. Which first-wave schemas and valid/invalid fixtures already exist on disk?
 6. Which CI checks block promotion for migration-bearing PRs?
 7. What emitted proof objects already exist versus only being documented?
 8. Is there a mounted `EvidenceBundle` resolver and `RuntimeResponseEnvelope` path?
@@ -563,7 +568,7 @@ Not only that the mechanism works, but that KFM can attach contracts, fixtures, 
 </details>
 
 <details>
-<summary>Illustrative migration packet header (PROPOSED)</summary>
+<summary><strong>Illustrative migration packet header (PROPOSED)</strong></summary>
 
 ```yaml
 id: <migration-id>
@@ -574,8 +579,8 @@ derived_scope: <what derived layers must rebuild or warn>
 compatibility_window: <none | bounded window>
 proof_objects:
   - <object-family>
-execution_augmenters:
-  - <spec_hash | run_manifest | run_receipt | ai_receipt | attestation bundle | audit_ref>
+proof_quartet:
+  - <spec_hash | run_receipt | ai_receipt | attestation refs>
 verification:
   - <tests / reports / parity checks>
 rollback: <revert | fail-forward | supersede | withdraw>
@@ -589,22 +594,22 @@ notes:
 </details>
 
 <details>
-<summary>Current repo contradictions this directory should not amplify</summary>
+<summary><strong>Current contradictions this directory should not amplify</strong></summary>
 
-| Contradiction | Why migration authors should care | Practical rule in this README |
+| Contradiction or tension | Why migration authors should care | Practical rule in this README |
 |---|---|---|
-| `contracts/` and `schemas/` both present as schema-facing surfaces | CI can validate one tree while docs or code drift in another | Name the authoritative schema home before claiming machine-safe migration gates |
-| Gatehouse action lanes are visible while `.github/workflows/` and `.github/watchers/` remain README-only on current public main | Reviewers may assume gates exist because the gatehouse looks mature | Never write migration guidance as if merge-blocking YAML already exists unless branch evidence proves it |
-| Proof-object doctrine is richer than emitted proof-object evidence | A strong manual is not the same thing as surfaced runtime or release output | Definition of done must name runnable checks and actual emitted examples, or mark the gap explicitly |
+| `contracts/` and `schemas/` both appear as schema-facing surfaces in the corpus | CI can validate one tree while docs or code drift in another | Name the authoritative schema home before claiming machine-safe migration gates |
+| Proof-object doctrine is richer than directly surfaced emitted proof evidence | A strong manual is not the same thing as surfaced runtime or release output | Definition of done must name runnable checks and actual emitted examples, or mark the gap explicitly |
+| Document-reported repo-root signals are stronger than zero, but still not a mounted checkout | Reviewers may mistake directory plausibility for branch proof | Keep repo-fit guidance specific, but keep current branch claims visibly bounded |
 
 </details>
 
 <details>
-<summary>What should be surfaced next before claiming implementation maturity</summary>
+<summary><strong>What should be surfaced next before claiming implementation maturity</strong></summary>
 
 - current repo tree and module inventory for the branch under review
 - actual `migrations/` inventory
-- current schema directories plus valid or invalid fixtures
+- current schema directories plus valid/invalid fixtures
 - workflow and CI inventory plus required checks
 - deployment descriptors or service manifests
 - one emitted release proof object
