@@ -5,12 +5,12 @@ type: standard
 version: v1
 status: review
 owners: @bartytime4life
-created: <TODO: confirm first-commit date>
-updated: 2026-04-04
+created: 2026-02-21
+updated: 2026-04-12
 policy_label: public
-related: [../README.md, ../workers/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/README.md, ../explorer-web/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../packages/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
+related: [../README.md, ../workers/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/README.md, ../ui/README.md, ../explorer-web/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../packages/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, apps, cli, governance, operator-lane, promotion]
-notes: [Current public main confirms apps/cli exists and is README-only at this path. Owner is derived from public CODEOWNERS coverage for /apps. Executable entrypoint, tests, and deeper CLI-local topology still need active-branch verification.]
+notes: [Current public main directly shows apps/cli with README.md only. Public app-family siblings now visibly include api, explorer-web, governed-api, review-console, ui, and workers. Executable entrypoint, tests, emitted proof objects, and deeper CLI-local topology still need active-branch verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM CLI
@@ -24,20 +24,20 @@ Governed operator-lane boundary for local tooling, diagnostics, proof-pack helpe
 | Field | Value |
 |---|---|
 | Path | `apps/cli/README.md` |
-| Repo fit | Child boundary README for `apps/` |
+| Repo fit | Child boundary README for the runtime-facing `apps/` family |
 | Upstream | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
 | CLI-local downstream | **NEEDS VERIFICATION** — no confirmed child CLI lanes are present here yet |
 | Accepted inputs | Release-backed identifiers, artifact refs, migration targets, validation-safe diagnostics, receipt lookup context |
 | Exclusions | Public request handling, hidden publish paths, unattended worker jobs, ad hoc business law, generic utility sprawl |
-| Current public-main signal | `apps/cli/` exists on public `main`; `README.md` is the only confirmed file at this path |
-| Adjacent runtime surfaces | [`../explorer-web/README.md`](../explorer-web/README.md), [`../governed-api/README.md`](../governed-api/README.md), [`../api/README.md`](../api/README.md), [`../review-console/README.md`](../review-console/README.md), [`../workers/README.md`](../workers/README.md) |
-| Evidence boundary | March–April 2026 KFM doctrine plus current public-main repo inspection; local-branch executable depth remains source-bounded |
+| Current public-main signal | `apps/cli/` exists on public `main`; `README.md` is still the only directly confirmed file at this path |
+| Adjacent runtime surfaces | [`../explorer-web/README.md`](../explorer-web/README.md), [`../governed-api/README.md`](../governed-api/README.md), [`../api/README.md`](../api/README.md), [`../review-console/README.md`](../review-console/README.md), [`../ui/README.md`](../ui/README.md), [`../workers/README.md`](../workers/README.md) |
+| Evidence boundary | March–April 2026 KFM doctrine plus current public-main repo inspection and public path-history verification; local-branch executable depth remains source-bounded |
 
 > [!IMPORTANT]
 > Treat this file as a **boundary contract first** and an **implementation index second**. Current public `main` proves that the CLI lane exists, but it does **not** yet prove a checked-in entrypoint, package-manager choice, command inventory, tests, or emitted proof objects under `apps/cli/`.
 
 > [!NOTE]
-> Human-invoked operator work belongs here. Request-time public traffic belongs in governed APIs, and unattended background execution belongs in worker or workflow lanes.
+> Human-invoked operator work belongs here. Request-time public traffic belongs in governed APIs, browser-facing shell ownership belongs in sibling runtime lanes, and unattended background execution belongs in worker or workflow lanes.
 
 ---
 
@@ -80,7 +80,7 @@ Use this README to keep the boundary honest until the active branch proves more.
 
 ## Repo fit
 
-`apps/cli/` sits inside the runtime-facing `apps/` family, so it should behave like an app boundary, not like a generic scripts bucket.
+`apps/cli/` sits inside the runtime-facing `apps/` family, which on current public `main` visibly includes `api/`, `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `ui/`, and `workers/`. It should therefore behave like an app boundary, not like a generic scripts bucket.
 
 ### Boundary-first rule
 
@@ -120,6 +120,7 @@ Use this README to keep the boundary honest until the active branch proves more.
 | [`../explorer-web/README.md`](../explorer-web/README.md) | Browser ownership stays outside CLI. |
 | [`../review-console/README.md`](../review-console/README.md) | Approval, denial, rollback, and correction UI must remain trust-visible rather than buried in commands. |
 | [`../governed-api/README.md`](../governed-api/README.md) and [`../api/README.md`](../api/README.md) | Request-time policy mediation, evidence shaping, and normal client access stay outside CLI. |
+| [`../ui/README.md`](../ui/README.md) | Public-main repo-visible UI placeholder lane remains outside CLI ownership unless the checked-out branch proves a different split. |
 | [`../workers/README.md`](../workers/README.md) | Once work becomes unattended, scheduled, or queue-driven, it belongs there instead of here. |
 
 [Back to top](#kfm-cli)
@@ -162,6 +163,7 @@ The easiest way to weaken this directory is to let it become an operator backdoo
 | Hidden publication without gates | Publication is a governance event, not a side effect. | Release, review, and policy-governed lanes |
 | Durable business law embedded only in scripts | KFM keeps law explicit and inspectable. | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), shared packages |
 | Direct client or store bypasses | Trust membrane rules still apply here. | Governed APIs and promoted artifact paths |
+| Browser-shell composition or placeholder UI-boundary reconciliation | CLI should not silently absorb browser-facing ownership. | [`../explorer-web/README.md`](../explorer-web/README.md) and [`../ui/README.md`](../ui/README.md) |
 | Generic `misc/` or `helpers/` sprawl | Weak ownership and undocumented side effects accumulate fast. | Structured command groups with docs and tests once real code exists |
 
 > [!WARNING]
@@ -177,17 +179,19 @@ The easiest way to weaken this directory is to let it become an operator backdoo
 
 ```text
 apps/
-├─ README.md
+├─ api/
 ├─ cli/
 │  └─ README.md
 ├─ explorer-web/
 ├─ governed-api/
 ├─ review-console/
-└─ workers/
+├─ ui/
+├─ workers/
+└─ README.md
 ```
 
 > [!NOTE]
-> The snapshot above reflects the current public app-family view that is directly visible without claiming deeper sibling inventories.
+> GitHub’s public `apps/` tree currently also shows `apps/.codex/`. This README keeps the snapshot focused on named runtime lanes and the lane-level boundary README because current visible evidence does not establish `.codex/` as a public runtime surface.
 
 ### CLI-local tree
 
@@ -229,7 +233,9 @@ sed -n '1,240p' apps/cli/README.md
 printf '\n== parent apps boundary ==\n'
 sed -n '1,240p' apps/README.md
 
-printf '\n== nearby operator and workflow seams ==\n'
+printf '\n== nearby runtime seams ==\n'
+sed -n '1,220p' apps/api/README.md
+sed -n '1,220p' apps/ui/README.md
 sed -n '1,220p' apps/workers/README.md
 sed -n '1,220p' .github/workflows/README.md
 
@@ -240,7 +246,7 @@ find . -maxdepth 4 \
 
 printf '\n== search for CLI-adjacent vocabulary ==\n'
 grep -RInE '\b(cli|promote|promotion|migrate|migration|receipt|run_receipt|release_manifest|catalog_closure|validate)\b' \
-  apps packages docs contracts policy tests tools scripts .github 2>/dev/null | head -n 200
+  apps packages docs contracts policy tests tools scripts .github pipelines 2>/dev/null | head -n 200
 ```
 
 ### Sanity check before documenting real commands
@@ -258,7 +264,7 @@ If that command returns only `apps/cli/README.md`, keep this README focused on t
 
 ## Usage
 
-Use this file in three modes.
+Use this file in four modes.
 
 ### 1. As a placement guide
 
@@ -266,7 +272,7 @@ Before adding code under `apps/cli/`, verify that the work is truly **human-invo
 
 - reusable domain law for `../../packages/`
 - request-time API logic for `../governed-api/` or `../api/`
-- browser or review UI ownership
+- browser-shell composition or UI-boundary ownership for `../explorer-web/` or `../ui/`
 - unattended background execution for `../workers/`
 
 ### 2. As an onboarding map
@@ -274,6 +280,7 @@ Before adding code under `apps/cli/`, verify that the work is truly **human-invo
 When a contributor asks, “Where should this operator flow live?”, this README should steer them toward the right seam:
 
 - **CLI** if it is human-invoked, explicit, receipted operator work
+- **UI / Explorer shell** if it is browser-facing shell composition or runtime route ownership
 - **Workers** if it is unattended background execution
 - **Governed API** if it is request-time trust mediation
 - **Packages / contracts / policy** if it is reusable law or machine-checkable structure
@@ -290,7 +297,11 @@ Any real CLI lane added here should document:
 - failure posture
 - rollback or correction path
 - neighboring tests and fixtures
-- why the work belongs in CLI rather than workers or API
+- why the work belongs in CLI rather than workers, API, or browser shells
+
+### 4. As a drift detector
+
+Use this README to catch repo-shape drift early. When `apps/README.md` changes, or when sibling runtime lanes such as `apps/api/` or `apps/ui/` move materially, this file should be re-read so it does not keep routing contributors with stale boundary assumptions.
 
 ### Command responsibilities once code lands
 
@@ -324,8 +335,9 @@ flowchart LR
     H --> I[Governed review / publish surfaces]
 
     J[apps/governed-api or apps/api] -. request-time mediation stays there .-> B
-    K[apps/workers] -. unattended background execution stays there .-> B
-    L[Canonical stores and promoted artifacts] -. crossed through governed seams, not hidden CLI shortcuts .-> I
+    K[apps/ui or apps/explorer-web] -. browser-facing shell ownership stays there .-> B
+    L[apps/workers] -. unattended background execution stays there .-> B
+    M[Canonical stores and promoted artifacts] -. crossed through governed seams, not hidden CLI shortcuts .-> I
 ```
 
 ### Reading rule for the diagram
@@ -343,7 +355,8 @@ flowchart LR
 | `apps/cli/` | Present | Named operator lane is real on current public `main` |
 | `apps/cli/README.md` | Present | Boundary doc exists and should stay truthful about what is not yet proven |
 | Other files under `apps/cli/` | None confirmed on public `main` | Do not invent entrypoints, flags, fixtures, or tests |
-| `apps/README.md` | Present | Parent runtime boundary already reserves room for a CLI / operator lane |
+| `apps/README.md` | Present | Parent runtime boundary already reserves room for CLI, API, UI, explorer, review, and worker lanes |
+| `apps/ui/README.md` | Present | Repo-visible UI placeholder exists, but it does not transfer browser-shell ownership into CLI |
 | `../../.github/workflows/README.md` | Present | Public workflow-doc context exists, but that is not the same thing as proven CLI automation |
 
 ### Proof objects a CLI lane should respect
@@ -365,11 +378,12 @@ flowchart LR
 
 ### Definition of done before merge
 
-- [ ] Confirm whether the active branch still leaves `apps/cli/` README-only.
-- [ ] Replace the meta-block placeholder `doc_id` and confirm the first-commit date.
+- [ ] Replace the meta-block placeholder `doc_id`.
+- [ ] Keep sibling references aligned with `apps/README.md` whenever the public `apps/` family changes.
 - [ ] If a real entrypoint now exists, replace the verification-first quickstart with actual install/help commands.
 - [ ] Confirm whether CLI-local tests live under `apps/cli/`, `../../tests/`, or both.
 - [ ] Confirm whether receipt or proof-pack helpers live here, in `../../packages/`, or in `../../tools/`.
+- [ ] Recheck whether `apps/ui/` stays placeholder-only or changes enough that CLI routing language should move with it.
 - [ ] Add real badge targets only after CI or release endpoints are verified.
 - [ ] Keep any documented command from implying direct client/public access or silent publish behavior.
 
@@ -380,6 +394,7 @@ flowchart LR
 - [ ] Release-significant operations emit or reference receipts and reviewable artifacts.
 - [ ] Migration paths carry rollback notes or correction references.
 - [ ] Reusable law stays in shared packages, contracts, schemas, or policy rather than drifting into CLI-only logic.
+- [ ] Browser-facing shell ownership and API naming claims are not upgraded from README context into runtime fact without branch-local proof.
 
 ---
 
@@ -387,11 +402,15 @@ flowchart LR
 
 ### Is `apps/cli/` confirmed on current public `main`?
 
-Yes. The path exists, and the public directory view confirms a `README.md` at this location.
+Yes. The path exists, and public path history confirms that this README lane begins on current public history from 2026-02-21.
 
 ### Is there a confirmed executable under `apps/cli/` right now?
 
 Not on the current public-main evidence reviewed for this revision. The path is real, but the CLI-local inventory is still README-only.
+
+### Does current public `main` also expose `apps/ui/`?
+
+Yes. It is visible as a sibling path, but its public-main state is also README-only, so it should not be used as proof that browser-shell ownership has been fully reassigned there.
 
 ### Does CLI replace governed API or workers?
 
@@ -414,22 +433,22 @@ Turning `apps/cli/` into an operator backdoor that can bypass policy, skip recei
 
 ### Confirm on the exact branch before expanding this README
 
-- Real executable entrypoint name
-- Runtime / package-manager truth
-- Installed command groups or subcommands
-- Whether app-local tests or fixtures exist
-- Whether any CLI-local docs beyond this README exist
-- Whether `apps/governed-api/` or `apps/api/` is the final canonical neighbor name for outward API authority
-- Whether proof-pack helpers live here or in shared packages/tools
+- real executable entrypoint name
+- runtime / package-manager truth
+- installed command groups or subcommands
+- whether app-local tests or fixtures exist
+- whether any CLI-local docs beyond this README exist
+- whether `apps/governed-api/` or `apps/api/` is the final canonical neighbor name for outward API authority
+- whether `apps/ui/` stays placeholder-only or starts carrying concrete runtime ownership that should change CLI routing language
+- whether proof-pack helpers live here or in shared packages/tools
 
 ### Safe replacement targets
 
 Replace these first when the active branch proves them:
 
 - `<TODO-UUID>`
-- `<TODO: confirm first-commit date>`
-- Any future command examples
-- Any future CLI-local tree entries beyond `README.md`
+- any future command examples
+- any future CLI-local tree entries beyond `README.md`
 
 </details>
 
