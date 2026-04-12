@@ -10,40 +10,44 @@ updated: NEEDS VERIFICATION
 policy_label: NEEDS VERIFICATION
 related: [../README.md, ./governance/, ./runbooks/, ./standards/, ./templates/]
 tags: [kfm, docs, documentation, governance, runbooks, standards, templates]
-notes: [Current session verified a mounted repository checkout. Directory shape is confirmed; many per-file metadata placeholders still require steward verification before merge.]
+notes: [Current session evidence was PDF-rich rather than a directly surfaced repo tree; reconcile ./governance/ with any deeper ./standards/governance/ layout before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # docs
 
-Governed documentation index for Kansas Frontier Matrix (KFM): doctrine, architecture, governance, runbooks, templates, and adjacent documentation surfaces that keep the system inspectable.
+Governed documentation index for Kansas Frontier Matrix (KFM): doctrine, standards, runbooks, templates, and adjacent documentation surfaces that keep the system inspectable.
 
-> **Status:** experimental — live checkout verified on 2026-04-11  
+> **Status:** experimental — subtree recheck still pending  
 > **Owners:** `NEEDS VERIFICATION` — confirm against `../.github/CODEOWNERS` before commit  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-pdf--corpus+manual--verified-lightgrey) ![trust](https://img.shields.io/badge/posture-docs--as--production-blueviolet) ![checkout](https://img.shields.io/badge/live--checkout-NEEDS_VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Baseline](#baseline-and-doctrinal-anchor) · [Directory tree](#source-reported-docs-footprint) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-pdf--corpus--only-lightgrey) ![trust](https://img.shields.io/badge/posture-docs--as--production-blueviolet) ![tree](https://img.shields.io/badge/tree-live--recheck--pending-lightgrey)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Baseline](#baseline-and-doctrinal-anchor) · [Directory tree](#review-ready-docs-footprint) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> In KFM, documentation is not ornamental packaging. It is a production-facing trust surface that should move with contracts, policy, review, release evidence, and correction material.
+> In KFM, documentation is not ornamental packaging. It is a production-facing trust surface that should move with contracts, policy, review, release evidence, correction material, and operator reality.
 
 ## Scope
 
 `docs/` is the human-readable operating layer for KFM.
 
-Its job is to make doctrine, architecture, standards, review rules, templates, and operator procedures legible **without** pretending that prose is the same thing as enforcement. In KFM terms, `docs/` should clarify the governed system, not become a quiet shortcut around contracts, policy bundles, release gates, or runtime controls.
+Its job is to make doctrine, architecture, standards, review rules, templates, and procedures legible **without** pretending that prose is the same thing as enforcement. In KFM terms, `docs/` should clarify the governed system, not become a quiet shortcut around contracts, policy bundles, release gates, or runtime controls.
 
 ## Repo fit
 
 **Path target:** `docs/README.md`  
-**Path status:** present in mounted checkout (metadata fields still include placeholders)
+**Path status:** target of this revision; exact live subtree still needs direct repo verification
 
-**Upstream neighbors:** [repo root](../README.md) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) · [`../data/`](../data/) · [`../apps/`](../apps/) · [`../packages/`](../packages/) · [`../.github/`](../.github/)
+**Upstream neighbors expected in a standard KFM repo layout:** [repo root](../README.md) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) · [`../data/`](../data/) · [`../apps/`](../apps/) · [`../packages/`](../packages/) · [`../.github/`](../.github/)  
+**Status of those exact relative paths in this session:** `NEEDS VERIFICATION`
 
-**Primary downstream hubs:** [governance](./governance/) · [runbooks](./runbooks/) · [standards](./standards/) · [templates](./templates/)
+**Draft-assumed primary downstream hubs from the existing docs index draft:** [governance](./governance/) · [runbooks](./runbooks/) · [standards](./standards/) · [templates](./templates/)
 
-**Other adjacent documentation families that may exist in the live repo:** [architecture](./architecture/) · [adr](./adr/) · [domains](./domains/) · [research](./research/) · [search](./search/) · [security](./security/)  
-**Status of those families:** `NEEDS VERIFICATION` until a mounted repo tree is inspected
+**Example-supported deeper families visible in attached KFM doc examples:** [standards/governance](./standards/governance/) · [standards/faircare](./standards/faircare/) · [standards/sovereignty](./standards/sovereignty/) · [research](./research/) · [events](./events/)
 
-**Why this directory matters:** it keeps doctrine, review, and operating knowledge close to the same evidence-first, fail-closed system KFM is trying to enforce.
+**Other adjacent documentation families mentioned in the draft or supporting corpus:** [architecture](./architecture/) · [adr](./adr/) · [domains](./domains/) · [search](./search/) · [security](./security/)  
+**Status of all exact descendants above:** `NEEDS VERIFICATION` until a mounted checkout is rechecked
+
+> [!NOTE]
+> The strongest attached signals support a `docs/standards/*` subtree for governance, FAIR+CARE, and sovereignty material. The task draft also expects a top-level `docs/governance/` hub. Keep both visible for review until the mounted repo resolves the actual shape.
 
 ## Accepted inputs
 
@@ -51,42 +55,42 @@ Content that belongs in `docs/` includes:
 
 - directory indexes and README files
 - doctrine, architecture notes, ADRs, and decision packets
-- standards, profiles, metadata guidance, authoring rules, and template-backed documentation protocol material
+- standards, metadata guidance, authoring rules, and template-backed documentation protocols
 - governance, ethics, sovereignty, review, rights, and sensitivity guidance
 - runbooks, rollback steps, correction playbooks, and steward/operator procedures
 - reusable documentation templates
-- research summaries, source summaries, search-method notes, evaluation material, and trust-visible explanatory content
-- diagrams, examples, glossary material, and human-readable schema/profile notes that explain governed behavior already enforced or intended elsewhere in the repo
+- research summaries, source summaries, evaluation material, and explanatory content
+- event summaries, lane overviews, diagrams, glossary material, and human-readable notes that explain governed behavior already enforced or intended elsewhere in the repo
 
 ## Exclusions
 
 The following do **not** belong here as the authoritative source of truth:
 
-- machine-enforced schemas, route contracts, DTO definitions, and controlled vocabularies  
-  → keep in [`../contracts/`](../contracts/) and the owning machine-checked surface
-- policy bundles, decision tests, deny-by-default enforcement logic, and runtime policy evaluation  
+- machine-enforced schemas, DTOs, route contracts, and controlled vocabularies  
+  → keep in [`../contracts/`](../contracts/) or the owning machine-checked surface
+- policy bundles, deny-by-default enforcement logic, and runtime policy evaluation  
   → keep in [`../policy/`](../policy/)
-- canonical data artifacts, source descriptors, receipts, manifests, and release outputs  
+- canonical data artifacts, source descriptors, manifests, receipts, proof packs, and released outputs  
   → keep on the truth path under [`../data/`](../data/) or the owning artifact home
 - runtime code, worker logic, UI implementation, and service behavior  
   → keep in the owning code surface
 - secrets, credentials, signed URLs, or sensitive coordinates  
   → never store those in docs
 - prose that quietly upgrades `UNKNOWN` implementation state into “already running” fact  
-  → keep it explicit, staged, and reviewable
+  → keep the uncertainty explicit and reviewable
 
-> [!NOTE]
-> KFM may place human-readable standards, schema notes, or profile guidance in `docs/`, but explanation must not silently replace the machine-checkable contract or policy artifact that actually governs behavior.
+> [!CAUTION]
+> KFM may place human-readable standards, schema notes, or profile guidance in `docs/`, but explanation must not silently replace the machine-checkable artifact that actually governs behavior.
 
 ## Evidence labels used in this index
 
 | Label | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Directly supported by current-session inspection or directly retrievable KFM source material |
-| **INFERRED** | Strongly implied by repeated KFM doctrine or architecture logic, but not directly re-opened as live repo reality |
-| **PROPOSED** | Added here as a repo-native organization, wording, or review improvement |
+| **CONFIRMED** | Directly supported by attached KFM documents or explicit current-session evidence |
+| **INFERRED** | Strongly implied by repeated KFM doctrine or example-backed doc patterns, but not reverified as mounted repo fact |
+| **PROPOSED** | Recommended wording, organization, or next-step packaging that fits the corpus but is not proven implementation |
 | **UNKNOWN** | Not supported strongly enough in this session to present as current repo fact |
-| **NEEDS VERIFICATION** | Exact live path, owner, date, label, related link, or implementation linkage should be checked before merge |
+| **NEEDS VERIFICATION** | Exact live path, owner, date, label, or implementation linkage should be checked before merge |
 
 ## Current evidence boundary
 
@@ -94,48 +98,56 @@ This index is intentionally explicit about what the current session **did** and 
 
 | Observation | Status | Why it changes this README |
 | --- | --- | --- |
-| The directly visible mounted workspace exposed PDFs, not a mounted KFM repository checkout | **CONFIRMED** | Exact subtree contents, CODEOWNERS values, workflow wiring, tests, and file-presence claims remain `NEEDS VERIFICATION` |
-| The strongest directly retrievable KFM doctrinal source in this session treats current-session workspace evidence as PDF-only and keeps unverified implementation details visible as `UNKNOWN` instead of smoothing them into confident prose | **CONFIRMED** | This README should keep certainty narrow and visible |
-| KFM is framed as a governed spatial evidence system rather than a loose pile of maps, reports, summaries, or AI surfaces | **CONFIRMED** | `docs/` should be described as an operational trust surface, not a decorative sidecar |
-| KFM explicitly defines trust-visible surfaces such as Map, Timeline, Dossier, Evidence Drawer, Focus Mode, Review, Compare, and Export | **CONFIRMED** | The docs index should acknowledge that documentation participates in a broader trust-visible system |
-| KFM explicitly separates authoritative truth from derived layers such as graph, search, vector, tile, scene, cache, and summary projections | **CONFIRMED** | This README must not imply that prose or derived summaries outrank the governed truth path |
-| The canonical manual proposes specific `docs/runbooks/*` paths for publication, correction, stale-projection, and rollback guidance, but marks them as proposed artifact work rather than mounted repo fact | **CONFIRMED** | Those paths may be referenced as `PROPOSED` or `NEEDS VERIFICATION`, not as already present |
-| Exact live `docs/` descendants below the first level were not rechecked from a mounted checkout in this session | **NEEDS VERIFICATION** | The tree below should stay conservative and review-ready rather than overconfident |
+| Current-session workspace evidence was PDF-rich rather than a directly surfaced repository tree | **CONFIRMED** | Exact subtree contents, CODEOWNERS values, workflow wiring, tests, and file-presence claims stay `NEEDS VERIFICATION` |
+| The freshest attached working-manual layer is the 11 April 2026 successor working edition, which keeps doctrine, realization guidance, and evidence limits visibly separated | **CONFIRMED** | This README should use that conservative posture rather than claiming “live checkout verified” |
+| KFM is framed as a governed spatial evidence and publication system rather than a loose set of maps, reports, summaries, or model outputs | **CONFIRMED** | `docs/` should be described as an operational trust surface, not a decorative sidecar |
+| Trust-visible shell surfaces include Map, Timeline, Dossier, Story, Evidence Drawer, Focus, Review, Compare, and Export | **CONFIRMED** | The docs index should acknowledge that documentation participates in a wider trust-visible system |
+| The corpus names first-wave proof and contract families such as `SourceDescriptor`, `IngestReceipt`, `ValidationReport`, `DatasetVersion`, `CatalogClosure`, `DecisionEnvelope`, `ReviewRecord`, `ReleaseManifest`, `EvidenceBundle`, `RuntimeResponseEnvelope`, and `CorrectionNotice` | **CONFIRMED** | `docs/` should stay synchronized with proof objects and release/correction behavior rather than drifting into free prose |
+| The canonical manual proposes runbook paths such as `docs/runbooks/publication.md`, `docs/runbooks/correction.md`, `docs/runbooks/stale_projection.md`, and `docs/runbooks/rollback.md` | **CONFIRMED** | Those paths may be referenced as `PROPOSED` or `NEEDS VERIFICATION`, not as already present |
+| Supporting attached doc examples show deeper standards and adjacent-doc families such as `docs/standards/governance/`, `docs/standards/faircare/`, `docs/standards/sovereignty/`, `docs/research/`, and `docs/events/` | **CONFIRMED** | The tree below should keep those families visible while still marking exact live presence as unverified |
+| Exact live `docs/` descendants below the first level were not rechecked from a mounted checkout in this session | **NEEDS VERIFICATION** | The tree below remains review-ready rather than a direct `find docs/` dump |
 
-> [!CAUTION]
-> Treat the tree below as a **review-ready documentation footprint draft**, not as a direct `find docs/` dump from the current checkout.
+> [!WARNING]
+> Treat the tree below as a **review-ready documentation footprint draft**, not as direct proof that the mounted repo already has exactly this shape.
 
 ## Baseline and doctrinal anchor
 
-The strongest directly retrievable doctrinal source in this session is the **KFM Canonical Master Reference Manual (prepared 2026-03-14)**. It explicitly treats KFM as a governed spatial evidence system, establishes a strict authority ladder, warns against hardening unverified repo shape into project fact, and states that the current-session workspace evidence was PDF-only. For this revision, that manual functions as the **baseline document**.
+The nearest attached **working-manual spine** for this revision is the **11 April 2026 successor working edition**. It explicitly builds upward from the 8 April 2026 strengthened working edition and integrates the attached Pass 13 synthesis and the expanded atlas while keeping implementation depth visibly bounded.
 
-Supporting material is therefore layered beneath that baseline:
+The deeper **doctrinal anchor** remains the **March 2026 canonical master reference manual**, especially for authority order, truth posture, trust-visible shell law, and starter contract families.
 
-1. the existing `docs` index draft supplied in this task, which acts as the redesign seed
-2. supporting KFM doctrine referenced by the canonical manual, including interface, verification, atlas, policy/runtime, and contract-surface overlays
-3. source-reported or adjacent path assumptions that still require a mounted checkout before they should be treated as repo fact
+This README therefore follows a layered baseline:
 
-This README therefore behaves as a **governed directory index draft anchored in doctrine plus explicit verification limits**, not as a claim that the live checkout has already been reverified line by line.
+1. the existing `docs` index draft supplied in this task, preserved where it was already strong
+2. the 11 April 2026 successor working edition as the nearest replacement-grade working spine
+3. the March 2026 canonical master manual for authority order, truth posture, trust-visible surfaces, and contract families
+4. the expanded atlas, Pass 13, and attached doc examples as supporting evidence for directory families, lane burdens, and documentation consequences
 
-## Source-reported docs footprint
+That means this file behaves as a **repo-ready docs index draft anchored in doctrine plus explicit verification limits**, not as a claim that the live checkout has already been reverified line by line.
+
+## Review-ready docs footprint
 
 ```text
 docs/
-├── README.md                              # target of this index revision; live presence NEEDS VERIFICATION
-├── governance/                            # primary downstream hub from task input
-├── runbooks/                              # primary downstream hub from task input
-├── standards/                             # primary downstream hub from task input
-├── templates/                             # primary downstream hub from task input
-├── architecture/                          # adjacent family; NEEDS VERIFICATION
-├── adr/                                   # adjacent family; NEEDS VERIFICATION
-├── domains/                               # adjacent family; NEEDS VERIFICATION
-├── research/                              # adjacent family; NEEDS VERIFICATION
-├── search/                                # adjacent family; NEEDS VERIFICATION
-└── security/                              # adjacent family; NEEDS VERIFICATION
+├── README.md                              # target of this revision; live subtree recheck pending
+├── governance/                            # task-supplied hub; mounted presence NEEDS VERIFICATION
+├── runbooks/                              # repeatedly supported family; exact contents NEEDS VERIFICATION
+├── standards/                             # repeatedly supported family; exact contents NEEDS VERIFICATION
+│   ├── governance/                        # example-supported deeper subtree; NEEDS VERIFICATION
+│   ├── faircare/                          # example-supported deeper subtree; NEEDS VERIFICATION
+│   └── sovereignty/                       # example-supported deeper subtree; NEEDS VERIFICATION
+├── templates/                             # task-supplied / example-supported; NEEDS VERIFICATION
+├── research/                              # example-supported family; NEEDS VERIFICATION
+├── events/                                # example-supported family; NEEDS VERIFICATION
+├── architecture/                          # adjacent family from existing draft; NEEDS VERIFICATION
+├── adr/                                   # adjacent family from existing draft; NEEDS VERIFICATION
+├── domains/                               # adjacent family from existing draft; NEEDS VERIFICATION
+├── search/                                # adjacent family from existing draft; NEEDS VERIFICATION
+└── security/                              # adjacent family from existing draft; NEEDS VERIFICATION
 ```
 
 > [!NOTE]
-> The canonical manual also proposes future or backlog-aligned runbook paths such as `docs/runbooks/publication.md`, `docs/runbooks/correction.md`, `docs/runbooks/stale_projection.md`, and `docs/runbooks/rollback.md`. Treat those as **PROPOSED** until the live repo confirms them.
+> If the mounted repo proves only one governance placement—either `docs/governance/` or `docs/standards/governance/`—collapse the other. Until then, leaving both visible is safer than silently choosing the wrong structure.
 
 ## Quickstart
 
@@ -146,38 +158,51 @@ Use a verification-first sequence before editing or expanding `docs/`.
 
 ```bash
 # Inspect the docs subtree first
-find docs -maxdepth 5 -type f | sort
+find docs -maxdepth 5 \( -type d -o -type f \) 2>/dev/null | sort
 
-# Open the directory index and likely core hubs
-sed -n '1,240p' docs/README.md
-find docs/governance docs/runbooks docs/standards docs/templates \
-  -maxdepth 4 -type f 2>/dev/null | sort
+# Open the directory index candidate
+sed -n '1,260p' docs/README.md 2>/dev/null
 
-# Re-check machine-enforced neighbors before documenting behavior as fact
-find contracts schemas policy -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
+# Reconcile governance-path ambiguity and first-wave hubs
+find docs -maxdepth 4 \( \
+  -path 'docs/governance*' -o \
+  -path 'docs/runbooks*' -o \
+  -path 'docs/standards*' -o \
+  -path 'docs/templates*' \
+\) 2>/dev/null | sort
+
+# Recheck adjacent families surfaced by supporting examples or the current draft
+find docs -maxdepth 4 \( \
+  -path 'docs/research*' -o \
+  -path 'docs/events*' -o \
+  -path 'docs/architecture*' -o \
+  -path 'docs/adr*' -o \
+  -path 'docs/domains*' -o \
+  -path 'docs/search*' -o \
+  -path 'docs/security*' \
+\) 2>/dev/null | sort
+
+# Recheck machine-enforced neighbors before documenting behavior as fact
+find contracts schemas policy .github -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
 
 # Confirm repo-level ownership and review boundaries
 sed -n '1,200p' .github/CODEOWNERS 2>/dev/null
-find .github -maxdepth 3 -type f 2>/dev/null | sort
 
-# Search for stable doctrine terms that should not drift between docs and enforcement
-grep -RIn "trust membrane\|EvidenceBundle\|Focus Mode\|authoritative-versus-derived\|fail-closed" \
+# Search for doctrine terms docs should not drift away from
+grep -RIn "Evidence Drawer\|Focus Mode\|run_receipt\|CorrectionNotice\|authoritative-versus-derived\|fail-closed" \
   docs contracts policy schemas 2>/dev/null
-
-# Reconcile the conservative footprint above with the actual checkout
-find docs -maxdepth 5 -type f 2>/dev/null | sort
 ```
 
 ## Usage
 
 ### Read `docs/` in this order
 
-1. Start here to understand the docs boundary, authority posture, and current verification limit.
-2. Read [`./governance/`](./governance/) when a change affects review, rights, ethics, sovereignty, withholding, escalation, or public-release conditions.
-3. Read [`./standards/`](./standards/) when the question is “what must be true?”
+1. Start here to understand the docs boundary, evidence posture, and current verification limit.
+2. Read [`./standards/`](./standards/) and any mounted governance subtrees when the question is “what must be true?” or “what is allowed?”
+3. Read [`./runbooks/`](./runbooks/) when the question is “how do we operate, recover, correct, or rollback safely?”
 4. Read [`./templates/`](./templates/) before creating new governed docs or changing document structure.
-5. Read [`./runbooks/`](./runbooks/) when the question is “how do we operate, recover, or contain this safely?”
-6. Read adjacent families such as [`./architecture/`](./architecture/), [`./adr/`](./adr/), [`./domains/`](./domains/), [`./research/`](./research/), [`./search/`](./search/), or [`./security/`](./security/) only after the owning boundary is clear.
+5. Read [`./research/`](./research/) and [`./events/`](./events/) only as adjacent explanatory surfaces unless the mounted repo shows they have already been promoted into a stronger governed role.
+6. Read [`./governance/`](./governance/) as a separate top-level family only if the mounted repo proves it exists that way; otherwise follow the deeper [`./standards/governance/`](./standards/governance/) layout.
 
 ### Documentation update rule
 
@@ -186,11 +211,11 @@ When a change is behavior-significant, `docs/` should not move alone and should 
 | If you changed... | Re-check alongside docs |
 | --- | --- |
 | public meaning, DTO-visible behavior, or evidence drill-through expectations | contracts, schemas, policy, tests, and release evidence |
-| review or publication gates | governance docs, runbooks, policy bundles, proof-object expectations, and approval paths |
-| authoring patterns or README structure | templates, standards, and neighboring directory indexes |
-| trust-visible UX, shell rules, Evidence Drawer behavior, or Focus outcomes | interface doctrine, example payloads, screenshots or diagrams if owned here |
-| rollback, correction, supersession, or stale-state handling | runbooks, correction materials, release/correction artifacts, and observability joins |
-| source families, lane definitions, or publication burdens | domain/source atlas docs and any linked standards or rights guidance |
+| review, promotion, correction, or rollback behavior | runbooks, policy bundles, release manifests, proof packs, and correction artifacts |
+| trust-visible UX, Evidence Drawer payloads, or Focus outcomes | shell doctrine, runtime response envelopes, examples, and screenshots/flows if owned here |
+| source families, lane burdens, or admissibility language | source descriptors, standards, atlas docs, and rights/sensitivity guidance |
+| authoring patterns or README structure | templates, neighboring directory indexes, and any repo-wide doc protocol |
+| governance path placement (`docs/governance/` vs `docs/standards/governance/`) | mounted subtree, cross-links, and any standards references that assume one layout or the other |
 
 ### Writing rule
 
@@ -200,32 +225,26 @@ Keep explanation downstream of evidence. `docs/` can clarify, constrain, and gui
 
 ```mermaid
 flowchart TD
-    ROOT["repo root"] --> DOCS["docs/<br/>production-facing documentation"]
+    ROOT["repo root"] --> DOCS["docs/<br/>documentation trust surface"]
     ROOT --> CONTRACTS["contracts/ + schemas/<br/>machine-checkable interfaces"]
     ROOT --> POLICY["policy/<br/>executable governance"]
     ROOT --> DATA["data/<br/>truth-path artifacts"]
-    ROOT --> GATE[".github/<br/>review + CI gatehouse"]
+    ROOT --> GH[".github/<br/>review and CI"]
 
-    subgraph D["docs/"]
-        IDX["README / directory indexes"]
-        GOV["governance/"]
-        RUN["runbooks/"]
-        STD["standards/"]
-        TMP["templates/"]
-        ADJ["adjacent families<br/>architecture / adr / domains / research / search / security"]
-    end
+    DOCS --> IDX["README + directory indexes"]
+    DOCS -. mounted shape decides .-> GOV["governance/"]
+    DOCS --> RUN["runbooks/"]
+    DOCS --> STD["standards/"]
+    DOCS --> TMP["templates/"]
+    DOCS --> ADJ["adjacent families<br/>research / events / architecture / adr / domains / search / security"]
 
-    DOCS --> IDX
-    DOCS --> GOV
-    DOCS --> RUN
-    DOCS --> STD
-    DOCS --> TMP
-    DOCS --> ADJ
+    STD --> SG["governance/"]
+    STD --> FC["faircare/"]
+    STD --> SV["sovereignty/"]
 
-    GOV --> POLICY
-    RUN --> GATE
-    STD --> CONTRACTS
-    TMP --> DOCS
+    RUN --> GH
+    STD --> POLICY
+    IDX --> CONTRACTS
     ADJ --> DATA
 ```
 
@@ -236,10 +255,12 @@ flowchart TD
 | Artifact or change | Primary home | Why |
 | --- | --- | --- |
 | Doctrine, invariants, architecture law, authority order | [`./standards/`](./standards/) and adjacent doctrine/architecture docs | These explain what the system claims and why |
-| Governance, ethics, sovereignty, review, rights, and sensitivity handling | [`./governance/`](./governance/) | These decide what may be promoted, withheld, generalized, or denied |
-| Operator procedures, rollback, correction, supersession, and recovery | [`./runbooks/`](./runbooks/) | These make failure and recovery reproducible |
+| Governance, rights, ethics, sovereignty, and review posture | mounted governance subtree (`./governance/` or `./standards/governance/`) | These decide what may be promoted, withheld, generalized, or denied |
+| FAIR+CARE and sovereignty guidance | likely under [`./standards/`](./standards/) subtrees | Attached examples support deeper standards placement for these policy-bearing docs |
+| Operator procedures, rollback, correction, and recovery | [`./runbooks/`](./runbooks/) | These make failure and recovery reproducible |
 | Reusable document scaffolds and authoring protocol | [`./templates/`](./templates/) | These keep documentation consistent and reviewable |
-| Directory-level indexing and cross-links | `docs/README.md` and sibling READMEs | These orient maintainers without outranking enforcement |
+| Research spikes, literature notes, and design studies | [`./research/`](./research/) when present | These stay useful without silently becoming governed contracts |
+| Event summaries and lane-adjacent explanatory docs | [`./events/`](./events/) when present | These can explain domain behavior without replacing contracts or release truth |
 | Machine-enforced schemas, route contracts, reason-code registries | [`../contracts/`](../contracts/) and adjacent machine-checked surfaces | These are machine-checkable interfaces |
 | Policy bundles and policy tests | [`../policy/`](../policy/) | These are executable governance surfaces |
 | Raw/work/processed/catalog/published artifacts, manifests, receipts, proofs | [`../data/`](../data/) or the owning artifact home | These belong on the truth path, not in prose |
@@ -249,33 +270,38 @@ flowchart TD
 | Surface | Primary question | Minimum obligation |
 | --- | --- | --- |
 | `docs/README.md` | Where do I start, and what is verified versus unverified? | Keep the evidence boundary visible |
-| `docs/governance/` | What is allowed, reviewed, withheld, or escalated? | Match fail-closed doctrine and review posture |
+| governance subtree | What is allowed, reviewed, withheld, or escalated? | Match fail-closed doctrine and rights/sensitivity posture |
 | `docs/standards/` | What must be true? | Stay stable, version-aware, and cross-linked to enforcement |
 | `docs/templates/` | How should we author governed docs? | Keep metadata, review posture, and promotion context explicit |
 | `docs/runbooks/` | How do we operate and recover safely? | Include prerequisites, validation, rollback, and resulting artifacts |
-| adjacent families | How do specific lanes, systems, or research seams stay legible? | Keep scope, provenance, and publication burden explicit |
+| `docs/research/` | What is exploratory rather than normative? | Make non-normative status explicit |
+| `docs/events/` | What domain-facing explanation belongs near operational truth? | Keep evidence, dates, and status visible without overstating governance state |
 
 ### Current evidence basis for this index
 
 | Evidence source | What it supports | How this README uses it |
 | --- | --- | --- |
-| direct current-session inspection | mounted filesystem was PDF-only, not a visible repo checkout | keeps live-tree certainty narrow |
-| KFM canonical master manual | authority order, docs-as-trust-surface posture, PDF-only evidence warning, trust-visible surfaces, route families, verification/correction posture | anchors this README’s caution level and structure |
-| task-supplied draft content | local section rhythm, directory-index role, adjacent-path expectations | preserved where it stayed consistent with the evidence boundary |
-| KFM minimal artifact plan | proposed runbook paths and contract-first sequencing | used only as `PROPOSED`, never hardened into mounted repo fact |
+| task-supplied draft content | local section rhythm, initial hub set, and directory-index role | preserved where consistent with the evidence boundary |
+| 11 April 2026 successor working edition | freshest replacement-grade working-manual posture and stronger explicit evidence restraint | sets the caution level and baseline packaging |
+| March 2026 canonical master manual | authority order, trust-visible surfaces, truth-path law, and starter contract families | anchors terminology and operational doctrine |
+| 8 April 2026 working edition | release/correction/runbook synchronization and verification backlog framing | keeps docs tied to correction and rollback consequences |
+| expanded atlas and Pass 13 | lane/source burden logic and current synthesis pressure | keeps docs indexed against domain and source consequences rather than generic “documentation” talk |
+| attached doc examples | deeper standards, research, events, and runbooks families already used in examples | keeps likely docs families visible without claiming mounted tree proof |
 
 ## Task list / Definition of done
 
 Use this checklist before treating `docs/README.md` as ready for commit.
 
 - [ ] Resolve `doc_id`, owners, created date, updated date, and `policy_label`
-- [ ] Verify the live `docs/` subtree from a mounted repo checkout
-- [ ] Confirm whether `./governance/README.md`, `./runbooks/README.md`, `./standards/README.md`, and `./templates/README.md` exist, or keep directory-level links instead
+- [ ] Recheck the live `docs/` subtree from a mounted repo checkout
+- [ ] Confirm whether `docs/governance/` exists as a top-level family, or whether governance lives only under `docs/standards/governance/`
+- [ ] Confirm whether `./runbooks/README.md`, `./standards/README.md`, and `./templates/README.md` exist, or keep links directory-level
+- [ ] Confirm whether `./research/` and `./events/` exist as live families rather than example-only paths
 - [ ] Confirm ownership in `../.github/CODEOWNERS`
-- [ ] Reconcile the conservative tree above with `find docs -maxdepth ...` output from the live repo
-- [ ] Confirm relative links render correctly on GitHub
-- [ ] Re-check whether any human-readable schema/profile notes live under `docs/` and point machine-enforced files to the correct owning surfaces
-- [ ] Confirm whether adjacent families like `docs/architecture/`, `docs/adr/`, `docs/domains/`, `docs/research/`, `docs/search/`, and `docs/security/` exist as live directories
+- [ ] Reconcile the review-ready tree above with `find docs -maxdepth ...` output from the live repo
+- [ ] Verify relative links render correctly on GitHub
+- [ ] Recheck whether human-readable standards already live under `docs/standards/governance/`, `docs/standards/faircare/`, and `docs/standards/sovereignty/`
+- [ ] Confirm whether adjacent families like `docs/architecture/`, `docs/adr/`, `docs/domains/`, `docs/search/`, and `docs/security/` are actually present
 - [ ] Confirm whether proposed runbooks `publication.md`, `correction.md`, `stale_projection.md`, and `rollback.md` already exist under `docs/runbooks/` or remain backlog candidates
 - [ ] Remove or keep every `NEEDS VERIFICATION` marker deliberately — never by accident
 
@@ -283,62 +309,58 @@ Use this checklist before treating `docs/README.md` as ready for commit.
 
 ### Why does this index use so many verification markers?
 
-Because the current session directly verified doctrine-rich PDFs and a PDF-only workspace boundary, not a mounted repo checkout. KFM’s own truth posture prefers visible incompleteness over polished overclaiming.
+Because the current session directly surfaced a PDF-rich corpus, not a mounted repo tree. KFM’s own truth posture prefers visible incompleteness over polished overclaiming.
+
+### Why keep both `./governance/` and `./standards/governance/` visible?
+
+Because the task draft expects a top-level governance hub, while attached KFM doc examples support a deeper `docs/standards/*` subtree. Until the mounted repo resolves the exact layout, hiding one of those paths would create false certainty.
 
 ### Why are several links directory-level instead of file-level?
 
-Because directory roles are supported by the task framing and KFM doctrine, but exact live file presence was not rechecked in a mounted repository tree during this session.
+Because directory roles are supported by the task framing and supporting examples, but exact README presence was not rechecked in a mounted repository tree during this session.
 
 ### Why keep `docs/` distinct from `contracts/`, `policy/`, and data/release artifacts?
 
-Because KFM separates explanation from enforcement and release proof. `docs/` explains, guides, and records; contracts and policy enforce; published artifacts carry outward truth-path evidence.
+Because KFM separates explanation from enforcement and from released truth-path evidence. `docs/` explains, guides, and records; contracts and policy enforce; released artifacts carry outward evidence.
 
 ### Why call docs a production surface?
 
-Because KFM doctrine treats trust-visible explanation, evidence access, correction behavior, and public-facing interpretation as part of the governed system. Stale docs are not cosmetic drift; they are governance drift.
+Because KFM doctrine treats trust-visible explanation, evidence access, correction behavior, and public interpretation as part of the governed system. Stale docs are not cosmetic drift; they are governance drift.
 
 ## Appendix
 
 <details>
-<summary>Directly retained source signals</summary>
+<summary><strong>Directly retained source signals</strong></summary>
 
 | Source signal | How it shaped this README |
 | --- | --- |
-| KFM is a governed spatial evidence system | framed `docs/` as an operational trust surface, not a decorative docs bucket |
-| current-session workspace evidence was PDF-only | kept repo/path certainty narrow and visible |
-| authority order is strict and implementation claims beyond mounted evidence must stay explicit | preserved `CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION` discipline |
-| trust-visible surfaces include Evidence Drawer and Focus Mode | reinforced documentation’s role in trust visibility and evidence drill-through |
-| route families and correction/rollback posture are explicit | kept runbooks and adjacent docs tied to operational accountability |
-| minimal artifact plan proposes specific runbook files | allowed those paths to be referenced only as `PROPOSED` |
+| KFM is a governed spatial evidence and publication system | framed `docs/` as an operational trust surface, not a decorative docs bucket |
+| current-session workspace evidence was PDF-rich rather than a surfaced repo tree | kept repo/path certainty narrow and visible |
+| trust-visible surfaces include Map, Timeline, Story, Evidence Drawer, Focus, Review, Compare, and Export | reinforced documentation’s role in trust visibility and evidence drill-through |
+| typed proof objects and contract families are part of the doctrine now | tied docs to release, correction, and runtime accountability rather than generic prose |
+| canonical manual proposes specific runbook paths for publication, correction, stale projection, and rollback | allowed those paths to stay visible only as `PROPOSED` / `NEEDS VERIFICATION` |
+| supporting doc examples use deeper standards, research, events, and runbooks families | expanded the directory footprint without hardening it into mounted fact |
 
 </details>
 
 <details>
-<summary>Current-session limits that still matter before merge</summary>
+<summary><strong>Current-session limits that still matter before merge</strong></summary>
 
-- The mounted workspace included the repository checkout and was directly inspected.
-- Large portions of the repo tree were directly inspected, but many metadata placeholders and runtime maturity claims remain unverified.
+- No mounted repo tree, schema registry, workflow YAML inventory, tests, deployment manifests, dashboards, or runtime traces were directly surfaced in this session.
 - This index is therefore **review-ready**, not falsely “fully verified.”
-- Any conflicting branch-local reality should still outrank documentation assumptions.
+- Any conflicting mounted-repo reality should outrank path assumptions in this draft.
+- Historical document references to older or alternative file paths should stay historical until reverified.
 
 </details>
 
 <details>
-<summary>Conservative path policy for this draft</summary>
+<summary><strong>Conservative path policy for this draft</strong></summary>
 
-- Directory-level links were favored when exact README presence was not reverified.
-- Adjacent documentation families were kept visible, but marked `NEEDS VERIFICATION` where live-tree proof was absent.
+- Directory-level links were favored where exact README presence was not reverified.
+- Both top-level and deeper governance placements were kept visible where the source set points in both directions.
 - Proposed artifact paths from the canonical manual remain proposed here; they are not silently upgraded into “already exists” repo claims.
+- Adjacent families were included only when they were either present in the supplied draft or supported by attached KFM doc examples.
 
 </details>
 
 [Back to top](#docs)
-
-## Repository operations addenda
-
-The following repo-level planning/verification docs are now tracked under `docs/`:
-
-- [`./REPO_MAP.md`](./REPO_MAP.md)
-- [`./BUILD_PLAN.md`](./BUILD_PLAN.md)
-- [`./VALIDATION_SUMMARY.md`](./VALIDATION_SUMMARY.md)
-- [`./BACKLOG.md`](./BACKLOG.md)
