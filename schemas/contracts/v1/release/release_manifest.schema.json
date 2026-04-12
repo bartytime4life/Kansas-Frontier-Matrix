@@ -1,1 +1,33 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.example/schemas/contracts/v1/release/release_manifest.schema.json",
+  "title": "ReleaseManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema_version",
+    "release_id",
+    "dataset_version_ref",
+    "published_at",
+    "spec_hash",
+    "run_receipt_ref",
+    "attestation_refs"
+  ],
+  "properties": {
+    "kind": { "const": "ReleaseManifest" },
+    "schema_version": { "const": "v1" },
+    "release_id": { "type": "string", "minLength": 1 },
+    "dataset_version_ref": { "type": "string", "minLength": 1 },
+    "published_at": { "type": "string", "format": "date-time" },
+    "spec_hash": { "type": "string", "minLength": 8 },
+    "run_receipt_ref": { "type": "string", "minLength": 1 },
+    "ai_receipt_ref": { "type": "string", "minLength": 1 },
+    "attestation_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

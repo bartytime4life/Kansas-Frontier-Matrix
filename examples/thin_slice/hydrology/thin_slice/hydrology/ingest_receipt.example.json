@@ -1,1 +1,8 @@
-{}
+{
+  "kind": "IngestReceipt",
+  "schema_version": "v1",
+  "receipt_id": "ing.hydrology.2026-04-12.0001",
+  "source_descriptor_ref": "src.hydrology.usgs-nwis.ks-0001",
+  "fetched_at": "2026-04-12T00:05:00Z",
+  "target_stage": "WORK"
+}

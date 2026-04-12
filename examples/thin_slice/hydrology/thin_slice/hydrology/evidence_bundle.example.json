@@ -1,1 +1,9 @@
-{}
+{
+  "kind": "EvidenceBundle",
+  "schema_version": "v1",
+  "evidence_bundle_id": "evb.hydrology.0001",
+  "decision_envelope_ref": "dec.hydrology.0001",
+  "release_manifest_ref": "rel.hydrology.huc12.2026-04-12.v1",
+  "run_receipt_ref": "rr.hydrology.2026-04-12.0001",
+  "attestation_refs": ["att.sigstore.example.0001"]
+}

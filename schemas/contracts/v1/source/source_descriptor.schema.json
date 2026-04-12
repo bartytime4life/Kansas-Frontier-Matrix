@@ -1,1 +1,49 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.example/schemas/contracts/v1/source/source_descriptor.schema.json",
+  "title": "SourceDescriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema_version",
+    "source_id",
+    "source_type",
+    "authority",
+    "access",
+    "lineage"
+  ],
+  "properties": {
+    "kind": { "const": "SourceDescriptor" },
+    "schema_version": { "const": "v1" },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_type": { "type": "string", "enum": ["API", "FILE", "FEED", "SENSOR"] },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "jurisdiction"],
+      "properties": {
+        "owner": { "type": "string", "minLength": 1 },
+        "jurisdiction": { "type": "string", "minLength": 1 }
+      }
+    },
+    "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rights_class", "license"],
+      "properties": {
+        "rights_class": { "type": "string", "enum": ["PUBLIC", "RESTRICTED"] },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "admitted_at"],
+      "properties": {
+        "stage": { "type": "string", "const": "RAW" },
+        "admitted_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

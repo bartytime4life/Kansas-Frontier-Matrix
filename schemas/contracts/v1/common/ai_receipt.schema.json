@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.example/schemas/contracts/v1/common/ai_receipt.schema.json",
+  "title": "AiReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "schema_version", "ai_receipt_id", "model_ref", "generated_at"],
+  "properties": {
+    "kind": { "const": "AiReceipt" },
+    "schema_version": { "const": "v1" },
+    "ai_receipt_id": { "type": "string", "minLength": 1 },
+    "model_ref": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" }
+  }
+}
