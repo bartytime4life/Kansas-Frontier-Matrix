@@ -22,7 +22,7 @@ notes: [Created date preserved from the previously checked-in baseline; updated 
 
 # `.github` README
 
-Repo-side responsibility map for governance, contributor intake, review routing, dependency policy, and control-plane-facing documentation in Kansas Frontier Matrix.
+Repo-side responsibility map for repository-wide governance, contributor intake, review routing, dependency policy, and control-plane-facing documentation in Kansas Frontier Matrix.
 
 > [!NOTE]
 > **Status:** active directory · draft README revision  
@@ -354,9 +354,9 @@ flowchart LR
 | [`./CODEOWNERS`](./CODEOWNERS) | **CONFIRMED** | executable review routing | changes approval scope and separation of duty |
 | [`./PULL_REQUEST_TEMPLATE.md`](./PULL_REQUEST_TEMPLATE.md) | **CONFIRMED** | structured PR intake with truth labels, evidence links, doctrine impact, and validation structure | weak PR prompts degrade review quality |
 | [`./ISSUE_TEMPLATE/README.md`](./ISSUE_TEMPLATE/README.md) | **CONFIRMED** | issue-intake guidance | contributor intake should stay governed rather than improvised |
-| [`./ISSUE_TEMPLATE/config.yml`](./ISSUE_TEMPLATE/config.yml) | **CONFIRMED current file presence** | issue chooser config path | was an empty placeholder in the last verified snapshot |
+| [`./ISSUE_TEMPLATE/config.yml`](./ISSUE_TEMPLATE/config.yml) | **CONFIRMED documented file presence** | issue chooser config path | was an empty placeholder in the last verified snapshot |
 | [`./actions/`](./actions/) | **CONFIRMED** | repo-local reusable GitHub Actions scaffolding | local actions can hide trust-bearing behavior if undocumented |
-| [`./actions/action.yml`](./actions/action.yml) | **CONFIRMED current file presence** | root action manifest path | was an empty placeholder in the last verified snapshot |
+| [`./actions/action.yml`](./actions/action.yml) | **CONFIRMED documented file presence** | root action manifest path | was an empty placeholder in the last verified snapshot |
 | [`./watchers/README.md`](./watchers/README.md) | **CONFIRMED** | watcher lane with emit-only, derived-surface rules | watcher surfaces must not bypass governed publication |
 | [`./workflows/README.md`](./workflows/README.md) | **CONFIRMED** | workflow documentation lane | docs can drift away from real workflow inventory |
 | `./workflows/*.yml|*.yaml` | **CONFIRMED last verified absence** | checked-in workflow definitions | none were documented in the last verified snapshot |
@@ -420,7 +420,7 @@ Not beyond the issue-template directory itself. The last verified snapshot docum
 
 ### Who owns `.github/` in this README?
 
-The documented baseline assigns the global fallback to `@bartytime4life` and explicitly assigns `/.github/` plus `/.github/CODEOWNERS` to `@bartytime4life`. Reconfirm against the live branch before relying on it.
+The documented baseline assigns the global fallback to `@bartytime4life` and explicitly assigns `/.github/` plus `/.github/CODEOWNERS` to `@bartytime4life`. Treat that as snapshot evidence until the live branch is rechecked.
 
 ### Does the documented snapshot expose pipeline lanes outside `.github/`?
 
