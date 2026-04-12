@@ -6,7 +6,7 @@ version: v1
 status: review
 owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS-VERIFICATION>
-updated: 2026-04-04
+updated: 2026-04-12
 policy_label: <NEEDS-VERIFICATION>
 related: [../README.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../apps/, ../packages/, ../pipelines/, ../scripts/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ./attest/README.md, ./catalog/README.md, ./ci/README.md, ./diff/README.md, ./docs/README.md, ./probes/README.md, ./validators/README.md]
 tags: [kfm, tools, validation, reproducibility, ci]
@@ -37,6 +37,8 @@ Governed helper surface for validation, probes, diffs, attestation, catalog QA, 
 
 That includes validators, link and structure checkers, diff helpers, metadata cross-checkers, catalog QA helpers, proof-pack and attestation helpers, probes, and CI-facing CLIs that help the governed truth path stay auditable.
 
+In the April 2026 KFM manuals, this helper layer matters because doctrine is no longer supposed to remain prose-only. KFM increasingly expects its governing rules to become machine-checkable objects and reviewable artifacts: source descriptors, receipts, validation reports, manifests, evidence bundles, runtime envelopes, review records, and correction artifacts. `tools/` is where many of the narrow, reusable utilities for inspecting and enforcing those objects logically belong.
+
 What belongs here:
 
 - reusable validators for contracts, catalogs, manifests, receipts, proof packs, and promotion-readiness checks
@@ -53,6 +55,19 @@ What this README does:
 - distinguishes the parent lane from its current child families
 - separates `tools/` from adjacent lanes such as `apps/`, `packages/`, `pipelines/`, `scripts/`, `tests/`, `contracts/`, `schemas/`, and `policy/`
 - preserves KFM’s truth posture by marking what is **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**
+
+### Common proof-bearing objects this lane most often touches
+
+| Object family | Most likely helper lanes | Why it shows up here |
+| --- | --- | --- |
+| `SourceDescriptor` | `validators/`, `catalog/`, `probes/` | intake contracts, fetch assumptions, and source metadata cross-checks |
+| `IngestReceipt` / `ValidationReport` | `validators/`, `ci/`, `attest/` | stable machine-readable proof that a run occurred and what checks fired |
+| `ReleaseManifest` / `ReleaseProofPack` | `attest/`, `ci/`, `diff/` | promotion review needs inspectable release bundles, digests, and rollback posture |
+| `EvidenceBundle` / `RuntimeResponseEnvelope` | `validators/`, `catalog/`, `docs/` | outward claims, Evidence Drawer payloads, and answer surfaces need supportable object shapes |
+| `ReviewRecord` / `CorrectionNotice` | `diff/`, `attest/`, `ci/` | rollback, supersession, and reviewer-visible state changes need explicit artifacts |
+
+> [!NOTE]
+> The table above names **doctrine-backed contract touchpoints**, not proof that every current child lane already ships concrete implementations on public `main`.
 
 ### Evidence markers used in this README
 
