@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <NEEDS CREATION DATE VERIFICATION>
-updated: 2026-04-02
+updated: 2026-04-12
 policy_label: <NEEDS POLICY LABEL VERIFICATION>
 related: [../README.md, ../../README.md, ../../infra/README.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, deployment, configs, review-needed]
-notes: [Owner comes from current public /configs/ CODEOWNERS fallback; public main confirms configs/deployment/ exists and currently contains README.md only; visible public path history shows activity on 2026-03-15, 2026-03-21, 2026-03-22, and 2026-04-02; created date and policy label still need verification.]
+notes: [Current public main confirms configs/deployment/ exists and currently contains README.md only; parent configs/ is now visibly populated with README.md, env.schema.json, and sibling child lanes env/, observability/, security/, and ui/; owner coverage is visible at the broader /configs/ level in public CODEOWNERS context; UUID, created date, and policy label still need direct verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Deployment Configuration
@@ -21,6 +21,7 @@ Deployment-facing configuration guidance for KFM rollout parameters, environment
 > **Owners:** `@bartytime4life` *(via current public `/configs/` CODEOWNERS coverage; no narrower `/configs/deployment/` rule was verified on public `main`)*  
 > **Path:** `configs/deployment/README.md`  
 > **Current public tree state:** `README.md` only on `main`  
+> **Current public parent-lane context:** `configs/` is visibly present on public `main` with `README.md`, `env.schema.json`, and sibling child lanes `env/`, `observability/`, `security/`, and `ui/`  
 > **Current public history signal:** visible path history shows activity on `2026-03-15`, `2026-03-21`, `2026-03-22`, and `2026-04-02`; the clean creation date for the current incarnation still needs verification  
 > **Repo fit:** child lane of [`../README.md`](../README.md), configuration-facing companion to [`../../infra/`](../../infra/), not a replacement for it
 
@@ -41,6 +42,8 @@ Deployment-facing configuration guidance for KFM rollout parameters, environment
 ## Scope
 
 This directory is the review surface for **deployment-facing configuration**: the settings, profiles, bindings, and rollout notes that shape how KFM is wired into an environment without turning configuration files into the hidden home of policy law, contract law, or business logic.
+
+This lane now sits inside a visibly populated public `configs/` family rather than a hypothetical future subtree. That matters because `deployment/` is only one sibling lane among `env/`, `observability/`, `security/`, and `ui/`. Deployment config should therefore stay narrow: it parameterizes environment behavior, but it does not absorb the rest of repo-visible configuration or dissolve stronger law-bearing surfaces into convenience YAML.
 
 In KFM terms, this lane should help contributors answer four practical questions:
 
@@ -70,6 +73,7 @@ In KFM terms, this lane should help contributors answer four practical questions
 | Item | Status | Role |
 |---|---|---|
 | [`../README.md`](../README.md) | **CONFIRMED** | Parent `configs/` contract for repo-visible, non-secret configuration |
+| `configs/` current public snapshot | **CONFIRMED** | Public `main` now visibly includes `README.md`, `env.schema.json`, and child lanes `deployment/`, `env/`, `observability/`, `security/`, and `ui/` |
 | `configs/deployment/` | **CONFIRMED** | Deployment-facing child lane present on current public `main` |
 | current public inventory | **CONFIRMED** | `README.md` only |
 | [`../../infra/`](../../infra/) | **CONFIRMED** | Deployment and operations lane for infrastructure, overlays, runtime bring-up, monitoring, restore, and rollback |
@@ -156,6 +160,24 @@ configs/
     └── README.md
 ```
 
+### Current verified parent-lane context *(public `main`)*
+
+```text
+configs/
+├── deployment/
+│   └── README.md
+├── env/
+│   └── README.md
+├── observability/
+│   └── README.md
+├── security/
+│   └── README.md
+├── ui/
+│   └── README.md
+├── README.md
+└── env.schema.json
+```
+
 ### Documented growth shape *(PROPOSED)*
 
 ```text
@@ -189,25 +211,29 @@ configs/
 Use this sequence when adding or changing deployment-facing configuration.
 
 ```bash
-# 1) inspect the current lane in the working checkout
+# 1) inspect the current lane and its parent config context
 ls -la configs/deployment
 find configs/deployment -maxdepth 2 -type f | sort
+find configs -maxdepth 2 -type f | sort
 
-# 2) reread the parent and companion lane contracts
-sed -n '1,220p' configs/README.md
+# 2) reread the parent config contract and current ownership boundary
+sed -n '1,260p' configs/README.md
+sed -n '1,220p' .github/CODEOWNERS
+
+# 3) reread the companion lanes that define stronger authority surfaces
 sed -n '1,240p' infra/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' contracts/README.md
 sed -n '1,220p' schemas/README.md
 sed -n '1,220p' tests/README.md
 ls -la .github/workflows
-sed -n '1,240p' .github/workflows/README.md
+sed -n '1,260p' .github/workflows/README.md
 
-# 3) pressure-test whether the config has a named consumer and real references
+# 4) pressure-test whether the config has a named consumer and real references
 grep -RIn "configs/deployment\|profile_id\|service_ref\|workflow_ref\|rollback_ref" \
   apps packages infra tests tools scripts 2>/dev/null || true
 
-# 4) inspect path history before inventing filenames, dates, or responsibilities
+# 5) inspect path history before inventing filenames, dates, or responsibilities
 git log --name-status -- configs/deployment
 ```
 
@@ -265,8 +291,12 @@ git log --name-status -- configs/deployment
 
 ```mermaid
 flowchart LR
-    C[configs/deployment]
     CR[configs/README.md]
+    C[configs/deployment]
+    ES[configs/env]
+    O[configs/observability]
+    S[configs/security]
+    U[configs/ui]
     W[.github/workflows]
     I[infra/]
     A[apps/* and packages/*]
@@ -276,6 +306,11 @@ flowchart LR
     R[deployed runtime]
 
     CR --> C
+    CR --> ES
+    CR --> O
+    CR --> S
+    CR --> U
+
     C --> A
     C --> W
     C --> I
@@ -289,6 +324,7 @@ flowchart LR
 ### Read the diagram this way
 
 - `configs/deployment/` should feed **consumer runtimes**, **workflow references**, and **infra references**
+- the wider `configs/` family now makes sibling concerns visible, but it does **not** collapse them into one lane
 - `policy/` and `contracts/ + schemas/` remain external authority surfaces
 - `tests/` and workflows verify the change
 - deployment config helps wire the runtime, but it does **not** become publication truth by itself
@@ -350,6 +386,7 @@ flowchart LR
 
 - [ ] Path ownership is set and visible
 - [ ] Current public-tree snapshot is still accurate, or intentionally updated in the same PR
+- [ ] Parent `configs/` snapshot and `/configs/` CODEOWNERS coverage were rechecked in the merge branch
 - [ ] Every config file names a runtime consumer
 - [ ] No live secrets are committed
 - [ ] Workflow references point to real files or are labeled **NEEDS VERIFICATION**
