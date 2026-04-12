@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../README.md, ../.github/README.md, ../.github/workflows/README.md, ../pipelines/README.md, ../apps/, ../contracts/, ../schemas/, ../policy/, ../data/, ../data/registry/README.md, ../docs/, ../infra/, ../tests/, ../tools/, ../scripts/, ./catalog/, ./domain/, ./evidence/, ./genealogy_ingest/, ./indexers/, ./ingest/, ./policy/]
+related: [../README.md, ../.github/README.md, ../.github/workflows/README.md, ../pipelines/README.md, ../apps/, ../web/, ../contracts/, ../schemas/, ../policy/, ../data/, ../data/registry/README.md, ../docs/, ../infra/, ../tests/, ../tools/, ../scripts/, ./catalog/, ./domain/, ./evidence/, ./genealogy_ingest/, ./indexers/, ./ingest/, ./policy/]
 tags: [kfm, packages, readme]
-notes: [doc_id and repo-side created/updated dates need verification, owner verified against ../.github/CODEOWNERS on current public main, current public main confirms packages/ plus catalog/, domain/, evidence/, genealogy_ingest/, indexers/, ingest/, and policy/ child package surfaces, genealogy_ingest README currently references starter files under pipelines/genealogy_ingest while the public pipelines/ index does not currently expose that lane, so path alignment needs verification]
+notes: [doc_id and repo-side created/updated dates need verification, owner verified against ../.github/CODEOWNERS on current public main, current public main confirms packages/ plus catalog/, domain/, evidence/, genealogy_ingest/, indexers/, ingest/, and policy/ child package surfaces, current public main also confirms ../web/ as a downstream presentation-facing surface relevant to package placement, public-main child package directories are still README-only, genealogy_ingest README currently references starter files under pipelines/genealogy_ingest while the public pipelines/ index does not currently expose that lane, so path alignment needs verification]
 [/KFM_META_BLOCK_V2] -->
 
 # `packages/`
@@ -33,9 +33,9 @@ Shared internal package boundaries for KFM’s governed truth path, evidence res
 | Path | [`packages/README.md`](./README.md) |
 | Audited public tree | `bartytime4life/Kansas-Frontier-Matrix@main` |
 | Default branch | `main` |
-| Repo fit | Shared internal module boundary between top-level authority surfaces and deployable [`../apps/`](../apps/) and lane-oriented [`../pipelines/README.md`](../pipelines/README.md) execution surfaces |
-| Current repo evidence | `packages/` exists on public `main`; visible child package surfaces now include `catalog/`, `domain/`, `evidence/`, `genealogy_ingest/`, `indexers/`, `ingest/`, and `policy/` |
-| Truth posture | `CONFIRMED` current public path, visible child package surfaces, and fallback owner · `CONFIRMED` neighboring repo docs and child README surfaces where checked · `UNKNOWN / NEEDS VERIFICATION` deeper package-local code, manifests, tests, fixtures, imports, and runtime wiring beneath most child paths |
+| Repo fit | Shared internal module boundary between top-level authority surfaces and downstream deployable [`../apps/`](../apps/), presentation-facing [`../web/`](../web/), and lane-oriented [`../pipelines/README.md`](../pipelines/README.md) execution surfaces |
+| Current repo evidence | `packages/` exists on public `main`; visible child package surfaces now include `catalog/`, `domain/`, `evidence/`, `genealogy_ingest/`, `indexers/`, `ingest/`, and `policy/`; those child directories are README-only on current public `main`, with `genealogy_ingest/README.md` explicitly documenting a starter lane under `pipelines/genealogy_ingest/` |
+| Truth posture | `CONFIRMED` current public path, visible child package surfaces, README-only public child directories, and fallback owner · `CONFIRMED` neighboring repo docs and child README surfaces where checked · `UNKNOWN / NEEDS VERIFICATION` deeper package-local code, manifests, tests, fixtures, imports, and runtime wiring beneath most child paths |
 | Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq) |
 
 ---
@@ -49,14 +49,14 @@ Shared internal package boundaries for KFM’s governed truth path, evidence res
 > No package should create a hidden client-to-store path, a second policy path, or a shadow truth source.
 
 > [!NOTE]
-> The public package family is no longer perfectly uniform.  
+> The public package family is no longer perfectly uniform, and it is still mostly README-only on public `main`.  
 > The current tree visibly includes a seventh child surface, [`./genealogy_ingest/`](./genealogy_ingest/), and that child README currently frames a starter ingest lane against `pipelines/genealogy_ingest/`. Keep **current path**, **documented target path**, and **actual checked-in implementation** visibly separate until the branch proves they align.
 
 ## Scope
 
-`packages/` holds shared internal libraries and reusable module boundaries used by KFM services, workers, validators, and other governed runtime surfaces.
+`packages/` holds shared internal libraries and reusable module boundaries used by KFM services, workers, validators, governed runtime surfaces, and downstream client-facing layers that still remain subordinate to stronger contract, policy, and evidence authority.
 
-Its job is to keep reusable logic bounded, inspectable, and reviewable without smearing domain rules across deployable apps or quietly relocating authority away from top-level contracts, schemas, policy bundles, governed data artifacts, and trust-visible runtime seams.
+Its job is to keep reusable logic bounded, inspectable, and reviewable without smearing domain rules across deployable apps, web shells, or lane-local execution work, and without quietly relocating authority away from top-level contracts, schemas, policy bundles, governed data artifacts, and trust-visible runtime seams.
 
 In KFM terms, packages should help preserve:
 
@@ -94,6 +94,7 @@ In KFM terms, packages should help preserve:
 
 - [`../.github/workflows/README.md`](../.github/workflows/README.md) — current public workflow lane doc and merge-gate context
 - [`../pipelines/README.md`](../pipelines/README.md) — lane-specific execution surface for fetch / normalize / validate / emit work
+- [`../web/`](../web/) — web-delivered client or presentation surface that should stay downstream of governed contracts, policy, and evidence
 - [`../data/registry/README.md`](../data/registry/README.md) — governed source-registration handoff relevant to shared intake helpers
 - [`../tests/README.md`](../tests/README.md) — verification and fixture posture
 - [`../tools/README.md`](../tools/README.md) — validators and utility tooling
@@ -118,14 +119,16 @@ In KFM terms, packages should help preserve:
 | `genealogy_ingest/README.md` is a substantive child README, not a placeholder pointer | The family is no longer a flat cluster of nearly identical child docs | **CONFIRMED** |
 | `genealogy_ingest/README.md` frames itself against `pipelines/genealogy_ingest/` | Package-path versus pipeline-path ownership needs to stay explicit until the branch actually aligns them | **CONFIRMED** |
 | The current public [`../pipelines/README.md`](../pipelines/README.md) index only exposes `soils/gssurgo-ks/` and `wbd-huc12-watcher/` | Parent-package docs must not silently rewrite a documented tension into a settled path fact | **CONFIRMED** |
+| Current public child package directories remain README-only on `main` | Parent-package docs should keep implementation-depth claims bounded until deeper child files are directly visible | **CONFIRMED** |
+| The current public root README also documents [`../web/`](../web/) as a core repo surface | Package-placement guidance should not imply every downstream runtime or presentation consumer lives only under `apps/` and `pipelines/` | **CONFIRMED** |
 
 ### How this directory fits the repo
 
-`packages/` sits between KFM’s top-level authority surfaces and its deployable or lane-specific execution surfaces. Logic belongs here when it is:
+`packages/` sits between KFM’s top-level authority surfaces and its deployable, presentation-facing, or lane-specific execution surfaces. Logic belongs here when it is:
 
-1. shared across more than one deployable surface, worker, validator, or lane
+1. shared across more than one deployable surface, worker, validator, lane, or presentation-facing client surface
 2. non-deployable on its own
-3. easier to review as a stable internal boundary than as app-local glue
+3. easier to review as a stable internal boundary than as app-local or shell-local glue
 4. subordinate to stronger top-level contract, policy, data, and review authority
 
 ## Accepted inputs
@@ -147,7 +150,7 @@ The following do **not** belong in `packages/`:
 
 | Does **not** belong in `packages/` | Put it here instead |
 |---|---|
-| Deployable HTTP services, workers, CLIs, or web apps | [`../apps/`](../apps/) |
+| Deployable HTTP services, workers, CLIs, web apps, or web-delivered presentation shells | [`../apps/`](../apps/) or [`../web/`](../web/) |
 | Lane-specific execution shells, fetch recipes, or watcher entrypoints whose main job is to run a single pipeline | [`../pipelines/README.md`](../pipelines/README.md), lane-local directories, or [`../scripts/`](../scripts/) |
 | Canonical OpenAPI definitions, JSON Schemas, or shared vocabularies | [`../contracts/`](../contracts/), [`../schemas/`](../schemas/) |
 | Repo-authoritative policy bundles, policy fixtures, or gate definitions | [`../policy/`](../policy/) |
@@ -160,16 +163,16 @@ The following do **not** belong in `packages/`:
 
 | Path | Present on `main` | Current visible state | Reading rule |
 |---|---|---|---|
-| [`./catalog/`](./catalog/) | Yes | Child boundary README surface visible | Use the child README plus this parent contract; deeper implementation still needs branch inspection |
-| [`./domain/`](./domain/) | Yes | Child boundary README surface visible | Same |
-| [`./evidence/`](./evidence/) | Yes | Child boundary README surface visible | Same |
-| [`./genealogy_ingest/`](./genealogy_ingest/) | Yes | Directory is present and its README is substantive, but the README currently frames starter files under `pipelines/genealogy_ingest/` | Keep package-path versus pipeline-path alignment explicit; do not claim settled package-local code ownership until the active branch proves it |
-| [`./indexers/`](./indexers/) | Yes | Child boundary README surface visible | Use the child README plus this parent contract; deeper implementation still needs branch inspection |
-| [`./ingest/`](./ingest/) | Yes | Child boundary README surface visible | Same |
-| [`./policy/`](./policy/) | Yes | Child boundary README surface visible | Same |
+| [`./catalog/`](./catalog/) | Yes | README-only child boundary surface visible on public `main` | Use the child README plus this parent contract; deeper implementation still needs branch inspection |
+| [`./domain/`](./domain/) | Yes | README-only child boundary surface visible on public `main` | Same |
+| [`./evidence/`](./evidence/) | Yes | README-only child boundary surface visible on public `main` | Same |
+| [`./genealogy_ingest/`](./genealogy_ingest/) | Yes | README-only child directory visible on public `main`; its README documents a starter lane under `pipelines/genealogy_ingest/` | Keep package-path versus pipeline-path alignment explicit; do not claim settled package-local code ownership until the active branch proves it |
+| [`./indexers/`](./indexers/) | Yes | README-only child boundary surface visible on public `main` | Same |
+| [`./ingest/`](./ingest/) | Yes | README-only child boundary surface visible on public `main` | Same |
+| [`./policy/`](./policy/) | Yes | README-only child boundary surface visible on public `main` | Same |
 
 > [!TIP]
-> Read the child package family as **README-driven, but not perfectly uniform**.  
+> Read the child package family as **README-driven**, and currently almost entirely **README-only on public `main`**.  
 > Several child READMEs now carry stronger package-local boundary prose, and `genealogy_ingest/` introduces an explicit path-alignment tension that should stay visible until verified.
 
 ## Directory tree
@@ -180,19 +183,19 @@ The following do **not** belong in `packages/`:
 packages/
 ├── README.md
 ├── catalog/
-│   └── README.md            # child boundary README visible
+│   └── README.md            # README-only public surface visible
 ├── domain/
-│   └── README.md            # child boundary README visible
+│   └── README.md            # README-only public surface visible
 ├── evidence/
-│   └── README.md            # child boundary README visible
+│   └── README.md            # README-only public surface visible
 ├── genealogy_ingest/
-│   └── README.md            # child README currently points at pipelines/genealogy_ingest starter path
+│   └── README.md            # README-only public surface; child README points at pipelines/genealogy_ingest starter path
 ├── indexers/
-│   └── README.md            # child boundary README visible
+│   └── README.md            # README-only public surface visible
 ├── ingest/
-│   └── README.md            # child boundary README visible
+│   └── README.md            # README-only public surface visible
 └── policy/
-    └── README.md            # child boundary README visible
+    └── README.md            # README-only public surface visible
 ```
 
 > [!NOTE]
@@ -209,7 +212,7 @@ find packages -maxdepth 2 -name README.md | sort
 find packages -maxdepth 4 -type f | sort
 ```
 
-### 2) Recheck adjacent authority surfaces
+### 2) Recheck adjacent authority and downstream surfaces
 
 ```bash
 sed -n '1,240p' packages/README.md
@@ -223,6 +226,7 @@ sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,240p' data/README.md
 sed -n '1,220p' data/registry/README.md
+ls -la apps web 2>/dev/null || true
 ```
 
 ### 3) Read every visible child package doc before claiming narrower ownership
@@ -265,7 +269,7 @@ Is this shared logic?
 Is it non-deployable on its own?
 Does it preserve the trust membrane?
 Does it avoid replacing top-level contract, policy, or data authority?
-Would more than one app, worker, or lane depend on it?
+Would more than one app, worker, lane, or downstream client surface depend on it?
 ```
 
 If the answer is mostly “no,” it probably should not become a new package.
@@ -284,7 +288,7 @@ Some child READMEs now carry meaningful package-local or starter-lane prose. Tha
 
 The package family now includes both:
 
-- narrow boundary READMEs that mainly define package seams, and
+- narrow, mostly README-only boundary surfaces that mainly define package seams, and
 - at least one child README that documents a more concrete starter lane against another repo path
 
 Do not flatten those into one narrative.
@@ -299,7 +303,7 @@ Packages should depend inward toward stable semantics, not outward toward volati
 
 ### Keep deployable concerns out
 
-Package code may support apps and pipelines, but it should not quietly become an app or lane by accumulating startup behavior, route handlers, auth entrypoints, scheduler ownership, or environment ownership.
+Package code may support apps, pipelines, and web-delivered client surfaces, but it should not quietly become an app, lane, or presentation shell by accumulating startup behavior, route handlers, auth entrypoints, scheduler ownership, or environment ownership.
 
 ### Keep package and pipeline boundaries explicit
 
@@ -340,6 +344,7 @@ flowchart LR
         A2["../pipelines/"]
         A3["../tests/"]
         A4["../tools/"]
+        A5["../web/"]
     end
 
     C1 --> P2
@@ -369,19 +374,19 @@ flowchart LR
 ```
 
 > [!NOTE]
-> The arrows show intended **boundary direction** and one current documentation tension. They do **not** claim a fully verified import graph.
+> The arrows show intended **boundary direction** and one current documentation tension. The `../web/` node is included because the current public root README exposes it as a repo surface, but this diagram still avoids claiming a verified package import graph into that client layer.
 
 ## Package map
 
 | Package | Root-contract reading | Current visible state | Must never do |
 |---|---|---|---|
-| [`./catalog/`](./catalog/) | catalog / triplet construction and validation logic | child boundary README visible | become an ad hoc runtime API surface |
-| [`./domain/`](./domain/) | stable domain vocabulary, invariants, and semantic core | child boundary README visible | own deployable side effects or outer-layer IO |
-| [`./evidence/`](./evidence/) | `EvidenceRef` → `EvidenceBundle` resolution and policy-safe presentation helpers | child boundary README visible | emit uncited or policy-unchecked evidence surfaces |
-| [`./genealogy_ingest/`](./genealogy_ingest/) | genealogy-shaped ingest seam with starter-lane prose | child boundary README visible; current doc path and target starter path are not yet aligned | quietly blur package boundary and lane-specific runtime ownership |
-| [`./indexers/`](./indexers/) | rebuildable search / map / runtime projection builders | child boundary README visible | become authoritative truth or source-of-record |
-| [`./ingest/`](./ingest/) | source intake, normalization, validation, and receipt helpers | child boundary README visible | serve clients directly or bypass lifecycle gates |
-| [`./policy/`](./policy/) | shared internal policy-support logic and adapters | child boundary README visible | replace repo-authoritative [`../policy/`](../policy/) |
+| [`./catalog/`](./catalog/) | catalog / triplet construction and validation logic | README-only child boundary surface visible on public `main` | become an ad hoc runtime API surface |
+| [`./domain/`](./domain/) | stable domain vocabulary, invariants, and semantic core | README-only child boundary surface visible on public `main` | own deployable side effects or outer-layer IO |
+| [`./evidence/`](./evidence/) | `EvidenceRef` → `EvidenceBundle` resolution and policy-safe presentation helpers | README-only child boundary surface visible on public `main` | emit uncited or policy-unchecked evidence surfaces |
+| [`./genealogy_ingest/`](./genealogy_ingest/) | genealogy-shaped ingest seam with starter-lane prose | README-only child directory visible on public `main`; current doc path and target starter path are not yet aligned | quietly blur package boundary and lane-specific runtime ownership |
+| [`./indexers/`](./indexers/) | rebuildable search / map / runtime projection builders | README-only child boundary surface visible on public `main` | become authoritative truth or source-of-record |
+| [`./ingest/`](./ingest/) | source intake, normalization, validation, and receipt helpers | README-only child boundary surface visible on public `main` | serve clients directly or bypass lifecycle gates |
+| [`./policy/`](./policy/) | shared internal policy-support logic and adapters | README-only child boundary surface visible on public `main` | replace repo-authoritative [`../policy/`](../policy/) |
 
 ### Package-adjacent governed objects
 
@@ -447,9 +452,9 @@ When a child package README names another repo path as its concrete starter home
 
 | Create a new package when… | Prefer an existing package or another location when… |
 |---|---|
-| The logic is reused across multiple apps, workers, or lanes | It serves only one deployable app or one lane-local runtime |
+| The logic is reused across multiple apps, workers, lanes, or downstream client surfaces | It serves only one deployable app, one web-facing shell, or one lane-local runtime |
 | The boundary can be named clearly in one sentence | The name would be vague (`common`, `misc`, `utils`) |
-| It owns a coherent semantic layer, helper family, or integration seam | It is mainly environment wiring, startup code, or route glue |
+| It owns a coherent semantic layer, helper family, or integration seam | It is mainly environment wiring, startup code, route glue, or client-shell composition |
 | It can carry its own README, tests, and failure rules | It would only forward imports or hide coupling |
 | It preserves authoritative-versus-derived boundaries | It starts acting like a second source of truth |
 
@@ -458,7 +463,7 @@ When a child package README names another repo path as its concrete starter home
 ### Definition of done for changes under `packages/`
 
 - [ ] The touched package README still matches what the package actually owns
-- [ ] No new deployable entrypoint was added under `packages/`
+- [ ] No new deployable entrypoint or web-delivered shell concern was added under `packages/`
 - [ ] No package-local contract, schema, or policy silently replaced a stronger top-level authority surface
 - [ ] Links to adjacent docs still resolve
 - [ ] Tests or fixtures were added or updated when behavior changed
@@ -468,7 +473,7 @@ When a child package README names another repo path as its concrete starter home
 
 ### Review gates worth applying
 
-- [ ] Can a reviewer tell whether this change belongs in `packages/` instead of `apps/`, `pipelines/`, `contracts/`, `policy/`, or `data/`?
+- [ ] Can a reviewer tell whether this change belongs in `packages/` instead of `apps/`, `web/`, `pipelines/`, `contracts/`, `policy/`, or `data/`?
 - [ ] Does the change preserve the trust membrane?
 - [ ] Is the difference between **current visible state**, **documented target path**, and **intended role** still obvious?
 - [ ] If rights, sensitivity, release, or correction behavior changed, were top-level contract / policy / doc surfaces updated too?
@@ -478,7 +483,7 @@ When a child package README names another repo path as its concrete starter home
 
 ### When should something go in `packages/` instead of `apps/`?
 
-Put it in `packages/` when it is reusable internal logic with no standalone deployment role. If it is an HTTP service, UI surface, worker runtime, or CLI entrypoint, it belongs in `apps/`.
+Put it in `packages/` when it is reusable internal logic with no standalone deployment role. If it is an HTTP service, UI surface, worker runtime, CLI entrypoint, or web-delivered presentation shell, it belongs in `apps/` or `web/`, not here.
 
 ### When should something go in `packages/` instead of `pipelines/`?
 
@@ -535,13 +540,13 @@ Because KFM separates **authoritative policy assets** from **shared internal pol
 
 | Path | Current README footprint |
 |---|---|
-| `packages/catalog/README.md` | substantive child README focused on catalog closure and outward `STAC / DCAT / PROV` consequences |
-| `packages/domain/README.md` | substantive child README focused on stable semantic core and invariant placement |
-| `packages/evidence/README.md` | substantive child README focused on `EvidenceRef` → `EvidenceBundle` resolution and evidence-as-interface reuse |
-| `packages/genealogy_ingest/README.md` | substantive child README focused on genealogy ingest starter behavior, but currently framed against `pipelines/genealogy_ingest/` |
-| `packages/indexers/README.md` | substantive child README focused on rebuildable search, tile, and related runtime projections |
-| `packages/ingest/README.md` | substantive child README focused on governed intake, normalization, validation, and receipt helpers |
-| `packages/policy/README.md` | substantive child README focused on shared internal policy-support behavior and its separation from top-level policy authority |
+| `packages/catalog/README.md` | substantive child README focused on catalog closure and outward `STAC / DCAT / PROV` consequences; child directory is README-only on public `main` |
+| `packages/domain/README.md` | substantive child README focused on stable semantic core and invariant placement; child directory is README-only on public `main` |
+| `packages/evidence/README.md` | substantive child README focused on `EvidenceRef` → `EvidenceBundle` resolution and evidence-as-interface reuse; child directory is README-only on public `main` |
+| `packages/genealogy_ingest/README.md` | substantive child README focused on genealogy ingest starter behavior, but currently framed against `pipelines/genealogy_ingest/`; child directory is README-only on public `main` |
+| `packages/indexers/README.md` | substantive child README focused on rebuildable search, tile, and related runtime projections; child directory is README-only on public `main` |
+| `packages/ingest/README.md` | substantive child README focused on governed intake, normalization, validation, and receipt helpers; child directory is README-only on public `main` |
+| `packages/policy/README.md` | substantive child README focused on shared internal policy-support behavior and its separation from top-level policy authority; child directory is README-only on public `main` |
 
 </details>
 
