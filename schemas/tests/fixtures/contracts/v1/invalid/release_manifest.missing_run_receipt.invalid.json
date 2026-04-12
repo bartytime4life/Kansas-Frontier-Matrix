@@ -1,0 +1,9 @@
+{
+  "kind": "ReleaseManifest",
+  "schema_version": "v1",
+  "release_id": "rel.hydrology.huc12.2026-04-12.v2",
+  "dataset_version_ref": "dv.hydrology.huc12.2026-04-12.v1",
+  "published_at": "2026-04-12T00:25:00Z",
+  "spec_hash": "sha256:4444444444444444",
+  "attestation_refs": ["att.sigstore.example.0002"]
+}

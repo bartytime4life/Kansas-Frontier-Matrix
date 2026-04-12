@@ -1,0 +1,7 @@
+{
+  "kind": "RunReceipt",
+  "schema_version": "v1",
+  "run_receipt_id": "rr.hydrology.2026-04-12.0001",
+  "spec_hash": "sha256:3333333333333333",
+  "generated_at": "2026-04-12T00:15:00Z"
+}

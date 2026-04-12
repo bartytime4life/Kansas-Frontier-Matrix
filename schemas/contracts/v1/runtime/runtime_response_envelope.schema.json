@@ -1,1 +1,32 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.example/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+  "title": "RuntimeResponseEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schema_version",
+    "request_id",
+    "outcome",
+    "decision_envelope_ref",
+    "evidence_bundle_ref",
+    "audit_ref"
+  ],
+  "properties": {
+    "kind": { "const": "RuntimeResponseEnvelope" },
+    "schema_version": { "const": "v1" },
+    "request_id": { "type": "string", "minLength": 1 },
+    "outcome": { "type": "string", "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"] },
+    "answer": { "type": "object" },
+    "decision_envelope_ref": { "type": "string", "minLength": 1 },
+    "evidence_bundle_ref": { "type": "string", "minLength": 1 },
+    "audit_ref": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "ANSWER" } } },
+      "then": { "required": ["answer"] }
+    }
+  ]
+}
