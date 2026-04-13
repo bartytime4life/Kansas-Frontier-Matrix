@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
 tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary, handoff]
-notes: [Updated to reflect render_promotion_review_handoff.py in addition to the promotion-oriented, diff-oriented, and bundle diff-policy renderer thin slice, with explicit thin-slice proof surfaces in tests/ci. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
+notes: [Updated to add an explicit review artifact publication-order note so the tools/ci lane matches the workflow-lane publication sequence for bundle summary, diff summary, diff-policy summary, and promotion review handoff. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -91,6 +91,22 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - reviewer-facing diff summaries
 > - reviewer-facing policy summaries for bundle drift
 > - one composed promotion review handoff document
+>
+> **Preferred review artifact publication sequence**
+>
+> When all four thin-slice promotion review artifacts are published together, prefer this order:
+>
+> 1. `promotion-bundle-summary.md`
+> 2. `promotion-bundle-diff-summary.md`
+> 3. `promotion-bundle-diff-policy-summary.md`
+> 4. `promotion-review-handoff.md`
+>
+> This keeps the review path legible:
+>
+> - first the governed bundle
+> - then the prior/current drift
+> - then the policy interpretation of that drift
+> - then the composed steward-facing conclusion
 >
 > They must not silently redefine policy, promotion law, diff law, or release truth.
 
@@ -449,6 +465,24 @@ It does **not** classify keys itself. That stays in the checked-in policy surfac
 
 It does **not** replace the underlying bundle, diff report, or diff-policy report. It composes them into one steward-facing handoff document.
 
+### Review artifact ordering note
+
+When publishing all current thin-slice promotion review artifacts together, keep the output order stable:
+
+1. `promotion-bundle-summary.md`
+2. `promotion-bundle-diff-summary.md`
+3. `promotion-bundle-diff-policy-summary.md`
+4. `promotion-review-handoff.md`
+
+Why this order works:
+
+- the reviewer sees the governed bundle first
+- then the prior/current change surface
+- then the policy interpretation of those changes
+- then the composed final handoff
+
+That sequence matches the workflow-lane guidance and helps prevent the final handoff document from being mistaken for the authoritative machine source.
+
 ---
 
 ## Diagram
@@ -538,6 +572,7 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 - [ ] add direct integration examples for `stable_diff.py` caller flows
 - [ ] add direct integration examples for bundle diff-policy reviewer flows
 - [ ] add direct integration examples for composed review handoff flows
+- [ ] keep review artifact publication order aligned with `.github/workflows/README.md`
 - [ ] add promotion-bundle-specific diff summary wording if needed
 - [ ] add optional compact mode for PR comment rendering
 - [ ] add machine-readable companion output for the review handoff
@@ -587,6 +622,10 @@ Yes. That is now also part of the current thin slice. But the checked-in policy 
 ### Can `tools/ci/` compose one reviewer handoff document from several machine artifacts?
 
 Yes. That is now part of the current thin slice. But the composed handoff is a reviewer convenience artifact, not a replacement for the bundle, diff, or diff-policy records themselves.
+
+### Why document publication order here too?
+
+Because the order is part of reviewer ergonomics. Keeping the renderer lane and the workflow lane aligned reduces confusion and preserves the distinction between underlying machine artifacts and the final composed steward-facing document.
 
 [Back to top](#ci)
 
@@ -758,6 +797,27 @@ and emit:
 - one reviewer-facing conclusion block
 
 That is still a rendering concern, not publication authority.
+
+</details>
+
+<details>
+<summary>Illustrative publication order rationale</summary>
+
+When all four thin-slice promotion review artifacts are published together:
+
+1. `promotion-bundle-summary.md`
+2. `promotion-bundle-diff-summary.md`
+3. `promotion-bundle-diff-policy-summary.md`
+4. `promotion-review-handoff.md`
+
+the reviewer sees the evidence chain in the same order the trust story develops:
+
+- what the bundle is
+- how it differs from the prior state
+- how policy interprets that difference
+- what the composed steward-facing conclusion is
+
+That ordering is review ergonomics, not new authority.
 
 </details>
 
