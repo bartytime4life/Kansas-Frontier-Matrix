@@ -25,6 +25,43 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > [!IMPORTANT]
 > This document defines both a **validator contract** and the current **executable thin-slice surface** for promotion validation. It does **not** by itself prove that all mounted paths, workflows, schemas, or merge-blocking integrations are present on the active branch. Exact executable paths, schema locations, and enforcement posture remain **NEEDS VERIFICATION** where not directly confirmed.
 
+> [!TIP]
+> **Current executable snapshot (thin slice)**  
+> The current documented thin slice for this lane includes the following executable and contract-bearing surfaces:
+>
+> **Core gate execution**
+> - `tools/validators/promotion_gate/prepare_candidate_fixture.py`
+> - `tools/validators/promotion_gate/promotion_gate.py`
+> - `tools/validators/promotion_gate/validate_decision_envelope.py`
+>
+> **Derived trust objects**
+> - `tools/validators/promotion_gate/write_promotion_record.py`
+> - `tools/validators/promotion_gate/validate_promotion_record.py`
+> - `tools/validators/promotion_gate/emit_promotion_prov.py`
+> - `tools/validators/promotion_gate/validate_promotion_prov.py`
+> - `tools/validators/promotion_gate/write_promotion_bundle.py`
+> - `tools/validators/promotion_gate/validate_promotion_bundle.py`
+>
+> **Reviewer / auditor outputs**
+> - `tools/ci/render_promotion_summary.py`
+> - `tools/ci/render_promotion_bundle_summary.py`
+>
+> **Attestation helpers**
+> - `tools/attest/sign_decision_envelope.py`
+> - `tools/attest/verify_decision_envelope.py`
+>
+> **Policy and schema surfaces**
+> - `tools/validators/promotion_gate/policies/*.rego`
+> - `schemas/promotion/decision-envelope.schema.json`
+> - `schemas/promotion/promotion-record.schema.json`
+> - `schemas/promotion/promotion-prov.schema.json`
+> - `schemas/promotion/promotion-bundle.schema.json`
+>
+> **Thin-slice tests**
+> - `tests/validators/test_promotion_gate_e2e.py`
+>
+> Keep this block synchronized with the mounted implementation as additional scripts, schemas, or trust objects land.
+
 ---
 
 ## Scope
