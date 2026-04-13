@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
 tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary]
-notes: [Updated to reflect render_bundle_diff_policy_summary.py in addition to the promotion-oriented and diff-oriented renderer thin slice. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
+notes: [Updated to reflect render_bundle_diff_policy_summary.py in addition to the promotion-oriented and diff-oriented renderer thin slice, with explicit thin-slice proof surfaces in tests/ci. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -69,8 +69,8 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > Expected proof surfaces:
 >
 > - `tests/ci/test_render_diff_summary.py`
-> - renderer tests for promotion summaries and bundle summaries where mounted
-> - tests for `render_bundle_diff_policy_summary.py` where mounted
+> - `tests/ci/test_render_bundle_diff_policy_summary.py`
+> - promotion-summary and promotion-bundle-summary proof surfaces should be added or reverified separately if not already mounted
 >
 > These helpers are intended to render already-governed outputs into:
 >
@@ -202,7 +202,8 @@ Do **not** use this lane when the job is to:
 | Promotion Gate documentation names `render_promotion_summary.py` and `render_promotion_bundle_summary.py` as thin-slice CI surfaces | **CONFIRMED via adjacent documentation** | This lane has concrete promotion renderer identities to document. |
 | `tools/ci/render_diff_summary.py` is the current diff-oriented thin-slice executable helper | **CONFIRMED** | This lane documents a concrete diff renderer in addition to promotion renderers. |
 | `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | The diff renderer lands with explicit test coverage. |
-| `tools/ci/render_bundle_diff_policy_summary.py` is part of the current promotion bundle diff-policy review path | **CONFIRMED via adjacent implementation updates** | This lane now explicitly includes a policy-summary renderer in the thin slice. |
+| `tools/ci/render_bundle_diff_policy_summary.py` is the current policy-summary thin-slice renderer | **CONFIRMED** | This lane now explicitly includes a policy-summary renderer in the thin slice. |
+| `tests/ci/test_render_bundle_diff_policy_summary.py` is the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | The policy-summary renderer lands with explicit test coverage. |
 | Exact additional helper inventory, live callers, artifact upload wiring, and platform-only settings beyond the thin slice | **UNKNOWN** | Keep broader platform claims out of this README unless re-verified against live settings. |
 
 [Back to top](#ci)
@@ -221,7 +222,7 @@ tools/ci/
 
 tests/ci/
 ├── test_render_diff_summary.py
-└── test_render_bundle_diff_policy_summary.py   # if mounted; otherwise verify exact path on active branch
+└── test_render_bundle_diff_policy_summary.py
 ```
 
 > [!NOTE]
@@ -309,7 +310,7 @@ pytest -q tests/ci/test_render_bundle_diff_policy_summary.py
 ```
 
 > [!NOTE]
-> Verify the exact mounted test path for `render_bundle_diff_policy_summary.py` on the active branch if it differs from the expected thin-slice test naming shown here.
+> The current thin slice now includes explicit proof for both diff-summary and bundle-diff-policy-summary rendering.
 
 ---
 
@@ -474,6 +475,7 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 - [x] `render_diff_summary.py` thin slice implemented
 - [x] `render_bundle_diff_policy_summary.py` thin slice implemented
 - [x] diff renderer tests added
+- [x] bundle diff-policy renderer tests added
 - [x] renderer inputs are documented and machine-readable
 - [x] outputs are deterministic and usable by both humans and CI
 - [x] helper remains read-only by default
