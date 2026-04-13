@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: 2026-04-13
 policy_label: public
-related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../policy/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tools/ci/render_promotion_summary.py, ../../../tools/ci/render_promotion_bundle_summary.py, ../../../.github/workflows/README.md]
-tags: [kfm, validators, promotion, governance, evidence, ci]
-notes: [Merged from the earlier doctrinal Promotion Gate draft and the later thin-slice implementation work. Target path is inferred as tools/validators/promotion_gate/README.md; active-branch inventory, exact workflow wiring, and merge-blocking enforcement remain NEEDS VERIFICATION.]
+related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../schemas/promotion/promotion-bundle-diff-policy.schema.json, ../../../policy/README.md, ../../../policy/promotion_bundle_diff_policy.json, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tests/validators/test_bundle_diff_policy.py, ../../../tests/validators/test_validate_bundle_diff_policy.py, ../../../tools/ci/render_promotion_summary.py, ../../../tools/ci/render_promotion_bundle_summary.py, ../../../tools/ci/render_diff_summary.py, ../../../tools/ci/render_bundle_diff_policy_summary.py, ../../../tools/diff/stable_diff.py, ../../../tools/catalog/catalog_crosslink.py, ../../../.github/workflows/README.md]
+tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy]
+notes: [Updated to reflect the promotion bundle diff-policy thin slice, including checked-in policy JSON, schema validation, prior/current bundle diff review, and reviewer-facing policy summaries. Active-branch inventory, exact workflow wiring, and merge-blocking enforcement still require direct verification where not proven by mounted files.]
 [/KFM_META_BLOCK_V2] -->
 
 # Promotion Gate (A–G)
@@ -42,13 +42,23 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > - `tools/validators/promotion_gate/write_promotion_bundle.py`
 > - `tools/validators/promotion_gate/validate_promotion_bundle.py`
 >
+> **Bundle diff-policy helpers**
+> - `tools/validators/promotion_gate/evaluate_bundle_diff_policy.py`
+> - `tools/validators/promotion_gate/validate_bundle_diff_policy.py`
+>
 > **Reviewer / auditor outputs**
 > - `tools/ci/render_promotion_summary.py`
 > - `tools/ci/render_promotion_bundle_summary.py`
+> - `tools/ci/render_diff_summary.py`
+> - `tools/ci/render_bundle_diff_policy_summary.py`
 >
 > **Attestation helpers**
 > - `tools/attest/sign_decision_envelope.py`
 > - `tools/attest/verify_decision_envelope.py`
+>
+> **Comparison and closure helpers consumed by this lane**
+> - `tools/diff/stable_diff.py`
+> - `tools/catalog/catalog_crosslink.py`
 >
 > **Policy and schema surfaces**
 > - `tools/validators/promotion_gate/policies/*.rego`
@@ -56,9 +66,13 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > - `schemas/promotion/promotion-record.schema.json`
 > - `schemas/promotion/promotion-prov.schema.json`
 > - `schemas/promotion/promotion-bundle.schema.json`
+> - `schemas/promotion/promotion-bundle-diff-policy.schema.json`
+> - `policy/promotion_bundle_diff_policy.json`
 >
 > **Thin-slice tests**
 > - `tests/validators/test_promotion_gate_e2e.py`
+> - `tests/validators/test_bundle_diff_policy.py`
+> - `tests/validators/test_validate_bundle_diff_policy.py`
 >
 > Keep this block synchronized with the mounted implementation as additional scripts, schemas, or trust objects land.
 
@@ -76,7 +90,7 @@ This README serves two purposes at once:
 | Posture | Meaning in this document |
 |---|---|
 | **CONFIRMED** | KFM requires typed contracts, evidence-bearing release objects, policy-visible decisions, catalog closure, and fail-closed behavior. |
-| **PROPOSED** | Some exact field choices, helper names, and current thin-slice wiring below. |
+| **PROPOSED** | Some exact field choices, helper names, and wider thin-slice growth below. |
 | **UNKNOWN / NEEDS VERIFICATION** | Mounted validator code, workflow enforcement, exact branch inventory, and any deeper integration not directly confirmed. |
 
 ---
@@ -98,6 +112,8 @@ This README serves two purposes at once:
 - catalog closure objects across STAC / DCAT / PROV
 - candidate fixtures in `tests/fixtures/promotion/`
 - geospatial candidate assets in `data/work/...`
+- prior/current bundle diff results for governed review visibility
+- checked-in diff-policy classification data
 
 ### Downstream consumers
 
@@ -106,12 +122,16 @@ This README serves two purposes at once:
 - CI summaries and annotations
 - promotion records and rollback preparation
 - release pipelines that require a machine-readable promotion decision
+- reviewer-facing prior/current bundle change review
+- diff-policy classification for release-significant drift
 
 ### Role in the system
 
 - sits **after** candidate assembly
 - sits **before** governed publication
 - emits a **DecisionEnvelope**
+- derives record / PROV / bundle trust objects
+- supports prior/current bundle comparison and classification
 - must not become a hidden direct-publish shortcut
 
 ---
@@ -136,6 +156,8 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | `ai_receipt` | Conditional | Required when model mediation affected the candidate. |
 | `diff_artifact` | Conditional | Required when change visibility matters materially. |
 | `correction_notice_ref` | Conditional | Required when the candidate supersedes or narrows a prior release. |
+| `prior_bundle` | Conditional | Needed when governed prior/current bundle review is enabled. |
+| `bundle_diff_policy` | Conditional | Needed when bundle diff policy classification is part of the review path. |
 
 ### Current thin-slice file inputs
 
@@ -149,6 +171,10 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | record schema | `schemas/promotion/promotion-record.schema.json` |
 | PROV schema | `schemas/promotion/promotion-prov.schema.json` |
 | bundle schema | `schemas/promotion/promotion-bundle.schema.json` |
+| bundle diff-policy schema | `schemas/promotion/promotion-bundle-diff-policy.schema.json` |
+| bundle diff-policy file | `policy/promotion_bundle_diff_policy.json` |
+| prior/current diff report | `promotion-bundle-diff.json` or equivalent |
+| diff-policy report | `promotion-bundle-diff-policy.json` or equivalent |
 
 ---
 
@@ -163,13 +189,15 @@ This lane does **not**:
 - redefine schemas or policy owned elsewhere
 - convert a prose README into proof that implementation already exists
 - embed governance authority in helpers where policy should remain the source of truth
+- compute general diff law inside policy renderers
+- turn CI presentation helpers into policy authority
 
 ---
 
 ## Directory tree
 
 ```text
-# Thin executable slice documented here — inventory still NEEDS VERIFICATION against active branch
+# Thin executable slice documented here — broader inventory still NEEDS VERIFICATION against active branch
 
 tools/validators/promotion_gate/
 ├── README.md
@@ -182,6 +210,8 @@ tools/validators/promotion_gate/
 ├── write_promotion_record.py
 ├── write_promotion_bundle.py
 ├── emit_promotion_prov.py
+├── evaluate_bundle_diff_policy.py
+├── validate_bundle_diff_policy.py
 ├── policies/
 │   ├── a_identity.rego
 │   ├── b_integrity.rego
@@ -198,15 +228,22 @@ Related surfaces:
 ```text
 tools/attest/sign_decision_envelope.py
 tools/attest/verify_decision_envelope.py
+tools/diff/stable_diff.py
+tools/catalog/catalog_crosslink.py
 tools/ci/render_promotion_summary.py
 tools/ci/render_promotion_bundle_summary.py
+tools/ci/render_diff_summary.py
+tools/ci/render_bundle_diff_policy_summary.py
+policy/promotion_bundle_diff_policy.json
 schemas/promotion/
 tests/fixtures/promotion/
 tests/validators/test_promotion_gate_e2e.py
+tests/validators/test_bundle_diff_policy.py
+tests/validators/test_validate_bundle_diff_policy.py
 ```
 
 > [!NOTE]
-> Shared contracts and schemas should remain authoritative in their own repo homes. This lane validates them; it does not replace them.
+> Shared contracts, schemas, and policy surfaces should remain authoritative in their own repo homes. This lane validates and consumes them; it does not replace them.
 
 ---
 
@@ -234,6 +271,18 @@ Each gate emits its own status:
 | `FAIL` | The gate found a concrete promotability violation. |
 | `SKIP` | The gate was not applicable or not yet implemented. |
 | `ERROR` | The gate could not safely evaluate due to parse or execution failure. |
+
+### Bundle diff-policy vocabulary
+
+The current thin-slice bundle-diff policy layer classifies prior/current bundle key drift into:
+
+| Classification | Meaning |
+|---|---|
+| `informational` | expected or non-blocking by current policy |
+| `review` | trust-visible or otherwise review-significant |
+| `blocking` | release-significant drift that must not pass silently |
+
+These are **review classifications**, not a replacement for the main promotion decision grammar.
 
 ---
 
@@ -285,6 +334,10 @@ The current thin slice may also emit:
 | `promotion-bundle-summary.md` | reviewer / auditor summary of the full bundle |
 | `decision-sign-result.json` | signing command result |
 | `decision-verify-result.json` | attestation verification result |
+| `promotion-bundle-diff.json` | prior/current bundle diff report |
+| `promotion-bundle-diff-summary.md` | reviewer-facing diff summary |
+| `promotion-bundle-diff-policy.json` | machine-readable policy classification of bundle drift |
+| `promotion-bundle-diff-policy-summary.md` | reviewer-facing policy summary for bundle drift |
 
 ---
 
@@ -328,6 +381,11 @@ flowchart LR
     K --> L[emit_promotion_prov.py]
     K --> M[write_promotion_bundle.py]
     M --> N[render_promotion_bundle_summary.py]
+    M --> O[stable_diff.py]
+    O --> P[render_diff_summary.py]
+    O --> Q[evaluate_bundle_diff_policy.py]
+    Q --> R[validate_bundle_diff_policy.py]
+    Q --> S[render_bundle_diff_policy_summary.py]
 ```
 
 ### Execution steps
@@ -343,7 +401,10 @@ flowchart LR
 9. Render reviewer-readable output where needed.
 10. Optionally sign and verify the decision.
 11. Derive record, PROV, and bundle objects.
-12. Route the result into governed review or rework.
+12. Optionally compare prior/current bundles.
+13. Classify bundle drift using checked-in diff policy.
+14. Render reviewer-facing diff and policy summaries.
+15. Route the result into governed review or rework.
 
 ---
 
@@ -361,6 +422,9 @@ flowchart LR
     F --> G[Promotion PROV]
     B --> H[Promotion Bundle]
     H --> I[Bundle Summary]
+    H --> J[Bundle Diff]
+    J --> K[Diff Policy]
+    K --> L[Policy Summary]
 ```
 
 ### Trust object split
@@ -373,9 +437,11 @@ flowchart LR
 | `promotion-record.json` | compact governed ledger entry |
 | `promotion-prov.json` | provenance activity for promotion |
 | `promotion-bundle.json` | bundle manifest indexing the full promotion artifact set |
+| `promotion-bundle-diff.json` | deterministic prior/current comparison report |
+| `promotion-bundle-diff-policy.json` | reviewed interpretation layer for changed keys |
 
 > [!NOTE]
-> This preserves KFM’s **receipts vs proofs** doctrine: receipts capture process memory; proofs and release-significant trust objects remain separately identifiable.
+> This preserves KFM’s **receipts vs proofs** doctrine: receipts capture process memory; proofs and release-significant trust objects remain separately identifiable. The diff-policy layer interprets change visibility; it does not replace the release decision itself.
 
 ---
 
@@ -461,11 +527,53 @@ python tools/ci/render_promotion_bundle_summary.py \
   --output promotion-bundle-summary.md
 ```
 
+### 9. Diff prior/current promotion bundles
+
+```bash
+python tools/diff/stable_diff.py \
+  --left promotion-bundle.previous.json \
+  --right promotion-bundle.json \
+  --output promotion-bundle-diff.json
+```
+
+### 10. Render diff summary
+
+```bash
+python tools/ci/render_diff_summary.py \
+  promotion-bundle-diff.json \
+  --output promotion-bundle-diff-summary.md
+```
+
+### 11. Validate checked-in diff policy
+
+```bash
+python tools/validators/promotion_gate/validate_bundle_diff_policy.py \
+  schemas/promotion/promotion-bundle-diff-policy.schema.json \
+  policy/promotion_bundle_diff_policy.json
+```
+
+### 12. Evaluate bundle diff policy
+
+```bash
+python tools/validators/promotion_gate/evaluate_bundle_diff_policy.py \
+  promotion-bundle-diff.json \
+  --policy policy/promotion_bundle_diff_policy.json \
+  --output promotion-bundle-diff-policy.json
+```
+
+### 13. Render diff-policy summary
+
+```bash
+python tools/ci/render_bundle_diff_policy_summary.py \
+  promotion-bundle-diff-policy.json \
+  --output promotion-bundle-diff-policy-summary.md
+```
+
 ---
 
 ## Policy evaluation
 
-Policy authority belongs in Rego. Python should orchestrate, collect, and render, but not silently redefine governance.
+Policy authority belongs in Rego or other checked-in governed surfaces. Python should orchestrate, collect, and render, but not silently redefine governance.
 
 ### Illustrative policy split
 
@@ -479,6 +587,16 @@ policies/
 ├── f_proof.rego
 ├── g_review.rego
 └── promotion.rego
+```
+
+### Current checked-in diff-policy surface
+
+```text
+policy/
+└── promotion_bundle_diff_policy.json
+
+schemas/promotion/
+└── promotion-bundle-diff-policy.schema.json
 ```
 
 ### Illustrative policy example
@@ -509,6 +627,16 @@ deny contains "policy.rights_missing" if {
   not input.rights.license
 }
 ```
+
+### Diff-policy rule shape
+
+The current checked-in bundle-diff policy file classifies keys into:
+
+- `informational`
+- `review`
+- `blocking`
+
+Unknown keys default to `review` under the current thin slice, preserving reviewer attention rather than silently accepting unfamiliar drift.
 
 ---
 
@@ -568,8 +696,43 @@ Illustrative workflow wiring for the fuller thin slice:
       promotion-bundle.json \
       --output promotion-bundle-summary.md
 
-- name: Publish summary
-  run: cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
+- name: Diff prior/current promotion bundles
+  run: |
+    python tools/diff/stable_diff.py \
+      --left promotion-bundle.previous.json \
+      --right promotion-bundle.json \
+      --output promotion-bundle-diff.json
+
+- name: Render promotion bundle diff summary
+  run: |
+    python tools/ci/render_diff_summary.py \
+      promotion-bundle-diff.json \
+      --output promotion-bundle-diff-summary.md
+
+- name: Validate promotion bundle diff policy schema
+  run: |
+    python tools/validators/promotion_gate/validate_bundle_diff_policy.py \
+      schemas/promotion/promotion-bundle-diff-policy.schema.json \
+      policy/promotion_bundle_diff_policy.json
+
+- name: Evaluate promotion bundle diff policy
+  run: |
+    python tools/validators/promotion_gate/evaluate_bundle_diff_policy.py \
+      promotion-bundle-diff.json \
+      --policy policy/promotion_bundle_diff_policy.json \
+      --output promotion-bundle-diff-policy.json
+
+- name: Render promotion bundle diff policy summary
+  run: |
+    python tools/ci/render_bundle_diff_policy_summary.py \
+      promotion-bundle-diff-policy.json \
+      --output promotion-bundle-diff-policy-summary.md
+
+- name: Publish summaries
+  run: |
+    cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-bundle-diff-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-bundle-diff-policy-summary.md >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ---
@@ -598,6 +761,18 @@ pytest -q tests/validators/test_promotion_gate_e2e.py
 | promotion bundle | bundle manifest emitted |
 | promotion bundle schema | bundle validates |
 | bundle summary | reviewer / auditor summary generated |
+| bundle diff | prior/current bundle comparison emitted |
+| diff summary | reviewer-facing diff summary generated |
+| bundle diff policy | changed keys classified by checked-in policy |
+| bundle diff policy schema | checked-in policy file validates against schema |
+| bundle diff policy summary | reviewer-facing policy summary generated |
+
+### Additional focused validator tests
+
+```bash
+pytest -q tests/validators/test_bundle_diff_policy.py
+pytest -q tests/validators/test_validate_bundle_diff_policy.py
+```
 
 ### Minimal Python dependencies
 
@@ -617,6 +792,8 @@ jsonschema
 | integrity failure | `DENY` |
 | insufficient proof or closure | `ABSTAIN` |
 | all required gates pass | `PROMOTE` |
+| invalid bundle diff-policy file | fail before policy evaluation continues |
+| release-significant bundle drift classified as blocking | non-zero diff-policy evaluation result |
 
 ---
 
@@ -625,10 +802,10 @@ jsonschema
 - **Deterministic** — same inputs should produce the same decision
 - **Hash-anchored** — `spec_hash` is the identity root
 - **Fail-closed** — no silent success on ambiguity
-- **Policy-separated** — Rego owns policy authority
+- **Policy-separated** — Rego and checked-in policy surfaces own governance authority
 - **Reviewer-visible** — human-readable summaries are first-class
 - **Receipt-safe** — receipts and proofs remain distinct trust surfaces
-- **Trust-chain aware** — derived objects should preserve attestation state, execution identity, and rollback linkage
+- **Trust-chain aware** — derived objects should preserve attestation state, execution identity, rollback linkage, and prior/current change visibility
 
 ---
 
@@ -643,8 +820,11 @@ jsonschema
 - [ ] Proof objects and receipts stay distinct.
 - [ ] Reviewer approval and rollback readiness are visible before promotion proceeds.
 - [ ] A passing gate still routes through governed review; no silent direct publish path exists.
-- [ ] E2E thin-slice tests remain green as policy and schema evolve.
-- [ ] Signed-decision verification state is preserved through record, PROV, and bundle outputs where implemented.
+- [x] E2E thin-slice tests cover bundle diff and diff-policy review surfaces.
+- [x] Signed-decision verification state is preserved through record, PROV, and bundle outputs where implemented.
+- [x] Bundle diff policy is checked in as data rather than only Python constants.
+- [x] Bundle diff policy file validates against a schema.
+- [ ] Promote bundle-summary rendering so raw diff + classified policy attention can be linked as one reviewer chain if desired.
 
 ---
 
@@ -664,11 +844,21 @@ No. Domain-specific validation still belongs in subject lanes. This gate sits ab
 
 ### Why split Python and Rego?
 
-Python handles orchestration, file preparation, derivation, and rendering. Rego holds policy logic. This keeps governance visible, reviewable, and less likely to drift into helper code.
+Python handles orchestration, file preparation, derivation, and rendering. Rego and checked-in policy data hold governance logic. This keeps governance visible, reviewable, and less likely to drift into helper code.
+
+### What is new in the current thin slice beyond the original gate flow?
+
+In addition to decision, record, PROV, bundle, and attestation flow, the current thin slice now supports:
+
+- prior/current bundle diff
+- reviewer-facing diff rendering
+- checked-in bundle diff-policy classification
+- schema validation for the checked-in policy file
+- reviewer-facing diff-policy summary rendering
 
 ### Is the directory layout already implemented?
 
-Unknown. This README documents the intended lane contract and the current thin-slice implementation surface. Mounted code, schemas, and workflows remain subject to repo verification.
+The thin-slice helper set named in the snapshot block is treated here as current documented lane shape. Wider inventory, callers, and workflow enforcement still remain subject to repo verification where not directly proven.
 
 ---
 
@@ -678,7 +868,7 @@ Unknown. This README documents the intended lane contract and the current thin-s
 <summary><strong>Minimal invocation chain</strong></summary>
 
 ```bash
-prepare → gate → validate → render → record → prov → bundle → bundle-summary
+prepare → gate → validate → render → record → prov → bundle → bundle-summary → bundle-diff → diff-policy
 ```
 
 </details>
@@ -756,6 +946,41 @@ prepare → gate → validate → render → record → prov → bundle → bund
     }
   ],
   "generated_at": "2026-04-13T00:00:00Z"
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Illustrative diff-policy file</strong></summary>
+
+```json
+{
+  "policy_type": "kfm.promotion.bundle_diff_policy",
+  "version": "v1",
+  "default_classification": "review",
+  "classifications": {
+    "informational": [
+      "generated_at",
+      "recorded_at"
+    ],
+    "review": [
+      "attestation_ref",
+      "attestation_verified",
+      "audit_ref",
+      "ci_run_id",
+      "gate_runner",
+      "repo_ref",
+      "release_ref"
+    ],
+    "blocking": [
+      "bundle_type",
+      "candidate_id",
+      "decision",
+      "spec_hash",
+      "artifacts"
+    ]
+  }
 }
 ```
 
