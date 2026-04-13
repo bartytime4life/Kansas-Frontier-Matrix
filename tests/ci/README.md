@@ -8,9 +8,9 @@ owners: NEEDS_VERIFICATION_OWNER
 created: YYYY-MM-DD
 updated: 2026-04-13
 policy_label: public
-related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tools/ci/README.md, ../../tools/diff/README.md, ../../tools/attest/README.md, ../../tools/validators/promotion_gate/README.md, ./test_render_diff_summary.py, ./test_render_bundle_diff_policy_summary.py, ../validators/test_promotion_gate_e2e.py]
-tags: [kfm, tests, ci, fixtures, renderer-tests, promotion, diff, policy-summary]
-notes: [Updated to reflect the expanded CI renderer proof thin slice, including test_render_bundle_diff_policy_summary.py and the adjacent render_bundle_diff_policy_summary.py helper. Exact owner record, commit dates, and any additional mounted test inventory remain NEEDS VERIFICATION.]
+related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tools/ci/README.md, ../../tools/diff/README.md, ../../tools/attest/README.md, ../../tools/validators/promotion_gate/README.md, ./test_render_diff_summary.py, ./test_render_bundle_diff_policy_summary.py, ./test_render_promotion_review_handoff.py, ../validators/test_promotion_gate_e2e.py]
+tags: [kfm, tests, ci, fixtures, renderer-tests, promotion, diff, policy-summary, review-handoff]
+notes: [Updated to reflect the expanded CI renderer proof thin slice, including test_render_bundle_diff_policy_summary.py, test_render_promotion_review_handoff.py, and adjacent renderer helpers. Exact owner record, commit dates, and any additional mounted test inventory remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -21,10 +21,10 @@ Deterministic, public-safe proof surfaces for KFM CI-facing summary, renderer, a
 > **Owners:** `NEEDS VERIFICATION` *(no lane-specific `/tests/ci/` owner rule was directly surfaced in this session; resolve against current `CODEOWNERS` before merge)*  
 > **Path:** `tests/ci/README.md`  
 > **Repo fit:** child lane of [`../README.md`](../README.md) · primary helper lane under [`../../tools/ci/README.md`](../../tools/ci/README.md) · adjacent helper lanes in [`../../tools/diff/README.md`](../../tools/diff/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), and [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) · orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md) and [`../../.github/actions/README.md`](../../.github/actions/README.md) · canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../policy/README.md`](../../policy/README.md)  
-> **Accepted inputs:** helper-facing fixtures, stable diff JSON, bundle diff-policy JSON, promotion decision and bundle artifacts, expected Markdown summaries, and small public-safe failure cases  
+> **Accepted inputs:** helper-facing fixtures, stable diff JSON, bundle diff-policy JSON, promotion decision and bundle artifacts, composed promotion review inputs, expected Markdown summaries, and small public-safe failure cases  
 > **Exclusions:** workflow YAML, policy truth, contract ownership, release mutation, secret-bearing fixtures, and broad end-to-end promotion choreography  
 > **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice CI test surface · broader lane inventory, runner wiring, and platform-only settings remain bounded  
-> **Current lane snapshot:** documented thin-slice proof is now centered on [`./test_render_diff_summary.py`](./test_render_diff_summary.py) and [`./test_render_bundle_diff_policy_summary.py`](./test_render_bundle_diff_policy_summary.py); broader summary and annotation coverage should stay marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until the working branch is rechecked  
+> **Current lane snapshot:** documented thin-slice proof is now centered on [`./test_render_diff_summary.py`](./test_render_diff_summary.py), [`./test_render_bundle_diff_policy_summary.py`](./test_render_bundle_diff_policy_summary.py), and [`./test_render_promotion_review_handoff.py`](./test_render_promotion_review_handoff.py); these files form the current confirmed renderer-proof center for this lane  
 > **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-NEEDS%20VERIFICATION-lightgrey)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tests%2Fci-6f42c1)](../README.md) [![role](https://img.shields.io/badge/role-helper%20proof%20surface-0a7d5a)](../../tools/ci/README.md) [![posture](https://img.shields.io/badge/posture-fixtures--first-1f6feb)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-documented%20thin--slice-lightgrey)](./README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Coverage matrix](#coverage-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -34,14 +34,16 @@ Deterministic, public-safe proof surfaces for KFM CI-facing summary, renderer, a
 > [!TIP]
 > **Current documented thin slice**
 >
-> This lane should stay tightly aligned to the helpers under [`../../tools/ci/README.md`](../../tools/ci/README.md). The currently documented proof center is:
+> This lane should stay tightly aligned to the helpers under [`../../tools/ci/README.md`](../../tools/ci/README.md). The currently confirmed proof center is:
 >
 > - subject under test: [`../../tools/ci/render_diff_summary.py`](../../tools/ci/render_diff_summary.py)
 > - current thin-slice proof surface: [`./test_render_diff_summary.py`](./test_render_diff_summary.py)
 > - subject under test: [`../../tools/ci/render_bundle_diff_policy_summary.py`](../../tools/ci/render_bundle_diff_policy_summary.py)
 > - current thin-slice proof surface: [`./test_render_bundle_diff_policy_summary.py`](./test_render_bundle_diff_policy_summary.py)
+> - subject under test: [`../../tools/ci/render_promotion_review_handoff.py`](../../tools/ci/render_promotion_review_handoff.py)
+> - current thin-slice proof surface: [`./test_render_promotion_review_handoff.py`](./test_render_promotion_review_handoff.py)
 >
-> Promotion-oriented summary helpers are real adjacent subjects, but their exact `tests/ci/` coverage should remain bounded until the working branch confirms it.
+> Promotion-oriented summary helpers remain real adjacent subjects, but the currently confirmed `tests/ci/` thin slice is the renderer-proof trio for diff summaries, bundle diff-policy summaries, and composed promotion review handoff rendering.
 
 > [!WARNING]
 > Fixtures here should be tiny, deterministic, and safe to print in logs. Never commit tokens, unpublished evidence, internal-only trust objects, or sensitive location-bearing payloads as convenience test data.
@@ -61,6 +63,7 @@ This lane is the right home for:
 - helper-focused negative-path cases such as malformed input, missing required fields, or unstable output shape
 - tests for diff-summary rendering over stable diff reports
 - tests for policy-summary rendering over checked-in bundle diff-policy reports
+- tests for composed reviewer handoff rendering over promotion bundle, diff, and diff-policy artifacts
 
 This lane is **not** the home for:
 
@@ -126,6 +129,7 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 | Input class | Examples | Why it belongs here |
 | --- | --- | --- |
 | Structured helper inputs | stable diff JSON, `decision.json`, `promotion-bundle.json`, normalized check result JSON, bundle diff-policy JSON | CI render helpers should be tested against declared, reviewable artifacts rather than scraped log blobs. |
+| Composed handoff inputs | promotion bundle + diff report + diff-policy report | Needed when one helper composes several already-governed artifacts into one review document. |
 | Expected human-facing outputs | Markdown summaries, compact text blocks, reviewer-facing fragments | These are the main visible outputs of `tools/ci/` helpers. |
 | Expected machine-facing outputs | compact JSON digests, normalized intermediate files, exit statuses | Some helpers may emit structured outputs that workflows or scripts consume. |
 | Failure-path fixtures | malformed JSON, missing required fields, empty bundles, unsupported states | Negative paths are first-class in KFM and should be proved here. |
@@ -156,6 +160,7 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 | Secret-bearing, unpublished, or rights-unclear fixtures | secured data lanes or safer synthetic fixtures | Public test surfaces must remain safe to clone and review. |
 | Ad hoc scratch files used only once | governed fixture surfaces under `tests/` | Fixtures should stay legible, reusable, and reviewable. |
 | Auto-fix or mutation shortcuts | nowhere | KFM review and promotion stay governed and inspectable. |
+| Treating the composed handoff Markdown as the authoritative trust object | nowhere | The underlying bundle, diff, and diff-policy machine artifacts remain the authoritative records. |
 
 [Back to top](#ci)
 
@@ -167,9 +172,10 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 | --- | --- | --- |
 | The broader repo documentation repeatedly treats `tests/` as a shared proof surface for fixtures, assertions, and regression evidence | **CONFIRMED** | Grounds why helper tests belong here instead of being buried in workflows or scratch scripts. |
 | `tools/ci/` is defined as a reusable helper boundary for rendering governed artifacts, not for owning policy or publication law | **CONFIRMED** | Tests in this lane should prove renderer behavior, not re-decide governance. |
-| The documented `tools/ci/` thin slice includes `render_promotion_summary.py`, `render_promotion_bundle_summary.py`, `render_diff_summary.py`, and `render_bundle_diff_policy_summary.py` | **CONFIRMED** | Identifies the helper family this lane should serve. |
-| `tests/ci/test_render_diff_summary.py` is the currently documented thin-slice proof surface for diff rendering | **CONFIRMED via adjacent documentation** | Grounds the current lane around one concrete file instead of a generic scaffold. |
-| `tests/ci/test_render_bundle_diff_policy_summary.py` is now part of the documented thin-slice proof surface for policy-summary rendering | **CONFIRMED via adjacent documentation** | Grounds the lane around a second concrete renderer proof file. |
+| The documented `tools/ci/` thin slice includes `render_promotion_summary.py`, `render_promotion_bundle_summary.py`, `render_diff_summary.py`, `render_bundle_diff_policy_summary.py`, and `render_promotion_review_handoff.py` | **CONFIRMED** | Identifies the helper family this lane should serve. |
+| `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | Grounds the current lane around one concrete file instead of a generic scaffold. |
+| `tests/ci/test_render_bundle_diff_policy_summary.py` is part of the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | Grounds the lane around a second concrete renderer proof file. |
+| `tests/ci/test_render_promotion_review_handoff.py` is part of the current thin-slice proof surface for composed review-handoff rendering | **CONFIRMED via current lane contract update** | Grounds the lane around a third concrete renderer proof file. |
 | Promotion-gate end-to-end coverage is documented under `tests/validators/test_promotion_gate_e2e.py` rather than `tests/ci/` | **CONFIRMED via adjacent documentation** | Keeps this lane helper-focused and prevents scope creep. |
 | Exact additional `tests/ci/` files, fixture inventory, local runner wiring, and any platform-specific annotation tests | **UNKNOWN / NEEDS VERIFICATION** | Remains visibly bounded until the working branch is rechecked directly. |
 
@@ -188,7 +194,8 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 tests/ci/
 ├── README.md
 ├── test_render_diff_summary.py
-└── test_render_bundle_diff_policy_summary.py
+├── test_render_bundle_diff_policy_summary.py
+└── test_render_promotion_review_handoff.py
 ```
 
 ### Confirmed adjacent thin slice
@@ -199,7 +206,8 @@ tools/ci/
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
-└── render_bundle_diff_policy_summary.py
+├── render_bundle_diff_policy_summary.py
+└── render_promotion_review_handoff.py
 
 tests/validators/
 └── test_promotion_gate_e2e.py
@@ -216,16 +224,19 @@ tests/ci/
 ├── README.md
 ├── test_render_diff_summary.py
 ├── test_render_bundle_diff_policy_summary.py
+├── test_render_promotion_review_handoff.py
 ├── test_render_promotion_summary.py
 ├── test_render_promotion_bundle_summary.py
 ├── fixtures/
 │   ├── diff/
 │   ├── diff_policy/
+│   ├── review_handoff/
 │   ├── promotion/
 │   └── promotion_bundle/
 └── golden/
     ├── diff/
     ├── diff_policy/
+    ├── review_handoff/
     ├── promotion/
     └── promotion_bundle/
 ```
@@ -249,11 +260,12 @@ sed -n '1,260p' tests/README.md
 sed -n '1,320p' tools/ci/README.md
 sed -n '1,220p' tests/ci/test_render_diff_summary.py 2>/dev/null || true
 sed -n '1,220p' tests/ci/test_render_bundle_diff_policy_summary.py 2>/dev/null || true
+sed -n '1,220p' tests/ci/test_render_promotion_review_handoff.py 2>/dev/null || true
 sed -n '1,260p' tools/diff/README.md
 sed -n '1,260p' tools/validators/promotion_gate/README.md
 
 # Reconfirm references before adding new tests
-git grep -n "tests/ci\|render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_summary\|render_promotion_bundle_summary" -- . || true
+git grep -n "tests/ci\|render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff\|render_promotion_summary\|render_promotion_bundle_summary" -- . || true
 ```
 
 When the checked-out branch uses `pytest` for this lane, the current thin slice should remain runnable locally as well as in CI:
@@ -261,10 +273,11 @@ When the checked-out branch uses `pytest` for this lane, the current thin slice 
 ```bash
 pytest -q tests/ci/test_render_diff_summary.py
 pytest -q tests/ci/test_render_bundle_diff_policy_summary.py
+pytest -q tests/ci/test_render_promotion_review_handoff.py
 ```
 
-> [!TIP]
-> If the active branch uses a different test runner or wrapper, update this section with the real command instead of leaving a guessed local convention behind.
+> [!NOTE]
+> The current thin slice now includes explicit proof for diff-summary rendering, bundle-diff-policy-summary rendering, and composed promotion-review handoff rendering.
 
 [Back to top](#ci)
 
@@ -280,7 +293,7 @@ Land a test here when all of the following are true:
 2. the helper consumes declared artifacts rather than hidden platform state
 3. the expected output can be asserted deterministically
 4. the test can run locally without depending on GitHub-only behavior
-5. the result helps reviewers trust a rendered summary, annotation block, compact digest, or policy-summary surface
+5. the result helps reviewers trust a rendered summary, annotation block, compact digest, policy-summary surface, or composed review handoff
 
 ### Keep fixtures narrow and reviewable
 
@@ -290,6 +303,7 @@ Good `tests/ci/` fixtures usually look like:
 - a minimal promotion decision object with one or two reasons
 - a compact promotion bundle with obvious trust-object refs
 - a small bundle diff-policy report with one or two classified keys
+- a compact composed handoff input set with obvious artifact and conclusion behavior
 - a broken fixture that fails for one well-named reason
 
 Avoid:
@@ -304,7 +318,7 @@ Avoid:
 | Put the test here when… | Put it elsewhere when… |
 | --- | --- |
 | you are proving a `tools/ci/` helper’s deterministic output | you are validating promotion or release law |
-| you are checking how a summary or annotation renders | you are checking how a gate decides |
+| you are checking how a summary, handoff, or annotation renders | you are checking how a gate decides |
 | you are asserting helper failure behavior on malformed input | you are exercising full workflow choreography |
 | you are comparing expected versus actual helper output | you need a broader end-to-end runtime proof scenario |
 
@@ -318,6 +332,7 @@ Prefer assertions that prove contract value clearly:
 - explicit review-required state
 - preservation of upstream reason codes or trust refs
 - preservation of per-key classifications where relevant
+- presence of composed review conclusions where relevant
 - read-only behavior
 - explicit failure on malformed or undeclared inputs
 
@@ -325,13 +340,14 @@ Be careful with assertions that overfit formatting noise. When full exact-match 
 
 ### Keep renderer tests separate from gate tests
 
-A renderer test may consume `decision.json`, `promotion-bundle.json`, diff JSON, or diff-policy JSON, but it should not:
+A renderer test may consume `decision.json`, `promotion-bundle.json`, diff JSON, diff-policy JSON, or a combination of those, but it should not:
 
 - recompute promotion law
 - re-run policy bundles
 - sign or verify artifacts
 - publish summaries as proof that release actions occurred
 - classify policy drift itself
+- replace the underlying machine artifacts with the composed reviewer document
 
 That separation is the whole point of this lane.
 
@@ -344,7 +360,7 @@ That separation is the whole point of this lane.
 ```mermaid
 flowchart LR
     U["Upstream governed artifacts<br/>decision.json · promotion-bundle.json · diff JSON · diff-policy JSON"] --> T["tests/ci/<br/>fixtures + assertions"]
-    H["tools/ci helpers<br/>render_* summary / annotation surfaces"] --> T
+    H["tools/ci helpers<br/>render_* summary / handoff / annotation surfaces"] --> T
     T --> L["local runner"]
     T --> C["CI runner"]
     L --> R["reviewable pass/fail output"]
@@ -362,6 +378,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | `render_diff_summary.py` | stable diff JSON report | blocking state, changed counts, reviewer-facing Markdown | **Thin-slice active** |
 | `render_bundle_diff_policy_summary.py` | bundle diff-policy JSON report | policy status, review-required state, per-key classification rendering | **Thin-slice active** |
+| `render_promotion_review_handoff.py` | promotion bundle + diff report + diff-policy report | composed reviewer handoff, artifact visibility, final conclusion block | **Thin-slice active** |
 | `render_promotion_summary.py` | `decision.json` | outcome visibility, reasons, obligations, compact reviewer text | **PROPOSED / NEEDS VERIFICATION** |
 | `render_promotion_bundle_summary.py` | `promotion-bundle.json` | bundle member visibility, trust refs, reviewer handoff clarity | **PROPOSED / NEEDS VERIFICATION** |
 | annotation helper family | structured error list with file context | normalized annotation text or objects | **PROPOSED** |
@@ -395,7 +412,9 @@ Use this checklist when adding or revising a `tests/ci/` proof surface.
 
 - [x] `test_render_diff_summary.py` thin-slice proof present
 - [x] `test_render_bundle_diff_policy_summary.py` thin-slice proof present
+- [x] `test_render_promotion_review_handoff.py` thin-slice proof present
 - [x] thin-slice coverage stays helper-focused rather than policy-owning
+- [x] current renderer-proof trio is explicitly named and documented
 - [ ] exact mounted test inventory beyond the thin slice rechecked before widening lane claims
 
 [Back to top](#ci)
@@ -435,6 +454,10 @@ Yes, when they stay tiny, deterministic, and safe to review. Use them sparingly 
 ### Can this lane test policy-summary rendering without owning policy law?
 
 Yes. That is exactly the intended pattern: feed the renderer a declared diff-policy report and prove the Markdown output, while leaving policy data and evaluation outside this lane.
+
+### Can this lane test one composed reviewer handoff document without owning release authority?
+
+Yes. That is also the intended pattern: feed the renderer declared bundle, diff, and diff-policy artifacts and prove the Markdown output, while keeping the underlying machine artifacts authoritative.
 
 [Back to top](#ci)
 
@@ -485,15 +508,33 @@ Yes. That is exactly the intended pattern: feed the renderer a declared diff-pol
 }
 ```
 
+### Example review-handoff input sketch
+
+```json
+{
+  "bundle": {
+    "candidate_id": "overlay:floodplain-kansas",
+    "decision": "PROMOTE",
+    "attestation_verified": true
+  },
+  "diff": {
+    "status": "changed"
+  },
+  "diff_policy": {
+    "status": "block"
+  }
+}
+```
+
 ### Example assertion sketch
 
 ```python
-def test_render_bundle_diff_policy_summary_reports_review_state(tmp_path):
-    out = tmp_path / "summary.md"
+def test_render_promotion_review_handoff_reports_blocking_state(tmp_path):
+    out = tmp_path / "handoff.md"
     text = out.read_text()
-    assert "Review required" in text
-    assert "attestation_verified" in text
-    assert "policy_version" not in text.lower() or "v1" in text
+    assert "Promotion Review Handoff" in text
+    assert "Policy status" in text
+    assert "Release-significant bundle drift is present" in text
 ```
 
 </details>
