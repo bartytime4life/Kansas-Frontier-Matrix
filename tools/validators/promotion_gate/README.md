@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: 2026-04-13
 policy_label: public
-related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../schemas/promotion/promotion-bundle-diff-policy.schema.json, ../../../policy/README.md, ../../../policy/promotion_bundle_diff_policy.json, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tests/validators/test_bundle_diff_policy.py, ../../../tests/validators/test_validate_bundle_diff_policy.py, ../../../tools/ci/render_promotion_summary.py, ../../../tools/ci/render_promotion_bundle_summary.py, ../../../tools/ci/render_diff_summary.py, ../../../tools/ci/render_bundle_diff_policy_summary.py, ../../../tools/diff/stable_diff.py, ../../../tools/catalog/catalog_crosslink.py, ../../../.github/workflows/README.md]
-tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy]
-notes: [Updated to reflect the promotion bundle diff-policy thin slice, including checked-in policy JSON, schema validation, prior/current bundle diff review, and reviewer-facing policy summaries. Active-branch inventory, exact workflow wiring, and merge-blocking enforcement still require direct verification where not proven by mounted files.]
+related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../schemas/promotion/promotion-bundle-diff-policy.schema.json, ../../../policy/README.md, ../../../policy/promotion_bundle_diff_policy.json, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tests/validators/test_bundle_diff_policy.py, ../../../tests/validators/test_validate_bundle_diff_policy.py, ../../../tests/ci/test_render_promotion_review_handoff.py, ../../../tools/ci/render_promotion_summary.py, ../../../tools/ci/render_promotion_bundle_summary.py, ../../../tools/ci/render_diff_summary.py, ../../../tools/ci/render_bundle_diff_policy_summary.py, ../../../tools/ci/render_promotion_review_handoff.py, ../../../tools/diff/stable_diff.py, ../../../tools/catalog/catalog_crosslink.py, ../../../.github/workflows/README.md]
+tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy, review-handoff]
+notes: [Updated to reflect the promotion bundle diff-policy thin slice plus the downstream composed promotion-review handoff artifact, including checked-in policy JSON, schema validation, prior/current bundle diff review, reviewer-facing policy summaries, and a single steward-facing handoff document. Active-branch inventory, exact workflow wiring, and merge-blocking enforcement still require direct verification where not proven by mounted files.]
 [/KFM_META_BLOCK_V2] -->
 
 # Promotion Gate (A–G)
@@ -51,6 +51,7 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > - `tools/ci/render_promotion_bundle_summary.py`
 > - `tools/ci/render_diff_summary.py`
 > - `tools/ci/render_bundle_diff_policy_summary.py`
+> - `tools/ci/render_promotion_review_handoff.py`
 >
 > **Attestation helpers**
 > - `tools/attest/sign_decision_envelope.py`
@@ -73,6 +74,7 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > - `tests/validators/test_promotion_gate_e2e.py`
 > - `tests/validators/test_bundle_diff_policy.py`
 > - `tests/validators/test_validate_bundle_diff_policy.py`
+> - `tests/ci/test_render_promotion_review_handoff.py`
 >
 > Keep this block synchronized with the mounted implementation as additional scripts, schemas, or trust objects land.
 
@@ -124,6 +126,7 @@ This README serves two purposes at once:
 - release pipelines that require a machine-readable promotion decision
 - reviewer-facing prior/current bundle change review
 - diff-policy classification for release-significant drift
+- composed steward-facing handoff documents derived from bundle, diff, and diff-policy artifacts
 
 ### Role in the system
 
@@ -132,6 +135,7 @@ This README serves two purposes at once:
 - emits a **DecisionEnvelope**
 - derives record / PROV / bundle trust objects
 - supports prior/current bundle comparison and classification
+- feeds reviewer-facing summaries and a composed review handoff
 - must not become a hidden direct-publish shortcut
 
 ---
@@ -175,6 +179,7 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | bundle diff-policy file | `policy/promotion_bundle_diff_policy.json` |
 | prior/current diff report | `promotion-bundle-diff.json` or equivalent |
 | diff-policy report | `promotion-bundle-diff-policy.json` or equivalent |
+| composed review handoff inputs | `promotion-bundle.json` + `promotion-bundle-diff.json` + `promotion-bundle-diff-policy.json` |
 
 ---
 
@@ -191,6 +196,7 @@ This lane does **not**:
 - embed governance authority in helpers where policy should remain the source of truth
 - compute general diff law inside policy renderers
 - turn CI presentation helpers into policy authority
+- replace underlying machine artifacts with one composed Markdown reviewer handoff
 
 ---
 
@@ -234,12 +240,14 @@ tools/ci/render_promotion_summary.py
 tools/ci/render_promotion_bundle_summary.py
 tools/ci/render_diff_summary.py
 tools/ci/render_bundle_diff_policy_summary.py
+tools/ci/render_promotion_review_handoff.py
 policy/promotion_bundle_diff_policy.json
 schemas/promotion/
 tests/fixtures/promotion/
 tests/validators/test_promotion_gate_e2e.py
 tests/validators/test_bundle_diff_policy.py
 tests/validators/test_validate_bundle_diff_policy.py
+tests/ci/test_render_promotion_review_handoff.py
 ```
 
 > [!NOTE]
@@ -338,6 +346,7 @@ The current thin slice may also emit:
 | `promotion-bundle-diff-summary.md` | reviewer-facing diff summary |
 | `promotion-bundle-diff-policy.json` | machine-readable policy classification of bundle drift |
 | `promotion-bundle-diff-policy-summary.md` | reviewer-facing policy summary for bundle drift |
+| `promotion-review-handoff.md` | composed steward-facing review document derived from bundle, diff, diff-policy, and attestation visibility |
 
 ---
 
@@ -386,6 +395,9 @@ flowchart LR
     O --> Q[evaluate_bundle_diff_policy.py]
     Q --> R[validate_bundle_diff_policy.py]
     Q --> S[render_bundle_diff_policy_summary.py]
+    M --> T[render_promotion_review_handoff.py]
+    O --> T
+    Q --> T
 ```
 
 ### Execution steps
@@ -404,7 +416,8 @@ flowchart LR
 12. Optionally compare prior/current bundles.
 13. Classify bundle drift using checked-in diff policy.
 14. Render reviewer-facing diff and policy summaries.
-15. Route the result into governed review or rework.
+15. Optionally compose one steward-facing review handoff document from bundle, diff, and diff-policy artifacts.
+16. Route the result into governed review or rework.
 
 ---
 
@@ -425,6 +438,10 @@ flowchart LR
     H --> J[Bundle Diff]
     J --> K[Diff Policy]
     K --> L[Policy Summary]
+    H --> M[Promotion Review Handoff]
+    J --> M
+    K --> M
+    D --> M
 ```
 
 ### Trust object split
@@ -439,9 +456,10 @@ flowchart LR
 | `promotion-bundle.json` | bundle manifest indexing the full promotion artifact set |
 | `promotion-bundle-diff.json` | deterministic prior/current comparison report |
 | `promotion-bundle-diff-policy.json` | reviewed interpretation layer for changed keys |
+| `promotion-review-handoff.md` | composed reviewer-facing document derived from, but not replacing, the underlying machine artifacts |
 
 > [!NOTE]
-> This preserves KFM’s **receipts vs proofs** doctrine: receipts capture process memory; proofs and release-significant trust objects remain separately identifiable. The diff-policy layer interprets change visibility; it does not replace the release decision itself.
+> This preserves KFM’s **receipts vs proofs** doctrine: receipts capture process memory; proofs and release-significant trust objects remain separately identifiable. The diff-policy layer interprets change visibility; it does not replace the release decision itself. The review handoff document is a derived steward convenience surface, not a new authoritative machine object.
 
 ---
 
@@ -567,6 +585,16 @@ python tools/validators/promotion_gate/evaluate_bundle_diff_policy.py \
 python tools/ci/render_bundle_diff_policy_summary.py \
   promotion-bundle-diff-policy.json \
   --output promotion-bundle-diff-policy-summary.md
+```
+
+### 14. Render composed promotion review handoff
+
+```bash
+python tools/ci/render_promotion_review_handoff.py \
+  --bundle promotion-bundle.json \
+  --diff promotion-bundle-diff.json \
+  --diff-policy promotion-bundle-diff-policy.json \
+  --output promotion-review-handoff.md
 ```
 
 ---
@@ -728,11 +756,20 @@ Illustrative workflow wiring for the fuller thin slice:
       promotion-bundle-diff-policy.json \
       --output promotion-bundle-diff-policy-summary.md
 
+- name: Render promotion review handoff
+  run: |
+    python tools/ci/render_promotion_review_handoff.py \
+      --bundle promotion-bundle.json \
+      --diff promotion-bundle-diff.json \
+      --diff-policy promotion-bundle-diff-policy.json \
+      --output promotion-review-handoff.md
+
 - name: Publish summaries
   run: |
     cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
     cat promotion-bundle-diff-summary.md >> "$GITHUB_STEP_SUMMARY"
     cat promotion-bundle-diff-policy-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-review-handoff.md >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ---
@@ -766,6 +803,7 @@ pytest -q tests/validators/test_promotion_gate_e2e.py
 | bundle diff policy | changed keys classified by checked-in policy |
 | bundle diff policy schema | checked-in policy file validates against schema |
 | bundle diff policy summary | reviewer-facing policy summary generated |
+| review handoff compatibility | bundle, diff, and diff-policy outputs are available for downstream composed handoff rendering |
 
 ### Additional focused validator tests
 
@@ -805,7 +843,7 @@ jsonschema
 - **Policy-separated** — Rego and checked-in policy surfaces own governance authority
 - **Reviewer-visible** — human-readable summaries are first-class
 - **Receipt-safe** — receipts and proofs remain distinct trust surfaces
-- **Trust-chain aware** — derived objects should preserve attestation state, execution identity, rollback linkage, and prior/current change visibility
+- **Trust-chain aware** — derived objects should preserve attestation state, execution identity, rollback linkage, prior/current change visibility, and downstream reviewer handoff compatibility
 
 ---
 
@@ -824,6 +862,8 @@ jsonschema
 - [x] Signed-decision verification state is preserved through record, PROV, and bundle outputs where implemented.
 - [x] Bundle diff policy is checked in as data rather than only Python constants.
 - [x] Bundle diff policy file validates against a schema.
+- [x] Downstream composed review handoff is documented as a derived reviewer surface.
+- [ ] Keep review handoff rendering separate from validator-proof ownership in `tests/ci`.
 - [ ] Promote bundle-summary rendering so raw diff + classified policy attention can be linked as one reviewer chain if desired.
 
 ---
@@ -855,10 +895,15 @@ In addition to decision, record, PROV, bundle, and attestation flow, the current
 - checked-in bundle diff-policy classification
 - schema validation for the checked-in policy file
 - reviewer-facing diff-policy summary rendering
+- a composed promotion review handoff document derived from bundle, diff, diff-policy, and attestation visibility
 
 ### Is the directory layout already implemented?
 
 The thin-slice helper set named in the snapshot block is treated here as current documented lane shape. Wider inventory, callers, and workflow enforcement still remain subject to repo verification where not directly proven.
+
+### Is `promotion-review-handoff.md` an authoritative promotion object?
+
+No. It is a reviewer-facing derived document. The authoritative machine objects remain the decision, record, PROV, bundle, diff, and diff-policy artifacts.
 
 ---
 
@@ -868,7 +913,7 @@ The thin-slice helper set named in the snapshot block is treated here as current
 <summary><strong>Minimal invocation chain</strong></summary>
 
 ```bash
-prepare → gate → validate → render → record → prov → bundle → bundle-summary → bundle-diff → diff-policy
+prepare → gate → validate → render → record → prov → bundle → bundle-summary → bundle-diff → diff-policy → review-handoff
 ```
 
 </details>
@@ -983,6 +1028,20 @@ prepare → gate → validate → render → record → prov → bundle → bund
   }
 }
 ```
+
+</details>
+
+<details>
+<summary><strong>Illustrative downstream review handoff role</strong></summary>
+
+The composed review handoff should remain a **derived reviewer surface** built from:
+
+- `promotion-bundle.json`
+- `promotion-bundle-diff.json`
+- `promotion-bundle-diff-policy.json`
+- attestation visibility already preserved in upstream artifacts
+
+It should help a steward review promotion state quickly without replacing the underlying machine artifacts.
 
 </details>
 
