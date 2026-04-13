@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../schemas/contracts/README.md, ../schemas/tests/README.md, ../docs/README.md, ./ci/README.md, ./e2e/README.md, ./policy/README.md]
 tags: [kfm, tests, verification, readme, ci]
-notes: [Updated to explicitly include the tests/ci proof lane alongside existing validator, e2e, policy, and schema-adjacent verification families. doc_id and created date still need live-repo verification; owner remains confirmed by current CODEOWNERS coverage for /tests/; this revision preserves the strong existing tests README structure while widening the top-level index for the now-documented CI renderer proof surface without overstating suite depth or merge-gate enforcement.]
+notes: [Updated to explicitly include the tests/ci proof lane alongside existing validator, e2e, policy, and schema-adjacent verification families, and to reflect the newer composed review-handoff proof within tests/ci. doc_id and created date still need live-repo verification; owner remains confirmed by current CODEOWNERS coverage for /tests/; this revision preserves the strong existing tests README structure while widening the top-level index for the now-documented CI renderer proof surface without overstating suite depth or merge-gate enforcement.]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
@@ -54,6 +54,7 @@ That is broader than “do the tests pass?” The stronger questions are:
 - can runtime behavior stay inspectable when evidence fails, citations fail, or trust state changes?
 - can rollback and correction remain visible instead of being polished away?
 - can reviewer-facing CI helpers prove that they render governed artifacts faithfully without quietly redefining law?
+- can composed reviewer handoff artifacts stay faithful to the underlying bundle, diff, and policy records without replacing them?
 
 ### Evidence boundary used here
 
@@ -165,7 +166,7 @@ Content that belongs in `tests/` includes:
 
 - unit tests for deterministic local behavior
 - integration tests for governed slices across real boundaries
-- CI-helper tests for reviewer-facing summaries, diff rendering, and policy-summary rendering
+- CI-helper tests for reviewer-facing summaries, diff rendering, policy-summary rendering, and composed review handoff rendering
 - contract-validation tests for envelopes, examples, and schema drift
 - policy tests for allow / deny / abstain / hold behavior
 - child-family indexes and narrowly scoped leaf readmes for currently visible sublanes such as `tests/policy/genealogy/`
@@ -210,7 +211,7 @@ The current repo-facing surface proves the following:
 - `tests/README.md` exists.
 - The documented top-level family set includes `accessibility/`, `ci/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
 - `tests/ci/README.md` now exists as a documented helper-proof lane for CI renderers.
-- `tests/ci/` currently documents thin-slice proof centered on `test_render_diff_summary.py` and `test_render_bundle_diff_policy_summary.py`.
+- `tests/ci/` currently documents thin-slice proof centered on `test_render_diff_summary.py`, `test_render_bundle_diff_policy_summary.py`, and `test_render_promotion_review_handoff.py`.
 - `tests/contracts/` is not treated here as README-only; current docs already acknowledge executable contract-facing proof there.
 - `tests/policy/` is not treated here as README-only; it exposes `README.md` plus `genealogy/`.
 - `tests/policy/genealogy/README.md` is documented as a real child README.
@@ -238,7 +239,8 @@ tests/
 ├── ci/
 │   ├── README.md
 │   ├── test_render_bundle_diff_policy_summary.py
-│   └── test_render_diff_summary.py
+│   ├── test_render_diff_summary.py
+│   └── test_render_promotion_review_handoff.py
 ├── contracts/
 │   ├── README.md
 │   └── test_correction_notice_contract.py
@@ -338,7 +340,7 @@ find schemas/contracts -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
 find schemas/tests -maxdepth 5 -type f 2>/dev/null | sort | sed -n '1,240p'
 
 # inspect likely KFM verification vocabulary without assuming a runner
-grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|ABSTAIN\|DENY\|ERROR\|render_diff_summary\|render_bundle_diff_policy_summary" \
+grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|ABSTAIN\|DENY\|ERROR\|render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff" \
   tests contracts policy schemas docs tools 2>/dev/null || true
 ```
 
@@ -387,7 +389,7 @@ Use the smallest fitting existing family before inventing a new top-level folder
 |---|---|---|
 | [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate | visible as a README-bearing family |
 | [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, or projection | visible as a README-bearing family |
-| [`./ci/`](./ci/README.md) | the main job is proving `tools/ci/` helper output over declared artifacts | documented helper-proof lane with thin-slice renderer tests |
+| [`./ci/`](./ci/README.md) | the main job is proving `tools/ci/` helper output over declared artifacts | documented helper-proof lane with thin-slice renderer tests, including composed review handoff proof |
 | [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift | visible as a family with `README.md` plus contract-facing proof |
 | [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior across the broader policy family | visible as a README-bearing family with a visible child lane |
 | [`./policy/genealogy/`](./policy/genealogy/README.md) | the change is genealogy-specific consent, living-person, DNA, provenance, or publication-control policy behavior | visible as a README-bearing child lane under `./policy/` |
@@ -487,7 +489,7 @@ flowchart LR
 | Surface | Current documented evidence | Why it matters to `tests/` |
 |---|---|---|
 | `.github/workflows/README.md` | present as workflow-lane boundary doc | checked-in test families exist, but enforcement still needs platform or branch-local verification |
-| `tools/ci/README.md` | present and now documents diff and policy-summary renderers | top-level `tests/` should acknowledge the helper-proof lane that serves it |
+| `tools/ci/README.md` | present and now documents diff, policy-summary, and review-handoff renderers | top-level `tests/` should acknowledge the helper-proof lane that serves it |
 | `tests/ci/README.md` | present and documents renderer thin-slice proof | makes CI helper verification a first-class family rather than an implicit afterthought |
 
 ### Change-trigger matrix
@@ -517,6 +519,7 @@ flowchart LR
 | correction / supersession drill | prefers visible correction to confident confusion |
 | accessibility failure on trust surface | prevents “verified” behavior that users cannot actually inspect |
 | malformed helper input for CI renderers | proves reviewer-facing surfaces fail clearly instead of inventing output |
+| malformed composed handoff input | proves convenience review documents do not quietly replace underlying machine artifacts |
 
 ## Task list / Definition of done
 
@@ -657,6 +660,7 @@ The repo and the manuals are aligned on principle:
 What changed in the documented shape is that multiple adjacent signals now matter at once:
 
 - `tests/ci/` is now a documented helper-proof lane
+- `tests/ci/` now documents renderer proof for diff summaries, policy summaries, and composed promotion review handoff rendering
 - `tests/contracts/` is no longer treated as purely README-only and shows contract-facing proof
 - `tests/policy/` now has a visible `genealogy/` child lane
 - `schemas/` now has visible contract and fixture scaffolds
