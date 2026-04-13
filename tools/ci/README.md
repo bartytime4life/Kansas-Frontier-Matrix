@@ -9,8 +9,8 @@ created: NEEDS_VERIFICATION_DATE
 updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
-tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff]
-notes: [Updated to reflect render_diff_summary.py and tests/ci/test_render_diff_summary.py in addition to the promotion-oriented renderer thin slice. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
+tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary]
+notes: [Updated to reflect render_bundle_diff_policy_summary.py in addition to the promotion-oriented and diff-oriented renderer thin slice. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -22,7 +22,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > **Path:** [`tools/ci/README.md`](./README.md)  
 > **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice lane shape plus broader public-tree context · exact additional helper inventory, live callers, rulesets, and platform settings remain bounded  
-> **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, and diff summaries. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
+> **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, diff summaries, and bundle diff-policy summaries. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
 > **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-thin--slice%20active-lightgrey)](./README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -37,6 +37,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_promotion_summary.py`
 > - `tools/ci/render_promotion_bundle_summary.py`
 > - `tools/ci/render_diff_summary.py`
+> - `tools/ci/render_bundle_diff_policy_summary.py`
 >
 > `render_diff_summary.py` renders:
 >
@@ -45,11 +46,20 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - added / removed / changed key counts
 > - reviewer-facing Markdown for stable diff reports
 >
+> `render_bundle_diff_policy_summary.py` renders:
+>
+> - policy status
+> - blocking / review-required state
+> - added / removed / changed key counts
+> - per-key classification table
+> - reviewer-facing Markdown for bundle diff-policy reports
+>
 > **Primary downstream trust surfaces**
 > - `decision.json`
 > - `promotion-record.json`
 > - `promotion-bundle.json`
 > - stable diff JSON reports such as `promotion-bundle-diff.json`
+> - bundle diff-policy reports such as `promotion-bundle-diff-policy.json`
 >
 > **Primary adjacent lanes**
 > - `tools/validators/promotion_gate/`
@@ -59,7 +69,8 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > Expected proof surfaces:
 >
 > - `tests/ci/test_render_diff_summary.py`
-> - the existing promotion renderer tests and fixtures where mounted
+> - renderer tests for promotion summaries and bundle summaries where mounted
+> - tests for `render_bundle_diff_policy_summary.py` where mounted
 >
 > These helpers are intended to render already-governed outputs into:
 >
@@ -67,6 +78,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - reviewer-readable Markdown
 > - compact auditor-facing bundle summaries
 > - reviewer-facing diff summaries
+> - reviewer-facing policy summaries for bundle drift
 >
 > They must not silently redefine policy, promotion law, diff law, or release truth.
 
@@ -90,6 +102,7 @@ Use this lane when the job is to:
 - attach evidence, proof-pack, receipt, or artifact links to reviewer-facing output
 - render trust-object bundles into concise reviewer or auditor summaries
 - render structured diff outputs into reviewer-facing Markdown without recomputing comparison law
+- render checked-in policy classifications into reviewer-facing Markdown without recomputing policy authority
 
 Do **not** use this lane when the job is to:
 
@@ -97,7 +110,7 @@ Do **not** use this lane when the job is to:
 - mutate release state, promotion state, or authoritative data
 - replace workflow orchestration with hidden shell logic
 - smuggle business meaning into “just CI glue”
-- become the only place where diff, validation, or attestation meaning exists
+- become the only place where diff, validation, attestation, or policy meaning exists
 
 ### Truth labels used here
 
@@ -126,6 +139,7 @@ Do **not** use this lane when the job is to:
 | Promotion consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Current reviewer summaries are clearest in the promotion flow. |
 | Attestation consumer | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may need reviewer-facing rendering in CI surfaces. |
 | Diff consumer | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Stable diff outputs are now a direct renderer input for this lane. |
+| Policy-summary consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Bundle diff-policy reports now flow into reviewer-facing CI rendering through this lane. |
 | Downstream consumers | pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
 
 ---
@@ -144,6 +158,7 @@ Do **not** use this lane when the job is to:
 | Promotion trust objects | `decision.json`, `promotion-record.json`, `promotion-bundle.json` | Current thin-slice promotion renderers operate over these governed artifacts. |
 | Verification state | sign/verify result refs, attestation verification booleans | Reviewer surfaces increasingly need trust visibility, not just pass/fail text. |
 | Stable diff reports | `stable_diff.py` JSON outputs such as `promotion-bundle-diff.json` | Current diff renderer consumes these directly without redoing comparison logic. |
+| Bundle diff-policy reports | `evaluate_bundle_diff_policy.py` JSON outputs such as `promotion-bundle-diff-policy.json` | Current policy-summary renderer consumes these directly without redoing policy classification logic. |
 
 ### Input rules
 
@@ -151,7 +166,7 @@ Do **not** use this lane when the job is to:
 2. Prefer structured formats over free-form log parsing.
 3. Keep helper-specific contracts small and explicit.
 4. Refuse undeclared or malformed inputs clearly and early.
-5. Render what upstream lanes already decided or measured; do not silently re-decide it here.
+5. Render what upstream lanes already decided, measured, or classified; do not silently re-decide it here.
 
 ---
 
@@ -170,6 +185,7 @@ Do **not** use this lane when the job is to:
 | Signature generation or verification | [`../attest/README.md`](../attest/README.md) | `tools/ci/` may display verification state, but signing and verifying stay in `tools/attest/`. |
 | Promotion decisions | [`../validators/README.md`](../validators/README.md) and `promotion_gate/` | `tools/ci/` renders decisions; it does not author them. |
 | Diff computation | [`../diff/README.md`](../diff/README.md) | `tools/ci/` renders stable diff results; it does not own comparison law. |
+| Policy classification | `policy/` plus validator lanes | `tools/ci/` renders checked-in classifications; it does not decide them. |
 
 ---
 
@@ -184,8 +200,9 @@ Do **not** use this lane when the job is to:
 | `.github/actions/` is visible and placeholder-heavy on current surfaces | **CONFIRMED** | Step-level reuse exists as a neighboring lane, but direct `tools/ci` caller maturity is not yet fully proven. |
 | Current repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
 | Promotion Gate documentation names `render_promotion_summary.py` and `render_promotion_bundle_summary.py` as thin-slice CI surfaces | **CONFIRMED via adjacent documentation** | This lane has concrete promotion renderer identities to document. |
-| `tools/ci/render_diff_summary.py` is the current diff-oriented thin-slice executable helper | **CONFIRMED** | This lane now documents a concrete diff renderer in addition to promotion renderers. |
+| `tools/ci/render_diff_summary.py` is the current diff-oriented thin-slice executable helper | **CONFIRMED** | This lane documents a concrete diff renderer in addition to promotion renderers. |
 | `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | The diff renderer lands with explicit test coverage. |
+| `tools/ci/render_bundle_diff_policy_summary.py` is part of the current promotion bundle diff-policy review path | **CONFIRMED via adjacent implementation updates** | This lane now explicitly includes a policy-summary renderer in the thin slice. |
 | Exact additional helper inventory, live callers, artifact upload wiring, and platform-only settings beyond the thin slice | **UNKNOWN** | Keep broader platform claims out of this README unless re-verified against live settings. |
 
 [Back to top](#ci)
@@ -199,10 +216,12 @@ tools/ci/
 ├── README.md
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
-└── render_diff_summary.py
+├── render_diff_summary.py
+└── render_bundle_diff_policy_summary.py
 
 tests/ci/
-└── test_render_diff_summary.py
+├── test_render_diff_summary.py
+└── test_render_bundle_diff_policy_summary.py   # if mounted; otherwise verify exact path on active branch
 ```
 
 > [!NOTE]
@@ -221,6 +240,7 @@ tools/ci/
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
+├── render_bundle_diff_policy_summary.py
 └── templates/
 ```
 
@@ -248,7 +268,7 @@ sed -n '1,260p' tools/diff/README.md
 
 # Find existing references before adding a helper
 git grep -n "tools/ci" -- . || true
-git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
+git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|policy-summary\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
 
 # Inspect likely producers of CI-facing artifacts
 find .github/actions tools scripts tests -maxdepth 3 -type f | sort
@@ -275,13 +295,21 @@ python tools/ci/render_promotion_bundle_summary.py \
 python tools/ci/render_diff_summary.py \
   diff-report.json \
   --output diff-summary.md
+
+python tools/ci/render_bundle_diff_policy_summary.py \
+  promotion-bundle-diff-policy.json \
+  --output promotion-bundle-diff-policy-summary.md
 ```
 
-### Thin-slice test run for diff rendering
+### Thin-slice test runs
 
 ```bash
 pytest -q tests/ci/test_render_diff_summary.py
+pytest -q tests/ci/test_render_bundle_diff_policy_summary.py
 ```
+
+> [!NOTE]
+> Verify the exact mounted test path for `render_bundle_diff_policy_summary.py` on the active branch if it differs from the expected thin-slice test naming shown here.
 
 ---
 
@@ -340,6 +368,12 @@ python tools/ci/render_diff_summary.py \
   --output promotion-bundle-diff-summary.md
 ```
 
+```bash
+python tools/ci/render_bundle_diff_policy_summary.py \
+  promotion-bundle-diff-policy.json \
+  --output promotion-bundle-diff-policy-summary.md
+```
+
 ### Thin-slice diff rendering behavior
 
 `render_diff_summary.py` currently renders:
@@ -351,6 +385,19 @@ python tools/ci/render_diff_summary.py \
 - reviewer-facing Markdown suitable for CI step summaries
 
 It does **not** compute the diff itself. That stays in `tools/diff/stable_diff.py`.
+
+### Thin-slice policy-summary rendering behavior
+
+`render_bundle_diff_policy_summary.py` currently renders:
+
+- policy status
+- blocking state
+- review-required state
+- added / removed / changed key counts
+- per-key classification table
+- reviewer-facing Markdown suitable for CI step summaries
+
+It does **not** classify keys itself. That stays in the checked-in policy surface plus `evaluate_bundle_diff_policy.py`.
 
 ---
 
@@ -371,10 +418,10 @@ flowchart LR
     CO["contracts/* / schemas/*"]
     PI["pipelines/*<br/>or build reports"]
 
-    IN1["declared reports / manifests / receipts / trust objects"]
+    IN1["declared reports / manifests / receipts / trust objects / diff-policy reports"]
     CI["tools/ci/*<br/>summary + annotation helpers"]
     OUT1["PR summary<br/>check-run text<br/>compact gate digest"]
-    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries<br/>diff summaries"]
+    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries<br/>diff summaries<br/>policy summaries"]
     NO["authoritative truth / promotion / policy law"]
 
     WF --> AC
@@ -411,6 +458,7 @@ flowchart LR
 | Normalizers | Convert tool-specific output into a stable CI-facing shape | raw tool output | normalized intermediate artifacts | **PROPOSED** |
 | Bundle renderers | Render full governed trust bundles for reviewer/auditor handoff | promotion bundle manifests, verification state | one-page Markdown summaries | **Thin-slice active** |
 | Diff renderers | Render stable diff reports for reviewer-facing CI output | stable diff JSON reports | Markdown summaries with change counts and key lists | **Thin-slice active** |
+| Policy-summary renderers | Render checked-in classification outputs for reviewer-facing CI output | bundle diff-policy JSON reports | Markdown summaries with status, counts, and per-key classification tables | **Thin-slice active** |
 
 > [!TIP]
 > The lane itself is real. The helper families above are intentionally distinguished between current thin-slice use and broader proposed growth so the README stays useful without overstating current branch contents.
@@ -424,15 +472,17 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 ### Definition of done for the current thin slice
 
 - [x] `render_diff_summary.py` thin slice implemented
+- [x] `render_bundle_diff_policy_summary.py` thin slice implemented
 - [x] diff renderer tests added
 - [x] renderer inputs are documented and machine-readable
 - [x] outputs are deterministic and usable by both humans and CI
 - [x] helper remains read-only by default
-- [x] failure semantics are explicit: helper failure is different from diff/change meaning
+- [x] failure semantics are explicit: helper failure is different from diff/change meaning or policy classification meaning
 
 ### Next sensible expansions
 
 - [ ] add direct integration examples for `stable_diff.py` caller flows
+- [ ] add direct integration examples for bundle diff-policy reviewer flows
 - [ ] add promotion-bundle-specific diff summary wording if needed
 - [ ] add optional compact mode for PR comment rendering
 - [ ] document specific workflow or script callers once mounted and verified
@@ -456,7 +506,7 @@ Because `scripts/` is the more natural home for orchestration, sequencing, and o
 
 ### Does this README claim helpers already exist?
 
-Yes, now in a bounded thin-slice sense. This lane currently documents promotion-oriented renderers and a diff-summary renderer. Broader inventory still requires verification where evidence is bounded.
+Yes, now in a bounded thin-slice sense. This lane currently documents promotion-oriented renderers, a diff-summary renderer, and a bundle diff-policy summary renderer. Broader inventory still requires verification where evidence is bounded.
 
 ### Can a `tools/ci/` helper publish, promote, or correct artifacts?
 
@@ -473,6 +523,10 @@ Yes — that is a good fit. But the signing and verification themselves belong i
 ### Can `tools/ci/` render diff results?
 
 Yes. That is now part of the current thin slice. But the diff computation itself still belongs in `tools/diff/`.
+
+### Can `tools/ci/` render policy classification results?
+
+Yes. That is now also part of the current thin slice. But the checked-in policy data and its evaluation remain outside this lane.
 
 [Back to top](#ci)
 
@@ -537,6 +591,18 @@ Yes. That is now part of the current thin slice. But the diff computation itself
 - Changed keys: `1`
 ```
 
+### Example current bundle diff-policy summary shape
+
+```md
+# Promotion Bundle Diff Policy Summary
+
+**Status:** ⛔ `block`  
+**Blocking:** `True`  
+**Review required:** `True`  
+**Policy path:** `policy/promotion_bundle_diff_policy.json`  
+**Policy version:** `v1`
+```
+
 Keep these shapes small, boring, and stable. Reviewer trust is helped more by consistency than by cleverness.
 
 </details>
@@ -569,6 +635,21 @@ A diff-oriented CI renderer may take a stable diff JSON report and emit:
 - one short reviewer-facing conclusion block
 
 That is also a rendering concern, not comparison-law authority.
+
+</details>
+
+<details>
+<summary>Illustrative policy-summary role (<strong>thin-slice aligned</strong>)</summary>
+
+A policy-summary renderer may take a checked-in policy evaluation result and emit:
+
+- policy status
+- blocking / review-required state
+- changed-key counts
+- per-key classification table
+- one short reviewer-facing conclusion block
+
+That is a rendering concern, not policy authority.
 
 </details>
 
