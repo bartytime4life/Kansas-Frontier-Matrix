@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: NEEDS-VERIFICATION
+updated: 2026-04-13
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../watchers/README.md, ../dependabot.yml, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../apps/, ../../packages/]
-tags: [kfm, github, workflows, ci-cd, docops]
-notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; the public Actions page and adjacent `.github/actions/` tree provide reconstruction clues but do not prove current checked-in YAML inventory; doc_id, created/updated dates, and policy_label still need repo confirmation.]
+related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../watchers/README.md, ../dependabot.yml, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tests/ci/README.md, ../../tests/validators/README.md, ../../tools/ci/README.md, ../../tools/validators/promotion_gate/README.md, ../../apps/, ../../packages/]
+tags: [kfm, github, workflows, ci-cd, docops, review-handoff]
+notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; the public Actions page and adjacent `.github/actions/` tree provide reconstruction clues but do not prove current checked-in YAML inventory; updated to reflect diff-summary, diff-policy-summary, and promotion-review-handoff publish steps in illustrative workflow examples; doc_id, created date, updated date provenance, and policy_label still need repo confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -22,7 +22,7 @@ Governed GitHub Actions surface for validation, promotion, release evidence, and
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `.github/workflows/README.md`  
-> **Repo fit:** workflow orchestration lane inside the `.github` gatehouse; upstream from [`../README.md`](../README.md), [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../actions/README.md`](../actions/README.md), [`../watchers/README.md`](../watchers/README.md), [`../dependabot.yml`](../dependabot.yml), and [`../SECURITY.md`](../SECURITY.md); downstream into contracts, policy, tests, docs, apps, packages, and release evidence.  
+> **Repo fit:** workflow orchestration lane inside the `.github` gatehouse; upstream from [`../README.md`](../README.md), [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../actions/README.md`](../actions/README.md), [`../watchers/README.md`](../watchers/README.md), [`../dependabot.yml`](../dependabot.yml), and [`../SECURITY.md`](../SECURITY.md); downstream into contracts, policy, tests, docs, apps, packages, and release evidence, including reviewer-facing CI summaries and composed review handoff artifacts.  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-success) ![visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![tree](https://img.shields.io/badge/tree-README--only-lightgrey) ![actions-history](https://img.shields.io/badge/actions_history-visible-0969da)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow model](#workflow-model) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -48,6 +48,10 @@ In KFM, workflow files are not a detached DevOps appendix. They are part of the 
 This directory exists to answer one narrow but consequential question:
 
 **What automation is allowed to change trust state, and what must be proven before that happens?**
+
+That now includes a second, closely related question:
+
+**Which reviewer-facing artifacts are published into workflow summaries so stewards can inspect release-significant drift without leaving the governed review path?**
 
 ### Status markers used in this README
 
@@ -81,6 +85,8 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | Root operating index | [`../../README.md`](../../README.md) | Defines monorepo posture, evidence model, and top-level directory contract |
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
 | Canonical verification surfaces | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Workflows may verify these surfaces, but they do not replace them |
+| CI renderer and helper-proof surfaces | [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Reviewer-facing diff, diff-policy, and composed review handoff artifacts are rendered there and published here |
+| Validator promotion chain | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md) | Promotion review flows now explicitly include bundle diff, diff-policy, and review-handoff outputs that workflow summaries may publish |
 | Runtime and package surfaces | [`../../apps/`](../../apps/), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving canonical ownership into workflow YAML |
 | Long-form doctrine and runbooks | [`../../docs/`](../../docs/) | Behavior-significant workflow changes should keep docs aligned |
 
@@ -110,9 +116,13 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 Accepted inputs for this directory include:
 
 - GitHub Actions workflow files that validate, gate, attest, promote, reconcile, or verify repo changes
-- Workflow-local notes that explain current inventory, historically visible lanes, intended gate families, or migration from placeholder to active automation
-- Minimal examples that help reviewers understand what a proposed workflow is supposed to prove
-- Only the smallest amount of workflow-facing documentation needed to keep automation reviewable
+- workflow-local notes that explain current inventory, historically visible lanes, intended gate families, or migration from placeholder to active automation
+- minimal examples that help reviewers understand what a proposed workflow is supposed to prove
+- publish-step examples for reviewer-facing outputs such as:
+  - diff summaries
+  - diff-policy summaries
+  - composed promotion review handoff documents
+- only the smallest amount of workflow-facing documentation needed to keep automation reviewable
 
 ## Exclusions
 
@@ -134,6 +144,8 @@ The following do **not** belong here as the canonical source of truth:
   → keep them in code surfaces such as [`../../apps/`](../../apps/) and [`../../packages/`](../../packages/)
 - Long-form operational runbooks that outgrow directory-local explanation  
   → place under [`../../docs/`](../../docs/)
+- Treating `GITHUB_STEP_SUMMARY` output as the authoritative trust object  
+  → keep machine-authoritative objects in their governed bundle, diff, diff-policy, and proof surfaces
 
 ---
 
@@ -217,10 +229,10 @@ find .github/actions -maxdepth 2 -name 'action.yml' | sort
 sed -n '1,260p' .github/watchers/README.md 2>/dev/null || true
 
 # 8) Cross-check repo surfaces workflows are expected to verify
-ls -la contracts schemas policy tests docs apps packages 2>/dev/null || true
+ls -la contracts schemas policy tests docs apps packages tools 2>/dev/null || true
 
-# 9) Search workflow-local docs for release-, policy-, or evidence-facing terms
-grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom" .github/workflows 2>/dev/null || true
+# 9) Search workflow-local docs for release-, policy-, evidence-, or review-handoff-facing terms
+grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom\|review-handoff\|GITHUB_STEP_SUMMARY" .github/workflows 2>/dev/null || true
 
 # 10) If the lane is being reconstructed, inspect git history instead of guessing
 git log --name-status -- .github/workflows
@@ -238,7 +250,7 @@ git log --name-status -- .github/workflows
 5. Check whether repo-local actions under [`../actions/`](../actions/) already cover reusable workflow behavior.
 6. Treat watcher-local scaffold references as clues to reconcile, not as proof of current YAML presence.
 7. Change the smallest possible workflow surface.
-8. Re-check rollback, correction, and contributor ergonomics after adding or tightening gates.
+8. Re-check rollback, correction, contributor ergonomics, and reviewer-output publication after adding or tightening gates.
 
 ---
 
@@ -277,6 +289,7 @@ Preserve these expectations:
 - review remains accountable
 - rollback and correction stay possible
 - documentation and accessibility changes travel with behavior-significant workflow changes
+- reviewer-facing summaries remain derived convenience surfaces rather than authoritative trust objects
 
 ### Workflow orchestration versus reusable automation
 
@@ -322,6 +335,26 @@ That keeps:
 - policy and provenance checks more reusable, and
 - orchestration separate from step implementation.
 
+### Publishing reviewer surfaces safely
+
+When a workflow publishes reviewer-facing content to `GITHUB_STEP_SUMMARY`, keep the publication order explicit and the authority split visible.
+
+Good current thin-slice publication order:
+
+1. promotion bundle summary
+2. promotion bundle diff summary
+3. promotion bundle diff-policy summary
+4. promotion review handoff
+
+That ordering helps a reviewer see:
+
+- the governed bundle itself
+- the prior/current drift
+- the policy classification of that drift
+- the composed steward-facing conclusion
+
+without confusing the final composed handoff document for the underlying machine-authoritative records.
+
 <p align="right"><a href="#top">Back to top ⤴</a></p>
 
 ## Workflow model
@@ -343,10 +376,14 @@ flowchart LR
 
     C --> D[Review + CODEOWNERS]
     D -->|approved| E[promote-and-reconcile.yml]
-    E --> F[Published or steward-visible correction-ready state]
+    E --> F[Bundle summary]
+    F --> G[Bundle diff summary]
+    G --> H[Bundle diff-policy summary]
+    H --> I[Promotion review handoff]
+    I --> J[Published or steward-visible correction-ready state]
 
-    D -->|rejected or insufficient| G[Hold / revise / quarantine]
-    F -. future explicit drill lane .-> H[rehearse-rollback-and-correction.yml]
+    D -->|rejected or insufficient| K[Hold / revise / quarantine]
+    J -. future explicit drill lane .-> L[rehearse-rollback-and-correction.yml]
 ```
 
 Reading rule: **promotion is a trust-state change, not a blind deploy step**.
@@ -398,6 +435,7 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Promotion paths consume already-approved artifacts or reviewed desired state rather than rebuilding silently later.
 - [ ] Candidate and release proof-pack expectations are explicit where the lane is trust-significant.
 - [ ] Runtime verification, rollback, or correction consequences are documented for any workflow that can change trust state.
+- [ ] Reviewer-summary publication order is explicit when bundle, diff, diff-policy, and review-handoff artifacts are all published.
 - [ ] Unknowns remain visible instead of being rewritten as certainty.
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
@@ -427,6 +465,10 @@ This README assumes **no**. Workflows may prepare evidence, run gates, and block
 ### Should policy rules, schemas, or attestations live here?
 
 No. Workflows may verify them, but canonical ownership remains outside this directory.
+
+### Can `GITHUB_STEP_SUMMARY` output become the authoritative review object?
+
+No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, bundle, diff, diff-policy, and proof lanes.
 
 ### What becomes CONFIRMED here?
 
@@ -509,6 +551,44 @@ jobs:
 </details>
 
 <details>
+<summary><strong>Illustrative publish sequence for promotion review artifacts (PROPOSED)</strong></summary>
+
+This example shows the intended review publication order once the promotion thin slice is wired into workflow YAML.
+
+```yaml
+- name: Render promotion bundle diff summary
+  run: |
+    python tools/ci/render_diff_summary.py \
+      promotion-bundle-diff.json \
+      --output promotion-bundle-diff-summary.md
+
+- name: Render promotion bundle diff policy summary
+  run: |
+    python tools/ci/render_bundle_diff_policy_summary.py \
+      promotion-bundle-diff-policy.json \
+      --output promotion-bundle-diff-policy-summary.md
+
+- name: Render promotion review handoff
+  run: |
+    python tools/ci/render_promotion_review_handoff.py \
+      --bundle promotion-bundle.json \
+      --diff promotion-bundle-diff.json \
+      --diff-policy promotion-bundle-diff-policy.json \
+      --output promotion-review-handoff.md
+
+- name: Publish review artifacts
+  run: |
+    cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-bundle-diff-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-bundle-diff-policy-summary.md >> "$GITHUB_STEP_SUMMARY"
+    cat promotion-review-handoff.md >> "$GITHUB_STEP_SUMMARY"
+```
+
+Use this as ordering guidance, not as proof that current `main` already contains the workflow file.
+
+</details>
+
+<details>
 <summary><strong>Review questions before restoring or adding a blocking workflow</strong></summary>
 
 1. What exact trust-state transition does this workflow control?
@@ -518,6 +598,7 @@ jobs:
 5. What correction path exists if the workflow proves too weak or too strong?
 6. Which canonical surfaces does it verify rather than duplicate?
 7. Can a future maintainer explain this workflow from its filename and README entry alone?
+8. If it publishes reviewer-facing artifacts, in what order are they shown and why?
 
 </details>
 
