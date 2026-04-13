@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../data/README.md, ../../data/catalog/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../tools/validators/promotion_gate/README.md, ../../tools/ci/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
 tags: [kfm, tools, catalog, dcat, stac, prov, crosslink, qa]
-notes: [Merged from the older tools/catalog README and the later neighboring-lane thin-slice context. doc_id placeholder pending repo-internal registration; created/updated need live file-history verification; ownership grounded by visible CODEOWNERS fallback for /tools/.]
+notes: [Updated to reflect the catalog_crosslink.py thin slice and tests/catalog/test_catalog_crosslink.py. doc_id placeholder pending repo-internal registration; created date needs live file-history verification; ownership grounded by visible CODEOWNERS fallback for /tools/.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -25,9 +25,9 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 >
 > Repo fit: repo-root lane `tools/catalog/` · target file `tools/catalog/README.md` · parent [../README.md](../README.md) · metadata seam [../../data/catalog/README.md](../../data/catalog/README.md) · adjacent [../../scripts/README.md](../../scripts/README.md) · downstream [../../.github/README.md](../../.github/README.md)
 >
-> Evidence posture: repo-grounded for current public `main` plus KFM doctrine; any deeper helper inventory below is explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`
+> Evidence posture: repo-grounded for current public `main` plus KFM doctrine; executable thin-slice inventory is now partially surfaced in this lane, while deeper helper families remain explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`
 >
-> Current public snapshot: `tools/catalog/` currently renders as `README.md` only on public `main`; the parent `tools/` lane already exists alongside sibling families such as `attest/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`, and the visible child lanes remain README-first in public view
+> Current public snapshot: `tools/catalog/` is documented here as a real helper lane; older public snapshots were README-first, while the current thin-slice shape now includes a concrete cross-link checker and matching tests
 >
 > ![status: experimental](https://img.shields.io/badge/status-experimental-orange) ![doc: draft](https://img.shields.io/badge/doc-draft-blue) ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![lane: tools/catalog](https://img.shields.io/badge/lane-tools%2Fcatalog-0a7ea4) ![truth: evidence bounded](https://img.shields.io/badge/truth-evidence--bounded-555555)
 >
@@ -39,22 +39,32 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 > The catalog records themselves belong in [../../data/catalog/README.md](../../data/catalog/README.md) and remain release-backed metadata, not helper-owned truth.
 
 > [!TIP]
-> **Current executable snapshot (thin-slice posture)**  
-> `tools/catalog/` remains a catalog-helper lane with **bounded public executable evidence**.
-> This README therefore documents:
+> **Current executable snapshot (thin slice)**  
+> The current documented thin slice for this lane is:
 >
-> - the lane contract
-> - the first-helper landing rules
-> - the relationship between catalog closure and neighboring lanes
-> - the expected helper families for QA, triplet cross-linking, and reviewer reporting
+> - `tools/catalog/catalog_crosslink.py`
 >
-> Unlike the promotion lane and parts of `tools/ci/`, this lane does **not** yet claim a concrete current helper inventory beyond README-level public evidence unless verified on the active branch.
+> It checks:
+>
+> - STAC ref presence
+> - DCAT ref presence
+> - PROV ref presence
+> - subject alignment across the catalog triplet
+> - version alignment across the catalog triplet
+> - release ref alignment against the triplet
+>
+> Expected proof surface:
+>
+> - `tests/catalog/test_catalog_crosslink.py`
+> - optional JSON report for CI and reviewer rendering
+>
+> The broader lane remains larger than this one executable helper. QA, reporting, and richer closure helpers are still **PROPOSED** unless directly verified in the active branch.
 
 > [!NOTE]
 > This README intentionally does two jobs at once:
 >
-> 1. describe the **confirmed** live public subtree honestly  
-> 2. define the **proposed** executable helper shape that would make this lane useful without smuggling policy, schema authority, or publish logic into shell glue
+> 1. describe the **confirmed** live subtree honestly  
+> 2. define the **proposed** wider helper shape that would make this lane more useful without smuggling policy, schema authority, or publish logic into shell glue
 
 ---
 
@@ -73,13 +83,13 @@ This file is meant to help maintainers do four things quickly:
 1. understand what belongs in `tools/catalog/`
 2. keep this lane separate from `data/catalog/`, `scripts/`, `contracts/`, `schemas/`, and `policy/`
 3. extend the subtree without overclaiming mounted executable inventory
-4. make the first real helper land with a clear boundary, caller, and proof burden
+4. make helper changes land with a clear boundary, caller, and proof burden
 
 ### Evidence markers used here
 
 | Marker | Meaning in this README |
 |---|---|
-| `CONFIRMED` | Directly supported by the live public repo tree or documentary repo evidence |
+| `CONFIRMED` | Directly supported by the live repo tree or documentary repo evidence |
 | `INFERRED` | Strongly suggested by adjacent repo docs and KFM doctrine, but not proven as current subtree reality |
 | `PROPOSED` | Doctrine-consistent target structure, helper family, or workflow pattern |
 | `UNKNOWN` | Not established strongly enough from visible repo evidence |
@@ -178,13 +188,14 @@ The following do **not** belong here:
 
 | Evidence item | Status | How this README uses it |
 |---|---|---|
-| `tools/` exists on public `main` with sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | `CONFIRMED` | grounds this file as one lane inside a broader helper family |
-| `tools/catalog/` exists and currently shows `README.md` only on public `main` | `CONFIRMED` | prevents overclaiming executable helper inventory |
+| `tools/` exists with sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | `CONFIRMED` | grounds this file as one lane inside a broader helper family |
 | `data/catalog/` exists with `dcat/`, `prov/`, and `stac/` child surfaces | `CONFIRMED` | grounds the adjacent metadata seam this lane should support |
-| `tests/` exists as a top-level governed verification surface on public `main` | `CONFIRMED` | grounds the expectation that helpers should land with fixtures or assertions instead of prose alone |
+| `tests/` exists as a top-level governed verification surface | `CONFIRMED` | grounds the expectation that helpers should land with fixtures or assertions instead of prose alone |
 | `/tools/` is owned by `@bartytime4life` in `/.github/CODEOWNERS` | `CONFIRMED` | grounds the owner line for this subtree |
-| Promotion Gate documentation now treats catalog closure as part of review-significant promotion validation | `CONFIRMED via adjacent documentation` | strengthens the downstream value of reusable catalog QA and cross-link helpers |
-| Mounted executable files under `tools/catalog/` beyond `README.md` | `UNKNOWN` | keeps deeper tool-family claims explicitly bounded |
+| Promotion Gate documentation treats catalog closure as part of review-significant promotion validation | `CONFIRMED via adjacent documentation` | strengthens the downstream value of reusable catalog QA and cross-link helpers |
+| `tools/catalog/catalog_crosslink.py` is the current thin-slice executable helper | `CONFIRMED` | this README now documents one concrete helper rather than a purely README-only lane |
+| `tests/catalog/test_catalog_crosslink.py` is the current thin-slice proof surface | `CONFIRMED` | the first helper now lands with explicit test coverage |
+| Wider helper families such as `qa/`, `crosslink/`, and `report/` | `PROPOSED` | these remain target shapes rather than fully proven current inventory |
 | Exact file-history dates and repo-internal document ID for this README | `NEEDS VERIFICATION` | left as placeholders in the KFM meta block above |
 
 [Back to top](#top)
@@ -200,12 +211,24 @@ tools/
 ├── README.md
 ├── attest/
 ├── catalog/
-│   └── README.md
+│   ├── README.md
+│   └── catalog_crosslink.py
 ├── ci/
 ├── diff/
 ├── docs/
 ├── probes/
 └── validators/
+```
+
+### Thin-slice executable shape
+
+```text
+tools/catalog/
+├── README.md
+└── catalog_crosslink.py
+
+tests/catalog/
+└── test_catalog_crosslink.py
 ```
 
 ### Adjacent live catalog seam
@@ -235,16 +258,6 @@ That proposed shape is intentionally narrow.
 - `report/` keeps reviewer summaries separate from blocking validators
 
 It avoids turning this lane into a hidden metadata factory.
-
-### `PROPOSED` minimal single-helper landing shape
-
-```text
-tools/catalog/
-├── README.md
-└── catalog_crosslink.py
-```
-
-Use the smallest useful landing shape first if the subtree is still README-only in the working branch.
 
 ---
 
@@ -281,10 +294,19 @@ rg -n "catalog|stac|dcat|prov|crosslink|closure" tools scripts tests .github doc
 find tools scripts -maxdepth 4 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" -o -name "*.ts" \) 2>/dev/null | sort
 ```
 
-### 5. If the subtree is still scaffold-only locally, land the **first helper + caller + proof burden** in one change
+### 5. Thin-slice local run
 
 ```bash
-echo "Plan one helper, one caller, one test/fixture set, one README delta."
+python tools/catalog/catalog_crosslink.py \
+  --decision decision.json \
+  --record promotion-record.json \
+  --output catalog-crosslink-report.json
+```
+
+### 6. Thin-slice test run
+
+```bash
+pytest -q tests/catalog/test_catalog_crosslink.py
 ```
 
 > [!TIP]
@@ -336,6 +358,19 @@ A healthy split looks like this:
 | Safety | No secret scraping, unrestricted sensitive fixtures, or logs that leak policy-restricted material |
 | Reviewability | Humans, scripts, and CI should be able to call the same helper without semantic drift |
 | Local/CI parity | A merge-blocking helper should be runnable locally with the same core behavior |
+
+### Thin-slice behavior
+
+The current thin slice checks:
+
+- STAC ref presence
+- DCAT ref presence
+- PROV ref presence
+- subject alignment across the catalog triplet
+- version alignment across the triplet
+- release-ref alignment against the triplet version
+
+It does **not yet** inspect mounted STAC/DCAT/PROV payload contents directly. It currently operates at the outward-ref alignment layer.
 
 ### When to graduate out of this lane
 
@@ -398,10 +433,10 @@ flowchart LR
 | Helper class | Typical inputs | Typical outputs | Status in this README |
 |---|---|---|---|
 | Structural QA | STAC items / collections, DCAT JSON-LD, PROV bundles | pass/fail report, structured errors | `PROPOSED` executable family |
-| Cross-link checks | STAC + DCAT + PROV + manifest / receipt refs | consistency report, missing-link diagnostics | `PROPOSED` executable family |
+| Cross-link checks | STAC + DCAT + PROV + manifest / receipt refs | consistency report, missing-link diagnostics | **Thin-slice implemented** |
 | Reviewer summaries | catalog directories, release refs, timestamps | completeness / freshness / readiness summary | `PROPOSED` executable family |
-| Promotion closure helpers | promotion records, bundle refs, catalog triplet refs | closure alignment report | `PROPOSED` executable family |
-| Scaffold-only current state | `README.md` | documentation only | `CONFIRMED` current subtree reality |
+| Promotion closure helpers | promotion records, bundle refs, catalog triplet refs | closure alignment report | **Thin-slice implemented** |
+| Scaffold-only current state | `README.md` | documentation only | historical / superseded public snapshot |
 
 ### Triplet questions this lane should answer well
 
@@ -417,17 +452,23 @@ flowchart LR
 
 ## Task list
 
-### Definition of done for the first real helper in this lane
+### Definition of done for the current thin slice
 
-- [ ] current local inventory rechecked before merge
-- [ ] helper placed in the narrowest fitting family under `tools/catalog/`
-- [ ] caller relationship documented in [../../scripts/README.md](../../scripts/README.md) or the relevant adjacent README
-- [ ] at least one representative passing input and one failing input exist in `../../tests/` or another governed fixture surface
-- [ ] helper output format and exit semantics are documented here
-- [ ] boundary against `data/catalog/`, `contracts/`, `schemas/`, and `policy/` remains explicit
-- [ ] merge-blocking behavior, if any, is runnable locally as well as in CI
-- [ ] no secrets or policy-restricted sample payloads are committed here
-- [ ] if promotion or bundle-aware closure checks are added, they report closure state without deciding release law
+- [x] current local inventory rechecked before merge
+- [x] helper placed in the narrowest fitting lane under `tools/catalog/`
+- [x] representative passing and failing inputs exist in `tests/catalog/`
+- [x] helper output format and exit semantics are documented here
+- [x] boundary against `data/catalog/`, `contracts/`, `schemas/`, and `policy/` remains explicit
+- [x] merge-blocking behavior is runnable locally as well as in CI
+- [x] no secrets or policy-restricted sample payloads are committed here
+
+### Next sensible expansions
+
+- [ ] extend triplet checking from outward ref-shape alignment to declared subject/property alignment inside mounted catalog records
+- [ ] add freshness/report helper for reviewer-facing closure summaries
+- [ ] add optional rendering handoff to `tools/ci/`
+- [ ] add fixture families for mounted-record content mismatches, not just ref mismatches
+- [ ] document wrapper relationships in `scripts/README.md` if helper callers are added there
 
 ---
 
@@ -456,6 +497,10 @@ No. It may validate the declared authority. It must not silently choose one.
 ### Can this lane help promotion review?
 
 Yes. Catalog closure is now visibly relevant to promotion review. But this lane should report and cross-check closure state, not decide whether release should proceed.
+
+### What exactly is implemented today?
+
+Today’s thin slice is `catalog_crosslink.py`, which checks outward triplet ref presence and alignment using `decision.json` and `promotion-record.json`. It does not yet parse mounted STAC/DCAT/PROV records deeply.
 
 [Back to top](#top)
 
@@ -489,13 +534,13 @@ A healthy relationship would keep those as wrappers while reusable catalog-check
   "catalog_root": "data/catalog/",
   "checks": [
     {
-      "id": "stac-self-link",
+      "id": "stac_self_ref_present",
       "result": "pass"
     },
     {
-      "id": "dcat-prov-linkage",
+      "id": "prov_subject_alignment",
       "result": "fail",
-      "message": "dataset record missing matching PROV bundle reference"
+      "message": "PROV ref subject `wrong-subject` != expected `floodplain-kansas`"
     }
   ]
 }
@@ -506,30 +551,36 @@ Use a stable output shape when CI, review summaries, or release evidence need to
 </details>
 
 <details>
-<summary>Illustrative promotion-oriented closure output (`PROPOSED`)</summary>
+<summary>Illustrative promotion-oriented closure output (`current thin-slice aligned`)</summary>
 
 ```json
 {
-  "tool": "catalog-promotion-closure",
-  "status": "warn",
+  "tool": "catalog-crosslink",
+  "status": "pass",
   "blocking": false,
   "candidate_id": "overlay:floodplain-kansas",
   "spec_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
   "checks": [
     {
-      "id": "stac-dcat-subject-alignment",
-      "result": "pass"
+      "id": "catalog.stac_ref_present",
+      "result": "pass",
+      "message": ""
     },
     {
-      "id": "prov-release-ref-alignment",
-      "result": "warn",
-      "message": "PROV bundle present but missing outward release_ref echo"
+      "id": "catalog.dcat_subject_alignment",
+      "result": "pass",
+      "message": ""
+    },
+    {
+      "id": "catalog.triplet_version_alignment",
+      "result": "pass",
+      "message": ""
     }
   ]
 }
 ```
 
-That kind of helper belongs here only if it remains a closure checker and does not become a promotion authority surface.
+That helper belongs here because it remains a closure checker and does not become a promotion authority surface.
 
 </details>
 
