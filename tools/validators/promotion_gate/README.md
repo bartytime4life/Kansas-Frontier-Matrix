@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: 2026-04-13
 policy_label: public
-related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../policy/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tools/ci/render_promotion_summary.py, ../../../.github/workflows/README.md]
+related: [../../../contracts/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../policy/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/test_promotion_gate_e2e.py, ../../../tools/ci/render_promotion_summary.py, ../../../tools/ci/render_promotion_bundle_summary.py, ../../../.github/workflows/README.md]
 tags: [kfm, validators, promotion, governance, evidence, ci]
-notes: [Merged from the earlier doctrinal Promotion Gate draft and the newer executable lane README. Target path is inferred as tools/validators/promotion_gate/README.md; active-branch inventory, exact workflow wiring, and merge-blocking enforcement remain NEEDS VERIFICATION.]
+notes: [Merged from the earlier doctrinal Promotion Gate draft and the later thin-slice implementation work. Target path is inferred as tools/validators/promotion_gate/README.md; active-branch inventory, exact workflow wiring, and merge-blocking enforcement remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # Promotion Gate (A–G)
@@ -20,7 +20,7 @@ Fail-closed, evidence-first promotion validation for KFM release candidates.
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: tools/validators](https://img.shields.io/badge/lane-tools%2Fvalidators-1f6feb) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-critical) ![KFM: Evidence First](https://img.shields.io/badge/kfm-evidence--first-6f42c1) ![Implementation: Needs Verification](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) • [Repo fit](#repo-fit) • [Inputs](#inputs) • [Exclusions](#exclusions) • [Directory tree](#directory-tree) • [Decision contract](#decision-contract) • [Gate matrix](#gate-matrix-ag) • [Quickstart](#quickstart) • [Execution flow](#execution-flow) • [Outputs](#outputs) • [Policy evaluation](#policy-evaluation) • [CI integration](#ci-integration) • [Tests](#tests) • [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) • [Repo fit](#repo-fit) • [Inputs](#inputs) • [Exclusions](#exclusions) • [Directory tree](#directory-tree) • [Decision contract](#decision-contract) • [Gate matrix](#gate-matrix-ag) • [Execution flow](#execution-flow) • [Quickstart](#quickstart) • [Outputs](#outputs) • [Trust chain](#trust-chain) • [Policy evaluation](#policy-evaluation) • [CI integration](#ci-integration) • [Tests](#tests) • [FAQ](#faq)
 
 > [!IMPORTANT]
 > This document defines both a **validator contract** and the current **executable thin-slice surface** for promotion validation. It does **not** by itself prove that all mounted paths, workflows, schemas, or merge-blocking integrations are present on the active branch. Exact executable paths, schema locations, and enforcement posture remain **NEEDS VERIFICATION** where not directly confirmed.
@@ -34,12 +34,12 @@ This lane decides whether a release candidate is promotable under KFM governance
 This README serves two purposes at once:
 
 1. a **normative lane contract** for promotion decisions; and  
-2. an **implementation-facing directory README** for the thin executable slice now scaffolded under this path.
+2. an **implementation-facing directory README** for the executable thin slice scaffolded under this path.
 
 | Posture | Meaning in this document |
 |---|---|
 | **CONFIRMED** | KFM requires typed contracts, evidence-bearing release objects, policy-visible decisions, catalog closure, and fail-closed behavior. |
-| **PROPOSED** | The exact A–G decomposition, example schemas, and some implementation details below. |
+| **PROPOSED** | Some exact field choices, helper names, and current thin-slice wiring below. |
 | **UNKNOWN / NEEDS VERIFICATION** | Mounted validator code, workflow enforcement, exact branch inventory, and any deeper integration not directly confirmed. |
 
 ---
@@ -109,6 +109,9 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | asset files | `data/work/.../assets/*` |
 | policy bundle | `tools/validators/promotion_gate/policies/*.rego` |
 | decision schema | `schemas/promotion/decision-envelope.schema.json` |
+| record schema | `schemas/promotion/promotion-record.schema.json` |
+| PROV schema | `schemas/promotion/promotion-prov.schema.json` |
+| bundle schema | `schemas/promotion/promotion-bundle.schema.json` |
 
 ---
 
@@ -136,6 +139,12 @@ tools/validators/promotion_gate/
 ├── promotion_gate.py
 ├── prepare_candidate_fixture.py
 ├── validate_decision_envelope.py
+├── validate_promotion_record.py
+├── validate_promotion_prov.py
+├── validate_promotion_bundle.py
+├── write_promotion_record.py
+├── write_promotion_bundle.py
+├── emit_promotion_prov.py
 ├── policies/
 │   ├── a_identity.rego
 │   ├── b_integrity.rego
@@ -150,8 +159,11 @@ tools/validators/promotion_gate/
 Related surfaces:
 
 ```text
+tools/attest/sign_decision_envelope.py
+tools/attest/verify_decision_envelope.py
 tools/ci/render_promotion_summary.py
-schemas/promotion/decision-envelope.schema.json
+tools/ci/render_promotion_bundle_summary.py
+schemas/promotion/
 tests/fixtures/promotion/
 tests/validators/test_promotion_gate_e2e.py
 ```
@@ -223,9 +235,19 @@ generated_at: RFC3339 timestamp
 | `gates[]` | Per-gate results for reviewer and CI visibility. |
 | `generated_at` | Time the decision was produced. |
 
-### Secondary reviewer output
+### Secondary and derived outputs
 
-In the current thin slice, `decision.json` may also be rendered into a reviewer-readable Markdown summary for CI surfaces such as step summaries and artifacts.
+The current thin slice may also emit:
+
+| Object | Purpose |
+|---|---|
+| `promotion-summary.md` | reviewer-readable summary of the DecisionEnvelope |
+| `promotion-record.json` | compact promotion ledger entry derived from the decision |
+| `promotion-prov.json` | minimal PROV document derived from the promotion record |
+| `promotion-bundle.json` | index of the full governed promotion artifact set |
+| `promotion-bundle-summary.md` | reviewer / auditor summary of the full bundle |
+| `decision-sign-result.json` | signing command result |
+| `decision-verify-result.json` | attestation verification result |
 
 ---
 
@@ -263,7 +285,12 @@ flowchart LR
     E --> F[DecisionEnvelope JSON]
     F --> G[validate_decision_envelope.py]
     F --> H[render_promotion_summary.py]
-    H --> I[Reviewer / CI output]
+    F --> I[sign_decision_envelope.py]
+    I --> J[verify_decision_envelope.py]
+    F --> K[write_promotion_record.py]
+    K --> L[emit_promotion_prov.py]
+    K --> M[write_promotion_bundle.py]
+    M --> N[render_promotion_bundle_summary.py]
 ```
 
 ### Execution steps
@@ -277,7 +304,41 @@ flowchart LR
 7. Collapse the result to one finite `decision`.
 8. Validate the decision against schema.
 9. Render reviewer-readable output where needed.
-10. Route the result into governed review or rework.
+10. Optionally sign and verify the decision.
+11. Derive record, PROV, and bundle objects.
+12. Route the result into governed review or rework.
+
+---
+
+## Trust chain
+
+The current thin slice now supports a fuller governed promotion evidence chain.
+
+```mermaid
+flowchart LR
+    A[Candidate] --> B[DecisionEnvelope]
+    B --> C[Signed Decision]
+    C --> D[Verified Attestation]
+    B --> E[Promotion Summary]
+    B --> F[Promotion Record]
+    F --> G[Promotion PROV]
+    B --> H[Promotion Bundle]
+    H --> I[Bundle Summary]
+```
+
+### Trust object split
+
+| Surface | Role |
+|---|---|
+| `decision.json` | finite machine-readable decision |
+| `decision-sign-result.json` | receipt-like signing outcome |
+| `decision-verify-result.json` | receipt-like verification outcome |
+| `promotion-record.json` | compact governed ledger entry |
+| `promotion-prov.json` | provenance activity for promotion |
+| `promotion-bundle.json` | bundle manifest indexing the full promotion artifact set |
+
+> [!NOTE]
+> This preserves KFM’s **receipts vs proofs** doctrine: receipts capture process memory; proofs and release-significant trust objects remain separately identifiable.
 
 ---
 
@@ -327,11 +388,40 @@ python tools/ci/render_promotion_summary.py \
   --output promotion-summary.md
 ```
 
-### 5. Inspect the outputs
+### 5. Write the promotion record
 
 ```bash
-jq . decision.json
-cat promotion-summary.md
+python tools/validators/promotion_gate/write_promotion_record.py \
+  decision.json \
+  --output promotion-record.json \
+  --summary-ref "artifact://promotion-summary.md"
+```
+
+### 6. Emit promotion PROV
+
+```bash
+python tools/validators/promotion_gate/emit_promotion_prov.py \
+  promotion-record.json \
+  --output promotion-prov.json
+```
+
+### 7. Write the promotion bundle
+
+```bash
+python tools/validators/promotion_gate/write_promotion_bundle.py \
+  --decision decision.json \
+  --summary promotion-summary.md \
+  --record promotion-record.json \
+  --prov promotion-prov.json \
+  --output promotion-bundle.json
+```
+
+### 8. Render bundle summary
+
+```bash
+python tools/ci/render_promotion_bundle_summary.py \
+  promotion-bundle.json \
+  --output promotion-bundle-summary.md
 ```
 
 ---
@@ -387,7 +477,7 @@ deny contains "policy.rights_missing" if {
 
 ## CI integration
 
-Illustrative workflow wiring for the current thin slice:
+Illustrative workflow wiring for the fuller thin slice:
 
 ```yaml
 - name: Prepare candidate fixture
@@ -413,8 +503,36 @@ Illustrative workflow wiring for the current thin slice:
       decision.json \
       --output promotion-summary.md
 
+- name: Write promotion record
+  run: |
+    python tools/validators/promotion_gate/write_promotion_record.py \
+      decision.json \
+      --output promotion-record.json \
+      --summary-ref "artifact://promotion-summary.md"
+
+- name: Emit promotion PROV
+  run: |
+    python tools/validators/promotion_gate/emit_promotion_prov.py \
+      promotion-record.json \
+      --output promotion-prov.json
+
+- name: Write promotion bundle
+  run: |
+    python tools/validators/promotion_gate/write_promotion_bundle.py \
+      --decision decision.json \
+      --summary promotion-summary.md \
+      --record promotion-record.json \
+      --prov promotion-prov.json \
+      --output promotion-bundle.json
+
+- name: Render promotion bundle summary
+  run: |
+    python tools/ci/render_promotion_bundle_summary.py \
+      promotion-bundle.json \
+      --output promotion-bundle-summary.md
+
 - name: Publish summary
-  run: cat promotion-summary.md >> "$GITHUB_STEP_SUMMARY"
+  run: cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ---
@@ -433,9 +551,16 @@ pytest -q tests/validators/test_promotion_gate_e2e.py
 |---|---|
 | fixture preparation | hashes computed correctly |
 | gate runner | decision envelope emitted |
-| schema validation | envelope conforms to schema |
+| decision schema validation | envelope conforms to schema |
 | summary rendering | Markdown reviewer output generated |
 | failure path | checksum mismatch collapses to `DENY` |
+| promotion record | compact ledger entry emitted |
+| promotion record schema | record validates |
+| promotion PROV | provenance emitted |
+| promotion PROV schema | PROV validates |
+| promotion bundle | bundle manifest emitted |
+| promotion bundle schema | bundle validates |
+| bundle summary | reviewer / auditor summary generated |
 
 ### Minimal Python dependencies
 
@@ -466,6 +591,7 @@ jsonschema
 - **Policy-separated** — Rego owns policy authority
 - **Reviewer-visible** — human-readable summaries are first-class
 - **Receipt-safe** — receipts and proofs remain distinct trust surfaces
+- **Trust-chain aware** — derived objects should preserve attestation state, execution identity, and rollback linkage
 
 ---
 
@@ -480,7 +606,8 @@ jsonschema
 - [ ] Proof objects and receipts stay distinct.
 - [ ] Reviewer approval and rollback readiness are visible before promotion proceeds.
 - [ ] A passing gate still routes through governed review; no silent direct publish path exists.
-- [ ] E2E thin-slice tests remain green as the policy and schema evolve.
+- [ ] E2E thin-slice tests remain green as policy and schema evolve.
+- [ ] Signed-decision verification state is preserved through record, PROV, and bundle outputs where implemented.
 
 ---
 
@@ -500,7 +627,7 @@ No. Domain-specific validation still belongs in subject lanes. This gate sits ab
 
 ### Why split Python and Rego?
 
-Python handles orchestration, file preparation, and rendering. Rego holds policy logic. This keeps governance visible, reviewable, and less likely to drift into helper code.
+Python handles orchestration, file preparation, derivation, and rendering. Rego holds policy logic. This keeps governance visible, reviewable, and less likely to drift into helper code.
 
 ### Is the directory layout already implemented?
 
@@ -514,7 +641,7 @@ Unknown. This README documents the intended lane contract and the current thin-s
 <summary><strong>Minimal invocation chain</strong></summary>
 
 ```bash
-prepare → gate → validate → render
+prepare → gate → validate → render → record → prov → bundle → bundle-summary
 ```
 
 </details>
