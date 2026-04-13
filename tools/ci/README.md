@@ -9,8 +9,8 @@ created: NEEDS_VERIFICATION_DATE
 updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
-tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary]
-notes: [Updated to reflect render_bundle_diff_policy_summary.py in addition to the promotion-oriented and diff-oriented renderer thin slice, with explicit thin-slice proof surfaces in tests/ci. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
+tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary, handoff]
+notes: [Updated to reflect render_promotion_review_handoff.py in addition to the promotion-oriented, diff-oriented, and bundle diff-policy renderer thin slice, with explicit thin-slice proof surfaces in tests/ci. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -22,7 +22,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > **Path:** [`tools/ci/README.md`](./README.md)  
 > **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice lane shape plus broader public-tree context · exact additional helper inventory, live callers, rulesets, and platform settings remain bounded  
-> **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, diff summaries, and bundle diff-policy summaries. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
+> **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, diff summaries, bundle diff-policy summaries, and one composed promotion review handoff document. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
 > **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-thin--slice%20active-lightgrey)](./README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -38,6 +38,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_promotion_bundle_summary.py`
 > - `tools/ci/render_diff_summary.py`
 > - `tools/ci/render_bundle_diff_policy_summary.py`
+> - `tools/ci/render_promotion_review_handoff.py`
 >
 > `render_diff_summary.py` renders:
 >
@@ -54,12 +55,21 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - per-key classification table
 > - reviewer-facing Markdown for bundle diff-policy reports
 >
+> `render_promotion_review_handoff.py` composes:
+>
+> - promotion bundle identity and artifact visibility
+> - prior/current diff summary
+> - diff-policy classification summary
+> - attestation visibility
+> - one reviewer-facing conclusion block
+>
 > **Primary downstream trust surfaces**
 > - `decision.json`
 > - `promotion-record.json`
 > - `promotion-bundle.json`
 > - stable diff JSON reports such as `promotion-bundle-diff.json`
 > - bundle diff-policy reports such as `promotion-bundle-diff-policy.json`
+> - composed handoff documents such as `promotion-review-handoff.md`
 >
 > **Primary adjacent lanes**
 > - `tools/validators/promotion_gate/`
@@ -70,6 +80,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 >
 > - `tests/ci/test_render_diff_summary.py`
 > - `tests/ci/test_render_bundle_diff_policy_summary.py`
+> - `tests/ci/test_render_promotion_review_handoff.py`
 > - promotion-summary and promotion-bundle-summary proof surfaces should be added or reverified separately if not already mounted
 >
 > These helpers are intended to render already-governed outputs into:
@@ -79,6 +90,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - compact auditor-facing bundle summaries
 > - reviewer-facing diff summaries
 > - reviewer-facing policy summaries for bundle drift
+> - one composed promotion review handoff document
 >
 > They must not silently redefine policy, promotion law, diff law, or release truth.
 
@@ -103,6 +115,7 @@ Use this lane when the job is to:
 - render trust-object bundles into concise reviewer or auditor summaries
 - render structured diff outputs into reviewer-facing Markdown without recomputing comparison law
 - render checked-in policy classifications into reviewer-facing Markdown without recomputing policy authority
+- compose several already-governed review artifacts into one steward-facing handoff without collapsing their separate machine roles
 
 Do **not** use this lane when the job is to:
 
@@ -140,6 +153,7 @@ Do **not** use this lane when the job is to:
 | Attestation consumer | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may need reviewer-facing rendering in CI surfaces. |
 | Diff consumer | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Stable diff outputs are now a direct renderer input for this lane. |
 | Policy-summary consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Bundle diff-policy reports now flow into reviewer-facing CI rendering through this lane. |
+| Review handoff consumer | promotion review and steward approval flows | Composed handoff artifacts belong here only if they remain derived, reviewer-facing, and subordinate to the underlying machine objects. |
 | Downstream consumers | pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
 
 ---
@@ -159,6 +173,7 @@ Do **not** use this lane when the job is to:
 | Verification state | sign/verify result refs, attestation verification booleans | Reviewer surfaces increasingly need trust visibility, not just pass/fail text. |
 | Stable diff reports | `stable_diff.py` JSON outputs such as `promotion-bundle-diff.json` | Current diff renderer consumes these directly without redoing comparison logic. |
 | Bundle diff-policy reports | `evaluate_bundle_diff_policy.py` JSON outputs such as `promotion-bundle-diff-policy.json` | Current policy-summary renderer consumes these directly without redoing policy classification logic. |
+| Composed review inputs | promotion bundle + diff report + diff-policy report | A review handoff composer may combine these inputs into one steward-facing document without redefining any underlying authority. |
 
 ### Input rules
 
@@ -186,6 +201,7 @@ Do **not** use this lane when the job is to:
 | Promotion decisions | [`../validators/README.md`](../validators/README.md) and `promotion_gate/` | `tools/ci/` renders decisions; it does not author them. |
 | Diff computation | [`../diff/README.md`](../diff/README.md) | `tools/ci/` renders stable diff results; it does not own comparison law. |
 | Policy classification | `policy/` plus validator lanes | `tools/ci/` renders checked-in classifications; it does not decide them. |
+| Replacing underlying machine artifacts with one composed Markdown file | nowhere | The handoff document is derived reviewer support, not a substitute for the underlying bundle, diff, or policy objects. |
 
 ---
 
@@ -204,6 +220,8 @@ Do **not** use this lane when the job is to:
 | `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | The diff renderer lands with explicit test coverage. |
 | `tools/ci/render_bundle_diff_policy_summary.py` is the current policy-summary thin-slice renderer | **CONFIRMED** | This lane now explicitly includes a policy-summary renderer in the thin slice. |
 | `tests/ci/test_render_bundle_diff_policy_summary.py` is the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | The policy-summary renderer lands with explicit test coverage. |
+| `tools/ci/render_promotion_review_handoff.py` is the current composed reviewer-handoff thin-slice renderer | **CONFIRMED via current lane contract update** | This lane now includes a composed steward-facing handoff artifact while keeping underlying machine surfaces separate. |
+| `tests/ci/test_render_promotion_review_handoff.py` is the current thin-slice proof surface for composed reviewer handoff rendering | **CONFIRMED via current lane contract update** | The handoff renderer lands with explicit test coverage. |
 | Exact additional helper inventory, live callers, artifact upload wiring, and platform-only settings beyond the thin slice | **UNKNOWN** | Keep broader platform claims out of this README unless re-verified against live settings. |
 
 [Back to top](#ci)
@@ -218,11 +236,13 @@ tools/ci/
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
-└── render_bundle_diff_policy_summary.py
+├── render_bundle_diff_policy_summary.py
+└── render_promotion_review_handoff.py
 
 tests/ci/
 ├── test_render_diff_summary.py
-└── test_render_bundle_diff_policy_summary.py
+├── test_render_bundle_diff_policy_summary.py
+└── test_render_promotion_review_handoff.py
 ```
 
 > [!NOTE]
@@ -242,6 +262,7 @@ tools/ci/
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
 ├── render_bundle_diff_policy_summary.py
+├── render_promotion_review_handoff.py
 └── templates/
 ```
 
@@ -269,7 +290,7 @@ sed -n '1,260p' tools/diff/README.md
 
 # Find existing references before adding a helper
 git grep -n "tools/ci" -- . || true
-git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|policy-summary\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
+git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|policy-summary\|review-handoff\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
 
 # Inspect likely producers of CI-facing artifacts
 find .github/actions tools scripts tests -maxdepth 3 -type f | sort
@@ -300,6 +321,12 @@ python tools/ci/render_diff_summary.py \
 python tools/ci/render_bundle_diff_policy_summary.py \
   promotion-bundle-diff-policy.json \
   --output promotion-bundle-diff-policy-summary.md
+
+python tools/ci/render_promotion_review_handoff.py \
+  --bundle promotion-bundle.json \
+  --diff promotion-bundle-diff.json \
+  --diff-policy promotion-bundle-diff-policy.json \
+  --output promotion-review-handoff.md
 ```
 
 ### Thin-slice test runs
@@ -307,10 +334,11 @@ python tools/ci/render_bundle_diff_policy_summary.py \
 ```bash
 pytest -q tests/ci/test_render_diff_summary.py
 pytest -q tests/ci/test_render_bundle_diff_policy_summary.py
+pytest -q tests/ci/test_render_promotion_review_handoff.py
 ```
 
 > [!NOTE]
-> The current thin slice now includes explicit proof for both diff-summary and bundle-diff-policy-summary rendering.
+> The current thin slice now includes explicit proof for diff-summary rendering, bundle-diff-policy-summary rendering, and composed promotion-review handoff rendering.
 
 ---
 
@@ -375,6 +403,14 @@ python tools/ci/render_bundle_diff_policy_summary.py \
   --output promotion-bundle-diff-policy-summary.md
 ```
 
+```bash
+python tools/ci/render_promotion_review_handoff.py \
+  --bundle promotion-bundle.json \
+  --diff promotion-bundle-diff.json \
+  --diff-policy promotion-bundle-diff-policy.json \
+  --output promotion-review-handoff.md
+```
+
 ### Thin-slice diff rendering behavior
 
 `render_diff_summary.py` currently renders:
@@ -400,6 +436,19 @@ It does **not** compute the diff itself. That stays in `tools/diff/stable_diff.p
 
 It does **not** classify keys itself. That stays in the checked-in policy surface plus `evaluate_bundle_diff_policy.py`.
 
+### Thin-slice review-handoff rendering behavior
+
+`render_promotion_review_handoff.py` currently renders:
+
+- promotion bundle identity
+- attestation visibility
+- artifact inventory
+- prior/current diff summary
+- diff-policy status and assessments
+- one reviewer-facing conclusion block
+
+It does **not** replace the underlying bundle, diff report, or diff-policy report. It composes them into one steward-facing handoff document.
+
 ---
 
 ## Diagram
@@ -422,7 +471,7 @@ flowchart LR
     IN1["declared reports / manifests / receipts / trust objects / diff-policy reports"]
     CI["tools/ci/*<br/>summary + annotation helpers"]
     OUT1["PR summary<br/>check-run text<br/>compact gate digest"]
-    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries<br/>diff summaries<br/>policy summaries"]
+    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries<br/>diff summaries<br/>policy summaries<br/>review handoff"]
     NO["authoritative truth / promotion / policy law"]
 
     WF --> AC
@@ -460,6 +509,7 @@ flowchart LR
 | Bundle renderers | Render full governed trust bundles for reviewer/auditor handoff | promotion bundle manifests, verification state | one-page Markdown summaries | **Thin-slice active** |
 | Diff renderers | Render stable diff reports for reviewer-facing CI output | stable diff JSON reports | Markdown summaries with change counts and key lists | **Thin-slice active** |
 | Policy-summary renderers | Render checked-in classification outputs for reviewer-facing CI output | bundle diff-policy JSON reports | Markdown summaries with status, counts, and per-key classification tables | **Thin-slice active** |
+| Review handoff composers | Combine multiple governed review artifacts into one steward-facing document | promotion bundle, diff report, diff-policy report, attestation visibility | one composed Markdown handoff | **Thin-slice active** |
 
 > [!TIP]
 > The lane itself is real. The helper families above are intentionally distinguished between current thin-slice use and broader proposed growth so the README stays useful without overstating current branch contents.
@@ -474,8 +524,10 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 
 - [x] `render_diff_summary.py` thin slice implemented
 - [x] `render_bundle_diff_policy_summary.py` thin slice implemented
+- [x] `render_promotion_review_handoff.py` thin slice implemented
 - [x] diff renderer tests added
 - [x] bundle diff-policy renderer tests added
+- [x] promotion review handoff tests added
 - [x] renderer inputs are documented and machine-readable
 - [x] outputs are deterministic and usable by both humans and CI
 - [x] helper remains read-only by default
@@ -485,8 +537,10 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 
 - [ ] add direct integration examples for `stable_diff.py` caller flows
 - [ ] add direct integration examples for bundle diff-policy reviewer flows
+- [ ] add direct integration examples for composed review handoff flows
 - [ ] add promotion-bundle-specific diff summary wording if needed
 - [ ] add optional compact mode for PR comment rendering
+- [ ] add machine-readable companion output for the review handoff
 - [ ] document specific workflow or script callers once mounted and verified
 - [ ] add richer annotation helpers separately instead of overloading summary renderers
 
@@ -508,7 +562,7 @@ Because `scripts/` is the more natural home for orchestration, sequencing, and o
 
 ### Does this README claim helpers already exist?
 
-Yes, now in a bounded thin-slice sense. This lane currently documents promotion-oriented renderers, a diff-summary renderer, and a bundle diff-policy summary renderer. Broader inventory still requires verification where evidence is bounded.
+Yes, now in a bounded thin-slice sense. This lane currently documents promotion-oriented renderers, a diff-summary renderer, a bundle diff-policy summary renderer, and a composed review handoff renderer. Broader inventory still requires verification where evidence is bounded.
 
 ### Can a `tools/ci/` helper publish, promote, or correct artifacts?
 
@@ -529,6 +583,10 @@ Yes. That is now part of the current thin slice. But the diff computation itself
 ### Can `tools/ci/` render policy classification results?
 
 Yes. That is now also part of the current thin slice. But the checked-in policy data and its evaluation remain outside this lane.
+
+### Can `tools/ci/` compose one reviewer handoff document from several machine artifacts?
+
+Yes. That is now part of the current thin slice. But the composed handoff is a reviewer convenience artifact, not a replacement for the bundle, diff, or diff-policy records themselves.
 
 [Back to top](#ci)
 
@@ -605,6 +663,32 @@ Yes. That is now also part of the current thin slice. But the checked-in policy 
 **Policy version:** `v1`
 ```
 
+### Example current promotion review handoff shape
+
+```md
+# Promotion Review Handoff
+
+## Candidate
+
+- Candidate: `overlay:floodplain-kansas`
+- Decision: ✅ `PROMOTE`
+- Spec hash: `111111111111`
+
+## Trust Visibility
+
+- Attestation verified: `True`
+
+## Prior / Current Diff
+
+- Diff status: `changed`
+
+## Diff Policy
+
+- Policy status: ⛔ `block`
+
+## Reviewer Conclusion
+```
+
 Keep these shapes small, boring, and stable. Reviewer trust is helped more by consistency than by cleverness.
 
 </details>
@@ -652,6 +736,28 @@ A policy-summary renderer may take a checked-in policy evaluation result and emi
 - one short reviewer-facing conclusion block
 
 That is a rendering concern, not policy authority.
+
+</details>
+
+<details>
+<summary>Illustrative review-handoff role (<strong>thin-slice aligned</strong>)</summary>
+
+A review-handoff composer may take:
+
+- a promotion bundle
+- a prior/current diff report
+- a diff-policy report
+
+and emit:
+
+- candidate identity
+- artifact visibility
+- attestation visibility
+- prior/current drift summary
+- classified drift summary
+- one reviewer-facing conclusion block
+
+That is still a rendering concern, not publication authority.
 
 </details>
 
