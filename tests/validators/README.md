@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../tools/ci/README.md, ../../tools/attest/README.md, ../../tools/validators/promotion_gate/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../schemas/promotion/decision-envelope.schema.json, ../../schemas/promotion/promotion-record.schema.json, ../../schemas/promotion/promotion-prov.schema.json, ../../schemas/promotion/promotion-bundle.schema.json, ../../schemas/promotion/promotion-bundle-diff-policy.schema.json, ../../policy/README.md, ../../policy/promotion_bundle_diff_policy.json, ../fixtures/promotion/, ../e2e/runtime_proof/README.md, ./test_promotion_gate_e2e.py, ./test_bundle_diff_policy.py, ./test_validate_bundle_diff_policy.py, ../ci/test_render_promotion_review_handoff.py]
 tags: [kfm, tests, validators, promotion, verification, fail-closed, diff-policy, review-handoff]
-notes: [Updated as a child tests-lane README from adjacent repo documentation and KFM doctrine to reflect the fuller promotion-gate thin slice: bundle diff, checked-in diff-policy evaluation, policy schema validation, and downstream review handoff artifacts. Direct branch inventory for tests/validators/ still remains bounded where not re-enumerated from a mounted checkout.]
+notes: [Updated as a child tests-lane README from adjacent repo documentation and KFM doctrine to reflect the fuller promotion-gate thin slice: bundle diff, checked-in diff-policy evaluation, policy schema validation, downstream review handoff artifacts, and explicit separation from renderer-proof ownership in tests/ci. Direct branch inventory for tests/validators/ still remains bounded where not re-enumerated from a mounted checkout.]
 [/KFM_META_BLOCK_V2] -->
 
 # validators
@@ -160,4 +160,402 @@ Content that belongs here should remain **test-facing**, **repeatable**, and **s
 | Canonical policy decisions | [`../../policy/README.md`](../../policy/README.md) | tests may assert decision output, but policy remains the source of truth |
 | Authoritative schemas or contract meaning | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md) | this lane validates chosen authority; it does not silently redefine it |
 | Broad runtime-proof scenarios | [`../e2e/`](../e2e/) | keep this lane validator-focused |
-| Unpublished or
+| Unpublished or secret-bearing fixtures | governed secure data lanes | public test surfaces must remain safe to clone and review |
+| Publication logic | release / publish surfaces | a passing validator test proves promotability, not publication |
+| Policy-summary rendering logic | `tools/ci/` plus `tests/ci/` | this lane may consume policy-summary outputs, but should not own renderer contracts |
+| Review-handoff Markdown assertions | `tests/ci/` | composed handoff formatting belongs to the renderer-proof lane, not the validator-proof lane |
+
+[Back to top](#validators)
+
+---
+
+## Current evidence snapshot
+
+| Evidence item | Status | How this README uses it |
+| --- | --- | --- |
+| `tests/` is framed as a governed verification surface rather than a generic QA bucket | **CONFIRMED** | grounds the lane’s trust-bearing tone and fail-closed posture |
+| Adjacent promotion-gate docs explicitly name `tests/validators/test_promotion_gate_e2e.py` as the current thin-slice proof surface | **CONFIRMED via adjacent documentation** | grounds the current lane around one concrete e2e validator test instead of a generic scaffold |
+| The promotion-gate subject lane documents a fuller chain from decision to record to PROV to bundle to diff to diff-policy | **CONFIRMED via adjacent documentation** | justifies a validator-lane README that covers more than the base decision object |
+| The local runner command `pytest -q tests/validators/test_promotion_gate_e2e.py` is documented | **CONFIRMED via adjacent documentation** | supports a concrete quickstart instead of guessed runner prose |
+| Adjacent promotion-gate docs now also name `tests/validators/test_bundle_diff_policy.py` and `test_validate_bundle_diff_policy.py` | **CONFIRMED via adjacent documentation** | expands the lane’s documented proof surface beyond one e2e file |
+| Checked-in bundle diff-policy data and a schema for it are now part of the adjacent promotion-gate contract | **CONFIRMED via adjacent documentation** | makes policy-file validation and diff-policy evaluation real validator concerns in this lane |
+| Adjacent CI docs now also name `render_promotion_review_handoff.py` and `tests/ci/test_render_promotion_review_handoff.py` as the composed downstream handoff surface | **CONFIRMED via adjacent documentation** | lets this lane document downstream handoff compatibility without claiming renderer-proof ownership |
+| Direct public-tree listing of `tests/validators/` was not independently surfaced in the top-level tests snapshot used in this pass | **NEEDS VERIFICATION** | keeps lane-inventory claims bounded |
+| Additional validator families under this lane beyond promotion proof | **UNKNOWN / NEEDS VERIFICATION** | prevents overclaiming broader mounted coverage |
+| ReviewRecord-oriented validator work exists in 2026 design notes | **PROPOSED** | informs future growth without being described as current repo fact |
+
+> [!TIP]
+> The discipline here is the same one KFM asks of the rest of the system: document the **smallest real thing** clearly, then show the growth path without upgrading possibility into fact.
+
+---
+
+## Directory tree
+
+### Current documented thin slice
+
+```text
+tests/validators/
+├── README.md
+├── test_promotion_gate_e2e.py
+├── test_bundle_diff_policy.py
+└── test_validate_bundle_diff_policy.py
+```
+
+> [!NOTE]
+> This is the **documented current lane shape** implied by adjacent validator docs. It is not a substitute for a fresh checked-out branch inventory.
+
+### Documented adjacent subject surface
+
+<details>
+<summary><strong>Promotion-gate thin slice</strong> (<strong>current documented subject lane</strong>)</summary>
+
+```text
+tools/validators/promotion_gate/
+├── prepare_candidate_fixture.py
+├── promotion_gate.py
+├── validate_decision_envelope.py
+├── write_promotion_record.py
+├── validate_promotion_record.py
+├── emit_promotion_prov.py
+├── validate_promotion_prov.py
+├── write_promotion_bundle.py
+├── validate_promotion_bundle.py
+├── evaluate_bundle_diff_policy.py
+├── validate_bundle_diff_policy.py
+└── policies/*.rego
+
+tools/ci/
+├── render_promotion_summary.py
+├── render_promotion_bundle_summary.py
+├── render_diff_summary.py
+├── render_bundle_diff_policy_summary.py
+└── render_promotion_review_handoff.py
+
+tools/attest/
+├── sign_decision_envelope.py
+└── verify_decision_envelope.py
+
+tools/diff/
+└── stable_diff.py
+
+schemas/promotion/
+├── decision-envelope.schema.json
+├── promotion-record.schema.json
+├── promotion-prov.schema.json
+├── promotion-bundle.schema.json
+└── promotion-bundle-diff-policy.schema.json
+
+policy/
+└── promotion_bundle_diff_policy.json
+
+tests/fixtures/promotion/
+└── *.json
+
+tests/ci/
+└── test_render_promotion_review_handoff.py
+```
+</details>
+
+### Possible stable growth shape
+
+<details>
+<summary><strong>PROPOSED</strong> future lane growth</summary>
+
+```text
+tests/validators/
+├── README.md
+├── test_promotion_gate_e2e.py
+├── test_bundle_diff_policy.py
+├── test_validate_bundle_diff_policy.py
+├── test_<validator_name>.py
+└── fixtures/
+    └── <validator_name>/
+```
+
+Prefer shared fixtures under `../fixtures/` when they already express the truth-bearing artifact more clearly.
+</details>
+
+[Back to top](#validators)
+
+---
+
+## Quickstart
+
+Start by rechecking what is actually mounted before extending this lane.
+
+```bash
+# Inspect the lane directly
+find tests/validators -maxdepth 3 \( -type f -o -type d \) 2>/dev/null | sort
+
+# Recheck parent and primary subject surfaces
+sed -n '1,320p' tests/README.md
+sed -n '1,420p' tools/validators/promotion_gate/README.md
+sed -n '1,360p' tools/ci/README.md
+sed -n '1,260p' tools/attest/README.md
+
+# Recheck the shared promotion fixture seam
+find tests/fixtures/promotion -maxdepth 3 -type f 2>/dev/null | sort
+
+# Reconfirm documentary references before adding new tests
+git grep -n "tests/validators\|test_promotion_gate_e2e\|test_bundle_diff_policy\|validate_bundle_diff_policy\|promotion_gate\|render_promotion_review_handoff" -- . || true
+```
+
+When the checked-out branch still matches the current documented thin slice, the local runner set should remain:
+
+```bash
+pytest -q tests/validators/test_promotion_gate_e2e.py
+pytest -q tests/validators/test_bundle_diff_policy.py
+pytest -q tests/validators/test_validate_bundle_diff_policy.py
+```
+
+> [!WARNING]
+> If the active branch uses a different test runner, wrapper, or package entrypoint, update this README to the real command rather than preserving a guessed convention.
+
+---
+
+## Usage
+
+### Add a validator-focused test
+
+Land a test here when all of the following are true:
+
+1. the subject under test is a validator, gate, or emitted validator artifact
+2. the expected outcome is finite and machine-readable
+3. both success and failure semantics can be asserted deterministically
+4. the test can run locally without hiding logic inside workflow YAML
+5. the result helps reviewers trust a governed decision without implying publication already occurred
+
+### Keep fixtures narrow and truth-preserving
+
+Good `tests/validators/` fixtures usually look like:
+
+- one candidate with one named success path
+- one candidate with one named integrity failure
+- one malformed artifact that should collapse to `ERROR`
+- one insufficient-proof or insufficient-closure path that should collapse to `ABSTAIN`
+- one emitted-object fixture per schema when the chain grows beyond the base decision
+- one diff report with one clearly classifiable changed key
+- one checked-in policy file pass/fail fixture pair for schema validation
+
+Prefer:
+
+- shared fixtures in `../fixtures/promotion/` before inventing a second source of truth
+- explicit assertions on `decision`, `reason_codes`, `obligations`, and per-gate status
+- one broken reason per failing fixture whenever possible
+- deterministic negative paths over theatrical “coverage” language
+- checked-in policy data over hard-coded classification constants when proving bundle-drift interpretation
+- explicit downstream compatibility checks when validator output is later consumed by a review handoff renderer
+
+Avoid:
+
+- burying assertions in shell wrappers only
+- mixing renderer expectations with validator authority
+- treating emitted Markdown as the primary truth object
+- claiming a test proves publication, promotion, or merge gating by itself
+- letting checked-in policy data drift without a schema-validation test
+
+### Boundary rule
+
+Use the neighboring lanes intentionally:
+
+- use [`../ci/README.md`](../ci/README.md) when the main burden is rendering helper output
+- use [`../contracts/README.md`](../contracts/README.md) when the main burden is valid/invalid contract examples
+- use [`../e2e/`](../e2e/) when the main burden is broader run-chain or runtime-proof behavior
+- use [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) when the work is implementation, not proof
+
+[Back to top](#validators)
+
+---
+
+## Validator proof contract
+
+A validator test here should prove more than “the process exited.”
+
+| Proof target | Minimum assertion |
+| --- | --- |
+| Finite decision grammar | output resolves only to the declared promotion outcomes |
+| Gate status grammar | every gate status resolves only to the declared status set |
+| Schema-valid decision | emitted decision object validates against the declared schema |
+| Fail-closed negative path | broken input collapses to `DENY`, `ABSTAIN`, or `ERROR` for an explicit reason |
+| Derived trust objects | record / PROV / bundle outputs preserve the decision state instead of inventing a new one |
+| Prior/current change visibility | bundle diff is emitted deterministically over prior/current inputs |
+| Checked-in diff-policy validity | policy file validates against the declared schema before policy evaluation continues |
+| Checked-in diff-policy interpretation | changed keys classify into a finite review/blocking vocabulary |
+| Reviewer handoff compatibility | downstream renderer inputs remain stable enough for CI summary and review-handoff helpers |
+| Non-publication boundary | a pass proves promotability only; it does not prove publish side effects |
+
+### Current promotion-oriented finite vocabularies
+
+| Surface | Current documented values |
+| --- | --- |
+| Promotion decision | `PROMOTE`, `ABSTAIN`, `DENY`, `ERROR` |
+| Per-gate status | `PASS`, `FAIL`, `SKIP`, `ERROR` |
+| Bundle diff-policy classification | `informational`, `review`, `blocking` |
+
+> [!IMPORTANT]
+> Treat a missing object, malformed schema, invalid checked-in policy file, or ambiguous trust state as a **real test case**, not as something to wave away in comments.  
+> KFM’s trust posture becomes visible only when negative outcomes are exercised on purpose.
+
+---
+
+## Diagram
+
+```mermaid
+flowchart LR
+    A[shared candidate fixture<br/>tests/fixtures/promotion] --> B[prepare_candidate_fixture.py]
+    B --> C[promotion_gate.py]
+    C --> D[decision.json<br/>DecisionEnvelope]
+    D --> E[validate_decision_envelope.py]
+    D --> F[render_promotion_summary.py]
+    D --> G[write_promotion_record.py]
+    G --> H[emit_promotion_prov.py]
+    H --> I[write_promotion_bundle.py]
+    I --> J[render_promotion_bundle_summary.py]
+    I --> K[stable_diff.py]
+    K --> L[promotion-bundle-diff.json]
+    L --> M[evaluate_bundle_diff_policy.py]
+    M --> N[promotion-bundle-diff-policy.json]
+    N --> O[render_bundle_diff_policy_summary.py]
+    M --> P[validate_bundle_diff_policy.py]
+    N --> RH[render_promotion_review_handoff.py]
+    I --> RH
+    L --> RH
+
+    E --> Q[validator proof assertions]
+    F --> Q
+    G --> Q
+    H --> Q
+    I --> Q
+    J --> Q
+    L --> Q
+    N --> Q
+    P --> Q
+    O --> Q
+    RH --> Q
+
+    C -. integrity failure .-> X[DENY]
+    E -. malformed output .-> Y[ERROR]
+    I -. insufficient closure/proof .-> Z[ABSTAIN]
+    P -. invalid checked-in policy .-> W[ERROR]
+
+    Q --> R[review-visible confidence]
+    R --> S[governed release flow]
+    S -. not direct publish .-> T[(publication stays elsewhere)]
+```
+
+---
+
+## Coverage matrix
+
+| Subject | Dominant proof object(s) | Current status |
+| --- | --- | --- |
+| Promotion-gate end-to-end thin slice | `decision.json`, reviewer summary, promotion record, promotion PROV, promotion bundle, bundle diff, diff-policy report | **CONFIRMED via adjacent documentation** |
+| Bundle diff-policy evaluator | diff report + checked-in policy file + finite classification output | **CONFIRMED via adjacent documentation** |
+| Bundle diff-policy schema validator | policy file + diff-policy schema | **CONFIRMED via adjacent documentation** |
+| Downstream review handoff compatibility | promotion bundle + diff report + diff-policy report remain stable enough for composed renderer consumption | **CONFIRMED via adjacent documentation** |
+| ReviewRecord validator pre-persistence checks | review-record payload + schema validation behavior | **PROPOSED / NEEDS VERIFICATION** |
+| Additional focused leaf-validator tests | gate-specific fixtures for schema, catalog, policy, or signature substeps | **PROPOSED / NEEDS VERIFICATION** |
+
+> [!NOTE]
+> The matrix above is intentionally narrow. This lane should grow by proving one validator burden clearly at a time, not by becoming a vague “all validators” umbrella.
+
+---
+
+## Definition of done
+
+Use this checklist when adding or revising a `tests/validators/` proof surface.
+
+- [ ] the subject validator or gate is explicitly named
+- [ ] the nearest authoritative schema or contract surface is linked
+- [ ] the fixture is deterministic, tiny, and public-safe
+- [ ] at least one representative success path exists
+- [ ] at least one representative failure path exists
+- [ ] the test asserts machine outputs, not only shell exit codes
+- [ ] finite outcome vocabulary is asserted where relevant
+- [ ] fail-closed behavior is visible and named
+- [ ] emitted reviewer artifacts stay secondary to the primary machine object
+- [ ] checked-in policy data is schema-validated before evaluator claims depend on it
+- [ ] downstream renderer handoff compatibility is updated when validator outputs change materially
+- [ ] the local runner command is real for the checked-out branch
+- [ ] this README is updated when the lane shape changes materially
+- [ ] adjacent docs are updated when the validator chain changes materially
+
+### Current thin-slice checklist status
+
+- [x] `test_promotion_gate_e2e.py` thin-slice proof documented
+- [x] `test_bundle_diff_policy.py` thin-slice proof documented
+- [x] `test_validate_bundle_diff_policy.py` thin-slice proof documented
+- [x] documented thin slice covers bundle diff and checked-in diff-policy validation burdens
+- [x] downstream review handoff is documented as a renderer handoff artifact, not as local renderer-proof ownership
+- [ ] exact mounted lane inventory beyond the documented thin slice rechecked directly before widening claims further
+
+[Back to top](#validators)
+
+---
+
+## FAQ
+
+### Why is this not `tools/validators/`?
+
+Because `tools/validators/` owns validator implementations. `tests/validators/` is the shared proof surface that demonstrates how those validators behave under governed conditions.
+
+### Why is this not `tests/ci/`?
+
+Because `tests/ci/` is the better fit for helper-rendering proofs. This lane is for validator behavior, emitted decision objects, checked-in policy interpretation over machine artifacts, fail-closed gate semantics, and renderer handoff compatibility—not renderer formatting contracts.
+
+### Why is this not `tests/e2e/runtime_proof/`?
+
+Because runtime-proof suites exercise request-time behavior and outward answer surfaces. `tests/validators/` stays centered on validator and promotion-gate proof.
+
+### Does a passing validator test publish anything?
+
+No. A pass here proves promotability or emitted-object correctness for the tested slice. Publication remains outside this lane.
+
+### Should this lane duplicate shared promotion fixtures?
+
+Prefer not to. Reuse `../fixtures/promotion/` when it already expresses the candidate truth clearly. Create lane-local fixtures only when that makes the contract smaller and easier to review.
+
+### Why does this lane now include checked-in diff-policy validation?
+
+Because prior/current bundle drift is now part of the documented promotion review path, and the checked-in policy file that interprets that drift is itself a trust-relevant machine input that must fail closed when malformed.
+
+### Why mention promotion review handoff here if renderer proof belongs elsewhere?
+
+Because validator outputs now feed that composed handoff artifact downstream. This lane should document compatibility with that handoff path, while leaving Markdown rendering assertions and renderer behavior to `tests/ci/`.
+
+### Can this lane grow beyond promotion validation?
+
+Yes, but only when the new validator surface is actually mounted, bounded, and documented in the same change. Keep the evidence snapshot and tree honest.
+
+[Back to top](#validators)
+
+---
+
+## Appendix
+
+<details>
+<summary><strong>Documented current promotion invocation chain</strong></summary>
+
+```text
+prepare → gate → validate → render → record → prov → bundle → bundle-summary → bundle-diff → diff-policy → policy-validate → review-handoff
+```
+
+This is the current documented thin slice for validator-oriented promotion proof and downstream renderer handoff compatibility.
+</details>
+
+<details>
+<summary><strong>First local review pass before merge</strong></summary>
+
+1. confirm whether `tests/validators/` is present on the checked-out branch
+2. confirm whether `test_promotion_gate_e2e.py` still exists at the documented path
+3. confirm whether `test_bundle_diff_policy.py` and `test_validate_bundle_diff_policy.py` still exist at the documented paths
+4. confirm whether the promotion-gate README still names the same helper chain
+5. confirm whether shared fixtures still live under `tests/fixtures/promotion/`
+6. confirm whether renderer helpers still belong to `tools/ci/`
+7. confirm whether the checked-in diff-policy file and its schema still live at the documented paths
+8. confirm whether the composed review handoff helper still exists downstream in `tools/ci/`
+9. confirm whether any new validator family now deserves its own row in the coverage matrix
+10. confirm whether required checks or rulesets changed in a way that affects this lane’s wording
+11. keep visible incompleteness visible instead of smoothing it away
+
+</details>
