@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-04-03
+updated: 2026-04-13
 policy_label: public
-related: [policy/README.md, policy/bundles/README.md, policy/fixtures/README.md, policy/policy-runtime/README.md, tests/README.md, tests/policy/README.md, tests/e2e/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/release_assembly/README.md, tests/e2e/correction/README.md, .github/workflows/README.md, contracts/README.md, schemas/README.md]
-tags: [kfm, policy, tests, governance, verification]
-notes: [doc_id and original created date need verification; updated reflects this 2026-04-03 draft revision; current public main still shows policy/tests as a README-first lane]
+related: [policy/README.md, policy/bundles/README.md, policy/fixtures/README.md, policy/policy-runtime/README.md, policy/promotion_bundle_diff_policy.json, tests/README.md, tests/policy/README.md, tests/validators/README.md, tests/e2e/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/release_assembly/README.md, tests/e2e/correction/README.md, .github/workflows/README.md, contracts/README.md, schemas/README.md, schemas/promotion/promotion-bundle-diff-policy.schema.json]
+tags: [kfm, policy, tests, governance, verification, diff-policy]
+notes: [doc_id and original created date need verification; updated reflects the newer validator and promotion diff-policy documentation surface while preserving the existing README-first public-lane reading for policy/tests on public main; active-branch inventory still needs verification before stronger implementation claims are made]
 [/KFM_META_BLOCK_V2] -->
 
 # Policy tests
@@ -21,13 +21,18 @@ Bundle-local policy verification lane for KFM deny-by-default rules, fixture-bac
 > **Owners:** `@bartytime4life`  
 > **Path:** `policy/tests/README.md`  
 > **Current public inventory:** `README.md` only on public `main`  
-> **Repo fit:** child verifier lane under [`../README.md`](../README.md); nearest siblings [`../bundles/README.md`](../bundles/README.md), [`../fixtures/README.md`](../fixtures/README.md), and [`../policy-runtime/README.md`](../policy-runtime/README.md); repo-facing verification neighbors [`../../tests/README.md`](../../tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), and [`../../tests/e2e/README.md`](../../tests/e2e/README.md); workflow guardrail [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Repo fit:** child verifier lane under [`../README.md`](../README.md); nearest siblings [`../bundles/README.md`](../bundles/README.md), [`../fixtures/README.md`](../fixtures/README.md), [`../policy-runtime/README.md`](../policy-runtime/README.md), and [`../promotion_bundle_diff_policy.json`](../promotion_bundle_diff_policy.json); repo-facing verification neighbors [`../../tests/README.md`](../../tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md), and [`../../tests/e2e/README.md`](../../tests/e2e/README.md); workflow guardrail [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-success) ![visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![scope](https://img.shields.io/badge/scope-policy%20tests-6f42c1) ![current inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `policy/tests/` is the **bundle-local** policy assertion lane.
-> It is not the same surface as [`../../tests/policy/README.md`](../../tests/policy/README.md), which should hold repo-facing proof that policy behavior survives contact with broader verification, runtime, release, and correction lanes.
+> It is **not** the same surface as:
+>
+> - [`../../tests/policy/README.md`](../../tests/policy/README.md), which should hold broader repo-facing proof that policy behavior survives runtime, release, and correction pressure
+> - [`../../tests/validators/README.md`](../../tests/validators/README.md), which should hold validator- and gate-facing proof for machine-evaluated policy inputs such as promotion bundle diff-policy classification
+>
+> Keep those boundaries sharp.
 
 > [!NOTE]
 > Current public `main` confirms that this directory exists and is currently **README-only**.
@@ -48,15 +53,17 @@ Questions that belong here include:
 - do shared fixtures trigger stable reason / obligation grammar instead of free-text drift?
 - do restrict, generalize, withdraw, supersede, or similar governed outcomes remain explicit at the bundle boundary?
 - do local helper imports or test packs resolve cleanly without silently changing bundle meaning?
+- does a small checked-in policy artifact consumed by the policy lane stay schema-valid before broader validator or release lanes rely on it?
 
 ### Evidence boundary used here
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | `policy/` is a real top-level lane; public `main` currently shows `README.md`, `bundles/`, `fixtures/`, `policy-runtime/`, and `tests/`; `policy/tests/` currently exposes `README.md` only; `/policy/` falls under `@bartytime4life` via `.github/CODEOWNERS`. |
-| **CONFIRMED — adjacent repo docs** | [`../README.md`](../README.md) treats `policy/` as the governed, executable policy surface; [`../../tests/README.md`](../../tests/README.md) separates policy-source ownership from broader verification; [`../../tests/policy/README.md`](../../tests/policy/README.md) defines the repo-facing policy proof lane; [`../../.github/workflows/README.md`](../../.github/workflows/README.md) documents a README-only public workflow lane. |
+| **CONFIRMED — current public repo** | `policy/` is a real top-level lane; public `main` currently shows `README.md`, `bundles/`, `fixtures/`, `policy-runtime/`, `tests/`, and adjacent docs now also index `promotion_bundle_diff_policy.json`; `policy/tests/` currently exposes `README.md` only; `/policy/` falls under `@bartytime4life` via `.github/CODEOWNERS`. |
+| **CONFIRMED — adjacent repo docs** | [`../README.md`](../README.md) treats `policy/` as the governed, executable policy surface; [`../../tests/README.md`](../../tests/README.md) separates policy-source ownership from broader verification; [`../../tests/policy/README.md`](../../tests/policy/README.md) defines the repo-facing policy proof lane; [`../../tests/validators/README.md`](../../tests/validators/README.md) now defines a distinct validator-facing proof lane; [`../../.github/workflows/README.md`](../../.github/workflows/README.md) documents a README-only public workflow lane. |
 | **CONFIRMED — adjacent proof families** | Public `main` also exposes [`../../tests/e2e/README.md`](../../tests/e2e/README.md) plus `runtime_proof/`, `release_assembly/`, and `correction/` as visible end-to-end proof families. |
-| **PROPOSED — doctrine-aligned working shape** | Seam-based local growth under `policy/tests/`, paired negative-path coverage, and explicit escalation from local policy assertions into repo-facing proof lanes. |
+| **CONFIRMED — adjacent policy data signal** | [`../promotion_bundle_diff_policy.json`](../promotion_bundle_diff_policy.json) is now documented as a checked-in policy data surface, with schema validation described at [`../../schemas/promotion/promotion-bundle-diff-policy.schema.json`](../../schemas/promotion/promotion-bundle-diff-policy.schema.json). |
+| **PROPOSED — doctrine-aligned working shape** | Seam-based local growth under `policy/tests/`, paired negative-path coverage, and explicit escalation from local policy assertions into validator-facing or repo-facing proof lanes. |
 | **UNKNOWN / NEEDS VERIFICATION** | Actual `.rego` or equivalent test inventory, runner choice, fixture density, exact required checks, branch protection, and whether local policy tests are already wired into merge-blocking automation. |
 
 ### Status markers used in this README
@@ -72,7 +79,7 @@ Questions that belong here include:
 ## Repo fit
 
 **Path:** `policy/tests/README.md`  
-**Role in repo:** directory guide for bundle-local policy assertions and the boundary between policy-source ownership and broader repo verification.
+**Role in repo:** directory guide for bundle-local policy assertions and the boundary between policy-source ownership, validator-facing proof, and broader repo verification.
 
 ### Upstream and adjacent anchors
 
@@ -82,11 +89,14 @@ Questions that belong here include:
 | Sibling | [`../bundles/README.md`](../bundles/README.md) | bundle source files belong there, not in this lane | **CONFIRMED** path / **UNKNOWN** executable depth |
 | Sibling | [`../fixtures/README.md`](../fixtures/README.md) | shared allow/deny/review fixtures should stay reviewable and reusable | **CONFIRMED** path / **UNKNOWN** fixture depth |
 | Sibling | [`../policy-runtime/README.md`](../policy-runtime/README.md) | current public repo exposes this runtime-adjacent lane | **CONFIRMED** current path |
+| Sibling policy data | [`../promotion_bundle_diff_policy.json`](../promotion_bundle_diff_policy.json) | narrow checked-in policy data surface that should remain reviewable and schema-bound | **CONFIRMED via adjacent documentation** |
 | Lateral | [`../../tests/README.md`](../../tests/README.md) | repo-wide verification map and placement rule for policy behavior | **CONFIRMED** |
-| Lateral | [`../../tests/policy/README.md`](../../tests/policy/README.md) | nearest repo-facing policy proof lane | **CONFIRMED** path / **UNKNOWN** executable depth |
+| Lateral | [`../../tests/policy/README.md`](../../tests/policy/README.md) | nearest broader repo-facing policy proof lane | **CONFIRMED** path / **UNKNOWN** executable depth |
+| Lateral | [`../../tests/validators/README.md`](../../tests/validators/README.md) | validator/gate proof lane for machine-evaluated policy inputs and fail-closed classification surfaces | **CONFIRMED via adjacent documentation** |
 | Broader whole-path proof | [`../../tests/e2e/README.md`](../../tests/e2e/README.md) | end-to-end proof family for runtime, release assembly, and correction drills | **CONFIRMED** |
 | Guardrail | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | workflow and merge-gate lane that may eventually exercise this surface | **CONFIRMED** |
 | Contract boundary | [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) | local policy tests should consume shared contract truth without duplicating schema authority | **CONFIRMED** |
+| Schema boundary for checked-in policy data | [`../../schemas/promotion/promotion-bundle-diff-policy.schema.json`](../../schemas/promotion/promotion-bundle-diff-policy.schema.json) | narrow checked-in policy data should still validate against a schema before downstream lanes consume it | **CONFIRMED via adjacent documentation** |
 
 ### Current public snapshot
 
@@ -96,7 +106,9 @@ Questions that belong here include:
 | `policy/bundles/README.md` | present | confirms local executable-bundle lane exists as a public scaffold |
 | `policy/fixtures/README.md` | present | confirms fixture lane exists, even though mature fixture inventory is not yet evidenced |
 | `policy/policy-runtime/README.md` | present | confirms current runtime-adjacent seam under `policy/` |
-| `tests/policy/README.md` | present | confirms repo-facing policy proof lane exists |
+| `policy/promotion_bundle_diff_policy.json` | documented by adjacent policy and validator docs | confirms top-level checked-in policy data is now part of the lane story |
+| `tests/policy/README.md` | present | confirms broader repo-facing policy proof lane exists |
+| `tests/validators/README.md` | present | confirms validator-facing proof lane now exists and should not be collapsed into this lane |
 | `tests/e2e/README.md` | present with visible `runtime_proof/`, `release_assembly/`, and `correction/` leaf families; each visible leaf has its own `README.md` on public `main` | confirms broader whole-path proof lanes that local exclusions escalate into |
 | `.github/workflows/README.md` | present; workflows directory is README-only on public `main` | confirms workflow-lane visibility without proving active checked-in YAML merge gates |
 
@@ -106,10 +118,11 @@ Questions that belong here include:
 |---|---|---|---|
 | bundle-local policy assertions | `policy/tests/` | often described broadly as “policy tests” | keep the current repo path explicit |
 | repo-facing policy proof | `tests/policy/` | sometimes collapsed into general policy-gate language | keep higher-order behavior proof in `../../tests/policy/` or `../../tests/e2e/` |
+| validator-facing machine policy proof | `tests/validators/` | sometimes blended into promotion/runtime proof language | keep validator/gate proof explicit when machine-evaluated policy artifacts are involved |
 | runtime-adjacent seam | `policy/policy-runtime/` | some doctrine sketches `packages/policy-runtime/` | link the current repo path, and note doctrinal naming divergence until the repo resolves it |
 
 > [!TIP]
-> If `../../tests/policy/README.md` is still thin on your branch, use [`../../tests/README.md`](../../tests/README.md) and [`../../tests/e2e/README.md`](../../tests/e2e/README.md) as the stronger placement guides for repo-facing proof.
+> If `../../tests/policy/README.md` is still thin on your branch, use [`../../tests/README.md`](../../tests/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md), and [`../../tests/e2e/README.md`](../../tests/e2e/README.md) as the stronger placement guides.
 
 [Back to top](#policy-tests)
 
@@ -122,6 +135,7 @@ Content that belongs in `policy/tests/` includes:
 - thin negative-path cases that stay close to sibling bundles and fixtures
 - local helper assertions or import-resolution checks that only make sense inside the `policy/` lane
 - minimal runner-specific notes when they are truly local to this directory and do not masquerade as repo-wide CI truth
+- narrow schema-validation assertions for small checked-in policy data files when keeping those checks close to policy-source ownership is the clearer boundary
 
 ## Exclusions
 
@@ -133,6 +147,8 @@ The following do **not** belong here as the authoritative home:
   → keep them under [`../fixtures/`](../fixtures/)
 - repo-wide policy proof, runtime-proof, release-proof, rollback, or correction drills  
   → escalate to [`../../tests/policy/`](../../tests/policy/), [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/), [`../../tests/e2e/release_assembly/`](../../tests/e2e/release_assembly/), or [`../../tests/e2e/correction/`](../../tests/e2e/correction/)
+- validator/gate proof over machine-evaluated policy inputs or promotion bundle diff-policy classification  
+  → escalate to [`../../tests/validators/`](../../tests/validators/)
 - workflow YAML, required-check logic, or promotion automation  
   → keep it under [`../../.github/workflows/`](../../.github/workflows/)
 - runtime adapters, policy loaders, or request mediators  
@@ -141,6 +157,8 @@ The following do **not** belong here as the authoritative home:
   → keep them under [`../../contracts/`](../../contracts/) and respect the current schema-authority boundary
 - test-only shadow copies of shared reason, obligation, rights, or sensitivity vocabularies  
   → keep shared vocab in its confirmed policy or contract home, not as local duplicates
+- reviewer-facing Markdown rendering of policy outputs  
+  → keep renderer behavior in `tools/ci/` and proof for it in `tests/ci/`
 
 ## Directory tree
 
@@ -149,6 +167,7 @@ The following do **not** belong here as the authoritative home:
 ```text
 policy/
 ├── README.md
+├── promotion_bundle_diff_policy.json
 ├── bundles/
 │   └── README.md
 ├── fixtures/
@@ -161,6 +180,8 @@ policy/
 tests/
 ├── README.md
 ├── policy/
+│   └── README.md
+├── validators/
 │   └── README.md
 └── e2e/
     ├── README.md
@@ -194,6 +215,7 @@ policy/tests/
 ├── runtime/
 ├── release/
 ├── correction/
+├── change_visibility/
 └── shared/
 ```
 
@@ -203,7 +225,7 @@ If the repo later standardizes on a runner or different layout, keep the seam lo
 
 > [!CAUTION]
 > A local seam directory is not the same thing as repo-wide proof.
-> If a change affects runtime envelopes, release evidence, or correction propagation, local assertions are necessary but not sufficient.
+> If a change affects runtime envelopes, validator outcomes, release evidence, or correction propagation, local assertions are necessary but not sufficient.
 
 [Back to top](#policy-tests)
 
@@ -217,8 +239,8 @@ These commands inspect the visible surface without assuming a runner:
 # inspect this lane and its nearest policy siblings
 find policy/tests policy/bundles policy/fixtures policy/policy-runtime -maxdepth 3 -type f 2>/dev/null | sort
 
-# inspect repo-facing policy proof lanes
-find tests/policy tests/e2e/runtime_proof tests/e2e/release_assembly tests/e2e/correction \
+# inspect repo-facing policy and validator proof lanes
+find tests/policy tests/validators tests/e2e/runtime_proof tests/e2e/release_assembly tests/e2e/correction \
   -maxdepth 3 -type f 2>/dev/null | sort
 
 # inspect ownership and workflow guardrails
@@ -226,15 +248,15 @@ sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 sed -n '1,260p' .github/workflows/README.md 2>/dev/null || true
 
 # trace trust objects and governed outcome grammar across policy-facing surfaces
-grep -RIn 'DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|ReleaseProofPack\|RuntimeResponseEnvelope\|CorrectionNotice\|ANSWER\|ABSTAIN\|DENY\|ERROR\|reason_codes\|obligation_codes' \
-  policy tests contracts docs 2>/dev/null || true
+grep -RIn 'DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|ReleaseProofPack\|RuntimeResponseEnvelope\|CorrectionNotice\|ANSWER\|ABSTAIN\|DENY\|ERROR\|reason_codes\|obligation_codes\|promotion_bundle_diff_policy' \
+  policy tests contracts docs schemas 2>/dev/null || true
 ```
 
 ### First review pass
 
-1. Read [`../README.md`](../README.md), this file, [`../../tests/README.md`](../../tests/README.md), and [`../../tests/e2e/README.md`](../../tests/e2e/README.md) together.
+1. Read [`../README.md`](../README.md), this file, [`../../tests/README.md`](../../tests/README.md), [`../../tests/policy/README.md`](../../tests/policy/README.md), and [`../../tests/validators/README.md`](../../tests/validators/README.md) together.
 2. Inventory the actual local bundle and fixture files before documenting runner commands.
-3. Keep bundle-local assertions here; move repo-facing behavior proof to [`../../tests/policy/`](../../tests/policy/) or the appropriate `../../tests/e2e/` lane.
+3. Keep bundle-local assertions here; move validator-facing machine policy proof to [`../../tests/validators/`](../../tests/validators/) and broader repo-facing behavior proof to [`../../tests/policy/`](../../tests/policy/) or the appropriate `../../tests/e2e/` lane.
 4. Verify the real `.github/workflows/` inventory before implying merge-blocking enforcement.
 5. Add at least one meaningful negative path whenever a new governed seam is introduced.
 
@@ -247,6 +269,7 @@ Use `policy/tests/` when the main question is local to the policy artifact strea
 - “Does this rule pack still default correctly when prerequisite data is missing?”
 - “Do these sibling fixtures still trigger the right governed outcome and explanation grammar?”
 - “Did a refactor change bundle-local behavior before broader repo checks ever run?”
+- “Does this small checked-in policy artifact remain schema-valid and locally reviewable as part of the policy lane?”
 
 ### Escalate out of this lane when…
 
@@ -256,15 +279,17 @@ Move or mirror work into broader repo proof lanes when the question changes from
 - release or promotion consequences
 - correction, supersession, or stale-state propagation
 - end-to-end behavior that only becomes meaningful once workflows, packages, or app surfaces are involved
+- validator/gate behavior over machine-evaluated policy inputs such as bundle diff-policy classification
 
 ### Working rule for change sets
 
 A policy-significant change should usually move as a small bundle:
 
-1. one or more rule changes under [`../bundles/`](../bundles/)
+1. one or more rule or policy-data changes under [`../bundles/`](../bundles/) or top-level checked-in policy files under `policy/`
 2. paired or updated examples under [`../fixtures/`](../fixtures/)
 3. local assertions here under `policy/tests/`
-4. broader proof in [`../../tests/policy/`](../../tests/policy/) or `../../tests/e2e/` when trust impact crosses the local bundle boundary
+4. validator-facing proof in [`../../tests/validators/`](../../tests/validators/) when machine-evaluated policy input or fail-closed classification is involved
+5. broader proof in [`../../tests/policy/`](../../tests/policy/) or `../../tests/e2e/` when trust impact crosses the local bundle boundary
 
 ## Diagram
 
@@ -272,13 +297,16 @@ A policy-significant change should usually move as a small bundle:
 flowchart LR
     B["policy/bundles/"] --> T["policy/tests/"]
     F["policy/fixtures/"] --> T
+    D["policy/promotion_bundle_diff_policy.json"] --> T
     R["policy/policy-runtime/"] -. current runtime-adjacent lane .-> T
     T --> P["tests/policy/"]
+    T --> V["tests/validators/"]
     T --> E["tests/e2e/"]
     E --> RP["runtime_proof/"]
     E --> RA["release_assembly/"]
     E --> C["correction/"]
     P --> W[".github/workflows/"]
+    V --> W
     RP --> W
     RA --> W
     C --> W
@@ -293,8 +321,9 @@ flowchart LR
 |---|---|---|---|
 | [`../bundles/`](../bundles/) | executable policy source | the rule body itself is changing | test-only assertions or fixture copies |
 | [`../fixtures/`](../fixtures/) | shared positive / negative examples | multiple local tests or lanes should consume the same governed cases | one-off scratch data hidden from review |
-| `policy/tests/` | bundle-local policy assertions | you are proving local rule behavior close to the policy artifact stream | repo-wide runtime, release, or correction proof |
-| [`../../tests/policy/`](../../tests/policy/) | repo-facing policy behavior proof | policy behavior needs to stay visible in the broader verification map | bundle source ownership |
+| `policy/tests/` | bundle-local policy assertions | you are proving local rule behavior close to the policy artifact stream | repo-wide runtime, release, correction, or validator/gate proof |
+| [`../../tests/validators/`](../../tests/validators/) | validator-facing policy proof | a machine-evaluated policy input must remain fail-closed and finite | policy-source ownership |
+| [`../../tests/policy/`](../../tests/policy/) | broader repo-facing policy behavior proof | policy behavior needs to stay visible in the broader verification map | bundle source ownership |
 | [`../../tests/e2e/README.md`](../../tests/e2e/README.md) | release, runtime, and correction drills | trust impact only shows up end to end | narrow bundle-local assertions |
 | [`../../.github/workflows/`](../../.github/workflows/) | automation and merge-gate wiring | the question is “what blocks or proves trust state in automation?” | shadow copies of bundle or test logic |
 
@@ -308,6 +337,17 @@ flowchart LR
 | runtime | does local decision grammar stay finite and explicit? | request-time behavior must be proven in `runtime_proof/` |
 | release / export | do local rules hold or deny correctly before publish-like actions? | release manifests, promotion, or export proof is involved |
 | correction | do local rules preserve withdraw / supersede meaning? | correction propagation or stale visibility must be exercised end to end |
+| change visibility | does checked-in classification data remain valid and explicit locally? | a validator or promotion gate consumes it as machine input |
+
+### Local policy data versus broader proof
+
+| Artifact type | Closest home | Why |
+|---|---|---|
+| seam-local rule pack | `policy/bundles/` | authoring home for policy law |
+| shared policy fixture | `policy/fixtures/` | reusable governed examples |
+| local seam assertion | `policy/tests/` | closest proof to the policy artifact seam |
+| validator-facing policy-input proof | `tests/validators/` | proves fail-closed machine evaluation and schema validity under gate conditions |
+| broader runtime/release/correction proof | `tests/policy/` or `tests/e2e/` | proves behavior survives contact with the rest of the system |
 
 [Back to top](#policy-tests)
 
@@ -319,7 +359,9 @@ Treat this README as healthy only when the lane stays both readable and truthful
 - [ ] Bundle-local assertions stay distinct from bundle source and shared fixture ownership.
 - [ ] New governed seams add negative-path coverage, not only happy-path confirmation.
 - [ ] Shared reason / obligation / rights / sensitivity vocabulary is referenced from its canonical home instead of duplicated here.
-- [ ] Changes that affect repo-wide trust behavior also touch [`../../tests/policy/`](../../tests/policy/) or the appropriate `../../tests/e2e/` lane.
+- [ ] Small checked-in policy data files remain schema-bound where that is part of the documented contract.
+- [ ] Changes that affect validator-facing machine policy behavior also touch [`../../tests/validators/`](../../tests/validators/).
+- [ ] Changes that affect broader trust behavior also touch [`../../tests/policy/`](../../tests/policy/) or the appropriate `../../tests/e2e/` lane.
 - [ ] Workflow or merge-gate claims stay aligned with the actual `.github/workflows/` inventory and branch settings.
 - [ ] Path notes stay synchronized if the repo resolves the current `policy/policy-runtime/` versus doctrinal `packages/policy-runtime/` naming difference.
 - [ ] The meta block stays synchronized with verified ownership and file-history evidence.
@@ -332,6 +374,13 @@ No.
 
 `policy/tests/` is the local assertion lane inside `policy/`.  
 `tests/policy/` is the broader repo-facing verifier lane that should prove policy behavior in the context of the full KFM verification surface.
+
+### Is `policy/tests/` the same thing as `tests/validators/`?
+
+No.
+
+`policy/tests/` keeps assertions close to policy-source ownership.  
+`tests/validators/` proves validator- and gate-facing machine behavior, including fail-closed handling of machine policy inputs used by promotion review.
 
 ### Should shared fixtures live here?
 
@@ -349,7 +398,11 @@ Current public repo inspection still shows [`../../.github/workflows/README.md`]
 
 No.
 
-Treat runner or engine specifics as **NEEDS VERIFICATION** unless the checked-out branch proves them directly. The repo and March 2026 doctrine make policy shape and behavior load-bearing; they do not let this README invent mounted toolchain reality.
+Treat runner or engine specifics as **NEEDS VERIFICATION** unless the checked-out branch proves them directly. The repo and doctrine make policy shape and behavior load-bearing; they do not let this README invent mounted toolchain reality.
+
+### Why mention `promotion_bundle_diff_policy.json` here at all?
+
+Because it is now a documented checked-in policy artifact under the `policy/` lane. Even if its validator-facing proof belongs elsewhere, its local ownership and local assertion boundary still matter here.
 
 ## Appendix
 
@@ -361,7 +414,9 @@ A mature `policy/tests/` lane would usually make these things easy to review tog
 - the governed seam being exercised
 - the sibling bundle(s) under `../bundles/`
 - the shared fixture(s) under `../fixtures/`
+- the checked-in policy data file when one exists
 - the expected local outcome grammar
+- any matching validator-facing proof added under `../../tests/validators/`
 - any matching repo-facing proof added under `../../tests/policy/` or `../../tests/e2e/`
 
 Illustrative local maturity signals:
@@ -370,6 +425,7 @@ Illustrative local maturity signals:
 - negative paths are as visible as allow paths
 - shared vocabulary use is explicit
 - bundle-local assertions do not quietly become the only place a policy change is proven
+- small checked-in policy data surfaces stay schema-valid and clearly escalated into validator proof where needed
 
 Illustrative only — verify the real runner, entrypoints, and gate wiring before committing commands:
 
