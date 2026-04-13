@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS_VERIFICATION_DATE
 updated: 2026-04-13
 policy_label: public
-related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md]
-tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion]
-notes: [Merged from the older tools/ci lane contract and the newer promotion-oriented thin-slice renderer work. README-like lane contract; hidden metadata uses placeholders where current public evidence does not confirm a stable document record.]
+related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
+tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff]
+notes: [Updated to reflect render_diff_summary.py and tests/ci/test_render_diff_summary.py in addition to the promotion-oriented renderer thin slice. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
 [/KFM_META_BLOCK_V2] -->
 
 # ci
@@ -21,9 +21,9 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > **Owners:** `@bartytime4life` *(via current public `/tools/` coverage in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); no narrower `/tools/ci/` rule directly verified)*  
 > **Path:** [`tools/ci/README.md`](./README.md)  
 > **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
-> **Evidence posture:** doctrine-grounded · public-`main` repo-grounded for visible tree state · exact helper inventory, live callers, rulesets, and platform settings remain bounded  
-> **Current public snapshot:** `tools/ci/` was historically **README-only** on the public tree; this README therefore defines the lane contract without pretending every renderer, caller, or workflow is already proven on all branches  
-> **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20public%20tree](https://img.shields.io/badge/current%20public%20tree-bounded-lightgrey)](./README.md)  
+> **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice lane shape plus broader public-tree context · exact additional helper inventory, live callers, rulesets, and platform settings remain bounded  
+> **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, and diff summaries. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
+> **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-thin--slice%20active-lightgrey)](./README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -31,31 +31,47 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 
 > [!TIP]
 > **Current executable snapshot (thin slice)**  
-> The current documented thin slice for this lane includes reviewer-facing renderers used by the Promotion Gate flow:
+> The current documented thin slice for this lane includes reviewer-facing renderers:
 >
 > **Reviewer / auditor summary helpers**
 > - `tools/ci/render_promotion_summary.py`
 > - `tools/ci/render_promotion_bundle_summary.py`
+> - `tools/ci/render_diff_summary.py`
+>
+> `render_diff_summary.py` renders:
+>
+> - diff status
+> - blocking state
+> - added / removed / changed key counts
+> - reviewer-facing Markdown for stable diff reports
 >
 > **Primary downstream trust surfaces**
 > - `decision.json`
 > - `promotion-record.json`
 > - `promotion-bundle.json`
+> - stable diff JSON reports such as `promotion-bundle-diff.json`
 >
 > **Primary adjacent lanes**
 > - `tools/validators/promotion_gate/`
 > - `tools/attest/`
+> - `tools/diff/`
+>
+> Expected proof surfaces:
+>
+> - `tests/ci/test_render_diff_summary.py`
+> - the existing promotion renderer tests and fixtures where mounted
 >
 > These helpers are intended to render already-governed outputs into:
 >
 > - CI step summaries
 > - reviewer-readable Markdown
 > - compact auditor-facing bundle summaries
+> - reviewer-facing diff summaries
 >
-> They must not silently redefine policy, promotion law, or release truth.
+> They must not silently redefine policy, promotion law, diff law, or release truth.
 
 > [!NOTE]
-> On some public snapshots this directory may still appear README-led or inventory-light. That is intentional here: the lane contract is stronger than the currently surfaced helper inventory so later additions do not become a miscellaneous CI junk drawer.
+> On some older public snapshots this directory may still appear README-led or inventory-light. This README now reflects a real renderer thin slice while keeping broader family claims bounded.
 
 > [!WARNING]
 > Helpers in `tools/ci/` should be deterministic, read-only by default, and safe to print in logs. Never leak tokens, unpublished evidence, policy-review internals, or trust-bearing state changes through convenience output.
@@ -68,11 +84,12 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 
 Use this lane when the job is to:
 
-- summarize validator, policy, docs, geospatial, or test output for a pull request or check run
+- summarize validator, policy, docs, geospatial, diff, or test output for a pull request or check run
 - normalize noisy tool output into a compact, stable intermediate format
 - emit annotations, markdown summaries, or compact gate digests
 - attach evidence, proof-pack, receipt, or artifact links to reviewer-facing output
 - render trust-object bundles into concise reviewer or auditor summaries
+- render structured diff outputs into reviewer-facing Markdown without recomputing comparison law
 
 Do **not** use this lane when the job is to:
 
@@ -80,13 +97,14 @@ Do **not** use this lane when the job is to:
 - mutate release state, promotion state, or authoritative data
 - replace workflow orchestration with hidden shell logic
 - smuggle business meaning into “just CI glue”
+- become the only place where diff, validation, or attestation meaning exists
 
 ### Truth labels used here
 
 | Label | Meaning in this file |
 | --- | --- |
-| **CONFIRMED** | Directly supported by the current public repo tree, checked-in public Markdown, or attached KFM doctrine |
-| **INFERRED** | Conservative interpretation of adjacent repo evidence or repeated doctrine, but not proven as current checked-in helper reality |
+| **CONFIRMED** | Directly supported by the current repo tree, checked-in Markdown, or adjacent KFM doctrine |
+| **INFERRED** | Conservative interpretation of adjacent repo evidence or repeated doctrine, but not proven as broader checked-in helper reality |
 | **PROPOSED** | Recommended landing shape or operating rule consistent with KFM doctrine |
 | **UNKNOWN** | Not verified strongly enough to present as current repo fact |
 | **NEEDS VERIFICATION** | Explicit placeholder that should be checked against the working branch or platform settings before merge |
@@ -105,8 +123,9 @@ Do **not** use this lane when the job is to:
 | Thin orchestration | [`../../scripts/README.md`](../../scripts/README.md) | Local/operator entrypoints may call `tools/ci` helpers, but reusable review rendering should not be buried in `scripts/`. |
 | Upstream truth law | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Canonical machine-checkable rules, fixtures, and proof burdens live here, not in CI presentation helpers. |
 | Neighbor lanes | [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../attest/README.md`](../attest/README.md), [`../docs/README.md`](../docs/README.md), [`../probes/README.md`](../probes/README.md), [`../catalog/README.md`](../catalog/README.md) | Adjacent reusable helpers may feed inputs into `tools/ci/` summaries. |
-| Promotion consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Current thin-slice reviewer summaries are now clearest in the promotion flow. |
+| Promotion consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Current reviewer summaries are clearest in the promotion flow. |
 | Attestation consumer | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may need reviewer-facing rendering in CI surfaces. |
+| Diff consumer | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Stable diff outputs are now a direct renderer input for this lane. |
 | Downstream consumers | pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
 
 ---
@@ -122,8 +141,9 @@ Do **not** use this lane when the job is to:
 | Diff context | changed files, affected packages, affected route families, doc surfaces touched | Helps render “what changed” without re-implementing git or policy logic. |
 | Run metadata | branch, SHA, job name, run ID, artifact locations | Needed for traceability and stable review output. |
 | Normalized intermediate artifacts | compact JSON or line-oriented status files created upstream | Prefer consuming declared, structured artifacts over scraping raw logs. |
-| Promotion trust objects | `decision.json`, `promotion-record.json`, `promotion-bundle.json` | Current thin-slice renderers operate over these governed artifacts. |
+| Promotion trust objects | `decision.json`, `promotion-record.json`, `promotion-bundle.json` | Current thin-slice promotion renderers operate over these governed artifacts. |
 | Verification state | sign/verify result refs, attestation verification booleans | Reviewer surfaces increasingly need trust visibility, not just pass/fail text. |
+| Stable diff reports | `stable_diff.py` JSON outputs such as `promotion-bundle-diff.json` | Current diff renderer consumes these directly without redoing comparison logic. |
 
 ### Input rules
 
@@ -131,7 +151,7 @@ Do **not** use this lane when the job is to:
 2. Prefer structured formats over free-form log parsing.
 3. Keep helper-specific contracts small and explicit.
 4. Refuse undeclared or malformed inputs clearly and early.
-5. Render what upstream lanes already decided; do not silently re-decide it here.
+5. Render what upstream lanes already decided or measured; do not silently re-decide it here.
 
 ---
 
@@ -149,6 +169,7 @@ Do **not** use this lane when the job is to:
 | Long-form runbooks and doctrine | [`../../docs/`](../../docs/) | Keep this lane focused on executable CI support rather than narrative documentation. |
 | Signature generation or verification | [`../attest/README.md`](../attest/README.md) | `tools/ci/` may display verification state, but signing and verifying stay in `tools/attest/`. |
 | Promotion decisions | [`../validators/README.md`](../validators/README.md) and `promotion_gate/` | `tools/ci/` renders decisions; it does not author them. |
+| Diff computation | [`../diff/README.md`](../diff/README.md) | `tools/ci/` renders stable diff results; it does not own comparison law. |
 
 ---
 
@@ -156,54 +177,51 @@ Do **not** use this lane when the job is to:
 
 | Evidence item | Status | CI-lane consequence |
 | --- | --- | --- |
-| `tools/ci/` currently exposed `README.md` only on older public snapshots | **CONFIRMED historical snapshot** | This lane contract must not imply landed helper binaries or scripts without branch verification. |
+| `tools/ci/` was README-only on older public snapshots | **CONFIRMED historical snapshot** | This lane contract must not imply older snapshots already had landed helpers. |
 | Parent `tools/` exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, `validators/`, and `README.md` | **CONFIRMED** | `ci/` is one of seven visible helper families, not an ad hoc directory. |
-| Current public `/tools/` ownership flows through broad `/tools/` coverage in `CODEOWNERS` | **CONFIRMED** | Owner wording should stay conservative until a narrower `/tools/ci/` rule exists. |
-| `.github/workflows/` may be README-only or otherwise bounded on some public snapshots | **CONFIRMED bounded workflow evidence** | Checked-in workflow caller inventory remains bounded unless directly re-verified. |
-| Public Actions history exposes workflow names such as `verify-docs.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED historical signal** / **NEEDS VERIFICATION** current | Useful reconstruction clue, not proof of current checked-in callers. |
-| `.github/actions/` is visible and placeholder-heavy on current public surfaces | **CONFIRMED** | Step-level reuse exists as a neighboring lane, but direct `tools/ci` caller maturity is not yet proven. |
-| Current public repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
-| Promotion Gate documentation now names `render_promotion_summary.py` and `render_promotion_bundle_summary.py` as current thin-slice CI surfaces | **CONFIRMED via adjacent documentation** | This lane now has concrete renderer identities to document. |
-| Exact helper inventory, live callers, artifact upload wiring, and platform-only settings are not derivable from the public tree alone | **UNKNOWN** | Keep platform claims out of this README unless re-verified against live settings. |
+| Current `/tools/` ownership flows through broad `/tools/` coverage in `CODEOWNERS` | **CONFIRMED** | Owner wording should stay conservative until a narrower `/tools/ci/` rule exists. |
+| `.github/workflows/` evidence remains bounded | **CONFIRMED bounded workflow evidence** | Checked-in workflow caller inventory remains bounded unless directly re-verified. |
+| `.github/actions/` is visible and placeholder-heavy on current surfaces | **CONFIRMED** | Step-level reuse exists as a neighboring lane, but direct `tools/ci` caller maturity is not yet fully proven. |
+| Current repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
+| Promotion Gate documentation names `render_promotion_summary.py` and `render_promotion_bundle_summary.py` as thin-slice CI surfaces | **CONFIRMED via adjacent documentation** | This lane has concrete promotion renderer identities to document. |
+| `tools/ci/render_diff_summary.py` is the current diff-oriented thin-slice executable helper | **CONFIRMED** | This lane now documents a concrete diff renderer in addition to promotion renderers. |
+| `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | The diff renderer lands with explicit test coverage. |
+| Exact additional helper inventory, live callers, artifact upload wiring, and platform-only settings beyond the thin slice | **UNKNOWN** | Keep broader platform claims out of this README unless re-verified against live settings. |
 
 [Back to top](#ci)
 
 ## Directory tree
 
-### Current public snapshot (**CONFIRMED historically bounded**)
+### Current lane shape
 
 ```text
-tools/
-└── ci/
-    └── README.md
+tools/ci/
+├── README.md
+├── render_promotion_summary.py
+├── render_promotion_bundle_summary.py
+└── render_diff_summary.py
+
+tests/ci/
+└── test_render_diff_summary.py
 ```
 
-That snapshot should be read literally: this README is a lane contract, not proof of a fully landed helper inventory.
-
-### Current documented thin-slice shape
-
-```text
-tools/
-└── ci/
-    ├── README.md
-    ├── render_promotion_summary.py
-    └── render_promotion_bundle_summary.py
-```
+> [!NOTE]
+> The lane now has a real renderer thin slice. That does **not** yet prove every broader family helper or workflow caller below.
 
 <details>
-<summary>Possible stable growth shape (<strong>PROPOSED</strong>, not guaranteed current public tree)</summary>
+<summary>Possible stable growth shape (<strong>PROPOSED</strong>)</summary>
 
 ```text
-tools/
-└── ci/
-    ├── README.md
-    ├── emit-pr-summary
-    ├── emit-annotations
-    ├── compact-gate-output
-    ├── normalize-check-output
-    ├── render_promotion_summary.py
-    ├── render_promotion_bundle_summary.py
-    └── templates/
+tools/ci/
+├── README.md
+├── emit-pr-summary
+├── emit-annotations
+├── compact-gate-output
+├── normalize-check-output
+├── render_promotion_summary.py
+├── render_promotion_bundle_summary.py
+├── render_diff_summary.py
+└── templates/
 ```
 
 Use the smallest useful set. Resist the temptation to turn `tools/ci/` into a second `scripts/` directory.
@@ -226,10 +244,11 @@ sed -n '1,220p' .github/CODEOWNERS
 sed -n '1,220p' scripts/README.md
 sed -n '1,260p' tools/validators/promotion_gate/README.md
 sed -n '1,260p' tools/attest/README.md
+sed -n '1,260p' tools/diff/README.md
 
 # Find existing references before adding a helper
 git grep -n "tools/ci" -- . || true
-git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
+git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
 
 # Inspect likely producers of CI-facing artifacts
 find .github/actions tools scripts tests -maxdepth 3 -type f | sort
@@ -242,7 +261,7 @@ Before adding a helper, answer four questions:
 3. What exact outputs does it emit?
 4. Why does this belong in `tools/ci/` instead of `scripts/`, `.github/actions/`, `policy/`, `contracts/`, or a package?
 
-### Exercise the current promotion summary renderers
+### Exercise the current thin-slice renderers
 
 ```bash
 python tools/ci/render_promotion_summary.py \
@@ -252,6 +271,16 @@ python tools/ci/render_promotion_summary.py \
 python tools/ci/render_promotion_bundle_summary.py \
   promotion-bundle.json \
   --output promotion-bundle-summary.md
+
+python tools/ci/render_diff_summary.py \
+  diff-report.json \
+  --output diff-summary.md
+```
+
+### Thin-slice test run for diff rendering
+
+```bash
+pytest -q tests/ci/test_render_diff_summary.py
 ```
 
 ---
@@ -263,7 +292,7 @@ python tools/ci/render_promotion_bundle_summary.py \
 A good `tools/ci/` helper follows this shape:
 
 1. **Receive** declared artifacts and run metadata.
-2. **Normalize** them into a compact internal status model.
+2. **Normalize** them into a compact internal status model where needed.
 3. **Render** human-facing and machine-facing outputs separately.
 4. **Exit** with helper-status semantics, not hidden policy semantics.
 
@@ -291,32 +320,37 @@ Use non-zero exit codes when the helper itself is broken or its declared input c
 
 Do **not** hide gate meaning inside an opaque crash. If a check found failures, the helper should still be able to render that result cleanly and let the caller decide how to enforce it.
 
-### Illustrative invocation patterns
+### Current thin-slice invocation patterns
 
 ```bash
-# Illustrative future entrypoint — not a claim that this helper exists today
-tools/ci/emit-pr-summary \
-  --input build/reports/contracts.json \
-  --input build/reports/policy.json \
-  --input build/reports/geospatial.json \
-  --sha "$GITHUB_SHA" \
-  --run-id "$GITHUB_RUN_ID" \
-  --out build/ci/pr-summary.md
-```
-
-```bash
-# Current thin-slice promotion-oriented renderer
 python tools/ci/render_promotion_summary.py \
   decision.json \
   --output promotion-summary.md
 ```
 
 ```bash
-# Current thin-slice bundle-oriented renderer
 python tools/ci/render_promotion_bundle_summary.py \
   promotion-bundle.json \
   --output promotion-bundle-summary.md
 ```
+
+```bash
+python tools/ci/render_diff_summary.py \
+  promotion-bundle-diff.json \
+  --output promotion-bundle-diff-summary.md
+```
+
+### Thin-slice diff rendering behavior
+
+`render_diff_summary.py` currently renders:
+
+- diff status
+- blocking state
+- added / removed / changed key counts
+- explicit key lists where present
+- reviewer-facing Markdown suitable for CI step summaries
+
+It does **not** compute the diff itself. That stays in `tools/diff/stable_diff.py`.
 
 ---
 
@@ -340,7 +374,7 @@ flowchart LR
     IN1["declared reports / manifests / receipts / trust objects"]
     CI["tools/ci/*<br/>summary + annotation helpers"]
     OUT1["PR summary<br/>check-run text<br/>compact gate digest"]
-    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries"]
+    OUT2["annotations<br/>review breadcrumbs<br/>bundle summaries<br/>diff summaries"]
     NO["authoritative truth / promotion / policy law"]
 
     WF --> AC
@@ -370,12 +404,13 @@ flowchart LR
 
 | Helper family | Primary job | Typical inputs | Typical outputs | Status |
 | --- | --- | --- | --- | --- |
-| Summary helpers | Produce reviewer-readable run summaries | structured validator / test / policy / docs outputs | Markdown or plain-text summaries | **CONFIRMED fit / thin-slice active for promotion** |
+| Summary helpers | Produce reviewer-readable run summaries | structured validator / test / policy / docs / diff outputs | Markdown or plain-text summaries | **Thin-slice active** |
 | Annotation helpers | Surface file- or line-scoped problems | structured failures with file context | platform-specific annotations | **PROPOSED** |
 | Gate-compaction helpers | Collapse many checks into one small digest | multiple report files | compact JSON or terse status blocks | **PROPOSED** |
 | Linkage helpers | Attach receipts, proof-pack, or artifact links to CI output | manifests, receipts, artifact indexes | link bundles for review surfaces | **PROPOSED** |
 | Normalizers | Convert tool-specific output into a stable CI-facing shape | raw tool output | normalized intermediate artifacts | **PROPOSED** |
-| Bundle renderers | Render full governed trust bundles for reviewer/auditor handoff | promotion bundle manifests, verification state | one-page Markdown summaries | **Thin-slice active for promotion** |
+| Bundle renderers | Render full governed trust bundles for reviewer/auditor handoff | promotion bundle manifests, verification state | one-page Markdown summaries | **Thin-slice active** |
+| Diff renderers | Render stable diff reports for reviewer-facing CI output | stable diff JSON reports | Markdown summaries with change counts and key lists | **Thin-slice active** |
 
 > [!TIP]
 > The lane itself is real. The helper families above are intentionally distinguished between current thin-slice use and broader proposed growth so the README stays useful without overstating current branch contents.
@@ -386,18 +421,22 @@ flowchart LR
 
 Use this checklist when adding or revising a `tools/ci/` helper.
 
-- [ ] The helper has one clear job and one obvious caller.
-- [ ] Its declared inputs are documented in this README or in a colocated help surface.
-- [ ] Its outputs are deterministic and easy for both humans and CI to consume.
-- [ ] It does **not** hide canonical policy, schema, release, or domain law.
-- [ ] It is read-only by default.
-- [ ] It does not leak secrets or unpublished evidence into logs.
-- [ ] It can be run locally with the same contract used in CI.
-- [ ] If a workflow or repo-local action calls it, that caller remains a thin wrapper rather than the only place helper behavior exists.
-- [ ] Its tests and fixtures live in the repo’s shared test surfaces, not in ad hoc scratch files.
-- [ ] It links back to real artifacts, receipts, manifests, or reports where useful.
-- [ ] Failure semantics are explicit: helper failure is different from gate failure.
-- [ ] If it renders trust state, that state comes from upstream artifacts rather than being recomputed opaquely inside the renderer.
+### Definition of done for the current thin slice
+
+- [x] `render_diff_summary.py` thin slice implemented
+- [x] diff renderer tests added
+- [x] renderer inputs are documented and machine-readable
+- [x] outputs are deterministic and usable by both humans and CI
+- [x] helper remains read-only by default
+- [x] failure semantics are explicit: helper failure is different from diff/change meaning
+
+### Next sensible expansions
+
+- [ ] add direct integration examples for `stable_diff.py` caller flows
+- [ ] add promotion-bundle-specific diff summary wording if needed
+- [ ] add optional compact mode for PR comment rendering
+- [ ] document specific workflow or script callers once mounted and verified
+- [ ] add richer annotation helpers separately instead of overloading summary renderers
 
 ---
 
@@ -417,7 +456,7 @@ Because `scripts/` is the more natural home for orchestration, sequencing, and o
 
 ### Does this README claim helpers already exist?
 
-It claims the lane contract is real and that the promotion thin slice currently depends on reviewer-facing summary renderers. Exact mounted inventory still requires branch verification where public evidence is bounded.
+Yes, now in a bounded thin-slice sense. This lane currently documents promotion-oriented renderers and a diff-summary renderer. Broader inventory still requires verification where evidence is bounded.
 
 ### Can a `tools/ci/` helper publish, promote, or correct artifacts?
 
@@ -431,12 +470,16 @@ Prefer the repo’s shared test surfaces so helper behavior stays reviewable bes
 
 Yes — that is a good fit. But the signing and verification themselves belong in `tools/attest/`; `tools/ci/` should only render the already-produced state.
 
+### Can `tools/ci/` render diff results?
+
+Yes. That is now part of the current thin slice. But the diff computation itself still belongs in `tools/diff/`.
+
 [Back to top](#ci)
 
 ## Appendix
 
 <details>
-<summary>Illustrative output shapes (<strong>PROPOSED</strong>)</summary>
+<summary>Illustrative output shapes (<strong>PROPOSED except where noted</strong>)</summary>
 
 ### Example markdown summary
 
@@ -476,14 +519,22 @@ Yes — that is a good fit. But the signing and verification themselves belong i
 }
 ```
 
-### Example annotation record
+### Example current diff-summary shape
 
-```json
-{
-  "path": "contracts/runtime/runtime_response_envelope.schema.json",
-  "level": "error",
-  "message": "Required property 'kind' missing in invalid fixture expectation block."
-}
+```md
+# Diff Summary
+
+**Tool:** `stable-diff`  
+**Status:** 📝 `changed`  
+**Blocking:** `True`  
+**Left:** `old.json`  
+**Right:** `new.json`  
+
+## Change Counts
+
+- Added keys: `1`
+- Removed keys: `1`
+- Changed keys: `1`
 ```
 
 Keep these shapes small, boring, and stable. Reviewer trust is helped more by consistency than by cleverness.
@@ -503,6 +554,21 @@ A promotion-oriented CI renderer may take a machine-readable decision or bundle 
 - one short reviewer / auditor conclusion block
 
 That is a rendering concern, not a decision-authority concern.
+
+</details>
+
+<details>
+<summary>Illustrative diff summary role (<strong>thin-slice aligned</strong>)</summary>
+
+A diff-oriented CI renderer may take a stable diff JSON report and emit:
+
+- diff status
+- blocking state
+- added / removed / changed counts
+- explicit changed-key lists
+- one short reviewer-facing conclusion block
+
+That is also a rendering concern, not comparison-law authority.
 
 </details>
 
