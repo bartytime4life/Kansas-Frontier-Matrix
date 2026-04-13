@@ -10,7 +10,7 @@ updated: 2026-04-13
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md, ../../tools/ci/README.md, ../../tools/attest/README.md, ../../tools/validators/README.md, ../../tools/validators/promotion_gate/README.md]
 tags: [kfm, tools, diff, comparison, deterministic, review]
-notes: [Merged from the older doctrine-heavy tools/diff README and the later neighboring-lane thin-slice context. doc_id placeholder requires repo UUID assignment; created date requires git-history verification; policy_label reflects current public-main visibility rather than a separately verified policy registry entry.]
+notes: [Updated to reflect the stable_diff.py thin slice and tests/diff/test_stable_diff.py. doc_id placeholder requires repo UUID assignment; created date requires git-history verification; policy_label reflects current public-main visibility rather than a separately verified policy registry entry.]
 [/KFM_META_BLOCK_V2] -->
 
 # diff
@@ -22,8 +22,8 @@ Deterministic comparison helpers for manifests, snapshots, release artifacts, ge
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-bartytime4life-blue) ![path](https://img.shields.io/badge/path-tools%2Fdiff%2FREADME.md-0b7285) ![role](https://img.shields.io/badge/role-deterministic%20comparison-success) ![posture](https://img.shields.io/badge/posture-read--only%20by%20default-red) ![evidence](https://img.shields.io/badge/evidence-repo--grounded%20%2B%20doctrine--bounded-yellow)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diff behavior contract](#diff-behavior-contract) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** target file `tools/diff/README.md` · parent [`../README.md`](../README.md) · root [`../../README.md`](../../README.md) · governance [`../../.github/README.md`](../../.github/README.md) · adjacent [`../../scripts/README.md`](../../scripts/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · downstream [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
-> **Evidence posture:** doctrine-grounded · public-`main` repo-grounded for visible tree state · deeper local checkout, workflow callers, and executable helper inventory remain bounded  
-> **Current public snapshot:** `tools/diff/` currently renders as `README.md` only. The parent `tools/` lane visibly exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`, so this README documents a real helper lane while keeping executable inventory bounded.  
+> **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice lane shape plus broader public-tree context · deeper local checkout, workflow callers, and additional executable helper inventory remain bounded  
+> **Current lane snapshot:** `tools/diff/` now has one documented executable thin slice plus tests: `stable_diff.py` and `tests/diff/test_stable_diff.py`. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
 > **Accepted inputs:** deterministic comparison helpers, explicit canonicalization-before-diff utilities, reviewer-facing summaries, machine-readable comparison output, and tiny non-sensitive support assets.  
 > **Exclusions:** orchestration, promotion logic, policy decisions, canonical schema ownership, long-running runtime code, and hidden mutation shortcuts.
 
@@ -31,14 +31,24 @@ Deterministic comparison helpers for manifests, snapshots, release artifacts, ge
 > `tools/diff/` is not a convenience bin for ad hoc one-liners. In KFM it is the reviewable comparison surface that helps humans, scripts, pipelines, and CI see **what changed** without quietly deciding **what should be published**.
 
 > [!TIP]
-> **Current executable snapshot (thin slice posture)**  
-> `tools/diff/` remains a comparison lane with **bounded public executable evidence**. This README therefore documents:
+> **Current executable snapshot (thin slice)**  
+> The current documented thin slice for this lane is:
 >
-> - the lane contract
-> - the first-helper landing rules
-> - the comparison boundary relative to `tools/ci/`, `tools/attest/`, and `tools/validators/`
+> - `tools/diff/stable_diff.py`
 >
-> Unlike `tools/ci/` and the promotion thin slice, this lane does **not** yet claim a concrete current helper inventory beyond README-level public evidence unless verified on the active branch.
+> It checks:
+>
+> - added top-level JSON keys
+> - removed top-level JSON keys
+> - changed top-level JSON keys
+> - deterministic equality under normalized key ordering
+>
+> Expected proof surface:
+>
+> - `tests/diff/test_stable_diff.py`
+> - optional JSON report for CI and reviewer rendering
+>
+> The broader lane remains larger than this one executable helper. Richer canonicalization, nested-path diffs, geometry summaries, and reviewer renderers are still **PROPOSED** unless directly verified in the active branch.
 
 > [!NOTE]
 > The parent `tools/` README already treats `diff/` as a named helper family. This child README narrows that doctrine to one lane: comparison helpers must stay deterministic, explicit, and subordinate to contracts, policy, review, and release evidence.
@@ -61,17 +71,17 @@ That makes this lane useful precisely because it is **not** the place where poli
 
 What this README does:
 
-1. describes the current public state honestly
+1. describes the current lane state honestly
 2. defines the operating contract for the `diff/` lane
-3. separates current subtree fact from documentary target shape
+3. separates current lane fact from target-shape guidance
 4. keeps KFM’s truth posture visible by marking what is **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**
 
 ### Evidence markers used in this README
 
 | Marker | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Supported by current public repo files, current public tree inspection, or current in-repo KFM doctrine |
-| **INFERRED** | Strongly suggested by current public repo docs and lane boundaries, but not proven as live executable `tools/diff/` inventory |
+| **CONFIRMED** | Supported by current repo files, current tree inspection, or current in-repo KFM doctrine |
+| **INFERRED** | Strongly suggested by current repo docs and lane boundaries, but not proven as broader live executable `tools/diff/` inventory |
 | **PROPOSED** | Target shape, placement rule, or starter helper guidance consistent with current repo doctrine |
 | **UNKNOWN** | Not established strongly enough from visible repo or public docs |
 | **NEEDS VERIFICATION** | Path, caller, owner, or merge-gate detail that should be checked on the exact working branch before merge |
@@ -95,12 +105,12 @@ What this README does:
 | Related family lanes | [`../attest/README.md`](../attest/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), [`../docs/README.md`](../docs/README.md), [`../probes/README.md`](../probes/README.md), [`../validators/README.md`](../validators/README.md) | sibling helper lanes with adjacent concerns that should stay coherent with diff behavior |
 | Adjacent | [`../../scripts/README.md`](../../scripts/README.md) | `scripts/` may call diff helpers, but reusable comparison logic should not be buried there |
 | Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | diff helpers compare typed objects; they do not define their canonical shape |
-| Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | repo currently exposes a schema surface; `tools/diff/` must not silently arbitrate schema authority |
+| Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | repo exposes a schema surface; `tools/diff/` must not silently arbitrate schema authority |
 | Adjacent | [`../../policy/README.md`](../../policy/README.md) | policy may consume diff output, but policy does the deciding |
 | Adjacent | [`../../tests/README.md`](../../tests/README.md) | fixtures and assertions should prove diff behavior explicitly |
-| Visible execution neighbor | [`../../pipelines/`](../../pipelines/) | public execution lanes exist at repo root, but specific diff callers there remain unverified on current public `main` |
+| Visible execution neighbor | [`../../pipelines/`](../../pipelines/) | execution lanes exist at repo root, but specific diff callers there remain unverified |
 | Promotion consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | promotion review increasingly benefits from deterministic comparison of candidates, prior releases, and bundle changes |
-| CI renderer neighbor | [`../../tools/ci/README.md`](../../tools/ci/README.md) | diff outputs are strong candidates for reviewer-readable summaries once stable helper inventory lands |
+| CI renderer neighbor | [`../../tools/ci/README.md`](../../tools/ci/README.md) | diff outputs are strong candidates for reviewer-readable summaries |
 | Attestation neighbor | [`../../tools/attest/README.md`](../../tools/attest/README.md) | attested release artifacts may still need deterministic comparison without duplicating signing logic |
 
 ### Why this directory matters in KFM
@@ -154,6 +164,7 @@ The following belong in or under `tools/diff/` when they remain comparison-orien
 | Geometry support artifacts | geometry summaries, bbox summaries, count/area/vertex summaries |
 | Review and correction artifacts | correction notices, rollback refs, supersession records |
 | Promotion trust chain artifacts | decision vs prior decision, record vs prior record, bundle vs prior bundle |
+| JSON document pairs | left/right JSON snapshots where stable top-level change reporting is enough | the current thin-slice implemented class |
 
 [Back to top](#diff)
 
@@ -185,15 +196,15 @@ The following belong in or under `tools/diff/` when they remain comparison-orien
 
 | Evidence item | Status | How this README uses it |
 | --- | --- | --- |
-| Public `tools/` root exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` alongside `README.md` | **CONFIRMED** | grounds that `diff/` is a live child lane in the checked-in helper family |
-| Public `tools/diff/` page lists `README.md` only on bounded public snapshots | **CONFIRMED** | prevents overclaiming executable helper inventory |
-| Visible sibling helper lanes each expose a `README.md` in public view | **CONFIRMED** | supports README-first lane navigation and a shared family pattern |
+| `tools/` root exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` alongside `README.md` | **CONFIRMED** | grounds that `diff/` is a live child lane in the checked-in helper family |
 | `.github/CODEOWNERS` assigns `/tools/` to `@bartytime4life` | **CONFIRMED** | grounds the owners line and review expectation |
-| Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and `.github/workflows/` README surfaces exist on public `main` | **CONFIRMED** | grounds relative links and boundary language |
-| `.github/workflows/` evidence remains bounded on current public surfaces | **CONFIRMED bounded workflow evidence** | keeps workflow-caller claims limited and pushes reusable comparison logic out of hidden YAML |
-| Repo root visibly includes `pipelines/` as a separate public execution lane | **CONFIRMED** | supports treating pipelines as possible callers without implying any specific checked-in diff integration there |
-| `tools/ci/` and promotion documentation now describe renderer and bundle surfaces that may consume comparison output | **CONFIRMED via adjacent documentation** | strengthens the downstream reviewer-value case for stable diff outputs |
-| Exact local checkout inventory, executable diff helpers, fixture catalog, and workflow callers | **UNKNOWN** | kept visibly bounded until the active checkout is inspected directly |
+| Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and `.github/workflows/` README surfaces exist | **CONFIRMED** | grounds relative links and boundary language |
+| `.github/workflows/` evidence remains bounded | **CONFIRMED bounded workflow evidence** | keeps workflow-caller claims limited and pushes reusable comparison logic out of hidden YAML |
+| Repo root visibly includes `pipelines/` as a separate execution lane | **CONFIRMED** | supports treating pipelines as possible callers without implying any specific checked-in diff integration there |
+| `tools/ci/` and promotion documentation describe renderer and bundle surfaces that may consume comparison output | **CONFIRMED via adjacent documentation** | strengthens the downstream reviewer-value case for stable diff outputs |
+| `tools/diff/stable_diff.py` is the current thin-slice executable helper | **CONFIRMED** | this README now documents one concrete helper rather than a purely README-only lane |
+| `tests/diff/test_stable_diff.py` is the current thin-slice proof surface | **CONFIRMED** | the first helper now lands with explicit test coverage |
+| Exact additional helper inventory beyond the thin slice | **UNKNOWN** | keeps wider lane growth explicitly bounded |
 
 [Back to top](#diff)
 
@@ -201,65 +212,37 @@ The following belong in or under `tools/diff/` when they remain comparison-orien
 
 ## Directory tree
 
-### Current public `tools/` family snapshot
+### Current lane shape
 
 ```text
-tools/
+tools/diff/
 ├── README.md
-├── attest/
-│   └── README.md
-├── catalog/
-│   └── README.md
-├── ci/
-│   └── README.md
-├── diff/
-│   └── README.md
-├── docs/
-│   └── README.md
-├── probes/
-│   └── README.md
-└── validators/
-    └── README.md
-```
+└── stable_diff.py
 
-### Current public `tools/diff/` snapshot
-
-```text
-tools/
-└── diff/
-    └── README.md
+tests/diff/
+└── test_stable_diff.py
 ```
 
 > [!NOTE]
-> The presence of `tools/diff/` is confirmed. The presence of executable helpers inside `tools/diff/` is not.
-
-### PROPOSED minimal landing shape for the first executable helper
-
-```text
-tools/
-└── diff/
-    ├── README.md
-    └── stable_diff.py   # PROPOSED illustrative starter name, not current public-tree proof
-```
+> The lane now has one real executable thin slice plus tests. That does **not** yet prove the wider family layout below.
 
 ### PROPOSED slightly richer landing shape
 
 ```text
-tools/
-└── diff/
-    ├── README.md
-    ├── stable_diff.py
-    ├── summarize_diff.py
-    ├── canonicalize_for_diff.py
-    └── examples/
+tools/diff/
+├── README.md
+├── stable_diff.py
+├── summarize_diff.py
+├── canonicalize_for_diff.py
+└── examples/
 ```
 
 ### Reading rule for this tree
 
 Use the split above intentionally:
 
-- the first two trees are **current public-tree fact**
-- the latter shapes are **preferred landing shapes**
+- the first tree is **current lane fact**
+- the latter shape is **preferred future growth**
 - anything beyond that remains **UNKNOWN** or **NEEDS VERIFICATION** until the active checkout is inspected directly
 
 [Back to top](#diff)
@@ -305,15 +288,27 @@ sed -n '1,220p' tests/README.md 2>/dev/null
 sed -n '1,220p' tools/validators/promotion_gate/README.md 2>/dev/null
 ```
 
-### 5) Syntax-check candidate helpers **only when they actually exist**
+### 5) Thin-slice local run
+
+```bash
+python tools/diff/stable_diff.py \
+  --left left.json \
+  --right right.json \
+  --output diff-report.json
+```
+
+### 6) Thin-slice test run
+
+```bash
+pytest -q tests/diff/test_stable_diff.py
+```
+
+### 7) Syntax-check helpers when present
 
 ```bash
 find tools/diff -type f -name "*.py" -print0 2>/dev/null | xargs -0 -r -n1 python -m py_compile
 find tools/diff -type f -name "*.sh" -print0 2>/dev/null | xargs -0 -r -n1 bash -n
 ```
-
-> [!TIP]
-> If the local tree still matches the README-only snapshot, treat this file as the lane contract and landing plan for the first executable helper, not as evidence that the helper already exists.
 
 [Back to top](#diff)
 
@@ -321,9 +316,9 @@ find tools/diff -type f -name "*.sh" -print0 2>/dev/null | xargs -0 -r -n1 bash 
 
 ## Usage
 
-### Add the first executable helper into a README-first lane
+### Add an executable helper into a diff lane
 
-When `tools/diff/` still contains only documentation, land the first helper with its caller and proof burden in the same change.
+When extending `tools/diff/`, land the helper with its caller and proof burden in the same change.
 
 1. identify the caller surface first: local review, CI gate, release review, correction drill, operator workflow, or a pipeline lane
 2. create the helper under the narrowest descriptive name that matches its actual job
@@ -349,6 +344,24 @@ Recommended sequence:
 3. emit a machine-readable summary if any caller will parse the result
 4. emit a human-readable summary if a reviewer will need to inspect the change
 5. route the result outward to scripts, pipelines, CI, review, or policy lanes as appropriate
+
+### Thin-slice behavior
+
+The current thin slice:
+
+- loads two JSON documents
+- normalizes object key ordering deterministically
+- reports added top-level keys
+- reports removed top-level keys
+- reports changed top-level keys
+- optionally fails non-zero when changes are present
+
+It does **not yet** provide:
+
+- nested-path diff output
+- geometry-aware summaries
+- field-type-specific materiality rules
+- reviewer-facing Markdown rendering
 
 ### Wire diff helpers into scripts, pipelines, or CI
 
@@ -406,24 +419,20 @@ That belongs here **only** when the helper remains a comparator and does not re-
 | Boundary discipline | no direct bypass of policy, review, release evidence, or the trust membrane |
 | Local / CI parity | a merge-blocking helper should be runnable locally with the same core behavior used in CI |
 
-### Illustrative starter output shape (**PROPOSED**)
+### Current thin-slice output shape
 
 ```json
 {
-  "tool": "stable_diff",
+  "tool": "stable-diff",
   "status": "changed",
   "blocking": false,
-  "left": "data/catalog/stac/items/place-a.json",
-  "right": "data/catalog/stac/items/place-b.json",
+  "left": "left.json",
+  "right": "right.json",
   "summary": {
-    "added": 2,
-    "removed": 0,
-    "changed": 4
-  },
-  "notes": [
-    "normalized key order applied",
-    "no policy decision made in this lane"
-  ]
+    "added": ["new_key"],
+    "removed": ["old_key"],
+    "changed": ["shared_key"]
+  }
 }
 ```
 
@@ -462,10 +471,10 @@ flowchart LR
 | --- | --- | --- | --- |
 | Release manifest vs release manifest | What changed between candidate and baseline? | added / removed / changed fields, digest drift, missing refs | review + release lanes |
 | Run receipt / AI receipt vs same class | Did evidence refs, digests, runtime metadata, or obligations change? | field diff, checksum drift, missing-link summary, machine-readable comparison output | review + policy lanes |
-| Catalog closure vs catalog closure | Did outward identifiers or links drift? | missing-link summary, identifier diff, outward-profile delta | catalog validation + review |
+| Catalog closure vs catalog closure | Did outward identifiers or links drift? | missing-link summary, identifier diff, outward-profile delta | catalog validation + review lanes |
 | Evidence bundle vs evidence bundle | Did support members, transforms, or citations change? | bundle member diff, transform summary, missing refs | evidence + review lanes |
 | Correction notice vs correction notice | Did the correction narrow, supersede, withdraw, or replace cleanly? | affected-release summary, replacement refs, scope delta | correction + review lanes |
-| Snapshot vs snapshot | Did the normalized object materially change? | stable field diff, counts, optional machine-readable summary | caller-specific |
+| JSON document vs JSON document | What top-level keys were added, removed, or changed? | stable machine-readable diff summary | caller-specific |
 | Geometry support artifact vs geometry support artifact | Is the spatial change small, large, or obviously malformed? | extent / area / count / vertex summaries | stewardship + policy lanes |
 | Promotion bundle vs promotion bundle | Did the trust-visible artifact set change between candidate and baseline? | artifact membership diff, digest drift summary, verification-state delta | stewardship + release review lanes |
 
@@ -486,19 +495,22 @@ flowchart LR
 
 ## Task list / Definition of done
 
-- [ ] the helper has one narrow, documented purpose
-- [ ] directory placement matches the helper’s real job
-- [ ] inputs, outputs, and side effects are explicit
-- [ ] read-only is the default unless an exception is deliberately documented
-- [ ] exit semantics are explicit and tested
-- [ ] at least one representative success path and one failing path exist
-- [ ] machine-readable output exists where CI, scripts, pipelines, or audits need stable parsing
-- [ ] the helper does not bypass policy, review, release evidence, or the trust membrane
-- [ ] any caller in scripts, pipelines, workflows, docs, or tests is documented near the helper
-- [ ] no secret, restricted, or rights-unclear fixture material was committed
-- [ ] this README was updated alongside any new helper path, caller path, or merge-blocking behavior
-- [ ] any future `stable_diff.py`-style landing keeps its **PROPOSED** status removed only after the file is actually present and reviewable
-- [ ] if bundle or trust-state comparison is added, it reports differences without re-deciding trust law
+### Definition of done for the current thin slice
+
+- [x] `stable_diff.py` thin slice implemented
+- [x] diff helper tests added
+- [x] machine-readable output exists for CI, scripts, and reviewer handoff
+- [x] read-only behavior is the default
+- [x] exit semantics are explicit and tested
+- [x] the helper does not bypass policy, review, release evidence, or the trust membrane
+
+### Next sensible expansions
+
+- [ ] extend JSON diff from top-level keys to nested-path reporting
+- [ ] add reviewer-facing renderer handoff to `tools/ci/`
+- [ ] add promotion-bundle and promotion-record comparison fixtures
+- [ ] add geometry-summary comparison helper separately instead of overloading the base JSON diff
+- [ ] document specific callers in scripts, workflows, or promotion review once they are mounted and verified
 
 [Back to top](#diff)
 
@@ -518,13 +530,13 @@ No. `tools/diff/` can report what changed and how large the change looks. Policy
 
 Yes, when the helper remains read-only and emits review-facing summaries. Geometry repair, topology fixing, or authoritative rewrites do not belong here.
 
-### Why keep `stable_diff.py` as **PROPOSED** in this README?
+### Why was `stable_diff.py` previously described as PROPOSED?
 
-Because it is an illustrative starter name in this file, not current public-tree proof. A future helper can keep that name or choose a narrower one if its contract is more specific.
+Because earlier lane docs were still README-first and did not yet have a mounted helper. That is no longer the case for the current thin slice.
 
-### What becomes **CONFIRMED** once the first helper lands?
+### What is CONFIRMED today?
 
-The executable path, the caller path, the documented inputs / outputs, the exit semantics, and the fixture-backed proof burden for that helper.
+The executable path `tools/diff/stable_diff.py`, the proof surface `tests/diff/test_stable_diff.py`, the documented inputs/outputs, and the tested exit semantics for that helper.
 
 ### Can this lane compare promotion bundles or signed artifacts?
 
@@ -537,22 +549,21 @@ Yes, but only as a comparator. Signature generation and verification remain in `
 ## Appendix
 
 <details>
-<summary>Illustrative starter CLI shape (<strong>PROPOSED</strong>)</summary>
+<summary>Illustrative starter CLI shape (<strong>current thin-slice aligned</strong>)</summary>
 
-A first helper in this lane could look like this:
+A current helper in this lane now looks like this:
 
 ```bash
 python tools/diff/stable_diff.py \
-  --left data/catalog/stac/items/place-a.json \
-  --right data/catalog/stac/items/place-b.json \
-  --format json \
-  --summary markdown
+  --left left.json \
+  --right right.json \
+  --output diff-report.json
 ```
 
-Minimal design expectations for a first helper:
+Minimal current behavior:
 
 - accepts explicit left / right inputs
-- makes normalization rules visible
+- normalizes object key order
 - emits stable machine-readable output
 - returns documented exit semantics
 - stays runnable locally and in CI
@@ -561,22 +572,22 @@ Minimal design expectations for a first helper:
 </details>
 
 <details>
-<summary>Current public-main facts this README is built to respect</summary>
+<summary>Current lane facts this README is built to respect</summary>
 
-1. `tools/diff/` exists on public `main`.
-2. `tools/diff/` currently shows `README.md` only on bounded public snapshots.
-3. The public `tools/` root shows sibling helper lanes: `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`.
-4. Each visible sibling helper lane exposes a `README.md` in public view.
+1. `tools/diff/` exists.
+2. `tools/diff/stable_diff.py` is the current thin-slice executable helper.
+3. `tests/diff/test_stable_diff.py` exists as the current thin-slice proof surface.
+4. The `tools/` root shows sibling helper lanes: `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`.
 5. `/tools/` is currently owned by `@bartytime4life`.
 6. Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and workflow README surfaces are present and should remain linked together.
-7. Repo root also visibly includes `pipelines/` as a separate execution lane, but no specific checked-in diff caller there is claimed here.
+7. Repo root also visibly includes `pipelines/` as a separate execution lane, but no specific checked-in diff caller there is claimed here beyond the thin slice itself.
 
 </details>
 
 <details>
 <summary>Illustrative future promotion-oriented diff use (<strong>PROPOSED</strong>)</summary>
 
-A future diff helper might compare:
+A future diff helper or caller might compare:
 
 - a candidate `promotion-bundle.json` against the last accepted bundle
 - artifact membership, digest drift, and verification-state change
