@@ -1,172 +1,272 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS_VERIFICATION__assign_uuid
-title: USFWS Critical Habitat Probe
+doc_id: kfm://doc/tools/probes/species-watchers/usfws-critical-habitat-probe
+title: usfws_critical_habitat_probe
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public
-related: [../README.md, ../../README.md, ../../../policy/README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md]
-tags: [kfm, probes, species, usfws, critical-habitat, ecology, stewardship]
-notes: [Path is user-specified; doc_id, dates, owner coverage, adjacent lane inventory, and related-link validity need live-repo verification. This file is doctrine-grounded probe guidance, not proof that a checked-in runnable probe already exists on the mounted branch.]
+created: 2026-04-13
+updated: 2026-04-13
+policy_label: public-safe
+related: [../README.md, ../../README.md, ../../../data/registry/usfws_critical_habitat.yaml, ../../../data/receipts/README.md, ../../../tools/probes/README.md, ../../../tools/validators/README.md, ../../../policy/README.md, ../../../contracts/README.md]
+tags: [kfm, probes, species, usfws, critical-habitat, receipts, drift, stewardship]
+notes: [Updated from an earlier broader draft into a thinner, release-aligned probe contract. Exact executable wiring, sibling inventory, source-descriptor path, and adjacent lane contents remain NEEDS VERIFICATION on the live branch.]
 [/KFM_META_BLOCK_V2] -->
 
-# USFWS Critical Habitat Probe
+# usfws_critical_habitat_probe
 
-Governed probe contract for monitoring authoritative U.S. Fish & Wildlife Service critical-habitat boundaries and turning them into KFM-safe stewardship outputs.
+Read-only probe contract for observing authoritative U.S. Fish & Wildlife Service critical-habitat change and recording that observation as **receipts**, not release proof.
 
-> **Status:** experimental  
-> **Owners:** `@bartytime4life` *(NEEDS VERIFICATION — inferred from adjacent `/tools/` documentation patterns rather than a mounted repo recheck for this exact lane)*  
+> [!NOTE]
+> **Status:** draft  
+> **Owners:** `@bartytime4life`  
 > **Path:** `tools/probes/species_watchers/usfws_critical_habitat_probe.md`  
-> **Repo fit:** standard-doc contract for the `tools/probes/species_watchers/` lane; upstream source-descriptor and policy surfaces should feed it, and downstream receipts, proofs, and catalog surfaces should consume it  
-> **Accepted inputs:** registered USFWS Critical Habitat FeatureService URI, registered ECOS critical-habitat snapshot URI, optional AOI geometry, prior receipt/hash state, optional IPaC AOI response for stewardship context  
-> **Exclusions:** community-occurrence harvesting, exact rare-species occurrence publication, policy-bundle authorship, formal ESA consultation letters, and UI-shell rendering  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Source basis](#source-basis) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Lane:** `tools/probes/`  
+> **Posture:** read-only · fail-closed for uncertain observations · no publish authority  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Checks](#checks) · [Finite outcomes](#finite-outcomes) · [Outputs](#outputs) · [Quickstart](#quickstart) · [FAQ](#faq)
 
-![status](https://img.shields.io/badge/status-experimental-orange)
-![lane](https://img.shields.io/badge/lane-tools%2Fprobes%2Fspecies__watchers-1f6feb)
-![source](https://img.shields.io/badge/source-USFWS%20critical%20habitat-0a7ea4)
-![posture](https://img.shields.io/badge/posture-governed%20%7C%20fail--closed-6f42c1)
-![publication](https://img.shields.io/badge/publication-aggregated%20by%20default-2ea043)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-8a63d2)
+![Status: Draft](https://img.shields.io/badge/status-draft-orange)
+![Lane: tools/probes](https://img.shields.io/badge/lane-tools%2Fprobes-1f6feb)
+![Source: USFWS Critical Habitat](https://img.shields.io/badge/source-USFWS%20Critical%20Habitat-0a7ea4)
+![Posture: Read Only](https://img.shields.io/badge/posture-read--only-6f42c1)
+![Outcome: Finite](https://img.shields.io/badge/outcomes-OK%20%7C%20CHANGED%20%7C%20ERROR-8250df)
 
 > [!IMPORTANT]
-> This file defines a **probe contract** for statutory habitat boundaries.  
-> It does **not** claim that a mounted runnable probe, workflow, schema pack, or checked-in source descriptor for this lane was directly verified in the current session.
+> This document defines a **probe contract**.  
+> It does **not** claim that a checked-in runnable probe, workflow, or CLI entrypoint has been verified on the mounted branch.
 
 > [!WARNING]
-> In KFM, critical-habitat boundaries are not the same thing as precise occurrence truth.  
-> Raw or sub-county geometry should stay restricted by default, and public release should prefer county, HUC8, or ecoregion aggregation unless steward review explicitly closes a finer-grained path.
+> Critical habitat is a **regulatory boundary source**, not a precise occurrence source.  
+> This probe must not imply species presence from habitat overlap alone, and it must not publish exact sensitive geometry merely because the source is federal.
 
 ---
 
 ## Scope
 
-This document defines the intended behavior of a KFM probe that watches authoritative USFWS critical-habitat sources, records stable evidence of change, and prepares only policy-safe outputs for downstream publication.
+This probe watches the `usfws_critical_habitat` source for observable upstream change and records bounded process memory for downstream review.
 
 This file is the right place for:
 
 - source-role clarification for USFWS critical-habitat inputs
-- probe-side fetch, snapshot, normalization, and diff expectations
-- minimum field and evidence requirements
-- publication-class boundaries
-- review hooks for stewardship-sensitive outputs
-- bounded quickstart and usage guidance for this lane
+- probe-side observation rules
+- change detection expectations
+- receipt output requirements
+- finite probe outcomes
+- review handoff boundaries
 
 This file is **not** the right place for:
 
-- canonical policy-bundle authorship
-- exact occurrence ingestion logic for GBIF, iNaturalist, or eBird
-- UI rendering or Evidence Drawer choreography
-- formal ESA consultation workflow generation
-- claims about merge-blocking enforcement that were not directly verified
-
-### Truth labels used in this file
-
-| Label | Meaning here |
-| --- | --- |
-| **CONFIRMED** | Directly supported by attached KFM doctrine or adjacent attached KFM documentation examples |
-| **INFERRED** | Strongly suggested by the corpus or target path, but not directly proven as mounted repo reality |
-| **PROPOSED** | Recommended implementation shape consistent with the corpus |
-| **UNKNOWN** | Not verified strongly enough in the current session |
-| **NEEDS VERIFICATION** | Reviewer fill-in or live-repo check required before treating the value as settled |
-
-[Back to top](#usfws-critical-habitat-probe)
+- policy authorship
+- promotion logic
+- STAC/DCAT/PROV schema ownership
+- occurrence ingestion workflows
+- exact public publication rules beyond probe-side cautions
+- UI rendering or runtime shell choreography
 
 ---
 
 ## Repo fit
 
-| Direction | Surface | Role in this file |
+| Direction | Surface | Role |
 | --- | --- | --- |
-| Current file | `tools/probes/species_watchers/usfws_critical_habitat_probe.md` | probe-specific contract for statutory habitat boundary intake |
-| Upstream candidate | [`../README.md`](../README.md) | likely species-watcher lane index *(NEEDS VERIFICATION)* |
-| Upstream candidate | [`../../README.md`](../../README.md) | likely probes-lane boundary doc *(NEEDS VERIFICATION)* |
-| Authority neighbor | [`../../../contracts/README.md`](../../../contracts/README.md) | human-readable contract context |
-| Authority neighbor | [`../../../schemas/README.md`](../../../schemas/README.md) | machine-schema home for any future probe records |
-| Control-plane neighbor | [`../../../policy/README.md`](../../../policy/README.md) | policy semantics stay here, not in the probe |
-| Downstream candidate | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | run receipts and fetch evidence |
-| Downstream candidate | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | evidence bundles and release-grade proof objects |
-| Downstream candidate | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) · [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md) · [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | outward catalog closure after review and aggregation |
+| Current file | `tools/probes/species_watchers/usfws_critical_habitat_probe.md` | thin probe contract for critical-habitat observation |
+| Upstream | `../../../data/registry/usfws_critical_habitat.yaml` | source identity and governance anchor |
+| Neighbor | `../../README.md` | probes-lane contract *(NEEDS VERIFICATION)* |
+| Neighbor | `../README.md` | species-watchers lane index *(NEEDS VERIFICATION)* |
+| Downstream | `../../../data/receipts/README.md` | process-memory home for probe outputs |
+| Downstream | `../../../tools/validators/README.md` | release-facing validators consume probe receipts |
+| Policy boundary | `../../../policy/README.md` | policy semantics stay here, not in the probe |
+| Contract boundary | `../../../contracts/README.md` | shared machine/human contract context |
 
-> [!NOTE]
-> The path above is grounded by the user-specified target.  
-> The neighboring links are deliberately conservative and should be rechecked against the live branch before commit.
+> [!TIP]
+> Probe outputs belong in `data/receipts/`, not `data/proofs/`.  
+> Receipts remember runs; proofs support releases.
 
 ---
 
-## Accepted inputs
+## Inputs
 
-The probe may accept the following input classes:
+The probe accepts explicitly declared inputs only.
 
-1. A registered **USFWS Critical Habitat FeatureService** URI used as the living, queryable boundary source.
-2. A registered **ECOS critical-habitat bulk snapshot** URI used as a periodic baseline or cross-check.
-3. Optional **AOI geometry** for scoped pulls, review, or local impact checks.
-4. Optional **IPaC location response** used as AOI-specific consultation context, not as the replacement for the critical-habitat anchor.
-5. Prior **hash / receipt / manifest state** for change classification and idempotent re-runs.
-6. Optional reviewer-supplied **aggregation target** such as county, HUC8, or ecoregion.
+| Input | Required | Purpose |
+| --- | ---: | --- |
+| `source_id` | yes | Must resolve to `usfws_critical_habitat` |
+| `upstream_endpoint` | yes | Canonical USFWS source surface |
+| `spatial_filter` | yes | Kansas filter or equivalent declared scope |
+| `prior_snapshot_ref` | no | Previous observed state for drift comparison |
+| `run_id` | yes | Deterministic run identity |
+| `as_of` | yes | Observation timestamp |
+| `aoi_geometry` | no | Optional bounded AOI for scoped observation |
+| `snapshot_uri` | no | Optional bulk snapshot or comparison surface |
 
 ### Minimum source expectations
 
-Every accepted source should arrive with enough metadata to answer:
+Every accepted source should answer:
 
-- what authority it comes from
-- whether it is living or snapshot-like
-- what pull time and validators were observed
-- what geometry class and CRS were delivered
-- whether the result is suitable for raw storage only, steward review, or public-safe aggregation
+- what authority produced it
+- whether it is a living service or snapshot
+- when it was observed
+- what geometry class it returned
+- whether Kansas scoping can be applied deterministically
 
 ---
 
 ## Exclusions
 
-This probe should **not** silently absorb responsibilities that belong elsewhere.
+This probe does **not**:
 
-| Excluded responsibility | Where it belongs instead |
-| --- | --- |
-| Precise occurrence ingestion from GBIF / iNaturalist / eBird | separate occurrence or biodiversity ingest lane |
-| Publishing exact rare-species or exact occurrence coordinates | restricted stewardship path only |
-| Policy-decision authorship | policy lane and review surfaces |
-| Formal ESA consultation packet generation | dedicated regulatory workflow |
-| Narrative, story, or shell rendering | governed API and UI surfaces |
-| Community-observation truth elevation | evidence review, corroboration, and stewardship workflows |
-
----
-
-## Current evidence snapshot
-
-| Evidence item | Status | How this file uses it |
-| --- | --- | --- |
-| KFM treats ecology and biodiversity as a structural lane with publication burden, not decorative content | **CONFIRMED** | grounds the existence of a stewardship-sensitive probe in this area |
-| The ecology lane explicitly includes statutory and critical-habitat ingest from **USFWS ECOS / IPaC** | **CONFIRMED** | grounds the source basis of this probe |
-| KFM doctrine distinguishes statutory records, direct observations, documentary material, and community-contributed data | **CONFIRMED** | prevents critical-habitat boundaries from being treated as occurrence truth |
-| The attached corpus recommends **public-safe generalized** versus **steward-only precise** publication classes for biodiversity work | **CONFIRMED** | grounds the default aggregation and withholding posture |
-| Attached working notes describe a dual-source pattern: **live FeatureService** plus **ECOS ZIP snapshot**, preserved with hashes, pull times, and FR citation context | **CONFIRMED** | grounds the recommended probe lifecycle |
-| The current session directly exposed a PDF-rich corpus, not a mounted KFM repo tree | **CONFIRMED** | forces bounded claims about checked-in code, schemas, or workflows |
-| The exact sibling inventory under `tools/probes/species_watchers/` | **UNKNOWN** | no broader lane claims are made here |
-| A checked-in runnable CLI entrypoint for this exact probe | **UNKNOWN** | quickstart examples are marked pseudocode |
-| Exact owner coverage for this exact file path | **NEEDS VERIFICATION** | owner field is conservative and should be rechecked at commit time |
+- publish data into `data/published/`
+- create release manifests
+- approve promotion
+- infer policy labels from missing evidence
+- ingest community occurrence feeds
+- replace occurrence review with habitat review
+- author formal ESA consultation outputs
 
 ---
 
 ## Source basis
 
-The probe should treat source roles as first-class, not as interchangeable fetch targets.
+The probe treats source roles as distinct and non-interchangeable.
 
-| Source family | Role in this probe | What it is good for | Main caution |
+| Source family | Role in this probe | Good for | Main caution |
 | --- | --- | --- | --- |
-| **USFWS Critical Habitat FeatureService** | living statutory boundary source | queryable current features, repeated polling, delta-oriented checks | do not confuse “updated as needed” with a full historical snapshot archive |
-| **ECOS critical-habitat bulk snapshot** | periodic baseline / evidence anchor | reproducible bulk comparison, exact snapshot capture, evidence bundles | snapshot cadence differs from live service behavior |
-| **IPaC Location API** | AOI-specific regulatory context | “what is in this footprint now” checks, consultation context | snapshot probe only; not the replacement for the federal boundary anchor |
-| **KDWP range / T&E context** | Kansas-side statutory context | state listing context, range-map comparison, public-facing context | range maps are not precise occurrences |
-| **GBIF / iNaturalist overlays** | optional stewardship overlay input | intersecting occurrence context and review triggers | public resharing must honor geoprivacy and generalization rules |
-| **NatureServe** | contextual sensitivity and review pressure | provider context, sensitivity cues, review-sensitive enrichments | licensing and precision constraints remain visible |
+| **USFWS Critical Habitat service** | primary observation surface | current boundary checks, repeated polling, drift detection | living service behavior is not a complete historical archive |
+| **ECOS snapshot / bulk baseline** | comparison anchor | reproducible bulk comparison, evidence capture | cadence may differ from live service |
+| **Optional AOI response** | scoped context only | bounded local checks | not the replacement for the canonical habitat source |
+| **State or range context** | optional enrichment | contextual review support | not occurrence truth |
+| **Occurrence overlays** | optional review signal | stewardship escalation | do not merge into habitat truth |
 
 > [!IMPORTANT]
-> Critical habitat belongs in the **statutory / administrative** role.  
-> It is authoritative for regulatory boundary context, but it must not silently replace direct observational evidence or precise occurrence records.
+> The probe observes statutory habitat boundaries.  
+> It does not elevate those boundaries into direct observational evidence.
+
+---
+
+## Checks
+
+The probe should only assert what can be directly observed from the declared source.
+
+### 1. Source identity
+Confirm the declared source maps to `usfws_critical_habitat`.
+
+### 2. Metadata drift
+Observe version/date/service-level changes where available.
+
+### 3. Record-count drift
+Compare Kansas-filtered counts against prior observed state.
+
+### 4. Geometry drift
+Compute a deterministic geometry hash from a normalized view.
+
+### 5. Shape sanity
+Confirm the returned structure is polygonal or multipolygonal and not empty.
+
+### 6. Scope applicability
+Confirm Kansas or declared AOI scoping can be applied without ambiguity.
+
+> [!CAUTION]
+> Probe-side geometry checking is intentionally limited.  
+> Final release-grade geometry validation belongs in validators, not probes.
+
+---
+
+## Finite outcomes
+
+The probe emits one of the following finite results:
+
+| Outcome | Meaning |
+| --- | --- |
+| `OK` | No meaningful upstream change observed |
+| `CHANGED` | Observable drift detected; downstream review may be needed |
+| `ERROR` | Observation failed or could not be trusted safely |
+
+The probe does **not** emit promotion decisions such as `PROMOTE` or `DENY`.
+
+---
+
+## Outputs
+
+Every run emits:
+
+- machine-readable receipt JSON
+- reviewer-readable summary markdown
+- optional candidate work-path hint
+- explicit finite status
+
+### Expected output pattern
+
+```text
+data/receipts/probes/usfws/YYYY-MM-DD/receipt.json
+data/receipts/probes/usfws/YYYY-MM-DD/summary.md
+```
+
+### Receipt expectations
+
+A receipt should capture:
+
+- source identity
+- run timestamp
+- observed endpoint
+- prior/current comparison state when available
+- finite result
+- next-action hint without asserting publish authority
+
+---
+
+## Current evidence snapshot
+
+| Item | Status | Use in this file |
+| --- | --- | --- |
+| KFM treats ecology and biodiversity as governance-bearing, not decorative | **CONFIRMED** | grounds the existence of a stewardship-aware probe |
+| Critical habitat belongs to the regulatory / statutory role | **CONFIRMED** | keeps this source distinct from occurrence truth |
+| Public release should avoid silent precision escalation | **CONFIRMED** | grounds read-only and review-first posture |
+| A dual-surface pattern of live service plus snapshot baseline is useful | **INFERRED** | supports optional comparison shape |
+| Exact runnable CLI for this probe exists on the mounted branch | **UNKNOWN** | examples remain explicitly proposed |
+| Exact sibling inventory under `tools/probes/species_watchers/` | **UNKNOWN** | lane-local claims stay conservative |
+| Exact related-link validity on current branch | **NEEDS VERIFICATION** | links should be rechecked before merge |
+
+---
+
+## Determinism rules
+
+To stay replayable and review-safe, the probe should:
+
+- use explicitly declared source surfaces
+- normalize geometry hashing consistently
+- record timestamps in UTC
+- avoid hidden retries that alter semantics
+- avoid policy enrichment
+- preserve observed disagreement rather than flattening it away
+
+---
+
+## Failure posture
+
+Fail closed when:
+
+- upstream response is malformed
+- geometry cannot be normalized consistently
+- source identity cannot be mapped to the registry
+- Kansas scope cannot be applied deterministically
+- required observation fields are absent
+
+Recommended outcome in these cases: `ERROR`.
+
+---
+
+## Probe-to-review handoff
+
+A `CHANGED` result may hand off a candidate path for review. It does **not** authorize publication.
+
+```mermaid
+flowchart LR
+  A[USFWS upstream] --> B[Probe observes]
+  B --> C{Finite outcome}
+  C -->|OK| D[Write receipt]
+  C -->|CHANGED| E[Write receipt + review hint]
+  C -->|ERROR| F[Write receipt + fail-closed error]
+```
 
 ---
 
@@ -174,239 +274,168 @@ The probe should treat source roles as first-class, not as interchangeable fetch
 
 ### Minimal operator flow
 
-1. Register the live FeatureService URI and the snapshot URI in a source descriptor.
-2. Pull both into restricted raw storage with validators, pull timestamps, and content hashes.
-3. Normalize geometry and required fields into a stable comparison shape.
-4. Compute feature- and collection-level digests.
-5. Classify changes as none, minor, material, or sensitive.
-6. Run policy and review checks before any outward publication.
-7. Publish only aggregated or otherwise policy-safe outputs by default.
+1. Resolve `source_id` to `usfws_critical_habitat`.
+2. Observe the declared upstream surface.
+3. Apply Kansas or declared AOI scoping.
+4. Normalize enough structure for deterministic comparison.
+5. Compute current observed hashes and counts.
+6. Compare against prior observed state if present.
+7. Emit receipt + summary with a finite outcome.
 
 ### Illustrative invocation
 
 ```bash
-# PSEUDOCODE — exact runner, config path, and output layout NEED VERIFICATION
-python tools/probes/run_probe.py \
-  --probe usfws_critical_habitat \
-  --source-descriptor configs/sources/usfws_critical_habitat.yml \
-  --aoi path/to/aoi.geojson \
-  --out data/work/species_watchers/usfws_critical_habitat/
+# PSEUDOCODE — exact runner, flags, and output layout remain NEEDS VERIFICATION
+python -m tools.probes.species_watchers.usfws_critical_habitat_probe \
+  --source-id usfws_critical_habitat \
+  --upstream-endpoint "$USFWS_ENDPOINT" \
+  --spatial-filter Kansas \
+  --as-of 2026-04-13T14:00:00Z \
+  --out data/receipts/probes/usfws/2026-04-13/
 ```
 
-### Illustrative review handoff
+### Illustrative receipt
 
-```bash
-# PSEUDOCODE — exact filenames and validators NEED VERIFICATION
-python tools/validators/review_bundle.py \
-  --input data/work/species_watchers/usfws_critical_habitat/run_receipt.json \
-  --proof data/proofs/species_watchers/usfws_critical_habitat/evidence_bundle.json \
-  --out data/work/species_watchers/usfws_critical_habitat/review_handoff.md
+```json
+{
+  "receipt_type": "probe_receipt",
+  "probe_id": "usfws_critical_habitat_probe",
+  "source_id": "usfws_critical_habitat",
+  "ran_at": "2026-04-13T14:00:00Z",
+  "status": "CHANGED",
+  "observed": {
+    "record_count_prior": 141,
+    "record_count_current": 143,
+    "metadata_version_prior": "2025-12-10",
+    "metadata_version_current": "2026-02-01",
+    "geometry_hash_prior": "sha256:...",
+    "geometry_hash_current": "sha256:..."
+  },
+  "decision_hint": {
+    "next_action": "review_required",
+    "promotion_candidate": true
+  }
+}
 ```
-
-> [!TIP]
-> If the live service and the snapshot disagree, preserve both states and make the conflict visible.  
-> The probe should not “fix” the disagreement by flattening it away.
 
 ---
 
-## Usage
+## Usage notes
 
-### What this probe is for
-
-Use this probe when the job is to:
+### Use this probe when the job is to
 
 - monitor authoritative federal habitat boundary change
-- preserve exact boundary-source identity
-- feed KFM stewardship overlays and review queues
-- prepare public-safe aggregates for maps or dossiers
-- trigger analyst review when another dataset intersects critical habitat
-- preserve Federal Register context alongside geometry
+- preserve source identity and observation timing
+- generate reviewable process memory
+- trigger downstream validation when drift is detected
 
-### What this probe is not for
+### Do not use this probe to
 
-Do **not** use this probe to:
-
-- imply species presence from boundary membership alone
-- publish precise protected-area geometry as the default public path
-- replace occurrence review with habitat review
+- imply species presence from habitat overlap
+- publish exact geometry by default
+- replace occurrence review
 - bypass policy because the source is federal
-- treat AOI snapshots as a complete historical baseline
-
----
-
-## Diagram
-
-```mermaid
-flowchart LR
-    FS["USFWS Critical Habitat FeatureService<br/>living statutory boundary source"]
-    ZIP["ECOS critical-habitat ZIP<br/>periodic snapshot baseline"]
-    IPAC["Optional IPaC AOI response<br/>context only"]
-    KDWP["Optional KDWP range / T&E context"]
-    OCC["Optional occurrence overlays<br/>GBIF / iNat / other"]
-
-    RAW["RAW (restricted)<br/>exact pulls + validators + pull time"]
-    WORK["WORK<br/>normalize fields + CRS + geometry"]
-    DIFF["diff / classify<br/>none | minor | material | sensitive"]
-    POL["policy + review<br/>generalize | withhold | steward_only | publish"]
-    PUB["PUBLISHED<br/>county / HUC8 / ecoregion aggregates"]
-    PROOF["receipts + evidence bundle<br/>catalog refs + review notes"]
-
-    FS --> RAW
-    ZIP --> RAW
-    IPAC --> WORK
-    KDWP --> WORK
-    OCC --> WORK
-
-    RAW --> WORK
-    WORK --> DIFF
-    DIFF --> POL
-    POL --> PUB
-    POL --> PROOF
-    PUB --> PROOF
-```
+- collapse source disagreement into a single silent answer
 
 ---
 
 ## Operating tables
 
-### Minimal field registry
+### Minimal observed fields
 
 | Field | Why it matters | Minimum posture |
 | --- | --- | --- |
-| `sciname` | stable scientific name context | preserve from source, do not silently rewrite |
-| `comname` | readable common-name context | preserve where present |
-| `source_id` / `entity_id` | stable federal identity anchor | required for diffing and cross-reference |
-| `status` | listing context | preserve source semantics |
-| `type` | `Final` vs `Proposed` or equivalent designation | required for review and portrayal logic |
-| `fr_publication_date` | legal/regulatory time anchor | preserve if available |
-| `fr_citation` | regulatory traceability | preserve if available |
-| `geometry` | actual critical-habitat boundary | restricted by default until publication class is resolved |
+| `source_id` | stable registry anchor | required |
+| `source_record_id` | upstream traceability | preserve when available |
+| `species_code` | stable subject identity | preserve when available |
+| `species_name` | readable subject label | preserve when available |
+| `designation_type` | regulatory status context | preserve |
+| `legal_status` | review and runtime context | preserve |
+| `effective_date` | legal time anchor | preserve when available |
 | `source_uri` | provenance anchor | always record |
 | `pull_timestamp` | freshness and audit | always record |
-| `spec_hash` | canonical collection identity | required |
-| `geometry_digest` | stable geometry comparison | strongly recommended |
-| `policy_label` | publication control | required before outward release |
-| `needs_steward_review` | explicit review handoff flag | required when occurrence or other sensitive overlays intersect |
+| `spec_hash` | collection/state identity | strongly recommended |
+| `geometry_hash` | geometry comparison | strongly recommended |
 
 ### Change classes
 
-| Class | Meaning | Typical action |
+| Class | Meaning | Typical next action |
 | --- | --- | --- |
-| `none` | identical authoritative state after normalization | skip publish, keep receipt |
-| `minor` | metadata-only or clearly non-consequential change | log and retain proof |
-| `material` | changed geometry, status, designation type, or FR context | prepare reviewable release candidate |
-| `sensitive` | changed output would increase precision or stewardship risk | withhold or steward-only pending review |
+| `none` | no meaningful observed change | receipt only |
+| `minor` | metadata-only or clearly limited drift | receipt + optional note |
+| `material` | changed geometry, designation, or legal context | review candidate |
+| `sensitive` | changed output would increase precision or stewardship risk | escalate for review |
 
-### Output classes
-
-| Output | Audience | Default visibility | Notes |
-| --- | --- | --- | --- |
-| Raw live pull | internal only | restricted | exact service payload or response capture |
-| Raw snapshot bundle | internal only | restricted | exact ZIP or equivalent evidence anchor |
-| Normalized geometry package | internal review | restricted | comparison-ready form, not public by default |
-| Diff report | reviewer / auditor | internal | explicit prior/current comparison |
-| Run receipt | reviewer / proof surfaces | internal | pull time, validators, source refs, hashes |
-| Evidence bundle | reviewer / auditor | internal | links receipts, proof objects, and review context |
-| County / HUC8 / ecoregion aggregate | public-safe | conditional public | default outward class |
-| Sub-county or exact geometry export | steward-only | withheld by default | requires explicit sign-off |
-
-### Negative outcomes to keep visible
-
-| Outcome | When it is valid | What should remain visible |
-| --- | --- | --- |
-| `DENY` | rights, sensitivity, or publication rules are unresolved | reason codes, obligations, audit linkage |
-| `ABSTAIN` | the probe cannot support a confident outward interpretation | visible incompleteness, not silent omission |
-| `ERROR` | fetch, validation, or packaging failed | runtime trace and repair path |
-| `QUARANTINE` | data is malformed, ambiguous, or too sensitive for current release intent | restricted storage and review state |
+> [!NOTE]
+> These classes are reviewer-facing interpretation aids.  
+> The probe’s actual finite machine outcome remains `OK`, `CHANGED`, or `ERROR`.
 
 ---
 
 ## Task list / Definition of done
 
-- [ ] A source descriptor exists for the live FeatureService URI.
-- [ ] A source descriptor exists for the ECOS snapshot URI.
-- [ ] Pull-time validators, timestamps, and content hashes are captured for every run.
-- [ ] Required identity and regulatory fields are preserved without flattening source semantics.
-- [ ] Geometry validity, CRS, and deterministic normalization rules are defined.
-- [ ] A stable `spec_hash` and geometry digest are emitted.
-- [ ] Prior/current diffing produces an explicit change class.
-- [ ] Any intersecting occurrence or stewardship overlay can raise `needs_steward_review`.
-- [ ] Raw and exact geometries stay in restricted lanes by default.
-- [ ] Public outputs default to county, HUC8, or ecoregion aggregation.
-- [ ] Any finer-grained release requires explicit steward sign-off.
-- [ ] A run receipt and evidence bundle are emitted for every material run.
-- [ ] Downstream catalog references are prepared only after publication class is resolved.
-- [ ] Negative outcomes are rendered as valid governed states, not hidden failures.
-
-[Back to top](#usfws-critical-habitat-probe)
+- [ ] Registry entry exists for `usfws_critical_habitat`
+- [ ] Probe accepts explicit source identity and scope inputs
+- [ ] Observation time is recorded in UTC
+- [ ] Record-count and geometry drift can be compared against prior state
+- [ ] Receipt JSON is emitted for every run
+- [ ] Summary markdown is emitted for every run
+- [ ] Probe never writes published or proof artifacts
+- [ ] Probe fails closed on malformed or ambiguous upstream state
+- [ ] A `CHANGED` run can hand off a candidate hint without implying approval
 
 ---
 
 ## FAQ
 
-### Why use both the FeatureService and the ECOS snapshot?
+### Why is this probe read-only?
 
-They serve different trust jobs. The FeatureService is the living, queryable source for repeated checks; the snapshot is the reproducible baseline that can be preserved in an evidence bundle.
+Because probes are bounded inspection surfaces. They observe and record; they do not publish or promote.
 
-### Is critical habitat the same as a species occurrence layer?
+### Is critical habitat the same thing as an occurrence layer?
 
-No. This probe handles statutory habitat boundaries. It should not be used to imply precise occurrence truth.
+No. Critical habitat is regulatory boundary context, not direct observation truth.
 
-### Why are county or HUC8 aggregates the default public path?
+### Why keep receipts separate from proofs?
 
-Because KFM treats ecology and rare-species-adjacent geography as review-bearing. Aggregation reduces precision risk and better matches public-safe publication.
+Receipts preserve process memory for runs. Proofs support release review and attestation. They are related but not interchangeable.
 
-### Does this probe replace IPaC?
+### Can the probe use both a live service and a snapshot?
 
-No. IPaC is useful for AOI-specific context and stewardship checks. It is not the replacement for the critical-habitat boundary anchor.
+Yes, when both are explicitly declared. The live surface helps with current observation; the snapshot helps with reproducible comparison.
 
-### Can this probe join occurrence datasets?
+### Can this probe emit a public artifact?
 
-Yes, but only as an optional review aid. Any occurrence intersection should raise a stewardship flag, and public outputs should still honor source geoprivacy and KFM precision controls.
+No. At most, it can emit a review hint. Publication belongs downstream.
 
 ---
 
 ## Appendix
 
 <details>
-<summary><strong>Appendix A — Minimal release posture</strong></summary>
+<summary><strong>Appendix A — Minimal credible thin slice</strong></summary>
 
-A smallest credible first release for this probe should prove:
+A smallest credible first slice for this probe should prove:
 
-- one registered live critical-habitat source
-- one registered snapshot source
-- one exact raw capture into restricted storage
-- one normalized comparison object with stable hashes
-- one explicit diff result
-- one policy-safe aggregate output
-- one receipt / evidence handoff that preserves source identity, timing, and review state
-
-</details>
-
-<details>
-<summary><strong>Appendix B — Review questions</strong></summary>
-
-Before promotion, reviewers should be able to answer:
-
-1. Which federal source produced the current boundary state?
-2. Is the change actually geometric, or only metadata-level?
-3. Did the designation type or Federal Register context change?
-4. Is any outward precision greater than the approved publication class?
-5. If an occurrence overlay was used, does the result require steward review?
-6. Can a public reader still distinguish statutory habitat context from direct occurrence evidence?
+- one declared `source_id`
+- one declared upstream surface
+- one bounded Kansas observation
+- one deterministic comparison against prior state
+- one receipt
+- one reviewer-readable summary
+- one finite outcome
 
 </details>
 
 <details>
-<summary><strong>Appendix C — Open verification items</strong></summary>
+<summary><strong>Appendix B — Open verification items</strong></summary>
 
 The following remain intentionally open until a live repo check confirms them:
 
-- sibling inventory under `tools/probes/species_watchers/`
-- exact runner/CLI path
+- exact sibling inventory under `tools/probes/species_watchers/`
+- exact runner / CLI path
 - exact source-descriptor schema path
-- exact receipt/proof schema filenames
-- exact owner coverage for this file path
-- whether the downstream data/catalog paths are already checked in on the target branch
+- exact receipt schema filename
+- exact related-link validity on target branch
 
 </details>
