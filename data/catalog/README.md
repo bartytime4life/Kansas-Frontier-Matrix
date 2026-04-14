@@ -6,34 +6,66 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION
-updated: NEEDS_VERIFICATION
+updated: 2026-04-14
 policy_label: NEEDS_VERIFICATION
-related: [data/README.md, data/catalog/dcat/README.md, data/catalog/stac/README.md, data/catalog/prov/README.md, .github/CODEOWNERS]
-tags: [kfm, catalog, dcat, stac, prov]
-notes: [owners confirmed from /.github/CODEOWNERS broad /data/ ownership; doc_id, created, updated, and policy_label need git-history or policy verification]
+related: [
+  ../README.md,
+  ../processed/README.md,
+  ../receipts/README.md,
+  ../proofs/README.md,
+  ../published/README.md,
+  ./dcat/README.md,
+  ./stac/README.md,
+  ./prov/README.md,
+  ../../contracts/README.md,
+  ../../policy/README.md,
+  ../../tests/README.md,
+  ../../tools/validators/README.md,
+  ../../tools/validators/promotion_gate/README.md,
+  ../../.github/CODEOWNERS
+]
+tags: [kfm, data, catalog, dcat, stac, prov, closure, lineage]
+notes: [owners confirmed from /.github/CODEOWNERS broad /data/ ownership; doc_id, created, and policy_label still need repo-side verification; public-main path presence is stronger than payload inventory.]
 [/KFM_META_BLOCK_V2] -->
 
-# data/catalog/
+# `data/catalog/`
 
-Governed catalog-closure surface for DCAT, STAC, and PROV metadata inside the KFM data lifecycle.
+Governed **catalog-closure** surface for `DCAT + STAC + PROV` metadata inside the KFM data lifecycle.
 
+> [!NOTE]
 > **Status:** experimental  
-> **Doc state:** draft  
+> **Document status:** draft  
 > **Owners:** `@bartytime4life` *(broad `/data/` CODEOWNERS fallback)*  
 > **Path:** `data/catalog/README.md`  
-> **Repo fit:** [`../README.md`](../README.md) → [`./dcat/`](./dcat/) · [`./stac/`](./stac/) · [`./prov/`](./prov/)  
-> ![status: experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
-> ![doc: draft](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square)
-> ![catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-2d6cdf?style=flat-square)
-> ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square)
-> ![public main: checked](https://img.shields.io/badge/public__main-checked-2ea043?style=flat-square)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![Doc: Draft](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square) ![Catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-2d6cdf?style=flat-square) ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb?style=flat-square) ![Public Main: Checked](https://img.shields.io/badge/public__main-checked-2ea043?style=flat-square)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Current public inventory](#current-public-inventory) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `data/catalog/` is a **catalog surface**, not a canonical data zone. In KFM, authority is stabilized upstream through `RAW -> WORK / QUARANTINE -> PROCESSED`, then closed into outward `DCAT + STAC + PROV` metadata for discovery, lineage, and policy-visible release behavior.
+> `data/catalog/` is a **catalog surface**, not a canonical data zone.
+>
+> In KFM, authority stabilizes upstream through:
+>
+> `RAW → WORK / QUARANTINE → PROCESSED`
+>
+> and is then closed into outward `DCAT + STAC + PROV` metadata for:
+>
+> - discovery
+> - asset description
+> - lineage
+> - release-visible identity
+
+> [!TIP]
+> Keep the KFM trust split visible here:
+>
+> **receipt ≠ proof ≠ catalog ≠ publication**
+>
+> `data/catalog/` should make released or release-candidate truth discoverable and cross-linkable.  
+> It must not quietly replace `processed/`, `receipts/`, `proofs/`, or `published/`.
 
 > [!NOTE]
 > Current public `main` confirms `data/catalog/`, `data/catalog/dcat/`, `data/catalog/stac/`, and `data/catalog/prov/`. Each child lane currently shows a checked-in `README.md`; deeper checked-in catalog payloads are not yet visible from the inspected public tree.
+
+---
 
 ## Scope
 
@@ -41,9 +73,9 @@ Governed catalog-closure surface for DCAT, STAC, and PROV metadata inside the KF
 
 In practical terms:
 
-- **DCAT** carries dataset- and distribution-level discovery.
-- **STAC** carries spatial and temporal asset description.
-- **PROV** carries lineage, activity, and agent traceability.
+- **DCAT** carries dataset- and distribution-level discovery
+- **STAC** carries spatial and temporal asset description
+- **PROV** carries lineage, activity, and agent traceability
 
 The directory’s job is not to invent truth. Its job is to make release-backed truth discoverable, inspectable, and cross-linkable without bypassing the trust membrane.
 
@@ -60,11 +92,15 @@ Use this file to answer four questions quickly:
 
 | Layer | Status | Reading rule |
 |---|---|---|
-| Current public `main` tree for `data/` and `data/catalog/` | **CONFIRMED** | Safe for path existence and current checked-in shape. |
-| KFM lifecycle, catalog triplet, promotion, and fail-closed posture in current repo readmes | **CONFIRMED** | Safe doctrine for this README. |
-| Checked-in catalog payload inventory beyond `README.md` files | **NEEDS VERIFICATION** | No checked-in dataset triplets are visible from the inspected directory views. |
-| `datasets/`, `collections/`, `items/`, and signed/hash-adjacent PROV starter paths | **PROPOSED** | Doctrine-aligned working shape only, not current-tree fact. |
-| Validator entrypoints and merge-blocking enforcement | **NEEDS VERIFICATION** | Mention only as starter wiring until branch-side scripts and workflows are directly confirmed. |
+| Current public `main` tree for `data/` and `data/catalog/` | **CONFIRMED** | Safe for path existence and current checked-in shape |
+| KFM lifecycle, catalog triplet, promotion, and fail-closed posture in current repo READMEs | **CONFIRMED** | Safe doctrine for this README |
+| Checked-in catalog payload inventory beyond `README.md` files | **NEEDS VERIFICATION** | No checked-in dataset triplets are visible from the inspected directory views |
+| `datasets/`, `collections/`, `items/`, and signed/hash-adjacent PROV starter paths | **PROPOSED** | Doctrine-aligned working shape only, not current-tree fact |
+| Validator entrypoints and merge-blocking enforcement | **NEEDS VERIFICATION** | Mention only as starter wiring until branch-side scripts and workflows are directly confirmed |
+
+[Back to top](#datacatalog)
+
+---
 
 ## Repo fit
 
@@ -75,26 +111,30 @@ Use this file to answer four questions quickly:
 | Path | [`data/catalog/README.md`](./README.md) |
 | Owner surface | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) broad `/data/` fallback |
 | Parent lifecycle | [`../README.md`](../README.md) defines the wider governed `data/` surface |
-| Child lanes | [`./dcat/`](./dcat/), [`./stac/`](./stac/), [`./prov/`](./prov/) |
+| Child lanes | [`./dcat/README.md`](./dcat/README.md), [`./stac/README.md`](./stac/README.md), [`./prov/README.md`](./prov/README.md) |
 | Adjacent data zones | [`../raw/`](../raw/), [`../work/`](../work/), [`../quarantine/`](../quarantine/), [`../processed/`](../processed/), [`../receipts/`](../receipts/), [`../proofs/`](../proofs/), [`../published/`](../published/), [`../registry/`](../registry/) |
-| Shared control surfaces | [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/), [`../../tests/`](../../tests/), [`../../tools/`](../../tools/) |
+| Shared control surfaces | [`../../contracts/`](../../contracts/), [`../../policy/`](../../policy/), [`../../tests/`](../../tests/), [`../../tools/validators/`](../../tools/validators/) |
 | Downstream consumers | governed APIs, discovery/read routes, Evidence Drawer flows, map/timeline/dossier/story/focus surfaces |
 
 ### Current public evidence snapshot *(CONFIRMED)*
 
 | Surface | Current public-main content | What that means |
 |---|---|---|
-| `data/` | `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, `work/`, `README.md` | The wider lifecycle surface is checked in now. |
-| `data/catalog/` | `dcat/`, `prov/`, `stac/`, `README.md` | The catalog parent exists now as a real checked-in lane. |
-| `data/catalog/dcat/` | `README.md` | The DCAT lane exists; checked-in dataset JSON-LD files are not yet visible here. |
-| `data/catalog/stac/` | `README.md` | The STAC lane exists; checked-in collections/items are not yet visible here. |
-| `data/catalog/prov/` | `README.md` | The PROV lane exists; checked-in provenance bundles are not yet visible here. |
+| `data/` | `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, `work/`, `README.md` | The wider lifecycle surface is checked in now |
+| `data/catalog/` | `dcat/`, `prov/`, `stac/`, `README.md` | The catalog parent exists now as a real checked-in lane |
+| `data/catalog/dcat/` | `README.md` | The DCAT lane exists; checked-in dataset JSON-LD files are not yet visible here |
+| `data/catalog/stac/` | `README.md` | The STAC lane exists; checked-in collections/items are not yet visible here |
+| `data/catalog/prov/` | `README.md` | The PROV lane exists; checked-in provenance bundles are not yet visible here |
 
 ### Repo-fit summary
 
 `data/catalog/` is where KFM’s outward metadata closure should live once a dataset version is ready for release-backed discovery. It should help users and services discover released scope, resolve lineage, and follow policy-safe links outward.
 
 It is **not** the place for raw payloads, unpublished scratch work, runtime envelopes, direct API behavior, or secret policy logic.
+
+[Back to top](#datacatalog)
+
+---
 
 ## Accepted inputs
 
@@ -112,10 +152,22 @@ The following belong here when they are release-bearing or promotion-relevant:
 
 Accepted content here should be:
 
-- downstream of `PROCESSED`,
-- compatible with review and release posture,
-- cross-linked across the triplet,
-- and restrained enough that the catalog does not outrun upstream evidence.
+- downstream of `PROCESSED`
+- compatible with review and release posture
+- cross-linked across the triplet
+- restrained enough that the catalog does not outrun upstream evidence
+
+### Minimum bar for anything added here
+
+- it is clearly **catalog-shaped** rather than payload-shaped
+- it resolves to a governed upstream artifact
+- it cross-links cleanly to the other triplet members
+- it preserves release or candidate identity instead of inventing a parallel naming universe
+- it does not quietly become a second proof pack or a public runtime object
+
+[Back to top](#datacatalog)
+
+---
 
 ## Exclusions
 
@@ -123,16 +175,23 @@ The following do **not** belong in `data/catalog/` as sovereign truth or as the 
 
 | Excluded content | Put it under / behind | Why |
 |---|---|---|
-| Raw acquisitions and source-native dumps | [`../raw/`](../raw/) | Discovery is not intake. |
-| Intermediate transforms, QA scratch outputs, or unpublished work | [`../work/`](../work/) or [`../quarantine/`](../quarantine/) | Validation does not equal publication. |
-| Canonical processed payloads | [`../processed/`](../processed/) | Catalog metadata is not the payload store. |
-| Policy bundles, reason registries, and OPA/Rego logic | [`../../policy/`](../../policy/) | Policy should stay executable and reviewable in its own surface. |
-| Shared schemas, profiles, and fixtures | [`../../contracts/`](../../contracts/) or [`../../schemas/`](../../schemas/) | Prevents metadata docs from becoming the silent contract authority. |
-| API handlers, OpenAPI contracts, or runtime response envelopes | app / contract surfaces | Catalog files are not API implementations. |
-| Unreviewed candidate scope pretending to be outward-ready truth | work / quarantine / review flows | KFM promotion is a governed state change, not a naming trick. |
+| Raw acquisitions and source-native dumps | [`../raw/`](../raw/) | Discovery is not intake |
+| Intermediate transforms, QA scratch outputs, or unpublished work | [`../work/`](../work/) or [`../quarantine/`](../quarantine/) | Validation does not equal publication |
+| Canonical processed payloads | [`../processed/`](../processed/) | Catalog metadata is not the payload store |
+| Policy bundles, reason registries, and OPA/Rego logic | [`../../policy/`](../../policy/) | Policy should stay executable and reviewable in its own surface |
+| Shared schemas, profiles, and fixtures | [`../../contracts/`](../../contracts/) or the repo’s schema authority | Prevents metadata docs from becoming silent contract authority |
+| API handlers, OpenAPI contracts, or runtime response envelopes | app / contract surfaces | Catalog files are not API implementations |
+| Unreviewed candidate scope pretending to be outward-ready truth | work / quarantine / review flows | KFM promotion is a governed state change, not a naming trick |
+| Materialized outward copies as the primary release surface | [`../published/`](../published/) | Publication materialization is adjacent, not identical, to catalog closure |
+| Release proof packs or attestations as the primary release record | [`../proofs/`](../proofs/) | Proofs stay explicit and separately inspectable |
+| Process-memory receipts as the primary record | [`../receipts/`](../receipts/) | Catalog closure should point to process memory, not swallow it |
 
 > [!CAUTION]
 > If a fact is “true” only in `data/catalog/` and is not traceable back to governed upstream artifacts, review state, and release posture, it is not ready to cross KFM’s trust membrane.
+
+[Back to top](#datacatalog)
+
+---
 
 ## Directory tree
 
@@ -182,8 +241,27 @@ data/catalog/
 
 ### Interpretation rule
 
-- **Current visible shape** = what is checked into public `main` now.
-- **Working-shape starter** = a doctrine-aligned target for later catalog payloads, not a claim that those files already exist.
+- **Current visible shape** = what is checked into public `main` now
+- **Working-shape starter** = a doctrine-aligned target for later catalog payloads, not a claim that those files already exist
+
+[Back to top](#datacatalog)
+
+---
+
+## Current public inventory
+
+| Surface | Current public state | Why it matters |
+|---|---|---|
+| `data/catalog/` | Public listing shows `README.md`, `dcat/`, `stac/`, and `prov/` | Confirms the parent lane and triplet child lanes exist |
+| `data/catalog/dcat/` | Public listing shows `README.md` | Confirms the DCAT child lane exists |
+| `data/catalog/stac/` | Public listing shows `README.md` | Confirms the STAC child lane exists |
+| `data/catalog/prov/` | Public listing shows `README.md` | Confirms the PROV child lane exists |
+| Non-README catalog payloads | No checked-in triplet inventory is surfaced in the inspected public tree | Keep payload naming and storage conventions marked **PROPOSED** until checked-in artifacts prove otherwise |
+| Sibling lifecycle lanes | `processed/`, `receipts/`, `proofs/`, and `published/` all exist as distinct siblings | Keeps closure, process memory, release proof, and materialized scope visibly separate |
+
+[Back to top](#datacatalog)
+
+---
 
 ## Quickstart
 
@@ -199,15 +277,23 @@ sed -n '1,220p' data/catalog/README.md
 sed -n '1,220p' data/catalog/dcat/README.md
 sed -n '1,220p' data/catalog/stac/README.md
 sed -n '1,220p' data/catalog/prov/README.md
+sed -n '1,220p' data/processed/README.md
+sed -n '1,220p' data/receipts/README.md
+sed -n '1,220p' data/proofs/README.md
+sed -n '1,220p' data/published/README.md
 
 # Check whether real triplet artifacts exist yet
 find data/catalog -type f | grep -E '\.(json|jsonld)$|\.prov\.json$' || true
 
 # Inspect likely cross-link fields once payloads exist
-grep -RIn "derived_from\|wasDerivedFrom\|wasGeneratedBy\|accessRights" data/catalog || true
+grep -RIn "derived_from\|wasDerivedFrom\|wasGeneratedBy\|accessRights\|spec_hash\|release_id" data/catalog || true
 ```
 
 When new catalog work starts, begin from a processed dataset version and ask what must be expressed in **DCAT**, **STAC**, and **PROV** together.
+
+[Back to top](#datacatalog)
+
+---
 
 ## Usage
 
@@ -230,9 +316,9 @@ Author or emit catalog records here **only after** upstream data has enough iden
 
 | Current public-main reality | Next useful step |
 |---|---|
-| The catalog parent and all three child lanes are checked in as documentation surfaces. | Add one representative public-safe triplet that resolves cleanly to a processed dataset version. |
-| No checked-in dataset JSON-LD, STAC collections/items, or PROV bundle inventory is visible in the inspected directories. | Confirm canonical subtree naming, then add real files and validation fixtures. |
-| The lane-level READMEs exist, but they are not yet harmonized in status depth or ownership detail. | Reconcile the family so `catalog/`, `dcat/`, `stac/`, and `prov/` read as one governed surface. |
+| The catalog parent and all three child lanes are checked in as documentation surfaces | Add one representative public-safe triplet that resolves cleanly to a processed dataset version |
+| No checked-in dataset JSON-LD, STAC collections/items, or PROV bundle inventory is visible in the inspected directories | Confirm canonical subtree naming, then add real files and validation fixtures |
+| The lane-level READMEs exist, but they are not yet harmonized in status depth or ownership detail | Reconcile the family so `catalog/`, `dcat/`, `stac/`, and `prov/` read as one governed surface |
 
 ### Illustrative validation sequence *(PROPOSED starter wiring)*
 
@@ -253,10 +339,6 @@ scripts/evidence/crosslink_consistency.py \
   --dcat data/catalog/dcat/datasets/<dataset>__<version>.jsonld \
   --prov data/catalog/prov/<dataset>__<version>.prov.json \
   --manifest data/processed/<theme>/<dataset>/<version>/manifest.json
-
-conftest test -p policy/ \
-  data/catalog/stac/items/<dataset>__<version>.json \
-  data/catalog/dcat/datasets/<dataset>__<version>.jsonld
 ```
 
 ### Working principles
@@ -267,6 +349,10 @@ conftest test -p policy/ \
 4. **Share identifiers across the triplet.** Catalog closure fails when the three lanes drift into separate naming universes.
 5. **Treat catalog closure as part of promotion.** Metadata is not an afterthought appended after release.
 6. **Treat metadata drift as a release bug.** Broken lineage or stale distribution targets are trust failures, not cosmetic debt.
+
+[Back to top](#datacatalog)
+
+---
 
 ## Diagram
 
@@ -288,60 +374,94 @@ flowchart LR
     F --> I
     G --> I
 
-    I --> J[Decision / release]
+    I --> J[Promotion / release]
     J --> K[Governed API + evidence resolver]
     K --> L[Map / timeline / dossier / story / Focus]
 ```
 
 The architectural point is simple: catalog metadata is downstream of processed truth and release discipline, but upstream of outward discovery and trust-visible surfaces.
 
-## Tables
+[Back to top](#datacatalog)
+
+---
+
+## Reference tables
 
 ### Catalog crosswalk
 
 | Sub-area | Primary job | Typical grain | Must link to | Must not replace |
 |---|---|---|---|---|
-| `dcat/` | Dataset and distribution discovery | Dataset / distribution / data service | processed artifacts, licenses, temporal/spatial coverage, outward endpoints | STAC’s asset model and PROV’s lineage model |
-| `stac/` | Spatial/temporal asset description | Catalog / collection / item / asset | processed geospatial assets, geometry/bbox, collection/self links, provenance references | Canonical processed payloads |
-| `prov/` | Lineage and release traceability | Entity / activity / agent | raw/work/processed artifacts, manifests, runs, tools, timestamps | Dataset-discovery prose or payload storage |
+| `dcat/` | Dataset and distribution discovery | dataset / distribution / data service | processed artifacts, licenses, temporal/spatial coverage, outward endpoints | STAC’s asset model and PROV’s lineage model |
+| `stac/` | Spatial/temporal asset description | catalog / collection / item / asset | processed geospatial assets, geometry/bbox, collection/self links, provenance refs | canonical processed payloads |
+| `prov/` | Lineage and release traceability | entity / activity / agent | raw/work/processed artifacts, manifests, runs, tools, timestamps | dataset-discovery prose or payload storage |
+
+### Boundary matrix
+
+| Surface | Primary job | Must not be confused with |
+|---|---|---|
+| `data/processed/` | canonical processed authority | outward metadata closure |
+| `data/receipts/` | process memory | catalog closure or release proof |
+| `data/proofs/` | release-significant evidence | catalog metadata or materialized outward copies |
+| `data/catalog/` | outward metadata and lineage closure | payload authority, process memory, or proof pack |
+| `data/published/` | optional release-backed outward scope | the catalog triplet itself |
 
 ### Current lane status
 
 | Lane | Current checked-in content | Meaning now |
 |---|---|---|
-| `data/catalog/dcat/` | `README.md` | Lane exists; dataset JSON-LD inventory is not yet visible here. |
-| `data/catalog/stac/` | `README.md` | Lane exists; collections/items are not yet visible here. |
-| `data/catalog/prov/` | `README.md` | Lane exists; provenance-bundle inventory is not yet visible here. |
+| `data/catalog/dcat/` | `README.md` | Lane exists; dataset JSON-LD inventory is not yet visible here |
+| `data/catalog/stac/` | `README.md` | Lane exists; collections/items are not yet visible here |
+| `data/catalog/prov/` | `README.md` | Lane exists; provenance-bundle inventory is not yet visible here |
 
 ### Minimum cross-link expectations
 
 | From | Minimum link target | Why it matters |
 |---|---|---|
-| DCAT dataset/distribution | processed artifact target or STAC reference | Discovery must resolve to something concrete. |
-| STAC collection/item | asset hrefs, collection/self links, PROV or derived-from reference | Map/time surfaces need exact asset context. |
-| PROV bundle | raw inputs, work intermediates, processed outputs, activities, agents | Lineage must survive audit, correction, and replay. |
-| All three | shared release-safe identifiers and compatible scope | Prevents three independent metadata silos. |
+| DCAT dataset/distribution | processed artifact target or STAC reference | discovery must resolve to something concrete |
+| STAC collection/item | asset hrefs, collection/self links, PROV or derived-from reference | map/time surfaces need exact asset context |
+| PROV bundle | raw inputs, work intermediates, processed outputs, activities, agents | lineage must survive audit, correction, and replay |
+| All three | shared release-safe identifiers and compatible scope | prevents three independent metadata silos |
+
+### Finite outcome pressure
+
+Where adjacent release-facing validators use finite outcomes, catalog closure should remain joinable to at least:
+
+| Outcome | Why it matters near catalog closure |
+|---|---|
+| `ALLOW` | explains why closure is fit for outward release linkage |
+| `ABSTAIN` | explains why closure remains unresolved without contradiction |
+| `DENY` | explains why outward discovery should not advance |
+| `ERROR` | explains validator or linkage failure without ambiguity |
+
+[Back to top](#datacatalog)
+
+---
 
 ## Task list
 
 ### Definition of done
 
-- [ ] Verify `doc_id`, `created`, `updated`, and `policy_label` in the meta block.
-- [ ] Keep owners aligned with `.github/CODEOWNERS`, or split to finer-grained owners if repo governance changes.
-- [ ] Reconcile [`../README.md`](../README.md) path-verification language with current public-tree reality for `data/catalog/` and its child lanes.
-- [ ] Harmonize the child lane READMEs so `dcat/`, `stac/`, and `prov/` read as one governed family.
-- [ ] Confirm whether `dcat/datasets/`, `stac/collections/`, `stac/items/`, and signed/hash-adjacent PROV paths are canonical.
-- [ ] Add at least one representative public-safe triplet that resolves cleanly to a processed dataset version.
-- [ ] Verify real validator entrypoints and merge gates before documenting them as enforced behavior.
-- [ ] Check all relative links and Mermaid render cleanly in GitHub.
+- [ ] verify `doc_id`, `created`, `updated`, and `policy_label` in the meta block
+- [ ] keep owners aligned with `.github/CODEOWNERS`, or split to finer-grained owners if repo governance changes
+- [ ] reconcile [`../README.md`](../README.md) path-verification language with current public-tree reality for `data/catalog/` and its child lanes
+- [ ] harmonize the child lane READMEs so `dcat/`, `stac/`, and `prov/` read as one governed family
+- [ ] confirm whether `dcat/datasets/`, `stac/collections/`, `stac/items/`, and signed/hash-adjacent PROV paths are canonical
+- [ ] add at least one representative public-safe triplet that resolves cleanly to a processed dataset version
+- [ ] verify real validator entrypoints and merge gates before documenting them as enforced behavior
+- [ ] check all relative links and Mermaid render cleanly in GitHub
+- [ ] keep receipt/proof/catalog/published boundaries explicit and cross-linked
 
 ### Review gates
 
-- [ ] No raw/work/quarantine payload is being treated as outward-ready catalog truth.
-- [ ] DCAT, STAC, and PROV agree on dataset/version identity and target artifacts.
-- [ ] Rights and sensitivity posture are visible where discoverability changes.
-- [ ] Metadata, manifests, receipts, and proofs resolve without guesswork.
-- [ ] Drift between `data/catalog/README.md` and sibling lane docs is actively reduced, not compounded.
+- [ ] no raw/work/quarantine payload is treated as outward-ready catalog truth
+- [ ] DCAT, STAC, and PROV agree on dataset/version identity and target artifacts
+- [ ] rights and sensitivity posture are visible where discoverability changes
+- [ ] metadata, manifests, receipts, and proofs resolve without guesswork
+- [ ] drift between `data/catalog/README.md` and sibling lane docs is actively reduced, not compounded
+
+[Back to top](#datacatalog)
+
+---
 
 ## FAQ
 
@@ -364,6 +484,10 @@ Because the inspected public directories do not yet show checked-in `datasets/`,
 ### What failure mode should maintainers watch most closely?
 
 Metadata drift. A catalog record that still resolves but no longer describes the released artifact truthfully is more dangerous than a missing file, because it looks trustworthy while quietly weakening auditability.
+
+[Back to top](#datacatalog)
+
+---
 
 ## Appendix
 
