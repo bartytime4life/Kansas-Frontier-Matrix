@@ -6,29 +6,53 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: REVIEW_REQUIRED_DATE
-updated: REVIEW_REQUIRED_DATE
+updated: 2026-04-14
 policy_label: REVIEW_REQUIRED_POLICY_LABEL
-related: [docs/standards/README.md, docs/standards/markdown-rules.md, docs/README.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
+related: [
+  ./README.md,
+  ./markdown-rules.md,
+  ../README.md,
+  ../../README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/PULL_REQUEST_TEMPLATE.md,
+  ../../.github/workflows/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../tests/README.md
+]
 tags: [kfm, documentation, markdown, standards, governance]
-notes: [Owners confirmed from the current public /docs/ CODEOWNERS rule; doc_id, created/updated dates, and policy label still need direct repo verification; current public main shows this file as a substantive draft protocol rather than a blank scaffold.]
+notes: [
+  "Owners confirmed from the current public /docs/ CODEOWNERS rule.",
+  "doc_id, created date, updated date at merge time, and policy_label still need direct repo verification.",
+  "Current public main shows this file as a substantive draft protocol rather than a blank scaffold.",
+  "markdown-rules.md remains a distinct repo-visible authoring brief and should not silently outrank this protocol."
+]
 [/KFM_META_BLOCK_V2] -->
 
-# KFM Markdown Work Protocol
+<a id="top"></a>
+
+# `KFM_MARKDOWN_WORK_PROTOCOL.md`
 
 Governed authoring, revision, and review rules for Markdown that must remain faithful to KFM doctrine, visible repo evidence, and GitHub-native readability.
 
-> **Status:** `experimental` · **Doc status:** `draft`  
+> [!NOTE]
+> **Status:** experimental  
+> **Document status:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path:** `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`  
-> **Repo fit:** protocol doc under [`./README.md`](./README.md) and [`./markdown-rules.md`](./markdown-rules.md); upstream from [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent to [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md); downstream into cross-cutting standards, README-like docs, and doctrine-facing documentation updates.  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![repo](https://img.shields.io/badge/repo-public%20main-brightgreen) ![surface](https://img.shields.io/badge/surface-markdown%20protocol-0b7285) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public evidence snapshot](#current-public-evidence-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth posture](#truth-posture-and-claim-discipline) · [Workflow](#authoring-workflow) · [Formatting](#github-markdown-formatting-protocol) · [Review gates](#review-gates-and-definition-of-done) · [Appendix](#appendix)
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-draft-lightgrey) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![Surface](https://img.shields.io/badge/surface-markdown%20protocol-0b7285) ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence snapshot](#current-public-evidence-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth posture](#truth-posture-and-claim-discipline) · [Authoring workflow](#authoring-workflow) · [Formatting protocol](#github-markdown-formatting-protocol) · [Review gates](#review-gates-and-definition-of-done) · [Failure modes](#common-failure-modes) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This protocol is a documentation standard, not a license to invent implementation state. In KFM, docs are production surfaces: they must preserve truth posture, trust boundaries, release discipline, and visible unknowns.
+> This protocol is a **documentation standard**, not a license to invent implementation state.
+>
+> In KFM, docs are production surfaces: they must preserve truth posture, trust boundaries, release discipline, and visible unknowns.
 
-> [!NOTE]
-> Current public `main` already shows this file as a substantive draft protocol. The correct default move is **in-place revision**, not a parallel replacement file.
+> [!TIP]
+> Revise this file **in place** when the standards lane changes.
+>
+> Do not create a second Markdown protocol unless the authority split is explicit, reviewed, and documented in the same change stream.
 
 ---
 
@@ -51,20 +75,34 @@ It applies most strongly to:
 - cross-cutting reference docs
 - documentation rewrites that translate doctrine into clearer repo-ready form
 
-It does **not** convert unsupported repo guesses into fact, and it does **not** outrank stronger project doctrine.
+It does **not**:
 
-[Back to top](#kfm-markdown-work-protocol)
+- convert unsupported repo guesses into fact
+- outrank stronger project doctrine
+- replace contracts, policy, tests, or workflow truth
+- permit “polished overclaim” as a substitute for evidence
+
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
 ### Working role
 
-This file is the operating protocol for how KFM Markdown should be written. It is intentionally narrower than master doctrine, more operational than the directory index, and more authoring-specific than the broader [`./markdown-rules.md`](./markdown-rules.md) instruction surface.
+This file is the operating protocol for how KFM Markdown should be written.
+
+It is intentionally:
+
+- narrower than master doctrine
+- more operational than the standards index
+- more authoring-specific than `markdown-rules.md`
+- upstream of README rewrites, standards updates, and repo-facing protocol docs
 
 ### Upstream context
 
 - [`./README.md`](./README.md) — local standards index and routing surface
-- [`./markdown-rules.md`](./markdown-rules.md) — broader Markdown authoring instruction set for this repo area
+- [`./markdown-rules.md`](./markdown-rules.md) — broader Markdown authoring instruction surface
 - [`../README.md`](../README.md) — `docs/` as a production-facing trust surface
 - [`../../README.md`](../../README.md) — repo-level posture and contributor-facing framing
 
@@ -87,7 +125,22 @@ This protocol should guide:
 - architecture, governance, review, and protocol docs that sit close to executable seams
 - future doctrine-to-implementation docs under `docs/**`
 
-[Back to top](#kfm-markdown-work-protocol)
+### Boundary rule
+
+Use this file to govern **how Markdown should be written**.
+
+Do **not** use it to silently own:
+
+- schema definitions
+- policy logic
+- workflow enforcement
+- runtime behavior
+- release truth
+- domain-specific ETL instructions
+
+[Back to top](#top)
+
+---
 
 ## Current public evidence snapshot
 
@@ -95,16 +148,18 @@ This protocol should reflect the repo that is actually visible, not an older or 
 
 | Surface | Current public-main state | Why it matters here |
 |---|---|---|
-| [`./README.md`](./README.md) | Substantive directory index | This file should deepen that index, not compete with it |
-| [`./markdown-rules.md`](./markdown-rules.md) | Present as the broader Markdown instruction surface | This file should specialize KFM truth posture and repo fit, not rephrase everything generically |
-| `./KFM_MARKDOWN_WORK_PROTOCOL.md` | Present as a substantive draft protocol | Revise in place; do not describe it as a blank stub |
-| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | `/docs/` currently routes to `@bartytime4life` | Owner coverage is confirmable at the current public layer |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow lane is README-only on public `main` | Do not imply markdown lint, Vale, merge-blocking checks, or docs CI without direct proof |
-| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | Review template explicitly requires truth labels and evidence links | Markdown changes should stay aligned with review expectations already visible in-repo |
-| [`../README.md`](../README.md) | `docs/` is framed as a production-facing trust surface | Documentation must stay tied to policy, review, correction, and proof-bearing surfaces |
+| [`./README.md`](./README.md) | substantive directory index | this file should deepen that index, not compete with it |
+| [`./markdown-rules.md`](./markdown-rules.md) | present as the broader Markdown instruction surface | this file should specialize KFM truth posture and repo fit, not rephrase everything generically |
+| `./KFM_MARKDOWN_WORK_PROTOCOL.md` | present as a substantive draft protocol | revise in place; do not describe it as a blank stub |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | `/docs/` currently routes to `@bartytime4life` | owner coverage is confirmable at the current public layer |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | workflow lane is README-only on public `main` | do not imply markdown lint, Vale, merge-blocking checks, or docs CI without direct proof |
+| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | review template explicitly requires truth labels and evidence links | Markdown changes should stay aligned with review expectations already visible in-repo |
+| [`../README.md`](../README.md) | `docs/` is framed as a production-facing trust surface | documentation must stay tied to policy, review, correction, and proof-bearing surfaces |
 
 > [!CAUTION]
-> Public-tree evidence is stronger than memory, but still narrower than full platform truth. GitHub rulesets, required checks, environment approvals, OIDC wiring, private settings, and non-public workflow inventory remain **UNKNOWN** unless directly reverified.
+> Public-tree evidence is stronger than memory, but still narrower than full platform truth.
+>
+> GitHub rulesets, required checks, environment approvals, OIDC wiring, private settings, and non-public workflow inventory remain **UNKNOWN** unless directly reverified.
 
 ### What still needs verification
 
@@ -118,7 +173,9 @@ The following must remain visibly open unless a checked-out branch or directly i
 - branch protections and required checks
 - any platform-only GitHub settings
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -126,17 +183,27 @@ The following inputs belong here when authoring or revising Markdown under this 
 
 | Input class | What to use it for | Minimum expectation |
 |---|---|---|
-| KFM doctrinal manuals | Governing language, invariants, truth posture, trust membrane, publication rules | Prefer repeated doctrine over one-off phrasing |
-| Adjacent repo docs | Local structure, section rhythm, naming patterns, visual style | Match nearby conventions where they are strong |
-| Contracts / schemas / policy docs | Machine-checkable claims, object names, route families, validation burdens | Do not paraphrase away load-bearing terms |
-| Verified repo files | File paths, ownership signals, current scaffold state, workflow surface facts | Treat direct repo inspection as stronger than memory |
-| Review templates / ownership surfaces | Truth labels, evidence-link expectations, reviewer routing | Keep working-branch deltas and public-main facts distinct |
-| CI / workflow docs | Review gates, merge expectations, generated-doc burdens | Keep enforcement claims proportional to visible evidence |
-| Tests / fixtures / examples | Concrete proof that behavior exists | If absent, say so |
-| Historical workflow or Actions signals | Continuity clues only | Never treat historical runs or deleted workflow names as proof of current checked-in YAMLs |
-| External standards | Boundary-sensitive or version-sensitive clarification only | Use to sharpen, not to silently override KFM |
+| KFM doctrinal manuals | governing language, invariants, truth posture, trust membrane, publication rules | prefer repeated doctrine over one-off phrasing |
+| Adjacent repo docs | local structure, section rhythm, naming patterns, visual style | match nearby conventions where they are strong |
+| Contracts / schemas / policy docs | machine-checkable claims, object names, route families, validation burdens | do not paraphrase away load-bearing terms |
+| Verified repo files | file paths, ownership signals, current scaffold state, workflow surface facts | treat direct repo inspection as stronger than memory |
+| Review templates / ownership surfaces | truth labels, evidence-link expectations, reviewer routing | keep working-branch deltas and public-main facts distinct |
+| CI / workflow docs | review gates, merge expectations, generated-doc burdens | keep enforcement claims proportional to visible evidence |
+| Tests / fixtures / examples | concrete proof that behavior exists | if absent, say so |
+| Historical workflow or Actions signals | continuity clues only | never treat historical runs or deleted workflow names as proof of current checked-in YAMLs |
+| External standards | boundary-sensitive or version-sensitive clarification only | use to sharpen, not to silently override KFM |
 
-[Back to top](#kfm-markdown-work-protocol)
+### Minimum input rule
+
+A Markdown change should be grounded in the strongest relevant evidence available, in this order:
+
+1. canonical KFM doctrine
+2. directly visible repo / workspace evidence
+3. authoritative external reference when needed
+
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -149,12 +216,19 @@ This file does **not** own the canonical contents of:
 - platform-only GitHub settings, rulesets, required checks, OIDC trust, secrets, or environment approvals
 - implementation claims not supported by direct repo, workspace, or authoritative source evidence
 
-When content primarily belongs elsewhere, this protocol should link to it rather than absorb it.
+When content primarily belongs elsewhere, this protocol should **link to it rather than absorb it**.
 
 > [!NOTE]
-> Markdown may summarize other system surfaces, but it must not become a shadow schema registry, a fake runbook, or a second source of truth that drifts from the actual repo.
+> Markdown may summarize other system surfaces, but it must not become:
+>
+> - a shadow schema registry
+> - a fake runbook
+> - a second source of truth
+> - a prose substitute for missing implementation evidence
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Truth posture and claim discipline
 
@@ -166,11 +240,11 @@ Use these labels when precision matters:
 
 | Label | Meaning | Use when |
 |---|---|---|
-| **CONFIRMED** | Directly supported by attached source material, mounted workspace evidence, or directly inspected repo/platform evidence | Stating what the doctrine, repo, or artifact actually shows |
-| **INFERRED** | Conservative structural completion strongly implied by multiple project sources | Filling a necessary gap without claiming mounted implementation |
-| **PROPOSED** | Recommended design, workflow, or structure consistent with doctrine but not verified as current implementation | Suggesting next-shape docs, routes, checklists, templates, or policy surfaces |
-| **UNKNOWN** | Not verified strongly enough in the current session to claim as current fact | Repo topology, automation coverage, shipping behavior, real schema inventory, actual workflow gates |
-| **NEEDS VERIFICATION** | Review-critical item that must be checked before publish or implementation reliance | Ownership, dates, policy label, exact enforcement, exact file paths, or platform settings not directly inspected |
+| **CONFIRMED** | directly supported by attached source material, mounted workspace evidence, or directly inspected repo/platform evidence | stating what the doctrine, repo, or artifact actually shows |
+| **INFERRED** | conservative structural completion strongly implied by multiple project sources | filling a necessary gap without claiming mounted implementation |
+| **PROPOSED** | recommended design, workflow, or structure consistent with doctrine but not verified as current implementation | suggesting next-shape docs, routes, checklists, templates, or policy surfaces |
+| **UNKNOWN** | not verified strongly enough in the current session to claim as current fact | repo topology, automation coverage, shipping behavior, real schema inventory, actual workflow gates |
+| **NEEDS VERIFICATION** | review-critical item that must be checked before publish or implementation reliance | ownership, dates, policy label, exact enforcement, exact file paths, or platform settings not directly inspected |
 
 ### Claim rules
 
@@ -178,8 +252,8 @@ Use these labels when precision matters:
 2. **Implementation claims require implementation evidence.**
 3. **Doctrinal claims may rely on doctrinal documents, but should keep mounted implementation separate.**
 4. **Recommendations must be labeled as recommendations.**
-5. **Unknowns stay visible.** Do not smooth them away for polish.
-6. **Public-main and working-branch facts are not interchangeable.** If the branch you are documenting is ahead of public docs, state that delta explicitly.
+5. **Unknowns stay visible.**
+6. **Public-main and working-branch facts are not interchangeable.**
 
 ### Disallowed moves
 
@@ -191,13 +265,17 @@ Use these labels when precision matters:
 - replacing project terms with nicer generic terms
 - collapsing **INFERRED** or **PROPOSED** into **CONFIRMED**
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## KFM-specific authoring principles
 
-### 1) Docs are production surfaces
+### 1. Docs are production surfaces
 
-In KFM, documentation is part of the operating system of trust. It should help preserve:
+In KFM, documentation is part of the operating system of trust.
+
+It should help preserve:
 
 - governed publication
 - correction lineage
@@ -206,9 +284,9 @@ In KFM, documentation is part of the operating system of trust. It should help p
 - route and contract clarity
 - reviewer confidence
 
-### 2) Doctrine outranks fashion
+### 2. Doctrine outranks fashion
 
-Prefer:
+Prefer project language such as:
 
 - trust membrane
 - canonical truth path
@@ -218,7 +296,7 @@ Prefer:
 - map-first and time-aware operation
 - 2D-by-default reasoning unless extra burden is justified
 
-### 3) Strong docs stay close to executable seams
+### 3. Strong docs stay close to executable seams
 
 Good KFM Markdown points clearly toward:
 
@@ -232,11 +310,13 @@ Good KFM Markdown points clearly toward:
 - review gates
 - correction and rollback paths
 
-### 4) Pleasant GitHub rendering matters, but not more than truth
+### 4. Pleasant GitHub rendering matters, but not more than truth
 
 Readable structure is required. Decorative overconfidence is not.
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Document classes and top-of-file obligations
 
@@ -244,11 +324,11 @@ This protocol should be applied after deciding what kind of Markdown the target 
 
 | Doc type | Required baseline behavior | Special obligations |
 |---|---|---|
-| Standard doc | Include KFM meta block v2 unless a stronger local exception is already established | Keep metadata synchronized with visible title and role |
-| README-like doc | Include purpose line, repo fit, accepted inputs, exclusions, impact block, quick jumps, and at least one meaningful diagram | Must feel navigable in GitHub |
-| Architecture / governance doc | Separate doctrine, realization, and unknowns | Avoid runtime overclaim |
-| Revision of existing file | Preserve strong substance and local terminology | Improve without flattening |
-| New file | Fit adjacent structure and linking patterns | Do not duplicate nearby docs unless the split is intentional |
+| Standard doc | include KFM Meta Block v2 unless a stronger local exception is already established | keep metadata synchronized with visible title and role |
+| README-like doc | include purpose line, repo fit, accepted inputs, exclusions, impact block, quick jumps, and at least one meaningful diagram | must feel navigable in GitHub |
+| Architecture / governance doc | separate doctrine, realization, and unknowns | avoid runtime overclaim |
+| Revision of existing file | preserve strong substance and local terminology | improve without flattening |
+| New file | fit adjacent structure and linking patterns | do not duplicate nearby docs unless the split is intentional |
 
 ### This file’s own class
 
@@ -257,13 +337,13 @@ This protocol is best treated as **both**:
 - a standard doc
 - a README-like operational protocol
 
-That means it should satisfy both the metadata requirements and the GitHub-readability requirements.
+That means it should satisfy both metadata requirements and GitHub-readability requirements.
 
 ### Top-of-file requirements
 
 #### For standard docs
 
-Include the KFM meta block v2 at the top of the file.
+Include the KFM Meta Block v2 at the top of the file.
 
 #### For README-like or operational protocol docs
 
@@ -273,8 +353,8 @@ Include, near the top:
 - one-line purpose
 - status
 - owners
-- repo fit
-- quick jump links
+- path
+- quick jumps
 - badges
 - a clear note when parts remain placeholders or need verification
 
@@ -289,7 +369,9 @@ If a value is not confirmed, use a reviewable placeholder such as:
 
 Do not silently guess.
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Authoring workflow
 
@@ -358,7 +440,9 @@ Specifically check for:
 - public-main versus working-branch confusion
 - flat or visually dead sections
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## GitHub Markdown formatting protocol
 
@@ -415,7 +499,13 @@ Wrap bulk material in `<details>` if it is reference-heavy but not critical to f
 
 README-like and directory-facing docs should include at least one meaningful Mermaid diagram.
 
-[Back to top](#kfm-markdown-work-protocol)
+### Quick-jump rule
+
+For long docs, include a top-of-file quick-jump line and maintain stable heading anchors so GitHub scanning stays fast.
+
+[Back to top](#top)
+
+---
 
 ## Repo-native writing rules
 
@@ -425,11 +515,11 @@ Use the terms the project already uses, including where relevant:
 
 - trust membrane
 - canonical truth path
-- EvidenceBundle
-- RuntimeResponseEnvelope
-- DecisionEnvelope
-- ReleaseManifest
-- CorrectionNotice
+- `EvidenceBundle`
+- `RuntimeResponseEnvelope`
+- `DecisionEnvelope`
+- `ReleaseManifest`
+- `CorrectionNotice`
 - map-first
 - time-aware
 - authoritative-versus-derived
@@ -459,7 +549,9 @@ GitHub Actions history, deleted workflow names, platform badges, and other UI si
 
 If an adjacent file already serves as the directory index or local doctrine summary, this file should deepen or specialize it rather than rewriting it.
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## README-like minimums and directory exceptions
 
@@ -467,22 +559,25 @@ When a document behaves like a README, it must include:
 
 | Requirement | Why |
 |---|---|
-| Title | Reader orientation |
-| One-line purpose | Immediate context |
-| Repo fit | Path and placement clarity |
-| Accepted inputs | Scope control |
-| Exclusions | Boundary protection |
-| Impact block | Review and maintenance shortcut |
+| Title | reader orientation |
+| One-line purpose | immediate context |
+| Repo fit | path and placement clarity |
+| Accepted inputs | scope control |
+| Exclusions | boundary protection |
+| Impact block | review and maintenance shortcut |
 | Quick jumps | GitHub navigation |
-| Diagram | Structural explanation |
-| Review checklist or task list | Commit readiness |
+| Diagram | structural explanation |
+| Review checklist or task list | commit readiness |
 
 ### Directory README note
 
-For directory READMEs, follow the fuller section-order expectations from [`./markdown-rules.md`](./markdown-rules.md).  
+For directory READMEs, follow the fuller section-order expectations from [`./markdown-rules.md`](./markdown-rules.md).
+
 For single-file standards like this one, keep the same minimum ingredients but omit directory-only scaffolding unless it adds real value.
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Review gates and definition of done
 
@@ -491,7 +586,7 @@ A KFM Markdown file is not done when it merely sounds polished.
 ### Minimum review gates
 
 - [ ] Title matches the actual role of the file
-- [ ] KFM meta block v2 is present for standard docs
+- [ ] KFM Meta Block v2 is present for standard docs
 - [ ] Unverified values are placeholders, not guesses
 - [ ] Adjacent docs were inspected
 - [ ] Repo fit is explicit
@@ -517,7 +612,9 @@ A document meets this protocol when it is:
 5. structurally reviewable in Git  
 6. safe to commit after direct verification of remaining placeholders
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Common failure modes
 
@@ -526,16 +623,18 @@ A document meets this protocol when it is:
 
 | Failure mode | Why it is harmful | Required correction |
 |---|---|---|
-| Treating doctrine as shipped implementation | Creates false confidence | Relabel as **PROPOSED** or **UNKNOWN** |
-| Replacing project terms with generic language | Weakens doctrinal precision | Restore project terminology |
-| Writing from memory of the repo | Introduces drift | Re-inspect files |
-| Building “better looking” but flatter docs | Loses auditability and usefulness | Reintroduce evidence, boundaries, and review detail |
-| Hiding unresolved metadata values | Breaks governance posture | Use placeholders and notes |
-| Duplicating nearby README content | Creates competing guidance | Link and specialize instead |
-| Claiming enforcement without visible gates | Misstates trust posture | Mark **NEEDS VERIFICATION** |
-| Treating historical workflow traces as current automation | Confuses continuity with checked-in reality | State them as historical or platform signal only |
+| Treating doctrine as shipped implementation | creates false confidence | relabel as **PROPOSED** or **UNKNOWN** |
+| Replacing project terms with generic language | weakens doctrinal precision | restore project terminology |
+| Writing from memory of the repo | introduces drift | re-inspect files |
+| Building “better looking” but flatter docs | loses auditability and usefulness | reintroduce evidence, boundaries, and review detail |
+| Hiding unresolved metadata values | breaks governance posture | use placeholders and notes |
+| Duplicating nearby README content | creates competing guidance | link and specialize instead |
+| Claiming enforcement without visible gates | misstates trust posture | mark **NEEDS VERIFICATION** |
+| Treating historical workflow traces as current automation | confuses continuity with checked-in reality | state them as historical or platform signal only |
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Change discipline for existing Markdown
 
@@ -549,10 +648,13 @@ When revising an existing file:
 6. improve navigation, examples, and reviewability
 7. avoid broad rewrites unless the current file is only a scaffold or clearly broken
 
-For scaffold-only files, a substantial upward rewrite is appropriate so long as it stays evidence-bounded.  
+For scaffold-only files, a substantial upward rewrite is appropriate so long as it stays evidence-bounded.
+
 For already substantive files, improve in place and keep neighboring conventions stable unless the current local pattern is itself misleading.
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Illustrative starter pattern
 
@@ -563,7 +665,7 @@ For already substantive files, improve in place and keep neighboring conventions
 1. Inspect the current file and adjacent docs
 2. Identify stronger doctrinal anchors
 3. Confirm whether the target is standard, README-like, or both
-4. Add KFM meta block with placeholders where required
+4. Add KFM Meta Block with placeholders where required
 5. Draft purpose, repo fit, inputs, exclusions, and quick jumps
 6. Add one meaningful diagram
 7. Separate confirmed facts from recommendations
@@ -571,7 +673,9 @@ For already substantive files, improve in place and keep neighboring conventions
 9. Leave unresolved items visible
 ```
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Protocol interaction with neighboring surfaces
 
@@ -584,7 +688,9 @@ This file should be read alongside, not instead of:
 - [`../../.github/workflows/README.md`](../../.github/workflows/README.md) when discussing automation or release gates
 - [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) and [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) when discussing review routing, evidence links, and truth-label expectations
 
-[Back to top](#kfm-markdown-work-protocol)
+[Back to top](#top)
+
+---
 
 ## Appendix
 
@@ -634,3 +740,5 @@ Potential downstream users of this protocol include:
 - README revisions for repo lanes that now have substantive public-main inventory but still need bounded trust language
 
 </details>
+
+[Back to top](#top)
