@@ -8,9 +8,9 @@ owners: TODO-NEEDS-VERIFICATION
 created: YYYY-MM-DD
 updated: 2026-04-14
 policy_label: TODO-NEEDS-VERIFICATION
-related: [contracts/README.md, tools/validators/promotion_gate/README.md, tools/ci/README.md, .github/workflows/README.md, policy/README.md, schemas/README.md]
+related: [contracts/README.md, tools/validators/promotion_gate/README.md, tools/ci/README.md, tests/ci/README.md, .github/workflows/README.md, policy/README.md, schemas/README.md]
 tags: [kfm, contracts, promotion, review, handoff]
-notes: [Public main currently exposes this file path as an empty placeholder; this document defines the contract boundary for the derived steward-facing handoff surface rather than claiming mounted helper completeness. Exact owners, policy label, and live caller inventory still need branch-level verification.]
+notes: [Public main currently exposes this file path as an empty placeholder; this document defines the contract boundary for the derived steward-facing handoff surface rather than claiming mounted helper completeness. Updated to align with the stabilized four-step publication order: bundle summary, diff summary, diff-policy summary, review handoff. Exact owners, policy label, and live caller inventory still need branch-level verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Promotion Review Handoff
@@ -32,7 +32,7 @@ Contract note for the derived steward-facing review handoff surface used in gove
 | What does it summarize? | Promotion bundle state, prior/current drift, checked-in drift-policy interpretation, and trust visibility. |
 | What is it **not**? | Not the release decision, not the bundle itself, not the diff engine, not policy authority. |
 | Where should authority remain? | In the underlying trust objects and their governing policy / contract surfaces. |
-| Why is it in `contracts/`? | To define the handoff’s **role, limits, required contents, and non-goals** without burying those rules inside renderer code or workflow YAML. |
+| Why is it in `contracts/`? | To define the handoff’s **role, limits, required contents, stable review order, and non-goals** without burying those rules inside renderer code or workflow YAML. |
 
 ---
 
@@ -47,6 +47,7 @@ Use this contract when the job is to ensure that a reviewer-facing handoff docum
 - preserves KFM’s **receipts vs proofs** doctrine
 - keeps diff computation, policy evaluation, attestation verification, and release authority in their proper upstream lanes
 - stays deterministic enough to be regenerated from the same declared inputs
+- remains the **final reviewer convenience surface**, not the first or only source a steward sees
 
 Do **not** use this contract to:
 
@@ -65,7 +66,8 @@ Do **not** use this contract to:
 | Parent lane | [`README.md`](README.md) | `contracts/` is the lane for machine-facing boundaries, semantics, and compatibility rules. |
 | Closest operational consumer | [`../tools/validators/promotion_gate/README.md`](../tools/validators/promotion_gate/README.md) | Documents the current promotion thin slice, trust chain, bundle drift, and reviewer-facing handoff role. |
 | Closest renderer lane | [`../tools/ci/README.md`](../tools/ci/README.md) | Keeps CI rendering helpers separate from policy law and release authority. |
-| Workflow boundary | [`../.github/workflows/README.md`](../.github/workflows/README.md) | Orchestration belongs in workflow YAML, not in this contract. |
+| Closest renderer-proof lane | [`../tests/ci/README.md`](../tests/ci/README.md) | Proves renderer behavior without turning renderer tests into authority. |
+| Workflow boundary | [`../.github/workflows/README.md`](../.github/workflows/README.md) | Orchestration and publication order belong in workflow YAML, not in this contract alone. |
 | Policy boundary | [`../policy/README.md`](../policy/README.md) | Blocking classification and governance remain policy-owned. |
 | Schema boundary | [`../schemas/README.md`](../schemas/README.md) | Canonical machine-checkable shapes should remain schema-led where applicable. |
 
@@ -127,6 +129,11 @@ The review handoff:
    - catalog closure
    - signature truth
    - promotion eligibility
+
+4. **must remain visibly derived**
+   - from declared upstream artifacts
+   - in the same review path
+   - without introducing a new independent trust plane
 
 ---
 
@@ -203,6 +210,13 @@ When all current thin-slice promotion review artifacts are published together, k
 - then the composed steward-facing handoff
 
 This keeps the final handoff from being mistaken for the primary machine source.
+
+### Contract implication
+
+The handoff should be written and reviewed as the **last summary-layer artifact** in the chain.
+
+That does **not** give it more authority.  
+It gives it the clearest ergonomic role.
 
 ---
 
@@ -357,3 +371,13 @@ This contract is intentionally safe under two conditions:
 2. when some public snapshots still show inventory-light or README-first lane shapes
 
 That restraint is deliberate. The contract should remain truthful even when branch visibility is incomplete.
+
+### Stability note
+
+This contract is also intentionally compatible with the current thin-slice publication order now documented in:
+
+- `tools/ci/README.md`
+- `.github/workflows/README.md`
+- `tools/validators/promotion_gate/README.md`
+
+That alignment matters because the handoff is most useful when every adjacent lane describes the same review story in the same order.
