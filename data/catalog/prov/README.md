@@ -1,33 +1,73 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
-title: `data/catalog/prov/`
+title: data/catalog/prov
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: <NEEDS-VERIFICATION>
-updated: <NEEDS-VERIFICATION>
+updated: 2026-04-14
 policy_label: <NEEDS-VERIFICATION>
-related: ["../README.md", "../dcat/README.md", "../stac/README.md", "../../README.md", "../../receipts/README.md", "../../proofs/README.md", "../../published/README.md", "../../registry/README.md", "../../../contracts/README.md", "../../../schemas/contracts/README.md", "../../../policy/README.md", "../../../tests/README.md", "../../../.github/CODEOWNERS"]
-tags: [kfm, data, catalog, prov, provenance]
-notes: ["Current public-main evidence confirms the path, sibling catalog lanes, and a broad `/data/` CODEOWNERS fallback to `@bartytime4life`.", "Current public-main checked-in inventory for this directory is `README.md` only.", "doc_id, created, updated, and policy_label still require branch-grounded confirmation."]
+related: [
+  "../README.md",
+  "../dcat/README.md",
+  "../stac/README.md",
+  "../../README.md",
+  "../../receipts/README.md",
+  "../../proofs/README.md",
+  "../../published/README.md",
+  "../../registry/README.md",
+  "../../../contracts/README.md",
+  "../../../schemas/contracts/README.md",
+  "../../../policy/README.md",
+  "../../../tests/README.md",
+  "../../../tools/validators/README.md",
+  "../../../tools/validators/promotion_gate/README.md",
+  "../../../.github/CODEOWNERS"
+]
+tags: [kfm, data, catalog, prov, provenance, catalog-closure, lineage]
+notes: [
+  "Current public-main evidence confirms the path, sibling catalog lanes, and a broad `/data/` CODEOWNERS fallback to `@bartytime4life`.",
+  "Current public-main checked-in inventory for this directory is `README.md` only.",
+  "doc_id, created, updated, and policy_label still require branch-grounded confirmation."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `data/catalog/prov/`
 
-Governed provenance-bundle surface for KFM catalog closure, lineage inspection, and release-backed traceability.
+Governed **provenance-bundle surface** for KFM catalog closure, lineage inspection, and release-backed traceability.
 
-> **Status:** `experimental`  
-> **Doc state:** `draft`  
+> [!NOTE]
+> **Status:** experimental  
+> **Document status:** draft  
 > **Owners:** `@bartytime4life` *(current strongest public owner signal is the broad `/data/` CODEOWNERS fallback; narrower path ownership is still unverified)*  
 > **Path:** `data/catalog/prov/README.md`  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-2563eb) ![Doc: Draft](https://img.shields.io/badge/doc-draft-f59e0b) ![Truth posture: verification--first](https://img.shields.io/badge/truth-verification--first-0f766e) ![Lane: Catalog PROV](https://img.shields.io/badge/lane-catalog%20prov-334155)  
-> **Quick jump:** [Scope](#scope) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-2563eb) ![Doc: Draft](https://img.shields.io/badge/doc-draft-f59e0b) ![Truth Posture: Verification First](https://img.shields.io/badge/truth-verification--first-0f766e) ![Lane: Catalog PROV](https://img.shields.io/badge/lane-catalog%20prov-334155)  
+> **Quick jumps:** [Scope](#scope) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This directory is a **catalog surface**, not a canonical data zone. It should hold outward-facing provenance bundles for released or release-candidate catalog artifacts, not raw inputs, work products, policy bundles, runtime receipts, or UI narrative text.
+> This directory is a **catalog surface**, not a canonical data zone.
+>
+> It should hold outward-facing provenance bundles for released or release-candidate catalog artifacts, not:
+>
+> - raw inputs
+> - work products
+> - policy bundles
+> - runtime receipts
+> - proof packs
+> - UI narrative text
+
+> [!TIP]
+> Keep the KFM trust split visible here:
+>
+> **receipt ≠ proof ≠ catalog ≠ publication**
+>
+> `data/catalog/prov/` should preserve **lineage** for release-facing artifacts.  
+> It must not quietly absorb process-memory receipts, release-proof objects, or materialized outward publication scope.
+
+---
 
 ## Scope
 
@@ -43,11 +83,13 @@ In practice, this lane should answer questions like:
 
 This README is intentionally **verification-first**:
 
-- it documents what this directory is for,
-- it distinguishes current visible repo reality from doctrine-aligned working shape,
-- and it avoids implying mounted implementation depth that still needs confirmation.
+- it documents what this directory is for
+- it distinguishes current visible repo reality from doctrine-aligned working shape
+- it avoids implying mounted implementation depth that still needs confirmation
 
 [Back to top](#top)
+
+---
 
 ## Evidence posture
 
@@ -55,25 +97,27 @@ This README is intentionally **verification-first**:
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Verified from current visible repo/public-main evidence or attached KFM doctrine |
-| **INFERRED** | Strongly suggested by adjacent repo docs and KFM doctrine, but not directly enforced in visible implementation evidence |
-| **PROPOSED** | A starter pattern that fits KFM doctrine and current directory role, but is not yet claimed as live enforcement |
-| **UNKNOWN / NEEDS VERIFICATION** | Not verified in the current visible evidence boundary |
+| **CONFIRMED** | verified from current visible repo/public-main evidence or attached KFM doctrine |
+| **INFERRED** | strongly suggested by adjacent repo docs and KFM doctrine, but not directly enforced in visible implementation evidence |
+| **PROPOSED** | a starter pattern that fits KFM doctrine and current directory role, but is not yet claimed as live enforcement |
+| **UNKNOWN / NEEDS VERIFICATION** | not verified in the current visible evidence boundary |
 
 ### Current public snapshot
 
 | Observation | Status | Why it matters |
 |---|---|---|
-| `data/catalog/prov/` exists | **CONFIRMED** | This lane is part of the visible repo structure |
+| `data/catalog/prov/` exists | **CONFIRMED** | this lane is part of the visible repo structure |
 | `data/catalog/` also contains `dcat/` and `stac/` | **CONFIRMED** | PROV is one member of the catalog triplet, not an isolated concept |
-| Current checked-in visible inventory for this lane is `README.md` | **CONFIRMED** | This README should not pretend that emitted bundles are already visible here |
-| `data/` includes lifecycle and release-adjacent lanes such as `raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `receipts/`, `proofs/`, `published/`, and `registry/` | **CONFIRMED** | Provenance has to sit cleanly inside a broader governed lifecycle |
-| Broad `/data/` CODEOWNERS ownership points to `@bartytime4life` | **CONFIRMED** | Strongest currently visible owner signal for this path |
-| Checked-in emitted `.prov.json` files under this directory | **UNKNOWN / NEEDS VERIFICATION** | Public snapshot does not prove they exist |
-| Mounted provenance validator / fixture / merge gate | **UNKNOWN / NEEDS VERIFICATION** | Public snapshot does not yet prove concrete enforcement wiring |
-| `<dataset>__<version>.prov.json` as a starter naming pattern | **PROPOSED** | Useful convention, but not presented here as machine-enforced fact |
+| current checked-in visible inventory for this lane is `README.md` | **CONFIRMED** | this README should not pretend that emitted bundles are already visible here |
+| `data/` includes lifecycle and release-adjacent lanes such as `raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `receipts/`, `proofs/`, `published/`, and `registry/` | **CONFIRMED** | provenance has to sit cleanly inside a broader governed lifecycle |
+| broad `/data/` CODEOWNERS ownership points to `@bartytime4life` | **CONFIRMED** | strongest currently visible owner signal for this path |
+| checked-in emitted `.prov.json` files under this directory | **UNKNOWN / NEEDS VERIFICATION** | public snapshot does not prove they exist |
+| mounted provenance validator / fixture / merge gate | **UNKNOWN / NEEDS VERIFICATION** | public snapshot does not yet prove concrete enforcement wiring |
+| `<dataset>__<version>.prov.json` as a starter naming pattern | **PROPOSED** | useful convention, but not presented here as machine-enforced fact |
 
 [Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -81,19 +125,21 @@ This README is intentionally **verification-first**:
 
 | Surface | Path | Relationship |
 |---|---|---|
-| Parent data guide | [`../../README.md`](../../README.md) | Defines `data/` as the governed storage and lifecycle area |
-| Catalog parent | [`../README.md`](../README.md) | Defines the catalog closure as linked `DCAT + STAC + PROV` |
-| STAC sibling | [`../stac/README.md`](../stac/README.md) | Spatial/temporal asset metadata surface |
-| DCAT sibling | [`../dcat/README.md`](../dcat/README.md) | Dataset/distribution metadata surface |
-| Receipts sibling | [`../../receipts/README.md`](../../receipts/README.md) | Run and event receipts should remain distinguishable from provenance bundles |
-| Proofs sibling | [`../../proofs/README.md`](../../proofs/README.md) | Proof packs and attestations should not be collapsed into the PROV lane |
-| Published sibling | [`../../published/README.md`](../../published/README.md) | Outward publication state remains a separate lifecycle concern |
-| Registry sibling | [`../../registry/README.md`](../../registry/README.md) | Identifier/registry concerns should remain explicit and linkable |
-| Contracts | [`../../../contracts/README.md`](../../../contracts/README.md) | Shared contract guidance for review and placement |
-| Schemas/contracts | [`../../../schemas/contracts/README.md`](../../../schemas/contracts/README.md) | Current visible machine-file scaffold surface adjacent to contract work |
-| Policy | [`../../../policy/README.md`](../../../policy/README.md) | Runtime and promotion posture that provenance must remain compatible with |
-| Tests | [`../../../tests/README.md`](../../../tests/README.md) | Future validator and fixture references belong here only when reviewable |
-| CODEOWNERS | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Current public ownership signal for this lane |
+| Parent data guide | [`../../README.md`](../../README.md) | defines `data/` as the governed storage and lifecycle area |
+| Catalog parent | [`../README.md`](../README.md) | defines the catalog closure as linked `DCAT + STAC + PROV` |
+| STAC sibling | [`../stac/README.md`](../stac/README.md) | spatial/temporal asset metadata surface |
+| DCAT sibling | [`../dcat/README.md`](../dcat/README.md) | dataset/distribution metadata surface |
+| Receipts sibling | [`../../receipts/README.md`](../../receipts/README.md) | run and event receipts should remain distinguishable from provenance bundles |
+| Proofs sibling | [`../../proofs/README.md`](../../proofs/README.md) | proof packs and attestations should not be collapsed into the PROV lane |
+| Published sibling | [`../../published/README.md`](../../published/README.md) | outward publication state remains a separate lifecycle concern |
+| Registry sibling | [`../../registry/README.md`](../../registry/README.md) | identifier/registry concerns should remain explicit and linkable |
+| Contracts | [`../../../contracts/README.md`](../../../contracts/README.md) | shared contract guidance for review and placement |
+| Schemas/contracts | [`../../../schemas/contracts/README.md`](../../../schemas/contracts/README.md) | current visible machine-file scaffold surface adjacent to contract work |
+| Policy | [`../../../policy/README.md`](../../../policy/README.md) | runtime and promotion posture that provenance must remain compatible with |
+| Tests | [`../../../tests/README.md`](../../../tests/README.md) | future validator and fixture references belong here only when reviewable |
+| Validator family | [`../../../tools/validators/README.md`](../../../tools/validators/README.md) | fail-closed validator family adjacent to this lane’s trust surfaces |
+| Promotion validator | [`../../../tools/validators/promotion_gate/README.md`](../../../tools/validators/promotion_gate/README.md) | release-facing validator most likely to consume provenance linkage |
+| CODEOWNERS | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | current public ownership signal for this lane |
 
 ### Upstream / lateral / downstream role
 
@@ -101,8 +147,8 @@ This README is intentionally **verification-first**:
 |---|---|---|
 | Upstream | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/` | PROV bundles should point back to the lifecycle artifacts and activities that produced released outputs |
 | Lateral | `data/catalog/stac/`, `data/catalog/dcat/` | KFM catalog closure is strongest when STAC, DCAT, and PROV cross-link cleanly |
-| Adjacent proof seam | `data/receipts/`, `data/proofs/`, `data/published/` | Provenance should link to these lanes where relevant rather than trying to absorb their responsibilities |
-| Downstream | governed APIs, review workflows, Focus Mode, evidence inspection | These consumers need provenance that is inspectable, stable, and not dependent on guesswork |
+| Adjacent proof seam | `data/receipts/`, `data/proofs/`, `data/published/` | provenance should link to these lanes where relevant rather than trying to absorb their responsibilities |
+| Downstream | governed APIs, review workflows, Focus Mode, evidence inspection | these consumers need provenance that is inspectable, stable, and not dependent on guesswork |
 
 ### Why this lane exists separately
 
@@ -116,18 +162,20 @@ This README is intentionally **verification-first**:
 
 [Back to top](#top)
 
+---
+
 ## Accepted inputs
 
 The following belong here when they are part of the **catalog-facing provenance surface**:
 
 | Accepted | Why it belongs |
 |---|---|
-| Dataset-version provenance bundles | Core lineage object for a released or release-candidate artifact |
-| Entity / activity / agent records | Minimum provenance vocabulary for traceability |
-| Cross-links to processed artifacts, manifests, receipts, and catalog siblings | Keeps lineage grounded in real release-bearing objects |
-| Redaction / masking / generalization notes inside provenance-compatible fields | Makes policy-significant transforms visible instead of silent |
-| Release-aligned provenance snapshots | Supports correction, rollback, replay, and later review |
-| Correction-aware lineage records | Preserves supersession/withdrawal context instead of flattening history |
+| dataset-version provenance bundles | core lineage object for a released or release-candidate artifact |
+| entity / activity / agent records | minimum provenance vocabulary for traceability |
+| cross-links to processed artifacts, manifests, receipts, and catalog siblings | keeps lineage grounded in real release-bearing objects |
+| redaction / masking / generalization notes inside provenance-compatible fields | makes policy-significant transforms visible instead of silent |
+| release-aligned provenance snapshots | supports correction, rollback, replay, and later review |
+| correction-aware lineage records | preserves supersession/withdrawal context instead of flattening history |
 
 ### Typical starter shape
 
@@ -137,29 +185,43 @@ A typical artifact here is expected to be a **dataset-version lineage bundle**, 
 
 That filename pattern is a **doctrine-aligned starter pattern**, not a claim that all live emitted bundles already follow it.
 
+### Minimum bar for anything added here
+
+- it is clearly **provenance-shaped** rather than payload-, receipt-, or proof-shaped
+- it grounds lineage in real artifacts, activities, and agents
+- it cross-links cleanly to sibling STAC/DCAT and adjacent release surfaces where relevant
+- it preserves release or correction identity instead of inventing a parallel history
+- it does not silently become a generic event log or policy carrier
+
+[Back to top](#top)
+
+---
+
 ## Exclusions
 
 The following do **not** belong in `data/catalog/prov/` as their primary home:
 
 | Excluded | Put it here instead |
 |---|---|
-| Raw acquisitions | `data/raw/` |
-| Intermediate transforms / QA scratch outputs | `data/work/` or `data/quarantine/` |
-| Canonical processed assets | `data/processed/` |
+| raw acquisitions | `data/raw/` |
+| intermediate transforms / QA scratch outputs | `data/work/` or `data/quarantine/` |
+| canonical processed assets | `data/processed/` |
 | STAC records | `data/catalog/stac/` |
 | DCAT records | `data/catalog/dcat/` |
-| Run receipts / ingest receipts / validation receipts as primary records | `data/receipts/` |
-| Release proof packs / attestations / cryptographic proof bundles as primary records | `data/proofs/` |
-| Public publication packages | `data/published/` |
-| Policy bundles / rule engines | `policy/` |
-| Contract schemas / fixtures | `contracts/` or `schemas/contracts/` |
-| Story text, Focus narrative, or UI state | governed API / app surfaces, not catalog provenance |
-| Research attachments and source-summary assets | `docs/research/...` |
+| run receipts / ingest receipts / validation receipts as primary records | `data/receipts/` |
+| release proof packs / attestations / cryptographic proof bundles as primary records | `data/proofs/` |
+| public publication packages | `data/published/` |
+| policy bundles / rule engines | `policy/` |
+| contract schemas / fixtures | `contracts/` or `schemas/contracts/` |
+| story text, Focus narrative, or UI state | governed API / app surfaces, not catalog provenance |
+| research attachments and source-summary assets | `docs/research/...` |
 
 > [!NOTE]
 > Provenance may *reference* raw, work, processed, receipts, proofs, policy, or contract artifacts. It should not silently replace them.
 
 [Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -194,16 +256,21 @@ data/
     └── prov/
         ├── README.md
         ├── <dataset>__<version>.prov.json
-        ├── <dataset>__<version>.prov.json.sig      # optional / NEEDS VERIFICATION
-        └── <dataset>__<version>.prov.json.sha256   # optional / NEEDS VERIFICATION
+        ├── <dataset>__<version>.prov.json.sig
+        └── <dataset>__<version>.prov.json.sha256
 ```
 
 ### Interpretation rule
 
-- **Current confirmed public snapshot** = what this README can safely speak about as visible repo reality.
-- **Doctrine-aligned starter shape** = a useful target that fits adjacent KFM doctrine and catalog structure, not an already-proven file inventory.
+- **Current confirmed public snapshot** = what this README can safely speak about as visible repo reality
+- **Doctrine-aligned starter shape** = a useful target that fits adjacent KFM doctrine and catalog structure, not an already-proven file inventory
+
+> [!NOTE]
+> Signature and digest sidecars are shown here as a **starter convention**, not as confirmed current-tree payloads or mandatory enforced outputs.
 
 [Back to top](#top)
+
+---
 
 ## Quickstart
 
@@ -221,6 +288,8 @@ sed -n '1,220p' data/catalog/prov/README.md
 sed -n '1,220p' data/receipts/README.md
 sed -n '1,220p' data/proofs/README.md
 sed -n '1,220p' schemas/contracts/README.md
+sed -n '1,220p' tools/validators/README.md
+sed -n '1,220p' tools/validators/promotion_gate/README.md
 sed -n '1,220p' .github/CODEOWNERS
 ```
 
@@ -251,19 +320,21 @@ grep -RIn "validate_prov\|prov.json\|catalog closure\|crosslink" contracts schem
 
 [Back to top](#top)
 
+---
+
 ## Usage
 
 ### What this directory should do well
 
 A strong `data/catalog/prov/` surface should make all of the following straightforward:
 
-1. Locate the provenance bundle for a dataset version quickly.
-2. Follow lineage from released artifact back to raw/work/processed references without guessing.
-3. Inspect the producing activity and its time bounds.
-4. Inspect the responsible software and role-bearing agents.
-5. Understand whether masking, generalization, or correction changed the released result.
-6. Cross-check STAC and DCAT against the same release-bearing artifact set.
-7. Preserve correction and supersession context instead of silently overwriting history.
+1. locate the provenance bundle for a dataset version quickly
+2. follow lineage from released artifact back to raw/work/processed references without guessing
+3. inspect the producing activity and its time bounds
+4. inspect the responsible software and role-bearing agents
+5. understand whether masking, generalization, or correction changed the released result
+6. cross-check STAC and DCAT against the same release-bearing artifact set
+7. preserve correction and supersession context instead of silently overwriting history
 
 ### Minimum lineage expectations
 
@@ -271,14 +342,14 @@ A catalog-facing provenance bundle should usually make room for:
 
 | Component | Minimum expectation | Why it matters |
 |---|---|---|
-| `Entity` | Raw, work, and processed references where applicable | Keeps lineage grounded in actual artifacts |
-| `Activity` | One or more pipeline / ETL / QA / derivation steps | Makes transformation history inspectable |
-| `Agent` | Pipeline/tool identity and review/steward role where appropriate | Supports accountability without collapsing responsibility into free text |
-| Relations | `used`, `wasGeneratedBy`, `wasDerivedFrom`, `wasAssociatedWith` | Core lineage joins |
-| Time | Start/end or equivalent run timing | Supports audit, replay, and comparison |
-| Policy-aware transforms | Redaction / masking / generalization visibility where material | Prevents silent sensitivity drift |
-| Release linkage | Reference to the released artifact, manifest, or closure context | Keeps catalog provenance tied to real outward state |
-| Correction visibility | A visible way to explain supersession / withdrawal / replacement where relevant | Preserves correctability instead of flattening lineage |
+| `Entity` | raw, work, and processed references where applicable | keeps lineage grounded in actual artifacts |
+| `Activity` | one or more pipeline / ETL / QA / derivation steps | makes transformation history inspectable |
+| `Agent` | pipeline/tool identity and review/steward role where appropriate | supports accountability without collapsing responsibility into free text |
+| Relations | `used`, `wasGeneratedBy`, `wasDerivedFrom`, `wasAssociatedWith` | core lineage joins |
+| Time | start/end or equivalent run timing | supports audit, replay, and comparison |
+| Policy-aware transforms | redaction / masking / generalization visibility where material | prevents silent sensitivity drift |
+| Release linkage | reference to the released artifact, manifest, or closure context | keeps catalog provenance tied to real outward state |
+| Correction visibility | a visible way to explain supersession / withdrawal / replacement where relevant | preserves correctability instead of flattening lineage |
 
 ### Working seam with receipts and proofs
 
@@ -286,10 +357,10 @@ The paths below are **confirmed repo surfaces**; their exact deeper enforcement 
 
 | Lane | Best primary role | Why it should stay distinct |
 |---|---|---|
-| `data/catalog/prov/` | Lineage for release-facing artifacts | Prevents provenance from turning into a generic event log |
-| `data/receipts/` | Run/event/process receipts | Keeps procedural execution records explicit |
-| `data/proofs/` | Proof packs, attestations, verification bundles | Keeps release proof and trust evidence inspectable on their own terms |
-| `data/published/` | Publication-facing packaged outputs | Keeps outward release state separate from explanatory lineage |
+| `data/catalog/prov/` | lineage for release-facing artifacts | prevents provenance from turning into a generic event log |
+| `data/receipts/` | run/event/process receipts | keeps procedural execution records explicit |
+| `data/proofs/` | proof packs, attestations, verification bundles | keeps release proof and trust evidence inspectable on their own terms |
+| `data/published/` | publication-facing packaged outputs | keeps outward release state separate from explanatory lineage |
 
 ### Claim discipline for this lane
 
@@ -301,6 +372,8 @@ The paths below are **confirmed repo surfaces**; their exact deeper enforcement 
 | “PROV should cross-link STAC/DCAT and release-bearing artifacts.” | “Every sibling lane already resolves those links” without direct evidence |
 
 [Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -325,9 +398,11 @@ flowchart LR
     I --> J["Explore / Dossier / Story / Focus"]
 ```
 
-Above: provenance sits beside STAC and DCAT inside the catalog closure layer, while receipts and proofs remain adjacent release-evidence lanes rather than being collapsed into the same folder.
+Above: provenance sits beside STAC and DCAT inside the catalog-closure layer, while receipts and proofs remain adjacent release-evidence lanes rather than being collapsed into the same folder.
 
 [Back to top](#top)
+
+---
 
 ## Reference tables
 
@@ -335,71 +410,87 @@ Above: provenance sits beside STAC and DCAT inside the catalog closure layer, wh
 
 | Concern | Primary home | Why not `data/catalog/prov/`? |
 |---|---|---|
-| Lifecycle storage | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/` | Provenance should describe these zones, not replace them |
-| Dataset metadata and distributions | `data/catalog/dcat/` | DCAT is the dataset/distribution vocabulary surface |
-| Spatial/temporal asset metadata | `data/catalog/stac/` | STAC is the asset description surface |
-| Lineage and transformation history | `data/catalog/prov/` | This is the provenance lane |
-| Run/event receipts | `data/receipts/` | Receipt chronology is not the same thing as outward lineage |
-| Proof packs / attestations | `data/proofs/` | Trust proof should remain inspectable as its own artifact family |
-| Shared contract law | `contracts/` and `schemas/contracts/` | Contract authority and machine scaffolds belong with shared contract review |
-| Runtime policy | `policy/` | Rule bundles and decision grammar belong there |
+| lifecycle storage | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/` | provenance should describe these zones, not replace them |
+| dataset metadata and distributions | `data/catalog/dcat/` | DCAT is the dataset/distribution vocabulary surface |
+| spatial/temporal asset metadata | `data/catalog/stac/` | STAC is the asset description surface |
+| lineage and transformation history | `data/catalog/prov/` | this is the provenance lane |
+| run/event receipts | `data/receipts/` | receipt chronology is not the same thing as outward lineage |
+| proof packs / attestations | `data/proofs/` | trust proof should remain inspectable as its own artifact family |
+| shared contract law | `contracts/` and `schemas/contracts/` | contract authority and machine scaffolds belong with shared contract review |
+| runtime policy | `policy/` | rule bundles and decision grammar belong there |
 
 ### What this README can safely claim today
 
 | Claim | Status |
 |---|---|
-| The path exists on current visible repo/public-main evidence | **CONFIRMED** |
-| It is part of a visible `DCAT + STAC + PROV` catalog structure | **CONFIRMED** |
-| The visible public snapshot for this lane is README-only | **CONFIRMED** |
-| The broad `/data/` CODEOWNERS fallback points to `@bartytime4life` | **CONFIRMED** |
-| A `<dataset>__<version>.prov.json` naming pattern is a useful starter convention | **PROPOSED** |
+| the path exists on current visible repo/public-main evidence | **CONFIRMED** |
+| it is part of a visible `DCAT + STAC + PROV` catalog structure | **CONFIRMED** |
+| the visible public snapshot for this lane is README-only | **CONFIRMED** |
+| the broad `/data/` CODEOWNERS fallback points to `@bartytime4life` | **CONFIRMED** |
+| a `<dataset>__<version>.prov.json` naming pattern is a useful starter convention | **PROPOSED** |
 | `.prov.json` files are already emitted here | **UNKNOWN / NEEDS VERIFICATION** |
-| A real provenance validator command is already reviewable | **UNKNOWN / NEEDS VERIFICATION** |
-| Public-main merge gates already enforce cross-link integrity for this lane | **UNKNOWN / NEEDS VERIFICATION** |
+| a real provenance validator command is already reviewable | **UNKNOWN / NEEDS VERIFICATION** |
+| public-main merge gates already enforce cross-link integrity for this lane | **UNKNOWN / NEEDS VERIFICATION** |
+
+### Boundary matrix
+
+| Surface | Primary job | Must not be confused with |
+|---|---|---|
+| `data/processed/` | canonical processed authority | outward provenance bundles |
+| `data/receipts/` | process memory | catalog-facing lineage |
+| `data/proofs/` | release-significant evidence | provenance bundles |
+| `data/catalog/prov/` | lineage and traceability for released artifacts | receipts, proofs, payloads, or runtime API behavior |
+| `data/catalog/dcat/` | dataset/distribution discovery | transformation history |
+| `data/catalog/stac/` | asset/time discovery | provenance bundles |
+| `data/published/` | optional materialized release-backed scope | the provenance lane itself |
 
 ### Review checklist for additions to this directory
 
 | Check | Pass condition |
 |---|---|
-| Path correctness | File lands under `data/catalog/prov/` |
-| Naming clarity | Dataset/version naming is consistent and non-ambiguous |
+| Path correctness | file lands under `data/catalog/prov/` |
+| Naming clarity | dataset/version naming is consistent and non-ambiguous |
 | Cross-links | STAC/DCAT/processed/receipt/proof references are present and coherent where relevant |
-| Artifact grounding | Entities resolve to real artifacts, manifests, or release-bearing references |
-| Transform visibility | Material redaction/generalization is not hidden |
-| Release posture | Bundle supports review, correction, and replay questions |
-| No scope drift | File is provenance, not policy, raw data, receipt chronology, or narrative prose |
+| Artifact grounding | entities resolve to real artifacts, manifests, or release-bearing references |
+| Transform visibility | material redaction/generalization is not hidden |
+| Release posture | bundle supports review, correction, and replay questions |
+| No scope drift | file is provenance, not policy, raw data, receipt chronology, or narrative prose |
 
 [Back to top](#top)
+
+---
 
 ## Task list
 
 ### Immediate
 
-- [ ] Replace remaining placeholder metadata values in the KFM meta block.
-- [ ] Confirm whether `@bartytime4life` should remain the owner for this path or be narrowed.
-- [ ] Confirm whether emitted provenance bundles already exist in the current checked-out branch.
-- [ ] Confirm whether a real provenance validator command exists and is reviewable.
-- [ ] Confirm whether sibling STAC/DCAT examples already expose outward lineage links.
+- [ ] replace remaining placeholder metadata values in the KFM meta block
+- [ ] confirm whether `@bartytime4life` should remain the owner for this path or be narrowed
+- [ ] confirm whether emitted provenance bundles already exist in the current checked-out branch
+- [ ] confirm whether a real provenance validator command exists and is reviewable
+- [ ] confirm whether sibling STAC/DCAT examples already expose outward lineage links
 
 ### Next useful hardening steps
 
-- [ ] Add one real emitted bundle example once the first release-bearing dataset lands.
-- [ ] Add one real cross-link example from STAC and one from DCAT once visible.
-- [ ] Record exact naming guidance once the repo settles on a single emitted pattern.
-- [ ] Add validator / fixture references only after they are mounted and reviewable.
-- [ ] Reconcile any legacy path references if older docs still say `data/prov/` or `data/provenance/`.
-- [ ] Add a short seam note if receipt/proof responsibilities become formally codified elsewhere.
+- [ ] add one real emitted bundle example once the first release-bearing dataset lands
+- [ ] add one real cross-link example from STAC and one from DCAT once visible
+- [ ] record exact naming guidance once the repo settles on a single emitted pattern
+- [ ] add validator / fixture references only after they are mounted and reviewable
+- [ ] reconcile any legacy path references if older docs still say `data/prov/` or `data/provenance/`
+- [ ] add a short seam note if receipt/proof responsibilities become formally codified elsewhere
 
 ### Definition of done for this README
 
-- [ ] Purpose and boundaries are explicit.
-- [ ] Current reality and doctrine-aligned starter shape are clearly separated.
-- [ ] Relative links resolve.
-- [ ] Diagram renders and has a plain-language description.
-- [ ] No section implies a mounted validator, gate, or emitted file inventory without evidence.
-- [ ] Adjacent receipt/proof lanes are linked without collapsing their roles into this folder.
+- [ ] purpose and boundaries are explicit
+- [ ] current reality and doctrine-aligned starter shape are clearly separated
+- [ ] relative links resolve
+- [ ] diagram renders and has a plain-language description
+- [ ] no section implies a mounted validator, gate, or emitted file inventory without evidence
+- [ ] adjacent receipt/proof lanes are linked without collapsing their roles into this folder
 
 [Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -428,6 +519,8 @@ No. It deliberately avoids that claim. Validation and CI references should be ad
 Follow the live repo path first. In the current visible repo structure, this README is for `data/catalog/prov/`. Any older alternate path references should be treated as continuity material until reconciled.
 
 [Back to top](#top)
+
+---
 
 ## Appendix
 
