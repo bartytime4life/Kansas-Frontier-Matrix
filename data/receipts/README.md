@@ -1,56 +1,72 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
-title: receipts
+title: data/receipts
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: <NEEDS_VERIFICATION_CREATED_DATE>
-updated: <NEEDS_VERIFICATION_UPDATED_DATE>
+updated: 2026-04-14
 policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
-related: [data/README.md, data/raw/README.md, data/work/README.md, data/quarantine/README.md, data/processed/README.md, data/catalog/README.md, data/published/README.md, data/proofs/README.md, data/registry/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md, .github/workflows/README.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md]
-tags: [kfm, data, receipts]
-notes: [owner confirmed from current public CODEOWNERS, current public main confirms data/receipts exists and the visible directory listing is README.md-only, created/updated/policy_label remain needs verification]
+related: [
+  ../README.md,
+  ../raw/README.md,
+  ../work/README.md,
+  ../quarantine/README.md,
+  ../processed/README.md,
+  ../catalog/README.md,
+  ../published/README.md,
+  ../proofs/README.md,
+  ../registry/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../tests/README.md,
+  ../../tools/validators/README.md,
+  ../../tools/validators/connector_gate/README.md,
+  ../../tools/validators/promotion_gate/README.md,
+  ../../.github/workflows/README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/PULL_REQUEST_TEMPLATE.md
+]
+tags: [kfm, data, receipts, process-memory, replay, correction, audit]
+notes: [Owner confirmed from current public CODEOWNERS; public-main snapshot indicates data/receipts exists and is README-first. doc_id, created date, and policy_label remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# receipts
+# `data/receipts/`
 
-Audit-facing process-memory surface for run receipts, validation reports, and replay/correction-ready evidence links in KFM.
-
-> **Status:** experimental  
-> **Doc state:** draft  
-> **Owners:** `@bartytime4life`  
-> **Path:** [`data/receipts/README.md`](./README.md)  
-> **Repo fit:** inside [`../README.md`](../README.md); lifecycle neighbors in [`../raw/README.md`](../raw/README.md), [`../work/README.md`](../work/README.md), [`../quarantine/README.md`](../quarantine/README.md), [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../published/README.md`](../published/README.md), [`../proofs/README.md`](../proofs/README.md), and [`../registry/README.md`](../registry/README.md); shared control surfaces in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), and [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status: experimental](https://img.shields.io/badge/status-experimental-6f42c1) ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![branch: main](https://img.shields.io/badge/branch-main-0a7d5a) ![role: process memory](https://img.shields.io/badge/role-process__memory-0a7ea4) ![proofs: separate](https://img.shields.io/badge/proofs-separate-f59e0b) ![schema home: unresolved](https://img.shields.io/badge/schema__home-unresolved-d73a49)
-
-> [!IMPORTANT]
-> `data/receipts/` is a **real directory on the public `main` branch**, and the current public directory listing still shows this lane as **`README.md`-only**.
->
-> This README therefore keeps four things distinct:
->
-> - **CONFIRMED current public-tree presence**
-> - **CONFIRMED KFM doctrine about receipt/process-memory responsibilities**
-> - **PROPOSED starter structure** for a fuller receipt surface
-> - **UNKNOWN / NEEDS VERIFICATION** details about emitted files, validators, and merge-blocking automation
+Audit-facing **process-memory** surface for run receipts, validation reports, and replay/correction-ready evidence links in KFM.
 
 > [!NOTE]
-> In KFM terms, **receipts are not proofs**.
+> **Status:** experimental  
+> **Document status:** draft  
+> **Owners:** `@bartytime4life`  
+> **Path:** [`data/receipts/README.md`](./README.md)  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-6f42c1) ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![Role: Process Memory](https://img.shields.io/badge/role-process__memory-0a7ea4) ![Proofs: Separate](https://img.shields.io/badge/proofs-separate-f59e0b) ![Schema Home: Unresolved](https://img.shields.io/badge/schema__home-unresolved-d73a49)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!IMPORTANT]
+> `data/receipts/` is a **real directory on public `main`**, and the visible public snapshot still shows this lane as **README-first**.
 >
-> Receipts preserve process memory: ingest, run, validation, and audit-facing evidence needed for replay, correction, and release review.  
-> Release-significant manifests, attestations, and proof packs stay separate, typically behind release/proof surfaces.
+> This README keeps four things distinct:
+>
+> - **CONFIRMED** current public-tree presence
+> - **CONFIRMED** KFM doctrine about receipt/process-memory responsibilities
+> - **PROPOSED** starter structure for a fuller receipt surface
+> - **UNKNOWN / NEEDS VERIFICATION** details about emitted files, validators, schemas, and merge-blocking automation
+
+> [!TIP]
+> In KFM terms:
+>
+> **receipt ≠ proof ≠ catalog ≠ publication**
+>
+> Receipts preserve **process memory**: ingest, run, validation, review, and audit-facing context needed for replay, correction, and release review.  
+> Release-significant manifests, attestations, proof packs, outward catalog closure, and publication state transitions remain separate.
 
 > [!CAUTION]
-> Surrounding contract evidence is now stronger than some older drafts implied:
->
-> - root [`../../contracts/README.md`](../../contracts/README.md) now frames `contracts/` as a live contract lane
-> - root [`../../schemas/README.md`](../../schemas/README.md) now describes a live nested subtree
-> - canonical schema-home authority is **still unresolved**
->
-> `data/receipts/` should therefore stay a **process-memory surface**, not a stealth schema home.
+> `data/receipts/` should stay a **process-memory surface**, not a stealth schema home, a second release lane, or a quiet runtime-truth surface.
 
 ---
 
@@ -62,9 +78,9 @@ This is **zone-level** documentation. It defines the role, boundaries, and place
 
 The surrounding `data/` doctrine makes three things especially clear:
 
-1. process evidence must remain durable enough for replay, rollback, correction, and release review,
-2. receipt-like artifacts may live in a central audited surface **or** in version-adjacent packs, and
-3. process memory must not silently collapse into release proof, canonical authority, or public runtime truth.
+1. process evidence must remain durable enough for replay, rollback, correction, and release review
+2. receipt-like artifacts may live in a central audited surface **or** in version-adjacent packs
+3. process memory must not silently collapse into release proof, canonical authority, or public runtime truth
 
 ### Evidence posture used here
 
@@ -90,21 +106,26 @@ This README governs the **boundary** and **role** of receipt artifacts, not one 
 
 [Back to top](#top)
 
+---
+
 ## Repo fit
 
-`receipts/` sits inside the `data/` lifecycle surface, but it should remain visibly adjacent to sibling zone docs, shared contract/policy surfaces, and workflow/review control.
+`receipts/` sits inside the `data/` lifecycle surface, but should remain visibly adjacent to sibling zone docs, shared contract/policy surfaces, and workflow/review control.
 
 ### Path and adjacent surfaces
 
 | Relation | Surface | Status | Why it matters |
 |---|---|---:|---|
 | Upstream | [`../README.md`](../README.md) | **CONFIRMED** | Defines the broader `data/` lifecycle role and the receipts-vs-proofs distinction |
-| Adjacent lifecycle | [`../raw/README.md`](../raw/README.md) · [`../work/README.md`](../work/README.md) · [`../quarantine/README.md`](../quarantine/README.md) · [`../processed/README.md`](../processed/README.md) · [`../catalog/README.md`](../catalog/README.md) · [`../published/README.md`](../published/README.md) · [`../proofs/README.md`](../proofs/README.md) · [`../registry/README.md`](../registry/README.md) | **CONFIRMED** | These neighboring `data/` surfaces are part of the current public routing story and clarify where receipts stop and stronger or later objects begin |
-| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Public `main` now treats `contracts/` as a live contract lane; receipt contracts should stay explicit there rather than reappearing ad hoc under `data/receipts/` |
-| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Public `main` now shows a live nested `schemas/` subtree, but that subtree does **not** settle canonical schema-home authority by itself |
-| Upstream | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Rights, sensitivity, deny-by-default, and obligation logic belong in executable policy surfaces |
+| Adjacent lifecycle | [`../raw/README.md`](../raw/README.md) · [`../work/README.md`](../work/README.md) · [`../quarantine/README.md`](../quarantine/README.md) · [`../processed/README.md`](../processed/README.md) · [`../catalog/README.md`](../catalog/README.md) · [`../published/README.md`](../published/README.md) · [`../proofs/README.md`](../proofs/README.md) · [`../registry/README.md`](../registry/README.md) | **CONFIRMED** | These neighboring `data/` surfaces clarify where receipts stop and stronger or later objects begin |
+| Upstream authority | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Receipt contracts should stay explicit there rather than reappearing ad hoc under `data/receipts/` |
+| Upstream authority | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Public `main` shows a live nested `schemas/` subtree, but that does **not** settle canonical receipt-schema authority by itself |
+| Upstream authority | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Rights, sensitivity, deny-by-default, and obligation logic belong in policy surfaces |
+| Adjacent validator pressure | [`../../tools/validators/README.md`](../../tools/validators/README.md) | **CONFIRMED** | Validators may consume receipt linkage, but should not become receipt ownership |
+| Adjacent validator pressure | [`../../tools/validators/connector_gate/README.md`](../../tools/validators/connector_gate/README.md) | **INFERRED** | Connector admission should emit receipt-shaped process memory on allow/deny/abstain paths |
+| Adjacent validator pressure | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | **INFERRED** | Promotion validation depends on receipt/proof separation and replayable process memory |
 | Downstream pressure | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Tests should exercise receipt behavior, not duplicate receipt ownership |
-| Control surfaces | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | **CONFIRMED** | Workflow intent, ownership routing, and PR review expectations are already public control surfaces that shape this lane |
+| Control surfaces | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | **CONFIRMED** | Workflow intent, ownership routing, and PR review expectations shape this lane |
 
 ### Current verified snapshot
 
@@ -114,9 +135,8 @@ This README governs the **boundary** and **role** of receipt artifacts, not one 
 | `data/receipts/README.md` exists | **CONFIRMED** | Substantive draft README is present on public `main` |
 | Current public listing shows additional visible child files or folders under `data/receipts/` | **CONFIRMED no** | Public `main` currently shows `README.md` only in this lane |
 | `data/` currently shows sibling child directories including `catalog/`, `processed/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, `specs/`, and `work/` | **CONFIRMED** | The broader lifecycle surface is live on public `main`, though deeper subtree meaning is not automatically proven by path presence alone |
-| `data/catalog/` is a visible child lane | **CONFIRMED** | Current public `main` proves the lane exists; deeper `dcat/`, `prov/`, and `stac/` sublane coverage still benefits from direct recheck before stronger claims |
-| Current public workflow lane is README-only | **CONFIRMED** | `.github/workflows/README.md` explicitly records `README.md`-only current-tree state on public `main` |
-| Root `contracts/` is a live repo lane | **CONFIRMED** | Current public docs now frame it as the contract-first boundary rather than a merely placeholder root surface |
+| Current public workflow lane is README-only | **CONFIRMED** | `.github/workflows/README.md` records README-first current-tree state on public `main` |
+| Root `contracts/` is a live repo lane | **CONFIRMED** | Current public docs frame it as a live contract lane |
 | Root `schemas/` exposes a live nested subtree | **CONFIRMED** | Useful routing signal, but not proof that canonical receipt-schema authority is resolved |
 | Current public control-surface ownership resolves to `@bartytime4life` | **CONFIRMED** | Public `CODEOWNERS` maps `/data/` and the global fallback to `@bartytime4life` |
 | Authoritative schema home for receipt-shaped contracts is settled | **UNKNOWN / NEEDS VERIFICATION** | Public docs still describe the contract story as split enough that canonical authority should not be flattened prematurely |
@@ -127,9 +147,11 @@ This README governs the **boundary** and **role** of receipt artifacts, not one 
 
 [Back to top](#top)
 
+---
+
 ## Accepted inputs
 
-The following are appropriate for `data/receipts/` when they are stored centrally rather than only version-adjacently:
+The following are appropriate for `data/receipts/` when stored centrally rather than only version-adjacently:
 
 | Accepted input | Why it belongs here | Typical linkage |
 |---|---|---|
@@ -137,16 +159,20 @@ The following are appropriate for `data/receipts/` when they are stored centrall
 | Validation reports | Preserve structural, spatial, temporal, or domain QC memory | validation ↔ run / subject |
 | Audit-facing process memory | Make replay, correction, and review reconstructable | audit refs ↔ decision / release review |
 | Watcher or probe receipts | Preserve operational fetch/probe memory without pretending they are release proofs | watcher ↔ run / artifact / drift check |
+| Connector-admission receipts | Preserve allow / abstain / deny / error process memory for source-entry decisions | connector candidate ↔ decision / subject / audit |
+| Promotion-process receipts | Preserve gate execution, attestation verification, and review-stage process memory | promotion candidate ↔ decision / proof / audit |
 | Redacted receipt mirrors | Keep repo-safe traceability when the full operational payload cannot be committed directly | mirror ↔ stronger internal source |
 | Lightweight lookup indexes | Help grouped replay/review without becoming a second source of truth | batch ↔ receipt set |
 
 ### Minimum bar for anything added here
 
-- It is clearly **receipt-shaped** rather than release-proof-shaped.
-- It is small enough to diff and inspect.
-- It links to a stronger object or decision when one exists.
-- It does not create a second, quieter authority path.
-- It can survive replay, correction, or release review without guesswork.
+- it is clearly **receipt-shaped** rather than release-proof-shaped
+- it is small enough to diff and inspect
+- it links to a stronger object or decision when one exists
+- it does not create a second, quieter authority path
+- it can survive replay, correction, or release review without guesswork
+
+---
 
 ## Exclusions
 
@@ -167,6 +193,8 @@ The following do **not** belong here as the authoritative home:
 > If a file here starts behaving like a release proof, a public runtime object, or a canonical schema, it is in the wrong place.
 
 [Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -205,6 +233,8 @@ data/receipts/
 ├── ingest/                 # fetch + landing receipts
 ├── runs/                   # transform / watcher / pipeline receipts
 ├── validation/             # validation reports and QC outputs
+├── connectors/             # connector-admission and probe/watch receipts
+├── promotions/             # promotion-process memory, not release proofs
 └── _lookup/                # small indexes for replay / grouped review
 ```
 
@@ -219,6 +249,8 @@ If a lane already keeps receipt packs beside:
 - a lane-local audited surface
 
 prefer **stable linking** over gratuitous duplication.
+
+---
 
 ## Quickstart
 
@@ -243,6 +275,9 @@ for p in \
   schemas/README.md \
   policy/README.md \
   tests/README.md \
+  tools/validators/README.md \
+  tools/validators/connector_gate/README.md \
+  tools/validators/promotion_gate/README.md \
   .github/workflows/README.md \
   .github/CODEOWNERS \
   .github/PULL_REQUEST_TEMPLATE.md
@@ -254,8 +289,8 @@ done
 
 # inspect receipt-shaped terms versus stronger proof/runtime objects
 grep -RIn \
-  "spec_hash\|run_receipt\|ai_receipt\|IngestReceipt\|ValidationReport\|DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|ReleaseProofPack\|ProjectionBuildReceipt\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|audit_ref\|attestation" \
-  data contracts schemas policy tests docs .github 2>/dev/null || true
+  "spec_hash\|run_receipt\|ai_receipt\|IngestReceipt\|ValidationReport\|DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|ReleaseProofPack\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|audit_ref\|attestation" \
+  data contracts schemas policy tests tools docs .github 2>/dev/null || true
 ```
 
 ### First local review pass
@@ -270,6 +305,8 @@ grep -RIn \
 > [!TIP]
 > Inspection-first is safer than inventing a validator or path convention in README prose.  
 > Let the checked-out branch prove the runner, schema, and gate wiring before this file names them as fact.
+
+---
 
 ## Usage
 
@@ -290,6 +327,7 @@ grep -RIn \
 4. Keep receipt artifacts easy to resolve during replay, correction, and release review.
 5. If a receipt pack is mirrored here from a version-adjacent lane, keep the relationship explicit.
 6. When sensitive operational detail is present, commit a redacted mirror here and keep the stronger source elsewhere under policy control.
+7. Emit receipts for both successful and blocked paths when the governing lane depends on finite outcomes.
 
 ### What `data/receipts/` is not
 
@@ -303,6 +341,8 @@ grep -RIn \
 - a quiet workaround for trust-membrane boundaries
 
 [Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -321,7 +361,9 @@ flowchart LR
     D -. audit context .-> G
 ```
 
-## Tables
+---
+
+## Reference tables
 
 ### Receipt boundary map
 
@@ -330,6 +372,8 @@ flowchart LR
 | `IngestReceipt` | RAW-adjacent or central audited receipt surface | **Sometimes** | Centralization is acceptable if replay remains easy |
 | `ValidationReport` | WORK / QUARANTINE or central audited receipt surface | **Yes** | Core process memory |
 | Run / watcher / pipeline receipt | Central or lane-adjacent receipt surface | **Yes** | Operational history should stay queryable |
+| Connector-admission receipt | Central or lane-adjacent receipt surface | **Yes** | Admission decisions need replayable process memory |
+| Promotion-process receipt | Central or promotion-adjacent receipt surface | **Sometimes** | Process memory belongs here; release proofs do not |
 | `DatasetVersion` | `processed/` | **No** | Canonical authority belongs elsewhere |
 | `CatalogClosure` | `catalog/` | **No** | Outward metadata closure is a distinct seam |
 | `ReleaseManifest` / `ReleaseProofPack` | `proofs/` or release bundle | **No** | Release-significant proof is not just process memory |
@@ -342,32 +386,50 @@ flowchart LR
 |---|---|
 | source or admission reference | reconstruct what the run or validation event touched |
 | subject reference | identify the dataset, feature family, or batch under review |
-| decision / review reference | explain why something was allowed, held, generalized, or denied |
+| decision or review reference | explain why something was allowed, held, generalized, denied, or abstained |
 | release reference | connect process memory forward to the publishable unit when one exists |
+| proof reference | connect process memory to release-significant trust objects without collapsing them |
 | audit reference | support review, incident reconstruction, or external explanation |
+
+### Finite outcome pressure
+
+Where adjacent lanes use finite outcomes, receipt artifacts should be able to preserve at least:
+
+| Outcome | Why it matters in receipts |
+|---|---|
+| `ALLOW` | records the successful governed handoff |
+| `ABSTAIN` | records insufficient support without losing process memory |
+| `DENY` | records blocked progression and explicit reasons |
+| `ERROR` | records validator or runtime failure without ambiguity |
+
+[Back to top](#top)
+
+---
 
 ## Task list
 
-- [ ] Replace remaining meta-block placeholders for `doc_id`, dates, and `policy_label`.
-- [ ] Recheck whether `data/receipts/` remains `README.md`-only on the target branch before merge.
-- [ ] Confirm whether receipts stay central, version-adjacent, or hybrid on the checked-out branch.
-- [ ] Confirm the authoritative schema home before adding any schema-like files here.
-- [ ] Add at least one real emitted receipt example once the branch exposes it.
-- [ ] Add one real linked validation-report example once visible.
-- [ ] Verify all relative links against the checked-out branch.
-- [ ] Name the first actual validator or workflow path only after it is directly surfaced and reviewable.
-- [ ] Confirm that receipt artifacts link cleanly into dataset, decision, release, and correction review paths.
+- [ ] replace remaining meta-block placeholders for `doc_id`, dates, and `policy_label`
+- [ ] recheck whether `data/receipts/` remains README-first on the target branch before merge
+- [ ] confirm whether receipts stay central, version-adjacent, or hybrid on the checked-out branch
+- [ ] confirm the authoritative schema home before adding any schema-like files here
+- [ ] add at least one real emitted receipt example once the branch exposes it
+- [ ] add one real linked validation-report example once visible
+- [ ] verify all relative links against the checked-out branch
+- [ ] name the first actual validator or workflow path only after it is directly surfaced and reviewable
+- [ ] confirm that receipt artifacts link cleanly into dataset, decision, proof, release, and correction review paths
 
 ### Definition of done
 
 This README is in a healthy state when:
 
-- it describes the **real current branch** more strongly than it describes hopeful future structure
-- it keeps **receipts**, **proofs**, **contracts**, and **runtime trust objects** visibly distinct
+- it describes the **real current branch** more strongly than hopeful future structure
+- it keeps **receipts**, **proofs**, **contracts**, **catalog**, and **runtime trust objects** visibly distinct
 - it no longer overstates the surrounding contract lane or schema-home story
 - it gives contributors a clear place to put receipt-shaped artifacts without creating a second authority path
 
 [Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -397,6 +459,12 @@ Only when policy explicitly allows it.
 
 When a receipt contains operational or sensitive detail that should not live in the repo unchanged, prefer a redacted mirror here plus a stronger linked source elsewhere.
 
+### Why does this README mention validator outcomes?
+
+Because connector-admission and promotion validators now depend more explicitly on replayable process memory. This lane does not own their decisions, but it should be able to preserve the process-memory side of those decisions clearly.
+
+---
+
 ## Appendix
 
 <details>
@@ -425,6 +493,7 @@ data/receipts/<lane-or-source>/<yyyy-mm-dd>/<validation-report-id>.json
     "source": "<source-or-admission-ref>",
     "subject": "<optional dataset-or-batch-ref>",
     "decision": "<optional decision-ref>",
+    "proof": "<optional proof-ref>",
     "release": "<optional release-ref>",
     "audit": "<optional audit-ref>"
   },
