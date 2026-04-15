@@ -1,21 +1,45 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: e2e
+title: tests/e2e
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: YYYY-MM-DD
+updated: 2026-04-14
 policy_label: NEEDS_VERIFICATION
-related: [tests/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/release_assembly/README.md, tests/e2e/correction/README.md, .github/CODEOWNERS, .github/workflows/README.md]
-tags: [kfm, tests, e2e, verification]
-notes: [doc_id, created, updated, and policy_label are placeholders pending git-history or governance-record verification]
+related: [
+  ../README.md,
+  ../contracts/README.md,
+  ../integration/README.md,
+  ../policy/README.md,
+  ../reproducibility/README.md,
+  ../accessibility/README.md,
+  ./runtime_proof/README.md,
+  ./release_assembly/README.md,
+  ./correction/README.md,
+  ../../README.md,
+  ../../contracts/README.md,
+  ../../policy/README.md,
+  ../../schemas/README.md,
+  ../../docs/README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/workflows/README.md,
+  ../../CONTRIBUTING.md
+]
+tags: [kfm, tests, e2e, verification, runtime, release, correction]
+notes: [
+  "doc_id, created, updated-at-merge, and policy_label remain placeholders pending git-history or governance-record verification.",
+  "Updated to align with the stronger top-level tests family map and the explicit three-leaf e2e structure.",
+  "Current public evidence proves the three documented leaf families and their README presence, but not executable suite depth or merge-blocking automation."
+]
 [/KFM_META_BLOCK_V2] -->
 
-# e2e
+<a id="top"></a>
 
-End-to-end proof surface for KFM runtime outcomes, release assembly, and correction lineage.
+# `tests/e2e/`
+
+End-to-end proof surface for **KFM runtime outcomes**, **release assembly**, and **correction lineage**.
 
 > [!NOTE]
 > The KFM meta block above keeps reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` until git history or governance records are reverified.
@@ -24,14 +48,22 @@ End-to-end proof surface for KFM runtime outcomes, release assembly, and correct
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/README.md`  
 > **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../docs/README.md`](../../docs/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md); upstream of the visible leaf families [`./runtime_proof/`](./runtime_proof/), [`./release_assembly/`](./release_assembly/), and [`./correction/`](./correction/)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-end--to--end%20proof-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-three%20documented%20leaf%20families-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![Family](https://img.shields.io/badge/family-end--to--end%20proof-0a7ea4) ![Branch](https://img.shields.io/badge/branch-main-0a7d5a) ![Current public inventory](https://img.shields.io/badge/current%20public%20inventory-three%20documented%20leaf%20families-lightgrey) ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 
 > [!IMPORTANT]
 > Current public `main` proves that `tests/e2e/` exists and currently exposes `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`, and that each visible leaf family currently publishes its own checked-in `README.md`.
 
 > [!WARNING]
-> This does **not** yet prove executable suite depth, a mounted runner/toolchain, merge-blocking automation, or exercised release/correction drills. Treat directory presence and README-only leaf inventories as family-boundary evidence, not already-earned operational proof.
+> This does **not** yet prove executable suite depth, a mounted runner/toolchain, merge-blocking automation, or exercised release/correction drills.
+> Treat directory presence and README-bearing leaf inventories as **family-boundary evidence**, not already-earned operational proof.
+
+> [!TIP]
+> Keep the KFM burden split visible here:
+>
+> **whole-path proof ≠ contract-only proof ≠ policy-only proof ≠ reproducibility-only proof**
+>
+> Use `tests/e2e/` only when the case is honestly whole-path and trust-bearing.
 
 ---
 
@@ -39,9 +71,15 @@ End-to-end proof surface for KFM runtime outcomes, release assembly, and correct
 
 `tests/e2e/` is where KFM should prove **whole-path trust-bearing behavior**.
 
-This directory is not the place for generic smoke tests, oversized demos, or coverage theater. It exists for the narrower and more consequential question: **does the governed system still hold together when a real runtime outcome, release-bearing assembly, or correction path is exercised end to end?**
+This directory is not the place for generic smoke tests, oversized demos, or coverage theater. It exists for the narrower and more consequential question:
 
-That burden is broader than `tests/integration/`, and stricter than “the UI loaded.” Good end-to-end cases are **thin but whole**: one accountable scenario, one visible result, and the proof objects needed to explain why that result is trustworthy.
+> **Does the governed system still hold together when a real runtime outcome, release-bearing assembly, or correction path is exercised end to end?**
+
+That burden is broader than `tests/integration/`, and stricter than “the UI loaded.” Good end-to-end cases are **thin but whole**:
+
+- one accountable scenario
+- one visible result
+- the proof objects needed to explain why that result is trustworthy
 
 ### Status markers used here
 
@@ -57,13 +95,17 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | `tests/e2e/` exists and the public directory listing currently shows `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`. |
-| **CONFIRMED — parent tests contract** | [`../README.md`](../README.md) defines `e2e/` as the end-to-end verification family and assigns the three visible leaf burdens. |
-| **CONFIRMED — ownership** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) assigns `/tests/` to `@bartytime4life`. |
-| **CONFIRMED — leaf directory state** | Public `main` now exposes checked-in `README.md` files under `./correction/`, `./release_assembly/`, and `./runtime_proof/`; the three visible leaf directories are still `README.md`-only in the public tree. |
-| **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone. |
-| **CONFIRMED — historical workflow signal** | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) now records deleted workflow-lane names visible through public Actions history, but it explicitly treats them as reconstruction clues rather than current checked-in inventory. |
-| **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, required checks, screenshot baseline inventory, proof-pack emitters, and whether runtime/release/correction drills are exercised on the checked-out branch. |
+| **CONFIRMED — current public repo** | `tests/e2e/` exists and the public directory listing currently shows `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md` |
+| **CONFIRMED — parent tests contract** | [`../README.md`](../README.md) defines `e2e/` as the end-to-end verification family and assigns the three visible leaf burdens |
+| **CONFIRMED — ownership** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) assigns `/tests/` to `@bartytime4life` |
+| **CONFIRMED — leaf directory state** | Public `main` now exposes checked-in `README.md` files under `./correction/`, `./release_assembly/`, and `./runtime_proof/`; the three visible leaf directories are still `README.md`-only in the public tree |
+| **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone |
+| **CONFIRMED — historical workflow signal** | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) records deleted workflow-lane names visible through public Actions history, but explicitly treats them as reconstruction clues rather than current checked-in inventory |
+| **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, required checks, screenshot baseline inventory, proof-pack emitters, and whether runtime/release/correction drills are exercised on the checked-out branch |
+
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -85,6 +127,9 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 | Runbooks and doctrine-adjacent docs | [`../../docs/README.md`](../../docs/README.md) | release, rollback, correction, and operator guidance should stay synchronized | **CONFIRMED** |
 | Smaller governed boundary slices | [`../integration/README.md`](../integration/README.md) | use integration when the proof is real-boundary but not full end to end | **CONFIRMED** |
 | Deterministic rerun proof | [`../reproducibility/README.md`](../reproducibility/README.md) | keep replay stability separate from broader whole-path proof | **CONFIRMED** |
+| Contract drift family | [`../contracts/README.md`](../contracts/README.md) | structure-only checks should stay there | **CONFIRMED** |
+| Policy grammar family | [`../policy/README.md`](../policy/README.md) | policy-only burden should stay there | **CONFIRMED** |
+| Accessibility family | [`../accessibility/README.md`](../accessibility/README.md) | accessibility-only burden should stay there | **CONFIRMED** |
 
 ### Confirmed local leaf families
 
@@ -95,7 +140,11 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 | [`./correction/`](./correction/) | correction, supersession, replacement, and stale-visible proof | visible + `README.md` only on public `main` |
 
 > [!NOTE]
-> Public `main` now proves all three leaf directories and their `README.md` files, but it still does **not** prove equal executable maturity across those leaves.
+> Public `main` proves all three leaf directories and their `README.md` files, but it still does **not** prove equal executable maturity across those leaves.
+
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -110,6 +159,10 @@ Accepted inputs for this directory are the **smallest artifacts needed to prove 
 | Correction drills | supersession, withdrawal, replacement, and stale-visible behavior | **CONFIRMED** as burden / mounted inventory **NEEDS VERIFICATION** |
 | Surface-state evidence | screenshots, snapshots, or equivalent outward cues when a trust state must remain visible | **PROPOSED / NEEDS VERIFICATION** |
 | Comparison and audit output | reports that explain pass, fail-closed behavior, or lineage changes | **INFERRED / PROPOSED** |
+
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -126,21 +179,30 @@ What does **not** belong here, and where it should go instead:
 | Runbooks, release notes, or operator prose | documentation is not executable proof | [`../../docs/README.md`](../../docs/README.md) |
 | Canonical schemas, policy bundles, or heavyweight release artifacts | this directory proves behavior; it should not replace authority or artifact storage | owning contract/policy/release surfaces |
 
+[Back to top](#top)
+
+---
+
 ## Current verified snapshot
 
 The current public `main` branch proves the following:
 
-- `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
-- `tests/e2e/README.md` is **not** a one-line scaffold on public `main`; it is already a multi-section directory guide.
-- [`./correction/`](./correction/), [`./release_assembly/`](./release_assembly/), and [`./runtime_proof/`](./runtime_proof/) each currently expose `README.md` only in the public tree.
-- Those leaf READMEs are not identical in emphasis: `runtime_proof/` is request-time outcome focused, `release_assembly/` is promotion and publish-path focused, and `correction/` is correction-lineage focused. What remains unproven is executable depth, not leaf meaning.
-- The parent [`../README.md`](../README.md) already assigns those three visible leaf families clear meanings.
-- Public `.github/workflows/` currently exposes `README.md` only; no checked-in workflow YAML files are visible there from the public tree.
-- Public `.github/workflows/README.md` now explicitly separates current `README.md`-only tree state from historically visible deleted workflow lanes in the Actions UI; treat those lane names as reconstruction clues, not current inventory.
-- `/tests/` ownership currently resolves to `@bartytime4life`.
+- `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`
+- `tests/e2e/README.md` is **not** a one-line scaffold on public `main`; it is already a multi-section directory guide
+- [`./correction/`](./correction/), [`./release_assembly/`](./release_assembly/), and [`./runtime_proof/`](./runtime_proof/) each currently expose `README.md` only in the public tree
+- those leaf READMEs are not identical in emphasis: `runtime_proof/` is request-time outcome focused, `release_assembly/` is promotion and publish-path focused, and `correction/` is correction-lineage focused
+- the parent [`../README.md`](../README.md) already assigns those three visible leaf families clear meanings
+- public `.github/workflows/` currently exposes `README.md` only; no checked-in workflow YAML files are visible there from the public tree
+- public `.github/workflows/README.md` explicitly separates current `README.md`-only tree state from historically visible deleted workflow lanes in the Actions UI; treat those lane names as reconstruction clues, not current inventory
+- `/tests/` ownership currently resolves to `@bartytime4life`
 
 > [!CAUTION]
-> What is still **not** proven here: the actual runner, suite depth, required checks, screenshot baseline inventory, proof-pack emitters, correction drill history, or whether any of these end-to-end families are exercised automatically.
+> What is still **not** proven here:
+> the actual runner, suite depth, required checks, screenshot baseline inventory, proof-pack emitters, correction drill history, or whether any of these end-to-end families are exercised automatically.
+
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -164,6 +226,31 @@ Keep `tests/e2e/` **leaf-led**.
 
 When real executable cases arrive, prefer adding them inside the existing visible families before inventing a second taxonomy at the same level.
 
+### `PROPOSED` maturity direction
+
+```text
+tests/e2e/
+├── correction/
+│   ├── README.md
+│   ├── cases/
+│   └── fixtures/
+├── release_assembly/
+│   ├── README.md
+│   ├── cases/
+│   └── fixtures/
+├── runtime_proof/
+│   ├── README.md
+│   ├── cases/
+│   └── fixtures/
+└── README.md
+```
+
+Use that as a **growth direction**, not as a claim about the current branch.
+
+[Back to top](#top)
+
+---
+
 ## Quickstart
 
 ### Safe inspection commands
@@ -177,7 +264,9 @@ find tests/e2e -maxdepth 4 -type f 2>/dev/null | sort
 
 # re-read the family map before moving or adding tests
 sed -n '1,260p' tests/README.md 2>/dev/null || true
+sed -n '1,220p' tests/contracts/README.md 2>/dev/null || true
 sed -n '1,220p' tests/integration/README.md 2>/dev/null || true
+sed -n '1,220p' tests/policy/README.md 2>/dev/null || true
 sed -n '1,220p' tests/reproducibility/README.md 2>/dev/null || true
 sed -n '1,220p' tests/unit/README.md 2>/dev/null || true
 
@@ -218,6 +307,10 @@ grep -RIn \
 
 > [!TIP]
 > Inspection-first is safer than guessing a toolchain. Do not document `npm test`, `pytest`, `cargo test`, browser harness commands, or GitHub required checks here until the checked-out branch proves them.
+
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -272,6 +365,10 @@ A case does **not** become better just because it sits under `e2e/`.
 
 If the smallest honest proof is a local helper, a contract example, a policy fixture, or a real-boundary slice that stops short of full runtime/release/correction proof, move it outward to the family that owns that burden.
 
+[Back to top](#top)
+
+---
+
 ## Diagram
 
 ```mermaid
@@ -296,7 +393,11 @@ flowchart LR
   E -. rerun stability only .-> REP["tests/reproducibility/"]
 ```
 
-## Tables
+[Back to top](#top)
+
+---
+
+## Reference tables
 
 ### Visible leaf burden matrix
 
@@ -327,7 +428,9 @@ flowchart LR
 | correction stale-visible supersession case | proves lineage remains visible after change | **PROPOSED** |
 | one public-safe thin slice spanning all three leaves | establishes a narrow but durable first anchor | **PROPOSED / NEEDS VERIFICATION** |
 
-[Back to top](#e2e)
+[Back to top](#top)
+
+---
 
 ## Task list / definition of done
 
@@ -343,6 +446,10 @@ flowchart LR
 - [ ] No claim of merge-blocking automation, required checks, or mature suite depth is made without direct evidence.
 - [ ] Adjacent docs are updated when case placement or family boundaries change.
 - [ ] This file’s current snapshot is updated whenever a leaf directory stops being `README.md`-only, a leaf README materially changes emphasis, or workflow-history reconstruction rules materially change in [`../../.github/workflows/README.md`](../../.github/workflows/README.md).
+
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -386,10 +493,14 @@ This directory should prove how the governed system behaves **using** those auth
 
 One narrow, public-safe scenario per visible leaf family is safer than a sprawling “platform proof.” If the repo adopts a single thin slice as its first serious lane, keep that slice small enough that runtime, release, and correction evidence all stay reviewable.
 
+[Back to top](#top)
+
+---
+
 ## Appendix
 
 <details>
-<summary>Appendix — maintainer notes and term reminders</summary>
+<summary><strong>Maintainer notes and term reminders</strong></summary>
 
 ### Terms to keep stable
 
@@ -411,4 +522,4 @@ If a future refactor renames or expands the visible e2e leaf families — or if 
 
 </details>
 
-[Back to top](#e2e)
+[Back to top](#top)
