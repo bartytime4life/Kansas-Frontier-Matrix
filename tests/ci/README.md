@@ -1,58 +1,77 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
-title: ci
+title: tests/ci
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION_OWNER
+owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-04-13
+updated: 2026-04-14
 policy_label: public
-related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tools/ci/README.md, ../../tools/diff/README.md, ../../tools/attest/README.md, ../../tools/validators/promotion_gate/README.md, ./test_render_diff_summary.py, ./test_render_bundle_diff_policy_summary.py, ./test_render_promotion_review_handoff.py, ../validators/test_promotion_gate_e2e.py]
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../.github/README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/workflows/README.md,
+  ../../.github/actions/README.md,
+  ../../scripts/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../tools/ci/README.md,
+  ../../tools/diff/README.md,
+  ../../tools/attest/README.md,
+  ../../tools/validators/promotion_gate/README.md,
+  ./test_render_diff_summary.py,
+  ./test_render_bundle_diff_policy_summary.py,
+  ./test_render_promotion_review_handoff.py,
+  ../validators/test_promotion_gate_e2e.py
+]
 tags: [kfm, tests, ci, fixtures, renderer-tests, promotion, diff, policy-summary, review-handoff]
-notes: [Updated to reflect the expanded CI renderer proof thin slice, including test_render_bundle_diff_policy_summary.py, test_render_promotion_review_handoff.py, and adjacent renderer helpers. Exact owner record, commit dates, and any additional mounted test inventory remain NEEDS VERIFICATION.]
+notes: [
+  "Updated to reflect the expanded CI renderer-proof thin slice, including test_render_bundle_diff_policy_summary.py and test_render_promotion_review_handoff.py.",
+  "Owners are now grounded by current /tests/ CODEOWNERS coverage rather than a lane-specific rule.",
+  "Exact commit dates, broader lane inventory, and any additional mounted test files still remain NEEDS VERIFICATION."
+]
 [/KFM_META_BLOCK_V2] -->
 
-# ci
+<a id="top"></a>
 
-Deterministic, public-safe proof surfaces for KFM CI-facing summary, renderer, and annotation helpers.
+# `tests/ci/`
 
+Deterministic, public-safe proof surface for **KFM CI-facing summary, renderer, and annotation helpers**.
+
+> [!NOTE]
 > **Status:** experimental  
-> **Owners:** `NEEDS VERIFICATION` *(no lane-specific `/tests/ci/` owner rule was directly surfaced in this session; resolve against current `CODEOWNERS` before merge)*  
+> **Owners:** `@bartytime4life`  
 > **Path:** `tests/ci/README.md`  
-> **Repo fit:** child lane of [`../README.md`](../README.md) · primary helper lane under [`../../tools/ci/README.md`](../../tools/ci/README.md) · adjacent helper lanes in [`../../tools/diff/README.md`](../../tools/diff/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), and [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) · orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md) and [`../../.github/actions/README.md`](../../.github/actions/README.md) · canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../policy/README.md`](../../policy/README.md)  
-> **Accepted inputs:** helper-facing fixtures, stable diff JSON, bundle diff-policy JSON, promotion decision and bundle artifacts, composed promotion review inputs, expected Markdown summaries, and small public-safe failure cases  
-> **Exclusions:** workflow YAML, policy truth, contract ownership, release mutation, secret-bearing fixtures, and broad end-to-end promotion choreography  
-> **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice CI test surface · broader lane inventory, runner wiring, and platform-only settings remain bounded  
-> **Current lane snapshot:** documented thin-slice proof is now centered on [`./test_render_diff_summary.py`](./test_render_diff_summary.py), [`./test_render_bundle_diff_policy_summary.py`](./test_render_bundle_diff_policy_summary.py), and [`./test_render_promotion_review_handoff.py`](./test_render_promotion_review_handoff.py); these files form the current confirmed renderer-proof center for this lane  
-> **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-NEEDS%20VERIFICATION-lightgrey)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tests%2Fci-6f42c1)](../README.md) [![role](https://img.shields.io/badge/role-helper%20proof%20surface-0a7d5a)](../../tools/ci/README.md) [![posture](https://img.shields.io/badge/posture-fixtures--first-1f6feb)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-documented%20thin--slice-lightgrey)](./README.md)  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![Lane](https://img.shields.io/badge/lane-tests%2Fci-6f42c1) ![Role](https://img.shields.io/badge/role-helper%20proof%20surface-0a7d5a) ![Posture](https://img.shields.io/badge/posture-fixtures--first-1f6feb) ![Current lane](https://img.shields.io/badge/current%20lane-documented%20thin--slice-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Coverage matrix](#coverage-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `tests/ci/` proves helper behavior for CI-facing renderers and summaries. It does **not** own workflow orchestration, promotion decisions, policy semantics, release state, or canonical schema law.
+> `tests/ci/` proves helper behavior for CI-facing renderers and summaries.
+>
+> It does **not** own workflow orchestration, promotion decisions, policy semantics, release state, or canonical schema law.
 
 > [!TIP]
-> **Current documented thin slice**
+> Keep the KFM trust split visible here:
 >
-> This lane should stay tightly aligned to the helpers under [`../../tools/ci/README.md`](../../tools/ci/README.md). The currently confirmed proof center is:
+> **fixtures + assertions ≠ helper implementation ≠ workflow orchestration**
 >
-> - subject under test: [`../../tools/ci/render_diff_summary.py`](../../tools/ci/render_diff_summary.py)
-> - current thin-slice proof surface: [`./test_render_diff_summary.py`](./test_render_diff_summary.py)
-> - subject under test: [`../../tools/ci/render_bundle_diff_policy_summary.py`](../../tools/ci/render_bundle_diff_policy_summary.py)
-> - current thin-slice proof surface: [`./test_render_bundle_diff_policy_summary.py`](./test_render_bundle_diff_policy_summary.py)
-> - subject under test: [`../../tools/ci/render_promotion_review_handoff.py`](../../tools/ci/render_promotion_review_handoff.py)
-> - current thin-slice proof surface: [`./test_render_promotion_review_handoff.py`](./test_render_promotion_review_handoff.py)
->
-> Promotion-oriented summary helpers remain real adjacent subjects, but the currently confirmed `tests/ci/` thin slice is the renderer-proof trio for diff summaries, bundle diff-policy summaries, and composed promotion review handoff rendering.
+> - `tools/ci/` owns reusable helper behavior  
+> - `tests/ci/` proves deterministic helper behavior  
+> - `.github/workflows/` decides when those proofs run
 
 > [!WARNING]
-> Fixtures here should be tiny, deterministic, and safe to print in logs. Never commit tokens, unpublished evidence, internal-only trust objects, or sensitive location-bearing payloads as convenience test data.
+> Fixtures here should be tiny, deterministic, and safe to print in logs.
+> Never commit tokens, unpublished evidence, internal-only trust objects, or sensitive location-bearing payloads as convenience test data.
 
 ---
 
 ## Scope
 
-`tests/ci/` is the KFM test lane for proving that small CI-facing helpers behave deterministically over already-governed artifacts.
+`tests/ci/` is the KFM test lane for proving that small **CI-facing helpers** behave deterministically over already-governed artifacts.
 
 This lane is the right home for:
 
@@ -76,8 +95,8 @@ This lane is **not** the home for:
 
 This README serves two purposes at once:
 
-1. a **normative lane contract** for CI-helper proof surfaces; and  
-2. an **implementation-facing directory README** for the current thin slice under `tests/ci/`.
+1. a **normative lane contract** for CI-helper proof surfaces
+2. an **implementation-facing directory README** for the current thin slice under `tests/ci/`
 
 ### Truth labels used in this README
 
@@ -89,7 +108,7 @@ This README serves two purposes at once:
 | **UNKNOWN** | Not surfaced strongly enough to describe as current repo fact |
 | **NEEDS VERIFICATION** | Placeholder detail that should be rechecked against the working branch before merge |
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -100,25 +119,25 @@ This README serves two purposes at once:
 
 | Direction | Surface | Why it matters |
 | --- | --- | --- |
-| Parent | [`../README.md`](../README.md) | `tests/` is the shared proof surface for fixtures, assertions, and regression evidence. |
-| Root posture | [`../../README.md`](../../README.md) | Keeps this lane subordinate to the repo’s evidence-first and trust-visible posture. |
-| Governance | [`../../.github/README.md`](../../.github/README.md) | The gatehouse is the caller boundary, not the place where assertion logic should disappear. |
-| Ownership surface | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Resolve final ownership before merge if this lane gains new files. |
-| Primary subject lane | [`../../tools/ci/README.md`](../../tools/ci/README.md) | Defines what the helpers do; `tests/ci/` proves how they behave. |
-| Adjacent subject lane | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Diff computation stays there; CI render tests here should consume declared diff outputs rather than recompute comparison law. |
-| Adjacent subject lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may later be rendered in CI, but signing and verification logic remain elsewhere. |
-| Adjacent validator lane | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Promotion-gate and diff-policy end-to-end validation live there; `tests/ci/` should stay helper-focused. |
-| Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflows orchestrate; they should call stable helpers and tests rather than embed large shell assertions. |
-| Step-wrapper seam | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Repo-local actions may call these helpers, but assertion logic should still remain visible in shared tests. |
-| Thin orchestration | [`../../scripts/README.md`](../../scripts/README.md) | Local wrappers may run these tests, but reusable proof should not be buried in scripts. |
-| Canonical law | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md) | Tests may validate helper output against those surfaces, but must not quietly replace them. |
-| Neighboring test lane | [`../validators/test_promotion_gate_e2e.py`](../validators/test_promotion_gate_e2e.py) | Helps keep renderer tests separate from governed promotion-gate and bundle diff-policy behavior. |
+| Parent | [`../README.md`](../README.md) | `tests/` is the shared proof surface for fixtures, assertions, and regression evidence |
+| Root posture | [`../../README.md`](../../README.md) | Keeps this lane subordinate to the repo’s evidence-first and trust-visible posture |
+| Governance | [`../../.github/README.md`](../../.github/README.md) | The gatehouse is the caller boundary, not the place where assertion logic should disappear |
+| Ownership surface | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current `/tests/` ownership resolves here |
+| Primary subject lane | [`../../tools/ci/README.md`](../../tools/ci/README.md) | Defines what the helpers do; `tests/ci/` proves how they behave |
+| Adjacent subject lane | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Diff computation stays there; render tests here should consume declared diff outputs rather than recompute comparison law |
+| Adjacent subject lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may later be rendered in CI, but signing and verification logic remain elsewhere |
+| Adjacent validator lane | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Promotion-gate and diff-policy validation live there; `tests/ci/` should stay helper-focused |
+| Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflows orchestrate; they should call stable helpers and tests rather than embed large shell assertions |
+| Step-wrapper seam | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Repo-local actions may call these helpers, but assertion logic should still remain visible in shared tests |
+| Thin orchestration | [`../../scripts/README.md`](../../scripts/README.md) | Local wrappers may run these tests, but reusable proof should not be buried in scripts |
+| Canonical law | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md) | Tests may validate helper output against those surfaces, but must not quietly replace them |
+| Neighboring test lane | [`../validators/test_promotion_gate_e2e.py`](../validators/test_promotion_gate_e2e.py) | Helps keep renderer tests separate from governed promotion-gate and bundle diff-policy behavior |
 
 ### Working interpretation
 
-Use `tests/ci/` when the main job is **prove helper behavior over declared artifacts**. Move out of this lane when the main job becomes **decide policy**, **validate full promotion candidates**, **own canonical schemas**, or **exercise broad runtime proof choreography**.
+Use `tests/ci/` when the main job is **prove helper behavior over declared artifacts**. Move out of this lane when the main job becomes **decide policy**, **validate full promotion candidates**, **own canonical schemas**, or **exercise broad runtime-proof choreography**.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -128,13 +147,13 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 
 | Input class | Examples | Why it belongs here |
 | --- | --- | --- |
-| Structured helper inputs | stable diff JSON, `decision.json`, `promotion-bundle.json`, normalized check result JSON, bundle diff-policy JSON | CI render helpers should be tested against declared, reviewable artifacts rather than scraped log blobs. |
-| Composed handoff inputs | promotion bundle + diff report + diff-policy report | Needed when one helper composes several already-governed artifacts into one review document. |
-| Expected human-facing outputs | Markdown summaries, compact text blocks, reviewer-facing fragments | These are the main visible outputs of `tools/ci/` helpers. |
-| Expected machine-facing outputs | compact JSON digests, normalized intermediate files, exit statuses | Some helpers may emit structured outputs that workflows or scripts consume. |
-| Failure-path fixtures | malformed JSON, missing required fields, empty bundles, unsupported states | Negative paths are first-class in KFM and should be proved here. |
-| Minimal invocation context | output paths, mode flags, deterministic input file locations | Keeps helper behavior testable without hiding assumptions in workflow YAML. |
-| Golden fragments | small reviewed excerpts of expected Markdown or JSON | Useful when output shape matters more than every byte. |
+| Structured helper inputs | stable diff JSON, `decision.json`, `promotion-bundle.json`, normalized check result JSON, bundle diff-policy JSON | CI render helpers should be tested against declared, reviewable artifacts rather than scraped log blobs |
+| Composed handoff inputs | promotion bundle + diff report + diff-policy report | Needed when one helper composes several already-governed artifacts into one review document |
+| Expected human-facing outputs | Markdown summaries, compact text blocks, reviewer-facing fragments | These are the main visible outputs of `tools/ci/` helpers |
+| Expected machine-facing outputs | compact JSON digests, normalized intermediate files, exit statuses | Some helpers may emit structured outputs that workflows or scripts consume |
+| Failure-path fixtures | malformed JSON, missing required fields, empty bundles, unsupported states | Negative paths are first-class in KFM and should be proved here |
+| Minimal invocation context | output paths, mode flags, deterministic input file locations | Keeps helper behavior testable without hiding assumptions in workflow YAML |
+| Golden fragments | small reviewed excerpts of expected Markdown or JSON | Useful when output shape matters more than every byte |
 
 ### Input rules
 
@@ -145,24 +164,26 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 5. Make negative-path fixtures as legible as the passing ones.
 6. When a helper consumes governed artifacts, preserve the upstream artifact shape instead of re-inventing it in test code.
 
+[Back to top](#top)
+
 ---
 
 ## Exclusions
 
 | Does **not** belong here | Put it here instead | Why |
 | --- | --- | --- |
-| Helper implementation code | [`../../tools/ci/README.md`](../../tools/ci/README.md) and the helper path itself | `tests/ci/` proves behavior; it does not become the helper lane. |
-| Workflow sequencing or permission logic | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Orchestration belongs at the workflow boundary. |
-| Repo-local composite action metadata | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Step-wrapper seams stay in the gatehouse, not in shared tests. |
-| Canonical policy decisions | [`../../policy/README.md`](../../policy/README.md) | Tests may assert rendered policy output, but policy remains the source of truth. |
-| Release or promotion decision logic | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) and `../validators/` | Promotion validation is a different lane from CI summary rendering. |
-| Broad end-to-end runtime proof packs | `../e2e/` or `../validators/` | Keep this lane focused on helper proofs, not full workflow choreography. |
-| Secret-bearing, unpublished, or rights-unclear fixtures | secured data lanes or safer synthetic fixtures | Public test surfaces must remain safe to clone and review. |
-| Ad hoc scratch files used only once | governed fixture surfaces under `tests/` | Fixtures should stay legible, reusable, and reviewable. |
-| Auto-fix or mutation shortcuts | nowhere | KFM review and promotion stay governed and inspectable. |
-| Treating the composed handoff Markdown as the authoritative trust object | nowhere | The underlying bundle, diff, and diff-policy machine artifacts remain the authoritative records. |
+| Helper implementation code | [`../../tools/ci/README.md`](../../tools/ci/README.md) and the helper path itself | `tests/ci/` proves behavior; it does not become the helper lane |
+| Workflow sequencing or permission logic | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Orchestration belongs at the workflow boundary |
+| Repo-local composite action metadata | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Step-wrapper seams stay in the gatehouse, not in shared tests |
+| Canonical policy decisions | [`../../policy/README.md`](../../policy/README.md) | Tests may assert rendered policy output, but policy remains the source of truth |
+| Release or promotion decision logic | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) and `../validators/` | Promotion validation is a different lane from CI summary rendering |
+| Broad end-to-end runtime proof packs | `../e2e/` or `../validators/` | Keep this lane focused on helper proofs, not full workflow choreography |
+| Secret-bearing, unpublished, or rights-unclear fixtures | secured data lanes or safer synthetic fixtures | Public test surfaces must remain safe to clone and review |
+| Ad hoc scratch files used only once | governed fixture surfaces under `tests/` | Fixtures should stay legible, reusable, and reviewable |
+| Auto-fix or mutation shortcuts | nowhere | KFM review and promotion stay governed and inspectable |
+| Treating the composed handoff Markdown as the authoritative trust object | nowhere | The underlying bundle, diff, and diff-policy machine artifacts remain the authoritative records |
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -170,19 +191,19 @@ Use `tests/ci/` when the main job is **prove helper behavior over declared artif
 
 | Evidence item | Status | How this README uses it |
 | --- | --- | --- |
-| The broader repo documentation repeatedly treats `tests/` as a shared proof surface for fixtures, assertions, and regression evidence | **CONFIRMED** | Grounds why helper tests belong here instead of being buried in workflows or scratch scripts. |
-| `tools/ci/` is defined as a reusable helper boundary for rendering governed artifacts, not for owning policy or publication law | **CONFIRMED** | Tests in this lane should prove renderer behavior, not re-decide governance. |
-| The documented `tools/ci/` thin slice includes `render_promotion_summary.py`, `render_promotion_bundle_summary.py`, `render_diff_summary.py`, `render_bundle_diff_policy_summary.py`, and `render_promotion_review_handoff.py` | **CONFIRMED** | Identifies the helper family this lane should serve. |
-| `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | Grounds the current lane around one concrete file instead of a generic scaffold. |
-| `tests/ci/test_render_bundle_diff_policy_summary.py` is part of the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | Grounds the lane around a second concrete renderer proof file. |
-| `tests/ci/test_render_promotion_review_handoff.py` is part of the current thin-slice proof surface for composed review-handoff rendering | **CONFIRMED via current lane contract update** | Grounds the lane around a third concrete renderer proof file. |
-| Promotion-gate end-to-end coverage is documented under `tests/validators/test_promotion_gate_e2e.py` rather than `tests/ci/` | **CONFIRMED via adjacent documentation** | Keeps this lane helper-focused and prevents scope creep. |
-| Exact additional `tests/ci/` files, fixture inventory, local runner wiring, and any platform-specific annotation tests | **UNKNOWN / NEEDS VERIFICATION** | Remains visibly bounded until the working branch is rechecked directly. |
+| The broader repo documentation repeatedly treats `tests/` as a shared proof surface for fixtures, assertions, and regression evidence | **CONFIRMED** | Grounds why helper tests belong here instead of being buried in workflows or scratch scripts |
+| `tools/ci/` is defined as a reusable helper boundary for rendering governed artifacts, not for owning policy or publication law | **CONFIRMED** | Tests in this lane should prove renderer behavior, not re-decide governance |
+| The documented `tools/ci/` thin slice includes `render_promotion_summary.py`, `render_promotion_bundle_summary.py`, `render_diff_summary.py`, `render_bundle_diff_policy_summary.py`, and `render_promotion_review_handoff.py` | **CONFIRMED** | Identifies the helper family this lane should serve |
+| `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | Grounds the lane around one concrete file instead of a generic scaffold |
+| `tests/ci/test_render_bundle_diff_policy_summary.py` is part of the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | Grounds the lane around a second concrete renderer proof file |
+| `tests/ci/test_render_promotion_review_handoff.py` is part of the current thin-slice proof surface for composed review-handoff rendering | **CONFIRMED** | Grounds the lane around a third concrete renderer proof file |
+| Promotion-gate end-to-end coverage is documented under `tests/validators/test_promotion_gate_e2e.py` rather than `tests/ci/` | **CONFIRMED via adjacent documentation** | Keeps this lane helper-focused and prevents scope creep |
+| Exact additional `tests/ci/` files, fixture inventory, local runner wiring, and platform-specific annotation tests | **UNKNOWN / NEEDS VERIFICATION** | Remains visibly bounded until the working branch is rechecked directly |
 
 > [!NOTE]
 > The key discipline here is proportionality: document the thin slice that is actually evidenced, then show the governed growth shape without pretending it is already mounted.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -245,7 +266,7 @@ Keep the directory small. Add only the fixtures needed to prove a helper contrac
 
 </details>
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -277,9 +298,9 @@ pytest -q tests/ci/test_render_promotion_review_handoff.py
 ```
 
 > [!NOTE]
-> The current thin slice now includes explicit proof for diff-summary rendering, bundle-diff-policy-summary rendering, and composed promotion-review handoff rendering.
+> The current thin slice includes explicit proof for diff-summary rendering, bundle-diff-policy-summary rendering, and composed promotion-review handoff rendering.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -351,7 +372,7 @@ A renderer test may consume `decision.json`, `promotion-bundle.json`, diff JSON,
 
 That separation is the whole point of this lane.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -368,7 +389,7 @@ flowchart LR
     T -. proves behavior, not law .-> N["policy / release / publication authority stays elsewhere"]
 ```
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -387,7 +408,7 @@ flowchart LR
 > [!TIP]
 > Keep the coverage matrix synchronized with the mounted implementation. Do not silently promote a row from `PROPOSED` to active without directly rechecking the branch.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -417,7 +438,7 @@ Use this checklist when adding or revising a `tests/ci/` proof surface.
 - [x] current renderer-proof trio is explicitly named and documented
 - [ ] exact mounted test inventory beyond the thin slice rechecked before widening lane claims
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -459,7 +480,7 @@ Yes. That is exactly the intended pattern: feed the renderer a declared diff-pol
 
 Yes. That is also the intended pattern: feed the renderer declared bundle, diff, and diff-policy artifacts and prove the Markdown output, while keeping the underlying machine artifacts authoritative.
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ---
 
@@ -552,4 +573,4 @@ When this lane grows, prefer this sequence:
 
 </details>
 
-[Back to top](#ci)
+[Back to top](#top)
