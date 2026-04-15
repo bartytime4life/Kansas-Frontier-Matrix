@@ -6,11 +6,40 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: 2026-04-13
+updated: 2026-04-14
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../actions/README.md, ../watchers/README.md, ../dependabot.yml, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tests/ci/README.md, ../../tests/validators/README.md, ../../tools/ci/README.md, ../../tools/validators/promotion_gate/README.md, ../../apps/, ../../packages/]
-tags: [kfm, github, workflows, ci-cd, docops, review-handoff]
-notes: [Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`; `.github/workflows/` is README-only on current public `main`; the public Actions page and adjacent `.github/actions/` tree provide reconstruction clues but do not prove current checked-in YAML inventory; updated to reflect diff-summary, diff-policy-summary, and promotion-review-handoff publish steps in illustrative workflow examples; doc_id, created date, updated date provenance, and policy_label still need repo confirmation.]
+related: [
+  ../README.md,
+  ../CODEOWNERS,
+  ../PULL_REQUEST_TEMPLATE.md,
+  ../actions/README.md,
+  ../watchers/README.md,
+  ../dependabot.yml,
+  ../SECURITY.md,
+  ../../README.md,
+  ../../CONTRIBUTING.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../tests/README.md,
+  ../../tests/ci/README.md,
+  ../../tests/validators/README.md,
+  ../../tests/e2e/release_assembly/README.md,
+  ../../tools/ci/README.md,
+  ../../tools/validators/promotion_gate/README.md,
+  ../../tools/validators/release_assembly_report.py,
+  ../../tools/ci/render_release_assembly_summary.py,
+  ../../apps/,
+  ../../packages/
+]
+tags: [kfm, github, workflows, ci-cd, docops, review-handoff, release-assembly]
+notes: [
+  "Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`.",
+  "`.github/workflows/` is README-only on current public `main`.",
+  "Public Actions history and adjacent `.github/actions/` tree provide reconstruction clues but do not prove current checked-in YAML inventory.",
+  "Updated to reflect diff-summary, diff-policy-summary, promotion-review-handoff, and release-assembly-summary publish steps in illustrative workflow examples.",
+  "doc_id, created date, updated date provenance, and policy_label still need repo confirmation."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -45,13 +74,12 @@ Governed GitHub Actions surface for validation, promotion, release evidence, and
 
 In KFM, workflow files are not a detached DevOps appendix. They are part of the trust membrane: the place where documentation checks, contract checks, policy checks, release-evidence checks, and post-deploy verification become executable rather than aspirational.
 
-This directory exists to answer one narrow but consequential question:
+This directory exists to answer two narrow but consequential questions:
 
-**What automation is allowed to change trust state, and what must be proven before that happens?**
+1. **What automation is allowed to change trust state, and what must be proven before that happens?**
+2. **Which reviewer-facing artifacts are published into workflow summaries so stewards can inspect release-significant drift without leaving the governed review path?**
 
-That now includes a second, closely related question:
-
-**Which reviewer-facing artifacts are published into workflow summaries so stewards can inspect release-significant drift without leaving the governed review path?**
+That second question now explicitly includes **release-assembly reporting** alongside promotion bundle, diff, diff-policy, and review-handoff publication.
 
 ### Status markers used in this README
 
@@ -85,8 +113,9 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | Root operating index | [`../../README.md`](../../README.md) | Defines monorepo posture, evidence model, and top-level directory contract |
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
 | Canonical verification surfaces | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Workflows may verify these surfaces, but they do not replace them |
-| CI renderer and helper-proof surfaces | [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Reviewer-facing diff, diff-policy, and composed review handoff artifacts are rendered there and published here |
-| Validator promotion chain | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md) | Promotion review flows now explicitly include bundle diff, diff-policy, and review-handoff outputs that workflow summaries may publish |
+| CI renderer and helper-proof surfaces | [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Reviewer-facing diff, diff-policy, release-assembly, and review-handoff artifacts are rendered there and published here |
+| Release-assembly validator path | [`../../tests/e2e/release_assembly/README.md`](../../tests/e2e/release_assembly/README.md), [`../../tools/validators/release_assembly_report.py`](../../tools/validators/release_assembly_report.py), [`../../tools/ci/render_release_assembly_summary.py`](../../tools/ci/render_release_assembly_summary.py) | Release completeness now has a machine-readable report and reviewer-readable summary path that workflows may publish |
+| Validator promotion chain | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md) | Promotion review flows include bundle diff, diff-policy, and review-handoff outputs that workflow summaries may publish |
 | Runtime and package surfaces | [`../../apps/`](../../apps/), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving canonical ownership into workflow YAML |
 | Long-form doctrine and runbooks | [`../../docs/`](../../docs/) | Behavior-significant workflow changes should keep docs aligned |
 
@@ -119,6 +148,7 @@ Accepted inputs for this directory include:
 - workflow-local notes that explain current inventory, historically visible lanes, intended gate families, or migration from placeholder to active automation
 - minimal examples that help reviewers understand what a proposed workflow is supposed to prove
 - publish-step examples for reviewer-facing outputs such as:
+  - release-assembly summaries
   - diff summaries
   - diff-policy summaries
   - composed promotion review handoff documents
@@ -145,7 +175,7 @@ The following do **not** belong here as the canonical source of truth:
 - Long-form operational runbooks that outgrow directory-local explanation  
   → place under [`../../docs/`](../../docs/)
 - Treating `GITHUB_STEP_SUMMARY` output as the authoritative trust object  
-  → keep machine-authoritative objects in their governed bundle, diff, diff-policy, and proof surfaces
+  → keep machine-authoritative objects in their governed report, bundle, diff, diff-policy, manifest, and proof surfaces
 
 ---
 
@@ -232,7 +262,7 @@ sed -n '1,260p' .github/watchers/README.md 2>/dev/null || true
 ls -la contracts schemas policy tests docs apps packages tools 2>/dev/null || true
 
 # 9) Search workflow-local docs for release-, policy-, evidence-, or review-handoff-facing terms
-grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom\|review-handoff\|GITHUB_STEP_SUMMARY" .github/workflows 2>/dev/null || true
+grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom\|review-handoff\|release-assembly\|GITHUB_STEP_SUMMARY" .github/workflows 2>/dev/null || true
 
 # 10) If the lane is being reconstructed, inspect git history instead of guessing
 git log --name-status -- .github/workflows
@@ -330,10 +360,10 @@ Prefer consuming those seams before embedding repeated shell logic directly in f
 
 That keeps:
 
-- workflow files smaller,
-- review more focused,
-- policy and provenance checks more reusable, and
-- orchestration separate from step implementation.
+- workflow files smaller
+- review more focused
+- policy and provenance checks more reusable
+- orchestration separate from step implementation
 
 ### Publishing reviewer surfaces safely
 
@@ -341,19 +371,37 @@ When a workflow publishes reviewer-facing content to `GITHUB_STEP_SUMMARY`, keep
 
 Good current thin-slice publication order:
 
-1. promotion bundle summary
-2. promotion bundle diff summary
-3. promotion bundle diff-policy summary
-4. promotion review handoff
+1. release-assembly summary
+2. promotion bundle summary
+3. promotion bundle diff summary
+4. promotion bundle diff-policy summary
+5. promotion review handoff
 
 That ordering helps a reviewer see:
 
+- whether release assembly is complete enough to review
 - the governed bundle itself
-- the prior/current drift
+- prior/current drift
 - the policy classification of that drift
 - the composed steward-facing conclusion
 
 without confusing the final composed handoff document for the underlying machine-authoritative records.
+
+### Illustrative release-assembly publication path
+
+The current thin slice now supports a report + render chain for release completeness:
+
+- `tools/validators/release_assembly_report.py`
+- `tools/ci/render_release_assembly_summary.py`
+
+A future workflow lane may:
+
+1. generate a machine-readable release-assembly report
+2. render a reviewer-readable Markdown summary
+3. publish that summary to `GITHUB_STEP_SUMMARY`
+4. only then proceed to later bundle/diff/review publication steps
+
+That keeps release completeness visible **before** the steward sees downstream drift summaries.
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
 
@@ -374,15 +422,17 @@ flowchart LR
     B3 --> C
     B4 --> C
 
-    C --> D[Review + CODEOWNERS]
+    C --> C1[release-assembly report]
+    C1 --> C2[release-assembly summary]
+    C2 --> D[Review + CODEOWNERS]
     D -->|approved| E[promote-and-reconcile.yml]
-    E --> F[Bundle summary]
-    F --> G[Bundle diff summary]
-    G --> H[Bundle diff-policy summary]
-    H --> I[Promotion review handoff]
-    I --> J[Published or steward-visible correction-ready state]
+    E --> F[promotion bundle summary]
+    F --> G[promotion bundle diff summary]
+    G --> H[promotion bundle diff-policy summary]
+    H --> I[promotion review handoff]
+    I --> J[published or steward-visible correction-ready state]
 
-    D -->|rejected or insufficient| K[Hold / revise / quarantine]
+    D -->|rejected or insufficient| K[hold / revise / quarantine]
     J -. future explicit drill lane .-> L[rehearse-rollback-and-correction.yml]
 ```
 
@@ -398,7 +448,7 @@ Reading rule: **promotion is a trust-state change, not a blind deploy step**.
 | `verify-contracts-and-policy.yml` | Contract, schema, and policy surfaces remain machine-checkable | invalid fixtures passing, schema drift, policy denial | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `verify-runtime.yml` | Runtime-facing trust behavior remains bounded and explainable | negative-path regressions, uncited answer path, envelope drift, hidden correction state | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `verify-tests-and-reproducibility.yml` | Candidate changes remain testable and repeatable | failed tests, reproducibility drift, missing proof of deterministic behavior | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `release-evidence.yml` | Candidate proof objects are assembled before promotion | missing manifests, missing validation summaries, absent attestation refs | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `release-evidence.yml` | Candidate proof objects are assembled before promotion | missing manifests, missing validation summaries, absent attestation refs, failed release-assembly report | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `promote-and-reconcile.yml` | Already-reviewed state moves into publishable scope and any required reconciliation runs | missing approvals, missing release evidence, unresolved policy blockers | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `watchers-kansas-env.yml` | Environment or watcher-oriented automation suggested by adjacent watcher docs | stale scaffold refs, undocumented orchestration, confusion with current inventory | **CONFIRMED** adjacent scaffold reference / **INFERRED** role / **NEEDS VERIFICATION** current or historical file status |
 | `rehearse-rollback-and-correction.yml` | Recovery and visible correction behavior become explicit and testable | failed rollback lineage, silent overwrite, missing correction drills | **PROPOSED** doctrinal addition |
@@ -434,8 +484,9 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] New automation begins in draft, shadow, dry-run, or PR-only mode unless a narrower approval lane is explicitly documented.
 - [ ] Promotion paths consume already-approved artifacts or reviewed desired state rather than rebuilding silently later.
 - [ ] Candidate and release proof-pack expectations are explicit where the lane is trust-significant.
+- [ ] Release-assembly summary publication happens before downstream bundle/diff/review-handoff publication when that lane is active.
 - [ ] Runtime verification, rollback, or correction consequences are documented for any workflow that can change trust state.
-- [ ] Reviewer-summary publication order is explicit when bundle, diff, diff-policy, and review-handoff artifacts are all published.
+- [ ] Reviewer-summary publication order is explicit when release-assembly, bundle, diff, diff-policy, and review-handoff artifacts are all published.
 - [ ] Unknowns remain visible instead of being rewritten as certainty.
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
@@ -468,7 +519,7 @@ No. Workflows may verify them, but canonical ownership remains outside this dire
 
 ### Can `GITHUB_STEP_SUMMARY` output become the authoritative review object?
 
-No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, bundle, diff, diff-policy, and proof lanes.
+No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, report, bundle, diff, diff-policy, manifest, and proof lanes.
 
 ### What becomes CONFIRMED here?
 
@@ -551,11 +602,26 @@ jobs:
 </details>
 
 <details>
-<summary><strong>Illustrative publish sequence for promotion review artifacts (PROPOSED)</strong></summary>
+<summary><strong>Illustrative publish sequence for reviewer artifacts (PROPOSED)</strong></summary>
 
-This example shows the intended review publication order once the promotion thin slice is wired into workflow YAML.
+This example shows the intended publication order once the thin slice is wired into workflow YAML.
 
 ```yaml
+- name: Emit release assembly report
+  run: |
+    python tools/validators/release_assembly_report.py \
+      --decision data/proofs/releases/floodplain-kansas-v1/decision.json \
+      --record data/proofs/releases/floodplain-kansas-v1/promotion-record.json \
+      --manifest data/proofs/releases/floodplain-kansas-v1/release-manifest.json \
+      --proof data/proofs/releases/floodplain-kansas-v1/release-proof-pack.json \
+      --output release-assembly-report.json
+
+- name: Render release assembly summary
+  run: |
+    python tools/ci/render_release_assembly_summary.py \
+      --report release-assembly-report.json \
+      --output release-assembly-summary.md
+
 - name: Render promotion bundle diff summary
   run: |
     python tools/ci/render_diff_summary.py \
@@ -578,6 +644,7 @@ This example shows the intended review publication order once the promotion thin
 
 - name: Publish review artifacts
   run: |
+    cat release-assembly-summary.md >> "$GITHUB_STEP_SUMMARY"
     cat promotion-bundle-summary.md >> "$GITHUB_STEP_SUMMARY"
     cat promotion-bundle-diff-summary.md >> "$GITHUB_STEP_SUMMARY"
     cat promotion-bundle-diff-policy-summary.md >> "$GITHUB_STEP_SUMMARY"
