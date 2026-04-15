@@ -8,9 +8,26 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS-VERIFICATION
-related: [../../README.md, ../README.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./SYSTEM_CONTEXT.md, ./DEPLOYMENT_TOPOLOGY.md, ./canonical_vs_rebuildable.md, ./system_overview.md, ./threat-model/README.md, ../adr/README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
-tags: [kfm, architecture, trust-membrane, truth-path, evidence-first]
-notes: [doc_id, created, updated, and policy_label still need repo verification before commit; owners are confirmed from ../../.github/CODEOWNERS; current public main shows docs/architecture now mixes substantive companion docs, README-only child lanes, and duplication/overlap signals that this index should keep visible rather than flatten]
+related: [
+  ../../README.md,
+  ../README.md,
+  ./TRUST_MEMBRANE.md,
+  ./TRUTH_PATH_LIFECYCLE.md,
+  ./SYSTEM_CONTEXT.md,
+  ./DEPLOYMENT_TOPOLOGY.md,
+  ./canonical_vs_rebuildable.md,
+  ./system_overview.md,
+  ./governed_runtime_trust.md,
+  ./threat-model/README.md,
+  ../adr/README.md,
+  ../../contracts/README.md,
+  ../../policy/README.md,
+  ../../schemas/README.md,
+  ../../tests/README.md,
+  ../../.github/workflows/README.md
+]
+tags: [kfm, architecture, trust-membrane, truth-path, evidence-first, runtime-trust]
+notes: [doc_id, created, updated, and policy_label still need repo verification before commit; owners are confirmed from ../../.github/CODEOWNERS; current public main shows docs/architecture now mixes substantive companion docs, README-only child lanes, and duplication/overlap signals that this index should keep visible rather than flatten; this revision adds governed_runtime_trust.md as a substantive companion and runtime-trust architecture cue.]
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture
@@ -19,13 +36,16 @@ System-level architecture law, boundary map, and navigation hub for Kansas Front
 
 > **Status:** experimental surface · doc under review  
 > **Owners:** `@bartytime4life`  
-> **Repo fit:** `docs/architecture/README.md` → upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md) · primary companions [`./SYSTEM_CONTEXT.md`](./SYSTEM_CONTEXT.md), [`./TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md), [`./TRUTH_PATH_LIFECYCLE.md`](./TRUTH_PATH_LIFECYCLE.md), [`./DEPLOYMENT_TOPOLOGY.md`](./DEPLOYMENT_TOPOLOGY.md), [`./canonical_vs_rebuildable.md`](./canonical_vs_rebuildable.md), [`./system_overview.md`](./system_overview.md), [`./threat-model/README.md`](./threat-model/README.md) · adjacent control surfaces [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Repo fit:** `docs/architecture/README.md` → upstream [`../README.md`](../README.md), [`../../README.md`](../../README.md) · primary companions [`./SYSTEM_CONTEXT.md`](./SYSTEM_CONTEXT.md), [`./TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md), [`./TRUTH_PATH_LIFECYCLE.md`](./TRUTH_PATH_LIFECYCLE.md), [`./DEPLOYMENT_TOPOLOGY.md`](./DEPLOYMENT_TOPOLOGY.md), [`./canonical_vs_rebuildable.md`](./canonical_vs_rebuildable.md), [`./system_overview.md`](./system_overview.md), [`./governed_runtime_trust.md`](./governed_runtime_trust.md), [`./threat-model/README.md`](./threat-model/README.md) · adjacent control surfaces [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![scope](https://img.shields.io/badge/scope-architecture-6f42c1) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-blue) ![posture](https://img.shields.io/badge/posture-evidence--first-0a7f5a) ![surface](https://img.shields.io/badge/surface-substantive%20companions%20%2B%20README--only%20lanes-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Baseline & evidence basis](#baseline--evidence-basis) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This index should explain architectural law **without bluffing about implementation maturity**.
+>
 > On current public `main`, `docs/architecture/` is no longer best described as “one substantive index plus mostly placeholders.” Several companion files are now real architecture notes, several child directories are README-only lanes with meaningful directory contracts, and a few path overlaps or duplicate surfaces still need canonical resolution.
+
+---
 
 ## Scope
 
@@ -37,6 +57,7 @@ System-level architecture law, boundary map, and navigation hub for Kansas Front
 - map-first, time-aware shell law
 - deployment and runtime boundary posture
 - architecture-facing registries, diagrams, interfaces, enforcement, and ADR memory
+- governed runtime trust as a request-time, trust-visible architecture concern
 
 This README is intentionally conservative. It should help a reviewer answer five questions quickly:
 
@@ -58,17 +79,19 @@ This README is intentionally conservative. It should help a reviewer answer five
 
 [Back to top](#architecture)
 
+---
+
 ## Repo fit
 
 | Field | Value |
 |---|---|
 | Path | `docs/architecture/README.md` |
-| Directory role | Architecture index for system law, boundary logic, trust-visible shell rules, and architecture-adjacent references |
+| Directory role | Architecture index for system law, boundary logic, trust-visible shell rules, runtime-trust orientation, and architecture-adjacent references |
 | Primary upstream anchors | [`../../README.md`](../../README.md), [`../README.md`](../README.md), [`../governance/README.md`](../governance/README.md), [`../standards/README.md`](../standards/README.md), [`../runbooks/README.md`](../runbooks/README.md), [`../templates/README.md`](../templates/README.md) |
-| Primary local companions | [`./SYSTEM_CONTEXT.md`](./SYSTEM_CONTEXT.md), [`./TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md), [`./TRUTH_PATH_LIFECYCLE.md`](./TRUTH_PATH_LIFECYCLE.md), [`./DEPLOYMENT_TOPOLOGY.md`](./DEPLOYMENT_TOPOLOGY.md), [`./canonical_vs_rebuildable.md`](./canonical_vs_rebuildable.md), [`./system_overview.md`](./system_overview.md), [`./threat-model/README.md`](./threat-model/README.md) |
+| Primary local companions | [`./SYSTEM_CONTEXT.md`](./SYSTEM_CONTEXT.md), [`./TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md), [`./TRUTH_PATH_LIFECYCLE.md`](./TRUTH_PATH_LIFECYCLE.md), [`./DEPLOYMENT_TOPOLOGY.md`](./DEPLOYMENT_TOPOLOGY.md), [`./canonical_vs_rebuildable.md`](./canonical_vs_rebuildable.md), [`./system_overview.md`](./system_overview.md), [`./governed_runtime_trust.md`](./governed_runtime_trust.md), [`./threat-model/README.md`](./threat-model/README.md) |
 | Machine-facing neighbors | [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 | Current public-main posture | Substantive index + substantive companions + README-only child lanes + visible duplication/overlap signals |
-| Why this directory matters | It keeps KFM’s architecture law legible without letting file names, diagrams, or delivery surfaces impersonate completed runtime truth |
+| Why this directory matters | It keeps KFM’s architecture law legible without letting file names, diagrams, delivery surfaces, or runtime-trust cues impersonate completed implementation truth |
 
 ### Repo relationship map
 
@@ -82,6 +105,8 @@ Architecture docs sit between doctrine and execution:
 
 [Back to top](#architecture)
 
+---
+
 ## Baseline & evidence basis
 
 ### Baseline document
@@ -91,6 +116,7 @@ The redesign baseline for this file is the current public [`docs/architecture/RE
 - the current public `main` architecture subtree
 - adjacent public repo docs
 - the March 2026 KFM doctrine corpus used as architecture law
+- the newly introduced companion [`./governed_runtime_trust.md`](./governed_runtime_trust.md)
 
 ### Evidence layers used in this revision
 
@@ -101,6 +127,7 @@ The redesign baseline for this file is the current public [`docs/architecture/RE
 | Current public adjacent docs (`docs/`, `contracts/`, `policy/`, `schemas/`, `tests/`, `.github/workflows/`) | `CONFIRMED` | Cross-links, neighboring responsibilities, and caution against overstated enforcement |
 | `.github/CODEOWNERS` | `CONFIRMED` | Broad ownership signal for docs |
 | March 2026 KFM doctrine corpus | `CONFIRMED` | Trust membrane, truth path, five-plane logic, map-first shell law, authoritative-versus-derived split, evidence-bounded Focus, fail-closed posture |
+| `governed_runtime_trust.md` | `PROPOSED` as a newly added companion unless rechecked on branch | Runtime-trust architecture orientation and navigation inclusion |
 | GitHub rulesets, required checks, environment approvals, deployment manifests, runtime logs, dashboards, exact route trees, exact schema inventories, live services | `UNKNOWN` | Not presented here as current implementation fact |
 
 ### Working interpretation rule
@@ -108,6 +135,8 @@ The redesign baseline for this file is the current public [`docs/architecture/RE
 Use the public repo tree for **what exists now** and the doctrine corpus for **what those surfaces are supposed to mean**. Do not let one silently replace the other.
 
 [Back to top](#architecture)
+
+---
 
 ## Accepted inputs
 
@@ -117,6 +146,7 @@ Content that belongs here includes:
 - trust-membrane, truth-path, and authoritative-versus-derived notes
 - deployment-topology and runtime-boundary docs
 - architecture diagrams explaining flows, write-rights, and enforcement points
+- governed runtime trust notes explaining request-time trust law, trust-visible runtime surfaces, and release / proof / receipt linkage
 - ADR and decision-memory guidance
 - architecture-facing interface, registry, and enforcement guidance
 - threat models, burden tests, and architecture review checklists
@@ -139,6 +169,8 @@ The following do **not** belong here as their authoritative home:
 
 [Back to top](#architecture)
 
+---
+
 ## Current public-main snapshot
 
 Current public `main` is **layered**, not flat. The key distinction is no longer “real index vs placeholders.” It is now:
@@ -159,6 +191,7 @@ Current public `main` is **layered**, not flat. The key distinction is no longer
 | `DEPLOYMENT_TOPOLOGY.md` | `CONFIRMED` | substantive topology note | runtime/deployment boundary companion |
 | `canonical_vs_rebuildable.md` | `CONFIRMED` | substantive authoritative-vs-derived rule note | authority split companion |
 | `system_overview.md` | `CONFIRMED` | substantive short-form overview | quick whole-system orientation |
+| `governed_runtime_trust.md` | `PROPOSED` until branch recheck | substantive runtime-trust companion | request-time trust law and trust-visible runtime orientation |
 | `threat-model/README.md` | `CONFIRMED` | substantive threat-model guide | threat review starting point |
 
 ### README-only child lanes still visible
@@ -196,9 +229,12 @@ Current public `main` is **layered**, not flat. The key distinction is no longer
 
 > [!NOTE]
 > The highest-risk documentation failure here is still **trust theater**.
-> In this directory, that risk no longer comes only from empty placeholders. It also comes from README-only lanes, duplicate locations, and overlapping filenames that sound resolved when they are not.
+>
+> In this directory, that risk no longer comes only from empty placeholders. It also comes from README-only lanes, duplicate locations, overlapping filenames, and runtime-trust wording that sounds resolved when it is not.
 
 [Back to top](#architecture)
+
+---
 
 ## Directory tree
 
@@ -230,6 +266,7 @@ docs/architecture/
 ├── TRUST_MEMBRANE.md              # substantive membrane-law note
 ├── TRUTH_PATH_LIFECYCLE.md        # substantive lifecycle note
 ├── canonical_vs_rebuildable.md    # substantive authority/derived note
+├── governed_runtime_trust.md      # runtime-trust companion; recheck branch presence
 ├── system_overview.md             # substantive overview bridge
 ```
 
@@ -250,6 +287,8 @@ docs/
 
 [Back to top](#architecture)
 
+---
+
 ## Quickstart
 
 Use a verification-first reading sequence before editing anything under `docs/architecture/`.
@@ -269,6 +308,7 @@ sed -n '1,220p' docs/architecture/TRUST_MEMBRANE.md
 sed -n '1,220p' docs/architecture/TRUTH_PATH_LIFECYCLE.md
 sed -n '1,220p' docs/architecture/DEPLOYMENT_TOPOLOGY.md
 sed -n '1,220p' docs/architecture/canonical_vs_rebuildable.md
+sed -n '1,220p' docs/architecture/governed_runtime_trust.md
 sed -n '1,220p' docs/architecture/threat-model/README.md
 
 # 4) Re-check adjacent documentation boundaries
@@ -300,6 +340,8 @@ sed -n '1,140p' docs/architecture/<topic>.md
 
 [Back to top](#architecture)
 
+---
+
 ## Usage
 
 ### Reading order for reviewers
@@ -313,6 +355,7 @@ sed -n '1,140p' docs/architecture/<topic>.md
    - [`TRUTH_PATH_LIFECYCLE.md`](./TRUTH_PATH_LIFECYCLE.md)
    - [`canonical_vs_rebuildable.md`](./canonical_vs_rebuildable.md)
    - [`DEPLOYMENT_TOPOLOGY.md`](./DEPLOYMENT_TOPOLOGY.md)
+   - [`governed_runtime_trust.md`](./governed_runtime_trust.md)
 5. Read [`threat-model/README.md`](./threat-model/README.md) and any relevant child-lane README next.
 6. When a claim sounds enforceable, re-check [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tests/README.md`](../../tests/README.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md).
 
@@ -343,7 +386,21 @@ Treat the change as governed when it affects any of the following:
 - canonical location of ADR memory or decision memory
 - any duplication or overlap that changes which file is canonical for architecture guidance
 
+### When `governed_runtime_trust.md` should be cited
+
+Reach for [`./governed_runtime_trust.md`](./governed_runtime_trust.md) when the change touches:
+
+- request-time trust law
+- trust-visible runtime surfaces
+- release / proof / receipt / correction linkage
+- finite outward outcomes such as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
+- runtime evidence drill-through
+- stale / corrected / denied / partial state visibility
+- cross-source trust composition or runtime conflict handling
+
 [Back to top](#architecture)
+
+---
 
 ## Diagram
 
@@ -352,7 +409,7 @@ flowchart TB
   Root["../../README.md<br/>repo posture"] --> Docs["../README.md<br/>docs boundary"]
   Docs --> Arch["docs/architecture/<br/>index surface"]
 
-  Arch --> Core["Substantive companions<br/>SYSTEM_CONTEXT<br/>TRUST_MEMBRANE<br/>TRUTH_PATH_LIFECYCLE<br/>DEPLOYMENT_TOPOLOGY<br/>canonical_vs_rebuildable<br/>system_overview<br/>threat-model/README"]
+  Arch --> Core["Substantive companions<br/>SYSTEM_CONTEXT<br/>TRUST_MEMBRANE<br/>TRUTH_PATH_LIFECYCLE<br/>DEPLOYMENT_TOPOLOGY<br/>canonical_vs_rebuildable<br/>system_overview<br/>governed_runtime_trust<br/>threat-model/README"]
   Arch --> Lanes["README-only child lanes<br/>adr · diagrams · enforcement · interfaces · overview · registries · templates"]
   Arch --> Minimal["Minimal scaffold lane<br/>decisions/README.md"]
   Arch --> Machine["contracts · schemas · policy · tests · .github/workflows/README.md"]
@@ -363,9 +420,11 @@ flowchart TB
   Lanes -. may deepen into real companions .-> Core
 ```
 
-This directory is the bridge between KFM doctrine and repo execution, but it is also a reminder that **named paths, README lanes, and overlapping files are not the same thing as fully resolved architecture authority**.
+This directory is the bridge between KFM doctrine and repo execution, but it is also a reminder that **named paths, README lanes, overlapping files, and runtime-trust companions are not the same thing as fully resolved architecture authority or verified implementation depth**.
 
 [Back to top](#architecture)
+
+---
 
 ## Reference tables
 
@@ -378,6 +437,7 @@ This directory is the bridge between KFM doctrine and repo execution, but it is 
 | Authoritative vs derived | graph, search, tiles, vectors, scenes, caches, summaries, and embeddings do not quietly become sovereign truth |
 | Map-first and time-explicit operation | geography and time remain coequal operating dimensions in shell and data |
 | Evidence Drawer / trust-visible shell | consequential surfaces expose provenance, freshness, review state, and policy context at point of use |
+| Governed runtime trust | request-time surfaces stay downstream of release state, evidence state, policy state, and correction state |
 | 2D default; 3D burden-bearing | 3D is conditional context, not default spectacle |
 | Fail-closed negative outcomes | deny, abstain, hold, stale-visible, generalized, superseded, withdrawn, and error states are valid architecture outputs |
 | Placeholder honesty | README-only lanes, minimal scaffolds, and duplicate paths stay visibly distinct until resolved |
@@ -390,6 +450,7 @@ This directory is the bridge between KFM doctrine and repo execution, but it is 
 | Lifecycle change | new zone, new gate, new promotion rule | lifecycle docs, release/proof expectations, review notes |
 | Policy-sensitive change | new `policy_label`, new obligation, new withholding rule | governance docs, policy fixtures/tests, sign-off path |
 | Derived-layer change | new index, graph, tile, scene, or cache surface | authority/derived docs, rebuild plan, stale-state handling |
+| Runtime-trust change | new outward trust state, evidence drill-through rule, release/proof/receipt linkage, correction visibility | `governed_runtime_trust.md`, policy, tests, contracts/schemas as applicable |
 | Topology change | new exposure path, runtime split, new deployment posture | infra docs, runbooks, rollback plan, verification notes |
 | Canonical-location change | moving ADRs, collapsing duplicate files, choosing one summary home | local READMEs, links, diagrams, task lists, migration notes |
 | README-lane promotion | turning a README-only lane into a real architecture registry or companion | Meta Block v2, owners/dates, proof burden, adjacent links, snapshot refresh |
@@ -405,14 +466,17 @@ This directory is the bridge between KFM doctrine and repo execution, but it is 
 | `.github/workflows/` is README-only on public `main` | do not imply visible merge-gate YAML coverage there |
 | `contracts/` and `schemas/` both exist as top-level surfaces | keep schema / contract authority explicit and singular in prose |
 | `policy/` and `tests/` now have visible child directories | architecture changes may point to real neighboring structure without overstating verified execution depth |
+| Runtime-trust claims sound operationally mature | route the reader to `governed_runtime_trust.md` and keep implementation depth explicitly bounded |
 
 [Back to top](#architecture)
+
+---
 
 ## Task list
 
 ### Definition of done for architecture changes
 
-- [ ] This README is updated when the trust membrane, truth path, shell law, directory surface, or companion classification changes.
+- [ ] This README is updated when the trust membrane, truth path, shell law, runtime-trust companion set, directory surface, or companion classification changes.
 - [ ] Newly substantive architecture files stop being described here as placeholders.
 - [ ] README-only lanes, minimal scaffolds, and duplicate-path issues remain visibly distinct.
 - [ ] Contracts, policy fixtures, tests, and workflow notes are updated where the change is enforceable.
@@ -426,15 +490,18 @@ This directory is the bridge between KFM doctrine and repo execution, but it is 
 - [ ] Resolve the canonical ADR home between `docs/architecture/adr/` and `docs/adr/`.
 - [ ] Decide whether `overview/README.md` or `system_overview.md` is the canonical reader-first summary surface.
 - [ ] Decide whether `decisions/README.md` should remain a minimal lane, become substantive, or merge into a clearer decision-memory structure.
+- [ ] Recheck whether `governed_runtime_trust.md` is present and linked correctly on the active branch before merge.
 - [ ] Keep this index synchronized whenever the architecture tree changes on `main`.
 
 [Back to top](#architecture)
 
+---
+
 ## FAQ
 
-### Why no longer describe `SYSTEM_CONTEXT.md`, `DEPLOYMENT_TOPOLOGY.md`, and `canonical_vs_rebuildable.md` as placeholders?
+### Why add `governed_runtime_trust.md` here?
 
-Because current public `main` now exposes substantive content in those files. Calling them placeholders would make the index less truthful than the tree it is supposed to describe.
+Because request-time trust law is architecture, not just UI polish or helper implementation. It sits between the trust membrane, truth path, release evidence, receipts, policy, tests, and outward runtime behavior.
 
 ### Are README-only child lanes the same thing as filled architecture registries?
 
@@ -454,6 +521,8 @@ Yes. Use the universal template and replace placeholders only where repo evidenc
 
 [Back to top](#architecture)
 
+---
+
 ## Appendix
 
 <details>
@@ -469,6 +538,7 @@ Yes. Use the universal template and replace placeholders only where repo evidenc
 - `docs/architecture/DEPLOYMENT_TOPOLOGY.md`
 - `docs/architecture/canonical_vs_rebuildable.md`
 - `docs/architecture/trust_membrane.md`
+- `docs/architecture/governed_runtime_trust.md`
 - `docs/architecture/threat-model/README.md`
 - `docs/architecture/adr/README.md`
 - `docs/architecture/decisions/README.md`
