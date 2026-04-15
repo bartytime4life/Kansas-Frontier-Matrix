@@ -24,14 +24,18 @@ related: [
   ../../schemas/README.md,
   ../../schemas/contracts/README.md,
   ../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json,
+  ../../schemas/contracts/v1/source/source_descriptor.schema.json,
   ../../schemas/soil_moisture/README.md,
   ../../policy/README.md,
   ../../tests/README.md,
   ../../tests/ci/README.md,
+  ../../tests/contracts/test_runtime_response_schema.py,
+  ../../tests/contracts/test_source_descriptor_schema.py,
   ../../tests/validators/README.md,
   ../../tests/e2e/runtime_proof/soil_moisture/README.md,
   ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py,
   ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py,
+  ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_emit_actual_responses.py,
   ../../tests/e2e/runtime_proof/test_governed_api_app.py,
   ../../tools/ci/README.md,
   ../../tools/ci/render_runtime_proof_summary.py,
@@ -47,7 +51,7 @@ related: [
 tags: [kfm, github, workflows, ci-cd, runtime-proof, review-handoff, release-assembly, soil-moisture]
 notes: [
   Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`.
-  This revision preserves the stronger old workflows README doctrine while adding the current thin-slice runtime-proof soil-moisture workflow as a concrete workflow lane.
+  This revision preserves the stronger old workflows README doctrine while upgrading the thin-slice runtime-proof soil-moisture workflow to include contract tests, emitted `actual.response.json`, and uploaded reviewer artifacts.
   Public Actions history and adjacent `.github/actions/` tree still provide reconstruction clues but do not prove broader current checked-in YAML inventory beyond the thin slice added in-session.
   doc_id, created date, policy_label, broader workflow inventory, and exact branch-level enforcement posture still need repo confirmation.
 ]
@@ -94,6 +98,7 @@ This directory exists to answer two narrow but consequential questions:
 That second question now explicitly includes:
 
 - **runtime-proof summary publication** for the soil-moisture thin slice
+- **runtime-proof actual-response artifact emission** for expected-vs-actual review
 - **release-assembly reporting**
 - promotion bundle, diff, diff-policy, and review-handoff publication
 
@@ -142,7 +147,7 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | Item | Current visible or drafted state | Posture |
 | --- | --- | --- |
 | `./README.md` | Present in the older surfaced file | **CONFIRMED** |
-| `runtime-proof-soil-moisture.yml` | Drafted in-session as a concrete thin-slice workflow | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
+| `runtime-proof-soil-moisture.yml` | Drafted in-session as a concrete thin-slice workflow with contract tests, runtime-proof tests, emitted `actual.response.json`, and uploaded reviewer artifacts | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
 | Broader `./*.yml` / `./*.yaml` workflow files | Not proven from current mounted checkout in this session | **UNKNOWN** beyond thin slice |
 | Actions sidebar workflow list | Public Actions UI surfaces may still expose workflow-like entries | **CONFIRMED** UI signal / **UNKNOWN** checked-in YAML provenance |
 | Public delete-run history | Public Actions history may still expose filenames like `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
@@ -182,9 +187,11 @@ For `runtime-proof-soil-moisture.yml`, the strongest current input family is:
 - governed API runtime code under `apps/governed_api/**`
 - soil-moisture contracts and source-descriptor surfaces
 - runtime envelope schema
+- source-descriptor and runtime-response contract tests
 - soil-moisture validator surfaces
 - runtime-proof tests and fixtures
 - runtime-proof summary renderer
+- actual runtime-response emission helper
 
 ---
 
@@ -359,15 +366,20 @@ The current thin-slice runtime-proof workflow is designed to:
 
 1. install Python test dependencies
 2. run:
+   - source descriptor contract tests
+   - runtime response schema contract tests
    - soil-moisture rule tests
    - validator orchestration tests
    - fixture-driven runtime-proof tests
    - runtime route tests
    - governed app tests
    - CI summary-renderer tests
-3. render a Markdown runtime-proof summary
-4. upload that summary as a workflow artifact
-5. fail closed if tests fail or the summary is missing
+3. emit `actual.response.json` beside each runtime-proof fixture case
+4. render a reviewer-readable Markdown runtime-proof summary
+5. upload both:
+   - actual runtime responses
+   - runtime-proof summary
+6. fail closed if tests fail or expected artifacts are missing
 
 That workflow should remain a **runtime-proof gate**, not a release-evidence or promotion lane.
 
@@ -450,15 +462,19 @@ without confusing the final composed handoff document for the underlying machine
 
 The current thin slice now supports a report + render chain for runtime proof:
 
+- source descriptor contract tests
+- runtime response schema contract tests
 - fixture-driven runtime-proof tests
 - `tools/ci/render_runtime_proof_summary.py`
+- emitted `actual.response.json` artifacts
 
 A workflow lane may therefore:
 
-1. run the runtime-proof tests
-2. render a reviewer-readable Markdown summary
-3. upload that summary as an artifact
-4. optionally later publish it to `GITHUB_STEP_SUMMARY`
+1. run the contract, validator, and runtime-proof tests
+2. emit actual runtime responses
+3. render a reviewer-readable Markdown summary
+4. upload both machine-readable actuals and the reviewer summary
+5. optionally later publish the summary to `GITHUB_STEP_SUMMARY`
 
 That keeps runtime proof visible **before** broader release or promotion evidence is discussed.
 
@@ -479,7 +495,9 @@ flowchart LR
     B --> B3[verify-runtime.yml]
     B --> B4[verify-tests-and-reproducibility.yml]
 
-    B0 --> B0A[runtime-proof summary]
+    B0 --> B0A[contract + validator + runtime-proof tests]
+    B0A --> B0B[actual.response.json]
+    B0B --> B0C[runtime-proof summary]
     B1 --> C[release-evidence.yml]
     B2 --> C
     B3 --> C
@@ -507,7 +525,7 @@ Reading rule: **promotion is a trust-state change, not a blind deploy step**.
 
 | Lane | Working interpretation here | Blockers to expect | Evidence posture |
 | --- | --- | --- | --- |
-| `runtime-proof-soil-moisture.yml` | thin-slice governed runtime gate for the soil-moisture stack | failed runtime-proof tests, failed route/app tests, failed runtime summary render | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
+| `runtime-proof-soil-moisture.yml` | thin-slice governed runtime gate for the soil-moisture stack | failed contract tests, failed runtime-proof tests, failed route/app tests, failed actual-response emission, failed runtime summary render | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
 | `verify-docs.yml` | Docs, links, examples, and trust-visible guidance stay aligned | broken links, stale examples, trust-cue drift | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `verify-contracts-and-policy.yml` | Contract, schema, and policy surfaces remain machine-checkable | invalid fixtures passing, schema drift, policy denial | **CONFIRMED** historical filename / **INFERRED** responsibility |
 | `verify-runtime.yml` | Runtime-facing trust behavior remains bounded and explainable | negative-path regressions, uncited answer path, envelope drift, hidden correction state | **CONFIRMED** historical filename / **INFERRED** responsibility |
@@ -550,6 +568,7 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Promotion paths consume already-approved artifacts or reviewed desired state rather than rebuilding silently later.
 - [ ] Candidate and release proof-pack expectations are explicit where the lane is trust-significant.
 - [ ] Runtime-proof summary publication is explicit where the soil-moisture thin slice is active.
+- [ ] Runtime-proof lanes that claim expected-vs-actual review actually emit and publish `actual.response.json` or an equivalent machine-readable artifact.
 - [ ] Release-assembly summary publication happens before downstream bundle/diff/review-handoff publication when that lane is active.
 - [ ] Runtime verification, rollback, or correction consequences are documented for any workflow that can change trust state.
 - [ ] Reviewer-summary publication order is explicit when runtime-proof, release-assembly, bundle, diff, diff-policy, and review-handoff artifacts are all published.
@@ -587,7 +606,7 @@ No. Workflows may verify them, but canonical ownership remains outside this dire
 
 ### Can `GITHUB_STEP_SUMMARY` output become the authoritative review object?
 
-No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, report, bundle, diff, diff-policy, manifest, and proof lanes.
+No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, report, bundle, diff, diff-policy, manifest, proof, and emitted runtime artifact lanes.
 
 ### What becomes CONFIRMED here?
 
@@ -678,15 +697,21 @@ jobs:
 <summary><strong>Illustrative runtime-proof publication path (PROPOSED)</strong></summary>
 
 ```yaml
-- name: Run runtime-proof tests
+- name: Run contract, validator, and runtime-proof tests
   run: |
     pytest -q \
+      tests/contracts/test_source_descriptor_schema.py \
+      tests/contracts/test_runtime_response_schema.py \
       tests/validators/test_soil_moisture_rules.py \
       tests/validators/test_soil_moisture_validator.py \
       tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py \
       tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py \
       tests/e2e/runtime_proof/test_governed_api_app.py \
       tests/ci/test_render_runtime_proof_summary.py
+
+- name: Emit actual runtime responses
+  run: |
+    pytest -q tests/e2e/runtime_proof/soil_moisture/test_runtime_emit_actual_responses.py
 
 - name: Render runtime proof summary
   run: |
@@ -695,9 +720,19 @@ jobs:
       --output artifacts/runtime-proof-summary-soil-moisture.md \
       --title "Runtime Proof Summary — Soil Moisture"
 
-- name: Publish runtime proof summary
-  run: |
-    cat artifacts/runtime-proof-summary-soil-moisture.md >> "$GITHUB_STEP_SUMMARY"
+- name: Upload actual runtime responses
+  uses: actions/upload-artifact@v4
+  with:
+    name: runtime-proof-actual-responses-soil-moisture
+    path: tests/e2e/runtime_proof/soil_moisture/fixtures/**/actual.response.json
+    if-no-files-found: error
+
+- name: Upload runtime proof summary
+  uses: actions/upload-artifact@v4
+  with:
+    name: runtime-proof-summary-soil-moisture
+    path: artifacts/runtime-proof-summary-soil-moisture.md
+    if-no-files-found: error
 ```
 
 Use this as ordering guidance, not as proof that current `main` already contains the workflow file.
