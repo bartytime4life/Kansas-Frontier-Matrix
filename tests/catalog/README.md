@@ -1,56 +1,83 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
-title: catalog
+title: tests/catalog
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION_DATE
-updated: NEEDS_VERIFICATION_DATE
+updated: 2026-04-14
 policy_label: public
-related: [../README.md, ../../README.md, ../../tools/catalog/README.md, ../../data/catalog/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS, ../../tools/ci/README.md]
-tags: [kfm, tests, catalog, stac, dcat, prov, crosslink]
-notes: [Current public-main evidence confirms `tests/` as a governed verification surface and `tools/catalog/` as the adjacent helper lane, but exact checked-in `tests/catalog/` subtree reality remains NEEDS VERIFICATION because visible public-tree evidence and newer lane materials do not fully converge.]
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../tools/catalog/README.md,
+  ../../data/catalog/README.md,
+  ../../data/catalog/stac/README.md,
+  ../../data/catalog/dcat/README.md,
+  ../../data/catalog/prov/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../.github/workflows/README.md,
+  ../../.github/CODEOWNERS,
+  ../../tools/ci/README.md
+]
+tags: [kfm, tests, catalog, stac, dcat, prov, crosslink, fixtures]
+notes: [
+  "Updated to reflect the thin-slice `catalog_crosslink.py` helper, the passing `test_catalog_crosslink.py` test, and the proposed mismatch fixtures.",
+  "Current public-main evidence confirms `tests/` as a governed verification surface and `tools/catalog/` as the adjacent helper lane.",
+  "Exact checked-in public-tree parity for `tests/catalog/` still requires verification against the target branch."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# catalog
+# `tests/catalog/`
 
-Governed verification surface for catalog closure, cross-link consistency, and catalog-adjacent helper proof in Kansas Frontier Matrix.
+Governed verification lane for **catalog closure**, **triplet cross-link consistency**, and **catalog-helper proof** in Kansas Frontier Matrix.
 
+> [!NOTE]
 > **Status:** experimental  
 > **Document state:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/catalog/README.md`  
-> **Repo fit:** child verification lane of [`../README.md`](../README.md) · proof surface for [`../../tools/catalog/README.md`](../../tools/catalog/README.md) · adjacent metadata seam [`../../data/catalog/README.md`](../../data/catalog/README.md) · shared authority in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../policy/README.md`](../../policy/README.md) · workflow boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-directory__README-blue) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![lane](https://img.shields.io/badge/lane-tests%2Fcatalog-0a7ea4) ![scope](https://img.shields.io/badge/scope-catalog%20closure%20proof-1f6feb) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-directory__README-blue) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![Lane](https://img.shields.io/badge/lane-tests%2Fcatalog-0a7ea4) ![Scope](https://img.shields.io/badge/scope-catalog%20closure%20proof-1f6feb) ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `tests/catalog/` is **not** the home of STAC, DCAT, or PROV truth.
 >
-> This lane proves catalog closure behavior over declared artifacts. The authoritative records stay in `data/catalog/`; policy law stays in `policy/`; machine contract authority stays in `contracts/` and `schemas/`.
+> This lane proves catalog-closure behavior over declared artifacts. The authoritative records stay in `data/catalog/`; policy law stays in `policy/`; machine-contract authority stays in `contracts/` and `schemas/`.
+
+> [!TIP]
+> Keep the KFM trust split visible here:
+>
+> **fixtures + assertions ≠ helper behavior ≠ metadata truth**
+>
+> `tests/catalog/` should prove behavior.  
+> `tools/catalog/` should implement reusable checks.  
+> `data/catalog/` should remain the authoritative outward metadata seam.
 
 > [!WARNING]
-> This README is intentionally **evidence-bounded**.
+> This README is intentionally evidence-bounded.
 >
-> Current public documentation clearly supports `tests/` as a governed verification surface and `tools/catalog/` as an adjacent helper lane, but it does **not** cleanly prove that `tests/catalog/` is already a visible public subtree on `main`. This file therefore treats the lane as a branch-ready addition and marks exact subtree parity as **NEEDS VERIFICATION**.
+> Current public documentation clearly supports `tests/` as a governed verification surface and `tools/catalog/` as an adjacent helper lane, but it does **not** fully prove the exact checked-in `tests/catalog/` subtree on public `main`. Treat current thin-slice files as target-branch evidence unless rechecked directly.
 
 ---
 
 ## Scope
 
-`tests/catalog/` is the verification lane for small, reviewable checks that prove whether catalog-oriented helper logic behaves correctly over declared inputs.
+`tests/catalog/` is the verification lane for **small, reviewable proofs** that catalog-oriented helper logic behaves correctly over declared inputs.
 
 In practice, that means proving behavior around:
 
 - STAC / DCAT / PROV cross-link consistency
 - promotion-adjacent catalog closure checks
 - stable JSON report shapes intended for CI or reviewer rendering
-- negative-path handling for missing refs, subject drift, version drift, and malformed inputs
+- negative-path handling for missing refs, subject drift, version drift, release drift, and malformed inputs
 
-This lane is useful because it keeps catalog-proof behavior explicit without collapsing metadata law, policy law, and workflow orchestration into one hidden place.
+This lane matters because it keeps catalog-proof behavior explicit without collapsing metadata law, policy law, and workflow orchestration into one hidden place.
 
 ### Evidence markers used in this README
 
@@ -68,17 +95,18 @@ This lane is useful because it keeps catalog-proof behavior explicit without col
 
 ## Repo fit
 
-`tests/catalog/` should sit between the helper lane that inspects catalog closure and the release-bearing metadata surfaces that must remain authoritative.
+`tests/catalog/` sits between the **helper lane that inspects catalog closure** and the **release-bearing metadata surfaces that must remain authoritative**.
 
 | Relation | Surface | Why it matters |
 |---|---|---|
 | Parent verification lane | [`../README.md`](../README.md) | Defines `tests/` as a governed verification surface rather than a generic QA bucket |
 | Root posture | [`../../README.md`](../../README.md) | Keeps evidence-first, trust-visible repo posture in scope |
-| Helper under test | [`../../tools/catalog/README.md`](../../tools/catalog/README.md) | Defines the adjacent helper lane for catalog QA, cross-link, and reviewer-facing metadata support |
+| Helper under test | [`../../tools/catalog/README.md`](../../tools/catalog/README.md) | Defines the helper lane for catalog QA, cross-link, and reviewer-facing metadata support |
 | Metadata seam | [`../../data/catalog/README.md`](../../data/catalog/README.md) | Catalog records live there; this lane proves behavior over them rather than owning them |
+| Catalog child lanes | [`../../data/catalog/stac/README.md`](../../data/catalog/stac/README.md), [`../../data/catalog/dcat/README.md`](../../data/catalog/dcat/README.md), [`../../data/catalog/prov/README.md`](../../data/catalog/prov/README.md) | The triplet surfaces the helper reads and this lane pressure-tests |
 | Contract authority | [`../../contracts/README.md`](../../contracts/README.md) | Canonical contract semantics should stay upstream from test assertions |
 | Schema authority | [`../../schemas/README.md`](../../schemas/README.md) | Test fixtures should pressure declared shapes, not silently replace them |
-| Policy authority | [`../../policy/README.md`](../../policy/README.md) | Tests may exercise policy consequences, but policy remains the source of truth |
+| Policy authority | [`../../policy/README.md`](../../policy/README.md) | Tests may exercise policy consequences, but policy remains the authority |
 | Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Merge-blocking invocation belongs at the workflow boundary, not hidden inside tests |
 | Ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current owner coverage for `/tests/` resolves here |
 | Reviewer rendering handoff | [`../../tools/ci/README.md`](../../tools/ci/README.md) | Stable machine-readable outputs from this lane can later feed reviewer-facing summaries |
@@ -89,7 +117,7 @@ This lane is useful because it keeps catalog-proof behavior explicit without col
 |---|---|
 | What belongs here? | Small, deterministic proofs for catalog closure helpers and catalog-adjacent validation behavior |
 | What does not belong here? | Authoritative catalog records, policy bundles, schema-home decisions, or workflow orchestration |
-| Why keep it separate from `tools/catalog/`? | `tools/catalog/` owns reusable helper behavior; `tests/catalog/` should own fixtures, assertions, and failure-path proof |
+| Why keep it separate from `tools/catalog/`? | `tools/catalog/` owns reusable helper behavior; `tests/catalog/` owns fixtures, assertions, and fail-path proof |
 | Why keep it separate from `data/catalog/`? | Catalog artifacts are release-bearing metadata, not disposable test fixtures |
 
 [Back to top](#top)
@@ -103,8 +131,8 @@ Only explicit, reviewable, public-safe artifacts belong here.
 | Input class | Examples | Why it belongs here |
 |---|---|---|
 | Thin-slice helper inputs | `decision.json`, `promotion-record.json`, crosslink report JSON | Lets the lane prove concrete helper behavior over declared artifacts |
-| Catalog reference fixtures | STAC/DCAT/PROV refs with aligned or misaligned subject/version shapes | Makes cross-link behavior legible and deterministic |
-| Minimal negative-path cases | missing refs, wrong subject, version drift, malformed JSON | KFM negative states are first-class and should be proved directly |
+| Catalog reference fixtures | STAC / DCAT / PROV refs with aligned or misaligned subject/version shapes | Makes cross-link behavior legible and deterministic |
+| Minimal negative-path cases | missing refs, wrong subject, version drift, release drift, malformed JSON | KFM negative states are first-class and should be proved directly |
 | Stable helper outputs | compact JSON reports and exit codes | CI and reviewer helpers can consume these without scraping logs |
 | Small synthetic metadata | public-safe catalog fragments and placeholder IDs | Keeps the lane clone-safe and understandable |
 
@@ -115,6 +143,8 @@ Only explicit, reviewable, public-safe artifacts belong here.
 3. Keep identifiers and references legible enough for review.
 4. Preserve upstream artifact shape when a helper depends on it.
 5. Treat malformed-input cases as equally important proof surfaces.
+
+[Back to top](#top)
 
 ---
 
@@ -142,13 +172,13 @@ Only explicit, reviewable, public-safe artifacts belong here.
 
 | Evidence item | Status | How this README uses it |
 |---|---|---|
-| `tests/` is a governed verification surface with public README-first routing | **CONFIRMED** | grounds this file as a child test lane rather than a generic folder |
-| `/tests/` is owned by `@bartytime4life` in current visible `CODEOWNERS` | **CONFIRMED** | grounds the owners line |
-| The current public `tests/README.md` names several downstream families but does **not** list `catalog/` among its confirmed downstream surfaces | **CONFIRMED** | prevents overclaiming current public subtree maturity |
-| The current public `tests/` tree visibly includes `accessibility/`, `ci/`, `contracts/`, `e2e/`, `fixtures/`, `integration/`, `policy/`, `reproducibility/`, `runtime_verification/`, `unit/`, `validators/`, and `README.md` | **CONFIRMED** | grounds the parent-lane snapshot and makes the absence of visible `catalog/` meaningful |
-| `tools/catalog/README.md` exists and clearly frames `tools/catalog/` as the helper lane for catalog QA, cross-link, and reviewer-facing metadata support | **CONFIRMED** | grounds the adjacent lane contract this README should complement |
-| A thin-slice direction centered on `tools/catalog/catalog_crosslink.py` with `tests/catalog/test_catalog_crosslink.py` as its proof surface is documented in adjacent lane materials | **DOCUMENTED / NEEDS VERIFICATION ON TARGET BRANCH** | supports the lane shape below without upgrading branch reality into public-tree fact |
-| Exact checked-in presence of `tests/catalog/` and `test_catalog_crosslink.py` on the current public `main` tree | **NEEDS VERIFICATION** | kept explicitly bounded until the target branch is inspected directly |
+| `tests/` is a governed verification surface with public README-first routing | **CONFIRMED** | Grounds this file as a child test lane rather than a generic folder |
+| `/tests/` is owned by `@bartytime4life` in current visible `CODEOWNERS` | **CONFIRMED** | Grounds the owners line |
+| The current public `tests/README.md` names several downstream families but does **not** list `catalog/` among its confirmed downstream surfaces | **CONFIRMED** | Prevents overclaiming current public subtree maturity |
+| The current public `tests/` tree visibly includes `accessibility/`, `ci/`, `contracts/`, `e2e/`, `fixtures/`, `integration/`, `policy/`, `reproducibility/`, `runtime_verification/`, `unit/`, `validators/`, and `README.md` | **CONFIRMED** | Grounds the parent-lane snapshot and makes the absence of visible `catalog/` meaningful |
+| `tools/catalog/README.md` exists and clearly frames `tools/catalog/` as the helper lane for catalog QA, cross-link, and reviewer-facing metadata support | **CONFIRMED** | Grounds the adjacent lane contract this README should complement |
+| A thin-slice direction centered on `tools/catalog/catalog_crosslink.py` with `tests/catalog/test_catalog_crosslink.py` as its proof surface is documented in adjacent lane materials | **DOCUMENTED / NEEDS VERIFICATION ON TARGET BRANCH** | Supports the lane shape below without upgrading branch reality into public-tree fact |
+| Exact checked-in presence of `tests/catalog/`, `tests/catalog/test_catalog_crosslink.py`, and `tests/catalog/fixtures/` on current public `main` | **NEEDS VERIFICATION** | Kept explicitly bounded until the target branch is inspected directly |
 
 [Back to top](#top)
 
@@ -174,12 +204,15 @@ tests/
 └── validators/
 ```
 
-### Working-branch-aligned landing shape for this lane
+### Target landing shape for this lane
 
 ```text
 tests/catalog/
 ├── README.md
-└── test_catalog_crosslink.py
+├── test_catalog_crosslink.py
+└── fixtures/
+    ├── promotion-record-mismatch.json
+    └── prov-mismatch.json
 ```
 
 ### Optional fixture shape to prefer as the lane matures
@@ -197,7 +230,7 @@ tests/catalog/
 > [!NOTE]
 > The first tree above is **current public-tree fact**.
 >
-> The latter shapes are the safest repo-native landing forms for this README and its thin-slice proof partner. Keep them marked as branch-conditional until the target checkout confirms them.
+> The latter shapes are the safest repo-native landing forms for this README, the thin-slice proof, and the first mismatch fixtures. Keep them marked as branch-conditional until the target checkout confirms them.
 
 [Back to top](#top)
 
@@ -229,16 +262,16 @@ sed -n '1,260p' .github/workflows/README.md 2>/dev/null
 rg -n "catalog|crosslink|stac|dcat|prov" tests tools scripts .github data contracts schemas policy -S 2>/dev/null
 ```
 
-### 4) Branch-conditional thin-slice local run
+### 4) Thin-slice local run
 
 ```bash
 python tools/catalog/catalog_crosslink.py \
-  --decision decision.json \
-  --record promotion-record.json \
+  --decision data/proofs/releases/floodplain-kansas-v1/decision.json \
+  --record data/proofs/releases/floodplain-kansas-v1/promotion-record.json \
   --output catalog-crosslink-report.json
 ```
 
-### 5) Branch-conditional thin-slice test run
+### 5) Thin-slice test run
 
 ```bash
 pytest -q tests/catalog/test_catalog_crosslink.py
@@ -246,6 +279,7 @@ pytest -q tests/catalog/test_catalog_crosslink.py
 
 > [!TIP]
 > Inventory first, then assert lane maturity.
+>
 > In KFM, a clear “not present yet” result is stronger than a confident fantasy subtree.
 
 [Back to top](#top)
@@ -285,7 +319,7 @@ The smallest credible first proof is a pass/fail pair around cross-link closure:
    → helper returns pass and non-blocking output
 
 2. **misaligned triplet**  
-   mismatched subject or mismatched version  
+   mismatched subject or mismatched version / release  
    → helper returns fail and blocking output
 
 ### Tool behavior contract
@@ -322,16 +356,18 @@ flowchart LR
     style G fill:#fff1f2,stroke:#dc2626
 ```
 
+[Back to top](#top)
+
 ---
 
-## Tables
+## Reference tables
 
 ### Proof matrix
 
 | Proof case | Inputs | Expected result | Why it matters |
 |---|---|---|---|
 | Aligned triplet | STAC / DCAT / PROV refs for one subject and one version | `pass`, non-blocking | proves the happy path without ambiguity |
-| PROV subject drift | mismatched `prov` subject ref | `fail`, blocking | catches lineage misbinding |
+| PROV subject drift | mismatched PROV subject ref | `fail`, blocking | catches lineage misbinding |
 | Version drift | STAC / DCAT / PROV versions diverge | `fail`, blocking | catches closure drift across outward records |
 | Release-ref drift | release ref version not aligned to catalog triplet | `fail`, blocking | catches review-significant promotion mismatch |
 | Malformed input | missing file or invalid JSON | `error`, non-success exit | proves fail-closed hygiene |
@@ -346,6 +382,13 @@ flowchart LR
 | `.github/workflows/` | ❌ | ❌ | ✅ |
 | `tools/ci/` | ❌ | rendered summaries only | ❌ |
 
+### Current thin-slice fixture intent
+
+| Fixture | Intent | Expected failure |
+|---|---|---|
+| `fixtures/promotion-record-mismatch.json` | points to an intentionally wrong PROV bundle | version / release mismatch |
+| `fixtures/prov-mismatch.json` | carries mismatched `subject_id` and `release_ref` | triplet closure failure |
+
 [Back to top](#top)
 
 ---
@@ -354,9 +397,9 @@ flowchart LR
 
 - [ ] Verify whether `tests/catalog/` already exists on the target branch
 - [ ] Land or confirm `test_catalog_crosslink.py`
-- [ ] Add tiny aligned and misaligned fixture pairs if the branch keeps them local to this lane
+- [ ] Land or confirm the first mismatch fixtures
 - [ ] Prove local and CI invocation parity with one documented command pair
-- [ ] Extend cross-link checks from ref-shape alignment toward declared mounted-record subject/property checks
+- [ ] Extend cross-link checks from ref-shape alignment toward mounted-record subject/property checks
 - [ ] Add an optional reviewer-facing handoff path into `tools/ci/` once the JSON report shape is stable
 - [ ] Reconcile this lane with the parent `tests/README.md` family map after subtree reality is confirmed
 
@@ -366,6 +409,7 @@ This lane is ready to move from draft toward review when all of the following ar
 
 - the target branch clearly contains the subtree
 - one thin-slice test is executable
+- one aligned and one misaligned case are both present
 - the helper under test has a documented local run path
 - negative-path behavior is explicit
 - parent and adjacent lane docs no longer disagree about whether the subtree exists
@@ -380,7 +424,7 @@ This lane is ready to move from draft toward review when all of the following ar
 
 Because `tools/catalog/` should own reusable helper behavior. `tests/catalog/` should own fixtures, assertions, and negative-path proof.
 
-### Why does this README keep saying “NEEDS VERIFICATION”?
+### Why does this README keep saying `NEEDS VERIFICATION`?
 
 Because the visible public repo evidence does not cleanly prove the subtree already exists, even though adjacent lane materials clearly point toward it. This file keeps that tension visible instead of smoothing it away.
 
@@ -390,7 +434,7 @@ Because catalog records are release-bearing metadata. Small synthetic examples a
 
 ### Should this lane become a full end-to-end promotion suite?
 
-No. Once the proof burden becomes broader than catalog helper behavior, it should graduate to `tests/e2e/`, `tests/validators/`, or another stronger lifecycle surface.
+No. Once the proof burden becomes broader than catalog-helper behavior, it should graduate to `tests/e2e/`, `tests/validators/`, or another stronger lifecycle surface.
 
 [Back to top](#top)
 
@@ -399,7 +443,7 @@ No. Once the proof burden becomes broader than catalog helper behavior, it shoul
 ## Appendix
 
 <details>
-<summary>Illustrative thin-slice fixture pair</summary>
+<summary><strong>Illustrative thin-slice fixture pair</strong></summary>
 
 These examples are illustrative only. Keep checked-in fixtures tiny and synthetic.
 
@@ -407,12 +451,9 @@ These examples are illustrative only. Keep checked-in fixtures tiny and syntheti
 
 ```json
 {
-  "candidate_id": "overlay:floodplain-kansas",
-  "catalog_refs": {
-    "stac": "kfm://catalog/stac/overlay/floodplain-kansas/v1",
-    "dcat": "kfm://catalog/dcat/overlay/floodplain-kansas/v1",
-    "prov": "kfm://catalog/prov/overlay/floodplain-kansas/v1"
-  }
+  "candidate_id": "floodplain-kansas",
+  "dataset_version_id": "floodplain-kansas__v1",
+  "release_id": "floodplain-kansas-v1"
 }
 ```
 
@@ -420,23 +461,14 @@ These examples are illustrative only. Keep checked-in fixtures tiny and syntheti
 
 ```json
 {
-  "record_type": "kfm.promotion.record",
-  "candidate_id": "overlay:floodplain-kansas",
-  "spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "decision": "PROMOTE",
-  "generated_at": "2026-04-13T00:00:00Z",
-  "recorded_at": "2026-04-13T00:05:00Z",
-  "reason_codes": [],
-  "obligations": [],
-  "release_ref": "kfm://release/overlay/floodplain-kansas/v1",
-  "gate_statuses": {
-    "A": "PASS",
-    "B": "PASS",
-    "C": "PASS",
-    "D": "PASS",
-    "E": "PASS",
-    "F": "PASS",
-    "G": "PASS"
+  "promotion_id": "promotion:floodplain-kansas-v1",
+  "candidate_id": "floodplain-kansas",
+  "dataset_version_id": "floodplain-kansas__v1",
+  "release_id": "floodplain-kansas-v1",
+  "catalog_refs": {
+    "stac_ref": "data/catalog/stac/items/floodplain-kansas__v1.json",
+    "dcat_ref": "data/catalog/dcat/datasets/floodplain-kansas__v1.jsonld",
+    "prov_ref": "data/catalog/prov/floodplain-kansas__v1.prov.json"
   }
 }
 ```
