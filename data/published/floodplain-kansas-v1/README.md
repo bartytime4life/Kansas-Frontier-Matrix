@@ -5,41 +5,45 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: NEEDS_VERIFICATION
+updated: 2026-04-14
 policy_label: public
-related: [../README.md, ../../catalog/README.md, ../../proofs/README.md, ../../receipts/README.md, <NEEDS_VERIFICATION: ../../registry/datasets/floodplain-kansas.yaml>, <NEEDS_VERIFICATION: ../../work/overlays/floodplain-kansas/stac-item.json>, <NEEDS_VERIFICATION: ../../catalog/stac/overlays/floodplain-kansas/v1/item.json>, <NEEDS_VERIFICATION: ../../catalog/prov/overlays/floodplain-kansas/v1/prov.json>]
+related: [
+  ../README.md,
+  ../../catalog/README.md,
+  ../../proofs/README.md,
+  ../../receipts/README.md,
+  <NEEDS_VERIFICATION: ../../registry/datasets/floodplain-kansas.yaml>,
+  <NEEDS_VERIFICATION: ../../work/overlays/floodplain-kansas/stac-item.json>,
+  <NEEDS_VERIFICATION: ../../catalog/stac/overlays/floodplain-kansas/v1/item.json>,
+  <NEEDS_VERIFICATION: ../../catalog/prov/overlays/floodplain-kansas/v1/prov.json>
+]
 tags: [kfm, data, published, floodplain, kansas]
-notes: [Requested target path is data/published/floodplain-kansas-v1/README.md; current-session corpus confirms the floodplain-kansas-v1 overlay identity and release-candidate metadata, but live mounted-branch presence of this dataset-version directory still needs verification.]
+notes: [
+  "Requested target path is data/published/floodplain-kansas-v1/README.md.",
+  "Current-session corpus confirms the floodplain-kansas-v1 overlay identity and release-candidate metadata.",
+  "Live mounted-branch presence of this dataset-version directory and its adjacent artifact paths still needs verification."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# floodplain-kansas-v1
+# `floodplain-kansas-v1`
 
-Release-backed README companion for the public-safe Kansas floodplain overlay materialization surface.
+Release-backed README companion for the **public-safe Kansas floodplain overlay** materialization surface.
 
-> **Status:** `experimental`  
-> **Doc state:** `draft`  
+> [!NOTE]
+> **Status:** experimental  
+> **Document status:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path target:** `data/published/floodplain-kansas-v1/README.md`  
-> **Repo fit:** child release companion under `data/published/`; downstream of `PROCESSED + CATALOG + proof` closure; upstream of governed APIs and trust-visible clients  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current evidence snapshot](#current-evidence-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
-
-![status](https://img.shields.io/badge/status-experimental-orange)
-![doc](https://img.shields.io/badge/doc-dataset%20README-1f6feb)
-![policy](https://img.shields.io/badge/policy-public-0a7d5a)
-![surface](https://img.shields.io/badge/surface-published%20release%20companion-6f42c1)
-![trust](https://img.shields.io/badge/trust-release--backed-5b4bdb)
-![tree](https://img.shields.io/badge/tree-NEEDS__VERIFICATION-f59e0b)
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-dataset%20README-1f6feb) ![Policy](https://img.shields.io/badge/policy-public-0a7d5a) ![Surface](https://img.shields.io/badge/surface-published%20release%20companion-6f42c1) ![Trust](https://img.shields.io/badge/trust-release--backed-5b4bdb) ![Tree](https://img.shields.io/badge/tree-NEEDS__VERIFICATION-f59e0b)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence snapshot](#current-evidence-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README documents a **release companion surface**, not the source of truth itself.
 >
 > In KFM, publication is a **governed state first**. This file should help reviewers and maintainers understand one released overlay version without collapsing receipts, proofs, catalog closure, and upstream processed authority into a single folder.
-
-> [!NOTE]
-> The strongest dataset-specific evidence currently surfaced in-session is a fresh promotion-style corpus packet for `overlay:floodplain-kansas` / `floodplain-kansas-v1`. That packet is strong enough to ground identity, extent, policy posture, and likely adjacent artifacts. It is **not** direct mounted-branch proof that this exact directory already exists.
 
 > [!WARNING]
 > Do **not** read this README as proof of:
@@ -57,18 +61,20 @@ Release-backed README companion for the public-safe Kansas floodplain overlay ma
 
 `floodplain-kansas-v1` is the intended dataset-version companion for a **Kansas floodplain overlay release** that has already crossed the KFM trust boundary strongly enough to be described at the `PUBLISHED` edge.
 
-This README is for four jobs:
+This README has four jobs:
 
-1. explain what this version is supposed to represent,
-2. keep the release-facing surface readable in GitHub,
-3. point reviewers toward the adjacent trust objects that actually justify publication,
-4. keep current certainty and uncertainty visible.
+1. explain what this version represents
+2. keep the release-facing surface readable in GitHub
+3. point reviewers toward the adjacent trust objects that actually justify publication
+4. keep certainty and uncertainty visible
 
 In KFM terms, this directory is **downstream** of the governing lifecycle:
 
-`Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED`
+```text
+Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED
+```
 
-It should therefore stay strong on release identity, policy-safe scope, caveats, and lineage pointers, while staying deliberately weak on invented subtree detail.
+It should stay strong on release identity, policy-safe scope, caveats, and lineage pointers, while staying deliberately weak on invented subtree detail.
 
 [Back to top](#top)
 
@@ -82,21 +88,21 @@ This folder is the likely place for a **human-readable per-version companion** t
 
 It is a good fit here when all of the following are true:
 
-- the overlay already has a stable release identity,
-- the scope is public-safe,
-- the release is linked to catalog closure,
-- proof objects and receipts remain adjacent rather than hidden,
-- correction and rollback can stay visible.
+- the overlay already has a stable release identity
+- the scope is public-safe
+- the release is linked to catalog closure
+- proof objects and receipts remain adjacent rather than hidden
+- correction and rollback can stay visible
 
 ### What this directory is not for
 
 This folder should **not** become:
 
-- the canonical home for raw or work-stage source material,
-- the place where policy is authored,
-- the place where DSSE bundles or proof packs are flattened into prose,
-- a substitute for `STAC + DCAT + PROV`,
-- or a backdoor public API.
+- the canonical home for raw or work-stage source material
+- the place where policy is authored
+- the place where DSSE bundles or proof packs are flattened into prose
+- a substitute for `STAC + DCAT + PROV`
+- a backdoor public API
 
 ### Path and adjacent surfaces
 
@@ -187,24 +193,24 @@ Those objects should remain linkable, inspectable, and separate.
 
 This README should **not**:
 
-- store raw FEMA or other source payloads,
-- flatten proofs into prose,
-- duplicate policy-bundle logic,
-- pretend to be the authoritative STAC / DCAT / PROV record,
-- claim real-time flood extent,
-- claim hydraulic-model output,
-- silently reinterpret rights or sensitivity,
-- imply active workflow enforcement unless the target branch proves it,
-- or hide correction / supersession state.
+- store raw FEMA or other source payloads
+- flatten proofs into prose
+- duplicate policy-bundle logic
+- pretend to be the authoritative STAC / DCAT / PROV record
+- claim real-time flood extent
+- claim hydraulic-model output
+- silently reinterpret rights or sensitivity
+- imply active workflow enforcement unless the target branch proves it
+- hide correction / supersession state
 
 > [!CAUTION]
 > Floodplain material is easy to over-read.
 >
 > A KFM floodplain overlay may be visually persuasive, but this README should not let a reader confuse:
 >
-> - regulatory context with observed inundation,
-> - a released overlay with an emergency alert,
-> - or a Kansas-wide public-safe release with full source-native detail.
+> - regulatory context with observed inundation
+> - a released overlay with an emergency alert
+> - a Kansas-wide public-safe release with full source-native detail
 
 [Back to top](#top)
 
@@ -217,7 +223,7 @@ This README should **not**:
 ```text
 data/published/
 └── floodplain-kansas-v1/
-    └── README.md   # target file requested in this session
+    └── README.md
 ```
 
 ### Likely adjacent release surfaces from the corpus packet
@@ -226,46 +232,43 @@ data/published/
 data/
 ├── registry/
 │   └── datasets/
-│       └── floodplain-kansas.yaml                     # corpus-confirmed path pattern; branch recheck needed
+│       └── floodplain-kansas.yaml
 ├── work/
 │   └── overlays/
 │       └── floodplain-kansas/
-│           ├── stac-item.json                         # corpus-confirmed path pattern; branch recheck needed
+│           ├── stac-item.json
 │           └── assets/
-│               └── floodplain.geojson                # corpus-confirmed path pattern; branch recheck needed
+│               └── floodplain.geojson
 ├── receipts/
 │   └── runs/
 │       ├── preview/
 │       ├── promote/
-│       └── rollback/                                 # corpus-confirmed pattern; branch recheck needed
+│       └── rollback/
 ├── proofs/
 │   └── overlays/
 │       └── floodplain-kansas/
 │           └── v1/
-│               ├── manifest.json                     # corpus-confirmed path pattern; branch recheck needed
-│               ├── attestation.dsse.json             # corpus-confirmed path pattern; branch recheck needed
-│               └── rollback.dsse.json                # corpus-confirmed path pattern; branch recheck needed
+│               ├── manifest.json
+│               ├── attestation.dsse.json
+│               └── rollback.dsse.json
 └── catalog/
     ├── stac/
     │   └── overlays/
     │       └── floodplain-kansas/
     │           └── v1/
-    │               └── item.json                     # corpus-confirmed path pattern; branch recheck needed
+    │               └── item.json
     └── prov/
         └── overlays/
             └── floodplain-kansas/
                 └── v1/
-                    └── prov.json                     # corpus-confirmed path pattern; branch recheck needed
+                    └── prov.json
 ```
 
-### What is currently safe to claim about `published/`
+### Interpretation rule
 
-```text
-data/published/
-└── README.md        # public-main documentation surface already described in adjacent draft
-```
-
-Per-version child folders under `data/published/` remain a **strong fit** for KFM, but this specific subtree still needs checkout verification.
+- the first tree is the **requested target**
+- the second tree is a **corpus-grounded likely adjacency map**
+- exact mounted paths still require recheck before stronger claims
 
 [Back to top](#top)
 
@@ -275,14 +278,14 @@ Per-version child folders under `data/published/` remain a **strong fit** for KF
 
 Use a verification-first loop before merging this README.
 
-### 1) Inspect the target surface
+### 1. Inspect the target surface
 
 ```bash
 pwd
 find data/published/floodplain-kansas-v1 -maxdepth 3 -print 2>/dev/null | sort
 ```
 
-### 2) Inspect likely adjacent release objects
+### 2. Inspect likely adjacent release objects
 
 ```bash
 for p in \
@@ -296,7 +299,7 @@ do
 done
 ```
 
-### 3) Recheck the release-facing metadata if the files exist
+### 3. Recheck release-facing metadata if files exist
 
 ```bash
 jq '.' data/work/overlays/floodplain-kansas/stac-item.json | sed -n '1,160p'
@@ -305,7 +308,7 @@ jq '.' data/catalog/stac/overlays/floodplain-kansas/v1/item.json | sed -n '1,160
 jq '.' data/catalog/prov/overlays/floodplain-kansas/v1/prov.json | sed -n '1,160p'
 ```
 
-### 4) Verify the release facts this README depends on
+### 4. Verify the release facts this README depends on
 
 Check that the mounted branch still agrees with the corpus-grounded release facts used here:
 
@@ -317,13 +320,13 @@ Check that the mounted branch still agrees with the corpus-grounded release fact
 - policy label `public`
 - rights posture `public-domain`
 
-### 5) Downgrade any claim that the branch cannot prove
+### 5. Downgrade any claim that the branch cannot prove
 
 If the checkout disagrees with this README:
 
-- keep doctrine claims,
-- correct the concrete file/path/value claims,
-- and preserve uncertainty visibly rather than smoothing it away.
+- keep doctrine claims
+- correct concrete file/path/value claims
+- preserve uncertainty visibly rather than smoothing it away
 
 ---
 
@@ -333,23 +336,23 @@ If the checkout disagrees with this README:
 
 Use this README as the **human-readable release companion** for:
 
-- quick orientation,
-- GitHub navigation,
-- review handoff,
-- public-safe caveats,
-- and correction-aware release context.
+- quick orientation
+- GitHub navigation
+- review handoff
+- public-safe caveats
+- correction-aware release context
 
 ### How maintainers should not use this file
 
 Do **not** use this README as the only place where release truth lives.
 
-The machine-checkable authority should stay distributed across adjacent objects such as:
+Machine-checkable authority should stay distributed across adjacent objects such as:
 
-- the canonical spec input,
-- release manifest,
-- proof bundle / DSSE attestation,
-- catalog triplet,
-- and audit-facing receipts.
+- the canonical spec input
+- release manifest
+- proof bundle / DSSE attestation
+- catalog triplet
+- audit-facing receipts
 
 ### Reader contract
 
@@ -385,11 +388,11 @@ flowchart LR
 ```
 
 > [!TIP]
-> The important design move is the split:
+> The important split is:
 >
-> - `PUBLISHED` is a release state,
-> - this README is a materialized companion,
-> - and authority still depends on the adjacent trust objects.
+> - `PUBLISHED` is a release state
+> - this README is a materialized companion
+> - authority still depends on the adjacent trust objects
 
 [Back to top](#top)
 
@@ -463,7 +466,7 @@ flowchart LR
 - [ ] Confirm whether `data/published/floodplain-kansas-v1/` already exists on the target branch.
 - [ ] Recheck whether `../../registry/datasets/floodplain-kansas.yaml` is the actual registry path.
 - [ ] Recheck whether the mounted branch contains a `DCAT` JSON file for this version and add its exact path if present.
-- [ ] Confirm that `STAC`, `PROV`, proof, and receipt counterparts exist where this README points.
+- [ ] Confirm that STAC, PROV, proof, and receipt counterparts exist where this README points.
 - [ ] Verify that the mounted `stac-item.json` still matches the release facts used here.
 - [ ] Verify whether `public-domain` is still the intended outward license string for this version.
 - [ ] Add one real correction or supersession pointer once the release lane proves it.
@@ -496,8 +499,7 @@ No. This README should not let a user confuse a released floodplain overlay with
 
 ### Why keep receipts, proofs, and catalogs separate?
 
-Because KFM’s trust model depends on each surface doing one job well:
-discovery, lineage, proof, and process memory should remain inspectable instead of being flattened into one file.
+Because KFM’s trust model depends on each surface doing one job well. Discovery, lineage, proof, and process memory should remain inspectable instead of being flattened into one file.
 
 ### Why is the policy label set to `public` if branch verification is still pending?
 
@@ -507,10 +509,10 @@ Because the freshest floodplain release packet explicitly carries `policy_label:
 
 The highest-value next additions would be:
 
-- the exact `DCAT` file path,
-- one mounted proof path,
-- one mounted correction or rollback pointer,
-- and replacement of all placeholders in the meta block.
+- the exact `DCAT` file path
+- one mounted proof path
+- one mounted correction or rollback pointer
+- replacement of all placeholders in the meta block
 
 [Back to top](#top)
 
@@ -572,9 +574,10 @@ Mounted presence of these paths should be checked before this README is treated 
 Use this README to explain **what the version is** and **how to review it**.
 
 Do not use this README to:
-- substitute for catalog closure,
-- hide missing proofs,
-- or quietly widen publication claims beyond what the release objects can support.
+
+- substitute for catalog closure
+- hide missing proofs
+- quietly widen publication claims beyond what the release objects can support
 
 </details>
 
