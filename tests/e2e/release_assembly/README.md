@@ -1,41 +1,82 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/REVIEW-NEEDED-UUID
-title: release assembly
+doc_id: kfm://doc/NEEDS-VERIFICATION
+title: tests/e2e/release_assembly
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: REVIEW-NEEDED
-related: [../README.md, ../../README.md, ../../../README.md, ../../../.github/README.md, ../../../.github/workflows/README.md, ../../../.github/CODEOWNERS, ../../../contracts/README.md, ../../../policy/README.md, ../../../docs/README.md, ../runtime_proof/README.md, ../correction/README.md]
-tags: [kfm, tests, e2e, release-assembly]
-notes: [doc_id placeholder pending document-record verification, created/updated placeholders pending git-history verification, policy_label placeholder pending governance classification verification]
+created: NEEDS_VERIFICATION
+updated: 2026-04-14
+policy_label: public
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../../README.md,
+  ../../../.github/README.md,
+  ../../../.github/workflows/README.md,
+  ../../../.github/CODEOWNERS,
+  ../../../contracts/README.md,
+  ../../../policy/README.md,
+  ../../../schemas/README.md,
+  ../../../docs/README.md,
+  ../../../data/proofs/README.md,
+  ../../../data/receipts/README.md,
+  ../../../data/published/README.md,
+  ../../../data/proofs/releases/floodplain-kansas-v1/decision.json,
+  ../../../data/proofs/releases/floodplain-kansas-v1/promotion-record.json,
+  ../../../data/proofs/releases/floodplain-kansas-v1/release-manifest.json,
+  ../../../data/proofs/releases/floodplain-kansas-v1/release-proof-pack.json,
+  ../runtime_proof/README.md,
+  ../correction/README.md
+]
+tags: [kfm, tests, e2e, release-assembly, manifest, proof-pack, promotion]
+notes: [
+  "Reconciled against the parent e2e lane and the thin-slice floodplain release artifacts.",
+  "Current public main proves the leaf exists; deeper executable suite depth remains branch-sensitive.",
+  "doc_id, created date, and any future local test inventory remain NEEDS VERIFICATION."
+]
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
+# `tests/e2e/release_assembly/`
+
+Governed end-to-end proof surface for **promotion**, **release evidence**, **publish-path integrity**, and **post-promotion lineage** in Kansas Frontier Matrix.
+
 > [!NOTE]
-> The meta block above keeps reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` until git history and document-record metadata are reverified from a checked-out branch or governance record.
-
-# release assembly
-
-_Governed end-to-end proof surface for promotion, release evidence, publish-path integrity, and post-promotion lineage in Kansas Frontier Matrix._
+> The meta block above keeps reviewable placeholders for `doc_id`, `created`, and any still-unverified document-record metadata until git history and governance records are rechecked.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/release_assembly/README.md`  
-> **Repo fit:** leaf release / promotion / publish-path proof family under [`../README.md`](../README.md); downstream of [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../.github/README.md`](../../../.github/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), and [`../../../docs/README.md`](../../../docs/README.md); adjacent to [`../runtime_proof/README.md`](../runtime_proof/README.md) and [`../correction/README.md`](../correction/README.md)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq)  
 >
-> ![status](https://img.shields.io/badge/status-experimental-orange)
-> ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
-> ![scope](https://img.shields.io/badge/scope-release__assembly-6f42c1)
-> ![branch](https://img.shields.io/badge/branch-main-0a7d5a)
-> ![public main](https://img.shields.io/badge/public__main-README--only-lightgrey)
->
-> [!IMPORTANT]
-> Current public `main` proves this directory exists, but it does **not** prove executable suite depth, checked-in workflow gates, proof-pack emitters, or branch protection details.
+> ![Status](https://img.shields.io/badge/status-experimental-orange)
+> ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
+> ![Scope](https://img.shields.io/badge/scope-release__assembly-6f42c1)
+> ![Branch](https://img.shields.io/badge/branch-main-0a7d5a)
+> ![Surface](https://img.shields.io/badge/surface-proof--bearing%20promotion-0a7ea4)
+> ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)
 
-Keep runner, workflow, and artifact-emission claims explicitly bounded until the checked-out branch is inspected.
+> [!IMPORTANT]
+> In KFM, a successful build or deploy is still weaker than a governed release.
+>
+> This leaf exists to prove that a candidate became **publishable with lineage intact**.
+
+> [!WARNING]
+> Current public `main` proves this directory exists, but does **not** by itself prove executable suite depth, checked-in workflow gates, proof-pack emitters, or required checks.
+>
+> Keep runner, workflow, and artifact-emission claims explicitly bounded until the checked-out branch is inspected.
+
+> [!TIP]
+> Keep the release grammar explicit:
+>
+> - `decision.json` → finite promotion outcome
+> - `promotion-record.json` → review-facing release linkage
+> - `release-manifest.json` → release inventory and closure anchor
+> - `release-proof-pack.json` → compact proof-bearing bundle
+>
+> Missing proof is a release failure, not a formatting inconvenience.
 
 ---
 
@@ -50,7 +91,9 @@ This directory exists to answer questions like:
 - Do docs, accessibility, and trust-visible release cues stay attached to the release rather than drifting into after-the-fact cleanup?
 - Can derived delivery and outward-facing surfaces still point back to a known release scope?
 
-In KFM terms, this family should protect the seam where **deployment success is still weaker than publication safety**.
+In KFM terms, this family protects the seam where:
+
+> **deployment success is still weaker than publication safety**
 
 ### Status markers used here
 
@@ -67,14 +110,17 @@ In KFM terms, this family should protect the seam where **deployment success is 
 | Area | Current posture |
 |---|---|
 | Directory existence | **CONFIRMED** |
-| Directory contents beyond `README.md` on public `main` | **UNKNOWN** |
 | Parent `tests/e2e/` family placement | **CONFIRMED** |
 | Sibling `e2e` leaf family structure | **CONFIRMED** |
+| Thin-slice floodplain release artifacts under `data/proofs/releases/floodplain-kansas-v1/` | **CONFIRMED in current working slice** |
 | Checked-in workflow YAML for merge-blocking release gates on public `main` | **NEEDS VERIFICATION** |
 | Exact test runner, fixture layout, and harness depth | **NEEDS VERIFICATION** |
-| Release-proof, correction, and fail-closed burden language | **CONFIRMED** in supplied March 2026 KFM manuals |
+| Dedicated local executable release-assembly test file in this leaf | **NOT YET PRESENT / PROPOSED** |
+| Release-proof, correction, and fail-closed burden language | **CONFIRMED** in KFM doctrine |
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -86,7 +132,12 @@ This file documents the responsibility of:
 tests/e2e/release_assembly/
 ```
 
-Within the broader repo, that family sits inside the `tests/e2e/` verification lane and is the natural home for **promotion / release / publish-path proof**.
+Within the broader repo, that family sits inside the `tests/e2e/` verification lane and is the natural home for:
+
+- promotion proof
+- release completeness
+- publish-path integrity
+- rollback-ready lineage
 
 ### Upstream anchors
 
@@ -94,37 +145,48 @@ Within the broader repo, that family sits inside the `tests/e2e/` verification l
 |---|---|
 | [`../README.md`](../README.md) | Defines `e2e/` as the whole-path proof umbrella and places `release_assembly/` beside `runtime_proof/` and `correction/` |
 | [`../../README.md`](../../README.md) | Defines the broader `tests/` tree and names `e2e/release_assembly/` as the release / promotion / publish-path proof family |
-| [`../../../README.md`](../../../README.md) | Establishes repo-wide verification-first posture |
+| [`../../../README.md`](../../../README.md) | Establishes repo-wide evidence-first posture |
 | [`../../../.github/README.md`](../../../.github/README.md) | Frames `.github/` as the repository gatehouse for governance, review, CI/CD, and delivery evidence |
 | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Documents current workflow-lane reality and keeps CI claims bounded |
 | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Current ownership signal for `/tests/` |
-| [`../../../contracts/README.md`](../../../contracts/README.md) | Keeps contract/testing language aligned with machine-readable backbone expectations |
-| [`../../../policy/README.md`](../../../policy/README.md) | Keeps release checks aligned with default-deny / fail-closed policy posture |
+| [`../../../contracts/README.md`](../../../contracts/README.md) | Keeps release/testing language aligned with contract-backed objects |
+| [`../../../policy/README.md`](../../../policy/README.md) | Keeps release checks aligned with fail-closed policy posture |
+| [`../../../schemas/README.md`](../../../schemas/README.md) | Prevents release-proof drift into schema-authority claims |
 | [`../../../docs/README.md`](../../../docs/README.md) | Reminds maintainers that docs are part of the trust surface, not a post-release extra |
+| [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release proof objects remain authoritative outside this leaf |
+| [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory and audit continuity stay adjacent |
+| [`../../../data/published/README.md`](../../../data/published/README.md) | Outward materialization should remain linked to release truth |
 
-### Adjacent e2e families
+### Adjacent `e2e` families
 
 | Adjacent path | Boundary |
 |---|---|
-| [`../runtime_proof/README.md`](../runtime_proof/README.md) | Request-time runtime outcomes, citation checks, and bounded answer behavior |
-| [`../correction/README.md`](../correction/README.md) | Post-release correction, rollback, supersession, withdrawal, and visible lineage changes |
+| [`../runtime_proof/README.md`](../runtime_proof/README.md) | request-time runtime outcomes, citation checks, and bounded answer behavior |
+| [`../correction/README.md`](../correction/README.md) | post-release correction, rollback, supersession, withdrawal, and visible lineage changes |
 
-### Downstream expectations
+### Thin-slice adjacent release artifacts
 
-Future executable cases, proof objects, archived drill evidence, and runner-local helpers that are specific to release proof belong under this directory **only when** the checked-out branch proves they exist.
+| Artifact | Role |
+|---|---|
+| [`../../../data/proofs/releases/floodplain-kansas-v1/decision.json`](../../../data/proofs/releases/floodplain-kansas-v1/decision.json) | finite promotion decision |
+| [`../../../data/proofs/releases/floodplain-kansas-v1/promotion-record.json`](../../../data/proofs/releases/floodplain-kansas-v1/promotion-record.json) | release-facing review linkage |
+| [`../../../data/proofs/releases/floodplain-kansas-v1/release-manifest.json`](../../../data/proofs/releases/floodplain-kansas-v1/release-manifest.json) | release inventory + closure anchor |
+| [`../../../data/proofs/releases/floodplain-kansas-v1/release-proof-pack.json`](../../../data/proofs/releases/floodplain-kansas-v1/release-proof-pack.json) | compact proof-bearing bundle |
 
 ### Current public footprint
 
-As of the current public branch view, the only confirmed file in this directory is:
+As of the current public branch view, the only confirmed file in this directory itself is:
 
 ```text
 tests/e2e/release_assembly/
 └── README.md
 ```
 
-Anything deeper than that belongs in `PROPOSED`, `INFERRED`, or `NEEDS VERIFICATION` territory until a checked-out branch proves it.
+Anything deeper than that inside this leaf belongs in `PROPOSED`, `INFERRED`, or `NEEDS VERIFICATION` territory until a checked-out branch proves it.
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -142,7 +204,22 @@ Typical accepted inputs include:
 - runner-local notes or helpers **only when** they are specific to release assembly and not generic test infrastructure
 
 > [!NOTE]
-> March 2026 doctrine names release-bearing object families such as `ReleaseManifest`, `ReleaseProofPack`, `DecisionEnvelope`, `ReviewRecord`, `ProjectionBuildReceipt`, and `CorrectionNotice`. Treat those as doctrinal vocabulary, not as a claim that this directory already contains those exact checked-in files on public `main`.
+> KFM doctrine names release-bearing object families such as `ReleaseManifest`, `ReleaseProofPack`, `DecisionEnvelope`, `ReviewRecord`, `ProjectionBuildReceipt`, and `CorrectionNotice`.
+> Treat those as doctrinal vocabulary, not as a claim that this directory already contains those exact checked-in local files on public `main`.
+
+### Minimum bar
+
+A credible release-assembly case should make all of the following reviewable:
+
+- release identity
+- promotion outcome
+- proof-bearing inventory
+- receipt / audit linkage
+- rollback or correction posture
+
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -155,28 +232,36 @@ Keep the following elsewhere:
 | Schema-authoring source of truth | `contracts/`, `schemas/`, contract-specific test lanes |
 | Request-time answer/citation proof | `../runtime_proof/` |
 | Correction propagation and visible lineage under change | `../correction/` |
-| Long-form operations manuals or release runbooks | `docs/` or `docs/runbooks/` once verified |
+| Long-form operations manuals or release runbooks | `docs/` or `docs/runbooks/` |
 | Runtime service code or release builders themselves | app/package/runtime locations, not `tests/e2e/` |
 | Scratch logs, ad hoc screenshots, manual exports | ephemeral local artifacts, not committed test surfaces |
 | Historical workflow names without current-branch proof | `.github/workflows/README.md` or review notes as signal, not release proof |
+| Canonical proof objects as primary records | `data/proofs/` |
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Current verified snapshot
 
-The following is safe to say from current public repo evidence:
+The following is safe to say from current public + thin-slice repo evidence:
 
-- `tests/e2e/release_assembly/` exists.
-- The current public tree shows this directory as README-only.
-- `tests/e2e/` also contains `runtime_proof/` and `correction/`.
-- `tests/e2e/README.md` and `tests/README.md` both assign `release_assembly/` the release / promotion / publish-path proof role.
-- `/.github/workflows/` is documented, but current public `main` does not show checked-in workflow YAML there.
-- `.github/workflows/README.md` explicitly records historical delete-run workflow names such as `release-evidence.yml` and `promote-and-reconcile.yml`.
-- `/tests/` ownership is currently assigned to `@bartytime4life`.
+- `tests/e2e/release_assembly/` exists
+- the current public tree shows this directory as `README.md` only
+- `tests/e2e/` also contains `runtime_proof/` and `correction/`
+- `tests/e2e/README.md` and `tests/README.md` both assign `release_assembly/` the release / promotion / publish-path proof role
+- `/.github/workflows/` is documented, but current public `main` does not show checked-in workflow YAML there
+- `.github/workflows/README.md` explicitly records historical deleted workflow names such as `release-evidence.yml` and `promote-and-reconcile.yml`
+- `/tests/` ownership is currently assigned to `@bartytime4life`
+- the thin-slice floodplain release under `data/proofs/releases/floodplain-kansas-v1/` now contains:
+  - `decision.json`
+  - `promotion-record.json`
+  - `release-manifest.json`
+  - `release-proof-pack.json`
 
-The following are **not** yet proven from current public evidence:
+### What is **not** yet proven from current evidence
 
-- actual release-assembly cases
+- actual local executable release-assembly cases in this leaf
 - runner choice
 - fixture inventory
 - proof-pack emitters
@@ -190,14 +275,16 @@ The following are **not** yet proven from current public evidence:
 
 > [!WARNING]
 > A placeholder directory can still carry a very real architectural burden.
+>
+> Do not mistake “thin tree” for “low importance.”
 
-Do not mistake “thin tree” for “low importance.”
+[Back to top](#top)
 
-[Back to top](#release-assembly)
+---
 
 ## Directory tree
 
-### Confirmed public snapshot
+### Confirmed public leaf snapshot
 
 ```text
 tests/
@@ -212,21 +299,41 @@ tests/
         └── README.md
 ```
 
+### Thin-slice adjacent release artifacts
+
+```text
+data/proofs/releases/floodplain-kansas-v1/
+├── decision.json
+├── promotion-record.json
+├── release-manifest.json
+└── release-proof-pack.json
+```
+
+### Smallest useful near-term growth shape (`PROPOSED`)
+
+```text
+tests/e2e/release_assembly/
+├── README.md
+├── fixtures/
+│   └── release-assembly-complete.json
+└── test_release_assembly_is_complete.py
+```
+
 ### Growth rule for this directory
 
 Prefer the **smallest real proving surface** over a decorative sublayout.
 
 When this directory grows, keep that growth:
 
-1. release-oriented,
-2. fixture-backed,
-3. negative-path aware,
-4. obviously distinct from `runtime_proof/` and `correction/`,
-5. honest about what is still `UNKNOWN`.
+1. release-oriented
+2. fixture-backed
+3. negative-path aware
+4. obviously distinct from `runtime_proof/` and `correction/`
+5. honest about what is still `UNKNOWN`
 
-A future sublayout is acceptable only once it is backed by executable cases. Until then, avoid inventing busy folder structures for their own sake.
+[Back to top](#top)
 
-[Back to top](#release-assembly)
+---
 
 ## Quickstart
 
@@ -247,6 +354,8 @@ sed -n '1,200p' .github/CODEOWNERS
 
 find .github/workflows -maxdepth 2 -type f | sort
 
+find data/proofs/releases/floodplain-kansas-v1 -maxdepth 3 -type f | sort
+
 grep -RIn \
   -e 'ReleaseManifest' \
   -e 'ReleaseProofPack' \
@@ -261,7 +370,7 @@ grep -RIn \
   -e 'audit_ref' \
   -e 'docs_gate' \
   -e 'projection.stale' \
-  tests contracts policy docs schemas .github . 2>/dev/null || true
+  tests contracts policy docs schemas .github data 2>/dev/null || true
 ```
 
 ### First local review pass
@@ -283,7 +392,9 @@ If this family is still scaffold-only, the safest first real addition is:
 
 That gives you positive proof, negative proof, and lineage pressure without assuming a large harness.
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -321,17 +432,19 @@ Release assembly should be the place where the repo proves this distinction clea
 
 | Term | Meaning |
 |---|---|
-| **Build** | Artifact creation or packaging |
-| **Deploy** | Runtime placement |
-| **Promote / release** | Governed trust-state transition with evidence, policy, review, and correction posture |
-| **Publish-path proof** | Demonstration that outward use remains explainable after promotion |
+| **Build** | artifact creation or packaging |
+| **Deploy** | runtime placement |
+| **Promote / release** | governed trust-state transition with evidence, policy, review, and correction posture |
+| **Publish-path proof** | demonstration that outward use remains explainable after promotion |
 
 > [!NOTE]
 > In KFM, “the build passed” is never enough.
+>
+> This family exists so that “safe to show” must be proven separately.
 
-This family exists so that “safe to show” must be proven separately.
+[Back to top](#top)
 
-[Back to top](#release-assembly)
+---
 
 ## Diagram
 
@@ -350,32 +463,34 @@ flowchart LR
     I --> J[Visible lineage preserved]
 ```
 
-[Back to top](#release-assembly)
+[Back to top](#top)
 
-## Operating tables
+---
+
+## Reference tables
 
 ### Release-assembly obligations
 
 | Release seam | This family should prove | Why it matters |
 |---|---|---|
-| Candidate → release inventory | Release-bearing object is complete enough to review and compare | Prevents “successful deploy” from masquerading as release truth |
-| Policy / review linkage | Release still points to the decisions that allowed or constrained it | Keeps publishability machine-explainable |
-| Docs / accessibility gate | Trust-facing documentation and basic public-surface obligations were not dropped | KFM treats docs as part of honesty, not decoration |
-| Proof-pack completeness | Promotion carries enough evidence to reconstruct what changed and why | Prevents narrative-only release claims |
-| Derived rebuild linkage | Tiles, exports, or other downstream outputs remain tied to known release scope | Protects authoritative-vs-derived separation |
-| Audit continuity | Request/release/bundle/decision refs can still join after promotion | Makes disputes and failures explainable |
-| Rollback / correction posture | Release can narrow, withdraw, supersede, or correct without losing lineage | Makes correction part of release engineering |
+| Candidate → release inventory | release-bearing object is complete enough to review and compare | prevents “successful deploy” from masquerading as release truth |
+| Policy / review linkage | release still points to the decisions that allowed or constrained it | keeps publishability machine-explainable |
+| Docs / accessibility gate | trust-facing documentation and basic public-surface obligations were not dropped | KFM treats docs as part of honesty, not decoration |
+| Proof-pack completeness | promotion carries enough evidence to reconstruct what changed and why | prevents narrative-only release claims |
+| Derived rebuild linkage | tiles, exports, or other downstream outputs remain tied to known release scope | protects authoritative-vs-derived separation |
+| Audit continuity | request/release/bundle/decision refs can still join after promotion | makes disputes and failures explainable |
+| Rollback / correction posture | release can narrow, withdraw, supersede, or correct without losing lineage | makes correction part of release engineering |
 
 ### Negative paths worth proving early
 
 | Negative path | Expected outcome |
 |---|---|
-| Missing manifest references | Candidate remains blocked or incomplete |
-| Missing policy/review linkage where required | No promotion |
-| Docs or accessibility gate failed | Release is not publishable yet |
-| Derived output older than declared freshness basis | Stale-visible, rebuild-required, or blocked |
-| Audit refs do not join cleanly | Release proof is incomplete |
-| Rollback/correction posture missing | Candidate cannot claim governed release readiness |
+| Missing manifest references | candidate remains blocked or incomplete |
+| Missing policy/review linkage where required | no promotion |
+| Docs or accessibility gate failed | release is not publishable yet |
+| Derived output older than declared freshness basis | stale-visible, rebuild-required, or blocked |
+| Audit refs do not join cleanly | release proof is incomplete |
+| Rollback/correction posture missing | candidate cannot claim governed release readiness |
 
 ### Current public evidence vs burden
 
@@ -385,12 +500,15 @@ flowchart LR
 | Parent `e2e` family names this burden | Yes | **CONFIRMED** |
 | `tests/README.md` names this burden | Yes | **CONFIRMED** |
 | Historical release-related workflow names surface in public workflow docs | `release-evidence.yml` and `promote-and-reconcile.yml` are named as removed lanes | **CONFIRMED historical signal** |
-| Checked-in executable release-assembly suite | Not shown on public `main` | **UNKNOWN** |
+| Thin-slice release proof objects exist under `data/proofs/releases/floodplain-kansas-v1/` | Yes | **CONFIRMED in current slice** |
+| Checked-in executable release-assembly suite in this leaf | Not shown | **UNKNOWN** |
 | Checked-in workflow YAML for release gating | Not shown on public `main` | **NEEDS VERIFICATION** |
-| Proof-pack examples committed in this directory | Not shown on public `main` | **UNKNOWN** |
+| Proof-pack examples committed in this leaf | Not shown | **UNKNOWN** |
 | Branch protection / required status checks | Not visible from repo files alone | **NEEDS VERIFICATION** |
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Task list / definition of done
 
@@ -410,12 +528,14 @@ flowchart LR
 
 A credible first implementation of this directory should prove at least:
 
-1. one blocked candidate,
-2. one publishable candidate,
-3. one stale / rebuild / correction-linked post-promotion case,
-4. one branch-visible explanation of how release evidence is inspected.
+1. one blocked candidate
+2. one publishable candidate
+3. one stale / rebuild / correction-linked post-promotion case
+4. one branch-visible explanation of how release evidence is inspected
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -443,19 +563,25 @@ Start with the smallest case that distinguishes **candidate** from **publishable
 
 Because this directory’s risk is overclaiming. A release-assembly lane that sounds mature before it emits proof objects is worse than a thin directory that says exactly what still needs verification.
 
-[Back to top](#release-assembly)
+[Back to top](#top)
+
+---
 
 ## Appendix
 
-### Evidence basis used for this README revision
+<details>
+<summary><strong>Evidence basis used for this README revision</strong></summary>
 
 This README was revised against three evidence layers:
 
-1. the current public repo shape and adjacent README conventions,
-2. the current public workflow-lane documentation and visible delete-run history signals, treated as historical/platform clues rather than present-tree proof, and
-3. the supplied March 2026 KFM doctrinal manuals that give this directory its release-proof, fail-closed, and correction-aware burden.
+1. the current public repo shape and adjacent README conventions
+2. the current public workflow-lane documentation and visible delete-run history signals, treated as historical/platform clues rather than present-tree proof
+3. the thin-slice floodplain release artifacts and KFM doctrinal manuals that give this directory its release-proof, fail-closed, and correction-aware burden
 
-### Direct verification still needed before stronger claims
+</details>
+
+<details>
+<summary><strong>Direct verification still needed before stronger claims</strong></summary>
 
 Before upgrading this README from burden-first scaffold to implementation-reporting README, inspect:
 
@@ -467,16 +593,28 @@ Before upgrading this README from burden-first scaffold to implementation-report
 - whether this branch introduces deeper subpaths under `tests/e2e/release_assembly/`
 - whether the historical release-related workflow names now map to current equivalents elsewhere in the checked-out branch
 
-### Reconciliation rule if the checked-out branch differs
+</details>
+
+<details>
+<summary><strong>Reconciliation rule if the checked-out branch differs</strong></summary>
 
 If the checked-out branch contains more than the public scaffold:
 
-1. keep the family boundary and burden language,
-2. update the tree and quickstart first,
-3. replace any `UNKNOWN` item with direct evidence,
-4. keep historical workflow signal clearly labeled as historical unless the branch proves current files,
-5. do **not** force code or files to mimic placeholder documentation paths.
+1. keep the family boundary and burden language
+2. update the tree and quickstart first
+3. replace any `UNKNOWN` item with direct evidence
+4. keep historical workflow signal clearly labeled as historical unless the branch proves current files
+5. do **not** force code or files to mimic placeholder documentation paths
 
-### Maintenance note
+</details>
 
-This file should remain smaller than the doctrine it points to. Its job is to keep the directory honest, navigable, and reviewable in Git — not to become the only place where release law is described.
+<details>
+<summary><strong>Maintenance note</strong></summary>
+
+This file should remain smaller than the doctrine it points to.
+
+Its job is to keep the directory honest, navigable, and reviewable in Git — not to become the only place where release law is described.
+
+</details>
+
+[Back to top](#top)
