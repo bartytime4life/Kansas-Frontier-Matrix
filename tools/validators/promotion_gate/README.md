@@ -6,12 +6,14 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-04-14
+updated: 2026-04-15
 policy_label: public
 related: [
   ../README.md,
   ../connector_gate/README.md,
+  ../../../pipelines/soil-moisture-watch/README.md,
   ../../../contracts/README.md,
+  ../../../contracts/soil_moisture/reading.schema.json,
   ../../../schemas/promotion/decision-envelope.schema.json,
   ../../../schemas/promotion/promotion-record.schema.json,
   ../../../schemas/promotion/promotion-prov.schema.json,
@@ -39,8 +41,14 @@ related: [
   ../../../.github/workflows/README.md
 ]
 tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy, review-handoff, proofs, spec_hash]
-notes: [Release-facing validator contract for governed promotion decisions. Active-branch inventory, exact workflow wiring, schema presence, and merge-blocking enforcement remain NEEDS VERIFICATION where not directly proven.]
+notes: [
+  Release-facing validator contract for governed promotion decisions.
+  This revision preserves the stronger existing A–G gate model, trust-chain split, and bundle-diff-policy posture while making the README more explicit about deterministic candidate identity, run_receipt expectations, and thin-slice soil-moisture applicability.
+  Exact mounted executable inventory, schema presence, and merge-blocking workflow wiring remain NEEDS VERIFICATION where not directly proven.
+]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # `tools/validators/promotion_gate/`
 
@@ -50,8 +58,8 @@ Fail-closed, evidence-first validator surface for **governed promotion decisions
 > **Status:** experimental  
 > **Document status:** draft  
 > **Owners:** `@bartytime4life`  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: tools/validators](https://img.shields.io/badge/lane-tools%2Fvalidators-1f6feb) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b60205) ![Scope: Promotion](https://img.shields.io/badge/scope-promotion-6f42c1) ![Implementation: Needs Verification](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-ag) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [Trust chain](#trust-chain) · [Catalog closure](#catalog-closure) · [Quickstart](#quickstart) · [FAQ](#faq)
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: tools/validators](https://img.shields.io/badge/lane-tools%2Fvalidators-1f6feb) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b60205) ![Scope: Promotion](https://img.shields.io/badge/scope-promotion-6f42c1) ![Trust: Receipt≠Proof≠Catalog](https://img.shields.io/badge/trust-receipt%E2%89%A0proof%E2%89%A0catalog-6f42c1) ![Implementation: Needs Verification](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-lightgrey)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-a-g) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [run_receipt posture](#run_receipt-posture) · [spec_hash rules](#spec_hash-rules) · [Trust chain](#trust-chain) · [Catalog closure](#catalog-closure) · [Quickstart](#quickstart) · [FAQ](#faq)
 
 > [!IMPORTANT]
 > This document defines both a **validator contract** and a **thin-slice executable shape** for promotion validation. It does **not** by itself prove that all mounted scripts, schemas, policies, tests, or merge-blocking integrations are present on the active branch. Exact file inventory, schema locations, workflow wiring, and enforcement posture remain **NEEDS VERIFICATION** where not directly confirmed.
@@ -89,6 +97,18 @@ In practical terms, this lane is where a promotion candidate should be checked f
 - catalog closure across STAC, DCAT, and PROV
 - explicit reviewer-facing outputs without pretending publication already happened
 
+### Thin-slice fit for soil-moisture work
+
+For the current Mesonet-first soil-moisture slice, this gate sits **downstream of canonical normalization**. It should consume:
+
+- canonical soil-moisture candidate rows
+- deterministic `spec_hash`
+- explicit source identity
+- explicit policy context
+- any anomaly, outage, or no-op replay signal relevant to promotion review
+
+It should **not** repair malformed upstream candidate preparation. Weak or ambiguous candidates should fail closed here rather than be silently “fixed.”
+
 ### Truth labels used here
 
 | Label | Meaning here |
@@ -99,7 +119,7 @@ In practical terms, this lane is where a promotion candidate should be checked f
 | **UNKNOWN** | Not surfaced strongly enough to state as current repo fact |
 | **NEEDS VERIFICATION** | Exact mounted file, workflow, schema, or enforcement detail should be checked on the working branch |
 
-[Back to top](#toolsvalidatorspromotion_gate)
+[Back to top](#top)
 
 ---
 
@@ -115,7 +135,9 @@ In practical terms, this lane is where a promotion candidate should be checked f
 |---|---|---|
 | Parent lane | [`../README.md`](../README.md) | Sets the validator-family posture: deterministic, reviewable, fail-closed helpers |
 | Upstream admission membrane | [`../connector_gate/README.md`](../connector_gate/README.md) | Connector admission is narrower and earlier than release promotion |
+| Candidate prep lane | [`../../../pipelines/soil-moisture-watch/README.md`](../../../pipelines/soil-moisture-watch/README.md) | Soil-moisture watch produces canonical candidates that may eventually reach this gate |
 | Shared contracts | [`../../../contracts/README.md`](../../../contracts/README.md) | Promotion should validate declared authority, not invent it |
+| Soil-moisture contract | [`../../../contracts/soil_moisture/reading.schema.json`](../../../contracts/soil_moisture/reading.schema.json) | Canonical row shape for the first-wave Mesonet slice |
 | Shared policy | [`../../../policy/README.md`](../../../policy/README.md) | Deny-by-default and obligation-bearing logic belongs there |
 | Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory should remain inspectable and separate from proof |
 | Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release-grade proof objects and bundles belong there conceptually, even if helpers here derive some artifacts |
@@ -137,7 +159,7 @@ Do **not** use it to:
 - turn CI presentation helpers into policy authority
 - replace underlying machine artifacts with a single Markdown handoff document
 
-[Back to top](#toolsvalidatorspromotion_gate)
+[Back to top](#top)
 
 ---
 
@@ -169,7 +191,7 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | Input | Expected path family |
 |---|---|
 | candidate fixture | `tests/fixtures/promotion/*.json` |
-| spec file | `data/work/.../stac-item.json` |
+| spec file | `data/work/.../stac-item.json` or equivalent canonical subject file |
 | asset files | `data/work/.../assets/*` |
 | policy bundle | `tools/validators/promotion_gate/policies/*.rego` |
 | decision schema | `schemas/promotion/decision-envelope.schema.json` |
@@ -181,6 +203,19 @@ Accepted inputs are the minimum evidence-bearing objects required to judge one p
 | prior/current diff report | `promotion-bundle-diff.json` or equivalent |
 | diff-policy report | `promotion-bundle-diff-policy.json` or equivalent |
 | composed review handoff inputs | `promotion-bundle.json` + `promotion-bundle-diff.json` + `promotion-bundle-diff-policy.json` |
+
+### Soil-moisture first-wave candidate expectations
+
+For the Mesonet-first soil-moisture lane, the strongest currently supported minimum candidate should arrive with:
+
+- canonical long-form observation rows conforming to the reading contract
+- deterministic `spec_hash`
+- explicit source identity
+- explicit schema version
+- explicit policy label
+- anomaly, outage, or no-meaningful-change signal when relevant
+
+This keeps the gate deterministic and replayable while allowing promotion to remain **event-aware** rather than merely file-aware.
 
 ---
 
@@ -197,6 +232,7 @@ This lane does **not**:
 - embed governance authority in helper scripts where policy should remain the source of truth
 - compute general diff law inside CI renderers
 - replace underlying machine artifacts with one composed Markdown reviewer handoff
+- repair malformed upstream candidates that should have failed before promotion review
 
 ---
 
@@ -253,7 +289,7 @@ tests/ci/test_render_promotion_review_handoff.py
 > [!NOTE]
 > Shared contracts, schemas, and policy surfaces remain authoritative in their own repo homes. This lane validates and consumes them; it does not replace them.
 
-[Back to top](#toolsvalidatorspromotion_gate)
+[Back to top](#top)
 
 ---
 
@@ -370,6 +406,36 @@ That ordering improves reviewer ergonomics while preserving the authority split 
 
 ---
 
+## `run_receipt` posture
+
+Promotion is not the only place receipts matter, but this gate must treat receipt presence and linkage as non-optional.
+
+### Receipt role at this lane
+
+| Surface | Role here |
+|---|---|
+| `run_receipt` | process memory proving what upstream candidate-preparation or validation activity occurred |
+| DecisionEnvelope | finite release-facing promotion decision |
+| Proof / attestation objects | release-significant trust objects that remain separate from receipts |
+| Catalog objects | outward discovery and lineage surfaces, still separate from both receipts and proofs |
+
+### Minimum expectations
+
+At promotion review time, the strongest current posture is:
+
+- `run_receipt` must be present
+- receipt must link coherently to the candidate subject or release-bearing activity
+- receipt absence is a **gate-level failure**, not a warning
+- receipt presence is **necessary but not sufficient** for promotion
+
+### Why this matters
+
+The KFM trust path depends on keeping **process memory** visible without pretending it is already the final proof bundle. This gate should validate that the receipt exists and links correctly, while still requiring separate proof, attestation, and catalog closure.
+
+[Back to top](#top)
+
+---
+
 ## Gate matrix (A–G)
 
 | Gate | Name | What it checks | Minimum evidence |
@@ -391,7 +457,55 @@ That ordering improves reviewer ergonomics while preserving the authority split 
 | insufficient evidence but no contradiction | `ABSTAIN` |
 | evaluator or gate error | `ERROR` |
 
-[Back to top](#toolsvalidatorspromotion_gate)
+### First-wave soil-moisture interpretation
+
+For the Mesonet-first soil-moisture slice, the following promotion triggers remain particularly important **after** the required gates pass:
+
+| Trigger | Why it matters |
+|---|---|
+| `spec_hash` changed | canonical candidate identity changed |
+| new station detected | roster meaning changed |
+| anomaly detected | operationally meaningful event |
+| outage / degraded signal detected | operationally meaningful event |
+| schema version changed | contract meaning changed |
+
+If none of those conditions are true, the candidate may still produce a decision artifact and reviewer visibility, but should generally **not** advance as a meaningful promotion event.
+
+[Back to top](#top)
+
+---
+
+## `spec_hash` rules
+
+`spec_hash` is the deterministic identity anchor for promotion review.
+
+### It MUST be derived from
+
+- canonicalized candidate rows or equivalent canonical subject material
+- ordered, stable content representation
+- declared variable / depth whitelist or equivalent meaning-bearing configuration
+- source identity / descriptor material where relevant
+- transform or schema version inputs that affect meaning
+
+### It MUST NOT be derived from
+
+- filenames
+- incidental run timestamps
+- scheduler cadence
+- temporary storage paths
+- non-deterministic ordering
+
+### Gate consequences
+
+| `spec_hash` state | Gate implication |
+|---|---|
+| Missing | gate failure |
+| Present but unsupported by canonical subject material | gate failure |
+| Present and changed | promotion-meaningful if other gates pass |
+| Present and unchanged, no meaningful operational event | likely no-op or review-only path |
+
+> [!CAUTION]
+> Identity drift should be treated as a release-significant concern. A weak or unexplained `spec_hash` is not a “best effort” warning; it is grounds to fail closed.
 
 ---
 
@@ -425,7 +539,7 @@ flowchart LR
 ### Execution steps
 
 1. Load the candidate and canonical spec bytes.
-2. Compute `spec_hash`.
+2. Compute or verify `spec_hash`.
 3. Normalize fixture hashes where needed.
 4. Validate gate inputs and shared contracts.
 5. Evaluate Gates A–G in deterministic order.
@@ -611,6 +725,34 @@ python tools/ci/render_promotion_review_handoff.py \
 
 ---
 
+## Task list
+
+### Thin-slice definition of done
+
+- [ ] promotion gate emits one finite decision for each candidate
+- [ ] all required A–G gates produce machine-readable statuses
+- [ ] `run_receipt` presence is validated explicitly
+- [ ] DecisionEnvelope validates against the declared schema
+- [ ] record, PROV, and bundle outputs remain derived and separate
+- [ ] prior/current bundle diff and diff-policy classification are reviewable where enabled
+- [ ] reviewer-facing Markdown artifacts remain derived surfaces, not authority surfaces
+- [ ] malformed, anonymous, or policy-unresolved candidates fail closed
+- [ ] no-op or unchanged candidates do not silently masquerade as meaningful promotions
+- [ ] exact mounted workflow wiring is confirmed on branch before claiming enforcement
+
+### Open verification items
+
+- [ ] confirm mounted executable inventory under `tools/validators/promotion_gate/`
+- [ ] confirm schema presence and exact filenames under `schemas/promotion/`
+- [ ] confirm policy file presence and active usage
+- [ ] confirm test filenames and current branch status
+- [ ] confirm merge-blocking or review-blocking workflow integration
+- [ ] confirm whether soil-moisture promotion uses the same full bundle path or a narrowed first-wave subset
+
+[Back to top](#top)
+
+---
+
 ## FAQ
 
 ### Does `promotion_gate/` publish anything directly?
@@ -633,4 +775,8 @@ No. It is a steward-facing derived convenience surface. The underlying machine-r
 
 It may call signing or verification helpers as part of the thin slice, but signature execution mechanics still belong conceptually to adjacent attestation surfaces rather than to policy authority itself.
 
-[Back to top](#toolsvalidatorspromotion_gate)
+### How should unchanged soil-moisture candidates behave?
+
+They may still produce a reviewable decision artifact, but should not be treated as meaningful promotion events unless identity, roster, anomaly, outage, or contract meaning changed.
+
+[Back to top](#top)
