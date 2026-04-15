@@ -8,9 +8,36 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../../README.md, ../README.md, ./README.md, ./SYSTEM_CONTEXT.md, ./TRUST_MEMBRANE.md, ./TRUTH_PATH_LIFECYCLE.md, ./DEPLOYMENT_TOPOLOGY.md, ./canonical_vs_rebuildable.md, ./threat-model/README.md, ../../apps/README.md, ../../apps/governed-api/README.md, ../../apps/api/src/api/README.md, ../../web/README.md, ../../packages/README.md, ../../data/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../infra/README.md, ../../.github/README.md, ../../.github/workflows/README.md]
-tags: [kfm, architecture, system-overview, truth-path, trust-membrane, map-first]
-notes: [doc_id placeholder pending UUID assignment, created/updated placeholders pending git-history verification, policy_label inherited from task baseline and not independently reverified here, revised from March 2026 doctrine plus current public-main repo inspection]
+related: [
+  ../../README.md,
+  ../README.md,
+  ./README.md,
+  ./SYSTEM_CONTEXT.md,
+  ./TRUST_MEMBRANE.md,
+  ./TRUTH_PATH_LIFECYCLE.md,
+  ./DEPLOYMENT_TOPOLOGY.md,
+  ./canonical_vs_rebuildable.md,
+  ./governed_runtime_trust.md,
+  ./threat-model/README.md,
+  ../../apps/README.md,
+  ../../apps/governed-api/README.md,
+  ../../apps/api/src/api/README.md,
+  ../../web/README.md,
+  ../../packages/README.md,
+  ../../data/README.md,
+  ../../data/proofs/README.md,
+  ../../data/receipts/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../tests/README.md,
+  ../../tests/e2e/runtime_proof/README.md,
+  ../../infra/README.md,
+  ../../.github/README.md,
+  ../../.github/workflows/README.md
+]
+tags: [kfm, architecture, system-overview, truth-path, trust-membrane, map-first, runtime-trust]
+notes: [doc_id placeholder pending UUID assignment, created/updated placeholders pending git-history verification, policy_label inherited from task baseline and not independently reverified here, revised from March 2026 doctrine plus current public-main repo inspection; this revision incorporates governed_runtime_trust.md as a runtime-trust companion rather than leaving request-time trust only implicit.]
 [/KFM_META_BLOCK_V2] -->
 
 # System Overview
@@ -28,13 +55,15 @@ _High-level architecture bridge for Kansas Frontier Matrix (KFM): truth path, tr
 > ![trust](https://img.shields.io/badge/trust-membrane-critical)
 > ![public main](https://img.shields.io/badge/public_main-tree--inspected-brightgreen)
 > ![runtime](https://img.shields.io/badge/runtime-mixed--topology--visible-lightgrey)
-> **Quick jumps:** [At a glance](#at-a-glance) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Governing law](#governing-law) · [Five-plane view](#five-plane-view) · [Repo surface map](#repo-surface-map) · [Quickstart](#quickstart) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [At a glance](#at-a-glance) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current public-main snapshot](#current-public-main-snapshot) · [Governing law](#governing-law) · [Five-plane view](#five-plane-view) · [Runtime trust place in the system](#runtime-trust-place-in-the-system) · [Repo surface map](#repo-surface-map) · [Quickstart](#quickstart) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This file is **doctrine-grounded and repo-aware**.
 >
 > It treats March 2026 KFM architecture law as stable, uses the current public `main` tree for path and maturity signals, and keeps deeper mounted-runtime claims explicitly bounded.  
-> It should make the system legible **without** turning placeholders, README-only lanes, or mixed-topology public signals into false certainty.
+> It should make the system legible **without** turning placeholders, README-only lanes, mixed-topology public signals, or architecture-only runtime-trust concepts into false certainty.
+
+---
 
 ## At a glance
 
@@ -47,6 +76,7 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 | Canonical lifecycle | `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` |
 | Trust boundary | Public and steward surfaces cross governed APIs; they do not directly touch canonical stores or model runtimes |
 | Runtime answer posture | Cite-or-abstain, fail closed, and keep negative outcomes visible |
+| Runtime trust posture | Request-time trust stays downstream of release state, evidence state, policy state, and correction state |
 | Shell posture | One map-first, time-aware operating shell with evidence drill-through and correction-visible state |
 | 3D posture | 2D default; 3D is conditional and burden-bearing |
 | Repo posture | Current public `main` shows real lane structure, but not every lane is equally implementation-deep or topology-stable |
@@ -63,6 +93,8 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 
 [Back to top](#system-overview)
 
+---
+
 ## Repo fit
 
 | Field | Value |
@@ -70,10 +102,10 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 | Path | `docs/architecture/system_overview.md` |
 | Primary role | One-page architecture bridge between doctrine and deeper architecture / runtime / policy surfaces |
 | Upstream anchors | [repo root][repo-root] · [docs index][docs-root] · [architecture index][arch-index] |
-| Companion architecture docs | [SYSTEM_CONTEXT.md][system-context] · [TRUST_MEMBRANE.md][trust-membrane] · [TRUTH_PATH_LIFECYCLE.md][truth-path] · [DEPLOYMENT_TOPOLOGY.md][deployment-topology] · [canonical_vs_rebuildable.md][canonical-vs-rebuildable] · [threat-model/README.md][threat-model] |
-| Adjacent machine-facing surfaces | [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [workflows README][workflows-readme] |
-| Adjacent runtime surfaces | [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root] |
-| Why this file matters | It gives contributors a stable whole-system reading before they descend into a single contract family, runtime lane, policy bundle, lifecycle zone, or public shell surface |
+| Companion architecture docs | [SYSTEM_CONTEXT.md][system-context] · [TRUST_MEMBRANE.md][trust-membrane] · [TRUTH_PATH_LIFECYCLE.md][truth-path] · [DEPLOYMENT_TOPOLOGY.md][deployment-topology] · [canonical_vs_rebuildable.md][canonical-vs-rebuildable] · [governed_runtime_trust.md][governed-runtime-trust] · [threat-model/README.md][threat-model] |
+| Adjacent machine-facing surfaces | [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [runtime proof tests][runtime-proof-tests] · [workflows README][workflows-readme] |
+| Adjacent runtime / evidence surfaces | [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [proofs][proofs-root] · [receipts][receipts-root] · [infra][infra-root] |
+| Why this file matters | It gives contributors a stable whole-system reading before they descend into a single contract family, runtime lane, policy bundle, lifecycle zone, release-evidence surface, or trust-visible shell behavior |
 
 ### What this file should do
 
@@ -89,6 +121,8 @@ KFM is a **governed spatial evidence system**. Its primary value unit is the **i
 - Freeze the exact runtime topology if the live checkout later proves a different shape.
 - Reintroduce stack claims that the current public tree or doctrine layer does not support.
 
+---
+
 ## Accepted inputs
 
 Content that belongs here includes:
@@ -97,6 +131,7 @@ Content that belongs here includes:
 - truth-path ordering and trust-membrane rules
 - five-plane or equivalent architecture summaries
 - map-first shell posture and runtime-boundary law
+- request-time runtime-trust orientation at the whole-system level
 - repo-lane maps that connect `data/`, `packages/`, `apps/`, `contracts/`, `policy/`, `tests/`, `infra/`, `.github/`, and relevant parallel runtime doc roots
 - architecture diagrams that explain responsibility, not just boxes
 - current public-main maturity notes when they materially affect safe documentation
@@ -113,7 +148,10 @@ The following do **not** belong here as the authoritative source of truth:
 | Runtime code, worker implementations, UI component logic | [apps][apps-root], [web][web-root], and [packages][packages-root] |
 | Deployment manifests, ingress details, secrets posture as if verified here | [infra][infra-root] plus mounted runtime evidence |
 | Service-local tutorials or route-by-route implementation notes | service-local docs and runbooks |
+| Concrete runtime-trust payload shapes, receipt schemas, or viewer state contracts presented as current implementation facts | [governed_runtime_trust.md][governed-runtime-trust], [contracts][contracts-root], [schemas][schemas-root], [tests][tests-root] |
 | Any claim that upgrades README-first or scaffold-first surfaces into “already working” architecture | keep it `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until rechecked |
+
+---
 
 ## Current public-main snapshot
 
@@ -127,6 +165,7 @@ The following do **not** belong here as the authoritative source of truth:
 |---|---|---|
 | Repo root | `.github`, `apps`, `brand`, `configs`, `contracts`, `data`, `docs`, `examples`, `infra`, `migrations`, `packages`, `policy`, `schemas`, `scripts`, `tests`, `tools`, plus root governance/docs files | Core monorepo lanes are real and broader than the subset this file summarizes |
 | `docs/architecture/` | Mixed subtree: substantive docs (`README.md`, `TRUST_MEMBRANE.md`, `TRUTH_PATH_LIFECYCLE.md`, `system_overview.md`, `threat-model/README.md`), thinner/scaffold-style leaves (`SYSTEM_CONTEXT.md`, `DEPLOYMENT_TOPOLOGY.md`, `canonical_vs_rebuildable.md`, `trust_membrane.md`), and scaffold-lane dirs (`adr/`, `decisions/`, `diagrams/`, `enforcement/`, `interfaces/`, `overview/`, `registries/`, `templates/`) | Keep this file bridge-like; do not pretend every architecture leaf is equally mature |
+| `docs/architecture/governed_runtime_trust.md` | `NEEDS VERIFICATION` on the active branch unless rechecked | Treat as a doctrine-aligned companion once present; until then, do not overclaim branch presence |
 | `apps/` | `cli`, `explorer-web`, `governed-api`, `review-console`, `workers` | Preferred app-lane names are now public-tree facts |
 | Parallel UI / API docs | `web/README.md` and `apps/api/src/api/README.md` are also visible on current public `main` | Runtime topology is mixed; convergence should stay explicit rather than silently canonicalized |
 | `packages/` | `catalog`, `domain`, `evidence`, `genealogy_ingest`, `indexers`, `ingest`, `policy` | Shared-law seam is real; child package public surfaces are still mostly README-first |
@@ -137,6 +176,8 @@ The following do **not** belong here as the authoritative source of truth:
 | `.github/workflows/` | `README.md` only on current public `main`; workflow README preserves historical workflow filenames as deleted / prior public signals | Keep current inventory and historical signal separate |
 
 [Back to top](#system-overview)
+
+---
 
 ## Governing law
 
@@ -164,9 +205,12 @@ KFM is **not**:
 | Authoritative vs derived | Release-linked authoritative data stays stronger than projections | Tiles, graphs, summaries, scenes, or caches presented as sovereign truth |
 | Cite-or-abstain | Claim-bearing surfaces resolve evidence or narrow / refuse | Fluent unsupported output presented as fact |
 | Fail closed | Missing evidence, rights ambiguity, or broken policy blocks widening trust state | Graceful-looking fallback that hides broken support |
+| Runtime trust | Request-time surfaces remain downstream of release, evidence, policy, and correction state | Trust-looking UI or answers with no governed support chain |
 | Map-first, time-aware shell | Place and chronology remain first-class controls | Detached assistant, dashboard-only view, or review path that severs geography and time |
 | 2D default | 2D is the standard operating surface | 3D used as default ornament without added burden and governance justification |
 | Docs as production surfaces | Behavior-significant changes move with docs, contracts, policy, tests, and runbooks | Silent drift between implementation and explanation |
+
+---
 
 ## Five-plane view
 
@@ -218,6 +262,55 @@ A normal outward read should be understood in this order:
 
 [Back to top](#system-overview)
 
+---
+
+## Runtime trust place in the system
+
+Runtime trust belongs in the system overview because request-time behavior is where publication, policy, evidence, and correction state become visible to the user.
+
+### Short rule
+
+A runtime output is trustworthy in KFM only when it stays downstream of:
+
+- release state
+- evidence state
+- policy state
+- correction / supersession state
+- finite outcome handling
+
+### Why it matters system-wide
+
+Without that rule, the system could still have:
+
+- a clean lifecycle
+- a strong trust membrane
+- good contracts
+- even signed release artifacts
+
+…and still present misleading runtime behavior.
+
+That is why runtime trust is not merely a UI concern. It is the outward continuation of the trust path.
+
+### Runtime trust surfaces to keep in view
+
+| Surface | Whole-system concern |
+|---|---|
+| outward answers | must remain cite-or-abstain and finite-outcome bounded |
+| map and layer shell | must keep stale / corrected / denied / partial states visible |
+| evidence drill-through | must connect results to release, proof, and supporting evidence context |
+| receipts | preserve process memory for replay and inspection |
+| proofs | preserve release-significant evidence distinct from process memory |
+| corrections / rollback / supersession | must travel forward into outward trust state rather than staying hidden upstream |
+
+For the deeper architecture treatment, use [`./governed_runtime_trust.md`][governed-runtime-trust].
+
+> [!NOTE]
+> This section is architectural orientation, not proof that every trust chip, runtime receipt, evidence drawer state, or runtime envelope has landed on the active branch.
+
+[Back to top](#system-overview)
+
+---
+
 ## Repo surface map
 
 | Repo surface | Current visible lanes | System role | Reading rule |
@@ -232,6 +325,8 @@ A normal outward read should be understood in this order:
 | [`tests/`][tests-root] | `accessibility`, `contracts`, `e2e`, `integration`, `policy`, `reproducibility`, `unit` | Governed verification and proof burdens | A green check is insufficient if it cannot explain trust state |
 | [`/.github/`][github-root] | `actions/`, `workflows/`, templates, ownership, security, automation scaffolding | Repo-side control and review plane | Separate checked-in files from unverified branch protection or platform settings |
 | [`docs/`][docs-root] | architecture, governance, standards, runbooks, domains, research, search, security, templates, and adjacent lanes | Human-readable operating layer | Explanation stays downstream of contracts, policy, and release evidence |
+
+---
 
 ## Quickstart
 
@@ -249,6 +344,7 @@ sed -n '1,240p' README.md
 sed -n '1,240p' docs/README.md
 sed -n '1,320p' docs/architecture/README.md
 sed -n '1,260p' docs/architecture/system_overview.md
+sed -n '1,260p' docs/architecture/governed_runtime_trust.md
 sed -n '1,220p' apps/README.md
 sed -n '1,220p' apps/explorer-web/README.md 2>/dev/null || true
 sed -n '1,220p' apps/governed-api/README.md 2>/dev/null || true
@@ -256,10 +352,13 @@ sed -n '1,220p' web/README.md 2>/dev/null || true
 sed -n '1,220p' apps/api/src/api/README.md 2>/dev/null || true
 sed -n '1,220p' packages/README.md
 sed -n '1,220p' data/README.md
+sed -n '1,220p' data/proofs/README.md 2>/dev/null || true
+sed -n '1,220p' data/receipts/README.md 2>/dev/null || true
 sed -n '1,220p' contracts/README.md
 sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
 sed -n '1,220p' tests/README.md
+sed -n '1,220p' tests/e2e/runtime_proof/README.md 2>/dev/null || true
 sed -n '1,220p' .github/README.md
 sed -n '1,260p' .github/workflows/README.md
 ```
@@ -277,6 +376,8 @@ grep -RIn "truth membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abst
 
 [Back to top](#system-overview)
 
+---
+
 ## Task list / definition of done
 
 ### Highest-value next tasks
@@ -289,6 +390,7 @@ grep -RIn "truth membrane\|EvidenceBundle\|RuntimeResponseEnvelope\|cite-or-abst
 - [ ] Decide whether `packages/genealogy_ingest/` is a durable first-class lane in the whole-system package map or a lane-specific exception that needs clearer placement.
 - [ ] Recheck `.github/workflows/` and record the real workflow catalog once checked-in YAML returns.
 - [ ] Reconcile the duplicate trust-membrane leaf paths (`TRUST_MEMBRANE.md` vs `trust_membrane.md`) into one canonical architecture reference.
+- [ ] Recheck `governed_runtime_trust.md` branch presence, cross-links, and companion alignment before strengthening runtime-trust claims.
 - [ ] Add one positive and one negative end-to-end trace showing evidence resolution and finite runtime outcomes.
 - [ ] Keep the repo-surface tables here aligned with real lane names on the active branch.
 
@@ -301,8 +403,11 @@ This file is in good standing when:
 - [ ] current public-main maturity signals are re-verified before merge
 - [ ] architecture claims do not outrun contracts, policy, tests, or workflow evidence
 - [ ] mixed-topology caveats remain visible until convergence is verified
+- [ ] runtime-trust overview language stays synchronized with [`./governed_runtime_trust.md`][governed-runtime-trust]
 - [ ] cross-links resolve
 - [ ] dates, owner record, and doc UUID are synchronized with the real repo record
+
+---
 
 ## FAQ
 
@@ -312,11 +417,12 @@ No. This is the **short-form architecture bridge**, not a claim that every mount
 
 ### What is the smallest stable mental model for KFM?
 
-Use three things together:
+Use four things together:
 
 1. the **truth path**
 2. the **trust membrane**
 3. the **five-plane reading**
+4. the **runtime-trust boundary**
 
 If a proposal breaks one of those, it is probably breaking KFM.
 
@@ -338,6 +444,8 @@ Because current public `main` already shows both the newer `apps/*` grouping and
 
 [Back to top](#system-overview)
 
+---
+
 ## Appendix
 
 <details>
@@ -349,6 +457,7 @@ Because current public `main` already shows both the newer `apps/*` grouping and
 | [`./system_overview.md`](./system_overview.md) | substantive | short-form whole-system bridge |
 | [`./TRUST_MEMBRANE.md`][trust-membrane] | substantive companion | focused trust-boundary law |
 | [`./TRUTH_PATH_LIFECYCLE.md`][truth-path] | substantive companion | lifecycle-specific detail |
+| [`./governed_runtime_trust.md`][governed-runtime-trust] | `NEEDS VERIFICATION` unless rechecked on branch | runtime-trust companion and request-time trust law |
 | [`./threat-model/README.md`][threat-model] | substantive companion | threat-model lane entry point |
 | [`./SYSTEM_CONTEXT.md`][system-context] | thin / scaffold-style | deeper system-context description |
 | [`./DEPLOYMENT_TOPOLOGY.md`][deployment-topology] | thin / scaffold-style | runtime / environment topology |
@@ -396,9 +505,9 @@ Because current public `main` already shows both the newer `apps/*` grouping and
 <summary><strong>Link map</strong></summary>
 
 - Upstream: [repo root][repo-root] · [docs index][docs-root] · [architecture index][arch-index]
-- Machine surfaces: [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [workflows README][workflows-readme]
-- Runtime surfaces: [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [infra][infra-root]
-- Companion architecture docs: [system context][system-context] · [trust membrane][trust-membrane] · [truth path lifecycle][truth-path] · [deployment topology][deployment-topology] · [canonical vs rebuildable][canonical-vs-rebuildable] · [threat model][threat-model]
+- Machine surfaces: [contracts][contracts-root] · [schemas][schemas-root] · [policy][policy-root] · [tests][tests-root] · [runtime proof tests][runtime-proof-tests] · [workflows README][workflows-readme]
+- Runtime and evidence surfaces: [apps][apps-root] · [apps/governed-api][apps-gov-api] · [apps/api/src/api][apps-legacy-api] · [web][web-root] · [packages][packages-root] · [data][data-root] · [proofs][proofs-root] · [receipts][receipts-root] · [infra][infra-root]
+- Companion architecture docs: [system context][system-context] · [trust membrane][trust-membrane] · [truth path lifecycle][truth-path] · [deployment topology][deployment-topology] · [canonical vs rebuildable][canonical-vs-rebuildable] · [governed runtime trust][governed-runtime-trust] · [threat model][threat-model]
 
 </details>
 
@@ -410,6 +519,7 @@ Because current public `main` already shows both the newer `apps/*` grouping and
 [truth-path]: ./TRUTH_PATH_LIFECYCLE.md
 [deployment-topology]: ./DEPLOYMENT_TOPOLOGY.md
 [canonical-vs-rebuildable]: ./canonical_vs_rebuildable.md
+[governed-runtime-trust]: ./governed_runtime_trust.md
 [threat-model]: ./threat-model/README.md
 [apps-root]: ../../apps/README.md
 [apps-gov-api]: ../../apps/governed-api/README.md
@@ -417,10 +527,13 @@ Because current public `main` already shows both the newer `apps/*` grouping and
 [web-root]: ../../web/README.md
 [packages-root]: ../../packages/README.md
 [data-root]: ../../data/README.md
+[proofs-root]: ../../data/proofs/README.md
+[receipts-root]: ../../data/receipts/README.md
 [contracts-root]: ../../contracts/README.md
 [schemas-root]: ../../schemas/README.md
 [policy-root]: ../../policy/README.md
 [tests-root]: ../../tests/README.md
+[runtime-proof-tests]: ../../tests/e2e/runtime_proof/README.md
 [infra-root]: ../../infra/README.md
 [github-root]: ../../.github/README.md
 [workflows-readme]: ../../.github/workflows/README.md
