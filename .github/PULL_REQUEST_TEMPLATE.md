@@ -6,11 +6,31 @@ version: v1
 status: published
 owners: @bartytime4life
 created: REVIEW-REQUIRED
-updated: REVIEW-REQUIRED
+updated: 2026-04-15
 policy_label: public
-related: [README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, SECURITY.md]
-tags: [kfm, github, pull-request, governance]
-notes: [doc_id and created/updated remain REVIEW-REQUIRED until canonical doc registry and target-branch git history are verified.]
+related: [
+  README.md,
+  CHANGELOG.md,
+  CONTRIBUTING.md,
+  .github/README.md,
+  .github/CODEOWNERS,
+  .github/SECURITY.md,
+  SECURITY.md,
+  .github/workflows/README.md,
+  apps/governed_api/README.md,
+  schemas/contracts/v1/runtime/README.md,
+  schemas/contracts/v1/runtime/runtime_response_envelope.schema.json,
+  schemas/contracts/v1/source/source_descriptor.schema.json,
+  tests/contracts/test_runtime_response_schema.py,
+  tests/contracts/test_source_descriptor_schema.py,
+  tests/e2e/runtime_proof/soil_moisture/README.md,
+  tools/ci/render_runtime_proof_summary.py
+]
+tags: [kfm, github, pull-request, governance, runtime-proof, contracts]
+notes: [
+  doc_id and created/updated remain REVIEW-REQUIRED until canonical doc registry and target-branch git history are verified.
+  This revision preserves the stronger old PR template while adding explicit runtime-proof, governed API, source-descriptor, validator, and runtime-schema review prompts.
+]
 [/KFM_META_BLOCK_V2] -->
 
 <!--
@@ -29,15 +49,18 @@ Helpful references:
 - .github/CODEOWNERS
 - .github/SECURITY.md
 - SECURITY.md
+- .github/workflows/README.md
+- apps/governed_api/README.md
+- schemas/contracts/v1/runtime/README.md
 -->
 
-<!-- Keep this template synchronized with README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, and SECURITY.md on the same branch. -->
+<!-- Keep this template synchronized with README.md, CHANGELOG.md, CONTRIBUTING.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, SECURITY.md, workflow docs, and governed runtime / contract docs on the same branch. -->
 
 > **Use this template completely.**
 >
 > Write `N/A` instead of deleting sections.
 > Keep truth labels explicit.
-> Link evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.
+> Link evidence, CI runs, proof packs, screenshots, reviewer notes, runtime-proof summaries, or follow-up issues where they exist.
 > If working-branch evidence proves something that public `main` docs do not yet show, state that explicitly.
 
 ## Summary
@@ -120,6 +143,14 @@ Helpful references:
 - [ ] No runtime answer / abstain / deny / error behavior affected
 - [ ] Runtime answer / abstain / deny / error behavior affected (described below)
 
+### Governed runtime / source-admission impact
+
+- [ ] No governed runtime or source-admission impact
+- [ ] Source descriptor / source-admission impact (described below)
+- [ ] Validator impact (described below)
+- [ ] Runtime envelope / governed API impact (described below)
+- [ ] Runtime-proof workflow / reviewer-summary impact (described below)
+
 ### Truth posture summary
 
 Fill only the labels that apply to this PR.
@@ -154,6 +185,14 @@ Fill only the labels that apply to this PR.
 - **Policy / review / release state impact:**
 - **Correction / supersession implications:**
 
+### Governed runtime impact
+
+- **Boundary impacted:** <!-- yes/no; explain if governed API boundary changed -->
+- **Runtime envelope changed:** <!-- yes/no; list changed fields or outcomes -->
+- **Source admission changed:** <!-- yes/no; describe source descriptor/schema/fixture impact -->
+- **Validator behavior changed:** <!-- yes/no; describe rule/result impact -->
+- **Workflow / reviewer summary changed:** <!-- yes/no; describe workflow or runtime-proof summary impact -->
+
 ---
 
 ## Validation
@@ -171,6 +210,16 @@ Fill only the labels that apply to this PR.
 - [ ] Manual verification
 - [ ] Not applicable (explained below)
 
+### Contract / runtime checks
+
+- [ ] Source descriptor schema test reviewed
+- [ ] Runtime response schema test reviewed
+- [ ] Validator tests reviewed
+- [ ] Governed API route/app tests reviewed
+- [ ] Runtime-proof tests reviewed
+- [ ] Runtime-proof summary linked or attached when runtime behavior changed
+- [ ] Not applicable (explained below)
+
 ### Evidence
 
 - **CI / workflow / report links:**
@@ -179,6 +228,10 @@ Fill only the labels that apply to this PR.
 - **Sample inputs / fixtures:**
 - **Screenshots / visual diffs / recordings:**
 - **Negative-path coverage (deny / abstain / stale / generalized / rollback / correction):**
+- **Runtime-proof summary:**
+- **Source descriptor schema test evidence:**
+- **Runtime response schema test evidence:**
+- **Governed API route/app test evidence:**
 - **Not applicable / gaps still open:**
 
 ---
@@ -191,6 +244,14 @@ Fill only the labels that apply to this PR.
 - [ ] OpenAPI / schema / contract updated
 - [ ] Policy bundle / fixtures / decision logic updated
 - [ ] No docs / contract / policy change required (explained below)
+
+### Focused contract / runtime review
+
+- [ ] Source descriptor impact reviewed (`contracts/source/`, `schemas/contracts/v1/source/`, source fixtures, or source schema tests)
+- [ ] Validator impact reviewed (`tools/validators/`, validator rules, validator tests)
+- [ ] Runtime contract impact reviewed (`schemas/contracts/v1/runtime/`, runtime schema fixtures/tests)
+- [ ] Governed API impact reviewed (`apps/governed_api/`, routes, runtime builders, app assembly)
+- [ ] Workflow / reviewer-summary impact reviewed (`.github/workflows/`, `tools/ci/`, runtime-proof artifacts)
 
 **Explanation:**
 
@@ -239,6 +300,7 @@ Fill only the labels that apply to this PR.
 - [ ] `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `.github/README.md`, `.github/CODEOWNERS`, and security-routing docs stay aligned where touched
 - [ ] Workflow / action / watcher claims do not overstate rulesets, required checks, OIDC wiring, or other platform-only settings
 - [ ] No review, policy, or release-evidence bypass was introduced
+- [ ] Runtime-proof workflow / artifact claims match visible workflow docs or branch files
 
 </details>
 
@@ -250,6 +312,8 @@ Fill only the labels that apply to this PR.
 - [ ] Example valid inputs / outputs updated
 - [ ] Invalid fixtures or failure cases updated
 - [ ] `audit_ref`, evidence, or policy fields preserved where relevant
+- [ ] Source descriptor fixtures / schema impact reviewed where relevant
+- [ ] Runtime response schema fixtures / tests updated where relevant
 
 </details>
 
@@ -263,6 +327,7 @@ Fill only the labels that apply to this PR.
 - [ ] Catalog / triplet impact (DCAT / STAC / PROV or equivalent) described
 - [ ] Example `EvidenceRef` / `EvidenceBundle` path noted
 - [ ] Public-safety / sensitivity / exact-location risk reviewed
+- [ ] Source-admission / source-descriptor contract changes described where relevant
 
 </details>
 
@@ -286,6 +351,7 @@ Fill only the labels that apply to this PR.
 - [ ] Backup / restore / rollback implications reviewed
 - [ ] Proof / manifest / attestation / receipt impact described where relevant
 - [ ] No automation self-approves policy-significant or public-truth changes
+- [ ] Reviewer-summary artifact changes described where relevant
 
 </details>
 
