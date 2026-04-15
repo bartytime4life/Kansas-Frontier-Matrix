@@ -1,42 +1,70 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<TODO-uuid>
-title: contracts
+title: tests/contracts
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-04-12
+updated: 2026-04-14
 policy_label: public
-related: [tests/README.md, tests/accessibility/README.md, tests/e2e/README.md, tests/integration/README.md, tests/policy/README.md, tests/reproducibility/README.md, tests/unit/README.md, contracts/README.md, schemas/README.md, schemas/contracts/README.md, schemas/contracts/v1/README.md, schemas/tests/README.md, policy/README.md, docs/standards/README.md, .github/workflows/README.md, .github/PULL_REQUEST_TEMPLATE.md, .github/CODEOWNERS]
+related: [
+  ../README.md,
+  ../accessibility/README.md,
+  ../e2e/README.md,
+  ../integration/README.md,
+  ../policy/README.md,
+  ../reproducibility/README.md,
+  ../unit/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../schemas/contracts/README.md,
+  ../../schemas/contracts/v1/README.md,
+  ../../schemas/tests/README.md,
+  ../../policy/README.md,
+  ../../docs/standards/README.md,
+  ../../.github/workflows/README.md,
+  ../../.github/PULL_REQUEST_TEMPLATE.md,
+  ../../.github/CODEOWNERS
+]
 tags: [kfm, tests, contracts, verification, schema-drift, fail-closed]
-notes: [doc_id and created date need verification; updated reflects this merged revision; this version preserves the stronger newer draft while reincorporating useful material from older README drafts; current-session evidence remained document-rich rather than mounted-repo-rich, so executable depth and inventory claims still need direct repo verification before merge]
+notes: [
+  "doc_id and created date still need verification.",
+  "This revision preserves the stronger contract-family draft while aligning it with the newer top-level tests family map and schema-side scaffold reality.",
+  "Current-session evidence remained document-rich rather than mounted-repo-rich, so executable depth and inventory claims still need direct branch verification before merge."
+]
 [/KFM_META_BLOCK_V2] -->
 
-# contracts
+<a id="top"></a>
 
-Contract-facing verification family for KFM schema drift, valid/invalid example packs, and fail-closed object validation.
+# `tests/contracts/`
 
+Contract-facing verification family for **KFM schema drift**, **valid/invalid example packs**, and **fail-closed object validation**.
+
+> [!NOTE]
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/contracts/README.md`  
-> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md), [`../../schemas/tests/README.md`](../../schemas/tests/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../docs/standards/README.md`](../../docs/standards/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md), and [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); lateral to [`../policy/`](../policy/), [`../integration/`](../integration/), [`../reproducibility/`](../reproducibility/), [`../accessibility/`](../accessibility/), and [`../unit/`](../unit/); upstream of future executable cases under `tests/contracts/**` and any escalation into [`../integration/`](../integration/) or [`../e2e/`](../e2e/).  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
->
-> ![status](https://img.shields.io/badge/status-experimental-orange)
-> ![family](https://img.shields.io/badge/family-tests--contracts-1f6feb)
-> ![owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1)
-> ![truth-posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
-> ![current-public-inventory](https://img.shields.io/badge/current%20public%20inventory-review%20before%20merge-lightgrey)
-> ![adjacent-schema-lane](https://img.shields.io/badge/adjacent%20schema%20lane-live%20scaffold-8250df)
-> ![workflow-lane](https://img.shields.io/badge/workflows-docs--visible%20only-lightgrey)
-> ![contract-wave](https://img.shields.io/badge/contracts-wave%2001%20core%20first-lightgrey)
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Family](https://img.shields.io/badge/family-tests--contracts-1f6feb) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![Truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043) ![Current public inventory](https://img.shields.io/badge/current%20public%20inventory-review%20before%20merge-lightgrey) ![Adjacent schema lane](https://img.shields.io/badge/adjacent%20schema%20lane-live%20scaffold-8250df) ![Workflow lane](https://img.shields.io/badge/workflows-docs--visible%20only-lightgrey) ![Contract wave](https://img.shields.io/badge/contracts-wave%2001%20core%20first-lightgrey)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> The parent [`tests/README.md`](../README.md) keeps `contracts/` as a first-class verification family. This file should stay narrow on purpose: verify machine-readable contract truth here, escalate broader seams elsewhere, and do not let this directory quietly become a second contract authority.
+> The parent [`tests/README.md`](../README.md) keeps `contracts/` as a first-class verification family.
+>
+> This file should stay narrow on purpose: verify machine-readable contract truth here, escalate broader seams elsewhere, and do not let this directory quietly become a second contract authority.
+
+> [!TIP]
+> Keep the KFM trust split visible here:
+>
+> **contract verification ≠ contract authority ≠ policy authority**
+>
+> - `tests/contracts/` proves shape and failure behavior  
+> - `contracts/` and `schemas/contracts/` remain the authority-facing sources  
+> - `policy/` remains the home for decision grammar and deny-by-default logic
 
 > [!CAUTION]
-> Current session evidence for this revision was document-rich, not mounted-repo-rich. Keep direct runtime depth, exact validator entrypoints, fixture inventory, and merge-blocking workflow claims at **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** unless the checked-out branch proves them directly.
+> Current session evidence for this revision was document-rich, not mounted-repo-rich.
+> Keep direct runtime depth, exact validator entrypoints, fixture inventory, and merge-blocking workflow claims at **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** unless the checked-out branch proves them directly.
 
 ---
 
@@ -44,9 +72,15 @@ Contract-facing verification family for KFM schema drift, valid/invalid example 
 
 `tests/contracts/` is the contract-facing verification family inside KFM’s governed `tests/` surface.
 
-In KFM terms, this is one of the smallest places where the inspectable-claim doctrine becomes executable. If a trust-bearing object cannot survive contract validation here, later integration, runtime, release, and UI surfaces should not be allowed to smooth over that failure.
+In KFM terms, this is one of the smallest places where the **inspectable-claim doctrine becomes executable**. If a trust-bearing object cannot survive contract validation here, later integration, runtime, release, and UI surfaces should not be allowed to smooth over that failure.
 
-Its job is specific: prove that trust-bearing objects are shaped correctly, reject invalid states deterministically, and fail closed when required evidence, policy, or correction fields are missing. This family should help the repo answer a harder question than “did the test pass?”:
+Its job is specific:
+
+- prove that trust-bearing objects are shaped correctly
+- reject invalid states deterministically
+- fail closed when required evidence, policy, or correction fields are missing
+
+This family should help the repo answer a harder question than “did the test pass?”:
 
 - did the contract fail loudly instead of drifting silently?
 - did an invalid object stay invalid instead of being normalized into something plausible?
@@ -101,7 +135,7 @@ Its job is specific: prove that trust-bearing objects are shaped correctly, reje
 
 For those, escalate into [`../integration/`](../integration/), [`../policy/`](../policy/), [`../reproducibility/`](../reproducibility/), [`../accessibility/`](../accessibility/), or [`../e2e/`](../e2e/).
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -156,22 +190,24 @@ The repo-facing material now points to four adjacent but non-identical surfaces:
 This README should keep those roles legible instead of flattening them into one implied authority.
 
 > [!NOTE]
-> This README should not try to settle `contracts/` versus `schemas/` authority by prose alone. Until the repo explicitly proves one machine-contract home as canonical, `tests/contracts/` should consume the declared source of truth and avoid becoming a second authority surface.
+> This README should not try to settle `contracts/` versus `schemas/` authority by prose alone.
+> Until the repo explicitly proves one machine-contract home as canonical, `tests/contracts/` should consume the declared source of truth and avoid becoming a second authority surface.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
 ## Current verified snapshot
 
 > [!NOTE]
-> The table below preserves the current working-baseline snapshot carried by the supplied drafts and adjacent corpus. In this session, the mounted repository tree was **not** directly surfaced, so inventory-sensitive rows should still be rechecked before merge.
+> The table below preserves the current working-baseline snapshot carried by the supplied drafts and adjacent corpus.
+> In this session, the mounted repository tree was **not** directly surfaced, so inventory-sensitive rows should still be rechecked before merge.
 
 | Item | Status | Why it matters |
 | --- | --- | --- |
 | `tests/contracts/` exists as its own repo-visible family in the working baseline | **CONFIRMED** | Keep the family visible instead of folding it into generic tests prose |
-| The working baseline shows `README.md` only inside `tests/contracts/` | **CONFIRMED** | README presence is not proof of executable suite depth |
-| The parent `tests/` tree exposes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/` in the supplied baseline | **CONFIRMED** | Use the actual sibling-family boundaries already established in the current draft |
+| The working baseline shows `README.md` plus contract-facing proof under `tests/contracts/` | **CONFIRMED** | This lane is no longer treated as purely README-only in the top-level family map |
+| The parent `tests/` tree exposes `accessibility/`, `catalog/`, `ci/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/` in the working baseline | **CONFIRMED** | Use the actual sibling-family boundaries already established in the current docs |
 | `tests/e2e/` already exposes `correction/`, `release_assembly/`, and `runtime_proof/` in the working baseline | **CONFIRMED** | Escalation targets are not hypothetical anymore |
 | `.github/workflows/` is documentation-visible, but active gate coverage is still unproven from the current session | **NEEDS VERIFICATION** | Do not assume merge-blocking contract automation from docs alone |
 | `contracts/` and `schemas/` both exist as authority-relevant surfaces in the working baseline | **CONFIRMED** | Schema-home authority still needs a single explicit owner |
@@ -182,9 +218,10 @@ This README should keep those roles legible instead of flattening them into one 
 | Exact mounted location, naming, and coverage of `run_receipt` / `ai_receipt` schema files or receipt fixtures | **NEEDS VERIFICATION** | Later April 2026 materials make them important, but their checked-in home is still not directly surfaced |
 
 > [!NOTE]
-> Public Actions history can be useful reconstruction signal, but it is not the same thing as current checked-in workflow inventory. Use present working evidence for current-tree truth.
+> Public Actions history can be useful reconstruction signal, but it is not the same thing as current checked-in workflow inventory.
+> Use present working evidence for current-tree truth.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -217,6 +254,8 @@ This directory should accept only materials that help verify contract truth.
 - schema-side illustrative or mirrored fixture scaffolds → [`../../schemas/tests/`](../../schemas/tests/README.md)
 - runbooks, ADRs, and long-form guidance → `docs/**`
 
+[Back to top](#top)
+
 ---
 
 ## Exclusions
@@ -239,9 +278,10 @@ This directory should stay strict but small.
 | Promotion-only supply-chain verification such as attestation transport or OCI release referrer checks | release/promotion lanes or broader policy/reproducibility families |
 
 > [!IMPORTANT]
-> A contract-facing test family should be **strict but small**. The goal is to catch structural dishonesty early, not to absorb every other verification concern in the repo.
+> A contract-facing test family should be **strict but small**.
+> The goal is to catch structural dishonesty early, not to absorb every other verification concern in the repo.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -253,8 +293,11 @@ This directory should stay strict but small.
 tests/
 ├── README.md
 ├── accessibility/
+├── catalog/
+├── ci/
 ├── contracts/
-│   └── README.md
+│   ├── README.md
+│   └── test_correction_notice_contract.py
 ├── e2e/
 │   ├── README.md
 │   ├── correction/
@@ -306,7 +349,7 @@ schemas/
                     └── README.md
 ```
 
-### PROPOSED maturity shape for this directory
+### `PROPOSED` maturity shape for this directory
 
 ```text
 tests/contracts/
@@ -339,7 +382,7 @@ tests/contracts/
     └── .gitkeep
 ```
 
-### Alternative shared-fixture shape — PROPOSED if fixture-home law later moves root-side
+### Alternative shared-fixture shape — `PROPOSED` if fixture-home law later moves root-side
 
 ```text
 tests/fixtures/contracts/
@@ -360,7 +403,7 @@ release/** or receipts/**                               # proof-carrying artifac
 
 That split keeps `tests/contracts/` focused on **tests and runners**, while broader shared fixtures or proof packs can later serve policy, integration, reproducibility, and e2e lanes without duplicating contract authority.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -375,6 +418,8 @@ find tests/contracts -maxdepth 4 -type f | sort
 # inspect sibling test-family docs to keep placement honest
 sed -n '1,220p' tests/README.md
 sed -n '1,220p' tests/accessibility/README.md
+sed -n '1,220p' tests/catalog/README.md
+sed -n '1,220p' tests/ci/README.md
 sed -n '1,220p' tests/e2e/README.md
 sed -n '1,220p' tests/integration/README.md
 sed -n '1,220p' tests/policy/README.md
@@ -442,7 +487,7 @@ grep -RIn \
   tests contracts schemas policy docs .github 2>/dev/null || true
 ```
 
-### PROPOSED future validator shape
+### `PROPOSED` future validator shape
 
 The command below is illustrative only. It uses a **real schema-side family path** and a **PROPOSED** root-test case path. Do **not** treat it as current repo behavior until a real validator entrypoint is checked in and referenced by the branch under review.
 
@@ -457,9 +502,10 @@ If the repo later chooses a broader shared fixture corpus outside `tests/contrac
 ### Workflow caution
 
 > [!CAUTION]
-> Do **not** assume that adding files under `tests/contracts/` automatically makes them merge-blocking. The current working evidence proves documentation and design pressure, not a directly surfaced workflow YAML gate for this family.
+> Do **not** assume that adding files under `tests/contracts/` automatically makes them merge-blocking.
+> The current working evidence proves documentation and design pressure, not a directly surfaced workflow YAML gate for this family.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -532,7 +578,7 @@ A KFM contract case should prefer:
 - stable, reviewable examples over clever test magic
 - contract-carried proof over free-text claims that a check “must have happened”
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -555,11 +601,11 @@ flowchart LR
 
 The directional point stays the same: `tests/contracts/` should **consume and verify** contract truth, not quietly become a second or third contract authority.
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
-## Tables
+## Reference tables
 
 ### Family placement matrix
 
@@ -607,7 +653,7 @@ The directional point stays the same: `tests/contracts/` should **consume and ve
 | Keep schema-side scaffolds and root-test runners synchronized | current repo reality is split enough already |
 | Treat malformed proof carriers as first-class invalid cases where applicable | proof language should not float above executable checks |
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -664,7 +710,7 @@ Before accepting changes here, check:
 - does it stay narrow enough to remain reviewable?
 - can the PR link validation evidence, proof packs, screenshots, or follow-up issues where they exist?
 
-[Back to top](#contracts)
+[Back to top](#top)
 
 ---
 
@@ -697,6 +743,8 @@ Because later April 2026 materials make them part of KFM’s proof pressure even
 ### Should API endpoint tests live here?
 
 Not usually. Keep object-shape checks here; move route wiring and full runtime behavior into integration or e2e lanes.
+
+[Back to top](#top)
 
 ---
 
@@ -749,4 +797,4 @@ Later April 2026 materials also add stronger cross-cutting pressure around:
 
 </details>
 
-[Back to top](#contracts)
+[Back to top](#top)
