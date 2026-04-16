@@ -13,19 +13,26 @@ tags: [kfm, pipelines, execution, governance]
 notes: [Original creation date NEEDS VERIFICATION. Current public-main tree confirms this top-level surface exists, but deeper runtime maturity inside each lane remains lane-specific and must not be inferred from presence alone.]
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+<a id="pipelines"></a>
+
 # `pipelines/`
 
 Governed execution-family index for KFM lane-local fetch, transform, validate, watch, and emit work.
 
+> [!IMPORTANT]
+> **Status:** Experimental  
+> **Doc state:** draft  
+> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` fallback; narrower `/pipelines/` ownership NEEDS VERIFICATION)*  
+> **Path:** `pipelines/README.md`  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Lane registry](#current-lane-registry) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-pipelines-blue) ![truth](https://img.shields.io/badge/truth-verification--first-5b6ee1) ![promotion](https://img.shields.io/badge/promotion-governed-important) ![tree](https://img.shields.io/badge/public--main-tree-confirmed-success)
+
 | Field | Value |
 |---|---|
-| **Status** | Experimental |
-| **Owners** | `@bartytime4life` *(current public `CODEOWNERS` fallback; narrower `/pipelines/` ownership NEEDS VERIFICATION)* |
-| **Path** | `pipelines/README.md` |
-| **Badges** | ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-pipelines-blue) ![truth](https://img.shields.io/badge/truth-verification--first-5b6ee1) ![promotion](https://img.shields.io/badge/promotion-governed-important) ![tree](https://img.shields.io/badge/public--main-tree-confirmed-success) |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Lane registry](#current-lane-registry) · [Definition of done](#definition-of-done) · [FAQ](#faq) |
-| **Accepted inputs** | Lane-local README files, watcher notes, recipe docs, execution helpers, lane-scoped validation notes, and tightly related runbook material that stays specific to pipeline work. |
-| **Exclusions** | Repo-wide doctrine, shared contracts, shared schemas, policy bundles, canonical data artifacts, generic architecture prose, and unverified runtime claims. |
+| **Role** | execution-family index for lane-local pipeline work |
+| **Accepted inputs** | Lane-local README files, watcher notes, recipe docs, execution helpers, lane-scoped validation notes, and tightly related runbook material that stays specific to pipeline work |
+| **Exclusions** | Repo-wide doctrine, shared contracts, shared schemas, policy bundles, canonical data artifacts, generic architecture prose, and unverified runtime claims |
 
 > [!IMPORTANT]
 > Current public `main` confirms that `/pipelines/` is a real top-level repo surface.
@@ -34,6 +41,8 @@ Governed execution-family index for KFM lane-local fetch, transform, validate, w
 
 > [!NOTE]
 > This README keeps five labels separate on purpose: `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, and `NEEDS VERIFICATION`.
+
+---
 
 ## Scope
 
@@ -50,13 +59,15 @@ A good `/pipelines/` README should therefore behave as an **orientation index**,
 
 | At a glance | Meaning |
 |---|---|
-| **Primary job** | Index lane-local execution surfaces. |
-| **Truth posture** | Presence is `CONFIRMED`; deeper runtime behavior is lane-specific and often `UNKNOWN` unless shown. |
-| **Adjacent law** | Shared rules still live in `../contracts/`, `../schemas/`, `../policy/`, `../tests/`, and `../data/`. |
-| **Delivery posture** | Pipelines prepare or validate truth-bearing artifacts; they do not bypass governed promotion. |
-| **Placement rule** | Keep lane-specific execution material here; move broad doctrine and interpretation outward. |
+| **Primary job** | Index lane-local execution surfaces |
+| **Truth posture** | Presence is `CONFIRMED`; deeper runtime behavior is lane-specific and often `UNKNOWN` unless shown |
+| **Adjacent law** | Shared rules still live in `../contracts/`, `../schemas/`, `../policy/`, `../tests/`, and `../data/` |
+| **Delivery posture** | Pipelines prepare or validate truth-bearing artifacts; they do not bypass governed promotion |
+| **Placement rule** | Keep lane-specific execution material here; move broad doctrine and interpretation outward |
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -92,7 +103,9 @@ A good `/pipelines/` README should therefore behave as an **orientation index**,
 
 A lane can live here even if it is still thin. What matters is that the README tells the truth about that thinness instead of smoothing it into implied maturity.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -118,7 +131,9 @@ Material belongs in `/pipelines/` when it is **execution-near**, **lane-specific
 - It describes workflow governance but not a specific lane.
 - It reads like a domain essay rather than an execution surface.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -137,7 +152,9 @@ The easiest way to make `/pipelines/` noisy is to let it become a dumping ground
 > [!TIP]
 > When in doubt, use this rule: **link first, duplicate last**. A lane README should point to shared law instead of restating it loosely.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -164,7 +181,9 @@ pipelines/
 - That is acceptable as long as the docs remain explicit about what is present versus merely intended.
 - The root README should therefore describe the directory as an **execution-family index with uneven lane maturity**, not as a fully proven automation hub.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Quickstart
 
@@ -206,7 +225,9 @@ sed -n '1,220p' tests/README.md
 # 5) do not imply workflow/runtime proof you cannot surface
 ```
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -271,7 +292,9 @@ One-line purpose.
 ## Current truth posture
 ```
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -295,11 +318,15 @@ flowchart LR
 
 This diagram is intentionally simple: `/pipelines/` is not the whole system. It is the lane-local execution band between admitted sources and governed outward publication.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Tables
 
 ### Current lane registry
+
+<a id="current-lane-registry"></a>
 
 | Path | Current reading | Posture |
 |---|---|---|
@@ -348,7 +375,9 @@ The table below is **doctrine-aligned guidance**, not a claim that every visible
 | Moving lane burden into generic language | Weakens rights, sensitivity, and proof clarity |
 | Treating workflow docs as live workflow proof | Public docs and live YAML are not the same evidence class |
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## Definition of done
 
@@ -366,7 +395,9 @@ A revision to this file is ready when all of the following are true:
 - [ ] Correction / rollback expectations are not omitted for consequential lanes.
 - [ ] No section feels visually dead or shapeless in GitHub rendering.
 
-[Back to top](#pipelines)
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -389,11 +420,14 @@ Because KFM’s trust posture depends on not upgrading uncertainty through tone.
 ### What is the best next improvement after this root README?
 
 Normalize the visible child-lane drift:
-1. correct root-path/role language in this file,
-2. normalize `hls-ndvi/README.md` so its path statement matches current public reality,
-3. either mature or retire `ssurgo_to_catchment.md`.
 
-[Back to top](#pipelines)
+1. correct root-path/role language in this file
+2. normalize `hls-ndvi/README.md` so its path statement matches current public reality
+3. either mature or retire `ssurgo_to_catchment.md`
+
+[Back to top](#top)
+
+---
 
 ## Appendix
 
@@ -421,3 +455,5 @@ Before expanding this tree, ask:
 5. Does it leave a reviewer with fewer hidden assumptions than before?
 
 </details>
+
+[Back to top](#top)
