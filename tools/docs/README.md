@@ -1,33 +1,66 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-NEEDS-UUID
-title: Documentation Tooling
+doc_id: kfm://doc/NEEDS_VERIFICATION
+title: tools/docs
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-28
-updated: 2026-04-13
-policy_label: TODO-NEEDS-VERIFICATION
-related: [tools/README.md, .github/CODEOWNERS, contracts/README.md, policy/README.md, scripts/README.md, docs/reports/readme-structure-reconciliation.md, tools/ci/README.md, tools/catalog/README.md, tools/probes/README.md, tools/diff/README.md, tools/attest/README.md, tools/validators/promotion_gate/README.md]
-tags: [kfm, docs, tooling, readme, metadata, structure, validation]
-notes: [Updated to reflect the check_doc_structure.py thin slice and tests/docs/test_check_doc_structure.py. Current public/main subtree for tools/docs/ historically presented as README-first; created date, policy label, and any broader helper inventory still need direct verification.]
+updated: 2026-04-16
+policy_label: public
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../.github/README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/workflows/README.md,
+  ../../.github/watchers/README.md,
+  ../../CONTRIBUTING.md,
+  ../../contracts/README.md,
+  ../../policy/README.md,
+  ../../schemas/README.md,
+  ../../scripts/README.md,
+  ../../docs/README.md,
+  ../../docs/reports/readme-structure-reconciliation.md,
+  ../../tests/README.md,
+  ../../tests/docs/test_check_doc_structure.py,
+  ../ci/README.md,
+  ../catalog/README.md,
+  ../probes/README.md,
+  ../diff/README.md,
+  ../attest/README.md,
+  ../validators/README.md,
+  ../validators/promotion_gate/README.md,
+  ./check_doc_structure.py
+]
+tags: [kfm, docs, tooling, readme, metadata, structure, validation, links, placeholders]
+notes: [
+  Updated to reflect the check_doc_structure.py thin slice and tests/docs/test_check_doc_structure.py.
+  Current public-main subtree for tools/docs/ is no longer purely README-first because one executable helper and one explicit proof surface are now documented here.
+  doc_id and any narrower lane ownership still need direct verification from branch history or governance records.
+]
 [/KFM_META_BLOCK_V2] -->
 
-# Documentation Tooling
+<a id="top"></a>
 
-Repo-facing tooling guidance for KFM documentation production, structure checks, and maintenance workflows.
+# `tools/docs/`
 
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![Doc](https://img.shields.io/badge/doc-standard%20%2B%20README--like-blue)
-![Truth](https://img.shields.io/badge/truth-public--main--checked-2b6cb0)
-![Owner](https://img.shields.io/badge/owner-%40bartytime4life-6f42c1)
-![Lane](https://img.shields.io/badge/lane-tools%2Fdocs-4c1)
+Documentation tooling for KFM: structure checks, metadata checks, link validation, placeholder detection, and bounded maintenance helpers for repo-facing Markdown.
 
 > [!IMPORTANT]
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(current public `CODEOWNERS` coverage for `/tools/`; finer-grained lane ownership still needs verification)*  
+> **Owners:** `@bartytime4life`  
 > **Path:** `tools/docs/README.md`  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** child lane under [`../README.md`](../README.md); adjacent to [`../ci/README.md`](../ci/README.md), [`../catalog/README.md`](../catalog/README.md), [`../probes/README.md`](../probes/README.md), [`../diff/README.md`](../diff/README.md), [`../attest/README.md`](../attest/README.md), [`../validators/README.md`](../validators/README.md), and [`../validators/promotion_gate/README.md`](../validators/promotion_gate/README.md); downstream callers may live in [`../../scripts/README.md`](../../scripts/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Documentation tooling contract](#documentation-tooling-contract) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+![status](https://img.shields.io/badge/status-experimental-orange)
+![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
+![lane](https://img.shields.io/badge/lane-tools%2Fdocs-4c1)
+![surface](https://img.shields.io/badge/surface-documentation%20tooling-0a7ea4)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
+![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
 
 > [!TIP]
 > **Current executable snapshot (thin slice)**  
@@ -50,27 +83,49 @@ Repo-facing tooling guidance for KFM documentation production, structure checks,
 >
 > The broader lane remains larger than this one executable helper. Templates, richer validators, renderers, and expanded consistency checks are still **PROPOSED** unless directly verified in the active branch.
 
-> [!NOTE]
-> In KFM, documentation is part of the working system. This lane exists to help docs stay reviewable, policy-aware, structurally consistent, and subordinate to the repo’s actual authority surfaces.
+> [!TIP]
+> Keep the KFM authority split visible here:
+>
+> **documentation tooling ≠ documentation authority ≠ contract authority ≠ policy authority ≠ release authority**
+>
+> - `tools/docs/` checks and assists documentation
+> - `docs/` holds prose and runbooks
+> - `contracts/` and `schemas/` hold contract and schema authority
+> - `policy/` holds governance logic
+> - `tools/ci/` renders summaries downstream
+> - workflows and scripts orchestrate callers
+
+> [!WARNING]
+> This lane may support policy docs, contract docs, release docs, and README structure across the repo, but it must not become a second source of truth for any of them.
 
 ---
 
 ## Scope
 
-`tools/docs/` is the documentation-tooling lane inside `tools/`: the place for helpers, conventions, and review aids that improve KFM documentation quality without quietly becoming a second source of truth.
+`tools/docs/` is the documentation-tooling lane inside `tools/`: the place for helpers, conventions, and review aids that improve KFM documentation quality without quietly becoming a second authority surface.
 
 This lane is the right home for:
 
 - documentation structure checks
 - README and standard-doc scaffolds
-- metadata/header validation
+- metadata and header validation
 - relative-link and anchor checks
 - placeholder and stale-state scans
-- generated documentation indices, matrices, or reconciliation aids
+- generated indices, matrices, and reconciliation aids
 - fixtures and examples for documentation tooling itself
 - reviewer-facing documentation consistency checks that remain subordinate to canonical repo surfaces
 
-This lane is **not** the home for canonical contract meaning, policy enforcement semantics, or release truth.
+This lane is **not** the home for canonical contract meaning, policy enforcement semantics, release truth, or human ownership decisions.
+
+### What this lane should prove
+
+- docs stay structurally reviewable
+- docs stay navigable inside GitHub
+- KFM Meta Block expectations remain checkable
+- placeholder leakage stays visible
+- generated documentation aids remain marked as generated or advisory
+- neighboring lane docs remain easier to compare and maintain
+- docs tooling can emit machine-readable output for CI without pretending to own CI or policy
 
 ### Truth labels used in this README
 
@@ -85,71 +140,70 @@ This lane is **not** the home for canonical contract meaning, policy enforcement
 > [!CAUTION]
 > Documentation tooling may support policy, contracts, publication, and review docs, but it must not redefine schema authority, runtime policy meaning, or release law.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
 ## Repo fit
 
+**Path:** `tools/docs/README.md`  
+**Role:** directory README for documentation tooling inside the broader `tools/` surface.
+
 ### Path and relationships
 
 | Direction | Path | Status | Notes |
 | --- | --- | --- | --- |
-| Target lane | `tools/docs/` | **CONFIRMED** | Current lane is visible and now documented with one executable thin slice plus tests. |
-| Parent | [`../README.md`](../README.md) | **CONFIRMED** | Parent `tools/README.md` defines `tools/` as the tooling lane and lists `docs/` as a child surface. |
-| Ownership surface | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** | Public `CODEOWNERS` currently assigns `/tools/` to `@bartytime4life`. |
-| Neighbor | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Contract lane exists and is framed as the machine-readable trust-object surface. |
-| Neighbor | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Policy lane exists and is framed as executable governance, not prose-only guidance. |
-| Neighbor | [`../../scripts/README.md`](../../scripts/README.md) | **CONFIRMED** | Script lane exists as a thin-entrypoint/documented helper surface. |
-| Related report | [`../../docs/reports/readme-structure-reconciliation.md`](../../docs/reports/readme-structure-reconciliation.md) | **CONFIRMED** | Useful review aid, but explicitly not safe to treat as live inventory on its own. |
-| Potential downstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **INFERRED** | Likely consumer of doc checks when workflow wiring becomes executable, but public evidence may remain README-bounded. |
-| Neighbor lane | [`../../tools/ci/README.md`](../../tools/ci/README.md) | **CONFIRMED** | CI helpers may render doc-check results, but should not own documentation truth. |
-| Neighbor lane | [`../../tools/catalog/README.md`](../../tools/catalog/README.md) | **CONFIRMED** | Catalog docs may need structure and metadata checks without moving catalog law into docs tooling. |
-| Neighbor lane | [`../../tools/probes/README.md`](../../tools/probes/README.md) | **CONFIRMED** | Probe docs and bounded-readme conventions benefit from consistent structure tooling. |
-| Neighbor lane | [`../../tools/diff/README.md`](../../tools/diff/README.md) | **CONFIRMED** | Diff lane docs benefit from stable README discipline and anchor/link validation. |
-| Neighbor lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | **CONFIRMED** | Trust-helper docs should stay aligned without duplicating trust authority. |
-| Neighbor lane | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | **CONFIRMED** | Promotion README work now depends heavily on structure, quick-jump, and metadata consistency. |
-
-### Current evidence snapshot
-
-| Surface | Current reading | Why it matters here |
-| --- | --- | --- |
-| `tools/` | Multiple child lanes are visible under `tools/`, including `docs/`, but the family remains lane-specific rather than generic-toolbox-oriented | `tools/docs/` should stay narrow and documentation-specific |
-| `tools/docs/` | no longer purely conceptual in this README; the lane now has one documented thin-slice executable helper | This README should describe a real small tool surface rather than a purely future lane |
-| `contracts/` | Present, but doc tooling still does not own contract truth | Documentation helpers may inspect contract-facing docs, but must stay subordinate |
-| `policy/` | Present as a separate authority surface | Documentation tooling must not drift into policy ownership |
-| `scripts/` | Present as thin-entrypoint lane | General script entrypoints belong there, not by default in `tools/docs/` |
-| reconciliation report | Historical scaffold + correction layer | Treat as review input, never as sovereign current inventory |
-| promotion/readme-heavy lanes | Multiple adjacent lanes now rely on richer README discipline | Strengthens the case for lane-local doc tooling without changing authority boundaries |
+| Target lane | `tools/docs/` | **CONFIRMED** | Current lane is visible and now documented with one executable thin slice plus tests |
+| Parent | [`../README.md`](../README.md) | **CONFIRMED** | Parent `tools/README.md` defines `tools/` as the tooling lane and lists `docs/` as a child surface |
+| Repo root | [`../../README.md`](../../README.md) | **CONFIRMED** | Root posture keeps docs tooling subordinate to evidence-first repo doctrine |
+| Governance surface | [`../../.github/README.md`](../../.github/README.md) | **CONFIRMED** | Repo gatehouse for review, ownership, and automation framing |
+| Ownership surface | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED** | Public `CODEOWNERS` currently assigns `/tools/` to `@bartytime4life` |
+| Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED** | Likely caller surface, but workflow wiring remains bounded unless directly verified |
+| Watcher boundary | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | **CONFIRMED** | Sharpens watcher/process-memory boundary language around doc automation and generated receipts |
+| Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | **CONFIRMED** | Keeps claims, commands, and evidence posture bounded |
+| Neighbor | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Contract lane exists and remains machine-readable authority |
+| Neighbor | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Policy lane remains executable governance, not prose-only guidance |
+| Neighbor | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema-home authority stays outside this lane |
+| Neighbor | [`../../scripts/README.md`](../../scripts/README.md) | **CONFIRMED** | Scripts may call docs tooling, but general thin entrypoints belong there |
+| Neighbor | [`../../docs/README.md`](../../docs/README.md) | **CONFIRMED** | Human-maintained documentation corpus stays separate from tooling |
+| Related report | [`../../docs/reports/readme-structure-reconciliation.md`](../../docs/reports/readme-structure-reconciliation.md) | **CONFIRMED** | Useful review aid, but explicitly not safe to treat as live inventory on its own |
+| Neighbor lane | [`../ci/README.md`](../ci/README.md) | **CONFIRMED** | CI helpers may render doc-check results but should not own documentation truth |
+| Neighbor lane | [`../catalog/README.md`](../catalog/README.md) | **CONFIRMED** | Catalog docs may need structure and metadata checks without moving catalog law into docs tooling |
+| Neighbor lane | [`../probes/README.md`](../probes/README.md) | **CONFIRMED** | Probe docs and bounded-readme conventions benefit from consistent structure tooling |
+| Neighbor lane | [`../diff/README.md`](../diff/README.md) | **CONFIRMED** | Diff lane docs benefit from stable README discipline and anchor/link validation |
+| Neighbor lane | [`../attest/README.md`](../attest/README.md) | **CONFIRMED** | Trust-helper docs should stay aligned without duplicating trust authority |
+| Neighbor lane | [`../validators/README.md`](../validators/README.md) | **CONFIRMED** | Validator docs need the same metadata and structure discipline |
+| Neighbor lane | [`../validators/promotion_gate/README.md`](../validators/promotion_gate/README.md) | **CONFIRMED** | Promotion docs are heavy users of quick-jump, structure, and metadata consistency |
 
 ### Working interpretation
 
 The current repo shape supports a clean separation:
 
-- **contracts/** owns machine-readable trust objects
-- **policy/** owns executable governance grammar
-- **scripts/** owns thin entrypoints and operational helpers
-- **tools/** owns support tooling
-- **tools/docs/** should therefore specialize in documentation quality, structure, and maintenance support
+- `contracts/` owns machine-readable trust objects
+- `policy/` owns executable governance grammar
+- `docs/` owns prose and runbooks
+- `scripts/` owns thin operational entrypoints
+- `tools/ci/` owns reviewer rendering
+- `tools/docs/` specializes in documentation quality, structure, and maintenance support
 
 > [!WARNING]
 > Historical reconciliation reports are useful review inputs, not live repo truth. If a report and the checked tree disagree, the checked tree wins.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
-## Inputs
+## Accepted inputs
 
 ### Accepted inputs
 
 **CONFIRMED or strongly adjacent inputs**
 
-- README-like docs in `tools/`, `contracts/`, `policy/`, `scripts/`, and nearby repo surfaces
+- README-like docs in `tools/`, `contracts/`, `policy/`, `scripts/`, `docs/`, and nearby repo surfaces
 - standard docs that use or should use the KFM meta block pattern
 - documentation structure rules, ownership markers, and quick-jump/navigation blocks
 - reconciliation or gap-analysis reports used as review aids
-- neighboring doctrine that defines how docs must talk about contracts, policy, evidence, and publication
+- neighboring doctrine that defines how docs must talk about contracts, policy, evidence, receipts, proofs, and publication
 - adjacent lane READMEs that should remain terminologically consistent
 
 **Implemented thin-slice input pattern**
@@ -157,7 +211,7 @@ The current repo shape supports a clean separation:
 - Markdown files or directories
 - repo root for relative-path resolution
 - optional placeholder-tolerance flag
-- optional JSON output path for CI/reporting
+- optional JSON output path for CI or reporting
 
 **PROPOSED tooling inputs**
 
@@ -190,7 +244,7 @@ Bad input is:
 - maintenance scripts that are not documentation-specific
 - checks that imply policy or release enforcement the repo does not actually implement
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -204,13 +258,14 @@ Bad input is:
 | General-purpose operational scripts unrelated to docs | Avoid turning this lane into an undifferentiated tool bucket | `../../scripts/` |
 | Runtime/API/business logic | Docs tooling should support explanation and verification, not application truth | app / package / worker lanes |
 | Domain ETL, geospatial transforms, or catalog publication code | This lane is documentation-focused, not data-plane focused | `../../pipelines/`, `../../packages/`, or domain lanes |
-| Signing and verification behavior | Trust-helper logic belongs elsewhere | `../../tools/attest/` |
-| Reviewer summary rendering for non-doc artifacts | CI/presentation belongs elsewhere | `../../tools/ci/` |
-| Policy or promotion decisions | Validation/governance belong elsewhere | `../../tools/validators/` |
+| Signing and verification behavior | Trust-helper logic belongs elsewhere | `../attest/` |
+| Reviewer summary rendering for non-doc artifacts | CI/presentation belongs elsewhere | `../ci/` |
+| Policy or promotion decisions | Validation/governance belong elsewhere | `../validators/` |
+| Receipt or proof storage | This lane may mention or validate docs about them, but should not own their storage | `../../data/receipts/`, `../../data/proofs/` |
 
-> **Rule of thumb:** if the artifact can directly change canonical meaning, policy result, or publication state, it probably does **not** belong in `tools/docs/`.
+> **Rule of thumb:** if the artifact can directly change canonical meaning, policy result, publication state, or sovereign trust storage, it probably does **not** belong in `tools/docs/`.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -225,10 +280,12 @@ Bad input is:
 | `tools/docs/check_doc_structure.py` is the current thin-slice executable helper | **CONFIRMED** | The lane now has one concrete helper instead of a fully README-only posture |
 | `tests/docs/test_check_doc_structure.py` is the current thin-slice proof surface | **CONFIRMED** | The first helper lands with explicit test coverage |
 | Neighbor lanes now include richer README surfaces with heavy structural expectations | **CONFIRMED via adjacent documentation** | Strengthens the case for structure/link/metadata tooling in this lane |
+| `.github/watchers/README.md` now exists as a public watcher-boundary surface | **CONFIRMED** | Docs automation and process-memory language can now be bounded more cleanly |
+| Adjacent docs now explicitly distinguish receipts from proofs and rendering from authority surfaces | **CONFIRMED in-session doctrine alignment** | This lane should now be clearer about process memory vs proof storage vs documentation checks |
 | Broader helper families such as templates, renderers, and expanded checks | **PROPOSED** | These remain target shapes, not fully proven mounted inventory |
 | Exact workflow or CI wiring for doc tooling under this lane | **UNKNOWN / NEEDS VERIFICATION** | Public evidence remains bounded |
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -276,26 +333,15 @@ tools/docs/
 
 </details>
 
-### Thin-slice executable shape
-
-```text
-tools/docs/
-├── README.md
-└── check_doc_structure.py
-
-tests/docs/
-└── test_check_doc_structure.py
-```
-
 ### Design intent for the PROPOSED layout
 
-- **templates/** keeps authoring shells explicit and reusable
-- **checks/** keeps structure, links, and truth posture testable
-- **renderers/** keeps generated doc artifacts reviewable instead of magical
-- **fixtures/** makes checker behavior demonstrable
-- **examples/** shows maintainers what “good” looks like
+- `templates/` keeps authoring shells explicit and reusable
+- `checks/` keeps structure, links, and truth posture testable
+- `renderers/` keeps generated doc artifacts reviewable instead of magical
+- `fixtures/` makes checker behavior demonstrable
+- `examples/` shows maintainers what “good” looks like
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -321,6 +367,8 @@ sed -n '1,240p' tools/README.md
 sed -n '1,220p' .github/CODEOWNERS
 sed -n '1,240p' tools/ci/README.md
 sed -n '1,240p' tools/catalog/README.md
+sed -n '1,240p' .github/workflows/README.md
+sed -n '1,240p' .github/watchers/README.md
 ```
 
 ### Thin-slice local run
@@ -348,7 +396,7 @@ pytest -q tests/docs/test_check_doc_structure.py
 3. What uncertainty must stay visible in the result?
 4. Which adjacent doc must stay synchronized?
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -372,7 +420,7 @@ Good fits for this lane include checks that answer questions like:
 - Is there exactly one H1?
 - Is the Quick jumps block present?
 - Are relative links valid from the file’s real location?
-- Are TODO/placeholder markers still intentional and visible?
+- Are TODO or placeholder markers still intentional and visible?
 - Do nearby lane READMEs keep a consistent top-of-file structure?
 
 ### 3) Generate reconciliation or inventory aids
@@ -403,6 +451,7 @@ A docs helper may inspect:
 - promotion lane docs
 - trust-helper docs
 - CI/rendering docs
+- receipt/proof boundary docs
 
 But it should only check structure, metadata, links, consistency, or freshness. It should not redefine what those lanes mean.
 
@@ -418,7 +467,28 @@ The current thin slice checks:
 
 It currently performs **presence-oriented** Quick jumps validation, not full anchor-resolution checks.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
+
+---
+
+## Documentation tooling contract
+
+A documentation helper in this lane should prove more than “the file exists.”
+
+| Proof target | Minimum expectation |
+| --- | --- |
+| Structural integrity | one H1, navigation block presence, stable section layout where required |
+| Metadata visibility | KFM Meta Block V2 presence and future field-level validation |
+| Navigation integrity | relative links resolve and anchor checks are at least bounded honestly |
+| Uncertainty visibility | placeholders remain visible and reviewable rather than silently buried |
+| Output honesty | generated reports are marked as advisory, review-input, or generated |
+| Local/CI parity | the same helper can run locally and inside CI callers |
+| Boundary discipline | helper does not become contract, policy, release, or trust authority |
+
+> [!IMPORTANT]
+> A docs checker may block a docs-quality workflow, but that does **not** make it the owner of policy, contracts, release truth, or human editorial judgment.
+
+[Back to top](#top)
 
 ---
 
@@ -451,7 +521,7 @@ flowchart LR
 
 This lane sits **between** authoritative inputs and reviewable documentation output. It should not sit above the authority layer or masquerade as a publication gate by itself.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -478,7 +548,7 @@ This lane sits **between** authoritative inputs and reviewable documentation out
 | --- | --- | --- |
 | `tools/docs/` contents | one helper + one test plus README | **CONFIRMED** current lane shape |
 | Broader helper scripts/checks/templates under this lane | not yet proven in the mounted lane beyond the thin slice | **PROPOSED / UNKNOWN** depending on claim strength |
-| Expanded lane shape for future growth | Fits doctrine and adjacent lane patterns | **PROPOSED** |
+| Expanded lane shape for future growth | fits doctrine and adjacent lane patterns | **PROPOSED** |
 | Ownership | `/tools/` currently owned by `@bartytime4life` in public `CODEOWNERS` | **CONFIRMED** at `/tools/` scope |
 | Executable CI/workflow wiring | not directly proven for this lane in public evidence | **UNKNOWN / NEEDS VERIFICATION** |
 
@@ -486,20 +556,20 @@ This lane sits **between** authoritative inputs and reviewable documentation out
 
 | Check | Intended outcome | Status |
 | --- | --- | --- |
-| KFM meta block presence/shape | Standard docs stay machine-auditable | **Thin-slice implemented** |
+| KFM meta block presence or shape | standard docs stay machine-auditable | **Thin-slice implemented** |
 | README required structure: exactly one H1 | README-like docs stay structurally comparable | **Thin-slice implemented** |
-| Relative-link validation | Broken navigation fails early | **Thin-slice implemented** |
+| Relative-link validation | broken navigation fails early | **Thin-slice implemented** |
 | Anchor/jump validation | Quick-jump blocks do not rot | **Partially implemented** |
 | Placeholder scan | TODO leakage remains visible and reviewable | **Thin-slice implemented** |
-| Reconciliation freshness marker | Reports do not masquerade as live inventory | **PROPOSED** |
-| Documentation/accessibility gate | Public-facing docs stay readable and behavior-aligned | **PROPOSED** |
+| Reconciliation freshness marker | reports do not masquerade as live inventory | **PROPOSED** |
+| Documentation accessibility and readability gate | public-facing docs stay readable and behavior-aligned | **PROPOSED** |
 | Neighbor-lane structure consistency | repeated lane contracts stay navigable and comparable | **PROPOSED** |
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
-## Task list
+## Task list / definition of done
 
 ### Definition of done for the current thin slice
 
@@ -517,9 +587,9 @@ This lane sits **between** authoritative inputs and reviewable documentation out
 - [ ] add required-section checker for README-like docs
 - [ ] add report freshness marker checker
 - [ ] add docs-style accessibility and readability checks for public-facing README surfaces
-- [ ] add neighbor-lane quick-jump / section consistency checker
+- [ ] add neighbor-lane quick-jump or section consistency checker
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -539,7 +609,7 @@ Because adjacent repo surfaces already distinguish those roles. `contracts/` and
 
 ### Can this lane generate docs from contracts or policy vocabularies?
 
-Yes—carefully. That is a good fit **if** the generated output points back to canonical inputs and remains reviewable.
+Yes, carefully. That is a good fit **if** the generated output points back to canonical inputs and remains reviewable.
 
 ### What is the easiest way for this lane to go wrong?
 
@@ -553,7 +623,7 @@ Yes. That is a strong fit, as long as it checks structure, metadata, links, or w
 
 Today’s thin slice is `check_doc_structure.py`, with tests in `tests/docs/test_check_doc_structure.py`. It checks metadata-block presence, single-H1 structure, Quick jumps presence, relative links, and placeholder leakage.
 
-[Back to top](#documentation-tooling)
+[Back to top](#top)
 
 ---
 
@@ -572,7 +642,7 @@ Strongly suggested by adjacent lane structure or doctrine, but not directly enum
 A recommended lane shape, checker family, or future layout that fits KFM doctrine but is not yet verified as mounted implementation.
 
 ### UNKNOWN / NEEDS VERIFICATION
-Broader executable helper inventory under `tools/docs/`, mounted-checkout parity beyond the thin slice, exact workflow wiring, policy label, and any finer-grained lane ownership beyond current `/tools/` coverage.
+Broader executable helper inventory under `tools/docs/`, mounted-checkout parity beyond the thin slice, exact workflow wiring, policy label beyond current doc posture, and any finer-grained lane ownership beyond current `/tools/` coverage.
 
 </details>
 
@@ -580,9 +650,9 @@ Broader executable helper inventory under `tools/docs/`, mounted-checkout parity
 <summary><strong>Open verification items</strong></summary>
 
 - Should lane ownership be narrowed from `/tools/` to a more specific `tools/docs/` rule?
-- What is the intended policy label for this document under current repo governance?
 - Which downstream docs should link back here once the local tree is reverified?
 - Is there already a helper family under `scripts/` or `.github/actions/` that should be reconciled with this lane before broader expansion?
+- Should docs-style accessibility and readability checks land here or remain split between tooling and review lanes?
 
 </details>
 
@@ -604,5 +674,3 @@ Keep that distinction visible during review.
 ---
 
 Keep this lane small, inspectable, and subordinate to the repo’s actual authority surfaces.
-
-[Back to top](#documentation-tooling)
