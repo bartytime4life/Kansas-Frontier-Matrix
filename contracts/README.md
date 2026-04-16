@@ -1,4 +1,5 @@
-<!-- [KFM_META_BLOCK_V2]
+<!--
+KFM Meta Block V2
 doc_id: kfm://doc/<UUID_NEEDS_VERIFICATION>
 title: Contracts
 type: standard
@@ -6,47 +7,96 @@ version: v1
 status: draft
 owners: <OWNER_NEEDS_VERIFICATION>
 created: <DATE_NEEDS_VERIFICATION>
-updated: <DATE_NEEDS_VERIFICATION>
+updated: 2026-04-16
 policy_label: <POLICY_LABEL_NEEDS_VERIFICATION>
-related: [<RELATED_PATHS_NEEDS_VERIFICATION>]
-tags: [kfm, contracts, schemas, proof-objects]
-notes: [Root contracts lane aligned to the user-requested path and doctrinal starter paths; owners, dates, and exact mounted inventory need verification]
-[/KFM_META_BLOCK_V2] -->
+related:
+  - ../README.md
+  - ../CONTRIBUTING.md
+  - ../schemas/README.md
+  - ../policy/README.md
+  - ../tools/validators/README.md
+  - ../tools/probes/README.md
+  - ../tests/README.md
+  - ../tests/contracts/README.md
+  - ../data/receipts/README.md
+  - ../data/run_receipts/
+tags:
+  - kfm
+  - contracts
+  - schemas
+  - proof-objects
+  - run-receipts
+  - trust-objects
+notes:
+  - Root contracts lane aligned to the user-requested path and doctrinal starter paths.
+  - This revision makes the contract/policy/schema split more explicit and calls out run_receipt as a concrete starter thin slice.
+  - owners, dates, exact mounted inventory, and active subtree population still need verification.
+-->
+
+<a id="top"></a>
 
 # Contracts
 
-Machine-checkable contract lane for KFM’s shared schemas, proof objects, and contract-first release rules.
+Machine-checkable contract lane for KFM’s shared schemas, trust objects, proof objects, and contract-first release rules.
 
-> **Status:** experimental  
-> **Owners:** `<OWNER_NEEDS_VERIFICATION>`  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-ffb000) ![Contracts: starter wave](https://img.shields.io/badge/contracts-starter_wave-5319e7) ![Evidence: PDF grounded](https://img.shields.io/badge/evidence-pdf--grounded-0a60ff) ![Proof quartet: required](https://img.shields.io/badge/proof_quartet-required-2ea44f) ![Schema profile: JSON Schema 2020-12](https://img.shields.io/badge/json_schema-2020--12-6e7781)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Starter schema wave](#starter-schema-wave) · [Versioning rules](#versioning-rules) · [Validation and gates](#validation-and-gates) · [FAQ](#faq)
+<div align="left">
+
+![Status: experimental](https://img.shields.io/badge/status-experimental-ffb000)
+![Contracts: starter wave](https://img.shields.io/badge/contracts-starter_wave-5319e7)
+![Evidence: doctrine grounded](https://img.shields.io/badge/evidence-doctrine--grounded-0a60ff)
+![Proof quartet: required](https://img.shields.io/badge/proof_quartet-required-2ea44f)
+![Schema profile: JSON Schema 2020-12](https://img.shields.io/badge/json_schema-2020--12-6e7781)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Path** | `contracts/README.md` |
+| **Role** | canonical contract lane for shared trust-bearing object shapes |
+| **Primary job** | define shape, semantics, compatibility, and machine-checkable expectations |
+| **Not this lane** | policy authorship, workflow orchestration, runtime implementation, emitted instance storage |
+| **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Starter schema wave](#starter-schema-wave) · [Versioning rules](#versioning-rules) · [Validation and gates](#validation-and-gates) · [FAQ](#faq) |
 
 > [!IMPORTANT]
-> This directory should function as KFM’s **canonical contract lane**: the place where recurring proof objects become explicit enough to validate, diff, test, and govern.
+> This directory should function as KFM’s **canonical contract lane**: the place where recurring trust objects become explicit enough to validate, diff, test, and govern.
 
 > [!WARNING]
-> Current-session evidence for this task was **PDF-rich only**. Treat exact mounted file inventory under `contracts/` as **NEEDS VERIFICATION** unless a path is explicitly listed below as a documented starter path or is directly surfaced in the repository.
+> Current-session evidence is strongest on **doctrine**, **routing**, and **starter families**, not on exact mounted file inventory under `contracts/`. Treat file presence and subtree population as **NEEDS VERIFICATION** unless a path is explicitly called out as current documented starter surface.
+
+> [!TIP]
+> Keep the lane split explicit:
+>
+> - **contracts define shape**
+> - **schemas validate machine form**
+> - **validators enforce shape/linkage**
+> - **policy decides**
+> - **workflows orchestrate**
+>
+> When those surfaces blur, trust objects stop being auditable.
+
+---
 
 ## Scope
 
 KFM’s doctrine is already strong. What this lane adds is **artifactization**: contracts that stop critical behavior from remaining prose-only.
 
-This directory exists to make KFM’s recurring proof objects:
+This directory exists to make KFM’s recurring trust objects:
 
 - machine-checkable
 - versionable
 - fixture-testable
+- validator-consumable
 - policy-gateable
 - reviewable in the same stream as the code and docs they affect
 
 ### Why contracts first
 
-Contracts matter here for three reasons:
+Contracts matter here for four reasons:
 
 1. They keep doctrine from dissolving into free-text interpretation.
 2. They make proof objects testable before promotion.
 3. They give runtime trust surfaces stable payloads instead of improvised JSON.
+4. They keep process-memory artifacts, release artifacts, and runtime envelopes distinguishable.
 
 ### Status vocabulary used here
 
@@ -58,12 +108,22 @@ Contracts matter here for three reasons:
 | **UNKNOWN** | Not verified strongly enough in the current session |
 | **NEEDS VERIFICATION** | Review flag for ownership, dates, exact inventory, or mounted enforcement |
 
+---
+
 ## Repo fit
 
 | Path | Role | Relationship |
 | --- | --- | --- |
 | `contracts/README.md` | contracts subtree hub | this file |
-| [`../README.md`](../README.md) | repository/root orientation | upstream context for project identity and navigation (**NEEDS VERIFICATION**) |
+| [`../README.md`](../README.md) | repository/root orientation | upstream context for project identity and navigation |
+| [`../schemas/README.md`](../schemas/README.md) | schema-home boundary guidance | adjacent machine-validation authority |
+| [`../policy/README.md`](../policy/README.md) | decision authority lane | policy consumes contract-bearing inputs but does not own their shape |
+| [`../tools/validators/README.md`](../tools/validators/README.md) | validation lane | validators enforce declared shape and linkage without becoming contract authority |
+| [`../tools/probes/README.md`](../tools/probes/README.md) | observation lane | probes may emit process-memory artifacts shaped by contracts |
+| [`../tests/README.md`](../tests/README.md) | broader proof lane | downstream execution and regression pressure |
+| [`../tests/contracts/README.md`](../tests/contracts/README.md) | contract proof lane | valid/invalid fixtures and schema/contract proof |
+| [`../data/receipts/README.md`](../data/receipts/README.md) | broader receipt process-memory lane | concrete receipts belong there, not here |
+| [`../data/run_receipts/`](../data/run_receipts/) | run-level process-memory lane | current thin-slice receipt instances land there, not in contracts |
 | `./source/` | source-intake contract lane | **PROPOSED** starter subtree |
 | `./core/` | authoritative core object lane | **PROPOSED** starter subtree |
 | `./policy/` | policy-result and decision-object lane | **PROPOSED** starter subtree |
@@ -71,6 +131,28 @@ Contracts matter here for three reasons:
 | `./runtime/` | runtime trust-object lane | **PROPOSED** starter subtree |
 | `./correction/` | correction and supersession lane | **PROPOSED** starter subtree |
 | `./profiles/` | standards-profile and compatibility lane | **PROPOSED** starter subtree |
+
+### Boundary rule
+
+Use `contracts/` when the main job is to define:
+
+- object identity
+- required fields
+- field meaning
+- compatibility expectations
+- trust-visible semantics
+
+Do **not** use `contracts/` when the main job is to:
+
+- decide allow/deny/review outcomes
+- store emitted run artifacts
+- implement runtime logic
+- orchestrate CI or promotion
+- bury policy logic inside schemas
+
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -82,6 +164,34 @@ Place material here when its primary job is to define **shape, semantics, or com
 - contract-local notes about required fields, compatibility, and migration behavior
 - valid and invalid examples only when they are used to test the contract itself
 
+### Current thin-slice pressure on this lane
+
+The current governed chain increases pressure on one concrete starter family:
+
+- **`run_receipt`** as a machine-checkable process-memory contract for bounded runs
+
+That means the contracts lane should be ready to define or anchor shapes for artifacts like:
+
+- probe run receipts
+- validator-facing input carriers
+- release-facing manifests
+- runtime response envelopes
+- correction notices
+
+### Working placement rule
+
+If the main question is:
+
+- **“What fields must this object carry?”** → `contracts/`
+- **“How do we validate it mechanically?”** → `schemas/`
+- **“Did this instance pass?”** → `tools/validators/`
+- **“Should this pass downstream governance?”** → `policy/`
+- **“Where does the emitted instance live?”** → `data/receipts/` or `data/run_receipts/`
+
+[Back to top](#top)
+
+---
+
 ## Exclusions
 
 Do **not** place the following here:
@@ -91,6 +201,10 @@ Do **not** place the following here:
 - emitted runtime instances from actual runs such as concrete `run_receipt.json`, `release_manifest.json`, or `correction_notice.json` files
 - domain-facing docs, runbooks, or shell behavior notes unless they are explaining a contract boundary
 - ad hoc examples that bypass the schema, fixtures, or validation path
+- workflow YAML or CI-only decision glue
+- probe, validator, or runtime implementation code
+
+---
 
 ## Directory tree
 
@@ -109,15 +223,29 @@ contracts/
 > [!NOTE]
 > The tree above is a **starter routing shape**, not a claim that every directory already exists in the mounted repo.
 
+### Current thin-slice documented contract pressure
+
+```text
+contracts/
+├── README.md
+└── <run_receipt contract surface>   # starter thin slice; exact mounted path still NEEDS VERIFICATION
+```
+
+The current repo work now strongly implies a concrete contract need around **run receipts**, even if the final file path inside `contracts/` is not yet confirmed in this session.
+
+[Back to top](#top)
+
+---
+
 ## Quickstart
 
-### Add a new schema
+### Add a new contract
 
 1. Choose the nearest contract family before naming files.
-2. Place the schema in the narrowest matching lane under `contracts/`.
+2. Place the contract in the narrowest matching lane under `contracts/`.
 3. Add at least one valid and one invalid fixture.
 4. Record compatibility impact: breaking, non-breaking, or **NEEDS VERIFICATION**.
-5. Wire or update schema tests and policy gates before merge.
+5. Wire or update schema tests and validator gates before merge.
 6. Update this README if the subtree shape or family map changes.
 
 ### Minimal starter shape
@@ -153,6 +281,28 @@ contracts/
 > [!NOTE]
 > The example above is an **illustrative starter skeleton**. Use mounted repo conventions if a stronger local template, typed-model source of truth, or naming pattern already exists.
 
+### Minimal run-receipt starter shape
+
+```json
+{
+  "source": "https://example.test/stac/collections/demo",
+  "collection": "demo-collection",
+  "fetch_ts": "2026-04-16T02:40:31Z",
+  "etag": "\"abc123\"",
+  "last_modified": "Wed, 15 Apr 2026 23:59:59 GMT",
+  "spec_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "changed_items": [
+    "item-001",
+    "item-042"
+  ],
+  "transport_status": 200
+}
+```
+
+Use this as a thin-slice contract example for a **process-memory receipt**, not as proof that this exact file is already mounted under `contracts/`.
+
+---
+
 ## Usage
 
 ### Typed flow pattern
@@ -176,6 +326,7 @@ Use fixtures to prove:
 - version-compatibility boundaries
 - reason/obligation grammar integrity
 - runtime negative outcomes where a contract is outward-facing
+- receipt-shaped process memory remains finite and machine-checkable
 
 ### When to update this README
 
@@ -186,6 +337,9 @@ Update this file when any of the following changes:
 - the versioning policy becomes repo-local and explicit
 - adjacent lanes change routing boundaries
 - the proof quartet or release/correction expectations change
+- a new thin-slice trust object becomes concrete enough to deserve explicit routing here
+
+---
 
 ## Diagram
 
@@ -202,7 +356,13 @@ flowchart LR
     I --> J[RuntimeResponseEnvelope]
     J --> K[ANSWER | ABSTAIN | DENY | ERROR]
     G --> L[CorrectionNotice]
+
+    P[Probe run] --> R[run_receipt]
+    R --> V[validator]
+    V --> POL[policy]
 ```
+
+---
 
 ## Reference tables
 
@@ -224,6 +384,7 @@ The recurring family below is doctrinally stable enough to document now, even th
 | `EvidenceBundle` | Package support for a claim, feature, story, export preview, or answer | bundle ID, source basis, dataset refs, lineage summary, preview policy, transform receipts, rights/sensitivity state, `audit_ref` |
 | `RuntimeResponseEnvelope` | Make runtime outcomes accountable | schema version, object type, `audit_ref`, request ID, evaluated-at time, surface class, surface state, result, citation check, decision ref |
 | `CorrectionNotice` | Preserve visible lineage under change | affected releases, replacement releases, affected surface classes, rebuild refs, cause, public note |
+| `run_receipt` | Carry process memory for one bounded run | source, fetch timestamp, material identity such as `spec_hash`, changed items, optional transport and fetch metadata |
 
 ### Proof quartet
 
@@ -232,7 +393,7 @@ KFM’s minimum machine-checkable proof center is small on purpose.
 | Carrier | Why it matters | Minimum expectation |
 | --- | --- | --- |
 | `spec_hash` | stable identity for an input or spec basis | deterministic and reproducible across reruns |
-| `run_receipt` | common audit object for one run | inputs, outputs, timestamps, `spec_hash`, artifact refs, policy/attestation refs |
+| `run_receipt` | common audit object for one run | inputs, outputs, timestamps, `spec_hash`, artifact refs, policy/attestation refs where applicable |
 | `ai_receipt` | model-mediated audit object where AI participates | model/runtime ID, allowed prompt/seed refs, inputs, outputs, policy context, artifact refs |
 | attestation refs | integrity and origin verification | verifiable link from contract-bearing artifact to signed proof |
 
@@ -252,7 +413,7 @@ The corpus names a deliberately small first wave. Family purpose is **CONFIRMED*
 | `runtime/evidence_bundle.schema.json` | `EvidenceBundle` | every consequential claim needs resolvable support | **PROPOSED** starter path |
 | `runtime/runtime_response_envelope.schema.json` | `RuntimeResponseEnvelope` | runtime outcomes must stay inspectable | **PROPOSED** starter path |
 | `correction/correction_notice.schema.json` | `CorrectionNotice` | supersession must remain visible | **PROPOSED** starter path |
-| `runtime/run_receipt.schema.json` | `run_receipt` | common run audit carrier | family **CONFIRMED**; lane placement **NEEDS VERIFICATION** |
+| `runtime/run_receipt.schema.json` | `run_receipt` | common run/process-memory audit carrier | family **CONFIRMED**; exact lane placement **NEEDS VERIFICATION** |
 | `runtime/ai_receipt.schema.json` | `ai_receipt` | model-mediated audit carrier | family **CONFIRMED**; lane placement **NEEDS VERIFICATION** |
 | `profiles/standards_profile.yaml` | standards profile | keeps external vocabularies and profile versions pinned | **PROPOSED** starter path |
 
@@ -267,7 +428,9 @@ External standards matter here, but they do **not** replace KFM’s own contract
 | DCAT 3 | outward dataset and distribution catalog metadata |
 | PROV-O | outward lineage vocabulary for activities, entities, agents, and causal relations |
 
-### Versioning rules
+---
+
+## Versioning rules
 
 Until a repo-local contract versioning policy is directly surfaced, use the following **PROPOSED starter rules**.
 
@@ -281,12 +444,14 @@ Until a repo-local contract versioning policy is directly surfaced, use the foll
 | Clarify docs, descriptions, examples, or comments only | non-breaking | patch |
 | Add a new reason/obligation code that consumers must actively handle | usually breaking | major or explicit compatibility note |
 
-#### Compatibility guardrails
+### Compatibility guardrails
 
 - Keep a visible schema version in the contract or its package metadata.
 - Never silently change the meaning of an existing reason or obligation code.
-- If a contract change alters release, correction, or runtime behavior, update the contract, fixtures, and the relevant runbook in the same review stream.
+- If a contract change alters release, correction, runtime, or process-memory behavior, update the contract, fixtures, and relevant proof surfaces in the same review stream.
 - If a change affects user-visible runtime outcomes, provide both positive and negative example payloads.
+
+---
 
 ## Validation and gates
 
@@ -296,7 +461,8 @@ KFM’s contract lane is only real if it is executable.
 | --- | --- | --- |
 | Schema export or lint | keeps publishable contract shape current | **PROPOSED** starter gate |
 | Valid/invalid fixture tests | proves the schema can fail closed | doctrinally **CONFIRMED**; exact harness **NEEDS VERIFICATION** |
-| Conftest / OPA gate | blocks unapproved contract drift | **PROPOSED** starter gate |
+| Validator gate | blocks malformed contract-bearing instances from moving downstream | **CONFIRMED** doctrinal requirement |
+| Policy gate | ensures validated objects still pass deny-by-default decision logic where applicable | **CONFIRMED** doctrinal requirement |
 | Docs gate | prevents behavior drift between contracts and maintainer/public docs | requirement **CONFIRMED**; exact wiring **NEEDS VERIFICATION** |
 | Runtime negative-path samples | proves `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` behave visibly | **CONFIRMED** requirement |
 
@@ -304,29 +470,35 @@ KFM’s contract lane is only real if it is executable.
 
 ```bash
 # Starter wiring only — adjust to the mounted repo paths
-python -m pytest -q tests/schema_validation
-conftest test policy/ --all-namespaces
+python -m pytest -q tests/contracts
+python3 tools/validators/run_receipt_validator.py data/run_receipts/example/run-receipt.json
+conftest test data/run_receipts/example/run-receipt.json -p policy
 ```
+
+---
 
 ## Task list / definition of done
 
-- [ ] schema file added or updated in the correct family lane
+- [ ] contract file added or updated in the correct family lane
 - [ ] valid fixture and invalid fixture included
 - [ ] compatibility impact written down
 - [ ] tests or validators updated in the same change
 - [ ] policy consequences updated if reason/obligation or release behavior changed
 - [ ] documentation updated if outward behavior changed
 - [ ] correction or rollback implications noted when applicable
+- [ ] emitted instance storage remains outside `contracts/`
+
+---
 
 ## FAQ
 
 ### Why does this directory emphasize structure more than implementation claims?
 
-Because the strongest current evidence is doctrinal and architectural, not a directly mounted repo inventory. This README therefore prioritizes **routing, families, and guardrails** over bluffing maturity.
+Because the strongest current evidence is doctrinal and architectural, not a directly mounted repo inventory. This README therefore prioritizes **routing, families, and guardrails** over pretending the subtree is more populated than verified.
 
 ### Are concrete `run_receipt.json` and `release_manifest.json` files stored here?
 
-Not by default. This lane is for **contract definitions**. Concrete emitted instances belong in the run, release, or evidence lane that owns the actual event.
+Not by default. This lane is for **contract definitions**. Concrete emitted instances belong in the run, release, receipt, or evidence lane that owns the actual event.
 
 ### Are external standards enough by themselves?
 
@@ -339,6 +511,8 @@ Yes. `ABSTAIN`, `DENY`, and `ERROR` are first-class outcomes, not embarrassing e
 ### Is this exact subtree already mounted in the repo?
 
 **NEEDS VERIFICATION.** The family map is strong. The exact mounted inventory must still be checked against the live repository.
+
+---
 
 ## Appendix
 
@@ -373,8 +547,8 @@ Before merging a contract change, check the following:
 - Would an older consumer misread this payload?
 - Does a required field imply a breaking change?
 - Did fixtures prove both acceptance and rejection behavior?
-- If the contract touches runtime or release behavior, was a negative-path example updated too?
+- If the contract touches runtime, release, receipt, or correction behavior, was a negative-path example updated too?
 
 </details>
 
-[Back to top](#contracts)
+[Back to top](#top)
