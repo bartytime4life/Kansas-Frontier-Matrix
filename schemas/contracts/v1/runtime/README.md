@@ -1,66 +1,54 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: runtime
+title: schemas/contracts/v1/runtime
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: 2026-04-15
+updated: 2026-04-16
 policy_label: public
-related: [
-  ../../../README.md,
-  ../README.md,
-  ../../README.md,
-  ../../vocab/README.md,
-  ../../../tests/README.md,
-  ../../../tests/fixtures/contracts/v1/README.md,
-  ../../../../contracts/README.md,
-  ../../../../contracts/source/kansas_mesonet_source_descriptor.md,
-  ../../../../schemas/README.md,
-  ../../../../schemas/soil_moisture/README.md,
-  ../../../../schemas/contracts/README.md,
-  ../../../../policy/README.md,
-  ../../../../tests/README.md,
-  ../../../../tests/contracts/README.md,
-  ../../../../tests/e2e/runtime_proof/soil_moisture/README.md,
-  ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py,
-  ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py,
-  ../../../../tests/e2e/runtime_proof/test_governed_api_app.py,
-  ../../../../apps/governed_api/README.md,
-  ../../../../apps/governed_api/runtime/soil_moisture_runtime.py,
-  ../../../../tools/ci/render_runtime_proof_summary.py,
-  ../../../../.github/workflows/README.md,
-  ./runtime_response_envelope.schema.json
-]
+related: [../../../README.md, ../README.md, ../../README.md, ../../vocab/README.md, ../../../tests/README.md, ../../../tests/fixtures/contracts/v1/README.md, ../../../../contracts/README.md, ../../../../contracts/source/kansas_mesonet_source_descriptor.md, ../../../../schemas/README.md, ../../../../schemas/soil_moisture/README.md, ../../../../schemas/contracts/README.md, ../../../../policy/README.md, ../../../../tests/README.md, ../../../../tests/contracts/README.md, ../../../../tests/e2e/runtime_proof/soil_moisture/README.md, ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py, ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py, ../../../../tests/e2e/runtime_proof/test_governed_api_app.py, ../../../../apps/governed_api/README.md, ../../../../apps/governed_api/runtime/soil_moisture_runtime.py, ../../../../tools/ci/render_runtime_proof_summary.py, ../../../../.github/workflows/README.md, ./runtime_response_envelope.schema.json]
 tags: [kfm, schemas, contracts, runtime, runtime-response-envelope, soil-moisture]
 notes: [
-  This revision preserves the stronger old runtime-lane README while aligning it to the current thin-slice runtime_response_envelope schema, governed runtime implementation, runtime-proof tests, and workflow summary work added in-session.
-  The older README correctly recorded the lane as real while the schema body was placeholder-only. That is no longer true for the current thin slice and is updated here.
-  Schema-home authority between contracts and schemas still remains unresolved at repo doctrine level and stays visible rather than being silently settled here.
+  Revised from the existing runtime-lane README baseline.
+  Preserves the thin-slice reality that this lane now includes a non-placeholder runtime_response_envelope schema plus governed runtime and runtime-proof consumers in the soil-moisture slice.
+  Canonical schema-home authority between root contracts/ and schemas/contracts/ remains unresolved and is kept explicit rather than silently settled here.
 ]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `runtime`
+# `schemas/contracts/v1/runtime/`
 
 Runtime contract-family lane for accountable outward outcomes, finite trust-visible result states, and cite-or-abstain behavior under `schemas/contracts/v1/`.
 
 > [!NOTE]
-> **Status:** experimental  
-> **Owners:** `@bartytime4life` *(via `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule was directly proven in the supplied materials)*  
+> **Status:** `experimental`  
+> **Owners:** `@bartytime4life` *(via `.github/CODEOWNERS` global fallback; narrower `/schemas/` ownership remains NEEDS VERIFICATION)*  
 > **Path:** `schemas/contracts/v1/runtime/README.md`  
-> **Repo fit:** child lane of [`../README.md`](../README.md) inside the live `schemas/contracts/v1/` inventory; broader schema boundary at [`../../../README.md`](../../../README.md); broader contract context at [`../../README.md`](../../README.md) and [`../../../../contracts/README.md`](../../../../contracts/README.md); cross-cutting standards lane at [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md); adjacent runtime neighbors in [`../evidence/README.md`](../evidence/README.md), [`../policy/README.md`](../policy/README.md), [`../release/README.md`](../release/README.md), and [`../correction/README.md`](../correction/README.md); downstream machine file in [`./runtime_response_envelope.schema.json`](./runtime_response_envelope.schema.json).  
-> ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![lane](https://img.shields.io/badge/lane-runtime-blue?style=flat-square) ![schema](https://img.shields.io/badge/schema-runtime__response__envelope-6f42c1?style=flat-square) ![authority](https://img.shields.io/badge/authority-needs%20verification-red?style=flat-square) ![tree](https://img.shields.io/badge/public_tree-live%20README%20%2B%20thin--slice%20schema-brightgreen?style=flat-square)  
-> **Quick jump:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime envelope minimums](#runtime-envelope-minimums) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> ![status](https://img.shields.io/badge/status-experimental-orange)
+> ![lane](https://img.shields.io/badge/lane-runtime-blue)
+> ![schema](https://img.shields.io/badge/schema-runtime__response__envelope-6f42c1)
+> ![authority](https://img.shields.io/badge/authority-needs%20verification-red)
+> ![tree](https://img.shields.io/badge/public_tree-live%20README%20%2B%20thin--slice%20schema-brightgreen)  
+> **Quick jumps:** [Scope](#scope) · [Current deltas](#current-deltas) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime envelope minimums](#runtime-envelope-minimums) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This lane is no longer just “README + placeholder schema.”  
-> In the current thin slice, `runtime_response_envelope.schema.json` now has a real first-wave body, and runtime-proof tests and governed runtime code now point at it.
+> This lane is no longer just “README + placeholder schema.” In the current thin slice, `runtime_response_envelope.schema.json` now has a real first-wave body, and runtime-proof tests plus governed runtime code point at it.
 
 > [!WARNING]
-> Do **not** treat current thin-slice progress as proof that all runtime emitters, all Focus behavior, all citation checks, or all merge-blocking runtime gates are already complete across the repo. The thin slice is real; the broader lane still needs branch-backed proof.
+> Do **not** treat thin-slice progress as proof that all runtime emitters, all Focus behavior, all citation checks, or all merge-blocking runtime gates are already complete across the repo. The thin slice is real; the broader lane still needs branch-backed proof.
+
+| Field | Value |
+|---|---|
+| Path | `schemas/contracts/v1/runtime/` |
+| Role | Runtime-facing contract lane for outward `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` accountability |
+| Primary machine file | [`./runtime_response_envelope.schema.json`](./runtime_response_envelope.schema.json) |
+| Current thin-slice consumer | [`../../../../apps/governed_api/runtime/soil_moisture_runtime.py`](../../../../apps/governed_api/runtime/soil_moisture_runtime.py) |
+| Current thin-slice proof surface | [`../../../../tests/e2e/runtime_proof/soil_moisture/README.md`](../../../../tests/e2e/runtime_proof/soil_moisture/README.md) |
+| Trust reminder | `runtime ≠ receipt ≠ proof ≠ catalog` |
+| Authority posture | Schema-home authority between root `contracts/` and `schemas/contracts/` remains **NEEDS VERIFICATION** |
 
 ---
 
@@ -68,14 +56,14 @@ Runtime contract-family lane for accountable outward outcomes, finite trust-visi
 
 This directory exists to hold the `runtime` contract family for outward response accountability.
 
-In KFM terms, this is the lane where a runtime-facing contract such as `RuntimeResponseEnvelope` should make an answer, abstention, denial, or error reconstructable to evidence, policy, release scope, freshness basis, and audit linkage. It is the contract boundary between “the system said something” and “the repo can explain exactly why that statement was allowed to appear.”
+In KFM terms, this is the lane where a runtime-facing contract such as `RuntimeResponseEnvelope` should make an answer, abstention, denial, or error reconstructable to evidence, policy, release scope, freshness basis, and audit linkage. It is the contract boundary between **“the system said something”** and **“the repo can explain exactly why that statement was allowed to appear.”**
 
 This README should therefore do four jobs:
 
-1. explain what this lane is for,
-2. record what the current thin slice actually proves,
-3. keep neighboring-family boundaries clear,
-4. state what still must be surfaced before stronger implementation claims become safe.
+1. explain what this lane is for
+2. record what the current thin slice actually proves
+3. keep neighboring-family boundaries clear
+4. state what still must be surfaced before stronger implementation claims become safe
 
 ### What changed since the older lane draft
 
@@ -89,23 +77,29 @@ The older README correctly described this lane as real while the machine schema 
 
 That means this README should now describe a **live thin-slice runtime contract lane**, while still keeping broader runtime claims bounded.
 
+[Back to top](#top)
+
 ---
 
-## Current public deltas
+## Current deltas
 
 | Delta | Why it matters now | Status |
 |---|---|---|
 | `README.md` in this lane was already a real boundary guide | This revision improves and reconciles the lane rather than rewriting it from zero | **CONFIRMED** |
 | `runtime_response_envelope.schema.json` no longer needs to be described as `{}` in the current thin slice | Human explanation and machine contract are now closer in maturity for the first wave | **CONFIRMED in-session thin slice** |
 | Runtime-proof tests now validate runtime envelopes against this schema | The contract is no longer only descriptive; it is now exercised in tests | **CONFIRMED in-session thin slice** |
-| Governed runtime code now emits first-wave runtime envelopes | The lane now has a real thin-slice consumer/emitter relationship | **CONFIRMED in-session thin slice** |
-| `schemas/tests/fixtures/contracts/v1/valid/` and `invalid/` remain scaffold-oriented in the older repo-facing signal | Broader schema-lane runtime fixture inventory still needs verification | **CONFIRMED in older surfaced doc posture** |
-| `.github/workflows/README.md` now also names a runtime-proof soil-moisture workflow candidate in addition to historical runtime lane names | Runtime workflow posture has a current thin-slice lane plus historical signal | **CONFIRMED in-session thin slice + older workflow README basis** |
+| Governed runtime code now emits first-wave runtime envelopes | The lane now has a real thin-slice consumer / emitter relationship | **CONFIRMED in-session thin slice** |
+| `schemas/tests/fixtures/contracts/v1/valid/` and `invalid/` remain scaffold-oriented in older repo-facing signal | Broader schema-lane runtime fixture inventory still needs verification | **CONFIRMED in older surfaced doc posture** |
+| `.github/workflows/README.md` now names a runtime-proof soil-moisture workflow candidate in addition to historical runtime lane names | Runtime workflow posture has a current thin-slice lane plus historical signal | **CONFIRMED in-session thin slice + older workflow README basis** |
 | `schemas/README.md` still indexes a live child subtree while root `contracts/README.md` still frames `contracts/` as the machine-readable contract backbone | Schema-home authority remains unresolved and must stay visible here | **NEEDS VERIFICATION** |
+
+[Back to top](#top)
 
 ---
 
 ## Repo fit
+
+This lane sits inside the visible `schemas/contracts/v1/` family and should stay aligned with that family rather than inventing a parallel runtime-contract taxonomy.
 
 | Aspect | Value |
 |---|---|
@@ -122,6 +116,8 @@ That means this README should now describe a **live thin-slice runtime contract 
 | Workflow guardrail surface | [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) |
 | Machine file in this lane | [`./runtime_response_envelope.schema.json`](./runtime_response_envelope.schema.json) |
 
+### Family boundary map
+
 The contract-family split still matters:
 
 - `runtime/` is where outward runtime accountability belongs
@@ -131,6 +127,8 @@ The contract-family split still matters:
 - `correction/` is where visible lineage under change belongs
 
 `runtime/` should consume those neighboring lanes, not collapse them into one file.
+
+[Back to top](#top)
 
 ---
 
@@ -162,6 +160,8 @@ For the current governed runtime slice, the strongest accepted content is:
 
 That is enough to make the current soil-moisture runtime proof inspectable without pretending the broader runtime family is complete.
 
+[Back to top](#top)
+
 ---
 
 ## Exclusions
@@ -174,9 +174,11 @@ That is enough to make the current soil-moisture runtime proof inspectable witho
 | Release proof packs, publication manifests, rollback receipts | [`../release/README.md`](../release/README.md) |
 | Correction workflow artifacts and supersession notices | [`../correction/README.md`](../correction/README.md) |
 | Broad repo-wide test strategy | [`../../../../tests/README.md`](../../../../tests/README.md) |
-| Contract-home ADR decisions presented as settled fact | root `contracts/`, `schemas/`, and standards/governance surfaces once formally resolved |
-| Claims that the entire repo already enforces runtime behavior end to end | nowhere until broader code, tests, and workflow evidence are surfaced |
-| Re-describing the governed API route or runtime builder line-by-line | `apps/governed_api/runtime/soil_moisture_runtime.py` and route docs/tests |
+| Contract-home ADR decisions presented as settled fact | Root `contracts/`, `schemas/`, and standards/governance surfaces once formally resolved |
+| Claims that the entire repo already enforces runtime behavior end to end | Nowhere until broader code, tests, and workflow evidence are surfaced |
+| Re-describing the governed API route or runtime builder line-by-line | Runtime code, route docs, and route tests |
+
+[Back to top](#top)
 
 ---
 
@@ -190,7 +192,7 @@ That is enough to make the current soil-moisture runtime proof inspectable witho
 | `runtime_response_envelope.schema.json` now has a real first-wave body in the current thin slice | **CONFIRMED in-session thin slice** | The runtime contract is no longer purely placeholder-state |
 | Parent `schemas/contracts/v1/` inventory exists and lists family lanes | **CONFIRMED** | Runtime should align with the visible `v1/` family structure rather than invent a new one |
 | `schemas/README.md` treats `schemas/contracts/` as a live child lane while keeping schema-home authority unresolved | **CONFIRMED doctrine / repo-facing posture** | Runtime docs should reflect live subtree reality without pretending authority is settled |
-| Root `contracts/README.md` still frames `contracts/` as the machine-readable contract backbone while current public `contracts/` doctrine still pulls authority upward | **CONFIRMED repo-facing posture** | Nearby docs still pull authority toward root `contracts/`, so the split must stay visible |
+| Root `contracts/README.md` still frames `contracts/` as the machine-readable contract backbone while current public doctrine still pulls authority upward | **CONFIRMED repo-facing posture** | Nearby docs still pull authority toward root `contracts/`, so the split must stay visible |
 | Runtime-proof tests now validate runtime envelopes against this schema | **CONFIRMED in-session thin slice** | The schema is no longer only documentary |
 | Governed runtime emitters now exist for the soil-moisture slice | **CONFIRMED in-session thin slice** | There is now a real consumer of this contract family |
 | Current thin-slice `.github/workflows` docs name a runtime-proof workflow candidate | **CONFIRMED in-session thin slice** | Runtime workflow posture is no longer only historical clue |
@@ -199,6 +201,8 @@ That is enough to make the current soil-moisture runtime proof inspectable witho
 
 > [!NOTE]
 > When broader inventory prose and the mounted thin slice diverge, prefer the most specific current lane docs plus the visible thin-slice implementation, then keep any remaining disagreement visible as `NEEDS VERIFICATION`.
+
+[Back to top](#top)
 
 ---
 
@@ -238,23 +242,27 @@ schemas/tests/fixtures/contracts/v1/
 │   └── README.md
 └── valid/
     └── README.md
-
-.github/workflows/
-└── README.md
 ```
+
+> [!TIP]
+> Keep the tree section literal: current lane inventory first, then nearby proof and scaffold surfaces. Do not turn it into a wishlist unless the tree is explicitly labeled as proposed.
+
+[Back to top](#top)
 
 ---
 
 ## Quickstart
 
-Inspect the lane as it exists now:
+Inspect the lane as it exists now.
+
+### 1) Inspect the lane itself
 
 ```bash
 sed -n '1,260p' schemas/contracts/v1/runtime/README.md
 cat schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
 ```
 
-Inspect the parent inventory and the authority split that still affects this lane:
+### 2) Inspect the parent inventory and the still-open authority split
 
 ```bash
 sed -n '1,260p' schemas/contracts/v1/README.md
@@ -264,7 +272,7 @@ sed -n '1,260p' contracts/README.md
 sed -n '1,260p' docs/standards/README.md
 ```
 
-Inspect thin-slice runtime consumers before claiming implementation depth:
+### 3) Inspect thin-slice runtime consumers before claiming implementation depth
 
 ```bash
 sed -n '1,260p' apps/governed_api/runtime/soil_moisture_runtime.py 2>/dev/null || true
@@ -273,7 +281,7 @@ sed -n '1,260p' tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_mo
 sed -n '1,220p' tests/e2e/runtime_proof/test_governed_api_app.py 2>/dev/null || true
 ```
 
-Inspect policy, verification, and workflow-adjacent surfaces before claiming broader enforcement:
+### 4) Inspect policy, verification, and workflow-adjacent surfaces before claiming broader enforcement
 
 ```bash
 sed -n '1,260p' policy/README.md
@@ -283,7 +291,7 @@ sed -n '1,260p' .github/workflows/README.md
 sed -n '1,120p' .github/CODEOWNERS
 ```
 
-Inspect vocab and fixture landing zones that this lane should eventually connect to:
+### 5) Inspect vocab and fixture landing zones this lane should eventually connect to
 
 ```bash
 sed -n '1,220p' schemas/contracts/vocab/README.md
@@ -294,13 +302,15 @@ find schemas/tests/fixtures/contracts/v1 -maxdepth 2 -type f | sort
 > [!NOTE]
 > If you are checking a non-`main` branch or a local worktree, always prefer the tree in front of you over older inventory prose. This lane should track mounted repo reality, not historical placeholder wording.
 
+[Back to top](#top)
+
 ---
 
 ## Usage
 
 Use this README as the human contract map for `runtime_response_envelope.schema.json`.
 
-A safe reading order is:
+### Safe reading order
 
 1. read this lane README for current-state truth and exclusions
 2. read [`../README.md`](../README.md) for family-level context
@@ -310,24 +320,25 @@ A safe reading order is:
 6. inspect runtime-proof tests and the governed runtime builder
 7. inspect [`../../../../tests/contracts/README.md`](../../../../tests/contracts/README.md) and [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) before claiming fixture or gate coverage
 
-A safe writing order is:
+### Safe writing order
 
-1. keep the current schema body aligned with actual emitted fields
+1. keep the current schema body aligned with actually emitted fields
 2. anchor field growth to doctrine-backed minimums
 3. add valid and invalid runtime fixtures when branch inventory supports them
 4. keep runtime citation-negative and outcome-shape tests visible
 5. only then promote stronger language about broader emitters or enforcement
 
-### Family boundary map
+### Runtime contract should answer
 
-| Neighbor lane | Runtime dependency |
-|---|---|
-| [`../evidence/README.md`](../evidence/README.md) | Runtime answers should resolve an `EvidenceBundle`, not improvise support |
-| [`../policy/README.md`](../policy/README.md) | Runtime outcomes need reason / obligation / decision linkage |
-| [`../release/README.md`](../release/README.md) | Runtime scope should stay inside released material and visible freshness rules |
-| [`../correction/README.md`](../correction/README.md) | Withdrawn, superseded, narrowed, or stale material must remain visible at runtime surfaces |
-| [`../../vocab/README.md`](../../vocab/README.md) | Runtime should reuse shared registries rather than invent lane-local free text |
-| [`../../../../docs/standards/README.md`](../../../../docs/standards/README.md) | Shared profile rules belong there, not as lane-local prose drift here |
+A good `RuntimeResponseEnvelope` contract should make these questions inspectable:
+
+- What outward outcome occurred?
+- Why was that outcome allowed, withheld, denied, or errored?
+- What source seam, validator seam, and receipt seam remain visible?
+- What freshness, interval, quantity, or depth semantics scoped the outward statement?
+- What audit reference allows later reconstruction?
+
+[Back to top](#top)
 
 ---
 
@@ -350,15 +361,15 @@ The current thin slice now gives a concrete first-wave answer for that minimum.
 | validator seam | `validator_result_ref` | Lets runtime point at subject-level validation where available |
 | receipt seam | `run_receipt_ref` | Keeps process-memory linkage visible without collapsing runtime into receipts |
 | support window and cadence | `observed_window`, `interval` | Preserves time basis when runtime burden depends on it |
-| quantity / depth / unit semantics | `quantity_kind`, `depth_cm`, `depth_basis`, `unit` | Prevents soil-moisture answers from becoming semantically vague |
-| freshness posture | `freshness` | Makes stale/degraded state visible at runtime |
+| quantity / depth / unit semantics | `quantity_kind`, `depth_cm`, `depth_basis`, `unit` | Prevents answers from becoming semantically vague |
+| freshness posture | `freshness` | Makes stale or degraded state visible at runtime |
 | obligations | `obligations` | Preserves constrained-but-visible runtime behavior |
 
 ### Runtime outcomes
 
 | Outcome | What it means here | Must fail closed? |
 |---|---|---|
-| `ANSWER` | A scoped response may appear because evidence and policy/validation checks passed enough for outward use | Yes |
+| `ANSWER` | A scoped response may appear because evidence and policy / validation checks passed enough for outward use | Yes |
 | `ABSTAIN` | The system should not answer because support, scope, freshness, or confidence is insufficient | Yes |
 | `DENY` | The requested action or surface is blocked by policy or trust-breaking conditions | Yes |
 | `ERROR` | The system cannot safely complete the request path | Yes |
@@ -382,15 +393,17 @@ The broader state vocabulary below still matters, even though the current thin s
 | `denied` | The system intentionally blocked the outward action |
 | `abstained` | The system intentionally declined to answer |
 
+[Back to top](#top)
+
 ---
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Request / surface action] --> B[Candidate support]
+    A[Request or surface action] --> B[Candidate support]
     B --> C[validator result]
-    C --> D[policy + trust checks]
+    C --> D[policy and trust checks]
     D --> E[RuntimeResponseEnvelope]
 
     E --> F[governed runtime]
@@ -401,15 +414,17 @@ flowchart LR
 
     K[reason_codes.json] -. constrains .-> D
     L[obligation_codes.json] -. constrains .-> D
-    M[Release scope / manifests] -. bounds .-> B
+    M[Release scope and manifests] -. bounds .-> B
     N[CorrectionNotice] -. updates visible state .-> E
 ```
+
+[Back to top](#top)
 
 ---
 
 ## Operating tables
 
-### What current thin slice proves vs. what it does not
+### What current thin slice proves vs what it does not
 
 | Claim | Read it as |
 |---|---|
@@ -442,9 +457,11 @@ flowchart LR
 | `CorrectionNotice` | Preserves visible lineage when prior runtime-visible material changes |
 | `audit_ref` joins | Connect logs, traces, policy decisions, and surfaced outcomes |
 
+[Back to top](#top)
+
 ---
 
-## Definition of done
+## Task list -- definition of done
 
 A stronger `runtime/` lane is ready when all of the following are true:
 
@@ -460,6 +477,8 @@ A stronger `runtime/` lane is ready when all of the following are true:
 - [ ] links to vocab, evidence, policy, release, correction, and standards lanes remain current
 - [ ] any stronger claim about Focus, broader API behavior, emitters, or merge-blocking enforcement is backed by visible code, tests, or workflow files
 
+[Back to top](#top)
+
 ---
 
 ## FAQ
@@ -468,9 +487,9 @@ A stronger `runtime/` lane is ready when all of the following are true:
 
 The lane is **real and branch-visible**, and the README is substantive. In the current thin slice, the runtime schema is also real rather than placeholder-only. The broader question of whether root `contracts/` or `schemas/contracts/` is the final authority surface remains **NEEDS VERIFICATION**.
 
-### Does the current thin slice prove runtime answer / abstain / deny / error behavior end to end?
+### Does the current thin slice prove runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` behavior end to end?
 
-For the **soil-moisture governed runtime slice**, yes in a narrow sense: there is a schema, runtime builder, route, app assembly, runtime-proof tests, and route/app tests. For broader repo-wide runtime behavior, no.
+For the **soil-moisture governed runtime slice**, yes in a narrow sense: there is a schema, runtime builder, route, app assembly, runtime-proof tests, and route / app tests. For broader repo-wide runtime behavior, no.
 
 ### Why keep `runtime/` separate from `evidence/`, `policy/`, and `release/`?
 
@@ -487,6 +506,8 @@ For the current thin slice, yes where the schema and runtime builder now actuall
 ### Why are `doc_id` and `created` still placeholders in the meta block?
 
 Because those values were not directly verified from repo-authoritative surfaces in the supplied materials. The placeholders are deliberate review markers.
+
+[Back to top](#top)
 
 ---
 
@@ -546,7 +567,7 @@ schemas/tests/
 
 Small, truth-preserving updates are better than decorative rewrites here. If branch reality changes, update:
 
-1. the current public deltas table
+1. the current deltas table
 2. the verified snapshot table
 3. the directory tree
 4. the definition-of-done checklist
