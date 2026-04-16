@@ -270,15 +270,16 @@ This README does **not** claim current implementation, but the neighboring lanes
 ## Diagram
 
 ```mermaid
+```mermaid
 flowchart LR
-    A[contracts/tiler<br/>meaning + invariants]
-    B[schemas/tiler<br/>run / invocation / receipt / summary]
-    C[schemas/tileset<br/>emitted tileset + scene-manifest shapes<br/>(boundary-first today)]
-    D[tools/tiler<br/>adapter execution]
-    E[data/receipts<br/>process memory]
-    F[data/catalog<br/>STAC / DCAT / PROV closure]
-    G[tools/validators<br/>fail-closed checks]
-    H[governed shell<br/>2D default, 3D conditional]
+    A["contracts/tiler<br/>meaning + invariants"]
+    B["schemas/tiler<br/>run / invocation / receipt / summary"]
+    C["schemas/tileset<br/>emitted tileset + scene-manifest shapes<br/>boundary-first today"]
+    D["tools/tiler<br/>adapter execution"]
+    E["data/receipts<br/>process memory"]
+    F["data/catalog<br/>STAC / DCAT / PROV closure"]
+    G["tools/validators<br/>fail-closed checks"]
+    H["governed shell<br/>2D default, 3D conditional"]
 
     A --> B
     A -. semantic prerequisite .-> C
@@ -290,6 +291,7 @@ flowchart LR
     C --> F
     E --> F
     F --> H
+```
 ```
 
 ## Tables
