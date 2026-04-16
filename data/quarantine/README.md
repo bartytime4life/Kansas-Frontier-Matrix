@@ -13,20 +13,22 @@ tags: [kfm, data, quarantine, lifecycle, governance]
 notes: [Uses the current public CODEOWNERS fallback for /data/ as the only directly verified owner surface; narrower quarantine stewardship, created/updated dates, and policy_label remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
-# data/quarantine
+<a id="top"></a>
+<a id="dataquarantine"></a>
+
+# `data/quarantine`
 
 Fail-closed holding zone for material that has entered KFM but cannot advance safely without review, clarification, repair, or revalidation.
 
-> **Status:** active directory · **Doc state:** draft  
+> [!IMPORTANT]
+> **Status:** active directory  
+> **Doc state:** draft  
 > **Owners:** `@bartytime4life` *(current public `CODEOWNERS` fallback for `/data/`; narrower quarantine stewardship still **NEEDS VERIFICATION**)*  
 > **Path:** `data/quarantine/README.md`  
 > **Current public tree:** `data/quarantine/` shows `README.md` only on public `main`  
 > **Repo fit:** parent [`../README.md`](../README.md) · upstream [`../raw/README.md`](../raw/README.md), [`../work/README.md`](../work/README.md) · downstream [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md), [`../published/README.md`](../published/README.md) · owner surface [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
-> ![status-active](https://img.shields.io/badge/status-active%20directory-0a7d5a?style=flat-square) ![doc-draft](https://img.shields.io/badge/doc-draft-8250df?style=flat-square) ![owners-bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0969da?style=flat-square) ![zone-quarantine](https://img.shields.io/badge/zone-quarantine-92400e?style=flat-square) ![public-main](https://img.shields.io/badge/public__main-README--only-lightgrey?style=flat-square) ![trust-fail--closed](https://img.shields.io/badge/trust-fail--closed-d73a49?style=flat-square) ![truth-bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043?style=flat-square)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
-
-> [!IMPORTANT]
-> `data/quarantine/` is a governed lifecycle state, not a convenience dump folder. Material lands here when KFM must remain honest about unresolved rights, failed validation, unresolved sensitivity, blocked review, or correction pressure instead of smoothing uncertainty into premature publication.
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-active%20directory-0a7d5a?style=flat-square) ![doc](https://img.shields.io/badge/doc-draft-8250df?style=flat-square) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da?style=flat-square) ![zone](https://img.shields.io/badge/zone-quarantine-92400e?style=flat-square) ![public-main](https://img.shields.io/badge/public__main-README--only-lightgrey?style=flat-square) ![trust](https://img.shields.io/badge/trust-fail--closed-d73a49?style=flat-square) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043?style=flat-square)
 
 > [!NOTE]
 > This README keeps three evidence layers separate on purpose:
@@ -35,6 +37,9 @@ Fail-closed holding zone for material that has entered KFM but cannot advance sa
 > - **CONFIRMED doctrine**: quarantine is part of the KFM truth path and must remain fail-closed.
 > - **PROPOSED starter structure**: case folders, filenames, and local helper patterns below the README are working guidance until a checked-out branch proves them directly.
 
+> [!WARNING]
+> `data/quarantine/` is a governed lifecycle state, not a convenience dump folder. Material lands here when KFM must remain honest about unresolved rights, failed validation, unresolved sensitivity, blocked review, or correction pressure instead of smoothing uncertainty into premature publication.
+
 | At a glance | Working rule |
 |---|---|
 | Directory role | Fail-closed holding zone for blocked, ambiguous, or review-held material |
@@ -42,6 +47,8 @@ Fail-closed holding zone for material that has entered KFM but cannot advance sa
 | Public-path rule | No normal UI or public API path should read quarantine directly |
 | Exit rule | Leave quarantine only through a new governed transition |
 | Current public inventory | `README.md` only on public `main` |
+
+---
 
 ## Scope
 
@@ -63,10 +70,10 @@ Use this file to answer five questions quickly:
 
 This file is not:
 
-- a dataset-specific repair runbook,
-- a substitute for shared contracts or schemas,
-- a policy bundle,
-- a claim that local scripts, emitted receipts, or merge-blocking automation are already proven for this lane.
+- a dataset-specific repair runbook
+- a substitute for shared contracts or schemas
+- a policy bundle
+- a claim that local scripts, emitted receipts, or merge-blocking automation are already proven for this lane
 
 ### Working claims
 
@@ -79,7 +86,9 @@ This file is not:
 | Current public `main` proves case folders, validators, or helper scripts beneath this README. | **UNKNOWN / NEEDS VERIFICATION** | The inspected public tree shows `README.md` only. |
 | A case-folder starter layout can still be documented as operator guidance. | **PROPOSED** | Useful for maintainers, but not yet proven as checked-in branch reality. |
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -119,7 +128,9 @@ This file is not:
 | What must stay visible here? | Block reason, review need, rights/sensitivity posture, and next action. |
 | What must not happen here? | Quiet promotion, public exposure, or metadata closure that implies the block has already been resolved. |
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -141,7 +152,9 @@ If an artifact can already be defended as **stable, release-backed, and public-s
 
 If it cannot yet be defended that way but must remain visible, governable, and reviewable, it probably does.
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -161,7 +174,9 @@ If it cannot yet be defended that way but must remain visible, governable, and r
 > [!CAUTION]
 > “We know it is questionable, but let’s expose it anyway” is exactly the failure mode quarantine is designed to stop.
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -204,7 +219,9 @@ Use this only after checking the active branch and any local house conventions.
 
 </details>
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Quickstart
 
@@ -262,12 +279,14 @@ candidate_next_step: revalidate_after_review
 
 Before anything moves again, make sure the case shows:
 
-- what is blocked,
-- why it is blocked,
-- who must review it,
-- and what evidence would allow it to leave quarantine.
+- what is blocked
+- why it is blocked
+- who must review it
+- and what evidence would allow it to leave quarantine
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -339,7 +358,9 @@ notes: >
   and rights clarification.
 ```
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -360,6 +381,10 @@ flowchart LR
 ```
 
 The operating idea is simple: **quarantine keeps uncertainty visible and contained until the system can either advance safely or refuse cleanly**.
+
+[Back to top](#top)
+
+---
 
 ## Tables
 
@@ -386,7 +411,9 @@ The operating idea is simple: **quarantine keeps uncertainty visible and contain
 | Serve quarantine material through normal public UI or public API routes | No | That would violate the trust membrane. |
 | Quietly move content forward without updated evidence and review context | No | Every exit must be legible. |
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
+
+---
 
 ## Task list
 
@@ -400,6 +427,10 @@ Use this as the minimum definition-of-done for a quarantine case.
 - [ ] Public exposure explicitly marked **blocked** or otherwise constrained
 - [ ] Next action recorded: repair, review, revalidate, reject, withdraw, or replace
 - [ ] Exit decision captured before any move toward `processed/`, `catalog/`, or `published/`
+
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -426,6 +457,10 @@ Because lifecycle states in KFM are governed transitions, not magic folders. Rep
 ### Where should proof for an approved release live?
 
 With the release and proof surfaces the active branch actually uses. This README does not claim a narrower proof emitter or archive pattern than the current evidence supports.
+
+[Back to top](#top)
+
+---
 
 ## Appendix
 
@@ -467,4 +502,4 @@ With the release and proof surfaces the active branch actually uses. This README
 
 </details>
 
-[Back to top](#dataquarantine)
+[Back to top](#top)
