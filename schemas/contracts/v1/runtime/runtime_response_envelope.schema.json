@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kfm.example/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
   "title": "RuntimeResponseEnvelope",
+  "description": "First-wave outward runtime envelope for governed KFM responses. Keeps finite outcomes, reason visibility, and audit linkage explicit without collapsing runtime, receipt, proof, and catalog surfaces.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -9,24 +10,219 @@
     "schema_version",
     "request_id",
     "outcome",
-    "decision_envelope_ref",
-    "evidence_bundle_ref",
+    "reason",
     "audit_ref"
   ],
   "properties": {
-    "kind": { "const": "RuntimeResponseEnvelope" },
-    "schema_version": { "const": "v1" },
-    "request_id": { "type": "string", "minLength": 1 },
-    "outcome": { "type": "string", "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"] },
-    "answer": { "type": "object" },
-    "decision_envelope_ref": { "type": "string", "minLength": 1 },
-    "evidence_bundle_ref": { "type": "string", "minLength": 1 },
-    "audit_ref": { "type": "string", "minLength": 1 }
+    "kind": {
+      "const": "RuntimeResponseEnvelope"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
+    },
+    "reason": {
+      "$ref": "#/$defs/reason"
+    },
+    "answer": {
+      "description": "Runtime-visible answer payload. Required only when outcome=ANSWER.",
+      "type": "object"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9._:+\\-/=]+$"
+    },
+    "validator_result_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_envelope_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audit_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_window": {
+      "$ref": "#/$defs/time_window"
+    },
+    "interval": {
+      "type": "string",
+      "minLength": 1
+    },
+    "quantity_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "depth_cm": {
+      "type": "number",
+      "minimum": 0
+    },
+    "depth_basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "freshness": {
+      "$ref": "#/$defs/freshness"
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/citation"
+      },
+      "minItems": 1
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    }
+  },
+  "$defs": {
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "time_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "zone_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zone_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generalized": {
+          "type": "boolean"
+        }
+      }
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "outcome": { "const": "ANSWER" } } },
-      "then": { "required": ["answer"] }
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "ANSWER"
+          }
+        },
+        "required": ["outcome"]
+      },
+      "then": {
+        "required": ["answer"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "enum": ["ABSTAIN", "DENY", "ERROR"]
+          }
+        },
+        "required": ["outcome"]
+      },
+      "then": {
+        "not": {
+          "required": ["answer"]
+        }
+      }
     }
   ]
 }
