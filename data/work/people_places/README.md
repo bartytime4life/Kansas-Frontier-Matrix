@@ -375,6 +375,32 @@ review-sensitive ambiguity or sensitivity split
 receipts, validation context, and later catalog linkage stay resolvable
 ```
 
+### Illustrative example (`PROPOSED`)
+
+The example below is intentionally small and non-canonical. It shows the kind of explicit, review-bearing intermediate shape that belongs in `WORK`; it does **not** claim a branch-implemented schema.
+
+```json
+{
+  "source_record_id": "news-1898-04-12-col-3-row-17",
+  "person_original": "Wm. H. Carter",
+  "person_normalized": "William H. Carter",
+  "place_original": "Delphos",
+  "place_candidates": [
+    {
+      "label": "Delphos, Ottawa County, Kansas",
+      "confidence": 0.92,
+      "valid_from": "1870-01-01",
+      "valid_to": null
+    }
+  ],
+  "review_state": "candidate",
+  "receipt_ref": "kfm://receipt/NEEDS_VERIFICATION"
+}
+```
+
+> [!NOTE]
+> The field names above are **illustrative only**. Canonical names and machine-shape authority belong in `contracts/` and `schemas/`, not in this README.
+
 [Back to top](#top)
 
 ---
@@ -451,6 +477,7 @@ Use this checklist before treating this leaf as branch-native.
 - [ ] Re-open [`../README.md`](../README.md) and align any parent `work` terminology before merge.
 - [ ] Replace `doc_id`, `created`, and `policy_label` placeholders with repo-backed values.
 - [ ] Verify whether this leaf already has local fixtures, transforms, or lookup files that should appear in the directory tree.
+- [ ] Confirm whether any local examples already exist and prefer those over README-only illustrative examples.
 - [ ] Add one **small valid example** of person/place normalization if the branch already contains it.
 - [ ] Add one **negative-path example** showing ambiguity, sensitivity, or failed-resolution behavior.
 - [ ] Keep any identity-resolution example explicitly **non-canonical** unless processed authority proves otherwise.
@@ -543,7 +570,6 @@ Do not use this README to:
 - substitute for canonical processed authority,
 - hide missing policy review,
 - or quietly widen publication claims beyond what downstream release objects can support.
-```
 
 </details>
 
