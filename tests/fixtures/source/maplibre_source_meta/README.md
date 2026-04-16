@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: NEEDS VERIFICATION__YYYY-MM-DD
+updated: NEEDS_VERIFICATION__YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION__public_or_internal
 related: [
   ../../../README.md,
@@ -38,7 +38,7 @@ Deterministic, public-safe fixtures for validating **MapLibre-style `source.meta
 > **Owners:** `@bartytime4life` *(leaf-specific routing still needs active-branch verification)*  
 > **Path:** `tests/fixtures/source/maplibre_source_meta/README.md`  
 > **Repo fit:** fixture leaf for small validation inputs consumed by source-meta helpers and validator tests  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
@@ -115,7 +115,7 @@ This leaf is **not** the place for:
 ## Repo fit
 
 **Path:** `tests/fixtures/source/maplibre_source_meta/README.md`  
-**Role:** small deterministic fixtures for source-meta validation in MapLibre-style style sources.
+**Role:** small deterministic fixtures for source-meta validation in MapLibre-style source declarations.
 
 | Direction | Surface | Why it matters |
 | --- | --- | --- |
@@ -142,12 +142,12 @@ Content that belongs here should be **tiny**, **deterministic**, and **safe to r
 
 | Input class | Examples | Why it belongs here |
 | --- | --- | --- |
-| Valid style fixture | `valid/style.single-source.valid.json` | proves minimal accepted `source.meta` shape |
-| Valid manifest fixture | `valid/manifest.single-source.match.json` | supports digest match checks |
-| Invalid style fixture | `invalid/style.missing-meta.json` | proves fail-closed behavior |
-| Invalid manifest fixture | `invalid/manifest.single-source.mismatch.json` | supports digest mismatch checks |
-| Edge case fixture | `edge/style.manifest-supplied-but-source-unmapped.json` | proves deterministic `ABSTAIN` case |
-| Tiny fixture README | this file | explains intent, boundaries, and growth rules |
+| Valid style fixture | `valid/style.single-source.valid.json` | Proves minimal accepted `source.meta` shape |
+| Valid manifest fixture | `valid/manifest.single-source.match.json` | Supports digest match checks |
+| Invalid style fixture | `invalid/style.missing-meta.json` | Proves fail-closed behavior |
+| Invalid manifest fixture | `invalid/manifest.single-source.mismatch.json` | Supports digest mismatch checks |
+| Edge case fixture | `edge/style.manifest-supplied-but-source-unmapped.json` | Proves deterministic `ABSTAIN` behavior |
+| Tiny fixture README | this file | Explains intent, boundaries, and growth rules |
 
 ### Input rules
 
@@ -157,7 +157,7 @@ Content that belongs here should be **tiny**, **deterministic**, and **safe to r
 4. Prefer JSON fixtures unless a real consumer requires another format.
 5. Keep example values synthetic and public-safe.
 6. Preserve the boundary **fixture ≠ manifest authority ≠ proof object ≠ runtime output**.
-7. Add new edge cases only when a real validator/helper/test consumes them.
+7. Add new edge cases only when a real validator, helper, or test consumes them.
 
 [Back to top](#top)
 
@@ -169,12 +169,12 @@ Content that belongs here should be **tiny**, **deterministic**, and **safe to r
 | --- | --- | --- |
 | Full production style JSON | docs/style or app-specific style lanes | This leaf is about fixtures, not map ownership |
 | Validator implementation | `tools/validators/` | Logic should not live in fixture paths |
-| TypeScript helper implementation | code/library lane | Helpers are consumers, not fixtures |
+| TypeScript helper implementation | code or library lane | Helpers are consumers, not fixtures |
 | Canonical source or release schemas | `schemas/` and `contracts/` | Authority stays upstream |
 | Policy rules or role logic | `policy/` | Deny-by-default logic does not originate here |
-| Signed proof packs or release manifests as trust records | release/proof lanes | Fixtures are not authoritative trust objects |
-| Large binary PMTiles / MBTiles / COG assets | governed data zones or ignored local paths | This leaf should remain tiny and diffable |
-| Secrets, credentials, tokens | secret management surfaces | Public fixture paths must remain safe |
+| Signed proof packs or release manifests as trust records | release or proof lanes | Fixtures are not authoritative trust objects |
+| Large binary PMTiles, MBTiles, or COG assets | governed data zones or ignored local paths | This leaf should remain tiny and diffable |
+| Secrets, credentials, or tokens | secret management surfaces | Public fixture paths must remain safe |
 
 [Back to top](#top)
 
@@ -342,23 +342,23 @@ flowchart LR
 
 | Case | Why it matters | Expected outcome |
 | --- | --- | --- |
-| Valid source meta + matching manifest | proves clean positive path | `ALLOW` |
-| Missing `meta` | proves fail-closed baseline | `DENY` |
-| Missing `digest` | proves required field enforcement | `DENY` |
-| Invalid epoch range | proves shape/order checks | `DENY` or `ABSTAIN` depending on strictness |
-| Digest mismatch | proves integrity comparison | `DENY` |
-| Missing `proof_ref` when required | proves strict linkage enforcement | `DENY` |
-| Manifest supplied but source unmapped | proves non-blocking ambiguity path | `ABSTAIN` |
+| Valid source meta + matching manifest | Proves clean positive path | `ALLOW` |
+| Missing `meta` | Proves fail-closed baseline | `DENY` |
+| Missing `digest` | Proves required field enforcement | `DENY` |
+| Invalid epoch range | Proves shape and order checks | `DENY` or `ABSTAIN` depending on strictness |
+| Digest mismatch | Proves integrity comparison | `DENY` |
+| Missing `proof_ref` when required | Proves strict linkage enforcement | `DENY` |
+| Manifest supplied but source unmapped | Proves non-blocking ambiguity path | `ABSTAIN` |
 
 ### Field seams to pressure-test
 
 | Field | Example issue | Why it matters |
 | --- | --- | --- |
-| `epoch` | missing, malformed, reversed range | time-aware source selection depends on it |
-| `license` | missing or malformed token | rights disclosure should travel with the source |
-| `digest` | missing or mismatched | integrity comparison depends on it |
-| `proof_ref` | absent in strict mode | proof linkage should be explicit when required |
-| `manifest_ref` | absent in strict mode | manifest linkage should be explicit when required |
+| `epoch` | missing, malformed, or reversed range | Time-aware source selection depends on it |
+| `license` | missing or malformed token | Rights disclosure should travel with the source |
+| `digest` | missing or mismatched | Integrity comparison depends on it |
+| `proof_ref` | absent in strict mode | Proof linkage should be explicit when required |
+| `manifest_ref` | absent in strict mode | Manifest linkage should be explicit when required |
 
 [Back to top](#top)
 
@@ -372,7 +372,7 @@ flowchart LR
 - [ ] Confirm any parent `tests/fixtures/README.md` and `tests/fixtures/source/README.md` links.
 - [ ] Land at least one valid and one invalid fixture.
 - [ ] Keep filenames behavior-based and failure-reason-based.
-- [ ] Verify the validator/helper paths that consume these fixtures.
+- [ ] Verify the validator and helper paths that consume these fixtures.
 - [ ] Ensure this README does not imply schema, policy, or release authority.
 
 ### Definition of done
@@ -411,6 +411,40 @@ No. It may contain tiny manifest-like fixtures for comparison tests, but those a
 ### Should this lane contain PMTiles, MBTiles, or COG assets?
 
 No. This leaf should remain text-only and reviewable in Git.
+
+[Back to top](#top)
+
+---
+
+## Appendix
+
+<details>
+<summary><strong>Illustrative starter set and review reminders</strong></summary>
+
+### Illustrative starter set
+
+The following filenames are the narrowest useful first wave for this leaf:
+
+- `valid/style.single-source.valid.json`
+- `valid/manifest.single-source.match.json`
+- `invalid/style.missing-meta.json`
+- `invalid/style.missing-digest.json`
+- `invalid/style.invalid-epoch.json`
+- `invalid/style.digest-mismatch.json`
+- `invalid/style.missing-proof-ref.required.json`
+- `invalid/manifest.single-source.mismatch.json`
+- `edge/style.manifest-supplied-but-source-unmapped.json`
+- `edge/manifest.source-unmapped.json`
+
+### Review questions before merge
+
+- Does the active branch actually contain the linked parent README files?
+- Are the validator and helper consumers landed at the documented paths?
+- Are the placeholder meta-block fields now resolvable from branch evidence?
+- Does the README still preserve the boundary **fixture ≠ manifest authority ≠ proof object ≠ runtime output**?
+- Is the subtree still small, deterministic, and public-safe?
+
+</details>
 
 [Back to top](#top)
 
