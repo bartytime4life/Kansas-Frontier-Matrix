@@ -18,7 +18,7 @@ related:
   - ../schemas/README.md
   - ../schemas/promotion/promotion-bundle-diff-policy.schema.json
   - ../data/README.md
-  - ../data/run_receipts/
+  - ../data/receipts/README.md
   - ../packages/policy/README.md
   - ../tests/policy/README.md
   - ../tests/validators/README.md
@@ -43,6 +43,7 @@ notes:
   - doc_id and created date require repo-backed verification before merge
   - updated reflects the promotion_bundle_diff_policy.json surface as a real governed policy artifact indexed by the top-level policy lane
   - this revision also aligns the lane with the current probe -> receipt -> validator -> policy -> CI chain
+  - this revision normalizes policy references around one central `data/receipts/` process-memory lane
   - relative links and lane inventory follow the supplied draft plus newer probe and validator documentation; active-branch validity still needs verification where not directly surfaced
 -->
 
@@ -74,12 +75,13 @@ _Governed, executable policy surface for KFM publication, runtime trust, rights 
 | **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Policy seams](#policy-seams) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Gates and definition of done](#gates-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
-> This revision is grounded in the supplied `Policy` draft plus the newer validator, probe, and promotion-gate documentation surface. Doctrine is still stronger than the directly surfaced repository evidence in this session. Treat exact branch inventory, checked-in bundle families, mounted fixtures, workflow YAML coverage, and active Rego adoption as **NEEDS VERIFICATION** until rechecked against the active branch.
+> This revision is grounded in the supplied `Policy` draft plus the newer validator, probe, receipt, and promotion-gate documentation surface. Doctrine is still stronger than the directly surfaced repository evidence in this session. Treat exact branch inventory, checked-in bundle families, mounted fixtures, workflow YAML coverage, and active Rego adoption as **NEEDS VERIFICATION** until rechecked against the active branch.
 
 > [!TIP]
 > Keep the top-level trust split explicit:
 >
 > - **probes observe**
+> - **receipts preserve process memory**
 > - **validators verify**
 > - **policy decides**
 > - **workflows orchestrate**
@@ -122,13 +124,14 @@ In KFM, policy is not a detached compliance appendix. It is the decision layer t
 
 ### What this revision makes more explicit
 
-This revision sharpens five boundaries:
+This revision sharpens six boundaries:
 
 1. **policy decides after validation**, not before it  
 2. **validators consume and shape-check inputs**, but do not own allow/deny meaning  
 3. **probes and watchers emit process memory**, but do not silently carry policy law  
 4. **workflows orchestrate side effects**, but should not become the hidden home of policy logic  
-5. **small checked-in policy files** and **policy-as-code bundles** can coexist if both remain reviewable and machine-valid
+5. **small checked-in policy files** and **policy-as-code bundles** can coexist if both remain reviewable and machine-valid  
+6. **receipt storage is centralized under `data/receipts/`**, while run-scoped receipts remain a receipt type rather than a required sibling storage doctrine
 
 [Back to top](#top)
 
@@ -136,7 +139,7 @@ This revision sharpens five boundaries:
 
 ## Repo fit
 
-This file is the parent lane README for KFM policy work. It explains where policy law lives, where policy support code should _not_ live, and how policy-related proof stays separated from contracts, schemas, validators, probes, and app glue.
+This file is the parent lane README for KFM policy work. It explains where policy law lives, where policy support code should _not_ live, and how policy-related proof stays separated from contracts, schemas, validators, probes, receipts, and app glue.
 
 ### Documented lane snapshot carried by the supplied draft plus current adjacent docs (**NEEDS VERIFICATION**)
 
@@ -150,7 +153,7 @@ The supplied draft is written against a wider policy subtree than a single READM
 | `policy/policy-runtime/README.md` | Runtime-coordination lane | Suitable home for runtime-facing policy notes; not proof that mounted glue or adapters already exist |
 | `policy/tests/README.md` | Bundle-local verifier lane | Suitable home for seam-local assertions; not proof of runner wiring or toolchain depth |
 | `policy/promotion_bundle_diff_policy.json` | Checked-in policy data surface | Real documented home for promotion bundle drift classification; not a substitute for broader policy bundles |
-| `policy/run_receipts.rego` | receipt-policy starter surface | Suitable documented home for a narrow run-receipt decision bundle; active-branch verification still required |
+| `policy/run_receipts.rego` | receipt-policy starter surface | Suitable documented home for a narrow receipt decision bundle; active-branch verification still required |
 | `packages/policy/README.md` | Shared internal support boundary | Suitable home for loaders/adapters/helpers; not a second authoritative policy home |
 | `tests/policy/README.md` | Broader repo-facing proof lane | Suitable home for runtime/release/correction proof; not the same thing as `policy/tests/` |
 | `tests/validators/README.md` | Validator-facing proof lane | Suitable home for promotion-gate and receipt-policy proof; not the same thing as policy authorship |
@@ -166,7 +169,7 @@ The supplied draft is written against a wider policy subtree than a single READM
 | Lateral | [`../schemas/README.md`](../schemas/README.md) | Authority/boundary guide that keeps schema-home ambiguity visible |
 | Lateral | [`../schemas/promotion/promotion-bundle-diff-policy.schema.json`](../schemas/promotion/promotion-bundle-diff-policy.schema.json) | Schema-validates the checked-in promotion bundle diff policy file |
 | Lateral | [`../data/README.md`](../data/README.md) | Truth-path zones and release-adjacent data surfaces policy governs but does not own |
-| Lateral | [`../data/run_receipts/`](../data/run_receipts/) | Concrete process-memory destination for probe-run receipts consumed by validator and policy chains |
+| Lateral | [`../data/receipts/README.md`](../data/receipts/README.md) | Central process-memory destination for probe, watcher, validation, and promotion receipts consumed by validator and policy chains |
 | Lateral | [`../tools/probes/README.md`](../tools/probes/README.md) | Probe lane that observes and emits process memory without deciding policy |
 | Lateral | [`../tools/validators/README.md`](../tools/validators/README.md) | Validator lane that verifies shape and linkage before policy decides |
 | Lateral | [`./bundles/README.md`](./bundles/README.md) | Seam-local rule-pack lane |
@@ -201,7 +204,7 @@ The supplied draft is written against a wider policy subtree than a single READM
 | Steward-facing notes | Minimal human-readable notes needed to review policy-significant changes | glossary notes, dependency maps, review notes |
 | Starter policy registries | Stable vocabularies that keep decision grammar machine-readable | `reason_codes.json`, `obligation_codes.json`, `reviewer_roles.json` |
 | Checked-in classification data | Small, schema-validated machine policy files used by governed review flows | `promotion_bundle_diff_policy.json` |
-| Narrow decision bundles | Small policy-as-code modules for concrete validated inputs | `run_receipts.rego` |
+| Narrow decision bundles | Small policy-as-code modules for concrete validated receipt-shaped inputs | `run_receipts.rego` |
 
 ### Working placement rule
 
@@ -214,7 +217,7 @@ If it mostly proves **repo-facing policy behavior under pressure**, it belongs u
 For the current starter thin slice, the intended order is:
 
 ```text
-probe -> data/run_receipts -> validator -> policy -> workflow / reviewer gate
+probe -> data/receipts -> validator -> policy -> workflow / reviewer gate
 ```
 
 That order matters. Policy should decide on already-shaped, already-inspected inputs rather than compensate for malformed or ambiguous upstream artifacts.
@@ -343,6 +346,7 @@ Policy is most useful when it is organized by **responsibility seam** and kept h
 | `./run_receipts.rego` | Narrow decision bundle surface | Holds a starter decision bundle for receipt gating | Broader adoption of policy-as-code across every seam |
 | `../tools/probes/` | Observation lane | Holds bounded readers and reporters that may emit process memory | Any decision authority |
 | `../tools/validators/` | Enforcement lane | Holds shape/linkage verification before policy decides | Policy authorship or workflow ownership |
+| `../data/receipts/` | Process-memory lane | Holds central receipt-shaped inputs that policy may evaluate after validation | Decision sovereignty or schema ownership |
 | `../packages/policy/` | Shared internal support boundary | Holds shared policy-support code that should stay subordinate to repo-authoritative policy | Populated package code or resolved import shape |
 | `../tests/policy/` | Broader proof lane | Holds repo-facing proof that policy behavior survives into runtime, release, and correction lanes | End-to-end coverage or current runner wiring |
 | `../tests/validators/` | Validator proof lane | Holds proof that checked-in policy files and policy-evaluated artifacts remain machine-valid and fail closed | Broader non-promotion validator families |
@@ -358,7 +362,7 @@ Policy is most useful when it is organized by **responsibility seam** and kept h
 | Runtime answer handling | `EvidenceBundle`, `RuntimeResponseEnvelope` | Empty scope, stale support, unresolved policy, or uncited output should produce a governed negative outcome |
 | Correction and withdrawal | `CorrectionNotice`, release refs, rebuild refs | Correction must propagate visibly rather than erasing history |
 | Bundle drift interpretation | prior/current promotion bundle diff + checked-in classification data | Release-significant drift must not pass silently when policy marks it blocking |
-| Run receipt gating | validated run receipt + explicit transport/status inputs | malformed or disallowed receipts should not silently advance downstream work |
+| Receipt gating | validated receipt-shaped process memory plus explicit status/materiality inputs | malformed or disallowed receipts should not silently advance downstream work |
 
 [Back to top](#top)
 
@@ -382,7 +386,7 @@ find contracts schemas -maxdepth 4 -type f 2>/dev/null | sort
 
 ```bash
 grep -RInE \
-  'DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|reason_codes|obligation_codes|reviewer_roles|rights_class|sensitivity_class|promotion_bundle_diff_policy|run_receipt|spec_hash|changed_items' \
+  'DecisionEnvelope|ReviewRecord|ReleaseManifest|ReleaseProofPack|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|reason_codes|obligation_codes|reviewer_roles|rights_class|sensitivity_class|promotion_bundle_diff_policy|run_receipt|spec_hash|changed_items|data/receipts' \
   policy packages tests contracts schemas docs apps tools data 2>/dev/null || true
 ```
 
@@ -408,10 +412,10 @@ python tools/validators/promotion_gate/validate_bundle_diff_policy.py \
   policy/promotion_bundle_diff_policy.json
 ```
 
-### 7) Evaluate a run receipt against policy
+### 7) Evaluate a receipt against policy
 
 ```bash
-conftest test data/run_receipts/example/run-receipt.json -p policy
+conftest test data/receipts/example/run-receipt.json -p policy
 ```
 
 > [!NOTE]
@@ -500,7 +504,7 @@ Use this as a starter fixture shape, not as proof that the checked-out branch al
 | Correction | Withdrawal and supersession remain inspectable after release |
 | CI / runtime parity | The same core semantics survive both pull-request gates and live requests |
 | Bundle drift interpretation | Checked-in classification data is schema-valid, finite, reviewable, and fail-closed when malformed |
-| Run receipt gating | Validated receipts with explicit status and materiality fields produce deterministic allow/deny outcomes |
+| Receipt gating | Validated receipt-shaped inputs with explicit status and materiality fields produce deterministic allow/deny outcomes |
 
 ### Working split for the current starter chain
 
@@ -509,6 +513,7 @@ Use the starter chain like this:
 | Stage | Job | Home |
 |---|---|---|
 | Observe | fetch, inspect, detect drift/materiality | `tools/probes/` |
+| Persist process memory | store receipt-shaped outputs | `data/receipts/` |
 | Verify | shape-check and fail closed on malformed inputs | `tools/validators/` |
 | Decide | evaluate allow/deny/review logic and obligations | `policy/` |
 | Orchestrate | stop or continue side effects | `.github/workflows/`, `scripts/` |
@@ -529,8 +534,8 @@ flowchart LR
   Policy --> DiffPolicy["./promotion_bundle_diff_policy.json"]
   Policy --> ReceiptPolicy["./run_receipts.rego"]
 
-  Probes["../tools/probes/"] --> RunReceipts["../data/run_receipts/"]
-  RunReceipts --> Validators["../tools/validators/"]
+  Probes["../tools/probes/"] --> Receipts["../data/receipts/"]
+  Receipts --> Validators["../tools/validators/"]
   Validators --> ReceiptPolicy
 
   Contracts["../contracts/README.md"] --> TrustObjects["DecisionEnvelope<br/>ReviewRecord<br/>ReleaseManifest / ReleaseProofPack<br/>EvidenceBundle<br/>RuntimeResponseEnvelope<br/>CorrectionNotice"]
@@ -570,6 +575,7 @@ Above: the boxes represent the documented repo-facing surfaces this README route
 | `tests/policy/` | Repo-facing proof that policy behavior survives under pressure | Becoming a second bundle tree |
 | `tests/validators/` | Validator proof that small checked-in policy data remains machine-valid and fail-closed | Becoming the authoring home for policy data |
 | `tools/probes/` | Observation and bounded process-memory generation | Hidden policy decisions |
+| `data/receipts/` | Central process-memory storage | Becoming policy authority or proof authority |
 | `tools/validators/` | Shape and linkage enforcement | Policy authorship or workflow ownership |
 | `.github/workflows/` | Workflow-lane documentation and future gate burden | Being treated as checked-in YAML proof when only docs are visible |
 
@@ -665,6 +671,12 @@ Yes. In the current documented thin slice, it is indexed here as a real checked-
 
 It is treated here as the current documented **starter** policy-as-code surface for receipt decision logic. Active-branch presence and wider adoption still need direct verification.
 
+### Are receipts now centralized under `data/receipts/`?
+
+That is the doctrine normalized by this revision.
+
+A run-scoped receipt is still treated as a receipt-shaped process-memory object. If the checked-out branch later proves a narrower local placement rule for a specific family, document that explicitly rather than assuming a second storage doctrine by default.
+
 ### Are `policy/tests/` and `tests/policy/` the same thing?
 
 No. `policy/tests/` is the bundle-local verifier lane. `tests/policy/` is the broader repo-facing proof lane for policy behavior under runtime, release, and correction pressure.
@@ -713,7 +725,7 @@ Not from the evidence available here. It remains the strongest documented starte
 | Runtime | Enforces finite outward outcomes |
 | Correction | Keeps withdrawal and supersession visible instead of implicit |
 | Bundle drift interpretation | Makes prior/current release review explainable instead of raw diff only |
-| Run receipt gating | Makes probe-to-policy handoff explicit and machine-reviewable |
+| Receipt gating | Makes probe-to-policy handoff explicit and machine-reviewable |
 
 ### Practical reminder
 
