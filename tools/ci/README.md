@@ -6,28 +6,56 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION_DATE
-updated: 2026-04-13
+updated: 2026-04-16
 policy_label: public
-related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/actions/README.md, ../../scripts/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../tools/diff/README.md]
-tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary, handoff]
-notes: [Updated to add an explicit review artifact publication-order note so the tools/ci lane matches the workflow-lane publication sequence for bundle summary, diff summary, diff-policy summary, and promotion review handoff. README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.]
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../.github/README.md,
+  ../../.github/CODEOWNERS,
+  ../../.github/workflows/README.md,
+  ../../.github/actions/README.md,
+  ../../.github/watchers/README.md,
+  ../../scripts/README.md,
+  ../../contracts/README.md,
+  ../../schemas/README.md,
+  ../../policy/README.md,
+  ../../data/receipts/README.md,
+  ../../data/proofs/README.md,
+  ../../tests/README.md,
+  ../../tests/ci/README.md,
+  ../../tests/contracts/README.md,
+  ../../tools/validators/README.md,
+  ../../tools/validators/promotion_gate/README.md,
+  ../../tools/attest/README.md,
+  ../../tools/diff/README.md,
+  ../../tools/catalog/README.md
+]
+tags: [kfm, tools, ci, summaries, annotations, reviewer-output, promotion, diff, policy-summary, handoff, receipts, proofs]
+notes: [
+  Updated to keep the tools/ci lane aligned with the newer workflow, validator, attestation, receipt, proof, and contract-test docs.
+  This revision preserves the renderer-first posture while making receipt/proof separation and validator-versus-renderer boundaries more explicit.
+  README-like lane contract; hidden metadata uses placeholders where current repo evidence does not confirm a stable document record.
+]
 [/KFM_META_BLOCK_V2] -->
 
-# ci
+<a id="top"></a>
+
+# `ci`
 
 Reusable CI-facing helpers for reviewer-readable summaries, annotations, and compact gate output over already-governed artifacts.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life` *(via current public `/tools/` coverage in [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); no narrower `/tools/ci/` rule directly verified)*  
 > **Path:** [`tools/ci/README.md`](./README.md)  
-> **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
+> **Repo fit:** child lane of [`../README.md`](../README.md); workflow orchestration boundary in [`../../.github/workflows/README.md`](../../.github/workflows/README.md); adjacent step-level reuse seam in [`../../.github/actions/README.md`](../../.github/actions/README.md); thin orchestration in [`../../scripts/README.md`](../../scripts/README.md); canonical law stays upstream in [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../data/receipts/README.md`](../../data/receipts/README.md), and [`../../data/proofs/README.md`](../../data/proofs/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for the current thin-slice lane shape plus broader public-tree context · exact additional helper inventory, live callers, rulesets, and platform settings remain bounded  
 > **Current lane snapshot:** `tools/ci/` now has a documented renderer thin slice that includes promotion decision summaries, promotion bundle summaries, diff summaries, bundle diff-policy summaries, and one composed promotion review handoff document. Broader helper families remain bounded and explicitly marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.  
 > **Badges:** [![status](https://img.shields.io/badge/status-experimental-orange)](./README.md) [![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)](../../.github/CODEOWNERS) [![lane](https://img.shields.io/badge/lane-tools%2Fci-6f42c1)](../README.md) [![branch](https://img.shields.io/badge/branch-main-111111)](../../README.md) [![posture](https://img.shields.io/badge/posture-read--only%20by%20default-0a7d5a)](./README.md) [![current%20lane](https://img.shields.io/badge/current%20lane-thin--slice%20active-lightgrey)](./README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Helper matrix](#helper-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `tools/ci/` is the reusable helper boundary for **rendering** gate results, not the authority boundary for **deciding** them. Workflow orchestration belongs in [`../../.github/workflows/`](../../.github/workflows/) or [`../../scripts/`](../../scripts/). Canonical schema, policy, release, and truth-bearing logic remain upstream.
+> `tools/ci/` is the reusable helper boundary for **rendering** gate results, not the authority boundary for **deciding** them. Workflow orchestration belongs in [`../../.github/workflows/`](../../.github/workflows/) or [`../../scripts/`](../../scripts/). Canonical schema, policy, validation, receipt storage, proof storage, release, and truth-bearing logic remain upstream.
 
 > [!TIP]
 > **Current executable snapshot (thin slice)**  
@@ -108,13 +136,13 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - then the policy interpretation of that drift
 > - then the composed steward-facing conclusion
 >
-> They must not silently redefine policy, promotion law, diff law, or release truth.
+> They must not silently redefine policy, promotion law, diff law, receipt meaning, proof authority, or release truth.
 
 > [!NOTE]
 > On some older public snapshots this directory may still appear README-led or inventory-light. This README now reflects a real renderer thin slice while keeping broader family claims bounded.
 
 > [!WARNING]
-> Helpers in `tools/ci/` should be deterministic, read-only by default, and safe to print in logs. Never leak tokens, unpublished evidence, policy-review internals, or trust-bearing state changes through convenience output.
+> Helpers in `tools/ci/` should be deterministic, read-only by default, and safe to print in logs. Never leak tokens, unpublished evidence, policy-review internals, secret-bearing state, or trust-bearing state changes through convenience output.
 
 ---
 
@@ -139,7 +167,17 @@ Do **not** use this lane when the job is to:
 - mutate release state, promotion state, or authoritative data
 - replace workflow orchestration with hidden shell logic
 - smuggle business meaning into “just CI glue”
-- become the only place where diff, validation, attestation, or policy meaning exists
+- become the only place where diff, validation, attestation, receipt, proof, or policy meaning exists
+
+### Current boundary pressure
+
+The surrounding updated docs now make five lane boundaries especially important here:
+
+1. **validators** decide and fail closed; `tools/ci/` renders their results
+2. **attestation helpers** sign or verify; `tools/ci/` renders attestation visibility
+3. **receipts** remain process memory; `tools/ci/` may link or summarize them without owning them
+4. **proofs** remain higher-order trust objects; `tools/ci/` may summarize them without becoming proof storage
+5. **review handoff Markdown** is derived reviewer support, not a replacement for machine artifacts
 
 ### Truth labels used here
 
@@ -151,7 +189,7 @@ Do **not** use this lane when the job is to:
 | **UNKNOWN** | Not verified strongly enough to present as current repo fact |
 | **NEEDS VERIFICATION** | Explicit placeholder that should be checked against the working branch or platform settings before merge |
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ## Repo fit
 
@@ -161,14 +199,18 @@ Do **not** use this lane when the job is to:
 | Root posture | [`../../README.md`](../../README.md) | Sets the repo-wide evidence-first, map-first, trust-visible identity. |
 | Ownership | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current public owner coverage for `/tools/` flows through here. |
 | Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow YAML should stay thin and call stable helpers instead of embedding large scripts. |
+| Watcher boundary | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | Watcher lanes may emit receipts and validation results that later need review-facing rendering. |
 | Step-level reuse seam | [`../../.github/actions/README.md`](../../.github/actions/README.md) | Repo-local actions are the step-wrapper surface; `tools/ci/` should not duplicate action metadata or orchestration. |
 | Thin orchestration | [`../../scripts/README.md`](../../scripts/README.md) | Local/operator entrypoints may call `tools/ci` helpers, but reusable review rendering should not be buried in `scripts/`. |
 | Upstream truth law | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Canonical machine-checkable rules, fixtures, and proof burdens live here, not in CI presentation helpers. |
+| Process-memory surface | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Receipt links may appear in CI output, but receipts remain governed process memory. |
+| Proof surface | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Proof objects may be summarized or linked, but they remain distinct from CI output. |
 | Neighbor lanes | [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../attest/README.md`](../attest/README.md), [`../docs/README.md`](../docs/README.md), [`../probes/README.md`](../probes/README.md), [`../catalog/README.md`](../catalog/README.md) | Adjacent reusable helpers may feed inputs into `tools/ci/` summaries. |
 | Promotion consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Current reviewer summaries are clearest in the promotion flow. |
 | Attestation consumer | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Verification state may need reviewer-facing rendering in CI surfaces. |
 | Diff consumer | [`../../tools/diff/README.md`](../../tools/diff/README.md) | Stable diff outputs are now a direct renderer input for this lane. |
 | Policy-summary consumer | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Bundle diff-policy reports now flow into reviewer-facing CI rendering through this lane. |
+| Contracts test consumer | [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | Current thin-slice renderers should ultimately depend on valid, reviewable tested object shapes. |
 | Review handoff consumer | promotion review and steward approval flows | Composed handoff artifacts belong here only if they remain derived, reviewer-facing, and subordinate to the underlying machine objects. |
 | Downstream consumers | pull request reviews, check summaries, compact merge-gate output, release-review breadcrumbs | These are the human-facing or gate-facing surfaces this lane is meant to improve. |
 
@@ -190,6 +232,7 @@ Do **not** use this lane when the job is to:
 | Stable diff reports | `stable_diff.py` JSON outputs such as `promotion-bundle-diff.json` | Current diff renderer consumes these directly without redoing comparison logic. |
 | Bundle diff-policy reports | `evaluate_bundle_diff_policy.py` JSON outputs such as `promotion-bundle-diff-policy.json` | Current policy-summary renderer consumes these directly without redoing policy classification logic. |
 | Composed review inputs | promotion bundle + diff report + diff-policy report | A review handoff composer may combine these inputs into one steward-facing document without redefining any underlying authority. |
+| Receipt or proof refs | `receipt_ref`, proof indexes, artifact refs | Helpful when reviewer-facing output needs to preserve trust-chain visibility without flattening surfaces. |
 
 ### Input rules
 
@@ -198,6 +241,7 @@ Do **not** use this lane when the job is to:
 3. Keep helper-specific contracts small and explicit.
 4. Refuse undeclared or malformed inputs clearly and early.
 5. Render what upstream lanes already decided, measured, or classified; do not silently re-decide it here.
+6. If receipt or proof refs are accepted, keep their roles explicit rather than merging them into one generic artifact list.
 
 ---
 
@@ -212,12 +256,13 @@ Do **not** use this lane when the job is to:
 | Machine-readable policy bundles or decision grammar | [`../../policy/`](../../policy/) | Deny-by-default logic belongs in policy assets and tests, not summary renderers. |
 | Trust-bearing domain logic | packages, pipelines, or workers under the repo’s main implementation structure | Business meaning should not hide inside “utility” helpers. |
 | Durable proof objects, releases, or authoritative outputs | the repo’s release / data / proof surfaces | CI summaries may link to proof objects; they should not silently become them. |
+| Receipt storage or archives | [`../../data/receipts/`](../../data/receipts/) | CI helpers may point at receipts, but should not own process memory. |
 | Long-form runbooks and doctrine | [`../../docs/`](../../docs/) | Keep this lane focused on executable CI support rather than narrative documentation. |
 | Signature generation or verification | [`../attest/README.md`](../attest/README.md) | `tools/ci/` may display verification state, but signing and verifying stay in `tools/attest/`. |
 | Promotion decisions | [`../validators/README.md`](../validators/README.md) and `promotion_gate/` | `tools/ci/` renders decisions; it does not author them. |
 | Diff computation | [`../diff/README.md`](../diff/README.md) | `tools/ci/` renders stable diff results; it does not own comparison law. |
 | Policy classification | `policy/` plus validator lanes | `tools/ci/` renders checked-in classifications; it does not decide them. |
-| Replacing underlying machine artifacts with one composed Markdown file | nowhere | The handoff document is derived reviewer support, not a substitute for the underlying bundle, diff, or policy objects. |
+| Replacing underlying machine artifacts with one composed Markdown file | nowhere | The handoff document is derived reviewer support, not a substitute for the underlying bundle, diff, policy, receipt, or proof objects. |
 
 ---
 
@@ -230,7 +275,7 @@ Do **not** use this lane when the job is to:
 | Current `/tools/` ownership flows through broad `/tools/` coverage in `CODEOWNERS` | **CONFIRMED** | Owner wording should stay conservative until a narrower `/tools/ci/` rule exists. |
 | `.github/workflows/` evidence remains bounded | **CONFIRMED bounded workflow evidence** | Checked-in workflow caller inventory remains bounded unless directly re-verified. |
 | `.github/actions/` is visible and placeholder-heavy on current surfaces | **CONFIRMED** | Step-level reuse exists as a neighboring lane, but direct `tools/ci` caller maturity is not yet fully proven. |
-| Current repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
+| Current repo root visibly includes `scripts/`, `tests/`, `contracts/`, `schemas/`, `policy/`, `tools/`, `data/`, and `pipelines/` | **CONFIRMED** | `tools/ci` helpers should expect upstream artifacts from several governed lanes, not just workflow YAML. |
 | Promotion Gate documentation names `render_promotion_summary.py` and `render_promotion_bundle_summary.py` as thin-slice CI surfaces | **CONFIRMED via adjacent documentation** | This lane has concrete promotion renderer identities to document. |
 | `tools/ci/render_diff_summary.py` is the current diff-oriented thin-slice executable helper | **CONFIRMED** | This lane documents a concrete diff renderer in addition to promotion renderers. |
 | `tests/ci/test_render_diff_summary.py` is the current thin-slice proof surface for diff rendering | **CONFIRMED** | The diff renderer lands with explicit test coverage. |
@@ -238,9 +283,10 @@ Do **not** use this lane when the job is to:
 | `tests/ci/test_render_bundle_diff_policy_summary.py` is the current thin-slice proof surface for policy-summary rendering | **CONFIRMED** | The policy-summary renderer lands with explicit test coverage. |
 | `tools/ci/render_promotion_review_handoff.py` is the current composed reviewer-handoff thin-slice renderer | **CONFIRMED via current lane contract update** | This lane now includes a composed steward-facing handoff artifact while keeping underlying machine surfaces separate. |
 | `tests/ci/test_render_promotion_review_handoff.py` is the current thin-slice proof surface for composed reviewer handoff rendering | **CONFIRMED via current lane contract update** | The handoff renderer lands with explicit test coverage. |
+| Updated adjacent docs now explicitly distinguish receipts from proofs and validators from attestation helpers | **CONFIRMED in-session doctrine alignment** | This lane should now speak more clearly about rendering trust chains without owning them. |
 | Exact additional helper inventory, live callers, artifact upload wiring, and platform-only settings beyond the thin slice | **UNKNOWN** | Keep broader platform claims out of this README unless re-verified against live settings. |
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ## Directory tree
 
@@ -263,6 +309,18 @@ tests/ci/
 
 > [!NOTE]
 > The lane now has a real renderer thin slice. That does **not** yet prove every broader family helper or workflow caller below.
+
+### Doctrine-aligned nearby shape
+
+```text
+tools/validators/**  # fail-closed decisions and linkage checks
+tools/attest/**      # signing / verification helpers
+tools/diff/**        # comparison law
+tools/ci/**          # reviewer-facing rendering
+data/receipts/**     # process memory
+data/proofs/**       # higher-order trust objects
+.github/workflows/** # orchestration and publication order
+```
 
 <details>
 <summary>Possible stable growth shape (<strong>PROPOSED</strong>)</summary>
@@ -298,18 +356,24 @@ ls -la tools/ci
 sed -n '1,260p' tools/README.md
 sed -n '1,260p' .github/workflows/README.md
 sed -n '1,260p' .github/actions/README.md
+sed -n '1,260p' .github/watchers/README.md
 sed -n '1,220p' .github/CODEOWNERS
 sed -n '1,220p' scripts/README.md
+sed -n '1,220p' data/receipts/README.md
+sed -n '1,220p' data/proofs/README.md
+sed -n '1,260p' tools/validators/README.md
 sed -n '1,260p' tools/validators/promotion_gate/README.md
 sed -n '1,260p' tools/attest/README.md
 sed -n '1,260p' tools/diff/README.md
+sed -n '1,260p' tests/ci/README.md
+sed -n '1,260p' tests/contracts/README.md
 
 # Find existing references before adding a helper
 git grep -n "tools/ci" -- . || true
-git grep -n "annotation\|summary\|proof-pack\|contract\|policy\|geospatial\|diff-summary\|policy-summary\|review-handoff\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs || true
+git grep -n "annotation\|summary\|proof-pack\|receipt\|attestation\|contract\|policy\|geospatial\|diff-summary\|policy-summary\|review-handoff\|GITHUB_STEP_SUMMARY\|promotion-bundle" -- .github scripts tests tools docs data || true
 
 # Inspect likely producers of CI-facing artifacts
-find .github/actions tools scripts tests -maxdepth 3 -type f | sort
+find .github/actions tools scripts tests data -maxdepth 3 -type f | sort
 ```
 
 Before adding a helper, answer four questions:
@@ -317,7 +381,7 @@ Before adding a helper, answer four questions:
 1. What single review problem does it solve?
 2. What declared inputs does it consume?
 3. What exact outputs does it emit?
-4. Why does this belong in `tools/ci/` instead of `scripts/`, `.github/actions/`, `policy/`, `contracts/`, or a package?
+4. Why does this belong in `tools/ci/` instead of `scripts/`, `.github/actions/`, `policy/`, `contracts/`, `data/`, or a package?
 
 ### Exercise the current thin-slice renderers
 
@@ -376,7 +440,7 @@ A good `tools/ci/` helper follows this shape:
 | `.github/workflows/` | job ordering, triggers, permissions, required gates | orchestration, sequencing, blocking review flow | reusable helper internals |
 | `.github/actions/` | repeated workflow steps with stable inputs/outputs | thin step wrappers | whole reviewer-summary families |
 | `../../scripts/` | local/operator entrypoints and staged orchestration | sequencing, convenience wrappers, operator-safe entrypoints | canonical decisions or buried reusable renderers |
-| `tools/ci/` | reviewer-readable summaries, annotations, compact digests | rendering already-produced artifacts for humans and CI | policy law, schema law, release authority |
+| `tools/ci/` | reviewer-readable summaries, annotations, compact digests | rendering already-produced artifacts for humans and CI | policy law, schema law, release authority, receipt ownership, proof ownership |
 
 ### Practical rules
 
@@ -386,6 +450,7 @@ A good `tools/ci/` helper follows this shape:
 - Emit concise logs and stable outputs.
 - Keep platform-specific behavior shallow and explicit.
 - Make local invocation and CI invocation as close as possible.
+- If rendering receipts or proofs, keep their roles explicit in the output.
 
 ### Recommended exit-code rule
 
@@ -463,7 +528,7 @@ It does **not** classify keys itself. That stays in the checked-in policy surfac
 - diff-policy status and assessments
 - one reviewer-facing conclusion block
 
-It does **not** replace the underlying bundle, diff report, or diff-policy report. It composes them into one steward-facing handoff document.
+It does **not** replace the underlying bundle, diff report, diff-policy report, receipt links, or proof records. It composes them into one steward-facing handoff document.
 
 ### Review artifact ordering note
 
@@ -500,6 +565,8 @@ flowchart LR
     TS["tests/*"]
     PO["policy/*"]
     CO["contracts/* / schemas/*"]
+    DR["data/receipts/*"]
+    DP["data/proofs/*"]
     PI["pipelines/*<br/>or build reports"]
 
     IN1["declared reports / manifests / receipts / trust objects / diff-policy reports"]
@@ -520,6 +587,8 @@ flowchart LR
     TS --> IN1
     PO --> IN1
     CO --> IN1
+    DR --> IN1
+    DP --> IN1
     PI --> IN1
 
     IN1 --> CI
@@ -529,7 +598,7 @@ flowchart LR
     CI -. must not own .-> NO
 ```
 
-[Back to top](#ci)
+[Back to top](#top)
 
 ## Helper matrix
 
@@ -538,7 +607,7 @@ flowchart LR
 | Summary helpers | Produce reviewer-readable run summaries | structured validator / test / policy / docs / diff outputs | Markdown or plain-text summaries | **Thin-slice active** |
 | Annotation helpers | Surface file- or line-scoped problems | structured failures with file context | platform-specific annotations | **PROPOSED** |
 | Gate-compaction helpers | Collapse many checks into one small digest | multiple report files | compact JSON or terse status blocks | **PROPOSED** |
-| Linkage helpers | Attach receipts, proof-pack, or artifact links to CI output | manifests, receipts, artifact indexes | link bundles for review surfaces | **PROPOSED** |
+| Linkage helpers | Attach receipts, proof-pack, or artifact links to CI output | manifests, receipts, proof indexes, artifact indexes | link bundles for review surfaces | **PROPOSED** |
 | Normalizers | Convert tool-specific output into a stable CI-facing shape | raw tool output | normalized intermediate artifacts | **PROPOSED** |
 | Bundle renderers | Render full governed trust bundles for reviewer/auditor handoff | promotion bundle manifests, verification state | one-page Markdown summaries | **Thin-slice active** |
 | Diff renderers | Render stable diff reports for reviewer-facing CI output | stable diff JSON reports | Markdown summaries with change counts and key lists | **Thin-slice active** |
@@ -566,6 +635,7 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 - [x] outputs are deterministic and usable by both humans and CI
 - [x] helper remains read-only by default
 - [x] failure semantics are explicit: helper failure is different from diff/change meaning or policy classification meaning
+- [x] review artifact publication order is documented and aligned with workflow-lane guidance
 
 ### Next sensible expansions
 
@@ -578,6 +648,7 @@ Use this checklist when adding or revising a `tools/ci/` helper.
 - [ ] add machine-readable companion output for the review handoff
 - [ ] document specific workflow or script callers once mounted and verified
 - [ ] add richer annotation helpers separately instead of overloading summary renderers
+- [ ] add explicit receipt/proof-link rendering examples where those surfaces are part of the reviewer trust chain
 
 ---
 
@@ -605,7 +676,7 @@ It should not own those trust-bearing actions. It may summarize evidence about t
 
 ### Where should tests and fixtures live?
 
-Prefer the repo’s shared test surfaces so helper behavior stays reviewable beside broader contract, policy, and regression evidence.
+Prefer the repo’s shared test surfaces so helper behavior stays reviewable beside broader contract, policy, receipt/proof, and regression evidence.
 
 ### Can `tools/ci/` render attestation verification state?
 
@@ -621,13 +692,17 @@ Yes. That is now also part of the current thin slice. But the checked-in policy 
 
 ### Can `tools/ci/` compose one reviewer handoff document from several machine artifacts?
 
-Yes. That is now part of the current thin slice. But the composed handoff is a reviewer convenience artifact, not a replacement for the bundle, diff, or diff-policy records themselves.
+Yes. That is now part of the current thin slice. But the composed handoff is a reviewer convenience artifact, not a replacement for the bundle, diff, diff-policy, receipt, or proof records themselves.
 
 ### Why document publication order here too?
 
 Because the order is part of reviewer ergonomics. Keeping the renderer lane and the workflow lane aligned reduces confusion and preserves the distinction between underlying machine artifacts and the final composed steward-facing document.
 
-[Back to top](#ci)
+### Can `tools/ci/` own receipt or proof meaning?
+
+No. It may render trust-chain visibility that includes those surfaces, but receipt storage, proof storage, and their meanings remain elsewhere.
+
+[Back to top](#top)
 
 ## Appendix
 
@@ -742,6 +817,7 @@ A promotion-oriented CI renderer may take a machine-readable decision or bundle 
 - gate or bundle health table
 - attestation verification visibility
 - compact artifact index
+- receipt / proof visibility where already declared upstream
 - one short reviewer / auditor conclusion block
 
 That is a rendering concern, not a decision-authority concern.
@@ -821,4 +897,4 @@ That ordering is review ergonomics, not new authority.
 
 </details>
 
-[Back to top](#ci)
+[Back to top](#top)
