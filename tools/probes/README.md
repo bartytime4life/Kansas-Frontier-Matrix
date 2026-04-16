@@ -1,4 +1,5 @@
-<!-- [KFM_META_BLOCK_V2]
+<!--
+KFM Meta Block V2
 doc_id: kfm://doc/NEEDS_VERIFICATION
 title: probes
 type: standard
@@ -8,34 +9,41 @@ owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: 2026-04-16
 policy_label: public
-related: [
-  ../README.md,
-  ../../README.md,
-  ../../.github/README.md,
-  ../../.github/CODEOWNERS,
-  ../../.github/workflows/README.md,
-  ../../.github/watchers/README.md,
-  ../../scripts/README.md,
-  ../../tests/README.md,
-  ../../contracts/README.md,
-  ../../schemas/README.md,
-  ../../policy/README.md,
-  ../../data/receipts/README.md,
-  ../../data/proofs/README.md,
-  ../../data/run_receipts/,
-  ../validators/README.md,
-  ../diff/README.md,
-  ../catalog/README.md,
-  ../ci/README.md,
-  ../attest/README.md
-]
-tags: [kfm, tools, probes, freshness, status, inspection, bounded-observation, receipts, proofs]
-notes: [
-  Current public snapshot remains README-first unless executable probes are landed and verified in-tree.
-  Updated to align this lane with newer watcher, receipt/proof, validator, diff, catalog, CI-renderer, and attestation boundaries.
-  doc_id and created date should be reconciled against authoritative repo history before publication.
-]
-[/KFM_META_BLOCK_V2] -->
+related:
+  - ../README.md
+  - ../../README.md
+  - ../../.github/README.md
+  - ../../.github/CODEOWNERS
+  - ../../.github/workflows/README.md
+  - ../../.github/watchers/README.md
+  - ../../scripts/README.md
+  - ../../tests/README.md
+  - ../../contracts/README.md
+  - ../../schemas/README.md
+  - ../../policy/README.md
+  - ../../data/receipts/README.md
+  - ../../data/proofs/README.md
+  - ../validators/README.md
+  - ../diff/README.md
+  - ../catalog/README.md
+  - ../ci/README.md
+  - ../attest/README.md
+tags:
+  - kfm
+  - tools
+  - probes
+  - freshness
+  - status
+  - inspection
+  - bounded-observation
+  - receipts
+  - proofs
+notes:
+  - Current public snapshot remains README-first unless executable probes are landed and verified in-tree.
+  - Updated to align this lane with newer watcher, receipt/proof, validator, diff, catalog, CI-renderer, and attestation boundaries.
+  - This revision normalizes probe outputs around the single central `data/receipts/` process-memory doctrine.
+  - doc_id and created date should be reconciled against authoritative repo history before publication.
+-->
 
 <a id="top"></a>
 
@@ -43,13 +51,7 @@ notes: [
 
 Bounded inspection, freshness, status, and read-only evidence helpers for Kansas Frontier Matrix.
 
-> **Status:** experimental  
-> **Owners:** `@bartytime4life` *(current `/tools/` owner inherited from visible `CODEOWNERS` coverage; no narrower `/tools/probes/` rule directly verified)*  
-> **Path:** `tools/probes/README.md`  
-> **Repo fit:** child lane under [`../README.md`](../README.md); adjacent to [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), and [`../attest/README.md`](../attest/README.md); downstream callers may live in [`../../scripts/README.md`](../../scripts/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md); process-memory outputs frequently land under [`../../data/run_receipts/`](../../data/run_receipts/) while authoritative trust surfaces remain in [`../../data/receipts/README.md`](../../data/receipts/README.md) and [`../../data/proofs/README.md`](../../data/proofs/README.md)  
-> **Evidence posture:** doctrine-grounded · repo-grounded for the current README-first lane shape plus broader public-tree context · exact executable probe inventory, workflow callers, and active-branch local usage remain bounded  
-> **Current lane snapshot:** `tools/probes/` is still README-first on visible public `main` unless deeper branch evidence proves otherwise. This README therefore records the lane contract and a careful landing pattern for future executable probes without overstating current inventory.  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
@@ -58,6 +60,18 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 ![role](https://img.shields.io/badge/role-bounded%20probes-111111)
 ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
 ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | experimental |
+| **Owners** | `@bartytime4life` *(current `/tools/` owner inherited from visible `CODEOWNERS` coverage; no narrower `/tools/probes/` rule directly verified)* |
+| **Path** | `tools/probes/README.md` |
+| **Repo fit** | child lane under [`../README.md`](../README.md); adjacent to [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), and [`../attest/README.md`](../attest/README.md); downstream callers may live in [`../../scripts/README.md`](../../scripts/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md); process-memory outputs should align to [`../../data/receipts/README.md`](../../data/receipts/README.md) while higher-order trust objects remain separate in [`../../data/proofs/README.md`](../../data/proofs/README.md) |
+| **Evidence posture** | doctrine-grounded · repo-grounded for the current README-first lane shape plus broader public-tree context · exact executable probe inventory, workflow callers, and active-branch local usage remain bounded |
+| **Current lane snapshot** | `tools/probes/` is still README-first on visible public `main` unless deeper branch evidence proves otherwise. This README therefore records the lane contract and a careful landing pattern for future executable probes without overstating current inventory. |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > `tools/probes/` is for **bounded readers and reporters**.
@@ -105,7 +119,7 @@ Typical probe work includes:
 - response-surface or field-presence checks
 - checksum, count, timestamp, or href drift observation
 - bounded trust-surface presence checks
-- small read-only helpers that turn operational facts into machine-readable reports, summaries, or run receipts
+- small read-only helpers that turn operational facts into machine-readable reports, summaries, or receipt-shaped process memory
 
 ### What belongs here
 
@@ -176,8 +190,8 @@ Those questions belong in stronger or more specialized lanes.
 | Authority | [`../../policy/README.md`](../../policy/README.md) | Policy decides; probes provide facts |
 | Contracts | [`../../contracts/README.md`](../../contracts/README.md) | Contracts define shapes and trust objects; probes inspect, not own |
 | Schemas | [`../../schemas/README.md`](../../schemas/README.md) | Schema-home authority stays outside this lane |
-| Process memory | [`../../data/run_receipts/`](../../data/run_receipts/) | Probe outputs frequently land as run receipts or similar process-memory artifacts |
-| Trust storage | [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md) | Probes may report on those surfaces without becoming their authority |
+| Process memory | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Probe outputs should land as receipt-shaped process memory under the central receipts doctrine |
+| Trust storage | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Probes may report on proof-bearing surfaces without becoming their authority |
 
 ### Working interpretation
 
@@ -273,10 +287,10 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 | Stable state comparison logic | `tools/diff/` | Comparing two canonicalized states is a different concern |
 | Reviewer summary formatting | `tools/ci/` | Probes should emit data that renderers can consume |
 | Signature generation or verification | `tools/attest/` | Probes may inspect trust-surface presence, not verify trust state |
-| Receipt or proof storage | `../../data/receipts/`, `../../data/proofs/` | Probes may emit process-memory observations or inspect refs, not become sovereign storage |
+| Receipt or proof storage authority | `../../data/receipts/`, `../../data/proofs/` | Probes may emit process-memory observations or inspect refs, not become sovereign storage |
 
 > [!CAUTION]
-> A probe may write a caller-chosen report file or run receipt, but it should not directly mutate canonical truth, publish artifacts, approve promotion, or bypass governed review as its primary job.
+> A probe may write a caller-chosen report file or receipt-shaped output, but it should not directly mutate canonical truth, publish artifacts, approve promotion, or bypass governed review as its primary job.
 
 [Back to top](#top)
 
@@ -348,11 +362,12 @@ data/
 ├── work/
 │   ├── meta/
 │   └── raw/
-└── run_receipts/
+└── receipts/
+    └── probes/
 ```
 
 > [!TIP]
-> `stac_change_runner.py` is a strong **PROPOSED** first executable fit for this lane because it observes upstream STAC materiality, persists raw payloads, and emits run receipts without becoming a publish or policy surface.
+> `stac_change_runner.py` is a strong **PROPOSED** first executable fit for this lane because it observes upstream STAC materiality, persists raw payloads, and emits receipt-shaped process memory without becoming a publish or policy surface.
 
 [Back to top](#top)
 
@@ -396,7 +411,7 @@ sed -n '1,240p' tools/attest/README.md 2>/dev/null
 ### 4. Search for existing caller and naming patterns
 
 ```bash
-rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref" \
+rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref|data/receipts/probes" \
   README.md .github docs scripts tests tools data -S 2>/dev/null
 ```
 
@@ -428,7 +443,7 @@ find tools/probes -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "
 - keep secrets minimal and externally injected
 - avoid hidden retries that erase evidence of degradation
 - keep policy, contract, and schema authority outside the helper
-- if the output is a run receipt, keep it clearly process-memory shaped rather than proof-shaped
+- if the output is a receipt, keep it clearly process-memory shaped rather than proof-shaped
 
 ### Illustrative invocation
 
@@ -466,8 +481,8 @@ A good probe usually hands off to a stronger lane:
 - `tools/catalog/` when the task becomes catalog closure QA
 - `tools/ci/` when machine-readable output needs reviewer rendering
 - `policy/` when allow/deny/obligation decisions must be made
-- `data/run_receipts/` when process-memory artifacts need durable placement
-- `data/receipts/` or `data/proofs/` only when a stronger lane, not the probe itself, owns those authoritative trust surfaces
+- `data/receipts/` when process-memory artifacts need durable placement
+- `data/proofs/` only when a stronger lane, not the probe itself, owns those authoritative trust surfaces
 
 ### Probe-output rule
 
@@ -495,7 +510,7 @@ flowchart LR
     C --> F[.github/workflows callers]
     C --> G[tools/ci renderers]
     C --> H[validators / catalog / diff callers]
-    C --> I[data/run_receipts]
+    C --> I[data/receipts/<br/>process memory]
 
     H --> J[policy / review / merge gates]
 
@@ -504,6 +519,8 @@ flowchart LR
     B -. no sovereign ownership .-> M[contracts/ · schemas/ · policy/]
     C -. do not flatten .-> N[receipts / proofs / release objects remain distinct]
 ```
+
+[Back to top](#top)
 
 ---
 
@@ -525,8 +542,8 @@ flowchart LR
 | `schemas/` | Hold schema-home boundary documentation | A probe may inspect shape, not settle authority |
 | `tests/` | Prove behavior with fixtures and assertions | Every material probe should be exercised here |
 | `.github/workflows/` | CI/CD automation | Workflows call probes; they should not become the only implementation surface |
-| `data/run_receipts/` | Process-memory outputs for runs | Good fit for probe-emitted run receipts |
-| `data/receipts/` / `data/proofs/` | Governed trust storage | Probes may inspect or reference, but should not become these lanes |
+| `data/receipts/` | Governed process-memory storage | Good fit for probe-emitted receipt-shaped outputs |
+| `data/proofs/` | Governed proof storage | Probes may inspect or reference, but should not become this lane |
 
 ### Probe behavior contract
 
@@ -605,7 +622,7 @@ Yes, especially around freshness, availability, and visible trust-surface state.
 
 ### Why mention receipts and proofs here?
 
-Because observational helpers are a common place for trust-state flattening to creep in. Keeping receipts, proofs, and run receipts explicitly separate prevents a convenience report from masquerading as a stronger trust object.
+Because observational helpers are a common place for trust-state flattening to creep in. Keeping receipts and proofs explicitly separate prevents a convenience report from masquerading as a stronger trust object.
 
 ---
 
@@ -658,7 +675,7 @@ is a strong fit **if** it remains:
 
 - read-only with respect to upstreams
 - deterministic in its spec-hash and change detection
-- explicit about outputs under `data/work/` and `data/run_receipts/`
+- explicit about outputs under `data/work/` and `data/receipts/probes/`
 - fail-closed only through external validator or policy callers
 
 </details>
