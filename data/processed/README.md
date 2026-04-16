@@ -14,59 +14,65 @@ notes: [Owner grounded from current public CODEOWNERS coverage for /data/; path 
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="dataprocessed"></a>
 
 # `data/processed/`
 
 Governed processed-zone guide for stable dataset versions, manifests, and release-adjacent evidence in KFM.
 
+> [!IMPORTANT]
 > **Status:** experimental  
 > **Doc state:** draft  
 > **Owners:** `@bartytime4life`  
 > **Path target:** `data/processed/README.md`  
-> **Repo fit:** [../README.md](../README.md) → [../catalog/](../catalog/) · [../receipts/](../receipts/) · [../proofs/](../proofs/) → [../../apps/](../../apps/)  
-> [![Status: experimental](https://img.shields.io/badge/status-experimental-informational)](#top)
-> [![Doc: draft](https://img.shields.io/badge/doc-draft-orange)](#top)
-> [![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0a7d5a)](#top)
-> [![Zone: processed](https://img.shields.io/badge/zone-processed-0f766e)](#scope)
-> [![Catalog: STAC+DCAT+PROV](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-blue)](#tables)
-> [![Repo: public main](https://img.shields.io/badge/repo-public%20main-brightgreen)](#directory-tree)
-> [![Inventory: README only](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)](#directory-tree)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo fit:** parent [`../README.md`](../README.md) · upstream [`../raw/README.md`](../raw/README.md), [`../work/README.md`](../work/README.md), [`../quarantine/`](../quarantine/) · downstream [`../catalog/`](../catalog/), [`../receipts/`](../receipts/), [`../proofs/`](../proofs/), [`../published/README.md`](../published/README.md), [`../../apps/`](../../apps/)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-experimental-informational) ![doc](https://img.shields.io/badge/doc-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0a7d5a) ![zone](https://img.shields.io/badge/zone-processed-0f766e) ![catalog](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-blue) ![repo](https://img.shields.io/badge/repo-public%20main-brightgreen) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)
 
-> [!IMPORTANT]
-> `data/processed/` is **not** the public edge.
+> [!WARNING]
+> `data/processed/` is **not the public edge**.
 >
-> In KFM terms, this zone is where transformed outputs become **stable, inspectable dataset versions**. Public and role-limited surfaces should still consume release-backed scope through governed APIs and linked evidence objects rather than direct folder exposure.
+> In KFM, this zone holds **stable dataset versions**, but public and role-limited access still crosses governed APIs, policy evaluation, and evidence-backed release surfaces. Direct UI/runtime reads from this directory should not be treated as a contract.
 
 > [!NOTE]
-> This README keeps three layers separate on purpose:
+> This README separates three layers:
 >
-> - **CONFIRMED current public-main fact:** `data/processed/` exists, and the currently visible checked-in tree shows `README.md` only.
-> - **CONFIRMED doctrine:** `PROCESSED` is where stable dataset versions and release-adjacent artifacts harden.
-> - **PROPOSED starter shape:** a per-version pack such as `data/processed/<theme>/<dataset>/<version>/`.
+> - **CONFIRMED public-main evidence:** `data/processed/` exists and currently shows `README.md` only.
+> - **CONFIRMED doctrine:** this zone is where stable dataset versions harden.
+> - **PROPOSED starter structure:** version-pack layout and file patterns that fit doctrine but are not yet proven as checked-in branch reality.
 
 ---
 
 ## Scope
 
-This README governs the **processed zone** of the `data/` lifecycle.
+This README governs the **processed zone** of the KFM data lifecycle:
 
-It explains what belongs in `data/processed/`, what must stay out, how this zone relates to sibling catalog and proof surfaces, and how to keep per-version dataset packs understandable to both machines and humans.
+```
+Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED
+```
 
-This file is **zone-level** documentation. It does not replace the need for **dataset-level** version READMEs inside individual processed version folders.
+`data/processed/` is the seam where transformation outputs become:
+
+- stable
+- versioned
+- inspectable
+- ready for catalog closure and release evaluation
+
+It does **not** itself imply publication.
 
 ### What this README is for
 
-`data/processed/` should answer questions like these:
-
-- What makes an output “processed” rather than “work” or “published”?
-- What minimum files should travel with a stable dataset version?
-- How should a human-readable dataset README relate to manifests, checksums, and catalog closure?
-- What release-facing links should be resolvable from a processed dataset pack?
+- defining what qualifies as a “processed” artifact
+- describing version-pack expectations
+- clarifying relationship to catalog, receipts, and proofs
+- ensuring processed outputs remain reviewable and replayable
 
 ### What this README is not for
 
-This file is not a source-specific ingest runbook, not a schema registry, not a policy bundle, and not a public API contract.
+- ingest or transform runbooks
+- schema authority or contract definition
+- policy definition or enforcement logic
+- public API documentation
 
 [Back to top](#top)
 
@@ -74,38 +80,28 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 
 ## Repo fit
 
-`data/processed/` sits at the seam where governed transforms become **stable versioned artifacts** that can support catalog closure, review, proof attachment, and later promotion.
-
-### Path + adjacent surfaces
+### Path and lifecycle position
 
 | Relation | Surface | Status | Why it matters |
-| --- | --- | --- | --- |
-| Parent | [`../README.md`](../README.md) | **CONFIRMED** | Parent lifecycle law for `data/` as a whole. |
-| Lateral | [`../raw/README.md`](../raw/README.md) | **CONFIRMED** | Immutable source captures stay there, not here. |
-| Lateral | [`../work/README.md`](../work/README.md) | **CONFIRMED** | In-progress transforms stay there until stable. |
-| Lateral | [`../quarantine/`](../quarantine/) | **CONFIRMED (path)** | Rights-unclear, invalid, or blocked material stays there. |
-| Lateral | [`../catalog/`](../catalog/) | **CONFIRMED (path)** | `STAC + DCAT + PROV` closure should resolve back to processed versions. |
-| Lateral | [`../receipts/`](../receipts/) | **CONFIRMED (path)** | Ingest and validation memory should be linkable from processed versions. |
-| Lateral | [`../proofs/`](../proofs/) | **CONFIRMED (path)** | Release and trust evidence should stay attachable and discoverable. |
-| Lateral | [`../published/README.md`](../published/README.md) | **CONFIRMED** | Publication is a governed state transition, not a synonym for “processed.” |
-| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | **CONFIRMED** | Shared contract authority should not be redefined locally here. |
-| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | **CONFIRMED** | Schema-home and inventory authority should stay explicit rather than fork into zone-local copies. |
-| Upstream | [`../../policy/README.md`](../../policy/README.md) | **CONFIRMED** | Deny-by-default and release-scope decisions belong there. |
-| Downstream | [`../../apps/`](../../apps/) | **CONFIRMED (path)** | UI and public-safe surfaces should consume governed outputs, not direct storage assumptions. |
-| Downstream | [`../../tests/README.md`](../../tests/README.md) | **CONFIRMED** | Validation, fixture, and regression checks should exercise this zone. |
-| Downstream | [`../../tools/`](../../tools/) | **CONFIRMED (path)** | Validators, lints, and packaging helpers should target this zone without redefining it. |
-| Adjacent control lane | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | **CONFIRMED README surface / NEEDS VERIFICATION workflow depth** | Public workflow docs are present; current public `main` treats the workflow directory as README-only, and any historical workflow names from the Actions UI remain reconstruction clues rather than current checked-in inventory. |
+|---|---|---|---|
+| Parent | [`../README.md`](../README.md) | **CONFIRMED** | Defines lifecycle law across all data zones |
+| Upstream | [`../raw/README.md`](../raw/README.md) | **CONFIRMED** | Source-native intake remains immutable |
+| Upstream | [`../work/README.md`](../work/README.md) | **CONFIRMED** | Transform staging occurs there |
+| Upstream | [`../quarantine/`](../quarantine/) | **CONFIRMED (path)** | Blocked material must not enter processed |
+| Downstream | [`../catalog/`](../catalog/) | **CONFIRMED (path)** | Catalog closure resolves from processed |
+| Downstream | [`../receipts/`](../receipts/) | **CONFIRMED (path)** | Process memory must remain linkable |
+| Downstream | [`../proofs/`](../proofs/) | **CONFIRMED (path)** | Release evidence attaches here |
+| Downstream | [`../published/README.md`](../published/README.md) | **CONFIRMED** | Publication is a separate governed state |
+| Control | [`../../contracts/`](../../contracts/) · [`../../schemas/`](../../schemas/) · [`../../policy/`](../../policy/) | **CONFIRMED** | Authority surfaces must not be redefined locally |
+| Consumers | [`../../apps/`](../../apps/) | **CONFIRMED path / INFERRED role** | Governed APIs consume processed outputs |
 
 ### Repo-fit summary
 
 | Question | Answer |
-| --- | --- |
-| What belongs here? | Stable processed artifacts, immutable version folders, manifests, checksums, human-readable version READMEs, and resolvable links into catalog / receipt / proof surfaces. |
-| What does **not** belong here? | Raw captures, unstable transforms, quarantined material, shared schemas, policy bundles, secrets, or direct-public serving assumptions. |
-| What is the downstream contract? | A processed version should be understandable, verifiable, and linkable into `STAC + DCAT + PROV`, receipts, and release evidence. |
-
-> [!NOTE]
-> Treat the checked-in tree as the source of truth for **what exists now**. Use adjacent workflow docs and public Actions history only to understand what may need reconstruction, not to imply current live automation.
+|---|---|
+| What belongs here? | Stable dataset versions with manifests, checksums, and human-readable context |
+| What does not belong here? | Raw data, incomplete transforms, quarantined material, policy/schema authority |
+| What is the contract? | A processed version must be verifiable, understandable, and linkable to catalog + evidence surfaces |
 
 [Back to top](#top)
 
@@ -113,18 +109,16 @@ This file is not a source-specific ingest runbook, not a schema registry, not a 
 
 ## Accepted inputs
 
-These are the kinds of artifacts that belong in, or directly as part of, the processed zone.
-
 | Accepted input | Why it belongs here | Typical shape |
-| --- | --- | --- |
-| Immutable processed data artifacts | This zone exists to hold stable transformed outputs. | GeoJSON, Parquet, GeoTIFF, CSV, vector packages, other release-safe processed formats |
-| Dataset version folders | Versioning keeps processed outputs inspectable and correction-safe. | `data/processed/<theme>/<dataset>/<version>/` |
-| `manifest.json` | Machine-readable inventory of the version pack. | One manifest per version folder |
-| `SHA256SUMS.txt` | Integrity anchor for version contents. | One checksum file per version folder |
-| `README.md` | Human-readable method, caveat, CRS, rights, and citation memory. | One README per version folder |
-| `LICENSE.txt` or equivalent rights note | Keeps release-facing rights context close to the version pack. | Machine-readable SPDX-compatible notice where possible |
-| Stable QA or release-adjacent outputs | Some final validation artifacts may need to remain resolvable from the version pack. | Summaries, reports, or references to sibling receipt/proof surfaces |
-| Resolvable sibling links | Processed versions should point to catalog, receipt, and proof surfaces without duplicating their full logic. | Links or references to `STAC + DCAT + PROV` / receipts / proofs |
+|---|---|---|
+| Stable processed artifacts | Core purpose of this zone | GeoJSON, Parquet, CSV, raster formats |
+| Version folders | Enables correction-safe lineage | `<theme>/<dataset>/<version>/` |
+| `manifest.json` | Machine-readable inventory | One per version |
+| `SHA256SUMS.txt` | Integrity anchor | One per version |
+| `README.md` | Human-readable explanation | One per version |
+| License / rights note | Required for release clarity | SPDX or equivalent |
+| QA summaries | Optional final validation evidence | Report or link |
+| Links to catalog/receipts/proofs | Maintains traceability | References only |
 
 [Back to top](#top)
 
@@ -132,21 +126,18 @@ These are the kinds of artifacts that belong in, or directly as part of, the pro
 
 ## Exclusions
 
-These do **not** belong in `data/processed/` as the normal case.
-
-| Exclusion | Put it under or behind | Why |
-| --- | --- | --- |
-| Raw source captures | [`../raw/README.md`](../raw/README.md) | Raw evidence should remain immutable and separately governed. |
-| Half-finished transforms | [`../work/README.md`](../work/README.md) | `processed/` is not a scratchpad. |
-| Rights-unclear or sensitivity-blocked material | [`../quarantine/`](../quarantine/) | Block first; do not normalize blocked material into “stable.” |
-| Shared schemas and vocabularies | [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) | Keep contract authority singular. |
-| Executable policy logic | [`../../policy/README.md`](../../policy/README.md) | Policy should not fork into folder-local rules. |
-| Secrets, credentials, tokens | environment / secret stores | This zone is versionable evidence, not secret storage. |
-| Detached proof packs with no release linkage | [`../proofs/`](../proofs/) | Keep release proof discoverable and traceable by release context. |
-| “Convenience copies” for direct public serving | governed API and release surfaces | Processed storage is not the trust membrane. |
+| Exclusion | Put it here instead | Why |
+|---|---|---|
+| Raw captures | `../raw/` | Must remain source-faithful |
+| In-progress transforms | `../work/` | Not yet stable |
+| Blocked material | `../quarantine/` | Fail-closed first |
+| Schema/contract definitions | `../../schemas/`, `../../contracts/` | Authority must remain centralized |
+| Policy logic | `../../policy/` | Avoid local rule drift |
+| Secrets | secure storage | Not versionable |
+| Direct-public copies | governed API layer | Processed ≠ published |
 
 > [!CAUTION]
-> A polished artifact in `data/processed/` is still not a license to skip catalog closure, policy checks, release evidence, or correction lineage.
+> “Looks finished” is not sufficient. Stability, traceability, and rights clarity must all be satisfied.
 
 [Back to top](#top)
 
@@ -154,18 +145,14 @@ These do **not** belong in `data/processed/` as the normal case.
 
 ## Directory tree
 
-### Current public-main path evidence
-
-The current public `main` branch proves this path exists, and the currently visible checked-in inventory is still minimal.
+### Current public state
 
 ```text
 data/processed/
 └── README.md
 ```
 
-### Doctrine-aligned starter skeleton
-
-Use this as a **starter shape**, not as a claim that every subtree already exists in the checked-in repo today.
+### Doctrine-aligned starter layout
 
 ```text
 data/processed/
@@ -177,26 +164,21 @@ data/processed/
             ├── manifest.json
             ├── SHA256SUMS.txt
             ├── LICENSE.txt
-            └── <processed-artifacts...>
+            └── <artifacts>
 ```
 
-### Related closure shape
-
-The current public `data/` tree already exposes sibling surfaces such as `catalog/`, `proofs/`, `published/`, `quarantine/`, `raw/`, `receipts/`, `registry/`, and `work/`. The closure shape below shows the subset most directly tied to processed version packs.
+### Related closure surfaces
 
 ```text
 data/
-├── processed/<theme>/<dataset>/<version>/
-├── catalog/
-│   ├── stac/
-│   ├── dcat/
-│   └── prov/
+├── processed/
+├── catalog/{stac,dcat,prov}/
 ├── receipts/
 └── proofs/
 ```
 
 > [!TIP]
-> Prefer **one obvious version pack** over many loosely related files scattered across the tree. The human and machine story should both converge on the same dataset version.
+> Prefer **one coherent version pack** over scattered artifacts.
 
 [Back to top](#top)
 
@@ -204,56 +186,32 @@ data/
 
 ## Quickstart
 
-### 1) Inspect the live surface first
-
-Before asserting layout or automation facts, inspect the current checkout and its nearest control surfaces.
+### Inspect current state
 
 ```bash
-find data/processed -maxdepth 4 -print 2>/dev/null | sort
-sed -n '1,220p' data/README.md
-sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
-sed -n '1,120p' .github/CODEOWNERS 2>/dev/null || true
+find data/processed -maxdepth 3 -print | sort
 ```
 
-### 2) Create a version pack
-
-Illustrative scaffold only:
+### Create a version pack
 
 ```bash
 mkdir -p data/processed/<theme>/<dataset>/<version>
 touch data/processed/<theme>/<dataset>/<version>/README.md
 touch data/processed/<theme>/<dataset>/<version>/manifest.json
 touch data/processed/<theme>/<dataset>/<version>/SHA256SUMS.txt
-touch data/processed/<theme>/<dataset>/<version>/LICENSE.txt
 ```
 
-### 3) Write the human-readable README
+### Minimum README checklist
 
-The per-version `README.md` should answer, at minimum:
-
-1. What the dataset version is.
-2. Which sources it derives from.
-3. How it was produced.
-4. Which CRS / spatial reference it uses.
-5. Which units and temporal semantics matter.
-6. Which caveats or known limits apply.
-7. What the license / rights posture is.
-8. How to cite it.
-9. Where the linked `STAC + DCAT + PROV` objects live.
-10. Which receipt / proof surfaces should be checked next.
-
-### 4) Close the machine-readable loop
-
-A processed version is not done when files merely exist. It is closer to done when these are all true:
-
-- `manifest.json` inventories the pack.
-- `SHA256SUMS.txt` verifies integrity.
-- sibling `STAC + DCAT + PROV` objects resolve to the same version.
-- receipt / proof references are discoverable.
-- no unresolved rights or quarantine issues remain.
-
-> [!NOTE]
-> Keep the human-readable README **adjacent** to the dataset version, but do not let prose replace machine-checkable manifests, checksums, or catalog closure.
+- purpose
+- sources
+- method
+- CRS
+- units
+- caveats
+- license
+- citation
+- links to catalog/receipts/proofs
 
 [Back to top](#top)
 
@@ -261,33 +219,31 @@ A processed version is not done when files merely exist. It is closer to done wh
 
 ## Usage
 
-### Version, do not overwrite
+### Version, don’t overwrite
 
-Treat `data/processed/` as a **versioned memory surface**. New outputs should normally create a new dataset version rather than mutating an old one in place.
+Treat this as immutable version memory.
 
-### Keep README human and manifest machine
+### Keep human + machine layers separate
 
-Use the README for explanation and operator memory. Use manifests, checksums, and catalog objects for machine-checkable truth.
+- README = explanation
+- manifest/checksums = verification
 
 ### Keep unresolved material out
 
-If an artifact still has rights uncertainty, sensitivity uncertainty, invalid geometry, unresolved units, or incomplete provenance, it should not quietly “graduate” into `processed/`.
+If anything is uncertain, route to `work/` or `quarantine/`.
 
-### Point back to receipts and source context
+### Maintain traceability
 
-A processed artifact should never become an orphan. A reviewer should be able to move from version pack -> receipt / validation memory -> catalog closure -> release evidence without guessing.
+Processed artifacts must resolve back to:
 
-### Close `STAC + DCAT + PROV` before outward release
+- source context
+- receipts
+- validation evidence
+- catalog closure
 
-Processed storage and outward discoverability are related, but not identical. Version packs should line up cleanly with their catalog triplet before release or publication claims are made.
+### Govern promotion
 
-### Publish by governed transition
-
-Copying files into a folder is not the same thing as promotion. Public-safe release remains a governance event, not just a storage event.
-
-### Preserve correction lineage
-
-If a processed version is later narrowed, superseded, withdrawn, or reissued, the lineage should stay visible rather than being silently overwritten.
+Moving into `processed/` is a **state transition**, not a file copy.
 
 [Back to top](#top)
 
@@ -297,20 +253,17 @@ If a processed version is later narrowed, superseded, withdrawn, or reissued, th
 
 ```mermaid
 flowchart LR
-    W[WORK] -->|validated, stable| P[data/processed/<theme>/<dataset>/<version>/]
+    W[WORK] -->|validated| P[PROCESSED]
     Q[QUARANTINE] -. blocked .-> P
 
-    P --> H[README.md<br/>LICENSE.txt]
-    P --> I[manifest.json<br/>SHA256SUMS.txt]
-    P --> C[Catalog closure<br/>STAC + DCAT + PROV]
-    P --> R[Receipts / validation memory]
-    C --> PF[Proofs / release evidence]
-    C --> API[Governed API]
-    API --> UI[Map / Dossier / Story / Export]
-    API --> F[Focus]
+    P --> C[CATALOG]
+    P --> R[RECEIPTS]
+    P --> PF[PROOFS]
 
-    UI -. no direct public path .-> P
-    F -. cite-or-abstain .-> C
+    C --> API[Governed API]
+    API --> UI[UI / Consumers]
+
+    UI -. no direct read .-> P
 ```
 
 [Back to top](#top)
@@ -319,38 +272,28 @@ flowchart LR
 
 ## Tables
 
-### Processed-zone matrix
+### Processed zone expectations
 
-| Concern | What belongs here | Block if... |
-| --- | --- | --- |
-| Stable transformed output | Final processed artifacts for a named version | The artifact is still mutable, provisional, or unexplained |
-| Version memory | A clear `<theme>/<dataset>/<version>` pack | The version cannot be identified or compared later |
-| Human-readable context | Per-version README | Prose is missing or contradicts machine-readable closure |
-| Integrity | Manifest + checksums | The pack cannot be inventoried or verified |
-| Rights context | License / rights note | Rights are unknown, conflicting, or still under review |
-| Discoverability | Links into `STAC + DCAT + PROV` | The version cannot be closed cleanly into outward catalog surfaces |
-| Traceability | Links into receipts / proofs | Reviewers cannot reconstruct how this version came to exist |
-| Release safety | Promotion-ready, not necessarily published | The artifact is being mistaken for public release merely because it is stored here |
+| Concern | Requirement | Block if |
+|---|---|---|
+| Stability | Immutable version | Mutable or unclear |
+| Integrity | Checksums present | Cannot verify |
+| Context | README present | Cannot interpret |
+| Rights | License clear | Unknown |
+| Closure | Catalog links exist | Cannot resolve outward |
+| Traceability | Links to receipts/proofs | Cannot audit |
 
-### Version pack minimum
+### Version pack components
 
-| Part | Typical location | Purpose | Posture |
-| --- | --- | --- | --- |
-| Dataset artifacts | `data/processed/<theme>/<dataset>/<version>/` | Stable processed payload | CONFIRMED doctrine |
-| `README.md` | same folder | Human-readable summary, caveats, citation, links | PROPOSED starter shape |
-| `manifest.json` | same folder | Inventory and machine-readable pack memory | PROPOSED starter shape |
-| `SHA256SUMS.txt` | same folder | Integrity check | PROPOSED starter shape |
-| `LICENSE.txt` | same folder | Rights / reuse clarity | PROPOSED starter shape |
-| STAC item / collection | sibling catalog surface | Geospatial asset discovery | CONFIRMED doctrine |
-| DCAT dataset | sibling catalog surface | Dataset-facing catalog closure | CONFIRMED doctrine |
-| PROV bundle | sibling catalog surface | Lineage memory | CONFIRMED doctrine |
-| Receipts / proofs | sibling evidence surfaces | Validation and release trust memory | CONFIRMED doctrine |
-
-> [!IMPORTANT]
-> A strong processed pack does two jobs at once:
->
-> 1. It helps machines validate, compare, and package the version.
-> 2. It helps humans understand what they are looking at without consulting tribal memory.
+| Component | Purpose | Status |
+|---|---|---|
+| Dataset files | Primary output | CONFIRMED |
+| README | Human context | PROPOSED |
+| manifest.json | Inventory | PROPOSED |
+| SHA256SUMS | Integrity | PROPOSED |
+| LICENSE | Rights | PROPOSED |
+| STAC/DCAT/PROV | Catalog closure | CONFIRMED |
+| Receipts/proofs | Evidence linkage | CONFIRMED |
 
 [Back to top](#top)
 
@@ -358,35 +301,24 @@ flowchart LR
 
 ## Task list
 
-### Definition of done for this zone README
+### README-level
 
-- [ ] KFM Meta Block v2 is present and synchronized with the visible document role.
-- [ ] States what `data/processed/` is for.
-- [ ] States what does **not** belong here.
-- [ ] Links to parent and sibling lifecycle surfaces.
-- [ ] Separates current public-main path evidence from doctrine-aligned starter shape.
-- [ ] Includes at least one meaningful lifecycle diagram.
-- [ ] Makes direct-public-path assumptions explicit and rejectable.
+- [ ] Meta block verified
+- [ ] Lifecycle position clear
+- [ ] Exclusions explicit
+- [ ] Diagram present
+- [ ] No public-path ambiguity
 
-### Definition of done for a dataset-version pack
+### Version pack
 
-- [ ] Version path is explicit: `<theme>/<dataset>/<version>`.
-- [ ] Stable artifacts are present.
-- [ ] `manifest.json` exists.
-- [ ] `SHA256SUMS.txt` exists.
-- [ ] `README.md` explains what it is, sources, method, CRS, units, caveats, license, citation, and linked evidence.
-- [ ] Rights / license note is present.
-- [ ] `STAC + DCAT + PROV` closure resolves to the same version.
-- [ ] Receipt and proof references are discoverable.
-- [ ] The pack can survive correction review without silent overwrite.
-- [ ] No raw / work / quarantine material is mixed into the version folder.
-
-### Review gates worth enforcing
-
-- [ ] No undocumented direct-public storage path is implied.
-- [ ] No shared contract or policy authority is redefined under `data/processed/`.
-- [ ] No README prose substitutes for missing machine-readable closure.
-- [ ] No correction-sensitive artifact is overwritten without visible lineage.
+- [ ] Version path exists
+- [ ] Artifacts stable
+- [ ] README complete
+- [ ] manifest + checksums exist
+- [ ] license present
+- [ ] catalog closure resolves
+- [ ] receipts/proofs linkable
+- [ ] no unresolved ambiguity
 
 [Back to top](#top)
 
@@ -394,29 +326,25 @@ flowchart LR
 
 ## FAQ
 
-### Is `data/processed/` already public?
+### Is processed public?
 
-No. It is a governed storage zone for stable dataset versions. Public-safe exposure should still happen through governed APIs, release-backed surfaces, and linked evidence objects.
+No. It is stable, not public.
 
-### Can a dataset README replace manifests and catalog closure?
+### Can README replace manifest?
 
-No. The README is for explanation, caveats, and operator memory. It complements machine-checkable artifacts; it does not replace them.
+No. It complements, not replaces.
 
-### Should receipts and proofs be copied into every version folder?
+### Should proofs live here?
 
-Not necessarily. What matters is that the processed version can resolve cleanly into receipt and proof surfaces. Duplication is less important than traceability.
+No. Link to them.
 
-### Are all derived outputs authoritative if they live here?
+### Can processed be modified?
 
-No. KFM keeps authoritative versus derived distinctions visible. A processed artifact may be stable and versioned without becoming a public truth surface by default.
+Prefer new version instead.
 
-### Is a `<theme>/<dataset>/<version>` layout mandatory?
+### Does this repo currently contain datasets here?
 
-Treat it as the preferred starter shape unless a stronger checked-in convention is directly proven in the live repo.
-
-### Does current public `main` already contain processed version packs?
-
-No. The currently visible public-main inventory for `data/processed/` is README-only. The per-version pack layout shown here is a doctrine-aligned starter shape, not a claim of existing checked-in datasets.
+No. Public main shows README only.
 
 [Back to top](#top)
 
@@ -425,53 +353,34 @@ No. The currently visible public-main inventory for `data/processed/` is README-
 ## Appendix
 
 <details>
-<summary><strong>Illustrative per-version README skeleton</strong></summary>
+<summary><strong>Example dataset README</strong></summary>
 
 ```markdown
-# <dataset> — <version>
-
-One-line purpose for this exact processed version.
+# dataset-name — version
 
 ## Summary
-
-What this dataset version contains and why it exists.
+What this version contains.
 
 ## Sources
+List sources.
 
-- Source A
-- Source B
+## Method
+Transform steps.
 
-## Method summary
-
-Short transform / normalization / derivation summary.
-
-## Spatial reference / CRS
-
-State CRS, projection, axis assumptions, and any transformation notes.
-
-## Units and temporal semantics
-
-State units, date/time basis, freshness basis, and interval semantics where relevant.
+## CRS
+Projection info.
 
 ## Caveats
+Limits.
 
-List known limits, omissions, uncertainty, masking, or generalization rules.
-
-## License / rights
-
-State license, restrictions, or review notes.
+## License
+Rights.
 
 ## Citation
+How to cite.
 
-Provide the preferred citation or attribution form.
-
-## Linked evidence
-
-- STAC:
-- DCAT:
-- PROV:
-- Receipts:
-- Proofs:
+## Links
+STAC / DCAT / PROV / Receipts / Proofs
 ```
 
 </details>
@@ -479,13 +388,13 @@ Provide the preferred citation or attribution form.
 <details>
 <summary><strong>Glossary</strong></summary>
 
-| Term | Meaning in this README |
-| --- | --- |
-| Processed | Stable transformed output suitable for versioning and later release review |
-| Catalog closure | The outward `STAC + DCAT + PROV` memory for a version |
-| Receipt | Evidence of intake, validation, or transform activity |
-| Proof | Release-adjacent trust memory such as manifests, checks, or attestable evidence |
-| Published | A governed public-safe state, not merely a folder location |
+| Term | Meaning |
+|---|---|
+| Processed | Stable versioned output |
+| Catalog closure | STAC + DCAT + PROV |
+| Receipt | Process memory |
+| Proof | Release evidence |
+| Published | Public-safe state |
 
 </details>
 
