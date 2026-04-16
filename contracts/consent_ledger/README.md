@@ -1,4 +1,3 @@
-````md
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: Consent Ledger Contract
@@ -570,5 +569,3 @@ This example is a **starter review aid**, not a claim that the active branch alr
 [Back to top](#top)
 
 </details>
-````
-
