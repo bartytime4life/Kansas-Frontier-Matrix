@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-04-15
+updated: 2026-04-16
 policy_label: public
 related: [
   ../README.md,
@@ -27,10 +27,12 @@ related: [
   ../../../data/catalog/dcat/README.md,
   ../../../data/catalog/prov/README.md,
   ../../../tests/README.md,
+  ../../../tests/contracts/README.md,
   ../../../tests/validators/test_promotion_gate_e2e.py,
   ../../../tests/validators/test_bundle_diff_policy.py,
   ../../../tests/validators/test_validate_bundle_diff_policy.py,
   ../../../tests/ci/test_render_promotion_review_handoff.py,
+  ../../../tools/attest/README.md,
   ../../../tools/ci/render_promotion_summary.py,
   ../../../tools/ci/render_promotion_bundle_summary.py,
   ../../../tools/ci/render_diff_summary.py,
@@ -38,13 +40,14 @@ related: [
   ../../../tools/ci/render_promotion_review_handoff.py,
   ../../../tools/diff/stable_diff.py,
   ../../../tools/catalog/catalog_crosslink.py,
-  ../../../.github/workflows/README.md
+  ../../../.github/workflows/README.md,
+  ../../../.github/watchers/README.md
 ]
-tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy, review-handoff, proofs, spec_hash]
+tags: [kfm, validators, promotion, governance, evidence, ci, diff-policy, review-handoff, proofs, receipts, spec_hash]
 notes: [
   Release-facing validator contract for governed promotion decisions.
-  This revision preserves the stronger existing A–G gate model, trust-chain split, and bundle-diff-policy posture while making the README more explicit about deterministic candidate identity, run_receipt expectations, and thin-slice soil-moisture applicability.
-  Exact mounted executable inventory, schema presence, and merge-blocking workflow wiring remain NEEDS VERIFICATION where not directly proven.
+  This revision preserves the stronger existing A–G gate model, trust-chain split, and bundle-diff-policy posture while making the README more explicit about receipt/proof separation, validator-versus-attest boundaries, deterministic candidate identity, and run_receipt expectations.
+  Exact mounted executable inventory, schema presence, attestation helper wiring, and merge-blocking workflow integration remain NEEDS VERIFICATION where not directly proven.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -59,10 +62,10 @@ Fail-closed, evidence-first validator surface for **governed promotion decisions
 > **Document status:** draft  
 > **Owners:** `@bartytime4life`  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Lane: tools/validators](https://img.shields.io/badge/lane-tools%2Fvalidators-1f6feb) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b60205) ![Scope: Promotion](https://img.shields.io/badge/scope-promotion-6f42c1) ![Trust: Receipt≠Proof≠Catalog](https://img.shields.io/badge/trust-receipt%E2%89%A0proof%E2%89%A0catalog-6f42c1) ![Implementation: Needs Verification](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-a-g) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [run_receipt posture](#run_receipt-posture) · [spec_hash rules](#spec_hash-rules) · [Trust chain](#trust-chain) · [Catalog closure](#catalog-closure) · [Quickstart](#quickstart) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-a-g) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [`run_receipt` posture](#run_receipt-posture) · [`spec_hash` rules](#spec_hash-rules) · [Trust chain](#trust-chain) · [Catalog closure](#catalog-closure) · [Quickstart](#quickstart) · [FAQ](#faq)
 
 > [!IMPORTANT]
-> This document defines both a **validator contract** and a **thin-slice executable shape** for promotion validation. It does **not** by itself prove that all mounted scripts, schemas, policies, tests, or merge-blocking integrations are present on the active branch. Exact file inventory, schema locations, workflow wiring, and enforcement posture remain **NEEDS VERIFICATION** where not directly confirmed.
+> This document defines both a **validator contract** and a **thin-slice executable shape** for promotion validation. It does **not** by itself prove that all mounted scripts, schemas, policies, tests, attestation helpers, or merge-blocking integrations are present on the active branch. Exact file inventory, schema locations, workflow wiring, and enforcement posture remain **NEEDS VERIFICATION** where not directly confirmed.
 
 > [!TIP]
 > Keep the KFM trust split visible here:
@@ -70,6 +73,9 @@ Fail-closed, evidence-first validator surface for **governed promotion decisions
 > **receipt ≠ proof ≠ catalog ≠ publication**
 >
 > `promotion_gate/` may validate declared linkage among these surfaces, and may derive release-significant trust objects, but it must not collapse them into one helper-owned authority.
+
+> [!CAUTION]
+> This lane sits **before promotion**, not after it. It may require receipt linkage, validator results, attestation visibility, and reviewer readiness, but it does not own receipt storage, signing mechanics, or publication.
 
 ---
 
@@ -109,6 +115,15 @@ For the current Mesonet-first soil-moisture slice, this gate sits **downstream o
 
 It should **not** repair malformed upstream candidate preparation. Weak or ambiguous candidates should fail closed here rather than be silently “fixed.”
 
+### What changed in this revision
+
+This revision makes four boundary rules more explicit:
+
+1. **validators** decide promotability and linkage readiness
+2. **attestation helpers** may sign or verify already-validated decision objects, but do not own promotion logic
+3. **receipts** are required process memory inputs, but they do not become proofs merely by being present
+4. **review handoff Markdown** remains derived convenience output, not sovereign machine authority
+
 ### Truth labels used here
 
 | Label | Meaning here |
@@ -141,8 +156,10 @@ It should **not** repair malformed upstream candidate preparation. Weak or ambig
 | Shared policy | [`../../../policy/README.md`](../../../policy/README.md) | Deny-by-default and obligation-bearing logic belongs there |
 | Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory should remain inspectable and separate from proof |
 | Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release-grade proof objects and bundles belong there conceptually, even if helpers here derive some artifacts |
+| Attestation helper lane | [`../../../tools/attest/README.md`](../../../tools/attest/README.md) | Signing and verification helpers are adjacent consumers, not owners of promotion decision law |
 | Catalog closure | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md), [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md), [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | Promotion should validate outward identity closure, not treat catalog fields as decorative metadata |
 | Workflow boundary | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Orchestration should call helpers here rather than bury policy-significant logic in workflow YAML |
+| Watcher boundary | [`../../../.github/watchers/README.md`](../../../.github/watchers/README.md) | Upstream watcher lanes may emit receipts, but this lane remains promotion-facing rather than watcher-owning |
 | Reviewer rendering | `tools/ci/*` | Reviewer summaries are derived outputs, not policy authority |
 
 ### Boundary rule
@@ -153,6 +170,8 @@ Do **not** use it to:
 
 - publish artifacts directly
 - merge branches directly
+- own signing logic
+- own receipt storage
 - own domain-specific subject validation in hydrology, hazards, soils, or other lanes
 - replace runtime answer-accountability envelopes
 - redefine contracts, schemas, or policy owned elsewhere
@@ -217,6 +236,19 @@ For the Mesonet-first soil-moisture lane, the strongest currently supported mini
 
 This keeps the gate deterministic and replayable while allowing promotion to remain **event-aware** rather than merely file-aware.
 
+### Receipt / proof input rule
+
+Promotion should treat receipts and proofs as distinct input classes:
+
+| Input class | Role at this gate |
+|---|---|
+| **Receipt** | process memory proving what upstream preparation, validation, or review activity occurred |
+| **Proof / attestation** | release-significant trust object or verification state carried forward into stronger review |
+| **Catalog closure** | outward release identity and lineage surfaces |
+| **Review handoff** | derived steward-facing convenience output, never the sole authority |
+
+A promotable candidate may require all four without collapsing them into one object.
+
 ---
 
 ## Exclusions
@@ -233,6 +265,8 @@ This lane does **not**:
 - compute general diff law inside CI renderers
 - replace underlying machine artifacts with one composed Markdown reviewer handoff
 - repair malformed upstream candidates that should have failed before promotion review
+- own signing mechanics that belong in `tools/attest/`
+- own receipt storage that belongs in `data/receipts/`
 
 ---
 
@@ -287,7 +321,7 @@ tests/ci/test_render_promotion_review_handoff.py
 ```
 
 > [!NOTE]
-> Shared contracts, schemas, and policy surfaces remain authoritative in their own repo homes. This lane validates and consumes them; it does not replace them.
+> Shared contracts, schemas, policy surfaces, attestation helpers, and receipt storage remain authoritative in their own repo homes. This lane validates and consumes them; it does not replace them.
 
 [Back to top](#top)
 
@@ -378,8 +412,8 @@ The current thin slice may also emit:
 | `promotion-prov.json` | minimal PROV document derived from the promotion record |
 | `promotion-bundle.json` | index of the full governed promotion artifact set |
 | `promotion-bundle-summary.md` | reviewer or auditor summary of the full bundle |
-| `decision-sign-result.json` | signing command result |
-| `decision-verify-result.json` | attestation verification result |
+| `decision-sign-result.json` | attestation helper result for signing a decision |
+| `decision-verify-result.json` | attestation helper result for verifying a decision |
 | `promotion-bundle-diff.json` | prior/current bundle diff report |
 | `promotion-bundle-diff-summary.md` | reviewer-facing diff summary |
 | `promotion-bundle-diff-policy.json` | machine-readable policy classification of bundle drift |
@@ -432,6 +466,21 @@ At promotion review time, the strongest current posture is:
 
 The KFM trust path depends on keeping **process memory** visible without pretending it is already the final proof bundle. This gate should validate that the receipt exists and links correctly, while still requiring separate proof, attestation, and catalog closure.
 
+### Receipt / proof boundary rule
+
+Promotion may:
+
+- require `run_receipt`
+- require `receipt_ref`
+- require proof linkage
+- require attestation visibility
+
+Promotion must **not**:
+
+- redefine receipt storage
+- treat receipt presence as equivalent to proof completeness
+- silently upgrade process memory into release proof by convenience
+
 [Back to top](#top)
 
 ---
@@ -470,8 +519,6 @@ For the Mesonet-first soil-moisture slice, the following promotion triggers rema
 | schema version changed | contract meaning changed |
 
 If none of those conditions are true, the candidate may still produce a decision artifact and reviewer visibility, but should generally **not** advance as a meaningful promotion event.
-
-[Back to top](#top)
 
 ---
 
@@ -547,13 +594,25 @@ flowchart LR
 7. Collapse the result to one finite `decision`.
 8. Validate the decision against schema.
 9. Render reviewer-readable output where needed.
-10. Optionally sign and verify the decision.
+10. Optionally sign and verify the decision through adjacent attestation helpers.
 11. Derive record, PROV, and bundle objects.
 12. Optionally compare prior/current bundles.
 13. Classify bundle drift using checked-in diff policy.
 14. Render reviewer-facing diff and policy summaries.
 15. Optionally compose one steward-facing review handoff document from bundle, diff, and diff-policy artifacts.
 16. Route the result into governed review or rework.
+
+### Validator / attest sequencing rule
+
+The healthy order is:
+
+1. validate candidate and linkage
+2. emit DecisionEnvelope
+3. validate DecisionEnvelope
+4. only then sign or verify through `tools/attest/`
+5. carry attestation results into bundle and review outputs
+
+That keeps promotion law here and signing mechanics in the adjacent helper lane.
 
 ---
 
@@ -585,8 +644,8 @@ flowchart LR
 | Surface | Role |
 |---|---|
 | `decision.json` | finite machine-readable decision |
-| `decision-sign-result.json` | receipt-like signing outcome |
-| `decision-verify-result.json` | receipt-like verification outcome |
+| `decision-sign-result.json` | attestation helper result for signing |
+| `decision-verify-result.json` | attestation helper result for verification |
 | `promotion-record.json` | compact governed ledger entry |
 | `promotion-prov.json` | provenance activity for promotion |
 | `promotion-bundle.json` | bundle manifest indexing the full promotion artifact set |
@@ -656,7 +715,21 @@ python tools/ci/render_promotion_summary.py \
   --output promotion-summary.md
 ```
 
-### 5. Write the promotion record
+### 5. Sign and verify the decision through the attestation lane
+
+```bash
+python tools/attest/sign_decision_envelope.py \
+  decision.json \
+  --artifact-uri "ghcr.io/example/promotion:candidate" \
+  --output decision-sign-result.json \
+  --yes
+
+python tools/attest/verify_decision_envelope.py \
+  "ghcr.io/example/promotion:candidate" \
+  --output decision-verify-result.json
+```
+
+### 6. Write the promotion record
 
 ```bash
 python tools/validators/promotion_gate/write_promotion_record.py \
@@ -665,7 +738,7 @@ python tools/validators/promotion_gate/write_promotion_record.py \
   --summary-ref "artifact://promotion-summary.md"
 ```
 
-### 6. Emit promotion PROV
+### 7. Emit promotion PROV
 
 ```bash
 python tools/validators/promotion_gate/emit_promotion_prov.py \
@@ -673,7 +746,7 @@ python tools/validators/promotion_gate/emit_promotion_prov.py \
   --output promotion-prov.json
 ```
 
-### 7. Write the promotion bundle
+### 8. Write the promotion bundle
 
 ```bash
 python tools/validators/promotion_gate/write_promotion_bundle.py \
@@ -681,10 +754,12 @@ python tools/validators/promotion_gate/write_promotion_bundle.py \
   --summary promotion-summary.md \
   --record promotion-record.json \
   --prov promotion-prov.json \
+  --sign-result decision-sign-result.json \
+  --verify-result decision-verify-result.json \
   --output promotion-bundle.json
 ```
 
-### 8. Render bundle summary
+### 9. Render bundle summary
 
 ```bash
 python tools/ci/render_promotion_bundle_summary.py \
@@ -692,7 +767,7 @@ python tools/ci/render_promotion_bundle_summary.py \
   --output promotion-bundle-summary.md
 ```
 
-### 9. Diff prior/current promotion bundles
+### 10. Diff prior/current promotion bundles
 
 ```bash
 python tools/diff/stable_diff.py \
@@ -701,7 +776,7 @@ python tools/diff/stable_diff.py \
   --output promotion-bundle-diff.json
 ```
 
-### 10. Classify bundle drift
+### 11. Classify bundle drift
 
 ```bash
 python tools/validators/promotion_gate/evaluate_bundle_diff_policy.py \
@@ -710,7 +785,7 @@ python tools/validators/promotion_gate/evaluate_bundle_diff_policy.py \
   --output promotion-bundle-diff-policy.json
 ```
 
-### 11. Render review handoff
+### 12. Render review handoff
 
 ```bash
 python tools/ci/render_promotion_review_handoff.py \
@@ -732,7 +807,9 @@ python tools/ci/render_promotion_review_handoff.py \
 - [ ] promotion gate emits one finite decision for each candidate
 - [ ] all required A–G gates produce machine-readable statuses
 - [ ] `run_receipt` presence is validated explicitly
+- [ ] receipt / proof separation remains explicit in emitted artifacts and docs
 - [ ] DecisionEnvelope validates against the declared schema
+- [ ] attestation helpers are treated as adjacent helper calls, not lane-owned logic
 - [ ] record, PROV, and bundle outputs remain derived and separate
 - [ ] prior/current bundle diff and diff-policy classification are reviewable where enabled
 - [ ] reviewer-facing Markdown artifacts remain derived surfaces, not authority surfaces
@@ -748,6 +825,7 @@ python tools/ci/render_promotion_review_handoff.py \
 - [ ] confirm test filenames and current branch status
 - [ ] confirm merge-blocking or review-blocking workflow integration
 - [ ] confirm whether soil-moisture promotion uses the same full bundle path or a narrowed first-wave subset
+- [ ] confirm exact attestation helper call signatures on the active branch
 
 [Back to top](#top)
 
@@ -778,5 +856,9 @@ It may call signing or verification helpers as part of the thin slice, but signa
 ### How should unchanged soil-moisture candidates behave?
 
 They may still produce a reviewable decision artifact, but should not be treated as meaningful promotion events unless identity, roster, anomaly, outage, or contract meaning changed.
+
+### Can `run_receipt` alone make a candidate promotable?
+
+No. Receipt presence is necessary process memory, not sufficient release proof.
 
 [Back to top](#top)
