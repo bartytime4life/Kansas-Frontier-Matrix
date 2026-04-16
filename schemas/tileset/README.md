@@ -10,7 +10,7 @@ updated: <NEEDS_VERIFICATION_DATE>
 policy_label: public
 related: [../README.md, ../tiler/README.md, ../../contracts/tiler/README.md, ../../tools/tiler/README.md, ../../data/catalog/README.md, ../../data/receipts/README.md, ../../tools/validators/README.md, ../../tests/contracts/README.md, ../../docs/standards/KFM_STAC_PROFILE.md]
 tags: [kfm, schemas, tileset, tiler, 3d-tiles, scene-manifest]
-notes: [Current public-main view shows this lane as README-only, narrower path ownership and canonical metadata values still need verification, scene-manifest-shaped schemas are doctrine-led and not yet repo-verified]
+notes: [Current public-main view shows this lane as README-only, narrower path ownership and canonical metadata values still need verification, tileset-facing schema wave is proposed but not repo-verified]
 [/KFM_META_BLOCK_V2] -->
 
 # `schemas/tileset`
@@ -18,7 +18,7 @@ notes: [Current public-main view shows this lane as README-only, narrower path o
 Boundary README for tileset- and scene-manifest-shaped schemas in KFM’s conditional 3D delivery path.
 
 > Status: experimental · Doc status: draft  
-> Owners: `@bartytime4life` *(public-main global fallback; narrower `/schemas/tileset/` rule still needs verification)*  
+> Owners: `@bartytime4life` *(public-main global fallback; narrower `/schemas/tileset/` ownership still needs verification)*  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-1f6feb) ![Doc: Draft](https://img.shields.io/badge/doc-draft-f59e0b) ![Lane: Tileset](https://img.shields.io/badge/lane-tileset-7c3aed) ![3D: Conditional](https://img.shields.io/badge/3D-conditional-6b7280) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b91c1c)  
 > Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)  
 > Repo fit: path `schemas/tileset/README.md` · upstream [`../README.md`](../README.md) · sibling schema lane [`../tiler/README.md`](../tiler/README.md) · contract home [`../../contracts/tiler/README.md`](../../contracts/tiler/README.md) · implementation lane [`../../tools/tiler/README.md`](../../tools/tiler/README.md) · downstream [`../../data/catalog/README.md`](../../data/catalog/README.md), [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tests/contracts/README.md`](../../tests/contracts/README.md), [`../../docs/standards/KFM_STAC_PROFILE.md`](../../docs/standards/KFM_STAC_PROFILE.md)  
@@ -26,7 +26,7 @@ Boundary README for tileset- and scene-manifest-shaped schemas in KFM’s condit
 > Exclusions: run specs, invocations, receipts, policy decisions, release proofs, renderer code, catalog standards, canonical data
 
 > [!IMPORTANT]
-> Current public `main` shows `schemas/tileset/` as a real directory, but only this README is visible today. Treat this file as a boundary and placement guide first, not as proof that a settled tileset schema wave already exists.
+> Current public `main` shows `schemas/tileset/` as a real directory, but only this README is visible in the evidence supplied for this revision. Treat this file as a boundary and placement guide first, not as proof that a settled schema wave already exists.
 
 > [!WARNING]
 > In KFM, tilesets are derived delivery artifacts, not sovereign truth objects. Any schema landed here must stay subordinate to released assets, evidence links, catalog closure, and the same trust-visible shell rules that govern 2D.
@@ -37,19 +37,27 @@ Boundary README for tileset- and scene-manifest-shaped schemas in KFM’s condit
 
 - semantic meaning and invariants
 - concrete field shape and serialization
-- adapter/runtime behavior
+- adapter and runtime behavior
 - publication, proof, and policy outcomes
 
-That split matters. The repo already gives `contracts/tiler/` the contract-home role for deterministic tiling runs, `schemas/tiler/` the schema-home role for run/receipt/summary objects, `tools/tiler/` the implementation role, and `data/catalog/` the outward discovery role. This directory should therefore stay **boundary-first** unless and until the repo explicitly decides that *emitted tileset-* and *scene-manifest-shaped* objects deserve their own schema lane.
+That split matters. The repo evidence supplied for this revision already gives:
+
+- `contracts/tiler/` the contract-home role for deterministic tiling runs
+- `schemas/tiler/` the schema-home role for run, receipt, and summary objects
+- `tools/tiler/` the implementation role
+- `data/catalog/` the outward discovery role
+
+This directory should therefore remain **boundary-first** unless and until the repo explicitly decides that *emitted tileset-* and *scene-manifest-shaped* objects deserve their own schema lane.
 
 ### Truth labels used here
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly visible in the public repo or strongly stated in the attached KFM corpus |
-| **INFERRED** | Strongly implied by the corpus, but not yet surfaced as checked-in local schema files |
+| **CONFIRMED** | Directly visible in the supplied repo-facing Markdown or strongly stated in the attached KFM corpus |
+| **INFERRED** | Strongly implied by the supplied corpus, but not yet surfaced as checked-in local schema files |
 | **PROPOSED** | Recommended next shape for this lane, not yet verified as implemented |
-| **NEEDS VERIFICATION** | Current public tree or attached evidence is not enough to settle the claim |
+| **UNKNOWN** | Not established by the supplied evidence |
+| **NEEDS VERIFICATION** | Current supplied evidence is not enough to settle the claim |
 
 [Back to top](#schemastileset)
 
@@ -64,9 +72,9 @@ That split matters. The repo already gives `contracts/tiler/` the contract-home 
 | [`../../contracts/tiler/README.md`](../../contracts/tiler/README.md) | contract home | owns meaning, invariants, and lifecycle semantics for tiling objects |
 | [`../../tools/tiler/README.md`](../../tools/tiler/README.md) | implementation lane | emits derived tile artifacts and run memory, not release truth |
 | [`../../data/receipts/README.md`](../../data/receipts/README.md) | process memory | receives run receipts; should not be conflated with tileset schemas |
-| [`../../data/catalog/README.md`](../../data/catalog/README.md) | STAC/DCAT/PROV closure | carries outward discovery and lineage closure for released artifacts |
+| [`../../data/catalog/README.md`](../../data/catalog/README.md) | STAC / DCAT / PROV closure | carries outward discovery and lineage closure for released artifacts |
 | [`../../tools/validators/README.md`](../../tools/validators/README.md) | fail-closed checks | validates shape, linkage, and readiness without owning semantics |
-| [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | contract/schema verification | should carry valid/invalid example coverage once schemas land |
+| [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | contract / schema verification | should carry valid / invalid example coverage once schemas land |
 
 ### Placement rule
 
@@ -77,9 +85,22 @@ Do **not** use it for:
 - author-authored run requests
 - normalized invocations
 - process-memory receipts
-- release proofs / attestations
-- STAC/DCAT/PROV profiles
-- renderer-specific bootstrap code
+- release proofs or attestations
+- STAC / DCAT / PROV profiles
+- renderer-specific bootstrap or worker code
+
+### First-wave direction
+
+The strongest **PROPOSED** first-wave objects, based on the supplied README baseline and the surrounding lane logic it cites, are:
+
+| Candidate object | Status | Why this is the likely fit |
+|---|---|---|
+| `tileset_manifest.schema.json` | **PROPOSED** | best single anchor for a released tileset descriptor |
+| `tileset_asset_inventory.schema.json` | **PROPOSED** | explicit file list, digests, bounds, hierarchy, and emitted artifact inventory fit this lane better than run-control lanes |
+| `scene_manifest.schema.json` | **INFERRED / PROPOSED** | coherent 3D handoff unit is repeatedly implied, but no checked-in schema was verified in the supplied evidence |
+
+> [!NOTE]
+> This README now names the likely first-wave schema objects more directly than the prior draft, but still does **not** claim those files already exist.
 
 ## Inputs
 
@@ -89,20 +110,30 @@ Do **not** use it for:
 |---|---|---:|---|
 | `tileset_manifest.schema.json` | **PROPOSED** | Yes, if adopted | a release-facing emitted tileset descriptor is narrower than run control and broader than raw file inventory |
 | `tileset_asset_inventory.schema.json` | **PROPOSED** | Yes, if adopted | file list, digests, bounds, hierarchy, and emitted artifact inventory are tileset-shaped, not run-shaped |
-| `scene_manifest.schema.json` | **INFERRED / PROPOSED** | Maybe | the attached corpus repeatedly points to scene manifests as the coherent 3D handoff unit, but no checked-in schema was verified |
-| `bounding_volume_summary.schema.json` | **PROPOSED** | Maybe | useful if the repo wants a compact validator-friendly surface for bounds / LOD / hierarchy review |
-| tiny `examples/*.json` | **PROPOSED** | Yes | reviewer-readable examples can help schema adoption, as long as full valid/invalid fixtures live in test lanes |
+| `scene_manifest.schema.json` | **INFERRED / PROPOSED** | Maybe | the supplied corpus repeatedly points to scene manifests as the coherent 3D handoff unit, but no checked-in schema was verified |
+| `bounding_volume_summary.schema.json` | **PROPOSED** | Maybe | useful if the repo wants a compact validator-friendly surface for bounds, LOD, or hierarchy review |
+| tiny `examples/*.json` | **PROPOSED** | Yes | reviewer-readable examples can help schema adoption, as long as full valid / invalid fixtures live in test lanes |
 
 ### Minimal field families any future schema here should expect
 
-A safe first-wave tileset object is likely to need some combination of:
+A safe first-wave tileset object is likely to need some combination of the following. These are **PROPOSED design families**, not confirmed implemented fields:
 
-- **identity**: object id, version, `spec_hash`, created/updated timestamps
+- **identity**: object id, version, `spec_hash`, created or updated timestamps
 - **artifact linkage**: emitted asset paths, digests, media types, byte sizes
-- **spatial interpretation**: CRS / coordinate metadata, bounds, geometric-error or hierarchy summaries
+- **spatial interpretation**: CRS or coordinate metadata, bounds, geometric-error or hierarchy summaries
 - **release linkage**: release refs, catalog refs, or promoted-subject identifiers
 - **evidence continuity**: evidence refs or drawer-parity refs when the object participates in a 3D story handoff
 - **status grammar**: bounded machine states when applicable
+
+### Validator-first expectations for a first schema wave
+
+The baseline README already points to validators, tests, receipts, and catalog closure as adjacent lanes. A conservative **PROPOSED** first schema wave should therefore favor objects whose fields are:
+
+- explicit rather than inferred
+- diff-friendly
+- digest-bearing
+- small enough for fail-closed validation
+- easy to link downstream without duplicating catalog or proof objects
 
 > [!TIP]
 > Keep author-friendly inputs and adapter-facing execution shapes in `schemas/tiler/`. Keep emitted tileset-facing shapes here only if the repo deliberately separates them.
@@ -114,10 +145,10 @@ This directory should **not** become a catch-all 3D bucket.
 | Does **not** belong here | Better home |
 |---|---|
 | `tiling_run_spec`, `tiling_invocation`, `tiling_receipt`, `tile_summary` | [`../tiler/README.md`](../tiler/README.md) + [`../../contracts/tiler/README.md`](../../contracts/tiler/README.md) |
-| policy allow/deny logic, sensitivity rules, promotion outcomes | [`../../policy/README.md`](../../policy/README.md) |
-| release manifests, attestations, proof packs | release / proof / validator lanes, not schema-only placement |
+| policy allow or deny logic, sensitivity rules, promotion outcomes | [`../../policy/README.md`](../../policy/README.md) |
+| release manifests, attestations, proof packs | release, proof, or validator lanes rather than schema-only placement |
 | STAC / DCAT / PROV outward profiles | [`../../docs/standards/KFM_STAC_PROFILE.md`](../../docs/standards/KFM_STAC_PROFILE.md) and `data/catalog/` |
-| renderer/bootstrap behavior for Cesium, MapLibre, three.js, or worker code | [`../../tools/tiler/README.md`](../../tools/tiler/README.md) and app/runtime lanes |
+| renderer or bootstrap behavior for Cesium, MapLibre, three.js, workers, or viewers | [`../../tools/tiler/README.md`](../../tools/tiler/README.md) and app or runtime lanes |
 | canonical terrain, imagery, or source datasets | upstream data lanes |
 
 ## Directory tree
@@ -143,7 +174,7 @@ schemas/
 ```
 
 > [!NOTE]
-> Full valid/invalid fixtures should stay in test lanes rather than turning this directory into an ungoverned example dump.
+> Full valid and invalid fixtures should stay in test lanes rather than turning this directory into an ungoverned example dump.
 
 [Back to top](#schemastileset)
 
@@ -155,13 +186,13 @@ schemas/
 2. **Land semantic meaning before field shape.**  
    Add or confirm contract meaning in `../../contracts/tiler/` or another explicit contract home before writing a schema file here.
 
-3. **Keep the first schema tiny.**  
+3. **Keep the first schema small.**  
    Prefer one object—most likely `tileset_manifest` or `tileset_asset_inventory`—before splitting into many variants.
 
 4. **Wire fail-closed coverage immediately.**  
-   Add at least one valid example and one invalid example to the contract/schema test surface, then wire validator checks.
+   Add at least one valid example and one invalid example to the contract or schema test surface, then wire validator checks.
 
-5. **Link downstream, do not duplicate downstream.**  
+5. **Link downstream; do not duplicate downstream.**  
    Reference catalog closure, receipts, and proof lanes instead of copying their fields wholesale.
 
 ### Starter review checklist
@@ -172,6 +203,35 @@ schemas/
 - [ ] Does the object stay subordinate to release-backed truth?
 - [ ] If it participates in 3D story mode, does it preserve Evidence Drawer parity?
 
+### Illustrative validator-facing sketch
+
+The following is **illustrative only**. It is included to make the first-wave direction concrete without claiming implementation.
+
+```json
+{
+  "kind": "tileset_manifest",
+  "version": "v1",
+  "spec_hash": "sha256:...",
+  "artifacts": [
+    {
+      "href": "relative/or/oci/ref",
+      "digest": "sha256:...",
+      "media_type": "application/json"
+    }
+  ],
+  "bounds": {
+    "kind": "region-or-box",
+    "summary_ref": "kfm://..."
+  },
+  "catalog_refs": {
+    "stac": "relative-or-kfm-ref",
+    "dcat": "relative-or-kfm-ref",
+    "prov": "relative-or-kfm-ref"
+  },
+  "status": "draft"
+}
+```
+
 ## Usage
 
 ### A practical placement matrix
@@ -179,15 +239,15 @@ schemas/
 | Question | Put it in | Reason |
 |---|---|---|
 | “What should be tiled, with which adapter, and how?” | `contracts/tiler/` + `schemas/tiler/` | run-control semantics already live there |
-| “What happened during the run?” | `schemas/tiler/` + `data/receipts/` | process memory and run results are already defined as receipt/summary territory |
+| “What happened during the run?” | `schemas/tiler/` + `data/receipts/` | process memory and run results are already defined as receipt or summary territory |
 | “Which files, digests, bounds, and hierarchy describe this emitted tileset?” | `schemas/tileset/` | emitted artifact shape fits this lane if the repo formalizes it |
-| “How does a conditional 3D scene hand off from the governed 2D shell?” | `schemas/tileset/` **only if** the repo adopts a renderer-neutral scene manifest | the attached doctrine points to a scene manifest, but this remains partly **INFERRED / PROPOSED** |
+| “How does a conditional 3D scene hand off from the governed 2D shell?” | `schemas/tileset/` **only if** the repo adopts a renderer-neutral scene manifest | the supplied doctrine points to a scene manifest, but this remains partly **INFERRED / PROPOSED** |
 | “How is the released asset discoverable and cross-linkable?” | `data/catalog/` + standards docs | catalog closure is downstream of schema shape |
-| “Can this object be trusted, promoted, or published?” | validators / policy / proof lanes | trust decisions do not belong to schema placement alone |
+| “Can this object be trusted, promoted, or published?” | validators, policy, and proof lanes | trust decisions do not belong to schema placement alone |
 
 ### Conditional 3D rule
 
-KFM’s attached doctrine is clear on one point: 3D is **conditional**, 2D remains primary, and a 3D story mode is coherent only when it stays downstream of the same released assets, evidence links, decision grammar, and Evidence Drawer payload logic as the 2D shell.
+The supplied doctrine is clear on one point: 3D is **conditional**, 2D remains primary, and a 3D story mode is coherent only when it stays downstream of the same released assets, evidence links, decision grammar, and Evidence Drawer payload logic as the 2D shell.
 
 That makes `schemas/tileset/` a possible home for **scene-manifest-shaped** objects—but only if they are:
 
@@ -195,6 +255,17 @@ That makes `schemas/tileset/` a possible home for **scene-manifest-shaped** obje
 - downstream of released assets rather than ambient runtime state
 - explicit about evidence, release, and correction linkage
 - small enough to validate and review fail-closed
+
+### Validator and test handoff
+
+This README does **not** claim current implementation, but the neighboring lanes it cites imply a clean division of responsibilities once a schema lands:
+
+| Neighbor lane | Expected role once schema files exist | Status |
+|---|---|---|
+| `tools/validators/` | shape checks, required-field checks, linkage checks | **INFERRED** |
+| `tests/contracts/` | valid / invalid fixtures and reviewable failure cases | **INFERRED** |
+| `data/catalog/` | outward discovery and closure, not schema authority | **CONFIRMED** in doctrine framing |
+| `data/receipts/` | process memory linkage, not release truth | **CONFIRMED** in doctrine framing |
 
 ## Diagram
 
@@ -243,6 +314,16 @@ flowchart LR
 | `bounding_volume_summary` | Low | useful later if review surfaces need a compact abstraction |
 | renderer-specific config blobs | Do not land here | keep implementation detail out of schema authority |
 
+### Truth boundary matrix
+
+| Concern | Sovereign home | Why `schemas/tileset/` is not the sovereign home |
+|---|---|---|
+| semantics | contracts | schema shape should not replace contract meaning |
+| process memory | receipts | receipts capture run memory, replay clues, and operational trace |
+| release discovery | catalog | catalog carries outward discovery and provenance closure |
+| trust decision | policy / proof / validators | schema presence alone is not authorization, promotion, or release proof |
+| viewer behavior | runtime / tools | engines and viewers consume outputs; they do not define schema authority |
+
 [Back to top](#schemastileset)
 
 ## Task list
@@ -264,19 +345,31 @@ flowchart LR
 - [ ] clear correction path
 - [ ] validator-visible parity fixture
 
+### Review questions for the first schema PR
+
+- [ ] Does the object reduce ambiguity, or just create a second naming system?
+- [ ] Is every trust-bearing link explicit?
+- [ ] Could a reviewer understand the object without reading runtime code?
+- [ ] Would the object still make sense if the renderer changed?
+- [ ] Does the placement keep `receipt ≠ proof ≠ catalog ≠ publication` visible?
+
 ## FAQ
 
 ### Is `schemas/tileset/` already a settled schema home?
-No. **CONFIRMED**: the public repo shows the directory exists. **NEEDS VERIFICATION**: no checked-in schema files were visible here in the inspected public snapshot.
+
+No. **CONFIRMED**: the supplied repo-facing draft shows the directory exists. **NEEDS VERIFICATION**: no checked-in schema files were visible in the supplied evidence set for this revision.
 
 ### Why not just put everything in `schemas/tiler/`?
+
 Because emitted tileset objects may deserve a narrower lane than run-control objects. But that split should happen only when it improves clarity rather than multiplying dialects.
 
 ### Does this directory authorize Cesium-specific or MapLibre-specific runtime behavior?
+
 No. Runtime behavior belongs in implementation lanes. This directory, if expanded, should stay at the level of machine-readable shape for emitted artifacts or renderer-neutral scene handoff objects.
 
 ### Are scene manifests already implemented in the repo?
-Not from the evidence inspected here. They are **INFERRED / PROPOSED** from the attached corpus as the coherent unit for conditional 3D handoff, but no mounted or checked-in schema file was directly verified in this path.
+
+Not from the evidence supplied here. They are **INFERRED / PROPOSED** from the attached corpus as the coherent unit for conditional 3D handoff, but no mounted or checked-in schema file was directly verified in this path.
 
 ## Appendix
 
@@ -320,17 +413,17 @@ This is an illustrative shape sketch, not a confirmed repo contract.
 }
 ```
 
-A safe first implementation would keep this object tiny, explicit, and downstream of released assets.
+A safe first implementation would keep this object small, explicit, and downstream of released assets.
 
 </details>
 
 <details>
-<summary><strong>Reviewer prompts for the first schema PR</strong></summary>
+<summary><strong>Open verification items</strong></summary>
 
-- Does the object reduce ambiguity, or just create a second naming system?
-- Is every trust-bearing link explicit?
-- Could a reviewer understand the object without reading runtime code?
-- Would the object still make sense if the renderer changed?
-- Does the placement keep `receipt ≠ proof ≠ catalog ≠ publication` visible?
+- Whether `schemas/tileset/` should become a real schema-home or remain boundary-only
+- Whether path-specific ownership exists beyond the public fallback owner shown in the supplied draft
+- Whether a scene-manifest contract already exists elsewhere in the repo
+- Whether `tileset_manifest` or `tileset_asset_inventory` is the preferred first landed object
+- Whether adjacent validator and test lanes already have conventions specific to emitted tileset artifacts
 
 </details>
