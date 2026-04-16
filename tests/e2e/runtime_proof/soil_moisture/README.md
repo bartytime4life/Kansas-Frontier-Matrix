@@ -33,13 +33,18 @@ related: [
   ../../../../apps/governed_api/runtime/soil_moisture_runtime.py,
   ../../../../tests/contracts/test_runtime_response_schema.py,
   ../../../../tests/contracts/test_source_descriptor_schema.py,
+  ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py,
+  ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py,
+  ../../../../tests/e2e/runtime_proof/soil_moisture/test_runtime_emit_actual_responses.py,
+  ../../../../scripts/verify_runtime_proof_soil_moisture.sh,
   ../../../../.github/CODEOWNERS,
-  ../../../../.github/workflows/README.md
+  ../../../../.github/workflows/README.md,
+  ../../../../.github/PULL_REQUEST_TEMPLATE.md
 ]
 tags: [kfm, tests, e2e, runtime-proof, soil-moisture, hydrology, mesonet, spec_hash, run_receipt]
 notes: [
   Hydrology-first and Kansas Mesonet source-role constraints are strongly supported in the supplied corpus.
-  This revision preserves the stronger existing runtime-proof doctrine while aligning the leaf with the newer source-descriptor, runtime schema, governed API runtime, route/app tests, emitted actual-response artifacts, and workflow summary surfaces added in-session.
+  This revision preserves the stronger existing runtime-proof doctrine while aligning the leaf with the newer source-descriptor, runtime schema, governed API runtime, route/app tests, emitted actual-response artifacts, local lane runner, and workflow summary surfaces added in-session.
   Exact mounted leaf inventory, runner wiring, created date, policy label, and leaf-level ownership still need direct branch verification.
 ]
 [/KFM_META_BLOCK_V2] -->
@@ -118,6 +123,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 | Runtime response schema now exists and is exercised by the current thin slice | **CONFIRMED in-session thin slice** | Runtime-proof is no longer only prose + illustrative envelope burden |
 | Governed runtime builder, route, and app tests now exist for the soil-moisture slice | **CONFIRMED in-session thin slice** | Whole-path runtime proof now points at real runtime code rather than only abstract doctrine |
 | `actual.response.json` emission helper now exists as a workflow/local-runner seam | **CONFIRMED in-session thin slice** | Expected-vs-actual review is now a real artifact path |
+| Local lane runner now exists at `scripts/verify_runtime_proof_soil_moisture.sh` | **CONFIRMED in-session thin slice** | The leaf now has a concrete local dry-run path |
 | Exact mounted leaf inventory on the active branch | **NEEDS VERIFICATION** | Do not claim mounted case inventory or runner wiring without direct branch evidence |
 | Required checks, protected-branch gates, and artifact retention policy | **NEEDS VERIFICATION** | The doc must not imply CI maturity the session did not surface |
 
@@ -151,6 +157,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 | Governed runtime builder | [`../../../../apps/governed_api/runtime/soil_moisture_runtime.py`](../../../../apps/governed_api/runtime/soil_moisture_runtime.py) | Current thin-slice runtime envelopes are emitted there |
 | Governed route and app | [`../../../../apps/governed_api/routes/soil_moisture.py`](../../../../apps/governed_api/routes/soil_moisture.py), [`../../../../apps/governed_api/app.py`](../../../../apps/governed_api/app.py) | Route/app tests now contribute to whole-path runtime proof |
 | Reviewer-summary tool | [`../../../../tools/ci/render_runtime_proof_summary.py`](../../../../tools/ci/render_runtime_proof_summary.py) | This leaf now feeds a reviewer-facing runtime summary path |
+| Local dry-run runner | [`../../../../scripts/verify_runtime_proof_soil_moisture.sh`](../../../../scripts/verify_runtime_proof_soil_moisture.sh) | Keeps the leaf runnable outside CI when the repo is mounted |
 | Workflow boundary | [`../../../../.github/workflows/README.md`](../../../../.github/workflows/README.md) | Workflow references remain proof burden, not evidence of checked-in merge gates |
 
 > [!TIP]
@@ -187,7 +194,7 @@ This lane should accept **small, explicit, reviewable** materials that help prov
 6. Label derived examples as derived.
 7. Keep **runtime response ≠ receipt ≠ proof ≠ catalog** visible even in examples.
 8. Keep `spec_hash`, validator result, and `run_receipt_ref` explicit when outward trust depends on them.
-9. Treat `actual.response.json` as an artifact-policy question, not silent committed truth by default.
+9. Treat `actual.response.json` under the leaf’s hybrid artifact policy: emit broadly, commit rarely, and promote only by explicit review.
 
 > [!NOTE]
 > If a shared soil-moisture fixture lane becomes mounted later, prefer consuming its tiny reusable slices instead of duplicating larger source-shaped files inside this e2e leaf.
@@ -253,9 +260,18 @@ tests/e2e/runtime_proof/
 
 ### Reading rule for `actual.response.json`
 
-- treat `request.json` + `expected.response.json` as the stable proof fixture pair
-- treat `actual.response.json` as an emitted comparison artifact unless repo policy explicitly promotes it to a checked-in golden file
-- keep artifact policy explicit in workflow, local runner, and `.gitignore` decisions
+KFM uses a **hybrid artifact policy** for emitted runtime-proof actuals in this leaf.
+
+- emit `actual.response.json` for all cases in CI and local review runs
+- do **not** treat emitted actuals as checked-in truth by default
+- do **not** commit emitted actuals routinely
+- promote only a **small canonical subset** to checked-in golden files when explicit review decides that a stable anchor is worth the diff cost
+
+Default reading:
+
+- `request.json` + `expected.response.json` are the stable proof fixture pair
+- `actual.response.json` is a generated comparison artifact unless explicitly promoted
+- any promoted golden actuals should be rare, named intentionally, and reviewed as trust-significant fixture changes
 
 > [!TIP]
 > Add only the smallest leaf shape the active branch can actually support. A narrow truthful subtree is better than a broad speculative one.
@@ -513,13 +529,29 @@ flowchart TD
 > A runtime response is **not** the same thing as a `run_receipt`.  
 > The runtime response is outward trust state; the receipt is machine-readable process memory.
 
-### Artifact-policy choices for `actual.response.json`
+### Artifact policy for `actual.response.json`
 
-| Policy choice | Benefit | Cost | Current safest reading |
-| --- | --- | --- | --- |
-| CI/local only | avoids noisy diffs | weaker checked-in golden visibility | strong candidate default |
-| checked-in golden files | stable review anchors | more repo churn | only if explicitly chosen |
-| hybrid | a few canonical golden files + full CI emission | needs policy clarity | recommended pattern if the lane grows |
+| Policy | Current decision | Meaning |
+| --- | --- | --- |
+| Emit in CI/local runs | **Yes** | Expected-vs-actual review should remain available for all runtime-proof cases |
+| Commit by default | **No** | Generated actuals are not routine checked-in truth |
+| Canonical golden subset allowed | **Yes, by explicit review** | A very small subset may be promoted when stable review anchors are worth the maintenance cost |
+| Summary artifact committed by default | **No** | Reviewer-facing Markdown summaries are generated artifacts unless branch policy explicitly says otherwise |
+
+### Practical rule
+
+Use emitted actuals for:
+
+- reviewer comparison
+- CI artifacts
+- local debugging
+- first-pass mismatch inspection
+
+Use checked-in golden actuals only when:
+
+- the case is canonical and stable
+- the output shape is intentionally part of review
+- the team wants a durable fixture anchor more than it wants a quiet diff history
 
 [Back to top](#top)
 
@@ -539,6 +571,7 @@ flowchart TD
 - [ ] at least one case keeps `spec_hash` and validator-result visibility explicit where the trust story depends on them
 - [ ] any `run_receipt` example stays visibly downstream of runtime response, not merged into it
 - [ ] `actual.response.json` emission path is documented honestly
+- [ ] hybrid artifact policy for `actual.response.json` remains visible and unchanged unless explicitly reviewed
 - [ ] runtime summary rendering path is documented honestly
 - [ ] placeholders in the meta block are replaced with repo-backed values
 - [ ] the README no longer implies runner, workflow, signing, or branch-protection maturity that the branch does not prove
@@ -548,7 +581,7 @@ flowchart TD
 - actual mounted path inventory
 - actual runner / toolchain
 - whether a shared soil-moisture fixture lane exists and should be consumed here
-- whether artifact policy for `actual.response.json` is CI-only, checked-in, or hybrid
+- whether hybrid artifact policy remains the branch decision
 - whether `ABSTAIN` versus `DENY` for stale support is already settled elsewhere
 - whether runtime envelopes already expose `spec_hash`, validator result, or `run_receipt` references on the active branch
 - whether workflow artifact upload and retention behavior is visible on the active branch
@@ -585,7 +618,15 @@ Because KFM keeps **policy authority** in policy / governed API surfaces. Runtim
 
 ### Should `actual.response.json` be committed?
 
-Not by default. That is an artifact-policy decision. The current safest posture is to treat emitted actuals as review artifacts unless the repo explicitly adopts golden actuals.
+Not by default.
+
+This leaf uses a **hybrid artifact policy**:
+
+- emit all actuals in CI and local review runs
+- commit none by default
+- allow only a very small explicitly reviewed canonical subset to become checked-in golden files
+
+That keeps expected-vs-actual review strong without turning every generated artifact into routine repo churn.
 
 [Back to top](#top)
 
