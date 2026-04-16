@@ -1,61 +1,53 @@
-<!--
-KFM Meta Block V2
-doc_id: kfm://doc/<TODO-tests-readme-uuid>
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION__tests_readme_uuid
 title: tests
 type: standard
 version: v1
 status: published
 owners: @bartytime4life
-created: <TODO: verify YYYY-MM-DD>
+created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: 2026-04-16
 policy_label: public
-related:
-  - ../README.md
-  - ../CONTRIBUTING.md
-  - ../.github/README.md
-  - ../.github/CODEOWNERS
-  - ../.github/workflows/README.md
-  - ../.github/watchers/README.md
-  - ../contracts/README.md
-  - ../policy/README.md
-  - ../schemas/README.md
-  - ../schemas/contracts/README.md
-  - ../schemas/tests/README.md
-  - ../data/receipts/README.md
-  - ../data/proofs/README.md
-  - ../docs/README.md
-  - ../tools/probes/README.md
-  - ../tools/validators/README.md
-  - ../tools/validators/promotion_gate/README.md
-  - ../tools/attest/README.md
-  - ./catalog/README.md
-  - ./ci/README.md
-  - ./contracts/README.md
-  - ./e2e/README.md
-  - ./policy/README.md
-tags:
-  - kfm
-  - tests
-  - verification
-  - readme
-  - ci
-  - catalog
-  - contracts
-  - receipts
-  - proofs
-notes:
-  - Updated to align the top-level tests family map with the newer contract, receipt, validator, attestation, workflow, probe, and policy lane documentation.
-  - doc_id and created date still need live-repo verification.
-  - Owner remains confirmed by current CODEOWNERS coverage for /tests/.
-  - This revision preserves the existing governed-verification framing while making receipt/proof separation and the probe -> receipt -> validator -> policy -> workflow chain more explicit.
-  - This revision also normalizes tests-facing receipt language around one central `data/receipts/` process-memory lane.
--->
+related: [
+  ../README.md,
+  ../CONTRIBUTING.md,
+  ../.github/README.md,
+  ../.github/CODEOWNERS,
+  ../.github/workflows/README.md,
+  ../.github/watchers/README.md,
+  ../contracts/README.md,
+  ../policy/README.md,
+  ../schemas/README.md,
+  ../schemas/contracts/README.md,
+  ../schemas/tests/README.md,
+  ../data/receipts/README.md,
+  ../data/proofs/README.md,
+  ../docs/README.md,
+  ../tools/probes/README.md,
+  ../tools/validators/README.md,
+  ../tools/validators/promotion_gate/README.md,
+  ../tools/attest/README.md,
+  ./catalog/README.md,
+  ./ci/README.md,
+  ./contracts/README.md,
+  ./e2e/README.md,
+  ./policy/README.md
+]
+tags: [kfm, tests, verification, readme, ci, catalog, contracts, receipts, proofs]
+notes: [
+  Updated to align the top-level tests family map with the newer contract, receipt, validator, attestation, workflow, probe, and policy lane documentation.
+  doc_id and created date still need live-repo verification.
+  Owner remains confirmed by current CODEOWNERS coverage for /tests/.
+  This revision preserves the existing governed-verification framing while making receipt/proof separation and the probe -> receipt -> validator -> policy -> workflow chain more explicit.
+  This revision also normalizes tests-facing receipt language around one central data/receipts/ process-memory lane.
+]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `tests/`
 
-Governed verification surface for KFM proof objects, trust cues, negative paths, release/correction drills, helper-proof boundaries, and receipt-aware validation pressure.
+Governed verification surface for KFM proof objects, trust cues, negative paths, release and correction drills, helper-proof boundaries, and receipt-aware validation pressure.
 
 > [!NOTE]
 > The meta-block value `status: published` preserves the current document-record baseline.  
@@ -123,22 +115,22 @@ That is broader than “do the tests pass?” The stronger questions are:
 | Evidence layer | What this README treats as settled |
 |---|---|
 | **CONFIRMED — current repo / current lane docs** | The repo exposes `tests/` as a real top-level directory; adjacent lane docs now explicitly document `tests/ci/` as a helper-proof lane, `tests/catalog/` as a catalog-helper proof lane, and `tests/contracts/` as a contract-facing proof lane; the visible family layout includes `tests/e2e/` leaf directories and the `tests/policy/genealogy/` child lane; adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, `docs/README.md`, `tools/probes/README.md`, `tools/validators/README.md`, and `tools/attest/README.md` are all part of the current documentation surface; `/tests/` ownership remains covered in `.github/CODEOWNERS`. |
-| **CONFIRMED — current workflow / probe lane posture** | `.github/workflows/README.md` and `.github/watchers/README.md` are present as documentation boundaries. Checked-in merge-blocking workflow depth, active probe orchestration, and watcher orchestration still need branch/platform verification where not directly proven. |
+| **CONFIRMED — current workflow / probe lane posture** | `.github/workflows/README.md` and `.github/watchers/README.md` are present as documentation boundaries. Checked-in merge-blocking workflow depth, active probe orchestration, and watcher orchestration still need branch and platform verification where not directly proven. |
 | **CONFIRMED — current schema adjacency** | `schemas/` is no longer effectively README-only; visible adjacent lanes include `schemas/contracts/`, `schemas/contracts/v1/`, and `schemas/tests/`, which materially affect how contract-facing verification and nested fixture scaffolds should be described. |
 | **CONFIRMED — current governed data adjacency** | `data/receipts/` and `data/proofs/` are now explicit adjacent surfaces in the documentation lattice. Tests should reflect their distinct roles rather than flatten them. |
-| **CONFIRMED — KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, helper-proof surfaces, receipt/process-memory boundaries, and hydrology-first thin-slice proof remain part of the KFM verification model. |
+| **CONFIRMED — KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, helper-proof surfaces, receipt and process-memory boundaries, and hydrology-first thin-slice proof remain part of the KFM verification model. |
 | **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different documented names and now does so alongside explicitly documented `tests/ci/`, `tests/catalog/`, and `tests/contracts/` lanes. |
-| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, required checks, rulesets, screenshot baseline inventory, fixture density, whether schema-side fixtures feed blocking runners, whether rollback/correction drills have been exercised on the checked-out branch, and how probe- or watcher-receipt cases are wired in local or CI runners. |
+| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner and toolchain, required checks, rulesets, screenshot baseline inventory, fixture density, whether schema-side fixtures feed blocking runners, whether rollback and correction drills have been exercised on the checked-out branch, and how probe- or watcher-receipt cases are wired in local or CI runners. |
 
 > [!CAUTION]
-> Directory presence is **not** the same thing as mature coverage.
+> Directory presence is **not** the same thing as mature coverage.  
 > This README distinguishes **what is documented and visible now** from **what KFM doctrine says the verification system must eventually prove**.
 
 ### Status markers used here
 
 | Marker | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Visible in the current documentation / repo-facing surface or directly grounded in stable KFM doctrine |
+| **CONFIRMED** | Visible in the current documentation and repo-facing surface or directly grounded in stable KFM doctrine |
 | **INFERRED** | Strongly supported by adjacent repo docs or repeated doctrine, but not re-proven from a mounted checkout in this session |
 | **PROPOSED** | Buildable structure, practice, or future consolidation that fits KFM doctrine but is not asserted as current repo fact |
 | **UNKNOWN** | Not verified strongly enough in this session to state as current repo reality |
@@ -159,7 +151,7 @@ That is broader than “do the tests pass?” The stronger questions are:
 |---|---|---|
 | [`../README.md`](../README.md) | root project identity and operating posture | **CONFIRMED** |
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | contributor workflow, review discipline, and documentation expectations | **CONFIRMED** |
-| [`../.github/README.md`](../.github/README.md) | repo gatehouse for CI/CD, review boundaries, and governance automation | **CONFIRMED** |
+| [`../.github/README.md`](../.github/README.md) | repo gatehouse for CI, review boundaries, and governance automation | **CONFIRMED** |
 | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | ownership and review boundary for `/tests/` | **CONFIRMED** |
 | [`../.github/workflows/README.md`](../.github/workflows/README.md) | workflow-lane surface and documented automation boundary | **CONFIRMED** |
 | [`../.github/watchers/README.md`](../.github/watchers/README.md) | watcher-lane doctrine and orchestration boundary | **CONFIRMED** |
@@ -173,12 +165,12 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`../data/proofs/README.md`](../data/proofs/README.md) | proof lane that stays distinct from tests and receipts | **CONFIRMED** |
 | [`../tools/probes/README.md`](../tools/probes/README.md) | probe lane that emits process memory and materiality signals | **CONFIRMED** |
 | [`../tools/validators/README.md`](../tools/validators/README.md) | validator lane that consumes tested shapes without replacing them | **CONFIRMED** |
-| [`../tools/validators/promotion_gate/README.md`](../tools/validators/promotion_gate/README.md) | promotion validator lane that depends on DecisionEnvelope, receipt/proof linkage, and fail-closed examples | **CONFIRMED** |
+| [`../tools/validators/promotion_gate/README.md`](../tools/validators/promotion_gate/README.md) | promotion validator lane that depends on `DecisionEnvelope`, receipt and proof linkage, and fail-closed examples | **CONFIRMED** |
 | [`../tools/attest/README.md`](../tools/attest/README.md) | attestation lane that consumes validated higher-order trust objects | **CONFIRMED** |
 | [`../docs/README.md`](../docs/README.md) | governed documentation index and runbook surface | **CONFIRMED** |
 | [`./ci/README.md`](./ci/README.md) | helper-proof lane for CI-facing renderer behavior | **CONFIRMED via adjacent documentation** |
 | [`./catalog/README.md`](./catalog/README.md) | helper-proof lane for catalog crosslink and closure behavior | **CONFIRMED via adjacent documentation** |
-| [`./contracts/README.md`](./contracts/README.md) | contract-facing proof lane for valid / invalid object behavior | **CONFIRMED via adjacent documentation** |
+| [`./contracts/README.md`](./contracts/README.md) | contract-facing proof lane for valid and invalid object behavior | **CONFIRMED via adjacent documentation** |
 
 ### Confirmed downstream surfaces
 
@@ -186,7 +178,7 @@ That is broader than “do the tests pass?” The stronger questions are:
 |---|---|
 | [`./accessibility/`](./accessibility/) | accessibility-focused verification family |
 | [`./catalog/`](./catalog/README.md) | catalog-helper proof family |
-| [`./ci/`](./ci/) | CI renderer/helper proof family |
+| [`./ci/`](./ci/) | CI renderer and helper-proof family |
 | [`./contracts/`](./contracts/) | contract-facing test family |
 | [`./e2e/`](./e2e/) | end-to-end verification family |
 | [`./integration/`](./integration/) | integration-slice verification family |
@@ -194,12 +186,12 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`./reproducibility/`](./reproducibility/) | reproducibility and bounded-regression family |
 | [`./unit/`](./unit/) | deterministic local-behavior family |
 | [`./e2e/correction/`](./e2e/correction/) | correction and supersession drill family |
-| [`./e2e/release_assembly/`](./e2e/release_assembly/) | release / promotion / publish-path proof family |
+| [`./e2e/release_assembly/`](./e2e/release_assembly/) | release, promotion, and publish-path proof family |
 | [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time runtime and outcome-proof family |
 | [`./policy/genealogy/`](./policy/genealogy/README.md) | genealogy-specific policy-behavior child lane for consent, living-person, DNA, provenance, and publication-control negative tests |
 
 > [!NOTE]
-> The workflow lane still matters to `tests/` even when the public automation surface is documentation-led.
+> The workflow lane still matters to `tests/` even when the public automation surface is documentation-led.  
 > That sharpens the README’s stance: **test families and helper-proof lanes are visible, but merge-blocking automation still needs platform-level or branch-local verification**.
 
 ### Current adjacent schema-side signals
@@ -217,18 +209,18 @@ The repo-facing docs and the manuals are directionally aligned, but not identica
 
 | Verification burden | Current documented repo path | Manual shorthand seen in doctrine | Working rule |
 |---|---|---|---|
-| catalog closure / crosslink proof | `tests/catalog/` | often implicit under catalog helper or promotion validation language | keep the explicit helper-proof lane now that it is documented |
+| catalog closure and crosslink proof | `tests/catalog/` | often implicit under catalog helper or promotion validation language | keep the explicit helper-proof lane now that it is documented |
 | CI helper rendering proof | `tests/ci/` | often implicit under workflow or summary language | keep the explicit helper-proof lane now that it is documented |
 | contract validation | `tests/contracts/` | `tests/contract/` | keep the current repo’s plural path until the repo itself changes |
-| accessibility trust checks | `tests/accessibility/` | often grouped under broader UI/regression language | keep the explicit top-level accessibility family |
-| integration slices | `tests/integration/` | sometimes absorbed into general verification/e2e doctrine | keep the explicit integration family |
-| reproducibility / bounded regression | `tests/reproducibility/` | often described as `regression` or reproducibility burden | keep current repo naming and describe the doctrinal burden clearly |
-| release proof / runtime proof / correction | `tests/e2e/...` | `tests/e2e/` plus doctrinal drill language | current repo and doctrine are closely aligned here |
-| probe receipt validation | `tests/contracts/`, `tests/integration/`, or `tests/e2e/...` depending on burden | often implicit under validator or watcher language | keep burden-first placement: shape in contracts, cross-boundary flow in integration/e2e |
+| accessibility trust checks | `tests/accessibility/` | often grouped under broader UI or regression language | keep the explicit top-level accessibility family |
+| integration slices | `tests/integration/` | sometimes absorbed into general verification and e2e doctrine | keep the explicit integration family |
+| reproducibility and bounded regression | `tests/reproducibility/` | often described as `regression` or reproducibility burden | keep current repo naming and describe the doctrinal burden clearly |
+| release proof and runtime proof and correction | `tests/e2e/...` | `tests/e2e/` plus doctrinal drill language | current repo and doctrine are closely aligned here |
+| probe receipt validation | `tests/contracts/`, `tests/integration/`, or `tests/e2e/...` depending on burden | often implicit under validator or watcher language | keep burden-first placement: shape in contracts, cross-boundary flow in integration or e2e |
 
 A second reconciliation tension still matters:
 
-| Verification / fixture pressure | Current documented repo path | Why it is not the same thing as settled authority | Working rule |
+| Verification or fixture pressure | Current documented repo path | Why it is not the same thing as settled authority | Working rule |
 |---|---|---|---|
 | schema-side machine contracts | `schemas/contracts/**` | visible files exist, but current repo docs still keep canonical schema-home authority unresolved | acknowledge the live lane without silently moving authority |
 | nested schema-side fixture scaffolds | `schemas/tests/**` | visible fixture scaffolds exist, but top-level `tests/` remains the stronger repo-wide governed verification index | keep nested scaffold language explicit and do not flatten it into repo-wide test truth |
@@ -236,7 +228,7 @@ A second reconciliation tension still matters:
 | higher-order proofs | `data/proofs/**` and attest-related surfaces | proof objects are distinct from receipt storage and from test ownership | validate their shapes without storing them here |
 
 > [!TIP]
-> Prefer **current repo names** over manual shorthand when writing commit-ready README text.
+> Prefer **current repo names** over manual shorthand when writing commit-ready README text.  
 > Prefer **manual burden language** over folder aesthetics when deciding what a family must prove.
 
 [Back to top](#top)
@@ -250,11 +242,11 @@ Content that belongs in `tests/` includes:
 - unit tests for deterministic local behavior
 - integration tests for governed slices across real boundaries
 - CI-helper tests for reviewer-facing summaries, diff rendering, policy-summary rendering, and composed review handoff rendering
-- catalog-helper tests for triplet crosslink proof, aligned/misaligned closure fixtures, and stable machine-readable reports
-- contract-validation tests for envelopes, examples, receipt/proof linkage shapes, and schema drift
-- policy tests for allow / deny / abstain / hold behavior
-- child-family indexes and narrowly scoped leaf readmes for currently visible sublanes such as `tests/policy/genealogy/`
-- negative-path tests for evidence failure, citation failure, rights failure, stale-state handling, helper malformed-input behavior, catalog drift, receipt/proof mismatch, and correction visibility
+- catalog-helper tests for triplet crosslink proof, aligned and misaligned closure fixtures, and stable machine-readable reports
+- contract-validation tests for envelopes, examples, receipt and proof linkage shapes, and schema drift
+- policy tests for allow, deny, abstain, and hold behavior
+- child-family indexes and narrowly scoped leaf READMEs for currently visible sublanes such as `tests/policy/genealogy/`
+- negative-path tests for evidence failure, citation failure, rights failure, stale-state handling, helper malformed-input behavior, catalog drift, receipt and proof mismatch, and correction visibility
 - tests for bounded receipts and receipt-gating behavior where the main burden is proof rather than contract ownership
 - end-to-end release-assembly tests
 - runtime-proof suites for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
@@ -265,11 +257,13 @@ Content that belongs in `tests/` includes:
 - tests that prove validators and attestation helpers are consuming well-shaped inputs rather than wishful objects
 - tests that prove probe outputs remain process memory and do not silently become proof objects
 
+[Back to top](#top)
+
 ---
 
 ## Exclusions
 
-The following do **not** belong here as authoritative source of truth:
+The following do **not** belong here as authoritative sources of truth:
 
 - canonical schemas, OpenAPI files, vocabularies, or standards profiles  
   → keep them under `../contracts/` and related schema surfaces
@@ -295,6 +289,8 @@ The following do **not** belong here as authoritative source of truth:
 - receipt archives or proof-pack archives  
   → keep them under `../data/receipts/` and `../data/proofs/`
 
+[Back to top](#top)
+
 ---
 
 ## Current verified snapshot
@@ -305,7 +301,7 @@ The current repo-facing surface proves the following:
 - `tests/README.md` exists
 - the documented top-level family set includes `accessibility/`, `catalog/`, `ci/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`
 - `tests/ci/README.md` exists as a documented helper-proof lane for CI renderers
-- `tests/catalog/README.md` now exists as a documented helper-proof lane for catalog crosslink behavior
+- `tests/catalog/README.md` exists as a documented helper-proof lane for catalog crosslink behavior
 - `tests/ci/` currently documents thin-slice proof centered on `test_render_diff_summary.py`, `test_render_bundle_diff_policy_summary.py`, and `test_render_promotion_review_handoff.py`
 - `tests/catalog/` currently documents thin-slice proof centered on `test_catalog_crosslink.py` and mismatch fixtures
 - `tests/contracts/` is not treated here as README-only; current docs already acknowledge executable contract-facing proof there
@@ -323,7 +319,7 @@ The current repo-facing surface proves the following:
 
 > [!WARNING]
 > What is still **not** proven here:
-> exact test runner(s), actual executable case depth inside each family, required checks and branch-protection settings, screenshot baseline coverage, fixture density, whether nested schema-side fixtures feed blocking runners, whether restore / rollback / correction drills have archived evidence on a checked-out branch, and how probe-oriented receipt cases are integrated into real suites.
+> exact test runner selection, actual executable case depth inside each family, required checks and branch-protection settings, screenshot baseline coverage, fixture density, whether nested schema-side fixtures feed blocking runners, whether restore, rollback, or correction drills have archived evidence on a checked-out branch, and how probe-oriented receipt cases are integrated into real suites.
 
 [Back to top](#top)
 
@@ -372,7 +368,7 @@ tests/
     └── README.md
 ```
 
-### Current adjacent schema-side signal that affects test placement language
+### Current adjacent schema-side signal that affects test-placement language
 
 ```text
 schemas/
@@ -410,7 +406,7 @@ Do **not** let receipt or proof path presence settle test ownership by inertia e
 
 ### What deeper maturity would look like (`PROPOSED` / `NEEDS VERIFICATION`)
 
-As this surface matures, family directories should accumulate executable cases, valid and invalid fixtures, golden examples, screenshot baselines, query packs, runner-specific configuration, receipt-/proof-linkage cases, probe-receipt cases, and archived drill evidence that map directly to repo contracts, policy bundles, runtime boundaries, correction paths, CI-helper proof burdens, catalog-helper proof burdens, validator preconditions, attestation preconditions, and any explicitly sanctioned schema-side mirrors.
+As this surface matures, family directories should accumulate executable cases, valid and invalid fixtures, golden examples, screenshot baselines, query packs, runner-specific configuration, receipt and proof linkage cases, probe-receipt cases, and archived drill evidence that map directly to repo contracts, policy bundles, runtime boundaries, correction paths, CI-helper proof burdens, catalog-helper proof burdens, validator preconditions, attestation preconditions, and any explicitly sanctioned schema-side mirrors.
 
 [Back to top](#top)
 
@@ -480,11 +476,11 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotic
 6. Verify whether `tests/policy/genealogy/` on the checked-out branch is still a README-only child lane or has accumulated executable cases.
 7. Verify whether the checked-out branch still matches the current documented tree for `tests/`, `schemas/`, `data/`, and `.github/workflows/`.
 8. Verify which checks actually block merges on the active branch.
-9. Verify whether contract, policy, docs, schemas, data, tools, and tests move together in the same change stream.
+9. Verify whether `contracts/`, `policy/`, `docs/`, `schemas/`, `data/`, `tools/`, and `tests/` move together in the same change stream.
 10. Verify whether negative paths exist, not only happy-path confirmation.
 
 > [!TIP]
-> Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands.
+> Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands.  
 > Inspection-first is safer than guessing a toolchain.
 
 [Back to top](#top)
@@ -523,9 +519,9 @@ Use the smallest fitting existing family before inventing a new top-level folder
 | [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate | visible as a README-bearing family |
 | [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, probe-to-validator handoff, or projection | visible as a README-bearing family |
 | [`./ci/`](./ci/README.md) | the main job is proving `tools/ci/` helper output over declared artifacts | documented helper-proof lane with thin-slice renderer tests, including composed review handoff proof |
-| [`./catalog/`](./catalog/README.md) | the main job is proving `tools/catalog/` helper output over declared STAC / DCAT / PROV and promotion refs | documented helper-proof lane with aligned and misaligned crosslink cases |
-| [`./contracts/`](./contracts/) | the main risk is schema, envelope, receipt/proof linkage shape, or example drift | visible as a family with `README.md` plus contract-facing proof |
-| [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior across the broader policy family | visible as a README-bearing family with a visible child lane |
+| [`./catalog/`](./catalog/README.md) | the main job is proving `tools/catalog/` helper output over declared STAC, DCAT, PROV, and promotion refs | documented helper-proof lane with aligned and misaligned crosslink cases |
+| [`./contracts/`](./contracts/) | the main risk is schema, envelope, receipt and proof linkage shape, or example drift | visible as a family with `README.md` plus contract-facing proof |
+| [`./policy/`](./policy/) | the change affects allow and deny logic, reason codes, rights, or sensitivity behavior across the broader policy family | visible as a README-bearing family with a visible child lane |
 | [`./policy/genealogy/`](./policy/genealogy/README.md) | the change is genealogy-specific consent, living-person, DNA, provenance, or publication-control policy behavior | visible as a README-bearing child lane under `./policy/` |
 | [`./accessibility/`](./accessibility/) | trust-visible interaction, keyboard flow, reduced-friction inspection, or calm failure is the main risk | visible as a README-bearing family |
 | [`./reproducibility/`](./reproducibility/) | stable digests, counts, receipts, and bounded metrics matter most | visible as a README-bearing family |
@@ -574,7 +570,7 @@ That burden may land across more than one test family:
 - object-shape cases in `tests/contracts/`
 - cross-boundary flow in `tests/integration/`
 - workflow-facing reviewer summary proof in `tests/ci/`
-- release/runtime/correction consequences in `tests/e2e/`
+- release, runtime, and correction consequences in `tests/e2e/`
 
 [Back to top](#top)
 
@@ -641,19 +637,19 @@ flowchart LR
 | Family | Documented now | Current visible contents | Primary burden | Doctrinal note |
 |---|---|---|---|---|
 | `accessibility/` | Yes | `README.md` | trust-visible accessibility and keyboard-critical flows | repo keeps this burden explicit instead of hiding it under generic regression language |
-| `catalog/` | Yes | `README.md`, thin-slice crosslink proof, mismatch fixtures | catalog-helper proof for STAC / DCAT / PROV closure | keeps closure proof separate from helper code and metadata truth |
+| `catalog/` | Yes | `README.md`, thin-slice crosslink proof, mismatch fixtures | catalog-helper proof for STAC, DCAT, and PROV closure | keeps closure proof separate from helper code and metadata truth |
 | `ci/` | Yes | `README.md` plus renderer-proof tests | helper-proof surface for reviewer-facing CI renderers | keeps rendering proof separate from workflow YAML and promotion law |
 | `contracts/` | Yes | `README.md` plus contract-facing proof | envelope, schema, example, and receipt/proof linkage validation | current repo uses plural path; some manuals use singular shorthand |
 | `e2e/` | Yes | `README.md` plus three leaf families | end-to-end verification umbrella | current repo and doctrine are closely aligned here |
 | `integration/` | Yes | `README.md` | governed slices across real boundaries | current repo keeps this family explicit |
-| `policy/` | Yes | `README.md` plus visible `genealogy/` child lane | allow / deny / abstain / hold behavior | parent family is no longer README-only in practice |
+| `policy/` | Yes | `README.md` plus visible `genealogy/` child lane | allow, deny, abstain, and hold behavior | parent family is no longer README-only in practice |
 | `policy/genealogy/` | Yes | `README.md` | consent, living-person, DNA, provenance, and publication-control negative tests | visible child lane should be indexed honestly without inflating executable depth |
-| `reproducibility/` | Yes | `README.md` | stable digests, counts, receipts, and bounded regression | overlaps with what some manuals describe as regression / rebuild burden |
+| `reproducibility/` | Yes | `README.md` | stable digests, counts, receipts, and bounded regression | overlaps with what some manuals describe as regression and rebuild burden |
 | `unit/` | Yes | `README.md` | deterministic local behavior | directly matches manual doctrine |
 | `e2e/correction/` | Yes | `README.md` | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
 | `e2e/release_assembly/` | Yes | `README.md` | promotion and publish-path proof | strongly aligned with release-proof doctrine |
 | `e2e/runtime_proof/` | Yes | `README.md` | `ANSWER / ABSTAIN / DENY / ERROR` proof | strongly aligned with runtime outcome doctrine |
-| `regression/` | No documented current path | — | doctrinal shorthand for some UI / map / rebuild burdens | keep this as doctrine, not current path claim |
+| `regression/` | No documented current path | — | doctrinal shorthand for some UI, map, or rebuild burdens | keep this as doctrine, not current path claim |
 
 ### Adjacent schema-side signals that now influence test-language accuracy
 
@@ -676,26 +672,26 @@ flowchart LR
 | `tests/ci/README.md` | present and documents renderer thin-slice proof | makes CI helper verification a first-class family rather than an implicit afterthought |
 | `tools/catalog/README.md` | present and documents catalog crosslink helper behavior | top-level `tests/` should acknowledge the catalog-helper proof lane that serves it |
 | `tests/catalog/README.md` | present and documents crosslink thin-slice proof | makes catalog closure verification a first-class family rather than an implicit validator side effect |
-| `tools/validators/README.md` | present and now documents receipt-consuming, fail-closed validators | tests should make valid/invalid fixture burden explicit for those consumers |
-| `tools/validators/promotion_gate/README.md` | present and now documents DecisionEnvelope / receipt / proof / attestation sequencing | promotion-facing contract and linkage cases now deserve clearer visibility in the family map |
-| `tools/attest/README.md` | present and now documents sign/verify helpers as a separate lane | tests should validate consumed object shapes without moving helper ownership here |
+| `tools/validators/README.md` | present and now documents receipt-consuming, fail-closed validators | tests should make valid and invalid fixture burden explicit for those consumers |
+| `tools/validators/promotion_gate/README.md` | present and now documents `DecisionEnvelope`, receipt, proof, and attestation sequencing | promotion-facing contract and linkage cases now deserve clearer visibility in the family map |
+| `tools/attest/README.md` | present and now documents sign and verify helpers as a separate lane | tests should validate consumed object shapes without moving helper ownership here |
 
 ### Change-trigger matrix
 
 | If a PR changes… | Minimum verification expectation |
 |---|---|
 | contracts / schemas | valid examples, invalid fixtures, version note, and no silent envelope drift |
-| policy / governance | allow + deny cases, negative fixtures, rationale alignment, and default-deny still intact |
+| policy / governance | allow and deny cases, negative fixtures, rationale alignment, and default-deny still intact |
 | tools/probes | proof that emitted receipts are shaped, deterministic enough, and bounded as process memory |
 | tools/ci renderers | helper-proof tests in `tests/ci/`, deterministic output checks, and failure-path coverage where relevant |
-| tools/catalog helpers | helper-proof tests in `tests/catalog/`, aligned/misaligned fixture pairs, and stable JSON output checks |
-| validators / promotion validators | valid / invalid fixture burden for the objects they consume, plus fail-closed negative cases |
+| tools/catalog helpers | helper-proof tests in `tests/catalog/`, aligned and misaligned fixture pairs, and stable JSON output checks |
+| validators / promotion validators | valid and invalid fixture burden for the objects they consume, plus fail-closed negative cases |
 | attestation helpers | object-shape and linkage cases where attestation-sensitive inputs are contract-relevant |
 | schema-side scaffolds / fixture mirrors | keep authority wording explicit, avoid quiet duplicate truth, and update both schema-side and test-side indexes if placement language changes |
-| source onboarding or transforms | deterministic manifest/checksum behavior, validation checks, and at least one representative integration slice |
-| evidence behavior | `EvidenceRef` / bundle resolution path, negative tests, and policy-safe denials |
+| source onboarding or transforms | deterministic manifest and checksum behavior, validation checks, and at least one representative integration slice |
+| evidence behavior | `EvidenceRef` or bundle resolution path, negative tests, and policy-safe denials |
 | story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
-| docs describing behavior | linked updates, no contradiction with tests / contracts / policy / schemas / tools / data, and no overclaiming branch reality |
+| docs describing behavior | linked updates, no contradiction with tests, contracts, policy, schemas, tools, data, and no overclaiming branch reality |
 | release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
 | workflow / required-check posture | confirm checked-in automation docs, platform rules, and whether repo-visible signals still match effective merge gates |
 
@@ -706,14 +702,14 @@ flowchart LR
 | citation verification failure | prevents plausible but unsupported output |
 | evidence-bundle resolution failure | proves trust is operational, not decorative |
 | policy denial for restricted material | enforces fail-closed behavior under ambiguity |
-| rights / consent denial on sensitive content | proves domain-specific child lanes do not quietly widen publication |
+| rights or consent denial on sensitive content | proves domain-specific child lanes do not quietly widen publication |
 | stale projection warning | prevents quietly outdated derived layers |
-| correction / supersession drill | prefers visible correction to confident confusion |
+| correction or supersession drill | prefers visible correction to confident confusion |
 | accessibility failure on trust surface | prevents “verified” behavior that users cannot actually inspect |
 | malformed helper input for CI renderers | proves reviewer-facing surfaces fail clearly instead of inventing output |
 | malformed helper input for catalog crosslink checks | proves closure helpers fail clearly instead of inventing consistency |
 | malformed composed handoff input | proves convenience review documents do not quietly replace underlying machine artifacts |
-| malformed receipt/proof linkage input | proves later promotion and attestation lanes are not built on wishful object joins |
+| malformed receipt or proof linkage input | proves later promotion and attestation lanes are not built on wishful object joins |
 | malformed receipt | proves probe-to-validator handoff fails closed rather than drifting downstream |
 | disallowed receipt transport state | proves policy-facing receipt gates do not silently allow ambiguous observation state |
 
@@ -733,9 +729,9 @@ Treat this README as healthy only when the directory contract stays both readabl
 - [ ] Update this README whenever `tests/contracts/` changes its documented contract-facing burden materially
 - [ ] Update this README whenever current workflow-lane evidence changes in a way that affects test-gate expectations
 - [ ] Update cross-lane notes here whenever adjacent schema-side scaffolds change in a way that affects contract-facing verification placement language
-- [ ] Keep receipt/proof separation visible whenever new test burdens touch those objects
-- [ ] Keep probe/validator/policy/workflow separation visible whenever new test burdens touch those lanes
-- [ ] Do not describe a family as active coverage unless the repo/docs actually prove executable cases
+- [ ] Keep receipt and proof separation visible whenever new test burdens touch those objects
+- [ ] Keep probe, validator, policy, and workflow separation visible whenever new test burdens touch those lanes
+- [ ] Do not describe a family as active coverage unless the repo and docs actually prove executable cases
 - [ ] Prefer negative-path proof for trust-sensitive changes, not just happy-path confirmation
 - [ ] Keep `contracts/`, `schemas/`, `policy/`, `data/`, `docs/`, `tools/`, and `tests/` coherent in the same PR when behavior changes
 - [ ] Keep quickstart commands branch-safe; avoid inventing runner commands without checkout proof
@@ -753,7 +749,7 @@ Because KFM treats verification as part of publication, runtime trust, correctio
 
 ### Why keep the current repo names instead of renaming everything to match the manuals?
 
-Because repo-native truth outranks cleaner theory. The manuals are valuable for burden language, but current documented paths such as `tests/catalog/`, `tests/ci/`, `tests/contracts/`, `tests/accessibility/`, `tests/integration/`, and `tests/reproducibility/` should not be silently rewritten into something the repo/docs do not use.
+Because repo-native truth outranks cleaner theory. The manuals are valuable for burden language, but current documented paths such as `tests/catalog/`, `tests/ci/`, `tests/contracts/`, `tests/accessibility/`, `tests/integration/`, and `tests/reproducibility/` should not be silently rewritten into something the repo and docs do not use.
 
 ### Why does this README now mention `tests/ci/`, `tests/catalog/`, and `tests/contracts/` explicitly?
 
@@ -769,7 +765,7 @@ Because the current repo-facing surface now exposes adjacent machine-file and fi
 
 ### Does the current surface prove merge-blocking coverage?
 
-No. The docs prove directory presence, README-bearing family placement, helper-proof lane presence, contract-proof lane presence, ownership boundaries, visible child lanes, adjacent schema-side scaffolds, receipt/proof-adjacent surfaces, probe/validator/policy boundaries, and documented workflow boundaries. They do **not** by themselves prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback/correction history.
+No. The docs prove directory presence, README-bearing family placement, helper-proof lane presence, contract-proof lane presence, ownership boundaries, visible child lanes, adjacent schema-side scaffolds, receipt/proof-adjacent surfaces, probe/validator/policy boundaries, and documented workflow boundaries. They do **not** by themselves prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback and correction history.
 
 ### Where should accessibility and reproducibility work live right now?
 
@@ -777,7 +773,7 @@ Under the current explicit families: `tests/accessibility/` and `tests/reproduci
 
 ### Why is hydrology still the preferred first thin slice?
 
-Because KFM doctrine repeatedly treats hydrology as comparatively public-safe while still exercising source descriptors, validation, release evidence, receipt/process-memory handling, map-first delivery, evidence drill-through, runtime outcomes, helper-proof boundaries, catalog closure, and correction/rollback behavior.
+Because KFM doctrine repeatedly treats hydrology as comparatively public-safe while still exercising source descriptors, validation, release evidence, receipt and process-memory handling, map-first delivery, evidence drill-through, runtime outcomes, helper-proof boundaries, catalog closure, and correction and rollback behavior.
 
 [Back to top](#top)
 
@@ -790,7 +786,7 @@ Because KFM doctrine repeatedly treats hydrology as comparatively public-safe wh
 
 This revision is grounded in three evidence layers:
 
-1. **Current repo/documentation evidence**, including:
+1. **Current repo and documentation evidence**, including:
    - top-level repo presence of `tests/`, `contracts/`, `docs/`, `.github/`, `data/`, and contributor-facing root docs
    - the current documented `tests/` family map
    - the documented `tests/ci/` lane and its thin-slice proof surface
@@ -832,7 +828,7 @@ This revision is grounded in three evidence layers:
    - release proof, rollback, and correction discipline
    - helper-proof surfaces for reviewer-facing CI rendering
    - helper-proof surfaces for catalog closure
-   - receipt/proof separation
+   - receipt and proof separation
    - the probe → receipt → validator → policy → workflow chain
    - the difference between repo reality and target-state manuals
 
@@ -846,13 +842,13 @@ Before treating this README as fully settled local-checkout documentation, verif
 - the exact contents of each current family directory
 - whether the checked-out branch still matches the documented tree summarized here
 - the test runner(s), config files, and invocation surface
-- the actual required checks and GitHub rulesets / branch protection
+- the actual required checks and GitHub rulesets or branch protection
 - screenshot baseline presence, if any
 - fixture placement and density
 - whether nested schema-side fixtures are mirror-only or active runner inputs
 - whether rollback, restore, or correction drills have archived evidence
-- whether any future refactor intends to consolidate split families or settle schema-home / fixture-home authority
-- how receipt/proof linkage and receipt cases are actually wired in local and CI runners
+- whether any future refactor intends to consolidate split families or settle schema-home or fixture-home authority
+- how receipt and proof linkage and receipt cases are actually wired in local and CI runners
 
 </details>
 
