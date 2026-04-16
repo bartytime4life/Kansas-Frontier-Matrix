@@ -19,17 +19,17 @@ related:
   - ../tests/README.md
   - ../tests/contracts/README.md
   - ../data/receipts/README.md
-  - ../data/run_receipts/
 tags:
   - kfm
   - contracts
   - schemas
   - proof-objects
-  - run-receipts
+  - receipts
   - trust-objects
 notes:
   - Root contracts lane aligned to the user-requested path and doctrinal starter paths.
   - This revision makes the contract/policy/schema split more explicit and calls out run_receipt as a concrete starter thin slice.
+  - This revision also normalizes contract references around the single central `data/receipts/` process-memory doctrine.
   - owners, dates, exact mounted inventory, and active subtree population still need verification.
 -->
 
@@ -122,8 +122,7 @@ Contracts matter here for four reasons:
 | [`../tools/probes/README.md`](../tools/probes/README.md) | observation lane | probes may emit process-memory artifacts shaped by contracts |
 | [`../tests/README.md`](../tests/README.md) | broader proof lane | downstream execution and regression pressure |
 | [`../tests/contracts/README.md`](../tests/contracts/README.md) | contract proof lane | valid/invalid fixtures and schema/contract proof |
-| [`../data/receipts/README.md`](../data/receipts/README.md) | broader receipt process-memory lane | concrete receipts belong there, not here |
-| [`../data/run_receipts/`](../data/run_receipts/) | run-level process-memory lane | current thin-slice receipt instances land there, not in contracts |
+| [`../data/receipts/README.md`](../data/receipts/README.md) | receipt process-memory lane | concrete emitted receipts belong there, not here |
 | `./source/` | source-intake contract lane | **PROPOSED** starter subtree |
 | `./core/` | authoritative core object lane | **PROPOSED** starter subtree |
 | `./policy/` | policy-result and decision-object lane | **PROPOSED** starter subtree |
@@ -172,8 +171,9 @@ The current governed chain increases pressure on one concrete starter family:
 
 That means the contracts lane should be ready to define or anchor shapes for artifacts like:
 
-- probe run receipts
-- validator-facing input carriers
+- probe receipts
+- watcher receipts
+- validation-facing input carriers
 - release-facing manifests
 - runtime response envelopes
 - correction notices
@@ -186,7 +186,7 @@ If the main question is:
 - **“How do we validate it mechanically?”** → `schemas/`
 - **“Did this instance pass?”** → `tools/validators/`
 - **“Should this pass downstream governance?”** → `policy/`
-- **“Where does the emitted instance live?”** → `data/receipts/` or `data/run_receipts/`
+- **“Where does the emitted instance live?”** → `data/receipts/`
 
 [Back to top](#top)
 
@@ -231,7 +231,7 @@ contracts/
 └── <run_receipt contract surface>   # starter thin slice; exact mounted path still NEEDS VERIFICATION
 ```
 
-The current repo work now strongly implies a concrete contract need around **run receipts**, even if the final file path inside `contracts/` is not yet confirmed in this session.
+The current repo work now strongly implies a concrete contract need around **receipt-shaped process memory**, even if the final file path inside `contracts/` is not yet confirmed in this session.
 
 [Back to top](#top)
 
@@ -357,7 +357,7 @@ flowchart LR
     J --> K[ANSWER | ABSTAIN | DENY | ERROR]
     G --> L[CorrectionNotice]
 
-    P[Probe run] --> R[run_receipt]
+    P[Probe or watcher run] --> R[run_receipt]
     R --> V[validator]
     V --> POL[policy]
 ```
@@ -471,8 +471,8 @@ KFM’s contract lane is only real if it is executable.
 ```bash
 # Starter wiring only — adjust to the mounted repo paths
 python -m pytest -q tests/contracts
-python3 tools/validators/run_receipt_validator.py data/run_receipts/example/run-receipt.json
-conftest test data/run_receipts/example/run-receipt.json -p policy
+python3 tools/validators/run_receipt_validator.py data/receipts/example/run-receipt.json
+conftest test data/receipts/example/run-receipt.json -p policy
 ```
 
 ---
@@ -498,7 +498,7 @@ Because the strongest current evidence is doctrinal and architectural, not a dir
 
 ### Are concrete `run_receipt.json` and `release_manifest.json` files stored here?
 
-Not by default. This lane is for **contract definitions**. Concrete emitted instances belong in the run, release, receipt, or evidence lane that owns the actual event.
+Not by default. This lane is for **contract definitions**. Concrete emitted instances belong in the receipt, release, or evidence lane that owns the actual event.
 
 ### Are external standards enough by themselves?
 
