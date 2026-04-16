@@ -32,7 +32,6 @@ related:
   - ../../tools/probes/README.md
   - ../../tools/validators/README.md
   - ../../data/receipts/README.md
-  - ../../data/run_receipts/
   - ../../data/work/README.md
   - ../../data/catalog/README.md
   - ../../apps/governed_api/README.md
@@ -52,6 +51,7 @@ notes:
   - Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`.
   - This revision preserves the README-first and history-aware posture while aligning the directory to the current probe -> receipt -> validator -> policy -> CI chain.
   - Receipt/proof separation is explicit here: receipts are process memory; proof packs and release evidence remain separate trust objects.
+  - This revision also normalizes workflow examples around the single central `data/receipts/` process-memory doctrine.
   - doc_id, created date, policy_label, exact checked-in workflow inventory, and branch/ruleset enforcement posture still need repo confirmation.
 -->
 
@@ -78,7 +78,7 @@ Governed GitHub Actions surface for validation, runtime proof, receipt-bearing w
 | **Path** | `.github/workflows/README.md` |
 | **Owners** | `@bartytime4life` |
 | **Role** | workflow inventory, gate expectations, and orchestration boundary for GitHub Actions |
-| **Current emphasis** | runtime proof, receipts-first watcher automation, promotion/release evidence, fail-closed orchestration |
+| **Current emphasis** | runtime proof, receipts-first watcher/probe automation, promotion/release evidence, fail-closed orchestration |
 | **Not this lane** | policy authorship, validator logic, probe implementation, contract/schema ownership |
 | **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow model](#workflow-model) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
 
@@ -126,7 +126,7 @@ This directory exists to answer a small set of consequential questions:
 - What automation is allowed to influence trust state?
 - What does each workflow prove before it blocks or permits something?
 - Which artifacts are convenience summaries versus authoritative trust objects?
-- Where do watcher receipts land, and how are they validated before they become part of governed process memory?
+- Where do watcher and probe receipts land, and how are they validated before they become part of governed process memory?
 
 ### What changed in this revision
 
@@ -135,7 +135,7 @@ This revision tightens the workflow model around the currently documented thin s
 - **runtime-proof summary publication** for the soil-moisture thin slice
 - **runtime-proof actual-response artifact emission** for expected-vs-actual review
 - **scheduled or manual probe execution**
-- **receipt emission to `data/run_receipts/`**
+- **receipt emission under `data/receipts/**`**
 - **validator + policy enforcement before downstream side effects**
 - **artifact upload for receipts, raw captures, and work metadata**
 - **explicit receipt/proof separation in pathing and review language**
@@ -179,7 +179,7 @@ This revision tightens the workflow model around the currently documented thin s
 | Validator lane | [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Contract, promotion, and linkage checks should stay fail-closed and reviewer-facing |
 | Attestation lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Proof-pack assembly, digest checks, and release-evidence helpers belong there |
 | Probe lane | [`../../tools/probes/README.md`](../../tools/probes/README.md), [`../../data/work/README.md`](../../data/work/README.md) | Read-only inspection and bounded source freshness logic should stay separated from promotion logic |
-| Receipt process-memory surface | [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/run_receipts/`](../../data/run_receipts/) | Process-memory outputs belong in governed receipt surfaces, not ad hoc artifact storage |
+| Receipt process-memory surface | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Process-memory outputs belong in governed receipt surfaces, not ad hoc artifact storage |
 | Catalog closure surfaces | [`../../data/catalog/README.md`](../../data/catalog/README.md) | Probes and workflows may feed catalog-facing lanes, but catalog authority lives outside this directory |
 | Runtime and package surfaces | [`../../apps/governed_api/README.md`](../../apps/governed_api/README.md), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving ownership into workflow YAML |
 
@@ -244,7 +244,7 @@ For `probes.yml`, the strongest current intended input family is:
 - a bounded source endpoint such as `SOURCE_URL`
 - probe implementation code under a path like `tools/probes/**`
 - temporary work state under `data/work/**`
-- receipt output under `data/run_receipts/**`
+- receipt output under `data/receipts/**`
 - contract and schema validation under `schemas/**` and validator tooling
 - policy enforcement under `policy/**`
 - optional proof-pack assembly under `tools/attest/**`
@@ -256,8 +256,7 @@ The receipts-first probe lane should preserve these distinctions:
 | Path family | Role |
 | --- | --- |
 | `data/work/**` | bounded intermediate and ephemeral working state |
-| `data/receipts/**` | governed process memory for broader receipts/report lanes where used |
-| `data/run_receipts/**` | run-level process memory for probe receipts |
+| `data/receipts/**` | governed process memory for receipts and receipt-local child lanes |
 | `data/proof_packs/**` or equivalent governed proof surface | review- or release-significant proof objects |
 | `policy/**` | deny-by-default rule logic and obligations |
 | `schemas/**` / `contracts/**` | machine contracts and schema homes |
@@ -464,7 +463,7 @@ The current drafted probe workflow is designed to:
 1. run on a schedule or by manual dispatch
 2. fetch from a declared external source endpoint
 3. use bounded working state under `data/work/**`
-4. emit a receipt to `data/run_receipts/**`
+4. emit a receipt under `data/receipts/**`
 5. locate the latest receipt deterministically
 6. validate the receipt with validator tooling
 7. evaluate the receipt against policy in fail-closed mode
@@ -489,7 +488,7 @@ KFM keeps these objects distinct even when one workflow touches both:
 
 | Object type | Purpose | Typical path posture |
 | --- | --- | --- |
-| **Receipt** | Process memory of a run, validation, or replay/correction trace | `data/receipts/**` or `data/run_receipts/**` depending on lane |
+| **Receipt** | Process memory of a run, validation, or replay/correction trace | `data/receipts/**` |
 | **Proof pack** | Review- or release-significant trust object assembled after sufficient validation | governed proof / release-evidence surface |
 | **Step summary** | Reviewer convenience rendering | Actions summary or uploaded markdown artifact |
 | **Working state** | Temporary probe, watcher, or transform state | `data/work/**` |
@@ -518,7 +517,7 @@ Keep the boundary sharp:
 - **This directory** should describe workflow orchestration, event triggers, job ordering, and blocking gates.
 - **`../actions/`** should hold reusable composite behavior.
 - **`../../tools/validators/`**, **`../../tools/attest/`**, **`../../tools/probes/`**, **`../../policy/`**, **`../../contracts/`**, **`../../schemas/`**, and **`../../tests/`** remain the canonical surfaces being checked.
-- **`../../data/receipts/`** and **`../../data/run_receipts/`** remain process-memory homes.
+- **`../../data/receipts/`** remains the governed process-memory home.
 
 A workflow may *enforce* those surfaces. It should not become a shadow copy of them.
 
@@ -642,7 +641,7 @@ flowchart LR
 
     B1 --> B1A[probe run]
     B1A --> B1B[data/work state]
-    B1B --> B1C[receipt in data/run_receipts]
+    B1B --> B1C[receipt in data/receipts]
     B1C --> B1D[validator check]
     B1D --> B1E[policy evaluation]
     B1E --> B1F[artifact upload]
@@ -721,7 +720,7 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Candidate and release proof-pack expectations are explicit where the lane is trust-significant.
 - [ ] Runtime-proof summary publication is explicit where the soil-moisture thin slice is active.
 - [ ] Runtime-proof lanes that claim expected-vs-actual review actually emit and publish `actual.response.json` or an equivalent machine-readable artifact.
-- [ ] Receipt-bearing lanes that claim governed process memory actually emit receipts into `data/run_receipts/**` or another explicitly documented governed receipt surface, not ad hoc artifact folders.
+- [ ] Receipt-bearing lanes that claim governed process memory actually emit receipts into `data/receipts/**` or another explicitly documented governed receipt surface, not ad hoc artifact folders.
 - [ ] Receipt and proof-pack responsibilities are kept distinct in pathing and review language.
 - [ ] Validator enforcement and policy evaluation are explicit before any receipt-bearing lane uploads or continues governed artifacts.
 - [ ] Release-assembly summary publication happens before downstream bundle/diff/review-handoff publication when that lane is active.
@@ -909,7 +908,7 @@ Use this as ordering guidance, not as proof that current `main` already contains
 
 - name: Find latest receipt
   run: |
-    find data/run_receipts -type f -name '*.json' | sort | tail -n 1
+    find data/receipts/probes -type f -name '*.json' | sort | tail -n 1
 
 - name: Validate receipt
   run: |
@@ -924,7 +923,7 @@ Use this as ordering guidance, not as proof that current `main` already contains
   with:
     name: probe-artifacts
     path: |
-      data/run_receipts/
+      data/receipts/probes/
       data/work/raw/
       data/work/meta/
 ```
