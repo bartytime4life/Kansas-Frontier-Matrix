@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: 2026-04-15
+updated: 2026-04-16
 policy_label: NEEDS-VERIFICATION
 related: [
   ../README.md,
@@ -19,41 +19,29 @@ related: [
   ../../README.md,
   ../../CONTRIBUTING.md,
   ../../contracts/README.md,
-  ../../contracts/source/kansas_mesonet_source_descriptor.md,
-  ../../contracts/soil_moisture/reading.schema.json,
   ../../schemas/README.md,
   ../../schemas/contracts/README.md,
-  ../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json,
-  ../../schemas/contracts/v1/source/source_descriptor.schema.json,
-  ../../schemas/soil_moisture/README.md,
   ../../policy/README.md,
   ../../tests/README.md,
   ../../tests/ci/README.md,
-  ../../tests/contracts/test_runtime_response_schema.py,
-  ../../tests/contracts/test_source_descriptor_schema.py,
-  ../../tests/validators/README.md,
   ../../tests/e2e/runtime_proof/soil_moisture/README.md,
-  ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_soil_moisture_proof.py,
-  ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_route_soil_moisture.py,
-  ../../tests/e2e/runtime_proof/soil_moisture/test_runtime_emit_actual_responses.py,
-  ../../tests/e2e/runtime_proof/test_governed_api_app.py,
   ../../tools/ci/README.md,
-  ../../tools/ci/render_runtime_proof_summary.py,
   ../../tools/validators/promotion_gate/README.md,
-  ../../tools/validators/release_assembly_report.py,
-  ../../tools/ci/render_release_assembly_summary.py,
+  ../../tools/attest/README.md,
+  ../../tools/probes/README.md,
+  ../../tools/validators/README.md,
+  ../../data/receipts/README.md,
+  ../../data/work/README.md,
+  ../../data/catalog/README.md,
   ../../apps/governed_api/README.md,
-  ../../apps/governed_api/app.py,
-  ../../apps/governed_api/routes/soil_moisture.py,
-  ../../apps/governed_api/runtime/soil_moisture_runtime.py,
   ../../packages/
 ]
-tags: [kfm, github, workflows, ci-cd, runtime-proof, review-handoff, release-assembly, soil-moisture]
+tags: [kfm, github, workflows, ci-cd, runtime-proof, receipts, watchers, promotion, release-evidence, governed-automation]
 notes: [
   Owner is grounded in current parent-path CODEOWNERS coverage for `/.github/`.
-  This revision preserves the stronger old workflows README doctrine while upgrading the thin-slice runtime-proof soil-moisture workflow to include contract tests, emitted `actual.response.json`, and uploaded reviewer artifacts.
-  Public Actions history and adjacent `.github/actions/` tree still provide reconstruction clues but do not prove broader current checked-in YAML inventory beyond the thin slice added in-session.
-  doc_id, created date, policy_label, broader workflow inventory, and exact branch-level enforcement posture still need repo confirmation.
+  This revision preserves the README-first and history-aware posture while adding the newly drafted incremental STAC watcher workflow as a governed receipts-first automation lane.
+  Receipt/proof separation is now made explicit here: receipts are process memory under `data/receipts/`; proof packs and release evidence remain separate trust objects.
+  doc_id, created date, policy_label, exact checked-in workflow inventory, and branch/ruleset enforcement posture still need repo confirmation.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -61,56 +49,72 @@ notes: [
 
 # `.github/workflows`
 
-Governed GitHub Actions surface for validation, runtime proof, promotion, release evidence, and correction-ready control in Kansas Frontier Matrix.
+Governed GitHub Actions surface for validation, runtime proof, receipt-bearing watchers, promotion, release evidence, and correction-ready control in Kansas Frontier Matrix.
 
 > [!NOTE]
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `.github/workflows/README.md`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-success) ![visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![tree](https://img.shields.io/badge/tree-history--aware-lightgrey) ![runtime](https://img.shields.io/badge/runtime-thin--slice%20gate-6f42c1)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![branch](https://img.shields.io/badge/branch-main-success) ![visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![posture](https://img.shields.io/badge/posture-governed%20automation-6f42c1) ![receipts](https://img.shields.io/badge/receipts-process%20memory-informational) ![evidence](https://img.shields.io/badge/evidence-fail--closed-important)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow model](#workflow-model) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public snapshot evidence in the older README established this directory as README-first and history-aware. The current thin slice now also has one concrete candidate workflow lane for **runtime-proof soil moisture**, but that does **not** justify overclaiming a broader current YAML inventory.
+> This directory is part of KFM’s trust membrane, not a detached DevOps appendix. Workflow files here may validate contracts, enforce policy, emit reviewer-facing summaries, publish receipts, assemble release evidence, and gate promotion or correction-sensitive transitions. They should stay **fail-closed**, **reviewable**, and **evidence-first**.
 
 > [!NOTE]
-> Public GitHub Actions surfaces still carry useful reconstruction clues, but they must be read carefully:
+> Current public and in-session signal should be kept in separate buckets:
 >
-> - the Actions UI may show workflow surfaces that are not equivalent to checked-in YAML inventory
-> - public delete-run history may expose removed lane names such as `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml`
-> - the current thin slice also introduces a concrete workflow candidate: `runtime-proof-soil-moisture.yml`
+> - **README-first public signal** for this directory
+> - **historical Actions/UI clues** that may point to prior lanes
+> - **current thin-slice drafted workflows** added in-session, including:
+>   - `runtime-proof-soil-moisture.yml`
+>   - `incremental-stac-watcher.yml`
 >
-> Treat all of that as **current thin-slice signal plus historical or platform signal**, not as proof that every named YAML file is checked in on current `main`.
+> Treat those drafted workflows as strong current intent for this revision, but still verify against the active branch before presenting them as fully landed inventory.
 
 ---
 
 ## Scope
 
-`.github/workflows/` is the repo-local control surface where KFM expresses CI, delivery, promotion, runtime proof, reconciliation, correction, and post-release verification as reviewable automation.
+`.github/workflows/` is the repo-local control surface where KFM expresses CI, validation, delivery, promotion, runtime proof, receipt-bearing watchers, reconciliation, correction, and post-release verification as reviewable automation.
 
-In KFM, workflow files are not a detached DevOps appendix. They are part of the trust membrane: the place where documentation checks, contract checks, policy checks, runtime checks, release-evidence checks, and post-deploy verification become executable rather than aspirational.
+In KFM, workflows do not merely “run tests.” They make a governed claim about what must be true before trust state is allowed to move. That includes at least four recurring responsibilities:
 
-This directory exists to answer two narrow but consequential questions:
+1. **Verification** — contracts, schemas, tests, docs, policy, and runtime behavior are checked in a fail-closed manner.
+2. **Publication** — reviewer-facing summaries and machine-readable artifacts are emitted in explicit, inspectable order.
+3. **State memory** — process memory is preserved as receipts under governed paths when automation observes or changes something important.
+4. **Promotion control** — trust-significant changes move only after evidence exists and review boundaries are respected.
 
-1. **What automation is allowed to change trust state, and what must be proven before that happens?**
-2. **Which reviewer-facing artifacts are published into workflow summaries so stewards can inspect trust-significant drift without leaving the governed review path?**
+### What this directory is for
 
-That second question now explicitly includes:
+This directory exists to answer a small set of consequential questions:
+
+- What automation is allowed to influence trust state?
+- What does each workflow prove before it blocks or permits something?
+- Which artifacts are convenience summaries versus authoritative trust objects?
+- Where do watcher receipts land, and how are they validated before they become part of governed process memory?
+
+### What changed in this revision
+
+This revision explicitly adds the receipts-first watcher lane to the model:
 
 - **runtime-proof summary publication** for the soil-moisture thin slice
 - **runtime-proof actual-response artifact emission** for expected-vs-actual review
-- **release-assembly reporting**
-- promotion bundle, diff, diff-policy, and review-handoff publication
+- **incremental STAC watcher execution**
+- **receipt emission to `data/receipts/`**
+- **contract + policy validation of watcher receipts**
+- **optional proof-pack assembly after receipt validation**
+- **release-assembly, promotion bundle, diff, diff-policy, and review-handoff publication**
 
 ### Status markers used in this README
 
 | Marker | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Grounded in current public Markdown, current in-session thin-slice files, or supplied KFM doctrine inspected for this revision |
-| **INFERRED** | Conservative interpretation connecting direct evidence to adjacent project doctrine |
-| **PROPOSED** | Repo-native pattern that fits KFM doctrine but is not yet proven as current checked-in workflow behavior |
-| **UNKNOWN** | Not verified strongly enough to present as current branch, settings, or mounted implementation reality |
-| **NEEDS VERIFICATION** | Placeholder detail that should be checked against git history, GitHub settings, or a mounted checkout before merge |
+| **CONFIRMED** | Grounded in the supplied README text, current KFM doctrine already established in-project, or drafted workflow work done in-session |
+| **INFERRED** | Conservative interpretation connecting direct evidence to adjacent repo doctrine |
+| **PROPOSED** | Repo-native pattern that fits KFM doctrine but is not yet proven as current checked-in branch behavior |
+| **UNKNOWN** | Not verified strongly enough to present as current branch, settings, or implementation reality |
+| **NEEDS VERIFICATION** | Placeholder detail that should be checked against git history, repo settings, or a mounted checkout before merge |
 
 [Back to top](#top)
 
@@ -118,48 +122,52 @@ That second question now explicitly includes:
 
 ## Repo fit
 
-Path: `.github/workflows/README.md`
+**Path:** `.github/workflows/README.md`
 
-Role in repo: directory README for GitHub Actions workflows, workflow inventory, gate expectations, historical reconstruction clues, current thin-slice runtime-proof workflow, and future workflow growth.
+**Role in repo:** directory README for GitHub Actions workflows, workflow inventory, gate expectations, historical reconstruction clues, current thin-slice runtime-proof workflow, current drafted incremental watcher workflow, and future workflow growth.
 
 ### Upstream and adjacent anchors
 
 | Relation | Path | Why it matters |
 | --- | --- | --- |
-| Parent governance surface | [`../README.md`](../README.md) | Explains `.github/` as the repository-side gatehouse for review, verification, and governed delivery |
+| Parent governance surface | [`../README.md`](../README.md) | Explains `.github/` as the repo-side gatehouse for review, verification, and governed delivery |
 | Review ownership | [`../CODEOWNERS`](../CODEOWNERS) | Makes review boundaries executable |
 | PR evidence template | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Keeps workflow changes aligned with proof links, truth labels, validation links, and rollback expectations |
-| GitHub security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps workflow and repo security guidance close to the same governance boundary |
+| GitHub security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps workflow and repository security guidance near the same governance boundary |
 | Reusable repo-local actions | [`../actions/README.md`](../actions/README.md) | Composite or reusable action logic belongs there, not in this directory |
-| Adjacent automation scaffolds | [`../watchers/README.md`](../watchers/README.md) | Watcher documentation may point toward future orchestration seams, but does not by itself prove current workflow inventory |
-| Dependency update automation | [`../dependabot.yml`](../dependabot.yml) | Dependency update policy already lives under `.github/`, but it is configuration rather than workflow orchestration |
+| Adjacent automation scaffolds | [`../watchers/README.md`](../watchers/README.md) | Watcher documentation may point toward orchestration seams, but does not by itself prove workflow inventory |
+| Dependency update automation | [`../dependabot.yml`](../dependabot.yml) | Dependency update policy already lives under `.github/`, but it is configuration rather than orchestration |
 | Root operating index | [`../../README.md`](../../README.md) | Defines monorepo posture, evidence model, and top-level directory contract |
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
 | Canonical verification surfaces | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Workflows may verify these surfaces, but they do not replace them |
-| CI renderer and helper-proof surfaces | [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Reviewer-facing diff, diff-policy, runtime-proof, release-assembly, and review-handoff artifacts are rendered there and published here |
-| Soil-moisture runtime proof chain | [`../../tests/e2e/runtime_proof/soil_moisture/README.md`](../../tests/e2e/runtime_proof/soil_moisture/README.md), [`../../tools/ci/render_runtime_proof_summary.py`](../../tools/ci/render_runtime_proof_summary.py), [`../../apps/governed_api/README.md`](../../apps/governed_api/README.md) | The new thin-slice workflow is built around this exact runtime-proof chain |
-| Release-assembly validator path | [`../../tools/validators/release_assembly_report.py`](../../tools/validators/release_assembly_report.py), [`../../tools/ci/render_release_assembly_summary.py`](../../tools/ci/render_release_assembly_summary.py) | Release completeness now has a machine-readable report and reviewer-readable summary path that workflows may publish |
-| Validator promotion chain | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md) | Promotion review flows include bundle diff, diff-policy, and review-handoff outputs that workflow summaries may publish |
-| Runtime and package surfaces | [`../../apps/governed_api/README.md`](../../apps/governed_api/README.md), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving canonical ownership into workflow YAML |
+| CI renderer and helper-proof surfaces | [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Reviewer-facing summaries and compact gate outputs are rendered there and published here |
+| Runtime-proof chain | [`../../tests/e2e/runtime_proof/soil_moisture/README.md`](../../tests/e2e/runtime_proof/soil_moisture/README.md), [`../../apps/governed_api/README.md`](../../apps/governed_api/README.md) | The soil-moisture thin slice is a current concrete runtime-proof lane |
+| Validator lane | [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Contract, promotion, and linkage checks should stay fail-closed and reviewer-facing |
+| Attestation lane | [`../../tools/attest/README.md`](../../tools/attest/README.md) | Proof-pack assembly, digest checks, and release-evidence helpers belong there |
+| Probe and watcher-adjacent lane | [`../../tools/probes/README.md`](../../tools/probes/README.md), [`../../data/work/README.md`](../../data/work/README.md) | Read-only inspection and bounded source freshness logic should stay separated from promotion logic |
+| Receipt process-memory surface | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Watcher outputs belong in governed receipts, not ad hoc artifact storage |
+| Catalog closure surfaces | [`../../data/catalog/README.md`](../../data/catalog/README.md) | Watchers may feed catalog-facing workflows, but catalog authority lives outside this directory |
+| Runtime and package surfaces | [`../../apps/governed_api/README.md`](../../apps/governed_api/README.md), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving ownership into workflow YAML |
 
-### Current public inventory and thin-slice signal
+### Current public inventory and drafted thin-slice signal
 
 | Item | Current visible or drafted state | Posture |
 | --- | --- | --- |
-| `./README.md` | Present in the older surfaced file | **CONFIRMED** |
+| `./README.md` | Present in supplied evidence | **CONFIRMED** |
 | `runtime-proof-soil-moisture.yml` | Drafted in-session as a concrete thin-slice workflow with contract tests, runtime-proof tests, emitted `actual.response.json`, and uploaded reviewer artifacts | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
-| Broader `./*.yml` / `./*.yaml` workflow files | Not proven from current mounted checkout in this session | **UNKNOWN** beyond thin slice |
+| `incremental-stac-watcher.yml` | Drafted in-session as a receipts-first scheduled watcher with contract validation, policy validation, commit-on-pass behavior, and optional proof-pack build | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
+| Broader `./*.yml` / `./*.yaml` workflow files | Not proven from a mounted checkout in this session | **UNKNOWN** beyond drafted thin slice |
 | Actions sidebar workflow list | Public Actions UI surfaces may still expose workflow-like entries | **CONFIRMED** UI signal / **UNKNOWN** checked-in YAML provenance |
-| Public delete-run history | Public Actions history may still expose filenames like `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
+| Public delete-run history | Public Actions history may still expose names like `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, and `promote-and-reconcile.yml` | **CONFIRMED** historical signal / **NEEDS VERIFICATION** if reconstructing exact file contents |
 | Delete-run `View workflow file` links | Some public entries may expose per-run workflow-file snapshots | **CONFIRMED** reconstruction clue / **NEEDS VERIFICATION** before reuse |
-| `.github/actions/` local action inventory | Older surfaced README shows reusable local-action seams under `../actions/` | **CONFIRMED** adjacent implementation seam |
-| `../CODEOWNERS` workflow ownership | Current parent-path coverage assigns `/.github/` to `@bartytime4life`; `/.github/workflows/` was not called out separately in the old README | **CONFIRMED** parent coverage / **INFERRED** workflow-path coverage |
-| Exact required checks / rulesets / environment approvals | Not derivable from public directory contents alone | **UNKNOWN** |
+| `.github/actions/` local action inventory | Older README evidence shows reusable local-action seams under `../actions/` | **CONFIRMED** adjacent implementation seam |
+| `../CODEOWNERS` workflow ownership | Current parent-path coverage assigns `/.github/` to `@bartytime4life`; `/.github/workflows/` was not separately proven in supplied text | **CONFIRMED** parent coverage / **INFERRED** workflow-path coverage |
+| Exact required checks / rulesets / environment approvals | Not derivable from supplied README alone | **UNKNOWN** |
 
 > [!NOTE]
 > A workflow run history is not the same thing as a current checked-in workflow inventory.
 >
-> Use the directory listing for **what exists on `main` now**. Use the Actions tab and git history for **what may need reconstruction, migration, or cleanup**. Use the current thin-slice draft only for the workflow actually added in-session.
+> Use the directory listing for **what exists on `main` now**. Use the Actions tab and git history for **what may need reconstruction, migration, or cleanup**. Use the thin-slice drafted workflows only for the specific lanes actually added in-session.
 
 [Back to top](#top)
 
@@ -177,10 +185,12 @@ Accepted inputs for this directory include:
   - release-assembly summaries
   - diff summaries
   - diff-policy summaries
-  - composed promotion review handoff documents
+  - promotion review handoff documents
+  - watcher receipt artifacts
+  - proof-pack artifacts
 - only the smallest amount of workflow-facing documentation needed to keep automation reviewable
 
-### Thin-slice runtime-proof workflow inputs
+### Thin-slice runtime-proof inputs
 
 For `runtime-proof-soil-moisture.yml`, the strongest current input family is:
 
@@ -193,6 +203,31 @@ For `runtime-proof-soil-moisture.yml`, the strongest current input family is:
 - runtime-proof summary renderer
 - actual runtime-response emission helper
 
+### Thin-slice watcher inputs
+
+For `incremental-stac-watcher.yml`, the strongest current intended input family is:
+
+- a bounded source endpoint such as `SOURCE_URL`
+- watcher implementation code under a path like `tools/watchers/**`
+- temporary work state under `data/work/watchers/**`
+- receipt output under `data/receipts/**`
+- contract and schema validation under `schemas/**` and validator tooling
+- policy enforcement under `policy/**`
+- optional proof-pack assembly under `tools/attest/**`
+
+### Required path discipline for watcher workflows
+
+The receipts-first watcher lane should preserve these distinctions:
+
+| Path family | Role |
+| --- | --- |
+| `data/work/**` | bounded intermediate and ephemeral working state |
+| `data/receipts/**` | governed process memory for runs, reports, and correction-ready traces |
+| `data/proof_packs/**` or equivalent governed proof surface | review or release-significant proof objects |
+| `policy/**` | deny-by-default rule logic and obligations |
+| `schemas/**` / `contracts/**` | machine contracts and schema homes |
+| `.github/workflows/**` | orchestration only |
+
 ---
 
 ## Exclusions
@@ -202,21 +237,23 @@ The following do **not** belong here as the canonical source of truth:
 - Composite action implementations  
   → place under [`../actions/`](../actions/)
 - Long-lived watcher behavior or watcher-specific operational doctrine  
-  → place under [`../watchers/`](../watchers/)
+  → place under [`../watchers/`](../watchers/), `tools/`, or `data/work/` as appropriate
 - Dependabot configuration policy as workflow orchestration  
   → keep in [`../dependabot.yml`](../dependabot.yml) unless a separate workflow truly needs to coordinate around it
 - Policy rule bodies, rule fixtures, or policy decision logic  
   → place under [`../../policy/`](../../policy/)
 - Schema definitions, OpenAPI documents, catalog profiles, or vocabularies  
   → place under [`../../contracts/`](../../contracts/) and [`../../schemas/`](../../schemas/)
-- Release manifests, receipts, SBOMs, attestations, or evidence bundles as ad hoc storage  
-  → keep them in the project’s designated release-evidence, proof, or artifact surfaces
-- Runtime service code, ingestion logic, UI code, or evidence resolvers  
-  → keep them in code surfaces such as [`../../apps/`](../../apps/) and [`../../packages/`](../../packages/)
+- Release manifests, proof packs, SBOMs, attestations, or evidence bundles as ad hoc workflow-only storage  
+  → keep them in designated proof or release-evidence surfaces
+- Runtime service code, ingestion logic, probes, or watcher implementations  
+  → keep them in code and data surfaces such as [`../../apps/`](../../apps/), [`../../tools/`](../../tools/), and [`../../data/`](../../data/)
+- Treating watcher receipts as proof packs or vice versa  
+  → receipts are **process memory**; proofs are **release- or review-significant trust objects**
 - Long-form operational runbooks that outgrow directory-local explanation  
   → place under [`../../docs/`](../../docs/)
 - Treating `GITHUB_STEP_SUMMARY` output as the authoritative trust object  
-  → keep machine-authoritative objects in their governed report, bundle, diff, diff-policy, manifest, and proof surfaces
+  → keep machine-authoritative objects in governed report, receipt, bundle, diff, diff-policy, manifest, and proof surfaces
 
 ---
 
@@ -230,13 +267,14 @@ The following do **not** belong here as the canonical source of truth:
     └── README.md
 ```
 
-### Current thin-slice candidate inventory
+### Current thin-slice drafted inventory
 
 ```text
 .github/
 └── workflows/
     ├── README.md
-    └── runtime-proof-soil-moisture.yml   # drafted in-session; active-branch presence still NEEDS VERIFICATION
+    ├── runtime-proof-soil-moisture.yml   # drafted in-session; active-branch presence still NEEDS VERIFICATION
+    └── incremental-stac-watcher.yml      # drafted in-session; active-branch presence still NEEDS VERIFICATION
 ```
 
 ### Historically observed public workflow names
@@ -254,7 +292,7 @@ promote-and-reconcile.yml
 
 ### Adjacent documented scaffold signal
 
-The path below is **not** part of the current confirmed inventory here. It appears only as an adjacent documentation reference in `.github/watchers/README.md` and therefore remains a reconciliation clue rather than a checked-in fact for this directory.
+The path below is **not** part of the current confirmed inventory here. It appears only as an adjacent documentation clue and therefore remains a reconciliation signal rather than a checked-in fact for this directory.
 
 ```text
 watchers-kansas-env.yml
@@ -262,12 +300,13 @@ watchers-kansas-env.yml
 
 ### Starter reconstitution shape
 
-The shape below is **PROPOSED** as the smallest history-aware reconstitution contract for this directory. It preserves the current thin-slice runtime-proof workflow, the historically visible lane names, and one explicit correction drill lane that is doctrinally warranted even though it was not visible in the historical filename set.
+The shape below is **PROPOSED** as a history-aware reconstitution contract for this directory. It preserves both drafted thin-slice workflows, the historically visible lane names, and one explicit correction drill lane that is doctrinally warranted even though it was not shown in the historical filename set.
 
 ```text
 .github/workflows/
 ├── README.md
 ├── runtime-proof-soil-moisture.yml
+├── incremental-stac-watcher.yml
 ├── verify-docs.yml
 ├── verify-contracts-and-policy.yml
 ├── verify-runtime.yml
@@ -311,18 +350,18 @@ find .github/actions -maxdepth 2 -name 'action.yml' | sort
 # 7) Check adjacent watcher docs for scaffold references that may need reconciliation
 sed -n '1,260p' .github/watchers/README.md 2>/dev/null || true
 
-# 8) Cross-check repo surfaces workflows are expected to verify
-ls -la contracts schemas policy tests docs apps packages tools 2>/dev/null || true
+# 8) Cross-check canonical surfaces workflows are expected to verify
+ls -la contracts schemas policy tests docs apps packages tools data 2>/dev/null || true
 
-# 9) Search workflow-local docs for runtime-, policy-, evidence-, or review-handoff-facing terms
-grep -R "runtime\|policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom\|review-handoff\|release-assembly\|GITHUB_STEP_SUMMARY" .github/workflows 2>/dev/null || true
+# 9) Search workflow-local docs for runtime-, receipt-, policy-, evidence-, or review-handoff-facing terms
+grep -R "runtime\|receipt\|policy\|catalog\|schema\|docs\|release\|evidence\|attest\|proof\|watcher\|review-handoff\|GITHUB_STEP_SUMMARY" .github/workflows 2>/dev/null || true
 
-# 10) If the lane is being reconstructed, inspect git history instead of guessing
+# 10) If a lane is being reconstructed, inspect git history instead of guessing
 git log --name-status -- .github/workflows
 ```
 
 > [!TIP]
-> If public Actions history shows a delete-run for a lane you need to restore, use the run’s **View workflow file** snapshot as a last-known clue, then verify it against git history and current canonical repo surfaces before reintroducing anything.
+> If public Actions history shows a deleted lane you need to restore, use the run’s **View workflow file** snapshot as a clue, then verify it against git history and current canonical repo surfaces before reintroducing anything.
 
 ### Minimal review order
 
@@ -330,7 +369,7 @@ git log --name-status -- .github/workflows
 2. Confirm the real workflow inventory before documenting or tightening gates.
 3. If a workflow lane is being reintroduced, inspect public delete-run clues and git history before choosing filenames or responsibilities.
 4. Verify ownership and merge-blocking assumptions against [`../CODEOWNERS`](../CODEOWNERS) and repo settings.
-5. Check whether repo-local actions under [`../actions/`](../actions/) already cover reusable workflow behavior.
+5. Check whether repo-local actions under [`../actions/`](../actions/) already cover reusable behavior.
 6. Treat watcher-local scaffold references as clues to reconcile, not as proof of current YAML presence.
 7. Change the smallest possible workflow surface.
 8. Re-check rollback, correction, contributor ergonomics, and reviewer-output publication after adding or tightening gates.
@@ -345,17 +384,17 @@ When a workflow lane returns after being absent from current `main`, start from 
 
 Preferred posture:
 
-1. Confirm the prior filename and its last known role.
-2. Decide whether the historic responsibility still matches the current repo.
-3. Keep the first reintroduced version PR-only, shadow, draft, or dry-run where possible.
-4. Declare explicit permissions.
-5. Update README, templates, and adjacent docs in the same PR.
+1. confirm the prior filename and last-known role
+2. decide whether the historic responsibility still matches the current repo
+3. keep the first reintroduced version PR-only, shadow, draft, or dry-run where possible
+4. declare explicit permissions
+5. update README, templates, and adjacent docs in the same PR
 
 ### Using public Actions history safely
 
 Keep the signals separated:
 
-- sidebar workflow labels are **UI surfaces**, not checked-in inventory assertions for this directory
+- sidebar workflow labels are **UI surfaces**, not checked-in inventory assertions
 - delete-run entries are stronger reconstruction clues because they reference actual workflow filenames
 - **View workflow file** snapshots are useful last-known YAML evidence, but they still need git-history and current-surface comparison before reuse
 - the first restored lane should still be the smallest reviewable version, not a maximal rewrite
@@ -383,6 +422,36 @@ The current thin-slice runtime-proof workflow is designed to:
 
 That workflow should remain a **runtime-proof gate**, not a release-evidence or promotion lane.
 
+### Thin-slice incremental watcher workflow
+
+The current drafted watcher workflow is designed to:
+
+1. run on a schedule or by manual dispatch
+2. fetch from a declared external source endpoint
+3. use bounded working state under `data/work/watchers/**`
+4. emit a receipt to `data/receipts/**`
+5. locate the latest receipt deterministically
+6. validate the receipt against contracts or schemas
+7. validate the receipt against policy in fail-closed mode
+8. optionally assemble a proof pack after receipt validation
+9. commit governed outputs only on validation success
+10. upload reviewer-usable artifacts on success
+
+That workflow should remain a **receipt-bearing watcher gate**, not a hidden publish lane or a replacement for catalog authority.
+
+### Receipt / proof separation
+
+KFM keeps these objects distinct even when one workflow touches both:
+
+| Object type | Purpose | Typical path posture |
+| --- | --- | --- |
+| **Receipt** | Process memory of a run, validation, or replay/correction trace | `data/receipts/**` |
+| **Proof pack** | Review- or release-significant trust object assembled after sufficient validation | governed proof / release-evidence surface |
+| **Step summary** | Reviewer convenience rendering | Actions summary or uploaded markdown artifact |
+| **Working state** | Temporary watcher or transform state | `data/work/**` |
+
+This split matters because a valid receipt is not automatically a release proof object.
+
 ### Editing blocking workflow gates
 
 Treat every blocking change here as a governance change, not just a YAML edit.
@@ -391,10 +460,11 @@ Preserve these expectations:
 
 - fail-closed behavior on blocking checks
 - no silent bypass around policy, evidence, or release state
+- explicit reasons and obligations where policy denies something
 - build once, promote many
 - review remains accountable
 - rollback and correction stay possible
-- documentation and accessibility changes travel with behavior-significant workflow changes
+- docs and trust-visible examples travel with behavior-significant workflow changes
 - reviewer-facing summaries remain derived convenience surfaces rather than authoritative trust objects
 
 ### Workflow orchestration versus reusable automation
@@ -403,23 +473,32 @@ Keep the boundary sharp:
 
 - **This directory** should describe workflow orchestration, event triggers, job ordering, and blocking gates.
 - **`../actions/`** should hold reusable composite behavior.
-- **`../../policy/`**, **`../../contracts/`**, **`../../schemas/`**, and **`../../tests/`** remain the canonical surfaces being checked.
+- **`../../tools/validators/`**, **`../../tools/attest/`**, **`../../tools/probes/`**, **`../../policy/`**, **`../../contracts/`**, **`../../schemas/`**, and **`../../tests/`** remain the canonical surfaces being checked.
+- **`../../data/receipts/`** remains the home for process-memory outputs.
 
 A workflow may *enforce* those surfaces. It should not become a shadow copy of them.
 
 ### Distinguishing Actions UI surfaces from checked-in YAML
 
-The public Actions UI may show workflow surfaces such as sidebar entries, historical deleted lanes, or recently removed workflow names. That is useful operational signal, but it should not overwrite the checked-in tree as the source of truth for current inventory.
+The public Actions UI may show sidebar entries, historical deleted lanes, or recently removed workflow names. That is useful operational signal, but it should not overwrite the checked-in tree as the source of truth for current inventory.
 
 Current examples to keep separated:
 
-- current thin-slice draft: `runtime-proof-soil-moisture.yml`
-- historical signals: `verify-docs.yml`, `verify-contracts-and-policy.yml`, `verify-runtime.yml`, `verify-tests-and-reproducibility.yml`, `release-evidence.yml`, `promote-and-reconcile.yml`
+- current drafted thin-slice names:
+  - `runtime-proof-soil-moisture.yml`
+  - `incremental-stac-watcher.yml`
+- historical signals:
+  - `verify-docs.yml`
+  - `verify-contracts-and-policy.yml`
+  - `verify-runtime.yml`
+  - `verify-tests-and-reproducibility.yml`
+  - `release-evidence.yml`
+  - `promote-and-reconcile.yml`
 
 Reading rule:
 
-- **Directory listing first** for current `main`
-- **Git history second** for reconstruction
+- **directory listing first** for current `main`
+- **git history second** for reconstruction
 - **Actions UI third** for activity clues and cleanup signal
 
 ### Reusing repo-local actions before creating new workflow glue
@@ -432,13 +511,13 @@ The public `.github/actions/` tree already exposes reusable local seams such as:
 - `provenance-guard`
 - `sbom-produce-and-sign`
 
-Prefer consuming those seams before embedding repeated shell logic directly in future workflow YAML.
+Prefer consuming those seams before embedding repeated shell logic directly in workflow YAML.
 
 ### Publishing reviewer surfaces safely
 
 When a workflow publishes reviewer-facing content to `GITHUB_STEP_SUMMARY`, keep the publication order explicit and the authority split visible.
 
-Good current publication order guidance:
+Good publication order guidance:
 
 1. runtime-proof summary
 2. release-assembly summary
@@ -447,25 +526,23 @@ Good current publication order guidance:
 5. promotion bundle diff-policy summary
 6. promotion review handoff
 
-That ordering helps a reviewer see:
+For watcher lanes, the publication order should normally look like:
 
-- whether runtime behavior is bounded and finite
-- whether release assembly is complete enough to review
-- the governed bundle itself
-- prior/current drift
-- the policy classification of that drift
-- the composed steward-facing conclusion
+1. receipt validation outcome
+2. machine-readable receipt artifact
+3. optional proof-pack artifact
+4. any reviewer summary derived from those artifacts
 
-without confusing the final composed handoff document for the underlying machine-authoritative records.
+That ordering helps a reviewer see what the workflow observed, whether it passed governance, and whether any higher-order proof object was assembled.
 
 ### Illustrative runtime-proof publication path
 
-The current thin slice now supports a report + render chain for runtime proof:
+The current thin slice supports a report + render chain for runtime proof:
 
 - source descriptor contract tests
 - runtime response schema contract tests
 - fixture-driven runtime-proof tests
-- `tools/ci/render_runtime_proof_summary.py`
+- runtime-proof summary renderer
 - emitted `actual.response.json` artifacts
 
 A workflow lane may therefore:
@@ -474,9 +551,27 @@ A workflow lane may therefore:
 2. emit actual runtime responses
 3. render a reviewer-readable Markdown summary
 4. upload both machine-readable actuals and the reviewer summary
-5. optionally later publish the summary to `GITHUB_STEP_SUMMARY`
+5. optionally publish the summary to `GITHUB_STEP_SUMMARY`
 
-That keeps runtime proof visible **before** broader release or promotion evidence is discussed.
+### Illustrative watcher receipt path
+
+The current drafted watcher lane supports a receipts-first chain:
+
+- declared source endpoint
+- bounded working state
+- emitted receipt
+- contract validation
+- policy validation
+- optional proof-pack build
+- gated commit and artifact upload
+
+A watcher lane may therefore:
+
+1. run the watcher
+2. emit exactly one or more governed receipts
+3. locate the newest receipt deterministically
+4. fail closed if receipt validation fails
+5. only commit and upload artifacts after validation success
 
 [Back to top](#top)
 
@@ -484,24 +579,35 @@ That keeps runtime proof visible **before** broader release or promotion evidenc
 
 ## Workflow model
 
-The diagram below combines current thin-slice work, current public historical signal, and KFM doctrine. It shows the **kind** of orchestration this directory is meant to carry, not a claim that every YAML file is checked in on current `main`.
+The diagram below combines current thin-slice work, current historical signal, and KFM doctrine. It shows the **kind** of orchestration this directory is meant to carry, not a claim that every YAML file is checked in on current `main`.
 
 ```mermaid
 flowchart LR
-    A[PR or source change] --> B[Verification lanes]
+    A[PR / schedule / manual dispatch] --> B[Verification lanes]
+
     B --> B0[runtime-proof-soil-moisture.yml]
-    B --> B1[verify-docs.yml]
-    B --> B2[verify-contracts-and-policy.yml]
-    B --> B3[verify-runtime.yml]
-    B --> B4[verify-tests-and-reproducibility.yml]
+    B --> B1[incremental-stac-watcher.yml]
+    B --> B2[verify-docs.yml]
+    B --> B3[verify-contracts-and-policy.yml]
+    B --> B4[verify-runtime.yml]
+    B --> B5[verify-tests-and-reproducibility.yml]
 
     B0 --> B0A[contract + validator + runtime-proof tests]
     B0A --> B0B[actual.response.json]
     B0B --> B0C[runtime-proof summary]
-    B1 --> C[release-evidence.yml]
-    B2 --> C
+
+    B1 --> B1A[watcher run]
+    B1A --> B1B[data/work watcher state]
+    B1B --> B1C[receipt in data/receipts]
+    B1C --> B1D[contract validation]
+    B1D --> B1E[policy validation]
+    B1E --> B1F[optional proof pack]
+    B1F --> B1G[commit on pass + artifact upload]
+
+    B2 --> C[release-evidence.yml]
     B3 --> C
     B4 --> C
+    B5 --> C
 
     C --> C1[release-assembly report]
     C1 --> C2[release-assembly summary]
@@ -517,7 +623,8 @@ flowchart LR
     J -. future explicit drill lane .-> L[rehearse-rollback-and-correction.yml]
 ```
 
-Reading rule: **promotion is a trust-state change, not a blind deploy step**.
+Reading rule: **promotion is a trust-state change, not a blind deploy step**.  
+Watcher rule: **a receipt-bearing watcher is governed automation, not background convenience glue**.
 
 ---
 
@@ -526,14 +633,15 @@ Reading rule: **promotion is a trust-state change, not a blind deploy step**.
 | Lane | Working interpretation here | Blockers to expect | Evidence posture |
 | --- | --- | --- | --- |
 | `runtime-proof-soil-moisture.yml` | thin-slice governed runtime gate for the soil-moisture stack | failed contract tests, failed runtime-proof tests, failed route/app tests, failed actual-response emission, failed runtime summary render | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
-| `verify-docs.yml` | Docs, links, examples, and trust-visible guidance stay aligned | broken links, stale examples, trust-cue drift | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `verify-contracts-and-policy.yml` | Contract, schema, and policy surfaces remain machine-checkable | invalid fixtures passing, schema drift, policy denial | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `verify-runtime.yml` | Runtime-facing trust behavior remains bounded and explainable | negative-path regressions, uncited answer path, envelope drift, hidden correction state | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `verify-tests-and-reproducibility.yml` | Candidate changes remain testable and repeatable | failed tests, reproducibility drift, missing proof of deterministic behavior | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `release-evidence.yml` | Candidate proof objects are assembled before promotion | missing manifests, missing validation summaries, absent attestation refs, failed release-assembly report | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `promote-and-reconcile.yml` | Already-reviewed state moves into publishable scope and any required reconciliation runs | missing approvals, missing release evidence, unresolved policy blockers | **CONFIRMED** historical filename / **INFERRED** responsibility |
-| `watchers-kansas-env.yml` | Environment or watcher-oriented automation suggested by adjacent watcher docs | stale scaffold refs, undocumented orchestration, confusion with current inventory | **CONFIRMED** adjacent scaffold reference / **INFERRED** role / **NEEDS VERIFICATION** current or historical file status |
-| `rehearse-rollback-and-correction.yml` | Recovery and visible correction behavior become explicit and testable | failed rollback lineage, silent overwrite, missing correction drills | **PROPOSED** doctrinal addition |
+| `incremental-stac-watcher.yml` | scheduled or manual watcher that emits governed receipts, validates them, and only commits or uploads on pass | source fetch failure, watcher failure, no receipt found, contract validation failure, policy failure, proof-pack build failure | **CONFIRMED in-session thin slice** / **NEEDS VERIFICATION** on active branch |
+| `verify-docs.yml` | docs, links, examples, and trust-visible guidance stay aligned | broken links, stale examples, trust-cue drift | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `verify-contracts-and-policy.yml` | contract, schema, and policy surfaces remain machine-checkable | invalid fixtures passing, schema drift, policy denial | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `verify-runtime.yml` | runtime-facing trust behavior remains bounded and explainable | negative-path regressions, uncited answer path, envelope drift, hidden correction state | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `verify-tests-and-reproducibility.yml` | candidate changes remain testable and repeatable | failed tests, reproducibility drift, missing proof of deterministic behavior | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `release-evidence.yml` | candidate proof objects are assembled before promotion | missing manifests, missing validation summaries, absent attestation refs, failed release-assembly report | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `promote-and-reconcile.yml` | already-reviewed state moves into publishable scope and any required reconciliation runs | missing approvals, missing release evidence, unresolved policy blockers | **CONFIRMED** historical filename / **INFERRED** responsibility |
+| `watchers-kansas-env.yml` | environment or watcher-oriented automation suggested by adjacent docs | stale scaffold refs, undocumented orchestration, confusion with current inventory | **CONFIRMED** adjacent scaffold clue / **INFERRED** role / **NEEDS VERIFICATION** current or historical file status |
+| `rehearse-rollback-and-correction.yml` | recovery and visible correction behavior become explicit and testable | failed rollback lineage, silent overwrite, missing correction drills | **PROPOSED** doctrinal addition |
 
 ### Naming guidance
 
@@ -541,9 +649,10 @@ Prefer names that expose purpose, not implementation trivia.
 
 Good current cues:
 
-- current thin-slice names such as `runtime-proof-soil-moisture.yml`
+- thin-slice names such as `runtime-proof-soil-moisture.yml`
+- explicit watcher names such as `incremental-stac-watcher.yml`
 - historically visible names such as `verify-docs.yml`, `verify-runtime.yml`, and `release-evidence.yml`
-- explicit future drill names such as `rehearse-rollback-and-correction.yml`
+- future drill names such as `rehearse-rollback-and-correction.yml`
 
 Avoid names that hide responsibility behind generic words like `main.yml`, `pipeline.yml`, or `automation.yml`.
 
@@ -560,7 +669,7 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Permissions are explicit and minimal.
 - [ ] Required checks and review boundaries are verified against active repo settings where relevant.
 - [ ] Repo-local actions are inspected before repeated step logic is added directly into YAML.
-- [ ] If public delete-run clues are used, the resulting YAML is compared against git history and current canonical repo surfaces before merge.
+- [ ] If public delete-run clues are used, resulting YAML is compared against git history and current canonical repo surfaces before merge.
 - [ ] Adjacent watcher scaffold references are reconciled instead of being copied forward as assumed facts.
 - [ ] Docs, examples, and templates change in the same governed stream as workflow behavior.
 - [ ] A reintroduced lane is marked as a historical reconstitution or a net-new lane.
@@ -569,9 +678,12 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Candidate and release proof-pack expectations are explicit where the lane is trust-significant.
 - [ ] Runtime-proof summary publication is explicit where the soil-moisture thin slice is active.
 - [ ] Runtime-proof lanes that claim expected-vs-actual review actually emit and publish `actual.response.json` or an equivalent machine-readable artifact.
+- [ ] Watcher lanes that claim governed process memory actually emit receipts into `data/receipts/**`, not ad hoc artifact folders.
+- [ ] Receipt and proof-pack responsibilities are kept distinct in pathing and review language.
+- [ ] Contract validation and policy validation are explicit before any watcher lane commits or uploads governed artifacts.
 - [ ] Release-assembly summary publication happens before downstream bundle/diff/review-handoff publication when that lane is active.
 - [ ] Runtime verification, rollback, or correction consequences are documented for any workflow that can change trust state.
-- [ ] Reviewer-summary publication order is explicit when runtime-proof, release-assembly, bundle, diff, diff-policy, and review-handoff artifacts are all published.
+- [ ] Reviewer-summary publication order is explicit when runtime-proof, receipts, proof packs, release-assembly, bundle, diff, diff-policy, and review-handoff artifacts are all published.
 - [ ] Unknowns remain visible instead of being rewritten as certainty.
 
 [Back to top](#top)
@@ -582,7 +694,7 @@ Definition of done for changes in `.github/workflows/`:
 
 ### Why does this directory need a README before every workflow YAML exists on current `main`?
 
-Because KFM treats release, runtime, review, verification, and correction as one governed system. A README-first contract prevents the first restored or newly added workflow from becoming an undocumented authority surface.
+Because KFM treats release, runtime, review, verification, watchers, receipts, and correction as one governed system. A README-first contract prevents the first restored or newly added workflow from becoming an undocumented authority surface.
 
 ### Why mention deleted or historical workflow names if the directory may still be README-first today?
 
@@ -590,27 +702,31 @@ Because public Actions history is a real repo signal. It helps maintainers recon
 
 ### Does this README claim those historical workflow files still exist?
 
-No. It explicitly distinguishes **current checked-in inventory**, **current thin-slice drafted workflow**, and **historical public signal**.
+No. It explicitly distinguishes **current checked-in inventory**, **drafted thin-slice workflows**, and **historical public signal**.
 
-### Why call out `runtime-proof-soil-moisture.yml` specifically?
+### Why call out `runtime-proof-soil-moisture.yml` and `incremental-stac-watcher.yml` specifically?
 
-Because the current thin slice now has a complete soil-moisture governed runtime stack plus a concrete workflow draft to test it. That makes it different from purely historical lane names.
+Because those are the two concrete workflows drafted in-session for this revision: one proves bounded runtime behavior, the other establishes a receipts-first governed watcher loop.
 
 ### Can workflow automation self-approve policy-significant or public-truth changes?
 
 This README assumes **no**. Workflows may prepare evidence, run gates, and block promotion, but accountable review boundaries still matter.
 
-### Should policy rules, schemas, or attestations live here?
+### Should policy rules, schemas, contracts, receipts, or attestations live here?
 
-No. Workflows may verify them, but canonical ownership remains outside this directory.
+No. Workflows may verify or orchestrate them, but canonical ownership remains outside this directory.
+
+### Can a watcher receipt be treated as a release proof object?
+
+No. A receipt is process memory. A proof pack or release-evidence object has a different trust role and should only be assembled through the appropriate governed lane.
 
 ### Can `GITHUB_STEP_SUMMARY` output become the authoritative review object?
 
-No. It is a reviewer convenience surface. The authoritative machine objects remain in the governed decision, report, bundle, diff, diff-policy, manifest, proof, and emitted runtime artifact lanes.
+No. It is a reviewer convenience surface. The authoritative machine objects remain in governed decision, receipt, report, bundle, diff, diff-policy, manifest, proof-pack, and emitted runtime artifact lanes.
 
 ### What becomes CONFIRMED here?
 
-Only what the supplied README, current thin-slice files, public repo signals, or current public GitHub UI visibly prove. Everything else stays **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
+Only what the supplied README, already-established KFM doctrine, public repo signals, or drafted in-session workflow work visibly support. Everything else stays **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ---
 
@@ -631,16 +747,17 @@ Only what the supplied README, current thin-slice files, public repo signals, or
 └── action.yml
 ```
 
-Use this inventory as a step-level reuse clue. It does **not** by itself prove which historical workflow lane called which action, or whether every action is complete enough for reuse without inspection.
+Use this inventory as a reuse clue. It does **not** by itself prove which historical workflow lane called which action, or whether every action is complete enough for reuse without inspection.
 
 </details>
 
 <details>
 <summary><strong>Current workflow signal buckets</strong></summary>
 
-### Current thin-slice workflow signal
+### Current drafted thin-slice signal
 
 - `runtime-proof-soil-moisture.yml`
+- `incremental-stac-watcher.yml`
 
 ### Historical public workflow signal
 
@@ -740,16 +857,54 @@ Use this as ordering guidance, not as proof that current `main` already contains
 </details>
 
 <details>
+<summary><strong>Illustrative incremental watcher path (PROPOSED)</strong></summary>
+
+```yaml
+- name: Run incremental watcher
+  run: |
+    python tools/watchers/incremental_stac_watcher.py \
+      --source "${SOURCE_URL}" \
+      --work-dir "data/work/watchers/incremental-stac" \
+      --out "data/receipts/incremental_stac"
+
+- name: Locate latest receipt
+  run: |
+    find data/receipts/incremental_stac -type f -name '*.json' -printf '%T@ %p\n' \
+      | sort -nr | head -n 1 | cut -d' ' -f2-
+
+- name: Contract validation
+  run: |
+    kfm-validate-contracts \
+      --input "${RECEIPT_PATH}" \
+      --schema-dir schemas/
+
+- name: Policy validation
+  run: |
+    conftest test "${RECEIPT_PATH}" -p policy/
+
+- name: Optional proof-pack build
+  run: |
+    kfm-build-proof-pack \
+      --receipt "${RECEIPT_PATH}" \
+      --out data/proof_packs/
+```
+
+Use this as watcher ordering guidance, not as proof that the workflow file is already present on current `main`.
+
+</details>
+
+<details>
 <summary><strong>Review questions before restoring or adding a blocking workflow</strong></summary>
 
 1. What exact trust-state transition does this workflow control?
-2. Is this a restored historical lane, a current thin-slice lane, or a net-new lane?
-3. What evidence does it emit?
-4. What explicitly blocks merge or promotion?
+2. Is this a restored historical lane, a drafted thin-slice lane, or a net-new lane?
+3. What evidence or receipts does it emit?
+4. What explicitly blocks merge, commit, promotion, or publication?
 5. What correction path exists if the workflow proves too weak or too strong?
 6. Which canonical surfaces does it verify rather than duplicate?
-7. Can a future maintainer explain this workflow from its filename and README entry alone?
-8. If it publishes reviewer-facing artifacts, in what order are they shown and why?
+7. Does it preserve receipt/proof separation where relevant?
+8. Can a future maintainer explain this workflow from its filename and README entry alone?
+9. If it publishes reviewer-facing artifacts, in what order are they shown and why?
 
 </details>
 
@@ -761,7 +916,8 @@ Do not add a workflow file here merely because GitHub Actions can do it. Add it 
 - the repo has a stable surface worth verifying,
 - the gate has a clear doctrinal basis,
 - the failure mode is understandable,
-- the rollback or correction consequence is known, and
+- the rollback or correction consequence is known,
+- receipts and proofs remain distinguishable where applicable, and
 - the new automation reduces ambiguity instead of creating another invisible control plane.
 
 </details>
