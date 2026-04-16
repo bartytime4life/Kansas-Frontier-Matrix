@@ -13,29 +13,28 @@ tags: [kfm, data, work, staging, provenance]
 notes: [Current public main confirms a README-only lane at `data/work/`; `created` stays pinned to the current-file reintroduction date on 2026-03-22; `doc_id` and `policy_label` still need verification; proof-aware carryover notes in this revision are doctrinally supported but still branch-convention-sensitive.]
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+<a id="datawork"></a>
+
 # `data/work`
 
 Repeatable, non-public staging zone for governed intermediate transforms, validation artifacts, and promotion handoff material.
 
-> **Status:** `active directory` · **Doc state:** `draft`  
+> [!IMPORTANT]
+> **Status:** `active directory`  
+> **Doc state:** `draft`  
 > **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` coverage for `/data/`)*  
 > **Path:** `data/work/README.md`  
 > **Current public tree:** `data/work/` contains `README.md` only on public `main`  
 > **Repo fit:** parent [`../README.md`](../README.md) · upstream [`../raw/README.md`](../raw/README.md) · lateral [`../quarantine/README.md`](../quarantine/README.md) · downstream [`../processed/README.md`](../processed/README.md), [`../catalog/README.md`](../catalog/README.md), [`../receipts/README.md`](../receipts/README.md), [`../proofs/README.md`](../proofs/README.md), [`../published/README.md`](../published/README.md), [`../registry/README.md`](../registry/README.md) · shared controls [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS)  
-> ![Status: active directory](https://img.shields.io/badge/status-active%20directory-0a7d5a)
-> ![Doc: draft](https://img.shields.io/badge/doc-draft-8250df)
-> ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-0969da)
-> ![Public tree: README only](https://img.shields.io/badge/public%20tree-README--only-lightgrey)
-> ![Catalog: DCAT+STAC+PROV](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb)
-> ![Trust: fail-closed](https://img.shields.io/badge/trust-fail--closed-d73a49)
->
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done--promotion-gates) · [FAQ](#faq) · [Appendix](#appendix)
-
-> [!IMPORTANT]
-> `data/work/` is **not** a publication surface, **not** a canonical endpoint, and **not** a client-facing integration path. In KFM, public and role-limited access crosses the governed API, policy, and evidence boundary; normal UI and runtime surfaces must not read `data/work/` directly.
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done--promotion-gates) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-active%20directory-0a7d5a) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da) ![public-tree](https://img.shields.io/badge/public%20tree-README--only-lightgrey) ![catalog](https://img.shields.io/badge/catalog-DCAT%2BSTAC%2BPROV-5b4bdb) ![trust](https://img.shields.io/badge/trust-fail--closed-d73a49)
 
 > [!NOTE]
 > Current public `main` confirms the lane, not a populated working inventory. This README therefore separates the **CONFIRMED live tree** from a **PROPOSED working deepening** instead of treating starter structure as checked-in reality.
+
+> [!WARNING]
+> `data/work/` is **not** a publication surface, **not** a canonical endpoint, and **not** a client-facing integration path. In KFM, public and role-limited access crosses the governed API, policy, and evidence boundary; normal UI and runtime surfaces must not read `data/work/` directly.
 
 ---
 
@@ -76,7 +75,7 @@ In KFM terms, material leaving this lane should do so through a **governed state
 - hiding blocked material that should be isolated in `data/quarantine/`
 - turning convenient scratch into de facto published truth
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -121,7 +120,7 @@ In KFM terms, material leaving this lane should do so through a **governed state
 - Keep process memory and release proof adjacent, not buried inside working payload folders.
 - Reach `data/published/` only through a governed, release-backed state transition.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -172,7 +171,7 @@ An artifact likely belongs in `data/work/` if all six checks pass:
 5. It should **not** be read directly by normal client or runtime surfaces.
 6. If it carries proof-aware context such as `spec_hash`, `run_receipt`, `ai_receipt`, or attestation references, that context is still clearly pre-release and not being mistaken for outward proof.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -193,7 +192,7 @@ An artifact likely belongs in `data/work/` if all six checks pass:
 > [!WARNING]
 > “Useful for an analyst right now” is **not** enough. If the artifact weakens reproducibility, obscures provenance, or tempts direct UI/runtime consumption, it does not belong here in unmanaged form.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -260,7 +259,7 @@ Prefer deterministic, boring names over clever names.
 - `run_*` / `validation_*` files: only after the active branch confirms those names are acceptable
 - proof-aware names such as `run_receipt.json`, `ai_receipt.json`, or attestation bundle pointers: only after the active branch confirms whether this lane keeps local copies, central mirrors, or references only
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -324,7 +323,7 @@ touch "data/work/<dataset>/${RUN_ID}/spec_hash.txt"
 
 If the active branch already emits `run_receipt`, `ai_receipt`, or attestation references for the run, keep them explicit and reviewable rather than burying them in free-form notes.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -356,7 +355,20 @@ Receipts preserve **process memory**. Proofs preserve **release evidence**. If p
 
 Promotion out of `data/work/` should reduce ambiguity, not move it downstream. By the time material leaves this lane, its target processed identity, validation context, and downstream catalog intent should be clear.
 
-[Back to top](#datawork)
+### Illustrative handoff sketch (`PROPOSED`)
+
+```text
+data/raw/<source-batch>/
+  -> data/work/<dataset>/<run-id>/staging/
+  -> data/work/<dataset>/<run-id>/qa/
+  -> data/processed/<dataset-version>/
+  -> data/catalog/{dcat,stac,prov}/
+```
+
+> [!TIP]
+> Keep this flow descriptive, not normative. The exact run layout, validator names, and promotion helpers still need branch verification.
+
+[Back to top](#top)
 
 ---
 
@@ -383,7 +395,7 @@ flowchart LR
 
 The key relationship is not just left-to-right flow. It is the **blocked path**: normal governed surfaces do **not** read `data/work/`, `data/quarantine/`, or `data/raw/` directly.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -436,7 +448,7 @@ The key relationship is not just left-to-right flow. It is the **blocked path**:
 | `ai_receipt.json` | model-mediated proposal or synthesis audit object | **PROPOSED proof-aware carryover** |
 | attestation ref / bundle pointer | integrity or origin evidence for emitted artifacts | **PROPOSED proof-aware carryover** |
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -470,7 +482,7 @@ A work run is ready to leave `data/work/` only when the following are satisfied:
 | Proof-aware traceability | any emitted `spec_hash` / receipt / attestation refs are explicit and not confused with release proof | hold / clarify |
 | Reviewability | the run can be explained without guesswork | hold |
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -504,7 +516,7 @@ No. It only means the **currently visible public subtree** is documentation-ligh
 
 Not as a normal governed path. Any preview behavior still has to respect the trust membrane and should not normalize direct reads from `data/work/`.
 
-[Back to top](#datawork)
+[Back to top](#top)
 
 ---
 
@@ -573,4 +585,4 @@ This README can now distinguish:
 
 _This README stays trust-visible and verification-first: it preserves the live public path, makes the lifecycle boundary legible, keeps deeper working shape explicit instead of implied, and treats proof-aware carryovers as doctrine-supported but still branch-verification-sensitive._
 
-[Back to top](#datawork)
+[Back to top](#top)
