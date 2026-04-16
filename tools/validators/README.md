@@ -1,6 +1,7 @@
-<!-- [KFM_META_BLOCK_V2]
+<!--
+KFM Meta Block V2
 doc_id: kfm.tools.validators.readme
-title: tools/validators
+title: Tools — Validators
 type: standard
 version: v1
 status: draft
@@ -8,47 +9,71 @@ owners: @bartytime4life
 created: 2026-04-11
 updated: 2026-04-16
 policy_label: public-safe
-related: [
-  ../README.md,
-  ../../contracts/README.md,
-  ../../schemas/README.md,
-  ../../schemas/contracts/README.md,
-  ../../schemas/tests/README.md,
-  ../../tests/README.md,
-  ../../tests/contracts/README.md,
-  ../attest/README.md,
-  ../probes/README.md,
-  ../../policy/README.md,
-  ../../data/receipts/README.md,
-  ../../data/work/README.md,
-  ../../.github/workflows/README.md,
-  ../../.github/watchers/README.md,
-  ./connector_gate/README.md,
-  ./promotion_gate/README.md
-]
-tags: [kfm, tools, validators, fail-closed, verification, contracts, receipts, proofs, spec_hash, linkage]
-notes: [
-  Parent lane contract for validator helpers.
-  This revision aligns the validator lane with updated workflow, watcher, and receipt doctrine: validators consume receipts but do not own them; they may support watcher and promotion lanes without collapsing receipt/proof separation.
-  Mounted repo inventory beyond the supplied draft remains NEEDS VERIFICATION; examples stay conservative and authority stays with contracts, schemas, policy, tests, and governed data surfaces.
-]
-[/KFM_META_BLOCK_V2] -->
+related:
+  - ../README.md
+  - ../../contracts/README.md
+  - ../../schemas/README.md
+  - ../../schemas/contracts/README.md
+  - ../../schemas/tests/README.md
+  - ../../tests/README.md
+  - ../../tests/contracts/README.md
+  - ../attest/README.md
+  - ../probes/README.md
+  - ../../policy/README.md
+  - ../../data/receipts/README.md
+  - ../../data/run_receipts/
+  - ../../data/work/README.md
+  - ../../.github/workflows/README.md
+  - ../../.github/watchers/README.md
+  - ./connector_gate/README.md
+  - ./promotion_gate/README.md
+tags:
+  - kfm
+  - tools
+  - validators
+  - fail-closed
+  - verification
+  - contracts
+  - receipts
+  - proofs
+  - spec_hash
+  - linkage
+notes:
+  - Parent lane contract for validator helpers.
+  - Validators consume receipts but do not own them.
+  - This revision aligns the lane with the current probe -> receipt -> validator -> policy -> CI chain.
+  - Mounted repo inventory beyond the supplied draft remains NEEDS VERIFICATION; examples stay conservative.
+-->
 
 <a id="top"></a>
 
 # `tools/validators/`
 
-Fail-closed validation helpers for trust-bearing artifacts, contract-first checks, declared linkage, and reviewable machine-readable outputs.
+Fail-closed validation helpers for trust-bearing artifacts, contract-first checks, declared linkage, finite outcome grammar, and reviewable machine-readable outputs.
 
-> [!NOTE]
-> **Status:** experimental  
-> **Document status:** draft  
-> **Owners:** `@bartytime4life`  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Doc: Draft](https://img.shields.io/badge/doc-draft-lightgrey) ![Policy: Public Safe](https://img.shields.io/badge/policy-public--safe-brightgreen) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b60205) ![Receipts: Consumed Not Owned](https://img.shields.io/badge/receipts-consumed%20not%20owned-0ea5e9)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
+
+![Status: Experimental](https://img.shields.io/badge/status-experimental-orange)
+![Doc: Draft](https://img.shields.io/badge/doc-draft-lightgrey)
+![Policy: Public Safe](https://img.shields.io/badge/policy-public--safe-brightgreen)
+![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-b60205)
+![Receipts: Consumed Not Owned](https://img.shields.io/badge/receipts-consumed%20not%20owned-0ea5e9)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Path** | `tools/validators/README.md` |
+| **Status** | experimental |
+| **Owners** | `@bartytime4life` |
+| **Primary job** | validate declared shapes, linkage, and finite outcomes |
+| **Not this lane** | policy authority, schema authority, attestation, receipt storage, workflow choreography |
+| **Current emphasis** | lane role, fail-closed posture, starter validator slice, receipt/proof separation |
+
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is strongest on **lane role**, **validator posture**, and the **documented starter slice**. Current-session implementation evidence is narrower than the doctrine: mounted repo contents beyond the supplied draft were not directly inspected here. Treat exact file inventory, workflow wiring, runtime details, and active entrypoints beyond the visible document as **NEEDS VERIFICATION**.
+> This README is strongest on **lane role**, **validator posture**, and the **documented starter slice**. Exact mounted repo inventory, workflow wiring, runtime details, and active entrypoints beyond the supplied draft remain **NEEDS VERIFICATION** unless separately confirmed in-tree.
 
 > [!TIP]
 > Keep the KFM trust split visible across this lane:
@@ -58,7 +83,7 @@ Fail-closed validation helpers for trust-bearing artifacts, contract-first check
 > Validators may check declared linkage among these surfaces, but they should not collapse them into one object or one ownership boundary.
 
 > [!CAUTION]
-> This lane should validate trust-bearing shapes, references, and finite outcomes. It should **not** quietly become a second policy home, a second schema home, a receipt store, or an attestation lane.
+> This lane validates trust-bearing shapes, references, and finite outcomes. It should **not** quietly become a second policy home, a second schema home, a receipt store, a watcher runtime, or an attestation lane.
 
 ---
 
@@ -79,7 +104,7 @@ Use `tools/validators/` for helpers that:
 - validate receipt-shaped process memory without taking ownership of it
 - emit stable, reviewable output for humans and CI
 
-The strongest first landed slice should remain **contract-first**, **admission-first**, **receipt-first**, or **release-manifest-first**. This family stays narrow, deterministic, and read-only by default.
+The strongest landed slice should remain **contract-first**, **receipt-first**, **admission-first**, or **release-manifest-first**. This family stays narrow, deterministic, and read-only by default.
 
 ### Operating posture
 
@@ -93,14 +118,17 @@ The strongest first landed slice should remain **contract-first**, **admission-f
 
 ### What changed in this revision
 
-This revision aligns the validator lane with updated workflow, watcher, and receipt documentation.
+This revision aligns the validator lane with updated workflow, watcher, probe, and receipt doctrine.
 
-That means this README now makes four points more explicit:
+It makes six points more explicit:
 
 1. validators may **consume receipts** but do not own receipt storage
-2. validators support **watcher lanes**, **promotion lanes**, and **runtime-proof lanes** without becoming orchestration
+2. validators support **probe lanes**, **watcher lanes**, **promotion lanes**, and **runtime-proof lanes** without becoming orchestration
 3. validators may support **proof-pack assembly preconditions**, but they are not the attestation lane
 4. fail-closed validation should occur **before** commit, upload, promotion, or publish-facing side effects
+5. validators sit between **observation** and **policy decision**, not inside either one
+6. the current starter chain is increasingly visible as:
+   - **probe → receipt → validator → policy → CI**
 
 [Back to top](#top)
 
@@ -122,8 +150,9 @@ That means this README now makes four points more explicit:
 | [`../../schemas/tests/README.md`](../../schemas/tests/README.md) | schema test surfaces | upstream fixture and negative-case pressure |
 | [`../../tests/README.md`](../../tests/README.md) | test hub | downstream execution lane for broader unit, integration, and e2e checks |
 | [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | contract tests | downstream fixture execution and contract proof |
-| [`../../policy/README.md`](../../policy/README.md) | policy hub | authority for reason, obligation, denial, and decision consistency |
+| [`../../policy/README.md`](../../policy/README.md) | policy hub | authority for allow/deny/obligation/reason consistency |
 | [`../../data/receipts/README.md`](../../data/receipts/README.md) | receipts lane | validator consumers should treat receipts as process memory rather than validator-owned outputs |
+| [`../../data/run_receipts/`](../../data/run_receipts/) | run receipt surface | concrete process-memory destination for probe-run receipts |
 | [`../../data/work/README.md`](../../data/work/README.md) | work lane | temporary state belongs there, not in validator-owned directories |
 | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | workflow gatehouse | workflows orchestrate validator execution and downstream side effects |
 | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | watcher gatehouse | watcher doctrine depends on validator checks without moving watcher logic into this lane |
@@ -171,6 +200,7 @@ Do **not** use this lane to:
 The following belong in or under `tools/validators/`:
 
 - narrow validator entrypoints such as `kfm-verify.ts`
+- narrow validator entrypoints such as `run_receipt_validator.py`
 - pinned validator dependency files
 - small validator-local config files
 - machine-readable report schemas or documented output contracts
@@ -179,11 +209,12 @@ The following belong in or under `tools/validators/`:
 
 ### Documented starter slice
 
-The supplied draft documents one starter validator entrypoint:
+The supplied draft documents one starter validator entrypoint and the current chain strongly supports a second receipt-first validator surface:
 
 | Entry point | Primary concern | Intended checks | Evidence posture |
 |---|---|---|---|
 | `kfm-verify.ts` | release-manifest-first validation | manifest shape assumptions, `spec_hash`, optional `bundle_ref` / `proof_ref`, optional local asset bytes | **Documented in the supplied draft**; mounted file presence remains **NEEDS VERIFICATION** |
+| `run_receipt_validator.py` | receipt-first validation | receipt shape, `spec_hash`, timestamp parsing, changed-item typing, optional transport status bounds | **PROPOSED / newly aligned starter slice** unless directly verified in-tree |
 
 ### Likely validator families in this lane
 
@@ -197,17 +228,18 @@ The supplied draft documents one starter validator entrypoint:
 | Linkage validators | receipt/proof/catalog/provenance joins | validate the declared chain without becoming the chain owner |
 | Placeholder-state validators | detect stub or scaffold-state contract/policy/schema surfaces | useful for fail-loud readiness checks |
 
-### Watcher-facing validator pressure
+### Probe- and watcher-facing validator pressure
 
-Adjacent docs now imply a concrete validator burden for watcher lanes:
+Adjacent docs now imply a concrete validator burden for probe and watcher lanes:
 
-| Watcher concern | Validator role |
+| Concern | Validator role |
 |---|---|
 | emitted receipt exists | confirm expected receipt artifact is present and readable |
-| receipt shape is correct | validate schema / contract expectations |
+| receipt shape is correct | validate schema or contract expectations |
 | linkage is declared | confirm refs to source, subject, decision, proof, or audit surfaces when required |
 | policy ran | verify required policy-result presence or fail closed when configured |
 | side effects are gated | support workflow decisions before commit, upload, or promotion-facing steps |
+| process memory remains distinct | validate receipt shape without converting receipt into proof or publication |
 
 ---
 
@@ -230,7 +262,7 @@ Put those concerns elsewhere:
 - signing and attestation mechanics → [`../attest/README.md`](../attest/README.md)
 - organization-level policy ownership → [`../../policy/README.md`](../../policy/README.md)
 - schema ownership → [`../../schemas/README.md`](../../schemas/README.md)
-- receipt process-memory ownership → [`../../data/receipts/README.md`](../../data/receipts/README.md)
+- receipt process-memory ownership → [`../../data/receipts/README.md`](../../data/receipts/README.md) and `../../data/run_receipts/`
 - workflow choreography → `scripts/` and `.github/workflows/`
 - broader quality execution → [`../../tests/README.md`](../../tests/README.md)
 
@@ -243,12 +275,13 @@ Current documented shape, kept deliberately conservative:
 ```text
 tools/validators/
 ├── README.md
-├── kfm-verify.ts               # documented starter validator entrypoint
-├── connector_gate/             # connector-admission validator surface
-├── promotion_gate/             # release-facing validator surface
-├── <validator-local-config>    # optional, small, pinned, lane-local
-├── <report-schema-or-examples> # optional, JSON/JSONL contracts or report examples
-└── <smoke-or-fixture-examples> # optional, tiny lane-local examples
+├── kfm-verify.ts                  # documented starter validator entrypoint
+├── run_receipt_validator.py       # receipt-first validator surface
+├── connector_gate/                # connector-admission validator surface
+├── promotion_gate/                # release-facing validator surface
+├── <validator-local-config>       # optional, small, pinned, lane-local
+├── <report-schema-or-examples>    # optional, JSON/JSONL contracts or report examples
+└── <smoke-or-fixture-examples>    # optional, tiny lane-local examples
 ```
 
 > [!NOTE]
@@ -259,11 +292,14 @@ tools/validators/
 The surrounding docs now make this split especially important:
 
 ```text
-data/work/**         # bounded temporary state
-data/receipts/**     # governed process memory
-tools/validators/**  # fail-closed validation logic
-tools/attest/**      # proof-pack / attestation logic
-.github/workflows/** # orchestration and side-effect control
+data/work/**           # bounded temporary state
+data/receipts/**       # governed process memory
+data/run_receipts/**   # run-level process memory
+tools/probes/**        # bounded observation logic
+tools/validators/**    # fail-closed validation logic
+tools/attest/**        # proof-pack / attestation logic
+policy/**              # decision authority
+.github/workflows/**   # orchestration and side-effect control
 ```
 
 That split is doctrinal guidance, not a claim about every currently mounted file.
@@ -294,13 +330,19 @@ node tools/validators/kfm-verify.ts \
 ### Validate receipt-shaped input
 
 ```bash
-node tools/validators/kfm-verify.ts \
-  --receipt data/receipts/example/run-receipt.json \
-  --require-receipt true
+python3 tools/validators/run_receipt_validator.py \
+  data/run_receipts/example/run-receipt.json
+```
+
+### Validate receipt-shaped input from stdin
+
+```bash
+cat data/run_receipts/example/run-receipt.json | \
+  python3 tools/validators/run_receipt_validator.py
 ```
 
 > [!TIP]
-> The command shape above is preserved conservatively from the supplied draft and extended only as doctrine-aligned illustration. Keep examples clearly reviewable until live runtime paths are directly verified and intentionally changed.
+> The command shapes above are conservative lane examples. Keep examples clearly reviewable until live runtime paths are directly verified and intentionally changed.
 
 ---
 
@@ -347,7 +389,7 @@ Use the validator family like this:
 | If the main burden is... | Start here | Why |
 |---|---|---|
 | connector admission readiness | `connector_gate/` | descriptor-first admission is narrower than release promotion |
-| watcher or receipt validation | `tools/validators/` | process-memory checks and linkage checks belong here, not in receipt storage |
+| probe or watcher receipt validation | `tools/validators/` | process-memory checks and linkage checks belong here, not in receipt storage |
 | release/promotion readiness | `promotion_gate/` | proof-facing validation is stronger and later than admission |
 | signing or attestation | `tools/attest/` | signatures and proof-pack assembly are adjacent, not the same as validation |
 | broader execution correctness | `tests/` | validators do not replace unit, integration, or e2e tests |
@@ -361,13 +403,24 @@ Validators often stand at the joins between process memory and higher-order trus
 - a validator may compare receipt and proof linkage without collapsing them into one object
 - a validator report should make missing or mismatched linkage visible rather than silently downgrading trust claims
 
+### Probe / validator / policy split
+
+Keep this sequence explicit:
+
+1. **probes observe**
+2. **validators enforce declared shape and linkage**
+3. **policy decides allow/deny/obligations**
+4. **workflows orchestrate side effects**
+
+When these boundaries blur, helper code starts quietly absorbing authority it should not own.
+
 ### Workflow-facing posture
 
 Where workflows use validators, the healthy order is usually:
 
 1. generate or collect the candidate object
 2. validate shape and linkage
-3. validate policy-facing prerequisites where applicable
+3. evaluate policy-facing prerequisites where applicable
 4. only then allow commit, artifact upload, promotion, or proof-pack assembly
 
 Validators help enforce that order. They should not replace the workflow lane that orchestrates it.
@@ -385,20 +438,23 @@ flowchart LR
     C[receipts / proofs / manifests / local assets] --> V
     D[policy reason and obligation pressure] --> V
 
+    P[tools/probes] --> RR[data/run_receipts]
+    RR --> V
+
     V --> R[reviewable JSON / JSONL report]
     V --> X[non-zero exit on blocking condition]
 
     R --> CI[CI gates]
-    R --> RR[release review]
+    R --> REV[release review]
     R --> UI[governed trust surfaces]
     X --> HOLD[hold / deny / quarantine]
 
     CG[connector_gate] --> V
     PG[promotion_gate] --> V
 
-    W[watcher / probe outputs] --> V
     WF[.github/workflows] -. orchestration stays outside the lane .-> V
-    A2[tools/attest] -. proof-pack assembly stays outside the lane .-> V
+    AT[tools/attest] -. proof-pack assembly stays outside the lane .-> V
+    POL[policy] -. decision authority stays outside the lane .-> V
 ```
 
 [Back to top](#top)
@@ -449,6 +505,7 @@ flowchart LR
 | Required references | a required `bundle_ref`, `proof_ref`, or `receipt_ref` is missing when strict validation was requested |
 | Local bytes vs declarations | a declared asset hash or byte length does not match local bytes |
 | Placeholder-state detection | an enforcement-bearing schema or vocabulary file is still scaffold-state when strict validation was requested |
+| Transport status bounds | a receipt presents an invalid or disallowed transport status when strict receipt validation is requested |
 
 ### Where receipts enter validator logic
 
@@ -456,7 +513,7 @@ flowchart LR
 |---|---|---|
 | replayable process memory | confirm receipt exists and is shaped correctly | own receipt storage |
 | promotion preconditions | verify declared receipt linkage | convert receipt into proof |
-| watcher validation | confirm emitted receipt and finite result posture | own watcher orchestration |
+| probe or watcher validation | confirm emitted receipt and finite result posture | own probe or watcher orchestration |
 | review output | reference receipt IDs or refs clearly | replace human review with opaque output |
 
 ### Status vocabulary used in this README
@@ -484,7 +541,7 @@ flowchart LR
 - [ ] positive and negative fixtures exist where the validator contract warrants them
 - [ ] local and CI usage both work from the same entrypoint
 - [ ] orchestration remains outside `tools/validators/`
-- [ ] adjacent docs are linked where authority, policy, schema, receipt, or test ownership lives elsewhere
+- [ ] adjacent docs are linked where authority, policy, schema, receipt, and test ownership live elsewhere
 - [ ] receipt, proof, and catalog boundaries remain explicit where linkage is checked
 - [ ] README examples are updated when behavior changes materially
 
@@ -497,7 +554,7 @@ flowchart LR
 - [ ] no free-form output replaces machine-readable review output
 - [ ] no placeholder-state file is described as enforcement-bearing without proof
 - [ ] no child-lane boundary is blurred between admission and promotion
-- [ ] no watcher or workflow lane is described as owned here when it is only consumed here
+- [ ] no probe or watcher lane is described as owned here when it is only consumed here
 
 ---
 
@@ -523,9 +580,9 @@ Yes, but only narrowly and explicitly, such as writing a report to a known path.
 
 Because validators often touch the joins between process memory, proof artifacts, and release manifests. Keeping those surfaces distinct makes failures more inspectable and prevents helper code from quietly becoming authority.
 
-### Can validators consume watcher receipts?
+### Can validators consume probe or watcher receipts?
 
-Yes. They may validate watcher-emitted receipts, linkage, and finite outcomes. They should not become the watcher runtime owner or receipt storage owner.
+Yes. They may validate emitted receipts, linkage, and finite outcomes. They should not become the probe runtime owner, watcher runtime owner, or receipt storage owner.
 
 ---
 
@@ -536,24 +593,24 @@ Yes. They may validate watcher-emitted receipts, linkage, and finite outcomes. T
 
 ```json
 {
-  "tool": "kfm-verify",
+  "tool": "run_receipt_validator",
   "outcome": "DENY",
-  "subject_ref": "dist/release/kfm-release-manifest.json",
+  "subject_ref": "data/run_receipts/example/run-receipt.json",
   "checked_at": "2026-04-16T00:00:00Z",
   "checks": [
     {
-      "name": "manifest.spec_hash",
+      "name": "receipt.spec_hash",
       "status": "pass"
     },
     {
-      "name": "required.bundle_ref",
+      "name": "receipt.transport_status",
       "status": "fail",
-      "reason_code": "MISSING_REQUIRED_REFERENCE"
+      "reason_code": "INVALID_TRANSPORT_STATUS"
     }
   ],
   "artifacts": [
     {
-      "path": "dist/release/kfm-release-manifest.json",
+      "path": "data/run_receipts/example/run-receipt.json",
       "sha256": "ILLUSTRATIVE_ONLY"
     }
   ]
