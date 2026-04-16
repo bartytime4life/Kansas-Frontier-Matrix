@@ -1,51 +1,44 @@
-<!--
-KFM Meta Block V2
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
 title: Policy
 type: standard
 version: v1
 status: review
 owners: @bartytime4life
-created: YYYY-MM-DD
+created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: 2026-04-16
 policy_label: public
-related:
-  - ../README.md
-  - ../CONTRIBUTING.md
-  - ../.github/README.md
-  - ../.github/workflows/README.md
-  - ../contracts/README.md
-  - ../schemas/README.md
-  - ../schemas/promotion/promotion-bundle-diff-policy.schema.json
-  - ../data/README.md
-  - ../data/receipts/README.md
-  - ../packages/policy/README.md
-  - ../tests/policy/README.md
-  - ../tests/validators/README.md
-  - ../tools/probes/README.md
-  - ../tools/validators/README.md
-  - ./bundles/README.md
-  - ./fixtures/README.md
-  - ./policy-runtime/README.md
-  - ./tests/README.md
-  - ./promotion_bundle_diff_policy.json
-  - ./run_receipts.rego
-tags:
-  - kfm
-  - policy
-  - governance
-  - trust
-  - review
-  - diff-policy
-  - deny-by-default
-  - rego
-notes:
-  - doc_id and created date require repo-backed verification before merge
-  - updated reflects the promotion_bundle_diff_policy.json surface as a real governed policy artifact indexed by the top-level policy lane
-  - this revision also aligns the lane with the current probe -> receipt -> validator -> policy -> CI chain
-  - this revision normalizes policy references around one central `data/receipts/` process-memory lane
-  - relative links and lane inventory follow the supplied draft plus newer probe and validator documentation; active-branch validity still needs verification where not directly surfaced
--->
+related: [
+  ../README.md,
+  ../CONTRIBUTING.md,
+  ../.github/README.md,
+  ../.github/workflows/README.md,
+  ../contracts/README.md,
+  ../schemas/README.md,
+  ../schemas/promotion/promotion-bundle-diff-policy.schema.json,
+  ../data/README.md,
+  ../data/receipts/README.md,
+  ../packages/policy/README.md,
+  ../tests/policy/README.md,
+  ../tests/validators/README.md,
+  ../tools/probes/README.md,
+  ../tools/validators/README.md,
+  ./bundles/README.md,
+  ./fixtures/README.md,
+  ./policy-runtime/README.md,
+  ./tests/README.md,
+  ./promotion_bundle_diff_policy.json,
+  ./run_receipts.rego
+]
+tags: [kfm, policy, governance, trust, review, diff-policy, deny-by-default, rego]
+notes: [
+  doc_id and created date require repo-backed verification before merge.
+  This revision indexes promotion_bundle_diff_policy.json as a real governed policy artifact at the top-level policy lane.
+  This revision aligns the lane to the documented probe -> receipt -> validator -> policy -> CI chain.
+  This revision normalizes policy references around one central data/receipts/ process-memory lane.
+  Relative links and lane inventory follow the supplied draft plus adjacent probe and validator documentation; active-branch validity still needs verification where not directly surfaced.
+]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -68,10 +61,10 @@ _Governed, executable policy surface for KFM publication, runtime trust, rights 
 |---|---|
 | **Path** | `policy/README.md` |
 | **Role** | parent lane for executable governance rules and policy data |
-| **Primary job** | decide allow/deny/review/obligation outcomes from validated inputs |
+| **Primary job** | decide allow / deny / review / obligation outcomes from validated inputs |
 | **Not this lane** | probe observation, validator enforcement, workflow orchestration, contract/schema ownership |
 | **Current documented checked-in policy data** | `policy/promotion_bundle_diff_policy.json` |
-| **Current documented starter policy-as-code direction** | OPA/Rego, branch verification still required |
+| **Current documented starter policy-as-code direction** | OPA / Rego, branch verification still required |
 | **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Policy seams](#policy-seams) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Gates and definition of done](#gates-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
@@ -338,7 +331,7 @@ Policy is most useful when it is organized by **responsibility seam** and kept h
 
 | Surface / seam | Documented role | Why it exists | What it still does **not** prove |
 |---|---|---|---|
-| `./bundles/` | Bundle lane | Holds seam-local rule packs and finite decision grammar | Checked-in `.rego` or equivalent rule files |
+| `./bundles/` | Bundle lane | Holds seam-local rule packs and finite decision grammar | Checked-in `*.rego` or equivalent rule files |
 | `./fixtures/` | Fixture lane | Holds positive and negative examples that make deny-by-default behavior reviewable | Mounted fixture payloads or case inventory |
 | `./tests/` | Bundle-local verifier lane | Holds assertions close to the policy lane | Runnable suite depth or actual toolchain |
 | `./policy-runtime/` | Runtime-coordination lane | Documents runtime-facing policy semantics inside top-level `policy/` | Mounted runtime glue, loaders, or adapters |
@@ -556,6 +549,8 @@ flowchart LR
 
 Above: the boxes represent the documented repo-facing surfaces this README routes among; the trust objects and outward surfaces are the doctrine-bearing responsibilities those lanes are expected to serve.
 
+[Back to top](#top)
+
 ---
 
 ## Tables
@@ -696,6 +691,8 @@ Not from this session. It is a valid routing boundary and proof burden, but chec
 ### Is `OPA/Rego` confirmed as mounted adoption?
 
 Not from the evidence available here. It remains the strongest documented starter direction for broader policy-as-code bundles, and a narrow starter surface is now documented here, but this README should not present broad adoption as a checked-in fact unless the active branch proves it.
+
+[Back to top](#top)
 
 ---
 
