@@ -6,43 +6,55 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION
-updated: 2026-04-14
+updated: 2026-04-16
 policy_label: public
 related: [
   ../README.md,
+  ../../README.md,
   ../../data/README.md,
   ../../data/catalog/README.md,
   ../../data/catalog/dcat/README.md,
   ../../data/catalog/stac/README.md,
   ../../data/catalog/prov/README.md,
+  ../../data/receipts/README.md,
+  ../../data/proofs/README.md,
   ../../scripts/README.md,
   ../../contracts/README.md,
   ../../schemas/README.md,
   ../../policy/README.md,
   ../../tests/README.md,
+  ../../tests/catalog/README.md,
+  ../../tests/contracts/README.md,
   ../../.github/README.md,
   ../../.github/CODEOWNERS,
+  ../../.github/workflows/README.md,
+  ../../.github/watchers/README.md,
   ../../tools/validators/README.md,
   ../../tools/validators/promotion_gate/README.md,
   ../../tools/ci/README.md,
   ../../tools/attest/README.md,
   ../../tools/diff/README.md
 ]
-tags: [kfm, tools, catalog, dcat, stac, prov, crosslink, qa, review]
-notes: [Updated to reflect the catalog_crosslink.py thin slice and tests/catalog/test_catalog_crosslink.py. doc_id placeholder pending repo-internal registration; created date needs live file-history verification; ownership grounded by visible CODEOWNERS fallback for /tools/.]
+tags: [kfm, tools, catalog, dcat, stac, prov, crosslink, qa, review, receipts, proofs]
+notes: [
+  Updated to reflect the catalog_crosslink.py thin slice and the adjacent tests/catalog/test_catalog_crosslink.py proof lane.
+  This revision aligns the lane with newer receipt/proof, validator/attest, workflow, watcher, and CI-renderer documentation.
+  doc_id placeholder and created date still need live file-history verification; ownership remains grounded by visible CODEOWNERS fallback for /tools/.
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `tools/catalog/`
 
-Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas Frontier Matrix.
+Catalog QA, cross-link, and review-support helper surface for Kansas Frontier Matrix.
 
 > [!NOTE]
 > **Status:** experimental  
 > **Document status:** draft  
 > **Owners:** `@bartytime4life`  
-> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Doc: Draft](https://img.shields.io/badge/doc-draft-blue) ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![Lane: tools/catalog](https://img.shields.io/badge/lane-tools%2Fcatalog-0a7ea4) ![Truth: Evidence Bounded](https://img.shields.io/badge/truth-evidence--bounded-555555)  
+> **Path:** `tools/catalog/README.md`  
+> ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Doc: Draft](https://img.shields.io/badge/doc-draft-blue) ![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1) ![Lane: tools/catalog](https://img.shields.io/badge/lane-tools%2Fcatalog-0a7ea4) ![Scope: Catalog Closure Helpers](https://img.shields.io/badge/scope-catalog%20closure%20helpers-1f6feb) ![Receipts: Process Memory](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![Truth: Evidence Bounded](https://img.shields.io/badge/truth-evidence--bounded-555555)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -63,7 +75,7 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 > This README intentionally does two jobs at once:
 >
 > 1. describe the **confirmed** live subtree honestly  
-> 2. define the **proposed** wider helper shape that would make this lane more useful without smuggling policy, schema authority, or publish logic into shell glue
+> 2. define the **proposed** wider helper shape that would make this lane more useful without smuggling policy, schema authority, receipt ownership, proof ownership, or publish logic into shell glue
 
 ---
 
@@ -71,18 +83,23 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 
 `tools/catalog/` is the KFM helper surface for **catalog closure quality**.
 
-In practice, that means reusable tools that operate on the outward metadata seam anchored in **DCAT, STAC, and PROV**. These helpers should strengthen governed discovery, lineage inspection, triplet consistency, and promotion-readiness review without quietly becoming the source of truth for metadata law, policy law, or release state.
+In practice, that means reusable tools that operate on the outward metadata seam anchored in **DCAT, STAC, and PROV**. These helpers should strengthen governed discovery, lineage inspection, triplet consistency, and promotion-readiness review without quietly becoming the source of truth for metadata law, policy law, receipt storage, proof storage, or release state.
 
 This lane exists because KFM treats catalog closure as operational infrastructure rather than optional metadata garnish. A good helper here should make catalog-backed trust easier to review, easier to automate, and easier to re-run locally.
 
 ### What this README is for
 
-This file helps maintainers do four things quickly:
+This file helps maintainers do five things quickly:
 
 1. understand what belongs in `tools/catalog/`
-2. keep this lane separate from `data/catalog/`, `scripts/`, `contracts/`, `schemas/`, and `policy/`
+2. keep this lane separate from `data/catalog/`, `data/receipts/`, `data/proofs/`, `scripts/`, `contracts/`, `schemas/`, and `policy/`
 3. extend the subtree without overclaiming mounted executable inventory
 4. make helper changes land with a clear boundary, caller, and proof burden
+5. keep catalog-helper behavior aligned with the newer validator, attestation, workflow, watcher, and CI-renderer docs
+
+### Working question
+
+> **Do the declared catalog artifacts and their adjacent trust refs still describe one coherent outward release surface, and can we prove helper behavior when they do not?**
 
 ### Evidence markers used here
 
@@ -110,11 +127,13 @@ This file helps maintainers do four things quickly:
 | Upstream metadata seam | [../../data/catalog/README.md](../../data/catalog/README.md) | owns the governed `DCAT + STAC + PROV` closure surface that this lane should inspect, not replace |
 | Catalog child lanes | [../../data/catalog/dcat/README.md](../../data/catalog/dcat/README.md), [../../data/catalog/stac/README.md](../../data/catalog/stac/README.md), [../../data/catalog/prov/README.md](../../data/catalog/prov/README.md) | the triplet surfaces this lane should QA and cross-link |
 | Parent lifecycle contract | [../../data/README.md](../../data/README.md) | defines the `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` truth path |
+| Receipt boundary | [../../data/receipts/README.md](../../data/receipts/README.md) | helpers may inspect or report receipt refs, but receipt storage and process memory remain there |
+| Proof boundary | [../../data/proofs/README.md](../../data/proofs/README.md) | higher-order trust objects may be linked or summarized without turning this lane into proof storage |
 | Adjacent orchestration | [../../scripts/README.md](../../scripts/README.md) | thin wrappers and CI entrypoints may call catalog helpers, but reusable logic should not be buried there |
 | Shared object law | [../../contracts/README.md](../../contracts/README.md) and [../../schemas/README.md](../../schemas/README.md) | helpers may validate declared authority, but must not silently define schema authority |
-| Policy boundary | [../../policy/README.md](../../policy/README.md) | rights, sensitivity, and deny-by-default rules belong there, even when helpers evaluate them |
-| Verification surface | [../../tests/README.md](../../tests/README.md) | fixtures and assertions should prove helper behavior instead of leaving README prose as the only evidence |
-| Repo governance | [../../.github/README.md](../../.github/README.md) and [../../.github/CODEOWNERS](../../.github/CODEOWNERS) | review boundaries, owner map, and merge posture live here |
+| Policy boundary | [../../policy/README.md](../../policy/README.md) | rights, sensitivity, and deny-by-default rules belong there, even when helpers evaluate their consequences |
+| Verification surfaces | [../../tests/README.md](../../tests/README.md), [../../tests/catalog/README.md](../../tests/catalog/README.md), [../../tests/contracts/README.md](../../tests/contracts/README.md) | fixtures and assertions should prove helper behavior instead of leaving README prose as the only evidence |
+| Repo governance | [../../.github/README.md](../../.github/README.md), [../../.github/CODEOWNERS](../../.github/CODEOWNERS), [../../.github/workflows/README.md](../../.github/workflows/README.md), [../../.github/watchers/README.md](../../.github/watchers/README.md) | review boundaries, owner map, workflow posture, and watcher-orchestration boundaries live here |
 | Neighbor helper lanes | [../../tools/ci/README.md](../../tools/ci/README.md), [../../tools/attest/README.md](../../tools/attest/README.md), [../../tools/diff/README.md](../../tools/diff/README.md), [../../tools/validators/README.md](../../tools/validators/README.md) | catalog helpers should stay aligned with CI rendering, attestation, comparison, and validation lanes without absorbing their jobs |
 | Promotion consumer | [../../tools/validators/promotion_gate/README.md](../../tools/validators/promotion_gate/README.md) | promotion now makes catalog closure a first-class review surface; this lane is the natural helper boundary for closure QA and triplet checks |
 
@@ -126,12 +145,14 @@ Use this lane when the work is:
 - catalog-specific
 - callable by humans, scripts, or CI
 - reviewable as a helper rather than as hidden business logic
+- capable of producing stable machine-readable output when downstream review or CI depends on it
 
 Do **not** use this lane when the work is really:
 
 - the catalog itself
 - policy ownership
 - schema ownership
+- receipt or proof storage
 - runtime API behavior
 - one-off operator glue that should stay in `scripts/`
 
@@ -161,6 +182,7 @@ The following belong here when they remain helper inputs rather than truth store
 | CI/operator flags | `--root`, `--fail-on-warn`, explicit paths | the helper stays deterministic and easy to re-run |
 | Promotion artifacts | decision refs, promotion records, bundle manifests | the helper checks whether outward catalog closure still aligns with governed promotion artifacts |
 | Diff support | normalized prior/current catalog records | the helper checks closure or linkage, not policy meaning |
+| Receipt/proof references | `receipt_ref`, `proof_ref`, `release_ref`, `catalog_refs` | the helper preserves trust-chain visibility without owning those surfaces |
 
 ### Minimum bar for anything added here
 
@@ -169,6 +191,7 @@ The following belong here when they remain helper inputs rather than truth store
 - it emits stable outputs when automation or review depends on it
 - it points back to concrete artifacts, refs, or digests
 - it does not silently become the only understandable source of catalog law
+- if it touches receipts or proofs, it keeps those roles explicit instead of flattening them
 
 [Back to top](#top)
 
@@ -190,6 +213,7 @@ The following do **not** belong here:
 | Signature generation or verification | [../../tools/attest/README.md](../../tools/attest/README.md) | catalog helpers may inspect signed state, but attestation belongs there |
 | Reviewer rendering | [../../tools/ci/README.md](../../tools/ci/README.md) | catalog helpers should emit stable outputs that CI helpers can render |
 | Promotion decisions | [../../tools/validators/README.md](../../tools/validators/README.md) | this lane can inform promotion, not decide it |
+| Receipt archives or proof-pack archives | [../../data/receipts/README.md](../../data/receipts/README.md), [../../data/proofs/README.md](../../data/proofs/README.md) | trust-bearing storage belongs in governed data surfaces, not helper lanes |
 
 > [!CAUTION]
 > If deleting a helper from `tools/catalog/` would erase the only understandable explanation of what is publishable, how policy was applied, or how catalog closure works, the helper is carrying too much meaning and should graduate to a stronger governed surface.
@@ -208,9 +232,10 @@ The following do **not** belong here:
 | `/tools/` is owned by `@bartytime4life` in `/.github/CODEOWNERS` | `CONFIRMED` | grounds the owner line for this subtree |
 | Promotion Gate documentation treats catalog closure as part of review-significant promotion validation | `CONFIRMED via adjacent documentation` | strengthens the downstream value of reusable catalog QA and cross-link helpers |
 | `tools/catalog/catalog_crosslink.py` is the current thin-slice executable helper | `CONFIRMED` | this README now documents one concrete helper rather than a purely README-only lane |
-| `tests/catalog/test_catalog_crosslink.py` is the current thin-slice proof surface | `CONFIRMED` | the first helper now lands with explicit test coverage |
+| `tests/catalog/test_catalog_crosslink.py` is the current thin-slice proof surface | `CONFIRMED in adjacent documentation` | the first helper now lands with explicit test coverage in the documentation stream |
+| Updated adjacent docs now make receipt/proof separation explicit across tests, validators, attestation, workflows, and CI rendering | `CONFIRMED in-session doctrine alignment` | this lane now needs clearer wording about trust-chain refs without taking ownership of them |
 | Wider helper families such as `qa/`, `crosslink/`, and `report/` | `PROPOSED` | these remain target shapes rather than fully proven current inventory |
-| Exact file-history dates and repo-internal document ID for this README | `NEEDS VERIFICATION` | left as placeholders in the KFM meta block above |
+| Exact file-history dates, repo-internal document ID, full caller inventory, and any additional mounted helpers | `NEEDS VERIFICATION` | left as placeholders in the KFM meta block above |
 
 [Back to top](#top)
 
@@ -285,18 +310,23 @@ Run these inventory-first commands before adding or moving anything under `tools
 
 ```bash
 find tools/catalog -maxdepth 3 -print 2>/dev/null | sort
+find tests/catalog -maxdepth 3 -print 2>/dev/null | sort
+find data/catalog -maxdepth 4 -print 2>/dev/null | sort
 ```
 
 ### 2. Re-read the parent helper contract and adjacent metadata / verification seams
 
 ```bash
 sed -n '1,240p' tools/README.md 2>/dev/null
+sed -n '1,260p' tests/README.md 2>/dev/null
+sed -n '1,260p' tests/catalog/README.md 2>/dev/null
 sed -n '1,260p' data/catalog/README.md 2>/dev/null
 sed -n '1,260p' data/catalog/dcat/README.md 2>/dev/null
 sed -n '1,260p' data/catalog/stac/README.md 2>/dev/null
 sed -n '1,260p' data/catalog/prov/README.md 2>/dev/null
+sed -n '1,260p' data/receipts/README.md 2>/dev/null
+sed -n '1,260p' data/proofs/README.md 2>/dev/null
 sed -n '1,260p' scripts/README.md 2>/dev/null
-sed -n '1,260p' tests/README.md 2>/dev/null
 sed -n '1,260p' tools/validators/promotion_gate/README.md 2>/dev/null
 sed -n '1,260p' tools/ci/README.md 2>/dev/null
 ```
@@ -304,7 +334,8 @@ sed -n '1,260p' tools/ci/README.md 2>/dev/null
 ### 3. Search for current callers and references before inventing names
 
 ```bash
-rg -n "catalog|stac|dcat|prov|crosslink|closure" tools scripts tests .github docs data policy contracts schemas pipelines -S 2>/dev/null
+rg -n "catalog|stac|dcat|prov|crosslink|closure|receipt_ref|proof_ref|promotion-record" \
+  tools scripts tests .github docs data policy contracts schemas pipelines -S 2>/dev/null
 ```
 
 ### 4. Inspect executable reality instead of assuming it exists
@@ -346,6 +377,7 @@ Use `tools/catalog/` when the helper has one clear job, for example:
 - release-readiness summaries for catalog closure
 - freshness, completeness, or drift reporting for review surfaces
 - promotion-oriented closure checks that ensure outward catalog records still align with governed release artifacts
+- trust-chain visibility checks that preserve receipt/proof linkage without moving those surfaces into helper-owned truth
 
 A good helper here should usually:
 
@@ -353,7 +385,7 @@ A good helper here should usually:
 2. default to read-only inspection
 3. emit stable machine-readable output when CI or review surfaces parse it
 4. fail non-zero when it is meant to block
-5. point back to concrete artifacts, paths, digests, or release refs
+5. point back to concrete artifacts, paths, digests, receipts, proofs, or release refs
 
 ### Keep helper logic separate from orchestration
 
@@ -365,6 +397,7 @@ A healthy split looks like this:
 - `tests/` owns fixtures and assertions
 - `data/catalog/` owns the metadata being inspected
 - `tools/ci/` owns reviewer-readable rendering of stable helper outputs
+- `data/receipts/` and `data/proofs/` remain distinct upstream trust surfaces
 
 ### Tool behavior contract
 
@@ -373,11 +406,12 @@ A healthy split looks like this:
 | Determinism | same inputs should yield the same output shape and exit code |
 | Failure semantics | blocking checks return non-zero and describe what failed |
 | Output shape | prefer JSON / JSONL or another stable format when CI or review surfaces consume it |
-| Cross-link discipline | reports should reference the concrete STAC/DCAT/PROV objects and any related manifest / receipt paths |
+| Cross-link discipline | reports should reference the concrete STAC/DCAT/PROV objects and any related manifest / receipt / proof paths |
 | Boundary discipline | no silent schema arbitration, no hidden policy law, no direct promotion shortcuts |
 | Safety | no secret scraping, unrestricted sensitive fixtures, or logs that leak policy-restricted material |
 | Reviewability | humans, scripts, and CI should be able to call the same helper without semantic drift |
 | Local/CI parity | a merge-blocking helper should be runnable locally with the same core behavior |
+| Trust-chain clarity | receipt refs, proof refs, and catalog refs must stay distinguishable when present |
 
 ### Thin-slice behavior
 
@@ -415,7 +449,7 @@ flowchart LR
     TC[tools/catalog/\nqa • crosslink • report]
     SC[scripts/\nwrappers / entrypoints]
     WF[.github/workflows/]
-    TS[tests/fixtures]
+    TS[tests/catalog/\nfixtures + assertions]
     CI[tools/ci/\nreview renderers]
     RV[reviewers / governed APIs]
 
@@ -430,7 +464,7 @@ flowchart LR
     CI --> RV
 
     CAT -. remains metadata seam, not helper-owned truth .-> RV
-    TC -. never bypass .-> LAW
+    TC -. must not bypass .-> LAW
 ```
 
 [Back to top](#top)
@@ -444,7 +478,9 @@ flowchart LR
 | Surface | Primary job | Must not quietly become |
 |---|---|---|
 | `data/catalog/` | release-backed DCAT/STAC/PROV metadata seam | helper-owned truth |
-| `tools/catalog/` | reusable catalog QA, cross-link, and review support helpers | schema authority, policy authority, or release truth |
+| `data/receipts/` | process memory for runs and validation | proof storage or catalog authority |
+| `data/proofs/` | higher-order trust objects | helper-owned summary output |
+| `tools/catalog/` | reusable catalog QA, cross-link, and review support helpers | schema authority, policy authority, receipt owner, proof owner, or release truth |
 | `scripts/` | thin wrappers and operator/CI entrypoints | the only place helper behavior is documented |
 | `contracts/` / `schemas/` | declared object grammar and validation law | implicit shell glue |
 | `policy/` | rights, sensitivity, and deny-by-default rule ownership | undocumented helper side effects |
@@ -455,7 +491,7 @@ flowchart LR
 | Helper class | Typical inputs | Typical outputs | Status in this README |
 |---|---|---|---|
 | Structural QA | STAC items / collections, DCAT JSON-LD, PROV bundles | pass/fail report, structured errors | `PROPOSED` executable family |
-| Cross-link checks | STAC + DCAT + PROV + manifest / receipt refs | consistency report, missing-link diagnostics | **Thin-slice implemented** |
+| Cross-link checks | STAC + DCAT + PROV + manifest / receipt / proof refs | consistency report, missing-link diagnostics | **Thin-slice implemented** |
 | Reviewer summaries | catalog directories, release refs, timestamps | completeness / freshness / readiness summary | `PROPOSED` executable family |
 | Promotion closure helpers | promotion records, bundle refs, catalog triplet refs | closure alignment report | **Thin-slice implemented** |
 | Scaffold-only current state | `README.md` | documentation only | historical / superseded public snapshot |
@@ -482,7 +518,7 @@ flowchart LR
 - [x] helper placed in the narrowest fitting lane under `tools/catalog/`
 - [x] representative passing and failing inputs exist in `tests/catalog/`
 - [x] helper output format and exit semantics are documented here
-- [x] boundary against `data/catalog/`, `contracts/`, `schemas/`, and `policy/` remains explicit
+- [x] boundary against `data/catalog/`, `contracts/`, `schemas/`, `policy/`, `data/receipts/`, and `data/proofs/` remains explicit
 - [x] merge-blocking behavior is runnable locally as well as in CI
 - [x] no secrets or policy-restricted sample payloads are committed here
 
@@ -493,6 +529,7 @@ flowchart LR
 - [ ] add optional rendering handoff to `tools/ci/`
 - [ ] add fixture families for mounted-record content mismatches, not just ref mismatches
 - [ ] document wrapper relationships in `scripts/README.md` if helper callers are added there
+- [ ] add explicit receipt/proof-ref examples only when the checked helper contract actually requires them
 
 [Back to top](#top)
 
@@ -528,6 +565,10 @@ Yes. Catalog closure is now visibly relevant to promotion review. But this lane 
 
 Today’s thin slice is `catalog_crosslink.py`, which checks outward triplet ref presence and alignment using `decision.json` and `promotion-record.json`. It does not yet parse mounted STAC/DCAT/PROV records deeply.
 
+### Why mention receipts and proofs here?
+
+Because downstream promotion and review surfaces may need those refs to remain visible and aligned. Mentioning them does not move their authority or storage into this lane.
+
 [Back to top](#top)
 
 ---
@@ -535,7 +576,7 @@ Today’s thin slice is `catalog_crosslink.py`, which checks outward triplet ref
 ## Appendix
 
 <details>
-<summary>Illustrative adjacent wrapper pattern (`PROPOSED`, document-grounded, not current subtree proof)</summary>
+<summary>Illustrative adjacent wrapper pattern (<strong>PROPOSED</strong>, document-grounded, not current subtree proof)</summary>
 
 The broader KFM documentation corpus already uses thin-wrapper examples like this:
 
@@ -577,7 +618,7 @@ Use a stable output shape when CI, review summaries, or release evidence need to
 </details>
 
 <details>
-<summary>Illustrative promotion-oriented closure output (`current thin-slice aligned`)</summary>
+<summary>Illustrative promotion-oriented closure output (<strong>current thin-slice aligned</strong>)</summary>
 
 ```json
 {
