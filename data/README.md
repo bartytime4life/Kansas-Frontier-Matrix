@@ -34,7 +34,7 @@ notes: [Revised upward from the supplied draft. Parent data-lane README now alig
 
 Governed lifecycle surface for KFM evidence-bearing data, process memory, catalog closure, release evidence, and release-backed outward scope.
 
-> [!NOTE]
+> [!IMPORTANT]
 > **Status:** experimental  
 > **Document status:** draft  
 > **Owners:** NEEDS VERIFICATION  
