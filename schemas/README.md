@@ -43,14 +43,14 @@ Parent boundary and live-tree index for the public `schemas/` subtree while KFM 
 > **Owners:** `@bartytime4life`  
 > **Path:** `schemas/README.md`  
 > **Posture:** parent boundary · live subtree index · authority-sensitive · public-facing inventory  
-> ![status](https://img.shields.io/badge/status-experimental-orange)
-> ![doc](https://img.shields.io/badge/doc-draft-lightgrey)
-> ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
-> ![inventory](https://img.shields.io/badge/inventory-live%20nested%20subtree-yellow)
-> ![authority](https://img.shields.io/badge/schema__home-unresolved-red)
-> ![repo](https://img.shields.io/badge/repo-public%20main-brightgreen)
->
 > **Quick jumps:** [Scope](#scope) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+![status](https://img.shields.io/badge/status-experimental-orange)
+![doc](https://img.shields.io/badge/doc-draft-lightgrey)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![inventory](https://img.shields.io/badge/inventory-live%20nested%20subtree-yellow)
+![authority](https://img.shields.io/badge/schema__home-unresolved-red)
+![repo](https://img.shields.io/badge/repo-public%20main-brightgreen)
 
 > [!IMPORTANT]
 > Current public-facing evidence confirms that `schemas/` is a **real nested subtree** with visible child lanes. This parent README must now do more than warn about future placement: it must index the live tree honestly and keep unresolved authority questions explicit.
@@ -190,7 +190,7 @@ The safest reading today is:
 
 ### Minimum bar for anything added here
 
-- it describes the role of the parent lane or its child/sibling routing
+- it describes the role of the parent lane or its child and sibling routing
 - it does not create a new shadow authority surface directly under the parent `schemas/` root
 - it keeps child README links and adjacent root-lane links current
 - it does not treat visible scaffold growth as implicit authority resolution
@@ -421,7 +421,7 @@ The repo currently exposes **several** real contract-adjacent signals:
 That is an explicit decision problem, not a quiet winner.
 
 <details>
-<summary><strong>Resolution branches (`PROPOSED`)</strong></summary>
+<summary><strong>Resolution branches (PROPOSED)</strong></summary>
 
 ### Branch A — `schemas/contracts/` becomes canonical for machine-readable contract families
 
@@ -523,7 +523,7 @@ Reading rule: inspect the live subtree first, then inspect the adjacent root con
 | `../contracts/` | `README.md` + `vocab/README.md` | root contract lane is no longer README-only | real adjacent surface, but not clean canonical-home proof on its own |
 | `../contracts/README.md` | present, substantive, but should be reread carefully before treating it as settled singular authority | a real adjacent document with meaningful placement impact | treat as a live but noisy signal that still needs reconciliation |
 | `../contracts/vocab/README.md` | README-only doctrinal vocabulary lane | root vocabulary doctrine now exists beside schema-side JSON registries | real neighboring vocabulary surface, not a mirrored machine-file twin |
-| `../docs/standards/README.md` | routes machine contracts to both `../contracts/` and `./contracts/` | old singular-root reading is stale | standards routing is split, not singular |
+| `../docs/standards/README.md` | routes machine contracts to both `contracts/` and `schemas/contracts/` | old singular-root reading is stale | standards routing is split, not singular |
 | `../tests/contracts/` | `README.md` + `test_correction_notice_contract.py` | contract-facing verification is no longer README-only | verification burden at root is more concrete than the schema-side scaffold |
 | `../.github/workflows/` | `README.md` only | workflow intent exists, but merge-gate YAML is not proven here | workflow enforcement depth remains `NEEDS VERIFICATION` |
 
@@ -534,7 +534,7 @@ Reading rule: inspect the live subtree first, then inspect the adjacent root con
 | parent inventory update | yes | `schemas/README.md` | this file owns the subtree index |
 | new child-lane boundary README | no | the specific child lane | use the most specific boundary surface |
 | new trust-bearing schema body in an existing visible family | not by default | the canonical contract lane once authority is explicit | current visible files do not settle authority by themselves |
-| shared reason / obligation / reviewer role value | no, not in the parent root | `schemas/contracts/vocab/` *or* another explicitly chosen canonical vocabulary home | shared vocab must stay finite and singular |
+| shared reason, obligation, or reviewer role value | no, not in the parent root | `schemas/contracts/vocab/` *or* another explicitly chosen canonical vocabulary home | shared vocab must stay finite and singular |
 | new valid / invalid example pack | no | prefer root `tests/contracts/` or the eventual canonical fixture home | verification should not silently fork |
 | workflow YAML | no | `../.github/workflows/` | execution control is not a schema-index concern |
 | human-readable standards prose | no | `../docs/standards/` | standards prose already has a governed home |
@@ -663,7 +663,7 @@ These are the tensions this parent README should keep visible until a later revi
 3. `docs/standards/README.md` routes machine contracts to both roots, which is more honest than older wording but still does not decide authority.
 4. `tests/contracts/` now has at least one real test file, which strengthens the verification side of the story even while `.github/workflows/` remains README-only on the visible public surface.
 5. `schemas/schemas/README.md` may still carry parent-staleness language that no longer matches the reconciled parent tree.
-6. `contracts/README.md` is a real current document, but its current path/body alignment should be rechecked before anyone treats it as clean canonical-home proof.
+6. `contracts/README.md` is a real current document, but its current path and body alignment should be rechecked before anyone treats it as clean canonical-home proof.
 
 </details>
 
