@@ -6,29 +6,73 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: YYYY-MM-DD
+updated: 2026-04-16
 policy_label: NEEDS_VERIFICATION
-related: [tests/README.md, tests/e2e/README.md, tests/contracts/README.md, tests/policy/README.md, .github/CODEOWNERS, .github/workflows/README.md, contracts/README.md, policy/README.md, schemas/README.md, schemas/contracts/v1/correction/README.md, docs/README.md]
-tags: [kfm, tests, e2e, correction, verification]
-notes: [doc_id, created, updated, and policy_label need verification; status is preserved from the supplied baseline until document-record metadata is reverified; owner is grounded in current public-main CODEOWNERS coverage for /tests/]
+related: [
+  ../README.md,
+  ../../README.md,
+  ../../contracts/README.md,
+  ../../policy/README.md,
+  ../../validators/README.md,
+  ../../ci/README.md,
+  ../../catalog/README.md,
+  ../../integration/README.md,
+  ../../reproducibility/README.md,
+  ../../accessibility/README.md,
+  ../runtime_proof/README.md,
+  ../release_assembly/README.md,
+  ../../../README.md,
+  ../../../.github/README.md,
+  ../../../.github/CODEOWNERS,
+  ../../../.github/workflows/README.md,
+  ../../../.github/watchers/README.md,
+  ../../../contracts/README.md,
+  ../../../policy/README.md,
+  ../../../schemas/README.md,
+  ../../../schemas/contracts/v1/correction/README.md,
+  ../../../docs/README.md,
+  ../../../data/receipts/README.md,
+  ../../../data/proofs/README.md
+]
+tags: [kfm, tests, e2e, correction, supersession, withdrawal, stale-visible, receipts, proofs]
+notes: [
+  doc_id, created, updated, and policy_label still need verification against repo history or governance records.
+  Updated to align the correction leaf with the fuller tests lattice, receipt/proof separation, validator and attestation adjacency, watcher/process-memory doctrine, and whole-path trust-surface guidance.
+  Current public-main evidence still proves this leaf mainly as a visible README-bearing family; executable suite depth, runner/toolchain, screenshot baselines, and merge-blocking automation remain bounded until checked directly on the working branch.
+]
 [/KFM_META_BLOCK_V2] -->
 
-# correction
+<a id="top"></a>
 
-End-to-end correction proof surface for KFM correction lineage, visible supersession, stale-visible behavior, and replacement-safe trust cues.
+# `correction`
+
+End-to-end correction proof surface for KFM **correction lineage**, **visible supersession**, **stale-visible behavior**, **withdrawal / replacement safety**, and **post-publication trust continuity**.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/correction/README.md`  
-> **Repo fit:** leaf family under [`../README.md`](../README.md); downstream of [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../schemas/contracts/v1/correction/README.md`](../../../schemas/contracts/v1/correction/README.md), [`../../../docs/README.md`](../../../docs/README.md), and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md); upstream of future executable correction drills and lineage-proof cases under `tests/e2e/correction/**`  
+> **Repo fit:** leaf family under [`../README.md`](../README.md); downstream of [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../validators/README.md`](../../validators/README.md), [`../../ci/README.md`](../../ci/README.md), [`../../catalog/README.md`](../../catalog/README.md), [`../../integration/README.md`](../../integration/README.md), [`../../reproducibility/README.md`](../../reproducibility/README.md), [`../../accessibility/README.md`](../../accessibility/README.md), [`../../../README.md`](../../../README.md), [`../../../.github/README.md`](../../../.github/README.md), [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), [`../../../.github/watchers/README.md`](../../../.github/watchers/README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../schemas/contracts/v1/correction/README.md`](../../../schemas/contracts/v1/correction/README.md), [`../../../docs/README.md`](../../../docs/README.md), [`../../../data/receipts/README.md`](../../../data/receipts/README.md), and [`../../../data/proofs/README.md`](../../../data/proofs/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-correction%20proof-bd561d) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
->
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-correction%20proof-bd561d) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+
 > [!NOTE]
 > The meta block above keeps `doc_id`, `created`, `updated`, and `policy_label` as reviewable placeholders until document-record metadata is reverified from repo history or governance records. The impact block below describes the current maturity of the `correction/` leaf itself.
->
+
 > [!IMPORTANT]
 > Current public `main` inspection confirms that `tests/e2e/correction/` exists and currently exposes `README.md` only. That proves the leaf boundary and its documented burden, but it does **not** prove checked-in executable correction cases, runner/toolchain, proof-pack emitters, screenshot baselines, or automatically exercised correction drills.
+
+> [!TIP]
+> Keep the KFM trust split visible here:
+>
+> **correction proof ≠ contract proof ≠ policy proof ≠ validator proof ≠ renderer proof ≠ receipt authority ≠ proof authority**
+>
+> - `tests/e2e/correction/` proves correction lineage across a whole path  
+> - `tests/contracts/` proves correction-object shape and valid/invalid examples  
+> - `tests/policy/` proves correction-related decision behavior  
+> - `tests/validators/` proves validator and gate behavior  
+> - `tests/ci/` proves downstream rendering and handoff behavior  
+> - `data/receipts/` remains process memory  
+> - `data/proofs/` remains higher-order trust storage
 
 | At a glance | Working rule |
 |---|---|
@@ -40,13 +84,36 @@ End-to-end correction proof surface for KFM correction lineage, visible superses
 | Minimum lineage anchors | `CorrectionNotice` + affected release ref + replacement ref or explicit absence |
 | Best first executable case | One synthetic, public-safe correction drill |
 
+---
+
 ## Scope
 
 `tests/e2e/correction/` exists to prove that KFM can correct a release-backed or outward trust-bearing result **without hiding the change**.
 
-Good correction cases are **thin but whole**: one mistaken or withdrawn outward artifact, one governed correction path, and one visible lineage trail across the affected surfaces. This leaf is for correction-specific end-to-end proof such as supersession, withdrawal, replacement, stale-visible behavior, correction-pending cues, or precision narrowing that must remain inspectable in maps, dossiers, stories, Focus, exports, or adjacent trust surfaces when those surfaces are in scope.
+Good correction cases are **thin but whole**: one mistaken, narrowed, withdrawn, or superseded outward artifact; one governed correction path; and one visible lineage trail across the affected surfaces. This leaf is for correction-specific end-to-end proof such as supersession, withdrawal, replacement, stale-visible behavior, correction-pending cues, or precision narrowing that must remain inspectable in maps, dossiers, stories, Focus, exports, or adjacent trust surfaces when those surfaces are in scope.
 
-This is not a generic regression bucket. If a case is really about release assembly, pure runtime outcome proof, policy grammar, schema shape, accessibility-only behavior, or deterministic replay, it should live in its more honest home.
+This is not a generic regression bucket. If a case is really about release assembly, request-time runtime outcome proof, policy grammar, schema shape, accessibility-only behavior, or deterministic replay, it should live in its more honest home.
+
+### What this leaf should prove
+
+- a correction changes outward trust state **without silent overwrite**
+- affected and replacement release lineage stays reconstructable
+- withdrawn or superseded state remains visible where user meaning changes
+- stale-derived surfaces stay visibly stale until rebuild or repoint completes
+- correction-related machine objects, receipts, proofs, and rendered summaries remain distinguishable
+- fail-closed behavior remains visible when correction cannot complete cleanly
+- audit continuity survives the correction path
+
+### What this leaf should not absorb
+
+- release assembly as the primary burden
+- request-time runtime proof as the primary burden
+- schema-validity proof by itself
+- policy grammar by itself
+- validator-only behavior by itself
+- renderer-only behavior by itself
+- receipt or proof storage
+- secret-bearing trace dumps or unrestricted sensitive fixtures
 
 ### Status markers used here
 
@@ -67,12 +134,17 @@ This is not a generic regression bucket. If a case is really about release assem
 | **CONFIRMED — tests family contract** | [`../../README.md`](../../README.md) treats verification as a governed trust surface, not a generic QA bucket |
 | **CONFIRMED — contract-facing validation lane** | [`../../contracts/README.md`](../../contracts/README.md) exists as the stronger repo-facing home for valid/invalid contract examples and fail-closed object validation |
 | **CONFIRMED — policy-behavior lane** | [`../../policy/README.md`](../../policy/README.md) exists as the stronger repo-facing home for correction reason/obligation behavior |
+| **CONFIRMED — validator and renderer neighbors** | [`../../validators/README.md`](../../validators/README.md) and [`../../ci/README.md`](../../ci/README.md) exist as stronger homes for validator-only and renderer-only proof |
 | **CONFIRMED — workflow adjacency** | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) exists, and current public `main` shows `.github/workflows/` as `README.md` only |
+| **CONFIRMED — watcher/process-memory adjacency** | [`../../../.github/watchers/README.md`](../../../.github/watchers/README.md) now exists and sharpens how receipt-bearing automation should be described |
 | **CONFIRMED — ownership** | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) currently assigns `/tests/` to `@bartytime4life` |
 | **CONFIRMED — schema-side correction lane** | [`../../../schemas/contracts/v1/correction/README.md`](../../../schemas/contracts/v1/correction/README.md) exists, and current public `correction_notice.schema.json` is placeholder-only `{}` |
+| **CONFIRMED — trust-surface adjacency** | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) and [`../../../data/proofs/README.md`](../../../data/proofs/README.md) materially affect how correction lineage should be described |
 | **NEEDS VERIFICATION** | Real runner/toolchain, checked-in executable cases, required checks, screenshot baselines, proof-pack emitters, whether correction drills are exercised automatically, and final schema-home authority between `schemas/` and `contracts/` |
 
-[Back to top](#correction)
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -87,21 +159,35 @@ This is not a generic regression bucket. If a case is really about release assem
 | Wider tests lattice | [`../../README.md`](../../README.md) | Keeps this leaf aligned with the repo’s governed verification model | **CONFIRMED** |
 | Contract-facing test lane | [`../../contracts/README.md`](../../contracts/README.md) | Stronger repo-facing home for contract-shape checks, valid/invalid examples, and fail-closed object validation | **CONFIRMED** |
 | Policy-behavior test lane | [`../../policy/README.md`](../../policy/README.md) | Stronger repo-facing home for correction-related reason/obligation behavior under pressure | **CONFIRMED** |
+| Validator-proof lane | [`../../validators/README.md`](../../validators/README.md) | Stronger repo-facing home for validator-only correction gating or machine checks | **CONFIRMED** |
+| Renderer-proof lane | [`../../ci/README.md`](../../ci/README.md) | Stronger repo-facing home for correction-summary or handoff rendering behavior | **CONFIRMED** |
+| Catalog-helper lane | [`../../catalog/README.md`](../../catalog/README.md) | Keep metadata-closure-only correction work out of this leaf when the burden is narrower | **CONFIRMED** |
+| Integration lane | [`../../integration/README.md`](../../integration/README.md) | Real-boundary but smaller-than-e2e correction slices may belong there | **CONFIRMED** |
+| Reproducibility lane | [`../../reproducibility/README.md`](../../reproducibility/README.md) | Deterministic replay or rebuild sameness should stay distinct from correction lineage | **CONFIRMED** |
+| Accessibility lane | [`../../accessibility/README.md`](../../accessibility/README.md) | Accessibility-only correction cues should stay first-class when they are the primary burden | **CONFIRMED** |
 | Repo root posture | [`../../../README.md`](../../../README.md) | Keeps correction proof tied to the governed, evidence-first repo identity | **CONFIRMED** |
 | Workflow adjacency | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Shows the current public automation boundary and its limits | **CONFIRMED** |
+| Watcher adjacency | [`../../../.github/watchers/README.md`](../../../.github/watchers/README.md) | Keeps watcher-produced process memory and watcher orchestration outside this leaf | **CONFIRMED** |
 | Ownership boundary | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Establishes review ownership for `/tests/` | **CONFIRMED** |
 | Contract source | [`../../../contracts/README.md`](../../../contracts/README.md) | Correction cases should consume authoritative object families, not redefine them | **CONFIRMED** |
 | Policy source | [`../../../policy/README.md`](../../../policy/README.md) | Correction can involve deny-by-default decisions, rights narrowing, or review-bearing outcomes | **CONFIRMED** |
 | Schema boundary | [`../../../schemas/README.md`](../../../schemas/README.md) | Prevents schema-law drift while schema-home authority remains a live repo concern | **CONFIRMED** |
 | Correction contract lane | [`../../../schemas/contracts/v1/correction/README.md`](../../../schemas/contracts/v1/correction/README.md) | Names the live schema-side correction lane and keeps the placeholder `CorrectionNotice` schema body visible instead of overclaimed | **CONFIRMED** current path / **NEEDS VERIFICATION** authoritative machine home |
 | Runbooks and human-readable guidance | [`../../../docs/README.md`](../../../docs/README.md) | Correction procedures and operator guidance should stay synchronized with executable proof | **CONFIRMED** |
+| Receipt boundary | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Correction may depend on process memory, but this leaf does not own receipt storage | **CONFIRMED** |
+| Proof boundary | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Correction may depend on release or proof lineage, but this leaf does not own proof storage | **CONFIRMED** |
 | Release-bearing sibling | [`../release_assembly/README.md`](../release_assembly/README.md) | Use that leaf when the core burden is release/proof-pack assembly rather than correction lineage | **CONFIRMED** as sibling path / **NEEDS VERIFICATION** as executable depth |
 | Runtime-bearing sibling | [`../runtime_proof/README.md`](../runtime_proof/README.md) | Use that leaf when the core burden is runtime outcome proof rather than correction propagation | **CONFIRMED** as sibling path / **NEEDS VERIFICATION** as executable depth |
 
 ### Local rule
 
-Keep this leaf **correction-led**.  
+Keep this leaf **correction-led**.
+
 If a case cannot point to a correction-specific end-to-end burden, it probably belongs somewhere else.
+
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -115,8 +201,9 @@ Accepted inputs for this directory are the **smallest artifacts needed to prove 
 | Surface-state evidence | Screenshots, snapshots, diffs, or other cues showing the outward correction state | **PROPOSED / NEEDS VERIFICATION** until the real runner is known |
 | Derived rebuild or stale-visible evidence | Proof that projections rebuild, repoint, or remain visibly stale instead of silently drifting | Especially important for map-facing or export-facing cases |
 | Audit and comparison output | Reports that show what changed, why, and how the system stayed trustworthy | Keep output reviewable and burden-led |
-| Reused authoritative fixtures | Contract, policy, and release examples imported from their owning homes | Reuse; do not fork authority locally |
+| Reused authoritative fixtures | Contract, policy, validator, release, receipt, and proof examples imported from their owning homes | Reuse; do not fork authority locally |
 | Public-safe correction drills | Synthetic or non-sensitive cases that can be exercised without rights leakage | Strong first executable candidate |
+| Trust-chain refs | `receipt_ref`, `proof_ref`, replacement release refs, rollback anchors, or attestation-visible state when the correction burden truly depends on them | Keep them explicit and separate, not flattened into one generic fixture |
 
 > [!NOTE]
 > Current public `schemas/contracts/v1/correction/correction_notice.schema.json` is placeholder-only `{}`. Until that schema body becomes substantive, whole-path correction proof should treat the schema-side lane as a boundary/reference signal rather than as proof of finished machine-contract coverage.
@@ -131,24 +218,32 @@ What does **not** belong here, and where it should go instead:
 | Runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` proof with no correction propagation | That is runtime proof first | [`../runtime_proof/README.md`](../runtime_proof/README.md) |
 | Schema-shape-only validation for `CorrectionNotice` or related objects | This leaf proves behavior, not contract shape alone | [`../../contracts/README.md`](../../contracts/README.md), [`../../../schemas/contracts/v1/correction/README.md`](../../../schemas/contracts/v1/correction/README.md), and [`../../../contracts/README.md`](../../../contracts/README.md) |
 | Policy grammar or reason/obligation logic by itself | Decision grammar should stay isolated when possible | [`../../policy/README.md`](../../policy/README.md) and [`../../../policy/README.md`](../../../policy/README.md) |
+| Validator-only correction gating | Machine gate proof without the broader outward correction chain | [`../../validators/README.md`](../../validators/README.md) |
+| Renderer-only correction-state formatting | Summary or handoff rendering without the broader outward correction chain | [`../../ci/README.md`](../../ci/README.md) |
 | Accessibility-only correction cues | If the burden is readability/keyboard/motion only, keep it first-class | [`../../accessibility/README.md`](../../accessibility/README.md) |
 | Deterministic replay without correction lineage | Repeatability is important, but not this leaf’s core job | [`../../reproducibility/README.md`](../../reproducibility/README.md) |
 | Human-readable correction playbooks | Documentation is not executable proof | [`../../../docs/README.md`](../../../docs/README.md) |
-| Canonical contracts, policy bundles, or emitted release artifacts as authority | This leaf should consume authority, not replace it | their owning contract, policy, release, or docs surfaces |
+| Canonical contracts, policy bundles, receipts, proofs, or emitted release artifacts as authority | This leaf should consume authority, not replace it | their owning contract, policy, receipt, proof, release, or docs surfaces |
+
+[Back to top](#top)
+
+---
 
 ## Current verified snapshot
 
 The current public `main` branch proves the following:
 
-- `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
-- The parent [`../README.md`](../README.md) already assigns this leaf the burden of correction, supersession, replacement, and stale-visible proof.
-- `tests/e2e/correction/` currently contains `README.md` only.
-- `tests/contracts/README.md` and `tests/policy/README.md` are visible and now provide stronger adjacent proof homes for contract shape and policy behavior.
-- `schemas/contracts/v1/correction/` currently contains `README.md` and `correction_notice.schema.json`.
-- The current public `correction_notice.schema.json` body is `{}`.
-- The checked-in leaf currently publishes boundary, placement, and inspection guidance, but the public tree does not prove executable correction cases under this leaf.
-- Public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML is not proven from visible repo files alone.
-- `/tests/` currently resolves to `@bartytime4life` in repo ownership.
+- `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`
+- the parent [`../README.md`](../README.md) already assigns this leaf the burden of correction, supersession, replacement, and stale-visible proof
+- `tests/e2e/correction/` currently contains `README.md` only
+- `tests/contracts/README.md` and `tests/policy/README.md` are visible and now provide stronger adjacent proof homes for contract shape and policy behavior
+- `tests/validators/README.md` and `tests/ci/README.md` are visible and now provide stronger adjacent proof homes for validator-only and renderer-only burdens
+- `schemas/contracts/v1/correction/` currently contains `README.md` and `correction_notice.schema.json`
+- the current public `correction_notice.schema.json` body is `{}`  
+- `.github/watchers/README.md` now exists publicly, which materially affects how process-memory-aware correction flows should be described
+- the checked-in leaf currently publishes boundary, placement, and inspection guidance, but the public tree does not prove executable correction cases under this leaf
+- public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML is not proven from visible repo files alone
+- `/tests/` currently resolves to `@bartytime4life` in repo ownership
 
 > [!CAUTION]
 > Directory presence is **not** executable coverage. This leaf should stay explicit about what is currently visible, what is still merely doctrinal, and what still needs a checked-out branch to confirm.
@@ -156,7 +251,9 @@ The current public `main` branch proves the following:
 > [!NOTE]
 > The correction schema lane is real on current public `main`, but the visible schema body is still placeholder-only `{}`. That means the public tree currently proves **boundary**, not finished contract completeness.
 
-[Back to top](#correction)
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -189,6 +286,10 @@ tests/
 > [!TIP]
 > Keep this leaf **case-led**. Add real subtrees only when a real correction burden exists to justify them.
 
+[Back to top](#top)
+
+---
+
 ## Quickstart
 
 ### Safe inspection commands
@@ -209,20 +310,25 @@ sed -n '1,220p' tests/e2e/correction/README.md 2>/dev/null || true
 # inspect the stronger adjacent correction-proof homes
 sed -n '1,220p' tests/contracts/README.md 2>/dev/null || true
 sed -n '1,220p' tests/policy/README.md 2>/dev/null || true
+sed -n '1,220p' tests/validators/README.md 2>/dev/null || true
+sed -n '1,220p' tests/ci/README.md 2>/dev/null || true
 sed -n '1,220p' schemas/contracts/v1/correction/README.md 2>/dev/null || true
 cat schemas/contracts/v1/correction/correction_notice.schema.json 2>/dev/null || true
 
-# inspect ownership and current public workflow-lane documentation
+# inspect ownership and current public workflow/watcher documentation
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+sed -n '1,220p' .github/watchers/README.md 2>/dev/null || true
 
-# inspect adjacent authority surfaces before adding correction cases
+# inspect adjacent authority and trust surfaces before adding correction cases
 sed -n '1,220p' tests/README.md 2>/dev/null || true
 sed -n '1,220p' contracts/README.md 2>/dev/null || true
 sed -n '1,220p' policy/README.md 2>/dev/null || true
 sed -n '1,220p' schemas/README.md 2>/dev/null || true
 sed -n '1,220p' docs/README.md 2>/dev/null || true
+sed -n '1,220p' data/receipts/README.md 2>/dev/null || true
+sed -n '1,220p' data/proofs/README.md 2>/dev/null || true
 
 # check whether doctrine-proposed correction docs already exist locally
 sed -n '1,220p' docs/runbooks/correction.md 2>/dev/null || true
@@ -237,12 +343,16 @@ grep -RIn \
   -e 'ProjectionBuildReceipt' \
   -e 'EvidenceBundle' \
   -e 'RuntimeResponseEnvelope' \
+  -e 'receipt_ref' \
+  -e 'proof_ref' \
+  -e 'run_receipt' \
+  -e 'ai_receipt' \
   -e 'superseded' \
   -e 'withdrawn' \
   -e 'stale-visible' \
   -e 'CORRECTION-PENDING' \
   -e 'replacement' \
-  tests contracts policy schemas docs .github 2>/dev/null || true
+  tests contracts policy schemas docs .github data tools 2>/dev/null || true
 ```
 
 ### First local review pass
@@ -255,6 +365,11 @@ grep -RIn \
 6. Confirm which proof objects the case should consume rather than redefine.
 7. Confirm whether the active branch still leaves `schemas/contracts/v1/correction/correction_notice.schema.json` as placeholder `{}` or has introduced a substantive body.
 8. Confirm whether any ADR or other repo decision has settled schema-home authority between `schemas/` and `contracts/`.
+9. Confirm whether receipt/proof or attestation-visible state materially affects the correction path on the checked-out branch before documenting it as active burden.
+
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -270,6 +385,7 @@ Typical cases include:
 - a correction must propagate into outward trust surfaces such as map, dossier, story, Focus, or export
 - a correction changes precision or access and the generalization/redaction has to stay inspectable
 - an audit trail must prove that no silent overwrite occurred
+- a correction path depends on explicit release refs, receipt/proof visibility, or attestation-visible state and must keep those roles distinct
 
 ### Naming guidance
 
@@ -307,6 +423,8 @@ Choose the smallest honest proof home.
 - If the case is about publish/promotion/release evidence with no outward correction burden, move it to [`../release_assembly/README.md`](../release_assembly/README.md).
 - If the case is only about schema validity, use the contracts/schema surfaces instead of widening this leaf.
 - If the case is only about policy grammar, reason codes, or obligations, keep it in policy-oriented tests.
+- If the case is only about validator behavior, use `tests/validators/`.
+- If the case is only about renderer behavior, use `tests/ci/`.
 - If the case is only about accessibility presentation, keep it in the accessibility family.
 
 ### Escalation rule
@@ -318,6 +436,20 @@ Escalate only when the proof stops being leaf-specific and becomes a broader e2e
 - a single run that must prove release assembly **and** runtime proof **and** correction together
 - a steward or review workflow that spans multiple independent boundaries
 - a repo-level orchestration flow that would make this leaf only one step in a larger governed drill
+
+### Trust-chain rule
+
+Where a correction case includes release objects, process memory, higher-order proofs, validator outputs, or rendered summaries:
+
+- keep receipts as **process memory**
+- keep proofs as **higher-order trust objects**
+- keep validator outputs as **machine decisions or records**
+- keep rendered summaries as **secondary review aids**
+- do not flatten all of them into one generic “correction artifact passed” story
+
+[Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -332,8 +464,17 @@ flowchart LR
     E --> H[Map / dossier / story / Focus / export show lineage]
     G --> H
     H --> I[Archive audit output and drill evidence]
+
+    C -. may carry refs to .-> R[data/receipts]
+    C -. may carry refs to .-> P[data/proofs]
+    H -. may feed secondary summaries .-> S[tools/ci]
+
     B -. forbidden .-> X[Silent overwrite]
 ```
+
+[Back to top](#top)
+
+---
 
 ## Tables
 
@@ -346,6 +487,7 @@ flowchart LR
 | Stale-visible before rebuild | Corrected authoritative scope exists, but derived delivery has not finished rebuilding | `CorrectionNotice` + release linkage + projection/rebuild context | visible `stale-visible` or `correction-pending` cue |
 | Runtime correction propagation | A corrected claim no longer resolves as if the old state were still valid | `CorrectionNotice` + `EvidenceBundle` + `RuntimeResponseEnvelope` where runtime is in scope | visible corrected lineage or fail-closed runtime outcome |
 | Generalized replacement | Precision narrows after correction and the system stays explicit about the downgrade | `CorrectionNotice` + policy/review linkage + affected release ref | visible generalization / reduced-precision cue |
+| Trust-chain-visible correction | A correction path depends on explicit receipt/proof or attestation-visible state and keeps those roles distinct | `CorrectionNotice` + affected/replacement refs + `receipt_ref` / `proof_ref` / visible trust cues where relevant | visible lineage plus explicit non-flattened trust state |
 
 ### Placement matrix
 
@@ -356,8 +498,14 @@ flowchart LR
 | Runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` behavior without correction propagation | `tests/e2e/runtime_proof/` | Keep runtime outcome proof honest and smaller |
 | `CorrectionNotice` schema shape, valid/invalid fixtures, or contract grammar | `tests/contracts/`, `schemas/contracts/v1/correction/`, plus authoritative contract homes | Behavior proof should not replace contract authority |
 | Reason/obligation logic or deny-by-default decision grammar for correction | `tests/policy/` plus authoritative policy homes | Keep policy law isolated when possible |
+| Validator-only correction gating | `tests/validators/` | Keep gate proof bounded when whole-path correction is not needed |
+| Renderer-only correction-state presentation | `tests/ci/` | Keep rendering proof explicit |
 | Accessibility-only correction cues | `tests/accessibility/` | Interaction/readability proof should stay first-class |
 | Deterministic rerun or replay sameness | `tests/reproducibility/` | Repeatability is not the same as correction lineage |
+
+[Back to top](#top)
+
+---
 
 ## Task list / definition of done
 
@@ -372,6 +520,7 @@ flowchart LR
 - [ ] Capture audit output and any screenshots/snapshots/diffs needed to review the correction path.
 - [ ] Update adjacent docs if the leaf stops being README-only or if a stable local invocation path is introduced.
 - [ ] Revisit this README if `correction_notice.schema.json` stops being `{}` or if schema-home authority is formally resolved.
+- [ ] Add receipt/proof-aware or attestation-visible assertions only when the checked-out branch truly makes them part of the correction burden.
 
 ### Definition of done
 
@@ -384,6 +533,11 @@ flowchart LR
 7. The case proves fail-closed behavior when correction cannot complete cleanly.
 8. Local and/or CI invocation is documented, or explicitly marked **NEEDS VERIFICATION**.
 9. Contract-shape assumptions do not outrun the current public schema-side reality.
+10. Receipts, proofs, validator outputs, and rendered summaries remain distinct when they participate in the correction path.
+
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -403,6 +557,10 @@ No. This leaf should consume correction contracts and policy outputs from their 
 
 No. Current public `main` proves a live schema-side correction lane exists and that `schemas/contracts/v1/correction/correction_notice.schema.json` is present, but the visible schema body is still `{}`. That is boundary evidence, not finished contract coverage.
 
+### Why mention receipts and proofs here?
+
+Because some correction paths may depend on visible trust-chain state. Mentioning them keeps the boundary explicit; it does not move their ownership or storage into this leaf.
+
 ### What is the best first executable case?
 
 One synthetic, public-safe correction drill that proves:
@@ -410,6 +568,10 @@ One synthetic, public-safe correction drill that proves:
 2. the correction becomes visible,
 3. lineage survives,
 4. no silent overwrite occurs.
+
+[Back to top](#top)
+
+---
 
 ## Appendix
 
@@ -426,6 +588,8 @@ One synthetic, public-safe correction drill that proves:
 | `EvidenceBundle` | Keeps corrected support inspectable one hop away |
 | `RuntimeResponseEnvelope` | Useful when correction changes runtime-visible behavior |
 | `DecisionEnvelope` / `ReviewRecord` | Useful when correction involves review, denial, narrowing, or rights changes |
+| `run_receipt` / `ai_receipt` | Useful when process-memory or model-mediated continuity matters to the correction path |
+| `proof_ref` / attestation-visible state | Useful when a correction must preserve visible higher-order trust linkage |
 
 ### Adjacent correction surfaces visible on current public `main`
 
@@ -434,8 +598,12 @@ One synthetic, public-safe correction drill that proves:
 | `tests/e2e/correction/` | `README.md` only | Whole-path correction burden is visible, but executable depth is unproven |
 | `tests/contracts/` | `README.md` plus documented proposed case lanes including `correction-notice/` | Stronger home for contract-shape validation and valid/invalid example packs |
 | `tests/policy/` | `README.md` with explicit correction/supersession outcome pressure | Stronger home for reason/obligation and policy-behavior proof |
+| `tests/validators/` | `README.md` with validator/gate proof posture | Stronger home for narrower validator-only correction gating |
+| `tests/ci/` | `README.md` with renderer-proof posture | Stronger home for correction-summary or handoff rendering proof |
 | `schemas/contracts/v1/correction/` | `README.md` + `correction_notice.schema.json` | Live schema-side correction lane is visible on public `main` |
 | `schemas/contracts/v1/correction/correction_notice.schema.json` | `{}` | Prevents claiming finished contract coverage where the public tree only proves placeholder body |
+| `data/receipts/` | visible governed process-memory lane | Keeps process memory distinct from correction proof |
+| `data/proofs/` | visible governed proof lane | Keeps higher-order proofs distinct from correction proof |
 
 ### Visible trust states to keep explicit when relevant
 
@@ -450,4 +618,4 @@ One synthetic, public-safe correction drill that proves:
 
 </details>
 
-[Back to top](#correction)
+[Back to top](#top)
