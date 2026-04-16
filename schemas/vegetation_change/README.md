@@ -1,35 +1,52 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION__schemas_vegetation_change_readme
-title: vegetation_change
+title: schemas/vegetation_change
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-04-15
 policy_label: public
-related: [../README.md, ../soil_moisture/README.md, ../contracts/README.md, ../tests/README.md, ../../contracts/README.md, ../../docs/standards/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
-tags: [kfm, schemas, vegetation-change, change-detection, ndvi]
-notes: [Public main confirms this leaf path exists but the checked-in README body is currently empty; exact leaf inventory beyond README, narrower /schemas ownership, and final schema-home authority still need branch verification.]
+related: [../README.md, ../contracts/README.md, ../soil_moisture/README.md, ../tests/README.md, ../../contracts/README.md, ../../docs/standards/README.md, ../../policy/README.md, ../../tests/README.md, ../../tests/contracts/README.md, ../../.github/workflows/README.md]
+tags: [kfm, schemas, vegetation-change, change-detection, ndvi, spec_hash]
+notes: [Revised from the existing schemas/vegetation_change README baseline. Public-tree path existence is supported by the attached baseline, but exact leaf inventory beyond README, narrower /schemas ownership, final schema-home authority, and active-branch consumers remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
-# vegetation_change
+<a id="top"></a>
+
+# `schemas/vegetation_change/`
 
 Schema-side landing page for vegetation-change object shapes, semantics, and validation boundaries.
 
-> [!IMPORTANT]
-> **Status:** experimental  
-> **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule was directly verified)*  
+> [!NOTE]
+> **Status:** `experimental`  
+> **Owners:** `@bartytime4life`  
 > **Path:** `schemas/vegetation_change/README.md`  
-> **Repo fit:** child schema lane under [`../README.md`](../README.md); adjacent schema lanes in [`../contracts/README.md`](../contracts/README.md), [`../soil_moisture/README.md`](../soil_moisture/README.md), [`../tests/README.md`](../tests/README.md), [`../standards/`](../standards/), and [`../workflows/`](../workflows/); cross-root authority surfaces in [`../../contracts/README.md`](../../contracts/README.md), [`../../docs/standards/README.md`](../../docs/standards/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tests/contracts/README.md`](../../tests/contracts/README.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md).  
-> ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-6f42c1?style=flat-square) ![lane](https://img.shields.io/badge/lane-schemas%2Fvegetation__change-4051b5?style=flat-square) ![domain](https://img.shields.io/badge/domain-vegetation%20change-2e8b57?style=flat-square) ![authority](https://img.shields.io/badge/schema%20home-unresolved-red?style=flat-square) ![tree](https://img.shields.io/badge/public_tree-README--only-lightgrey?style=flat-square)  
+> ![status](https://img.shields.io/badge/status-experimental-orange)
+> ![owner](https://img.shields.io/badge/owner-%40bartytime4life-6f42c1)
+> ![lane](https://img.shields.io/badge/lane-schemas%2Fvegetation__change-4051b5)
+> ![domain](https://img.shields.io/badge/domain-vegetation%20change-2e8b57)
+> ![authority](https://img.shields.io/badge/schema%20home-unresolved-red)
+> ![tree](https://img.shields.io/badge/public_tree-README--only-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
-> [!NOTE]
+> [!IMPORTANT]
 > This README documents a **schema lane**, not mounted implementation proof. Its job is to make vegetation-change object boundaries reviewable and machine-checkable without inventing validators, workflows, or sibling schema files that the active branch has not yet proven.
 
 > [!WARNING]
 > Keep the split explicit: **schema ≠ receipt ≠ proof ≠ catalog ≠ runtime**. This leaf should help reviewers reason about vegetation-change object shape and semantics without quietly settling the repo’s still-visible `contracts/` versus `schemas/` authority tension.
+
+| Field | Value |
+|---|---|
+| Path | `schemas/vegetation_change/` |
+| Role | `shape and vocabulary for vegetation-change objects before validator, policy, proof, and publication surfaces widen` |
+| Posture | `schema-first · authority-aware · reviewable · non-executable` |
+| Typical object pressure | candidate signal · QA summary · atmospheric gate · decision handoff · manifest compatibility |
+| Current public posture | Path is real; checked-in leaf inventory beyond `README.md` remains **NEEDS VERIFICATION** |
+| Trust reminder | `schema ≠ receipt ≠ proof ≠ catalog ≠ runtime` |
+
+---
 
 ## Scope
 
@@ -49,44 +66,54 @@ This lane exists because “change” is easy to flatten incorrectly. A generic 
 ### Truth labels used in this README
 
 | Label | Meaning here |
-| --- | --- |
-| **CONFIRMED** | Supported by current public repo tree or adjacent public KFM documentation reopened for this revision |
+|---|---|
+| **CONFIRMED** | Supported by the attached baseline or adjacent public KFM documentation referenced there |
 | **INFERRED** | Conservative reading that fits confirmed repo and doctrinal evidence, but is not directly verified as mounted leaf reality |
 | **PROPOSED** | Commit-ready structure or practice that fits KFM doctrine but is not asserted as current branch fact |
 | **UNKNOWN** | Not surfaced strongly enough to describe as settled |
 | **NEEDS VERIFICATION** | Important enough to keep visible before merge or rollout |
 
-[Back to top](#vegetation_change)
+### What this lane is for
+
+- vegetation-change object shapes
+- field-level semantic notes
+- explicit pre/post collection and time-basis rules
+- quality-mask and atmospheric-gate distinctions
+- raw-signal versus governed-decision distinctions
+- tiny illustrative examples when clearly labeled
+- compatibility notes that help validators and tests pressure the right things
+
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
-This path is explicit in the public tree, but the currently checked-in raw file body is empty. Treat this README as the leaf boundary the tree already implies, not as proof that sibling schema files, validators, or merge-blocking workflows already exist.
+This path is explicit in the public tree, but the baseline says the checked-in raw file body was empty. Treat this README as the leaf boundary the tree already implies, not as proof that sibling schema files, validators, or merge-blocking workflows already exist.
 
 ### Current evidence posture
 
 | Surface | Status | Why it matters |
-| --- | --- | --- |
-| `schemas/vegetation_change/README.md` path exists on public `main` | **CONFIRMED** | This leaf is not hypothetical |
-| Raw checked-in README body is empty | **CONFIRMED** | A real path exists, but the human boundary has not yet been authored |
-| `schemas/` is a real parent subtree | **CONFIRMED** | This leaf should read like a child schema lane, not an isolated scratch note |
-| `schemas/contracts/` and `schemas/contracts/v1/` are visible adjacent schema families | **CONFIRMED** | Vegetation-change schema language should stay legible beside first-wave machine-contract families |
-| `schemas/tests/` is a visible schema-side fixture scaffold | **CONFIRMED** | This leaf can reference schema-side fixture pressure without silently absorbing test authority |
-| `schemas/soil_moisture/README.md` is a live sibling schema leaf | **CONFIRMED** | It provides the nearest current on-repo style and burden analogue for a top-level domain schema README |
-| Exact `schemas/vegetation_change/` leaf inventory beyond `README.md` | **NEEDS VERIFICATION** | This README must not pretend to know mounted sibling files |
-| Vegetation-change object families for candidate, QA, atmospheric gate, decision input/output, and manifest handoff | **PROPOSED** | Strongly pressured by doctrine and recent change-detection design work, but not directly surfaced here as checked-in machine files |
+|---|---|---|
+| `schemas/vegetation_change/README.md` path exists on public `main` | **CONFIRMED** | This leaf is not hypothetical. |
+| Raw checked-in README body was empty | **CONFIRMED** | A real path exists, but the human boundary had not yet been authored. |
+| `schemas/` is a real parent subtree | **CONFIRMED** | This leaf should read like a child schema lane, not an isolated scratch note. |
+| `schemas/contracts/` and `schemas/contracts/v1/` are visible adjacent schema families | **CONFIRMED** | Vegetation-change schema language should stay legible beside first-wave machine-contract families. |
+| `schemas/tests/` is a visible schema-side fixture scaffold | **CONFIRMED** | This leaf can reference schema-side fixture pressure without silently absorbing test authority. |
+| `schemas/soil_moisture/README.md` is a live sibling schema leaf | **CONFIRMED** | It provides the nearest current on-repo style and burden analogue. |
+| Exact `schemas/vegetation_change/` leaf inventory beyond `README.md` | **NEEDS VERIFICATION** | This README must not pretend to know mounted sibling files. |
+| Vegetation-change object families for candidate, QA, atmospheric gate, decision input/output, and manifest handoff | **PROPOSED** | Strongly pressured by doctrine and nearby change-detection work, but not directly surfaced here as checked-in machine files. |
 
 ### Adjacent surfaces that matter
 
 | Direction | Surface | Relationship |
-| --- | --- | --- |
+|---|---|---|
 | Parent | [`../README.md`](../README.md) | Parent schema boundary and subtree context |
 | Adjacent | [`../contracts/README.md`](../contracts/README.md) | Schema-side contract scaffold lane |
 | Adjacent | [`../soil_moisture/README.md`](../soil_moisture/README.md) | Closest live top-level schema-leaf precedent |
 | Adjacent | [`../tests/README.md`](../tests/README.md) | Schema-side fixture scaffold that should stay distinct from repo-wide governed verification |
-| Adjacent | [`../standards/`](../standards/) | Schema-adjacent standards boundary lane |
-| Adjacent | [`../workflows/`](../workflows/) | Workflow-shaped schema boundary lane |
-| Downstream authority | [`../../contracts/README.md`](../../contracts/README.md) | Human-readable contract meaning still leans here more strongly than anywhere else |
-| Downstream policy | [`../../policy/README.md`](../../policy/README.md) | Threshold law, allow/deny logic, reasons, and obligations belong there |
+| Downstream authority | [`../../contracts/README.md`](../../contracts/README.md) | Human-readable contract meaning still leans here more strongly than anywhere else explicitly cited |
+| Downstream policy | [`../../policy/README.md`](../../policy/README.md) | Threshold law, reasons, obligations, and allow/deny semantics belong there |
 | Downstream verification | [`../../tests/README.md`](../../tests/README.md) | Repo-wide proof surface that should pressure-test these shapes |
 | Contract-facing verification | [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | Contract examples and schema drift checks should stay reviewable there |
 | Workflow boundary | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Automation intent belongs there, not in schema prose |
@@ -95,21 +122,21 @@ This path is explicit in the public tree, but the currently checked-in raw file 
 > [!TIP]
 > Keep the split visible: **shape and vocabulary here, human-readable contract meaning nearby, verification downstream, publication later**.
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
 This lane should hold **schema-facing**, **reviewable**, and **narrowly scoped** materials.
 
-### Typical accepted inputs
-
 | Input class | Examples | Why it belongs here | Status |
-| --- | --- | --- | --- |
-| Vegetation-change JSON Schema drafts | candidate signal, QA summary, atmospheric gate, decision input, decision output, candidate manifest | Makes domain-specific structure machine-checkable | **PROPOSED file form** |
+|---|---|---|---|
+| Vegetation-change JSON Schema drafts | `change_candidate`, `qa_summary`, `atmospheric_gate`, `decision_input`, `decision_output`, `candidate_manifest` | Makes domain-specific structure machine-checkable | **PROPOSED file form** |
 | Field registries / enum notes | `season`, `baseline_kind`, `qa_state`, `source_family`, `decision_basis` | Prevents silent semantics drift | **INFERRED / PROPOSED** |
 | Small illustrative payload fragments | one AOI, one pre/post pair, one result example | Helps reviewers see intended shape without claiming mounted fixtures | **PROPOSED** |
 | Schema notes tied to source posture | HLS / Landsat / Sentinel pairing, QA masks, atmospheric compromise handling, source-role distinctions | Keeps source-risk consequences visible at the shape level | **CONFIRMED doctrine / PROPOSED local expression** |
-| Compatibility notes | `spec_hash`, `run_receipt`, `DecisionEnvelope`, `EvidenceBundle`, runtime-envelope compatibility notes | Keeps downstream seams explicit without moving authority out of contracts / policy | **INFERRED / PROPOSED** |
+| Compatibility notes | `spec_hash`, `run_receipt`, `DecisionEnvelope`, `EvidenceBundle`, runtime-envelope compatibility notes | Keeps downstream seams explicit without moving authority out of contracts or policy | **INFERRED / PROPOSED** |
 | Version notes | breaking / non-breaking schema commentary | Reduces silent envelope drift | **PROPOSED** |
 
 ### What belongs here
@@ -122,25 +149,29 @@ This lane should hold **schema-facing**, **reviewable**, and **narrowly scoped**
 - tiny illustrative examples when clearly labeled
 - compatibility notes that help tests and validators pressure the right things
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
 | Does **not** belong here | Put it here instead | Why |
-| --- | --- | --- |
+|---|---|---|
 | Human-readable contract law | [`../../contracts/README.md`](../../contracts/README.md) | This leaf should support contract meaning, not replace it |
-| Policy bundles, threshold law, reasons, obligations, or decision logic | [`../../policy/README.md`](../../policy/README.md) | Policy remains the source of truth for allow / deny behavior |
+| Policy bundles, threshold law, reasons, obligations, or decision logic | [`../../policy/README.md`](../../policy/README.md) | Policy remains the source of truth for allow/deny behavior |
 | Repo-wide governed verification guidance | [`../../tests/README.md`](../../tests/README.md) | Tests pressure schema law; they do not originate here |
-| Raw provider snapshots, large COGs, or packaged NDVI diffs | governed data or fixture lanes | This path is for shapes, not archives |
-| `run_receipt`, proof bundles, signatures, or rollback records as primary objects | receipt / proof / release lanes | Schema meaning must not collapse machine memory, proof, and publication into one file |
-| Live watcher / pipeline / runtime code | application, package, pipeline, or tool lanes | This README is not implementation proof |
+| Raw provider snapshots, large COGs, or packaged NDVI diffs | Governed data or fixture lanes | This path is for shapes, not archives |
+| `run_receipt`, proof bundles, signatures, or rollback records as primary objects | Receipt / proof / release lanes | Schema meaning must not collapse machine memory, proof, and publication into one file |
+| Live watcher / pipeline / runtime code | Application, package, pipeline, or tool lanes | This README is not implementation proof |
 | Workflow YAML and merge-gate logic | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Execution belongs in the control plane |
-| Prose that quietly settles `contracts/` versus `schemas/` authority | repo-wide contract/schema decision | This leaf should stay truthful about the unresolved seam |
+| Prose that quietly settles `contracts/` versus `schemas/` authority | Repo-wide contract/schema decision | This leaf should stay truthful about the unresolved seam |
 
 > [!CAUTION]
 > A well-written schema README is still not proof of scheduling, signing, promotion, catalog closure, or runtime enforcement on the active branch.
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -152,7 +183,7 @@ schemas/
     └── README.md
 ```
 
-That is the only subtree claim this README makes as current branch fact.
+That is the only subtree claim this README makes as current-branch fact.
 
 ### Preferred growth shape (`PROPOSED` / `NEEDS VERIFICATION`)
 
@@ -171,7 +202,9 @@ schemas/
 > [!TIP]
 > Add only the files the active branch can actually support. A smaller truthful subtree is better than a broad speculative one.
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Quickstart
 
@@ -219,7 +252,7 @@ grep -RIn \
 
 Start narrow, not broad:
 
-1. one **candidate change** shape
+1. one **change candidate** shape
 2. one **QA summary** shape
 3. one **atmospheric gate** shape only after QA semantics are stable
 4. one **decision input / output** shape only after the execution seam is clear
@@ -231,13 +264,15 @@ If this leaf gains validators, fixtures, downstream consumers, or workflow calle
 
 Do not leave guessed runner, endpoint, or workflow commands behind.
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Usage
 
 ### Why this lane should exist at all
 
-KFM’s current doctrine treats machine-readable trust objects as first-class and repeatedly presses for explicit proof objects, finite decision grammar, deterministic identity, and visible release / runtime boundaries.
+KFM doctrine treats machine-readable trust objects as first-class and repeatedly presses for explicit proof objects, finite decision grammar, deterministic identity, and visible release/runtime boundaries.
 
 That pressure matters for vegetation change because a single “change detected” object can quietly conflate:
 
@@ -264,8 +299,7 @@ A good schema leaf makes those distinctions harder to blur.
 ### Illustrative minimal payload
 
 > [!NOTE]
-> The shape below is illustrative only.  
-> It makes the semantic burden concrete without pretending the final key names or mounted schema family are already verified.
+> The shape below is illustrative only. It makes the semantic burden concrete without pretending the final key names or mounted schema family are already verified.
 
 ```json
 {
@@ -304,14 +338,16 @@ A good schema leaf makes those distinctions harder to blur.
 ### Boundary matrix
 
 | Surface | What it is | What it is not |
-| --- | --- | --- |
+|---|---|---|
 | Schema object | Shape and semantic law for a vegetation-change object | Not the record that a run succeeded |
 | `run_receipt` | Compact machine-readable process memory | Not the release-grade proof bundle |
 | Proof / attestation bundle | Verifiable trust object for release-significant material | Not the schema leaf itself |
 | Catalog object | Discoverability and outward linkage surface | Not the source-admission or policy-decision state |
 | Runtime envelope | Outward answer / abstain / deny / error accountability surface | Not the raw candidate signal |
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Diagram
 
@@ -335,14 +371,16 @@ flowchart LR
     VC -. must not own .-> NO3[runtime code]
 ```
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Tables
 
 ### Object-family matrix
 
 | Family | Why it matters | Safest current posture |
-| --- | --- | --- |
+|---|---|---|
 | `change_candidate` | Holds the smallest pre/post, QA, and metric surface before policy | **PROPOSED** |
 | `qa_summary` | Prevents cloud/shadow/valid-pixel burden from disappearing into one boolean | **PROPOSED** |
 | `atmospheric_gate` | Keeps smoke / aerosol / fire compromise explicit instead of quietly folded into “bad data” | **PROPOSED** |
@@ -353,17 +391,19 @@ flowchart LR
 ### Semantic pressure points
 
 | Concern | Keep distinct | Why |
-| --- | --- | --- |
+|---|---|---|
 | Pre/post collection identity | `pre.collection_id` vs `post.collection_id` | Drift and replay become ambiguous otherwise |
-| Time basis | observation window vs fetch / normalization / promotion time | “Current” is not one timestamp |
-| QA burden | cloud / shadow / valid-pixel quality vs final decision | Quality failure is not the same as policy denial |
-| Atmospheric burden | smoke / AOD / fire compromise vs vegetation delta | False alerts hide here first |
-| Signal burden | raw change candidate vs outward governed decision | Candidate math should not masquerade as publication truth |
+| Time basis | Observation window vs fetch / normalization / promotion time | “Current” is not one timestamp |
+| QA burden | Cloud / shadow / valid-pixel quality vs final decision | Quality failure is not the same as policy denial |
+| Atmospheric burden | Smoke / AOD / fire compromise vs vegetation delta | False alerts hide here first |
+| Signal burden | Raw change candidate vs outward governed decision | Candidate math should not masquerade as publication truth |
 | Identity burden | `spec_hash` vs `run_receipt` vs proof bundle refs | Deterministic identity, process memory, and release proof are different jobs |
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
 
-## Task list / Definition of done
+---
+
+## Task list -- definition of done
 
 ### Immediate definition of done for this README
 
@@ -385,7 +425,9 @@ flowchart LR
 - [ ] Add one standards-profile link if vegetation-change publication becomes formalized
 - [ ] Add one real consumer path only after code or workflow evidence exists
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## FAQ
 
@@ -399,17 +441,19 @@ No. It proves the leaf path exists and gives that path a truthful boundary docum
 
 ### Why separate atmospheric compromise from vegetation-change metrics?
 
-Because “change” can be distorted by haze, smoke, or fire context. Even when those fields are only schema pressure right now, keeping them explicit prevents noisy metrics from looking more certain than they are.
+Because change can be distorted by haze, smoke, or fire context. Even when those fields are only schema pressure right now, keeping them explicit prevents noisy metrics from looking more certain than they are.
 
 ### Should this lane own thresholds and pass/fail logic?
 
-No. Threshold law, reasons, obligations, and allow / deny semantics belong to policy and downstream validator surfaces, not to the schema leaf itself.
+No. Threshold law, reasons, obligations, and allow/deny semantics belong to policy and downstream validator surfaces, not to the schema leaf itself.
 
 ### Why keep `spec_hash` visible if this is only a schema lane?
 
 Because vegetation-change work is unusually sensitive to replay, diff, and handoff identity. The schema leaf should at least stay compatible with deterministic identity pressure even if receipts and proofs live elsewhere.
 
-[Back to top](#vegetation_change)
+[Back to top](#top)
+
+---
 
 ## Appendix
 
@@ -418,24 +462,26 @@ Because vegetation-change work is unusually sensitive to replay, diff, and hando
 
 This README is grounded in three layers:
 
-1. the current public repo tree for `schemas/` and `schemas/vegetation_change/`,
-2. live sibling schema-lane reading from `schemas/soil_moisture/README.md`,
+1. the current public repo-tree statements preserved in the baseline for `schemas/` and `schemas/vegetation_change/`,
+2. live sibling schema-lane reading implied by the baseline through `schemas/soil_moisture/README.md`,
 3. current KFM doctrine emphasizing explicit proof objects, finite decisions, deterministic identity, and fail-closed boundaries.
 
 That means this file can safely describe:
-- the existing leaf path,
-- the empty current README body,
-- the role of a schema-side vegetation-change lane,
-- the safest current-boundary interpretation.
+
+- the existing leaf path
+- the previously empty README body
+- the role of a schema-side vegetation-change lane
+- the safest current-boundary interpretation
 
 It should **not** claim:
-- mounted sibling schema files,
-- checked-in validator inventory,
-- executable workflows,
-- merge-blocking enforcement,
-- published proof packs,
-- live runtime consumers,
-- final authority resolution between `contracts/` and `schemas/`.
+
+- mounted sibling schema files
+- checked-in validator inventory
+- executable workflows
+- merge-blocking enforcement
+- published proof packs
+- live runtime consumers
+- final authority resolution between `contracts/` and `schemas/`
 
 </details>
 
@@ -444,12 +490,14 @@ It should **not** claim:
 
 Before treating this README as fully settled local-checkout documentation, verify:
 
-1. whether `schemas/vegetation_change/` now contains schema files beyond `README.md`,
-2. whether any root-side `contracts/vegetation_change/` or equivalent companion lane exists,
-3. whether `tests/contracts/` already carries vegetation-change cases,
-4. whether any `tools/validators/` or `pipelines/` surface now consumes this leaf,
-5. whether the active branch has narrower `/schemas/` ownership than the public fallback,
-6. whether policy labels or reviewer expectations differ from this draft,
-7. whether any release or runtime surface has already standardized vegetation-change object names.
+1. whether `schemas/vegetation_change/` now contains schema files beyond `README.md`
+2. whether any root-side `contracts/vegetation_change/` or equivalent companion lane exists
+3. whether `tests/contracts/` already carries vegetation-change cases
+4. whether any `tools/validators/` or `pipelines/` surface now consumes this leaf
+5. whether the active branch has narrower `/schemas/` ownership than the public fallback
+6. whether policy labels or reviewer expectations differ from this draft
+7. whether any release or runtime surface has already standardized vegetation-change object names
 
 </details>
+
+[Back to top](#top)
