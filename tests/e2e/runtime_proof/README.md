@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS_VERIFICATION_UUID
+doc_id: kfm://doc/tests-e2e-runtime-proof-readme
 title: runtime_proof
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: 2026-04-16
+created: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-04-17
 policy_label: public
 related: [
   ../README.md,
@@ -18,32 +18,23 @@ related: [
   ../../data/receipts/README.md,
   ../../data/proofs/README.md,
   ../../tools/validators/README.md,
-  ../../tools/validators/promotion_gate/README.md,
   ../../tools/attest/README.md,
   ../../tools/ci/README.md,
   ../../.github/CODEOWNERS,
   ../../.github/workflows/README.md,
   ../../.github/watchers/README.md,
   ../../CONTRIBUTING.md,
-  ../README.md,
-  ../contracts/README.md,
-  ../policy/README.md,
-  ../validators/README.md,
-  ../ci/README.md,
-  ../catalog/README.md,
-  ../integration/README.md,
-  ../reproducibility/README.md,
-  ../accessibility/README.md,
   ../release_assembly/README.md,
-  ../correction/README.md
+  ../correction/README.md,
+  ./air/pm25/README.md
 ]
 tags: [kfm, tests, e2e, runtime-proof, runtime, evidence, citations, receipts, proofs]
 notes: [
-  doc_id, created, and merge-time updated stamp remain placeholders pending git-history or governance-record verification.
-  Updated to align the runtime_proof leaf with the fuller tests lattice, receipt/proof separation, validator and attestation adjacency, watcher boundary, and reviewer-surface doctrine.
-  Current public evidence still proves this leaf mainly as a visible README-bearing family; executable suite depth, runner/toolchain, and merge-blocking automation remain bounded until checked directly on the working branch.
+  doc_id and created remain placeholders pending git-history or governance-record verification.
+  Updated to align the runtime_proof family with the PM2.5 leaf trust path and the clearer separation among runtime responses, review records, receipts, proofs, validators, and attestation helpers.
+  Current public evidence still proves this family mainly as a visible README-bearing leaf; executable suite depth, runner/toolchain, and merge-blocking automation remain bounded until checked directly on the working branch.
 ]
-[/KFM_META_BLOCK_V2] -->
+-->
 
 <a id="top"></a>
 
@@ -52,14 +43,11 @@ notes: [
 End-to-end runtime proof surface for **KFM request-time evidence resolution**, **citations**, **finite outward outcomes**, **trust-chain visibility**, and **fail-closed governed behavior**.
 
 > [!NOTE]
-> The KFM meta block above keeps reviewable placeholders for `doc_id`, `created`, and merge-time metadata until git history or governance records are reverified.
-
-> **Status:** experimental  
+> **Status:** `draft`  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/runtime_proof/README.md`  
-> **Repo fit:** leaf end-to-end proof family under [`../README.md`](../README.md) for request-time governed outcomes; downstream of [`../../README.md`](../../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../docs/README.md`](../../docs/README.md), [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), [`../../tools/ci/README.md`](../../tools/ci/README.md), [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), [`../../.github/watchers/README.md`](../../.github/watchers/README.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![public inventory](https://img.shields.io/badge/current%20public%20inventory-directory%20visible-lightgrey) ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+> ![status](https://img.shields.io/badge/status-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![posture](https://img.shields.io/badge/posture-fail--closed-b60205) ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Artifact split](#artifact-split) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > Use this family when the main question is **what the governed system emits at request time** — especially evidence resolution, citation behavior, scope echo, trust cues, and the finite outcomes `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
@@ -67,7 +55,7 @@ End-to-end runtime proof surface for **KFM request-time evidence resolution**, *
 > [!TIP]
 > Keep the KFM trust split visible here:
 >
-> **runtime proof ≠ validator proof ≠ renderer proof ≠ receipt authority ≠ proof authority**
+> **runtime proof ≠ validator proof ≠ renderer proof ≠ review record authority ≠ receipt authority ≠ proof authority**
 >
 > - `tests/e2e/runtime_proof/` proves request-time whole-path behavior  
 > - `tests/validators/` proves validator and gate behavior  
@@ -93,13 +81,13 @@ That burden is stricter than `tests/integration/`, narrower than generic end-to-
 
 ### What counts as runtime proof here
 
-- evidence resolution from `EvidenceRef`-like inputs to inspectable support
+- evidence resolution from request inputs to inspectable support
 - citation-positive and citation-negative behavior
 - bounded request-time outcomes: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`
 - scope echo and evidence sufficiency signaling
-- outward trust cues such as `bundle_ref`, `release_ref`, freshness basis, reason/obligation visibility, and `audit_ref`
+- outward trust cues such as `bundle_ref`, `release_ref`, freshness basis, reason or obligation visibility, and `audit_ref`
 - fail-closed behavior when evidence, rights, sensitivity, receipt/proof linkage, or resolver health cannot safely support completion
-- visible distinction between process memory, higher-order proofs, and outward runtime cues when all three participate in one request path
+- visible distinction between **runtime response**, **review record**, **receipt**, and **proof** when multiple trust objects participate in one request path
 
 ### What does **not** belong here
 
@@ -108,7 +96,7 @@ That burden is stricter than `tests/integration/`, narrower than generic end-to-
 - validator-only behavior without the request-time outward chain
 - renderer-only behavior without the request-time outward chain
 - release-assembly or correction-lineage proof as the primary burden
-- receipt or proof storage semantics
+- receipt or proof storage semantics as the main burden
 - secret-bearing trace dumps masquerading as fixtures
 
 ### Status vocabulary used in this README
@@ -128,34 +116,31 @@ That burden is stricter than `tests/integration/`, narrower than generic end-to-
 ## Repo fit
 
 **Path:** `tests/e2e/runtime_proof/README.md`  
-**Role:** leaf README for request-time runtime and trust-surface proof under `tests/e2e/`.
+**Role:** family README for request-time runtime and trust-surface proof under `tests/e2e/`.
 
 ### Upstream and adjacent anchors
 
 | Relation | Path | Why it matters | Status |
 |---|---|---|---|
-| Parent e2e family | [`../README.md`](../README.md) | defines the whole-path proof family and names `runtime_proof/` as one of three visible leaves | **CONFIRMED** |
+| Parent e2e family | [`../README.md`](../README.md) | defines the whole-path proof family and names `runtime_proof/` as one of the visible leaves | **CONFIRMED** |
 | Parent test lattice | [`../../README.md`](../../README.md) | assigns `runtime_proof/` to request-time evidence, citations, and finite answer outcomes | **CONFIRMED** |
-| Repo root posture | [`../../README.md`](../../README.md) | keeps this family aligned with the repo’s governed, evidence-first, map-first posture | **CONFIRMED** |
+| Repo root posture | [`../../README.md`](../../README.md) | keeps this family aligned with the repo’s governed, evidence-first posture | **CONFIRMED** |
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | keeps claims, commands, and workflow references evidence-bounded | **CONFIRMED** |
 | Ownership boundary | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | establishes review ownership for `/tests/` | **CONFIRMED** |
 | Workflow adjacency | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | current public automation visibility and its limits live here | **CONFIRMED** |
 | Watcher adjacency | [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | watcher-produced process memory and watcher orchestration boundaries should remain explicit | **CONFIRMED** |
 | Contract source | [`../../contracts/README.md`](../../contracts/README.md) | runtime proof should consume authoritative contracts, not restate them | **CONFIRMED** |
 | Schema boundary | [`../../schemas/README.md`](../../schemas/README.md) | avoid creating a second schema home inside tests | **CONFIRMED** |
-| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | reason/obligation logic and deny-by-default behavior belong there when policy is the main unit of work | **CONFIRMED** |
+| Policy boundary | [`../../policy/README.md`](../../policy/README.md) | reason and obligation logic belong there when policy is the main unit of work | **CONFIRMED** |
 | Receipt boundary | [`../../data/receipts/README.md`](../../data/receipts/README.md) | request-time cases may depend on receipts or refs, but receipts remain process memory | **CONFIRMED** |
 | Proof boundary | [`../../data/proofs/README.md`](../../data/proofs/README.md) | higher-order proof objects remain distinct from receipts and from outward runtime cues | **CONFIRMED** |
-| Validator boundary | [`../../tools/validators/README.md`](../../tools/validators/README.md) | request-time cases may consume validator outputs or shared vocabularies without becoming validator-only proof | **CONFIRMED** |
-| Promotion-gate boundary | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | whole-path runtime proof should remain distinct from release-facing gate proof even when both share trust objects | **CONFIRMED** |
+| Validator boundary | [`../../tools/validators/README.md`](../../tools/validators/README.md) | request-time cases may consume validator outputs without becoming validator-only proof | **CONFIRMED** |
 | Attestation boundary | [`../../tools/attest/README.md`](../../tools/attest/README.md) | runtime proof may observe trust visibility without owning sign/verify logic | **CONFIRMED** |
 | Reviewer-render boundary | [`../../tools/ci/README.md`](../../tools/ci/README.md) | reviewer summaries may be downstream cues, but formatter proof belongs elsewhere | **CONFIRMED** |
 | Human-readable runbooks | [`../../docs/README.md`](../../docs/README.md) | runtime proof should stay synchronized with runbooks and operator guidance | **CONFIRMED** |
 | Neighbor leaf | [`../release_assembly/README.md`](../release_assembly/README.md) | use that leaf when publish-path proof is the main question | **CONFIRMED** |
 | Neighbor leaf | [`../correction/README.md`](../correction/README.md) | use that leaf when rollback, supersession, or correction propagation is the main question | **CONFIRMED** |
-| Neighbor family | [`../../tests/validators/README.md`](../../tests/validators/README.md) | use validator proof when the main burden is gate behavior rather than outward runtime truth | **CONFIRMED** |
-| Neighbor family | [`../../tests/ci/README.md`](../../tests/ci/README.md) | use renderer proof when the main burden is output rendering rather than outward runtime truth | **CONFIRMED** |
-| Neighbor family | [`../../tests/catalog/README.md`](../../tests/catalog/README.md) | use catalog proof when the main burden is metadata closure rather than outward runtime truth | **CONFIRMED** |
+| Example domain leaf | [`./air/pm25/README.md`](./air/pm25/README.md) | demonstrates how a domain-specific runtime-proof leaf can express source-role burdens and runtime receipt expectations | **PROPOSED / branch verification needed** |
 
 ### Working rule
 
@@ -175,6 +160,8 @@ Accepted inputs for this family are the **smallest artifacts needed to prove a r
 | Reused authoritative fixtures | contract examples, policy fixtures, validator outputs, bundle examples, public-safe release-backed samples, and runtime-safe review artifacts reused from their owning homes | **CONFIRMED** as direction |
 | Evidence-resolution traces | positive or negative traces that prove how support was resolved or why resolution failed closed | **CONFIRMED** as burden / mounted inventory **NEEDS VERIFICATION** |
 | Runtime envelope examples | `RuntimeResponseEnvelope`-shaped examples or equivalent emitted metadata for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` | **CONFIRMED** as burden / exact local storage **NEEDS VERIFICATION** |
+| Review record examples | reviewer-facing runtime audit objects with reasons, obligations, and evidence refs when the trust path expects them | **PROPOSED / aligned with current PM2.5 design direction** |
+| Runtime receipt examples | request-time process-memory artifacts pairing outward runtime outcome with reviewer-facing context | **PROPOSED / aligned with current PM2.5 design direction** |
 | Citation-negative cases | uncited, empty-scope, stale-scope, or mismatched-scope requests that must not leak fluent confidence | **CONFIRMED** |
 | Trust-chain refs | `release_ref`, `bundle_ref`, `receipt_ref`, `proof_ref`, `run_receipt`, `ai_receipt`, or attestation-visible state when the runtime contract depends on them | **INFERRED / PROPOSED** |
 | Surface-state evidence | snapshots, logs, or outward cues proving that abstained, denied, stale-visible, or errored states remain legible | **INFERRED / PROPOSED** |
@@ -210,7 +197,7 @@ This directory is **not** the place for every runtime-adjacent concern.
 | Reproducibility-only checks | stable digests, counts, or rerun sameness without a request-time trust question | [`../../tests/reproducibility/README.md`](../../tests/reproducibility/README.md) |
 | Runtime implementation code | app, resolver, or adapter code is not test documentation | `apps/`, `packages/`, or `infra/` |
 | Runbooks and operator prose | documentation is not executable proof | `docs/` and runbook-owning surfaces |
-| Receipt or proof storage | this lane proves behavior over trust surfaces; it does not own them | [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md) |
+| Receipt or proof storage ownership | this lane proves behavior over trust surfaces; it does not own them | [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md) |
 
 [Back to top](#top)
 
@@ -221,15 +208,15 @@ This directory is **not** the place for every runtime-adjacent concern.
 The current public-branch evidence used for this revision supports the following:
 
 - `tests/e2e/runtime_proof/` exists as a visible leaf under `tests/e2e/`
-- `tests/README.md` assigns this leaf to **request-time evidence, citations, and finite answer outcomes**
-- `tests/e2e/README.md` places `runtime_proof/` beside `release_assembly/` and `correction/` as one of the three current end-to-end proof leaves
+- `tests/README.md` assigns this family to **request-time evidence, citations, and finite answer outcomes**
+- `tests/e2e/README.md` places `runtime_proof/` beside `release_assembly/` and `correction/` as an end-to-end proof leaf
 - `/tests/` ownership currently resolves to `@bartytime4life`
 - public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML and merge-blocking automation are **not** proven from the visible public tree alone
-- `.github/workflows/README.md` also records prior workflow activity and deleted workflow filenames as historical reconstruction clues, but that history is **signal**, not proof of current checked-in YAML
-- `.github/watchers/README.md` now exists as a watcher-boundary doc, which materially affects how request-time process-memory and watcher orchestration should be described
+- `.github/workflows/README.md` records prior workflow activity and deleted workflow filenames as reconstruction clues, but that history is **signal**, not proof of current checked-in YAML
+- `.github/watchers/README.md` now exists as a watcher-boundary doc, which materially affects how request-time process memory and watcher orchestration should be described
 - root `README.md` and `CONTRIBUTING.md` both treat public `main` as a useful baseline rather than final branch truth; the checked-out branch under review should outrank it when available
-- adjacent docs now explicitly distinguish receipts from proofs, validators from attestation helpers, and renderer proof from runtime proof
-- exact runner/toolchain, executable suite depth, fixture density, emitted proof objects, screenshot baseline inventory, receipt/proof-aware scenarios, and required checks remain **NEEDS VERIFICATION**
+- adjacent docs explicitly distinguish receipts from proofs, validators from attestation helpers, and renderer proof from runtime proof
+- exact runner/toolchain, executable suite depth, fixture density, emitted review records, emitted runtime receipts, and required checks remain **NEEDS VERIFICATION**
 
 > [!IMPORTANT]
 > Public `main` is a useful baseline, not the final merge authority. Reconcile this README against the checked-out branch, local inventory, and real runner surface before treating any path, command, or workflow claim as settled.
@@ -261,6 +248,11 @@ Treat the tree above as **current visible branch truth** for this family. Do **n
 ```text
 tests/e2e/runtime_proof/
 ├── README.md
+├── air/
+│   └── pm25/
+│       ├── README.md
+│       ├── fixtures/
+│       └── test_pm25_runtime_proof.py
 ├── cases/
 ├── fixtures/
 └── snapshots/
@@ -280,8 +272,8 @@ These commands are safe because they inspect the current branch shape and vocabu
 
 ```bash
 # inspect the current local runtime-proof surface
-find tests/e2e/runtime_proof -maxdepth 4 -type d 2>/dev/null | sort
-find tests/e2e/runtime_proof -maxdepth 4 -type f 2>/dev/null | sort
+find tests/e2e/runtime_proof -maxdepth 5 -type d 2>/dev/null | sort
+find tests/e2e/runtime_proof -maxdepth 5 -type f 2>/dev/null | sort
 
 # re-read the governing repo and test-family map before adding cases
 sed -n '1,220p' README.md 2>/dev/null || true
@@ -300,7 +292,6 @@ sed -n '1,220p' docs/README.md 2>/dev/null || true
 sed -n '1,220p' data/receipts/README.md 2>/dev/null || true
 sed -n '1,220p' data/proofs/README.md 2>/dev/null || true
 sed -n '1,220p' tools/validators/README.md 2>/dev/null || true
-sed -n '1,220p' tools/validators/promotion_gate/README.md 2>/dev/null || true
 sed -n '1,220p' tools/attest/README.md 2>/dev/null || true
 sed -n '1,220p' tools/ci/README.md 2>/dev/null || true
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
@@ -310,11 +301,13 @@ sed -n '1,220p' .github/watchers/README.md 2>/dev/null || true
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 
-# search for the runtime-proof vocabulary before inventing names
+# search for runtime-proof vocabulary before inventing names
 grep -RIn \
   -e 'EvidenceRef' \
   -e 'EvidenceBundle' \
   -e 'RuntimeResponseEnvelope' \
+  -e 'ReviewRecord' \
+  -e 'runtime_receipt' \
   -e 'ANSWER' \
   -e 'ABSTAIN' \
   -e 'DENY' \
@@ -327,7 +320,7 @@ grep -RIn \
   -e 'run_receipt' \
   -e 'ai_receipt' \
   -e 'citation' \
-  tests contracts policy schemas docs .github data tools 2>/dev/null || true
+  tests contracts policy schemas docs .github data tools scripts 2>/dev/null || true
 ```
 
 ### First local review pass
@@ -355,7 +348,7 @@ grep -RIn \
 `runtime_proof/` is:
 
 - the leaf family for **request-time** governed proof
-- the place where KFM demonstrates that evidence resolution, citation behavior, policy shaping, validator influence, and finite runtime outcomes stay honest under pressure
+- the place where KFM demonstrates that evidence resolution, citation behavior, policy shaping, validator influence, review-record visibility, and finite runtime outcomes stay honest under pressure
 - the family that should make **negative outcomes** as visible and reviewable as positive ones
 - the end-to-end lane that proves no polished, uncited “fifth outcome” slips through
 - the place where outward trust cues should remain reconstructable after the request
@@ -366,7 +359,7 @@ grep -RIn \
 
 - a generic UI smoke-test area
 - a substitute for contract authority or schema-home decisions
-- a duplicate home for policy bundles or reason/obligation registries
+- a duplicate home for policy bundles or reason or obligation registries
 - a substitute for validator-only proof
 - a substitute for renderer-only proof
 - a place to hide unverified runner guesses behind broad “coverage” language
@@ -389,11 +382,12 @@ grep -RIn \
 
 ### Trust-chain rule
 
-Where a request-time case includes receipts, proofs, validator outputs, or reviewer-facing cues:
+Where a request-time case includes receipts, proofs, validator outputs, review records, or reviewer-facing cues:
 
 - keep receipts as **process memory**
 - keep proofs as **higher-order trust objects**
 - keep validator outputs as **machine decisions or reports**
+- keep review records as **reviewer-facing runtime audit context**
 - keep rendered outward cues as **secondary**
 - do not flatten all of them into one generic “artifact passed” story
 
@@ -410,6 +404,54 @@ Where a request-time case includes receipts, proofs, validator outputs, or revie
 
 ---
 
+## Runtime outcomes
+
+This family should use a **finite runtime grammar**.
+
+| Outcome | Meaning here |
+|---|---|
+| `ANSWER` | Enough qualified support exists to emit a governed outward result with visible trust cues |
+| `ABSTAIN` | Support is insufficient, stale, unresolved, or too weak for a trustworthy outward answer |
+| `DENY` | Runtime detects a policy or trust-breaking condition and refuses the operation |
+| `ERROR` | Malformed request, malformed runtime artifact, broken contract, or non-policy technical failure |
+
+> [!NOTE]
+> `ABSTAIN`, `DENY`, and `ERROR` can all be successful expected outcomes for this family when the system reaches them correctly and visibly.
+
+### Stable interpretation rule
+
+Until a mounted runtime contract says otherwise, keep the split simple and stable:
+
+- use **`ABSTAIN`** for insufficiency, stale support, unresolved linkage, or non-consensus support,
+- use **`DENY`** for explicit policy or trust violations,
+- use **`ERROR`** for malformed inputs or broken runtime shape.
+
+[Back to top](#top)
+
+---
+
+## Artifact split
+
+Runtime proof should make the request-time trust path legible without collapsing its distinct artifacts.
+
+| Object | What it is | Why runtime proof cares | Authority home |
+|---|---|---|---|
+| runtime response / `RuntimeResponseEnvelope` | outward finite runtime outcome | this is the primary request-time object under proof | contracts / runtime surfaces |
+| review record | reviewer-facing runtime explanation with reasons, obligations, and evidence refs | proves reconstructability and review readability | runtime helper surfaces / receipts adjacency |
+| runtime receipt | request-time process-memory object pairing outward outcome with review context | proves replay, audit, and process memory linkage | `data/receipts/` |
+| proof object / attestation | higher-order trust object beyond request-time process memory | proves release-significant or signed trust state when relevant | `data/proofs/`, `tools/attest/` |
+| validator output | deterministic machine decision or gate result | may shape runtime behavior without replacing it | `tools/validators/` |
+
+### Boundary rule
+
+> **runtime response ≠ review record ≠ receipt ≠ proof**
+
+This family may prove that those objects are emitted, linked, and shaped correctly. It should not recast them as the same thing.
+
+[Back to top](#top)
+
+---
+
 ## Diagram
 
 ```mermaid
@@ -420,17 +462,18 @@ flowchart LR
     V --> P["policy + rights + sensitivity"]
     P --> O{"finite runtime outcome"}
 
-    O -->|ANSWER| A["RuntimeResponseEnvelope<br/>citations + bundle_ref + release_ref + scope_echo + audit_ref"]
-    O -->|ABSTAIN| B["RuntimeResponseEnvelope<br/>insufficiency + next_safe_actions + audit_ref"]
-    O -->|DENY| D["RuntimeResponseEnvelope<br/>reason/obligation visibility + no protected leak"]
-    O -->|ERROR| E["RuntimeResponseEnvelope<br/>technical failure + retry guidance + audit_ref"]
+    O -->|ANSWER| A["runtime response<br/>citations + bundle_ref + release_ref + audit_ref"]
+    O -->|ABSTAIN| B["runtime response<br/>insufficiency + next_safe_actions + audit_ref"]
+    O -->|DENY| D["runtime response<br/>reason or obligation visibility + no protected leak"]
+    O -->|ERROR| E["runtime response<br/>technical failure + retry guidance + audit_ref"]
 
-    A --> UI["trust-visible surface<br/>Evidence Drawer / Focus / map / dossier cues"]
-    B --> UI
-    D --> UI
-    E --> UI
+    A --> RR["review record<br/>reviewer-facing context"]
+    B --> RR
+    D --> RR
+    E --> RR
 
-    UI --> R["reviewable proof trail<br/>release_ref · bundle_ref · decision_refs · receipt/proof visibility · audit_ref"]
+    RR --> RT["runtime receipt<br/>process memory"]
+    RT -. distinct from .-> PF["proof object / attestation"]
 ```
 
 [Back to top](#top)
@@ -447,15 +490,16 @@ _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS V
 |---|---|---|---|
 | `ANSWER` | support is sufficient, admissible, and policy-safe | released evidence resolves cleanly and citations are available | citations, `bundle_ref` or `bundle_refs`, `release_ref` when relevant, `scope_echo`, `audit_ref` |
 | `ABSTAIN` | evidence is insufficient, partial, stale, conflicting, or unresolved | ambiguous causal question, empty scope, stale support, unresolved trust chain, or evidence-resolution insufficiency | insufficiency signal, next safe action, visible boundedness, `audit_ref` |
-| `DENY` | request is blocked by rights, sensitivity, actor role, or publication state | steward-only or prepublication ask, exact-location restriction, release state block | visible deny state, reason/obligation visibility, no protected leak, `audit_ref` |
-| `ERROR` | reliable execution failed technically | resolver failure, missing proof objects, missing receipts when required, broken upstream dependency | explicit error state, retry or fallback guidance, `audit_ref` |
+| `DENY` | request is blocked by rights, sensitivity, actor role, or publication state | steward-only or prepublication ask, exact-location restriction, release state block, explicit trust violation | visible deny state, reason or obligation visibility, no protected leak, `audit_ref` |
+| `ERROR` | reliable execution failed technically | resolver failure, malformed request, broken runtime artifact, missing required trust objects | explicit error state, retry or fallback guidance, `audit_ref` |
 
 ### Proof objects and where they should come from
 
 | Object or cue | Why runtime proof cares | Authoritative home |
 |---|---|---|
 | `EvidenceBundle` | proves inspectable support for a runtime answer or visible claim | contracts / runtime docs and resolver implementation |
-| `RuntimeResponseEnvelope` | makes outcomes finite, accountable, and reviewable | contracts / runtime docs |
+| runtime response envelope | makes outcomes finite, accountable, and reviewable | contracts / runtime docs |
+| review record | keeps reviewer-readable reasons, obligations, and evidence refs explicit | runtime helper surfaces / receipt-oriented lanes |
 | reason and obligation vocabularies | keep negative outcomes explicit instead of prose drift | policy |
 | `release_ref` and freshness basis | keep answers bounded to promoted scope | release / catalog / docs |
 | `run_receipt` / `ai_receipt` | keep process-memory and model-mediated visibility explicit when relevant | receipts / governed process-memory surfaces |
@@ -486,13 +530,14 @@ _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS V
 - [ ] Each scenario reuses authoritative contract, policy, validator, receipt, and proof inputs instead of inventing a parallel truth home.
 - [ ] A citation-negative case proves that uncited or empty-scope answers fail closed.
 - [ ] A policy-shaped negative case proves that rights, sensitivity, or publication state can deny without leaking protected detail.
-- [ ] A technical failure case proves that resolver or proof-object failure emits `ERROR`, not polished bluffing.
-- [ ] A trust-chain-aware case exists only when the runtime contract truly depends on receipt/proof or attestation visibility.
+- [ ] A technical failure case proves that resolver or trust-object failure emits `ERROR`, not polished bluffing.
+- [ ] A review-record-aware case exists when the runtime contract exposes reviewer-facing request-time context.
+- [ ] A receipt-aware case exists only when the runtime contract truly depends on request-time process memory linkage.
 - [ ] Each case preserves visible request-time linkage such as `bundle_ref`, `release_ref`, decision linkage, or `audit_ref`, where the current runtime contract expects them.
 - [ ] The checked-out branch proves the actual runner/toolchain before this README names any execution command.
 - [ ] The checked-out branch has been reconciled against the public-main baseline, and any local deltas are explicit in this README or the corresponding PR.
 - [ ] If UI or screenshot evidence is used, outward trust cues remain legible without relying on color alone.
-- [ ] Parent docs stay synchronized when this leaf’s meaning or local structure changes.
+- [ ] Parent docs stay synchronized when this family’s meaning or local structure changes.
 - [ ] No scenario bypasses the governed API, promoted scope, or declared trust boundary.
 
 > [!IMPORTANT]
@@ -510,7 +555,7 @@ Not by itself. If the main risk is schema shape or example validity, use `tests/
 
 ### Is this the place to prove policy grammar or reason-code tables?
 
-Not by themselves. Keep policy logic authoritative in `policy/` and `tests/policy/`. Use `runtime_proof/` when policy must be exercised together with scope, evidence resolution, validator/trust visibility, and outward runtime behavior.
+Not by themselves. Keep policy logic authoritative in `policy/` and `tests/policy/`. Use `runtime_proof/` when policy must be exercised together with scope, evidence resolution, validator or trust visibility, and outward runtime behavior.
 
 ### Can this directory hold happy-path-only demos?
 
@@ -528,7 +573,7 @@ No. Use public `main` as a baseline when a local checkout is unavailable, but th
 
 No. Use the smallest honest proof surface. But when a trust cue is user-visible — especially for abstained, denied, stale-visible, or errored states — outward evidence should remain reviewable.
 
-### Why mention receipts and proofs here?
+### Why mention receipts, review records, and proofs here?
 
 Because some request-time outcomes may depend on visible trust-chain state. Mentioning them keeps the boundary explicit; it does not move their ownership or storage into this lane.
 
@@ -556,7 +601,7 @@ These are candidate scenario names and burdens, not asserted current inventory.
 | `error_resolver_unavailable` | `ERROR` with retry-safe outward behavior | technical failure stays explicit |
 | `citation_negative_blocks_answer` | no uncited convenience fallback | core KFM cite-or-abstain rule |
 | `stale_visible_runtime_state` | stale or degraded support remains visible, not silently polished away | trust cue remains legible |
-| `focus_scope_echo_and_next_safe_action` | runtime response echoes bounded scope and safe follow-up | Focus-style governed assistance stays bounded |
+| `review_record_visibility` | reviewer-facing runtime context is linked without replacing the outward response | trust split remains explicit |
 | `receipt_or_proof_visibility_required` | trust-chain visibility affects outward boundedness without collapsing receipts and proofs together | trust split remains explicit |
 
 </details>
