@@ -23,8 +23,8 @@ related: [
 ]
 tags: [kfm, tests, e2e, runtime-proof, soils, agriculture, ssurgo, sda, gssurgo, gnatsgo, spec_hash, run_receipt]
 notes: [
-  This revision preserves the existing runtime-proof doctrine while tightening repo-fit, terminology, and proof boundaries for soils-specific cases.
-  Exact active-branch contents for tests/e2e/runtime_proof/soils remain NEEDS VERIFICATION in this session; current-safe claims stay intentionally narrow.
+  This revision preserves the existing runtime-proof doctrine while tightening repo fit, trust boundaries, and soils-specific proof pressures.
+  Exact mounted contents for tests/e2e/runtime_proof/soils remain NEEDS VERIFICATION in this session; current-safe claims stay intentionally narrow.
   Owners are grounded at /tests/ scope; exact leaf-level ownership still needs branch verification.
   Subject-specific contracts, schemas, validators, fixtures, and runner surfaces for soils remain NEEDS VERIFICATION until directly surfaced from the checked-out branch.
 ]
@@ -34,24 +34,25 @@ notes: [
 
 # Runtime Proof — Soils
 
-Request-time proof leaf for qualified soils outcomes, source-role visibility, weighting and scale discipline, and fail-closed handling when support is weak, mixed, stale, or malformed.
+Request-time proof leaf for **qualified soils outcomes**, **source-role visibility**, **weighting and scale discipline**, and **fail-closed handling** when support is weak, mixed, stale, or malformed.
 
-![status](https://img.shields.io/badge/status-experimental-orange)
-![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
-![lane](https://img.shields.io/badge/lane-runtime--proof-8250df)
-![domain](https://img.shields.io/badge/domain-soils%20%26%20agriculture-0a7f5a)
-![source](https://img.shields.io/badge/source-SSURGO%20%2F%20SDA-blue)
-![posture](https://img.shields.io/badge/posture-fail--closed-b60205)
-![trust](https://img.shields.io/badge/trust-runtime%E2%89%A0receipt%E2%89%A0proof%E2%89%A0catalog-6f42c1)
+[![Status](https://img.shields.io/badge/status-experimental-orange)](#current-evidence-posture)
+[![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)](#repo-fit)
+[![Lane](https://img.shields.io/badge/lane-runtime--proof-8250df)](#repo-fit)
+[![Domain](https://img.shields.io/badge/domain-soils%20%26%20agriculture-0a7f5a)](#scope)
+[![Source](https://img.shields.io/badge/source-SSURGO%20%2F%20SDA-blue)](#operating-tables)
+[![Posture](https://img.shields.io/badge/posture-fail--closed-b60205)](#runtime-outcomes)
+[![Trust](https://img.shields.io/badge/trust-runtime%E2%89%A0receipt%E2%89%A0proof%E2%89%A0catalog-6f42c1)](#runtime-outcomes)
 
 > [!NOTE]
 > **Status:** `experimental`  
 > **Owners:** `@bartytime4life` *(CONFIRMED at `/tests/` scope; exact leaf-level assignment still needs branch verification)*  
 > **Path:** `tests/e2e/runtime_proof/soils/README.md`  
-> **Repo fit:** child proof leaf under [`../README.md`](../README.md), inside the broader [`../../README.md`](../../README.md) end-to-end family and bounded by contract, policy, schema, release-assembly, and correction surfaces rather than replacing them  
+> **Repo fit:** child proof leaf under [`../README.md`](../README.md), inside the broader [`../../README.md`](../../README.md) end-to-end family, and bounded by contract, policy, schema, release-assembly, and correction surfaces rather than replacing them  
 > **Accepted inputs:** small request/response fixtures, tiny normalized soil candidates, weighting and resolution cases, source-role qualifiers, and minimal outward-response fragments  
-> **Exclusions:** policy authorship, canonical schemas, release-proof artifacts, raw SSURGO mirrors, live watcher code, scheduler claims, and guessed workflow maturity  
-> **Quick jump:** [Scope](#scope) · [Current evidence posture](#current-evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Proof matrix](#proof-matrix) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Exclusions:** policy authorship, canonical schemas, release-proof artifacts, raw SSURGO mirrors, live watcher code, scheduler claims, and guessed workflow maturity
+
+**Quick jumps:** [Scope](#scope) · [Current evidence posture](#current-evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Proof matrix](#proof-matrix) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This leaf proves **runtime behavior**. It must not quietly become the home of source custody, policy authority, release proof, or workflow mythology.
