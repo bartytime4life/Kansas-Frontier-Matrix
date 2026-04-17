@@ -21,12 +21,12 @@ related: [
   ../../../../.github/CODEOWNERS,
   ../../../../.github/workflows/README.md
 ]
-tags: [kfm, tests, e2e, runtime-proof, soils, agriculture, ssurgo, sda, spec_hash, run_receipt]
+tags: [kfm, tests, e2e, runtime-proof, soils, agriculture, ssurgo, sda, gssurgo, gnatsgo, spec_hash, run_receipt]
 notes: [
-  Soil-lane doctrine is strong in the attached KFM corpus, but the exact mounted contents of tests/e2e/runtime_proof/soils were not directly surfaced in this session.
-  Owners are grounded at /tests/ scope; exact leaf-level assignment still needs branch verification.
-  This README intentionally preserves a narrow current-safe claim and a clearly marked proposed growth shape so it can be merged without overstating active branch contents.
-  Subject-specific contract, schema, validator, and runner paths for soils remain NEEDS VERIFICATION until directly surfaced from the checked-out branch.
+  This revision preserves the existing runtime-proof doctrine while tightening repo-fit, terminology, and proof boundaries for soils-specific cases.
+  Exact active-branch contents for tests/e2e/runtime_proof/soils remain NEEDS VERIFICATION in this session; current-safe claims stay intentionally narrow.
+  Owners are grounded at /tests/ scope; exact leaf-level ownership still needs branch verification.
+  Subject-specific contracts, schemas, validators, fixtures, and runner surfaces for soils remain NEEDS VERIFICATION until directly surfaced from the checked-out branch.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -34,7 +34,7 @@ notes: [
 
 # Runtime Proof — Soils
 
-Request-time proof lane for qualified soils outcomes, visible source-role and scale semantics, component-weighting discipline, and fail-closed authoritative-versus-derived behavior in KFM.
+Request-time proof leaf for qualified soils outcomes, source-role visibility, weighting and scale discipline, and fail-closed handling when support is weak, mixed, stale, or malformed.
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
@@ -46,25 +46,24 @@ Request-time proof lane for qualified soils outcomes, visible source-role and sc
 
 > [!NOTE]
 > **Status:** `experimental`  
-> **Owners:** `@bartytime4life` *(confirmed at `/tests/` scope; exact leaf-level assignment still needs branch verification)*  
+> **Owners:** `@bartytime4life` *(CONFIRMED at `/tests/` scope; exact leaf-level assignment still needs branch verification)*  
 > **Path:** `tests/e2e/runtime_proof/soils/README.md`  
-> **Repo fit:** child whole-path proof leaf under [`../README.md`](../README.md), inside the broader [`../../README.md`](../../README.md) `e2e/` family; bounded by authoritative contract, policy, schema, release-assembly, and correction surfaces rather than replacing them  
-> **Accepted inputs:** small request/response fixtures, tiny normalized soil candidates, weighting and resolution cases, source-role qualifiers, and minimal expected outward-response fragments  
-> **Exclusions:** policy bundle authorship, canonical soil schemas, release-proof artifacts, raw SSURGO mirrors, live watcher code, and guessed workflow claims  
+> **Repo fit:** child proof leaf under [`../README.md`](../README.md), inside the broader [`../../README.md`](../../README.md) end-to-end family and bounded by contract, policy, schema, release-assembly, and correction surfaces rather than replacing them  
+> **Accepted inputs:** small request/response fixtures, tiny normalized soil candidates, weighting and resolution cases, source-role qualifiers, and minimal outward-response fragments  
+> **Exclusions:** policy authorship, canonical schemas, release-proof artifacts, raw SSURGO mirrors, live watcher code, scheduler claims, and guessed workflow maturity  
 > **Quick jump:** [Scope](#scope) · [Current evidence posture](#current-evidence-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Proof matrix](#proof-matrix) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This leaf should prove **runtime behavior**, not quietly become the home of source custody, policy authority, release proof, or workflow mythology.
+> This leaf proves **runtime behavior**. It must not quietly become the home of source custody, policy authority, release proof, or workflow mythology.
 
 > [!CAUTION]
-> **Soils look stable, but they are not interpretation-free.**  
-> Runtime proof in this lane should make it harder to flatten **SSURGO**, **Soil Data Access (SDA)**, **gSSURGO**, and **gNATSGO** into one unqualified “soil layer,” or to hide component weighting, resolution choice, refresh cadence, and derived status behind generic prose.
+> Soils are easy to flatten incorrectly. This leaf should make it harder to collapse **SSURGO**, **Soil Data Access (SDA)**, **gSSURGO**, and **gNATSGO** into one unqualified “soil layer,” or to hide component weighting, horizon basis, resolution choice, source vintage, and derived status behind generic prose.
 
 ---
 
 ## Scope
 
-This directory is for **whole-path runtime proof** of soils behavior in a KFM slice where soil baselines, joins, and derived summaries must stay inspectable.
+This directory is for **whole-path runtime proof** of soils behavior in a KFM slice where soil baselines, joins, and derived summaries must stay inspectable at request time.
 
 It should prove whether a runtime-facing request can or cannot produce a qualified outward result when soils support is:
 
@@ -73,20 +72,20 @@ It should prove whether a runtime-facing request can or cannot produce a qualifi
 - semantically qualified
 - map-unit versus gridded support visible
 - weighting or aggregation basis visible where required
-- refresh or release posture visible where the wording depends on “current” or “latest”
+- release, refresh, or source-vintage posture visible when wording depends on “current” or “latest”
 - public-safe or visibly constrained
 - denied, abstained, or errored in a reviewable way when support is weak
 
-This leaf should **not** decide final publication policy, sign release artifacts, or imply a mounted scheduler.
+This leaf does **not** decide publication policy, sign release artifacts, or imply a mounted scheduler.
 
 ### What this leaf is proving
 
 - request-time outcome behavior
 - fail-closed handling of weak or malformed soils support
 - visible distinction between authoritative and derived soil surfaces
-- source-role clarity for **SSURGO / SDA** versus **gSSURGO / gNATSGO** and contextual companions
+- source-role clarity for **SSURGO / SDA** versus **gSSURGO / gNATSGO** and adjacent companions
 - explicit separation of **runtime response**, **receipt**, **proof**, and **catalog** functions
-- visibility of `spec_hash`, validator-result seams, and source vintage when the trust story depends on them
+- visibility of `spec_hash`, validator seams, and source vintage where the trust story depends on them
 - bounded outward handling of weighting, aggregation, and resolution choices
 - finite runtime outcomes without pretending release proof already exists
 
@@ -96,7 +95,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 - cryptographic publication success
 - final schema-home authority for soil objects
 - full watcher or ETL implementation depth
-- live connector maturity on the checked-out branch beyond what is directly surfaced
+- live connector maturity beyond what the active branch directly shows
 
 [Back to top](#top)
 
@@ -110,9 +109,9 @@ This leaf should **not** decide final publication policy, sign release artifacts
 | `runtime_proof/` is the request-time outcome-focused proof family | **CONFIRMED** | The soils leaf should stay centered on outward runtime behavior |
 | `/tests/` ownership resolves to `@bartytime4life` | **CONFIRMED at parent scope** | Grounds the visible owner cue while keeping exact leaf assignment reviewable |
 | Exact mounted contents of `tests/e2e/runtime_proof/soils/` on the active branch | **NEEDS VERIFICATION** | This README should stay truthful even if the leaf is currently README-only |
-| Public `.github/workflows/` inventory beyond documentation surfaces | **NEEDS VERIFICATION** | Do not silently imply checked-in merge gates or runner wiring |
-| Soils / agriculture are strong watcher territory after hydrology | **CONFIRMED doctrine** | Justifies a subject-specific soils runtime-proof leaf |
-| Resolution choice, component weighting, refresh cadence, and authoritative-versus-derived status are load-bearing in soils answers | **CONFIRMED caution** | These are the first things the fixtures should pressure |
+| Public workflow inventory beyond documentation surfaces | **NEEDS VERIFICATION** | Do not silently imply checked-in merge gates or runner wiring |
+| Soils / agriculture are strong next-domain doctrine after hydrology | **CONFIRMED doctrine** | Justifies a subject-specific soils runtime-proof leaf |
+| Resolution choice, weighting basis, and authoritative-versus-derived posture are load-bearing in soils answers | **CONFIRMED doctrine** | These are primary fixture pressures for this leaf |
 
 > [!TIP]
 > Treat public `main` as a useful baseline, not the final merge authority. The checked-out branch under review should outrank it when directly available.
@@ -125,7 +124,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 
 **Path:** `tests/e2e/runtime_proof/soils/README.md`  
 **Role:** whole-path proof leaf for outward soils runtime behavior  
-**Primary consumers:** maintainers, reviewers, contract/schema editors, and anyone tightening request-time soil semantics
+**Primary consumers:** maintainers, reviewers, contract and schema editors, and anyone tightening request-time soil semantics
 
 ### Upstream
 
@@ -146,7 +145,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 - future shared soil fixture custody, if mounted later
 - future soil validator lanes, if mounted later
 - future source-descriptor or schema surfaces for soil map units, components, horizons, or gridded soil products
-- future governed API runtime surfaces that emit outward soils envelopes
+- future governed runtime surfaces that emit outward soils envelopes
 
 ### Downstream
 
@@ -155,7 +154,7 @@ This leaf should **not** decide final publication policy, sign release artifacts
 - subject-specific runtime tightening work
 
 > [!NOTE]
-> This leaf is downstream of contract and policy authority. It should consume those surfaces, not replace them.
+> This leaf is downstream of contract and policy authority. It should consume those surfaces, not redefine them.
 
 [Back to top](#top)
 
@@ -163,12 +162,12 @@ This leaf should **not** decide final publication policy, sign release artifacts
 
 ## Accepted inputs
 
-This lane should accept **small, explicit, reviewable** materials that help prove runtime behavior without turning the directory into a source mirror or release lane.
+This lane should accept **small, explicit, reviewable** materials that prove runtime behavior without turning the directory into a source mirror or release lane.
 
 | Input class | Examples | Why it belongs here | Status |
 | --- | --- | --- | --- |
-| Request / response fixture pairs | `request.json` + `expected.response.json` by case | Keeps finite outcomes compact and reviewable | **PROPOSED leaf growth** |
-| Tiny normalized soil candidates | one map unit, one component slice, one gridded cell summary, one AOI-local support window | Lets the leaf prove whole-path runtime behavior without shipping bulk datasets | **PROPOSED** |
+| Request / response fixture pairs | `request.json` + `expected.response.json` by case | Keeps finite outcomes compact and diffable | **PROPOSED leaf growth** |
+| Tiny normalized soil candidates | one map unit, one component slice, one gridded cell summary, one AOI-local support window | Proves whole-path behavior without shipping bulk datasets | **PROPOSED** |
 | Weighting / aggregation qualifiers | dominant-component flag, `comppct_r` basis, horizon-range basis, explicit aggregation note | Prevents silent interpretive drift | **PROPOSED** |
 | Resolution / authority qualifiers | `source_ref`, `source_role`, `resolution_choice`, `derived_from`, `coverage_ref` | Keeps SSURGO, gSSURGO, and gNATSGO visibly distinct | **PROPOSED** |
 | Refresh / release qualifiers | source vintage, annual refresh anchor, stale-or-unknown version case | Stops old baselines from sounding “current” by accident | **PROPOSED** |
@@ -176,16 +175,16 @@ This lane should accept **small, explicit, reviewable** materials that help prov
 
 ### Operating rules
 
-1. Keep every case **small enough to read in one diff**.
+1. Keep every case **small enough to review in one diff**.
 2. Prefer **one interpretive pressure per case** before composing larger scenarios.
 3. Keep **authoritative** versus **derived** support visible in the case itself, not only in prose.
 4. Do not let a fixture silently erase **map-unit**, **component**, **horizon**, or **grid** distinctions.
 5. If a value depends on aggregation, make the **weighting basis** visible.
-6. If a value depends on scale, make the **resolution choice** visible.
-7. If the answer sounds time-sensitive, keep the **source vintage** or refresh posture visible.
-8. Use **minimal expected outward fragments** rather than pseudo-release artifacts.
-9. If a local runner later emits `actual.response.json`, document its artifact policy explicitly instead of treating generated actuals as default checked-in truth.
-10. Prefer a narrow truthful subtree over a broad speculative one.
+6. If a value depends on depth logic, make the **horizon basis** visible.
+7. If a value depends on scale, make the **resolution choice** visible.
+8. If the answer sounds time-sensitive, keep the **source vintage** or refresh posture visible.
+9. Use **minimal expected outward fragments** rather than pseudo-release artifacts.
+10. If a local runner later emits `actual.response.json`, document its artifact policy explicitly instead of treating generated actuals as default checked-in truth.
 
 [Back to top](#top)
 
@@ -205,7 +204,7 @@ This directory is **not** the authoritative home for every soils-adjacent concer
 | Full SSURGO zips, statewide GeoPackages, large raster tiles, or scrape caches | governed data zones or ignored local paths | Runtime proof should stay compact and reviewable |
 | Live watcher code, scheduler wiring, ETL orchestration, or bulk transforms | pipeline, tool, or workflow lanes | README prose is not implementation proof |
 | Soil-moisture time-series behavior as the main topic | sibling `soil_moisture/` leaf if present | Time-varying observation proof is a different burden from soil-baseline proof |
-| Quiet replacement of authoritative support with coarser companions | nowhere | that is exactly the behavior this leaf should catch and refuse |
+| Quiet replacement of authoritative support with coarser companions | nowhere | That is exactly the behavior this leaf should catch and refuse |
 
 [Back to top](#top)
 
@@ -215,7 +214,7 @@ This directory is **not** the authoritative home for every soils-adjacent concer
 
 ### Current safe claim
 
-This session did **not** directly surface the active branch contents for this exact target leaf.
+This session did **not** directly surface the active-branch contents for this exact target leaf.
 
 The only safe branch-backed claim this README can make without overreach is the target document itself.
 
@@ -300,6 +299,7 @@ grep -RIn \
   -e 'MUKEY' \
   -e 'COKEY' \
   -e 'component weighting' \
+  -e 'horizon' \
   -e 'resolution choice' \
   -e 'authoritative' \
   -e 'derived' \
@@ -322,7 +322,7 @@ A good first pass is:
 4. one `DENY` for mixed authority or resolution flattening
 5. one `ERROR` for malformed request shape
 
-Do not widen into more scenarios until those stay reviewable and consistent.
+Do not widen into more scenarios until those remain reviewable and internally consistent.
 
 ### 5) Document the real runner only after it exists
 
@@ -330,9 +330,10 @@ If this leaf later gains executable cases, document the **actual** local and CI 
 
 ### 6) Keep `soils/` and `soil_moisture/` distinct
 
-Do not inherit sensor-specific field names, freshness rules, or runner language into this leaf by accident.  
-`soils/` is about **soil baselines, joins, weighting, and scale discipline**.  
-`soil_moisture/`, if mounted, is about **time-varying observation context**.
+Do not inherit sensor-specific field names, freshness rules, or runner language into this leaf by accident.
+
+- `soils/` is about **soil baselines, joins, weighting, source vintage, and scale discipline**
+- `soil_moisture/`, if mounted, is about **time-varying observation context**
 
 [Back to top](#top)
 
@@ -360,18 +361,19 @@ Use this leaf when the main question is:
 
 ### Why this leaf exists at all
 
-KFM treats **hydrology** as the strongest first proof lane, and the attached corpus repeatedly identifies **soils / agriculture** as the next strong watcher territory.
+KFM treats **hydrology** as the strongest first proof lane, and the project corpus repeatedly positions **soils / agriculture** as a strong next watcher territory.
 
 A soils runtime-proof leaf is useful because it can pressure:
 
 - source-role visibility
 - explicit resolution choice
 - explicit component-weighting and aggregation semantics
+- explicit horizon basis when needed
 - authoritative-versus-derived distinction
 - release-vintage and refresh-cadence visibility
 - `SourceDescriptor` → canonical candidate → validator result → `spec_hash` → `run_receipt` thinking
 - finite runtime outcomes without pretending release proof already exists
-- explicit refusal when the support is underqualified or semantically unsafe
+- explicit refusal when support is underqualified or semantically unsafe
 
 > [!IMPORTANT]
 > This leaf should make it harder to answer a soils question with an unqualified, source-flattened, stale, or semantically ambiguous response.
@@ -399,7 +401,7 @@ This leaf should use a **finite runtime grammar**.
 Until a mounted soils runtime contract says otherwise, keep the distinction simple and stable:
 
 - use **`ANSWER`** only when source role, scale, and semantic basis are visible enough to trust
-- use **`ABSTAIN`** for insufficient support, missing weighting basis, or missing release basis
+- use **`ABSTAIN`** for insufficient support, missing weighting basis, missing horizon basis where required, or missing release basis
 - use **`DENY`** for explicit trust or semantic violations, such as hidden source flattening
 - use **`ERROR`** for malformed inputs or broken runtime shape
 
@@ -410,21 +412,22 @@ If a later machine contract chooses a different split, update this README and th
 | Field | Purpose | Notes |
 | --- | --- | --- |
 | `outcome` | finite runtime result | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| `reason.code` | stable machine-readable cause | keep concise and reviewable |
-| `reason.message` | human-readable explanation | explain the visible cause calmly |
-| `source_ref` | declared source identity | preserve citation-ready source identity |
-| `source_role` | authoritative / derived / context class | do not flatten source class |
-| `mukey` or `coverage_ref` | support traceability | keep map-unit or AOI basis visible |
-| `attribute_name` | semantic target | e.g. `hydgrp`, `hydric_flag`, `awc_r` |
-| `resolution_choice` | scale semantics | map-unit, polygon aggregate, grid, or fallback should stay visible |
-| `weighting_basis` | aggregation discipline | e.g. dominant component, `comppct_r`, or depth-weighted basis |
-| `source_vintage` | release semantics | annual refresh, extract date, or survey version |
-| `spec_hash` | deterministic identity seam | visible when runtime depends on versioned support |
-| `validator_result_ref` | subject-level validation visibility | optional but valuable |
-| `run_receipt_ref` | optional machine-memory link | present only if actually emitted by the lane |
-| `freshness` or `refresh_anchor` | support sufficiency | especially when outward wording implies currentness |
-| `audit_ref` | reviewer or runtime trace hook | trust-visible boundary evidence |
-| `obligations` | constrained answer cues | required when the response is narrowed but still outward-facing |
+| `reason.code` | stable machine-readable cause | Keep concise and reviewable |
+| `reason.message` | human-readable explanation | Explain the visible cause plainly |
+| `source_ref` | declared source identity | Preserve citation-ready source identity |
+| `source_role` | authoritative / derived / context class | Do not flatten source class |
+| `mukey` or `coverage_ref` | support traceability | Keep map-unit or AOI basis visible |
+| `attribute_name` | semantic target | Example: `hydgrp`, `hydric_flag`, `awc_r` |
+| `resolution_choice` | scale semantics | Map-unit, polygon aggregate, grid, or fallback should stay visible |
+| `weighting_basis` | aggregation discipline | Example: dominant component, `comppct_r`, or depth-weighted basis |
+| `horizon_basis` | depth semantics | Required when the answer depends on horizon ranges or standardized depth windows |
+| `source_vintage` | release semantics | Annual refresh, extract date, or survey version |
+| `spec_hash` | deterministic identity seam | Visible when runtime depends on versioned support |
+| `validator_result_ref` | subject-level validation visibility | Optional but valuable |
+| `run_receipt_ref` | optional process-memory link | Present only if actually emitted by the lane |
+| `freshness` or `refresh_anchor` | support sufficiency | Especially when outward wording implies currentness |
+| `audit_ref` | reviewer or runtime trace hook | Trust-visible boundary evidence |
+| `obligations` | constrained-answer cues | Required when the response is narrowed but still outward-facing |
 
 > [!TIP]
 > A runtime response is **not** the same thing as a `run_receipt`.  
@@ -439,11 +442,12 @@ If a later machine contract chooses a different split, update this README and th
 | Case family | What it pressures | Expected outcome | Minimum visible cues |
 | --- | --- | --- | --- |
 | Authoritative map-unit answer | SSURGO / SDA source role with explicit map-unit support | `ANSWER` | `source_ref`, `source_role`, `mukey`, `attribute_name`, `source_vintage` |
-| Derived statewide grid answer | gSSURGO or gNATSGO answer that stays visibly derived | `ANSWER` | `source_role`, `resolution_choice`, `derived_from` or equivalent cue |
-| Missing weighting basis | map-unit aggregate without visible component or horizon basis | `ABSTAIN` | `reason.code`, `attribute_name`, missing `weighting_basis` explanation |
+| Derived gridded answer | gSSURGO or gNATSGO answer that stays visibly derived | `ANSWER` | `source_role`, `resolution_choice`, `derived_from` or equivalent cue |
+| Missing weighting basis | map-unit aggregate without visible component basis | `ABSTAIN` | `reason.code`, `attribute_name`, missing `weighting_basis` explanation |
+| Missing horizon basis | depth-dependent answer without visible horizon or depth-window basis | `ABSTAIN` | `reason.code`, `attribute_name`, missing `horizon_basis` explanation |
 | Unknown release or refresh basis | outward “current” answer without visible soil release basis | `ABSTAIN` | `reason.code`, stale or unknown `source_vintage` posture |
-| Mixed authority or scale flattening | SSURGO and gNATSGO silently collapsed into one answer | `DENY` | explicit source-role conflict and visible refusal |
-| Malformed request | broken or incomplete runtime input | `ERROR` | visible technical fault, not policy theater |
+| Mixed authority or scale flattening | SSURGO and gNATSGO silently collapsed into one answer | `DENY` | Explicit source-role conflict and visible refusal |
+| Malformed request | broken or incomplete runtime input | `ERROR` | Visible technical fault, not policy theater |
 
 [Back to top](#top)
 
@@ -483,9 +487,9 @@ flowchart LR
 | Surface | Role at runtime | What must stay visible |
 | --- | --- | --- |
 | **SSURGO / SDA** | authoritative vector / tabular soil support | map-unit or component basis, extract/query vintage, join-key logic |
-| **gSSURGO** | derived gridded companion | derivative status, grid resolution, lag relative to direct SSURGO/SDA support |
+| **gSSURGO** | derived gridded companion | derivative status, grid resolution, lag relative to direct SSURGO / SDA support |
 | **gNATSGO** | broader gridded companion / fallback | fallback status and coarser-scale implications |
-| Kansas GeoPortal or other mirrors | convenience derivative / mirror | mirror identity should not outrank the authoritative source |
+| Kansas GeoPortal or other mirrors | convenience derivative / mirror | mirror identity must not outrank the authoritative source |
 | USDA Quick Stats or crop-condition context | production / context signal | not a soil-property source and not a substitute for soil-support truth |
 | Kansas Mesonet / SCAN / SMAP | time-varying moisture context | useful neighbor lane, not a replacement for soil map-unit truth |
 
@@ -495,6 +499,7 @@ flowchart LR
 | --- | --- | --- |
 | Missing `mukey` or coverage basis | answer cannot be traced to support | `ABSTAIN` or `ERROR` |
 | Hidden dominant-component assumption | silently biases output | `ABSTAIN` |
+| Hidden horizon assumption | depth-dependent answer becomes semantically unsafe | `ABSTAIN` |
 | Mixed map-unit and grid sources without qualifier | source-role flattening | `DENY` |
 | Unknown release or refresh basis | old soil baseline sounds current | `ABSTAIN` |
 | Malformed attribute request | broken runtime shape | `ERROR` |
@@ -514,6 +519,7 @@ flowchart LR
 - [ ] every authoritative answer keeps map-unit or coverage basis explicit
 - [ ] every derived answer keeps resolution choice explicit
 - [ ] every aggregate answer keeps weighting basis explicit
+- [ ] every depth-dependent answer keeps horizon basis explicit
 - [ ] every time-sensitive answer keeps source vintage or refresh posture visible
 - [ ] at least one outward response example points cleanly to an `audit_ref`
 - [ ] at least one case keeps `spec_hash` and validator-result visibility explicit where the trust story depends on them
@@ -528,7 +534,7 @@ flowchart LR
 - actual runner / toolchain
 - whether a shared soils fixture lane exists and should be consumed here
 - whether machine contracts for soil runtime envelopes already exist
-- whether subject-specific contract surfaces for SoilMapUnit / Component / Horizon are already mounted
+- whether subject-specific contract surfaces for soil map units, components, or horizons are already mounted
 - whether `ABSTAIN` versus `DENY` for stale or mixed-resolution soil support is already settled elsewhere
 - whether runtime envelopes already expose `spec_hash`, validator result, or `run_receipt` references on the active branch
 - whether this leaf is intentionally separate from any mounted `soil_moisture/` lane
@@ -546,9 +552,11 @@ Because the primary burden here is **outward runtime behavior**, not source-slic
 
 ### Why separate `soils/` from `soil_moisture/`?
 
-Because the burden is different.  
-`soils/` is about **soil baselines, joins, weighting, source vintage, and scale discipline**.  
-`soil_moisture/` is about **time-varying observation context**.  
+Because the burden is different.
+
+- `soils/` is about **soil baselines, joins, weighting, source vintage, and scale discipline**
+- `soil_moisture/` is about **time-varying observation context**
+
 Collapsing those subjects would make both leaves less truthful.
 
 ### Why keep mentioning **SSURGO / SDA** instead of just saying “soil data”?
@@ -565,7 +573,7 @@ Yes. In KFM, fail-closed behavior is part of the trust contract. If a case shoul
 
 ### Does this README prove live automation already exists?
 
-No. It documents the burden and the preferred shape of the leaf. Runner wiring, workflow YAML, required checks, and signed publication behavior still need direct branch verification.
+No. It documents the burden and preferred shape of the leaf. Runner wiring, workflow YAML, required checks, and signed publication behavior still need direct branch verification.
 
 ### Why not let this leaf decide publication or policy outcomes directly?
 
@@ -601,19 +609,35 @@ These examples are here to make the leaf concrete without pretending the final r
 }
 ```
 
-### Example `ABSTAIN`
+### Example `ABSTAIN` — missing weighting basis
 
 ```json
 {
   "outcome": "ABSTAIN",
   "reason": {
     "code": "missing_weighting_basis",
-    "message": "A soil aggregate was available, but the component-weighting or horizon basis required for a trustworthy answer was missing."
+    "message": "A soil aggregate was available, but the component-weighting basis required for a trustworthy answer was missing."
   },
   "source_ref": "kfm://source/ssurgo-sda",
   "source_role": "authoritative_vector_tabular",
   "attribute_name": "om_pct",
   "audit_ref": "kfm://receipt/runtime/soils-002"
+}
+```
+
+### Example `ABSTAIN` — missing horizon basis
+
+```json
+{
+  "outcome": "ABSTAIN",
+  "reason": {
+    "code": "missing_horizon_basis",
+    "message": "The requested soil attribute depends on horizon or depth-window semantics, but no trustworthy horizon basis was provided."
+  },
+  "source_ref": "kfm://source/ssurgo-sda",
+  "source_role": "authoritative_vector_tabular",
+  "attribute_name": "clay_pct",
+  "audit_ref": "kfm://receipt/runtime/soils-002b"
 }
 ```
 
@@ -652,7 +676,7 @@ These examples are here to make the leaf concrete without pretending the final r
 
 - Is the case still the smallest meaningful whole-path proof?
 - Is the source role explicit?
-- Are authority, scale, weighting, and vintage explicit where needed?
+- Are authority, scale, weighting, horizon basis, and vintage explicit where needed?
 - Did we preserve **runtime response ≠ receipt ≠ proof ≠ catalog**?
 - Did we avoid claiming runner or workflow maturity the branch does not prove?
 
