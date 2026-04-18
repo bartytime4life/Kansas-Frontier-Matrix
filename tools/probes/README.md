@@ -1,49 +1,17 @@
-<!--
-KFM Meta Block V2
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION
 title: probes
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: NEEDS-VERIFICATION
-updated: 2026-04-16
+updated: 2026-04-18
 policy_label: public
-related:
-  - ../README.md
-  - ../../README.md
-  - ../../.github/README.md
-  - ../../.github/CODEOWNERS
-  - ../../.github/workflows/README.md
-  - ../../.github/watchers/README.md
-  - ../../scripts/README.md
-  - ../../tests/README.md
-  - ../../contracts/README.md
-  - ../../schemas/README.md
-  - ../../policy/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../validators/README.md
-  - ../diff/README.md
-  - ../catalog/README.md
-  - ../ci/README.md
-  - ../attest/README.md
-tags:
-  - kfm
-  - tools
-  - probes
-  - freshness
-  - status
-  - inspection
-  - bounded-observation
-  - receipts
-  - proofs
-notes:
-  - Current public snapshot remains README-first unless executable probes are landed and verified in-tree.
-  - Updated to align this lane with newer watcher, receipt/proof, validator, diff, catalog, CI-renderer, and attestation boundaries.
-  - This revision normalizes probe outputs around the single central `data/receipts/` process-memory doctrine.
-  - doc_id and created date should be reconciled against authoritative repo history before publication.
--->
+related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../scripts/README.md, ../../tests/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../validators/README.md, ../diff/README.md, ../catalog/README.md, ../ci/README.md, ../attest/README.md, ./hydro-watcher/README.md]
+tags: [kfm, tools, probes, freshness, status, inspection, bounded-observation, receipts, proofs, hydrology]
+notes: [Current public snapshot remains README-first unless executable probes are landed and verified in-tree. Updated to align this lane with watcher, receipt/proof, validator, diff, catalog, CI-renderer, attestation, and proposed hydrology child-lane boundaries. This revision keeps probe outputs aligned to the single central `data/receipts/` process-memory doctrine while preserving proof separation. doc_id and created date should be reconciled against authoritative repo history before publication.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -60,6 +28,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 ![role](https://img.shields.io/badge/role-bounded%20probes-111111)
 ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
 ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+![domains](https://img.shields.io/badge/domain-thin%20slices%20allowed-2d6a4f)
 
 </div>
 
@@ -70,7 +39,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 | **Path** | `tools/probes/README.md` |
 | **Repo fit** | child lane under [`../README.md`](../README.md); adjacent to [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), and [`../attest/README.md`](../attest/README.md); downstream callers may live in [`../../scripts/README.md`](../../scripts/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md); process-memory outputs should align to [`../../data/receipts/README.md`](../../data/receipts/README.md) while higher-order trust objects remain separate in [`../../data/proofs/README.md`](../../data/proofs/README.md) |
 | **Evidence posture** | doctrine-grounded · repo-grounded for the current README-first lane shape plus broader public-tree context · exact executable probe inventory, workflow callers, and active-branch local usage remain bounded |
-| **Current lane snapshot** | `tools/probes/` is still README-first on visible public `main` unless deeper branch evidence proves otherwise. This README therefore records the lane contract and a careful landing pattern for future executable probes without overstating current inventory. |
+| **Current lane snapshot** | `tools/probes/` is still README-first on visible public `main` unless deeper branch evidence proves otherwise. This README therefore records the lane contract and careful landing patterns for future executable probes without overstating current inventory. |
 | **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
@@ -104,7 +73,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 > 1. it records the **current public-tree reality** honestly  
 > 2. it defines the **landing contract** for the first executable probes
 >
-> That means example probe names, receipts, or CLI shapes below may be marked **PROPOSED** or **illustrative** until verified in-tree.
+> That means example probe names, child lanes, receipts, or CLI shapes below may be marked **PROPOSED** or **illustrative** until verified in-tree.
 
 ---
 
@@ -120,6 +89,7 @@ Typical probe work includes:
 - checksum, count, timestamp, or href drift observation
 - bounded trust-surface presence checks
 - small read-only helpers that turn operational facts into machine-readable reports, summaries, or receipt-shaped process memory
+- narrow domain probes whose logic remains observational even when the subject matter is specialized
 
 ### What belongs here
 
@@ -128,6 +98,7 @@ Typical probe work includes:
 - helpers that measure **freshness**, **availability**, **materiality**, **surface state**, or **boundary visibility**
 - tools that emit stable reports, summaries, or process-memory receipts for downstream review
 - observational trust-surface checks that preserve receipt/proof separation instead of flattening everything into one “artifact present” claim
+- thin-slice domain probes when they still follow the same bounded-inspection contract
 
 ### What a probe should sound like
 
@@ -139,6 +110,7 @@ A probe is a strong fit when the main question sounds like:
 - “Did the upstream checksum, timestamp, or item set change?”
 - “Is the outward trust surface present?”
 - “Can we emit a bounded report another lane can validate, render, diff, or gate?”
+- “Can we observe a narrow domain condition without making the release or policy decision here?”
 
 ### What a probe should not sound like
 
@@ -192,6 +164,7 @@ Those questions belong in stronger or more specialized lanes.
 | Schemas | [`../../schemas/README.md`](../../schemas/README.md) | Schema-home authority stays outside this lane |
 | Process memory | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Probe outputs should land as receipt-shaped process memory under the central receipts doctrine |
 | Trust storage | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Probes may report on proof-bearing surfaces without becoming their authority |
+| Proposed child lane | [`./hydro-watcher/README.md`](./hydro-watcher/README.md) | Example of a domain-specific probe surface that still remains bounded, read-only, and evidence-first | **PROPOSED** child lane |
 
 ### Working interpretation
 
@@ -223,6 +196,19 @@ A probe should **not**:
 - silently sign or verify trust objects
 - silently reclassify observational facts as release truth
 
+### Domain thin slices are allowed, but still bounded
+
+A specialized child lane under `tools/probes/` is a good fit only when the specialization does **not** override the probe contract.
+
+That means a hydrology, catalog, or other domain-specific probe may exist here if it still behaves like a probe:
+
+- read-only by default
+- bounded in scope
+- explicit about inputs
+- explicit about outputs
+- reviewable outside CI YAML
+- clear about handoff to schemas, validators, policy, receipts, proofs, and runtime proof
+
 [Back to top](#top)
 
 ---
@@ -248,6 +234,7 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 | Surface-shape probes | field presence, response skeleton, item-count surface |
 | Drift observers | checksum drift, timestamp drift, count drift, href drift |
 | Trust-surface probes | evidence bundle members present, receipt visible, release refs reachable, proof refs present, attestation result visible |
+| Domain threshold probes | narrow observational checks like seasonal-tail streamflow evaluation that still hand consequential decisions downstream |
 
 ### Example bounded inputs
 
@@ -259,6 +246,7 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 - proof directory plus presence expectations
 - promotion bundle plus visibility checklist
 - watcher-produced receipt or status artifact
+- domain-specific identifiers such as a USGS site number plus an explicit comparison basis
 
 ### Input rules
 
@@ -267,6 +255,7 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 3. Keep credentials minimal, externally supplied, and reviewable in interface docs.
 4. Prefer read-only inspection over convenience mutation.
 5. If a probe touches receipt or proof refs, keep those roles explicit instead of flattening them into generic “artifact present” blobs.
+6. If a probe applies domain thresholds, keep the governing baseline or threshold source explicit and keep any downstream consequential decision outside the helper unless another lane formally owns it.
 
 [Back to top](#top)
 
@@ -288,6 +277,7 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 | Reviewer summary formatting | `tools/ci/` | Probes should emit data that renderers can consume |
 | Signature generation or verification | `tools/attest/` | Probes may inspect trust-surface presence, not verify trust state |
 | Receipt or proof storage authority | `../../data/receipts/`, `../../data/proofs/` | Probes may emit process-memory observations or inspect refs, not become sovereign storage |
+| Release-bearing hydrology alert publication | pipeline, runtime API, or governed review surface | Even a hydrology watcher child lane here remains probe-first, not public-alert authority |
 
 > [!CAUTION]
 > A probe may write a caller-chosen report file or receipt-shaped output, but it should not directly mutate canonical truth, publish artifacts, approve promotion, or bypass governed review as its primary job.
@@ -308,6 +298,7 @@ The following belong in or under `tools/probes/` when they remain bounded, obser
 | Adjacent lane docs already describe validator, diff, catalog, CI, and attestation boundaries | **CONFIRMED** | Strengthens clean handoff expectations |
 | `.github/watchers/README.md` now exists as a public watcher-boundary surface | **CONFIRMED** | Probes can now be described more cleanly relative to watcher-produced process memory |
 | Adjacent docs now explicitly distinguish receipts from proofs and rendering from authority surfaces | **CONFIRMED in-session doctrine alignment** | This lane should now be clearer about process memory vs. proof storage vs. observational output |
+| A hydrology child-lane README is being prepared as a probe-first watcher surface | **PROPOSED** | Parent lane documentation should be able to acknowledge that landing shape without claiming it is merged |
 | Exact workflow callers or non-public runtime usage of probes | **UNKNOWN** | Not derivable from visible tree inspection alone |
 | Any landed executable probe under `tools/probes/` on non-public branches | **UNKNOWN** | Requires active-branch or deeper checkout verification |
 
@@ -355,6 +346,16 @@ tools/probes/
 └── stac_change_runner.py
 ```
 
+### Example domain-child landing
+
+```text
+tools/probes/
+├── README.md
+└── hydro-watcher/
+    ├── README.md
+    └── streamflow_probe.py
+```
+
 ### Expected data-side outputs for receipt-oriented probes
 
 ```text
@@ -368,6 +369,9 @@ data/
 
 > [!TIP]
 > `stac_change_runner.py` is a strong **PROPOSED** first executable fit for this lane because it observes upstream STAC materiality, persists raw payloads, and emits receipt-shaped process memory without becoming a publish or policy surface.
+
+> [!TIP]
+> A hydrology child lane such as `hydro-watcher/` is also a plausible fit **only if** it remains clearly probe-first and keeps schema, policy, public-alert, and runtime-proof authority outside this lane.
 
 [Back to top](#top)
 
@@ -411,7 +415,7 @@ sed -n '1,240p' tools/attest/README.md 2>/dev/null
 ### 4. Search for existing caller and naming patterns
 
 ```bash
-rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref|data/receipts/probes" \
+rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref|data/receipts/probes|hydro-watcher|streamflow_probe" \
   README.md .github docs scripts tests tools data -S 2>/dev/null
 ```
 
@@ -419,6 +423,13 @@ rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|
 
 ```bash
 find tools/probes -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" -o -name "*.ts" \) 2>/dev/null | sort
+```
+
+### 6. If adding a child-lane README, keep the parent index truthful
+
+```bash
+sed -n '1,260p' tools/probes/README.md 2>/dev/null
+sed -n '1,260p' tools/probes/hydro-watcher/README.md 2>/dev/null
 ```
 
 ---
@@ -455,6 +466,16 @@ WORK_DIR=./data \
 python3 tools/probes/stac_change_runner.py
 ```
 
+### Illustrative domain-child invocation
+
+The example below is also **illustrative** until verified in-tree.
+
+```bash
+python3 tools/probes/hydro-watcher/streamflow_probe.py \
+  --site 06887500 \
+  --comid 12345678
+```
+
 ### Illustrative bounded receipt shape
 
 This is an example output shape, not a settled repo contract.
@@ -472,6 +493,29 @@ This is an example output shape, not a settled repo contract.
 }
 ```
 
+### Illustrative domain-threshold event shape
+
+This is a **PROPOSED** shape for a thin-slice hydrology probe output, not a settled lane contract.
+
+```json
+{
+  "site_no": "06887500",
+  "permanent_id": null,
+  "comid": 12345678,
+  "doy": 93,
+  "obs_cfs": 41.2,
+  "p5_cfs": 55.0,
+  "p95_cfs": 481.0,
+  "rolling_7d_mean_cfs": 44.9,
+  "status": "low",
+  "alert_class": "seasonal_low_tail",
+  "breach_days": 3,
+  "join_resolution_reason": "fallback_comid",
+  "baseline_kind": "day_of_year_percentile",
+  "event_content_hash": "sha256:NEEDS_VERIFICATION"
+}
+```
+
 ### Healthy handoff model
 
 A good probe usually hands off to a stronger lane:
@@ -483,6 +527,7 @@ A good probe usually hands off to a stronger lane:
 - `policy/` when allow/deny/obligation decisions must be made
 - `data/receipts/` when process-memory artifacts need durable placement
 - `data/proofs/` only when a stronger lane, not the probe itself, owns those authoritative trust surfaces
+- `tests/e2e/runtime_proof/` when request-time finite outcomes and outward trust cues must be proven
 
 ### Probe-output rule
 
@@ -493,7 +538,8 @@ That means:
 - a probe report may be review-significant
 - a probe receipt may be useful evidence
 - a probe summary may feed a gate
-- but none of those automatically become policy law, proof-pack truth, or release authority
+- a narrow domain event may support review
+- but none of those automatically become policy law, proof-pack truth, runtime proof authority, or release authority
 
 [Back to top](#top)
 
@@ -513,11 +559,25 @@ flowchart LR
     C --> I[data/receipts/<br/>process memory]
 
     H --> J[policy / review / merge gates]
+    C --> K[tests/e2e/runtime_proof<br/>when outward finite outcomes must be proven]
 
-    B -. no direct publish .-> K[Published artifacts]
-    B -. no hidden promotion law .-> L[Promotion decisions]
-    B -. no sovereign ownership .-> M[contracts/ · schemas/ · policy/]
-    C -. do not flatten .-> N[receipts / proofs / release objects remain distinct]
+    B -. no direct publish .-> L[Published artifacts]
+    B -. no hidden promotion law .-> M[Promotion decisions]
+    B -. no sovereign ownership .-> N[contracts/ · schemas/ · policy/]
+    C -. do not flatten .-> O[receipts / proofs / release objects remain distinct]
+```
+
+### Example child-lane relationship
+
+```mermaid
+flowchart TD
+    A[tools/probes/] --> B[generic freshness / availability probes]
+    A --> C[PROPOSED hydro-watcher child lane]
+    C --> D[read-only streamflow threshold probe]
+    D --> E[receipt-shaped output]
+    D --> F[reviewable event shape]
+    F --> G[schemas/ and tests/ own authority elsewhere]
+    F --> H[runtime proof remains outside probes]
 ```
 
 [Back to top](#top)
@@ -541,6 +601,7 @@ flowchart LR
 | `contracts/` | Own machine-readable trust objects | A probe may inspect them, not define them |
 | `schemas/` | Hold schema-home boundary documentation | A probe may inspect shape, not settle authority |
 | `tests/` | Prove behavior with fixtures and assertions | Every material probe should be exercised here |
+| `tests/e2e/runtime_proof/` | Prove request-time finite outward outcomes | Probe outputs may feed this leaf, but the proof burden does not live in `tools/probes/` |
 | `.github/workflows/` | CI/CD automation | Workflows call probes; they should not become the only implementation surface |
 | `data/receipts/` | Governed process-memory storage | Good fit for probe-emitted receipt-shaped outputs |
 | `data/proofs/` | Governed proof storage | Probes may inspect or reference, but should not become this lane |
@@ -557,7 +618,7 @@ flowchart LR
 | Callers | Stay runnable locally, from scripts, and from workflows | Avoids YAML-only logic |
 | Tests | Add representative positive and negative-path fixtures | KFM verification includes failure paths |
 | Docs | Update this README when lane behavior changes materially | Keeps documentary surfaces honest |
-| Authority | Never become the canonical owner of policy, contracts, receipts, proofs, or schema decisions | Prevents helper-code drift into sovereign truth |
+| Authority | Never become the canonical owner of policy, contracts, receipts, proofs, runtime proof, or schema decisions | Prevents helper-code drift into sovereign truth |
 
 ### Probe class matrix
 
@@ -569,6 +630,7 @@ flowchart LR
 | Drift probe | Did checksum, timestamp, count, or href set change? | observed drift summary, prior/current values |
 | Trust-surface probe | Are expected outward or supporting artifacts present? | missing artifact report, presence matrix |
 | Receipt/proof visibility probe | Are process-memory and proof-bearing refs both present and distinguishable? | explicit receipt/proof visibility summary |
+| Domain threshold probe | Is a narrow domain condition observable against an explicit threshold or baseline? | bounded event object, threshold summary, abstain/no-change report |
 
 [Back to top](#top)
 
@@ -583,10 +645,11 @@ flowchart LR
 - [ ] Caller surfaces are documented
 - [ ] Representative test coverage lands with the probe
 - [ ] Output format and exit behavior are stable enough for local and CI use
-- [ ] Adjacent boundary docs remain in sync if schema-, contract-, policy-, receipt-, or proof-facing assumptions change
+- [ ] Adjacent boundary docs remain in sync if schema-, contract-, policy-, receipt-, proof-, or runtime-proof-facing assumptions change
 - [ ] Unknowns remain visible instead of being smoothed into implementation claims
 - [ ] If a probe begins to enforce rules rather than observe facts, it is moved or split into a stronger lane
 - [ ] If a probe starts to emit trust-bearing artifacts, receipt/proof/process-memory boundaries stay explicit
+- [ ] If `hydro-watcher/` lands, this parent README indexes it without overstating merge status
 
 ---
 
@@ -604,6 +667,10 @@ Not as its primary job. A probe may inform a governed decision, but promotion, p
 
 No. The current visible public subtree is README-first unless executable files are separately verified in-tree.
 
+### Can a domain-specific child lane still belong under `tools/probes/`?
+
+Yes, but only if it still behaves like a probe. Specialization does not relax the lane boundary. A hydrology watcher here is acceptable only if it stays read-only, bounded, reviewable, and explicit about downstream handoff.
+
 ### Where should fixtures live?
 
 Prefer [`../../tests/`](../../tests/) for representative fixtures and assertions. Keep helper-local samples tiny and safe if they exist at all.
@@ -620,9 +687,9 @@ No. Probes may inspect those surfaces, but canonical ownership remains with the 
 
 Yes, especially around freshness, availability, and visible trust-surface state. They should report those facts, not convert them into release law.
 
-### Why mention receipts and proofs here?
+### Why mention receipts, proofs, and runtime proof here?
 
-Because observational helpers are a common place for trust-state flattening to creep in. Keeping receipts and proofs explicitly separate prevents a convenience report from masquerading as a stronger trust object.
+Because observational helpers are a common place for trust-state flattening to creep in. Keeping receipts, proofs, and runtime proof explicitly separate prevents a convenience report from masquerading as a stronger trust object.
 
 ---
 
@@ -639,6 +706,7 @@ Because observational helpers are a common place for trust-state flattening to c
    - checksum drift
    - surface-shape drift
    - bounded materiality check
+   - narrow domain threshold observation
 
 2. Name the entrypoint clearly:
 
@@ -662,8 +730,9 @@ Because observational helpers are a common place for trust-state flattening to c
    - no silent canonical writes
    - no schema-home arbitration by convenience
    - no receipt/proof flattening by convenience
+   - no runtime-proof authority by convenience
 
-### Example first-probe candidate
+### Example first-probe candidates
 
 A STAC materiality watcher such as:
 
@@ -677,6 +746,20 @@ is a strong fit **if** it remains:
 - deterministic in its spec-hash and change detection
 - explicit about outputs under `data/work/` and `data/receipts/probes/`
 - fail-closed only through external validator or policy callers
+
+A hydrology child lane such as:
+
+```text
+tools/probes/hydro-watcher/streamflow_probe.py
+```
+
+is a strong fit **if** it remains:
+
+- observational rather than publish-bearing
+- explicit about approved baseline source and persistence rules
+- clear that schema authority lives outside `tools/probes/`
+- clear that runtime proof lives under `tests/e2e/runtime_proof/`
+- explicit that downstream policy or public-alert authority is elsewhere
 
 </details>
 
@@ -730,6 +813,36 @@ This kind of helper belongs here only if it remains observational and does not d
 ```
 
 This belongs in the probes lane only while it is still **process memory and observation**, not proof-pack authority or release law.
+
+</details>
+
+<details>
+<summary><strong>Illustrative hydrology probe event</strong></summary>
+
+```json
+{
+  "site_no": "06887500",
+  "permanent_id": null,
+  "comid": 12345678,
+  "doy": 93,
+  "obs_cfs": 41.2,
+  "p5_cfs": 55.0,
+  "p50_cfs": 210.0,
+  "p95_cfs": 481.0,
+  "rolling_7d_mean_cfs": 44.9,
+  "rolling_30d_mean_cfs": 61.2,
+  "status": "low",
+  "alert_class": "seasonal_low_tail",
+  "breach_days": 3,
+  "join_resolution_reason": "fallback_comid",
+  "decision": "ANSWER",
+  "reason": "sustained percentile breach",
+  "baseline_kind": "day_of_year_percentile",
+  "event_content_hash": "sha256:NEEDS_VERIFICATION"
+}
+```
+
+This kind of output can fit in `tools/probes/` only while it remains a bounded observational result that hands schema authority, proof burden, and downstream release authority elsewhere.
 
 </details>
 
