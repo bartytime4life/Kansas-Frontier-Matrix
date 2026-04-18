@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <NEEDS VERIFICATION>
-updated: 2026-04-12
+updated: 2026-04-18
 policy_label: <NEEDS VERIFICATION>
 related: [../README.md, ../docs/README.md, ../infra/README.md, ../packages/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../.github/workflows/README.md, ./api/README.md, ./api/src/README.md, ./api/src/api/README.md, ./api/tests/README.md, ./cli/README.md, ./explorer-web/README.md, ./governed-api/README.md, ./review-console/README.md, ./ui/README.md, ./workers/README.md]
 tags: [kfm, apps, runtime, shell, governance]
-notes: [Revised against the March-April 2026 KFM doctrine corpus plus current public-main repo path evidence; current public-main now confirms apps/ui/README.md and apps/api/src/README.md in addition to the previously surfaced apps paths. Final local-branch topology, manifests, policy_label, doc UUID, created date, and the authoritative resolution of apps/api versus apps/governed-api versus the thin apps/ui lane still require direct branch verification.]
+notes: [Revised against the March-April 2026 KFM doctrine corpus plus current public-main repo path evidence; current public-main confirms apps/.codex/, apps/ui/README.md, and apps/api/src/README.md in addition to the previously surfaced apps paths. Final local-branch topology, manifests, policy_label, doc UUID, created date, and the authoritative resolution of apps/api versus apps/governed-api versus the thin apps/ui lane still require direct branch verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Apps Runtime Surfaces
@@ -27,6 +27,7 @@ Boundary README for the runtime-facing KFM app layer where governed doctrine bec
 | Path | `apps/README.md` |
 | Primary role | Boundary README for runtime-facing KFM application surfaces and their shared shell law |
 | Current public-main app family | `api/`, `cli/`, `explorer-web/`, `governed-api/`, `review-console/`, `ui/`, `workers/`, plus this `README.md` |
+| Visible non-runtime support path | `.codex/` is present under `apps/` and is listed here as a support/audit path, not as an app surface |
 | Truth posture | **CONFIRMED** public-main path inventory · **INFERRED** surface-role mapping · **UNKNOWN** local-branch runtime depth |
 | Strongest doctrine anchors | Map-first shell, timeline coequality, Evidence Drawer, Focus as bounded synthesis, review as shell variation, trust membrane, finite runtime outcomes, and 2D-first reasoning |
 | Upstream fit | Shared doctrine, contracts, schemas, policy, tests, packages, infra, docs, and workflow scaffolding live outside this boundary |
@@ -63,10 +64,16 @@ This boundary is not just “frontend code.” In KFM, runtime surfaces sit on t
 | Governed API lane | [`./governed-api/README.md`](./governed-api/README.md) and [`./api/README.md`](./api/README.md) | outward route families, evidence resolution, policy-aware payloads, bounded runtime access | **CONFIRMED paths / NEEDS VERIFICATION for final naming authority** |
 | API source subtree | [`./api/src/README.md`](./api/src/README.md) | app-local source subtree boundary below `apps/api/`, currently thin in public-main evidence | **CONFIRMED path / CONFIRMED thin snapshot / UNKNOWN implementation depth** |
 | Contract-first API internals | [`./api/src/api/README.md`](./api/src/api/README.md) | deeper API boundary and enforcement detail | **CONFIRMED path / UNKNOWN implementation depth** |
-| App-local test surface | [`./api/tests/README.md`](./api/tests/README.md) | contract-facing API tests and related verification surfaces | **CONFIRMED path / UNKNOWN full suite coverage** |
+| App-local test surface | [`./api/tests/README.md`](./api/tests/README.md) | contract-facing API tests and related verification surfaces | **CONFIRMED path / CONFIRMED README-only placeholder / UNKNOWN full suite coverage** |
 | CLI / operator lane | [`./cli/README.md`](./cli/README.md) | local/operator tooling, diagnostics, proof-pack helpers, narrow app-adjacent commands | **CONFIRMED path / INFERRED role** |
-| UI placeholder lane | [`./ui/README.md`](./ui/README.md) | thin placeholder child README currently present under `apps/`; durable responsibility remains unresolved | **CONFIRMED path / CONFIRMED placeholder role / NEEDS VERIFICATION for lasting boundary intent** |
+| UI placeholder lane | [`./ui/README.md`](./ui/README.md) | thin placeholder child README currently present under `apps/`; durable responsibility remains unresolved | **CONFIRMED path / CONFIRMED README-only placeholder / NEEDS VERIFICATION for lasting boundary intent** |
 | Worker lane | [`./workers/README.md`](./workers/README.md) | projections, export jobs, correction propagation, and app-adjacent runtime jobs | **CONFIRMED path / INFERRED role / UNKNOWN runtime depth** |
+
+### Visible support path
+
+| Path | Why it is listed | Current label |
+|---|---|---|
+| `apps/.codex/` | public-main support/audit artifacts appear under `apps/`; this README records the path without treating it as a runtime surface | **CONFIRMED path / NOT an app family / NEEDS VERIFICATION for branch-local role** |
 
 ### What this README is not
 
@@ -90,11 +97,11 @@ This file sits at `apps/README.md` and documents the runtime boundary where KFM�
 
 ### Boundary-first rule
 
-1. app surfaces stay downstream of promoted release scope  
-2. consequential claims remain one hop from inspectable evidence  
-3. policy, review, freshness, and correction state stay visible in outward experience  
-4. runtime assistance remains subordinate to evidence, policy, and release state  
-5. exact local branch topology stays explicit when not directly verified  
+1. app surfaces stay downstream of promoted release scope
+2. consequential claims remain one hop from inspectable evidence
+3. policy, review, freshness, and correction state stay visible in outward experience
+4. runtime assistance remains subordinate to evidence, policy, and release state
+5. exact local branch topology stays explicit when not directly verified
 
 ### Upstream and downstream links
 
@@ -119,9 +126,10 @@ This file sits at `apps/README.md` and documents the runtime boundary where KFM�
 | Downstream | [./api/src/api/README.md](./api/src/api/README.md) | deeper API enforcement boundary |
 | Downstream | [./api/tests/README.md](./api/tests/README.md) | app-local API test surface |
 | Downstream | [./ui/README.md](./ui/README.md) | placeholder child README currently present under `apps/` |
+| Support | `./.codex/` | public-main markdown/path audit support artifacts; not a runtime surface |
 
 > [!WARNING]
-> Current public main exposes **both** `apps/governed-api/README.md` and the `apps/api/` path family. It also exposes `apps/ui/README.md` as a checked-in placeholder child path. This README keeps all three facts visible instead of guessing which one becomes singular or authoritative on the target branch.
+> Current public main exposes **both** `apps/governed-api/README.md` and the `apps/api/` path family. It also exposes `apps/ui/README.md` as a checked-in placeholder child path. This README keeps those facts visible instead of guessing which path becomes singular or authoritative on the target branch.
 
 ### Why `apps/` matters in KFM
 
@@ -154,6 +162,7 @@ Accepted inputs in `apps/` are the ones that make KFM’s governed surfaces buil
 | Placeholder child docs | placeholder README surfaces such as `apps/ui/README.md` that keep markdown-linked structure coherent while long-term boundary ownership is still unsettled | **CONFIRMED path / CONFIRMED placeholder snapshot / NEEDS VERIFICATION for durable role** |
 | App-local docs, fixtures, and tests | E2E shell flows, keyboard continuity, reduced-motion behavior, Evidence Drawer drill-through, export-preview trust cues, Focus negative outcomes, and surface-state tests | **CONFIRMED need / current inventory partial** |
 | CLI and worker inputs | operator commands, job specs, diagnostics, and app-adjacent batch/runtime obligations for child paths that actually exist | **CONFIRMED paths / deeper runtime depth UNKNOWN** |
+| Support/audit artifacts | path audits and markdown-path reports that help maintain doc integrity without becoming runtime behavior | **CONFIRMED `.codex/` path / role NEEDS VERIFICATION** |
 
 ### Every serious surface should expect these inputs
 
@@ -185,6 +194,7 @@ Accepted inputs in `apps/` are the ones that make KFM’s governed surfaces buil
 | Hidden second admin product | review shell variation and governed review routes | preserves visible accountability |
 | Default spectacle-first 3D shell | controlled burden-bearing slice only after 2D trust model is proven | spectacle does not outrank inspectability |
 | Business law hidden in scripts or deployment glue | shared packages, contracts, policy, or workers | keeps authority seams reviewable |
+| Markdown path audits treated as runtime proof | docs/tooling or `.codex/` support surfaces | documentation evidence helps review, but it is not runtime maturity |
 
 > [!WARNING]
 > Stable anti-patterns remain stable even when implementation details move: direct browser-to-store access, detached AI panes, hidden time semantics, decorative evidence, policy-only-in-frontend behavior, and silent export stripping.
@@ -200,6 +210,10 @@ The tree below reflects the **current public-main snapshot** that was directly i
 ```text
 apps/
 ├── README.md
+├── .codex/
+│   ├── markdown-path-audit.json
+│   ├── markdown-path-audit.md
+│   └── markdown-path-report.md
 ├── api/
 │   ├── README.md
 │   ├── src/
@@ -223,7 +237,7 @@ apps/
 ```
 
 > [!NOTE]
-> `apps/api/` and `apps/governed-api/` are both public-main realities right now. `apps/ui/README.md` is also a public-main reality, but presently as a placeholder child doc rather than a proved runtime subtree. This README preserves all three facts until direct branch inspection makes the runtime boundary singular and unambiguous.
+> `apps/api/` and `apps/governed-api/` are both public-main realities right now. `apps/ui/README.md` is also a public-main reality, but presently as a placeholder child doc rather than a proved runtime subtree. `apps/.codex/` is visible as a support/audit path, not as a runtime-facing app. This README preserves those facts until direct branch inspection makes the runtime boundary singular and unambiguous.
 
 ### Expected local README coverage
 
@@ -238,8 +252,9 @@ apps/
 | `apps/api/README.md` | app-local API lane root | **CONFIRMED path** |
 | `apps/api/src/README.md` | app-local source subtree README | **CONFIRMED path / CONFIRMED thin snapshot** |
 | `apps/api/src/api/README.md` | deeper API enforcement boundary | **CONFIRMED path** |
-| `apps/api/tests/README.md` | app-local API test surface | **CONFIRMED path** |
+| `apps/api/tests/README.md` | app-local API test surface | **CONFIRMED path / CONFIRMED README-only placeholder in public-main evidence** |
 | `apps/ui/README.md` | placeholder child README currently present under `apps/` | **CONFIRMED path / CONFIRMED placeholder role / NEEDS VERIFICATION for durable ownership** |
+| `apps/.codex/` | markdown/path audit support surface | **CONFIRMED path / NOT runtime family / NEEDS VERIFICATION for merge policy** |
 
 [Back to top](#apps-runtime-surfaces)
 
@@ -252,7 +267,7 @@ These commands are **verification-first** and intentionally read-only. Run them 
 ```bash
 # 1) Confirm the current branch revision and inspect the apps subtree
 git rev-parse HEAD
-find apps -maxdepth 4 -type f -name 'README.md' | sort
+find apps -maxdepth 4 -type f | sort
 ```
 
 ```bash
@@ -263,9 +278,9 @@ find . -maxdepth 2 \
 ```
 
 ```bash
-# 3) Inspect app-facing API, shell, and placeholder surfaces that still need reconciliation
+# 3) Inspect app-facing API, shell, placeholder, worker, and support surfaces that still need reconciliation
 find apps -maxdepth 4 \
-  \( -path 'apps/api/*' -o -path 'apps/governed-api/*' -o -path 'apps/explorer-web/*' -o -path 'apps/review-console/*' -o -path 'apps/cli/*' -o -path 'apps/ui/*' -o -path 'apps/workers/*' \) \
+  \( -path 'apps/.codex/*' -o -path 'apps/api/*' -o -path 'apps/governed-api/*' -o -path 'apps/explorer-web/*' -o -path 'apps/review-console/*' -o -path 'apps/cli/*' -o -path 'apps/ui/*' -o -path 'apps/workers/*' \) \
   -print | sort
 ```
 
@@ -295,12 +310,12 @@ Treat `apps/` as the place where KFM’s governing law becomes visible product b
 
 ### Operating law
 
-1. app surfaces read through governed APIs only  
-2. consequential claims stay one hop from inspectable evidence  
-3. review and stewardship remain shell variations, not detached admin products  
-4. shell continuity state stays distinct from trust-bearing backend state  
-5. negative states are first-class and remain visible  
-6. the shell stays 2D-first unless a specific 3D burden is explicitly justified  
+1. app surfaces read through governed APIs only
+2. consequential claims stay one hop from inspectable evidence
+3. review and stewardship remain shell variations, not detached admin products
+4. shell continuity state stays distinct from trust-bearing backend state
+5. negative states are first-class and remain visible
+6. the shell stays 2D-first unless a specific 3D burden is explicitly justified
 
 ### Current public app family snapshot
 
@@ -314,8 +329,9 @@ Treat `apps/` as the place where KFM’s governing law becomes visible product b
 | `apps/api/` | current public API lane root | contract-first API behavior remains reviewable and testable | **CONFIRMED path** |
 | `apps/api/src/` | app-local source subtree | app-root and deeper API-lane detail stay explicitly separated even when the subtree is thin | **CONFIRMED path / UNKNOWN local runtime depth** |
 | `apps/api/src/api/` | deeper API enforcement surface | route families and runtime envelopes stay governed | **CONFIRMED path** |
-| `apps/api/tests/` | app-local API test surface | boundary behavior stays contract-testable | **CONFIRMED path** |
+| `apps/api/tests/` | app-local API test surface | boundary behavior should stay contract-testable; current public evidence remains README-only | **CONFIRMED path / README-only public snapshot / UNKNOWN runner depth** |
 | `apps/ui/` | currently thin placeholder child doc lane | placeholder role stays explicit unless the target branch gives it durable ownership and deeper subtree proof | **CONFIRMED path / NEEDS VERIFICATION for lasting runtime role** |
+| `apps/.codex/` | support/audit surface | markdown/path reports may help document integrity but must not become runtime proof | **CONFIRMED path / NOT app runtime** |
 
 ### State ownership
 
@@ -363,13 +379,14 @@ flowchart LR
     PolicySurface[policy] --> APIBoundary
     Tests[tests] --> Shell
 
+    Support[apps/.codex<br/>markdown/path audit support] -. documentation integrity only .-> Shell
     Canonical[Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG → PUBLISHED] -. governs admissible scope .-> APIBoundary
     MapRuntime -. render only, never sovereign truth .-> Shell
     Evidence -. drawer + drill-through .-> Shell
     Policy -. trust cues .-> Shell
 ```
 
-Above: app surfaces sit at the visible trust edge, but remain downstream of release scope, policy mediation, evidence resolution, and protected runtime boundaries. The diagram shows the **boundary role**, not a final claim that API-lane naming or the long-term `apps/ui/` role has already been reconciled.
+Above: app surfaces sit at the visible trust edge, but remain downstream of release scope, policy mediation, evidence resolution, and protected runtime boundaries. The diagram shows the **boundary role**, not a final claim that API-lane naming, the long-term `apps/ui/` role, or any `.codex/` support surface has already been reconciled.
 
 [Back to top](#apps-runtime-surfaces)
 
@@ -426,6 +443,7 @@ Above: app surfaces sit at the visible trust edge, but remain downstream of rele
 ### Definition of done for this README
 
 - [ ] verify the target branch `apps/` subtree against the current public-main snapshot
+- [ ] confirm whether `apps/.codex/` is expected to remain under `apps/` and whether it should be linked from runtime docs at all
 - [ ] resolve the authoritative relationship between `apps/api/` and `apps/governed-api/`
 - [ ] confirm whether `apps/ui/README.md` remains a placeholder-only child doc or becomes a durable runtime lane on the target branch
 - [ ] populate the final KFM meta block UUID, created date, and policy label from authoritative branch evidence
@@ -444,6 +462,7 @@ Above: app surfaces sit at the visible trust edge, but remain downstream of rele
 - [ ] generalized, restricted, stale, superseded, withdrawn, denied, abstained, and errored states remain visible
 - [ ] export preview still preserves trust cues and correction linkage
 - [ ] thin placeholder docs under `apps/` are not silently upgraded into implementation proof without branch-local evidence
+- [ ] support/audit artifacts are not mistaken for runtime behavior, CI enforcement, or release proof
 - [ ] docs, contracts, fixtures, and accessibility checks change together when trust behavior changes
 
 [Back to top](#apps-runtime-surfaces)
@@ -458,11 +477,15 @@ Because both path families are currently visible on public main. This README kee
 
 ### Why does `apps/ui/` now appear?
 
-Because current public main now exposes `apps/ui/README.md` as a real child path under `apps/`. Public evidence currently supports a placeholder README there, not a mature subtree or settled ownership model.
+Because current public main exposes `apps/ui/README.md` as a real child path under `apps/`. Public evidence currently supports a placeholder README there, not a mature subtree or settled ownership model.
 
 ### Why does `apps/api/src/README.md` now appear?
 
 Because current public main exposes `apps/api/src/README.md` alongside `apps/api/src/api/README.md`. Omitting it would underreport the inspected public tree.
+
+### Why does `apps/.codex/` appear?
+
+Because current public main exposes `.codex/` under `apps/` with markdown/path audit artifacts. This README records it as a support path only. It is not treated as a runtime surface, trust membrane, release proof, or product lane.
 
 ### Is review a separate product?
 
@@ -504,22 +527,25 @@ Because document UUID, original created date, and final policy label were not di
 - **Trust-bearing state** — evidence, review, release, policy, freshness, and correction semantics owned by governed services rather than browser convenience.
 - **Review shell variation** — steward behavior preserved inside the same shell law rather than split into a detached epistemic system.
 - **Thin slice** — one real lane that proves source admission, validation, release, evidence resolution, surface behavior, and correction without trust gaps.
+- **Support/audit path** — a documentation or tooling-support path that may help maintainers inspect structure, but does not itself prove runtime behavior.
 
 ### Merge-time checklist
 
 1. Verify the target branch tree against the public-main snapshot in this README.
-2. Choose the single API-lane naming that the branch actually intends to keep, if consolidation has happened.
-3. Decide whether `apps/ui/README.md` remains a placeholder child doc, is removed, or becomes a real lane.
-4. Replace any stale sibling links once the branch topology is settled.
-5. Populate the meta block from authoritative branch evidence.
-6. Add real workspace commands only after manifest verification.
-7. Keep any remaining uncertainty explicit instead of smoothing it into false certainty.
+2. Decide whether `.codex/` belongs in this boundary README, a tooling README, or neither.
+3. Choose the single API-lane naming that the branch actually intends to keep, if consolidation has happened.
+4. Decide whether `apps/ui/README.md` remains a placeholder child doc, is removed, or becomes a real lane.
+5. Replace any stale sibling links once the branch topology is settled.
+6. Populate the meta block from authoritative branch evidence.
+7. Add real workspace commands only after manifest verification.
+8. Keep any remaining uncertainty explicit instead of smoothing it into false certainty.
 
 ### Maintenance rule
 
 Update this README when any of the following change materially:
 
 - the app family under `apps/`
+- the support/audit paths under `apps/`
 - the authoritative API-lane path
 - the role of `apps/ui/README.md`
 - shell-state ownership
