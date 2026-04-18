@@ -4,45 +4,75 @@ title: pipelines/usgs-mesonet-watch
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: 2026-04-14
-updated: 2026-04-14
+updated: 2026-04-18
 policy_label: public
-related: [
-  ../README.md,
-  ../../docs/patterns/dataset_watch.md,
-  ../../data/receipts/README.md,
-  ../../data/proofs/README.md,
-  ../../tools/validators/README.md,
-  ../../tools/validators/promotion_gate/README.md,
-  ../../policy/README.md,
-  ../../schemas/README.md,
-  ../../tests/README.md
-]
-tags: [kfm, pipelines, usgs, mesonet, watcher, receipts, spec_hash]
-notes: [Watcher-first hydrology thin slice. Doctrine is strong; exact mounted subtree, scheduler owner, validator path, and live endpoint wiring remain NEEDS VERIFICATION.]
+related: [../README.md, ../../docs/patterns/dataset_watch.md, ../../data/receipts/README.md, ../../data/receipts/probes/README.md, ../../data/proofs/README.md, ../../tools/probes/README.md, ../../tools/probes/hydro-watcher/README.md, ../../tools/validators/README.md, ../../tools/validators/promotion_gate/README.md, ../../policy/README.md, ../../schemas/README.md, ../../tests/README.md, ../../tests/e2e/runtime_proof/hydrology/streamflow/README.md]
+tags: [kfm, pipelines, usgs, mesonet, watcher, receipts, spec_hash, hydrology]
+notes: [Watcher-first hydrology thin slice. Doctrine is strong; exact mounted subtree, scheduler owner, validator path, and live endpoint wiring remain NEEDS VERIFICATION. This revision keeps lane-level allow/deny/quarantine language explicit while surfacing the adjacent runtime-proof ANSWER/ABSTAIN/DENY/ERROR vocabulary as a separate downstream concern rather than silently flattening the two.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # `pipelines/usgs-mesonet-watch/`
 
 Watcher-first hydrology intake lane for **USGS Water Data** and **Kansas Mesonet** candidate batches, with deterministic `spec_hash`, fail-closed policy evaluation, receipt emission, and promotion-manifest handoff.
 
-> [!NOTE]
-> **Operational maturity:** experimental  
-> **Document status:** draft  
-> **Owners:** `@bartytime4life`  
-> ![Status: Draft](https://img.shields.io/badge/status-draft-f4c430) ![Maturity: Experimental](https://img.shields.io/badge/maturity-experimental-8250df) ![Lane: Hydrology](https://img.shields.io/badge/lane-hydrology-1f6feb) ![Posture: Fail Closed](https://img.shields.io/badge/posture-fail--closed-238636) ![Trust: Receipt≠Proof](https://img.shields.io/badge/trust-receipt%E2%89%A0proof-6f42c1)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Flow](#flow) · [Contract surfaces](#contract-surfaces) · [Release and policy gates](#release-and-policy-gates) · [Open questions](#open-questions)
+<div align="left">
+
+![status](https://img.shields.io/badge/status-draft-f4c430)
+![maturity](https://img.shields.io/badge/maturity-experimental-8250df)
+![lane](https://img.shields.io/badge/lane-hydrology-1f6feb)
+![posture](https://img.shields.io/badge/posture-fail--closed-238636)
+![trust](https://img.shields.io/badge/trust-receipt%E2%89%A0proof-6f42c1)
+![watcher](https://img.shields.io/badge/mode-watcher--first-0a7ea4)
+![spec_hash](https://img.shields.io/badge/id-spec__hash-111111)
+
+</div>
 
 | Field | Value |
 |---|---|
-| Path | `pipelines/usgs-mesonet-watch/` |
-| Role | `observe → normalize → spec_hash → policy gate → receipt → promotion manifest` |
-| Posture | `fail-closed · watcher-first · receipt/proof separated` |
-| Lane class | Hydrology-first proof slice with time-series promotion pressure |
-| Primary watched sources | USGS Water Data · Kansas Mesonet |
-| Context sources | WBD HUC12 · FEMA NFHL |
-| Current evidence posture | Doctrine is strong; mounted workflow/file proof remains bounded |
+| **Status** | draft |
+| **Operational maturity** | experimental |
+| **Owners** | `@bartytime4life` |
+| **Path** | `pipelines/usgs-mesonet-watch/` |
+| **Role** | `observe → normalize → spec_hash → policy gate → receipt → promotion manifest` |
+| **Posture** | `fail-closed · watcher-first · receipt/proof separated` |
+| **Lane class** | hydrology-first watcher slice with time-series promotion pressure |
+| **Primary watched sources** | USGS Water Data · Kansas Mesonet |
+| **Context sources** | WBD HUC12 · FEMA NFHL |
+| **Evidence posture** | doctrine is strong; mounted workflow/file proof remains bounded |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Flow](#flow) · [Source surfaces and roles](#source-surfaces-and-roles) · [Contract surfaces](#contract-surfaces) · [Release and policy gates](#release-and-policy-gates) · [Outcome vocabulary boundary](#outcome-vocabulary-boundary) · [Task list](#task-list) · [FAQ](#faq) · [Open questions](#open-questions) |
+
+> [!IMPORTANT]
+> This README is strongest as a **lane contract and repo-fit document**.
+>
+> It is **not** evidence that the mounted repository already contains the watcher, scheduler, validators, manifests, signing workflow, or live source wiring described here.
+
+> [!TIP]
+> Keep the trust split visible in this lane:
+>
+> **watcher output ≠ receipt ≠ proof ≠ catalog ≠ publication**
+>
+> This lane should:
+>
+> - watch upstreams
+> - normalize a candidate
+> - compute identity
+> - evaluate fail-closed policy
+> - emit process memory
+> - prepare a handoff
+>
+> It should **not** silently become the published truth surface.
+
+> [!WARNING]
+> This lane sits next to an unresolved vocabulary split in adjacent docs:
+>
+> - watcher/pipeline language here is **allow / deny / quarantine**
+> - runtime-proof language downstream is **ANSWER / ABSTAIN / DENY / ERROR**
+>
+> Keep that split explicit until the repo normalizes it deliberately.
 
 ---
 
@@ -61,18 +91,35 @@ It is responsible for:
 
 It is **not** the place where public truth is declared. This directory is the lane where a candidate becomes inspectable enough to hand off.
 
-> [!IMPORTANT]
-> This README is strongest as a **lane contract and repo-fit document**. It is **not** evidence that the mounted repository already contains the watcher, scheduler, validators, manifests, or signing workflow described here.
-
 ### Current evidence posture
 
 | Surface | Status | Why it matters |
 |---|---|---|
-| Watcher-first hydrology direction | **CONFIRMED** | Hydrology is the preferred first proof lane and this lane fits that burden profile. |
-| `manifest → spec_hash → policy gate → receipt → promotion` choreography | **TECHNICALLY VALIDATED / PROPOSED** | The corpus now gives a strong, end-to-end pattern for watcher-driven time-series promotion. |
-| Exact mounted subtree, scheduler owner, workflow files, and live URLs | **NEEDS VERIFICATION** | Current-session workspace evidence was PDF-rich, not repo-mounted. |
+| Watcher-first hydrology direction | **CONFIRMED** | Hydrology is the preferred first proof lane and this lane fits that burden profile |
+| `manifest → spec_hash → policy gate → receipt → promotion` choreography | **TECHNICALLY VALIDATED / PROPOSED** | The corpus gives a strong end-to-end pattern for watcher-driven time-series promotion |
+| Exact mounted subtree, scheduler owner, workflow files, and live URLs | **NEEDS VERIFICATION** | Current-session evidence is documentation-heavy, not branch-mounted implementation proof |
 
-[Back to top](#pipelinesusgs-mesonet-watch)
+### What belongs here
+
+- watcher logic that observes bounded source surfaces
+- deterministic candidate normalization
+- canonical manifest preparation
+- `spec_hash` derivation
+- fail-closed lane-level gating
+- machine-readable `run_receipt`
+- promotion-manifest handoff preparation
+
+### What does not belong here
+
+- release proof bundles
+- final publication
+- schema-home authority
+- runtime-proof assertions
+- public-alert authority
+- UI rendering logic
+- silent promotion shortcuts
+
+[Back to top](#top)
 
 ---
 
@@ -82,18 +129,27 @@ This directory sits at the handoff point between **dataset watching**, **validat
 
 | Direction | Surface | Relationship |
 |---|---|---|
-| Upstream | [`../README.md`](../README.md) | Parent pipelines surface for neighboring lane conventions. |
-| Upstream | [`../../docs/patterns/dataset_watch.md`](../../docs/patterns/dataset_watch.md) | Watcher pattern and cadence discipline. |
-| Downstream | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Compact run/process-memory outputs belong there. |
-| Downstream | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Release-grade proof objects belong there, not here. |
-| Downstream | [`../../tools/validators/README.md`](../../tools/validators/README.md) | Contract and validation surface that should consume emitted objects. |
-| Downstream | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Promotion decision surface for release-bearing candidates. |
-| Downstream | [`../../policy/README.md`](../../policy/README.md) | Fail-closed decision logic. |
-| Downstream | [`../../schemas/README.md`](../../schemas/README.md) | Canonical schema home once object shapes are published. |
-| Downstream | [`../../tests/README.md`](../../tests/README.md) | Positive/negative fixtures and replay checks. |
+| Parent | [`../README.md`](../README.md) | Parent pipelines surface for neighboring lane conventions |
+| Upstream pattern | [`../../docs/patterns/dataset_watch.md`](../../docs/patterns/dataset_watch.md) | Watcher pattern and cadence discipline |
+| Adjacent receipt lane | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Compact process-memory outputs belong there |
+| Adjacent receipt child lane | [`../../data/receipts/probes/README.md`](../../data/receipts/probes/README.md) | Probe-first process-memory receipts can be emitted before or beside stronger pipeline memory |
+| Adjacent proof lane | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Release-grade proof objects belong there, not here |
+| Adjacent probe lane | [`../../tools/probes/README.md`](../../tools/probes/README.md) | Probe-first watcher helpers should remain bounded and read-only |
+| Proposed streamflow watcher child lane | [`../../tools/probes/hydro-watcher/README.md`](../../tools/probes/hydro-watcher/README.md) | Candidate producer of bounded streamflow observation objects and run receipts |
+| Validation surface | [`../../tools/validators/README.md`](../../tools/validators/README.md) | Contract and validation helpers should consume emitted objects |
+| Promotion boundary | [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Stronger promotion decision surface for release-bearing candidates |
+| Policy lane | [`../../policy/README.md`](../../policy/README.md) | Fail-closed decision logic belongs there |
+| Schema home | [`../../schemas/README.md`](../../schemas/README.md) | Canonical schema authority stays outside the pipeline lane |
+| Test root | [`../../tests/README.md`](../../tests/README.md) | Positive/negative fixtures and replay checks live there |
+| Runtime-proof leaf | [`../../tests/e2e/runtime_proof/hydrology/streamflow/README.md`](../../tests/e2e/runtime_proof/hydrology/streamflow/README.md) | Downstream finite outward proof remains outside this watcher lane |
 
 > [!TIP]
-> The lane should stay narrow: **watch and prepare** here, **prove and publish** downstream.
+> Keep the lane narrow:
+>
+> **watch and prepare** here,  
+> **prove and publish** downstream.
+
+[Back to top](#top)
 
 ---
 
@@ -103,13 +159,14 @@ The current corpus supports the following inputs for this lane.
 
 | Input surface | Purpose | Status |
 |---|---|---|
-| USGS Water Data candidate batch | Primary hydrology/time-series observation input | CONFIRMED |
-| Kansas Mesonet candidate batch | Kansas station and soil-moisture context input | CONFIRMED |
-| WBD HUC12 context reference | Hydrologic grouping and basin context | CONFIRMED as contextual dependency |
-| FEMA NFHL context reference | Regulatory flood context | CONFIRMED as contextual dependency |
-| Source descriptors | Names source, cadence, role, and rights posture | PROPOSED first-wave contract |
-| Canonicalization rules | Stable normalization before hashing | TECHNICALLY VALIDATED direction |
-| Policy label + validation inputs | Fail-closed release decision input | CONFIRMED doctrine; exact fields NEED VERIFICATION |
+| USGS Water Data candidate batch | Primary hydrology/time-series observation input | **CONFIRMED** |
+| Kansas Mesonet candidate batch | Kansas station and soil-moisture or station context input | **CONFIRMED** |
+| WBD HUC12 context reference | Hydrologic grouping and basin context | **CONFIRMED as contextual dependency** |
+| FEMA NFHL context reference | Regulatory flood context | **CONFIRMED as contextual dependency** |
+| Source descriptors | Names source, cadence, role, and rights posture | **PROPOSED first-wave contract** |
+| Canonicalization rules | Stable normalization before hashing | **TECHNICALLY VALIDATED direction** |
+| Policy label + validation inputs | Fail-closed release decision input | **CONFIRMED doctrine; exact fields NEEDS VERIFICATION** |
+| Candidate work paths | Stable handoff pointers to reviewable downstream artifacts | **INFERRED / PROPOSED** |
 
 ### What belongs here
 
@@ -118,8 +175,10 @@ The current corpus supports the following inputs for this lane.
 - context references that help interpret the batch without turning this lane into a general-purpose catalog
 - release-candidate objects that are still reviewable and reversible
 
-> [!WARNING]
-> **Kansas Mesonet is a viable public connector, not a free-for-all ingestion surface.** Treat automation against Mesonet as policy-bearing design work, not unconstrained scraping.
+> [!CAUTION]
+> **Kansas Mesonet is a viable public connector, not a free-for-all ingestion surface.**
+>
+> Treat automation against Mesonet as policy-bearing design work, not unconstrained scraping.
 
 ---
 
@@ -135,6 +194,10 @@ This lane does **not**:
 - act as the final proof store
 - collapse **receipts**, **proofs**, and **catalog** objects into one file
 - imply live scheduler, workflow, or signing integration unless those surfaces are directly verified in-repo
+- replace runtime-proof leaves with ad hoc pipeline assertions
+- become the authoritative home for public-safe streamflow event semantics by convenience
+
+[Back to top](#top)
 
 ---
 
@@ -147,7 +210,24 @@ pipelines/usgs-mesonet-watch/
 └── README.md  # target lane document (mounted presence still NEEDS VERIFICATION)
 ```
 
-If this directory already contains code, fixtures, or workflow helpers, add them only after direct repo inspection.
+### Plausible first-wave landing (`PROPOSED`)
+
+```text
+pipelines/usgs-mesonet-watch/
+├── README.md
+├── manifests/
+│   └── candidate_manifest.json
+├── receipts/
+│   └── run_receipt.json
+└── fixtures/
+    ├── allow_candidate.json
+    └── deny_candidate.json
+```
+
+> [!NOTE]
+> The subtree above is illustrative only. Do not convert it into an implementation claim without direct branch inspection.
+
+[Back to top](#top)
 
 ---
 
@@ -155,13 +235,13 @@ If this directory already contains code, fixtures, or workflow helpers, add them
 
 Use this sequence when turning the lane from a draft contract into a real thin slice.
 
-1. Define source descriptors for **USGS Water Data** and **Kansas Mesonet**.
-2. Decide whether **WBD HUC12** and **FEMA NFHL** are resolved during the watch or joined as context later.
-3. Normalize one candidate batch into a stable manifest shape.
-4. Compute `spec_hash` from canonicalized content.
-5. Run fail-closed validation and policy checks.
-6. Always write `run_receipt`, whether the candidate is allowed or denied.
-7. Build the promotion-manifest handoff object only after the candidate passes.
+1. Define source descriptors for **USGS Water Data** and **Kansas Mesonet**
+2. Decide whether **WBD HUC12** and **FEMA NFHL** are resolved during the watch or joined as context later
+3. Normalize one candidate batch into a stable manifest shape
+4. Compute `spec_hash` from canonicalized content
+5. Run fail-closed validation and policy checks
+6. Always write `run_receipt`, whether the candidate is allowed, denied, or quarantined
+7. Build the promotion-manifest handoff object only after the candidate passes
 
 Illustrative sequence only:
 
@@ -174,6 +254,23 @@ observe
   -> run_receipt
   -> promotion manifest handoff
 ```
+
+### Branch-truth check commands
+
+```bash
+find pipelines/usgs-mesonet-watch -maxdepth 4 \( -type f -o -type d \) 2>/dev/null | sort
+sed -n '1,260p' pipelines/README.md 2>/dev/null
+sed -n '1,260p' docs/patterns/dataset_watch.md 2>/dev/null
+sed -n '1,260p' data/receipts/README.md 2>/dev/null
+sed -n '1,260p' data/proofs/README.md 2>/dev/null
+sed -n '1,260p' tools/probes/README.md 2>/dev/null
+sed -n '1,260p' tools/probes/hydro-watcher/README.md 2>/dev/null
+sed -n '1,260p' tools/validators/README.md 2>/dev/null
+sed -n '1,260p' tools/validators/promotion_gate/README.md 2>/dev/null
+sed -n '1,260p' tests/e2e/runtime_proof/hydrology/streamflow/README.md 2>/dev/null
+```
+
+[Back to top](#top)
 
 ---
 
@@ -190,14 +287,16 @@ flowchart LR
   F -->|allow| G[Write run_receipt]
   G --> I[Build promotion manifest]
   I --> J[Handoff to signing / publish lane]
-  F -->|deny| K[Quarantine candidate]
+  F -->|deny or quarantine| K[Stop promotion handoff]
   K --> L[Write run_receipt]
 ```
 
 > [!NOTE]
-> This doc deliberately keeps the lane-level branch language to **allow / deny / quarantine**. The broader corpus still carries an unresolved outcome-vocabulary collision that should be normalized separately rather than silently decided here.
+> This doc deliberately keeps the lane-level branch language to **allow / deny / quarantine**.
+>
+> The broader corpus still carries an unresolved outcome-vocabulary collision that should be normalized separately rather than silently decided here.
 
-[Back to top](#pipelinesusgs-mesonet-watch)
+[Back to top](#top)
 
 ---
 
@@ -205,10 +304,10 @@ flowchart LR
 
 | Source | Lane role | Notes |
 |---|---|---|
-| **USGS Water Data** | Primary watched hydrology source | Best fit for first proof-lane observation flow. |
-| **Kansas Mesonet** | Complementary Kansas station context | Valuable for local environmental context; usage constraints stay visible. |
-| **WBD HUC12** | Context / grouping surface | Supports basin-aware interpretation and routing. |
-| **FEMA NFHL** | Regulatory flood context | Useful context for flood-oriented reasoning; not a real-time inundation feed. |
+| **USGS Water Data** | Primary watched hydrology source | Best fit for first proof-lane observation flow |
+| **Kansas Mesonet** | Complementary Kansas station context | Valuable for local environmental context; usage constraints stay visible |
+| **WBD HUC12** | Context / grouping surface | Supports basin-aware interpretation and routing |
+| **FEMA NFHL** | Regulatory flood context | Useful context for flood-oriented reasoning; not a real-time inundation feed |
 
 This split matters because the lane should preserve **source-role clarity** instead of flattening everything into one undifferentiated “hydrology source.”
 
@@ -220,13 +319,13 @@ The corpus strongly pressures a small object family here, but not every schema i
 
 | Object | Owned here? | Purpose | Status |
 |---|---|---|---|
-| `SourceDescriptor` | Partially | Describe source identity, cadence, role, and rights posture | PROPOSED schema wave |
-| Canonical manifest | Yes | Stable batch identity surface before release handoff | INFERRED |
-| `spec_hash` | Yes | Deterministic identity + idempotency anchor | TECHNICALLY VALIDATED |
-| `run_receipt` | Yes | Compact process-memory record for allow/deny/quarantine | TECHNICALLY VALIDATED |
-| Promotion manifest | Handoff | Release candidate passed downstream | PROPOSED |
-| Signed proofs / bundles | No | Release-grade proof surface | Downstream responsibility |
-| Catalog objects | No | Discoverability / outward linkage | Downstream responsibility |
+| `SourceDescriptor` | Partially | Describe source identity, cadence, role, and rights posture | **PROPOSED schema wave** |
+| Canonical manifest | Yes | Stable batch identity surface before release handoff | **INFERRED** |
+| `spec_hash` | Yes | Deterministic identity and idempotency anchor | **TECHNICALLY VALIDATED** |
+| `run_receipt` | Yes | Compact process-memory record for allow/deny/quarantine | **TECHNICALLY VALIDATED** |
+| Promotion manifest | Handoff | Release candidate passed downstream | **PROPOSED** |
+| Signed proofs / bundles | No | Release-grade proof surface | **Downstream responsibility** |
+| Catalog objects | No | Discoverability and outward linkage | **Downstream responsibility** |
 
 ### Receipt / proof boundary
 
@@ -237,7 +336,9 @@ The corpus strongly pressures a small object family here, but not every schema i
 | Catalog entry | Outward discoverability and lineage surface | Not the same thing as validation or promotion state |
 
 > [!IMPORTANT]
-> Keep **receipt ≠ proof ≠ catalog** visible in the implementation. This lane should emit the first one and prepare the handoff for the others.
+> Keep **receipt ≠ proof ≠ catalog** visible in the implementation.
+>
+> This lane should emit the first one and prepare the handoff for the others.
 
 ---
 
@@ -247,11 +348,11 @@ The corpus strongly pressures a small object family here, but not every schema i
 
 | Law | Practical consequence here |
 |---|---|
-| Promotion is a governed state transition, not a file move | Passing validation is necessary but not sufficient for publication. |
-| Fail closed on weak support | Missing required fields or unresolved policy should stop promotion handoff. |
-| `spec_hash` anchors identity | Replays and diffs should use canonical content, not ad hoc filenames. |
-| Always emit a receipt | Denied and quarantined runs still need machine-readable memory. |
-| Signed proof lives downstream | This lane prepares release objects; it does not pretend they are already published. |
+| Promotion is a governed state transition, not a file move | Passing validation is necessary but not sufficient for publication |
+| Fail closed on weak support | Missing required fields or unresolved policy should stop promotion handoff |
+| `spec_hash` anchors identity | Replays and diffs should use canonical content, not ad hoc filenames |
+| Always emit a receipt | Denied and quarantined runs still need machine-readable memory |
+| Signed proof lives downstream | This lane prepares release objects; it does not pretend they are already published |
 
 ### Proposed first gate set
 
@@ -268,6 +369,58 @@ These are the safest first-wave checks to document here without inventing mounte
 
 A good first implementation should fail for **missing manifest shape**, **missing `spec_hash`**, **missing source identity**, and **missing receipt** before it tries to do anything more ambitious.
 
+[Back to top](#top)
+
+---
+
+## Outcome vocabulary boundary
+
+The current documentation set carries two nearby but non-identical finite-outcome grammars.
+
+### Lane-level watcher grammar
+
+This README keeps the watcher pipeline language as:
+
+- `allow`
+- `deny`
+- `quarantine`
+
+Use this grammar for:
+
+- promotion-path eligibility
+- quarantine routing
+- receipt-bearing pipeline memory
+- candidate handoff control
+
+### Downstream runtime-proof grammar
+
+Adjacent runtime-proof leaves use:
+
+- `ANSWER`
+- `ABSTAIN`
+- `DENY`
+- `ERROR`
+
+Use that grammar for:
+
+- outward governed responses
+- request-time proof
+- finite runtime behavior
+- evidence-visible answer suppression or failure reporting
+
+### Why not silently unify them here?
+
+Because the current evidence does **not** prove that normalization work is finished, and silently choosing one vocabulary in this README would erase a real repo-level design decision still in flight.
+
+> [!TIP]
+> The safest current stance is:
+>
+> - keep watcher grammar explicit in the pipeline lane
+> - keep runtime grammar explicit in runtime-proof leaves
+> - document the seam instead of hiding it
+
+[Back to top](#top)
+
 ---
 
 ## Task list
@@ -282,6 +435,7 @@ A good first implementation should fail for **missing manifest shape**, **missin
 - [ ] promotion-manifest handoff is machine-readable
 - [ ] direct repo evidence confirms workflow file, scheduler owner, and storage target
 - [ ] mounted tests prove replayability for unchanged `spec_hash`
+- [ ] vocabulary boundary with downstream runtime-proof docs is either documented or intentionally normalized with matching updates
 
 ### Things this doc intentionally leaves open
 
@@ -290,8 +444,9 @@ A good first implementation should fail for **missing manifest shape**, **missin
 - exact storage layout below `data/work/`, `data/quarantine/`, and `data/receipts/`
 - exact schema registry path for first-wave objects
 - exact signing/proof bundle mechanics after handoff
+- exact normalization plan for watcher grammar versus runtime-proof grammar
 
-[Back to top](#pipelinesusgs-mesonet-watch)
+[Back to top](#top)
 
 ---
 
@@ -313,6 +468,10 @@ No. Both are valuable, but the source roles are different and Mesonet carries ex
 
 No. The broader corpus still needs a normalization pass for outcome vocabulary. This README avoids pretending that work is finished.
 
+### Does this lane own runtime-proof behavior?
+
+No. It may prepare candidate objects and receipts that downstream runtime-proof leaves consume, but request-time outward proof remains outside this watcher lane.
+
 ---
 
 ## Open questions
@@ -323,6 +482,7 @@ No. The broader corpus still needs a normalization pass for outcome vocabulary. 
 - Does the repo use `promotion manifest`, `release manifest`, or both as distinct objects?
 - Which validations are mandatory for the first allowed handoff?
 - What exact downstream surface consumes this lane’s promotion object first?
+- Where should watcher grammar be formally mapped to runtime-proof grammar, if at all?
 
 ---
 
@@ -384,4 +544,4 @@ promotion_manifest_ref: null
 
 </details>
 
-[Back to top](#pipelinesusgs-mesonet-watch)
+[Back to top](#top)
