@@ -8,31 +8,52 @@ owners: [@bartytime4life]
 created: 2026-04-11
 updated: 2026-04-18
 policy_label: public-safe
-related: [tools/probes/README.md, .github/watchers/README.md, docs/domains/hydrology/README.md, docs/domains/hydrology/usgs-tail-alerts-schema.md, pipelines/wbd-huc12-watcher/README.md, tools/validators/README.md, data/receipts/README.md, schemas/README.md, schemas/hydrology/streamflow-event.schema.json, policy/README.md, tests/e2e/runtime_proof/README.md]
+related: [tools/probes/README.md, .github/watchers/README.md, docs/domains/hydrology/README.md, docs/domains/hydrology/usgs-tail-alerts-schema.md, pipelines/wbd-huc12-watcher/README.md, pipelines/usgs-mesonet-watch/README.md, tools/validators/README.md, data/receipts/README.md, data/receipts/probes/README.md, schemas/README.md, schemas/hydrology/streamflow-event.schema.json, policy/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/runtime_proof/hydrology/streamflow/README.md]
 tags: [kfm, hydrology, probes, watcher, usgs, noaa, thresholds, streamflow]
-notes: [Merged from the prior draft and updated to include a proposed deterministic USGS streamflow seasonal-tail probe landing. Exact child-lane file inventory, callable entrypoints, workflow wiring, and schema placement still require branch verification before merge.]
+notes: [Merged from the prior draft and updated to include a proposed deterministic USGS streamflow seasonal-tail probe landing. Exact child-lane file inventory, callable entrypoints, workflow wiring, receipt paths, and schema placement still require branch verification before merge. This revision keeps the probe lane explicitly bounded while surfacing handoffs to receipts, runtime proof, and the watcher-first pipeline lane.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Hydrologic Threshold Watcher
 
 Bounded child-lane README for a read-only hydrology threshold probe that evaluates recent water conditions, packages evidence, and hands consequential downstream emission off to governed review surfaces.
 
-> **Status:** draft child lane · experimental surface  
-> **Owners:** `@bartytime4life` *(inherits current `/tools/` owner coverage; narrower child-lane ownership NEEDS VERIFICATION)*  
-> **Path:** `tools/probes/hydro-watcher/README.md` *(PROPOSED child lane under the checked-in `tools/probes/` surface)*  
-> **Primary source posture:** USGS-first authoritative observation and approved-baseline logic; NOAA remains optional contextual enrichment unless a reviewed source-role rule later upgrades it.  
-> **Downstream:** reviewer-facing proof surfaces, receipts, and any later owner lane that may emit release-bearing decisions.  
-> **Quick jumps:** [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Output model](#output-model) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
 
-[![Status](https://img.shields.io/badge/status-draft-orange)](#status)
-[![Owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)](#repo-fit)
-[![Lane](https://img.shields.io/badge/lane-tools%2Fprobes-8250df)](#repo-fit)
-[![Domain](https://img.shields.io/badge/domain-hydrology-0a7ea4)](#scope)
-[![Posture](https://img.shields.io/badge/posture-read--only%20inspection-2d6a4f)](#scope)
-[![Runtime](https://img.shields.io/badge/runtime-fail--closed-b60205)](#status)
+![status](https://img.shields.io/badge/status-draft-orange)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![lane](https://img.shields.io/badge/lane-tools%2Fprobes-8250df)
+![domain](https://img.shields.io/badge/domain-hydrology-0a7ea4)
+![posture](https://img.shields.io/badge/posture-read--only%20inspection-2d6a4f)
+![runtime](https://img.shields.io/badge/runtime-fail--closed-b60205)
+![sources](https://img.shields.io/badge/sources-USGS--first-111111)
+![trust](https://img.shields.io/badge/trust-receipt%E2%89%A0proof-6f42c1)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | draft child lane · experimental surface |
+| **Owners** | `@bartytime4life` *(inherits current `/tools/` owner coverage; narrower child-lane ownership still **NEEDS VERIFICATION**)* |
+| **Path** | `tools/probes/hydro-watcher/README.md` *(PROPOSED child lane under the checked-in `tools/probes/` surface)* |
+| **Primary source posture** | USGS-first authoritative observation and approved-baseline logic; NOAA remains optional contextual enrichment unless a reviewed source-role rule later upgrades it |
+| **Repo fit** | bounded child lane under `tools/probes/`; downstream handoffs point to receipts, runtime proof, validators, and watcher/pipeline surfaces without collapsing those roles |
+| **Quick jumps** | [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Output model](#output-model) · [Boundary and handoff model](#boundary-and-handoff-model) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
-> In `tools/probes/`, this surface must stay the bounded inspection half of a watcher pattern. It may fetch, normalize, compare, and emit reviewable reports or proof candidates, but it must not silently become a public alerting lane, a policy source-of-truth, or a direct publication surface.
+> In `tools/probes/`, this surface must stay the bounded inspection half of a watcher pattern. It may fetch, normalize, compare, and emit reviewable reports or process-memory receipts, but it must not silently become a public alerting lane, a policy source of truth, or a direct publication surface.
+
+> [!TIP]
+> Keep the KFM split visible:
+>
+> **probe helper ≠ receipt ≠ runtime proof ≠ policy ≠ publication**
+>
+> - probe logic lives here
+> - process memory lands under `data/receipts/`
+> - runtime-proof burden lives under `tests/e2e/runtime_proof/`
+> - policy remains sovereign elsewhere
+> - public release remains downstream
 
 > [!NOTE]
 > This README deliberately separates **CONFIRMED** parent-lane doctrine from **PROPOSED** or **INFERRED** child-lane packaging. If this child lane lands, update the parent `tools/probes/README.md` in the same governed review stream so the subtree remains truthful.
@@ -45,12 +66,12 @@ Hydrology remains the preferred first thin slice in the attached KFM corpus beca
 
 | Field | Value |
 | --- | --- |
-| Lifecycle | Experimental / draft build surface |
-| Runtime posture | Fail-closed |
-| Thin-slice role | Hydrology-first governed proof lane |
+| Lifecycle | experimental / draft build surface |
+| Runtime posture | fail-closed |
+| Thin-slice role | hydrology-first governed proof-support lane |
 | Dominant causal basis | authoritative recent observations + approved seasonal baselines |
 | Forecast role | contextual only unless reviewed otherwise |
-| Mounted repo verification | **NEEDS VERIFICATION** for actual file presence, workflows, validator entrypoints, and final CLI surface |
+| Mounted repo verification | **NEEDS VERIFICATION** for actual file presence, workflows, validator entrypoints, receipt paths, and final CLI surface |
 
 ### Truth labels used here
 
@@ -62,7 +83,9 @@ Hydrology remains the preferred first thin slice in the attached KFM corpus beca
 | **UNKNOWN** | Not verified strongly enough to present as settled repo or runtime fact |
 | **NEEDS VERIFICATION** | Concrete detail to confirm before merge, caller wiring, or behavior-bearing claims |
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Scope
 
@@ -88,9 +111,31 @@ Use some other owner surface when the primary job becomes:
 
 ### Current thin-slice emphasis
 
-The strongest currently documented thin slice remains **USGS seasonal-tail detection** for streamflow, especially where a recent observed value can be compared against an approved day-of-year percentile baseline and must visibly **ABSTAIN** when that baseline is unavailable, stale, or unresolved.
+The strongest currently documented thin slice remains **USGS seasonal-tail detection** for streamflow, especially where a recent observed value can be compared against an approved day-of-year percentile baseline and must visibly **ABSTAIN** when that baseline is unavailable, stale, weakly supported, or unresolved.
 
-[Back to top](#hydrologic-threshold-watcher)
+### What belongs here
+
+- read-only fetch and compare logic
+- deterministic threshold evaluation
+- explicit negative-state handling
+- bounded event-like review artifacts
+- run receipts or receipt references
+- replayable local smoke and offline fixture support
+- explicit handoff to stronger lanes
+
+### What does not belong here
+
+- public alert publication
+- release-bearing `DecisionEnvelope` ownership unless the lane graduates explicitly
+- schema-home authority
+- policy authorship
+- long-term dataset warehousing
+- hidden retries that erase evidence of degraded upstreams
+- silent baseline substitution when the approved basis cannot be resolved
+
+[Back to top](#top)
+
+---
 
 ## Repo fit
 
@@ -100,10 +145,11 @@ The strongest currently documented thin slice remains **USGS seasonal-tail detec
 | Watcher doctrine | `.github/watchers/README.md` | Frames emit-only watcher behavior and warns against treating docs-only watcher surfaces as runtime proof | **CONFIRMED** |
 | Hydrology lane boundary | `docs/domains/hydrology/README.md` | Defines what belongs in hydrology and keeps publication burdens visible | **CONFIRMED** |
 | Seasonal tail standard | `docs/domains/hydrology/usgs-tail-alerts-schema.md` | Supplies the strongest documented basis for percentile-style hydrologic alert logic and abstention behavior | **CONFIRMED** |
-| Comparable watcher lane | `pipelines/wbd-huc12-watcher/README.md` | Shows how KFM currently documents a watcher-oriented hydrology slice when the surface is execution-bearing rather than probe-only | **CONFIRMED** |
+| Comparable watcher lane | `pipelines/wbd-huc12-watcher/README.md` | Shows how KFM documents a watcher-oriented hydrology slice when the surface is execution-bearing rather than probe-only | **CONFIRMED** |
+| Watcher-first pipeline lane | `pipelines/usgs-mesonet-watch/README.md` | Adjacent owner surface for candidate normalization, `spec_hash`, policy gate, and promotion handoff | **PROPOSED / CONFIRMED doc surface** |
 | Validators / schemas / policy / contracts / tests | `tools/validators/README.md`, `schemas/README.md`, `policy/README.md`, `contracts/README.md`, `tests/README.md` | Hold proof, gate, and shape authority that this child lane must not quietly absorb | **CONFIRMED** as adjacent surfaces |
-| Receipts / work memory | `data/receipts/README.md`, `data/work/README.md` | Keep process memory and working-state expectations visible | **CONFIRMED** pattern, exact local linkage **NEEDS VERIFICATION** |
-| Runtime proof family | `tests/e2e/runtime_proof/README.md` | Holds request-time proof obligations for finite outward outcomes and visible trust cues | **CONFIRMED** pattern |
+| Receipts / work memory | `data/receipts/README.md`, `data/receipts/probes/README.md`, `data/work/README.md` | Keep process memory and working-state expectations visible | **CONFIRMED** pattern, exact local linkage **NEEDS VERIFICATION** |
+| Runtime proof family | `tests/e2e/runtime_proof/README.md`, `tests/e2e/runtime_proof/hydrology/streamflow/README.md` | Holds request-time proof obligations for finite outward outcomes and visible trust cues | **CONFIRMED** pattern / **PROPOSED** leaf linkage |
 | This child lane | `tools/probes/hydro-watcher/README.md` | Proposed dedicated hydrology probe surface for threshold evaluation and evidence handoff | **PROPOSED** |
 
 ### Working interpretation
@@ -113,7 +159,8 @@ Inside `tools/probes/`, a hydrologic threshold watcher should be understood as a
 - it may produce a `CheckRecord` or a `ThresholdEvaluation`
 - it may assemble an `EvidenceBundle` candidate when the finding is consequential
 - it may stage a deterministic streamflow tail event object for downstream review
-- it should defer any release-bearing `DecisionEnvelope` emission to a better-owner surface unless and until the lane graduates with explicit policy, tests, and runtime proof
+- it may emit a `run_receipt` or point to one under the central receipts lane
+- it should defer release-bearing `DecisionEnvelope` ownership to a better-owner surface unless and until the lane graduates with explicit policy, tests, and runtime proof
 
 ### Proposed streamflow thin-slice landing
 
@@ -123,10 +170,13 @@ The clearest KFM-aligned starter landing for this child lane is:
 - a hydrology schema outside the lane for the event payload shape
 - runtime-proof fixtures under `tests/e2e/runtime_proof/`
 - receipts and report artifacts kept distinct from proofs
+- stats-baseline support treated as authoritative comparison input rather than convenience enrichment
 
-This is **PROPOSED** landing shape, not a claim that all files are already checked in.
+This is a **PROPOSED** landing shape, not a claim that all files are already checked in.
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Accepted inputs
 
@@ -147,10 +197,11 @@ This is **PROPOSED** landing shape, not a claim that all files are already check
 | Input | Role | Status |
 | --- | --- | --- |
 | `config/sites.yaml` | primary watcher configuration for sources, thresholds, and output paths | **INFERRED** from supplied watcher bundle |
-| `schemas/config/hydro-watcher-sites.schema.json` | contract authority for config validation | **INFERRED** exact path, **CONFIRMED** need for a schema authority |
+| `schemas/config/hydro-watcher-sites.schema.json` | contract authority for config validation | **INFERRED** exact path, **CONFIRMED** need for schema authority |
 | saved fixture JSON | offline replay input for deterministic tests | **CONFIRMED** pattern |
-| local state files | previous regime + last observation memory | **PROPOSED** / **INFERRED** |
+| local state files | previous regime and last observation memory | **PROPOSED** / **INFERRED** |
 | source responses | latest observation payload from a configured adapter | **CONFIRMED** concept |
+| stats-support payloads | approved seasonal baseline responses and support counts | **PROPOSED**, strongly aligned to the streamflow thin slice |
 
 ### Threshold families that fit this lane
 
@@ -170,6 +221,7 @@ This is **PROPOSED** landing shape, not a claim that all files are already check
 | `lookback_days` | rolling window and recent-value lookback | **PROPOSED** |
 | `low_percentile` / `high_percentile` | seasonal tail thresholds; current thin-slice default favors `p05/p95` | **PROPOSED**, but aligns to documented tail doctrine |
 | `sustained_days` | persistence gate for repeated breach detection | **PROPOSED** |
+| `baseline_support_min` | minimum approved baseline support before consequential output | **PROPOSED**, aligned to the stats-support abstention direction |
 
 ### Illustrative selector fields
 
@@ -181,7 +233,9 @@ This is **PROPOSED** landing shape, not a claim that all files are already check
 | `threshold` | primary upward crossing threshold | **PROPOSED** |
 | `hysteresis_buffer` | downward reset buffer or clear value offset | **PROPOSED** |
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Exclusions
 
@@ -195,11 +249,15 @@ This is **PROPOSED** landing shape, not a claim that all files are already check
 | Sensitive or private coordinate dumps | Public tooling should stay safe to clone and review | steward-only data or tightly scoped test fixtures |
 | Broad historical time-series warehousing | This surface is an inspection and threshold-evaluation lane, not a canonical warehouse | governed processed/catalog lanes |
 | Best-effort ambiguous alerting | KFM defaults to visible negative outcomes, not improvised positive claims | fail-closed negative states such as `ABSTAIN`, `DENY`, or `ERROR` |
+| Runtime-proof ownership | This lane may feed proof fixtures, but it must not become the runtime-proof leaf by convenience | `tests/e2e/runtime_proof/...` |
+| Proof-pack or release-manifest authority | Consequential trust objects belong to stronger downstream lanes | `data/proofs/`, release/promotion owner surfaces |
 
 > [!CAUTION]
 > If this surface needs to own long-running schedules, direct outward `DecisionEnvelope` emission, or release-bearing catalog writes, it has outgrown the safe `tools/probes/` contract. Graduate the owner surface instead of stretching the probe lane until it quietly becomes runtime.
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Directory tree
 
@@ -242,6 +300,13 @@ tools/
         ├── README.md
         └── streamflow_probe.py
 
+data/
+└── receipts/
+    └── probes/
+        └── usgs-water/
+            └── YYYY-MM-DD/
+                └── <run_id>.json
+
 schemas/
 └── hydrology/
     └── streamflow-event.schema.json
@@ -253,6 +318,7 @@ tests/
             └── streamflow/
                 ├── README.md
                 ├── test_streamflow_runtime_proof.py
+                ├── test_streamflow_stats_baseline.py
                 └── fixtures/
                     └── seasonal_low_tail_answer/
                         └── event.json
@@ -271,9 +337,11 @@ tools/
 ```
 
 > [!WARNING]
-> The trees above are landing shapes, not current public-branch proof. Keep the child path, entrypoint name, config names, schema location, and test location synchronized with the exact branch under review.
+> The trees above are landing shapes, not current public-branch proof. Keep the child path, entrypoint name, config names, receipt paths, schema location, and test location synchronized with the exact branch under review.
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Quickstart
 
@@ -294,6 +362,7 @@ sed -n '1,260p' docs/domains/hydrology/usgs-tail-alerts-schema.md
 
 ```bash
 find tools/probes -maxdepth 3 -type f | sort
+find data/receipts -maxdepth 4 -type f | sort | rg "probes|usgs-water"
 find schemas -maxdepth 3 -type f | sort | rg "hydrology|streamflow"
 find tests/e2e/runtime_proof -maxdepth 5 -type f | sort | rg "hydrology|streamflow"
 ```
@@ -301,8 +370,8 @@ find tests/e2e/runtime_proof -maxdepth 5 -type f | sort | rg "hydrology|streamfl
 3. Search for overlapping threshold, NWIS, or watcher logic before inventing a new entrypoint.
 
 ```bash
-rg -n "tail alert|threshold|nwis|usgs|DecisionEnvelope|EvidenceBundle|CheckRecord|streamflow" \
-  .github docs pipelines policy contracts schemas tests tools -S
+rg -n "tail alert|threshold|nwis|usgs|DecisionEnvelope|EvidenceBundle|CheckRecord|streamflow|stats_receipt|run_receipt" \
+  .github docs pipelines policy contracts schemas tests tools data -S
 ```
 
 4. Only after the child-lane files are actually checked in, run the reviewed branch entrypoint.
@@ -337,9 +406,12 @@ python tools/validators/validate_hydro_watcher_config.py \
 
 pytest -q tools/probes/hydro-watcher/tests/test_replay_offline.py
 pytest -q tests/e2e/runtime_proof/hydrology/streamflow/test_streamflow_runtime_proof.py
+pytest -q tests/e2e/runtime_proof/hydrology/streamflow/test_streamflow_stats_baseline.py
 ```
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Usage
 
@@ -349,7 +421,7 @@ pytest -q tests/e2e/runtime_proof/hydrology/streamflow/test_streamflow_runtime_p
 2. Resolve the correct comparison basis:
    - direct threshold mode, or
    - seasonal tail mode using approved day-of-year percentile context.
-3. Apply recency, qualifier, persistence, and hysteresis gates before any consequential conclusion.
+3. Apply recency, qualifier, persistence, hysteresis, and baseline-support gates before any consequential conclusion.
 4. Emit a stable, reviewable output that makes the negative path visible rather than silently disappearing.
 5. Hand consequential downstream emission off to a better-owner surface if needed.
 
@@ -370,7 +442,8 @@ For the first narrow streamflow slice, the strongest implementation reading is:
 3. resolve the current day-of-year percentile row
 4. compare the observed value and short rolling mean against the approved seasonal tail
 5. require a persistence window before any consequential result
-6. emit a visible **ABSTAIN** when the baseline row cannot be resolved
+6. require minimum baseline support before consequential result
+7. emit a visible **ABSTAIN** when the baseline row cannot be resolved
 
 ### Core behavior
 
@@ -379,7 +452,7 @@ For the first narrow streamflow slice, the strongest implementation reading is:
 3. Fetch or replay the latest observation.
 4. Parse the latest value for the configured parameter.
 5. Resolve the comparison basis and apply threshold logic.
-6. Apply recency, qualifier, persistence, and hysteresis rules before any consequential conclusion.
+6. Apply recency, qualifier, persistence, hysteresis, and baseline-support rules before any consequential conclusion.
 7. Write state or equivalent continuity memory on deterministic outcomes.
 8. Write reviewable records, evidence candidates, and a run receipt according to the result state.
 
@@ -399,9 +472,12 @@ Persistence reduces one-off spikes. Hysteresis reduces repeated flip-flops near 
 | High seasonal tail | `p95` | Conservative unusual-high trigger | **PROPOSED**, but aligned to checked-in tail-alert guidance |
 | Persistence minimum | `3` consecutive observations | Reduces noisy single-point excursions | **PROPOSED** |
 | Missing approved baseline | `ABSTAIN` | Trust-preserving negative state | **CONFIRMED** doctrine |
+| Weak baseline support | `ABSTAIN` | Trust-preserving negative state when support is too thin | **PROPOSED**, aligned to current streamflow thread |
 | Rolling confirmation | short rolling mean must agree with the tail breach | Reduces one-day noise | **PROPOSED** |
 
-[Back to top](#hydrologic-threshold-watcher)
+[Back to top](#top)
+
+---
 
 ## Output model
 
@@ -429,6 +505,7 @@ Persistence reduces one-off spikes. Hysteresis reduces repeated flip-flops near 
 | `obs_cfs` | candidate observed discharge |
 | `p5_cfs` / `p95_cfs` | governing seasonal tail thresholds for the starter thin slice |
 | `rolling_7d_mean_cfs` | short-window confirmation against one-day noise |
+| `baseline_sample_count` | visible support strength for the approved baseline |
 | `status` | finite `low` / `high` event class |
 | `alert_class` | outward-readable seasonal tail class |
 | `breach_days` | visible persistence count |
@@ -440,297 +517,4 @@ Persistence reduces one-off spikes. Hysteresis reduces repeated flip-flops near 
 ### Artifact-oriented shape
 
 | Object | Why it exists | Typical fields |
-| --- | --- | --- |
-| Event artifact | describes the crossing decision | `event_id`, `type`, `site`, `source`, `parameter`, `value`, `threshold`, `direction`, `outcome`, `reason`, `timestamp` |
-| Evidence bundle | explains why the event exists | parsed observation, previous state, threshold rule, request provenance, run identifier, deterministic input hash |
-| Run receipt | preserves process memory for the pass | `run_id`, started/ended timestamps, sites checked, events emitted, errors, abstains, result list, config hash |
-| State file | preserves regime continuity | prior regime, latest observation marker, last transition |
-
-### Expected artifact behavior
-
-| Situation | Check / Event | Evidence | Receipt |
-| --- | --- | --- | --- |
-| True crossing | yes | yes | yes |
-| No crossing | visible `CheckRecord` or no event artifact | optional / mode-specific | yes |
-| Parse failure | no consequential event | optional failure detail | yes |
-| Missing baseline | visible `ABSTAIN` or equivalent non-emit record | optional | yes |
-| Invalid config | no runtime event | no runtime evidence | validation failure / receipt or hard stop depending on runner |
-
-> [!IMPORTANT]
-> Seasonal tail mode should not emit a consequential finding when the approved baseline is missing, stale, unresolved, or not quality-assured. The correct KFM move is visible abstention, not an improvised comparison.
-
-[Back to top](#hydrologic-threshold-watcher)
-
-## Diagram
-
-### Probe-lane decision model
-
-```mermaid
-flowchart LR
-    A[USGS recent observations] --> B[Read-only fetch + normalize]
-    C[USGS approved seasonal baseline] --> D[Threshold evaluation]
-    E[Optional NOAA forecast context<br/>context only] -.-> D
-    B --> D
-    D --> F{Meaningful condition?}
-    F -- no --> G[CheckRecord<br/>not emitted]
-    F -- yes --> H[ThresholdEvaluation]
-    H --> I[EvidenceBundle candidate]
-    I --> J[tests / workflows / reviewer]
-    J -. if surface graduates .-> K[Pipeline or governed API emits DecisionEnvelope]
-    K --> L[CorrectionNotice if later narrowed, replaced, or withdrawn]
-```
-
-### Streamflow seasonal-tail thin slice
-
-```mermaid
-flowchart LR
-    A[USGS daily values<br/>recent discharge] --> B[Normalize observed series]
-    C[USGS daily statistics<br/>approved historical baseline] --> D[Resolve DOY percentile row]
-    B --> E[Compute rolling windows]
-    D --> F[Compare observed + rolling values<br/>against p05 / p95 tails]
-    E --> F
-    F --> G{Persistence met?}
-    G -- no --> H[ABSTAIN or no event]
-    G -- yes --> I[Proposed streamflow event object]
-    I --> J[Receipt / review / runtime proof]
-```
-
-### Execution model — bundle-oriented proposal
-
-```mermaid
-flowchart LR
-    A[Load config] --> B[Validate schema]
-    B --> C[Load state]
-    C --> D[Fetch or replay observation]
-    D --> E[Parse latest value]
-    E --> F{Threshold crossing or abstention state?}
-    F -->|No consequential crossing| G[Update state / write CheckRecord]
-    F -->|Consequential crossing| H[Write ThresholdEvaluation]
-    H --> I[Write EvidenceBundle candidate]
-    I --> J[Write RunReceipt]
-    G --> J
-```
-
-### Regime model — hysteresis proposal
-
-```mermaid
-stateDiagram-v2
-    [*] --> Below
-    Below --> Above: value >= threshold
-    Above --> Below: value <= threshold - hysteresis_buffer
-```
-
-[Back to top](#hydrologic-threshold-watcher)
-
-## Tables
-
-### Source-role discipline
-
-| Source family | Lane role | Must not be mistaken for |
-| --- | --- | --- |
-| USGS recent observations | candidate condition source | approved historical baseline |
-| USGS approved daily or statistical history | governing seasonal comparison basis | forecast or contextual enrichment |
-| NOAA forecast context | contextual enrichment for review | authoritative trigger source |
-| Local joins such as HUC or nearby-gage context | explanatory context | canonical threshold truth |
-
-### Outcome reading
-
-| Outcome | Meaning here | Default lane action |
-| --- | --- | --- |
-| `ANSWER` | Threshold condition supported strongly enough for a consequential handoff | write evidence candidate and surface for downstream review |
-| `ABSTAIN` | Trustworthy basis missing or insufficient | emit visible non-emit record |
-| `DENY` | Policy or reviewed suppression rule blocks emission | emit visible non-emit record |
-| `ERROR` | Execution failure prevented evaluation | fail clearly and preserve run evidence |
-
-### Join-resolution reading for streamflow events
-
-| Situation | Expected outward cue |
-| --- | --- |
-| durable `permanent_id` available | `join_resolution_reason: "permanent_id"` |
-| `permanent_id` missing but hydrology join still possible | `comid` present with `join_resolution_reason: "fallback_comid"` |
-| neither durable join available | **NEEDS VERIFICATION** whether the thin slice should ABSTAIN or emit a site-only review object |
-
-[Back to top](#hydrologic-threshold-watcher)
-
-## Task list / definition of done
-
-- [ ] Confirm whether this child lane should exist under `tools/probes/` or graduate immediately to a pipeline/watcher owner surface.
-- [ ] Update `tools/probes/README.md` so the parent subtree and landing-shape language stay accurate if this child lane lands.
-- [ ] Check in one explicit entrypoint and one example config before keeping runnable commands in the main quickstart.
-- [ ] Confirm whether the starter thin slice lands as `streamflow_probe.py`, `hydro_threshold_probe.py`, or another reviewed entrypoint name.
-- [ ] Confirm whether the hydrology event schema belongs in `schemas/hydrology/` on the reviewed branch.
-- [ ] Prove `CheckRecord`, `ThresholdEvaluation`, and streamflow tail fixtures in `tests/README.md` or a clearly linked child test surface.
-- [ ] Encode no-baseline -> `ABSTAIN`, stale-observation -> `ABSTAIN`, qualifier suppression -> `DENY` or hold, and hysteresis/persistence behavior as explicit tests.
-- [ ] Decide whether any `DecisionEnvelope` output remains strictly downstream.
-- [ ] Keep NOAA context clearly labeled as optional context unless a reviewed source-role rule says otherwise.
-- [ ] Keep event, evidence, and receipt objects distinct.
-- [ ] Prove deterministic replay for at least one true rising crossing and one seasonal low-tail case.
-- [ ] Ensure one-shot execution writes a receipt even when no crossing occurs.
-- [ ] Isolate smoke outputs from local runtime outputs.
-- [ ] Document fail-closed behavior for invalid config, parse failure, insufficient data, stale observation, and stale or unresolved baseline resolution.
-
-### Definition of done
-
-This README is in a healthy merge-ready state when:
-
-- the child path and adjacent references match the exact reviewed branch
-- the parent probe README no longer contradicts the child-lane tree
-- no command implies a file or workflow that is not checked in
-- the lane stays read-only and evidence-first
-- threshold logic distinguishes direct thresholds from seasonal approved-baseline logic
-- seasonal streamflow tail behavior is explicitly modeled as a thin slice without overclaiming branch reality
-- negative states remain first-class and visible
-- downstream release-bearing behavior is either linked to a real owner surface or explicitly left out
-- bundle-derived operational details are either verified in-branch or kept clearly marked as illustrative
-
-[Back to top](#hydrologic-threshold-watcher)
-
-## FAQ
-
-### Why not publish alerts directly from `tools/probes/`?
-
-Because the checked-in `tools/probes/` contract is for bounded inspection and stable reporting, not for hidden trust-state mutation or public release behavior.
-
-### Why does missing baseline data lead to `ABSTAIN` instead of “best effort”?
-
-Because the checked-in hydrology alert standard treats approved seasonal baselines as governing comparison evidence. Without that basis, a confident alert would overclaim.
-
-### Why keep NOAA context optional and secondary?
-
-Because current hydrology repo docs ground threshold causality in authoritative observations and approved historical baselines. Forecast context can help reviewers, but it should not outrank the primary evidence path without explicit review.
-
-### Why use both persistence and hysteresis?
-
-Persistence reduces one-off spikes. Hysteresis reduces repeated state flipping when values hover near a threshold. They solve different noise problems and combine well in probe-oriented reporting.
-
-### Why separate checks, evidence, and receipts?
-
-Because they serve different trust roles.
-
-- checks or evaluations describe what was concluded
-- evidence explains why the conclusion exists
-- receipts preserve process memory for the run
-
-### Why keep an offline replay path?
-
-To prove watcher behavior deterministically in CI without depending on live upstream availability.
-
-### Why make the streamflow thin slice percentiles explicit?
-
-Because the reviewed hydrology doctrine already treats approved day-of-year percentile baselines as the strongest documented basis for seasonal tail interpretation. Making those thresholds outward-visible improves reviewability and fail-closed behavior.
-
-### Why fail closed?
-
-Because ambiguous hydrologic outputs should not silently turn into alerting decisions.
-
-## Appendix
-
-<details>
-<summary><strong>Illustrative config and report shapes</strong></summary>
-
-### Example threshold config
-
-```yaml
-sites:
-  - site_id: "06887500"
-    parameter_code: "00060"
-    mode: "seasonal_tail"
-    tail_direction: "low"
-    percentile: 5
-    recency_limit_hours: 96
-    persistence_min: 3
-    hysteresis:
-      enabled: true
-      clear_percentile: 10
-```
-
-### Example no-emit record
-
-```json
-{
-  "schema_version": "v1",
-  "check_id": "uuid",
-  "dataset_id": "hydrology.nwis.06887500.00060",
-  "observed_at": "2026-04-11T00:00:00Z",
-  "comparison_status": "baseline_unavailable",
-  "emit_status": "not_emitted",
-  "reason_code": "approved_percentile_missing",
-  "reason_summary": "Seasonal tail mode abstained because the approved percentile baseline was not resolvable."
-}
-```
-
-### Example consequential handoff candidate
-
-```json
-{
-  "schema_version": "v1",
-  "bundle_kind": "watcher_evidence_bundle",
-  "dataset": {
-    "dataset_id": "hydrology.nwis.06887500.00060",
-    "authority_class": "authoritative",
-    "policy_class": "public"
-  },
-  "trigger": {
-    "trigger_type": "DOMAIN_DELTA",
-    "reason_code": "seasonal_low_tail_triggered"
-  },
-  "outcome": {
-    "outcome": "ANSWER",
-    "emit_status": "candidate_only"
-  },
-  "human_summary": "Recent discharge remained below the approved seasonal low-tail threshold across the configured persistence window."
-}
-```
-
-### Example proposed streamflow event object
-
-```json
-{
-  "site_no": "06887500",
-  "permanent_id": null,
-  "comid": 12345678,
-  "doy": 93,
-  "obs_cfs": 41.2,
-  "p5_cfs": 55.0,
-  "p50_cfs": 210.0,
-  "p95_cfs": 481.0,
-  "rolling_7d_mean_cfs": 44.9,
-  "rolling_30d_mean_cfs": 61.2,
-  "status": "low",
-  "alert_class": "seasonal_low_tail",
-  "breach_days": 3,
-  "join_resolution_reason": "fallback_comid",
-  "decision": "ANSWER",
-  "reason": "sustained percentile breach",
-  "baseline_kind": "day_of_year_percentile",
-  "event_content_hash": "sha256:NEEDS_VERIFICATION_EXAMPLE"
-}
-```
-
-</details>
-
-<details>
-<summary><strong>Illustrative local workflow — bundle-derived and NEEDS VERIFICATION</strong></summary>
-
-```bash
-cp tools/probes/hydro-watcher/config/sites.yaml.example \
-  tools/probes/hydro-watcher/config/sites.yaml
-
-make hydro-validate
-make hydro-test
-make hydro-once
-```
-
-</details>
-
-<details>
-<summary><strong>Review notes for the first implementation pass</strong></summary>
-
-- Keep the first checked-in artifact small: one site, one parameter, one threshold family, one stable report.
-- Prefer reviewed fixtures and receipts over broad source coverage.
-- Prefer USGS-only seasonal-tail causality in the first slice; add NOAA strictly as reviewer context if it lands at all.
-- If the first implementation needs scheduling, publication, or correction authority, move the runtime owner surface before the lane takes on that burden accidentally.
-
-</details>
-
-[Back to top](#hydrologic-threshold-watcher)
+| ---
