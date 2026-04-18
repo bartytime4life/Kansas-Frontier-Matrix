@@ -13,17 +13,21 @@ tags: [kfm, explorer-web, maplibre, evidence, shell]
 notes: [UUID is still unresolved; owner and dates are carried forward from the supplied draft; adjacent repo links and mounted subtree depth remain NEEDS VERIFICATION in the current PDF-only session.]
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # KFM Explorer Web
 
 Persistent, map-first, time-aware, trust-visible shell boundary for Kansas Frontier Matrix exploration, dossier inspection, evidence drill-through, and bounded Focus flows.
 
+> [!NOTE]
 > **Status:** `experimental / boundary-documented`  
 > **Owners:** `@bartytime4life` *(carried forward from the supplied draft; NEEDS VERIFICATION on mounted repo evidence)*  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![trust](https://img.shields.io/badge/trust-visible%20evidence-1f6feb) ![repo](https://img.shields.io/badge/repo%20verification-PDF--only-lightgrey) ![3D](https://img.shields.io/badge/3D-burden--bearing%20only-6b7280)  
+> **Path:** `apps/explorer-web/README.md` *(target path from supplied draft; mounted subtree still NEEDS VERIFICATION)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![trust](https://img.shields.io/badge/trust-visible%20evidence-1f6feb) ![focus](https://img.shields.io/badge/Focus-bounded%20synthesis-6f42c1) ![repo](https://img.shields.io/badge/repo%20verification-PDF--only-lightgrey) ![3D](https://img.shields.io/badge/3D-burden--bearing%20only-6b7280)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is intentionally **boundary-descriptive before it is implementation-descriptive**. In the current session, the project evidence is PDF-rich but does **not** include a mounted repo tree, package manifests, workflow YAML, tests, runtime traces, or deployed routes. Shell doctrine is therefore stated confidently, while file-level runtime reality remains `UNKNOWN` or `NEEDS VERIFICATION`.
+> This README is intentionally **boundary-descriptive before it is implementation-descriptive**. The available evidence for this revision is doctrine-rich and PDF-heavy, but it does **not** include a mounted repo tree, package manifests, workflow YAML, tests, runtime traces, deployment overlays, or deployed routes. Shell doctrine is therefore stated confidently; file-level runtime reality remains `UNKNOWN` or `NEEDS VERIFICATION`.
 
 | Field | Value |
 |---|---|
@@ -40,7 +44,7 @@ Persistent, map-first, time-aware, trust-visible shell boundary for Kansas Front
 
 `apps/explorer-web/` is the place where KFM’s evidence posture becomes user-facing operating behavior.
 
-This boundary is **not** “just a frontend.” In KFM terms, the shell is part of the evidence chain, part of the trust model, and part of governed publication. That means geography, time scope, freshness, rights/sensitivity posture, evidence access, review state, and bounded AI behavior have to stay coordinated rather than splitting into disconnected products.
+This boundary is **not** “just a frontend.” In KFM terms, the shell is part of the evidence chain, part of the trust model, and part of governed publication. Geography, time scope, freshness, rights/sensitivity posture, evidence access, review state, and bounded AI behavior have to stay coordinated rather than splitting into disconnected products.
 
 At minimum, this boundary is expected to keep the following surfaces inside one governed shell family:
 
@@ -52,14 +56,25 @@ At minimum, this boundary is expected to keep the following surfaces inside one 
 - **Focus Mode** as bounded synthesis inside the same shell
 - **Compare**, **Export**, and role-gated **Review / Stewardship** as variations of the same trust system
 
-> [!NOTE]
-> Because mounted implementation evidence is unavailable in this session, this README defines the **shell contract** and **trust boundary** first. It deliberately avoids pretending that routes, package names, tests, or component inventories are already proven.
+> [!TIP]
+> A polished shell that hides freshness, review state, correction state, or evidence routes is **not** a KFM shell. Smoothness never outranks inspectability.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
 ## Repo fit
+
+### Evidence posture for this README
+
+| Evidence layer | Current reading | Treatment in this README |
+|---|---|---|
+| KFM shell doctrine | `CONFIRMED` in attached architecture and synthesis documents | Stated as governing boundary law |
+| MapLibre as disciplined 2D runtime | `CONFIRMED doctrine / PROPOSED realization` | Used as renderer direction, not as proof of mounted implementation |
+| `apps/explorer-web/` path | `INFERRED` from supplied draft and packet-era repo-fit language | Treated as target path, not mounted-tree proof |
+| Adjacent README links | `NEEDS VERIFICATION` in this session | Kept in metadata as review targets; not overclaimed as existing files |
+| Runtime routes, package manager, tests, workflows | `UNKNOWN` | Explicitly left for checkout validation |
+| Security-header / worker-integrity guidance | `PROPOSED` integration guidance | Captured as a verification item, not claimed as implemented |
 
 ### Boundary placement
 
@@ -97,6 +112,7 @@ This directory should own:
 - interaction continuity
 - UI-local rendering behavior
 - surface-level continuity across Explore, Dossier, Story, Focus, Compare, Export, and Review
+- public-safe browser runtime expectations for map, worker, and asset loading
 
 It should **not** become the owner of:
 
@@ -105,9 +121,10 @@ It should **not** become the owner of:
 - policy adjudication
 - release authority
 - unrestricted data access
+- direct model-runtime access
 - browser-side shortcuts around governed APIs
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -125,6 +142,7 @@ Only the following work classes belong here.
 | Local view state and replay helpers | Yes | Public-safe, serializable shell continuity only |
 | Client service adapters | Yes | Explicit governed-API boundary only |
 | Accessibility, reduced motion, keyboard reachability | Yes | First-class acceptance burden |
+| Browser security-header expectations | Yes | Document expectations and checks; deployment-specific truth still needs verification |
 | Public-safe 3D escalation controls | Maybe | Only when 2D is insufficient and trust objects stay intact |
 | Canonical evidence resolution | No | Must stay behind governed services |
 | Policy decision logic | No | Must stay in shared policy/backend enforcement |
@@ -133,7 +151,7 @@ Only the following work classes belong here.
 | Direct model-runtime invocation from the browser | No | Focus remains governed and bounded |
 | Hidden fetches from render components | No | Network I/O belongs in an explicit service layer |
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -153,11 +171,12 @@ This directory is **not** the convenience path around KFM governance.
 | Restricted payload persistence in local browser storage | Risks stale or sensitive leakage | Scoped server-mediated hydration only |
 | Free-form assistant UX detached from evidence | Violates bounded Focus doctrine | Governed Focus Mode |
 | App-local schema copies | Creates contract drift | Shared contract boundary |
+| Worker or WASM proof authority | Rendering helpers can be hashed, but release proof belongs outside the shell | `../workers/`, `../../tools/attest/`, `../../data/proofs/` |
 
 > [!WARNING]
 > The explorer shell must never become the easiest place to bypass policy, evidence, or review state. In KFM, the last mile is part of governed publication.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -191,10 +210,18 @@ apps/explorer-web/
    │  ├─ App.tsx
    │  ├─ router.tsx
    │  └─ layout/
-   ├─ services/                  # explicit network boundary
-   ├─ contracts/                 # consumer-side types aligned to shared contracts
+   ├─ services/                  # explicit governed-API network boundary
+   ├─ types/                     # consumer-side types; shared contracts remain authoritative
    ├─ components/                # presentation only; no hidden fetches
    ├─ features/
+   │  ├─ explore/
+   │  ├─ dossier/
+   │  ├─ evidence-drawer/
+   │  ├─ focus/
+   │  ├─ story/
+   │  ├─ compare/
+   │  ├─ export/
+   │  └─ review/
    ├─ hooks/
    ├─ styles/
    └─ test/
@@ -206,7 +233,7 @@ apps/explorer-web/
 - The runtime subtree is a **starter shape**, not a claim of present implementation.
 - If the mounted repo later proves a different active root, this README should be reconciled to that reality instead of forcing reality to fit the diagram.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -237,22 +264,35 @@ sed -n '1,260p' apps/cli/README.md 2>/dev/null || true
 ### 3) Inventory trust-critical vocabulary already in the repo
 
 ```bash
-grep -RInE 'EvidenceDrawer|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|Focus|ABSTAIN|DENY|audit_ref|spec_hash|run_receipt|MapLibre|Timeline' \
+grep -RInE 'EvidenceDrawer|EvidenceBundle|RuntimeResponseEnvelope|DecisionEnvelope|CorrectionNotice|Focus|ABSTAIN|DENY|audit_ref|spec_hash|run_receipt|MapLibre|Timeline|ReviewRecord' \
   apps web contracts policy tests .github 2>/dev/null | head -200
 ```
 
-### 4) Only then decide the active runtime root
+### 4) Confirm the active package manager and dev entrypoint
+
+```bash
+find . -maxdepth 3 \( -name package.json -o -name pnpm-lock.yaml -o -name package-lock.json -o -name yarn.lock -o -name bun.lockb \) -print | sort
+find apps/explorer-web web -maxdepth 2 -name package.json -print -exec sed -n '1,220p' {} \; 2>/dev/null
+```
+
+### 5) Check browser-runtime headers before claiming isolation
+
+```bash
+: "${KFM_EXPLORER_ORIGIN:=http://localhost:5173}"
+curl -I "$KFM_EXPLORER_ORIGIN" 2>/dev/null | grep -Ei 'cross-origin|content-security-policy|permissions-policy|cache-control' || true
+```
 
 Possible outcomes:
 
-1. `apps/explorer-web/` is the active UI root
-2. `web/` is still the active UI root
-3. multiple UI/API boundaries coexist and need explicit convergence
+1. `apps/explorer-web/` is the active UI root.
+2. `web/` is still the active UI root.
+3. Multiple UI/API boundaries coexist and need explicit convergence.
+4. The shell exists only as a target boundary and should remain documented as `PROPOSED`.
 
 > [!IMPORTANT]
-> Do **not** let package-manager commands or framework assumptions outrun the tree you actually inspect.
+> Do **not** let package-manager commands, framework assumptions, or route names outrun the tree you actually inspect.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -271,6 +311,19 @@ The explorer shell should preserve one coordinated chain:
 7. **Compare** preserves asymmetry and visible basis on both sides.
 8. **Export** previews what leaves the system and which trust cues remain attached.
 9. **Review / Stewardship** stays inside the same governed shell, not in a hidden admin product.
+
+### Shell mode contract
+
+| Mode | User-facing job | Required continuity |
+|---|---|---|
+| Explore | Find places, layers, events, and features | Map camera, time scope, active layer basis |
+| Dossier | Inspect a durable object | Selection identity, evidence route, review/freshness cues |
+| Story | Read or author evidence-bearing narrative | Map/time continuity, citation reachability |
+| Evidence Drawer | Inspect support for a consequential claim | EvidenceRef, EvidenceBundle summary, rights, version, lineage |
+| Focus | Ask bounded questions over released evidence | Place/time context, finite outcome, audit reference |
+| Compare | Compare places, times, datasets, or claims | Basis for comparison, asymmetry, release scope |
+| Export | Prepare outward artifact | Preview, policy result, preserved provenance cues |
+| Review | Steward candidate, denied, or promoted artifacts | Same shell logic plus role-gated controls |
 
 ### State ownership rule
 
@@ -294,6 +347,7 @@ The explorer shell should preserve one coordinated chain:
 | Policy decisions | never the browser | backend and shared policy remain authoritative |
 | Restricted persistence | nowhere in browser storage by default | denies stale or sensitive reconstruction |
 | Heavy truth-bearing computation | upstream preparation, not the shell | keeps the browser thin and auditable |
+| Worker / WASM hashes | generated and reviewed outside render components | keeps runtime helpers inspectable without making them policy authorities |
 
 ### Trust-visible cue set
 
@@ -307,11 +361,12 @@ The shell should keep these visible during consequential flows:
 - review or release-state cue where relevant
 - `audit_ref` or equivalent runtime trace hook when present
 - correction / supersession signal when applicable
+- explicit negative state when the governed runtime returns `ABSTAIN`, `DENY`, or `ERROR`
 
-> [!TIP]
-> A polished shell that hides freshness, review state, or evidence routes is **not** a KFM shell. Smoothness never outranks inspectability.
+> [!CAUTION]
+> For any locally hosted or semi-public deployment, treat the explorer as an exposed public surface. Prefer deny-by-default access, least privilege, same-origin runtime assets where practical, strict browser headers, no restricted browser persistence, and no direct path to canonical/internal stores.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -363,7 +418,7 @@ flowchart LR
 - The **governed API** remains the trust-bearing way to retrieve evidence, policy-safe portrayal inputs, and Focus outcomes.
 - The explorer should never talk directly to canonical/internal stores.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -404,10 +459,23 @@ flowchart LR
 | Slice | Key deliverables | Acceptance cue |
 |---|---|---|
 | Map Explorer baseline UI | `MapCanvas`, `LayerPanel`, `TimeControl`, `EvidenceDrawer`, e2e coverage | Evidence drawer shows license + version; keyboard navigation works |
+| Hydrology-first claim path | one released hydrology layer, one claim, one drawer payload, one audit path | user can move from map feature to evidence without leaving the governed shell |
 | Story publish workflow | story schema, routes, renderer, publish gate | publishing requires review state + resolvable citations; citations open the Evidence Drawer |
 | Focus Mode MVP | focus orchestrator, route, evaluation harness | cite-or-abstain; golden queries; regressions block merge |
+| Controlled 3D story mode | scene manifest, 2D return path, drawer parity | 3D carries explanatory burden and never creates a second truth surface |
 
-[Back to top](#kfm-explorer-web)
+### Reviewer anti-pattern quick check
+
+| Smell | Why it matters | Review response |
+|---|---|---|
+| A component fetches directly from storage | Hidden trust-boundary bypass | Move fetch into explicit governed service adapter |
+| A layer renders without evidence access | Breaks inspectable-claim posture | Block until drawer route exists or mark layer non-claim-bearing |
+| Focus returns fluent prose without finite outcome | Collapses generation and decision state | Require `ANSWER / ABSTAIN / DENY / ERROR` envelope |
+| Time filter is UI-only and not part of request scope | Makes answers impossible to audit | Include time scope in governed request payload |
+| 3D becomes a default homepage animation | Violates burden-bearing 3D rule | Keep 3D as controlled story or analysis mode only |
+| Export strips review or provenance cues | Publishes a weaker artifact than the shell showed | Block export or attach trust metadata |
+
+[Back to top](#top)
 
 ---
 
@@ -423,6 +491,8 @@ flowchart LR
 - [ ] Confirm whether shared contract files already exist and link to them directly.
 - [ ] Confirm whether accessibility and reduced-motion checks already exist in tests or CI.
 - [ ] Confirm whether any 3D route already exists and, if so, gate it behind a burden rubric.
+- [ ] Confirm whether browser-runtime security headers are owned here, in deployment config, or in a sibling security doc.
+- [ ] Remove or revise the PDF-only evidence note once mounted checkout evidence is attached.
 
 ### Definition of done for runtime behavior
 
@@ -436,7 +506,16 @@ flowchart LR
 - [ ] Keyboard use, reduced motion, and screen-reader labeling are verified across major shell states.
 - [ ] One hydrology claim path proves the thin-client route from catalog to Evidence Drawer.
 
-[Back to top](#kfm-explorer-web)
+### Browser-runtime verification gates (`PROPOSED`)
+
+- [ ] Runtime workers and map assets load from reviewed origins.
+- [ ] `Cross-Origin-Opener-Policy` and `Cross-Origin-Embedder-Policy` posture is documented for the active deployment.
+- [ ] CSP allows only necessary script, worker, image, tile, font, and connect origins.
+- [ ] Worker / WASM artifacts have deterministic hash manifests where release significance justifies it.
+- [ ] Same-origin or explicitly embeddable assets are preferred for MapLibre and any controlled Cesium path.
+- [ ] CI probes fail closed when required worker or asset paths are missing.
+
+[Back to top](#top)
 
 ---
 
@@ -446,7 +525,7 @@ flowchart LR
 
 No.
 
-It establishes the intended shell boundary and the doctrinal rules that should govern it. In the current session, the repo tree, manifests, scripts, tests, and routes were not directly surfaced.
+It establishes the intended shell boundary and the doctrinal rules that should govern it. In the current revision context, the repo tree, manifests, scripts, tests, and routes were not directly surfaced.
 
 ### Is this a frontend-only document?
 
@@ -476,7 +555,7 @@ KFM remains **2D-first**. Controlled 3D is allowed only when it carries real exp
 
 Because KFM doctrine explicitly prefers honest incompleteness over persuasive overclaiming. This README is meant to stay true when the mounted tree is finally inspected, not just sound complete before that happens.
 
-[Back to top](#kfm-explorer-web)
+[Back to top](#top)
 
 ---
 
@@ -530,7 +609,27 @@ Do not mix:
 </details>
 
 <details>
-<summary><strong>Appendix C — Merge-time verification checklist</strong></summary>
+<summary><strong>Appendix C — Browser runtime header sketch</strong></summary>
+
+This is a **PROPOSED / NEEDS VERIFICATION** deployment sketch. Reconcile it with actual hosting, CDN, tile, worker, and asset origins before use.
+
+```http
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
+Content-Security-Policy: default-src 'self'; script-src 'self'; worker-src 'self' blob:; connect-src 'self' https:; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+```
+
+Review notes:
+
+- Prefer same-origin runtime assets where practical.
+- Any cross-origin worker, tile, terrain, texture, glyph, sprite, or font asset needs an explicit CORS or CORP posture.
+- Do not use permissive `connect-src *` or broad script allowances as a shortcut.
+- Keep final header truth in deployment config, not only in Markdown.
+
+</details>
+
+<details>
+<summary><strong>Appendix D — Merge-time verification checklist</strong></summary>
 
 Before treating this README as implementation-descriptive rather than boundary-descriptive:
 
@@ -542,5 +641,6 @@ Before treating this README as implementation-descriptive rather than boundary-d
 6. reconcile any overlapping `web/` and `apps/*web*` docs
 7. replace placeholders in the meta block
 8. downgrade or remove any file/path names the mounted tree disproves
+9. attach a checked evidence note or PR comment showing the inspected commit and tree depth
 
 </details>
