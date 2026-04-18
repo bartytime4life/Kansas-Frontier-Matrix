@@ -6,32 +6,34 @@ version: v1
 status: review
 owners: @bartytime4life
 created: 2026-02-21
-updated: 2026-04-12
+updated: 2026-04-18
 policy_label: public
 related: [../README.md, ../workers/README.md, ../review-console/README.md, ../governed-api/README.md, ../api/README.md, ../ui/README.md, ../explorer-web/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../packages/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
 tags: [kfm, apps, cli, governance, operator-lane, promotion]
-notes: [Current public main directly shows apps/cli with README.md only. Public app-family siblings now visibly include api, explorer-web, governed-api, review-console, ui, and workers. Executable entrypoint, tests, emitted proof objects, and deeper CLI-local topology still need active-branch verification.]
+notes: [Public main rechecked 2026-04-18. Current public main directly shows apps/cli with README.md only. Public app-family siblings visibly include api, explorer-web, governed-api, review-console, ui, and workers; apps/.codex is visible but not treated here as a public runtime surface. Executable entrypoint, tests, emitted proof objects, and deeper CLI-local topology still need active-branch verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM CLI
 
 Governed operator-lane boundary for local tooling, diagnostics, proof-pack helpers, and any future CLI surfaces under `apps/cli/`.
 
-**Status:** experimental **Owners:** [`@bartytime4life`](../../.github/CODEOWNERS) **Badges:** ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![repo](https://img.shields.io/badge/repo-Kansas--Frontier--Matrix-24292f) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![boundary](https://img.shields.io/badge/boundary-cli%20runtime-6f42c1) ![truth](https://img.shields.io/badge/truth-source--bounded-f2cc60) ![public-main](https://img.shields.io/badge/public__main-README__only-orange)
+**Status:** experimental  
+**Owners:** [`@bartytime4life`](../../.github/CODEOWNERS)  
+**Badges:** ![status](https://img.shields.io/badge/status-experimental-lightgrey) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![repo](https://img.shields.io/badge/repo-Kansas--Frontier--Matrix-24292f) ![branch](https://img.shields.io/badge/branch-main-2ea44f) ![boundary](https://img.shields.io/badge/boundary-cli%20runtime-6f42c1) ![truth](https://img.shields.io/badge/truth-source--bounded-f2cc60) ![public-main](https://img.shields.io/badge/public__main-README__only-orange)
 
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 | Field | Value |
 |---|---|
 | Path | `apps/cli/README.md` |
-| Repo fit | Child boundary README for the runtime-facing `apps/` family |
+| Repo fit | Child boundary README for the runtime-facing [`apps/`](../README.md) family |
 | Upstream | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
 | CLI-local downstream | **NEEDS VERIFICATION** — no confirmed child CLI lanes are present here yet |
 | Accepted inputs | Release-backed identifiers, artifact refs, migration targets, validation-safe diagnostics, receipt lookup context |
 | Exclusions | Public request handling, hidden publish paths, unattended worker jobs, ad hoc business law, generic utility sprawl |
 | Current public-main signal | `apps/cli/` exists on public `main`; `README.md` is still the only directly confirmed file at this path |
 | Adjacent runtime surfaces | [`../explorer-web/README.md`](../explorer-web/README.md), [`../governed-api/README.md`](../governed-api/README.md), [`../api/README.md`](../api/README.md), [`../review-console/README.md`](../review-console/README.md), [`../ui/README.md`](../ui/README.md), [`../workers/README.md`](../workers/README.md) |
-| Evidence boundary | March–April 2026 KFM doctrine plus current public-main repo inspection and public path-history verification; local-branch executable depth remains source-bounded |
+| Evidence boundary | March–April 2026 KFM doctrine plus public-main repo inspection on 2026-04-18; local-branch executable depth remains source-bounded |
 
 > [!IMPORTANT]
 > Treat this file as a **boundary contract first** and an **implementation index second**. Current public `main` proves that the CLI lane exists, but it does **not** yet prove a checked-in entrypoint, package-manager choice, command inventory, tests, or emitted proof objects under `apps/cli/`.
@@ -74,7 +76,7 @@ This file is **not** proof that current public `main` already contains:
 
 Use this README to keep the boundary honest until the active branch proves more.
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
 
 ---
 
@@ -94,21 +96,22 @@ Use this README to keep the boundary honest until the active branch proves more.
 
 | Direction | Path | Role |
 |---|---|---|
-| Upstream | [../README.md](../README.md) | Parent app-family boundary and shell law |
-| Upstream | [../../README.md](../../README.md) | Repo-root posture and system identity |
-| Upstream | [../../docs/README.md](../../docs/README.md) | Architecture, doctrine, ADRs, and runbooks |
-| Upstream | [../../packages/README.md](../../packages/README.md) | Shared reusable logic boundary |
-| Upstream | [../../contracts/README.md](../../contracts/README.md) | Contract families and examples |
-| Upstream | [../../schemas/README.md](../../schemas/README.md) | Machine-checkable schema boundary |
-| Upstream | [../../policy/README.md](../../policy/README.md) | Deny-by-default and obligation logic |
-| Upstream | [../../tests/README.md](../../tests/README.md) | Verification burden and test placement |
-| Upstream | [../../.github/workflows/README.md](../../.github/workflows/README.md) | Current public workflow-doc surface |
-| Upstream | [../../infra/README.md](../../infra/README.md) | Deployment, queue, and environment-facing documentation |
-| Downstream | [../explorer-web/README.md](../explorer-web/README.md) | Browser shell boundary |
-| Downstream | [../review-console/README.md](../review-console/README.md) | Review and stewardship shell boundary |
-| Downstream | [../governed-api/README.md](../governed-api/README.md) | Governed API boundary |
-| Downstream | [../api/README.md](../api/README.md) | Public-main API lane root |
-| Downstream | [../workers/README.md](../workers/README.md) | Background execution boundary |
+| Upstream | [`../README.md`](../README.md) | Parent app-family boundary and shell law |
+| Upstream | [`../../README.md`](../../README.md) | Repo-root posture and system identity |
+| Upstream | [`../../docs/README.md`](../../docs/README.md) | Architecture, doctrine, ADRs, and runbooks |
+| Upstream | [`../../packages/README.md`](../../packages/README.md) | Shared reusable logic boundary |
+| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | Contract families and examples |
+| Upstream | [`../../schemas/README.md`](../../schemas/README.md) | Machine-checkable schema boundary |
+| Upstream | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default and obligation logic |
+| Upstream | [`../../tests/README.md`](../../tests/README.md) | Verification burden and test placement |
+| Upstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Current public workflow-doc surface |
+| Upstream | [`../../infra/README.md`](../../infra/README.md) | Deployment, queue, and environment-facing documentation |
+| Downstream | [`../explorer-web/README.md`](../explorer-web/README.md) | Browser shell boundary |
+| Downstream | [`../review-console/README.md`](../review-console/README.md) | Review and stewardship shell boundary |
+| Downstream | [`../governed-api/README.md`](../governed-api/README.md) | Governed API boundary |
+| Downstream | [`../api/README.md`](../api/README.md) | Public-main API lane root |
+| Downstream | [`../ui/README.md`](../ui/README.md) | Public-main UI reconciliation boundary |
+| Downstream | [`../workers/README.md`](../workers/README.md) | Background execution boundary |
 
 > [!WARNING]
 > Current public `main` exposes both `apps/governed-api/README.md` and an `apps/api/` path family. Keep CLI links explicit and treat final naming authority as **NEEDS VERIFICATION** on the active branch.
@@ -120,10 +123,10 @@ Use this README to keep the boundary honest until the active branch proves more.
 | [`../explorer-web/README.md`](../explorer-web/README.md) | Browser ownership stays outside CLI. |
 | [`../review-console/README.md`](../review-console/README.md) | Approval, denial, rollback, and correction UI must remain trust-visible rather than buried in commands. |
 | [`../governed-api/README.md`](../governed-api/README.md) and [`../api/README.md`](../api/README.md) | Request-time policy mediation, evidence shaping, and normal client access stay outside CLI. |
-| [`../ui/README.md`](../ui/README.md) | Public-main repo-visible UI placeholder lane remains outside CLI ownership unless the checked-out branch proves a different split. |
-| [`../workers/README.md`](../workers/README.md) | Once work becomes unattended, scheduled, or queue-driven, it belongs there instead of here. |
+| [`../ui/README.md`](../ui/README.md) | Public-main repo-visible UI placeholder / reconciliation lane remains outside CLI ownership unless the checked-out branch proves a different split. |
+| [`../workers/README.md`](../workers/README.md) | Once work becomes unattended, scheduled, retrying, or queue-driven, it belongs there instead of here. |
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
 
 ---
 
@@ -133,8 +136,8 @@ The following inputs are appropriate for a CLI lane **if** code lands here.
 
 | Input type | Status | Why it belongs |
 |---|---|---|
-| Release-backed identifiers (`dataset_id`, version refs, release refs, run IDs) | **CONFIRMED doctrine / local placement INFERRED** | CLI work should target governed objects, not ad hoc local state. |
-| Artifact references (processed outputs, manifests, receipts, catalog paths) | **CONFIRMED doctrine / local placement INFERRED** | Operator flows frequently need to inspect or move proof-bearing artifacts. |
+| Release-backed identifiers such as `dataset_id`, version refs, release refs, and run IDs | **CONFIRMED doctrine / local placement INFERRED** | CLI work should target governed objects, not ad hoc local state. |
+| Artifact references such as processed outputs, manifests, receipts, and catalog paths | **CONFIRMED doctrine / local placement INFERRED** | Operator flows frequently need to inspect or move proof-bearing artifacts. |
 | Migration targets and environment selectors | **CONFIRMED doctrine / local placement INFERRED** | Migration is explicitly part of the documented CLI role. |
 | Validation-safe diagnostic requests | **INFERRED** | Operator-facing diagnostics fit CLI better than public UI or request-time API lanes. |
 | Receipt / audit lookup context | **INFERRED** | CLI is a natural place to inspect run context, rollback references, and audit summaries. |
@@ -169,7 +172,7 @@ The easiest way to weaken this directory is to let it become an operator backdoo
 > [!WARNING]
 > A CLI that can silently publish, silently “heal” missing proof, or silently bypass review is not a convenience. It is a trust-boundary bug.
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
 
 ---
 
@@ -179,6 +182,7 @@ The easiest way to weaken this directory is to let it become an operator backdoo
 
 ```text
 apps/
+├─ .codex/
 ├─ api/
 ├─ cli/
 │  └─ README.md
@@ -191,7 +195,7 @@ apps/
 ```
 
 > [!NOTE]
-> GitHub’s public `apps/` tree currently also shows `apps/.codex/`. This README keeps the snapshot focused on named runtime lanes and the lane-level boundary README because current visible evidence does not establish `.codex/` as a public runtime surface.
+> GitHub’s public `apps/` tree currently shows `apps/.codex/`. This README keeps the runtime snapshot focused on named app lanes because current visible evidence does not establish `.codex/` as a public runtime surface.
 
 ### CLI-local tree
 
@@ -258,7 +262,7 @@ find apps/cli -maxdepth 3 -mindepth 1 | sort
 
 If that command returns only `apps/cli/README.md`, keep this README focused on the boundary and avoid pretending deeper structure is already mounted.
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
 
 ---
 
@@ -301,7 +305,7 @@ Any real CLI lane added here should document:
 
 ### 4. As a drift detector
 
-Use this README to catch repo-shape drift early. When `apps/README.md` changes, or when sibling runtime lanes such as `apps/api/` or `apps/ui/` move materially, this file should be re-read so it does not keep routing contributors with stale boundary assumptions.
+Use this README to catch repo-shape drift early. When `apps/README.md` changes, or when sibling runtime lanes such as `apps/api/`, `apps/ui/`, or `apps/workers/` move materially, this file should be re-read so it does not keep routing contributors with stale boundary assumptions.
 
 ### Command responsibilities once code lands
 
@@ -356,7 +360,7 @@ flowchart LR
 | `apps/cli/README.md` | Present | Boundary doc exists and should stay truthful about what is not yet proven |
 | Other files under `apps/cli/` | None confirmed on public `main` | Do not invent entrypoints, flags, fixtures, or tests |
 | `apps/README.md` | Present | Parent runtime boundary already reserves room for CLI, API, UI, explorer, review, and worker lanes |
-| `apps/ui/README.md` | Present | Repo-visible UI placeholder exists, but it does not transfer browser-shell ownership into CLI |
+| `apps/ui/README.md` | Present | Repo-visible UI placeholder / reconciliation lane exists, but it does not transfer browser-shell ownership into CLI |
 | `../../.github/workflows/README.md` | Present | Public workflow-doc context exists, but that is not the same thing as proven CLI automation |
 
 ### Proof objects a CLI lane should respect
@@ -370,7 +374,7 @@ flowchart LR
 | Catalog closure / STAC–DCAT–PROV linkage | Publish-readiness boundary | **CONFIRMED doctrine** |
 | Rollback or correction reference | Visible reversal story for release-significant work | **CONFIRMED doctrine** |
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
 
 ---
 
@@ -402,11 +406,11 @@ flowchart LR
 
 ### Is `apps/cli/` confirmed on current public `main`?
 
-Yes. The path exists, and public path history confirms that this README lane begins on current public history from 2026-02-21.
+Yes. The path exists, and the current public `apps/cli/` listing shows `README.md`.
 
 ### Is there a confirmed executable under `apps/cli/` right now?
 
-Not on the current public-main evidence reviewed for this revision. The path is real, but the CLI-local inventory is still README-only.
+Not on the current public-main evidence reviewed for this revision. The path is real, but the CLI-local inventory remains README-only.
 
 ### Does current public `main` also expose `apps/ui/`?
 
@@ -461,4 +465,4 @@ If real CLI code lands, move command-specific detail into the code-owning paths 
 
 </details>
 
-[Back to top](#kfm-cli)
+<p align="right"><a href="#kfm-cli">Back to top ↑</a></p>
