@@ -4,46 +4,14 @@ title: tests/e2e
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: 2026-04-17
+updated: 2026-04-18
 policy_label: public
-related: [
-  ../README.md,
-  ../contracts/README.md,
-  ../integration/README.md,
-  ../policy/README.md,
-  ../reproducibility/README.md,
-  ../accessibility/README.md,
-  ../validators/README.md,
-  ../ci/README.md,
-  ../catalog/README.md,
-  ./runtime_proof/README.md,
-  ./runtime_proof/air/pm25/README.md,
-  ./release_assembly/README.md,
-  ./correction/README.md,
-  ../../README.md,
-  ../../contracts/README.md,
-  ../../policy/README.md,
-  ../../schemas/README.md,
-  ../../docs/README.md,
-  ../../data/receipts/README.md,
-  ../../data/proofs/README.md,
-  ../../tools/validators/README.md,
-  ../../tools/attest/README.md,
-  ../../tools/ci/README.md,
-  ../../.github/CODEOWNERS,
-  ../../.github/workflows/README.md,
-  ../../.github/watchers/README.md,
-  ../../CONTRIBUTING.md
-]
+related: [../README.md, ../contracts/README.md, ../integration/README.md, ../policy/README.md, ../reproducibility/README.md, ../accessibility/README.md, ../validators/README.md, ../ci/README.md, ../catalog/README.md, ./runtime_proof/README.md, ./runtime_proof/hydrology/README.md, ./runtime_proof/hydrology/streamflow/README.md, ./runtime_proof/air/pm25/README.md, ./release_assembly/README.md, ./correction/README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../docs/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../../tools/validators/README.md, ../../tools/attest/README.md, ../../tools/ci/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../CONTRIBUTING.md]
 tags: [kfm, tests, e2e, verification, runtime, release, correction, receipts, proofs]
-notes: [
-  doc_id and created remain placeholders pending git-history or governance-record verification.
-  Updated to align the e2e family with the strengthened runtime_proof parent and the PM2.5 runtime-proof leaf.
-  This revision keeps executable suite depth, runner/toolchain, and merge-blocking automation claims bounded to currently verified branch-visible evidence.
-]
--->
+notes: [doc_id and created remain placeholders pending git-history or governance-record verification. Updated to align the e2e family with the strengthened runtime_proof parent, the hydrology runtime-proof subtree, and the PM2.5 runtime-proof leaf. This revision keeps executable suite depth, runner/toolchain, and merge-blocking automation claims bounded to currently verified branch-visible evidence.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -51,12 +19,27 @@ notes: [
 
 End-to-end proof surface for **KFM runtime outcomes**, **release assembly**, **correction lineage**, and the governed trust path that connects contracts, policy, validators, receipts, proofs, and outward review state.
 
-> [!NOTE]
-> **Status:** `draft`  
-> **Owners:** `@bartytime4life`  
-> **Path:** `tests/e2e/README.md`  
-> ![status](https://img.shields.io/badge/status-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-end--to--end%20proof-0a7ea4) ![posture](https://img.shields.io/badge/posture-whole--path%20but%20burden--led-1d4ed8) ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![family](https://img.shields.io/badge/family-end--to--end%20proof-0a7ea4)
+![posture](https://img.shields.io/badge/posture-whole--path%20but%20burden--led-1d4ed8)
+![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
+![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | draft |
+| **Owners** | `@bartytime4life` |
+| **Path** | `tests/e2e/README.md` |
+| **Repo fit** | whole-path proof family under [`../README.md`](../README.md), with visible leaf families `runtime_proof/`, `release_assembly/`, and `correction/` |
+| **Family posture** | whole-path but burden-led |
+| **Trust posture** | receipts remain process memory · proofs remain higher-order trust objects · leaf families stay non-interchangeable |
+| **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > Current public `main` proves that `tests/e2e/` exists and currently exposes `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`, and that each visible leaf family currently publishes its own checked-in `README.md`.
@@ -135,6 +118,7 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 | **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone |
 | **CONFIRMED — watcher adjacency** | Public `main` shows [`../../.github/watchers/README.md`](../../.github/watchers/README.md) as the watcher-boundary doc, which affects how receipt-bearing automation should be described |
 | **CONFIRMED — trust-surface adjacency** | `../../data/receipts/README.md`, `../../data/proofs/README.md`, `../../tools/validators/README.md`, `../../tools/attest/README.md`, and `../../tools/ci/README.md` materially shape how whole-path proof should be described |
+| **CONFIRMED — hydrology subtree direction** | `runtime_proof/hydrology/README.md` and `runtime_proof/hydrology/streamflow/README.md` now exist as visible runtime-proof leaves and should be reflected at the family level |
 | **PROPOSED — runtime-proof depth** | domain leaves such as `runtime_proof/air/pm25/` may expose review-record-aware and receipt-aware request-time cases without changing the parent e2e burden |
 | **NEEDS VERIFICATION** | actual runner/toolchain, executable case depth, required checks, screenshot baseline inventory, proof-pack emitters, receipt/proof-aware fixtures, and whether runtime / release / correction drills are exercised on the checked-out branch |
 
@@ -179,7 +163,9 @@ That burden is broader than `tests/integration/`, and stricter than “the UI lo
 
 | Leaf | Meaning | Current visible state |
 |---|---|---|
-| [`./runtime_proof/`](./runtime_proof/) | request-time runtime and outward outcome proof | visible + `README.md` only on public `main` |
+| [`./runtime_proof/`](./runtime_proof/) | request-time runtime and outward outcome proof | visible + `README.md` on public `main` |
+| [`./runtime_proof/hydrology/`](./runtime_proof/hydrology/) | hydrology runtime-proof domain index | visible + `README.md` on current branch context |
+| [`./runtime_proof/hydrology/streamflow/`](./runtime_proof/hydrology/streamflow/) | streamflow proof leaf for finite outcomes, approved baselines, and support visibility | visible + `README.md` on current branch context |
 | [`./release_assembly/`](./release_assembly/) | release / promotion / publish-path proof | visible + `README.md` only on public `main` |
 | [`./correction/`](./correction/) | correction, supersession, replacement, and stale-visible proof | visible + `README.md` only on public `main` |
 
@@ -191,10 +177,10 @@ The child leaves are intentionally **burden-specific**, not interchangeable:
 - `release_assembly/` is about release-bearing completeness and publish-path integrity
 - `correction/` is about supersession, withdrawal, stale visibility, and lineage continuity
 
-A domain-specific child such as `runtime_proof/air/pm25/` may deepen one leaf without changing the meaning of the other two.
+A domain-specific child such as `runtime_proof/hydrology/streamflow/` may deepen one leaf without changing the meaning of the other two.
 
 > [!NOTE]
-> Public `main` proves all three leaf directories and their `README.md` files, but it still does **not** prove equal executable maturity across those leaves.
+> Public `main` proves the top-level three leaf directories and their `README.md` files, but it still does **not** prove equal executable maturity across those leaves.
 
 [Back to top](#top)
 
@@ -260,7 +246,8 @@ The current public `main` branch proves the following:
 - `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`
 - `tests/e2e/README.md` is already a multi-section directory guide rather than a one-line scaffold
 - [`./correction/`](./correction/), [`./release_assembly/`](./release_assembly/), and [`./runtime_proof/`](./runtime_proof/) each currently expose `README.md` only in the public tree
-- those leaf READMEs are not identical in emphasis: `runtime_proof/` is request-time outcome focused, `release_assembly/` is promotion and publish-path focused, and `correction/` is correction-lineage focused
+- `./runtime_proof/hydrology/README.md` and `./runtime_proof/hydrology/streamflow/README.md` are now part of the active documentation stack and should be considered current adjacent family context
+- those leaf READMEs are not identical in emphasis: `runtime_proof/` is request-time outcome focused, `release_assembly/` is publish-path focused, and `correction/` is correction-lineage focused
 - the parent [`../README.md`](../README.md) already assigns those three visible leaf families clear meanings
 - public `.github/workflows/` currently exposes `README.md` only; no checked-in workflow YAML files are visible there from the public tree
 - public `.github/workflows/README.md` explicitly separates current `README.md`-only tree state from historically visible deleted workflow lanes in the Actions UI; treat those lane names as reconstruction clues, not current inventory
@@ -288,7 +275,11 @@ tests/
     ├── release_assembly/
     │   └── README.md
     ├── runtime_proof/
-    │   └── README.md
+    │   ├── README.md
+    │   └── hydrology/
+    │       ├── README.md
+    │       └── streamflow/
+    │           └── README.md
     └── README.md
 ```
 
@@ -317,6 +308,13 @@ tests/e2e/
 │   │       ├── README.md
 │   │       ├── fixtures/
 │   │       └── test_pm25_runtime_proof.py
+│   ├── hydrology/
+│   │   ├── README.md
+│   │   └── streamflow/
+│   │       ├── README.md
+│   │       ├── fixtures/
+│   │       ├── test_streamflow_runtime_proof.py
+│   │       └── test_streamflow_stats_baseline.py
 │   ├── cases/
 │   └── fixtures/
 └── README.md
@@ -356,6 +354,8 @@ sed -n '1,220p' tests/unit/README.md 2>/dev/null || true
 
 # inspect visible e2e leaf docs
 sed -n '1,220p' tests/e2e/runtime_proof/README.md 2>/dev/null || true
+sed -n '1,220p' tests/e2e/runtime_proof/hydrology/README.md 2>/dev/null || true
+sed -n '1,220p' tests/e2e/runtime_proof/hydrology/streamflow/README.md 2>/dev/null || true
 sed -n '1,220p' tests/e2e/runtime_proof/air/pm25/README.md 2>/dev/null || true
 sed -n '1,220p' tests/e2e/release_assembly/README.md 2>/dev/null || true
 sed -n '1,220p' tests/e2e/correction/README.md 2>/dev/null || true
@@ -458,6 +458,7 @@ Prefer **burden-led** names over tool-led names.
 runtime_proof.citation_negative.abstain.test.*
 runtime_proof.evidence_missing.error.test.*
 runtime_proof.air.pm25.review_record_visibility.test.*
+runtime_proof.hydrology.streamflow.baseline_support_abstain.test.*
 release_assembly.proof_pack.complete.test.*
 release_assembly.publish_path.rollback_ready.test.*
 correction.supersession.stale_visible.test.*
@@ -528,7 +529,7 @@ flowchart LR
 
 | Leaf family | Primary burden | Typical KFM objects / cues | Status note |
 |---|---|---|---|
-| `runtime_proof/` | request-time runtime and outward outcome proof | `EvidenceBundle`, outward runtime response, citation checks, `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`, review-record and receipt visibility where relevant | visible family **CONFIRMED**; current public tree is `README.md`-only; executable depth **NEEDS VERIFICATION** |
+| `runtime_proof/` | request-time runtime and outward outcome proof | `EvidenceBundle`, outward runtime response, citation checks, `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`, review-record and receipt visibility where relevant | visible family **CONFIRMED**; current public tree is `README.md`-bearing; executable depth **NEEDS VERIFICATION** |
 | `release_assembly/` | release / promotion / publish-path proof | `ReleaseManifest`, `ReleaseProofPack`, validator outputs, bundle summaries, rollback note, receipt/proof linkage, review linkage | visible family **CONFIRMED**; current public tree is `README.md`-only; proof-pack emitter and automation **NEEDS VERIFICATION** |
 | `correction/` | supersession, withdrawal, replacement, and stale-visible proof | `CorrectionNotice`, affected release refs, public note, visible state change, lineage continuity, correction-linked trust state | visible family **CONFIRMED**; current public tree is `README.md`-only; drill history and fixtures **NEEDS VERIFICATION** |
 
@@ -553,6 +554,7 @@ flowchart LR
 |---|---|---|
 | runtime citation-negative abstention case | proves fail-closed outward behavior instead of fluent bluffing | **PROPOSED** |
 | runtime review-record visibility case | proves reviewer-facing request-time context stays distinct from outward runtime response | **PROPOSED** |
+| hydrology streamflow baseline-support abstention case | proves approved-baseline weakness yields `ABSTAIN` rather than invented confidence | **PROPOSED / aligned to current hydrology leaf** |
 | PM2.5 runtime receipt thin slice | proves domain-specific request-time receipt linkage without collapsing receipt, review, and response | **PROPOSED / NEEDS VERIFICATION** |
 | release-assembly completeness case | proves publish-path proof is more than deploy success | **PROPOSED** |
 | correction stale-visible supersession case | proves lineage remains visible after change | **PROPOSED** |
@@ -577,6 +579,7 @@ flowchart LR
 - [ ] No claim of merge-blocking automation, required checks, or mature suite depth is made without direct evidence.
 - [ ] Adjacent docs are updated when case placement or family boundaries change.
 - [ ] This file’s current snapshot is updated whenever a leaf directory stops being `README.md`-only, a leaf README materially changes emphasis, or workflow-history reconstruction rules materially change in [`../../.github/workflows/README.md`](../../.github/workflows/README.md).
+- [ ] Runtime-proof subtree indexing remains synchronized with `runtime_proof/README.md`, `runtime_proof/hydrology/README.md`, and `runtime_proof/hydrology/streamflow/README.md`.
 
 [Back to top](#top)
 
@@ -600,7 +603,7 @@ The current public tree proves the directory and its visible leaf families, not 
 
 No.
 
-The public tree still shows each leaf directory as `README.md`-only, but all three leaf pages now read as burden-specific guides with different emphases. `runtime_proof/` is request-time focused, `release_assembly/` is publish-path focused, and `correction/` is correction-lineage focused. What remains unproven is executable case depth, not the documented burden of the leaves themselves.
+The public tree still shows `release_assembly/` and `correction/` as `README.md`-only, but the runtime-proof branch now has deeper visible documentation under `hydrology/` and `hydrology/streamflow/`. What remains unproven is executable case depth, not the documented burden of the family.
 
 ### Can public Actions run names prove current checked-in e2e automation?
 
