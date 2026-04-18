@@ -4,47 +4,14 @@ title: tests
 type: standard
 version: v1
 status: published
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: 2026-04-17
+updated: 2026-04-18
 policy_label: public
-related: [
-  ../README.md,
-  ../CONTRIBUTING.md,
-  ../.github/README.md,
-  ../.github/CODEOWNERS,
-  ../.github/workflows/README.md,
-  ../.github/watchers/README.md,
-  ../contracts/README.md,
-  ../policy/README.md,
-  ../schemas/README.md,
-  ../schemas/contracts/README.md,
-  ../schemas/tests/README.md,
-  ../data/receipts/README.md,
-  ../data/proofs/README.md,
-  ../docs/README.md,
-  ../tools/probes/README.md,
-  ../tools/validators/README.md,
-  ../tools/validators/promotion_gate/README.md,
-  ../tools/attest/README.md,
-  ./accessibility/README.md,
-  ./catalog/README.md,
-  ./ci/README.md,
-  ./contracts/README.md,
-  ./e2e/README.md,
-  ./e2e/runtime_proof/README.md,
-  ./e2e/runtime_proof/air/pm25/README.md,
-  ./policy/README.md
-]
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../.github/watchers/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../schemas/contracts/README.md, ../schemas/tests/README.md, ../data/receipts/README.md, ../data/proofs/README.md, ../docs/README.md, ../tools/probes/README.md, ../tools/validators/README.md, ../tools/validators/promotion_gate/README.md, ../tools/attest/README.md, ./accessibility/README.md, ./catalog/README.md, ./ci/README.md, ./contracts/README.md, ./e2e/README.md, ./e2e/runtime_proof/README.md, ./e2e/runtime_proof/hydrology/README.md, ./e2e/runtime_proof/hydrology/streamflow/README.md, ./e2e/runtime_proof/air/pm25/README.md, ./integration/README.md, ./policy/README.md, ./policy/genealogy/README.md, ./reproducibility/README.md, ./unit/README.md]
 tags: [kfm, tests, verification, readme, ci, catalog, contracts, receipts, proofs]
-notes: [
-  Updated to align the top-level tests family map with the stronger runtime_proof and e2e lane distinctions.
-  doc_id and created date still need live-repo verification.
-  Owner remains confirmed by current CODEOWNERS coverage for /tests/.
-  This revision preserves governed-verification framing while making runtime response, review record, receipt, and proof separation more explicit.
-  This revision also keeps the probe -> receipt -> validator -> policy -> workflow chain visible without overclaiming runner or merge-gate maturity.
-]
--->
+notes: [Updated to align the top-level tests family map with the stronger runtime_proof and e2e lane distinctions, including the hydrology runtime-proof subtree. doc_id and created date still need live-repo verification. Owner remains confirmed by current CODEOWNERS coverage for /tests/. This revision preserves governed-verification framing while making runtime response, review record, receipt, and proof separation more explicit. This revision also keeps the probe -> receipt -> validator -> policy -> workflow chain visible without overclaiming runner or merge-gate maturity.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -58,14 +25,14 @@ Governed verification surface for KFM proof objects, trust cues, negative paths,
 
 <div align="left">
 
-![Status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
-![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
-![Branch: main](https://img.shields.io/badge/branch-main-0a7d5a)
-![Scope: governed verification](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
-![Repo tree: current lane](https://img.shields.io/badge/repo%20tree-current%20lane-lightgrey)
-![Receipts: process memory](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
-![Proofs: separate](https://img.shields.io/badge/proofs-separate-f59e0b)
-![Truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)
+![status](https://img.shields.io/badge/status-experimental-6f42c1)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![branch](https://img.shields.io/badge/branch-main-0a7d5a)
+![scope](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
+![tree](https://img.shields.io/badge/repo%20tree-current%20lane-lightgrey)
+![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
+![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)
 
 </div>
 
@@ -74,7 +41,7 @@ Governed verification surface for KFM proof objects, trust cues, negative paths,
 | **Status** | experimental |
 | **Owners** | `@bartytime4life` |
 | **Path** | `tests/README.md` |
-| **Repo fit** | directory index for governed verification families, fixtures, drill expectations, helper-proof lanes, and review-facing proof boundaries |
+| **Repo fit** | top-level index for governed verification families, fixtures, drill expectations, helper-proof lanes, and review-facing proof boundaries |
 | **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
@@ -125,6 +92,7 @@ That is broader than “do the tests pass?” The stronger questions are:
 | **CONFIRMED — current schema adjacency** | `schemas/` is no longer effectively README-only; visible adjacent lanes include `schemas/contracts/`, `schemas/contracts/v1/`, and `schemas/tests/`, which materially affect how contract-facing verification and nested fixture scaffolds should be described. |
 | **CONFIRMED — current governed data adjacency** | `data/receipts/` and `data/proofs/` are explicit adjacent surfaces in the documentation lattice. Tests should reflect their distinct roles rather than flatten them. |
 | **CONFIRMED — KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, helper-proof surfaces, receipt and process-memory boundaries, runtime response vs review record vs receipt vs proof separation, and hydrology-first thin-slice proof remain part of the KFM verification model. |
+| **CONFIRMED — current e2e runtime subtree** | `tests/e2e/runtime_proof/README.md`, `tests/e2e/runtime_proof/hydrology/README.md`, and `tests/e2e/runtime_proof/hydrology/streamflow/README.md` are now active adjacent family docs that should be reflected in the top-level test map. |
 | **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different documented names and now does so alongside explicitly documented `tests/ci/`, `tests/catalog/`, and `tests/contracts/` lanes. |
 | **NEEDS VERIFICATION** | Exact executable suite depth, actual runner and toolchain, required checks, rulesets, screenshot baseline inventory, fixture density, whether schema-side fixtures feed blocking runners, whether rollback and correction drills have been exercised on the checked-out branch, and how probe- or watcher-receipt cases are wired in local or CI runners. |
 
@@ -195,6 +163,8 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`./e2e/correction/`](./e2e/correction/) | correction and supersession drill family |
 | [`./e2e/release_assembly/`](./e2e/release_assembly/) | release, promotion, and publish-path proof family |
 | [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time runtime and outcome-proof family |
+| [`./e2e/runtime_proof/hydrology/`](./e2e/runtime_proof/hydrology/) | hydrology runtime-proof domain index |
+| [`./e2e/runtime_proof/hydrology/streamflow/`](./e2e/runtime_proof/hydrology/streamflow/) | streamflow runtime-proof leaf for baseline support and finite outcomes |
 | [`./e2e/runtime_proof/air/pm25/`](./e2e/runtime_proof/air/pm25/README.md) | domain-specific runtime-proof leaf for PM2.5 trust and receipt-aware outward behavior |
 | [`./policy/genealogy/`](./policy/genealogy/README.md) | genealogy-specific policy-behavior child lane for consent, living-person, DNA, provenance, and publication-control negative tests |
 
@@ -261,6 +231,7 @@ Content that belongs in `tests/` includes:
 - review-record-aware runtime tests where reviewer-facing request-time context is part of the trust path
 - end-to-end release-assembly tests
 - runtime-proof suites for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
+- hydrology runtime-proof suites where approved baseline support, source-role visibility, and fail-closed outward behavior matter
 - correction, supersession, withdrawal, and stale-visibility drills
 - accessibility-critical trust-surface checks
 - reproducibility and bounded-regression checks where digests, counts, or stable metrics matter
@@ -320,6 +291,8 @@ The current repo-facing surface proves the following:
 - `tests/policy/genealogy/README.md` is documented as a real child README
 - `tests/e2e/` exposes `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/`
 - `tests/e2e/runtime_proof/` is documented as the request-time outward proof family
+- `tests/e2e/runtime_proof/hydrology/README.md` is documented as the hydrology domain index under runtime proof
+- `tests/e2e/runtime_proof/hydrology/streamflow/README.md` is documented as the streamflow finite-outcome leaf
 - `schemas/` is no longer effectively README-only; it currently exposes `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows/`, and `README.md`
 - `schemas/contracts/` currently exposes `README.md`, `v1/`, and `vocab/`
 - `schemas/contracts/v1/` currently exposes `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, `source/`, and `README.md`
@@ -367,7 +340,11 @@ tests/
 │   ├── release_assembly/
 │   │   └── README.md
 │   └── runtime_proof/
-│       └── README.md
+│       ├── README.md
+│       └── hydrology/
+│           ├── README.md
+│           └── streamflow/
+│               └── README.md
 ├── integration/
 │   └── README.md
 ├── policy/
@@ -432,11 +409,11 @@ These commands are inspection-first because they verify what is present without 
 
 ```bash
 # inspect the visible tests surface
-find tests -maxdepth 5 -type d | sort
-find tests -maxdepth 5 -type f | sort
+find tests -maxdepth 6 -type d | sort
+find tests -maxdepth 6 -type f | sort
 
 # inspect adjacent contract, schema, policy, workflow, receipt, proof, validator, attest, and probe-facing surfaces
-find .github contracts data docs policy schemas tests tools -maxdepth 5 -type f 2>/dev/null | sort | sed -n '1,320p'
+find .github contracts data docs policy schemas tests tools -maxdepth 6 -type f 2>/dev/null | sort | sed -n '1,360p'
 
 # inspect ownership and governance boundaries
 sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
@@ -464,9 +441,11 @@ sed -n '1,260p' tools/validators/promotion_gate/README.md 2>/dev/null || true
 sed -n '1,260p' tools/attest/README.md 2>/dev/null || true
 
 # inspect the current e2e leaf family placement
-find tests/e2e -maxdepth 5 -type f 2>/dev/null | sort
+find tests/e2e -maxdepth 6 -type f 2>/dev/null | sort
 sed -n '1,240p' tests/e2e/README.md 2>/dev/null || true
 sed -n '1,240p' tests/e2e/runtime_proof/README.md 2>/dev/null || true
+sed -n '1,240p' tests/e2e/runtime_proof/hydrology/README.md 2>/dev/null || true
+sed -n '1,240p' tests/e2e/runtime_proof/hydrology/streamflow/README.md 2>/dev/null || true
 sed -n '1,240p' tests/e2e/runtime_proof/air/pm25/README.md 2>/dev/null || true
 
 # inspect the visible policy child-lane placement
@@ -477,7 +456,7 @@ find schemas/contracts -maxdepth 5 -type f 2>/dev/null | sort | sed -n '1,280p'
 find schemas/tests -maxdepth 5 -type f 2>/dev/null | sort | sed -n '1,280p'
 
 # inspect likely KFM verification vocabulary without assuming a runner
-grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|ReviewRecord\|runtime_receipt\|CorrectionNotice\|run_receipt\|ai_receipt\|attestation\|render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff\|catalog_crosslink\|stac_change_runner\|run_receipt_validator" \
+grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|ReviewRecord\|runtime_receipt\|CorrectionNotice\|run_receipt\|ai_receipt\|attestation\|render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff\|catalog_crosslink\|stac_change_runner\|run_receipt_validator\|hydrology\|streamflow\|baseline_support" \
   tests contracts policy schemas data tools docs scripts 2>/dev/null || true
 ```
 
@@ -489,11 +468,12 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|ReviewRecord\|r
 4. Verify whether `tests/contracts/` on the checked-out branch matches the documented contract-facing proof burden.
 5. Verify whether receipt-oriented tests already exist for probe-generated process memory or still need to be added.
 6. Verify whether review-record-aware runtime tests already exist or still need to be added.
-7. Verify whether `tests/policy/genealogy/` on the checked-out branch is still a README-only child lane or has accumulated executable cases.
-8. Verify whether the checked-out branch still matches the current documented tree for `tests/`, `schemas/`, `data/`, and `.github/workflows/`.
-9. Verify which checks actually block merges on the active branch.
-10. Verify whether `contracts/`, `policy/`, `docs/`, `schemas/`, `data/`, `tools/`, and `tests/` move together in the same change stream.
-11. Verify whether negative paths exist, not only happy-path confirmation.
+7. Verify whether hydrology runtime-proof tests already exist beneath `tests/e2e/runtime_proof/hydrology/streamflow/` or remain documentation-only.
+8. Verify whether `tests/policy/genealogy/` on the checked-out branch is still a README-only child lane or has accumulated executable cases.
+9. Verify whether the checked-out branch still matches the current documented tree for `tests/`, `schemas/`, `data/`, and `.github/workflows/`.
+10. Verify which checks actually block merges on the active branch.
+11. Verify whether `contracts/`, `policy/`, `docs/`, `schemas/`, `data/`, `tools/`, and `tests/` move together in the same change stream.
+12. Verify whether negative paths exist, not only happy-path confirmation.
 
 > [!TIP]
 > Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands.  
@@ -543,6 +523,8 @@ Use the smallest fitting existing family before inventing a new top-level folder
 | [`./reproducibility/`](./reproducibility/) | stable digests, counts, receipts, and bounded regression matter most | visible as a README-bearing family |
 | [`./e2e/release_assembly/`](./e2e/release_assembly/) | promotion, release evidence, or publish-path integrity is the question | visible as a README-bearing leaf family |
 | [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time evidence, citations, finite answer outcomes, or review-record-aware outward trust is the question | visible as a README-bearing leaf family |
+| [`./e2e/runtime_proof/hydrology/`](./e2e/runtime_proof/hydrology/) | the change is a hydrology-domain runtime-proof burden | visible as a README-bearing domain leaf |
+| [`./e2e/runtime_proof/hydrology/streamflow/`](./e2e/runtime_proof/hydrology/streamflow/) | the change is a streamflow runtime-proof burden with baseline support, freshness, and finite outcome pressure | visible as a README-bearing subject leaf |
 | [`./e2e/runtime_proof/air/pm25/`](./e2e/runtime_proof/air/pm25/README.md) | the change is a domain-specific request-time runtime proof burden with source-role and receipt-aware semantics | documented domain leaf beneath runtime_proof |
 | [`./e2e/correction/`](./e2e/correction/) | supersession, rollback, stale visibility, withdrawal, or correction propagation must be exercised | visible as a README-bearing leaf family |
 
@@ -558,6 +540,7 @@ Today, the documented visible exceptions to a pure README-only reading are:
 - `tests/catalog/`, which now has a documented thin-slice catalog-crosslink proof surface
 - `tests/contracts/`, which already exposes executable contract-facing proof
 - `tests/policy/`, which already exposes a visible child lane
+- `tests/e2e/runtime_proof/hydrology/` and `tests/e2e/runtime_proof/hydrology/streamflow/`, which now expose deeper documentation structure under runtime proof without yet proving executable maturity
 
 If a schema-side scaffold exists nearby under `schemas/`, treat that as **adjacent signal** until repo law explicitly says it is canonical for the same burden.
 
@@ -589,6 +572,7 @@ That burden may land across more than one test family:
 - cross-boundary flow in `tests/integration/`
 - workflow-facing reviewer summary proof in `tests/ci/`
 - request-time outcome, review-record, and receipt linkage in `tests/e2e/runtime_proof/`
+- hydrology streamflow baseline-support and abstention behavior in `tests/e2e/runtime_proof/hydrology/streamflow/`
 - release, runtime, and correction consequences in `tests/e2e/`
 
 [Back to top](#top)
@@ -627,6 +611,8 @@ flowchart LR
       EC["e2e/correction/"]
       ER["e2e/release_assembly/"]
       EP["e2e/runtime_proof/"]
+      EH["e2e/runtime_proof/hydrology/"]
+      ES["e2e/runtime_proof/hydrology/streamflow/"]
     end
 
     T --> F
@@ -634,6 +620,8 @@ flowchart LR
     E --> EC
     E --> ER
     E --> EP
+    EP --> EH
+    EH --> ES
     F --> G
     G --> Q{"trust-preserving?"}
 
@@ -671,6 +659,8 @@ flowchart LR
 | `e2e/correction/` | Yes | `README.md` | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
 | `e2e/release_assembly/` | Yes | `README.md` | promotion and publish-path proof | strongly aligned with release-proof doctrine |
 | `e2e/runtime_proof/` | Yes | `README.md` | `ANSWER / ABSTAIN / DENY / ERROR` proof | strongly aligned with runtime outcome doctrine |
+| `e2e/runtime_proof/hydrology/` | Yes | `README.md` | hydrology-domain runtime proof index | domain-level routing for water-related runtime-proof burdens |
+| `e2e/runtime_proof/hydrology/streamflow/` | Yes | `README.md` | streamflow runtime proof with baseline support and finite outcomes | current thin-slice subject leaf beneath hydrology runtime proof |
 | `e2e/runtime_proof/air/pm25/` | Yes | `README.md` | PM2.5 request-time runtime proof with source-role and receipt-aware trust cues | domain-specific runtime-proof leaf |
 | `regression/` | No documented current path | — | doctrinal shorthand for some UI, map, or rebuild burdens | keep this as doctrine, not current path claim |
 
@@ -715,6 +705,7 @@ flowchart LR
 | source onboarding or transforms | deterministic manifest and checksum behavior, validation checks, and at least one representative integration slice |
 | evidence behavior | `EvidenceRef` or bundle resolution path, negative tests, and policy-safe denials |
 | story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
+| hydrology runtime-proof surfaces | baseline support, freshness, source-role visibility, and `ABSTAIN` vs `ANSWER` pressure under approved seasonal context |
 | docs describing behavior | linked updates, no contradiction with tests, contracts, policy, schemas, tools, data, and no overclaiming branch reality |
 | release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
 | workflow / required-check posture | confirm checked-in automation docs, platform rules, and whether repo-visible signals still match effective merge gates |
@@ -737,6 +728,7 @@ flowchart LR
 | malformed review-record or runtime-receipt input | proves request-time audit context fails closed rather than drifting downstream |
 | malformed receipt | proves probe-to-validator handoff fails closed rather than drifting downstream |
 | disallowed receipt transport state | proves policy-facing receipt gates do not silently allow ambiguous observation state |
+| missing or weak approved baseline support | proves hydrology runtime leaves abstain instead of inventing seasonal certainty |
 
 [Back to top](#top)
 
@@ -749,7 +741,7 @@ Treat this README as healthy only when the directory contract stays both readabl
 - [ ] Keep current documented structure separate from assumptions about suite depth.
 - [ ] Keep owners aligned with `../.github/CODEOWNERS`.
 - [ ] Update this README whenever a test family is added, renamed, removed, or materially repurposed.
-- [ ] Update this README whenever a visible child lane such as `tests/policy/genealogy/` or `tests/e2e/runtime_proof/air/pm25/` is added, removed, or materially repurposed.
+- [ ] Update this README whenever a visible child lane such as `tests/policy/genealogy/`, `tests/e2e/runtime_proof/hydrology/`, `tests/e2e/runtime_proof/hydrology/streamflow/`, or `tests/e2e/runtime_proof/air/pm25/` is added, removed, or materially repurposed.
 - [ ] Update this README whenever a helper-proof lane such as `tests/ci/` or `tests/catalog/` changes its documented thin slice materially.
 - [ ] Update this README whenever `tests/contracts/` changes its documented contract-facing burden materially.
 - [ ] Update this README whenever `tests/e2e/` changes its burden map materially.
@@ -776,7 +768,7 @@ Because KFM treats verification as part of publication, runtime trust, correctio
 
 Because repo-native truth outranks cleaner theory. The manuals are valuable for burden language, but current documented paths such as `tests/catalog/`, `tests/ci/`, `tests/contracts/`, `tests/accessibility/`, `tests/integration/`, and `tests/reproducibility/` should not be silently rewritten into something the repo and docs do not use.
 
-### Why does this README mention `tests/ci/`, `tests/catalog/`, `tests/contracts/`, `tests/e2e/`, and the PM2.5 leaf explicitly?
+### Why does this README mention `tests/ci/`, `tests/catalog/`, `tests/contracts/`, `tests/e2e/`, the hydrology runtime-proof subtree, and the PM2.5 leaf explicitly?
 
 Because the current lane docs expose them as real helper-proof, contract-proof, whole-path, and domain-leaf surfaces. A top-level index that ignores documented child verification lanes is less truthful than one that records them conservatively.
 
@@ -819,6 +811,7 @@ This revision is grounded in three evidence layers:
    - the documented `tests/contracts/` lane and its contract-facing proof surface
    - the documented `tests/e2e/` leaf family tree
    - the documented `tests/e2e/runtime_proof/` family
+   - the documented hydrology runtime-proof domain and streamflow leaf
    - the documented PM2.5 runtime-proof leaf
    - the documented `tests/policy/genealogy/` child lane
    - current ownership mapping from `.github/CODEOWNERS`
@@ -850,6 +843,8 @@ This revision is grounded in three evidence layers:
    - `tests/contracts/README.md`
    - `tests/e2e/README.md`
    - `tests/e2e/runtime_proof/README.md`
+   - `tests/e2e/runtime_proof/hydrology/README.md`
+   - `tests/e2e/runtime_proof/hydrology/streamflow/README.md`
 
 3. **KFM doctrinal manuals**, especially the layers that sharpen:
    - verification as trust-bearing governance
@@ -878,6 +873,7 @@ Before treating this README as fully settled local-checkout documentation, verif
 - whether nested schema-side fixtures are mirror-only or active runner inputs
 - whether rollback, restore, or correction drills have archived evidence
 - whether runtime review-record and runtime-receipt cases already exist
+- whether hydrology runtime-proof executable cases already exist under `tests/e2e/runtime_proof/hydrology/streamflow/`
 - whether any future refactor intends to consolidate split families or settle schema-home or fixture-home authority
 - how receipt, review-record, and proof linkage cases are actually wired in local and CI runners
 
@@ -920,6 +916,7 @@ What changed in the documented shape is that multiple adjacent signals now matte
 - `tests/policy/` has a visible `genealogy/` child lane
 - `tests/e2e/` has a stronger family boundary
 - `tests/e2e/runtime_proof/` now has a clearer runtime trust split
+- `tests/e2e/runtime_proof/hydrology/` and `.../streamflow/` now extend that subtree visibly
 - `schemas/` has visible contract and fixture scaffolds
 - `data/receipts/` and `data/proofs/` matter more explicitly to test-language accuracy
 - `tools/probes/`, `tools/validators/`, and `policy/` sharpen the starter governed chain
