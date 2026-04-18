@@ -10,7 +10,7 @@ updated: 2026-04-18
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../scripts/README.md, ../../tests/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../validators/README.md, ../diff/README.md, ../catalog/README.md, ../ci/README.md, ../attest/README.md, ./hydro-watcher/README.md]
 tags: [kfm, tools, probes, freshness, status, inspection, bounded-observation, receipts, proofs, hydrology]
-notes: [Current public snapshot remains README-first unless executable probes are landed and verified in-tree. Updated to align this lane with watcher, receipt/proof, validator, diff, catalog, CI-renderer, attestation, and proposed hydrology child-lane boundaries. This revision keeps probe outputs aligned to the single central `data/receipts/` process-memory doctrine while preserving proof separation. doc_id and created date should be reconciled against authoritative repo history before publication.]
+notes: [Current public snapshot remains README-first unless executable probes are landed and verified in-tree. This revision preserves the bounded-observation doctrine, strengthens receipt-versus-proof separation, and makes room for a probe-first hydrology child lane without claiming merge status. doc_id and created date should be reconciled against authoritative repo history before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -40,7 +40,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 | **Repo fit** | child lane under [`../README.md`](../README.md); adjacent to [`../validators/README.md`](../validators/README.md), [`../diff/README.md`](../diff/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), and [`../attest/README.md`](../attest/README.md); downstream callers may live in [`../../scripts/README.md`](../../scripts/README.md) or [`../../.github/workflows/README.md`](../../.github/workflows/README.md); process-memory outputs should align to [`../../data/receipts/README.md`](../../data/receipts/README.md) while higher-order trust objects remain separate in [`../../data/proofs/README.md`](../../data/proofs/README.md) |
 | **Evidence posture** | doctrine-grounded · repo-grounded for the current README-first lane shape plus broader public-tree context · exact executable probe inventory, workflow callers, and active-branch local usage remain bounded |
 | **Current lane snapshot** | `tools/probes/` is still README-first on visible public `main` unless deeper branch evidence proves otherwise. This README therefore records the lane contract and careful landing patterns for future executable probes without overstating current inventory. |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Hydrology child-lane thread](#hydrology-child-lane-thread-proposed) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > `tools/probes/` is for **bounded readers and reporters**.
@@ -73,13 +73,13 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 > 1. it records the **current public-tree reality** honestly  
 > 2. it defines the **landing contract** for the first executable probes
 >
-> That means example probe names, child lanes, receipts, or CLI shapes below may be marked **PROPOSED** or **illustrative** until verified in-tree.
+> That means example probe names, child lanes, receipts, CLI shapes, or domain event outputs below may be marked **PROPOSED** or **illustrative** until verified in-tree.
 
 ---
 
 ## Scope
 
-`tools/probes/` is the KFM helper lane for small, explicit utilities whose main job is to **inspect**, **sample**, **measure**, **check freshness/materiality**, and **emit reviewable outputs** without quietly changing trust state.
+`tools/probes/` is the KFM helper lane for small, explicit utilities whose main job is to **inspect**, **sample**, **measure**, **check freshness or materiality**, and **emit reviewable outputs** without quietly changing trust state.
 
 Typical probe work includes:
 
@@ -415,7 +415,7 @@ sed -n '1,240p' tools/attest/README.md 2>/dev/null
 ### 4. Search for existing caller and naming patterns
 
 ```bash
-rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref|data/receipts/probes|hydro-watcher|streamflow_probe" \
+rg -n "tools/probes|_probe|run_receipt|freshness|availability|materiality|stale|drift|proof_ref|receipt_ref|data/receipts/probes|hydro-watcher|streamflow_probe|decision_envelope|stats_receipt" \
   README.md .github docs scripts tests tools data -S 2>/dev/null
 ```
 
@@ -430,6 +430,13 @@ find tools/probes -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "
 ```bash
 sed -n '1,260p' tools/probes/README.md 2>/dev/null
 sed -n '1,260p' tools/probes/hydro-watcher/README.md 2>/dev/null
+```
+
+### 7. If landing a hydrology probe, prove receipt and runtime-proof boundaries stay visible
+
+```bash
+sed -n '1,240p' data/receipts/probes/README.md 2>/dev/null
+sed -n '1,240p' tests/e2e/runtime_proof/hydrology/streamflow/README.md 2>/dev/null
 ```
 
 ---
@@ -450,11 +457,12 @@ sed -n '1,260p' tools/probes/hydro-watcher/README.md 2>/dev/null
 
 - prefer one clear CLI entrypoint per probe
 - keep exit codes deterministic
-- stamp `checked_at` and, when relevant, observed source freshness basis
+- stamp `checked_at` or equivalent timing basis
 - keep secrets minimal and externally injected
 - avoid hidden retries that erase evidence of degradation
 - keep policy, contract, and schema authority outside the helper
 - if the output is a receipt, keep it clearly process-memory shaped rather than proof-shaped
+- if the output includes a decision-like object, keep the handoff to runtime proof and downstream policy explicit
 
 ### Illustrative invocation
 
@@ -473,7 +481,10 @@ The example below is also **illustrative** until verified in-tree.
 ```bash
 python3 tools/probes/hydro-watcher/streamflow_probe.py \
   --site 06887500 \
-  --comid 12345678
+  --parameter 00060 \
+  --start 2026-03-01T00:00:00Z \
+  --end 2026-04-01T00:00:00Z \
+  --detect-events
 ```
 
 ### Illustrative bounded receipt shape
@@ -493,26 +504,37 @@ This is an example output shape, not a settled repo contract.
 }
 ```
 
+### Illustrative hydrology receipt bundle
+
+This is a **PROPOSED** family of outputs for a probe-first hydrology child lane, not a settled lane contract.
+
+```text
+data/work/hydrology/usgs-water/<run_id>/records.ndjson
+data/work/hydrology/usgs-water/<run_id>/run_manifest.json
+data/receipts/probes/usgs-water/<date>/<run_id>.json
+data/work/hydrology/usgs-water-events/<run_id>/<site_id>/decision_envelope.json
+data/work/hydrology/usgs-water-events/<run_id>/<site_id>/stats_receipt.json
+data/work/hydrology/usgs-water-events/<run_id>/<site_id>/stats_payload.json
+```
+
 ### Illustrative domain-threshold event shape
 
 This is a **PROPOSED** shape for a thin-slice hydrology probe output, not a settled lane contract.
 
 ```json
 {
-  "site_no": "06887500",
-  "permanent_id": null,
-  "comid": 12345678,
-  "doy": 93,
-  "obs_cfs": 41.2,
-  "p5_cfs": 55.0,
-  "p95_cfs": 481.0,
-  "rolling_7d_mean_cfs": 44.9,
-  "status": "low",
-  "alert_class": "seasonal_low_tail",
-  "breach_days": 3,
-  "join_resolution_reason": "fallback_comid",
-  "baseline_kind": "day_of_year_percentile",
-  "event_content_hash": "sha256:NEEDS_VERIFICATION"
+  "site_id": "06887500",
+  "parameter_code": "00060",
+  "baseline_kind": "day_of_year_normal",
+  "baseline_sample_count": 27,
+  "latest_value": 41.2,
+  "baseline_p50": 210.0,
+  "baseline_p95": 481.0,
+  "rate_of_change": 0.31,
+  "decision": "ANSWER",
+  "decision_class": "hydrologic-spike-event",
+  "reason": "Observed value exceeds high-percentile baseline and recent rate-of-change threshold.",
+  "audit_ref": "event-06887500-00060-20260418T000000Z"
 }
 ```
 
@@ -540,6 +562,94 @@ That means:
 - a probe summary may feed a gate
 - a narrow domain event may support review
 - but none of those automatically become policy law, proof-pack truth, runtime proof authority, or release authority
+
+[Back to top](#top)
+
+---
+
+## Hydrology child-lane thread (**PROPOSED**)
+
+A probe-first hydrology child lane is a plausible extension of `tools/probes/` **only if** it stays inside the same membrane as the rest of this directory.
+
+### Working shape
+
+A plausible landing pattern is:
+
+```text
+tools/probes/
+└── hydro-watcher/
+    ├── README.md
+    └── streamflow_probe.py
+```
+
+### What makes the hydrology thread a probe, not a pipeline
+
+The child lane still belongs here only while it behaves like this:
+
+- fetches read-only upstream observations
+- partitions time windows deterministically
+- emits process-memory receipts rather than release proofs
+- may emit a bounded decision-like envelope for review
+- does **not** become public-alert authority
+- does **not** own schema, policy, or publication law
+- keeps runtime-proof burden in `tests/e2e/runtime_proof/`
+
+### Hydrology-specific boundary reminders
+
+| Concern | Keep in probes | Keep elsewhere |
+|---|---|---|
+| Observation fetch | read-only OGC or comparable source pulls | any publish-bearing downstream surface |
+| Baseline lookup | observational statistics fetch and receipt capture | canonical policy interpretation of thresholds |
+| Receipt emission | process memory under `data/receipts/` | proof packs or release manifests as trust authority |
+| Event-like summary | bounded review artifact | public-alert publication or runtime API claims |
+| Finite outward proof | test fixture inputs may be generated here | runtime-proof authority remains under `tests/e2e/runtime_proof/` |
+
+> [!IMPORTANT]
+> A hydrology probe may compute or emit a bounded event object, but that does **not** make `tools/probes/` the owner of flood-alert policy, public-safe release law, or runtime trust guarantees.
+
+### Illustrative command family
+
+```bash
+python3 tools/probes/hydro-watcher/streamflow_probe.py \
+  --site 06891000 \
+  --site 06892350 \
+  --parameter 00060 \
+  --start 2026-03-01T00:00:00Z \
+  --end 2026-04-01T00:00:00Z \
+  --detect-events
+```
+
+### Illustrative per-site artifact family
+
+```json
+{
+  "probe": {
+    "run_id": "usgs-water-continuous-00060-06891000-06892350-20260418T000000Z",
+    "outcome": "ANSWER",
+    "record_count": 123,
+    "records_path": "data/work/hydrology/usgs-water/.../records.ndjson",
+    "receipt_path": "data/receipts/probes/usgs-water/2026-04-18/...json"
+  },
+  "events": {
+    "06891000": {
+      "decision_path": "data/work/hydrology/usgs-water-events/.../decision_envelope.json",
+      "stats_receipt_path": "data/work/hydrology/usgs-water-events/.../stats_receipt.json"
+    }
+  }
+}
+```
+
+### Why this thread still fits here
+
+This thread remains a fit only while the primary verb is still:
+
+> **observe**
+
+The moment the primary verb becomes:
+
+> **publish** or **decide policy**
+
+the implementation should move or split into a stronger lane.
 
 [Back to top](#top)
 
@@ -573,11 +683,12 @@ flowchart LR
 flowchart TD
     A[tools/probes/] --> B[generic freshness / availability probes]
     A --> C[PROPOSED hydro-watcher child lane]
-    C --> D[read-only streamflow threshold probe]
-    D --> E[receipt-shaped output]
-    D --> F[reviewable event shape]
-    F --> G[schemas/ and tests/ own authority elsewhere]
-    F --> H[runtime proof remains outside probes]
+    C --> D[read-only streamflow probe]
+    D --> E[run receipt / stats receipt]
+    D --> F[bounded decision envelope]
+    E --> G[data/receipts/ process memory]
+    F --> H[tests/e2e/runtime_proof<br/>finite outward proof elsewhere]
+    F --> I[policy / publication authority elsewhere]
 ```
 
 [Back to top](#top)
@@ -632,6 +743,17 @@ flowchart TD
 | Receipt/proof visibility probe | Are process-memory and proof-bearing refs both present and distinguishable? | explicit receipt/proof visibility summary |
 | Domain threshold probe | Is a narrow domain condition observable against an explicit threshold or baseline? | bounded event object, threshold summary, abstain/no-change report |
 
+### Illustrative hydrology artifact split
+
+| Artifact | Example location | Role | Boundary reminder |
+|---|---|---|---|
+| Raw observations | `data/work/hydrology/usgs-water/<run_id>/records.ndjson` | staging/work memory | not proof authority |
+| Run manifest | `data/work/hydrology/usgs-water/<run_id>/run_manifest.json` | local run summary | not release manifest authority |
+| Run receipt | `data/receipts/probes/usgs-water/<date>/<run_id>.json` | process memory | receipt, not proof |
+| Stats receipt | `data/work/hydrology/usgs-water-events/<run_id>/<site_id>/stats_receipt.json` | baseline fetch memory | observational support only |
+| Stats payload | `data/work/hydrology/usgs-water-events/<run_id>/<site_id>/stats_payload.json` | raw baseline response | keep parsing assumptions reviewable |
+| Decision envelope | `data/work/hydrology/usgs-water-events/<run_id>/<site_id>/decision_envelope.json` | bounded event summary | not public-alert authority |
+
 [Back to top](#top)
 
 ---
@@ -650,6 +772,7 @@ flowchart TD
 - [ ] If a probe begins to enforce rules rather than observe facts, it is moved or split into a stronger lane
 - [ ] If a probe starts to emit trust-bearing artifacts, receipt/proof/process-memory boundaries stay explicit
 - [ ] If `hydro-watcher/` lands, this parent README indexes it without overstating merge status
+- [ ] If hydrology baselines or event outputs are documented here, they remain clearly labeled as **PROPOSED** until verified in-tree
 
 ---
 
@@ -690,6 +813,10 @@ Yes, especially around freshness, availability, and visible trust-surface state.
 ### Why mention receipts, proofs, and runtime proof here?
 
 Because observational helpers are a common place for trust-state flattening to creep in. Keeping receipts, proofs, and runtime proof explicitly separate prevents a convenience report from masquerading as a stronger trust object.
+
+### Why mention decision envelopes or stats receipts in a probes README?
+
+Because those are plausible bounded outputs for a probe-first hydrology child lane. They are mentioned here only as **PROPOSED** shapes so the parent lane can document the boundary without claiming that those files are already merged.
 
 ---
 
@@ -821,24 +948,18 @@ This belongs in the probes lane only while it is still **process memory and obse
 
 ```json
 {
-  "site_no": "06887500",
-  "permanent_id": null,
-  "comid": 12345678,
-  "doy": 93,
-  "obs_cfs": 41.2,
-  "p5_cfs": 55.0,
-  "p50_cfs": 210.0,
-  "p95_cfs": 481.0,
-  "rolling_7d_mean_cfs": 44.9,
-  "rolling_30d_mean_cfs": 61.2,
-  "status": "low",
-  "alert_class": "seasonal_low_tail",
-  "breach_days": 3,
-  "join_resolution_reason": "fallback_comid",
+  "site_id": "06887500",
+  "parameter_code": "00060",
+  "baseline_kind": "day_of_year_normal",
+  "baseline_sample_count": 27,
+  "latest_value": 41.2,
+  "baseline_p50": 210.0,
+  "baseline_p95": 481.0,
+  "rate_of_change": 0.31,
   "decision": "ANSWER",
-  "reason": "sustained percentile breach",
-  "baseline_kind": "day_of_year_percentile",
-  "event_content_hash": "sha256:NEEDS_VERIFICATION"
+  "decision_class": "hydrologic-spike-event",
+  "reason": "Observed value exceeds high-percentile baseline and recent rate-of-change threshold.",
+  "audit_ref": "event-06887500-00060-20260418T000000Z"
 }
 ```
 
