@@ -4,37 +4,14 @@ title: runtime_proof
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: 2026-04-17
+updated: 2026-04-18
 policy_label: public
-related: [
-  ../README.md,
-  ../../README.md,
-  ../../contracts/README.md,
-  ../../policy/README.md,
-  ../../schemas/README.md,
-  ../../docs/README.md,
-  ../../data/receipts/README.md,
-  ../../data/proofs/README.md,
-  ../../tools/validators/README.md,
-  ../../tools/attest/README.md,
-  ../../tools/ci/README.md,
-  ../../.github/CODEOWNERS,
-  ../../.github/workflows/README.md,
-  ../../.github/watchers/README.md,
-  ../../CONTRIBUTING.md,
-  ../release_assembly/README.md,
-  ../correction/README.md,
-  ./air/pm25/README.md
-]
+related: [../README.md, ../../README.md, ../../contracts/README.md, ../../policy/README.md, ../../schemas/README.md, ../../docs/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../../tools/validators/README.md, ../../tools/attest/README.md, ../../tools/ci/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../CONTRIBUTING.md, ../release_assembly/README.md, ../correction/README.md, ./hydrology/README.md, ./hydrology/streamflow/README.md, ./air/pm25/README.md]
 tags: [kfm, tests, e2e, runtime-proof, runtime, evidence, citations, receipts, proofs]
-notes: [
-  doc_id and created remain placeholders pending git-history or governance-record verification.
-  Updated to align the runtime_proof family with the PM2.5 leaf trust path and the clearer separation among runtime responses, review records, receipts, proofs, validators, and attestation helpers.
-  Current public evidence still proves this family mainly as a visible README-bearing leaf; executable suite depth, runner/toolchain, and merge-blocking automation remain bounded until checked directly on the working branch.
-]
--->
+notes: [doc_id and created remain placeholders pending git-history or governance-record verification. Updated to align the runtime_proof family with hydrology and PM2.5 child leaves, clearer separation among runtime responses, review records, receipts, proofs, validators, and attestation helpers, and the finite-outcome runtime contract. Current public evidence still proves this family mainly as a visible README-bearing leaf; executable suite depth, runner/toolchain, and merge-blocking automation remain bounded until checked directly on the working branch.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -42,12 +19,27 @@ notes: [
 
 End-to-end runtime proof surface for **KFM request-time evidence resolution**, **citations**, **finite outward outcomes**, **trust-chain visibility**, and **fail-closed governed behavior**.
 
-> [!NOTE]
-> **Status:** `draft`  
-> **Owners:** `@bartytime4life`  
-> **Path:** `tests/e2e/runtime_proof/README.md`  
-> ![status](https://img.shields.io/badge/status-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![posture](https://img.shields.io/badge/posture-fail--closed-b60205) ![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![proofs](https://img.shields.io/badge/proofs-separate-f59e0b) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Artifact split](#artifact-split) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![family](https://img.shields.io/badge/family-runtime%20proof-8250df)
+![posture](https://img.shields.io/badge/posture-fail--closed-b60205)
+![receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
+![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | draft |
+| **Owners** | `@bartytime4life` |
+| **Path** | `tests/e2e/runtime_proof/README.md` |
+| **Repo fit** | request-time runtime proof family under [`../README.md`](../README.md), with domain leaves such as [`./hydrology/README.md`](./hydrology/README.md) and [`./air/pm25/README.md`](./air/pm25/README.md) |
+| **Runtime posture** | finite outward outcomes only: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` |
+| **Evidence posture** | public-main family shape is visible; runner/toolchain, executable depth, and required checks remain bounded until branch verification |
+| **Quick jump** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runtime outcomes](#runtime-outcomes) · [Artifact split](#artifact-split) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > Use this family when the main question is **what the governed system emits at request time** — especially evidence resolution, citation behavior, scope echo, trust cues, and the finite outcomes `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
@@ -57,11 +49,11 @@ End-to-end runtime proof surface for **KFM request-time evidence resolution**, *
 >
 > **runtime proof ≠ validator proof ≠ renderer proof ≠ review record authority ≠ receipt authority ≠ proof authority**
 >
-> - `tests/e2e/runtime_proof/` proves request-time whole-path behavior  
-> - `tests/validators/` proves validator and gate behavior  
-> - `tests/ci/` proves reviewer rendering behavior  
-> - `data/receipts/` remains process memory  
-> - `data/proofs/` remains higher-order trust storage  
+> - `tests/e2e/runtime_proof/` proves request-time whole-path behavior
+> - `tests/validators/` proves validator and gate behavior
+> - `tests/ci/` proves reviewer rendering behavior
+> - `data/receipts/` remains process memory
+> - `data/proofs/` remains higher-order trust storage
 > - `tools/attest/` remains the sign/verify helper lane
 
 > [!WARNING]
@@ -140,7 +132,9 @@ That burden is stricter than `tests/integration/`, narrower than generic end-to-
 | Human-readable runbooks | [`../../docs/README.md`](../../docs/README.md) | runtime proof should stay synchronized with runbooks and operator guidance | **CONFIRMED** |
 | Neighbor leaf | [`../release_assembly/README.md`](../release_assembly/README.md) | use that leaf when publish-path proof is the main question | **CONFIRMED** |
 | Neighbor leaf | [`../correction/README.md`](../correction/README.md) | use that leaf when rollback, supersession, or correction propagation is the main question | **CONFIRMED** |
-| Example domain leaf | [`./air/pm25/README.md`](./air/pm25/README.md) | demonstrates how a domain-specific runtime-proof leaf can express source-role burdens and runtime receipt expectations | **PROPOSED / branch verification needed** |
+| Domain leaf | [`./hydrology/README.md`](./hydrology/README.md) | hydrology domain index under runtime proof | **CONFIRMED** |
+| Child domain leaf | [`./hydrology/streamflow/README.md`](./hydrology/streamflow/README.md) | streamflow finite-outcome proof with baseline and evidence pressure | **CONFIRMED** |
+| Example domain leaf | [`./air/pm25/README.md`](./air/pm25/README.md) | demonstrates another domain-specific runtime-proof leaf | **PROPOSED / branch verification needed** |
 
 ### Working rule
 
@@ -160,8 +154,8 @@ Accepted inputs for this family are the **smallest artifacts needed to prove a r
 | Reused authoritative fixtures | contract examples, policy fixtures, validator outputs, bundle examples, public-safe release-backed samples, and runtime-safe review artifacts reused from their owning homes | **CONFIRMED** as direction |
 | Evidence-resolution traces | positive or negative traces that prove how support was resolved or why resolution failed closed | **CONFIRMED** as burden / mounted inventory **NEEDS VERIFICATION** |
 | Runtime envelope examples | `RuntimeResponseEnvelope`-shaped examples or equivalent emitted metadata for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` | **CONFIRMED** as burden / exact local storage **NEEDS VERIFICATION** |
-| Review record examples | reviewer-facing runtime audit objects with reasons, obligations, and evidence refs when the trust path expects them | **PROPOSED / aligned with current PM2.5 design direction** |
-| Runtime receipt examples | request-time process-memory artifacts pairing outward runtime outcome with reviewer-facing context | **PROPOSED / aligned with current PM2.5 design direction** |
+| Review record examples | reviewer-facing runtime audit objects with reasons, obligations, and evidence refs when the trust path expects them | **PROPOSED / aligned with current domain-leaf direction** |
+| Runtime receipt examples | request-time process-memory artifacts pairing outward runtime outcome with review context | **PROPOSED / aligned with current domain-leaf direction** |
 | Citation-negative cases | uncited, empty-scope, stale-scope, or mismatched-scope requests that must not leak fluent confidence | **CONFIRMED** |
 | Trust-chain refs | `release_ref`, `bundle_ref`, `receipt_ref`, `proof_ref`, `run_receipt`, `ai_receipt`, or attestation-visible state when the runtime contract depends on them | **INFERRED / PROPOSED** |
 | Surface-state evidence | snapshots, logs, or outward cues proving that abstained, denied, stale-visible, or errored states remain legible | **INFERRED / PROPOSED** |
@@ -236,7 +230,11 @@ The current public-branch evidence used for this revision supports the following
 tests/
 └── e2e/
     └── runtime_proof/
-        └── README.md
+        ├── README.md
+        └── hydrology/
+            ├── README.md
+            └── streamflow/
+                └── README.md
 ```
 
 ### Reading rule
@@ -253,6 +251,13 @@ tests/e2e/runtime_proof/
 │       ├── README.md
 │       ├── fixtures/
 │       └── test_pm25_runtime_proof.py
+├── hydrology/
+│   ├── README.md
+│   └── streamflow/
+│       ├── README.md
+│       ├── fixtures/
+│       ├── test_streamflow_runtime_proof.py
+│       └── test_streamflow_stats_baseline.py
 ├── cases/
 ├── fixtures/
 └── snapshots/
@@ -422,9 +427,9 @@ This family should use a **finite runtime grammar**.
 
 Until a mounted runtime contract says otherwise, keep the split simple and stable:
 
-- use **`ABSTAIN`** for insufficiency, stale support, unresolved linkage, or non-consensus support,
-- use **`DENY`** for explicit policy or trust violations,
-- use **`ERROR`** for malformed inputs or broken runtime shape.
+- use **`ABSTAIN`** for insufficiency, stale support, unresolved linkage, or non-consensus support
+- use **`DENY`** for explicit policy or trust violations
+- use **`ERROR`** for malformed inputs or broken runtime shape
 
 [Back to top](#top)
 
@@ -520,6 +525,14 @@ _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS V
 | contract shape | `tests/contracts/` |
 | policy grammar | `tests/policy/` |
 
+### Domain-leaf map
+
+| Leaf | Current status | Primary burden |
+|---|---|---|
+| `hydrology/` | **CONFIRMED** | water-related runtime proof index |
+| `hydrology/streamflow/` | **CONFIRMED** | streamflow evidence, baseline support, freshness, and finite outcomes |
+| `air/pm25/` | **PROPOSED / NEEDS VERIFICATION** | PM2.5 domain runtime proof and trust-path behavior |
+
 [Back to top](#top)
 
 ---
@@ -532,13 +545,14 @@ _KFM-shaped minimums: **CONFIRMED** as burden; exact field set remains **NEEDS V
 - [ ] A policy-shaped negative case proves that rights, sensitivity, or publication state can deny without leaking protected detail.
 - [ ] A technical failure case proves that resolver or trust-object failure emits `ERROR`, not polished bluffing.
 - [ ] A review-record-aware case exists when the runtime contract exposes reviewer-facing request-time context.
-- [ ] A receipt-aware case exists only when the runtime contract truly depends on request-time process memory linkage.
+- [ ] A receipt-aware case exists only when the runtime contract truly depends on request-time process-memory linkage.
 - [ ] Each case preserves visible request-time linkage such as `bundle_ref`, `release_ref`, decision linkage, or `audit_ref`, where the current runtime contract expects them.
 - [ ] The checked-out branch proves the actual runner/toolchain before this README names any execution command.
 - [ ] The checked-out branch has been reconciled against the public-main baseline, and any local deltas are explicit in this README or the corresponding PR.
 - [ ] If UI or screenshot evidence is used, outward trust cues remain legible without relying on color alone.
 - [ ] Parent docs stay synchronized when this family’s meaning or local structure changes.
 - [ ] No scenario bypasses the governed API, promoted scope, or declared trust boundary.
+- [ ] Domain leaves such as `hydrology/` remain indexed here without overstating fixture or runner maturity.
 
 > [!IMPORTANT]
 > A green end-to-end result is not enough. This family is complete only when a reviewer can still explain **why** the outcome was safe, bounded, truthful, and reconstructable.
@@ -616,3 +630,5 @@ These are candidate scenario names and burdens, not asserted current inventory.
 - If a reviewer disputes the result, can they follow the same lineage without leaving the trust path?
 
 </details>
+
+[Back to top](#top)
