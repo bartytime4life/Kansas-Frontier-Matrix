@@ -6,11 +6,11 @@ version: v1
 status: review
 owners: @bartytime4life
 created: 2026-02-21
-updated: 2026-04-04
+updated: 2026-04-18
 policy_label: TODO(verify public|restricted classification)
 related: [../README.md, ../apps/, ../packages/README.md, ../pipelines/README.md, ../infra/README.md, ../data/README.md, ../docs/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../scripts/README.md, ../migrations/, ../examples/, ./deployment/README.md, ./env/README.md, ./observability/README.md, ./security/README.md, ./ui/README.md, ./env.schema.json]
 tags: [kfm, configs, runtime, deployment, observability, trust-boundaries]
-notes: [Owners and public-main git-history dates are verified; UUID and explicit policy classification remain review items; current public tree confirms configs/README.md, configs/env.schema.json, and README-led child lanes under deployment/, env/, observability/, security/, and ui/.]
+notes: [Owner coverage and current public tree are verified for this revision; UUID and explicit policy classification remain review items; created date is carried from supplied baseline and should be rechecked if branch history changes; current public tree confirms configs/README.md, configs/env.schema.json, and README-led child lanes under deployment/, env/, observability/, security/, and ui/.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -22,6 +22,7 @@ _Repo-visible, non-secret configuration surfaces for KFM runtime wiring, deploym
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `configs/README.md`  
+> **Current public baseline inspected:** 2026-04-18 on public `main`  
 > **Repo fit:** parent configuration lane under [`../README.md`](../README.md); companion surfaces include [`../apps/`](../apps/), [`../packages/README.md`](../packages/README.md), [`../pipelines/README.md`](../pipelines/README.md), and [`../infra/README.md`](../infra/README.md)  
 > **Current public tree state:** `README.md`, `env.schema.json`, and child lanes `deployment/`, `env/`, `observability/`, `security/`, and `ui/` are present on `main`; each child lane is currently README-led in public view, and `env.schema.json` is `{}`.  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-bartytime4life-blue) ![path](https://img.shields.io/badge/path-configs%2FREADME.md-blue) ![branch](https://img.shields.io/badge/branch-public%20main-brightgreen) ![tree](https://img.shields.io/badge/tree-README--led-lightgrey) ![scope](https://img.shields.io/badge/scope-non--secret%20config-informational) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
@@ -52,7 +53,9 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | **INFERRED** | The lane’s intended role is repo-visible, non-secret runtime/deployment/observability/UI/security wiring subordinate to stronger law-bearing surfaces. |
 | **PROPOSED** | Future file additions inside the child lanes, deeper validator commands, and any expansion beyond the current scaffold-first state. |
 | **UNKNOWN** | Exact runtime loader paths, exact CI enforcement depth, non-public consumers, and any branch-local divergence from the inspected public tree. |
-| **NEEDS VERIFICATION** | UUID, explicit policy label, and the repo’s final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
+| **NEEDS VERIFICATION** | UUID, explicit policy label, original creation-date provenance, and the repo’s final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
+
+[Back to top](#top)
 
 ## Repo fit
 
@@ -79,6 +82,8 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | Local child lanes | [`./deployment/README.md`](./deployment/README.md) · [`./env/README.md`](./env/README.md) · [`./observability/README.md`](./observability/README.md) · [`./security/README.md`](./security/README.md) · [`./ui/README.md`](./ui/README.md) | **CONFIRMED** |
 | Host-local companions | `/etc/kfm/*.env` | Documented runtime pattern; not a repo path |
 
+[Back to top](#top)
+
 ## Accepted inputs
 
 | Path or class | Current public state | What belongs here | Why it belongs here |
@@ -100,6 +105,8 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 - non-secret operational thresholds
 - documentation-backed configuration examples that help contributors wire the system correctly
 
+[Back to top](#top)
+
 ## Exclusions
 
 | Do **not** keep here | Put it instead | Why |
@@ -115,6 +122,8 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 
 > [!WARNING]
 > The public repo currently exposes both `contracts/` and `schemas/`. Until the singular machine-law authority is explicitly settled, `configs/` should not accumulate contract-like files “temporarily.”
+
+[Back to top](#top)
 
 ## Directory tree
 
@@ -140,6 +149,8 @@ How to read this tree:
 - `env.schema.json` is also a **current public fact**, but its current contents are only `{}`. Treat it as a placeholder until a real schema and validator path land.
 - The child lanes are present **README-led / scaffold-first**. Their existence is confirmed; their deeper file inventories are still intentionally small in public view.
 - Growing a child lane should be deliberate: name the consumer, name the validator, and keep the file subordinate to stronger law-bearing surfaces.
+
+[Back to top](#top)
 
 ## Quickstart
 
@@ -197,6 +208,8 @@ KFM_BIND=127.0.0.1:8080
 > [!NOTE]
 > The stronger host-runtime pattern keeps secret-bearing files outside the repo, under root-owned paths such as `/etc/kfm/kfm-api.env`, `/etc/kfm/kfm-worker.env`, `/etc/kfm/kfm-publish.env`, and an Ollama override or systemd drop-in. Treat those as runtime examples, not merge-verified repo facts.
 
+[Back to top](#top)
+
 ## Usage rules
 
 ### 1) Keep `configs/` non-secret and reviewable
@@ -236,6 +249,8 @@ Config should reinforce the separation of shell, renderer, style, server, worker
 > [!CAUTION]
 > Any toggle that weakens citation, publication, rights handling, scope handling, or stale-state visibility is not a convenience setting. It is a governance change.
 
+[Back to top](#top)
+
 ## Diagram
 
 ```mermaid
@@ -261,6 +276,8 @@ flowchart LR
     C -. "supports, but does not own" .-> DD["data/ + docs/"]
     C -. "subordinate to truth path" .-> FLOW["RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED"]
 ```
+
+[Back to top](#top)
 
 ## Reference tables
 
@@ -303,6 +320,8 @@ flowchart LR
 | New threshold / waiver config | operational risk review | Tolerance drift can silently weaken gates |
 | Turning `env.schema.json` into an active validator surface | schema + CI review | Empty placeholder → authoritative gate is a major state change |
 
+[Back to top](#top)
+
 ## Task list / definition of done
 
 - [ ] No secrets, tokens, or private credentials are committed
@@ -317,6 +336,8 @@ flowchart LR
 - [ ] UUID and explicit policy label in the meta block are verified or intentionally left as placeholders
 - [ ] Owners and dates in the meta block still match the target merge branch
 - [ ] Neighboring docs and lane links are rechecked against the target merge branch
+
+[Back to top](#top)
 
 ## FAQ
 
@@ -347,6 +368,8 @@ Because the current config guidance separates repo-visible configuration from se
 ### Can `configs/` change user-visible behavior?
 
 Yes. Bind scope, published-only behavior, shell defaults, stale-state handling, and observability can all change visible system behavior. That is why config deserves review discipline.
+
+[Back to top](#top)
 
 ## Appendix
 
