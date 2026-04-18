@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION
-title: .github/actions
+title: .github/actions/
 type: standard
 version: v1
 status: draft
@@ -20,6 +20,10 @@ related: [
   ../../policy/README.md,
   ../../contracts/README.md,
   ../../schemas/README.md,
+  ../../data/receipts/README.md,
+  ../../data/proofs/README.md,
+  ../../data/published/README.md,
+  ../../data/catalog/README.md,
   ../../tests/README.md,
   ../../tests/validators/README.md,
   ../../tests/ci/README.md,
@@ -33,9 +37,9 @@ related: [
 ]
 tags: [kfm, github-actions, ci-cd, governance, local-actions, validation, receipts, proofs]
 notes: [
-  Updated to reflect the current public-main visible inventory for .github/actions/, including placeholder-heavy local-action directories and the empty root action.yml artifact.
-  Aligned with newer watcher, receipt/proof, validator, attestation, docs-tooling, workflow, and tests-family boundary documentation.
-  doc_id, created date, and any stronger claims about workflow callers, GitHub rulesets, OIDC wiring, required checks, environment approvals, or non-public automation remain NEEDS VERIFICATION until the checked-out branch or platform settings prove them directly.
+  Updated to distinguish current README-only action directories from implemented composite-action contracts.
+  Current public main confirms the .github/actions/ inventory and empty root action.yml; active workflow callers, branch rules, OIDC wiring, required checks, and non-public automation remain NEEDS VERIFICATION.
+  doc_id and created date remain NEEDS VERIFICATION until the document registry and git history confirm them directly.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -49,23 +53,15 @@ Repo-local action contracts and thin step wrappers for validation, provenance, S
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `.github/actions/README.md`  
-> **Repo fit:** repo-local action surface inside [`.github/`](../README.md); upstream from [`../workflows/README.md`](../workflows/README.md), adjacent to [`../watchers/README.md`](../watchers/README.md), and downstream of canonical authority surfaces in [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), [`../../tools/ci/README.md`](../../tools/ci/README.md), and [`../../tools/docs/README.md`](../../tools/docs/README.md)  
+> **Repo fit:** repo-local action surface inside [`.github/`](../README.md); upstream from [`../workflows/README.md`](../workflows/README.md), adjacent to [`../watchers/README.md`](../watchers/README.md), and downstream of canonical authority surfaces in [`../../policy/README.md`](../../policy/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/attest/README.md`](../../tools/attest/README.md), [`../../tools/ci/README.md`](../../tools/ci/README.md), and [`../../tools/docs/README.md`](../../tools/docs/README.md)  
+> **Badges:** ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![Branch](https://img.shields.io/badge/branch-main-black) ![Visibility](https://img.shields.io/badge/visibility-public-brightgreen) ![Inventory](https://img.shields.io/badge/inventory-README--only%20actions-lightgrey) ![Posture](https://img.shields.io/badge/posture-fail--closed%20%7C%20PR--first-0a7d5a) ![Receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9) ![Proofs](https://img.shields.io/badge/proofs-separate-f59e0b)  
 > **Quick jumps:** [Scope](#scope) · [Current public deltas](#current-public-deltas) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Current public inventory](#current-public-inventory) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
-![Status](https://img.shields.io/badge/status-experimental-orange)
-![Owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
-![Branch](https://img.shields.io/badge/branch-main-black)
-![Visibility](https://img.shields.io/badge/visibility-public-brightgreen)
-![Inventory](https://img.shields.io/badge/inventory-placeholder--heavy-lightgrey)
-![Posture](https://img.shields.io/badge/posture-fail--closed%20%7C%20PR--first-0a7d5a)
-![Receipts](https://img.shields.io/badge/receipts-process%20memory-0ea5e9)
-![Proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
-
 > [!NOTE]
-> Public `main` is now inspectable enough that this README should describe `.github/actions/` as it actually exists today, not only as a hypothetical control-plane surface.
+> Public `main` is inspectable enough to describe `.github/actions/` as a real directory surface. It is **not** enough to claim implemented local actions, live callers, platform enforcement, or branch-protection behavior.
 
 > [!WARNING]
-> The current public inventory is **real but placeholder-heavy**. The named action directories exist, but public `main` does **not** yet show directory-local `action.yml` contracts or action-local implementation files for them.
+> The current public inventory is **real but implementation-light**. The named action directories exist and carry README guidance, but the public tree does not yet show directory-local `action.yml` contracts for those named actions.
 
 > [!TIP]
 > Keep the KFM trust split visible here:
@@ -76,8 +72,8 @@ Repo-local action contracts and thin step wrappers for validation, provenance, S
 > - `.github/workflows/` owns job orchestration, permissions, and lane choreography
 > - `policy/` owns governance meaning
 > - `contracts/` and `schemas/` own contract and schema meaning
-> - receipts remain process memory
-> - proofs remain higher-order trust objects
+> - `data/receipts/` preserves process memory
+> - `data/proofs/` preserves release-significant trust objects
 > - repo-local actions may evaluate or emit trust-bearing signals, but should not become sovereign sources of truth
 
 ---
@@ -93,6 +89,7 @@ Use this directory for thin, reviewable, repo-local actions that centralize repe
 - provenance and receipt guards
 - SBOM production and signing wrappers
 - small summary or verification helpers
+- narrow setup shims for tools that are repeatedly used by workflows
 
 Do **not** use this directory as the sovereign home of policy, contract meaning, canonical evidence, release authority, or trust-object storage. In KFM, those meanings must stay readable and reviewable outside workflow glue.
 
@@ -126,12 +123,13 @@ Earlier drafts treated `.github/actions/` as mostly inferred. That is no longer 
 
 | Delta | Current public signal | Why it matters | Posture |
 |---|---|---|---|
-| Inventory is now visible | Public `main` shows named action directories plus `README.md`, `src/`, and a root `action.yml` | This README can now separate current inventory from proposed future shape | **CONFIRMED** |
-| Current inventory is placeholder-heavy | Each visible named action directory currently exposes `README.md` only, and that README is a placeholder text file | The directory is real, but checked-in action contracts are not yet present on public `main` | **CONFIRMED** |
+| Inventory is visible | Public `main` shows named action directories plus `README.md`, `src/`, and a root `action.yml` | This README can separate current inventory from proposed future shape | **CONFIRMED** |
+| Named actions are contract-pending | Named action folders expose README guidance, but directory-local `action.yml` files are not visible | The names are real, but implemented composite-action contracts are not yet proven | **CONFIRMED** inventory · **UNKNOWN** executable depth |
 | Root-level `action.yml` exists but is empty | `.github/actions/action.yml` is present and 0 bytes | Treat it as a placeholder or unresolved root artifact until its role is justified or it is removed | **CONFIRMED** file · **INFERRED** non-usable action contract |
-| Caller inventory remains unproven | Public `main` shows [`../workflows/README.md`](../workflows/README.md) only, not checked-in workflow YAML files | Active callers of these local actions cannot be established from the visible branch tree | **CONFIRMED** current snapshot · **UNKNOWN** live callers |
-| Version drift is already visible | `metadata-validate/` and `metadata-validate-v2/` coexist | Versioned action namespaces should be justified by a real caller migration, not left as permanent ambiguity | **CONFIRMED** inventory · **PROPOSED** cleanup rule |
-| Trust-boundary docs are now explicit | `data/receipts/README.md`, `data/proofs/README.md`, `tools/attest/README.md`, `tools/docs/README.md`, and watcher/workflow docs now exist as explicit adjacent surfaces | Local action guidance can now be more precise about what wrappers may emit versus what they must not own | **CONFIRMED** |
+| Caller inventory remains unproven | Public `main` currently exposes [`../workflows/README.md`](../workflows/README.md), not a proven checked-in workflow caller set | Active callers of these local actions cannot be established from the visible branch tree alone | **CONFIRMED** current snapshot · **UNKNOWN** live callers |
+| Version drift is visible | `metadata-validate/` and `metadata-validate-v2/` coexist | Versioned action namespaces should be justified by a real caller migration, not left as permanent ambiguity | **CONFIRMED** inventory · **PROPOSED** cleanup rule |
+| Child READMEs are not proof of implementation | Some child READMEs describe intended or documented contracts with `NEEDS VERIFICATION` language | This is useful lane doctrine, but not the same as mounted action metadata and tests | **CONFIRMED** README presence · **NEEDS VERIFICATION** action contract |
+| Trust-boundary docs are explicit | `data/receipts/README.md`, `data/proofs/README.md`, `tools/attest/README.md`, `tools/docs/README.md`, watcher docs, and workflow docs now exist as adjacent surfaces | Local action guidance can be precise about what wrappers may emit versus what they must not own | **CONFIRMED** |
 
 [Back to top](#top)
 
@@ -140,15 +138,15 @@ Earlier drafts treated `.github/actions/` as mostly inferred. That is no longer 
 ## Repo fit
 
 **Path:** `.github/actions/README.md`  
-**Role in repo:** directory README for repo-local GitHub Actions, local action contracts, placeholder-to-production graduation rules, and the boundary between workflow orchestration and canonical truth surfaces.
+**Role in repo:** directory README for repo-local GitHub Actions, local action contracts, README-only action namespaces, placeholder-to-production graduation rules, and the boundary between workflow orchestration and canonical truth surfaces.
 
 ### Upstream and adjacent anchors
 
 | Relation | Path | Why it matters |
 |---|---|---|
 | Parent gatehouse | [`../README.md`](../README.md) | Defines `.github/` as the repository-side gatehouse for review, verification, and governed delivery |
-| Workflow caller lane | [`../workflows/README.md`](../workflows/README.md) | Workflows orchestrate jobs and permissions; local actions should stay at repeated-step scope |
-| Adjacent watcher docs | [`../watchers/README.md`](../watchers/README.md) | Watcher scaffolds may eventually point to workflow or action seams, but do not by themselves prove live action usage |
+| Workflow caller lane | [`../workflows/README.md`](../workflows/README.md) | Workflows orchestrate jobs, triggers, permissions, and lane choreography; local actions should stay at repeated-step scope |
+| Adjacent watcher docs | [`../watchers/README.md`](../watchers/README.md) | Watcher scaffolds may point to workflow or action seams, but do not by themselves prove live action usage |
 | Review ownership | [`../CODEOWNERS`](../CODEOWNERS) | Makes control-plane review routing explicit |
 | PR evidence contract | [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md) | Keeps action changes tied to truth labels, validation evidence, rollout, and rollback |
 | Security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps repo-side security guidance close to action and workflow changes |
@@ -156,6 +154,8 @@ Earlier drafts treated `.github/actions/` as mostly inferred. That is no longer 
 | Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Keeps claims and automation descriptions honest |
 | Canonical policy truth | [`../../policy/README.md`](../../policy/README.md) | Actions may evaluate policy, but should not own policy meaning |
 | Canonical contract and schema truth | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md) | Actions may validate these surfaces, not redefine them |
+| Receipt surface | [`../../data/receipts/README.md`](../../data/receipts/README.md) | Actions may emit or check process memory, but must not turn receipts into proofs |
+| Proof surface | [`../../data/proofs/README.md`](../../data/proofs/README.md) | Actions may participate in proof assembly or checks, but must not become proof storage |
 | Validation surfaces | [`../../tests/README.md`](../../tests/README.md), [`../../tests/validators/README.md`](../../tests/validators/README.md), [`../../tests/ci/README.md`](../../tests/ci/README.md) | Smoke coverage, fixtures, and failure cases should remain inspectable outside YAML |
 | Durable helper surfaces | [`../../tools/README.md`](../../tools/README.md), [`../../scripts/README.md`](../../scripts/README.md) | Heavy or shared logic belongs here when it outgrows thin local-action scope |
 | Validator adjacency | [`../../tools/validators/README.md`](../../tools/validators/README.md), [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Strong validator and promotion logic should stay in durable tool lanes |
@@ -228,8 +228,8 @@ Keep these out of `.github/actions/` unless there is a narrow wrapper reason and
 | Secrets or long-lived credentials | Actions must not become secret stores | GitHub environments or external secret management |
 | Direct publish shortcuts | KFM promotion is a governed state transition | workflow-controlled promotion paths |
 | Canonical evidence archives | Actions may emit links or receipts, but not become long-term evidence truth | governed evidence and release locations elsewhere in the repo |
-| Receipt or proof storage | Wrappers may mention or emit process-memory objects, but should not become the sovereign storage surface | `../../data/receipts/`, `../../data/proofs/` |
-| Documentation authority | Actions may call doc checks, but should not become the home of doc structure policy | `../../tools/docs/`, `../../docs/` |
+| Receipt or proof storage | Wrappers may mention or emit process-memory objects, but should not become the sovereign storage surface | [`../../data/receipts/`](../../data/receipts/), [`../../data/proofs/`](../../data/proofs/) |
+| Documentation authority | Actions may call doc checks, but should not become the home of doc structure policy | [`../../tools/docs/`](../../tools/docs/), [`../../docs/`](../../docs/) |
 
 > [!IMPORTANT]
 > If an action starts to own durable business logic, canonical truth, or release law, it has likely outgrown this directory.
@@ -247,17 +247,17 @@ Keep these out of `.github/actions/` unless there is a narrow wrapper reason and
 ├── README.md
 ├── action.yml                  # 0 bytes on public main
 ├── metadata-validate/
-│   └── README.md               # placeholder
+│   └── README.md               # experimental README; no action.yml visible
 ├── metadata-validate-v2/
-│   └── README.md               # placeholder
+│   └── README.md               # experimental README; no action.yml visible
 ├── opa-gate/
-│   └── README.md               # placeholder
+│   └── README.md               # README-only in visible tree
 ├── provenance-guard/
-│   └── README.md               # placeholder
+│   └── README.md               # README-only in visible tree
 ├── sbom-produce-and-sign/
-│   └── README.md               # placeholder
+│   └── README.md               # documented/proposed contract; no action.yml visible
 └── src/
-    └── README.md               # placeholder
+    └── README.md               # shared-helper README; no helper inventory proven here
 ```
 
 ### Graduated target shape (**PROPOSED**)
@@ -306,21 +306,24 @@ Keep these out of `.github/actions/` unless there is a narrow wrapper reason and
 ### 1) Inspect what actually exists
 
 ```bash
-# Inventory the directory
+# Inventory the directory.
 find .github/actions -maxdepth 2 -type f | sort
 
-# Detect empty action metadata files
+# Detect empty action metadata files.
 find .github/actions -name action.yml -size 0 -print
 
-# Confirm which current files are only placeholder keepers
-grep -R "Placeholder file to keep this directory in version control." .github/actions -n || true
+# Confirm whether named action directories have executable metadata.
+for d in .github/actions/*/; do
+  printf '\n== %s ==\n' "$d"
+  test -f "${d}action.yml" && sed -n '1,160p' "${d}action.yml" || echo "NO action.yml visible"
+done
 
-# Look for current workflow callers, if any
+# Look for current workflow callers, if any.
 grep -R "uses: ./.github/actions/" -n .github/workflows 2>/dev/null || true
 
-# Check ownership and PR evidence expectations
-sed -n '1,80p' .github/CODEOWNERS
-sed -n '1,200p' .github/PULL_REQUEST_TEMPLATE.md
+# Check ownership and PR evidence expectations.
+sed -n '1,120p' .github/CODEOWNERS
+sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md
 sed -n '1,220p' .github/workflows/README.md
 sed -n '1,220p' .github/watchers/README.md
 sed -n '1,220p' tools/validators/README.md
@@ -328,7 +331,7 @@ sed -n '1,220p' tools/attest/README.md
 sed -n '1,220p' tools/docs/README.md
 ```
 
-### 2) Turn one placeholder into a real local action (**illustrative**)
+### 2) Turn one README-only action namespace into a real local action (**illustrative**)
 
 Start with `opa-gate/` or `metadata-validate/`, because those names already exist on public `main` and map cleanly to KFM’s strongest recurring delivery pressures.
 
@@ -381,7 +384,7 @@ jobs:
 ```
 
 > [!IMPORTANT]
-> The example above is a starter contract, not a claim that the current public repo already contains this implementation. Public `main` currently shows the placeholder directory name, not the action metadata file.
+> The examples above are starter contracts, not claims that current public `main` already contains these implementations. Public `main` currently shows the action directory names and README docs, not implemented action metadata for the named directories.
 
 [Back to top](#top)
 
@@ -400,15 +403,15 @@ Use repo-local actions when a repeated **step** deserves a named, reviewable con
 | Reusable workflow | The repeated thing is a job or lane with its own permissions or environments | orchestration, promotion sequences, review choreography | tiny helper steps |
 | Repo tool or script | Logic deserves independent tests, richer runtime support, or reuse beyond one action | durable validators, transforms, resolvers | being hidden in YAML |
 
-### Current placeholder intent map
+### Current README-only intent map
 
-| Current path | Best-fit role once implemented | Notes |
+| Current path | Best-fit role once implemented | Current caution |
 |---|---|---|
-| `metadata-validate/` | metadata, schema, and fixture validation | good first graduation target |
-| `metadata-validate-v2/` | incompatible replacement only if both versions must coexist temporarily | document caller migration or retire it |
-| `opa-gate/` | deny-by-default policy evaluation | keep bundle path explicit |
-| `provenance-guard/` | receipt, attestation, or evidence-envelope verification | should fail closed on missing proof |
-| `sbom-produce-and-sign/` | SBOM generation plus signing wrapper | signing is acceptable here; publish authority is not |
+| `metadata-validate/` | metadata, schema, and fixture validation | add or align `action.yml` before claiming implementation |
+| `metadata-validate-v2/` | incompatible replacement only if both versions must coexist temporarily | document caller migration or retire |
+| `opa-gate/` | deny-by-default policy evaluation | keep bundle path explicit and fail closed |
+| `provenance-guard/` | receipt, attestation, or evidence-envelope verification | should fail closed on missing proof or unresolved provenance |
+| `sbom-produce-and-sign/` | SBOM generation plus signing wrapper | signing support is acceptable here; publish authority is not |
 | `src/` | tiny shared helpers only | move durable logic out when complexity grows |
 
 ### Design rules
@@ -458,26 +461,26 @@ Where a repo-local action emits or checks trust-bearing signals:
 
 ```mermaid
 flowchart LR
-    W[.github/workflows/*] --> A[.github/actions/<action>/action.yml]
+    WF[".github/workflows/*"] --> ACT[".github/actions/{action}/action.yml"]
 
-    A --> P[policy/]
-    A --> C[contracts/ + schemas/]
-    A --> T[tests/ + fixtures]
-    A --> S[tools/ + scripts/]
-    A --> D[tools/docs/]
-    A --> AT[tools/attest/]
+    ACT --> POL["policy/"]
+    ACT --> CS["contracts/ + schemas/"]
+    ACT --> TEST["tests/ + fixtures"]
+    ACT --> TOOL["tools/ + scripts/"]
+    ACT --> DOCS["tools/docs/"]
+    ACT --> ATTEST["tools/attest/"]
 
-    P --> R[summary / receipt / attestation / status]
-    C --> R
-    T --> R
-    S --> R
-    D --> R
-    AT --> R
+    POL --> OUT["summary / receipt / attestation / status"]
+    CS --> OUT
+    TEST --> OUT
+    TOOL --> OUT
+    DOCS --> OUT
+    ATTEST --> OUT
 
-    R --> G[required checks / PR review / promotion gate]
+    OUT --> REVIEW["required checks / PR review / promotion gate"]
 
-    X[public main today] -. placeholder-heavy .-> A
-    Y[platform settings] -. unknown from public tree .-> G
+    PUBLIC["public main today"] -. "README-only action dirs" .-> ACT
+    SETTINGS["branch rules + env approvals"] -. "UNKNOWN from tree" .-> REVIEW
 ```
 
 [Back to top](#top)
@@ -488,23 +491,23 @@ flowchart LR
 
 | Path | Current visible state | Interpretation | Next hardening move |
 |---|---|---|---|
-| `./README.md` | Present and substantial | Directory contract exists, but it still carries placeholder-aware uncertainty language | keep inventory current and branch-grounded |
-| `./action.yml` | Present, 0 bytes | Root artifact is unresolved and not a usable action contract as-is | remove it or justify a real role |
-| `./metadata-validate/README.md` | Present; placeholder-only | Namespace reserved, not yet implemented | add `action.yml`, action-local README, fixtures |
-| `./metadata-validate-v2/README.md` | Present; placeholder-only | Versioned namespace reserved, migration purpose not yet shown | prove caller split or retire |
-| `./opa-gate/README.md` | Present; placeholder-only | Best current candidate for a deny-by-default gate | add thin composite action contract |
-| `./provenance-guard/README.md` | Present; placeholder-only | Intended proof / receipt / attestation gate | add explicit inputs, outputs, and fail-closed behavior |
-| `./sbom-produce-and-sign/README.md` | Present; placeholder-only | Intended supply-chain helper surface | keep outputs and signing scope explicit |
-| `./src/README.md` | Present; placeholder-only | Reserved shared helper surface | keep tiny, or move logic out |
-| Current workflow callers | Not visible on public `main` | Active use cannot be proved from the branch tree | verify with git history or non-public settings before overclaiming |
+| `./README.md` | Present and substantial | Directory contract exists; this revision adds the required KFM Meta Block and cleans up README-only action wording | keep inventory current and branch-grounded |
+| `./action.yml` | Present, 0 bytes | Root artifact is unresolved and not a usable action contract as-is | remove it or justify a real root action role |
+| `./metadata-validate/README.md` | Present; experimental README | Namespace reserved and documented, but executable action metadata is not proven | add `action.yml`, action-local contract, fixtures |
+| `./metadata-validate-v2/README.md` | Present; experimental README | Versioned namespace reserved; migration purpose not yet proven by callers | prove caller split or retire |
+| `./opa-gate/README.md` | Present; README-only in visible tree | Best current candidate for a deny-by-default policy gate | add thin composite action contract |
+| `./provenance-guard/README.md` | Present; README-only in visible tree | Intended proof / receipt / attestation gate | add explicit inputs, outputs, and fail-closed behavior |
+| `./sbom-produce-and-sign/README.md` | Present; documented/proposed contract | Supply-chain helper intent is visible, but mounted `action.yml` is not proven | align README with real metadata or add the contract |
+| `./src/README.md` | Present; shared-helper guidance | Reserved shared helper surface | keep tiny, or move logic out |
+| Current workflow callers | Not proven from public `main` | Active use cannot be proved from the branch tree alone | verify with git history, live branch, or platform settings before overclaiming |
 
 ### Gaps that still block “implemented local actions” status
 
-- directory-local `action.yml` files are not yet visible for the named action directories
-- action-local README contracts are not yet visible for the named action directories
-- smoke fixtures or tests are not yet visible under the action directories
-- public `main` does not currently show workflow YAML callers for these actions
-- the root `action.yml` is empty and therefore unresolved
+- directory-local `action.yml` files are not visible for the named action directories
+- smoke fixtures or tests are not visible under the action directories
+- public `main` does not currently prove workflow YAML callers for these actions
+- the root `.github/actions/action.yml` is empty and therefore unresolved
+- platform-level branch protection, required checks, OIDC configuration, and environment approvals remain outside public-tree evidence
 
 [Back to top](#top)
 
@@ -512,11 +515,11 @@ flowchart LR
 
 ## Task list / definition of done
 
-A placeholder action directory is ready to graduate when:
+A README-only action directory is ready to graduate when:
 
 - [ ] it has one clear responsibility
 - [ ] it includes a non-empty directory-local `action.yml`
-- [ ] it includes an action-local `README.md`
+- [ ] its action-local `README.md` matches the real `action.yml`
 - [ ] its inputs are explicit
 - [ ] its outputs are explicit where downstream jobs depend on them
 - [ ] its default permissions are minimal
@@ -539,7 +542,7 @@ A placeholder action directory is ready to graduate when:
 
 ### Why revise this README now?
 
-Because the older checked-in draft still speaks from a more hypothetical posture. Public `main` is now visible enough to document the current inventory honestly.
+Because the older checked-in surface already names the action lane, but it needs stronger KFM Meta Block alignment, clearer README-like structure, and tighter wording around what public `main` actually proves.
 
 ### What does the empty top-level `action.yml` mean?
 
@@ -547,7 +550,7 @@ It means the path exists, but its role is unresolved from public-tree evidence. 
 
 ### Are these actions live?
 
-**UNKNOWN from public `main`.** The directory names are real; the public tree does not currently prove directory-local `action.yml` files, live workflow callers, or exercised runtime behavior.
+**UNKNOWN from public `main`.** The directory names and READMEs are real; the public tree does not currently prove directory-local `action.yml` files, live workflow callers, or exercised runtime behavior for the named action directories.
 
 ### Should both `metadata-validate/` and `metadata-validate-v2/` stay?
 
@@ -561,6 +564,10 @@ No. KFM’s trust-bearing publication and promotion steps belong in governed wor
 
 Because repo-local actions are a common place for trust-state flattening to creep in. Mentioning them keeps process memory and higher-order proof state explicit; it does not move ownership into this directory.
 
+### Can a child README describe a proposed action before `action.yml` exists?
+
+Yes, but the README must keep that status visible. Treat it as lane doctrine or a contract proposal until mounted action metadata, callers, and tests prove executable behavior.
+
 [Back to top](#top)
 
 ---
@@ -568,7 +575,7 @@ Because repo-local actions are a common place for trust-state flattening to cree
 ## Appendix
 
 <details>
-<summary>Minimal composite action starter for an existing placeholder directory</summary>
+<summary>Minimal composite action starter for an existing README-only action directory</summary>
 
 ### `action.yml`
 
@@ -616,12 +623,12 @@ Short purpose statement.
 
 ## Usage
 
-```yaml
+~~~yaml
 - name: Run <action-name>
   uses: ./.github/actions/<action-name>
   with:
     working-directory: .
-```
+~~~
 
 ## Security notes
 
@@ -641,9 +648,22 @@ Short purpose statement.
 - Are the permissions narrower than the surrounding job?
 - Can a reviewer understand failure behavior from the README alone?
 - Does the action emit something inspectable, or only print logs?
-- Are any path claims in the action README actually branch-verified?
+- Are path claims in the action README actually branch-verified?
 - Does the action leave a rollback or correction path visible?
 - If it emits receipts or summaries, are they clearly process-memory or secondary aids rather than sovereign proof objects?
+
+</details>
+
+<details>
+<summary>Truth-label quick reference</summary>
+
+| Label | Use here |
+|---|---|
+| **CONFIRMED** | Directly supported by current public tree evidence, checked-in Markdown, or stable KFM doctrine |
+| **INFERRED** | Conservative interpretation from confirmed tree shape or adjacent docs |
+| **PROPOSED** | Recommended target shape, starter pattern, or cleanup rule not yet proven in implementation |
+| **UNKNOWN** | Not verified strongly enough to present as current behavior |
+| **NEEDS VERIFICATION** | Important unresolved value that should be checked against git history, active branch state, platform settings, or emitted artifacts |
 
 </details>
 
