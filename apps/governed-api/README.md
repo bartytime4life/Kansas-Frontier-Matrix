@@ -37,9 +37,10 @@ related: [
 ]
 tags: [kfm, governed-api, api, trust-membrane, runtime, soil-moisture]
 notes: [
-  This revision preserves the stronger old boundary-first README while aligning it to the current thin-slice governed runtime implementation added in-session.
-  The older surfaced draft used the path apps/governed-api/ while the current thin-slice code examples use apps/governed_api/. That path split remains NEEDS VERIFICATION and is kept explicit here instead of being silently flattened.
-  Mounted repository inspection was not available in this session; repo-fit details below preserve the strongest supplied signals and should be rechecked against repository-authoritative sources before publication.
+  This README is both a standard doc and a README-like boundary doc.
+  This revision preserves the older boundary-first Governed API README while aligning it to the supplied 2026-04-15 soil-moisture governed runtime thin-slice packet.
+  The older surfaced draft used apps/governed-api/ while the supplied thin-slice packet uses apps/governed_api/. That path split remains NEEDS VERIFICATION and is kept explicit instead of silently flattened.
+  Mounted repository inspection was not available in this session; repo-fit details preserve the strongest supplied signals and should be rechecked against repository-authoritative sources before publication.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -47,20 +48,20 @@ notes: [
 
 # Governed API
 
-Trust-bearing API boundary for KFM reads, evidence resolution, bounded assistance, exports, and steward-only actions.
+Trust-bearing API boundary for KFM reads, evidence resolution, bounded assistance, exports, runtime envelopes, and steward-only actions.
 
 > [!NOTE]
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
-> **Path:** `apps/governed_api/README.md` *(older surfaced draft used `apps/governed-api/README.md`; exact mounted path remains NEEDS VERIFICATION)*  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Trust](https://img.shields.io/badge/trust-membrane-1f4d78) ![Boundary](https://img.shields.io/badge/boundary-governed%20API-blue) ![Runtime](https://img.shields.io/badge/runtime-finite%20outcomes-6f42c1) ![Repo fit](https://img.shields.io/badge/repo--fit-needs%20mounted%20recheck-lightgrey)  
+> **Path:** `apps/governed_api/README.md` *(older surfaced draft used `apps/governed-api/README.md`; mounted path remains NEEDS VERIFICATION)*  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![Trust](https://img.shields.io/badge/trust-membrane-1f4d78) ![Boundary](https://img.shields.io/badge/boundary-governed%20API-blue) ![Runtime](https://img.shields.io/badge/runtime-finite%20outcomes-6f42c1) ![Repo fit](https://img.shields.io/badge/repo--fit-needs%20mounted%20recheck-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > In KFM, the API boundary is part of the trust model. Public and steward-facing shells consume governed responses; they do **not** bypass policy evaluation, evidence resolution, release state, correction visibility, or runtime proof obligations.
 
 > [!TIP]
-> This README is intentionally **boundary-first**. It explains trust obligations, mounted app fit, accepted request families, and proof expectations. Route-by-route handler mechanics belong in the deeper route or runtime modules, not here.
+> This README is intentionally **boundary-first**. It explains trust obligations, repo fit, accepted request families, exclusions, and proof expectations. Route-by-route handler mechanics belong in route/runtime modules or the deeper API module README.
 
 ---
 
@@ -68,31 +69,31 @@ Trust-bearing API boundary for KFM reads, evidence resolution, bounded assistanc
 
 This directory documents the edge-facing contract boundary between KFM clients and released, policy-shaped, evidence-resolvable outputs.
 
-The point of this README is not to describe transport plumbing in the abstract. Its job is to explain how KFM keeps the trust membrane intact at the public and steward edge: requests enter through governed surfaces, narrow to admissible released scope, resolve support-bearing objects, and leave through bounded runtime outcomes rather than uncited improvisation.
+The point of this README is not to describe transport plumbing in the abstract. Its job is to explain how KFM keeps the **trust membrane** intact at the public and steward edge: requests enter through governed surfaces, narrow to admissible scope, resolve support-bearing objects, and leave through bounded outcomes rather than uncited improvisation.
 
 ### Boundary doctrine in one view
 
-The supplied KFM material consistently frames the governed API as the **runtime trust-surface boundary**. In that posture, the API and evidence resolver serve approved discovery, read, evidence-resolution, dossier, story, export, and Focus interactions; public or external surfaces may read only through this boundary and only within promoted scope; and the boundary may not bypass catalog, policy, review, or correction control planes.
+KFM materials consistently frame the governed API as a **runtime trust-surface boundary**. In that posture, the API and evidence resolver serve approved discovery, read, evidence-resolution, dossier, story, export, Focus, and thin-slice runtime interactions.
+
+Public or external surfaces may read only through this boundary and only within promoted or otherwise explicitly governed scope. The boundary may not bypass catalog, policy, review, release, correction, or evidence-control planes.
 
 ### What this README must answer
 
 1. What belongs in the governed API boundary?
 2. What must stay outside it?
-3. How does this boundary fit the current repo?
-4. What is doctrinally confirmed today versus still unresolved at mounted-repo level?
+3. How does this boundary fit the current repo shape?
+4. What is doctrine, what is packet-supported thin-slice evidence, and what still needs mounted verification?
 
-### Current thin-slice reality
+### Current posture snapshot
 
-The in-session thin slice now clearly supports:
-
-- a governed app assembly surface
-- a mounted soil-moisture runtime route
-- a runtime builder that emits finite outward envelopes
-- fixture-driven runtime proof
-- app-level and route-level tests
-- schema-validated runtime responses
-
-That means this README should now describe **both** doctrine and the thin-slice governed runtime that actually exists in the current work, without overstating broader app maturity.
+| Area | Status | Safe wording |
+|---|---|---|
+| Governed API as trust membrane | **CONFIRMED** from KFM doctrine | The API boundary protects public and steward request paths. |
+| Public clients behind governed APIs | **CONFIRMED** doctrine | Browser shells and model surfaces should not call canonical stores directly. |
+| Soil-moisture runtime thin slice | **CONFIRMED in supplied packet** | The supplied 2026-04-15 packet defines app, route, runtime, schema, and tests for a narrow soil-moisture runtime slice. |
+| `apps/governed_api/` path | **NEEDS VERIFICATION** | Preferred by the supplied thin-slice packet, but not confirmed by mounted repo inspection here. |
+| `apps/governed-api/` path | **NEEDS VERIFICATION** | Used by older surfaced draft; treat as a path-tension item, not a silent typo. |
+| Broader runtime, workflow, and CI maturity | **UNKNOWN** | Do not claim active workflow enforcement, deployed DTOs, or live route depth without repo evidence. |
 
 [Back to top](#top)
 
@@ -102,42 +103,41 @@ That means this README should now describe **both** doctrine and the thin-slice 
 
 | Item | Value |
 |---|---|
-| File | `apps/governed_api/README.md` *(older surfaced draft used `apps/governed-api/README.md`)* |
+| Target file | `apps/governed_api/README.md` |
+| Older surfaced file signal | `apps/governed-api/README.md` |
 | Directory role | Boundary-level README for the governed API surface |
-| Boundary role from corpus | Governed API and evidence resolver for approved discovery, read, evidence-resolution, dossier, story, export, and Focus interactions |
-| Current thin-slice mounted-style surfaces created in-session | `apps/governed_api/app.py`, `apps/governed_api/routes/__init__.py`, `apps/governed_api/routes/soil_moisture.py`, `apps/governed_api/runtime/soil_moisture_runtime.py` |
-| Parallel deeper API doc surface | `apps/api/src/api/README.md` remains the likeliest deeper API-module README based on the supplied draft and project notes |
-| Upstream neighbors | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../packages/README.md`](../../packages/README.md), [`../../tests/README.md`](../../tests/README.md) |
+| Boundary role | Governed API and evidence resolver for approved discovery, read, evidence-resolution, dossier, story, export, Focus, runtime, and steward-only interactions |
+| Upstream app/root neighbor | [`../README.md`](../README.md) |
+| Parallel deeper API surface | [`../api/src/api/README.md`](../api/src/api/README.md) |
 | Downstream / sibling consumers | [`../explorer-web/README.md`](../explorer-web/README.md), [`../review-console/README.md`](../review-console/README.md), [`../workers/README.md`](../workers/README.md) |
-| Trust rule | Public or external surfaces should read only through governed API layers and only within promoted scope |
-| Verification posture | Boundary doctrine is **CONFIRMED** from the supplied corpus; exact mounted repo-tree specifics remain **NEEDS VERIFICATION** in this session |
+| Contract neighbors | [`../../contracts/README.md`](../../contracts/README.md), [`../../contracts/source/kansas_mesonet_source_descriptor.md`](../../contracts/source/kansas_mesonet_source_descriptor.md), [`../../contracts/soil_moisture/reading.schema.json`](../../contracts/soil_moisture/reading.schema.json) |
+| Schema neighbors | [`../../schemas/README.md`](../../schemas/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json), [`../../schemas/soil_moisture/README.md`](../../schemas/soil_moisture/README.md) |
+| Policy / package / proof neighbors | [`../../policy/README.md`](../../policy/README.md), [`../../packages/README.md`](../../packages/README.md), [`../../tests/README.md`](../../tests/README.md) |
+| Runtime-proof neighbors | [`../../tests/e2e/runtime_proof/soil_moisture/README.md`](../../tests/e2e/runtime_proof/soil_moisture/README.md), [`../../tests/e2e/runtime_proof/test_governed_api_app.py`](../../tests/e2e/runtime_proof/test_governed_api_app.py) |
+| Trust rule | Public and external surfaces should read through governed API layers, not canonical/internal stores. |
+| Verification posture | Doctrine is **CONFIRMED**. Exact mounted path and implementation inventory remain **NEEDS VERIFICATION**. |
 
-### Current surfaced repo-fit signals
+### Path split that must stay visible
 
 > [!CAUTION]
-> The table below preserves the strongest repo-fit signals available in the supplied old draft and the in-session thin-slice code work. It should not be upgraded into a mounted implementation claim until repository-authoritative inspection is performed.
+> Do not silently normalize `governed-api` and `governed_api`. The hyphenated path appears in the older surfaced boundary README, while the underscored path appears in the supplied soil-moisture thin-slice packet. Resolve this by repo inspection and an explicit migration note, not by documentation smoothing.
 
-| Surface | Current signal in supplied material | Safe reading |
+| Surface | Current evidence signal | Safe reading |
 |---|---|---|
-| `apps/governed_api/` | Thin-slice app assembly, route, and runtime files were generated in-session | Treat as the current preferred app path for this slice, pending mounted recheck |
-| `apps/governed-api/` | Older surfaced README draft used a hyphenated path | Treat as a path-tension / reconciliation item, not a hidden typo |
-| `apps/api/src/api/` | Identified as a deeper API-shaped doc surface with `README.md`, `middleware/`, and `routes/` adjacency | Treat as the likeliest home for route/module detail beyond this boundary README |
-| `contracts/` | Named as neighboring human-readable contract law | Safe to reference as adjacent doctrinal ownership |
-| `schemas/contracts/` | Named as neighboring machine-file contract lane | Safe to reference as adjacent schema ownership |
-| `policy/` | Named as adjacent policy-runtime / bundle lane | Safe to reference as enforcement dependency, not sovereign home of this app |
-| `tests/` | Named as adjacent verification family | Safe to reference as the proof lane, not as proof of broader app maturity |
-| `.github/workflows/` | Mentioned as neighboring workflow surface | Keep workflow depth explicitly bounded until direct file inspection happens |
+| `apps/governed_api/` | Supplied thin-slice packet uses this package-style path for app, route, and runtime files. | Treat as the preferred target path for this README until repo inspection says otherwise. |
+| `apps/governed-api/` | Older surfaced boundary README used this path. | Treat as an older path signal requiring reconciliation. |
+| `apps/api/src/api/` | Existing deeper API-module documentation surface. | Keep route/middleware detail here or in local route docs; do not duplicate it in this boundary README. |
 
 ### Boundary-first reading
 
-This file should describe:
+This README should describe:
 
-- the API as a trust-bearing boundary
-- the repo neighbors it depends on
-- the runtime and proof objects it touches
-- the open reconciliation work between `apps/governed_api/` and `apps/api/src/api/`
+- the API as a trust-bearing boundary,
+- the repo neighbors it depends on,
+- the runtime and proof objects it touches,
+- the open reconciliation work between `apps/governed_api/`, `apps/governed-api/`, and `apps/api/src/api/`.
 
-It should **not** duplicate route-by-route implementation notes better housed in [`../api/src/api/README.md`](../api/src/api/README.md) or the local runtime / route modules.
+It should **not** duplicate endpoint mechanics better housed in route/runtime modules or [`../api/src/api/README.md`](../api/src/api/README.md).
 
 [Back to top](#top)
 
@@ -145,32 +145,32 @@ It should **not** duplicate route-by-route implementation notes better housed in
 
 ## Accepted inputs
 
-This area should accept or orchestrate the following request classes.
+This area accepts request classes that can be shaped by release state, evidence resolution, policy checks, and finite outward outcomes.
 
-| Request family | Belongs here? | Notes |
-|---|---:|---|
-| Catalog and discovery requests | Yes | Release-scoped discovery, catalog closure reads, outward metadata resolution |
-| Feature / subject / place reads | Yes | Released authoritative reads only |
-| Map / tile / style / legend / portrayal reads | Yes | Public-safe delivery over released scope |
-| `EvidenceRef` resolution | Yes | Request-time drill-through to `EvidenceBundle` |
-| Story / dossier / compare reads | Yes | Must stay anchored to the same geography/time/release shell |
-| Export / report requests | Yes | Public-safe outward artifacts that inherit release, policy, and correction state |
-| Focus / governed assistance requests | Yes | Bounded synthesis over admissible released evidence only |
-| Soil-moisture runtime requests | Yes | Thin-slice mounted governed runtime path in current work |
-| Review / stewardship actions | Yes, internal only | Approval, denial, rollback, quarantine inspection, rights/sensitivity handling |
-| Ops / status endpoints | Yes, internal only | Health, traces, audit joins, runtime status; never a shadow truth surface |
-| Raw store paths, DB credentials, unpublished candidate artifacts | No | Trust-membrane violation |
-| Free-form uncited assistant behavior | No | Prohibited by KFM doctrine |
+| Request family | Belongs here? | Public / internal | Notes |
+|---|---:|---|---|
+| Catalog and discovery requests | Yes | Public governed | Release-scoped discovery, catalog closure reads, outward metadata resolution. |
+| Feature / subject / place reads | Yes | Public governed | Released authoritative reads with support, time, rights, sensitivity, and correction posture. |
+| Map / tile / style / legend / portrayal reads | Yes | Public governed | Public-safe delivery over released scope. |
+| `EvidenceRef` resolution | Yes | Public governed | Request-time drill-through to `EvidenceBundle`. |
+| Story / dossier / compare reads | Yes | Public governed | Must stay anchored to the same geography, time, release, and evidence shell. |
+| Export / report requests | Yes | Public governed | Export must inherit release, policy, rights, and correction state. |
+| Focus / governed assistance requests | Yes | Public governed | Bounded synthesis over admissible evidence; never assistant sovereignty. |
+| Soil-moisture runtime requests | Yes | Public governed thin slice | Supplied packet supports a narrow runtime route and finite response envelope. |
+| Review / stewardship actions | Yes | Internal governed | Approval, denial, rollback, quarantine inspection, rights/sensitivity handling. |
+| Ops / status endpoints | Yes | Internal governed | Health, traces, audit joins, and runtime status without raw-store exposure. |
 
 ### Thin-slice soil-moisture request posture
 
-The current governed runtime slice supports requests shaped like:
+The supplied thin-slice packet describes requests shaped around:
 
-- request metadata (`request_id`)
-- query context (`kind=soil_moisture`, interval, station hints, quantity hints)
-- canonical candidate object for the bounded runtime evaluation
+- request metadata such as `request_id`,
+- query context such as `kind=soil_moisture`, interval, station, quantity, depth, and freshness hints,
+- a bounded candidate object for runtime evaluation.
 
-This is intentionally narrow. The route is not yet a general ingestion or retrieval API; it is a governed request-time envelope builder over already-bounded candidate support.
+This is intentionally narrow. The route is not a general ingestion API, not a source-normalization API, and not a publication service.
+
+[Back to top](#top)
 
 ---
 
@@ -178,15 +178,16 @@ This is intentionally narrow. The route is not yet a general ingestion or retrie
 
 | Out of scope | Why it stays out | Where it goes instead |
 |---|---|---|
-| Direct browser/client access to RAW, WORK, QUARANTINE, canonical stores, or artifact trees | Collapses the trust membrane | Intake, canonical, catalog/review, and projection planes behind governed services |
-| Canonical writes from ordinary clients | Public clients are not authority writers | Steward-only review / repair / promotion lanes |
-| Shared domain model ownership | Prevents app-local drift and duplicated contract semantics | [`../../packages/README.md`](../../packages/README.md) |
-| Policy bundle authorship | This boundary enforces policy; it should not become policy’s sovereign home | [`../../policy/README.md`](../../policy/README.md) |
-| Schema / standards-profile source of truth | This boundary consumes and validates against them | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) |
-| Hidden correction or rollback behavior | KFM requires visible correction lineage | release / correction runbooks and proof objects |
-| “Secret” second truth in telemetry or ops | Status endpoints must not become a bypass database | shaped governed ops surfaces only |
-| Route-detail duplication already maintained elsewhere | Creates drift between boundary docs and handler/module docs | [`../api/src/api/README.md`](../api/src/api/README.md) |
-| Fetching or normalizing source data inside the runtime route | Breaks the thin-slice trust split | source descriptor, watcher, normalization, and validator lanes |
+| Direct browser/client access to RAW, WORK, QUARANTINE, canonical stores, or artifact trees | Collapses the trust membrane. | Intake, canonical, catalog/review, and projection planes behind governed services. |
+| Canonical writes from ordinary clients | Public clients are not authority writers. | Steward-only review, repair, promotion, and correction lanes. |
+| Source fetching inside runtime routes | Conflates source custody with request-time trust behavior. | Watchers, source descriptors, connector lanes, and normalization pipelines. |
+| Shared domain model ownership | Prevents app-local drift and duplicated contract semantics. | [`../../packages/README.md`](../../packages/README.md). |
+| Policy bundle authorship | This boundary enforces or consults policy; it should not become policy’s sovereign home. | [`../../policy/README.md`](../../policy/README.md). |
+| Schema / standards-profile source of truth | This boundary consumes and validates against schemas. | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md). |
+| Hidden correction or rollback behavior | KFM requires visible correction lineage. | Release, correction, and rollback runbooks/proof objects. |
+| “Secret” second truth in telemetry or ops | Status endpoints must not become a bypass database. | Governed ops surfaces with explicit scope. |
+| Route-detail duplication | Creates drift between boundary docs and handler/module docs. | Route/runtime modules and [`../api/src/api/README.md`](../api/src/api/README.md). |
+| Free-form uncited assistant behavior | Violates cite-or-abstain and evidence-first doctrine. | Bounded Focus / model adapter behind evidence, policy, and response-envelope checks. |
 
 > [!WARNING]
 > Do not let this directory become a convenience bypass. In KFM, undocumented edge behavior is usually governance debt in disguise.
@@ -197,30 +198,40 @@ This is intentionally narrow. The route is not yet a general ingestion or retrie
 
 ## Directory tree
 
-### Current thin-slice governed API sketch
+The trees below are **orientation sketches**, not mounted inventory proof. Re-run the inspection commands in [Quickstart](#quickstart) before converting any path from **NEEDS VERIFICATION** to **CONFIRMED**.
+
+### Target governed API surface
 
 ```text
 apps/
-├── governed_api/
-│   ├── README.md
-│   ├── app.py
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   └── soil_moisture.py
-│   └── runtime/
-│       └── soil_moisture_runtime.py
-└── api/
-    └── src/
-        └── api/
-            └── README.md
+└── governed_api/
+    ├── README.md
+    ├── app.py
+    ├── routes/
+    │   ├── __init__.py
+    │   └── soil_moisture.py
+    └── runtime/
+        └── soil_moisture_runtime.py
 ```
 
-### Older surfaced path sketch
+### Older surfaced path signal
 
 ```text
 apps/
 └── governed-api/
     └── README.md
+```
+
+### Parallel deeper API surface
+
+```text
+apps/
+└── api/
+    └── src/
+        └── api/
+            ├── README.md
+            ├── middleware/
+            └── routes/
 ```
 
 ### Adjacent contract / policy / verification surfaces
@@ -240,29 +251,25 @@ schemas/
 └── contracts/
     ├── README.md
     └── v1/
-        ├── runtime/
-        │   └── runtime_response_envelope.schema.json
-        └── source/
-            └── source_descriptor.schema.json
+        └── runtime/
+            └── runtime_response_envelope.schema.json
 
 tests/
-├── README.md
 └── e2e/
     └── runtime_proof/
-        ├── soil_moisture/
-        │   ├── README.md
-        │   ├── fixtures/
-        │   ├── test_runtime_soil_moisture_proof.py
-        │   └── test_runtime_route_soil_moisture.py
-        └── test_governed_api_app.py
+        ├── test_governed_api_app.py
+        └── soil_moisture/
+            ├── README.md
+            ├── test_runtime_soil_moisture_proof.py
+            └── test_runtime_route_soil_moisture.py
 ```
 
 ### Working implication
 
-The strongest current signal is that the repo now has **at least two API-facing documentation surfaces** to reconcile explicitly:
+The strongest surfaced signal is that the repo now has at least two API-facing documentation surfaces to keep distinct:
 
-1. `apps/governed_api/README.md` — boundary-facing, trust-first README for the current thin slice  
-2. `apps/api/src/api/README.md` — deeper API-module surface for broader route and middleware detail
+1. `apps/governed_api/README.md` — boundary-facing, trust-first README for the supplied thin slice.
+2. `apps/api/src/api/README.md` — deeper API-module surface for route, middleware, and implementation-facing detail.
 
 That is a documentation split to reconcile, not a fact to hide.
 
@@ -277,21 +284,25 @@ That is a documentation split to reconcile, not a fact to hide.
 1. Read this file as the **boundary README** for the governed API surface.
 2. Read [`../api/src/api/README.md`](../api/src/api/README.md) as the deeper API-module surface.
 3. Check [`../../contracts/README.md`](../../contracts/README.md), [`../../contracts/source/kansas_mesonet_source_descriptor.md`](../../contracts/source/kansas_mesonet_source_descriptor.md), and [`../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) before making contract claims here.
-4. Check [`../../policy/README.md`](../../policy/README.md) and [`../../tests/README.md`](../../tests/README.md) before claiming enforcement depth.
-5. Promote or downgrade wording in this README only after those neighbors agree.
+4. Check [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), and [`../../tests/e2e/runtime_proof/soil_moisture/README.md`](../../tests/e2e/runtime_proof/soil_moisture/README.md) before claiming enforcement depth.
+5. Promote or downgrade wording in this README only after neighboring contracts, schemas, tests, and workflow files agree.
 
-### Useful local inspection commands
+### Mount recheck commands
 
-Use these when the repository is mounted and you need to recheck boundary claims directly:
+Use these inspection-only commands when the repository is mounted:
 
 ```bash
-find apps/governed_api -maxdepth 3 -type f | sort
+find apps/governed_api -maxdepth 3 -type f | sort 2>/dev/null || true
 find apps/governed-api -maxdepth 3 -type f | sort 2>/dev/null || true
-find apps/api/src/api -maxdepth 3 -type f | sort
-find contracts -maxdepth 3 -type f | sort
-find schemas/contracts -maxdepth 4 -type f | sort
-find tests/e2e/runtime_proof -maxdepth 4 -type f | sort
-find .github/workflows -maxdepth 2 -type f | sort
+find apps/api/src/api -maxdepth 3 -type f | sort 2>/dev/null || true
+
+find contracts -maxdepth 3 -type f | sort 2>/dev/null || true
+find schemas/contracts -maxdepth 5 -type f | sort 2>/dev/null || true
+find schemas/soil_moisture -maxdepth 3 -type f | sort 2>/dev/null || true
+find policy -maxdepth 3 -type f | sort 2>/dev/null || true
+find tests/e2e/runtime_proof -maxdepth 5 -type f | sort 2>/dev/null || true
+find tools/ci -maxdepth 3 -type f | sort 2>/dev/null || true
+find .github/workflows -maxdepth 3 -type f | sort 2>/dev/null || true
 ```
 
 ### Minimal review pass before editing boundary claims
@@ -299,16 +310,18 @@ find .github/workflows -maxdepth 2 -type f | sort
 ```bash
 sed -n '1,260p' apps/governed_api/README.md 2>/dev/null || true
 sed -n '1,260p' apps/api/src/api/README.md 2>/dev/null || true
-sed -n '1,220p' apps/governed_api/app.py 2>/dev/null || true
-sed -n '1,240p' apps/governed_api/routes/soil_moisture.py 2>/dev/null || true
-sed -n '1,240p' apps/governed_api/runtime/soil_moisture_runtime.py 2>/dev/null || true
-sed -n '1,240p' contracts/README.md 2>/dev/null || true
-sed -n '1,240p' policy/README.md 2>/dev/null || true
+sed -n '1,240p' apps/governed_api/app.py 2>/dev/null || true
+sed -n '1,260p' apps/governed_api/routes/soil_moisture.py 2>/dev/null || true
+sed -n '1,260p' apps/governed_api/runtime/soil_moisture_runtime.py 2>/dev/null || true
+
+sed -n '1,240p' contracts/source/kansas_mesonet_source_descriptor.md 2>/dev/null || true
+sed -n '1,240p' contracts/soil_moisture/reading.schema.json 2>/dev/null || true
+sed -n '1,240p' schemas/contracts/v1/runtime/runtime_response_envelope.schema.json 2>/dev/null || true
 sed -n '1,240p' tests/e2e/runtime_proof/soil_moisture/README.md 2>/dev/null || true
 ```
 
 > [!TIP]
-> The supplied KFM corpus proves more doctrine than mounted implementation. Keep broader route names, DTOs, workflow enforcement, and live runtime depth visibly bounded unless the repo, tests, manifests, or emitted proof objects are directly rechecked.
+> The supplied KFM corpus proves more doctrine than mounted implementation. Keep route names, DTOs, workflow enforcement, and runtime maturity visibly bounded unless repo files, tests, manifests, workflow YAML, or emitted proof objects are directly rechecked.
 
 [Back to top](#top)
 
@@ -321,85 +334,68 @@ sed -n '1,240p' tests/e2e/runtime_proof/soil_moisture/README.md 2>/dev/null || t
 The governed API should expose request families by responsibility, not by framework fashion.
 
 | Route family | Public or internal | What it owes callers |
-|---|---:|---|
-| Catalog and discovery | Public governed | release scope, stable identifiers, outward metadata closure |
-| Feature / subject / place reads | Public governed | support/time semantics, rights posture, release linkage, correction visibility |
-| Map / tile / portrayal | Public governed | release linkage, freshness basis, policy posture |
-| Evidence resolution | Public governed | `EvidenceRef → EvidenceBundle`, preview policy, rights/sensitivity state, audit linkage |
-| Story / dossier / compare | Public governed | anchored geography/time shell, drill-through to evidence |
-| Export / report | Public governed | no export outruns release, policy, or correction state |
-| Focus / governed assistance | Public governed | finite outcome, citation checks, policy-visible reasoning boundary, audit linkage |
-| Soil-moisture runtime | Public governed (thin slice) | finite runtime envelope, explicit source role, depth/unit/freshness visibility, fail-closed outcomes |
-| Review / stewardship | Internal governed | explicit decision artifacts, no hidden approvals |
-| Ops / status | Internal governed | health and explainability without raw-store exposure |
+|---|---|---|
+| Catalog and discovery | Public governed | Release scope, stable identifiers, outward metadata closure. |
+| Feature / subject / place reads | Public governed | Support/time semantics, rights posture, release linkage, correction visibility. |
+| Map / tile / portrayal | Public governed | Release linkage, freshness basis, policy posture. |
+| Evidence resolution | Public governed | `EvidenceRef → EvidenceBundle`, preview policy, rights/sensitivity state, audit linkage. |
+| Story / dossier / compare | Public governed | Anchored geography/time shell, drill-through to evidence. |
+| Export / report | Public governed | No export outruns release, policy, or correction state. |
+| Focus / governed assistance | Public governed | Finite outcome, citation checks, policy-visible reasoning boundary, audit linkage. |
+| Soil-moisture runtime | Public governed thin slice | Finite runtime envelope, explicit source role, depth/unit/freshness visibility, fail-closed outcomes. |
+| Review / stewardship | Internal governed | Explicit decision artifacts; no hidden approvals. |
+| Ops / status | Internal governed | Health and explainability without raw-store exposure. |
 
 ### Boundary request rule of thumb
 
 1. Establish request context, audience, and allowed surface.
 2. Apply policy pre-checks and scope narrowing.
-3. Resolve only to release-scoped admissible material.
-4. Resolve evidence, catalog, or outward portrayal objects.
+3. Resolve only to admissible released or governed material.
+4. Resolve evidence, catalog, runtime, or outward portrayal objects.
 5. Shape the result into a bounded runtime outcome.
-6. Attach decision, audit, and correction linkage where required.
-7. Preserve visible stale-state, narrowing, or denial cues instead of bluffing.
+6. Attach decision, audit, correction, and evidence linkage where required.
+7. Preserve visible stale-state, narrowing, abstention, or denial cues instead of bluffing.
 
-### Thin-slice runtime route posture
+### Packet-supported soil-moisture route posture
 
-The current soil-moisture route:
+The supplied thin-slice packet describes a route shaped like:
 
-- accepts a thin request envelope
-- rejects malformed request shape early
-- denies unsupported query kinds
-- delegates candidate trust logic to the runtime module
-- returns finite outward outcomes:
-  - `ANSWER`
-  - `ABSTAIN`
-  - `DENY`
-  - `ERROR`
-
-It does **not**:
-
-- fetch Mesonet directly
-- normalize raw provider payloads
-- issue promotion decisions
-- sign proofs
-- publish catalogs
+| Surface | Packet-supported signal | Mounted status |
+|---|---|---|
+| App factory | `apps/governed_api/app.py` with `create_app()` | **NEEDS VERIFICATION** |
+| Health route | `GET /health` returning `{"status": "ok"}` | **NEEDS VERIFICATION** |
+| Runtime route | `POST /soil-moisture/runtime` | **NEEDS VERIFICATION** |
+| Request handler | `handle_soil_moisture_runtime(...)` | **NEEDS VERIFICATION** |
+| Runtime delegate | `build_runtime_response(...)` | **NEEDS VERIFICATION** |
+| Supported query kind | `soil_moisture` | **NEEDS VERIFICATION** |
+| Finite outcomes | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | **Packet-confirmed**, mounted recheck required |
+| HTTP mapping | `ERROR → 400`, `DENY → 403`, `ANSWER/ABSTAIN → 200` | **Packet-confirmed**, active-branch convention still reviewable |
 
 ### Public-safe outcomes
 
 | Outcome | Allowed? | Minimum burden |
 |---|---:|---|
-| Evidence-linked read | Yes | resolvable support, policy-allowed scope, release linkage |
-| `ANSWER` | Yes | evidence resolution + citation / source checks + bounded support |
-| `ABSTAIN` | Yes | explicit bounded reason, calm failure language |
-| `DENY` | Yes | policy or trust reason + obligation visibility where applicable |
-| `ERROR` | Yes | machine-meaningful failure without bluffing |
-| Silent fallback to uncited prose | No | prohibited |
-| Direct DB / object-store pass-through | No | prohibited |
+| Evidence-linked read | Yes | Resolvable support, policy-allowed scope, release linkage. |
+| `ANSWER` | Yes | Evidence resolution, bounded support, source/time/unit/depth cues where applicable. |
+| `ABSTAIN` | Yes | Explicit bounded reason; no false certainty. |
+| `DENY` | Yes | Policy, trust, or unsupported-scope reason with obligations where applicable. |
+| `ERROR` | Yes | Machine-meaningful failure without bluffing. |
+| Silent fallback to uncited prose | No | Prohibited. |
+| Direct DB / object-store pass-through | No | Prohibited. |
+| Runtime response leaking release proof internals | No | Runtime proof must not masquerade as promotion or release proof. |
 
 ### Boundary README vs module README
 
 | Surface | Best use |
 |---|---|
-| `apps/governed_api/README.md` | explain trust obligations, repo fit, accepted inputs, exclusions, proof expectations, adjacent ownership |
-| `apps/api/src/api/README.md` | explain middleware, broader route groups, `/api/v1` shaping, implementation-facing handler organization |
-| `apps/governed_api/runtime/soil_moisture_runtime.py` | explain runtime envelope assembly for the current thin slice |
-| `apps/governed_api/routes/soil_moisture.py` | explain request handling and route behavior for the thin slice |
-| `contracts/README.md` | explain human-readable contract law and contract families |
-| `schemas/contracts/README.md` | explain machine-file contract scaffolding and vocabulary adjacency |
-| `policy/README.md` | explain policy-runtime, bundle, and fixture lanes |
-| `tests/README.md` | explain verification families and proof expectations |
-
-### Repo-facing guidance
-
-This README should remain the calm, high-signal answer to:
-
-- “What is the governed API surface for?”
-- “What does it protect?”
-- “What does it consume?”
-- “What must not bypass it?”
-
-It should not become the place where route-by-route handler mechanics drift away from the actual API module docs.
+| `apps/governed_api/README.md` | Trust obligations, repo fit, accepted inputs, exclusions, thin-slice runtime posture, proof expectations, adjacent ownership. |
+| `apps/api/src/api/README.md` | Middleware, broader route groups, `/api/v1` shaping, implementation-facing handler organization. |
+| `apps/governed_api/runtime/soil_moisture_runtime.py` | Runtime envelope assembly for the supplied thin slice. |
+| `apps/governed_api/routes/soil_moisture.py` | Request handling and route behavior for the supplied thin slice. |
+| `contracts/README.md` | Human-readable contract law and contract families. |
+| `schemas/contracts/README.md` | Machine-file contract scaffolding and vocabulary adjacency. |
+| `policy/README.md` | Policy runtime, bundles, fixtures, and deny-by-default decision logic. |
+| `tests/README.md` | Verification families and proof expectations. |
 
 [Back to top](#top)
 
@@ -412,61 +408,64 @@ flowchart LR
     subgraph Clients["Client and operator surfaces"]
         Explorer["apps/explorer-web"]
         Review["apps/review-console"]
-        CLI["apps/cli"]
         Workers["apps/workers"]
+        Focus["Focus / bounded assistance"]
     end
 
     subgraph Boundary["Governed API boundary"]
-        BoundaryReadme["apps/governed_api/README.md"]
+        Readme["apps/governed_api/README.md"]
         App["app.py"]
         Route["routes/soil_moisture.py"]
         Runtime["runtime/soil_moisture_runtime.py"]
-        Envelope["Runtime outcomes\nANSWER / ABSTAIN / DENY / ERROR"]
+        Outcomes["RuntimeResponseEnvelope\nANSWER / ABSTAIN / DENY / ERROR"]
     end
 
     subgraph Control["Control-plane dependencies"]
-        Contracts["contracts + schemas"]
-        Policy["Policy / review / decisions"]
-        Validator["Soil-moisture validator"]
-        Release["Release / correction / rollback"]
+        Contracts["contracts / schemas"]
+        Policy["policy / review / decisions"]
+        Validation["soil-moisture validator"]
+        Release["release / correction / rollback"]
+        Evidence["EvidenceRef → EvidenceBundle"]
     end
 
     subgraph Published["Published outward scope"]
-        Closure["STAC / DCAT / PROV closure"]
-        Releases["Promoted datasets, portrayals,\nexports, and release refs"]
+        Catalog["STAC / DCAT / PROV closure"]
+        Portrayals["Released datasets, portrayals,\nexports, and release refs"]
     end
 
     subgraph NonPublic["Non-public planes"]
         Raw["RAW / WORK / QUARANTINE"]
-        Canon["Canonical truth"]
+        Canonical["Canonical truth stores"]
     end
 
-    Explorer --> BoundaryReadme
-    Review --> BoundaryReadme
-    CLI --> BoundaryReadme
-    Workers --> BoundaryReadme
+    Explorer --> Readme
+    Review --> Readme
+    Workers --> Readme
+    Focus --> Readme
 
-    BoundaryReadme --> App
+    Readme --> App
     App --> Route
     Route --> Runtime
-    Runtime --> Envelope
-    Runtime --> Validator
+    Runtime --> Outcomes
+
     Route --> Contracts
     Route --> Policy
-    Route --> Release
+    Route --> Evidence
+    Runtime --> Validation
+    Policy --> Release
 
-    Release --> Closure
-    Release --> Releases
+    Release --> Catalog
+    Release --> Portrayals
 
-    Explorer -. no direct client path .-> Raw
-    Explorer -. no direct client path .-> Canon
-    Route -. may not bypass control planes .-> Canon
-    Review -. no hidden approval bypass .-> Canon
+    Explorer -. "no direct client path" .-> Raw
+    Explorer -. "no direct client path" .-> Canonical
+    Route -. "must not bypass control planes" .-> Canonical
+    Focus -. "no assistant sovereignty" .-> Canonical
 ```
 
 ### Reading the diagram
 
-The API does not “own” the whole system. It owns the public and steward edge where request context, policy evaluation, evidence resolution, and bounded runtime results meet. In the current thin slice, that edge is now represented by a boundary README, an app assembly, a route handler, and a runtime module.
+The governed API does not own the whole system. It owns the public and steward edge where request context, policy evaluation, evidence resolution, and bounded runtime results meet. In the supplied soil-moisture thin slice, that edge is represented by an app assembly, a route handler, a runtime module, tests, and a runtime response envelope schema — all still requiring mounted repo verification before publication claims are upgraded.
 
 [Back to top](#top)
 
@@ -474,31 +473,31 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 ## Tables
 
-### Core proof-bearing objects this boundary is expected to touch
+### Core proof-bearing objects this boundary may touch
 
-| Object family | Why it matters here | Current posture |
+| Object family | Why the boundary cares | Current posture |
 |---|---|---|
-| `SourceDescriptor` | keeps source role, cadence, and rights posture explicit at runtime | strong thin-slice alignment |
-| canonical soil-moisture candidate | bounded support object for governed runtime responses | strong thin-slice alignment |
-| validator result | keeps subject-level validation separate from outward runtime behavior | strong thin-slice alignment |
-| `RuntimeResponseEnvelope` | keeps runtime outcomes finite, inspectable, and auditable | now schema-backed in thin slice |
-| `run_receipt` | provides machine-checkable audit linkage for support-bearing work | visible seam, not equivalent to runtime response |
-| `EvidenceBundle` | makes broader drill-through operational at point of use | doctrinally strong; broader mounted examples still need verification |
-| `DecisionEnvelope` | makes policy results machine-readable | strong corpus support; broader mounted shape still needs verification |
-| `ReleaseManifest` / proof pack | ties outward payloads to release state | corpus-supported; broader emitted examples still need verification |
+| `SourceDescriptor` | Keeps source role, cadence, rights, and access posture explicit. | Strong doctrine; Kansas Mesonet descriptor path needs mounted recheck. |
+| Canonical soil-moisture candidate | Bounded support object for request-time runtime response. | Packet-supported thin-slice object. |
+| Validator result | Keeps subject-level validation separate from outward runtime behavior. | Packet-supported concept; path and schema need recheck. |
+| `RuntimeResponseEnvelope` | Keeps runtime outcomes finite, inspectable, and auditable. | Packet-supported and schema-referenced; mounted schema path needs recheck. |
+| `run_receipt` | Provides machine-checkable process memory. | Boundary may link/consume; runtime must not confuse it with release proof. |
+| `EvidenceBundle` | Makes drill-through operational at point of use. | Strong doctrine; mounted resolver traces still needed. |
+| `DecisionEnvelope` | Makes policy results machine-readable. | Strong doctrine; exact active schema needs recheck. |
+| `ReleaseManifest` / proof pack | Ties outward payloads to release state. | Release/proof lane owns; boundary should link, not reinvent. |
 
 ### Boundary-adjacent proof quartet
 
-| Artifact | Why the boundary cares | Ownership note |
+| Artifact | Boundary relationship | Must not become |
 |---|---|---|
-| `spec_hash` | joins visible runtime or release behavior back to exact input / contract state | cross-cutting proof object; not boundary-exclusive |
-| `run_receipt` | provides machine-checkable audit linkage for fetch/build/publish work that shapes outward scope | usually emitted in ingest/build/release lanes, consumed at the boundary |
-| `ai_receipt` | required wherever model-mediated proposal or bounded assistance participates | subordinate to evidence and policy; not a replacement for `EvidenceBundle` |
-| Attestation ref / bundle | connects releases or run artifacts to signed proof | strongest as release/proof-lane object; boundary should link, not reinvent |
+| `spec_hash` | Identity anchor joining runtime, schema, source, and artifact state. | A human-only note with no validation. |
+| `run_receipt` | Process memory and audit join for fetch/build/publish work. | Release proof by itself. |
+| `ai_receipt` | Record of model-mediated proposal or bounded assistance when AI participates. | Authoritative evidence. |
+| Attestation ref / bundle | Cryptographic or release-grade proof surface. | Runtime payload clutter or hidden bypass. |
 
 ### Boundary ownership matrix
 
-| Concern | This app owns it | This app consumes it | This app must not replace it |
+| Concern | This app owns | This app consumes | This app must not replace |
 |---|---:|---:|---:|
 | Request authentication / policy edge | ✓ |  |  |
 | Evidence resolution orchestration | ✓ |  |  |
@@ -514,32 +513,23 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 | Statement type | What to surface |
 |---|---|
-| Released, public-safe read | release linkage, provenance, freshness basis, correction state |
-| Modeled / derived content | modeled status, limits, and release linkage |
-| Partial coverage | explicit partial-state cue, not silent omission |
-| Stale projection | visible stale cue or fail-closed denial depending on policy |
-| Rights / sensitivity constrained read | denial or generalized output with stated obligation |
-
-### Thin-slice runtime surface
-
-| Surface | Current role | Notes |
-|---|---|---|
-| `app.py` | app assembly | mounts current governed routes |
-| `routes/soil_moisture.py` | request handling | finite HTTP behavior for the soil-moisture route |
-| `runtime/soil_moisture_runtime.py` | envelope builder | converts validated candidate state into outward runtime responses |
-| `tests/e2e/runtime_proof/...` | proof of outward behavior | fixture-driven and schema-aware |
-| `tools/ci/render_runtime_proof_summary.py` | reviewer summary | presentation-only, not authority |
+| Released, public-safe read | Release linkage, provenance, freshness basis, correction state. |
+| Modeled / derived content | Modeled status, limits, release linkage, and support role. |
+| Partial coverage | Explicit partial-state cue, not silent omission. |
+| Stale projection | Visible stale cue or fail-closed denial depending on policy. |
+| Rights / sensitivity constrained read | Denial, generalization, redaction, or staged access with stated obligation. |
+| Soil-moisture runtime answer | Source role, station/depth/unit/time/freshness cues, candidate support, finite outcome. |
 
 ### Current verification posture
 
 | Area | Safe reading now |
 |---|---|
-| Route families and trust obligations | **CONFIRMED** doctrine from supplied KFM materials |
-| Runtime proof for the soil-moisture slice | **CONFIRMED in-session thin slice** |
-| Runtime envelope schema | **CONFIRMED in-session thin slice** |
-| Broader EvidenceBundle / DecisionEnvelope / release-proof family | **CONFIRMED doctrine**, broader mounted examples still **NEEDS VERIFICATION** |
-| Repo tree shape under `apps/`, `contracts/`, `schemas/`, `policy/`, `tests/` | **NEEDS VERIFICATION** in this session because the mounted repo was not surfaced |
-| CI / workflow enforcement depth | **UNKNOWN** beyond what neighboring docs may later prove |
+| Route families and trust obligations | **CONFIRMED** doctrine from KFM materials. |
+| Soil-moisture thin-slice route/runtime/test packet | **CONFIRMED as supplied packet evidence**, not mounted repo proof. |
+| Runtime envelope finite outcomes | **CONFIRMED as packet-supported design**; mounted schema/test recheck required. |
+| Broader `EvidenceBundle` / `DecisionEnvelope` / release proof family | **CONFIRMED doctrine**, broader mounted examples **NEEDS VERIFICATION**. |
+| Repo tree under `apps/`, `contracts/`, `schemas/`, `policy/`, `tests/` | **NEEDS VERIFICATION**. |
+| CI / workflow enforcement depth | **UNKNOWN** beyond neighboring docs and supplied packet intent. |
 
 [Back to top](#top)
 
@@ -547,11 +537,11 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 ## Task list
 
-### Definition of done for this directory
+### Definition of done for this README
 
-- [ ] Canonical relationship between `apps/governed_api/README.md` and `apps/api/src/api/README.md` is explicitly documented in both places.
+- [ ] Canonical relationship between `apps/governed_api/README.md`, any surviving `apps/governed-api/README.md`, and `apps/api/src/api/README.md` is explicitly documented.
 - [ ] Owners, created date, doc UUID, and policy label in the meta block are filled from repo-authoritative sources.
-- [ ] The current mounted path (`governed_api` vs `governed-api`) is resolved explicitly.
+- [ ] The durable path choice for `governed_api` versus `governed-api` is decided and recorded.
 - [ ] One public governed-read contract surface is linked from this README.
 - [ ] One internal / steward contract surface is linked from this README.
 - [ ] One positive runtime trace is linked.
@@ -563,17 +553,18 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 ### First high-value gates
 
-- [ ] **contracts gate** — schema compile + valid/invalid fixtures + non-zero CI failure
-- [ ] **policy gate** — deny-by-default reason / obligation grammar
-- [ ] **resolver gate** — positive and negative evidence traces
-- [ ] **runtime gate** — finite envelope validation for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
-- [ ] **correction gate** — visible supersession / withdrawal / rollback behavior
-- [ ] **docs gate** — boundary README, module README, runbooks, and actual route/contract behavior stay aligned
+- [ ] **Contracts gate** — schema compile + valid/invalid fixtures + non-zero CI failure.
+- [ ] **Policy gate** — deny-by-default reason / obligation grammar.
+- [ ] **Resolver gate** — positive and negative `EvidenceBundle` traces.
+- [ ] **Runtime gate** — finite envelope validation for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
+- [ ] **Correction gate** — visible supersession / withdrawal / rollback behavior.
+- [ ] **Docs gate** — boundary README, module README, runbooks, and actual route/contract behavior stay aligned.
 
 ### Immediate repo-fit follow-ups
 
 - [ ] Decide whether `apps/governed_api/` remains the durable app shell path.
-- [ ] Confirm whether `schemas/contracts/` or another path is the durable machine-file authority for runtime and evidence contracts.
+- [ ] Confirm whether `apps/governed-api/` exists, redirects, is removed, or is retained as historical lineage.
+- [ ] Confirm whether `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` is the durable machine-file authority for runtime envelopes.
 - [ ] Replace scaffold-state or placeholder representative files before claiming broader implemented contract-family depth in prose.
 - [ ] Confirm whether `.github/workflows/README.md` reflects hidden/private enforcement, public enforcement, or intended future structure only.
 - [ ] Add narrower `CODEOWNERS` coverage if `apps/governed_api/` needs review routing more specific than `/apps/`.
@@ -586,27 +577,27 @@ The API does not “own” the whole system. It owns the public and steward edge
 
 ### Why “governed API” instead of just “backend”?
 
-Because KFM treats the API boundary as part of the trust model. It is where public or steward requests inherit release state, evidence drill-through, policy posture, and fail-closed runtime behavior.
+Because KFM treats the API boundary as part of the trust model. It is where public or steward requests inherit release state, evidence drill-through, policy posture, correction visibility, and fail-closed runtime behavior.
 
 ### Why can’t the UI call the database or object store directly?
 
 Because that would collapse the trust membrane. Browser shells are supposed to inherit governed evidence, policy, and correction behavior — not bypass them.
 
-### Why are there two API-facing documentation surfaces right now?
+### Why are there two API-facing documentation surfaces?
 
-Because the strongest surfaced repo-fit signal points to both `apps/governed_api/README.md` and `apps/api/src/api/README.md`. The first reads best as a boundary README for the current thin slice. The second still reads best as a deeper API module surface. The split is real and should be documented rather than blurred.
+Because the surfaced materials point to both a boundary README and a deeper API-module README. The first should explain trust obligations and boundary law. The second should explain route and middleware mechanics. The split is useful if it stays explicit.
 
 ### Is `apps/governed_api/` currently code-bearing?
 
-In the current thin slice produced in-session, yes. Broader branch-level inventory still needs direct verification.
+The supplied 2026-04-15 packet provides code-bearing thin-slice content for `apps/governed_api/`. Mounted repository verification was not available here, so current branch status remains **NEEDS VERIFICATION**.
 
 ### Where should endpoint-level details live?
 
-Today, the least-drifty place is the local route/runtime modules plus `apps/api/src/api/README.md` for broader API-module structure, unless the repo later consolidates that ownership.
+In the route/runtime modules and the deeper API module docs. This README should explain why the endpoint exists, what trust burden it carries, and what it must not bypass.
 
 ### Are runtime contracts already enforcement-grade?
 
-For the current soil-moisture thin slice, the runtime envelope and runtime-proof tests are now concrete. Broader contract-family depth still needs direct recheck.
+For the supplied soil-moisture thin slice, finite outcomes and schema-backed runtime behavior are strongly indicated by the packet. Broader enforcement depth still needs direct repo, schema, test, and CI recheck.
 
 [Back to top](#top)
 
@@ -615,66 +606,75 @@ For the current soil-moisture thin slice, the runtime envelope and runtime-proof
 ## Appendix
 
 <details>
-<summary><strong>Status legend, vocabulary, and path note</strong></summary>
+<summary><strong>Status legend and vocabulary</strong></summary>
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| **CONFIRMED** | directly supported by the supplied KFM corpus or by in-session thin-slice files |
-| **INFERRED** | strongly implied by repeated project patterns, but not directly proven as mounted broader behavior |
-| **PROPOSED** | recommended starter shape or reconciliation move |
-| **UNKNOWN** | not verified strongly enough to claim as live repo or runtime fact |
-| **NEEDS VERIFICATION** | a field, repo path, or authority source that should be rechecked before publication |
+| **CONFIRMED** | Directly supported by KFM doctrine or supplied packet evidence. |
+| **INFERRED** | Strongly implied by repeated project patterns, but not directly proven as mounted behavior. |
+| **PROPOSED** | Recommended structure or reconciliation move. |
+| **UNKNOWN** | Not verified strongly enough to claim as live repo or runtime fact. |
+| **NEEDS VERIFICATION** | A path, owner, schema, route, workflow, or authority source that should be checked before publication. |
 
 ### Working vocabulary
 
 | Term | Meaning in this README |
 |---|---|
-| **Trust membrane** | the boundary that prevents public or ordinary UI paths from bypassing governed services |
-| **SourceDescriptor** | source-admission object for role, rights, cadence, and access posture |
-| **RuntimeResponseEnvelope** | bounded runtime result object carrying outcome, reason, and trust cues |
-| **run_receipt** | compact machine-readable process memory |
-| **EvidenceBundle** | broader request-time package of support, lineage hints, rights/sensitivity state, and preview policy |
-| **DecisionEnvelope** | machine-readable policy result with reason and obligation codes |
-
-### Path note
-
-Treat `apps/governed_api/README.md` as the preferred current target path for this README.
-
-Treat `apps/governed-api/README.md` as an older surfaced path signal that still needs reconciliation.
-
-Treat `apps/api/src/api/README.md` as the likeliest parallel deeper API module documentation surface until direct repository inspection either confirms or revises that relationship.
+| **Trust membrane** | The boundary that prevents public or ordinary UI paths from bypassing governed services. |
+| **SourceDescriptor** | Source-admission object for role, rights, cadence, and access posture. |
+| **RuntimeResponseEnvelope** | Bounded runtime result object carrying outcome, reason, and trust cues. |
+| **run_receipt** | Compact process memory for audit and replay; not release proof by itself. |
+| **EvidenceBundle** | Request-time package of support, lineage hints, rights/sensitivity state, and preview policy. |
+| **DecisionEnvelope** | Machine-readable policy or gate result with outcome, reason codes, obligations, and audit reference. |
+| **Focus Mode** | Bounded synthesis and navigation assistance downstream of evidence, policy, and visible shell state. |
+| **Boundary README** | This file: a repo-facing explanation of trust obligations and fit, not a route implementation manual. |
 
 </details>
 
 <details>
-<summary><strong>Current direct-recheck checklist</strong></summary>
+<summary><strong>Direct recheck checklist</strong></summary>
 
 ```bash
-# app surfaces
+# App surfaces
 find apps -maxdepth 3 -type f | sort
 
-# governed app thin slice
-find apps/governed_api -maxdepth 3 -type f | sort
+# Governed API current target
+find apps/governed_api -maxdepth 4 -type f | sort
 
-# older path signal
-find apps/governed-api -maxdepth 3 -type f | sort 2>/dev/null || true
+# Older path signal
+find apps/governed-api -maxdepth 4 -type f | sort 2>/dev/null || true
 
-# deeper API surface
-find apps/api/src/api -maxdepth 3 -type f | sort
+# Deeper API surface
+find apps/api/src/api -maxdepth 4 -type f | sort
 
-# contracts and schemas
-find contracts -maxdepth 3 -type f | sort
-find schemas/contracts -maxdepth 4 -type f | sort
+# Contracts and schemas
+find contracts -maxdepth 4 -type f | sort
+find schemas/contracts -maxdepth 6 -type f | sort
+find schemas/soil_moisture -maxdepth 4 -type f | sort 2>/dev/null || true
 
-# policy and tests
-find policy -maxdepth 3 -type f | sort
-find tests/e2e/runtime_proof -maxdepth 4 -type f | sort
+# Policy and proof lanes
+find policy -maxdepth 4 -type f | sort
+find tests/e2e/runtime_proof -maxdepth 6 -type f | sort
+find tools/ci -maxdepth 4 -type f | sort 2>/dev/null || true
 
-# workflow visibility
+# Workflow visibility
 find .github/workflows -maxdepth 3 -type f | sort
 ```
+
+</details>
+
+<details>
+<summary><strong>Review prompts before publication</strong></summary>
+
+- Does this README still describe the boundary without pretending route mechanics live here?
+- Do all implementation claims have visible repo, test, schema, or workflow support?
+- Did the path split between `governed_api` and `governed-api` get resolved or remain clearly marked?
+- Are runtime responses still separate from receipts, proofs, catalog entries, and release promotion?
+- Are negative outcomes treated as valid governed behavior rather than embarrassing exceptions?
+- Are relative links valid from `apps/governed_api/README.md`?
+- Has any placeholder in the meta block been filled from repo-authoritative evidence rather than guesswork?
 
 </details>
 
