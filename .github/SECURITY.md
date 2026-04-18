@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-03-15
-updated: 2026-04-03
+updated: 2026-04-18
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, ../SECURITY.md, ./ISSUE_TEMPLATE/README.md, ./workflows/README.md]
 tags: [kfm, security, github, disclosure, private-reporting]
-notes: [UUID still needs verification, created date is confirmed from .github/SECURITY.md history, updated date reflects this proposed revision and should be kept in sync on merge, GitHub Security tab currently renders .github/SECURITY.md and exposes private reporting, root SECURITY.md also exists and currently delegates to this file, public issue-template chooser is still effectively unconfigured on public main (README.md plus empty config.yml only), fallback inbox/SLA/rulesets/branch protection still need verification]
+notes: [UUID still needs verification, created date is confirmed from .github/SECURITY.md history, updated date reflects this proposed revision and should be kept in sync on merge, GitHub Security tab currently renders .github/SECURITY.md and exposes private reporting, root SECURITY.md also exists and currently delegates to this file, public issue-template chooser is still effectively unconfigured on public main, fallback inbox/SLA/rulesets/branch protection still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM GitHub Security Policy
@@ -25,12 +25,15 @@ Private-first vulnerability reporting, safe handling, and coordinated disclosure
 | Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Current public signals](#current-public-signals) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) · [Appendix](#appendix) |
 | Intended path | `.github/SECURITY.md` |
 | Canonical disclosure path | `.github/SECURITY.md` *(root [`../SECURITY.md`](../SECURITY.md) currently acts as a short public entrypoint and hands off here)* |
+| Public inspection basis | public `main` and GitHub Security page rechecked for this revision; platform-only settings still require merge-time verification |
 
 > [!IMPORTANT]
 > The current public GitHub Security tab exposes **Report a vulnerability** and renders `/.github/SECURITY.md` as the repository policy. Use that lane first. Keep this file authoritative, and keep the root [`../SECURITY.md`](../SECURITY.md) aligned as a short handoff surface.
 
 > [!NOTE]
 > Current public `main` still shows `.github/ISSUE_TEMPLATE/README.md` plus an empty `config.yml`, with no checked-in issue forms or chooser routing visible. Treat the Security tab and the two `SECURITY.md` files as the confirmed public reporting surfaces, not the issue-creation UI.
+
+---
 
 ## Scope
 
@@ -66,6 +69,8 @@ KFM treats security as part of the governed publication system, not as a detache
 > [!WARNING]
 > Treat any unpublished fallback inbox, escalation alias, ruleset assumption, required-check claim, or branch-protection expectation as a merge-time verification item, not as a settled repo fact.
 
+[Back to top](#kfm-github-security-policy)
+
 ## Current public signals
 
 | Signal | Status | Why it matters |
@@ -77,9 +82,12 @@ KFM treats security as part of the governed publication system, not as a detache
 | `.github/workflows/` contains `README.md` only on public `main` | `CONFIRMED` | Do not overclaim checked-in workflow YAMLs, required checks, or platform-side enforcement. |
 | `.github/ISSUE_TEMPLATE/` contains `README.md` plus empty `config.yml`, with no visible issue forms on public `main` | `CONFIRMED` | Do not assume the issue chooser will reroute a sensitive report away from public issues. |
 | GitHub Releases currently shows no releases published | `CONFIRMED` | Support policy still needs an explicit maintained version matrix. |
+| Private fallback inbox, acknowledgement target, disclosure SLA, public key, and bounty posture | `NEEDS VERIFICATION` | Do not publish promises unless the channel and expectations are real and maintained. |
 
 > [!WARNING]
-> Platform state is not the same thing as repo state. Checked-in Markdown can describe intended disclosure posture, but it does not by itself prove rulesets, required checks, environment approvals, fallback inboxes, or other platform-only settings.
+> Platform state is not the same thing as repo state. Checked-in Markdown can describe intended disclosure posture, but it does not by itself prove rulesets, required checks, environment approvals, fallback inboxes, advisory settings, or other platform-only controls.
+
+[Back to top](#kfm-github-security-policy)
 
 ## Accepted inputs
 
@@ -88,13 +96,15 @@ Use this policy for **private** reports involving the following security-affecti
 | Report type | Examples | Why it belongs here |
 |---|---|---|
 | Access-control or boundary failure | auth bypass, privilege escalation, direct client access to canonical stores, direct client access to model runtime, steward-surface privilege bleed | These weaken the trust membrane and least-privilege posture. |
-| Evidence or citation failure | broken evidence resolution, consequential uncited output, policy-bypass retrieval, stale or unsupported claims presented as current | In KFM, trust failures are security failures. |
-| Policy or release-integrity failure | missing proof objects, broken promotion gate, unsigned or unattested release artifact, spec-hash drift, missing redaction/generalization, incorrect review state | Publication and promotion are governed security transitions. |
+| Evidence or citation failure | broken EvidenceRef resolution, consequential uncited output, policy-bypass retrieval, stale or unsupported claims presented as current | In KFM, trust failures can become security failures. |
+| Policy or release-integrity failure | missing proof objects, broken promotion gate, unsigned or unattested release artifact, `spec_hash` drift, missing redaction/generalization, incorrect review state | Publication and promotion are governed security transitions. |
 | Supply-chain, workflow, or automation failure | credential leaks, over-permissioned GitHub Actions, review-bypass workflow logic, missing attestations, unsafe automation token usage | GitHub automation is part of KFM’s governed delivery path. |
-| Runtime exposure or unsafe serving | public exposure of local model runtime, canonical-store exposure, insecure service defaults, ungoverned internal surface exposed externally | These threaten confidentiality, integrity, and controlled response behavior. |
+| Runtime exposure or unsafe serving | public exposure of local model runtime, canonical-store exposure, insecure service defaults, ungoverned internal surface exposed externally | These threaten confidentiality, integrity, controlled response behavior, and auditability. |
 | Availability or correction-path failure | denial-of-service, rollback gap, correction failure, stale-without-warning behavior, release that cannot be withdrawn cleanly | KFM must preserve safe negative outcomes and recoverability. |
-| Rights, sensitivity, or stewardship leakage | exact-location exposure, release of redaction-sensitive material, unresolved rights posture, unsafe archival/heritage disclosure | KFM security includes stewardship and publication safety, not just exploit prevention. |
+| Rights, sensitivity, or stewardship leakage | exact-location exposure, release of redaction-sensitive material, unresolved rights posture, unsafe archival/heritage/ecological disclosure | KFM security includes stewardship and publication safety, not just exploit prevention. |
 | Security-affecting documentation or disclosure-path failure | broken private reporting instructions, misleading contributor guidance, docs that route researchers into public exposure, unsafe example commands | In KFM, docs are part of the production trust surface. |
+
+[Back to top](#kfm-github-security-policy)
 
 ## Exclusions
 
@@ -102,11 +112,14 @@ Use this policy for **private** reports involving the following security-affecti
 |---|---|---|
 | Feature requests, product ideas, or normal UX feedback | Not security by itself | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) or normal issue flow |
 | Ordinary data/content corrections with no confidentiality, integrity, release, or policy impact | These follow governed correction paths, not security disclosure | normal correction / review workflow |
-| Canonical policy rule bodies, schemas, or test fixtures | This file should not become a policy store or contract registry | policy / contract surfaces |
+| Canonical policy rule bodies, schemas, or test fixtures | This file should not become a policy store or contract registry | [`../policy/`](../policy/), [`../contracts/`](../contracts/), or [`../schemas/`](../schemas/) |
 | Environment-specific incident commands or operator-only recovery details | Public policy should not become an internal runbook dump | internal runbooks and ops docs |
 | Public proof-of-concept release before coordination | It can increase user exposure before containment | private reporting path only |
-| Social engineering, retaliatory access, counterattack, or hackback | Explicitly incompatible with responsible disclosure posture | prohibited |
+| Social engineering, phishing, physical intrusion, retaliatory access, counterattack, or hackback | Explicitly incompatible with responsible disclosure posture | prohibited |
 | Cosmetic documentation edits with no disclosure, trust, or safety consequence | Not security by itself | normal docs workflow |
+| Unrelated third-party systems | KFM cannot authorize testing outside its own controlled surfaces | report to the owner of that system unless KFM-controlled configuration created the issue |
+
+[Back to top](#kfm-github-security-policy)
 
 ## Supported releases and scope
 
@@ -129,7 +142,9 @@ Repository release support still needs explicit maintainer definition, but sever
 > The absence of published GitHub Releases does not by itself define the supported-version policy. Maintainers should publish an explicit support window here if support is narrower than “current `main` branch plus unreleased repository state.”
 
 > [!NOTE]
-> Current public `main` shows `.github/workflows/README.md` only. Public GitHub Actions history remains visible, but that history should be treated as historical signal rather than proof of currently checked-in workflow YAMLs, required checks, or platform-side rules.
+> Current public `main` shows `.github/workflows/README.md` only. Historical Actions/UI signals can help with reconstruction or archaeology, but they are not proof of current checked-in workflow YAMLs, required checks, or platform-side rules.
+
+[Back to top](#kfm-github-security-policy)
 
 ## Report a vulnerability
 
@@ -155,7 +170,7 @@ Report security issues **privately first**.
 | Bounty / reward program | `No program is confirmed in visible project evidence; verify before publication` |
 
 > [!WARNING]
-> Do not publish a fallback inbox, public key, or disclosure SLA here unless the channel is actually monitored and the response expectations are real.
+> Do not publish a fallback inbox, public key, acknowledgement target, status-update cadence, disclosure SLA, or bug-bounty claim here unless the channel is actually monitored and the response expectations are real.
 
 > [!NOTE]
 > GitHub private vulnerability reporting and `SECURITY.md` are related but distinct. In this repository the GitHub advisory intake button is currently visible, so that is the preferred lane. This file remains the canonical public policy and fallback instruction surface.
@@ -169,9 +184,10 @@ A useful report includes:
 - reproduction steps
 - the smallest safe proof of concept
 - expected safe behavior vs. observed behavior
-- whether the issue affects confidentiality, integrity, availability, policy enforcement, evidence linkage, release integrity, review state, correction behavior, or runtime trust
+- whether the issue affects confidentiality, integrity, availability, policy enforcement, evidence linkage, release integrity, review state, correction behavior, runtime trust, or rights/sensitivity handling
 - any logs, screenshots, digests, or receipts needed to reproduce the issue, with sensitive data minimized or redacted
-- any suggested mitigation, containment, or rollback consideration
+- any suggested mitigation, containment, rollback, redaction, correction, or withdrawal consideration
+- disclosure constraints or timing concerns
 
 <details>
 <summary><strong>Private report template</strong></summary>
@@ -188,7 +204,7 @@ Minimal proof of concept:
 Expected safe behavior:
 Observed behavior:
 Sensitive data touched (if any):
-Suggested mitigation or containment:
+Suggested mitigation, containment, rollback, redaction, correction, or withdrawal:
 Disclosure constraints or timing concerns:
 Contact preference:
 ```
@@ -227,6 +243,8 @@ Unless KFM publishes explicit written authorization, the following are out of sc
 - mass scanning or automated exploitation beyond agreed scope
 - testing that targets exact locations, culturally sensitive materials, or restricted historical/ecological content without explicit authorization
 - retaliatory access, counterattack, or hackback
+
+[Back to top](#kfm-github-security-policy)
 
 ## Triage, remediation, and coordinated disclosure
 
@@ -269,6 +287,8 @@ Where GitHub repository security advisories are enabled, use that private adviso
 
 No public disclosure should outrun containment, fix verification, or a clearly defined coordinated-disclosure window.
 
+[Back to top](#kfm-github-security-policy)
+
 ## Disclosure flow
 
 ```mermaid
@@ -290,6 +310,8 @@ flowchart LR
 
 Above: a high-level disclosure path showing private intake, safe reproduction, containment, fix verification, evidence updates, and coordinated disclosure.
 
+[Back to top](#kfm-github-security-policy)
+
 ## Security-affecting change checklist
 
 Use this list for any change that can affect trust, exposure, release integrity, or runtime safety.
@@ -307,6 +329,8 @@ Use this list for any change that can affect trust, exposure, release integrity,
 - [ ] Documentation, examples, diagrams, and runbooks were updated with the behavior
 - [ ] Sensitive data, exact locations, and restricted content remain correctly withheld or generalized
 - [ ] Recovery implications reviewed: backup, restore, supersession, correction notice, or withdrawal path
+
+[Back to top](#kfm-github-security-policy)
 
 ## FAQ
 
@@ -361,7 +385,7 @@ Before merging this file, verify and complete the following:
 - [ ] Decide whether the currently empty [`./ISSUE_TEMPLATE/config.yml`](./ISSUE_TEMPLATE/config.yml) should stay intentionally minimal or gain explicit security-routing text; until then, do not rely on issue UI steering for private disclosure.
 - [ ] Replace acknowledgement, status-update, and coordinated-disclosure placeholders with real maintained values.
 - [ ] Confirm whether the repo offers encryption guidance, a reward program, or neither.
-- [ ] Recheck live rulesets, branch protection, required status checks, signed-commit settings, and CODEOWNERS enforcement expectations referenced by this policy.
+- [ ] Recheck live rulesets, branch protection, required status checks, signed-commit settings, environment approvals, and CODEOWNERS enforcement expectations referenced by this policy.
 - [ ] Recheck the live `.github/workflows/` inventory and any platform-side required checks before linking security expectations to specific workflow gates elsewhere.
 - [ ] If issue forms or chooser config are later added, keep them aligned with the private-reporting posture in this file.
 - [ ] Set the final KFM metadata UUID in the meta block.
