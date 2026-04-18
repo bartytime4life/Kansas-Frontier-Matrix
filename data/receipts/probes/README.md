@@ -1,52 +1,17 @@
-<!--
-KFM Meta Block V2
-doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION
 title: Probe Receipt Packs (`data/receipts/probes/`)
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
-created: <NEEDS_VERIFICATION_CREATED_DATE>
-updated: 2026-04-16
-policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
-related:
-  - ../README.md
-  - ../../README.md
-  - ../../raw/README.md
-  - ../../work/README.md
-  - ../../quarantine/README.md
-  - ../../processed/README.md
-  - ../../catalog/README.md
-  - ../../published/README.md
-  - ../../proofs/README.md
-  - ../../registry/README.md
-  - ../../../tools/probes/README.md
-  - ../../../tools/validators/README.md
-  - ../../../tools/validators/promotion_gate/README.md
-  - ../../../tools/attest/README.md
-  - ../../../contracts/README.md
-  - ../../../schemas/README.md
-  - ../../../policy/README.md
-  - ../../../tests/README.md
-  - ../../../.github/workflows/README.md
-  - ../../../.github/CODEOWNERS
-  - ../../../.github/PULL_REQUEST_TEMPLATE.md
-tags:
-  - kfm
-  - data
-  - receipts
-  - probes
-  - process-memory
-  - watchers
-  - audit
-  - drift
-notes:
-  - Parent `data/receipts/` and sibling `tools/probes/` lanes are current public-main surfaces.
-  - This leaf is documented as a truthful landing contract and should not be read as proof that `data/receipts/probes/` is already populated on the target branch.
-  - April 2026 probe thin-slice materials are used as the nearest lane-specific baseline.
-  - This revision normalizes probe receipts under the single central `data/receipts/` process-memory doctrine.
-  - doc_id, created date, policy_label, and exact checked-in leaf inventory remain NEEDS VERIFICATION.
--->
+owners: [@bartytime4life]
+created: NEEDS-VERIFICATION
+updated: 2026-04-18
+policy_label: NEEDS-VERIFICATION
+related: [../README.md, ../../README.md, ../../raw/README.md, ../../work/README.md, ../../quarantine/README.md, ../../processed/README.md, ../../catalog/README.md, ../../published/README.md, ../../proofs/README.md, ../../registry/README.md, ../../../tools/probes/README.md, ../../../tools/validators/README.md, ../../../tools/validators/promotion_gate/README.md, ../../../tools/attest/README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../.github/workflows/README.md, ../../../.github/CODEOWNERS, ../../../.github/PULL_REQUEST_TEMPLATE.md]
+tags: [kfm, data, receipts, probes, process-memory, watchers, audit, drift]
+notes: [Parent `data/receipts/` and sibling `tools/probes/` lanes are current public-main surfaces. This leaf is documented as a truthful landing contract and should not be read as proof that `data/receipts/probes/` is already populated on the target branch. April 2026 probe thin-slice materials are used as the nearest lane-specific baseline. This revision normalizes probe receipts under the single central `data/receipts/` process-memory doctrine while preserving separation from proofs, policy, catalog closure, and publication. doc_id, created date, policy_label, and exact checked-in leaf inventory remain NEEDS VERIFICATION.]
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -56,12 +21,14 @@ Receipt-pack landing page for read-only probe runs that observe upstream drift a
 
 <div align="left">
 
-![Status: Experimental](https://img.shields.io/badge/status-experimental-6f42c1)
-![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
-![Role: Probe Process Memory](https://img.shields.io/badge/role-probe__process__memory-0a7ea4)
-![Posture: Read Only](https://img.shields.io/badge/posture-read--only-4051b5)
-![Proofs: Separate](https://img.shields.io/badge/proofs-separate-f59e0b)
-![Tree: Needs Verification](https://img.shields.io/badge/tree-NEEDS__VERIFICATION-f59e0b)
+![status](https://img.shields.io/badge/status-experimental-6f42c1)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![role](https://img.shields.io/badge/role-probe__process__memory-0a7ea4)
+![posture](https://img.shields.io/badge/posture-read--only-4051b5)
+![receipts](https://img.shields.io/badge/receipts-centralized-0ea5e9)
+![proofs](https://img.shields.io/badge/proofs-separate-f59e0b)
+![surface](https://img.shields.io/badge/surface-process__memory-111111)
+![tree](https://img.shields.io/badge/tree-NEEDS__VERIFICATION-f59e0b)
 
 </div>
 
@@ -72,7 +39,8 @@ Receipt-pack landing page for read-only probe runs that observe upstream drift a
 | **Owners** | `@bartytime4life` |
 | **Path target** | `data/receipts/probes/README.md` |
 | **Role** | probe-scoped child lane under the central `data/receipts/` process-memory surface |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
+| **Evidence posture** | doctrine-grounded · parent-lane and sibling-lane grounded · exact checked-in subtree inventory remains bounded |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Hydrology probe thread](#hydrology-probe-thread-proposed) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
 > This surface is for **probe receipts and summaries only**.
@@ -91,7 +59,7 @@ Receipt-pack landing page for read-only probe runs that observe upstream drift a
 > data/receipts/
 > ```
 >
-> Probe receipts are a **child family** within that lane, not a separate receipt doctrine and not a release surface.
+> Probe receipts are a **child family** within that lane, not a second receipt doctrine and not a release surface.
 
 > [!WARNING]
 > Current public-tree evidence confirms the parent `data/receipts/` lane and the sibling `tools/probes/` lane. It does **not** by itself prove that this leaf already exists on the target branch as a populated subtree.
@@ -332,7 +300,7 @@ sed -n '1,220p' .github/workflows/README.md 2>/dev/null
 
 ```bash
 rg -n \
-  "probe_receipt|data/receipts/probes|geometry_hash|record_count_current|metadata_version_current|decision_hint|raw-manifest|review_required" \
+  "probe_receipt|data/receipts/probes|geometry_hash|record_count_current|metadata_version_current|decision_hint|raw-manifest|review_required|stats_receipt|decision_envelope" \
   data tools contracts schemas policy tests .github -S 2>/dev/null
 ```
 
@@ -420,6 +388,52 @@ That means:
 
 ---
 
+## Hydrology probe thread (**PROPOSED**)
+
+A probe-first hydrology watcher can fit this receipt lane **only while** its emitted artifacts remain process memory rather than runtime-proof or publication authority.
+
+### Likely hydrology receipt family
+
+If a streamflow probe lands under `tools/probes/hydro-watcher/`, the most natural receipt-side shape is still a child of the central receipts lane:
+
+```text
+data/receipts/probes/
+└── usgs-water/
+    └── YYYY-MM-DD/
+        └── <run_id>.json
+```
+
+### What belongs here from that thread
+
+Plausible hydrology probe process-memory artifacts include:
+
+- one `run_receipt` for the streamflow probe run
+- bounded request parameters and date windows
+- `spec_hash`
+- upstream response digests
+- a machine-readable run outcome such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` **only as observational process memory**
+- links or paths to `data/work/.../records.ndjson` and `run_manifest.json`
+
+### What does **not** move here automatically
+
+The following should remain outside this leaf unless stronger repo evidence says otherwise:
+
+- runtime-proof fixtures
+- schema-home contracts
+- policy authority
+- public-alert publication
+- proof packs
+- release manifests
+- UI-facing evidence drawer logic
+
+### Boundary reminder
+
+A hydrology `decision_envelope.json` or `stats_receipt.json` may exist in a work or event sub-lane as a **PROPOSED** design direction, but that does **not** make this receipt leaf the owner of runtime-proof or baseline authority.
+
+[Back to top](#top)
+
+---
+
 ## Diagram
 
 ```mermaid
@@ -473,6 +487,16 @@ flowchart LR
 | `data/catalog/` | outward discovery and provenance closure |
 | `data/published/` | release-backed materialized scope |
 
+### Illustrative hydrology receipt split
+
+| Artifact | Example location | Role | Boundary reminder |
+|---|---|---|---|
+| Run receipt | `data/receipts/probes/usgs-water/YYYY-MM-DD/<run_id>.json` | process memory for one bounded probe run | receipt, not proof |
+| Work records | `data/work/hydrology/usgs-water/<run_id>/records.ndjson` | staging/work output | not receipt authority |
+| Run manifest | `data/work/hydrology/usgs-water/<run_id>/run_manifest.json` | local run summary | not release manifest authority |
+| Stats receipt | `data/work/hydrology/usgs-water-events/<run_id>/<site_id>/stats_receipt.json` | bounded baseline fetch memory | **PROPOSED** and not this lane by default |
+| Decision envelope | `data/work/hydrology/usgs-water-events/<run_id>/<site_id>/decision_envelope.json` | bounded event summary | **PROPOSED** and not public-alert authority |
+
 [Back to top](#top)
 
 ---
@@ -489,6 +513,7 @@ flowchart LR
 - [ ] Relative links resolve correctly from this leaf.
 - [ ] `data/receipts/README.md`, `tools/probes/README.md`, and any new probe docs stay in sync.
 - [ ] Unknowns remain visible instead of being rewritten as certainty.
+- [ ] Any hydrology-specific examples remain clearly marked **PROPOSED** until the branch inventory is verified.
 
 [Back to top](#top)
 
@@ -529,6 +554,10 @@ Because current public-tree evidence confirms the **parent** receipt lane and th
 Yes, as a **review candidate hint** only.
 
 That is a handoff convenience, not a publication decision.
+
+### Can a hydrology probe receipt live here if the probe emits decision-like objects elsewhere?
+
+Yes. The run receipt can still live here as process memory. That does not grant this lane ownership of runtime-proof, stats-baseline, or publication logic.
 
 [Back to top](#top)
 
@@ -593,6 +622,40 @@ If the repo lands an executable or schema-backed implementation, normalize that 
 </details>
 
 <details>
+<summary><strong>Illustrative hydrology run receipt (`PROPOSED`)</strong></summary>
+
+```json
+{
+  "receipt_type": "run_receipt",
+  "run_id": "usgs-water-continuous-00060-06891000-06892350-20260418T000000Z",
+  "source_id": "usgs-waterdata-ogc",
+  "collection": "continuous",
+  "policy_label": "public-safe",
+  "spec_hash": "sha256:...",
+  "query": {
+    "sites": ["06891000", "06892350"],
+    "parameter": "00060",
+    "start": "2026-03-01T00:00:00Z",
+    "end": "2026-04-01T00:00:00Z"
+  },
+  "outcome": "ANSWER",
+  "record_count": 123,
+  "artifacts": {
+    "records_ndjson": "data/work/hydrology/usgs-water/.../records.ndjson",
+    "run_manifest": "data/work/hydrology/usgs-water/.../run_manifest.json"
+  }
+}
+```
+
+### Reading rule for this example
+
+This is a **PROPOSED** design-aligned example only.
+
+It is included so this receipt leaf can acknowledge the likely streamflow watcher direction without claiming that these exact files or fields are already merged on the target branch.
+
+</details>
+
+<details>
 <summary><strong>Evidence boundary for this README</strong></summary>
 
 | Claim class | What is safe to say here |
@@ -601,6 +664,7 @@ If the repo lands an executable or schema-backed implementation, normalize that 
 | **CONFIRMED** | The April 2026 packet family uses `data/receipts/probes/usfws/2026-04-13/receipt.json` and `summary.md` as a thin-slice example |
 | **INFERRED** | This leaf is a strong repo-native fit because parent and sibling lanes already exist and the packet family names a concrete receipt-pack path under them |
 | **PROPOSED** | The generalized subtree shape for `data/receipts/probes/<source>/<date>/...` |
+| **PROPOSED** | Hydrology run-receipt examples and watcher-aligned receipt vocabulary |
 | **UNKNOWN / NEEDS VERIFICATION** | Exact checked-in leaf inventory, final schema authority for probe receipts, exact workflow emitters, and current active-branch automation that writes this path |
 
 </details>
