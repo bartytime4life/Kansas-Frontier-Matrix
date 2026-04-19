@@ -6,56 +6,62 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: REVIEW_REQUIRED_DATE
-updated: 2026-04-14
+updated: 2026-04-18
 policy_label: public
-related: [
-  ../README.md,
-  ../../README.md,
-  ./KFM_STAC_PROFILE.md,
-  ./KFM_DCAT_PROFILE.md,
-  ./KFM_PROV_PROFILE.md,
-  ./KFM_MARKDOWN_WORK_PROTOCOL.md,
-  ./markdown-rules.md,
-  ./governance/README.md,
-  ./governance/ROOT_GOVERNANCE.md,
-  ./faircare/README.md,
-  ./faircare/FAIRCARE-GUIDE.md,
-  ./sovereignty/README.md,
-  ./sovereignty/INDIGENOUS-DATA-PROTECTION.md,
-  ./stac/README.md,
-  ./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md,
-  ../runbooks/README.md,
-  ../../contracts/README.md,
-  ../../schemas/README.md,
-  ../../schemas/contracts/README.md,
-  ../../schemas/contracts/v1/README.md,
-  ../../policy/README.md,
-  ../../tests/README.md,
-  ../../.github/workflows/README.md
-]
-tags: [kfm, docs, standards, metadata, provenance, governance, markdown]
-notes: [UUID and commit-level dates still need direct verification; current public main shows substantive FAIR+CARE guidance, lane-local README files under governance/faircare/sovereignty/stac, and a visible markdown-rules.md task brief that should remain distinct from the normative Markdown protocol.]
+related: [../README.md, ../../README.md, ./KFM_STAC_PROFILE.md, ./KFM_DCAT_PROFILE.md, ./KFM_PROV_PROFILE.md, ./KFM_MARKDOWN_WORK_PROTOCOL.md, ./markdown-rules.md, ./governance/README.md, ./governance/ROOT_GOVERNANCE.md, ./faircare/README.md, ./faircare/FAIRCARE-GUIDE.md, ./sovereignty/README.md, ./sovereignty/INDIGENOUS-DATA-PROTECTION.md, ./stac/README.md, ./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md, ../runbooks/README.md, ../../contracts/README.md, ../../contracts/vocab/README.md, ../../schemas/README.md, ../../schemas/contracts/README.md, ../../schemas/contracts/v1/README.md, ../../policy/README.md, ../../tests/README.md, ../../tests/contracts/README.md, ../../tests/e2e/runtime_proof/, ../../.github/workflows/README.md]
+tags: [kfm, docs, standards, metadata, provenance, governance, markdown, routing, runtime-proof]
+notes: [UUID and commit-level dates still need direct verification., This revision preserves the public-main standards surface while making contract/schema routing ambiguity explicit., docs/standards is a prose authority lane and must not silently choose the canonical machine-contract home., Runtime-proof is now treated as a downstream consumer that must not redefine contract or schema authority.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # `docs/standards/`
 
-Governed **standards index** for KFM metadata, provenance, publication, documentation, and review.
+Governed **standards index** for KFM metadata, provenance, publication, documentation, review, and cross-lane routing rules.
 
-> [!NOTE]
-> **Status:** experimental  
-> **Document status:** draft  
-> **Owners:** `@bartytime4life` *(current `/docs/` CODEOWNERS owner; no narrower `/docs/standards/` rule is directly visible on public `main`)*  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-draft-orange) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![Branch](https://img.shields.io/badge/branch-main-blue) ![KFM](https://img.shields.io/badge/KFM-standards-purple) ![Evidence](https://img.shields.io/badge/evidence-public%20main%20%2B%20March--April%202026%20corpus-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current public standards surface](#current-public-standards-surface) · [Lane-local directories](#lane-local-directories) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Standards map](#standards-map) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
+
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Doc](https://img.shields.io/badge/doc-draft-orange)
+![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
+![Routing](https://img.shields.io/badge/routing-authority__split__explicit-5319e7)
+![Branch](https://img.shields.io/badge/branch-main-blue)
+![KFM](https://img.shields.io/badge/KFM-standards-purple)
+![Evidence](https://img.shields.io/badge/evidence-public%20main%20%2B%20April%202026%20corpus-lightgrey)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Path** | `docs/standards/README.md` |
+| **Status** | experimental |
+| **Owners** | `@bartytime4life` *(current visible `/docs/` owner signal; no narrower `/docs/standards/` rule directly confirmed here)* |
+| **Primary job** | root standards index and routing surface for shared norm text |
+| **Not this lane** | machine-contract registry, executable policy home, fixture store, workflow gatehouse, or silent authority winner |
+| **Current emphasis** | truthful public-tree index, routing clarity, authority-split visibility, runtime-proof consumption boundaries |
+
+**Quick jumps:** [Scope](#scope) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Current public standards surface](#current-public-standards-surface) · [Lane-local directories](#lane-local-directories) · [Routing guardrails](#routing-guardrails) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Standards map](#standards-map) · [Put-it-here test](#put-it-here-test) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This index is grounded in two evidence layers:
 >
 > - the current KFM doctrine corpus
-> - direct public-`main` inspection of `docs/standards/`, its lane-local subdirectories, `docs/README.md`, `.github/CODEOWNERS`, `contracts/README.md`, `schemas/README.md`, `schemas/contracts/README.md`, `schemas/contracts/v1/README.md`, `policy/README.md`, `tests/README.md`, `docs/runbooks/README.md`, and `.github/workflows/README.md`
+> - direct public-`main` inspection of `docs/standards/`, its lane-local subdirectories, `docs/README.md`, `.github/CODEOWNERS`, `contracts/README.md`, `contracts/vocab/README.md`, `schemas/README.md`, `schemas/contracts/README.md`, `schemas/contracts/v1/README.md`, `policy/README.md`, `tests/README.md`, `tests/contracts/README.md`, `docs/runbooks/README.md`, and `.github/workflows/README.md`
+
+> [!WARNING]
+> `docs/standards/` must not resolve the current **machine-contract home split** by tone, implication, or convenience.
+>
+> Current repo signals still point at both:
+>
+> - `../../contracts/`
+> - `../../schemas/contracts/`
+>
+> Until the repo explicitly resolves that split, this standards lane should route contributors carefully and **block silent duplication**.
 
 > [!TIP]
-> In this README, **substantive draft** means a file already carries real normative content on public `main`. It does **not** mean the standard is final, machine-enforced, or fully wired into CI.
+> Treat `tests/e2e/runtime_proof/` as a **downstream consumer** of standards, contracts, schemas, and policy.
+>
+> It may prove request-time behavior, but it must **not** choose contract authority, invent private vocabularies, or fork schema shape by test convenience.
 
 > [!NOTE]
 > [`markdown-rules.md`](./markdown-rules.md) is a visible repo surface on current public `main`, but it is **not** the same thing as [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md).
@@ -85,6 +91,7 @@ Use this directory for:
 - cross-domain governance text
 - lane-local standards routing READMEs
 - normative documentation protocol
+- temporary routing law while machine-contract authority remains unresolved
 
 Do **not** use this lane to quietly become:
 
@@ -95,7 +102,32 @@ Do **not** use this lane to quietly become:
 - the runbook lane
 - a duplicate authority source for rules already owned elsewhere
 
-[Back to top](#docsstandards)
+### Temporary routing rule
+
+Until canonical machine-contract authority is written down explicitly:
+
+1. **Do not create new contract families by default**
+2. **Do not let standards prose imply that both homes are equally valid for new files**
+3. **Do not let runtime-proof, validators, or schemas point at different “authoritative” paths**
+4. **Require an explicit placement decision before landing new trust-bearing contract families**
+
+[Back to top](#top)
+
+---
+
+## Evidence posture
+
+| Claim | Status | Why it matters |
+|---|---|---|
+| `docs/standards/` is a real governed standards lane | **CONFIRMED** | this file is a live routing surface, not a placeholder |
+| root-level standards and lane-local standards files are visible on public `main` | **CONFIRMED** | this index must route to existing files honestly |
+| `contracts/` and `schemas/contracts/` are both meaningful adjacent signals | **CONFIRMED** | standards routing must not hide the split |
+| `contracts/vocab/` and `schemas/contracts/vocab/` both matter to routing | **CONFIRMED** | vocabulary ownership is part of standards routing now |
+| runtime-proof is now a downstream standards consumer | **INFERRED** | current KFM doctrine repeatedly pressures request-time proof surfaces |
+| canonical machine-contract home is resolved | **NEEDS VERIFICATION** | current evidence still shows split authority |
+| this lane may choose the winning machine-contract path implicitly | **DENIED by doctrine** | prose routing must not settle machine authority by accident |
+
+[Back to top](#top)
 
 ---
 
@@ -111,12 +143,12 @@ Do **not** use this lane to quietly become:
 | Root standard files | [`./KFM_STAC_PROFILE.md`](./KFM_STAC_PROFILE.md) · [`./KFM_DCAT_PROFILE.md`](./KFM_DCAT_PROFILE.md) · [`./KFM_PROV_PROFILE.md`](./KFM_PROV_PROFILE.md) · [`./KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) · [`./markdown-rules.md`](./markdown-rules.md) |
 | Lane-local directories | [`./governance/README.md`](./governance/README.md) · [`./faircare/README.md`](./faircare/README.md) · [`./sovereignty/README.md`](./sovereignty/README.md) · [`./stac/README.md`](./stac/README.md) |
 | Primary downstream standards and notes | [`./governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md) · [`./faircare/FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md) · [`./sovereignty/INDIGENOUS-DATA-PROTECTION.md`](./sovereignty/INDIGENOUS-DATA-PROTECTION.md) · [`./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md`](./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md) |
-| Adjacent governed areas | [`../runbooks/README.md`](../runbooks/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) · [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
+| Adjacent governed areas | [`../runbooks/README.md`](../runbooks/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) · [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../tests/contracts/README.md`](../../tests/contracts/README.md) · [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/) · [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 | Ownership signal | `/docs/` currently routes to `@bartytime4life` in `.github/CODEOWNERS`; no narrower `/docs/standards/` rule is directly visible on public `main` |
 
 ### Boundary rule
 
-Use `docs/standards/` to state **shared norm text**.
+Use `docs/standards/` to state **shared norm text** and **routing law**.
 
 Do **not** use it to own:
 
@@ -128,7 +160,17 @@ Do **not** use it to own:
 - release proof objects
 - ad hoc planning notes disguised as standards
 
-[Back to top](#docsstandards)
+### Routing rule for adjacent machine surfaces
+
+When standards text refers to machine-facing companions:
+
+- it may point to `contracts/`
+- it may point to `schemas/contracts/`
+- it may point to both **only to describe the current unresolved state**
+- it must **not** tell contributors to add new trust-bearing families to both
+- it must **not** imply that ambiguity is harmless
+
+[Back to top](#top)
 
 ---
 
@@ -147,7 +189,7 @@ The standards lane is no longer just this index plus a few profile files. Public
 | [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) | present, substantive draft protocol | repo-native Markdown authoring and review rules already have a normative home |
 | [`markdown-rules.md`](./markdown-rules.md) | present, visible task-facing authoring brief / repo-local instruction surface | contributors should not confuse this file with the normative Markdown protocol or let the two drift silently apart |
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -167,14 +209,70 @@ The standards lane is no longer just this index plus a few profile files. Public
 | [`../README.md`](../README.md) | present, substantive | the repo root frames KFM as governed, evidence-first, map-first, and time-aware |
 | [`../runbooks/README.md`](../runbooks/README.md) | present, substantive | procedures, rollback, correction, and operator behavior now have a visible sibling surface and should not be absorbed into standards prose |
 | [`../../contracts/README.md`](../../contracts/README.md) | present, substantive | root human-readable machine-contract guidance still lives here |
+| [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md) | present, substantive | vocabulary routing now has an explicit root-side surface |
 | [`../../schemas/README.md`](../../schemas/README.md) | present, substantive | `schemas/` now has a live nested subtree, but schema-home authority remains explicitly unresolved |
-| [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) | present, substantive | current public `main` now shows a real machine-file-bearing subtree under `schemas/contracts/` |
+| [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) | present, substantive | current public `main` shows a real machine-file-bearing subtree under `schemas/contracts/` |
 | [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) | present, substantive | the versioned contract lane is already visible and should be routed honestly when standards talk about machine-facing companions |
 | [`../../policy/README.md`](../../policy/README.md) | present, substantive | keeps deny-by-default, reasons/obligations, and publication-as-governance visible |
 | [`../../tests/README.md`](../../tests/README.md) | present, substantive | frames verification as governed proof, not generic QA |
+| [`../../tests/contracts/README.md`](../../tests/contracts/README.md) | present, substantive | contract-facing verification should eventually point to one authoritative machine path |
+| [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/) | doctrinally relevant downstream proof family; exact branch contents may vary | request-time proof must consume one authoritative contract/schema path rather than redefining it |
 | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | present, README-only lane | public `main` still documents workflow intent more strongly than checked-in workflow YAML inventory |
 
-[Back to top](#docsstandards)
+[Back to top](#top)
+
+---
+
+## Routing guardrails
+
+This section is intentionally explicit because the repo now has enough live surfaces to drift by “reasonable” interpretation.
+
+### Guardrail 1 — no silent authority choice
+
+If a standard needs to reference machine contracts:
+
+- cite the current state honestly
+- name unresolved authority when it exists
+- avoid language that implies “put it in either place”
+
+### Guardrail 2 — no new family by inertia
+
+Until the repo resolves canonical machine-contract authority:
+
+- do **not** create new trust-bearing contract families by default
+- do **not** add a matching file under both `contracts/` and `schemas/contracts/`
+- do **not** let standards prose normalize duplication as routine
+
+### Guardrail 3 — runtime-proof is consumption, not authorship
+
+`tests/e2e/runtime_proof/` may:
+
+- consume contract and schema authority
+- prove governed runtime behavior
+- validate outward outcome grammar
+
+It must **not**:
+
+- invent new envelope shapes
+- fork vocabulary families
+- choose the canonical home by fixture convenience
+- silently repair upstream ambiguity with local copies
+
+### Guardrail 4 — vocabulary must stay singular
+
+When standards text references shared vocabularies:
+
+- contract-shared vocab points to `contracts/vocab/` or the explicitly chosen canonical machine-readable home
+- policy-owned code lists point to `policy/`
+- if `schemas/contracts/vocab/` remains in play, its relationship to `contracts/vocab/` must be described explicitly as canonical, mirror, pointer, or unresolved
+
+### Guardrail 5 — one rule family, one owning surface
+
+A standards file may route to many downstream surfaces, but each rule family still needs one owning home.
+
+If you cannot name the owner cleanly, the standards change is not ready.
+
+[Back to top](#top)
 
 ---
 
@@ -190,7 +288,7 @@ Place a document in `docs/standards/` when it defines a reusable rule that multi
 | documentation protocols | rules for governed Markdown authoring, structure, truth posture, and review |
 | lane-local directory READMEs | routing, scope, exclusions, and local ownership boundaries for a standards sub-lane |
 | interoperability and deployment notes | standards-aligned guidance that sharpens how KFM implements shared profiles |
-| cross-cutting vocabularies and validation expectations | reason codes, obligations, labels, or review expectations that govern interpretation above one domain |
+| routing constraints for unresolved authority seams | temporary but necessary guardrails while adjacent machine homes are being reconciled |
 
 ### Minimum bar for anything added here
 
@@ -200,7 +298,7 @@ Place a document in `docs/standards/` when it defines a reusable rule that multi
 - it stays prose-focused rather than pretending to be executable policy or schema authority
 - it makes unresolved enforcement depth visible instead of smoothing it away
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -230,7 +328,7 @@ This directory should not become a catch-all, and this README should not duplica
 > [!NOTE]
 > A good rule of thumb: if the file is primarily **normative across multiple domains**, it likely belongs here. If it is primarily **machine-facing**, **operational**, **domain-specific**, or already owned by a dedicated downstream file, it probably does not belong in this index.
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -263,7 +361,7 @@ docs/standards/
 > [!CAUTION]
 > The tree above is a **public-main snapshot**, not a guarantee about the branch under review. Re-open the working checkout before merge and update this index if the lane changed again.
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -283,7 +381,21 @@ Use this index as a router, then move to the owning file:
 8. For sovereignty lane routing, start with [`sovereignty/README.md`](./sovereignty/README.md); for substantive sovereignty rules, go to [`sovereignty/INDIGENOUS-DATA-PROTECTION.md`](./sovereignty/INDIGENOUS-DATA-PROTECTION.md).
 9. For STAC-specific support notes beneath the main profile, start with [`stac/README.md`](./stac/README.md) and then use [`stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md`](./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md).
 
-### 2) Add or revise a standard
+### 2) If the change touches contracts or schemas
+
+Before editing standards text that references machine-facing surfaces:
+
+1. reopen [`../../contracts/README.md`](../../contracts/README.md)
+2. reopen [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md)
+3. reopen [`../../schemas/README.md`](../../schemas/README.md)
+4. reopen [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md)
+5. reopen [`../../tests/contracts/README.md`](../../tests/contracts/README.md)
+6. reopen [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/) or its nearest README / proof family surface
+7. confirm whether the branch has **explicitly** resolved canonical machine-contract home
+
+If not, route conservatively and avoid adding new trust-bearing family guidance.
+
+### 3) Add or revise a standard
 
 1. Confirm the document is **normative**, not exploratory.
 2. Check whether an existing root file, lane README, or downstream standard already owns the rule.
@@ -293,16 +405,19 @@ Use this index as a router, then move to the owning file:
    - substantive rule text.
 5. Re-check neighboring machine-facing and operational surfaces:
    - [`../../contracts/README.md`](../../contracts/README.md)
+   - [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md)
    - [`../../schemas/README.md`](../../schemas/README.md)
    - [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md)
    - [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md)
    - [`../../policy/README.md`](../../policy/README.md)
    - [`../../tests/README.md`](../../tests/README.md)
+   - [`../../tests/contracts/README.md`](../../tests/contracts/README.md)
+   - [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/)
    - [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
    - [`../runbooks/README.md`](../runbooks/README.md)
 6. Update this index whenever the standards surface, routing split, or maturity snapshot changes.
 
-### 3) Minimal authoring skeleton
+### 4) Minimal authoring skeleton
 
 ```md
 <!-- [KFM_META_BLOCK_V2]
@@ -340,15 +455,16 @@ _One-line purpose._
 ## Open verification
 ```
 
-### 4) Merge-time review prompts
+### 5) Merge-time review prompts
 
 - Does this change define a cross-cutting rule, or is it really a lane-local note?
 - Does an existing root file, lane README, or downstream standard already own the rule?
 - Did the change keep `markdown-rules.md` and `KFM_MARKDOWN_WORK_PROTOCOL.md` aligned where both still apply?
-- Did the change point to the contracts, schema, policy, tests, workflows, or runbooks it expects?
+- Did the change point to the contracts, schema, policy, tests, runtime-proof, workflows, or runbooks it expects?
 - Did it preserve KFM’s evidence-first, fail-closed, and correction-visible posture?
+- Did it avoid choosing machine-contract authority by implication?
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -380,8 +496,19 @@ Start here when you need to answer questions like these:
 - Which Markdown protocol should a governed README or standard follow?
 - Is `markdown-rules.md` the brief I should read for this task, or do I need the normative protocol file?
 - Which current files are real standards, which are lane-local routing surfaces, and which are still README-only support lanes?
+- Has the repo actually resolved contract-home authority, or do I need to route conservatively?
 
-[Back to top](#docsstandards)
+### For reviewers
+
+Reject changes that do any of the following:
+
+- imply that new machine-contract families can safely land in both `contracts/` and `schemas/contracts/`
+- let standards text silently upgrade an unresolved path into canonical authority
+- let runtime-proof tests or examples invent private outcome grammar, envelope shapes, or vocabulary families
+- duplicate lane-owned or downstream rule text without an explicit reason
+- downgrade a substantive standards file back to “scaffold” language without evidence
+
+[Back to top](#top)
 
 ---
 
@@ -420,16 +547,19 @@ flowchart LR
     MDP -.normative authoring law.-> DOCS[repo-authored Markdown]
     MR -.task-facing brief when present.-> DOCS
 
-    CONTRACTS[../../contracts/README.md] -.machine contracts.-> CLOSURE
+    CONTRACTS[../../contracts/README.md] -.human-readable machine-contract guidance.-> CLOSURE
+    CVOCAB[../../contracts/vocab/README.md] -.shared vocab guidance.-> CLOSURE
     SCHEMAS[../../schemas/README.md] -.boundary / authority split.-> CONTRACTS
     SCON[../../schemas/contracts/README.md] -.machine-file subtree.-> CONTRACTS
     POLICY[../../policy/README.md] -.deny-by-default rules.-> CLOSURE
     TESTS[../../tests/README.md] -.proof burdens.-> CLOSURE
+    TCON[../../tests/contracts/README.md] -.contract verification.-> CLOSURE
+    RTP[../../tests/e2e/runtime_proof/] -.consumes authoritative shapes only.-> CLOSURE
     WF[../../.github/workflows/README.md] -.automation gates when implemented.-> CLOSURE
     RUNBOOKS[../runbooks/README.md] -.operational procedures.-> CLOSURE
 ```
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -461,7 +591,18 @@ This section separates **root-level standard files** from **lane-local routing s
 | [`stac/README.md`](./stac/README.md) | STAC-specific support lane index | present | use for STAC support-lane routing |
 | [`stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md`](./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md) | STAC deployment/alignment note | present; substantive guidance note | use for STAC-specific interoperability and deployment comparison work |
 
-[Back to top](#docsstandards)
+### Machine-surface routing map
+
+| Change type | Best home now | Standards note |
+|---|---|---|
+| contract meaning and family semantics | `../../contracts/` | route there, but do not imply canonical machine-home authority is settled |
+| machine schema / enum enforcement | `../../schemas/` / `../../schemas/contracts/` | route there honestly; do not duplicate in prose |
+| shared vocabulary semantics | `../../contracts/vocab/` | route there unless a later explicit decision changes ownership |
+| policy-owned codes and obligations | `../../policy/` | standards may reference them, not own them |
+| contract verification | `../../tests/contracts/` | tests should consume one authoritative path |
+| request-time proof | `../../tests/e2e/runtime_proof/` | consumes authority; does not create it |
+
+[Back to top](#top)
 
 ---
 
@@ -481,14 +622,16 @@ This section separates **root-level standard files** from **lane-local routing s
 | FAIR+CARE standards build-out | yes | [`./faircare/FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md) |
 | sovereignty lane routing update | yes | [`./sovereignty/README.md`](./sovereignty/README.md) |
 | Indigenous/community-sensitive release rule | yes | [`./sovereignty/INDIGENOUS-DATA-PROTECTION.md`](./sovereignty/INDIGENOUS-DATA-PROTECTION.md) |
+| shared machine vocabulary semantics | no | [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md) |
 | API request/response schema | no | [`../../contracts/`](../../contracts/) or [`../../schemas/contracts/`](../../schemas/contracts/) |
 | Rego policy bundle or decision grammar | no | [`../../policy/`](../../policy/) |
 | test fixtures, golden files, or failure drills | no | [`../../tests/`](../../tests/) |
+| runtime-proof outcome fixture or request-time envelope example | no | [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/) |
 | publication / rollback / correction procedure | no | [`../runbooks/README.md`](../runbooks/README.md) and the owning runbook |
 | domain ingest runbook | no | domain / runbook / owning code surface |
 | exploratory note or literature digest | no | research / idea / planning surface |
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -500,7 +643,7 @@ A standards doc is ready to merge when all of the following are true:
 - [ ] scope is explicit and excludes material that belongs elsewhere
 - [ ] relative links resolve to the governing or downstream files it names
 - [ ] the change lands in the owning root file, lane README, or downstream standard if one already exists
-- [ ] contracts, schemas, policy, tests, workflow, and runbook touchpoints are referenced where relevant
+- [ ] contracts, schemas, vocab, policy, tests, runtime-proof, workflow, and runbook touchpoints are referenced where relevant
 - [ ] draft / experimental / unknown state is visible
 - [ ] the file does not silently create second authority beside a stronger neighboring surface
 - [ ] if the standard affects sensitive or public outputs, review triggers are explicit
@@ -514,10 +657,11 @@ A standards doc is ready to merge when all of the following are true:
 - [ ] [`faircare/FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md) is still described accurately and is **not** silently downgraded back to scaffold-only
 - [ ] `.github/CODEOWNERS` still supports the owner line used here
 - [ ] `.github/workflows/README.md` is still README-only on the target branch, or this file has been updated to reflect checked-in workflow YAML
-- [ ] `schemas/README.md` and `schemas/contracts/README.md` still reflect the current authority split and subtree reality, or this file has been updated to match
+- [ ] `contracts/README.md`, `contracts/vocab/README.md`, `schemas/README.md`, and `schemas/contracts/README.md` still reflect the current authority split, or this file has been updated to match
+- [ ] runtime-proof references still consume rather than redefine upstream authority
 - [ ] meta-block placeholders have been replaced or intentionally retained
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -531,6 +675,10 @@ No. Metadata profiles are central here, but the directory also covers governance
 
 No. Standards explain the rule set. Contracts and schemas are the machine-facing artifacts that implement or validate those rules, and policy is the executable decision layer that enforces them.
 
+### Does this file decide whether `contracts/` or `schemas/contracts/` is canonical?
+
+No. This README now makes that unresolved state explicit. It may route to both surfaces to describe current reality, but it must not quietly decide the winner.
+
 ### Is `FAIRCARE-GUIDE.md` still scaffold-only?
 
 No. Not on the current public-main snapshot used for this revision. The FAIR+CARE lane now has both a lane-local `README.md` and a substantive [`FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md).
@@ -538,6 +686,10 @@ No. Not on the current public-main snapshot used for this revision. The FAIR+CAR
 ### What is `markdown-rules.md` relative to `KFM_MARKDOWN_WORK_PROTOCOL.md`?
 
 `markdown-rules.md` is a visible repo-local authoring brief. [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) remains the normative standards-layer Markdown protocol unless the active branch explicitly changes that relationship.
+
+### Should runtime-proof tests define their own outcome grammar or envelope vocabulary?
+
+No. Runtime-proof should prove governed behavior using authoritative upstream shapes and vocabularies. If it needs a new value or field, that change should be made in the owning upstream surface first.
 
 ### Should lane-local READMEs repeat their child standards?
 
@@ -547,7 +699,7 @@ No. Lane-local READMEs should define lane scope, routing, exclusions, and owners
 
 The stronger governing doctrine wins. Update the proposal, or document the conflict and route it for review instead of letting drift land quietly.
 
-[Back to top](#docsstandards)
+[Back to top](#top)
 
 ---
 
@@ -565,16 +717,36 @@ The stronger governing doctrine wins. Update the proposal, or document the confl
 - whether `markdown-rules.md` is a deliberate long-term repo surface or a transitional task brief that should be folded elsewhere
 - whether any lane-local README should be collapsed into its downstream standard or kept as a distinct routing surface
 - whether any standards doc here is using a documented exception to KFM Meta Block v2
+- whether the branch under review has explicitly resolved canonical machine-contract authority
+- what exact leaf inventory currently exists under `tests/e2e/runtime_proof/`
 
 ### Authoring notes for future maintainers
 
 - keep this file as a **root index and routing surface**, not a second copy of downstream rule text
 - when a root file, lane README, or downstream standard changes maturity or role, update this README in the same change stream
 - do not call a substantive guide a scaffold, and do not call a task brief a normative standard without explicitly resolving the authority split
-- sync this file with [`../README.md`](../README.md), [`../runbooks/README.md`](../runbooks/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md) when boundaries move
+- sync this file with [`../README.md`](../README.md), [`../runbooks/README.md`](../runbooks/README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../contracts/vocab/README.md`](../../contracts/vocab/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md), [`../../tests/contracts/README.md`](../../tests/contracts/README.md), [`../../tests/e2e/runtime_proof/`](../../tests/e2e/runtime_proof/), and [`../../.github/workflows/README.md`](../../.github/workflows/README.md) when boundaries move
 - use reviewable placeholders when metadata is not confirmed; do not silently guess
 - prefer one owning surface per rule family over overlapping duplicates
+- do not let this file normalize unresolved duplication as stable architecture
 
 </details>
 
-[Back to top](#docsstandards)
+<details>
+<summary><strong>Temporary authority shorthand</strong></summary>
+
+Until the repo resolves the machine-facing split explicitly, keep this shorthand in mind:
+
+- **standards** explain shared norm text
+- **contracts** explain object meaning
+- **schemas** enforce machine shape
+- **policy** decides allow / deny / obligations
+- **tests/contracts** verify contract-facing behavior
+- **runtime-proof** proves request-time behavior using authoritative upstream shapes
+- **workflows** orchestrate checks and gates
+
+If one change tries to do all of these at once, it needs to be split.
+
+</details>
+
+[Back to top](#top)
