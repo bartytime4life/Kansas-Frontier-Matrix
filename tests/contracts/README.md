@@ -6,144 +6,158 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-04-16
+updated: 2026-04-19
 policy_label: public
-related: [../README.md, ../accessibility/README.md, ../e2e/README.md, ../integration/README.md, ../policy/README.md, ../reproducibility/README.md, ../unit/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../schemas/contracts/README.md, ../../schemas/contracts/v1/README.md, ../../schemas/tests/README.md, ../../policy/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../../tools/validators/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../docs/standards/README.md, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../.github/PULL_REQUEST_TEMPLATE.md, ../../.github/CODEOWNERS]
-tags: [kfm, tests, contracts, verification, schema-drift, fail-closed, receipts, proofs]
-notes: [
-  "doc_id and created date still need verification.",
-  "This revision preserves the stronger contract-family draft while aligning it to the now-documented manifest-driven runner, CLI, readable failure summary, and first executable contract wave.",
-  "Executable depth is stronger than the earlier draft, but fixture-home authority, workflow enforcement depth, and broader family coverage still need direct branch verification before merge."
-]
+related: [../README.md, ../accessibility/README.md, ../e2e/README.md, ../integration/README.md, ../policy/README.md, ../reproducibility/README.md, ../unit/README.md, ../../contracts/README.md, ../../contracts/vocab/README.md, ../../schemas/README.md, ../../schemas/contracts/README.md, ../../schemas/contracts/v1/README.md, ../../schemas/tests/README.md, ../../policy/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../../tools/validators/README.md, ../../tools/validators/promotion_gate/README.md, ../../tools/attest/README.md, ../../docs/standards/README.md, ../../.github/workflows/README.md, ../../.github/watchers/README.md, ../../.github/PULL_REQUEST_TEMPLATE.md, ../../.github/CODEOWNERS]
+tags: [kfm, tests, contracts, verification, schema-drift, fail-closed, receipts, proofs, runtime-proof]
+notes: [doc_id and created date still need verification., This revision combines the stronger executable-wave draft with the stricter authority-consumption rules., tests/contracts consumes declared contract and schema authority; it must not create or fork authority., Workflow enforcement depth and fixture-home law still require active-branch verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `tests/contracts/`
 
-Contract-facing verification family for KFM schema drift, valid/invalid example packs, manifest-driven validation, and fail-closed object checks.
+Contract-facing verification for KFM schema drift, valid/invalid example packs, manifest-driven validation, and fail-closed object checks.
 
-> [!NOTE]
-> **Status:** `experimental`  
-> **Owners:** `@bartytime4life`  
-> **Path:** `tests/contracts/README.md`  
-> ![status](https://img.shields.io/badge/status-experimental-orange)
-> ![family](https://img.shields.io/badge/family-tests--contracts-1f6feb)
-> ![owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1)
-> ![posture](https://img.shields.io/badge/posture-fail--closed-critical)
-> ![runner](https://img.shields.io/badge/runner-manifest--driven-8250df)
-> ![inventory](https://img.shields.io/badge/inventory-wave--01%20core%20present-brightgreen)
-> ![authority](https://img.shields.io/badge/authority-consume%20don%E2%80%99t%20duplicate-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runner](#runner) · [CLI](#cli) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
+
+![status](https://img.shields.io/badge/status-experimental-orange)
+![family](https://img.shields.io/badge/family-tests--contracts-1f6feb)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-6f42c1)
+![posture](https://img.shields.io/badge/posture-fail--closed-critical)
+![runner](https://img.shields.io/badge/runner-manifest--driven-8250df)
+![inventory](https://img.shields.io/badge/inventory-wave--01%20core%20reported-brightgreen)
+![authority](https://img.shields.io/badge/authority-consume__don%E2%80%99t__fork-red)
+
+</div>
+
+**Quick jumps:** [Scope](#scope) · [Authority rules](#authority-rules) · [Repo fit](#repo-fit) · [Current working snapshot](#current-working-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Runner](#runner) · [CLI](#cli) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+---
 
 > [!IMPORTANT]
-> The parent [`tests/README.md`](../README.md) keeps `contracts/` as a first-class verification family.  
-> This lane should stay narrow on purpose: verify machine-readable contract truth here, escalate broader seams elsewhere, and do not let this directory quietly become a second contract authority.
-
-> [!TIP]
-> Keep the KFM trust split visible here:
+> **tests consume authority — they do not create it.**
 >
-> **contract verification ≠ contract authority ≠ policy authority ≠ proof authority**
->
-> - `tests/contracts/` proves shape and failure behavior
-> - `contracts/` and `schemas/contracts/` remain the authority-facing sources
-> - `policy/` remains the home for decision grammar and deny-by-default logic
-> - `data/receipts/` remains process memory
-> - `data/proofs/` and attestation flows remain higher-order trust surfaces
+> This directory validates trust-bearing object shape and failure behavior. It must not become a second contract registry, a duplicate schema home, a policy vocabulary source, or a runtime-proof substitute.
 
 > [!CAUTION]
-> Current-session evidence improved this lane’s executable posture, but not every repo claim is fully settled.  
-> Keep fixture-home law, workflow gate depth, broader family inventory, attestation coupling, and merge-blocking enforcement at **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** unless the checked-out branch proves them directly.
+> This README records the supplied working baseline and the intended lane discipline. Before merging changes, verify the active branch directly for file presence, workflow gates, fixture-home law, branch protection, and runner behavior. Documentation evidence is not the same as mounted implementation proof.
 
 | Field | Value |
 |---|---|
 | Path | `tests/contracts/` |
 | Role | Contract-facing verification for machine-readable object shape, invalid-state rejection, and fail-closed drift detection |
 | Primary burden | Valid/invalid examples, schema conformance, negative-state proof, and manifest-driven execution |
-| Adjacent authority surfaces | `contracts/`, `schemas/contracts/`, `policy/` |
-| Adjacent consumers | `tools/validators/`, `tools/attest/`, `tests/e2e/`, `tests/integration/` |
-| Current executable thin slice | Wave 01 core fixtures + manifest + JSON Schema runner + CLI + readable failure summary |
+| Not this lane | Contract authority, schema ownership, policy logic, runtime orchestration, proof storage |
+| Adjacent authority surfaces | `contracts/`, `schemas/contracts/`, `contracts/vocab/`, `policy/` |
+| Adjacent consumers | `tools/validators/`, `tools/attest/`, `tests/integration/`, `tests/e2e/` |
+| Reported executable thin slice | Wave 01 core fixtures + manifest + JSON Schema runner + CLI + readable failure summary |
 | Trust reminder | `verification ≠ authority ≠ policy ≠ proof` |
 
 ---
 
 ## Scope
 
-`tests/contracts/` is the contract-facing verification family inside KFM’s governed `tests/` surface.
+`tests/contracts/` is the contract-consumption and validation boundary inside KFM’s governed test system.
 
-In KFM terms, this is one of the smallest places where the **inspectable-claim doctrine becomes executable**. If a trust-bearing object cannot survive contract validation here, later integration, runtime, release, validator, attestation, and UI surfaces should not be allowed to smooth over that failure.
+In KFM terms, this is one of the smallest places where the inspectable-claim doctrine becomes executable. If a trust-bearing object cannot survive validation here, downstream integration, validator, attestation, runtime, release, and UI surfaces should not be allowed to smooth over that failure.
 
-Its job is specific:
+This family exists to prove that:
 
-- prove that trust-bearing objects are shaped correctly
-- reject invalid states deterministically
-- fail closed when required evidence, policy, receipt, or correction fields are missing
-
-This family should help the repo answer a harder question than “did the test pass?”:
-
-- did the contract fail loudly instead of drifting silently?
-- did an invalid object stay invalid instead of being normalized into something plausible?
-- did negative outcomes remain first-class rather than being flattened into “success”?
-- did downstream lanes inherit stable assumptions instead of wishful ones?
-- did receipt, proof, and envelope objects keep their distinct roles under test?
+- object shapes match declared contracts and schemas
+- invalid states fail deterministically
+- required evidence, policy, receipt, proof, release, or correction fields are not silently optional
+- negative states remain first-class instead of being flattened into success
+- downstream lanes inherit stable assumptions rather than wishful ones
+- schema drift becomes visible in PR review
 
 ### Working role
 
-`tests/contracts/` is the natural home for shape validation and example-pack truth for contract families such as:
+`tests/contracts/` is the natural home for shape validation and example-pack truth for trust-bearing families such as:
 
-- `SourceDescriptor`
-- `IngestReceipt`
-- `ValidationReport`
-- `DatasetVersion`
-- `CatalogClosure`
 - `DecisionEnvelope`
-- `ReviewRecord`
-- `ReleaseManifest` / `ReleaseProofPack`
-- `ProjectionBuildReceipt`
 - `EvidenceBundle`
 - `RuntimeResponseEnvelope`
 - `CorrectionNotice`
+- `ReleaseManifest`
+- `SourceDescriptor`
+- `DatasetVersion`
+- `IngestReceipt`
+- `ValidationReport`
+- `CatalogClosure`
+- `ReviewRecord`
+- `ProjectionBuildReceipt`
 
-Later adjacent docs also increase pressure on this family to account for cross-cutting proof carriers when they are contract-relevant:
+Later proof-oriented materials also increase pressure to validate cross-cutting carriers when they are part of a contract under test:
 
+- `spec_hash`
 - `run_receipt`
 - `ai_receipt`
-- attestation references
-- bundle or proof linkage refs
+- attestation refs
+- receipt/proof linkage refs
 
-### Status vocabulary used here
+### Status labels used here
 
-| Label | Meaning here |
+| Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly visible in the current session’s attached docs or explicit repo-facing draft evidence |
-| **INFERRED** | Conservative interpretation of visible structure or adjacent docs, but not a settled implementation fact |
-| **PROPOSED** | Strong repo- and doctrine-aligned starter shape not yet verified as mounted implementation |
-| **UNKNOWN** | Not proven strongly enough from current evidence |
-| **NEEDS VERIFICATION** | Detail that should be checked against the active checkout, runner, or platform settings before merge |
+| **CONFIRMED** | Grounded in supplied docs or explicit working-baseline evidence from the provided drafts |
+| **PROPOSED** | Recommended lane shape not yet proven from the active checkout in this session |
+| **UNKNOWN** | Not established strongly enough from the available evidence |
+| **NEEDS VERIFICATION** | Must be checked against the active branch, runner, workflow, or repo settings before merge |
 
-### What this family now proves
+[Back to top](#top)
 
-- required fields exist
-- invalid shapes are rejected
-- contract examples stay synchronized with canonical docs
-- negative outcomes remain first-class rather than being silently normalized away
-- contract drift is caught before integration, validator, attestation, runtime, or release layers build on it
-- receipt-, proof-, and envelope-carrying objects stay inspectable when they become relevant to validation or promotion-significant checks
-- a first executable wave can be discovered and run from a manifest
-- failures can be summarized in reviewer-readable form instead of raw validator noise only
+---
 
-### What this family should not try to prove alone
+## Authority rules
 
-- cross-service wiring
-- end-to-end publication or release assembly
-- UI trust-state rendering
-- policy bundle semantics beyond contract-facing fixtures
-- digest stability or rerun reproducibility as a primary burden
-- accessibility behavior such as keyboard, motion, or non-color-only trust cues
-- geospatial correctness beyond object-shape expectations
-- signing mechanics or attestation transport as a primary burden
+This is the non-negotiable part of the lane.
 
-For those, escalate into [`../integration/`](../integration/), [`../policy/`](../policy/), [`../reproducibility/`](../reproducibility/), [`../accessibility/`](../accessibility/), [`../e2e/`](../e2e/), [`../../tools/validators/README.md`](../../tools/validators/README.md), or [`../../tools/attest/README.md`](../../tools/attest/README.md).
+### Rule 1 — consume one declared machine source
+
+Each contract family should validate against one declared machine source for that family.
+
+| Situation | Required action |
+|---|---|
+| `contracts/` and `schemas/contracts/` both appear relevant | Verify the active branch’s declared authority before adding or changing tests |
+| a test references two competing schema homes for the same family | Reject the change until authority is resolved upstream |
+| schema-home authority is unclear | Mark **NEEDS VERIFICATION** and stop rather than normalizing ambiguity |
+| a runner must locate schemas dynamically | Use an explicit manifest or declared resolver; do not silently guess |
+
+### Rule 2 — no schema duplication
+
+Tests must import or resolve schemas from their authoritative location. They must not inline schema fragments, copy schema bodies into fixtures, or create local “temporary” schemas that become durable by accident.
+
+### Rule 3 — fixtures do not define structure
+
+Fixtures must conform to schema. They must not introduce fields that are absent from schema, smuggle new envelope shapes into tests, or become a backdoor contract draft.
+
+### Rule 4 — runtime proof is downstream
+
+`tests/e2e/runtime_proof/` consumes validated contract outputs. It must not redefine contract shape, outcome vocabulary, or proof-carrier semantics. If upstream contract tests fail, runtime-proof work should fail or stop rather than adapt around the invalid shape.
+
+### Rule 5 — vocabulary is external
+
+Contract tests must not define outcome enums, reason codes, obligation codes, reviewer roles, or policy-owned vocab locally.
+
+Use the owning surfaces instead:
+
+| Vocabulary kind | Owning surface |
+|---|---|
+| contract-shared vocab | `contracts/vocab/` or the verified schema-side vocab lane |
+| policy reason / obligation grammar | `policy/` |
+| runtime outcome semantics | declared contract/schema + runtime proof consumers |
+| reviewer roles or release obligations | owning contract, policy, or release lane |
+
+### Rule 6 — receipts and proofs stay distinct
+
+Receipt-shaped objects can be validated here when they are contract subjects, but storage and authority remain elsewhere.
+
+| Trust object | This lane may validate… | This lane must not become… |
+|---|---|---|
+| `run_receipt` / `ai_receipt` | shape, required refs, invalid missing fields | the receipt archive |
+| `EvidenceBundle` / proof pack | linkage, integrity fields, required refs | the proof store |
+| attestation ref | required field shape and invalid absence | the signing implementation |
 
 [Back to top](#top)
 
@@ -151,98 +165,71 @@ For those, escalate into [`../integration/`](../integration/), [`../policy/`](..
 
 ## Repo fit
 
-### Upstream authorities this family should stay aligned with
+### Upstream surfaces this family should stay aligned with
 
-| Upstream surface | Why it matters here | Current visible posture |
+| Surface | Why it matters here | Posture to preserve |
 |---|---|---|
-| [`../README.md`](../README.md) | Defines `tests/` as a governed verification surface and keeps `contracts/` visible as its own family | Experimental directory index for verification families |
-| [`../../contracts/README.md`](../../contracts/README.md) | Human-readable contract doctrine, trust-object list, and first-wave starter pressure | Draft doctrine surface; machine-home law still needs direct repo confirmation |
-| [`../../schemas/README.md`](../../schemas/README.md) | Documents the wider `schemas/` boundary and warns against parallel schema authority | Authority-sensitive boundary, not a license to duplicate schemas |
-| [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) | Makes the schema-side machine-file subtree explicit | Current working evidence points to a live scaffold lane |
-| [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) | Shows the first-wave machine-contract family split | `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, and `source/` are the relevant family names in the attached evidence |
-| [`../../schemas/tests/README.md`](../../schemas/tests/README.md) | Documents schema-side fixture scaffolds and their non-canonical posture | Illustrative or scaffold pressure, not settled authority by itself |
-| [`../../policy/README.md`](../../policy/README.md) | Keeps deny-by-default posture, reason/obligation grammar, and finite outcomes close to contract verification | The right sibling lane for policy grammar rather than shape-only checks |
-| [`../../data/receipts/README.md`](../../data/receipts/README.md) | Clarifies that receipts are governed process memory rather than proofs | Receipt-shaped objects can be tested here without moving receipt authority into tests |
-| [`../../data/proofs/README.md`](../../data/proofs/README.md) | Keeps higher-order proof objects separate from process memory | Proof objects may be tested here without making tests their storage home |
-| [`../../tools/validators/README.md`](../../tools/validators/README.md) | Validators consume contract fixtures and fail-closed expectations | Validators should rely on tests here rather than replacing them |
-| [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Promotion now depends on explicit receipt/proof separation and `DecisionEnvelope` rigor | This family is a natural home for valid/invalid bundle, envelope, and receipt-style cases |
-| [`../../tools/attest/README.md`](../../tools/attest/README.md) | Attestation helpers consume validated trust objects, not vice versa | Tests may exercise helper-facing object shapes without moving proof authority here |
-| [`../../docs/standards/README.md`](../../docs/standards/README.md) | Keeps standards/profile routing separate from executable proof | Standards should guide tests, not silently become them |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Documents the automation lane and warns against treating doc visibility as active gate proof | Workflow inventory and merge-blocking depth still need direct verification |
-| [`../../.github/watchers/README.md`](../../.github/watchers/README.md) | Watcher doctrine now makes receipt emission and validation more explicit | This family may need watcher-facing receipt fixtures without owning watcher logic |
-| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | Pull requests already expect honest truth labels and evidence/proof links | Review should point to proof, not polished overclaiming |
-| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Keeps current owner and review boundary explicit | `/tests/` remains within the same governance boundary in the supplied working baseline |
+| [`../README.md`](../README.md) | Defines `tests/` as the governed verification surface | Keep `contracts/` visible as its own family |
+| [`../../contracts/README.md`](../../contracts/README.md) | Human-readable contract doctrine and trust-object framing | Do not override contract meaning from tests |
+| [`../../schemas/README.md`](../../schemas/README.md) | Wider schema boundary | Do not create parallel schema authority |
+| [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md) | Schema-side machine-contract lane | Resolve schemas; do not clone them |
+| [`../../schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) | First-wave schema family split | Use as a placement signal, not proof of complete coverage |
+| [`../../schemas/tests/README.md`](../../schemas/tests/README.md) | Schema-side fixture scaffold | Do not let fixture-home ambiguity become silent authority |
+| [`../../policy/README.md`](../../policy/README.md) | Deny-by-default policy grammar | Keep policy decisions out of shape-only tests |
+| [`../../data/receipts/README.md`](../../data/receipts/README.md) | Process memory | Validate receipt shape without storing receipts here |
+| [`../../data/proofs/README.md`](../../data/proofs/README.md) | Release-grade proofs | Validate proof-carrier shape without storing proofs here |
+| [`../../tools/validators/README.md`](../../tools/validators/README.md) | Fail-closed consumers | Give validators stable fixtures to consume |
+| [`../../tools/validators/promotion_gate/README.md`](../../tools/validators/promotion_gate/README.md) | Promotion gate pressure | Keep `DecisionEnvelope`, `EvidenceBundle`, and release fixtures precise |
+| [`../../tools/attest/README.md`](../../tools/attest/README.md) | Signing and verification helpers | Validate helper-facing objects; do not own signing logic |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Automation lane | Do not claim merge-blocking gates without workflow proof |
+| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | Review evidence expectations | Make validation evidence easy to cite in PRs |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Review boundary | Keep ownership explicit until finer splits are verified |
 
-### Lateral family boundaries
+### Lateral test-family boundaries
 
-Use sibling test families rather than stretching this README beyond its burden:
-
-- [`../unit/`](../unit/) for deterministic local helpers and pure local behavior
-- [`../policy/`](../policy/) for policy grammar and deny-by-default behavior checks
-- [`../integration/`](../integration/) for cross-boundary governed slices
-- [`../reproducibility/`](../reproducibility/) for rerun consistency, digest stability, and receipt-backed rebuild checks
-- [`../accessibility/`](../accessibility/) for trust-visible shell operability
-- [`../e2e/`](../e2e/) for full runtime, release, promotion, and correction proof
+| Need | Prefer |
+|---|---|
+| pure helper behavior | [`../unit/`](../unit/) |
+| policy allow/deny reasoning | [`../policy/`](../policy/) |
+| cross-boundary service or adapter seams | [`../integration/`](../integration/) |
+| rerun consistency, `spec_hash`, digest stability, rebuild drift | [`../reproducibility/`](../reproducibility/) |
+| keyboard, motion, screen-reader, non-color-only trust cues | [`../accessibility/`](../accessibility/) |
+| public runtime, release assembly, correction flow, runtime proof | [`../e2e/`](../e2e/) |
 
 ### Downstream consequences
 
-If this directory stays weak, later lanes become easier to bluff:
+If this directory drifts or stays weak:
 
 - integration tests inherit unstable payload assumptions
 - policy tests drift into free text because example packs are missing
 - validators can claim linkage rigor without stable valid/invalid cases
 - attestation helpers can appear stronger than the validated subjects they consume
-- e2e cases can pass on objects that should have failed earlier
-- docs imply a contract system that the repo does not yet enforce
-- runtime or UI surfaces risk sounding confident on unverified payload shapes
-
-### Path reconciliation note
-
-The repo-facing material now points to several adjacent but non-identical surfaces:
-
-- [`../../contracts/`](../../contracts/README.md) for human-readable contract law and authority-facing guidance
-- [`../../schemas/contracts/`](../../schemas/contracts/README.md) for schema-side machine files and vocab registries
-- [`../../schemas/tests/`](../../schemas/tests/README.md) for nested schema-side fixture scaffolds
-- `tests/contracts/` for the root contract-facing verification family
-- [`../../data/receipts/`](../../data/receipts/README.md) for process memory
-- [`../../tools/validators/`](../../tools/validators/README.md) for fail-closed consumers of those contracts
-- [`../../tools/attest/`](../../tools/attest/README.md) for higher-order proof support
-
-This README should keep those roles legible instead of flattening them into one implied authority.
-
-> [!NOTE]
-> This README should not try to settle `contracts/` versus `schemas/` authority by prose alone. Until the repo explicitly proves one machine-contract home as canonical, `tests/contracts/` should consume the declared source of truth and avoid becoming a second authority surface.
+- e2e checks can pass on objects that should have failed earlier
+- docs imply a contract system that the active repo may not yet enforce
 
 [Back to top](#top)
 
 ---
 
-## Current verified snapshot
+## Current working snapshot
 
 > [!NOTE]
-> The table below preserves the current working-baseline snapshot carried by the supplied drafts and adjacent corpus. In this session, the mounted repository tree was **not** directly surfaced, so inventory-sensitive rows should still be rechecked before merge.
+> The table below is grounded in the supplied drafts and should be treated as a working-baseline snapshot. Recheck inventory-sensitive rows against the active branch before merge.
 
 | Item | Status | Why it matters |
 |---|---|---|
-| `tests/contracts/` exists as its own repo-visible family in the working baseline | **CONFIRMED** | Keep the family visible instead of folding it into generic tests prose |
-| The working baseline shows `README.md` plus contract-facing proof under `tests/contracts/` | **CONFIRMED** | This lane is no longer treated as purely README-only in the top-level family map |
-| The parent `tests/` tree exposes `accessibility/`, `catalog/`, `ci/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/` in the working baseline | **CONFIRMED** | Use the actual sibling-family boundaries already established in the current docs |
-| `tests/e2e/` already exposes `correction/`, `release_assembly/`, and `runtime_proof/` in the working baseline | **CONFIRMED** | Escalation targets are not hypothetical anymore |
-| `schemas/contracts/` is treated in the corpus as a live schema-side lane rather than a blank placeholder | **CONFIRMED** | This README must reflect nearby schema-side reality, not an older README-only story |
-| `schemas/contracts/v1/` exposes `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, and `source/` as the first-wave family split in the attached evidence | **CONFIRMED** | These names are the best current machine-family anchors for contract placement |
-| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` exists as a schema-side scaffold in the working baseline | **CONFIRMED** | A fixture lane is visible nearby, but it does not settle canonical fixture-home law |
-| `tests/contracts/manifests/contract_cases.v1.json` is now the documented first-wave discovery manifest | **CONFIRMED in-session thin slice** | Contract inventory is now executable rather than only implied |
-| `tests/contracts/validators/jsonschema_runner.py` exists as the current schema-validation helper | **CONFIRMED in-session thin slice** | Contract cases can now be validated deterministically |
-| `tests/contracts/validators/manifest.py` and `manifest_cli.py` exist as manifest-driven execution helpers | **CONFIRMED in-session thin slice** | This family now has a real runner surface, not only prose |
-| `tests/contracts/validators/report.py` exists as a readable failure summary helper | **CONFIRMED in-session thin slice** | Failures can now surface in reviewer-readable form |
-| First-wave core fixtures now exist for `RuntimeResponseEnvelope`, `DecisionEnvelope`, `EvidenceBundle`, `ReleaseManifest`, and `CorrectionNotice` | **CONFIRMED in-session thin slice** | This family now has a real executable Wave 01 core |
-| `.github/workflows/` is documentation-visible, but active gate coverage is still unproven from the current session | **NEEDS VERIFICATION** | Do not assume merge-blocking contract automation from docs alone |
-| `contracts/` and `schemas/` both exist as authority-relevant surfaces in the working baseline | **CONFIRMED** | Schema-home authority still needs a single explicit owner |
-| Exact validator command, local runner invocation beyond the documented manifest CLI, required checks, branch protections, and rulesets | **NEEDS VERIFICATION** | These cannot be derived from the attached docs alone |
-| Exact mounted location, naming, and coverage of `run_receipt` / `ai_receipt` schema files or receipt fixtures | **NEEDS VERIFICATION** | Later materials make them important, but their checked-in home is still not directly surfaced |
-
-> [!NOTE]
-> Public Actions history can be useful reconstruction signal, but it is not the same thing as current checked-in workflow inventory. Use present working evidence for current-tree truth.
+| `tests/contracts/` is documented as its own verification family | **CONFIRMED** | Keep this lane visible instead of folding it into generic tests prose |
+| `contracts/` and `schemas/contracts/` both appear as authority-relevant surfaces | **CONFIRMED** | Schema-home authority must be explicit; tests must not choose by inertia |
+| `schemas/contracts/v1/` is described with first-wave families under `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime`, and `source/` | **CONFIRMED** | These names are the best current placement anchors for first-wave contract cases |
+| `schemas/tests/fixtures/contracts/v1/{valid,invalid}` is described as a schema-side scaffold | **CONFIRMED** | It is visible pressure, but it does not settle fixture-home law by itself |
+| `tests/contracts/manifests/contract_cases.v1.json` is the reported first-wave discovery manifest | **CONFIRMED in supplied thin slice** | Contract inventory can be executable rather than implied |
+| `tests/contracts/validators/jsonschema_runner.py` is the reported schema-validation helper | **CONFIRMED in supplied thin slice** | Case validation can be deterministic |
+| `tests/contracts/validators/manifest.py` and `manifest_cli.py` are reported manifest execution helpers | **CONFIRMED in supplied thin slice** | The family has a runner surface beyond prose |
+| `tests/contracts/validators/report.py` is the reported readable failure-summary helper | **CONFIRMED in supplied thin slice** | Failures can be reviewer-readable |
+| Wave 01 core fixtures are reported for `RuntimeResponseEnvelope`, `DecisionEnvelope`, `EvidenceBundle`, `ReleaseManifest`, and `CorrectionNotice` | **CONFIRMED in supplied thin slice** | The first executable wave has concrete subjects |
+| `.github/workflows/` is documentation-visible | **NEEDS VERIFICATION** | Do not assume active merge-blocking contract automation |
+| Exact branch protections, required checks, rulesets, and workflow coverage | **NEEDS VERIFICATION** | These cannot be established from README text alone |
+| Exact canonical home for `run_receipt` and `ai_receipt` schemas or fixtures | **NEEDS VERIFICATION** | Later proof pressure is real; checked-in ownership remains unsettled here |
 
 [Back to top](#top)
 
@@ -250,38 +237,31 @@ This README should keep those roles legible instead of flattening them into one 
 
 ## Accepted inputs
 
-This directory should accept only materials that help verify contract truth.
+This directory accepts only materials that verify contract truth.
 
 ### Belongs here
 
-- valid JSON examples for trust-bearing object families
-- invalid JSON examples that prove fail-closed behavior
+- valid JSON examples for trust-bearing contract families
+- invalid JSON examples proving fail-closed behavior
 - contract-specific validator entrypoints
 - schema-to-example conformance tests
 - fixture manifests or discovery manifests for contract waves
-- regression cases for negative states such as `deny`, `abstain`, `stale-visible`, `generalized`, `superseded`, or `withdrawn`
-- minimal helper utilities used only to load, normalize, or validate contract fixtures
-- local documentation that makes a contract case reviewable without inventing new authority
-- runner-facing glue that points at the checked-out machine contract lane without copying those schemas into a second home
-- golden packs for finite runtime outcomes when those packs are truly contract-facing and not broader runtime or system proof
-- receipt- or proof-carrier fixtures when the contract under test explicitly depends on them
-- valid/invalid `DecisionEnvelope`, `ReleaseManifest`, bundle, or receipt-linkage cases that later validators or attestation helpers consume
-- manifest-driven validators and readable failure summarizers that remain narrow, deterministic, and non-authoritative
-- CLI surfaces that execute contract waves without redefining schema ownership
+- deterministic runner glue that resolves schemas from the declared authority lane
+- readable failure-report helpers
+- CLI surfaces that run contract waves without redefining schema ownership
+- regression cases for negative states such as `ABSTAIN`, `DENY`, `ERROR`, `stale-visible`, `generalized`, `superseded`, or `withdrawn`
+- proof-carrier fixtures when the contract under test explicitly requires them
+- valid/invalid cases for `DecisionEnvelope`, `RuntimeResponseEnvelope`, `EvidenceBundle`, `ReleaseManifest`, `CorrectionNotice`, `SourceDescriptor`, and `DatasetVersion`
 
-### Usually belongs nearby, not here
+### Allowed only with care
 
-- policy bundle rule tests → [`../policy/`](../policy/)
-- cross-component orchestration → [`../integration/`](../integration/)
-- runtime proof traces and correction drills → [`../e2e/`](../e2e/)
-- rerun consistency, `spec_hash` stability, receipt comparison, and rebuild drift → [`../reproducibility/`](../reproducibility/)
-- accessibility-critical trust-surface cases → [`../accessibility/`](../accessibility/)
-- canonical schema definitions → currently visible under [`../../schemas/contracts/`](../../schemas/contracts/README.md), while authority still needs direct repo confirmation
-- schema-side illustrative or mirrored fixture scaffolds → [`../../schemas/tests/`](../../schemas/tests/README.md)
-- run receipts as storage → [`../../data/receipts/`](../../data/receipts/README.md)
-- release proofs or proof packs as storage → [`../../data/proofs/`](../../data/proofs/README.md)
-- signing helper implementations → [`../../tools/attest/README.md`](../../tools/attest/README.md)
-- runbooks, ADRs, and long-form guidance → `docs/**`
+| Material | Condition |
+|---|---|
+| receipt-like fixtures | Only when testing a receipt contract; do not store run history here |
+| attestation refs | Only field shape and required-linkage checks; no signing mechanics |
+| schema-side fixture mirrors | Only if explicitly marked as mirrors or generated copies |
+| policy-facing fields | Only shape and required presence; policy meaning belongs in `tests/policy/` |
+| generated reports | Keep lightweight and reproducible; avoid committing noisy runtime output |
 
 [Back to top](#top)
 
@@ -289,26 +269,24 @@ This directory should accept only materials that help verify contract truth.
 
 ## Exclusions
 
-This directory should stay strict but small.
-
 | Excluded from `tests/contracts/` | Put it here instead |
 |---|---|
-| Pure helper or local-function checks | [`../unit/`](../unit/) |
-| Policy allow/deny reasoning beyond fixture compatibility | [`../policy/`](../policy/) |
-| Reproducibility or digest-stability checks | [`../reproducibility/`](../reproducibility/) |
-| Keyboard, screen-reader, reduced-motion, or non-color-only trust cues | [`../accessibility/`](../accessibility/) |
-| Cross-service or cross-adapter seams | [`../integration/`](../integration/) |
-| Full runtime/public-route, release-proof, or correction-visible sweeps | [`../e2e/`](../e2e/) |
-| Database migration tests | Package- or service-local test lanes |
-| Geospatial CRS / topology / raster QA | Geospatial validation suites or broader integration / e2e lanes |
-| Canonical schema files, policy bundles, or route contracts as primary records | Their owning repo surfaces |
-| Nested schema-side fixture scaffolds treated as singular truth by inertia | [`../../schemas/tests/`](../../schemas/tests/README.md) only if explicitly marked non-authoritative |
-| Narrative examples that are only documentation | [`../../contracts/README.md`](../../contracts/README.md) or `docs/**` |
-| Promotion-only supply-chain verification such as attestation transport or OCI release referrer checks | Promotion / attest lanes or broader policy / reproducibility families |
-| Receipt archives or proof-pack archives | [`../../data/receipts/`](../../data/receipts/README.md), [`../../data/proofs/`](../../data/proofs/README.md) |
+| canonical contract definitions | [`../../contracts/`](../../contracts/README.md) |
+| canonical schema files | [`../../schemas/contracts/`](../../schemas/contracts/README.md) |
+| policy logic, reason-code semantics, obligation evaluation | [`../policy/`](../policy/) or [`../../policy/`](../../policy/README.md) |
+| pure helper or local-function checks | [`../unit/`](../unit/) |
+| integration flows and adapter seams | [`../integration/`](../integration/) |
+| runtime/public-route proof, release assembly, correction drills | [`../e2e/`](../e2e/) |
+| digest stability, rebuild drift, receipt comparison as a primary burden | [`../reproducibility/`](../reproducibility/) |
+| trust-visible accessibility behavior | [`../accessibility/`](../accessibility/) |
+| receipt archives | [`../../data/receipts/`](../../data/receipts/README.md) |
+| release proof packs or proof archives | [`../../data/proofs/`](../../data/proofs/README.md) |
+| signing helpers and attestation transport | [`../../tools/attest/`](../../tools/attest/README.md) |
+| promotion-only supply-chain verification | [`../../tools/validators/promotion_gate/`](../../tools/validators/promotion_gate/README.md) plus policy/reproducibility lanes |
+| long-form runbooks and ADRs | `docs/**` |
 
 > [!IMPORTANT]
-> A contract-facing test family should be **strict but small**. The goal is to catch structural dishonesty early, not to absorb every other verification concern in the repo.
+> Keep this family strict but small. Its job is to catch structural dishonesty early, not to absorb every verification concern in the repository.
 
 [Back to top](#top)
 
@@ -316,88 +294,46 @@ This directory should stay strict but small.
 
 ## Directory tree
 
-### Working baseline — test-family view
+### Reported current thin slice — verify against active branch
 
 ```text
-tests/
+tests/contracts/
 ├── README.md
-├── accessibility/
-├── catalog/
-├── ci/
-├── contracts/
-│   ├── README.md
-│   ├── cases/
-│   │   └── wave-01-core/
-│   │       ├── correction-notice/
-│   │       ├── decision-envelope/
-│   │       ├── evidence-bundle/
-│   │       ├── release-manifest/
-│   │       └── runtime-response-envelope/
-│   ├── manifests/
-│   │   └── contract_cases.v1.json
-│   ├── validators/
-│   │   ├── jsonschema_runner.py
-│   │   ├── manifest.py
-│   │   ├── manifest_cli.py
-│   │   └── report.py
-│   ├── test_contract_manifest_wave_01.py
-│   ├── test_correction_notice.py
-│   ├── test_decision_envelope.py
-│   ├── test_evidence_bundle.py
-│   ├── test_release_manifest.py
-│   └── test_runtime_response_envelope.py
-├── e2e/
-│   ├── README.md
-│   ├── correction/
-│   ├── release_assembly/
-│   └── runtime_proof/
-├── integration/
-├── policy/
-├── reproducibility/
-└── unit/
+├── manifests/
+│   └── contract_cases.v1.json
+├── validators/
+│   ├── jsonschema_runner.py
+│   ├── manifest.py
+│   ├── manifest_cli.py
+│   └── report.py
+└── test_contract_manifest_wave_01.py
 ```
 
-### Working baseline — adjacent schema-side reality
+### Nearby schema-side reality described by the supplied drafts
 
 ```text
 schemas/
-├── README.md
 ├── contracts/
 │   ├── README.md
 │   ├── v1/
-│   │   ├── README.md
 │   │   ├── common/
-│   │   │   └── header_profile.schema.json
 │   │   ├── correction/
-│   │   │   └── correction_notice.schema.json
 │   │   ├── data/
-│   │   │   └── dataset_version.schema.json
 │   │   ├── evidence/
-│   │   │   └── evidence_bundle.schema.json
 │   │   ├── policy/
-│   │   │   └── decision_envelope.schema.json
 │   │   ├── release/
-│   │   │   └── release_manifest.schema.json
 │   │   ├── runtime/
-│   │   │   └── runtime_response_envelope.schema.json
 │   │   └── source/
-│   │       └── source_descriptor.schema.json
 │   └── vocab/
-│       ├── obligation_codes.json
-│       ├── reason_codes.json
-│       └── reviewer_roles.json
 └── tests/
     └── fixtures/
         └── contracts/
             └── v1/
-                ├── README.md
                 ├── invalid/
-                │   └── README.md
                 └── valid/
-                    └── README.md
 ```
 
-### `PROPOSED` maturity shape for this directory
+### `PROPOSED` maturity shape
 
 ```text
 tests/contracts/
@@ -430,21 +366,13 @@ tests/contracts/
     └── .gitkeep
 ```
 
-### Alternative shared-fixture shape — `PROPOSED` if fixture-home law later moves root-side
-
-```text
-tests/fixtures/contracts/
-└── v1/
-    ├── valid/
-    └── invalid/
-```
-
 ### Coordination pattern to prefer
 
 ```text
 schemas/contracts/v1/**/*.schema.json                   # schema-side machine contract lane
-schemas/tests/fixtures/contracts/v1/{valid,invalid}/    # visible shared fixture scaffold
+schemas/tests/fixtures/contracts/v1/{valid,invalid}/    # visible fixture scaffold, if designated
 tests/contracts/**                                      # root verification family, runners, reports
+contracts/vocab/**                                      # shared contract vocabulary, if designated
 policy/**                                               # reason / obligation grammar
 data/receipts/**                                        # process-memory surfaces
 data/proofs/**                                          # higher-order proof surfaces
@@ -452,119 +380,44 @@ tools/validators/**                                     # fail-closed consumers
 tools/attest/**                                         # signing / verification helpers
 ```
 
-That split keeps `tests/contracts/` focused on **tests and runners**, while broader shared fixtures or proof packs can later serve policy, integration, reproducibility, validator, and e2e lanes without duplicating contract authority.
-
 [Back to top](#top)
 
 ---
 
 ## Quickstart
 
-### Safe inspection commands
+### Run the full family
 
 ```bash
-# inspect the family exactly as the checked-out branch exposes it
-find tests/contracts -maxdepth 4 -type f | sort
-
-# inspect sibling test-family docs to keep placement honest
-sed -n '1,220p' tests/README.md
-sed -n '1,220p' tests/accessibility/README.md
-sed -n '1,220p' tests/catalog/README.md
-sed -n '1,220p' tests/ci/README.md
-sed -n '1,220p' tests/e2e/README.md
-sed -n '1,220p' tests/integration/README.md
-sed -n '1,220p' tests/policy/README.md
-sed -n '1,220p' tests/reproducibility/README.md
-sed -n '1,220p' tests/unit/README.md
-
-# inspect adjacent contract / schema / fixture / workflow doctrine
-sed -n '1,260p' contracts/README.md
-sed -n '1,220p' schemas/README.md
-sed -n '1,260p' schemas/contracts/README.md
-sed -n '1,260p' schemas/contracts/v1/README.md
-sed -n '1,220p' schemas/tests/README.md
-sed -n '1,220p' schemas/tests/fixtures/contracts/v1/README.md
-sed -n '1,220p' policy/README.md
-sed -n '1,220p' data/receipts/README.md
-sed -n '1,220p' data/proofs/README.md
-sed -n '1,220p' tools/validators/README.md
-sed -n '1,220p' tools/validators/promotion_gate/README.md
-sed -n '1,220p' tools/attest/README.md
-sed -n '1,220p' docs/standards/README.md
-sed -n '1,220p' .github/workflows/README.md
-sed -n '1,220p' .github/watchers/README.md
-sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md
-sed -n '1,220p' .github/CODEOWNERS
+pytest tests/contracts -q
 ```
 
-### Run the family
+### Run the reported Wave 01 manifest test
 
 ```bash
-# full family
-pytest tests/contracts -q
-
-# manifest-only first wave
 pytest tests/contracts/test_contract_manifest_wave_01.py -q
+```
 
-# direct CLI execution
+### Run the manifest CLI directly
+
+```bash
 python -m tests.contracts.validators.manifest_cli \
   tests/contracts/manifests/contract_cases.v1.json
 ```
 
-### Candidate fixture-home inspection
-
-Use this before assuming where valid/invalid packs truly live:
+### Inspect the authority and fixture surfaces before expanding
 
 ```bash
+sed -n '1,220p' contracts/README.md
+sed -n '1,260p' schemas/contracts/README.md
+sed -n '1,260p' schemas/contracts/v1/README.md
+sed -n '1,220p' schemas/tests/README.md
 find schemas/tests/fixtures/contracts -maxdepth 4 -type f 2>/dev/null | sort
-find tests/fixtures/contracts -maxdepth 4 -type f 2>/dev/null | sort
+find tests/contracts -maxdepth 5 -type f 2>/dev/null | sort
 ```
 
-### Fast drift check
-
-Use this before inventing new names or object families:
-
-```bash
-grep -RIn \
-  -e 'SourceDescriptor' \
-  -e 'IngestReceipt' \
-  -e 'ValidationReport' \
-  -e 'DatasetVersion' \
-  -e 'CatalogClosure' \
-  -e 'DecisionEnvelope' \
-  -e 'ReviewRecord' \
-  -e 'ReleaseManifest' \
-  -e 'EvidenceBundle' \
-  -e 'RuntimeResponseEnvelope' \
-  -e 'CorrectionNotice' \
-  -e 'ABSTAIN' \
-  -e 'DENY' \
-  -e 'ERROR' \
-  -e 'schemas/contracts/v1' \
-  -e 'schemas/tests/fixtures/contracts/v1' \
-  tests contracts schemas policy data tools docs .github 2>/dev/null || true
-```
-
-### Fast proof-carrier scan
-
-Use this before claiming that receipt- or proof-carrying objects are already wired here:
-
-```bash
-grep -RIn \
-  -e 'spec_hash' \
-  -e 'run_receipt' \
-  -e 'ai_receipt' \
-  -e 'attestation' \
-  -e 'proof_ref' \
-  -e 'receipt_ref' \
-  tests contracts schemas policy data tools docs .github 2>/dev/null || true
-```
-
-### Workflow caution
-
-> [!CAUTION]
-> Do **not** assume that adding files under `tests/contracts/` automatically makes them merge-blocking.  
-> The current working evidence proves documentation, a runner, and CI-ready shape — not a directly verified merge-protected workflow gate for this family.
+> [!WARNING]
+> Do not treat the quickstart commands as proof of active CI enforcement. Local runner success proves validation behavior; merge-blocking status still requires workflow and branch-rule evidence.
 
 [Back to top](#top)
 
@@ -572,22 +425,39 @@ grep -RIn \
 
 ## Usage
 
+### Correct flow
+
+```python
+schema = load_schema_from_declared_authority(family.schema_ref)
+case = load_contract_case(family.case_dir / case_name)
+result = validate(case, schema)
+assert result.actual_valid == result.expected_valid
+```
+
+### Incorrect flow
+
+```python
+# ❌ The test has invented structure by example.
+payload = {
+    "outcome": "ANSWER",
+    "new_field_not_in_schema": "quietly accepted by a permissive helper",
+}
+```
+
 ### Placement rules
 
-1. Put **shape validation** here, but read schemas from the checked-out contract lane instead of cloning them.
-2. Put **semantic policy decisions** in [`../policy/`](../policy/).
-3. Put **service wiring** in [`../integration/`](../integration/).
-4. Put **rerun / digest / receipt stability** in [`../reproducibility/`](../reproducibility/).
-5. Put **trust-visible accessibility behavior** in [`../accessibility/`](../accessibility/).
-6. Put **public-surface behavior**, **release proof**, and **correction flows** in [`../e2e/`](../e2e/).
-7. Keep helper code here **small, deterministic, and non-authoritative**.
+1. Put shape validation here, but read schemas from the checked-out declared authority lane.
+2. Put semantic policy decisions in [`../policy/`](../policy/).
+3. Put service wiring in [`../integration/`](../integration/).
+4. Put rerun, digest, and receipt-stability checks in [`../reproducibility/`](../reproducibility/).
+5. Put trust-visible accessibility behavior in [`../accessibility/`](../accessibility/).
+6. Put public-surface behavior, release proof, correction flow, and runtime proof in [`../e2e/`](../e2e/).
+7. Keep helper code here small, deterministic, and non-authoritative.
 8. When schema-side reality and contract-side doctrine diverge, document the divergence and stop the PR rather than smoothing it away.
-9. When schema-home and fixture-home law remain unsettled, grow one real wave and leave the tension visible rather than masking it with broad scaffolding.
-10. When receipt-, proof-, or attestation-carrying objects are under test, keep their roles distinct instead of flattening them into one generic artifact case.
 
 ### Naming guidance
 
-Use case names that preserve family, polarity, and intent.
+Use names that preserve family, polarity, and failure intent.
 
 | Good example | Why it helps |
 |---|---|
@@ -595,41 +465,10 @@ Use case names that preserve family, polarity, and intent.
 | `decision_envelope.missing_reason.invalid.json` | failure reason is obvious |
 | `correction_notice.supersession.valid.json` | correction lineage remains visible |
 | `evidence_bundle.partial_scope.invalid.json` | contract drift is reviewable in Git |
-| `run_receipt.missing_spec_hash.invalid.json` | proof-carrier failure is legible at review time |
-| `ai_receipt.unapproved_model_context.invalid.json` | model-mediated edge case stays explicit |
 | `release_manifest.missing_receipt_ref.invalid.json` | receipt/proof linkage stays explicit |
 | `decision_envelope.unverified_attestation_ref.invalid.json` | higher-order trust linkage remains visible |
 
-Avoid vague buckets such as `misc/`, `contract_v2/`, or `helpers_everything/`.
-
-### First executable wave
-
-Start with the families that both show up repeatedly across the current contract-facing docs and are best anchored in the visible schema-side lane:
-
-1. `DecisionEnvelope`
-2. `EvidenceBundle`
-3. `RuntimeResponseEnvelope`
-4. `CorrectionNotice`
-5. `ReleaseManifest`
-
-Then expand the same first wave with the substrate objects that keep identity and source-edge rigor intact:
-
-6. `SourceDescriptor`
-7. `DatasetVersion`
-
-Then add the intake / review wave once schema-home and fixture-home law are explicit enough to keep growth reversible:
-
-8. `IngestReceipt`
-9. `ValidationReport`
-10. `CatalogClosure`
-11. `ReviewRecord`
-12. `ProjectionBuildReceipt`
-
-Then add the cross-cutting proof carriers that later materials make hard to ignore, but whose exact checked-in homes are still **NEEDS VERIFICATION**:
-
-13. `run_receipt`
-14. `ai_receipt`
-15. attestation-linked golden packs where the contract under test truly depends on them
+Avoid vague buckets such as `misc/`, `contract_v2/`, `draft_cases/`, or `helpers_everything/`.
 
 ### Failure philosophy
 
@@ -650,20 +489,20 @@ A KFM contract case should prefer:
 
 ### Manifest-driven execution
 
-All first-wave contract cases are currently discovered via:
+The reported first-wave contract cases are discovered via:
 
 ```text
 tests/contracts/manifests/contract_cases.v1.json
 ```
 
-Each family entry declares:
+Each family entry should declare:
 
 - `schema_ref`
 - `case_dir`
 - `valid_cases`
 - `invalid_cases`
 
-The current first-wave manifest covers:
+The reported first-wave manifest covers:
 
 - `runtime-response-envelope`
 - `decision-envelope`
@@ -671,19 +510,19 @@ The current first-wave manifest covers:
 - `release-manifest`
 - `correction-notice`
 
-### Current helper surfaces
+### Helper surfaces
 
 | File | Purpose |
 |---|---|
-| `tests/contracts/validators/jsonschema_runner.py` | Validate one instance against one schema and return structured pass/fail + error text |
+| `tests/contracts/validators/jsonschema_runner.py` | Validate one instance against one schema and return structured pass/fail plus error text |
 | `tests/contracts/validators/manifest.py` | Load and resolve the manifest |
 | `tests/contracts/validators/report.py` | Render readable failure summaries |
 | `tests/contracts/validators/manifest_cli.py` | Run manifest-driven validation outside pytest |
 | `tests/contracts/test_contract_manifest_wave_01.py` | Assert all valid cases pass and all invalid cases fail |
 
-### Current result model
+### Result model
 
-The family now supports a reviewer-readable summary model:
+Failure summaries should show enough for review without requiring maintainers to open validator internals:
 
 - total cases
 - passed cases
@@ -694,22 +533,20 @@ The family now supports a reviewer-readable summary model:
 - actual validity
 - validation error text when present
 
-That is enough for a first executable wave without pretending broader reporting infrastructure is already settled.
-
 [Back to top](#top)
 
 ---
 
 ## CLI
 
-Run the first executable wave directly:
+Run the reported first executable wave directly:
 
 ```bash
 python -m tests.contracts.validators.manifest_cli \
   tests/contracts/manifests/contract_cases.v1.json
 ```
 
-### Expected output shape
+Expected output shape:
 
 ```text
 Contract validation summary
@@ -726,10 +563,7 @@ Failures should include:
 - actual validity
 - validation error
 
-### Relationship to pytest
-
-The CLI is a convenience surface, not a second source of truth.  
-The manifest and fixtures stay central; pytest and the CLI are two ways to execute the same wave.
+The CLI is a convenience surface, not a second source of truth. The manifest and fixtures stay central; pytest and CLI execution should run the same wave.
 
 [Back to top](#top)
 
@@ -739,24 +573,25 @@ The manifest and fixtures stay central; pytest and the CLI are two ways to execu
 
 ```mermaid
 flowchart LR
-    D[contracts and/or schemas<br/>declared machine contract source] --> C[tests/contracts<br/>shape validation and case review]
-    S[schemas/contracts/v1/**/*.schema.json<br/>schema-side machine files] --> C
-    F[schemas/tests/fixtures/contracts/v1<br/>nested fixture scaffold] -. only if explicitly designated .-> C
-    M[contract_cases.v1.json<br/>family discovery manifest] --> C
-    R[jsonschema_runner + manifest + report + CLI] --> C
-    Q[proof-carrier pressure<br/>spec_hash · run_receipt · ai_receipt · attestation refs] -. consumed or validated when relevant .-> C
-    P[policy<br/>reason and obligation vocab] --> C
-    V[tools/validators<br/>fail-closed consumers] --> C
-    A[tools/attest<br/>sign / verify helpers] -. consume validated trust objects .-> C
-    C -. local helper behavior .-> U[tests/unit]
-    C -. rerun / digest stability .-> X[tests/reproducibility]
-    C -. trust-visible accessibility .-> Y[tests/accessibility]
-    C --> I[tests/integration<br/>cross-boundary seams]
+    A[contracts / schemas<br/>declared authority] --> C[tests/contracts<br/>shape + failure validation]
+    V[contracts/vocab or policy vocab<br/>declared code lists] --> C
+    M[contract_cases.v1.json<br/>discovery manifest] --> C
+    F[valid / invalid fixtures<br/>case packs] --> C
+    R[jsonschema runner<br/>manifest loader<br/>report + CLI] --> C
+
+    C --> Q[PR review<br/>readable drift signal]
+    C --> T[tools/validators<br/>fail-closed consumers]
+    C --> I[tests/integration<br/>cross-boundary proof]
     C --> E[tests/e2e<br/>runtime proof + release/correction]
-    C --> G[PR review and CI logs<br/>drift becomes visible in Git]
+
+    C -. not primary .-> U[tests/unit]
+    C -. not primary .-> P[tests/policy]
+    C -. not primary .-> X[tests/reproducibility]
+    C -. not primary .-> A11Y[tests/accessibility]
+    C -. not primary .-> S[tools/attest]
 ```
 
-The directional point stays the same: `tests/contracts/` should **consume and verify** contract truth, not quietly become a second or third contract authority.
+The directional point is deliberate: `tests/contracts/` consumes and verifies contract truth. It must not quietly become a second or third contract authority.
 
 [Back to top](#top)
 
@@ -769,25 +604,13 @@ The directional point stays the same: `tests/contracts/` should **consume and ve
 | If the work mainly tests… | Primary home | Why |
 |---|---|---|
 | object shape and required fields | `tests/contracts/` | Keep machine-contract truth explicit and reviewable |
-| policy result logic, reason codes, or obligation vocab | `tests/policy/` | Decision grammar should stay isolated when possible |
+| policy result logic, reason codes, or obligation vocab | `tests/policy/` | Decision grammar should stay isolated |
 | pure local helper behavior | `tests/unit/` | Cheapest convincing proof wins |
-| rerun consistency, `spec_hash` stability, or receipt comparison | `tests/reproducibility/` | Determinism is its own verification burden |
+| rerun consistency, `spec_hash` stability, or receipt comparison | `tests/reproducibility/` | Determinism is its own burden |
 | keyboard / motion / screen-reader / non-color-only trust cues | `tests/accessibility/` | Accessibility is a first-class trust burden |
-| route behavior across real boundaries | `tests/integration/` | This family exists for cross-boundary proof |
-| full runtime / public behavior, release proof, promotion proof, or correction lineage | `tests/e2e/` | That burden is broader than one contract or integration slice |
+| route behavior across real boundaries | `tests/integration/` | Cross-boundary proof belongs there |
+| full runtime, release proof, promotion proof, or correction lineage | `tests/e2e/` | That burden is broader than one contract slice |
 | signing mechanics or attestation transport | `tools/attest/` plus adjacent tests | Those helpers should stay reusable outside one test lane |
-
-### Candidate first cases
-
-| Family | Why it belongs early | Best current schema-side signal | Minimum negative case |
-|---|---|---|---|
-| `RuntimeResponseEnvelope` | Trust-bearing runtime object for `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | [`../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | missing `outcome`, missing `audit_ref`, unsupported surface state |
-| `EvidenceBundle` | Keeps evidence inspectable at point of use | [`../../schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | missing evidence refs or empty evidence refs |
-| `DecisionEnvelope` | Bridges policy posture into machine-readable outcomes | [`../../schemas/contracts/v1/policy/decision_envelope.schema.json`](../../schemas/contracts/v1/policy/decision_envelope.schema.json) | missing reason / invalid outcome |
-| `CorrectionNotice` | Preserves correction lineage | [`../../schemas/contracts/v1/correction/correction_notice.schema.json`](../../schemas/contracts/v1/correction/correction_notice.schema.json) | missing affected release or invalid status |
-| `ReleaseManifest` | Binds outward release to proof and rollback posture | [`../../schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) | missing proof ref or missing audit ref |
-| `SourceDescriptor` | Keeps source-edge identity explicit before downstream derivation | [`../../schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) | missing source kind, rights, or freshness basis |
-| `DatasetVersion` | Preserves versioned identity and lineage before promotion | [`../../schemas/contracts/v1/data/dataset_version.schema.json`](../../schemas/contracts/v1/data/dataset_version.schema.json) | missing version lineage, temporal basis, or status field |
 
 ### Starter wave strategy
 
@@ -798,20 +621,31 @@ The directional point stays the same: `tests/contracts/` should **consume and ve
 | Wave 02 — intake / review | `IngestReceipt`, `ValidationReport`, `CatalogClosure`, `ReviewRecord`, `ProjectionBuildReceipt` | Adds acquisition, validation, review, and derived-build rigor after the first trust-bearing core exists |
 | Cross-cutting proof carriers | `spec_hash`, `run_receipt`, `ai_receipt`, attestation refs | Prevents proof language from floating above actual contract checks |
 
+### Candidate early cases
+
+| Family | Why it belongs early | Current schema-side signal to verify | Minimum negative case |
+|---|---|---|---|
+| `RuntimeResponseEnvelope` | Trust-bearing runtime object for finite outcomes | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | missing `outcome`, missing `audit_ref`, unsupported state |
+| `DecisionEnvelope` | Bridges policy posture into machine-readable outcomes | `schemas/contracts/v1/policy/decision_envelope.schema.json` | missing reason, invalid outcome |
+| `EvidenceBundle` | Keeps evidence inspectable at point of use | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | missing refs, empty evidence list |
+| `CorrectionNotice` | Preserves correction lineage | `schemas/contracts/v1/correction/correction_notice.schema.json` | missing affected release, invalid status |
+| `ReleaseManifest` | Binds outward release to proof and rollback posture | `schemas/contracts/v1/release/release_manifest.schema.json` | missing proof ref or audit ref |
+| `SourceDescriptor` | Keeps source-edge identity explicit before derivation | `schemas/contracts/v1/source/source_descriptor.schema.json` | missing source kind, rights, freshness basis |
+| `DatasetVersion` | Preserves versioned identity and lineage before promotion | `schemas/contracts/v1/data/dataset_version.schema.json` | missing lineage, temporal basis, or status |
+
 ### Contract-family design rules
 
 | Rule | Why it matters |
 |---|---|
 | One valid and one invalid example is the minimum unit of seriousness | Prose-only doctrine drifts too easily |
 | Invalid cases should be named by failure reason | Git review becomes faster and less ambiguous |
-| Keep fixtures deterministic | Contract tests should not depend on network or clock jitter |
+| Fixtures must be deterministic | Contract tests should not depend on network, clock jitter, or source volatility |
 | Prefer explicit schema-version fields | Later migration is easier to audit |
 | Preserve negative-state vocabulary | KFM trust posture depends on visible failure classes |
-| Do not duplicate canonical schemas here | This family proves behavior; it does not own singular authority |
-| Keep schema-side scaffolds and root-test runners synchronized | Current repo reality is split enough already |
+| Do not duplicate canonical schemas here | This family proves behavior; it does not own authority |
 | Treat malformed proof carriers as first-class invalid cases where applicable | Proof language should not float above executable checks |
-| Keep receipt and proof roles explicit in case names and manifests | Later validator and attestation lanes depend on that distinction |
-| Keep manifest inventory synchronized with actual case directories | Drift should fail in the runner, not be discovered by accident later |
+| Keep receipt and proof roles explicit in names and manifests | Validator and attestation lanes depend on that distinction |
+| Keep manifest inventory synchronized with actual case directories | Drift should fail in the runner, not be discovered by accident |
 
 [Back to top](#top)
 
@@ -822,55 +656,54 @@ The directional point stays the same: `tests/contracts/` should **consume and ve
 ### First executable suite bootstrap
 
 - [ ] Confirm whether an existing repo-wide runner, validator, or shared fixture convention already governs this family
-- [ ] Reconcile `tests/contracts/` with the schema-side `schemas/contracts/v1/` subtree and `schemas/tests/fixtures/contracts/v1/` scaffold
-- [ ] Confirm authoritative schema home between `contracts/` and `schemas/`
-- [ ] Decide whether any schema-side fixture leaf is mirror-only, illustrative-only, or runnable input
-- [ ] Decide whether a root-side shared fixture corpus such as `tests/fixtures/contracts/v1/` is needed or would just create another authority surface
+- [ ] Reconcile `tests/contracts/` with `schemas/contracts/v1/` and `schemas/tests/fixtures/contracts/v1/`
+- [ ] Confirm authoritative machine-contract home between `contracts/` and `schemas/contracts/`
+- [ ] Decide whether schema-side fixture leaves are mirror-only, illustrative-only, generated, or runnable
+- [ ] Decide whether root-side shared fixtures such as `tests/fixtures/contracts/v1/` are needed or would create another authority surface
 - [x] Add one real wave before adding broad subtrees
-- [x] Create first-wave contract cases for the highest-leverage families already visible under `schemas/contracts/v1/`
+- [x] Create first-wave contract cases for the highest-leverage visible families
 - [x] Add paired valid / invalid examples
 - [x] Add one deterministic validator entrypoint
 - [x] Add one family-level manifest / discovery mechanism
-- [ ] Wire the family into a real merge-blocking workflow
-- [ ] Document how failures surface in PR review with branch-verified workflow evidence
-- [ ] Cross-link runner inputs and fixture locations from [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), and [`../../schemas/tests/README.md`](../../schemas/tests/README.md)
+- [ ] Wire the family into a branch-verified merge-blocking workflow
+- [ ] Document how failures surface in PR review using active workflow evidence
+- [ ] Cross-link runner inputs and fixture locations from `contracts/`, `schemas/contracts/`, and `schemas/tests/`
 
 ### Cross-cutting proof upgrades
 
-- [ ] Decide whether `run_receipt` and `ai_receipt` belong in this family, an adjacent schema pack, or both as contract + golden-pack pairs
-- [ ] Add at least one invalid receipt-style case if proof-carrying objects are part of the family’s real burden
-- [ ] Define which malformed quartet members are deterministic deny reasons in policy or validation lanes
-- [x] Add one golden `RuntimeResponseEnvelope` pack that keeps `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` outcomes visibly distinct
-- [x] Add one readable failure-report shape so contract breakage is reviewable without opening raw validator internals
-- [ ] Add at least one receipt / proof linkage case used by promotion-oriented validation
+- [ ] Decide whether `run_receipt` and `ai_receipt` belong here, in an adjacent schema pack, or both as contract + golden-pack pairs
+- [ ] Add at least one invalid receipt-style case if proof-carrying objects become part of this family’s burden
+- [ ] Define which malformed proof-carrier members are deterministic deny reasons in policy or validation lanes
+- [x] Add a golden `RuntimeResponseEnvelope` pack that keeps `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` distinct
+- [x] Add readable failure-report output so contract breakage is reviewable without raw validator internals
+- [ ] Add at least one receipt/proof linkage case used by promotion-oriented validation
 - [ ] Confirm how attestation refs are represented in valid and invalid cases where relevant
 
 ### Definition of done
 
-This family is meaningfully established when all of the following are true:
+This family is meaningfully established when:
 
 1. there is no silent conflict between `tests/contracts/`, `contracts/`, `schemas/contracts/`, and `schemas/tests/fixtures/contracts/`
-2. there is no unresolved schema-home ambiguity for executable contract files that the suite silently papers over
+2. executable contract files have no unresolved schema-home ambiguity that the suite silently papers over
 3. at least one real wave of contract artifacts exists
 4. each first-wave family has valid and invalid examples
 5. validators run deterministically in local and CI contexts
 6. failure output is readable enough for code review
 7. adjacent docs stop describing this family as README-only intention
-8. the PR can point to fixtures, proof of behavior, and proof of failure behavior
-9. public `main` shows more than a scaffold README in this directory
-10. any proof-carrier claims used by this family are validated rather than assumed
-11. negative outcomes remain explicit all the way through example packs and review output
+8. the PR can point to fixtures, passing behavior, and failing behavior
+9. proof-carrier claims used by this family are validated rather than assumed
+10. negative outcomes remain explicit through example packs, runner output, and review evidence
 
 ### Review gates
 
-Before accepting changes here, check:
+Before accepting changes here, ask:
 
-- does this add verification, or just more wording?
+- does this add executable verification, or just more wording?
 - does it create duplicate authority with `contracts/`, `schemas/contracts/`, `schemas/tests/`, or an unnecessary extra fixture home?
 - does it preserve fail-closed semantics?
 - does it keep negative states explicit?
 - does it stay narrow enough to remain reviewable?
-- can the PR link validation evidence, proof packs, screenshots, or follow-up issues where they exist?
+- can the PR link validation evidence and failure evidence?
 
 [Back to top](#top)
 
@@ -878,41 +711,41 @@ Before accepting changes here, check:
 
 ## FAQ
 
-### Why is this directory named `contracts/`, not `contract/`?
+### Do tests define contracts?
 
-Because the repo-visible path carried by the working baseline is `tests/contracts/`, and nearby repo docs already reference that family. This README stays faithful to the established path instead of normalizing it to different shorthand.
+No. Tests verify contract shape and invalid-state behavior against declared authority. They do not create meaning, own schema structure, or define policy vocabulary.
 
-### Why does this README mention `schemas/contracts/` and `schemas/tests/` so often?
+### Can tests choose the schema location?
 
-Because nearby evidence now points to both a schema-side machine-file lane and a nested schema-side fixture scaffold. Ignoring them would make this file less accurate than the contract environment it is supposed to describe.
+No. If a test must choose between `contracts/` and `schemas/contracts/`, the authority boundary is not clear enough. Stop and resolve it upstream.
+
+### Why mention `schemas/contracts/` and `schemas/tests/` so often?
+
+Because the supplied working baseline points to both a schema-side machine-file lane and a nested fixture scaffold. This README keeps those surfaces visible so root contract tests do not accidentally turn a scaffold into authority.
 
 ### Why not store canonical schemas directly under `tests/contracts/`?
 
-Because this family should verify contract truth, not quietly replace it. Until the repo directly proves a singular authoritative machine-contract home, duplicating schemas here increases drift risk.
+Because duplicating schemas here increases drift risk. This family should prove behavior against schema authority, not replace it.
 
-### Why are valid / invalid fixtures emphasized so heavily?
+### Why emphasize valid and invalid fixtures?
 
-Because fail-closed behavior and visible negative outcomes are treated throughout the current contract-facing docs as trust requirements, not edge cases. Contract examples are the smallest executable proof of that posture.
+Because fail-closed behavior and visible negative outcomes are trust requirements in KFM. Contract examples are the smallest executable proof of that posture.
 
 ### Why add a manifest and CLI?
 
-Because this turns fixture inventory into something executable and reviewable. A discovery manifest reduces silent drift, and a CLI lets the same wave run outside pytest without creating a second source of truth.
+A discovery manifest turns fixture inventory into something executable and reviewable. The CLI lets the same wave run outside pytest without creating a second source of truth.
 
 ### Should reproducibility cases live here?
 
-Not as a primary burden. A contract case may participate in a broader rerun proof, but digest stability, receipt comparison, and bounded-drift reruns belong first in [`../reproducibility/`](../reproducibility/).
+Not as a primary burden. A contract case may participate in broader rerun proof, but digest stability, receipt comparison, and bounded-drift reruns belong first in [`../reproducibility/`](../reproducibility/).
 
-### Why are `run_receipt` and `ai_receipt` mentioned if their exact repo home is not settled here?
+### Why mention `run_receipt` and `ai_receipt` if their exact home is unsettled?
 
-Because later materials make them part of KFM’s proof pressure even when the mounted repo home is still unresolved. Mentioning them prevents drift; claiming they already exist here would be overclaiming.
-
-### Should API endpoint tests live here?
-
-Not usually. Keep object-shape checks here; move route wiring and full runtime behavior into integration or e2e lanes.
+Because later proof-oriented materials make them part of KFM’s contract pressure. Mentioning them prevents drift; claiming they already live here would overstate the evidence.
 
 ### Do attestation helpers belong here?
 
-Not as primary ownership. This family may validate the object shapes those helpers consume, but helper implementations and signing logic still belong in the attestation lane.
+No. This family may validate object shapes those helpers consume. Helper implementations and signing logic belong in the attestation lane.
 
 [Back to top](#top)
 
@@ -925,20 +758,16 @@ Not as primary ownership. This family may validate the object shapes those helpe
 
 ### Evidence notes
 
-This revision is grounded first in the stronger contract-family draft, then updated to reflect the newly introduced executable thin slice:
+This revision combines two supplied drafts:
 
-- Wave 01 core contract fixtures
-- manifest-driven family discovery
-- JSON Schema runner
-- manifest loader
-- readable failure summary helper
-- CLI execution path
+- the shorter authority-focused draft, which makes the consume-don’t-create rule explicit
+- the longer executable-wave draft, which documents the reported manifest, runner, CLI, readable failure summary, and Wave 01 core shape
 
-This file still does **not** imply branch-verified merge gates, exhaustive family coverage, or final fixture-home law unless the checked-out branch proves those artifacts directly.
+This README still does not imply branch-verified merge gates, exhaustive family coverage, final fixture-home law, or active ruleset enforcement unless the checked-out branch proves those artifacts directly.
 
 ### Doctrinal contract lattice echoed here
 
-The current contract-facing materials repeatedly center the following trust-bearing families:
+The current contract-facing materials repeatedly center these trust-bearing families:
 
 - `SourceDescriptor`
 - `IngestReceipt`
@@ -954,24 +783,22 @@ The current contract-facing materials repeatedly center the following trust-bear
 - `RuntimeResponseEnvelope`
 - `CorrectionNotice`
 
-Later adjacent materials also add stronger cross-cutting pressure around:
+Adjacent proof materials add pressure around:
 
 - `spec_hash`
 - `run_receipt`
 - `ai_receipt`
-- attestation references
+- attestation refs
 
 ### Open verification items
 
-- Is `contracts/` or `schemas/` the singular authoritative machine-contract home?
-- Are schema-side `valid/invalid` leaves intended to stay illustrative, mirrored, generated, or eventually runnable?
-- Is there a broader validator script or package entrypoint not yet surfaced in docs?
-- Are there checked-in workflow YAML files on the active branch that do not appear in the current working evidence?
-- Does any existing thin slice already exercise contract validation indirectly beyond Wave 01 core?
-- Which visible `schemas/contracts/v1/**/*.schema.json` files are still placeholder bodies on the working branch under review?
-- Where do `run_receipt` and `ai_receipt` live canonically, and which lane owns their fixtures?
-- How should this family coordinate with `tests/reproducibility/` once receipt-backed rebuild checks become real?
-- Which promotion-facing or attestation-facing shapes should have first-wave valid and invalid cases here versus nearby lanes?
+- Is `contracts/` or `schemas/contracts/` the singular authoritative machine-contract home for each family?
+- Are schema-side valid/invalid leaves illustrative, mirrored, generated, or runnable?
+- Is there a broader validator entrypoint not yet surfaced in the supplied drafts?
+- Are there active workflow YAML files that make this family merge-blocking?
+- Which `schemas/contracts/v1/**/*.schema.json` files are complete versus placeholders?
+- Where do `run_receipt` and `ai_receipt` live canonically?
+- Which promotion-facing or attestation-facing shapes should receive first-wave valid/invalid cases here versus adjacent lanes?
 
 </details>
 
