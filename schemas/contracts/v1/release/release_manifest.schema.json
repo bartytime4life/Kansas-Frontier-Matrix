@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/schemas/contracts/v1/release/release_manifest.schema.json",
+  "title": "release_manifest.schema",
+  "description": "Skeletal schema placeholder generated from linked documentation.",
+  "type": "object",
+  "additionalProperties": true
+}
