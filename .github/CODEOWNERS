@@ -1,0 +1,192 @@
+# Kansas Frontier Matrix CODEOWNERS
+#
+# Source posture:
+# - Current evidence supports broad fallback ownership by @bartytime4life
+#   across .github, root docs, apps, packages, contracts, policy, data,
+#   infra, docs, tools, tests, configs, scripts, migrations, and examples.
+# - Narrower ownership by doctrine, contracts/schemas, policy, data/catalog,
+#   runtime/web shell, release/correction, and domain lane is still proposed,
+#   not confirmed as active GitHub teams.
+# - Keep this broad fallback until narrower teams exist with write access and
+#   branch/ruleset enforcement has been verified.
+#
+# Ordering rule for maintainers: keep broad defaults first and more specific
+# future owner rules later, so future specialized owners can override safely.
+
+# ---------------------------------------------------------------------------
+# Global fallback
+# ---------------------------------------------------------------------------
+* @bartytime4life
+
+# ---------------------------------------------------------------------------
+# GitHub governance, review routing, workflows, and security gatehouse
+# ---------------------------------------------------------------------------
+/.github/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+/.github/README.md @bartytime4life
+/.github/PULL_REQUEST_TEMPLATE.md @bartytime4life
+/.github/SECURITY.md @bartytime4life
+/.github/dependabot.yml @bartytime4life
+/.github/actions/ @bartytime4life
+/.github/watchers/ @bartytime4life
+/.github/workflows/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Root governance and contributor-facing control files
+# ---------------------------------------------------------------------------
+/README.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+/SECURITY.md @bartytime4life
+/CODE_OF_CONDUCT.md @bartytime4life
+/LICENSE* @bartytime4life
+/NOTICE* @bartytime4life
+/Makefile @bartytime4life
+/package.json @bartytime4life
+/pnpm-lock.yaml @bartytime4life
+/package-lock.json @bartytime4life
+/yarn.lock @bartytime4life
+/pyproject.toml @bartytime4life
+/requirements*.txt @bartytime4life
+/go.mod @bartytime4life
+/go.sum @bartytime4life
+/Cargo.toml @bartytime4life
+/Cargo.lock @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Documentation control plane, canon, lineage, reports, ADRs, and runbooks
+# ---------------------------------------------------------------------------
+/docs/ @bartytime4life
+/docs/README.md @bartytime4life
+/docs/architecture/ @bartytime4life
+/docs/adr/ @bartytime4life
+/docs/backlog/ @bartytime4life
+/docs/domains/ @bartytime4life
+/docs/reports/ @bartytime4life
+/docs/runbooks/ @bartytime4life
+/docs/sources/ @bartytime4life
+/docs/templates/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Contracts, schemas, vocabularies, policy, and proof-object authority surfaces
+# ---------------------------------------------------------------------------
+/contracts/ @bartytime4life
+/schemas/ @bartytime4life
+/schemas/contracts/ @bartytime4life
+/schemas/contracts/v1/ @bartytime4life
+/policy/ @bartytime4life
+/policy/ai/ @bartytime4life
+/policy/data/ @bartytime4life
+/policy/release/ @bartytime4life
+/policy/sensitivity/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Data lifecycle, source registries, receipts, proofs, catalog, and publication
+# ---------------------------------------------------------------------------
+/data/ @bartytime4life
+/data/README.md @bartytime4life
+/data/registry/ @bartytime4life
+/data/raw/ @bartytime4life
+/data/work/ @bartytime4life
+/data/quarantine/ @bartytime4life
+/data/processed/ @bartytime4life
+/data/catalog/ @bartytime4life
+/data/triplet/ @bartytime4life
+/data/receipts/ @bartytime4life
+/data/run_receipts/ @bartytime4life
+/data/proofs/ @bartytime4life
+/data/releases/ @bartytime4life
+/data/published/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Runtime, governed API, web shell, MapLibre UI, packages, and examples
+# ---------------------------------------------------------------------------
+/apps/ @bartytime4life
+/apps/governed_api/ @bartytime4life
+/apps/governed-api/ @bartytime4life
+/apps/explorer-web/ @bartytime4life
+/web/ @bartytime4life
+/ui/ @bartytime4life
+/packages/ @bartytime4life
+/examples/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Tooling, validators, probes, CI helpers, tests, and pipelines
+# ---------------------------------------------------------------------------
+/tools/ @bartytime4life
+/tools/attest/ @bartytime4life
+/tools/catalog/ @bartytime4life
+/tools/ci/ @bartytime4life
+/tools/diff/ @bartytime4life
+/tools/docs/ @bartytime4life
+/tools/probes/ @bartytime4life
+/tools/validators/ @bartytime4life
+/tests/ @bartytime4life
+/tests/contracts/ @bartytime4life
+/tests/ci/ @bartytime4life
+/tests/docs/ @bartytime4life
+/tests/e2e/ @bartytime4life
+/tests/fixtures/ @bartytime4life
+/tests/policy/ @bartytime4life
+/tests/validators/ @bartytime4life
+/pipelines/ @bartytime4life
+/scripts/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Infrastructure, deployment, config, migrations, release, and generated assets
+# ---------------------------------------------------------------------------
+/infra/ @bartytime4life
+/configs/ @bartytime4life
+/migrations/ @bartytime4life
+/release/ @bartytime4life
+/artifacts/ @bartytime4life
+/brand/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Domain-lane roots observed or repeatedly proposed in the source corpus
+# ---------------------------------------------------------------------------
+/habitat/ @bartytime4life
+/fauna/ @bartytime4life
+/flora/ @bartytime4life
+/hydrology/ @bartytime4life
+/hazards/ @bartytime4life
+/soil/ @bartytime4life
+/agriculture/ @bartytime4life
+/archaeology/ @bartytime4life
+/atmosphere/ @bartytime4life
+/geology/ @bartytime4life
+/settlements/ @bartytime4life
+/transport/ @bartytime4life
+/people_dna_land/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# High-burden domain documentation paths. These remain broad-owner fallback
+# until domain/steward teams are created and verified.
+# ---------------------------------------------------------------------------
+/docs/domains/habitat/ @bartytime4life
+/docs/domains/fauna/ @bartytime4life
+/docs/domains/flora/ @bartytime4life
+/docs/domains/hydrology/ @bartytime4life
+/docs/domains/hazards/ @bartytime4life
+/docs/domains/soil/ @bartytime4life
+/docs/domains/agriculture/ @bartytime4life
+/docs/domains/archaeology/ @bartytime4life
+/docs/domains/atmosphere/ @bartytime4life
+/docs/domains/geology/ @bartytime4life
+/docs/domains/settlements/ @bartytime4life
+/docs/domains/transport/ @bartytime4life
+/docs/domains/people_dna_land/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Future split placeholders for maintainers:
+# Replace selected fallback rules above with verified teams only after the teams
+# exist with write access and branch/ruleset behavior is confirmed.
+#
+# Example future patterns, intentionally commented out:
+# /docs/architecture/ @YOUR_ORG/kfm-doctrine
+# /schemas/ @YOUR_ORG/kfm-schema-validation
+# /contracts/ @YOUR_ORG/kfm-contracts
+# /policy/ @YOUR_ORG/kfm-policy
+# /data/registry/ @YOUR_ORG/kfm-source-data-stewards
+# /data/catalog/ @YOUR_ORG/kfm-catalog-release
+# /apps/ @YOUR_ORG/kfm-runtime-ui
+# /tools/validators/ @YOUR_ORG/kfm-validation
