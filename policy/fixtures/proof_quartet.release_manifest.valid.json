@@ -1,6 +1,0 @@
-{
-  "kind": "ReleaseManifest",
-  "spec_hash": "sha256:2222222222222222",
-  "run_receipt_ref": "rr.hydrology.2026-04-12.0001",
-  "attestation_refs": ["att.sigstore.example.0001"]
-}
