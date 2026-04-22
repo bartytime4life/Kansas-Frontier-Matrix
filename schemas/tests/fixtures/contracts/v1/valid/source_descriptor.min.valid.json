@@ -1,9 +1,0 @@
-{
-  "kind": "SourceDescriptor",
-  "schema_version": "v1",
-  "source_id": "src.hydrology.usgs-nwis.ks-0001",
-  "source_type": "API",
-  "authority": { "owner": "USGS", "jurisdiction": "US-KS" },
-  "access": { "rights_class": "PUBLIC", "license": "public-domain" },
-  "lineage": { "stage": "RAW", "admitted_at": "2026-04-12T00:00:00Z" }
-}
