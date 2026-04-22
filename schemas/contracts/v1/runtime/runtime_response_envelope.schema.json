@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+  "title": "runtime_response_envelope.schema",
+  "description": "Skeletal schema placeholder generated from linked documentation.",
+  "type": "object",
+  "additionalProperties": true
+}
