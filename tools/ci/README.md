@@ -253,9 +253,9 @@ git grep -n "render_diff_summary\|render_bundle_diff_policy_summary\|render_prom
 For baseline repository inventory verification (used by `.github/workflows/verification-baseline.yml`):
 
 ```bash
-./tools/ci/verify_baseline.sh baseline-report.txt
+sh ./tools/ci/verify_baseline.sh baseline-report.txt
 cat baseline-report.txt
-./tools/ci/test_verify_baseline.sh
+sh ./tools/ci/test_verify_baseline.sh
 ```
 
 When the checked-out branch uses `pytest` for this lane, the documented thin slice should remain runnable locally as well as in CI:

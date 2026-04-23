@@ -59,4 +59,16 @@ if "${verifier}" --root "${fail_root}" >/dev/null 2>&1; then
   exit 1
 fi
 
+# FAIL case: unknown option should fail with usage error
+if "${verifier}" --unknown >/dev/null 2>&1; then
+  echo "expected verifier to fail on unknown option"
+  exit 1
+fi
+
+# FAIL case: multiple positional args should fail
+if "${verifier}" report-a.txt report-b.txt --root "${pass_root}" >/dev/null 2>&1; then
+  echo "expected verifier to fail on multiple report paths"
+  exit 1
+fi
+
 echo "verify_baseline tests passed"

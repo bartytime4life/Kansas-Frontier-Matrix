@@ -3,6 +3,7 @@ set -eu
 
 report_path="baseline-report.txt"
 repo_root="."
+report_path_set="0"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -14,8 +15,21 @@ while [ "$#" -gt 0 ]; do
       repo_root="$2"
       shift 2
       ;;
+    --help|-h)
+      echo "usage: $0 [report_path] [--root <repo_root>]"
+      exit 0
+      ;;
+    --*)
+      echo "unknown option: $1" >&2
+      exit 2
+      ;;
     *)
+      if [ "${report_path_set}" = "1" ]; then
+        echo "unexpected extra argument: $1" >&2
+        exit 2
+      fi
       report_path="$1"
+      report_path_set="1"
       shift
       ;;
   esac

@@ -20,10 +20,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run baseline verification script
-        run: ./tools/ci/verify_baseline.sh baseline-report.txt
+        run: sh ./tools/ci/verify_baseline.sh baseline-report.txt
 
       - name: Run verifier self-tests
-        run: ./tools/ci/test_verify_baseline.sh
+        run: sh ./tools/ci/test_verify_baseline.sh
 
       - name: Upload baseline report
         uses: actions/upload-artifact@v4
