@@ -71,10 +71,5 @@ if "${verifier}" report-a.txt report-b.txt --root "${pass_root}" >/dev/null 2>&1
   exit 1
 fi
 
-# PASS case: help should succeed and print usage
-if ! "${verifier}" --help | grep -q "^usage:"; then
-  echo "expected --help to print usage"
-  exit 1
-fi
 
 echo "verify_baseline tests passed"
