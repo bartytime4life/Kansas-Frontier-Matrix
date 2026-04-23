@@ -4,7 +4,7 @@ title: Kansas Frontier Matrix
 type: standard
 version: v1
 status: draft
-owners: TODO-owner
+owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: 2026-04-23
 policy_label: NEEDS-VERIFICATION
@@ -20,7 +20,7 @@ notes: [Root README revision prepared from the uploaded KFM README draft, attach
 A governed, evidence-first, map-first, time-aware spatial knowledge system for producing inspectable public claims from spatial evidence.
 
 > [!IMPORTANT]
-> **Status:** `experimental` · **Document status:** `draft` · **Owners:** `TODO-owner`
+> **Status:** `experimental` · **Document status:** `draft` · **Owners:** `@bartytime4life`
 > **Target path:** `README.md` / `readme.md` — `NEEDS VERIFICATION`  
 > **Evidence posture:** `CONFIRMED doctrine` · `PROPOSED implementation plan` · `UNKNOWN mounted repo implementation`  
 > **Operating posture:** artifactization and verification before broad live-source ingestion, UI expansion, model integration, or public release.
