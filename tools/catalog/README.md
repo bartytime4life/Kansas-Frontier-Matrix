@@ -371,19 +371,19 @@ A healthy split looks like this:
 
 ```mermaid
 flowchart LR
-    A[data/catalog/stac|dcat|prov] --> B[tools/catalog/catalog_crosslink.py]
-    R[promotion record / decision inputs] --> B
-    B --> C[stable JSON report]
-    C --> D[tests/catalog/ fixtures + assertions]
-    C --> E[tools/ci/ reviewer renderers]
-    C --> F[tools/validators/promotion_gate]
-    G[scripts/ entrypoints] --> B
-    H[.github/workflows/] --> B
+    A["data/catalog/stac, dcat, prov"] --> B["tools/catalog/catalog_crosslink.py"]
+    R["promotion record / decision inputs"] --> B
+    B --> C["stable JSON report"]
+    C --> D["tests/catalog/ fixtures + assertions"]
+    C --> E["tools/ci/ reviewer renderers"]
+    C --> F["tools/validators/promotion_gate"]
+    G["scripts/ entrypoints"] --> B
+    H[".github/workflows/"] --> B
 
-    B -. no publish authority .-> P[data/published/]
-    B -. no policy ownership .-> Q[policy/]
-    B -. no schema-home authority .-> S[contracts/ + schemas/]
-    B -. helper only .-> T[data/catalog/]
+    B -. "no publish authority" .-> P["data/published/"]
+    B -. "no policy ownership" .-> Q["policy/"]
+    B -. "no schema-home authority" .-> S["contracts/ + schemas/"]
+    B -. "helper only" .-> T["data/catalog/"]
 ```
 
 Above: `tools/catalog/` inspects outward catalog seams and emits stable outputs for tests, CI, and promotion review, while staying outside publication, policy, and schema-home authority.
