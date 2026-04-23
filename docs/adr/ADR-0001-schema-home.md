@@ -41,6 +41,20 @@ KFM currently exposes two nearby surfaces that can be interpreted as contract au
 
 Without a canonical-home decision, teams risk contract drift, ambiguous validator targets, mismatched fixture paths, and unclear upgrade/migration behavior.
 
+## Scope and non-goals
+
+### In scope
+
+- Canonical path for **machine-checkable** contracts.
+- Role separation between schema authority and narrative contract documentation.
+- Enforcement expectations for validators, tests, and CI.
+
+### Out of scope (for this ADR)
+
+- Rewriting existing contract/domain documentation content.
+- Defining schema versioning semantics beyond canonical home selection.
+- Deciding release cadence or branch-protection policy details.
+
 ## Decision
 
 **Canonical machine-contract home is `schemas/contracts/v1/`.**
@@ -58,6 +72,13 @@ Normative rules:
 2. Files under `contracts/` must not silently become machine-truth substitutes for schema artifacts.
 3. If compatibility aliases are needed, alias mapping must be explicit and tested (no implicit duplication).
 4. Validators and tests must fail closed when contract path resolution is ambiguous.
+
+### Canonical split
+
+| Surface | Canonical for machine validation? | Primary role |
+|---|---:|---|
+| `schemas/contracts/v1/` | Yes | Versioned machine schemas used by validators, policy checks, CI gates, and release checks. |
+| `contracts/` | No | Human-facing contract narratives, API/object/vocab explanations, and implementation guidance. |
 
 ## Alternatives considered
 
@@ -99,6 +120,17 @@ Before upgrading this ADR from proposed to accepted:
 4. Add fixtures demonstrating valid/invalid contract path resolution.
 5. Confirm `contracts/README.md` and `schemas/README.md` wording aligns with this authority split.
 
+## Acceptance criteria (for ADR status upgrade)
+
+ADR-0001 may move from `proposed` to `accepted` only when all items below are true:
+
+- [ ] Owners/stewards for schema and contracts surfaces are confirmed.
+- [ ] Validator rule exists to reject machine-schema additions outside canonical homes.
+- [ ] CI executes that rule and fails closed.
+- [ ] Valid/invalid fixtures for canonical-path enforcement exist.
+- [ ] Root/contracts/schemas docs explicitly reference this ADR and authority split.
+- [ ] Any compatibility aliases are documented and covered by tests.
+
 ## Migration / implementation plan (proposed)
 
 1. **Inventory:** enumerate schema-path consumers in `tools/`, `tests/`, and workflows.
@@ -122,5 +154,6 @@ If this decision proves incorrect:
 - Final owners and review sign-off set.
 - Policy label confirmation for ADR publication scope.
 - Whether any hidden automation currently treats `contracts/` as normative schema authority.
+- Whether any external consumers require a temporary alias map or migration bridge.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
