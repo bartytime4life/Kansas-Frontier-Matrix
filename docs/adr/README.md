@@ -140,7 +140,7 @@ These materials should **not** be stored as ADRs.
 ```text
 docs/adr/
 ├── README.md                                # This file
-├── ADR-0001-schema-home.md                  # PROPOSED / priority high
+├── ADR-0001-schema-home.md                  # PRESENT in current branch / status: proposed
 ├── ADR-0002-source-ledger-authority.md      # PROPOSED / priority high
 ├── ADR-0003-evidencebundle-contract.md      # PROPOSED / priority high
 ├── ADR-0004-promotion-gate.md               # PROPOSED / priority high
@@ -153,7 +153,7 @@ docs/adr/
 ```
 
 > [!NOTE]
-> This tree is a **proposed first-wave ADR map**, not current repository proof. If the mounted checkout already uses another numbering or naming pattern, preserve existing anchors and record the migration or aliasing decision.
+> This tree is a first-wave ADR map. `ADR-0001-schema-home.md` is present in the current branch; other entries remain proposed placeholders unless separately added.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
