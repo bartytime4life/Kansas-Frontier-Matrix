@@ -1,0 +1,31 @@
+name: verification-baseline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repo-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run baseline verification script
+        run: ./tools/ci/verify_baseline.sh baseline-report.txt
+
+      - name: Run verifier self-tests
+        run: ./tools/ci/test_verify_baseline.sh
+
+      - name: Upload baseline report
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-report
+          path: baseline-report.txt
