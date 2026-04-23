@@ -47,6 +47,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_diff_summary.py`
 > - `tools/ci/render_bundle_diff_policy_summary.py`
 > - `tools/ci/render_promotion_review_handoff.py`
+> - `tools/ci/verify_baseline.sh` (baseline repository inventory verifier used by `.github/workflows/verification-baseline.yml`)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >
@@ -246,7 +247,15 @@ sed -n '1,220p' tests/ci/test_render_bundle_diff_policy_summary.py 2>/dev/null |
 sed -n '1,220p' tests/ci/test_render_promotion_review_handoff.py 2>/dev/null || true
 
 # Reconfirm references before widening claims
-git grep -n "render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff\|render_promotion_summary\|render_promotion_bundle_summary\|tests/ci" -- . || true
+git grep -n "render_diff_summary\|render_bundle_diff_policy_summary\|render_promotion_review_handoff\|render_promotion_summary\|render_promotion_bundle_summary\|verify_baseline\|tests/ci" -- . || true
+```
+
+For baseline repository inventory verification (used by `.github/workflows/verification-baseline.yml`):
+
+```bash
+./tools/ci/verify_baseline.sh baseline-report.txt
+cat baseline-report.txt
+./tools/ci/test_verify_baseline.sh
 ```
 
 When the checked-out branch uses `pytest` for this lane, the documented thin slice should remain runnable locally as well as in CI:
