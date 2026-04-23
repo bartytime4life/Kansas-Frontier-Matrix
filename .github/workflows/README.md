@@ -21,8 +21,8 @@ Governed GitHub Actions orchestration surface for validation, runtime proof, rec
 
 > [!NOTE]
 > **Status:** `experimental` · **Document status:** `draft` · **Owners:** `@bartytime4life` · **Path:** `.github/workflows/README.md`  
-> **Current public inventory:** `README.md` + `.gitkeep`; checked-in workflow YAML remains **UNKNOWN / NEEDS VERIFICATION** until verified from the active branch.  
-> **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-0969da) ![lane](https://img.shields.io/badge/lane-.github%2Fworkflows-6f42c1) ![posture](https://img.shields.io/badge/posture-governed%20automation-0a7d5a) ![inventory](https://img.shields.io/badge/current%20inventory-README%20%2B%20.gitkeep-lightgrey)  
+> **Current public inventory:** `README.md` + `verification-baseline.yml` (+ optional `.gitkeep` placeholder); checked-in workflow YAML now includes a baseline verification gate.
+> **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-0969da) ![lane](https://img.shields.io/badge/lane-.github%2Fworkflows-6f42c1) ![posture](https://img.shields.io/badge/posture-governed%20automation-0a7d5a) ![inventory](https://img.shields.io/badge/current%20inventory-README%20%2B%20verification--baseline.yml-lightgrey)
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
@@ -109,10 +109,11 @@ This directory exists to answer a small set of consequential questions:
 | Item | Current visible or drafted state | Posture |
 |---|---|---|
 | `README.md` | current public-main directory listing exposes this README | **CONFIRMED** |
-| `.gitkeep` | current public-main directory listing exposes a placeholder file | **CONFIRMED** |
+| `verification-baseline.yml` | checked-in baseline workflow that runs `verify_baseline.sh`, shell syntax checks, verifier self-tests, and uploads a baseline inventory artifact | **CONFIRMED** |
+| `.gitkeep` | optional placeholder file where present | **NON-BLOCKING** |
 | `runtime-proof-soil-moisture.yml` | documented as a drafted thin-slice workflow with contract tests, runtime-proof tests, emitted `actual.response.json`, reviewer summary, and uploaded artifacts | **NEEDS VERIFICATION on active branch** |
 | `probes.yml` | documented as a receipts-first scheduled/manual probe workflow with validation, policy evaluation, and artifact upload | **NEEDS VERIFICATION on active branch** |
-| broader `*.yml` / `*.yaml` files | not proven from the current public-main directory listing | **UNKNOWN** |
+| broader `*.yml` / `*.yaml` files | one baseline workflow is proven; additional lanes remain unverified | **PARTIALLY VERIFIED** |
 | Actions sidebar workflow labels | useful public UI signal where visible | **NEEDS VERIFICATION** before treating as checked-in YAML |
 | historical deleted workflow names | useful reconstruction clues | **NEEDS VERIFICATION** before reuse |
 | required checks / rulesets / environments | not derivable from this README alone | **UNKNOWN** |
