@@ -1,11 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-report_path="${1:-baseline-report.txt}"
+report_path="baseline-report.txt"
+repo_root="."
 
-test -f README.md
-test ! -f readme.md
-test -f .github/CODEOWNERS
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --root)
+      repo_root="${2:?missing value for --root}"
+      shift 2
+      ;;
+    *)
+      report_path="$1"
+      shift
+      ;;
+  esac
+done
+
+cd "${repo_root}"
+
+test -f "README.md"
+test ! -f "readme.md"
+test -f ".github/CODEOWNERS"
 
 required_paths=(
   ".github/workflows/README.md"
