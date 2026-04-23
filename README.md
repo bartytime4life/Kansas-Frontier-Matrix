@@ -10,7 +10,7 @@ updated: 2026-04-23
 policy_label: NEEDS-VERIFICATION
 related: [NEEDS-VERIFICATION]
 tags: [kfm, readme, spatial-evidence, governance, map-first, time-aware]
-notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Target repository was not mounted. Confirm doc_id, owners, created date, policy label, related links, path casing, repo topology, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
+notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Repository is mounted in this session and basic path inventory is now verified; implementation behavior and platform state still require deeper verification. Confirm doc_id, owners, created date, policy label, related links, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -325,16 +325,16 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 
 | Item | Status | Next check |
 |---|---|---|
-| Root file casing: `README.md` vs `readme.md` | `NEEDS VERIFICATION` | Confirm repo convention before merge |
-| Owner / CODEOWNERS coverage | `UNKNOWN` | Inspect `.github/CODEOWNERS` |
-| Package manager and test runner | `UNKNOWN` | Inspect lockfiles and CI workflows |
+| Root file casing: `README.md` vs `readme.md` | `CONFIRMED` (`README.md` present, `readme.md` absent) | Keep root filename stable as `README.md` |
+| Owner / CODEOWNERS coverage | `PARTIALLY VERIFIED` (`.github/CODEOWNERS` present; broad fallback owner declared) | Confirm team-level owners and branch enforcement in GitHub settings |
+| Package manager and test runner | `PARTIALLY VERIFIED` (no root lockfiles/manifests found; workflow YAML inventory still minimal) | Confirm authoritative runtime/toolchain and add executable quickstart commands |
 | Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority |
-| Existing governed API | `UNKNOWN` | Inspect `apps/`, `packages/`, and route contracts |
-| Existing MapLibre shell | `UNKNOWN` | Inspect web app and layer registry |
-| Existing Evidence Drawer / Focus Mode | `UNKNOWN` | Inspect UI contracts and runtime envelopes |
-| CI gates | `UNKNOWN` | Inspect `.github/workflows/` and local validation tools |
-| Source registry | `UNKNOWN` | Inspect `data/registry/` and source descriptor conventions |
-| Release artifacts | `UNKNOWN` | Inspect `release/`, `data/proofs/`, `data/receipts/`, and `data/published/` |
+| Existing governed API | `PARTIALLY VERIFIED` (`apps/governed-api/README.md` present) | Confirm implemented routes, handlers, and contract tests |
+| Existing MapLibre shell | `PARTIALLY VERIFIED` (`apps/web/README.md` and `ui/README.md` present) | Confirm runnable shell code and layer registry implementation |
+| Existing Evidence Drawer / Focus Mode | `PARTIALLY VERIFIED` (documented across app/contract READMEs) | Confirm concrete runtime payloads, fixtures, and UI wiring |
+| CI gates | `PARTIALLY VERIFIED` (`.github/workflows/README.md` present; checked-in workflow YAML still unverified) | Add/verify concrete workflow files and required checks |
+| Source registry | `PARTIALLY VERIFIED` (`data/registry/` exists) | Confirm active source descriptors, rights fields, and validator coverage |
+| Release artifacts | `PARTIALLY VERIFIED` (`release/`, `data/proofs/`, `data/receipts/`, `data/published/` exist) | Confirm real emitted manifests/receipts/proofs on active branch |
 | Public exposure posture | `NEEDS VERIFICATION` | Verify firewall, reverse proxy, VPN, auth, audit logging, secrets, and least-privilege boundaries before semi-public access |
 
 ---
