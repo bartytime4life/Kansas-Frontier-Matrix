@@ -1,4 +1,0 @@
-README.md: yes
-readme.md: no
-CODEOWNERS: yes
-workflow_yml_count: 2

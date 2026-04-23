@@ -109,7 +109,7 @@ This directory exists to answer a small set of consequential questions:
 | Item | Current visible or drafted state | Posture |
 |---|---|---|
 | `README.md` | current public-main directory listing exposes this README | **CONFIRMED** |
-| `verification-baseline.yml` | checked-in baseline workflow that calls `tools/ci/verify_baseline.sh` to verify root README casing, CODEOWNERS presence, core documentation surfaces, and uploads a baseline inventory artifact | **CONFIRMED** |
+| `verification-baseline.yml` | checked-in baseline workflow that runs `verify_baseline.sh`, shell syntax checks, verifier self-tests, and uploads a baseline inventory artifact | **CONFIRMED** |
 | `.gitkeep` | optional placeholder file where present | **NON-BLOCKING** |
 | `runtime-proof-soil-moisture.yml` | documented as a drafted thin-slice workflow with contract tests, runtime-proof tests, emitted `actual.response.json`, reviewer summary, and uploaded artifacts | **NEEDS VERIFICATION on active branch** |
 | `probes.yml` | documented as a receipts-first scheduled/manual probe workflow with validation, policy evaluation, and artifact upload | **NEEDS VERIFICATION on active branch** |
