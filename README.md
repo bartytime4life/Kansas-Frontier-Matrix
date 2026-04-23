@@ -10,7 +10,7 @@ updated: 2026-04-23
 policy_label: NEEDS-VERIFICATION
 related: [NEEDS-VERIFICATION]
 tags: [kfm, readme, spatial-evidence, governance, map-first, time-aware]
-notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Target repository was not mounted. Confirm doc_id, owners, created date, policy label, related links, path casing, repo topology, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
+notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Repository is mounted in this session and basic path inventory is now verified; implementation behavior and platform state still require deeper verification. Confirm doc_id, owners, created date, policy label, related links, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -20,7 +20,7 @@ notes: [Root README revision prepared from the uploaded KFM README draft, attach
 A governed, evidence-first, map-first, time-aware spatial knowledge system for producing inspectable public claims from spatial evidence.
 
 > [!IMPORTANT]
-> **Status:** `experimental` · **Document status:** `draft` · **Owners:** `TODO-owner`  
+> **Status:** `experimental` · **Document status:** `draft` · **Owners:** `TODO-owner`
 > **Target path:** `README.md` / `readme.md` — `NEEDS VERIFICATION`  
 > **Evidence posture:** `CONFIRMED doctrine` · `PROPOSED implementation plan` · `UNKNOWN mounted repo implementation`  
 > **Operating posture:** artifactization and verification before broad live-source ingestion, UI expansion, model integration, or public release.
@@ -325,14 +325,14 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 
 | Item | Status | Next check |
 |---|---|---|
-| Root file casing: `README.md` vs `readme.md` | `NEEDS VERIFICATION` | Confirm repo convention before merge |
-| Owner / CODEOWNERS coverage | `UNKNOWN` | Inspect `.github/CODEOWNERS` |
-| Package manager and test runner | `UNKNOWN` | Inspect lockfiles and CI workflows |
+| Root file casing: `README.md` vs `readme.md` | `CONFIRMED` (`README.md` present, `readme.md` absent) | Keep root filename stable as `README.md` |
+| Owner / CODEOWNERS coverage | `NEEDS VERIFICATION` | Confirm steward ownership model and CODEOWNERS intent with maintainers |
+| Package manager and test runner | `UNKNOWN` | Confirm authoritative runtime/toolchain and executable verification commands |
 | Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority |
 | Existing governed API | `UNKNOWN` | Inspect `apps/`, `packages/`, and route contracts |
 | Existing MapLibre shell | `UNKNOWN` | Inspect web app and layer registry |
 | Existing Evidence Drawer / Focus Mode | `UNKNOWN` | Inspect UI contracts and runtime envelopes |
-| CI gates | `UNKNOWN` | Inspect `.github/workflows/` and local validation tools |
+| CI gates | `PARTIALLY VERIFIED` (`.github/workflows/verification-baseline.yml` now enforces baseline path checks) | Add contract/policy/runtime-proof gates and required-check settings |
 | Source registry | `UNKNOWN` | Inspect `data/registry/` and source descriptor conventions |
 | Release artifacts | `UNKNOWN` | Inspect `release/`, `data/proofs/`, `data/receipts/`, and `data/published/` |
 | Public exposure posture | `NEEDS VERIFICATION` | Verify firewall, reverse proxy, VPN, auth, audit logging, secrets, and least-privilege boundaries before semi-public access |
