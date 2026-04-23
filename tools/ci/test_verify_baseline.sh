@@ -71,4 +71,5 @@ if "${verifier}" report-a.txt report-b.txt --root "${pass_root}" >/dev/null 2>&1
   exit 1
 fi
 
+
 echo "verify_baseline tests passed"
