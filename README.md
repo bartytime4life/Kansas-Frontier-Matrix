@@ -327,12 +327,12 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 |---|---|---|
 | Root file casing: `README.md` vs `readme.md` | `CONFIRMED` (`README.md` present, `readme.md` absent) | Keep root filename stable as `README.md` |
 | Owner / CODEOWNERS coverage | `CONFIRMED` (broad fallback owner declared in `.github/CODEOWNERS`) | Add narrower team ownership only after GitHub teams and rulesets are active |
-| Package manager and test runner | `CONFIRMED GAP` (no package/lock manifests detected; no runnable test command declared in root) | Declare canonical stack + executable verification commands |
+| Package manager and test runner | `CONFIRMED GAP` (no package/lock manifests detected; root test runner remains undefined) | Declare canonical stack + add project-level test command contract |
 | Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority |
 | Existing governed API | `CONFIRMED DOC SURFACE` (`apps/governed-api/README.md` present) | Confirm implemented routes, handlers, and contract tests (if code exists) |
 | Existing MapLibre shell | `CONFIRMED DOC SURFACE` (`apps/web/README.md` and `ui/README.md` present) | Confirm runnable shell code and layer registry implementation (if code exists) |
 | Existing Evidence Drawer / Focus Mode | `CONFIRMED DOC CLAIMS` (documented across app/contract READMEs) | Confirm concrete runtime payloads, fixtures, and UI wiring |
-| CI gates | `CONFIRMED GAP` (`.github/workflows/` contains README only; no checked-in workflow YAML) | Add/verify concrete workflow files and required checks |
+| CI gates | `PARTIALLY VERIFIED` (`.github/workflows/verification-baseline.yml` now enforces baseline path checks) | Add contract/policy/runtime-proof gates and required-check settings |
 | Source registry | `CONFIRMED DOC SURFACE` (`data/registry/README.md` present) | Confirm active source descriptors, rights fields, and validator coverage |
 | Release artifacts | `CONFIRMED DOC SURFACE` (`release/README.md`, `data/proofs/README.md`, `data/receipts/README.md`, `data/published/README.md` present) | Confirm real emitted manifests/receipts/proofs on active branch |
 | Public exposure posture | `NEEDS VERIFICATION` | Verify firewall, reverse proxy, VPN, auth, audit logging, secrets, and least-privilege boundaries before semi-public access |
