@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: TODO-owner
 created: NEEDS-VERIFICATION
-updated: 2026-04-22
+updated: 2026-04-23
 policy_label: NEEDS-VERIFICATION
-related: [docs/README.md, docs/architecture/README.md, docs/adr/README.md, schemas/README.md, contracts/README.md, policy/README.md, tests/README.md]
+related: [NEEDS-VERIFICATION]
 tags: [kfm, readme, spatial-evidence, governance, map-first, time-aware]
-notes: [Root README draft generated from the attached KFM corpus and current-session workspace scan; target repository tree was not mounted during authoring; doc_id, owners, created date, policy label, related paths, branch state, package manager, workflow inventory, and implementation maturity require repo verification before merge.]
+notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Target repository was not mounted. Confirm doc_id, owners, created date, policy label, related links, path casing, repo topology, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -20,10 +20,10 @@ notes: [Root README draft generated from the attached KFM corpus and current-ses
 A governed, evidence-first, map-first, time-aware spatial knowledge system for producing inspectable public claims from spatial evidence.
 
 > [!IMPORTANT]
-> **Status:** `experimental` · **Document status:** `draft`  
-> **Owners:** `TODO-owner`  
-> **Path:** `readme.md`  
+> **Status:** `experimental` · **Document status:** `draft` · **Owners:** `TODO-owner`  
+> **Target path:** `README.md` / `readme.md` — `NEEDS VERIFICATION`  
 > **Evidence posture:** `CONFIRMED doctrine` · `PROPOSED implementation plan` · `UNKNOWN mounted repo implementation`  
+> **Operating posture:** artifactization and verification before broad live-source ingestion, UI expansion, model integration, or public release.
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
 > ![doc](https://img.shields.io/badge/doc-draft-lightgrey)
@@ -32,7 +32,7 @@ A governed, evidence-first, map-first, time-aware spatial knowledge system for p
 > ![repo](https://img.shields.io/badge/repo-needs%20verification-lightgrey)
 > ![lifecycle](https://img.shields.io/badge/lifecycle-governed-6f42c1)
 >
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Architecture](#architecture-at-a-glance) · [Directory tree](#target-directory-tree) · [Quickstart](#verification-first-quickstart) · [Gates](#definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Evidence basis](#evidence-basis) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Architecture](#architecture-at-a-glance) · [Directory tree](#target-directory-tree) · [Quickstart](#verification-first-quickstart) · [Done](#definition-of-done) · [FAQ](#faq)
 
 ---
 
@@ -40,14 +40,40 @@ A governed, evidence-first, map-first, time-aware spatial knowledge system for p
 
 Kansas Frontier Matrix (**KFM**) is not a generic GIS portal, a map tile project, a graph demo, or an AI chatbot.
 
-**CONFIRMED doctrine:** KFM’s durable public value is the **inspectable claim**: a statement that remains reconstructable to admissible evidence, spatial and temporal scope, source role, policy posture, review state, release state, and correction lineage.
+**CONFIRMED doctrine:** KFM’s durable public value is the **inspectable claim**: a statement reconstructable to admissible evidence, spatial and temporal scope, source role, policy posture, review state, release state, and correction lineage.
 
-**PROPOSED implementation posture:** move the repository forward through small, reversible, proof-bearing thin slices before broad live-source ingestion, UI expansion, model integration, or public release.
+**PROPOSED implementation posture:** move the repository through small, reversible, proof-bearing thin slices before broad live-source ingestion, public map layers, UI polish, model-provider integration, or publication workflows.
 
-**UNKNOWN until repo inspection:** current package manager, root directory conventions, checked-in schemas, APIs, routes, workflows, tests, dashboards, runtime logs, branch protections, source registries, emitted receipts, and release artifacts.
+**UNKNOWN until repo inspection:** current package manager, root directory conventions, checked-in schemas, APIs, route names, workflows, tests, dashboards, runtime logs, branch protections, source registries, emitted receipts, and release artifacts.
 
 > [!WARNING]
-> This README is written from attached KFM doctrine and a current-session workspace scan. The authoring session did **not** expose a mounted KFM Git checkout. Any implementation-shaped path, command, route, workflow, or file below is either `PROPOSED` or `NEEDS VERIFICATION` unless a maintainer confirms it in the real repository.
+> This README is written from attached KFM doctrine, the uploaded README draft, and a current-session workspace scan. The authoring session did **not** expose a mounted KFM Git checkout. Any implementation-shaped path, command, route, workflow, schema, test, or file below is either `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until a maintainer confirms it in the real repository.
+
+[Back to top](#top)
+
+---
+
+## Evidence basis
+
+This file is intentionally truth-labeled because README language can otherwise create false implementation confidence.
+
+| Evidence class | Status in this revision | How it is used |
+|---|---|---|
+| Attached KFM doctrine and synthesis PDFs | `CONFIRMED as supplied documents` | Establish KFM identity, trust posture, lifecycle, object families, UI/AI boundaries, and publication discipline |
+| Uploaded root README draft | `CONFIRMED as source text` | Preserved as the baseline structure and wording where strong |
+| Current-session workspace scan | `CONFIRMED` | Confirms `/mnt/data` is not a Git repository and visible files are uploaded PDFs / prompts, not a mounted source tree |
+| Target repository implementation | `UNKNOWN` | Not used to claim existing files, routes, workflows, tests, source registries, dashboards, branch rules, or runtime behavior |
+| External standards and sources | `DEFERRED` | Not needed for this root README revision; recheck separately for source activation, standards versions, API behavior, licensing, or security facts |
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified in this session from attached documents, uploaded Markdown, command output, or visible workspace evidence |
+| `PROPOSED` | Recommended design, file home, sequence, or implementation shape not verified as present in the repo |
+| `UNKNOWN` | Not verifiable because the repository, runtime, logs, workflows, dashboards, or platform settings were not mounted |
+| `NEEDS VERIFICATION` | Specific check required before merge, source activation, release, or public claim |
+| `CONFLICTED` | Evidence suggests unresolved authority, naming, or file-home ambiguity; no current repo conflict is proven without repo access |
 
 [Back to top](#top)
 
@@ -55,32 +81,34 @@ Kansas Frontier Matrix (**KFM**) is not a generic GIS portal, a map tile project
 
 ## Repo fit
 
+This README is the root orientation layer. It should help maintainers and reviewers decide whether a change preserves KFM’s trust membrane before they inspect lower-level docs, contracts, tests, and release artifacts.
+
 | Field | Value |
 |---|---|
-| **Target file** | `readme.md` |
-| **Role** | Root orientation, trust posture, navigation, and contributor guardrails |
-| **Upstream doctrine** | `docs/architecture/`, `docs/registers/`, `docs/adr/` — `NEEDS VERIFICATION` |
+| **Target file** | `README.md` or `readme.md` — `NEEDS VERIFICATION`; the uploaded draft used `readme.md` |
+| **Role** | Root orientation, trust posture, navigation, contributor guardrails, and verification-first onboarding |
+| **Primary upstream doctrine** | `docs/architecture/`, `docs/registers/`, `docs/adr/` — `PROPOSED / NEEDS VERIFICATION` |
 | **Machine contracts** | `schemas/contracts/v1/` and/or `contracts/` — `CONFLICTED / ADR REQUIRED` |
-| **Policy boundary** | `policy/`, `tools/validators/`, `.github/workflows/` — `NEEDS VERIFICATION` |
+| **Policy boundary** | `policy/`, `tools/validators/`, `.github/workflows/` — `PROPOSED / NEEDS VERIFICATION` |
 | **Downstream consumers** | governed API, MapLibre shell, Evidence Drawer, Focus Mode, exports, release review — `PROPOSED until code is inspected` |
 | **Primary reviewer question** | “Does this change preserve the trust membrane and make claims more inspectable?” |
 
-This file should stay high-level. Domain details, source-specific rules, validator behavior, schema definitions, policy code, and release proof formats belong in their own repo homes and should be linked here only after their paths are verified.
+This file should stay high-level. Domain details, source-specific rules, validator behavior, schema definitions, policy code, and release proof formats belong in their own verified repo homes and should be linked here only after their paths are confirmed.
 
 ---
 
 ## Accepted inputs
 
-Use this README to orient maintainers, contributors, reviewers, and stewards around the repository’s governed shape.
+Use this README to orient maintainers, contributors, reviewers, and stewards around KFM’s governed shape.
 
 | Accepted input | Belongs here when… | Typical downstream home |
 |---|---|---|
-| Project identity | It explains what KFM is and is not | `docs/architecture/` |
-| Trust posture | It names rules contributors must preserve | `docs/registers/`, `policy/` |
-| Lifecycle overview | It clarifies RAW → PUBLISHED movement | `data/`, `release/`, `docs/runbooks/` |
-| First-slice guidance | It describes safe next work without claiming implementation | `docs/adr/`, `tests/`, `tools/validators/` |
-| Contributor gates | It tells reviewers what must pass before merge | `.github/`, `tests/`, `policy/` |
-| Navigation | It points to verified repo paths | root and directory READMEs |
+| Project identity | It explains what KFM is and is not | `docs/architecture/` — `NEEDS VERIFICATION` |
+| Trust posture | It names rules contributors must preserve | `docs/registers/`, `policy/` — `NEEDS VERIFICATION` |
+| Lifecycle overview | It clarifies RAW → PUBLISHED movement | `data/`, `release/`, `docs/runbooks/` — `NEEDS VERIFICATION` |
+| First-slice guidance | It describes safe next work without claiming implementation | `docs/adr/`, `tests/`, `tools/validators/` — `NEEDS VERIFICATION` |
+| Contributor gates | It tells reviewers what must pass before merge | `.github/`, `tests/`, `policy/` — `NEEDS VERIFICATION` |
+| Navigation | It points to verified repo paths | Root and directory READMEs after path verification |
 
 ---
 
@@ -90,13 +118,13 @@ Do **not** use this README as a dumping ground for raw material, unstable operat
 
 | Excluded item | Why it does not belong here | Put it here instead |
 |---|---|---|
-| Raw source files, scraped data, private records | Root README is not a lifecycle store | `data/raw/`, `data/work/`, or `data/quarantine/` after source intake |
-| Secrets, API keys, tokens, credentials | Public docs and receipts must not leak secrets | local secret manager / deployment config outside repo |
-| Exact sensitive locations | Archaeology, rare species, cultural, critical-infrastructure, living-person, and DNA contexts fail closed | restricted steward workflow with redaction/generalization receipts |
-| Direct model output | AI is interpretive, not root truth | governed runtime envelope + EvidenceBundle + citation validation |
-| Unverified source terms or current endpoint claims | Rights, quotas, schemas, and APIs change | source registry with `NEEDS VERIFICATION` |
+| Raw source files, scraped data, private records | Root README is not a lifecycle store | `data/raw/`, `data/work/`, or `data/quarantine/` after source intake — `NEEDS VERIFICATION` |
+| Secrets, API keys, tokens, credentials | Public docs and receipts must not leak secrets | Local secret manager / deployment config outside repo |
+| Exact sensitive locations | Archaeology, rare species, cultural, critical-infrastructure, living-person, and DNA contexts fail closed | Restricted steward workflow with redaction/generalization receipts |
+| Direct model output | AI is interpretive, not root truth | Governed runtime envelope + EvidenceBundle + citation validation |
+| Unverified source terms or current endpoint claims | Rights, quotas, schemas, and APIs change | Source registry with `NEEDS VERIFICATION` |
 | Broad route/API claims | Current route tree was not inspected | API contracts after repo verification |
-| Emergency or medical instructions | KFM contextualizes evidence; it is not an alerting or medical system | official emergency, public-health, or life-safety authorities |
+| Emergency or medical instructions | KFM contextualizes evidence; it is not an alerting or medical system | Official emergency, public-health, or life-safety authorities |
 
 [Back to top](#top)
 
@@ -144,11 +172,11 @@ flowchart LR
 
 ## Target directory tree
 
-`NEEDS VERIFICATION`: this tree reflects the KFM target architecture described by the attached implementation manuals. Verify the real checkout before creating, moving, or linking files.
+`NEEDS VERIFICATION`: this tree reflects the target architecture repeatedly described in the attached implementation manuals and the uploaded draft. Verify the real checkout before creating, moving, renaming, or linking files.
 
 ```text
 .
-├── readme.md
+├── README.md                       # or readme.md — confirm repo convention
 ├── docs/
 │   ├── README.md
 │   ├── adr/
@@ -217,7 +245,7 @@ find .github docs contracts schemas policy data tools tests apps packages pipeli
   | sed -n '1,250p'
 ```
 
-Then record the result in a small repo-evidence note before changing architecture-significant files.
+Record the result in a small repo-evidence note before changing architecture-significant files.
 
 ### First safe PR shape
 
@@ -229,7 +257,7 @@ Then record the result in a small repo-evidence note before changing architectur
 | 4 | Core schema wave | Makes EvidenceBundle, DecisionEnvelope, receipts, manifests, and layer payloads testable |
 | 5 | Offline fixtures | Allows valid/invalid proof without live source risk |
 | 6 | Validators + policy stubs | Converts doctrine into fail-closed checks |
-| 7 | No-network hydrology dry run | Proves a low-sensitivity end-to-end lane |
+| 7 | No-network hydrology dry run | Proves a lower-sensitivity end-to-end lane before higher-risk domains |
 | 8 | Evidence Drawer + Focus payload contracts | Keeps UI and AI downstream of evidence |
 
 `PROPOSED`: hydrology remains the preferred first proof lane because it exercises source identity, geometry, time, catalog, API, UI, and evidence resolution without starting from the highest-sensitivity domains.
@@ -237,6 +265,8 @@ Then record the result in a small repo-evidence note before changing architectur
 ---
 
 ## Core object families
+
+These object families are a contract and verification backlog unless the real repository proves they already exist.
 
 | Object family | Purpose | Public-release pressure |
 |---|---|---|
@@ -256,7 +286,7 @@ Then record the result in a small repo-evidence note before changing architectur
 
 ## UI and AI boundary
 
-KFM’s UI is part of the trust system, not decorative chrome.
+KFM’s UI is part of the trust system, not decorative chrome. KFM’s AI layer is interpretive, bounded, and subordinate to evidence, policy, review, and release state.
 
 | Surface | Must do | Must never do |
 |---|---|---|
@@ -295,7 +325,7 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 
 | Item | Status | Next check |
 |---|---|---|
-| Root file casing: `readme.md` vs `README.md` | `NEEDS VERIFICATION` | Confirm repo convention before merge |
+| Root file casing: `README.md` vs `readme.md` | `NEEDS VERIFICATION` | Confirm repo convention before merge |
 | Owner / CODEOWNERS coverage | `UNKNOWN` | Inspect `.github/CODEOWNERS` |
 | Package manager and test runner | `UNKNOWN` | Inspect lockfiles and CI workflows |
 | Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority |
@@ -305,6 +335,7 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 | CI gates | `UNKNOWN` | Inspect `.github/workflows/` and local validation tools |
 | Source registry | `UNKNOWN` | Inspect `data/registry/` and source descriptor conventions |
 | Release artifacts | `UNKNOWN` | Inspect `release/`, `data/proofs/`, `data/receipts/`, and `data/published/` |
+| Public exposure posture | `NEEDS VERIFICATION` | Verify firewall, reverse proxy, VPN, auth, audit logging, secrets, and least-privilege boundaries before semi-public access |
 
 ---
 
