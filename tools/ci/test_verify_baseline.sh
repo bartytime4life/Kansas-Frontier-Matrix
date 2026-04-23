@@ -1,14 +1,14 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 verifier="${script_dir}/verify_baseline.sh"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "${tmpdir}"' EXIT
 
 seed_repo() {
-  local root="$1"
+  root="$1"
   mkdir -p \
     "${root}/.github/workflows" \
     "${root}/apps/governed-api" \
@@ -46,7 +46,7 @@ pass_root="${tmpdir}/pass"
 mkdir -p "${pass_root}"
 seed_repo "${pass_root}"
 "${verifier}" report.txt --root "${pass_root}"
-test -f "${pass_root}/report.txt"
+[ -f "${pass_root}/report.txt" ]
 grep -q "workflow_yml_count: 1" "${pass_root}/report.txt"
 
 # FAIL case: lowercase readme should fail verification

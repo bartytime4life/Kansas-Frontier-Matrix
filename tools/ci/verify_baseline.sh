@@ -1,13 +1,17 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 report_path="baseline-report.txt"
 repo_root="."
 
-while [[ $# -gt 0 ]]; do
+while [ "$#" -gt 0 ]; do
   case "$1" in
     --root)
-      repo_root="${2:?missing value for --root}"
+      if [ "$#" -lt 2 ]; then
+        echo "missing value for --root" >&2
+        exit 2
+      fi
+      repo_root="$2"
       shift 2
       ;;
     *)
@@ -19,24 +23,22 @@ done
 
 cd "${repo_root}"
 
-test -f "README.md"
-test ! -f "readme.md"
-test -f ".github/CODEOWNERS"
+[ -f "README.md" ]
+[ ! -f "readme.md" ]
+[ -f ".github/CODEOWNERS" ]
 
-required_paths=(
-  ".github/workflows/README.md"
-  "apps/governed-api/README.md"
-  "apps/web/README.md"
-  "ui/README.md"
-  "data/registry/README.md"
-  "data/proofs/README.md"
-  "data/receipts/README.md"
-  "data/published/README.md"
+for path in \
+  ".github/workflows/README.md" \
+  "apps/governed-api/README.md" \
+  "apps/web/README.md" \
+  "ui/README.md" \
+  "data/registry/README.md" \
+  "data/proofs/README.md" \
+  "data/receipts/README.md" \
+  "data/published/README.md" \
   "release/README.md"
-)
-
-for path in "${required_paths[@]}"; do
-  test -f "$path"
+do
+  [ -f "$path" ]
 done
 
 workflow_yml_count="$(
