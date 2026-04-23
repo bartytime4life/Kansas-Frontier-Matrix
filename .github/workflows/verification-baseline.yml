@@ -1,0 +1,56 @@
+name: verification-baseline
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - work
+  workflow_dispatch:
+
+jobs:
+  repo-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify root README casing
+        run: |
+          test -f README.md
+          test ! -f readme.md
+
+      - name: Verify CODEOWNERS exists
+        run: test -f .github/CODEOWNERS
+
+      - name: Verify documentation baseline surfaces
+        run: |
+          set -euo pipefail
+          for path in \
+            .github/workflows/README.md \
+            apps/governed-api/README.md \
+            apps/web/README.md \
+            ui/README.md \
+            data/registry/README.md \
+            data/proofs/README.md \
+            data/receipts/README.md \
+            data/published/README.md \
+            release/README.md
+          do
+            test -f "$path"
+          done
+
+      - name: Emit baseline inventory
+        run: |
+          {
+            echo "README.md: $(test -f README.md && echo yes || echo no)"
+            echo "readme.md: $(test -f readme.md && echo yes || echo no)"
+            echo "CODEOWNERS: $(test -f .github/CODEOWNERS && echo yes || echo no)"
+            echo "workflow_yml_count: $(find .github/workflows -maxdepth 1 -type f \\( -name '*.yml' -o -name '*.yaml' \\) | wc -l)"
+          } | tee baseline-report.txt
+
+      - name: Upload baseline report
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-report
+          path: baseline-report.txt
