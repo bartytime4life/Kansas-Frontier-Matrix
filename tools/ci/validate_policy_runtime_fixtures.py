@@ -13,6 +13,11 @@ REQUIRED_RUNTIME_FILES = [
     Path("policy/bundles/runtime/runtime_denials.rego"),
     Path("policy/bundles/runtime/proof_quartet.rego"),
 ]
+REQUIRED_REGO_MARKERS = {
+    Path("policy/bundles/runtime/finite_outcomes.rego"): ["default outcome", "ABSTAIN"],
+    Path("policy/bundles/runtime/runtime_denials.rego"): ["default deny"],
+    Path("policy/bundles/runtime/proof_quartet.rego"): ["default proof_quartet_ok"],
+}
 
 
 def main() -> int:
@@ -35,6 +40,14 @@ def main() -> int:
             contents = abs_path.read_text(encoding="utf-8")
             if "package " not in contents:
                 failures.append(f"runtime policy file missing package declaration: {rel_path}")
+                continue
+
+            required_markers = REQUIRED_REGO_MARKERS.get(rel_path, [])
+            for marker in required_markers:
+                if marker not in contents:
+                    failures.append(
+                        f"runtime policy file missing required marker '{marker}': {rel_path}"
+                    )
         elif rel_path.suffix == ".yaml":
             contents = abs_path.read_text(encoding="utf-8")
             if "name:" not in contents:

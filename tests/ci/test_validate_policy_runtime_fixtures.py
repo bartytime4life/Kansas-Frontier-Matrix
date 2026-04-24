@@ -26,9 +26,18 @@ def _write_runtime_layout(root: Path) -> None:
     runtime_fixtures.mkdir(parents=True, exist_ok=True)
 
     (runtime_bundle / "bundle.yaml").write_text("name: runtime\n", encoding="utf-8")
-    (runtime_bundle / "finite_outcomes.rego").write_text("package kfm.runtime\n", encoding="utf-8")
-    (runtime_bundle / "runtime_denials.rego").write_text("package kfm.runtime.denials\n", encoding="utf-8")
-    (runtime_bundle / "proof_quartet.rego").write_text("package kfm.runtime.proof\n", encoding="utf-8")
+    (runtime_bundle / "finite_outcomes.rego").write_text(
+        'package kfm.runtime\ndefault outcome := "ABSTAIN"\n',
+        encoding="utf-8",
+    )
+    (runtime_bundle / "runtime_denials.rego").write_text(
+        "package kfm.runtime.denials\ndefault deny := false\n",
+        encoding="utf-8",
+    )
+    (runtime_bundle / "proof_quartet.rego").write_text(
+        "package kfm.runtime.proof\ndefault proof_quartet_ok := false\n",
+        encoding="utf-8",
+    )
 
 
 def _write_runtime_fixtures(root: Path, fixtures: dict[str, dict[str, str]]) -> None:
@@ -322,3 +331,20 @@ def test_validate_policy_runtime_fixtures_fails_when_bundle_name_missing() -> No
 
         assert proc.returncode != 0
         assert "runtime policy bundle missing name field" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_required_rego_marker_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/bundles/runtime/finite_outcomes.rego").write_text(
+            "package kfm.runtime\ndefault outcome := \"DENY\"\n",
+            encoding="utf-8",
+        )
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "runtime policy file missing required marker 'ABSTAIN'" in proc.stderr
