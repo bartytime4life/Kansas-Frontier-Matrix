@@ -109,3 +109,67 @@ def test_validate_policy_runtime_fixtures_fails_when_scenario_mismatch() -> None
 
         assert proc.returncode != 0
         assert "does not match filename stem" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_on_invalid_json_fixture() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        fixtures_dir = root / "policy/fixtures/runtime"
+        (fixtures_dir / "answer_public_safe.json").write_text(
+            json.dumps({"scenario": "answer_public_safe", "expected": "ANSWER"}),
+            encoding="utf-8",
+        )
+        (fixtures_dir / "abstain_missing_evidence.json").write_text(
+            json.dumps({"scenario": "abstain_missing_evidence", "expected": "ABSTAIN"}),
+            encoding="utf-8",
+        )
+        (fixtures_dir / "deny_restricted_support.json").write_text(
+            json.dumps({"scenario": "deny_restricted_support", "expected": "DENY"}),
+            encoding="utf-8",
+        )
+        (fixtures_dir / "error_policy_engine_unavailable.json").write_text("{not-json", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "invalid JSON" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_runtime_scaffold_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        # Remove one required runtime scaffold file.
+        (root / "policy/bundles/runtime/proof_quartet.rego").unlink()
+
+        fixtures = {
+            "answer_public_safe": {"scenario": "answer_public_safe", "expected": "ANSWER"},
+            "abstain_missing_evidence": {"scenario": "abstain_missing_evidence", "expected": "ABSTAIN"},
+            "deny_restricted_support": {"scenario": "deny_restricted_support", "expected": "DENY"},
+            "error_policy_engine_unavailable": {
+                "scenario": "error_policy_engine_unavailable",
+                "expected": "ERROR",
+            },
+        }
+        for name, payload in fixtures.items():
+            (root / "policy/fixtures/runtime" / f"{name}.json").write_text(
+                json.dumps(payload), encoding="utf-8"
+            )
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "missing runtime policy file" in proc.stderr
