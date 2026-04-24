@@ -51,6 +51,12 @@ def main() -> int:
             failures.append(f"invalid JSON: {fixture_path.relative_to(root)} ({exc})")
             continue
 
+        if not isinstance(payload, dict):
+            failures.append(
+                f"invalid top-level JSON type in {fixture_path.relative_to(root)}; expected object"
+            )
+            continue
+
         scenario = payload.get("scenario")
         expected = payload.get("expected")
 
