@@ -79,6 +79,7 @@ This runbook captures the most practical next actions after a repository scan on
 - Add one concise runbook for “baseline + smoke CI failure triage”.
 
 
+
 ## Immediate next (post thin-slice implementation)
 
 Now that baseline scripts and renderer tests exist, the next highest-value moves are:
@@ -102,3 +103,4 @@ Now that baseline scripts and renderer tests exist, the next highest-value moves
 5. **Define merge gates explicitly**
    - Document required checks in `.github/workflows/README.md` and align branch protection expectations.
    - Keep `verification-baseline` as the minimum required status while expanding gates incrementally.
+
