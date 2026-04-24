@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/runtime/renderers/diff_summary_input/v1",
+  "type": "object",
+  "required": ["added", "changed", "removed"],
+  "properties": {
+    "added": {"type": "integer"},
+    "changed": {"type": "integer"},
+    "removed": {"type": "integer"}
+  },
+  "additionalProperties": true
+}
