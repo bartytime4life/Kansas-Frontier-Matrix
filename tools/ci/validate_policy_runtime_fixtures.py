@@ -64,7 +64,13 @@ def main() -> int:
             failures.append(f"missing required non-empty string key 'scenario' in {fixture_path.relative_to(root)}")
             continue
 
-        if not isinstance(expected, str) or expected not in ALLOWED_OUTCOMES:
+        if not isinstance(expected, str) or not expected:
+            failures.append(
+                f"missing required non-empty string key 'expected' in {fixture_path.relative_to(root)}"
+            )
+            continue
+
+        if expected not in ALLOWED_OUTCOMES:
             failures.append(
                 f"invalid expected outcome '{expected}' in {fixture_path.relative_to(root)}; "
                 f"must be one of {sorted(ALLOWED_OUTCOMES)}"
