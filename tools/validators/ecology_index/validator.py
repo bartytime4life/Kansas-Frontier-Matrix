@@ -164,6 +164,21 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
     return errors
 
 
+def dedupe_errors(errors: list[ValidationErrorItem]) -> list[ValidationErrorItem]:
+    seen: set[tuple[str, str]] = set()
+    deduped: list[ValidationErrorItem] = []
+
+    for error in errors:
+        key = (error.code, error.message)
+        if key in seen:
+            continue
+
+        seen.add(key)
+        deduped.append(error)
+
+    return deduped
+
+
 def build_receipt(
     *,
     schema_ref: str,
@@ -204,10 +219,12 @@ def validate_file(
     row = load_json(input_path)
     schema = load_json(Path(schema_ref))
 
-    errors = [
-        *validate_schema(row, schema),
-        *validate_semantics(row),
-    ]
+    errors = dedupe_errors(
+        [
+            *validate_schema(row, schema),
+            *validate_semantics(row),
+        ]
+    )
 
     result = ValidationResult(
         decision="fail" if errors else "pass",
