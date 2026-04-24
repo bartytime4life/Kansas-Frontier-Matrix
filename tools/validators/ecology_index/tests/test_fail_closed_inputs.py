@@ -39,7 +39,7 @@ def test_validate_file_rejects_non_object_json(tmp_path: Path) -> None:
         validate_file(input_path=input_path, schema_ref=SCHEMA_REF)
 
 
-def test_cli_malformed_json_fails_closed(tmp_path: Path) -> None:
+def test_cli_malformed_json_returns_validation_failure(tmp_path: Path) -> None:
     input_path = tmp_path / "malformed.json"
     input_path.write_text("{ this is not valid json", encoding="utf-8")
 
@@ -50,11 +50,11 @@ def test_cli_malformed_json_fails_closed(tmp_path: Path) -> None:
         SCHEMA_REF,
     )
 
-    assert result.returncode == 5
-    assert "internal validator error:" in result.stderr
+    assert result.returncode == 1
+    assert "invalid json:" in result.stderr
 
 
-def test_cli_non_object_json_fails_closed(tmp_path: Path) -> None:
+def test_cli_non_object_json_returns_validation_failure(tmp_path: Path) -> None:
     input_path = tmp_path / "array.json"
     input_path.write_text("[]\n", encoding="utf-8")
 
@@ -65,7 +65,8 @@ def test_cli_non_object_json_fails_closed(tmp_path: Path) -> None:
         SCHEMA_REF,
     )
 
-    assert result.returncode == 5
+    assert result.returncode == 1
+    assert "invalid input:" in result.stderr
     assert "Eco index input must be a JSON object" in result.stderr
 
 
