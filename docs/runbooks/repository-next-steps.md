@@ -11,8 +11,9 @@ This runbook captures the most practical next actions after a repository scan on
 ## Progress update (2026-04-24)
 
 - The baseline workflow has now been de-duplicated so it executes only the `tools/ci/run_repo_baseline_local.sh` wrapper and does not rerun the same schema/fixture/pytest checks in separate steps.
-- Local baseline execution remains green after this cleanup (`14 passed` in `tests/ci`).
+- Local baseline execution remains green after this cleanup (`23 passed` in `tests/ci` as of 2026-04-24).
 - This keeps CI behavior unchanged while reducing redundant runtime and maintenance surface.
+- Runtime policy smoke checks are now enforced through `tools/ci/validate_policy_runtime_fixtures.py`, including finite outcome coverage over `policy/fixtures/runtime/*.json`.
 
 ## Key gaps discovered
 
