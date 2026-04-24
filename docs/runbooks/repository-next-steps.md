@@ -8,13 +8,18 @@ This runbook captures the most practical next actions after a repository scan on
 - The currently executable CI baseline path is narrow but healthy: `.github/workflows/verification-baseline.yml` runs shell syntax checks, self-tests, and `tools/ci/verify_baseline.sh`.  
 - `tools/ci/test_verify_baseline.sh` passes locally and validates both pass/fail behavior for the baseline verifier.
 
+## Progress update (2026-04-24)
+
+- Baseline checks are now listed explicitly in `.github/workflows/verification-baseline.yml` (shell checks, script checks, fixture validation, and `tests/ci`) for clearer CI job visibility.
+- Local baseline execution remains green (`33 passed` in `tests/ci` as of 2026-04-24).
+- Runtime policy smoke checks are enforced through `tools/ci/validate_policy_runtime_fixtures.py`, including finite outcome coverage over `policy/fixtures/runtime/*.json`.
+
 ## Key gaps discovered
 
 1. **Documentation-to-repo drift is high.**
    - Several READMEs describe scripts or helpers that are not present in the current tree.
    - Example drift:
      - `scripts/README.md` lists helper files that do not exist.
-     - `tools/ci/README.md` lists renderer helpers and tests that do not exist.
 2. **Placeholder density is very high.**
    - A scan found ~1,875 `TODO`, `UNKNOWN`, and `NEEDS VERIFICATION` markers across core documentation lanes.
 3. **Machine-enforced governance is minimal today.**
@@ -79,7 +84,7 @@ This runbook captures the most practical next actions after a repository scan on
 - Add one concise runbook for “baseline + smoke CI failure triage”.
 
 
-## Immediate next (post thin-slice implementation)
+## Immediate next (post baseline workflow cleanup)
 
 Now that baseline scripts and renderer tests exist, the next highest-value moves are:
 
@@ -119,4 +124,3 @@ Use this as the concrete next implementation sequence:
 - Invalid renderer input fails before markdown generation.
 - One deterministic end-to-end CI artifact is produced from fixture data.
 - Required checks are documented in-repo and enforced in GitHub settings.
-
