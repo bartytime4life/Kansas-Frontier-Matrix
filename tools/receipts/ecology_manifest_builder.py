@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 
 BLOCKING_DECISIONS = {
     "fail",
@@ -106,6 +108,24 @@ def build_manifest(
         "decision": decision,
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def validate_manifest(
+    *,
+    manifest: dict[str, Any],
+    schema_path: Path,
+) -> list[str]:
+    schema = load_json(schema_path)
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+
+    return [
+        f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
+        for error in sorted(
+            validator.iter_errors(manifest),
+            key=lambda item: list(item.path),
+        )
+    ]
 
 
 def write_manifest(path: Path, manifest: dict[str, Any]) -> None:
