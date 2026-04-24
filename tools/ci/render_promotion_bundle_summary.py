@@ -9,13 +9,22 @@ from pathlib import Path
 
 def read_json(path: str) -> dict:
     try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
+        payload = json.loads(Path(path).read_text(encoding="utf-8"))
     except FileNotFoundError:
         print(f"render_promotion_bundle_summary: input not found: {path}", file=sys.stderr)
         raise SystemExit(2)
     except json.JSONDecodeError as exc:
         print(f"render_promotion_bundle_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
         raise SystemExit(2)
+
+    if not isinstance(payload, dict):
+        print(
+            f"render_promotion_bundle_summary: expected top-level JSON object in {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    return payload
 
 
 def main() -> int:
