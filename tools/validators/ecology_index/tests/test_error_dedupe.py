@@ -62,10 +62,25 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def as_string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+
+    return [item for item in value if isinstance(item, str)]
+
+
+def as_object(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+
+    return value
+
+
 def validate_schema(
     row: dict[str, Any],
     schema: dict[str, Any],
 ) -> list[ValidationErrorItem]:
+    Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
 
     errors: list[ValidationErrorItem] = []
@@ -84,8 +99,8 @@ def validate_schema(
 def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
     errors: list[ValidationErrorItem] = []
 
-    domains = row.get("domains", [])
-    join_keys = row.get("join_keys", {}) or {}
+    domains = as_string_list(row.get("domains", []))
+    join_keys = as_object(row.get("join_keys", {}))
     evidence_refs = row.get("evidence_refs", [])
 
     unknown_domains = sorted(set(domains) - ALLOWED_DOMAINS)
@@ -105,7 +120,7 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
             )
         )
 
-    if not evidence_refs:
+    if not isinstance(evidence_refs, list) or not evidence_refs:
         errors.append(
             ValidationErrorItem(
                 ERROR_CODES["evidence_required"],
