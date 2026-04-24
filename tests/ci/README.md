@@ -18,6 +18,7 @@ Run with:
 ```bash
 python3 -m pytest -q tests/ci
 ```
+
 Contract check for committed fixtures:
 
 ```bash
