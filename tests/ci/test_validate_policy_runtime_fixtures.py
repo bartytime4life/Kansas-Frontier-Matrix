@@ -402,3 +402,20 @@ def test_validate_policy_runtime_fixtures_passes_against_repo_root() -> None:
 
     assert proc.returncode == 0
     assert "validated 4 runtime fixtures" in proc.stdout
+
+
+def test_validate_policy_runtime_fixtures_ignores_non_json_files_in_fixture_dir() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/fixtures/runtime" / "notes.txt").write_text(
+            "this file should be ignored by json fixture scanner",
+            encoding="utf-8",
+        )
+
+        proc = _run_validator(root)
+
+        assert proc.returncode == 0
+        assert "validated 4 runtime fixtures" in proc.stdout
