@@ -21,9 +21,6 @@ jobs:
       - name: Validate shell syntax
         run: sh -n ./tools/ci/verify_baseline.sh ./tools/ci/test_verify_baseline.sh
 
-      - name: Validate shell syntax
-        run: sh -n ./tools/ci/verify_baseline.sh ./tools/ci/test_verify_baseline.sh
-
       - name: Run verifier self-tests
         run: sh ./tools/ci/test_verify_baseline.sh
 
