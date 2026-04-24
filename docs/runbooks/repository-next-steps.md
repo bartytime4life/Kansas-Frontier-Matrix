@@ -11,8 +11,10 @@ This runbook captures the most practical next actions after a repository scan on
 ## Progress update (2026-04-24)
 
 - Baseline checks are now listed explicitly in `.github/workflows/verification-baseline.yml` (shell checks, script checks, fixture validation, and `tests/ci`) for clearer CI job visibility.
+- The baseline workflow has been consolidated so that shared steps are not duplicated, using `tools/ci/run_repo_baseline_local.sh` for the local wrapper path where appropriate.
 - Local baseline execution remains green (`41 passed` in `tests/ci` as of 2026-04-24).
 - Runtime policy smoke checks are enforced through `tools/ci/validate_policy_runtime_fixtures.py`, including finite outcome coverage over `policy/fixtures/runtime/*.json`.
+- This keeps CI behavior stable while reducing redundant runtime and maintenance surface.
 
 ## Key gaps discovered
 
