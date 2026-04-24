@@ -56,3 +56,20 @@ def test_render_promotion_summary_invalid_json_fails() -> None:
 
         assert proc.returncode != 0
         assert "invalid JSON" in proc.stderr
+
+
+def test_render_promotion_summary_non_object_json_fails() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        src = root / "promotion.json"
+        src.write_text("[]", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", "tools/ci/render_promotion_summary.py", "--input", str(src)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "expected top-level JSON object" in proc.stderr

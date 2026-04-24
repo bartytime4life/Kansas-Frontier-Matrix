@@ -83,3 +83,20 @@ def test_render_bundle_diff_policy_summary_reasons_must_be_list() -> None:
 
         assert proc.returncode != 0
         assert "reasons must be a list when provided" in proc.stderr
+
+
+def test_render_bundle_diff_policy_summary_non_object_json_fails() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        src = root / "diff-policy.json"
+        src.write_text("[]", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", "tools/ci/render_bundle_diff_policy_summary.py", "--input", str(src)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "expected top-level JSON object" in proc.stderr

@@ -63,3 +63,20 @@ def test_render_promotion_bundle_summary_artifacts_must_be_list() -> None:
 
         assert proc.returncode != 0
         assert "missing required list key: artifacts" in proc.stderr
+
+
+def test_render_promotion_bundle_summary_non_object_json_fails() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        src = root / "bundle.json"
+        src.write_text("[]", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", "tools/ci/render_promotion_bundle_summary.py", "--input", str(src)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "expected top-level JSON object" in proc.stderr
