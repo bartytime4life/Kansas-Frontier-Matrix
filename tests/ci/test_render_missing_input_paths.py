@@ -41,7 +41,7 @@ def test_single_input_renderers_fail_on_missing_input(script: str, args: list[st
         text=True,
     )
 
-    assert proc.returncode != 0
+    assert proc.returncode == 2
     assert expected_stderr in proc.stderr
 
 
@@ -95,5 +95,5 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert expected_stderr in proc.stderr
