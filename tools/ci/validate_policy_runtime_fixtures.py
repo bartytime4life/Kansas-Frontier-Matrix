@@ -26,8 +26,19 @@ def main() -> int:
     failures: list[str] = []
 
     for rel_path in REQUIRED_RUNTIME_FILES:
-        if not (root / rel_path).exists():
+        abs_path = root / rel_path
+        if not abs_path.exists():
             failures.append(f"missing runtime policy file: {rel_path}")
+            continue
+
+        if rel_path.suffix == ".rego":
+            contents = abs_path.read_text(encoding="utf-8")
+            if "package " not in contents:
+                failures.append(f"runtime policy file missing package declaration: {rel_path}")
+        elif rel_path.suffix == ".yaml":
+            contents = abs_path.read_text(encoding="utf-8")
+            if "name:" not in contents:
+                failures.append(f"runtime policy bundle missing name field: {rel_path}")
 
     fixtures_dir = root / "policy/fixtures/runtime"
     if not fixtures_dir.exists() or not fixtures_dir.is_dir():

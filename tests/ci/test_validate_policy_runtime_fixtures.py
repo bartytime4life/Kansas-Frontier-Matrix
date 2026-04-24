@@ -288,3 +288,37 @@ def test_validate_policy_runtime_fixtures_fails_when_expected_key_empty() -> Non
 
         assert proc.returncode != 0
         assert "missing required non-empty string key 'expected'" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_rego_package_declaration_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/bundles/runtime/finite_outcomes.rego").write_text(
+            "# deliberately invalid module\n",
+            encoding="utf-8",
+        )
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "runtime policy file missing package declaration" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_bundle_name_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/bundles/runtime/bundle.yaml").write_text(
+            "version: 1\n",
+            encoding="utf-8",
+        )
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "runtime policy bundle missing name field" in proc.stderr
