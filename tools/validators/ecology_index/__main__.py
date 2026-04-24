@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -12,6 +13,7 @@ EXIT_PASS = 0
 EXIT_VALIDATION_FAILURE = 1
 EXIT_MISSING_INPUT = 2
 EXIT_MISSING_SCHEMA = 3
+EXIT_UNRESOLVED_EVIDENCE = 4
 EXIT_INTERNAL_ERROR = 5
 
 
@@ -70,6 +72,12 @@ def main(argv: list[str] | None = None) -> int:
             schema_ref=str(schema_path),
             receipt_out=receipt_out,
         )
+    except json.JSONDecodeError as exc:
+        print(f"invalid json: {exc}", file=sys.stderr)
+        return EXIT_VALIDATION_FAILURE
+    except ValueError as exc:
+        print(f"invalid input: {exc}", file=sys.stderr)
+        return EXIT_VALIDATION_FAILURE
     except Exception as exc:  # fail closed
         print(f"internal validator error: {exc}", file=sys.stderr)
         return EXIT_INTERNAL_ERROR
