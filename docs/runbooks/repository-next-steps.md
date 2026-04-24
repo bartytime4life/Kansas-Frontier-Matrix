@@ -78,3 +78,29 @@ This runbook captures the most practical next actions after a repository scan on
   - runtime policy smoke check
 - Add one concise runbook for “baseline + smoke CI failure triage”.
 
+
+
+## Immediate next (post thin-slice implementation)
+
+Now that baseline scripts and renderer tests exist, the next highest-value moves are:
+
+1. **Lock input contracts for renderer scripts**
+   - Add JSON Schema files for renderer input reports.
+   - Validate inputs before rendering so CI fails with clear contract errors.
+
+2. **Add negative-path CI tests**
+   - Add tests for malformed JSON, missing required keys, and empty report files.
+   - Ensure each renderer exits non-zero with deterministic error messaging.
+
+3. **Wire documentation drift checks**
+   - Add `tools/ci/check_readme_paths.sh` that validates declared “current” file trees in READMEs.
+   - Gate pull requests on this check to prevent docs/repo divergence.
+
+4. **Promote one governed end-to-end fixture**
+   - Add a single fixture set under `tests/contracts/fixtures/runtime/`.
+   - Validate fixture -> policy decision -> envelope -> rendered summary in one deterministic test path.
+
+5. **Define merge gates explicitly**
+   - Document required checks in `.github/workflows/README.md` and align branch protection expectations.
+   - Keep `verification-baseline` as the minimum required status while expanding gates incrementally.
+
