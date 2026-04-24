@@ -102,3 +102,20 @@ Now that baseline scripts and renderer tests exist, the next highest-value moves
 5. **Define merge gates explicitly**
    - Document required checks in `.github/workflows/README.md` and align branch protection expectations.
    - Keep `verification-baseline` as the minimum required status while expanding gates incrementally.
+
+
+## Next execution packet (recommended order)
+
+Use this as the concrete next implementation sequence:
+
+1. Add renderer input schemas under `schemas/contracts/v1/runtime/` and reject invalid payloads in each `tools/ci/render_*.py` entrypoint.
+2. Add failing-path tests in `tests/ci/` for malformed JSON and missing required keys.
+3. Add one integration test that runs: fixture -> policy output -> renderer handoff markdown.
+4. Document required status checks in `.github/workflows/README.md` and mirror them in branch protection settings.
+
+### Exit criteria for this packet
+
+- Every renderer has at least one negative-path test.
+- Invalid renderer input fails before markdown generation.
+- One deterministic end-to-end CI artifact is produced from fixture data.
+- Required checks are documented in-repo and enforced in GitHub settings.
