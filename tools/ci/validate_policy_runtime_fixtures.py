@@ -37,7 +37,11 @@ def main() -> int:
             continue
 
         if rel_path.suffix == ".rego":
-            contents = abs_path.read_text(encoding="utf-8")
+            try:
+                contents = abs_path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                failures.append(f"non-utf8 runtime policy file: {rel_path}")
+                continue
             if "package " not in contents:
                 failures.append(f"runtime policy file missing package declaration: {rel_path}")
                 continue
@@ -49,7 +53,11 @@ def main() -> int:
                         f"runtime policy file missing required marker '{marker}': {rel_path}"
                     )
         elif rel_path.suffix == ".yaml":
-            contents = abs_path.read_text(encoding="utf-8")
+            try:
+                contents = abs_path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                failures.append(f"non-utf8 runtime policy file: {rel_path}")
+                continue
             if "name:" not in contents:
                 failures.append(f"runtime policy bundle missing name field: {rel_path}")
 
@@ -70,7 +78,13 @@ def main() -> int:
 
     for fixture_path in fixture_paths:
         try:
-            payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+            fixture_text = fixture_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            failures.append(f"non-utf8 fixture JSON file: {fixture_path.relative_to(root)}")
+            continue
+
+        try:
+            payload = json.loads(fixture_text)
         except json.JSONDecodeError as exc:
             failures.append(f"invalid JSON: {fixture_path.relative_to(root)} ({exc})")
             continue

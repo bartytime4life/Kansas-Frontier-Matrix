@@ -348,3 +348,31 @@ def test_validate_policy_runtime_fixtures_fails_when_required_rego_marker_missin
 
         assert proc.returncode != 0
         assert "runtime policy file missing required marker 'ABSTAIN'" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_on_non_utf8_runtime_file() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/bundles/runtime/runtime_denials.rego").write_bytes(b"\xff\xfe")
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "non-utf8 runtime policy file" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_on_non_utf8_fixture_file() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/fixtures/runtime/answer_public_safe.json").write_bytes(b"\xff\xfe")
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "non-utf8 fixture JSON file" in proc.stderr
