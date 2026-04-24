@@ -38,6 +38,7 @@ jobs:
           ./scripts/bootstrap.sh
           python3 ./scripts/validate_schemas.py
           python3 ./scripts/catalog_validate.py
+          python3 ./tools/ci/validate_renderer_fixtures.py
 
       - name: Run CI renderer tests
         run: python3 -m pytest -q tests/ci
