@@ -3,8 +3,9 @@ set -eu
 
 script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 checker="${script_dir}/check_readme_paths.sh"
+manifest="${script_dir}/readme_required_paths.txt"
 
-"${checker}" --root . >/dev/null
+"${checker}" --root . --manifest "${manifest}" >/dev/null
 
 # unknown option should fail
 if "${checker}" --unknown >/dev/null 2>&1; then
@@ -15,8 +16,14 @@ fi
 # incomplete root should fail
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "${tmpdir}"' EXIT
-if "${checker}" --root "${tmpdir}" >/dev/null 2>&1; then
+if "${checker}" --root "${tmpdir}" --manifest "${manifest}" >/dev/null 2>&1; then
   echo "expected checker to fail on incomplete root"
+  exit 1
+fi
+
+# missing manifest should fail
+if "${checker}" --manifest "${script_dir}/does-not-exist.txt" >/dev/null 2>&1; then
+  echo "expected checker to fail on missing manifest"
   exit 1
 fi
 
