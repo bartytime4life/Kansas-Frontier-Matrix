@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from tools.validators.promotion_gate.ecology_manifest import (
+    PromotionManifestDecision,
     decision_to_dict,
     evaluate_ecology_receipt_manifest,
     load_manifest,
@@ -159,7 +160,17 @@ def test_non_object_manifest_raises(tmp_path: Path) -> None:
 
 
 def test_decision_to_dict() -> None:
-    value = evaluate_like = {
+    decision = PromotionManifestDecision(
+        gate="ecology_receipt_manifest",
+        decision="pass",
+        manifest_ref="manifest.json",
+        candidate_id="eco_index.example",
+        spec_hash=SPEC_HASH,
+        errors=[],
+        warnings=[],
+    )
+
+    assert decision_to_dict(decision) == {
         "gate": "ecology_receipt_manifest",
         "decision": "pass",
         "manifest_ref": "manifest.json",
@@ -168,21 +179,4 @@ def test_decision_to_dict() -> None:
         "errors": [],
         "warnings": [],
     }
-
-    manifest_path = Path("manifest.json")
-    write_value = {
-        "gate": "ecology_receipt_manifest",
-        "decision": "pass",
-        "manifest_ref": str(manifest_path),
-        "candidate_id": "eco_index.example",
-        "spec_hash": SPEC_HASH,
-        "errors": [],
-        "warnings": [],
-    }
-
-    from tools.validators.promotion_gate.ecology_manifest import PromotionManifestDecision
-
-    decision = PromotionManifestDecision(**write_value)
-
-    assert decision_to_dict(decision) == value
 ```
