@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -36,11 +37,23 @@ def validate(payload: Any, schema: dict[str, Any], context: str, errors: list[st
             validate(item, schema["items"], f"{context}[{i}]", errors)
 
 
-def load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+def load_json(path: Path, errors: list[str]) -> Any | None:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        errors.append(f"missing file: {path}")
+    except json.JSONDecodeError as exc:
+        errors.append(f"invalid JSON in {path}: {exc}")
+    return None
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate renderer fixtures against schema contracts.")
+    parser.add_argument("--root", default=".", help="Repository root path")
+    args = parser.parse_args()
+
+    root = Path(args.root)
+
     pairs: list[tuple[Path, Path, str]] = [
         (
             Path("tests/ci/fixtures/diff_summary/diff.json"),
@@ -65,19 +78,22 @@ def main() -> int:
     ]
 
     errors: list[str] = []
-    for payload_path, schema_path, label in pairs:
-        payload = load_json(payload_path)
-        schema = load_json(schema_path)
+    for payload_rel, schema_rel, label in pairs:
+        payload = load_json(root / payload_rel, errors)
+        schema = load_json(root / schema_rel, errors)
+        if payload is None or schema is None:
+            continue
         validate(payload, schema, label, errors)
 
-    review_schema = load_json(Path("schemas/contracts/v1/runtime/renderers/review_handoff_inputs.schema.json"))
+    review_schema = load_json(root / Path("schemas/contracts/v1/runtime/renderers/review_handoff_inputs.schema.json"), errors)
     review_payload = {
-        "promotion": load_json(Path("tests/ci/fixtures/review_handoff/promotion.json")),
-        "bundle": load_json(Path("tests/ci/fixtures/review_handoff/bundle.json")),
-        "diff": load_json(Path("tests/ci/fixtures/review_handoff/diff.json")),
-        "diff_policy": load_json(Path("tests/ci/fixtures/review_handoff/diff_policy.json")),
+        "promotion": load_json(root / Path("tests/ci/fixtures/review_handoff/promotion.json"), errors),
+        "bundle": load_json(root / Path("tests/ci/fixtures/review_handoff/bundle.json"), errors),
+        "diff": load_json(root / Path("tests/ci/fixtures/review_handoff/diff.json"), errors),
+        "diff_policy": load_json(root / Path("tests/ci/fixtures/review_handoff/diff_policy.json"), errors),
     }
-    validate(review_payload, review_schema, "review_handoff", errors)
+    if review_schema is not None and all(v is not None for v in review_payload.values()):
+        validate(review_payload, review_schema, "review_handoff", errors)
 
     if errors:
         print("validate_renderer_fixtures: failed", file=sys.stderr)

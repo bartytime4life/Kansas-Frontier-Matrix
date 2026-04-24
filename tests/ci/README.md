@@ -12,6 +12,7 @@ CI-focused tests for helper renderers in `tools/ci/`.
 - `test_end_to_end_diff_summary.py`
 - `test_end_to_end_promotion_summary.py`
 - `test_end_to_end_promotion_bundle_summary.py`
+- `test_validate_renderer_fixtures.py`
 
 Run with:
 
