@@ -22,7 +22,6 @@ This runbook captures the most practical next actions after a repository scan on
    - Several READMEs describe scripts or helpers that are not present in the current tree.
    - Example drift:
      - `scripts/README.md` lists helper files that do not exist.
-     - `tools/ci/README.md` lists renderer helpers and tests that do not exist.
 2. **Placeholder density is very high.**
    - A scan found ~1,875 `TODO`, `UNKNOWN`, and `NEEDS VERIFICATION` markers across core documentation lanes.
 3. **Machine-enforced governance is minimal today.**

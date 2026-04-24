@@ -25,7 +25,6 @@ jobs:
           sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
           sh ./tools/ci/verify_baseline.sh baseline-report.txt
 
-
       - name: Run scripts thin-slice checks
         run: |
           ./scripts/bootstrap.sh
