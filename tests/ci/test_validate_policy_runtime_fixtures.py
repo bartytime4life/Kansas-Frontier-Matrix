@@ -228,3 +228,4 @@ def test_validate_policy_runtime_fixtures_fails_when_fixture_directory_empty() -
 
         assert proc.returncode != 0
         assert "no runtime fixture JSON files found" in proc.stderr
+
