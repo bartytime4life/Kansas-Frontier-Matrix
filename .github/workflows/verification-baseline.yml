@@ -18,20 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate shell syntax
-        run: sh -n ./tools/ci/verify_baseline.sh ./tools/ci/test_verify_baseline.sh ./tools/ci/check_readme_paths.sh ./tools/ci/test_check_readme_paths.sh ./scripts/bootstrap.sh ./scripts/dev_up.sh ./scripts/sample_ingest.sh
-
-      - name: Run verifier self-tests
-        run: sh ./tools/ci/test_verify_baseline.sh
-
-      - name: Run README-path checker self-tests
-        run: sh ./tools/ci/test_check_readme_paths.sh
-
-      - name: Run README-path checks
-        run: sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
-
-      - name: Run baseline verification script
-        run: sh ./tools/ci/verify_baseline.sh baseline-report.txt
+      - name: Run repo-baseline wrapper
+        run: sh ./tools/ci/run_repo_baseline_local.sh
 
       - name: Run scripts thin-slice checks
         run: |
