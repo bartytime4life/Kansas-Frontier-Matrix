@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/runtime/renderers/promotion_summary_input/v1",
+  "type": "object",
+  "required": ["release_id", "state"],
+  "properties": {
+    "release_id": {"type": "string"},
+    "state": {"type": "string"}
+  },
+  "additionalProperties": true
+}
