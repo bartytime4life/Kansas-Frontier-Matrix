@@ -18,17 +18,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run repo-baseline wrapper
-        run: sh ./tools/ci/run_repo_baseline_local.sh
+      - name: Run baseline shell checks and manifest checks
+        run: |
+          sh ./tools/ci/test_verify_baseline.sh
+          sh ./tools/ci/test_check_readme_paths.sh
+          sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
+          sh ./tools/ci/verify_baseline.sh baseline-report.txt
 
       - name: Run scripts thin-slice checks
         run: |
           ./scripts/bootstrap.sh
           python3 ./scripts/validate_schemas.py
           python3 ./scripts/catalog_validate.py
+
+      - name: Run policy and renderer fixture checks
+        run: |
+          python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
           python3 ./tools/ci/validate_renderer_fixtures.py --root .
 
-      - name: Run CI renderer tests
+      - name: Run CI tests
         run: python3 -m pytest -q tests/ci
 
       - name: Upload baseline report
