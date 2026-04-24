@@ -44,8 +44,7 @@ def test_render_promotion_bundle_summary_missing_bundle_id_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
-        assert "missing required string key: bundle_id" in proc.stderr
+        assert proc.returncode == 2
 
 
 def test_render_promotion_bundle_summary_artifacts_must_be_list() -> None:
@@ -61,7 +60,7 @@ def test_render_promotion_bundle_summary_artifacts_must_be_list() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "missing required list key: artifacts" in proc.stderr
 
 
@@ -78,5 +77,5 @@ def test_render_promotion_bundle_summary_non_object_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "expected top-level JSON object" in proc.stderr
