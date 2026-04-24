@@ -364,6 +364,20 @@ def test_validate_policy_runtime_fixtures_fails_on_non_utf8_runtime_file() -> No
         assert "non-utf8 runtime policy file" in proc.stderr
 
 
+def test_validate_policy_runtime_fixtures_fails_on_non_utf8_runtime_bundle_yaml() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+        _write_runtime_fixtures(root, FULL_FIXTURES)
+
+        (root / "policy/bundles/runtime/bundle.yaml").write_bytes(b"\xff\xfe")
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "non-utf8 runtime policy file" in proc.stderr
+
+
 def test_validate_policy_runtime_fixtures_fails_on_non_utf8_fixture_file() -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
