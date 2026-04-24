@@ -3,7 +3,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+
+def read_json(path: str) -> dict:
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print(f"render_promotion_bundle_summary: input not found: {path}", file=sys.stderr)
+        raise SystemExit(2)
+    except json.JSONDecodeError as exc:
+        print(f"render_promotion_bundle_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
+        raise SystemExit(2)
 
 
 def main() -> int:
@@ -12,14 +24,20 @@ def main() -> int:
     parser.add_argument("--output")
     args = parser.parse_args()
 
-    payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    bundle_id = payload.get("bundle_id", "unknown")
-    artifacts = payload.get("artifacts", [])
+    payload = read_json(args.input)
+    if "bundle_id" not in payload or not isinstance(payload["bundle_id"], str):
+        print("render_promotion_bundle_summary: missing required string key: bundle_id", file=sys.stderr)
+        return 2
+
+    artifacts = payload.get("artifacts")
+    if not isinstance(artifacts, list):
+        print("render_promotion_bundle_summary: missing required list key: artifacts", file=sys.stderr)
+        return 2
 
     md = "\n".join([
         "# Promotion Bundle Summary",
         "",
-        f"- Bundle: **{bundle_id}**",
+        f"- Bundle: **{payload['bundle_id']}**",
         f"- Artifacts: **{len(artifacts)}**",
     ])
 

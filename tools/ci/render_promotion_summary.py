@@ -3,7 +3,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+
+def read_json(path: str) -> dict:
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print(f"render_promotion_summary: input not found: {path}", file=sys.stderr)
+        raise SystemExit(2)
+    except json.JSONDecodeError as exc:
+        print(f"render_promotion_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
+        raise SystemExit(2)
 
 
 def main() -> int:
@@ -12,15 +24,17 @@ def main() -> int:
     parser.add_argument("--output")
     args = parser.parse_args()
 
-    payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    state = payload.get("state", "unknown")
-    release_id = payload.get("release_id", "n/a")
+    payload = read_json(args.input)
+    for key in ("release_id", "state"):
+        if key not in payload or not isinstance(payload[key], str):
+            print(f"render_promotion_summary: missing required string key: {key}", file=sys.stderr)
+            return 2
 
     md = "\n".join([
         "# Promotion Summary",
         "",
-        f"- Release: **{release_id}**",
-        f"- State: **{state}**",
+        f"- Release: **{payload['release_id']}**",
+        f"- State: **{payload['state']}**",
     ])
 
     if args.output:

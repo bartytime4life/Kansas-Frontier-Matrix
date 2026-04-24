@@ -3,7 +3,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+
+def read_json(path: str) -> dict:
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print(f"render_bundle_diff_policy_summary: input not found: {path}", file=sys.stderr)
+        raise SystemExit(2)
+    except json.JSONDecodeError as exc:
+        print(f"render_bundle_diff_policy_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
+        raise SystemExit(2)
 
 
 def main() -> int:
@@ -12,11 +24,17 @@ def main() -> int:
     parser.add_argument("--output")
     args = parser.parse_args()
 
-    payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    decision = payload.get("decision", "unknown")
-    reasons = payload.get("reasons", [])
+    payload = read_json(args.input)
+    if "decision" not in payload or not isinstance(payload["decision"], str):
+        print("render_bundle_diff_policy_summary: missing required string key: decision", file=sys.stderr)
+        return 2
 
-    lines = ["# Bundle Diff Policy Summary", "", f"- Decision: **{decision}**"]
+    reasons = payload.get("reasons", [])
+    if not isinstance(reasons, list):
+        print("render_bundle_diff_policy_summary: reasons must be a list when provided", file=sys.stderr)
+        return 2
+
+    lines = ["# Bundle Diff Policy Summary", "", f"- Decision: **{payload['decision']}**"]
     if reasons:
         lines.append("- Reasons:")
         lines.extend([f"  - {reason}" for reason in reasons])

@@ -3,7 +3,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+
+REQUIRED_KEYS = ("added", "changed", "removed")
+
+
+def read_json(path: str) -> dict:
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print(f"render_diff_summary: input not found: {path}", file=sys.stderr)
+        raise SystemExit(2)
+    except json.JSONDecodeError as exc:
+        print(f"render_diff_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
+        raise SystemExit(2)
 
 
 def main() -> int:
@@ -12,18 +27,23 @@ def main() -> int:
     parser.add_argument("--output", help="Optional output markdown path")
     args = parser.parse_args()
 
-    payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    added = payload.get("added", 0)
-    changed = payload.get("changed", 0)
-    removed = payload.get("removed", 0)
+    payload = read_json(args.input)
+    missing = [k for k in REQUIRED_KEYS if k not in payload]
+    if missing:
+        print(f"render_diff_summary: missing required key(s): {', '.join(missing)}", file=sys.stderr)
+        return 2
+
+    if not all(isinstance(payload[k], int) for k in REQUIRED_KEYS):
+        print("render_diff_summary: required keys must be integers", file=sys.stderr)
+        return 2
 
     md = "\n".join(
         [
             "# Diff Summary",
             "",
-            f"- Added: **{added}**",
-            f"- Changed: **{changed}**",
-            f"- Removed: **{removed}**",
+            f"- Added: **{payload['added']}**",
+            f"- Changed: **{payload['changed']}**",
+            f"- Removed: **{payload['removed']}**",
         ]
     )
 

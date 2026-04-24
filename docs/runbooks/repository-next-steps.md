@@ -119,3 +119,4 @@ Use this as the concrete next implementation sequence:
 - Invalid renderer input fails before markdown generation.
 - One deterministic end-to-end CI artifact is produced from fixture data.
 - Required checks are documented in-repo and enforced in GitHub settings.
+
