@@ -6,9 +6,12 @@ import json
 import sys
 from pathlib import Path
 
+from jsonschema.exceptions import SchemaError
+
 from .ecology_proof_pack_builder import (
     build_proof_pack,
     load_json,
+    validate_proof_pack,
     write_proof_pack,
 )
 
@@ -16,6 +19,7 @@ from .ecology_proof_pack_builder import (
 EXIT_PASS = 0
 EXIT_FAILURE = 1
 EXIT_MISSING_INPUT = 2
+EXIT_MISSING_SCHEMA = 3
 EXIT_INTERNAL_ERROR = 5
 
 
@@ -38,6 +42,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "--schema",
+        default="schemas/ecology/ecology_proof_pack.schema.json",
+        help="Path to the ecology proof-pack schema.",
+    )
+
+    parser.add_argument(
         "--out",
         required=True,
         help="Output path for proof-pack JSON.",
@@ -52,6 +62,7 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest_path = Path(args.manifest)
     catalog_refs_path = Path(args.catalog_refs)
+    schema_path = Path(args.schema)
     out_path = Path(args.out)
 
     if not manifest_path.exists():
@@ -62,6 +73,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"missing catalog refs: {catalog_refs_path}", file=sys.stderr)
         return EXIT_MISSING_INPUT
 
+    if not schema_path.exists():
+        print(f"missing schema: {schema_path}", file=sys.stderr)
+        return EXIT_MISSING_SCHEMA
+
     try:
         manifest = load_json(manifest_path)
         catalog_refs = load_json(catalog_refs_path)
@@ -71,6 +86,16 @@ def main(argv: list[str] | None = None) -> int:
             manifest_ref=str(manifest_path),
             catalog_refs=catalog_refs,
         )
+
+        errors = validate_proof_pack(
+            proof_pack=proof_pack,
+            schema_path=schema_path,
+        )
+        if errors:
+            for error in errors:
+                print(f"proof-pack schema invalid: {error}", file=sys.stderr)
+            return EXIT_FAILURE
+
         write_proof_pack(out_path, proof_pack)
     except json.JSONDecodeError as exc:
         print(f"invalid json: {exc}", file=sys.stderr)
@@ -78,6 +103,9 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         print(f"invalid proof-pack input: {exc}", file=sys.stderr)
         return EXIT_FAILURE
+    except SchemaError as exc:
+        print(f"invalid proof-pack schema: {exc.message}", file=sys.stderr)
+        return EXIT_MISSING_SCHEMA
     except Exception as exc:
         print(f"internal proof-pack builder error: {exc}", file=sys.stderr)
         return EXIT_INTERNAL_ERROR
