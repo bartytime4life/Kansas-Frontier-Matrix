@@ -21,6 +21,16 @@ jobs:
       - name: Run repo-baseline wrapper
         run: sh ./tools/ci/run_repo_baseline_local.sh
 
+      - name: Run scripts thin-slice checks
+        run: |
+          ./scripts/bootstrap.sh
+          python3 ./scripts/validate_schemas.py
+          python3 ./scripts/catalog_validate.py
+          python3 ./tools/ci/validate_renderer_fixtures.py --root .
+
+      - name: Run CI renderer tests
+        run: python3 -m pytest -q tests/ci
+
       - name: Upload baseline report
         if: always()
         uses: actions/upload-artifact@v4

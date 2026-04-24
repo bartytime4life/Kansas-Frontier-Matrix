@@ -153,6 +153,19 @@ sh ./tools/ci/run_repo_baseline_local.sh
 
 The wrapper script executes the documented thin-slice sequence (syntax checks, baseline self-tests, README-path checks, schema/catalog checks, renderer fixture validation, and `pytest -q tests/ci`) and emits `baseline-report.txt` for artifact upload.
 
+The full sequence run by the wrapper is:
+
+```bash
+sh ./tools/ci/test_verify_baseline.sh
+sh ./tools/ci/test_check_readme_paths.sh
+sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
+sh ./tools/ci/verify_baseline.sh baseline-report.txt
+./scripts/bootstrap.sh
+python3 ./scripts/validate_schemas.py
+python3 ./scripts/catalog_validate.py
+python3 ./tools/ci/validate_renderer_fixtures.py --root .
+python3 -m pytest -q tests/ci
+```
 
 ## Inputs
 
