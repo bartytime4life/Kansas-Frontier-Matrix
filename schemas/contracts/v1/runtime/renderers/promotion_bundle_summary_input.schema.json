@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/runtime/renderers/promotion_bundle_summary_input/v1",
+  "type": "object",
+  "required": ["bundle_id", "artifacts"],
+  "properties": {
+    "bundle_id": {"type": "string"},
+    "artifacts": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

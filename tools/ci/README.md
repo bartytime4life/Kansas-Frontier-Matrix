@@ -171,6 +171,13 @@ This README intentionally distinguishes the **documented thin slice** from broad
 ```text
 tools/ci/
 ├── README.md
+├── check_readme_paths.sh
+├── readme_required_paths.txt
+├── test_check_readme_paths.sh
+├── verify_baseline.sh
+├── test_verify_baseline.sh
+├── validate_renderer_fixtures.py
+├── run_repo_baseline_local.sh
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
@@ -181,7 +188,15 @@ tests/ci/
 ├── README.md
 ├── test_render_diff_summary.py
 ├── test_render_bundle_diff_policy_summary.py
-└── test_render_promotion_review_handoff.py
+├── test_render_promotion_review_handoff.py
+├── test_validate_renderer_fixtures.py
+├── test_end_to_end_diff_summary.py
+├── test_end_to_end_diff_policy_summary.py
+├── test_end_to_end_promotion_summary.py
+├── test_end_to_end_promotion_bundle_summary.py
+├── test_end_to_end_review_handoff.py
+├── fixtures/
+└── golden/
 ```
 
 > [!WARNING]
@@ -256,14 +271,16 @@ For baseline repository inventory verification (used by `.github/workflows/verif
 sh ./tools/ci/verify_baseline.sh baseline-report.txt
 cat baseline-report.txt
 sh ./tools/ci/test_verify_baseline.sh
+sh ./tools/ci/test_check_readme_paths.sh
+sh ./tools/ci/check_readme_paths.sh
+python3 ./tools/ci/validate_renderer_fixtures.py
+sh ./tools/ci/run_repo_baseline_local.sh
 ```
 
 When the checked-out branch uses `pytest` for this lane, the documented thin slice should remain runnable locally as well as in CI:
 
 ```bash
-pytest -q tests/ci/test_render_diff_summary.py
-pytest -q tests/ci/test_render_bundle_diff_policy_summary.py
-pytest -q tests/ci/test_render_promotion_review_handoff.py
+pytest -q tests/ci
 ```
 
 [Back to top](#top)
