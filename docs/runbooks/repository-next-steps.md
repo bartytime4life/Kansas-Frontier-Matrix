@@ -8,6 +8,12 @@ This runbook captures the most practical next actions after a repository scan on
 - The currently executable CI baseline path is narrow but healthy: `.github/workflows/verification-baseline.yml` runs shell syntax checks, self-tests, and `tools/ci/verify_baseline.sh`.  
 - `tools/ci/test_verify_baseline.sh` passes locally and validates both pass/fail behavior for the baseline verifier.
 
+## Progress update (2026-04-24)
+
+- The baseline workflow has now been de-duplicated so it executes only the `tools/ci/run_repo_baseline_local.sh` wrapper and does not rerun the same schema/fixture/pytest checks in separate steps.
+- Local baseline execution remains green after this cleanup (`14 passed` in `tests/ci`).
+- This keeps CI behavior unchanged while reducing redundant runtime and maintenance surface.
+
 ## Key gaps discovered
 
 1. **Documentation-to-repo drift is high.**
@@ -79,7 +85,7 @@ This runbook captures the most practical next actions after a repository scan on
 - Add one concise runbook for “baseline + smoke CI failure triage”.
 
 
-## Immediate next (post thin-slice implementation)
+## Immediate next (post baseline workflow cleanup)
 
 Now that baseline scripts and renderer tests exist, the next highest-value moves are:
 
@@ -119,4 +125,3 @@ Use this as the concrete next implementation sequence:
 - Invalid renderer input fails before markdown generation.
 - One deterministic end-to-end CI artifact is produced from fixture data.
 - Required checks are documented in-repo and enforced in GitHub settings.
-
