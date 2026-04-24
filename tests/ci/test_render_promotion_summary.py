@@ -37,7 +37,7 @@ def test_render_promotion_summary_missing_key_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "missing required string key: state" in proc.stderr
 
 
@@ -54,7 +54,7 @@ def test_render_promotion_summary_invalid_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "invalid JSON" in proc.stderr
 
 
@@ -71,5 +71,5 @@ def test_render_promotion_summary_non_object_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "expected top-level JSON object" in proc.stderr
