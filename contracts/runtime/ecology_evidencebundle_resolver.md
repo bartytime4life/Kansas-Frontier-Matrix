@@ -21,7 +21,8 @@ notes: [
   "PROPOSED governed API resolver contract for ecology EvidenceBundles.",
   "Target path inferred from the source draft: contracts/runtime/ecology_evidencebundle_resolver.md.",
   "Does not claim apps/governed_api implementation, route wiring, schema presence, CI coverage, or runtime behavior has been verified.",
-  "Preserves KFM trust membrane, EvidenceBundle-first resolution, and cite-or-abstain behavior."
+  "Preserves KFM trust membrane, EvidenceBundle-first resolution, and cite-or-abstain behavior.",
+  "Compatibility anchors are preserved for the older headings: request-parameters, response-decisions, success-response, and abstain-response."
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -154,6 +155,8 @@ GET /v1/ecology/evidence-bundles/{candidate_id}
 
 ---
 
+<a id="request-parameters"></a>
+
 ## Request contract
 
 | Parameter | Required | Location | Description |
@@ -175,6 +178,8 @@ GET /v1/ecology/evidence-bundles/eco_index.example?spec_hash=aaaaaaaaaaaaaaaaaaa
 ```
 
 ---
+
+<a id="response-decisions"></a>
 
 ## Decision model
 
@@ -216,6 +221,8 @@ The resolver decision is about evidence support. It is related to, but not ident
 | `meta.resolver` | Always | Resolver name/version should be added when implementation exists. |
 | `meta.evidence_drawer_required` | Always | `true` for consequential ecology support. |
 
+<a id="success-response"></a>
+
 <details>
 <summary>Illustrative success response</summary>
 
@@ -255,6 +262,8 @@ The resolver decision is about evidence support. It is related to, but not ident
 ```
 
 </details>
+
+<a id="abstain-response"></a>
 
 <details>
 <summary>Illustrative abstain response</summary>
@@ -450,6 +459,7 @@ function resolveEcologyEvidenceBundle(candidate_id, options):
 | Policy and release-state mapping | `NEEDS VERIFICATION` | Determines whether blocked candidates emit `review_required`, `DENY`, or another negative state. |
 | Evidence Drawer payload schema | `NEEDS VERIFICATION` | Drawer must render support without hidden truth paths. |
 | Sensitive ecology redaction rules | `NEEDS VERIFICATION` | Prevents unsafe exact-location exposure. |
+| Legacy link compatibility | `PROPOSED` | Compatibility anchors were added for older heading names, but inbound repo links still need verification. |
 
 ---
 
