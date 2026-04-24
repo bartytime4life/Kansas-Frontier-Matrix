@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 SPEC_HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+SCHEMA_REF = "schemas/ecology/ecology_proof_pack.schema.json"
 
 
 def write_json(path: Path, value: object) -> None:
@@ -57,12 +58,15 @@ def cli_args(
     manifest_path: Path,
     catalog_refs_path: Path,
     out_path: Path,
+    schema_ref: str = SCHEMA_REF,
 ) -> list[str]:
     return [
         "--manifest",
         str(manifest_path),
         "--catalog-refs",
         str(catalog_refs_path),
+        "--schema",
+        schema_ref,
         "--out",
         str(out_path),
     ]
@@ -129,6 +133,58 @@ def test_cli_missing_catalog_refs_exits_two(tmp_path: Path) -> None:
 
     assert result.returncode == 2
     assert "missing catalog refs:" in result.stderr
+    assert not out_path.exists()
+
+
+def test_cli_missing_schema_exits_three(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    catalog_refs_path = tmp_path / "catalog_refs.json"
+    out_path = tmp_path / "proof_pack.json"
+
+    write_json(manifest_path, manifest())
+    write_json(catalog_refs_path, catalog_refs())
+
+    result = run_cli(
+        *cli_args(
+            manifest_path=manifest_path,
+            catalog_refs_path=catalog_refs_path,
+            out_path=out_path,
+            schema_ref=str(tmp_path / "missing_schema.json"),
+        )
+    )
+
+    assert result.returncode == 3
+    assert "missing schema:" in result.stderr
+    assert not out_path.exists()
+
+
+def test_cli_invalid_schema_exits_three(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    catalog_refs_path = tmp_path / "catalog_refs.json"
+    schema_path = tmp_path / "invalid_schema.json"
+    out_path = tmp_path / "proof_pack.json"
+
+    write_json(manifest_path, manifest())
+    write_json(catalog_refs_path, catalog_refs())
+    write_json(
+        schema_path,
+        {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": 123,
+        },
+    )
+
+    result = run_cli(
+        *cli_args(
+            manifest_path=manifest_path,
+            catalog_refs_path=catalog_refs_path,
+            out_path=out_path,
+            schema_ref=str(schema_path),
+        )
+    )
+
+    assert result.returncode == 3
+    assert "invalid proof-pack schema:" in result.stderr
     assert not out_path.exists()
 
 
