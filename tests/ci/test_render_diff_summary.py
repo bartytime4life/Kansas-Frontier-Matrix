@@ -38,7 +38,7 @@ def test_render_diff_summary_missing_key_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "missing required key" in proc.stderr
 
 
@@ -55,5 +55,22 @@ def test_render_diff_summary_invalid_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "invalid JSON" in proc.stderr
+
+
+def test_render_diff_summary_non_object_json_fails() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        src = root / "diff.json"
+        src.write_text("[1,2,3]", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", "tools/ci/render_diff_summary.py", "--input", str(src)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode == 2
+        assert "expected top-level JSON object" in proc.stderr
