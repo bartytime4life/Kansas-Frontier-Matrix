@@ -421,6 +421,7 @@ def test_validate_policy_runtime_fixtures_ignores_non_json_files_in_fixture_dir(
         assert "validated 4 runtime fixtures" in proc.stdout
 
 
+
 def test_validate_policy_runtime_fixtures_fails_on_missing_root_path() -> None:
     proc = subprocess.run(
         ["python3", str(SCRIPT), "--root", "does-not-exist-root"],
