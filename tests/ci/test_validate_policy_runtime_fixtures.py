@@ -376,3 +376,15 @@ def test_validate_policy_runtime_fixtures_fails_on_non_utf8_fixture_file() -> No
 
         assert proc.returncode != 0
         assert "non-utf8 fixture JSON file" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_passes_against_repo_root() -> None:
+    proc = subprocess.run(
+        ["python3", str(SCRIPT), "--root", "."],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 0
+    assert "validated 4 runtime fixtures" in proc.stdout
