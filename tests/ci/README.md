@@ -10,6 +10,8 @@ CI-focused tests for helper renderers in `tools/ci/`.
 - `test_end_to_end_review_handoff.py`
 - `test_end_to_end_diff_policy_summary.py`
 - `test_end_to_end_diff_summary.py`
+- `test_end_to_end_promotion_summary.py`
+- `test_end_to_end_promotion_bundle_summary.py`
 
 Run with:
 
