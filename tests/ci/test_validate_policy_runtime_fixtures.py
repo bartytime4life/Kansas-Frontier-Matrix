@@ -208,3 +208,33 @@ def test_validate_policy_runtime_fixtures_fails_on_duplicate_scenario_names() ->
 
         assert proc.returncode != 0
         assert "duplicate scenario 'answer_public_safe'" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_on_invalid_expected_outcome() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        fixtures = {
+            "answer_public_safe": {"scenario": "answer_public_safe", "expected": "ANSWER"},
+            "abstain_missing_evidence": {"scenario": "abstain_missing_evidence", "expected": "ABSTAIN"},
+            "deny_restricted_support": {"scenario": "deny_restricted_support", "expected": "DENY"},
+            "error_policy_engine_unavailable": {
+                "scenario": "error_policy_engine_unavailable",
+                "expected": "BOGUS",
+            },
+        }
+        for name, payload in fixtures.items():
+            (root / "policy/fixtures/runtime" / f"{name}.json").write_text(
+                json.dumps(payload), encoding="utf-8"
+            )
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "invalid expected outcome 'BOGUS'" in proc.stderr
