@@ -12,4 +12,12 @@ if "${checker}" --unknown >/dev/null 2>&1; then
   exit 1
 fi
 
+# incomplete root should fail
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "${tmpdir}"' EXIT
+if "${checker}" --root "${tmpdir}" >/dev/null 2>&1; then
+  echo "expected checker to fail on incomplete root"
+  exit 1
+fi
+
 echo "check_readme_paths tests passed"

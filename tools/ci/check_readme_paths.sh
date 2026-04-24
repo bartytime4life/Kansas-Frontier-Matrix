@@ -49,6 +49,13 @@ tests/ci/README.md
 tests/ci/test_render_diff_summary.py
 tests/ci/test_render_bundle_diff_policy_summary.py
 tests/ci/test_render_promotion_review_handoff.py
+tests/ci/test_validate_renderer_fixtures.py
+tools/ci/validate_renderer_fixtures.py
+schemas/contracts/v1/runtime/renderers/diff_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/diff_policy_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/promotion_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/promotion_bundle_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/review_handoff_inputs.schema.json
 '
 
 missing_count=0
