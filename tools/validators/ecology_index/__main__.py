@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+from jsonschema.exceptions import SchemaError
+
 from .validator import validate_file
 
 
@@ -78,6 +80,9 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         print(f"invalid input: {exc}", file=sys.stderr)
         return EXIT_VALIDATION_FAILURE
+    except SchemaError as exc:
+        print(f"invalid schema: {exc.message}", file=sys.stderr)
+        return EXIT_MISSING_SCHEMA
     except Exception as exc:  # fail closed
         print(f"internal validator error: {exc}", file=sys.stderr)
         return EXIT_INTERNAL_ERROR
