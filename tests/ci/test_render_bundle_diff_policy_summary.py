@@ -47,7 +47,7 @@ def test_render_bundle_diff_policy_summary_missing_decision_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "missing required string key: decision" in proc.stderr
 
 
@@ -64,7 +64,7 @@ def test_render_bundle_diff_policy_summary_invalid_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "invalid JSON" in proc.stderr
 
 
@@ -81,7 +81,7 @@ def test_render_bundle_diff_policy_summary_reasons_must_be_list() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "reasons must be a list when provided" in proc.stderr
 
 
@@ -98,5 +98,5 @@ def test_render_bundle_diff_policy_summary_non_object_json_fails() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 2
         assert "expected top-level JSON object" in proc.stderr
