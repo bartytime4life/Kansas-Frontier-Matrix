@@ -229,3 +229,32 @@ def test_validate_policy_runtime_fixtures_fails_when_fixture_directory_empty() -
         assert proc.returncode != 0
         assert "no runtime fixture JSON files found" in proc.stderr
 
+
+def test_validate_policy_runtime_fixtures_fails_when_scenario_key_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        fixtures = dict(FULL_FIXTURES)
+        fixtures["answer_public_safe"] = {"expected": "ANSWER"}
+        _write_runtime_fixtures(root, fixtures)
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "missing required non-empty string key 'scenario'" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_scenario_key_empty() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        fixtures = dict(FULL_FIXTURES)
+        fixtures["answer_public_safe"] = {"scenario": "", "expected": "ANSWER"}
+        _write_runtime_fixtures(root, fixtures)
+
+        proc = _run_validator(root)
+
+        assert proc.returncode != 0
+        assert "missing required non-empty string key 'scenario'" in proc.stderr
