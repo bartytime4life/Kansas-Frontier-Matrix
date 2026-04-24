@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/runtime/renderers/diff_policy_summary_input/v1",
+  "type": "object",
+  "required": ["decision"],
+  "properties": {
+    "decision": {"type": "string"},
+    "reasons": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

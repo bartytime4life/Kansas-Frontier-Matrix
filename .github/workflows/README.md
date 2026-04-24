@@ -125,6 +125,35 @@ This directory exists to answer a small set of consequential questions:
 
 ---
 
+
+## Required check baseline (current)
+
+The repository’s currently actionable required-check baseline is:
+
+- `verification-baseline / repo-baseline`
+
+This job now validates:
+
+1. shell syntax for thin-slice scripts,
+2. baseline verifier self-tests,
+3. README path checker self-tests and path checks,
+4. baseline inventory verification,
+5. schema/catalog thin-slice scripts,
+6. renderer fixture contract validation,
+7. renderer test suite in `tests/ci`.
+
+When branch protection is configured, use this job as the minimum required status while adding stronger gates incrementally.
+
+
+Current command shape for the `repo-baseline` job:
+
+```bash
+sh ./tools/ci/run_repo_baseline_local.sh
+```
+
+The wrapper script executes the documented thin-slice sequence (syntax checks, baseline self-tests, README-path checks, schema/catalog checks, renderer fixture validation, and `pytest -q tests/ci`) and emits `baseline-report.txt` for artifact upload.
+
+
 ## Inputs
 
 Accepted inputs for this directory include:
@@ -211,9 +240,12 @@ The following do **not** belong here as canonical truth:
 ```text
 .github/
 └── workflows/
-    ├── .gitkeep     # CONFIRMED: placeholder visible in current public-main directory listing
-    └── README.md    # CONFIRMED: this directory README
+    ├── README.md
+    └── verification-baseline.yml
 ```
+
+> [!NOTE]
+> `verification-baseline.yml` is the currently verified workflow lane in this checkout. Other drafted workflow names remain planning signals until they exist in the mounted branch.
 
 ### Drafted thin-slice intent
 
