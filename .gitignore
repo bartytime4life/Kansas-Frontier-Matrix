@@ -1,1 +1,4 @@
 baseline-report.txt
+__pycache__/
+*.pyc
+*.pyo
