@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -45,12 +46,12 @@ def test_single_input_renderers_fail_on_missing_input(script: str, args: list[st
 
 
 def test_review_handoff_renderer_fails_on_missing_promotion_input() -> None:
-    # Create minimal valid files for non-missing inputs.
-    bundle = Path("tests/ci/golden/.tmp-missing-bundle.json")
-    diff = Path("tests/ci/golden/.tmp-missing-diff.json")
-    diff_policy = Path("tests/ci/golden/.tmp-missing-diff-policy.json")
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        bundle = root / "bundle.json"
+        diff = root / "diff.json"
+        diff_policy = root / "diff-policy.json"
 
-    try:
         bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
         diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
         diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
@@ -75,7 +76,3 @@ def test_review_handoff_renderer_fails_on_missing_promotion_input() -> None:
 
         assert proc.returncode != 0
         assert "render_promotion_review_handoff: promotion input not found" in proc.stderr
-    finally:
-        for path in (bundle, diff, diff_policy):
-            if path.exists():
-                path.unlink()
