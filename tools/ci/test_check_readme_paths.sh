@@ -27,4 +27,12 @@ if "${checker}" --manifest "${script_dir}/does-not-exist.txt" >/dev/null 2>&1; t
   exit 1
 fi
 
+# empty/comment-only manifest should fail
+empty_manifest="${tmpdir}/empty-manifest.txt"
+printf '# comment only\n\n' > "${empty_manifest}"
+if "${checker}" --manifest "${empty_manifest}" >/dev/null 2>&1; then
+  echo "expected checker to fail on empty manifest"
+  exit 1
+fi
+
 echo "check_readme_paths tests passed"
