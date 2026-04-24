@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 
 ALLOWED_DOMAINS = {
     "flora",
@@ -60,7 +62,26 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def validate_semantics(row: dict[str, Any]) -> ValidationResult:
+def validate_schema(
+    row: dict[str, Any],
+    schema: dict[str, Any],
+) -> list[ValidationErrorItem]:
+    validator = Draft202012Validator(schema)
+
+    errors: list[ValidationErrorItem] = []
+    for error in sorted(validator.iter_errors(row), key=lambda item: list(item.path)):
+        path = ".".join(str(part) for part in error.path) or "<root>"
+        errors.append(
+            ValidationErrorItem(
+                ERROR_CODES["schema_invalid"],
+                f"{path}: {error.message}",
+            )
+        )
+
+    return errors
+
+
+def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
     errors: list[ValidationErrorItem] = []
 
     domains = row.get("domains", [])
@@ -140,8 +161,7 @@ def validate_semantics(row: dict[str, Any]) -> ValidationResult:
                 )
             )
 
-    decision = "fail" if errors else "pass"
-    return ValidationResult(decision=decision, errors=errors)
+    return errors
 
 
 def build_receipt(
@@ -182,7 +202,17 @@ def validate_file(
     receipt_out: Path | None = None,
 ) -> ValidationResult:
     row = load_json(input_path)
-    result = validate_semantics(row)
+    schema = load_json(Path(schema_ref))
+
+    errors = [
+        *validate_schema(row, schema),
+        *validate_semantics(row),
+    ]
+
+    result = ValidationResult(
+        decision="fail" if errors else "pass",
+        errors=errors,
+    )
 
     if receipt_out is not None:
         receipt = build_receipt(
