@@ -51,9 +51,15 @@ def main() -> int:
         (diff_policy, "decision", str),
     ]
 
+    type_labels = {str: "string", int: "integer"}
+
     for payload, key, typ in required:
         if key not in payload or not isinstance(payload[key], typ):
-            print(f"render_promotion_review_handoff: missing required {typ.__name__} key: {key}", file=sys.stderr)
+            type_label = type_labels.get(typ, typ.__name__)
+            print(
+                f"render_promotion_review_handoff: missing required {type_label} key: {key}",
+                file=sys.stderr,
+            )
             return 2
 
     md = "\n".join([

@@ -76,7 +76,7 @@ def test_render_promotion_review_handoff_missing_key_fails() -> None:
         )
 
         assert proc.returncode != 0
-        assert "missing required str key: state" in proc.stderr
+        assert "missing required string key: state" in proc.stderr
 
 
 def test_render_promotion_review_handoff_invalid_json_fails() -> None:
