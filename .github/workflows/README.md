@@ -157,6 +157,9 @@ python3 ./scripts/validate_schemas.py
 python3 ./scripts/catalog_validate.py
 python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 -m pytest -q tests/ci
+
+# Optional local wrapper for the same sequence
+sh ./tools/ci/run_repo_baseline_local.sh
 ```
 
 

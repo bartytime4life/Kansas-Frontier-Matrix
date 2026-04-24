@@ -14,6 +14,7 @@ tools/ci/render_diff_summary.py
 tools/ci/render_bundle_diff_policy_summary.py
 tools/ci/render_promotion_review_handoff.py
 tools/ci/validate_renderer_fixtures.py
+tools/ci/run_repo_baseline_local.sh
 tests/ci/README.md
 tests/ci/test_render_diff_summary.py
 tests/ci/test_render_bundle_diff_policy_summary.py
