@@ -173,3 +173,38 @@ def test_validate_policy_runtime_fixtures_fails_when_runtime_scaffold_missing() 
 
         assert proc.returncode != 0
         assert "missing runtime policy file" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_on_duplicate_scenario_names() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        fixtures_dir = root / "policy/fixtures/runtime"
+        fixtures = {
+            "answer_public_safe": {"scenario": "answer_public_safe", "expected": "ANSWER"},
+            "abstain_missing_evidence": {"scenario": "abstain_missing_evidence", "expected": "ABSTAIN"},
+            "deny_restricted_support": {"scenario": "deny_restricted_support", "expected": "DENY"},
+            "error_policy_engine_unavailable": {
+                "scenario": "error_policy_engine_unavailable",
+                "expected": "ERROR",
+            },
+        }
+        for name, payload in fixtures.items():
+            (fixtures_dir / f"{name}.json").write_text(json.dumps(payload), encoding="utf-8")
+
+        # Add a second fixture with a duplicate scenario value.
+        (fixtures_dir / "answer_public_safe_duplicate.json").write_text(
+            json.dumps({"scenario": "answer_public_safe", "expected": "ANSWER"}),
+            encoding="utf-8",
+        )
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "duplicate scenario 'answer_public_safe'" in proc.stderr
