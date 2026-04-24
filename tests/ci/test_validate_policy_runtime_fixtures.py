@@ -269,3 +269,41 @@ def test_validate_policy_runtime_fixtures_fails_on_non_object_json_fixture() -> 
 
         assert proc.returncode != 0
         assert "invalid top-level JSON type" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_runtime_fixture_directory_missing() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+
+        runtime_bundle = root / "policy/bundles/runtime"
+        runtime_bundle.mkdir(parents=True, exist_ok=True)
+        (runtime_bundle / "bundle.yaml").write_text("name: runtime\n", encoding="utf-8")
+        (runtime_bundle / "finite_outcomes.rego").write_text("package kfm.runtime\n", encoding="utf-8")
+        (runtime_bundle / "runtime_denials.rego").write_text("package kfm.runtime.denials\n", encoding="utf-8")
+        (runtime_bundle / "proof_quartet.rego").write_text("package kfm.runtime.proof\n", encoding="utf-8")
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "missing runtime fixtures directory" in proc.stderr
+
+
+def test_validate_policy_runtime_fixtures_fails_when_fixture_directory_empty() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        _write_runtime_layout(root)
+
+        proc = subprocess.run(
+            ["python3", str(SCRIPT), "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode != 0
+        assert "no runtime fixture JSON files found" in proc.stderr
