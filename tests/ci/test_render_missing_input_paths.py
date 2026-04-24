@@ -42,6 +42,10 @@ def test_single_input_renderers_fail_on_missing_input(script: str, args: list[st
     )
 
     assert proc.returncode == 2
+    assert expected_stderr in proc.stderr
+
+
+@pytest.mark.parametrize(
     ("missing_arg", "expected_stderr"),
     [
         ("--promotion", "render_promotion_review_handoff: promotion input not found"),
