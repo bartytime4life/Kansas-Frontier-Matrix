@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/runtime/renderers/review_handoff_inputs/v1",
+  "type": "object",
+  "required": ["promotion", "bundle", "diff", "diff_policy"],
+  "properties": {
+    "promotion": {
+      "type": "object",
+      "required": ["release_id", "state"],
+      "properties": {
+        "release_id": {"type": "string"},
+        "state": {"type": "string"}
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "required": ["bundle_id"],
+      "properties": {
+        "bundle_id": {"type": "string"}
+      }
+    },
+    "diff": {
+      "type": "object",
+      "required": ["added", "changed", "removed"],
+      "properties": {
+        "added": {"type": "integer"},
+        "changed": {"type": "integer"},
+        "removed": {"type": "integer"}
+      }
+    },
+    "diff_policy": {
+      "type": "object",
+      "required": ["decision"],
+      "properties": {
+        "decision": {"type": "string"}
+      }
+    }
+  },
+  "additionalProperties": false
+}
