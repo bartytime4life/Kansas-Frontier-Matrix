@@ -39,7 +39,8 @@ EVIDENCE := $(PROOFS_DIR)/evidence_bundle.json
 RECEIPT := $(RECEIPTS_DIR)/run_receipt.json
 PROOF := $(PROOFS_DIR)/receipt_proof.json
 
-CATALOG_STAC := $(CATALOG_STAC_DIR)/kansas_biodiversity_occurrences.item.json
+CATALOG_STAC_ROOT := $(CATALOG_STAC_DIR)/kansas_biodiversity_occurrences
+CATALOG_STAC_COLLECTION := $(CATALOG_STAC_ROOT)/collection.json
 CATALOG_DCAT := $(CATALOG_DCAT_DIR)/kansas_biodiversity_occurrences.dataset.json
 CATALOG_PROV := $(CATALOG_PROV_DIR)/kansas_biodiversity_occurrences.prov.json
 
@@ -50,7 +51,7 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog clean sample check-inputs
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog clean sample check-inputs check-catalog
 
 # Full governed run
 all: harvest normalize dedupe publish sign gate catalog
@@ -63,6 +64,15 @@ check-inputs:
 	@echo "=== Preflight: required local files ==="
 	@test -f $(LICENSE_MAP) || (echo "Missing $(LICENSE_MAP)" && exit 1)
 	@test -f $(SENSITIVE_TAXA) || (echo "Missing $(SENSITIVE_TAXA)" && exit 1)
+
+check-catalog:
+	@echo "=== Catalog Smoke Check ==="
+	@test -f $(CATALOG_STAC_COLLECTION) || (echo "Missing $(CATALOG_STAC_COLLECTION)" && exit 1)
+	@test -f $(CATALOG_DCAT) || (echo "Missing $(CATALOG_DCAT)" && exit 1)
+	@test -f $(CATALOG_PROV) || (echo "Missing $(CATALOG_PROV)" && exit 1)
+	python -m json.tool $(CATALOG_STAC_COLLECTION) >/dev/null
+	python -m json.tool $(CATALOG_DCAT) >/dev/null
+	python -m json.tool $(CATALOG_PROV) >/dev/null
 
 # ----------------------------
 # Harvest (GBIF)
@@ -144,19 +154,20 @@ gate:
 		--proof $(PROOF)
 
 # ----------------------------
-# Catalog closure (STAC + DCAT + PROV)
+# Catalog closure (STAC Collection + Items, DCAT, PROV)
 # ----------------------------
 
 catalog:
-	@echo "=== Catalog Closure: STAC + DCAT + PROV ==="
+	@echo "=== Catalog Closure: STAC Collection + Items, DCAT + PROV ==="
 	python catalog/emit_catalog.py \
 		--dataset-root $(DATASET_ROOT) \
 		--metadata $(METADATA) \
 		--evidence $(EVIDENCE) \
 		--receipt $(RECEIPT) \
-		--stac-output $(CATALOG_STAC) \
+		--stac-output-root $(CATALOG_STAC_ROOT) \
 		--dcat-output $(CATALOG_DCAT) \
 		--prov-output $(CATALOG_PROV)
+	$(MAKE) check-catalog
 
 # ----------------------------
 # Sample mode (offline testing)
@@ -184,6 +195,6 @@ clean:
 	rm -rf $(RECEIPTS_DIR)
 	rm -rf $(PROOFS_DIR)
 	rm -rf $(RAW_DIR)
-	rm -f $(CATALOG_STAC)
+	rm -rf $(CATALOG_STAC_ROOT)
 	rm -f $(CATALOG_DCAT)
 	rm -f $(CATALOG_PROV)
