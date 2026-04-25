@@ -25,9 +25,11 @@ For markdown-specific remediation sequencing, see `docs/runbooks/markdown-remedi
 
 **Decision date:** 2026-04-25
 
-The highest-leverage immediate move is to **turn the ecology API/UI boundary into explicit schema-validated contract tests** while keeping marker-growth guardrails in place.
+Two parallel next moves were executed concurrently:
 
-Why this is next:
+**Move A — Turn the ecology API/UI boundary into explicit schema-validated contract tests** (this PR)
+
+Why this was next:
 
 - Project code now has canonical ecology resolver/routes and UI mapper paths; this is the correct boundary to harden next.
 - Current tests cover behavior, but formal contract checks make breakage deterministic and reviewer-visible.
@@ -42,6 +44,24 @@ Action taken in this cycle:
   - `apps/governed-api/ecology/tests/test_route_response_contract_schema.py`
   - `apps/ui/ecology/tests/test_evidence_drawer_contract_schema.py`
 - Added negative contract assertions for missing required fields so failures are explicit and actionable.
+
+**Move B — Freeze marker growth in the worst markdown hotspots already identified by CI**
+
+Why this was next:
+
+- The repo is still markdown-heavy (194 markdown files vs 82 Python files), so authority drift remains a primary operational risk.
+- Existing marker reporting already pinpoints concentrated debt (`packages/indexers/README.md`, `packages/genealogy_ingest/README.md`, and ETL/catalog docs).
+- Extending threshold checks is a fast, deterministic guardrail that prevents regression without blocking future targeted cleanup passes.
+
+Action taken in this cycle:
+
+- Added these docs to `tools/ci/markdown_authority_thresholds.json` with baseline ceilings set to current observed totals:
+  - `packages/indexers/README.md` (59)
+  - `packages/genealogy_ingest/README.md` (44)
+  - `pipelines/kansas_biodiversity_etl/dedupe/README.md` (39)
+  - `data/catalog/prov/README.md` (39)
+  - `pipelines/kansas_biodiversity_etl/catalog/README.md` (35)
+  - `.github/README.md` (35)
 
 ## Why the priorities changed
 

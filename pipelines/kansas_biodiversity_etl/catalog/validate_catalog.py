@@ -3,15 +3,16 @@
 Validate catalog closure for the Kansas biodiversity ETL.
 
 Checks:
+- metadata exists and carries spec_hash
 - STAC collection exists and parses
 - at least one STAC item exists and parses
 - DCAT dataset exists and parses
 - PROV lineage document exists and parses
-- metadata exists and carries spec_hash
 - STAC collection spec_hash matches metadata
 - every STAC item spec_hash matches metadata
 - DCAT spec_hash matches metadata
 - PROV dataset spec_hash matches metadata
+- optional JSON Schema validation when --schema-root is supplied
 
 Fail-closed:
 Any violation => FAIL
@@ -22,10 +23,16 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 JsonObject = Dict[str, Any]
+
+
+try:
+    import jsonschema
+except ImportError:  # pragma: no cover
+    jsonschema = None
 
 
 def fail(reason: str) -> int:
@@ -61,7 +68,32 @@ def metadata_spec_hash(metadata: JsonObject) -> str:
     return str(spec_hash)
 
 
-def stac_collection_spec_hash(collection: JsonObject) -> str | None:
+def schema_path(schema_root: Optional[Path], filename: str) -> Optional[Path]:
+    if schema_root is None:
+        return None
+    return schema_root / filename
+
+
+def validate_schema(instance: JsonObject, schema_file: Optional[Path], failure_reason: str) -> None:
+    if schema_file is None:
+        return
+
+    if jsonschema is None:
+        raise RuntimeError("jsonschema_missing")
+
+    if not schema_file.exists():
+        raise RuntimeError(f"catalog_schema_missing:{schema_file.name}")
+
+    try:
+        schema = load_json(schema_file)
+        jsonschema.validate(instance=instance, schema=schema)
+    except RuntimeError:
+        raise
+    except Exception as exc:
+        raise RuntimeError(failure_reason) from exc
+
+
+def stac_collection_spec_hash(collection: JsonObject) -> Optional[str]:
     summaries = collection.get("summaries")
     if not isinstance(summaries, dict):
         return None
@@ -76,7 +108,7 @@ def stac_collection_spec_hash(collection: JsonObject) -> str | None:
     return None
 
 
-def stac_item_spec_hash(item: JsonObject) -> str | None:
+def stac_item_spec_hash(item: JsonObject) -> Optional[str]:
     properties = item.get("properties")
     if not isinstance(properties, dict):
         return None
@@ -85,12 +117,12 @@ def stac_item_spec_hash(item: JsonObject) -> str | None:
     return str(value) if value else None
 
 
-def dcat_spec_hash(dcat: JsonObject) -> str | None:
+def dcat_spec_hash(dcat: JsonObject) -> Optional[str]:
     value = dcat.get("kfm:spec_hash")
     return str(value) if value else None
 
 
-def prov_spec_hash(prov: JsonObject) -> str | None:
+def prov_spec_hash(prov: JsonObject) -> Optional[str]:
     entity = prov.get("entity")
     if not isinstance(entity, dict):
         return None
@@ -122,13 +154,23 @@ def stac_item_paths(stac_root: Path) -> List[Path]:
     return paths
 
 
-def validate_stac_collection(stac_root: Path, expected_hash: str) -> JsonObject:
+def validate_stac_collection(
+    stac_root: Path,
+    expected_hash: str,
+    schema_root: Optional[Path],
+) -> JsonObject:
     collection_path = stac_root / "collection.json"
 
     collection = load_required_json(
         collection_path,
         "stac_collection_missing",
         "invalid_stac_collection_json",
+    )
+
+    validate_schema(
+        collection,
+        schema_path(schema_root, "stac_collection.schema.json"),
+        "invalid_stac_collection_schema",
     )
 
     if collection.get("type") != "Collection":
@@ -145,7 +187,11 @@ def validate_stac_collection(stac_root: Path, expected_hash: str) -> JsonObject:
     return collection
 
 
-def validate_stac_items(stac_root: Path, expected_hash: str) -> List[JsonObject]:
+def validate_stac_items(
+    stac_root: Path,
+    expected_hash: str,
+    schema_root: Optional[Path],
+) -> List[JsonObject]:
     items: List[JsonObject] = []
 
     for item_path in stac_item_paths(stac_root):
@@ -156,6 +202,12 @@ def validate_stac_items(stac_root: Path, expected_hash: str) -> List[JsonObject]
 
         if not isinstance(item, dict):
             raise RuntimeError(f"invalid_stac_item_json:{item_path.name}")
+
+        validate_schema(
+            item,
+            schema_path(schema_root, "stac_item.schema.json"),
+            f"invalid_stac_item_schema:{item_path.name}",
+        )
 
         if item.get("type") != "Feature":
             raise RuntimeError(f"stac_item_wrong_type:{item_path.name}")
@@ -173,8 +225,14 @@ def validate_stac_items(stac_root: Path, expected_hash: str) -> List[JsonObject]
     return items
 
 
-def validate_dcat(path: Path, expected_hash: str) -> JsonObject:
+def validate_dcat(path: Path, expected_hash: str, schema_root: Optional[Path]) -> JsonObject:
     dcat = load_required_json(path, "dcat_missing", "invalid_dcat_json")
+
+    validate_schema(
+        dcat,
+        schema_path(schema_root, "dcat_dataset.schema.json"),
+        "invalid_dcat_schema",
+    )
 
     actual_hash = dcat_spec_hash(dcat)
 
@@ -187,8 +245,14 @@ def validate_dcat(path: Path, expected_hash: str) -> JsonObject:
     return dcat
 
 
-def validate_prov(path: Path, expected_hash: str) -> JsonObject:
+def validate_prov(path: Path, expected_hash: str, schema_root: Optional[Path]) -> JsonObject:
     prov = load_required_json(path, "prov_missing", "invalid_prov_json")
+
+    validate_schema(
+        prov,
+        schema_path(schema_root, "prov_document.schema.json"),
+        "invalid_prov_schema",
+    )
 
     actual_hash = prov_spec_hash(prov)
 
@@ -201,6 +265,21 @@ def validate_prov(path: Path, expected_hash: str) -> JsonObject:
     return prov
 
 
+def resolve_schema_root(value: Optional[str]) -> Optional[Path]:
+    if not value:
+        return None
+
+    root = Path(value)
+
+    if not root.exists():
+        raise RuntimeError("schema_root_missing")
+
+    if not root.is_dir():
+        raise RuntimeError("schema_root_not_directory")
+
+    return root
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Validate Kansas biodiversity ETL STAC/DCAT/PROV catalog closure."
@@ -209,6 +288,11 @@ def main() -> int:
     parser.add_argument("--stac-root", required=True)
     parser.add_argument("--dcat", required=True)
     parser.add_argument("--prov", required=True)
+    parser.add_argument(
+        "--schema-root",
+        default=None,
+        help="Optional schema root, usually schemas/catalog.",
+    )
     args = parser.parse_args()
 
     metadata_path = Path(args.metadata)
@@ -217,6 +301,8 @@ def main() -> int:
     prov_path = Path(args.prov)
 
     try:
+        schema_root = resolve_schema_root(args.schema_root)
+
         metadata = load_required_json(
             metadata_path,
             "metadata_missing",
@@ -224,13 +310,25 @@ def main() -> int:
         )
         expected_hash = metadata_spec_hash(metadata)
 
-        collection = validate_stac_collection(stac_root, expected_hash)
-        items = validate_stac_items(stac_root, expected_hash)
-        dcat = validate_dcat(dcat_path, expected_hash)
-        prov = validate_prov(prov_path, expected_hash)
+        collection = validate_stac_collection(stac_root, expected_hash, schema_root)
+        items = validate_stac_items(stac_root, expected_hash, schema_root)
+        dcat = validate_dcat(dcat_path, expected_hash, schema_root)
+        prov = validate_prov(prov_path, expected_hash, schema_root)
 
     except RuntimeError as exc:
         return fail(str(exc))
+
+    checks = [
+        "metadata",
+        "stac_collection",
+        "stac_items",
+        "dcat",
+        "prov",
+        "spec_hash_alignment",
+    ]
+
+    if args.schema_root:
+        checks.append("json_schema")
 
     print(
         json.dumps(
@@ -241,22 +339,15 @@ def main() -> int:
                 "stac_items": len(items),
                 "dcat": str(dcat_path),
                 "prov": str(prov_path),
+                "schema_root": str(schema_root) if args.schema_root else None,
                 "dataset_id": metadata.get("dataset_id"),
                 "spec_hash": expected_hash,
-                "checks": [
-                    "metadata",
-                    "stac_collection",
-                    "stac_items",
-                    "dcat",
-                    "prov",
-                    "spec_hash_alignment",
-                ],
+                "checks": checks,
             },
             sort_keys=True,
         )
     )
 
-    # Keep references alive for static analyzers and future debug expansion.
     _ = collection, dcat, prov
 
     return 0
