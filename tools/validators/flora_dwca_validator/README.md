@@ -28,51 +28,60 @@ notes: [
 <a id="top"></a>
 
 # Flora DwC-A Validator
+
 Fail-closed validation for Kansas flora Darwin Core Archive inputs before EvidenceBundle assembly.
 
 > **Path:** `tools/validators/flora_dwca_validator/`  
-> **Role:** Validate source archives and normalized records before `flora_evidencebundle.schema.json` is emitted.
+> **Role:** Validate source archives and normalized records before `flora_evidencebundle.schema.json` is emitted.  
+> **Truth posture:** **PROPOSED** validator behavior; executable files, fixtures, CI wiring, and exact path presence **NEED VERIFICATION**.
 
 ---
 
 ## 🚦 Impact Block
 
-- **Status:** draft  
-- **Owners:** @bartytime4life  
-- **Badges:**  
-  ![status](https://img.shields.io/badge/status-draft-yellow)  
-  ![validator](https://img.shields.io/badge/type-validator-blue)  
-  ![policy](https://img.shields.io/badge/default-fail--closed-red)  
-  ![domain](https://img.shields.io/badge/domain-flora-green)
+![status](https://img.shields.io/badge/status-draft%20%2F%20experimental-yellow)
+![type](https://img.shields.io/badge/type-validator-blue)
+![default](https://img.shields.io/badge/default-fail--closed-red)
+![domain](https://img.shields.io/badge/domain-flora-green)
+![input](https://img.shields.io/badge/input-DwC--A-lightgrey)
 
-**Quick links**
-- [Scope](#scope) • [Repo fit](#repo-fit) • [Accepted inputs](#accepted-inputs) • [Exclusions](#exclusions)  
-- [Validation gates](#validation-gates) • [Failure behavior](#failure-behavior) • [CLI contract](#cli-contract)  
-- [Receipts](#receipt-contract) • [Directory tree](#directory-tree) • [Definition of done](#definition-of-done)
+| Field | Value |
+|---|---|
+| **Status** | draft / experimental |
+| **Owner** | `@bartytime4life` |
+| **Primary input** | Darwin Core Archive `.zip` |
+| **Default posture** | fail closed |
+| **Public release role** | pre-bundle validation only; this validator does not promote or publish |
+
+**Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Validation gates](#validation-gates) · [Failure behavior](#failure-behavior) · [CLI contract](#cli-contract) · [Receipt contract](#receipt-contract) · [Directory tree](#directory-tree) · [Definition of Done](#definition-of-done)
 
 ---
 
 ## Scope
 
-This validator checks **Kansas flora Darwin Core Archive (DwC-A)** inputs before they are normalized into KFM EvidenceBundles.
+This README defines the intended validation boundary for **Kansas flora Darwin Core Archive (DwC-A)** inputs before they are normalized into KFM EvidenceBundles.
 
-It is responsible for answering one question:
+The validator is responsible for answering one narrow question:
 
 > Can this flora source be trusted enough to enter the KFM evidence chain?
 
-If the answer is not clearly yes, the validator must return a failing result and produce a receipt.
+If the answer is not clearly yes, the validator returns a failing result and produces a receipt. Failed or ambiguous source material belongs in quarantine, not in processed evidence.
+
+> [!IMPORTANT]
+> This document describes intended validation behavior. It does **not** claim that `validate.py`, fixtures, tests, watcher integration, or CI gates exist until the target branch is inspected.
 
 ---
 
 ## Repo fit
 
-| Layer | Relationship |
-|---|---|
-| `pipelines/watchers/kansas_flora_watch/` | Calls this validator before bundling |
-| `schemas/flora/flora_evidencebundle.schema.json` | Downstream schema validated after normalization |
-| `data/quarantine/` | Receives rejected archives or rejected record batches |
-| `data/receipts/` | Stores validation receipts |
-| `tools/validators/promotion_gate/` | Later checks promoted bundle/catalog readiness |
+| Relationship | Path | Responsibility |
+|---|---|---|
+| **This validator** | `tools/validators/flora_dwca_validator/` | Rejects malformed, unattributed, spatially invalid, temporally invalid, or ambiguous flora DwC-A inputs before bundling |
+| **Upstream watcher** | [`pipelines/watchers/kansas_flora_watch/README.md`][kansas-flora-watch] | Calls this validator before EvidenceBundle assembly |
+| **Downstream schema** | [`schemas/flora/flora_evidencebundle.schema.json`][flora-schema] | Validates normalized EvidenceBundle output after source validation |
+| **Failure destination** | [`data/quarantine/`][quarantine] | Receives rejected archives or rejected record batches |
+| **Receipt destination** | [`data/receipts/`][receipts] | Stores pass, warning, and fail receipts |
+| **Later gate** | [`tools/validators/promotion_gate/`][promotion-gate] | Checks promoted bundle/catalog readiness after this pre-bundle step |
 
 This validator sits **before** EvidenceBundle creation. It should reject bad source material early rather than allowing ambiguous records to become evidence.
 
@@ -84,10 +93,10 @@ This validator sits **before** EvidenceBundle creation. It should reject bad sou
 |---|---:|---|
 | DwC-A `.zip` archive | yes | Primary validator target |
 | `meta.xml` | yes | Describes core and extensions |
-| occurrence core table | yes | Usually `occurrence.txt`, but read from `meta.xml` |
-| source descriptor reference | yes | Needed for provenance and policy expectations |
-| expected source id | yes | Prevents accidental source mixing |
-| optional checksum | no | Required when source publishes one |
+| Occurrence core table | yes | Usually `occurrence.txt`, but must be discovered from `meta.xml` |
+| Source descriptor reference | yes | Needed for provenance and policy expectations |
+| Expected source id | yes | Prevents accidental source mixing |
+| Optional checksum | no | Required when the source publishes one |
 
 Accepted source classes:
 
@@ -118,15 +127,25 @@ Records that fail mandatory checks belong in quarantine, not in processed eviden
 flowchart TD
   A[Input archive] --> B[Archive integrity]
   B --> C[DwC-A structure]
-  C --> D[Required fields]
-  D --> E[Attribution fields]
-  E --> F[Spatial checks]
-  F --> G[Temporal checks]
+  C --> D[Required flora fields]
+  D --> E[Attribution]
+  E --> F[Spatial integrity]
+  F --> G[Temporal integrity]
   G --> H[Record identity + dedupe key]
   H --> I{Valid?}
   I -->|yes| J[Pass receipt]
   I -->|no| K[Fail receipt + quarantine]
 ```
+
+| Gate | Pass condition | Failing disposition |
+|---|---|---|
+| 1. Archive integrity | Archive opens, referenced files are present, checksum matches when supplied | fail + quarantine |
+| 2. DwC-A structure | `meta.xml` resolves the occurrence core and headers | fail + quarantine |
+| 3. Required flora fields | Mandatory taxonomic, spatial, temporal, source, and rights fields are present | fail + quarantine |
+| 4. Attribution | `license`, `rightsHolder`, and `datasetID` are present record-by-record | fail + quarantine |
+| 5. Spatial integrity | Coordinates are numeric, in valid ranges, and policy-compatible | fail or warning, depending on configured source policy |
+| 6. Temporal integrity | `eventDate` parses into an acceptable temporal representation | fail + quarantine |
+| 7. Record identity | Dedupe key can be computed without provenance ambiguity | warning or fail |
 
 ### Gate 1 — Archive integrity
 
@@ -184,6 +203,7 @@ Fail if:
 - coordinate fields are non-numeric
 - Kansas-only ingest receives non-Kansas coordinates without an explicit source policy
 
+> [!NOTE]
 > Kansas bounding enforcement may live in validator code or a policy layer. Final placement **NEEDS VERIFICATION**.
 
 ### Gate 6 — Temporal integrity
@@ -212,11 +232,11 @@ This validator is **fail-closed**.
 
 | Condition | Result | Destination |
 |---|---|---|
-| valid archive | `pass` | downstream normalization |
-| recoverable issue | `warning` | receipt + reviewer attention |
-| missing mandatory field | `fail` | quarantine |
-| malformed archive | `fail` | quarantine |
-| restricted/public mismatch | `fail` | quarantine or restricted lane |
+| Valid archive | `pass` | downstream normalization |
+| Recoverable issue | `warning` | receipt + reviewer attention |
+| Missing mandatory field | `fail` | quarantine |
+| Malformed archive | `fail` | quarantine |
+| Restricted/public mismatch | `fail` | quarantine or restricted lane |
 
 Failures must preserve enough context for review without silently mutating evidence.
 
@@ -224,7 +244,8 @@ Failures must preserve enough context for review without silently mutating evide
 
 ## CLI contract
 
-> Illustrative until executable files are verified.
+> [!WARNING]
+> The command below is illustrative until executable files and exact source descriptor paths are verified.
 
 ```bash
 python tools/validators/flora_dwca_validator/validate.py \
@@ -246,7 +267,7 @@ Expected exit codes:
 
 ## Receipt contract
 
-Validation receipts should include:
+Validation receipts should include enough detail to support audit, replay, and reviewer triage.
 
 ```json
 {
@@ -264,7 +285,8 @@ Validation receipts should include:
 }
 ```
 
-> `spec_hash` may be null at this stage if hashing occurs after normalization.
+> [!NOTE]
+> `spec_hash` may be `null` at this stage if hashing occurs after normalization.
 
 ---
 
@@ -326,7 +348,24 @@ tools/
 | Whether Kansas bounds are validator-level or policy-level | NEEDS VERIFICATION |
 | Final validator id/version | NEEDS VERIFICATION |
 | CI workflow integration | NEEDS VERIFICATION |
+| Target branch path existence | NEEDS VERIFICATION |
+| Neighboring README formatting convention | NEEDS VERIFICATION |
+
+---
+
+<details>
+<summary>Appendix — review posture</summary>
+
+This README is intended to be safe for direct repository review after branch inspection. It keeps validation behavior separate from promotion, publication, API serving, and UI rendering; marks executable and fixture details as **NEEDS VERIFICATION**; and preserves the KFM distinction between source validation, EvidenceBundle assembly, receipts, quarantine, catalog readiness, and promotion.
+
+</details>
 
 ---
 
 [Back to top](#top)
+
+[flora-schema]: ../../../schemas/flora/flora_evidencebundle.schema.json
+[kansas-flora-watch]: ../../../pipelines/watchers/kansas_flora_watch/README.md
+[quarantine]: ../../../data/quarantine/README.md
+[receipts]: ../../../data/receipts/README.md
+[promotion-gate]: ../promotion_gate/README.md
