@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -137,4 +136,3 @@ def test_cli_writes_gate_result(tmp_path: Path) -> None:
         "errors": [],
         "warnings": [],
     }
-```

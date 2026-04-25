@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -134,4 +133,3 @@ def write_manifest(path: Path, manifest: dict[str, Any]) -> None:
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-```
