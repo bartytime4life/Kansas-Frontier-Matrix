@@ -1,4 +1,3 @@
-```makefile
 SHELL := /bin/bash
 
 # ----------------------------
@@ -8,11 +7,20 @@ SHELL := /bin/bash
 PIPELINE_ROOT := .
 DATA_ROOT := ../../data
 
-RAW_DIR := $(DATA_ROOT)/raw/kansas_biodiversity_etl/20260425
+RUN_DATE := 20260425
+SINCE := 2026-04-01T00:00:00Z
+STATE := Kansas
+MAX_RECORDS := 1000
+
+RAW_DIR := $(DATA_ROOT)/raw/kansas_biodiversity_etl/$(RUN_DATE)
 WORK_DIR := $(DATA_ROOT)/work/kansas_biodiversity_etl
 PROCESSED_DIR := $(DATA_ROOT)/processed/kansas_occurrences
-RECEIPTS_DIR := $(DATA_ROOT)/receipts/kansas_biodiversity_etl/20260425
-PROOFS_DIR := $(DATA_ROOT)/proofs/kansas_biodiversity_etl/20260425
+RECEIPTS_DIR := $(DATA_ROOT)/receipts/kansas_biodiversity_etl/$(RUN_DATE)
+PROOFS_DIR := $(DATA_ROOT)/proofs/kansas_biodiversity_etl/$(RUN_DATE)
+
+CATALOG_STAC_DIR := $(DATA_ROOT)/catalog/stac
+CATALOG_DCAT_DIR := $(DATA_ROOT)/catalog/dcat
+CATALOG_PROV_DIR := $(DATA_ROOT)/catalog/prov
 
 # ----------------------------
 # Files
@@ -29,6 +37,11 @@ METADATA := $(PROCESSED_DIR)/_dataset_metadata.json
 
 EVIDENCE := $(PROOFS_DIR)/evidence_bundle.json
 RECEIPT := $(RECEIPTS_DIR)/run_receipt.json
+PROOF := $(PROOFS_DIR)/receipt_proof.json
+
+CATALOG_STAC := $(CATALOG_STAC_DIR)/kansas_biodiversity_occurrences.item.json
+CATALOG_DCAT := $(CATALOG_DCAT_DIR)/kansas_biodiversity_occurrences.dataset.json
+CATALOG_PROV := $(CATALOG_PROV_DIR)/kansas_biodiversity_occurrences.prov.json
 
 LICENSE_MAP := license/license_map.json
 SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
@@ -37,23 +50,32 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish gate clean sample
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog clean sample check-inputs
 
 # Full governed run
-all: harvest normalize dedupe publish gate
+all: harvest normalize dedupe publish sign gate catalog
+
+# ----------------------------
+# Preflight
+# ----------------------------
+
+check-inputs:
+	@echo "=== Preflight: required local files ==="
+	@test -f $(LICENSE_MAP) || (echo "Missing $(LICENSE_MAP)" && exit 1)
+	@test -f $(SENSITIVE_TAXA) || (echo "Missing $(SENSITIVE_TAXA)" && exit 1)
 
 # ----------------------------
 # Harvest (GBIF)
 # ----------------------------
 
 harvest:
-	@echo "=== Harvest: GBIF Kansas occurrences ==="
+	@echo "=== Harvest: GBIF $(STATE) occurrences ==="
 	python harvest/harvest_gbif.py \
-		--state Kansas \
-		--since 2026-04-01T00:00:00Z \
+		--state $(STATE) \
+		--since $(SINCE) \
 		--output $(RAW_GBIF) \
 		--receipt-output $(HARVEST_RECEIPT) \
-		--max-records 1000
+		--max-records $(MAX_RECORDS)
 
 # ----------------------------
 # Normalize (DwC → canonical)
@@ -69,7 +91,7 @@ normalize:
 # Dedupe + license + sensitivity
 # ----------------------------
 
-dedupe:
+dedupe: check-inputs
 	@echo "=== Dedupe + License + Sensitivity ==="
 	python dedupe/dedupe_occurrences.py \
 		--input $(NORMALIZED) \
@@ -89,10 +111,27 @@ publish:
 		--metadata-output $(METADATA) \
 		--evidence-output $(EVIDENCE) \
 		--receipt-output $(RECEIPT) \
-		--source-uri "https://api.gbif.org/v1/occurrence/search?stateProvince=Kansas"
+		--source-uri "https://api.gbif.org/v1/occurrence/search?stateProvince=$(STATE)"
 
 # ----------------------------
-# Promotion Gate (A–G)
+# Sign receipt (local proof shim)
+# ----------------------------
+
+sign:
+	@echo "=== Sign Receipt: Local Proof Shim ==="
+	python attest/sign_receipt.py \
+		--receipt $(RECEIPT) \
+		--proof-output $(PROOF) \
+		--signer "@bartytime4life"
+
+verify-proof:
+	@echo "=== Verify Receipt Proof ==="
+	python attest/verify_receipt_proof.py \
+		--receipt $(RECEIPT) \
+		--proof $(PROOF)
+
+# ----------------------------
+# Promotion Gate (A–H)
 # ----------------------------
 
 gate:
@@ -100,20 +139,39 @@ gate:
 	python validate/promotion_gate_full.py \
 		--dataset $(DATASET_ROOT) \
 		--metadata $(METADATA) \
-		--evidence $(EVIDENCE)
+		--evidence $(EVIDENCE) \
+		--receipt $(RECEIPT) \
+		--proof $(PROOF)
+
+# ----------------------------
+# Catalog closure (STAC + DCAT + PROV)
+# ----------------------------
+
+catalog:
+	@echo "=== Catalog Closure: STAC + DCAT + PROV ==="
+	python catalog/emit_catalog.py \
+		--dataset-root $(DATASET_ROOT) \
+		--metadata $(METADATA) \
+		--evidence $(EVIDENCE) \
+		--receipt $(RECEIPT) \
+		--stac-output $(CATALOG_STAC) \
+		--dcat-output $(CATALOG_DCAT) \
+		--prov-output $(CATALOG_PROV)
 
 # ----------------------------
 # Sample mode (offline testing)
 # ----------------------------
 
-sample:
+sample: check-inputs
 	@echo "=== Sample Mode (offline) ==="
 	python normalize/normalize_dwc.py \
 		--input samples/dwc_occurrences_sample.jsonl \
 		--output $(NORMALIZED)
 	$(MAKE) dedupe
 	$(MAKE) publish
+	$(MAKE) sign
 	$(MAKE) gate
+	$(MAKE) catalog
 
 # ----------------------------
 # Clean
@@ -126,4 +184,6 @@ clean:
 	rm -rf $(RECEIPTS_DIR)
 	rm -rf $(PROOFS_DIR)
 	rm -rf $(RAW_DIR)
-```
+	rm -f $(CATALOG_STAC)
+	rm -f $(CATALOG_DCAT)
+	rm -f $(CATALOG_PROV)
