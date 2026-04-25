@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-__all__ = ["format_message", "read_json_object"]
+__all__: tuple[str, str] = ("format_message", "read_json_object")
 
 
 def format_message(template: object, **kwargs: object) -> str:
