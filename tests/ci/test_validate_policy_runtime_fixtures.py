@@ -81,7 +81,7 @@ def test_validate_policy_runtime_fixtures_fails_when_outcome_coverage_incomplete
         _write_runtime_fixtures(root, fixtures)
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing: ERROR" in proc.stderr
 
 
@@ -98,7 +98,7 @@ def test_validate_policy_runtime_fixtures_fails_when_scenario_mismatch() -> None
         _write_runtime_fixtures(root, fixtures)
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "does not match filename stem" in proc.stderr
 
 
@@ -129,7 +129,7 @@ def test_validate_policy_runtime_fixtures_fails_on_invalid_json_fixture() -> Non
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "invalid JSON" in proc.stderr
 
 
@@ -144,7 +144,7 @@ def test_validate_policy_runtime_fixtures_fails_when_runtime_scaffold_missing() 
         _write_runtime_fixtures(root, FULL_FIXTURES)
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing runtime policy file" in proc.stderr
 
 
@@ -164,7 +164,7 @@ def test_validate_policy_runtime_fixtures_fails_on_duplicate_scenario_names() ->
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "duplicate scenario 'answer_public_safe'" in proc.stderr
 
 
@@ -181,7 +181,7 @@ def test_validate_policy_runtime_fixtures_fails_on_invalid_expected_outcome() ->
         _write_runtime_fixtures(root, fixtures)
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "invalid expected outcome 'BOGUS'" in proc.stderr
 
 
@@ -207,7 +207,7 @@ def test_validate_policy_runtime_fixtures_fails_on_non_object_json_fixture() -> 
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "invalid top-level JSON type" in proc.stderr
 
 
@@ -224,7 +224,7 @@ def test_validate_policy_runtime_fixtures_fails_when_runtime_fixture_directory_m
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing runtime fixtures directory" in proc.stderr
 
 
@@ -235,7 +235,7 @@ def test_validate_policy_runtime_fixtures_fails_when_fixture_directory_empty() -
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "no runtime fixture JSON files found" in proc.stderr
 
 
@@ -250,7 +250,7 @@ def test_validate_policy_runtime_fixtures_fails_when_scenario_key_missing() -> N
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing required non-empty string key 'scenario'" in proc.stderr
 
 
@@ -265,7 +265,7 @@ def test_validate_policy_runtime_fixtures_fails_when_scenario_key_empty() -> Non
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing required non-empty string key 'scenario'" in proc.stderr
 
 
@@ -280,7 +280,7 @@ def test_validate_policy_runtime_fixtures_fails_when_expected_key_missing() -> N
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing required non-empty string key 'expected'" in proc.stderr
 
 
@@ -295,7 +295,7 @@ def test_validate_policy_runtime_fixtures_fails_when_expected_key_empty() -> Non
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "missing required non-empty string key 'expected'" in proc.stderr
 
 
@@ -312,7 +312,7 @@ def test_validate_policy_runtime_fixtures_fails_when_rego_package_declaration_mi
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "runtime policy file missing package declaration" in proc.stderr
 
 
@@ -329,7 +329,7 @@ def test_validate_policy_runtime_fixtures_fails_when_bundle_name_missing() -> No
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "runtime policy bundle missing name field" in proc.stderr
 
 
@@ -346,7 +346,7 @@ def test_validate_policy_runtime_fixtures_fails_when_required_rego_marker_missin
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "runtime policy file missing required marker 'ABSTAIN'" in proc.stderr
 
 
@@ -360,7 +360,7 @@ def test_validate_policy_runtime_fixtures_fails_on_non_utf8_runtime_file() -> No
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "non-utf8 runtime policy file" in proc.stderr
 
 
@@ -374,7 +374,7 @@ def test_validate_policy_runtime_fixtures_fails_on_non_utf8_runtime_bundle_yaml(
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "non-utf8 runtime policy file" in proc.stderr
 
 
@@ -388,7 +388,7 @@ def test_validate_policy_runtime_fixtures_fails_on_non_utf8_fixture_file() -> No
 
         proc = _run_validator(root)
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "non-utf8 fixture JSON file" in proc.stderr
 
 
@@ -429,6 +429,6 @@ def test_validate_policy_runtime_fixtures_fails_on_missing_root_path() -> None:
         text=True,
     )
 
-    assert proc.returncode != 0
+    assert proc.returncode == 1
     assert "missing runtime policy file:" in proc.stderr
     assert "missing runtime fixtures directory:" in proc.stderr

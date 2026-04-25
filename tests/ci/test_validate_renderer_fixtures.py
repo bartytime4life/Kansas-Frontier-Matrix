@@ -49,5 +49,5 @@ def test_validate_renderer_fixtures_fails_on_invalid_fixture() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "diff_summary.added: expected integer" in proc.stderr
