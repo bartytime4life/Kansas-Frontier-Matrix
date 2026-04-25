@@ -10,6 +10,9 @@ updated: 2026-04-25
 policy_label: <NEEDS_VERIFICATION: public-safe>
 related: [
   ../README.md,
+  ../config.schema.json,
+  ../report.schema.json,
+  fixture.schema.json,
   ../../validators/README.md,
   ../../receipts/README.md,
   ../../../data/receipts/README.md,
@@ -22,8 +25,8 @@ tags: [kfm, evaluators, fixtures, testing, evidence, governance]
 notes: [
   "Target path: tools/evaluators/fixtures/README.md.",
   "Directory README for evaluator fixtures.",
-  "No mounted repository evidence was available in the supplied workspace; adjacent links and owners require verification.",
-  "Fixture structure is PROPOSED from the supplied draft and KFM evaluator/validator/receipt doctrine.",
+  "Updated to align fixture guidance with tools/evaluators/config.schema.json fixture_ref expectations.",
+  "Adjacent links, owners, policy_label, evaluator family names, and test runner require repository verification.",
   "Fixtures are test inputs only; they are not policy, truth, receipts, proofs, catalog records, or production evidence."
 ]
 [/KFM_META_BLOCK_V2] -->
@@ -73,7 +76,7 @@ Use this directory when a maintainer needs to prove that an evaluator can consis
 The basic test shape is:
 
 ```text
-fixture input → evaluator → evaluation report → validator → optional receipt
+fixture input → evaluator config → evaluator → evaluation report → validator → optional receipt
 ```
 
 Fixtures help make evaluator behavior:
@@ -96,12 +99,15 @@ Fixtures help make evaluator behavior:
 | Direction | Surface | Fit | Status |
 |---|---|---|---|
 | Parent | [`../README.md`](../README.md) | Evaluator families consume fixtures as inputs for scoring and explanation. | **NEEDS VERIFICATION** |
+| Config schema | [`../config.schema.json`](../config.schema.json) | Defines `fixtures[]` references through `fixture_ref`, `fixture_type`, `expected_outcome`, `expected_failure_flags`, and optional `fixture_hash`. | **CONFIRMED FROM PROVIDED FILE** |
+| Report schema | [`../report.schema.json`](../report.schema.json) | Defines the expected report-side vocabulary for outcomes, metric breakdowns, metric results, and failure flags. | **NEEDS VERIFICATION** |
+| Fixture schema | [`fixture.schema.json`](fixture.schema.json) | Defines the proposed fixture-file shape. | **PROPOSED / NEEDS VERIFICATION** |
 | Validators | [`../../validators/README.md`](../../validators/README.md) | Validators may assert fixture → report correctness. | **NEEDS VERIFICATION** |
 | Receipts | [`../../receipts/README.md`](../../receipts/README.md) | Fixture-driven evaluation runs may emit process receipts. | **NEEDS VERIFICATION** |
 | Data receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Stores run memory when receipt emission is enabled. | **NEEDS VERIFICATION** |
 | Data proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Stores proof artifacts; fixtures must not be stored there. | **NEEDS VERIFICATION** |
 | Tests | [`../../../tests/README.md`](../../../tests/README.md) | Executes fixtures against evaluator logic. | **NEEDS VERIFICATION** |
-| Schemas | `<NEEDS_VERIFICATION>` | Defines fixture shape contracts if a fixture schema exists. | **UNKNOWN** |
+| Schemas | `<NEEDS_VERIFICATION>` | May provide canonical registry placement if evaluator schemas move out of `tools/evaluators/`. | **UNKNOWN** |
 | Contracts | `<NEEDS_VERIFICATION>` | Defines evaluator report semantics if a contract exists. | **UNKNOWN** |
 
 ---
@@ -112,13 +118,15 @@ A file belongs in `tools/evaluators/fixtures/` when it is a small, safe, determi
 
 ### Fixture categories
 
+The fixture categories must stay aligned with `config.schema.json`, which references these same values in `fixtures[].fixture_type`.
+
 | Category | Purpose | Expected reviewer question |
 |---|---|---|
-| Positive | Valid case that should pass under the target evaluator. | “Can the evaluator recognize a supported result?” |
-| Negative | Invalid case that should fail or deny for a clear reason. | “Can the evaluator catch the defect?” |
-| Abstention | Missing, weak, partial, stale, or conflicted evidence case. | “Can the evaluator abstain rather than overclaim?” |
-| Edge case | Boundary condition such as empty evidence, duplicate refs, or tolerance limits. | “Can the evaluator stay stable at the edge?” |
-| Error case | Invalid input shape or intentionally broken fixture. | “Does the evaluator fail explicitly without pretending success?” |
+| `positive` | Valid case that should pass under the target evaluator. | “Can the evaluator recognize a supported result?” |
+| `negative` | Invalid case that should fail or deny for a clear reason. | “Can the evaluator catch the defect?” |
+| `abstention` | Missing, weak, partial, stale, or conflicted evidence case. | “Can the evaluator abstain rather than overclaim?” |
+| `edge` | Boundary condition such as empty evidence, duplicate refs, or tolerance limits. | “Can the evaluator stay stable at the edge?” |
+| `error` | Invalid input shape or intentionally broken fixture. | “Does the evaluator fail explicitly without pretending success?” |
 
 ### Fixture requirements
 
@@ -130,6 +138,7 @@ A file belongs in `tools/evaluators/fixtures/` when it is a small, safe, determi
 | Isolated | Avoid hidden dependencies on external state, production data, or unpublished artifacts. |
 | Non-sensitive | Use synthetic or approved public-safe examples only. |
 | Contract-aware | Align expected output with the evaluator family’s report semantics. |
+| Config-aware | Ensure fixture files can be referenced from `config.schema.json` using `fixture_ref`, `fixture_type`, `expected_outcome`, `expected_failure_flags`, and optional `fixture_hash`. |
 | Version-aware | When relevant, include fixture schema/version fields instead of relying on implicit shape. |
 
 ---
@@ -160,6 +169,7 @@ Do not put the following in this directory.
 ```text
 tools/evaluators/fixtures/
 ├── README.md
+├── fixture.schema.json
 ├── runtime_response/
 │   ├── valid_response.json
 │   ├── missing_citation.json
@@ -187,6 +197,17 @@ tools/evaluators/fixtures/
 find tools/evaluators/fixtures -type f | sort
 ```
 
+### Validate fixture files
+
+> [!WARNING]
+> Validation command is **NEEDS VERIFICATION**. Use the repo-native JSON Schema validator when confirmed.
+
+```bash
+python -m jsonschema \
+  -i tools/evaluators/fixtures/runtime_response/missing_citation.json \
+  tools/evaluators/fixtures/fixture.schema.json
+```
+
 ### Run an evaluator against one fixture
 
 > [!WARNING]
@@ -196,6 +217,7 @@ find tools/evaluators/fixtures -type f | sort
 mkdir -p build/evaluators/runtime_response
 
 python tools/evaluators/runtime_response/runtime_response_evaluator.py \
+  --config tools/evaluators/runtime_response/config.json \
   --input tools/evaluators/fixtures/runtime_response/missing_citation.json \
   --report build/evaluators/runtime_response/missing_citation.report.json
 ```
@@ -203,7 +225,7 @@ python tools/evaluators/runtime_response/runtime_response_evaluator.py \
 ### Run tests
 
 > [!NOTE]
-> Test runner and test paths are **NEEDS VERIFICATION** until the real repository is mounted.
+> Test runner and test paths are **NEEDS VERIFICATION** until the real repository is inspected.
 
 ```bash
 pytest tests -q
@@ -245,12 +267,13 @@ artifact_schema_missing_required_field.json
 ### Minimal fixture shape
 
 > [!IMPORTANT]
-> This shape is **PROPOSED**. If the repo already has a fixture schema, use the verified schema instead.
+> This shape is **PROPOSED** and should be checked against `fixture.schema.json` when that file is present.
 
 ```json
 {
-  "fixture_id": "runtime_response.missing_citation.v1",
+  "fixture_id": "kfm.fixture.evaluator.runtime_response.missing_citation.v1",
   "fixture_type": "negative",
+  "subject_type": "runtime_response",
   "description": "Runtime response lacks a required citation.",
   "input": {
     "text": "Soil moisture increased.",
@@ -259,7 +282,24 @@ artifact_schema_missing_required_field.json
   "expected": {
     "outcome": "DENY",
     "failure_flags": ["MISSING_REQUIRED_CITATION"]
-  }
+  },
+  "policy_label": "public-safe",
+  "notes": [
+    "Synthetic fixture; not production evidence."
+  ]
+}
+```
+
+### Config reference shape
+
+Evaluator configs should reference fixtures without embedding full fixture content.
+
+```json
+{
+  "fixture_ref": "tools/evaluators/fixtures/runtime_response/missing_citation.json",
+  "fixture_type": "negative",
+  "expected_outcome": "DENY",
+  "expected_failure_flags": ["MISSING_REQUIRED_CITATION"]
 }
 ```
 
@@ -269,9 +309,10 @@ artifact_schema_missing_required_field.json
 2. Keep the input as small as possible.
 3. Use synthetic content unless public-safe source terms are verified.
 4. Include the expected outcome and expected flags.
-5. Avoid hidden dependencies on runtime state.
-6. Make abstention cases first-class, not failed positive cases.
-7. Update tests when fixture behavior changes.
+5. Keep expected outcomes aligned to `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR` unless an evaluator-family contract says otherwise.
+6. Avoid hidden dependencies on runtime state.
+7. Make abstention cases first-class, not failed positive cases.
+8. Update tests when fixture behavior changes.
 
 ---
 
@@ -279,6 +320,7 @@ artifact_schema_missing_required_field.json
 
 ```mermaid
 flowchart LR
+  config["Evaluator config<br/>fixtures[] refs"]
   fixture["Fixture input<br/>tools/evaluators/fixtures"]
   evaluator["Evaluator<br/>tools/evaluators"]
   report["Evaluation report<br/>generated output"]
@@ -286,7 +328,9 @@ flowchart LR
   receipt["Optional receipt<br/>data/receipts"]
   proof["Proof object<br/>data/proofs"]
 
+  config --> fixture
   fixture --> evaluator
+  config --> evaluator
   evaluator --> report
   report --> validator
   validator -->|if configured| receipt
@@ -303,14 +347,14 @@ flowchart LR
 
 ### Behavior-to-outcome guide
 
-Evaluator families may use different result vocabularies. Keep each fixture aligned to the verified evaluator contract.
+The evaluator config schema uses `ALLOW`, `ABSTAIN`, `DENY`, and `ERROR` for `expected_outcome`.
 
-| Fixture intent | Common outcome shape | Notes |
+| Fixture intent | Expected outcome | Notes |
 |---|---|---|
-| Supported answer | `ANSWER`, `ALLOW`, `PASS`, or equivalent | Use the evaluator family’s verified vocabulary. |
-| Unsupported answer | `DENY`, `FAIL`, or equivalent | Include stable `failure_flags`. |
+| Supported answer | `ALLOW` | Use when the evaluator should accept the subject for the declared evaluation scope. |
+| Unsupported answer | `DENY` | Include stable `failure_flags`. |
 | Evidence gap | `ABSTAIN` | Missing evidence is not the same as technical failure. |
-| Policy block | `DENY` or policy-specific equivalent | Fixture may simulate policy result, but policy logic belongs elsewhere. |
+| Policy-shaped block | `DENY` | Fixture may simulate a policy-shaped result, but policy logic belongs elsewhere. |
 | Technical failure | `ERROR` | Use only when the fixture is meant to prove error handling. |
 
 ### Fixture family guide
@@ -329,6 +373,8 @@ Evaluator families may use different result vocabularies. Keep each fixture alig
 | Does it test one behavior? | Yes. |
 | Is the expected outcome explicit? | Yes. |
 | Are `failure_flags` stable and reviewable? | Yes, when applicable. |
+| Does its `fixture_type` match the config schema enum? | Yes. |
+| Does its expected outcome match `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR`? | Yes, unless a verified evaluator contract overrides it. |
 | Does it avoid policy-authority claims? | Yes. |
 | Is it covered by at least one evaluator test? | Yes, unless intentionally staged as backlog. |
 | Does it preserve deterministic behavior? | Yes. |
@@ -344,7 +390,9 @@ A fixture is complete when:
 - [ ] It contains no secrets, private data, sensitive entities, or restricted precision.
 - [ ] It has an explicit expected outcome.
 - [ ] It defines expected `failure_flags` when the evaluator emits them.
-- [ ] It uses the verified outcome vocabulary for its evaluator family.
+- [ ] Its `fixture_type` is one of `positive`, `negative`, `abstention`, `edge`, or `error`.
+- [ ] Its expected outcome is one of `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR`, unless a verified evaluator-family contract says otherwise.
+- [ ] It can be referenced from evaluator config using `fixture_ref`.
 - [ ] It is covered by at least one evaluator test.
 - [ ] It produces consistent results across repeated runs.
 - [ ] It does not claim policy authority, truth authority, catalog status, proof status, or release status.
@@ -396,10 +444,12 @@ Resolve these before promoting this README beyond draft.
 |---|---|---|
 | Confirm owner from `CODEOWNERS` or maintainer records. | **NEEDS VERIFICATION** | The current owner value is not verified from repo evidence. |
 | Confirm adjacent README paths. | **NEEDS VERIFICATION** | Relative links should not imply files exist unless inspected. |
+| Confirm `../config.schema.json` path on branch. | **NEEDS VERIFICATION** | Provided schema content exists in the conversation, but repo placement still needs branch verification. |
+| Confirm `../report.schema.json` path on branch. | **NEEDS VERIFICATION** | README links should match committed schema files. |
+| Confirm `fixture.schema.json` path on branch. | **NEEDS VERIFICATION** | Fixture files should validate against the committed schema. |
 | Confirm evaluator family names. | **NEEDS VERIFICATION** | Directory tree should match real evaluator boundaries. |
-| Confirm fixture schema home. | **UNKNOWN** | Schema authority may live under `schemas/`, `contracts/`, or another verified home. |
+| Confirm canonical schema home. | **UNKNOWN** | Schema authority may live under `schemas/`, `contracts/`, or another verified home. |
 | Confirm test runner and command. | **NEEDS VERIFICATION** | `pytest` is illustrative until repo tooling is inspected. |
-| Confirm outcome vocabulary by evaluator family. | **NEEDS VERIFICATION** | Runtime, policy, artifact, and citation evaluators may use different result vocabularies. |
 | Confirm receipt/proof emission behavior. | **UNKNOWN** | Fixtures should not imply receipt or proof generation unless implemented. |
 | Confirm policy label. | **NEEDS VERIFICATION** | `public-safe` must match repo sensitivity taxonomy before publication. |
 
