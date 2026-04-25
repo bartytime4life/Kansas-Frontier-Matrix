@@ -6,6 +6,13 @@ import sys
 from pathlib import Path
 
 
+def _format_message(template: str, **kwargs: object) -> str:
+    try:
+        return template.format(**kwargs)
+    except (KeyError, IndexError, ValueError):
+        return template
+
+
 def read_json_object(
     path: str,
     *,
@@ -18,20 +25,20 @@ def read_json_object(
     try:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
     except FileNotFoundError:
-        print(not_found.format(path=path), file=sys.stderr)
+        print(_format_message(not_found, path=path), file=sys.stderr)
         raise SystemExit(2)
     except UnicodeDecodeError:
-        print(non_utf8.format(path=path), file=sys.stderr)
+        print(_format_message(non_utf8, path=path), file=sys.stderr)
         raise SystemExit(2)
     except json.JSONDecodeError as exc:
-        print(invalid_json.format(path=path, exc=exc), file=sys.stderr)
+        print(_format_message(invalid_json, path=path, exc=exc), file=sys.stderr)
         raise SystemExit(2)
     except OSError as exc:
-        print(unreadable.format(path=path, exc=exc), file=sys.stderr)
+        print(_format_message(unreadable, path=path, exc=exc), file=sys.stderr)
         raise SystemExit(2)
 
     if not isinstance(payload, dict):
-        print(wrong_type.format(path=path), file=sys.stderr)
+        print(_format_message(wrong_type, path=path), file=sys.stderr)
         raise SystemExit(2)
 
     return payload

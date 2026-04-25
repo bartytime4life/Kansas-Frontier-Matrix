@@ -111,3 +111,15 @@ def test_read_json_object_wrong_type(
 
     assert exc.value.code == 2
     assert f"type: wrong type {path}" in capsys.readouterr().err
+def test_read_json_object_tolerates_bad_template(
+    read_json_object: Callable[..., dict[str, Any]],
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    templates = _templates("bad-template")
+    templates["not_found"] = "bad-template: missing {unknown_placeholder}"
+
+    with pytest.raises(SystemExit) as exc:
+        read_json_object("does-not-exist.json", **templates)
+
+    assert exc.value.code == 2
+    assert "bad-template: missing {unknown_placeholder}" in capsys.readouterr().err
