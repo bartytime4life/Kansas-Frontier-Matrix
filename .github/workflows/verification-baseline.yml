@@ -35,6 +35,7 @@ jobs:
         run: |
           python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
           python3 ./tools/ci/validate_renderer_fixtures.py --root .
+          python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
 
       - name: Run CI tests
         run: python3 -m pytest -q tests/ci

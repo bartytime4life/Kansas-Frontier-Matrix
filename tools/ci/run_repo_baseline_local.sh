@@ -21,6 +21,7 @@ python3 ./scripts/validate_schemas.py
 python3 ./scripts/catalog_validate.py
 python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
 python3 ./tools/ci/validate_renderer_fixtures.py --root .
+python3 ./tools/ci/report_placeholder_markers.py --root . --top 5
 
 python3 -m pytest -q tests/ci
 
