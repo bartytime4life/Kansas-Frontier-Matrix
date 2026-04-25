@@ -1,1 +1,55 @@
-
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/catalog/prov_document.schema.json",
+  "title": "KFM PROV Document",
+  "type": "object",
+  "required": ["entity", "activity", "wasGeneratedBy"],
+  "properties": {
+    "prefix": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["dataset"],
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "required": ["kfm:spec_hash"],
+          "properties": {
+            "prov:type": { "type": "string" },
+            "prov:location": { "type": "string" },
+            "kfm:dataset_id": { "type": "string" },
+            "kfm:spec_hash": {
+              "type": "string",
+              "pattern": "^sha256:[a-fA-F0-9]{64}$"
+            },
+            "kfm:records": { "type": "integer", "minimum": 0 },
+            "kfm:format": { "type": ["string", "null"] }
+          },
+          "additionalProperties": true
+        },
+        "evidence_bundle": { "type": "object" },
+        "run_receipt": { "type": "object" },
+        "stac_collection": { "type": "object" },
+        "dcat_dataset": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "activity": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "object" }
+    },
+    "wasGeneratedBy": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "object" }
+    },
+    "wasDerivedFrom": {
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    }
+  },
+  "additionalProperties": true
+}
