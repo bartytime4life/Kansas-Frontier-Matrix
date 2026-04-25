@@ -10,6 +10,10 @@ __all__ = ["format_message", "read_json_object"]
 
 
 def format_message(template: object, **kwargs: object) -> str:
+    """Format a message template defensively.
+
+    Falls back to the raw template text if interpolation fails.
+    """
     template_text = template if isinstance(template, str) else str(template)
     try:
         return template_text.format(**kwargs)
@@ -30,6 +34,11 @@ def read_json_object(
     unreadable: object,
     wrong_type: object,
 ) -> dict[str, object]:
+    """Read a JSON file and require a top-level object payload.
+
+    On read/parse/type failures, prints the provided message template to stderr
+    and exits with code 2 to preserve renderer CLI contracts.
+    """
     try:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
     except FileNotFoundError:
