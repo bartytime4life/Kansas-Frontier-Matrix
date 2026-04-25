@@ -111,8 +111,6 @@ def test_read_json_object_wrong_type(
 
     assert exc.value.code == 2
     assert f"type: wrong type {path}" in capsys.readouterr().err
-
-
 def test_read_json_object_tolerates_bad_template(
     read_json_object: Callable[..., dict[str, Any]],
     capsys: pytest.CaptureFixture[str],
