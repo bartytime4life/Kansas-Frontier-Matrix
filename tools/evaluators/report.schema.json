@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/tools/evaluators/report.schema.json",
+  "title": "KFM Evaluator Report",
+  "description": "Proposed schema for deterministic, explainable evaluator reports emitted by tools/evaluators before validation, receipt custody, policy review, proof generation, or promotion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_type",
+    "evaluator",
+    "subject_ref",
+    "evaluator_spec_hash",
+    "artifact_spec_hash",
+    "outcome",
+    "metric_breakdown",
+    "failure_flags",
+    "metrics",
+    "generated_at"
+  ],
+  "properties": {
+    "report_type": {
+      "type": "string",
+      "const": "kfm.evaluator_report.v1"
+    },
+    "evaluator": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Evaluator identifier, usually a repo-relative tool path or stable evaluator name."
+    },
+    "evaluator_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Candidate, fixture, runtime response, artifact, or other evaluated subject reference."
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "runtime_response",
+        "model_output",
+        "artifact",
+        "fixture",
+        "catalog_candidate",
+        "proof_candidate",
+        "receipt_candidate",
+        "other"
+      ]
+    },
+    "evaluator_spec_hash": {
+      "$ref": "#/$defs/hash"
+    },
+    "artifact_spec_hash": {
+      "$ref": "#/$defs/hash"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "metric_breakdown": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "description": "Metric-name to normalized score map. Blocking behavior must still be represented in failure_flags."
+    },
+    "failure_flags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/reason_code"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/metric_result"
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ci_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "receipt_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional reference to a stored evaluator run receipt. Receipt custody remains outside this schema."
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^(sha256:)?[a-f0-9]{64}$"
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_:-]*$"
+    },
+    "metric_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "score",
+        "passed",
+        "reason_code",
+        "explanation"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.:-]*$"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "reason_code": {
+          "$ref": "#/$defs/reason_code"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "blocking"
+          ]
+        },
+        "explanation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "summary"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "matched_spans": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "missing": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "json_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
