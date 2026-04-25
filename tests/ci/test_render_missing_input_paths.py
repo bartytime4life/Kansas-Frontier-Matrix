@@ -8,6 +8,45 @@ from pathlib import Path
 import pytest
 
 
+def _write_review_handoff_inputs(root: Path) -> dict[str, Path]:
+    promotion = root / "promotion.json"
+    bundle = root / "bundle.json"
+    diff = root / "diff.json"
+    diff_policy = root / "diff-policy.json"
+
+    promotion.write_text('{"release_id":"r1","state":"approved"}', encoding="utf-8")
+    bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
+    diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
+    diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
+
+    return {
+        "--promotion": promotion,
+        "--bundle": bundle,
+        "--diff": diff,
+        "--diff-policy": diff_policy,
+    }
+
+
+def _run_review_handoff_renderer(args: dict[str, Path | str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            "python3",
+            "tools/ci/render_promotion_review_handoff.py",
+            "--promotion",
+            str(args["--promotion"]),
+            "--bundle",
+            str(args["--bundle"]),
+            "--diff",
+            str(args["--diff"]),
+            "--diff-policy",
+            str(args["--diff-policy"]),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+
 @pytest.mark.parametrize(
     ("script", "args", "expected_stderr"),
     [
@@ -113,41 +152,9 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
 ) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        promotion = root / "promotion.json"
-        bundle = root / "bundle.json"
-        diff = root / "diff.json"
-        diff_policy = root / "diff-policy.json"
-
-        promotion.write_text('{"release_id":"r1","state":"approved"}', encoding="utf-8")
-        bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
-        diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
-        diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
-
-        args = {
-            "--promotion": str(promotion),
-            "--bundle": str(bundle),
-            "--diff": str(diff),
-            "--diff-policy": str(diff_policy),
-        }
+        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
         args[missing_arg] = "does-not-exist.json"
-
-        proc = subprocess.run(
-            [
-                "python3",
-                "tools/ci/render_promotion_review_handoff.py",
-                "--promotion",
-                args["--promotion"],
-                "--bundle",
-                args["--bundle"],
-                "--diff",
-                args["--diff"],
-                "--diff-policy",
-                args["--diff-policy"],
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = _run_review_handoff_renderer(args)
 
         assert proc.returncode == 2
         assert expected_stderr in proc.stderr
@@ -165,41 +172,9 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
 def test_review_handoff_renderer_fails_on_non_utf8_input(bad_arg: str, expected_stderr: str) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        promotion = root / "promotion.json"
-        bundle = root / "bundle.json"
-        diff = root / "diff.json"
-        diff_policy = root / "diff-policy.json"
-
-        promotion.write_text('{"release_id":"r1","state":"approved"}', encoding="utf-8")
-        bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
-        diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
-        diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
-
-        args = {
-            "--promotion": promotion,
-            "--bundle": bundle,
-            "--diff": diff,
-            "--diff-policy": diff_policy,
-        }
+        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
         args[bad_arg].write_bytes(b"\xff\xfe")
-
-        proc = subprocess.run(
-            [
-                "python3",
-                "tools/ci/render_promotion_review_handoff.py",
-                "--promotion",
-                str(args["--promotion"]),
-                "--bundle",
-                str(args["--bundle"]),
-                "--diff",
-                str(args["--diff"]),
-                "--diff-policy",
-                str(args["--diff-policy"]),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = _run_review_handoff_renderer(args)
 
     assert proc.returncode == 2
     assert expected_stderr in proc.stderr
@@ -219,41 +194,9 @@ def test_review_handoff_renderer_fails_on_unreadable_input_path(
 ) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        promotion = root / "promotion.json"
-        bundle = root / "bundle.json"
-        diff = root / "diff.json"
-        diff_policy = root / "diff-policy.json"
-
-        promotion.write_text('{"release_id":"r1","state":"approved"}', encoding="utf-8")
-        bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
-        diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
-        diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
-
-        args = {
-            "--promotion": promotion,
-            "--bundle": bundle,
-            "--diff": diff,
-            "--diff-policy": diff_policy,
-        }
+        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
         args[bad_arg] = root
-
-        proc = subprocess.run(
-            [
-                "python3",
-                "tools/ci/render_promotion_review_handoff.py",
-                "--promotion",
-                str(args["--promotion"]),
-                "--bundle",
-                str(args["--bundle"]),
-                "--diff",
-                str(args["--diff"]),
-                "--diff-policy",
-                str(args["--diff-policy"]),
-            ],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        proc = _run_review_handoff_renderer(args)
 
     assert proc.returncode == 2
     assert expected_stderr in proc.stderr
