@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -138,4 +137,3 @@ def test_invalid_schema_fails_before_validation(tmp_path: Path) -> None:
         assert exc.__class__.__name__ == "SchemaError"
     else:
         raise AssertionError("Expected invalid schema to raise SchemaError")
-```

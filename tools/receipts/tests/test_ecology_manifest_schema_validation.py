@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -112,4 +111,3 @@ def test_validate_manifest_rejects_invalid_schema(tmp_path: Path) -> None:
             manifest=manifest,
             schema_path=schema_path,
         )
-```
