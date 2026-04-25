@@ -27,19 +27,24 @@ def _write_review_handoff_inputs(root: Path) -> dict[str, Path]:
     }
 
 
-def _run_review_handoff_renderer(args: dict[str, Path | str]) -> subprocess.CompletedProcess[str]:
+def _run_review_handoff_renderer(
+    args: dict[str, Path],
+    overrides: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    cli_args = {flag: str(path) for flag, path in args.items()}
+    cli_args.update(overrides or {})
     return subprocess.run(
         [
             "python3",
             "tools/ci/render_promotion_review_handoff.py",
             "--promotion",
-            str(args["--promotion"]),
+            cli_args["--promotion"],
             "--bundle",
-            str(args["--bundle"]),
+            cli_args["--bundle"],
             "--diff",
-            str(args["--diff"]),
+            cli_args["--diff"],
             "--diff-policy",
-            str(args["--diff-policy"]),
+            cli_args["--diff-policy"],
         ],
         check=False,
         capture_output=True,
@@ -152,9 +157,8 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
 ) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
-        args[missing_arg] = "does-not-exist.json"
-        proc = _run_review_handoff_renderer(args)
+        args = _write_review_handoff_inputs(root)
+        proc = _run_review_handoff_renderer(args, overrides={missing_arg: "does-not-exist.json"})
 
         assert proc.returncode == 2
         assert expected_stderr in proc.stderr
@@ -172,7 +176,7 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
 def test_review_handoff_renderer_fails_on_non_utf8_input(bad_arg: str, expected_stderr: str) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
+        args = _write_review_handoff_inputs(root)
         args[bad_arg].write_bytes(b"\xff\xfe")
         proc = _run_review_handoff_renderer(args)
 
@@ -194,9 +198,8 @@ def test_review_handoff_renderer_fails_on_unreadable_input_path(
 ) -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        args: dict[str, Path | str] = _write_review_handoff_inputs(root)
-        args[bad_arg] = root
-        proc = _run_review_handoff_renderer(args)
+        args = _write_review_handoff_inputs(root)
+        proc = _run_review_handoff_renderer(args, overrides={bad_arg: str(root)})
 
     assert proc.returncode == 2
     assert expected_stderr in proc.stderr
