@@ -4,19 +4,20 @@ from __future__ import annotations
 import importlib.util
 import tempfile
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Callable
 
 import pytest
 
 
-def _load_read_json_object() -> Callable[..., dict[str, Any]]:
+def _load_render_json_module() -> ModuleType:
     module_path = Path("tools/ci/render_json_io.py").resolve()
     spec = importlib.util.spec_from_file_location("render_json_io", module_path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"unable to load module spec: {module_path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module.read_json_object
+    return module
 
 
 def _templates(prefix: str) -> dict[str, str]:
@@ -30,8 +31,24 @@ def _templates(prefix: str) -> dict[str, str]:
 
 
 @pytest.fixture(scope="module")
-def read_json_object() -> Callable[..., dict[str, Any]]:
-    return _load_read_json_object()
+def render_json_module() -> ModuleType:
+    return _load_render_json_module()
+
+
+@pytest.fixture(scope="module")
+def read_json_object(render_json_module: ModuleType) -> Callable[..., dict[str, Any]]:
+    return render_json_module.read_json_object
+
+
+def test_format_message_happy_path(render_json_module: ModuleType) -> None:
+    assert render_json_module._format_message("hello {name}", name="ci") == "hello ci"
+
+
+def test_format_message_falls_back_for_bad_template(render_json_module: ModuleType) -> None:
+    assert (
+        render_json_module._format_message("broken {unknown}", name="ci")
+        == "broken {unknown}"
+    )
 
 
 def test_read_json_object_success(read_json_object: Callable[..., dict[str, Any]]) -> None:
