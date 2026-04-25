@@ -46,6 +46,37 @@ def test_single_input_renderers_fail_on_missing_input(script: str, args: list[st
 
 
 @pytest.mark.parametrize(
+    ("script", "expected_stderr"),
+    [
+        ("tools/ci/render_diff_summary.py", "render_diff_summary: input is not valid UTF-8"),
+        (
+            "tools/ci/render_bundle_diff_policy_summary.py",
+            "render_bundle_diff_policy_summary: input is not valid UTF-8",
+        ),
+        ("tools/ci/render_promotion_summary.py", "render_promotion_summary: input is not valid UTF-8"),
+        (
+            "tools/ci/render_promotion_bundle_summary.py",
+            "render_promotion_bundle_summary: input is not valid UTF-8",
+        ),
+    ],
+)
+def test_single_input_renderers_fail_on_non_utf8_input(script: str, expected_stderr: str) -> None:
+    with tempfile.TemporaryDirectory() as td:
+        bad = Path(td) / "bad.json"
+        bad.write_bytes(b"\xff\xfe")
+
+        proc = subprocess.run(
+            ["python3", script, "--input", str(bad)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    assert proc.returncode == 2
+    assert expected_stderr in proc.stderr
+
+
+@pytest.mark.parametrize(
     ("missing_arg", "expected_stderr"),
     [
         ("--promotion", "render_promotion_review_handoff: promotion input not found"),
@@ -97,3 +128,55 @@ def test_review_handoff_renderer_fails_on_missing_required_input(
 
         assert proc.returncode == 2
         assert expected_stderr in proc.stderr
+
+
+@pytest.mark.parametrize(
+    ("bad_arg", "expected_stderr"),
+    [
+        ("--promotion", "render_promotion_review_handoff: promotion input is not valid UTF-8"),
+        ("--bundle", "render_promotion_review_handoff: bundle input is not valid UTF-8"),
+        ("--diff", "render_promotion_review_handoff: diff input is not valid UTF-8"),
+        ("--diff-policy", "render_promotion_review_handoff: diff-policy input is not valid UTF-8"),
+    ],
+)
+def test_review_handoff_renderer_fails_on_non_utf8_input(bad_arg: str, expected_stderr: str) -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        promotion = root / "promotion.json"
+        bundle = root / "bundle.json"
+        diff = root / "diff.json"
+        diff_policy = root / "diff-policy.json"
+
+        promotion.write_text('{"release_id":"r1","state":"approved"}', encoding="utf-8")
+        bundle.write_text('{"bundle_id":"b1","artifacts":[]}', encoding="utf-8")
+        diff.write_text('{"added":0,"changed":0,"removed":0}', encoding="utf-8")
+        diff_policy.write_text('{"decision":"allow"}', encoding="utf-8")
+
+        args = {
+            "--promotion": promotion,
+            "--bundle": bundle,
+            "--diff": diff,
+            "--diff-policy": diff_policy,
+        }
+        args[bad_arg].write_bytes(b"\xff\xfe")
+
+        proc = subprocess.run(
+            [
+                "python3",
+                "tools/ci/render_promotion_review_handoff.py",
+                "--promotion",
+                str(args["--promotion"]),
+                "--bundle",
+                str(args["--bundle"]),
+                "--diff",
+                str(args["--diff"]),
+                "--diff-policy",
+                str(args["--diff-policy"]),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    assert proc.returncode == 2
+    assert expected_stderr in proc.stderr

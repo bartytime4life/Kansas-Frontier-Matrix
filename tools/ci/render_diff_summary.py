@@ -16,6 +16,9 @@ def read_json(path: str) -> dict:
     except FileNotFoundError:
         print(f"render_diff_summary: input not found: {path}", file=sys.stderr)
         raise SystemExit(2)
+    except UnicodeDecodeError:
+        print(f"render_diff_summary: input is not valid UTF-8: {path}", file=sys.stderr)
+        raise SystemExit(2)
     except json.JSONDecodeError as exc:
         print(f"render_diff_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
         raise SystemExit(2)

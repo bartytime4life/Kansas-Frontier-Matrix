@@ -13,6 +13,12 @@ def read_json(path: str, label: str) -> dict:
     except FileNotFoundError:
         print(f"render_promotion_review_handoff: {label} input not found: {path}", file=sys.stderr)
         raise SystemExit(2)
+    except UnicodeDecodeError:
+        print(
+            f"render_promotion_review_handoff: {label} input is not valid UTF-8: {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
     except json.JSONDecodeError as exc:
         print(f"render_promotion_review_handoff: invalid JSON in {label} input {path}: {exc}", file=sys.stderr)
         raise SystemExit(2)
