@@ -19,6 +19,18 @@ def read_json(path: str) -> dict:
     except json.JSONDecodeError as exc:
         print(f"render_bundle_diff_policy_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
         raise SystemExit(2)
+    except OSError as exc:
+        print(f"render_bundle_diff_policy_summary: unable to read input {path}: {exc}", file=sys.stderr)
+        raise SystemExit(2)
+
+    if not isinstance(payload, dict):
+        print(
+            f"render_bundle_diff_policy_summary: expected top-level JSON object in {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    return payload
 
     if not isinstance(payload, dict):
         print(

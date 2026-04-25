@@ -22,6 +22,21 @@ def read_json(path: str, label: str) -> dict:
     except json.JSONDecodeError as exc:
         print(f"render_promotion_review_handoff: invalid JSON in {label} input {path}: {exc}", file=sys.stderr)
         raise SystemExit(2)
+    except OSError as exc:
+        print(
+            f"render_promotion_review_handoff: unable to read {label} input {path}: {exc}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    if not isinstance(payload, dict):
+        print(
+            f"render_promotion_review_handoff: expected top-level JSON object in {label} input {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    return payload
 
     if not isinstance(payload, dict):
         print(
