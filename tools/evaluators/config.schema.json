@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/tools/evaluators/config.schema.json",
+  "title": "KFM Evaluator Config",
+  "description": "Proposed schema for deterministic evaluator configuration consumed by tools/evaluators before report emission, validation, receipt custody, policy review, proof generation, or promotion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_type",
+    "evaluator",
+    "evaluator_version",
+    "subject_types",
+    "metrics",
+    "output"
+  ],
+  "properties": {
+    "config_type": {
+      "type": "string",
+      "const": "kfm.evaluator_config.v1"
+    },
+    "evaluator": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable evaluator identifier, usually a repo-relative evaluator name or tool path."
+    },
+    "evaluator_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "random_seed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Optional deterministic seed for evaluator families that use sampling or randomized ordering."
+    },
+    "canonicalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "json_canonicalization_scheme",
+            "repo_native",
+            "none"
+          ]
+        },
+        "hash_algorithm": {
+          "type": "string",
+          "const": "sha256"
+        },
+        "include_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "exclude_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "subject_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "runtime_response",
+          "model_output",
+          "artifact",
+          "fixture",
+          "catalog_candidate",
+          "proof_candidate",
+          "receipt_candidate",
+          "other"
+        ]
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fixture_ref"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/metric_config"
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/threshold"
+      },
+      "description": "Optional shared thresholds addressable by metric configs."
+    },
+    "failure_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fail_closed": {
+          "type": "boolean",
+          "const": true
+        },
+        "blocking_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reason_code"
+          }
+        },
+        "treat_error_as": {
+          "type": "string",
+          "enum": [
+            "ERROR",
+            "DENY"
+          ]
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "report_type",
+        "format"
+      ],
+      "properties": {
+        "report_type": {
+          "type": "string",
+          "const": "kfm.evaluator_report.v1"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "json",
+            "jsonl"
+          ]
+        },
+        "report_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "emit_explanations": {
+          "type": "boolean",
+          "const": true
+        },
+        "emit_failure_flags": {
+          "type": "boolean",
+          "const": true
+        },
+        "emit_metric_breakdown": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "published",
+            "deprecated"
+          ]
+        },
+        "policy_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^(sha256:)?[a-f0-9]{64}$"
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_:-]*$"
+    },
+    "fixture_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_ref",
+        "fixture_type",
+        "expected_outcome"
+      ],
+      "properties": {
+        "fixture_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fixture_type": {
+          "type": "string",
+          "enum": [
+            "positive",
+            "negative",
+            "abstention",
+            "edge",
+            "error"
+          ]
+        },
+        "expected_outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "expected_failure_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reason_code"
+          }
+        },
+        "fixture_hash": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "metric_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "kind",
+        "enabled"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.:-]*$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "schema",
+            "citation",
+            "exact_match",
+            "numeric_tolerance",
+            "span_overlap",
+            "diff",
+            "abstention",
+            "custom"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "must_pass": {
+          "type": "boolean"
+        },
+        "threshold": {
+          "$ref": "#/$defs/threshold"
+        },
+        "threshold_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "failure_flag": {
+          "$ref": "#/$defs/reason_code"
+        },
+        "explanation_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "eq",
+            "neq",
+            "gt",
+            "gte",
+            "lt",
+            "lte"
+          ]
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    }
+  }
+}
