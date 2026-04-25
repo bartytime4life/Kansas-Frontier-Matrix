@@ -21,11 +21,11 @@ _format_message = format_message
 def read_json_object(
     path: str,
     *,
-    not_found: str,
-    non_utf8: str,
-    invalid_json: str,
-    unreadable: str,
-    wrong_type: str,
+    not_found: object,
+    non_utf8: object,
+    invalid_json: object,
+    unreadable: object,
+    wrong_type: object,
 ) -> dict:
     try:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
