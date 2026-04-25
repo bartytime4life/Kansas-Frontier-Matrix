@@ -131,8 +131,13 @@ def test_read_json_object_tolerates_non_string_template(
     read_json_object: Callable[..., dict[str, Any]],
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    templates = _templates("bad-template")
-    templates["not_found"] = None  # type: ignore[assignment]
+    templates: dict[str, object] = {
+        "not_found": None,
+        "non_utf8": "bad-template: non-utf8 {path}",
+        "invalid_json": "bad-template: invalid json {path} {exc}",
+        "unreadable": "bad-template: unreadable {path} {exc}",
+        "wrong_type": "bad-template: wrong type {path}",
+    }
 
     with pytest.raises(SystemExit) as exc:
         read_json_object("does-not-exist.json", **templates)
