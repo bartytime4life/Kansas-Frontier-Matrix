@@ -51,6 +51,7 @@ def test_format_message_falls_back_for_bad_template(render_json_module: ModuleTy
     )
 
 
+
 def test_read_json_object_success(read_json_object: Callable[..., dict[str, Any]]) -> None:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "ok.json"
