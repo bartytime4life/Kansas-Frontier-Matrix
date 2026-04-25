@@ -39,6 +39,7 @@ jobs:
           python3 ./tools/ci/validate_renderer_fixtures.py --root .
           python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
           python3 ./tools/ci/check_markdown_authority_thresholds.py --root .
+          python3 ./tools/ci/check_governed_api_path_policy.py --root .
 
       - name: Install optional boundary test dependencies
         run: sh ./tools/ci/install_boundary_test_deps.sh

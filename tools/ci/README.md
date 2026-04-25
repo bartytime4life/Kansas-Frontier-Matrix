@@ -55,6 +55,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
 > - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter with optional threshold-fail mode for weekly scorecard observability)
 > - `tools/ci/check_markdown_authority_thresholds.py` (required markdown marker caps for top authority docs)
+> - `tools/ci/check_governed_api_path_policy.py` (enforces canonical governed_api path + shim-only legacy path)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >
@@ -71,6 +72,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/test_check_python_syntax.sh`
 > - `apps/governed-api/ecology/tests/*` (dependency-aware boundary slice; skips when optional deps are unavailable)
 > - `apps/ui/ecology/tests/test_evidence_drawer_mapper.py`
+> - `tests/ci/test_check_governed_api_path_policy.py`
 >
 > Active-branch parity, additional callers, and platform wiring still need direct verification.
 
@@ -202,6 +204,7 @@ tools/ci/
 ├── validate_renderer_fixtures.py
 ├── report_placeholder_markers.py
 ├── check_markdown_authority_thresholds.py
+├── check_governed_api_path_policy.py
 ├── run_repo_baseline_local.sh
 ├── render_json_io.py
 ├── render_promotion_summary.py
@@ -222,6 +225,7 @@ tests/ci/
 ├── test_validate_policy_runtime_fixtures.py
 ├── test_validate_renderer_fixtures.py
 ├── test_report_placeholder_markers.py
+├── test_check_governed_api_path_policy.py
 ├── test_end_to_end_diff_summary.py
 ├── test_end_to_end_diff_policy_summary.py
 ├── test_end_to_end_promotion_summary.py
