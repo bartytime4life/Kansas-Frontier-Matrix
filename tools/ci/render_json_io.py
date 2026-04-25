@@ -8,6 +8,7 @@ from pathlib import Path
 __all__ = ["format_message", "read_json_object"]
 
 
+
 def format_message(template: object, **kwargs: object) -> str:
     template_text = template if isinstance(template, str) else str(template)
     try:
