@@ -32,6 +32,15 @@ def read_json(path: str) -> dict:
 
     return payload
 
+    if not isinstance(payload, dict):
+        print(
+            f"render_bundle_diff_policy_summary: expected top-level JSON object in {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    return payload
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Render markdown summary for bundle diff-policy report.")

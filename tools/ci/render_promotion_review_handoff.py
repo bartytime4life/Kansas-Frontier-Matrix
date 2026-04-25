@@ -38,6 +38,15 @@ def read_json(path: str, label: str) -> dict:
 
     return payload
 
+    if not isinstance(payload, dict):
+        print(
+            f"render_promotion_review_handoff: expected top-level JSON object in {label} input {path}",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+    return payload
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compose promotion review handoff markdown.")
