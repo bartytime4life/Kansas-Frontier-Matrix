@@ -51,10 +51,10 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog clean sample check-inputs check-catalog
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog gate-catalog clean sample check-inputs check-catalog test-e2e
 
 # Full governed run
-all: harvest normalize dedupe publish sign gate catalog validate-catalog
+all: harvest normalize dedupe publish sign gate catalog validate-catalog gate-catalog
 
 # ----------------------------
 # Preflight
@@ -141,11 +141,11 @@ verify-proof:
 		--proof $(PROOF)
 
 # ----------------------------
-# Promotion Gate (A–H)
+# Promotion Gate (A-H)
 # ----------------------------
 
 gate:
-	@echo "=== Promotion Gate (fail-closed) ==="
+	@echo "=== Promotion Gate A-H (fail-closed) ==="
 	python validate/promotion_gate_full.py \
 		--dataset $(DATASET_ROOT) \
 		--metadata $(METADATA) \
@@ -182,6 +182,22 @@ validate-catalog:
 		--prov $(CATALOG_PROV)
 
 # ----------------------------
+# Promotion Gate with Catalog Closure (A-I)
+# ----------------------------
+
+gate-catalog:
+	@echo "=== Promotion Gate A-I: Dataset + Proof + Catalog Closure ==="
+	python validate/promotion_gate_full.py \
+		--dataset $(DATASET_ROOT) \
+		--metadata $(METADATA) \
+		--evidence $(EVIDENCE) \
+		--receipt $(RECEIPT) \
+		--proof $(PROOF) \
+		--stac-root $(CATALOG_STAC_ROOT) \
+		--dcat $(CATALOG_DCAT) \
+		--prov $(CATALOG_PROV)
+
+# ----------------------------
 # Sample mode (offline testing)
 # ----------------------------
 
@@ -196,6 +212,16 @@ sample: check-inputs
 	$(MAKE) gate
 	$(MAKE) catalog
 	$(MAKE) validate-catalog
+	$(MAKE) gate-catalog
+
+# ----------------------------
+# End-to-end local regression
+# ----------------------------
+
+test-e2e:
+	@echo "=== End-to-End Pipeline Test (sample mode) ==="
+	$(MAKE) clean
+	$(MAKE) sample
 
 # ----------------------------
 # Clean
