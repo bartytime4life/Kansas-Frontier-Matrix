@@ -1,0 +1,117 @@
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/ecology/ecology_map_layer_binding.schema.json",
+  "title": "KFM Ecology Map Layer Binding",
+  "description": "Schema for binding ecology map layers to governed EvidenceBundles and Evidence Drawer payloads.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "layer_id",
+    "candidate_id",
+    "evidence_bundle_id",
+    "drawer_id",
+    "render_type",
+    "time_enabled",
+    "default_visibility",
+    "source_ref",
+    "style_layer_ref",
+    "spec_hash",
+    "status"
+  ],
+  "properties": {
+    "layer_id": {
+      "type": "string",
+      "pattern": "^kfm\\.ecology\\.[a-z0-9_.:-]+$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_bundle_id": {
+      "type": "string",
+      "pattern": "^kfm\\.evidence\\.ecology\\.[a-zA-Z0-9_.:-]+$"
+    },
+    "drawer_id": {
+      "type": "string",
+      "pattern": "^kfm\\.drawer\\.ecology\\.[a-zA-Z0-9_.:-]+$"
+    },
+    "render_type": {
+      "type": "string",
+      "enum": [
+        "raster",
+        "vector",
+        "timeseries",
+        "3d_tiles"
+      ]
+    },
+    "time_enabled": {
+      "type": "boolean"
+    },
+    "default_visibility": {
+      "type": "boolean"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "style_layer_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "deprecated",
+        "review_required"
+      ]
+    },
+    "cesium": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "justification": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "render_type": {
+            "const": "3d_tiles"
+          }
+        },
+        "required": ["render_type"]
+      },
+      "then": {
+        "required": ["cesium"],
+        "properties": {
+          "cesium": {
+            "required": ["enabled", "justification"],
+            "properties": {
+              "enabled": {
+                "const": true
+              },
+              "justification": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
