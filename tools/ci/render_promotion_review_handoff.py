@@ -2,41 +2,21 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
+from render_json_io import read_json_object
+
 
 def read_json(path: str, label: str) -> dict:
-    try:
-        payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        print(f"render_promotion_review_handoff: {label} input not found: {path}", file=sys.stderr)
-        raise SystemExit(2)
-    except UnicodeDecodeError:
-        print(
-            f"render_promotion_review_handoff: {label} input is not valid UTF-8: {path}",
-            file=sys.stderr,
-        )
-        raise SystemExit(2)
-    except json.JSONDecodeError as exc:
-        print(f"render_promotion_review_handoff: invalid JSON in {label} input {path}: {exc}", file=sys.stderr)
-        raise SystemExit(2)
-    except OSError as exc:
-        print(
-            f"render_promotion_review_handoff: unable to read {label} input {path}: {exc}",
-            file=sys.stderr,
-        )
-        raise SystemExit(2)
-
-    if not isinstance(payload, dict):
-        print(
-            f"render_promotion_review_handoff: expected top-level JSON object in {label} input {path}",
-            file=sys.stderr,
-        )
-        raise SystemExit(2)
-
-    return payload
+    return read_json_object(
+        path,
+        not_found=f"render_promotion_review_handoff: {label} input not found: {{path}}",
+        non_utf8=f"render_promotion_review_handoff: {label} input is not valid UTF-8: {{path}}",
+        invalid_json=f"render_promotion_review_handoff: invalid JSON in {label} input {{path}}: {{exc}}",
+        unreadable=f"render_promotion_review_handoff: unable to read {label} input {{path}}: {{exc}}",
+        wrong_type=f"render_promotion_review_handoff: expected top-level JSON object in {label} input {{path}}",
+    )
 
 
 def main() -> int:
