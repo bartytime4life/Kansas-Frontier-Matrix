@@ -1,0 +1,14 @@
+{
+  "checks": [
+    {"path": "docs/README.md", "max_total": 60},
+    {"path": "docs/architecture/README.md", "max_total": 60},
+    {"path": "apps/README.md", "max_total": 45},
+    {"path": "apps/ui/README.md", "max_total": 55},
+    {"path": "packages/indexers/README.md", "max_total": 59},
+    {"path": "packages/genealogy_ingest/README.md", "max_total": 44},
+    {"path": "pipelines/kansas_biodiversity_etl/dedupe/README.md", "max_total": 39},
+    {"path": "data/catalog/prov/README.md", "max_total": 39},
+    {"path": "pipelines/kansas_biodiversity_etl/catalog/README.md", "max_total": 35},
+    {"path": ".github/README.md", "max_total": 35}
+  ]
+}

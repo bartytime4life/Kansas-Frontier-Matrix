@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 from apps.ui.ecology.evidence_drawer_mapper import map_evidence_bundle_to_drawer
@@ -156,4 +155,3 @@ def test_non_cite_decision_maps_to_abstain() -> None:
     assert drawer["decision"] == "abstain"
     assert drawer["failure"]["reason"] == "policy_review_required"
     assert drawer["failure"]["error_code"] == "ECO_EB_REVIEW_REQUIRED"
-```

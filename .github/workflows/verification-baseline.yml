@@ -22,7 +22,9 @@ jobs:
         run: |
           sh ./tools/ci/test_verify_baseline.sh
           sh ./tools/ci/test_check_readme_paths.sh
+          sh ./tools/ci/test_check_python_syntax.sh
           sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
+          sh ./tools/ci/check_python_syntax.sh
           sh ./tools/ci/verify_baseline.sh baseline-report.txt
 
       - name: Run scripts thin-slice checks
@@ -35,9 +37,21 @@ jobs:
         run: |
           python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
           python3 ./tools/ci/validate_renderer_fixtures.py --root .
+          python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
+          python3 ./tools/ci/check_markdown_authority_thresholds.py --root .
+          python3 ./tools/ci/check_governed_api_path_policy.py --root .
+
+      - name: Install optional boundary test dependencies
+        run: sh ./tools/ci/install_boundary_test_deps.sh
 
       - name: Run CI tests
-        run: python3 -m pytest -q tests/ci
+        run: |
+          python3 -m pytest -q tests/ci
+          python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
+
+      - name: Build governed artifacts from fixed fixtures
+        run: |
+          python3 ./tools/ci/build_governed_artifacts.py --root . --out-dir artifacts/governed
 
 
       - name: Upload baseline report
@@ -46,4 +60,12 @@ jobs:
         with:
           name: baseline-report
           path: baseline-report.txt
+          if-no-files-found: warn
+
+      - name: Upload governed artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governed-artifacts
+          path: artifacts/governed
           if-no-files-found: warn
