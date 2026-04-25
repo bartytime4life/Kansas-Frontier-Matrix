@@ -49,8 +49,11 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_promotion_review_handoff.py`
 > - `tools/ci/render_json_io.py` (shared JSON input helper used by renderer entrypoints)
 > - `tools/ci/verify_baseline.sh` (baseline repository inventory verifier used by `.github/workflows/verification-baseline.yml`)
+> - `tools/ci/check_python_syntax.sh` (syntax gate for repository Python files; optional targeted mode via `tools/ci/python_syntax_targets.txt`)
+> - `tools/ci/install_boundary_test_deps.sh` (installs optional Python deps used by ecology boundary tests)
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
 > - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
+> - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter with optional threshold-fail mode for weekly scorecard observability)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >
@@ -63,6 +66,10 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tests/ci/test_render_json_io.py`
 > - `tests/ci/test_validate_policy_runtime_fixtures.py`
 > - `tests/ci/test_validate_renderer_fixtures.py`
+> - `tests/ci/test_report_placeholder_markers.py`
+> - `tools/ci/test_check_python_syntax.sh`
+> - `apps/governed-api/ecology/tests/*` (dependency-aware boundary slice; skips when optional deps are unavailable)
+> - `apps/ui/ecology/tests/test_evidence_drawer_mapper.py`
 >
 > Active-branch parity, additional callers, and platform wiring still need direct verification.
 
@@ -185,8 +192,13 @@ tools/ci/
 ├── test_check_readme_paths.sh
 ├── verify_baseline.sh
 ├── test_verify_baseline.sh
+├── check_python_syntax.sh
+├── test_check_python_syntax.sh
+├── python_syntax_targets.txt
+├── install_boundary_test_deps.sh
 ├── validate_policy_runtime_fixtures.py
 ├── validate_renderer_fixtures.py
+├── report_placeholder_markers.py
 ├── run_repo_baseline_local.sh
 ├── render_json_io.py
 ├── render_promotion_summary.py
@@ -206,6 +218,7 @@ tests/ci/
 ├── test_render_missing_input_paths.py
 ├── test_validate_policy_runtime_fixtures.py
 ├── test_validate_renderer_fixtures.py
+├── test_report_placeholder_markers.py
 ├── test_end_to_end_diff_summary.py
 ├── test_end_to_end_diff_policy_summary.py
 ├── test_end_to_end_promotion_summary.py
