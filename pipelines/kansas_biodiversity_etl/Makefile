@@ -51,10 +51,10 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog clean sample check-inputs check-catalog
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog clean sample check-inputs check-catalog
 
 # Full governed run
-all: harvest normalize dedupe publish sign gate catalog
+all: harvest normalize dedupe publish sign gate catalog validate-catalog
 
 # ----------------------------
 # Preflight
@@ -170,6 +170,18 @@ catalog:
 	$(MAKE) check-catalog
 
 # ----------------------------
+# Catalog validation
+# ----------------------------
+
+validate-catalog:
+	@echo "=== Validate Catalog Closure ==="
+	python catalog/validate_catalog.py \
+		--metadata $(METADATA) \
+		--stac-root $(CATALOG_STAC_ROOT) \
+		--dcat $(CATALOG_DCAT) \
+		--prov $(CATALOG_PROV)
+
+# ----------------------------
 # Sample mode (offline testing)
 # ----------------------------
 
@@ -183,6 +195,7 @@ sample: check-inputs
 	$(MAKE) sign
 	$(MAKE) gate
 	$(MAKE) catalog
+	$(MAKE) validate-catalog
 
 # ----------------------------
 # Clean
