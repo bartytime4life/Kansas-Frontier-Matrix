@@ -51,7 +51,7 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog gate-catalog clean sample check-inputs check-catalog test-e2e
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog gate-catalog test-catalog test-e2e clean sample check-inputs check-catalog
 
 # Full governed run
 all: harvest normalize dedupe publish sign gate catalog validate-catalog gate-catalog
@@ -88,7 +88,7 @@ harvest:
 		--max-records $(MAX_RECORDS)
 
 # ----------------------------
-# Normalize (DwC → canonical)
+# Normalize
 # ----------------------------
 
 normalize:
@@ -98,7 +98,7 @@ normalize:
 		--output $(NORMALIZED)
 
 # ----------------------------
-# Dedupe + license + sensitivity
+# Dedupe
 # ----------------------------
 
 dedupe: check-inputs
@@ -110,7 +110,7 @@ dedupe: check-inputs
 		--sensitive-taxa $(SENSITIVE_TAXA)
 
 # ----------------------------
-# Publish (partitioned parquet)
+# Publish
 # ----------------------------
 
 publish:
@@ -124,7 +124,7 @@ publish:
 		--source-uri "https://api.gbif.org/v1/occurrence/search?stateProvince=$(STATE)"
 
 # ----------------------------
-# Sign receipt (local proof shim)
+# Attestation
 # ----------------------------
 
 sign:
@@ -141,11 +141,11 @@ verify-proof:
 		--proof $(PROOF)
 
 # ----------------------------
-# Promotion Gate (A-H)
+# Promotion Gate (A–H)
 # ----------------------------
 
 gate:
-	@echo "=== Promotion Gate A-H (fail-closed) ==="
+	@echo "=== Promotion Gate A-H ==="
 	python validate/promotion_gate_full.py \
 		--dataset $(DATASET_ROOT) \
 		--metadata $(METADATA) \
@@ -154,11 +154,11 @@ gate:
 		--proof $(PROOF)
 
 # ----------------------------
-# Catalog closure (STAC Collection + Items, DCAT, PROV)
+# Catalog
 # ----------------------------
 
 catalog:
-	@echo "=== Catalog Closure: STAC Collection + Items, DCAT + PROV ==="
+	@echo "=== Catalog Closure ==="
 	python catalog/emit_catalog.py \
 		--dataset-root $(DATASET_ROOT) \
 		--metadata $(METADATA) \
@@ -170,7 +170,7 @@ catalog:
 	$(MAKE) check-catalog
 
 # ----------------------------
-# Catalog validation
+# Catalog Validation
 # ----------------------------
 
 validate-catalog:
@@ -182,11 +182,11 @@ validate-catalog:
 		--prov $(CATALOG_PROV)
 
 # ----------------------------
-# Promotion Gate with Catalog Closure (A-I)
+# Gate A–I
 # ----------------------------
 
 gate-catalog:
-	@echo "=== Promotion Gate A-I: Dataset + Proof + Catalog Closure ==="
+	@echo "=== Promotion Gate A-I ==="
 	python validate/promotion_gate_full.py \
 		--dataset $(DATASET_ROOT) \
 		--metadata $(METADATA) \
@@ -198,11 +198,28 @@ gate-catalog:
 		--prov $(CATALOG_PROV)
 
 # ----------------------------
-# Sample mode (offline testing)
+# Catalog Tests (NEW)
+# ----------------------------
+
+test-catalog:
+	@echo "=== Catalog Validator Tests ==="
+	pytest catalog/tests/test_validate_catalog.py
+
+# ----------------------------
+# End-to-end
+# ----------------------------
+
+test-e2e:
+	@echo "=== End-to-End Pipeline Test ==="
+	$(MAKE) clean
+	$(MAKE) sample
+
+# ----------------------------
+# Sample
 # ----------------------------
 
 sample: check-inputs
-	@echo "=== Sample Mode (offline) ==="
+	@echo "=== Sample Mode ==="
 	python normalize/normalize_dwc.py \
 		--input samples/dwc_occurrences_sample.jsonl \
 		--output $(NORMALIZED)
@@ -215,20 +232,11 @@ sample: check-inputs
 	$(MAKE) gate-catalog
 
 # ----------------------------
-# End-to-end local regression
-# ----------------------------
-
-test-e2e:
-	@echo "=== End-to-End Pipeline Test (sample mode) ==="
-	$(MAKE) clean
-	$(MAKE) sample
-
-# ----------------------------
 # Clean
 # ----------------------------
 
 clean:
-	@echo "=== Cleaning pipeline outputs ==="
+	@echo "=== Cleaning ==="
 	rm -rf $(WORK_DIR)
 	rm -rf $(PROCESSED_DIR)
 	rm -rf $(RECEIPTS_DIR)
