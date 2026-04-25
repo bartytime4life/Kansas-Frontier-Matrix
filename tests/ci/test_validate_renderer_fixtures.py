@@ -49,5 +49,29 @@ def test_validate_renderer_fixtures_fails_on_invalid_fixture() -> None:
             text=True,
         )
 
-        assert proc.returncode != 0
+        assert proc.returncode == 1
         assert "diff_summary.added: expected integer" in proc.stderr
+
+
+def test_validate_renderer_fixtures_fails_on_non_utf8_fixture() -> None:
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+
+        for rel in REQUIRED_FILES:
+            src = Path(rel)
+            dst = root / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+
+        broken = root / "tests/ci/fixtures/diff_summary/diff.json"
+        broken.write_bytes(b"\xff\xfe")
+
+        proc = subprocess.run(
+            ["python3", "tools/ci/validate_renderer_fixtures.py", "--root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        assert proc.returncode == 1
+        assert "invalid UTF-8 in" in proc.stderr
