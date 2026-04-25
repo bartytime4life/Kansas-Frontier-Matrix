@@ -39,6 +39,7 @@ jobs:
       - name: Run CI tests
         run: python3 -m pytest -q tests/ci
 
+
       - name: Upload baseline report
         if: always()
         uses: actions/upload-artifact@v4
