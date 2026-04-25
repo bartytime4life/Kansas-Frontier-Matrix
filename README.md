@@ -41,7 +41,7 @@ Kansas Frontier Matrix (KFM) is a governed, evidence-first workspace for buildin
 The baseline workflow currently checks the following thin-slice path:
 
 1. Repository and README path integrity checks.
-2. Python syntax checks for selected app/API boundary files.
+2. Python syntax checks across repository Python files.
 3. Baseline verifier checks.
 4. Script-level schema and catalog checks.
 5. Runtime policy fixture validation.
@@ -90,7 +90,7 @@ When submitting changes:
 - Baseline workflow: `.github/workflows/verification-baseline.yml`
 - Baseline local runner: `tools/ci/run_repo_baseline_local.sh`
 - Baseline verifier: `tools/ci/verify_baseline.sh`
-- Python syntax checker: `tools/ci/check_python_syntax.sh`
+- Python syntax checker: `tools/ci/check_python_syntax.sh` (optional manifest mode supported)
 - Placeholder marker report: `tools/ci/report_placeholder_markers.py`
 - CI tests: `tests/ci/`
 - Policy runtime fixtures: `policy/fixtures/runtime/`

@@ -49,7 +49,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_promotion_review_handoff.py`
 > - `tools/ci/render_json_io.py` (shared JSON input helper used by renderer entrypoints)
 > - `tools/ci/verify_baseline.sh` (baseline repository inventory verifier used by `.github/workflows/verification-baseline.yml`)
-> - `tools/ci/check_python_syntax.sh` (syntax gate for selected Python app/API boundary files listed in `tools/ci/python_syntax_targets.txt`)
+> - `tools/ci/check_python_syntax.sh` (syntax gate for repository Python files; optional targeted mode via `tools/ci/python_syntax_targets.txt`)
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
 > - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
 > - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter for weekly scorecard observability)

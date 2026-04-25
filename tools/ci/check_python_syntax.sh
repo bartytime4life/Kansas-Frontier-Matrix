@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-manifest="./tools/ci/python_syntax_targets.txt"
+manifest=""
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -16,40 +16,54 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-if [ ! -f "$manifest" ]; then
-  echo "check_python_syntax: manifest not found: $manifest" >&2
-  exit 2
-fi
+targets_file="$(mktemp)"
+trap 'rm -f "$targets_file"' EXIT
 
-missing=0
-targets=""
-
-while IFS= read -r rel || [ -n "$rel" ]; do
-  case "$rel" in
-    ""|\#*)
-      continue
-      ;;
-  esac
-
-  if [ ! -f "$rel" ]; then
-    echo "check_python_syntax: missing file listed in manifest: $rel" >&2
-    missing=1
-    continue
+if [ -n "$manifest" ]; then
+  if [ ! -f "$manifest" ]; then
+    echo "check_python_syntax: manifest not found: $manifest" >&2
+    exit 2
   fi
 
-  targets="$targets $rel"
-done < "$manifest"
+  missing=0
+  while IFS= read -r rel || [ -n "$rel" ]; do
+    case "$rel" in
+      ""|\#*)
+        continue
+        ;;
+    esac
 
-if [ "$missing" -ne 0 ]; then
-  exit 1
+    if [ ! -f "$rel" ]; then
+      echo "check_python_syntax: missing file listed in manifest: $rel" >&2
+      missing=1
+      continue
+    fi
+
+    printf "%s\n" "$rel" >> "$targets_file"
+  done < "$manifest"
+
+  if [ "$missing" -ne 0 ]; then
+    exit 1
+  fi
+else
+  find . -type f -name '*.py' \
+    -not -path './.git/*' \
+    -not -path './.pytest_cache/*' \
+    -not -path '*/__pycache__/*' \
+    | sort > "$targets_file"
 fi
 
-if [ -z "${targets# }" ]; then
-  echo "check_python_syntax: no targets listed in manifest" >&2
+if [ ! -s "$targets_file" ]; then
+  echo "check_python_syntax: no Python files found to check" >&2
   exit 2
 fi
 
-# shellcheck disable=SC2086
-python3 -m py_compile $targets
+while IFS= read -r path || [ -n "$path" ]; do
+  python3 -m py_compile "$path"
+done < "$targets_file"
 
-echo "check_python_syntax: ok"
+if [ -n "$manifest" ]; then
+  echo "check_python_syntax: ok (manifest)"
+else
+  echo "check_python_syntax: ok (all python files)"
+fi
