@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -137,4 +136,3 @@ def test_abstain_response_matches_runtime_envelope(tmp_path: Path) -> None:
 
     assert payload["data"]["decision"] == "abstain"
     assert_runtime_envelope_valid(payload)
-```
