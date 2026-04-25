@@ -2,20 +2,21 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
+from render_json_io import read_json_object
+
 
 def read_json(path: str) -> dict:
-    try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        print(f"render_bundle_diff_policy_summary: input not found: {path}", file=sys.stderr)
-        raise SystemExit(2)
-    except json.JSONDecodeError as exc:
-        print(f"render_bundle_diff_policy_summary: invalid JSON in {path}: {exc}", file=sys.stderr)
-        raise SystemExit(2)
+    return read_json_object(
+        path,
+        not_found="render_bundle_diff_policy_summary: input not found: {path}",
+        non_utf8="render_bundle_diff_policy_summary: input is not valid UTF-8: {path}",
+        invalid_json="render_bundle_diff_policy_summary: invalid JSON in {path}: {exc}",
+        unreadable="render_bundle_diff_policy_summary: unable to read input {path}: {exc}",
+        wrong_type="render_bundle_diff_policy_summary: expected top-level JSON object in {path}",
+    )
 
 
 def main() -> int:
