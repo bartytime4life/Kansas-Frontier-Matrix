@@ -122,3 +122,4 @@ def test_governed_api_path_policy_fails_when_canonical_is_shim_only(tmp_path: Pa
 
     assert proc.returncode == 1
     assert "canonical file must not be shim-only" in proc.stderr
+

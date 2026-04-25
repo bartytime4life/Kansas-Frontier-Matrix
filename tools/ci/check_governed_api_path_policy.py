@@ -38,6 +38,7 @@ def is_shim_only_module(text: str) -> bool:
     return bool(re.match(r"^from apps\.governed_api\.ecology\..+ import \*  # noqa: F401,F403$", lines[1]))
 
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Enforce governed_api canonical path and legacy shim policy.")
     parser.add_argument("--root", default=".", help="Repository root path")
@@ -59,6 +60,7 @@ def main() -> int:
         if is_shim_only_module(text):
             # Guardrail against accidental inversion where canonical files become shim-only.
             errors.append(f"canonical file must not be shim-only: {rel}")
+
 
     for rel, target in LEGACY_SHIMS.items():
         path = root / rel
