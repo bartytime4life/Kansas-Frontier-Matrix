@@ -21,6 +21,28 @@ For markdown-specific remediation sequencing, see `docs/runbooks/markdown-remedi
   - `UNKNOWN`: 480
   - `NEEDS VERIFICATION`: 1,857
 
+## Decided next move (from markdown + project scan)
+
+**Decision date:** 2026-04-25
+
+The highest-leverage immediate move is to **freeze marker growth in the worst markdown hotspots already identified by CI** while feature/boundary work continues.
+
+Why this is next:
+
+- The repo is still markdown-heavy (194 markdown files vs 82 Python files), so authority drift remains a primary operational risk.
+- Existing marker reporting already pinpoints concentrated debt (`packages/indexers/README.md`, `packages/genealogy_ingest/README.md`, and ETL/catalog docs).
+- Extending threshold checks is a fast, deterministic guardrail that prevents regression without blocking future targeted cleanup passes.
+
+Action taken in this cycle:
+
+- Added these docs to `tools/ci/markdown_authority_thresholds.json` with baseline ceilings set to current observed totals:
+  - `packages/indexers/README.md` (59)
+  - `packages/genealogy_ingest/README.md` (44)
+  - `pipelines/kansas_biodiversity_etl/dedupe/README.md` (39)
+  - `data/catalog/prov/README.md` (39)
+  - `pipelines/kansas_biodiversity_etl/catalog/README.md` (35)
+  - `.github/README.md` (35)
+
 ## Why the priorities changed
 
 Earlier next-step guidance focused on adding baseline and smoke checks. That work is now in place. The highest-value work has shifted to **reducing ambiguity in authoritative docs**, **turning thin-slice checks into enforceable contract tests at additional boundaries**, and **proving one governed end-to-end runtime path beyond fixture-level smoke validation**.
