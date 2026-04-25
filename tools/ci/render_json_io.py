@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Shared JSON I/O helpers for CI renderer entrypoints."""
 from __future__ import annotations
 
 import json
