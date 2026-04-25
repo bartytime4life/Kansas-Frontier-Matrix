@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -108,4 +107,3 @@ def write_proof_pack(path: Path, proof_pack: dict[str, Any]) -> None:
         json.dumps(proof_pack, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-```
