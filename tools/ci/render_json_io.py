@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import TypeAlias
 
-__all__: tuple[str, str] = ("format_message", "read_json_object")
+__all__: tuple[str, str, str] = ("MessageTemplate", "format_message", "read_json_object")
 MessageTemplate: TypeAlias = object
 
 
