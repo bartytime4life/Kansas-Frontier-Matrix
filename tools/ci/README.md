@@ -294,7 +294,7 @@ sh ./tools/ci/run_repo_baseline_local.sh
 When the checked-out branch uses `pytest` for this lane, the documented thin slice should remain runnable locally as well as in CI:
 
 ```bash
-pytest -q tests/ci
+python3 -m pytest -q tests/ci
 ```
 
 [Back to top](#top)
