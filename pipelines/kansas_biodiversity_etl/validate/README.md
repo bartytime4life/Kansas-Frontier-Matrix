@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/TBD-kansas-biodiversity-etl-validate-readme-uuid
-title: pipelines/kansas_biodiversity_etl/validate/ README
+title: Kansas Biodiversity ETL Validation Gate
 type: standard
 version: v1
 status: draft
@@ -8,69 +8,100 @@ owners: TODO-confirm-biodiversity-validation-stewards
 created: 2026-04-25
 updated: 2026-04-25
 policy_label: TODO-confirm-public-or-restricted
-related: [../README.md, ../../README.md, ../../../README.md, ../../../data/README.md, ../../../data/registry/README.md, ../../../data/catalog/stac/README.md, ../../../schemas/README.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../tests/README.md]
-tags: [kfm, pipelines, kansas-biodiversity-etl, validation, biodiversity, geoprivacy, evidence]
-notes: [Generated as a review-ready draft for the requested path. Branch-local file presence, owners, policy label, CLI names, schema home, and related-link validity NEED VERIFICATION.]
+related: [
+  ../README.md,
+  ../Makefile,
+  ../publish/README.md,
+  ../attest/README.md,
+  ../catalog/README.md,
+  ../../../data/README.md,
+  ../../../data/processed/README.md,
+  ../../../data/receipts/README.md,
+  ../../../data/proofs/README.md,
+  ../../../data/catalog/README.md,
+  ../../../tools/validators/README.md,
+  ../../../tools/validators/promotion_gate/README.md
+]
+tags: [kfm, pipelines, kansas-biodiversity-etl, validation, promotion-gate, evidencebundle, spec-hash, receipts, proofs]
+notes: [
+  "Updated from an earlier broad validation README into the concrete promotion gate contract for promotion_gate_full.py.",
+  "Branch-local file presence, owners, policy label, CI wiring, and exact shared-schema homes still NEED VERIFICATION.",
+  "Documents JSONL, single-file Parquet, partitioned Parquet, metadata spec_hash, EvidenceBundle, and receipt-proof checks."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `pipelines/kansas_biodiversity_etl/validate/`
+# Kansas Biodiversity ETL Validation Gate
 
-Validation gate for Kansas biodiversity ETL candidates before catalog, release, API, map, export, or Focus Mode use.
+Fail-closed validation boundary for Kansas biodiversity ETL candidates before catalog closure, publication, API use, map layers, export, or Focus Mode use.
 
-| Field | Value |
+<div align="left">
+
+![status](https://img.shields.io/badge/status-experimental-orange)
+![doc](https://img.shields.io/badge/doc-draft-lightgrey)
+![surface](https://img.shields.io/badge/surface-validation-blue)
+![truth](https://img.shields.io/badge/truth-evidence--first-5b6ee1)
+![policy](https://img.shields.io/badge/policy-fail--closed-critical)
+![gate](https://img.shields.io/badge/gates-A--H-red)
+
+</div>
+
+| Impact field | Value |
 | --- | --- |
-| **Status** | Experimental / draft |
+| **Status** | `experimental` |
 | **Owners** | `TODO-confirm-biodiversity-validation-stewards` |
 | **Path** | `pipelines/kansas_biodiversity_etl/validate/README.md` |
-| **Badges** | ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-validation-blue) ![truth](https://img.shields.io/badge/truth-evidence--first-5b6ee1) ![tests](https://img.shields.io/badge/tests-no--network--first-success) ![policy](https://img.shields.io/badge/policy-fail--closed-critical) |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Validation matrix](#validation-matrix) · [Diagram](#diagram) · [Definition of done](#definition-of-done) · [FAQ](#faq) |
-| **Accepted inputs** | Source descriptors, normalized candidate batches, synthetic fixtures, public-safe payload candidates, derivation receipts, catalog drafts, and validation profiles. |
-| **Exclusions** | Live credentials, raw source dumps, canonical schema law, policy source-of-truth files, release aliases, public publication actions, and AI-generated claims. |
-| **Truth boundary** | `CONFIRMED` requested target path; branch-local implementation, CLI names, workflow wiring, and current file inventory are `NEEDS VERIFICATION`. |
+| **Primary executable** | `promotion_gate_full.py` |
+| **Trust posture** | fail-closed promotion gate |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Gate matrix](#gate-matrix) · [Diagram](#diagram) · [Failure reasons](#failure-reasons) · [Definition of done](#definition-of-done) · [FAQ](#faq) |
 
 > [!IMPORTANT]
-> `validate/` decides whether a biodiversity candidate can move forward. It does **not** publish, promote, repair, summarize, or make species claims on its own.
+> `validate/` is a promotion boundary. It may return `PASS`, but it does **not** publish, repair, enrich, catalog, summarize, or make biodiversity claims on its own.
 
 > [!WARNING]
-> Exact rare-species, protected-species, steward-controlled, embargoed, or otherwise sensitive occurrence geometry is denied by default for public outputs unless a reviewed policy explicitly allows the release class.
+> Unknown licenses, missing attribution, duplicate identities, invalid evidence, missing metadata, mismatched `spec_hash`, and unredacted restricted geometry must fail closed.
 
 ---
 
 ## Scope
 
-This directory is the lane-local validation membrane for `kansas_biodiversity_etl`.
+This directory contains the Kansas biodiversity ETL lane-local validation gate.
 
-It should help maintainers answer five review questions quickly:
+The current concrete gate target is:
 
-1. Does each candidate record have admissible source identity, rights posture, and source-role scope?
-2. Are taxonomy, geometry, time, sensitivity, and evidence references valid enough to continue?
-3. Are public payloads free of restricted coordinates, private source fields, and reverse-engineering leakage?
-4. Do catalog and release candidates close against STAC/DCAT/PROV-style provenance, evidence, checksums, and review state?
-5. Can failures be routed to `HOLD`, `DENY`, `ERROR`, or quarantine without silently inventing truth?
+```text
+pipelines/kansas_biodiversity_etl/validate/promotion_gate_full.py
+```
+
+It validates generated artifacts from the pipeline sequence:
+
+```text
+harvest -> normalize -> dedupe -> publish -> sign -> gate -> catalog
+```
 
 ### What this lane validates
 
-| Validation concern | Why it matters in KFM |
+| Validation concern | Gate responsibility |
 | --- | --- |
-| **Source role** | A status authority, occurrence aggregator, habitat surface, and controlled-access heritage record are not interchangeable evidence. |
-| **Rights and sensitivity** | Unknown rights or sensitive exact location exposure blocks public promotion. |
-| **Taxonomy** | Ambiguous or unresolved scientific names must not silently merge into canonical taxon identity. |
-| **Geometry and time** | Coordinates, CRS, support, uncertainty, event date, source freshness, and publication date must remain distinct. |
-| **Evidence closure** | Every consequential candidate claim must resolve to evidence, not just a fluent label or map popup. |
-| **Catalog/proof closure** | STAC/DCAT/PROV, `EvidenceBundle`, `ReleaseManifest`, and digest references must close before release-facing use. |
-| **Public payload safety** | Public API, map, Focus Mode, and export payloads must not expose restricted fields or exact sensitive geometry. |
+| **EvidenceBundle** | Must exist, parse, contain `spec_hash`, `items`, `source_uris`, license summary, and attribution summary. |
+| **Dataset presence** | Dataset path must exist as JSONL, single Parquet file, or partitioned Parquet directory. |
+| **Dataset metadata** | Parquet outputs must have `_dataset_metadata.json` with stable `spec_hash`. |
+| **Identity** | EvidenceBundle `spec_hash` must match the expected dataset identity source. |
+| **Record-level rights** | Records must not contain missing or `UNKNOWN` license values. |
+| **Attribution** | `CC-BY-4.0` records must carry attribution. |
+| **Sensitivity** | `restricted` records must not retain geometry. |
+| **Receipt proof** | When wired through Makefile, receipt proof hash must match current receipt bytes. |
 
 ### Truth labels used here
 
 | Label | Meaning |
 | --- | --- |
-| **CONFIRMED** | Verified from the checked branch, current command output, or controlling KFM doctrine. |
-| **INFERRED** | Conservative placement or relationship derived from adjacent repo/doc conventions. |
-| **PROPOSED** | Recommended realization not yet verified in branch-local implementation. |
+| **CONFIRMED** | Present in the supplied old README or prior generated code in this conversation. |
+| **INFERRED** | Conservative relationship derived from KFM lifecycle doctrine and adjacent pipeline paths. |
+| **PROPOSED** | Recommended realization not yet verified in active branch. |
 | **UNKNOWN** | Not proven strongly enough to state as current repo fact. |
-| **NEEDS VERIFICATION** | Must be checked against the mounted repo, policy/schema home, source terms, or CI before merge. |
+| **NEEDS VERIFICATION** | Must be checked against active branch, CI, policy, schema, or workflow state before merge. |
 
 [Back to top](#top)
 
@@ -78,31 +109,34 @@ It should help maintainers answer five review questions quickly:
 
 ## Repo fit
 
-`validate/` sits inside a pipeline lane. It should stay execution-near and lane-specific, while shared law remains outside this directory.
+`validate/` sits inside the Kansas biodiversity ETL lane. It should stay execution-near and lane-specific.
 
-| Relation | Surface | Status | Use it for |
+| Relation | Surface | Use it for | Status |
 | --- | --- | --- | --- |
-| Parent lane | [`../README.md`](../README.md) | NEEDS VERIFICATION | Biodiversity ETL lane overview and stage ordering. |
-| Pipeline root | [`../../README.md`](../../README.md) | INFERRED | Pipeline-family placement, execution boundaries, and lane-local conventions. |
-| Repo root | [`../../../README.md`](../../../README.md) | NEEDS VERIFICATION | Project identity, contribution posture, and high-level navigation. |
-| Data lifecycle | [`../../../data/README.md`](../../../data/README.md) | NEEDS VERIFICATION | RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED placement. |
-| Source registry | [`../../../data/registry/README.md`](../../../data/registry/README.md) | NEEDS VERIFICATION | Source descriptors, source roles, cadence, rights, and authority scope. |
-| Catalog closure | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) | NEEDS VERIFICATION | STAC-facing metadata and release-candidate catalog checks. |
-| Shared schemas | [`../../../schemas/README.md`](../../../schemas/README.md) | NEEDS VERIFICATION | JSON/YAML schema law and schema-home decisions. |
-| Shared contracts | [`../../../contracts/README.md`](../../../contracts/README.md) | NEEDS VERIFICATION | Envelopes, proof objects, runtime payloads, and interface contracts. |
-| Policy | [`../../../policy/README.md`](../../../policy/README.md) | NEEDS VERIFICATION | Default-deny, rights, sensitivity, source-role, and publication policy. |
-| Tests | [`../../../tests/README.md`](../../../tests/README.md) | NEEDS VERIFICATION | Valid/invalid fixtures, negative cases, no-network CI posture. |
+| Parent lane | [`../README.md`](../README.md) | ETL stage ordering and evidence-first posture | NEEDS VERIFICATION |
+| Makefile | [`../Makefile`](../Makefile) | canonical local execution path | PROPOSED / NEEDS VERIFICATION |
+| Publisher | [`../publish/`](../publish/) | dataset, metadata, EvidenceBundle, receipt emission | PROPOSED / NEEDS VERIFICATION |
+| Attestation helper | [`../attest/`](../attest/) | local receipt proof generation | PROPOSED / NEEDS VERIFICATION |
+| Catalog closure | [`../catalog/`](../catalog/) | STAC/DCAT/PROV emission after gate pass | PROPOSED / NEEDS VERIFICATION |
+| Processed data | [`../../../data/processed/README.md`](../../../data/processed/README.md) | processed dataset lifecycle placement | NEEDS VERIFICATION |
+| Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | run receipt custody | NEEDS VERIFICATION |
+| Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | proof artifact custody | NEEDS VERIFICATION |
+| Catalog | [`../../../data/catalog/README.md`](../../../data/catalog/README.md) | catalog closure surfaces | NEEDS VERIFICATION |
+| Shared validators | [`../../../tools/validators/README.md`](../../../tools/validators/README.md) | reusable validation doctrine | NEEDS VERIFICATION |
+| Promotion gate doctrine | [`../../../tools/validators/promotion_gate/README.md`](../../../tools/validators/promotion_gate/README.md) | broader A–G gate semantics | NEEDS VERIFICATION |
 
 ### Upstream / downstream boundary
 
 ```text
-source descriptors + normalized candidates + fixtures
-  -> pipelines/kansas_biodiversity_etl/validate/
-  -> validation reports + policy decisions + quarantine reasons
-  -> processed/catalog/release-candidate surfaces after promotion gates
+data/work/kansas_biodiversity_etl/deduped.jsonl
+  -> publish/
+  -> data/processed/kansas_occurrences/
+  -> data/proofs/.../evidence_bundle.json
+  -> data/receipts/.../run_receipt.json
+  -> data/proofs/.../receipt_proof.json
+  -> validate/promotion_gate_full.py
+  -> catalog/emit_catalog.py only after PASS
 ```
-
-`validate/` may emit a reviewable `ValidationReport`, `PolicyDecision`, and receipt references. It must not move release aliases, mutate public catalog state, or expose public map/API payloads directly.
 
 [Back to top](#top)
 
@@ -110,17 +144,16 @@ source descriptors + normalized candidates + fixtures
 
 ## Accepted inputs
 
-Material belongs here when it is specific to validating the Kansas biodiversity ETL lane.
+Material belongs here only when it is needed to validate a generated Kansas biodiversity ETL candidate.
 
-| Input class | Examples | Required posture |
+| Input | Example | Required posture |
 | --- | --- | --- |
-| Source descriptors | KDWP-like state status source, USFWS-like federal status/critical habitat source, controlled heritage source, GBIF-like occurrence source | Descriptor must name `source_role`, `authority_scope`, rights, cadence, steward/review state, and sensitivity posture. |
-| Normalized candidates | Taxon records, occurrence records, habitat-context joins, range/status summaries | Must be downstream of ingest/normalize and must carry source refs and hashes. |
-| Synthetic fixtures | Public-safe occurrence fixture, sensitive exact-location negative fixture, unknown-rights fixture | Fixture-only unless explicitly promoted through governed source intake. |
-| Validation profiles | Stage-specific config for source-role, taxonomy, geometry, sensitivity, catalog, and payload checks | Profiles are lane-local settings, not policy source of truth. |
-| Public payload candidates | Candidate map popup, Evidence Drawer payload, API envelope, layer manifest | Must be checked for restricted fields, evidence refs, and finite outcomes. |
-| Catalog drafts | STAC Item/Collection, DCAT dataset/distribution, PROV activity/entity draft | Must close to evidence, source descriptors, receipts, and digests. |
-| Prior validation output | Earlier report, denial, hold reason, compatibility map | Must support regression checks and correction lineage. |
+| Dataset candidate | `data/processed/kansas_occurrences/` | JSONL, single Parquet, or partitioned Parquet directory must be readable. |
+| Dataset metadata | `data/processed/kansas_occurrences/_dataset_metadata.json` | Required for Parquet and partitioned Parquet. |
+| EvidenceBundle | `data/proofs/kansas_biodiversity_etl/YYYYMMDD/evidence_bundle.json` | Must contain `evidenceBundle.spec_hash`. |
+| Run receipt | `data/receipts/kansas_biodiversity_etl/YYYYMMDD/run_receipt.json` | Required when proof verification is enforced. |
+| Receipt proof | `data/proofs/kansas_biodiversity_etl/YYYYMMDD/receipt_proof.json` | Required when `--proof` is supplied. |
+| Synthetic sample outputs | generated from `make sample` | Allowed for offline validation only. |
 
 [Back to top](#top)
 
@@ -130,14 +163,16 @@ Material belongs here when it is specific to validating the Kansas biodiversity 
 
 | Does **not** belong here | Better home | Why |
 | --- | --- | --- |
-| Raw biodiversity source exports | `../../../data/raw/` or repo-confirmed raw source home | Raw data must stay in lifecycle storage, not validator docs. |
-| Sensitive exact coordinates or restricted source payloads | Restricted storage approved by policy/steward process | README and public validation fixtures must not leak protected locations. |
-| Canonical schemas | `../../../schemas/` or `../../../contracts/` | Validators enforce schema law; they should not define parallel law. |
-| Policy bundles and allow/deny logic | `../../../policy/` | Policy must stay explicit and independently testable. |
-| Live credentials, tokens, cookies, API keys, or workstation overrides | Secret manager / untracked local config | Validation directories must never become secret stores. |
-| Catalog publication or release alias changes | Catalog/release/promotion surfaces | Validation can recommend; promotion is a governed state transition. |
-| AI prompt templates that make biodiversity claims | Governed AI / Focus Mode surfaces | AI may summarize only released, policy-safe EvidenceBundles. |
-| Generic biodiversity essays | `../../../docs/domains/` or repo-confirmed domain docs | This directory is execution-facing, not the domain manual. |
+| Raw source exports | `../../../data/raw/` | validators should not own raw custody |
+| Work/intermediate transforms | `../../../data/work/` | validators consume candidates; they should not become transformation storage |
+| Durable proof artifacts | `../../../data/proofs/` | proof custody is lifecycle storage |
+| Run receipts | `../../../data/receipts/` | receipt custody is separate from validation code |
+| Catalog records | `../../../data/catalog/` | catalog closure is downstream of validation |
+| Published data | `../../../data/published/` | publication is a governed state transition |
+| Policy source of truth | `../../../policy/` | validator enforces policy; it should not hide policy law |
+| Canonical schemas/contracts | `../../../schemas/`, `../../../contracts/` | validators should not define parallel schema law |
+| Secrets or signing keys | secret manager / untracked local config | never commit trust-root material |
+| Public map/API payloads | governed API / UI contract surfaces | validation is not runtime serving |
 
 [Back to top](#top)
 
@@ -145,36 +180,39 @@ Material belongs here when it is specific to validating the Kansas biodiversity 
 
 ## Directory tree
 
-> [!NOTE]
-> The tree below is a target/checklist shape for this validation surface. Treat it as `NEEDS VERIFICATION` until branch-local files are inspected.
-
 ```text
 pipelines/kansas_biodiversity_etl/
-├── README.md
-├── ingest/
-├── normalize/
-├── validate/
-│   ├── README.md
-│   ├── config/
-│   │   ├── validation_profile.yaml          # PROPOSED: lane-local validator profile
-│   │   └── reason_codes.yaml                # PROPOSED: stable validation reason codes
-│   ├── fixtures/
-│   │   ├── valid/
-│   │   │   └── public_safe_occurrence.json  # PROPOSED: no sensitive exact geometry
-│   │   └── invalid/
-│   │       ├── sensitive_exact_public.json  # PROPOSED: must DENY/HOLD
-│   │       ├── unknown_rights.json          # PROPOSED: must HOLD/DENY
-│   │       └── unresolved_taxon.json        # PROPOSED: must HOLD/ABSTAIN
-│   ├── reports/
-│   │   └── .gitkeep                         # PROPOSED: local generated reports ignored or documented
-│   └── scripts/
-│       └── validate_biodiversity_candidates.py  # PROPOSED unless repo uses another CLI
-└── catalog/
+├── Makefile
+├── attest/
+│   ├── sign_receipt.py                 # PROPOSED / NEEDS VERIFICATION
+│   └── verify_receipt_proof.py         # PROPOSED / NEEDS VERIFICATION
+├── publish/
+│   └── publish.py                      # PROPOSED / NEEDS VERIFICATION
+└── validate/
+    ├── README.md
+    └── promotion_gate_full.py          # PROPOSED / NEEDS VERIFICATION
 ```
 
-### Placement rule
+Expected validated output surfaces:
 
-Keep only lane-local validation support here. Move shared schemas, policy gates, reusable validators, and proof-object definitions to their repo-confirmed shared homes.
+```text
+data/
+├── processed/
+│   └── kansas_occurrences/
+│       ├── _dataset_metadata.json
+│       └── year=YYYY/
+│           └── month=MM/
+│               └── part-000.parquet
+├── proofs/
+│   └── kansas_biodiversity_etl/
+│       └── YYYYMMDD/
+│           ├── evidence_bundle.json
+│           └── receipt_proof.json
+└── receipts/
+    └── kansas_biodiversity_etl/
+        └── YYYYMMDD/
+            └── run_receipt.json
+```
 
 [Back to top](#top)
 
@@ -182,48 +220,47 @@ Keep only lane-local validation support here. Move shared schemas, policy gates,
 
 ## Quickstart
 
-### 1. Inspect the branch-local surface
+Run from:
 
-Run these from the repo root before changing validator behavior.
-
-```bash
-git status --short
-
-find pipelines/kansas_biodiversity_etl/validate -maxdepth 4 -type f | sort
-
-find tests -maxdepth 5 -type f 2>/dev/null \
-  | grep -E 'biodiversity|fauna|flora|habitat|geoprivacy|taxonomy' \
-  || true
-
-find schemas contracts policy data/registry -maxdepth 5 -type f 2>/dev/null \
-  | grep -E 'biodiversity|fauna|flora|habitat|species|taxon|occurrence|sensitivity' \
-  || true
+```text
+pipelines/kansas_biodiversity_etl/
 ```
 
-### 2. Run the no-network fixture suite
-
-> [!CAUTION]
-> The exact command is `NEEDS VERIFICATION`. Use the branch-confirmed make target, test runner, or validator CLI. Do not add live-source network calls to ordinary PR validation.
+### Full gate through Makefile
 
 ```bash
-# PSEUDOCODE — replace with the repo-confirmed validator entrypoint.
-<validator-command> \
-  --profile pipelines/kansas_biodiversity_etl/validate/config/validation_profile.yaml \
-  --input tests/fixtures/biodiversity/valid/public_safe_occurrence.json \
-  --report build/biodiversity/validation_report.json \
-  --no-network
+make gate
 ```
 
-### 3. Confirm invalid fixtures fail closed
+Expected success shape:
+
+```json
+{
+  "decision": "PASS",
+  "gates": ["A", "B", "C", "D", "E", "F", "G", "H"]
+}
+```
+
+### Direct gate command
 
 ```bash
-# PSEUDOCODE — invalid fixtures should produce HOLD, DENY, or ERROR with reason codes.
-<validator-command> \
-  --profile pipelines/kansas_biodiversity_etl/validate/config/validation_profile.yaml \
-  --input tests/fixtures/biodiversity/invalid/sensitive_exact_public.json \
-  --expect DENY \
-  --no-network
+python validate/promotion_gate_full.py \
+  --dataset ../../data/processed/kansas_occurrences \
+  --metadata ../../data/processed/kansas_occurrences/_dataset_metadata.json \
+  --evidence ../../data/proofs/kansas_biodiversity_etl/20260425/evidence_bundle.json \
+  --receipt ../../data/receipts/kansas_biodiversity_etl/20260425/run_receipt.json \
+  --proof ../../data/proofs/kansas_biodiversity_etl/20260425/receipt_proof.json
 ```
+
+### Offline sample flow
+
+```bash
+make clean
+make sample
+```
+
+> [!NOTE]
+> `make sample` should remain no-network and fixture-driven. `make all` may use the GBIF harvest step when that harvester is present and network access is intended.
 
 [Back to top](#top)
 
@@ -231,238 +268,23 @@ find schemas contracts policy data/registry -maxdepth 5 -type f 2>/dev/null \
 
 ## Usage
 
-### Modes
+### Supported dataset shapes
 
-| Mode | Purpose | Network posture | Merge posture |
-| --- | --- | --- | --- |
-| **Fixture mode** | Validate positive/negative fixtures and reason codes. | No network. | Should be merge-blocking once wired. |
-| **Candidate mode** | Validate normalized candidate batches from ingest/normalize. | No network unless explicitly approved. | Blocks promotion when invalid. |
-| **Review mode** | Emit reviewer-facing summaries from validation reports. | No network. | Supports steward review; does not publish. |
-| **Source-probe mode** | Check external endpoint shape, rights, cadence, or drift. | Opt-in only. | Never required for ordinary PRs unless credentials and source policy are governed. |
-
-### Outcome grammar
-
-| Outcome | Meaning | Required next step |
+| Dataset argument | Supported | Identity source |
 | --- | --- | --- |
-| `PASS` | Candidate satisfies configured validation checks for the current stage. | Continue to the next governed stage; do not publish automatically. |
-| `HOLD` | Candidate may be fixable or needs steward/source review. | Route to quarantine/review with reason codes. |
-| `DENY` | Policy or public-safety rule forbids the candidate or payload. | Do not promote; emit denial evidence. |
-| `ERROR` | Validator infrastructure failed or input shape prevented a decision. | Block; repair validator/input before retrying. |
+| `*.jsonl` | yes | SHA-256 of dataset file bytes |
+| `*.parquet` | yes | `_dataset_metadata.json` |
+| partitioned directory | yes | `_dataset_metadata.json` |
+| missing path | fail | `dataset_missing` |
+| unsupported suffix | fail | `unsupported_dataset_format:<suffix>` |
 
-Runtime surfaces may later translate release-safe results into `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, but this validator should not emit fluent public answers.
+### Makefile gate target
 
-[Back to top](#top)
-
----
-
-## Validation matrix
-
-| Validator family | Required checks | Blocks when | Expected output |
-| --- | --- | --- | --- |
-| Source registry | `source_id`, `source_role`, `authority_scope`, rights, cadence, steward/review status | Unknown rights, unknown role, missing authority scope, live connector not verified | `ValidationReport` + source-role reason codes |
-| Taxonomy | Scientific name normalization, rank, authority mapping, synonym handling, ambiguity classification | Ambiguous/unresolved taxon, silent merge, missing migration mapping | Taxon resolution receipt or `HOLD` |
-| Occurrence geometry | Geometry validity, CRS, coordinate uncertainty, spatial support, event date, source freshness | Invalid geometry, unknown CRS, unsupported precision, event/publication date collapse | Geometry validation section |
-| Sensitivity / geoprivacy | Sensitive class, steward override, embargo, coordinate generalization, redaction receipt | Exact sensitive geometry in public payload, missing redaction receipt, ignored geoprivacy flag | Redaction receipt + public support class |
-| Rights | License, attribution, redistribution, source-specific terms, record-level rights | Unknown rights requested for public promotion | Rights block reason |
-| Evidence refs | Candidate claims resolve to source refs and EvidenceBundle refs | Dangling refs, missing evidence, uncited consequential claim | Evidence closure report |
-| Catalog closure | STAC/DCAT/PROV, digest alignment, source refs, generated-by activity | Missing PROV, mismatched checksums, incomplete catalog matrix | Catalog validation report |
-| Public payload | Field allowlist, no `restricted_geometry_ref`, no private source fields, finite runtime envelope | Restricted fields, source-private data, raw/work/quarantine refs | Payload safety report |
-| Continuity | Prior IDs, aliases, release refs, rollback refs, compatibility maps | Destructive rename or schema churn without mapping/tests/docs/rollback | Continuity report |
-
-### Source-role hierarchy to preserve
-
-| Source family | Validation posture |
-| --- | --- |
-| Kansas state conservation/legal-status source | May support Kansas-specific status claims only when descriptor and authority scope are verified. |
-| Federal listed-species / critical-habitat source | May support federal status or critical-habitat claims only within its declared scope. |
-| Controlled heritage / NatureServe-like source | Sensitive by default; exact occurrence release requires steward authorization. |
-| Occurrence aggregator | Corroborative occurrence evidence, not legal authority. Requires record-level rights and geoprivacy checks. |
-| Community-science source | Occurrence/monitoring signal only; requires bias, precision, rights, and review context. |
-| Habitat / land-cover surface | Habitat context or derived join support; not proof of species presence. |
-| Synthetic fixture | Test evidence only; never treated as public biological source authority. |
-
-[Back to top](#top)
-
----
-
-## Diagram
-
-```mermaid
-flowchart LR
-    A[SourceDescriptor] --> V[validate/]
-    B[Normalized candidate batch] --> V
-    C[Synthetic valid/invalid fixtures] --> V
-    D[Validation profile] --> V
-
-    V -->|PASS| P[Processed candidate<br/>not public yet]
-    V -->|HOLD| Q[QUARANTINE / steward review]
-    V -->|DENY| N[PolicyDecision DENY]
-    V -->|ERROR| E[ValidationReport ERROR]
-
-    P --> CC[Catalog closure<br/>STAC + DCAT + PROV]
-    CC --> EB[EvidenceBundle refs]
-    EB --> RM[ReleaseManifest candidate]
-    RM --> API[Governed API / Map / Evidence Drawer]
-
-    API -. must not read .-> RAW[(RAW / WORK / QUARANTINE)]
-```
-
-[Back to top](#top)
-
----
-
-## Definition of done
-
-A validation change is not done until it is reviewable, reproducible, and fail-closed.
-
-- [ ] Branch-local path and adjacent links are verified.
-- [ ] Owners and policy label are confirmed.
-- [ ] Valid fixtures pass without network calls.
-- [ ] Invalid fixtures fail with stable reason codes.
-- [ ] Unknown rights block public promotion.
-- [ ] Unknown source role cannot be used as authority.
-- [ ] Ambiguous or unresolved taxon does not silently merge.
-- [ ] Sensitive exact geometry cannot appear in public payloads.
-- [ ] Redaction/generalization emits a receipt with before/after hashes.
-- [ ] Public payload field allowlist is enforced.
-- [ ] Evidence refs resolve or candidate is held/denied.
-- [ ] STAC/DCAT/PROV closure is checked when catalog drafts are present.
-- [ ] Runtime-facing candidates use finite outcome grammar.
-- [ ] No validator writes public release aliases.
-- [ ] No ordinary PR validation requires live source credentials.
-- [ ] Rollback/correction references are present for release-bearing candidates.
-- [ ] Documentation, fixtures, and tests change together when behavior changes.
-
-[Back to top](#top)
-
----
-
-## Failure patterns this lane should catch
-
-| Pattern | Correct response |
-| --- | --- |
-| A GBIF-like occurrence is used as Kansas legal-status authority. | `DENY` or `HOLD` for source-role misuse. |
-| A rare-species occurrence contains exact public coordinates. | `DENY`; require generalization/redaction receipt or steward-reviewed release class. |
-| A candidate has a plausible species name but ambiguous taxonomy. | `HOLD`; require taxon resolution receipt or explicit unresolved state. |
-| Rights are missing, vague, or inherited from an unverified source. | `HOLD` or `DENY`; no public promotion. |
-| A habitat join is treated as proof of species presence. | `DENY` or `HOLD`; classify as derived context only. |
-| A public map payload includes `restricted_geometry_ref`. | `DENY`; public-safety validator failure. |
-| STAC exists but PROV activity is missing. | `HOLD`; catalog closure incomplete. |
-| A validator silently drops unknown fields/assets. | `ERROR` or `HOLD`; route unmapped material to quarantine/review. |
-
-[Back to top](#top)
-
----
-
-## FAQ
-
-### Is this the publication gate?
-
-No. This directory validates candidates and emits reviewable outputs. Promotion and publication remain governed state transitions outside this directory.
-
-### Can this lane validate live GBIF, eBird, iNaturalist, KDWP, NatureServe, or USFWS data?
-
-Only after source descriptors, rights, terms, source roles, sensitivity rules, and steward review obligations are verified. The first mergeable tests should use no-network fixtures.
-
-### Can a public fixture include exact coordinates?
-
-Only for explicitly public-safe synthetic or non-sensitive fixtures. Sensitive and rare-species examples should use generalized geometry or invalid fixtures that prove denial behavior.
-
-### Does a habitat assignment prove habitat preference or species presence?
-
-No. A point-to-raster or point-to-polygon assignment is a derived context record. It must carry source refs, derivation parameters, validation state, and uncertainty/support notes.
-
-### Why so many negative tests?
-
-Because KFM treats overclaiming as a trust failure. A validator that only proves happy paths is not enough for biodiversity, where rights, sensitivity, taxonomy, and public-location risk matter.
-
-[Back to top](#top)
-
----
-
-<details>
-<summary>Appendix A — Illustrative validation report shape</summary>
-
-> [!NOTE]
-> This is an illustrative example until the branch-confirmed schema home and validator contract are verified.
-
-```json
-{
-  "schema_version": "kfm.validation_report.v1",
-  "validator": "pipelines.kansas_biodiversity_etl.validate",
-  "run_id": "kfm-run-TODO",
-  "input_ref": "kfm://candidate/biodiversity/TODO",
-  "outcome": "HOLD",
-  "reason_codes": [
-    "RIGHTS_UNKNOWN",
-    "EVIDENCE_REF_UNRESOLVED"
-  ],
-  "source_refs": [
-    "kfm://source/TODO"
-  ],
-  "evidence_refs": [],
-  "policy_decision_ref": "kfm://policy-decision/TODO",
-  "receipts": {
-    "run_receipt_ref": "kfm://receipt/run/TODO",
-    "redaction_receipt_ref": null
-  },
-  "public_payload_allowed": false,
-  "network_used": false,
-  "notes": [
-    "Illustrative only; replace with repo-confirmed schema."
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>Appendix B — Illustrative validation profile shape</summary>
-
-```yaml
-# Illustrative only — replace with repo-confirmed schema and policy references.
-profile_id: kansas_biodiversity_etl_validate_default
-schema_version: kfm.validation_profile.v1
-network: deny_by_default
-
-required_checks:
-  - source_registry
-  - taxonomy
-  - occurrence_geometry
-  - sensitivity_geoprivacy
-  - rights
-  - evidence_refs
-  - catalog_closure
-  - public_payload
-  - continuity
-
-public_payload:
-  deny_fields:
-    - restricted_geometry_ref
-    - private_source_payload
-    - raw_record
-    - steward_only_notes
-
-reason_codes:
-  rights_unknown: RIGHTS_UNKNOWN
-  source_role_unknown: SOURCE_ROLE_UNKNOWN
-  taxon_ambiguous: TAXON_AMBIGUOUS
-  sensitive_exact_public: SENSITIVE_EXACT_PUBLIC
-  redaction_receipt_missing: REDACTION_RECEIPT_MISSING
-  evidence_ref_unresolved: EVIDENCE_REF_UNRESOLVED
-  catalog_prov_missing: CATALOG_PROV_MISSING
-```
-
-</details>
-
-<details>
-<summary>Appendix C — Reviewer checklist</summary>
-
-- [ ] This README does not claim live connectors, current workflows, or route names that were not verified.
-- [ ] All examples are either branch-confirmed or explicitly marked illustrative / needs verification.
-- [ ] Public biodiversity examples avoid sensitive exact coordinates.
-- [ ] Shared law is linked outward instead of duplicated loosely.
-- [ ] A future reader can tell the difference between validation, promotion, publication, and runtime answering.
-- [ ] The validator cannot become a hidden publication path.
-
-</details>
+```makefile
+gate:
+	@echo "=== Promotion Gate (fail-closed) ==="
+	python validate/promotion_gate_full.py \
+		--dataset $(DATASET_ROOT) \
+		--metadata $(METADATA) \
+		--evidence $(EVIDENCE) \
+		--receipt $(RECEIPT) \
