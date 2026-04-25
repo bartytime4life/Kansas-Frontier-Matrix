@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -180,4 +179,3 @@ def test_get_ecology_evidence_bundle_abstains_for_missing_proof_pack(
     assert response["status"] == "ok"
     assert response["data"]["decision"] == "abstain"
     assert response["data"]["reason"] == "proof_pack_missing"
-```

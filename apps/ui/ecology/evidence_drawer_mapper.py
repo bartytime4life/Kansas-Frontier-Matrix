@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 from typing import Any
@@ -115,4 +114,3 @@ def abstain_drawer(
             "open_provenance": False,
         },
     }
-```

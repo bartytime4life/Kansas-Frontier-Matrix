@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -206,4 +205,3 @@ def test_fastapi_route_respects_include_uncertainty_false(
     payload = response.json()
     assert payload["data"]["decision"] == "cite"
     assert "uncertainty" not in payload["data"]
-```
