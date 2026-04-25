@@ -51,6 +51,9 @@ def test_format_message_falls_back_for_bad_template(render_json_module: ModuleTy
     )
 
 
+def test_render_json_io_exports_expected_public_api(render_json_module: ModuleType) -> None:
+    assert sorted(render_json_module.__all__) == ["format_message", "read_json_object"]
+
 
 def test_read_json_object_success(read_json_object: Callable[..., dict[str, Any]]) -> None:
     with tempfile.TemporaryDirectory() as td:

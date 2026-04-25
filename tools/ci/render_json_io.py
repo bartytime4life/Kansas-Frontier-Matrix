@@ -8,7 +8,6 @@ from pathlib import Path
 __all__ = ["format_message", "read_json_object"]
 
 
-
 def format_message(template: object, **kwargs: object) -> str:
     """Format a message template defensively.
 
@@ -19,10 +18,6 @@ def format_message(template: object, **kwargs: object) -> str:
         return template_text.format(**kwargs)
     except (AttributeError, KeyError, IndexError, TypeError, ValueError):
         return template_text
-
-
-# Backward-compatible alias for internal callers.
-_format_message = format_message
 
 
 def read_json_object(
