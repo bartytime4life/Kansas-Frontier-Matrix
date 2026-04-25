@@ -1,21 +1,30 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-uuid-gbif-source-contract
+doc_id: kfm://doc/TODO-uuid-source-contract-gbif-kansas-flora
 title: GBIF Source Contract — Kansas Flora
 type: standard
 version: v1
 status: draft
-owners: TODO-data-steward-owner
+owners: TODO-verify-flora-data-steward-owner
 created: 2026-04-25
 updated: 2026-04-25
-policy_label: TODO-policy-label
-related: [contracts/source/kansas_flora/README.md, schemas/contracts/v1/kansas_flora/occurrence_evidence.schema.json, data/registry/kansas_flora/sources.yaml, docs/domains/kansas_flora/README.md]
-tags: [kfm, kansas-flora, gbif, biodiversity, occurrence, source-contract, geoprivacy]
-notes: [doc_id owners policy_label and related paths need repo verification; target path was provided by request; live connector remains disabled until activation gates pass]
+policy_label: TODO-verify-policy-label
+related: ["TODO-verify:contracts/source/kansas_flora/README.md", "TODO-verify:data/registry/flora/sources.yaml", "TODO-verify:docs/adr/ADR-flora-source-roles.md", "TODO-verify:docs/adr/ADR-flora-sensitive-location-policy.md", "TODO-verify:docs/domains/flora/README.md"]
+tags: [kfm, kansas-flora, flora, gbif, biodiversity, occurrence, source-contract, geoprivacy]
+notes: [doc_id owners policy_label and related paths need repo verification; target path was provided by request; static Shields.io badges are used pending repo badge convention verification; live connector remains disabled until source rights sensitivity cadence fixture and steward gates pass]
 [/KFM_META_BLOCK_V2] -->
 
 # GBIF Source Contract — Kansas Flora
 
-Defines how GBIF-mediated occurrence data may support Kansas Flora evidence without becoming authoritative status, steward-reviewed precision, or public exact-location truth.
+Defines how GBIF-mediated plant occurrence records may support Kansas Flora evidence without becoming authoritative status, steward-reviewed precision, or public exact-location truth.
+
+<p>
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Activation: fixture only" src="https://img.shields.io/badge/activation-fixture--only-lightgrey">
+  <img alt="Source role: corroborative occurrence signal" src="https://img.shields.io/badge/source_role-corroborative_occurrence_signal-blue">
+  <img alt="Public geometry: generalized by default" src="https://img.shields.io/badge/public_geometry-generalized_by_default-orange">
+  <img alt="Runtime: cite or abstain" src="https://img.shields.io/badge/runtime-cite_or_abstain-purple">
+  <img alt="Evidence: EvidenceBundle required" src="https://img.shields.io/badge/evidence-EvidenceBundle_required-informational">
+</p>
 
 <a id="top"></a>
 
@@ -23,15 +32,16 @@ Defines how GBIF-mediated occurrence data may support Kansas Flora evidence with
 |---|---|
 | Target path | `contracts/source/kansas_flora/gbif.md` |
 | Source key | `gbif` |
-| Domain lane | `kansas_flora` |
+| Domain lane | `kansas_flora` / Flora |
 | Source family | Biodiversity occurrence aggregator |
 | Default source role | `corroborative_occurrence_signal` |
-| Activation state | `fixture_only` until source, rights, sensitivity, cadence, and steward gates are reviewed |
-| Public release default | Generalized / aggregated only; exact points are denied unless explicitly authorized |
-| Runtime posture | Cite-or-abstain; finite outcomes only: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Activation state | `fixture_only` until source, rights, sensitivity, cadence, and steward gates pass |
+| Public release default | Generalized / aggregated only; exact public points are denied unless explicitly authorized |
+| Runtime posture | Cite-or-abstain with finite outcomes: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Connector posture | No live connector is authorized by this document alone |
 
 > [!IMPORTANT]
-> **Truth posture:** This document is a source contract and activation checklist. It does **not** prove that a GBIF connector, schema, registry entry, workflow, API route, MapLibre layer, or promotion gate currently exists in the repository. Live access remains **NEEDS VERIFICATION** until the real repo and runtime are inspected.
+> **Truth posture:** this is a source contract and activation checklist. It does **not** prove that a GBIF connector, schema, source registry entry, workflow, API route, MapLibre layer, Evidence Drawer component, Focus Mode handler, or promotion gate currently exists in the repository. Those implementation claims remain **UNKNOWN** until the real repo and runtime are inspected.
 
 ## Quick navigation
 
@@ -49,6 +59,7 @@ Defines how GBIF-mediated occurrence data may support Kansas Flora evidence with
 - [Runtime and UI contract](#runtime-and-ui-contract)
 - [Definition of done](#definition-of-done)
 - [Open verification backlog](#open-verification-backlog)
+- [External references](#external-references)
 
 ---
 
@@ -56,16 +67,42 @@ Defines how GBIF-mediated occurrence data may support Kansas Flora evidence with
 
 This contract governs **GBIF-mediated occurrence records** used as evidence candidates for Kansas Flora.
 
-It is intended to support:
+GBIF may supply broad occurrence signals from herbarium specimens, observations, machine observations, material samples, and other publisher-mediated datasets. In KFM, that breadth is valuable only when the system preserves:
 
-- plant occurrence evidence candidates;
-- specimen and observation signals with source attribution;
-- taxon, time, location, uncertainty, rights, and dataset identity preservation;
-- public-safe generalized flora outputs;
-- steward/reviewer workflows for sensitive or restricted records;
-- EvidenceBundle-backed API, Evidence Drawer, Focus Mode, and MapLibre outputs.
+- source and dataset identity;
+- GBIF download or derived-dataset citation context;
+- source-native and GBIF-interpreted taxon fields;
+- basis of record;
+- event time and date precision;
+- coordinate uncertainty and geospatial flags;
+- rights, license, publisher, rights holder, and media-license separation;
+- sensitivity, redaction, review, and public geometry class;
+- validation results, receipts, catalog closure, and release state.
 
-GBIF is useful in this lane because it aggregates biodiversity records from many publishers and datasets. In KFM, that breadth is valuable only when **dataset identity, licensing, occurrence uncertainty, source role, and sensitivity posture stay visible**.
+This contract is designed for **Kansas Flora evidence**, not for all biodiversity, not for fauna, and not for unbounded GBIF harvesting.
+
+### What this contract does
+
+| It does | Why |
+|---|---|
+| Defines GBIF’s source role | Prevents an aggregator from becoming legal, steward, or status authority |
+| Defines accepted inputs | Keeps fixture, download, metadata, rights, and citation artifacts reviewable |
+| Defines exclusion rules | Blocks website scraping, non-flora drift, and public exact sensitive-location leakage |
+| Defines validation gates | Makes source activation testable instead of implied |
+| Defines runtime consequences | Forces `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` to remain explicit |
+| Defines UI obligations | Keeps Evidence Drawer and Focus Mode trust-visible |
+
+### What this contract does not do
+
+| It does not | Correct next step |
+|---|---|
+| Activate live GBIF harvesting | Add and review a machine source descriptor, fixtures, validators, and steward approval |
+| Declare GBIF authoritative for Kansas protected status | Use KDWP, USFWS, NatureServe, or steward-reviewed status sources |
+| Permit exact public rare-plant points | Apply sensitivity policy, geoprivacy transform, and release review |
+| Define final repo schema authority | Verify the real repo and resolve `contracts/` vs `schemas/contracts/v1/` by ADR |
+| Replace KFM Flora domain docs | Link to or update Flora lane docs after repo paths are verified |
+
+[Back to top](#top)
 
 ---
 
@@ -75,20 +112,24 @@ GBIF is useful in this lane because it aggregates biodiversity records from many
 contracts/source/kansas_flora/gbif.md
 ```
 
-| Direction | Surface | Role |
-|---|---|---|
-| Upstream | GBIF API, GBIF occurrence downloads, GBIF dataset metadata, GBIF citation/download DOI records | External source access and provenance |
-| Same-lane companion | `contracts/source/kansas_flora/README.md` | Source-contract index and local conventions — **NEEDS VERIFICATION** |
-| Same-lane companion | `data/registry/kansas_flora/sources.yaml` | Machine-readable source registry — **PROPOSED** |
-| Same-lane companion | `schemas/contracts/v1/kansas_flora/occurrence_evidence.schema.json` | Occurrence evidence object schema — **PROPOSED** |
-| Downstream | `data/work/kansas_flora/gbif/` | Normalized work-stage records and validation reports — **PROPOSED** |
-| Downstream | `data/quarantine/kansas_flora/gbif/` | Records blocked by rights, sensitivity, unresolved taxonomy, invalid geometry, or missing provenance — **PROPOSED** |
-| Downstream | `data/processed/kansas_flora/occurrences/` | Processed occurrence evidence candidates — **PROPOSED** |
-| Downstream | `data/catalog/{stac,dcat,prov}/kansas_flora/` | Catalog and provenance closure — **PROPOSED** |
-| Downstream | Governed API / Evidence Drawer / Focus Mode | Released evidence interpretation only; no raw GBIF shortcut |
+| Direction | Surface | Role | Truth label |
+|---|---|---|---|
+| Upstream | GBIF API, occurrence downloads, dataset metadata, citation/download DOI records | External source access and provenance | CONFIRMED external source family |
+| Same-lane companion | `contracts/source/kansas_flora/README.md` | Source-contract index and local conventions | NEEDS VERIFICATION |
+| Same-lane companion | `data/registry/flora/sources.yaml` | Machine-readable source registry | PROPOSED |
+| Same-lane companion | `data/registry/flora/source_roles.yaml` | Source-role vocabulary and authority boundaries | PROPOSED |
+| Same-lane companion | `docs/adr/ADR-flora-source-roles.md` | Source-role authority decision | PROPOSED |
+| Same-lane companion | `docs/adr/ADR-flora-sensitive-location-policy.md` | Exact/internal/public geometry policy | PROPOSED |
+| Same-lane companion | `schemas/contracts/v1/flora/occurrence_evidence.schema.json` | Occurrence evidence object schema | PROPOSED |
+| Downstream | `data/raw/flora/gbif/` | Immutable GBIF download package, request JSON, rights, citations, checksums | PROPOSED |
+| Downstream | `data/work/flora/gbif/` | Normalized interpreted/verbatim work records and validation reports | PROPOSED |
+| Downstream | `data/quarantine/flora/gbif/` | Records blocked by rights, sensitivity, unresolved taxonomy, geometry, or provenance | PROPOSED |
+| Downstream | `data/processed/flora/occurrences/` | Processed occurrence evidence candidates | PROPOSED |
+| Downstream | `data/catalog/{stac,dcat,prov}/flora/` | Catalog and provenance closure | PROPOSED |
+| Downstream | Governed API / Evidence Drawer / Focus Mode / MapLibre | Released evidence interpretation only; no raw GBIF shortcut | PROPOSED |
 
 > [!NOTE]
-> The user-provided target path is treated as the requested file home. All adjacent paths are contractually useful but remain **PROPOSED** until the mounted repository confirms its directory conventions.
+> The user-provided target path is treated as the requested file home. Adjacent paths are **PROPOSED** because the mounted repository was not available for verification.
 
 [Back to top](#top)
 
@@ -99,15 +140,18 @@ contracts/source/kansas_flora/gbif.md
 | Input | Accepted when | Required preservation |
 |---|---|---|
 | GBIF fixture records | Always allowed for no-network tests and contract validation | Fixture source, expected outcome, sample license state, geometry precision class |
-| GBIF occurrence download request JSON | Allowed as a reviewed request artifact before live execution | Predicate, creator, notification target, requested format, intended release scope |
+| GBIF occurrence download request JSON | Allowed as a reviewed request artifact before live execution | Predicate, creator placeholder, notification target, requested format, intended release scope |
 | Completed GBIF occurrence download ZIP | Allowed after activation; initially test-only | Download key, DOI where available, request JSON, retrieval timestamp, checksum |
-| Darwin Core Archive download | Allowed when `occurrence.txt`, `verbatim.txt`, `rights.txt`, `citations.txt`, and `metadata.xml` are retained | Interpreted and verbatim separation, rights, citations, dataset metadata |
+| Darwin Core Archive download | Allowed when the archive and metadata files are retained | `occurrence.txt`, `verbatim.txt`, `rights.txt`, `citations.txt`, `metadata.xml`, `meta.xml`, dataset metadata |
 | Simple CSV download | Allowed for small, fixture, or explicitly scoped extracts | Header, query, download metadata, checksum, DOI or derived-dataset citation plan |
-| Dataset metadata | Required for each contributing dataset | `datasetKey`, publisher, license, citation, rights holder, version/date if available |
+| Dataset metadata | Required for each contributing dataset | `datasetKey`, publisher, license, citation, rights holder, version/date when available |
 | Occurrence identity fields | Required when present | `gbifID`, `occurrenceID`, `catalogNumber`, `institutionCode`, `collectionCode`, `datasetKey` |
-| Flora taxon scope | Required before broad harvesting | Approved taxon keys or curated taxon list; do not use an unbounded all-life query |
+| Flora taxon scope | Required before broad harvesting | Approved taxon keys, curated taxon list, or approved higher-taxon boundary |
 | Coordinate and uncertainty fields | Required for spatial claims | Latitude/longitude, uncertainty, precision bucket, georeference quality, GBIF issue flags |
 | Rights and attribution fields | Required for any outward use | License URI, rights holder, publisher, DOI/download citation, citation obligations |
+| Media fields | Accepted only as separately rights-reviewed references | Parent occurrence, media license, creator/rights holder, reuse decision |
+
+[Back to top](#top)
 
 ---
 
@@ -115,14 +159,16 @@ contracts/source/kansas_flora/gbif.md
 
 | Excluded item | Why excluded | Destination |
 |---|---|---|
-| Scraped GBIF website pages | GBIF API/documented downloads are the supported machine path; website scraping is not a KFM source contract pattern | Deny; replace with official API/download |
-| Non-plant taxa | This contract is scoped to Kansas Flora | Route to fauna, habitat, invasive species, pollinator, or biodiversity-wide source contract |
+| Scraped GBIF website pages | Official API/download paths are the supported machine path | Deny; replace with documented API/download |
+| Non-plant taxa | This contract is scoped to Kansas Flora | Route to fauna, habitat, invasive species, pollinator, or biodiversity-wide contract |
 | GBIF records used as protected-status authority | GBIF occurrence data is not Kansas legal or steward authority | KDWP, USFWS ECOS, NatureServe, or steward-reviewed status contract |
 | Public exact sensitive occurrence coordinates | KFM geoprivacy defaults deny exact sensitive point exposure | Generalized public derivative, steward-only view, or quarantine |
 | Records with missing or incompatible rights for outward publication | KFM must not publish data whose reuse posture is unknown or incompatible | Quarantine or restricted internal reference |
-| Occurrences with unresolved taxonomy where accepted identity is required | Taxon ambiguity must stay visible | Work review or quarantine |
+| Occurrences with unresolved taxonomy where accepted identity is required | Taxon ambiguity must remain visible | Work review or quarantine |
 | Modeled distribution or habitat inference | GBIF occurrence records are occurrence signals, not models | Flora habitat, range, or model contract |
 | AI-generated flora claims without EvidenceBundle resolution | AI is interpretive only and cannot substitute for evidence | Runtime `DENY` or `ABSTAIN` |
+| Public layer built directly from raw GBIF coordinates | Public outputs must be promoted, cataloged, reviewed, and release-scoped | Block promotion |
+| GBIF media reused without media-license review | Occurrence data and media rights can differ | Media review or omit media |
 
 [Back to top](#top)
 
@@ -140,9 +186,10 @@ GBIF records must **not** be used alone to claim:
 - a sensitive species location is safe for public exact display;
 - an observation has been steward-reviewed by Kansas authorities;
 - a modeled habitat/range boundary is authoritative;
-- absence of records means absence of the taxon;
+- absence of GBIF records means absence of the taxon;
 - occurrence geometry is survey-grade or boundary-grade evidence;
-- GBIF interpretation has resolved every taxonomic or geospatial uncertainty.
+- GBIF interpretation has resolved every taxonomic or geospatial uncertainty;
+- an image or media asset is reusable merely because the occurrence record is accessible.
 
 | Claim type | GBIF role | Required companion evidence |
 |---|---|---|
@@ -152,6 +199,8 @@ GBIF records must **not** be used alone to claim:
 | Habitat association | Input signal only | Habitat/covariate source, derivation receipt, uncertainty method |
 | Species range | Corroborative only | Range map, modeled habitat, or official range/status source |
 | Taxon identity | Informative, not final when contested | KFM taxon authority or accepted reconciliation policy |
+| Trend or richness summary | Source-dependent signal | Sampling caveat, deduplication, spatial/temporal support, source-bias note |
+| Public map popup | Evidence-backed released claim only | Evidence Drawer payload, release state, policy decision, generalized geometry |
 
 [Back to top](#top)
 
@@ -161,12 +210,12 @@ GBIF records must **not** be used alone to claim:
 
 ```mermaid
 flowchart LR
-    A[GBIF API / occurrence download<br/>official external source] --> B[RAW<br/>download zip, request JSON, DOI, rights, citations]
+    A[GBIF API / occurrence download<br/>official external source] --> B[RAW<br/>download zip, request JSON, DOI, rights, citations, checksums]
     B --> C[WORK<br/>interpreted + verbatim normalization<br/>taxon, geometry, rights, issue flags]
     C --> D{Validation + policy}
     D -- missing rights / sensitivity / taxonomy / geometry --> E[QUARANTINE<br/>blocked or review-required records]
     D -- passes internal checks --> F[PROCESSED<br/>occurrence evidence candidates]
-    F --> G[CATALOG / PROV / receipts<br/>DCAT, STAC where spatial assets exist, PROV lineage]
+    F --> G[CATALOG / PROV / receipts<br/>DCAT, STAC when spatial assets exist, PROV lineage]
     G --> H{Promotion}
     H -- public-safe --> I[PUBLISHED<br/>generalized / aggregated flora outputs]
     H -- steward-only --> J[Restricted release<br/>role-gated exact/internal context]
@@ -175,6 +224,7 @@ flowchart LR
 
     C -. no direct public path .-> K
     E -. no public path .-> K
+    B -. no direct public path .-> K
 ```
 
 ### Lifecycle rules
@@ -186,6 +236,26 @@ flowchart LR
 5. **CATALOG/TRIPLET is closure.** Catalog records, provenance, receipts, and optional graph/triplet projection must close over the same promoted subject.
 6. **PUBLISHED is governed.** Publication requires policy, review, rights, sensitivity, validation, catalog closure, and rollback path.
 7. **Public clients never read RAW, WORK, or QUARANTINE.**
+
+### Batch-level receipts
+
+Every GBIF run should emit a receipt that includes:
+
+| Receipt field | Required content |
+|---|---|
+| `source_key` | `gbif` |
+| `run_id` | Deterministic or traceable run identifier |
+| `requested_by` | Human/service identity, if allowed by repo policy |
+| `request_digest` | Digest of request JSON |
+| `download_key` | GBIF download key when available |
+| `download_doi` | GBIF DOI or derived-dataset DOI where applicable |
+| `retrieved_at` | Timestamp |
+| `raw_checksum` | Download/archive checksum |
+| `record_count` | Count by batch and by dataset where possible |
+| `license_summary` | License counts and blocked license states |
+| `sensitivity_summary` | Generalized/restricted/quarantined counts |
+| `validation_summary` | Pass/fail counts and reason-code counts |
+| `next_action` | `review_required`, `promote_candidate`, `quarantine_batch`, or `abort` |
 
 [Back to top](#top)
 
@@ -212,10 +282,11 @@ flowchart LR
 | `countryCode`, `stateProvince`, `county`, `locality` | `place.source_place_terms` | Preserve source geography; normalize only with visible method |
 | `license` | `rights.license_uri` | Required for outward use; missing/unknown rights blocks public promotion |
 | `rightsHolder`, `publisher` | `rights.rights_holder`, `provenance.publisher` | Required for attribution and review |
-| `references` | `provenance.source_record_url` | Preserve for evidence drawer and record trace |
+| `references` | `provenance.source_record_url` | Preserve for Evidence Drawer and record trace |
 | `issue` / GBIF processing flags | `validation.gbif_issues` | Preserve and classify; some issues route to quarantine |
 | `lastInterpreted`, `modified` | `provenance.gbif_last_interpreted`, `provenance.publisher_modified` | Use for freshness and reprocessing awareness; do not confuse GBIF re-interpretation with publisher modification |
 | Download DOI / key | `provenance.gbif_download` | Required for citable snapshots where downloads are used |
+| Media fields | `media.references[]` | Store as references only until media-specific license review passes |
 
 ### Deterministic identity
 
@@ -242,6 +313,20 @@ Identity rules:
 - never silently overwrite a published occurrence evidence object;
 - treat duplicate candidates as review items until a validator resolves or quarantines them.
 
+### Quality signal classification
+
+| Signal | KFM interpretation |
+|---|---|
+| Missing `coordinateUncertaintyInMeters` | Public exact geometry blocked; internal review may continue |
+| GBIF geospatial issue present | Route to review or quarantine based on severity matrix |
+| Missing `eventDate` | Cannot support time-specific occurrence claim |
+| Missing `datasetKey` | Quarantine; dataset citation and rights cannot close |
+| Missing `license` | Quarantine for public release |
+| Taxon mismatch or unresolved name | Preserve raw and interpreted values; block claims requiring accepted identity |
+| Duplicate record candidate | Suppress only through validator; do not silently drop without receipt |
+| Publisher-modified date newer than prior release | Revalidation required before reuse |
+| GBIF `lastInterpreted` changed | Reprocessing review required if interpretation affects released fields |
+
 [Back to top](#top)
 
 ---
@@ -252,7 +337,7 @@ Identity rules:
 
 | License / rights state | Default KFM action |
 |---|---|
-| `CC0` | Eligible for public use if attribution/citation, sensitivity, and validation pass |
+| `CC0` | Eligible for public use if citation, sensitivity, and validation pass |
 | `CC BY` | Eligible for public use if attribution/citation, sensitivity, and validation pass |
 | `CC BY-NC` | Restricted by default for outward release until KFM policy confirms the specific use is non-commercial and attribution obligations are satisfied |
 | Missing license | `QUARANTINE` for publication; `ABSTAIN` for public runtime claims |
@@ -271,7 +356,19 @@ Identity rules:
 | Unknown sensitivity status | Fail closed until KDWP/USFWS/NatureServe/steward context is checked |
 | Public MapLibre layer | Generalized/aggregated only; no exact points, restricted IDs, or internal references |
 
-Recommended reason codes:
+### Public geometry classes
+
+| Class | Description | Public default |
+|---|---|---|
+| `none` | No public geometry available | Allowed when claim is still meaningful without map point |
+| `county_summary` | County-level summary or count | Allowed after rights/sensitivity review |
+| `coarse_grid` | Coarse grid or generalized cell | Allowed after transform receipt and review |
+| `generalized_point` | Public-safe displaced or generalized point | Restricted; requires explicit method and policy approval |
+| `exact_internal` | Exact coordinate retained for authorized review | Not public |
+| `withheld` | Source or KFM withholds geometry | Public may show safe stub only |
+| `quarantined` | Unsafe or unresolved geometry | Not public |
+
+### Recommended reason codes
 
 ```text
 unknown_rights
@@ -285,6 +382,9 @@ public_geometry_not_generalized
 ambiguous_taxon_identity
 gbif_issue_requires_review
 catalog_matrix_not_closed
+download_citation_missing
+dataset_key_missing
+media_license_unreviewed
 ```
 
 [Back to top](#top)
@@ -309,6 +409,8 @@ catalog_matrix_not_closed
 | G11 | Catalog closure | DCAT, PROV, and spatial catalog records close over the same promoted subject | Deny promotion |
 | G12 | EvidenceBundle closure | Evidence refs resolve to source records, provenance, rights, review, and release state | Runtime `ABSTAIN` or `ERROR` |
 | G13 | Rollback target | Supersession and rollback path exists before publication | Deny promotion |
+| G14 | UI trust payload | Evidence Drawer payload contains source role, rights, freshness, review, correction, and public geometry state | Deny UI exposure |
+| G15 | Runtime finite outcome | Focus/API response emits only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` with reason codes | Block runtime release |
 
 [Back to top](#top)
 
@@ -400,21 +502,21 @@ validation:
 
 outputs:
   raw:
-    - data/raw/kansas_flora/gbif/
+    - data/raw/flora/gbif/
   work:
-    - data/work/kansas_flora/gbif/
+    - data/work/flora/gbif/
   quarantine:
-    - data/quarantine/kansas_flora/gbif/
+    - data/quarantine/flora/gbif/
   processed:
-    - data/processed/kansas_flora/occurrences/
+    - data/processed/flora/occurrences/
   catalog:
-    - data/catalog/dcat/kansas_flora/
-    - data/catalog/prov/kansas_flora/
-    - data/catalog/stac/kansas_flora/
+    - data/catalog/dcat/flora/
+    - data/catalog/prov/flora/
+    - data/catalog/stac/flora/
   receipts:
-    - data/receipts/kansas_flora/gbif/
+    - data/receipts/flora/gbif/
   proofs:
-    - data/proofs/kansas_flora/
+    - data/proofs/flora/
 ```
 
 [Back to top](#top)
@@ -485,10 +587,11 @@ outputs:
 - Use authenticated download requests for citable bulk downloads.
 - Store request JSON and response metadata.
 - Preserve download DOI and download key.
-- Preserve `rights.txt`, `citations.txt`, `metadata.xml`, and dataset-level metadata.
+- Preserve `rights.txt`, `citations.txt`, `metadata.xml`, `meta.xml`, and dataset-level metadata.
 - Prefer download snapshots for citable occurrence sets; search API probes are not release artifacts by themselves.
 - Record rate-limit behavior and retries in the run receipt.
 - Do not commit GBIF credentials or user passwords.
+- Treat cloud/search/API-only derived extracts as needing a derived-dataset citation plan if no download DOI exists.
 
 [Back to top](#top)
 
@@ -540,7 +643,19 @@ Denied public map outputs:
 - raw GBIF coordinates for protected or review-required taxa;
 - restricted source IDs or internal record references;
 - layers without rights, citation, and redaction receipts;
-- layers that imply absence from lack of GBIF records.
+- layers that imply absence from lack of GBIF records;
+- UI-side policy decisions that bypass backend release state.
+
+### Public API behavior
+
+| Request | Required response |
+|---|---|
+| Public query for released generalized occurrence summary | `ANSWER` with EvidenceBundle refs and public geometry class |
+| Public query for exact sensitive coordinates | `DENY` with reason code such as `precise_sensitive_location_denied` |
+| Query for record missing rights/citation | `ABSTAIN` until rights/citation closes |
+| Query for quarantined record | `DENY` or safe stub, depending on role |
+| Query with broken evidence reference | `ERROR` and operational receipt |
+| Steward query with authorized role | Restricted payload only if policy and review state allow it |
 
 [Back to top](#top)
 
@@ -552,9 +667,10 @@ A GBIF source-contract PR is not done until:
 
 - [ ] `contracts/source/kansas_flora/gbif.md` is reviewed by data, policy, and flora/domain stewards.
 - [ ] Metadata block placeholders are resolved or explicitly accepted as TODOs.
+- [ ] Badge wording matches repo badge convention or is accepted as static status markup.
 - [ ] The canonical source registry home is verified.
 - [ ] The GBIF source descriptor validates against the repo’s source descriptor schema.
-- [ ] No-live-network GBIF fixtures exist for valid, missing-license, sensitive-precise, unresolved-taxonomy, and malformed-record cases.
+- [ ] No-live-network GBIF fixtures exist for valid, missing-license, sensitive-precise, unresolved-taxonomy, malformed-record, and duplicate-candidate cases.
 - [ ] Rights policy distinguishes `CC0`, `CC BY`, `CC BY-NC`, missing, and conflicting license states.
 - [ ] Geoprivacy policy denies exact public sensitive locations.
 - [ ] Occurrence evidence schema preserves source-native identity, taxon, geometry, uncertainty, rights, GBIF issues, and provenance fields.
@@ -562,6 +678,7 @@ A GBIF source-contract PR is not done until:
 - [ ] Catalog closure is tested for DCAT and PROV; STAC is emitted when spatial assets are published.
 - [ ] EvidenceBundle closure is tested for at least one public-safe occurrence summary.
 - [ ] Runtime finite outcomes are tested: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`.
+- [ ] Evidence Drawer payload includes source role, dataset, rights, quality, freshness, review, correction, and geometry class.
 - [ ] Rollback/supersession path exists before any publication.
 - [ ] No credentials, precise restricted coordinates, or raw GBIF payloads are exposed in public outputs.
 
@@ -585,7 +702,10 @@ A GBIF source-contract PR is not done until:
 | GBIF issue flag severity matrix | PROPOSED | Validator mapping from GBIF issue flags to pass/quarantine/deny |
 | Evidence Drawer implementation | UNKNOWN | UI contract or component evidence |
 | Focus Mode implementation | UNKNOWN | Runtime envelope and evidence-resolution tests |
+| Static badge convention | NEEDS VERIFICATION | Existing repo docs or README badge style |
 | Live connector activation | BLOCKED | Passing source descriptor, fixtures, policy, rights, sensitivity, and reviewer gates |
+
+[Back to top](#top)
 
 ---
 
@@ -597,6 +717,7 @@ A GBIF source-contract PR is not done until:
 - Do not widen public access to precise locations just because GBIF has coordinates.
 - Do not let a map popup become the first place a claim is qualified.
 - Prefer one small fixture-backed release proof over broad live harvesting.
+- Keep badges and status cues honest: they should expose activation and risk posture, not decorate the contract.
 
 ---
 
@@ -608,7 +729,6 @@ A GBIF source-contract PR is not done until:
 - [GBIF citation guidelines][gbif-citation-guidelines]
 - [GBIF terms of use][gbif-terms]
 - [GBIF license guidance][gbif-license-guidance]
-- [GBIF data processing][gbif-data-processing]
 
 [gbif-api-reference]: https://techdocs.gbif.org/en/openapi/
 [gbif-api-downloads]: https://techdocs.gbif.org/en/data-use/api-downloads
@@ -616,4 +736,3 @@ A GBIF source-contract PR is not done until:
 [gbif-citation-guidelines]: https://www.gbif.org/citation-guidelines
 [gbif-terms]: https://www.gbif.org/terms
 [gbif-license-guidance]: https://www.gbif.org/publishing-data
-[gbif-data-processing]: https://techdocs.gbif.org/en/data-processing/
