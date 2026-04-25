@@ -47,6 +47,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_diff_summary.py`
 > - `tools/ci/render_bundle_diff_policy_summary.py`
 > - `tools/ci/render_promotion_review_handoff.py`
+> - `tools/ci/render_json_io.py` (shared JSON input helper used by renderer entrypoints)
 > - `tools/ci/verify_baseline.sh` (baseline repository inventory verifier used by `.github/workflows/verification-baseline.yml`)
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
 >
