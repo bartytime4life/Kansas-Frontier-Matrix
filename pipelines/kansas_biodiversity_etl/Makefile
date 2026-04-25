@@ -7,6 +7,8 @@ SHELL := /bin/bash
 PIPELINE_ROOT := .
 DATA_ROOT := ../../data
 
+SCHEMA_ROOT := ../../schemas/catalog
+
 RUN_DATE := 20260425
 SINCE := 2026-04-01T00:00:00Z
 STATE := Kansas
@@ -51,7 +53,7 @@ SENSITIVE_TAXA := sensitivity/sensitive_taxa_sample.txt
 # Targets
 # ----------------------------
 
-.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog gate-catalog test-catalog test-e2e clean sample check-inputs check-catalog
+.PHONY: all harvest normalize dedupe publish sign verify-proof gate catalog validate-catalog gate-catalog test-catalog test-e2e clean sample check-inputs check-catalog check-schemas
 
 # Full governed run
 all: harvest normalize dedupe publish sign gate catalog validate-catalog gate-catalog
@@ -65,6 +67,10 @@ check-inputs:
 	@test -f $(LICENSE_MAP) || (echo "Missing $(LICENSE_MAP)" && exit 1)
 	@test -f $(SENSITIVE_TAXA) || (echo "Missing $(SENSITIVE_TAXA)" && exit 1)
 
+check-schemas:
+	@echo "=== Schema Root Check ==="
+	@test -d $(SCHEMA_ROOT) || (echo "Missing $(SCHEMA_ROOT)" && exit 1)
+
 check-catalog:
 	@echo "=== Catalog Smoke Check ==="
 	@test -f $(CATALOG_STAC_COLLECTION) || (echo "Missing $(CATALOG_STAC_COLLECTION)" && exit 1)
@@ -75,7 +81,7 @@ check-catalog:
 	python -m json.tool $(CATALOG_PROV) >/dev/null
 
 # ----------------------------
-# Harvest (GBIF)
+# Harvest
 # ----------------------------
 
 harvest:
@@ -170,16 +176,17 @@ catalog:
 	$(MAKE) check-catalog
 
 # ----------------------------
-# Catalog Validation
+# Catalog Validation (Schema-aware)
 # ----------------------------
 
-validate-catalog:
-	@echo "=== Validate Catalog Closure ==="
+validate-catalog: check-schemas
+	@echo "=== Validate Catalog Closure (Schema + Spec Hash) ==="
 	python catalog/validate_catalog.py \
 		--metadata $(METADATA) \
 		--stac-root $(CATALOG_STAC_ROOT) \
 		--dcat $(CATALOG_DCAT) \
-		--prov $(CATALOG_PROV)
+		--prov $(CATALOG_PROV) \
+		--schema-root $(SCHEMA_ROOT)
 
 # ----------------------------
 # Gate A–I
@@ -198,7 +205,7 @@ gate-catalog:
 		--prov $(CATALOG_PROV)
 
 # ----------------------------
-# Catalog Tests (NEW)
+# Catalog Tests
 # ----------------------------
 
 test-catalog:
