@@ -59,7 +59,9 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tests/ci/test_render_promotion_bundle_summary.py`
 > - `tests/ci/test_render_promotion_review_handoff.py`
 > - `tests/ci/test_render_missing_input_paths.py`
+> - `tests/ci/test_render_json_io.py`
 > - `tests/ci/test_validate_policy_runtime_fixtures.py`
+> - `tests/ci/test_validate_renderer_fixtures.py`
 >
 > Active-branch parity, additional callers, and platform wiring still need direct verification.
 
