@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import subprocess
@@ -83,4 +82,3 @@ def test_cli_writes_receipt(tmp_path: Path) -> None:
 
     assert result.returncode == 0
     assert receipt_out.exists()
-```
