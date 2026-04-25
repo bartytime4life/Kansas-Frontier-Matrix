@@ -132,14 +132,14 @@ pipelines/
 
 ```mermaid
 flowchart LR
-  A[Detect change] -->|ETag / modified| B[Acquire]
-  B --> C[Validate (DwC-A + fields)]
-  C -->|pass| D[Normalize (Darwin Core)]
-  D --> E[Assemble EvidenceBundle]
-  E --> F[Write lifecycle]
-  F --> G[Catalog closure]
-  G --> H[Promotion Gate A–G]
-  C -->|fail| X[Quarantine + receipt]
+  A["Detect change"] -->|"ETag / modified"| B["Acquire"]
+  B --> C["Validate (DwC-A + fields)"]
+  C -->|"pass"| D["Normalize (Darwin Core)"]
+  D --> E["Assemble EvidenceBundle"]
+  E --> F["Write lifecycle"]
+  F --> G["Catalog closure"]
+  G --> H["Promotion Gate A-G"]
+  C -->|"fail"| X["Quarantine + receipt"]
 ```
 
 ### 1) Detect change
