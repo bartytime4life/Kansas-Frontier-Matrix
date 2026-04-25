@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import importlib.util
 import tempfile
 from pathlib import Path
 
 import pytest
 
-import sys
-
-sys.path.insert(0, str(Path("tools/ci").resolve()))
-from render_json_io import read_json_object  # noqa: E402
+_MODULE_PATH = Path("tools/ci/render_json_io.py").resolve()
+_SPEC = importlib.util.spec_from_file_location("render_json_io", _MODULE_PATH)
+assert _SPEC is not None and _SPEC.loader is not None
+_MODULE = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(_MODULE)
+read_json_object = _MODULE.read_json_object
 
 
 def _templates(prefix: str) -> dict[str, str]:
