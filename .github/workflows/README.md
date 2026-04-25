@@ -139,21 +139,14 @@ This job now validates:
 3. README path checker self-tests and path checks,
 4. baseline inventory verification,
 5. schema/catalog thin-slice scripts,
-6. renderer fixture contract validation,
-7. renderer test suite in `tests/ci`.
+6. runtime policy fixture smoke validation,
+7. renderer fixture contract validation,
+8. CI test suite in `tests/ci`.
 
 When branch protection is configured, use this job as the minimum required status while adding stronger gates incrementally.
 
 
 Current command shape for the `repo-baseline` job:
-
-```bash
-sh ./tools/ci/run_repo_baseline_local.sh
-```
-
-The wrapper script executes the documented thin-slice sequence (syntax checks, baseline self-tests, README-path checks, schema/catalog checks, renderer fixture validation, and `pytest -q tests/ci`) and emits `baseline-report.txt` for artifact upload.
-
-The full sequence run by the wrapper is:
 
 ```bash
 sh ./tools/ci/test_verify_baseline.sh
@@ -163,9 +156,12 @@ sh ./tools/ci/verify_baseline.sh baseline-report.txt
 ./scripts/bootstrap.sh
 python3 ./scripts/validate_schemas.py
 python3 ./scripts/catalog_validate.py
+python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
 python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 -m pytest -q tests/ci
 ```
+
+`tools/ci/run_repo_baseline_local.sh` remains the local convenience wrapper and mirrors this sequence for non-GitHub runs.
 
 ## Inputs
 
