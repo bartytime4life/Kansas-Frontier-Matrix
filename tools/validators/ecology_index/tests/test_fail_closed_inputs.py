@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import subprocess
@@ -92,4 +91,3 @@ def test_cli_missing_schema_fails_closed() -> None:
 
     assert result.returncode == 3
     assert "missing schema:" in result.stderr
-```

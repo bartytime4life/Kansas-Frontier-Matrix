@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 """
 Publish deduped Kansas biodiversity occurrence records to a governed,
@@ -346,17 +345,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-```
-
-## Makefile target
-
-```makefile
-publish:
-	python publish/publish.py \
-		--input $(DEDUPED) \
-		--dataset-root $(DATASET_ROOT) \
-		--metadata-output $(METADATA) \
-		--evidence-output $(EVIDENCE) \
-		--receipt-output $(RECEIPT) \
-		--source-uri "https://api.gbif.org/v1/occurrence/search?stateProvince=Kansas"
-```
