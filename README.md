@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: 2026-04-23
+updated: 2026-04-25
 policy_label: NEEDS-VERIFICATION
 related: [NEEDS-VERIFICATION]
 tags: [kfm, readme, spatial-evidence, governance, map-first, time-aware]
-notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. Repository is mounted in this session and basic path inventory is now verified; implementation behavior and platform state still require deeper verification. Confirm doc_id, owners, created date, policy label, related links, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
+notes: [Root README revision prepared from the uploaded KFM README draft, attached KFM doctrine, and current-session workspace scan. No mounted KFM Git repository was found in this session; visible workspace evidence is uploaded PDFs, prompt files, and generated scan output, not a source checkout. Confirm doc_id, owners, created date, policy label, related links, root file casing, package manager, workflows, schemas, contracts, tests, source registries, release artifacts, and runtime behavior before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -21,18 +21,18 @@ A governed, evidence-first, map-first, time-aware spatial knowledge system for p
 
 > [!IMPORTANT]
 > **Status:** `experimental` · **Document status:** `draft` · **Owners:** `@bartytime4life`
-> **Target path:** `README.md` / `readme.md` — `NEEDS VERIFICATION`  
-> **Evidence posture:** `CONFIRMED doctrine` · `PROPOSED implementation plan` · `UNKNOWN mounted repo implementation`  
+> **Target path:** `README.md` / `readme.md` — `NEEDS VERIFICATION; repo not mounted`  
+> **Evidence posture:** `CONFIRMED doctrine` · `CONFIRMED no mounted repo` · `UNKNOWN implementation depth`  
 > **Operating posture:** artifactization and verification before broad live-source ingestion, UI expansion, model integration, or public release.
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
 > ![doc](https://img.shields.io/badge/doc-draft-lightgrey)
 > ![posture](https://img.shields.io/badge/posture-evidence--first-blue)
 > ![surface](https://img.shields.io/badge/surface-root%20README-0b7285)
-> ![repo](https://img.shields.io/badge/repo-needs%20verification-lightgrey)
+> ![repo](https://img.shields.io/badge/repo-not%20mounted-red)
 > ![lifecycle](https://img.shields.io/badge/lifecycle-governed-6f42c1)
 >
-> **Quick jumps:** [Scope](#scope) · [Evidence basis](#evidence-basis) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Architecture](#architecture-at-a-glance) · [Directory tree](#target-directory-tree) · [Quickstart](#verification-first-quickstart) · [Done](#definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Evidence basis](#evidence-basis) · [Repo scan](#current-session-repo-scan) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Architecture](#architecture-at-a-glance) · [Directory tree](#target-directory-tree) · [Quickstart](#verification-first-quickstart) · [Done](#definition-of-done) · [FAQ](#faq)
 
 ---
 
@@ -44,10 +44,10 @@ Kansas Frontier Matrix (**KFM**) is not a generic GIS portal, a map tile project
 
 **PROPOSED implementation posture:** move the repository through small, reversible, proof-bearing thin slices before broad live-source ingestion, public map layers, UI polish, model-provider integration, or publication workflows.
 
-**UNKNOWN until repo inspection:** current package manager, root directory conventions, checked-in schemas, APIs, route names, workflows, tests, dashboards, runtime logs, branch protections, source registries, emitted receipts, and release artifacts.
+**CONFIRMED current-session scan:** no mounted KFM Git checkout was available. Current package manager, root directory conventions, checked-in schemas, APIs, route names, workflows, tests, dashboards, runtime logs, branch protections, source registries, emitted receipts, and release artifacts remain `UNKNOWN`.
 
 > [!WARNING]
-> This README is written from attached KFM doctrine, the uploaded README draft, and a current-session workspace scan. The authoring session did **not** expose a mounted KFM Git checkout. Any implementation-shaped path, command, route, workflow, schema, test, or file below is either `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until a maintainer confirms it in the real repository.
+> This README is written from attached KFM doctrine, the uploaded README draft, and a current-session workspace scan. The authoring session scanned common workspace roots and did **not** find a mounted KFM Git checkout. Any implementation-shaped path, command, route, workflow, schema, test, or file below is either `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` until a maintainer confirms it in the real repository.
 
 [Back to top](#top)
 
@@ -61,9 +61,25 @@ This file is intentionally truth-labeled because README language can otherwise c
 |---|---|---|
 | Attached KFM doctrine and synthesis PDFs | `CONFIRMED as supplied documents` | Establish KFM identity, trust posture, lifecycle, object families, UI/AI boundaries, and publication discipline |
 | Uploaded root README draft | `CONFIRMED as source text` | Preserved as the baseline structure and wording where strong |
-| Current-session workspace scan | `CONFIRMED` | Confirms `/mnt/data` is not a Git repository and visible files are uploaded PDFs / prompts, not a mounted source tree |
-| Target repository implementation | `UNKNOWN` | Not used to claim existing files, routes, workflows, tests, source registries, dashboards, branch rules, or runtime behavior |
+| Current-session workspace/repo scan | `CONFIRMED` | Confirms `/mnt/data` is not a Git repository; common-root `.git` probes returned no target checkout; expected KFM repo directories were absent from the visible workspace |
+| Target repository implementation | `UNKNOWN` | Not used to claim existing root README casing, files, routes, workflows, tests, source registries, dashboards, branch rules, or runtime behavior |
 | External standards and sources | `DEFERRED` | Not needed for this root README revision; recheck separately for source activation, standards versions, API behavior, licensing, or security facts |
+
+### Current-session repo scan
+
+`CONFIRMED`: the visible workspace did not contain a mounted KFM source checkout during this revision. This scan reinforces the README's caution labels and prevents stale implementation claims from entering the root orientation doc.
+
+| Probe | Result | README consequence |
+|---|---|---|
+| `git -C /mnt/data status --short` | `fatal: not a git repository` | No branch, dirty-state, tracked-file, or root README claim is made. |
+| `git -C /mnt/data branch --show-current` | `fatal: not a git repository` | No branch-specific implementation claim is made. |
+| `git -C /mnt/data rev-parse --show-toplevel` | `fatal: not a git repository` | `/mnt/data` is an evidence workspace, not a repo root. |
+| Common-root `.git` probe | No target `.git` directory returned under checked workspace roots | Mounted repo implementation remains `UNKNOWN`. |
+| Expected KFM directories under `/mnt/data` | No `.github`, `docs`, `contracts`, `schemas`, `policy`, `data`, `tools`, `tests`, `apps`, `packages`, `pipelines`, `infra`, `configs`, or `release` tree was visible | All such paths remain `PROPOSED / NEEDS VERIFICATION`. |
+| Repo marker probe | Only unrelated system/skill files were found outside `/mnt/data` | Do not infer KFM package manager, framework, or CI from environment files. |
+
+> [!NOTE]
+> The uploaded Markdown draft is `CONFIRMED` as source text. It is not proof that a root `README.md` or `readme.md` exists in the target repository.
 
 ### Truth labels used here
 
@@ -85,12 +101,12 @@ This README is the root orientation layer. It should help maintainers and review
 
 | Field | Value |
 |---|---|
-| **Target file** | `README.md` or `readme.md` — `NEEDS VERIFICATION`; the uploaded draft used `readme.md` |
+| **Target file** | `README.md` or `readme.md` — `NEEDS VERIFICATION`; current scan found no mounted repo root, and the uploaded draft filename is not repo casing proof |
 | **Role** | Root orientation, trust posture, navigation, contributor guardrails, and verification-first onboarding |
 | **Primary upstream doctrine** | `docs/architecture/`, `docs/registers/`, `docs/adr/` — `PROPOSED / NEEDS VERIFICATION` |
 | **Machine contracts** | `schemas/contracts/v1/` and/or `contracts/` — `CONFLICTED / ADR REQUIRED` |
 | **Policy boundary** | `policy/`, `tools/validators/`, `.github/workflows/` — `PROPOSED / NEEDS VERIFICATION` |
-| **Downstream consumers** | governed API, MapLibre shell, Evidence Drawer, Focus Mode, exports, release review — `PROPOSED until code is inspected` |
+| **Downstream consumers** | governed API, MapLibre shell, Evidence Drawer, Focus Mode, exports, release review — `PROPOSED until a real checkout is inspected` |
 | **Primary reviewer question** | “Does this change preserve the trust membrane and make claims more inspectable?” |
 
 This file should stay high-level. Domain details, source-specific rules, validator behavior, schema definitions, policy code, and release proof formats belong in their own verified repo homes and should be linked here only after their paths are confirmed.
@@ -245,7 +261,7 @@ find .github docs contracts schemas policy data tools tests apps packages pipeli
   | sed -n '1,250p'
 ```
 
-Record the result in a small repo-evidence note before changing architecture-significant files.
+Record the result in a small repo-evidence note before changing architecture-significant files. In this session, that note is represented by the generated scan output; it confirms no mounted repo checkout was available.
 
 ### First safe PR shape
 
@@ -325,14 +341,14 @@ A KFM change is not done because it renders, summarizes, or passes a happy-path 
 
 | Item | Status | Next check |
 |---|---|---|
-| Root file casing: `README.md` vs `readme.md` | `CONFIRMED` (`README.md` present, `readme.md` absent) | Keep root filename stable as `README.md` |
+| Root file casing: `README.md` vs `readme.md` | `UNKNOWN / NEEDS VERIFICATION` | Mount the real repo and verify existing casing before replacing the root file |
 | Owner / CODEOWNERS coverage | `NEEDS VERIFICATION` | Confirm steward ownership model and CODEOWNERS intent with maintainers |
 | Package manager and test runner | `UNKNOWN` | Confirm authoritative runtime/toolchain and executable verification commands |
-| Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority |
-| Existing governed API | `UNKNOWN` | Inspect `apps/`, `packages/`, and route contracts |
-| Existing MapLibre shell | `UNKNOWN` | Inspect web app and layer registry |
-| Existing Evidence Drawer / Focus Mode | `UNKNOWN` | Inspect UI contracts and runtime envelopes |
-| CI gates | `PARTIALLY VERIFIED` (`.github/workflows/verification-baseline.yml` now enforces baseline path checks) | Add contract/policy/runtime-proof gates and required-check settings |
+| Schema home | `CONFLICTED / NEEDS ADR` | Decide `schemas/contracts/v1/` vs `contracts/` authority after repo inspection |
+| Existing governed API | `UNKNOWN` | Inspect `apps/`, `packages/`, and route contracts in a mounted checkout |
+| Existing MapLibre shell | `UNKNOWN` | Inspect web app and layer registry in a mounted checkout |
+| Existing Evidence Drawer / Focus Mode | `UNKNOWN` | Inspect UI contracts and runtime envelopes in a mounted checkout |
+| CI gates | `UNKNOWN` | Inspect `.github/workflows/`, required checks, and policy/test gates |
 | Source registry | `UNKNOWN` | Inspect `data/registry/` and source descriptor conventions |
 | Release artifacts | `UNKNOWN` | Inspect `release/`, `data/proofs/`, `data/receipts/`, and `data/published/` |
 | Public exposure posture | `NEEDS VERIFICATION` | Verify firewall, reverse proxy, VPN, auth, audit logging, secrets, and least-privilege boundaries before semi-public access |
