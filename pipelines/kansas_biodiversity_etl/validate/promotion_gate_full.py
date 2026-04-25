@@ -1,20 +1,13 @@
-Replace:
-
-```text
-pipelines/kansas_biodiversity_etl/validate/promotion_gate_full.py
-```
-
-with:
-
-```python
 #!/usr/bin/env python3
 """
 Full Promotion Gate (A-G) for Kansas Biodiversity ETL.
 
 Supports:
 - JSONL thin-slice artifacts
-- Parquet dataset artifacts
+- single-file Parquet artifacts
+- partitioned Parquet dataset directories
 - format-independent spec_hash via _dataset_metadata.json
+- local receipt proof verification
 
 Gate Checks:
 
@@ -25,6 +18,7 @@ D. EvidenceBundle spec_hash matches dataset metadata spec_hash
 E. License validity
 F. Attribution completeness
 G. Sensitivity enforcement
+H. Receipt proof verification
 
 Fail-closed:
 Any violation => FAIL
@@ -44,6 +38,9 @@ except ImportError:  # pragma: no cover
     pq = None
 
 
+JsonRecord = Dict[str, Any]
+
+
 def fail(reason: str) -> int:
     print(json.dumps({"decision": "FAIL", "reason": reason}, sort_keys=True))
     return 1
@@ -61,17 +58,19 @@ def load_json(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def read_jsonl(path: Path) -> List[Dict[str, Any]]:
-    records: List[Dict[str, Any]] = []
+def read_jsonl(path: Path) -> List[JsonRecord]:
+    records: List[JsonRecord] = []
+
     with path.open("r", encoding="utf-8") as handle:
         for line in handle:
             stripped = line.strip()
             if stripped:
                 records.append(json.loads(stripped))
+
     return records
 
 
-def read_parquet(path: Path) -> List[Dict[str, Any]]:
+def read_parquet(path: Path) -> List[JsonRecord]:
     if pq is None:
         raise RuntimeError("pyarrow_missing_for_parquet_validation")
 
@@ -79,7 +78,24 @@ def read_parquet(path: Path) -> List[Dict[str, Any]]:
     return table.to_pylist()
 
 
-def read_dataset_records(dataset_path: Path) -> List[Dict[str, Any]]:
+def read_partitioned_parquet(dataset_root: Path) -> List[JsonRecord]:
+    parquet_files = sorted(dataset_root.rglob("*.parquet"))
+
+    if not parquet_files:
+        raise RuntimeError("no_parquet_files_found")
+
+    records: List[JsonRecord] = []
+
+    for parquet_file in parquet_files:
+        records.extend(read_parquet(parquet_file))
+
+    return records
+
+
+def read_dataset_records(dataset_path: Path) -> List[JsonRecord]:
+    if dataset_path.is_dir():
+        return read_partitioned_parquet(dataset_path)
+
     suffix = dataset_path.suffix.lower()
 
     if suffix == ".jsonl":
@@ -92,20 +108,18 @@ def read_dataset_records(dataset_path: Path) -> List[Dict[str, Any]]:
 
 
 def expected_spec_hash(dataset_path: Path, metadata_path: Optional[Path]) -> str:
-    suffix = dataset_path.suffix.lower()
+    if dataset_path.is_dir() or dataset_path.suffix.lower() == ".parquet":
+        resolved_metadata_path = metadata_path or (
+            dataset_path / "_dataset_metadata.json"
+            if dataset_path.is_dir()
+            else dataset_path.parent / "_dataset_metadata.json"
+        )
 
-    if suffix == ".jsonl":
-        return sha256_file(dataset_path)
-
-    if suffix == ".parquet":
-        if metadata_path is None:
-            metadata_path = dataset_path.parent / "_dataset_metadata.json"
-
-        if not metadata_path.exists():
+        if not resolved_metadata_path.exists():
             raise RuntimeError("missing_dataset_metadata")
 
         try:
-            metadata = load_json(metadata_path)
+            metadata = load_json(resolved_metadata_path)
         except Exception as exc:
             raise RuntimeError("invalid_dataset_metadata_json") from exc
 
@@ -115,14 +129,41 @@ def expected_spec_hash(dataset_path: Path, metadata_path: Optional[Path]) -> str
 
         return str(spec_hash)
 
-    raise RuntimeError(f"unsupported_dataset_format:{suffix}")
+    if dataset_path.suffix.lower() == ".jsonl":
+        return sha256_file(dataset_path)
+
+    raise RuntimeError(f"unsupported_dataset_format:{dataset_path.suffix.lower()}")
 
 
-def primary_key(record: Dict[str, Any]) -> str:
+def verify_receipt_proof(receipt_path: Path, proof_path: Path) -> Optional[str]:
+    if not receipt_path.exists():
+        return "receipt_missing"
+
+    if not proof_path.exists():
+        return "proof_missing"
+
+    try:
+        proof = load_json(proof_path)
+    except Exception:
+        return "invalid_proof_json"
+
+    expected = proof.get("receipt_hash")
+    actual = sha256_file(receipt_path)
+
+    if not expected:
+        return "proof_missing_receipt_hash"
+
+    if expected != actual:
+        return "receipt_proof_hash_mismatch"
+
+    return None
+
+
+def primary_key(record: JsonRecord) -> str:
     return f"{record.get('institution_code')}|{record.get('id')}"
 
 
-def validate_record_level_rules(records: Iterable[Dict[str, Any]]) -> Optional[str]:
+def validate_record_level_rules(records: Iterable[JsonRecord]) -> Optional[str]:
     seen_keys = set()
 
     for record in records:
@@ -149,6 +190,34 @@ def validate_record_level_rules(records: Iterable[Dict[str, Any]]) -> Optional[s
     return None
 
 
+def validate_metadata_counts(
+    metadata_path: Optional[Path],
+    dataset_path: Path,
+    record_count: int,
+) -> Optional[str]:
+    resolved_metadata_path = metadata_path
+
+    if resolved_metadata_path is None:
+        if dataset_path.is_dir():
+            resolved_metadata_path = dataset_path / "_dataset_metadata.json"
+        elif dataset_path.suffix.lower() == ".parquet":
+            resolved_metadata_path = dataset_path.parent / "_dataset_metadata.json"
+
+    if resolved_metadata_path is None or not resolved_metadata_path.exists():
+        return None
+
+    try:
+        metadata = load_json(resolved_metadata_path)
+    except Exception:
+        return "invalid_dataset_metadata_json"
+
+    expected_records = metadata.get("records")
+    if expected_records is not None and int(expected_records) != record_count:
+        return "metadata_record_count_mismatch"
+
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", required=True)
@@ -156,19 +225,29 @@ def main() -> int:
     parser.add_argument(
         "--metadata",
         default=None,
-        help="Optional metadata path. Required for explicit Parquet metadata validation; defaults to dataset parent.",
+        help="Optional metadata path. Required for explicit Parquet metadata validation; defaults to dataset parent/root.",
+    )
+    parser.add_argument(
+        "--receipt",
+        default=None,
+        help="Optional run receipt path. Required when --proof is supplied.",
+    )
+    parser.add_argument(
+        "--proof",
+        default=None,
+        help="Optional local receipt proof path. If supplied, receipt proof verification is enforced.",
     )
     args = parser.parse_args()
 
     dataset_path = Path(args.dataset)
     evidence_path = Path(args.evidence)
     metadata_path = Path(args.metadata) if args.metadata else None
+    receipt_path = Path(args.receipt) if args.receipt else None
+    proof_path = Path(args.proof) if args.proof else None
 
-    # Gate B: dataset exists
     if not dataset_path.exists():
         return fail("dataset_missing")
 
-    # Gate A: evidence exists and is valid
     if not evidence_path.exists():
         return fail("evidencebundle_missing")
 
@@ -178,7 +257,14 @@ def main() -> int:
     except Exception:
         return fail("invalid_evidencebundle_json")
 
-    # Gate C/D: spec_hash must match expected identity source.
+    if proof_path is not None:
+        if receipt_path is None:
+            return fail("receipt_required_when_proof_supplied")
+
+        proof_error = verify_receipt_proof(receipt_path, proof_path)
+        if proof_error:
+            return fail(proof_error)
+
     try:
         actual_hash = expected_spec_hash(dataset_path, metadata_path)
     except RuntimeError as exc:
@@ -191,7 +277,6 @@ def main() -> int:
     if evidence_hash != actual_hash:
         return fail("spec_hash_mismatch")
 
-    # EvidenceBundle completeness.
     if int(bundle.get("items", 0)) <= 0:
         return fail("empty_evidencebundle_items")
 
@@ -204,7 +289,6 @@ def main() -> int:
     if not bundle.get("attribution"):
         return fail("missing_evidencebundle_attribution")
 
-    # Load dataset for record-level checks.
     try:
         records = read_dataset_records(dataset_path)
     except RuntimeError as exc:
@@ -218,9 +302,18 @@ def main() -> int:
     if int(bundle.get("items", 0)) != len(records):
         return fail("item_count_mismatch")
 
+    metadata_error = validate_metadata_counts(metadata_path, dataset_path, len(records))
+    if metadata_error:
+        return fail(metadata_error)
+
     record_error = validate_record_level_rules(records)
     if record_error:
         return fail(record_error)
+
+    passed_gates = ["A", "B", "C", "D", "E", "F", "G"]
+
+    if proof_path is not None:
+        passed_gates.append("H")
 
     print(
         json.dumps(
@@ -228,9 +321,12 @@ def main() -> int:
                 "decision": "PASS",
                 "dataset": str(dataset_path),
                 "evidence": str(evidence_path),
+                "metadata": str(metadata_path) if metadata_path else None,
+                "receipt": str(receipt_path) if receipt_path else None,
+                "proof": str(proof_path) if proof_path else None,
                 "records": len(records),
                 "spec_hash": actual_hash,
-                "gates": ["A", "B", "C", "D", "E", "F", "G"],
+                "gates": passed_gates,
             },
             sort_keys=True,
         )
@@ -241,42 +337,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-```
-
----
-
-## Makefile Update
-
-For Parquet mode, use:
-
-```makefile
-gate:
-	python validate/promotion_gate_full.py \
-		--dataset $(DATASET) \
-		--evidence $(EVIDENCE) \
-		--metadata $(METADATA)
-```
-
-For JSONL thin-slice mode, this still works:
-
-```makefile
-gate:
-	python validate/promotion_gate_full.py \
-		--dataset $(DATASET) \
-		--evidence $(EVIDENCE)
-```
-
----
-
-## Verification Run
-
-```bash
-make clean
-make all
-```
-
-Expected:
-
-```json
-{"decision":"PASS"}
-```
