@@ -1,0 +1,109 @@
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/ecology/ecology_receipt_manifest.schema.json",
+  "title": "KFM Ecology Receipt Manifest",
+  "description": "Proposed schema for aggregating ecology validator and promotion receipts before catalog closure and proof-pack generation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "candidate_id",
+    "candidate_type",
+    "spec_hash",
+    "receipts",
+    "decision",
+    "generated_at"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm\\.receipt_manifest\\.ecology\\.[a-zA-Z0-9_.:-]+$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_type": {
+      "type": "string",
+      "enum": [
+        "eco_index",
+        "ecological_claim",
+        "map_layer",
+        "processed_artifact"
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "receipt_type",
+          "receipt_ref",
+          "decision",
+          "generated_at"
+        ],
+        "properties": {
+          "receipt_type": {
+            "type": "string",
+            "enum": [
+              "validator_result",
+              "promotion_result",
+              "catalog_closure_result",
+              "proof_result"
+            ]
+          },
+          "validator": {
+            "type": "string"
+          },
+          "receipt_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "hold",
+              "ready_for_promotion",
+              "not_ready",
+              "proof_required",
+              "proof_complete"
+            ]
+          },
+          "spec_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ready_for_promotion",
+        "not_ready",
+        "hold",
+        "quarantine",
+        "proof_required",
+        "proof_complete"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
+```
