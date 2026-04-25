@@ -40,6 +40,11 @@ Decision-control surface for KFM architecture choices that affect governance, co
 > [!NOTE]
 > ADRs are not decorative history. In KFM, an ADR is a reviewable commitment record: it should preserve the context, evidence, alternatives, consequences, verification requirements, and rollback or supersession path for consequential architecture decisions.
 
+### Implemented ADR files currently present
+
+- `ADR-0001-schema-home.md`
+- `ADR-0002-governed-api-path-canonicalization.md`
+
 ---
 
 ## Scope
