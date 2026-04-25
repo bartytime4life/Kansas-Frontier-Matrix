@@ -82,3 +82,71 @@ def test_report_placeholder_markers_invalid_root_fails() -> None:
 
     assert proc.returncode == 2
     assert "report_placeholder_markers: invalid root path" in proc.stderr
+
+
+def test_report_placeholder_markers_threshold_failure(tmp_path: Path) -> None:
+    (tmp_path / "a.md").write_text("TODO\nTODO\nUNKNOWN\n", encoding="utf-8")
+
+    proc = subprocess.run(
+        [
+            "python3",
+            "tools/ci/report_placeholder_markers.py",
+            "--root",
+            str(tmp_path),
+            "--max-overall",
+            "2",
+            "--max-marker",
+            "TODO=1",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 1
+    assert "threshold check failed" in proc.stderr
+    assert "overall marker total 3 exceeds configured max-overall 2" in proc.stderr
+    assert "marker 'TODO' count 2 exceeds configured max 1" in proc.stderr
+
+
+def test_report_placeholder_markers_threshold_pass(tmp_path: Path) -> None:
+    (tmp_path / "a.md").write_text("TODO\nUNKNOWN\n", encoding="utf-8")
+
+    proc = subprocess.run(
+        [
+            "python3",
+            "tools/ci/report_placeholder_markers.py",
+            "--root",
+            str(tmp_path),
+            "--max-overall",
+            "2",
+            "--max-marker",
+            "TODO=1",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 0
+
+
+def test_report_placeholder_markers_invalid_max_marker_fails(tmp_path: Path) -> None:
+    (tmp_path / "a.md").write_text("TODO\n", encoding="utf-8")
+
+    proc = subprocess.run(
+        [
+            "python3",
+            "tools/ci/report_placeholder_markers.py",
+            "--root",
+            str(tmp_path),
+            "--max-marker",
+            "BROKEN_FORMAT",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 2
+    assert "invalid --max-marker value" in proc.stderr

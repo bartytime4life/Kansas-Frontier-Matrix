@@ -53,7 +53,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/install_boundary_test_deps.sh` (installs optional Python deps used by ecology boundary tests)
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
 > - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
-> - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter for weekly scorecard observability)
+> - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter with optional threshold-fail mode for weekly scorecard observability)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >

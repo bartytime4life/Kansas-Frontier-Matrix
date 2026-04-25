@@ -4,7 +4,7 @@ This runbook captures the most important next actions after a fresh repository s
 
 ## Evidence snapshot
 
-- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`92 passed`).
+- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`95 passed`).
 - The baseline GitHub workflow (`.github/workflows/verification-baseline.yml`) already executes thin-slice checks for baseline integrity, script validation, policy fixture validation, renderer fixture validation, and `tests/ci`.
 - Baseline now also runs ecology API/UI boundary tests (`apps/governed-api/ecology/tests` and `apps/ui/ecology/tests`), with dependency-aware skips when optional packages are not installed.
 - Baseline workflow installs optional boundary-test dependencies via `tools/ci/install_boundary_test_deps.sh` before running ecology boundary tests.
@@ -12,9 +12,9 @@ This runbook captures the most important next actions after a fresh repository s
 - Placeholder marker reporting is now automated via `tools/ci/report_placeholder_markers.py` and is included in the local baseline runner and baseline workflow for observability.
 - The repo remains documentation-heavy (190 Markdown files out of 361 files), which means governance quality is currently constrained more by documentation clarity than by missing baseline test scaffolding.
 - Placeholder and uncertainty markers are still high:
-  - `TODO`: 484
-  - `UNKNOWN`: 473
-  - `NEEDS VERIFICATION`: 1,851
+  - `TODO`: 491
+  - `UNKNOWN`: 475
+  - `NEEDS VERIFICATION`: 1,852
 
 ## Why the priorities changed
 
@@ -96,6 +96,7 @@ Update this section each week.
 ```bash
 tools/ci/run_repo_baseline_local.sh
 python3 tools/ci/report_placeholder_markers.py --root . --top 10
+python3 tools/ci/report_placeholder_markers.py --root . --max-overall 5000 --max-marker "NEEDS VERIFICATION=2500"
 python - <<'PY'
 from pathlib import Path
 root=Path('.')
