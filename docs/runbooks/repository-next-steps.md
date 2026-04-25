@@ -6,6 +6,7 @@ This runbook captures the most important next actions after a fresh repository s
 
 - Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`92 passed`).
 - The baseline GitHub workflow (`.github/workflows/verification-baseline.yml`) already executes thin-slice checks for baseline integrity, script validation, policy fixture validation, renderer fixture validation, and `tests/ci`.
+- Python syntax checks are now enforced in baseline for selected ecology API/UI boundary files via `tools/ci/check_python_syntax.sh` and `tools/ci/python_syntax_targets.txt`.
 - Placeholder marker reporting is now automated via `tools/ci/report_placeholder_markers.py` and is included in the local baseline runner and baseline workflow for observability.
 - The repo remains documentation-heavy (190 Markdown files out of 361 files), which means governance quality is currently constrained more by documentation clarity than by missing baseline test scaffolding.
 - Placeholder and uncertainty markers are still high:

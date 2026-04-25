@@ -7,14 +7,18 @@ sh -n ./tools/ci/verify_baseline.sh \
   ./tools/ci/test_verify_baseline.sh \
   ./tools/ci/check_readme_paths.sh \
   ./tools/ci/test_check_readme_paths.sh \
+  ./tools/ci/check_python_syntax.sh \
+  ./tools/ci/test_check_python_syntax.sh \
   ./scripts/bootstrap.sh \
   ./scripts/dev_up.sh \
   ./scripts/sample_ingest.sh
 
 sh ./tools/ci/test_verify_baseline.sh
 sh ./tools/ci/test_check_readme_paths.sh
+sh ./tools/ci/test_check_python_syntax.sh
 sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
 sh ./tools/ci/verify_baseline.sh baseline-report.txt
+sh ./tools/ci/check_python_syntax.sh --manifest ./tools/ci/python_syntax_targets.txt
 
 ./scripts/bootstrap.sh
 python3 ./scripts/validate_schemas.py

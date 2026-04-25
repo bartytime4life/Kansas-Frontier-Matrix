@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -236,4 +235,3 @@ def test_resolver_abstains_when_status_not_complete(tmp_path: Path) -> None:
 
     assert result["data"]["decision"] == "abstain"
     assert result["data"]["reason"] == "proof_pack_invalid"
-```
