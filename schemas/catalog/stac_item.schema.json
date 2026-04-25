@@ -1,1 +1,66 @@
-
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/catalog/stac_item.schema.json",
+  "title": "KFM STAC Item",
+  "type": "object",
+  "required": ["type", "stac_version", "id", "properties", "assets"],
+  "properties": {
+    "type": { "const": "Feature" },
+    "stac_version": { "type": "string", "minLength": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "collection": { "type": "string" },
+    "geometry": { "type": ["object", "null"] },
+    "bbox": { "type": ["array", "null"] },
+    "properties": {
+      "type": "object",
+      "required": ["kfm:spec_hash"],
+      "properties": {
+        "title": { "type": "string" },
+        "datetime": { "type": "string" },
+        "kfm:dataset_id": { "type": "string" },
+        "kfm:spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-fA-F0-9]{64}$"
+        },
+        "kfm:records": { "type": "integer", "minimum": 0 },
+        "kfm:format": { "type": ["string", "null"] },
+        "kfm:partition_year": { "type": "string" },
+        "kfm:partition_month": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rel", "href"],
+        "properties": {
+          "rel": { "type": "string", "minLength": 1 },
+          "href": { "type": "string", "minLength": 1 },
+          "type": { "type": "string" },
+          "title": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "assets": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["href"],
+        "properties": {
+          "href": { "type": "string", "minLength": 1 },
+          "type": { "type": "string" },
+          "roles": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "title": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
