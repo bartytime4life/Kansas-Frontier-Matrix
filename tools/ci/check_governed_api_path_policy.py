@@ -29,6 +29,16 @@ def is_valid_shim(text: str, target: str) -> bool:
     return bool(re.match(pattern, lines[1]))
 
 
+def is_shim_only_module(text: str) -> bool:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if len(lines) != 2:
+        return False
+    if lines[0] != "from __future__ import annotations":
+        return False
+    return bool(re.match(r"^from apps\.governed_api\.ecology\..+ import \*  # noqa: F401,F403$", lines[1]))
+
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Enforce governed_api canonical path and legacy shim policy.")
     parser.add_argument("--root", default=".", help="Repository root path")
@@ -42,8 +52,15 @@ def main() -> int:
     errors: list[str] = []
 
     for rel in CANONICAL_FILES:
-        if not (root / rel).is_file():
+        path = root / rel
+        if not path.is_file():
             errors.append(f"missing canonical file: {rel}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        if is_shim_only_module(text):
+            # Guardrail against accidental inversion where canonical files become shim-only.
+            errors.append(f"canonical file must not be shim-only: {rel}")
+
 
     for rel, target in LEGACY_SHIMS.items():
         path = root / rel

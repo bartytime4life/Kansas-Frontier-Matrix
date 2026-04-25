@@ -98,3 +98,28 @@ def test_governed_api_path_policy_fails_when_canonical_missing(tmp_path: Path) -
 
     assert proc.returncode == 1
     assert "missing canonical file" in proc.stderr
+
+
+def test_governed_api_path_policy_fails_when_canonical_is_shim_only(tmp_path: Path) -> None:
+    _setup_valid_tree(tmp_path)
+    _write(
+        tmp_path / "apps/governed_api/ecology/routes.py",
+        "from __future__ import annotations\n\n"
+        "from apps.governed_api.ecology.fastapi_routes import *  # noqa: F401,F403\n",
+    )
+
+    proc = subprocess.run(
+        [
+            "python3",
+            "tools/ci/check_governed_api_path_policy.py",
+            "--root",
+            str(tmp_path),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 1
+    assert "canonical file must not be shim-only" in proc.stderr
+
