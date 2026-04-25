@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -98,4 +97,3 @@ def decision_to_dict(decision: PromotionManifestDecision) -> dict[str, Any]:
         "errors": decision.errors,
         "warnings": decision.warnings,
     }
-```

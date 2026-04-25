@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -116,4 +115,3 @@ def test_validate_proof_pack_rejects_invalid_schema(tmp_path: Path) -> None:
             proof_pack=proof_pack,
             schema_path=schema_path,
         )
-```
