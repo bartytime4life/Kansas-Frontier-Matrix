@@ -26,7 +26,7 @@ def read_json_object(
     invalid_json: object,
     unreadable: object,
     wrong_type: object,
-) -> dict:
+) -> dict[str, object]:
     try:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
     except FileNotFoundError:
