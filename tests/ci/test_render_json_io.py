@@ -41,12 +41,12 @@ def read_json_object(render_json_module: ModuleType) -> Callable[..., dict[str, 
 
 
 def test_format_message_happy_path(render_json_module: ModuleType) -> None:
-    assert render_json_module._format_message("hello {name}", name="ci") == "hello ci"
+    assert render_json_module.format_message("hello {name}", name="ci") == "hello ci"
 
 
 def test_format_message_falls_back_for_bad_template(render_json_module: ModuleType) -> None:
     assert (
-        render_json_module._format_message("broken {unknown}", name="ci")
+        render_json_module.format_message("broken {unknown}", name="ci")
         == "broken {unknown}"
     )
 
