@@ -45,6 +45,7 @@ def test_render_promotion_bundle_summary_missing_bundle_id_fails() -> None:
         )
 
         assert proc.returncode == 2
+        assert "missing required string key: bundle_id" in proc.stderr
 
 
 def test_render_promotion_bundle_summary_artifacts_must_be_list() -> None:
