@@ -1,1 +1,28 @@
-
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/catalog/definitions.schema.json",
+  "title": "KFM Catalog Shared Definitions",
+  "type": "object",
+  "$defs": {
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "non_empty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "href": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
