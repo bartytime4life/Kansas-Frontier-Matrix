@@ -42,8 +42,12 @@ def load_json(path: Path, errors: list[str]) -> Any | None:
         return json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:
         errors.append(f"missing file: {path}")
+    except UnicodeDecodeError:
+        errors.append(f"invalid UTF-8 in {path}")
     except json.JSONDecodeError as exc:
         errors.append(f"invalid JSON in {path}: {exc}")
+    except OSError as exc:
+        errors.append(f"unable to read {path}: {exc}")
     return None
 
 
@@ -53,6 +57,9 @@ def main() -> int:
     args = parser.parse_args()
 
     root = Path(args.root)
+    if not root.exists() or not root.is_dir():
+        print(f"validate_renderer_fixtures: invalid root path (expected directory): {root}", file=sys.stderr)
+        return 1
 
     pairs: list[tuple[Path, Path, str]] = [
         (
