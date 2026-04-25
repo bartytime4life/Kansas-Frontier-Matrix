@@ -6,11 +6,12 @@ import sys
 from pathlib import Path
 
 
-def _format_message(template: str, **kwargs: object) -> str:
+def _format_message(template: object, **kwargs: object) -> str:
+    template_text = template if isinstance(template, str) else str(template)
     try:
-        return template.format(**kwargs)
-    except (KeyError, IndexError, ValueError):
-        return template
+        return template_text.format(**kwargs)
+    except (AttributeError, KeyError, IndexError, TypeError, ValueError):
+        return template_text
 
 
 def read_json_object(
