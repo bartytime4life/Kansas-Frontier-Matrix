@@ -27,6 +27,7 @@ python3 ./scripts/catalog_validate.py
 python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
 python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 ./tools/ci/report_placeholder_markers.py --root . --top 5
+python3 ./tools/ci/check_markdown_authority_thresholds.py --root .
 
 if [ "${KFM_INSTALL_BOUNDARY_DEPS:-0}" = "1" ]; then
   sh ./tools/ci/install_boundary_test_deps.sh

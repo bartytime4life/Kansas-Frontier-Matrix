@@ -54,6 +54,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
 > - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
 > - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter with optional threshold-fail mode for weekly scorecard observability)
+> - `tools/ci/check_markdown_authority_thresholds.py` (required markdown marker caps for top authority docs)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >
@@ -195,10 +196,12 @@ tools/ci/
 ├── check_python_syntax.sh
 ├── test_check_python_syntax.sh
 ├── python_syntax_targets.txt
+├── markdown_authority_thresholds.json
 ├── install_boundary_test_deps.sh
 ├── validate_policy_runtime_fixtures.py
 ├── validate_renderer_fixtures.py
 ├── report_placeholder_markers.py
+├── check_markdown_authority_thresholds.py
 ├── run_repo_baseline_local.sh
 ├── render_json_io.py
 ├── render_promotion_summary.py

@@ -77,6 +77,9 @@ Use threshold mode in `tools/ci/report_placeholder_markers.py` as follows:
 - Enable first required markdown threshold for top-level docs.
 - Publish post-remediation marker trend in `docs/runbooks/repository-next-steps.md`.
 
+Status update: first authority-doc threshold gate is now implemented via
+`tools/ci/check_markdown_authority_thresholds.py`.
+
 ---
 
 ## Success criteria

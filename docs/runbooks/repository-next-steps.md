@@ -7,17 +7,18 @@ For markdown-specific remediation sequencing, see `docs/runbooks/markdown-remedi
 
 ## Evidence snapshot
 
-- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`95 passed`).
+- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`98 passed`).
 - The baseline GitHub workflow (`.github/workflows/verification-baseline.yml`) already executes thin-slice checks for baseline integrity, script validation, policy fixture validation, renderer fixture validation, and `tests/ci`.
 - Baseline now also runs ecology API/UI boundary tests (`apps/governed-api/ecology/tests` and `apps/ui/ecology/tests`), with dependency-aware skips when optional packages are not installed.
 - Baseline workflow installs optional boundary-test dependencies via `tools/ci/install_boundary_test_deps.sh` before running ecology boundary tests.
 - Python syntax checks are now enforced in baseline for repository Python files via `tools/ci/check_python_syntax.sh` (with optional manifest mode via `tools/ci/python_syntax_targets.txt`).
 - Placeholder marker reporting is now automated via `tools/ci/report_placeholder_markers.py` and is included in the local baseline runner and baseline workflow for observability.
+- Markdown authority docs now have required marker caps enforced via `tools/ci/check_markdown_authority_thresholds.py` and `tools/ci/markdown_authority_thresholds.json`.
 - The repo remains documentation-heavy (190 Markdown files out of 361 files), which means governance quality is currently constrained more by documentation clarity than by missing baseline test scaffolding.
 - Placeholder and uncertainty markers are still high:
-  - `TODO`: 495
-  - `UNKNOWN`: 477
-  - `NEEDS VERIFICATION`: 1,855
+  - `TODO`: 498
+  - `UNKNOWN`: 480
+  - `NEEDS VERIFICATION`: 1,857
 
 ## Why the priorities changed
 
