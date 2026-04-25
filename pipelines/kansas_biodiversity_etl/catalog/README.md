@@ -8,9 +8,32 @@ owners: NEEDS_VERIFICATION__@bartytime4life_or_biodiversity_domain_owner
 created: 2026-04-25
 updated: 2026-04-25
 policy_label: NEEDS_VERIFICATION__public_or_internal
-related: [../README.md, ./emit_catalog.py, ../../README.md, ../../../data/catalog/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/published/README.md, ../../../schemas/README.md, ../../../contracts/README.md, ../../../policy/README.md, ../../../tools/validators/promotion_gate/README.md]
-tags: [kfm, pipelines, biodiversity, catalog, stac, dcat, prov, evidence-bundle, receipts, promotion]
-notes: [Current public main confirms this path exists and that this README is empty before revision; current public main also confirms sibling emit_catalog.py. Owners, policy_label, branch-local execution wiring, and catalog promotion enforcement remain NEEDS_VERIFICATION.]
+related: [
+  ../README.md,
+  ../Makefile,
+  ./emit_catalog.py,
+  ../validate/README.md,
+  ../attest/README.md,
+  ../../README.md,
+  ../../../data/catalog/README.md,
+  ../../../data/catalog/stac/README.md,
+  ../../../data/catalog/dcat/README.md,
+  ../../../data/catalog/prov/README.md,
+  ../../../data/receipts/README.md,
+  ../../../data/proofs/README.md,
+  ../../../data/published/README.md,
+  ../../../schemas/README.md,
+  ../../../contracts/README.md,
+  ../../../policy/README.md,
+  ../../../tools/validators/promotion_gate/README.md
+]
+tags: [kfm, pipelines, biodiversity, catalog, stac, dcat, prov, evidence-bundle, receipts, proofs, promotion-gate]
+notes: [
+  "Revision of existing catalog README for pipelines/kansas_biodiversity_etl/catalog/.",
+  "Documents catalog closure after the Kansas biodiversity ETL Gate A-H validation path.",
+  "Current emitter is dataset-level; STAC-per-partition output is identified as the next hardening step, not claimed implemented unless active branch confirms it.",
+  "Owners, policy_label, branch-local execution wiring, schema validation, and catalog promotion enforcement remain NEEDS VERIFICATION."
+]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -27,21 +50,22 @@ Catalog-closure README for the Kansas biodiversity occurrence pipeline’s STAC,
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![doc](https://img.shields.io/badge/doc-draft-lightgrey)
 ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey)
-![surface](https://img.shields.io/badge/surface-pipelines%2Fkansas__biodiversity__etl%2Fcatalog-6f42c1)
+![surface](https://img.shields.io/badge/surface-pipeline__catalog-6f42c1)
 ![catalog](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT%20%2B%20PROV-0a7ea4)
 ![posture](https://img.shields.io/badge/posture-evidence--bounded-blue)
-![promotion](https://img.shields.io/badge/promotion-not%20by%20catalog%20alone-red)
+![gate](https://img.shields.io/badge/after-gate__A--H-red)
 
 </div>
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | **Status** | `experimental` / `draft` |
 | **Owners** | `NEEDS_VERIFICATION__@bartytime4life_or_biodiversity_domain_owner` |
 | **Path** | `pipelines/kansas_biodiversity_etl/catalog/README.md` |
 | **Repo fit** | child README for catalog-emission logic inside the staged Kansas biodiversity ETL lane |
-| **Current public-main inventory** | `README.md` + `emit_catalog.py` |
+| **Primary emitter** | `emit_catalog.py` |
 | **Primary artifact family** | `STAC Item` · `DCAT Dataset` · `PROV lineage document` |
+| **Ordering rule** | catalog closure should run after publish, receipt proof, and Gate A-H validation |
 | **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 ---
@@ -58,15 +82,19 @@ It exists to help the pipeline turn already-produced governed artifacts into rev
 
 The catalog stage should make the release candidate easier to inspect. It does **not** make the release candidate safe, promoted, public, or authoritative by itself.
 
-### What this directory should make clear
+### Current catalog boundary
 
 | Question | Expected answer |
-|---|---|
+| --- | --- |
 | What catalog records are emitted? | STAC, DCAT, and PROV records for the Kansas biodiversity occurrence candidate. |
-| What must already exist? | Dataset metadata, an `EvidenceBundle`, and a run receipt. |
+| What must already exist? | Dataset metadata, an EvidenceBundle, a run receipt, and preferably a verified receipt proof. |
+| What should run before catalog closure? | The full promotion gate for the candidate artifact, including receipt proof verification when wired. |
 | What does catalog closure prove? | Metadata cross-linkage and lineage description, subject to validation. |
 | What does it not prove? | Publication approval, source authority, policy clearance, or sensitive-location safety. |
-| What remains downstream? | Promotion gate, proof review, release state, published alias, governed API/UI consumption. |
+| What remains downstream? | Promotion decision, release state, published alias, governed API/UI consumption. |
+
+> [!NOTE]
+> The current emitter documented here is dataset-level. For partitioned Parquet, the stronger next implementation is **STAC item per partition** plus a collection-level record. That is **PROPOSED** until implemented and verified.
 
 [Back to top](#top)
 
@@ -79,20 +107,23 @@ This README sits inside the staged Kansas biodiversity ETL lane.
 ### Path and neighboring surfaces
 
 | Relationship | Surface | Role | Status |
-|---|---|---|---|
-| Parent pipeline lane | [`../README.md`](../README.md) | Defines the Kansas biodiversity ETL truth path, source burden, stage contract, promotion gate, and failure modes. | **CONFIRMED public-main path** |
-| Sibling emitter | [`./emit_catalog.py`](./emit_catalog.py) | Emits STAC, DCAT, and PROV records from dataset metadata, EvidenceBundle, and run receipt inputs. | **CONFIRMED public-main file** |
-| Pipeline root | [`../../README.md`](../../README.md) | Defines `/pipelines/` as the execution-family index. | **CONFIRMED public-main path** |
-| Data catalog parent | [`../../../data/catalog/README.md`](../../../data/catalog/README.md) | Defines the repo-wide catalog seam and the distinction between catalog, proof, receipt, and publication. | **CONFIRMED public-main path** |
-| STAC lane | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) | Repo-level STAC guidance and child catalog surface. | **CONFIRMED public-main path** |
-| DCAT lane | [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md) | Repo-level DCAT guidance and child catalog surface. | **CONFIRMED public-main path** |
-| PROV lane | [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | Repo-level provenance guidance and lineage surface. | **CONFIRMED public-main path** |
-| Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory; catalog records may reference receipts but must not replace them. | **NEEDS VERIFICATION in active checkout** |
-| Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release evidence; catalog records may reference proof objects but must not replace them. | **NEEDS VERIFICATION in active checkout** |
-| Published artifacts | [`../../../data/published/README.md`](../../../data/published/README.md) | Promotion-gated public or steward-facing materialization. | **NEEDS VERIFICATION in active checkout** |
+| --- | --- | --- | --- |
+| Parent pipeline lane | [`../README.md`](../README.md) | Defines the Kansas biodiversity ETL truth path, source burden, stage contract, promotion gate, and failure modes. | **NEEDS VERIFICATION** |
+| Pipeline Makefile | [`../Makefile`](../Makefile) | Expected to wire `catalog` after `gate`. | **PROPOSED / NEEDS VERIFICATION** |
+| Sibling emitter | [`./emit_catalog.py`](./emit_catalog.py) | Emits STAC, DCAT, and PROV records from dataset metadata, EvidenceBundle, and run receipt inputs. | **CONFIRMED by uploaded draft / branch NEEDS VERIFICATION** |
+| Validation lane | [`../validate/README.md`](../validate/README.md) | Documents Gate A-H and fail-closed candidate validation. | **PROPOSED / NEEDS VERIFICATION** |
+| Attestation lane | [`../attest/README.md`](../attest/README.md) | Documents local receipt proof helpers. | **PROPOSED / NEEDS VERIFICATION** |
+| Pipeline root | [`../../README.md`](../../README.md) | Defines `/pipelines/` as the execution-family index. | **NEEDS VERIFICATION** |
+| Data catalog parent | [`../../../data/catalog/README.md`](../../../data/catalog/README.md) | Defines the repo-wide catalog seam and the distinction between catalog, proof, receipt, and publication. | **NEEDS VERIFICATION** |
+| STAC lane | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) | Repo-level STAC guidance and child catalog surface. | **NEEDS VERIFICATION** |
+| DCAT lane | [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md) | Repo-level DCAT guidance and child catalog surface. | **NEEDS VERIFICATION** |
+| PROV lane | [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | Repo-level provenance guidance and lineage surface. | **NEEDS VERIFICATION** |
+| Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory; catalog records may reference receipts but must not replace them. | **NEEDS VERIFICATION** |
+| Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release evidence; catalog records may reference proof objects but must not replace them. | **NEEDS VERIFICATION** |
+| Published artifacts | [`../../../data/published/README.md`](../../../data/published/README.md) | Promotion-gated public or steward-facing materialization. | **NEEDS VERIFICATION** |
 | Contracts / schemas | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md) | Shared contract meaning and machine schema authority. | **Schema-home posture NEEDS VERIFICATION** |
-| Policy | [`../../../policy/README.md`](../../../policy/README.md) | Rights, sensitivity, geoprivacy, and release policy. | **NEEDS VERIFICATION in active checkout** |
-| Promotion gate | [`../../../tools/validators/promotion_gate/README.md`](../../../tools/validators/promotion_gate/README.md) | Gate logic that should evaluate catalog closure as one release-readiness input. | **NEEDS VERIFICATION in active checkout** |
+| Policy | [`../../../policy/README.md`](../../../policy/README.md) | Rights, sensitivity, geoprivacy, and release policy. | **NEEDS VERIFICATION** |
+| Promotion gate | [`../../../tools/validators/promotion_gate/README.md`](../../../tools/validators/promotion_gate/README.md) | Repo-wide promotion gate doctrine. | **NEEDS VERIFICATION** |
 
 ### Placement rule
 
@@ -113,10 +144,11 @@ Use `data/receipts/` for run receipts and process memory.
 Inputs belong here only when they are already produced by governed upstream stages and are safe to describe as catalog subjects.
 
 | Input | Accepted when… | Required minimum |
-|---|---|---|
-| Dataset metadata JSON | The publish stage produced `_dataset_metadata.json` or an equivalent metadata object. | `dataset_id`, `generated_at`, `spec_hash`, record count, format, and dataset root. |
-| EvidenceBundle JSON | The pipeline emitted an evidence bundle that ties the candidate dataset to source URIs, license posture, attribution, obligations, and policy references. | Resolvable bundle identifier, source references, license/attribution fields, obligations, and `spec_hash`. |
-| Run receipt JSON | The pipeline wrote a receipt for the execution that produced the candidate dataset and evidence bundle. | `run_id`, time, inputs/outputs, validation/policy status where available, and linkable artifact references. |
+| --- | --- | --- |
+| Dataset metadata JSON | The publish stage produced `_dataset_metadata.json` or an equivalent metadata object. | `dataset_id`, `generated_at`, `spec_hash`, record count, format, partition metadata when available, and dataset root. |
+| EvidenceBundle JSON | The pipeline emitted an evidence bundle tying the candidate dataset to source URIs, license posture, attribution, obligations, and policy references. | source references, license/attribution fields, obligations, item count, and `spec_hash`. |
+| Run receipt JSON | The pipeline wrote a receipt for the execution that produced the candidate dataset and evidence bundle. | time, inputs/outputs, candidate path, `spec_hash`, and linkable artifact references. |
+| Receipt proof JSON | The local proof helper emitted a receipt proof and Gate H verified it. | `receipt_hash`, proof type, signer label, and verification outcome. |
 | Dataset root | The path describes the processed candidate dataset being cataloged. | Stable path or URI; no raw/work/quarantine path. |
 | Catalog output paths | The paths target catalog surfaces, not publication surfaces. | STAC, DCAT, and PROV outputs under `data/catalog/...` or a repo-approved equivalent. |
 
@@ -134,6 +166,21 @@ Inputs belong here only when they are already produced by governed upstream stag
 --prov-output
 ```
 
+### Recommended Makefile order
+
+```text
+harvest
+normalize
+dedupe
+publish
+sign
+gate
+catalog
+```
+
+> [!IMPORTANT]
+> Catalog should not run as a substitute for `gate`. If `make all` includes catalog, the catalog target should come **after** the fail-closed gate.
+
 [Back to top](#top)
 
 ---
@@ -143,7 +190,7 @@ Inputs belong here only when they are already produced by governed upstream stag
 These do **not** belong in `pipelines/kansas_biodiversity_etl/catalog/`.
 
 | Excluded item | Why | Use instead |
-|---|---|---|
+| --- | --- | --- |
 | Raw GBIF or DwC-A payloads | Catalog emission must not become a raw-source store. | `../../../data/raw/` |
 | Work-stage normalized JSONL or scratch files | Work products are not release-ready catalog subjects. | `../../../data/work/` |
 | Quarantined records | Invalid, sensitive, conflicted, or blocked records should not be cataloged as outward artifacts. | `../../../data/quarantine/` |
@@ -161,17 +208,17 @@ These do **not** belong in `pipelines/kansas_biodiversity_etl/catalog/`.
 
 ## Directory tree
 
-Current public-main inventory for this directory is intentionally small.
+Current expected inventory for this directory is intentionally small.
 
 ```text
 pipelines/kansas_biodiversity_etl/catalog/
 ├── README.md          # this file; catalog-closure orientation
-└── emit_catalog.py    # CONFIRMED: STAC + DCAT + PROV emitter
+└── emit_catalog.py    # STAC + DCAT + PROV emitter
 ```
 
-### Expected output placement
+### Current dataset-level output placement
 
-The emitter should write catalog records outside the pipeline code directory:
+The current emitter should write catalog records outside the pipeline code directory:
 
 ```text
 data/catalog/
@@ -183,8 +230,23 @@ data/catalog/
     └── kansas_biodiversity_occurrences.prov.json
 ```
 
-> [!NOTE]
-> Output names above match the current emitter guidance. Before treating them as release policy, verify branch-local schema names, catalog conventions, and promotion-gate expectations.
+### Proposed partition-aware STAC shape
+
+For partitioned Parquet, the next stronger STAC shape is:
+
+```text
+data/catalog/stac/kansas_biodiversity_occurrences/
+├── collection.json
+├── year=2026-month=04.item.json
+└── year=unknown-month=unknown.item.json
+```
+
+| Shape | Status | Why |
+| --- | --- | --- |
+| One dataset-level STAC item | **CURRENT / NEEDS VERIFICATION** | simple catalog closure for the whole candidate |
+| STAC collection + item per partition | **PROPOSED** | better matches partitioned Parquet and time-aware discovery |
+| DCAT dataset/distribution | **CURRENT / NEEDS VERIFICATION** | dataset/distribution-level description |
+| PROV lineage document | **CURRENT / NEEDS VERIFICATION** | entity/activity/source linkage |
 
 [Back to top](#top)
 
@@ -192,17 +254,28 @@ data/catalog/
 
 ## Quickstart
 
-Run catalog emission only after the upstream biodiversity pipeline has produced the processed dataset metadata, EvidenceBundle, and run receipt.
+Run catalog emission only after the upstream biodiversity pipeline has produced the processed dataset metadata, EvidenceBundle, run receipt, and local proof, and after the gate has passed.
 
-### Inspect the catalog lane
+### Full pipeline route
 
-```bash
-find pipelines/kansas_biodiversity_etl/catalog -maxdepth 2 -type f | sort
-sed -n '1,220p' pipelines/kansas_biodiversity_etl/catalog/README.md
-sed -n '1,260p' pipelines/kansas_biodiversity_etl/catalog/emit_catalog.py
+From:
+
+```text
+pipelines/kansas_biodiversity_etl/
 ```
 
-### Emit catalog records from repo root
+```bash
+make clean
+make all
+```
+
+Expected order if Makefile wiring is current:
+
+```text
+harvest -> normalize -> dedupe -> publish -> sign -> gate -> catalog
+```
+
+### Emit catalog records directly from repo root
 
 ```bash
 python pipelines/kansas_biodiversity_etl/catalog/emit_catalog.py \
@@ -224,11 +297,9 @@ python -m json.tool data/catalog/prov/kansas_biodiversity_occurrences.prov.json 
 ```
 
 > [!WARNING]
-> The command above does not prove the dataset is publishable. It only emits and smoke-checks catalog JSON. Promotion still requires evidence closure, rights review, sensitivity handling, integrity checks, and release-state approval.
+> The command above does not prove the dataset is publishable. It only emits and smoke-checks catalog JSON. Promotion still requires evidence closure, rights review, sensitivity handling, integrity checks, proof objects, and release-state approval.
 
-### Makefile posture
-
-The current pipeline Makefile should be inspected before assuming `make catalog` exists.
+### Inspect Makefile catalog wiring
 
 ```bash
 grep -nE 'catalog|CATALOG_|emit_catalog' pipelines/kansas_biodiversity_etl/Makefile || true
@@ -244,19 +315,21 @@ If branch-local Makefile integration is absent, call `emit_catalog.py` directly 
 
 ### When to use this emitter
 
-Use `emit_catalog.py` when the Kansas biodiversity ETL has already produced:
+Use `emit_catalog.py` when the Kansas biodiversity ETL has already produced and validated:
 
 1. a processed occurrence dataset candidate,
 2. dataset metadata with stable identity,
 3. an EvidenceBundle,
-4. a run receipt.
+4. a run receipt,
+5. a local receipt proof when Gate H is enabled,
+6. a passing Gate A-H decision.
 
 The emitter can then write catalog records that make the candidate easier to inspect across discovery, dataset description, and provenance surfaces.
 
 ### What the emitter does
 
 | Function | Catalog role | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `build_stac_item` | Creates a STAC-shaped item for the dataset candidate. | Links to EvidenceBundle and run receipt. |
 | `build_dcat_dataset` | Creates a DCAT-shaped dataset/distribution record. | Uses license and attribution from the EvidenceBundle. |
 | `build_prov_document` | Creates a PROV-shaped lineage document. | Links dataset, EvidenceBundle, run receipt, and source URIs. |
@@ -287,41 +360,43 @@ The emitter must not:
 flowchart LR
     A["GBIF / DwC-A source edge"] --> B["Harvest"]
     B --> C["Normalize"]
-    C --> D["Dedupe + conflict review"]
-    D --> E["License + attribution"]
-    E --> F["Sensitivity / geoprivacy"]
-    F --> G["Processed dataset candidate"]
+    C --> D["Dedupe + license + sensitivity"]
+    D --> E["Publish partitioned dataset"]
 
-    G --> H["Dataset metadata"]
-    G --> I["EvidenceBundle"]
-    G --> J["Run receipt"]
+    E --> F["Dataset metadata"]
+    E --> G["EvidenceBundle"]
+    E --> H["Run receipt"]
 
-    H --> K["catalog/emit_catalog.py"]
-    I --> K
-    J --> K
+    H --> I["Local receipt proof"]
+    F --> J["Gate A-H"]
+    G --> J
+    H --> J
+    I --> J
 
-    K --> L["STAC Item"]
-    K --> M["DCAT Dataset"]
-    K --> N["PROV lineage"]
+    J -->|PASS| K["catalog/emit_catalog.py"]
+    J -->|FAIL| L["Fail closed / review / quarantine"]
 
-    L --> O["Catalog closure review"]
-    M --> O
-    N --> O
+    K --> M["STAC"]
+    K --> N["DCAT"]
+    K --> O["PROV"]
 
-    O --> P["Promotion gate / proof review"]
-    P -->|pass| Q["Published governed artifact"]
-    P -->|fail| R["Quarantine / correction queue"]
+    M --> P["Catalog closure review"]
+    N --> P
+    O --> P
 
-    Q --> S["Governed API"]
-    S --> T["MapLibre / Evidence Drawer / Focus Mode"]
+    P --> Q["Governed promotion path"]
+    Q -->|approved| R["data/published/"]
+    Q -->|held or denied| L
 
-    K -. "must not promote by itself" .-> Q
-    T -. "must not read" .-> B
-    T -. "must not read" .-> C
-    T -. "must not read" .-> R
+    R --> S["Governed API / Map / Evidence Drawer / Focus Mode"]
+
+    K -. "must not promote by itself" .-> R
+    S -. "must not read raw/work/quarantine" .-> B
+    S -. "must not read raw/work/quarantine" .-> C
+    S -. "must not read raw/work/quarantine" .-> L
 ```
 
-The key boundary: `catalog/` helps close metadata around a candidate artifact. It does not create the candidate, approve it, or make it public.
+The key boundary: `catalog/` helps close metadata around a candidate artifact **after** the candidate has passed validation. It does not create the candidate, approve it, or make it public.
 
 [Back to top](#top)
 
@@ -332,8 +407,8 @@ The key boundary: `catalog/` helps close metadata around a candidate artifact. I
 ### Truth labels for this README
 
 | Label | Meaning here |
-|---|---|
-| **CONFIRMED** | Verified from the current public GitHub tree or directly visible sibling file content. |
+| --- | --- |
+| **CONFIRMED** | Verified from uploaded project material or directly visible sibling-file description. |
 | **INFERRED** | Strongly suggested by parent pipeline docs or adjacent catalog doctrine, but not directly enforced by this README alone. |
 | **PROPOSED** | Fits KFM doctrine and current lane shape, but needs implementation or branch-local confirmation. |
 | **UNKNOWN** | Not verified from mounted repo evidence, runtime logs, CI, emitted artifacts, or platform state. |
@@ -342,20 +417,21 @@ The key boundary: `catalog/` helps close metadata around a candidate artifact. I
 ### Current evidence snapshot
 
 | Observation | Status | Consequence |
-|---|---|---|
-| `pipelines/kansas_biodiversity_etl/catalog/README.md` exists but is effectively empty before this revision. | **CONFIRMED** | This file can be revised without needing to preserve existing prose. |
-| `pipelines/kansas_biodiversity_etl/catalog/emit_catalog.py` exists. | **CONFIRMED** | This README should document the emitter rather than invent a different catalog role. |
-| `emit_catalog.py` accepts dataset metadata, EvidenceBundle, and run receipt inputs. | **CONFIRMED** | Accepted inputs are grounded in the current emitter. |
-| `emit_catalog.py` emits STAC, DCAT, and PROV records. | **CONFIRMED** | The README’s scope should be catalog-closure specific. |
-| `emit_catalog.py` says it does not promote data by itself. | **CONFIRMED** | Promotion language must remain bounded. |
-| Current branch has active `make catalog` wiring. | **NEEDS VERIFICATION** | Use direct CLI unless Makefile integration is confirmed. |
+| --- | --- | --- |
+| `pipelines/kansas_biodiversity_etl/catalog/README.md` is the target file. | **CONFIRMED** | This file is revised directly. |
+| `emit_catalog.py` is the sibling emitter described by the uploaded README. | **CONFIRMED from uploaded draft** | This README documents the emitter instead of inventing a new catalog role. |
+| `emit_catalog.py` accepts dataset metadata, EvidenceBundle, and run receipt inputs. | **CONFIRMED from uploaded draft** | Accepted inputs are grounded in the current emitter contract. |
+| `emit_catalog.py` emits STAC, DCAT, and PROV records. | **CONFIRMED from uploaded draft** | The README’s scope is catalog-closure specific. |
+| `emit_catalog.py` says it does not promote data by itself. | **CONFIRMED from uploaded draft** | Promotion language remains bounded. |
+| Current pipeline has active `make catalog` wiring. | **NEEDS VERIFICATION** | Inspect Makefile before relying on target execution. |
+| Gate A-H is active in branch-local validator. | **NEEDS VERIFICATION** | Documented as expected current contract from this workstream, not branch-proven. |
 | Generated catalog outputs have passed schema validation. | **UNKNOWN** | Add validation before release reliance. |
-| Catalog closure is enforced by merge-blocking CI. | **UNKNOWN** | Treat as a future gate until workflow evidence exists. |
+| Catalog closure is enforced by merge-blocking CI. | **UNKNOWN** | Treat as future gate until workflow evidence exists. |
 
 ### Catalog output contract
 
 | Output | Purpose | Must reference |
-|---|---|---|
+| --- | --- | --- |
 | STAC Item | Spatial/temporal artifact discovery. | dataset metadata, EvidenceBundle link, run receipt link, asset path, `spec_hash`. |
 | DCAT Dataset | Dataset/distribution description, rights, access, and publisher-facing metadata. | dataset identifier, access URL, format, license, attribution, `spec_hash`. |
 | PROV lineage document | Entity/activity/source lineage. | dataset entity, EvidenceBundle entity, run receipt entity, source URIs, generation activity. |
@@ -363,7 +439,7 @@ The key boundary: `catalog/` helps close metadata around a candidate artifact. I
 ### Anti-collapse rules
 
 | Do not collapse… | Because… |
-|---|---|
+| --- | --- |
 | catalog record → proof pack | Catalog closure supports review; proof packs establish release evidence. |
 | receipt → EvidenceBundle | Receipts are process memory; EvidenceBundles resolve claims to support. |
 | STAC/DCAT/PROV → publication | Metadata does not equal release approval. |
@@ -384,7 +460,7 @@ A revision to this README is ready when:
 - [ ] The README states that catalog closure is **not** promotion.
 - [ ] Accepted inputs match `emit_catalog.py` arguments.
 - [ ] Exclusions keep raw, work, quarantine, receipts, proofs, policy, and published aliases out of this directory.
-- [ ] The directory tree reflects the current public-main inventory.
+- [ ] The directory tree reflects the active branch inventory or clearly marks uncertainty.
 - [ ] The quickstart is non-destructive and says what must exist before running it.
 - [ ] The diagram shows catalog as a closure seam, not the whole pipeline.
 - [ ] STAC, DCAT, and PROV outputs are explained as separate but cross-linked metadata surfaces.
@@ -395,6 +471,7 @@ A revision to this README is ready when:
 A catalog output is review-ready when:
 
 - [ ] `--metadata`, `--evidence`, and `--receipt` inputs exist.
+- [ ] Gate A-H has passed for the candidate or the catalog output is explicitly marked draft.
 - [ ] JSON outputs are syntactically valid.
 - [ ] Output subjects point to the same dataset candidate and `spec_hash`.
 - [ ] STAC, DCAT, and PROV records can be associated with the same release candidate.
@@ -403,6 +480,14 @@ A catalog output is review-ready when:
 - [ ] No raw, work, or quarantine path is exposed as a public-facing asset.
 - [ ] Rights and sensitivity posture are visible or explicitly blocked.
 - [ ] Promotion gate treats catalog closure as one input, not an automatic pass.
+
+### Next hardening tasks
+
+- [ ] Emit STAC collection plus one STAC item per Parquet partition.
+- [ ] Validate STAC/DCAT/PROV JSON against repo-approved schemas or structural checks.
+- [ ] Add a catalog matrix confirming STAC/DCAT/PROV agree on `dataset_id`, `spec_hash`, source refs, and receipt refs.
+- [ ] Add fixture-backed tests for `emit_catalog.py`.
+- [ ] Decide whether catalog closure becomes part of `promotion_gate_full.py` or a separate catalog gate.
 
 [Back to top](#top)
 
@@ -432,7 +517,7 @@ Only after branch-local Makefile wiring is confirmed. The direct `python ... emi
 
 ### What is the safest next improvement?
 
-Add fixture-backed tests that run `emit_catalog.py` against a tiny dataset metadata JSON, EvidenceBundle JSON, and run receipt JSON, then assert STAC/DCAT/PROV outputs share the same dataset identity and `spec_hash`.
+Upgrade `emit_catalog.py` so partitioned Parquet writes a STAC Collection plus one STAC Item per partition, while keeping DCAT and PROV tied to the dataset-level `spec_hash`.
 
 [Back to top](#top)
 
@@ -444,10 +529,11 @@ Add fixture-backed tests that run `emit_catalog.py` against a tiny dataset metad
 <summary>Open verification backlog</summary>
 
 | Item | Status | Why it matters |
-|---|---|---|
+| --- | --- | --- |
 | Confirm branch-local owner for `pipelines/kansas_biodiversity_etl/catalog/`. | **NEEDS VERIFICATION** | Owner assignment should come from CODEOWNERS or steward records. |
 | Confirm accepted `policy_label` vocabulary. | **NEEDS VERIFICATION** | Meta block should not invent policy labels. |
 | Confirm `make catalog` integration. | **NEEDS VERIFICATION** | Current Makefile wiring may not include catalog execution. |
+| Confirm Gate A-H is active in branch-local validator. | **NEEDS VERIFICATION** | Catalog should run after the validated candidate boundary. |
 | Add catalog fixtures. | **PROPOSED** | Prevents catalog closure from remaining prose-only. |
 | Add STAC/DCAT/PROV schema or structural validation. | **PROPOSED** | JSON syntax is not enough for catalog closure. |
 | Add CatalogMatrix or equivalent closure check. | **PROPOSED** | STAC/DCAT/PROV should agree on subject, version, checksums, and release references. |
