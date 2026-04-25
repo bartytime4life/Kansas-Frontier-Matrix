@@ -430,5 +430,4 @@ def test_validate_policy_runtime_fixtures_fails_on_missing_root_path() -> None:
     )
 
     assert proc.returncode == 1
-    assert "missing runtime policy file:" in proc.stderr
-    assert "missing runtime fixtures directory:" in proc.stderr
+    assert "invalid root path (expected directory): does-not-exist-root" in proc.stderr

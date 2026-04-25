@@ -100,3 +100,15 @@ def test_validate_renderer_fixtures_fails_on_unreadable_fixture_path() -> None:
 
         assert proc.returncode == 1
         assert "unable to read" in proc.stderr
+
+
+def test_validate_renderer_fixtures_fails_on_missing_root_path() -> None:
+    proc = subprocess.run(
+        ["python3", "tools/ci/validate_renderer_fixtures.py", "--root", "does-not-exist-root"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert proc.returncode == 1
+    assert "validate_renderer_fixtures: invalid root path (expected directory): does-not-exist-root" in proc.stderr

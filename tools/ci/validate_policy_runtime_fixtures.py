@@ -29,6 +29,10 @@ def main() -> int:
 
     root = Path(args.root)
     failures: list[str] = []
+    if not root.exists() or not root.is_dir():
+        failures.append(f"invalid root path (expected directory): {root}")
+        _emit_failures(failures)
+        return 1
 
     for rel_path in REQUIRED_RUNTIME_FILES:
         abs_path = root / rel_path
