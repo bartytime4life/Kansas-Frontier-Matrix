@@ -50,6 +50,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/render_json_io.py` (shared JSON input helper used by renderer entrypoints)
 > - `tools/ci/verify_baseline.sh` (baseline repository inventory verifier used by `.github/workflows/verification-baseline.yml`)
 > - `tools/ci/validate_policy_runtime_fixtures.py` (runtime policy fixture and finite-outcome smoke checks used by the baseline wrapper)
+> - `tools/ci/validate_renderer_fixtures.py` (renderer fixture/schema contract checks used by the baseline wrapper)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >
