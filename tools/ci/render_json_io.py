@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from typing import TypeAlias
 
 __all__: tuple[str, str] = ("format_message", "read_json_object")
+MessageTemplate: TypeAlias = object
 
 
 def format_message(template: object, **kwargs: object) -> str:
@@ -24,11 +26,11 @@ def format_message(template: object, **kwargs: object) -> str:
 def read_json_object(
     path: str,
     *,
-    not_found: object,
-    non_utf8: object,
-    invalid_json: object,
-    unreadable: object,
-    wrong_type: object,
+    not_found: MessageTemplate,
+    non_utf8: MessageTemplate,
+    invalid_json: MessageTemplate,
+    unreadable: MessageTemplate,
+    wrong_type: MessageTemplate,
 ) -> dict[str, object]:
     """Read a JSON file and require a top-level object payload.
 
