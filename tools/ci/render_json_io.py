@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Shared JSON I/O helpers for CI renderer entrypoints."""
+"""Shared JSON I/O helpers for CI renderer entrypoints.
+
+Exports:
+- ``MessageTemplate``: accepted template-like message input type.
+- ``format_message``: defensive interpolation helper.
+- ``read_json_object``: JSON object loader with deterministic CLI failures.
+"""
 from __future__ import annotations
 
 import json
