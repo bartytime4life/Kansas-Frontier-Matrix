@@ -67,6 +67,8 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tests/ci/test_validate_renderer_fixtures.py`
 > - `tests/ci/test_report_placeholder_markers.py`
 > - `tools/ci/test_check_python_syntax.sh`
+> - `apps/governed-api/ecology/tests/*` (dependency-aware boundary slice; skips when optional deps are unavailable)
+> - `apps/ui/ecology/tests/test_evidence_drawer_mapper.py`
 >
 > Active-branch parity, additional callers, and platform wiring still need direct verification.
 

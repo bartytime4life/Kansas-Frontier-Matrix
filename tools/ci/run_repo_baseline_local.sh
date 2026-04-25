@@ -28,5 +28,6 @@ python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 ./tools/ci/report_placeholder_markers.py --root . --top 5
 
 python3 -m pytest -q tests/ci
+python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
 
 echo "run_repo_baseline_local: completed"

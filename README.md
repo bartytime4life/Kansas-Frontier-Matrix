@@ -48,6 +48,7 @@ The baseline workflow currently checks the following thin-slice path:
 6. Renderer fixture validation.
 7. Placeholder marker observability report.
 8. `tests/ci` pytest suite.
+9. Ecology API/UI boundary test slice (`apps/governed-api/ecology/tests` and `apps/ui/ecology/tests`).
 
 This establishes a reliable minimum merge gate for repository integrity and fixture-level policy/rendering behavior.
 

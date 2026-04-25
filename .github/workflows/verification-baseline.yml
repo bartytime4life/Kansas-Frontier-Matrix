@@ -40,7 +40,9 @@ jobs:
           python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
 
       - name: Run CI tests
-        run: python3 -m pytest -q tests/ci
+        run: |
+          python3 -m pytest -q tests/ci
+          python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
 
 
       - name: Upload baseline report

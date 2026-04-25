@@ -3,6 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
+pytest.importorskip("jsonschema")
+pytest.importorskip("fastapi")
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 

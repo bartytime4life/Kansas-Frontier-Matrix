@@ -3,6 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
+pytest.importorskip("jsonschema")
+
 from apps.governed_api.ecology.evidencebundle_resolver import (
     ERROR_CODES,
     ResolverConfig,
