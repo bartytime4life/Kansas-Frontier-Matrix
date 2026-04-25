@@ -44,6 +44,9 @@ Action taken in this cycle:
   - `apps/governed-api/ecology/tests/test_route_response_contract_schema.py`
   - `apps/ui/ecology/tests/test_evidence_drawer_contract_schema.py`
 - Added negative contract assertions for missing required fields so failures are explicit and actionable.
+- Added deterministic governed-artifact build path and CI upload:
+  - `tools/ci/build_governed_artifacts.py`
+  - workflow artifact upload (`governed-artifacts`) in `.github/workflows/verification-baseline.yml`
 
 **Move B — Freeze marker growth in the worst markdown hotspots already identified by CI**
 
@@ -139,7 +142,6 @@ Update this section each week.
 - Top blocker:
 
 ## Commands used for this analysis
-
 ```bash
 tools/ci/run_repo_baseline_local.sh
 python3 tools/ci/report_placeholder_markers.py --root . --top 10

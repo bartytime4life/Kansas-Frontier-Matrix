@@ -56,6 +56,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/report_placeholder_markers.py` (placeholder marker count reporter with optional threshold-fail mode for weekly scorecard observability)
 > - `tools/ci/check_markdown_authority_thresholds.py` (required markdown marker caps for top authority docs)
 > - `tools/ci/check_governed_api_path_policy.py` (enforces canonical governed_api path + shim-only legacy path)
+> - `tools/ci/build_governed_artifacts.py` (renders deterministic markdown artifacts from fixed fixtures and emits a checksum manifest for CI upload)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >

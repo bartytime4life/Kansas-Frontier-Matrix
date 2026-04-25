@@ -49,6 +49,10 @@ jobs:
           python3 -m pytest -q tests/ci
           python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
 
+      - name: Build governed artifacts from fixed fixtures
+        run: |
+          python3 ./tools/ci/build_governed_artifacts.py --root . --out-dir artifacts/governed
+
 
       - name: Upload baseline report
         if: always()
@@ -56,4 +60,12 @@ jobs:
         with:
           name: baseline-report
           path: baseline-report.txt
+          if-no-files-found: warn
+
+      - name: Upload governed artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governed-artifacts
+          path: artifacts/governed
           if-no-files-found: warn
