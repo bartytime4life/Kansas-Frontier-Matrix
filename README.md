@@ -62,6 +62,9 @@ tools/ci/run_repo_baseline_local.sh
 
 # run CI pytest slice directly
 python3 -m pytest -q tests/ci
+
+# optional: install ecology boundary test dependencies before baseline
+KFM_INSTALL_BOUNDARY_DEPS=1 tools/ci/run_repo_baseline_local.sh
 ```
 
 ## Development priorities
@@ -92,6 +95,7 @@ When submitting changes:
 - Baseline local runner: `tools/ci/run_repo_baseline_local.sh`
 - Baseline verifier: `tools/ci/verify_baseline.sh`
 - Python syntax checker: `tools/ci/check_python_syntax.sh` (optional manifest mode supported)
+- Optional dependency installer for boundary tests: `tools/ci/install_boundary_test_deps.sh`
 - Placeholder marker report: `tools/ci/report_placeholder_markers.py`
 - CI tests: `tests/ci/`
 - Policy runtime fixtures: `policy/fixtures/runtime/`

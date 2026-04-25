@@ -39,6 +39,9 @@ jobs:
           python3 ./tools/ci/validate_renderer_fixtures.py --root .
           python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
 
+      - name: Install optional boundary test dependencies
+        run: sh ./tools/ci/install_boundary_test_deps.sh
+
       - name: Run CI tests
         run: |
           python3 -m pytest -q tests/ci
