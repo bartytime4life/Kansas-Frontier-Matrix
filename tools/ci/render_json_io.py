@@ -19,6 +19,7 @@ def format_message(template: object, **kwargs: object) -> str:
     except (AttributeError, KeyError, IndexError, TypeError, ValueError):
         return template_text
 
+
 def read_json_object(
     path: str,
     *,
