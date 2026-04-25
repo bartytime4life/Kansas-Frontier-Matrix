@@ -2,6 +2,8 @@
 
 This runbook captures the most important next actions after a fresh repository scan and baseline verification run on **2026-04-25**.
 
+For the impact-ordered foundation plan, see `docs/runbooks/foundation-strategy.md`.
+
 ## Evidence snapshot
 
 - Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`95 passed`).
@@ -14,7 +16,7 @@ This runbook captures the most important next actions after a fresh repository s
 - Placeholder and uncertainty markers are still high:
   - `TODO`: 491
   - `UNKNOWN`: 475
-  - `NEEDS VERIFICATION`: 1,852
+  - `NEEDS VERIFICATION`: 1,853
 
 ## Why the priorities changed
 
