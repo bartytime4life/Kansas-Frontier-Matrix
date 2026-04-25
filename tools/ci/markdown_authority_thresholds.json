@@ -1,0 +1,8 @@
+{
+  "checks": [
+    {"path": "docs/README.md", "max_total": 60},
+    {"path": "docs/architecture/README.md", "max_total": 60},
+    {"path": "apps/README.md", "max_total": 45},
+    {"path": "apps/ui/README.md", "max_total": 55}
+  ]
+}
