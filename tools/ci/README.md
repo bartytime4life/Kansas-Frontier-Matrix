@@ -184,6 +184,7 @@ tools/ci/
 ├── validate_policy_runtime_fixtures.py
 ├── validate_renderer_fixtures.py
 ├── run_repo_baseline_local.sh
+├── render_json_io.py
 ├── render_promotion_summary.py
 ├── render_promotion_bundle_summary.py
 ├── render_diff_summary.py
@@ -194,6 +195,7 @@ tests/ci/
 ├── README.md
 ├── test_render_diff_summary.py
 ├── test_render_bundle_diff_policy_summary.py
+├── test_render_json_io.py
 ├── test_render_promotion_summary.py
 ├── test_render_promotion_bundle_summary.py
 ├── test_render_promotion_review_handoff.py
@@ -284,6 +286,7 @@ sh ./tools/ci/test_verify_baseline.sh
 sh ./tools/ci/test_check_readme_paths.sh
 sh ./tools/ci/check_readme_paths.sh
 python3 ./tools/ci/validate_renderer_fixtures.py
+python3 -m pytest -q tests/ci/test_render_json_io.py
 sh ./tools/ci/run_repo_baseline_local.sh
 ```
 
