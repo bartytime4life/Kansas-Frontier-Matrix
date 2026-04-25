@@ -7,7 +7,7 @@ Kansas Frontier Matrix (KFM) is a governed, evidence-first workspace for buildin
 - Repository type: docs-first with executable validation tooling.
 - Baseline local verification command: `tools/ci/run_repo_baseline_local.sh`.
 - Baseline CI workflow: `.github/workflows/verification-baseline.yml`.
-- Current baseline test result from local run on 2026-04-25: `89 passed` in `tests/ci`.
+- Current baseline test result from local run on 2026-04-25: `92 passed` in `tests/ci`.
 
 ## What this repository contains
 
@@ -45,7 +45,8 @@ The baseline workflow currently checks the following thin-slice path:
 3. Script-level schema and catalog checks.
 4. Runtime policy fixture validation.
 5. Renderer fixture validation.
-6. `tests/ci` pytest suite.
+6. Placeholder marker observability report.
+7. `tests/ci` pytest suite.
 
 This establishes a reliable minimum merge gate for repository integrity and fixture-level policy/rendering behavior.
 
@@ -88,6 +89,7 @@ When submitting changes:
 - Baseline workflow: `.github/workflows/verification-baseline.yml`
 - Baseline local runner: `tools/ci/run_repo_baseline_local.sh`
 - Baseline verifier: `tools/ci/verify_baseline.sh`
+- Placeholder marker report: `tools/ci/report_placeholder_markers.py`
 - CI tests: `tests/ci/`
 - Policy runtime fixtures: `policy/fixtures/runtime/`
 - Next-step runbook: `docs/runbooks/repository-next-steps.md`

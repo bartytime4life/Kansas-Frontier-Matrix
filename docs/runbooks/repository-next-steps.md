@@ -4,13 +4,14 @@ This runbook captures the most important next actions after a fresh repository s
 
 ## Evidence snapshot
 
-- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`89 passed`).
+- Baseline local verification is green via `tools/ci/run_repo_baseline_local.sh`, including schema checks, runtime policy fixture checks, renderer fixture checks, and CI tests (`92 passed`).
 - The baseline GitHub workflow (`.github/workflows/verification-baseline.yml`) already executes thin-slice checks for baseline integrity, script validation, policy fixture validation, renderer fixture validation, and `tests/ci`.
+- Placeholder marker reporting is now automated via `tools/ci/report_placeholder_markers.py` and is included in the local baseline runner and baseline workflow for observability.
 - The repo remains documentation-heavy (190 Markdown files out of 361 files), which means governance quality is currently constrained more by documentation clarity than by missing baseline test scaffolding.
 - Placeholder and uncertainty markers are still high:
-  - `TODO`: 423
-  - `UNKNOWN`: 469
-  - `NEEDS VERIFICATION`: 1,815
+  - `TODO`: 484
+  - `UNKNOWN`: 473
+  - `NEEDS VERIFICATION`: 1,851
 
 ## Why the priorities changed
 
@@ -66,7 +67,7 @@ Earlier next-step guidance focused on adding baseline and smoke checks. That wor
 
 ## 7-day execution packet (recommended)
 
-1. **Day 1:** Root README truth pass (P0).
+1. **Day 1:** Root README truth pass (P0) ✅ completed.
 2. **Day 2–3:** Add API/UI negative boundary tests (P1).
 3. **Day 4–5:** Add one deterministic E2E governed artifact test + CI artifact publish (P2).
 4. **Day 6:** Run placeholder triage on top 10 docs (P3).
@@ -79,9 +80,9 @@ Update this section each week.
 - Baseline run status: `PASS/FAIL`
 - `tests/ci` pass count:
 - Marker counts:
-  - `TODO`:
-  - `UNKNOWN`:
-  - `NEEDS VERIFICATION`:
+  - `TODO`: (from `tools/ci/report_placeholder_markers.py`)
+  - `UNKNOWN`: (from `tools/ci/report_placeholder_markers.py`)
+  - `NEEDS VERIFICATION`: (from `tools/ci/report_placeholder_markers.py`)
 - Root README verification marker count:
 - New boundary tests added this week:
 - E2E governed artifact status:
@@ -91,6 +92,7 @@ Update this section each week.
 
 ```bash
 tools/ci/run_repo_baseline_local.sh
+python3 tools/ci/report_placeholder_markers.py --root . --top 10
 python - <<'PY'
 from pathlib import Path
 root=Path('.')
