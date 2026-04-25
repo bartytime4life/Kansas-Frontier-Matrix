@@ -285,7 +285,8 @@ cat baseline-report.txt
 sh ./tools/ci/test_verify_baseline.sh
 sh ./tools/ci/test_check_readme_paths.sh
 sh ./tools/ci/check_readme_paths.sh
-python3 ./tools/ci/validate_renderer_fixtures.py
+python3 ./tools/ci/validate_policy_runtime_fixtures.py --root .
+python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 -m pytest -q tests/ci/test_render_json_io.py
 sh ./tools/ci/run_repo_baseline_local.sh
 ```
@@ -293,7 +294,7 @@ sh ./tools/ci/run_repo_baseline_local.sh
 When the checked-out branch uses `pytest` for this lane, the documented thin slice should remain runnable locally as well as in CI:
 
 ```bash
-pytest -q tests/ci
+python3 -m pytest -q tests/ci
 ```
 
 [Back to top](#top)
