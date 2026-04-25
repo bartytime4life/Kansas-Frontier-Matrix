@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
-title: Kansas Flora Watcher (pipelines/watchers/kansas_flora_watch)
+title: Kansas Flora Watcher
 type: standard
 version: v1
 status: draft
@@ -25,183 +25,181 @@ related: [
 tags: [kfm, flora, watcher, dwc-a, gbif, ingestion, evidencebundle]
 notes: [
   "Watcher-first ingestion doc for Kansas flora (plants).",
-  "Paths and validator names reflect repo conventions; exact filenames may need verification.",
-  "No claim of existing executable watcher until verified on branch."
+  "Target path is pipelines/watchers/kansas_flora_watch/; exact repo placement still needs verification.",
+  "Paths, validator names, source descriptors, and executable watcher status remain NEEDS VERIFICATION until checked on branch."
 ]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Kansas Flora Watcher
-One-way, fail-closed ingestion of Kansas flora (plant) data into KFM EvidenceBundles.
 
-> **Path:** `pipelines/watchers/kansas_flora_watch/`  
-> **Role:** Source → EvidenceBundle → Catalog closure (DCAT + STAC + PROV) → Promotion Gate
+One-way, fail-closed ingestion of Kansas flora records into KFM EvidenceBundles, catalog records, receipts, and promotion-gate review.
 
----
+![status](https://img.shields.io/badge/status-experimental-orange)
+![doc](https://img.shields.io/badge/doc-draft-yellow)
+![pattern](https://img.shields.io/badge/pattern-watcher--first-blue)
+![policy](https://img.shields.io/badge/policy-fail--closed-red)
 
-## 🚦 Impact Block
+## Impact block
 
-- **Status:** draft  
-- **Owners:** @bartytime4life  
-- **Badges:**  
-  ![status](https://img.shields.io/badge/status-draft-yellow)  
-  ![watcher](https://img.shields.io/badge/pattern-watcher--first-blue)  
-  ![policy](https://img.shields.io/badge/policy-fail--closed-red)
+| Field | Value |
+|---|---|
+| **Status** | `experimental` / `draft` — **NEEDS VERIFICATION** in target branch |
+| **Owner** | `@bartytime4life` |
+| **Target path** | `pipelines/watchers/kansas_flora_watch/` |
+| **Primary role** | Source → EvidenceBundle → catalog closure → Promotion Gate |
+| **Runtime boundary** | Emits governed artifacts only; normal runtime access should happen through governed APIs. |
 
-**Quick links**
-- [Scope](#scope) • [Repo fit](#repo-fit) • [Inputs](#inputs) • [Exclusions](#exclusions)  
-- [Flow](#ingest-flow-fail-closed) • [EvidenceBundle](#evidencebundle-contract)  
-- [Catalog closure](#catalog-closure) • [Promotion gate](#promotion-gate-ag)  
-- [Directory tree](#directory-tree) • [Quickstart](#quickstart) • [DoD](#definition-of-done)
+**Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Flow](#ingest-flow-fail-closed) · [EvidenceBundle](#evidencebundle-contract) · [Catalog closure](#catalog-closure) · [Definition of Done](#definition-of-done)
+
+> [!IMPORTANT]
+> **Truth posture:** this README describes the intended watcher shape. It does not claim that `runner.py`, validator modules, source descriptors, catalog writers, or CI wiring already exist. Those implementation details remain **NEEDS VERIFICATION** until inspected in the mounted repo.
 
 ---
 
 ## Scope
 
-Ingest **Kansas flora** (vascular plants and related taxa) from specimen-backed and curated sources, normalize to Darwin Core, and emit **EvidenceBundles** with full provenance and licensing for downstream map layers and Focus Mode.
+This watcher is intended to ingest **Kansas flora** records, especially vascular plant records and related taxa, from specimen-backed and curated sources. The output target is a normalized Darwin Core-oriented EvidenceBundle with provenance, source identity, rights metadata, and enough catalog closure for downstream map layers and Focus Mode.
 
-**Priority principle:** specimen-backed records (herbaria) > aggregated observations.
-
----
+**Priority principle:** specimen-backed records, especially herbarium-backed records, outrank aggregated observations when conflicts require weighting.
 
 ## Repo fit
 
-- **Upstream (sources):**
-  - Institutional IPT (Darwin Core Archives)
-  - Aggregators (GBIF/iDigBio)
-  - Federal baseline (USDA PLANTS)
-
-- **Downstream (KFM):**
-  - `data/raw` → `data/work` → `data/processed`
-  - `data/catalog/{dcat,stac,prov}`
-  - `data/receipts`
-  - `tools/validators/*` (schema + promotion gate)
-  - Governed APIs (trust membrane) and UI (Evidence Drawer)
-
-> This watcher **emits only** (no direct runtime serving). Runtime reads from governed APIs.
-
----
+| Side | Expected connection | Notes |
+|---|---|---|
+| **Upstream sources** | Institutional IPT exports, GBIF/iDigBio aggregators, USDA PLANTS snapshots | Source descriptors and endpoint details are **NEEDS VERIFICATION**. |
+| **Lifecycle** | `data/raw` → `data/work` / `data/quarantine` → `data/processed` | Preserves KFM ingest discipline and failure isolation. |
+| **Catalog / receipts** | `data/catalog/{dcat,stac,prov}` and `data/receipts` | Catalog closure is required before promotion. |
+| **Validation** | `tools/validators/*` and promotion-gate checks | Exact validator names are **NEEDS VERIFICATION**. |
+| **Runtime** | Governed APIs and trust-visible UI surfaces | The watcher should not become a direct public-serving surface. |
 
 ## Inputs
 
-| Source class | Format | Access pattern | Notes |
+Accepted input belongs here only when source identity, rights posture, and minimum Darwin Core fields can be resolved.
+
+| Source class | Format | Access pattern | Intended role |
 |---|---|---|---|
-| IPT exports (KANU/KSC) | DwC-A (zip) | HTTP with `ETag` / `Last-Modified` | **Primary evidence** |
-| GBIF | JSON API + downloads | `modified` filter or download jobs | Coverage + dedupe |
-| iDigBio | JSON API | paginated | Supplemental specimens |
-| USDA PLANTS | bulk tables | versioned snapshots | Taxonomy + traits baseline |
+| IPT exports, such as KANU / KSC | DwC-A `.zip` | HTTP with `ETag` / `Last-Modified` | Primary specimen evidence |
+| GBIF | JSON API or download job | `modified` filter or download jobs | Coverage, mirror detection, dedupe context |
+| iDigBio | JSON API | Paginated API access | Supplemental specimen records |
+| USDA PLANTS | Bulk tables | Versioned snapshot | Taxonomy and traits baseline |
 
-> **Accepted fields:** Darwin Core terms (e.g., `scientificName`, `decimalLatitude`, `decimalLongitude`, `eventDate`, `institutionCode`, `catalogNumber`, `license`, `rightsHolder`, `datasetID`).
+**Accepted Darwin Core-style fields include:** `scientificName`, `decimalLatitude`, `decimalLongitude`, `eventDate`, `institutionCode`, `catalogNumber`, `license`, `rightsHolder`, and `datasetID`.
 
----
+> [!NOTE]
+> Source endpoints, source IDs, and authentication posture are placeholders until a source descriptor is verified in `contracts/source/` or the repo’s actual source-registry home.
 
 ## Exclusions
 
-- Non-plant taxa (handled by other watchers)
-- Non-georeferenced records lacking coordinates (**fail ingest** unless policy allows specific exceptions)
-- Records missing **license**, **rightsHolder**, or **datasetID**
-- Restricted datasets (e.g., NatureServe) **outside gated partitions** (see Policy notes)
-
----
+| Excluded material | Default handling |
+|---|---|
+| Non-plant taxa | Route to the appropriate fauna, habitat, or other domain watcher. |
+| Non-georeferenced records without coordinates | Fail ingest unless a documented policy exception exists. |
+| Records missing `license`, `rightsHolder`, or `datasetID` | Fail closed and emit a quarantine receipt. |
+| Restricted datasets, including controlled rare-plant sources | Keep outside open publication; use gated partitions and explicit policy review. |
 
 ## Directory tree
 
-```
+```text
 pipelines/
   watchers/
     kansas_flora_watch/
       README.md
-      config.yaml                 # sources + schedules (NEEDS VERIFICATION)
-      runner.py                   # orchestrator (NEEDS VERIFICATION)
+      config.yaml                 # sources + schedules; NEEDS VERIFICATION
+      runner.py                   # orchestrator; NEEDS VERIFICATION
       steps/
-        detect.py                 # ETag/modified checks (NEEDS VERIFICATION)
-        acquire.py                # download & checksum (NEEDS VERIFICATION)
-        validate_dwca.py          # schema & field validation (NEEDS VERIFICATION)
-        normalize.py              # Darwin Core normalization (NEEDS VERIFICATION)
-        bundle.py                 # EvidenceBundle assembly (NEEDS VERIFICATION)
-        publish.py                # write lifecycle + catalog (NEEDS VERIFICATION)
-      tests/                      # watcher tests (NEEDS VERIFICATION)
+        detect.py                 # ETag / modified checks; NEEDS VERIFICATION
+        acquire.py                # download + checksum; NEEDS VERIFICATION
+        validate_dwca.py          # schema + field validation; NEEDS VERIFICATION
+        normalize.py              # Darwin Core normalization; NEEDS VERIFICATION
+        bundle.py                 # EvidenceBundle assembly; NEEDS VERIFICATION
+        publish.py                # lifecycle + catalog writes; NEEDS VERIFICATION
+      tests/                      # watcher tests; NEEDS VERIFICATION
 ```
 
-> Tree reflects intended structure; exact filenames **NEEDS VERIFICATION**.
+> [!CAUTION]
+> This tree is a target structure, not confirmed repo inventory. Verify actual file homes before committing or wiring imports.
 
----
+## Quickstart
+
+These commands are **illustrative** and should be adjusted to the actual repo wiring after the watcher files, config template, and runtime entrypoint are verified.
+
+```bash
+# 1) Configure sources.
+cp pipelines/watchers/kansas_flora_watch/config.example.yaml \
+  pipelines/watchers/kansas_flora_watch/config.yaml
+
+# 2) Run a single ingest without writing promoted outputs.
+python pipelines/watchers/kansas_flora_watch/runner.py --once --dry-run
+
+# 3) Inspect run receipts.
+ls data/receipts/flora/
+```
+
+> [!WARNING]
+> The write-enabled command below should not be run until source descriptors, rights checks, validation gates, and lifecycle paths are verified.
+
+```bash
+python pipelines/watchers/kansas_flora_watch/runner.py --once
+```
+
+**Illustrative GBIF query:**
+
+```bash
+curl "https://api.gbif.org/v1/occurrence/search?country=US&stateProvince=Kansas&modified=2026-01-01"
+```
+
+## Usage
+
+The watcher should be used as a governed ingest path, not as a public runtime path.
+
+| Use | Expected behavior |
+|---|---|
+| Scheduled ingest | Run via CI, cron, or scheduler only after repo wiring is verified. |
+| Dry-run review | Validate source shape, field completeness, and receipt emission without promotion. |
+| Production ingest | Write lifecycle artifacts only after source rights and promotion gates pass. |
+| Downstream access | Consumers read through governed APIs, catalog records, and EvidenceBundle resolution. |
 
 ## Ingest flow (fail-closed)
 
 ```mermaid
 flowchart LR
-  A["Detect change"] -->|"ETag / modified"| B["Acquire"]
-  B --> C["Validate (DwC-A + fields)"]
-  C -->|"pass"| D["Normalize (Darwin Core)"]
+  A["Detect change"] -->|"ETag / modified / snapshot"| B["Acquire"]
+  B --> C["Validate DwC-A + fields"]
+  C -->|"pass"| D["Normalize Darwin Core"]
+  C -->|"fail"| X["Quarantine + receipt"]
   D --> E["Assemble EvidenceBundle"]
-  E --> F["Write lifecycle"]
+  E --> F["Write lifecycle artifacts"]
   F --> G["Catalog closure"]
   G --> H["Promotion Gate A-G"]
-  C -->|"fail"| X["Quarantine + receipt"]
+  H -->|"pass"| P["Published governed artifact"]
+  H -->|"fail"| R["Receipt + no runtime visibility"]
 ```
 
-### 1) Detect change
-- IPT: honor `ETag` / `Last-Modified`
-- GBIF/iDigBio: filter on `modified`
-- USDA: snapshot version/date
+| Step | Gate | Output |
+|---|---|---|
+| **1. Detect** | Honor `ETag`, `Last-Modified`, API `modified`, or snapshot version/date. | No change → no ingest. |
+| **2. Acquire** | Download archives or pages; verify checksum, archive completeness, and encoding. | Raw source package and acquisition receipt. |
+| **3. Validate** | Reject missing rights fields, invalid coordinates, CRS ambiguity, malformed DwC fields, or invalid `eventDate`. | Pass to normalization or quarantine with receipt. |
+| **4. Normalize** | Map inputs to canonical Darwin Core fields; standardize dates, coordinates, and taxon strings. | Work artifact with source descriptor attached. |
+| **5. Bundle** | Build deterministic `spec_hash`; attach dataset DOI/version, harvest metadata, and record attribution. | EvidenceBundle candidate. |
+| **6. Write lifecycle** | Preserve raw/work/processed/receipt separation. | Lifecycle artifacts. |
+| **7. Catalog closure** | Emit DCAT, STAC, and PROV records. | Catalog-ready candidate. |
+| **8. Promote** | Pass Promotion Gate A-G. | Published governed artifact or fail-closed receipt. |
 
-> **Zero-drift rule:** if no change → **no ingest**.
+### Lifecycle paths
 
-### 2) Acquire
-- Download archives (DwC-A zip) or API pages
-- Verify:
-  - checksum (if provided)
-  - archive completeness (`meta.xml`, core/extension tables)
-  - encoding integrity
-
-### 3) Validate (hard gate)
-Reject if any:
-- Missing `license` / `rightsHolder` / `datasetID`
-- Invalid coordinates or CRS ambiguity
-- Required DwC fields absent or malformed
-- Temporal fields invalid (`eventDate`)
-
-> Failures go to **quarantine** with a **receipt**.
-
-### 4) Normalize
-- Map inputs → canonical Darwin Core fields
-- Standardize dates, coordinates, taxon strings
-- Attach **source descriptor** (see `contracts/source/*`)
-
-### 5) Assemble EvidenceBundle
-- Deterministic `spec_hash`
-- Attach dataset DOI/version and harvest metadata
-- Preserve per-record attribution fields
-
-### 6) Write lifecycle
-```
+```text
 data/raw/flora/<source>/<timestamp>/
 data/work/flora/<run_id>/
 data/processed/flora/<spec_hash>/
 data/receipts/flora/<run_id>.json
 ```
 
-### 7) Catalog closure
-- DCAT dataset entry
-- STAC collection/item(s)
-- PROV lineage
-
-### 8) Promotion Gate (A–G)
-- A: Schema valid  
-- B: License compliant  
-- C: Provenance complete  
-- D: Spatial integrity  
-- E: Temporal consistency  
-- F: Cross-source dedupe  
-- G: Evidence Drawer render
-
-> **Fail-closed:** no promotion → no runtime visibility.
-
----
-
 ## EvidenceBundle contract
+
+The JSON below is an **illustrative contract sketch**. Confirm the actual schema home and field names before implementation.
 
 ```json
 {
@@ -231,128 +229,113 @@ data/receipts/flora/<run_id>.json
 }
 ```
 
-> Schema location **NEEDS VERIFICATION** (see `schemas/*`).
-
----
+> [!NOTE]
+> Schema location remains **NEEDS VERIFICATION**. The visible placeholder points toward `schemas/*`, but the mounted repo must resolve the canonical schema home.
 
 ## Catalog closure
 
-- **DCAT**: dataset metadata (title, publisher, license, temporal/spatial coverage)
-- **STAC**: collection for flora, items per release (and/or tiles if derived)
-- **PROV**: lineage linking source → bundle → processed outputs
+Catalog closure must happen before promotion. Each catalog surface answers a different question and should not silently substitute for the others.
 
-> Catalog must be **complete before promotion**.
+| Surface | Purpose | Minimum expectation |
+|---|---|---|
+| **DCAT** | Dataset metadata | Title, publisher, license, spatial coverage, temporal coverage. |
+| **STAC** | Spatiotemporal inventory | Flora collection and item/release records; derived tile records only when applicable. |
+| **PROV** | Lineage | Source → bundle → processed outputs, including validator and run metadata. |
 
----
+## Promotion gate A-G
+
+| Gate | Check |
+|---|---|
+| **A** | Schema valid |
+| **B** | License compliant |
+| **C** | Provenance complete |
+| **D** | Spatial integrity verified |
+| **E** | Temporal consistency verified |
+| **F** | Cross-source dedupe completed |
+| **G** | Evidence Drawer attribution render verified |
+
+> [!IMPORTANT]
+> **Fail-closed:** no promotion means no runtime visibility.
 
 ## Deduplication
 
-Cross-source duplicates (e.g., KANU vs GBIF mirror) resolved using:
+Cross-source duplicates, such as an institutional record mirrored into GBIF, should resolve with a deterministic key where available.
 
-```
+```text
 key = institutionCode + catalogNumber + eventDate
 ```
 
-- Prefer **institutional record** when conflicts exist
-- Keep trace to all contributing datasets in provenance
-
----
+When conflicts exist, prefer the institutional specimen record and preserve traceability to every contributing dataset in provenance.
 
 ## Policy notes
 
-- **Attribution mandatory:** `license`, `rightsHolder`, `datasetID` carried end-to-end
-- **Restricted data:** segregate (e.g., NatureServe) → **no open publication**
-- **Specimen-first weighting:** used by downstream layer generation (NEEDS VERIFICATION implementation)
+- **Attribution is mandatory:** `license`, `rightsHolder`, and `datasetID` must be carried end-to-end.
+- **Restricted flora data is not open-layer data:** rare, sensitive, or controlled-access records require gated partitions and policy review.
+- **Specimen-first weighting is a downstream interpretation rule:** its implementation remains **NEEDS VERIFICATION** until confirmed in layer-generation or Focus Mode code.
 
----
+## Source registry
 
-## Quickstart
+This source registry is illustrative. Populate endpoint values and IDs from verified source descriptors.
 
-> Illustrative; adjust paths/commands to actual repo wiring.
-
-```bash
-# 1) Configure sources
-cp pipelines/watchers/kansas_flora_watch/config.example.yaml \
-   pipelines/watchers/kansas_flora_watch/config.yaml
-
-# 2) Run a single ingest (dry-run)
-python pipelines/watchers/kansas_flora_watch/runner.py \
-  --once --dry-run
-
-# 3) Run ingest (write enabled)
-python pipelines/watchers/kansas_flora_watch/runner.py \
-  --once
-
-# 4) Inspect receipts
-ls data/receipts/flora/
-```
-
-**Example GBIF query (illustrative):**
-```bash
-curl "https://api.gbif.org/v1/occurrence/search?country=US&stateProvince=Kansas&modified=2026-01-01"
-```
-
----
-
-## Usage
-
-- Schedule via CI/cron (NEEDS VERIFICATION)
-- Emit **receipts** for every run (success/failure)
-- Downstream consumers **must** read via governed APIs
-
----
-
-## Tables
-
-### Source registry (illustrative)
-
-| id | type | endpoint | auth | notes |
+| ID | Type | Endpoint | Auth | Notes |
 |---|---|---|---|---|
-| kanu_ipt | IPT DwC-A | `<KANU_IPT_URL>` | none | primary |
-| ksc_ipt | IPT DwC-A | `<KSC_IPT_URL>` | none | primary |
-| gbif_api | REST | `api.gbif.org` | none | delta via `modified` |
-| usda_plants | bulk | `<USDA_URL>` | none | taxonomy |
-
-> Fill endpoints and IDs from **contracts/source/** (**NEEDS VERIFICATION**).
-
----
+| `kanu_ipt` | IPT DwC-A | `<KANU_IPT_URL>` | `none` | Primary specimen source; **NEEDS VERIFICATION**. |
+| `ksc_ipt` | IPT DwC-A | `<KSC_IPT_URL>` | `none` | Primary specimen source; **NEEDS VERIFICATION**. |
+| `gbif_api` | REST | `api.gbif.org` | `none` | Delta via `modified`; **NEEDS VERIFICATION**. |
+| `idigbio_api` | REST | `<IDIGBIO_ENDPOINT>` | `none` | Supplemental specimens; **NEEDS VERIFICATION**. |
+| `usda_plants` | Bulk | `<USDA_URL>` | `none` | Taxonomy / traits baseline; **NEEDS VERIFICATION**. |
 
 ## Definition of Done
 
-- [ ] Change detection uses `ETag` / `modified` correctly  
-- [ ] Acquisition verifies checksums and archive completeness  
-- [ ] Validation rejects records missing license/rights fields  
-- [ ] EvidenceBundle emitted with deterministic `spec_hash`  
-- [ ] Lifecycle paths populated (`raw/work/processed/receipts`)  
-- [ ] DCAT + STAC + PROV written (catalog closure)  
-- [ ] Promotion Gate A–G passes (or fails with receipts)  
-- [ ] Evidence Drawer shows attribution for sample queries (NEEDS VERIFICATION)  
-
----
+- [ ] Change detection uses `ETag`, `Last-Modified`, `modified`, or versioned snapshots correctly.
+- [ ] Acquisition verifies checksums, archive completeness, and encoding integrity.
+- [ ] Validation rejects records missing license, rights holder, or dataset identity.
+- [ ] EvidenceBundle emits deterministic `spec_hash`.
+- [ ] Lifecycle paths populate `raw`, `work`, `processed`, and `receipts` without collapse.
+- [ ] Failed records produce quarantine receipts.
+- [ ] DCAT, STAC, and PROV catalog records are written before promotion.
+- [ ] Promotion Gate A-G passes or fails with receipts.
+- [ ] Evidence Drawer shows attribution for sample queries — **NEEDS VERIFICATION**.
+- [ ] Downstream consumers use governed APIs rather than direct watcher output.
 
 ## FAQ
 
-**Q: Why fail on missing license fields?**  
-A: KFM requires machine-verifiable attribution; missing fields break “cite-or-abstain”.
+### Why fail on missing license fields?
 
-**Q: Why specimen-first?**  
-A: Physical vouchers provide stronger, auditable evidence for claims.
+KFM requires machine-verifiable attribution. Missing rights fields break cite-or-abstain behavior and should fail closed.
 
-**Q: Can we merge restricted datasets?**  
-A: Not in open layers; keep gated partitions with explicit policy.
+### Why specimen-first?
 
----
+Physical vouchers provide stronger, auditable evidence for claims than aggregate observations alone.
+
+### Can restricted datasets be merged?
+
+Not into open layers. Restricted records require gated partitions, explicit policy, and review state before any derived public representation.
 
 ## Appendix
 
 <details>
-<summary>Validator expectations (illustrative)</summary>
+<summary>Validator expectations</summary>
 
-- DwC-A structure present (`meta.xml`, core table)
-- Required fields non-null
-- Coordinate bounds valid for Kansas (or explicitly global with filter)
-- Date parsing ISO-8601
-- License parseable (SPDX or URL)
+- DwC-A structure is present, including `meta.xml` and core table.
+- Required fields are non-null.
+- Coordinates are valid and policy-safe for Kansas use, or the record is explicitly global and filtered.
+- Dates parse to ISO-8601-compatible values.
+- License is parseable as SPDX identifier or URL.
+- Source descriptor is present and resolvable.
+- Quarantine receipts are emitted for all hard-gate failures.
+
+</details>
+
+<details>
+<summary>Remaining verification items</summary>
+
+- Confirm target repo path and neighboring README conventions.
+- Confirm whether `schemas/`, `contracts/`, or another directory is the canonical machine-contract home.
+- Confirm actual validator names, CLI commands, and promotion-gate implementation.
+- Confirm source endpoints, source terms, licenses, and auth requirements.
+- Confirm how Evidence Drawer sample rendering is tested.
+- Confirm whether `data/quarantine` exists as a first-class lifecycle path in the target repo.
 
 </details>
 
