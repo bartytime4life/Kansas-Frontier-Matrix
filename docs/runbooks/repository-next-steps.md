@@ -3,6 +3,7 @@
 This runbook captures the most important next actions after a fresh repository scan and baseline verification run on **2026-04-25**.
 
 For the impact-ordered foundation plan, see `docs/runbooks/foundation-strategy.md`.
+For markdown-specific remediation sequencing, see `docs/runbooks/markdown-remediation-plan.md`.
 
 ## Evidence snapshot
 
@@ -14,9 +15,9 @@ For the impact-ordered foundation plan, see `docs/runbooks/foundation-strategy.m
 - Placeholder marker reporting is now automated via `tools/ci/report_placeholder_markers.py` and is included in the local baseline runner and baseline workflow for observability.
 - The repo remains documentation-heavy (190 Markdown files out of 361 files), which means governance quality is currently constrained more by documentation clarity than by missing baseline test scaffolding.
 - Placeholder and uncertainty markers are still high:
-  - `TODO`: 491
-  - `UNKNOWN`: 475
-  - `NEEDS VERIFICATION`: 1,853
+  - `TODO`: 495
+  - `UNKNOWN`: 477
+  - `NEEDS VERIFICATION`: 1,855
 
 ## Why the priorities changed
 

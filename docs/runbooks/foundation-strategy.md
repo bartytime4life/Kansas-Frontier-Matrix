@@ -68,6 +68,7 @@ Documentation ambiguity is currently large enough to mask implementation drift.
 - Use `tools/ci/report_placeholder_markers.py` threshold mode in non-blocking monitor first.
 - Set rolling thresholds for top 10 high-marker docs (not repo-wide hard-fail on day one).
 - Reduce `NEEDS VERIFICATION` in root/docs architecture surfaces first.
+- Execute file-by-file prioritization from `docs/runbooks/markdown-remediation-plan.md`.
 
 ### Definition of done
 
