@@ -1,0 +1,14 @@
+name: release-dry-run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo "release-dry-run workflow is scaffolded and pending implementation."

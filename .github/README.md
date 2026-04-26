@@ -173,29 +173,35 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 
 ## Directory map
 
-Current `.github/` contents were **not** available in the workspace used to draft this file. Treat the tree below as a verification map, not an inventory claim.
+Current `.github/` contents are now partially scaffolded in-repo. The tree below is the current checked-in baseline and still uses placeholder files where implementation details are pending.
 
 ```text
 .github/
 ├── README.md                         # this file
 ├── CODEOWNERS                        # NEEDS_VERIFICATION
 ├── PULL_REQUEST_TEMPLATE.md          # NEEDS_VERIFICATION
-├── ISSUE_TEMPLATE/                   # NEEDS_VERIFICATION
-│   ├── bug_report.md                 # NEEDS_VERIFICATION
-│   ├── documentation_drift.md        # PROPOSED pattern
-│   ├── source_intake.md              # PROPOSED pattern
-│   └── policy_or_release_gap.md      # PROPOSED pattern
-├── workflows/                        # NEEDS_VERIFICATION
-│   ├── README.md                     # NEEDS_VERIFICATION
-│   ├── docs-lint.yml                 # NEEDS_VERIFICATION
-│   ├── contracts.yml                 # NEEDS_VERIFICATION
-│   ├── policy.yml                    # NEEDS_VERIFICATION
-│   ├── tests.yml                     # NEEDS_VERIFICATION
-│   └── release-dry-run.yml           # PROPOSED pattern
-├── dependabot.yml                    # NEEDS_VERIFICATION
-└── linters/                          # NEEDS_VERIFICATION
-    ├── markdownlint.json             # NEEDS_VERIFICATION
-    └── mlc.config.json               # NEEDS_VERIFICATION
+├── ISSUE_TEMPLATE/
+│   ├── bug_report.md
+│   ├── documentation_drift.md
+│   ├── source_intake.md
+│   └── policy_or_release_gap.md
+├── SECURITY.md
+├── dependabot.yml
+├── actions/
+│   └── README.md
+├── watchers/
+│   └── README.md
+├── workflows/
+│   ├── README.md
+│   ├── verification-baseline.yml
+│   ├── docs-lint.yml
+│   ├── contracts.yml
+│   ├── policy.yml
+│   ├── tests.yml
+│   └── release-dry-run.yml
+└── linters/
+    ├── markdownlint.json
+    └── mlc.config.json
 ```
 
 > [!TIP]
