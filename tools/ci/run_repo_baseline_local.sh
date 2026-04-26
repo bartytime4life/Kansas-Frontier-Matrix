@@ -14,6 +14,28 @@ sh -n ./tools/ci/verify_baseline.sh \
   ./scripts/dev_up.sh \
   ./scripts/sample_ingest.sh
 
+# Optional proposed HUC12/admin crosswalk pipeline files.
+# Keep these guarded so baseline remains green before the lane is fully merged.
+if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py ]; then
+  python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py
+fi
+
+if [ -f ./tools/validators/crosswalk/validate_crosswalk_sql.sql ]; then
+  test -s ./tools/validators/crosswalk/validate_crosswalk_sql.sql
+fi
+
+if [ -f ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json ]; then
+  python3 -m json.tool ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json >/dev/null
+fi
+
+if [ -f ./policy/crosswalk/crosswalk.rego ]; then
+  test -s ./policy/crosswalk/crosswalk.rego
+fi
+
+if [ -f ./data/registry/crosswalk/sources.yaml ]; then
+  test -s ./data/registry/crosswalk/sources.yaml
+fi
+
 sh ./tools/ci/test_verify_baseline.sh
 sh ./tools/ci/test_check_readme_paths.sh
 sh ./tools/ci/test_check_python_syntax.sh
@@ -38,5 +60,9 @@ fi
 
 python3 -m pytest -q tests/ci
 python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
+
+if [ -d ./tests/crosswalk ]; then
+  python3 -m pytest -q tests/crosswalk
+fi
 
 echo "run_repo_baseline_local: completed"
