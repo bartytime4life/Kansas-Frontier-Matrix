@@ -93,18 +93,18 @@ Ingest **live USGS gage streams** and bind each sample to **HUC12/10/8 overlays*
 
 ```mermaid
 flowchart LR
-  A[Watcher Scheduler] --> B[USGS OGC API Pull]
-  B --> C[Normalize Samples]
-  C --> D[Spatial Join: site -> HUC12/10/8]
-  C --> E[Flowline Join: mainstem_id, reach_measure]
-  D --> F[Enrich + Quality Flags]
+  A["Watcher Scheduler"] --> B["USGS OGC API Pull"]
+  B --> C["Normalize Samples"]
+  C --> D["Spatial Join: site → HUC12 / HUC10 / HUC8"]
+  C --> E["Flowline Join: mainstem_id, reach_measure"]
+  D --> F["Enrich + Quality Flags"]
   E --> F
-  F --> G[Write data/processed slices]
-  F --> H[Emit receipts (raw + transform)]
-  F --> I[Build KFM sidecar]
-  I --> J[Promotion Gate A–G]
-  J -->|pass| K[data/published + proofs]
-  J -->|deny| L[data/quarantine]
+  F --> G["Write data/processed slices"]
+  F --> H["Emit receipts: raw + transform"]
+  F --> I["Build KFM sidecar"]
+  I --> J["Promotion Gate A-G"]
+  J -->|pass| K["data/published + proofs"]
+  J -->|deny| L["data/quarantine"]
 ```
 
 > Diagram reflects intended architecture. Exact wiring of schedulers/CI is **NEEDS VERIFICATION** on branch.
