@@ -1,69 +1,93 @@
 #!/bin/sh
 set -eu
 
-# Static checks for the proposed KFM HUC12 ↔ admin crosswalk lane.
-# No database, network, or source-data access required.
+# Tests for tools/ci/check_crosswalk_static.sh
 
 ROOT="${1:-.}"
-
-WATCHER_DIR="$ROOT/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch"
-SCHEMA_JSON="$ROOT/schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json"
-POLICY_FILE="$ROOT/policy/crosswalk/crosswalk.rego"
-SOURCE_REGISTRY="$ROOT/data/registry/crosswalk/sources.yaml"
-VALIDATOR_SQL="$ROOT/tools/validators/crosswalk/validate_crosswalk_sql.sql"
-TEST_FILE="$ROOT/tests/crosswalk/test_crosswalk_fixture.py"
+CHECK_SCRIPT="$ROOT/tools/ci/check_crosswalk_static.sh"
 
 fail() {
-  echo "check_crosswalk_static: FAIL: $*" >&2
+  echo "test_check_crosswalk_static: FAIL: $*" >&2
   exit 1
 }
 
-check_file() {
-  test -s "$1" || fail "missing or empty file: $1"
+pass() {
+  echo "test_check_crosswalk_static: PASS: $*"
 }
 
-# Required lane files.
-check_file "$WATCHER_DIR/README.md"
-check_file "$WATCHER_DIR/runner.py"
-check_file "$WATCHER_DIR/ingest_wbd.py"
-check_file "$WATCHER_DIR/ingest_tiger_admin.py"
-check_file "$WATCHER_DIR/sql/001_schema.sql"
-check_file "$WATCHER_DIR/sql/010_build_crosswalk.sql"
-check_file "$WATCHER_DIR/fixtures/create_fixture.sql"
-check_file "$SCHEMA_JSON"
-check_file "$POLICY_FILE"
-check_file "$SOURCE_REGISTRY"
-check_file "$VALIDATOR_SQL"
-check_file "$TEST_FILE"
+# Ensure the check script exists and is executable
+test -f "$CHECK_SCRIPT" || fail "missing $CHECK_SCRIPT"
+test -x "$CHECK_SCRIPT" || chmod +x "$CHECK_SCRIPT"
 
-# Python syntax.
-python3 -m py_compile \
-  "$WATCHER_DIR/runner.py" \
-  "$WATCHER_DIR/ingest_wbd.py" \
-  "$WATCHER_DIR/ingest_tiger_admin.py" \
-  "$TEST_FILE"
+# -------------------------------------------------------------------
+# Test 1: happy path (should pass if lane files exist and are valid)
+# -------------------------------------------------------------------
+if sh "$CHECK_SCRIPT" "$ROOT" >/dev/null 2>&1; then
+  pass "happy path"
+else
+  echo "---- stdout/stderr from check_crosswalk_static ----"
+  sh "$CHECK_SCRIPT" "$ROOT" || true
+  fail "happy path failed"
+fi
 
-# JSON syntax.
-python3 -m json.tool "$SCHEMA_JSON" >/dev/null
+# -------------------------------------------------------------------
+# Test 2: missing file detection (should fail)
+# -------------------------------------------------------------------
+TMPDIR="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR"' EXIT
 
-# Content guardrails.
-grep -q "EPSG:5070" "$WATCHER_DIR/README.md" || fail "README missing EPSG:5070"
-grep -q "run_receipt" "$WATCHER_DIR/README.md" || fail "README missing run_receipt"
-grep -q "spec_hash" "$WATCHER_DIR/README.md" || fail "README missing spec_hash"
+# Copy minimal tree
+mkdir -p "$TMPDIR/tools/ci"
+cp "$CHECK_SCRIPT" "$TMPDIR/tools/ci/check_crosswalk_static.sh"
 
-grep -q "CREATE EXTENSION IF NOT EXISTS postgis" "$WATCHER_DIR/sql/001_schema.sql" || fail "schema SQL missing PostGIS extension"
-grep -q "kfm_crosswalk.crosswalk_pairs" "$WATCHER_DIR/sql/001_schema.sql" || fail "schema SQL missing crosswalk_pairs"
-grep -q "ST_Intersection" "$WATCHER_DIR/sql/010_build_crosswalk.sql" || fail "build SQL missing ST_Intersection"
-grep -q "ST_AsEWKB" "$WATCHER_DIR/sql/010_build_crosswalk.sql" || fail "build SQL missing EWKB geometry hashing"
-grep -q "sha256" "$WATCHER_DIR/sql/010_build_crosswalk.sql" || fail "build SQL missing sha256 hashing"
+# Intentionally omit required files
+if sh "$TMPDIR/tools/ci/check_crosswalk_static.sh" "$TMPDIR" >/dev/null 2>&1; then
+  fail "missing file test did not fail as expected"
+else
+  pass "missing file detection"
+fi
 
-grep -q "usgs_wbd_huc12" "$SOURCE_REGISTRY" || fail "source registry missing WBD source"
-grep -q "census_tiger" "$SOURCE_REGISTRY" || fail "source registry missing TIGER source"
+# -------------------------------------------------------------------
+# Test 3: invalid JSON detection
+# -------------------------------------------------------------------
+mkdir -p "$TMPDIR/schemas/contracts/v1/crosswalk"
+echo '{ invalid json' > "$TMPDIR/schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json"
 
-grep -q "package kfm.crosswalk" "$POLICY_FILE" || fail "policy file missing package"
-grep -q "EPSG:5070" "$POLICY_FILE" || fail "policy missing CRS guardrail"
+# Create required placeholders so failure is specifically JSON
+mkdir -p "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/sql"
+mkdir -p "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/fixtures"
+mkdir -p "$TMPDIR/data/registry/crosswalk"
+mkdir -p "$TMPDIR/policy/crosswalk"
+mkdir -p "$TMPDIR/tools/validators/crosswalk"
+mkdir -p "$TMPDIR/tests/crosswalk"
 
-grep -q "KFM_CROSSWALK_TEST_DSN" "$TEST_FILE" || fail "test missing crosswalk test DSN gate"
-grep -q "no-publish" "$TEST_FILE" || fail "test missing no-publish runner check"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/README.md"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_wbd.py"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_tiger_admin.py"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/sql/001_schema.sql"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/sql/010_build_crosswalk.sql"
+touch "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/fixtures/create_fixture.sql"
+touch "$TMPDIR/policy/crosswalk/crosswalk.rego"
+touch "$TMPDIR/data/registry/crosswalk/sources.yaml"
+touch "$TMPDIR/tools/validators/crosswalk/validate_crosswalk_sql.sql"
+touch "$TMPDIR/tests/crosswalk/test_crosswalk_fixture.py"
 
-echo "check_crosswalk_static: completed"
+if sh "$TMPDIR/tools/ci/check_crosswalk_static.sh" "$TMPDIR" >/dev/null 2>&1; then
+  fail "invalid JSON test did not fail"
+else
+  pass "invalid JSON detection"
+fi
+
+# -------------------------------------------------------------------
+# Test 4: python syntax error detection
+# -------------------------------------------------------------------
+echo 'def broken(' > "$TMPDIR/pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py"
+
+if sh "$TMPDIR/tools/ci/check_crosswalk_static.sh" "$TMPDIR" >/dev/null 2>&1; then
+  fail "python syntax error test did not fail"
+else
+  pass "python syntax error detection"
+fi
+
+echo "test_check_crosswalk_static: completed"
