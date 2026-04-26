@@ -50,6 +50,7 @@ Action taken in this cycle:
 - Added deterministic markdown debt backlog generation to drive the next documentation cleanup cycle:
   - `tools/ci/generate_markdown_debt_backlog.py`
   - workflow artifact upload (`observability-artifacts`) for `artifacts/observability/markdown_debt_backlog.md`
+  - checked-in execution backlog snapshot: `docs/runbooks/markdown-debt-backlog.md`
 
 **Move B — Freeze marker growth in the worst markdown hotspots already identified by CI**
 
@@ -69,6 +70,20 @@ Action taken in this cycle:
   - `pipelines/kansas_biodiversity_etl/catalog/README.md` (35)
   - `.github/README.md` (35)
 
+## Immediate execution decision (2026-04-26)
+
+Based on the generated backlog snapshot, the next implementation cycle should target these files in order:
+
+1. `packages/indexers/README.md`
+2. `docs/architecture/README.md`
+3. `docs/README.md`
+
+Success criteria for this cycle:
+
+- Reduce combined marker count across these three files by at least **30%**.
+- Keep all other files at or below current marker thresholds.
+- Regenerate `docs/runbooks/markdown-debt-backlog.md` and include before/after deltas in this runbook.
+
 ## Why the priorities changed
 
 Earlier next-step guidance focused on adding baseline and smoke checks. That work is now in place. The highest-value work has shifted to **reducing ambiguity in authoritative docs**, **turning thin-slice checks into enforceable contract tests at additional boundaries**, and **proving one governed end-to-end runtime path beyond fixture-level smoke validation**.
@@ -77,7 +92,7 @@ Earlier next-step guidance focused on adding baseline and smoke checks. That wor
 
 ### P0 — Reduce trust-surface ambiguity in top-level docs (1–2 days)
 
-1. Rewrite the root `README.md` from “unknown/doctrine-first” language to “repo-evidenced” language.
+1. Rewrite the root `README.md` from "unknown/doctrine-first" language to "repo-evidenced" language.
 2. Keep the doctrine framing, but move speculative/legacy claims into a clearly labeled appendix.
 3. Set a target to reduce root-README `NEEDS VERIFICATION` markers by at least **50%**.
 
@@ -145,6 +160,7 @@ Update this section each week.
 - Top blocker:
 
 ## Commands used for this analysis
+
 ```bash
 tools/ci/run_repo_baseline_local.sh
 python3 tools/ci/report_placeholder_markers.py --root . --top 10
