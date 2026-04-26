@@ -2,41 +2,43 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION-packages-readme
 title: packages/
 type: standard
-version: v1
+version: v1.1
 status: review
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: 2026-04-22
 policy_label: public
 related: [../README.md, ../.github/CODEOWNERS, ../.github/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../data/README.md, ../data/registry/README.md, ../docs/README.md, ../tests/README.md, ../tools/README.md, ../pipelines/README.md, ./catalog/README.md, ./domain/README.md, ./evidence/README.md, ./genealogy_ingest/README.md, ./indexers/README.md, ./ingest/README.md, ./policy/README.md]
-tags: [kfm, packages, implementation, evidence, governance, trust-membrane]
-notes: [doc_id and created date need repository metadata confirmation, policy_label is provisional for a public repository README, this revision replaces a zero-line package README with a governed directory contract]
+tags: [kfm, packages, implementation, evidence, governance, trust-membrane, reusable-modules]
+notes: [doc_id and created date need repository metadata confirmation, policy_label is provisional for a public repository README, this revision upgrades the packages directory contract and preserves an evidence-bounded truth posture]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `packages/`
 
-Shared internal package boundaries for reusable KFM logic that must stay subordinate to evidence, contracts, policy, release state, and governed APIs.
+Shared internal package boundaries for reusable KFM logic that must stay subordinate to evidence, contracts, schemas, policy, lifecycle state, review state, release state, and governed APIs.
+
+![status](https://img.shields.io/badge/status-review-blue?style=flat-square)
+![surface](https://img.shields.io/badge/surface-packages%2F-6f42c1?style=flat-square)
+![owner](https://img.shields.io/badge/owner-%40bartytime4life-0b7285?style=flat-square)
+![truth](https://img.shields.io/badge/truth-evidence--bounded-orange?style=flat-square)
+![membrane](https://img.shields.io/badge/trust%20membrane-preserve-red?style=flat-square)
+![public](https://img.shields.io/badge/policy-public-lightgrey?style=flat-square)
 
 > [!IMPORTANT]
-> **Status:** `active` directory · `review` README revision  
-> **Owners:** `@bartytime4life` via broad `/packages/` CODEOWNERS fallback  
+> **Status:** `review` README revision for an implementation-bearing directory boundary  
 > **Path:** `packages/README.md`  
-> **Authority class:** implementation-bearing package boundary; not doctrine, not policy law, not canonical data, and not release evidence  
-> **Truth posture:** `CONFIRMED` public package path and child README surfaces · `PROPOSED` parent directory contract · `UNKNOWN / NEEDS VERIFICATION` package-local code, manifests, tests, imports, and runtime wiring  
->
-> ![status](https://img.shields.io/badge/status-active-success?style=flat-square)
-> ![doc](https://img.shields.io/badge/doc-review-blue?style=flat-square)
-> ![owner](https://img.shields.io/badge/owner-%40bartytime4life-0b7285?style=flat-square)
-> ![surface](https://img.shields.io/badge/surface-packages%2F-6f42c1?style=flat-square)
-> ![truth](https://img.shields.io/badge/truth-evidence--bounded-orange?style=flat-square)
-> ![membrane](https://img.shields.io/badge/trust%20membrane-preserve-red?style=flat-square)
->
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Authority class:** shared internal implementation contract; not doctrine, not policy law, not canonical data, not release evidence  
+> **Truth posture:** `CONFIRMED` supplied README intent and KFM boundary vocabulary · `PROPOSED` strengthened parent directory contract · `UNKNOWN / NEEDS VERIFICATION` package-local source code, manifests, tests, imports, CI gates, and runtime wiring until the active checkout is inspected  
+> **Default rule:** package code may help KFM operate, but it must not become a side door around governed evidence, policy, lifecycle, review, or release gates.
 
 > [!WARNING]
-> `packages/` must not become a side door around the KFM trust membrane. Package code may support governed APIs, pipelines, UI, catalog work, Evidence Drawer payloads, Focus Mode, and release tooling, but it must not create a hidden public path to RAW, WORK, QUARANTINE, canonical stores, model runtimes, unpublished candidates, or policy-unchecked outputs.
+> `packages/` must never become a normal public path to RAW, WORK, QUARANTINE, canonical stores, unpublished candidates, model runtimes, vector indexes, policy-unchecked answers, or release-unreviewed artifacts. Public clients and normal UI surfaces must remain behind governed APIs and released, policy-safe artifacts.
+
+## Quick jumps
+
+[Scope](#scope) · [At a glance](#at-a-glance) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Placement test](#placement-test) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Maintainer workflow](#maintainer-workflow) · [Quickstart](#quickstart) · [Usage patterns](#usage-patterns) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
@@ -44,26 +46,54 @@ Shared internal package boundaries for reusable KFM logic that must stay subordi
 
 `packages/` is the shared internal module lane for reusable KFM implementation logic.
 
-It sits between top-level authority surfaces and deployable or execution-facing surfaces. Its job is to keep shared logic bounded, testable, and reviewable without relocating authority away from `contracts/`, `schemas/`, `policy/`, governed `data/` artifacts, release evidence, or trust-visible runtime seams.
+It sits between stronger top-level authority surfaces and deployable or execution-facing surfaces. Its job is to keep shared logic bounded, testable, reviewable, and reusable without relocating authority away from `contracts/`, `schemas/`, `policy/`, governed `data/` artifacts, release evidence, review state, correction lineage, or trust-visible runtime seams.
 
-A healthy package in this directory should preserve:
+A healthy package in this directory preserves:
 
 - the governed truth path
 - the trust membrane
 - authoritative-versus-derived separation
+- deterministic identity where practical
 - evidence-linked behavior
-- fail-closed defaults where rights, sensitivity, policy, or evidence are uncertain
+- fail-closed defaults where rights, sensitivity, policy, review state, or evidence are uncertain
 - rebuildable derived layers that do not pretend to be canonical truth
+- correction and rollback references when package outputs affect downstream projections
 
-### Evidence posture used here
+`packages/` is useful only when it makes reusable logic easier to inspect. It is harmful when it hides authority, policy, release state, source identity, or data lifecycle transitions inside generic helper code.
+
+[Back to top](#top)
+
+---
+
+## At a glance
+
+| Question | Answer |
+| --- | --- |
+| What belongs here? | Reusable, non-deployable internal logic shared across apps, pipelines, tools, validators, or UI-support seams. |
+| What does not belong here? | Canonical schemas, policy law, data artifacts, release records, route handlers, workers, live connectors, secrets, public UI entrypoints, or model runtimes. |
+| What must packages respect? | Top-level contracts, schemas, policy, source registry, lifecycle zones, catalog/proof/release objects, review state, and correction lineage. |
+| What should packages emit? | Bounded helper outputs, validation reports, normalized envelopes, or derived artifacts only through the owning lifecycle or release lane. |
+| What should packages never become? | Shadow authority, hidden public surface, unreviewed publication path, or substitute for evidence. |
+| What is the safe default? | `ABSTAIN`, `DENY`, `ERROR`, quarantine, redaction, or review-required state when evidence, rights, policy, sensitivity, or release state is unclear. |
+
+[Back to top](#top)
+
+---
+
+## Evidence posture
+
+This README uses truth labels because package documentation can easily overstate implementation maturity.
 
 | Label | Meaning in this README |
 | --- | --- |
-| `CONFIRMED` | Directly supported by public repo-visible paths, child README surfaces, CODEOWNERS coverage, or checked adjacent docs. |
-| `INFERRED` | Strongly suggested by child README wording or adjacent KFM docs, but not proven as executable implementation. |
-| `PROPOSED` | Recommended package-boundary guidance consistent with KFM doctrine. |
-| `UNKNOWN` | Not established strongly enough from inspected files or current workspace evidence. |
-| `NEEDS VERIFICATION` | A concrete repo, code, CI, owner, fixture, runtime, or platform check is required before stronger claims are safe. |
+| `CONFIRMED` | Directly supported by supplied README content, visible adjacent documentation text, or active checkout evidence when later inspected. |
+| `INFERRED` | Strongly suggested by child README wording or adjacent KFM doctrine, but not proven as executable implementation. |
+| `PROPOSED` | Recommended boundary guidance consistent with KFM doctrine and supplied package documentation. |
+| `UNKNOWN` | Not established strongly enough from current-session evidence, active checkout evidence, tests, workflows, or runtime artifacts. |
+| `NEEDS VERIFICATION` | A concrete repo, source file, manifest, owner, fixture, CI, runtime, license, policy, or platform check is required before stronger claims are safe. |
+
+> [!NOTE]
+> A README can establish intended boundaries. It does not prove source files, test coverage, import graphs, package publishing, runtime behavior, deployment state, or release maturity.
 
 [Back to top](#top)
 
@@ -71,33 +101,52 @@ A healthy package in this directory should preserve:
 
 ## Repo fit
 
-`packages/` is implementation-bearing. It is useful only when it stays downstream of stronger governance and upstream of deployable reuse.
+`packages/` is implementation-bearing. It should stay downstream of stronger governance and upstream of deployable reuse.
 
-| Relationship | Path | Role for `packages/` | Current posture |
+| Relationship | Path | Role for `packages/` | Package posture |
 | --- | --- | --- | --- |
-| Root orientation | [`../README.md`](../README.md) | Project identity, truth posture, and repo-wide guardrails. | `CONFIRMED` public path |
-| Ownership routing | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Broad `/packages/` owner fallback. | `CONFIRMED` broad fallback |
-| GitHub gatehouse | [`../.github/README.md`](../.github/README.md) | Review, CI/CD, and repository-control posture. | `CONFIRMED` adjacent surface |
-| Contracts | [`../contracts/README.md`](../contracts/README.md) | Object meaning, interface commitments, contract families. | `CONFIRMED` adjacent surface |
-| Schemas | [`../schemas/README.md`](../schemas/README.md) | Machine-checkable validation surface. | `CONFIRMED` adjacent surface |
-| Policy | [`../policy/README.md`](../policy/README.md) | Rights, sensitivity, obligations, denials, release admissibility. | `CONFIRMED` adjacent surface |
-| Data lifecycle | [`../data/README.md`](../data/README.md) | Registries, lifecycle zones, catalogs, receipts, proofs, published artifacts. | `CONFIRMED` adjacent surface |
-| Source registry | [`../data/registry/README.md`](../data/registry/README.md) | SourceDescriptor and registry handoff for shared intake helpers. | `CONFIRMED` adjacent surface |
-| Pipelines | [`../pipelines/README.md`](../pipelines/README.md) | Lane-specific fetch / normalize / validate / emit execution. | `CONFIRMED` adjacent surface |
-| Apps / runtime | [`../apps/`](../apps/) | Deployable services and governed API consumers. | `CONFIRMED` root path; imports `UNKNOWN` |
-| Web / presentation | [`../web/`](../web/) | Browser-delivered presentation surface downstream of governed contracts. | `CONFIRMED` root path; imports `UNKNOWN` |
-| Tests | [`../tests/README.md`](../tests/README.md) | Verification posture and fixtures. | `CONFIRMED` adjacent surface |
-| Tools | [`../tools/README.md`](../tools/README.md) | Validators, probes, CLIs, link checks, and utility tooling. | `CONFIRMED` adjacent surface |
-| Infra | [`../infra/`](../infra/) | Deployment and environment wiring. | `CONFIRMED` root path; details `NEEDS VERIFICATION` |
+| Root orientation | [`../README.md`](../README.md) | Project identity, truth posture, and repo-wide guardrails. | Respect and reference. |
+| Ownership routing | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Owner review routing for package changes. | Verify before claiming coverage. |
+| GitHub gatehouse | [`../.github/README.md`](../.github/README.md) | Review, CI/CD, and repository-control posture. | Do not replace. |
+| Contracts | [`../contracts/README.md`](../contracts/README.md) | Interface commitments and object meaning. | Consume, validate, adapt. |
+| Schemas | [`../schemas/README.md`](../schemas/README.md) | Machine-checkable validation surface. | Consume, validate, adapt. |
+| Policy | [`../policy/README.md`](../policy/README.md) | Rights, sensitivity, obligations, denials, and release admissibility. | Consume outcomes; do not redefine. |
+| Data lifecycle | [`../data/README.md`](../data/README.md) | Registries, lifecycle zones, catalogs, receipts, proofs, and published artifacts. | Support lifecycle; do not own lifecycle records. |
+| Source registry | [`../data/registry/README.md`](../data/registry/README.md) | SourceDescriptor and source-role handoff. | Consume activation posture. |
+| Pipelines | [`../pipelines/README.md`](../pipelines/README.md) | Lane-specific fetch, normalize, validate, and emit execution. | Provide helpers; do not become the runner. |
+| Apps / runtime | [`../apps/`](../apps/) | Deployable services and governed API consumers. | Provide reusable internals only. |
+| Web / presentation | [`../web/`](../web/) | Browser-delivered presentation surface downstream of governed contracts. | Support trust-visible UI; do not bypass governed API. |
+| Tests | [`../tests/README.md`](../tests/README.md) | Verification posture, fixtures, and integration evidence. | Add local tests; defer repo-wide proof here. |
+| Tools | [`../tools/README.md`](../tools/README.md) | Validators, probes, CLIs, link checks, and utility tooling. | Share helpers only when reusable. |
+| Infra | [`../infra/`](../infra/) | Deployment and environment wiring. | Never own secrets or deployment state. |
 
-### Placement rule
+[Back to top](#top)
 
-Put logic in `packages/` only when it is:
+---
 
-1. shared across more than one app, worker, validator, pipeline, package, or presentation-facing surface
-2. non-deployable on its own
-3. easier to review as a stable internal boundary than as app-local or pipeline-local glue
-4. subordinate to stronger top-level contract, schema, policy, data, and review authority
+## Placement test
+
+Add logic under `packages/` only when **all** of these are true:
+
+1. The logic is shared across more than one app, worker, validator, pipeline, package, or presentation-facing surface.
+2. The logic is not deployable on its own.
+3. The logic is easier to review as a stable internal boundary than as app-local or pipeline-local glue.
+4. The logic is subordinate to stronger top-level contract, schema, policy, data, and review authority.
+5. The logic can be tested without live source activation or public release.
+6. The logic does not require secrets, machine-local config, direct model clients, public routes, or unpublished data access as its normal path.
+
+### Decision matrix
+
+| Situation | Put it in `packages/`? | Better home when not |
+| --- | --- | --- |
+| Shared `EvidenceRef` resolver used by API and UI trust surfaces | Yes, if it returns bounded states and respects policy. | `apps/` only if it is route-local glue. |
+| One pipeline's fetch schedule | No. | `pipelines/` or lane runbook. |
+| Canonical JSON Schema | No. | `schemas/` or `contracts/`, per repo convention. |
+| Policy adapter that formats a `PolicyDecision` for runtime callers | Yes, if top-level policy remains authoritative. | `policy/` if it defines the rule. |
+| Generated receipt or proof object | No. | `data/receipts/`, `data/proofs/`, `release/`, or confirmed lifecycle home. |
+| Search index builder for released artifacts | Yes, if rebuildable and release-linked. | `data/` / `release/` for emitted outputs. |
+| Public map popup component | No. | `web/` or governed UI shell. |
+| A generalized helper named `common/` or `utils/` | Usually no. | Create a named package with a crisp responsibility. |
 
 [Back to top](#top)
 
@@ -110,11 +159,11 @@ Content belongs in `packages/` when it is shared internal logic, not a public ar
 | Accepted input | Belongs here when… | Must stay linked to… |
 | --- | --- | --- |
 | Domain vocabulary and invariant helpers | They preserve stable KFM meaning across packages and runtime surfaces. | `contracts/`, `schemas/`, `docs/`, tests |
-| Source intake helpers | They are reusable connector, normalization, validation, checksum, or receipt helpers. | `data/registry/`, `pipelines/`, `policy/` |
+| Source intake helpers | They are reusable connector, normalization, validation, checksum, quarantine, or receipt helpers. | `data/registry/`, `pipelines/`, `policy/` |
 | Catalog closure helpers | They compile or validate DCAT / STAC / PROV closure without becoming the outward catalog. | `data/catalog/`, `release/`, governed API |
 | Evidence helpers | They support `EvidenceRef` → `EvidenceBundle` resolution or evidence-safe presentation. | `contracts/`, `schemas/`, `apps/`, Evidence Drawer |
 | Policy-support adapters | They normalize policy outcomes, reason codes, obligations, or fail-closed errors without owning policy truth. | `policy/`, `tests/policy/`, governed API |
-| Rebuildable indexers | They build search, tile, graph, vector, or runtime projections that are derived and release-linked. | `data/`, `release/`, `tests/`, cache invalidation notes |
+| Rebuildable indexers | They build search, tile, graph, vector, embedding, or runtime projections that are derived and release-linked. | `data/`, `release/`, `tests/`, cache invalidation notes |
 | Package-local tests and fixtures | They prove package behavior without replacing repo-level tests or policy fixtures. | `tests/`, child README, CI |
 | Export maps and package docs | They make package boundaries explicit and reviewable. | parent README, child README, CODEOWNERS |
 
@@ -145,20 +194,20 @@ Content belongs in `packages/` when it is shared internal logic, not a public ar
 
 ## Current package surface
 
-`CONFIRMED`: the package family currently has child README surfaces. `UNKNOWN`: package-local code depth, manifests, tests, exports, runtime imports, and branch-enforced CI.
+`PROPOSED / NEEDS VERIFICATION`: the package family is documented as README-first child boundaries. Confirm package-local code depth, manifests, tests, exports, runtime imports, and branch-enforced CI in the active checkout before stronger claims.
 
-| Package | Root-contract reading | Current visible state | Must never do |
+| Package | Root-contract reading | Documented state | Must never do |
 | --- | --- | --- | --- |
-| [`./catalog/`](./catalog/) | Shared internal catalog-closure compiler / validator seam. | README-only child boundary surface visible on public `main`. | Become an ad hoc runtime API surface or release authority. |
-| [`./domain/`](./domain/) | Stable semantic core for KFM vocabulary, invariants, and cross-package meaning. | README-only child boundary surface visible on public `main`. | Own deployable side effects, transport, filesystem, database, or policy authority. |
-| [`./evidence/`](./evidence/) | Governed `EvidenceRef` → `EvidenceBundle` resolution and evidence-safe presentation helpers. | README-only child boundary surface visible on public `main`. | Emit uncited or policy-unchecked evidence surfaces. |
-| [`./genealogy_ingest/`](./genealogy_ingest/) | Genealogy-shaped ingest seam; child README currently frames a starter ingest lane against `pipelines/genealogy_ingest/`. | README-only child surface with path-alignment tension. | Blur package boundary, lane execution, living-person privacy, DNA sensitivity, or consent review. |
-| [`./indexers/`](./indexers/) | Rebuildable search, tile, and runtime projection builders. | README-only child boundary surface visible on public `main`. | Become authoritative truth or source-of-record. |
-| [`./ingest/`](./ingest/) | Source intake, normalization, validation, and receipt helpers. | README-only child boundary surface visible on public `main`. | Serve clients directly or bypass lifecycle gates. |
-| [`./policy/`](./policy/) | Shared internal policy-support logic and adapters. | README-only child boundary surface visible on public `main`. | Replace repo-authoritative [`../policy/`](../policy/). |
+| [`./catalog/`](./catalog/) | Shared internal catalog-closure compiler / validator seam. | README-first child boundary surface. | Become an ad hoc runtime API surface or release authority. |
+| [`./domain/`](./domain/) | Stable semantic core for KFM vocabulary, invariants, and cross-package meaning. | README-first child boundary surface. | Own deployable side effects, transport, filesystem, database, or policy authority. |
+| [`./evidence/`](./evidence/) | Governed `EvidenceRef` → `EvidenceBundle` resolution and evidence-safe presentation helpers. | README-first child boundary surface. | Emit uncited or policy-unchecked evidence surfaces. |
+| [`./genealogy_ingest/`](./genealogy_ingest/) | Genealogy-shaped ingest seam; documented with path-alignment tension against `pipelines/genealogy_ingest/`. | README-first child surface with lane-shaped naming. | Blur package boundary, lane execution, living-person privacy, DNA sensitivity, consent, or review gates. |
+| [`./indexers/`](./indexers/) | Rebuildable search, tile, graph, vector, embedding, and runtime projection builders. | README-first child boundary surface. | Become authoritative truth or a source of record. |
+| [`./ingest/`](./ingest/) | Source intake, normalization, validation, quarantine, and receipt helpers. | README-first child boundary surface. | Serve clients directly or bypass lifecycle gates. |
+| [`./policy/`](./policy/) | Shared internal policy-support logic and adapters. | README-first child boundary surface. | Replace repo-authoritative [`../policy/`](../policy/). |
 
 > [!NOTE]
-> This package family is not perfectly uniform. Most child surfaces are README-first package seams; `genealogy_ingest/` is more lane-shaped and currently names a pipeline-oriented starter path. Keep package path, pipeline path, and actual checked-in implementation visibly separate until the active branch proves they align.
+> This package family is not perfectly uniform. Most child surfaces are package seams; `genealogy_ingest/` is more lane-shaped and currently names a pipeline-oriented starter path. Keep package path, pipeline path, and actual checked-in implementation visibly separate until the active branch proves they align.
 
 [Back to top](#top)
 
@@ -166,7 +215,9 @@ Content belongs in `packages/` when it is shared internal logic, not a public ar
 
 ## Directory tree
 
-### Current public package-family snapshot
+### Current package-family snapshot
+
+Verify this from the active checkout before treating it as implementation inventory.
 
 ```text
 packages/
@@ -202,7 +253,34 @@ packages/<package-name>/
 ```
 
 > [!TIP]
-> Replace the current snapshot only with inventory generated from the active checkout. Do not infer package manifests, `src/` trees, import graphs, or runnable commands from README prose.
+> Replace the snapshot only with inventory generated from the active checkout. Do not infer package manifests, `src/` trees, import graphs, runnable commands, or test status from README prose.
+
+[Back to top](#top)
+
+---
+
+## Maintainer workflow
+
+Use this sequence for package changes:
+
+1. **Inventory** the active checkout before changing package claims.
+2. **Classify** the change as boundary doc, implementation helper, validator, adapter, fixture, or derived-output builder.
+3. **Check authority** against `contracts/`, `schemas/`, `policy/`, `data/registry/`, `data/`, `release/`, and `docs/`.
+4. **Update both layers**: the affected child README and this parent README.
+5. **Add local tests** when implementation code exists.
+6. **Run repo-level checks** using the repo's confirmed package manager and CI conventions.
+7. **Record migration / rollback** when downstream imports, generated outputs, or release-linked projections are affected.
+
+### Change impact matrix
+
+| Change type | Required documentation | Required validation | Rollback note |
+| --- | --- | --- | --- |
+| Add package | Parent README, child README, CODEOWNERS check, related ADR if authority is ambiguous. | Manifest check, local tests, import map, link check. | Remove package entry and package path; invalidate generated derivatives if any. |
+| Rename package | Parent README, child README, migration note, import impact note. | Import graph, tests, affected tools, generated references. | Alias or revert path; preserve correction history. |
+| Split package | Parent README, child READMEs, migration map, downstream consumer list. | Tests for old and new boundaries, export map. | Recombine or alias until consumers migrate. |
+| Add validator helper | Child README, test fixture docs, toolchain reference. | Valid and invalid fixtures; fail-closed behavior. | Disable helper; keep fixture and reason for removal. |
+| Add derived indexer | Child README, source/release dependency notes, cache invalidation notes. | Rebuild test, release-link validation, correction propagation check. | Drop derivative output; rebuild from prior release source. |
+| Add policy adapter | Child README, policy authority link, reason-code mapping. | Policy fixture parity; `DENY` / `ABSTAIN` / `ERROR` handling. | Revert adapter; preserve top-level policy as source of truth. |
 
 [Back to top](#top)
 
@@ -210,7 +288,7 @@ packages/<package-name>/
 
 ## Quickstart
 
-Use read-only inspection before making package claims stronger.
+Run these commands from the repository root unless noted otherwise. They are read-only inspection commands, not proof of build success.
 
 ```bash
 # Confirm repository state.
@@ -236,7 +314,7 @@ for d in catalog domain evidence genealogy_ingest indexers ingest policy; do
 done
 
 # Recheck adjacent authority and downstream surfaces.
-sed -n '1,220p' ../README.md 2>/dev/null || sed -n '1,220p' README.md
+sed -n '1,220p' README.md
 sed -n '1,160p' .github/CODEOWNERS
 sed -n '1,220p' contracts/README.md
 sed -n '1,220p' schemas/README.md
@@ -260,7 +338,7 @@ grep -RInE \
 
 ---
 
-## Usage
+## Usage patterns
 
 ### Treat this README as the parent package contract
 
@@ -281,6 +359,10 @@ Packages should depend inward toward stable semantics and top-level contracts. T
 ### Keep deployable concerns out
 
 Package code may support apps, pipelines, and web-delivered surfaces, but it should not quietly become an app, lane, or presentation shell by accumulating startup behavior, route handlers, schedulers, auth entrypoints, or environment ownership.
+
+### Keep negative states first-class
+
+Packages that touch evidence, policy, AI-adjacent flows, source intake, or publication-related decisions must carry `ABSTAIN`, `DENY`, `ERROR`, stale, unavailable, restricted, generalized, and review-required outcomes instead of collapsing them into success or silence.
 
 ### Update both layers when boundaries change
 
@@ -351,7 +433,7 @@ flowchart LR
 
     TESTS -. verifies .-> Packages
     TOOLS -. validates .-> Packages
-    Packages -. never own .-> RELEASE
+    Packages -. must not own .-> RELEASE
 ```
 
 The boundary is intentional: package code may implement reusable internal mechanics, but KFM truth remains anchored in evidence, policy, contracts, lifecycle artifacts, review state, release manifests, and correction lineage outside the package directory.
@@ -370,8 +452,8 @@ The boundary is intentional: package code may implement reusable internal mechan
 | [`domain/`](./domain/) | Stable semantic vocabulary and invariant helpers. | Contracts, schemas, docs, policy. | Does it stay side-effect-free and reusable across multiple packages? |
 | [`evidence/`](./evidence/) | Resolve evidence handles into policy-safe support packages. | EvidenceBundle contract, policy, governed API. | Can it return bounded negative states instead of unsupported evidence? |
 | [`genealogy_ingest/`](./genealogy_ingest/) | Starter genealogy-shaped ingest seam. | People/DNA/land policy, privacy, consent, pipeline ownership. | Is package-vs-pipeline placement explicitly resolved before implementation claims grow? |
-| [`indexers/`](./indexers/) | Build derived search, tile, or runtime projections. | Release state, source lineage, freshness, correction propagation. | Are outputs rebuildable, release-linked, and clearly non-authoritative? |
-| [`ingest/`](./ingest/) | Shared source intake, normalization, validation, and receipt helpers. | SourceDescriptor, data lifecycle, policy, quarantine rules. | Does it emit or support receipts without bypassing RAW → WORK / QUARANTINE? |
+| [`indexers/`](./indexers/) | Build derived search, tile, graph, vector, embedding, or runtime projections. | Release state, source lineage, freshness, correction propagation. | Are outputs rebuildable, release-linked, and clearly non-authoritative? |
+| [`ingest/`](./ingest/) | Shared source intake, normalization, validation, quarantine, and receipt helpers. | SourceDescriptor, data lifecycle, policy, quarantine rules. | Does it emit or support receipts without bypassing RAW → WORK / QUARANTINE? |
 | [`policy/`](./policy/) | Shared internal policy-support adapters. | Top-level `policy/`, policy tests, contracts, schemas. | Does it consume policy outputs without redefining policy truth? |
 
 ### Package-adjacent governed objects
@@ -404,6 +486,7 @@ A good KFM package usually has:
 - explicit dependency on top-level contracts, schemas, and policy where relevant
 - bounded negative outcomes for unsupported or policy-blocked behavior
 - no silent authority claims beyond its layer
+- migration and rollback notes when downstream consumers change
 
 ### What should stay at the top level
 
@@ -434,6 +517,28 @@ Even when package code supports these surfaces, the authoritative versions stay 
 
 `packages/ingest/` supports source intake. It must not publish, promote, or serve outputs. Failed, sensitive, rights-unclear, or malformed inputs must remain visible through quarantine, receipts, validation reports, or denial states.
 
+### Runtime overlap rule
+
+Package helpers may be runtime-adjacent, but direct client traffic belongs behind governed APIs. A package must not become a direct model-client path, a browser-accessible evidence bypass, or an unpublished-data gateway.
+
+[Back to top](#top)
+
+---
+
+## Trust membrane checks
+
+Before merging a package change, ask:
+
+| Check | Pass condition |
+| --- | --- |
+| Raw data access | No normal public/UI path reaches RAW, WORK, QUARANTINE, canonical stores, or unpublished candidates. |
+| Evidence resolution | Consequential claims resolve `EvidenceRef` → `EvidenceBundle` or return a bounded negative state. |
+| Policy outcome | Policy-denied, restricted, sensitive, stale, unavailable, or uncertain inputs do not silently become public outputs. |
+| Derived outputs | Indexes, tiles, embeddings, graph projections, summaries, and caches are rebuildable and release-linked. |
+| Release memory | Receipts, proofs, catalogs, manifests, review records, corrections, and rollback references remain in their owning lanes. |
+| AI boundary | Package code does not expose direct model calls or treat generated language as proof. |
+| UI boundary | Package code does not strip trust cues required by Evidence Drawer, Focus Mode, layer manifests, or governed API envelopes. |
+
 [Back to top](#top)
 
 ---
@@ -448,9 +553,9 @@ A `packages/` change is done enough to support stronger claims only when the che
 - [ ] Package purpose, accepted inputs, exclusions, and stronger authority surfaces are explicit.
 - [ ] Package manifest and test runner are directly inspected before install/build/test commands are documented.
 - [ ] Package-local tests or fixtures exist when implementation code exists.
-- [ ] Package does not define canonical schemas, policy law, release records, data lifecycle artifacts, or public routes by accident.
+- [ ] Package does not define canonical schemas, policy law, release records, data lifecycle artifacts, public routes, or app entrypoints by accident.
 - [ ] Package does not create a normal public path to RAW, WORK, QUARANTINE, canonical stores, model runtimes, vector indexes, or unpublished candidates.
-- [ ] Package handles `ABSTAIN`, `DENY`, `ERROR`, stale, restricted, generalized, and unavailable states where its boundary can encounter them.
+- [ ] Package handles `ABSTAIN`, `DENY`, `ERROR`, stale, restricted, generalized, unavailable, and review-required states where its boundary can encounter them.
 - [ ] Any emitted receipt, proof, manifest, catalog closure, or layer descriptor stays in its owning lifecycle or release lane.
 - [ ] Changes that affect downstream imports include migration notes and rollback steps.
 - [ ] Documentation avoids upgrading README presence into implementation maturity.
@@ -477,6 +582,10 @@ No. Passing package tests is evidence, not publication authority. Publication re
 
 No. It may normalize or adapt policy outputs for shared package use. The repo-authoritative policy surface remains `../policy/` and its linked fixtures and tests.
 
+### Can packages contain AI helpers?
+
+Yes, but only as evidence-subordinate, provider-neutral helpers behind governed API boundaries. They must not read unpublished stores directly, receive direct client traffic, or publish uncited model output.
+
 ### Why are most implementation claims still `UNKNOWN`?
 
 Because README-visible package directories do not prove manifests, source files, tests, import graphs, CI gates, runtime behavior, package publishing, or deployment. Those require direct checkout, file, test, workflow, or runtime evidence.
@@ -492,9 +601,9 @@ Because README-visible package directories do not prove manifests, source files,
 
 | Item | Why it matters | Suggested evidence |
 | --- | --- | --- |
-| Parent README replacement | Confirms this file is no longer a zero-line placeholder. | Direct `git show HEAD:packages/README.md` or PR diff. |
-| Child package inventory | Prevents stale package map. | `find packages -maxdepth 2 -type d | sort`. |
-| Package-local code depth | Prevents README-only surfaces from being described as implemented packages. | `find packages/<name> -maxdepth 4 -type f | sort`. |
+| Parent README replacement | Confirms this file is no longer a placeholder. | Direct `git show HEAD:packages/README.md` or PR diff. |
+| Child package inventory | Prevents stale package map. | `find packages -maxdepth 2 -type d \| sort`. |
+| Package-local code depth | Prevents README-only surfaces from being described as implemented packages. | `find packages/<name> -maxdepth 4 -type f \| sort`. |
 | Package manager | Needed before documenting install/build commands. | Lockfiles, package manifests, CI workflows. |
 | Test runner | Needed before claiming validation. | Local test config and passing test output. |
 | Import graph | Needed before claiming downstream consumers. | Static imports, package exports, tests, runtime docs. |
@@ -515,9 +624,20 @@ Because README-visible package directories do not prove manifests, source files,
 | EvidenceRef | Stable reference to support material that must resolve to an EvidenceBundle before consequential claims. |
 | EvidenceBundle | Inspectable support package carrying source, scope, lineage, rights, review, freshness, release, and correction context. |
 | Finite outcome | A bounded result such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
-| Rebuildable projection | Derived search, tile, graph, vector, cache, or summary output that can be regenerated from governed release inputs. |
+| Rebuildable projection | Derived search, tile, graph, vector, cache, embedding, or summary output that can be regenerated from governed release inputs. |
 | Shadow authority | Duplicate policy, schema, data, release, or evidence meaning hidden inside package code. |
 | Promotion | Governed state transition into public-safe release, not a file move or package test success. |
+
+</details>
+
+<details>
+<summary>Revision notes for this README version</summary>
+
+- Strengthened the parent directory contract and quick decision path.
+- Added at-a-glance, placement, maintainer workflow, change impact, and trust membrane sections.
+- Tightened truth posture to avoid treating README text as implementation proof.
+- Preserved child package map, object-family handoffs, Mermaid diagram, verification backlog, and glossary.
+- Kept all package claims bounded pending active checkout inspection.
 
 </details>
 
