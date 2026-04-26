@@ -122,12 +122,16 @@ This lane should accept only small, explicit materials that clarify runtime cont
 
 ```text
 schemas/contracts/v1/runtime/
+├── ecology_evidence_bundle_response.schema.json
+├── ecology_evidence_drawer.schema.json
 ├── README.md
 └── runtime_response_envelope.schema.json
 ```
 
 | Path | Role | Current posture |
 | --- | --- | --- |
+| `ecology_evidence_bundle_response.schema.json` | Contract for governed ecology API EvidenceBundle payloads (`cite`/`abstain`). | **Draft, CI-validated in boundary tests** |
+| `ecology_evidence_drawer.schema.json` | Contract for UI-facing ecology Evidence Drawer payloads. | **Draft, CI-validated in boundary tests** |
 | `README.md` | Human-readable boundary guide for the runtime contract family. | **Draft revision** |
 | `runtime_response_envelope.schema.json` | Machine-readable target for finite runtime outcome envelopes. | **NEEDS VERIFICATION** for field-level schema body in active checkout |
 

@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -79,4 +78,3 @@ def test_receipt_parent_directory_is_created(tmp_path: Path) -> None:
     assert result.ok
     assert receipt_out.exists()
     assert receipt_out.parent.exists()
-```

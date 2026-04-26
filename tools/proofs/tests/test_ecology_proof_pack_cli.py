@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -250,4 +249,3 @@ def test_cli_missing_prov_catalog_ref_exits_one(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert "proof pack requires at least one PROV catalog reference" in result.stderr
     assert not out_path.exists()
-```

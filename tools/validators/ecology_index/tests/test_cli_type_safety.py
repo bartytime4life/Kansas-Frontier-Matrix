@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -110,4 +109,3 @@ def test_cli_evidence_refs_string_returns_validation_failure(tmp_path: Path) -> 
     assert result.returncode == 1
     assert "ECO_INDEX_SCHEMA_INVALID" in result.stderr
     assert "internal validator error:" not in result.stderr
-```

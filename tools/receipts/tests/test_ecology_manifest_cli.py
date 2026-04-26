@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -174,4 +173,3 @@ def test_cli_non_object_receipt_exits_one(tmp_path: Path) -> None:
     assert "invalid receipt:" in result.stderr
     assert "Receipt must be a JSON object" in result.stderr
     assert not out_path.exists()
-```

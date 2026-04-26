@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -132,4 +131,3 @@ def test_invalid_schema_raises(tmp_path: Path) -> None:
 
     with pytest.raises(SchemaError):
         Draft202012Validator.check_schema(load_schema(bad_schema))
-```
