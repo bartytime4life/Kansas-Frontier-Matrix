@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: 2026-04-13
-updated: 2026-04-23
+updated: 2026-04-25
 policy_label: public
 related: [../README.md, ../../README.md, ../../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../schemas/promotion/decision-envelope.schema.json, ../../../schemas/promotion/promotion-record.schema.json, ../../../schemas/promotion/promotion-prov.schema.json, ../../../schemas/promotion/promotion-bundle.schema.json, ../../../policy/README.md, ../../../data/receipts/README.md, ../../../data/proofs/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/prov/README.md, ../../../tests/README.md, ../../../tests/validators/README.md, ../../../tests/e2e/runtime_proof/promotion_gate/README.md, ../../ci/README.md, ../../attest/README.md, ../../../.github/actions/promotion-gate/README.md, ../../../.github/workflows/README.md]
-tags: [kfm, validators, promotion, governance, evidence, ci, fail-closed]
-notes: [Target path is tools/validators/promotion_gate/README.md. doc_id, active-branch executable inventory, exact schema-home authority, workflow enforcement, and branch protection posture remain NEEDS VERIFICATION. Created date is derived from surfaced prior Promotion Gate README evidence and should be rechecked against git history before publication.]
+tags: [kfm, validators, promotion, governance, evidence, ci, fail-closed, pmtiles, cog, attestation]
+notes: [Target path is tools/validators/promotion_gate/README.md. doc_id, active-branch executable inventory, exact schema-home authority, workflow enforcement, tile QA implementation, attestation wiring, and branch protection posture remain NEEDS VERIFICATION. Created date is derived from surfaced prior Promotion Gate README evidence and should be rechecked against git history before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -21,7 +21,7 @@ Fail-closed, evidence-first promotion validation for KFM release candidates befo
 
 > [!IMPORTANT]
 > **Status:** `experimental` · **Doc status:** `draft` · **Owners:** `@bartytime4life` · **Path:** `tools/validators/promotion_gate/README.md`  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-ag) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [Review handoff](#validator-to-review-handoff) · [Policy](#policy-evaluation) · [CI](#ci-integration) · [Tests](#tests) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Quickstart](#quickstart) · [Decision contract](#decision-contract) · [Gate matrix](#gate-matrix-ag) · [Tile QA](#tile-qa-profile) · [Attestation](#attestation-profile) · [Execution flow](#execution-flow) · [Outputs](#outputs) · [Policy](#policy-evaluation) · [CI](#ci-integration) · [Tests](#tests) · [Definition of done](#definition-of-done)
 
 ![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
 ![doc](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square)
@@ -32,7 +32,7 @@ Fail-closed, evidence-first promotion validation for KFM release candidates befo
 ![verification](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-f59e0b?style=flat-square)
 
 > [!WARNING]
-> This README is both a **validator-lane contract** and an **implementation-facing directory guide**. It must not be treated as proof that every executable, workflow, schema, fixture, or merge-blocking rule is present on the active branch. Re-run the quickstart inventory commands before changing enforcement.
+> This README is a validator-lane contract and implementation-facing directory guide. It must not be treated as proof that every executable, workflow, schema, fixture, tile validator, attestation helper, or merge-blocking rule is present on the active branch.
 
 ---
 
@@ -40,14 +40,14 @@ Fail-closed, evidence-first promotion validation for KFM release candidates befo
 
 The Promotion Gate decides whether a release candidate is ready to move toward publication under KFM governance.
 
-It validates candidate identity, evidence support, policy posture, catalog closure, proof/receipt linkage, reviewer intent, and rollback readiness. It emits finite, machine-readable outcomes for review and CI. It does **not** publish artifacts.
+It validates candidate identity, evidence support, policy posture, catalog closure, proof/receipt linkage, reviewer intent, rollback readiness, and—when the candidate is a map artifact—publish-time tile quality and cryptographic attestation readiness.
 
 | Claim | Truth posture | Meaning |
 | --- | --- | --- |
-| KFM promotion is a governed state transition, not a file move. | **CONFIRMED doctrine** | This gate must preserve policy, provenance, audit, and rollback meaning. |
-| This lane is the release-facing validator surface under `tools/validators/`. | **CONFIRMED in surfaced repo-facing docs / NEEDS VERIFICATION in active checkout** | The path is stable in KFM documentation, but the mounted branch must still be inspected. |
-| Exact helper filenames, schemas, and workflow callers are complete and enforced. | **NEEDS VERIFICATION** | Keep implementation claims bounded until branch inventory and tests prove them. |
-| Promotion output can be collapsed into a plain boolean. | **DENIED** | KFM needs finite outcomes and reasoned negative states, not silent pass/fail. |
+| KFM promotion is a governed state transition, not a file move. | **CONFIRMED doctrine** | This gate must preserve policy, provenance, audit, rollback, and publication meaning. |
+| The gate emits finite machine-readable outcomes. | **CONFIRMED doctrine** | Promotion cannot collapse to a silent boolean. |
+| PMTiles / COG artifacts need publish-time QA before release. | **PROPOSED / implementation-facing** | Tile quality checks should be enforced before publication, but active-branch implementation remains **NEEDS VERIFICATION**. |
+| Signed attestations bind artifact, spec, and evidence. | **PROPOSED / implementation-facing** | Attestation pattern is recommended; exact Sigstore/cosign wiring remains **NEEDS VERIFICATION**. |
 
 [Back to top](#top)
 
@@ -63,6 +63,7 @@ This directory sits between candidate assembly and governed publication.
 candidate / release bundle
   -> promotion gate validation
   -> DecisionEnvelope / promotion record / PROV / bundle index
+  -> receipt + proof linkage
   -> reviewer handoff
   -> release or correction workflow
 ```
@@ -77,7 +78,7 @@ candidate / release bundle
 | Schemas | [`../../../schemas/README.md`](../../../schemas/README.md) | Machine-readable shape validation. |
 | Policy | [`../../../policy/README.md`](../../../policy/README.md) | Allow/deny/obligation semantics. |
 | Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | Process memory from runs and handoffs. |
-| Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release-grade proof objects. |
+| Proofs | [`../../../data/proofs/README.md`](../../../data/proofs/README.md) | Release-grade proof objects and attestations. |
 | Catalog closure | [`../../../data/catalog/README.md`](../../../data/catalog/README.md) | STAC / DCAT / PROV adjacency and closure checks. |
 | Promotion fixtures | [`../../../tests/fixtures/promotion/`](../../../tests/fixtures/promotion/) | Deterministic pass / deny / error examples. |
 
@@ -93,7 +94,7 @@ candidate / release bundle
 | Workflows | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Orchestration and permissions, not gate logic. |
 
 > [!NOTE]
-> The Promotion Gate should stay narrow: it decides release-facing readiness. It does not become the schema registry, policy owner, catalog owner, attestation owner, workflow engine, or publication tool.
+> The Promotion Gate should stay narrow: it decides release-facing readiness. It does not become the schema registry, policy owner, catalog owner, attestation owner, workflow engine, renderer, or publication tool.
 
 [Back to top](#top)
 
@@ -112,6 +113,7 @@ Use the smallest artifact set needed to prove the promotion question honestly.
 | Rights and sensitivity fields | license, source role, policy label, redaction/generalization posture | Keeps public release policy-visible. |
 | Review intent | reviewer/steward action, approval state, recorded reason | Makes release-significant human decisions auditable. |
 | Rollback target | prior release ref, correction ref, supersession metadata | Ensures reversible change before outward exposure. |
+| Map artifacts | `*.pmtiles`, COG `*.tif` / `*.tiff` | Enables tile QA, raster overview checks, digest binding, and publish-time budget enforcement. |
 | Fixtures | valid, deny, abstain, malformed/error examples | Tests finite outcomes and fail-closed behavior. |
 
 [Back to top](#top)
@@ -137,77 +139,6 @@ Use the smallest artifact set needed to prove the promotion question honestly.
 
 ---
 
-## Directory tree
-
-### Documented / expected lane shape
-
-> [!IMPORTANT]
-> Treat this tree as **NEEDS VERIFICATION** until confirmed by the active branch. Keep the README synchronized with actual files as helpers land, move, or retire.
-
-```text
-tools/validators/promotion_gate/
-├── README.md
-├── __init__.py
-├── __main__.py
-├── promotion_gate.py
-├── prepare_candidate_fixture.py
-├── validate_decision_envelope.py
-├── write_promotion_record.py
-├── validate_promotion_record.py
-├── emit_promotion_prov.py
-├── validate_promotion_prov.py
-├── write_promotion_bundle.py
-├── validate_promotion_bundle.py
-├── evaluate_bundle_diff_policy.py
-├── validate_bundle_diff_policy.py
-├── catalog_matrix_validator.py
-├── policies/
-│   └── *.rego
-├── examples/
-│   ├── release_bundle.json
-│   ├── stac_item.json
-│   ├── dcat_dataset.json
-│   └── prov_entity.json
-└── lib/
-    ├── io.py
-    ├── paths.py
-    └── subprocess_tools.py
-```
-
-### Adjacent proof and handoff surfaces
-
-```text
-schemas/promotion/
-├── decision-envelope.schema.json
-├── promotion-record.schema.json
-├── promotion-prov.schema.json
-└── promotion-bundle.schema.json
-
-tests/validators/
-└── test_promotion_gate_e2e.py
-
-tests/e2e/runtime_proof/promotion_gate/
-├── README.md
-├── pass/
-├── deny_catalog_mismatch/
-└── error_malformed_bundle/
-
-tools/ci/
-├── render_promotion_summary.py
-├── render_promotion_bundle_summary.py
-├── render_diff_summary.py
-├── render_bundle_diff_policy_summary.py
-└── render_promotion_review_handoff.py
-
-tools/attest/
-├── sign_decision_envelope.py
-└── verify_decision_envelope.py
-```
-
-[Back to top](#top)
-
----
-
 ## Quickstart
 
 Start by verifying what is actually mounted.
@@ -221,7 +152,7 @@ find schemas/promotion tests/validators tests/e2e/runtime_proof/promotion_gate t
   -maxdepth 3 \( -type f -o -type d \) 2>/dev/null | sort
 
 # Confirm references across repo docs and code.
-git grep -n "promotion_gate\|Promotion Gate\|DecisionEnvelope\|promotion-bundle" -- . || true
+git grep -n "promotion_gate\|Promotion Gate\|DecisionEnvelope\|promotion-bundle\|pmtiles\|COG\|attestation" -- . || true
 ```
 
 Run the module entrypoint when the active branch confirms it exists:
@@ -231,26 +162,23 @@ python3 -m tools.validators.promotion_gate \
   --bundle data/proofs/release_bundle.json
 ```
 
-Run focused helper checks when present:
+Run tile QA when the active branch confirms the tile profile exists:
 
 ```bash
-python3 -m tools.validators.promotion_gate.validate_decision_envelope --help
-python3 -m tools.validators.promotion_gate.catalog_matrix_validator \
-  tools/validators/promotion_gate/examples/release_bundle.json \
-  --stac tools/validators/promotion_gate/examples/stac_item.json \
-  --dcat tools/validators/promotion_gate/examples/dcat_dataset.json \
-  --prov tools/validators/promotion_gate/examples/prov_entity.json
+python3 -m tools.validators.promotion_gate \
+  --bundle data/proofs/release_bundle.json \
+  --profile tile-qa
 ```
 
-Run tests when the documented fixtures are available:
+Run tests when documented fixtures are available:
 
 ```bash
 pytest -q tests/validators/test_promotion_gate_e2e.py
-tests/e2e/runtime_proof/promotion_gate/run.sh local
+pytest -q tests/e2e/runtime_proof/promotion_gate
 ```
 
 > [!WARNING]
-> If the active branch uses a different package manager, test runner, module name, schema path, or fixture home, update this README to the branch reality instead of preserving guessed commands.
+> If the active branch uses a different package manager, test runner, module name, schema path, fixture home, or tile validator, update this README to branch reality instead of preserving guessed commands.
 
 [Back to top](#top)
 
@@ -264,7 +192,7 @@ Every promotion attempt must end in one finite outcome.
 | --- | --- | --- |
 | `PROMOTE` | Candidate is promotable under current gates. | Required gates pass, review intent is present, rollback is ready. |
 | `ABSTAIN` | Insufficient support to promote, without a hard contradiction. | Missing steward review, incomplete evidence, unresolved but non-fatal ambiguity. |
-| `DENY` | Candidate must not be promoted. | Policy denial, sensitivity violation, catalog mismatch, invalid rights posture, broken rollback target. |
+| `DENY` | Candidate must not be promoted. | Policy denial, sensitivity violation, catalog mismatch, invalid rights posture, broken rollback target, failed tile QA. |
 | `ERROR` | Evaluator failure or malformed input. | Invalid JSON, schema load failure, validator unavailable, broken runner state. |
 
 Illustrative minimum envelope:
@@ -272,16 +200,16 @@ Illustrative minimum envelope:
 ```json
 {
   "outcome": "DENY",
-  "reason_codes": ["catalog_mismatch"],
-  "obligations": ["repair_catalog_refs", "rerun_gate"],
+  "reason_codes": ["tile_budget_exceeded"],
+  "obligations": ["reduce_tile_density", "rerun_gate"],
   "audit_ref": "kfm://audit/promotion-gate/example",
   "bundle_ref": "data/proofs/release_bundle.json",
   "release_ref": "kfm://release/example",
   "gate_statuses": {
     "A": "PASS",
     "B": "PASS",
-    "C": "PASS",
-    "D": "FAIL",
+    "C": "FAIL",
+    "D": "PASS",
     "E": "PASS",
     "F": "PASS",
     "G": "ABSTAIN"
@@ -302,10 +230,10 @@ Illustrative minimum envelope:
 | --- | --- | --- | --- |
 | **A** | Identity & closure | Stable identifier, canonical `spec_hash`, required release subject identity, immutable target intent. | `candidate_id`, release subject, canonical spec bytes, declared hash. |
 | **B** | Asset integrity | Every declared asset exists, is checksummed, and matches reviewed bytes. | asset list, checksums, manifest/STAC asset linkage. |
-| **C** | Geometry & CRS invariants | Geometry validity, CRS allowlist, bbox consistency, deterministic generalization, sane geometric summaries where spatial assets exist. | geometry-bearing assets, CRS metadata, bbox, generalization parameters. |
+| **C** | Geometry, CRS & tile invariants | Geometry validity, CRS allowlist, bbox consistency, deterministic generalization, tile budgets where PMTiles/COG assets exist. | geometry-bearing assets, CRS metadata, bbox, generalization parameters, tile QA stats. |
 | **D** | Temporal & coverage semantics | Valid intervals, coherent spatial/temporal coverage, freshness declarations where required. | observed time, valid time, publication time, coverage metadata. |
 | **E** | Rights, sensitivity, and policy | License, rights, policy label, source role, sensitivity handling, and deny-by-default for unknown classification. | rights metadata, policy label, source descriptor, reviewable sensitivity context. |
-| **F** | Provenance, proofs, and receipts | Run receipts exist, attestations validate when required, proof hashes match, catalog/provenance closure is coherent. | `run_receipt`, proof objects, attestation refs, STAC/DCAT/PROV refs. |
+| **F** | Provenance, proofs, receipts & attestations | Run receipts exist, attestations validate when required, proof hashes match, catalog/provenance closure is coherent. | `run_receipt`, proof objects, attestation refs, STAC/DCAT/PROV refs. |
 | **G** | Reviewer intent & rollback readiness | Approval is recorded, steward is visible, rollback target exists, supersession/correction path is reversible. | review record, prior release ref, rollback card, correction/supersession posture. |
 
 ### Gate-to-outcome collapse
@@ -321,6 +249,107 @@ Illustrative minimum envelope:
 
 ---
 
+## Tile QA profile
+
+This profile applies when a release candidate includes PMTiles or COG artifacts.
+
+### Deterministic sampling
+
+| Requirement | Default |
+| --- | --- |
+| Sample size | `min(500, 1% of tiles)` |
+| Zoom coverage | low / medium / high zoom strata |
+| PMTiles v3 preference | Hilbert tile ordering when available |
+| Sampling record | Must be written to the run receipt |
+
+### Tile budgets
+
+| Check | Target | Hard failure |
+| --- | --- | --- |
+| Median tile size | 30–60 KB | `median_kb > 100` |
+| Maximum tile size | — | `max_tile_kb > 500` |
+| Mobile feature density | ≤ 200 features/tile | profile-specific |
+| Desktop feature density | ≤ 500 features/tile | `max_features_per_tile > 500` |
+| Attribute cardinality | ≤ 50 unique values per attribute per zoom | cardinality overflow |
+
+### Geometry and raster checks
+
+| Artifact type | Required checks |
+| --- | --- |
+| PMTiles | geometry validity, feature density, tile size distribution, attribute cardinality, digest binding |
+| COG | internal tiling block size `256` or `512`, overview pyramid, compression, no mixed block sizes |
+
+### Fail-closed tile policy
+
+The gate rejects promotion if any condition is met:
+
+```text
+tile_stats.median_kb > 100
+geometry_issues_count > 0
+max_features_per_tile > 500
+required COG overview missing
+artifact digest mismatch
+```
+
+> [!IMPORTANT]
+> Tile QA is not a renderer test. It proves that the artifact is bounded, inspectable, digest-bound, and safe enough to expose through governed publication surfaces.
+
+[Back to top](#top)
+
+---
+
+## Attestation profile
+
+Signed attestations bind the promoted artifact to the evaluated spec, validation evidence, and signer identity.
+
+### Minimal predicate shape
+
+```json
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [{
+    "name": "maps/kansas/ecology.pmtiles",
+    "digest": {
+      "sha256": "<artifact_digest>"
+    }
+  }],
+  "predicateType": "https://slsa.dev/attestation/v1",
+  "predicate": {
+    "spec_hash": "<sha256-of-canonical-spec>",
+    "artifact_digest": "<sha256>",
+    "tile_stats": {
+      "median_kb": 42.7,
+      "p95_kb": 118.3,
+      "max_features_by_zoom": {
+        "z7": 180,
+        "z10": 420,
+        "z12": 510
+      }
+    },
+    "geometry_issues_count": 0,
+    "evidence_uri": "evidence://bundles/2026-04-25/run_0142/receipt.json",
+    "signer": "sigstore://fulcio/subject=ci@kfm",
+    "timestamp": "2026-04-25T03:14:59Z"
+  }
+}
+```
+
+### Example signing command
+
+```bash
+cosign attest \
+  --predicate predicate.json \
+  --type slsa.dev/attestation/v1 \
+  maps/kansas/ecology.pmtiles
+```
+
+> [!NOTE]
+> The attestation helper may sign and verify. The Promotion Gate decides whether the attestation is required, present, coherent, and compatible with promotion.
+
+[Back to top](#top)
+
+---
+
 ## Execution flow
 
 ```mermaid
@@ -329,10 +358,10 @@ flowchart LR
     B --> C[Canonical identity / spec_hash]
     C --> D[Gate A: identity + closure]
     D --> E[Gate B: asset integrity]
-    E --> F[Gate C: geometry + CRS]
+    E --> F[Gate C: geometry / CRS / tile QA]
     F --> G[Gate D: time + coverage]
     G --> H[Gate E: rights + policy]
-    H --> I[Gate F: provenance + proofs]
+    H --> I[Gate F: provenance / proofs / attestations]
     I --> J[Gate G: review + rollback]
     J --> K{Finite decision}
     K -->|PROMOTE| L[DecisionEnvelope]
@@ -352,6 +381,7 @@ flowchart LR
 | Surface | Status | Use |
 | --- | --- | --- |
 | `python3 -m tools.validators.promotion_gate` | **NEEDS VERIFICATION** | Preferred authoritative local/CI entrypoint when module exists. |
+| Tile QA profile | **NEEDS VERIFICATION** | PMTiles / COG validation profile when map artifacts are present. |
 | Focused helper modules | **NEEDS VERIFICATION** | Debug and targeted gate validation. |
 | Make targets | **NEEDS VERIFICATION** | Developer convenience only; must call the same authoritative runner. |
 | Composite GitHub Action | **NEEDS VERIFICATION** | Reusable workflow wrapper; must not contain divergent gate logic. |
@@ -366,45 +396,45 @@ flowchart LR
 | Artifact | Purpose | Owner surface |
 | --- | --- | --- |
 | `decision.json` | Final finite outcome and gate status map. | `tools/validators/promotion_gate/` |
+| `receipt.json` | Run record containing inputs, sample method, checks, timestamps, and decision. | `data/receipts/` |
 | `promotion-summary.md` | Human-readable summary of the decision. | `tools/ci/` |
 | `promotion-record.json` | Compact ledger entry derived from the decision. | `tools/validators/promotion_gate/` |
 | `promotion-prov.json` | Minimal PROV activity derived from the record. | `tools/validators/promotion_gate/` + catalog/provenance lane |
 | `promotion-bundle.json` | Index of the governed promotion artifact set. | `tools/validators/promotion_gate/` |
 | `promotion-bundle-summary.md` | Reviewer/auditor summary of the full bundle. | `tools/ci/` |
+| `attestation.json` | Signed or signable statement binding artifact digest, `spec_hash`, evidence, and validator results. | `tools/attest/` + `data/proofs/` |
 | `decision-sign-result.json` | Signing command result. | `tools/attest/` |
 | `decision-verify-result.json` | Attestation verification result. | `tools/attest/` |
 | `promotion-bundle-diff.json` | Prior/current bundle diff. | `tools/diff/` |
-| `promotion-bundle-diff-summary.md` | Reviewer-facing diff summary. | `tools/ci/` |
 | `promotion-bundle-diff-policy.json` | Machine-readable policy classification of bundle drift. | `tools/validators/promotion_gate/` + `policy/` |
-| `promotion-bundle-diff-policy-summary.md` | Reviewer-facing policy summary. | `tools/ci/` |
 | `promotion-review-handoff.md` | Steward-facing review document derived from decision, diff, policy, and attestation visibility. | `tools/ci/` |
+
+### Run receipt example
+
+```json
+{
+  "run_id": "ci-2026-04-25-0142",
+  "pipeline_ref": "tools/validators/promotion_gate@v1",
+  "repo_ref": "main@<commit>",
+  "tile_sample": {
+    "count": 500,
+    "method": "hilbert-stratified"
+  },
+  "checks": [
+    "geometry_valid",
+    "attr_cardinality",
+    "tile_sizes",
+    "cog_overviews",
+    "attestation_ready"
+  ],
+  "decision": "approved",
+  "attestation_ref": "rekor://<uuid>",
+  "timestamp": "2026-04-25T03:14:59Z"
+}
+```
 
 > [!CAUTION]
 > Reviewer-facing Markdown is support material. Machine-readable gate artifacts remain the authoritative validator output.
-
-[Back to top](#top)
-
----
-
-## Validator-to-review handoff
-
-The promotion path should be read as a governed sequence of artifacts, not one helper silently owning the whole review story.
-
-```text
-validator decision
-  -> prior/current diff
-  -> diff-policy classification
-  -> CI summaries
-  -> composed review handoff
-```
-
-| Step | Primary artifact | Primary owner | Trust rule |
-| --- | --- | --- | --- |
-| Validator decision | `DecisionEnvelope` / `decision.json` | `tools/validators/promotion_gate/` | Finite outcome and reason codes must be machine-readable. |
-| Prior/current comparison | `promotion-bundle-diff.json` | `tools/diff/` | Diff logic stays separate from policy and publication. |
-| Drift classification | `promotion-bundle-diff-policy.json` | `policy/` + validator wrapper | Policy meaning remains policy-owned. |
-| Reviewer summaries | `*-summary.md` | `tools/ci/` | Summaries derive from machine artifacts. |
-| Handoff document | `promotion-review-handoff.md` | `tools/ci/` | Handoff supports steward review; it is not sovereign truth. |
 
 [Back to top](#top)
 
@@ -414,11 +444,32 @@ validator decision
 
 The gate may call local policy helpers, Rego/OPA/Conftest, or repo-native policy tooling. Regardless of toolchain, these rules apply:
 
-1. Unknown rights, unknown sensitivity, missing source role, or broken catalog linkage fails closed.
+1. Unknown rights, unknown sensitivity, missing source role, broken catalog linkage, invalid geometry, or oversized release tiles fail closed.
 2. Policy decisions must emit reason codes and obligations.
 3. Policy output is consumed by the gate but owned by `policy/`.
 4. Reviewer-facing Conftest output is support material only.
 5. The final decision comes from the Promotion Gate envelope.
+
+Example tile policy:
+
+```rego
+package promotion
+
+deny[msg] {
+  input.tile_stats.median_kb > 100
+  msg := "Median tile size exceeds 100 KB"
+}
+
+deny[msg] {
+  input.geometry_issues_count > 0
+  msg := "Invalid geometries present"
+}
+
+deny[msg] {
+  max(input.tile_stats.max_features_by_zoom[_]) > 500
+  msg := "Feature count exceeds limit"
+}
+```
 
 Example local review command when policy tooling is installed:
 
@@ -449,7 +500,7 @@ Expected CI principles:
 | Principle | Requirement |
 | --- | --- |
 | One authority | Workflow calls the gate runner; workflow does not redefine gate logic. |
-| Fail closed | Missing bundle, malformed output, or validator failure blocks promotion. |
+| Fail closed | Missing bundle, malformed output, invalid geometry, missing attestation, or validator failure blocks promotion. |
 | Thin caller | Tool installation and orchestration stay reusable. |
 | Reviewer visibility | CI uploads or prints summaries derived from machine artifacts. |
 | No silent bypass | Manual dispatch, PR, and release workflows use the same decision path. |
@@ -466,6 +517,9 @@ Expected CI principles:
 | --- | --- | --- |
 | valid bundle with closed catalog refs | `PROMOTE` | Proves happy path without bypassing evidence. |
 | catalog digest mismatch | `DENY` | Proves fail-closed catalog behavior. |
+| invalid geometry | `DENY` | Proves geometry failures block publishable state. |
+| oversized PMTiles sample | `DENY` | Proves tile budgets are enforced. |
+| missing COG overview | `DENY` | Proves raster publication checks are enforced. |
 | missing rights / sensitivity classification | `DENY` or `ABSTAIN` | Proves policy uncertainty is visible. |
 | missing steward review | `ABSTAIN` | Proves insufficient evidence does not become success. |
 | malformed JSON or missing required structure | `ERROR` | Proves evaluator failure is not smoothed into denial. |
@@ -487,6 +541,8 @@ pytest -q tests/e2e/runtime_proof/promotion_gate
 - obligations are present when remediation is needed
 - malformed input yields `ERROR`
 - catalog mismatch yields `DENY`
+- invalid geometry yields `DENY`
+- tile budget overflow yields `DENY`
 - no test asserts that a passing gate equals publication
 
 [Back to top](#top)
@@ -504,6 +560,8 @@ A Promotion Gate change is ready for review when all applicable checks are compl
 - [ ] `DecisionEnvelope` or promotion decision schema validation passes.
 - [ ] Policy failures fail closed with reason codes.
 - [ ] Receipts, proofs, catalogs, and publication remain separate.
+- [ ] Tile QA emits deterministic sample stats when map artifacts are present.
+- [ ] Attestation references bind `artifact_digest`, `spec_hash`, evidence URI, signer, and timestamp.
 - [ ] Reviewer summaries are derived from machine artifacts.
 - [ ] CI caller uses the authoritative runner or documented composite action.
 - [ ] Rollback target or correction path is checked before release-significant promotion.
@@ -519,7 +577,7 @@ A Promotion Gate change is ready for review when all applicable checks are compl
 <details>
 <summary><strong>Is a successful Promotion Gate run the same as publication?</strong></summary>
 
-No. A successful gate means the candidate is promotable under the checked contract, policy, proof, catalog, review, and rollback conditions. Publication remains a governed downstream action.
+No. A successful gate means the candidate is promotable under the checked contract, policy, proof, catalog, review, rollback, and artifact-quality conditions. Publication remains a governed downstream action.
 
 </details>
 
@@ -534,6 +592,13 @@ No for public or release-facing validation. Candidate-producing lanes may work t
 <summary><strong>Why not return a boolean?</strong></summary>
 
 A boolean erases remediation meaning. KFM requires visible negative states. `ABSTAIN`, `DENY`, and `ERROR` are materially different outcomes and should stay distinct.
+
+</details>
+
+<details>
+<summary><strong>Where do PMTiles and COG checks fit?</strong></summary>
+
+They fit under Gate C for geometry, CRS, and tile invariants, and under Gate F when the artifact requires digest-bound attestations and proof linkage.
 
 </details>
 
@@ -578,9 +643,11 @@ No. UI and Focus Mode should use governed APIs and released decision/evidence pa
 | --- | --- |
 | `candidate_id` | Stable identifier for the object or bundle being evaluated. |
 | `spec_hash` | Deterministic hash of the canonical spec or release subject definition. |
+| `artifact_digest` | Cryptographic digest of the promoted artifact bytes. |
 | `DecisionEnvelope` | Machine-readable decision object with finite outcome, reasons, obligations, refs, and gate statuses. |
 | `run_receipt` | Process-memory record of a run; not proof and not publication. |
 | proof object | Release-grade support artifact that can be checked independently. |
+| attestation | Signed statement binding subject digest to validation evidence and signer identity. |
 | catalog closure | Evidence that STAC/DCAT/PROV or equivalent references are coherent enough for release interpretation. |
 | rollback target | Prior state or release ref that makes reversal reviewable and auditable. |
 
@@ -596,9 +663,11 @@ Before editing this file:
 3. Verify schema paths and names.
 4. Verify workflow callers and composite action path.
 5. Re-run positive and negative promotion fixtures.
-6. Update badges only if status, owner, or lane maturity changed.
-7. Preserve the distinction between receipts, proofs, catalog objects, summaries, and publication.
-8. Leave unresolved items visibly marked as `NEEDS VERIFICATION`.
+6. Re-run PMTiles / COG fixtures if tile QA is enabled.
+7. Verify attestation signing and verification paths if proofs are required.
+8. Update badges only if status, owner, or lane maturity changed.
+9. Preserve the distinction between receipts, proofs, catalog objects, summaries, and publication.
+10. Leave unresolved items visibly marked as `NEEDS VERIFICATION`.
 
 </details>
 
