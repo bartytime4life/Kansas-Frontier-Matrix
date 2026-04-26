@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Full Promotion Gate (A-G) for Kansas Biodiversity ETL.
+Full Promotion Gate (A-I) for Kansas Biodiversity ETL.
 
 Supports:
 - JSONL thin-slice artifacts
@@ -8,6 +8,7 @@ Supports:
 - partitioned Parquet dataset directories
 - format-independent spec_hash via _dataset_metadata.json
 - local receipt proof verification
+- optional catalog closure validation for STAC/DCAT/PROV outputs
 
 Gate Checks:
 
@@ -19,6 +20,7 @@ E. License validity
 F. Attribution completeness
 G. Sensitivity enforcement
 H. Receipt proof verification
+I. Catalog closure validation
 
 Fail-closed:
 Any violation => FAIL
@@ -39,6 +41,7 @@ except ImportError:  # pragma: no cover
 
 
 JsonRecord = Dict[str, Any]
+JsonObject = Dict[str, Any]
 
 
 def fail(reason: str) -> int:
@@ -54,7 +57,7 @@ def sha256_file(path: Path) -> str:
     return "sha256:" + digest.hexdigest()
 
 
-def load_json(path: Path) -> Dict[str, Any]:
+def load_json(path: Path) -> JsonObject:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -107,15 +110,24 @@ def read_dataset_records(dataset_path: Path) -> List[JsonRecord]:
     raise RuntimeError(f"unsupported_dataset_format:{suffix}")
 
 
+def resolve_metadata_path(dataset_path: Path, metadata_path: Optional[Path]) -> Optional[Path]:
+    if metadata_path is not None:
+        return metadata_path
+
+    if dataset_path.is_dir():
+        return dataset_path / "_dataset_metadata.json"
+
+    if dataset_path.suffix.lower() == ".parquet":
+        return dataset_path.parent / "_dataset_metadata.json"
+
+    return None
+
+
 def expected_spec_hash(dataset_path: Path, metadata_path: Optional[Path]) -> str:
     if dataset_path.is_dir() or dataset_path.suffix.lower() == ".parquet":
-        resolved_metadata_path = metadata_path or (
-            dataset_path / "_dataset_metadata.json"
-            if dataset_path.is_dir()
-            else dataset_path.parent / "_dataset_metadata.json"
-        )
+        resolved_metadata_path = resolve_metadata_path(dataset_path, metadata_path)
 
-        if not resolved_metadata_path.exists():
+        if resolved_metadata_path is None or not resolved_metadata_path.exists():
             raise RuntimeError("missing_dataset_metadata")
 
         try:
@@ -195,13 +207,7 @@ def validate_metadata_counts(
     dataset_path: Path,
     record_count: int,
 ) -> Optional[str]:
-    resolved_metadata_path = metadata_path
-
-    if resolved_metadata_path is None:
-        if dataset_path.is_dir():
-            resolved_metadata_path = dataset_path / "_dataset_metadata.json"
-        elif dataset_path.suffix.lower() == ".parquet":
-            resolved_metadata_path = dataset_path.parent / "_dataset_metadata.json"
+    resolved_metadata_path = resolve_metadata_path(dataset_path, metadata_path)
 
     if resolved_metadata_path is None or not resolved_metadata_path.exists():
         return None
@@ -214,6 +220,140 @@ def validate_metadata_counts(
     expected_records = metadata.get("records")
     if expected_records is not None and int(expected_records) != record_count:
         return "metadata_record_count_mismatch"
+
+    return None
+
+
+def catalog_stac_collection_spec_hash(collection: JsonObject) -> Optional[str]:
+    summaries = collection.get("summaries")
+    if not isinstance(summaries, dict):
+        return None
+
+    values = summaries.get("kfm:spec_hash")
+
+    if isinstance(values, list) and values:
+        return str(values[0])
+
+    if isinstance(values, str):
+        return values
+
+    return None
+
+
+def catalog_stac_item_spec_hash(item: JsonObject) -> Optional[str]:
+    properties = item.get("properties")
+    if not isinstance(properties, dict):
+        return None
+
+    value = properties.get("kfm:spec_hash")
+    return str(value) if value else None
+
+
+def catalog_dcat_spec_hash(dcat: JsonObject) -> Optional[str]:
+    value = dcat.get("kfm:spec_hash")
+    return str(value) if value else None
+
+
+def catalog_prov_spec_hash(prov: JsonObject) -> Optional[str]:
+    entity = prov.get("entity")
+    if not isinstance(entity, dict):
+        return None
+
+    dataset = entity.get("dataset")
+    if not isinstance(dataset, dict):
+        return None
+
+    value = dataset.get("kfm:spec_hash")
+    return str(value) if value else None
+
+
+def validate_catalog_closure(
+    *,
+    metadata_hash: str,
+    stac_root: Path,
+    dcat_path: Path,
+    prov_path: Path,
+) -> Optional[str]:
+    if not stac_root.exists():
+        return "stac_root_missing"
+
+    if not stac_root.is_dir():
+        return "stac_root_not_directory"
+
+    stac_collection_path = stac_root / "collection.json"
+
+    if not stac_collection_path.exists():
+        return "stac_collection_missing"
+
+    try:
+        collection = load_json(stac_collection_path)
+    except Exception:
+        return "invalid_stac_collection_json"
+
+    if collection.get("type") != "Collection":
+        return "stac_collection_wrong_type"
+
+    collection_hash = catalog_stac_collection_spec_hash(collection)
+
+    if not collection_hash:
+        return "stac_collection_missing_spec_hash"
+
+    if collection_hash != metadata_hash:
+        return "stac_collection_spec_hash_mismatch"
+
+    stac_items = sorted(stac_root.glob("*.item.json"))
+
+    if not stac_items:
+        return "no_stac_items_found"
+
+    for item_path in stac_items:
+        try:
+            item = load_json(item_path)
+        except Exception:
+            return f"invalid_stac_item_json:{item_path.name}"
+
+        if item.get("type") != "Feature":
+            return f"stac_item_wrong_type:{item_path.name}"
+
+        item_hash = catalog_stac_item_spec_hash(item)
+
+        if not item_hash:
+            return f"stac_item_missing_spec_hash:{item_path.name}"
+
+        if item_hash != metadata_hash:
+            return f"stac_item_spec_hash_mismatch:{item_path.name}"
+
+    if not dcat_path.exists():
+        return "dcat_missing"
+
+    try:
+        dcat = load_json(dcat_path)
+    except Exception:
+        return "invalid_dcat_json"
+
+    dcat_hash = catalog_dcat_spec_hash(dcat)
+
+    if not dcat_hash:
+        return "dcat_missing_spec_hash"
+
+    if dcat_hash != metadata_hash:
+        return "dcat_spec_hash_mismatch"
+
+    if not prov_path.exists():
+        return "prov_missing"
+
+    try:
+        prov = load_json(prov_path)
+    except Exception:
+        return "invalid_prov_json"
+
+    prov_hash = catalog_prov_spec_hash(prov)
+
+    if not prov_hash:
+        return "prov_missing_spec_hash"
+
+    if prov_hash != metadata_hash:
+        return "prov_spec_hash_mismatch"
 
     return None
 
@@ -237,6 +377,21 @@ def main() -> int:
         default=None,
         help="Optional local receipt proof path. If supplied, receipt proof verification is enforced.",
     )
+    parser.add_argument(
+        "--stac-root",
+        default=None,
+        help="Optional STAC output root. If supplied with --dcat and --prov, catalog closure is enforced.",
+    )
+    parser.add_argument(
+        "--dcat",
+        default=None,
+        help="Optional DCAT dataset JSON path. Required when --stac-root or --prov is supplied.",
+    )
+    parser.add_argument(
+        "--prov",
+        default=None,
+        help="Optional PROV lineage JSON path. Required when --stac-root or --dcat is supplied.",
+    )
     args = parser.parse_args()
 
     dataset_path = Path(args.dataset)
@@ -244,6 +399,9 @@ def main() -> int:
     metadata_path = Path(args.metadata) if args.metadata else None
     receipt_path = Path(args.receipt) if args.receipt else None
     proof_path = Path(args.proof) if args.proof else None
+    stac_root = Path(args.stac_root) if args.stac_root else None
+    dcat_path = Path(args.dcat) if args.dcat else None
+    prov_path = Path(args.prov) if args.prov else None
 
     if not dataset_path.exists():
         return fail("dataset_missing")
@@ -310,10 +468,36 @@ def main() -> int:
     if record_error:
         return fail(record_error)
 
+    catalog_args = [stac_root, dcat_path, prov_path]
+    catalog_requested = any(value is not None for value in catalog_args)
+
+    if catalog_requested:
+        if stac_root is None:
+            return fail("stac_root_required_for_catalog_validation")
+
+        if dcat_path is None:
+            return fail("dcat_required_for_catalog_validation")
+
+        if prov_path is None:
+            return fail("prov_required_for_catalog_validation")
+
+        catalog_error = validate_catalog_closure(
+            metadata_hash=actual_hash,
+            stac_root=stac_root,
+            dcat_path=dcat_path,
+            prov_path=prov_path,
+        )
+
+        if catalog_error:
+            return fail(catalog_error)
+
     passed_gates = ["A", "B", "C", "D", "E", "F", "G"]
 
     if proof_path is not None:
         passed_gates.append("H")
+
+    if catalog_requested:
+        passed_gates.append("I")
 
     print(
         json.dumps(
@@ -324,6 +508,9 @@ def main() -> int:
                 "metadata": str(metadata_path) if metadata_path else None,
                 "receipt": str(receipt_path) if receipt_path else None,
                 "proof": str(proof_path) if proof_path else None,
+                "stac_root": str(stac_root) if stac_root else None,
+                "dcat": str(dcat_path) if dcat_path else None,
+                "prov": str(prov_path) if prov_path else None,
                 "records": len(records),
                 "spec_hash": actual_hash,
                 "gates": passed_gates,
