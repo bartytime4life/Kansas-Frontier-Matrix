@@ -1,14 +1,261 @@
-name: docs-lint
+name: Docs lint
 
-on:
+"on":
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.mdx"
+      - ".github/workflows/docs-lint.yml"
+      - ".markdownlint*"
+      - "docs/**"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "**/*.md"
+      - "**/*.mdx"
+      - ".github/workflows/docs-lint.yml"
+      - ".markdownlint*"
+      - "docs/**"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: docs-lint-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  placeholder:
+  docs-lint:
+    name: Markdown and local link checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - name: Placeholder
-        run: echo "docs-lint workflow is scaffolded and pending implementation."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Detect Markdown files
+        id: docs
+        run: |
+          set -euo pipefail
+
+          mapfile -d '' files < <(
+            find . -type f \( -name '*.md' -o -name '*.mdx' \) \
+              -not -path './.git/*' \
+              -not -path './node_modules/*' \
+              -not -path './dist/*' \
+              -not -path './build/*' \
+              -not -path './coverage/*' \
+              -not -path './.next/*' \
+              -not -path './.turbo/*' \
+              -not -path './vendor/*' \
+              -print0 | sort -z
+          )
+
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "has_markdown=false" >> "$GITHUB_OUTPUT"
+            echo "No Markdown or MDX files found; docs lint is skipped."
+            exit 0
+          fi
+
+          printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/markdown-files.txt"
+          echo "has_markdown=true" >> "$GITHUB_OUTPUT"
+          echo "count=${#files[@]}" >> "$GITHUB_OUTPUT"
+          echo "Found ${#files[@]} Markdown/MDX file(s):"
+          sed 's/^/ - /' "$RUNNER_TEMP/markdown-files.txt"
+
+      - name: Markdown style lint
+        if: steps.docs.outputs.has_markdown == 'true'
+        env:
+          MARKDOWNLINT_VERSION: "0.22.0"
+        run: |
+          set -euo pipefail
+
+          shopt -s nullglob
+          repo_configs=(.markdownlint-cli2.* .markdownlint.*)
+          config_args=()
+
+          if [ "${#repo_configs[@]}" -eq 0 ]; then
+            cat > "$RUNNER_TEMP/.markdownlint-cli2.yaml" <<'CONFIG'
+          config:
+            default: true
+
+            # KFM docs often include long source paths, citations, hashes,
+            # badges, and compact evidence labels that are more useful intact
+            # than hard-wrapped at an arbitrary column.
+            MD013: false
+
+            # Allow generated docs, README badges, and GitHub-readable callout
+            # fragments without forcing all markup into pure Markdown.
+            MD033: false
+
+            # Allow docs to start with badges, status banners, or front matter.
+            MD041: false
+
+            # Permit repeated heading text in different sibling sections only.
+            MD024:
+              siblings_only: true
+
+          globs:
+            - "**/*.md"
+            - "**/*.mdx"
+
+          ignores:
+            - ".git/**"
+            - "node_modules/**"
+            - "dist/**"
+            - "build/**"
+            - "coverage/**"
+            - ".next/**"
+            - ".turbo/**"
+            - "vendor/**"
+          CONFIG
+            config_args=(--config "$RUNNER_TEMP/.markdownlint-cli2.yaml")
+            echo "No repository markdownlint config found; using CI default config."
+          else
+            echo "Repository markdownlint config detected: ${repo_configs[*]}"
+            echo "Using markdownlint-cli2 auto-discovery."
+          fi
+
+          npx --yes "markdownlint-cli2@${MARKDOWNLINT_VERSION}" "${config_args[@]}" \
+            "**/*.md" \
+            "**/*.mdx" \
+            "#.git/**" \
+            "#node_modules/**" \
+            "#dist/**" \
+            "#build/**" \
+            "#coverage/**" \
+            "#.next/**" \
+            "#.turbo/**" \
+            "#vendor/**"
+
+      - name: Local Markdown link check
+        if: steps.docs.outputs.has_markdown == 'true'
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import re
+          import sys
+          from pathlib import Path
+          from urllib.parse import unquote
+
+          root = Path.cwd().resolve()
+          ignored_dirs = {
+              ".git",
+              "node_modules",
+              "dist",
+              "build",
+              "coverage",
+              ".next",
+              ".turbo",
+              "vendor",
+          }
+
+          inline_link = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]+)\)")
+          reference_link = re.compile(r"^\s*\[[^\]]+\]:\s*(\S+)")
+          external_prefixes = (
+              "http://",
+              "https://",
+              "mailto:",
+              "tel:",
+              "sms:",
+              "urn:",
+              "doi:",
+              "javascript:",
+              "data:",
+          )
+
+          def is_ignored(path: Path) -> bool:
+              return any(part in ignored_dirs for part in path.parts)
+
+          def visible_lines(path: Path):
+              in_fence = False
+              for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                  stripped = line.lstrip()
+                  if stripped.startswith("```") or stripped.startswith("~~~"):
+                      in_fence = not in_fence
+                      continue
+                  if not in_fence:
+                      yield number, line
+
+          def clean_target(raw: str) -> str:
+              target = raw.strip()
+              if target.startswith("<") and ">" in target:
+                  target = target[1 : target.index(">")]
+              elif " " in target:
+                  # Markdown titles follow the URL with whitespace. Local paths
+                  # with spaces should be percent-encoded to avoid ambiguity.
+                  target = target.split(None, 1)[0]
+              return target.strip()
+
+          def check_target(source: Path, line_number: int, raw_target: str, errors: list[str]) -> None:
+              target = clean_target(raw_target)
+
+              if not target or target.startswith("#"):
+                  return
+
+              lowered = target.lower()
+              if lowered.startswith(external_prefixes) or target.startswith("//"):
+                  return
+
+              target_without_fragment = target.split("#", 1)[0].split("?", 1)[0]
+              if not target_without_fragment:
+                  return
+
+              decoded = unquote(target_without_fragment)
+              candidate = (root / decoded.lstrip("/")) if decoded.startswith("/") else (source.parent / decoded)
+              candidate = candidate.resolve()
+
+              try:
+                  candidate.relative_to(root)
+              except ValueError:
+                  errors.append(
+                      f"{source.relative_to(root)}:{line_number}: link leaves repository: {target}"
+                  )
+                  return
+
+              if not candidate.exists():
+                  errors.append(
+                      f"{source.relative_to(root)}:{line_number}: missing local link target: {target}"
+                  )
+
+          markdown_files = sorted(
+              path
+              for suffix in ("*.md", "*.mdx")
+              for path in root.rglob(suffix)
+              if not is_ignored(path.relative_to(root))
+          )
+
+          errors: list[str] = []
+
+          for path in markdown_files:
+              for line_number, line in visible_lines(path):
+                  for match in inline_link.finditer(line):
+                      check_target(path, line_number, match.group(1), errors)
+                  match = reference_link.match(line)
+                  if match:
+                      check_target(path, line_number, match.group(1), errors)
+
+          if errors:
+              print("Broken local Markdown links found:", file=sys.stderr)
+              for error in errors:
+                  print(f" - {error}", file=sys.stderr)
+              sys.exit(1)
+
+          print(f"Local Markdown links OK across {len(markdown_files)} file(s).")
+          PY
