@@ -62,7 +62,7 @@ jobs:
       KFM_RELEASE_DRY_RUN_STRICT: ${{ inputs.strict_mode || 'false' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
