@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/crosswalk/crosswalk_pair.schema.json",
+  "title": "KFM Crosswalk Pair",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "object_type",
+    "huc12_id",
+    "admin_id",
+    "admin_type",
+    "huc_area_m2",
+    "admin_area_m2",
+    "overlap_m2",
+    "overlap_pct_huc",
+    "overlap_pct_admin",
+    "weight",
+    "assignment_method",
+    "source_snapshot_ids",
+    "algorithm_version",
+    "crs",
+    "geometry_hash",
+    "spec_hash",
+    "run_receipt_id"
+  ],
+
+  "properties": {
+    "object_type": {
+      "const": "crosswalk_pair"
+    },
+
+    "huc12_id": {
+      "type": "string",
+      "pattern": "^[0-9]{12}$"
+    },
+
+    "admin_id": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "admin_type": {
+      "type": "string",
+      "enum": [
+        "county",
+        "place",
+        "county_subdivision",
+        "mcd"
+      ]
+    },
+
+    "huc_area_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+
+    "admin_area_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+
+    "overlap_m2": {
+      "type": "number",
+      "minimum": 0
+    },
+
+    "overlap_pct_huc": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "overlap_pct_admin": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "weight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "assignment_method": {
+      "type": "string",
+      "enum": [
+        "primary_overlap_ge_50pct_huc",
+        "fractional_weight",
+        "centroid_tie_break",
+        "stable_fips_tie_break"
+      ]
+    },
+
+    "centroid_within_flag": {
+      "type": "boolean"
+    },
+
+    "shared_boundary_m": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+
+    "source_snapshot_ids": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+
+    "algorithm_version": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "crs": {
+      "type": "string",
+      "const": "EPSG:5070"
+    },
+
+    "geometry_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+
+    "run_receipt_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
