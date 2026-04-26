@@ -6,49 +6,70 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: TODO: verify original creation date
-updated: 2026-04-22
+updated: 2026-04-26
 policy_label: TODO: confirm public|restricted
 related: [../README.md, ../apps/, ../packages/README.md, ../pipelines/README.md, ../infra/README.md, ../data/README.md, ../docs/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../scripts/README.md]
 tags: [kfm, configs, configuration, governance, local-runtime, non-secret]
-notes: [doc_id policy_label and original created date require verification; public main baseline inspected 2026-04-22; mounted checkout was not available in the authoring session]
+notes: [doc_id policy_label and original created date require verification; source draft reported public main baseline inspected 2026-04-22; target checkout parity still requires verification before merge; do not treat this README as proof of runtime consumers]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # configs/
 
-Repo-visible, non-secret configuration surfaces for KFM runtime wiring, deployment, observability, UI defaults, and scan-facing security thresholds.
+<p align="center">
+  <strong>Repo-visible, non-secret configuration surfaces for KFM runtime wiring, deployment defaults, observability joins, UI presentation defaults, and scan-facing thresholds.</strong>
+</p>
 
-> [!IMPORTANT]
-> **Status:** experimental  
-> **Owners:** `@bartytime4life`  
-> **Path:** `configs/README.md`  
-> **Current public baseline inspected:** 2026-04-22 on public `main`; verify target-branch parity before merge.  
-> **Repo fit:** parent configuration lane under [`../README.md`](../README.md); companion surfaces include [`../apps/`](../apps/), [`../packages/README.md`](../packages/README.md), [`../pipelines/README.md`](../pipelines/README.md), and [`../infra/`](../infra/).
+<p align="center">
+  <img alt="Status: experimental" src="https://img.shields.io/badge/status-experimental-orange">
+  <img alt="Owner: @bartytime4life" src="https://img.shields.io/badge/owner-%40bartytime4life-blue">
+  <img alt="Path: configs/README.md" src="https://img.shields.io/badge/path-configs%2FREADME.md-blue">
+  <img alt="Scope: non-secret config" src="https://img.shields.io/badge/scope-non--secret%20config-informational">
+  <img alt="Posture: fail-closed" src="https://img.shields.io/badge/posture-fail--closed-red">
+  <img alt="Truth: evidence-bounded" src="https://img.shields.io/badge/truth-evidence--bounded-lightgrey">
+</p>
 
-![status](https://img.shields.io/badge/status-experimental-orange)
-![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
-![path](https://img.shields.io/badge/path-configs%2FREADME.md-blue)
-![scope](https://img.shields.io/badge/scope-non--secret%20config-informational)
-![posture](https://img.shields.io/badge/posture-fail--closed-red)
-![truth](https://img.shields.io/badge/truth-evidence--bounded-lightgrey)
-
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage rules](#usage-rules) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<p align="center">
+  <a href="#scope">Scope</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#accepted-inputs">Accepted inputs</a> ·
+  <a href="#exclusions">Exclusions</a> ·
+  <a href="#directory-map">Directory map</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#usage-rules">Usage rules</a> ·
+  <a href="#review-triggers">Review triggers</a> ·
+  <a href="#validation">Validation</a> ·
+  <a href="#definition-of-done">Definition of done</a> ·
+  <a href="#faq">FAQ</a>
+</p>
 
 ---
 
+> [!IMPORTANT]
+> **Status:** experimental directory README.  
+> **Path:** `configs/README.md`  
+> **Owner:** `@bartytime4life` from the source draft; re-check against target-branch CODEOWNERS before merge.  
+> **Evidence boundary:** this README may describe directory doctrine and public-baseline observations from the source draft, but it does **not** prove active runtime loaders, CI enforcement, route behavior, deployment posture, or non-public consumers.  
+> **Core rule:** `configs/` is a reviewable wiring surface. It is not a secret store, policy engine, source registry, contract authority, lifecycle data store, release-proof store, or canonical truth source.
+
+> [!CAUTION]
+> Config changes can alter exposure, citation behavior, stale-state visibility, review posture, model-adapter routing, and public UX. Treat trust-affecting config like code and route it through the same evidence, policy, review, and rollback discipline expected of KFM implementation changes.
+
 ## Scope
 
-In KFM, configuration is not a miscellaneous settings bucket. It is a **trust-bearing operational surface**: config can change how services bind, how workers locate governed artifacts, how observability joins are emitted, how the shell presents already-governed state, and whether fail-closed behavior survives deployment changes.
+In KFM, configuration is not a miscellaneous settings bucket. It is a **trust-bearing operational surface**: configuration can change how services bind, how workers locate governed artifacts, how observability joins are emitted, how the shell presents already-governed state, and whether fail-closed behavior survives deployment changes.
 
 This directory covers the repo-visible, non-secret part of that space:
 
-- environment schema and example values
-- deployment/runtime value surfaces
-- observability defaults worth reviewing in Git
-- UI-facing defaults that do **not** become policy or contract law
-- non-secret security thresholds, waivers, and scan-facing settings
-- documented references to host-local runtime files such as `/etc/kfm/*.env`
+| Configuration concern | Belongs here when it is... | Does **not** become... |
+| --- | --- | --- |
+| Environment shape | a non-secret schema, example, default, or documented host-local reference | a committed secret-bearing env file |
+| Deployment/runtime values | reviewable defaults, overlays, service-profile values, or non-secret runtime hints | deployment logic, credentials, or one-machine state |
+| Observability defaults | log/trace field maps, join-key defaults, collector hints, or audit-reference wiring | proof objects, dashboards-as-truth, or raw logs as canonical evidence |
+| UI defaults | declarative presentation defaults that preserve trust-visible UX | policy, evidence resolution, or frontend-only governance |
+| Security thresholds | non-secret scanner-facing thresholds, hardening defaults, or reviewed waivers | executable policy, rights decisions, or secret material |
+| Host-local references | file names, service names, or secret-manager pointers without values | committed `/etc/kfm/*.env` contents |
 
 It does **not** flatten KFM’s stronger seams. Contracts, executable policy bundles, canonical truth objects, release-proof artifacts, source registries, and secret-bearing host files stay separate on purpose.
 
@@ -56,13 +77,13 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 
 | Label | How it applies here |
 | --- | --- |
-| **CONFIRMED** | Public `main` has `configs/README.md`; current public `configs/env.schema.json` is present and currently `{}`; current public ownership coverage includes `/configs/ @bartytime4life`. |
+| **CONFIRMED** | The source draft reports public `main` has `configs/README.md`, `configs/env.schema.json` exists and is currently `{}`, and `/configs/` is covered by `@bartytime4life`; verify target branch before merge. |
 | **INFERRED** | The lane’s intended role is repo-visible, non-secret runtime/deployment/observability/UI/security wiring subordinate to stronger law-bearing surfaces. |
-| **PROPOSED** | Future substantive config files, deeper validators, active consumers, and any expansion beyond scaffold-first README surfaces. |
-| **UNKNOWN** | Exact runtime loader paths, exact CI enforcement depth, non-public consumers, branch-local divergence, and whether target-branch child-lane inventories differ from public `main`. |
-| **NEEDS VERIFICATION** | Canonical `doc_id`, original creation date, explicit `policy_label`, and the final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
+| **PROPOSED** | Future substantive config files, deeper validators, active consumers, and any expansion beyond README/scaffold surfaces. |
+| **UNKNOWN** | Exact runtime loader paths, CI enforcement depth, non-public consumers, branch-local divergence, deployment behavior, and target-branch child-lane inventories. |
+| **NEEDS VERIFICATION** | Canonical `doc_id`, original `created` date, explicit `policy_label`, owner coverage, badge claims, live links, and the final single-authority decision for machine-law schemas between `contracts/` and `schemas/`. |
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -72,29 +93,29 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 | --- | --- |
 | Path | `configs/README.md` |
 | Directory role | Repo-visible home for non-secret configuration surfaces and reviewed runtime wiring |
-| Current public snapshot | `README.md`, `env.schema.json`, and child lanes documented under the `configs/` family; verify exact child-lane inventory against the target checkout before merge |
+| Current public snapshot from source draft | `README.md`, `env.schema.json`, and child lanes documented under the `configs/` family; verify exact child-lane inventory against the target checkout before merge |
 | Primary companion surfaces | [`../apps/`](../apps/), [`../packages/README.md`](../packages/README.md), [`../pipelines/README.md`](../pipelines/README.md), [`../infra/`](../infra/), [`../tests/README.md`](../tests/README.md), [`../tools/README.md`](../tools/README.md), [`../scripts/README.md`](../scripts/README.md) |
 | Evidence and doctrine neighbors | [`../data/README.md`](../data/README.md), [`../docs/README.md`](../docs/README.md) |
 | Law-bearing neighbors | [`../contracts/README.md`](../contracts/README.md), [`../schemas/README.md`](../schemas/README.md), [`../policy/README.md`](../policy/README.md) |
-| Governing posture | Config remains subordinate to contracts, policy, review, release state, EvidenceBundle resolution, correction discipline, and the RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED truth path |
+| Governing posture | Config remains subordinate to contracts, policy, review state, release state, EvidenceBundle resolution, correction discipline, and the `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` truth path |
 | Review posture | Treat config edits as architecture-significant when they alter exposure, policy behavior, citation behavior, release scope, stale-state behavior, observability, or trust-visible UX |
 
 ### Upstream / downstream links
 
 | Relationship | Paths | Status |
 | --- | --- | --- |
-| Root context | [`../README.md`](../README.md) | CONFIRMED in public repo context; verify target branch |
-| Evidence and doctrine neighbors | [`../data/README.md`](../data/README.md) · [`../docs/README.md`](../docs/README.md) | CONFIRMED in public repo context; verify target branch |
-| Runtime and execution companions | [`../apps/`](../apps/) · [`../packages/README.md`](../packages/README.md) · [`../pipelines/README.md`](../pipelines/README.md) · [`../infra/`](../infra/) | CONFIRMED path family / INFERRED active consumption |
-| Verification and tooling companions | [`../tests/README.md`](../tests/README.md) · [`../tools/README.md`](../tools/README.md) · [`../scripts/README.md`](../scripts/README.md) | CONFIRMED in public repo context; verify target branch |
-| Governance and law-bearing surfaces | [`../contracts/README.md`](../contracts/README.md) · [`../schemas/README.md`](../schemas/README.md) · [`../policy/README.md`](../policy/README.md) | CONFIRMED path family; singular machine-law authority still NEEDS VERIFICATION |
-| Neighboring operational lanes | [`../migrations/`](../migrations/) · [`../examples/`](../examples/) | CONFIRMED path family; verify current contents |
+| Root context | [`../README.md`](../README.md) | Reported public repo context; verify target branch |
+| Evidence and doctrine neighbors | [`../data/README.md`](../data/README.md) · [`../docs/README.md`](../docs/README.md) | Reported public repo context; verify target branch |
+| Runtime and execution companions | [`../apps/`](../apps/) · [`../packages/README.md`](../packages/README.md) · [`../pipelines/README.md`](../pipelines/README.md) · [`../infra/`](../infra/) | Path family reported; active consumption remains UNKNOWN until target checkout proves it |
+| Verification and tooling companions | [`../tests/README.md`](../tests/README.md) · [`../tools/README.md`](../tools/README.md) · [`../scripts/README.md`](../scripts/README.md) | Reported public repo context; verify target branch |
+| Governance and law-bearing surfaces | [`../contracts/README.md`](../contracts/README.md) · [`../schemas/README.md`](../schemas/README.md) · [`../policy/README.md`](../policy/README.md) | Path family reported; singular machine-law authority still NEEDS VERIFICATION |
+| Neighboring operational lanes | [`../migrations/`](../migrations/) · [`../examples/`](../examples/) | Path family reported; verify current contents |
 | Host-local companions | `/etc/kfm/*.env` | Documented runtime pattern; not a repo path |
 
 > [!NOTE]
-> `configs/` should make configuration visible without becoming the place where KFM hides secrets, policy decisions, schema law, publication truth, or runtime state.
+> `configs/` should make configuration visible without becoming the place where KFM hides secrets, policy decisions, schema law, source authority, publication truth, or runtime state.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -102,35 +123,41 @@ It does **not** flatten KFM’s stronger seams. Contracts, executable policy bun
 
 | Path or class | Current status | What belongs here | Why it belongs here |
 | --- | --- | --- | --- |
-| `env.schema.json` | CONFIRMED file; current public content is `{}` | process-start environment schema and early validation anchor | Keeps runtime wiring explicit and machine-checkable once populated |
-| `env/` | CONFIRMED lane family in public documentation; verify target branch | non-secret env examples, defaults, and environment guidance | Lets contributors wire runtimes without committing secrets |
-| `deployment/` | CONFIRMED lane family in public documentation; verify target branch | deploy-facing values, overlays, and runtime-profile defaults | Keeps environment-specific wiring reviewable and diffable |
-| `observability/` | CONFIRMED lane family in public documentation; verify target branch | collector/exporter config, log field maps, join-key defaults, trace/receipt helpers | Preserves operational evidence without burying it in app code |
-| `ui/` | CONFIRMED lane family in public documentation; verify target branch | declarative shell/renderer defaults and accessibility-safe presentation behavior | Lets the shell vary presentation without moving governance into the frontend |
-| `security/` | CONFIRMED lane family in public documentation; verify target branch | non-secret thresholds, waivers, scanner-facing config, and hardening defaults | Useful when separated from executable policy and secret material |
-| documented host-local references | PROPOSED / NEEDS VERIFICATION per target runtime | filenames, service names, or secret-manager references without secret values | Allows reviewers to understand expected runtime wiring without leaking credentials |
+| `env.schema.json` | CONFIRMED in source draft; current public content reported as `{}` | Process-start environment schema and early validation anchor | Keeps runtime wiring explicit and machine-checkable once populated |
+| `env/` | Reported child lane; verify target branch | Non-secret env examples, defaults, and environment guidance | Lets contributors wire runtimes without committing secrets |
+| `deployment/` | Reported child lane; verify target branch | Deploy-facing values, overlays, and runtime-profile defaults | Keeps environment-specific wiring reviewable and diffable |
+| `observability/` | Reported child lane; verify target branch | Collector/exporter config, log field maps, join-key defaults, trace/receipt helpers | Preserves operational evidence without burying it in app code |
+| `ui/` | Reported child lane; verify target branch | Declarative shell/renderer defaults and accessibility-safe presentation behavior | Lets the shell vary presentation without moving governance into the frontend |
+| `security/` | Reported child lane; verify target branch | Non-secret thresholds, waivers, scanner-facing config, and hardening defaults | Useful when separated from executable policy and secret material |
+| Documented host-local references | PROPOSED / NEEDS VERIFICATION per target runtime | Filenames, service names, secret-manager references, or local override names without secret values | Lets reviewers understand expected runtime wiring without leaking credentials |
 
-### What belongs here in practice
+### Practical admission test
 
-- non-secret env examples and defaults
-- early-start configuration schemas
-- deployment/runtime value surfaces
-- observability settings with named consumers
-- UI-facing declarative defaults that preserve trust-visible UX
-- non-secret operational thresholds and scanner-facing settings
-- references to host-local secret files, never secret contents
-- documentation-backed configuration examples that help contributors wire the system correctly
-
-A good config file normally answers four questions quickly:
+A file belongs in `configs/` only when a reviewer can answer these four questions without guessing.
 
 | Question | Required answer |
 | --- | --- |
-| Who reads it? | a named app, worker, tool, pipeline, UI surface, or deploy target |
-| What does it affect? | binding, environment shape, observability, deployment, UI presentation, scan threshold, or runtime wiring |
-| What validates it? | schema, lint, smoke check, policy test, manual review, or explicit NEEDS VERIFICATION |
-| What rolls it back? | a documented revert path, profile reset, host-local rollback, or release-safe fallback |
+| Who reads it? | A named app, worker, tool, pipeline, UI surface, scanner, deploy target, or runtime profile |
+| What does it affect? | Binding, environment shape, observability, deployment, UI presentation, scan threshold, or runtime wiring |
+| What validates it? | Schema, lint, smoke check, policy test, manual review, or explicit NEEDS VERIFICATION |
+| What rolls it back? | A documented revert path, profile reset, host-local rollback, cache invalidation, or release-safe fallback |
 
-[Back to top](#top)
+### Preferred file-level mini-contract
+
+Use a lightweight header or nearby README note for substantive config files. Keep it human-reviewable; do not turn it into a second schema system.
+
+```yaml
+# Illustrative only — adapt to repo conventions before use.
+kfm_config_note:
+  consumer: TODO: name the app, worker, tool, pipeline, scanner, or UI surface
+  effect: TODO: describe what behavior changes
+  validator: TODO: name schema/lint/test/manual review path
+  rollback: TODO: describe revert/profile reset/cache invalidation path
+  secrets: false
+  trust_affecting: TODO: true|false and why
+```
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -138,32 +165,33 @@ A good config file normally answers four questions quickly:
 
 | Do **not** keep here | Put it instead | Why |
 | --- | --- | --- |
-| Credentials, tokens, private keys, live DSNs with secrets | host-local secret files, deployment platform secrets, or secret-manager references | `configs/` must stay repo-visible and non-secret |
+| Credentials, tokens, private keys, live DSNs with secrets | Host-local secret files, deployment platform secrets, or secret-manager references | `configs/` must stay repo-visible and non-secret |
 | Executable deny/allow logic, policy bundles, reason/obligation evaluation, policy tests | [`../policy/README.md`](../policy/README.md) | Governance must remain explicit, testable, and separately reviewable |
-| Machine-law schemas, OpenAPI contracts, controlled vocabularies, contract fixtures | authoritative schema/contract home in [`../contracts/README.md`](../contracts/README.md) or [`../schemas/README.md`](../schemas/README.md) | `configs/` must not become a third schema authority |
-| Source descriptors, source-admission decisions, rights records, source-role authority | [`../data/README.md`](../data/README.md), `../data/registry/`, contracts, and policy lanes | Source authority is a governed evidence surface, not a convenience config |
+| Machine-law schemas, OpenAPI contracts, controlled vocabularies, contract fixtures | Authoritative schema/contract home in [`../contracts/README.md`](../contracts/README.md) or [`../schemas/README.md`](../schemas/README.md) | `configs/` must not become a third schema authority |
+| Source descriptors, source-admission decisions, rights records, source-role authority | [`../data/README.md`](../data/README.md), `../data/registry/`, contracts, and policy lanes | Source authority is a governed evidence surface, not convenience config |
 | Database migrations | [`../migrations/`](../migrations/) | Schema evolution needs replay discipline |
 | Pipeline orchestration logic, watcher code, scheduler behavior | [`../pipelines/README.md`](../pipelines/README.md) or deployable runtime surfaces | Config may parameterize execution; it must not become execution logic |
-| Generated caches, temp files, build output, runtime sockets, local state | ignored runtime/build/cache locations such as `/run/kfm/` or `/var/lib/kfm/` | Reviewable config should remain intentional and stable |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED lifecycle data | governed data lifecycle paths | Config may point at lifecycle locations; it must not hold lifecycle data |
-| Release-backed evidence artifacts, run manifests, attestations, proof packs, or canonical truth objects | governed data, catalog, proof, receipt, or release surfaces | Config may reference them; it does not replace them |
-| Frontend-only heuristics that become trust logic | shell code, governed API, contracts, or policy depending on the concern | Trust behavior must not hide in convenience toggles |
+| Generated caches, temp files, build output, runtime sockets, local state | Ignored runtime/build/cache locations such as `/run/kfm/` or `/var/lib/kfm/` | Reviewable config should remain intentional and stable |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED lifecycle data | Governed data lifecycle paths | Config may point at lifecycle locations; it must not hold lifecycle data |
+| Release-backed evidence artifacts, run manifests, attestations, proof packs, or canonical truth objects | Governed data, catalog, proof, receipt, or release surfaces | Config may reference them; it does not replace them |
+| Frontend-only heuristics that become trust logic | Shell code, governed API, contracts, or policy depending on the concern | Trust behavior must not hide in convenience toggles |
+| Direct model-runtime prompts, free-form AI behavior, or public model endpoint values | Governed API/runtime adapter configuration plus policy-bound AI contracts | AI remains interpretive and must stay behind the governed boundary |
 
 > [!WARNING]
-> The repo exposes both `contracts/` and `schemas/`. Until the single-authority split is explicitly settled, `configs/` should not accumulate contract-like files “temporarily.”
+> The repo exposes both `contracts/` and `schemas/` in the source draft. Until the single-authority split is explicitly settled, `configs/` should not accumulate contract-like files “temporarily.”
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Directory tree
+## Directory map
 
-Current verified public baseline plus target-branch verification note:
+Current source-draft baseline plus target-branch verification note:
 
 ```text
 configs/
 ├── README.md                         # this directory contract
-├── env.schema.json                   # CONFIRMED file; current public content is {}
+├── env.schema.json                   # CONFIRMED in source draft; public content reported as {}
 ├── deployment/                       # deployment-facing configuration lane
 ├── env/                              # non-secret environment guidance lane
 ├── observability/                    # logging / traces / audit-reference config lane
@@ -173,12 +201,50 @@ configs/
 
 How to read this tree:
 
-- The root lane and `env.schema.json` are current public facts.
-- `env.schema.json` currently being `{}` means it is a placeholder until a real schema, consumer, and validator path land.
+- The root lane and `env.schema.json` are reported public-baseline facts from the source draft.
+- `env.schema.json` being `{}` means it is a placeholder until a real schema, consumer, and validator path land.
 - Child-lane presence and exact file inventories must be checked against the target branch before merge.
 - Growing a child lane should be deliberate: name the consumer, name the validator, and keep the file subordinate to stronger law-bearing surfaces.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Boundary diagram
+
+```mermaid
+flowchart LR
+  C["configs/<br/>repo-visible, non-secret wiring"]
+
+  C --> ES["env.schema.json<br/>reported placeholder"]
+  C --> E["env/<br/>examples + env guidance"]
+  C --> D["deployment/<br/>runtime profiles + overlays"]
+  C --> O["observability/<br/>logs + trace join defaults"]
+  C --> S["security/<br/>scanner + hardening defaults"]
+  C --> U["ui/<br/>presentation defaults"]
+
+  E --> AP["apps/ + packages/<br/>runtime consumers"]
+  D --> PX["pipelines/ + infra/<br/>deploy/runtime companions"]
+  O --> TV["tests/ + tools/ + scripts/<br/>verification companions"]
+  U --> SHELL["shell / renderer surfaces<br/>presentation only"]
+  S --> OPS["ops / scanners / hardening<br/>non-secret thresholds"]
+
+  C -. "references only; never commits values" .-> HOST["/etc/kfm/*.env"]
+  C -. "not machine law" .-> LAW["contracts/ + schemas/"]
+  C -. "not executable governance" .-> POLICY["policy/"]
+  C -. "not source authority" .-> REG["data/registry/"]
+  C -. "not lifecycle data" .-> FLOW["RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED"]
+  C -. "not public model traffic" .-> AI["governed API → model adapter"]
+```
+
+Read the diagram this way:
+
+- `configs/` is a reviewable wiring surface, not a truth store.
+- Host-local files may be referenced, but secret-bearing values stay out of Git.
+- Contract, schema, policy, registry, and lifecycle surfaces outrank convenience config.
+- Config can support the governed shell and runtime, but it must not bypass EvidenceBundle resolution, policy checks, review state, release state, or governed AI boundaries.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -191,6 +257,7 @@ Use this sequence before changing anything under `configs/`.
 3. Decide whether the change is truly configuration, or whether it belongs in `contracts/`, `schemas/`, `policy/`, `pipelines/`, `migrations/`, `infra/`, `data/registry/`, or host-local secret surfaces.
 4. Make the smallest useful non-secret change.
 5. Run the repo’s actual validation path before merge.
+6. Document rollback for every trust-affecting config change.
 
 ```bash
 # Inspect the current config lane.
@@ -246,7 +313,7 @@ KFM_BIND=127.0.0.1:8080
 > [!NOTE]
 > The stronger host-runtime pattern keeps secret-bearing files outside the repo, under root-owned paths such as `/etc/kfm/kfm-api.env`, `/etc/kfm/kfm-worker.env`, `/etc/kfm/kfm-publish.env`, and local runtime override files. Treat those as runtime examples, not merge-verified repo facts.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -256,17 +323,17 @@ KFM_BIND=127.0.0.1:8080
 
 Commit examples, schemas, defaults, reviewed value surfaces, and documented references.
 
-Do **not** commit live credentials, private tokens, one-machine hacks, secret-bearing host files, or files copied from `/etc/kfm/`.
+Do **not** commit live credentials, private tokens, one-machine hacks, secret-bearing host files, files copied from `/etc/kfm/`, or model-provider secrets.
 
 ### 2. Keep configuration subordinate to law
 
 Configuration expresses wiring, defaults, thresholds, runtime shape, and presentation defaults.
 
-It must not quietly become the place where contract law, evidence law, source authority, rights decisions, or publication governance actually lives.
+It must not quietly become the place where contract law, evidence law, source authority, rights decisions, publication governance, or policy obligations actually live.
 
 ### 3. Review trust-affecting config like code
 
-A small config diff can widen network exposure, weaken citation behavior, loosen publication scope, change stale-state visibility, or alter Evidence Drawer behavior. In KFM, those are architecture changes.
+A small config diff can widen network exposure, weaken citation behavior, loosen publication scope, change stale-state visibility, alter Evidence Drawer behavior, or route model traffic differently. In KFM, those are architecture changes.
 
 ### 4. Load config explicitly and validate it early
 
@@ -274,7 +341,7 @@ Hidden fallback defaults are especially dangerous in governed systems. Configura
 
 ### 5. Do not create a third schema authority
 
-The repo already exposes both `contracts/` and `schemas/`. Until that authority is formally narrowed, `configs/` should stay out of machine-law territory.
+The repo already exposes both `contracts/` and `schemas/` in the source draft. Until that authority is formally narrowed, `configs/` should stay out of machine-law territory.
 
 ### 6. Expand scaffold lanes deliberately
 
@@ -288,45 +355,67 @@ A child lane should gain substantive files only when three things are visible to
 
 Config should reinforce the separation of shell, renderer, style, server, workers, pipelines, contracts, policy, and evidence resolution. It should not blur them.
 
-> [!CAUTION]
-> Any toggle that weakens citation, publication, rights handling, scope handling, or stale-state visibility is not a convenience setting. It is a governance change.
+### 8. Make negative outcomes first-class
 
-[Back to top](#top)
+Config validation failures should fail visibly. Prefer explicit `ABSTAIN`, `DENY`, or `ERROR` pathways in downstream governed surfaces over silent permissive defaults when evidence, policy, rights, or runtime state is unclear.
+
+> [!CAUTION]
+> Any toggle that weakens citation, publication, rights handling, scope handling, stale-state visibility, exact-location safety, or governed-AI boundaries is not a convenience setting. It is a governance change.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Diagram
+## Review triggers
+
+| Change trigger | Treat as | Why |
+| --- | --- | --- |
+| Bind address, listening port, reverse-proxy boundary, VPN exposure, or CORS posture | Security + architecture review | Alters trust and attack surface |
+| Citation, published-only, release-scope, or evidence-required toggle | Governance-significant change | Can weaken public trust behavior |
+| Model adapter URL, model runtime host, embedding endpoint, or inference provider value | Governed-AI + security review | Model runtimes must remain behind governed API boundaries |
+| Worker, scheduler, watcher, or queue config | Runtime + provenance review | Can alter rebuild, correction, or freshness semantics |
+| Pipeline parameter or staging/publish path change | Execution + release review | Can alter promotion behavior and artifact routing |
+| New observability join key, retention setting, or audit-reference field | Ops + audit review | Can affect traceability and incident reconstruction |
+| New threshold or waiver config | Operational risk review | Tolerance drift can silently weaken gates |
+| Turning `env.schema.json` into an active validator surface | Schema + CI review | Empty placeholder → authoritative gate is a major state change |
+| UI default that hides trust cues, freshness, review state, or sensitivity | UX + policy review | Trust cues are part of interpretation |
+| Host-local path naming convention change | Ops + rollback review | Can break service startup, local overrides, or incident recovery |
+
+### Trust-affecting toggle examples
+
+| Example key | Why it is sensitive | Minimum review expectation |
+| --- | --- | --- |
+| `KFM_PUBLISHED_ONLY` | Can alter whether public surfaces see only governed released state | Policy/release review plus explicit rollback |
+| `KFM_CITATIONS_REQUIRED` | Can alter cite-or-abstain behavior | Evidence/governance review plus tests or manual verification |
+| `KFM_MODEL_ADAPTER_URL` | Can route inference to a different provider/runtime | Security/governed-AI review; no direct public client traffic |
+| `KFM_BIND` | Can expose a service beyond localhost | Security review; reverse-proxy/VPN posture documented |
+| `KFM_POLICY_DIR` | Can point runtime to a different policy bundle | Policy integrity review; hash/version checks where practical |
+| `KFM_ARTIFACT_ROOT` | Can move artifact reads/writes | Lifecycle/release review; ensure no RAW/WORK public bypass |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Placement decision tree
 
 ```mermaid
-flowchart LR
-  C["configs/<br/>repo-visible, non-secret"] --> ES["env.schema.json<br/>current public placeholder"]
-  C --> E["env/"]
-  C --> D["deployment/"]
-  C --> O["observability/"]
-  C --> S["security/"]
-  C --> U["ui/"]
-
-  E --> AP["apps/ + packages/"]
-  D --> PX["pipelines/ + infra/"]
-  O --> TV["tests/ + tools/ + scripts/"]
-  U --> SHELL["shell / renderer surfaces"]
-  S --> OPS["ops / scanners / hardening defaults"]
-
-  C -. "not secrets" .-> HOST["/etc/kfm/*.env"]
-  C -. "not machine law" .-> LAW["contracts/ + schemas/"]
-  C -. "not executable governance" .-> POLICY["policy/"]
-  C -. "supports, but does not own" .-> DD["data/ + docs/"]
-  C -. "subordinate to truth path" .-> FLOW["RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED"]
+flowchart TD
+  A["New file or setting proposed"] --> B{"Contains secrets or live credentials?"}
+  B -->|Yes| H["Do not commit.<br/>Use secret store or host-local env reference."]
+  B -->|No| C{"Defines policy, rights, obligations, or deny/allow logic?"}
+  C -->|Yes| P["policy/ + contracts/schemas<br/>not configs/"]
+  C -->|No| D{"Defines machine-law schema, OpenAPI, controlled vocab, or fixtures?"}
+  D -->|Yes| L["contracts/ or schemas/<br/>resolve authority via ADR if unclear"]
+  D -->|No| E{"Defines source authority, source role, rights, or admission?"}
+  E -->|Yes| R["data/registry/ + policy/contracts"]
+  E -->|No| F{"Executes pipeline logic, scheduler behavior, or watcher code?"}
+  F -->|Yes| X["pipelines/ or deployable runtime lane"]
+  F -->|No| G{"Non-secret wiring/default/threshold with named consumer + validator?"}
+  G -->|Yes| Cfg["configs/"]
+  G -->|No| N["NEEDS VERIFICATION<br/>do not land as catch-all config"]
 ```
 
-Read the diagram this way:
-
-- `configs/` is a reviewable wiring surface, not a truth store.
-- Host-local files may be referenced, but secret-bearing values stay out of Git.
-- Contract, schema, policy, and data lifecycle surfaces outrank convenience config.
-- Config can support the governed shell and runtime, but it must not bypass EvidenceBundle resolution, policy checks, review state, or release state.
-
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -334,54 +423,119 @@ Read the diagram this way:
 
 ### Current lane snapshot
 
-| Path | Current public state | Intended role | Notes |
+| Path | Current public state from source draft | Intended role | Notes |
 | --- | --- | --- | --- |
-| `configs/README.md` | CONFIRMED | root lane doctrine and contributor guidance | revise alongside any material lane expansion |
-| `configs/env.schema.json` | CONFIRMED file | environment/config schema anchor | current public content is `{}` |
-| `configs/deployment/` | CONFIRMED lane family in public documentation | deployment-lane guidance | verify target-branch contents |
-| `configs/env/` | CONFIRMED lane family in public documentation | environment-lane guidance | verify target-branch contents |
-| `configs/observability/` | CONFIRMED lane family in public documentation | observability-lane guidance | verify target-branch contents |
-| `configs/security/` | CONFIRMED lane family in public documentation | security-lane guidance | verify target-branch contents |
-| `configs/ui/` | CONFIRMED lane family in public documentation | UI-configuration guidance | verify target-branch contents |
+| `configs/README.md` | CONFIRMED in source draft | Root lane doctrine and contributor guidance | Revise alongside any material lane expansion |
+| `configs/env.schema.json` | CONFIRMED file in source draft | Environment/config schema anchor | Current public content reported as `{}` |
+| `configs/deployment/` | Reported lane family | Deployment-lane guidance | Verify target-branch contents |
+| `configs/env/` | Reported lane family | Environment-lane guidance | Verify target-branch contents |
+| `configs/observability/` | Reported lane family | Observability-lane guidance | Verify target-branch contents |
+| `configs/security/` | Reported lane family | Security-lane guidance | Verify target-branch contents |
+| `configs/ui/` | Reported lane family | UI-configuration guidance | Verify target-branch contents |
 
 ### What lives where
 
 | Concern | Preferred home | Must not hide in |
 | --- | --- | --- |
 | Source admission rules | `contracts/` + `policy/` + `data/registry/` | UI config or ad hoc scripts |
-| Contract fixtures and schema law | current authoritative schema/contract lane | `configs/` |
-| Canonical write logic | workers / canonical-model packages | browser code or config toggles |
-| Pipeline orchestration and scheduling | `pipelines/` or deployable runtime surfaces | silent config knobs with no validator path |
-| Evidence resolution | governed API and resolver packages | renderer components or UI config |
-| Styles, sprites, portrayal assets | style registry / delivery assets | canonical business tables as unexplained blobs |
-| Trust cues | shell payloads and shared UI state | implicit frontend heuristics only |
-| Secrets | secret store or host-local env refs | repo history or client bundles |
-| Projection rebuild logic | projection workers | public routes |
-| Review actions | governed API + review surface | hidden admin scripts |
-| Runtime model adapter values | governed runtime config + policy-bound adapter | public clients or free-form model calls |
+| Contract fixtures and schema law | Current authoritative schema/contract lane | `configs/` |
+| Canonical write logic | Workers / canonical-model packages | Browser code or config toggles |
+| Pipeline orchestration and scheduling | `pipelines/` or deployable runtime surfaces | Silent config knobs with no validator path |
+| Evidence resolution | Governed API and resolver packages | Renderer components or UI config |
+| Styles, sprites, portrayal assets | Style registry / delivery assets | Canonical business tables as unexplained blobs |
+| Trust cues | Shell payloads and shared UI state | Implicit frontend heuristics only |
+| Secrets | Secret store or host-local env refs | Repo history or client bundles |
+| Projection rebuild logic | Projection workers | Public routes |
+| Review actions | Governed API + review surface | Hidden admin scripts |
+| Runtime model adapter values | Governed runtime config + policy-bound adapter | Public clients or free-form model calls |
 
-### Review triggers
+### Config review classes
 
-| Change trigger | Treat as | Why |
+| Class | Examples | Review posture |
 | --- | --- | --- |
-| Bind address, listening port, proxy boundary, or exposure scope change | security + architecture review | Alters trust and attack surface |
-| Citation / published-only / release-scope toggle | governance-significant change | Can weaken public trust behavior |
-| New worker or scheduler config | runtime + provenance review | Can alter rebuild, correction, or freshness semantics |
-| Pipeline parameter or staging/publish path change | execution + release review | Can alter promotion behavior and artifact routing |
-| New observability join key or retention setting | ops + audit review | Can affect traceability |
-| New threshold / waiver config | operational risk review | Tolerance drift can silently weaken gates |
-| Turning `env.schema.json` into an active validator surface | schema + CI review | Empty placeholder → authoritative gate is a major state change |
-| UI default that hides trust cues, freshness, review state, or sensitivity | UX + policy review | Trust cues are part of interpretation |
+| Routine wiring | Non-secret display defaults, local sample values, log-format examples | Normal review; link consumer and validator |
+| Runtime-affecting | Bind scope, artifact root, worker queues, model adapter, policy directory | Architecture/security review; rollback required |
+| Trust-affecting | Published-only, citations-required, stale-state visibility, sensitivity display | Governance/policy review; tests or explicit manual verification required |
+| Authority-adjacent | Anything that resembles schema law, source authority, policy logic, release gates | Move to stronger lane or create ADR before landing |
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Task list / definition of done
+## Validation
+
+No single generic command proves `configs/` is safe. Use layered checks and prefer the repo’s actual validation workflow when available.
+
+### Baseline checks
+
+```bash
+# 1. Confirm intended files are visible and small enough to review.
+find configs -maxdepth 3 -type f -print | sort
+```
+
+```bash
+# 2. Check for accidental secret-like material.
+# Keep this lightweight check as a local sanity pass; use the repo's official secret scanner before merge.
+grep -RInE '(password|passwd|secret|token|api[_-]?key|private[_-]?key|BEGIN (RSA|OPENSSH|PRIVATE) KEY)' configs || true
+```
+
+```bash
+# 3. Check for accidental policy/contract/proof drift into configs/.
+grep -RInE '(EvidenceBundle|DecisionEnvelope|PolicyDecision|ReleaseManifest|SourceDescriptor|rights|obligation|reason_code|canonical_truth|proof_pack|attestation)' configs || true
+```
+
+```bash
+# 4. Confirm links from this README after target checkout is available.
+# Replace with repo-native markdown/link checker if one exists.
+python - <<'PY'
+from pathlib import Path
+readme = Path('configs/README.md')
+print(f'{readme}: {readme.exists()}')
+PY
+```
+
+### Validator expectations
+
+| Validation area | Expected posture |
+| --- | --- |
+| Secret scanning | No live credentials, tokens, keys, or secret-bearing DSNs in `configs/` |
+| Schema/config checks | Any active schema file has named consumers and a validation path |
+| Policy separation | Deny/allow logic and obligations remain in `policy/` and contract surfaces |
+| Contract separation | Machine-law schemas and API contracts remain in the authoritative schema/contract lane |
+| Link checks | Repo-relative links resolve in the target checkout or are explicitly marked TODO/NEEDS VERIFICATION |
+| Trust toggle review | Trust-affecting toggles have review notes and rollback plans |
+| Consumer traceability | New config files name the app/tool/pipeline/UI surface that reads them |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Rollback and correction posture
+
+Config rollback is not just “revert the file” when config affects exposure, release behavior, Evidence Drawer behavior, model routing, policy bundle selection, or artifact locations.
+
+| Change kind | Rollback should include |
+| --- | --- |
+| Bind/exposure change | Revert config, reload service, confirm listener, re-check reverse proxy/VPN/firewall posture |
+| Artifact-root change | Revert pointer, invalidate affected caches, confirm no RAW/WORK/QUARANTINE data became public |
+| Published-only or citation toggle | Revert toggle, rerun relevant smoke checks, confirm public surfaces cite or abstain |
+| Policy directory change | Repoint to previous bundle, verify policy version/hash where available, rerun policy fixtures |
+| Model adapter change | Repoint adapter, confirm no direct public model traffic, clear Focus/model caches where applicable |
+| UI trust cue default | Restore trust-visible defaults, verify Evidence Drawer/freshness/review state display |
+| Observability join-key change | Restore join-key shape, verify trace/log correlation, preserve incident notes if affected |
+
+When a config mistake affected public or semi-public output, preserve correction lineage instead of silently overwriting history.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Definition of done
 
 - [ ] No secrets, tokens, private credentials, or live secret-bearing DSNs are committed.
 - [ ] Every new config file names its primary consumer.
 - [ ] Every new config file names its validation or review path.
+- [ ] Every new config file has a rollback path proportional to its risk.
 - [ ] New files are placed in the correct lane instead of drifting into `configs/` as a catch-all.
 - [ ] `configs/` does not encode contract law or executable policy logic that belongs elsewhere.
 - [ ] Source-admission, rights, sensitivity, and publication rules remain in governed source/policy/contract surfaces.
@@ -393,9 +547,9 @@ Read the diagram this way:
 - [ ] `doc_id`, original `created` date, and explicit `policy_label` in the meta block are verified or intentionally left as placeholders.
 - [ ] Owners in the meta block match CODEOWNERS or the target branch’s narrower ownership rule.
 - [ ] Neighboring docs and lane links are rechecked against the target merge branch.
-- [ ] A rollback path exists for each config change that can alter exposure, release behavior, citation behavior, or runtime binding.
+- [ ] A rollback path exists for each config change that can alter exposure, release behavior, citation behavior, model routing, or runtime binding.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -403,23 +557,23 @@ Read the diagram this way:
 
 ### Is `configs/` confirmed now?
 
-The public repo confirms the root lane and `env.schema.json`. Child-lane presence should still be rechecked against the target branch because the authoring session did not include a mounted checkout.
+The source draft reports the public repo confirms the root lane and `env.schema.json`. Child-lane presence should still be rechecked against the target branch because the authoring context did not include a mounted checkout.
 
 ### Are the child lanes active implementation surfaces?
 
-They are real configuration lanes in the public repo context, but active runtime consumption still depends on target-checkout evidence. Do not describe loader behavior, CI enforcement, or runtime consumers as CONFIRMED unless the working checkout proves them.
+They are documented configuration lanes in the public repo context described by the source draft. Active runtime consumption still depends on target-checkout evidence. Do not describe loader behavior, CI enforcement, or runtime consumers as CONFIRMED unless the working checkout proves them.
 
 ### Why mention both `contracts/` and `schemas/`?
 
-Because the repo exposes both. Until their authority split is explicitly resolved, this README should not pretend only one exists.
+Because the source draft says the repo exposes both. Until their authority split is explicitly resolved, this README should not pretend only one exists.
 
 ### Why mention `pipelines/`, `data/`, and `docs/` here?
 
-Because config often parameterizes runtime and publication behavior across those neighboring lanes, even though it does not own truth objects, source authority, or orchestration logic.
+Because config often parameterizes runtime and publication behavior across those neighboring lanes, even though it does not own truth objects, source authority, orchestration logic, or doctrine.
 
 ### Is `env.schema.json` authoritative today?
 
-The file exists, but its current public contents are only `{}`. Treat it as a placeholder until a validator path and active consumers are surfaced.
+The file is reported present, but its current public contents are only `{}`. Treat it as a placeholder until a validator path and active consumers are surfaced.
 
 ### Why mention `/etc/kfm/*.env` in a repo README?
 
@@ -433,7 +587,11 @@ Yes. Bind scope, published-only behavior, shell defaults, stale-state handling, 
 
 Only when they are non-secret, scanner-facing or operational thresholds with a named consumer and validator. They must not replace executable policy, rights logic, publication gates, or reason/obligation semantics.
 
-[Back to top](#top)
+### Can model runtime values live here?
+
+Only as non-secret, governed-runtime wiring with clear boundaries. Public clients must not talk directly to model runtimes, and model output must not become proof.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -442,7 +600,7 @@ Only when they are non-secret, scanner-facing or operational thresholds with a n
 <details>
 <summary><strong>Current public snapshot used for this revision</strong></summary>
 
-| Path | Public-main observation |
+| Path | Public-main observation reported by source draft |
 | --- | --- |
 | `configs/README.md` | present |
 | `configs/env.schema.json` | present and currently `{}` |
@@ -460,25 +618,25 @@ Only when they are non-secret, scanner-facing or operational thresholds with a n
 
 | Example | What it shows | Status |
 | --- | --- | --- |
-| `/etc/kfm/kfm-api.env` | host-local API environment file pattern | documented example · verify against merge target |
-| `/etc/kfm/kfm-worker.env` | host-local worker environment file pattern | documented example · verify against merge target |
-| `/etc/kfm/kfm-publish.env` | host-local publish/runtime environment file pattern | documented example · verify against merge target |
-| `/etc/kfm/ollama.override.env` | local model runtime override pattern | documented example · verify against merge target |
-| `KFM_ARTIFACT_ROOT` | artifact-root pointer | illustrative only |
-| `KFM_POLICY_DIR` | policy-directory pointer | illustrative only |
-| `KFM_DB_DSN` | database connection pointer | illustrative only; never commit live secret-bearing DSNs |
-| `KFM_MODEL_ADAPTER_URL` | model-adapter URL pointer | illustrative only; must remain behind governed API boundaries |
-| `KFM_PUBLISHED_ONLY` | public-read posture | illustrative only; trust-affecting |
-| `KFM_CITATIONS_REQUIRED` | cite-or-abstain posture | illustrative only; trust-affecting |
-| `KFM_BIND` | bind-address / listener posture | illustrative only; exposure-affecting |
+| `/etc/kfm/kfm-api.env` | Host-local API environment file pattern | documented example · verify against merge target |
+| `/etc/kfm/kfm-worker.env` | Host-local worker environment file pattern | documented example · verify against merge target |
+| `/etc/kfm/kfm-publish.env` | Host-local publish/runtime environment file pattern | documented example · verify against merge target |
+| `/etc/kfm/ollama.override.env` | Local model runtime override pattern | documented example · verify against merge target |
+| `KFM_ARTIFACT_ROOT` | Artifact-root pointer | illustrative only |
+| `KFM_POLICY_DIR` | Policy-directory pointer | illustrative only |
+| `KFM_DB_DSN` | Database connection pointer | illustrative only; never commit live secret-bearing DSNs |
+| `KFM_MODEL_ADAPTER_URL` | Model-adapter URL pointer | illustrative only; must remain behind governed API boundaries |
+| `KFM_PUBLISHED_ONLY` | Public-read posture | illustrative only; trust-affecting |
+| `KFM_CITATIONS_REQUIRED` | Cite-or-abstain posture | illustrative only; trust-affecting |
+| `KFM_BIND` | Bind-address / listener posture | illustrative only; exposure-affecting |
 
 </details>
 
 <details>
 <summary><strong>Verification checklist before merge</strong></summary>
 
-1. Confirm the target branch still matches the public `main` tree inspected for this draft.
-2. Reconfirm the public-main `git log` dates if the target merge branch has moved since this revision’s snapshot.
+1. Confirm the target branch still matches the public `main` tree inspected for the source draft.
+2. Reconfirm the public-main `git log` dates if the target merge branch has moved since the source draft’s snapshot.
 3. Confirm whether `env.schema.json` is intentionally placeholder or should now carry a real schema.
 4. Verify whether any child lane has gained substantive files beyond the public README-led surfaces.
 5. Verify whether the authoritative machine-law home is `contracts/`, `schemas/`, or a formally split arrangement.
@@ -487,7 +645,24 @@ Only when they are non-secret, scanner-facing or operational thresholds with a n
 8. Run the repo’s actual documentation, schema, policy, and secret-scanning checks.
 9. Recheck every relative link from `configs/README.md` in the target checkout.
 10. Replace placeholder meta-block fields only with confirmed values.
+11. Verify no direct public model-runtime path or unpublished lifecycle path can be reached through ordinary UI/API config.
+12. Confirm rollback notes for any config change that alters exposure, citation behavior, release scope, policy bundle selection, or model routing.
 
 </details>
 
-[Back to top](#top)
+<details>
+<summary><strong>Maintainer handoff notes</strong></summary>
+
+| Item | Status | Action |
+| --- | --- | --- |
+| `doc_id` | NEEDS VERIFICATION | Assign canonical KFM doc ID before publishing |
+| `created` | NEEDS VERIFICATION | Replace placeholder only with verified original creation date |
+| `policy_label` | NEEDS VERIFICATION | Confirm `public`, `restricted`, or narrower label before publishing |
+| CODEOWNERS | NEEDS VERIFICATION | Confirm owner coverage in target checkout |
+| `env.schema.json` | NEEDS VERIFICATION | Keep placeholder if no active validator exists; otherwise document consumer + validator |
+| `contracts/` vs `schemas/` | CONFLICTED / NEEDS VERIFICATION | Resolve by ADR or canonical-home doc before adding contract-like config |
+| Runtime consumers | UNKNOWN | Do not claim active consumption until target checkout proves it |
+
+</details>
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
