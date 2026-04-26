@@ -13,7 +13,8 @@ permissions:
 jobs:
   repo-baseline:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,6 +27,28 @@ jobs:
           sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.txt
           sh ./tools/ci/check_python_syntax.sh
           sh ./tools/ci/verify_baseline.sh baseline-report.txt
+
+      - name: Run optional crosswalk static checks
+        run: |
+          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py ]; then
+            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py
+          fi
+
+          if [ -f ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json ]; then
+            python3 -m json.tool ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json >/dev/null
+          fi
+
+          if [ -f ./policy/crosswalk/crosswalk.rego ]; then
+            test -s ./policy/crosswalk/crosswalk.rego
+          fi
+
+          if [ -f ./tools/validators/crosswalk/validate_crosswalk_sql.sql ]; then
+            test -s ./tools/validators/crosswalk/validate_crosswalk_sql.sql
+          fi
+
+          if [ -f ./data/registry/crosswalk/sources.yaml ]; then
+            test -s ./data/registry/crosswalk/sources.yaml
+          fi
 
       - name: Run scripts thin-slice checks
         run: |
@@ -50,10 +73,13 @@ jobs:
           python3 -m pytest -q tests/ci
           python3 -m pytest -q apps/governed-api/ecology/tests apps/ui/ecology/tests
 
+          if [ -d ./tests/crosswalk ]; then
+            python3 -m pytest -q tests/crosswalk
+          fi
+
       - name: Build governed artifacts from fixed fixtures
         run: |
           python3 ./tools/ci/build_governed_artifacts.py --root . --out-dir artifacts/governed
-
 
       - name: Upload baseline report
         if: always()
