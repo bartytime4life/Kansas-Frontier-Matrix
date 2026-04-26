@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload baseline report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: baseline-report
           path: baseline-report.txt
@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload governed artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: governed-artifacts
           path: artifacts/governed
@@ -99,7 +99,7 @@ jobs:
 
       - name: Upload observability artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: observability-artifacts
           path: artifacts/observability
