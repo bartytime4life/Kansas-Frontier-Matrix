@@ -74,15 +74,17 @@ Action taken in this cycle:
 
 Based on the generated backlog snapshot, the next implementation cycle should target these files in order:
 
-1. `docs/architecture/README.md`
-2. `apps/ui/README.md`
-3. `docs/domains/fauna/README.md`
+1. `docs/domains/fauna/README.md`
+2. `packages/genealogy_ingest/README.md`
+3. `data/catalog/prov/README.md`
 
 Progress update (2026-04-26):
 
 - Completed a first markdown debt burn-down pass on `packages/indexers/README.md`.
 - Completed a second markdown debt burn-down pass on `docs/README.md`.
-- Regenerated backlog snapshot reduced overall marker total from **2801** to **2696**.
+- Completed a third markdown debt burn-down pass on `docs/architecture/README.md`.
+- Completed a fourth markdown debt burn-down pass on `apps/ui/README.md`.
+- Regenerated backlog snapshot reduced overall marker total from **2801** to **2592**.
 
 Success criteria for this cycle:
 
@@ -98,7 +100,7 @@ Earlier next-step guidance focused on adding baseline and smoke checks. That wor
 
 ### P0 — Reduce trust-surface ambiguity in top-level docs (1–2 days)
 
-1. Rewrite the root `README.md` from "unknown/doctrine-first" language to "repo-evidenced" language.
+1. Rewrite the root `README.md` from “unknown/doctrine-first” language to “repo-evidenced” language.
 2. Keep the doctrine framing, but move speculative/legacy claims into a clearly labeled appendix.
 3. Set a target to reduce root-README `NEEDS VERIFICATION` markers by at least **50%**.
 
