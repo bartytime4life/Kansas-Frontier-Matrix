@@ -1,0 +1,10 @@
+{
+  "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305",
+  "domain": "hydrology",
+  "ref": "data/catalog/hydrology/huc12/102600080305.json",
+  "release_state": "PUBLISHED",
+  "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "sensitivity": "public",
+  "review_state": "approved",
+  "promotion_receipt_ref": "data/receipts/promotion/hydrology/102600080305.promotion_receipt.json"
+}

@@ -1,0 +1,6 @@
+{
+  "claim_id": "kfm:claim:hydrology:missing_evidence_refs",
+  "claim_text": "This claim has no evidence refs which is not allowed.",
+  "evidence_refs": [],
+  "render": false
+}

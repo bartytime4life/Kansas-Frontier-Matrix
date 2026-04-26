@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/policy/promotion_receipt.schema.json",
+  "title": "PromotionReceipt",
+  "description": "Approval receipt required before promoted evidence may be cited on public surfaces. Evidence without a valid PromotionReceipt must produce an abstain outcome.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "promotion_receipt_id",
+    "evidence_ref_id",
+    "approved",
+    "approved_by",
+    "generated_at"
+  ],
+  "properties": {
+    "promotion_receipt_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable unique identifier for this promotion receipt."
+    },
+    "evidence_ref_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The evidence_ref_id this receipt approves."
+    },
+    "approved": {
+      "type": "boolean",
+      "description": "True when evidence is approved for public citation. False must produce abstain downstream."
+    },
+    "approved_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the approving authority."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when this receipt was generated."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional reviewer notes."
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Optional sha256 digest of the approved evidence artifact."
+    }
+  }
+}
