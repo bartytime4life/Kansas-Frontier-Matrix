@@ -21,7 +21,7 @@ Governed GitHub Actions orchestration surface for validation, runtime proof, rec
 
 > [!NOTE]
 > **Status:** `experimental` · **Document status:** `draft` · **Owners:** `@bartytime4life` · **Path:** `.github/workflows/README.md`  
-> **Current public inventory:** `README.md` + `verification-baseline.yml` (+ optional `.gitkeep` placeholder); checked-in workflow YAML now includes a baseline verification gate.
+> **Current public inventory:** `README.md`, `verification-baseline.yml`, and scaffold workflows (`docs-lint.yml`, `contracts.yml`, `policy.yml`, `tests.yml`, `release-dry-run.yml`).
 > **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-8250df) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-0969da) ![lane](https://img.shields.io/badge/lane-.github%2Fworkflows-6f42c1) ![posture](https://img.shields.io/badge/posture-governed%20automation-0a7d5a) ![inventory](https://img.shields.io/badge/current%20inventory-README%20%2B%20verification--baseline.yml-lightgrey)
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Workflow lanes](#workflow-lanes) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -250,7 +250,12 @@ The following do **not** belong here as canonical truth:
 .github/
 └── workflows/
     ├── README.md
-    └── verification-baseline.yml
+    ├── verification-baseline.yml
+    ├── docs-lint.yml
+    ├── contracts.yml
+    ├── policy.yml
+    ├── tests.yml
+    └── release-dry-run.yml
 ```
 
 > [!NOTE]

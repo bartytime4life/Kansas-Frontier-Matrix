@@ -1,0 +1,14 @@
+name: contracts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo "contracts workflow is scaffolded and pending implementation."

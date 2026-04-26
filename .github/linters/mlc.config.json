@@ -1,0 +1,6 @@
+{
+  "no-hard-tabs": true,
+  "no-trailing-punctuation-in-headings": false,
+  "require-h1": true,
+  "allow-duplicate-heading-text": false
+}
