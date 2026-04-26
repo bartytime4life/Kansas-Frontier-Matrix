@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/runtime/ecology_evidence_drawer.schema.json",
+  "title": "Ecology Evidence Drawer Payload",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "drawer_id",
+    "candidate_id",
+    "decision",
+    "status",
+    "title",
+    "summary",
+    "sections",
+    "actions"
+  ],
+  "properties": {
+    "drawer_id": {"type": "string"},
+    "candidate_id": {"type": "string"},
+    "decision": {"enum": ["cite", "abstain"]},
+    "status": {"type": "string"},
+    "title": {"type": "string"},
+    "summary": {"type": "string"},
+    "sections": {"type": "array"},
+    "actions": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["copy_citation", "open_catalog", "open_provenance"],
+      "properties": {
+        "copy_citation": {"type": "boolean"},
+        "open_catalog": {"type": "boolean"},
+        "open_provenance": {"type": "boolean"}
+      }
+    },
+    "proof_pack": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["ref", "spec_hash"],
+      "properties": {
+        "ref": {"type": ["string", "null"]},
+        "spec_hash": {"type": ["string", "null"]}
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["reason", "error_code"],
+      "properties": {
+        "reason": {},
+        "error_code": {}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "cite"}}},
+      "then": {"required": ["proof_pack"]}
+    },
+    {
+      "if": {"properties": {"decision": {"const": "abstain"}}},
+      "then": {"required": ["failure"]}
+    }
+  ]
+}
