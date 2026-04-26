@@ -40,6 +40,7 @@ jobs:
           python3 ./tools/ci/report_placeholder_markers.py --root . --top 10
           python3 ./tools/ci/check_markdown_authority_thresholds.py --root .
           python3 ./tools/ci/check_governed_api_path_policy.py --root .
+          python3 ./tools/ci/generate_markdown_debt_backlog.py --root . --top 10 --output artifacts/observability/markdown_debt_backlog.md
 
       - name: Install optional boundary test dependencies
         run: sh ./tools/ci/install_boundary_test_deps.sh
@@ -68,4 +69,12 @@ jobs:
         with:
           name: governed-artifacts
           path: artifacts/governed
+          if-no-files-found: warn
+
+      - name: Upload observability artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: observability-artifacts
+          path: artifacts/observability
           if-no-files-found: warn

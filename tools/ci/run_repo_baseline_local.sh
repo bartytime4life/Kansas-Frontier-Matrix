@@ -29,6 +29,7 @@ python3 ./tools/ci/validate_renderer_fixtures.py --root .
 python3 ./tools/ci/report_placeholder_markers.py --root . --top 5
 python3 ./tools/ci/check_markdown_authority_thresholds.py --root .
 python3 ./tools/ci/check_governed_api_path_policy.py --root .
+python3 ./tools/ci/generate_markdown_debt_backlog.py --root . --top 10 --output artifacts/observability/markdown_debt_backlog.md
 python3 ./tools/ci/build_governed_artifacts.py --root . --out-dir artifacts/governed
 
 if [ "${KFM_INSTALL_BOUNDARY_DEPS:-0}" = "1" ]; then

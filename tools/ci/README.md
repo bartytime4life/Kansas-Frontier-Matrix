@@ -57,6 +57,7 @@ Reusable CI-facing helpers for reviewer-readable summaries, annotations, and com
 > - `tools/ci/check_markdown_authority_thresholds.py` (required markdown marker caps for top authority docs)
 > - `tools/ci/check_governed_api_path_policy.py` (enforces canonical governed_api path + shim-only legacy path)
 > - `tools/ci/build_governed_artifacts.py` (renders deterministic markdown artifacts from fixed fixtures and emits a checksum manifest for CI upload)
+> - `tools/ci/generate_markdown_debt_backlog.py` (generates a ranked markdown debt backlog report from TODO/UNKNOWN/NEEDS VERIFICATION markers)
 >
 > Surfaced proof surfaces for the same thin slice include:
 >

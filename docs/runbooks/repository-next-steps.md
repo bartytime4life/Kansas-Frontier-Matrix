@@ -47,6 +47,9 @@ Action taken in this cycle:
 - Added deterministic governed-artifact build path and CI upload:
   - `tools/ci/build_governed_artifacts.py`
   - workflow artifact upload (`governed-artifacts`) in `.github/workflows/verification-baseline.yml`
+- Added deterministic markdown debt backlog generation to drive the next documentation cleanup cycle:
+  - `tools/ci/generate_markdown_debt_backlog.py`
+  - workflow artifact upload (`observability-artifacts`) for `artifacts/observability/markdown_debt_backlog.md`
 
 **Move B — Freeze marker growth in the worst markdown hotspots already identified by CI**
 
