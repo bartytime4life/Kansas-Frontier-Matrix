@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 from pathlib import Path
@@ -88,4 +87,3 @@ def test_unknown_domain_fails() -> None:
 
     assert not result.ok
     assert any(error.code == "ECO_INDEX_UNKNOWN_DOMAIN" for error in result.errors)
-```

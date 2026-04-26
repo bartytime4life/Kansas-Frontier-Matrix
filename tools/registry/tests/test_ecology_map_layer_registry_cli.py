@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -290,4 +289,3 @@ def test_cli_invalid_binding_schema_exits_one(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert "invalid registry:" in result.stderr
     assert "binding schema invalid" in result.stderr
-```

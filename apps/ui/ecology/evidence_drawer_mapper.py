@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 from typing import Any
@@ -7,7 +6,7 @@ from typing import Any
 def map_evidence_bundle_to_drawer(
     response: dict[str, Any],
 ) -> dict[str, Any]:
-    data = response.get("data", {}) or {}
+    data = response.get("data", {})
 
     if not isinstance(data, dict):
         return abstain_drawer(
@@ -115,4 +114,3 @@ def abstain_drawer(
             "open_provenance": False,
         },
     }
-```

@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import argparse
@@ -80,4 +79,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-```

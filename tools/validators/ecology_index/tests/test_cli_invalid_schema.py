@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -44,4 +43,3 @@ def test_cli_invalid_schema_exits_three(tmp_path: Path) -> None:
     assert result.returncode == 3
     assert "invalid schema:" in result.stderr
     assert "internal validator error:" not in result.stderr
-```

@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -143,4 +142,3 @@ def active_layer_bindings(
         )
 
     return bindings
-```

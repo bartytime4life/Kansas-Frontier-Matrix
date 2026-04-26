@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -175,4 +174,3 @@ def test_load_json_requires_object(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="Proof-pack input must be a JSON object"):
         load_json(path)
-```

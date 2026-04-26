@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -135,4 +134,3 @@ def test_vegetation_requires_layer_or_landcover(tmp_path: Path) -> None:
     assert not result.ok
     assert any(error.code == "ECO_INDEX_SCHEMA_INVALID" for error in result.errors)
     assert any("is not valid under any of the given schemas" in error.message for error in result.errors)
-```

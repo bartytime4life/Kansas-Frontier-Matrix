@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -179,4 +178,3 @@ def test_decision_to_dict() -> None:
         "errors": [],
         "warnings": [],
     }
-```

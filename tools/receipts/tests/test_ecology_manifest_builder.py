@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -146,4 +145,3 @@ def test_write_manifest_creates_parent_directory(tmp_path: Path) -> None:
     assert manifest_path.exists()
     written = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert written["decision"] == "not_ready"
-```

@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -293,4 +292,3 @@ def test_active_layer_bindings_returns_only_active(tmp_path: Path) -> None:
 
     assert len(bindings) == 1
     assert bindings[0]["layer_id"] == "kfm.ecology.vegetation.ndvi_change.v1"
-```

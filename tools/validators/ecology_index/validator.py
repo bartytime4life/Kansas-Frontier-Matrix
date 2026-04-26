@@ -1,4 +1,3 @@
-```python
 from __future__ import annotations
 
 import json
@@ -241,4 +240,3 @@ def validate_file(
         write_receipt(receipt_out, receipt)
 
     return result
-```
