@@ -4,10 +4,12 @@ title: data
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: [@bartytime4life]
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: 2026-04-22
+updated: 2026-04-26
 policy_label: NEEDS_VERIFICATION__public_or_internal
+intended_path: data/README.md
+evidence_mode: CORPUS_ONLY__ACTIVE_CHECKOUT_NEEDED
 related: [
   ../README.md,
   ./registry/README.md,
@@ -32,12 +34,12 @@ related: [
   ../.github/CODEOWNERS,
   ../.github/workflows/
 ]
-tags: [kfm, data, lifecycle, evidence, registry, catalog, receipts, proofs, publication]
+tags: [kfm, data, lifecycle, evidence, registry, catalog, receipts, proofs, publication, trust-boundary]
 notes: [
-  "doc_id, created date, and final policy label need active-branch verification.",
-  "Owner is grounded in current public CODEOWNERS coverage for /data/.",
-  "This README is both a standard KFM doc and a README-like directory landing page.",
-  "Implementation depth, emitted artifact inventory, validator wiring, and workflow enforcement remain NEEDS VERIFICATION unless proven by the active checkout."
+  "doc_id, created date, owner coverage, active status, and final policy label need active-branch verification.",
+  "This README is a standard KFM doc and a directory landing page for data/.",
+  "This revision can state KFM lifecycle doctrine and intended directory responsibilities, but it must not be treated as proof of current branch implementation depth.",
+  "Emitted artifact inventory, validator wiring, workflow enforcement, route behavior, published contents, and runtime behavior remain NEEDS VERIFICATION until proven by active checkout evidence."
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -47,56 +49,110 @@ notes: [
 
 Governed lifecycle surface for KFM source admission, evidence-bearing data stages, catalog closure, process memory, release evidence, and public-safe materialization.
 
+![status](https://img.shields.io/badge/status-draft-8250df)
+![surface](https://img.shields.io/badge/surface-data%2F-0b7285)
+![posture](https://img.shields.io/badge/posture-governed%20lifecycle-6f42c1)
+![trust](https://img.shields.io/badge/trust-evidence--first-1f6feb)
+![boundary](https://img.shields.io/badge/boundary-no%20raw%20public%20path-c92a2a)
+![verification](https://img.shields.io/badge/repo%20depth-needs%20verification-d29922)
+
 > [!IMPORTANT]
-> **Status:** active  
+> **Intended path:** `data/README.md`  
 > **Doc state:** draft  
-> **Owners:** `@bartytime4life`  
-> **Path:** `data/README.md`  
-> **Repo fit:** child of [`../README.md`](../README.md); parent to [`./registry/`](./registry/), [`./raw/`](./raw/), [`./work/`](./work/), [`./quarantine/`](./quarantine/), [`./processed/`](./processed/), [`./catalog/`](./catalog/), [`./triplets/`](./triplets/), [`./receipts/`](./receipts/), [`./proofs/`](./proofs/), and [`./published/`](./published/); adjacent to [`../contracts/`](../contracts/), [`../schemas/`](../schemas/), [`../policy/`](../policy/), [`../tests/`](../tests/), [`../tools/`](../tools/), [`../pipelines/`](../pipelines/), and [`../release/`](../release/).
+> **Owner:** `@bartytime4life` — **NEEDS ACTIVE-BRANCH VERIFICATION**  
+> **Evidence mode for this revision:** `CORPUS_ONLY__ACTIVE_CHECKOUT_NEEDED`  
+> **Core invariant:** `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`
 >
-> ![status](https://img.shields.io/badge/status-active-0a7d5a)
-> ![doc](https://img.shields.io/badge/doc-draft-8250df)
-> ![owners](https://img.shields.io/badge/owners-%40bartytime4life-0969da)
-> ![surface](https://img.shields.io/badge/surface-data-0b7285)
-> ![posture](https://img.shields.io/badge/posture-governed%20lifecycle-6f42c1)
-> ![trust](https://img.shields.io/badge/trust-evidence--first-1f6feb)
->
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> This README explains the intended KFM data lifecycle and governance posture. It does **not** prove active-branch directory contents, validators, workflows, emitted receipts, API routes, runtime behavior, or deployment maturity without current checkout evidence.
 
 > [!CAUTION]
-> `data/` is **not** the trust membrane, not a public API, and not a shortcut around governance. Public and role-limited clients should consume release-backed scope through governed interfaces, catalog records, tile services, EvidenceBundle resolution, and review-visible state — not through direct reads of RAW, WORK, QUARANTINE, or unpublished candidates.
+> `data/` is **not** the trust membrane, **not** a public API, **not** a model context bucket, and **not** a shortcut around publication governance. Normal public clients and routine UI surfaces should consume release-backed scope through governed interfaces, cataloged delivery, tile services, EvidenceBundle resolution, and review-visible state — not by direct reads of `raw/`, `work/`, `quarantine/`, canonical/internal stores, or unpublished candidates.
+
+## Quick navigation
+
+[Scope](#scope) · [Operating contract](#operating-contract) · [Lifecycle map](#lifecycle-map) · [Directory contract](#directory-contract) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [How to work here](#how-to-work-here) · [Validation checklist](#validation-checklist) · [Reference tables](#reference-tables) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-`data/` is the repo-facing home for KFM’s governed data lifecycle.
-
-It exists to make evidence-bearing material inspectable as it moves from source admission toward public-safe publication:
+`data/` is the repo-facing home for KFM’s governed data lifecycle. It exists to make source-bearing, evidence-bearing, release-bearing, and correction-bearing material inspectable as it moves from source admission toward public-safe publication.
 
 ```text
-SOURCE EDGE → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
+SOURCE EDGE → REGISTRY → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PROOFS → PUBLISHED
 ```
 
-Inside that path, this directory should help maintainers answer practical review questions:
+Inside that path, `data/` helps maintainers answer concrete review questions:
 
-- What source or dataset was admitted?
-- What lifecycle state is this material in?
-- What source role, rights posture, sensitivity, and review burden apply?
-- What receipts, validation reports, catalog records, proof packs, release manifests, or correction notices explain the movement?
-- Which public or role-limited surfaces may consume the result?
-
-The durable KFM value is not “a file under `data/`.” The durable value is an **inspectable claim** or release-backed artifact that can be traced to admissible evidence, spatial and temporal scope, source role, policy posture, review state, release state, and correction lineage.
-
-### Evidence posture used here
-
-| Label | Meaning in this README |
+| Review question | `data/` consequence |
 |---|---|
-| **CONFIRMED** | Directly supported by current public repo evidence, current-session inspection, or stable KFM doctrine. |
-| **INFERRED** | Strongly follows from adjacent README surfaces and KFM doctrine, but still needs active-branch confirmation. |
-| **PROPOSED** | A recommended pattern or future structure that fits KFM but is not proven as current implementation. |
-| **UNKNOWN** | Not verifiable from the available checkout, public tree, or attached corpus. |
-| **NEEDS VERIFICATION** | A specific check required before stronger repo, workflow, validator, schema, or release claims are made. |
+| What source or dataset was admitted? | SourceDescriptor and registry records should identify source role, authority limits, rights, cadence, and activation state. |
+| What lifecycle state is the material in? | Folder placement should express state without pretending that placement alone proves promotion. |
+| What source role, rights posture, sensitivity, and review burden apply? | Admission, receipt, validation, policy, and catalog records should make the answer inspectable. |
+| What explains the movement between states? | Receipts, validation reports, policy decisions, proof packs, release manifests, or correction notices should be linkable. |
+| Which public or role-limited surfaces may consume the result? | Only release-backed, policy-checked, rollback-aware material should reach normal public delivery. |
+
+The durable KFM value is not “a file under `data/`.” The durable value is an **inspectable claim** or release-backed artifact that can be reconstructed to admissible evidence, spatial and temporal scope, source role, policy posture, review state, release state, and correction lineage.
+
+### Evidence posture used in this README
+
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Verified from active checkout evidence, tests, logs, generated artifacts, or source files in the current work session. |
+| **DOCTRINE-CONFIRMED** | Supported as intended KFM doctrine by project corpus or governing documentation, but not proof of current implementation. |
+| **PROPOSED** | Recommended pattern that fits KFM but is not verified as active implementation. |
+| **UNKNOWN** | Not verified strongly enough from current checkout, tests, logs, workflows, or generated artifacts. |
+| **NEEDS VERIFICATION** | Specific check required before stronger repo, workflow, validator, schema, release, or runtime claims are made. |
+
+> [!NOTE]
+> For this revision, lifecycle doctrine is treated as **DOCTRINE-CONFIRMED**. Active directory contents, schema homes, workflow enforcement, validator behavior, release manifests, and runtime surfaces are **NEEDS VERIFICATION** until inspected in the real branch.
+
+[Back to top](#top)
+
+---
+
+## Operating contract
+
+### What `data/` is for
+
+`data/` is the governed lifecycle surface for:
+
+- source admission and source-role visibility
+- source-native captures and acquisition context
+- reproducible transformation staging
+- quarantine and fail-closed holds
+- processed dataset versions
+- catalog and provenance closure
+- derivative graph/triplet projections
+- receipts, proof packs, release evidence, correction evidence, and rollback targets
+- public-safe, release-backed materialization where policy allows it
+
+### What `data/` is not
+
+`data/` should not become:
+
+- the public trust membrane
+- the source of model truth
+- the default schema authority
+- the policy implementation home
+- an app route or UI state store
+- a secret store
+- a dumping ground for live provider pulls
+- a hidden location for unreviewed, exact sensitive geometry
+- an emergency alerting system
+
+### Non-negotiable boundary rules
+
+| Rule | Why it matters |
+|---|---|
+| Register before harvesting. | Source identity, source role, rights, cadence, and sensitivity must be explicit before live ingestion. |
+| Keep RAW source-native. | Original evidence must remain reconstructable and distinguishable from normalized outputs. |
+| Use WORK for transformation, not publication. | Transformation is not release. QA and receipts must remain visible. |
+| Quarantine uncertainty. | Unknown rights, failed validation, unresolved sensitivity, or stale/ambiguous evidence should fail closed. |
+| Processed is not automatically public. | Processed artifacts still need catalog closure, policy checks, proof, review, and promotion. |
+| Receipts are not proofs. | Process memory and release trust evidence serve different review questions. |
+| Published must be release-backed. | Promotion is a governed state transition, not a file copy. |
+| AI is interpretive only. | EvidenceBundle, policy, review, and release state outrank generated language. |
 
 [Back to top](#top)
 
@@ -104,94 +160,80 @@ The durable KFM value is not “a file under `data/`.” The durable value is an
 
 ## Repo fit
 
-`data/` is a lifecycle and evidence-surface parent. It should remain close to contracts, schemas, policy, validators, tests, pipelines, release handling, and governed application surfaces — but it should not absorb their responsibilities.
+`data/` is a lifecycle and evidence-surface parent. It should stay close to contracts, schemas, policy, validators, tests, pipelines, release handling, and governed application surfaces — but it should not absorb their responsibilities.
 
-### Path and neighboring surfaces
+### Neighboring surfaces
 
-| Relation | Surface | Role | Current posture |
+| Relation | Surface | Responsibility | Posture in this README |
 |---|---|---|---|
-| Parent | [`../README.md`](../README.md) | Project identity, trust posture, and repo-level orientation | **CONFIRMED** |
-| Admission | [`./registry/`](./registry/) | Source identity, source role, rights, cadence, activation state, and dataset onboarding | **CONFIRMED path** |
-| Fixture support | [`./fixtures/`](./fixtures/) | Small example or test-oriented data artifacts where repo convention permits | **CONFIRMED path / NEEDS VERIFICATION contents** |
-| Lifecycle | [`./raw/`](./raw/) | Immutable source-native intake | **CONFIRMED path** |
-| Lifecycle | [`./work/`](./work/) | Non-public transformation, normalization, QA, and handoff staging | **CONFIRMED path** |
-| Lifecycle | [`./quarantine/`](./quarantine/) | Fail-closed holding state for invalid, sensitive, rights-conflicted, or unresolved material | **CONFIRMED path** |
-| Lifecycle | [`./processed/`](./processed/) | Stable, normalized, reviewable dataset versions before publication | **CONFIRMED path** |
-| Catalog | [`./catalog/`](./catalog/) | STAC / DCAT / PROV and internal catalog closure where applicable | **CONFIRMED path** |
-| Projection | [`./triplets/`](./triplets/) | Derived graph/triplet projection; never sovereign truth | **CONFIRMED path / NEEDS VERIFICATION contents** |
-| Process memory | [`./receipts/`](./receipts/) | Run, ingest, validation, review, and audit-facing process memory | **CONFIRMED path** |
-| Release evidence | [`./proofs/`](./proofs/) | Proof packs, attestations, release evidence, rollback/correction trace | **CONFIRMED path** |
-| Publication | [`./published/`](./published/) | Optional materialized outward scope after governed promotion | **CONFIRMED path** |
-| Control | [`../contracts/`](../contracts/) · [`../schemas/`](../schemas/) | Human and machine contract authority; schema-home split remains review-sensitive | **CONFIRMED paths / ADR-sensitive** |
-| Control | [`../policy/`](../policy/) | Policy rules, decision logic, reason codes, release obligations | **CONFIRMED path** |
-| Verification | [`../tests/`](../tests/) · [`../tools/`](../tools/) | Fixtures, validators, proof checks, documentation checks, catalog/link checks | **CONFIRMED paths** |
-| Execution | [`../pipelines/`](../pipelines/) | Watchers, ingest, transform, and promotion handoff flows | **CONFIRMED path / NEEDS VERIFICATION depth** |
-| Release | [`../release/`](../release/) | Release manifests, release notes, promotion bundles, and distribution controls where adopted | **CONFIRMED path / NEEDS VERIFICATION depth** |
-| Runtime | [`../apps/`](../apps/) | Governed API and UI consumers of release-backed data | **CONFIRMED path / implementation UNKNOWN** |
+| Parent | [`../README.md`](../README.md) | Project identity, trust posture, and repository orientation | **NEEDS ACTIVE-CHECKOUT VERIFICATION** |
+| Admission | [`./registry/`](./registry/) | Source identity, source role, rights, cadence, activation state, dataset onboarding | **EXPECTED / VERIFY** |
+| Fixture support | [`./fixtures/`](./fixtures/) | Small public-safe fixtures or examples where repo convention permits | **EXPECTED / VERIFY** |
+| Lifecycle | [`./raw/`](./raw/) | Source-native intake | **EXPECTED / VERIFY** |
+| Lifecycle | [`./work/`](./work/) | Transformation, normalization, QA, redaction, generalization, handoff staging | **EXPECTED / VERIFY** |
+| Lifecycle | [`./quarantine/`](./quarantine/) | Fail-closed hold state | **EXPECTED / VERIFY** |
+| Lifecycle | [`./processed/`](./processed/) | Stable normalized dataset versions before publication | **EXPECTED / VERIFY** |
+| Catalog | [`./catalog/`](./catalog/) | STAC / DCAT / PROV or internal catalog closure | **EXPECTED / VERIFY** |
+| Projection | [`./triplets/`](./triplets/) | Derived graph/triplet projection; never sovereign truth | **EXPECTED / VERIFY** |
+| Process memory | [`./receipts/`](./receipts/) | Run, ingest, validation, review, and audit-facing process memory | **EXPECTED / VERIFY** |
+| Release evidence | [`./proofs/`](./proofs/) | Proof packs, attestations, release evidence, rollback/correction trace | **EXPECTED / VERIFY** |
+| Publication | [`./published/`](./published/) | Optional materialized outward scope after governed promotion | **EXPECTED / VERIFY** |
+| Control | [`../contracts/`](../contracts/) · [`../schemas/`](../schemas/) | Human and machine contract authority; schema-home split is ADR-sensitive | **VERIFY BEFORE CLAIMING** |
+| Control | [`../policy/`](../policy/) | Policy rules, reason codes, release obligations, policy tests | **VERIFY BEFORE CLAIMING** |
+| Verification | [`../tests/`](../tests/) · [`../tools/`](../tools/) | Fixtures, validators, proof checks, documentation checks, catalog/link checks | **VERIFY BEFORE CLAIMING** |
+| Execution | [`../pipelines/`](../pipelines/) | Watchers, ingest, transform, promotion handoff | **VERIFY BEFORE CLAIMING** |
+| Release | [`../release/`](../release/) | Release manifests, notes, bundles, distribution controls where adopted | **VERIFY BEFORE CLAIMING** |
+| Runtime | [`../apps/`](../apps/) | Governed API and UI consumers of release-backed data | **UNKNOWN UNTIL INSPECTED** |
 
 ### Boundary summary
 
 | Question | Answer |
 |---|---|
 | What is `data/` for? | Governed source admission, lifecycle state, evidence-bearing artifacts, small fixtures, catalog closure, process memory, release proof support, and materialized published scope. |
-| What is `data/` not? | Not a public API, not a model context bucket, not a schema authority by default, not a policy home, and not permission to expose unpublished or sensitive material directly. |
 | What stays adjacent? | Contracts, schemas, executable policy, validators, workflow code, app routes, secrets, platform settings, and branch/ruleset enforcement. |
+| What must never be normalized as the public path? | Direct reads of RAW, WORK, QUARANTINE, canonical/internal stores, unreviewed summaries, or direct model output. |
 
 [Back to top](#top)
 
 ---
 
-## Accepted inputs
+## Lifecycle map
 
-The following belong in or immediately around `data/` when they preserve the KFM lifecycle and evidence posture.
+```mermaid
+flowchart LR
+    S[Source edge] --> R0[data/registry<br/>SourceDescriptor + admission posture]
+    R0 --> RAW[data/raw<br/>source-native capture]
+    RAW --> W[data/work<br/>transform + QA staging]
+    W -->|rights / sensitivity / validation unclear| Q[data/quarantine<br/>fail closed]
+    W --> P[data/processed<br/>stable dataset versions]
+    P --> C[data/catalog<br/>STAC / DCAT / PROV or internal closure]
+    P --> T[data/triplets<br/>derived graph projection]
+    W -. run / validation memory .-> RC[data/receipts<br/>process memory]
+    P -. validation / review memory .-> RC
+    C --> PF[data/proofs<br/>release evidence]
+    T --> PF
+    PF --> PUB[data/published<br/>release-backed materialization]
+    PUB --> API[Governed API / delivery surfaces]
+    API --> UI[MapLibre shell / Evidence Drawer / Focus Mode]
+    UI --> CLAIM[Inspectable claim]
 
-| Accepted input | Why it belongs here | Typical surface |
-|---|---|---|
-| Source registration artifacts | Source onboarding is a governed admission act, not just a fetch | `registry/` |
-| Source-native captures or acquisition manifests | RAW must preserve what arrived and under what context | `raw/` |
-| Request metadata, rights snapshots, and checksums | Intake must be replayable and reviewable | `raw/`, `receipts/` |
-| Repeatable transform outputs | WORK normalizes and validates without pretending to publish | `work/` |
-| Redaction, generalization, and QA candidates | Sensitive and policy-bearing transforms need visible handoff context | `work/`, `quarantine/`, `receipts/` |
-| Invalid, rights-unclear, sensitive, or unresolved material | Fail-closed handling is a normal lifecycle state | `quarantine/` |
-| Stable processed dataset versions | Processed artifacts carry normalized authority before release | `processed/` |
-| Catalog closure records | Discovery and provenance need STAC / DCAT / PROV or internal equivalents | `catalog/` |
-| Derived graph/triplet projection files | Graph views are useful query projections when clearly derivative | `triplets/` |
-| Receipts and validation reports | Replay, rollback, audit, and correction need process memory | `receipts/` |
-| Proof packs and release evidence | Promotion must leave reviewable evidence and rollback targets | `proofs/`, `release/` |
-| Release-backed materialized outputs | Some promoted artifacts need stable outward packaging | `published/` |
-| Small fixtures or examples | Tests and docs may need compact, public-safe data examples | `fixtures/`, `tests/fixtures/` |
+    API -. forbidden normal path .-> RAW
+    API -. forbidden normal path .-> W
+    API -. forbidden normal path .-> Q
+```
 
-> [!TIP]
-> When in doubt, ask: “Is this source-native, work-in-progress, blocked, processed, cataloged, proof-bearing, or published?” If the answer is unclear, use a receipt, validation report, or quarantine path rather than silently choosing the most convenient folder.
-
-[Back to top](#top)
-
----
-
-## Exclusions
-
-Do not use `data/` as a catch-all for anything that is merely data-shaped.
-
-| Does **not** belong here | Better home | Why |
-|---|---|---|
-| Secrets, tokens, credentials, private keys, or deployment credentials | Secret manager or deployment-only configuration outside the public repo | Public data surfaces must not leak operational access. |
-| Canonical schema definitions unless the schema-home ADR says so | [`../schemas/`](../schemas/) or [`../contracts/`](../contracts/) | `data/` should hold instances and lifecycle artifacts, not silently become the contract authority. |
-| Policy source code or reason-code law | [`../policy/`](../policy/) | Policy must remain reviewable and testable as policy. |
-| Application routes, UI state, or model runtime code | [`../apps/`](../apps/) or [`../packages/`](../packages/) | Runtime behavior belongs behind governed APIs and typed contracts. |
-| Large ad hoc downloads without source registration | `registry/` first, then `raw/` after admission | Source identity, rights, cadence, and sensitivity must be explicit. |
-| Analyst scratch that cannot be replayed | Local ignored workspace or governed `work/` run folder with receipts | Unreplayable scratch becomes invisible authority. |
-| Exact sensitive locations for archaeology, rare species, cultural, sacred, critical-infrastructure, living-person, DNA, or other restricted contexts | Restricted steward workflow, redacted/generalized derivative, or `quarantine/` | KFM fails closed when public exposure risk is unresolved. |
-| Published-looking outputs that lack release proof | `processed/` + `catalog/` + `proofs/` until promotion passes | Publication is a governed state transition, not a file copy. |
-| Generated summaries or direct AI output | Governed runtime envelope, EvidenceBundle, AIReceipt, and citation validation | Generated prose is not root truth. |
-| Emergency-alerting or life-safety instruction payloads | Official alerting authorities and external public-safety systems | KFM contextualizes evidence; it is not an emergency alert system. |
+> [!WARNING]
+> The forbidden arrows matter as much as the happy path. Normal public clients and routine UI surfaces should not read `raw/`, `work/`, or `quarantine/` directly.
 
 [Back to top](#top)
 
 ---
 
-## Directory tree
+## Directory contract
 
-### Current top-level `data/` shape
+### Expected top-level shape
+
+The tree below is the intended parent-level orientation. Treat it as **EXPECTED / NEEDS ACTIVE-CHECKOUT VERIFICATION** until the active branch proves it.
 
 ```text
 data/
@@ -209,10 +251,23 @@ data/
 └── work/
 ```
 
-> [!NOTE]
-> The tree above is the parent-level orientation. Deeper per-lane inventories, emitted artifacts, workflow outputs, schema bindings, and validator wiring remain **NEEDS VERIFICATION** unless the active branch proves them.
+### Stage responsibilities
 
-### Proposed domain-lane deepening pattern
+| Surface | Main role | Public by itself? | Typical gate before moving on |
+|---|---|---:|---|
+| `registry/` | Source and dataset admission | No | Source role, rights, sensitivity, cadence, and review posture declared |
+| `raw/` | Source-native intake | No | Checksums, request context, rights snapshot, acquisition receipt |
+| `work/` | Transform and QA staging | No | Reproducibility, validation, policy checks, handoff notes |
+| `quarantine/` | Fail-closed hold state | No | Explicit reason, reviewer or policy decision, correction path |
+| `processed/` | Stable normalized artifacts | Not directly | Schema, spatial/temporal/unit validation, evidence linkage |
+| `catalog/` | Discovery and provenance closure | Not alone | Catalog links to source, dataset, evidence, and release intent |
+| `triplets/` | Derived graph/query projection | No | Provenance to processed support and projection contract |
+| `receipts/` | Process memory | Not proof alone | Links to run, validation, policy, review, and subject artifacts |
+| `proofs/` | Release evidence | Supports release | Integrity, manifest, policy, review, rollback reference |
+| `published/` | Release-backed outward materialization | Yes, if promoted | Promotion decision, proof pack, catalog closure, correction route |
+| `fixtures/` | Small test/doc examples | Only if public-safe | Fixture purpose, schema context, sensitivity check, and test linkage |
+
+### Domain-lane deepening pattern
 
 Use this only after source admission, schema-home review, policy review, and fixture planning.
 
@@ -242,16 +297,68 @@ data/
     └── <domain>/<release_id>/
 ```
 
+> [!TIP]
+> New domain folders should land with a source descriptor, fixture, validation expectation, policy note, and review path. Broad empty scaffolds create false maturity and should be avoided unless an ADR explicitly justifies them.
+
 [Back to top](#top)
 
 ---
 
-## Quickstart
+## Accepted inputs
 
-Use these commands to inspect the data surface without implying deeper implementation maturity.
+The following belong in or immediately around `data/` when they preserve lifecycle clarity and evidence posture.
+
+| Accepted input | Why it belongs here | Typical surface |
+|---|---|---|
+| Source registration artifacts | Source onboarding is a governed admission act, not just a fetch | `registry/` |
+| Source-native captures or acquisition manifests | RAW must preserve what arrived and under what context | `raw/` |
+| Request metadata, rights snapshots, checksums | Intake must be replayable and reviewable | `raw/`, `receipts/` |
+| Repeatable transform outputs | WORK normalizes and validates without pretending to publish | `work/` |
+| Redaction, generalization, QA candidates | Sensitive and policy-bearing transforms need visible handoff context | `work/`, `quarantine/`, `receipts/` |
+| Invalid, rights-unclear, sensitive, stale, or unresolved material | Fail-closed handling is a normal lifecycle state | `quarantine/` |
+| Stable processed dataset versions | Processed artifacts carry normalized authority before release | `processed/` |
+| Catalog closure records | Discovery and provenance need STAC / DCAT / PROV or internal equivalents | `catalog/` |
+| Derived graph/triplet projection files | Graph views are useful query projections when clearly derivative | `triplets/` |
+| Receipts and validation reports | Replay, rollback, audit, and correction need process memory | `receipts/` |
+| Proof packs and release evidence | Promotion must leave reviewable evidence and rollback targets | `proofs/`, `release/` |
+| Release-backed materialized outputs | Promoted artifacts may need stable outward packaging | `published/` |
+| Small fixtures or examples | Tests and docs may need compact public-safe data examples | `fixtures/`, `tests/fixtures/` |
+
+> [!TIP]
+> When in doubt, ask: “Is this source-native, work-in-progress, blocked, processed, cataloged, proof-bearing, or published?” If the answer is unclear, create a receipt, validation report, or quarantine record rather than silently choosing the most convenient folder.
+
+[Back to top](#top)
+
+---
+
+## Exclusions
+
+Do not use `data/` as a catch-all for anything that is merely data-shaped.
+
+| Does **not** belong here | Better home | Why |
+|---|---|---|
+| Secrets, tokens, credentials, private keys, deployment credentials | Secret manager or deployment-only configuration outside the public repo | Public data surfaces must not leak operational access. |
+| Canonical schema definitions unless the schema-home ADR says so | [`../schemas/`](../schemas/) or [`../contracts/`](../contracts/) | `data/` should hold instances and lifecycle artifacts, not silently become contract authority. |
+| Policy source code or reason-code law | [`../policy/`](../policy/) | Policy must remain reviewable and testable as policy. |
+| Application routes, UI state, model runtime code | [`../apps/`](../apps/) or [`../packages/`](../packages/) | Runtime behavior belongs behind governed APIs and typed contracts. |
+| Large ad hoc downloads without source registration | `registry/` first, then `raw/` after admission | Source identity, rights, cadence, and sensitivity must be explicit. |
+| Analyst scratch that cannot be replayed | Local ignored workspace or governed `work/` run folder with receipts | Unreplayable scratch becomes invisible authority. |
+| Exact sensitive locations for archaeology, rare species, cultural, sacred, critical-infrastructure, living-person, DNA, or other restricted contexts | Restricted steward workflow, redacted/generalized derivative, or `quarantine/` | KFM fails closed when public exposure risk is unresolved. |
+| Published-looking outputs that lack release proof | `processed/` + `catalog/` + `proofs/` until promotion passes | Publication is a governed state transition, not a file copy. |
+| Generated summaries or direct AI output | Governed runtime envelope, EvidenceBundle, AIReceipt, citation validation | Generated prose is not root truth. |
+| Emergency-alerting or life-safety instruction payloads | Official alerting authorities and external public-safety systems | KFM contextualizes evidence; it is not an emergency alert system. |
+
+[Back to top](#top)
+
+---
+
+## How to work here
+
+### 1. Inspect before changing
+
+Use these commands from the repository root to confirm active-branch state before making implementation claims.
 
 ```bash
-# From the repository root.
 git status --short
 git branch --show-current
 git rev-parse --show-toplevel
@@ -260,16 +367,15 @@ find data -maxdepth 2 -type d | sort
 find data -maxdepth 3 -type f -iname 'README.md' | sort
 ```
 
-Check for large or sensitive files before committing.
+### 2. Check candidate additions
 
 ```bash
-# Review candidate data additions.
 git status --short data
 git diff --stat -- data
 git diff --name-only -- data | sort
 ```
 
-Inspect likely governance companions before promoting or publishing anything.
+Before committing, inspect likely governance companions.
 
 ```bash
 find data/registry data/receipts data/proofs data/catalog data/published \
@@ -279,92 +385,101 @@ find contracts schemas policy tests tools pipelines release \
   -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,250p'
 ```
 
+### 3. Add new source material safely
+
+| Step | Minimum expectation |
+|---|---|
+| Register | Create or update source identity, source role, rights posture, sensitivity posture, cadence, activation state, and steward/review burden. |
+| Capture | Preserve source-native material or acquisition manifest with request context, retrieval time, and checksums. |
+| Receipt | Record acquisition and handoff context so the run can be audited or replayed. |
+| Validate | Check schema, spatial scope, temporal scope, units, source role, rights, sensitivity, and policy constraints. |
+| Quarantine if needed | Hold unresolved material with explicit reason and next action. |
+| Process | Produce stable normalized artifacts only after reproducibility and validation are reviewable. |
+| Catalog | Close discovery/provenance seams and link processed artifacts to evidence and release intent. |
+| Promote | Publish only after proof, policy, review, and rollback targets are ready. |
+
+### 4. Publish only through governed promotion
+
+A promoted artifact should have:
+
+- source descriptor and source-role constraints
+- processed dataset identity
+- validation report
+- catalog closure
+- policy decision and obligations
+- proof pack or release evidence
+- release manifest with hashes and rollback target
+- correction or withdrawal path
+- public-safe geometry and sensitivity posture
+- EvidenceBundle resolution for consequential claims
+
 > [!WARNING]
-> Do not add live provider pulls, sensitive exact geometry, credentials, or large generated outputs merely to satisfy a README example. Use public-safe fixtures and small, reviewable manifests until the relevant source descriptor, policy, schema, and validator path are verified.
+> Do not add live provider pulls, sensitive exact geometry, credentials, large generated outputs, or public-looking release copies merely to satisfy a README example. Use public-safe fixtures and small reviewable manifests until the source descriptor, policy, schema, and validator path are verified.
 
 [Back to top](#top)
 
 ---
 
-## Usage
-
-### Lifecycle rules
-
-1. **Register before harvesting.** A source should have an identity, source role, rights posture, sensitivity posture, cadence, and review burden before live ingestion.
-2. **Land source-native material in RAW.** Preserve original bytes, request context, checksums, and rights snapshots.
-3. **Transform in WORK.** Normalize, reproject, enrich, redact, generalize, QA, and prepare handoff without pretending to publish.
-4. **Escalate uncertainty to QUARANTINE.** Rights conflicts, sensitivity ambiguity, failed validation, stale evidence, or unresolved identity should fail closed.
-5. **Stabilize in PROCESSED.** A processed artifact should have stable identity, schema context, time semantics, and validation evidence.
-6. **Close the catalog and projection seams.** Catalog records, triplets, and derivative layers should point back to processed/release-backed support.
-7. **Separate receipts from proofs.** Receipts preserve process memory; proofs support release trust.
-8. **Publish only after promotion.** `published/` is for release-backed outward scope, not convenience copies.
-
-### Naming guidance
+## Naming and identity
 
 Prefer deterministic, boring names.
 
 | Naming pressure | Recommended pattern | Avoid |
 |---|---|---|
-| Source identity | `source_id` from registry | provider nickname without role |
-| Acquisition | timestamp or source-provided version | “latest” |
-| Run identity | `run_id` + `spec_hash` where available | opaque local notebook names |
-| Dataset version | stable version, date, or digest-bearing folder | overwrite-in-place folders |
-| Release | `release_id` tied to manifest/proof | public copy without rollback target |
-| Blocked material | explicit hold id and reason | hidden `tmp/` or `misc/` folder |
+| Source identity | `source_id` from registry | Provider nickname without source role |
+| Acquisition | Timestamp, source-provided version, or digest | `latest` |
+| Run identity | `run_id` + `spec_hash` where available | Opaque local notebook names |
+| Dataset version | Stable version, date, or digest-bearing folder | Overwrite-in-place folders |
+| Release | `release_id` tied to manifest/proof | Public copy without rollback target |
+| Blocked material | Explicit `hold_id` and reason | Hidden `tmp/`, `misc/`, or `scratch` folder |
+| Public layer | Stable layer id tied to LayerManifest | UI-only display name as identity |
+| Correction | `correction_id` with affected release/artifact ids | Silent replacement |
 
 [Back to top](#top)
 
 ---
 
-## Diagram
+## Validation checklist
 
-```mermaid
-flowchart LR
-    S[Source edge] --> R0[data/registry<br/>SourceDescriptor + admission posture]
-    R0 --> RAW[data/raw<br/>source-native capture]
-    RAW --> W[data/work<br/>transform + QA staging]
-    W -->|rights / sensitivity / validation unclear| Q[data/quarantine<br/>fail closed]
-    W --> P[data/processed<br/>stable dataset versions]
-    P --> C[data/catalog<br/>STAC / DCAT / PROV]
-    P --> T[data/triplets<br/>derived graph projection]
-    W -. run / validation memory .-> RC[data/receipts<br/>process memory]
-    P -. validation / review memory .-> RC
-    C --> PF[data/proofs<br/>release evidence]
-    T --> PF
-    PF --> PUB[data/published<br/>release-backed materialization]
-    PUB --> API[Governed API / delivery surfaces]
-    API --> UI[MapLibre shell / Evidence Drawer / Focus Mode]
-    UI --> CLAIM[Inspectable claim]
+A change under `data/` is not done because a file exists. It is done when lifecycle, evidence, and release consequences are reviewable.
 
-    API -. never direct .-> RAW
-    API -. never direct .-> W
-    API -. never direct .-> Q
+- [ ] Path, owner, and adjacent README links verified in the active branch.
+- [ ] KFM Meta Block V2 present for README-like governed Markdown.
+- [ ] Source role, rights, sensitivity, cadence, and activation state captured for new sources.
+- [ ] RAW inputs preserve source-native material, request context, retrieval context, and checksums.
+- [ ] WORK outputs are reproducible enough to replay or explain.
+- [ ] QUARANTINE items include explicit reason, reviewer/policy context, and next action.
+- [ ] PROCESSED artifacts have stable identity, schema context, temporal scope, spatial scope, and validation results.
+- [ ] CATALOG records link to source, processed artifact, evidence, and release intent.
+- [ ] TRIPLET projections remain derivative and resolvable back to governed sources.
+- [ ] RECEIPTS and PROOFS remain separate.
+- [ ] PUBLISHED material is release-backed, policy-checked, public-safe, and rollback-aware.
+- [ ] No normal public route, UI layer, export, story, or Focus Mode answer reads RAW, WORK, QUARANTINE, or canonical/internal stores directly.
+- [ ] Documentation updated wherever lifecycle meaning, source status, publication status, or public interpretation changed.
+
+### Suggested active-branch checks
+
+Adapt these to the repository’s actual validator names after inspection.
+
+```bash
+# Markdown and link checks, if available.
+# markdownlint data/README.md
+# lychee data/README.md
+
+# Schema / policy / fixture checks, if available.
+# pytest tests/data tests/policy tests/fixtures
+# conftest test data/proofs data/catalog --policy policy/
+
+# Lightweight filesystem sanity checks.
+find data -maxdepth 2 -type d | sort
+find data -maxdepth 3 -type f | sort | sed -n '1,250p'
 ```
-
-### Reading rule
-
-The forbidden arrows matter as much as the happy path. Normal public clients and routine UI surfaces should not read `raw/`, `work/`, or `quarantine/` directly.
 
 [Back to top](#top)
 
 ---
 
 ## Reference tables
-
-### Lifecycle role matrix
-
-| Surface | Main role | Can be public by itself? | Typical gate before moving on |
-|---|---|---:|---|
-| `registry/` | Source and dataset admission | No | Source role, rights, sensitivity, cadence, and review posture declared |
-| `raw/` | Source-native intake | No | Checksums, request context, rights snapshot, acquisition receipt |
-| `work/` | Transform and QA staging | No | Reproducibility, validation, policy checks, handoff notes |
-| `quarantine/` | Fail-closed hold state | No | Explicit reason, reviewer or policy decision, correction path |
-| `processed/` | Stable normalized artifacts | Not directly | Schema, spatial/temporal/unit validation, evidence linkage |
-| `catalog/` | Discovery and provenance closure | Not alone | Catalog links to source, dataset, evidence, and release intent |
-| `triplets/` | Derived graph/query projection | Not sovereign truth | Provenance to processed support and projection contract |
-| `receipts/` | Process memory | Not proof alone | Links to run, validation, policy, review, and subject artifacts |
-| `proofs/` | Release evidence | Supports release | Integrity, manifest, policy, review, rollback reference |
-| `published/` | Release-backed outward materialization | Yes, if promoted | Promotion decision, proof pack, catalog closure, correction route |
 
 ### Artifact families
 
@@ -385,35 +500,27 @@ The forbidden arrows matter as much as the happy path. Normal public clients and
 
 | Risk signal | Default action | Release note |
 |---|---|---|
-| Unknown rights | Quarantine or deny promotion | Do not publish until source terms are recorded |
-| Sensitive exact location | Redact, generalize, restrict, or quarantine | Store transform receipt and reason |
-| Missing EvidenceRef | Abstain from consequential claim | Do not paper over with summary prose |
-| Failed validation | Quarantine | Keep validation report visible |
-| Stale operational feed | Mark stale or hold | Do not imply current status |
-| Model-generated text | Treat as interpretation only | Require EvidenceBundle and AIReceipt when material |
-| Graph or tile derivative | Treat as projection | Link to processed/release-backed source |
+| Unknown rights | Quarantine or deny promotion | Do not publish until source terms are recorded. |
+| Sensitive exact location | Redact, generalize, restrict, or quarantine | Store transform receipt and reason. |
+| Missing EvidenceRef | Abstain from consequential claim | Do not paper over with summary prose. |
+| Failed validation | Quarantine | Keep validation report visible. |
+| Stale operational feed | Mark stale or hold | Do not imply current status. |
+| Model-generated text | Treat as interpretation only | Require EvidenceBundle and AIReceipt when material. |
+| Graph or tile derivative | Treat as projection | Link to processed/release-backed source. |
+| Emergency/life-safety request | Route to official public-safety authority | KFM is not an alerting system. |
 
-[Back to top](#top)
+### Promotion readiness snapshot
 
----
-
-## Task list / definition of done
-
-A change under `data/` is not done because a file exists. It is done when the lifecycle, evidence, and release consequences are reviewable.
-
-- [ ] Path, owner, and adjacent README links verified.
-- [ ] KFM Meta Block V2 present for README-like governed Markdown.
-- [ ] Source role, rights, sensitivity, cadence, and activation state captured for new sources.
-- [ ] RAW inputs preserve source-native material, request context, and checksums.
-- [ ] WORK outputs are reproducible enough to replay or explain.
-- [ ] QUARANTINE items include explicit reason, reviewer/policy context, and next action.
-- [ ] PROCESSED artifacts have stable identity, schema context, and validation results.
-- [ ] CATALOG records link to source, processed artifact, evidence, and release intent.
-- [ ] TRIPLET projections remain derivative and resolvable back to governed sources.
-- [ ] RECEIPTS and PROOFS remain separate.
-- [ ] PUBLISHED material is release-backed, policy-checked, and rollback-aware.
-- [ ] No normal public route, UI layer, export, story, or Focus Mode answer reads RAW, WORK, QUARANTINE, or canonical/internal stores directly.
-- [ ] Documentation updated wherever lifecycle meaning, source status, publication status, or public interpretation changed.
+| Required support | Ready when |
+|---|---|
+| Source identity | SourceDescriptor resolves and states source role, rights, sensitivity, cadence, activation state, and authority limits. |
+| Artifact identity | Dataset, run, and release ids are stable and not overwrite-in-place. |
+| Evidence | EvidenceRef resolves to EvidenceBundle for consequential claims. |
+| Policy | PolicyDecision records outcome, reason codes, obligations, and reviewer context where applicable. |
+| Catalog | Catalog closure links source, processed artifact, provenance, distribution, and release intent. |
+| Proof | Proof pack records integrity, validation, review, rollback target, and release scope. |
+| Public safety | Sensitive geometries are withheld, generalized, restricted, or justified by review state. |
+| Correction | Supersession, rollback, withdrawal, or narrowed republication path is documented. |
 
 [Back to top](#top)
 
@@ -427,15 +534,15 @@ Not by itself. `data/` contains lifecycle artifacts and evidence-bearing surface
 
 ### Can clients read directly from `data/published/`?
 
-Only if the project explicitly treats a published artifact as a release-backed delivery object and the governed interface rules allow it. The normal KFM posture is that public clients use governed APIs, cataloged delivery, tile services, EvidenceBundle resolution, and trust-visible UI state.
+Only if the project explicitly treats a published artifact as a release-backed delivery object and governed interface rules allow it. The normal KFM posture is that public clients use governed APIs, cataloged delivery, tile services, EvidenceBundle resolution, and trust-visible UI state.
 
 ### Are receipts the same as proofs?
 
-No. Receipts are process memory: what ran, when, with which inputs, checks, outputs, and policy context. Proofs are release evidence: why a promoted artifact can be trusted, reviewed, rolled back, or corrected.
+No. Receipts are process memory: what ran, when, with which inputs, checks, outputs, and policy context. Proofs are release evidence: why a promoted artifact can be trusted, reviewed, rolled back, corrected, or withdrawn.
 
 ### What should happen to sensitive exact locations?
 
-Fail closed. Use quarantine, redaction, generalization, staged access, or steward review. Do not commit public exact geometry for sensitive archaeology, rare species, cultural, sacred, critical infrastructure, living-person, DNA, or other restricted contexts unless the governing policy and review state explicitly support release.
+Fail closed. Use quarantine, redaction, generalization, staged access, or steward review. Do not commit public exact geometry for sensitive archaeology, rare species, cultural, sacred, critical infrastructure, living-person, DNA, or other restricted contexts unless governing policy and review state explicitly support release.
 
 ### Can AI-generated summaries be stored here?
 
@@ -468,7 +575,7 @@ A small, reversible PR that updates README coverage, source registry skeletons, 
 | **Triplet projection** | Derived graph/query representation that remains subordinate to source evidence. |
 | **Promotion** | Governed state transition into release-backed status, not a file move. |
 | **CorrectionNotice** | Visible record for supersession, withdrawal, rollback, or narrowed republication. |
-| **Quarantine** | Hold state for invalid, unresolved, sensitive, rights-conflicted, or otherwise unfit material. |
+| **Quarantine** | Hold state for invalid, unresolved, sensitive, rights-conflicted, stale, or otherwise unfit material. |
 
 </details>
 
@@ -488,6 +595,18 @@ A new `data/<stage>/<domain>/` subtree should not land as a broad empty scaffold
 - rollback or correction implication
 - owner or review role
 - links to schemas, contracts, policy, fixtures, and runbooks where they exist
+
+</details>
+
+<details>
+<summary><strong>Maintainer notes before finalizing this README in the active branch</strong></summary>
+
+- Verify whether `data/` and all child surfaces exist in the target branch.
+- Verify whether `../contracts/` or `../schemas/` is the canonical machine-schema home, and record the answer in an ADR if unresolved.
+- Verify CODEOWNERS coverage for `data/` before treating `@bartytime4life` as confirmed owner.
+- Replace `NEEDS_VERIFICATION__YYYY-MM-DD` with the actual created date.
+- Replace `NEEDS_VERIFICATION__public_or_internal` with the approved policy label.
+- Update the badge status from `draft` to the approved repository status only after review.
 
 </details>
 
