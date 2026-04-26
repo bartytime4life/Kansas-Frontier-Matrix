@@ -2,7 +2,7 @@
 doc_id: kfm://doc/TODO-pipelines-readme
 title: KFM Pipelines
 type: standard
-version: v1
+version: v1.1-scan
 status: draft
 owners: TODO(pipeline/data platform owners)
 created: TODO(YYYY-MM-DD)
@@ -10,7 +10,7 @@ updated: 2026-04-26
 policy_label: TODO(public|restricted)
 related: [NEEDS_VERIFICATION:../docs/architecture/pipeline-lifecycle.md, NEEDS_VERIFICATION:../schemas/contracts/v1/, NEEDS_VERIFICATION:../policy/, NEEDS_VERIFICATION:../data/README.md]
 tags: [kfm, pipelines, lifecycle, governance, evidence, validation, promotion]
-notes: [GENERATED_THIS_RUN: revised from supplied pipeline README markdown; NEEDS VERIFICATION: target repo path, owners, links, workflows, schemas, policies, validators, and runtime behavior must be verified in a mounted KFM repository.]
+notes: [UPDATED_THIS_RUN: repository scan applied to supplied pipeline README markdown; CONFIRMED_THIS_RUN: /mnt/data is not a Git repository; CONFIRMED_THIS_RUN: no .git directory or KFM repo marker files were found in inspected roots; CURRENT_IMPLEMENTATION_UNKNOWN: target KFM checkout was not mounted; NEEDS_VERIFICATION: target repo path, owners, links, workflows, schemas, policies, validators, and runtime behavior.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Pipelines
@@ -21,22 +21,23 @@ notes: [GENERATED_THIS_RUN: revised from supplied pipeline README markdown; NEED
 
 <p align="center">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Repo evidence: needs verification" src="https://img.shields.io/badge/repo--evidence-NEEDS_VERIFICATION-lightgrey">
+  <img alt="Repo evidence: no mounted repo" src="https://img.shields.io/badge/repo--evidence-NO_MOUNTED_REPO-red">
   <img alt="Evidence: cite or abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
   <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
   <img alt="Lifecycle: governed" src="https://img.shields.io/badge/lifecycle-governed-2ea44f">
   <img alt="Release: not published" src="https://img.shields.io/badge/release-not_published-lightgrey">
-  <img alt="Review: TODO" src="https://img.shields.io/badge/review-TODO-lightgrey">
+  <img alt="Review: repo mount needed" src="https://img.shields.io/badge/review-repo_mount_needed-lightgrey">
 </p>
 
 <p align="center">
+  <a href="#current-session-repo-scan">Repo scan</a> ·
   <a href="#scope">Scope</a> ·
   <a href="#repo-fit">Repo fit</a> ·
   <a href="#lifecycle-map">Lifecycle</a> ·
   <a href="#minimum-pipeline-contract">Contract</a> ·
   <a href="#validation-gates">Gates</a> ·
   <a href="#pipeline-families">Families</a> ·
-  <a href="#quickstart">Quickstart</a> ·
+  <a href="#quickstart-for-a-future-mounted-checkout">Quickstart</a> ·
   <a href="#faq">FAQ</a>
 </p>
 
@@ -46,20 +47,51 @@ notes: [GENERATED_THIS_RUN: revised from supplied pipeline README markdown; NEED
 |---|---|
 | **Status** | `draft` |
 | **Owners** | `TODO(pipeline/data platform owners)` |
-| **Path** | `pipelines/` — **NEEDS VERIFICATION** in mounted repo |
+| **Path** | `pipelines/` — **PROPOSED TARGET PATH / NOT FOUND** in the current visible workspace |
 | **Document role** | Directory README and review gate for pipeline definitions, dry-runs, watchers, validation flows, and promotion rehearsals |
-| **Evidence mode** | **CORPUS_ONLY / GENERATED_THIS_RUN:** revised from supplied Markdown and KFM guidance. **UNKNOWN:** actual current `pipelines/` contents, package manager, CI wiring, source registry, validator paths, and runtime behavior. |
+| **Evidence mode** | **CONFIRMED scan / PROPOSED README / UNKNOWN implementation depth:** `/mnt/data` is not a Git repository; no `.git` directory or repo marker files were found in inspected roots; actual target `pipelines/` contents, package manager, CI wiring, source registry, validator paths, and runtime behavior remain **UNKNOWN**. |
 | **Public posture** | Pipelines prepare governed artifacts; public and ordinary UI clients use governed APIs and released or policy-safe artifacts only. |
 | **Core invariant** | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` |
+| **Current scan** | **CONFIRMED 2026-04-26:** visible workspace contains uploaded PDFs, this Markdown input, and a scan transcript; it does not contain a mounted KFM checkout. |
 
 > [!IMPORTANT]
-> This README defines the intended KFM role of `pipelines/`. It does **not** prove that any pipeline, workflow, connector, fixture, validator, release artifact, API route, source registry, or UI component already exists. Treat implementation-shaped examples as **PROPOSED** until verified from current repository evidence.
+> This README defines the intended KFM role of `pipelines/`. Current-session scanning found **no mounted KFM Git repository**, so this document does **not** prove that `pipelines/`, any pipeline, workflow, connector, fixture, validator, release artifact, API route, source registry, or UI component already exists. Treat implementation-shaped examples as **PROPOSED** until verified from current repository evidence.
 
 | What this document does | What it does not do |
 |---|---|
 | Defines how pipeline work should preserve evidence, policy, validation, review, publication, and rollback. | Does not authorize public release or live source activation. |
 | Identifies accepted inputs, exclusions, object families, gates, and failure outcomes. | Does not prove current repo paths, tests, CI, route names, package manager, or runtime behavior. |
 | Gives a reviewable README and manifest pattern for future pipeline directories. | Does not replace schemas, policies, validators, receipts, `EvidenceBundle` resolution, or promotion review. |
+
+---
+
+## Current-session repo scan
+
+**Truth posture:** **CONFIRMED workspace scan / PROPOSED repo README / UNKNOWN target implementation.**
+
+The visible workspace was scanned before this update. The scan found uploaded artifacts, not a mounted KFM repository checkout.
+
+| Probe | Result | Status | Consequence |
+|---|---|---|---|
+| `pwd` | `/` | **CONFIRMED** | Shell started outside any target repository. |
+| `git -C /mnt/data status --short` | `fatal: not a git repository` | **CONFIRMED** | `/mnt/data` is an artifact workspace, not the KFM repo root. |
+| `git -C /mnt/data branch --show-current` | `fatal: not a git repository` | **CONFIRMED** | No branch or dirty-state claim is possible. |
+| `.git` search under inspected roots | No `.git` directory found under `/mnt/data` or `/tmp`; common candidate roots such as `/workspace`, `/workspaces`, `/home/oai`, `/repo`, `/project`, and `/app` were absent in this container. | **CONFIRMED for inspected roots** | Target checkout is not mounted in the visible workspace. |
+| Repo marker search | No KFM `README.md`, `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Makefile`, lockfile, or `.github` marker found under inspected roots. | **CONFIRMED for inspected roots** | Package manager, language stack, CI, and repo conventions remain **UNKNOWN**. |
+| Expected KFM directories in `/mnt/data` | No mounted `.github/`, `docs/`, `contracts/`, `schemas/`, `policy/`, `tools/`, `tests/`, `apps/`, `packages/`, `infra/`, `data/`, `pipelines/`, `migrations/`, `release/`, `src/`, `ui/`, or `web/` tree found. | **CONFIRMED** | All path references below remain proposed targets or link-intent placeholders. |
+| Visible files in `/mnt/data` | Uploaded PDFs, the supplied Markdown input, the updated Markdown output, and `repo_scan_transcript.txt`. | **CONFIRMED** | The scan updated this Markdown as a standalone artifact; it did not edit a repository file. |
+
+**Update consequence:** this README can be used as a proposed `pipelines/README.md` after the real checkout is mounted, but it should not be merged as an implementation claim until the target repository is inspected.
+
+**Required next verification before repo merge:**
+
+1. Mount or open the actual KFM repository.
+2. Re-run `git status --short`, `git branch --show-current`, and `git rev-parse --show-toplevel` from the repo root.
+3. Inventory `pipelines/`, `.github/`, `docs/`, `contracts/`, `schemas/`, `policy/`, `tools/`, `tests/`, `apps/`, `packages/`, `infra/`, and `data/`.
+4. Replace placeholder links, owners, commands, badges, and path conventions with repo-native evidence.
+5. Keep any unverified implementation-shaped section labeled **PROPOSED** or **NEEDS VERIFICATION**.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -101,11 +133,11 @@ pipelines/
 ```
 
 > [!NOTE]
-> Path existence, naming conventions, runner commands, package manager, and CI integration are **NEEDS VERIFICATION** until the real KFM checkout is mounted and inspected.
+> Current-session scan did **not** find a mounted repository or a `pipelines/` directory. Treat `pipelines/` as the proposed target path until the real KFM checkout is mounted and inspected. Path existence, naming conventions, runner commands, package manager, and CI integration remain **UNKNOWN / NEEDS VERIFICATION**.
 
 ### Upstream dependencies
 
-These are intended repository relationships and must be verified against the actual checkout before merge.
+These are intended repository relationships and must be verified against the actual checkout before merge. In the current scan, none of these targets were visible as repo files.
 
 | Upstream surface | Expected relationship | Link status |
 |---|---|---|
@@ -361,12 +393,15 @@ publication_performed: false
 
 ---
 
-## Quickstart
+## Quickstart for a future mounted checkout
+
+> [!IMPORTANT]
+> These commands are for the real KFM repository root after it is mounted. They were not runnable as repo commands in the current visible workspace because no checkout was present.
 
 ### 1. Inspect before running
 
 ```bash
-# From the repository root.
+# From the actual repository root, after mounting/opening the checkout.
 git status --short
 git branch --show-current
 
@@ -563,11 +598,11 @@ Usually no. Watchers are useful after source terms, cadence, credentials, diff s
 
 | Question | Status | Why it matters |
 |---|---|---|
-| Where is the canonical repo and active branch? | **UNKNOWN** | Required before path claims become implementation claims |
-| Does `pipelines/` already exist, and what does it contain? | **UNKNOWN** | Needed before revising rather than creating |
-| What package manager and language stack are authoritative? | **UNKNOWN** | Determines runnable quickstart and CI commands |
+| Where is the canonical repo and active branch? | **UNKNOWN / NOT MOUNTED IN CURRENT SCAN** | Required before path claims become implementation claims |
+| Does `pipelines/` already exist, and what does it contain? | **UNKNOWN / NOT FOUND IN CURRENT SCAN** | Needed before revising rather than creating |
+| What package manager and language stack are authoritative? | **UNKNOWN / NO REPO MARKERS FOUND** | Determines runnable quickstart and CI commands |
 | Is `schemas/contracts/v1/` the final machine schema home? | **NEEDS VERIFICATION** | Avoids contract/schema drift |
-| Which CI workflows already exist? | **UNKNOWN** | Prevents speculative workflow names and badges |
+| Which CI workflows already exist? | **UNKNOWN / `.github` NOT FOUND IN CURRENT SCAN** | Prevents speculative workflow names and badges |
 | Who owns pipeline review and release approval? | **TODO** | Required for separation of duty and review accountability |
 | Which source families have verified rights and terms? | **NEEDS VERIFICATION** | Blocks live connector activation and public release |
 | Where are receipts, proofs, catalogs, and releases emitted today? | **UNKNOWN** | Prevents invented artifact paths |
@@ -631,6 +666,39 @@ Does it avoid:
 | `FocusModePayload` | Evidence-bounded synthesis payload with finite outcomes such as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. |
 | `CorrectionNotice` | Public or steward-facing notice that explains correction scope, reason, lineage, and replacement/withdrawal state. |
 | `RollbackPlan` | Practical reference for undoing or superseding release-facing artifacts without hiding history. |
+
+</details>
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+<details>
+<summary><strong>Current scan transcript summary</strong></summary>
+
+```text
+timestamp_utc=2026-04-26T18:53:28Z
+pwd=/
+
+git -C /mnt/data status --short
+fatal: not a git repository (or any of the parent directories): .git
+
+git -C /mnt/data branch --show-current
+fatal: not a git repository (or any of the parent directories): .git
+
+git -C /mnt/data rev-parse --show-toplevel
+fatal: not a git repository (or any of the parent directories): .git
+
+.git search under inspected visible roots:
+no .git directory returned under /mnt/data or /tmp
+candidate roots /workspace, /workspaces, /home/oai, /home/oai/share, /repo, /project, /app were absent
+
+repo marker search:
+no package.json, pyproject.toml, Cargo.toml, go.mod, README.md, Makefile, pnpm-lock.yaml,
+yarn.lock, package-lock.json, or requirements.txt found under inspected roots
+
+expected KFM directory search under /mnt/data:
+no mounted .github, docs, contracts, schemas, policy, tools, tests, apps, packages, infra,
+data, pipelines, migrations, release, configs, src, ui, or web tree found
+```
 
 </details>
 
