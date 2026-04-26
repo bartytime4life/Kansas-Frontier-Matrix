@@ -1,14 +1,261 @@
-name: policy
+name: Policy
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      strict:
+        description: "Fail on advisory warnings as well as hard policy errors"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
+concurrency:
+  group: policy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  placeholder:
+  kfm-policy:
+    name: KFM policy gates
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KFM_POLICY_STRICT: ${{ github.event_name == 'workflow_dispatch' && inputs.strict || false }}
     steps:
-      - name: Placeholder
-        run: echo "policy workflow is scaffolded and pending implementation."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Static KFM policy scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          repo = Path('.').resolve()
+          strict = os.environ.get('KFM_POLICY_STRICT', 'false').lower() == 'true'
+          errors: list[str] = []
+          warnings: list[str] = []
+
+          def note(kind: str, message: str) -> None:
+              if kind == 'error':
+                  errors.append(message)
+              else:
+                  warnings.append(message)
+
+          try:
+              files = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
+          except Exception:
+              files = [
+                  str(path.relative_to(repo))
+                  for path in repo.rglob('*')
+                  if path.is_file() and '.git' not in path.parts
+              ]
+
+          files = [f.replace('\\', '/') for f in files]
+          file_set = set(files)
+
+          text_suffixes = {
+              '.cjs', '.css', '.html', '.js', '.json', '.jsx', '.md', '.mdx',
+              '.mjs', '.py', '.rego', '.sh', '.svelte', '.toml', '.ts', '.tsx',
+              '.txt', '.vue', '.yaml', '.yml'
+          }
+
+          def is_text_path(path: str) -> bool:
+              suffix = Path(path).suffix.lower()
+              return suffix in text_suffixes or Path(path).name in {'Makefile', 'Dockerfile'}
+
+          def read_text(path: str) -> str:
+              try:
+                  return Path(path).read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  return Path(path).read_text(encoding='utf-8', errors='ignore')
+              except FileNotFoundError:
+                  return ''
+
+          def allowed_placeholder(path: str) -> bool:
+              name = Path(path).name.lower()
+              if name in {'.gitkeep', '.gitignore', 'readme', 'readme.md'}:
+                  return True
+              if path.startswith('tests/fixtures/') or '/fixtures/' in path:
+                  return True
+              if path.startswith('docs/'):
+                  return True
+              return False
+
+          # KFM lifecycle rule: RAW/WORK/QUARANTINE are not normal committed/public artifacts.
+          private_lifecycle_prefixes = ('data/raw/', 'data/work/', 'data/quarantine/')
+          for path in files:
+              if path.startswith(private_lifecycle_prefixes) and not allowed_placeholder(path):
+                  note(
+                      'error',
+                      f'{path}: committed RAW/WORK/QUARANTINE artifact detected. '
+                      'Move live/candidate data out of repo, into fixtures, or through governed processed/catalog/proof surfaces.'
+                  )
+
+          # Public and client surfaces must not bypass the trust membrane.
+          public_prefixes = (
+              'apps/web/', 'apps/ui/', 'apps/frontend/', 'frontend/', 'web/', 'ui/',
+              'src/ui/', 'src/web/', 'public/'
+          )
+          private_path_patterns = [
+              (re.compile(r'\bdata/(raw|work|quarantine)\b', re.I), 'direct private lifecycle path'),
+              (re.compile(r'\b(raw|work|quarantine)/(sources?|evidence|candidate|canonical|processed)?\b', re.I), 'raw/work/quarantine reference'),
+              (re.compile(r'\bcanonical(_|-)?store\b', re.I), 'canonical-store reference'),
+          ]
+          direct_model_patterns = [
+              (re.compile(r'localhost:11434|127\.0\.0\.1:11434|OLLAMA_HOST', re.I), 'direct Ollama runtime access'),
+              (re.compile(r'/api/(generate|chat|embeddings)\b', re.I), 'direct model runtime endpoint'),
+              (re.compile(r'api\.openai\.com|from\s+["\']openai["\']|new\s+OpenAI\s*\(', re.I), 'direct OpenAI client access'),
+              (re.compile(r'api\.anthropic\.com|from\s+["\']@anthropic-ai/sdk["\']', re.I), 'direct Anthropic client access'),
+          ]
+
+          for path in files:
+              if not path.startswith(public_prefixes) or not is_text_path(path):
+                  continue
+              text = read_text(path)
+              for pattern, label in private_path_patterns:
+                  if pattern.search(text):
+                      note('error', f'{path}: public/client surface contains {label}; use governed APIs and released artifacts only.')
+              for pattern, label in direct_model_patterns:
+                  if pattern.search(text):
+                      note('error', f'{path}: public/client surface contains {label}; model runtimes must stay behind governed APIs.')
+              if re.search(r'\bollama\b', text, re.I):
+                  note('warning', f'{path}: mentions Ollama in a public/client surface. Confirm it is only a governed-status label, not a direct client.')
+
+          # Workflow hygiene: policy-sensitive PR checks should not use pull_request_target by default.
+          for path in files:
+              if not (path.startswith('.github/workflows/') and path.endswith(('.yml', '.yaml'))):
+                  continue
+              text = read_text(path)
+              if re.search(r'^\s*pull_request_target\s*:', text, re.M):
+                  note('error', f'{path}: uses pull_request_target. Use pull_request unless a reviewed exception documents the fork/secrets risk.')
+              if re.search(r'^\s*permissions\s*:\s*write-all\s*$', text, re.M):
+                  note('error', f'{path}: uses permissions: write-all. Use least-privilege job permissions.')
+              if re.search(r'uses:\s*[^\s]+@(main|master|HEAD)\b', text):
+                  note('warning', f'{path}: references an action by a mutable ref. Pin to a release tag or reviewed SHA where practical.')
+              if re.search(r'(?m)^[ \t]{0,10}(contents|id-token):\s*write\s*$', text):
+                  note('warning', f'{path}: requests write-capable permissions. Confirm this is needed and scoped to a release/signing job.')
+
+          # Publication gates: public artifacts need catalog/proof/release context.
+          published_files = [
+              f for f in files
+              if f.startswith(('data/published/', 'published/')) and not allowed_placeholder(f)
+          ]
+          if published_files:
+              has_catalog = any(f.startswith(('data/catalog/', 'catalog/')) for f in files)
+              has_proofs = any(f.startswith(('data/proofs/', 'proofs/')) for f in files)
+              has_release = any(f.startswith(('release/', 'releases/')) for f in files)
+              if not (has_catalog and has_proofs and has_release):
+                  note(
+                      'error',
+                      'Published artifacts are present, but catalog/proof/release surfaces were not all found. '
+                      'Promotion must be a governed state transition, not a file move.'
+                  )
+
+          # Advisory structure checks. These do not fail unless workflow_dispatch strict=true.
+          if '.github/workflows/policy.yml' not in file_set:
+              note('warning', '.github/workflows/policy.yml is not tracked yet; ensure this workflow file is committed at that path.')
+          if not any(f.startswith(('policy/', 'policies/')) for f in files):
+              note('warning', 'No policy/ or policies/ files found. Inline checks ran, but repo-native policy-as-code is still absent.')
+          if not any(f.startswith(('schemas/', 'contracts/')) for f in files):
+              note('warning', 'No schemas/ or contracts/ files found. Machine contract checks are not available yet.')
+          if not any(f.startswith(('data/registry/', 'registry/')) for f in files):
+              note('warning', 'No source registry files found. Source-role and rights policy cannot be fully enforced yet.')
+
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          summary = Path(summary_path) if summary_path else None
+          report_lines = [
+              '## KFM static policy scan',
+              '',
+              f'- Files inspected: {len(files)}',
+              f'- Hard policy errors: {len(errors)}',
+              f'- Advisory warnings: {len(warnings)}',
+              '',
+          ]
+          if errors:
+              report_lines.append('### Errors')
+              report_lines.extend(f'- {item}' for item in errors)
+              report_lines.append('')
+          if warnings:
+              report_lines.append('### Warnings')
+              report_lines.extend(f'- {item}' for item in warnings)
+              report_lines.append('')
+          if not errors and not warnings:
+              report_lines.append('No policy issues detected by the built-in static scan.')
+          output = '\n'.join(report_lines)
+          print(output)
+          if summary:
+              with summary.open('a', encoding='utf-8') as handle:
+                  handle.write(output + '\n')
+
+          if errors or (strict and warnings):
+              sys.exit(1)
+          PY
+
+      - name: Run repository-provided policy validators
+        shell: bash
+        run: |
+          set -euo pipefail
+          ran=0
+
+          if [ -f Makefile ] && grep -Eq '(^|[[:space:]])policy:' Makefile; then
+            echo "Running make policy"
+            make policy
+            ran=1
+          fi
+
+          if [ -x scripts/policy.sh ]; then
+            echo "Running scripts/policy.sh"
+            scripts/policy.sh
+            ran=1
+          fi
+
+          if [ -f tools/validators/policy_check.py ]; then
+            echo "Running tools/validators/policy_check.py"
+            python3 tools/validators/policy_check.py
+            ran=1
+          fi
+
+          if [ -f package.json ] && node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.policy ? 0 : 1)"; then
+            echo "Running package.json policy script"
+            if [ -f pnpm-lock.yaml ] && command -v pnpm >/dev/null 2>&1; then
+              pnpm run policy
+            elif [ -f yarn.lock ] && command -v yarn >/dev/null 2>&1; then
+              yarn run policy
+            else
+              npm run policy
+            fi
+            ran=1
+          fi
+
+          if [ -d policy ] && find policy -type f -name '*.rego' | grep -q .; then
+            if command -v conftest >/dev/null 2>&1; then
+              echo "Running conftest against policy/"
+              conftest test . --policy policy
+              ran=1
+            elif command -v opa >/dev/null 2>&1; then
+              echo "Running opa fmt --diff policy/"
+              opa fmt --diff policy
+              ran=1
+            else
+              echo "Rego policy files found, but conftest/opa is not installed. Skipping external Rego execution."
+            fi
+          fi
+
+          if [ "$ran" -eq 0 ]; then
+            echo "No optional repository-provided policy validators found. Built-in static KFM policy scan completed."
+          fi
