@@ -31,9 +31,12 @@ Orientation and guardrails for architecture docs that preserve KFM's governed, e
 
 **Quick jumps:** [Scope](#scope) · [Evidence boundary](#evidence-boundary) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Architecture boundaries](#architecture-boundaries) · [Review gates](#review-gates) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog)
 
----
+1. **Contracts and schemas** define machine-checkable interfaces.
+2. **Policy and validation tooling** enforce release/runtime guardrails.
+3. **Applications and pipelines** implement behavior behind those contracts.
+4. **Runbooks and ADRs** document operational and governance decisions.
 
-## Scope
+## Next move
 
 `docs/architecture/` is the repo-facing home for architecture-level explanation, boundary setting, and design governance.
 
