@@ -52,35 +52,10 @@ jobs:
           sh ./tools/ci/check_python_syntax.sh
           sh ./tools/ci/verify_baseline.sh baseline-report.txt
 
-      - name: Run optional crosswalk static checks
+      - name: Run crosswalk static checks
         run: |
-          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py ]; then
-            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py
-          fi
-
-          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_wbd.py ]; then
-            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_wbd.py
-          fi
-
-          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_tiger_admin.py ]; then
-            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_tiger_admin.py
-          fi
-
-          if [ -f ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json ]; then
-            python3 -m json.tool ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json >/dev/null
-          fi
-
-          if [ -f ./policy/crosswalk/crosswalk.rego ]; then
-            test -s ./policy/crosswalk/crosswalk.rego
-          fi
-
-          if [ -f ./tools/validators/crosswalk/validate_crosswalk_sql.sql ]; then
-            test -s ./tools/validators/crosswalk/validate_crosswalk_sql.sql
-          fi
-
-          if [ -f ./data/registry/crosswalk/sources.yaml ]; then
-            test -s ./data/registry/crosswalk/sources.yaml
-          fi
+          sh ./tools/ci/test_check_crosswalk_static.sh
+          sh ./tools/ci/check_crosswalk_static.sh
 
       - name: Run scripts thin-slice checks
         run: |
