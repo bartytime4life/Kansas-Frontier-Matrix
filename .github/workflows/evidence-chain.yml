@@ -1,0 +1,47 @@
+name: evidence-chain
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-chain-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pytest jsonschema
+
+      - name: Validate evidence schemas are valid JSON
+        run: |
+          python3 -m json.tool schemas/contracts/v1/evidence/evidence_ref.schema.json > /dev/null
+          python3 -m json.tool schemas/contracts/v1/evidence/claim_envelope.schema.json > /dev/null
+          python3 -m json.tool schemas/contracts/v1/evidence/evidence_bundle.schema.json > /dev/null
+          python3 -m json.tool schemas/contracts/v1/policy/promotion_receipt.schema.json > /dev/null
+
+      - name: Run evidence-chain validator tests
+        run: python -m pytest tests/validators/ -v
+
+      - name: Run evidence-chain runtime proof e2e tests
+        run: python -m pytest tests/e2e/runtime_proof/evidence_ref/ -v
+
+      - name: Validate evidence-chain CLI smoke test
+        run: |
+          python -m packages.evidence \
+            --evidence-ref tests/fixtures/evidence/valid/evidence_ref_published.json \
+            --schema schemas/contracts/v1/evidence/evidence_ref.schema.json

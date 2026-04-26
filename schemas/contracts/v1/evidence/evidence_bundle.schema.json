@@ -1,8 +1,74 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schema/schemas/contracts/v1/evidence/evidence_bundle.schema.json",
-  "title": "evidence_bundle.schema",
-  "description": "Skeletal schema placeholder generated from linked documentation.",
+  "$id": "kfm://schema/contracts/v1/evidence/evidence_bundle.schema.json",
+  "title": "EvidenceBundle",
+  "description": "Resolved, policy-safe support package for a claim, feature, story, export preview, Focus answer, or drawer payload. Packages support; does not publish by itself.",
   "type": "object",
-  "additionalProperties": true
+  "additionalProperties": false,
+  "required": [
+    "evidence_bundle_id",
+    "candidate_id",
+    "decision",
+    "status"
+  ],
+  "properties": {
+    "evidence_bundle_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable unique identifier for this evidence bundle."
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The candidate this bundle resolves support for."
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "cite",
+        "abstain",
+        "deny"
+      ],
+      "description": "cite when evidence resolves, abstain when missing or unresolvable, deny when policy forbids."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "resolved",
+        "unresolved"
+      ],
+      "description": "resolved when bundle is ready to cite, unresolved when evidence is missing or invalid."
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Spec hash from the proof pack for integrity verification."
+    },
+    "proof_pack_ref": {
+      "type": "string",
+      "description": "Reference to the proof pack that backs this bundle."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Human-readable reason for abstain or deny decisions."
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Machine-readable error code for abstain or deny decisions."
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Resolved evidence payload.",
+      "additionalProperties": true
+    },
+    "uncertainty": {
+      "type": "object",
+      "description": "Declared uncertainty summary.",
+      "additionalProperties": true
+    },
+    "claim_text": {
+      "type": "string",
+      "description": "Human-readable claim text for abstain bundles."
+    }
+  }
 }

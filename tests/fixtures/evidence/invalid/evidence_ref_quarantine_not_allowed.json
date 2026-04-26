@@ -1,0 +1,6 @@
+{
+  "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305:quarantine",
+  "domain": "hydrology",
+  "ref": "data/quarantine/hydrology/102600080305.json",
+  "release_state": "QUARANTINE"
+}

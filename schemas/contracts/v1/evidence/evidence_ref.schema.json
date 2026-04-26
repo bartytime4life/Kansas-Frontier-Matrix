@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/evidence/evidence_ref.schema.json",
+  "title": "EvidenceRef",
+  "description": "Stable pointer to a support item with source identity, release scope, rights/sensitivity, review state, and integrity linkage. A reference is not proof by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_ref_id",
+    "domain",
+    "ref",
+    "release_state"
+  ],
+  "properties": {
+    "evidence_ref_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable unique identifier for this evidence reference."
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Ecological or data domain this evidence covers."
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Pointer to the underlying evidence artifact (URI or path)."
+    },
+    "release_state": {
+      "type": "string",
+      "enum": [
+        "PUBLISHED",
+        "CATALOG",
+        "PROCESSED",
+        "WORK",
+        "RAW",
+        "QUARANTINE"
+      ],
+      "description": "Lifecycle release state. Only PUBLISHED or CATALOG evidence may be cited on public surfaces."
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Optional sha256 digest for integrity verification."
+    },
+    "sensitivity": {
+      "type": "string",
+      "description": "Policy sensitivity label for rights and access control."
+    },
+    "review_state": {
+      "type": "string",
+      "description": "Review or approval state for this evidence reference."
+    },
+    "promotion_receipt_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional reference to the PromotionReceipt that approved this evidence for public use."
+    }
+  }
+}
