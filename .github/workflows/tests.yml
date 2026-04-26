@@ -1,14 +1,296 @@
 name: tests
 
-on:
+'on':
+  push:
+    branches:
+      - '**'
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: '3.12'
+  NODE_VERSION: '22'
+  # Keep CI honest: set this to '1' only for an intentional bootstrap PR.
+  KFM_ALLOW_NO_TESTS: '0'
+
 jobs:
-  placeholder:
+  tests:
+    name: test and validate
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
-      - name: Placeholder
-        run: echo "tests workflow is scaffolded and pending implementation."
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Detect repository toolchain
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          has_node=false
+          package_manager=none
+          has_node_test=false
+          has_python=false
+          has_pytest=false
+          has_make_test=false
+
+          if [[ -f package.json ]]; then
+            has_node=true
+            if [[ -f pnpm-lock.yaml ]]; then
+              package_manager=pnpm
+            elif [[ -f yarn.lock ]]; then
+              package_manager=yarn
+            else
+              package_manager=npm
+            fi
+
+            if python3 - <<'PY'
+          import json
+          from pathlib import Path
+          package = json.loads(Path('package.json').read_text(encoding='utf-8'))
+          raise SystemExit(0 if package.get('scripts', {}).get('test') else 1)
+          PY
+            then
+              has_node_test=true
+            fi
+          fi
+
+          if [[ -f pyproject.toml || -f setup.cfg || -f setup.py || -f requirements.txt || -f requirements-dev.txt || -d tests ]]; then
+            has_python=true
+          fi
+
+          if find . \
+            -path './.git' -prune -o \
+            -path './node_modules' -prune -o \
+            -path './.venv' -prune -o \
+            -path './venv' -prune -o \
+            -type f \( -name 'test_*.py' -o -name '*_test.py' \) -print -quit | grep -q .; then
+            has_pytest=true
+            has_python=true
+          fi
+
+          if [[ -f Makefile ]] && grep -Eq '^test[[:space:]]*:' Makefile; then
+            has_make_test=true
+          fi
+
+          {
+            echo "has_node=${has_node}"
+            echo "package_manager=${package_manager}"
+            echo "has_node_test=${has_node_test}"
+            echo "has_python=${has_python}"
+            echo "has_pytest=${has_pytest}"
+            echo "has_make_test=${has_make_test}"
+          } >> "$GITHUB_OUTPUT"
+
+          printf 'Detected: node=%s pm=%s node_test=%s python=%s pytest=%s make_test=%s\n' \
+            "$has_node" "$package_manager" "$has_node_test" "$has_python" "$has_pytest" "$has_make_test"
+
+      - name: Require at least one test surface
+        shell: bash
+        env:
+          HAS_MAKE_TEST: ${{ steps.detect.outputs.has_make_test }}
+          HAS_NODE_TEST: ${{ steps.detect.outputs.has_node_test }}
+          HAS_PYTEST: ${{ steps.detect.outputs.has_pytest }}
+        run: |
+          set -euo pipefail
+          targets=()
+          [[ "$HAS_MAKE_TEST" == 'true' ]] && targets+=("make test")
+          [[ "$HAS_NODE_TEST" == 'true' ]] && targets+=("package.json test script")
+          [[ "$HAS_PYTEST" == 'true' ]] && targets+=("pytest")
+
+          if [[ ${#targets[@]} -eq 0 && "$KFM_ALLOW_NO_TESTS" != '1' ]]; then
+            cat <<'MSG'
+          No repository test surface was detected.
+
+          Add at least one of:
+          - a Makefile target named test
+          - a package.json scripts.test entry
+          - Python tests under tests/ or files matching test_*.py / *_test.py
+
+          For a deliberate bootstrap-only PR, set KFM_ALLOW_NO_TESTS to '1'.
+          MSG
+            exit 1
+          fi
+
+          printf 'Test surfaces: %s\n' "${targets[*]:-bootstrap override only}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install Python validation tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pytest jsonschema pyyaml
+
+      - name: Validate JSON and YAML syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          import yaml
+
+          skip_dirs = {
+              '.git', '.github/actions-cache', '.mypy_cache', '.pytest_cache',
+              '.ruff_cache', '.tox', '.venv', 'build', 'dist', 'node_modules',
+              'venv', '__pycache__'
+          }
+          suffixes = {'.json', '.yaml', '.yml'}
+          checked = 0
+          failures = []
+
+          for path in Path('.').rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in suffixes:
+                  continue
+              if any(part in skip_dirs for part in path.parts):
+                  continue
+
+              checked += 1
+              try:
+                  text = path.read_text(encoding='utf-8')
+                  if path.suffix.lower() == '.json':
+                      json.loads(text)
+                  else:
+                      yaml.safe_load(text)
+              except Exception as exc:  # noqa: BLE001 - surface parser detail in CI
+                  failures.append(f'{path}: {exc}')
+
+          print(f'Validated {checked} JSON/YAML file(s).')
+          if failures:
+              print('Syntax validation failed:', file=sys.stderr)
+              for failure in failures:
+                  print(f'  - {failure}', file=sys.stderr)
+              raise SystemExit(1)
+          PY
+
+      - name: Install Python project dependencies
+        if: steps.detect.outputs.has_python == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -f requirements.txt ]]; then
+            python -m pip install -r requirements.txt
+          fi
+
+          if [[ -f requirements-dev.txt ]]; then
+            python -m pip install -r requirements-dev.txt
+          fi
+
+          if [[ -f pyproject.toml || -f setup.cfg || -f setup.py ]]; then
+            python -m pip install -e '.[test]' \
+              || python -m pip install -e '.[tests]' \
+              || python -m pip install -e .
+          fi
+
+      - name: Run repository validators when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          ran=false
+
+          if [[ -f scripts/validate.py ]]; then
+            python scripts/validate.py
+            ran=true
+          fi
+
+          if [[ -f tools/validators/validate.py ]]; then
+            python tools/validators/validate.py
+            ran=true
+          fi
+
+          if [[ -f tools/validators/check_no_direct_model_client.py ]]; then
+            python tools/validators/check_no_direct_model_client.py
+            ran=true
+          fi
+
+          if [[ -f tools/validators/validate_evidence_refs.py ]]; then
+            python tools/validators/validate_evidence_refs.py
+            ran=true
+          fi
+
+          if [[ "$ran" == 'false' ]]; then
+            echo 'No optional repository validator scripts found.'
+          fi
+
+      - name: Set up Node.js
+        if: steps.detect.outputs.has_node == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Node.js dependencies
+        if: steps.detect.outputs.has_node == 'true'
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ steps.detect.outputs.package_manager }}
+        run: |
+          set -euo pipefail
+          corepack enable || true
+
+          case "$PACKAGE_MANAGER" in
+            pnpm)
+              pnpm install --frozen-lockfile
+              ;;
+            yarn)
+              yarn install --immutable || yarn install --frozen-lockfile
+              ;;
+            npm)
+              if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+                npm ci
+              else
+                npm install
+              fi
+              ;;
+            *)
+              echo "Unsupported package manager: $PACKAGE_MANAGER" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Run Node.js tests
+        if: steps.detect.outputs.has_node_test == 'true'
+        shell: bash
+        env:
+          PACKAGE_MANAGER: ${{ steps.detect.outputs.package_manager }}
+        run: |
+          set -euo pipefail
+          case "$PACKAGE_MANAGER" in
+            pnpm) pnpm test ;;
+            yarn) yarn test ;;
+            npm) npm test ;;
+            *) echo "Unsupported package manager: $PACKAGE_MANAGER" >&2; exit 1 ;;
+          esac
+
+      - name: Run Python tests
+        if: steps.detect.outputs.has_pytest == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q
+
+      - name: Run Makefile test target
+        if: steps.detect.outputs.has_make_test == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          make test
