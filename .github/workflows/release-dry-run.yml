@@ -1,14 +1,489 @@
 name: release-dry-run
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/release-dry-run.yml"
+      - "docs/**"
+      - "schemas/**"
+      - "contracts/**"
+      - "policy/**"
+      - "tools/**"
+      - "tests/**"
+      - "release/**"
+      - "releases/**"
+      - "data/catalog/**"
+      - "data/proofs/**"
+      - "data/receipts/**"
+      - "data/published/**"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - ".github/workflows/release-dry-run.yml"
+      - "docs/**"
+      - "schemas/**"
+      - "contracts/**"
+      - "policy/**"
+      - "tools/**"
+      - "tests/**"
+      - "release/**"
+      - "releases/**"
+      - "data/catalog/**"
+      - "data/proofs/**"
+      - "data/receipts/**"
+      - "data/published/**"
   workflow_dispatch:
+    inputs:
+      strict_mode:
+        description: "Fail on governance warnings, not only DENY/ERROR findings."
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 permissions:
   contents: read
+  actions: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  placeholder:
+  release-dry-run:
+    name: Governed release dry run
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KFM_RELEASE_DRY_RUN_STRICT: ${{ inputs.strict_mode || 'false' }}
     steps:
-      - name: Placeholder
-        run: echo "release-dry-run workflow is scaffolded and pending implementation."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build release dry-run receipt
+        id: dryrun
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          STRICT_MODE: ${{ env.KFM_RELEASE_DRY_RUN_STRICT }}
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import datetime as _dt
+          import fnmatch
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import re
+          import subprocess
+          import sys
+          from typing import Any
+
+          root = pathlib.Path.cwd()
+          out_dir = root / "release-dry-run-output"
+          out_dir.mkdir(parents=True, exist_ok=True)
+
+          event_name = os.environ.get("EVENT_NAME", "unknown")
+          head_sha = os.environ.get("HEAD_SHA", "")
+          strict_mode = os.environ.get("STRICT_MODE", "false").lower() == "true"
+
+          release_relevant_prefixes = (
+              ".github/workflows/release-dry-run.yml",
+              "docs/",
+              "schemas/",
+              "contracts/",
+              "policy/",
+              "tools/",
+              "tests/",
+              "release/",
+              "releases/",
+              "data/catalog/",
+              "data/proofs/",
+              "data/receipts/",
+              "data/published/",
+          )
+          release_candidate_prefixes = (
+              "release/",
+              "releases/",
+              "data/catalog/",
+              "data/proofs/",
+              "data/receipts/",
+              "data/published/",
+          )
+          public_release_prefixes = ("release/", "releases/", "data/published/")
+          forbidden_lifecycle_patterns = [
+              re.compile(r"(^|/)raw(/|$)", re.IGNORECASE),
+              re.compile(r"(^|/)work(/|$)", re.IGNORECASE),
+              re.compile(r"(^|/)quarantine(/|$)", re.IGNORECASE),
+              re.compile(r"data/(raw|work|quarantine)/", re.IGNORECASE),
+          ]
+          json_like_suffixes = (".json", ".jsonl")
+
+          def run_git(args: list[str]) -> tuple[int, str, str]:
+              proc = subprocess.run(
+                  ["git", *args],
+                  cwd=root,
+                  text=True,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.PIPE,
+                  check=False,
+              )
+              return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
+
+          def normalize_path(path: str) -> str:
+              return path.replace("\\", "/").lstrip("./")
+
+          def git_files() -> list[str]:
+              code, stdout, _ = run_git(["ls-files"])
+              if code == 0:
+                  return sorted({normalize_path(p) for p in stdout.splitlines() if p.strip()})
+              files: list[str] = []
+              for p in root.rglob("*"):
+                  if p.is_file() and ".git" not in p.parts:
+                      files.append(normalize_path(str(p.relative_to(root))))
+              return sorted(files)
+
+          def changed_files() -> list[str]:
+              base = ""
+              head = head_sha
+              if event_name == "pull_request":
+                  base = os.environ.get("PR_BASE_SHA", "")
+                  head = os.environ.get("PR_HEAD_SHA", "") or head
+              elif event_name == "push":
+                  base = os.environ.get("PUSH_BEFORE_SHA", "")
+
+              zero = "0" * 40
+              if base and head and base != zero:
+                  code, stdout, stderr = run_git(["diff", "--name-only", base, head])
+                  if code == 0:
+                      return sorted({normalize_path(p) for p in stdout.splitlines() if p.strip()})
+                  print(f"::warning::Could not diff {base}..{head}: {stderr}", file=sys.stderr)
+
+              # Manual dispatch or shallow/edge event fallback: inspect the whole tree.
+              return git_files()
+
+          def path_starts(path: str, prefixes: tuple[str, ...]) -> bool:
+              return any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in prefixes)
+
+          def is_release_relevant(path: str) -> bool:
+              return path_starts(path, release_relevant_prefixes)
+
+          def is_release_candidate_path(path: str) -> bool:
+              return path_starts(path, release_candidate_prefixes)
+
+          def name_has(path: str, *terms: str) -> bool:
+              n = pathlib.Path(path).name.lower().replace("_", "-")
+              full = path.lower().replace("_", "-")
+              return all(term.lower().replace("_", "-") in n or term.lower().replace("_", "-") in full for term in terms)
+
+          def file_digest(path: str) -> str | None:
+              p = root / path
+              if not p.is_file():
+                  return None
+              h = hashlib.sha256()
+              with p.open("rb") as f:
+                  for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+
+          def load_json(path: str) -> Any:
+              p = root / path
+              with p.open("r", encoding="utf-8") as f:
+                  if path.endswith(".jsonl"):
+                      return [json.loads(line) for line in f if line.strip()]
+                  return json.load(f)
+
+          def flatten_strings(value: Any) -> list[str]:
+              found: list[str] = []
+              if isinstance(value, str):
+                  found.append(value)
+              elif isinstance(value, list):
+                  for item in value:
+                      found.extend(flatten_strings(item))
+              elif isinstance(value, dict):
+                  for k, v in value.items():
+                      found.append(str(k))
+                      found.extend(flatten_strings(v))
+              return found
+
+          def has_key_like(value: Any, *needles: str) -> bool:
+              needles = tuple(n.lower() for n in needles)
+              if isinstance(value, dict):
+                  for k, v in value.items():
+                      kl = str(k).lower()
+                      if any(n in kl for n in needles):
+                          return True
+                      if has_key_like(v, *needles):
+                          return True
+              elif isinstance(value, list):
+                  return any(has_key_like(item, *needles) for item in value)
+              return False
+
+          all_files = git_files()
+          changed = changed_files()
+          relevant_changed = [p for p in changed if is_release_relevant(p)]
+          candidate_changed = [p for p in changed if is_release_candidate_path(p)]
+          public_release_changed = [p for p in changed if path_starts(p, public_release_prefixes)]
+
+          manifests = [
+              p for p in all_files
+              if p.endswith(json_like_suffixes) and (
+                  name_has(p, "release", "manifest") or
+                  name_has(p, "ReleaseManifest") or
+                  name_has(p, "manifest") and path_starts(p, ("release/", "releases/"))
+              )
+          ]
+          proof_packs = [p for p in all_files if p.endswith(json_like_suffixes) and name_has(p, "proof")]
+          promotion_decisions = [p for p in all_files if p.endswith(json_like_suffixes) and name_has(p, "promotion", "decision")]
+          rollback_plans = [p for p in all_files if p.endswith(json_like_suffixes) and name_has(p, "rollback")]
+          correction_notices = [p for p in all_files if p.endswith(json_like_suffixes) and name_has(p, "correction")]
+          catalog_records = [p for p in all_files if p.endswith(json_like_suffixes) and path_starts(p, ("data/catalog/", "release/catalog/", "releases/catalog/"))]
+
+          release_candidate_present = bool(manifests or candidate_changed or public_release_changed)
+
+          checks: list[dict[str, Any]] = []
+          warnings: list[str] = []
+          denials: list[str] = []
+          errors: list[str] = []
+
+          def add_check(name: str, status: str, detail: str, **extra: Any) -> None:
+              checks.append({"name": name, "status": status, "detail": detail, **extra})
+
+          add_check(
+              "changed-file-inventory",
+              "PASS" if relevant_changed else "ABSTAIN",
+              f"{len(relevant_changed)} release-relevant changed file(s) detected.",
+              changed_files=relevant_changed,
+          )
+
+          if not release_candidate_present:
+              add_check(
+                  "release-candidate-detection",
+                  "ABSTAIN",
+                  "No release manifest, published artifact change, proof pack, receipt, catalog, or release directory change was detected.",
+              )
+          else:
+              add_check(
+                  "release-candidate-detection",
+                  "PASS",
+                  "Release-candidate surface detected; governance dry-run checks were evaluated.",
+              )
+
+              if manifests:
+                  add_check("release-manifest-present", "PASS", f"Found {len(manifests)} manifest candidate(s).", files=manifests)
+              else:
+                  denials.append("Release-candidate surface changed, but no release manifest candidate was found.")
+                  add_check("release-manifest-present", "DENY", denials[-1])
+
+              if public_release_changed:
+                  missing = []
+                  if not proof_packs:
+                      missing.append("proof pack")
+                  if not promotion_decisions:
+                      missing.append("promotion decision")
+                  if not rollback_plans:
+                      missing.append("rollback plan")
+                  if missing:
+                      denials.append("Public release surface changed without required rehearsal object(s): " + ", ".join(missing) + ".")
+                      add_check("public-release-object-closure", "DENY", denials[-1], changed_files=public_release_changed)
+                  else:
+                      add_check("public-release-object-closure", "PASS", "Public release changes have proof, promotion, and rollback object candidates.")
+              else:
+                  add_check("public-release-object-closure", "ABSTAIN", "No public release artifact path changed in this event.")
+
+              parsed_json: dict[str, Any] = {}
+              for path in [*manifests, *proof_packs, *promotion_decisions, *rollback_plans, *correction_notices, *catalog_records]:
+                  if path in parsed_json:
+                      continue
+                  try:
+                      parsed_json[path] = load_json(path)
+                  except Exception as exc:  # noqa: BLE001 - CI receipt should capture raw parse failure.
+                      errors.append(f"Invalid JSON-like release object {path}: {exc}")
+                      add_check("json-parse", "ERROR", errors[-1], file=path)
+
+              if not errors:
+                  add_check("json-parse", "PASS" if parsed_json else "ABSTAIN", f"Parsed {len(parsed_json)} JSON-like release object(s).")
+
+              for path, data in parsed_json.items():
+                  strings = [normalize_path(s) for s in flatten_strings(data)]
+                  forbidden_refs = [
+                      s for s in strings
+                      if any(pattern.search(s) for pattern in forbidden_lifecycle_patterns)
+                  ]
+                  if forbidden_refs:
+                      denials.append(f"{path} references RAW/WORK/QUARANTINE lifecycle material: {forbidden_refs[:10]}")
+                      add_check("no-public-raw-work-quarantine-reference", "DENY", denials[-1], file=path)
+
+              if not any(c["name"] == "no-public-raw-work-quarantine-reference" and c["status"] == "DENY" for c in checks):
+                  add_check(
+                      "no-public-raw-work-quarantine-reference",
+                      "PASS" if parsed_json else "ABSTAIN",
+                      "No parsed release object referenced RAW, WORK, or QUARANTINE material.",
+                  )
+
+              for path, data in parsed_json.items():
+                  if path in manifests:
+                      advisory_missing = []
+                      if not has_key_like(data, "evidence"):
+                          advisory_missing.append("EvidenceRef/EvidenceBundle reference")
+                      if not has_key_like(data, "policy"):
+                          advisory_missing.append("PolicyDecision reference")
+                      if not has_key_like(data, "review"):
+                          advisory_missing.append("review state")
+                      if not has_key_like(data, "rollback"):
+                          advisory_missing.append("rollback reference")
+                      if advisory_missing:
+                          msg = f"{path} is missing recognizable governance fields: {', '.join(advisory_missing)}."
+                          warnings.append(msg)
+                          add_check("manifest-governance-field-scan", "WARN", msg, file=path)
+                      else:
+                          add_check("manifest-governance-field-scan", "PASS", f"{path} includes recognizable governance fields.", file=path)
+
+              changed_forbidden = [p for p in changed if any(pattern.search(p) for pattern in forbidden_lifecycle_patterns)]
+              if changed_forbidden and release_candidate_present:
+                  denials.append("Release-candidate event also changes RAW/WORK/QUARANTINE paths: " + ", ".join(changed_forbidden[:20]))
+                  add_check("release-event-does-not-mix-private-lifecycle-paths", "DENY", denials[-1])
+              else:
+                  add_check(
+                      "release-event-does-not-mix-private-lifecycle-paths",
+                      "PASS" if release_candidate_present else "ABSTAIN",
+                      "No RAW/WORK/QUARANTINE changed paths were mixed into this release-candidate event.",
+                  )
+
+          if strict_mode and warnings and not denials and not errors:
+              denials.append("Strict mode converts release dry-run governance warnings into a denial.")
+              add_check("strict-mode-warning-gate", "DENY", denials[-1], warnings=warnings)
+          elif strict_mode:
+              add_check("strict-mode-warning-gate", "PASS", "Strict mode enabled; no warning-only release gate remained.")
+          else:
+              add_check("strict-mode-warning-gate", "ABSTAIN", "Strict mode not enabled; warnings remain advisory.")
+
+          if errors:
+              outcome = "ERROR"
+              conclusion = "failure"
+              reason = errors[0]
+          elif denials:
+              outcome = "DENY"
+              conclusion = "failure"
+              reason = denials[0]
+          elif release_candidate_present:
+              outcome = "PASS"
+              conclusion = "success"
+              reason = "Release dry-run completed without DENY or ERROR findings."
+          else:
+              outcome = "ABSTAIN"
+              conclusion = "success"
+              reason = "No release candidate was detected, so the release dry-run abstained."
+
+          hash_targets = sorted(set(manifests + proof_packs + promotion_decisions + rollback_plans + correction_notices + catalog_records + [p for p in relevant_changed if (root / p).is_file()]))
+          digests = {p: file_digest(p) for p in hash_targets if file_digest(p)}
+
+          receipt = {
+              "receipt_type": "kfm.release_dry_run.receipt.v1",
+              "workflow": "release-dry-run",
+              "outcome": outcome,
+              "conclusion": conclusion,
+              "reason": reason,
+              "strict_mode": strict_mode,
+              "generated_at_utc": _dt.datetime.now(_dt.UTC).isoformat(),
+              "github": {
+                  "event_name": event_name,
+                  "head_sha": head_sha,
+                  "run_id": os.environ.get("GITHUB_RUN_ID"),
+                  "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+                  "ref": os.environ.get("GITHUB_REF"),
+                  "repository": os.environ.get("GITHUB_REPOSITORY"),
+              },
+              "release_candidate_present": release_candidate_present,
+              "changed_files": changed,
+              "release_relevant_changed_files": relevant_changed,
+              "release_candidate_changed_files": candidate_changed,
+              "public_release_changed_files": public_release_changed,
+              "objects": {
+                  "release_manifests": manifests,
+                  "proof_packs": proof_packs,
+                  "promotion_decisions": promotion_decisions,
+                  "rollback_plans": rollback_plans,
+                  "correction_notices": correction_notices,
+                  "catalog_records": catalog_records,
+              },
+              "digests_sha256": digests,
+              "warnings": warnings,
+              "denials": denials,
+              "errors": errors,
+              "checks": checks,
+          }
+
+          receipt_path = out_dir / "release-dry-run-receipt.json"
+          receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+          summary = out_dir / "release-dry-run-summary.md"
+          summary.write_text(
+              "# KFM release dry run\n\n"
+              f"**Outcome:** `{outcome}`\n\n"
+              f"**Reason:** {reason}\n\n"
+              f"**Release candidate detected:** `{str(release_candidate_present).lower()}`\n\n"
+              f"**Release-relevant changed files:** `{len(relevant_changed)}`\n\n"
+              f"**Manifest candidates:** `{len(manifests)}` · **Proof packs:** `{len(proof_packs)}` · "
+              f"**Promotion decisions:** `{len(promotion_decisions)}` · **Rollback plans:** `{len(rollback_plans)}`\n\n"
+              "## Checks\n\n"
+              + "\n".join(f"- `{c['status']}` — **{c['name']}**: {c['detail']}" for c in checks)
+              + "\n\n## Receipt\n\n`release-dry-run-output/release-dry-run-receipt.json`\n",
+              encoding="utf-8",
+          )
+
+          if os.environ.get("GITHUB_STEP_SUMMARY"):
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+                  f.write(summary.read_text(encoding="utf-8"))
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"outcome={outcome}\n")
+              f.write(f"conclusion={conclusion}\n")
+              f.write(f"receipt_path={receipt_path}\n")
+
+          if outcome in {"DENY", "ERROR"}:
+              print(f"::error::{outcome}: {reason}")
+          elif outcome == "ABSTAIN":
+              print(f"::notice::{outcome}: {reason}")
+          else:
+              print(f"::notice::{outcome}: {reason}")
+          PY
+
+      - name: Run repo-native release rehearsal if present
+        if: steps.dryrun.outputs.outcome == 'PASS'
+        run: |
+          set -euo pipefail
+          if [ -x scripts/release-dry-run.sh ]; then
+            scripts/release-dry-run.sh
+          elif [ -f tools/release/dry_run.py ]; then
+            python3 tools/release/dry_run.py --dry-run --no-network
+          elif [ -f Makefile ] && grep -Eq '(^|[[:space:]])release-dry-run:' Makefile; then
+            make release-dry-run
+          else
+            echo "No repo-native release rehearsal hook found; self-contained KFM dry-run receipt is the only emitted proof object."
+          fi
+
+      - name: Upload release dry-run receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dry-run-${{ github.run_id }}-${{ github.run_attempt }}
+          path: release-dry-run-output/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce dry-run result
+        if: steps.dryrun.outputs.outcome == 'DENY' || steps.dryrun.outputs.outcome == 'ERROR'
+        run: |
+          echo "Release dry run ended with ${{ steps.dryrun.outputs.outcome }}. See release-dry-run-output/release-dry-run-receipt.json."
+          exit 1
