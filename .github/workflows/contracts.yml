@@ -1,14 +1,291 @@
-name: contracts
+name: Contracts
 
-on:
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/contracts.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "policy/**"
+      - "tools/validators/**"
+      - "tests/**"
+      - "docs/adr/**"
+      - "docs/registers/**"
+      - "data/registry/**"
+      - "release/**"
+  push:
+    paths:
+      - ".github/workflows/contracts.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "policy/**"
+      - "tools/validators/**"
+      - "tests/**"
+      - "docs/adr/**"
+      - "docs/registers/**"
+      - "data/registry/**"
+      - "release/**"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: contracts-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUNBUFFERED: "1"
+  KFM_NO_NETWORK_TESTS: "1"
+  KFM_CONTRACTS_STRICT: "1"
+
 jobs:
-  placeholder:
+  contracts:
+    name: Contract, schema, and policy gates
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - name: Placeholder
-        run: echo "contracts workflow is scaffolded and pending implementation."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation tooling
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements-ci.txt ]; then
+            python -m pip install -r requirements-ci.txt
+          elif [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+          else
+            python -m pip install "jsonschema>=4,<5" "PyYAML>=6,<7" "pytest>=8,<9"
+          fi
+
+      - name: Inventory contract-bearing surfaces
+        id: inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          roots = [
+              Path("contracts"),
+              Path("schemas"),
+              Path("policy"),
+              Path("data/registry"),
+              Path("docs/registers"),
+              Path("release"),
+          ]
+          suffixes = {".json", ".jsonld", ".yaml", ".yml"}
+          skip_dirs = {".git", ".github", "node_modules", ".venv", "venv", "dist", "build", "__pycache__"}
+
+          candidates = []
+          for root in roots:
+              if not root.exists():
+                  continue
+              for path in root.rglob("*"):
+                  if any(part in skip_dirs for part in path.parts):
+                      continue
+                  if path.is_file() and path.suffix.lower() in suffixes:
+                      candidates.append(path)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print(f"candidate_count={len(candidates)}", file=output)
+              print(f"has_candidates={'true' if candidates else 'false'}", file=output)
+
+          lines = [
+              "### KFM contract inventory",
+              f"Contract-bearing files found: {len(candidates)}",
+              "",
+          ]
+          lines.extend(f"- {path.as_posix()}" for path in sorted(candidates)[:200])
+          if len(candidates) > 200:
+              lines.append(f"- ... {len(candidates) - 200} more")
+          message = "\n".join(lines)
+          print(message)
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as summary:
+                  print(message, file=summary)
+          PY
+
+      - name: Generic JSON/YAML syntax and schema sanity checks
+        if: steps.inventory.outputs.has_candidates == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          import yaml
+          from jsonschema.validators import validator_for
+
+          roots = [
+              Path("contracts"),
+              Path("schemas"),
+              Path("policy"),
+              Path("data/registry"),
+              Path("docs/registers"),
+              Path("release"),
+          ]
+          suffixes = {".json", ".jsonld", ".yaml", ".yml"}
+          skip_dirs = {".git", ".github", "node_modules", ".venv", "venv", "dist", "build", "__pycache__"}
+          errors: list[str] = []
+
+          def candidate_paths() -> list[Path]:
+              paths: list[Path] = []
+              for root in roots:
+                  if not root.exists():
+                      continue
+                  for path in root.rglob("*"):
+                      if any(part in skip_dirs for part in path.parts):
+                          continue
+                      if path.is_file() and path.suffix.lower() in suffixes:
+                          paths.append(path)
+              return sorted(paths)
+
+          for path in candidate_paths():
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except UnicodeDecodeError as exc:
+                  errors.append(f"{path}: not valid UTF-8: {exc}")
+                  continue
+
+              try:
+                  if path.suffix.lower() in {".json", ".jsonld"}:
+                      obj = json.loads(text)
+                  else:
+                      obj = yaml.safe_load(text)
+              except Exception as exc:  # noqa: BLE001 - validation report should include parser family errors
+                  errors.append(f"{path}: parse failure: {exc}")
+                  continue
+
+              if isinstance(obj, dict) and "$schema" in obj:
+                  try:
+                      validator_cls = validator_for(obj)
+                      validator_cls.check_schema(obj)
+                  except Exception as exc:  # noqa: BLE001
+                      errors.append(f"{path}: invalid JSON Schema self-check: {exc}")
+
+          if errors:
+              print("::error::Contract syntax/schema sanity checks failed")
+              for error in errors:
+                  print(f"- {error}")
+              sys.exit(1)
+
+          print("Contract syntax/schema sanity checks passed.")
+          PY
+
+      - name: Public API trust-boundary guard
+        if: steps.inventory.outputs.has_candidates == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          import yaml
+
+          api_roots = [Path("contracts/api"), Path("schemas/api"), Path("schemas/contracts/v1/api")]
+          blocked_path_fragments = re.compile(r"/(raw|work|quarantine)(/|$)", re.IGNORECASE)
+          errors: list[str] = []
+
+          def load(path: Path):
+              text = path.read_text(encoding="utf-8")
+              if path.suffix.lower() in {".json", ".jsonld"}:
+                  return json.loads(text)
+              return yaml.safe_load(text)
+
+          def walk_paths(obj, prefix=""):
+              if isinstance(obj, dict):
+                  for key, value in obj.items():
+                      key_text = str(key)
+                      if key_text.startswith("/"):
+                          yield key_text
+                      yield from walk_paths(value, f"{prefix}.{key_text}" if prefix else key_text)
+              elif isinstance(obj, list):
+                  for value in obj:
+                      yield from walk_paths(value, prefix)
+
+          for root in api_roots:
+              if not root.exists():
+                  continue
+              for path in sorted(root.rglob("*")):
+                  if not path.is_file() or path.suffix.lower() not in {".json", ".jsonld", ".yaml", ".yml"}:
+                      continue
+                  try:
+                      obj = load(path)
+                  except Exception as exc:  # noqa: BLE001
+                      errors.append(f"{path}: could not parse API contract for boundary guard: {exc}")
+                      continue
+                  for route in walk_paths(obj):
+                      if blocked_path_fragments.search(route):
+                          errors.append(f"{path}: public API route exposes blocked lifecycle surface: {route}")
+
+          if errors:
+              print("::error::Public API trust-boundary guard failed")
+              for error in errors:
+                  print(f"- {error}")
+              sys.exit(1)
+
+          print("Public API trust-boundary guard passed.")
+          PY
+
+      - name: Run repo-native contract validator when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f tools/validators/contracts/validate_contracts.py ]; then
+            python tools/validators/contracts/validate_contracts.py
+          elif [ -f tools/validators/validate_contracts.py ]; then
+            python tools/validators/validate_contracts.py
+          elif [ -f tools/validators/schema_contracts.py ]; then
+            python tools/validators/schema_contracts.py
+          else
+            echo "::notice::No repo-native contract validator found; generic checks were used."
+          fi
+
+      - name: Run Makefile contracts target when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f Makefile ] && grep -Eq '^[[:space:]]*contracts:' Makefile; then
+            make contracts
+          else
+            echo "::notice::No Makefile contracts target found."
+          fi
+
+      - name: Run contract-related tests when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          test_targets=()
+          for target in tests/contracts tests/schemas tests/policy tests/validators/contracts; do
+            if [ -d "$target" ]; then
+              test_targets+=("$target")
+            fi
+          done
+
+          if [ "${#test_targets[@]}" -eq 0 ]; then
+            echo "::notice::No contract-related test directories found."
+            exit 0
+          fi
+
+          python -m pytest -q "${test_targets[@]}"
+
+      - name: Empty contract set notice
+        if: steps.inventory.outputs.has_candidates != 'true'
+        run: |
+          echo "::warning::No contract-bearing JSON/YAML files were found under contracts/, schemas/, policy/, data/registry/, docs/registers/, or release/. Add schemas, contracts, fixtures, policies, or registry records to exercise this gate."
