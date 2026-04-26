@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/runtime/ecology_evidence_bundle_response.schema.json",
+  "title": "Ecology EvidenceBundle Response",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["status", "data", "meta"],
+  "properties": {
+    "status": {"const": "ok"},
+    "meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["resolver", "evidence_drawer_required"],
+      "properties": {
+        "resolver": {"const": "ecology_evidencebundle"},
+        "evidence_drawer_required": {"type": "boolean"}
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "evidence_bundle_id",
+            "candidate_id",
+            "spec_hash",
+            "decision",
+            "status",
+            "proof_pack_ref",
+            "evidence"
+          ],
+          "properties": {
+            "evidence_bundle_id": {"type": "string"},
+            "candidate_id": {"type": "string"},
+            "spec_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "decision": {"const": "cite"},
+            "status": {"type": "string"},
+            "proof_pack_ref": {"type": "string"},
+            "evidence": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "receipts": {"type": "array"},
+                "catalog_refs": {"type": "object"}
+              }
+            },
+            "uncertainty": {"type": "object"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "evidence_bundle_id",
+            "candidate_id",
+            "decision",
+            "status",
+            "reason",
+            "error_code"
+          ],
+          "properties": {
+            "evidence_bundle_id": {"type": "string"},
+            "candidate_id": {"type": "string"},
+            "decision": {"const": "abstain"},
+            "status": {"type": "string"},
+            "reason": {"type": "string"},
+            "error_code": {"type": "string"},
+            "claim_text": {"type": "string"}
+          }
+        }
+      ]
+    }
+  }
+}
