@@ -13,11 +13,35 @@ permissions:
 jobs:
   repo-baseline:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgis/postgis:15-3.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      KFM_CROSSWALK_TEST_DSN: postgresql://postgres:postgres@localhost:5432/postgres
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
 
       - name: Run baseline shell checks and manifest checks
         run: |
@@ -32,6 +56,14 @@ jobs:
         run: |
           if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py ]; then
             python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/runner.py
+          fi
+
+          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_wbd.py ]; then
+            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_wbd.py
+          fi
+
+          if [ -f ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_tiger_admin.py ]; then
+            python3 -m py_compile ./pipelines/watchers/hydrology_huc12_admin_crosswalk_watch/ingest_tiger_admin.py
           fi
 
           if [ -f ./schemas/contracts/v1/crosswalk/crosswalk_pair.schema.json ]; then
