@@ -1,0 +1,24 @@
+{
+  "object_type": "crosswalk_pair",
+  "huc12_id": "102701010101",
+  "admin_id": "20001",
+  "admin_type": "county",
+  "huc_area_m2": 1000000,
+  "admin_area_m2": 600000,
+  "overlap_m2": 600000,
+  "overlap_pct_huc": 0.6,
+  "overlap_pct_admin": 1.0,
+  "weight": 0.6,
+  "assignment_method": "primary_overlap_ge_50pct_huc",
+  "centroid_within_flag": true,
+  "shared_boundary_m": 3200,
+  "source_snapshot_ids": [
+    "fixture:wbd:huc12",
+    "fixture:tiger:county"
+  ],
+  "algorithm_version": "huc12_admin_crosswalk_v0.1.0",
+  "crs": "EPSG:5070",
+  "geometry_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "run_receipt_id": "run_receipt:hydrology_huc12_admin_crosswalk_watch:fixture"
+}
