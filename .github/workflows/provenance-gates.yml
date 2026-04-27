@@ -1,0 +1,88 @@
+name: Provenance Gates
+
+on:
+  pull_request:
+    paths:
+      - "contracts/v1/provenance/**"
+      - "tools/validators/provenance/**"
+      - "policy/provenance/**"
+      - "tests/fixtures/provenance/**"
+      - ".github/workflows/provenance-gates.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "contracts/v1/provenance/**"
+      - "tools/validators/provenance/**"
+      - "policy/provenance/**"
+      - "tests/fixtures/provenance/**"
+      - ".github/workflows/provenance-gates.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provenance-schema-validator:
+    name: Validate PROV sidecars
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python validator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+
+      - name: Validate known-good provenance fixture
+        run: |
+          python tools/validators/provenance/validate_prov_sidecar.py \
+            tests/fixtures/provenance/valid/minimal.prov.jsonld
+
+      - name: Ensure missing-license fixture fails closed
+        run: |
+          if python tools/validators/provenance/validate_prov_sidecar.py \
+            tests/fixtures/provenance/invalid/missing_license.prov.jsonld; then
+            echo "DENY: invalid missing_license fixture unexpectedly passed"
+            exit 1
+          fi
+
+  provenance-policy:
+    name: Evaluate provenance policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          CONFTEST_VERSION="0.56.0"
+          curl -L \
+            "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" \
+            -o conftest.tar.gz
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Policy allows known-good provenance fixture
+        run: |
+          conftest test \
+            tests/fixtures/provenance/valid/minimal.prov.jsonld \
+            --policy policy/provenance
+
+      - name: Policy denies missing-license fixture
+        run: |
+          if conftest test \
+            tests/fixtures/provenance/invalid/missing_license.prov.jsonld \
+            --policy policy/provenance; then
+            echo "DENY: invalid missing_license fixture unexpectedly passed policy"
+            exit 1
+          fi
