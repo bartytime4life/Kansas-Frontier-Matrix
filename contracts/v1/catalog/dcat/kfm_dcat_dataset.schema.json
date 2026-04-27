@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schema/contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json",
   "title": "KFM DCAT Dataset Export",
+  "description": "KFM public-safe DCAT Dataset export schema with evidence, provenance, release, rights, and distribution closure fields.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -25,42 +26,125 @@
       "type": "object",
       "required": ["dcat", "dct", "kfm"],
       "properties": {
-        "dcat": { "const": "http://www.w3.org/ns/dcat#" },
-        "dct": { "const": "http://purl.org/dc/terms/" },
-        "kfm": { "type": "string", "minLength": 1 }
+        "dcat": {
+          "const": "http://www.w3.org/ns/dcat#"
+        },
+        "dct": {
+          "const": "http://purl.org/dc/terms/"
+        },
+        "kfm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prov": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "additionalProperties": true
     },
-    "@type": { "const": "dcat:Dataset" },
-    "dct:title": { "type": "string", "minLength": 1 },
-    "dct:identifier": { "type": "string", "minLength": 1 },
+    "@type": {
+      "const": "dcat:Dataset"
+    },
+    "dct:title": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "dct:description": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "dct:identifier": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
     "dct:license": {
-      "type": "string",
-      "minLength": 1,
-      "not": { "enum": ["TODO", "unknown", "UNKNOWN"] }
+      "$ref": "#/$defs/nonTodoPublicString"
     },
     "dct:accessRights": {
-      "type": "string",
-      "minLength": 1,
-      "not": { "enum": ["TODO", "unknown", "UNKNOWN", "restricted", "deny"] }
+      "const": "public"
     },
-    "dct:provenance": { "type": "string", "minLength": 1 },
+    "dct:provenance": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "dct:issued": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dct:modified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dct:source": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "dct:replaces": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "dct:isReplacedBy": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
     "kfm:spec_hash": {
-      "type": "string",
-      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+      "$ref": "#/$defs/sha256"
     },
-    "kfm:evidence_ref": { "type": "string", "minLength": 1 },
-    "kfm:release_manifest_ref": { "type": "string", "minLength": 1 },
-    "kfm:policy_label": { "const": "public" },
+    "kfm:content_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "kfm:geometry_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "kfm:evidence_ref": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:run_receipt_ref": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:release_manifest_ref": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:policy_label": {
+      "const": "public"
+    },
     "kfm:review_state": {
       "type": "string",
       "enum": ["reviewed", "published"]
     },
-    "kfm:source_role": { "type": "string", "minLength": 1 },
-    "kfm:redaction_receipt_ref": { "type": "string", "minLength": 1 },
-    "kfm:ai_receipt_ref": { "type": "string", "minLength": 1 },
-    "dct:replaces": { "type": "string", "minLength": 1 },
-    "dct:isReplacedBy": { "type": "string", "minLength": 1 },
+    "kfm:source_role": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:redaction_receipt_ref": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:ai_receipt_ref": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "kfm:sensitivity": {
+      "type": "string",
+      "enum": ["public"]
+    },
+    "kfm:catalog_refs": {
+      "type": "object",
+      "properties": {
+        "stac": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "prov": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": true
+    },
+    "dcat:keyword": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "dcat:theme": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
     "dcat:distribution": {
       "type": "array",
       "minItems": 1,
@@ -70,6 +154,29 @@
     }
   },
   "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonTodoPublicString": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "enum": [
+          "TODO",
+          "todo",
+          "UNKNOWN",
+          "unknown",
+          "NEEDS-VERIFICATION",
+          "restricted",
+          "deny"
+        ]
+      }
+    },
     "distribution": {
       "type": "object",
       "additionalProperties": true,
@@ -79,23 +186,38 @@
         "dct:license"
       ],
       "properties": {
-        "@type": { "const": "dcat:Distribution" },
+        "@type": {
+          "const": "dcat:Distribution"
+        },
         "dcat:accessURL": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dcat:downloadURL": {
+          "$ref": "#/$defs/nonEmptyString"
         },
         "dct:license": {
-          "type": "string",
-          "minLength": 1,
-          "not": { "enum": ["TODO", "unknown", "UNKNOWN"] }
+          "$ref": "#/$defs/nonTodoPublicString"
+        },
+        "dct:rights": {
+          "$ref": "#/$defs/nonEmptyString"
         },
         "dct:format": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dcat:mediaType": {
+          "$ref": "#/$defs/nonEmptyString"
         },
         "dct:conformsTo": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kfm:spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kfm:provenance_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kfm:attestation_ref": {
+          "$ref": "#/$defs/nonEmptyString"
         }
       }
     }
