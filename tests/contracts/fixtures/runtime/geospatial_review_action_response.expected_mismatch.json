@@ -1,0 +1,6 @@
+{
+  "fixture": "geospatial_review_action_response",
+  "operation": "promote",
+  "outcome": "expected_mismatch",
+  "status": "skeletal"
+}
