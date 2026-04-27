@@ -31,7 +31,7 @@ The governed API is the trust boundary where KFM clients receive release-aware, 
 > |---|---|
 > | Status | `experimental` until the mounted repository confirms path, route, contract, and CI reality |
 > | Owners | `TODO-VERIFY(api-owner, security-steward)` |
-> | Target path | `apps/governed-api/README.md` |
+> | Target path | `apps/governed_api/README.md` |
 > | Boundary posture | Public, UI, Focus Mode, review, and export calls must cross governed interfaces |
 > | Verification posture | Route names, DTOs, workflow gates, runtime behavior, deployment posture, and emitted proof objects are **NEEDS VERIFICATION** |
 >
