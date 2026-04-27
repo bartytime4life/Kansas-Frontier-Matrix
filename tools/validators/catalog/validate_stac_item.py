@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """
 Validate KFM STAC Item exports.
+
+Checks:
+- JSON Schema validity
+- public-only policy posture
+- reviewed or published review state
+- required provenance, evidence, and release links
+- required data and provenance assets
+- public sensitivity posture when provided
+- no RAW / WORK / QUARANTINE references in public export
 """
 
 from __future__ import annotations
@@ -14,6 +23,7 @@ from jsonschema import Draft202012Validator
 
 
 SCHEMA_PATH = Path("contracts/v1/catalog/stac/kfm_stac_item.schema.json")
+
 FORBIDDEN_PUBLIC_REFS = (
     "/raw/",
     "/work/",
@@ -22,6 +32,16 @@ FORBIDDEN_PUBLIC_REFS = (
     "data/work/",
     "data/quarantine/",
 )
+
+BLOCKED_PUBLIC_VALUES = {
+    "TODO",
+    "todo",
+    "UNKNOWN",
+    "unknown",
+    "NEEDS-VERIFICATION",
+    "restricted",
+    "deny",
+}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -48,12 +68,31 @@ def contains_forbidden_ref(value: Any) -> bool:
     return False
 
 
+def assert_present(mapping: dict[str, Any], key: str, label: str) -> Any:
+    value = mapping.get(key)
+    if value in (None, ""):
+        fail(f"{label} missing {key}")
+    return value
+
+
+def assert_not_blocked(value: Any, label: str) -> None:
+    if isinstance(value, str) and value in BLOCKED_PUBLIC_VALUES:
+        fail(f"{label} cannot be {value}")
+
+
 def link_rels(doc: dict[str, Any]) -> set[str]:
     return {
         link.get("rel", "")
         for link in doc.get("links", [])
         if isinstance(link, dict)
     }
+
+
+def asset_roles(asset: dict[str, Any]) -> set[str]:
+    roles = asset.get("roles", [])
+    if not isinstance(roles, list):
+        return set()
+    return {role for role in roles if isinstance(role, str)}
 
 
 def main() -> None:
@@ -80,6 +119,9 @@ def main() -> None:
             print(f"DENY: schema error at {loc}: {error.message}", file=sys.stderr)
         sys.exit(1)
 
+    if doc.get("type") != "Feature":
+        fail("STAC item must be GeoJSON Feature")
+
     props = doc.get("properties", {})
 
     if props.get("kfm:policy_label") != "public":
@@ -87,6 +129,28 @@ def main() -> None:
 
     if props.get("kfm:review_state") not in {"reviewed", "published"}:
         fail("STAC public export requires reviewed or published review state")
+
+    if props.get("kfm:sensitivity") not in (None, "public"):
+        fail("STAC public export requires kfm:sensitivity=public when provided")
+
+    assert_present(props, "kfm:spec_hash", "properties")
+    assert_present(props, "kfm:evidence_ref", "properties")
+    assert_present(props, "kfm:run_receipt_url", "properties")
+    assert_present(props, "kfm:release_manifest_ref", "properties")
+    assert_present(props, "kfm:source_role", "properties")
+    assert_present(props, "processing:software", "properties")
+    assert_present(props, "processing:version", "properties")
+    assert_present(props, "processing:datetime", "properties")
+
+    for key in (
+        "kfm:evidence_ref",
+        "kfm:run_receipt_url",
+        "kfm:release_manifest_ref",
+        "kfm:source_role",
+        "processing:software",
+        "processing:version",
+    ):
+        assert_not_blocked(props.get(key), f"properties {key}")
 
     required_rels = {"provenance", "evidence", "release-manifest"}
     missing_rels = sorted(required_rels - link_rels(doc))
@@ -96,11 +160,34 @@ def main() -> None:
 
     assets = doc.get("assets", {})
 
-    if "data" not in assets:
+    data_asset = assets.get("data")
+    if not isinstance(data_asset, dict):
         fail("STAC item missing data asset")
 
-    if "provenance" not in assets:
+    provenance_asset = assets.get("provenance")
+    if not isinstance(provenance_asset, dict):
         fail("STAC item missing provenance asset")
+
+    assert_present(data_asset, "href", "assets.data")
+    assert_present(provenance_asset, "href", "assets.provenance")
+
+    data_roles = asset_roles(data_asset)
+    provenance_roles = asset_roles(provenance_asset)
+
+    if data_roles and "data" not in data_roles:
+        fail("assets.data roles must include data when roles are provided")
+
+    if provenance_roles and "provenance" not in provenance_roles:
+        fail("assets.provenance roles must include provenance when roles are provided")
+
+    if props.get("kfm:redaction_receipt_url") and "redaction-receipt" not in link_rels(doc):
+        fail("redaction receipt property requires redaction-receipt link")
+
+    if props.get("kfm:ai_receipt_url") and "ai-receipt" not in link_rels(doc):
+        fail("AI receipt property requires ai-receipt link")
+
+    if props.get("kfm:attestation_url") and "attestation" not in link_rels(doc):
+        fail("attestation property requires attestation link")
 
     if contains_forbidden_ref(doc):
         fail("public STAC export references RAW / WORK / QUARANTINE material")
