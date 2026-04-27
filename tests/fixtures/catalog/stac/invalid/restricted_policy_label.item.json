@@ -1,0 +1,37 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "kfm-item-TODO",
+  "geometry": null,
+  "properties": {
+    "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "kfm:evidence_ref": "kfm://evidence/TODO",
+    "kfm:run_receipt_url": "https://example.invalid/artifact.prov.jsonld",
+    "kfm:release_manifest_ref": "kfm://release/TODO",
+    "kfm:policy_label": "restricted",
+    "kfm:review_state": "reviewed",
+    "kfm:source_role": "authoritative_source",
+    "processing:software": "kfm-pipeline",
+    "processing:version": "v1",
+    "processing:datetime": "2026-04-27T00:00:00Z"
+  },
+  "links": [
+    {
+      "rel": "provenance",
+      "href": "https://example.invalid/artifact.prov.jsonld"
+    },
+    {
+      "rel": "evidence",
+      "href": "https://example.invalid/evidence.json"
+    },
+    {
+      "rel": "release-manifest",
+      "href": "https://example.invalid/release-manifest.json"
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "https://example.invalid/artifact.ext"
+    }
+  }
+}
