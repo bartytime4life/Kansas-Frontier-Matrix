@@ -2,20 +2,34 @@
   "@context": {
     "dcat": "http://www.w3.org/ns/dcat#",
     "dct": "http://purl.org/dc/terms/",
-    "kfm": "https://kfm.local/ns#"
+    "kfm": "https://kfm.local/ns#",
+    "prov": "http://www.w3.org/ns/prov#"
   },
   "@type": "dcat:Dataset",
-  "dct:title": "Restricted Dataset",
-  "dct:identifier": "kfm://dataset/TODO",
+
+  "dct:title": "Restricted Dataset (Invalid Fixture)",
+  "dct:description": "This fixture intentionally violates access rules.",
+  "dct:identifier": "kfm://dataset/restricted-fixture",
+
   "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
-  "dct:accessRights": "restricted",
+  "dct:accessRights": "restricted",  // <-- MUST FAIL
+
   "dct:provenance": "https://example.invalid/artifact.prov.jsonld",
+
+  "dct:issued": "2026-04-27T00:00:00Z",
+  "dct:modified": "2026-04-27T00:00:00Z",
+
   "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "kfm:evidence_ref": "kfm://evidence/TODO",
-  "kfm:release_manifest_ref": "kfm://release/TODO",
-  "kfm:policy_label": "public",
+  "kfm:evidence_ref": "kfm://evidence/restricted-fixture",
+  "kfm:run_receipt_ref": "kfm://receipt/run/restricted-fixture",
+  "kfm:release_manifest_ref": "kfm://release/restricted-fixture",
+
+  "kfm:policy_label": "public",   // <-- intentionally inconsistent with accessRights
   "kfm:review_state": "reviewed",
   "kfm:source_role": "authoritative_source",
+
+  "kfm:sensitivity": "public",
+
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
