@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION__tests_accessibility_readme
-title: accessibility
+title: Accessibility Verification
 type: standard
 version: v1
 status: published
@@ -9,65 +9,91 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/workflows/README.md, ../../.github/CODEOWNERS]
-tags: [kfm, tests, accessibility, verification, trust-visible-ui]
-notes: [doc_id, created, and updated remain placeholders pending live-checkout metadata verification; status reflects surfaced public-main README presence, not executable suite maturity]
+tags: [kfm, tests, accessibility, verification, trust-visible-ui, evidence-drawer, focus-mode]
+notes: [doc_id, created, and updated remain placeholders pending live-checkout metadata verification; status reflects the supplied repo-facing README posture, not executable suite maturity; runner, workflow enforcement, and branch protection remain NEEDS VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# accessibility
+# Accessibility Verification
 
-Governed accessibility verification family for KFM trust-visible shell behavior, keyboard-critical flows, reduced-motion handling, and calm failure.
+<p align="center">
+  <strong>Governed accessibility proof for KFM trust-visible shell behavior.</strong><br>
+  Evidence-first · map-first · time-aware · shell-preserving · cite-or-abstain
+</p>
+
+<p align="center">
+  <img alt="Status: experimental" src="https://img.shields.io/badge/status-experimental-orange">
+  <img alt="Owner: @bartytime4life" src="https://img.shields.io/badge/owner-%40bartytime4life-blue">
+  <img alt="Surface: tests/accessibility" src="https://img.shields.io/badge/surface-tests%2Faccessibility-1f6feb">
+  <img alt="Policy: public" src="https://img.shields.io/badge/policy-public-blue">
+  <img alt="Runner: NEEDS VERIFICATION" src="https://img.shields.io/badge/runner-NEEDS%20VERIFICATION-lightgrey">
+  <img alt="Implementation depth: README-only snapshot" src="https://img.shields.io/badge/implementation-README--only%20snapshot-lightgrey">
+  <img alt="Truth: bounded" src="https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1">
+</p>
+
+<p align="center">
+  <a href="#scope">Scope</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#accepted-inputs">Inputs</a> ·
+  <a href="#exclusions">Exclusions</a> ·
+  <a href="#current-verified-snapshot">Snapshot</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#validation-model">Validation model</a> ·
+  <a href="#definition-of-done">Definition of done</a> ·
+  <a href="#faq">FAQ</a>
+</p>
+
+> [!IMPORTANT]
+> This README defines the accessibility verification burden for `tests/accessibility/`. It does **not** prove that executable accessibility tests, a runner, screenshot baselines, workflow YAML, required checks, or release gates are currently active. Treat those implementation details as `NEEDS VERIFICATION` until a checked-out branch proves them directly.
 
 | Field | Value |
 |---|---|
-| **Status** | experimental |
-| **Owners** | `@bartytime4life` |
-| **Path** | `tests/accessibility/README.md` |
-| **Repo fit** | Focused accessibility verification family inside `tests/` for map-first trust surfaces, Evidence Drawer reachability, Focus outcomes, non-color-only cues, and same-page recovery. |
-| **Truth posture** | CONFIRMED directory role from surfaced repo-facing docs · PROPOSED starter test burden · UNKNOWN executable suite depth and active enforcement |
-| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
+| **Family status** | `experimental` |
+| **Document path** | `tests/accessibility/README.md` |
+| **Owner** | `@bartytime4life` |
+| **Policy label** | `public` |
+| **Evidence posture** | `CONFIRMED` directory role from supplied repo-facing docs · `PROPOSED` starter test burden · `UNKNOWN` executable suite depth |
+| **Primary burden** | Verify that trust-visible KFM UI surfaces remain operable, perceivable, and recoverable across keyboard, assistive technology, reduced motion, non-color-only cues, and narrow layouts. |
+| **Current caution** | README-only snapshot; do not claim active enforcement without repo/workflow evidence. |
 
-![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
-![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-blue)
-![Surface: tests/accessibility](https://img.shields.io/badge/surface-tests%2Faccessibility-1f6feb)
-![Scope: trust-visible accessibility](https://img.shields.io/badge/scope-trust--visible%20accessibility-8250df)
-![Runner: needs verification](https://img.shields.io/badge/runner-NEEDS%20VERIFICATION-lightgrey)
-![Truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
-
-> [!IMPORTANT]
-> Surfaced repo-facing documentation confirms `tests/accessibility/` as an explicit accessibility verification family, but the current public-main snapshot is README-only. Treat runner choice, executable case depth, screenshot baselines, active workflow gates, and merge-blocking enforcement as **NEEDS VERIFICATION** until a checked-out branch proves them directly.
+| What this README does | What it does not do |
+|---|---|
+| Defines what belongs in `tests/accessibility/`. | Does not define UI component implementation. |
+| Keeps accessibility tied to KFM evidence, policy, time, and correction cues. | Does not replace contracts, policies, runtime proof, or release gates. |
+| Provides runner-neutral inspection, case-placement, and validation guidance. | Does not claim Playwright, Cypress, axe, Lighthouse, Storybook, or any runner is active. |
+| Lists a proposed starter backlog for trust-critical accessibility cases. | Does not assert those cases already exist. |
 
 > [!NOTE]
-> In KFM, accessibility is not decorative polish. This family exists to prove that users can still inspect evidence, time scope, policy state, freshness, correction cues, and finite outcomes when pointer use, motion tolerance, color perception, screen-reader dependency, or device size varies.
+> In KFM, accessibility is not decorative polish. If a user cannot reach evidence, understand policy state, perceive freshness or correction cues, operate bounded Focus outcomes, or recover from guarded states without losing map/time context, the trust model is incomplete.
 
 ---
 
 ## Scope
 
-`tests/accessibility/` is the accessibility-critical verification family within KFM’s governed `tests/` surface.
+`tests/accessibility/` is the accessibility-critical verification family for KFM trust-visible product surfaces.
 
-Its job is narrower than “all UI testing” and more consequential than generic visual QA. This family should prove whether trust-visible surfaces remain operable when a user relies on keyboard navigation, assistive technology, reduced-motion settings, non-color-only signaling, narrow viewport layouts, or same-page recovery from guarded outcomes.
+This family owns proof that users can still operate and inspect consequential UI states when pointer use, motion tolerance, color perception, screen-reader dependency, viewport size, or input method varies.
 
-The main questions here are:
+The main questions are:
 
-- Can a user reach and inspect consequential evidence without pointer-only affordances?
-- Do map-first shell surfaces keep time, freshness, policy, and correction cues perceivable?
-- Do `ABSTAIN`, `DENY`, and `ERROR` preserve shell context instead of ejecting the user into dead-end failure?
-- Does motion remain optional without hiding meaning or changing trust state?
-- Do compressed layouts preserve the evidence contract instead of hiding it behind decorative controls?
+- Can a user reach and inspect evidence without pointer-only affordances?
+- Do map-first shell surfaces keep time, freshness, policy, review, release, and correction cues perceivable?
+- Do `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` preserve same-page shell context?
+- Does reduced motion remove unnecessary motion without hiding meaning or trust state?
+- Do compressed layouts keep the evidence contract visible instead of hiding it behind decorative controls?
 
-### Truth posture used in this README
+### Truth posture used here
 
-| Label | Meaning here |
+| Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Surfaced repo-facing docs or KFM doctrine directly support the claim. |
-| **INFERRED** | Strongly suggested by adjacent docs or doctrine, but not re-proven from a mounted checkout. |
-| **PROPOSED** | Buildable test structure or workflow expectation that fits KFM doctrine but is not asserted as current repo fact. |
+| **CONFIRMED** | Supplied repo-facing docs, visible workspace evidence, or KFM doctrine directly support the claim. |
+| **INFERRED** | Strongly suggested by adjacent docs or doctrine, but not directly re-proven from a mounted checkout. |
+| **PROPOSED** | Buildable test structure, workflow expectation, or starter case not asserted as current implementation. |
 | **UNKNOWN** | Not verified strongly enough to present as current branch reality. |
-| **NEEDS VERIFICATION** | A concrete command, runner, folder depth, gate, or platform setting should be checked before stronger claims are made. |
+| **NEEDS VERIFICATION** | A command, runner, path, owner, gate, conformance target, workflow, badge, or platform setting should be checked before stronger claims are made. |
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -75,23 +101,23 @@ The main questions here are:
 
 **Path:** `tests/accessibility/README.md`
 
-**Role in repo:** family README for accessibility-critical verification of trust-visible product surfaces.
+**Role:** family README for accessibility-critical verification of trust-visible KFM shell behavior.
 
-**Upstream anchors:**
+### Upstream anchors
 
 | Surface | Why it matters | Status here |
 |---|---|---|
-| [`../README.md`](../README.md) | Defines the parent `tests/` family map and keeps accessibility explicit rather than burying it under generic regression language. | **CONFIRMED via surfaced repo-facing docs** |
+| [`../README.md`](../README.md) | Defines the parent `tests/` family map and keeps accessibility explicit rather than burying it under broad regression language. | **CONFIRMED from supplied repo-facing docs** |
 | [`../../README.md`](../../README.md) | Project front door and contributor orientation. | **CONFIRMED as adjacent repo-facing surface** |
 | [`../../.github/README.md`](../../.github/README.md) | Repository governance and contributor gatehouse. | **CONFIRMED as adjacent repo-facing surface** |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Automation lane documentation; does not by itself prove active workflow YAML or branch protection. | **CONFIRMED docs / UNKNOWN enforcement** |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Automation-lane documentation; does not by itself prove active workflow YAML or branch protection. | **CONFIRMED docs / UNKNOWN enforcement** |
 | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Owner/review boundary; `/tests/` ownership is surfaced as `@bartytime4life`. | **CONFIRMED at `/tests/` scope** |
 
-**Lateral handoffs:**
+### Lateral handoffs
 
-| Use this directory when… | Use a sibling when… |
+| Use `tests/accessibility/` when… | Use a sibling when… |
 |---|---|
-| the main burden is access to trust: keyboard reachability, focus return, live outcome announcement, non-color-only trust cues, reduced motion, same-page recovery. | the main burden is contract shape, policy decision logic, cross-boundary integration, whole-path runtime proof, release assembly, deterministic local behavior, or reproducibility. |
+| the main burden is access to trust: keyboard reachability, focus return, live outcome announcement, non-color-only trust cues, reduced motion, or same-page recovery. | the main burden is contract shape, policy decision logic, cross-boundary integration, whole-path runtime proof, release assembly, deterministic local behavior, or reproducibility. |
 
 Recommended sibling surfaces:
 
@@ -102,9 +128,10 @@ Recommended sibling surfaces:
 - [`../reproducibility/`](../reproducibility/) for rerun consistency, digest stability, and bounded drift.
 - [`../unit/`](../unit/) for deterministic local helpers.
 
-**Downstream:** no child files beyond this README are currently confirmed from the surfaced public-main snapshot.
+> [!TIP]
+> Add work here when the hard question is: **Can a user still access the trust surface?** Move it elsewhere when the hard question is contract validity, policy correctness, end-to-end release proof, or deterministic computation.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -116,70 +143,71 @@ Accepted inputs include:
 
 - keyboard-only checks for map shell, layer panel, timeline, Evidence Drawer, Focus Mode, compare controls, and export triggers
 - screen-reader and semantic-structure checks for headings, labels, selected-feature updates, drawer structure, outcome banners, and trust-chip changes
-- reduced-motion checks for story/camera motion, timeline autoplay, drawer transitions, compare wipes, and other animation that could change meaning
+- reduced-motion checks for story/camera motion, timeline autoplay, drawer transitions, compare wipes, and any animation that could change meaning
 - non-color-only checks for source role, rights, sensitivity, review state, freshness, release state, correction state, generalized geometry, and stale status
 - focus-restoration checks after drawers, dialogs, popovers, Focus results, and guarded state banners close
 - same-page recovery checks for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
 - responsive trust-preservation checks for mobile and narrow viewport layouts
-- small, public-safe fixtures or mock states used only to exercise accessibility behavior
-- runner-neutral smoke cases that can later be wired to Playwright, Cypress, axe-like checks, Storybook, or repo-native tooling once the checked-out branch proves the runner
+- public-safe fixtures or mock states used only to exercise accessibility behavior
+- runner-neutral smoke cases that can later be wired to repo-native tooling once the checked-out branch proves the runner
 
-> [!TIP]
-> Add work here when the hard question is: **“Can a user still access the trust surface?”**  
-> Move it elsewhere when the hard question is contract validity, policy correctness, end-to-end release proof, or deterministic computation.
+### Fixture boundary
 
-[Back to top](#top)
+| Fixture type | Allowed here? | Rule |
+|---|---:|---|
+| Public-safe mock UI state | Yes | Must be clearly synthetic or fixture-bound. |
+| Released public evidence references | Yes, if needed | Do not turn accessibility fixtures into canonical evidence. |
+| Sensitive coordinates, private endpoints, secrets, or live credentials | No | Keep out of tests and docs; fail closed. |
+| RAW / WORK / QUARANTINE data | No | Public and ordinary UI surfaces must not depend on unpublished lifecycle zones. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Exclusions
 
-The following do **not** belong here as authoritative sources of truth:
+The following do **not** belong here as authoritative sources of truth.
 
 | Do not put this here | Put it here instead | Reason |
 |---|---|---|
 | UI component implementations, shell runtime code, or map adapters | `../../apps/`, `../../packages/`, or repo-native UI package paths | Tests should not become the product surface. |
-| canonical schemas, OpenAPI files, vocabularies, or standards profiles | `../../contracts/`, `../../schemas/`, and `../../docs/standards/` | This directory can test accessibility consequences, not define contracts. |
+| canonical schemas, OpenAPI files, vocabularies, or standards profiles | `../../contracts/`, `../../schemas/`, and `../../docs/standards/` | This family can test accessibility consequences, not define contracts. |
 | policy bundles, reviewer-role maps, or obligation registries | `../../policy/` | Policy law belongs in policy surfaces; this family checks whether policy state remains perceivable. |
 | release manifests, receipts, proof packs, SBOMs, or promoted artifacts as primary records | governed `data/`, `release/`, or proof/receipt homes | Accessibility checks may consume these references but must not become their authority. |
-| generic visual-regression screenshots with no trust-bearing assertion | a visual-regression family if the repo adds one, or `../reproducibility/` for bounded outputs | Screenshots without a declared accessibility burden are weak proof. |
+| generic visual-regression screenshots with no trust-bearing assertion | visual regression family if added, or `../reproducibility/` for bounded outputs | Screenshots without a declared accessibility burden are weak proof. |
 | full runtime outcome proof for request envelopes | `../e2e/runtime_proof/` | Whole-path runtime proof is broader than accessibility reachability. |
 | large raw datasets, secrets, branch-local dumps, or sensitive coordinates | governed data lifecycle zones or ignored local paths | `tests/` must stay public-safe and reviewable. |
-| claims of WCAG A/AA/AAA conformance without a verified repo standard and runner | owning standards docs plus verified test artifacts | Conformance claims require stronger evidence than a README. |
+| claims of WCAG A/AA/AAA conformance without verified standards docs and representative artifacts | owning standards docs plus verified test artifacts | Conformance claims require stronger evidence than a README. |
 
-[Back to top](#top)
+> [!WARNING]
+> Do not use this directory to make unsupported compliance, release, or enforcement claims. A polished README, badge, diagram, or screenshot is not proof of active accessibility coverage.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Current verified snapshot
 
-**CONFIRMED from surfaced repo-facing documentation:**
+**CONFIRMED from supplied repo-facing documentation:**
 
 - `tests/accessibility/` is a named top-level test family.
-- `tests/accessibility/README.md` is the only currently confirmed file in this family.
-- The parent `tests/` documentation keeps accessibility as an explicit family rather than folding it into generic UI or regression language.
+- `tests/accessibility/README.md` is the only currently confirmed file in this family from the supplied snapshot.
+- The parent `tests/` documentation keeps accessibility explicit rather than folding it into generic UI or regression language.
 - `/tests/` ownership is surfaced as `@bartytime4life`.
 
 **UNKNOWN / NEEDS VERIFICATION until a checked-out branch proves it:**
 
 - executable accessibility case inventory
 - runner choice and command surface
-- screenshots or baseline artifact structure
+- screenshots, traces, or baseline artifact structure
 - active workflow YAML
 - branch protection or required-check status
 - exact project conformance target
-- whether accessibility failures currently block release, docs, or promotion gates
+- whether accessibility failures currently block release, docs, promotion gates, or merge
 
-> [!WARNING]
-> Do not upgrade this directory from “README-only scaffold with a governed burden” to “active accessibility suite” until direct branch evidence proves executable cases and enforcement.
+### Directory tree
 
-[Back to top](#top)
-
----
-
-## Directory tree
-
-### Current confirmed snapshot
+Current confirmed snapshot:
 
 ```text
 tests/
@@ -187,11 +215,10 @@ tests/
     └── README.md
 ```
 
-### Reading rule
+> [!IMPORTANT]
+> Use the tree above for current branch-facing truth. Do **not** silently convert a present directory into claims about active suites, configured runners, screenshot baselines, merge-blocking gates, or release enforcement.
 
-Use the tree above for current branch-facing truth. Do **not** silently convert a present directory into claims about active suites, configured runners, screenshot baselines, merge-blocking gates, or release enforcement.
-
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -202,16 +229,16 @@ Use the tree above for current branch-facing truth. Do **not** silently convert 
 These commands inspect what is present without assuming a specific accessibility runner.
 
 ```bash
-# inspect this family
+# Inspect this family.
 find tests/accessibility -maxdepth 3 -type f 2>/dev/null | sort
 
-# inspect the parent tests contract and repo gatehouse
+# Inspect the parent tests contract and repo gatehouse.
 sed -n '1,260p' tests/README.md 2>/dev/null || true
 sed -n '1,240p' .github/README.md 2>/dev/null || true
 sed -n '1,240p' .github/workflows/README.md 2>/dev/null || true
 sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
 
-# inspect sibling family READMEs before moving cases across boundaries
+# Inspect sibling family READMEs before moving cases across boundaries.
 sed -n '1,220p' tests/contracts/README.md 2>/dev/null || true
 sed -n '1,220p' tests/policy/README.md 2>/dev/null || true
 sed -n '1,220p' tests/e2e/README.md 2>/dev/null || true
@@ -219,28 +246,28 @@ sed -n '1,220p' tests/integration/README.md 2>/dev/null || true
 sed -n '1,220p' tests/reproducibility/README.md 2>/dev/null || true
 sed -n '1,220p' tests/unit/README.md 2>/dev/null || true
 
-# look for accessibility-, shell-, and trust-surface vocabulary
+# Look for accessibility-, shell-, and trust-surface vocabulary.
 grep -RIn "accessib\|a11y\|keyboard\|screen reader\|reduced motion\|Evidence Drawer\|Focus Mode\|ABSTAIN\|DENY\|ERROR" \
   tests docs apps packages policy contracts 2>/dev/null || true
 
-# inventory likely UI-facing files without assuming a framework
+# Inventory likely UI-facing files without assuming a framework.
 find apps packages docs tests -maxdepth 4 -type f 2>/dev/null | \
   grep -E 'accessib|a11y|drawer|focus|story|dossier|map|timeline|compare|export' | sort
 ```
 
 ### First local review pass
 
-1. Verify whether the checked-out branch still matches the surfaced public-main snapshot for this directory.
-2. Verify whether any accessibility suite exists beyond README scaffolding.
-3. Verify which surface states, keyboard paths, and reduced-motion cases are already covered.
+1. Verify whether the checked-out branch still matches the supplied README-only snapshot for this directory.
+2. Verify whether any executable accessibility suite exists beyond README scaffolding.
+3. Verify which shell states, keyboard paths, and reduced-motion cases are already covered.
 4. Verify whether any workflow or branch rule currently treats accessibility as blocking.
 5. Verify whether docs, contracts, policy, and accessibility cases move together when trust-bearing behavior changes.
-6. Verify whether any case that starts here should actually live in a sibling family once the burden is better understood.
+6. Verify whether a case that starts here should actually live in a sibling family once the burden is better understood.
 
 > [!TIP]
 > Do not hard-code Playwright, Cypress, axe-core, Lighthouse, Storybook, or another tool as current repo fact unless the checked-out branch proves that choice. This family owns the burden; the repo chooses the runner.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -274,52 +301,50 @@ This family must **not** become:
 
 Add work here when the main risk is **access to trust** rather than raw business logic.
 
-Use this family when the hard question is:
+| Hard question | Primary home |
+|---|---|
+| Can a user still operate, inspect, perceive, and recover safely? | `tests/accessibility/` |
+| Is the payload shape valid? | `tests/contracts/` |
+| Is the policy decision correct? | `tests/policy/` |
+| Does the whole runtime path work? | `tests/e2e/` |
+| Is the transform deterministic or reproducible? | `tests/reproducibility/` or `tests/unit/` |
 
-> Can a user still operate, inspect, perceive, and recover safely?
-
-Use sibling families when the hard question is about contracts, policy logic, deterministic transforms, reproducibility, or end-to-end release proof.
-
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Diagram
+## Validation model
 
 The diagram below shows this family’s responsibility without pretending current runner wiring is already in place.
 
 ```mermaid
 flowchart LR
     S["Trust-visible shell surfaces<br/>map · timeline · dossier · story<br/>Evidence Drawer · Focus · compare · export"]
-    D["Docs + doctrine<br/>KFM UI / verification rules"]
+    D["Docs + doctrine<br/>UI / verification rules"]
     P["Policy + contracts<br/>reason · obligation · state semantics"]
     A["tests/accessibility/"]
-    W[".github/workflows/<br/>public evidence: docs-visible · enforcement UNKNOWN"]
+    R["Runner + artifacts<br/>NEEDS VERIFICATION"]
     G{"Accessibility trust preserved?"}
     OK["candidate may keep moving<br/>with accessibility proof attached"]
     FIX["hold · fix · re-test<br/>before stronger release claims"]
+    H["Sibling handoff<br/>contracts · policy · e2e · reproducibility"]
 
     S --> A
     D --> A
     P --> A
-    A --> G
-    W -. future gate wiring .-> G
+    A --> R
+    R --> G
     G -->|yes| OK
     G -->|no| FIX
+    A -. burden changes .-> H
 ```
-
-[Back to top](#top)
-
----
-
-## Tables
 
 ### Accessibility burden map
 
 | Surface | Minimum accessibility burden | Why it matters in KFM |
 |---|---|---|
 | **Map shell** | keyboard alternatives for feature selection, pan/zoom-dependent selection, and layer inspection | the map is the entry point, not a pointer-only decoration |
-| **Timeline / time controls** | focusable controls, clear current time/scope labels, reduced-motion or restrained playback | time is a coequal operating dimension in KFM |
+| **Timeline / time controls** | focusable controls, clear current time/scope labels, restrained playback or reduced-motion behavior | time is a coequal operating dimension in KFM |
 | **Layer panel / legend** | readable labels, non-color-only symbols, source-role and policy state cues | layer visibility must not imply authority or publication approval |
 | **Dossier / Story** | heading structure, readable trust chips, clear link order | durable claim surfaces must remain inspectable, not decorative |
 | **Evidence Drawer** | open/close reachability, structure announcement, focus return, evidence sections in logical order | immediate provenance inspection sits closest to consequential claims |
@@ -328,27 +353,57 @@ flowchart LR
 | **Export** | preview reachability and trust-cue legibility before outward emit | exported artifacts remain trust-bearing publication surfaces |
 | **Mobile / narrow viewport** | stacked or collapsed layouts keep scope, freshness, policy, review, and evidence cues visible | compression cannot hide trust |
 
-### Current repo wiring and standards baseline
+### Negative outcome accessibility
 
-| Surface | Working rule | Posture |
+| Outcome | Accessibility burden | Handoff if failure is broader than accessibility |
 |---|---|---|
-| **Current public family depth** | `tests/accessibility/` is currently README-only in surfaced public-main evidence. | **CONFIRMED** snapshot |
-| **Parent family contract** | Keep accessibility explicit under `tests/accessibility/`, not buried under broad regression language. | **CONFIRMED** repo-facing docs |
-| **Sibling family handoff** | Use sibling test families when the burden becomes contract, policy, integration, reproducibility, unit, or whole-flow proof. | **CONFIRMED** structure · case placement still requires review |
-| **Workflow enforcement** | Accessibility can be described as gate-worthy, but checked-in workflow YAML and branch protection are not proven here. | **UNKNOWN** effective enforcement |
-| **Release/docs gate consequence** | Accessibility failure can be trust-significant enough to block stronger release/docs claims. | **CONFIRMED doctrine · exact wiring UNKNOWN** |
-| **External accessibility reference** | Use WCAG 2.2 as a review vocabulary unless repo standards docs declare a different baseline; treat WCAG 3.0 as a watchlist item, not a project conformance claim. | **NEEDS VERIFICATION in repo standards** |
-| **Exact repo conformance target** | Do not invent a project-specific A/AA/AAA claim here. Verify it from the checked-out branch or owning standards docs before merge. | **NEEDS VERIFICATION** |
+| `ANSWER` | cited answer remains perceivable, keyboard reachable, and connected to source/evidence UI | `../contracts/` for envelope shape; `../e2e/` for runtime proof |
+| `ABSTAIN` | insufficiency reason is announced and same-page next actions are reachable | `../policy/` or `../e2e/runtime_proof/` |
+| `DENY` | denial reason and allowed alternatives remain visible without exposing restricted content | `../policy/` |
+| `ERROR` | technical failure is announced calmly; shell context and recovery remain available | `../e2e/` for whole-path failure handling |
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Task list / Definition of done
+## Runner activation plan
+
+The current README is intentionally runner-neutral. Once the real repo proves a runner, update this section with the verified command, fixture path, artifact path, and failure interpretation.
+
+| Activation step | Required evidence before updating this README |
+|---|---|
+| Name runner | checked-in dependency/config/workflow proving the toolchain |
+| Name command | package script, Make target, CI step, or documented command in current repo evidence |
+| Name artifacts | generated report path, screenshots, traces, SARIF, HTML, JSON, or logs that actually exist |
+| Name enforcement | workflow YAML and branch/release policy proving blocking behavior |
+| Name conformance target | standards doc or policy surface proving exact A/AA/AAA target if any |
+
+> [!CAUTION]
+> Static badges are acceptable for honest status. Do not add “passing,” “verified,” “AA,” “production,” “required check,” or real workflow badges until supporting repo evidence proves them.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Standards posture
+
+Use external accessibility standards as review vocabulary, not as unsupported conformance claims.
+
+| Standard surface | Safe README posture |
+|---|---|
+| **[WCAG 2.2](https://www.w3.org/TR/WCAG22/)** | Useful review vocabulary and likely baseline candidate. Do not claim project conformance until repo standards docs and representative artifacts prove the target. |
+| **[WCAG 3.0](https://www.w3.org/TR/wcag-3.0/)** | Watchlist / draft-awareness item. Do not use as a KFM conformance target unless future repo policy explicitly adopts it. |
+| **Automated checks** | Helpful but incomplete. Treat automated findings as one input alongside keyboard review, semantic review, reduced-motion review, and manual assistive-technology checks. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Definition of done
 
 Treat this README as healthy only when it stays both useful and truthful.
 
-- [ ] The checked-out branch confirms the real runner(s), command surface, and artifact layout for this family.
+- [ ] The checked-out branch confirms the real runner, command surface, artifact layout, and failure semantics for this family.
 - [ ] At least one case exists for each trust-critical burden that the current branch actually claims to support.
 - [ ] Keyboard paths cover Evidence Drawer entry/exit, timeline movement, compare controls, Focus outcomes, and export triggers where those surfaces exist.
 - [ ] Screen-reader checks cover headings, labels, outcome banners, selected-feature updates, and live trust-state updates.
@@ -358,10 +413,28 @@ Treat this README as healthy only when it stays both useful and truthful.
 - [ ] `ABSTAIN`, `DENY`, and `ERROR` keep the map/time shell intact and provide safe next actions.
 - [ ] Narrow viewport checks prove trust cues remain reachable where claims are shown.
 - [ ] Cases that no longer belong here are moved into the correct sibling family instead of stretching this directory into a generic UX bucket.
-- [ ] Any workflow, release-gate, or conformance claim is verified against the checked-out branch or GitHub settings before this README is updated to say it is active.
+- [ ] Any workflow, release-gate, or conformance claim is verified against checked-out branch evidence or GitHub settings before this README says it is active.
 - [ ] Documentation changes stay synchronized with real suite depth instead of outrunning it.
+- [ ] Fixtures remain public-safe and do not contain sensitive coordinates, secrets, private endpoints, or live credentials.
+- [ ] Rollback/correction guidance is followed when a trust-significant accessibility claim must be downgraded.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Rollback and correction note
+
+If this README overstates suite maturity, workflow enforcement, standards conformance, or release-blocking behavior:
+
+1. Downgrade the claim to `NEEDS VERIFICATION` or `UNKNOWN`.
+2. Remove or replace misleading badges.
+3. Restore runner-neutral language until direct repo evidence exists.
+4. Add a short note to the relevant changelog or documentation control surface if the repo has one.
+5. Re-run local inspection and verify links, headings, badges, and affected sibling README references.
+
+If an accessibility regression reaches a public or semi-public surface, treat it as a trust-significant correction candidate when it blocks evidence inspection, policy-state comprehension, recovery from `DENY`/`ABSTAIN`/`ERROR`, or public-safe publication review.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -373,7 +446,7 @@ Because accessibility in KFM is part of the evidence contract. If a user cannot 
 
 ### Does this README prove the repo already has accessibility tests?
 
-No. It proves the intended directory contract and the surfaced README-only snapshot. Executable tests, runner choice, active checks, and branch protection remain **NEEDS VERIFICATION**.
+No. It proves the intended directory contract and the supplied README-only snapshot. Executable tests, runner choice, active checks, and branch protection remain **NEEDS VERIFICATION**.
 
 ### Why not name Playwright, Cypress, axe-core, Lighthouse, or Storybook as the runner?
 
@@ -393,9 +466,9 @@ It can be trust-significant enough to block stronger release or publication clai
 
 ### Should this README claim WCAG conformance?
 
-Not by itself. It may reference WCAG as a review vocabulary, but A/AA/AAA conformance claims require verified standards docs, actual cases, representative coverage, and reproducible artifacts.
+Not by itself. It may reference WCAG as review vocabulary, but A/AA/AAA conformance claims require verified standards docs, actual cases, representative coverage, and reproducible artifacts.
 
-[Back to top](#top)
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -408,11 +481,11 @@ Not by itself. It may reference WCAG as a review vocabulary, but A/AA/AAA confor
 
 This README is grounded in:
 
-1. Surfaced repo-facing documentation that identifies `tests/accessibility/` as an explicit accessibility verification family and currently README-only.
-2. Parent `tests/` documentation patterns: metadata block, impact block, quick jumps, repo fit, accepted inputs, exclusions, current snapshot, tree, quickstart, diagrams, tables, and definition of done.
+1. Supplied repo-facing Markdown that identifies `tests/accessibility/` as an explicit accessibility verification family and currently README-only.
+2. The supplied KFM Markdown/documentation guidance requiring GitHub-readable, evidence-bounded, badge-aware, callout-aware, diagram-aware, repository-ready writing.
 3. KFM UI doctrine that treats MapLibre shell behavior, Evidence Drawer, Focus Mode, finite outcomes, visible trust cues, reduced motion, keyboard operation, and same-page recovery as trust-bearing requirements.
 4. Documentation architecture guidance that requires README surfaces to state scope, repo fit, accepted inputs, exclusions, evidence boundary, current snapshot, directory tree, quickstart, diagrams, tables, and definition of done.
-5. Current-session workspace evidence that no mounted checkout was available to verify executable suite depth, runner wiring, or platform settings.
+5. Current-session evidence limit: no mounted KFM checkout was inspected in this pass, so executable suite depth, runner wiring, workflow enforcement, and platform settings remain `UNKNOWN`.
 
 ### Open verification items
 
@@ -441,6 +514,41 @@ Use these as planning names only. Do not claim they exist until checked in.
 | `trust_chips_non_color_only` | source, rights, sensitivity, freshness, review, and correction cues do not rely on hue alone | `../contracts/` if payload shape is the failing burden |
 | `narrow_viewport_trust_preservation` | mobile layout keeps trust cues attached to claims | UI shell docs if it becomes layout guidance rather than executable proof |
 | `export_preview_trust_cues` | export preview remains reachable and shows provenance/correction cues | `../e2e/release_assembly/` for publish-path proof |
+| `focus_live_region_outcomes` | Focus outcome changes announce without stealing context | `../contracts/` if the output envelope lacks state fields |
+| `compare_non_color_asymmetry` | comparison meaning survives without hue and without forced motion | `../reproducibility/` if the failure is deterministic rendering drift |
+
+</details>
+
+<details>
+<summary><strong>Appendix C — Contributor review checklist</strong></summary>
+
+Before adding or moving an accessibility case, verify:
+
+- [ ] The case names the trust-bearing surface under test.
+- [ ] The case names the accessibility burden, not just the UI element.
+- [ ] The fixture is public-safe.
+- [ ] The case does not depend on RAW, WORK, QUARANTINE, unpublished candidate data, or direct model output.
+- [ ] The case preserves map/time shell context through guarded outcomes.
+- [ ] Failure interpretation is clear enough for maintainers to triage.
+- [ ] Any runner-specific command is verified from the current branch.
+- [ ] Any required workflow or release-gate claim is verified before documentation says it is active.
+- [ ] Sibling handoff is recorded if the failure belongs in contracts, policy, e2e, reproducibility, or unit tests.
+
+</details>
+
+<details>
+<summary><strong>Appendix D — Reviewer prompts</strong></summary>
+
+Use these prompts during review when a proposed test or documentation change is hard to classify.
+
+| Prompt | Use when |
+|---|---|
+| “Could a keyboard-only user reach the evidence behind this claim?” | map shell, drawer, timeline, compare, or export behavior changes |
+| “Does a non-visual user receive the same trust-state change?” | selected feature, policy state, freshness, correction, or Focus outcome changes |
+| “Does reduced motion remove movement without removing meaning?” | story, camera, timeline, drawer, compare, or transition behavior changes |
+| “Is this a contract failure disguised as accessibility?” | missing fields or malformed envelopes drive the failure |
+| “Is this a policy failure disguised as accessibility?” | denial, redaction, sensitivity, or source-role obligations drive the failure |
+| “Would this claim be misleading if no runner is active?” | badges, enforcement language, or release-blocking language changes |
 
 </details>
 
