@@ -299,6 +299,34 @@ apps/governed-api/
 
 ---
 
+## Companion docs in this directory
+
+The files listed in the directory-tree section are now scaffolded and ready for iterative hardening:
+
+- [architecture.md](./architecture.md)
+- [data_model.md](./data_model.md)
+- [source_registry.md](./source_registry.md)
+- [schema_index.md](./schema_index.md)
+- [pipeline_inventory.md](./pipeline_inventory.md)
+- [lifecycle_and_promotion.md](./lifecycle_and_promotion.md)
+- [catalog_and_proof_objects.md](./catalog_and_proof_objects.md)
+- [api_surface.md](./api_surface.md)
+- [ui_layer_inventory.md](./ui_layer_inventory.md)
+- [evidence_drawer_payloads.md](./evidence_drawer_payloads.md)
+- [focus_mode_behavior.md](./focus_mode_behavior.md)
+- [test_matrix.md](./test_matrix.md)
+- [fixture_inventory.md](./fixture_inventory.md)
+- [ci_gate_matrix.md](./ci_gate_matrix.md)
+- [rollback_and_corrections.md](./rollback_and_corrections.md)
+- [file_inventory.md](./file_inventory.md)
+- [change_log.md](./change_log.md)
+- [verification_backlog.md](./verification_backlog.md)
+- [extension_points.md](./extension_points.md)
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## Quickstart
 
 Use this only after the real repository is mounted.
