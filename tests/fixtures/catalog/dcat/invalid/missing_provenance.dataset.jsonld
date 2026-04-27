@@ -1,1 +1,37 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "kfm": "https://kfm.local/ns#",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@type": "dcat:Dataset",
 
+  "dct:title": "Missing Provenance Dataset (Invalid Fixture)",
+  "dct:description": "This fixture intentionally omits the provenance pointer.",
+  "dct:identifier": "kfm://dataset/missing-provenance-fixture",
+
+  "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
+  "dct:accessRights": "public",
+
+  "dct:issued": "2026-04-27T00:00:00Z",
+  "dct:modified": "2026-04-27T00:00:00Z",
+
+  "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "kfm:evidence_ref": "kfm://evidence/missing-provenance-fixture",
+  "kfm:run_receipt_ref": "kfm://receipt/run/missing-provenance-fixture",
+  "kfm:release_manifest_ref": "kfm://release/missing-provenance-fixture",
+
+  "kfm:policy_label": "public",
+  "kfm:review_state": "reviewed",
+  "kfm:source_role": "authoritative_source",
+  "kfm:sensitivity": "public",
+
+  "dcat:distribution": [
+    {
+      "@type": "dcat:Distribution",
+      "dcat:accessURL": "https://example.invalid/artifact.ext",
+      "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html"
+    }
+  ]
+}
