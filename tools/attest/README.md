@@ -209,7 +209,10 @@ Do **not** silently convert visible lane presence into claims of mature, end-to-
 
 ```text
 tools/attest/
-└── README.md
+├── README.md
+├── receipt.schema.json
+├── sign_decision_envelope.py
+└── verify_decision_envelope.py
 ```
 
 ### Current documented thin-slice shape
