@@ -11,6 +11,8 @@ sh -n ./tools/ci/verify_baseline.sh \
   ./tools/ci/test_check_python_syntax.sh \
   ./tools/ci/check_crosswalk_static.sh \
   ./tools/ci/test_check_crosswalk_static.sh \
+  ./tools/ci/check_crosswalk_runtime.sh \
+  ./tools/ci/test_check_crosswalk_runtime.sh \
   ./tools/ci/install_boundary_test_deps.sh \
   ./scripts/bootstrap.sh \
   ./scripts/dev_up.sh \
@@ -24,6 +26,12 @@ sh ./tools/ci/check_readme_paths.sh --manifest ./tools/ci/readme_required_paths.
 sh ./tools/ci/verify_baseline.sh baseline-report.txt
 sh ./tools/ci/check_python_syntax.sh
 sh ./tools/ci/check_crosswalk_static.sh
+
+sh ./tools/ci/test_check_crosswalk_runtime.sh
+
+if [ -n "${KFM_CROSSWALK_TEST_DSN:-${DATABASE_URL:-}}" ]; then
+  sh ./tools/ci/check_crosswalk_runtime.sh
+fi
 
 ./scripts/bootstrap.sh
 python3 ./scripts/validate_schemas.py
