@@ -159,15 +159,23 @@ Current branch contents are **NEEDS VERIFICATION**. The tree below is a conserva
 ```text
 docs/domains/soil/
 ├── README.md                 # this domain orientation
-├── SOURCE_BURDEN.md          # PROPOSED: source role and support burden notes
-├── SUPPORT_TYPES.md          # PROPOSED: support_type taxonomy and examples
-├── LAYER_GUIDE.md            # PROPOSED: MapLibre layer and Evidence Drawer expectations
-├── OPEN_VERIFICATION.md      # PROPOSED: unresolved source, rights, owner, and path checks
-└── CHANGELOG.md              # PROPOSED: doc-level evolution notes
+├── SOURCE_BURDEN.md          # source role and support burden notes
+├── SUPPORT_TYPES.md          # support_type taxonomy and examples
+├── LAYER_GUIDE.md            # MapLibre layer and Evidence Drawer expectations
+├── OPEN_VERIFICATION.md      # unresolved source, rights, owner, and path checks
+└── CHANGELOG.md              # doc-level evolution notes
 ```
 
 > [!TIP]
 > Keep this directory small. Put executable contracts, fixtures, policies, validators, pipeline code, and emitted artifacts in their stronger homes.
+
+Companion docs in this directory:
+
+- [`SOURCE_BURDEN.md`](./SOURCE_BURDEN.md)
+- [`SUPPORT_TYPES.md`](./SUPPORT_TYPES.md)
+- [`LAYER_GUIDE.md`](./LAYER_GUIDE.md)
+- [`OPEN_VERIFICATION.md`](./OPEN_VERIFICATION.md)
+- [`CHANGELOG.md`](./CHANGELOG.md)
 
 [Back to top](#top)
 
