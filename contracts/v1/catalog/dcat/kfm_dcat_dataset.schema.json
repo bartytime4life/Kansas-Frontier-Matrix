@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json",
+  "title": "KFM DCAT Dataset Export",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "@context",
+    "@type",
+    "dct:title",
+    "dct:identifier",
+    "dct:license",
+    "dct:accessRights",
+    "dct:provenance",
+    "kfm:spec_hash",
+    "kfm:evidence_ref",
+    "kfm:release_manifest_ref",
+    "kfm:policy_label",
+    "kfm:review_state",
+    "kfm:source_role",
+    "dcat:distribution"
+  ],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "required": ["dcat", "dct", "kfm"],
+      "properties": {
+        "dcat": { "const": "http://www.w3.org/ns/dcat#" },
+        "dct": { "const": "http://purl.org/dc/terms/" },
+        "kfm": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "@type": { "const": "dcat:Dataset" },
+    "dct:title": { "type": "string", "minLength": 1 },
+    "dct:identifier": { "type": "string", "minLength": 1 },
+    "dct:license": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "enum": ["TODO", "unknown", "UNKNOWN"] }
+    },
+    "dct:accessRights": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "enum": ["TODO", "unknown", "UNKNOWN", "restricted", "deny"] }
+    },
+    "dct:provenance": { "type": "string", "minLength": 1 },
+    "kfm:spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "kfm:evidence_ref": { "type": "string", "minLength": 1 },
+    "kfm:release_manifest_ref": { "type": "string", "minLength": 1 },
+    "kfm:policy_label": { "const": "public" },
+    "kfm:review_state": {
+      "type": "string",
+      "enum": ["reviewed", "published"]
+    },
+    "kfm:source_role": { "type": "string", "minLength": 1 },
+    "kfm:redaction_receipt_ref": { "type": "string", "minLength": 1 },
+    "kfm:ai_receipt_ref": { "type": "string", "minLength": 1 },
+    "dct:replaces": { "type": "string", "minLength": 1 },
+    "dct:isReplacedBy": { "type": "string", "minLength": 1 },
+    "dcat:distribution": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/distribution"
+      }
+    }
+  },
+  "$defs": {
+    "distribution": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "@type",
+        "dcat:accessURL",
+        "dct:license"
+      ],
+      "properties": {
+        "@type": { "const": "dcat:Distribution" },
+        "dcat:accessURL": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dct:license": {
+          "type": "string",
+          "minLength": 1,
+          "not": { "enum": ["TODO", "unknown", "UNKNOWN"] }
+        },
+        "dct:format": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dct:conformsTo": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
