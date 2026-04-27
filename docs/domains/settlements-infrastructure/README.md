@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TODO(repo CODEOWNERS or domain steward)
 created: 2026-04-22
-updated: 2026-04-22
+updated: 2026-04-27
 policy_label: public
 related: [TODO:docs/registers/domain-file-index.md, TODO:docs/domains/settlements/README.md, TODO:docs/domains/infrastructure/README.md, TODO:schemas/contracts/v1/settlements/, TODO:schemas/contracts/v1/infrastructure/]
 tags: [kfm, domain, settlements, infrastructure, map-first, evidence, governance]
@@ -31,7 +31,7 @@ Landing page for the KFM domain lane that keeps Kansas places, civic status, inf
 > **Status:** experimental  
 > **Owners:** TODO — verify against repo CODEOWNERS, stewardship register, or domain ownership docs.  
 > **Path:** `docs/domains/settlements-infrastructure/README.md`  
-> **Posture:** **CONFIRMED** requested landing page path; **PROPOSED** lane structure; **UNKNOWN** current implementation depth until the mounted repo, tests, workflows, schemas, policy bundles, and runtime evidence are inspected.
+> **Posture:** **CONFIRMED** requested landing page path and companion docs landed in this directory; **NEEDS VERIFICATION** for owners, schema homes, runtime routes, and policy wiring.
 
 **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Lifecycle](#governed-lifecycle) · [Contracts](#contracts-and-object-families) · [Map/UI](#map-ui-and-focus-mode) · [Done](#definition-of-done) · [Verification](#verification-backlog)
 
@@ -73,7 +73,7 @@ It is not just a map layer catalog. It is the reviewable control surface for cla
 | Role | README-like domain landing page and review entry point |
 | Upstream doctrine | KFM pipeline doctrine, documentation control plane, settlements/infrastructure blueprint, MapLibre UI doctrine, governed AI doctrine |
 | Upstream machine surfaces | `schemas/contracts/v1/settlements/` and `schemas/contracts/v1/infrastructure/` are **PROPOSED** until repo conventions are verified |
-| Downstream docs | `data-model.md`, `source-registry.md`, `schema-registry.md`, `pipeline.md`, `api.md`, `map-layers.md`, `governance.md`, `verification-backlog.md`, `correction-log.md` are **PROPOSED** companion docs |
+| Downstream docs | `data-model.md`, `source-registry.md`, `schema-registry.md`, `pipeline.md`, `api.md`, `map-layers.md`, `governance.md`, `verification-backlog.md`, `correction-log.md`, `continuity.md`, and `file-map.md` are implemented companion docs in this directory. |
 | Downstream runtime | Governed API, released layer descriptors, Evidence Drawer payloads, Focus Mode envelopes, catalog/proof/release objects |
 | Must not become | A raw data directory, schema authority by itself, operational status dashboard, critical-infrastructure exposure surface, or uncited historical narrative |
 
@@ -129,22 +129,23 @@ These do **not** belong in this README or companion documentation unless explici
 
 ## Directory tree
 
-**NEEDS VERIFICATION:** The actual repo tree was not available in the inspected workspace. The tree below is the intended documentation shape for this requested combined path. Do not create duplicate authority if the real repo already has separate `docs/domains/settlements/` and `docs/domains/infrastructure/` homes.
+Current directory shape in this repository checkout.
 
 ```text
 docs/domains/settlements-infrastructure/
 ├── README.md                    # this landing page
-├── data-model.md                # PROPOSED: bounded contexts and field dictionary
-├── source-registry.md           # PROPOSED: source roles, rights posture, cadence
-├── schema-registry.md           # PROPOSED: schema/object index and compatibility notes
-├── pipeline.md                  # PROPOSED: RAW -> PUBLISHED flow and receipts
-├── api.md                       # PROPOSED: governed API contracts and finite outcomes
-├── map-layers.md                # PROPOSED: released layer descriptors and Evidence Drawer mapping
-├── governance.md                # PROPOSED: rights, sensitivity, policy, review, release gates
-├── verification-backlog.md      # PROPOSED: open checks before activation
-├── correction-log.md            # PROPOSED: post-release correction and supersession notes
-├── continuity.md                # PROPOSED: migration from prior scaffold/lineage docs
-└── file-map.md                  # PROPOSED: links into docs/registers/domain-file-index.md
+├── data-model.md                # bounded contexts and field dictionary
+├── source-registry.md           # source roles, rights posture, cadence
+├── schema-registry.md           # schema/object index and compatibility notes
+├── pipeline.md                  # RAW -> PUBLISHED flow and receipts
+├── api.md                       # governed API contracts and finite outcomes
+├── map-layers.md                # released layer descriptors and Evidence Drawer mapping
+├── governance.md                # rights, sensitivity, policy, review, release gates
+├── verification-backlog.md      # open checks before activation
+├── correction-log.md            # post-release correction and supersession notes
+├── continuity.md                # migration from prior scaffold/lineage docs
+├── file-map.md                  # links into docs/registers/domain-file-index.md
+└── CHANGELOG.md                 # lane documentation change history
 ```
 
 Companion homes, also **NEEDS VERIFICATION**:
