@@ -5,12 +5,15 @@ on:
     paths:
       - "contracts/v1/provenance/**"
       - "contracts/v1/catalog/dcat/**"
+      - "contracts/v1/catalog/stac/**"
       - "tools/validators/provenance/**"
       - "tools/validators/catalog/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
+      - "policy/catalog/stac/**"
       - "tests/fixtures/provenance/**"
       - "tests/fixtures/catalog/dcat/**"
+      - "tests/fixtures/catalog/stac/**"
       - ".github/workflows/provenance-gates.yml"
   push:
     branches:
@@ -18,12 +21,15 @@ on:
     paths:
       - "contracts/v1/provenance/**"
       - "contracts/v1/catalog/dcat/**"
+      - "contracts/v1/catalog/stac/**"
       - "tools/validators/provenance/**"
       - "tools/validators/catalog/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
+      - "policy/catalog/stac/**"
       - "tests/fixtures/provenance/**"
       - "tests/fixtures/catalog/dcat/**"
+      - "tests/fixtures/catalog/stac/**"
       - ".github/workflows/provenance-gates.yml"
   workflow_dispatch:
 
@@ -36,26 +42,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install Python validator dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           python -m pip install jsonschema
 
-      - name: Validate known-good provenance fixture
-        run: |
+      - run: |
           python tools/validators/provenance/validate_prov_sidecar.py \
             tests/fixtures/provenance/valid/minimal.prov.jsonld
 
-      - name: Ensure missing-license fixture fails closed
-        run: |
+      - run: |
           if python tools/validators/provenance/validate_prov_sidecar.py \
             tests/fixtures/provenance/invalid/missing_license.prov.jsonld; then
             echo "DENY: invalid missing_license fixture unexpectedly passed"
@@ -67,27 +68,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Conftest
-        run: |
+      - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
             "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" \
             -o conftest.tar.gz
           tar xzf conftest.tar.gz
           sudo mv conftest /usr/local/bin/conftest
-          conftest --version
 
-      - name: Policy allows known-good provenance fixture
-        run: |
+      - run: |
           conftest test \
             tests/fixtures/provenance/valid/minimal.prov.jsonld \
             --policy policy/provenance
 
-      - name: Policy denies missing-license fixture
-        run: |
+      - run: |
           if conftest test \
             tests/fixtures/provenance/invalid/missing_license.prov.jsonld \
             --policy policy/provenance; then
@@ -100,34 +96,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install Python validator dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           python -m pip install jsonschema
 
-      - name: Validate known-good DCAT fixture
-        run: |
+      - run: |
           python tools/validators/catalog/validate_dcat_dataset.py \
             tests/fixtures/catalog/dcat/valid/minimal.dataset.jsonld
 
-      - name: Ensure restricted-access fixture fails closed
-        run: |
+      - run: |
           if python tools/validators/catalog/validate_dcat_dataset.py \
             tests/fixtures/catalog/dcat/invalid/restricted_access.dataset.jsonld; then
             echo "DENY: restricted_access fixture unexpectedly passed"
             exit 1
           fi
 
-      - name: Ensure missing-provenance fixture fails closed
-        run: |
+      - run: |
           if python tools/validators/catalog/validate_dcat_dataset.py \
             tests/fixtures/catalog/dcat/invalid/missing_provenance.dataset.jsonld; then
             echo "DENY: missing_provenance fixture unexpectedly passed"
@@ -139,27 +129,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Conftest
-        run: |
+      - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
             "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" \
             -o conftest.tar.gz
           tar xzf conftest.tar.gz
           sudo mv conftest /usr/local/bin/conftest
-          conftest --version
 
-      - name: Policy allows known-good DCAT fixture
-        run: |
+      - run: |
           conftest test \
             tests/fixtures/catalog/dcat/valid/minimal.dataset.jsonld \
             --policy policy/catalog/dcat
 
-      - name: Policy denies restricted-access fixture
-        run: |
+      - run: |
           if conftest test \
             tests/fixtures/catalog/dcat/invalid/restricted_access.dataset.jsonld \
             --policy policy/catalog/dcat; then
@@ -167,11 +152,79 @@ jobs:
             exit 1
           fi
 
-      - name: Policy denies missing-provenance fixture
-        run: |
+      - run: |
           if conftest test \
             tests/fixtures/catalog/dcat/invalid/missing_provenance.dataset.jsonld \
             --policy policy/catalog/dcat; then
             echo "DENY: missing_provenance fixture unexpectedly passed policy"
+            exit 1
+          fi
+
+  stac-schema-validator:
+    name: Validate STAC exports
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+
+      - run: |
+          python tools/validators/catalog/validate_stac_item.py \
+            tests/fixtures/catalog/stac/valid/minimal.item.json
+
+      - run: |
+          if python tools/validators/catalog/validate_stac_item.py \
+            tests/fixtures/catalog/stac/invalid/missing_evidence_ref.item.json; then
+            echo "DENY: missing_evidence_ref fixture unexpectedly passed"
+            exit 1
+          fi
+
+      - run: |
+          if python tools/validators/catalog/validate_stac_item.py \
+            tests/fixtures/catalog/stac/invalid/restricted_policy_label.item.json; then
+            echo "DENY: restricted_policy_label fixture unexpectedly passed"
+            exit 1
+          fi
+
+  stac-policy:
+    name: Evaluate STAC policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          CONFTEST_VERSION="0.56.0"
+          curl -L \
+            "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" \
+            -o conftest.tar.gz
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+
+      - run: |
+          conftest test \
+            tests/fixtures/catalog/stac/valid/minimal.item.json \
+            --policy policy/catalog/stac
+
+      - run: |
+          if conftest test \
+            tests/fixtures/catalog/stac/invalid/missing_evidence_ref.item.json \
+            --policy policy/catalog/stac; then
+            echo "DENY: missing_evidence_ref fixture unexpectedly passed policy"
+            exit 1
+          fi
+
+      - run: |
+          if conftest test \
+            tests/fixtures/catalog/stac/invalid/restricted_policy_label.item.json \
+            --policy policy/catalog/stac; then
+            echo "DENY: restricted_policy_label fixture unexpectedly passed policy"
             exit 1
           fi
