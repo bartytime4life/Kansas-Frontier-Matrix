@@ -8,7 +8,7 @@ owners: TODO(confirm habitat lane steward and documentation-control owner)
 created: TODO(verify initial creation date)
 updated: 2026-04-22
 policy_label: TODO(confirm public|restricted)
-related: [docs/architecture/habitat/HABITAT_CONTROL_PLANE_INDEX.md, docs/architecture/habitat/ADR-0001-habitat-schema-home.md, data/registry/habitat/MASTER_REGISTRY_INDEX.md]
+related: [docs/domains/habitat/ARCHITECTURE.md, docs/domains/habitat/SOURCE_REGISTRY.md, docs/domains/habitat/VALIDATION_AND_POLICY.md, docs/architecture/habitat/HABITAT_CONTROL_PLANE_INDEX.md, docs/architecture/habitat/ADR-0001-habitat-schema-home.md, data/registry/habitat/MASTER_REGISTRY_INDEX.md]
 tags: [kfm, habitat, domain, evidence, map-first, geoprivacy]
 notes: [Repository checkout was not mounted during authoring; owner, created date, policy label, badge targets, and companion-path links require verification before publication.]
 [/KFM_META_BLOCK_V2] -->
@@ -24,7 +24,7 @@ Governed orientation for the KFM Habitat lane: source-role-safe habitat evidence
 > **Owners:** `TODO(confirm habitat lane steward and documentation-control owner)`  
 > **Path:** `docs/domains/habitat/README.md`  
 > **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-README--like%20%2B%20standard-blue) ![truth](https://img.shields.io/badge/truth-evidence--bounded-2b6cb0) ![lane](https://img.shields.io/badge/lane-habitat-2ea043) ![repo](https://img.shields.io/badge/repo-needs%20verification-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-b60205)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Companion docs](#companion-docs) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!NOTE]
 > This README is intentionally **evidence-bounded**. It states KFM Habitat doctrine confidently where the attached corpus supports it, but marks repo implementation, owners, exact paths, CI, routes, and live source behavior as `NEEDS VERIFICATION` until the real checkout is inspected.
@@ -86,6 +86,23 @@ Habitat outputs may support Fauna, Flora, Hydrology, Soils, Atmosphere, Hazards,
 
 ---
 
+## Companion docs
+
+The Habitat domain directory now includes companion documents for day-to-day maintenance:
+
+- [ARCHITECTURE.md](ARCHITECTURE.md): bounded context, object families, and trust boundaries.
+- [SOURCE_REGISTRY.md](SOURCE_REGISTRY.md): source-admission guide and source-role expectations.
+- [VALIDATION_AND_POLICY.md](VALIDATION_AND_POLICY.md): fail-closed gate categories and runtime outcomes.
+- [API_AND_UI_SURFACES.md](API_AND_UI_SURFACES.md): governed API and MapLibre/Evidence Drawer/Focus expectations.
+- [PROMOTION_AND_ROLLBACK.md](PROMOTION_AND_ROLLBACK.md): release prerequisites, promotion path, and rollback protocol.
+- [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md): unresolved decisions and verification backlog.
+
+These files are documentation-control surfaces. They do not replace machine contracts, validators, policy code, or run receipts.
+
+[Back to top](#top)
+
+---
+
 ## Accepted inputs
 
 Use this directory and its companion Habitat control-plane files for materials that belong to the Habitat lane and can be governed through KFM’s evidence path.
@@ -131,7 +148,13 @@ Do not place these in the Habitat lane without an explicit ADR, source admission
 
 ```text
 docs/domains/habitat/
-└── README.md
+├── README.md
+├── ARCHITECTURE.md
+├── SOURCE_REGISTRY.md
+├── VALIDATION_AND_POLICY.md
+├── API_AND_UI_SURFACES.md
+├── PROMOTION_AND_ROLLBACK.md
+└── OPEN_QUESTIONS.md
 ```
 
 ### Expected companion surfaces
