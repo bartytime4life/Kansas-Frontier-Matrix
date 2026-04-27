@@ -1,16 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-VERIFY-UUID
+doc_id: kfm://doc/ui-shell-readme
 title: KFM UI Shell
 type: standard
 version: v1
 status: draft
-owners: TODO-VERIFY-UI-SHELL-OWNER
-created: TODO-VERIFY-YYYY-MM-DD
+owners: @bartytime4life
+created: 2026-04-27
 updated: 2026-04-27
-policy_label: TODO-VERIFY-public-or-restricted
-related: [ui/shell/README.md, TODO-VERIFY:docs/architecture/maplibre/, TODO-VERIFY:docs/architecture/ui/, TODO-VERIFY:schemas/contracts/v1/maplibre/, TODO-VERIFY:contracts/api/maplibre/]
+policy_label: public
+related: [ui/shell/README.md, ui/maplibre/README.md, ui/evidence-drawer/README.md, ui/focus/README.md, schemas/contracts/v1/runtime/renderers/, contracts/api/README.md, docs/architecture/, docs/adr/]
 tags: [kfm, ui, shell, maplibre, evidence-drawer, focus-mode, governed-ui]
-notes: [doc_id owners created policy_label and related paths require repo verification; target path supplied as ui/shell/README.md; implementation state remains NEEDS VERIFICATION until checked in the mounted repo]
+notes: [Repository paths verified on 2026-04-27; this directory currently contains documentation only and no runnable shell implementation artifacts.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM UI Shell
@@ -20,7 +20,7 @@ Map-first, time-aware, evidence-visible shell for the Kansas Frontier Matrix gov
 <a id="top"></a>
 
 > [!IMPORTANT]
-> **Current implementation state: NEEDS VERIFICATION.** This README is written for the target path `ui/shell/` using KFM doctrine and the supplied architecture corpus. It does **not** prove that the directory, components, routes, schemas, tests, or package commands already exist in the repository.
+> **Current implementation state: DOCUMENTED, IMPLEMENTATION PENDING.** The `ui/shell/` directory exists and has been verified in-repo, but it currently contains documentation only (no runnable shell components, routes, or adapters yet).
 
 ## Impact block
 
@@ -34,7 +34,7 @@ Map-first, time-aware, evidence-visible shell for the Kansas Frontier Matrix gov
 | Field | Value |
 | --- | --- |
 | **Status** | `experimental` |
-| **Owners** | `TODO-VERIFY-UI-SHELL-OWNER` |
+| **Owners** | `@bartytime4life` |
 | **Target path** | `ui/shell/` |
 | **Primary role** | Persistent governed shell: map, time, evidence, policy, review state, negative states |
 | **Default renderer posture** | MapLibre-first 2D shell; conditional 3D handoff only after admission and parity checks |
@@ -75,13 +75,13 @@ The shell is **not** the canonical evidence store, policy engine, source registr
 
 | Relation | Path or surface | Status | Notes |
 | --- | --- | --- | --- |
-| **This README** | `ui/shell/README.md` | `PROPOSED / TARGET PROVIDED` | Target path was provided by the task. Existing repo file status is `NEEDS VERIFICATION`. |
+| **This README** | `ui/shell/README.md` | `VERIFIED` | Target path exists in the repository and currently contains this README only. |
 | **Upstream inputs** | [Accepted inputs](#accepted-inputs) | `PROPOSED` | Manifest, drawer, Focus, policy, and runtime payloads should arrive through governed contracts/API. |
 | **Downstream outputs** | [Shell outputs](#shell-outputs) | `PROPOSED` | Runtime receipts, safe telemetry, export requests, and user-visible trust states. |
-| **Adjacent docs** | `docs/architecture/ui/`, `docs/architecture/maplibre/`, `docs/adr/` | `TODO-VERIFY` | Use repo-native documentation homes if they differ. |
-| **Machine contracts** | `schemas/contracts/v1/`, `contracts/api/` | `TODO-VERIFY` | Resolve schema/API homes by ADR before creating parallel authorities. |
-| **Governed API** | `apps/governed-api/` or repo-native equivalent | `TODO-VERIFY` | Browser must call governed routes only; no direct raw/canonical/model path. |
-| **Fixtures/tests** | `tests/fixtures/ui/`, `tests/fixtures/maplibre/`, or repo-native equivalent | `TODO-VERIFY` | No-network fixtures first; live data later only after source and rights gates. |
+| **Adjacent docs** | `docs/architecture/`, `docs/adr/`, `ui/maplibre/README.md` | `VERIFIED` | Repo has `docs/architecture/` (with `governed-ai/`) and no `docs/architecture/ui/` or `docs/architecture/maplibre/` subdirectories today. |
+| **Machine contracts** | `schemas/contracts/v1/`, `contracts/api/` | `VERIFIED` | `schemas/contracts/v1/` exists with runtime/renderers scopes; `contracts/api/` exists with a README and placeholder `.gitkeep`. |
+| **Governed API** | `apps/governed_api/` (repo-native) | `VERIFIED` | Repository uses underscore naming for the governed API app directory. |
+| **Fixtures/tests** | `tests/fixtures/`, `tests/e2e/`, `tests/accessibility/` | `VERIFIED` | Repo has generic fixture/test roots; no dedicated `tests/fixtures/ui/` or `tests/fixtures/maplibre/` directories currently. |
 
 ### Upstream governed inputs
 
@@ -354,13 +354,11 @@ Record the result in the first implementation PR or linked ADR.
 
 ### 2. Discover the repo-native test path
 
-Do not assume a package manager. After verification, replace these placeholders with the repo-native commands.
+Package-manager commands are intentionally omitted because no `package.json`, lockfiles, `pyproject.toml`, `Cargo.toml`, `go.mod`, or `Makefile` were found at repository root depth during verification.
 
 ```bash
-# Illustrative only — replace after repo verification.
-# npm test -- ui/shell
-# pnpm test --filter ui-shell
-# yarn test ui/shell
+# No runnable UI shell test command is currently discoverable in this repository snapshot.
+# If/when app code is added, document the exact command here in the same PR.
 ```
 
 ### 3. Validate the first shell slice
@@ -448,7 +446,7 @@ async function askFocus(question: string) {
 A `ui/shell/` change is not done until it preserves KFM trust boundaries.
 
 - [ ] Repo conventions, package manager, app path, schema home, API home, policy tooling, and test runner have been verified.
-- [ ] `README.md` metadata placeholders have been replaced or explicitly retained with review notes.
+- [x] `README.md` metadata placeholders have been replaced with currently verifiable repository values.
 - [ ] Browser cannot reach `RAW`, `WORK`, `QUARANTINE`, canonical evidence stores, proof packs, or direct model runtime.
 - [ ] Feature click resolves through governed API, not local popup properties.
 - [ ] Evidence Drawer opens from a valid payload or a visible finite negative state.
@@ -539,17 +537,17 @@ A no-network, public-safe fixture slice: validated layer/release manifests, a Ma
 
 | Item | Status | How to retire |
 | --- | --- | --- |
-| Does `ui/shell/` already exist? | `NEEDS VERIFICATION` | Inspect mounted repo tree. |
-| Existing README conventions near target path | `NEEDS VERIFICATION` | Inspect adjacent READMEs and docs templates. |
-| Repo package manager | `UNKNOWN` | Check lockfiles and package metadata. |
-| UI framework and route conventions | `UNKNOWN` | Inspect UI app source and router setup. |
-| Schema home | `UNKNOWN / POSSIBLY CONFLICTED` | Resolve with ADR before adding schema references. |
-| Governed API route names | `UNKNOWN` | Inspect backend route tree and API contracts. |
-| Existing MapLibre adapter | `UNKNOWN` | Search app/packages for renderer boundary. |
-| Existing Evidence Drawer | `UNKNOWN` | Search UI features/components and fixtures. |
-| Existing Focus Mode | `UNKNOWN` | Search API/UI/model adapter code and contracts. |
-| Existing tests and CI gates | `UNKNOWN` | Inspect test directories and workflow files. |
-| Current owners | `TODO-VERIFY` | Check CODEOWNERS, docs ownership, or team conventions. |
-| Policy label | `TODO-VERIFY` | Check repository documentation policy labels. |
+| Does `ui/shell/` already exist? | `VERIFIED` | Yes; it currently contains `ui/shell/README.md` only. |
+| Existing README conventions near target path | `VERIFIED` | Nearby `ui/*/README.md` files use a `KFM_META_BLOCK_V2` header and trust-boundary guidance style. |
+| Repo package manager | `NOT DETECTED` | No package-manager or build-system manifest found at root depth in current snapshot. |
+| UI framework and route conventions | `NOT YET IMPLEMENTED IN ui/` | `ui/` currently appears documentation-only; no app code or router files are present there. |
+| Schema home | `VERIFIED` | `schemas/contracts/v1/` is present and includes runtime-related schema directories. |
+| Governed API route names | `PARTIALLY VERIFIED` | Governed API directory exists at `apps/governed_api/`; exact route map remains to be documented when implementing shell code. |
+| Existing MapLibre adapter | `NOT FOUND IN ui/shell` | Only documentation is present in `ui/`; implementation adapter remains future work. |
+| Existing Evidence Drawer | `DOC-ONLY SURFACE PRESENT` | `ui/evidence-drawer/README.md` exists; no runnable component files found in `ui/`. |
+| Existing Focus Mode | `DOC-ONLY SURFACE PRESENT` | `ui/focus/README.md` exists; no runnable component files found in `ui/`. |
+| Existing tests and CI gates | `VERIFIED` | Test and workflow scaffolding exists under `tests/` and `.github/workflows/`. |
+| Current owners | `VERIFIED` | `.github/CODEOWNERS` assigns `/ui/` to `@bartytime4life` (with global fallback to same owner). |
+| Policy label | `SET TO public (PROVISIONAL)` | Chosen for README consistency with other top-level docs; update if repo governance standard changes. |
 
 </details>
