@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schema/contracts/v1/provenance/kfm_prov_sidecar.schema.json",
   "title": "KFM PROV Sidecar",
+  "description": "KFM provenance sidecar for EvidenceBundle outputs, pipeline runs, receipt references, and catalog-linked public artifacts.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -26,8 +27,13 @@
         "kfm": {
           "type": "string",
           "minLength": 1
+        },
+        "spdx": {
+          "type": "string",
+          "minLength": 1
         }
-      }
+      },
+      "additionalProperties": true
     },
     "entity": {
       "type": "object",
@@ -36,7 +42,8 @@
         "^[A-Za-z0-9_:-]+$": {
           "$ref": "#/$defs/entity"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "activity": {
       "type": "object",
@@ -45,7 +52,8 @@
         "^[A-Za-z0-9_:-]+$": {
           "$ref": "#/$defs/activity"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "agent": {
       "type": "object",
@@ -54,35 +62,48 @@
         "^[A-Za-z0-9_:-]+$": {
           "$ref": "#/$defs/agent"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "wasGeneratedBy": {
-      "type": "object",
-      "required": ["prov:entity", "prov:activity"],
-      "properties": {
-        "prov:entity": {
-          "type": "string",
-          "minLength": 1
-        },
-        "prov:activity": {
-          "type": "string",
-          "minLength": 1
-        }
-      }
+      "$ref": "#/$defs/wasGeneratedBy"
     },
     "wasAttributedTo": {
+      "$ref": "#/$defs/wasAttributedTo"
+    },
+    "wasDerivedFrom": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/wasDerivedFrom"
+      }
+    },
+    "used": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/used"
+      }
+    },
+    "kfm:publication_context": {
+      "type": "string",
+      "enum": ["public", "restricted", "internal", "deny"]
+    },
+    "kfm:release_manifest_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kfm:catalog_refs": {
       "type": "object",
-      "required": ["prov:entity", "prov:agent"],
       "properties": {
-        "prov:entity": {
+        "stac": {
           "type": "string",
           "minLength": 1
         },
-        "prov:agent": {
+        "dcat": {
           "type": "string",
           "minLength": 1
         }
-      }
+      },
+      "additionalProperties": true
     }
   },
   "$defs": {
@@ -90,9 +111,28 @@
       "type": "string",
       "pattern": "^sha256:[a-fA-F0-9]{64}$"
     },
-    "uriOrTodo": {
+    "nonEmptyString": {
       "type": "string",
       "minLength": 1
+    },
+    "nonTodoString": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "enum": ["TODO", "todo", "UNKNOWN", "unknown", "NEEDS-VERIFICATION"]
+      }
+    },
+    "uriOrRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policyLabel": {
+      "type": "string",
+      "enum": ["public", "restricted", "internal", "deny", "TODO"]
+    },
+    "reviewState": {
+      "type": "string",
+      "enum": ["draft", "review", "reviewed", "published", "superseded", "retracted", "TODO"]
     },
     "entity": {
       "type": "object",
@@ -103,10 +143,31 @@
           "minLength": 1
         },
         "dct:identifier": {
-          "$ref": "#/$defs/uriOrTodo"
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "dct:title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dct:description": {
+          "$ref": "#/$defs/nonEmptyString"
         },
         "dct:license": {
-          "$ref": "#/$defs/uriOrTodo"
+          "$ref": "#/$defs/nonTodoString"
+        },
+        "dct:accessRights": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dct:created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dct:modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "prov:generatedAtTime": {
+          "type": "string",
+          "format": "date-time"
         },
         "kfm:spec_hash": {
           "$ref": "#/$defs/sha256"
@@ -114,17 +175,36 @@
         "kfm:content_spec_hash": {
           "$ref": "#/$defs/sha256"
         },
+        "kfm:geometry_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kfm:evidence_ref": {
+          "$ref": "#/$defs/uriOrRef"
+        },
         "kfm:run_receipt_ref": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/uriOrRef"
         },
         "kfm:ai_receipt_ref": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/uriOrRef"
         },
         "kfm:redaction_receipt_ref": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "kfm:release_manifest_ref": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "kfm:policy_label": {
+          "$ref": "#/$defs/policyLabel"
+        },
+        "kfm:review_state": {
+          "$ref": "#/$defs/reviewState"
+        },
+        "kfm:source_role": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kfm:sensitivity": {
           "type": "string",
-          "minLength": 1
+          "enum": ["public", "restricted", "sensitive", "deny", "unknown", "TODO"]
         }
       },
       "additionalProperties": true
@@ -140,10 +220,10 @@
         "prov:used": {
           "type": "array",
           "items": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/uriOrRef"
           },
-          "minItems": 1
+          "minItems": 1,
+          "uniqueItems": true
         },
         "prov:startedAtTime": {
           "type": "string",
@@ -154,12 +234,16 @@
           "format": "date-time"
         },
         "kfm:pipeline": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonEmptyString"
         },
         "kfm:pipeline_version": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kfm:run_receipt_ref": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "kfm:execution_environment": {
+          "$ref": "#/$defs/nonEmptyString"
         }
       },
       "additionalProperties": true
@@ -173,8 +257,73 @@
           "minLength": 1
         },
         "dct:identifier": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kfm:agent_role": {
           "type": "string",
-          "minLength": 1
+          "enum": ["signer", "reviewer", "pipeline", "service", "human", "TODO"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "wasGeneratedBy": {
+      "type": "object",
+      "required": ["prov:entity", "prov:activity"],
+      "properties": {
+        "prov:entity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:activity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": true
+    },
+    "wasAttributedTo": {
+      "type": "object",
+      "required": ["prov:entity", "prov:agent"],
+      "properties": {
+        "prov:entity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:agent": {
+          "$ref": "#/$defs/uriOrRef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "wasDerivedFrom": {
+      "type": "object",
+      "required": ["prov:generatedEntity", "prov:usedEntity"],
+      "properties": {
+        "prov:generatedEntity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:usedEntity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:activity": {
+          "$ref": "#/$defs/uriOrRef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "used": {
+      "type": "object",
+      "required": ["prov:activity", "prov:entity"],
+      "properties": {
+        "prov:activity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:entity": {
+          "$ref": "#/$defs/uriOrRef"
+        },
+        "prov:role": {
+          "$ref": "#/$defs/nonEmptyString"
         }
       },
       "additionalProperties": true
