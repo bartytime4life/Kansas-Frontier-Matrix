@@ -1,1 +1,82 @@
-
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/tools/attest/receipt.schema.json",
+  "title": "KFM Attest Helper Result",
+  "description": "Schema for sign/verify result artifacts emitted by tools/attest thin-slice helpers.",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "result_type",
+        "status",
+        "artifact_uri",
+        "decision_sha256",
+        "signature",
+        "signed_at",
+        "tool"
+      ],
+      "properties": {
+        "result_type": { "const": "kfm:DecisionEnvelopeSignResult" },
+        "status": { "const": "signed" },
+        "artifact_uri": { "type": "string", "minLength": 1 },
+        "decision_path": { "type": "string", "minLength": 1 },
+        "decision_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signature": {
+          "type": "object",
+          "required": ["alg", "value", "signer", "key_source"],
+          "properties": {
+            "alg": { "const": "sha256" },
+            "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "signer": { "type": "string", "minLength": 1 },
+            "key_source": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "signed_at": { "type": "string", "format": "date-time" },
+        "tool": { "const": "tools/attest/sign_decision_envelope.py" }
+      },
+      "additionalProperties": true
+    },
+    {
+      "type": "object",
+      "required": [
+        "result_type",
+        "status",
+        "verified",
+        "artifact_uri",
+        "decision_sha256",
+        "checks",
+        "checked_at",
+        "tool"
+      ],
+      "properties": {
+        "result_type": { "const": "kfm:DecisionEnvelopeVerifyResult" },
+        "status": { "enum": ["verified", "verification_failed"] },
+        "verified": { "type": "boolean" },
+        "artifact_uri": { "type": "string", "minLength": 1 },
+        "decision_path": { "type": "string", "minLength": 1 },
+        "sign_result_path": { "type": "string", "minLength": 1 },
+        "decision_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "checks": {
+          "type": "object",
+          "required": [
+            "artifact_uri_match",
+            "decision_sha256_match",
+            "signature_match",
+            "result_type_match"
+          ],
+          "properties": {
+            "artifact_uri_match": { "type": "boolean" },
+            "decision_sha256_match": { "type": "boolean" },
+            "signature_match": { "type": "boolean" },
+            "result_type_match": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "tool": { "const": "tools/attest/verify_decision_envelope.py" }
+      },
+      "additionalProperties": true
+    }
+  ]
+}
