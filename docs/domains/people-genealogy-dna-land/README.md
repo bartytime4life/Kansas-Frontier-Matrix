@@ -131,12 +131,12 @@ Planned companion documentation should stay small, reviewable, and reversible.
 ```text
 docs/domains/people-genealogy-dna-land/
 ├── README.md                         # this landing page
-├── DECISIONS.md                      # PROPOSED: lane decisions and ADR cross-links
-├── SOURCE_FAMILIES.md                # PROPOSED: source-family notes and role boundaries
-├── PRIVACY_AND_SENSITIVITY.md        # PROPOSED: living-person, DNA, residential, and title-sensitive posture
-├── VALIDATION.md                     # PROPOSED: validator, fixture, policy, and gate summary
-├── API_AND_UI.md                     # PROPOSED: governed API, Evidence Drawer, Focus Mode payload notes
-└── CHANGELOG.md                      # PROPOSED: doc evolution, supersession, and correction notes
+├── DECISIONS.md                      # lane decisions and ADR cross-links (initial)
+├── SOURCE_FAMILIES.md                # source-family notes and role boundaries (initial)
+├── PRIVACY_AND_SENSITIVITY.md        # living-person, DNA, residential, and title-sensitive posture (initial)
+├── VALIDATION.md                     # validator, fixture, policy, and gate summary (initial)
+├── API_AND_UI.md                     # governed API, Evidence Drawer, Focus Mode payload notes (initial)
+└── CHANGELOG.md                      # doc evolution, supersession, and correction notes
 ```
 
 Machine, policy, data, and test homes should remain outside this directory:
