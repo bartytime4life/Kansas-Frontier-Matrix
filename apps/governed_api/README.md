@@ -193,7 +193,7 @@ The governed API must be deliberately narrow. These items do **not** belong as n
 > **NEEDS VERIFICATION:** this tree is a proposed shape for review. Do not claim these files exist until a mounted repo confirms them. If the repo uses `apps/governed_api/`, `apps/api/`, or `packages/api/`, adapt through an ADR rather than duplicating authority.
 
 ```text
-apps/governed-api/
+apps/governed_api/
   README.md                    # this boundary README
 
   openapi/                     # PROPOSED: generated or source OpenAPI home if repo confirms ownership
