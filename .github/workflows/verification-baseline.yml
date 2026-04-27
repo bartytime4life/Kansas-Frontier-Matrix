@@ -84,6 +84,11 @@ jobs:
             python3 -m pytest -q tests/crosswalk
           fi
 
+      - name: Run crosswalk runtime validation
+        run: |
+          sh ./tools/ci/test_check_crosswalk_runtime.sh
+          sh ./tools/ci/check_crosswalk_runtime.sh
+
       - name: Build governed artifacts from fixed fixtures
         run: |
           python3 ./tools/ci/build_governed_artifacts.py --root . --out-dir artifacts/governed
