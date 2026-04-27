@@ -6,53 +6,86 @@ version: v1
 status: draft
 owners: TODO-VERIFY-web-owner
 created: TODO-YYYY-MM-DD
-updated: 2026-04-23
+updated: 2026-04-27
 policy_label: TODO-confirm-public
-related: [../README.md, ../apps/README.md, ../apps/explorer-web/README.md, ../apps/governed-api/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../data/README.md, ../.github/README.md]
+related: ["TODO: verify ../README.md", "TODO: verify ../apps/README.md", "TODO: verify ../apps/explorer-web/README.md", "TODO: verify ../apps/governed-api/README.md", "TODO: verify ../contracts/README.md", "TODO: verify ../schemas/README.md", "TODO: verify ../policy/README.md", "TODO: verify ../tests/README.md", "TODO: verify ../data/README.md", "TODO: verify ../.github/README.md"]
 tags: [kfm, web, ui, maplibre, evidence-drawer, focus-mode, governed-api]
-notes: [Repo-ready replacement for web/README.md; owners, created date, policy label, and runtime depth require active-checkout verification.]
+notes: [Repo-ready replacement for web/README.md; owners, created date, policy label, related paths, and runtime depth require active-checkout verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix Web UI
 
-Map-first, time-aware, evidence-first UI guidance for KFM’s governed browser boundary.
+<p align="center">
+  <strong>Map-first • time-aware • evidence-first • governed browser boundary</strong>
+</p>
+
+<p align="center">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
+  <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
+  <img alt="Policy: fail-closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Renderer: proposed MapLibre 2D" src="https://img.shields.io/badge/renderer-PROPOSED_MapLibre_2D-lightgrey">
+  <img alt="Focus: bounded synthesis" src="https://img.shields.io/badge/Focus-bounded_synthesis-6f42c1">
+  <img alt="Runtime depth: unknown" src="https://img.shields.io/badge/runtime_depth-UNKNOWN-lightgrey">
+  <img alt="Release: not published" src="https://img.shields.io/badge/release-not_published-lightgrey">
+</p>
+
+<p align="center">
+  <a href="#scope">Scope</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#accepted-inputs">Inputs</a> ·
+  <a href="#exclusions">Exclusions</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#diagram">Diagram</a> ·
+  <a href="#validation">Validation</a> ·
+  <a href="#rollback-and-correction">Rollback</a>
+</p>
 
 > [!IMPORTANT]
-> **Status:** `experimental`  
-> **Owners:** `TODO-VERIFY-web-owner`  
-> **Path:** `web/README.md`  
-> **Surface:** browser UI root guidance for KFM-Web  
-> **Evidence posture:** `CONFIRMED doctrine` / `PROPOSED web boundary contract` / `UNKNOWN runtime implementation depth`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-lightgrey) ![surface](https://img.shields.io/badge/surface-web%20UI-0b7285) ![renderer](https://img.shields.io/badge/renderer-MapLibre%202D-3b82f6) ![focus](https://img.shields.io/badge/Focus-bounded%20synthesis-6f42c1) ![trust](https://img.shields.io/badge/trust-governed%20API-1f6feb) ![repo](https://img.shields.io/badge/runtime-depth-needs%20verification-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> This README is evidence-bounded UI-root guidance. It does not prove checked-in browser code, package manager, routes, workflows, tests, deployment, branch protection, or runtime behavior. Treat implementation-specific claims as `UNKNOWN` until verified from the active KFM checkout.
 
-> [!NOTE]
-> This README is intentionally conservative. It documents what `web/` should own in KFM and what must be verified before stronger claims are made about checked-in runtime code, package manager, app entrypoints, routes, components, workflow enforcement, or deployed behavior.
+| Field | Value |
+|---|---|
+| Document status | `draft` |
+| Lane posture | `experimental guidance` |
+| Requested path | `web/README.md` |
+| Owners | `TODO-VERIFY-web-owner` |
+| Authoring evidence mode | `CORPUS_ONLY / NO_LOCAL_REPO_EVIDENCE` |
+| Runtime implementation depth | `UNKNOWN` |
+| Policy label | `TODO-confirm-public` |
+| Public posture | Cite-or-abstain; fail closed on unresolved evidence, rights, sensitivity, review, or release state |
+| Repo fit | UI-root guidance for the governed browser boundary; adjacent paths require active-checkout verification |
+
+| What this document does | What it does not do |
+|---|---|
+| Defines the browser-side trust boundary for KFM-Web. | Does not make the browser the source of truth. |
+| Describes how maps, timelines, Evidence Drawer, and Focus Mode should behave. | Does not prove MapLibre, Evidence Drawer, Focus Mode, or app routes are implemented. |
+| Lists accepted inputs, exclusions, validation gates, and rollback expectations. | Does not authorize public release or source activation. |
+| Preserves `UNKNOWN` and `NEEDS VERIFICATION` where repo evidence is absent. | Does not replace schemas, contracts, policy, receipts, release manifests, or EvidenceBundle resolution. |
 
 ---
 
 ## Scope
 
-`web/` is KFM’s browser-facing UI root guidance surface.
+`web/` is the requested browser-facing UI root guidance surface for Kansas Frontier Matrix.
 
-In KFM terms, this is not “frontend notes.” It is the place where browser-side expectations for map-first exploration, timeline coequality, Evidence Drawer drill-through, bounded Focus consumption, local development, accessibility, and trust-visible rendering stay explicit without pretending that the browser decides truth on its own.
+In KFM terms, this is not generic frontend documentation. It is the place where browser-side expectations for map-first exploration, time-aware interaction, Evidence Drawer drill-through, bounded Focus consumption, accessibility, trust-visible rendering, local verification, and rollback-safe UI change remain explicit.
 
 Use this README to answer four questions quickly:
 
-1. What is the browser allowed to render, request, and preserve?
-2. What must it never decide or fetch directly?
-3. How does `web/` relate to `apps/explorer-web/` and `apps/governed-api/`?
-4. Which claims are doctrine, and which still need active-checkout verification?
+1. What may the browser render, request, preserve, and deep-link?
+2. What must it never decide, fetch, expose, or treat as truth?
+3. How should `web/` relate to app shells, governed API surfaces, contracts, schemas, policy, data lifecycle, and tests?
+4. Which statements are doctrine-backed guidance, and which require active-checkout verification?
 
 ### Evidence labels used here
 
 | Label | Meaning in this README |
 |---|---|
-| `CONFIRMED` | Directly supported by attached KFM doctrine, current public repo evidence, or current-session workspace inspection. |
-| `INFERRED` | Conservative interpretation of repeated doctrine or adjacent README patterns. |
-| `PROPOSED` | Repo-native guidance that fits KFM law but is not yet proven as active runtime implementation. |
-| `UNKNOWN` | Not supported strongly enough to present as current runtime, branch, package, route, or deployment reality. |
-| `NEEDS VERIFICATION` | Explicit placeholder to check in the active checkout before merge. |
+| `CONFIRMED` | Supported by attached KFM doctrine, direct authoring-session workspace evidence, or current user-provided target intent. |
+| `INFERRED` | Conservative interpretation of repeated KFM doctrine or adjacent documentation patterns. |
+| `PROPOSED` | Repo-native guidance that fits KFM operating law but is not verified as active implementation. |
+| `UNKNOWN` | Not supported strongly enough to present as current runtime, branch, package, route, test, workflow, or deployment fact. |
+| `NEEDS VERIFICATION` | Check in the active checkout before merge or before treating the value as current fact. |
 
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
@@ -60,30 +93,32 @@ Use this README to answer four questions quickly:
 
 ## Repo fit
 
-| Field | Value |
-|---|---|
-| Path | `web/README.md` |
-| Role | UI-root README for KFM-Web and its governed browser-boundary invariants. |
-| Upstream root | [`../README.md`](../README.md) |
-| Runtime family | [`../apps/README.md`](../apps/README.md) |
-| Closest shell sibling | [`../apps/explorer-web/README.md`](../apps/explorer-web/README.md) |
-| Governed API boundary | [`../apps/governed-api/README.md`](../apps/governed-api/README.md) |
-| Shared contract meaning | [`../contracts/README.md`](../contracts/README.md) |
-| Machine shape boundary | [`../schemas/README.md`](../schemas/README.md) |
-| Policy and admissibility | [`../policy/README.md`](../policy/README.md) |
-| Verification and fixtures | [`../tests/README.md`](../tests/README.md) |
-| Lifecycle and released artifacts | [`../data/README.md`](../data/README.md) |
-| GitHub control surface | [`../.github/README.md`](../.github/README.md) |
+| Surface | Status | Relationship |
+|---|---|---|
+| `web/README.md` | `REQUESTED TARGET` | UI-root browser-boundary guidance. |
+| `[Root README — NEEDS VERIFICATION](../README.md)` | `NEEDS VERIFICATION` | Project-level orientation and doctrine entry point. |
+| `[Apps README — NEEDS VERIFICATION](../apps/README.md)` | `NEEDS VERIFICATION` | Runtime-family navigation, if present. |
+| `[Explorer Web README — NEEDS VERIFICATION](../apps/explorer-web/README.md)` | `NEEDS VERIFICATION` | Likely map-first shell sibling, if present. |
+| `[Governed API README — NEEDS VERIFICATION](../apps/governed-api/README.md)` | `NEEDS VERIFICATION` | Browser-facing trust boundary should resolve through governed APIs. |
+| `[Contracts README — NEEDS VERIFICATION](../contracts/README.md)` | `NEEDS VERIFICATION` | Human-readable semantic contracts. |
+| `[Schemas README — NEEDS VERIFICATION](../schemas/README.md)` | `NEEDS VERIFICATION` | Machine-readable shapes and fixtures. |
+| `[Policy README — NEEDS VERIFICATION](../policy/README.md)` | `NEEDS VERIFICATION` | Rights, sensitivity, release, and exposure rules. |
+| `[Tests README — NEEDS VERIFICATION](../tests/README.md)` | `NEEDS VERIFICATION` | Validation, fixture, smoke, accessibility, and negative-path coverage. |
+| `[Data README — NEEDS VERIFICATION](../data/README.md)` | `NEEDS VERIFICATION` | Lifecycle, receipts, proofs, catalog, release, and published artifacts. |
+| `[GitHub README — NEEDS VERIFICATION](../.github/README.md)` | `NEEDS VERIFICATION` | Repository controls, templates, and workflow documentation, if present. |
 
 ### Boundary rule
 
-`web/` should own browser-facing guidance, shell expectations, renderer integration constraints, local UI verification notes, and client-side contract carry-forward.
+`web/` should own browser-facing guidance, shell expectations, renderer integration constraints, local UI verification notes, accessibility obligations, and client-side trust-state carry-forward.
 
-`web/` should not silently become the owner of canonical truth, source authority, policy adjudication, evidence-resolution law, release authority, raw data access, direct model access, or proof-object storage.
+`web/` should not silently become the owner of canonical truth, source authority, policy adjudication, evidence-resolution law, release authority, raw data access, direct model access, proof-object storage, or publication decisions.
 
-### Relationship to `apps/explorer-web/`
+### Relationship to app shell paths
 
-`web/` is the UI-root guidance surface. `apps/explorer-web/` is the closest documented shell-boundary sibling for the runnable map-first product surface. Keep both linked until the active branch intentionally consolidates, renames, or supersedes one of them through a documented path decision.
+`web/` is the requested UI-root guidance surface. `apps/explorer-web/` may be the runtime shell path if the active repository confirms it. Keep both paths linked as `NEEDS VERIFICATION` until the active checkout proves whether they are separate, consolidated, renamed, or superseded.
+
+> [!CAUTION]
+> Do not create a second browser-shell authority by accident. If both `web/` and `apps/explorer-web/` exist, record which one is guidance, which one is runtime implementation, and how they stay synchronized.
 
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
@@ -96,13 +131,13 @@ Only work with a clear browser-boundary role belongs here.
 | Input class | Belongs here? | Notes |
 |---|---:|---|
 | UI-root shell invariants | Yes | Map-first, time-aware, evidence-first browser rules. |
-| Browser-boundary guidance | Yes | What the browser may request, render, cache, deep-link, or preserve. |
-| MapLibre runtime expectations | Yes | Renderer behavior, hit-testing, view state, layer display, and trust-cue display rules. |
+| Browser-boundary guidance | Yes | What the browser may request, render, cache, deep-link, compare, or preserve. |
+| MapLibre runtime expectations | Yes | Renderer behavior, feature selection, view state, layer display, and trust-cue display rules. |
 | Evidence Drawer carry-forward | Yes | Payload routing expectations and visible trust-state requirements. |
 | Focus Mode client behavior | Yes | Display and interaction rules for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. |
-| Accessibility and trust-cue guidance | Yes | Keyboard access, focus order, readable state chips, and negative-state visibility. |
+| Accessibility and trust-cue guidance | Yes | Keyboard access, focus order, readable state chips, non-map alternatives, and negative-state visibility. |
 | Local UI verification commands | Yes, after verification | Package-manager-specific commands remain `NEEDS VERIFICATION` until package files are inspected. |
-| Browser fixtures or snapshots | Maybe | Belong here only if the active repo convention places UI fixtures under `web/`; otherwise use `../tests/`. |
+| Browser fixtures or snapshots | Maybe | Belong here only if the active repo convention places UI fixtures under `web/`; otherwise use the repo-native tests home. |
 | Styling tokens and presentation assets | Maybe | Keep them here only when they are UI presentation assets, not policy, schema, or proof objects. |
 
 > [!TIP]
@@ -118,16 +153,16 @@ The fastest way to weaken KFM is to let UI convenience become an ungoverned shor
 
 | Do not place or decide here | Use instead | Reason |
 |---|---|---|
-| RAW, WORK, or QUARANTINE material | `../data/` lifecycle homes | The browser should not read unpublished, unresolved, or rights-unclear material as a normal path. |
-| Canonical/internal truth stores | Governed service and data layers | Public UI must not bypass evidence, policy, audit, release, or correction controls. |
-| Machine schemas | `../schemas/` | Shape validation must remain distinct from UI behavior. |
-| Human semantic contracts | `../contracts/` | Object meaning should not be buried in components or styles. |
-| Policy rules, rights logic, sensitivity rules | `../policy/` | The UI displays policy state; it does not decide policy. |
+| RAW, WORK, or QUARANTINE material | Lifecycle homes under the repo-native `data/` layout | The browser should not read unpublished, unresolved, or rights-unclear material as a normal path. |
+| Canonical/internal truth stores | Governed service and data layers | Public UI must not bypass evidence, policy, audit, release, correction, or rollback controls. |
+| Machine schemas | Repo-native `schemas/` or accepted schema home | Shape validation must remain distinct from UI behavior. |
+| Human semantic contracts | Repo-native `contracts/` or accepted contract home | Object meaning should not be buried in components or styles. |
+| Policy rules, rights logic, sensitivity rules | Repo-native `policy/` home | The UI displays policy state; it does not decide policy. |
 | Source onboarding rules | Source registry and pipeline lanes | Source role, rights, cadence, and activation state are upstream governance concerns. |
-| Receipts, proofs, release manifests | `../data/receipts/`, `../data/proofs/`, `../release/` as repo conventions confirm | Process memory and release evidence remain separate from UI source. |
-| Secrets, tokens, credentials, private endpoints | Secret manager or deployment configuration | No secret belongs in committed browser code or docs. |
+| Receipts, proofs, release manifests | Repo-native receipts/proofs/release homes | Process memory and release evidence remain separate from UI source. |
+| Secrets, tokens, credentials, private endpoints | Secret manager or deployment configuration | No secret belongs in committed browser code, screenshots, fixtures, examples, or docs. |
 | Direct model clients | Governed API adapter boundary | Focus Mode must not call model runtimes directly from browser code. |
-| Emergency/life-safety instructions | Official emergency, health, or public-safety authorities | KFM contextualizes evidence; it is not an emergency alert system. |
+| Emergency or life-safety instructions | Official emergency, health, or public-safety authorities | KFM contextualizes evidence; it is not an emergency alert system. |
 
 > [!WARNING]
 > A smooth map that hides evidence, freshness, review state, correction state, sensitivity posture, or policy denial is not a KFM success condition.
@@ -142,7 +177,7 @@ The fastest way to weaken KFM is to let UI convenience become an ungoverned shor
 
 ```text
 web/
-└── README.md                         # this UI-root guidance surface
+└── README.md                         # requested UI-root guidance surface
 
 # Verify before documenting as current implementation:
 web/<runtime-root>/                    # NEEDS VERIFICATION
@@ -152,34 +187,31 @@ web/<fixtures-or-snapshots>/           # NEEDS VERIFICATION
 web/<tests-or-e2e>/                    # NEEDS VERIFICATION
 ```
 
-### Nearby surfaces already linked from this README
+Nearby surfaces to verify before linking as current repo fact:
 
 ```text
 apps/
-├── README.md
+├── README.md                         # NEEDS VERIFICATION
 ├── explorer-web/
-│   └── README.md
+│   └── README.md                     # NEEDS VERIFICATION
 └── governed-api/
-    └── README.md
+    └── README.md                     # NEEDS VERIFICATION
 
 contracts/
-└── README.md
+└── README.md                         # NEEDS VERIFICATION
 
 schemas/
-└── README.md
+└── README.md                         # NEEDS VERIFICATION
 
 policy/
-└── README.md
+└── README.md                         # NEEDS VERIFICATION
 
 tests/
-└── README.md
+└── README.md                         # NEEDS VERIFICATION
 
 data/
-└── README.md
+└── README.md                         # NEEDS VERIFICATION
 ```
-
-> [!CAUTION]
-> Do not create a second browser-shell authority by accident. If the active branch uses both `web/` and `apps/explorer-web/`, keep one as UI-root guidance and one as shell/runtime boundary, or record a consolidation decision.
 
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
@@ -190,14 +222,14 @@ data/
 Start with evidence inventory, not package assumptions.
 
 ```bash
-# Confirm the active checkout and branch.
+# Read-only active-checkout confirmation.
 git status --short
 git branch --show-current
 git rev-parse --show-toplevel
 
 # Inspect this UI surface and adjacent runtime/doc surfaces.
 find web -maxdepth 4 -type f | sort
-find apps -maxdepth 4 -type f | sort
+find apps -maxdepth 4 -type f 2>/dev/null | sort
 find contracts schemas policy tests data -maxdepth 4 -type f 2>/dev/null | sort
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 
@@ -215,8 +247,7 @@ grep -RInE \
 Package-manager-specific commands are `NEEDS VERIFICATION` until `package.json`, lockfiles, workspace config, or CI workflows are inspected.
 
 ```bash
-# Use the repo-native command only after verification.
-# Examples to adapt, not claims:
+# Illustrative only — replace with repo-native commands after verification.
 npm run dev
 npm test
 npm run lint
@@ -235,11 +266,11 @@ Use `web/` changes to make governed evidence easier to inspect, not to move gove
 | Change type | Before merge, verify… | Review emphasis |
 |---|---|---|
 | Map shell change | Layer data arrives through released artifacts, layer manifests, or governed API responses. | Renderer boundary, no raw/public bypass, trust cue visibility. |
-| Timeline change | Time semantics are explicit: valid time, observed time, publication time, or review time. | Time is coequal with place, not a hidden filter. |
+| Timeline change | Time semantics are explicit: valid time, observed time, publication time, review time, or freshness time. | Time is coequal with place, not a hidden filter. |
 | Evidence Drawer change | Drawer payloads resolve `EvidenceRef` to support-bearing objects. | Source role, rights, sensitivity, review, release, correction. |
 | Focus Mode change | The browser displays governed envelopes and finite outcomes. | No direct model client, no memory-only answers, cite-or-abstain behavior. |
 | Style or visual cue change | Visual changes do not hide negative states or policy obligations. | Accessibility, readability, reviewability. |
-| Export or story change | Trust cues, provenance, and correction state survive the output. | No polish that strips evidence context. |
+| Export or story change | Trust cues, provenance, release state, and correction state survive the output. | No polish that strips evidence context. |
 | Local-dev change | Commands are backed by package files and CI or test evidence. | Avoid stale quickstarts and invented package-manager assumptions. |
 
 ### Client-side state ownership
@@ -283,7 +314,7 @@ flowchart LR
     Web -. "must not call directly" .-> Model["Model runtime"]
 ```
 
-The core boundary is simple: the browser can make KFM legible and useful, but consequential claims must remain downstream of governed evidence, policy, review, release, and correction state.
+The core boundary is simple: the browser can make KFM legible and useful, but consequential claims remain downstream of governed evidence, policy, review, release, and correction state.
 
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
@@ -302,29 +333,74 @@ The core boundary is simple: the browser can make KFM legible and useful, but co
 | Renderer boundary | MapLibre draws and interacts; it does not own truth, policy, source authority, or review state. |
 | AI subordinate | Focus Mode receives policy-safe evidence only and must cite, abstain, deny, or error. |
 | Derived layers stay derived | Tiles, scenes, summaries, search indexes, and graph projections never replace canonical truth. |
-| Fail closed | Missing rights, unresolved sensitivity, stale release state, or unavailable policy checks block publication-facing behavior. |
+| Fail closed | Missing rights, unresolved sensitivity, stale release state, unavailable policy checks, or unresolved EvidenceRefs block publication-facing behavior. |
 
 ### Surface contract
 
 | Surface | What belongs | What does not belong | Required posture |
 |---|---|---|---|
 | Map shell | Released layers, timeline controls, trust chips, drawer entry points | Raw records, hidden policy state, unreviewed joins | Evidence-visible and public-safe |
-| Timeline | Valid-time, observed-time, publication-time, review-time controls | Silent temporal filtering that changes claim meaning | Time-aware and explicit |
+| Timeline | Valid-time, observed-time, publication-time, review-time, and freshness controls | Silent temporal filtering that changes claim meaning | Time-aware and explicit |
 | Evidence Drawer | Source role, evidence, rights, sensitivity, review, release, correction | Optional tooltip treatment | Mandatory for consequential claims |
 | Focus Mode | Evidence-bounded synthesis and navigation | Free-form model answer detached from release objects | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
 | Review affordances | Diffs, obligations, denials, correction state | Hidden alternate truth system | Auditable and reversible |
 | Export / story | Trust-preserving output | Evidence-stripped polish | Provenance and correction cues preserved |
 | Controlled 3D | Burden-bearing terrain or structure explanation | Spectacle-first second product | Same trust objects as 2D |
 
+### Accessibility and trust visibility
+
+| Area | Minimum expectation |
+|---|---|
+| Keyboard navigation | Map actions have keyboard-reachable equivalents where practical. |
+| Evidence Drawer opening | Drawer can be opened without pointer-only interaction. |
+| Focus result states | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are text-visible, not color-only. |
+| Trust chips | Rights, sensitivity, freshness, review, release, and correction cues are readable and screen-reader friendly where material. |
+| Negative states | Denials, abstentions, stale evidence, missing evidence, and policy blocks remain visible. |
+| Export previews | Public-facing export or story previews preserve trust and correction cues. |
+
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
 ---
 
-## Task list / Definition of done
+## Security and exposure posture
+
+KFM may be local-first and exposed to trusted third parties through a firewall, reverse proxy, or VPN. Browser documentation should therefore assume security relevance.
+
+| Boundary | Default posture |
+|---|---|
+| Public browser access | Deny by default until release, policy, and access state are verified. |
+| Admin paths | Private by default; never become the normal public path. |
+| RAW / WORK / QUARANTINE | Not public browser-readable. |
+| Direct model runtime | Not public browser-callable. |
+| Secrets and endpoints | Never committed in docs, examples, screenshots, fixtures, or browser bundles. |
+| Logs and diagnostics | Useful for review without exposing restricted evidence, prompts, tokens, private endpoints, or exact sensitive geometry. |
+| Feature flags / disable paths | Required for public-facing changes that affect evidence, policy, or release display. |
+
+> [!CAUTION]
+> A browser route that can bypass governed evidence, policy, or release state is a trust-membrane failure, even if the UI looks polished.
+
+<p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
+
+---
+
+## Validation
 
 A `web/` change is not ready merely because it renders.
 
-- [ ] Path, owner, and adjacent READMEs are verified in the active checkout.
+| Validation target | Minimum check |
+|---|---|
+| Path and ownership | `web/`, adjacent app paths, owners, and CODEOWNERS coverage are verified. |
+| Schema/contract alignment | Drawer, Focus, layer, and runtime envelope fields match repo-native contracts. |
+| No raw public path | Tests or review prove browser routes do not read RAW, WORK, or QUARANTINE as ordinary public paths. |
+| No direct model client | Tests or review prove browser code does not call model runtimes directly. |
+| Evidence resolution | At least one browser-visible claim can open or resolve an Evidence Drawer payload. |
+| Negative outcomes | At least one `ABSTAIN`, `DENY`, or `ERROR` path is fixture-tested. |
+| Accessibility smoke | Keyboard, focus order, state chips, drawer opening, and negative outcomes are checked. |
+| Rollback readiness | Public-facing UI changes have a documented disable, revert, or manifest rollback path. |
+
+### Definition of Done
+
+- [ ] Path, owner, and adjacent README links are verified in the active checkout.
 - [ ] This README’s KFM Meta Block v2 fields are reviewed and placeholders are resolved or explicitly accepted.
 - [ ] Browser-visible claims can open or resolve an Evidence Drawer payload.
 - [ ] Focus-like behavior displays finite outcomes and does not call model runtimes directly.
@@ -337,6 +413,24 @@ A `web/` change is not ready merely because it renders.
 - [ ] Package-manager and startup commands are backed by checked-in files.
 - [ ] Rollback, disable, or feature-flag path is documented for public-facing changes.
 - [ ] Any behavior-significant change updates adjacent contracts, schemas, policy notes, tests, or docs.
+
+<p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
+
+---
+
+## Rollback and correction
+
+Browser rollback must preserve trust, not merely hide a component.
+
+| Situation | Safe response |
+|---|---|
+| Drawer payload contract breaks | Disable affected drawer entry point or revert to prior release manifest; preserve error state. |
+| Focus citation validation fails | Show `ABSTAIN` or `ERROR`; do not display uncited synthesis as answer. |
+| Sensitive geometry appears too precisely | Remove or generalize layer, record redaction/correction path, invalidate affected cache or release artifact. |
+| Layer release is withdrawn | Repoint to prior valid release manifest or hide layer with visible withdrawal/correction note. |
+| Browser code calls a model directly | Block merge or revert; add no-direct-model-client test. |
+| Browser path reaches RAW / WORK / QUARANTINE | Block merge or revert; add no-public-raw-path test. |
+| Accessibility regression hides trust state | Revert visual change or ship a constrained fix before public release. |
 
 <p align="right"><a href="#kansas-frontier-matrix-web-ui">Back to top ↑</a></p>
 
@@ -379,14 +473,14 @@ Because implementation evidence matters. KFM doctrine can define the intended tr
 
 | Term | Working meaning |
 |---|---|
-| Inspectable claim | A public-facing statement reconstructable to evidence, scope, source role, policy, review, release, and correction lineage. |
-| Trust membrane | Boundary preventing internal/canonical/raw paths from becoming normal public truth paths. |
+| Inspectable claim | A public-facing statement reconstructable to evidence, spatial scope, temporal scope, source role, policy posture, review state, release state, and correction lineage. |
+| Trust membrane | Boundary preventing internal, canonical, raw, unpublished, or model-runtime paths from becoming normal public truth paths. |
 | EvidenceRef | Stable reference to evidence that must resolve into an `EvidenceBundle`. |
 | EvidenceBundle | Human- and machine-inspectable support package. |
-| DecisionEnvelope | Finite decision object carrying outcome, evidence refs, policy, reason codes, and obligations. |
+| DecisionEnvelope | Finite decision object carrying outcome, evidence refs, policy, reason codes, obligations, and audit references. |
 | RuntimeResponseEnvelope | Outward runtime result shape for browser, Focus, API, and export surfaces. |
 | SourceDescriptor | Source identity and governance record. |
-| LayerManifest | Map-layer governance record binding renderer inputs to source, evidence, policy, and release state. |
+| LayerManifest | Map-layer governance record binding renderer inputs to source, evidence, policy, artifact, and release state. |
 | ReleaseManifest | Integrity and publication manifest for released artifacts. |
 | CatalogMatrix | Catalog closure surface for datasets, distributions, evidence, and release objects. |
 | Promotion | Governed state transition into public-safe release, not a file move. |
@@ -408,6 +502,8 @@ Because implementation evidence matters. KFM doctrine can define the intended tr
 - [ ] Confirm accessibility and browser test runner.
 - [ ] Confirm workflow names and whether checks are merge-blocking.
 - [ ] Confirm whether all README-like docs use KFM Meta Block v2 in the active branch.
-- [ ] Resolve `created`, `owners`, `doc_id`, and `policy_label` placeholders in this README.
+- [ ] Resolve `created`, `owners`, `doc_id`, `policy_label`, and `related` placeholders in this README.
+- [ ] Replace placeholder directory tree with generated active-checkout inventory.
+- [ ] Update links from `NEEDS VERIFICATION` to ordinary relative links after targets are confirmed.
 
 </details>
