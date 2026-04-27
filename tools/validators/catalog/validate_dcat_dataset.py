@@ -6,7 +6,9 @@ Checks:
 - JSON Schema validity
 - public-only access posture
 - provenance pointer present
-- distribution licenses present
+- evidence and release manifest references present
+- distribution access URLs and licenses present
+- distribution license consistency
 - no RAW / WORK / QUARANTINE references in public export
 """
 
@@ -21,7 +23,25 @@ from jsonschema import Draft202012Validator
 
 
 SCHEMA_PATH = Path("contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json")
-FORBIDDEN_PUBLIC_REFS = ("/raw/", "/work/", "/quarantine/", "data/raw/", "data/work/", "data/quarantine/")
+
+FORBIDDEN_PUBLIC_REFS = (
+    "/raw/",
+    "/work/",
+    "/quarantine/",
+    "data/raw/",
+    "data/work/",
+    "data/quarantine/",
+)
+
+BLOCKED_PUBLIC_VALUES = {
+    "TODO",
+    "todo",
+    "UNKNOWN",
+    "unknown",
+    "NEEDS-VERIFICATION",
+    "restricted",
+    "deny",
+}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -46,6 +66,18 @@ def contains_forbidden_ref(value: Any) -> bool:
         return any(contains_forbidden_ref(v) for v in value)
 
     return False
+
+
+def assert_present(mapping: dict[str, Any], key: str, label: str) -> Any:
+    value = mapping.get(key)
+    if value in (None, ""):
+        fail(f"{label} missing {key}")
+    return value
+
+
+def assert_not_blocked(value: Any, label: str) -> None:
+    if isinstance(value, str) and value in BLOCKED_PUBLIC_VALUES:
+        fail(f"{label} cannot be {value}")
 
 
 def main() -> None:
@@ -81,8 +113,21 @@ def main() -> None:
     if doc.get("dct:accessRights") != "public":
         fail("DCAT public export requires dct:accessRights=public")
 
-    if not doc.get("dct:provenance"):
-        fail("DCAT dataset missing dct:provenance")
+    if doc.get("kfm:sensitivity") not in (None, "public"):
+        fail("DCAT public export requires kfm:sensitivity=public when provided")
+
+    license_value = assert_present(doc, "dct:license", "dataset")
+    assert_not_blocked(license_value, "dataset dct:license")
+
+    assert_present(doc, "dct:provenance", "dataset")
+    assert_present(doc, "kfm:spec_hash", "dataset")
+    assert_present(doc, "kfm:evidence_ref", "dataset")
+    assert_present(doc, "kfm:release_manifest_ref", "dataset")
+    assert_present(doc, "kfm:source_role", "dataset")
+
+    review_state = doc.get("kfm:review_state")
+    if review_state not in {"reviewed", "published"}:
+        fail("DCAT public export requires kfm:review_state reviewed or published")
 
     distributions = doc.get("dcat:distribution", [])
 
@@ -90,11 +135,23 @@ def main() -> None:
         fail("DCAT dataset missing distributions")
 
     for idx, distribution in enumerate(distributions):
-        if not distribution.get("dcat:accessURL"):
-            fail(f"distribution[{idx}] missing dcat:accessURL")
+        if distribution.get("@type") != "dcat:Distribution":
+            fail(f"distribution[{idx}] must be @type dcat:Distribution")
 
-        if not distribution.get("dct:license"):
-            fail(f"distribution[{idx}] missing dct:license")
+        assert_present(distribution, "dcat:accessURL", f"distribution[{idx}]")
+
+        distribution_license = assert_present(
+            distribution,
+            "dct:license",
+            f"distribution[{idx}]",
+        )
+        assert_not_blocked(distribution_license, f"distribution[{idx}] dct:license")
+
+        if distribution_license != license_value:
+            fail(
+                f"distribution[{idx}] license differs from dataset license; "
+                "reviewed exception is not represented"
+            )
 
     if contains_forbidden_ref(doc):
         fail("public DCAT export references RAW / WORK / QUARANTINE material")
