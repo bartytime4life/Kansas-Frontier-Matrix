@@ -1,16 +1,25 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "kfm-item-TODO",
+  "id": "kfm-item-restricted-policy-fixture",
+  "collection": "kfm-collection-invalid",
+  "bbox": [-102.051744, 36.993016, -94.588413, 40.003162],
   "geometry": null,
   "properties": {
+    "datetime": "2026-04-27T00:00:00Z",
+
     "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "kfm:evidence_ref": "kfm://evidence/TODO",
+    "kfm:content_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+
+    "kfm:evidence_ref": "kfm://evidence/restricted-policy-fixture",
     "kfm:run_receipt_url": "https://example.invalid/artifact.prov.jsonld",
-    "kfm:release_manifest_ref": "kfm://release/TODO",
-    "kfm:policy_label": "restricted",
+    "kfm:release_manifest_ref": "kfm://release/restricted-policy-fixture",
+
+    "kfm:policy_label": "restricted",   // <-- INTENTIONAL FAILURE
     "kfm:review_state": "reviewed",
     "kfm:source_role": "authoritative_source",
+    "kfm:sensitivity": "public",
+
     "processing:software": "kfm-pipeline",
     "processing:version": "v1",
     "processing:datetime": "2026-04-27T00:00:00Z"
@@ -18,20 +27,30 @@
   "links": [
     {
       "rel": "provenance",
-      "href": "https://example.invalid/artifact.prov.jsonld"
+      "href": "https://example.invalid/artifact.prov.jsonld",
+      "type": "application/ld+json"
     },
     {
       "rel": "evidence",
-      "href": "https://example.invalid/evidence.json"
+      "href": "https://example.invalid/evidence.json",
+      "type": "application/json"
     },
     {
       "rel": "release-manifest",
-      "href": "https://example.invalid/release-manifest.json"
+      "href": "https://example.invalid/release-manifest.json",
+      "type": "application/json"
     }
   ],
   "assets": {
     "data": {
-      "href": "https://example.invalid/artifact.ext"
+      "href": "https://example.invalid/artifact.ext",
+      "type": "application/octet-stream",
+      "roles": ["data"]
+    },
+    "provenance": {
+      "href": "https://example.invalid/artifact.prov.jsonld",
+      "type": "application/ld+json",
+      "roles": ["metadata", "provenance"]
     }
   }
 }
