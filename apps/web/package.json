@@ -1,0 +1,10 @@
+{
+  "name": "@kfm/web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Governed web shell scaffold for Kansas Frontier Matrix",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "check": "node --check src/main.js"
+  }
+}
