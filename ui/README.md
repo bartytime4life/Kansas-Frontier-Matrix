@@ -167,7 +167,7 @@ The UI should consume prepared, governed, released, or review-authorized inputs 
 
 ## Directory tree
 
-The current session did **not** expose a mounted repo tree, so the shape below is a review scaffold, not a claim that these files exist.
+The tree below reflects the initialized `ui/` structure in this repository as of 2026-04-27. Child folders are scaffolded and ready for contract/implementation-specific expansion.
 
 ```text
 ui/
