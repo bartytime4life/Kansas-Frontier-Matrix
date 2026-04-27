@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "kfm": "https://kfm.local/ns#"
+  },
+  "@type": "dcat:Dataset",
+  "dct:title": "Restricted Dataset",
+  "dct:identifier": "kfm://dataset/TODO",
+  "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
+  "dct:accessRights": "restricted",
+  "dct:provenance": "https://example.invalid/artifact.prov.jsonld",
+  "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "kfm:evidence_ref": "kfm://evidence/TODO",
+  "kfm:release_manifest_ref": "kfm://release/TODO",
+  "kfm:policy_label": "public",
+  "kfm:review_state": "reviewed",
+  "kfm:source_role": "authoritative_source",
+  "dcat:distribution": [
+    {
+      "@type": "dcat:Distribution",
+      "dcat:accessURL": "https://example.invalid/artifact.ext",
+      "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html"
+    }
+  ]
+}
