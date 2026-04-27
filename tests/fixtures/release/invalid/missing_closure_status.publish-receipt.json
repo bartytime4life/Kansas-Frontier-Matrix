@@ -1,1 +1,31 @@
+{
+  "receipt_type": "kfm:PublishReceipt",
+  "created_at": "2026-04-27T00:00:00Z",
+  "status": "PUBLISHED",
+  "mode": "local-receipt-only",
+  "plan": {
+    "release_id": "kfm://release/missing-closure-status-fixture",
+    "manifest_id": "kfm://release-manifest/missing-closure-status-fixture",
+    "manifest_path": "tests/fixtures/release/valid/minimal.release-manifest.json",
+    "policy_label": "public",
+    "review_state": "reviewed",
+    "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_count": 1,
 
+    /* intentionally missing:
+       "closure_status": "PUBLISHABLE"
+       → MUST FAIL schema + validator
+    */
+
+    "artifacts": [
+      {
+        "artifact_ref": "https://example.invalid/artifact.ext",
+        "evidence_ref": "kfm://evidence/missing-closure-status-fixture",
+        "provenance_ref": "https://example.invalid/artifact.prov.jsonld",
+        "stac_ref": "kfm://catalog/stac/missing-closure-status-fixture",
+        "dcat_ref": "kfm://catalog/dcat/missing-closure-status-fixture",
+        "run_receipt_ref": "kfm://receipt/run/missing-closure-status-fixture"
+      }
+    ]
+  }
+}
