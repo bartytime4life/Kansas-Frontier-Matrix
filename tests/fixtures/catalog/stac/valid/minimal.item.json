@@ -1,16 +1,22 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "kfm-item-TODO",
+  "id": "kfm-item-minimal-fixture",
+  "collection": "kfm-collection-minimal-fixture",
+  "bbox": [-102.051744, 36.993016, -94.588413, 40.003162],
   "geometry": null,
   "properties": {
+    "datetime": "2026-04-27T00:00:00Z",
     "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "kfm:evidence_ref": "kfm://evidence/TODO",
+    "kfm:content_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "kfm:evidence_ref": "kfm://evidence/minimal-fixture",
     "kfm:run_receipt_url": "https://example.invalid/artifact.prov.jsonld",
-    "kfm:release_manifest_ref": "kfm://release/TODO",
+    "kfm:release_manifest_ref": "kfm://release/minimal-fixture",
     "kfm:policy_label": "public",
     "kfm:review_state": "reviewed",
     "kfm:source_role": "authoritative_source",
+    "kfm:sensitivity": "public",
+    "kfm:source_descriptor_ref": "kfm://source/minimal-fixture",
     "processing:software": "kfm-pipeline",
     "processing:version": "v1",
     "processing:datetime": "2026-04-27T00:00:00Z"
@@ -18,27 +24,38 @@
   "links": [
     {
       "rel": "provenance",
-      "href": "https://example.invalid/artifact.prov.jsonld"
+      "href": "https://example.invalid/artifact.prov.jsonld",
+      "type": "application/ld+json",
+      "title": "KFM PROV sidecar"
     },
     {
       "rel": "evidence",
-      "href": "https://example.invalid/evidence.json"
+      "href": "https://example.invalid/evidence.json",
+      "type": "application/json",
+      "title": "KFM EvidenceBundle"
     },
     {
       "rel": "release-manifest",
-      "href": "https://example.invalid/release-manifest.json"
+      "href": "https://example.invalid/release-manifest.json",
+      "type": "application/json",
+      "title": "KFM ReleaseManifest"
     }
   ],
   "assets": {
     "data": {
       "href": "https://example.invalid/artifact.ext",
       "type": "application/octet-stream",
-      "roles": ["data"]
+      "title": "Minimal fixture artifact",
+      "roles": ["data"],
+      "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kfm:provenance_ref": "https://example.invalid/artifact.prov.jsonld"
     },
     "provenance": {
       "href": "https://example.invalid/artifact.prov.jsonld",
       "type": "application/ld+json",
-      "roles": ["metadata", "provenance"]
+      "title": "KFM PROV sidecar",
+      "roles": ["metadata", "provenance"],
+      "kfm:provenance_ref": "https://example.invalid/artifact.prov.jsonld"
     }
   }
 }
