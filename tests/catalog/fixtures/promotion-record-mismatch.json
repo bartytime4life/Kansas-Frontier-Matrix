@@ -1,0 +1,20 @@
+{
+  "release_ref": "kfm:release:floodplain-kansas:v2",
+  "catalog_refs": {
+    "stac": {
+      "subject_id": "kfm:subject:floodplain-kansas",
+      "version": "v1",
+      "release_ref": "kfm:release:floodplain-kansas:v1"
+    },
+    "dcat": {
+      "subject_id": "kfm:subject:floodplain-kansas",
+      "version": "v1",
+      "release_ref": "kfm:release:floodplain-kansas:v1"
+    },
+    "prov": {
+      "subject_id": "kfm:subject:floodplain-kansas",
+      "version": "v1",
+      "release_ref": "kfm:release:floodplain-kansas:v1"
+    }
+  }
+}
