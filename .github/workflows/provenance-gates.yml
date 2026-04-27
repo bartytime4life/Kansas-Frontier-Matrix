@@ -4,18 +4,26 @@ on:
   pull_request:
     paths:
       - "contracts/v1/provenance/**"
+      - "contracts/v1/catalog/dcat/**"
       - "tools/validators/provenance/**"
+      - "tools/validators/catalog/**"
       - "policy/provenance/**"
+      - "policy/catalog/dcat/**"
       - "tests/fixtures/provenance/**"
+      - "tests/fixtures/catalog/dcat/**"
       - ".github/workflows/provenance-gates.yml"
   push:
     branches:
       - main
     paths:
       - "contracts/v1/provenance/**"
+      - "contracts/v1/catalog/dcat/**"
       - "tools/validators/provenance/**"
+      - "tools/validators/catalog/**"
       - "policy/provenance/**"
+      - "policy/catalog/dcat/**"
       - "tests/fixtures/provenance/**"
+      - "tests/fixtures/catalog/dcat/**"
       - ".github/workflows/provenance-gates.yml"
   workflow_dispatch:
 
@@ -84,5 +92,86 @@ jobs:
             tests/fixtures/provenance/invalid/missing_license.prov.jsonld \
             --policy policy/provenance; then
             echo "DENY: invalid missing_license fixture unexpectedly passed policy"
+            exit 1
+          fi
+
+  dcat-schema-validator:
+    name: Validate DCAT exports
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python validator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+
+      - name: Validate known-good DCAT fixture
+        run: |
+          python tools/validators/catalog/validate_dcat_dataset.py \
+            tests/fixtures/catalog/dcat/valid/minimal.dataset.jsonld
+
+      - name: Ensure restricted-access fixture fails closed
+        run: |
+          if python tools/validators/catalog/validate_dcat_dataset.py \
+            tests/fixtures/catalog/dcat/invalid/restricted_access.dataset.jsonld; then
+            echo "DENY: restricted_access fixture unexpectedly passed"
+            exit 1
+          fi
+
+      - name: Ensure missing-provenance fixture fails closed
+        run: |
+          if python tools/validators/catalog/validate_dcat_dataset.py \
+            tests/fixtures/catalog/dcat/invalid/missing_provenance.dataset.jsonld; then
+            echo "DENY: missing_provenance fixture unexpectedly passed"
+            exit 1
+          fi
+
+  dcat-policy:
+    name: Evaluate DCAT policy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          CONFTEST_VERSION="0.56.0"
+          curl -L \
+            "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" \
+            -o conftest.tar.gz
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Policy allows known-good DCAT fixture
+        run: |
+          conftest test \
+            tests/fixtures/catalog/dcat/valid/minimal.dataset.jsonld \
+            --policy policy/catalog/dcat
+
+      - name: Policy denies restricted-access fixture
+        run: |
+          if conftest test \
+            tests/fixtures/catalog/dcat/invalid/restricted_access.dataset.jsonld \
+            --policy policy/catalog/dcat; then
+            echo "DENY: restricted_access fixture unexpectedly passed policy"
+            exit 1
+          fi
+
+      - name: Policy denies missing-provenance fixture
+        run: |
+          if conftest test \
+            tests/fixtures/catalog/dcat/invalid/missing_provenance.dataset.jsonld \
+            --policy policy/catalog/dcat; then
+            echo "DENY: missing_provenance fixture unexpectedly passed policy"
             exit 1
           fi
