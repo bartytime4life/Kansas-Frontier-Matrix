@@ -1,3 +1,426 @@
-# Unit
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<NEEDS-VERIFICATION-UUID>
+title: unit
+type: standard
+version: v1
+status: published
+owners: @bartytime4life
+created: 2026-01-28
+updated: 2026-04-27
+policy_label: public
+related: [tests/README.md, .github/CODEOWNERS, .github/workflows/README.md, CONTRIBUTING.md]
+tags: [kfm, tests, unit, verification]
+notes: [doc_id placeholder pending registry assignment, created date follows surfaced public path-history evidence, updated date reflects this Markdown revision, active checkout runner and executable suite depth remain NEEDS VERIFICATION]
+[/KFM_META_BLOCK_V2] -->
 
-This directory is reserved for local deterministic unit tests.
+# unit
+
+Deterministic local-behavior verification family for Kansas Frontier Matrix.
+
+> [!NOTE]
+> The meta block’s `status: published` records this README as a checked-in public document.
+> The impact block below describes the **current maturity of the `tests/unit/` surface itself**, which remains experimental.
+
+<div align="left">
+
+![status](https://img.shields.io/badge/status-experimental-orange)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
+![path](https://img.shields.io/badge/path-tests%2Funit%2FREADME.md-0a7ea4)
+![family](https://img.shields.io/badge/family-deterministic%20local%20behavior-0a7ea4)
+![inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | `experimental` |
+| **Owners** | `@bartytime4life` |
+| **Path** | `tests/unit/README.md` |
+| **Public path history** | first visible create `2026-01-28` · visible README update history includes `2026-03-28` |
+| **Repo fit** | smallest deterministic proof family under [`../README.md`](../README.md) |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Public history signal](#public-history-signal) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
+
+> [!IMPORTANT]
+> `tests/unit/` is where KFM should prove the smallest trustworthy behaviors first: fast, isolated, deterministic checks that fail loudly when local assumptions drift.
+
+> [!WARNING]
+> Treat this directory as a documented family boundary, not as already-earned coverage or mature suite depth. Current surfaced public-branch evidence for this path remains README-first.
+
+---
+
+## Scope
+
+`tests/unit/` is the narrowest proof surface inside KFM’s governed verification stack.
+
+Its job is to prove behavior that should remain correct **before** a live store, network, renderer, workflow lane, model runtime, or publication path enters the picture. In KFM terms, “unit” does not mean “anything small.” It means **local determinism is the main question**.
+
+Illustrative examples of the kind of burden that fits here:
+
+- pure normalization or canonicalization helpers
+- local trust-state mappers that must not erase `generalized`, `partial`, `stale-visible`, `withdrawn`, or similar distinctions
+- comparison, sorting, formatting, or time-window math that should be stable under small inputs
+- helper-level negative cases for malformed input, missing fields, or impossible state combinations
+
+Examples above are **illustrative placement guidance**, not claims about current implementation inventory.
+
+### Evidence boundary used here
+
+| Evidence layer | What this README treats as settled |
+|---|---|
+| **CONFIRMED — surfaced public repo evidence** | `tests/unit/README.md` exists and currently frames `tests/unit/` as an experimental deterministic local-behavior family. |
+| **CONFIRMED — parent tests contract** | [`../README.md`](../README.md) defines `tests/` as governed verification and names `unit/` as the deterministic local-behavior family. |
+| **CONFIRMED — ownership signal** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) provides broad fallback ownership by `@bartytime4life`; narrower team ownership remains proposed until verified. |
+| **CONFIRMED — workflow adjacency** | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) exists as workflow documentation; merge-blocking automation is still not proven by this README. |
+| **CONFIRMED — public path-history signal** | Public history for `tests/unit/` includes scaffold, delete, recreate, and README-revision events; path age alone is therefore a weak maturity signal. |
+| **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, local fixture inventory, required checks, branch protection, and whether this family is exercised on the checked-out branch. |
+
+### Status markers used here
+
+| Marker | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Visible in surfaced repo evidence or directly grounded in adjacent repo documentation |
+| **INFERRED** | Strongly supported by repo doctrine and neighboring docs, but not re-proven from executable branch evidence in this revision |
+| **PROPOSED** | Buildable guidance that fits KFM’s repo doctrine without claiming current implementation |
+| **UNKNOWN** | Not verified strongly enough to describe as current repo reality |
+| **NEEDS VERIFICATION** | Something that should be rechecked against the checked-out branch, GitHub settings, or runner configuration before merge |
+
+[Back to top](#unit)
+
+---
+
+## Repo fit
+
+**Path:** `tests/unit/README.md`  
+**Role:** directory README for the smallest, fastest, most deterministic proof family under `tests/`
+
+| Relation | Path | Why it matters | Status |
+|---|---|---|---|
+| Parent family map | [`../README.md`](../README.md) | defines the current test-family lattice and names `unit/` as deterministic local behavior | **CONFIRMED** |
+| Repo root | [`../../README.md`](../../README.md) | provides root posture and evidence-first repo framing | **CONFIRMED** |
+| Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | keeps changes evidence-bounded and warns against guessing exact commands or workflow state | **CONFIRMED** |
+| Ownership boundary | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | establishes broad fallback ownership for `/tests/` | **CONFIRMED** |
+| Workflow adjacency | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | documents workflow posture while branch-level enforcement remains a separate verification item | **CONFIRMED** |
+| Sibling family | [`../integration/README.md`](../integration/README.md) | take boundary-crossing behavior here instead of stretching `unit/` too far | **CONFIRMED** |
+| Sibling family | [`../contracts/README.md`](../contracts/README.md) | schema, envelope, and example drift belong there when that is the primary risk | **CONFIRMED** |
+| Sibling family | [`../policy/README.md`](../policy/README.md) | allow / deny / abstain / obligation behavior belongs there when policy is the main question | **CONFIRMED** |
+| Sibling family | [`../accessibility/README.md`](../accessibility/README.md) | accessibility-critical trust-surface behavior should stay explicit | **CONFIRMED** |
+| Sibling family | [`../reproducibility/README.md`](../reproducibility/README.md) | digest, count, or bounded-rebuild stability belongs there | **CONFIRMED** |
+| Local contents | [`./README.md`](./README.md) | current local directory guide | **CONFIRMED** |
+
+[Back to top](#unit)
+
+---
+
+## Current verified snapshot
+
+The surfaced public-branch evidence used for this revision supports the following:
+
+- `tests/unit/README.md` exists.
+- `tests/unit/` is documented as the deterministic local-behavior family.
+- The parent `tests/` surface documents sibling families for `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
+- `.github/workflows/README.md` is visible, but merge-blocking automation for this family is still **not** proven by this README alone.
+
+> [!CAUTION]
+> Directory presence is not the same thing as executable proof depth. This snapshot narrows what can be said honestly; it does not imply maturity.
+
+[Back to top](#unit)
+
+---
+
+## Accepted inputs
+
+Content that belongs in `tests/unit/` includes:
+
+| Belongs here | Why it belongs here |
+|---|---|
+| Pure helper tests with stable inputs and outputs | local determinism is the main burden |
+| Negative cases for malformed or incomplete local input | fail-loud behavior should be visible early |
+| Tiny local fixtures that do not pretend to be canonical examples | unit tests should stay cheap and isolated |
+| Trust-state mapping helpers | local proof can prevent silent flattening of meaningful states before larger suites exist |
+| Formatting / ordering / normalization helpers | correctness can be earned without touching real boundaries |
+| Small serialization helpers | only when contract drift is **not** the primary question |
+
+> [!NOTE]
+> If the proof question becomes “does the real boundary behave correctly?” or “does the published contract still validate?”, you have already moved beyond `tests/unit/`.
+
+[Back to top](#unit)
+
+---
+
+## Exclusions
+
+The following do **not** belong here as the primary source of proof:
+
+| Does **not** belong here | Goes instead | Why |
+|---|---|---|
+| Schema validation, envelope examples, contract drift checks | [`../contracts/README.md`](../contracts/README.md) | the main risk is contract law, not local helper behavior |
+| Allow / deny / abstain / obligation evaluation | [`../policy/README.md`](../policy/README.md) | policy behavior should stay reviewable as policy behavior |
+| API, store, ingest, resolver, projection, or multi-component behavior | [`../integration/README.md`](../integration/README.md) | real boundaries matter |
+| Runtime outcome proof, release assembly, rollback, supersession, or correction lineage | [`../e2e/README.md`](../e2e/README.md) | those are end-to-end burdens |
+| Keyboard flow, trust-surface accessibility, reduced-motion, or inspectability behavior | [`../accessibility/README.md`](../accessibility/README.md) | accessibility is explicit in this repo’s test family map |
+| Stable digests, counts, rebuild invariants, or bounded-regression baselines | [`../reproducibility/README.md`](../reproducibility/README.md) | reproducibility is its own proof surface |
+| Canonical schemas, policy bundles, release evidence, or large raw fixtures | `../../contracts/`, `../../policy/`, governed artifact surfaces | unit tests should consume these, not replace them |
+| Live network probes, source watchers, or provider mirrors | `../../tools/probes/`, `../../pipelines/`, or integration/e2e proof lanes | unit tests should not become source intake or availability checks |
+
+[Back to top](#unit)
+
+---
+
+## Directory tree
+
+### Current confirmed snapshot
+
+```text
+tests/unit/
+└── README.md
+```
+
+No additional branch-visible files are confirmed in this directory by this README revision.
+
+### What maturity would look like here
+
+**PROPOSED, not a current path claim:**
+
+```text
+tests/unit/
+├── README.md
+├── <domain-or-helper-family>/
+│   ├── test_<pure_helper>.py
+│   └── fixtures/
+│       ├── valid.local.json
+│       └── malformed.local.json
+└── <repo-native-runner-files-if-proven>
+```
+
+As this family matures, it should accumulate executable local suites, tiny deterministic fixtures, and only the minimum runner-specific configuration that the checked-out branch actually uses.
+
+The point is not to make `unit/` look busy. The point is to make local correctness cheap to earn and cheap to keep.
+
+[Back to top](#unit)
+
+---
+
+## Public history signal
+
+The public path history is useful here because it explains **why path presence should not be over-read**.
+
+| Date | Public history signal | Why it matters |
+|---|---|---|
+| `2026-03-28` | `Add newline at end of README.md` | latest surfaced path update is editorial, not suite-depth proof |
+| `2026-03-24` | `Enhance README.md for unit testing directory` | current family guidance was materially revised |
+| `2026-03-22` | `Scaffold repository structure from README-defined layout` | current directory presence is compatible with scaffold-first growth |
+| `2026-03-21` | `Delete tests/unit directory` | continuity on this path has breaks, so path age alone is a weak maturity signal |
+
+> [!NOTE]
+> Earlier public history also shows additional create, delete, scaffold, and README-focused updates. Read that history as a documentation-and-structure signal, not as proof that executable unit suites currently exist.
+
+[Back to top](#unit)
+
+---
+
+## Quickstart
+
+### Safe inspection commands
+
+These commands are safe because they inspect the current branch shape without assuming a specific runner.
+
+```bash
+# inspect current local inventory
+find tests/unit -maxdepth 3 -type d 2>/dev/null | sort
+find tests/unit -maxdepth 3 -type f 2>/dev/null | sort
+
+# re-read the family boundary before adding new work
+sed -n '1,260p' tests/README.md 2>/dev/null || true
+sed -n '1,220p' tests/integration/README.md 2>/dev/null || true
+sed -n '1,220p' tests/contracts/README.md 2>/dev/null || true
+sed -n '1,220p' tests/policy/README.md 2>/dev/null || true
+sed -n '1,220p' tests/accessibility/README.md 2>/dev/null || true
+sed -n '1,220p' tests/reproducibility/README.md 2>/dev/null || true
+
+# inspect ownership and workflow adjacency
+sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+
+# inspect local path history before claiming maturity or continuity
+git log --oneline -- tests/unit 2>/dev/null | sed -n '1,20p'
+git log --oneline -- tests/unit/README.md 2>/dev/null | sed -n '1,20p'
+
+# discover actual local test tooling before documenting it
+find . -maxdepth 3 \( -name "package.json" -o -name "pyproject.toml" -o -name "Cargo.toml" -o -name "go.mod" -o -name "Makefile" \) 2>/dev/null | sort
+grep -RIn "describe\|it(\|test(\|pytest\|vitest\|jest\|node --test\|cargo test" . 2>/dev/null || true
+```
+
+### First local review pass
+
+1. Confirm whether `tests/unit/` still contains only scaffolding or already has executable suites on the checked-out branch.
+2. Confirm which runner or harness the repo actually uses before documenting a command.
+3. Confirm whether the behavior under test is truly local and deterministic.
+4. Confirm whether the same change also needs sibling proof in `integration/`, `contracts/`, `policy/`, `accessibility/`, `reproducibility/`, or `e2e/`.
+5. Confirm that negative cases exist, not only happy-path confirmation.
+6. Confirm whether current branch history changes the maturity story relative to the surfaced public branch.
+
+> [!TIP]
+> Inspection-first is safer than guessing a toolchain. Do not paste `npm test`, `pytest`, `cargo test`, or any other runner command into this README until the active branch proves that choice.
+
+[Back to top](#unit)
+
+---
+
+## Usage
+
+### What `unit/` is
+
+`tests/unit/` is:
+
+- the smallest proof surface in the repo’s verification lattice
+- the place for cheap, deterministic confidence work
+- the family that should catch local logic drift before it grows into boundary or publication failures
+- a protection against quietly smoothing away trust-critical state at helper level
+
+### What `unit/` is not
+
+`tests/unit/` is **not**:
+
+- a substitute for contract, policy, or end-to-end proof
+- a place to hide boundary complexity behind mocks and call it coverage
+- a scratch bucket for ad hoc experiments
+- a badge generator for CI theater
+- proof that the repo has merge-blocking automation
+
+### Working placement rule
+
+Use `tests/unit/` only when the main question can be answered **without** a real boundary.
+
+If the proof needs a live database, filesystem artifact tree, HTTP surface, policy decision point, release object, accessibility surface, or correction path, move outward to the family that owns that burden.
+
+[Back to top](#unit)
+
+---
+
+## Diagram
+
+```mermaid
+flowchart LR
+    C["contracts / schemas"] --> Q{"What is the main risk?"}
+    P["policy"] --> Q
+    A["apps / packages / infra"] --> Q
+    D["docs / runbooks"] --> Q
+
+    Q -->|local deterministic behavior| U["tests/unit/"]
+    Q -->|real boundary or multi-component slice| I["tests/integration/"]
+    Q -->|schema / envelope / example drift| K["tests/contracts/"]
+    Q -->|allow / deny / abstain logic| PO["tests/policy/"]
+    Q -->|trust-surface accessibility| AX["tests/accessibility/"]
+    Q -->|stable digests / counts / rebuilds| R["tests/reproducibility/"]
+    Q -->|runtime / release / correction proof| E["tests/e2e/..."]
+
+    U --> M{"Still local?"}
+    M -->|yes| FAST["keep it fast, isolated, explicit"]
+    M -->|no| MOVE["move to the owning family"]
+```
+
+[Back to top](#unit)
+
+---
+
+## Tables
+
+### Family boundary matrix
+
+| If the main question is… | Put it here | Why |
+|---|---|---|
+| “Does this pure helper always return the right local result?” | `tests/unit/` | local determinism is the burden |
+| “Does the real boundary behave correctly across components?” | `tests/integration/` | integration owns boundary proof |
+| “Does the object still validate or drift against examples?” | `tests/contracts/` | contract law is primary |
+| “Does policy still allow, deny, abstain, or hold correctly?” | `tests/policy/` | policy behavior should stay explicit |
+| “Can a user still inspect the trust surface accessibly?” | `tests/accessibility/` | accessibility is a first-class family |
+| “Do stable counts, digests, or bounded rebuild metrics stay fixed?” | `tests/reproducibility/` | reproducibility is its own burden |
+| “Do runtime, release, or correction flows still hold together?” | `tests/e2e/...` | that is not local proof anymore |
+
+### Quality bar for a KFM unit test
+
+| Property | Minimum expectation |
+|---|---|
+| Determinism | stable inputs, stable outputs, no hidden dependency on external state |
+| Isolation | no required network, service, or persistent store |
+| Negative coverage | malformed, missing, contradictory, or impossible inputs should be exercised |
+| Trust visibility | local code must not silently erase important states or caveats |
+| Fixture size | keep fixtures tiny and local; do not smuggle canonical artifacts in here |
+| Placement honesty | move the test if the proof question becomes boundary-heavy |
+| Documentation honesty | do not claim runner, coverage, or merge-gate behavior without direct branch evidence |
+| History honesty | do not turn scaffold or README churn into claims of executable depth |
+
+[Back to top](#unit)
+
+---
+
+## Task list / definition of done
+
+- [ ] The behavior under test is local, deterministic, and boundary-light.
+- [ ] At least one negative or malformed-input case exists.
+- [ ] The suite does not silently flatten trust-critical state or visible caveats.
+- [ ] Any real boundary proof was placed in the sibling family that owns it.
+- [ ] Fixtures stay tiny and local.
+- [ ] Commands or runner references were verified from the checked-out branch.
+- [ ] History was checked before claiming continuity, maturity, or suite depth.
+- [ ] No claim of merge-blocking, coverage depth, or mature CI automation is made without direct evidence.
+- [ ] Adjacent docs were updated if the boundary between families changed.
+
+[Back to top](#unit)
+
+---
+
+## FAQ
+
+### Is `tests/unit/` currently a populated executable suite?
+
+Not from the public evidence used for this revision. The surfaced public README evidence describes `tests/unit/` as README-first and experimental.
+
+### Why does this README mention public history at all?
+
+Because public history for this path includes scaffold, delete, recreate, and README-focused edits. That makes history useful for **bounding claims**, even though it does not by itself prove executable depth.
+
+### Can I test `ABSTAIN`, `DENY`, or `ERROR` behavior here?
+
+Only when the proof is purely local, such as a small mapper or formatter. End-to-end runtime outcome proof belongs under [`../e2e/`](../e2e/), and policy decision proof belongs under [`../policy/`](../policy/).
+
+### Should schema-example validation live here?
+
+No. When schema or example drift is the main risk, place the work under [`../contracts/`](../contracts/).
+
+### Should I document a specific runner in this README?
+
+Only after the checked-out branch proves the toolchain. This README should not guess.
+
+[Back to top](#unit)
+
+---
+
+## Appendix
+
+### Illustrative local burden examples
+
+**PROPOSED examples, not current inventory:**
+
+- local time-window normalization
+- stable sort / compare helpers for already-loaded records
+- explicit trust-state label mapping
+- small formatting helpers for citations, badges, or warning text
+- canonicalization helpers for IDs, slugs, or display tokens
+- local guards against impossible or contradictory state combinations
+
+These are examples of **shape**, not claims that such helpers already exist in the repo.
+
+### Open verification items before claiming maturity
+
+Before calling this family active or stable, verify:
+
+1. the real runner and invocation surface
+2. actual executable suite depth
+3. whether any fixtures exist locally
+4. whether unit work is wired into an effective merge gate
+5. whether local proofs are paired correctly with integration, contract, policy, accessibility, reproducibility, or end-to-end proof where needed
+
+[Back to top](#unit)
