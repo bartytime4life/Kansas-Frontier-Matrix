@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: TODO-agriculture-domain-steward
 created: 2026-04-22
-updated: 2026-04-22
+updated: 2026-04-27
 policy_label: TODO-policy-label
 related: [TODO-verify-docs-domains-index, TODO-verify-agriculture-schema-home, TODO-verify-source-registry]
 tags: [kfm, agriculture, domain-readme, evidence-first, map-first, time-aware]
-notes: [Created from attached KFM agriculture and pipeline doctrine; repo checkout was not mounted during authoring; replace TODO values after repository verification.]
+notes: [Expanded in-repo with companion agriculture lane docs on 2026-04-27; TODO owner/policy metadata still requires steward verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -32,7 +32,7 @@ notes: [Created from attached KFM agriculture and pipeline doctrine; repo checko
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Source-role guardrails](#source-role-guardrails) · [Lifecycle](#lifecycle) · [Quickstart](#quickstart) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 > [!NOTE]
-> **Authoring boundary — CONFIRMED:** this README was prepared from the attached KFM corpus and workspace inspection. A mounted KFM Git checkout was not visible during authoring, so actual owners, package manager, schema home, CI workflow names, app paths, route names, and emitted proof objects remain **NEEDS VERIFICATION**.
+> **Authoring boundary — UPDATED:** this README now lives in a mounted repository and has a companion agriculture documentation set. Owner metadata, canonical schema home, and runtime/CI wiring still remain **NEEDS VERIFICATION** until steward confirmation.
 
 ---
 
@@ -123,7 +123,7 @@ This directory accepts documentation that helps maintainers understand, review, 
 
 ## Directory tree
 
-**PROPOSED directory shape** for this documentation lane. Create only the files that match actual repo conventions after Phase 0 inspection.
+**Current directory shape** for this documentation lane in this repository checkout.
 
 ```text
 docs/domains/agriculture/
