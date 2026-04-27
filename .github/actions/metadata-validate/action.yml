@@ -1,0 +1,28 @@
+name: metadata-validate
+
+description: Validate KFM metadata blocks on markdown files.
+inputs:
+  files:
+    description: Newline-delimited list of files to validate.
+    required: false
+    default: ""
+  required-token:
+    description: Token that must appear in each file.
+    required: false
+    default: "[KFM_META_BLOCK_V2]"
+outputs:
+  checked-count:
+    description: Number of files checked.
+    value: ${{ steps.validate.outputs.checked_count }}
+  missing-count:
+    description: Number of files missing the required token.
+    value: ${{ steps.validate.outputs.missing_count }}
+runs:
+  using: composite
+  steps:
+    - id: validate
+      shell: bash
+      run: |
+        "${{ github.action_path }}/src/validate.sh" \
+          "${{ inputs.files }}" \
+          "${{ inputs.required-token }}"

@@ -1,0 +1,32 @@
+name: sbom-produce-and-sign
+
+description: Produce a lightweight SBOM-style manifest and optional detached signature.
+inputs:
+  artifact-path:
+    description: File or directory to inventory.
+    required: true
+  output-manifest:
+    description: Output manifest path.
+    required: false
+    default: sbom-manifest.sha256
+  signature-path:
+    description: Optional detached signature output path.
+    required: false
+    default: ""
+outputs:
+  manifest-path:
+    description: Path to manifest.
+    value: ${{ steps.sbom.outputs.manifest_path }}
+  signature-path:
+    description: Path to detached signature when requested.
+    value: ${{ steps.sbom.outputs.signature_path }}
+runs:
+  using: composite
+  steps:
+    - id: sbom
+      shell: bash
+      run: |
+        "${{ github.action_path }}/src/build.sh" \
+          "${{ inputs.artifact-path }}" \
+          "${{ inputs.output-manifest }}" \
+          "${{ inputs.signature-path }}"

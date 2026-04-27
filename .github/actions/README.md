@@ -6,11 +6,11 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS-VERIFICATION
-updated: 2026-04-26
+updated: 2026-04-27
 policy_label: public
 related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../workflows/README.md, ../watchers/README.md, ../../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/README.md, ../../tools/validators/README.md, ../../tools/attest/README.md, ../../tools/ci/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md]
 tags: [kfm, github-actions, ci-cd, governance, local-actions]
-notes: [doc_id and created date need registry or git-history verification, owner is grounded in current CODEOWNERS fallback coverage for /.github/actions/, policy label is based on public repository exposure and still should be checked against any policy-label registry, current source check shows .github/actions/ as README-only with no composite actions checked in, mounted private branch state and GitHub platform settings remain NEEDS VERIFICATION]
+notes: [doc_id and created date need registry or git-history verification, owner is grounded in current CODEOWNERS fallback coverage for /.github/actions/, policy label is based on public repository exposure and still should be checked against any policy-label registry, current source check shows seeded composite-action scaffolds (metadata-validate, opa-gate, provenance-guard, sbom-produce-and-sign) checked in, mounted private branch state and GitHub platform settings remain NEEDS VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -23,13 +23,13 @@ Repo-local action boundary for thin, reviewable GitHub Action step wrappers in K
 > **Status:** `experimental`  
 > **Owners:** `@bartytime4life`  
 > **Path:** `.github/actions/README.md`  
-> **Current source-check state:** `README.md` only; no composite actions are checked in on the public `main` snapshot.  
+> **Current source-check state:** seeded local composite-action scaffolds are checked in (`metadata-validate`, `opa-gate`, `provenance-guard`, `sbom-produce-and-sign`), with no caller workflow wiring claimed here.  
 > **Repo fit:** local action seam inside the [`.github/`](../README.md) gatehouse; shaped by [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../workflows/README.md`](../workflows/README.md), and [`../watchers/README.md`](../watchers/README.md); subordinate to canonical authority surfaces in [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/), [`../../tests/`](../../tests/), [`../../tools/`](../../tools/), [`../../data/receipts/`](../../data/receipts/), and [`../../data/proofs/`](../../data/proofs/).
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![owner](https://img.shields.io/badge/owner-%40bartytime4life-0969da)
 ![surface](https://img.shields.io/badge/surface-.github%2Factions-6f42c1)
-![inventory](https://img.shields.io/badge/inventory-README--only-lightgrey)
+![inventory](https://img.shields.io/badge/inventory-seeded%20local%20actions-2ea043)
 ![posture](https://img.shields.io/badge/posture-thin%20%7C%20fail--closed-0a7d5a)
 ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
 
@@ -142,16 +142,7 @@ Keep these out of `.github/actions/` unless there is a narrow wrapper reason and
 
 ## Directory tree
 
-### Current public `main` snapshot (**CONFIRMED by source check**)
-
-```text
-.github/actions/
-└── README.md
-```
-
-Current state is intentionally narrow: this directory is a README-only surface. Do not claim implemented composite actions until action metadata, tests or fixtures, and caller workflows are present.
-
-### Graduated target shape (**PROPOSED**)
+### Current snapshot (**CONFIRMED by source check**)
 
 ```text
 .github/actions/
@@ -159,21 +150,38 @@ Current state is intentionally narrow: this directory is a README-only surface. 
 ├── metadata-validate/
 │   ├── action.yml
 │   ├── README.md
-│   ├── src/
-│   └── tests/fixtures/
+│   └── src/validate.sh
 ├── opa-gate/
 │   ├── action.yml
 │   ├── README.md
-│   ├── src/
-│   └── tests/fixtures/
+│   └── src/evaluate.sh
 ├── provenance-guard/
 │   ├── action.yml
 │   ├── README.md
-│   ├── templates/
-│   └── tests/fixtures/
+│   └── src/verify.sh
 ├── sbom-produce-and-sign/
 │   ├── action.yml
 │   ├── README.md
+│   └── src/build.sh
+└── src/
+    └── README.md
+```
+
+This directory now contains thin scaffolded local actions and a shared-helper placeholder. Treat them as composable wrappers until caller workflows and action-level tests are wired and verified.
+
+### Next target shape (**PROPOSED**)
+
+```text
+.github/actions/
+├── <existing seeded actions>/
+│   ├── action.yml
+│   ├── README.md
+│   ├── src/
+│   └── tests/fixtures/
+├── <future local actions>/
+│   ├── action.yml
+│   ├── README.md
+│   ├── src/
 │   ├── templates/
 │   └── tests/fixtures/
 └── src/
@@ -182,7 +190,7 @@ Current state is intentionally narrow: this directory is a README-only surface. 
 ```
 
 > [!NOTE]
-> The target shape is a reviewable landing pattern, not a claim that these directories exist today. Add each action only when there is a real repeated workflow step and a testable contract.
+> Keep each action single-purpose and fail-closed where it guards policy, provenance, or release transitions. Graduate heavy logic to durable tool lanes.
 
 [Back to top](#top)
 
@@ -390,7 +398,7 @@ flowchart LR
 | Directory-local `action.yml` files | Not visible under named action folders because no named action folders are currently checked in. | **UNKNOWN / not currently proven** |
 | Workflow callers | Must be verified from checked-in workflow YAML and platform settings. | **NEEDS VERIFICATION** |
 | Branch rules, required checks, OIDC, environments | Not derivable from this README. | **UNKNOWN** |
-| Receipt or proof emission from actions | Not proven by current README-only action inventory. | **UNKNOWN** |
+| Receipt or proof emission from actions | Not yet proven by workflow wiring from the current seeded action inventory. | **UNKNOWN** |
 
 ### Graduation gates
 
@@ -443,7 +451,7 @@ A directory-level README revision is ready when:
 
 ### Are composite actions currently checked in here?
 
-No, not from the current public source check. This directory is currently README-only.
+No, not yet from the current source check. This directory now has seeded actions, but workflow usage and runtime behavior still require verification.
 
 ### Can a local action enforce policy?
 
@@ -567,7 +575,7 @@ This action may call tools, validators, policy checks, or summary renderers. It 
 
 | Item | Status |
 |---|---|
-| Current public `.github/actions/` inventory | **CONFIRMED** as README-only during this revision source check. |
+| Current public `.github/actions/` inventory | **CONFIRMED** as seeded local actions plus directory docs during this revision source check. |
 | Owner fallback for `/.github/actions/` | **CONFIRMED** from current `CODEOWNERS`. |
 | Current composite action implementations | **UNKNOWN / not currently proven**. |
 | Current workflow callers | **NEEDS VERIFICATION** from checked-in workflow YAML and platform settings. |

@@ -1,0 +1,23 @@
+name: provenance-guard
+
+description: Verify file digests to enforce provenance checks before downstream promotion.
+inputs:
+  file:
+    description: File to hash.
+    required: true
+  expected-sha256:
+    description: Expected sha256 digest (hex).
+    required: true
+outputs:
+  actual-sha256:
+    description: Computed sha256 digest.
+    value: ${{ steps.provenance.outputs.actual_sha256 }}
+runs:
+  using: composite
+  steps:
+    - id: provenance
+      shell: bash
+      run: |
+        "${{ github.action_path }}/src/verify.sh" \
+          "${{ inputs.file }}" \
+          "${{ inputs.expected-sha256 }}"

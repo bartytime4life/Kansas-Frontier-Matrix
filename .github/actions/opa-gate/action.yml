@@ -1,0 +1,24 @@
+name: opa-gate
+
+description: Run an OPA policy decision command and fail closed on non-allow output.
+inputs:
+  command:
+    description: Full command that evaluates policy and prints a decision.
+    required: true
+  allow-pattern:
+    description: Regex pattern treated as an allow result.
+    required: false
+    default: '(^|\s)(true|allow|allowed)(\s|$)'
+outputs:
+  decision:
+    description: Raw command output.
+    value: ${{ steps.opa.outputs.decision }}
+runs:
+  using: composite
+  steps:
+    - id: opa
+      shell: bash
+      run: |
+        "${{ github.action_path }}/src/evaluate.sh" \
+          "${{ inputs.command }}" \
+          "${{ inputs.allow-pattern }}"
