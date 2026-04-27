@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/provenance/kfm_prov_sidecar.schema.json",
+  "title": "KFM PROV Sidecar",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "@context",
+    "entity",
+    "activity",
+    "agent",
+    "wasGeneratedBy",
+    "wasAttributedTo"
+  ],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "required": ["prov", "dct", "kfm"],
+      "properties": {
+        "prov": {
+          "const": "http://www.w3.org/ns/prov#"
+        },
+        "dct": {
+          "const": "http://purl.org/dc/terms/"
+        },
+        "kfm": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z0-9_:-]+$": {
+          "$ref": "#/$defs/entity"
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z0-9_:-]+$": {
+          "$ref": "#/$defs/activity"
+        }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z0-9_:-]+$": {
+          "$ref": "#/$defs/agent"
+        }
+      }
+    },
+    "wasGeneratedBy": {
+      "type": "object",
+      "required": ["prov:entity", "prov:activity"],
+      "properties": {
+        "prov:entity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prov:activity": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "wasAttributedTo": {
+      "type": "object",
+      "required": ["prov:entity", "prov:agent"],
+      "properties": {
+        "prov:entity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prov:agent": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "uriOrTodo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entity": {
+      "type": "object",
+      "required": ["prov:type"],
+      "properties": {
+        "prov:type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dct:identifier": {
+          "$ref": "#/$defs/uriOrTodo"
+        },
+        "dct:license": {
+          "$ref": "#/$defs/uriOrTodo"
+        },
+        "kfm:spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kfm:content_spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kfm:run_receipt_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kfm:ai_receipt_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kfm:redaction_receipt_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "activity": {
+      "type": "object",
+      "required": ["prov:type", "prov:endedAtTime"],
+      "properties": {
+        "prov:type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prov:used": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "prov:startedAtTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "prov:endedAtTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "kfm:pipeline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kfm:pipeline_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "agent": {
+      "type": "object",
+      "required": ["prov:type"],
+      "properties": {
+        "prov:type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dct:identifier": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
