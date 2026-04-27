@@ -1,1 +1,65 @@
+{
+  "matrix_id": "kfm://catalog-matrix/missing-dcat-ref-fixture",
+  "created_at": "2026-04-27T00:00:00Z",
+  "status": "closed",
+  "policy_label": "public",
+  "review_state": "reviewed",
+  "sensitivity": "public",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 
+  "artifact": {
+    "ref": "https://example.invalid/artifact.ext",
+    "resolved": true,
+    "kind": "artifact"
+  },
+  "provenance": {
+    "ref": "https://example.invalid/artifact.prov.jsonld",
+    "resolved": true,
+    "kind": "provenance"
+  },
+  "evidence": {
+    "ref": "kfm://evidence/missing-dcat-ref-fixture",
+    "resolved": false,
+    "kind": "evidence"
+  },
+  "stac": {
+    "ref": "kfm://catalog/stac/missing-dcat-ref-fixture",
+    "resolved": false,
+    "kind": "stac"
+  },
+
+  /* intentionally missing:
+     "dcat": { ... }
+     → MUST FAIL schema + validator
+  */
+
+  "release": {
+    "ref": "kfm://release/missing-dcat-ref-fixture",
+    "resolved": false,
+    "kind": "release"
+  },
+  "publish_receipt": {
+    "ref": "kfm://receipt/publish/missing-dcat-ref-fixture",
+    "resolved": false,
+    "kind": "publish_receipt"
+  },
+
+  "artifact_count": 1,
+  "artifacts": [
+    {
+      "artifact_ref": "https://example.invalid/artifact.ext",
+      "evidence_ref": "kfm://evidence/missing-dcat-ref-fixture",
+      "provenance_ref": "https://example.invalid/artifact.prov.jsonld",
+      "stac_ref": "kfm://catalog/stac/missing-dcat-ref-fixture",
+
+      /* intentionally missing:
+         "dcat_ref": "kfm://catalog/dcat/missing-dcat-ref-fixture"
+         → MUST FAIL validator
+      */
+
+      "release_ref": "kfm://release/missing-dcat-ref-fixture",
+      "publish_receipt_ref": "kfm://receipt/publish/missing-dcat-ref-fixture",
+      "run_receipt_ref": "kfm://receipt/run/missing-dcat-ref-fixture"
+    }
+  ]
+}
