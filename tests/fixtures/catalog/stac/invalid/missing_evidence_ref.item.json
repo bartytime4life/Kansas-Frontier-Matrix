@@ -1,32 +1,49 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "kfm-item-TODO",
+  "id": "kfm-item-missing-evidence-fixture",
+  "collection": "kfm-collection-invalid",
+  "bbox": [-102.051744, 36.993016, -94.588413, 40.003162],
   "geometry": null,
   "properties": {
+    "datetime": "2026-04-27T00:00:00Z",
+
     "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "kfm:run_receipt_url": "https://example.invalid/artifact.prov.jsonld",
-    "kfm:release_manifest_ref": "kfm://release/TODO",
+    "kfm:release_manifest_ref": "kfm://release/missing-evidence-fixture",
+
     "kfm:policy_label": "public",
     "kfm:review_state": "reviewed",
     "kfm:source_role": "authoritative_source",
+    "kfm:sensitivity": "public",
+
     "processing:software": "kfm-pipeline",
     "processing:version": "v1",
     "processing:datetime": "2026-04-27T00:00:00Z"
+
+    /* intentionally missing kfm:evidence_ref → SHOULD FAIL */
   },
   "links": [
     {
       "rel": "provenance",
-      "href": "https://example.invalid/artifact.prov.jsonld"
+      "href": "https://example.invalid/artifact.prov.jsonld",
+      "type": "application/ld+json"
     },
     {
       "rel": "release-manifest",
-      "href": "https://example.invalid/release-manifest.json"
+      "href": "https://example.invalid/release-manifest.json",
+      "type": "application/json"
     }
+
+    /* intentionally missing "evidence" rel → SHOULD FAIL */
   ],
   "assets": {
     "data": {
-      "href": "https://example.invalid/artifact.ext"
+      "href": "https://example.invalid/artifact.ext",
+      "type": "application/octet-stream",
+      "roles": ["data"]
     }
+
+    /* intentionally missing provenance asset → SHOULD FAIL */
   }
 }
