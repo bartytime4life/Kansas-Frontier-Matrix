@@ -22,7 +22,7 @@ Test boundary for ecology-facing governed API behavior: evidence resolution, pol
 > [!NOTE]
 > **Status:** `experimental` · **Document status:** `draft`  
 > **Owners:** `<NEEDS_VERIFICATION_OWNER>`  
-> **Path:** `apps/governed-api/ecology/tests/README.md`  
+> **Path:** `apps/governed_api/ecology/tests/README.md`  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Test matrix](#test-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-orange)
@@ -123,7 +123,7 @@ Only test-grade, reviewable inputs belong here.
 **PROPOSED / NEEDS VERIFICATION:** this tree is a recommended shape for the target directory, not proof that files currently exist.
 
 ```text
-apps/governed-api/ecology/tests/
+apps/governed_api/ecology/tests/
 ├── README.md
 ├── fixtures/
 │   ├── api_outcomes/
