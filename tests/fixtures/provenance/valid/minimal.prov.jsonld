@@ -2,41 +2,78 @@
   "@context": {
     "prov": "http://www.w3.org/ns/prov#",
     "dct": "http://purl.org/dc/terms/",
-    "kfm": "https://kfm.local/ns#"
+    "kfm": "https://kfm.local/ns#",
+    "spdx": "https://spdx.org/licenses/"
   },
   "entity": {
     "e:artifact": {
       "prov:type": "kfm:EvidenceBundle",
       "dct:identifier": "kfm://evidence/TODO",
+      "dct:title": "KFM EvidenceBundle Fixture",
       "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
-      "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "dct:accessRights": "public",
+      "prov:generatedAtTime": "2026-04-27T00:00:00Z",
+      "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kfm:evidence_ref": "kfm://evidence/TODO",
+      "kfm:run_receipt_ref": "kfm://receipt/run/TODO",
+      "kfm:release_manifest_ref": "kfm://release/TODO",
+      "kfm:policy_label": "public",
+      "kfm:review_state": "reviewed",
+      "kfm:source_role": "authoritative_source",
+      "kfm:sensitivity": "public"
     },
     "e:spec": {
       "prov:type": "kfm:Spec",
-      "dct:identifier": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      "dct:identifier": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "kfm:spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     }
   },
   "activity": {
     "a:run": {
       "prov:type": "kfm:PipelineRun",
       "prov:used": ["e:spec"],
+      "prov:startedAtTime": "2026-04-27T00:00:00Z",
       "prov:endedAtTime": "2026-04-27T00:00:00Z",
       "kfm:pipeline": "kfm-pipeline",
-      "kfm:pipeline_version": "v1"
+      "kfm:pipeline_version": "v1",
+      "kfm:run_receipt_ref": "kfm://receipt/run/TODO",
+      "kfm:execution_environment": "ci-fixture"
     }
   },
   "agent": {
     "ag:signer": {
       "prov:type": "prov:SoftwareAgent",
-      "dct:identifier": "sigstore:cosign"
+      "dct:identifier": "sigstore:cosign",
+      "kfm:agent_role": "signer"
     }
   },
   "wasGeneratedBy": {
     "prov:entity": "e:artifact",
-    "prov:activity": "a:run"
+    "prov:activity": "a:run",
+    "prov:time": "2026-04-27T00:00:00Z"
   },
   "wasAttributedTo": {
     "prov:entity": "e:artifact",
     "prov:agent": "ag:signer"
+  },
+  "used": [
+    {
+      "prov:activity": "a:run",
+      "prov:entity": "e:spec",
+      "prov:role": "input_spec"
+    }
+  ],
+  "wasDerivedFrom": [
+    {
+      "prov:generatedEntity": "e:artifact",
+      "prov:usedEntity": "e:spec",
+      "prov:activity": "a:run"
+    }
+  ],
+  "kfm:publication_context": "public",
+  "kfm:release_manifest_ref": "kfm://release/TODO",
+  "kfm:catalog_refs": {
+    "stac": "kfm://catalog/stac/TODO",
+    "dcat": "kfm://catalog/dcat/TODO"
   }
 }
