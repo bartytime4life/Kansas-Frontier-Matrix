@@ -11,6 +11,7 @@ on:
       - "tools/validators/catalog/**"
       - "tools/validators/release/**"
       - "tools/resolvers/release/**"
+      - "tools/release/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
       - "policy/catalog/stac/**"
@@ -32,6 +33,7 @@ on:
       - "tools/validators/catalog/**"
       - "tools/validators/release/**"
       - "tools/resolvers/release/**"
+      - "tools/release/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
       - "policy/catalog/stac/**"
@@ -290,5 +292,35 @@ jobs:
           if python tools/resolvers/release/resolve_release_manifest.py \
             tests/fixtures/release/invalid/unresolved_artifact.release-manifest.json; then
             echo "DENY: unresolved_artifact fixture unexpectedly passed closure"
+            exit 1
+          fi
+
+  release-publish-dry-run:
+    name: Publish release dry run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+      - run: |
+          python tools/release/publish_release.py \
+            tests/fixtures/release/valid/minimal.release-manifest.json \
+            --dry-run
+      - run: |
+          if python tools/release/publish_release.py \
+            tests/fixtures/release/invalid/missing_provenance_ref.release-manifest.json \
+            --dry-run; then
+            echo "DENY: invalid release unexpectedly published"
+            exit 1
+          fi
+      - run: |
+          if python tools/release/publish_release.py \
+            tests/fixtures/release/invalid/unresolved_artifact.release-manifest.json \
+            --dry-run; then
+            echo "DENY: unresolved artifact release unexpectedly published"
             exit 1
           fi
