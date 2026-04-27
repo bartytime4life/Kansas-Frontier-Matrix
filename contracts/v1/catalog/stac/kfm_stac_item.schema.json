@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/catalog/stac/kfm_stac_item.schema.json",
+  "title": "KFM STAC Item",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["type", "stac_version", "id", "properties", "links", "assets"],
+  "properties": {
+    "type": { "const": "Feature" },
+    "stac_version": { "type": "string", "minLength": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "geometry": {},
+    "properties": {
+      "type": "object",
+      "required": [
+        "kfm:spec_hash",
+        "kfm:evidence_ref",
+        "kfm:run_receipt_url",
+        "kfm:release_manifest_ref",
+        "kfm:policy_label",
+        "kfm:review_state",
+        "kfm:source_role",
+        "processing:software",
+        "processing:version",
+        "processing:datetime"
+      ],
+      "properties": {
+        "kfm:spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-fA-F0-9]{64}$"
+        },
+        "kfm:evidence_ref": { "type": "string", "minLength": 1 },
+        "kfm:run_receipt_url": { "type": "string", "minLength": 1 },
+        "kfm:release_manifest_ref": { "type": "string", "minLength": 1 },
+        "kfm:policy_label": { "const": "public" },
+        "kfm:review_state": {
+          "type": "string",
+          "enum": ["reviewed", "published"]
+        },
+        "kfm:source_role": { "type": "string", "minLength": 1 },
+        "kfm:redaction_receipt_url": { "type": "string", "minLength": 1 },
+        "kfm:ai_receipt_url": { "type": "string", "minLength": 1 },
+        "processing:software": { "type": "string", "minLength": 1 },
+        "processing:version": { "type": "string", "minLength": 1 },
+        "processing:datetime": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    },
+    "links": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/link" }
+    },
+    "assets": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/asset" }
+    }
+  },
+  "$defs": {
+    "link": {
+      "type": "object",
+      "required": ["rel", "href"],
+      "properties": {
+        "rel": { "type": "string", "minLength": 1 },
+        "href": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "asset": {
+      "type": "object",
+      "required": ["href"],
+      "properties": {
+        "href": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "roles": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
