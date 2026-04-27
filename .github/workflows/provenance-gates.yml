@@ -10,6 +10,7 @@ on:
       - "tools/validators/provenance/**"
       - "tools/validators/catalog/**"
       - "tools/validators/release/**"
+      - "tools/resolvers/release/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
       - "policy/catalog/stac/**"
@@ -30,6 +31,7 @@ on:
       - "tools/validators/provenance/**"
       - "tools/validators/catalog/**"
       - "tools/validators/release/**"
+      - "tools/resolvers/release/**"
       - "policy/provenance/**"
       - "policy/catalog/dcat/**"
       - "policy/catalog/stac/**"
@@ -261,5 +263,32 @@ jobs:
             tests/fixtures/release/invalid/missing_provenance_ref.release-manifest.json \
             --policy policy/release; then
             echo "DENY: missing_provenance_ref fixture unexpectedly passed policy"
+            exit 1
+          fi
+
+  release-closure:
+    name: Resolve ReleaseManifest closure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema
+      - run: |
+          python tools/resolvers/release/resolve_release_manifest.py \
+            tests/fixtures/release/valid/minimal.release-manifest.json
+      - run: |
+          if python tools/resolvers/release/resolve_release_manifest.py \
+            tests/fixtures/release/invalid/missing_provenance_ref.release-manifest.json; then
+            echo "DENY: missing_provenance_ref fixture unexpectedly passed closure"
+            exit 1
+          fi
+      - run: |
+          if python tools/resolvers/release/resolve_release_manifest.py \
+            tests/fixtures/release/invalid/unresolved_artifact.release-manifest.json; then
+            echo "DENY: unresolved_artifact fixture unexpectedly passed closure"
             exit 1
           fi
