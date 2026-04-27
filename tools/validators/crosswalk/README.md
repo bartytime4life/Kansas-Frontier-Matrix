@@ -27,7 +27,7 @@ Validate KFM crosswalk pair rows for geometry, overlap, weight, CRS, determinist
 ![implementation](https://img.shields.io/badge/implementation-NEEDS%20VERIFICATION-f59e0b?style=flat-square)
 
 > [!NOTE]
-> **Document status:** `draft` · **Validator status:** `experimental` · **Expected path:** `tools/validators/validators/crosswalk/README.md` · **Owners:** `TODO-verify-owner-or-codeowners`
+> **Document status:** `draft` · **Validator status:** `experimental` · **Expected path:** `tools/validators/crosswalk/README.md` · **Owners:** `TODO-verify-owner-or-codeowners`
 >
 > **Quick jumps:** [What this is](#what-this-is) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Validation rules](#validation-rules) · [Outcome grammar](#outcome-grammar) · [Diagram](#diagram) · [Hardening plan](#hardening-plan) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -524,4 +524,3 @@ Before hardening this file from `draft` to `review` or `published`, verify:
 </details>
 
 [Back to top](#top)
-
