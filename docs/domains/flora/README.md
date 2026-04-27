@@ -150,7 +150,7 @@ Do **not** put these in `docs/domains/flora/`:
 
 ## Directory tree
 
-The tree below is a **PROPOSED starter map** for the Flora lane. It should be reconciled with the real repo after a mounted checkout is inspected.
+The tree below reflects the current Flora documentation set in this repository. Keep `FILE_MANIFEST.md` aligned when files are added or removed.
 
 ```text
 docs/
