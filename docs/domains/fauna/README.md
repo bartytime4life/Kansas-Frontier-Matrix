@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TODO(fauna-domain-stewards)
 created: TODO(verify-original-created-date-or-set-on-first-commit)
-updated: 2026-04-22
+updated: 2026-04-27
 policy_label: TODO(verify-public-or-restricted)
 related: ["source:KFM_Fauna_Architecture_PDF_Only_Report.pdf", "source:KFM_Habitat_Fauna_Thin_Slice_Extended_Pro_Blueprint.pdf", "source:KFM_MapLibre_UI_Architecture_and_Governed_Interaction_Design.pdf", "source:Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.2.pdf"]
 tags: [kfm, fauna, wildlife, geoprivacy, evidence, domain-readme]
@@ -133,22 +133,22 @@ The fauna documentation directory must not become a dumping ground for data, sec
 
 ## Directory tree
 
-**PROPOSED companion layout — NEEDS VERIFICATION before creating files.**
+**Current companion layout.**
 
 ```text
 docs/domains/fauna/
 ├── README.md                         # this file
-├── CONTROL_PLANE.md                  # PROPOSED: domain doc registry, owners, source status
-├── SOURCE_ROLES.md                   # PROPOSED: fauna source-role taxonomy and examples
-├── GEOPRIVACY.md                     # PROPOSED: public geometry and sensitive-location rules
-├── VALIDATION.md                     # PROPOSED: human-readable validator and gate guide
-├── MIGRATION_AND_CONTINUITY.md       # PROPOSED: prior-gain preservation and old-to-new mappings
+├── CONTROL_PLANE.md                  # domain governance, ownership, cadence, and active risks
+├── SOURCE_ROLES.md                   # fauna source-role taxonomy and compatibility guardrails
+├── GEOPRIVACY.md                     # public geometry classes and sensitive-location rules
+├── VALIDATION.md                     # human-readable validator and gate expectations
+├── MIGRATION_AND_CONTINUITY.md       # prior-gain preservation and old-to-new mappings
 └── runbooks/
-    ├── release-dry-run.md            # PROPOSED: fixture-only promotion rehearsal
-    └── rollback.md                   # PROPOSED: release rollback and correction workflow
+    ├── release-dry-run.md            # fixture-first promotion rehearsal
+    └── rollback.md                   # release rollback and correction workflow
 ```
 
-Directory creation should wait until the repo’s existing documentation pattern, ADR convention, and source registry home are verified.
+Companion documents are now present in this directory and should be maintained together as a single fauna documentation set.
 
 [Back to top](#top)
 
@@ -308,7 +308,7 @@ Expected result: actual repo conventions are visible before adding or editing fi
 ### 2. Inventory existing fauna and adjacent work
 
 ```bash
-grep -RInE "fauna|wildlife|species|taxon|occurrence|sensitivity|geoprivacy|EvidenceBundle|DecisionEnvelope|LayerManifest" \
+rg -n --no-heading "fauna|wildlife|species|taxon|occurrence|sensitivity|geoprivacy|EvidenceBundle|DecisionEnvelope|LayerManifest" \
   docs contracts schemas policy data apps packages tools tests 2>/dev/null | sed -n '1,200p'
 ```
 
