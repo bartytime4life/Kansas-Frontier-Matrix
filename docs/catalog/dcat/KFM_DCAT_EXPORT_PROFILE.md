@@ -11,10 +11,17 @@ policy_label: public
 related: [
   docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md,
   docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md,
-  contracts/v1/provenance/kfm_prov_sidecar.schema.json
+  contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json,
+  contracts/v1/provenance/kfm_prov_sidecar.schema.json,
+  contracts/v1/release/kfm_release_manifest.schema.json,
+  tools/validators/catalog/validate_dcat_dataset.py,
+  policy/catalog/dcat/dcat_dataset_gate.rego,
+  tests/fixtures/catalog/dcat/valid/minimal.dataset.jsonld,
+  tests/fixtures/catalog/dcat/invalid/restricted_access.dataset.jsonld,
+  tests/fixtures/catalog/dcat/invalid/missing_provenance.dataset.jsonld
 ]
-tags: [kfm, dcat, catalog, provenance, rights, access-rights, evidence]
-notes: [Defines KFM DCAT export rules for public-safe dataset discovery and rights propagation. doc_id, owners, and created remain TODO until repository history/ownership are verified.]
+tags: [kfm, dcat, catalog, provenance, rights, access-rights, evidence, release-manifest, governance]
+notes: [Defines KFM DCAT export rules for public-safe dataset discovery and rights propagation. doc_id, owners, created date, and final path need repository verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -23,41 +30,73 @@ notes: [Defines KFM DCAT export rules for public-safe dataset discovery and righ
 
 Public-safe DCAT export rules for KFM datasets, distributions, rights, provenance, release closure, and access posture.
 
-> **Status:** draft standard  
-> **Target path:** `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md`  
-> **Truth posture:** **CONFIRMED** source-draft doctrine / **PROPOSED** validation contract / **UNKNOWN** current mounted-repo enforcement  
-> **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Export flow](#export-flow) · [Field requirements](#field-requirements) · [Rules](#rules) · [Examples](#examples) · [Validation](#validation-checklist) · [Open verification](#open-verification-items)
+<p align="center">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Policy: public" src="https://img.shields.io/badge/policy-public-brightgreen">
+  <img alt="Catalog: DCAT" src="https://img.shields.io/badge/catalog-DCAT-blue">
+  <img alt="Repo verification needed" src="https://img.shields.io/badge/repo-NEEDS_VERIFICATION-orange">
+</p>
+
+---
+
+## Impact block
+
+| Field | Value |
+| --- | --- |
+| **Status** | `draft` |
+| **Target path** | `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md` |
+| **Owners** | `TODO` |
+| **Policy label** | `public` |
+| **Primary schema** | `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` |
+| **Validator** | `tools/validators/catalog/validate_dcat_dataset.py` |
+| **Policy gate** | `policy/catalog/dcat/dcat_dataset_gate.rego` |
+| **Truth posture** | CONFIRMED source-draft doctrine / PROPOSED validation contract / UNKNOWN mounted-repo enforcement |
 
 > [!IMPORTANT]
-> DCAT is a **public discovery/export layer**. It is not the KFM source of truth, not a substitute for STAC asset records, not a substitute for PROV lineage, and not an authorization bypass. Public-facing records must remain downstream of evidence, policy, review, release, rights, and sensitivity gates.
+> DCAT is a **public discovery/export layer**. It is not the KFM source of truth, not a substitute for STAC asset records, not a substitute for PROV lineage, and not an authorization bypass.
+
+---
+
+## Quick jump
+
+- [Scope](#scope)
+- [Repo fit](#repo-fit)
+- [Export flow](#export-flow)
+- [Core mapping](#core-mapping)
+- [Field requirements](#field-requirements)
+- [Allowed public values](#allowed-public-values)
+- [Rules](#rules)
+- [Examples](#examples)
+- [Validation checklist](#validation-checklist)
+- [Open verification items](#open-verification-items)
 
 ---
 
 ## Scope
 
-This profile defines how KFM exports public catalog records into **DCAT-compatible** JSON-LD without losing the project’s trust boundaries:
+This profile defines how KFM exports public catalog records into **DCAT-compatible JSON-LD** without losing:
 
 - license posture
 - access-rights posture
 - provenance links
 - `EvidenceBundle` lineage
-- release manifest closure
+- ReleaseManifest closure
 - correction and supersession lineage
 - sensitivity and geoprivacy constraints
 
-A DCAT record is valid only when it describes **public-safe released or release-candidate scope** and can be traced back to governed KFM evidence.
+A DCAT record is valid only when it describes **public-safe released or release-candidate scope** and traces back to governed KFM evidence.
 
-### Non-goals
+### Exclusions
 
-This profile does **not** define:
+Do not export DCAT records that contain or point to:
 
-- canonical storage for datasets,
-- STAC item/asset semantics,
-- PROV sidecar schema internals,
-- raw ingest or quarantine behavior,
-- reviewer workflow internals,
-- runtime answer envelopes,
-- or AI interpretation rules beyond the DCAT export boundary.
+- `RAW`, `WORK`, or `QUARANTINE` material
+- restricted, denied, unknown, or TODO access posture
+- unresolved rights or license terms
+- exact sensitive geometry without a required redaction receipt
+- unpublished candidate data presented as released truth
+- direct model output without evidence and AI receipt linkage
+- any distribution endpoint that is not public-safe
 
 [Back to top](#top)
 
@@ -70,35 +109,25 @@ This profile does **not** define:
 | This profile | `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md` | Human-readable normative export rules. |
 | STAC profile | `docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md` | Spatial/temporal asset and item discovery companion. |
 | PROV sidecar schema | `contracts/v1/provenance/kfm_prov_sidecar.schema.json` | Machine-readable provenance validation target. |
-| DCAT payloads | `data/catalog/dcat/` or branch-specific catalog output path | Public-safe dataset/distribution records. |
-| Release closure | release manifest / proof pack / catalog matrix surfaces | Proof that DCAT, STAC, PROV, evidence, rights, and public artifacts agree. |
+| DCAT schema | `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` | Machine-readable DCAT export contract. |
+| DCAT validator | `tools/validators/catalog/validate_dcat_dataset.py` | Enforces schema and public-safe catalog rules. |
+| DCAT policy gate | `policy/catalog/dcat/dcat_dataset_gate.rego` | Fails closed on unsafe export posture. |
+| Release closure | `contracts/v1/release/kfm_release_manifest.schema.json` | Binds DCAT to artifact, evidence, PROV, STAC, and release state. |
 
 > [!NOTE]
-> Path placement and validator entrypoints are **NEEDS VERIFICATION** until checked against the mounted repository branch. This document preserves the supplied target path and related links, but it does not claim current CI or runtime enforcement.
+> Path placement and validator entrypoints are **NEEDS VERIFICATION** until checked against the mounted repository branch.
 
 ### Accepted inputs
 
-A DCAT export may be emitted from records that have all of the following:
+A DCAT export may be emitted from records that have:
 
-- resolved `EvidenceBundle`,
-- resolved release manifest reference,
-- resolved provenance sidecar,
-- known license and rights posture,
-- public-safe access posture,
-- review state sufficient for public discovery,
-- and public-safe distribution targets.
-
-### Exclusions
-
-Do not export DCAT records that contain or point to:
-
-- `RAW`, `WORK`, or `QUARANTINE` material,
-- restricted, denied, unknown, or TODO access posture,
-- unresolved rights or license terms,
-- exact sensitive geometry without a required redaction receipt,
-- unpublished candidate data presented as released truth,
-- direct model output without evidence and AI receipt linkage,
-- or any distribution endpoint that is not public-safe.
+- resolved `EvidenceBundle`
+- resolved ReleaseManifest reference
+- resolved provenance sidecar
+- known license and rights posture
+- public-safe access posture
+- review state sufficient for public discovery
+- public-safe distribution targets
 
 [Back to top](#top)
 
@@ -121,15 +150,6 @@ flowchart TD
     I -- public-safe --> J[DCAT Dataset / Distribution]
     I -- unresolved / restricted --> K[ABSTAIN or DENY]
     J --> L[Governed public discovery]
-
-    classDef source fill:#f7f7f7,stroke:#666,color:#222;
-    classDef proof fill:#eef6ff,stroke:#4a74a8,color:#102a43;
-    classDef gate fill:#fff4e6,stroke:#c9871a,color:#5c3b00;
-    classDef publish fill:#eef9ef,stroke:#3d8b50,color:#183d23;
-    class A,B,C source;
-    class D,E,F,G,H proof;
-    class I,K gate;
-    class J,L publish;
 ```
 
 The flow is intentionally asymmetric: DCAT receives released evidence and catalog closure; it does not create them.
@@ -143,14 +163,14 @@ The flow is intentionally asymmetric: DCAT receives released evidence and catalo
 | KFM object or concept | DCAT / DCT carrier | Requirement |
 | --- | --- | --- |
 | Published dataset | `dcat:Dataset` | Required. |
-| Public artifact or service | `dcat:Distribution` / `dcat:DataService` where applicable | At least one public-safe distribution is required for a published export. |
+| Public artifact or service | `dcat:Distribution` / `dcat:DataService` where applicable | At least one public-safe distribution is required. |
 | License | `dct:license` | Required; must not be `TODO` or unknown. |
-| Access posture | `dct:accessRights` | Required; must be public-safe. |
+| Access posture | `dct:accessRights` | Required; must be `public`. |
 | Evidence reference | `dct:source` and/or `kfm:evidence_ref` | Required through KFM extension field. |
 | Provenance sidecar | `dct:provenance` | Required and resolvable. |
 | Release manifest | `kfm:release_manifest_ref` | Required. |
-| Correction lineage | `dct:isReplacedBy` / `dct:replaces` | Required when the record is superseded or replaces another record. |
-| AI interpretation receipt | `kfm:ai_receipt_ref` | Conditional; required when AI contributed interpretation to the exported description. |
+| Correction lineage | `dct:isReplacedBy` / `dct:replaces` | Required when superseded or replacing another record. |
+| AI interpretation receipt | `kfm:ai_receipt_ref` | Conditional; required when AI contributed interpretation. |
 | Redaction receipt | `kfm:redaction_receipt_ref` | Conditional; required after geoprivacy or sensitivity transform. |
 
 [Back to top](#top)
@@ -163,26 +183,27 @@ The flow is intentionally asymmetric: DCAT receives released evidence and catalo
 
 | Field | Required | Description | Export check |
 | --- | --- | --- | --- |
-| `@context` | yes | JSON-LD context containing `dcat`, `dct`, and `kfm` prefixes. | Must parse as JSON-LD context. |
+| `@context` | yes | JSON-LD context containing `dcat`, `dct`, and `kfm`. | Must parse as JSON-LD context. |
 | `@type` | yes | Must be `dcat:Dataset`. | Exact value required. |
-| `@id` | recommended | Stable dataset IRI or KFM identifier. | Strongly preferred for cross-record linking. |
 | `dct:title` | yes | Human-readable dataset title. | Must be non-empty. |
-| `dct:identifier` | yes | Stable KFM dataset identifier. | Must be non-empty and stable across rebuilds for the same dataset identity. |
-| `dct:license` | yes | License URI or JSON-LD `@id` object. | Must be known and resolvable enough for release review. |
-| `dct:accessRights` | yes | Access-rights URI or controlled value. | Must be public-safe. |
+| `dct:identifier` | yes | Stable KFM dataset identifier. | Must be non-empty. |
+| `dct:license` | yes | License URI. | Must be known and non-blocked. |
+| `dct:accessRights` | yes | Access-rights value. | Must be `public`. |
 | `dct:provenance` | yes | PROV sidecar reference. | Must resolve and validate. |
-| `dcat:distribution` | yes | Public-safe distribution list. | Must contain at least one public-safe distribution. |
+| `dcat:distribution` | yes | Public-safe distribution list. | Must contain at least one distribution. |
 
 ### Required KFM extension fields
 
 | Field | Required | Description | Export check |
 | --- | --- | --- | --- |
-| `kfm:spec_hash` | yes | Deterministic identity / export-spec hash. | Must match the expected hash format, typically `sha256:<64 hex chars>`. |
+| `kfm:spec_hash` | yes | Deterministic identity / export-spec hash. | Must match `sha256:<64 hex>`. |
 | `kfm:evidence_ref` | yes | `EvidenceBundle` reference. | Must resolve before public export. |
-| `kfm:release_manifest_ref` | yes | Release manifest reference. | Must resolve before public export. |
-| `kfm:policy_label` | yes | Publication policy label. | Must be `public` for published DCAT export. |
-| `kfm:review_state` | yes | Review state at export. | Must not be `TODO`, `unknown`, or unresolved. Exact enum is **NEEDS VERIFICATION** against the machine contract. |
+| `kfm:run_receipt_ref` | recommended | Run receipt reference. | Required when release policy requires run closure. |
+| `kfm:release_manifest_ref` | yes | ReleaseManifest reference. | Must resolve before public export. |
+| `kfm:policy_label` | yes | Publication policy label. | Must be `public`. |
+| `kfm:review_state` | yes | Review state at export. | Must be `reviewed` or `published`. |
 | `kfm:source_role` | yes | Source role used for the exported claim or dataset. | Must not be unknown where source authority matters. |
+| `kfm:sensitivity` | recommended | Sensitivity posture. | Must be `public` when present. |
 | `kfm:redaction_receipt_ref` | conditional | Required after geoprivacy or sensitivity transform. | Must resolve when transform occurred. |
 | `kfm:ai_receipt_ref` | conditional | Required when AI contributed interpretation. | Must resolve when AI contributed text or interpretation. |
 
@@ -191,12 +212,12 @@ The flow is intentionally asymmetric: DCAT receives released evidence and catalo
 | Field | Required | Description | Export check |
 | --- | --- | --- | --- |
 | `@type` | yes | Must be `dcat:Distribution`. | Exact value required. |
-| `dcat:accessURL` | yes | Public-safe artifact URL, landing page, service endpoint, or mediated access point. | Must not point to `RAW`, `WORK`, `QUARANTINE`, restricted stores, or internal-only paths. |
+| `dcat:accessURL` | yes | Public-safe artifact URL, landing page, service endpoint, or mediated access point. | Must not point to RAW, WORK, QUARANTINE, restricted stores, or internal-only paths. |
 | `dcat:downloadURL` | conditional | Direct downloadable artifact URL. | Use only when the target is actually downloadable. |
-| `dct:license` | yes | Distribution license URI. | Must be known; conflicts with dataset license require review. |
-| `dcat:mediaType` | recommended | Media type for the distribution. | Prefer when media type is known. |
-| `dct:format` | recommended | Format label or URI. | Use when helpful for discovery or older consumers. |
-| `dct:conformsTo` | recommended | STAC / schema / profile reference. | Strongly recommended for validator and consumer clarity. |
+| `dct:license` | yes | Distribution license URI. | Must match dataset license unless reviewed exception is modeled. |
+| `dcat:mediaType` | recommended | Media type for the distribution. | Prefer when known. |
+| `dct:format` | recommended | Format label or URI. | Use when helpful for discovery. |
+| `dct:conformsTo` | recommended | STAC / schema / profile reference. | Recommended for validator and consumer clarity. |
 
 > [!TIP]
 > Use `dcat:downloadURL` for a direct file download. Use `dcat:accessURL` for a landing page, service, API endpoint, viewer, or mediated access surface.
@@ -205,12 +226,25 @@ The flow is intentionally asymmetric: DCAT receives released evidence and catalo
 
 ---
 
-## Allowed publication values
+## Allowed public values
 
 `kfm:policy_label` **MUST** be:
 
 ```text
 public
+```
+
+`dct:accessRights` **MUST** be:
+
+```text
+public
+```
+
+Allowed review states:
+
+```text
+reviewed
+published
 ```
 
 The following values **MUST NOT** appear in a published DCAT export:
@@ -219,10 +253,13 @@ The following values **MUST NOT** appear in a published DCAT export:
 restricted
 deny
 TODO
+todo
 unknown
+UNKNOWN
+NEEDS-VERIFICATION
 ```
 
-`dct:accessRights` must also be public-safe. A record with a public `kfm:policy_label` but restricted or unknown `dct:accessRights` is invalid.
+A record with a public `kfm:policy_label` but restricted or unknown `dct:accessRights` is invalid.
 
 [Back to top](#top)
 
@@ -234,24 +271,24 @@ unknown
 
 DCAT export **MUST fail closed** when:
 
-- `dct:license` is missing,
-- `dct:license` is `TODO`, unknown, or non-resolvable enough for review,
-- rights are unknown,
-- access posture is missing,
-- access posture conflicts with public export,
-- a distribution license conflicts with the dataset license without review,
-- or a distribution URL points to material whose release rights are not public-safe.
+- `dct:license` is missing
+- `dct:license` is `TODO`, unknown, restricted, denied, or empty
+- rights are unknown
+- access posture is missing
+- access posture conflicts with public export
+- a distribution license conflicts with the dataset license without a modeled reviewed exception
+- a distribution URL points to material whose release rights are not public-safe
 
 ### Sensitivity rules
 
 DCAT export **MUST fail closed** when:
 
-- `dct:accessRights` is missing,
-- `dct:accessRights` is `restricted`, `deny`, `unknown`, or `TODO`,
-- public distribution points to restricted material,
-- precise sensitive geometry is exposed,
-- a required redaction receipt is missing,
-- or a public record would reveal steward-controlled, culturally sensitive, living-person, DNA, protected-species, archaeological, critical-infrastructure, or other sensitive detail without policy clearance.
+- `dct:accessRights` is missing
+- `dct:accessRights` is `restricted`, `deny`, `unknown`, or `TODO`
+- public distribution points to restricted material
+- precise sensitive geometry is exposed
+- a required redaction receipt is missing
+- a public record would reveal steward-controlled, culturally sensitive, living-person, DNA, protected-species, archaeological, critical-infrastructure, or other sensitive detail without policy clearance
 
 ### Provenance rules
 
@@ -263,7 +300,7 @@ DCAT export **MUST** include a resolvable provenance pointer:
 }
 ```
 
-The referenced provenance sidecar must validate against the project provenance sidecar contract:
+The referenced provenance sidecar must validate against:
 
 ```text
 contracts/v1/provenance/kfm_prov_sidecar.schema.json
@@ -273,22 +310,20 @@ contracts/v1/provenance/kfm_prov_sidecar.schema.json
 
 A DCAT export is valid only when all of the following resolve or are explicitly marked not applicable by policy:
 
-- `EvidenceBundle`,
-- release manifest,
-- provenance sidecar,
-- public artifact or mediated access surface,
-- rights and license posture,
-- sensitivity/public-safety posture,
-- STAC companion record where spatial/temporal asset discovery exists,
-- correction lineage when superseded, withdrawn, or replacing another record.
+- `EvidenceBundle`
+- ReleaseManifest
+- provenance sidecar
+- public artifact or mediated access surface
+- rights and license posture
+- sensitivity/public-safety posture
+- STAC companion record where spatial/temporal asset discovery exists
+- correction lineage when superseded, withdrawn, or replacing another record
 
 ### STAC / DCAT / PROV cross-link rules
 
-KFM catalog closure is strongest when the triplet stays linked:
-
 | Link direction | Preferred carrier | Requirement |
 | --- | --- | --- |
-| DCAT → STAC | `dct:relation` or `dct:conformsTo` where profile-level | Include when a STAC collection/item is the asset companion. |
+| DCAT → STAC | `dct:relation` or `dct:conformsTo` | Include when a STAC collection/item is the asset companion. |
 | DCAT → PROV | `dct:provenance` | Required for lineage. |
 | DCAT → ReleaseManifest | `kfm:release_manifest_ref` and/or `dct:relation` | Required for release closure. |
 | STAC → DCAT | STAC `links[]` with `rel: describedby` | Recommended for companion navigability. |
@@ -344,53 +379,38 @@ DENY
 
 ### Minimal public-safe DCAT example
 
-This example is illustrative. Replace placeholder identifiers, URLs, and review values before using it as a fixture.
-
 ```json
 {
   "@context": {
     "dcat": "http://www.w3.org/ns/dcat#",
     "dct": "http://purl.org/dc/terms/",
-    "kfm": "https://kfm.local/ns#"
+    "kfm": "https://kfm.local/ns#",
+    "prov": "http://www.w3.org/ns/prov#"
   },
-  "@id": "kfm://dataset/TODO",
   "@type": "dcat:Dataset",
-  "dct:title": "KFM Public Dataset",
-  "dct:identifier": "kfm://dataset/TODO",
-  "dct:license": {
-    "@id": "https://spdx.org/licenses/CC-BY-4.0.html"
-  },
+  "dct:title": "KFM Minimal Public Dataset Fixture",
+  "dct:description": "Valid minimal DCAT dataset for CI validation.",
+  "dct:identifier": "kfm://dataset/minimal-fixture",
+  "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
   "dct:accessRights": "public",
-  "dct:source": {
-    "@id": "kfm://evidence/TODO"
-  },
-  "dct:provenance": {
-    "@id": "https://catalog.example.invalid/prov/artifact.prov.jsonld"
-  },
-  "dct:relation": [
-    { "@id": "kfm://release/TODO" },
-    { "@id": "kfm://stac/TODO" }
-  ],
+  "dct:provenance": "https://example.invalid/artifact.prov.jsonld",
+  "dct:issued": "2026-04-27T00:00:00Z",
+  "dct:modified": "2026-04-27T00:00:00Z",
   "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "kfm:evidence_ref": "kfm://evidence/TODO",
-  "kfm:release_manifest_ref": "kfm://release/TODO",
+  "kfm:evidence_ref": "kfm://evidence/minimal-fixture",
+  "kfm:run_receipt_ref": "kfm://receipt/run/minimal-fixture",
+  "kfm:release_manifest_ref": "kfm://release/minimal-fixture",
   "kfm:policy_label": "public",
   "kfm:review_state": "reviewed",
   "kfm:source_role": "authoritative_source",
+  "kfm:sensitivity": "public",
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
-      "dcat:accessURL": {
-        "@id": "https://catalog.example.invalid/artifacts/artifact.ext"
-      },
-      "dct:license": {
-        "@id": "https://spdx.org/licenses/CC-BY-4.0.html"
-      },
-      "dcat:mediaType": "application/octet-stream",
+      "dcat:accessURL": "https://example.invalid/artifact.ext",
+      "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
       "dct:format": "application/octet-stream",
-      "dct:conformsTo": {
-        "@id": "docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md"
-      }
+      "dct:conformsTo": "docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md"
     }
   ]
 }
@@ -407,6 +427,7 @@ This example is illustrative. Replace placeholder identifiers, URLs, and review 
 | AI-written description without `kfm:ai_receipt_ref` | Generated interpretation would be detached from audit evidence. |
 | Precise sensitive geometry without `kfm:redaction_receipt_ref` | Public release would lack transform proof. |
 | Superseded record with no correction lineage | Discovery would erase replacement history. |
+| Distribution license differs from dataset license | Rights posture is inconsistent without an explicit reviewed exception. |
 
 [Back to top](#top)
 
@@ -422,18 +443,19 @@ Before publishing a DCAT export, verify:
 - [ ] `dct:identifier` exists.
 - [ ] `dct:title` exists.
 - [ ] `dct:license` exists and is not `TODO` or unknown.
-- [ ] `dct:accessRights` is public-safe.
+- [ ] `dct:accessRights` is `public`.
 - [ ] `dct:provenance` resolves.
 - [ ] PROV sidecar validates against `contracts/v1/provenance/kfm_prov_sidecar.schema.json`.
 - [ ] `kfm:spec_hash` is valid.
 - [ ] `kfm:evidence_ref` resolves.
 - [ ] `kfm:release_manifest_ref` resolves.
 - [ ] `kfm:policy_label` is `public`.
-- [ ] `kfm:review_state` is not `TODO` or unknown.
+- [ ] `kfm:review_state` is `reviewed` or `published`.
+- [ ] `kfm:sensitivity` is `public` when present.
 - [ ] At least one distribution exists.
 - [ ] All distribution URLs are public-safe.
 - [ ] No `RAW`, `WORK`, or `QUARANTINE` references appear in outward records.
-- [ ] Distribution license does not conflict with dataset license unless reviewed.
+- [ ] Distribution license matches dataset license unless reviewed exception is modeled.
 - [ ] Redaction receipt exists when sensitivity transform occurred.
 - [ ] AI receipt exists when AI contributed interpretation.
 - [ ] STAC / DCAT / PROV / release links agree on stable identifiers.
@@ -443,14 +465,14 @@ Before publishing a DCAT export, verify:
 
 A DCAT export profile change is ready for review when it is:
 
-- evidence-grounded,
-- public-safe,
-- release-linked,
-- link-resolvable,
-- rights-explicit,
-- sensitivity-aware,
-- correction-preserving,
-- and honest about remaining **UNKNOWN** or **NEEDS VERIFICATION** items.
+- evidence-grounded
+- public-safe
+- release-linked
+- link-resolvable
+- rights-explicit
+- sensitivity-aware
+- correction-preserving
+- honest about remaining **UNKNOWN** or **NEEDS VERIFICATION** items
 
 [Back to top](#top)
 
@@ -462,9 +484,8 @@ A DCAT export profile change is ready for review when it is:
 <summary><strong>Items to verify before claiming enforcement</strong></summary>
 
 - Final `doc_id`, `owners`, and `created` metadata values.
-- Whether `contracts/v1/provenance/kfm_prov_sidecar.schema.json` is the exact current mounted schema path.
-- Whether a dedicated DCAT export schema already exists or should be added.
-- Exact controlled enum for `kfm:review_state`.
+- Whether `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` is the exact current mounted schema path.
+- Whether `contracts/v1/provenance/kfm_prov_sidecar.schema.json` is the exact current mounted provenance schema path.
 - Exact controlled enum or URI set for `dct:accessRights`.
 - Exact current validator entrypoint for DCAT JSON-LD.
 - Whether `data/catalog/dcat/` or another path is the active emitted payload home on the target branch.
@@ -472,18 +493,5 @@ A DCAT export profile change is ready for review when it is:
 - Whether external public namespace for `kfm:` should remain `https://kfm.local/ns#` or be replaced before public release.
 
 </details>
-
-## Recommended next artifacts
-
-The supplied draft already identifies the right next implementation step: make the profile enforceable. The smallest useful follow-up is:
-
-1. `contracts/v1/catalog/kfm_dcat_export.schema.json` — **PROPOSED** schema home; verify repo convention first.
-2. Valid and invalid DCAT fixtures under the repo’s fixture convention.
-3. A DCAT validator that checks rights, public access, provenance, evidence, release, and distribution safety.
-4. A catalog-closure consistency check across DCAT / STAC / PROV / release manifest.
-5. CI wiring that fails closed on invalid public exports.
-
-> [!CAUTION]
-> Do not add live emitters or public payloads before schema home, validator path, rights posture, and release linkage are verified.
 
 [Back to top](#top)
