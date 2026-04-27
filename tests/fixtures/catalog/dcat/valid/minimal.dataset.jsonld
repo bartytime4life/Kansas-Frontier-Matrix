@@ -1,1 +1,49 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "kfm": "https://kfm.local/ns#",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@type": "dcat:Dataset",
 
+  "dct:title": "KFM Minimal Public Dataset Fixture",
+  "dct:description": "Valid minimal DCAT dataset for CI validation.",
+  "dct:identifier": "kfm://dataset/minimal-fixture",
+
+  "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
+  "dct:accessRights": "public",
+  "dct:provenance": "https://example.invalid/artifact.prov.jsonld",
+
+  "dct:issued": "2026-04-27T00:00:00Z",
+  "dct:modified": "2026-04-27T00:00:00Z",
+
+  "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "kfm:evidence_ref": "kfm://evidence/minimal-fixture",
+  "kfm:run_receipt_ref": "kfm://receipt/run/minimal-fixture",
+  "kfm:release_manifest_ref": "kfm://release/minimal-fixture",
+
+  "kfm:policy_label": "public",
+  "kfm:review_state": "reviewed",
+  "kfm:source_role": "authoritative_source",
+  "kfm:sensitivity": "public",
+
+  "kfm:catalog_refs": {
+    "stac": "kfm://catalog/stac/minimal-fixture",
+    "prov": "https://example.invalid/artifact.prov.jsonld"
+  },
+
+  "dcat:distribution": [
+    {
+      "@type": "dcat:Distribution",
+      "dcat:accessURL": "https://example.invalid/artifact.ext",
+      "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
+      "dct:format": "application/octet-stream",
+      "dct:conformsTo": "docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md",
+
+      "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kfm:provenance_ref": "https://example.invalid/artifact.prov.jsonld",
+      "kfm:attestation_ref": "https://example.invalid/artifact.bundle.json"
+    }
+  ]
+}
