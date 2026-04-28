@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 
 PASSING_RECEIPT_DECISIONS = {
@@ -19,12 +21,31 @@ PROMOTABLE_MANIFEST_DECISIONS = {
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8").strip()
+    fenced_match = re.match(r"^```[a-zA-Z0-9_-]*\n(.*?)\n```", text, flags=re.DOTALL)
+    if fenced_match:
+        text = fenced_match.group(1).strip()
+
+    value = json.loads(text)
 
     if not isinstance(value, dict):
         raise ValueError("Proof-pack input must be a JSON object.")
 
     return value
+
+
+def assert_schema_supported(schema: dict[str, Any]) -> None:
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if "type" in node and not isinstance(node["type"], (str, list)):
+                raise SchemaError("schema 'type' must be a string or array of strings")
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(schema)
 
 
 def normalize_catalog_refs(catalog_refs: dict[str, Any] | None) -> dict[str, list[str]]:
@@ -109,6 +130,7 @@ def validate_proof_pack(
     schema_path: Path,
 ) -> list[str]:
     schema = load_json(schema_path)
+    assert_schema_supported(schema)
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
 

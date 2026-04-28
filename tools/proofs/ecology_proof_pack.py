@@ -103,7 +103,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"invalid proof-pack input: {exc}", file=sys.stderr)
         return EXIT_FAILURE
     except SchemaError as exc:
-        print(f"invalid proof-pack schema: {exc.message}", file=sys.stderr)
+        print(f"invalid proof-pack schema: {exc}", file=sys.stderr)
         return EXIT_MISSING_SCHEMA
     except Exception as exc:
         print(f"internal proof-pack builder error: {exc}", file=sys.stderr)
