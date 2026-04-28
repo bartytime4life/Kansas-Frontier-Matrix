@@ -172,8 +172,12 @@ Do **not** put these under `tools/receipts/` as their authoritative home.
 ```text
 tools/
 └── receipts/
-    ├── README.md                    # CONFIRMED empty before this revision
-    └── ecology_manifest_builder.py  # CONFIRMED file; execution NEEDS VERIFICATION
+    ├── README.md
+    ├── compare_receipt_sets.py
+    ├── ecology_manifest.py
+    ├── ecology_manifest_builder.py
+    ├── validate_receipt_manifest.py
+    └── tests/
 ```
 
 ### Candidate future shape
@@ -184,10 +188,12 @@ The following tree is **PROPOSED**. Do not create every file at once unless a PR
 tools/
 └── receipts/
     ├── README.md
+    ├── compare_receipt_sets.py       # Compare receipt lists across two manifests
+    ├── ecology_manifest.py           # CLI to build and validate manifest candidates
     ├── ecology_manifest_builder.py
-    ├── render_receipt_summary.py      # PROPOSED: render-only reviewer summary
-    ├── validate_receipt_manifest.py   # PROPOSED: manifest-shape and readiness checks
-    └── compare_receipt_sets.py        # PROPOSED: deterministic receipt-set comparison
+    ├── render_receipt_summary.py     # PROPOSED: render-only reviewer summary
+    ├── validate_receipt_manifest.py  # Validate an existing manifest against schema
+    └── tests/
 ```
 
 ### Adjacent surfaces to recheck before merge
