@@ -9,6 +9,48 @@ from pathlib import Path
 from typing import Any
 
 
+
+
+def _parse_min_yaml(text: str) -> dict[str, Any]:
+    data: dict[str, Any] = {}
+    current_list: str | None = None
+    current_item: dict[str, Any] | None = None
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        if not line or line.lstrip().startswith('#'):
+            continue
+        if line.startswith('  - '):
+            if current_list is None:
+                continue
+            item: dict[str, Any] = {}
+            data.setdefault(current_list, []).append(item)
+            current_item = item
+            rem = line[4:]
+            if ':' in rem:
+                k, v = rem.split(':', 1)
+                current_item[k.strip()] = v.strip().strip('"')
+            continue
+        if line.startswith('    ') and current_item is not None and ':' in line.strip():
+            k, v = line.strip().split(':', 1)
+            val = v.strip().strip('"')
+            if val.startswith('[') and val.endswith(']'):
+                val = [x.strip().strip('"') for x in val[1:-1].split(',') if x.strip()]
+            current_item[k.strip()] = val
+            continue
+        if not line.startswith(' ') and ':' in line:
+            k, v = line.split(':', 1)
+            key = k.strip()
+            val = v.strip().strip('"')
+            if val == '':
+                current_list = key
+                data[current_list] = []
+                current_item = None
+            else:
+                data[key] = val
+                current_list = None
+                current_item = None
+    return data
+
 def _load_yaml_like(path: Path) -> dict[str, Any]:
     """Load YAML using PyYAML if available, else JSON fallback for YAML-compatible JSON."""
     text = path.read_text(encoding="utf-8")
@@ -17,7 +59,10 @@ def _load_yaml_like(path: Path) -> dict[str, Any]:
 
         data = yaml.safe_load(text)
     except Exception:
-        data = json.loads(text)
+        try:
+            data = json.loads(text)
+        except Exception:
+            data = _parse_min_yaml(text)
     if not isinstance(data, dict):
         raise ValueError(f"Expected mapping at top-level in {path}")
     return data

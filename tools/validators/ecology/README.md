@@ -452,3 +452,22 @@ Quarantine with reason codes, preserve reviewable receipts where policy allows, 
 </details>
 
 [Back to top](#top)
+
+---
+
+## Implemented validator scripts (current)
+
+The following scripts are currently implemented in this folder and executable as standalone checks:
+
+- `validate_ecology_bundle.py`
+- `validate_source_descriptors.py`
+- `validate_taxa.py`
+- `validate_occurrences.py`
+- `validate_habitat_surfaces.py`
+- `validate_habitat_assignments.py`
+- `validate_sensitivity.py`
+- `validate_catalog_closure.py`
+- `validate_release_bundle.py`
+- `validate_runtime_envelope.py`
+- `run_all.py`
+- `render_summary.py`
