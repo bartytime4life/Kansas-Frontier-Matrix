@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "kind": "FocusModePayload",
+  "status": "illustrative_only",
+  "query": "What changed in watershed condition?",
+  "response_envelope_ref": "runtime:response:illustrative-answer",
+  "trust_state": {
+    "outcome": "ANSWER",
+    "citations_required": true,
+    "policy_state": "allow"
+  }
+}

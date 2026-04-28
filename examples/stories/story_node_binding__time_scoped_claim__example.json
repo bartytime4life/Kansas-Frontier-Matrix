@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "kind": "StoryNodeBinding",
+  "status": "illustrative_only",
+  "node_id": "watershed-change-overview",
+  "temporal_scope": {
+    "start": "2019-01-01",
+    "end": "2025-12-31"
+  },
+  "claim_ref": "claim_001",
+  "evidence_refs": [
+    "catalog:stac:item/example-item"
+  ]
+}
