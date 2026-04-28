@@ -255,6 +255,23 @@ def test_cli_invalid_registry_exits_one(tmp_path: Path) -> None:
     assert "registry.layers must be an array" in result.stderr
 
 
+def test_cli_invalid_registry_json_exits_one(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    schema_path = tmp_path / "schema.json"
+    registry_path.write_text("{not-valid-json", encoding="utf-8")
+    write_json(schema_path, schema())
+
+    result = run_cli(
+        "--registry",
+        str(registry_path),
+        "--schema",
+        str(schema_path),
+    )
+
+    assert result.returncode == 1
+    assert "invalid json:" in result.stderr
+
+
 def test_cli_registry_with_invalid_layer_entry_exits_one(tmp_path: Path) -> None:
     registry_path = tmp_path / "registry.json"
     schema_path = tmp_path / "schema.json"
@@ -314,3 +331,46 @@ def test_cli_invalid_binding_schema_exits_one(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert "invalid registry:" in result.stderr
     assert "binding schema invalid" in result.stderr
+
+
+def test_cli_invalid_binding_json_exits_one(tmp_path: Path) -> None:
+    registry_path, schema_path = setup_registry(tmp_path)
+    binding_path = tmp_path / "bindings" / "active.binding.json"
+    binding_path.write_text("{not-valid-json", encoding="utf-8")
+
+    result = run_cli(
+        "--registry",
+        str(registry_path),
+        "--schema",
+        str(schema_path),
+    )
+
+    assert result.returncode == 1
+    assert "invalid json:" in result.stderr
+
+
+def test_cli_malformed_schema_runtime_error_exits_five(tmp_path: Path) -> None:
+    registry_path, _ = setup_registry(tmp_path)
+    schema_path = tmp_path / "schema.json"
+    write_json(
+        schema_path,
+        {
+            "type": "object",
+            "properties": {
+                "layer_id": {
+                    "type": "string",
+                    "pattern": "[",
+                }
+            },
+        },
+    )
+
+    result = run_cli(
+        "--registry",
+        str(registry_path),
+        "--schema",
+        str(schema_path),
+    )
+
+    assert result.returncode == 5
+    assert "internal registry error:" in result.stderr

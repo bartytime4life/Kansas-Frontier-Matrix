@@ -211,6 +211,18 @@ def test_resolve_binding_path_relative_to_registry() -> None:
     assert resolved == Path("data/registry/ecology/map_layers/bindings/ndvi.binding.json")
 
 
+def test_resolve_binding_path_accepts_absolute_paths() -> None:
+    registry_path = Path("data/registry/ecology/map_layers/registry.json")
+    absolute_binding = Path("/tmp/kfm/absolute.binding.json")
+
+    resolved = resolve_binding_path(
+        registry_path=registry_path,
+        binding_ref=str(absolute_binding),
+    )
+
+    assert resolved == absolute_binding
+
+
 def test_get_layer_entry_finds_layer() -> None:
     value = registry()
 
@@ -316,6 +328,24 @@ def test_load_layer_binding_spec_hash_mismatch_fails(tmp_path: Path) -> None:
     )
 
     with pytest.raises(LayerRegistryError, match="binding spec_hash does not match"):
+        load_layer_binding(
+            registry_path=registry_path,
+            layer_id="kfm.ecology.vegetation.ndvi_change.v1",
+            schema_path=schema_path,
+        )
+
+
+def test_load_layer_binding_invalid_json_fails_with_decode_error(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    schema_path = tmp_path / "schema.json"
+    binding_path = tmp_path / "bindings" / "ndvi.binding.json"
+
+    write_json(registry_path, registry())
+    write_json(schema_path, schema())
+    binding_path.parent.mkdir(parents=True, exist_ok=True)
+    binding_path.write_text("{not-valid-json", encoding="utf-8")
+
+    with pytest.raises(json.JSONDecodeError):
         load_layer_binding(
             registry_path=registry_path,
             layer_id="kfm.ecology.vegetation.ndvi_change.v1",
