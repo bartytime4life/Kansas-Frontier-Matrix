@@ -287,7 +287,7 @@ Validation should be offline-first and fixture-driven until source terms and rep
 
 ```bash
 # Illustrative only — NEEDS VERIFICATION against mounted repo conventions.
-python tools/validators/ecology/validate_ecology_fixture.py tests/fixtures/ecology/valid/taxon_record.json
+python tools/validators/ecology/validate_ecology_fixture.py tests/fixtures/ecology/valid/taxon_record.valid.json
 ```
 
 <p align="right"><a href="#ecology-domain--control-plane">Back to top ↑</a></p>

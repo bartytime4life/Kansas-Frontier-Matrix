@@ -249,8 +249,8 @@ find tests/fixtures -maxdepth 3 -type f | grep -E 'ecology|habitat|fauna|flora' 
 # NEEDS VERIFICATION: replace with the repo-native schema validator command.
 python tools/validators/schemas/validate_schema_fixture.py \
   --schema schemas/contracts/v1/ecology/habitat_assignment.schema.json \
-  --valid tests/fixtures/ecology/habitat_assignment.valid.json \
-  --invalid tests/fixtures/ecology/habitat_assignment.missing_class.invalid.json
+  --valid tests/fixtures/ecology/valid/habitat_assignment.valid.json \
+  --invalid tests/fixtures/ecology/invalid/habitat_assignment.missing_class.invalid.json
 ```
 
 > [!CAUTION]
