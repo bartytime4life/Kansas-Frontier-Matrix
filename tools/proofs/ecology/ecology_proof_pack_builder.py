@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 
 PASSING_RECEIPT_DECISIONS = {
@@ -17,12 +21,31 @@ PROMOTABLE_MANIFEST_DECISIONS = {
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8").strip()
+    fenced_match = re.match(r"^```[a-zA-Z0-9_-]*\n(.*?)\n```", text, flags=re.DOTALL)
+    if fenced_match:
+        text = fenced_match.group(1).strip()
+
+    value = json.loads(text)
 
     if not isinstance(value, dict):
         raise ValueError("Proof-pack input must be a JSON object.")
 
     return value
+
+
+def assert_schema_supported(schema: dict[str, Any]) -> None:
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if "type" in node and not isinstance(node["type"], (str, list)):
+                raise SchemaError("schema 'type' must be a string or array of strings")
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(schema)
 
 
 def normalize_catalog_refs(catalog_refs: dict[str, Any] | None) -> dict[str, list[str]]:
@@ -99,6 +122,68 @@ def build_proof_pack(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "proof_complete",
     }
+
+
+def validate_proof_pack(
+    *,
+    proof_pack: dict[str, Any],
+    schema_path: Path,
+) -> list[str]:
+    schema = load_json(schema_path)
+    assert_schema_supported(schema)
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema)
+
+    schema_errors = [
+        f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
+        for error in sorted(
+            validator.iter_errors(proof_pack),
+            key=lambda item: list(item.path),
+        )
+    ]
+
+    const_errors = list(_collect_const_errors(schema, proof_pack))
+    return sorted(set(schema_errors + const_errors))
+
+
+def _collect_const_errors(
+    schema_node: Any,
+    data_node: Any,
+    path: tuple[str, ...] = (),
+) -> list[str]:
+    errors: list[str] = []
+
+    if not isinstance(schema_node, dict):
+        return errors
+
+    if "const" in schema_node and data_node != schema_node["const"]:
+        path_text = ".".join(path) or "<root>"
+        errors.append(f"{path_text}: expected constant value {schema_node['const']!r}")
+
+    properties = schema_node.get("properties")
+    if isinstance(properties, dict) and isinstance(data_node, dict):
+        for key, child_schema in properties.items():
+            if key in data_node:
+                errors.extend(
+                    _collect_const_errors(
+                        child_schema,
+                        data_node[key],
+                        (*path, key),
+                    )
+                )
+
+    items_schema = schema_node.get("items")
+    if isinstance(items_schema, dict) and isinstance(data_node, list):
+        for index, item in enumerate(data_node):
+            errors.extend(
+                _collect_const_errors(
+                    items_schema,
+                    item,
+                    (*path, str(index)),
+                )
+            )
+
+    return errors
 
 
 def write_proof_pack(path: Path, proof_pack: dict[str, Any]) -> None:
