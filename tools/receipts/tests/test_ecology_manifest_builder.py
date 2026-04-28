@@ -145,3 +145,18 @@ def test_write_manifest_creates_parent_directory(tmp_path: Path) -> None:
     assert manifest_path.exists()
     written = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert written["decision"] == "not_ready"
+
+
+def test_markdown_fenced_receipt_is_supported(tmp_path: Path) -> None:
+    receipt_path = tmp_path / "receipt.md"
+    payload = json.dumps(validator_receipt(), indent=2)
+    receipt_path.write_text(f"```json\n{payload}\n```\n", encoding="utf-8")
+
+    manifest = build_manifest(
+        candidate_id="eco_index.example",
+        candidate_type="eco_index",
+        spec_hash=SPEC_HASH,
+        receipt_paths=[receipt_path],
+    )
+
+    assert manifest["decision"] == "ready_for_promotion"
