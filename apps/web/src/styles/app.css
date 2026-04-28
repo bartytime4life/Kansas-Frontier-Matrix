@@ -61,3 +61,30 @@ body {
   font-size: 0.9rem;
   color: #334155;
 }
+
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 0 8px 8px;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  z-index: 1000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

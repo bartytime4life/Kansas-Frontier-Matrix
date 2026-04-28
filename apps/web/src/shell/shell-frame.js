@@ -7,12 +7,13 @@ export function createShellFrame() {
   shell.className = "shell-frame";
 
   shell.innerHTML = `
+    <a class="skip-link" href="#workspace-start">Skip to workspace</a>
     <header class="top-bar">
       <h1>KFM Governed Web Shell</h1>
       <p class="subtitle">Map-first · Evidence-first · Cite-or-abstain</p>
     </header>
-    <section class="workspace">
-      <aside class="left-rail">
+    <section class="workspace" id="workspace-start" tabindex="-1" aria-label="Map and trust workspace">
+      <aside class="left-rail" aria-label="Primary">
         <h2>Layers</h2>
         <ul>
           <li>Hydrology (released)</li>
