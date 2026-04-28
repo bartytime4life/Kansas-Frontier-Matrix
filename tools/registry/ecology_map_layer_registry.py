@@ -45,6 +45,28 @@ def load_registry(path: Path) -> dict[str, Any]:
     if not isinstance(layers, list):
         raise LayerRegistryError("registry.layers must be an array")
 
+    for index, layer in enumerate(layers):
+        if not isinstance(layer, dict):
+            raise LayerRegistryError(f"registry.layers[{index}] must be an object")
+
+        layer_id = layer.get("layer_id")
+        if not isinstance(layer_id, str) or not layer_id:
+            raise LayerRegistryError(
+                f"registry.layers[{index}].layer_id must be a non-empty string"
+            )
+
+        status = layer.get("status")
+        if not isinstance(status, str) or not status:
+            raise LayerRegistryError(
+                f"registry.layers[{index}].status must be a non-empty string"
+            )
+
+        binding_ref = layer.get("binding_ref")
+        if not isinstance(binding_ref, str) or not binding_ref:
+            raise LayerRegistryError(
+                f"registry.layers[{index}].binding_ref must be a non-empty string"
+            )
+
     return registry
 
 
@@ -123,15 +145,10 @@ def active_layer_bindings(
     bindings: list[dict[str, Any]] = []
 
     for entry in registry["layers"]:
-        if not isinstance(entry, dict):
-            continue
-
         if entry.get("status") != "active":
             continue
 
-        layer_id = entry.get("layer_id")
-        if not isinstance(layer_id, str):
-            continue
+        layer_id = entry["layer_id"]
 
         bindings.append(
             load_layer_binding(

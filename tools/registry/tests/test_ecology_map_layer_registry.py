@@ -125,6 +125,81 @@ def test_load_registry_rejects_missing_layers_array(tmp_path: Path) -> None:
         load_registry(registry_path)
 
 
+def test_load_registry_rejects_non_object_layer_entry(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    write_json(
+        registry_path,
+        {
+            "registry_id": "kfm.registry.ecology.map_layers",
+            "layers": ["bad-entry"],
+        },
+    )
+
+    with pytest.raises(LayerRegistryError, match="registry.layers\\[0\\] must be an object"):
+        load_registry(registry_path)
+
+
+def test_load_registry_rejects_missing_layer_id(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    write_json(
+        registry_path,
+        {
+            "registry_id": "kfm.registry.ecology.map_layers",
+            "layers": [{"binding_ref": "bindings/a.json", "status": "active"}],
+        },
+    )
+
+    with pytest.raises(
+        LayerRegistryError,
+        match="registry.layers\\[0\\]\\.layer_id must be a non-empty string",
+    ):
+        load_registry(registry_path)
+
+
+def test_load_registry_rejects_missing_status(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    write_json(
+        registry_path,
+        {
+            "registry_id": "kfm.registry.ecology.map_layers",
+            "layers": [
+                {
+                    "layer_id": "kfm.ecology.vegetation.ndvi_change.v1",
+                    "binding_ref": "bindings/a.json",
+                }
+            ],
+        },
+    )
+
+    with pytest.raises(
+        LayerRegistryError,
+        match="registry.layers\\[0\\]\\.status must be a non-empty string",
+    ):
+        load_registry(registry_path)
+
+
+def test_load_registry_rejects_missing_binding_ref(tmp_path: Path) -> None:
+    registry_path = tmp_path / "registry.json"
+    write_json(
+        registry_path,
+        {
+            "registry_id": "kfm.registry.ecology.map_layers",
+            "layers": [
+                {
+                    "layer_id": "kfm.ecology.vegetation.ndvi_change.v1",
+                    "status": "active",
+                }
+            ],
+        },
+    )
+
+    with pytest.raises(
+        LayerRegistryError,
+        match="registry.layers\\[0\\]\\.binding_ref must be a non-empty string",
+    ):
+        load_registry(registry_path)
+
+
 def test_resolve_binding_path_relative_to_registry() -> None:
     registry_path = Path("data/registry/ecology/map_layers/registry.json")
 
