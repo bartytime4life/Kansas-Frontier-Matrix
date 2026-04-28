@@ -2,35 +2,157 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kfm.local/schemas/contracts/v1/ecology/observation_plot.schema.json",
   "title": "Ecology Observation Plot",
+  "description": "Governed ecology observation plot record for field, sensor, specimen, or curated observation events. Public use must respect rights, sensitivity, and geometry policy.",
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "schema_version",
+    "object_type",
     "plot_id",
     "observed_at",
     "geometry",
+    "geometry_policy",
     "taxa",
     "method",
+    "source_id",
+    "source_role",
     "source_ref",
     "sensitivity",
-    "rights_status"
+    "rights_status",
+    "policy_label",
+    "spec_hash",
+    "evidence_refs"
   ],
   "properties": {
-    "plot_id": {"type": "string", "minLength": 1},
-    "observed_at": {"type": "string", "format": "date-time"},
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "object_type": {
+      "type": "string",
+      "const": "ObservationPlot"
+    },
+    "plot_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^kfm://plot/.+"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "geometry": {
       "type": "object",
-      "required": ["type", "coordinates"],
+      "required": [
+        "type",
+        "coordinates"
+      ],
       "properties": {
-        "type": {"type": "string", "enum": ["Point", "Polygon", "MultiPolygon"]},
+        "type": {
+          "type": "string",
+          "enum": [
+            "Point",
+            "Polygon",
+            "MultiPolygon"
+          ]
+        },
         "coordinates": {}
       },
       "additionalProperties": true
     },
-    "taxa": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-    "method": {"type": "string", "enum": ["field_survey", "remote_sensor", "specimen", "citizen_science"]},
-    "source_ref": {"type": "string", "minLength": 1},
-    "sensitivity": {"type": "string", "enum": ["public", "generalize", "restricted", "review_required"]},
-    "rights_status": {"type": "string", "enum": ["public", "open", "controlled", "restricted", "unknown"]},
-    "evidence_refs": {"type": "array", "items": {"type": "string"}}
+    "geometry_ref": {
+      "type": "string",
+      "pattern": "^kfm://geometry/.+"
+    },
+    "geometry_policy": {
+      "type": "string",
+      "enum": [
+        "public",
+        "generalized",
+        "restricted",
+        "withheld"
+      ]
+    },
+    "taxa": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "taxon_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://taxon/.+"
+      }
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "field_survey",
+        "remote_sensor",
+        "specimen",
+        "citizen_science"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_role": {
+      "type": "string",
+      "const": "OBSERVATION_SYSTEM"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": [
+        "public",
+        "generalize",
+        "restricted",
+        "review_required"
+      ]
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": [
+        "public",
+        "open",
+        "controlled",
+        "restricted",
+        "unknown"
+      ]
+    },
+    "measurement_summary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "policy_label": {
+      "type": "string",
+      "enum": [
+        "public",
+        "restricted_until_reviewed",
+        "restricted",
+        "internal"
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^kfm://evidence/.+"
+      }
+    }
   }
 }
