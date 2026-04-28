@@ -1,0 +1,24 @@
+{
+  "schema_version": "v1",
+  "object_type": "HabitatAssignment",
+  "assignment_id": "kfm://habitat-assignment/ks-ellsworth-001",
+  "occurrence_id": "kfm://occurrence/ks-ellsworth-001",
+  "surface_id": "kfm://habitat-surface/nlcd-2021-cell-3901",
+  "plot_id": "kfm://plot/ks-ellsworth-101",
+  "habitat_class": "Mixed Grass Prairie",
+  "classification_system": "KFM-Habitat-v1",
+  "class_confidence": 0.91,
+  "derivation_method": "raster-overlay",
+  "derivation_parameters": {
+    "buffer_m": 30,
+    "version": "2026-01"
+  },
+  "derived_at": "2026-01-20T14:32:11Z",
+  "quality_flag": "high",
+  "knowledge_character": "derived",
+  "policy_label": "public",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "evidence_refs": [
+    "kfm://evidence/ecology/habitat-assignment-valid-001"
+  ]
+}

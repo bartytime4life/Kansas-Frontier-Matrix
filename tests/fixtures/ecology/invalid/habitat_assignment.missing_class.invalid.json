@@ -1,0 +1,16 @@
+{
+  "schema_version": "v1",
+  "object_type": "HabitatAssignment",
+  "assignment_id": "kfm://habitat-assignment/ks-ellsworth-invalid-001",
+  "occurrence_id": "kfm://occurrence/ks-ellsworth-invalid-001",
+  "surface_id": "kfm://habitat-surface/nlcd-2021-cell-3902",
+  "classification_system": "KFM-Habitat-v1",
+  "derivation_method": "raster-overlay",
+  "derived_at": "2026-01-20T14:32:11Z",
+  "quality_flag": "medium",
+  "knowledge_character": "derived",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "evidence_refs": [
+    "kfm://evidence/ecology/habitat-assignment-invalid-001"
+  ]
+}
