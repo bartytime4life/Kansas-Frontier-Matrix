@@ -10,7 +10,7 @@ updated: NEEDS_VERIFICATION__YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION__public_or_restricted
 related: [../../README.md, ../../../README.md, ../../../policy/README.md, ../../../e2e/runtime_proof/README.md, ../../../e2e/release_assembly/README.md, ../../../e2e/correction/README.md, ../../../../policy/README.md, ../../../../schemas/README.md, ../../../../contracts/README.md, ../../../../data/README.md]
 tags: [kfm, tests, fixtures, ecology, policy, fauna, flora, habitat, sensitivity, rights]
-notes: [Target branch was not mounted in this session; exact owner, dates, policy label, fixture inventory, runner wiring, and adjacent path validity remain verification items.]
+notes: [Fixture inventory was updated in-session; owner, dates, policy label, and runner wiring still require branch-level verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -58,7 +58,7 @@ In KFM terms, **ecology** here is an umbrella fixture context for fauna, flora, 
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current session** | The target file path was requested, but the active repository was not mounted in this workspace. Exact branch inventory, runner wiring, and leaf-level ownership remain unverified. |
+| **CONFIRMED — current session** | The repository is mounted and this fixture lane contains concrete allow/generalize/deny/abstain/error examples; ownership and runner wiring remain unverified. |
 | **CONFIRMED — KFM doctrine** | KFM uses an evidence-first, map-first, time-aware, governed posture; lifecycle state and public exposure must remain explicit; sensitive exact locations fail closed. |
 | **INFERRED — repo role** | This leaf should behave like a `tests/fixtures/` child surface: compact examples for proof lanes, not canonical ecology data. |
 | **PROPOSED — first useful fill** | Add one public-safe allow case, one evidence-thin hold/abstain case, one sensitive-location deny case, one rights-deny case, and one malformed error case. |
@@ -149,39 +149,29 @@ A minimal honest starter set is:
 
 ## Directory tree
 
-### Current safe claim
-
-The active branch contents for this exact leaf were not available in this session. The only safe inventory claim in this README is the requested target document itself.
-
-```text
-tests/fixtures/ecology/policy/
-└── README.md
-```
-
-### Possible next executable fill
-
-The structure below is **PROPOSED**. Preserve any existing branch convention if the mounted repository already uses different names.
+### Current inventory
 
 ```text
 tests/fixtures/ecology/policy/
 ├── README.md
-├── allow/
-│   └── generalized_public_habitat_support/
-│       ├── input.example.json
-│       └── expected.policy_decision.example.json
-├── hold/
-│   ├── missing_evidence_bundle/
-│   └── unresolved_steward_review/
-├── deny/
-│   ├── sensitive_exact_location/
-│   ├── unknown_or_restricted_rights/
-│   ├── source_role_misuse/
-│   ├── raw_work_quarantine_public_leak/
-│   └── missing_redaction_receipt/
-└── error/
-    ├── malformed_ecology_policy_input/
-    └── invalid_lifecycle_state/
+├── abstain_unresolved_evidence_bundle.json
+├── allow_derived_layer_with_catalog_closure.json
+├── allow_public_taxon.json
+├── deny_derived_layer_as_confirmed.json
+├── deny_sensitive_exact_geometry.json
+├── deny_unknown_rights.json
+├── deny_unresolved_evidence_bundle.json
+├── derived_layer_as_confirmed.policy.json
+├── error_malformed_policy_input.json
+├── generalize_sensitive_occurrence.json
+├── restricted_exact_location_case.json
+├── sensitive_exact_public_geometry.policy.json
+└── unknown_rights.policy.json
 ```
+
+### Next executable fill
+
+Keep adding cases in the current flat-file naming convention unless a runner explicitly requires nested lanes.
 
 > [!NOTE]
 > The example filenames are placement guidance, not schema law. If the branch already has a fixture naming convention, use that convention and update this tree.
