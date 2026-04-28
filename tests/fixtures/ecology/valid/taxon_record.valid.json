@@ -1,16 +1,22 @@
 {
-  "record_id": "taxon-record-valid-001",
-  "source_refs": ["kfs_taxonomy_program"],
-  "dataset_refs": ["ecology.taxon_record.v1"],
-  "catalog_refs": ["catalog://ecology/taxon_record/v1"],
+  "schema_version": "v1",
+  "object_type": "TaxonRecord",
+  "taxon_id": "kfm://taxon/asclepias-syriaca",
+  "scientific_name": "Asclepias syriaca",
+  "vernacular_name": "Common milkweed",
+  "common_names": [
+    "Common milkweed",
+    "Silkweed"
+  ],
+  "rank": "species",
+  "family": "Apocynaceae",
+  "authority_source": "USDA PLANTS",
+  "source_id": "usda_plants",
+  "source_role": "TAXONOMIC_AUTHORITY",
+  "taxonomic_status": "accepted",
+  "policy_label": "public",
   "spec_hash": "sha256:4a471f0f48de7fb95f2f5c6e8cd9678ef6e43a1c18e67c2df92f90ece2f13f4b",
-  "policy_id": "eco-generalize-v1",
-  "sensitivity": "generalize",
-  "rights_status": "controlled",
-  "taxon": {
-    "scientific_name": "Asclepias syriaca",
-    "common_name": "Common milkweed",
-    "rank": "species"
-  },
-  "evidence_refs": ["evidence://ecology/taxon-record-valid-001"]
+  "evidence_refs": [
+    "kfm://evidence/ecology/taxon-record-valid-001"
+  ]
 }

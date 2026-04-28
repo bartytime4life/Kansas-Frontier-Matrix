@@ -1,13 +1,34 @@
 {
-  "occurrence_id": "sensitive-occurrence-valid-001",
-  "source_refs": ["kfs_rare_species_program"],
-  "dataset_refs": ["ecology.sensitive_occurrence_record.v1"],
-  "catalog_refs": ["catalog://ecology/sensitive_occurrence_record/v1"],
-  "spec_hash": "sha256:9e58e2b3f06f5af4f8f4a6132ea8cbc243cd6da9ef2a67fbe772ec5e932ea569",
-  "policy_id": "eco-restricted-v1",
+  "schema_version": "v1",
+  "object_type": "SensitiveOccurrenceRecord",
+  "occurrence_id": "kfm://occurrence/ks-sensitive-001",
+  "taxon_id": "taxon:asclepias-meadii",
+  "taxon_ref": "kfm://taxon/asclepias-meadii",
+  "source_id": "kfs_field_plots",
+  "source_role": "SENSITIVE_OCCURRENCE",
+  "source_ref": "source://kfs_field_plots/restricted/ks-sensitive-001",
   "sensitivity": "restricted",
+  "sensitivity_class": "threatened_or_endangered_species",
+  "geometry_private": {
+    "type": "Point",
+    "coordinates": [
+      -98.244832,
+      38.761512
+    ]
+  },
+  "restricted_geometry_ref": "kfm://restricted/geometry/ks-sensitive-001",
+  "geometry_public": null,
+  "generalized_geometry_ref": "kfm://geometry/generalized/ks-sensitive-001",
+  "generalization_method": "county-centroid-offset",
+  "precision_served": "suppressed",
+  "public_geometry_policy": "deny_exact_generalize_required",
+  "public_visibility": "withheld",
+  "policy_id": "eco-restricted-v1",
+  "policy_label": "restricted",
   "rights_status": "controlled",
-  "exact_geometry_present": false,
-  "geometry_precision": "generalized",
-  "evidence_refs": ["evidence://ecology/sensitive-occurrence-valid-001"]
+  "redaction_receipt_ref": "kfm://receipt/redaction/ks-sensitive-001",
+  "spec_hash": "sha256:9e58e2b3f06f5af4f8f4a6132ea8cbc243cd6da9ef2a67fbe772ec5e932ea569",
+  "evidence_refs": [
+    "kfm://evidence/ecology/sensitive-occurrence-valid-001"
+  ]
 }
