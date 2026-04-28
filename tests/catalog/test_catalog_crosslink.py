@@ -40,31 +40,8 @@ def _read(path: Path) -> dict:
 
 
 def test_catalog_crosslink_passes_for_aligned_triplet(tmp_path: Path) -> None:
-    decision = {
-        "release_ref": "kfm:release:floodplain-kansas:v1",
-        "catalog_refs": {
-            "stac": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-            "dcat": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-            "prov": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-        },
-    }
-
-    record = {
-        "release_ref": "kfm:release:floodplain-kansas:v1",
-        "catalog_refs": decision["catalog_refs"],
-    }
+    decision = _read(FIXTURES / "aligned-decision.json")
+    record = _read(FIXTURES / "aligned-record.json")
 
     result = _run(decision, record, tmp_path)
     assert result.returncode == 0
@@ -112,26 +89,7 @@ def test_catalog_crosslink_fails_for_prov_subject_mismatch(tmp_path: Path) -> No
 
 
 def test_catalog_crosslink_fails_for_release_ref_mismatch(tmp_path: Path) -> None:
-    decision = {
-        "release_ref": "kfm:release:floodplain-kansas:v1",
-        "catalog_refs": {
-            "stac": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-            "dcat": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-            "prov": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-        },
-    }
+    decision = _read(FIXTURES / "aligned-decision.json")
     record = _read(FIXTURES / "promotion-record-mismatch.json")
 
     result = _run(decision, record, tmp_path)
@@ -144,21 +102,7 @@ def test_catalog_crosslink_fails_for_release_ref_mismatch(tmp_path: Path) -> Non
 
 
 def test_catalog_crosslink_fails_for_missing_triplet_ref(tmp_path: Path) -> None:
-    decision = {
-        "release_ref": "kfm:release:floodplain-kansas:v1",
-        "catalog_refs": {
-            "stac": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-            "dcat": {
-                "subject_id": "kfm:subject:floodplain-kansas",
-                "version": "v1",
-                "release_ref": "kfm:release:floodplain-kansas:v1",
-            },
-        },
-    }
+    decision = _read(FIXTURES / "missing-prov-decision.json")
     record = {
         "release_ref": "kfm:release:floodplain-kansas:v1",
         "catalog_refs": decision["catalog_refs"],
