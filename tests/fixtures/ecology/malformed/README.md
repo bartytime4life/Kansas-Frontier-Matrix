@@ -154,27 +154,28 @@ Use this directory for compact malformed objects that are valuable because they 
 
 ## Directory tree
 
-### Current safe claim
+### Verified branch snapshot
 
-`NEEDS VERIFICATION`: active-branch contents for this exact target directory were not directly available in this session. Treat the tree below as the intended, reviewable shape.
+Current branch contents for this directory are verified below.
 
 ```text
 tests/fixtures/ecology/malformed/
 ├── README.md
+├── error_invalid_fixture_shape.json
+├── geometry/
+│   └── precision_served_missing.json
 ├── occurrence/
-│   ├── missing_required_fields.json
 │   ├── missing_provenance.json
+│   ├── missing_required_fields.json
 │   └── source_role_flattened.json
 ├── rights/
 │   └── redistribution_posture_missing.json
+├── runtime/
+│   └── malformed_envelope_missing_reason_code.json
 ├── sensitivity/
 │   └── exact_location_conflicts_with_sensitive_flag.json
-├── taxonomy/
-│   └── blank_scientific_name.json
-├── geometry/
-│   └── precision_served_missing.json
-└── runtime/
-    └── malformed_envelope_missing_reason_code.json
+└── taxonomy/
+    └── blank_scientific_name.json
 ```
 
 ### Naming pattern

@@ -163,7 +163,21 @@ tests/fixtures/ecology/
 │   └── taxon_record.missing_spec_hash.invalid.json
 ├── malformed/
 │   ├── README.md
-│   └── error_invalid_fixture_shape.json
+│   ├── error_invalid_fixture_shape.json
+│   ├── geometry/
+│   │   └── precision_served_missing.json
+│   ├── occurrence/
+│   │   ├── missing_provenance.json
+│   │   ├── missing_required_fields.json
+│   │   └── source_role_flattened.json
+│   ├── rights/
+│   │   └── redistribution_posture_missing.json
+│   ├── runtime/
+│   │   └── malformed_envelope_missing_reason_code.json
+│   ├── sensitivity/
+│   │   └── exact_location_conflicts_with_sensitive_flag.json
+│   └── taxonomy/
+│       └── blank_scientific_name.json
 ├── policy/
 │   ├── README.md
 │   ├── allow_derived_layer_with_catalog_closure.json
@@ -270,6 +284,14 @@ python tools/validators/run_all.py --fixtures tests/fixtures/ecology
 | Sensitive exact geometry | `invalid/sensitive_exact_geometry_public_payload.json` |
 | Modeled/observed collapse | `invalid/modeled_habitat_labeled_observed_occurrence.json` |
 | Malformed body | `malformed/error_invalid_fixture_shape.json` |
+| Malformed missing required fields | `malformed/occurrence/missing_required_fields.json` |
+| Malformed missing provenance | `malformed/occurrence/missing_provenance.json` |
+| Malformed source-role flattening | `malformed/occurrence/source_role_flattened.json` |
+| Malformed rights posture | `malformed/rights/redistribution_posture_missing.json` |
+| Malformed sensitivity conflict | `malformed/sensitivity/exact_location_conflicts_with_sensitive_flag.json` |
+| Malformed blank taxon name | `malformed/taxonomy/blank_scientific_name.json` |
+| Malformed missing served precision | `malformed/geometry/precision_served_missing.json` |
+| Malformed runtime envelope | `malformed/runtime/malformed_envelope_missing_reason_code.json` |
 
 ### Outcome grammar
 

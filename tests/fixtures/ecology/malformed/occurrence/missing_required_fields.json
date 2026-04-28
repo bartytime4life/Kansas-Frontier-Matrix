@@ -1,0 +1,9 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyOccurrenceSupport",
+  "fixture_id": "kfm://fixture/ecology/malformed/occurrence/missing_required_fields",
+  "malformed_reason": "missing_required_fields",
+  "source_role": "observed_occurrence",
+  "expected_outcome": "ERROR",
+  "notes": "Intentionally omits required occurrence identifier and spec_hash."
+}
