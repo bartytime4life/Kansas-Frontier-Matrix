@@ -6,62 +6,99 @@ version: v1
 status: draft
 owners: NEEDS-VERIFICATION
 created: NEEDS-VERIFICATION
-updated: 2026-04-22
+updated: 2026-04-27
 policy_label: NEEDS-VERIFICATION
 related: [../README.md, ../../README.md, ../architecture/README.md, ../sources/README.md, ../../data/registry/README.md, ../../schemas/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md]
-tags: [kfm, domains, domain-lanes, evidence, governance, map-first, time-aware]
-notes: [doc_id, owners, created, policy_label, and related links require verification in a mounted repository before publication]
+tags: [kfm, domains, domain-lanes, evidence, governance, map-first, time-aware, source-roles, publication]
+notes: [doc_id, owners, created, policy_label, related links, schema-home authority, and actual repo path require verification in a mounted repository before publication]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Domain Lanes
 
+<p align="center">
+  <strong>Kansas Frontier Matrix</strong><br>
+  Evidence-first • map-first • time-aware • governed
+</p>
+
+<p align="center">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
+  <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
+  <img alt="Repo evidence: needs verification" src="https://img.shields.io/badge/repo-NEEDS_VERIFICATION-lightgrey">
+  <img alt="Implementation: unknown" src="https://img.shields.io/badge/implementation-UNKNOWN-lightgrey">
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Lifecycle: RAW to PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-8250df">
+  <img alt="Release: not published" src="https://img.shields.io/badge/release-not_published-lightgrey">
+  <img alt="Review: TODO" src="https://img.shields.io/badge/review-TODO-lightgrey">
+</p>
+
+<p align="center">
+  <a href="#scope">Scope</a> ·
+  <a href="#truth-posture">Truth posture</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#accepted-inputs">Inputs</a> ·
+  <a href="#exclusions">Exclusions</a> ·
+  <a href="#domain-lane-registry">Lane registry</a> ·
+  <a href="#source-role-discipline">Source roles</a> ·
+  <a href="#domain-lifecycle">Lifecycle</a> ·
+  <a href="#validation-gates">Validation</a> ·
+  <a href="#definition-of-done">Definition of done</a>
+</p>
+
 Directory landing page for KFM domain documentation: what each lane may claim, what it must prove, and where domain knowledge must not bypass governance.
 
-> [!NOTE]
-> **Status:** `experimental`  
-> **Owners:** `NEEDS VERIFICATION`  
-> **Path:** `docs/domains/README.md`  
-> **Repo fit:** domain documentation landing under [`../README.md`](../README.md) and the repository root [`../../README.md`](../../README.md). All downstream lane links are candidate homes until a mounted checkout verifies the tree.
->
-> [![status](https://img.shields.io/badge/status-experimental-orange)](#scope)
-> [![posture](https://img.shields.io/badge/posture-evidence--first-blue)](#scope)
-> [![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-8250df)](#domain-lifecycle)
-> [![truth](https://img.shields.io/badge/truth-CONFIRMED%20%2F%20INFERRED%20%2F%20PROPOSED%20%2F%20UNKNOWN-0969da)](#truth-labels-used-here)
-> [![policy](https://img.shields.io/badge/policy-fail--closed-b60205)](#definition-of-done)
-> [![repo](https://img.shields.io/badge/repo--state-NEEDS%20VERIFICATION-lightgrey)](#repo-fit)
->
-> **Quick jumps:** [Scope](#scope) · [Truth labels](#truth-labels-used-here) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Domain registry](#domain-lane-registry) · [Lifecycle](#domain-lifecycle) · [Minimum lane README](#minimum-lane-readme-contract) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+| Field | Value |
+|---|---|
+| Status | `draft` |
+| Owners | `NEEDS VERIFICATION` |
+| Target path | `docs/domains/README.md` — `NEEDS VERIFICATION` in the mounted repo |
+| Evidence mode for this revision | `CORPUS_ONLY` / `NO_LOCAL_REPO_EVIDENCE` until a real checkout is inspected |
+| Policy label | `NEEDS VERIFICATION` |
+| Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, sovereignty, privacy, cultural, living-person, DNA, exact-location, or critical-infrastructure risk |
+| Primary job | Orient maintainers to domain lanes, domain burdens, source-role discipline, release posture, and review gates |
+| Immediate next check | Mount the repo, verify path conventions, resolve owners/policy label, and confirm linked homes before publication |
 
 > [!IMPORTANT]
-> This README is an orientation and governance entrypoint. It does **not** prove that every listed lane directory, schema, validator, route, workflow, artifact, or runtime behavior exists. Treat implementation-specific links as `PROPOSED` or `NEEDS VERIFICATION` until current repo evidence, tests, workflows, emitted artifacts, or runtime logs verify them.
+> This README is repo-ready guidance, not proof of current implementation. Claims about actual files, tests, workflows, schemas, routes, UI components, dashboards, emitted proof objects, or runtime behavior remain `UNKNOWN` until verified from current repository evidence.
+
+| What this document does | What it does not do |
+|---|---|
+| Defines the governed role of domain-lane documentation. | Does not prove that every listed lane directory exists. |
+| Explains accepted inputs, exclusions, source roles, sensitivity posture, and review gates. | Does not admit sources, authorize public release, or replace policy-as-code. |
+| Gives maintainers a consistent lane README contract and review checklist. | Does not create schemas, OpenAPI contracts, validators, workflows, routes, or artifacts. |
+| Protects KFM’s evidence-first, map-first, time-aware trust path. | Does not let maps, summaries, AI answers, graph edges, tiles, indexes, or scenes become canonical truth. |
 
 ---
+
+<a id="scope"></a>
 
 ## Scope
 
 `docs/domains/` is where KFM explains **domain lane meaning** before downstream systems ingest, validate, render, summarize, review, or publish that meaning.
 
-A domain lane is a bounded knowledge area with its own vocabulary, source roles, sensitivity burden, evidence expectations, public-release posture, and correction responsibilities. Domain docs should make those constraints inspectable before they become schemas, source descriptors, API payloads, MapLibre layers, Focus answers, Story Nodes, release bundles, or proof objects.
+A domain lane is a bounded knowledge area with its own vocabulary, source roles, sensitivity burden, evidence expectations, public-release posture, and correction responsibilities. Domain docs should make those constraints inspectable before they become schemas, source descriptors, API payloads, MapLibre layers, Focus answers, Story Nodes, release bundles, proof objects, or public claims.
 
 ### This README owns
 
 - the domain documentation entrypoint;
-- the lane map and lane burden summary;
-- minimum expectations for each lane README;
-- the boundary between domain documentation and machine/runtime surfaces;
+- the candidate lane map and lane burden summary;
+- the minimum contract for each lane README;
+- the boundary between domain meaning and machine/runtime surfaces;
+- directory-wide anti-collapse rules;
+- publication, sensitivity, correction, and rollback expectations for lane docs;
 - placeholders that must be resolved before publication.
 
 ### This README does not own
 
 - canonical source descriptors;
-- machine schemas or OpenAPI contracts;
-- policy-as-code;
-- raw, work, quarantine, processed, catalog, triplet, or published data;
-- proof objects, receipts, release manifests, or catalog entries;
+- machine schemas, OpenAPI contracts, DTOs, or runtime envelopes;
+- executable policy;
+- RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data;
+- proof objects, receipts, release manifests, catalog records, or generated artifacts;
 - runtime route behavior;
-- UI components or MapLibre layer implementation.
+- UI components, MapLibre style/layer implementation, Cesium scenes, or model adapters;
+- source credentials, private steward contacts, or restricted operational runbooks.
 
 Those surfaces must remain linked, testable, and governed from their appropriate homes.
 
@@ -69,45 +106,47 @@ Those surfaces must remain linked, testable, and governed from their appropriate
 
 ---
 
-<a id="truth-labels-used-here"></a>
+<a id="truth-posture"></a>
 
-## Truth labels used here
+## Truth posture
 
 Use the narrowest truthful label. Do not upgrade a planning statement into implementation fact through confident tone.
 
 | Label | Use in this README |
 |---|---|
-| `CONFIRMED` | Verified by the supplied draft, attached KFM doctrine, or current-session workspace inspection. |
-| `INFERRED` | Strongly implied by KFM doctrine or repeated domain-lane plans, but not verified as current repo implementation. |
-| `PROPOSED` | Recommended path, lane, sequence, file, check, or rule that maintainers should verify before landing. |
-| `UNKNOWN` | Not verified because the mounted repository, workflows, tests, runtime, dashboards, logs, branch state, or current repo tree were not available. |
-| `NEEDS VERIFICATION` | A concrete check must happen before treating the item as current repo fact. |
+| `CONFIRMED` | Verified by the supplied draft, attached KFM doctrine, visible current-session files, or direct workspace inspection. |
+| `PROPOSED` | Recommended path, lane, sequence, file, check, schema home, or rule that maintainers should verify before landing. |
+| `UNKNOWN` | Not verified because the mounted repository, branch state, workflows, tests, runtime, dashboards, logs, source registries, or generated artifacts were not available. |
+| `NEEDS VERIFICATION` | A concrete check must happen before treating the item as current repo fact or release-ready posture. |
 
 > [!WARNING]
-> Domain docs are allowed to plan. They are not allowed to pretend. If a statement depends on actual files, route names, workflows, source descriptors, policy enforcement, or emitted proof objects, verify it first or label it.
+> Domain docs are allowed to plan. They are not allowed to pretend. If a statement depends on actual files, route names, workflows, source descriptors, policy enforcement, emitted proof objects, or runtime behavior, verify it first or label it.
 
 ### Evidence posture for this draft
 
 | Evidence class | What it can support here | What it cannot support here |
 |---|---|---|
-| Supplied Domain Lanes draft | The intended file role, title, KFM meta block shape, section anchors, lane list, lifecycle wording, and review checklist. | Current repository existence of any linked path. |
-| Attached KFM doctrine and domain reports | KFM terminology, governance posture, lane burdens, lifecycle, EvidenceBundle priority, UI/AI boundaries, and sensitivity defaults. | Exact current code, package manager, route names, schemas, policies, CI, dashboards, deployments, or branch protections. |
-| Mounted repo inspection | Would verify current paths, adjacent docs, actual conventions, tests, and workflows. | `UNKNOWN` until the real checkout is mounted and inspected. |
+| Supplied Domain Lanes draft | Intended file role, title, KFM meta block shape, lane list, lifecycle wording, and review checklist. | Current repository existence of any linked path. |
+| Attached KFM doctrine and domain reports | KFM terminology, governance posture, lane burdens, lifecycle, EvidenceBundle priority, UI/AI boundaries, and sensitivity defaults. | Exact current code, package manager, route names, schemas, policies, CI, dashboards, deployments, branch protections, or emitted proof objects. |
+| Current workspace inspection | Whether this session has a mounted repo, visible files, and generated outputs. | Production behavior or branch state when the real checkout is not mounted. |
+| Mounted repo inspection | Would verify current paths, adjacent docs, actual conventions, tests, workflows, and runtime artifacts. | `UNKNOWN` until the real checkout is mounted and inspected. |
 
 [Back to top](#top)
 
 ---
 
+<a id="repo-fit"></a>
+
 ## Repo fit
 
 | Surface | Relationship | Current posture |
 |---|---|---|
-| `docs/domains/README.md` | This file. Domain-lane landing, scope router, and review checklist. | `CONFIRMED` as the target encoded by the supplied draft; repo existence still `NEEDS VERIFICATION`. |
+| `docs/domains/README.md` | This file. Domain-lane landing, scope router, and review checklist. | `PROPOSED` target path until verified in the mounted repo. |
 | [`../README.md`](../README.md) | Upstream docs landing. Should explain how domain docs fit into the documentation lattice. | Link target `NEEDS VERIFICATION`. |
 | [`../../README.md`](../../README.md) | Root repository orientation. Should route maintainers toward current canon, not mixed lineage. | Link target `NEEDS VERIFICATION`. |
 | `../architecture/` | Architecture doctrine: truth path, trust membrane, authoritative-vs-derived boundaries, shell law. | `PROPOSED` / `NEEDS VERIFICATION`. |
-| `../sources/` | Source admission, source-role discipline, and source descriptor standards. | `PROPOSED` / `NEEDS VERIFICATION`. |
-| `../../data/registry/` | Candidate SourceDescriptor and DatasetVersion registry home, if adopted by the repo. | `PROPOSED` / `NEEDS VERIFICATION`. |
+| `../sources/` | Source admission, source-role discipline, source descriptor standards, and rights/sensitivity notes. | `PROPOSED` / `NEEDS VERIFICATION`. |
+| `../../data/registry/` | Candidate SourceDescriptor, DatasetVersion, and source activation registry home if adopted by the repo. | `PROPOSED` / `NEEDS VERIFICATION`. |
 | `../../schemas/` and `../../contracts/` | Candidate machine-readable contract/schema homes. Schema-home authority must not drift. | `UNKNOWN` until repo convention is inspected. |
 | `../../policy/` | Policy and sensitivity enforcement. | `PROPOSED` / `NEEDS VERIFICATION`. |
 | `../../tests/` | Fixtures, contract tests, runtime-proof tests, and no-regression checks. | `PROPOSED` / `NEEDS VERIFICATION`. |
@@ -123,40 +162,48 @@ These links are orientation targets, not proof that directories currently exist:
 
 ---
 
+<a id="accepted-inputs"></a>
+
 ## Accepted inputs
 
 Use `docs/domains/` for domain-specific documentation that answers: **what can this lane responsibly mean in KFM?**
 
 | Input type | Belongs here when it… | Minimum expectation |
 |---|---|---|
-| Lane README | Orients maintainers to a domain lane. | Scope, repo fit, accepted inputs, exclusions, sensitivity posture, source-role summary, and definition of done. |
+| Lane README | Orients maintainers to a domain lane. | Scope, repo fit, accepted inputs, exclusions, sensitivity posture, source-role summary, evidence expectations, validation gates, and definition of done. |
 | Domain concept note | Defines a lane-specific term, relation, rule, uncertainty, or burden. | Truth labels and source-role assumptions are explicit. |
-| Domain source-role guidance | Explains which source types may support which claim types. | Source convenience must not become authority. |
-| Sensitivity guidance | Explains redaction, generalization, staged access, delayed release, denial, or steward review. | Fail-closed defaults where rights, sovereignty, privacy, cultural sensitivity, exact locations, or living-person data matter. |
-| Domain-to-contract note | Explains meaning before a schema or DTO encodes it. | Links to schemas/contracts only when targets exist or are labeled `PROPOSED`. |
-| Domain UI note | Explains Evidence Drawer, layer, Focus, Story, Compare, Review, or Export implications. | UI behavior remains downstream of governed APIs and evidence resolution. |
-| Lane release note | Explains what must be validated before public or semi-public release. | Distinguishes receipts, proofs, catalog records, release manifests, and published artifacts. |
+| Domain source-role guidance | Explains which source types may support which claim types. | Source convenience must not become source authority. |
+| Sensitivity guidance | Explains redaction, generalization, staged access, delayed release, denial, or steward review. | Fail-closed defaults where rights, sovereignty, privacy, cultural sensitivity, exact locations, critical infrastructure, living-person, or DNA risk matters. |
+| Domain-to-contract note | Explains meaning before a schema or DTO encodes it. | Links to schemas/contracts only when targets exist or are labeled `PROPOSED` / `NEEDS VERIFICATION`. |
+| Domain UI note | Explains Evidence Drawer, layer, Focus, Story, Compare, Review, Export, or public map implications. | UI behavior remains downstream of governed APIs, release state, and evidence resolution. |
+| Lane release note | Explains what must be validated before public or semi-public release. | Distinguishes receipts, proofs, catalog records, release manifests, review state, and published artifacts. |
+| Correction or rollback note | Explains how lane-specific errors are corrected, withdrawn, superseded, or generalized. | Correction lineage and rollback targets are visible. |
 
 [Back to top](#top)
 
 ---
 
+<a id="exclusions"></a>
+
 ## Exclusions
 
 | Does not belong here | Where it should go instead | Why |
 |---|---|---|
-| RAW, WORK, QUARANTINE, or PROCESSED data files | Data lifecycle directories under `data/`, if present. | Domain docs describe meaning; they do not store governed data. |
-| SourceDescriptor records | `data/registry/` or the repo’s verified source-registry home. | Source descriptors are machine/audit objects, not prose-only docs. |
+| RAW, WORK, QUARANTINE, or PROCESSED data files | Data lifecycle directories or verified repo-native data homes. | Domain docs are not storage. |
+| SourceDescriptor or DatasetVersion machine records | Source registry / data registry home. | Source admission needs validators, rights checks, and version discipline. |
 | JSON Schema, OpenAPI, DTOs, or runtime envelopes | `schemas/`, `contracts/`, or verified contract homes. | Machine contracts need validators, fixtures, and version discipline. |
 | Rego/OPA policy or equivalent enforcement code | `policy/` and policy tests. | Policy must be executable or testable, not decorative prose. |
 | Generated tiles, PMTiles, COGs, GeoParquet, STAC, DCAT, PROV, or release bundles | Catalog, release, or published artifact homes. | Derived artifacts must not replace canonical truth. |
 | Model prompts, direct LLM outputs, or chain-of-thought artifacts | Governed AI runtime/receipt surfaces only where policy allows. | AI is interpretive; EvidenceBundle outranks generated language. |
 | Live source credentials, API keys, tokens, or private steward contacts | Secrets management or restricted operational runbooks. | Public docs must not leak operational or sensitive access details. |
 | Exact sensitive locations by default | Restricted review/stewardship surfaces. | Archaeology, rare species, cultural sites, critical infrastructure, living-person, and DNA contexts fail closed. |
+| Emergency instructions or life-safety alerting behavior | Official source guidance and emergency alert systems. | KFM may provide context; it must not become an emergency alert system. |
 
 [Back to top](#top)
 
 ---
+
+<a id="directory-tree"></a>
 
 ## Directory tree
 
@@ -197,31 +244,50 @@ docs/domains/
 ```
 
 > [!NOTE]
-> `_slices/` is a proposed home for cross-lane proof slices only if the mounted repository adopts that convention. Cross-lane slices must not blur lane ownership, source-role burden, policy posture, or release responsibility.
+> `_slices/` is a proposed home for cross-lane proof slices only if the mounted repository adopts that convention. Cross-lane slices must not blur lane ownership, source-role burden, policy posture, review state, or release responsibility.
 
 [Back to top](#top)
 
 ---
 
+<a id="domain-lane-registry"></a>
+
 ## Domain lane registry
 
-This registry is an orientation map, not an implementation inventory.
+This registry is an orientation map, not an implementation inventory. Candidate paths are `PROPOSED` until the mounted repo proves them.
 
-| Lane | Candidate README | Primary burden | Public-release posture |
+### Foundation and early proof lanes
+
+| Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
 |---|---|---|---|
-| Hydrology | `./hydrology/README.md` | Place/time-rich proof lane; source identity, HUC/crosswalk, observations vs regulatory context. | `PROPOSED` first proof lane. EvidenceRef → EvidenceBundle, source role, time basis, and no silent identity joins. |
-| Hazards | `./hazards/README.md` | Hazard history, regulatory context, operational context, model/remote-sensing distinction. | `PROPOSED` second lane after hydrology. KFM is not an emergency alert system; operational feeds are contextual and not for life-safety action. |
-| Soil | `./soil/README.md` | Soil units, interpretations, moisture/context watchers, source/derived separation. | `PROPOSED` near-term watcher territory. Keep SSURGO/gSSURGO/SDA-style source roles and derived boundary caveats visible. |
-| Agriculture | `./agriculture/README.md` | Crops, land use, agricultural observations, modeled indicators, source rights, soil adjacency. | `PROPOSED` after core schema/source discipline. Do not equate gridded or modeled products with observed field truth. |
-| Atmosphere / Air | `./atmosphere-air/README.md` | Air quality, weather, climate, smoke, EO-derived fields, model/observation separation. | `PROPOSED` carefully bounded contextual lane. Claims expose source type, freshness, and knowledge character. |
-| Geology & Natural Resources | `./geology-natural-resources/README.md` | Geologic units, stratigraphy, wells/cores, resource estimates, extraction/reclamation context. | `PROPOSED` staged lane. Physical geology, interpretation, resource administration, and production records remain distinct. |
-| Flora | `./flora/README.md` | Plant taxa, observations/specimens, rare-plant controls, vegetation surfaces. | `PROPOSED` staged future lane. Rare-location geoprivacy, steward review, and occurrence/model distinction required. |
-| Fauna | `./fauna/README.md` | Taxa, occurrence evidence, ranges, seasonal context, disease/mortality, legal/conservation status. | `PROPOSED` staged future lane. Sensitive species protection required; aggregators are not legal-status authorities. |
-| Habitat | `./habitat/README.md` | Habitat classes, models, patches, corridors, condition, land-cover context. | `PROPOSED` staged future lane. Habitat/model support is not occurrence truth; public outputs may require generalization. |
-| Settlements & Infrastructure | `./settlements-infrastructure/README.md` | Settlements, cities, townsites, infrastructure networks, condition, dependencies. | `PROPOSED` with critical-infrastructure caution. Legal place, historic settlement, facility, operator, condition, and service area remain separate. |
-| Roads / Rail / Trade Routes | `./roads-rail-trade-routes/README.md` | Modern and historic movement networks, roads, rail, trade/mobility corridors, restrictions. | `PROPOSED` with sensitivity and uncertainty controls. Route geometry, designation, operator, status, and historical interpretation remain distinct. |
-| Archaeology | `./archaeology/README.md` | Sites, features, surveys, remote-sensing candidates, cultural/steward review. | `PROPOSED` high-sensitivity lane. Exact site locations denied by default; remote-sensing anomaly is not confirmed site truth. |
-| People / Genealogy / DNA / Land Ownership | `./people-genealogy-dna-land/README.md` | Person assertions, relationships, DNA, land ownership, parcel/title/assessor distinctions. | `PROPOSED` restricted-by-default lane. Living-person and DNA outputs restricted; assessor/tax rows are not title truth. |
+| Hydrology | `./hydrology/README.md` | Place/time-rich water observations, HUC/crosswalk identity, watershed context, regulatory flood context, source versioning. | Silent identity joins, unscoped observations, regulatory area as observed event, or model output as measured flow. |
+| Hazards | `./hazards/README.md` | Hazard history, regulatory context, operational context, modeled or remote-sensing indicators, resilience review. | Life-safety alerting, emergency instructions, operational feed freshness without expiry, or regulatory area as observed event. |
+| Soil | `./soil/README.md` | Soil units, interpretations, static snapshots, moisture/context watchers, source-vs-derived distinctions. | Derived interpretations as observed soil truth, gridded products as site-level certainty, or unverified SSURGO/gSSURGO/SDA equivalence. |
+| Agriculture | `./agriculture/README.md` | Crops, land use, agricultural observations, modeled indicators, soil adjacency, seasonal context. | Field truth from gridded/model products alone, private farm-sensitive claims without review, or source-rights assumptions. |
+
+### Physical, atmospheric, and ecological context lanes
+
+| Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
+|---|---|---|---|
+| Atmosphere / Air | `./atmosphere-air/README.md` | Air quality, weather, climate, smoke, EO-derived fields, source freshness, and knowledge character. | Observations, public AQI reports, regulatory archives, model fields, smoke masks, and anomaly surfaces as interchangeable truth. |
+| Geology & Natural Resources | `./geology-natural-resources/README.md` | Geologic units, stratigraphy, wells/cores, geophysics/geochemistry references, resource estimates, extraction/reclamation context. | Physical geology, interpretation, resource administration, production records, and legal/resource status as one collapsed layer. |
+| Habitat | `./habitat/README.md` | Habitat classes, models, patches, corridors, condition, land-cover context, public-safe generalized products. | Habitat/model support as occurrence truth or exact habitat-sensitive outputs without policy review. |
+
+### Biodiversity and sensitive occurrence lanes
+
+| Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
+|---|---|---|---|
+| Flora | `./flora/README.md` | Plant taxa, observations, specimens, steward-reviewed records, rare-plant controls, vegetation surfaces. | Exact rare-plant locations, occurrence confirmation from models alone, or aggregator convenience as legal authority. |
+| Fauna | `./fauna/README.md` | Taxa, occurrence evidence, range/seasonal context, disease/mortality, legal/conservation status when source role allows. | Exact sensitive species locations, community-science record as legal status, or range model as observed occurrence. |
+
+### Human, built, cultural, and rights-heavy lanes
+
+| Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
+|---|---|---|---|
+| Settlements & Infrastructure | `./settlements-infrastructure/README.md` | Settlements, cities, historic townsites, facilities, networks, service areas, operators, condition observations, dependencies. | Critical-infrastructure precision without review, facility as operator, legal municipality as historic settlement, or condition as design capacity. |
+| Roads / Rail / Trade Routes | `./roads-rail-trade-routes/README.md` | Modern/historic movement networks, roads, rail corridors, trade/mobility routes, restrictions, facilities, temporal status. | Route geometry as legal designation, operator as owner, historic interpretation as surveyed alignment, or sensitive mobility corridors as precise public geometry. |
+| Archaeology | `./archaeology/README.md` | Sites, features, surveys, collections, remote-sensing candidates, cultural/steward review posture, public-safe generalized outputs. | Exact site locations by default, remote-sensing anomaly as confirmed site, or cultural/steward-sensitive material without review. |
+| People / Genealogy / DNA / Land Ownership | `./people-genealogy-dna-land/README.md` | Person assertions, relationship hypotheses, documentary evidence, land ownership assertions, parcel/title/assessor distinctions. | Living-person or DNA-derived public output by default, assessor/tax rows as title truth, or relationship hypotheses as canonical fact. |
 
 ### Suggested sequencing posture
 
@@ -234,6 +300,51 @@ This registry is an orientation map, not an implementation inventory.
 [Back to top](#top)
 
 ---
+
+<a id="source-role-discipline"></a>
+
+## Source-role discipline
+
+Domain docs should make source roles visible before source records become claims. A source role answers: **what kind of claim may this source support, and what kind of claim must it not support alone?**
+
+| Source role | Can support | Cannot support alone |
+|---|---|---|
+| Observation | A measured or observed condition at a stated place, time, method, and source. | Legal status, trend, causation, public release right, or broad truth outside scope. |
+| Regulatory / administrative context | Jurisdictional classification, official boundary, program context, designation, declaration, or administrative record. | Observed physical event or field condition unless the source is also observational. |
+| Model / derivative | Scenario, interpolation, classification, prediction, index, suitability, or derived surface. | Direct observation, legal authority, or exact site/species/event truth. |
+| Documentary / archival | Historical support, narrative evidence, map reference, deed, report, photograph, or textual assertion. | Precision beyond the source, living-person release, or modern condition without corroboration. |
+| Remote-sensing candidate | Candidate detection, anomaly, mask, spectral context, or image-derived indicator. | Confirmed archaeological site, confirmed species occurrence, legal boundary, or field-verified condition. |
+| Legal / title authority | Claim types explicitly within the authority’s role and current legal/source terms. | Physical ground truth, geometry precision beyond the authority, or unrelated ownership/relationship claims. |
+| Steward-reviewed | Controlled or reviewed record with steward conditions. | Public release without the steward-approved access posture. |
+| Aggregated / community source | Discovery lead, occurrence context, or corroborating support when source terms allow. | Legal/conservation authority, exact sensitive public geometry, or release right by default. |
+
+> [!CAUTION]
+> A source can be useful and still not be authoritative for a specific claim. Domain docs must preserve that distinction because public users will often see only the map, summary, or Focus answer unless the Evidence Drawer exposes the burden.
+
+[Back to top](#top)
+
+---
+
+<a id="sensitivity-and-release-posture"></a>
+
+## Sensitivity and release posture
+
+Sensitivity is lane-specific, but the default rule is shared: when rights, privacy, sovereignty, cultural sensitivity, exact-location exposure, source authority, or review state are unresolved, **do not publish exact or consequential claims**.
+
+| Risk class | Common lanes | Default posture | Public-safe transform examples |
+|---|---|---|---|
+| Exact sensitive species location | Flora, Fauna, Habitat | Deny exact public geometry unless review explicitly allows. | Generalize, suppress, delay, aggregate, or role-limit. |
+| Archaeological / cultural site exposure | Archaeology, Roads/Trade, Settlements | Deny exact public geometry by default. | Generalize, suppress, steward-review, use non-identifying context. |
+| Living-person or DNA data | People / Genealogy / DNA / Land | Restrict by default; public output requires explicit policy support. | Redact, withhold, use historical-only scope, deny DNA-derived output. |
+| Critical infrastructure precision | Settlements & Infrastructure, Roads/Rail, Hazards | Fail closed on precision and exploitability risk. | Generalize, remove operational details, role-limit. |
+| Source-rights uncertainty | All lanes | Quarantine or block promotion. | Record rights status, use no-public-release flag, seek terms review. |
+| Operational-feed freshness | Hazards, Atmosphere/Air, Hydrology | Require issue time, retrieval time, expiry/freshness, and contextual-only posture where appropriate. | Stale banner, abstention, link to official source, deny life-safety use. |
+
+[Back to top](#top)
+
+---
+
+<a id="domain-lifecycle"></a>
 
 ## Domain lifecycle
 
@@ -276,13 +387,15 @@ Domain docs should explain the lane-specific meaning of each state:
 
 ---
 
+<a id="minimum-lane-readme-contract"></a>
+
 ## Minimum lane README contract
 
 Every lane README should be small enough to review but explicit enough to prevent domain drift.
 
 | Required part | Purpose | Review cue |
 |---|---|---|
-| Meta block + impact block | Makes ownership, status, placeholders, and repo fit visible. | Unverified owners, dates, labels, and related links remain placeholders. |
+| Meta block + impact block | Makes ownership, status, placeholders, repo fit, and policy posture visible. | Unverified owners, dates, labels, and related links remain placeholders. |
 | Scope | Defines what the lane may responsibly mean. | Includes boundaries and cross-lane edges. |
 | Accepted inputs | Lists what belongs in the lane docs. | Does not confuse docs with data, schema, policy, or runtime homes. |
 | Exclusions | Prevents unsafe or duplicate placement. | Names where excluded material should go instead. |
@@ -295,6 +408,41 @@ Every lane README should be small enough to review but explicit enough to preven
 [Back to top](#top)
 
 ---
+
+<a id="validation-gates"></a>
+
+## Validation gates
+
+Domain docs do not execute gates, but they must name the gates that matter for the lane.
+
+### Documentation review gates
+
+- [ ] KFM meta block is present and unresolved fields are explicit.
+- [ ] The impact block states status, owners, evidence mode, policy label, repo fit, accepted inputs, and exclusions.
+- [ ] Scope prevents domain drift and duplicate homes.
+- [ ] Accepted inputs and exclusions route content to the proper repo surfaces.
+- [ ] Source roles and knowledge character are explicit.
+- [ ] Sensitivity and public-release posture fail closed where risk matters.
+- [ ] Links are verified or labeled `PROPOSED` / `NEEDS VERIFICATION`.
+
+### Implementation-adjacent gates to link after verification
+
+| Gate | Why it matters | Domain doc stance |
+|---|---|---|
+| SourceDescriptor validation | Prevents unknown source roles, rights, or cadence from becoming claims. | Link to verified registry entry or label as `PROPOSED`. |
+| Schema / contract validation | Keeps domain meaning aligned with machine-readable surfaces. | Do not create parallel schema homes from prose. |
+| Policy check | Blocks sensitive, rights-unclear, stale, or unauthorized release. | Treat policy as executable/testable, not decorative. |
+| EvidenceBundle closure | Ensures public claims reconstruct to admissible evidence. | Require cite-or-abstain for consequential claims. |
+| LayerManifest check | Prevents map layer from becoming sovereign truth. | Public layer must point back to catalog/evidence/release state. |
+| ReleaseManifest / proof pack check | Makes promotion auditable and reversible. | Promotion is a governed state transition, not a file move. |
+| No raw public path | Protects trust membrane. | Public clients use governed APIs and released artifacts only. |
+| No direct model client | Keeps AI subordinate to evidence, policy, and release state. | Focus Mode uses governed envelopes only. |
+
+[Back to top](#top)
+
+---
+
+<a id="quickstart"></a>
 
 ## Quickstart
 
@@ -329,6 +477,8 @@ touch docs/domains/<lane>/README.md
 
 ---
 
+<a id="usage"></a>
+
 ## Usage
 
 ### When editing this README
@@ -354,6 +504,8 @@ Do not hide those changes in domain prose. Update the proper machine or runtime 
 [Back to top](#top)
 
 ---
+
+<a id="diagram"></a>
 
 ## Diagram
 
@@ -382,6 +534,8 @@ flowchart TD
 
 ---
 
+<a id="anti-collapse-rules"></a>
+
 ## Anti-collapse rules
 
 | Do not collapse… | Because… | Safe posture |
@@ -394,22 +548,25 @@ flowchart TD
 | Remote-sensing candidate into confirmed site/species/event | Detection is not confirmation. | Preserve candidate status and review requirement. |
 | Regulatory hazard area into observed event | Regulation, model, and observation differ. | Label knowledge character and time basis. |
 | Exact sensitive location into public geometry | Exposure can create harm. | Generalize, suppress, delay, restrict, or deny. |
+| Scene or digital twin into operational truth | 3D/globe scenes are downstream carriers unless a separate evidence burden is met. | Preserve evidence, release state, and measurement caveats. |
 
 [Back to top](#top)
 
 ---
+
+<a id="definition-of-done"></a>
 
 ## Definition of done
 
 A domain lane README is ready for review when:
 
 - [ ] KFM meta block is present and unresolved fields are explicit.
-- [ ] Status, owners, badges, and quick jumps are visible near the top.
+- [ ] Status, owners, badges, quick links, and an impact block are visible near the top.
 - [ ] Scope is specific enough to prevent domain drift.
 - [ ] Accepted inputs and exclusions are explicit.
 - [ ] Repo fit identifies upstream and downstream surfaces.
 - [ ] Source-role discipline is stated.
-- [ ] Sensitivity, rights, sovereignty, privacy, cultural sensitivity, and exact-location risks are addressed where relevant.
+- [ ] Sensitivity, rights, sovereignty, privacy, cultural sensitivity, critical infrastructure, living-person data, DNA, and exact-location risks are addressed where relevant.
 - [ ] The lane distinguishes canonical records from derived tiles, summaries, graph edges, indexes, scenes, embeddings, and model outputs.
 - [ ] The lane explains EvidenceRef → EvidenceBundle expectations.
 - [ ] Public-facing claims are cite-or-abstain.
@@ -422,6 +579,8 @@ A domain lane README is ready for review when:
 
 ---
 
+<a id="faq"></a>
+
 ## FAQ
 
 ### Can a domain README publish a source?
@@ -432,7 +591,7 @@ No. A domain README can explain source-role expectations and link to a source de
 
 Yes, but only as bounded interpretation over admissible released evidence. AI must not read RAW, WORK, QUARANTINE, unpublished candidates, or canonical/internal stores directly.
 
-### Can a tile, graph, or summary become the lane’s canonical truth?
+### Can a tile, graph, summary, embedding, or scene become the lane’s canonical truth?
 
 No. Tiles, graphs, summaries, indexes, scenes, and embeddings are rebuildable derivatives. They may help users inspect evidence; they must not silently replace it.
 
@@ -447,6 +606,8 @@ Preserve the existing material, add a migration note or ADR, and avoid duplicate
 [Back to top](#top)
 
 ---
+
+<a id="appendix"></a>
 
 ## Appendix
 
@@ -471,16 +632,40 @@ notes: [replace placeholders after repo inspection]
 
 # <Lane Title>
 
+<p align="center">
+  <strong>Kansas Frontier Matrix</strong><br>
+  Evidence-first • map-first • time-aware • governed
+</p>
+
+<p align="center">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
+  <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Repo: needs verification" src="https://img.shields.io/badge/repo-NEEDS_VERIFICATION-lightgrey">
+</p>
+
+<p align="center">
+  <a href="#scope">Scope</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#accepted-inputs">Inputs</a> ·
+  <a href="#exclusions">Exclusions</a> ·
+  <a href="#validation-gates">Validation</a> ·
+  <a href="#definition-of-done">Definition of done</a>
+</p>
+
 One-line purpose for this lane.
 
-> [!NOTE]
-> **Status:** `experimental`  
-> **Owners:** `NEEDS VERIFICATION`  
-> **Path:** `docs/domains/<lane>/README.md`  
->
-> [![status](https://img.shields.io/badge/status-experimental-orange)](#scope)
-> [![posture](https://img.shields.io/badge/posture-evidence--first-blue)](#scope)
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions)
+| Field | Value |
+|---|---|
+| Status | `draft` |
+| Owners | `NEEDS VERIFICATION` |
+| Evidence mode | `NEEDS VERIFICATION` |
+| Policy label | `NEEDS VERIFICATION` |
+| Repo fit | `docs/domains/<lane>/README.md` — verify in mounted repo |
+| Public posture | Cite-or-abstain; fail closed on unresolved rights or sensitivity |
+
+> [!IMPORTANT]
+> This lane README is repo-ready guidance, not proof of current implementation.
 
 ## Scope
 
@@ -497,6 +682,8 @@ One-line purpose for this lane.
 ## Evidence and proof expectations
 
 ## Validation gates
+
+## Correction and rollback
 
 ## Definition of done
 ```
@@ -533,7 +720,8 @@ Before publication, verify:
 - policy home and policy test conventions;
 - EvidenceBundle, ReleaseManifest, LayerManifest, proof pack, and receipt schema homes;
 - UI route/component names for Evidence Drawer, Focus Mode, Story, Review, Compare, and Export;
-- CI workflows and required documentation checks.
+- CI workflows and required documentation checks;
+- CODEOWNERS, PR template, branch protection, and release-review expectations if the repo uses them.
 
 </details>
 
