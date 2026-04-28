@@ -3,7 +3,7 @@ export function createMapPane() {
   section.className = "map-pane";
   section.innerHTML = `
     <h2>Map Canvas</h2>
-    <div class="map-surface">MapLibre adapter placeholder</div>
+    <div class="map-surface" role="img" aria-label="Map preview placeholder for released layers">MapLibre adapter placeholder</div>
     <p class="note">Render released layers only; no direct RAW/WORK/QUARANTINE access.</p>
   `;
   return section;
