@@ -1,7 +1,14 @@
 {
+  "schema_version": "v1",
+  "object_type": "DerivedVegetationLayer",
   "layer_id": "derived-veg-layer-invalid-001",
-  "source_refs": ["kfs_field_plots", "kfs_satellite_imagery"],
-  "dataset_refs": ["ecology.derived_vegetation_layer.v1"],
+  "source_refs": [
+    "kfs_field_plots",
+    "kfs_satellite_imagery"
+  ],
+  "dataset_refs": [
+    "ecology.derived_vegetation_layer.v1"
+  ],
   "spec_hash": "sha256:f7707fd5f0b2d9936c2f20f9202c26fda4c1a57422f1528a08fbe7f15e7ae9f4",
   "policy_id": "eco-generalize-v1",
   "sensitivity": "generalize",
@@ -11,5 +18,8 @@
     "input_plot_count": 42,
     "resolution_m": 30
   },
-  "evidence_refs": ["evidence://ecology/derived-layer-invalid-001"]
+  "evidence_refs": [
+    "evidence://ecology/derived-layer-invalid-001"
+  ],
+  "expected_failure_reason": "missing_catalog_refs"
 }
