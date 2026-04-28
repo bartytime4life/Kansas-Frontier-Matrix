@@ -76,7 +76,7 @@ Ecology here is an umbrella test fixture label. It does **not** collapse the str
 | Policy source | [`../../../policy/README.md`](../../../policy/README.md) | allow/deny/review logic belongs upstream |
 | Standards docs | [`../../../docs/standards/README.md`](../../../docs/standards/README.md) | fixture, validator, and documentation conventions; `NEEDS VERIFICATION` |
 | Runtime proof consumers | [`../../e2e/runtime_proof/README.md`](../../e2e/runtime_proof/README.md) | downstream request-time proof harness; `NEEDS VERIFICATION` |
-| Release/correction siblings | [`../release_assembly/README.md`](../release_assembly/README.md), [`../correction/README.md`](../correction/README.md) | use those leaves when proof packs, promotion, rollback, withdrawal, or correction lineage is the main burden |
+| Release/correction siblings | [`../../e2e/release_assembly/README.md`](../../e2e/release_assembly/README.md), [`../../e2e/correction/README.md`](../../e2e/correction/README.md) | use those leaves when proof packs, promotion, rollback, withdrawal, or correction lineage is the main burden |
 
 ### Downstream consumers
 
@@ -146,54 +146,46 @@ This directory is not the authoritative home for every ecology-adjacent concern.
 
 ## Directory tree
 
-### Current safe claim
+### Verified branch snapshot
 
-The active checkout for this exact leaf was not available in this session. The only branch-safe claim is the target README path:
-
-```text
-tests/fixtures/ecology/
-└── README.md
-```
-
-### Preferred growth shape (`PROPOSED` / `NEEDS VERIFICATION`)
-
-Add only the subfolders that the active branch can actually support.
+Current fixture inventory in this branch:
 
 ```text
 tests/fixtures/ecology/
 ├── README.md
-├── source_descriptors/
-│   ├── valid/
-│   │   └── habitat_context_public_safe.source_descriptor.json
-│   └── invalid/
-│       ├── unknown_rights_public_release.source_descriptor.json
-│       └── unknown_source_role_authority_claim.source_descriptor.json
-├── habitat_assignment/
-│   ├── answer_public_safe_generalized/
-│   │   ├── input.fixture.json
-│   │   └── expected.decision.json
-│   └── abstain_missing_evidence/
-│       ├── input.fixture.json
-│       └── expected.decision.json
-├── occurrence_publication/
-│   ├── deny_sensitive_exact_location/
-│   │   ├── input.fixture.json
-│   │   └── expected.decision.json
-│   └── deny_restricted_license/
-│       ├── input.fixture.json
-│       └── expected.decision.json
-├── catalog_closure/
-│   └── public_safe_ecology_claim/
-│       ├── evidence_bundle.fixture.json
-│       ├── stac.item.fixture.json
-│       ├── dcat.dataset.fixture.json
-│       └── prov.entity.fixture.json
-└── malformed/
-    └── error_invalid_fixture_shape.json
+├── invalid/
+│   ├── README.md
+│   ├── derived_vegetation_layer.missing_catalog_refs.invalid.json
+│   ├── habitat_assignment.missing_class.invalid.json
+│   ├── missing_policy_id.json
+│   ├── observation_plot.unknown_rights.invalid.json
+│   ├── sensitive_occurrence_record.public_exact_geometry.invalid.json
+│   └── taxon_record.missing_spec_hash.invalid.json
+├── policy/
+│   ├── README.md
+│   ├── allow_derived_layer_with_catalog_closure.json
+│   ├── allow_public_taxon.json
+│   ├── deny_derived_layer_as_confirmed.json
+│   ├── deny_sensitive_exact_geometry.json
+│   ├── deny_unknown_rights.json
+│   ├── deny_unresolved_evidence_bundle.json
+│   ├── derived_layer_as_confirmed.policy.json
+│   ├── generalize_sensitive_occurrence.json
+│   ├── restricted_exact_location_case.json
+│   ├── sensitive_exact_public_geometry.policy.json
+│   └── unknown_rights.policy.json
+└── valid/
+    ├── README.md
+    ├── derived_vegetation_layer.valid.json
+    ├── habitat_assignment.valid.json
+    ├── observation_bundle_valid.json
+    ├── observation_plot.valid.json
+    ├── sensitive_occurrence_record.valid.json
+    └── taxon_record.valid.json
 ```
 
 > [!TIP]
-> Start with one **valid fixture** and one **invalid fixture named by failure reason**. A narrow fixture pair that proves a real rule is better than a broad subtree full of untested examples.
+> Use the subdirectory indexes for file navigation: [`valid/README.md`](./valid/README.md), [`invalid/README.md`](./invalid/README.md), and [`policy/README.md`](./policy/README.md).
 
 [Back to top](#top)
 
