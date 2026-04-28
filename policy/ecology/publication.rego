@@ -2,29 +2,28 @@ package ecology.publication
 
 # Fail-closed publication policy for ecology bundles.
 #
-# Input is expected to be an object with governance fields used by the
-# ecology schemas and source registry, including:
-# - object_type
-# - source_role
-# - sensitivity
-# - sensitivity_class
-# - rights_status
-# - policy_id
-# - policy_label
-# - public_visibility
-# - public_geometry_policy
-# - exact_geometry_present
-# - evidence_refs
-# - evidence_bundle_resolved
-# - catalog_closure
-# - claim_status
+# This policy evaluates whether an ecology object may be exposed on a public surface.
+# It enforces KFM governance invariants:
+# - Evidence must resolve to an EvidenceBundle
+# - Sensitive geometry must not leak
+# - Derived layers must remain labeled as derived
+# - Rights must be known and acceptable
+# - Publication state must be safe for release
 #
-# This policy decides whether an ecology object may be published to a
-# public surface. It does not promote data by itself.
+# NOTE:
+# This policy does NOT promote objects — it only allows, generalizes, holds, or denies.
 
 default allow := false
-
 default decision := "deny"
+
+# -------------------------------------------------------------------
+# DENY CONDITIONS (fail-closed)
+# -------------------------------------------------------------------
+
+deny_reasons contains r if {
+  not input.object_type
+  r := "missing_object_type"
+}
 
 deny_reasons contains r if {
   not input.sensitivity
@@ -47,6 +46,17 @@ deny_reasons contains r if {
 }
 
 deny_reasons contains r if {
+  not input.spec_hash
+  r := "missing_spec_hash"
+}
+
+deny_reasons contains r if {
+  input.spec_hash != ""
+  not regex.match("^sha256:[a-fA-F0-9]{64}$", input.spec_hash)
+  r := "invalid_spec_hash"
+}
+
+deny_reasons contains r if {
   count(object.get(input, "evidence_refs", [])) == 0
   r := "missing_evidence_refs"
 }
@@ -62,6 +72,37 @@ deny_reasons contains r if {
 }
 
 deny_reasons contains r if {
+  input.policy_label == "internal"
+  r := "internal_policy_label_not_publishable"
+}
+
+# -------------------------------------------------------------------
+# PUBLIC SURFACE SAFETY
+# -------------------------------------------------------------------
+
+deny_reasons contains r if {
+  object.get(input, "surface", "public") == "public"
+  input.publication_state == "candidate"
+  r := "candidate_not_publishable"
+}
+
+deny_reasons contains r if {
+  object.get(input, "surface", "public") == "public"
+  input.publication_state == "held"
+  r := "held_not_publishable"
+}
+
+deny_reasons contains r if {
+  object.get(input, "surface", "public") == "public"
+  input.publication_state == "quarantined"
+  r := "quarantined_not_publishable"
+}
+
+# -------------------------------------------------------------------
+# DERIVED LAYER RULES
+# -------------------------------------------------------------------
+
+deny_reasons contains r if {
   input.source_role == "DERIVED_MODEL_LAYER"
   object.get(input, "claim_status", "") == "CONFIRMED"
   r := "derived_layer_as_confirmed_truth"
@@ -72,6 +113,10 @@ deny_reasons contains r if {
   object.get(input, "catalog_closure", false) == false
   r := "derived_layer_missing_catalog_closure"
 }
+
+# -------------------------------------------------------------------
+# SENSITIVE OCCURRENCE RULES
+# -------------------------------------------------------------------
 
 deny_reasons contains r if {
   input.source_role == "SENSITIVE_OCCURRENCE"
@@ -86,11 +131,6 @@ deny_reasons contains r if {
 }
 
 deny_reasons contains r if {
-  input.sensitivity == "review_required"
-  r := "requires_steward_review"
-}
-
-deny_reasons contains r if {
   object.get(input, "public_geometry_policy", "") == "deny_exact_generalize_required"
   object.get(input, "exact_geometry_present", false)
   r := "exact_geometry_requires_generalization"
@@ -102,21 +142,41 @@ deny_reasons contains r if {
 }
 
 deny_reasons contains r if {
-  input.policy_label == "internal"
-  r := "internal_policy_label_not_publishable"
+  object.get(input, "public_visibility", "") == "generalized"
+  not input.redaction_receipt_ref
+  r := "missing_redaction_receipt"
 }
+
+# -------------------------------------------------------------------
+# REVIEW / HOLD CONDITIONS
+# -------------------------------------------------------------------
+
+deny_reasons contains r if {
+  input.sensitivity == "review_required"
+  r := "requires_steward_review"
+}
+
+# -------------------------------------------------------------------
+# GENERALIZATION PATH
+# -------------------------------------------------------------------
 
 generalize_reasons contains r if {
   input.sensitivity == "generalize"
   input.rights_status != "unknown"
+  object.get(input, "exact_geometry_present", false) == false
   r := "generalization_required"
 }
 
 generalize_reasons contains r if {
   object.get(input, "public_visibility", "") == "generalized"
-  object.get(input, "exact_geometry_present", false)
-  r := "public_visibility_requires_generalization"
+  object.get(input, "exact_geometry_present", false) == false
+  input.redaction_receipt_ref
+  r := "public_visibility_generalized_with_receipt"
 }
+
+# -------------------------------------------------------------------
+# ALLOW CONDITIONS
+# -------------------------------------------------------------------
 
 allow if {
   count(deny_reasons) == 0
@@ -132,6 +192,10 @@ allow if {
   object.get(input, "catalog_closure", false) == true
   object.get(input, "evidence_bundle_resolved", false) == true
 }
+
+# -------------------------------------------------------------------
+# DECISION OUTPUT
+# -------------------------------------------------------------------
 
 decision := "allow" if {
   allow
