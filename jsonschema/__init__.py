@@ -58,6 +58,9 @@ def _iter_schema_errors(instance: Any, schema: dict[str, Any], path: tuple[Any, 
     if enum_values is not None and instance not in enum_values:
         yield _ValidationIssue(path, f"{instance!r} is not one of {enum_values}")
 
+    if "const" in schema and instance != schema["const"]:
+        yield _ValidationIssue(path, f"{instance!r} was expected to be constant {schema.get('const')!r}")
+
     if isinstance(instance, str):
         min_length = schema.get("minLength")
         if isinstance(min_length, int) and len(instance) < min_length:
@@ -95,6 +98,21 @@ def _iter_schema_errors(instance: Any, schema: dict[str, Any], path: tuple[Any, 
             for key in instance:
                 if key not in allowed_keys:
                     yield _ValidationIssue(path, f"Additional properties are not allowed ({key!r} was unexpected)")
+
+    all_of = schema.get("allOf")
+    if isinstance(all_of, list):
+        for subschema in all_of:
+            if isinstance(subschema, dict):
+                yield from _iter_schema_errors(instance, subschema, path)
+
+    if_schema = schema.get("if")
+    then_schema = schema.get("then")
+    else_schema = schema.get("else")
+    if isinstance(if_schema, dict):
+        if_matches = not any(_iter_schema_errors(instance, if_schema, path))
+        branch = then_schema if if_matches else else_schema
+        if isinstance(branch, dict):
+            yield from _iter_schema_errors(instance, branch, path)
 
 
 __all__ = [
