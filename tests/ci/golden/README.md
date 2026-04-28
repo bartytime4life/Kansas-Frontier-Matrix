@@ -151,6 +151,19 @@ tests/ci/golden/
 └── README.md
 ```
 
+### Current checked-in shape
+
+```text
+tests/ci/golden/
+├── README.md
+├── diff_policy_summary.md
+├── diff_summary.md
+├── promotion_bundle_summary.md
+├── promotion_review_handoff.md
+├── promotion_summary.md
+└── review_handoff.md
+```
+
 ### Stable growth shape
 
 The following structure is **PROPOSED** and should be created only as corresponding tests and helper contracts land.
