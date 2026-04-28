@@ -1,0 +1,5 @@
+bundle:
+  name: kfm.policy.sensitivity
+  version: v0
+  entrypoint: data.kfm.policy.sensitivity.decision
+  module: generalize_or_restrict.rego
