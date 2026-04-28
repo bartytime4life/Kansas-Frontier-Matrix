@@ -157,10 +157,13 @@ tests/fixtures/ecology/
 │   ├── README.md
 │   ├── derived_vegetation_layer.missing_catalog_refs.invalid.json
 │   ├── habitat_assignment.missing_class.invalid.json
-│   ├── missing_policy_id.json
+│   ├── missing_policy_id.invalid.json
 │   ├── observation_plot.unknown_rights.invalid.json
 │   ├── sensitive_occurrence_record.public_exact_geometry.invalid.json
 │   └── taxon_record.missing_spec_hash.invalid.json
+├── malformed/
+│   ├── README.md
+│   └── error_invalid_fixture_shape.json
 ├── policy/
 │   ├── README.md
 │   ├── allow_derived_layer_with_catalog_closure.json
@@ -178,14 +181,14 @@ tests/fixtures/ecology/
     ├── README.md
     ├── derived_vegetation_layer.valid.json
     ├── habitat_assignment.valid.json
-    ├── observation_bundle_valid.json
+    ├── observation_bundle_public_safe.valid.json
     ├── observation_plot.valid.json
     ├── sensitive_occurrence_record.valid.json
     └── taxon_record.valid.json
 ```
 
 > [!TIP]
-> Use the subdirectory indexes for file navigation: [`valid/README.md`](./valid/README.md), [`invalid/README.md`](./invalid/README.md), and [`policy/README.md`](./policy/README.md).
+> Use the subdirectory indexes for file navigation: [`valid/README.md`](./valid/README.md), [`invalid/README.md`](./invalid/README.md), [`policy/README.md`](./policy/README.md), and [`malformed/README.md`](./malformed/README.md).
 
 [Back to top](#top)
 
