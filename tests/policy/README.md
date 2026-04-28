@@ -34,7 +34,7 @@ Repo-facing policy-behavior verification family for KFM deny-by-default decision
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/policy/README.md`  
-> **Repo fit:** parent policy-verification family inside [`../README.md`](../README.md); local child lane currently indexed at [`./genealogy/README.md`](./genealogy/README.md); adjacent to policy law in [`../../policy/README.md`](../../policy/README.md), shared contracts in [`../../contracts/README.md`](../../contracts/README.md), schema-boundary guidance in [`../../schemas/README.md`](../../schemas/README.md), and workflow guardrails in [`../../.github/workflows/README.md`](../../.github/workflows/README.md).  
+> **Repo fit:** parent policy-verification family inside [`../README.md`](../README.md); local child lanes currently indexed at [`./genealogy/README.md`](./genealogy/README.md) and [`./runtime_parity/README.md`](./runtime_parity/README.md); adjacent to policy law in [`../../policy/README.md`](../../policy/README.md), shared contracts in [`../../contracts/README.md`](../../contracts/README.md), schema-boundary guidance in [`../../schemas/README.md`](../../schemas/README.md), and workflow guardrails in [`../../.github/workflows/README.md`](../../.github/workflows/README.md).  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!NOTE]
@@ -73,7 +73,8 @@ This is narrower than all tests and broader than local bundle assertions. It sho
 | Direction | Surface | Why it matters |
 |---|---|---|
 | Parent | [`../README.md`](../README.md) | Defines the broader governed verification map for `tests/`. |
-| Child | [`./genealogy/README.md`](./genealogy/README.md) | Current policy-behavior child lane for consent, living-person, DNA, provenance, and publication-control negative tests. |
+| Child | [`./genealogy/README.md`](./genealogy/README.md) | Policy-behavior child lane for consent, living-person, DNA, provenance, and publication-control negative tests. |
+| Child | [`./runtime_parity/README.md`](./runtime_parity/README.md) | Runtime-policy parity leaf for finite outward outcomes and reason/obligation visibility checks. |
 | Policy law | [`../../policy/README.md`](../../policy/README.md) | Owns policy bundles, fixtures, runtime-policy notes, and checked-in policy data. |
 | Contracts | [`../../contracts/README.md`](../../contracts/README.md) | Owns shared contract meaning that policy tests should consume rather than fork. |
 | Schema boundary | [`../../schemas/README.md`](../../schemas/README.md) | Keeps schema-home ambiguity explicit and prevents test fixtures from becoming shadow schemas. |
@@ -171,7 +172,9 @@ The strongest safe current-branch claim is intentionally bounded.
 tests/
 └── policy/
     ├── README.md
-    └── genealogy/
+    ├── genealogy/
+    │   └── README.md
+    └── runtime_parity/
         └── README.md
 ```
 
@@ -183,12 +186,15 @@ tests/
     ├── README.md
     ├── genealogy/
     │   ├── README.md
-    │   ├── runtime_parity.md
     │   ├── release_parity.md
     │   ├── correction_parity.md
     │   └── fixtures/              # only if repo-facing verification truly needs local copies
-    ├── runtime/
-    │   └── README.md              # optional future cross-domain runtime policy parity
+    ├── runtime_parity/
+    │   ├── README.md
+    │   ├── fixtures/
+    │   ├── expected/
+    │   ├── cases/
+    │   └── test_runtime_parity.py
     ├── release/
     │   └── README.md              # optional future promotion/publication policy parity
     └── correction/

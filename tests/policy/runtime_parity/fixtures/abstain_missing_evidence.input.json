@@ -1,0 +1,17 @@
+{
+  "case_id": "abstain_missing_evidence",
+  "policy_input_ref": "tests/policy/runtime_parity/fixtures/abstain_missing_evidence.input.json",
+  "expected_policy_result": "abstain",
+  "expected_runtime_outcome": "ABSTAIN",
+  "reason_codes": [
+    "EVIDENCE_NOT_RENDERABLE"
+  ],
+  "obligation_codes": [
+    "REQUIRE_REVIEW"
+  ],
+  "evidence_state": "missing",
+  "contract_refs": [
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+  ],
+  "notes": "Insufficient evidence should abstain instead of inventing confidence."
+}
