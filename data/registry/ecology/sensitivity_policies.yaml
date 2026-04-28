@@ -1,0 +1,42 @@
+{
+  "version": "v1",
+  "updated": "2026-04-28",
+  "policies": [
+    {
+      "policy_id": "eco-public-v1",
+      "applies_to": ["public"],
+      "decision": "allow",
+      "requires": [
+        "rights_status in [public, open]",
+        "evidence_refs present"
+      ]
+    },
+    {
+      "policy_id": "eco-generalize-v1",
+      "applies_to": ["generalize"],
+      "decision": "generalize",
+      "requires": [
+        "generalization_method present",
+        "precision_served not exact",
+        "evidence_refs present"
+      ]
+    },
+    {
+      "policy_id": "eco-restricted-v1",
+      "applies_to": ["restricted"],
+      "decision": "deny",
+      "requires": [
+        "no exact coordinates in public outputs",
+        "stewardship_review optional override only for non-public lanes"
+      ]
+    },
+    {
+      "policy_id": "eco-review-required-v1",
+      "applies_to": ["review_required"],
+      "decision": "hold",
+      "requires": [
+        "explicit reviewer decision before publication"
+      ]
+    }
+  ]
+}
