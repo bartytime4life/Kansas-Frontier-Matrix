@@ -71,6 +71,7 @@ The first-wave scope is intentionally narrow:
 - watch one or more Kansas-relevant `HUC12` subjects;
 - compare a current HUC12/admin crosswalk summary against a prior summary;
 - preserve source snapshot identity, source role, geometry fingerprint, and algorithm version;
+- require projected area math in `EPSG:5070` (or fail closed);
 - emit a watcher-local `run_receipt`;
 - produce a deterministic change/no-change summary;
 - hand off a narrow candidate to downstream promotion review without becoming the promotion system itself.
