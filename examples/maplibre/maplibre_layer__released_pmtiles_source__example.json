@@ -1,0 +1,26 @@
+{
+  "version": 8,
+  "status": "illustrative_only",
+  "sources": {
+    "kfm_example_released_tiles": {
+      "type": "vector",
+      "url": "NEEDS_VERIFICATION__released_tilejson_or_pmtiles_uri",
+      "attribution": "NEEDS_VERIFICATION__source_attribution"
+    }
+  },
+  "layers": [
+    {
+      "id": "kfm-example-public-safe-layer",
+      "type": "fill",
+      "source": "kfm_example_released_tiles",
+      "source-layer": "NEEDS_VERIFICATION__source_layer",
+      "metadata": {
+        "kfm:example_only": true,
+        "kfm:not_canonical_truth": true
+      },
+      "paint": {
+        "fill-opacity": 0.4
+      }
+    }
+  ]
+}

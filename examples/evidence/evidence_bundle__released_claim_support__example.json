@@ -1,0 +1,19 @@
+{
+  "version": "v1",
+  "kind": "EvidenceBundle",
+  "status": "illustrative_only",
+  "bundle_id": "evidence_bundle__released_claim_support__example",
+  "claims": [
+    {
+      "claim_id": "claim_001",
+      "summary": "Illustrative claim for documentation only",
+      "evidence_refs": [
+        "catalog:stac:item/example-item"
+      ]
+    }
+  ],
+  "notes": [
+    "This object is not a proof artifact.",
+    "This object is not release state."
+  ]
+}

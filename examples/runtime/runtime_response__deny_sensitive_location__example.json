@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "kind": "RuntimeResponseEnvelope",
+  "status": "illustrative_only",
+  "outcome": "DENY",
+  "policy": {
+    "decision": "deny",
+    "reason_codes": ["sensitive_exact_location_not_public_safe"]
+  },
+  "answer": null,
+  "citations": []
+}

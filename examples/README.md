@@ -166,7 +166,7 @@ Do **not** put these in `examples/`.
 
 ## Directory map
 
-The child structure below is a **proposed orientation map**, not a confirmed inventory.
+The child structure below reflects the current `examples/` layout in this branch.
 
 ```text
 examples/
@@ -187,7 +187,7 @@ examples/
     └── README.md                       # PROPOSED: deprecated examples retained only with successor notes
 ```
 
-Start with this `README.md` only unless the active branch already contains child examples. Add a child directory only when at least one example is small, reviewed, public-safe, and linked to its intended downstream home.
+Each child directory should keep examples small, reviewed, public-safe, and linked to an intended downstream schema, contract, policy, or fixture home.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -446,7 +446,7 @@ Only as documentation smoke material unless a repo-native validator explicitly t
 
 ### Does this README prove that `examples/` currently contains child directories?
 
-No. The tree is proposed until confirmed in the active repository checkout.
+Yes in this branch context: the tree shown above is implemented and intended to be maintained as examples are added or removed.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
