@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ecology/fragments/sensitivity_status.schema.json",
+  "title": "Sensitivity Status",
+  "description": "Release sensitivity status for ecology objects.",
+  "type": "string",
+  "enum": [
+    "public_safe",
+    "restricted",
+    "review_required",
+    "withheld"
+  ]
+}
