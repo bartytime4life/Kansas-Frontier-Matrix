@@ -180,6 +180,7 @@ tests/fixtures/ecology/
 │       └── blank_scientific_name.json
 ├── policy/
 │   ├── README.md
+│   ├── abstain_unresolved_evidence_bundle.json
 │   ├── allow_derived_layer_with_catalog_closure.json
 │   ├── allow_public_taxon.json
 │   ├── deny_derived_layer_as_confirmed.json
@@ -187,6 +188,7 @@ tests/fixtures/ecology/
 │   ├── deny_unknown_rights.json
 │   ├── deny_unresolved_evidence_bundle.json
 │   ├── derived_layer_as_confirmed.policy.json
+│   ├── error_malformed_policy_input.json
 │   ├── generalize_sensitive_occurrence.json
 │   ├── restricted_exact_location_case.json
 │   ├── sensitive_exact_public_geometry.policy.json
