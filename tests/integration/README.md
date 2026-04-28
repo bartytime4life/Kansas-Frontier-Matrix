@@ -21,21 +21,21 @@ Governed slices across real KFM boundaries: broader than unit, contract, or poli
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/integration/README.md`  
-> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../docs/README.md`](../../docs/README.md); upstream of future executable slices under `tests/integration/**` and any escalation into [`../e2e/`](../e2e/).  
+> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/contracts/README.md`](../../schemas/contracts/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../docs/README.md`](../../docs/README.md); upstream of executable slices under `tests/integration/**` and escalation into [`../e2e/`](../e2e/).  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current documented snapshot](#current-documented-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Authority routing](#authority-routing) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
 ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![path](https://img.shields.io/badge/path-tests%2Fintegration-lightgrey)
 ![family](https://img.shields.io/badge/family-governed%20slice-0a7ea4)
-![inventory](https://img.shields.io/badge/current%20inventory-README--only-lightgrey)
+![inventory](https://img.shields.io/badge/current%20inventory-README%20%2B%20fixtures%20%2B%20tests-2ea043)
 ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN%20%7C%20NEEDS%20VERIFICATION-6f42c1)
 
 > [!IMPORTANT]
 > `tests/integration/` is a first-class verification family, not a miscellaneous bucket. Put a test here only when the smallest honest proof crosses a real KFM boundary.
 
 > [!CAUTION]
-> The surfaced public-main docs show `tests/integration/` as README-only. They do **not** prove an executable suite, fixture inventory, local runner, required workflow, or branch-protection status for this family.
+> This lane now includes executable integration slices and local fixtures in this checkout. Workflow wiring and branch-protection status still require active-branch verification.
 
 ---
 
@@ -113,11 +113,11 @@ Content belongs here when it proves a governed slice across real boundaries with
 
 | Accepted input | What belongs here | Status posture |
 |---|---|---|
-| Narrow scenario definitions | One named seam, one expected finite outcome, one negative path | **PROPOSED** until executable files exist |
+| Narrow scenario definitions | One named seam, one expected finite outcome, one negative path | **CONFIRMED** in active checkout via local slice tests |
 | Reused authoritative fixtures | Contract, schema, policy, source, or evidence fixtures from owning homes | **CONFIRMED** as direction; inventory **NEEDS VERIFICATION** |
 | Source-admission slices | SourceDescriptor fixture + validator + candidate/quarantine/deny behavior | **PROPOSED** |
-| Evidence-resolution slices | `EvidenceRef` → `EvidenceBundle` → bounded response behavior | **CONFIRMED** as burden; local implementation **UNKNOWN** |
-| Policy-mediation slices | allow, deny, abstain, hold, or redaction behavior across a real payload | **CONFIRMED** as burden; local implementation **UNKNOWN** |
+| Evidence-resolution slices | `EvidenceRef` → `EvidenceBundle` → bounded response behavior | **CONFIRMED** and represented by local executable slices |
+| Policy-mediation slices | allow, deny, abstain, hold, or redaction behavior across a real payload | **CONFIRMED** and represented by local executable slices |
 | Projection/freshness slices | released derivative, manifest, stale marker, or correction visibility | **PROPOSED** |
 | Adapter-boundary slices | deterministic mock provider, resolver, or API seam with no direct public model call | **PROPOSED** |
 | Stable comparison reports | Machine-readable pass/fail reports that explain what boundary was proven | **PROPOSED** |
@@ -180,7 +180,7 @@ The following snapshot is sourced from surfaced repo-facing documentation, not f
 | Item | Status | Why it matters |
 |---|---|---|
 | `tests/integration/` exists as a test-family lane | **CONFIRMED** from surfaced repo-facing docs | Keep the repo-visible family name |
-| `tests/integration/` currently exposes `README.md` only | **CONFIRMED** from surfaced repo-facing docs | Do not imply executable coverage yet |
+| `tests/integration/` now includes executable evidence→policy slices and local fixtures | **CONFIRMED in active checkout** | Integration burden is now represented with runnable tests |
 | `/tests/` owner marker is `@bartytime4life` | **CONFIRMED** from surfaced repo-facing docs | Reuse the owner marker unless CODEOWNERS changes |
 | `.github/workflows/` is documentation-led in the surfaced snapshot | **CONFIRMED** / executable wiring **UNKNOWN** | CI enforcement must be verified in an active checkout |
 | `policy/` is a real top-level lane in surfaced docs | **CONFIRMED** from surfaced repo-facing docs | Integration slices should reuse policy seams, not copy policy |
@@ -193,12 +193,17 @@ The following snapshot is sourced from surfaced repo-facing documentation, not f
 
 ## Directory tree
 
-### Documented current snapshot — **CONFIRMED** from surfaced repo-facing docs
+### Current active-checkout snapshot — **CONFIRMED**
 
 ```text
 tests/
 └── integration/
-    └── README.md
+    ├── README.md
+    ├── fixtures/
+    │   ├── README.md
+    │   ├── evidence_ref_published.json
+    │   └── evidence_ref_raw.json
+    └── test_evidence_policy_integration.py
 ```
 
 ### Proposed maturity shape — **PROPOSED / NEEDS VERIFICATION**
