@@ -34,7 +34,7 @@ Fail-closed validator lane for ecological composite claims that must cite eviden
 > [!NOTE]
 > **Status:** `experimental` README / `draft` KFM document  
 > **Owners:** `@bartytime4life`  
-> **Truth posture:** `PROPOSED` until the active branch confirms the schema, executable validator, fixtures, tests, CI gate, and promotion wiring.  
+> **Truth posture:** `PARTIALLY IMPLEMENTED` (CLI validator exists; schema wiring and CI fixtures remain pending).  
 > **Suggested path:** `tools/validators/ecology_composite_claim/README.md`  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Validation gates](#validation-gates) · [Fixtures](#fixtures) · [Exit behavior](#exit-behavior) · [Definition of done](#definition-of-done)
 
@@ -42,7 +42,7 @@ Fail-closed validator lane for ecological composite claims that must cite eviden
 ![Document status: draft](https://img.shields.io/badge/document-draft-6f42c1)
 ![Truth posture: PROPOSED](https://img.shields.io/badge/truth-PROPOSED-d29922)
 ![Behavior: fail closed](https://img.shields.io/badge/behavior-fail--closed-b42318)
-![Implementation: needs verification](https://img.shields.io/badge/implementation-needs%20verification-d29922)
+![Implementation: partial](https://img.shields.io/badge/implementation-partial-d29922)
 
 ---
 
@@ -395,7 +395,7 @@ python -m tools.validators.ecology_composite_claim \
 ```
 
 > [!WARNING]
-> The CLI above is illustrative. Do not document it as implemented until an executable module and tests exist.
+> The CLI is implemented as `python -m tools.validators.ecology_composite_claim` and supports file input or stdin.
 
 ---
 
