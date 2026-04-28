@@ -502,3 +502,24 @@ grep -RIn \
 </details>
 
 [Back to top](#top)
+
+---
+
+## Implemented baseline runner
+
+The repository now includes a concrete fixture evaluator runner and sample inputs:
+
+- `tools/evaluators/evaluate_fixture.py`
+- `tools/evaluators/fixture_runner.py`
+- `tools/evaluators/examples/runtime_response.config.json`
+- `tools/evaluators/fixtures/runtime_response/valid_response.json`
+- `tools/evaluators/fixtures/citation_quality/missing_citation.json`
+
+Run the baseline evaluator:
+
+```bash
+python tools/evaluators/evaluate_fixture.py \
+  --config tools/evaluators/examples/runtime_response.config.json \
+  --fixture tools/evaluators/fixtures/runtime_response/valid_response.json \
+  --output build/evaluators/runtime_response.report.json
+```
