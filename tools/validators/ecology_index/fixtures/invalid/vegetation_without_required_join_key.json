@@ -1,0 +1,11 @@
+{
+  "index_id": "kfm.eco_index.invalid.vegetation_without_required_join_key",
+  "geom_id": "GRID:KS_10KM_211",
+  "geometry_type": "grid",
+  "time_bucket": "2024_annual",
+  "spec_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "domains": ["vegetation"],
+  "join_keys": {"station_id": "MESONET:ELL"},
+  "evidence_refs": [{"domain": "vegetation", "evidence_ref": "kfm:evidence:vegetation:ndvi_change:v1"}],
+  "status": "valid"
+}

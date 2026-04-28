@@ -87,3 +87,33 @@ def test_unknown_domain_fails() -> None:
 
     assert not result.ok
     assert any(error.code == "ECO_INDEX_UNKNOWN_DOMAIN" for error in result.errors)
+
+
+def test_hydrology_without_required_join_key_fails() -> None:
+    result = validate_file(
+        input_path=FIXTURE_ROOT / "invalid" / "hydrology_without_required_join_key.json",
+        schema_ref=SCHEMA_REF,
+    )
+
+    assert not result.ok
+    assert any(error.code == "ECO_INDEX_HYDROLOGY_KEY_REQUIRED" for error in result.errors)
+
+
+def test_soil_without_required_join_key_fails() -> None:
+    result = validate_file(
+        input_path=FIXTURE_ROOT / "invalid" / "soil_without_required_join_key.json",
+        schema_ref=SCHEMA_REF,
+    )
+
+    assert not result.ok
+    assert any(error.code == "ECO_INDEX_SOIL_KEY_REQUIRED" for error in result.errors)
+
+
+def test_vegetation_without_required_join_key_fails() -> None:
+    result = validate_file(
+        input_path=FIXTURE_ROOT / "invalid" / "vegetation_without_required_join_key.json",
+        schema_ref=SCHEMA_REF,
+    )
+
+    assert not result.ok
+    assert any(error.code == "ECO_INDEX_VEGETATION_KEY_REQUIRED" for error in result.errors)
