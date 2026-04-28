@@ -181,11 +181,11 @@ This table records the lane posture carried forward for this README. Recheck it 
 | Evidence item | Status | Current meaning |
 |---|---:|---|
 | `tools/probes/README.md` is the target lane surface | **CONFIRMED** | This README is a real lane document, not a hypothetical path. |
-| Public-tree evidence for `tools/probes/` is README-first | **CONFIRMED / NEEDS VERIFICATION in active checkout** | Prevents overclaiming executable probe inventory. |
+| Public-tree evidence for `tools/probes/` is README-plus-executables | **CONFIRMED** | Lane now includes documented executable probes plus this README. |
 | The existing probe README lineage is substantive | **CONFIRMED** | This revision builds upward instead of resetting the lane to generic scaffold prose. |
 | Sibling `tools/` lanes include validators, diff, catalog, CI, attest, docs, and probes | **CONFIRMED from retrieved repo-doc evidence / NEEDS ACTIVE CHECKOUT VERIFICATION** | Grounds handoff boundaries and relative-link structure. |
 | `/tools/` owner coverage uses `@bartytime4life` | **CONFIRMED from retrieved repo-doc evidence / NEEDS ACTIVE CODEOWNERS VERIFICATION** | Grounds the owner line without inventing a narrower `/tools/probes/` owner rule. |
-| Exact executable probes under `tools/probes/` | **UNKNOWN** | Do not claim executable inventory until the active branch is inspected. |
+| Executable probes under `tools/probes/` | **CONFIRMED** | Current lane includes `hydrology_freshness_probe.py`, `catalog_release_refs_probe.py`, and `stac_materiality_probe.py`. |
 | Exact workflow callers, rulesets, or non-public runtime use | **UNKNOWN** | Not derivable from README lineage alone. |
 | Whether `data/run_receipts/` is populated or active | **NEEDS VERIFICATION** | Probe outputs may land there only when repo conventions confirm it. |
 
@@ -199,7 +199,11 @@ This table records the lane posture carried forward for this README. Recheck it 
 
 ```text
 tools/probes/
-└── README.md
+├── README.md
+├── __init__.py
+├── catalog_release_refs_probe.py
+├── hydrology_freshness_probe.py
+└── stac_materiality_probe.py
 ```
 
 ### Confirmed parent-family context from repo-doc evidence
