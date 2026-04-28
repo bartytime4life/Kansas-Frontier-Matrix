@@ -134,13 +134,56 @@ def validate_proof_pack(
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema)
 
-    return [
+    schema_errors = [
         f"{'.'.join(str(part) for part in error.path) or '<root>'}: {error.message}"
         for error in sorted(
             validator.iter_errors(proof_pack),
             key=lambda item: list(item.path),
         )
     ]
+
+    const_errors = list(_collect_const_errors(schema, proof_pack))
+    return sorted(set(schema_errors + const_errors))
+
+
+def _collect_const_errors(
+    schema_node: Any,
+    data_node: Any,
+    path: tuple[str, ...] = (),
+) -> list[str]:
+    errors: list[str] = []
+
+    if not isinstance(schema_node, dict):
+        return errors
+
+    if "const" in schema_node and data_node != schema_node["const"]:
+        path_text = ".".join(path) or "<root>"
+        errors.append(f"{path_text}: expected constant value {schema_node['const']!r}")
+
+    properties = schema_node.get("properties")
+    if isinstance(properties, dict) and isinstance(data_node, dict):
+        for key, child_schema in properties.items():
+            if key in data_node:
+                errors.extend(
+                    _collect_const_errors(
+                        child_schema,
+                        data_node[key],
+                        (*path, key),
+                    )
+                )
+
+    items_schema = schema_node.get("items")
+    if isinstance(items_schema, dict) and isinstance(data_node, list):
+        for index, item in enumerate(data_node):
+            errors.extend(
+                _collect_const_errors(
+                    items_schema,
+                    item,
+                    (*path, str(index)),
+                )
+            )
+
+    return errors
 
 
 def write_proof_pack(path: Path, proof_pack: dict[str, Any]) -> None:
