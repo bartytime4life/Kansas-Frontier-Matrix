@@ -142,7 +142,13 @@ If the change defines **how app/runtime code consumes a policy result consistent
 ```text
 packages/
 └── policy/
-    └── README.md
+    ├── README.md
+    ├── __init__.py
+    ├── __main__.py
+    ├── decision_engine.py
+    ├── inputs.py
+    ├── obligations.py
+    └── results.py
 ```
 
 ### Possible implementation shape (**PROPOSED — adapt after active-branch inspection**)
