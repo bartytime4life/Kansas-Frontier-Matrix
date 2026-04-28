@@ -63,13 +63,19 @@
             "artifact_uri_match",
             "decision_sha256_match",
             "signature_match",
-            "result_type_match"
+            "result_type_match",
+            "status_match",
+            "signature_alg_match",
+            "tool_match"
           ],
           "properties": {
             "artifact_uri_match": { "type": "boolean" },
             "decision_sha256_match": { "type": "boolean" },
             "signature_match": { "type": "boolean" },
-            "result_type_match": { "type": "boolean" }
+            "result_type_match": { "type": "boolean" },
+            "status_match": { "type": "boolean" },
+            "signature_alg_match": { "type": "boolean" },
+            "tool_match": { "type": "boolean" }
           },
           "additionalProperties": true
         },

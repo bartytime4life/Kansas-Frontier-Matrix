@@ -137,3 +137,63 @@ def test_verify_fails_on_artifact_mismatch(tmp_path: Path) -> None:
     result = json.loads(verify_out.read_text(encoding="utf-8"))
     assert result["verified"] is False
     assert result["checks"]["artifact_uri_match"] is False
+
+
+def test_sign_fails_when_decision_shape_invalid(tmp_path: Path) -> None:
+    decision_path = tmp_path / "decision.json"
+    sign_out = tmp_path / "decision-sign-result.json"
+
+    write_json(decision_path, {"status": "allow"})
+
+    sign = run_sign(
+        str(decision_path),
+        "--artifact-uri",
+        "ghcr.io/example/promotion:overlay-floodplain-kansas-v1",
+        "--output",
+        str(sign_out),
+        "--yes",
+        env={"KFM_ATTEST_SIGNING_KEY": "unit-test-key"},
+    )
+
+    assert sign.returncode == 1
+    assert "decision envelope missing required field: decision_id" in sign.stderr
+    assert not sign_out.exists()
+
+
+def test_verify_fails_when_sign_result_metadata_tampered(tmp_path: Path) -> None:
+    decision_path = tmp_path / "decision.json"
+    sign_out = tmp_path / "decision-sign-result.json"
+    verify_out = tmp_path / "decision-verify-result.json"
+
+    write_json(decision_path, decision_fixture())
+
+    sign = run_sign(
+        str(decision_path),
+        "--artifact-uri",
+        "ghcr.io/example/promotion:correct",
+        "--output",
+        str(sign_out),
+        "--yes",
+        env={"KFM_ATTEST_SIGNING_KEY": "unit-test-key"},
+    )
+    assert sign.returncode == 0
+
+    tampered = json.loads(sign_out.read_text(encoding="utf-8"))
+    tampered["signature"]["alg"] = "sha512"
+    sign_out.write_text(json.dumps(tampered, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    verify = run_verify(
+        "ghcr.io/example/promotion:correct",
+        "--decision",
+        str(decision_path),
+        "--sign-result",
+        str(sign_out),
+        "--output",
+        str(verify_out),
+        env={"KFM_ATTEST_SIGNING_KEY": "unit-test-key"},
+    )
+
+    assert verify.returncode == 1
+    result = json.loads(verify_out.read_text(encoding="utf-8"))
+    assert result["verified"] is False
+    assert result["checks"]["signature_alg_match"] is False

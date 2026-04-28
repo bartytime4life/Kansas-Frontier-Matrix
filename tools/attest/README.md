@@ -446,6 +446,12 @@ The helper names below are part of the **current documented thin slice**. Their 
 - `decision-sign-result.json`
 - `decision-verify-result.json`
 
+### Current thin-slice guardrails (implemented)
+
+- signing fails closed when the decision envelope is missing required identity fields (`decision_id`, `status`)
+- verification checks signature binding **and** signed-result metadata (`status`, algorithm, and signing tool identity)
+- verification emits explicit boolean checks so downstream lanes can render why verification failed without re-running signing logic
+
 ### Typical downstream artifacts this lane may help feed
 
 - `promotion-record.json`

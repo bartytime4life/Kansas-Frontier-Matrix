@@ -56,6 +56,13 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def ensure_decision_envelope_shape(value: dict[str, Any]) -> None:
+    if not str(value.get("decision_id", "")).strip():
+        raise ValueError("decision envelope missing required field: decision_id")
+    if not str(value.get("status", "")).strip():
+        raise ValueError("decision envelope missing required field: status")
+
+
 def write_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -78,6 +85,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         decision = load_json(decision_path)
+        ensure_decision_envelope_shape(decision)
         sign_result = load_json(sign_result_path)
 
         decision_digest = sha256_hex(canonical_json(decision))
@@ -92,6 +100,9 @@ def main(argv: list[str] | None = None) -> int:
             "decision_sha256_match": sign_result.get("decision_sha256") == decision_digest,
             "signature_match": signature_value == expected_signature,
             "result_type_match": sign_result.get("result_type") == "kfm:DecisionEnvelopeSignResult",
+            "status_match": sign_result.get("status") == "signed",
+            "signature_alg_match": sign_result.get("signature", {}).get("alg") == "sha256",
+            "tool_match": sign_result.get("tool") == "tools/attest/sign_decision_envelope.py",
         }
         verified = all(checks.values())
 
