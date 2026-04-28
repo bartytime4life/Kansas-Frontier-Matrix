@@ -11,8 +11,13 @@ from tools.proofs.ecology_proof_pack_builder import (
     validate_proof_pack,
 )
 
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
-SPEC_HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+def load_fixture(*parts: str) -> dict:
+    return json.loads(FIXTURES_DIR.joinpath(*parts).read_text(encoding="utf-8"))
+
+
 SCHEMA_REF = Path("schemas/ecology/ecology_proof_pack.schema.json")
 
 
@@ -21,32 +26,11 @@ def write_json(path: Path, value: object) -> None:
 
 
 def manifest() -> dict:
-    return {
-        "manifest_id": "kfm.receipt_manifest.ecology.eco_index.example",
-        "candidate_id": "eco_index.example",
-        "candidate_type": "eco_index",
-        "spec_hash": SPEC_HASH,
-        "receipts": [
-            {
-                "receipt_type": "validator_result",
-                "validator": "tools/validators/ecology_index",
-                "receipt_ref": "data/receipts/ecology/index/example.validator_receipt.json",
-                "decision": "pass",
-                "spec_hash": SPEC_HASH,
-                "generated_at": "2026-04-24T00:00:00Z",
-            }
-        ],
-        "decision": "ready_for_promotion",
-        "generated_at": "2026-04-24T00:00:00Z",
-    }
+    return load_fixture("valid", "manifest.ready_for_promotion.json")
 
 
 def catalog_refs() -> dict:
-    return {
-        "dcat": ["kfm:dcat:dataset:ecology:example"],
-        "stac": ["kfm:stac:item:ecology:example"],
-        "prov": ["kfm:prov:entity:ecology:example"],
-    }
+    return load_fixture("valid", "catalog_refs.complete.json")
 
 
 def test_validate_proof_pack_accepts_generated_pack() -> None:

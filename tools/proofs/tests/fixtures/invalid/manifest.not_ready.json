@@ -1,0 +1,18 @@
+{
+  "manifest_id": "kfm.receipt_manifest.ecology.eco_index.example",
+  "candidate_id": "eco_index.example",
+  "candidate_type": "eco_index",
+  "spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "receipts": [
+    {
+      "receipt_type": "validator_result",
+      "validator": "tools/validators/ecology_index",
+      "receipt_ref": "data/receipts/ecology/index/example.validator_receipt.json",
+      "decision": "pass",
+      "spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "generated_at": "2026-04-24T00:00:00Z"
+    }
+  ],
+  "decision": "not_ready",
+  "generated_at": "2026-04-24T00:00:00Z"
+}
