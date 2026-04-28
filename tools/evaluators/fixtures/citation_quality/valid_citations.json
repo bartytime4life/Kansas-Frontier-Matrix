@@ -1,0 +1,33 @@
+{
+  "fixture_type": "kfm.evaluator_fixture.v1",
+  "fixture_id": "citation.valid_citations.v1",
+  "fixture_category": "positive",
+  "subject_ref": "tests/fixtures/evidence/valid/claim_envelope_render_allowed.json",
+  "subject_type": "runtime_response",
+  "expected_outcome": "ALLOW",
+  "artifact_spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "metric_results": [
+    {
+      "name": "citation_present",
+      "score": 1,
+      "passed": true,
+      "reason_code": "CITATION_PRESENT",
+      "explanation": {
+        "summary": "All expected citation references are present.",
+        "evidence_refs": [
+          "evidence://source/001",
+          "evidence://source/002"
+        ]
+      }
+    },
+    {
+      "name": "citation_supports_claim",
+      "score": 1,
+      "passed": true,
+      "reason_code": "CITATION_SUPPORT_CONFIRMED",
+      "explanation": {
+        "summary": "Citations directly support the asserted claim."
+      }
+    }
+  ]
+}
