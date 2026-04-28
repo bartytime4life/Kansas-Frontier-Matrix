@@ -164,7 +164,7 @@ Do not put the following in this directory.
 
 ## Directory tree
 
-### Proposed structure
+### Current structure
 
 ```text
 tools/evaluators/fixtures/
@@ -185,7 +185,7 @@ tools/evaluators/fixtures/
 ```
 
 > [!NOTE]
-> This tree is **PROPOSED** until the mounted repo confirms actual evaluator families, fixture names, schema homes, and test runners.
+> This tree reflects the current checked-in fixture set. Keep family names and file paths aligned with `fixture.schema.json`, `config.schema.json`, and evaluator test coverage.
 
 ---
 
@@ -204,7 +204,7 @@ find tools/evaluators/fixtures -type f | sort
 
 ```bash
 python -m jsonschema \
-  -i tools/evaluators/fixtures/runtime_response/missing_citation.json \
+  -i tools/evaluators/fixtures/citation_quality/missing_citation.json \
   tools/evaluators/fixtures/fixture.schema.json
 ```
 
@@ -218,7 +218,7 @@ mkdir -p build/evaluators/runtime_response
 
 python tools/evaluators/runtime_response/runtime_response_evaluator.py \
   --config tools/evaluators/runtime_response/config.json \
-  --input tools/evaluators/fixtures/runtime_response/missing_citation.json \
+  --input tools/evaluators/fixtures/citation_quality/missing_citation.json \
   --report build/evaluators/runtime_response/missing_citation.report.json
 ```
 
@@ -296,7 +296,7 @@ Evaluator configs should reference fixtures without embedding full fixture conte
 
 ```json
 {
-  "fixture_ref": "tools/evaluators/fixtures/runtime_response/missing_citation.json",
+  "fixture_ref": "tools/evaluators/fixtures/citation_quality/missing_citation.json",
   "fixture_type": "negative",
   "expected_outcome": "DENY",
   "expected_failure_flags": ["MISSING_REQUIRED_CITATION"]
@@ -361,9 +361,9 @@ The evaluator config schema uses `ALLOW`, `ABSTAIN`, `DENY`, and `ERROR` for `ex
 
 | Family | Purpose | Example fixture | Status |
 |---|---|---|---|
-| `runtime_response/` | Tests finite runtime response outcomes and citation behavior. | `missing_citation.json` | **PROPOSED** |
-| `citation_quality/` | Tests citation presence, support, and reference linkage. | `partial_support.json` | **PROPOSED** |
-| `artifact_quality/` | Tests schema, tolerance, or artifact-shape expectations. | `invalid_schema.json` | **PROPOSED** |
+| `runtime_response/` | Tests finite runtime response outcomes and abstention behavior. | `abstain_case.json` | **PRESENT** |
+| `citation_quality/` | Tests citation presence, support, and reference linkage. | `partial_support.json` | **PRESENT** |
+| `artifact_quality/` | Tests schema, tolerance, or artifact-shape expectations. | `invalid_schema.json` | **PRESENT** |
 
 ### Fixture review matrix
 
