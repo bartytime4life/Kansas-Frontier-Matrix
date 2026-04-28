@@ -143,7 +143,10 @@ This snapshot is intentionally bounded.
 | Surface | Current evidence posture | What it means |
 |---|---|---|
 | `tests/reproducibility/` | **CONFIRMED from surfaced repo-facing Markdown; NEEDS VERIFICATION in active checkout** | The directory is treated as a real test-family boundary. |
-| `tests/reproducibility/README.md` | **CONFIRMED from surfaced repo-facing Markdown; NEEDS VERIFICATION in active checkout** | The surfaced public-main snapshot listed this README as the only visible file in the directory. |
+| `tests/reproducibility/README.md` | **CONFIRMED from surfaced repo-facing Markdown** | This lane contract and checklist remain the primary policy-facing guide. |
+| `tests/reproducibility/cases/first_public_safe_receipt_rerun.json` | **CONFIRMED in active checkout** | A starter case card defines pinned fields, expected outcome, and bounded drift. |
+| `tests/reproducibility/scripts/compare_receipts.py` | **CONFIRMED in active checkout** | A local no-network comparator returns `PASS` or `FAIL_CLOSED` and emits machine-readable reports. |
+| `tests/reproducibility/test_receipt_comparator.py` | **CONFIRMED in active checkout** | Two fixture-backed tests prove allowed drift and required-field drift behavior. |
 | Sibling test families | **CONFIRMED from surfaced `tests/` README drafts** | Adjacent families include accessibility, contracts, e2e, integration, policy, and unit. |
 | `/tests/` owner | **CONFIRMED from surfaced CODEOWNERS-backed docs** | Owner is carried forward as `@bartytime4life`; narrower ownership still needs direct recheck. |
 | Workflow YAML | **UNKNOWN / NEEDS VERIFICATION** | Surfaced workflow docs described `.github/workflows/` as README-only on public `main`; active branch and platform rules must be inspected before claiming merge gates. |
@@ -164,7 +167,22 @@ This snapshot is intentionally bounded.
 
 ```text
 tests/reproducibility/
-└── README.md
+├── README.md
+├── cases/
+│   └── first_public_safe_receipt_rerun.json
+├── fixtures/
+│   ├── invalid/
+│   │   └── receipt_spec_hash_drift.json
+│   └── valid/
+│       ├── receipt_run_a.json
+│       └── receipt_run_b.json
+├── receipts/
+│   └── README.md
+├── reports/
+│   └── README.md
+├── scripts/
+│   └── compare_receipts.py
+└── test_receipt_comparator.py
 ```
 
 ### Proposed starter expansion shape
@@ -233,21 +251,19 @@ sed -n '1,220p' pipelines/soils/gssurgo-ks/README.md 2>/dev/null || true
 The real task runner, case filenames, and workflow hooks remain **NEEDS VERIFICATION**, so this is intentionally pseudocode.
 
 ```bash
-# PSEUDOCODE — replace placeholders after active-checkout inspection.
+# 1) Choose the starter case and fixture receipts.
+CASE="tests/reproducibility/cases/first_public_safe_receipt_rerun.json"
+A="tests/reproducibility/fixtures/valid/receipt_run_a.json"
+B="tests/reproducibility/fixtures/valid/receipt_run_b.json"
 
-# 1) Choose a pinned reproducibility case.
-CASE="tests/reproducibility/cases/<case>.yaml"
+# 2) Compare two runs using the local comparator.
+python3 tests/reproducibility/scripts/compare_receipts.py \
+  "$A" "$B" \
+  --case "$CASE" \
+  --report-out tests/reproducibility/reports/latest_report.json
 
-# 2) Execute the same governed run twice against the same declared scope.
-<repo-test-runner> reproducibility --case "$CASE" --out /tmp/kfm-run-a
-<repo-test-runner> reproducibility --case "$CASE" --out /tmp/kfm-run-b
-
-# 3) Compare receipts, spec hashes, artifact digests, and outcome class.
-<repo-compare-tool> \
-  /tmp/kfm-run-a/receipt.json \
-  /tmp/kfm-run-b/receipt.json
-
-# 4) Fail closed if drift is unexplained or outside the case's declared envelope.
+# 3) Run fixture-backed tests for allowed drift and fail-closed drift.
+python3 -m pytest -q tests/reproducibility/test_receipt_comparator.py
 ```
 
 > [!TIP]
@@ -419,12 +435,12 @@ flowchart LR
 This lane is “done enough” to claim executable reproducibility coverage only when the following gates are satisfied.
 
 - [ ] Active checkout confirms `tests/reproducibility/` inventory and owner mapping.
-- [ ] At least one `cases/` entry exists with declared input scope, comparison basis, expected outcome, and allowed drift.
-- [ ] At least one valid fixture and one invalid or negative-path fixture exist.
+- [x] At least one `cases/` entry exists with declared input scope, comparison basis, expected outcome, and allowed drift.
+- [x] At least one valid fixture and one invalid or negative-path fixture exist.
 - [ ] The default case can run without network access unless the case explicitly declares and gates live source use.
-- [ ] The rerun path runs the same case at least twice and compares machine-readable receipts before prose.
-- [ ] The comparison report names the first differing field for any mismatch.
-- [ ] Unexplained drift fails closed.
+- [x] The rerun path runs the same case at least twice and compares machine-readable receipts before prose.
+- [x] The comparison report names the first differing field for any mismatch.
+- [x] Unexplained drift fails closed.
 - [ ] `ABSTAIN`, `DENY`, and `ERROR` can be expected passing outcomes when declared.
 - [ ] No RAW, WORK, QUARANTINE, credentials, or unpublished canonical data are exposed through this directory.
 - [ ] The active workflow path is documented only after checked-in YAML or platform rules are verified.
