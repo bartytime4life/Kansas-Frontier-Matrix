@@ -87,3 +87,59 @@ flowchart LR
   C -->|expected| D[DENY / HOLD / ABSTAIN / ERROR]
   C -->|regression| E[Accepted as public-ready]
   E --> F[Test failure]
+```
+
+A fixture in this folder should be parseable JSON, but it should fail at least one downstream validation or decisioning gate.
+
+## Rules for this folder
+
+- Keep fixtures synthetic; never commit real sensitive coordinates or protected site detail.
+- Prefer one dominant failure reason per file.
+- Name files as `<object>.<failure_reason>.invalid.json`.
+- Keep failure intent obvious from the filename and inventory row.
+- If a fixture is changed, update matching schema, policy, validator, or test expectations in the same PR.
+- Do not add “near valid” fixtures unless the expected failing gate is clear and stable.
+- Do not use this folder to test ambiguous source-rights or steward-review behavior with real records.
+
+## Quick checks
+
+Run these from the repository root.
+
+```bash
+# List invalid ecology fixtures
+find tests/fixtures/ecology/invalid -maxdepth 1 -type f -name '*.json' | sort
+```
+
+```bash
+# JSON parse sanity
+python - <<'PY'
+from pathlib import Path
+import json
+
+fixture_dir = Path("tests/fixtures/ecology/invalid")
+
+for path in sorted(fixture_dir.glob("*.json")):
+    json.loads(path.read_text(encoding="utf-8"))
+    print("ok", path)
+PY
+```
+
+## Review checklist
+
+Before approving changes to this folder, confirm:
+
+| Check | Expected result |
+| --- | --- |
+| Synthetic only | No real sensitive ecology data is committed. |
+| One dominant failure | The fixture has a clear primary expected failure. |
+| Naming | Filename follows `<object>.<failure_reason>.invalid.json`. |
+| Inventory | Table above reflects the current fixture set. |
+| Parser sanity | Fixture remains valid JSON. |
+| Validator outcome | Fixture fails closed as `DENY`, `HOLD`, `ABSTAIN`, or validator `ERROR`. |
+| Policy posture | No invalid fixture is treated as public-ready. |
+
+## Expected outcome
+
+Every fixture in this directory should produce a failing result: `DENY`, `HOLD`, `ABSTAIN`, or validator `ERROR`.
+
+No payload in this folder may be accepted as public-ready, promoted as a release candidate, or used as a public ecology example.
