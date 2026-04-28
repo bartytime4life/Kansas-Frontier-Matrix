@@ -575,3 +575,32 @@ These fields are a review checklist, not a canonical schema.
 </details>
 
 [Back to top](#top)
+
+---
+
+## Current implementation snapshot
+
+The directory currently includes a working Python validator entrypoint:
+
+- `validate_connector_candidate.py`
+- `candidate.example.json`
+- `candidate.invalid.json`
+
+Quick local checks:
+
+```bash
+python3 tools/validators/connector_gate/validate_connector_candidate.py \
+  tools/validators/connector_gate/candidate.example.json
+
+python3 tools/validators/connector_gate/validate_connector_candidate.py \
+  tools/validators/connector_gate/candidate.invalid.json
+```
+
+Optional strict digest mode:
+
+```bash
+python3 tools/validators/connector_gate/validate_connector_candidate.py \
+  --enforce-spec-hash tools/validators/connector_gate/candidate.example.json
+```
+
+In strict mode, `spec_hash` must be present and equal to the sha256 digest of the candidate file bytes.
