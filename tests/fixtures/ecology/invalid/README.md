@@ -15,42 +15,75 @@ notes: [Negative fixtures for ecology validators; each file is intentionally inv
 
 # Ecology Invalid Fixtures
 
-This directory contains **synthetic negative fixtures** used to verify fail-closed behavior for ecology schema and policy checks.
+Synthetic negative ecology fixtures used to verify fail-closed schema, policy, rights, identity, and geoprivacy behavior.
+
+> [!IMPORTANT]
+> **Status:** active  
+> **Owners:** `kfm-data-governance`  
+> **Policy label:** `restricted`  
+> **Fixture posture:** intentionally invalid; never public-ready
+>
+> ![status: active](https://img.shields.io/badge/status-active-2ea44f)
+> ![policy: restricted](https://img.shields.io/badge/policy-restricted-8b5cf6)
+> ![fixtures: invalid](https://img.shields.io/badge/fixtures-invalid-b91c1c)
+> ![outcome: fail--closed](https://img.shields.io/badge/outcome-fail--closed-1f6feb)
+>
+> **Quick jumps:** [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Fixture inventory](#fixture-inventory) · [Rules](#rules-for-this-folder) · [Quick checks](#quick-checks)
+
+## Repo fit
+
+| Field | Value |
+| --- | --- |
+| Path | `tests/fixtures/ecology/invalid/` |
+| Purpose | Negative test payloads for ecology validators and publication/policy gates. |
+| Upstream context | [`../README.md`](../README.md), [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md) |
+| Adjacent fixture sets | [`../valid/README.md`](../valid/README.md), [`../policy/README.md`](../policy/README.md) |
+| Downstream consumers | Ecology schema and policy tests that assert invalid payloads produce `DENY`, `HOLD`, `ABSTAIN`, or validator `ERROR`. |
+| Downstream test paths | **NEEDS VERIFICATION:** exact test-module paths must be confirmed from the mounted repo. |
+
+This folder is part of the KFM evidence-safety test surface. It exists to prove that invalid or unsafe ecology payloads do **not** silently cross into public-ready release posture.
+
+## Accepted inputs
+
+Place files here only when they are:
+
+- Synthetic `.json` payloads.
+- Intentionally invalid.
+- Focused on one dominant expected failure.
+- Useful for ecology schema, policy, rights, identity, or geoprivacy validator coverage.
+- Safe to commit without exposing real sensitive coordinates, protected site detail, steward-controlled records, or live occurrence data.
+
+## Exclusions
+
+Do **not** place the following in this folder:
+
+| Excluded material | Where it belongs instead |
+| --- | --- |
+| Valid ecology fixtures | [`../valid/`](../valid/) |
+| Policy-only examples that are not invalid ecology payloads | [`../policy/`](../policy/) |
+| Real occurrence records, sensitive coordinates, protected habitat detail, or steward-controlled data | Do not commit; use governed source intake and restricted storage. |
+| Fixture documentation that changes suite-level behavior | Parent fixture README or domain test documentation. |
+| Validator implementation code | Repo-native validator/tooling path. **NEEDS VERIFICATION:** confirm exact path in mounted repo. |
 
 ## Fixture inventory
 
-| File | Primary expected failure |
-| --- | --- |
-| `derived_vegetation_layer.missing_catalog_refs.invalid.json` | Missing `catalog_refs` closure for derived layer payloads. |
-| `habitat_assignment.missing_class.invalid.json` | Missing `habitat_class` on derived habitat assignment. |
-| `missing_policy_id.invalid.json` | Missing required `policy_id` for publication decisioning. |
-| `observation_plot.unknown_rights.invalid.json` | `rights_status` is `unknown` for a publishable observation payload. |
-| `sensitive_occurrence_record.public_exact_geometry.invalid.json` | Restricted occurrence includes public exact geometry posture. |
-| `taxon_record.missing_spec_hash.invalid.json` | Missing deterministic `spec_hash`. |
+| File | Primary expected failure | Gate family |
+| --- | --- | --- |
+| `derived_vegetation_layer.missing_catalog_refs.invalid.json` | Missing `catalog_refs` closure for derived layer payloads. | Catalog closure |
+| `habitat_assignment.missing_class.invalid.json` | Missing `habitat_class` on derived habitat assignment. | Derived habitat schema |
+| `missing_policy_id.invalid.json` | Missing required `policy_id` for publication decisioning. | Publication policy |
+| `observation_plot.unknown_rights.invalid.json` | `rights_status` is `unknown` for a publishable observation payload. | Rights / publication |
+| `sensitive_occurrence_record.public_exact_geometry.invalid.json` | Restricted occurrence includes public exact geometry posture. | Geoprivacy / sensitivity |
+| `taxon_record.missing_spec_hash.invalid.json` | Missing deterministic `spec_hash`. | Identity / hashing |
 
-## Rules for fixtures in this folder
+## Failure contract
 
-- Keep fixtures synthetic; never commit real sensitive coordinates or protected site detail.
-- Prefer one dominant failure reason per file.
-- Name files as `<object>.<failure_reason>.invalid.json`.
-- If a fixture is changed, update tests/policy fixtures in the same PR when behavior changes.
+These fixtures are not “bad examples” for manual inspection only. They are regression guards.
 
-## Quick checks
-
-```bash
-# List fixtures
-find tests/fixtures/ecology/invalid -maxdepth 1 -type f -name '*.json' | sort
-
-# JSON parse sanity
-python - <<'PY'
-from pathlib import Path
-import json
-for p in sorted(Path('tests/fixtures/ecology/invalid').glob('*.json')):
-    json.loads(p.read_text(encoding='utf-8'))
-    print('ok', p)
-PY
-```
-
-## Expected outcome
-
-These fixtures should produce a failing result (`DENY`, `HOLD`, `ABSTAIN`, or validator `ERROR`) and must never be accepted as public-ready payloads.
+```mermaid
+flowchart LR
+  A[Invalid synthetic fixture] --> B[JSON parse sanity]
+  B --> C[Schema / policy validator]
+  C -->|expected| D[DENY / HOLD / ABSTAIN / ERROR]
+  C -->|regression| E[Accepted as public-ready]
+  E --> F[Test failure]
