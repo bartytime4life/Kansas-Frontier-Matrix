@@ -1,0 +1,38 @@
+{
+  "version": "v1",
+  "updated": "2026-04-28",
+  "datasets": [
+    {
+      "dataset_id": "ecology.taxon_record.v1",
+      "title": "Normalized ecological taxon records",
+      "source_refs": ["usda_plants", "gbif_occurrence"],
+      "schema_ref": "schemas/contracts/v1/ecology/taxon_record.schema.json",
+      "sensitivity_default": "public",
+      "publication_state": "candidate"
+    },
+    {
+      "dataset_id": "ecology.observation_plot.v1",
+      "title": "Plot-level ecological observations",
+      "source_refs": ["kfs_field_plots"],
+      "schema_ref": "schemas/contracts/v1/ecology/observation_plot.schema.json",
+      "sensitivity_default": "review_required",
+      "publication_state": "candidate"
+    },
+    {
+      "dataset_id": "ecology.derived_vegetation_layer.v1",
+      "title": "Derived vegetation layer descriptors",
+      "source_refs": ["ndvi_derived_layers"],
+      "schema_ref": "schemas/contracts/v1/ecology/derived_vegetation_layer.schema.json",
+      "sensitivity_default": "public",
+      "publication_state": "candidate"
+    },
+    {
+      "dataset_id": "ecology.sensitive_occurrence_record.v1",
+      "title": "Restricted sensitive occurrence records",
+      "source_refs": ["gbif_occurrence", "kfs_field_plots"],
+      "schema_ref": "schemas/contracts/v1/ecology/sensitive_occurrence_record.schema.json",
+      "sensitivity_default": "restricted",
+      "publication_state": "restricted"
+    }
+  ]
+}

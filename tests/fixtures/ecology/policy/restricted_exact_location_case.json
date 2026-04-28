@@ -1,0 +1,10 @@
+{
+  "bundle_id": "ecology-policy-case-001",
+  "source_refs": ["kfs_field_plots"],
+  "dataset_refs": ["ecology.sensitive_occurrence_record.v1"],
+  "policy_id": "eco-restricted-v1",
+  "sensitivity": "restricted",
+  "rights_status": "controlled",
+  "exact_geometry_present": true,
+  "evidence_refs": ["evidence://bundle/sensitive-001"]
+}

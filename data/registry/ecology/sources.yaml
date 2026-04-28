@@ -1,0 +1,55 @@
+{
+  "version": "v1",
+  "updated": "2026-04-28",
+  "sources": [
+    {
+      "source_id": "gbif_occurrence",
+      "title": "Global Biodiversity Information Facility (GBIF) occurrences",
+      "role": "aggregator",
+      "steward": "GBIF Secretariat",
+      "rights_default": "mixed",
+      "cadence": "daily",
+      "trust_tier": "medium",
+      "notes": [
+        "Upstream attribution must be preserved per record.",
+        "Sensitivity class must be evaluated prior to publication."
+      ]
+    },
+    {
+      "source_id": "usda_plants",
+      "title": "USDA PLANTS taxonomy and distribution reference",
+      "role": "authority",
+      "steward": "USDA NRCS",
+      "rights_default": "public",
+      "cadence": "periodic",
+      "trust_tier": "high",
+      "notes": [
+        "Preferred authority for standardized plant naming in this lane."
+      ]
+    },
+    {
+      "source_id": "kfs_field_plots",
+      "title": "Kansas field survey plot observations",
+      "role": "observation",
+      "steward": "Kansas Frontier Matrix partners",
+      "rights_default": "controlled",
+      "cadence": "seasonal",
+      "trust_tier": "high",
+      "notes": [
+        "Can contain sensitive coordinates and private-access sites."
+      ]
+    },
+    {
+      "source_id": "ndvi_derived_layers",
+      "title": "NDVI-based vegetation derivatives",
+      "role": "model",
+      "steward": "KFM ecological modeling",
+      "rights_default": "internal",
+      "cadence": "monthly",
+      "trust_tier": "medium",
+      "notes": [
+        "Model output should be labeled as derived context, not direct occurrence evidence."
+      ]
+    }
+  ]
+}

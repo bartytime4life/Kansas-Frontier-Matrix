@@ -1,0 +1,8 @@
+{
+  "bundle_id": "ecology-bundle-invalid-001",
+  "source_refs": ["kfs_field_plots"],
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "evidence_refs": ["evidence://bundle/obs-002"]
+}
