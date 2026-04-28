@@ -1,10 +1,22 @@
 {
-  "bundle_id": "ecology-policy-case-001",
+  "case_id": "ecology-policy-restricted-exact-location-case-001",
+  "object_type": "sensitive_occurrence",
+  "source_role": "SENSITIVE_OCCURRENCE",
   "source_refs": ["kfs_field_plots"],
   "dataset_refs": ["ecology.sensitive_occurrence_record.v1"],
+  "catalog_refs": ["catalog://ecology/sensitive_occurrence_record/v1"],
   "policy_id": "eco-restricted-v1",
+  "policy_label": "public",
   "sensitivity": "restricted",
   "rights_status": "controlled",
+  "public_visibility": "public",
+  "public_geometry_policy": "allow_exact",
   "exact_geometry_present": true,
-  "evidence_refs": ["evidence://bundle/sensitive-001"]
+  "evidence_refs": ["evidence://ecology/policy/restricted-exact-location-case-001"],
+  "evidence_bundle_resolved": true,
+  "expected_decision": "DENY",
+  "expected_reasons": [
+    "sensitive_exact_geometry_not_publishable",
+    "restricted_exact_geometry_not_publishable"
+  ]
 }
