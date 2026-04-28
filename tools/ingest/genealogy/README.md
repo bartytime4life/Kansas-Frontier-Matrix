@@ -253,11 +253,11 @@ python tools/ingest/genealogy/write_sidecar.py \
 
 | Command | Primary responsibility | Expected output | Truth label |
 |---|---|---|---|
-| `verify_evidence_bundle.py` | Verify payload hash, trust envelope, and consent obligations before ingest | PASS/ERROR plus no parsed data on failure | `PROPOSED / NEEDS VERIFICATION` |
-| `parse_gedcom.py` | Extract source event rows from GEDCOM | `data/work/genealogy/raw_events.ndjson` | `PROPOSED / NEEDS VERIFICATION` |
-| `build_canonical_events.py` | Attach pseudonymous key, `bundle_id`, `evidence_ref`, and canonical event fields | `data/processed/genealogy/events.ndjson` | `PROPOSED / NEEDS VERIFICATION` |
-| `write_sidecar.py` | Emit encrypted sidecar mappings for restricted lookup | `data/work/genealogy/sidecar.ndjson` | `PROPOSED / NEEDS VERIFICATION` |
-| `read_sidecar.py` | Resolve one sidecar row for controlled review/debug | JSON to stdout for authorized local review | `PROPOSED / NEEDS VERIFICATION` |
+| `verify_evidence_bundle.py` | Verify payload hash, trust envelope, and consent obligations before ingest | PASS/ERROR plus no parsed data on failure | `IMPLEMENTED (2026-04-28)` |
+| `parse_gedcom.py` | Extract source event rows from GEDCOM | `data/work/genealogy/raw_events.ndjson` | `IMPLEMENTED (2026-04-28)` |
+| `build_canonical_events.py` | Attach pseudonymous key, `bundle_id`, `evidence_ref`, and canonical event fields | `data/processed/genealogy/events.ndjson` | `IMPLEMENTED (2026-04-28)` |
+| `write_sidecar.py` | Emit restricted sidecar mappings for controlled lookup | `data/work/genealogy/sidecar.ndjson` | `IMPLEMENTED (2026-04-28)` |
+| `read_sidecar.py` | Resolve one sidecar row for controlled review/debug | JSON to stdout for authorized local review | `IMPLEMENTED (2026-04-28)` |
 
 ### Operating rules
 
@@ -369,7 +369,7 @@ Before this README is treated as merged guidance:
 - [ ] Confirm `tools/ingest/genealogy/` exists on the target branch.
 - [ ] Confirm or update owner metadata and `CODEOWNERS` coverage.
 - [ ] Confirm parent and downstream README links.
-- [ ] Confirm command inventory: `verify_evidence_bundle.py`, `parse_gedcom.py`, `build_canonical_events.py`, `write_sidecar.py`, and `read_sidecar.py`.
+- [x] Confirm command inventory: `verify_evidence_bundle.py`, `parse_gedcom.py`, `build_canonical_events.py`, `write_sidecar.py`, and `read_sidecar.py`.
 - [ ] Confirm dependency management for DSSE verification, JSON schema validation, and encryption helpers.
 - [ ] Confirm fixtures exist for valid GEDCOM, invalid bundle, missing consent, revoked consent, recent unknown living status, and raw identifier leakage.
 - [ ] Confirm canonical rows require `evidence_ref`.
