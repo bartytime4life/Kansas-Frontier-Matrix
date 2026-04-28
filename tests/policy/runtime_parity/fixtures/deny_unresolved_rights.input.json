@@ -1,0 +1,18 @@
+{
+  "case_id": "deny_unresolved_rights",
+  "policy_input_ref": "tests/policy/runtime_parity/fixtures/deny_unresolved_rights.input.json",
+  "expected_policy_result": "deny",
+  "expected_runtime_outcome": "DENY",
+  "reason_codes": [
+    "RIGHTS_UNRESOLVED"
+  ],
+  "obligation_codes": [
+    "RESTRICT_TO_ALLOWED_AUDIENCE",
+    "RECORD_AUDIT"
+  ],
+  "evidence_state": "resolved",
+  "contract_refs": [
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+  ],
+  "notes": "Rights and redistribution uncertainty must remain explicit denial."
+}

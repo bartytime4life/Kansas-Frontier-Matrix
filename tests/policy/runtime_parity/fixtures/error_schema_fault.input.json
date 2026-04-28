@@ -1,0 +1,17 @@
+{
+  "case_id": "error_schema_fault",
+  "policy_input_ref": "tests/policy/runtime_parity/fixtures/error_schema_fault.input.json",
+  "expected_policy_result": "error",
+  "expected_runtime_outcome": "ERROR",
+  "reason_codes": [
+    "RUNTIME_SCHEMA_VALIDATION_FAILED"
+  ],
+  "obligation_codes": [
+    "RECORD_AUDIT"
+  ],
+  "evidence_state": "unknown",
+  "contract_refs": [
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+  ],
+  "notes": "Technical validation failure must surface as runtime error, not policy deny."
+}
