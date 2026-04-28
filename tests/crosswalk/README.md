@@ -154,12 +154,14 @@ These do **not** belong in this leaf.
 
 ## Directory tree
 
-Current public tree for this leaf is intentionally small.
+Current tree for this leaf includes schema/policy contract checks and catalog emission coverage alongside the core fixture test.
 
 ```text
 tests/crosswalk/
-├── README.md                    # this guide
-└── test_crosswalk_fixture.py    # PostGIS-backed integration fixture
+├── README.md                      # this guide
+├── test_crosswalk_catalog.py      # catalog manifest emission + schema validation
+├── test_crosswalk_contract.py     # schema + OPA policy contract checks
+└── test_crosswalk_fixture.py      # PostGIS-backed integration fixture
 ```
 
 Referenced surfaces to verify in the active checkout:

@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-from jsonschema import validate, ValidationError
+from jsonschema import validate
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,12 +14,12 @@ VALID_FIXTURE = ROOT / "tests/fixtures/crosswalk/valid/crosswalk_pair.valid.json
 INVALID_CRS_FIXTURE = ROOT / "tests/fixtures/crosswalk/invalid/crosswalk_pair.bad_crs.json"
 
 
-def load_json(path: Path):
+def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 @pytest.fixture(scope="module")
-def schema():
+def schema() -> dict:
     return load_json(SCHEMA_PATH)
 
 
@@ -28,7 +28,7 @@ def test_valid_fixture_passes_schema(schema):
     validate(instance=data, schema=schema)
 
 
-def test_invalid_crs_fails_schema(schema):
+def test_invalid_crs_is_schema_valid_by_design(schema):
     data = load_json(INVALID_CRS_FIXTURE)
 
     # JSON schema should NOT catch CRS error (policy should)
