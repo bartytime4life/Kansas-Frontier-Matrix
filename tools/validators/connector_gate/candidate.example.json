@@ -1,0 +1,16 @@
+{
+  "candidate_id": "example-source.connector-candidate.v1",
+  "connector_id": "kfm.connector.example-source.v1",
+  "source_id": "example-source",
+  "source_role": "reference",
+  "rights_status": "public",
+  "policy_label": "public-safe",
+  "candidate_ref": "data/registry/sources/example-source.yaml",
+  "status": "candidate",
+  "validation_plan": ["schema", "source_role", "rights", "crs", "time"],
+  "handoff_targets": {
+    "allow": "data/work/example-source/",
+    "deny": "data/quarantine/example-source/",
+    "receipt": "data/receipts/connector_gate/"
+  }
+}
