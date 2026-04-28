@@ -200,19 +200,9 @@ A file belongs in `infra/` only when all of the following are true:
 
 ## Directory tree
 
-Current lane depth is **NEEDS VERIFICATION** in the active checkout. Use the commands in [Quickstart](#quickstart) to replace this section with direct inventory evidence before claiming lane maturity.
+Current lane depth now includes baseline lane scaffolding with lane-level README files. Lane **implementation maturity** remains `NEEDS VERIFICATION` until runtime evidence exists.
 
-### Minimal placeholder shape
-
-```text
-infra/
-├── README.md
-└── .gitkeep                  # optional placeholder; remove only when real lane files land
-```
-
-### Proposed lane map
-
-These lanes are **PROPOSED** until the actual repository confirms them.
+### Current lane map
 
 ```text
 infra/
@@ -234,17 +224,17 @@ infra/
 
 | Lane | Expected role | Status |
 | --- | --- | --- |
-| `backup/` | Restore rehearsal, rollback artifacts, stale-state handling. | PROPOSED / NEEDS VERIFICATION |
-| `compose/` | Local service coordination where compose is justified. | PROPOSED / NEEDS VERIFICATION |
-| `dashboards/` | Operator-facing dashboard definitions. | PROPOSED / NEEDS VERIFICATION |
-| `gitops/` | Declarative reconciliation for later maturity stages. | PROPOSED / NEEDS VERIFICATION |
-| `hosted/` | Remote exposure, ingress, VPN, reverse proxy, and environment overlays. | PROPOSED / NEEDS VERIFICATION |
-| `kubernetes/` | Cluster manifests, Helm/Kustomize overlays, and orchestration notes. | PROPOSED / NEEDS VERIFICATION |
-| `local/` | Single-host and local-only bring-up profile. | PROPOSED / NEEDS VERIFICATION |
-| `monitoring/` | Metrics, alerts, health checks, telemetry join keys. | PROPOSED / NEEDS VERIFICATION |
-| `systemd/` | Units, timers, sockets, service isolation, hardening notes. | PROPOSED / NEEDS VERIFICATION |
-| `systemd-or-compose/` | Decision bridge for phase-one runtime orchestration. | PROPOSED / NEEDS VERIFICATION |
-| `terraform/` | Provisioning modules and environment descriptors. | PROPOSED / NEEDS VERIFICATION |
+| `backup/` | Restore rehearsal, rollback artifacts, stale-state handling. | SCAFFOLDED / NEEDS VERIFICATION |
+| `compose/` | Local service coordination where compose is justified. | SCAFFOLDED / NEEDS VERIFICATION |
+| `dashboards/` | Operator-facing dashboard definitions. | SCAFFOLDED / NEEDS VERIFICATION |
+| `gitops/` | Declarative reconciliation for later maturity stages. | SCAFFOLDED / NEEDS VERIFICATION |
+| `hosted/` | Remote exposure, ingress, VPN, reverse proxy, and environment overlays. | SCAFFOLDED / NEEDS VERIFICATION |
+| `kubernetes/` | Cluster manifests, Helm/Kustomize overlays, and orchestration notes. | SCAFFOLDED / NEEDS VERIFICATION |
+| `local/` | Single-host and local-only bring-up profile. | SCAFFOLDED / NEEDS VERIFICATION |
+| `monitoring/` | Metrics, alerts, health checks, telemetry join keys. | SCAFFOLDED / NEEDS VERIFICATION |
+| `systemd/` | Units, timers, sockets, service isolation, hardening notes. | SCAFFOLDED / NEEDS VERIFICATION |
+| `systemd-or-compose/` | Decision bridge for phase-one runtime orchestration. | SCAFFOLDED / NEEDS VERIFICATION |
+| `terraform/` | Provisioning modules and environment descriptors. | SCAFFOLDED / NEEDS VERIFICATION |
 
 ### Subtree README expectation
 
