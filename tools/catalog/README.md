@@ -64,7 +64,7 @@ Catalog QA, cross-link, and reviewer-facing metadata helper surface for Kansas F
 > - `tests/catalog/test_catalog_crosslink.py`
 > - optional JSON output for CI and reviewer rendering
 >
-> The broader lane remains larger than this one executable helper. QA, reporting, and richer closure helpers are still **PROPOSED** unless directly verified in the active branch.
+> The broader lane remains larger than this executable starter set. QA, reporting, and richer closure helpers are still **PROPOSED** unless directly verified in the active branch.
 
 > [!NOTE]
 > This README intentionally does two jobs at once:
@@ -203,7 +203,9 @@ tools/
 ├── attest/
 ├── catalog/
 │   ├── README.md
-│   └── catalog_crosslink.py
+│   ├── catalog_crosslink.py
+│   ├── catalog_record_mount_check.py
+│   └── catalog_freshness_report.py
 ├── ci/
 ├── diff/
 ├── docs/
@@ -216,10 +218,13 @@ tools/
 ```text
 tools/catalog/
 ├── README.md
-└── catalog_crosslink.py
+├── catalog_crosslink.py
+├── catalog_record_mount_check.py
+└── catalog_freshness_report.py
 
 tests/catalog/
-└── test_catalog_crosslink.py
+├── test_catalog_crosslink.py
+└── test_catalog_record_helpers.py
 ```
 
 ### Adjacent live catalog seam
@@ -437,8 +442,8 @@ Above: `tools/catalog/` inspects outward catalog seams and emits stable outputs 
 - [x] document `tools/catalog/` as a helper lane distinct from `data/catalog/`
 - [x] document the current thin slice `catalog_crosslink.py`
 - [x] document the thin-slice proof surface `tests/catalog/test_catalog_crosslink.py`
-- [ ] extend triplet checking from ref-shape alignment to declared subject/property alignment inside mounted catalog records
-- [ ] add freshness / report helper support for reviewer-facing closure summaries
+- [x] extend triplet checking from ref-shape alignment to declared subject/property alignment inside mounted catalog records
+- [x] add freshness / report helper support for reviewer-facing closure summaries
 - [ ] add optional rendering handoff to `tools/ci/`
 - [ ] verify exact file-history dates, `doc_id`, and active-branch caller/workflow parity before publication
 
