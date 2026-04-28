@@ -80,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"invalid input: {exc}", file=sys.stderr)
         return EXIT_VALIDATION_FAILURE
     except SchemaError as exc:
-        print(f"invalid schema: {exc.message}", file=sys.stderr)
+        print(f"invalid schema: {exc}", file=sys.stderr)
         return EXIT_MISSING_SCHEMA
     except Exception as exc:  # fail closed
         print(f"internal validator error: {exc}", file=sys.stderr)

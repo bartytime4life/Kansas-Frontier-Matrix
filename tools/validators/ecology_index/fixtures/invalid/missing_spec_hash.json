@@ -1,0 +1,10 @@
+{
+  "index_id": "kfm.eco_index.invalid.missing_spec_hash",
+  "geom_id": "GRID:KS_10KM_205",
+  "geometry_type": "grid",
+  "time_bucket": "2024_annual",
+  "domains": ["vegetation"],
+  "join_keys": {"layer_id": "kfm.ecology.vegetation.ndvi_change.v1"},
+  "evidence_refs": [{"domain": "vegetation", "evidence_ref": "kfm:evidence:vegetation:ndvi_change:v1"}],
+  "status": "valid"
+}

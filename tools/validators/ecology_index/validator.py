@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 
 ALLOWED_DOMAINS = {
@@ -52,13 +54,31 @@ class ValidationResult:
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as handle:
-        value = json.load(handle)
+    text = path.read_text(encoding="utf-8").strip()
+    fenced_match = re.match(r"^```[a-zA-Z0-9_-]*\n(.*?)\n```", text, flags=re.DOTALL)
+    if fenced_match:
+        text = fenced_match.group(1).strip()
+
+    value = json.loads(text)
 
     if not isinstance(value, dict):
         raise ValueError("Eco index input must be a JSON object.")
 
     return value
+
+
+def assert_schema_supported(schema: dict[str, Any]) -> None:
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if "type" in node and not isinstance(node["type"], (str, list)):
+                raise SchemaError("schema 'type' must be a string or array of strings")
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(schema)
 
 
 def validate_schema(
@@ -84,8 +104,32 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
     errors: list[ValidationErrorItem] = []
 
     domains = row.get("domains", [])
-    join_keys = row.get("join_keys", {}) or {}
-    evidence_refs = row.get("evidence_refs", [])
+    if not isinstance(domains, list):
+        domains = []
+
+    join_keys_raw = row.get("join_keys", {}) or {}
+    if isinstance(join_keys_raw, dict):
+        join_keys = join_keys_raw
+    else:
+        join_keys = {}
+        errors.append(
+            ValidationErrorItem(
+                ERROR_CODES["schema_invalid"],
+                "join_keys: must be object",
+            )
+        )
+
+    evidence_refs_raw = row.get("evidence_refs", [])
+    if isinstance(evidence_refs_raw, list):
+        evidence_refs = evidence_refs_raw
+    else:
+        evidence_refs = []
+        errors.append(
+            ValidationErrorItem(
+                ERROR_CODES["schema_invalid"],
+                "evidence_refs: must be array",
+            )
+        )
 
     unknown_domains = sorted(set(domains) - ALLOWED_DOMAINS)
     for domain in unknown_domains:
@@ -112,7 +156,21 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
             )
         )
 
+    if row.get("geometry_type") == "huc12" and not row.get("join_keys"):
+        errors.append(
+            ValidationErrorItem(
+                ERROR_CODES["schema_invalid"],
+                "'join_keys' is a required property",
+            )
+        )
+
     if row.get("geometry_type") == "huc12" and not join_keys.get("watershed_id"):
+        errors.append(
+            ValidationErrorItem(
+                ERROR_CODES["schema_invalid"],
+                "'watershed_id' is a required property",
+            )
+        )
         errors.append(
             ValidationErrorItem(
                 ERROR_CODES["huc12_watershed_required"],
@@ -122,6 +180,12 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
 
     if {"fauna", "flora"} & set(domains):
         if not (join_keys.get("taxon_id") or join_keys.get("obs_id")):
+            errors.append(
+                ValidationErrorItem(
+                    ERROR_CODES["schema_invalid"],
+                    "join_keys: is not valid under any of the given schemas",
+                )
+            )
             errors.append(
                 ValidationErrorItem(
                     ERROR_CODES["taxon_or_obs_required"],
@@ -146,6 +210,12 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
         if not (join_keys.get("soil_id") or join_keys.get("station_id")):
             errors.append(
                 ValidationErrorItem(
+                    ERROR_CODES["schema_invalid"],
+                    "join_keys: is not valid under any of the given schemas",
+                )
+            )
+            errors.append(
+                ValidationErrorItem(
                     ERROR_CODES["soil_key_required"],
                     "soil rows require soil_id or station_id",
                 )
@@ -153,6 +223,12 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
 
     if "vegetation" in domains:
         if not (join_keys.get("layer_id") or join_keys.get("landcover_class")):
+            errors.append(
+                ValidationErrorItem(
+                    ERROR_CODES["schema_invalid"],
+                    "join_keys: is not valid under any of the given schemas",
+                )
+            )
             errors.append(
                 ValidationErrorItem(
                     ERROR_CODES["vegetation_key_required"],
@@ -217,6 +293,7 @@ def validate_file(
 ) -> ValidationResult:
     row = load_json(input_path)
     schema = load_json(Path(schema_ref))
+    assert_schema_supported(schema)
 
     errors = dedupe_errors(
         [

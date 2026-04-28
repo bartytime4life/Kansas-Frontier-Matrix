@@ -1,0 +1,19 @@
+{
+  "index_id": "kfm.eco_index.valid.huc12_veg_soil_hydrology",
+  "geom_id": "HUC12:102600080305",
+  "geometry_type": "huc12",
+  "time_bucket": "2024_growing_season",
+  "spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "domains": ["hydrology", "soil", "vegetation"],
+  "join_keys": {
+    "watershed_id": "102600080305",
+    "soil_id": "gssurgo:ks:102600080305",
+    "layer_id": "kfm.ecology.vegetation.ndvi_change.v1"
+  },
+  "evidence_refs": [
+    {"domain": "hydrology", "evidence_ref": "kfm:evidence:hydrology:huc12:102600080305"},
+    {"domain": "soil", "evidence_ref": "kfm:evidence:soil:gssurgo:102600080305"},
+    {"domain": "vegetation", "evidence_ref": "kfm:evidence:vegetation:ndvi_change:v1"}
+  ],
+  "status": "valid"
+}

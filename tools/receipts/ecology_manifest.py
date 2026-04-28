@@ -115,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"invalid receipt: {exc}", file=sys.stderr)
         return EXIT_FAILURE
     except SchemaError as exc:
-        print(f"invalid manifest schema: {exc.message}", file=sys.stderr)
+        print(f"invalid manifest schema: {exc}", file=sys.stderr)
         return EXIT_MISSING_SCHEMA
     except Exception as exc:
         print(f"internal manifest builder error: {exc}", file=sys.stderr)

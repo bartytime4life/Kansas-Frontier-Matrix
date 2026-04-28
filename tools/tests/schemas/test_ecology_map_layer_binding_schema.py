@@ -7,12 +7,21 @@ import pytest
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
 
+from tools.validators.ecology_index.validator import assert_schema_supported
+
 
 SCHEMA_REF = Path("schemas/ecology/ecology_map_layer_binding.schema.json")
 
 
 def load_schema(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8").strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        for index, line in enumerate(lines[1:], start=1):
+            if line.strip() == "```":
+                text = "\n".join(lines[1:index]).strip()
+                break
+    return json.loads(text)
 
 
 def validate(instance: dict) -> list[str]:
@@ -130,4 +139,4 @@ def test_invalid_schema_raises(tmp_path: Path) -> None:
     bad_schema.write_text(json.dumps({"type": 123}), encoding="utf-8")
 
     with pytest.raises(SchemaError):
-        Draft202012Validator.check_schema(load_schema(bad_schema))
+        assert_schema_supported(load_schema(bad_schema))
