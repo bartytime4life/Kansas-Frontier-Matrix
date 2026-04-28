@@ -1,0 +1,20 @@
+{
+  "version": "v1",
+  "kind": "SourceDescriptor",
+  "identity": {
+    "title": "Example Source Without Stable ID",
+    "provider": "Example Provider"
+  },
+  "access": {
+    "mode": "undocumented_scrape"
+  },
+  "support": {
+    "temporal": {}
+  },
+  "expected_invalid_reasons": [
+    "identity.source_id missing",
+    "rights_and_sensitivity missing",
+    "undocumented access mode",
+    "temporal basis missing"
+  ]
+}

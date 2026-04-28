@@ -138,10 +138,17 @@ The following belong here when they are small, reviewable, and intentionally sha
 
 ```text
 tests/fixtures/source/kansas_mesonet_source_descriptor/
-└── README.md
+├── README.md
+├── expected/
+│   ├── run_receipt.allow.json
+│   └── run_receipt.deny.json
+├── invalid/
+│   └── descriptor.missing_rights.invalid.json
+└── valid/
+    └── descriptor.public_safe.valid.json
 ```
 
-This README does not claim that sibling fixtures already exist on the active branch.
+This README now reflects direct active-branch fixture inventory.
 
 <details>
 <summary><strong>Possible stable growth shape</strong> (<strong>PROPOSED</strong>)</summary>

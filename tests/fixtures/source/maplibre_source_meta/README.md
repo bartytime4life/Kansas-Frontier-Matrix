@@ -175,11 +175,18 @@ Content that belongs here should stay **small**, **explicit**, deterministic, an
 
 ### Current safe claim
 
-Without direct active-branch inspection, this README claims no child inventory beyond the intended target file.
+This README now reflects direct active-branch inspection.
 
 ```text
 tests/fixtures/source/maplibre_source_meta/
-└── README.md
+├── README.md
+├── expected/
+│   ├── decision.allow.json
+│   └── decision.deny.json
+├── invalid/
+│   └── source.missing_type.invalid.json
+└── valid/
+    └── source.vector_tilejson_min.valid.json
 ```
 
 <details>

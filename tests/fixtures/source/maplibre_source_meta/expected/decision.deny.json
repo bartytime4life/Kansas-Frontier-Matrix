@@ -1,0 +1,7 @@
+{
+  "expected_outcome": "DENY",
+  "fixture": "source.missing_type.invalid.json",
+  "reason_codes": [
+    "source_type_missing"
+  ]
+}

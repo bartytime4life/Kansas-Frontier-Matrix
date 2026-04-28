@@ -166,10 +166,24 @@ Content that belongs here should stay **small**, **explicit**, and **safe to rev
 
 ```text
 tests/fixtures/source/
-└── README.md
+├── README.md
+├── source_descriptor/
+│   ├── expected/
+│   ├── invalid/
+│   └── valid/
+├── kansas_mesonet_source_descriptor/
+│   ├── README.md
+│   ├── expected/
+│   ├── invalid/
+│   └── valid/
+└── maplibre_source_meta/
+    ├── README.md
+    ├── expected/
+    ├── invalid/
+    └── valid/
 ```
 
-That is the only subtree claim this README can make safely without direct active-branch inspection of this exact directory.
+This tree is now grounded by direct active-branch inspection and committed fixture files.
 
 <details>
 <summary><strong>Possible stable growth shape</strong> (<strong>PROPOSED</strong>)</summary>

@@ -1,0 +1,10 @@
+{
+  "expected_outcome": "DENY",
+  "fixture": "descriptor.missing_source_id.invalid.json",
+  "reasons": [
+    "missing source id",
+    "missing rights posture",
+    "undocumented acquisition mode",
+    "missing temporal basis"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "expected_outcome": "DENY",
+  "fixture": "descriptor.missing_rights.invalid.json",
+  "reason_codes": [
+    "source_identity_missing",
+    "rights_posture_missing",
+    "undocumented_access_mode",
+    "temporal_support_missing"
+  ]
+}
