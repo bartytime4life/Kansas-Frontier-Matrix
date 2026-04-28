@@ -1,16 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION__tools_release_readme
+doc_id: kfm://doc/tools_release_readme
 title: tools/release
 type: standard
 version: v1
-status: draft
-owners: NEEDS_VERIFICATION__tools_owner
-created: NEEDS_VERIFICATION__repo_history_or_initial_creation_date
+status: active
+owners: release-tooling
+created: 2026-04-28
 updated: 2026-04-28
-policy_label: NEEDS_VERIFICATION__public_or_restricted
+policy_label: internal
 related: [../README.md, ../ci/README.md, ../validators/README.md, ../validators/promotion_gate/README.md, ../attest/README.md, ../../data/receipts/README.md, ../../data/proofs/README.md, ../../schemas/README.md, ../../schemas/contracts/README.md, ../../policy/README.md, ../../tests/e2e/release_assembly/README.md, ../../.github/workflows/README.md]
 tags: [kfm, tools, release, release-assembly, proof-pack, release-manifest, receipts, promotion, rollback]
-notes: [Draft README for tools/release; current session had no mounted KFM repo, so owner, created date, policy label, executable inventory, and CI enforcement remain NEEDS_VERIFICATION.]
+notes: [Repository-mounted update completed with executable inventory and runnable release publication helper documentation.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -21,8 +21,8 @@ Release helper tooling for assembling, checking, and summarizing KFM release can
 
 > [!IMPORTANT]
 > **Status:** experimental  
-> **Document status:** draft  
-> **Owners:** `NEEDS_VERIFICATION__tools_owner`  
+> **Document status:** active  
+> **Owners:** `release-tooling`  
 > **Path:** `tools/release/README.md`  
 > **Repo fit:** child tooling lane under [`../README.md`](../README.md), adjacent to [`../ci/README.md`](../ci/README.md), [`../validators/promotion_gate/README.md`](../validators/promotion_gate/README.md), and [`../attest/README.md`](../attest/README.md); downstream into release review, [`../../data/receipts/README.md`](../../data/receipts/README.md), [`../../data/proofs/README.md`](../../data/proofs/README.md), and [`../../tests/e2e/release_assembly/README.md`](../../tests/e2e/release_assembly/README.md).  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
@@ -71,9 +71,6 @@ This lane is intentionally narrow. It supports the release path; it does not own
 | Policy authority | [`../../policy/README.md`](../../policy/README.md) | Rights, sensitivity, source-role, and release-policy logic; this lane reports policy state but does not create it. |
 | E2E release proof | [`../../tests/e2e/release_assembly/README.md`](../../tests/e2e/release_assembly/README.md) | Whole-path verification that release assembly remains complete and reviewable. |
 
-> [!WARNING]
-> **NEEDS VERIFICATION:** The target repository was not mounted during this drafting pass. Verify every relative link, executable name, and workflow caller before merging.
-
 [Back to top](#top)
 
 ---
@@ -120,8 +117,8 @@ Release helpers may consume only artifacts that have already passed the relevant
 | Item | Status | Reading rule |
 |---|---:|---|
 | Target file requested | CONFIRMED | User requested `tools/release/README.md`. |
-| Mounted KFM repo available during drafting | CONFIRMED absent | No current branch inventory, package manager, workflow YAML, or existing helper file can be claimed from this pass. |
-| `tools/release/` existing directory contents | UNKNOWN | Verify in the mounted repository before adding helper names or commands. |
+| Mounted KFM repo available during drafting | CONFIRMED | Inventory verified in `/workspace/Kansas-Frontier-Matrix`. |
+| `tools/release/` existing directory contents | CONFIRMED | Contains `README.md` and `publish_release.py`. |
 | Release object vocabulary | CONFIRMED doctrine / PROPOSED implementation | KFM doctrine repeatedly names release manifests, proof packs, receipts, catalog closure, policy decisions, rollback, and correction as distinct surfaces. |
 | Exact executable entrypoints | NEEDS VERIFICATION | Do not document `python`, `node`, `make`, `pnpm`, or workflow calls as authoritative until branch evidence proves them. |
 | CI enforcement posture | UNKNOWN | Workflow presence and branch protection must be verified separately. |
@@ -136,17 +133,15 @@ Only the README target is specified by this task. Other helper files must be inv
 
 ```text
 tools/release/
-└── README.md
+├── README.md
+└── publish_release.py
 ```
 
-Candidate helper families that may belong here later, after verification:
+Current executable:
 
-| Candidate family | Status | Purpose |
+| File | Status | Purpose |
 |---|---:|---|
-| release handoff renderer | PROPOSED | Render reviewer-facing summaries from manifest, proof, receipt, and policy inputs. |
-| release assembly checker | PROPOSED | Confirm that a release candidate has the minimum closure required before promotion-gate evaluation. |
-| rollback reference checker | PROPOSED | Confirm that every promotable candidate has a rollback or correction lineage plan. |
-| CI summary adapter | PROPOSED | Convert release assembly results into GitHub summary or artifact payloads without changing the decision. |
+| `publish_release.py` | CONFIRMED | Resolves `ReleaseManifest` closure and emits a local publish receipt when closure is `PUBLISHABLE`. |
 
 [Back to top](#top)
 
@@ -166,7 +161,7 @@ find tools/release -maxdepth 3 -type f 2>/dev/null | sort
 find tools/validators/promotion_gate tools/attest tools/ci -maxdepth 3 -type f 2>/dev/null | sort
 
 # Search for existing release object vocabulary before adding names.
-grep -RIn \
+rg -n \
   -e 'ReleaseManifest' \
   -e 'ProofPack' \
   -e 'CatalogMatrix' \
@@ -176,11 +171,28 @@ grep -RIn \
   -e 'RollbackReference' \
   -e 'run_receipt' \
   -e 'DecisionEnvelope' \
-  tools data docs schemas contracts policy tests .github 2>/dev/null || true
+  tools data docs schemas contracts policy tests .github || true
 ```
 
 > [!TIP]
 > A safe first PR for this lane is README-only or README + no-network fixtures. A helper PR should come later, with valid/invalid fixtures, tests, and CI output that prove it cannot publish directly.
+
+### Run `publish_release.py`
+
+```bash
+# Validate closure and print publish plan without writing receipts.
+python tools/release/publish_release.py \
+  --dry-run \
+  tests/fixtures/release/valid/minimal.release-manifest.json
+
+# Publish locally (writes a receipt under data/receipts/release/ by default).
+python tools/release/publish_release.py \
+  tests/fixtures/release/valid/minimal.release-manifest.json
+```
+
+If local validator dependencies are missing (for example `jsonschema`), closure
+resolution will deny publication and include validator stderr in the failure
+reason so remediation is explicit.
 
 [Back to top](#top)
 
