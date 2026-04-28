@@ -1,5 +1,23 @@
 {
-  "fixture": "geospatial_review_action_request",
-  "operation": "promote",
-  "status": "skeletal"
+  "schema_version": "v1",
+  "object_type": "GeospatialReviewActionRequest",
+  "request_id": "kfm://request/review-action/geo-promote-2026-04-28-001",
+  "review": {
+    "candidate_id": "kfm://candidate/ecology-layer/chase-county-tallgrass-v3",
+    "action": "promote",
+    "reviewer_role": "steward",
+    "reason_code": "EVIDENCE_VERIFIED",
+    "notes": "Promote after evidence and policy checks passed.",
+    "submitted_at": "2026-04-28T12:00:00Z"
+  },
+  "expected": {
+    "target_state": "promoted",
+    "requires_receipt": true,
+    "requires_proof_pack": true
+  },
+  "meta": {
+    "surface": "tests/contracts/fixtures/runtime",
+    "fixture_name": "geospatial_review_action_request.promote",
+    "deterministic": true
+  }
 }
