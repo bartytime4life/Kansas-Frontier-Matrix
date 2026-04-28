@@ -1,0 +1,24 @@
+{
+  "claim_id": "kfm.claim.ecology.vegetation_soil.example.v1",
+  "claim_type": "composite_ecological_claim",
+  "spec_hash": "sha256:abc123",
+  "policy_label": "public-safe",
+  "domains": ["vegetation", "soil"],
+  "runtime_behavior": {
+    "decision": "cite",
+    "evidence_drawer_required": true
+  },
+  "evidence": {
+    "status": "resolved",
+    "items": [
+      {
+        "evidence_ref": "kfm://evidence/ecology/veg-soil/2026-01",
+        "layer_ref": "kfm://layer/ecology/veg-soil/preview"
+      }
+    ]
+  },
+  "uncertainty": {
+    "status": "declared",
+    "summary": "Bounded uncertainty remains within documented range."
+  }
+}

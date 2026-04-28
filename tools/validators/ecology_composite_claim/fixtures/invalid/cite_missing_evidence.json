@@ -1,0 +1,18 @@
+{
+  "claim_id": "kfm.claim.ecology.veg_soil_missing_evidence.example.v1",
+  "claim_type": "composite_ecological_claim",
+  "spec_hash": "sha256:ghi789",
+  "policy_label": "public-safe",
+  "domains": ["vegetation", "soil"],
+  "runtime_behavior": {
+    "decision": "cite",
+    "evidence_drawer_required": true
+  },
+  "evidence": {
+    "status": "resolved",
+    "items": []
+  },
+  "uncertainty": {
+    "status": "declared"
+  }
+}
