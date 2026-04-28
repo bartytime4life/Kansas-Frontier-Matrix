@@ -54,7 +54,7 @@ This README documents a narrow SQL-first validator lane for crosswalk rows, espe
 
 | Claim | Current README posture | Required proof before stronger claim |
 | --- | --- | --- |
-| This README is intended for `tools/validators/validators/crosswalk/`. | **PROPOSED / target path** | Active checkout path inspection. |
+| This README is intended for `tools/validators/crosswalk/`. | **VERIFIED in active checkout** | Path inspection confirms location. |
 | `validate_crosswalk_sql.sql` is the adjacent validator file. | **NEEDS VERIFICATION** | File presence and content review in the active branch. |
 | The SQL file is invoked by tests or CI. | **NEEDS VERIFICATION** | Workflow/test references plus a successful run. |
 | Non-zero failures block merge or promotion. | **NEEDS VERIFICATION** | Wrapper, CI, or promotion-gate evidence. |
@@ -69,7 +69,7 @@ This README documents a narrow SQL-first validator lane for crosswalk rows, espe
 The target validator surface is SQL-first:
 
 ```text
-tools/validators/validators/crosswalk/validate_crosswalk_sql.sql
+tools/validators/crosswalk/validate_crosswalk_sql.sql
 ```
 
 The rule set is intended to inspect `kfm_crosswalk.crosswalk_pairs` for:
@@ -100,7 +100,7 @@ The rule set is intended to inspect `kfm_crosswalk.crosswalk_pairs` for:
 
 ## Repo fit
 
-**Expected lane:** `tools/validators/validators/crosswalk/`
+**Expected lane:** `tools/validators/crosswalk/`
 
 This directory sits below the validator tooling family and should stay narrow: validate crosswalk row integrity and report reviewable failures.
 
@@ -182,7 +182,7 @@ Do **not** place these responsibilities in this lane.
 ### Expected current shape
 
 ```text
-tools/validators/validators/crosswalk/
+tools/validators/crosswalk/
 ├── README.md                  # this file
 └── validate_crosswalk_sql.sql # expected SQL failure-count validator; verify in active branch
 ```
@@ -190,7 +190,7 @@ tools/validators/validators/crosswalk/
 ### Proposed hardening shape
 
 ```text
-tools/validators/validators/crosswalk/
+tools/validators/crosswalk/
 ├── README.md
 ├── validate_crosswalk_sql.sql
 ├── examples/                  # PROPOSED no-network SQL seed fixtures
@@ -217,7 +217,11 @@ git rev-parse --show-toplevel
 git status --short
 git branch --show-current || true
 
-test -f tools/validators/validators/crosswalk/README.md
+test -f tools/validators/crosswalk/README.md
+
+python3 tools/validators/crosswalk/validate_crosswalk_sql.py \
+  --dsn "$KFM_CROSSWALK_TEST_DSN" \
+  --fail-on-errors
 test -f tools/validators/validators/crosswalk/validate_crosswalk_sql.sql
 find tools/validators/validators/crosswalk -maxdepth 2 -type f -print | sort
 ```
