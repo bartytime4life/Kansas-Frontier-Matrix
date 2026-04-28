@@ -11,37 +11,25 @@ from tools.proofs.ecology_proof_pack_builder import (
     write_proof_pack,
 )
 
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
+
+
+def load_fixture(*parts: str) -> dict:
+    return json.loads(FIXTURES_DIR.joinpath(*parts).read_text(encoding="utf-8"))
+
 
 SPEC_HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 
 def manifest(*, decision: str = "ready_for_promotion", receipt_decision: str = "pass") -> dict:
-    return {
-        "manifest_id": "kfm.receipt_manifest.ecology.eco_index.example",
-        "candidate_id": "eco_index.example",
-        "candidate_type": "eco_index",
-        "spec_hash": SPEC_HASH,
-        "receipts": [
-            {
-                "receipt_type": "validator_result",
-                "validator": "tools/validators/ecology_index",
-                "receipt_ref": "data/receipts/ecology/index/example.validator_receipt.json",
-                "decision": receipt_decision,
-                "spec_hash": SPEC_HASH,
-                "generated_at": "2026-04-24T00:00:00Z",
-            }
-        ],
-        "decision": decision,
-        "generated_at": "2026-04-24T00:00:00Z",
-    }
+    value = load_fixture("valid", "manifest.ready_for_promotion.json")
+    value["decision"] = decision
+    value["receipts"][0]["decision"] = receipt_decision
+    return value
 
 
 def catalog_refs() -> dict:
-    return {
-        "dcat": ["kfm:dcat:dataset:ecology:example"],
-        "stac": ["kfm:stac:item:ecology:example"],
-        "prov": ["kfm:prov:entity:ecology:example"],
-    }
+    return load_fixture("valid", "catalog_refs.complete.json")
 
 
 def test_build_proof_pack_success() -> None:
@@ -102,11 +90,7 @@ def test_receipt_spec_hash_mismatch_fails() -> None:
 
 
 def test_missing_prov_catalog_ref_fails() -> None:
-    refs = {
-        "dcat": ["kfm:dcat:dataset:ecology:example"],
-        "stac": ["kfm:stac:item:ecology:example"],
-        "prov": [],
-    }
+    refs = load_fixture("invalid", "catalog_refs.missing_prov.json")
 
     with pytest.raises(ValueError, match="proof pack requires at least one PROV catalog reference"):
         build_proof_pack(

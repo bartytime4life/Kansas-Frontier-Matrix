@@ -5,8 +5,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
-SPEC_HASH = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+def load_fixture(*parts: str) -> dict:
+    return json.loads(FIXTURES_DIR.joinpath(*parts).read_text(encoding="utf-8"))
+
+
 SCHEMA_REF = "schemas/ecology/ecology_proof_pack.schema.json"
 
 
@@ -24,32 +29,15 @@ def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
 
 
 def manifest(*, decision: str = "ready_for_promotion") -> dict:
-    return {
-        "manifest_id": "kfm.receipt_manifest.ecology.eco_index.example",
-        "candidate_id": "eco_index.example",
-        "candidate_type": "eco_index",
-        "spec_hash": SPEC_HASH,
-        "receipts": [
-            {
-                "receipt_type": "validator_result",
-                "validator": "tools/validators/ecology_index",
-                "receipt_ref": "data/receipts/ecology/index/example.validator_receipt.json",
-                "decision": "pass",
-                "spec_hash": SPEC_HASH,
-                "generated_at": "2026-04-24T00:00:00Z",
-            }
-        ],
-        "decision": decision,
-        "generated_at": "2026-04-24T00:00:00Z",
-    }
+    value = load_fixture("valid", "manifest.ready_for_promotion.json")
+    value["decision"] = decision
+    return value
 
 
 def catalog_refs(*, include_prov: bool = True) -> dict:
-    return {
-        "dcat": ["kfm:dcat:dataset:ecology:example"],
-        "stac": ["kfm:stac:item:ecology:example"],
-        "prov": ["kfm:prov:entity:ecology:example"] if include_prov else [],
-    }
+    if include_prov:
+        return load_fixture("valid", "catalog_refs.complete.json")
+    return load_fixture("invalid", "catalog_refs.missing_prov.json")
 
 
 def cli_args(
@@ -213,7 +201,7 @@ def test_cli_non_promotable_manifest_exits_one(tmp_path: Path) -> None:
     catalog_refs_path = tmp_path / "catalog_refs.json"
     out_path = tmp_path / "proof_pack.json"
 
-    write_json(manifest_path, manifest(decision="not_ready"))
+    write_json(manifest_path, load_fixture("invalid", "manifest.not_ready.json"))
     write_json(catalog_refs_path, catalog_refs())
 
     result = run_cli(

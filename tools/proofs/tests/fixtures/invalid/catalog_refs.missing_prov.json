@@ -1,0 +1,5 @@
+{
+  "dcat": ["kfm:dcat:dataset:ecology:example"],
+  "stac": ["kfm:stac:item:ecology:example"],
+  "prov": []
+}
