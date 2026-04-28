@@ -1,0 +1,8 @@
+{
+  "object_type": "run_receipt",
+  "run_receipt_id": "run_receipt:soil_moisture_watch:fixture-deny",
+  "status": "DENY",
+  "subject": "soil-moisture:mesonet:ks:2026-04-20",
+  "reason_code": "soil_moisture_value_out_of_range",
+  "evaluated_at": "2026-04-20T18:02:00Z"
+}
