@@ -11,7 +11,7 @@
   "derivation_method": "raster-overlay",
   "derivation_parameters": {
     "buffer_m": 30,
-    "version": "2026-01"
+    "epoch": "2021"
   },
   "derived_at": "2026-01-20T14:32:11Z",
   "quality_flag": "high",

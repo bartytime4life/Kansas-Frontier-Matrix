@@ -1,17 +1,36 @@
 {
-  "plot_id": "observation-plot-valid-001",
-  "source_refs": ["kfs_field_plots"],
-  "dataset_refs": ["ecology.observation_plot.v1"],
-  "catalog_refs": ["catalog://ecology/observation_plot/v1"],
-  "spec_hash": "sha256:d8f8d3676fe6f9b1757c8ed5ac15d291ef1e0de8b69096b8dc4dbfdeb6de7158",
-  "policy_id": "eco-generalize-v1",
+  "schema_version": "v1",
+  "object_type": "ObservationPlot",
+  "plot_id": "kfm://plot/ks-ellsworth-101",
+  "observed_at": "2025-09-14T10:15:00Z",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -98.214,
+      38.742
+    ]
+  },
+  "geometry_ref": "kfm://geometry/observation/ks-ellsworth-101",
+  "geometry_policy": "generalized",
+  "taxa": [
+    "Asclepias syriaca"
+  ],
+  "taxon_refs": [
+    "kfm://taxon/asclepias-syriaca"
+  ],
+  "method": "field_survey",
+  "source_id": "kfs_field_plots",
+  "source_role": "OBSERVATION_SYSTEM",
+  "source_ref": "source://kfs_field_plots/2025/fall/ellsworth-101",
   "sensitivity": "generalize",
   "rights_status": "controlled",
-  "plot": {
-    "observed_on": "2025-09-14",
-    "vegetation_class": "mixed_grass_prairie",
+  "measurement_summary": {
     "sample_area_m2": 1000,
-    "geometry_precision": "generalized"
+    "vegetation_class": "mixed_grass_prairie"
   },
-  "evidence_refs": ["evidence://ecology/observation-plot-valid-001"]
+  "policy_label": "restricted_until_reviewed",
+  "spec_hash": "sha256:d8f8d3676fe6f9b1757c8ed5ac15d291ef1e0de8b69096b8dc4dbfdeb6de7158",
+  "evidence_refs": [
+    "kfm://evidence/ecology/observation-plot-valid-001"
+  ]
 }

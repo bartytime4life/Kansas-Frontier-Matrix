@@ -1,19 +1,33 @@
 {
-  "layer_id": "derived-veg-layer-valid-001",
-  "source_refs": ["kfs_field_plots", "kfs_satellite_imagery"],
-  "dataset_refs": ["ecology.derived_vegetation_layer.v1"],
-  "catalog_refs": [
-    "catalog://ecology/observation_plot/v1",
-    "catalog://ecology/derived_vegetation_layer/v1"
+  "schema_version": "v1",
+  "object_type": "DerivedVegetationLayer",
+  "layer_id": "kfm://layer/ks-ndvi-2025-q3",
+  "title": "Kansas NDVI-derived Vegetation Context Layer (Q3 2025)",
+  "source_id": "ndvi_derived_layers",
+  "source_role": "DERIVED_MODEL_LAYER",
+  "product": "NDVI_DERIVED",
+  "version": "2025.09",
+  "derivation_method": "ndvi-temporal-composite-v3",
+  "source_refs": [
+    "source://kfs_field_plots/2025",
+    "source://sentinel-2/l2a/2025-q3"
   ],
-  "spec_hash": "sha256:b6f2d0dd3fa9dc0e55643fca2d63f6d3c4b6f03b005c298eb1db57f8600f6c8f",
-  "policy_id": "eco-generalize-v1",
-  "sensitivity": "generalize",
-  "rights_status": "controlled",
-  "derivation": {
-    "method": "canopy_cover_model_v3",
-    "input_plot_count": 42,
-    "resolution_m": 30
+  "time_window": {
+    "start": "2025-07-01",
+    "end": "2025-09-30"
   },
-  "evidence_refs": ["evidence://ecology/derived-layer-valid-001"]
+  "classification": "derived_context",
+  "derived_status": "derived",
+  "spatial_resolution_m": 30,
+  "policy_label": "public_after_catalog_closure",
+  "spec_hash": "sha256:b6f2d0dd3fa9dc0e55643fca2d63f6d3c4b6f03b005c298eb1db57f8600f6c8f",
+  "evidence_refs": [
+    "kfm://evidence/ecology/derived-layer-valid-001"
+  ],
+  "catalog_refs": {
+    "stac": "kfm://catalog/stac/ecology/derived-veg-layer-valid-001",
+    "prov": "kfm://catalog/prov/ecology/derived-veg-layer-valid-001",
+    "dcat": "kfm://catalog/dcat/ecology/derived-veg-layer-valid-001"
+  },
+  "publication_state": "candidate"
 }
