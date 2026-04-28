@@ -11,11 +11,7 @@
     "review_state": "reviewed",
     "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "artifact_count": 1,
-
-    /* intentionally missing:
-       "closure_status": "PUBLISHABLE"
-       → MUST FAIL schema + validator
-    */
+    "fixture_note": "intentionally missing closure_status to force schema/validator failure",
 
     "artifacts": [
       {
