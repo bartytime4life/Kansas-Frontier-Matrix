@@ -156,21 +156,7 @@ def validate_semantics(row: dict[str, Any]) -> list[ValidationErrorItem]:
             )
         )
 
-    if row.get("geometry_type") == "huc12" and not row.get("join_keys"):
-        errors.append(
-            ValidationErrorItem(
-                ERROR_CODES["schema_invalid"],
-                "'join_keys' is a required property",
-            )
-        )
-
     if row.get("geometry_type") == "huc12" and not join_keys.get("watershed_id"):
-        errors.append(
-            ValidationErrorItem(
-                ERROR_CODES["schema_invalid"],
-                "'watershed_id' is a required property",
-            )
-        )
         errors.append(
             ValidationErrorItem(
                 ERROR_CODES["huc12_watershed_required"],
@@ -261,6 +247,17 @@ def build_receipt(
     result: ValidationResult,
     spec_hash: str | None,
 ) -> dict[str, Any]:
+    receipt_errors = result.errors
+    if any(error.code == ERROR_CODES["huc12_watershed_required"] for error in result.errors):
+        receipt_errors = [
+            error
+            for error in result.errors
+            if not (
+                error.code == ERROR_CODES["schema_invalid"]
+                and "'watershed_id' is a required property" in error.message
+            )
+        ]
+
     return {
         "receipt_type": "validator_result",
         "validator": "tools/validators/ecology_index",
@@ -269,7 +266,7 @@ def build_receipt(
         "decision": result.decision,
         "errors": [
             {"code": error.code, "message": error.message}
-            for error in result.errors
+            for error in receipt_errors
         ],
         "warnings": [],
         "spec_hash": spec_hash,
