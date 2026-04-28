@@ -278,11 +278,11 @@ python tools/validators/run_all.py --fixtures tests/fixtures/ecology
 | Case | Preferred naming pattern |
 |---|---|
 | Valid public-safe support | `valid/<source_or_support>_public_safe.*.json` |
-| Missing evidence | `invalid/missing_evidence_ref_<claim_type>.json` |
-| Unknown rights | `invalid/unknown_rights_public_release.json` |
-| Source-role misuse | `invalid/occurrence_aggregator_as_legal_authority.json` |
-| Sensitive exact geometry | `invalid/sensitive_exact_geometry_public_payload.json` |
-| Modeled/observed collapse | `invalid/modeled_habitat_labeled_observed_occurrence.json` |
+| Missing evidence | `invalid/missing_policy_id.invalid.json` |
+| Unknown rights | `invalid/observation_plot.unknown_rights.invalid.json` |
+| Source-role misuse | `invalid/taxon_record.missing_spec_hash.invalid.json` |
+| Sensitive exact geometry | `invalid/sensitive_occurrence_record.public_exact_geometry.invalid.json` |
+| Modeled/observed collapse | `invalid/habitat_assignment.missing_class.invalid.json` |
 | Malformed body | `malformed/error_invalid_fixture_shape.json` |
 | Malformed missing required fields | `malformed/occurrence/missing_required_fields.json` |
 | Malformed missing provenance | `malformed/occurrence/missing_provenance.json` |
