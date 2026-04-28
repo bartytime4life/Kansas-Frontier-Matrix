@@ -107,12 +107,12 @@ Content belongs in this docs folder when it explains, constrains, or reviews the
 
 A small, useful initial set is:
 
-1. `CHECK_MATRIX.md`
-2. `REASON_CODES.md`
-3. `SOURCE_ROLE_BOUNDARIES.md`
-4. `SENSITIVITY_AND_GEOPRIVACY.md`
-5. `CONTINUITY_NOTES.md`
-6. `ROLLBACK.md`
+1. [`CHECK_MATRIX.md`](./CHECK_MATRIX.md) ✅
+2. [`REASON_CODES.md`](./REASON_CODES.md) ✅
+3. [`SOURCE_ROLE_BOUNDARIES.md`](./SOURCE_ROLE_BOUNDARIES.md) ✅
+4. [`SENSITIVITY_AND_GEOPRIVACY.md`](./SENSITIVITY_AND_GEOPRIVACY.md) ✅
+5. `CONTINUITY_NOTES.md` (next)
+6. `ROLLBACK.md` (next)
 
 [Back to top](#top)
 
