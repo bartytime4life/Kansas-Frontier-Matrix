@@ -20,7 +20,7 @@ Deterministic comparison helpers for review-bearing KFM artifacts without decidi
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tools/diff/README.md`  
-> **Truth posture:** `CONFIRMED` directory README placeholder · `PROPOSED` executable helper contract · `UNKNOWN` active local checkout inventory  
+> **Truth posture:** `CONFIRMED` lane README + `stable_diff.py` helper + `tests/diff` proof surface in this checkout · `PROPOSED` future helper expansion  
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
 > ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
@@ -138,11 +138,11 @@ Strong fit examples:
 | Evidence item | Status | How this README uses it |
 |---|---:|---|
 | `tools/diff/README.md` exists in public main as a skeletal placeholder | **CONFIRMED** | This revision replaces the placeholder with a repo-ready lane README. |
-| `tools/diff/stable_diff.py` was not confirmed on public main during this authoring pass | **CONFIRMED absent / NEEDS VERIFICATION** | Executable helper claims are marked `PROPOSED` until the working branch proves otherwise. |
+| `tools/diff/stable_diff.py` exists in this checkout | **CONFIRMED** | This lane now includes a first executable comparator for top-level JSON drift reporting. |
 | `tools/` includes a visible `diff/` child lane in the public directory listing | **CONFIRMED** | Grounds this file as a real child-lane README, not a hypothetical path. |
 | `CODEOWNERS` assigns `/tools/diff/` to `@bartytime4life` | **CONFIRMED** | Grounds the owner line in the impact block. |
 | Parent `tools/README.md` treats diff helpers as a future or lineage helper family | **CONFIRMED drift / context** | This README keeps executable inventory bounded rather than claiming the fuller lane is implemented. |
-| Local mounted checkout was not available in this ChatGPT workspace | **CONFIRMED in-session** | Runtime behavior, branch status, CI results, and exact helper inventory remain `UNKNOWN`. |
+| Local mounted checkout inventory for this lane was verified during implementation | **CONFIRMED** | `stable_diff.py`, fixtures, and `tests/diff/test_stable_diff.py` now exist in this branch. |
 
 [Back to top](#toolsdiff)
 
@@ -150,22 +150,30 @@ Strong fit examples:
 
 ## Directory tree
 
-### Current public-main lane shape
-
-```text
-tools/diff/
-└── README.md
-```
-
-### Proposed first executable shape
+### Current lane shape in this checkout
 
 ```text
 tools/diff/
 ├── README.md
-└── stable_diff.py        # PROPOSED until present in the working branch
+└── stable_diff.py
 
 tests/diff/
-└── test_stable_diff.py   # PROPOSED proof surface for the first helper
+├── test_stable_diff.py
+└── fixtures/
+    ├── changed/
+    ├── malformed/
+    └── same/
+```
+
+### First executable shape (now landed)
+
+```text
+tools/diff/
+├── README.md
+└── stable_diff.py
+
+tests/diff/
+└── test_stable_diff.py
 ```
 
 ### Proposed future growth shape
@@ -273,7 +281,7 @@ same artifact class
 
 ### Current implementation contract
 
-`UNKNOWN`: no executable comparator was confirmed in this lane during this authoring pass.
+`CONFIRMED`: `tools/diff/stable_diff.py` compares two JSON objects and reports deterministic top-level key drift.
 
 ### Proposed first helper contract
 
@@ -404,11 +412,11 @@ Diagram status: **PROPOSED operating boundary**, grounded in the current KFM tru
 ### Minimum next landing
 
 - [ ] Verify the working branch inventory for `tools/diff/`.
-- [ ] Replace this README placeholder in the real checkout.
-- [ ] Decide whether the first helper is `stable_diff.py` or another narrower name.
-- [ ] Add non-sensitive fixtures for `same`, `changed`, malformed input, and missing input.
-- [ ] Add `tests/diff/test_stable_diff.py` or the repo-native equivalent.
-- [ ] Document exact CLI flags and output fields.
+- [x] Replace this README placeholder in the real checkout.
+- [x] Land the first helper as `stable_diff.py` for deterministic top-level JSON comparison.
+- [x] Add non-sensitive fixtures for `same`, `changed`, and malformed input; keep missing-input as a path-based negative test.
+- [x] Add `tests/diff/test_stable_diff.py` as the first proof surface.
+- [x] Document exact CLI flags and output fields in helper help text and this lane README.
 - [ ] Add syntax checks for every helper file.
 - [ ] Wire one downstream caller only after the helper contract is green.
 
