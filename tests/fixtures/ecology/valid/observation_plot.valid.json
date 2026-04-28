@@ -1,0 +1,17 @@
+{
+  "plot_id": "observation-plot-valid-001",
+  "source_refs": ["kfs_field_plots"],
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "catalog_refs": ["catalog://ecology/observation_plot/v1"],
+  "spec_hash": "sha256:d8f8d3676fe6f9b1757c8ed5ac15d291ef1e0de8b69096b8dc4dbfdeb6de7158",
+  "policy_id": "eco-generalize-v1",
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "plot": {
+    "observed_on": "2025-09-14",
+    "vegetation_class": "mixed_grass_prairie",
+    "sample_area_m2": 1000,
+    "geometry_precision": "generalized"
+  },
+  "evidence_refs": ["evidence://ecology/observation-plot-valid-001"]
+}
