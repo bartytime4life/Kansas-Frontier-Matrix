@@ -56,3 +56,53 @@ def test_missing_required_field_fails() -> None:
 
     assert errors
     assert any("subject_ref" in error for error in errors)
+
+
+def test_invalid_fixture_type_fails() -> None:
+    instance = valid_fixture()
+    instance["fixture_type"] = "kfm.evaluator_fixture.v2"
+
+    errors = validate(instance)
+
+    assert errors
+    assert any("fixture_type" in error and "kfm.evaluator_fixture.v1" in error for error in errors)
+
+
+def test_invalid_subject_type_fails() -> None:
+    instance = valid_fixture()
+    instance["subject_type"] = "unsupported_subject"
+
+    errors = validate(instance)
+
+    assert errors
+    assert any("subject_type" in error for error in errors)
+
+
+def test_metric_results_requires_at_least_one_item() -> None:
+    instance = valid_fixture()
+    instance["metric_results"] = []
+
+    errors = validate(instance)
+
+    assert errors
+    assert any("metric_results" in error and "minimum size" in error.lower() for error in errors)
+
+
+def test_additional_properties_fail_closed() -> None:
+    instance = valid_fixture()
+    instance["unexpected"] = "nope"
+
+    errors = validate(instance)
+
+    assert errors
+    assert any("unexpected" in error and "additional properties" in error.lower() for error in errors)
+
+
+def test_invalid_notes_type_fails() -> None:
+    instance = valid_fixture()
+    instance["notes"] = "not-an-array"
+
+    errors = validate(instance)
+
+    assert errors
+    assert any("notes" in error and "array" in error.lower() for error in errors)
