@@ -137,6 +137,7 @@ def resolve_ref(
     result: ClosureResult,
     required: bool = True,
     allow_fixture_placeholders: bool = True,
+    strict_remote: bool = False,
 ) -> Path | None:
     if not ref:
         if required:
@@ -153,6 +154,10 @@ def resolve_ref(
         return None
 
     if is_http_ref(ref):
+        if strict_remote:
+            result.abstain(f"{label}: remote URL unresolved in strict offline mode: {ref}")
+            result.resolved[label] = {"ref": ref, "mode": "remote-unresolved"}
+            return None
         result.warn(f"{label}: remote URL not fetched in offline resolver mode: {ref}")
         result.resolved[label] = {"ref": ref, "mode": "remote-unchecked"}
         return None
@@ -205,6 +210,7 @@ def check_artifact_entry(
     index: int,
     manifest_spec_hash: str | None,
     result: ClosureResult,
+    strict_remote: bool = False,
 ) -> None:
     label = f"artifacts[{index}]"
 
@@ -225,6 +231,7 @@ def check_artifact_entry(
         label=f"{label}.artifact_ref",
         result=result,
         required=True,
+        strict_remote=strict_remote,
     )
 
     evidence_path = resolve_ref(
@@ -232,6 +239,7 @@ def check_artifact_entry(
         label=f"{label}.evidence_ref",
         result=result,
         required=True,
+        strict_remote=strict_remote,
     )
 
     provenance_path = resolve_ref(
@@ -239,6 +247,7 @@ def check_artifact_entry(
         label=f"{label}.provenance_ref",
         result=result,
         required=True,
+        strict_remote=strict_remote,
     )
 
     stac_path = resolve_ref(
@@ -246,6 +255,7 @@ def check_artifact_entry(
         label=f"{label}.stac_ref",
         result=result,
         required=True,
+        strict_remote=strict_remote,
     )
 
     dcat_path = resolve_ref(
@@ -253,6 +263,7 @@ def check_artifact_entry(
         label=f"{label}.dcat_ref",
         result=result,
         required=True,
+        strict_remote=strict_remote,
     )
 
     run_receipt_path = resolve_ref(
@@ -260,6 +271,7 @@ def check_artifact_entry(
         label=f"{label}.run_receipt_ref",
         result=result,
         required=False,
+        strict_remote=strict_remote,
     )
 
     attestation_path = resolve_ref(
@@ -267,6 +279,7 @@ def check_artifact_entry(
         label=f"{label}.attestation_ref",
         result=result,
         required=False,
+        strict_remote=strict_remote,
     )
 
     for resolved_path, resolved_label in (
@@ -281,7 +294,7 @@ def check_artifact_entry(
         validate_resolved_path(resolved_path, result, resolved_label)
 
 
-def resolve_release_manifest(manifest_path: Path) -> ClosureResult:
+def resolve_release_manifest(manifest_path: Path, *, strict_remote: bool = False) -> ClosureResult:
     result = ClosureResult()
 
     if not manifest_path.exists():
@@ -316,6 +329,7 @@ def resolve_release_manifest(manifest_path: Path) -> ClosureResult:
             index=idx,
             manifest_spec_hash=manifest_spec_hash,
             result=result,
+            strict_remote=strict_remote,
         )
 
     return result
@@ -341,7 +355,7 @@ def main() -> None:
     args = parse_args()
     manifest_path = Path(args.manifest)
 
-    result = resolve_release_manifest(manifest_path)
+    result = resolve_release_manifest(manifest_path, strict_remote=args.strict_remote)
     emit(result)
 
     if result.status == "PUBLISHABLE":
