@@ -1,0 +1,12 @@
+{
+  "fixture_id": "soil-moisture-anomaly-seven-day-jump",
+  "station_id": "HAYS",
+  "depth_cm": 10,
+  "window_start_utc": "2026-04-13T18:00:00Z",
+  "window_end_utc": "2026-04-20T18:00:00Z",
+  "start_value_m3m3": 0.14,
+  "end_value_m3m3": 0.33,
+  "absolute_jump_m3m3": 0.19,
+  "jump_threshold_m3m3": 0.10,
+  "flagged": true
+}

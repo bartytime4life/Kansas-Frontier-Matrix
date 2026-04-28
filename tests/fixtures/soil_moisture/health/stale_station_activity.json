@@ -1,0 +1,9 @@
+{
+  "fixture_id": "soil-moisture-health-stale-station",
+  "station_id": "MANH",
+  "freshness_window_minutes": 90,
+  "most_recent_observed_at_utc": "2026-04-20T16:00:00Z",
+  "evaluated_at_utc": "2026-04-20T18:00:00Z",
+  "is_stale": true,
+  "reason": "observation_older_than_freshness_window"
+}

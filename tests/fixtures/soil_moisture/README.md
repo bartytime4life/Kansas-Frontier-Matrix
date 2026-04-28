@@ -174,14 +174,36 @@ This lane should hold **small, stable, reviewable** examples that help prove soi
 
 ## Directory tree
 
-### Current safe claim
+### Current checked-in snapshot
 
 ```text
 tests/fixtures/soil_moisture/
-└── README.md
+├── README.md
+├── anomalies/
+│   ├── seven_day_jump.json
+│   └── zscore_spike.json
+├── expected/
+│   ├── run_receipt.allow.json
+│   └── run_receipt.deny.json
+├── health/
+│   ├── roster_loss_threshold.json
+│   └── stale_station_activity.json
+├── invalid/
+│   ├── impossible_vwc_value.csv
+│   ├── missing_station_id.csv
+│   ├── unordered_timestamps.csv
+│   └── unsupported_depth_column.csv
+├── normalized/
+│   ├── series.long.min.json
+│   └── series.window.min.json
+└── valid/
+    ├── mesonet_mostrecent.min.csv
+    ├── mesonet_stationactive.min.csv
+    ├── mesonet_stationdata.hourly.min.csv
+    └── mesonet_stationnames.min.csv
 ```
 
-That is the only subtree claim this README can make safely without direct active-branch inspection.
+This snapshot reflects the files currently checked into the branch and should stay small, deterministic, and reviewable.
 
 ### Preferred growth shape (`PROPOSED` / `NEEDS VERIFICATION`)
 
