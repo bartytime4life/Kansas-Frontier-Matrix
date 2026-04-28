@@ -1,0 +1,10 @@
+{
+  "case_id": "ecology-policy-sensitive-geometry-001",
+  "dataset_refs": ["ecology.sensitive_occurrence_record.v1"],
+  "policy_id": "eco-restricted-v1",
+  "sensitivity": "restricted",
+  "rights_status": "public",
+  "exact_geometry_present": true,
+  "expected_decision": "DENY",
+  "expected_reason": "SENSITIVE_EXACT_GEOMETRY_PUBLIC"
+}

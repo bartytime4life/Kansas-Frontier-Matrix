@@ -1,0 +1,10 @@
+{
+  "case_id": "ecology-policy-derived-layer-confirmed-001",
+  "dataset_refs": ["ecology.derived_vegetation_layer.v1"],
+  "policy_id": "eco-generalize-v1",
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "record_status": "confirmed",
+  "expected_decision": "ALLOW",
+  "expected_reason": "DERIVED_LAYER_CONFIRMED"
+}

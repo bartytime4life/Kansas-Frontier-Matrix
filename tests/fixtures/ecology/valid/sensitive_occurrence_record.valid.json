@@ -1,0 +1,13 @@
+{
+  "occurrence_id": "sensitive-occurrence-valid-001",
+  "source_refs": ["kfs_rare_species_program"],
+  "dataset_refs": ["ecology.sensitive_occurrence_record.v1"],
+  "catalog_refs": ["catalog://ecology/sensitive_occurrence_record/v1"],
+  "spec_hash": "sha256:9e58e2b3f06f5af4f8f4a6132ea8cbc243cd6da9ef2a67fbe772ec5e932ea569",
+  "policy_id": "eco-restricted-v1",
+  "sensitivity": "restricted",
+  "rights_status": "controlled",
+  "exact_geometry_present": false,
+  "geometry_precision": "generalized",
+  "evidence_refs": ["evidence://ecology/sensitive-occurrence-valid-001"]
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "ecology-policy-unknown-rights-001",
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "policy_id": "eco-generalize-v1",
+  "sensitivity": "generalize",
+  "rights_status": "unknown",
+  "expected_decision": "DENY",
+  "expected_reason": "UNKNOWN_RIGHTS_STATUS"
+}
