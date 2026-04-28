@@ -26,6 +26,9 @@ def build_rows(rows: list[dict[str, Any]], bundle_id: str, evidence_ref: str, re
     out: list[dict[str, Any]] = []
     for index, row in enumerate(rows, start=1):
         person_id = str(row.get("person_id", "UNKNOWN"))
+        event_type = row.get("event_type")
+        if not event_type:
+            continue
         pseudonymous_key = _stable_person_key(person_id, repo_salt)
         out.append(
             {
@@ -33,10 +36,11 @@ def build_rows(rows: list[dict[str, Any]], bundle_id: str, evidence_ref: str, re
                 "bundle_id": bundle_id,
                 "evidence_ref": evidence_ref,
                 "person_key": pseudonymous_key,
-                "event_type": row.get("event_type"),
+                "event_type": event_type,
                 "event_date": row.get("event_date"),
                 "place": row.get("place"),
                 "source_line": row.get("source_line"),
+                "family_id": row.get("family_id"),
             }
         )
     return out

@@ -25,7 +25,28 @@ def _line_record(line: str) -> tuple[int, str | None, str, str]:
 def parse_gedcom(input_path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     current_person: str | None = None
+    current_family: str | None = None
+    family_spouses: dict[str, set[str]] = {}
     current_event: dict[str, Any] | None = None
+    current_family_event: dict[str, Any] | None = None
+
+    def flush_family_event() -> None:
+        nonlocal current_family_event
+        if current_family is None or current_family_event is None:
+            return
+        for spouse in sorted(family_spouses.get(current_family, set())):
+            rows.append(
+                {
+                    "person_id": spouse,
+                    "event_type": current_family_event["event_type"],
+                    "event_date": current_family_event["event_date"],
+                    "place": current_family_event["place"],
+                    "source_value": current_family_event["source_value"],
+                    "source_line": current_family_event["source_line"],
+                    "family_id": current_family,
+                }
+            )
+        current_family_event = None
 
     with input_path.open("r", encoding="utf-8") as handle:
         for line_no, raw in enumerate(handle, start=1):
@@ -36,17 +57,22 @@ def parse_gedcom(input_path: Path) -> list[dict[str, Any]]:
             level, xref, tag, rest = _line_record(raw)
 
             if level == 0:
+                flush_family_event()
                 current_event = None
+                current_family_event = None
                 if tag == "INDI" and xref:
                     current_person = xref
+                    current_family = None
+                elif tag == "FAM" and xref:
+                    current_family = xref
+                    current_person = None
+                    family_spouses.setdefault(current_family, set())
                 else:
                     current_person = None
+                    current_family = None
                 continue
 
-            if current_person is None:
-                continue
-
-            if level == 1 and tag in EVENT_TAGS:
+            if level == 1 and current_person and tag in EVENT_TAGS:
                 current_event = {
                     "person_id": current_person,
                     "event_type": tag,
@@ -58,13 +84,41 @@ def parse_gedcom(input_path: Path) -> list[dict[str, Any]]:
                 rows.append(current_event)
                 continue
 
-            if current_event is None:
+            if level == 1 and current_family and tag in EVENT_TAGS:
+                current_family_event = {
+                    "family_id": current_family,
+                    "event_type": tag,
+                    "event_date": None,
+                    "place": None,
+                    "source_value": rest or None,
+                    "source_line": line_no,
+                }
                 continue
 
-            if level == 2 and tag == "DATE":
-                current_event["event_date"] = rest or None
-            elif level == 2 and tag == "PLAC":
-                current_event["place"] = rest or None
+            if level == 1 and current_family and tag in {"HUSB", "WIFE"} and rest:
+                family_spouses[current_family].add(rest)
+                continue
+
+            if level == 2 and current_event is not None:
+                if tag == "DATE":
+                    current_event["event_date"] = rest or None
+                elif tag == "PLAC":
+                    current_event["place"] = rest or None
+                continue
+
+            if level == 2 and current_family_event is not None:
+                if tag == "DATE":
+                    current_family_event["event_date"] = rest or None
+                elif tag == "PLAC":
+                    current_family_event["place"] = rest or None
+
+                if tag in {"DATE", "PLAC"}:
+                    continue
+
+            if level == 1 and current_family and current_family_event is not None and tag not in {"DATE", "PLAC"}:
+                flush_family_event()
+
+    flush_family_event()
 
     return rows
 

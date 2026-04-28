@@ -29,10 +29,12 @@ def _encode_payload(payload: dict[str, Any]) -> str:
 
 def build_sidecar(rows: list[dict[str, Any]], repo_salt: str, kek_id: str) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
+    seen: set[str] = set()
     for row in rows:
         person_id = str(row.get("person_id", ""))
-        if not person_id:
+        if not person_id or person_id in seen:
             continue
+        seen.add(person_id)
 
         payload = {
             "person_id": person_id,
