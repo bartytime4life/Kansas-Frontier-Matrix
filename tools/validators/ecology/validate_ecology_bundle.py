@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate ecology descriptors against schemas, registry references, and policy prerequisites."""
+"""Validate ecology descriptors, bundles, and governed output objects."""
 
 from __future__ import annotations
 
@@ -23,9 +23,22 @@ SCHEMA_MAP = {
     "SensitiveOccurrenceRecord": REPO_ROOT / "schemas/contracts/v1/ecology/sensitive_occurrence_record.schema.json",
     "HabitatAssignment": REPO_ROOT / "schemas/contracts/v1/ecology/habitat_assignment.schema.json",
     "EcologyObservationBundle": REPO_ROOT / "schemas/contracts/v1/ecology/ecology_observation_bundle.schema.json",
+    "EvidenceBundle": REPO_ROOT / "schemas/contracts/v1/ecology/evidence_bundle.schema.json",
+    "DecisionEnvelope": REPO_ROOT / "schemas/contracts/v1/ecology/decision_envelope.schema.json",
+    "EcologicalClaim": REPO_ROOT / "schemas/contracts/v1/ecology/ecological_claim.schema.json",
+    "ReleaseManifest": REPO_ROOT / "schemas/contracts/v1/ecology/release_manifest.schema.json",
 }
 
-BUNDLE_OBJECT_TYPES = {"EcologyObservationBundle"}
+BUNDLE_OBJECT_TYPES = {
+    "EcologyObservationBundle",
+    "EvidenceBundle",
+}
+
+OUTPUT_OBJECT_TYPES = {
+    "DecisionEnvelope",
+    "EcologicalClaim",
+    "ReleaseManifest",
+}
 
 SPEC_HASH_RE = re.compile(r"^sha256:[a-fA-F0-9]{64}$")
 EVIDENCE_REF_RE = re.compile(r"^kfm://evidence/.+")
@@ -138,9 +151,16 @@ def _is_bundle_object(obj: dict[str, Any]) -> bool:
     return obj.get("object_type") in BUNDLE_OBJECT_TYPES or "bundle_id" in obj
 
 
+def _is_output_object(obj: dict[str, Any]) -> bool:
+    return obj.get("object_type") in OUTPUT_OBJECT_TYPES
+
+
 def _object_identifier(obj: dict[str, Any]) -> str | None:
     for key in (
         "bundle_id",
+        "decision_id",
+        "claim_id",
+        "release_id",
         "assignment_id",
         "layer_id",
         "plot_id",
@@ -154,6 +174,61 @@ def _object_identifier(obj: dict[str, Any]) -> str | None:
 
 
 def _required_governance_fields(obj: dict[str, Any]) -> list[str]:
+    object_type = obj.get("object_type")
+
+    if object_type == "EvidenceBundle":
+        return [
+            "object_type",
+            "bundle_id",
+            "source_refs",
+            "dataset_refs",
+            "evidence_refs",
+            "object_refs",
+            "resolved",
+            "policy_label",
+            "rights_status",
+            "sensitivity",
+            "spec_hash",
+        ]
+
+    if object_type == "DecisionEnvelope":
+        return [
+            "object_type",
+            "decision_id",
+            "bundle_ref",
+            "policy_id",
+            "surface",
+            "decision",
+            "allow",
+            "evaluated_at",
+            "spec_hash",
+        ]
+
+    if object_type == "EcologicalClaim":
+        return [
+            "object_type",
+            "claim_id",
+            "statement",
+            "claim_status",
+            "knowledge_character",
+            "evidence_bundle_ref",
+            "decision_ref",
+            "policy_label",
+            "spec_hash",
+        ]
+
+    if object_type == "ReleaseManifest":
+        return [
+            "object_type",
+            "release_id",
+            "surface",
+            "release_state",
+            "policy_pass",
+            "published_at",
+            "objects",
+            "spec_hash",
+        ]
+
     if _is_bundle_object(obj):
         return [
             "object_type",
@@ -287,15 +362,20 @@ def _validate_governance(obj: dict[str, Any]) -> list[str]:
     if not isinstance(spec_hash, str) or not SPEC_HASH_RE.match(spec_hash):
         errors.append("invalid_spec_hash")
 
-    evidence_refs = obj.get("evidence_refs", [])
-    if not isinstance(evidence_refs, list) or not evidence_refs:
-        errors.append("evidence_refs_required")
-    else:
-        for ref in evidence_refs:
-            if not isinstance(ref, str) or not EVIDENCE_REF_RE.match(ref):
-                errors.append(f"invalid_evidence_ref:{ref}")
+    evidence_refs = obj.get("evidence_refs")
+    if evidence_refs is not None:
+        if not isinstance(evidence_refs, list) or not evidence_refs:
+            errors.append("evidence_refs_required")
+        else:
+            for ref in evidence_refs:
+                if not isinstance(ref, str) or not EVIDENCE_REF_RE.match(ref):
+                    errors.append(f"invalid_evidence_ref:{ref}")
 
-    if obj.get("evidence_bundle_resolved") is not True:
+    if obj.get("object_type") not in OUTPUT_OBJECT_TYPES and obj.get("object_type") != "EvidenceBundle":
+        if obj.get("evidence_bundle_resolved") is not True:
+            errors.append("unresolved_evidence_bundle")
+
+    if obj.get("resolved") is False:
         errors.append("unresolved_evidence_bundle")
 
     if obj.get("rights_status") == "unknown":
@@ -329,6 +409,23 @@ def _validate_governance(obj: dict[str, Any]) -> list[str]:
 
     if obj.get("sensitivity") == "review_required":
         errors.append("requires_steward_review")
+
+    if obj.get("object_type") == "DecisionEnvelope":
+        if obj.get("decision") == "allow" and obj.get("allow") is not True:
+            errors.append("decision_allow_mismatch")
+        if obj.get("decision") in {"deny", "hold", "generalize"} and obj.get("allow") is True:
+            errors.append("decision_allow_mismatch")
+
+    if obj.get("object_type") == "EcologicalClaim":
+        if obj.get("claim_status") == "CONFIRMED" and obj.get("knowledge_character") in {
+            "derived",
+            "modeled",
+        }:
+            errors.append("derived_claim_marked_confirmed")
+
+    if obj.get("object_type") == "ReleaseManifest":
+        if obj.get("release_state") == "published" and obj.get("policy_pass") is not True:
+            errors.append("published_release_without_policy_pass")
 
     errors.extend(_validate_catalog_refs(obj))
 
@@ -391,7 +488,7 @@ def _expand_paths(patterns: list[str]) -> list[Path]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate ecology descriptor or bundle fixtures")
+    parser = argparse.ArgumentParser(description="Validate ecology descriptor, bundle, or governed output fixtures")
     parser.add_argument("--bundle", action="append", default=[], help="Path or glob to descriptor/bundle JSON file")
     parser.add_argument("--sources", default=str(DEFAULT_SOURCES))
     parser.add_argument("--datasets", default=str(DEFAULT_DATASETS))
