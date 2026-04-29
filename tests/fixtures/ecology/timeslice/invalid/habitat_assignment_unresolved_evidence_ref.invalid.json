@@ -1,0 +1,14 @@
+{
+  "fixture_id": "habitat_assignment.unresolved_evidence_ref.invalid",
+  "status": "invalid",
+  "reason": "unresolved evidence ref",
+  "assignment": {
+    "occurrence_ref": "obs-ks-2024-0001",
+    "surface_ref": "kfm://surface/habitat/grassland_30m/v1",
+    "habitat_class": "Temperate_Grassland",
+    "spec_hash": "sha256:7f0fd9cbff9d8b59a44b2b87fa8b9bc251dbd3475da716ea648dbaec4cf0e5b9"
+  },
+  "evidence_refs": [
+    "kfm://evidence/does-not-exist"
+  ]
+}
