@@ -6,7 +6,7 @@ from .evidencebundle_resolver import ResolverConfig, resolve_ecology_evidence_bu
 
 
 DEFAULT_PROOF_ROOT = Path("data/proofs/ecology")
-DEFAULT_SCHEMA_PATH = Path("schemas/contracts/v1/runtime/ecology_proof_pack.schema.json")
+DEFAULT_SCHEMA_PATH = Path("schemas/ecology/ecology_proof_pack.schema.json")
 
 
 def get_ecology_evidence_bundle(

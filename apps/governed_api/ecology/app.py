@@ -3,10 +3,12 @@ from __future__ import annotations
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+from apps.governed_api.ecology.fastapi_routes import router as ecology_router
 from apps.governed_api.ecology.focus_mode import answer_focus_request
 
 
-app = FastAPI(title="KFM Ecology Focus Mode")
+app = FastAPI(title="KFM Governed Ecology API")
+app.include_router(ecology_router)
 
 
 class FocusModeRequest(BaseModel):
