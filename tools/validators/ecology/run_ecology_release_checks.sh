@@ -8,9 +8,13 @@
 # - ReleaseManifest objects
 #
 # Expectations:
-# - processed → pass (any policy decision allowed except deny)
-# - triplets → pass (claims + envelopes valid)
-# - published → pass + policy_decision=allow ONLY
+# - processed → pass validation; policy_decision may be allow, hold, or generalize
+# - triplets → pass validation
+# - published → pass validation and policy_decision=allow only
+#
+# Exit code:
+#   0 → success
+#   1 → failure
 
 set -euo pipefail
 
@@ -30,12 +34,18 @@ if [[ ! -f "$VALIDATOR" ]]; then
   exit 1
 fi
 
-run_dir_if_present() {
+validate_dir() {
   local label="$1"
   local dir="$2"
-  local expect_policy="${3:-}"
+  local required="$3"
+  local expect_policy="${4:-}"
 
   if [[ ! -d "$dir" ]]; then
+    if [[ "$required" == "required" ]]; then
+      echo "ERROR: $label directory missing: $dir"
+      exit 1
+    fi
+
     echo "SKIP: $label directory not present: $dir"
     return 0
   fi
@@ -45,12 +55,18 @@ run_dir_if_present() {
   shopt -u nullglob
 
   if [[ "${#files[@]}" -eq 0 ]]; then
+    if [[ "$required" == "required" ]]; then
+      echo "ERROR: $label contains no JSON files: $dir"
+      exit 1
+    fi
+
     echo "SKIP: $label has no JSON files: $dir"
     return 0
   fi
 
   echo "→ Validating $label"
   echo "  files=${#files[@]}"
+  echo "  expect=pass"
 
   if [[ -n "$expect_policy" ]]; then
     echo "  expect_policy=$expect_policy"
@@ -67,19 +83,8 @@ run_dir_if_present() {
   echo
 }
 
-# --------------------------------------------------
-# Processed outputs (allow | hold | generalize OK)
-# --------------------------------------------------
-run_dir_if_present "processed ecology outputs" "$PROCESSED_DIR"
-
-# --------------------------------------------------
-# Triplets (claims + envelopes)
-# --------------------------------------------------
-run_dir_if_present "ecology triplets" "$TRIPLETS_DIR"
-
-# --------------------------------------------------
-# Published releases (STRICT: allow only)
-# --------------------------------------------------
-run_dir_if_present "published ecology releases" "$PUBLISHED_DIR" "allow"
+validate_dir "processed ecology outputs" "$PROCESSED_DIR" "optional"
+validate_dir "ecology triplets" "$TRIPLETS_DIR" "optional"
+validate_dir "published ecology releases" "$PUBLISHED_DIR" "required" "allow"
 
 echo "✓ All ecology release checks passed"
