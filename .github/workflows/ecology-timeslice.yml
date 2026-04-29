@@ -145,6 +145,37 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/evidence_bundle.schema.json \
             /tmp/evidence_bundle.json
 
+      - name: Fail closed on required dry-run artifacts
+        run: |
+          required_artifacts=(
+            "/tmp/ecology_timeslice_qa_decision.json"
+            "/tmp/promotion_decision.json"
+            "/tmp/evidence_bundle.json"
+          )
+
+          for artifact in "${required_artifacts[@]}"; do
+            if [ ! -s "$artifact" ]; then
+              echo "ERROR: required artifact missing or empty: $artifact"
+              exit 1
+            fi
+
+            python -m json.tool "$artifact" > /dev/null
+          done
+
+          if [ ! -d /tmp/ecology-policy-assertions ]; then
+            echo "ERROR: policy assertions directory missing"
+            exit 1
+          fi
+
+          assertion_count="$(find /tmp/ecology-policy-assertions -name '*.assertion.json' | wc -l)"
+
+          if [ "$assertion_count" -lt 7 ]; then
+            echo "ERROR: expected at least 7 policy assertion artifacts, found $assertion_count"
+            exit 1
+          fi
+
+          echo "All required dry-run artifacts are present and valid JSON"
+
       - name: Generate dry-run receipt
         run: |
           cat > data/receipts/runs/dry-run/run_receipt.json <<JSON
