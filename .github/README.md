@@ -9,8 +9,8 @@ created: 2026-04-29
 updated: 2026-04-29
 policy_label: public
 intended_path: .github/README.md
-evidence_mode: CORPUS_ONLY / NO_REPO_EVIDENCE until a mounted checkout is inspected
-truth_posture: CONFIRMED purpose from supplied KFM doctrine; PROPOSED directory contract; UNKNOWN active GitHub platform state
+evidence_mode: REPO_CHECKOUT_INSPECTED (filesystem only) / NO_GITHUB_PLATFORM_SETTINGS_EVIDENCE
+truth_posture: CONFIRMED purpose and on-disk .github inventory; PARTIALLY_VERIFIED workflow files in checkout; UNKNOWN GitHub platform enforcement state
 related:
   - ../README.md
   - ../docs/README.md
@@ -35,8 +35,8 @@ tags:
   - readme
   - control-surface
 notes:
-  - Draft-ready .github/README.md revision.
-  - Current repository inventory, workflow YAML, branch protection, CODEOWNERS coverage, required checks, Actions settings, environment approvals, secrets, deployment rules, and release artifact behavior remain NEEDS_VERIFICATION until checked in the active repository and GitHub platform settings.
+  - Updated against mounted repository checkout on 2026-04-29 (filesystem evidence).
+  - GitHub platform settings (branch protection, required checks, environment approvals, Actions/repo permissions, and secret posture) remain NEEDS_VERIFICATION until checked in GitHub UI/API evidence.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -73,17 +73,17 @@ notes:
 ## Read this first
 
 > [!IMPORTANT]
-> This README is **repo-ready guidance**, not proof of active GitHub enforcement. Treat workflow names, owners, badges, branch-protection claims, required checks, environment approvals, secret posture, deployment rules, and platform settings as `NEEDS_VERIFICATION` until checked against the current repository and GitHub settings.
+> This README is **checkout-verified guidance**, but still not proof of active GitHub platform enforcement. Treat workflow names, owners, badges, branch-protection claims, required checks, environment approvals, secret posture, deployment rules, and platform settings as `NEEDS_VERIFICATION` until checked against the current repository and GitHub settings.
 
 | Field | Value |
 |---|---|
 | Status | `draft` |
 | Intended path | `.github/README.md` |
 | Owners | `@bartytime4life` |
-| Evidence mode | `CORPUS_ONLY` / `NO_REPO_EVIDENCE` until a mounted checkout is inspected |
+| Evidence mode | `REPO_CHECKOUT_INSPECTED (filesystem only)` / `NO_GITHUB_PLATFORM_SETTINGS_EVIDENCE` |
 | Authority class | GitHub-native operational control surface |
 | Policy label | `public` |
-| Truth posture | `CONFIRMED` target purpose · `PROPOSED` directory contract · `UNKNOWN` active workflow/platform state |
+| Truth posture | `CONFIRMED` target purpose and on-disk inventory · `PARTIALLY_VERIFIED` workflow files in checkout · `UNKNOWN` platform enforcement state |
 | Public posture | Cite-or-abstain; fail closed where rights, sensitivity, release state, or source terms are unresolved |
 
 | What this document does | What it does not do |
@@ -215,43 +215,68 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 
 ## Directory map
 
-This is a **proposed verification target**, not a claim that these files are active in the current repository. Replace it with a generated inventory after the real checkout is mounted and inspected.
+This map reflects the mounted repository checkout as inspected on **2026-04-29**. It confirms file presence only; behavior and platform enforcement still require GitHub settings evidence.
 
 ```text
 .github/
-├── README.md                         # this file
-├── CODEOWNERS                        # NEEDS_VERIFICATION
-├── PULL_REQUEST_TEMPLATE.md          # NEEDS_VERIFICATION
-├── SECURITY.md                       # NEEDS_VERIFICATION
-├── dependabot.yml                    # NEEDS_VERIFICATION
+├── README.md
+├── CODEOWNERS
+├── PULL_REQUEST_TEMPLATE.md
+├── SECURITY.md
+├── dependabot.yml
 ├── ISSUE_TEMPLATE/
-│   ├── bug_report.md                 # PROPOSED / NEEDS_VERIFICATION
-│   ├── documentation_drift.md         # PROPOSED / NEEDS_VERIFICATION
-│   ├── source_intake.md               # PROPOSED / NEEDS_VERIFICATION
-│   ├── policy_or_release_gap.md       # PROPOSED / NEEDS_VERIFICATION
-│   └── security_sensitive.md          # PROPOSED / NEEDS_VERIFICATION
+│   ├── README.md
+│   ├── bug_report.md
+│   ├── config.yml
+│   ├── documentation_drift.md
+│   ├── policy_or_release_gap.md
+│   └── source_intake.md
 ├── actions/
-│   └── README.md                      # PROPOSED / GitHub-specific glue only
+│   ├── README.md
+│   ├── metadata-validate/
+│   │   ├── README.md
+│   │   └── action.yml
+│   ├── opa-gate/
+│   │   ├── README.md
+│   │   └── action.yml
+│   ├── provenance-guard/
+│   │   ├── README.md
+│   │   └── action.yml
+│   ├── sbom-produce-and-sign/
+│   │   ├── README.md
+│   │   └── action.yml
+│   └── src/
+│       └── README.md
+├── linters/
+│   ├── README.md
+│   ├── markdownlint.json
+│   └── mlc.config.json
 ├── watchers/
-│   └── README.md                      # PROPOSED / workflow watcher notes only
-├── workflows/
-│   ├── README.md                      # PROPOSED / workflow inventory and gates
-│   ├── verification-baseline.yml      # PROPOSED / read-only baseline checks
-│   ├── docs-lint.yml                  # PROPOSED / delegates to docs tooling
-│   ├── contracts.yml                  # PROPOSED / delegates to contract tooling
-│   ├── policy.yml                     # PROPOSED / delegates to policy tooling
-│   ├── tests.yml                      # PROPOSED / delegates to repo tests
-│   └── release-dry-run.yml            # PROPOSED / no public release by itself
-└── linters/
-    ├── markdownlint.json              # PROPOSED / GitHub-facing config
-    └── mlc.config.json                # PROPOSED / link-check config
+│   ├── README.md
+│   ├── RECEIPT_PROOF_SEPARATION.md
+│   ├── WATCHER_PROPOSAL_TEMPLATE.md
+│   └── templates/
+│       └── watcher-run-receipt.example.yaml
+└── workflows/
+    ├── .gitkeep
+    ├── README.md
+    ├── contracts.yml
+    ├── docs-lint.yml
+    ├── ecology-timeslice.yml
+    ├── ecology-validation.yml
+    ├── evidence-chain.yml
+    ├── policy.yml
+    ├── provenance-gates.yml
+    ├── release-dry-run.yml
+    ├── tests.yml
+    └── verification-baseline.yml
 ```
 
 > [!TIP]
-> After the real repository is mounted, replace the proposed tree with an inventory generated from the checkout.
+> Regenerate this section from the active checkout whenever `.github/` files are added, removed, or moved.
 
 ```bash
-# Read-only inventory. Run from repository root after mounting the real checkout.
+# Read-only inventory from repository root.
 find .github -maxdepth 3 -type f | sort
 ```
 
