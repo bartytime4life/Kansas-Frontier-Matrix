@@ -1,0 +1,7 @@
+{
+  "total_pixels": 1000,
+  "masked_pixels": 120,
+  "aerosol_flagged_pixels": 25,
+  "valid_30m_pixels": 880,
+  "total_30m_pixels": 1000
+}
