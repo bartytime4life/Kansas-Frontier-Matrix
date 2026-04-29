@@ -1,477 +1,429 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
-title: data/registry/ecology
+doc_id: kfm://doc/NEEDS-VERIFICATION-data-registry-ecology-ecology-readme
+title: data/registry/ecology/ecology/
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
-created: <NEEDS_VERIFICATION_CREATED_DATE>
-updated: 2026-04-24
-policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
-related: [
-  ../README.md,
-  ../../README.md,
-  ../../raw/README.md,
-  ../../work/README.md,
-  ../../quarantine/README.md,
-  ../../processed/README.md,
-  ../../catalog/README.md,
-  ../../catalog/dcat/README.md,
-  ../../catalog/stac/README.md,
-  ../../catalog/prov/README.md,
-  ../../receipts/README.md,
-  ../../proofs/README.md,
-  ../../../contracts/README.md,
-  ../../../schemas/README.md,
-  ../../../policy/README.md,
-  ../../../tests/README.md,
-  ../../../tools/validators/README.md,
-  ../../../.github/CODEOWNERS
-]
-tags: [kfm, data, registry, ecology, flora, fauna, habitat, soil, air, vegetation, landcover, hydrology, map-rendering]
-notes: [
-  "Target path is proposed as data/registry/ecology/README.md and needs active-branch verification.",
-  "This README defines a governed registry boundary for ecological source descriptors, crosswalk descriptors, baseline descriptors, and map-layer descriptors.",
-  "This README does not claim checked-in dataset payloads, machine schemas, executable validators, source connectors, catalog records, proofs, or runtime routes.",
-  "DCAT, STAC, and PROV closure remains downstream in data/catalog/.",
-  "doc_id, created date, and policy_label remain NEEDS VERIFICATION."
-]
+owners: NEEDS_VERIFICATION__data_registry_steward
+created: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-04-29
+policy_label: NEEDS_VERIFICATION__public_or_restricted
+related: [../README.md, ../../README.md, ../../../README.md, ../../../catalog/README.md, ../../../receipts/README.md, ../../../proofs/README.md, ../../../published/README.md, ../../../../contracts/README.md, ../../../../schemas/README.md, ../../../../policy/README.md, ../../../../tools/validators/README.md, ../../../../tests/README.md, ../../../../docs/README.md]
+tags: [kfm, data, registry, ecology, biodiversity, source-descriptor, source-role, sensitivity, evidence]
+notes: [README-like standard doc for the ecology registry leaf. Exact repo presence, owner assignment, created date, policy label, parent README inventory, descriptor filenames, validator wiring, and live source activation remain NEEDS VERIFICATION. Updated date reflects this draft generation date.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `data/registry/ecology/`
+# `data/registry/ecology/ecology/`
 
-Governed registry lane for ecological source descriptors, cross-domain join keys, baseline descriptors, and map-layer descriptors across KFM flora, fauna, habitat, soil, air, vegetation, land-cover, and hydrology work.
-
-> [!NOTE]
-> **Status:** experimental  
-> **Document status:** draft  
-> **Owners:** `@bartytime4life`  
-> **Path target:** `data/registry/ecology/README.md`  
-> **Truth posture:** `PROPOSED` lane boundary; child files, schemas, validators, catalog records, and runtime integrations remain `NEEDS VERIFICATION` until proven in the active branch.  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Proposed directory tree](#proposed-directory-tree) · [Operating model](#operating-model) · [Descriptor minimum](#descriptor-minimum) · [Join keys](#join-keys) · [Layer registry](#layer-registry) · [Promotion gates](#promotion-gates) · [Flow diagram](#flow-diagram) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
-
-![Status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
-![Owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
-![Lane: ecology registry](https://img.shields.io/badge/lane-ecology%20registry-0a7ea4)
-![Truth: proposed](https://img.shields.io/badge/truth-PROPOSED%20%7C%20NEEDS%20VERIFICATION-2ea043)
-![Renderer: MapLibre-first](https://img.shields.io/badge/renderer-MapLibre--first-0969da)
+Registry leaf for ecology source descriptors, source-role boundaries, rights/sensitivity posture, and evidence-ready intake metadata.
 
 > [!IMPORTANT]
-> This directory is a **registry and descriptor lane**, not a canonical data payload zone.
->
-> Ecological observations, rasters, vectors, model outputs, receipts, proofs, catalog records, and runtime envelopes belong in their governed lifecycle homes. This lane records **what the ecological sources and layers are**, how they may be joined, and what evidence burden they carry before promotion.
+> This directory is a **source-registry surface**, not a data lake, publication gate, proof pack, or runtime answer system. It should make ecological sources governable before ingestion, validation, cataloging, publication, or map/runtime use.
+
+| Field | Value |
+|---|---|
+| **Status** | `experimental` |
+| **Document state** | `draft` |
+| **Owners** | `NEEDS_VERIFICATION__data_registry_steward` |
+| **Path** | `data/registry/ecology/ecology/README.md` |
+| **Repo fit** | Child of `data/registry/ecology/`; upstream registry context in [`../../README.md`](../../README.md) and data lifecycle context in [`../../../README.md`](../../../README.md); downstream consumers should be validators, pipelines, catalog/proof surfaces, and governed APIs after verification. |
+| **Badges** | ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-lightgrey) ![surface](https://img.shields.io/badge/surface-data%2Fregistry-blue) ![posture](https://img.shields.io/badge/posture-evidence--first-5b6ee1) ![sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-b60205) |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence posture](#evidence-posture) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Registry tables](#registry-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 ---
 
 ## Scope
 
-`data/registry/ecology/` gives KFM a single, inspectable place to describe ecological source families and map-facing ecological layer families before they become public claims.
+`data/registry/ecology/ecology/` is the proposed registry home for **ecology-wide source identity and source-role records** that do not fit cleanly into a single narrow flora, fauna, habitat, wetlands, landcover, or protected-area leaf.
 
-| Domain family | Registry role | Publication risk to keep visible |
-|---|---|---|
-| Flora | Plant taxonomy, occurrence-source descriptors, spatial precision, observation method, temporal coverage | Rare species, exact locations, collector/source rights |
-| Fauna | Species observation descriptors, habitat-model descriptors, sensitivity and generalization posture | Nest/den/roost/spawning exposure, stewardship restrictions |
-| Habitat | Crosswalks between land cover, soils, hydrology, vegetation, and species suitability | Model support being mistaken for observation truth |
-| Soil and air | Baseline source descriptors, monitoring-station descriptors, temporal baseline definitions | Unit normalization, station freshness, static-vs-dynamic confusion |
-| Vegetation and land-cover change | Raster-source descriptors, scene families, change-detection layer identities | Scene date, cloud/mask limitations, derivative-surface overclaiming |
-| Hydrology and watershed mapping | HUC/reach/station descriptors and watershed join keys | Ambiguous crosswalks, regulatory context mistaken for observed events |
-| Rendering integration | Map-layer descriptors for MapLibre-first and Cesium-when-justified presentation | Renderer output being mistaken for canonical truth |
+It exists to keep these distinctions visible before any connector, validator, map layer, Evidence Drawer payload, or Focus Mode answer consumes ecological support:
 
-This README defines the lane boundary only. It does **not** confirm that `sources/`, `crosswalks/`, `baselines/`, `layers/`, validators, schemas, or fixtures currently exist.
+- observed occurrence evidence
+- habitat or landcover context
+- modeled range or modeled habitat products
+- regulatory or statutory habitat context
+- protected-area or stewardship context
+- source rights, cadence, access method, freshness, and public-use posture
+- sensitivity and geoprivacy burden, especially for rare species and exact coordinates
 
-[Back to top](#top)
+### Working question
+
+> Can this ecology source be identified, classified, governed, validated, and safely routed without flattening ecological evidence into one undifferentiated biodiversity bucket?
 
 ---
 
 ## Repo fit
 
-From the target path `data/registry/ecology/README.md`, this lane sits between source admission and the downstream lifecycle surfaces that turn evidence into governed public artifacts.
+This README should orient maintainers who are deciding where an ecology source descriptor belongs and what it is allowed to mean.
 
-| Relation | Surface | Role |
+| Boundary | Relationship | Status |
 |---|---|---|
-| Parent registry | [`../README.md`](../README.md) | Source identity, source admission metadata, descriptor governance |
-| Data lifecycle | [`../../README.md`](../../README.md) | Truth-path routing across raw, work, quarantine, processed, catalog, published, receipts, and proofs |
-| Raw inputs | [`../../raw/README.md`](../../raw/README.md) | Source-native ecological acquisitions |
-| Work and quarantine | [`../../work/README.md`](../../work/README.md), [`../../quarantine/README.md`](../../quarantine/README.md) | Normalization, QA, holds, rejected or unresolved ecological candidates |
-| Processed outputs | [`../../processed/README.md`](../../processed/README.md) | Canonical processed ecological artifacts |
-| Catalog closure | [`../../catalog/README.md`](../../catalog/README.md) | Downstream DCAT + STAC + PROV discovery and lineage closure |
-| Receipts and proofs | [`../../receipts/README.md`](../../receipts/README.md), [`../../proofs/README.md`](../../proofs/README.md) | Execution memory and release-significant proof objects |
-| Contracts, schemas, policy | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md) | Object meaning, machine validation, rights, sensitivity, and review law |
-| Verification | [`../../../tests/README.md`](../../../tests/README.md), [`../../../tools/validators/README.md`](../../../tools/validators/README.md) | Executable checks when implemented and proven |
+| [`../../README.md`](../../README.md) | Parent `data/registry/` index and source-registry law. | `NEEDS VERIFICATION` |
+| [`../README.md`](../README.md) | Ecology registry parent. | `NEEDS VERIFICATION` |
+| [`../../../receipts/README.md`](../../../receipts/README.md) | Process memory for probes, watchers, validation runs, and review handoffs. | `NEEDS VERIFICATION` |
+| [`../../../catalog/README.md`](../../../catalog/README.md) | Catalog closure surfaces such as STAC/DCAT/PROV after processed artifacts exist. | `NEEDS VERIFICATION` |
+| [`../../../proofs/README.md`](../../../proofs/README.md) | Release/proof objects; separate from descriptors and receipts. | `NEEDS VERIFICATION` |
+| [`../../../../contracts/README.md`](../../../../contracts/README.md) | Human-readable contract law for source admission, evidence objects, runtime envelopes, and review objects. | `NEEDS VERIFICATION` |
+| [`../../../../schemas/README.md`](../../../../schemas/README.md) | Machine-readable schema home or mirror; exact authority split remains an ADR issue. | `NEEDS VERIFICATION` |
+| [`../../../../policy/README.md`](../../../../policy/README.md) | Policy bundles for sensitivity, rights, precision, review, and release gates. | `NEEDS VERIFICATION` |
+| [`../../../../tools/validators/README.md`](../../../../tools/validators/README.md) | Validator implementations that should consume descriptors; this registry should not replace them. | `NEEDS VERIFICATION` |
+| [`../../../../tests/README.md`](../../../../tests/README.md) | Fixture and regression proof for descriptor validity and fail-closed behavior. | `NEEDS VERIFICATION` |
 
-> [!CAUTION]
-> The links above are path targets inferred from KFM’s proposed lifecycle layout. They must be verified against the active branch before this file is marked `review` or `published`.
+> [!NOTE]
+> If the active branch already has a different ecology registry layout, preserve that layout and adapt this README through a small migration note rather than creating a parallel authority.
 
 ---
 
 ## Accepted inputs
 
-Accepted inputs are descriptor-shaped or registry-shaped objects only.
+This directory may contain compact, reviewable registry material for ecology-wide source admission.
 
-| Accepted input | Belongs here when it records... |
-|---|---|
-| Ecological source descriptors | `source_id`, steward, rights, cadence, access method, source role, and domain burden |
-| Taxonomic authority descriptors | Accepted taxonomy source, version, reconciliation method, and uncertainty posture |
-| Observation-family descriptors | Occurrence source, precision class, observation method, temporal scope, and source limitations |
-| Habitat crosswalk descriptors | NLCD-to-habitat, soil-to-habitat, hydrology-to-habitat, vegetation-to-habitat mappings |
-| Baseline descriptors | Soil moisture, air quality, vegetation health, or hydrologic baseline windows |
-| Join-key crosswalks | HUC12 ↔ reach ↔ station, county ↔ grid cell ↔ watershed, taxon ↔ observation mappings |
-| Map-layer descriptors | `layer_id`, render type, `spec_hash`, evidence refs, source refs, and time-enabled behavior |
-| Promotion-readiness metadata | Known QA burden, sensitivity posture, required receipts, required proof objects, and catalog closure expectations |
-
-### Descriptor-shaped means
-
-A descriptor is a **claim about a source, join, baseline, or layer**, not the source payload itself. It should be small enough to review in Git and explicit enough for validators, catalog builders, EvidenceBundle builders, and UI surfaces to refuse unsupported claims.
+| Accepted input | Examples | Required posture |
+|---|---|---|
+| Source descriptors | `*_source.yaml`, `*_descriptor.yaml`, or repo-native descriptor format | Must declare source identity, source role, rights, cadence, access class, spatial/temporal support, expected formats, sensitivity, and citation posture. |
+| Source-family indexes | `_index.yaml`, `_index.md`, `source_families.md` | Must separate occurrence, habitat, regulatory, modeled, and context sources. |
+| Source-role matrices | `source_roles.md`, `authority_matrix.md` | Must state what a source can and cannot support. |
+| Sensitivity/publication matrices | `sensitivity_publication_matrix.md` | Must fail closed for exact sensitive locations, unresolved rights, and unreviewed public precision. |
+| Review notes | `review_burden.md`, `steward_review_notes.md` | Must identify what is still `NEEDS VERIFICATION`; must not grant publication by prose alone. |
+| Tiny illustrative fixtures | `examples/*.json` | Must be synthetic or public-safe; must not contain non-public exact locations or restricted records. |
 
 ---
 
 ## Exclusions
 
-| Excluded content | Correct home |
-|---|---|
-| Raw ecological source payloads | `data/raw/` |
-| Scratch transforms and intermediate joins | `data/work/` |
-| Held, rejected, or unresolved source candidates | `data/quarantine/` |
-| Canonical processed ecological artifacts | `data/processed/` |
-| DCAT, STAC, and PROV output records | `data/catalog/` |
-| Run receipts and validation reports | `data/receipts/` |
-| Release proof packs and attestations | `data/proofs/` |
-| Published tiles, COGs, GeoParquet, PMTiles, scenes, or static exports | `data/published/` or release-specific publication surfaces, when confirmed |
-| Runtime API envelopes | App or contract runtime surfaces |
-| Map renderer implementation code | `apps/`, `web/`, `ui/`, or package surfaces, when confirmed |
-| Policy rules and executable gates | `policy/` |
-| Shared machine schemas | `schemas/` or `contracts/`, subject to schema-home ADR |
+This directory should stay small and source-governance focused.
 
-[Back to top](#top)
+| Does **not** belong here | Put it here instead | Why |
+|---|---|---|
+| Raw occurrence dumps, rasters, provider downloads, scrape caches | `data/raw/`, `data/work/`, or quarantined lifecycle homes | Registry files describe sources; they do not store source payloads. |
+| Restricted exact species coordinates or steward-only records | Restricted/quarantined data surfaces | Registry material should not leak sensitive ecological locations. |
+| Validator code | `tools/validators/` | Validation must be executable and testable outside the registry. |
+| Pipeline watchers or live connector code | `pipelines/` or `tools/probes/` | Source refresh and fetch behavior should emit receipts and stay separate from descriptors. |
+| Proof packs, release manifests, signed bundles | `data/proofs/`, `data/releases/`, or release-bearing surfaces | Proof is a later release state, not a descriptor state. |
+| STAC/DCAT/PROV catalog records | `data/catalog/` | Catalog records describe emitted artifacts; source descriptors describe intake authority and burden. |
+| Policy rule bodies | `policy/` | This leaf declares policy-relevant metadata; it does not author allow/deny law. |
+| UI drawer payloads or Focus Mode examples | App, contract, or runtime-proof surfaces | Runtime presentation must consume governed evidence, not registry prose directly. |
+| Canonical taxonomic truth | Taxonomy contracts/schemas or a dedicated taxon registry | Ecology descriptors can reference taxonomy support but should not become the taxonomy authority. |
 
 ---
 
-## Proposed directory tree
+## Evidence posture
 
-The starter tree below is intentionally small. It creates reviewable lanes for source identity, cross-domain joins, baseline windows, and map-layer descriptors without pretending that dataset payloads live here.
+| Claim | Label | Basis |
+|---|---|---|
+| KFM treats source-role discipline, citation, policy, review state, and release state as core to public claims. | `CONFIRMED doctrine` | Attached KFM doctrine and architecture corpus. |
+| Habitat, fauna, and flora should remain governed ecological lanes with taxonomic identity, occurrence evidence, habitat surfaces, sensitivity transforms, and derived joins kept distinct. | `CONFIRMED doctrine / PROPOSED realization` | Attached ecology, habitat, fauna, flora, and whole-system planning corpus. |
+| This exact target path exists in the mounted repository. | `UNKNOWN` | No mounted KFM checkout was available in this session. |
+| Descriptor filenames under this leaf are already branch-authoritative. | `UNKNOWN` | No active branch inventory was available. |
+| `@bartytime4life` or another owner controls this exact leaf. | `NEEDS VERIFICATION` | Existing examples show owner placeholders or broad ownership patterns; leaf-level ownership must be checked. |
+| Source endpoints, licenses, current API fields, and redistribution terms are safe for activation. | `NEEDS VERIFICATION` | Source activation is version-, rights-, and steward-sensitive. |
+| A descriptor in this leaf grants public release. | `FALSE / not allowed` | Release requires validation, policy, catalog/proof closure, review state, and promotion. |
+
+---
+
+## Directory tree
+
+### Current safe claim
+
+This README is the only file this draft can describe without asserting branch inventory.
 
 ```text
-data/registry/ecology/
+data/registry/ecology/ecology/
+└── README.md
+```
+
+### Preferred growth shape (`PROPOSED` / `NEEDS VERIFICATION`)
+
+```text
+data/registry/ecology/ecology/
 ├── README.md
+├── _index.yaml
+├── source_roles.md
+├── sensitivity_publication_matrix.md
 ├── sources/
-│   ├── flora/
-│   ├── fauna/
-│   ├── habitat/
-│   ├── soil/
-│   ├── air/
-│   ├── vegetation/
-│   ├── landcover/
-│   └── hydrology/
-├── crosswalks/
-│   ├── taxon_authority.json
-│   ├── habitat_classes.json
-│   ├── huc_reach_station.json
-│   └── layer_domain_map.json
-├── baselines/
-│   ├── soil_moisture.json
-│   ├── air_quality.json
-│   └── vegetation_health.json
-└── layers/
-    ├── maplibre_layers.json
-    └── cesium_layers.json
+│   ├── nlcd_landcover.yaml
+│   ├── nwi_wetlands.yaml
+│   ├── usfws_critical_habitat.yaml
+│   ├── gbif_occurrence.yaml
+│   ├── inaturalist_occurrence.yaml
+│   └── ebird_occurrence.yaml
+└── examples/
+    ├── source_descriptor.public-safe.example.yaml
+    └── source_descriptor.invalid-missing-rights.example.yaml
 ```
 
-> [!CAUTION]
-> The tree is **PROPOSED**. Do not treat these paths as checked-in inventory until the active branch proves them. If repo convention prefers YAML descriptors, nested domain registries, or `land-cover/` instead of `landcover/`, update this README and record the change in an ADR or migration note.
+> [!TIP]
+> Add one descriptor and one invalid fixture before adding a family of descriptors. A small source-ledgered registry is safer than a broad but weakly validated one.
 
 ---
 
-## Operating model
+## Quickstart
 
-Ecological registry entries should move through a narrow, governed sequence before they can support public-facing claims.
+Use these commands from the repository root after the real checkout is mounted.
+
+### 1) Inspect the branch before making stronger claims
+
+```bash
+git status --short
+git branch --show-current
+test -d data/registry/ecology/ecology && find data/registry/ecology/ecology -maxdepth 3 -type f | sort
+```
+
+### 2) Check for adjacent ownership and registry conventions
+
+```bash
+find data/registry -maxdepth 3 -name 'README.md' -o -name '*descriptor*' -o -name '_index.*' | sort
+find .github -maxdepth 3 -type f | sort
+grep -RInE "data/registry|source descriptor|SourceDescriptor|ecology|biodiversity" .github docs data contracts schemas policy 2>/dev/null | head -100
+```
+
+### 3) Validate descriptors only after the schema path is verified
+
+```bash
+# Example only — replace with the repo-native validator once verified.
+python -m tools.validators.source_descriptor \
+  --schema schemas/contracts/v1/source/source_descriptor.schema.json \
+  --path data/registry/ecology/ecology/sources
+```
+
+> [!WARNING]
+> Do not run live source fetches from registry review. Descriptor validation is safe; connector activation requires source steward review, rights review, policy review, and receipt emission.
+
+---
+
+## Usage
+
+### Descriptor admission rule
+
+A source descriptor in this leaf should be admissible only when it can answer these questions:
+
+1. **Who publishes the source?**
+2. **What kind of ecological support does it provide?**
+3. **What claim is it allowed to support?**
+4. **What claim must it never support by itself?**
+5. **What rights, license, attribution, or redistribution limits apply?**
+6. **What precision can be served publicly?**
+7. **What spatial and temporal support does the source actually have?**
+8. **What validator and policy gates must run before downstream use?**
+9. **What receipt, catalog, proof, or release objects should exist later?**
+
+### Registry-to-runtime rule
+
+Registry entries should feed downstream evidence systems by reference only.
 
 ```text
-source candidate
-  -> source descriptor
-  -> rights and sensitivity review
-  -> join-key declaration
-  -> baseline or layer descriptor
-  -> processed artifact linkage
-  -> receipt and proof linkage
-  -> DCAT + STAC + PROV closure
-  -> governed API / map surface
+SourceDescriptor
+  -> probe / ingest receipt
+  -> validation report
+  -> processed artifact
+  -> catalog closure
+  -> proof / release object
+  -> EvidenceBundle
+  -> governed API
+  -> Evidence Drawer / Focus Mode
 ```
 
-### Registry rules
-
-| Rule | Meaning |
-|---|---|
-| Describe before ingesting | A source candidate should have identity, steward, rights, cadence, and source-role posture before live ingestion is activated. |
-| Join before synthesis | Cross-domain ecological claims need declared join keys before they become summaries, layers, or Focus Mode answers. |
-| Generalize before public display | Sensitive taxa, habitats, private-land context, and vulnerable resources require review and public-safe geometry before publication. |
-| Catalog before discovery | DCAT, STAC, and PROV records belong downstream in `data/catalog/`; this lane can reference expected closure but should not store catalog output as canonical registry truth. |
-| Evidence before runtime | Map popups, Evidence Drawer payloads, Focus Mode answers, and export surfaces should resolve EvidenceRefs or abstain. |
-
-[Back to top](#top)
+The registry does **not** skip directly to UI, Focus Mode, map rendering, or public release.
 
 ---
 
-## Descriptor minimum
-
-The fields below are a **proposed minimum shape**, not a confirmed schema. Machine validation belongs in `schemas/` or `contracts/` after schema-home authority is verified.
-
-```json
-{
-  "descriptor_id": "kfm.ecology.<domain>.<source>",
-  "domain": "flora|fauna|habitat|soil|air|vegetation|landcover|hydrology",
-  "source_name": "<name>",
-  "source_steward": "<organization>",
-  "source_role": "authority|observation|aggregator|model|baseline|regulatory_context|render_descriptor",
-  "rights": "<license-or-access-note>",
-  "cadence": "<refresh-cadence>",
-  "spatial_grain": "point|polygon|raster|station|watershed|grid|generalized_geometry",
-  "temporal_grain": "instant|daily|monthly|seasonal|annual|multi_year|event_window",
-  "sensitivity": "public|generalize|restricted|review_required",
-  "join_keys": [],
-  "required_receipts": [],
-  "required_catalog_closure": ["DCAT", "STAC", "PROV"],
-  "evidence_bundle_ref": "<NEEDS_VERIFICATION>",
-  "status": "PROPOSED"
-}
-```
-
-### Status values
-
-| Status | Use |
-|---|---|
-| `PROPOSED` | Descriptor is drafted but not verified by validator, source review, or active-branch evidence. |
-| `NEEDS_VERIFICATION` | Required field, source behavior, rights, cadence, sensitivity, schema home, or evidence reference is unresolved. |
-| `QUARANTINED` | Descriptor cannot support promotion because identity, rights, sensitivity, or source role is unsafe or ambiguous. |
-| `ACTIVE` | Descriptor has passed the repo’s confirmed validator and policy path. Do not use until that path exists and is proven. |
-| `DEPRECATED` | Descriptor is retained for lineage but should not be used for new promotion without compatibility review. |
-
----
-
-## Join keys
-
-Join keys are the ecology lane’s trust membrane against accidental synthesis. They make it visible when a claim crosses from one domain family into another.
-
-| Join key | Domain use |
-|---|---|
-| `taxon_id` | Flora/fauna taxonomic reconciliation |
-| `obs_id` | Observation-level provenance |
-| `geom_id` | County, grid, hex, watershed, parcel-safe generalized geometry |
-| `time_bucket` | Seasonal, monthly, annual, or event-window joins |
-| `soil_id` | SSURGO/gSSURGO or soil map-unit joins; field naming must not erase source semantics |
-| `landcover_class` | NLCD or derived habitat-class joins |
-| `watershed_id` | HUC12 or other watershed alignment |
-| `reach_id` | NHD/NHDPlus-style flowline alignment when verified |
-| `station_id` | NWIS, Mesonet, air-monitor, or other station joins |
-| `layer_id` | Runtime or map registry alignment |
-| `spec_hash` | Deterministic layer, descriptor, transform, or artifact identity |
-
-### Proposed ecological index
-
-`kfm_eco_index` is a proposed crosswalk concept. It should become a documented crosswalk file or schema-backed table only after schema-home and storage conventions are verified.
-
-```text
-kfm_eco_index:
-  geom_id
-  time_bucket
-  taxon_id
-  obs_id
-  soil_id
-  landcover_class
-  watershed_id
-  reach_id
-  station_id
-  layer_id
-  spec_hash
-```
-
-[Back to top](#top)
-
----
-
-## Layer registry
-
-Every map-facing ecological layer should have a descriptor before it crosses into runtime presentation.
-
-```json
-{
-  "layer_id": "kfm.ecology.vegetation.ndvi_change.v1",
-  "title": "NDVI change",
-  "domain": "vegetation",
-  "render_type": "raster|vector|timeseries|3d_tiles",
-  "default_renderer": "maplibre",
-  "cesium_allowed": false,
-  "time_enabled": true,
-  "spec_hash": "<sha256>",
-  "source_descriptor_refs": [],
-  "processed_artifact_refs": [],
-  "receipt_refs": [],
-  "evidence_bundle_ref": "<NEEDS_VERIFICATION>",
-  "sensitivity": "public",
-  "status": "PROPOSED"
-}
-```
-
-### Rendering rule
-
-MapLibre is the default renderer for ecological layers. Cesium should be enabled only when 3D carries a real explanatory burden, such as terrain, elevation, volumetric flood context, or vertical structure that cannot be explained cleanly in 2D.
-
-### Layer claim rule
-
-A layer descriptor does not make a claim true. A layer may support a consequential claim only when it can resolve:
-
-1. source descriptor refs,
-2. processed artifact refs,
-3. receipt refs where applicable,
-4. catalog closure refs where applicable,
-5. an EvidenceBundle or an explicit abstention reason.
-
----
-
-## Promotion gates
-
-Ecological registry entries should not promote on format validity alone.
-
-| Gate | Requirement |
-|---|---|
-| Source identity | Source steward, access path, rights, citation text, and cadence are explicit. |
-| Source role | Authority, observation, aggregator, model, baseline, regulatory-context, or render-descriptor role is not ambiguous. |
-| Spatial burden | Precision, generalization, CRS/projection, geometry validity, and public-safe geometry posture are visible. |
-| Temporal burden | Observation date, baseline window, refresh cadence, and freshness posture are visible. |
-| Taxonomic burden | Accepted authority, reconciliation method, and uncertainty are documented. |
-| Cross-domain burden | Join keys are documented before composite claims. |
-| Sensitivity burden | Species, habitat, private land, cultural, critical-resource, or vulnerable-resource review is fail-closed. |
-| Receipt burden | Ingestion, transform, validation, watcher, or redaction receipts are linked where applicable. |
-| Catalog burden | DCAT + STAC + PROV closure is ready before outward discovery. |
-| Runtime burden | EvidenceBundle resolution or abstain behavior exists before consequential runtime claims. |
-
-### Cross-domain integrity rule
-
-A high-confidence ecological claim should require at least two independent domain families to agree, unless the claim is explicitly labeled as single-domain.
-
-```text
-vegetation change + soil moisture anomaly + watershed context
-```
-
-The example above is illustrative only. It is not a claim that those inputs, descriptors, or validators exist in the active branch.
-
-[Back to top](#top)
-
----
-
-## Flow diagram
+## Diagram
 
 ```mermaid
 flowchart LR
-    A[Ecological source candidate] --> B[data/registry/ecology<br/>descriptor lane]
+  A[Ecology source family] --> B[SourceDescriptor in data/registry]
+  B --> C{Descriptor valid?}
+  C -->|no| Q[Hold or quarantine<br/>missing rights, role, support, or sensitivity]
+  C -->|yes| D[Probe / ingest path emits receipt]
+  D --> E[ValidationReport]
+  E --> F{Policy + sensitivity gates}
+  F -->|deny / abstain| R[Visible negative outcome<br/>DENY or ABSTAIN]
+  F -->|pass| G[Processed artifact]
+  G --> H[Catalog closure<br/>STAC / DCAT / PROV]
+  H --> I[ReleaseManifest / ProofPack]
+  I --> J[EvidenceBundle]
+  J --> K[Governed API]
+  K --> L[Map / Evidence Drawer / Focus Mode]
 
-    B --> B1[source descriptors]
-    B --> B2[crosswalk descriptors]
-    B --> B3[baseline descriptors]
-    B --> B4[layer descriptors]
-
-    B1 --> C[data/raw<br/>source-native capture]
-    C --> D[data/work or data/quarantine<br/>normalize, hold, validate]
-    D --> E[data/processed<br/>canonical ecological artifacts]
-
-    E --> F[data/receipts<br/>run + validation memory]
-    E --> G[data/catalog<br/>DCAT + STAC + PROV]
-    F --> H[data/proofs<br/>release evidence]
-    G --> I[Governed API]
-    H --> I
-    B4 --> I
-
-    I --> J[MapLibre default]
-    I --> K[Cesium only when justified]
-    I --> L[Evidence Drawer]
-    I --> M[Focus Mode]
+  B -. never .-> L
+  A -. no direct client fetch .-> L
 ```
 
 ---
 
-## Task list
+## Registry tables
 
-### Before first commit
+### Source-role guardrail
 
-- [ ] Verify that `data/registry/ecology/` is the correct target path in the active branch.
-- [ ] Assign stable `doc_id`, `created`, and `policy_label` values.
-- [ ] Confirm whether ecology belongs directly under `data/registry/` or under a broader domain registry grouping.
-- [ ] Confirm whether descriptor files should be JSON, YAML, or another repo-standard format.
-- [ ] Resolve schema-home authority between `contracts/` and `schemas/` before adding machine schemas.
+| Source role | Typical ecology source family | Can support | Must not be treated as | Public precision posture |
+|---|---|---|---|---|
+| `observed_occurrence` | eBird, iNaturalist, GBIF-style occurrence extracts | Evidence that an observation was reported under declared source conditions | Regulatory truth, modeled range truth, automatic public exact-coordinate permission | Usually generalized or filtered unless rights, sensitivity, precision, and review pass. |
+| `regulatory_context` | USFWS critical habitat or similar statutory context | Legal or regulatory habitat context for a taxon/place/time | Species presence, survey observation, modeled habitat suitability | Public polygons may still require source-term and date/effective-status review. |
+| `modeled_range` | GAP-style species range products or model outputs | Modeled support, range context, suitability context | Observed occurrence or legal status | Must be labeled modeled; uncertainty and version must stay visible. |
+| `habitat_or_landcover_context` | NLCD, LANDFIRE, NWI-style landcover/wetland layers | Environmental context and derived joins | Biological observation or statutory habitat designation | Public-safe if source terms pass; joins remain derived. |
+| `protected_area_context` | PAD-US or stewardship/protected-area datasets | Access, stewardship, management, or protected-area context | Species presence or ecological condition proof | Public status depends on source terms and sensitivity review. |
+| `taxonomic_context` | Taxon resolver or authority crosswalk | Name resolution, synonym handling, taxon identity support | Occurrence evidence or habitat evidence | Usually safe as metadata, but ambiguity must remain visible. |
 
-### Before first descriptor
+### Descriptor minimum fields
 
-- [ ] Add one public-safe source descriptor each for flora, fauna, habitat, hydrology, land-cover, and soil/air baseline work.
-- [ ] Add source-role fields before allowing any descriptor to support a public claim.
-- [ ] Add rights, cadence, steward, citation text, and sensitivity fields for every descriptor.
-- [ ] Add invalid fixtures for missing rights, unknown cadence, ambiguous source role, unresolved evidence refs, and sensitive exact geometry.
+| Field family | Required fields or review questions | Failure mode |
+|---|---|---|
+| Identity | `source_id`, publisher, system, source family, jurisdiction, source URL or citation surface | Hold if identity is ambiguous. |
+| Role | `source_role`, allowed claim types, disallowed claim types | Hold if source role is missing or overloaded. |
+| Rights | license, attribution, redistribution review, record-level license behavior | Deny or quarantine if rights are unknown for public use. |
+| Sensitivity | geoprivacy flags, rare-species trigger, public precision, steward review requirement | Deny exact public output if unresolved. |
+| Support | spatial support, temporal support, resolution/scale, CRS expectation, update cadence | Abstain if support cannot answer the requested claim. |
+| Validation | required fields, geometry requirements, identifier rules, freshness checks | Quarantine if validation cannot run or fails. |
+| Downstream | expected lifecycle zones, catalog targets, evidence bundle expectations | Do not publish if downstream closure is absent. |
 
-### Before first map layer
+### Ecological anti-collapse matrix
 
-- [ ] Define and validate a layer descriptor shape.
-- [ ] Confirm MapLibre runtime layer contract before marking renderer integration as implemented.
-- [ ] Keep Cesium disabled by default unless a documented 3D explanatory burden exists.
-- [ ] Require EvidenceBundle or abstain behavior before map popups, Evidence Drawer, Focus Mode, or export surfaces make consequential claims.
+| Do not collapse | Why it matters |
+|---|---|
+| Observation and modeled range | A reported sighting and a predicted/range model answer different questions. |
+| Critical habitat and occurrence | Regulatory habitat designation is not proof that a species was observed there. |
+| Landcover and habitat suitability | A landcover class may support context, but does not by itself prove biological use. |
+| Internal exact coordinate and public geometry | Public-safe output often requires generalization, aggregation, withholding, or steward review. |
+| Registry entry and release proof | A descriptor explains a source; it does not prove an artifact passed promotion. |
+| AI summary and EvidenceBundle | Generated language is downstream of evidence and policy. |
 
-### Before promotion
+---
 
-- [ ] Cross-link promoted entries to processed artifacts, receipts, catalog records, proof objects, and release records.
-- [ ] Verify DCAT + STAC + PROV closure downstream in `data/catalog/`.
-- [ ] Emit or link review artifacts for sensitivity, rights, and source-role decisions.
-- [ ] Define rollback and correction behavior for any published layer or claim that depends on this registry.
+## Definition of done
+
+This README should not be upgraded beyond `draft` until the following checks are complete.
+
+- [ ] The active branch confirms this exact path or a documented replacement path.
+- [ ] Parent registry README links to this leaf.
+- [ ] Leaf owner is confirmed through CODEOWNERS, governance docs, or steward assignment.
+- [ ] Policy label is confirmed for the README and for any descriptor files.
+- [ ] At least one valid ecology descriptor fixture exists.
+- [ ] At least one invalid descriptor fixture demonstrates fail-closed behavior.
+- [ ] Source-role matrix is reviewed by a data/registry steward.
+- [ ] Sensitivity/publication matrix is reviewed for rare species, protected locations, and restricted licenses.
+- [ ] Schema-home decision is reconciled before machine validation claims are made.
+- [ ] Descriptor validation is wired to the repo-native validator or explicitly deferred.
+- [ ] No raw data, restricted exact coordinates, provider secrets, or live credentials are stored here.
+- [ ] Downstream references to receipts, catalog, proofs, and governed APIs are linked without collapsing their authority.
 
 ---
 
 ## FAQ
 
-### Is this a dataset directory?
+### Why is the path `ecology/ecology/`?
 
-No. It is a descriptor and registry lane.
+The target path is explicit. This README treats the duplicated segment as a **leaf-level ecology registry** under a broader ecology registry parent. If the mounted repo reveals a different convention, migrate with an ADR or parent README note rather than silently renaming.
 
-### Can this contain source payloads?
+### Does this registry prove a source is safe to publish?
 
-No. Payloads belong in `raw`, `work`, `quarantine`, or `processed` depending on lifecycle state.
+No. A source descriptor is an intake/control-plane object. Public release requires validation, rights/sensitivity checks, catalog closure, proof/release objects, review state, and promotion.
 
-### Why include map-rendering fields in a registry?
+### Can occurrence sources be public?
 
-Because map layers are evidence-bearing presentation surfaces in KFM. A layer that cannot resolve source descriptors, processed artifacts, receipts, and evidence references should not become a consequential runtime claim.
+Sometimes, but not by default. Public safety depends on record-level rights, source geoprivacy, taxon sensitivity, coordinate uncertainty, review status, and the precision served.
 
-### Why require cross-domain integrity?
+### Can ecological joins become canonical truth?
 
-Ecological claims can become misleading when vegetation, soil, hydrology, habitat, observation evidence, and source roles are separated. The registry should make those joins explicit before synthesis.
+Treat joins as derived unless a stronger contract explicitly promotes them. A fauna occurrence sampled against a landcover surface can be useful and evidence-bearing, but it should remain reproducible, reversible, and versioned against both inputs.
 
-### Can AI use these descriptors directly?
+### Should runtime routes or UI components read this registry directly?
 
-Only through governed retrieval and EvidenceBundle resolution. Descriptors may help explain what a source or layer is, but generated language must not outrank evidence, policy, or review state.
+No. Runtime and UI surfaces should consume governed API responses and EvidenceBundle-backed payloads. Registry entries may be part of upstream evidence resolution, but they are not a direct public client dependency.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix
 
 <details>
-<summary>Truth labels used by this README</summary>
+<summary><strong>Illustrative descriptor skeleton</strong> — not branch-authoritative</summary>
 
-| Label | Meaning |
-|---|---|
-| `CONFIRMED` | Verified from current branch evidence, current workspace evidence, or governing documents. This README has limited confirmed implementation evidence. |
-| `INFERRED` | Reasonable conclusion from project doctrine or adjacent lane patterns, but not directly proven in this target path. |
-| `PROPOSED` | Recommended design or path not verified as present implementation. |
-| `UNKNOWN` | Not known from available evidence. |
-| `NEEDS VERIFICATION` | Concrete value or behavior must be checked before use as current fact. |
+```yaml
+id: NEEDS_VERIFICATION__source_id
+title: NEEDS_VERIFICATION__source_title
+status: draft
+owners:
+  - NEEDS_VERIFICATION__data_registry_steward
+
+source:
+  publisher: NEEDS_VERIFICATION
+  system: NEEDS_VERIFICATION
+  source_family: ecology
+  source_role: NEEDS_VERIFICATION__observed_occurrence_or_context_or_regulatory_or_modeled
+  homepage: NEEDS_VERIFICATION
+  access_modes:
+    - NEEDS_VERIFICATION
+
+scope:
+  spatial_scope: NEEDS_VERIFICATION
+  temporal_scope: NEEDS_VERIFICATION
+  subject_domains:
+    - ecology
+    - biodiversity
+
+rights:
+  license_expression: NEEDS_VERIFICATION
+  attribution_required: NEEDS_VERIFICATION
+  redistribution_review: true
+  record_level_rights: NEEDS_VERIFICATION
+
+sensitivity:
+  default_public_precision: NEEDS_VERIFICATION
+  exact_location_public_allowed: false
+  steward_review_required: true
+  rare_species_or_protected_location_handling: fail_closed
+
+quality:
+  required_fields:
+    - source_record_id
+    - source_role
+    - observed_or_effective_date
+    - geometry_or_declared_spatial_support
+    - rights_status
+  geometry_requirements:
+    - declared_crs
+    - geometry_valid_or_spatial_support_declared
+    - precision_or_resolution_declared
+
+normalization:
+  target_crs: EPSG:4326
+  id_pattern: NEEDS_VERIFICATION
+  required_derived_fields:
+    - source_snapshot_at
+    - normalized_at
+    - spec_hash
+
+downstream:
+  allowed_lifecycle_targets:
+    - data/work
+    - data/quarantine
+    - data/processed
+    - data/catalog
+  blocked_until_verified:
+    - data/published
+    - runtime_answer
+    - public_exact_location
+```
 
 </details>
 
 <details>
-<summary>Review prompts for maintainers</summary>
+<summary><strong>Review checklist for a new ecology source descriptor</strong></summary>
 
-- Does this lane duplicate any existing flora, fauna, habitat, soil, air, hydrology, or MapLibre registry?
-- Does the active branch already define a source descriptor schema that this README should reuse?
-- Should `landcover/` be renamed to `land-cover/` for repo naming consistency?
-- Does the repo use `spec_hash`, `content_spec_hash`, or another deterministic identity field for layer descriptors?
-- Which policy labels are allowed for ecological descriptors that mention sensitive taxa or vulnerable habitats?
-- What is the minimum EvidenceBundle shape required before a layer becomes visible in the Evidence Drawer?
+- [ ] Does the descriptor name the publisher and source system?
+- [ ] Does it declare source role without overloading one source as observation, model, legal authority, and context?
+- [ ] Does it state rights and attribution expectations?
+- [ ] Does it identify record-level license behavior when relevant?
+- [ ] Does it declare public precision and sensitivity behavior?
+- [ ] Does it identify whether exact coordinates are blocked, generalized, or steward-reviewed?
+- [ ] Does it declare spatial support, temporal support, CRS, and resolution/uncertainty?
+- [ ] Does it name expected validation checks?
+- [ ] Does it state what claims the source cannot support?
+- [ ] Does it avoid storing raw records, credentials, restricted locations, or provider caches?
+- [ ] Does it link to the owning schema/contract path after schema-home verification?
+- [ ] Does it leave live connector activation to probe/pipeline surfaces?
 
 </details>
-
-[Back to top](#top)
