@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kfm.local/schemas/contracts/v1/ecology/habitat_assignment.schema.json",
   "title": "Habitat Assignment",
-  "description": "Derived join contract between an occurrence/observation and a habitat surface class.",
+  "description": "Derived join contract between an occurrence/observation and a habitat surface class. This object is derived context and must not be presented as confirmed occurrence truth without separate evidence and review.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -11,41 +11,220 @@
     "assignment_id",
     "occurrence_id",
     "surface_id",
+    "source_id",
+    "source_role",
+    "source_refs",
+    "dataset_refs",
     "habitat_class",
     "classification_system",
     "derivation_method",
     "derived_at",
     "quality_flag",
     "knowledge_character",
+    "sensitivity",
+    "rights_status",
+    "policy_id",
+    "policy_label",
+    "publication_state",
+    "surface",
+    "catalog_closure",
+    "evidence_bundle_resolved",
     "spec_hash",
-    "evidence_refs"
+    "evidence_refs",
+    "catalog_refs"
   ],
   "properties": {
-    "schema_version": { "type": "string", "const": "v1" },
-    "object_type": { "type": "string", "const": "HabitatAssignment" },
-    "assignment_id": { "type": "string", "pattern": "^kfm://habitat-assignment/.+" },
-    "occurrence_id": { "type": "string", "pattern": "^kfm://occurrence/.+" },
-    "surface_id": { "type": "string", "pattern": "^kfm://habitat-surface/.+" },
-    "plot_id": { "type": "string", "pattern": "^kfm://plot/.+" },
-    "habitat_class": { "type": "string", "minLength": 1 },
-    "classification_system": { "type": "string", "minLength": 1 },
-    "class_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-    "derivation_method": { "type": "string", "minLength": 1 },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "object_type": {
+      "type": "string",
+      "const": "HabitatAssignment"
+    },
+    "assignment_id": {
+      "type": "string",
+      "pattern": "^kfm://habitat-assignment/.+"
+    },
+    "occurrence_id": {
+      "type": "string",
+      "pattern": "^kfm://occurrence/.+"
+    },
+    "surface_id": {
+      "type": "string",
+      "pattern": "^kfm://habitat-surface/.+"
+    },
+    "plot_id": {
+      "type": "string",
+      "pattern": "^kfm://plot/.+"
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_role": {
+      "type": "string",
+      "const": "DERIVED_MODEL_LAYER"
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dataset_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "habitat_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classification_system": {
+      "type": "string",
+      "minLength": 1
+    },
+    "class_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "derivation_method": {
+      "type": "string",
+      "minLength": 1
+    },
     "derivation_parameters": {
       "type": "object",
       "additionalProperties": {
-        "type": ["string", "number", "integer", "boolean", "null"]
+        "type": [
+          "string",
+          "number",
+          "integer",
+          "boolean",
+          "null"
+        ]
       }
     },
-    "derived_at": { "type": "string", "format": "date-time" },
-    "quality_flag": { "type": "string", "enum": ["high", "medium", "low", "needs_review"] },
-    "knowledge_character": { "$ref": "fragments/ecology_knowledge_character.schema.json" },
-    "policy_label": { "type": "string", "enum": ["public", "restricted", "internal", "restricted_until_reviewed"] },
-    "spec_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" },
+    "derived_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "needs_review"
+      ]
+    },
+    "knowledge_character": {
+      "type": "string",
+      "enum": [
+        "derived",
+        "modeled",
+        "interpreted",
+        "observed_context"
+      ]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": [
+        "public",
+        "generalize",
+        "restricted",
+        "review_required"
+      ]
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": [
+        "public",
+        "open",
+        "controlled",
+        "restricted",
+        "unknown"
+      ]
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_label": {
+      "type": "string",
+      "enum": [
+        "public",
+        "restricted",
+        "internal",
+        "restricted_until_reviewed",
+        "public_after_catalog_closure"
+      ]
+    },
+    "publication_state": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "reviewed",
+        "published",
+        "held",
+        "quarantined",
+        "superseded"
+      ]
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "public",
+        "restricted",
+        "internal"
+      ]
+    },
+    "catalog_closure": {
+      "type": "boolean"
+    },
+    "evidence_bundle_resolved": {
+      "type": "boolean"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
     "evidence_refs": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "pattern": "^kfm://evidence/.+" }
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://evidence/.+"
+      }
+    },
+    "catalog_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stac",
+        "prov",
+        "dcat"
+      ],
+      "properties": {
+        "stac": {
+          "type": "string",
+          "pattern": "^kfm://catalog/stac/.+"
+        },
+        "prov": {
+          "type": "string",
+          "pattern": "^kfm://catalog/prov/.+"
+        },
+        "dcat": {
+          "type": "string",
+          "pattern": "^kfm://catalog/dcat/.+"
+        }
+      }
     }
   }
 }
