@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate ecology bundle descriptors against schemas, registry references, and policy prerequisites."""
+"""Validate ecology descriptors against schemas, registry references, and policy prerequisites."""
 
 from __future__ import annotations
 
@@ -21,10 +21,44 @@ SCHEMA_MAP = {
     "DerivedVegetationLayer": REPO_ROOT / "schemas/contracts/v1/ecology/derived_vegetation_layer.schema.json",
     "ObservationPlot": REPO_ROOT / "schemas/contracts/v1/ecology/observation_plot.schema.json",
     "SensitiveOccurrenceRecord": REPO_ROOT / "schemas/contracts/v1/ecology/sensitive_occurrence_record.schema.json",
+    "HabitatAssignment": REPO_ROOT / "schemas/contracts/v1/ecology/habitat_assignment.schema.json",
+    "EcologyObservationBundle": REPO_ROOT / "schemas/contracts/v1/ecology/ecology_observation_bundle.schema.json",
+}
+
+BUNDLE_OBJECT_TYPES = {"EcologyObservationBundle"}
+DESCRIPTOR_OBJECT_TYPES = {
+    "TaxonRecord",
+    "DerivedVegetationLayer",
+    "ObservationPlot",
+    "SensitiveOccurrenceRecord",
+    "HabitatAssignment",
 }
 
 SPEC_HASH_RE = re.compile(r"^sha256:[a-fA-F0-9]{64}$")
 EVIDENCE_REF_RE = re.compile(r"^kfm://evidence/.+")
+KFM_REF_RE = re.compile(r"^kfm://.+")
+
+
+def _parse_scalar(value: str) -> Any:
+    value = value.strip().strip('"').strip("'")
+
+    if value in {"true", "True"}:
+        return True
+
+    if value in {"false", "False"}:
+        return False
+
+    if value in {"null", "None", "~"}:
+        return None
+
+    if value.startswith("[") and value.endswith("]"):
+        return [
+            item.strip().strip('"').strip("'")
+            for item in value[1:-1].split(",")
+            if item.strip()
+        ]
+
+    return value
 
 
 def _parse_min_yaml(text: str) -> dict[str, Any]:
@@ -79,28 +113,6 @@ def _parse_min_yaml(text: str) -> dict[str, Any]:
     return data
 
 
-def _parse_scalar(value: str) -> Any:
-    value = value.strip().strip('"').strip("'")
-
-    if value in {"true", "True"}:
-        return True
-
-    if value in {"false", "False"}:
-        return False
-
-    if value in {"null", "None", "~"}:
-        return None
-
-    if value.startswith("[") and value.endswith("]"):
-        return [
-            item.strip().strip('"').strip("'")
-            for item in value[1:-1].split(",")
-            if item.strip()
-        ]
-
-    return value
-
-
 def _load_yaml_like(path: Path) -> dict[str, Any]:
     """Load YAML using PyYAML if available, then JSON, then minimal YAML fallback."""
     text = path.read_text(encoding="utf-8")
@@ -138,9 +150,56 @@ def _registry_ids(registry: dict[str, Any], list_key: str, id_key: str) -> set[s
     }
 
 
-def _validate_schema(bundle: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
+def _is_bundle_object(bundle: dict[str, Any]) -> bool:
+    return bundle.get("object_type") in BUNDLE_OBJECT_TYPES or "bundle_id" in bundle
 
+
+def _object_identifier(bundle: dict[str, Any]) -> str | None:
+    for key in (
+        "bundle_id",
+        "assignment_id",
+        "layer_id",
+        "plot_id",
+        "occurrence_id",
+        "taxon_id",
+    ):
+        value = bundle.get(key)
+        if isinstance(value, str):
+            return value
+    return None
+
+
+def _required_governance_fields(bundle: dict[str, Any]) -> list[str]:
+    if _is_bundle_object(bundle):
+        return [
+            "object_type",
+            "bundle_id",
+            "source_refs",
+            "dataset_refs",
+            "policy_id",
+            "policy_label",
+            "sensitivity",
+            "rights_status",
+            "spec_hash",
+            "evidence_refs",
+            "evidence_bundle_resolved",
+        ]
+
+    return [
+        "object_type",
+        "source_id",
+        "source_role",
+        "policy_id",
+        "policy_label",
+        "sensitivity",
+        "rights_status",
+        "spec_hash",
+        "evidence_refs",
+        "evidence_bundle_resolved",
+    ]
+
+
+def _validate_schema(bundle: dict[str, Any]) -> list[str]:
     object_type = bundle.get("object_type")
     if not object_type:
         return ["missing_required_field:object_type"]
@@ -160,6 +219,7 @@ def _validate_schema(bundle: dict[str, Any]) -> list[str]:
     schema = _load_json(schema_path)
     validator = Draft202012Validator(schema)
 
+    errors: list[str] = []
     for err in sorted(validator.iter_errors(bundle), key=lambda e: list(e.path)):
         location = ".".join(str(part) for part in err.path) or "<root>"
         errors.append(f"schema_error:{location}:{err.message}")
@@ -167,52 +227,78 @@ def _validate_schema(bundle: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_bundle(
+def _validate_registry_refs(
     bundle: dict[str, Any],
     sources_registry: dict[str, Any],
     datasets_registry: dict[str, Any],
     policies_registry: dict[str, Any],
-    *,
-    validate_schema: bool = True,
 ) -> list[str]:
     errors: list[str] = []
-
-    required = [
-        "object_type",
-        "bundle_id",
-        "source_refs",
-        "dataset_refs",
-        "policy_id",
-        "policy_label",
-        "sensitivity",
-        "rights_status",
-        "spec_hash",
-        "evidence_refs",
-        "evidence_bundle_resolved",
-    ]
-
-    for field in required:
-        if field not in bundle:
-            errors.append(f"missing_required_field:{field}")
-
-    if validate_schema:
-        errors.extend(_validate_schema(bundle))
 
     source_ids = _registry_ids(sources_registry, "sources", "source_id")
     dataset_ids = _registry_ids(datasets_registry, "datasets", "dataset_id")
     policy_ids = _registry_ids(policies_registry, "policies", "policy_id")
 
-    for ref in bundle.get("source_refs", []):
-        if ref not in source_ids:
-            errors.append(f"unknown_source_ref:{ref}")
+    source_refs = bundle.get("source_refs", [])
+    if source_refs:
+        if not isinstance(source_refs, list):
+            errors.append("source_refs_must_be_array")
+        else:
+            for ref in source_refs:
+                if ref not in source_ids:
+                    errors.append(f"unknown_source_ref:{ref}")
 
-    for ref in bundle.get("dataset_refs", []):
-        if ref not in dataset_ids:
-            errors.append(f"unknown_dataset_ref:{ref}")
+    source_id = bundle.get("source_id")
+    if source_id and source_ids and source_id not in source_ids:
+        errors.append(f"unknown_source_id:{source_id}")
+
+    dataset_refs = bundle.get("dataset_refs", [])
+    if dataset_refs:
+        if not isinstance(dataset_refs, list):
+            errors.append("dataset_refs_must_be_array")
+        else:
+            for ref in dataset_refs:
+                if dataset_ids and ref not in dataset_ids:
+                    errors.append(f"unknown_dataset_ref:{ref}")
 
     policy_id = bundle.get("policy_id")
     if policy_id and policy_ids and policy_id not in policy_ids:
         errors.append(f"unknown_policy_id:{policy_id}")
+
+    return errors
+
+
+def _validate_catalog_refs(bundle: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    catalog_refs = bundle.get("catalog_refs")
+
+    if catalog_refs is None:
+        return errors
+
+    if isinstance(catalog_refs, dict):
+        for key, value in catalog_refs.items():
+            if key not in {"stac", "dcat", "prov"}:
+                errors.append(f"unknown_catalog_ref_kind:{key}")
+            if not isinstance(value, str) or not KFM_REF_RE.match(value):
+                errors.append(f"invalid_catalog_ref:{key}")
+        return errors
+
+    if isinstance(catalog_refs, list):
+        for ref in catalog_refs:
+            if not isinstance(ref, str) or not KFM_REF_RE.match(ref):
+                errors.append(f"invalid_catalog_ref:{ref}")
+        return errors
+
+    errors.append("catalog_refs_must_be_object_or_array")
+    return errors
+
+
+def _validate_governance(bundle: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+
+    for field in _required_governance_fields(bundle):
+        if field not in bundle:
+            errors.append(f"missing_required_field:{field}")
 
     spec_hash = bundle.get("spec_hash")
     if not isinstance(spec_hash, str) or not SPEC_HASH_RE.match(spec_hash):
@@ -259,18 +345,49 @@ def validate_bundle(
         if bundle.get("public_visibility") == "generalized" and not bundle.get("redaction_receipt_ref"):
             errors.append("missing_redaction_receipt")
 
+    if bundle.get("public_visibility") == "generalized" and not bundle.get("redaction_receipt_ref"):
+        errors.append("missing_redaction_receipt")
+
     if bundle.get("sensitivity") == "restricted" and bundle.get("exact_geometry_present", False):
         errors.append("restricted_exact_geometry_not_allowed")
 
     if bundle.get("sensitivity") == "review_required":
         errors.append("requires_steward_review")
 
+    errors.extend(_validate_catalog_refs(bundle))
+
+    return errors
+
+
+def validate_bundle(
+    bundle: dict[str, Any],
+    sources_registry: dict[str, Any],
+    datasets_registry: dict[str, Any],
+    policies_registry: dict[str, Any],
+    *,
+    validate_schema: bool = True,
+) -> list[str]:
+    errors: list[str] = []
+
+    if validate_schema:
+        errors.extend(_validate_schema(bundle))
+
+    errors.extend(_validate_governance(bundle))
+    errors.extend(
+        _validate_registry_refs(
+            bundle,
+            sources_registry,
+            datasets_registry,
+            policies_registry,
+        )
+    )
+
     return sorted(set(errors))
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate ecology bundle descriptor")
-    parser.add_argument("--bundle", required=True, help="Path to bundle JSON file")
+    parser = argparse.ArgumentParser(description="Validate ecology descriptor or bundle")
+    parser.add_argument("--bundle", required=True, help="Path to descriptor/bundle JSON file")
     parser.add_argument("--sources", default=str(DEFAULT_SOURCES))
     parser.add_argument("--datasets", default=str(DEFAULT_DATASETS))
     parser.add_argument("--policies", default=str(DEFAULT_POLICIES))
@@ -296,7 +413,7 @@ def main() -> int:
     result = {
         "validator": "tools/validators/ecology/validate_ecology_bundle.py",
         "bundle_path": str(bundle_path),
-        "bundle_id": bundle.get("bundle_id"),
+        "object_id": _object_identifier(bundle),
         "object_type": bundle.get("object_type"),
         "decision": "pass" if not errors else "fail",
         "errors": errors,
@@ -306,7 +423,7 @@ def main() -> int:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:
         print(f"decision={result['decision']}")
-        print(f"bundle_id={result['bundle_id']}")
+        print(f"object_id={result['object_id']}")
         print(f"object_type={result['object_type']}")
         for error in errors:
             print(f"error={error}")
