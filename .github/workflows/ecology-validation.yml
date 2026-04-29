@@ -60,6 +60,7 @@ jobs:
           chmod +x tools/validators/ecology/run_ecology_fixture_checks.sh
           chmod +x tools/validators/ecology/run_ecology_release_checks.sh
           chmod +x tools/validators/ecology/run_ecology_focus_mode_checks.sh
+          chmod +x tools/validators/ecology/run_ecology_ui_checks.sh
 
       - name: Run ecology fixture checks
         run: tools/validators/ecology/run_ecology_fixture_checks.sh
@@ -69,3 +70,6 @@ jobs:
 
       - name: Run ecology Focus Mode checks
         run: tools/validators/ecology/run_ecology_focus_mode_checks.sh
+
+      - name: Run ecology UI checks
+        run: tools/validators/ecology/run_ecology_ui_checks.sh

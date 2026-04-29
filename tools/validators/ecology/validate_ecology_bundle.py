@@ -29,6 +29,7 @@ SCHEMA_MAP = {
     "ReleaseManifest": REPO_ROOT / "schemas/contracts/v1/ecology/release_manifest.schema.json",
     "FocusModeRequest": REPO_ROOT / "schemas/contracts/v1/ecology/focus_mode_request.schema.json",
     "FocusModeResponse": REPO_ROOT / "schemas/contracts/v1/ecology/focus_mode_response.schema.json",
+    "EcologyEvidenceDrawerPayload": REPO_ROOT / "schemas/contracts/v1/ecology/ecology_evidence_drawer_payload.schema.json",
 }
 
 BUNDLE_OBJECT_TYPES = {
@@ -41,6 +42,8 @@ OUTPUT_OBJECT_TYPES = {
     "EcologicalClaim",
     "ReleaseManifest",
 }
+
+UI_OBJECT_TYPES = {"EcologyEvidenceDrawerPayload"}
 
 SPEC_HASH_RE = re.compile(r"^sha256:[a-fA-F0-9]{64}$")
 EVIDENCE_REF_RE = re.compile(r"^kfm://evidence/.+")
@@ -168,6 +171,7 @@ def _object_identifier(obj: dict[str, Any]) -> str | None:
         "plot_id",
         "occurrence_id",
         "taxon_id",
+        "payload_id",
     ):
         value = obj.get(key)
         if isinstance(value, str):
@@ -447,8 +451,9 @@ def validate_object(
     if validate_schema:
         errors.extend(_validate_schema(obj))
 
-    errors.extend(_validate_governance(obj))
-    errors.extend(_validate_registry_refs(obj, sources_registry, datasets_registry, policies_registry))
+    if obj.get("object_type") not in UI_OBJECT_TYPES:
+        errors.extend(_validate_governance(obj))
+        errors.extend(_validate_registry_refs(obj, sources_registry, datasets_registry, policies_registry))
 
     return sorted(set(errors))
 
