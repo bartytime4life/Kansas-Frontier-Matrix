@@ -148,10 +148,10 @@ deny_reasons contains r if {
 }
 
 # -------------------------------------------------------------------
-# REVIEW / HOLD CONDITIONS
+# HOLD CONDITIONS
 # -------------------------------------------------------------------
 
-deny_reasons contains r if {
+hold_reasons contains r if {
   input.sensitivity == "review_required"
   r := "requires_steward_review"
 }
@@ -180,6 +180,8 @@ generalize_reasons contains r if {
 
 allow if {
   count(deny_reasons) == 0
+  count(hold_reasons) == 0
+  count(generalize_reasons) == 0
   input.sensitivity == "public"
   input.rights_status in {"public", "open"}
   object.get(input, "evidence_bundle_resolved", false) == true
@@ -187,6 +189,7 @@ allow if {
 
 allow if {
   count(deny_reasons) == 0
+  count(hold_reasons) == 0
   input.source_role == "DERIVED_MODEL_LAYER"
   input.policy_label == "public_after_catalog_closure"
   object.get(input, "catalog_closure", false) == true
@@ -195,24 +198,29 @@ allow if {
 
 # -------------------------------------------------------------------
 # DECISION OUTPUT
+#
+# Precedence:
+# 1. deny
+# 2. hold
+# 3. generalize
+# 4. allow
 # -------------------------------------------------------------------
 
-decision := "allow" if {
-  allow
-}
-
-decision := "generalize" if {
-  not allow
-  count(deny_reasons) == 0
-  count(generalize_reasons) > 0
+decision := "deny" if {
+  count(deny_reasons) > 0
 }
 
 decision := "hold" if {
-  not allow
-  input.sensitivity == "review_required"
+  count(deny_reasons) == 0
+  count(hold_reasons) > 0
 }
 
-decision := "deny" if {
-  not allow
-  count(deny_reasons) > 0
+decision := "generalize" if {
+  count(deny_reasons) == 0
+  count(hold_reasons) == 0
+  count(generalize_reasons) > 0
+}
+
+decision := "allow" if {
+  allow
 }
