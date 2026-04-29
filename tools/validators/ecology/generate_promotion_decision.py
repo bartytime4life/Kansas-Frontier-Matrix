@@ -45,12 +45,21 @@ def normalize_reasons(value: Any) -> list[str]:
         return []
 
     if isinstance(value, list):
-        return [str(item) for item in value]
+        return sorted(str(item) for item in value)
 
     if isinstance(value, set):
         return sorted(str(item) for item in value)
 
     return [str(value)]
+
+
+def utc_now() -> str:
+    return (
+        datetime.now(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
 
 
 def generate_promotion_decision(
@@ -69,14 +78,12 @@ def generate_promotion_decision(
         )
 
     promotion_decision = POLICY_TO_PROMOTION[policy_decision]
-    decided_at = decided_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    decided_at = decided_at or utc_now()
 
     decision_id = (
         "kfm://promotion/ecology/"
-        + stable_suffix(candidate, receipt_ref, policy_decision, decided_at)
+        + stable_suffix(candidate, receipt_ref, policy_decision)
     )
-
-    requires_steward = promotion_decision == "REVIEW"
 
     artifact: dict[str, Any] = {
         "schema_version": "v1",
@@ -85,7 +92,7 @@ def generate_promotion_decision(
         "candidate": candidate,
         "decision": promotion_decision,
         "reasons": reasons,
-        "requires_steward": requires_steward,
+        "requires_steward": promotion_decision == "REVIEW",
         "receipt_ref": receipt_ref,
         "decided_at": decided_at,
     }
@@ -112,7 +119,15 @@ def main() -> int:
     reasons: list[str] = []
     if args.reasons_json:
         payload = load_json(args.reasons_json)
-        reasons = normalize_reasons(payload.get("reasons", payload.get("deny_reasons", [])))
+        reasons = normalize_reasons(
+            payload.get(
+                "reasons",
+                payload.get(
+                    "deny_reasons",
+                    payload.get("hold_reasons", payload.get("generalize_reasons", [])),
+                ),
+            )
+        )
 
     try:
         artifact = generate_promotion_decision(
