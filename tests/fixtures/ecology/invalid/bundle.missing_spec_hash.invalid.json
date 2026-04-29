@@ -1,0 +1,20 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyObservationBundle",
+  "bundle_id": "kfm://bundle/ecology/missing-spec-hash",
+  "source_refs": ["kfs_field_plots"],
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "policy_id": "ecology_sensitive_occurrence_publication",
+  "policy_label": "restricted",
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "public_visibility": "generalized",
+  "public_geometry_policy": "deny_exact_generalize_required",
+  "exact_geometry_present": false,
+  "redaction_receipt_ref": "kfm://receipt/redaction/ecology/missing-spec-hash",
+  "publication_state": "reviewed",
+  "surface": "public",
+  "catalog_closure": true,
+  "evidence_bundle_resolved": true,
+  "evidence_refs": ["kfm://evidence/ecology/missing-spec-hash"]
+}
