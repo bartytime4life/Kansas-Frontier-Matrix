@@ -26,33 +26,29 @@ echo "=== KFM Ecology Focus Mode Checks ==="
 echo "ROOT_DIR: $ROOT_DIR"
 echo
 
-if [[ ! -f "$VALIDATOR" ]]; then
-  echo "ERROR: validator not found at $VALIDATOR"
-  exit 1
-fi
+require_file() {
+  local label="$1"
+  local path="$2"
 
-if [[ ! -f "$RUNTIME" ]]; then
-  echo "ERROR: Focus Mode runtime not found at $RUNTIME"
-  exit 1
-fi
+  if [[ ! -f "$path" ]]; then
+    echo "ERROR: $label not found at $path"
+    exit 1
+  fi
+}
 
-if [[ ! -f "$RESPONSE_SCHEMA" ]]; then
-  echo "ERROR: Focus Mode response schema not found at $RESPONSE_SCHEMA"
-  exit 1
-fi
+require_dir() {
+  local label="$1"
+  local path="$2"
 
-if [[ ! -d "$REQUEST_DIR" ]]; then
-  echo "ERROR: Focus Mode fixture directory missing: $REQUEST_DIR"
-  exit 1
-fi
+  if [[ ! -d "$path" ]]; then
+    echo "ERROR: $label directory missing: $path"
+    exit 1
+  fi
+}
 
 require_fixture() {
   local file="$1"
-
-  if [[ ! -f "$REQUEST_DIR/$file" ]]; then
-    echo "ERROR: required Focus Mode fixture missing: $REQUEST_DIR/$file"
-    exit 1
-  fi
+  require_file "required Focus Mode fixture" "$REQUEST_DIR/$file"
 }
 
 run_runtime_expect_outcome() {
@@ -61,14 +57,16 @@ run_runtime_expect_outcome() {
   local output_file
 
   output_file="$(mktemp)"
+  trap 'rm -f "$output_file"' RETURN
 
   echo "→ Executing Focus Mode fixture: $fixture"
   echo "  expected_outcome=$expected"
 
   python "$RUNTIME" "$REQUEST_DIR/$fixture" > "$output_file"
 
-  python - "$output_file" "$RESPONSE_SCHEMA" "$expected" <<'PY'
+  python - "$output_file" "$RESPONSE_SCHEMA" "$expected" "$fixture" <<'PY'
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -77,6 +75,7 @@ from jsonschema import Draft202012Validator
 output_path = Path(sys.argv[1])
 schema_path = Path(sys.argv[2])
 expected = sys.argv[3]
+fixture = sys.argv[4]
 
 payload = json.loads(output_path.read_text(encoding="utf-8"))
 schema = json.loads(schema_path.read_text(encoding="utf-8"))
@@ -87,7 +86,7 @@ errors = sorted(
 )
 
 if errors:
-    print("ERROR: Focus Mode response schema validation failed")
+    print(f"ERROR: Focus Mode response schema validation failed for {fixture}")
     for err in errors:
         location = ".".join(str(part) for part in err.path) or "<root>"
         print(f"  schema_error:{location}:{err.message}")
@@ -97,9 +96,10 @@ if errors:
 
 outcome = payload.get("outcome")
 visible_outcome = payload.get("visible_outcome")
+spec_hash = payload.get("spec_hash")
 
 if outcome != expected or visible_outcome != expected:
-    print("ERROR: Focus Mode outcome mismatch")
+    print(f"ERROR: Focus Mode outcome mismatch for {fixture}")
     print(f"Expected: {expected}")
     print(f"Actual outcome: {outcome}")
     print(f"Actual visible_outcome: {visible_outcome}")
@@ -107,12 +107,38 @@ if outcome != expected or visible_outcome != expected:
     print(json.dumps(payload, indent=2, sort_keys=True))
     raise SystemExit(1)
 
+if not isinstance(spec_hash, str) or not re.fullmatch(r"sha256:[a-fA-F0-9]{64}", spec_hash):
+    print(f"ERROR: invalid response spec_hash for {fixture}")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+if expected == "ANSWER" and not payload.get("answer"):
+    print(f"ERROR: ANSWER response missing answer text for {fixture}")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+if expected in {"ABSTAIN", "DENY"} and payload.get("answer") is not None:
+    print(f"ERROR: {expected} response must not include answer text for {fixture}")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+if expected in {"ABSTAIN", "DENY"} and not payload.get("reasons"):
+    print(f"ERROR: {expected} response missing reasons for {fixture}")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
 print(json.dumps(payload, indent=2, sort_keys=True))
 PY
 
   rm -f "$output_file"
+  trap - RETURN
   echo
 }
+
+require_file "validator" "$VALIDATOR"
+require_file "Focus Mode runtime" "$RUNTIME"
+require_file "Focus Mode response schema" "$RESPONSE_SCHEMA"
+require_dir "Focus Mode fixture" "$REQUEST_DIR"
 
 require_fixture "valid_request.json"
 require_fixture "deny_sensitive_request.json"
