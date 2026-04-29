@@ -179,7 +179,17 @@ pipelines/
 └── watchers/
     ├── README.md
     ├── kansas_flora_watch/
-    │   └── README.md
+    │   ├── README.md
+    │   ├── config.example.yaml
+    │   ├── runner.py
+    │   ├── steps/
+    │   └── tests/
+    ├── soil_air_quality/
+    │   ├── README.md
+    │   ├── config.example.yaml
+    │   ├── runner.py
+    │   ├── steps/
+    │   └── tests/
     └── <domain>_<source-or-scope>_watch/
         ├── README.md
         ├── watcher.manifest.yaml        # PROPOSED after schema-home verification
