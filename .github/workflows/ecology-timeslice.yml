@@ -54,6 +54,9 @@ jobs:
           mkdir -p /tmp/ecology-ingest
           mkdir -p data/receipts/runs/dry-run
 
+      # ----------------------------
+      # INGEST
+      # ----------------------------
       - name: Run HLS/Landsat ingest
         run: |
           python connectors/pipelines/ecology/hls_landsat_ingest.py \
@@ -66,6 +69,21 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/ingest_manifest.schema.json \
             /tmp/ecology-ingest/ingest_manifest.json
 
+      - name: Validate QA summary schema
+        run: |
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/qa_summary.schema.json \
+            /tmp/ecology-ingest/qa_summary.json
+
+      - name: Validate tileset metadata schema
+        run: |
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/tileset_metadata.schema.json \
+            /tmp/ecology-ingest/tileset_metadata.json
+
+      # ----------------------------
+      # POLICY + QA
+      # ----------------------------
       - name: Parse ecology publication policy
         run: |
           opa parse policy/ecology/publication.rego
@@ -120,6 +138,9 @@ jobs:
             exit 1
           fi
 
+      # ----------------------------
+      # PROMOTION + EVIDENCE
+      # ----------------------------
       - name: Generate PromotionDecision
         run: |
           python tools/validators/ecology/generate_promotion_decision.py \
@@ -162,6 +183,9 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/evidence_bundle.schema.json \
             /tmp/evidence_bundle.json
 
+      # ----------------------------
+      # STAC
+      # ----------------------------
       - name: Generate STAC Item
         run: |
           python tools/validators/ecology/generate_stac_item.py \
@@ -204,3 +228,29 @@ jobs:
           check-jsonschema \
             --schemafile schemas/contracts/v1/ecology/stac_catalog.schema.json \
             /tmp/stac_catalog.json
+
+      # ----------------------------
+      # FAIL-CLOSED
+      # ----------------------------
+      - name: Fail closed on required artifacts
+        run: |
+          required_artifacts=(
+            "/tmp/ecology-ingest/ingest_manifest.json"
+            "/tmp/ecology-ingest/qa_summary.json"
+            "/tmp/ecology-ingest/tileset_metadata.json"
+            "/tmp/ecology_timeslice_qa_decision.json"
+            "/tmp/promotion_decision.json"
+            "/tmp/evidence_bundle.json"
+            "/tmp/stac_item.json"
+            "/tmp/stac_collection.json"
+            "/tmp/stac_catalog.json"
+          )
+
+          for artifact in "${required_artifacts[@]}"; do
+            if [ ! -s "$artifact" ]; then
+              echo "ERROR: missing $artifact"
+              exit 1
+            fi
+          done
+
+          echo "All artifacts present"
