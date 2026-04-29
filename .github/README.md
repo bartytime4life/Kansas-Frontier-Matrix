@@ -2,15 +2,41 @@
 doc_id: kfm://doc/github-control-surface-readme
 title: GitHub Control Surface
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: @bartytime4life
 created: 2026-04-29
-updated: 2026-04-22
+updated: 2026-04-29
 policy_label: public
-related: [../README.md, ../docs/README.md, ../docs/standards/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../data/README.md, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./workflows/README.md]
-tags: [kfm, github, ci, governance, documentation, readme, control-surface]
-notes: [Draft-ready .github/README.md revision. Current repository inventory, workflow YAML, branch protection, owners, policy label, link validity, and platform settings remain NEEDS_VERIFICATION until checked in the mounted repository.]
+intended_path: .github/README.md
+evidence_mode: CORPUS_ONLY / NO_REPO_EVIDENCE until a mounted checkout is inspected
+truth_posture: CONFIRMED purpose from supplied KFM doctrine; PROPOSED directory contract; UNKNOWN active GitHub platform state
+related:
+  - ../README.md
+  - ../docs/README.md
+  - ../docs/standards/README.md
+  - ../contracts/README.md
+  - ../schemas/README.md
+  - ../policy/README.md
+  - ../tests/README.md
+  - ../tools/README.md
+  - ../data/README.md
+  - ../release/README.md
+  - ./CODEOWNERS
+  - ./PULL_REQUEST_TEMPLATE.md
+  - ./SECURITY.md
+  - ./workflows/README.md
+tags:
+  - kfm
+  - github
+  - ci
+  - governance
+  - documentation
+  - readme
+  - control-surface
+notes:
+  - Draft-ready .github/README.md revision.
+  - Current repository inventory, workflow YAML, branch protection, CODEOWNERS coverage, required checks, Actions settings, environment approvals, secrets, deployment rules, and release artifact behavior remain NEEDS_VERIFICATION until checked in the active repository and GitHub platform settings.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -24,20 +50,21 @@ notes: [Draft-ready .github/README.md revision. Current repository inventory, wo
 <p align="center">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="Surface: .github" src="https://img.shields.io/badge/surface-.github-0b7285">
-  <img alt="Truth posture: evidence-first" src="https://img.shields.io/badge/truth-evidence--first-2ea043">
-  <img alt="Policy posture: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence--first-2ea043">
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
   <img alt="CI: needs verification" src="https://img.shields.io/badge/CI-needs%20verification-lightgrey">
 </p>
 
 <p align="center">
   <a href="#read-this-first">Read first</a> ·
   <a href="#scope">Scope</a> ·
-  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#control-surface-map">Control map</a> ·
   <a href="#accepted-inputs">Inputs</a> ·
   <a href="#exclusions">Exclusions</a> ·
   <a href="#operating-model">Operating model</a> ·
+  <a href="#workflow-standards">Workflows</a> ·
   <a href="#validation">Validation</a> ·
-  <a href="#definition-of-done">Definition of Done</a> ·
+  <a href="#definition-of-done">Done</a> ·
   <a href="#appendix">Appendix</a>
 </p>
 
@@ -46,7 +73,7 @@ notes: [Draft-ready .github/README.md revision. Current repository inventory, wo
 ## Read this first
 
 > [!IMPORTANT]
-> This README is **repo-ready guidance**, not proof of active GitHub enforcement. Treat workflow names, owners, badges, branch-protection claims, and platform settings as `NEEDS_VERIFICATION` until they are checked against the current repository and GitHub settings.
+> This README is **repo-ready guidance**, not proof of active GitHub enforcement. Treat workflow names, owners, badges, branch-protection claims, required checks, environment approvals, secret posture, deployment rules, and platform settings as `NEEDS_VERIFICATION` until checked against the current repository and GitHub settings.
 
 | Field | Value |
 |---|---|
@@ -61,9 +88,19 @@ notes: [Draft-ready .github/README.md revision. Current repository inventory, wo
 
 | What this document does | What it does not do |
 |---|---|
-| Defines how `.github/` should support contribution intake, review routing, and CI orchestration. | Does not prove current workflows, required checks, branch protection, owners, or repository settings. |
-| Keeps GitHub automation subordinate to KFM evidence, policy, contracts, tests, and release objects. | Does not define canonical schemas, policy semantics, source authority, runtime behavior, or publication approval. |
-| Gives maintainers a verification map, change playbook, and definition of done. | Does not authorize public release, direct model access, raw-data exposure, or promotion by file move. |
+| Defines how `.github/` should support contribution intake, review routing, CI orchestration, and GitHub-specific repository hygiene. | Does not prove current workflows, required checks, branch protection, owners, platform settings, secrets, deployments, or runtime behavior. |
+| Keeps GitHub automation subordinate to KFM evidence, policy, contracts, schemas, tests, and release objects. | Does not define canonical schemas, policy semantics, source authority, runtime behavior, publication approval, or AI authority. |
+| Gives maintainers a verification map, change playbook, workflow-risk model, and definition of done. | Does not authorize public release, direct model access, raw-data exposure, or promotion by file move. |
+
+### One-screen rule
+
+`.github/` may **coordinate** trust work. It must not **become** trust work.
+
+| Allowed posture | Blocked posture |
+|---|---|
+| Run validators, tests, policy checks, docs lint, release dry runs, and review routing. | Define canonical truth, publish by file move, bypass policy, or route public clients to raw stores/model runtimes. |
+| Ask contributors for evidence, truth labels, affected surfaces, and rollback notes. | Treat fluent summaries, workflow logs, or badges as proof of source authority. |
+| Emit reports or artifacts that other KFM gates can inspect. | Collapse receipts, proofs, manifests, catalogs, reviews, and releases into one unreviewed output. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -71,47 +108,48 @@ notes: [Draft-ready .github/README.md revision. Current repository inventory, wo
 
 ## Scope
 
-`.github/` is KFM’s GitHub-native control surface. It may contain contribution templates, issue templates, workflow orchestration, ownership routing, dependency automation, and small GitHub-specific configuration.
+`.github/` is KFM’s GitHub-native control surface. It may contain contribution templates, issue templates, workflow orchestration, ownership routing, dependency automation, Actions-specific configuration, and small GitHub-specific glue.
 
-In KFM terms, this directory helps make review and delivery expectations visible at the repository edge. It does **not** own the truth path, canonical object definitions, source authority, runtime policy decisions, or published evidence.
+In KFM terms, this directory makes review and delivery expectations visible at the repository edge. It does **not** own the truth path, canonical object definitions, source authority, runtime policy decisions, published evidence, release state, or correction lineage.
 
 ### This surface should make it easy to answer
 
 - Which GitHub-facing files route contribution, review, and automation?
-- Which checks are expected to run before a PR can support stronger claims?
+- Which checks are expected before a PR can support stronger claims?
 - Which evidence, truth labels, affected surfaces, and rollback notes belong in PR intake?
+- Which workflows are release-adjacent, policy-significant, or security-sensitive?
 - Which claims remain `UNKNOWN` until workflow YAML, branch rules, emitted artifacts, and platform settings are inspected?
 
 > [!WARNING]
-> A workflow file is not enforcement proof. Required checks, branch protection, deployment approvals, repository permissions, Actions settings, secrets, and environment rules must be verified from current platform evidence before they are described as active controls.
+> A workflow file is not enforcement proof. Required checks, branch protection, deployment approvals, repository permissions, Actions settings, secrets, environment rules, and code-owner enforcement must be verified from current platform evidence before they are described as active controls.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Repo fit
+## Control surface map
 
 `.github/` is a routing and orchestration layer beside the KFM trust system. It should point to the surfaces that own meaning, validation, policy, and release evidence instead of duplicating them.
 
 | Relationship | Target path | Current status | Role |
 |---|---|---:|---|
-| Upstream landing | `../README.md` | `NEEDS_VERIFICATION` | Root identity and orientation. |
-| Documentation standards | `../docs/README.md`, `../docs/standards/README.md` | `NEEDS_VERIFICATION` | Markdown, README, and governance documentation standards. |
+| Upstream landing | `../README.md` | `NEEDS_VERIFICATION` | Root identity and repository orientation. |
+| Documentation standards | `../docs/README.md`, `../docs/standards/README.md` | `NEEDS_VERIFICATION` | Markdown, README, governance, and documentation-control standards. |
 | Machine meaning | `../contracts/README.md`, `../schemas/README.md` | `NEEDS_VERIFICATION` | Contract and schema homes; `.github/` must not duplicate these. |
 | Policy and release gates | `../policy/README.md` | `NEEDS_VERIFICATION` | Policy rules and release admissibility. Workflows may call checks; they do not own policy semantics. |
 | Tests and fixtures | `../tests/README.md` | `NEEDS_VERIFICATION` | Executable verification and fixture evidence. |
 | Tooling | `../tools/README.md` | `NEEDS_VERIFICATION` | Scripts and validators that workflows should invoke rather than reimplement inline. |
-| Evidence lifecycle | `../data/README.md`, `../release/` | `NEEDS_VERIFICATION` | Receipts, proofs, manifests, catalogs, review records, release bundles, and rollback references. |
-| Local GitHub files | `./CODEOWNERS`, `./PULL_REQUEST_TEMPLATE.md`, `./workflows/README.md` | `NEEDS_VERIFICATION` | Ownership routing, PR intake, and workflow documentation. |
+| Evidence lifecycle | `../data/README.md`, `../release/` | `NEEDS_VERIFICATION` | Receipts, proofs, manifests, catalogs, review records, release bundles, correction notices, and rollback references. |
+| Local GitHub files | `./CODEOWNERS`, `./PULL_REQUEST_TEMPLATE.md`, `./SECURITY.md`, `./workflows/README.md` | `NEEDS_VERIFICATION` | Ownership routing, PR intake, security reporting, and workflow documentation. |
 
 ### Boundary contract
 
 | `.github/` may coordinate | Source of meaning remains outside `.github/` |
 |---|---|
-| Run docs lint, schema checks, policy tests, fixtures, release dry runs, and dependency checks. | `docs/`, `contracts/`, `schemas/`, `policy/`, `tools/`, `tests/`, `data/`, and `release/`. |
-| Ask contributors for truth labels, evidence links, affected surfaces, and rollback notes. | The underlying EvidenceBundle, DecisionEnvelope, receipts, proofs, manifests, review records, and correction lineage. |
-| Route review using CODEOWNERS and templates. | Actual owner records, steward responsibilities, branch protection, and separation-of-duty policy. |
-| Upload or report generated artifacts when workflows allow it. | The canonical lifecycle and release process that determines whether artifacts are admissible or publishable. |
+| Run docs lint, schema checks, policy tests, fixtures, release dry runs, dependency checks, and repository hygiene checks. | `docs/`, `contracts/`, `schemas/`, `policy/`, `tools/`, `tests/`, `data/`, and `release/`. |
+| Ask contributors for truth labels, evidence links, affected surfaces, open unknowns, and rollback notes. | The underlying EvidenceBundle, DecisionEnvelope, receipts, proofs, manifests, review records, source registry entries, correction lineage, and release state. |
+| Route review using `CODEOWNERS`, templates, labels, and issue forms. | Actual owner records, steward responsibilities, branch protection, and separation-of-duty policy. |
+| Upload reports or generated artifacts when workflows allow it. | The canonical lifecycle and release process that determines whether artifacts are admissible, publishable, or rollback-safe. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -123,13 +161,14 @@ Accepted inputs for `.github/` are GitHub-specific configuration and lightweight
 
 | Input family | Belongs here when… | Must stay linked to… |
 |---|---|---|
-| Workflow YAML | It orchestrates repo checks, builds, docs linting, fixtures, or release dry runs. | Repo tools, tests, policies, schemas, contracts, and release docs. |
-| Workflow README files | They explain purpose, trigger conditions, permissions, artifacts, and failure behavior. | This README and the validators or artifacts the workflows invoke. |
-| Pull request template | It collects truth labels, affected surfaces, evidence links, rollback notes, and open verification items. | Documentation, schema, policy, testing, and release standards. |
-| Issue templates | They route bugs, docs drift, source intake, policy gaps, release problems, and security-sensitive reports without collapsing them into one queue. | Documentation control plane, source registry, and domain-lane owners. |
+| Workflow YAML | It orchestrates repo checks, builds, docs linting, fixtures, policy checks, or release dry runs. | Repo tools, tests, policies, schemas, contracts, and release docs. |
+| Workflow README files | They explain purpose, trigger conditions, permissions, artifacts, failure behavior, and rollback. | This README and the validators or artifacts the workflows invoke. |
+| Pull request template | It collects truth labels, affected surfaces, evidence links, policy impact, rollback notes, and open verification items. | Documentation, schema, policy, testing, and release standards. |
+| Issue templates | They route bugs, docs drift, source intake, policy gaps, release problems, and security-sensitive reports without collapsing them into one queue. | Documentation control plane, source registry, domain-lane owners, and security reporting rules. |
 | `CODEOWNERS` | It routes review for repository paths and sensitive control surfaces. | Verified owners, steward review rules, and branch protection settings. |
-| Dependency automation | It proposes dependency changes while preserving review, test, and policy gates. | Package manager evidence, lockfiles, security posture, and CI. |
+| Dependency automation | It proposes dependency changes while preserving review, test, lockfile, and policy gates. | Package manager evidence, lockfiles, security posture, and CI. |
 | Linter configuration | It configures GitHub-facing checks or delegates to repo tooling. | Markdown/doc standards, fixtures, and validator tests. |
+| Actions glue | It handles GitHub-specific invocation, artifact naming, summaries, or annotations. | Reusable implementation in `../tools/`, `../tests/`, `../policy/`, `../contracts/`, or `../schemas/`. |
 
 ### Good `.github/` files are thin
 
@@ -142,6 +181,8 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 ../policy/**             ->  owns policy semantics
 ../contracts/**          ->  owns interface contracts, if repo convention confirms
 ../schemas/**            ->  owns machine schemas, if repo convention confirms
+../data/**               ->  owns lifecycle artifacts, receipts, proofs, manifests, catalogs, and release inputs
+../release/**            ->  owns release bundles, review state, correction, and rollback records where repo convention confirms
 ```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
@@ -158,11 +199,12 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 | Policy semantics, rights rules, or sensitivity logic | `../policy/` | Workflows may run policy checks; they do not define policy truth. |
 | Validators, scripts, or complex CI logic | `../tools/` and `../tests/` | Keeps YAML thin, testable, and reviewable. |
 | RAW, WORK, QUARANTINE, processed datasets, or published artifacts | `../data/` lifecycle surfaces | Preserves KFM lifecycle boundaries. |
-| Receipts, proofs, manifests, catalogs, review records, or release bundles | `../data/receipts/`, `../data/proofs/`, `../data/manifests/`, `../data/catalog/`, `../release/` as repo conventions confirm | GitHub may emit or upload artifacts; it does not own evidence objects. |
-| Secrets, credentials, access tokens, model endpoints, or private service URLs | Repository/environment secrets and deployment docs | Prevents accidental exposure. |
-| Runtime API, UI, MapLibre, or model-adapter code | `../apps/`, `../packages/`, or repo-native runtime homes | `.github/` is orchestration, not application implementation. |
+| Receipts, proofs, manifests, catalogs, review records, correction notices, rollback records, or release bundles | Repo-confirmed `../data/**` and `../release/**` homes | GitHub may emit or upload artifacts; it does not own evidence objects. |
+| Secrets, credentials, access tokens, model endpoints, private service URLs, or sensitive coordinates | Repository/environment secrets and restricted deployment docs | Prevents accidental exposure. |
+| Runtime API, UI, MapLibre, Cesium, or model-adapter code | `../apps/`, `../packages/`, or repo-native runtime homes | `.github/` is orchestration, not application implementation. |
 | Branch protection claims without settings evidence | Verification backlog or platform-state docs | Repository settings are not fully represented by checked-in files. |
-| Direct public path to model runtime, vector index, or unpublished candidate data | Governed API after evidence and policy checks | Preserves the trust membrane. |
+| Direct public path to model runtime, vector index, search projection, or unpublished candidate data | Governed API after evidence and policy checks | Preserves the trust membrane. |
+| Sensitive issue details | Restricted security/steward process | Public issues can leak exact locations, credentials, or private facts. |
 
 > [!CAUTION]
 > A workflow that publishes without EvidenceBundle closure, policy decision, release manifest, rollback reference, and required review state is not a KFM promotion path. It is an unsafe shortcut.
@@ -173,39 +215,40 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 
 ## Directory map
 
-Current `.github/` contents are now partially scaffolded in-repo. The tree below is the current checked-in baseline and still uses placeholder files where implementation details are pending.
+This is a **proposed verification target**, not a claim that these files are active in the current repository. Replace it with a generated inventory after the real checkout is mounted and inspected.
 
 ```text
 .github/
 ├── README.md                         # this file
 ├── CODEOWNERS                        # NEEDS_VERIFICATION
 ├── PULL_REQUEST_TEMPLATE.md          # NEEDS_VERIFICATION
+├── SECURITY.md                       # NEEDS_VERIFICATION
+├── dependabot.yml                    # NEEDS_VERIFICATION
 ├── ISSUE_TEMPLATE/
-│   ├── bug_report.md
-│   ├── documentation_drift.md
-│   ├── source_intake.md
-│   └── policy_or_release_gap.md
-├── SECURITY.md
-├── dependabot.yml
+│   ├── bug_report.md                 # PROPOSED / NEEDS_VERIFICATION
+│   ├── documentation_drift.md         # PROPOSED / NEEDS_VERIFICATION
+│   ├── source_intake.md               # PROPOSED / NEEDS_VERIFICATION
+│   ├── policy_or_release_gap.md       # PROPOSED / NEEDS_VERIFICATION
+│   └── security_sensitive.md          # PROPOSED / NEEDS_VERIFICATION
 ├── actions/
-│   └── README.md
+│   └── README.md                      # PROPOSED / GitHub-specific glue only
 ├── watchers/
-│   └── README.md
+│   └── README.md                      # PROPOSED / workflow watcher notes only
 ├── workflows/
-│   ├── README.md
-│   ├── verification-baseline.yml
-│   ├── docs-lint.yml
-│   ├── contracts.yml
-│   ├── policy.yml
-│   ├── tests.yml
-│   └── release-dry-run.yml
+│   ├── README.md                      # PROPOSED / workflow inventory and gates
+│   ├── verification-baseline.yml      # PROPOSED / read-only baseline checks
+│   ├── docs-lint.yml                  # PROPOSED / delegates to docs tooling
+│   ├── contracts.yml                  # PROPOSED / delegates to contract tooling
+│   ├── policy.yml                     # PROPOSED / delegates to policy tooling
+│   ├── tests.yml                      # PROPOSED / delegates to repo tests
+│   └── release-dry-run.yml            # PROPOSED / no public release by itself
 └── linters/
-    ├── markdownlint.json
-    └── mlc.config.json
+    ├── markdownlint.json              # PROPOSED / GitHub-facing config
+    └── mlc.config.json                # PROPOSED / link-check config
 ```
 
 > [!TIP]
-> After the real repository is mounted, replace this verification map with an inventory generated from the checkout.
+> After the real repository is mounted, replace the proposed tree with an inventory generated from the checkout.
 
 ```bash
 # Read-only inventory. Run from repository root after mounting the real checkout.
@@ -235,7 +278,7 @@ flowchart TD
 
     G --> K[Receipts / proofs / manifests / catalogs / release notes]
     H --> L[Follow-up PR or source-intake record]
-    I --> M[Correction, redaction, or restricted access path]
+    I --> M[Correction, redaction, restricted access, or non-public handling]
     J --> N[Retry after fix; no silent success]
 
     C -. must not own .-> RAW[RAW / WORK / QUARANTINE stores]
@@ -244,14 +287,42 @@ flowchart TD
     C -. must not replace .-> POLICY[Policy semantics]
 ```
 
-### State discipline
+### Finite outcome discipline
 
-| State | Meaning for `.github/` |
+| Outcome | Meaning for `.github/` | Normal next step |
+|---|---|---|
+| `ANSWER` | A workflow or review path produced evidence-backed, policy-safe output. | Preserve report/artifact and continue review or promotion. |
+| `ABSTAIN` | Evidence is insufficient or scope is underspecified. | Request clarification, source intake, or verification backlog. |
+| `DENY` | Policy, rights, sensitivity, access, source terms, or exposure risk blocks the action. | Quarantine, restrict, redact, or route to steward/security review. |
+| `ERROR` | Technical failure prevents reliable interpretation. | Repair and rerun; do not convert failure into success. |
+
+### Trust boundary rules
+
+| Rule | Operational meaning |
 |---|---|
-| `ANSWER` | A workflow or review path produced evidence-backed, policy-safe output. |
-| `ABSTAIN` | Evidence is insufficient; the repo should request clarification or keep the claim out of publication. |
-| `DENY` | Policy, rights, sensitivity, access, source terms, or exposure risk blocks the action. |
-| `ERROR` | A technical failure prevents reliable interpretation; do not convert it into success. |
+| `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED` | GitHub workflows may inspect or run dry checks, but normal public paths must not expose upstream lifecycle stores. |
+| Public clients use governed interfaces | Do not route UI, public users, or third-party clients directly to canonical/internal stores, model runtimes, vector indexes, or unpublished candidates. |
+| EvidenceBundle outranks language | A workflow summary, AI answer, or Markdown report cannot substitute for EvidenceBundle closure and policy state. |
+| Promotion is a state transition | Release-adjacent workflows must preserve proof, review, correction, and rollback context. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Workflow risk tiers
+
+Use the lowest tier that satisfies the job. Escalate review when a workflow can mutate state, access secrets, publish artifacts, or affect release posture.
+
+| Tier | Examples | Risk | Required posture |
+|---|---|---:|---|
+| Tier 0 — read-only inspection | Markdown lint, schema validation, fixture tests, grep checks | Low | `contents: read`, no secrets, no publish, no write. |
+| Tier 1 — generated reports | Test summaries, coverage reports, validation artifacts | Medium | Clear artifact naming, no secret leakage, retention policy, no release claim. |
+| Tier 2 — dependency/update automation | Dependabot, lockfile updates, generated PRs | Medium | Human review, tests, package-manager evidence, no auto-merge without policy. |
+| Tier 3 — release-adjacent dry run | Proof-pack dry run, manifest build, catalog closure check | High | Explicit gate docs, no public publish, preserve receipts/logs, reviewer confirmation. |
+| Tier 4 — deployment/publication | Any workflow that can publish or deploy | Critical | Separation of duty, platform evidence, environment approval, rollback plan, audit trail, fail closed. |
+
+> [!WARNING]
+> `pull_request_target`, write permissions, `id-token: write`, deployment triggers, workflow chaining, and secret access are Tier 3+ signals until proven otherwise.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -265,13 +336,14 @@ When editing `.github/`, use the smallest reversible change that preserves KFM�
 
 | Change type | Before merge, verify… | Review emphasis |
 |---|---|---|
-| Workflow trigger change | The event is intentional and cannot publish or expose restricted material by accident. | Least privilege, no surprise release path, clear failure mode. |
+| Workflow trigger change | The event is intentional and cannot publish, deploy, or expose restricted material by accident. | Least privilege, no surprise release path, clear failure mode. |
 | New workflow | It delegates substantive logic to repo tools/tests and records outputs where KFM expects them. | Thin YAML, deterministic inputs, clear artifacts. |
 | Template change | It collects enough evidence without becoming noisy or performative. | Truth labels, affected surfaces, rollback, open verification. |
 | `CODEOWNERS` change | Owners are current and match the review burden of affected surfaces. | Separation of duty for policy-significant paths. |
 | Dependency automation | Updates remain reviewable and cannot bypass tests or policy. | Supply-chain posture, package-manager evidence, lockfile behavior. |
 | Linter/config change | Rules are documented and validated with fixtures where practical. | Avoid style-only churn; prefer trust and maintainability checks. |
 | Release-adjacent change | Promotion remains a governed state transition and proof objects stay distinct. | No file-move promotion; preserve receipts, manifests, review, correction, and rollback. |
+| Security-sensitive routing | Reports cannot leak secrets, exact sensitive geometry, or private source endpoints. | Restricted handling, disclosure discipline, auditability. |
 
 ### PR evidence prompts
 
@@ -280,8 +352,8 @@ A `.github/` PR should answer:
 1. What surface does this change govern?
 2. What evidence was inspected?
 3. Which claims are `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS_VERIFICATION`, or `CONFLICTED`?
-4. Which downstream docs, schemas, policies, tests, runbooks, release objects, or UI/API contracts are affected?
-5. Could this change expose secrets, exact sensitive locations, unpublished candidate data, model endpoints, or raw lifecycle stores?
+4. Which downstream docs, schemas, contracts, policies, tests, runbooks, release objects, or UI/API contracts are affected?
+5. Could this change expose secrets, exact sensitive locations, unpublished candidate data, model endpoints, private source URLs, or raw lifecycle stores?
 6. What is the rollback path?
 7. What should not be inferred from this change?
 
@@ -317,8 +389,137 @@ permissions:
   contents: read
 ```
 
-> [!WARNING]
-> `pull_request_target`, write permissions, artifact upload, deployment triggers, and secret access require heightened review. They can cross the trust membrane if used casually.
+### Workflow header pattern
+
+```yaml
+# KFM workflow contract
+# Purpose: <what this workflow proves or reports>
+# Trigger: <events and trust assumptions>
+# Permissions: <least-privilege summary>
+# Delegates to: <tools/tests/policy/schemas/contracts path>
+# Artifacts: <reports, logs, receipts, dry-run outputs>
+# Negative outcomes: ABSTAIN / DENY / ERROR are preserved, not hidden
+# Rollback: <file revert, workflow disable, artifact audit path>
+```
+
+### YAML anti-patterns
+
+| Anti-pattern | Why it is unsafe |
+|---|---|
+| Large inline scripts in workflow YAML | Logic becomes hard to test locally or review independently. |
+| Broad default permissions | Accidental write/deploy/secrets capability can cross the trust membrane. |
+| Release steps hidden in generic build workflows | Maintainers cannot see promotion or publication authority. |
+| `continue-on-error` around trust checks | Converts verification failure into false confidence. |
+| Uploading artifacts without classification | Receipts, proofs, logs, test output, and release bundles have different meanings. |
+| Treating workflow success as publication approval | CI success is not a KFM promotion decision by itself. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Template expectations
+
+Templates should guide contributors toward evidence, not paperwork.
+
+### Pull request template should collect
+
+- Change summary.
+- Affected surfaces.
+- Truth labels.
+- Evidence inspected.
+- Links to receipts, proof packs, fixtures, validation reports, or dry-run artifacts when available.
+- Policy, rights, sensitivity, security, local-exposure, and public-release impact.
+- Rollback or correction path.
+- Remaining `UNKNOWN` / `NEEDS_VERIFICATION` items.
+- Explicit statement of what the PR does **not** prove.
+
+### Issue templates should separate queues
+
+| Template | Use when… | Must avoid… |
+|---|---|---|
+| Bug report | Behavior differs from expected behavior or documented contract. | Turning uncertain source facts into confirmed bug claims. |
+| Documentation drift | Docs, schemas, policy, fixtures, or implementation appear out of sync. | Silently rewriting doctrine without an evidence basis. |
+| Source intake | A source, endpoint, dataset, license, or authority role needs evaluation. | Activating live ingestion before source terms and release posture are known. |
+| Policy or release gap | A release path, sensitivity rule, rights rule, or rollback path is unclear. | Publishing around the gap. |
+| Security-sensitive report | A workflow, secret, token, private endpoint, exposure path, or exact sensitive geometry may be exposed. | Posting secrets or sensitive location details in public issue text. |
+
+> [!CAUTION]
+> Security-sensitive, archaeology, rare-species, living-person, DNA/genomics, private landowner, critical infrastructure, private endpoint, and credential issues should fail closed and route to restricted review until publication safety is established.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## CODEOWNERS and review routing
+
+`CODEOWNERS` can route review, but it does not prove review enforcement unless branch protection requires code-owner review.
+
+| Path family | Review posture |
+|---|---|
+| `.github/**` | Maintainer + governance review. Workflows and templates can affect intake, CI, and release posture. |
+| `.github/workflows/**` | Maintainer + security/governance review. Escalate if secrets, deployments, write permissions, or release artifacts are involved. |
+| `.github/ISSUE_TEMPLATE/**` | Maintainer + documentation/control-plane review. Security-sensitive templates need restricted-reporting review. |
+| `.github/CODEOWNERS` | Maintainer + owner/steward review. Prevent orphaned review paths. |
+| `.github/dependabot.yml` | Maintainer + supply-chain review. Verify package-manager and lockfile conventions. |
+
+### Owner freshness checks
+
+Before making owner claims, verify:
+
+```bash
+# Read-only examples. Run from mounted repo root.
+[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS
+
+# Optional: list .github paths that should have owner coverage.
+find .github -maxdepth 3 -type f | sort
+```
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Dependency automation
+
+Dependency automation is useful only when it stays reviewable.
+
+| Requirement | Rationale |
+|---|---|
+| Package-manager evidence | Do not create dependency automation until the package manager and lockfile conventions are confirmed. |
+| No silent auto-merge | Dependency updates can affect security, build behavior, runtime behavior, and source-chain trust. |
+| Lockfile discipline | Lockfiles, manifests, and package constraints must be updated together according to repo convention. |
+| Security triage | Security updates may need faster handling, but still need test and policy posture. |
+| Toolchain pinning | Version-sensitive validators, OPA/Conftest, Node, Python, package managers, and Actions should be pinned or documented. |
+
+> [!NOTE]
+> Dependabot configuration belongs in `.github/` when the repo confirms the package ecosystem. The security meaning of dependency updates belongs in the broader supply-chain and release posture, not in `.github/` alone.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Security and exposure guardrails
+
+KFM may be locally hosted and exposed through a home firewall, reverse proxy, or VPN for trusted third-party access. `.github/` should support that posture by keeping automation least-privileged and auditable.
+
+| Guardrail | `.github/` implication |
+|---|---|
+| Deny by default | Do not grant broad workflow permissions without a verified need. |
+| Least privilege | Prefer explicit workflow `permissions:` blocks. |
+| No secret leakage | Never commit secrets, tokens, model endpoints, private service URLs, or sensitive coordinates. |
+| No direct model path | Do not create workflows or templates that encourage public clients to talk directly to model runtimes. |
+| No raw lifecycle exposure | Do not create normal public paths to RAW, WORK, QUARANTINE, canonical/internal stores, or unpublished candidate data. |
+| Auditable boundaries | Preserve logs, receipts, reports, and review records where the workflow is policy-significant. |
+| Reversible change | Every workflow/template/ownership change needs rollback instructions. |
+| Public-safe issue handling | Do not require reporters to paste secrets, exact sensitive geometry, private endpoint URLs, or living-person/DNA details into public issue bodies. |
+
+### High-risk trigger review
+
+```bash
+# Read-only scan for workflow patterns that require heightened review.
+grep -RInE \
+  'pull_request_target|workflow_run|deployment|id-token: write|contents: write|actions: write|secrets:|environment:|pages: write|packages: write' \
+  .github/workflows 2>/dev/null || true
+```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -350,7 +551,7 @@ grep -RInE \
 
 ### What these commands do not prove
 
-They do not prove branch protection, required checks, Actions permissions in repository settings, environment approvals, secret configuration, deployment posture, runtime behavior, owner freshness, or emitted proof-object validity.
+They do not prove branch protection, required checks, Actions permissions in repository settings, environment approvals, secret configuration, deployment posture, runtime behavior, owner freshness, emitted proof-object validity, or local exposure safety.
 
 ### Validation matrix
 
@@ -362,56 +563,7 @@ They do not prove branch protection, required checks, Actions permissions in rep
 | Policy enforcement | Policy files, policy tests, tool versions, workflow logs, and failure fixtures. |
 | Release dry run | Generated receipts/proofs/manifests and release dry-run logs. |
 | Security posture | Workflow permissions, Actions settings, secret handling, dependency automation, and deployment docs. |
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Template expectations
-
-Templates should guide contributors toward evidence, not paperwork.
-
-### Pull request template should collect
-
-- Change summary.
-- Affected surfaces.
-- Truth labels.
-- Evidence inspected.
-- Links to receipts, proof packs, fixtures, or validation reports when available.
-- Policy, rights, sensitivity, and public-release impact.
-- Rollback or correction path.
-- Remaining `UNKNOWN` / `NEEDS_VERIFICATION` items.
-
-### Issue templates should separate queues
-
-| Template | Use when… | Must avoid… |
-|---|---|---|
-| Bug report | Behavior differs from expected behavior or documented contract. | Turning uncertain source facts into confirmed bug claims. |
-| Documentation drift | Docs, schemas, policy, fixtures, or implementation appear out of sync. | Silently rewriting doctrine without an evidence basis. |
-| Source intake | A source, endpoint, dataset, license, or authority role needs evaluation. | Activating live ingestion before source terms and release posture are known. |
-| Policy or release gap | A release path, sensitivity rule, rights rule, or rollback path is unclear. | Publishing around the gap. |
-| Security-sensitive report | A workflow, secret, token, private endpoint, exposure path, or exact sensitive geometry may be exposed. | Posting secrets or sensitive location details in public issue text. |
-
-> [!CAUTION]
-> Security-sensitive, archaeology, rare-species, living-person, DNA/genomics, private landowner, critical infrastructure, private endpoint, and credential issues should fail closed and route to restricted review until publication safety is established.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Security and exposure guardrails
-
-KFM may be locally hosted and exposed through a home firewall, reverse proxy, or VPN for trusted third-party access. `.github/` should support that posture by keeping automation least-privileged and auditable.
-
-| Guardrail | `.github/` implication |
-|---|---|
-| Deny by default | Do not grant broad workflow permissions without a verified need. |
-| Least privilege | Prefer explicit workflow `permissions:` blocks. |
-| No secret leakage | Never commit secrets, tokens, model endpoints, private service URLs, or sensitive coordinates. |
-| No direct model path | Do not create workflows or templates that encourage public clients to talk directly to model runtimes. |
-| No raw lifecycle exposure | Do not create normal public paths to RAW, WORK, QUARANTINE, canonical/internal stores, or unpublished candidate data. |
-| Auditable boundaries | Preserve logs, receipts, reports, and review records where the workflow is policy-significant. |
-| Reversible change | Every workflow/template/ownership change needs rollback instructions. |
+| Local exposure posture | Deployment docs, reverse proxy/VPN config, auth, CORS, firewall rules, logs, and secret boundaries. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -429,6 +581,7 @@ For `.github/` changes, rollback is usually a repository configuration or file r
 | `CODEOWNERS` | Restore prior owner routing and verify pending reviews are not orphaned. |
 | Dependency automation | Disable or revert configuration; inspect opened PRs for unintended update scope. |
 | Release-adjacent workflow | Revert workflow and preserve any generated receipts, proofs, manifests, review artifacts, correction notices, and rollback references for audit. |
+| Security-sensitive exposure | Revoke credentials, remove exposed content, preserve incident evidence, rotate affected secrets, and route through restricted review. |
 
 > [!IMPORTANT]
 > Rollback should not erase evidence. Preserve enough context to reconstruct what ran, what changed, what was blocked, what was published, and what correction path applies.
@@ -443,8 +596,8 @@ A `.github/` change is done enough to support stronger claims only when the chec
 
 - [ ] Metadata block has a real `doc_id`, verified owner, verified dates, verified policy label, and valid related paths.
 - [ ] `.github/` inventory is generated from the current checkout and reflected in [Directory map](#directory-map).
-- [ ] `CODEOWNERS` coverage is verified for `.github/`, workflows, policy-significant templates, and release-adjacent files.
-- [ ] Each workflow has a documented purpose, trigger, permissions posture, expected artifacts, and failure behavior.
+- [ ] `CODEOWNERS` coverage is verified for `.github/`, workflows, policy-significant templates, security-sensitive reporting, and release-adjacent files.
+- [ ] Each workflow has a documented purpose, trigger, permissions posture, expected artifacts, failure behavior, and rollback path.
 - [ ] Workflow YAML delegates substantive validation to `tools/`, `tests/`, `policy/`, `contracts/`, or `schemas/` instead of embedding complex logic inline.
 - [ ] PR and issue templates collect truth posture, evidence basis, affected surfaces, rollback path, and open verification items.
 - [ ] Required checks and branch protection claims are backed by direct platform evidence or explicitly labeled `NEEDS_VERIFICATION`.
@@ -452,7 +605,8 @@ A `.github/` change is done enough to support stronger claims only when the chec
 - [ ] Documentation linting checks KFM Meta Block V2, H1 count, quick jumps, relative paths, and placeholder leakage where repo tooling supports it.
 - [ ] Release-adjacent workflows preserve receipts, proofs, manifests, catalog records, review artifacts, correction lineage, and rollback references rather than replacing them.
 - [ ] No workflow creates a normal public path to RAW, WORK, QUARANTINE, canonical/internal stores, vector indexes, model runtimes, or unpublished candidate data.
-- [ ] Rollback is documented for every new workflow, template, or ownership-routing change.
+- [ ] Security-sensitive reports have a restricted path that avoids public leakage of secrets, exact sensitive locations, private endpoint URLs, and living-person/DNA details.
+- [ ] Rollback is documented for every new workflow, template, dependency automation, or ownership-routing change.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -463,7 +617,7 @@ A `.github/` change is done enough to support stronger claims only when the chec
 <details>
 <summary>Is <code>.github/</code> part of the KFM trust model?</summary>
 
-Yes, but as an orchestration and review-routing surface. It can make governance visible and testable, but it does not own canonical truth, policy semantics, source authority, or release evidence.
+Yes, but as an orchestration and review-routing surface. It can make governance visible and testable, but it does not own canonical truth, policy semantics, source authority, release evidence, or publication approval.
 
 </details>
 
@@ -489,9 +643,16 @@ Only tiny GitHub-specific glue should live here. Reusable validation, linting, s
 </details>
 
 <details>
-<summary>Can `.github/` include badge images?</summary>
+<summary>Can <code>.github/</code> include badge images?</summary>
 
 Yes, when badges are static status/orientation labels or their targets are verified. Do not add fake CI, coverage, deployment, owner, security, or release badges.
+
+</details>
+
+<details>
+<summary>Does this README prove the current repository has these files?</summary>
+
+No. This README is a draft control-surface contract. Current file presence, branch state, workflow behavior, branch protection, code-owner enforcement, deployment posture, and emitted artifacts remain `UNKNOWN` until verified in the active checkout and platform settings.
 
 </details>
 
@@ -527,8 +688,8 @@ Yes, when badges are static status/orientation labels or their targets are verif
 printf 'repo=%s\nbranch=%s\n' "$(git rev-parse --show-toplevel 2>/dev/null || echo UNKNOWN)" "$(git branch --show-current 2>/dev/null || echo UNKNOWN)"
 find .github -maxdepth 3 -type f | sort
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) -print | sort
-[ -f .github/CODEOWNERS ] && sed -n '1,200p' .github/CODEOWNERS || true
-[ -f .github/PULL_REQUEST_TEMPLATE.md ] && sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md || true
+[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS || true
+[ -f .github/PULL_REQUEST_TEMPLATE.md ] && sed -n '1,240p' .github/PULL_REQUEST_TEMPLATE.md || true
 ```
 
 </details>
@@ -545,6 +706,21 @@ find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \)
 | Cite-or-abstain | The posture that consequential claims should resolve to evidence or decline to answer. |
 | Finite outcome | A bounded result such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, rather than an ambiguous free-form state. |
 | Promotion | A governed state transition with validation, policy, review, provenance, release, correction, and rollback context; not a file move. |
+| Release-adjacent | A check, workflow, or artifact that can influence publication, deployment, or public interpretation even if it does not publish directly. |
+
+</details>
+
+<details>
+<summary><strong>D. Review-smell checklist</strong></summary>
+
+| Smell | Safer response |
+|---|---|
+| “This workflow enforces policy” but no policy files/tests are cited | Rephrase as `PROPOSED`; require policy evidence and workflow logs. |
+| “Required checks are active” but only YAML exists | Mark `NEEDS_VERIFICATION`; inspect branch protection/platform settings. |
+| Complex inline shell in YAML | Move logic to `tools/` and add tests/fixtures. |
+| Workflow can publish from PR context | Escalate to Tier 4 review; require environment approval and rollback. |
+| Issue template asks for sensitive details publicly | Move to restricted security/steward intake. |
+| Badge claims CI/security/release status without source | Remove badge or label as unverified. |
 
 </details>
 
