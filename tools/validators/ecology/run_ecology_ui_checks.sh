@@ -5,8 +5,10 @@
 # - EcologyEvidenceDrawerPayload
 #
 # Expectations:
+# - UI fixture directory must exist
+# - UI fixtures must be present
 # - All UI fixtures must pass schema validation
-# - No governance-layer failures (UI objects are exempt from policy gating)
+# - UI objects are schema-validated but exempt from governance policy gating
 #
 # Exit code:
 #   0 → success
@@ -28,8 +30,8 @@ if [[ ! -f "$VALIDATOR" ]]; then
 fi
 
 if [[ ! -d "$UI_DIR" ]]; then
-  echo "SKIP: UI fixture directory not present: $UI_DIR"
-  exit 0
+  echo "ERROR: UI fixture directory missing: $UI_DIR"
+  exit 1
 fi
 
 shopt -s nullglob
@@ -37,8 +39,8 @@ UI_FILES=("$UI_DIR"/*.json)
 shopt -u nullglob
 
 if [[ "${#UI_FILES[@]}" -eq 0 ]]; then
-  echo "SKIP: no UI fixture files found in $UI_DIR"
-  exit 0
+  echo "ERROR: no UI fixture files found in $UI_DIR"
+  exit 1
 fi
 
 echo "→ Validating UI payload fixtures"
