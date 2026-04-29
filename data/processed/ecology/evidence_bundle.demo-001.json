@@ -1,19 +1,35 @@
 {
-  "bundle_id": "kfm://evidence/ecology/demo-001",
-  "object_type": "EvidenceBundle",
   "schema_version": "v1",
+  "object_type": "EvidenceBundle",
+  "bundle_id": "kfm://evidence/ecology/demo-001",
+  "title": "Ecology demo evidence bundle 001",
   "source_refs": [
     "usda_plants",
-    "ndvi_derived_layers"
+    "ndvi_derived_layers",
+    "kfs_field_plots"
   ],
   "dataset_refs": [
     "ecology.taxon_record.v1",
-    "ecology.derived_vegetation_layer.v1"
+    "ecology.derived_vegetation_layer.v1",
+    "ecology.observation_plot.v1"
   ],
-  "objects": [
+  "evidence_refs": [
+    "kfm://evidence/ecology/taxon-record-valid-001",
+    "kfm://evidence/ecology/derived-layer-valid-001",
+    "kfm://evidence/ecology/observation-plot-valid-001"
+  ],
+  "object_refs": [
     "kfm://taxon/asclepias-syriaca",
-    "kfm://layer/ks-ndvi-2025-q3"
+    "kfm://layer/ks-ndvi-2025-q3",
+    "kfm://plot/ks-ellsworth-101"
   ],
   "resolved": true,
+  "policy_label": "public_after_catalog_closure",
+  "rights_status": "controlled",
+  "sensitivity": "generalize",
+  "limitations": [
+    "Derived vegetation context is not direct occurrence proof.",
+    "Observation geometry is generalized for public use."
+  ],
   "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 }
