@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ecology/run_receipt.schema.json",
+  "title": "KFM Ecology Run Receipt",
+  "description": "Schema for run_receipt.json capturing inputs, outputs, policy decisions, and catalog artifacts for an ecology time-slice run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "run_id",
+    "receipt_ref",
+    "spec_hash",
+    "outputs",
+    "policy_results",
+    "promotion"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "object_type": {
+      "type": "string",
+      "const": "run_receipt"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^kfm://run/ecology/.+"
+    },
+    "receipt_ref": {
+      "type": "string",
+      "pattern": "^kfm://receipt/run/ecology/.+"
+    },
+    "spec_hash": {
+      "type": "string"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qa_decision",
+        "promotion_decision",
+        "evidence_bundle",
+        "stac_item",
+        "stac_collection",
+        "stac_catalog"
+      ],
+      "properties": {
+        "ingest_manifest": {
+          "type": "string"
+        },
+        "qa_summary": {
+          "type": "string"
+        },
+        "tileset_metadata": {
+          "type": "string"
+        },
+        "qa_decision": {
+          "type": "string"
+        },
+        "policy_assertions_dir": {
+          "type": "string"
+        },
+        "promotion_decision": {
+          "type": "string"
+        },
+        "evidence_bundle": {
+          "type": "string"
+        },
+        "stac_item": {
+          "type": "string"
+        },
+        "stac_collection": {
+          "type": "string"
+        },
+        "stac_catalog": {
+          "type": "string"
+        }
+      }
+    },
+    "policy_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["policy", "query", "result"],
+        "properties": {
+          "policy": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string",
+            "enum": ["allow", "hold", "deny"]
+          }
+        }
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "required": ["decision_ref", "decision"],
+      "properties": {
+        "decision_ref": {
+          "type": "string",
+          "pattern": "^kfm://.+"
+        },
+        "decision": {
+          "type": "string",
+          "enum": ["PROMOTE", "REVIEW", "DENY"]
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "required": [
+        "stac_item",
+        "stac_collection",
+        "stac_catalog"
+      ],
+      "properties": {
+        "stac_item": {
+          "type": "string"
+        },
+        "stac_collection": {
+          "type": "string"
+        },
+        "stac_catalog": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
