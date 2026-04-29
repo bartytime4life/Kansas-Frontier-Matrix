@@ -145,12 +145,33 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/evidence_bundle.schema.json \
             /tmp/evidence_bundle.json
 
+      - name: Generate STAC Item
+        run: |
+          python tools/validators/ecology/generate_stac_item.py \
+            --item-id kfm-ecology-example-pass \
+            --collection kfm-ecology-timeslices \
+            --tileset-metadata tests/fixtures/ecology/timeslice/pass/tileset_metadata.json \
+            --evidence-bundle kfm://evidence/ecology/example-pass-timeslice \
+            --promotion-decision kfm://promotion/ecology/example-pass \
+            --asset tileset=kfm://tileset/ecology/example-pass \
+            --out /tmp/stac_item.json
+
+      - name: Validate STAC Item structure
+        run: |
+          python -m json.tool /tmp/stac_item.json > /dev/null
+          jq -e '.type == "Feature"' /tmp/stac_item.json > /dev/null
+          jq -e '.stac_version == "1.0.0"' /tmp/stac_item.json > /dev/null
+          jq -e '.geometry.type == "Polygon"' /tmp/stac_item.json > /dev/null
+          jq -e '.properties["kfm:evidence_bundle"] != null' /tmp/stac_item.json > /dev/null
+          jq -e '.properties["kfm:promotion_decision"] != null' /tmp/stac_item.json > /dev/null
+
       - name: Fail closed on required dry-run artifacts
         run: |
           required_artifacts=(
             "/tmp/ecology_timeslice_qa_decision.json"
             "/tmp/promotion_decision.json"
             "/tmp/evidence_bundle.json"
+            "/tmp/stac_item.json"
           )
 
           for artifact in "${required_artifacts[@]}"; do
@@ -189,7 +210,8 @@ jobs:
               "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
               "policy_assertions_dir": "/tmp/ecology-policy-assertions",
               "promotion_decision": "/tmp/promotion_decision.json",
-              "evidence_bundle": "/tmp/evidence_bundle.json"
+              "evidence_bundle": "/tmp/evidence_bundle.json",
+              "stac_item": "/tmp/stac_item.json"
             },
             "policy_results": [
               {
@@ -201,6 +223,9 @@ jobs:
             "promotion": {
               "decision_ref": "/tmp/promotion_decision.json",
               "decision": "PROMOTE"
+            },
+            "catalog": {
+              "stac_item": "/tmp/stac_item.json"
             }
           }
           JSON
