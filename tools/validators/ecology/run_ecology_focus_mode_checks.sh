@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # KFM Ecology Focus Mode Validation Runner
 #
-# Validates governed Focus Mode fixtures and runtime outcomes.
+# Validates governed Focus Mode fixtures, runtime outcomes, and response schema.
 #
 # Expectations:
 # - request fixtures must pass schema validation
 # - valid_request.json must return ANSWER
 # - deny_sensitive_request.json must return DENY
 # - abstain_missing_evidence.json must return ABSTAIN
+# - runtime responses must validate against FocusModeResponse schema
 #
 # Exit code:
 #   0 → success
@@ -19,6 +20,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 VALIDATOR="$ROOT_DIR/tools/validators/ecology/validate_ecology_bundle.py"
 RUNTIME="$ROOT_DIR/apps/governed_api/ecology/focus_mode.py"
 REQUEST_DIR="$ROOT_DIR/tests/fixtures/ecology/focus_mode"
+RESPONSE_SCHEMA="$ROOT_DIR/schemas/contracts/v1/ecology/focus_mode_response.schema.json"
 
 echo "=== KFM Ecology Focus Mode Checks ==="
 echo "ROOT_DIR: $ROOT_DIR"
@@ -31,6 +33,11 @@ fi
 
 if [[ ! -f "$RUNTIME" ]]; then
   echo "ERROR: Focus Mode runtime not found at $RUNTIME"
+  exit 1
+fi
+
+if [[ ! -f "$RESPONSE_SCHEMA" ]]; then
+  echo "ERROR: Focus Mode response schema not found at $RESPONSE_SCHEMA"
   exit 1
 fi
 
@@ -60,16 +67,49 @@ run_runtime_expect_outcome() {
 
   python "$RUNTIME" "$REQUEST_DIR/$fixture" > "$output_file"
 
-  if ! grep -Eq "\"outcome\"[[:space:]]*:[[:space:]]*\"$expected\"|\"visible_outcome\"[[:space:]]*:[[:space:]]*\"$expected\"" "$output_file"; then
-    echo "ERROR: Focus Mode outcome mismatch for $fixture"
-    echo "Expected: $expected"
-    echo "Actual output:"
-    cat "$output_file"
-    rm -f "$output_file"
-    exit 1
-  fi
+  python - "$output_file" "$RESPONSE_SCHEMA" "$expected" <<'PY'
+import json
+import sys
+from pathlib import Path
 
-  cat "$output_file"
+from jsonschema import Draft202012Validator
+
+output_path = Path(sys.argv[1])
+schema_path = Path(sys.argv[2])
+expected = sys.argv[3]
+
+payload = json.loads(output_path.read_text(encoding="utf-8"))
+schema = json.loads(schema_path.read_text(encoding="utf-8"))
+
+errors = sorted(
+    Draft202012Validator(schema).iter_errors(payload),
+    key=lambda err: list(err.path),
+)
+
+if errors:
+    print("ERROR: Focus Mode response schema validation failed")
+    for err in errors:
+        location = ".".join(str(part) for part in err.path) or "<root>"
+        print(f"  schema_error:{location}:{err.message}")
+    print("Actual output:")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+outcome = payload.get("outcome")
+visible_outcome = payload.get("visible_outcome")
+
+if outcome != expected or visible_outcome != expected:
+    print("ERROR: Focus Mode outcome mismatch")
+    print(f"Expected: {expected}")
+    print(f"Actual outcome: {outcome}")
+    print(f"Actual visible_outcome: {visible_outcome}")
+    print("Actual output:")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    raise SystemExit(1)
+
+print(json.dumps(payload, indent=2, sort_keys=True))
+PY
+
   rm -f "$output_file"
   echo
 }
