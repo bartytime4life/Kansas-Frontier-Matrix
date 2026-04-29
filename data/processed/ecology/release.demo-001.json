@@ -1,0 +1,14 @@
+{
+  "release_id": "kfm://release/ecology/demo-001",
+  "object_type": "ReleaseManifest",
+  "schema_version": "v1",
+  "objects": [
+    "kfm://evidence/ecology/demo-001",
+    "kfm://decision/ecology/demo-001",
+    "kfm://claim/ecology/demo-001"
+  ],
+  "surface": "public",
+  "policy_pass": true,
+  "published_at": "2026-04-28T12:00:00Z",
+  "spec_hash": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+}
