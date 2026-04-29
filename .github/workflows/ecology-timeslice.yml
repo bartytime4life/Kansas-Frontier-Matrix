@@ -175,6 +175,20 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/stac_collection.schema.json \
             /tmp/stac_collection.json
 
+      - name: Build STAC Catalog
+        run: |
+          python tools/validators/ecology/build_stac_catalog.py \
+            --catalog-id kfm-ecology-catalog \
+            --collection /tmp/stac_collection.json \
+            --out /tmp/stac_catalog.json
+
+      - name: Validate STAC Catalog structure
+        run: |
+          python -m json.tool /tmp/stac_catalog.json > /dev/null
+          jq -e '.type == "Catalog"' /tmp/stac_catalog.json > /dev/null
+          jq -e '.stac_version == "1.0.0"' /tmp/stac_catalog.json > /dev/null
+          jq -e '.links | length > 0' /tmp/stac_catalog.json > /dev/null
+
       - name: Fail closed on required dry-run artifacts
         run: |
           required_artifacts=(
@@ -183,6 +197,7 @@ jobs:
             "/tmp/evidence_bundle.json"
             "/tmp/stac_item.json"
             "/tmp/stac_collection.json"
+            "/tmp/stac_catalog.json"
           )
 
           for artifact in "${required_artifacts[@]}"; do
@@ -223,7 +238,8 @@ jobs:
               "promotion_decision": "/tmp/promotion_decision.json",
               "evidence_bundle": "/tmp/evidence_bundle.json",
               "stac_item": "/tmp/stac_item.json",
-              "stac_collection": "/tmp/stac_collection.json"
+              "stac_collection": "/tmp/stac_collection.json",
+              "stac_catalog": "/tmp/stac_catalog.json"
             },
             "policy_results": [
               {
@@ -238,7 +254,8 @@ jobs:
             },
             "catalog": {
               "stac_item": "/tmp/stac_item.json",
-              "stac_collection": "/tmp/stac_collection.json"
+              "stac_collection": "/tmp/stac_collection.json",
+              "stac_catalog": "/tmp/stac_catalog.json"
             }
           }
           JSON
