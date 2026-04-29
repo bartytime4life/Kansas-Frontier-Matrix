@@ -9,8 +9,8 @@
   "version": "2025.09",
   "derivation_method": "ndvi-temporal-composite-v3",
   "source_refs": [
-    "source://kfs_field_plots/2025",
-    "source://sentinel-2/l2a/2025-q3"
+    "ndvi_derived_layers",
+    "kfs_field_plots"
   ],
   "time_window": {
     "start": "2025-07-01",
@@ -29,5 +29,11 @@
     "prov": "kfm://catalog/prov/ecology/derived-veg-layer-valid-001",
     "dcat": "kfm://catalog/dcat/ecology/derived-veg-layer-valid-001"
   },
-  "publication_state": "candidate"
+  "publication_state": "published",
+  "catalog_closure": true,
+  "sensitivity": "public",
+  "rights_status": "open",
+  "policy_id": "ecology_public_derived_layer_publication",
+  "evidence_bundle_resolved": true,
+  "surface": "public"
 }
