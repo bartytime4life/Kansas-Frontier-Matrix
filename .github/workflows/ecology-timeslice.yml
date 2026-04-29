@@ -47,6 +47,11 @@ jobs:
           sudo mv conftest /usr/local/bin/conftest
           conftest --version
 
+      - name: Prepare dry-run artifact directories
+        run: |
+          mkdir -p /tmp/ecology-policy-assertions
+          mkdir -p data/receipts/runs/dry-run
+
       - name: Parse ecology publication policy
         run: |
           opa parse policy/ecology/publication.rego
@@ -69,37 +74,50 @@ jobs:
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_allow_timeslice_pass.json \
             --query data.ecology.publication.decision \
-            --expected allow
+            --expected allow \
+            --out /tmp/ecology-policy-assertions/publication_allow_timeslice_pass.assertion.json
+
+          python tools/validators/ecology/assert_rego_decision.py \
+            --policy policy/ecology \
+            --input tests/fixtures/ecology/policy/publication_allow_with_fallback.json \
+            --query data.ecology.publication.decision \
+            --expected allow \
+            --out /tmp/ecology-policy-assertions/publication_allow_with_fallback.assertion.json
 
           python tools/validators/ecology/assert_rego_decision.py \
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_hold_timeslice_review.json \
             --query data.ecology.publication.decision \
-            --expected hold
+            --expected hold \
+            --out /tmp/ecology-policy-assertions/publication_hold_timeslice_review.assertion.json
 
           python tools/validators/ecology/assert_rego_decision.py \
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_deny_timeslice_reject.json \
             --query data.ecology.publication.decision \
-            --expected deny
+            --expected deny \
+            --out /tmp/ecology-policy-assertions/publication_deny_timeslice_reject.assertion.json
 
           python tools/validators/ecology/assert_rego_decision.py \
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_deny_missing_receipt.json \
             --query data.ecology.publication.decision \
-            --expected deny
+            --expected deny \
+            --out /tmp/ecology-policy-assertions/publication_deny_missing_receipt.assertion.json
 
           python tools/validators/ecology/assert_rego_decision.py \
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_deny_missing_fallback.json \
             --query data.ecology.publication.decision \
-            --expected deny
+            --expected deny \
+            --out /tmp/ecology-policy-assertions/publication_deny_missing_fallback.assertion.json
 
           python tools/validators/ecology/assert_rego_decision.py \
             --policy policy/ecology \
             --input tests/fixtures/ecology/policy/publication_deny_incomplete_tiles_no_steward.json \
             --query data.ecology.publication.decision \
-            --expected deny
+            --expected deny \
+            --out /tmp/ecology-policy-assertions/publication_deny_incomplete_tiles_no_steward.assertion.json
 
       - name: Extract allow policy decision
         id: policy_decision
@@ -133,7 +151,7 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/promotion_decision.schema.json \
             /tmp/promotion_decision.json
 
-      - name: Generate DENY PromotionDecision dry run
+      - name: Generate and validate DENY PromotionDecision dry run
         run: |
           python tools/validators/ecology/generate_promotion_decision.py \
             --policy-decision deny \
@@ -143,10 +161,12 @@ jobs:
 
           grep '"decision": "DENY"' /tmp/promotion_decision_deny.json
 
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/promotion_decision.schema.json \
+            /tmp/promotion_decision_deny.json
+
       - name: Generate dry-run receipt
         run: |
-          mkdir -p data/receipts/runs/dry-run
-
           cat > data/receipts/runs/dry-run/run_receipt.json <<JSON
           {
             "schema_version": "v1",
@@ -161,7 +181,9 @@ jobs:
             },
             "outputs": {
               "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
-              "promotion_decision": "/tmp/promotion_decision.json"
+              "policy_assertions_dir": "/tmp/ecology-policy-assertions",
+              "promotion_decision": "/tmp/promotion_decision.json",
+              "promotion_decision_deny": "/tmp/promotion_decision_deny.json"
             },
             "policy_results": [
               {
