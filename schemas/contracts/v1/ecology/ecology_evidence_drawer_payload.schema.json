@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kfm.local/schemas/contracts/v1/ecology/ecology_evidence_drawer_payload.schema.json",
   "title": "Ecology Evidence Drawer Payload",
-  "description": "UI payload contract for evidence drawer content backing an ecology claim response.",
+  "description": "UI payload contract for evidence drawer content backing an ecology claim response. Public payloads must expose trust context, citations, limitations, policy posture, and redaction receipts without leaking restricted geometry.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,30 +10,96 @@
     "object_type",
     "payload_id",
     "claim_ref",
+    "evidence_bundle_ref",
+    "decision_ref",
+    "release_ref",
     "decision",
     "visible_outcome",
     "summary",
     "sources",
     "evidence_refs",
+    "trust_badges",
     "freshness",
     "spec_hash"
   ],
   "properties": {
-    "schema_version": { "type": "string", "const": "v1" },
-    "object_type": { "type": "string", "const": "EcologyEvidenceDrawerPayload" },
-    "payload_id": { "type": "string", "pattern": "^kfm://drawer/ecology/.+" },
-    "claim_ref": { "type": "string", "pattern": "^kfm://claim/ecology/.+" },
-    "decision": { "type": "string", "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"] },
-    "visible_outcome": { "type": "string", "enum": ["shown", "generalized", "withheld", "unavailable"] },
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "object_type": {
+      "type": "string",
+      "const": "EcologyEvidenceDrawerPayload"
+    },
+    "payload_id": {
+      "type": "string",
+      "pattern": "^kfm://drawer/ecology/.+"
+    },
+    "claim_ref": {
+      "type": "string",
+      "pattern": "^kfm://claim/ecology/.+"
+    },
+    "evidence_bundle_ref": {
+      "type": "string",
+      "pattern": "^kfm://evidence/ecology/.+"
+    },
+    "decision_ref": {
+      "type": "string",
+      "pattern": "^kfm://decision/ecology/.+"
+    },
+    "release_ref": {
+      "type": "string",
+      "pattern": "^kfm://release/ecology/.+"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "visible_outcome": {
+      "type": "string",
+      "enum": [
+        "shown",
+        "generalized",
+        "withheld",
+        "unavailable"
+      ]
+    },
     "summary": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["headline", "trust_note"],
+      "required": [
+        "headline",
+        "trust_note"
+      ],
       "properties": {
-        "headline": { "type": "string", "minLength": 1 },
-        "trust_note": { "type": "string", "minLength": 1 },
-        "taxon": { "type": "string" },
-        "habitat_class": { "type": "string" }
+        "headline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trust_note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon": {
+          "type": "string"
+        },
+        "habitat_class": {
+          "type": "string"
+        },
+        "knowledge_character": {
+          "type": "string",
+          "enum": [
+            "derived",
+            "observed",
+            "interpreted",
+            "modeled"
+          ]
+        }
       }
     },
     "sources": {
@@ -42,25 +108,110 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_ref", "source_role", "citation"],
+        "required": [
+          "source_ref",
+          "source_role",
+          "citation"
+        ],
         "properties": {
-          "source_ref": { "type": "string", "pattern": "^kfm://source/.+" },
-          "source_role": { "$ref": "fragments/ecology_source_role.schema.json" },
-          "citation": { "type": "string", "minLength": 1 }
+          "source_ref": {
+            "type": "string",
+            "pattern": "^(kfm://source/.+|[a-zA-Z0-9_.-]+)$"
+          },
+          "source_role": {
+            "type": "string",
+            "enum": [
+              "TAXONOMIC_AUTHORITY",
+              "OBSERVATION_SYSTEM",
+              "AGGREGATOR",
+              "DERIVED_MODEL_LAYER",
+              "SENSITIVE_OCCURRENCE",
+              "BASELINE",
+              "REGULATORY_CONTEXT",
+              "RENDER_DESCRIPTOR"
+            ]
+          },
+          "citation": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
-    "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^kfm://evidence/.+" } },
-    "policy_flags": { "type": "array", "items": { "type": "string", "enum": ["sensitivity", "rights", "review_required", "generalized"] } },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://evidence/.+"
+      }
+    },
+    "trust_badges": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "DERIVED_SUPPORTED",
+          "OBSERVED_SUPPORTED",
+          "EVIDENCE_RESOLVED",
+          "PUBLIC_GENERALIZED",
+          "PUBLIC_SAFE",
+          "RESTRICTED_SOURCE",
+          "REDACTION_RECEIPT_PRESENT",
+          "CATALOG_CLOSED",
+          "RELEASED"
+        ]
+      }
+    },
+    "policy_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "sensitivity",
+          "rights",
+          "review_required",
+          "generalized",
+          "derived_context",
+          "redacted"
+        ]
+      }
+    },
+    "redaction_receipt_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://receipt/redaction/.+"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "freshness": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["generated_at", "stale_after"],
+      "required": [
+        "generated_at",
+        "stale_after"
+      ],
       "properties": {
-        "generated_at": { "type": "string", "format": "date-time" },
-        "stale_after": { "type": "string", "format": "date-time" }
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stale_after": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
-    "spec_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    }
   }
 }
