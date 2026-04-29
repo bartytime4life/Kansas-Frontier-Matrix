@@ -1,0 +1,8 @@
+{
+  "schema": "kfm.ui.focus_mode.v1",
+  "outcomes": ["ANSWER", "ABSTAIN", "DENY", "ERROR"],
+  "show_reason_codes": true,
+  "inherit_scope": true,
+  "show_citations": true,
+  "allow_direct_model_endpoint": false
+}
