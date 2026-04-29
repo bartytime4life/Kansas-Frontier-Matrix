@@ -1,0 +1,8 @@
+{
+  "schema": "kfm.ui.environment.v1",
+  "name": "review",
+  "feature_flag_overrides": {
+    "enable_export_surface": true,
+    "enable_diagnostics_surface": true
+  }
+}

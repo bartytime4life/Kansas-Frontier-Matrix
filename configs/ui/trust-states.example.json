@@ -1,0 +1,14 @@
+{
+  "schema": "kfm.ui.trust_states.v1",
+  "states": {
+    "MISSING_EVIDENCE": "Evidence is required before this claim can be relied on.",
+    "SOURCE_STALE": "Sources are outdated and should be refreshed.",
+    "DENIED_BY_POLICY": "This action is blocked by policy.",
+    "GENERALIZED_GEOMETRY": "Geometry has been generalized for safety.",
+    "RESTRICTED_ACCESS": "Access is restricted for this content.",
+    "CONFLICTED_SUPPORT": "Available sources conflict and need review.",
+    "CITATION_FAILED": "Citation resolution failed.",
+    "RELEASE_WITHDRAWN": "The release was withdrawn and is not valid.",
+    "RUNTIME_ERROR": "A runtime error occurred while preparing this output."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema": "kfm.ui.evidence_drawer.v1",
+  "section_order": ["summary", "citations", "sources", "review", "release", "corrections"],
+  "visibility": {
+    "citations": true,
+    "source_roles": true,
+    "review_state": true,
+    "release_state": true,
+    "corrections": true
+  },
+  "empty_state": "No supporting evidence is currently available."
+}

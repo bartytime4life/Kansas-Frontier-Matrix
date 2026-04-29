@@ -1,0 +1,11 @@
+{
+  "schema": "kfm.ui.feature_flags.v1",
+  "flags": {
+    "enable_focus_mode": true,
+    "enable_compare_surface": true,
+    "enable_export_surface": true,
+    "enable_diagnostics_surface": true,
+    "allow_policy_bypass": false,
+    "allow_unreleased_artifacts": false
+  }
+}
