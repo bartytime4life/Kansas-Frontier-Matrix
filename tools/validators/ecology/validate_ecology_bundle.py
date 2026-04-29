@@ -156,10 +156,6 @@ def _is_bundle_object(obj: dict[str, Any]) -> bool:
     return obj.get("object_type") in BUNDLE_OBJECT_TYPES or "bundle_id" in obj
 
 
-def _is_output_object(obj: dict[str, Any]) -> bool:
-    return obj.get("object_type") in OUTPUT_OBJECT_TYPES
-
-
 def _object_identifier(obj: dict[str, Any]) -> str | None:
     for key in (
         "bundle_id",
@@ -357,8 +353,10 @@ def _validate_catalog_refs(obj: dict[str, Any]) -> list[str]:
     return ["catalog_refs_must_be_object_or_array"]
 
 
-def _validate_governance(obj: dict[str, Any]) -> list[str]:
+def _validate_governance(obj: dict[str, Any]) -> tuple[list[str], list[str], list[str]]:
     errors: list[str] = []
+    hold_reasons: list[str] = []
+    generalize_reasons: list[str] = []
 
     for field in _required_governance_fields(obj):
         if field not in obj:
@@ -414,7 +412,18 @@ def _validate_governance(obj: dict[str, Any]) -> list[str]:
         errors.append("restricted_exact_geometry_not_allowed")
 
     if obj.get("sensitivity") == "review_required":
-        errors.append("requires_steward_review")
+        hold_reasons.append("requires_steward_review")
+
+    if obj.get("sensitivity") == "generalize":
+        if obj.get("rights_status") != "unknown" and obj.get("exact_geometry_present", False) is False:
+            generalize_reasons.append("generalization_required")
+
+    if (
+        obj.get("public_visibility") == "generalized"
+        and obj.get("exact_geometry_present", False) is False
+        and obj.get("redaction_receipt_ref")
+    ):
+        generalize_reasons.append("public_visibility_generalized_with_receipt")
 
     if obj.get("object_type") == "DecisionEnvelope":
         if obj.get("decision") == "allow" and obj.get("allow") is not True:
@@ -435,7 +444,35 @@ def _validate_governance(obj: dict[str, Any]) -> list[str]:
 
     errors.extend(_validate_catalog_refs(obj))
 
-    return errors
+    return sorted(set(errors)), sorted(set(hold_reasons)), sorted(set(generalize_reasons))
+
+
+def _policy_decision(
+    errors: list[str],
+    hold_reasons: list[str],
+    generalize_reasons: list[str],
+    obj: dict[str, Any],
+) -> str:
+    if errors:
+        return "deny"
+
+    if hold_reasons:
+        return "hold"
+
+    if generalize_reasons:
+        return "generalize"
+
+    if obj.get("sensitivity") == "public" and obj.get("rights_status") in {"public", "open"}:
+        return "allow"
+
+    if (
+        obj.get("source_role") == "DERIVED_MODEL_LAYER"
+        and obj.get("policy_label") == "public_after_catalog_closure"
+        and obj.get("catalog_closure") is True
+    ):
+        return "allow"
+
+    return "deny"
 
 
 def validate_object(
@@ -445,17 +482,27 @@ def validate_object(
     policies_registry: dict[str, Any],
     *,
     validate_schema: bool = True,
-) -> list[str]:
+) -> tuple[list[str], list[str], list[str], str]:
     errors: list[str] = []
+    hold_reasons: list[str] = []
+    generalize_reasons: list[str] = []
 
     if validate_schema:
         errors.extend(_validate_schema(obj))
 
     if obj.get("object_type") not in UI_OBJECT_TYPES:
-        errors.extend(_validate_governance(obj))
+        governance_errors, governance_holds, governance_generalizes = _validate_governance(obj)
+        errors.extend(governance_errors)
+        hold_reasons.extend(governance_holds)
+        generalize_reasons.extend(governance_generalizes)
         errors.extend(_validate_registry_refs(obj, sources_registry, datasets_registry, policies_registry))
 
-    return sorted(set(errors))
+    errors = sorted(set(errors))
+    hold_reasons = sorted(set(hold_reasons))
+    generalize_reasons = sorted(set(generalize_reasons))
+    policy_decision = _policy_decision(errors, hold_reasons, generalize_reasons, obj)
+
+    return errors, hold_reasons, generalize_reasons, policy_decision
 
 
 def validate_file(
@@ -467,7 +514,7 @@ def validate_file(
     validate_schema: bool = True,
 ) -> dict[str, Any]:
     obj = _load_json(path)
-    errors = validate_object(
+    errors, hold_reasons, generalize_reasons, policy_decision = validate_object(
         obj,
         sources_registry,
         datasets_registry,
@@ -480,7 +527,10 @@ def validate_file(
         "object_id": _object_identifier(obj),
         "object_type": obj.get("object_type"),
         "decision": "pass" if not errors else "fail",
+        "policy_decision": policy_decision,
         "errors": errors,
+        "hold_reasons": hold_reasons,
+        "generalize_reasons": generalize_reasons,
     }
 
 
@@ -501,7 +551,12 @@ def main() -> int:
     parser.add_argument("--datasets", default=str(DEFAULT_DATASETS))
     parser.add_argument("--policies", default=str(DEFAULT_POLICIES))
     parser.add_argument("--skip-schema", action="store_true", help="Skip JSON Schema validation")
-    parser.add_argument("--expect", choices=["pass", "fail"], help="Expected decision for all input files")
+    parser.add_argument("--expect", choices=["pass", "fail"], help="Expected validation decision for all input files")
+    parser.add_argument(
+        "--expect-policy",
+        choices=["allow", "deny", "hold", "generalize"],
+        help="Expected governed policy decision for all input files",
+    )
     parser.add_argument("--json", action="store_true", help="Emit JSON result")
     args = parser.parse_args()
 
@@ -536,6 +591,15 @@ def main() -> int:
                 ]
                 result["decision"] = "fail"
 
+    if args.expect_policy:
+        for result in results:
+            if result["policy_decision"] != args.expect_policy:
+                result["errors"] = [
+                    *result["errors"],
+                    f"unexpected_policy_decision:expected_{args.expect_policy}:got_{result['policy_decision']}",
+                ]
+                result["decision"] = "fail"
+
     output = {
         "validator": "tools/validators/ecology/validate_ecology_bundle.py",
         "decision": "pass" if all(r["decision"] == "pass" for r in results) else "fail",
@@ -552,6 +616,11 @@ def main() -> int:
             print(f"{result['decision'].upper()} {result['path']}")
             print(f"  object_id={result['object_id']}")
             print(f"  object_type={result['object_type']}")
+            print(f"  policy_decision={result['policy_decision']}")
+            for reason in result["hold_reasons"]:
+                print(f"  hold_reason={reason}")
+            for reason in result["generalize_reasons"]:
+                print(f"  generalize_reason={reason}")
             for error in result["errors"]:
                 print(f"  error={error}")
 
