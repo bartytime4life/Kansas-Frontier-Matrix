@@ -1,23 +1,17 @@
 package ecology.publication
 
-# Fail-closed publication policy for ecology bundles.
+# Fail-closed publication policy for ecology bundles and time-sliced vegetation /
+# land-cover products.
 #
-# This policy evaluates whether an ecology object may be exposed on a public surface.
-# It enforces KFM governance invariants:
-# - Evidence must resolve to an EvidenceBundle
-# - Sensitive geometry must not leak
-# - Derived layers must remain labeled as derived
-# - Rights must be known and acceptable
-# - Publication state must be safe for release
-#
-# NOTE:
-# This policy does NOT promote objects — it only allows, generalizes, holds, or denies.
+# This policy evaluates whether an ecology object may be exposed on a public
+# surface. It does not promote objects. Promotion must be recorded separately as
+# a governed PromotionDecision with receipts.
 
 default allow := false
 default decision := "deny"
 
 # -------------------------------------------------------------------
-# DENY CONDITIONS (fail-closed)
+# DENY CONDITIONS — REQUIRED GOVERNANCE FIELDS
 # -------------------------------------------------------------------
 
 deny_reasons contains r if {
@@ -67,6 +61,16 @@ deny_reasons contains r if {
 }
 
 deny_reasons contains r if {
+  not object.get(input, "evidence_bundle_url", "")
+  r := "missing_evidence_bundle_url"
+}
+
+deny_reasons contains r if {
+  not object.get(input, "run_receipt_ref", "")
+  r := "missing_run_receipt_ref"
+}
+
+deny_reasons contains r if {
   input.rights_status == "unknown"
   r := "unknown_rights"
 }
@@ -96,6 +100,62 @@ deny_reasons contains r if {
   object.get(input, "surface", "public") == "public"
   input.publication_state == "quarantined"
   r := "quarantined_not_publishable"
+}
+
+deny_reasons contains r if {
+  object.get(input, "lifecycle_state", "") == "RAW"
+  r := "raw_state_not_publishable"
+}
+
+deny_reasons contains r if {
+  object.get(input, "lifecycle_state", "") == "WORK"
+  r := "work_state_not_publishable"
+}
+
+deny_reasons contains r if {
+  object.get(input, "lifecycle_state", "") == "QUARANTINE"
+  r := "quarantine_state_not_publishable"
+}
+
+# -------------------------------------------------------------------
+# TIME-SLICE QA RULES
+# -------------------------------------------------------------------
+
+deny_reasons contains r if {
+  object.get(object.get(input, "qa_summary", {}), "decision", "") == "REJECT"
+  r := "qa_rejected"
+}
+
+deny_reasons contains r if {
+  object.get(object.get(input, "qa_summary", {}), "masked_pct", 0) > 30
+  r := "masked_pct_over_reject_threshold"
+}
+
+deny_reasons contains r if {
+  object.get(object.get(input, "qa_summary", {}), "requires_fallback", false) == true
+  not object.get(object.get(input, "fallback", {}), "viirs_500m_attached", false)
+  r := "missing_required_viirs_500m_fallback"
+}
+
+deny_reasons contains r if {
+  object.get(object.get(input, "tileset_metadata", {}), "provisional", false) == true
+  not object.get(object.get(input, "steward_approval", {}), "approved", false)
+  r := "provisional_tileset_requires_steward_approval"
+}
+
+deny_reasons contains r if {
+  object.get(object.get(input, "tileset_metadata", {}), "expected_tile_count", 0) > 0
+  produced := object.get(object.get(input, "tileset_metadata", {}), "produced_tile_count", 0)
+  expected := object.get(object.get(input, "tileset_metadata", {}), "expected_tile_count", 0)
+  produced < expected * 0.95
+  not object.get(object.get(input, "steward_approval", {}), "approved", false)
+  r := "incomplete_tile_production_requires_steward_approval"
+}
+
+hold_reasons contains r if {
+  object.get(object.get(input, "qa_summary", {}), "decision", "") == "REVIEW"
+  not object.get(object.get(input, "steward_approval", {}), "approved", false)
+  r := "qa_review_requires_steward_approval"
 }
 
 # -------------------------------------------------------------------
