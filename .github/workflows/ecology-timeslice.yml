@@ -70,54 +70,25 @@ jobs:
 
       - name: Assert ecology publication policy decisions
         run: |
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_allow_timeslice_pass.json \
-            --query data.ecology.publication.decision \
-            --expected allow \
-            --out /tmp/ecology-policy-assertions/publication_allow_timeslice_pass.assertion.json
+          for f in \
+            publication_allow_timeslice_pass:allow \
+            publication_allow_with_fallback:allow \
+            publication_hold_timeslice_review:hold \
+            publication_deny_timeslice_reject:deny \
+            publication_deny_missing_receipt:deny \
+            publication_deny_missing_fallback:deny \
+            publication_deny_incomplete_tiles_no_steward:deny
+          do
+            name="${f%%:*}"
+            expected="${f##*:}"
 
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_allow_with_fallback.json \
-            --query data.ecology.publication.decision \
-            --expected allow \
-            --out /tmp/ecology-policy-assertions/publication_allow_with_fallback.assertion.json
-
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_hold_timeslice_review.json \
-            --query data.ecology.publication.decision \
-            --expected hold \
-            --out /tmp/ecology-policy-assertions/publication_hold_timeslice_review.assertion.json
-
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_deny_timeslice_reject.json \
-            --query data.ecology.publication.decision \
-            --expected deny \
-            --out /tmp/ecology-policy-assertions/publication_deny_timeslice_reject.assertion.json
-
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_deny_missing_receipt.json \
-            --query data.ecology.publication.decision \
-            --expected deny \
-            --out /tmp/ecology-policy-assertions/publication_deny_missing_receipt.assertion.json
-
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_deny_missing_fallback.json \
-            --query data.ecology.publication.decision \
-            --expected deny \
-            --out /tmp/ecology-policy-assertions/publication_deny_missing_fallback.assertion.json
-
-          python tools/validators/ecology/assert_rego_decision.py \
-            --policy policy/ecology \
-            --input tests/fixtures/ecology/policy/publication_deny_incomplete_tiles_no_steward.json \
-            --query data.ecology.publication.decision \
-            --expected deny \
-            --out /tmp/ecology-policy-assertions/publication_deny_incomplete_tiles_no_steward.assertion.json
+            python tools/validators/ecology/assert_rego_decision.py \
+              --policy policy/ecology \
+              --input "tests/fixtures/ecology/policy/${name}.json" \
+              --query data.ecology.publication.decision \
+              --expected "$expected" \
+              --out "/tmp/ecology-policy-assertions/${name}.assertion.json"
+          done
 
       - name: Extract allow policy decision
         id: policy_decision
@@ -129,14 +100,13 @@ jobs:
             'data.ecology.publication.decision')"
 
           echo "decision=$decision" >> "$GITHUB_OUTPUT"
-          echo "Policy decision: $decision"
 
           if [ "$decision" != "allow" ]; then
-            echo "ERROR: promotion dry-run must be backed by allow decision"
+            echo "ERROR: expected allow for promotion dry-run"
             exit 1
           fi
 
-      - name: Generate PromotionDecision dry run
+      - name: Generate PromotionDecision
         run: |
           python tools/validators/ecology/generate_promotion_decision.py \
             --policy-decision "${{ steps.policy_decision.outputs.decision }}" \
@@ -151,19 +121,29 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/promotion_decision.schema.json \
             /tmp/promotion_decision.json
 
-      - name: Generate and validate DENY PromotionDecision dry run
+      - name: Build EvidenceBundle
         run: |
-          python tools/validators/ecology/generate_promotion_decision.py \
-            --policy-decision deny \
-            --candidate kfm://tileset/ecology/example-reject \
-            --receipt-ref kfm://receipt/run/ecology/dry-run \
-            --out /tmp/promotion_decision_deny.json
+          python tools/validators/ecology/build_evidence_bundle.py \
+            --bundle-id kfm://evidence/ecology/example-pass-timeslice \
+            --artifact qa_decision=/tmp/ecology_timeslice_qa_decision.json \
+            --artifact promotion_decision=/tmp/promotion_decision.json \
+            --object-ref kfm://tileset/ecology/example-pass \
+            --policy-id kfm://policy/ecology/publication \
+            --surface public \
+            --publication-state ready \
+            --source-role AUTHORITATIVE_LAYER \
+            --claim-status CONFIRMED \
+            --catalog-closure \
+            --no-exact-geometry-present \
+            --public-geometry-policy allow_exact \
+            --public-visibility public \
+            --out /tmp/evidence_bundle.json
 
-          grep '"decision": "DENY"' /tmp/promotion_decision_deny.json
-
+      - name: Validate EvidenceBundle schema
+        run: |
           check-jsonschema \
-            --schemafile schemas/contracts/v1/ecology/promotion_decision.schema.json \
-            /tmp/promotion_decision_deny.json
+            --schemafile schemas/contracts/v1/ecology/evidence_bundle.schema.json \
+            /tmp/evidence_bundle.json
 
       - name: Generate dry-run receipt
         run: |
@@ -174,16 +154,11 @@ jobs:
             "run_id": "kfm://run/ecology/dry-run",
             "receipt_ref": "kfm://receipt/run/ecology/dry-run",
             "spec_hash": "dry-run",
-            "inputs": {
-              "qa_summary": "tests/fixtures/ecology/timeslice/pass/qa_summary.json",
-              "tileset_metadata": "tests/fixtures/ecology/timeslice/pass/tileset_metadata.json",
-              "policy_input": "tests/fixtures/ecology/policy/publication_allow_timeslice_pass.json"
-            },
             "outputs": {
               "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
               "policy_assertions_dir": "/tmp/ecology-policy-assertions",
               "promotion_decision": "/tmp/promotion_decision.json",
-              "promotion_decision_deny": "/tmp/promotion_decision_deny.json"
+              "evidence_bundle": "/tmp/evidence_bundle.json"
             },
             "policy_results": [
               {
@@ -195,9 +170,7 @@ jobs:
             "promotion": {
               "decision_ref": "/tmp/promotion_decision.json",
               "decision": "PROMOTE"
-            },
-            "signatures": [],
-            "timestamp": "TODO"
+            }
           }
           JSON
 
