@@ -1,6 +1,3 @@
-Below is the full updated `apps/governed_api/README.md`, preserving your existing structure/formatting and adding the governed ecology API scaffold details. 
-
-````md
 <!-- [KFM_META_BLOCK_V2]
 doc_id: TODO-VERIFY(kfm://doc/<uuid>)
 title: Governed API
@@ -590,4 +587,3 @@ Return `DENY` with safe reason and obligation information where permitted. Do no
 * [ ] No `RAW`, `WORK`, or `QUARANTINE` path is exposed to normal clients.
 
 </details>
-```
