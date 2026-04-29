@@ -5,6 +5,9 @@ on:
     paths:
       - "docs/domains/ecology/**"
       - "data/registry/ecology/**"
+      - "data/processed/ecology/**"
+      - "data/triplets/ecology/**"
+      - "data/published/ecology/**"
       - "schemas/contracts/v1/ecology/**"
       - "policy/ecology/**"
       - "tools/validators/ecology/**"
@@ -16,6 +19,9 @@ on:
     paths:
       - "docs/domains/ecology/**"
       - "data/registry/ecology/**"
+      - "data/processed/ecology/**"
+      - "data/triplets/ecology/**"
+      - "data/published/ecology/**"
       - "schemas/contracts/v1/ecology/**"
       - "policy/ecology/**"
       - "tools/validators/ecology/**"
@@ -27,8 +33,8 @@ permissions:
   contents: read
 
 jobs:
-  ecology-fixtures:
-    name: Validate ecology fixtures
+  ecology-validation:
+    name: Validate ecology control plane
     runs-on: ubuntu-latest
 
     steps:
@@ -45,8 +51,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install jsonschema pyyaml
 
-      - name: Ensure runner is executable
-        run: chmod +x tools/validators/ecology/run_ecology_fixture_checks.sh
+      - name: Ensure runners are executable
+        run: |
+          chmod +x tools/validators/ecology/run_ecology_fixture_checks.sh
+          chmod +x tools/validators/ecology/run_ecology_release_checks.sh
 
       - name: Run ecology fixture checks
         run: tools/validators/ecology/run_ecology_fixture_checks.sh
+
+      - name: Run ecology release checks
+        run: tools/validators/ecology/run_ecology_release_checks.sh
