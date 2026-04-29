@@ -7,6 +7,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 source_name="$1"
+case "$source_name" in
+  *[!A-Za-z0-9._-]*|"")
+    echo "sample_ingest: source_name must use [A-Za-z0-9._-] only" >&2
+    exit 2
+    ;;
+esac
+
 out_dir="data/work/sample_ingest"
 receipt_dir="data/receipts"
 
