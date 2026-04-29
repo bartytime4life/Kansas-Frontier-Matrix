@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ecology/focus_mode_request.schema.json",
+  "title": "Ecology Focus Mode Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "request_id",
+    "query",
+    "surface"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "v1" },
+    "object_type": { "type": "string", "const": "FocusModeRequest" },
+    "request_id": { "type": "string", "pattern": "^kfm://request/ecology/.+" },
+    "query": { "type": "string", "minLength": 1 },
+    "surface": { "type": "string", "enum": ["public", "restricted", "internal"] },
+    "taxon_ref": { "type": "string", "pattern": "^kfm://taxon/.+" },
+    "geometry_ref": { "type": "string", "pattern": "^kfm://geometry/.+" },
+    "claim_refs": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^kfm://claim/ecology/.+" }
+    },
+    "evidence_bundle_refs": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^kfm://evidence/ecology/.+" }
+    }
+  }
+}

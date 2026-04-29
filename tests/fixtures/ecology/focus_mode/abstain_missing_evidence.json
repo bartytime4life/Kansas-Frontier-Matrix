@@ -1,0 +1,10 @@
+{
+  "schema_version": "v1",
+  "object_type": "FocusModeRequest",
+  "request_id": "kfm://request/ecology/abstain-missing-evidence-001",
+  "query": "What species occur here?",
+  "surface": "public",
+  "evidence_bundle_refs": [
+    "kfm://evidence/ecology/missing"
+  ]
+}
