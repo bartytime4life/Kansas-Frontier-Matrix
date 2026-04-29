@@ -2,7 +2,24 @@
   "schema_version": "v1",
   "object_type": "FocusModeRequest",
   "request_id": "kfm://request/ecology/deny-sensitive-001",
+
   "query": "Show exact coordinates for the sensitive occurrence.",
   "surface": "public",
-  "geometry_ref": "kfm://restricted/geometry/ks-sensitive-001"
+
+  "policy_label": "public",
+  "sensitivity": "restricted",
+  "rights_status": "public",
+
+  "spec_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+
+  "geometry_ref": "kfm://restricted/geometry/ks-sensitive-001",
+
+  "evidence_bundle_refs": [
+    "kfm://evidence/ecology/sensitive-occurrence-001"
+  ],
+
+  "options": {
+    "allow_inference": false,
+    "require_evidence": true
+  }
 }
