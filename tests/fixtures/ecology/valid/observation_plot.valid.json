@@ -21,14 +21,20 @@
   "method": "field_survey",
   "source_id": "kfs_field_plots",
   "source_role": "OBSERVATION_SYSTEM",
-  "source_ref": "source://kfs_field_plots/2025/fall/ellsworth-101",
+  "source_ref": "kfm://source/kfs_field_plots/2025/fall/ellsworth-101",
   "sensitivity": "generalize",
   "rights_status": "controlled",
   "measurement_summary": {
     "sample_area_m2": 1000,
     "vegetation_class": "mixed_grass_prairie"
   },
+  "policy_id": "ecology_sensitive_occurrence_publication",
   "policy_label": "restricted_until_reviewed",
+  "publication_state": "reviewed",
+  "surface": "public",
+  "exact_geometry_present": false,
+  "evidence_bundle_resolved": true,
+  "redaction_receipt_ref": "kfm://receipt/redaction/ecology/observation-plot-valid-001",
   "spec_hash": "sha256:d8f8d3676fe6f9b1757c8ed5ac15d291ef1e0de8b69096b8dc4dbfdeb6de7158",
   "evidence_refs": [
     "kfm://evidence/ecology/observation-plot-valid-001"
