@@ -251,6 +251,74 @@ jobs:
               echo "ERROR: missing $artifact"
               exit 1
             fi
+
+            python -m json.tool "$artifact" > /dev/null
           done
 
-          echo "All artifacts present"
+          if [ ! -d /tmp/ecology-policy-assertions ]; then
+            echo "ERROR: policy assertions directory missing"
+            exit 1
+          fi
+
+          assertion_count="$(find /tmp/ecology-policy-assertions -name '*.assertion.json' | wc -l)"
+
+          if [ "$assertion_count" -lt 7 ]; then
+            echo "ERROR: expected at least 7 policy assertion artifacts, found $assertion_count"
+            exit 1
+          fi
+
+          echo "All artifacts present and valid JSON"
+
+      # ----------------------------
+      # RECEIPT
+      # ----------------------------
+      - name: Generate dry-run receipt
+        run: |
+          cat > data/receipts/runs/dry-run/run_receipt.json <<JSON
+          {
+            "schema_version": "v1",
+            "object_type": "run_receipt",
+            "run_id": "kfm://run/ecology/dry-run",
+            "receipt_ref": "kfm://receipt/run/ecology/dry-run",
+            "spec_hash": "dry-run",
+            "inputs": {
+              "scene_manifest": "tests/fixtures/ecology/timeslice/pass/scene_manifest.json"
+            },
+            "outputs": {
+              "ingest_manifest": "/tmp/ecology-ingest/ingest_manifest.json",
+              "qa_summary": "/tmp/ecology-ingest/qa_summary.json",
+              "tileset_metadata": "/tmp/ecology-ingest/tileset_metadata.json",
+              "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
+              "policy_assertions_dir": "/tmp/ecology-policy-assertions",
+              "promotion_decision": "/tmp/promotion_decision.json",
+              "evidence_bundle": "/tmp/evidence_bundle.json",
+              "stac_item": "/tmp/stac_item.json",
+              "stac_collection": "/tmp/stac_collection.json",
+              "stac_catalog": "/tmp/stac_catalog.json"
+            },
+            "policy_results": [
+              {
+                "policy": "policy/ecology/publication.rego",
+                "query": "data.ecology.publication.decision",
+                "result": "${{ steps.policy_decision.outputs.decision }}"
+              }
+            ],
+            "promotion": {
+              "decision_ref": "kfm://promotion/ecology/example-pass",
+              "decision": "PROMOTE"
+            },
+            "catalog": {
+              "stac_item": "/tmp/stac_item.json",
+              "stac_collection": "/tmp/stac_collection.json",
+              "stac_catalog": "/tmp/stac_catalog.json"
+            }
+          }
+          JSON
+
+          python -m json.tool data/receipts/runs/dry-run/run_receipt.json > /tmp/run_receipt.pretty.json
+
+      - name: Validate run receipt schema
+        run: |
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/run_receipt.schema.json \
+            data/receipts/runs/dry-run/run_receipt.json
