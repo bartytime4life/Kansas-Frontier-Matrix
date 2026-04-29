@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ecology/ecological_claim.schema.json",
+  "title": "Ecological Claim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "claim_id",
+    "statement",
+    "claim_status",
+    "knowledge_character",
+    "evidence_bundle_ref",
+    "decision_ref",
+    "policy_label",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "v1" },
+    "object_type": { "type": "string", "const": "EcologicalClaim" },
+    "claim_id": { "type": "string", "pattern": "^kfm://claim/ecology/.+" },
+    "statement": { "type": "string", "minLength": 1 },
+    "claim_status": {
+      "type": "string",
+      "enum": ["DERIVED_SUPPORTED", "OBSERVED_SUPPORTED", "CONFIRMED", "ABSTAINED", "DENIED"]
+    },
+    "knowledge_character": {
+      "type": "string",
+      "enum": ["derived", "observed", "interpreted", "modeled"]
+    },
+    "taxon_ref": { "type": "string", "pattern": "^kfm://taxon/.+" },
+    "plot_ref": { "type": "string", "pattern": "^kfm://plot/.+" },
+    "layer_ref": { "type": "string", "pattern": "^kfm://layer/.+" },
+    "evidence_bundle_ref": { "type": "string", "pattern": "^kfm://evidence/ecology/.+" },
+    "decision_ref": { "type": "string", "pattern": "^kfm://decision/ecology/.+" },
+    "policy_label": { "type": "string", "minLength": 1 },
+    "public_geometry_policy": { "type": "string" },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "spec_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+  }
+}
