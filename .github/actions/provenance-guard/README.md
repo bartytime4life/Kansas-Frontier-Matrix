@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-NEEDS-VERIFICATION
+doc_id: kfm://doc/github-action-provenance-guard-readme
 title: provenance-guard
 type: standard
 version: v1

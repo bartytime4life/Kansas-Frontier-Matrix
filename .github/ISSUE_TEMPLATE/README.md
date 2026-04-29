@@ -1,11 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-ISSUE-TEMPLATE-README-UUID
+doc_id: kfm://doc/github-issue-template-readme
 title: KFM Issue Template Directory
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: TODO-NEEDS-VERIFICATION
+created: 2026-04-29
 updated: 2026-04-27
 policy_label: public
 related: [../README.md, ../CODEOWNERS, ../PULL_REQUEST_TEMPLATE.md, ../SECURITY.md, ../../SECURITY.md, ../../CONTRIBUTING.md, ./config.yml, ./bug_report.md, ./documentation_drift.md, ./policy_or_release_gap.md, ./source_intake.md, ../../docs/, ../../policy/, ../../contracts/, ../../schemas/, ../../tests/]
