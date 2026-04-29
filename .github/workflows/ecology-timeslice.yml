@@ -1,0 +1,107 @@
+name: Ecology Timeslice CI
+
+on:
+  pull_request:
+    paths:
+      - "tools/validators/ecology/**"
+      - "policy/ecology/**"
+      - "schemas/contracts/v1/ecology/**"
+      - "tests/fixtures/ecology/**"
+      - ".github/workflows/ecology-timeslice.yml"
+  push:
+    branches:
+      - main
+
+jobs:
+  ecology-timeslice:
+    name: Validate ecology time-slice governance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema check-jsonschema
+
+      - name: Install Conftest
+        run: |
+          CONFTEST_VERSION=0.56.0
+          curl -L "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz" -o conftest.tar.gz
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/conftest
+          conftest --version
+
+      - name: Validate QA timeslice fixture
+        run: |
+          python tools/validators/ecology/validate_timeslice.py \
+            --qa-summary tests/fixtures/ecology/timeslice/pass/qa_summary.json \
+            --tileset-metadata tests/fixtures/ecology/timeslice/pass/tileset_metadata.json \
+            --out /tmp/ecology_timeslice_qa_decision.json
+
+      - name: Verify deterministic spec hash helper
+        run: |
+          python tools/validators/ecology/hash_spec.py \
+            tests/fixtures/ecology/timeslice/pass/tileset_metadata.json
+
+      - name: Run ecology publication policy allow fixture
+        run: |
+          conftest test \
+            --policy policy/ecology \
+            --namespace kfm.ecology.publication \
+            tests/fixtures/ecology/policy/publication_allow.json
+
+      - name: Run ecology publication policy deny fixture
+        run: |
+          set +e
+          conftest test \
+            --policy policy/ecology \
+            --namespace kfm.ecology.publication \
+            tests/fixtures/ecology/policy/publication_deny_reject.json
+          status=$?
+          set -e
+
+          if [ "$status" -eq 0 ]; then
+            echo "ERROR: deny fixture unexpectedly passed"
+            exit 1
+          fi
+
+          echo "Deny fixture correctly failed policy evaluation"
+
+      - name: Generate dry-run receipt
+        run: |
+          mkdir -p data/receipts/runs/dry-run
+
+          cat > data/receipts/runs/dry-run/run_receipt.json <<'JSON'
+          {
+            "schema_version": "v1",
+            "object_type": "run_receipt",
+            "run_id": "kfm://run/ecology/dry-run",
+            "receipt_ref": "kfm://receipt/run/ecology/dry-run",
+            "spec_hash": "dry-run",
+            "inputs": {
+              "qa_summary": "tests/fixtures/ecology/timeslice/pass/qa_summary.json",
+              "tileset_metadata": "tests/fixtures/ecology/timeslice/pass/tileset_metadata.json"
+            },
+            "outputs": {
+              "qa_decision": "/tmp/ecology_timeslice_qa_decision.json"
+            },
+            "policy_results": [
+              {
+                "policy": "policy/ecology/publication.rego",
+                "result": "allow"
+              }
+            ],
+            "signatures": [],
+            "timestamp": "TODO"
+          }
+          JSON
+
+          python -m json.tool data/receipts/runs/dry-run/run_receipt.json > /tmp/run_receipt.pretty.json
