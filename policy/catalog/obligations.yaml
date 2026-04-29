@@ -1,0 +1,7 @@
+obligations:
+  - code: catalog_review_hold
+    description: Hold in steward review until missing catalog links are repaired.
+  - code: catalog_rights_repair
+    description: Rights posture must be corrected before release-linked publication.
+  - code: catalog_visibility_recheck
+    description: Re-evaluate public visibility after sensitivity or policy-label changes.
