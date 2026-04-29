@@ -5,6 +5,8 @@
   "description": "Governed web shell scaffold for Kansas Frontier Matrix",
   "scripts": {
     "dev": "python3 -m http.server 4173",
-    "check": "node --check src/main.js"
+    "check": "node --check src/main.js",
+    "build": "node scripts_build.mjs",
+    "build:clean": "rm -rf dist"
   }
 }

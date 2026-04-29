@@ -448,3 +448,9 @@ It should not silently imply absence. Restricted or generalized objects should s
 </details>
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
+
+
+## Build
+
+- `npm run check` validates the JavaScript entrypoint syntax.
+- `npm run build` creates a static `dist/` bundle (index, src, public).
