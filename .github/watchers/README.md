@@ -172,6 +172,9 @@ Use this directory for small, watcher-facing documentation artifacts only.
 | What belongs here | Why |
 |---|---|
 | `README.md` | Directory contract, current public inventory, and review expectations |
+| `WATCHER_PROPOSAL_TEMPLATE.md` | Standard intake shape for review-ready watcher changes |
+| `RECEIPT_PROOF_SEPARATION.md` | Canonical watcher language for receipts vs proofs |
+| `templates/watcher-run-receipt.example.yaml` | Example run receipt structure for reviewers and implementers |
 | short watcher-lane notes | Keeps future implementation handoff reviewable |
 | links to sibling `.github/` docs | Preserves gatehouse context for watcher changes |
 | minimal illustrative examples | Clarifies watcher posture without pretending runtime exists here |
@@ -209,7 +212,11 @@ Keep these out of `.github/watchers/` unless there is a very narrow documentatio
 ```text
 .github/
 └── watchers/
-    └── README.md
+    ├── README.md
+    ├── WATCHER_PROPOSAL_TEMPLATE.md
+    ├── RECEIPT_PROOF_SEPARATION.md
+    └── templates/
+        └── watcher-run-receipt.example.yaml
 ```
 
 ### Adjacent gatehouse surfaces to recheck on the active branch
@@ -266,6 +273,9 @@ data/proofs/**           # optional higher-order proof objects
 ```bash
 ls -la .github/watchers
 sed -n '1,260p' .github/watchers/README.md
+sed -n '1,220p' .github/watchers/WATCHER_PROPOSAL_TEMPLATE.md
+sed -n '1,220p' .github/watchers/RECEIPT_PROOF_SEPARATION.md
+sed -n '1,220p' .github/watchers/templates/watcher-run-receipt.example.yaml
 ```
 
 ### 2) Check the gatehouse surfaces that shape watcher review
