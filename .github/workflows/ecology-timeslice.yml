@@ -182,12 +182,11 @@ jobs:
             --collection /tmp/stac_collection.json \
             --out /tmp/stac_catalog.json
 
-      - name: Validate STAC Catalog structure
+      - name: Validate STAC Catalog schema
         run: |
-          python -m json.tool /tmp/stac_catalog.json > /dev/null
-          jq -e '.type == "Catalog"' /tmp/stac_catalog.json > /dev/null
-          jq -e '.stac_version == "1.0.0"' /tmp/stac_catalog.json > /dev/null
-          jq -e '.links | length > 0' /tmp/stac_catalog.json > /dev/null
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/stac_catalog.schema.json \
+            /tmp/stac_catalog.json
 
       - name: Fail closed on required dry-run artifacts
         run: |
