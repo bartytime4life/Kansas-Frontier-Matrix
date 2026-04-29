@@ -1,1 +1,37 @@
+{
+  "source_uris": [
+    "file:///data/hls/HLS.L30.T14SPC.2024170.v2.0",
+    "file:///data/hls/HLS.S30.T14SPC.2024170.v2.0"
+  ],
+  "sensor": "HLS",
+  "collection_version": "v2.0",
+  "bbox": [-102.1, 36.9, -94.5, 40.1],
+  "time_start": "2024-06-18T00:00:00Z",
+  "time_end": "2024-06-18T23:59:59Z",
 
+  "qa": {
+    "total_pixels": 1000000,
+    "masked_pixels": 120000,
+    "aerosol_flagged_pixels": 25000,
+    "total_30m_pixels": 1000000,
+    "valid_30m_pixels": 880000
+  },
+
+  "tiles": {
+    "expected_tile_count": 256,
+    "produced_tile_count": 256,
+    "minzoom": 6,
+    "maxzoom": 12
+  },
+
+  "provisional": false,
+
+  "allowed_fields": [
+    "class",
+    "confidence",
+    "time_start",
+    "time_end"
+  ],
+
+  "evidence_bundle_url": "kfm://evidence/ecology/example-pass-timeslice"
+}
