@@ -1,20 +1,51 @@
 {
   "schema_version": "v1",
-  "object_type": "EvidenceDrawerPayload",
+  "object_type": "EcologyEvidenceDrawerPayload",
+  "payload_id": "kfm://drawer/ecology/demo-001",
   "claim_ref": "kfm://claim/ecology/demo-001",
   "evidence_bundle_ref": "kfm://evidence/ecology/demo-001",
   "decision_ref": "kfm://decision/ecology/demo-001",
   "release_ref": "kfm://release/ecology/demo-001",
+  "decision": "ANSWER",
+  "visible_outcome": "generalized",
+  "summary": {
+    "headline": "Kansas prairie observation available with safeguards",
+    "trust_note": "Evidence resolved and sensitivity controls applied.",
+    "taxon": "Asclepias viridis",
+    "habitat_class": "TallgrassPrairie",
+    "knowledge_character": "derived"
+  },
+  "sources": [
+    {
+      "source_ref": "kfm://source/ks-heritage-program",
+      "source_role": "SENSITIVE_OCCURRENCE",
+      "citation": "Kansas Heritage Program occurrence registry (2025 snapshot)."
+    }
+  ],
+  "evidence_refs": [
+    "kfm://evidence/ecology/demo-001#plot-01"
+  ],
   "trust_badges": [
     "DERIVED_SUPPORTED",
+    "EVIDENCE_RESOLVED",
     "PUBLIC_GENERALIZED",
-    "EVIDENCE_RESOLVED"
+    "REDACTION_RECEIPT_PRESENT"
   ],
-  "limitations": [
-    "Derived-supported, not confirmed.",
-    "Public geometry is generalized."
+  "policy_flags": [
+    "sensitivity",
+    "generalized",
+    "redacted"
   ],
   "redaction_receipt_refs": [
     "kfm://receipt/redaction/ecology/observation-plot-valid-001"
-  ]
+  ],
+  "limitations": [
+    "Derived-supported, not field-confirmed.",
+    "Public geometry is generalized to protect sensitive occurrence locations."
+  ],
+  "freshness": {
+    "generated_at": "2026-04-29T00:00:00Z",
+    "stale_after": "2026-05-29T00:00:00Z"
+  },
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
