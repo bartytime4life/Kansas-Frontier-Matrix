@@ -112,7 +112,7 @@ Good inputs are explicit, reviewable, and repo-relative.
 ```bash
 bash scripts/sample_ingest.sh example_fixture
 python3 scripts/validate_schemas.py
-make catalog-validate
+bash scripts/build_all.sh
 ```
 
 ### What bad input looks like
@@ -155,6 +155,7 @@ bash scripts/publish_everything.sh ~/Desktop/private-data
 scripts/
 ├── README.md
 ├── bootstrap.sh
+├── build_all.sh
 ├── catalog_validate.py
 ├── dev_up.sh
 ├── sample_ingest.sh
