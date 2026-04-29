@@ -2,11 +2,13 @@
 # KFM Ecology Fixture Validation Runner
 #
 # Runs validator across fixture sets.
-# - Valid fixtures MUST pass validation
-# - Invalid fixtures MUST fail validation
-# - Hold fixtures MUST pass validation and produce policy_decision=hold
-# - Generalize fixtures MUST pass validation and produce policy_decision=generalize
-# - Publishable fixtures MUST pass validation and produce policy_decision=allow
+#
+# Expectations:
+# - valid fixtures MUST pass validation
+# - invalid fixtures MUST fail validation
+# - hold fixtures MUST pass validation and produce policy_decision=hold
+# - generalize fixtures MUST pass validation and produce policy_decision=generalize
+# - allow fixtures MUST pass validation and produce policy_decision=allow
 #
 # Exit code:
 #   0 → success
@@ -32,42 +34,6 @@ if [[ ! -f "$VALIDATOR" ]]; then
   exit 1
 fi
 
-run_if_json_exists() {
-  local label="$1"
-  local dir="$2"
-  local expect="$3"
-  local expect_policy="${4:-}"
-
-  if [[ ! -d "$dir" ]]; then
-    echo "SKIP: $label directory not present: $dir"
-    return 0
-  fi
-
-  shopt -s nullglob
-  local files=("$dir"/*.json)
-  shopt -u nullglob
-
-  if [[ "${#files[@]}" -eq 0 ]]; then
-    echo "SKIP: $label has no JSON fixtures: $dir"
-    return 0
-  fi
-
-  echo "→ Running $label fixtures"
-  echo "  expect=$expect"
-  if [[ -n "$expect_policy" ]]; then
-    echo "  expect_policy=$expect_policy"
-    python "$VALIDATOR" \
-      --bundle "$dir"/*.json \
-      --expect "$expect" \
-      --expect-policy "$expect_policy"
-  else
-    python "$VALIDATOR" \
-      --bundle "$dir"/*.json \
-      --expect "$expect"
-  fi
-  echo
-}
-
 require_json_dir() {
   local label="$1"
   local dir="$2"
@@ -87,13 +53,41 @@ require_json_dir() {
   fi
 }
 
-require_json_dir "valid" "$VALID_DIR"
-require_json_dir "invalid" "$INVALID_DIR"
+run_required_set() {
+  local label="$1"
+  local dir="$2"
+  local expect="$3"
+  local expect_policy="${4:-}"
 
-run_if_json_exists "VALID" "$VALID_DIR" "pass"
-run_if_json_exists "INVALID" "$INVALID_DIR" "fail"
-run_if_json_exists "HOLD" "$HOLD_DIR" "pass" "hold"
-run_if_json_exists "GENERALIZE" "$GENERALIZE_DIR" "pass" "generalize"
-run_if_json_exists "ALLOW" "$ALLOW_DIR" "pass" "allow"
+  require_json_dir "$label" "$dir"
+
+  shopt -s nullglob
+  local files=("$dir"/*.json)
+  shopt -u nullglob
+
+  echo "→ Running $label fixtures"
+  echo "  files=${#files[@]}"
+  echo "  expect=$expect"
+
+  if [[ -n "$expect_policy" ]]; then
+    echo "  expect_policy=$expect_policy"
+    python "$VALIDATOR" \
+      --bundle "$dir"/*.json \
+      --expect "$expect" \
+      --expect-policy "$expect_policy"
+  else
+    python "$VALIDATOR" \
+      --bundle "$dir"/*.json \
+      --expect "$expect"
+  fi
+
+  echo
+}
+
+run_required_set "VALID" "$VALID_DIR" "pass"
+run_required_set "INVALID" "$INVALID_DIR" "fail"
+run_required_set "HOLD" "$HOLD_DIR" "pass" "hold"
+run_required_set "GENERALIZE" "$GENERALIZE_DIR" "pass" "generalize"
+run_required_set "ALLOW" "$ALLOW_DIR" "pass" "allow"
 
 echo "✓ All ecology fixture checks passed"
