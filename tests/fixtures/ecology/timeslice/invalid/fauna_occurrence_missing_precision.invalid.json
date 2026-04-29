@@ -1,0 +1,13 @@
+{
+  "fixture_id": "fauna_occurrence.missing_precision.invalid",
+  "status": "invalid",
+  "reason": "precision_m is required for public-safe serving",
+  "occurrence": {
+    "observation_id": "obs-ks-2024-0099",
+    "taxon": "Spiza americana",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-97.45, 38.61]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "fixture_id": "habitat_assignment.obs-ks-2024-0001.valid",
+  "fixture_family": "ecology_timeslice",
+  "status": "valid",
+  "assignment": {
+    "occurrence_ref": "obs-ks-2024-0001",
+    "surface_ref": "kfm://surface/habitat/grassland_30m/v1",
+    "cell_id": "5070:154493:433921",
+    "habitat_class": "Temperate_Grassland",
+    "confidence": 0.84,
+    "method": "point_to_grid_overlay.v1",
+    "spec_hash": "sha256:7f0fd9cbff9d8b59a44b2b87fa8b9bc251dbd3475da716ea648dbaec4cf0e5b9"
+  },
+  "evidence_refs": [
+    "kfm://evidence/occurrence/obs-ks-2024-0001",
+    "kfm://evidence/habitat/grassland_30m/v1"
+  ]
+}

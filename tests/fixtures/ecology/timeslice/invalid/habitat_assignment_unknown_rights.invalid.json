@@ -1,0 +1,13 @@
+{
+  "fixture_id": "habitat_assignment.unknown_rights.invalid",
+  "status": "invalid",
+  "reason": "unknown rights blocks publication-shaped outputs",
+  "assignment": {
+    "occurrence_ref": "obs-ks-2024-0001",
+    "surface_ref": "kfm://surface/habitat/grassland_30m/v1",
+    "habitat_class": "Temperate_Grassland"
+  },
+  "rights": {
+    "redistribution": "unknown"
+  }
+}
