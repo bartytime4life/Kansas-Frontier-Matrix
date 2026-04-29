@@ -203,7 +203,7 @@ How to read this tree:
 
 - The root lane and `env.schema.json` are reported public-baseline facts from the source draft.
 - `env.schema.json` being `{}` means it is a placeholder until a real schema, consumer, and validator path land.
-- Child-lane presence and exact file inventories must be checked against the target branch before merge.
+- Child lanes now exist in this branch as scaffold placeholders (`README.md` only); substantive files should declare consumer + validator before activation.
 - Growing a child lane should be deliberate: name the consumer, name the validator, and keep the file subordinate to stronger law-bearing surfaces.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
