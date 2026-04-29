@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "docs/domains/ecology/**"
+      - "apps/governed_api/ecology/**"
       - "data/registry/ecology/**"
       - "data/processed/ecology/**"
       - "data/triplets/ecology/**"
@@ -12,12 +13,14 @@ on:
       - "policy/ecology/**"
       - "tools/validators/ecology/**"
       - "tests/fixtures/ecology/**"
+      - "tests/fixtures/ecology/focus_mode/**"
       - ".github/workflows/ecology-validation.yml"
   push:
     branches:
       - main
     paths:
       - "docs/domains/ecology/**"
+      - "apps/governed_api/ecology/**"
       - "data/registry/ecology/**"
       - "data/processed/ecology/**"
       - "data/triplets/ecology/**"
@@ -26,6 +29,7 @@ on:
       - "policy/ecology/**"
       - "tools/validators/ecology/**"
       - "tests/fixtures/ecology/**"
+      - "tests/fixtures/ecology/focus_mode/**"
       - ".github/workflows/ecology-validation.yml"
   workflow_dispatch:
 
@@ -63,5 +67,5 @@ jobs:
       - name: Run ecology release checks
         run: tools/validators/ecology/run_ecology_release_checks.sh
 
-      - name: Run ecology focus mode checks
+      - name: Run ecology Focus Mode checks
         run: tools/validators/ecology/run_ecology_focus_mode_checks.sh
