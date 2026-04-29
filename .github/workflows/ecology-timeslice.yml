@@ -3,6 +3,7 @@ name: Ecology Timeslice CI
 on:
   pull_request:
     paths:
+      - "connectors/pipelines/ecology/**"
       - "tools/validators/ecology/**"
       - "policy/ecology/**"
       - "schemas/contracts/v1/ecology/**"
@@ -50,23 +51,34 @@ jobs:
       - name: Prepare dry-run artifact directories
         run: |
           mkdir -p /tmp/ecology-policy-assertions
+          mkdir -p /tmp/ecology-ingest
           mkdir -p data/receipts/runs/dry-run
+
+      - name: Run HLS/Landsat ingest
+        run: |
+          python connectors/pipelines/ecology/hls_landsat_ingest.py \
+            --scene-manifest tests/fixtures/ecology/timeslice/pass/scene_manifest.json \
+            --out-dir /tmp/ecology-ingest
+
+          python -m json.tool /tmp/ecology-ingest/ingest_manifest.json > /dev/null
+          python -m json.tool /tmp/ecology-ingest/qa_summary.json > /dev/null
+          python -m json.tool /tmp/ecology-ingest/tileset_metadata.json > /dev/null
 
       - name: Parse ecology publication policy
         run: |
           opa parse policy/ecology/publication.rego
 
-      - name: Validate QA timeslice fixture
+      - name: Validate QA timeslice ingest output
         run: |
           python tools/validators/ecology/validate_timeslice.py \
-            --qa-summary tests/fixtures/ecology/timeslice/pass/qa_summary.json \
-            --tileset-metadata tests/fixtures/ecology/timeslice/pass/tileset_metadata.json \
+            --qa-summary /tmp/ecology-ingest/qa_summary.json \
+            --tileset-metadata /tmp/ecology-ingest/tileset_metadata.json \
             --out /tmp/ecology_timeslice_qa_decision.json
 
       - name: Verify deterministic spec hash helper
         run: |
           python tools/validators/ecology/hash_spec.py \
-            tests/fixtures/ecology/timeslice/pass/tileset_metadata.json
+            /tmp/ecology-ingest/tileset_metadata.json
 
       - name: Assert ecology publication policy decisions
         run: |
@@ -125,6 +137,9 @@ jobs:
         run: |
           python tools/validators/ecology/build_evidence_bundle.py \
             --bundle-id kfm://evidence/ecology/example-pass-timeslice \
+            --artifact ingest_manifest=/tmp/ecology-ingest/ingest_manifest.json \
+            --artifact qa_summary=/tmp/ecology-ingest/qa_summary.json \
+            --artifact tileset_metadata=/tmp/ecology-ingest/tileset_metadata.json \
             --artifact qa_decision=/tmp/ecology_timeslice_qa_decision.json \
             --artifact promotion_decision=/tmp/promotion_decision.json \
             --object-ref kfm://tileset/ecology/example-pass \
@@ -150,7 +165,7 @@ jobs:
           python tools/validators/ecology/generate_stac_item.py \
             --item-id kfm-ecology-example-pass \
             --collection kfm-ecology-timeslices \
-            --tileset-metadata tests/fixtures/ecology/timeslice/pass/tileset_metadata.json \
+            --tileset-metadata /tmp/ecology-ingest/tileset_metadata.json \
             --evidence-bundle kfm://evidence/ecology/example-pass-timeslice \
             --promotion-decision kfm://promotion/ecology/example-pass \
             --asset tileset=kfm://tileset/ecology/example-pass \
@@ -191,6 +206,9 @@ jobs:
       - name: Fail closed on required dry-run artifacts
         run: |
           required_artifacts=(
+            "/tmp/ecology-ingest/ingest_manifest.json"
+            "/tmp/ecology-ingest/qa_summary.json"
+            "/tmp/ecology-ingest/tileset_metadata.json"
             "/tmp/ecology_timeslice_qa_decision.json"
             "/tmp/promotion_decision.json"
             "/tmp/evidence_bundle.json"
@@ -231,7 +249,13 @@ jobs:
             "run_id": "kfm://run/ecology/dry-run",
             "receipt_ref": "kfm://receipt/run/ecology/dry-run",
             "spec_hash": "dry-run",
+            "inputs": {
+              "scene_manifest": "tests/fixtures/ecology/timeslice/pass/scene_manifest.json"
+            },
             "outputs": {
+              "ingest_manifest": "/tmp/ecology-ingest/ingest_manifest.json",
+              "qa_summary": "/tmp/ecology-ingest/qa_summary.json",
+              "tileset_metadata": "/tmp/ecology-ingest/tileset_metadata.json",
               "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
               "policy_assertions_dir": "/tmp/ecology-policy-assertions",
               "promotion_decision": "/tmp/promotion_decision.json",
