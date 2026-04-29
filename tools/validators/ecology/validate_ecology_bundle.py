@@ -27,6 +27,8 @@ SCHEMA_MAP = {
     "DecisionEnvelope": REPO_ROOT / "schemas/contracts/v1/ecology/decision_envelope.schema.json",
     "EcologicalClaim": REPO_ROOT / "schemas/contracts/v1/ecology/ecological_claim.schema.json",
     "ReleaseManifest": REPO_ROOT / "schemas/contracts/v1/ecology/release_manifest.schema.json",
+    "FocusModeRequest": REPO_ROOT / "schemas/contracts/v1/ecology/focus_mode_request.schema.json",
+    "FocusModeResponse": REPO_ROOT / "schemas/contracts/v1/ecology/focus_mode_response.schema.json",
 }
 
 BUNDLE_OBJECT_TYPES = {
