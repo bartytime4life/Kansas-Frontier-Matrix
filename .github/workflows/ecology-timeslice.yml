@@ -101,11 +101,53 @@ jobs:
             --query data.ecology.publication.decision \
             --expected deny
 
+      - name: Extract allow policy decision
+        id: policy_decision
+        run: |
+          decision="$(opa eval \
+            --data policy/ecology \
+            --input tests/fixtures/ecology/policy/publication_allow_timeslice_pass.json \
+            --format raw \
+            'data.ecology.publication.decision')"
+
+          echo "decision=$decision" >> "$GITHUB_OUTPUT"
+          echo "Policy decision: $decision"
+
+          if [ "$decision" != "allow" ]; then
+            echo "ERROR: promotion dry-run must be backed by allow decision"
+            exit 1
+          fi
+
+      - name: Generate PromotionDecision dry run
+        run: |
+          python tools/validators/ecology/generate_promotion_decision.py \
+            --policy-decision "${{ steps.policy_decision.outputs.decision }}" \
+            --candidate kfm://tileset/ecology/example-pass \
+            --receipt-ref kfm://receipt/run/ecology/dry-run \
+            --evidence-bundle-url kfm://evidence/ecology/example-pass-timeslice \
+            --out /tmp/promotion_decision.json
+
+      - name: Validate PromotionDecision schema
+        run: |
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/promotion_decision.schema.json \
+            /tmp/promotion_decision.json
+
+      - name: Generate DENY PromotionDecision dry run
+        run: |
+          python tools/validators/ecology/generate_promotion_decision.py \
+            --policy-decision deny \
+            --candidate kfm://tileset/ecology/example-reject \
+            --receipt-ref kfm://receipt/run/ecology/dry-run \
+            --out /tmp/promotion_decision_deny.json
+
+          grep '"decision": "DENY"' /tmp/promotion_decision_deny.json
+
       - name: Generate dry-run receipt
         run: |
           mkdir -p data/receipts/runs/dry-run
 
-          cat > data/receipts/runs/dry-run/run_receipt.json <<'JSON'
+          cat > data/receipts/runs/dry-run/run_receipt.json <<JSON
           {
             "schema_version": "v1",
             "object_type": "run_receipt",
@@ -114,18 +156,24 @@ jobs:
             "spec_hash": "dry-run",
             "inputs": {
               "qa_summary": "tests/fixtures/ecology/timeslice/pass/qa_summary.json",
-              "tileset_metadata": "tests/fixtures/ecology/timeslice/pass/tileset_metadata.json"
+              "tileset_metadata": "tests/fixtures/ecology/timeslice/pass/tileset_metadata.json",
+              "policy_input": "tests/fixtures/ecology/policy/publication_allow_timeslice_pass.json"
             },
             "outputs": {
-              "qa_decision": "/tmp/ecology_timeslice_qa_decision.json"
+              "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
+              "promotion_decision": "/tmp/promotion_decision.json"
             },
             "policy_results": [
               {
                 "policy": "policy/ecology/publication.rego",
                 "query": "data.ecology.publication.decision",
-                "result": "allow"
+                "result": "${{ steps.policy_decision.outputs.decision }}"
               }
             ],
+            "promotion": {
+              "decision_ref": "/tmp/promotion_decision.json",
+              "decision": "PROMOTE"
+            },
             "signatures": [],
             "timestamp": "TODO"
           }
