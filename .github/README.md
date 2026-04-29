@@ -1,13 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-verify-uuid--github-control-surface-readme
+doc_id: kfm://doc/github-control-surface-readme
 title: GitHub Control Surface
 type: standard
 version: v1
 status: draft
-owners: TODO-verify-owner-or-codeowners
-created: TODO-verify-created-date
+owners: @bartytime4life
+created: 2026-04-29
 updated: 2026-04-22
-policy_label: TODO-verify-public-or-restricted
+policy_label: public
 related: [../README.md, ../docs/README.md, ../docs/standards/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../data/README.md, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./workflows/README.md]
 tags: [kfm, github, ci, governance, documentation, readme, control-surface]
 notes: [Draft-ready .github/README.md revision. Current repository inventory, workflow YAML, branch protection, owners, policy label, link validity, and platform settings remain NEEDS_VERIFICATION until checked in the mounted repository.]
@@ -52,10 +52,10 @@ notes: [Draft-ready .github/README.md revision. Current repository inventory, wo
 |---|---|
 | Status | `draft` |
 | Intended path | `.github/README.md` |
-| Owners | `TODO-verify-owner-or-codeowners` |
+| Owners | `@bartytime4life` |
 | Evidence mode | `CORPUS_ONLY` / `NO_REPO_EVIDENCE` until a mounted checkout is inspected |
 | Authority class | GitHub-native operational control surface |
-| Policy label | `TODO-verify-public-or-restricted` |
+| Policy label | `public` |
 | Truth posture | `CONFIRMED` target purpose · `PROPOSED` directory contract · `UNKNOWN` active workflow/platform state |
 | Public posture | Cite-or-abstain; fail closed where rights, sensitivity, release state, or source terms are unresolved |
 

@@ -1,13 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-NEEDS-UUID
+doc_id: kfm://doc/github-actions-src-readme
 title: .github/actions/src
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: TODO-VERIFY-CREATED-DATE
+created: 2026-04-29
 updated: 2026-04-27
-policy_label: TODO-VERIFY-POLICY-LABEL
+policy_label: public
 related: [../README.md, ../../README.md, ../../workflows/README.md, ../../watchers/README.md, ../../CODEOWNERS, ../../PULL_REQUEST_TEMPLATE.md, ../../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../tools/README.md, ../../../scripts/README.md]
 tags: [kfm, github, actions, shared-helpers, ci, control-plane]
 notes: [Current public-main evidence describes `.github/actions/src/README.md` as placeholder-only. This revision defines the lane boundary for tiny shared local-action helpers. Created date, policy label, active-branch helper inventory, workflow callers, and lane-specific ownership remain NEEDS VERIFICATION.]

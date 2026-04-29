@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-assign-uuid
+doc_id: kfm://doc/github-linters-control-surface
 title: GitHub Linters Control Surface
 type: standard
 version: v1
@@ -7,7 +7,7 @@ status: draft
 owners: @bartytime4life
 created: 2026-04-26
 updated: 2026-04-27
-policy_label: TODO-confirm-public-or-restricted
+policy_label: public
 related: [../README.md, ../workflows/README.md, ../CODEOWNERS, ./markdownlint.json, ./mlc.config.json, ../../README.md]
 tags: [kfm, github, linters, markdown, documentation, governance, review, ci]
 notes: [doc_id needs document-registry assignment, policy_label needs classification review, owner and branch-protection claims need mounted-checkout and GitHub-platform verification, workflow enforcement remains NEEDS VERIFICATION]

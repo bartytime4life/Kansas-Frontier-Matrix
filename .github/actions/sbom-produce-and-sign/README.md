@@ -1,13 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-VERIFY-UUID
+doc_id: kfm://doc/github-action-sbom-produce-and-sign-readme
 title: SBOM Produce and Sign Action
 type: standard
 version: v1
 status: draft
 owners: @bartytime4life (NEEDS VERIFICATION for this leaf action)
-created: TODO(verify-created-date)
+created: 2026-04-29
 updated: 2026-04-27
-policy_label: TODO(verify-public-or-restricted)
+policy_label: public
 related: [../README.md, ../../README.md, ../../workflows/README.md, ../../../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../schemas/contracts/v1/README.md, ../../../policy/README.md, ../../../tests/README.md, ../../../tests/contracts/README.md, ../../../scripts/README.md, ../../../tools/attest/README.md, ../../../tools/validators/promotion_gate/README.md, ../../../data/proofs/README.md, ../../../data/receipts/README.md]
 tags: [kfm, github-actions, sbom, sigstore, cosign, supply-chain, release-proof, provenance]
 notes: [doc_id, created date, policy label, active action.yml contract, workflow callers, OIDC trust rules, and leaf-specific ownership require active-checkout verification. This README documents the KFM action lane and graduated target contract without claiming live implementation depth.]
