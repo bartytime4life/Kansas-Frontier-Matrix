@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ecology/decision_envelope.schema.json",
+  "title": "Ecology Decision Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "decision_id",
+    "bundle_ref",
+    "policy_id",
+    "surface",
+    "decision",
+    "allow",
+    "evaluated_at",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "v1" },
+    "object_type": { "type": "string", "const": "DecisionEnvelope" },
+    "decision_id": { "type": "string", "pattern": "^kfm://decision/ecology/.+" },
+    "bundle_ref": { "type": "string", "pattern": "^kfm://evidence/ecology/.+" },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "surface": {
+      "type": "string",
+      "enum": ["public", "restricted", "internal"]
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["allow", "generalize", "hold", "deny"]
+    },
+    "allow": { "type": "boolean" },
+    "deny_reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "generalize_reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "redaction_receipt_ref": {
+      "type": "string",
+      "pattern": "^kfm://receipt/redaction/.+"
+    },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "spec_hash": { "type": "string", "pattern": "^sha256:[a-fA-F0-9]{64}$" }
+  }
+}
