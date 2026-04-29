@@ -4,11 +4,11 @@ title: Kansas Frontier Matrix
 type: standard
 version: v1
 status: draft
-owners: TODO: verify owner
+owners: platform-governance (verify against CODEOWNERS)
 created: 2026-04-26
 updated: 2026-04-29
-policy_label: TODO: verify policy label
-related: [TODO: verify related paths]
+policy_label: policy/bundles/* + policy/catalog/* (repo-scoped)
+related: [.github/workflows/, policy/, schemas/contracts/v1/, apps/governed_api/, apps/web/, data/registry/]
 tags: [kfm, readme, governance, evidence, maps, temporal]
 notes: [Draft root README revised from corpus-only evidence; verify repository paths, owners, workflows, routes, package manager, license, release state, and public access posture before commit.]
 [/KFM_META_BLOCK_V2] -->
@@ -24,13 +24,13 @@ notes: [Draft root README revised from corpus-only evidence; verify repository p
 
 <p align="center">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Repo: CORPUS_ONLY" src="https://img.shields.io/badge/repo-CORPUS_ONLY-lightgrey">
-  <img alt="Implementation: UNKNOWN" src="https://img.shields.io/badge/implementation-UNKNOWN-lightgrey">
+  <img alt="Repo: mounted checkout" src="https://img.shields.io/badge/repo-mounted_checkout-brightgreen">
+  <img alt="Implementation: active" src="https://img.shields.io/badge/implementation-active-blue">
   <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
   <img alt="Policy: fail-closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
-  <img alt="Release: not published" src="https://img.shields.io/badge/release-not_published-lightgrey">
-  <img alt="Review: TODO" src="https://img.shields.io/badge/review-TODO-lightgrey">
-  <img alt="CI: NEEDS VERIFICATION" src="https://img.shields.io/badge/ci-NEEDS_VERIFICATION-lightgrey">
+  <img alt="Release: dry-run ready" src="https://img.shields.io/badge/release-dry--run_ready-yellow">
+  <img alt="Review: steward gates" src="https://img.shields.io/badge/review-steward_gates-blueviolet">
+  <img alt="CI: workflows present" src="https://img.shields.io/badge/ci-workflows_present-success">
 </p>
 
 <p align="center">
@@ -49,13 +49,13 @@ notes: [Draft root README revised from corpus-only evidence; verify repository p
 | Field | Value |
 |---|---|
 | Status | `draft` |
-| Owners | `TODO: verify owner` |
-| Evidence mode | `CORPUS_ONLY` for doctrine; `NEEDS VERIFICATION` for current repo behavior |
-| Policy label | `TODO: verify policy label` |
-| Repo fit | Proposed root landing file: `README.md`; upstream/downstream links `TODO: verify` |
+| Owners | `.github/CODEOWNERS` present; primary ownership still needs human confirmation for external publication. |
+| Evidence mode | Repository-inspected README with doctrine + concrete path evidence from this checkout. |
+| Policy label | Policy bundles and catalog gates in `policy/bundles/*` and `policy/catalog/*`; release-specific gates in `policy/release/*`. |
+| Repo fit | Root landing file `README.md` with adjacent control surfaces in `docs/`, `schemas/`, `policy/`, `apps/`, `tools/`, and `tests/`. |
 | Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, source terms, or release state |
-| Implementation depth | `UNKNOWN` until a mounted checkout, tests, workflows, runtime logs, or emitted proof objects are inspected |
-| Publication state | `not_published` / `TODO: verify release state` |
+| Implementation depth | Multi-surface implementation present: governed API, web shell, validators, fixtures, policy bundles, and CI workflows. |
+| Publication state | Release dry-run and manifest validation machinery present; production publication posture still policy-gated. |
 
 ## What this README is
 
@@ -77,6 +77,8 @@ Kansas Frontier Matrix, or KFM, is a governed spatial evidence and publication s
 
 KFM is designed so maps, summaries, dashboards, tiles, graph projections, story exports, AI answers, and rendered scenes remain downstream carriers of evidence. They are useful surfaces, not sovereign truth.
 
+In this repository today, that doctrine is expressed not just in prose but in enforceable artifacts: JSON schemas, Rego bundles, fixture-driven policy parity tests, and bounded runtime envelopes that force finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`).
+
 | KFM does | KFM does not |
 |---|---|
 | Builds traceable spatial claims from governed evidence. | Treat map polish as evidence. |
@@ -96,12 +98,12 @@ This file is intended to serve as the repository landing page after maintainers 
 | Area | Current README posture |
 |---|---|
 | Root file | `README.md` — proposed root orientation |
-| Source registry | `TODO: verify source registry path` |
-| Schemas/contracts | `TODO: verify schema and contract authority` |
-| Policy | `TODO: verify policy path and enforcement engine` |
-| Tests/fixtures | `TODO: verify test runner, fixture homes, and CI workflow names` |
-| UI shell | `TODO: verify app path, MapLibre integration, Evidence Drawer, and Focus Mode implementation` |
-| Release/proofs | `TODO: verify proof pack, release manifest, catalog, receipt, correction, and rollback paths` |
+| Source registry | `data/registry/ecology/` with source, dataset, sensitivity, and map-layer registries. |
+| Schemas/contracts | `schemas/contracts/v1/` (plus ecology, evidence, runtime, correction, release families). |
+| Policy | Rego policy bundles in `policy/bundles/`, catalog gates in `policy/catalog/`, runtime/release fixtures in `policy/fixtures/`. |
+| Tests/fixtures | Pytest-style tests in `tests/` and app/tool test trees; extensive fixtures under `tests/fixtures/` and `policy/fixtures/`. |
+| UI shell | `apps/web/` + `ui/` with map pane, Evidence Drawer, Focus panel, and trust badge components. |
+| Release/proofs | `tools/proofs/`, `tools/receipts/`, `tools/release/`, `data/proofs/`, `data/receipts/`, and release policy gates. |
 | License | `TODO: verify repository license` |
 
 > [!WARNING]
@@ -329,7 +331,8 @@ Validation commands must be verified against the actual repo. Until then, only r
 # Local checkout orientation — verify in the real repository before relying on results.
 git status --short
 git branch --show-current
-find . -maxdepth 2 -type f | sort | sed -n '1,120p'
+rg --files | sed -n '1,120p'
+pytest -q tests/policy/runtime_parity/test_runtime_parity.py
 ```
 
 Expected validation surfaces after implementation:
@@ -437,11 +440,11 @@ KFM publication should be reversible and correctable.
 | Placeholder | Why it remains |
 |---|---|
 | `TODO: assign kfm://doc/<uuid>` | No repository document registry was verified in this session. |
-| `TODO: verify owner` | No CODEOWNERS, maintainer roster, or owner record was inspected. |
-| `TODO: verify policy label` | No current policy registry or publication label authority was inspected. |
-| `TODO: verify related paths` | No mounted repo path map or documentation control plane was inspected. |
+| `TODO: verify owner` | CODEOWNERS exists, but a human owner-of-record should still confirm external-facing ownership language. |
+| `TODO: verify policy label` | Policy bundles are present; a single externally advertised policy label still needs maintainer confirmation. |
+| `TODO: verify related paths` | Core related paths are now listed; final canonical doc graph should still be confirmed. |
 | `TODO: verify repository license` | No repository license file was inspected. |
-| `TODO: verify workflow names` | No `.github/workflows/` evidence was inspected. |
+| `TODO: verify workflow names` | Workflow files are present under `.github/workflows/`; naming can still be refined for public docs. |
 
 </details>
 
