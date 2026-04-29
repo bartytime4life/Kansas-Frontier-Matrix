@@ -1,0 +1,20 @@
+{
+  "schema_version": "v1",
+  "object_type": "EvidenceDrawerPayload",
+  "claim_ref": "kfm://claim/ecology/demo-001",
+  "evidence_bundle_ref": "kfm://evidence/ecology/demo-001",
+  "decision_ref": "kfm://decision/ecology/demo-001",
+  "release_ref": "kfm://release/ecology/demo-001",
+  "trust_badges": [
+    "DERIVED_SUPPORTED",
+    "PUBLIC_GENERALIZED",
+    "EVIDENCE_RESOLVED"
+  ],
+  "limitations": [
+    "Derived-supported, not confirmed.",
+    "Public geometry is generalized."
+  ],
+  "redaction_receipt_refs": [
+    "kfm://receipt/redaction/ecology/observation-plot-valid-001"
+  ]
+}
