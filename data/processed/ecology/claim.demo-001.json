@@ -1,0 +1,10 @@
+{
+  "claim_id": "kfm://claim/ecology/demo-001",
+  "object_type": "EcologicalClaim",
+  "schema_version": "v1",
+  "statement": "Common milkweed occurs in mixed grass prairie in Ellsworth County",
+  "status": "DERIVED_SUPPORTED",
+  "taxon_ref": "kfm://taxon/asclepias-syriaca",
+  "evidence_bundle_ref": "kfm://evidence/ecology/demo-001",
+  "spec_hash": "sha256:abababababababababababababababababababababababababababababababab"
+}
