@@ -72,6 +72,22 @@ def run_opa_eval(policy: Path, input_file: Path, query: str) -> Any:
     return expressions[0].get("value")
 
 
+def normalize_expected(value: str) -> Any:
+    """
+    Allow simple scalar expectations while preserving JSON-capable assertions.
+
+    Examples:
+      --expected allow
+      --expected '"allow"'
+      --expected true
+      --expected '["qa_rejected"]'
+    """
+    try:
+        return json.loads(value)
+    except json.JSONDecodeError:
+        return value
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Assert expected Rego decision for a JSON fixture."
@@ -80,7 +96,14 @@ def main() -> int:
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--query", required=True)
     parser.add_argument("--expected", required=True)
+    parser.add_argument(
+        "--out",
+        type=Path,
+        help="Optional path to write assertion result JSON.",
+    )
     args = parser.parse_args()
+
+    expected = normalize_expected(args.expected)
 
     try:
         actual = run_opa_eval(args.policy, args.input, args.query)
@@ -88,30 +111,43 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    if actual != args.expected:
+    result = {
+        "input": str(args.input),
+        "policy": str(args.policy),
+        "query": args.query,
+        "expected": expected,
+        "actual": actual,
+        "status": "PASS" if actual == expected else "FAIL",
+    }
+
+    if actual != expected:
         print(
             "ERROR: Rego decision mismatch\n"
             f"  input:    {args.input}\n"
+            f"  policy:   {args.policy}\n"
             f"  query:    {args.query}\n"
-            f"  expected: {args.expected}\n"
+            f"  expected: {expected}\n"
             f"  actual:   {actual}",
             file=sys.stderr,
         )
+
+        if args.out:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(
+                json.dumps(result, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
         return 1
 
-    print(
-        json.dumps(
-            {
-                "input": str(args.input),
-                "query": args.query,
-                "expected": args.expected,
-                "actual": actual,
-                "status": "PASS",
-            },
-            indent=2,
-            sort_keys=True,
+    if args.out:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
         )
-    )
+
+    print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
 
