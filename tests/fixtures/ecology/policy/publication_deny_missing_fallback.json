@@ -1,1 +1,50 @@
+{
+  "object_type": "EcologyTileset",
+  "policy_id": "kfm://policy/ecology/publication",
+  "policy_label": "public",
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
 
+  "surface": "public",
+  "publication_state": "ready",
+  "lifecycle_state": "PROCESSED",
+
+  "rights_status": "open",
+
+  "sensitivity": "public",
+  "public_visibility": "public",
+
+  "evidence_refs": [
+    "kfm://evidence/ref/example-missing-fallback-1"
+  ],
+  "evidence_bundle_resolved": true,
+  "evidence_bundle_url": "kfm://evidence/ecology/example-missing-fallback",
+
+  "run_receipt_ref": "kfm://receipt/run/ecology/example-missing-fallback",
+
+  "qa_summary": {
+    "decision": "PASS",
+    "masked_pct": 12.0,
+    "requires_fallback": true
+  },
+
+  "tileset_metadata": {
+    "provisional": true,
+    "expected_tile_count": 100,
+    "produced_tile_count": 100
+  },
+
+  "steward_approval": {
+    "approved": true
+  },
+
+  "fallback": {
+    "viirs_500m_attached": false
+  },
+
+  "source_role": "AUTHORITATIVE_LAYER",
+
+  "exact_geometry_present": false,
+  "public_geometry_policy": "allow_exact",
+
+  "catalog_closure": true
+}
