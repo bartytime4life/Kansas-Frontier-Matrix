@@ -1,0 +1,12 @@
+watcher_id: soil_air_quality
+mode: dry-run
+sources:
+  - id: airnow
+    enabled: true
+  - id: aqs
+    enabled: false
+outputs:
+  raw_root: data/raw/soil_air
+  work_root: data/work/soil_air
+  proofs_root: data/proofs/soil_air
+  receipts_root: data/receipts/soil_air
