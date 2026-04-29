@@ -162,6 +162,19 @@ jobs:
             --schemafile schemas/contracts/v1/ecology/stac_item.schema.json \
             /tmp/stac_item.json
 
+      - name: Generate STAC Collection
+        run: |
+          python tools/validators/ecology/generate_stac_collection.py \
+            --collection-id kfm-ecology-timeslices \
+            --item /tmp/stac_item.json \
+            --out /tmp/stac_collection.json
+
+      - name: Validate STAC Collection schema
+        run: |
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/stac_collection.schema.json \
+            /tmp/stac_collection.json
+
       - name: Fail closed on required dry-run artifacts
         run: |
           required_artifacts=(
@@ -169,6 +182,7 @@ jobs:
             "/tmp/promotion_decision.json"
             "/tmp/evidence_bundle.json"
             "/tmp/stac_item.json"
+            "/tmp/stac_collection.json"
           )
 
           for artifact in "${required_artifacts[@]}"; do
@@ -208,7 +222,8 @@ jobs:
               "policy_assertions_dir": "/tmp/ecology-policy-assertions",
               "promotion_decision": "/tmp/promotion_decision.json",
               "evidence_bundle": "/tmp/evidence_bundle.json",
-              "stac_item": "/tmp/stac_item.json"
+              "stac_item": "/tmp/stac_item.json",
+              "stac_collection": "/tmp/stac_collection.json"
             },
             "policy_results": [
               {
@@ -222,7 +237,8 @@ jobs:
               "decision": "PROMOTE"
             },
             "catalog": {
-              "stac_item": "/tmp/stac_item.json"
+              "stac_item": "/tmp/stac_item.json",
+              "stac_collection": "/tmp/stac_collection.json"
             }
           }
           JSON
