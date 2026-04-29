@@ -10,7 +10,7 @@ updated: 2026-04-29
 policy_label: TODO(verify public|restricted)
 related: [../../README.md, ../README.md, ../habitat_layer_build/README.md, ../kansas_biodiversity_etl/README.md, ../../data/README.md, ../../policy/README.md, ../../schemas/README.md]
 tags: [kfm, pipelines, ecology, biodiversity, remote-sensing, evidence, governance]
-notes: [doc_id owners and policy_label require repository verification, intended replacement for a placeholder ecology README, hls_landsat_ingest.py behavior remains UNKNOWN until implemented and tested, active checkout and CI wiring must be verified before merge]
+notes: [doc_id owners and policy_label require repository verification, ecology README documents the lane contract and should stay aligned with repo behavior, hls_landsat_ingest.py currently supports local-manifest artifact generation only (no network fetch), active checkout and CI wiring must be verified before merge]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -54,7 +54,7 @@ notes: [doc_id owners and policy_label require repository verification, intended
 | **Path** | `pipelines/ecology/README.md` |
 | **Document role** | Directory README and operating contract for the ecology pipeline lane. |
 | **Current evidence boundary** | `CONFIRMED`: this document defines the intended lane contract. `NEEDS VERIFICATION`: active checkout, branch state, adjacent links, script behavior, package runner, CI wiring, source descriptors, emitted artifacts, and public-route boundaries. |
-| **Primary placeholder** | [`hls_landsat_ingest.py`][script-placeholder], treated as placeholder-only until implementation and tests prove behavior. |
+| **Primary script** | [`hls_landsat_ingest.py`][script-placeholder], local-manifest ingest scaffold that emits ingest artifacts and does not fetch imagery. |
 | **Public posture** | Cite-or-abstain; fail closed on unresolved rights, sensitivity, source role, support scale, EvidenceRef resolution, or publication review. |
 | **Lifecycle invariant** | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. |
 
@@ -79,7 +79,7 @@ It is intended for fixture-first and source-described processing of ecological c
 |---|---|
 | What is this lane allowed to do? | Prepare reviewable ecology-context artifacts from declared inputs, fixtures, source descriptors, and prior-stage lifecycle material. |
 | What is this lane not allowed to do? | Publish sensitive locations, infer species presence from context alone, bypass rights review, or let a map layer stand in for evidence. |
-| What is the current script status? | `hls_landsat_ingest.py` is treated as a placeholder; runtime behavior remains `UNKNOWN` until implemented and tested. |
+| What is the current script status? | `hls_landsat_ingest.py` is an implemented no-fetch scaffold that reads a local scene manifest and emits ingest artifacts. |
 | What lifecycle invariant applies? | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. |
 | What should fail closed? | Unknown rights, unknown sensitivity, missing source role, missing support scale, unresolved EvidenceRef, exact sensitive geometry, and unreviewed public release. |
 
@@ -110,7 +110,7 @@ It is intended for fixture-first and source-described processing of ecological c
 | [`../../data/README.md`][data-readme] | Lifecycle storage, registry, fixtures, raw/work/quarantine/processed/catalog/proofs/published boundaries. | `NEEDS VERIFICATION`; this lane must not redefine storage authority. |
 | [`../../policy/README.md`][policy-readme] | Rights, sensitivity, release, source-role, review, and runtime decision logic. | `NEEDS VERIFICATION`; policy must remain inspectable and testable. |
 | [`../../schemas/README.md`][schemas-readme] | Parent schema lane and schema-home ambiguity guardrail. | `NEEDS VERIFICATION`; do not create parallel schema authority. |
-| [`./hls_landsat_ingest.py`][script-placeholder] | Current ecology script placeholder. | `UNKNOWN` behavior until inspected, implemented, and tested. |
+| [`./hls_landsat_ingest.py`][script-placeholder] | Current ecology ingest scaffold script. | Implemented local-manifest artifact generation; no remote fetch behavior. |
 
 ### Downstream consumers
 
@@ -221,7 +221,7 @@ Do not put these in `pipelines/ecology/`.
 ```text
 pipelines/ecology/
 ├── README.md              # directory contract and orientation surface
-└── hls_landsat_ingest.py  # placeholder until behavior is implemented and tested
+└── hls_landsat_ingest.py  # local-manifest ingest scaffold (no remote fetch)
 ```
 
 ### Proposed implementation shape
@@ -440,7 +440,7 @@ find pipelines/ecology -maxdepth 2 -type f | sort
 wc -l pipelines/ecology/README.md pipelines/ecology/hls_landsat_ingest.py
 ```
 
-### 2. Check placeholder status without running a live ingest
+### 2. Check script status without running a live ingest
 
 ```python
 from pathlib import Path
@@ -455,15 +455,16 @@ for path in required:
         raise SystemExit(f"missing required ecology lane file: {path}")
     print(f"{path}: {path.stat().st_size} bytes")
 
-print("Ecology lane inventory check complete. Runtime behavior still requires implementation evidence.")
+print("Ecology lane inventory check complete. Script supports local-manifest artifact generation only.")
 ```
 
 ### 3. Do not run live fetches until gates are ready
 
 ```bash
-# PROPOSED ONLY — replace with repo-native command after implementation.
-# The first real command should be fixture-first and no-network.
-python pipelines/ecology/hls_landsat_ingest.py --dry-run --no-network
+# Current scaffold command — local manifest in, artifact files out (no network fetch).
+python pipelines/ecology/hls_landsat_ingest.py \
+  --scene-manifest tests/fixtures/ecology/timeslice/pass/scene_manifest.json \
+  --out-dir /tmp/ecology-ingest
 ```
 
 > [!WARNING]
@@ -596,7 +597,7 @@ What correction path applies if rights, sensitivity, or evidence changes?
 
 1. Replace the placeholder ecology README with this directory contract.
 2. Verify active checkout, branch, file presence, adjacent links, and `hls_landsat_ingest.py` status.
-3. Keep `hls_landsat_ingest.py` placeholder-only unless no-network dry-run behavior, fixtures, and tests are added in the same PR.
+3. Keep `hls_landsat_ingest.py` scoped to local-manifest artifact generation unless live-source controls, fixtures, and tests are added in the same PR.
 4. Add or plan tiny public-safe fixtures only after source descriptor and schema-home conventions are verified.
 5. Add negative tests for unknown rights, missing source role, missing support resolution, exact sensitive geometry, unresolved EvidenceRef, and public raw-path bypass.
 6. Update parent pipeline docs only if shared lane behavior changes.
@@ -607,7 +608,7 @@ What correction path applies if rights, sensitivity, or evidence changes?
 |---|---|---|
 | Phase 0 | Active checkout and convention verification. | Branch, path, adjacent docs, package runner, schema home, policy home, and test runner are known. |
 | Phase 1 | Documentation and no-network fixture slice. | README, source descriptor fixture, valid/invalid candidates, and validation expectations are reviewable. |
-| Phase 2 | Placeholder runner or dry-run script. | `--dry-run --no-network` emits deterministic receipt-like output. |
+| Phase 2 | Deterministic local-manifest runner hardening. | `--scene-manifest` + `--out-dir` emits deterministic receipt-like output from fixtures. |
 | Phase 3 | Validation and policy gates. | Fixtures pass/fail as expected; public boundary and sensitivity tests exist. |
 | Phase 4 | Candidate handoff to catalog/release review. | Candidate manifests, EvidenceBundle refs, policy decisions, and rollback refs are generated or simulated. |
 | Phase 5 | Live source activation. | Rights, endpoint behavior, credentials, cadence, attribution, source role, and sensitivity controls are verified. |
@@ -635,7 +636,7 @@ This README is ready when a maintainer can inspect `pipelines/ecology/` and quic
 
 - [ ] Active checkout inspected; branch, file sizes, package runner, and target path verified.
 - [ ] `doc_id`, owners, policy label, and related links resolved or deliberately left as reviewed placeholders.
-- [ ] `hls_landsat_ingest.py` is either documented as placeholder-only or implemented with no-network dry-run support.
+- [ ] `hls_landsat_ingest.py` is documented as local-manifest artifact generation only, or expanded behavior is accompanied by fixtures/tests and gate updates.
 - [ ] Source descriptors exist for every source family used by an ecology run.
 - [ ] Good and bad fixtures are present, public-safe, no-network, and small enough for review.
 - [ ] Negative tests cover unknown rights, missing source role, missing support resolution, exact sensitive geometry, and unresolved EvidenceRef.
@@ -662,7 +663,7 @@ Not directly. This lane may prepare candidates and proof inputs. Publication req
 
 ### Can `hls_landsat_ingest.py` fetch live sources?
 
-`NEEDS VERIFICATION`. Treat it as placeholder-only until it has a source descriptor, fixture-first dry-run, rights and endpoint verification, no-secret handling, tests, and receipts.
+It currently reads a local scene manifest and writes ingest artifacts without performing remote fetches. Live-source behavior remains out of scope until source descriptors, rights and endpoint verification, tests, and receipts are in place.
 
 ### Can remote sensing prove species presence?
 
@@ -741,7 +742,7 @@ Does it avoid:
 
 - [ ] Verify the active repository branch and dirty state.
 - [ ] Verify whether `pipelines/ecology/README.md` and `pipelines/ecology/hls_landsat_ingest.py` exist in the current checkout.
-- [ ] Inspect `hls_landsat_ingest.py` and classify it as placeholder, dry-run runner, live connector, or deprecated script.
+- [ ] Inspect `hls_landsat_ingest.py` and confirm whether it remains local-manifest only or has expanded into live-connector behavior.
 - [ ] Verify package runner and test conventions.
 - [ ] Verify schema home: `schemas/`, `contracts/`, or another accepted registry.
 - [ ] Verify policy home and whether OPA/Rego, Python validators, or another mechanism is accepted.
