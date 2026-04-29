@@ -6,27 +6,38 @@ version: v1
 status: draft
 owners: NEEDS_VERIFICATION__owners
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-04-29
 policy_label: NEEDS_VERIFICATION__public_or_internal
-related: [../../../README.md, ../../README.md, ../README.md, ../../../contracts/README.md, ../../../schemas/README.md, ../../../policy/README.md, ../../../docs/standards/README.md]
-tags: [kfm, tests, fixtures, ecology, habitat, fauna, flora, evidence]
-notes: [No mounted KFM repository was available in the current session. Exact owner, active fixture inventory, parent README availability, policy label, schema home, and runner wiring remain branch-level verification items.]
+related:
+  - ../../../README.md
+  - ../../README.md
+  - ../README.md
+  - ../../../contracts/README.md
+  - ../../../schemas/README.md
+  - ../../../policy/README.md
+  - ../../../docs/standards/README.md
+tags:
+  - kfm
+  - tests
+  - fixtures
+  - ecology
+  - habitat
+  - fauna
+  - flora
+  - evidence
+notes:
+  - Current-session evidence mode for this revision was uploaded-markdown/corpus only; no mounted KFM repository was available.
+  - Owner, active branch inventory, parent README availability, policy label, schema home, validator runner, CI wiring, and CODEOWNERS remain NEEDS_VERIFICATION.
+  - Candidate fixture paths listed below are preserved from the supplied Markdown as proposed branch targets unless verified in a mounted checkout.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Ecology Fixtures
 
-Small, reviewable, public-safe fixtures for proving ecology-domain validation without turning `tests/fixtures/` into a data mirror, policy source, or publication surface.
+Small, public-safe, reviewable ecology fixtures for proving KFM validation behavior without turning `tests/fixtures/` into a data mirror, policy source, canonical schema home, or publication surface.
 
-> [!NOTE]
-> **Status:** `experimental`  
-> **Owners:** `NEEDS_VERIFICATION__owners`  
-> **Path:** `tests/fixtures/ecology/README.md`  
-> **Repo fit:** child fixture README for ecology examples inside the broader KFM tests and verification boundary  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
-
-![status](https://img.shields.io/badge/status-experimental-orange)
+![status](https://img.shields.io/badge/status-draft%20%2F%20experimental-orange)
 ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey)
 ![surface](https://img.shields.io/badge/surface-tests%2Ffixtures-lightgrey)
 ![fixture](https://img.shields.io/badge/fixture-ecology-blue)
@@ -34,26 +45,74 @@ Small, reviewable, public-safe fixtures for proving ecology-domain validation wi
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-0a7ea4)
 
 > [!IMPORTANT]
-> This leaf is **fixture-bounded**. It may hold small valid and invalid examples for validators, policy tests, catalog-closure tests, and runtime-envelope tests. It must not become a provider mirror, sensitive occurrence cache, raw source landing zone, canonical schema home, or substitute policy engine.
+> This leaf is **fixture-bounded**. It may hold small valid, invalid, malformed, and policy-oriented examples for validators, policy tests, catalog-closure tests, geoprivacy checks, and runtime-envelope tests. It must not become a provider mirror, sensitive occurrence cache, raw source landing zone, canonical schema home, policy engine, release bundle, or public data product.
+
+> [!NOTE]
+> **Evidence mode for this revision:** `CORPUS_ONLY / UPLOADED_MARKDOWN_ONLY`  
+> The active KFM repository was not mounted in this session. Treat fixture inventory, runner commands, owner assignments, schema homes, and CI wiring as `NEEDS_VERIFICATION` until direct branch evidence confirms them.
+
+## Quick jumps
+
+[At a glance](#at-a-glance) · [Scope](#scope) · [Truth posture](#truth-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Candidate tree](#candidate-directory-tree) · [Quickstart](#quickstart) · [Authoring rules](#authoring-rules) · [Outcome grammar](#outcome-grammar) · [Validation matrix](#validation-matrix) · [Diagram](#diagram) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+
+---
+
+## At a glance
+
+| Field | Value |
+|---|---|
+| Target path | `tests/fixtures/ecology/README.md` |
+| Role | Child README for ecology-domain fixtures inside the broader KFM test and verification boundary |
+| Status | `draft` / `experimental` |
+| Intended fixture posture | small, synthetic or safely generalized, public-safe, Git-reviewable |
+| Primary burden | prove validator, policy, evidence, sensitivity, rights, catalog-closure, and finite-outcome behavior |
+| Must not become | raw-data store, provider mirror, sensitive-location cache, canonical schema home, policy source, release artifact, or UI/API implementation proof |
+| Repo maturity claims | `UNKNOWN` until a mounted branch, file tree, tests, workflows, and runtime artifacts are inspected |
+| Safe default | cite-or-abstain; fail closed where rights, sensitivity, source role, or evidence is unresolved |
+
+[Back to top](#top)
 
 ---
 
 ## Scope
 
-This directory is for compact ecology-domain fixtures that help KFM prove that ecology claims remain evidence-bound, policy-aware, rights-aware, and public-safe.
+This directory is for compact ecology-domain fixtures that help KFM prove ecology claims remain evidence-bound, policy-aware, rights-aware, sensitivity-aware, and public-safe.
 
-Ecology here is an umbrella test fixture label. It does **not** collapse the stronger domain distinctions that KFM needs to preserve:
+Ecology is an umbrella fixture label. It does **not** collapse the stronger domain distinctions that KFM needs to preserve.
 
 | Keep distinct | Why it matters |
 |---|---|
-| **Observed occurrence** | a species observation, specimen, survey, or monitoring record is not the same as habitat support |
-| **Modeled range or suitability** | modeled context must stay visibly modeled and should not be presented as observed presence |
-| **Habitat context** | land cover, wetland, soil, hydrology, protected-area, or vegetation context can support interpretation but does not prove occurrence by itself |
-| **Regulatory or conservation status** | legal/status sources are not occurrence aggregators and should not be treated as field observations |
-| **Flora, fauna, and habitat lanes** | each carries different source roles, sensitivity rules, and review burdens |
-| **Public-safe derivative** | generalized, redacted, or aggregated output is not the same thing as the restricted source record |
+| **Observed occurrence** | A species observation, specimen, survey, plot, or monitoring record is not the same thing as habitat support. |
+| **Modeled range or suitability** | Modeled context must stay visibly modeled and must not be presented as observed presence. |
+| **Habitat context** | Land cover, wetland, soil, hydrology, protected-area, vegetation, or management context can support interpretation but does not prove occurrence by itself. |
+| **Regulatory or conservation status** | Legal/status sources are not occurrence aggregators and should not be treated as field observations. |
+| **Flora, fauna, and habitat lanes** | Each lane carries different source roles, sensitivity rules, taxonomic issues, public-release burdens, and steward-review expectations. |
+| **Public-safe derivative** | Generalized, redacted, aggregated, or public-safe output is not the same thing as the restricted source record. |
+| **Fixture example** | A fixture proves a behavior under a declared contract; it does not prove live source activation, route maturity, publication, or deployment state. |
 
-**Current safe claim:** `tests/fixtures/ecology/README.md` is the requested target path. The active branch contents for this exact leaf were not available in this session, so all fixture names and runner commands below are either `PROPOSED` or `NEEDS VERIFICATION` unless later branch inspection confirms them.
+**Current safe claim:** this README is intended for `tests/fixtures/ecology/README.md`. The active branch contents for this exact leaf were not available in this session, so fixture names, runner commands, sibling README paths, and CI behavior remain `PROPOSED` or `NEEDS_VERIFICATION` until branch inspection confirms them.
+
+[Back to top](#top)
+
+---
+
+## Truth posture
+
+Use these labels when editing this README or adding fixture notes.
+
+| Label | Meaning in this leaf |
+|---|---|
+| `CONFIRMED` | Verified from direct branch evidence, mounted file tree, tests, generated artifacts, logs, or a schema/policy file inspected in the current implementation session. |
+| `PROPOSED` | Recommended path, fixture, runner, schema key, validator, policy expectation, or directory structure not yet verified in the active branch. |
+| `UNKNOWN` | Not verifiable from available evidence. Use for repo topology, owner, schema home, CI wiring, route names, runtime behavior, release state, or sensitive-source posture when no direct proof exists. |
+| `NEEDS_VERIFICATION` | Checkable item that must be verified before merge or publication, such as owner, source rights, policy label, validator command, source endpoint, schema version, or CODEOWNERS entry. |
+| `DENY` | Policy forbids the public or runtime action. Denial can be the correct test result. |
+| `ABSTAIN` | Evidence is insufficient or unresolved, but denial is not required. Abstention can be the correct test result. |
+| `ERROR` | Fixture shape, runner behavior, or required dependency is malformed, invalid, or unavailable. |
+
+### Repo-evidence rule
+
+Do not write “the repo contains,” “CI runs,” “this validator enforces,” “this route returns,” or “this layer renders” unless a current mounted repo, test output, workflow, runtime log, generated artifact, or equivalent evidence proves it.
 
 [Back to top](#top)
 
@@ -66,27 +125,28 @@ Ecology here is an umbrella test fixture label. It does **not** collapse the str
 
 ### Upstream and adjacent anchors
 
-| Relation | Path | Use |
-|---|---|---|
-| Repo root posture | [`../../../README.md`](../../../README.md) | project-wide orientation and evidence-first posture; `NEEDS VERIFICATION` in active branch |
-| Parent tests lattice | [`../../README.md`](../../README.md) | broader test-family expectations; `NEEDS VERIFICATION` |
-| Parent fixture family | [`../README.md`](../README.md) | fixture taxonomy and naming rules; `NEEDS VERIFICATION` |
-| Contract source | [`../../../contracts/README.md`](../../../contracts/README.md) | human-facing contract authority; this leaf consumes, not defines |
-| Schema source | [`../../../schemas/README.md`](../../../schemas/README.md) | machine-contract authority; this leaf must not create a second schema home |
-| Policy source | [`../../../policy/README.md`](../../../policy/README.md) | allow/deny/review logic belongs upstream |
-| Standards docs | [`../../../docs/standards/README.md`](../../../docs/standards/README.md) | fixture, validator, and documentation conventions; `NEEDS VERIFICATION` |
-| Runtime proof consumers | [`../../e2e/runtime_proof/README.md`](../../e2e/runtime_proof/README.md) | downstream request-time proof harness; `NEEDS VERIFICATION` |
-| Release/correction siblings | [`../../e2e/release_assembly/README.md`](../../e2e/release_assembly/README.md), [`../../e2e/correction/README.md`](../../e2e/correction/README.md) | use those leaves when proof packs, promotion, rollback, withdrawal, or correction lineage is the main burden |
+| Relation | Path | Use | Status until branch inspection |
+|---|---|---|---|
+| Repo root posture | [`../../../README.md`](../../../README.md) | project-wide orientation and evidence-first posture | `NEEDS_VERIFICATION` |
+| Parent tests lattice | [`../../README.md`](../../README.md) | broader test-family expectations | `NEEDS_VERIFICATION` |
+| Parent fixture family | [`../README.md`](../README.md) | fixture taxonomy and naming rules | `NEEDS_VERIFICATION` |
+| Contract source | [`../../../contracts/README.md`](../../../contracts/README.md) | human-facing contract authority; this leaf consumes, not defines | `NEEDS_VERIFICATION` |
+| Schema source | [`../../../schemas/README.md`](../../../schemas/README.md) | machine-contract authority; this leaf must not create a second schema home | `NEEDS_VERIFICATION` |
+| Policy source | [`../../../policy/README.md`](../../../policy/README.md) | allow/deny/review logic belongs upstream | `NEEDS_VERIFICATION` |
+| Standards docs | [`../../../docs/standards/README.md`](../../../docs/standards/README.md) | fixture, validator, and documentation conventions | `NEEDS_VERIFICATION` |
+| Runtime proof consumers | [`../../e2e/runtime_proof/README.md`](../../e2e/runtime_proof/README.md) | downstream request-time proof harness | `NEEDS_VERIFICATION` |
+| Release/correction siblings | [`../../e2e/release_assembly/README.md`](../../e2e/release_assembly/README.md), [`../../e2e/correction/README.md`](../../e2e/correction/README.md) | proof packs, promotion, rollback, withdrawal, and correction-lineage burdens | `NEEDS_VERIFICATION` |
 
 ### Downstream consumers
 
 | Consumer | What it may read from this leaf | What it must not assume |
 |---|---|---|
-| Schema validators | small valid/invalid fixture bodies | that the fixture is production data |
-| Policy tests | deny/hold/abstain examples for source role, rights, sensitivity, and publication class | that policy was authored here |
-| Geoprivacy checks | synthetic sensitive-location cases and redaction-receipt examples | that real restricted coordinates are safe to store here |
-| Catalog tests | tiny STAC/DCAT/PROV closure snippets tied to fixture evidence | that catalog snippets are signed release artifacts |
+| Schema validators | small valid, invalid, and malformed fixture bodies | that the fixture is production data |
+| Policy tests | deny, hold, abstain, and allow examples for source role, rights, sensitivity, and publication class | that policy was authored here |
+| Geoprivacy checks | synthetic sensitive-location cases and redaction/generalization examples | that real restricted coordinates are safe to store here |
+| Catalog tests | tiny STAC/DCAT/PROV closure snippets tied to fixture evidence | that snippets are signed release artifacts |
 | Runtime proof harnesses | expected `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` examples | that a live route or UI component exists |
+| Evidence Drawer tests | expected public-safe evidence payload examples | that UI implementation exists or is wired |
 | Documentation reviewers | fixture intent, accepted inputs, exclusions, and open verification items | that README prose proves CI enforcement |
 
 [Back to top](#top)
@@ -100,14 +160,15 @@ Content belongs here only when it is small, synthetic or safely generalized, rev
 | Input class | Belongs here when… | Expected posture |
 |---|---|---|
 | `SourceDescriptor` fixtures | they prove source-role, rights, sensitivity, cadence, or authority-scope handling for ecology sources | valid/invalid examples only |
-| Habitat-context fixtures | they show land-cover, wetland, protected-area, soil, hydrology, or vegetation context as **support**, not occurrence proof | public-safe support |
-| Occurrence-publication fixtures | they prove public-safe generalized occurrence behavior, missing evidence abstention, or exact-sensitive-location denial | synthetic or generalized |
+| Habitat-context fixtures | they show land-cover, wetland, protected-area, soil, hydrology, vegetation, or management context as **support**, not occurrence proof | public-safe support |
+| Occurrence-publication fixtures | they prove public-safe generalized occurrence behavior, missing-evidence abstention, or exact-sensitive-location denial | synthetic or generalized |
 | Flora/fauna status fixtures | they distinguish legal/status authority from observation or aggregation sources | source-role explicit |
-| Geoprivacy fixtures | they prove redaction, generalization, embargo, steward review, or quarantine behavior | no real restricted coordinates |
+| Geoprivacy fixtures | they prove redaction, generalization, embargo, steward review, quarantine, or deny behavior | no real restricted coordinates |
 | Evidence fixtures | they reference `EvidenceRef`, `EvidenceBundle`, or citation obligations for a small ecology claim | cite-or-abstain |
-| Decision fixtures | they prove finite outcomes such as `PASS`, `HOLD`, `DENY`, `ERROR`, or runtime `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | outcome is visible |
+| Decision fixtures | they prove finite outcomes such as `PASS`, `HOLD`, `DENY`, `ERROR`, or runtime `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | outcome visible |
 | Catalog-closure fixtures | they show tiny STAC/DCAT/PROV snippets that close back to the same evidence-bearing subject | release-like, not release |
-| Negative fixtures | they intentionally fail for unknown rights, missing source role, sensitive exact geometry, modeled-as-observed drift, ambiguous taxonomy, or missing evidence refs | failure reason named |
+| Negative fixtures | they intentionally fail for unknown rights, missing source role, sensitive exact geometry, modeled-as-observed drift, ambiguous taxonomy, unresolved evidence, or missing refs | failure reason named |
+| Malformed fixtures | they prove the runner emits `ERROR` rather than silently interpreting invalid shape | malformed on purpose |
 
 ### Good first thin-slice cases
 
@@ -130,25 +191,25 @@ This directory is not the authoritative home for every ecology-adjacent concern.
 
 | Does **not** belong here | Put it here instead | Why |
 |---|---|---|
-| Raw provider downloads, bulk occurrence pulls, scrape caches, or source snapshots | governed lifecycle data zones such as `data/raw/`, `data/work/`, or `data/quarantine/` if those exist | fixtures must stay compact and reviewable |
-| Real sensitive coordinates, exact rare-species sites, steward-only records, or private land details | quarantined or restricted-access surfaces | public fixture lanes must not leak protected locations |
+| Raw provider downloads, bulk occurrence pulls, scrape caches, source snapshots | governed lifecycle data zones such as `data/raw/`, `data/work/`, or `data/quarantine/`, if those exist | fixtures must stay compact and reviewable |
+| Real sensitive coordinates, exact rare-species sites, steward-only records, private land details | quarantined or restricted-access surfaces | public fixture lanes must not leak protected locations |
 | Canonical schemas | [`../../../schemas/README.md`](../../../schemas/README.md) and confirmed schema homes | this leaf consumes schema authority |
 | Human contract definitions | [`../../../contracts/README.md`](../../../contracts/README.md) | fixture examples should not redefine contracts |
 | Policy source files | [`../../../policy/README.md`](../../../policy/README.md) and confirmed policy homes | policy belongs upstream |
-| Live connectors, watchers, scheduler wiring, or API route handlers | confirmed pipeline, package, service, or tool directories | README prose is not implementation proof |
-| Signed proof packs, release manifests, publication bundles, or rollback receipts | release/correction fixtures or governed release surfaces | release proof has a different burden |
+| Live connectors, watchers, scheduler wiring, API route handlers | confirmed pipeline, package, service, or tool directories | README prose is not implementation proof |
+| Signed proof packs, release manifests, publication bundles, rollback receipts | release/correction fixtures or governed release surfaces | release proof has a different burden |
 | UI components or MapLibre layer implementation | confirmed app/UI directories | this leaf may provide expected payloads, not component code |
 | AI prompts or model outputs that reveal restricted data | governed AI test surfaces after evidence and policy checks | AI is interpretive, never root truth |
+| Taxonomic authority registries | confirmed taxonomy/source-registry surfaces | fixture cases may reference taxonomy behavior but should not become authority |
 
 [Back to top](#top)
 
 ---
 
-## Directory tree
+## Candidate directory tree
 
-### Verified branch snapshot
-
-Current fixture inventory in this branch:
+> [!WARNING]
+> The tree below is a **candidate inventory preserved from the supplied Markdown**, not independently verified branch evidence in this session. After the real repository is mounted, replace this section with a `CONFIRMED` branch snapshot or mark mismatches in the open verification checklist.
 
 ```text
 tests/fixtures/ecology/
@@ -204,7 +265,7 @@ tests/fixtures/ecology/
 ```
 
 > [!TIP]
-> Use the subdirectory indexes for file navigation: [`valid/README.md`](./valid/README.md), [`invalid/README.md`](./invalid/README.md), [`policy/README.md`](./policy/README.md), and [`malformed/README.md`](./malformed/README.md).
+> If these leaves exist in the active branch, use the subdirectory indexes for navigation: [`valid/README.md`](./valid/README.md), [`invalid/README.md`](./invalid/README.md), [`policy/README.md`](./policy/README.md), and [`malformed/README.md`](./malformed/README.md).
 
 [Back to top](#top)
 
@@ -221,7 +282,7 @@ Use inspection-first commands. These are safe because they check current branch 
 find tests/fixtures/ecology -maxdepth 4 -type f 2>/dev/null | sort
 ```
 
-### 2) Re-read the nearby authority surfaces
+### 2) Re-read nearby authority surfaces
 
 ```bash
 sed -n '1,260p' tests/README.md 2>/dev/null || true
@@ -251,40 +312,42 @@ git grep -n \
 ### 4) Run validators only after the active branch exposes them
 
 ```bash
-# NEEDS VERIFICATION: adapt to the repo-native validator command.
+# NEEDS_VERIFICATION: adapt to the repo-native validator command.
 python tools/validators/run_all.py --fixtures tests/fixtures/ecology
 ```
 
 > [!WARNING]
-> Do not add live-source network fetches to this leaf. If a test requires a source system, use a controlled fixture or a separately governed source snapshot with explicit rights and sensitivity review.
+> Do not add live-source network fetches to this leaf. If a test requires a source system, use a controlled fixture or a separately governed source snapshot with explicit rights, sensitivity, source-role, and review posture.
 
 [Back to top](#top)
 
 ---
 
-## Usage
+## Authoring rules
 
 ### Working rule for adding a fixture
 
 1. Name the fixture by **behavior** or **failure reason**.
-2. Keep `source_role`, rights posture, sensitivity posture, and evidence refs visible.
+2. Keep `source_role`, rights posture, sensitivity posture, geometry posture, and evidence refs visible.
 3. Use synthetic or generalized geometry unless the fixture is proving denial.
-4. Never include real protected coordinates, private identifiers, or steward-only detail.
+4. Never include real protected coordinates, private identifiers, steward-only detail, or exact sensitive locations.
 5. If the fixture exercises modeled support, label it as modeled.
 6. If the fixture includes a public outcome, include the evidence and policy condition that makes it safe.
-7. If the fixture includes a negative outcome, make the denial or abstention visible rather than smoothing it into a generic failure.
-8. Do not imply live connector, workflow, signing, route, or UI maturity unless direct branch evidence proves it.
+7. If the fixture includes a negative outcome, make the denial, hold, abstention, or error reason visible.
+8. Do not imply live connector, workflow, signing, route, UI, or deployment maturity unless direct branch evidence proves it.
+9. Update the relevant README, contract, schema, policy, validator note, or fixture index when behavior changes.
 
 ### Naming guidance
 
 | Case | Preferred naming pattern |
 |---|---|
 | Valid public-safe support | `valid/<source_or_support>_public_safe.*.json` |
-| Missing evidence | `invalid/missing_policy_id.invalid.json` |
+| Missing evidence | `invalid/<claim_or_payload>.missing_evidence.invalid.json` |
 | Unknown rights | `invalid/observation_plot.unknown_rights.invalid.json` |
-| Source-role misuse | `invalid/taxon_record.missing_spec_hash.invalid.json` |
+| Source-role misuse | `invalid/<object>.source_role_misuse.invalid.json` |
 | Sensitive exact geometry | `invalid/sensitive_occurrence_record.public_exact_geometry.invalid.json` |
-| Modeled/observed collapse | `invalid/habitat_assignment.missing_class.invalid.json` |
+| Modeled/observed collapse | `invalid/<claim>.modeled_as_observed.invalid.json` |
+| Missing catalog closure | `invalid/derived_vegetation_layer.missing_catalog_refs.invalid.json` |
 | Malformed body | `malformed/error_invalid_fixture_shape.json` |
 | Malformed missing required fields | `malformed/occurrence/missing_required_fields.json` |
 | Malformed missing provenance | `malformed/occurrence/missing_provenance.json` |
@@ -295,19 +358,58 @@ python tools/validators/run_all.py --fixtures tests/fixtures/ecology
 | Malformed missing served precision | `malformed/geometry/precision_served_missing.json` |
 | Malformed runtime envelope | `malformed/runtime/malformed_envelope_missing_reason_code.json` |
 
-### Outcome grammar
+[Back to top](#top)
+
+---
+
+## Outcome grammar
 
 Use the narrowest truthful outcome.
 
 | Outcome | Use when |
 |---|---|
-| `PASS` | a validator confirms the fixture meets the stated contract |
-| `HOLD` | obligations remain, such as steward review, missing rights review, or unresolved source authority |
-| `DENY` | policy forbids the public or runtime action |
-| `ERROR` | the fixture or runner is malformed, unavailable, or invalid |
-| `ANSWER` | runtime can return a supported public-safe ecology answer |
-| `ABSTAIN` | evidence is insufficient or unresolved, but policy does not require denial |
-| `NEEDS VERIFICATION` | branch evidence, owner, runner, schema home, or fixture inventory is still unconfirmed |
+| `PASS` | A validator confirms the fixture meets the stated contract. |
+| `HOLD` | Obligations remain, such as steward review, missing rights review, unresolved source authority, or release-blocking ambiguity. |
+| `DENY` | Policy forbids the public or runtime action. |
+| `ERROR` | The fixture or runner is malformed, unavailable, invalid, or cannot be interpreted safely. |
+| `ANSWER` | Runtime can return a supported public-safe ecology answer. |
+| `ABSTAIN` | Evidence is insufficient or unresolved, but policy does not require denial. |
+| `NEEDS_VERIFICATION` | Branch evidence, owner, runner, schema home, source terms, or fixture inventory is still unconfirmed. |
+
+### Refusal states are success cases
+
+A fixture that correctly produces `DENY`, `ABSTAIN`, `HOLD`, or `ERROR` is not a failed KFM test by default. It may be the exact trust behavior the fixture is meant to prove.
+
+[Back to top](#top)
+
+---
+
+## Validation matrix
+
+### Source-role boundaries
+
+| Fixture source family | May support | Must not claim |
+|---|---|---|
+| Land cover / habitat context | habitat support, environmental context, modeled support, observed support when source evidence warrants | species occurrence by itself |
+| Occurrence aggregator | occurrence evidence or corroboration after rights, quality, and sensitivity checks | legal-status authority |
+| Agency legal/status source | state or federal conservation/regulatory status within authority scope | field observation unless source records it |
+| Herbarium or specimen collection | specimen-backed flora evidence with date, collector, locality posture, and rights handling | current presence without interpretation |
+| Community science observation | observation evidence after quality, rights, and geoprivacy review | unrestricted public precision |
+| Modeled suitability or range | modeled support with uncertainty and provenance | observed presence |
+| Protected-area context | management, conservation, or jurisdictional context | species occurrence or ownership truth |
+| Redacted public derivative | a public-safe output under declared transform rules | unrestricted access to the restricted source record |
+
+### Required fields by fixture burden
+
+| Burden | Required in the fixture or paired expected output |
+|---|---|
+| Source admission | `source_id`, `source_role`, authority scope, rights posture, sensitivity posture, access mode |
+| Public-safe occurrence | public geometry class, sensitivity summary, evidence refs, redaction/generalization receipt if applicable |
+| Habitat assignment | occurrence support, habitat/context support, derivation method, uncertainty or support class, evidence refs |
+| Catalog closure | same subject identity across EvidenceBundle, catalog snippets, and expected decision |
+| Negative outcome | explicit reason code, blocked field or obligation, expected outcome |
+| Runtime proof | request fixture, expected decision/envelope, and optional drawer payload if a downstream harness consumes it |
+| Malformed input | expected `ERROR`, reason code, and enough invalid shape to prove parser/validator behavior |
 
 [Back to top](#top)
 
@@ -344,30 +446,21 @@ flowchart LR
 
 ---
 
-## Operating tables
+## Reviewer workflow
 
-### Source-role boundaries
+Use this when reviewing a fixture PR.
 
-| Fixture source family | May support | Must not claim |
+| Review pass | Question | Good answer |
 |---|---|---|
-| Land cover / habitat context | habitat support, environmental context, modeled or observed support depending on source | species occurrence by itself |
-| Occurrence aggregator | occurrence evidence or corroboration after rights and quality checks | legal-status authority |
-| Agency legal/status source | state or federal conservation/regulatory status within authority scope | field observation unless source records it |
-| Herbarium or specimen collection | specimen-backed flora evidence with date, collector, and locality posture | current presence without interpretation |
-| Community science observation | observation evidence after quality, rights, and geoprivacy review | unrestricted public precision |
-| Modeled suitability or range | modeled support with uncertainty and provenance | observed presence |
-| Protected-area context | management or conservation context | species occurrence or ownership truth |
-
-### Required fields by fixture burden
-
-| Burden | Required in the fixture or paired expected output |
-|---|---|
-| Source admission | `source_id`, `source_role`, authority scope, rights posture, sensitivity posture, access mode |
-| Public-safe occurrence | public geometry class, sensitivity summary, evidence refs, redaction/generalization receipt if applicable |
-| Habitat assignment | occurrence support, habitat/context support, derivation method, uncertainty or support class, evidence refs |
-| Catalog closure | same subject identity across EvidenceBundle, catalog snippets, and expected decision |
-| Negative outcome | explicit reason code, blocked field or obligation, expected outcome |
-| Runtime proof | request fixture, expected decision/envelope, and optional drawer payload if a downstream harness consumes it |
+| Scope | Is this a tiny fixture, not a data mirror? | Yes; one behavior or failure reason is isolated. |
+| Source role | Is the source allowed to support the claim type? | Yes, or the expected outcome denies/abstains. |
+| Rights | Are rights explicit? | Yes; unknown rights do not allow public release. |
+| Sensitivity | Is exact sensitive geometry absent, generalized, or denied? | Yes; no real protected coordinates are exposed. |
+| Evidence | Does every factual public claim have evidence refs? | Yes; missing evidence leads to `ABSTAIN` or `DENY`. |
+| Modeled vs observed | Is modeled support kept distinct from observed occurrence? | Yes; no modeled-as-observed drift. |
+| Negative behavior | Is the expected refusal state specific? | Yes; reason code names the burden. |
+| Documentation | Did behavior-changing work update docs or explain why not? | Yes. |
+| Repo claims | Does the README avoid unverified implementation claims? | Yes; unverified branch behavior is labeled. |
 
 [Back to top](#top)
 
@@ -382,13 +475,30 @@ Before a fixture is considered ready for review:
 - [ ] The fixture does not contain real sensitive coordinates or private occurrence detail.
 - [ ] `source_role` is explicit where source authority matters.
 - [ ] Rights posture is explicit; unknown rights do not silently allow publication.
-- [ ] Sensitivity posture is explicit; exact sensitive geometry is denied or generalized.
+- [ ] Sensitivity posture is explicit; exact sensitive geometry is denied, generalized, or excluded.
 - [ ] Modeled support is not mislabeled as observed occurrence.
 - [ ] Evidence refs are present when the expected outcome makes a factual claim.
 - [ ] Negative fixtures include expected denial, abstention, hold, or error reasoning.
 - [ ] Catalog snippets, if present, close back to the same fixture subject and evidence bundle.
 - [ ] The fixture does not imply live connector, public release, route, UI, workflow, signing, or deployment maturity that the branch does not prove.
-- [ ] Any behavior-changing update also updates the relevant README, contract, schema, policy, or validator documentation.
+- [ ] Any behavior-changing update also updates the relevant README, contract, schema, policy, validator, or test documentation.
+
+[Back to top](#top)
+
+---
+
+## Rollback and correction
+
+Fixture changes should be reversible.
+
+| Problem found after merge | Smallest rollback |
+|---|---|
+| Fixture name conflicts with repo convention | Rename fixture and update README/index references. |
+| Expected outcome is wrong | Correct expected outcome and add a note explaining the previous failure. |
+| Fixture leaks sensitive detail | Remove or quarantine immediately; replace with synthetic/generalized equivalent; record reason. |
+| Fixture implies live connector or route maturity | Reword to `PROPOSED` / `NEEDS_VERIFICATION`; remove runtime claim. |
+| Schema/policy home was wrong | Move or alias through an ADR or migration note; do not maintain divergent definitions. |
+| Validator command was wrong | Replace with repo-native command once confirmed; keep placeholder labeled `NEEDS_VERIFICATION` until then. |
 
 [Back to top](#top)
 
@@ -418,7 +528,7 @@ Only where the active branch already proves the contract. Otherwise, examples re
 
 ### Can this leaf prove a published release?
 
-No. It can support release tests, but proof packs, ReleaseManifests, signatures, and rollback/correction receipts belong in release-bearing surfaces.
+No. It can support release tests, but proof packs, ReleaseManifests, signatures, promotion decisions, and rollback/correction receipts belong in release-bearing surfaces.
 
 [Back to top](#top)
 
@@ -546,6 +656,7 @@ Verify these before merging a real fixture update:
 - [ ] Are `EvidenceBundle`, `DecisionEnvelope`, `ReleaseManifest`, and `SourceDescriptor` schemas already mounted?
 - [ ] Are owners and CODEOWNERS confirmed for this leaf?
 - [ ] Is the policy label for this README public, internal, or restricted?
+- [ ] Does the fixture inventory above match the current branch after `find tests/fixtures/ecology -maxdepth 4 -type f | sort`?
 
 </details>
 
