@@ -1,0 +1,19 @@
+{
+  "bundle_id": "kfm://evidence/ecology/demo-001",
+  "object_type": "EvidenceBundle",
+  "schema_version": "v1",
+  "source_refs": [
+    "usda_plants",
+    "ndvi_derived_layers"
+  ],
+  "dataset_refs": [
+    "ecology.taxon_record.v1",
+    "ecology.derived_vegetation_layer.v1"
+  ],
+  "objects": [
+    "kfm://taxon/asclepias-syriaca",
+    "kfm://layer/ks-ndvi-2025-q3"
+  ],
+  "resolved": true,
+  "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+}
