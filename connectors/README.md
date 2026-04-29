@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: @bartytime4life
 created: NEEDS_VERIFICATION__YYYY-MM-DD
-updated: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-04-29
 policy_label: NEEDS_VERIFICATION__public_safe_or_restricted
 related: [../README.md, ../.github/CODEOWNERS, ../data/README.md, ../data/registry/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tools/validators/README.md, ../tools/validators/connector_gate/README.md, ./pipelines/README.md, ./pipelines/ecology/README.md]
 tags: [kfm, connectors, source-admission, ingestion, source-descriptor, receipts, fail-closed]
@@ -30,7 +30,7 @@ Source-admission and connector-orientation surface for bringing external source 
 > [!NOTE]
 > **Status:** `experimental` / `draft`  
 > **Intended path:** `connectors/README.md`  
-> **Owners:** `@bartytime4life` by broad fallback unless connector-specific CODEOWNERS verification says otherwise.  
+> **Owners:** `@bartytime4life` (verified against current `.github/CODEOWNERS` broad fallback on 2026-04-29).  
 > **Evidence mode:** README contract and orientation. Active implementation depth remains **NEEDS_VERIFICATION** until checked in the real repository.  
 > **Repo fit:** parent README for source-facing connector stubs, no-network connector fixtures, and pipeline-oriented admission work before governed lifecycle handoff.
 
