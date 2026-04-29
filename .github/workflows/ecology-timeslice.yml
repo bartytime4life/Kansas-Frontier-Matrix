@@ -156,14 +156,11 @@ jobs:
             --asset tileset=kfm://tileset/ecology/example-pass \
             --out /tmp/stac_item.json
 
-      - name: Validate STAC Item structure
+      - name: Validate STAC Item schema
         run: |
-          python -m json.tool /tmp/stac_item.json > /dev/null
-          jq -e '.type == "Feature"' /tmp/stac_item.json > /dev/null
-          jq -e '.stac_version == "1.0.0"' /tmp/stac_item.json > /dev/null
-          jq -e '.geometry.type == "Polygon"' /tmp/stac_item.json > /dev/null
-          jq -e '.properties["kfm:evidence_bundle"] != null' /tmp/stac_item.json > /dev/null
-          jq -e '.properties["kfm:promotion_decision"] != null' /tmp/stac_item.json > /dev/null
+          check-jsonschema \
+            --schemafile schemas/contracts/v1/ecology/stac_item.schema.json \
+            /tmp/stac_item.json
 
       - name: Fail closed on required dry-run artifacts
         run: |
