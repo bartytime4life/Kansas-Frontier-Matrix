@@ -121,6 +121,7 @@
           "source_role": {
             "type": "string",
             "enum": [
+              "AUTHORITATIVE",
               "TAXONOMIC_AUTHORITY",
               "OBSERVATION_SYSTEM",
               "AGGREGATOR",
@@ -134,6 +135,19 @@
           "citation": {
             "type": "string",
             "minLength": 1
+          },
+          "license": {
+            "type": "string"
+          },
+          "rights_status": {
+            "type": "string",
+            "enum": [
+              "public",
+              "open",
+              "controlled",
+              "restricted",
+              "unknown"
+            ]
           }
         }
       }
@@ -154,6 +168,7 @@
         "enum": [
           "DERIVED_SUPPORTED",
           "OBSERVED_SUPPORTED",
+          "AUTHORITATIVE_SOURCE",
           "EVIDENCE_RESOLVED",
           "PUBLIC_GENERALIZED",
           "PUBLIC_SAFE",
@@ -174,7 +189,9 @@
           "review_required",
           "generalized",
           "derived_context",
-          "redacted"
+          "redacted",
+          "public_safe",
+          "catalog_closure"
         ]
       }
     },
@@ -182,7 +199,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^kfm://receipt/redaction/.+"
+        "pattern": "^kfm://(receipt/redaction|receipts/geoprivacy|receipts/redaction)/.+"
       }
     },
     "limitations": {
