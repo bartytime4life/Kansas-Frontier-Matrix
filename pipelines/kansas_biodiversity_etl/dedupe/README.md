@@ -14,6 +14,9 @@ notes: [draft README generated from attached KFM doctrine; mounted target repo n
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Biodiversity ETL — Dedupe
+> [!WARNING]
+> **Implementation status: roadmap-only.** This lane is currently documentation-only in this repository snapshot (README-only directory). Track implementation in `docs/tracking/pipeline-roadmap-only-lanes.md` before treating commands, scripts, or tests here as available.
+
 
 Deduplicate Kansas biodiversity candidate records without erasing evidence, source role, sensitivity, rights, or review state.
 

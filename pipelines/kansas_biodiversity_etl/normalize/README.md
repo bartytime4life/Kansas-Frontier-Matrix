@@ -16,6 +16,9 @@ notes: [Target path is confirmed on public main; the current leaf README was emp
 <a id="top"></a>
 
 # Kansas Biodiversity ETL — Normalize
+> [!WARNING]
+> **Implementation status: roadmap-only.** This lane is currently documentation-only in this repository snapshot (README-only directory). Track implementation in `docs/tracking/pipeline-roadmap-only-lanes.md` before treating commands, scripts, or tests here as available.
+
 
 Convert harvested Kansas biodiversity occurrence inputs into deterministic, source-traceable, policy-aware normalized candidates without publishing or weakening the KFM trust path.
 

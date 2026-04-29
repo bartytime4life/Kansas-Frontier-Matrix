@@ -16,6 +16,9 @@ notes: [Drafted from attached KFM habitat, pipeline, MapLibre UI, and documentat
 <a id="top"></a>
 
 # Habitat Layer Build Pipeline
+> [!WARNING]
+> **Implementation status: roadmap-only.** This lane is currently documentation-only in this repository snapshot (README-only directory). Track implementation in `docs/tracking/pipeline-roadmap-only-lanes.md` before treating commands, scripts, or tests here as available.
+
 
 Builds **reviewable habitat layer candidates** from governed habitat inputs without bypassing source roles, validation, catalog closure, release review, or EvidenceBundle-backed publication.
 
