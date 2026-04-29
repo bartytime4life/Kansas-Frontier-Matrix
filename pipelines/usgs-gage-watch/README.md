@@ -31,6 +31,9 @@ notes: [
 <a id="top"></a>
 
 # USGS Gage → HUC Overlay Watcher
+> [!WARNING]
+> **Implementation status: roadmap-only.** This lane is currently documentation-only in this repository snapshot (README-only directory). Track implementation in `docs/tracking/pipeline-roadmap-only-lanes.md` before treating commands, scripts, or tests here as available.
+
 
 Ingest **live USGS gage streams** and bind each sample to **HUC12/10/8 overlays** and a **mainstem crosswalk**, emitting **receipts** and **KFM sidecars** for governed promotion.
 

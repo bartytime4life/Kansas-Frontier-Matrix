@@ -29,6 +29,9 @@ notes: [
 <a id="top"></a>
 
 # Soil & Air Quality Watchers
+> [!WARNING]
+> **Implementation status: roadmap-only.** This lane is currently documentation-only in this repository snapshot (README-only directory). Track implementation in `docs/tracking/pipeline-roadmap-only-lanes.md` before treating commands, scripts, or tests here as available.
+
 
 Evidence-first polling connectors for soil and air-quality data sources.  
 These watchers ingest, diff, and attest external data into KFM as **EvidenceBundles**, not publishable claims.
