@@ -1,1 +1,40 @@
+{
+  "object_type": "EvidenceBundle",
+  "bundle_id": "kfm://evidence/ecology/test/review-required-hold",
 
+  "source_refs": ["usgs_landfire"],
+  "dataset_refs": ["lf2024_evc"],
+
+  "policy_id": "ecology_publication_policy_v1",
+  "policy_label": "review_required",
+
+  "sensitivity": "review_required",
+  "rights_status": "public",
+
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+
+  "evidence_refs": [
+    "kfm://evidence/source/lf2024/evc"
+  ],
+  "evidence_bundle_resolved": true,
+
+  "resolved": true,
+
+  "surface": "public",
+  "publication_state": "published",
+
+  "source_role": "AUTHORITATIVE",
+
+  "catalog_closure": true,
+
+  "assets": [
+    {
+      "asset_id": "evc_cog",
+      "type": "raster",
+      "format": "COG",
+      "href": "s3://kfm/test/ecology/evc.tif",
+      "checksum": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "public_safe": true
+    }
+  ]
+}
