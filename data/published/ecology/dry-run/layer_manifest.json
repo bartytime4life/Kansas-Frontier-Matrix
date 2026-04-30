@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyLayerManifest",
+  "layer_id": "kfm://layer/ecology/example-pass",
+  "title": "KFM Ecology Example Time Slice",
+  "source_type": "vector",
+  "tiles_url": "https://example.invalid/tiles/{z}/{x}/{y}.pbf",
+  "source_layer": "ecology",
+  "stac_catalog_ref": "kfm://catalog/stac",
+  "stac_collection_ref": "kfm://catalog/stac/collections/kfm-ecology-timeslices",
+  "evidence_bundle_ref": "kfm://evidence/ecology/example-pass-timeslice",
+  "promotion_decision_ref": "kfm://promotion/ecology/example-pass",
+  "run_receipt_ref": "kfm://receipt/run/ecology/dry-run",
+  "minzoom": 0,
+  "maxzoom": 14,
+  "allowed_fields": ["class", "confidence", "time_start", "time_end"],
+  "public_safe": true
+}
