@@ -182,7 +182,7 @@ jobs:
           cat "$KFM_CI_ARTIFACT_DIR/repo-inventory.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload inventory artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-ci-inventory
           path: .kfm-ci/
@@ -340,7 +340,7 @@ jobs:
 
       - name: Upload static guardrail artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-static-guardrails
           path: .kfm-ci/static-guardrails.md
@@ -490,7 +490,7 @@ jobs:
 
       - name: Upload schema validation artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-schema-validation
           path: .kfm-ci/schema-validation.md
@@ -559,7 +559,7 @@ jobs:
 
       - name: Upload policy artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-policy-tests
           path: .kfm-ci/
@@ -644,7 +644,7 @@ jobs:
 
       - name: Upload Node CI artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-node-ci
           path: .kfm-ci/node-ci.md
@@ -719,7 +719,7 @@ jobs:
 
       - name: Upload Python CI artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-python-ci
           path: .kfm-ci/python-ci.md
@@ -755,7 +755,7 @@ jobs:
 
       - name: Upload Go CI artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-go-ci
           path: .kfm-ci/go-ci.md
@@ -790,7 +790,7 @@ jobs:
 
       - name: Upload Rust CI artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-rust-ci
           path: .kfm-ci/rust-ci.md
@@ -933,7 +933,7 @@ jobs:
 
       - name: Upload governed object fixture artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-governed-object-fixtures
           path: .kfm-ci/governed-object-fixtures.md
@@ -1059,7 +1059,7 @@ jobs:
 
       - name: Upload docs continuity artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-docs-continuity
           path: .kfm-ci/docs-continuity.md
@@ -1144,7 +1144,7 @@ jobs:
 
       - name: Upload release gate artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kfm-catalog-proof-release
           path: .kfm-ci/catalog-proof-release.md
