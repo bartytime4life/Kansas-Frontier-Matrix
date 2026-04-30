@@ -4,38 +4,41 @@ title: KFM Markdown Rules
 type: standard
 version: v1
 status: draft
-owners: @bartytime4life
+owners: NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION
 updated: 2026-04-30
 policy_label: NEEDS_VERIFICATION
 related: [docs/standards/README.md, docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md, docs/standards/markdown-rules.md, docs/README.md, README.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/README.md, contracts/README.md, schemas/README.md, policy/README.md, tests/README.md]
-tags: [kfm, documentation, markdown, standards, governance]
-notes: [Task-facing mirror of docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md; protocol remains authoritative if this file diverges; owners grounded in current CODEOWNERS fallback; doc_id, created date, and policy_label still need active-repo verification.]
+tags: [kfm, documentation, markdown, standards, governance, evidence-first]
+notes: [Task-facing mirror of docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md; protocol remains authoritative if this file diverges; doc_id, owner, created date, policy_label, and related path availability require active-repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `markdown-rules.md`
+# KFM Markdown Rules
 
-Concise, task-facing Markdown authoring brief for KFM contributors.
+Concise, task-facing Markdown authoring rules for KFM contributors who need repo-ready prose without weakening evidence, policy, review, release, or correction boundaries.
 
 > [!IMPORTANT]
-> This file is the quick guide.  
-> The normative Markdown standard remains [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md). If the two files conflict, the protocol wins until maintainers explicitly consolidate or reassign authority.
+> This file is a quick guide, not the governing Markdown protocol. The normative Markdown standard remains [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md). If the two files conflict, the protocol wins until maintainers explicitly consolidate the documents or reassign authority.
 
-> **Status:** experimental  
-> **Document status:** draft  
-> **Owners:** `@bartytime4life`  
-> **Path:** `docs/standards/markdown-rules.md`  
-> **Authority class:** task-facing mirror / authoring checklist  
-> **Repo fit:** standards-lane quick reference under [`./README.md`](./README.md), aligned to [`./KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md), and downstream from the documentation control plane in [`../README.md`](../README.md).  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Core rules](#core-rules) · [Document types](#document-types) · [Formatting](#formatting) · [Evidence](#evidence-and-truth-labels) · [Workflow](#authoring-workflow) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+| Field | Value |
+|---|---|
+| **Status** | `draft` / `NEEDS_VERIFICATION` in active repo |
+| **Authority class** | Task-facing mirror / authoring checklist |
+| **Expected path** | `docs/standards/markdown-rules.md` |
+| **Primary upstream** | [`./KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) |
+| **Primary downstream users** | Contributors, reviewers, documentation maintainers, architecture writers |
+| **Evidence posture** | Cite, label, or abstain; do not turn prose into implementation proof |
+| **Repo evidence limit** | Path, owner, policy, workflow, and enforcement claims require active-repo verification |
 
-![Status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
-![Doc: draft](https://img.shields.io/badge/doc-draft-lightgrey)
+![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)
 ![Surface: markdown rules](https://img.shields.io/badge/surface-markdown%20rules-0a7ea4)
 ![Truth: evidence first](https://img.shields.io/badge/truth-evidence%20first-2ea043)
 ![Policy: verify](https://img.shields.io/badge/policy-verify%20before%20claiming-f59e0b)
+![Mode: quick guide](https://img.shields.io/badge/mode-quick%20guide-6f42c1)
+
+**Quick jump:** [Scope](#scope) · [Fast path](#fast-path) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Core rules](#core-rules) · [Document patterns](#document-patterns) · [Metadata](#required-metadata-block) · [Formatting](#formatting) · [Evidence](#evidence-and-truth-labels) · [Workflow](#authoring-workflow) · [Definition of done](#definition-of-done) · [Commands](#quick-inspection-commands) · [Review red flags](#review-red-flags) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
@@ -47,17 +50,38 @@ This file is for:
 
 - cleaning up Markdown before a PR;
 - drafting or revising README-like docs;
-- adding a metadata block correctly;
-- checking headings, links, tables, callouts, diagrams, and examples;
-- deciding when to mark a claim `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`;
-- keeping standards prose aligned with evidence, policy, review state, and downstream proof burden.
+- adding or reviewing a `KFM_META_BLOCK_V2` metadata block;
+- checking headings, links, tables, callouts, Mermaid diagrams, examples, and details blocks;
+- deciding when to mark a claim `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS_VERIFICATION`;
+- preserving KFM's evidence-first, map-first, time-aware, policy-aware, reviewable, reversible documentation posture;
+- keeping standards prose aligned with evidence, policy, review state, release state, and downstream proof burden.
 
 This file is not for:
 
 - defining new doctrine;
 - replacing [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md);
-- proving CI, runtime, branch protection, workflow enforcement, source activation, release state, or policy coverage;
-- moving machine schemas, Rego policy, fixtures, source descriptors, receipts, proofs, catalogs, or release manifests into prose.
+- proving CI, runtime behavior, branch protection, workflow enforcement, source activation, release state, or policy coverage;
+- moving machine schemas, Rego policy, fixtures, source descriptors, receipts, proofs, catalogs, or release manifests into prose;
+- turning exploratory packets, generated summaries, AI answers, tiles, maps, dashboards, scenes, or derived views into authority.
+
+[Back to top](#top)
+
+---
+
+## Fast path
+
+When you only have a few minutes, do these first.
+
+1. Confirm the file has exactly one H1.
+2. Put a plain purpose sentence directly under the title.
+3. Add or repair `KFM_META_BLOCK_V2` without inventing unverified values.
+4. State scope, non-goals, upstream authority, and downstream dependencies.
+5. Label uncertain implementation claims as `PROPOSED`, `UNKNOWN`, or `NEEDS_VERIFICATION`.
+6. Link to stronger sources instead of copying them.
+7. Run or request link, heading, metadata, and Markdown checks.
+
+> [!TIP]
+> Good KFM Markdown should feel polished, but its polish must never make it sound more certain than the evidence allows.
 
 [Back to top](#top)
 
@@ -65,7 +89,7 @@ This file is not for:
 
 ## Repo fit
 
-| Relationship | Path | Role |
+| Relationship | Expected path | Role |
 |---|---|---|
 | This file | `docs/standards/markdown-rules.md` | Fast task-facing checklist for KFM Markdown |
 | Normative protocol | [`./KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) | Authoritative Markdown authoring and review protocol |
@@ -76,14 +100,34 @@ This file is not for:
 | Machine meaning | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md) | Contracts and schemas that prose must not silently replace |
 | Policy and verification | [`../../policy/README.md`](../../policy/README.md), [`../../tests/README.md`](../../tests/README.md) | Policy rules, deny reasons, tests, fixtures, and validation evidence |
 
+> [!NOTE]
+> The paths above are expected KFM homes. Their presence, ownership, and enforcement state must be verified in the active repository before being used as implementation proof.
+
 ### Boundary rule
 
 | Surface | Job | Not allowed to do |
 |---|---|---|
-| `markdown-rules.md` | Give maintainers a fast checklist | Become a second standard |
+| `markdown-rules.md` | Give contributors and reviewers a fast checklist | Become a second standard |
 | `KFM_MARKDOWN_WORK_PROTOCOL.md` | Define the governing Markdown protocol | Hide uncertainty or implementation gaps |
 | `docs/standards/README.md` | Route standards work to the right file | Prove enforcement |
 | Contracts / schemas / policy / tests | Prove or execute rules | Be replaced by narrative prose |
+| Generated summaries or AI answers | Help interpret evidence | Become root truth or release authority |
+
+### Trust membrane sketch
+
+```mermaid
+flowchart LR
+    A[Repo evidence / doctrine / source corpus] --> B[Markdown author]
+    B --> C{Claim type?}
+    C -->|directly verified| D[CONFIRMED]
+    C -->|design target| E[PROPOSED]
+    C -->|not verified| F[UNKNOWN or NEEDS_VERIFICATION]
+    D --> G[Repo-ready prose]
+    E --> G
+    F --> H[Verification backlog]
+    G --> I[Review]
+    I --> J[Adjacent docs / contracts / tests updated when needed]
+```
 
 [Back to top](#top)
 
@@ -96,11 +140,12 @@ Put Markdown guidance here only when it helps contributors write, revise, or rev
 | Input | Belongs here when… | Route elsewhere when… |
 |---|---|---|
 | Quick Markdown checklist | The rule helps authors prepare a doc for review | The rule changes the normative protocol |
-| Formatting guidance | It covers headings, tables, links, callouts, Mermaid, details blocks, or code fences | It requires a linter, validator, or CI workflow change |
+| Formatting guidance | It covers headings, tables, links, callouts, Mermaid, details blocks, images, or code fences | It requires a linter, validator, or CI workflow change |
 | Truth-label reminders | It helps authors avoid overclaiming | It defines a new evidence tier or doctrine |
 | README-like structure | It summarizes the expected shape of repo landing docs | It changes a directory README’s scope or authority |
 | Metadata reminder | It restates the required `KFM_META_BLOCK_V2` pattern | It changes metadata semantics, schema, or validation |
 | Review checklist | It helps reviewers catch common Markdown failures | It becomes a policy gate, workflow, or required check |
+| Examples | They illustrate existing rules | They establish new requirements |
 
 [Back to top](#top)
 
@@ -121,6 +166,7 @@ Do not hide implementation, policy, evidence, or release objects inside Markdown
 | Receipts, proofs, catalogs, release manifests | `data/receipts/**`, `data/proofs/**`, `data/catalog/**`, `release/**`, or repo-confirmed emitted-artifact lane | These are process memory and release evidence |
 | Runtime routes, DTOs, adapters, UI components | App/package lanes confirmed by repo inspection | Code implements behavior; docs explain boundaries |
 | Exploratory packet content | `docs/intake/**` or `docs/archive/exploratory/**` when present | Exploratory material must not become accidental authority |
+| Sensitive exact-location details | Governed restricted-access records and public-safe generalized products | Public docs should fail closed when exposure risk matters |
 
 [Back to top](#top)
 
@@ -138,7 +184,7 @@ Every Markdown file should have exactly one `#` heading.
 One-line purpose.
 ```
 
-Avoid multiple H1s, decorative H1s, or file names that do not match the document’s role.
+Avoid multiple H1s, decorative H1s, or file-name-only titles that do not communicate the document’s role.
 
 ### 2. Start with purpose
 
@@ -169,18 +215,20 @@ Every substantial doc should answer:
 - What upstream surface governs this file?
 - What downstream surface depends on this file?
 - What would prove a stronger claim?
+- What release, sensitivity, rights, or review burden applies?
 
 ### 4. Label uncertainty where it matters
 
-Use the narrowest truthful label:
+Use the narrowest truthful label.
 
 | Label | Use when… |
 |---|---|
 | `CONFIRMED` | Direct evidence supports the statement from inspected repo files, supplied doctrine, generated artifacts, tests, logs, or current verified source evidence |
 | `INFERRED` | Strong evidence supports the conclusion, but the claim is not directly proven |
-| `PROPOSED` | The statement is a recommendation, target, design move, or future file/path |
+| `PROPOSED` | The statement is a recommendation, target, design move, future file/path, or not-yet-verified implementation plan |
 | `UNKNOWN` | The evidence is not strong enough to state safely |
-| `NEEDS VERIFICATION` | A concrete check is required before relying on the claim |
+| `NEEDS_VERIFICATION` | A concrete check is required before relying on the claim |
+| `CONFLICTED` | Evidence points to incompatible homes, terms, authorities, or interpretations that need resolution |
 
 Do not upgrade uncertainty because the prose sounds plausible.
 
@@ -193,6 +241,7 @@ Never write:
 - “This policy denies…” unless the policy rule, tests, or decision artifact is visible.
 - “This artifact is published” unless the release/promotion evidence exists.
 - “This owner is active” unless CODEOWNERS, team access, or stewardship records confirm it.
+- “This map proves…” unless the map claim resolves to admissible evidence and release state.
 
 ### 6. Link instead of duplicating
 
@@ -202,11 +251,11 @@ Prefer:
 See [`../../contracts/README.md`](../../contracts/README.md) for contract-surface routing.
 ```
 
-Avoid copying authoritative content into a second surface.
+Avoid copying authoritative content into a second surface unless the copy is explicitly marked as a summary and the stronger source remains linked.
 
 ### 7. Keep KFM’s trust path visible
 
-Docs should not flatten KFM’s core lifecycle:
+Docs should not flatten KFM’s core lifecycle.
 
 ```text
 RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
@@ -216,13 +265,27 @@ Public or semi-public claims should remain downstream of evidence, source role, 
 
 ### 8. Keep AI and renderers downstream
 
-Map views, 3D scenes, dashboards, story pages, summaries, and model answers are not sovereign truth. They are downstream surfaces that must point back to evidence, policy, review, and release state.
+Map views, 3D scenes, dashboards, story pages, summaries, model answers, vector indexes, search layers, and derived tiles are not sovereign truth. They are downstream surfaces that must point back to evidence, policy, review, and release state.
+
+### 9. Make review cheap
+
+Good Markdown makes it easy for reviewers to answer:
+
+- What changed?
+- What evidence supports it?
+- What remains unknown?
+- What stronger file owns the rule?
+- What would rollback look like?
+
+### 10. Update adjacent docs when behavior changes
+
+When a Markdown change materially affects a neighboring standard, README, ADR, contract, schema, policy, test, runbook, release process, or review route, update that surface or record why it did not change.
 
 [Back to top](#top)
 
 ---
 
-## Document types
+## Document patterns
 
 Use the shape that fits the file. Do not pad docs with empty sections.
 
@@ -236,6 +299,18 @@ Use the shape that fits the file. Do not pad docs with empty sections.
 | Domain doc | Lane scope, source roles, evidence burden, sensitivity, public posture, open gaps | Source matrix, policy table |
 | Report | Evidence basis, method, results, unknowns, recommendations | Appendix, command transcript |
 | Template | Minimal reusable shape | Placeholder rules and examples |
+| Review note | Scope of review, evidence checked, findings, open gaps | Diff summary, follow-up checklist |
+
+### Pattern chooser
+
+| Need | Use |
+|---|---|
+| “Where does this kind of work go?” | Directory README or standards index |
+| “What rule governs contributors?” | Standard doc or protocol |
+| “Why did we choose this?” | ADR |
+| “How do I execute a repeatable operation?” | Runbook |
+| “What can public users see?” | Domain doc, policy doc, or release note |
+| “What changed in this pass?” | Review note or changelog |
 
 [Back to top](#top)
 
@@ -271,12 +346,32 @@ notes: [<short review notes>]
 | `doc_id` | Use a verified ID or a reviewable placeholder |
 | `title` | Match the visible H1 in substance |
 | `type` | Use `standard` for standard docs unless another documented type applies |
-| `status` | Use `draft`, `review`, or `published` only when supported |
+| `version` | Use a meaningful version only when the file’s versioning policy supports it |
+| `status` | Use `draft`, `review`, or `published` only when supported by repo evidence or maintainer decision |
 | `owners` | Use CODEOWNERS or steward evidence; otherwise mark `NEEDS_VERIFICATION` |
 | `created` / `updated` | Use verified dates; current revision date may be used for `updated` when this is the revision output |
 | `policy_label` | Use verified policy label or `NEEDS_VERIFICATION` |
-| `related` | Prefer repo-relative paths that are expected to exist; mark uncertainty in notes |
-| `notes` | Keep short and reviewable |
+| `related` | Prefer repo-relative paths or stable `kfm://` IDs; mark uncertainty in notes |
+| `tags` | Keep discoverable and stable; do not turn tags into policy |
+| `notes` | Keep short, reviewable, and uncertainty-aware |
+
+### Metadata anti-patterns
+
+Avoid:
+
+```markdown
+owners: @team-that-sounds-right
+policy_label: public
+created: 2024-01-01
+```
+
+Use instead:
+
+```markdown
+owners: NEEDS_VERIFICATION
+policy_label: NEEDS_VERIFICATION
+created: NEEDS_VERIFICATION
+```
 
 [Back to top](#top)
 
@@ -290,12 +385,13 @@ notes: [<short review notes>]
 - Keep headings informative.
 - Preserve stable anchors when revising existing docs unless the change is worth the breakage.
 - Use one H1 only.
+- Do not use heading levels for visual decoration.
 
 ### Paragraphs
 
 Prefer short paragraphs with one job each.
 
-Avoid long uninterrupted blocks, especially in architecture, policy, and standards docs.
+Avoid long uninterrupted blocks, especially in architecture, policy, standards, source registry, and release docs.
 
 ### Lists
 
@@ -312,9 +408,9 @@ Good:
 
 ### Tables
 
-Use tables for matrices, routing decisions, status summaries, file responsibilities, ownership, and comparison.
+Use tables for matrices, routing decisions, status summaries, file responsibilities, ownership, and comparisons.
 
-Leave a blank line before every table.
+Leave a blank line before every table. Keep wide tables readable. If a table needs more than five dense columns, consider cards, subsections, or an appendix.
 
 ### Code fences
 
@@ -337,7 +433,7 @@ Use `text` for plain examples that are not executable.
 
 ### Callouts
 
-Use GitHub callouts only when they add value:
+Use GitHub callouts only when they add value.
 
 ```markdown
 > [!NOTE]
@@ -376,6 +472,8 @@ flowchart TD
     F --> H[Review + link check]
 ```
 
+Do not use Mermaid as decoration. Use it to show lifecycle, routing, authority, review, or trust boundaries.
+
 ### Details blocks
 
 Use `<details>` for long examples, appendices, or reference material. Do not hide critical rules.
@@ -389,6 +487,13 @@ Example content.
 </details>
 ```
 
+### Links
+
+- Prefer repo-relative links when linking inside the repository.
+- Preserve anchor stability when revising docs.
+- Do not link to a file as proof of behavior unless the file actually proves the claim.
+- For version-sensitive external facts, cite or link official sources and mark operational use `NEEDS_VERIFICATION` when appropriate.
+
 ### Images
 
 When images are used:
@@ -396,7 +501,8 @@ When images are used:
 - use repo-relative paths;
 - include meaningful alt text;
 - avoid decorative-only images in standards docs;
-- use `<picture>` when light/dark variants are required.
+- use `<picture>` when light/dark variants are required;
+- explain what the image proves, illustrates, or does not prove.
 
 [Back to top](#top)
 
@@ -408,16 +514,16 @@ KFM docs are truth surfaces. A polished doc that hides uncertainty is worse than
 
 ### Claim test
 
-Before writing “the repo contains,” “CI enforces,” “the API returns,” “the policy blocks,” or “the layer is published,” ask:
+Before writing “the repo contains,” “CI enforces,” “the API returns,” “the policy blocks,” “the layer is published,” or “the map proves,” ask:
 
 | Question | If no… |
 |---|---|
-| Did I inspect the file, test, workflow, manifest, log, dashboard, or emitted artifact? | Use `UNKNOWN` or `NEEDS VERIFICATION` |
+| Did I inspect the file, test, workflow, manifest, log, dashboard, or emitted artifact? | Use `UNKNOWN` or `NEEDS_VERIFICATION` |
 | Is this a doctrine claim rather than implementation behavior? | Say it is doctrine |
 | Is this a future design? | Use `PROPOSED` |
 | Is this inferred from adjacent evidence? | Use `INFERRED` |
 | Is this based on an exploratory packet? | Treat as exploratory unless promoted |
-| Could rights, sensitivity, sovereignty, living-person, public-location, or release state matter? | Fail closed and mark the release burden |
+| Could rights, sensitivity, sovereignty, living-person, public-location, cultural, archaeological, rare-species, or release state matter? | Fail closed and mark the release burden |
 
 ### Strong phrasing
 
@@ -430,7 +536,7 @@ PROPOSED: Add a validator for this fixture family.
 
 UNKNOWN: Runtime behavior has not been verified in this session.
 
-NEEDS VERIFICATION: Branch protection and required checks must be checked in GitHub settings.
+NEEDS_VERIFICATION: Branch protection and required checks must be checked in GitHub settings.
 ```
 
 Avoid:
@@ -442,6 +548,17 @@ This workflow blocks bad releases.
 The map proves the claim.
 The AI answer is authoritative.
 ```
+
+### Source role reminder
+
+| Source class | Can support | Cannot support by itself |
+|---|---|---|
+| Current repo file | File presence, intended local behavior, implementation shape | Runtime behavior unless executed or logged |
+| Test output | Tested behavior under specific conditions | Untested runtime guarantees |
+| Workflow config | Intended automation | Branch protection or successful run state |
+| Doctrine PDF or architecture doc | Governing intent or design posture | Current implementation maturity |
+| Exploratory packet | Backlog idea or design pressure | Canonical rule or public release authority |
+| AI-generated summary | Interpretation aid | Source truth, policy, review, or promotion proof |
 
 [Back to top](#top)
 
@@ -475,6 +592,17 @@ flowchart LR
 9. Run or request link, anchor, metadata, and Markdown checks.
 10. Record unresolved verification items.
 
+### Change discipline
+
+| Change type | Preferred action |
+|---|---|
+| Small wording improvement | Edit directly and preserve anchors |
+| New checklist item | Add under the smallest relevant section |
+| New normative rule | Route to the protocol first |
+| New metadata field | Update schema/protocol/tooling surfaces, not only prose |
+| New enforcement claim | Verify workflow, test, policy, and platform evidence first |
+| Conflicting paths or homes | Create or update an ADR candidate |
+
 [Back to top](#top)
 
 ---
@@ -486,7 +614,7 @@ A Markdown change is ready for review when all applicable items are true.
 - [ ] One H1 only.
 - [ ] Purpose line appears directly below the title.
 - [ ] `KFM_META_BLOCK_V2` is present for standard docs unless a documented exception applies.
-- [ ] Status, owners, path, and policy label are verified or clearly marked `NEEDS VERIFICATION`.
+- [ ] Status, owners, path, and policy label are verified or clearly marked `NEEDS_VERIFICATION`.
 - [ ] Scope is explicit.
 - [ ] Accepted inputs and exclusions are clear when the file routes work.
 - [ ] Repo fit identifies upstream and downstream surfaces.
@@ -497,9 +625,9 @@ A Markdown change is ready for review when all applicable items are true.
 - [ ] Tables are used where they clarify routing or status.
 - [ ] Mermaid diagrams are meaningful, not decorative.
 - [ ] Long reference material is wrapped in `<details>` when appropriate.
-- [ ] Sensitive release, rights, sovereignty, living-person, cultural, exact-location, or public-safety concerns are visible.
+- [ ] Sensitive release, rights, sovereignty, living-person, cultural, archaeological, rare-species, exact-location, or public-safety concerns are visible.
 - [ ] Adjacent README, protocol, standard, ADR, contract, schema, policy, test, or runbook surfaces are updated when the change affects them.
-- [ ] Unknowns are recorded as `UNKNOWN`, `NEEDS VERIFICATION`, an ADR candidate, or a backlog item.
+- [ ] Unknowns are recorded as `UNKNOWN`, `NEEDS_VERIFICATION`, an ADR candidate, or a backlog item.
 - [ ] The change does not create a second authority beside a stronger neighboring file.
 
 [Back to top](#top)
@@ -530,7 +658,41 @@ test -f docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md
 test -f docs/standards/markdown-rules.md
 ```
 
-When a check fails, do not invent a new home. Mark the gap `NEEDS VERIFICATION`, update the routing table, or open the smallest ADR/backlog item needed to resolve the mismatch.
+```bash
+# Basic link target scan from the expected file directory.
+python - <<'PY'
+from pathlib import Path
+import re
+
+root = Path.cwd()
+path = root / "docs/standards/markdown-rules.md"
+text = path.read_text(encoding="utf-8")
+links = re.findall(r"\[[^\]]+\]\((?!https?://)([^)#]+)(?:#[^)]+)?\)", text)
+for link in sorted(set(links)):
+    target = (path.parent / link).resolve()
+    if not target.exists():
+        print(f"NEEDS_VERIFICATION: missing link target {link}")
+PY
+```
+
+When a check fails, do not invent a new home. Mark the gap `NEEDS_VERIFICATION`, update the routing table, or open the smallest ADR/backlog item needed to resolve the mismatch.
+
+[Back to top](#top)
+
+---
+
+## Review red flags
+
+| Red flag | Why it matters | Safer rewrite |
+|---|---|---|
+| “The repo already…” without inspected files | Turns memory or assumptions into evidence | “UNKNOWN until active repo inspection confirms…” |
+| “CI blocks…” without workflow/run/platform evidence | Overclaims enforcement | “PROPOSED CI gate…” or “NEEDS_VERIFICATION: required checks…” |
+| “The AI knows…” | Collapses interpretation and truth | “Focus Mode may summarize released EvidenceBundles…” |
+| “The map shows…” as final proof | Rendered views are downstream | “The map layer links to EvidenceBundle…” |
+| Exact sensitive locations in public docs | Exposure and misuse risk | Generalize, redact, quarantine, or require steward review |
+| Long copied protocol text | Creates shadow authority | Link to the protocol and summarize narrowly |
+| New rule added only here | Bypasses normative protocol | Move or mirror through protocol update |
+| Dense, seven-column table | Hard to review and likely to wrap badly | Split into smaller tables or cards |
 
 [Back to top](#top)
 
@@ -556,7 +718,7 @@ Only if it is clearly a quick-guide restatement or marked `PROPOSED`. Normative 
 
 ### Do all docs need badges?
 
-README-like docs and major landing docs should include a compact impact block with badges. Standard docs may include badges when they improve scanability, but badges never prove enforcement.
+README-like docs and major landing docs may include a compact impact block with badges. Standard docs may include badges when they improve scanability, but badges never prove enforcement.
 
 ### Do all docs need diagrams?
 
@@ -565,6 +727,10 @@ No. Use Mermaid when a real flow, boundary, lifecycle, or responsibility map bec
 ### Can a standard say a policy is enforced?
 
 Only with direct evidence. A standard may say “this policy should deny” as `PROPOSED`, but “this policy denies” requires inspected policy, fixture, test, decision artifact, or runtime evidence.
+
+### Should I use `NEEDS VERIFICATION` or `NEEDS_VERIFICATION`?
+
+Use `NEEDS_VERIFICATION` for machine-like labels and metadata. If older docs use the spaced form, preserve it only when needed for compatibility and note the normalization plan.
 
 [Back to top](#top)
 
@@ -597,6 +763,24 @@ Update this file when:
 - truth-label vocabulary changes;
 - a maintainer consolidates this file with the protocol;
 - a repo inspection proves that current assumptions about owners, policy labels, or validation need correction.
+
+### Minimal review note template
+
+```markdown
+## Review note
+
+**Target:** `<path>`
+
+**Evidence checked:** `<files / tests / workflows / docs>`
+
+**CONFIRMED:** `<directly verified items>`
+
+**PROPOSED:** `<recommended changes>`
+
+**UNKNOWN / NEEDS_VERIFICATION:** `<open checks>`
+
+**Rollback:** `<how to revert or supersede>`
+```
 
 ### Final rule
 
