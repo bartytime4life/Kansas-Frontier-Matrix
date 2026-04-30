@@ -16,3 +16,5 @@ This document covers Layer 10 productization for `kfm-ebird`.
 
 ## Layer 12 federation/export
 See `docs/domains/fauna/EBIRD_FEDERATION.md` for federation index, discovery, semantic graph, STAC-lite/RO-Crate-lite/warehouse/search exports, and public-safety constraints.
+
+See `docs/domains/fauna/EBIRD_REDTEAM.md` for Layer 18 synthetic adversarial testing.
