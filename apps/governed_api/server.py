@@ -6,6 +6,13 @@ Minimal FastAPI server for public-safe dry-run ecology publication artifacts.
 
 Endpoints:
   GET /healthz
+  GET /api/healthz
+  GET /api/layers/manifest
+  GET /api/ecology/timeslices/{id}
+  GET /api/ecology/evidence/{bundle_id}
+  GET /api/ecology/catalog/stac
+
+Legacy aliases retained:
   GET /ecology/timeslices/{id}
   GET /ecology/evidence/{bundle_id}
   GET /ecology/catalog/stac
@@ -32,6 +39,7 @@ from pathlib import Path as FsPath
 from typing import Any, Final
 
 from fastapi import FastAPI, HTTPException, Path as ApiPath
+from fastapi.middleware.cors import CORSMiddleware
 
 
 DEFAULT_ARTIFACT_ROOT: Final[FsPath] = FsPath(
@@ -46,6 +54,9 @@ PUBLIC_DENY_FIELDS: Final[frozenset[str]] = frozenset(
         "internal_notes",
         "private_notes",
         "raw_source_payload",
+        "filesystem_path",
+        "local_path",
+        "absolute_path",
     }
 )
 
@@ -72,6 +83,7 @@ PUBLIC_SENSITIVITY_ALLOW_VALUES: Final[frozenset[str]] = frozenset(
     {
         "coarse",
         "generalized",
+        "generalize",
         "low",
         "masked",
         "non_sensitive",
@@ -101,8 +113,19 @@ POLICY_ALLOW_VALUES: Final[frozenset[str]] = frozenset(
 
 app = FastAPI(
     title="KFM Governed Ecology API",
-    version="0.1.1",
+    version="0.2.0",
     description="Public-safe governed API for KFM Ecology publication artifacts.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:4173",
+        "http://localhost:4173",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET"],
+    allow_headers=["Accept", "Content-Type"],
 )
 
 
@@ -127,13 +150,17 @@ def error_envelope(
     **extra: Any,
 ) -> None:
     detail: dict[str, Any] = {
+        "schema_version": "v1",
         "object_type": "ErrorEnvelope",
         "outcome": outcome,
         "message": message,
     }
+
     if reasons:
         detail["reasons"] = reasons
+
     detail.update(extra)
+
     raise HTTPException(status_code=status_code, detail=detail)
 
 
@@ -176,6 +203,15 @@ def load_json_artifact(name: str) -> dict[str, Any]:
     return loaded
 
 
+def load_optional_json_artifact(name: str) -> dict[str, Any] | None:
+    path = artifact_path(name)
+
+    if not path.exists():
+        return None
+
+    return load_json_artifact(name)
+
+
 def load_publication_artifacts() -> PublicationArtifacts:
     return PublicationArtifacts(
         tileset_metadata=load_json_artifact("tileset_metadata.json"),
@@ -201,6 +237,7 @@ def redact_public(value: Any) -> Any:
 
 def policy_summary(receipt: dict[str, Any]) -> dict[str, Any]:
     policy_results = receipt.get("policy_results", [])
+
     if not isinstance(policy_results, list) or not policy_results:
         return {
             "decision": "deny",
@@ -209,6 +246,7 @@ def policy_summary(receipt: dict[str, Any]) -> dict[str, Any]:
         }
 
     first = policy_results[0]
+
     if not isinstance(first, dict):
         return {
             "decision": "deny",
@@ -216,10 +254,14 @@ def policy_summary(receipt: dict[str, Any]) -> dict[str, Any]:
             "reasons": ["malformed_policy_result"],
         }
 
+    reasons = first.get("reasons", [])
+    if not isinstance(reasons, list):
+        reasons = [str(reasons)]
+
     return {
         "decision": first.get("result", "deny"),
         "policy_ref": first.get("policy", "policy/ecology/publication.rego"),
-        "reasons": first.get("reasons", []),
+        "reasons": reasons,
     }
 
 
@@ -272,8 +314,12 @@ def require_public_safe_evidence(bundle: dict[str, Any]) -> None:
         )
 
 
-def require_promoted(promotion_decision: dict[str, Any], run_receipt: dict[str, Any]) -> None:
+def require_promoted(
+    promotion_decision: dict[str, Any],
+    run_receipt: dict[str, Any],
+) -> None:
     decision = normalize_token(promotion_decision.get("decision"))
+
     if decision != "promote":
         error_envelope(
             status_code=451,
@@ -287,10 +333,12 @@ def require_promoted(promotion_decision: dict[str, Any], run_receipt: dict[str, 
 def require_policy_allows_public_release(run_receipt: dict[str, Any]) -> dict[str, Any]:
     summary = policy_summary(run_receipt)
     decision = normalize_token(summary.get("decision"))
+
     if decision not in POLICY_ALLOW_VALUES:
         reasons = summary.get("reasons")
         if not isinstance(reasons, list) or not reasons:
             reasons = [f"policy_decision_{decision or 'missing'}"]
+
         error_envelope(
             status_code=451,
             outcome="DENY",
@@ -298,6 +346,7 @@ def require_policy_allows_public_release(run_receipt: dict[str, Any]) -> dict[st
             reasons=[str(reason) for reason in reasons],
             policy_ref=summary.get("policy_ref"),
         )
+
     return summary
 
 
@@ -307,16 +356,13 @@ def require_publication_allowed(artifacts: PublicationArtifacts) -> dict[str, An
     return require_policy_allows_public_release(artifacts.run_receipt)
 
 
-def require_timeslice_match(requested_id: str, tileset_metadata: dict[str, Any]) -> None:
-    """Deny accidental wildcard behavior when metadata declares an ID.
-
-    Dry-run artifact shapes may vary. If no ID-like field is present, the endpoint
-    keeps compatibility with the original single-artifact behavior. If an ID is
-    present, the requested path value must match either the full ID or its suffix.
-    """
-
+def require_timeslice_match(
+    requested_id: str,
+    tileset_metadata: dict[str, Any],
+) -> None:
     candidate_ids: set[str] = set()
-    for key in ("id", "timeslice_id", "tileset_id", "collection_id"):
+
+    for key in ("id", "timeslice_id", "tileset_id", "collection_id", "layer_id"):
         value = tileset_metadata.get(key)
         if value:
             text = str(value)
@@ -324,6 +370,7 @@ def require_timeslice_match(requested_id: str, tileset_metadata: dict[str, Any])
             candidate_ids.add(text.rstrip("/").split("/")[-1])
 
     requested_full = f"kfm://tileset/ecology/{requested_id}"
+
     if candidate_ids and requested_id not in candidate_ids and requested_full not in candidate_ids:
         error_envelope(
             status_code=404,
@@ -333,7 +380,10 @@ def require_timeslice_match(requested_id: str, tileset_metadata: dict[str, Any])
         )
 
 
-def bundle_id_matches(requested_bundle_id: str, evidence_bundle: dict[str, Any]) -> bool:
+def bundle_id_matches(
+    requested_bundle_id: str,
+    evidence_bundle: dict[str, Any],
+) -> bool:
     expected = str(evidence_bundle.get("bundle_id", ""))
     if not expected:
         return False
@@ -342,11 +392,111 @@ def bundle_id_matches(requested_bundle_id: str, evidence_bundle: dict[str, Any])
     return requested_bundle_id in {expected, expected_suffix}
 
 
+def pick_first(*values: Any, default: Any = None) -> Any:
+    for value in values:
+        if value not in (None, "", [], {}):
+            return value
+    return default
+
+
+def build_public_layer_manifest(
+    artifacts: PublicationArtifacts,
+    policy: dict[str, Any],
+) -> dict[str, Any]:
+    explicit_manifest = load_optional_json_artifact("layer_manifest.json")
+    if explicit_manifest is not None:
+        return redact_public(explicit_manifest)
+
+    tileset = artifacts.tileset_metadata
+    evidence = artifacts.evidence_bundle
+
+    layer_id = str(
+        pick_first(
+            tileset.get("layer_id"),
+            tileset.get("timeslice_id"),
+            tileset.get("tileset_id"),
+            tileset.get("id"),
+            "example-pass",
+        )
+    )
+
+    source_type = str(pick_first(tileset.get("source_type"), tileset.get("type"), "vector"))
+
+    source: dict[str, Any] = {
+        "type": source_type,
+    }
+
+    source_url = pick_first(
+        tileset.get("url"),
+        tileset.get("tilejson"),
+        tileset.get("tileset_url"),
+        tileset.get("pmtiles_url"),
+    )
+    if source_url:
+        source["url"] = source_url
+
+    tiles = tileset.get("tiles")
+    if isinstance(tiles, list) and tiles:
+        source["tiles"] = tiles
+
+    attribution = tileset.get("attribution")
+    if attribution:
+        source["attribution"] = attribution
+
+    layer: dict[str, Any] = {
+        "layer_id": layer_id.rstrip("/").split("/")[-1],
+        "title": pick_first(tileset.get("title"), "Ecology dry-run layer"),
+        "description": pick_first(
+            tileset.get("description"),
+            "Public-safe governed ecology publication layer.",
+        ),
+        "source": source,
+        "source_layer": pick_first(tileset.get("source_layer"), tileset.get("source-layer")),
+        "minzoom": pick_first(tileset.get("minzoom"), tileset.get("min_zoom"), default=0),
+        "maxzoom": pick_first(tileset.get("maxzoom"), tileset.get("max_zoom"), default=14),
+        "datetime": pick_first(
+            tileset.get("datetime"),
+            tileset.get("generated_at"),
+            artifacts.run_receipt.get("created_at"),
+        ),
+        "evidence_ref": evidence.get("bundle_id"),
+        "rights": normalize_token(evidence.get("rights_status")) or "public",
+        "sensitivity": normalize_token(evidence.get("sensitivity")) or "public",
+        "promotion_ref": artifacts.promotion_decision.get("decision_id"),
+        "run_receipt_ref": artifacts.run_receipt.get("receipt_ref"),
+        "policy": policy,
+    }
+
+    layer = {key: value for key, value in layer.items() if value is not None}
+
+    return redact_public(
+        {
+            "schema_version": "v1",
+            "object_type": "LayerManifest",
+            "generated_at": pick_first(
+                artifacts.run_receipt.get("created_at"),
+                artifacts.run_receipt.get("generated_at"),
+                default="NEEDS_VERIFICATION",
+            ),
+            "layers": [layer],
+        }
+    )
+
+
 @app.get("/healthz")
+@app.get("/api/healthz")
 def healthz() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/api/layers/manifest")
+def get_layer_manifest() -> dict[str, Any]:
+    artifacts = load_publication_artifacts()
+    policy = require_publication_allowed(artifacts)
+    return build_public_layer_manifest(artifacts, policy)
+
+
+@app.get("/api/ecology/timeslices/{id}")
 @app.get("/ecology/timeslices/{id}")
 def get_ecology_timeslice(
     id: str = ApiPath(
@@ -379,6 +529,7 @@ def get_ecology_timeslice(
     return redact_public(response)
 
 
+@app.get("/api/ecology/evidence/{bundle_id:path}")
 @app.get("/ecology/evidence/{bundle_id:path}")
 def get_ecology_evidence_bundle(bundle_id: str) -> dict[str, Any]:
     artifacts = load_publication_artifacts()
@@ -395,6 +546,7 @@ def get_ecology_evidence_bundle(bundle_id: str) -> dict[str, Any]:
     return redact_public(artifacts.evidence_bundle)
 
 
+@app.get("/api/ecology/catalog/stac")
 @app.get("/ecology/catalog/stac")
 def get_ecology_stac_catalog() -> dict[str, Any]:
     artifacts = load_publication_artifacts()
