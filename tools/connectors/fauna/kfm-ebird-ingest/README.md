@@ -26,3 +26,21 @@ kfm-ebird-ingest \
 
 ## Layer 4 aggregation
 Use `kfm-ebird-aggregate` to create public-safe county/HUC12 aggregates, restricted suppression receipts, and aggregate manifests. Public outputs must never contain exact coordinates. Suppression rule: `checklist_count >= suppression_min_n`.
+
+## Layer 5 Promotion (`kfm-ebird-promote`)
+Promotes Layer 4 public-safe aggregates into governed public/catalog artifacts.
+
+Example:
+```bash
+kfm-ebird-promote \
+  --aggregate-file tests/fixtures/fauna/ebird/ebird_agg_huc12.public.jsonl \
+  --aggregate-manifest tests/fixtures/fauna/ebird/ebird_agg_huc12_manifest.json \
+  --evidencebundle tests/fixtures/fauna/ebird/evidencebundle.valid.json \
+  --aggregate huc12
+```
+
+Safety guarantees:
+- never publishes exact coordinates/geometry
+- requires `policy_label=public_aggregate`, `exact_points=restricted`, and `public_safe=true`
+- refuses to publish suppression receipts or restricted raw rows
+- deterministic run id from canonical hash inputs

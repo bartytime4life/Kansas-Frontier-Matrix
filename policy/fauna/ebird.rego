@@ -31,3 +31,8 @@ deny[msg] if { is_public_aggregate_row; input.checklist_count < input.suppressio
 
 is_public_layer if { object.get(input, "policy_label", "") == "public" or object.get(input, "policy_label", "") == "public_aggregate" }
 is_public_aggregate_row if { object.get(input, "object_type", "") == "AggregateOccurrence" }
+
+
+deny[msg] if { object.get(input,"object_type","")=="PromotionReceipt"; object.get(input,"policy_label","")!="public_aggregate"; msg:="promotion receipt policy_label must be public_aggregate" }
+deny[msg] if { object.get(input,"object_type","")=="PromotionReceipt"; object.get(input,"public_safe",false)!=true; msg:="promotion receipt public_safe must be true" }
+deny[msg] if { object.get(input,"object_type","")=="CatalogRecord"; object.get(input,"exact_points","")!="restricted"; msg:="catalog record exact_points must be restricted" }
