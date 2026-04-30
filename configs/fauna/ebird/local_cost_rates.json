@@ -1,0 +1,1 @@
+{"schema_version":"v1","object_type":"EbirdLocalCostRates","rate_profile":"local_default","currency":"USD","compute_cost_per_core_hour":1.0,"memory_cost_per_gb_hour":0.5,"storage_cost_per_gb_month":0.1,"artifact_transfer_cost_per_gb":0.01,"operator_hour_cost":40,"default_operator_minutes_per_month":30,"notes":["Rates are local estimates only. No cloud billing APIs are used."]}
