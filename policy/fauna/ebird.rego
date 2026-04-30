@@ -41,3 +41,24 @@ deny[msg] if { object.get(input,"object_type","")=="PipelinePlan"; input.suppres
 deny[msg] if { object.get(input,"object_type","")=="PipelineManifest"; object.get(input,"public_safe_final_outputs",false) != true; msg := "pipeline manifest public_safe_final_outputs must be true" }
 deny[msg] if { object.get(input,"object_type","")=="PipelineManifest"; object.get(input,"exact_points","") != "restricted"; msg := "pipeline manifest exact_points must be restricted" }
 deny[msg] if { object.get(input,"object_type","")=="ValidationReport"; object.get(input,"status","")=="fail"; msg := "validation report status fail in promoted/public run" }
+
+deny[msg] if {
+  object.get(input,"object_type","")=="EbirdProductionCertificationPacket"
+  object.get(input,"approval_decision","")=="approve"
+  some g in object.get(input,"hard_gates",[])
+  object.get(g,"status","")=="fail"
+  msg := "approved certification contains failed hard gate"
+}
+
+deny[msg] if {
+  object.get(input,"object_type","")=="PublicEbirdCorrectionRequestWorkflow"
+  lower(json.marshal(input)) != ""
+  contains(lower(json.marshal(input)), "credentials")
+  msg := "public correction workflow requests credentials"
+}
+
+deny[msg] if {
+  object.get(input,"object_type","")=="PublicEbirdTakedownRequestWorkflow"
+  contains(lower(json.marshal(input)), "exact_private_locations")
+  msg := "public takedown workflow requests exact private locations"
+}
