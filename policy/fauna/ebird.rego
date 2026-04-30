@@ -36,3 +36,8 @@ is_public_aggregate_row if { object.get(input, "object_type", "") == "AggregateO
 deny[msg] if { object.get(input,"object_type","")=="PromotionReceipt"; object.get(input,"policy_label","")!="public_aggregate"; msg:="promotion receipt policy_label must be public_aggregate" }
 deny[msg] if { object.get(input,"object_type","")=="PromotionReceipt"; object.get(input,"public_safe",false)!=true; msg:="promotion receipt public_safe must be true" }
 deny[msg] if { object.get(input,"object_type","")=="CatalogRecord"; object.get(input,"exact_points","")!="restricted"; msg:="catalog record exact_points must be restricted" }
+
+deny[msg] if { object.get(input,"object_type","")=="PipelinePlan"; input.suppression_min_n < 10; msg := "pipeline plan suppression_min_n must be >= 10" }
+deny[msg] if { object.get(input,"object_type","")=="PipelineManifest"; object.get(input,"public_safe_final_outputs",false) != true; msg := "pipeline manifest public_safe_final_outputs must be true" }
+deny[msg] if { object.get(input,"object_type","")=="PipelineManifest"; object.get(input,"exact_points","") != "restricted"; msg := "pipeline manifest exact_points must be restricted" }
+deny[msg] if { object.get(input,"object_type","")=="ValidationReport"; object.get(input,"status","")=="fail"; msg := "validation report status fail in promoted/public run" }

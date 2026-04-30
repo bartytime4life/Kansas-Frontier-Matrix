@@ -60,3 +60,19 @@ kfm-ebird-build-public-view --promotion-dir <promoted_run_dir> --aggregate count
 ```
 
 Public API/UI artifacts never expose exact eBird coordinates and never serve restricted observations, quarantines, or suppression receipts.
+
+## Layer 7 Pipeline Runner (`kfm-ebird-run-pipeline`)
+Adds governed orchestration ingest → aggregate → promote → public-view with deterministic `run_id`, audit ledger, validation report, and replay artifact.
+
+Default governed predicate (only executable predicate family):
+`complete==TRUE && protocol_type!='Incidental' && duration_min>=5 && distance_km<=5 && number_observers<=10`
+
+Examples:
+- Plan only: `kfm-ebird-run-pipeline --ebd-file tests/fixtures/fauna/ebird/sample_ebd.tsv --plan`
+- Execute HUC12: `kfm-ebird-run-pipeline --ebd-file tests/fixtures/fauna/ebird/sample_ebd.tsv --aggregate huc12 --execute`
+- Execute county: `... --aggregate county --execute`
+- Execute both: `... --aggregate both --execute`
+- Resume: `... --execute --resume`
+- Force rerun: `... --execute --force`
+
+Safety: no downloads/credentials, no public exact coordinates, no restricted outputs under `data/published`, no suppression receipts in public outputs.

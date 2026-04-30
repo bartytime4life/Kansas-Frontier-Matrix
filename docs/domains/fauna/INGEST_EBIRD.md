@@ -48,3 +48,13 @@ Promotion is aggregate-only and never publishes exact coordinates, restricted ob
 - Aggregate-only MapLibre config
 
 Safety rules: no exact coordinates, no point/circle/heatmap/cluster eBird layers, no restricted observation/quarantine/suppression receipt serving. Boundary configuration references external public boundary datasets and does not bundle real HUC12/county boundaries.
+
+## Layer 7: Governed end-to-end pipeline runner
+`kfm-ebird-run-pipeline` writes:
+- `pipeline_plan.json`
+- `pipeline_manifest.json`
+- `audit_ledger.jsonl`
+- `validation_report.json`
+- `replay.json`
+
+It computes deterministic `run_id` from canonical hash inputs (source URI, input hash, predicate, aggregate mode, suppression threshold, optional regions hash, format, executable filter name), performs stage orchestration, and keeps restricted/public separation.
