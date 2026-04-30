@@ -95,3 +95,7 @@ Use `kfm-ebird-analytics` and `kfm-ebird-insights` for public-safe descriptive i
 
 ## Layer 14 portal/downloads
 Use `kfm-ebird-downloads` to build public-safe bundles and dictionaries, then `kfm-ebird-portal` to build static local-only public portal artifacts with CSP and safety reports.
+
+## Layer 16 certification/support
+- `kfm-ebird-certify` builds production certification and governance signoff packets from synthetic/local public-safe artifacts only.
+- `kfm-ebird-support` builds support workflow packs plus public correction/takedown workflows.
