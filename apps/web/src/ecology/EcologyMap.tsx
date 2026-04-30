@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { fetchEcologyStacCatalog } from "./stac";
+import { fetchEcologyLayerManifest } from "./layerManifest";
 import {
   ECOLOGY_LAYER_ID,
   ECOLOGY_SOURCE_ID,
@@ -12,16 +12,16 @@ import {
 
 type EcologyMapProps = {
   apiBase?: string;
-  tilesUrl?: string;
+  layerId?: string;
 };
 
 export function EcologyMap({
   apiBase = "/api",
-  tilesUrl = "https://example.invalid/tiles/{z}/{x}/{y}.pbf"
+  layerId = "example-pass"
 }: EcologyMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const [status, setStatus] = useState("Loading governed ecology catalog...");
+  const [status, setStatus] = useState("Loading governed ecology layer...");
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -54,21 +54,27 @@ export function EcologyMap({
 
     map.on("load", async () => {
       try {
-        const catalog = await fetchEcologyStacCatalog(apiBase);
-
-        if (catalog.type !== "Catalog") {
-          throw new Error("Governed ecology STAC response was not a Catalog");
-        }
+        const manifest = await fetchEcologyLayerManifest(layerId, apiBase);
 
         if (!map.getSource(ECOLOGY_SOURCE_ID)) {
-          map.addSource(ECOLOGY_SOURCE_ID, buildEcologyVectorSource(tilesUrl));
+          map.addSource(ECOLOGY_SOURCE_ID, buildEcologyVectorSource(manifest));
         }
 
         if (!map.getLayer(ECOLOGY_LAYER_ID)) {
-          map.addLayer(buildEcologyFillLayer());
+          map.addLayer(buildEcologyFillLayer(manifest));
         }
 
-        setStatus(`Loaded ${catalog.title}`);
+        if (manifest.bounds) {
+          map.fitBounds(
+            [
+              [manifest.bounds[0], manifest.bounds[1]],
+              [manifest.bounds[2], manifest.bounds[3]]
+            ],
+            { padding: 32, duration: 0 }
+          );
+        }
+
+        setStatus(`Loaded governed layer: ${manifest.title}`);
       } catch (error) {
         setStatus(error instanceof Error ? error.message : "Failed to load ecology layer");
       }
@@ -78,7 +84,7 @@ export function EcologyMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [apiBase, tilesUrl]);
+  }, [apiBase, layerId]);
 
   return (
     <section>
