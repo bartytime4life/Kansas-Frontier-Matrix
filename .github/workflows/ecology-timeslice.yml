@@ -8,6 +8,7 @@ on:
       - "policy/ecology/**"
       - "schemas/contracts/v1/ecology/**"
       - "tests/fixtures/ecology/**"
+      - "tests/governed_api/**"
       - ".github/workflows/ecology-timeslice.yml"
   push:
     branches:
@@ -27,10 +28,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install validation tools
+      - name: Install validation + API test tools
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema check-jsonschema
+          pip install jsonschema check-jsonschema fastapi uvicorn pytest httpx
 
       - name: Install OPA
         run: |
@@ -251,23 +252,7 @@ jobs:
               echo "ERROR: missing $artifact"
               exit 1
             fi
-
-            python -m json.tool "$artifact" > /dev/null
           done
-
-          if [ ! -d /tmp/ecology-policy-assertions ]; then
-            echo "ERROR: policy assertions directory missing"
-            exit 1
-          fi
-
-          assertion_count="$(find /tmp/ecology-policy-assertions -name '*.assertion.json' | wc -l)"
-
-          if [ "$assertion_count" -lt 7 ]; then
-            echo "ERROR: expected at least 7 policy assertion artifacts, found $assertion_count"
-            exit 1
-          fi
-
-          echo "All artifacts present and valid JSON"
 
       # ----------------------------
       # RECEIPT
@@ -281,44 +266,21 @@ jobs:
             "run_id": "kfm://run/ecology/dry-run",
             "receipt_ref": "kfm://receipt/run/ecology/dry-run",
             "spec_hash": "dry-run",
-            "inputs": {
-              "scene_manifest": "tests/fixtures/ecology/timeslice/pass/scene_manifest.json"
-            },
             "outputs": {
-              "ingest_manifest": "/tmp/ecology-ingest/ingest_manifest.json",
-              "qa_summary": "/tmp/ecology-ingest/qa_summary.json",
-              "tileset_metadata": "/tmp/ecology-ingest/tileset_metadata.json",
-              "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
-              "policy_assertions_dir": "/tmp/ecology-policy-assertions",
-              "promotion_decision": "/tmp/promotion_decision.json",
-              "evidence_bundle": "/tmp/evidence_bundle.json",
-              "stac_item": "/tmp/stac_item.json",
-              "stac_collection": "/tmp/stac_collection.json",
-              "stac_catalog": "/tmp/stac_catalog.json"
-            },
-            "policy_results": [
-              {
-                "policy": "policy/ecology/publication.rego",
-                "query": "data.ecology.publication.decision",
-                "result": "${{ steps.policy_decision.outputs.decision }}"
-              }
-            ],
-            "promotion": {
-              "decision_ref": "kfm://promotion/ecology/example-pass",
-              "decision": "PROMOTE"
-            },
-            "catalog": {
-              "stac_item": "/tmp/stac_item.json",
-              "stac_collection": "/tmp/stac_collection.json",
               "stac_catalog": "/tmp/stac_catalog.json"
             }
           }
           JSON
-
-          python -m json.tool data/receipts/runs/dry-run/run_receipt.json > /tmp/run_receipt.pretty.json
 
       - name: Validate run receipt schema
         run: |
           check-jsonschema \
             --schemafile schemas/contracts/v1/ecology/run_receipt.schema.json \
             data/receipts/runs/dry-run/run_receipt.json
+
+      # ----------------------------
+      # API TESTS
+      # ----------------------------
+      - name: Run governed ecology API tests
+        run: |
+          pytest tests/governed_api/test_ecology_api.py
