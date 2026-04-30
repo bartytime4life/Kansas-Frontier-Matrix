@@ -21,3 +21,6 @@ No eBird downloads, credentials, exact coordinates, restricted observations, qua
 Open: `kfm-ebird-observe --mode incident-open --aggregate huc12 --release-receipt fixtures/ebird/releases/huc12/release_receipt.json --severity medium --summary "Synthetic public safety scan failure for test fixture" --out-dir /tmp/kfm-ebird-observability/incidents`
 
 Update/close use `--incident-id`.
+
+## Layer 10 handoff
+Use kfm-ebird-doctor and kfm-ebird-conformance for local acceptance gates.
