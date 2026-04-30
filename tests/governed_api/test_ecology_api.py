@@ -9,6 +9,13 @@ from fastapi.testclient import TestClient
 from apps.governed_api.server import app
 
 
+EVIDENCE_BUNDLE_REF = "kfm://evidence/ecology/example-pass-timeslice"
+PROMOTION_DECISION_REF = "kfm://promotion/ecology/example-pass"
+RUN_RECEIPT_REF = "kfm://receipt/run/ecology/dry-run"
+LAYER_ID = "kfm://layer/ecology/example-pass"
+ALLOWED_PUBLIC_FIELDS = ["class", "confidence", "time_start", "time_end"]
+
+
 @pytest.fixture()
 def artifact_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "published" / "ecology" / "dry-run"
@@ -33,6 +40,10 @@ def write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def seed_public_safe_artifacts(root: Path) -> None:
     write_json(
         root / "tileset_metadata.json",
@@ -50,9 +61,9 @@ def seed_public_safe_artifacts(root: Path) -> None:
             "kfm": {
                 "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             },
-            "evidence_bundle_url": "kfm://evidence/ecology/example-pass-timeslice",
+            "evidence_bundle_url": EVIDENCE_BUNDLE_REF,
             "provisional": False,
-            "allowed_fields": ["class", "confidence", "time_start", "time_end"],
+            "allowed_fields": ALLOWED_PUBLIC_FIELDS,
         },
     )
 
@@ -61,13 +72,13 @@ def seed_public_safe_artifacts(root: Path) -> None:
         {
             "schema_version": "v1",
             "object_type": "PromotionDecision",
-            "decision_id": "kfm://promotion/ecology/example-pass",
+            "decision_id": PROMOTION_DECISION_REF,
             "candidate": "kfm://tileset/ecology/example-pass",
             "decision": "PROMOTE",
             "reasons": [],
             "requires_steward": False,
-            "receipt_ref": "kfm://receipt/run/ecology/dry-run",
-            "evidence_bundle_url": "kfm://evidence/ecology/example-pass-timeslice",
+            "receipt_ref": RUN_RECEIPT_REF,
+            "evidence_bundle_url": EVIDENCE_BUNDLE_REF,
             "decided_at": "2024-06-18T00:00:00Z",
         },
     )
@@ -77,7 +88,7 @@ def seed_public_safe_artifacts(root: Path) -> None:
         {
             "schema_version": "v1",
             "object_type": "EvidenceBundle",
-            "bundle_id": "kfm://evidence/ecology/example-pass-timeslice",
+            "bundle_id": EVIDENCE_BUNDLE_REF,
             "domain": "ecology",
             "source_refs": ["kfm://source/ecology/no-network-fixture"],
             "dataset_refs": ["kfm://dataset/ecology/no-network-fixture"],
@@ -118,15 +129,13 @@ def seed_public_safe_artifacts(root: Path) -> None:
         },
     )
 
-    # ---------------------------
-    # NEW: LAYER MANIFEST
-    # ---------------------------
+    # Public layer manifest consumed by governed map/UI surfaces.
     write_json(
         root / "layer_manifest.json",
         {
             "schema_version": "v1",
             "object_type": "EcologyLayerManifest",
-            "layer_id": "kfm://layer/ecology/example-pass",
+            "layer_id": LAYER_ID,
             "title": "KFM Ecology Example Time Slice",
             "description": "Governed ecology time-slice layer derived from HLS/Landsat inputs.",
             "source_type": "vector",
@@ -135,15 +144,15 @@ def seed_public_safe_artifacts(root: Path) -> None:
             "stac_catalog_ref": "kfm://catalog/stac",
             "stac_collection_ref": "kfm://catalog/stac/collections/kfm-ecology-timeslices",
             "stac_item_ref": "kfm://catalog/stac/items/kfm-ecology-example-pass",
-            "evidence_bundle_ref": "kfm://evidence/ecology/example-pass-timeslice",
-            "promotion_decision_ref": "kfm://promotion/ecology/example-pass",
-            "run_receipt_ref": "kfm://receipt/run/ecology/dry-run",
+            "evidence_bundle_ref": EVIDENCE_BUNDLE_REF,
+            "promotion_decision_ref": PROMOTION_DECISION_REF,
+            "run_receipt_ref": RUN_RECEIPT_REF,
             "bounds": [-102.1, 36.9, -94.5, 40.1],
             "time_start": "2024-06-18T00:00:00Z",
             "time_end": "2024-06-18T23:59:59Z",
             "minzoom": 0,
             "maxzoom": 14,
-            "allowed_fields": ["class", "confidence", "time_start", "time_end"],
+            "allowed_fields": ALLOWED_PUBLIC_FIELDS,
             "public_safe": True,
             "sensitivity": "public",
             "rights_status": "open",
@@ -158,7 +167,7 @@ def seed_public_safe_artifacts(root: Path) -> None:
             "schema_version": "v1",
             "object_type": "run_receipt",
             "run_id": "kfm://run/ecology/dry-run",
-            "receipt_ref": "kfm://receipt/run/ecology/dry-run",
+            "receipt_ref": RUN_RECEIPT_REF,
             "spec_hash": "dry-run",
             "policy_results": [
                 {
@@ -168,7 +177,7 @@ def seed_public_safe_artifacts(root: Path) -> None:
                 }
             ],
             "promotion": {
-                "decision_ref": "kfm://promotion/ecology/example-pass",
+                "decision_ref": PROMOTION_DECISION_REF,
                 "decision": "PROMOTE",
             },
             "catalog": {
@@ -193,14 +202,19 @@ def test_get_layer_public_safe(client: TestClient, artifact_root: Path) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["object_type"] == "EcologyLayerManifest"
-    assert payload["layer_id"] == "kfm://layer/ecology/example-pass"
+    assert payload["layer_id"] == LAYER_ID
+    assert payload["public_safe"] is True
+    assert payload["allowed_fields"] == ALLOWED_PUBLIC_FIELDS
+    assert payload["evidence_bundle_ref"] == EVIDENCE_BUNDLE_REF
+    assert payload["promotion_decision_ref"] == PROMOTION_DECISION_REF
+    assert payload["run_receipt_ref"] == RUN_RECEIPT_REF
 
 
 def test_get_layer_denied_not_public_safe(client: TestClient, artifact_root: Path) -> None:
     seed_public_safe_artifacts(artifact_root)
 
     path = artifact_root / "layer_manifest.json"
-    data = json.loads(path.read_text())
+    data = read_json(path)
     data["public_safe"] = False
     write_json(path, data)
 
