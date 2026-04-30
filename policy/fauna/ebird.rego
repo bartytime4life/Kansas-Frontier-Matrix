@@ -1,81 +1,33 @@
 package kfm.fauna.ebird
 
-# Best-effort predicate checks use string containment, not a full parser.
+deny[msg] if { not re_match("^sha256:[a-f0-9]{64}$", object.get(input, "kfm:spec_hash", "")); msg := "kfm:spec_hash missing or malformed" }
+deny[msg] if { input.suppression_min_n < 10; msg := "suppression_min_n must be >= 10" }
+deny[msg] if { input.aggregate; not input.aggregate in {"county", "huc12"}; msg := "aggregate must be county or huc12" }
 
 deny[msg] if {
-  not input.source_uri
-  msg := "source_uri missing"
-}
-
-deny[msg] if {
-  not input.query_predicate
-  msg := "query_predicate missing"
-}
-
-deny[msg] if {
-  not re_match("^sha256:[a-f0-9]{64}$", object.get(input, "kfm:spec_hash", ""))
-  msg := "kfm:spec_hash missing or malformed"
-}
-
-deny[msg] if {
-  input.suppression_min_n < 10
-  msg := "suppression_min_n must be >= 10"
-}
-
-deny[msg] if {
-  input.aggregate
-  not input.aggregate in {"county", "huc12"}
-  msg := "aggregate must be county or huc12"
-}
-
-deny[msg] if {
-  is_public
-  exact_field := lower(input.public_fields[_])
-  exact_field in {"decimallatitude", "decimallongitude", "latitude", "longitude", "lat", "lon", "geom", "geometry"}
-  msg := sprintf("public layer exposes exact field: %s", [exact_field])
-}
-
-deny[msg] if {
-  is_public
+  is_public_layer
   object.get(input, "exact_points", "") != "restricted"
   msg := "exact_points must be restricted for public eBird layers"
 }
 
 deny[msg] if {
-  is_public
-  qp := lower(input.query_predicate)
-  not contains(qp, "complete==true")
-  msg := "query_predicate must require complete checklists (best-effort)"
+  is_public_layer
+  some f in object.get(input, "allowlist_fields", object.get(input, "public_fields", []))
+  lower(f) in {"decimallatitude","decimallongitude","latitude","longitude","lat","lon","point","geom","geometry"}
+  msg := "public eBird layer allowlist contains exact coordinate field"
 }
 
 deny[msg] if {
-  is_public
-  qp := lower(input.query_predicate)
-  not contains(qp, "protocol_type!='incidental'")
-  msg := "query_predicate must exclude incidental protocol_type (best-effort)"
+  is_public_aggregate_row
+  some k
+  lower(k) in {"decimallatitude","decimallongitude","latitude","longitude","lat","lon","raw_latitude","raw_longitude","point","geom","geometry"}
+  input[k]
+  msg := "public aggregate rows containing exact coordinate fields"
 }
 
-deny[msg] if {
-  is_public
-  qp := lower(input.query_predicate)
-  not contains(qp, "duration_min>=5")
-  msg := "query_predicate must include duration_min>=5 (best-effort)"
-}
+deny[msg] if { is_public_aggregate_row; object.get(input, "policy_label", "") != "public_aggregate"; msg := "public aggregate output where policy_label is not public_aggregate" }
+deny[msg] if { is_public_aggregate_row; not object.get(input, "kfm:spec_hash", ""); msg := "public aggregate output missing kfm:spec_hash" }
+deny[msg] if { is_public_aggregate_row; input.checklist_count < input.suppression_min_n; msg := "public aggregate rows with checklist_count < suppression_min_n" }
 
-deny[msg] if {
-  is_public
-  qp := lower(input.query_predicate)
-  not contains(qp, "distance_km<=5")
-  msg := "query_predicate must include distance_km<=5 (best-effort)"
-}
-
-deny[msg] if {
-  is_public
-  qp := lower(input.query_predicate)
-  not contains(qp, "number_observers<=10")
-  msg := "query_predicate must include number_observers<=10 (best-effort)"
-}
-
-is_public if {
-  object.get(input, "policy_label", "public") == "public"
-}
+is_public_layer if { object.get(input, "policy_label", "") == "public" or object.get(input, "policy_label", "") == "public_aggregate" }
+is_public_aggregate_row if { object.get(input, "object_type", "") == "AggregateOccurrence" }

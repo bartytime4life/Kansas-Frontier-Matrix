@@ -18,3 +18,10 @@ Semantically different predicates are rejected.
 
 Exact coordinates are only emitted to restricted local outputs and are blocked from `data/published`.
 No public exact-point publication is implemented in this layer.
+
+## Layer 4 (aggregation)
+- Public-safe aggregate contract (`AggregateOccurrence`) for `huc12` and `county`.
+- Suppression threshold enforces `checklist_count >= suppression_min_n`.
+- Restricted suppression receipt stores hashed suppressed group identifiers.
+- Region assignment order: observation field, then optional synthetic GeoJSON spatial join.
+- WARNING: public outputs must never contain exact coordinates.

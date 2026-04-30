@@ -1,13 +1,13 @@
 {
-  "id": "ebird_agg_huc12",
+  "id": "ebird_agg_county",
   "domain": "fauna",
   "source": "ebird",
-  "aggregate": "huc12",
+  "aggregate": "county",
   "suppression_min_n": 10,
   "policy_label": "public_aggregate",
   "exact_points": "restricted",
   "allowlist_fields": [
-    "huc12",
+    "county_fips",
     "taxonKey",
     "occurrenceDate_month",
     "checklist_count",

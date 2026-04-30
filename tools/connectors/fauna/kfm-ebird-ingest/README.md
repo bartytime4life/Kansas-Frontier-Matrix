@@ -23,3 +23,6 @@ kfm-ebird-ingest \
 - Exact coordinate output is labeled `policy_label=restricted`.
 - `--out` and `--quarantine` paths under `data/published` are rejected.
 - Dry-run still emits the same EvidenceBundle contract as Layer 2.
+
+## Layer 4 aggregation
+Use `kfm-ebird-aggregate` to create public-safe county/HUC12 aggregates, restricted suppression receipts, and aggregate manifests. Public outputs must never contain exact coordinates. Suppression rule: `checklist_count >= suppression_min_n`.
