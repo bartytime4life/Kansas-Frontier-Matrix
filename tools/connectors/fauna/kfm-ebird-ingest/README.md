@@ -85,3 +85,7 @@ Use `kfm-ebird-observe` for scan/trend/attest/evidence-pack/incident/report flow
 
 ## Layer 11 maintenance
 Use `kfm-ebird-maintain` and `kfm-ebird-migrate` for contract evolution and copy-on-write migrations.
+
+
+## Layer 12 federation/export
+See `docs/domains/fauna/EBIRD_FEDERATION.md` for federation index, discovery, semantic graph, STAC-lite/RO-Crate-lite/warehouse/search exports, and public-safety constraints.

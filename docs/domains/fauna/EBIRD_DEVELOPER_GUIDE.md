@@ -12,3 +12,7 @@ This document covers Layer 10 productization for `kfm-ebird`.
 `tools/connectors/fauna/kfm-ebird-ingest/kfm-ebird-doctor --strict --json`
 
 `tools/connectors/fauna/kfm-ebird-ingest/kfm-ebird-conformance --aggregate both --format jsonl --json`
+
+
+## Layer 12 federation/export
+See `docs/domains/fauna/EBIRD_FEDERATION.md` for federation index, discovery, semantic graph, STAC-lite/RO-Crate-lite/warehouse/search exports, and public-safety constraints.
