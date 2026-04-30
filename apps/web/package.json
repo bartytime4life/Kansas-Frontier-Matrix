@@ -2,31 +2,41 @@
   "name": "@kfm/web",
   "private": true,
   "version": "0.1.0",
-  "description": "Governed web shell scaffold for Kansas Frontier Matrix",
+  "description": "Governed web shell for Kansas Frontier Matrix public-safe map, evidence, and catalog surfaces",
   "type": "module",
   "license": "UNLICENSED",
+  "packageManager": "npm@10",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 4173",
+    "dev:host": "vite --host 0.0.0.0 --port 4173",
     "dev:static": "python3 -m http.server 4173 --bind 127.0.0.1",
     "start": "npm run preview",
     "serve": "npm run preview",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "preview:host": "vite preview --host 0.0.0.0 --port 4173",
     "preview:static": "python3 -m http.server 4173 --bind 127.0.0.1 --directory dist",
+
     "check": "npm run check:package && npm run check:syntax && npm run format:check",
     "check:package": "node -e \"JSON.parse(require('node:fs').readFileSync('package.json','utf8')); console.log('package.json ok')\"",
     "check:syntax": "node --check src/main.js && node --check scripts_build.mjs",
+    "check:dist": "test -d dist && test -f dist/index.html",
+
     "lint": "npm run check:syntax",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests",
+
     "build": "vite build",
     "build:static": "node scripts_build.mjs",
     "build:clean": "rm -rf dist",
     "rebuild": "npm run build:clean && npm run build",
+
     "clean": "rm -rf dist coverage .vite .vitest node_modules/.vite",
     "format:check": "prettier --check . --ignore-unknown",
     "format:write": "prettier --write . --ignore-unknown",
+
     "audit": "npm audit --audit-level=moderate",
-    "doctor": "npm run check && npm run test && npm run build"
+    "doctor": "npm run check && npm run test && npm run build && npm run check:dist"
   },
   "dependencies": {
     "maplibre-gl": "5.24.0",
@@ -60,8 +70,14 @@
     "gis",
     "maplibre",
     "pmtiles",
+    "stac",
     "spatial",
+    "temporal",
     "evidence",
-    "governance"
+    "governance",
+    "public-safe"
+  ],
+  "sideEffects": [
+    "*.css"
   ]
 }
