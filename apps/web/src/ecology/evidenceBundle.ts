@@ -55,6 +55,14 @@ export type EcologyEvidenceBundleFiniteOutcome =
   | "DENY"
   | "ERROR";
 
+export type EcologyEvidenceBundleArtifact = {
+  role?: string;
+  uri?: string;
+  media_type?: string;
+  digest?: string;
+  [key: string]: unknown;
+};
+
 export type EcologyEvidenceBundle = {
   schema_version: typeof ECOLOGY_EVIDENCE_SCHEMA_VERSION;
   object_type: typeof ECOLOGY_EVIDENCE_OBJECT_TYPE;
@@ -94,6 +102,9 @@ export type EcologyEvidenceBundle = {
   correction_notice_refs?: string[];
   artifact_digests?: string[];
 
+  artifacts?: EcologyEvidenceBundleArtifact[];
+  artifact_count?: number;
+
   review_state?: EcologyEvidenceBundleReviewState;
   release_state?: EcologyEvidenceBundleReleaseState;
   correction_state?: EcologyEvidenceBundleCorrectionState;
@@ -124,8 +135,32 @@ export type EcologyEvidenceBundleSummary = {
   dataset_count: number;
   evidence_count: number;
   object_count: number;
+  artifact_count: number;
   limitation_count: number;
+  warning_count: number;
   stale: boolean;
+};
+
+export type EcologyEvidenceDrawerEvidence = {
+  bundle_id: string;
+  bundle_ref: string;
+  resolved: boolean;
+  resolution_state: EcologyEvidenceBundleResolutionState;
+  visibility: EcologyEvidenceBundleVisibility;
+  policy_label: string;
+  rights_status: EcologyEvidenceBundleRightsStatus;
+  sensitivity: EcologyEvidenceBundleSensitivity;
+  spec_hash: string;
+  source_refs: string[];
+  dataset_refs: string[];
+  evidence_refs: string[];
+  object_refs: string[];
+  catalog_refs: string[];
+  release_refs: string[];
+  limitations: string[];
+  notes: string[];
+  warnings: string[];
+  artifacts: EcologyEvidenceBundleArtifact[];
 };
 
 export type FetchEcologyEvidenceBundleOptions = {
@@ -311,7 +346,6 @@ export function extractEcologyEvidenceBundleId(bundleRef: string): string {
     });
   }
 
-  // Fast path for already-normalized ids, including ids such as sha256:...
   if (!cleaned.includes("/") && SAFE_BUNDLE_ID_RE.test(cleaned)) {
     return cleaned;
   }
@@ -523,6 +557,16 @@ export function parseEcologyEvidenceBundle(
 
   return {
     ...record,
+    source_refs: record.source_refs ?? [],
+    dataset_refs: record.dataset_refs ?? [],
+    evidence_refs: record.evidence_refs ?? [],
+    object_refs: record.object_refs ?? [],
+    catalog_refs: record.catalog_refs ?? [],
+    release_refs: record.release_refs ?? [],
+    limitations: record.limitations ?? [],
+    notes: record.notes ?? [],
+    warnings: record.warnings ?? [],
+    artifacts: record.artifacts ?? [],
     evidence_bundle_resolved:
       record.evidence_bundle_resolved ?? record.resolved,
     resolution_state:
@@ -597,6 +641,14 @@ export function validateEcologyEvidenceBundle(value: unknown): string[] {
     errors.push("stale must be a boolean when present");
   }
 
+  if (value.artifact_count !== undefined && typeof value.artifact_count !== "number") {
+    errors.push("artifact_count must be a number when present");
+  }
+
+  if (value.artifacts !== undefined && !Array.isArray(value.artifacts)) {
+    errors.push("artifacts must be an array when present");
+  }
+
   return errors;
 }
 
@@ -659,8 +711,37 @@ export function summarizeEcologyEvidenceBundle(
     dataset_count: bundle.dataset_refs?.length ?? 0,
     evidence_count: bundle.evidence_refs?.length ?? 0,
     object_count: bundle.object_refs?.length ?? 0,
+    artifact_count: bundle.artifacts?.length ?? bundle.artifact_count ?? 0,
     limitation_count: bundle.limitations?.length ?? 0,
+    warning_count: bundle.warnings?.length ?? 0,
     stale: bundle.stale ?? false,
+  };
+}
+
+export function buildEvidenceDrawerEvidence(
+  bundle: EcologyEvidenceBundle,
+): EcologyEvidenceDrawerEvidence {
+  return {
+    bundle_id: bundle.bundle_id,
+    bundle_ref: getEcologyEvidenceBundleRef(bundle),
+    resolved: isEcologyEvidenceBundleResolved(bundle),
+    resolution_state:
+      bundle.resolution_state ?? (bundle.resolved ? "resolved" : "unresolved"),
+    visibility: getEcologyEvidenceBundleVisibility(bundle),
+    policy_label: bundle.policy_label,
+    rights_status: bundle.rights_status,
+    sensitivity: bundle.sensitivity,
+    spec_hash: bundle.spec_hash,
+    source_refs: bundle.source_refs ?? [],
+    dataset_refs: bundle.dataset_refs ?? [],
+    evidence_refs: bundle.evidence_refs ?? [],
+    object_refs: bundle.object_refs ?? [],
+    catalog_refs: bundle.catalog_refs ?? [],
+    release_refs: bundle.release_refs ?? [],
+    limitations: bundle.limitations ?? [],
+    notes: bundle.notes ?? [],
+    warnings: bundle.warnings ?? [],
+    artifacts: bundle.artifacts ?? [],
   };
 }
 
@@ -723,7 +804,7 @@ async function readResponseSnippet(
 function classifyHttpOutcome(
   status: number,
 ): Exclude<EcologyEvidenceBundleFiniteOutcome, "ANSWER"> {
-  if (status === 401 || status === 403) {
+  if (status === 401 || status === 403 || status === 451) {
     return "DENY";
   }
 
