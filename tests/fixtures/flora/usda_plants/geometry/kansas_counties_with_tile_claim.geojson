@@ -1,0 +1,80 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "fips": "20091",
+        "state": "KS",
+        "county_name": "Johnson County",
+        "geometry_fixture": "synthetic_test_only"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -95.0,
+              38.8
+            ],
+            [
+              -94.8,
+              38.8
+            ],
+            [
+              -94.8,
+              39.0
+            ],
+            [
+              -95.0,
+              39.0
+            ],
+            [
+              -95.0,
+              38.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fips": "20173",
+        "state": "KS",
+        "county_name": "Sedgwick County",
+        "geometry_fixture": "synthetic_test_only"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.5,
+              37.5
+            ],
+            [
+              -97.2,
+              37.5
+            ],
+            [
+              -97.2,
+              37.8
+            ],
+            [
+              -97.5,
+              37.8
+            ],
+            [
+              -97.5,
+              37.5
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "tiles": [
+    "https://example.com/{z}/{x}/{y}.pbf"
+  ]
+}
