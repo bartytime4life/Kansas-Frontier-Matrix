@@ -5,6 +5,11 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import EvidenceDrawer, {
   type EvidenceDrawerLayerMetadata
 } from "./EvidenceDrawer";
+import {
+  buildEvidenceDrawerEvidence,
+  tryFetchEcologyEvidenceBundle,
+  type EcologyEvidenceDrawerEvidence
+} from "./evidenceBundle";
 import { fetchEcologyLayerManifest } from "./layerManifest";
 import {
   ECOLOGY_LAYER_ID,
@@ -31,6 +36,9 @@ export function EcologyMap({
     useState<Record<string, unknown>>();
   const [layerMetadata, setLayerMetadata] =
     useState<EvidenceDrawerLayerMetadata>();
+  const [drawerEvidence, setDrawerEvidence] =
+    useState<EcologyEvidenceDrawerEvidence>();
+  const [drawerEvidenceStatus, setDrawerEvidenceStatus] = useState<string>();
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -92,7 +100,7 @@ export function EcologyMap({
           map.getCanvas().style.cursor = "";
         });
 
-        map.on("click", ECOLOGY_LAYER_ID, (event: MapMouseEvent) => {
+        map.on("click", ECOLOGY_LAYER_ID, async (event: MapMouseEvent) => {
           const feature = event.features?.[0];
           const rawProperties = feature?.properties ?? {};
 
@@ -104,7 +112,22 @@ export function EcologyMap({
 
           setFeatureProperties(filteredProperties);
           setLayerMetadata(metadata);
+          setDrawerEvidence(undefined);
+          setDrawerEvidenceStatus("Loading resolved EvidenceBundle...");
           setDrawerOpen(true);
+
+          const evidenceResult = await tryFetchEcologyEvidenceBundle(
+            metadata.evidenceBundleRef,
+            { apiBase, publicOnly: true }
+          );
+
+          if (evidenceResult.outcome === "ANSWER") {
+            setDrawerEvidence(buildEvidenceDrawerEvidence(evidenceResult.bundle));
+            setDrawerEvidenceStatus(undefined);
+          } else {
+            setDrawerEvidence(undefined);
+            setDrawerEvidenceStatus(evidenceResult.reason);
+          }
         });
 
         if (manifest.bounds) {
@@ -148,6 +171,8 @@ export function EcologyMap({
         onClose={() => setDrawerOpen(false)}
         featureProperties={featureProperties}
         layerMetadata={layerMetadata}
+        evidence={drawerEvidence}
+        evidenceStatus={drawerEvidenceStatus}
       />
 
       <p>{status}</p>
