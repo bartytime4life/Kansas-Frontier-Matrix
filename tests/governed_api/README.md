@@ -4,13 +4,13 @@ title: Governed API Tests
 type: standard
 version: v1
 status: draft
-owners: TODO-VERIFY(@bartytime4life inherited from surfaced /tests ownership; leaf owner still needs active-branch verification)
+owners: TODO-VERIFY(@bartytime4life appears in the existing README draft as inherited /tests ownership; confirm against CODEOWNERS or current branch ownership records)
 created: TODO-VERIFY(YYYY-MM-DD)
 updated: TODO-VERIFY(YYYY-MM-DD)
 policy_label: TODO-VERIFY(public|restricted)
-related: [../README.md, ../contracts/README.md, ../integration/README.md, ../e2e/README.md, ../policy/README.md, ../reproducibility/README.md, ../unit/README.md, TODO-VERIFY(../../apps/governed_api/README.md), TODO-VERIFY(../../schemas/contracts/v1/runtime/README.md), TODO-VERIFY(../../schemas/contracts/v1/evidence/README.md), TODO-VERIFY(../../policy/README.md)]
+related: [../README.md, ../contracts/README.md, ../integration/README.md, ../e2e/README.md, ../policy/README.md, ../reproducibility/README.md, ../unit/README.md, TODO-VERIFY(../../apps/governed_api/README.md), TODO-VERIFY(../../apps/governed-api/README.md), TODO-VERIFY(../../schemas/contracts/v1/runtime/README.md), TODO-VERIFY(../../schemas/contracts/v1/evidence/README.md), TODO-VERIFY(../../schemas/contracts/v1/policy/README.md), TODO-VERIFY(../../policy/README.md)]
 tags: [kfm, tests, governed-api, runtime-envelope, evidence, policy, no-bypass]
-notes: [Target path supplied by current request as tests/governed_api/README.md, local checkout was not mounted during this drafting pass, surfaced KFM docs support /tests ownership and governed API doctrine but exact leaf existence runner CI wiring route names and branch enforcement remain NEEDS VERIFICATION]
+notes: [Active-branch verification is still required for leaf existence runner CI wiring route names schema homes app path ownership branch protection and runtime behavior; this README treats path and implementation claims as verification targets unless current checkout evidence proves them]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -21,10 +21,10 @@ Verification lane for KFM governed API boundary behavior: evidence resolution, p
 
 > [!IMPORTANT]
 > **Status:** `experimental`  
-> **Owners:** `TODO-VERIFY(@bartytime4life inherited from /tests; leaf owner still needs active-branch verification)`  
+> **Owners:** `TODO-VERIFY(@bartytime4life inherited from existing draft/test-family note; confirm against current branch ownership records)`  
 > **Path target:** `tests/governed_api/README.md`  
 > **Repo fit:** child lane under [`../README.md`](../README.md); adjacent to [`../contracts/README.md`](../contracts/README.md), [`../integration/README.md`](../integration/README.md), [`../e2e/README.md`](../e2e/README.md), [`../policy/README.md`](../policy/README.md), [`../unit/README.md`](../unit/README.md), and [`../reproducibility/README.md`](../reproducibility/README.md)  
-> **Downstream candidates:** `../../apps/governed_api/`, `../../schemas/contracts/v1/runtime/`, `../../schemas/contracts/v1/evidence/`, `../../policy/`, and `../../data/published/governed_api/` are **NEEDS VERIFICATION** from the active branch before converting to hard links.  
+> **Downstream candidates:** `../../apps/governed_api/`, `../../apps/governed-api/`, `../../schemas/contracts/v1/runtime/`, `../../schemas/contracts/v1/evidence/`, `../../schemas/contracts/v1/policy/`, `../../policy/`, and `../../data/published/governed_api/` are **NEEDS VERIFICATION** from the active branch before converting to hard links.  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status](https://img.shields.io/badge/status-experimental-orange)
@@ -35,7 +35,7 @@ Verification lane for KFM governed API boundary behavior: evidence resolution, p
 ![bypass](https://img.shields.io/badge/no--bypass-RAW%2FWORK%2FQUARANTINE-b60205)
 
 > [!CAUTION]
-> This directory should prove **governed API behavior**, not become a second home for schemas, policy source, application code, release artifacts, model providers, or canonical evidence stores.
+> This directory should prove **governed API behavior**, not become a second home for schemas, policy source, application code, release artifacts, model providers, canonical evidence stores, or public truth objects.
 
 ---
 
@@ -65,7 +65,7 @@ The active repository was not mounted during this drafting pass. Keep these stat
 | --- | ---: | --- |
 | `tests/governed_api/` already exists | **NEEDS VERIFICATION** | active repo tree |
 | runner is `pytest`, `vitest`, or another specific harness | **NEEDS VERIFICATION** | package/config files or existing tests |
-| `apps/governed_api/` is the final implementation home | **NEEDS VERIFICATION** | mounted app tree and ADR/path reconciliation |
+| `apps/governed_api/` or `apps/governed-api/` is the final implementation home | **NEEDS VERIFICATION** | mounted app tree and ADR/path reconciliation |
 | route names and app registration are implemented | **NEEDS VERIFICATION** | route source files and app-level tests |
 | CI blocks merges on this lane | **NEEDS VERIFICATION** | workflow YAML and branch-protection evidence |
 | production public traffic uses these exact tests | **UNKNOWN** | deployment/runtime logs and release proof |
@@ -231,12 +231,25 @@ find schemas/contracts/v1 policy data/published -maxdepth 5 -type f 2>/dev/null 
 
 ### 2. Check for bypass risks
 
+These probes are intentionally **self-match aware**: they scan application/runtime paths first and exclude Markdown so this README does not appear as a false positive.
+
 ```bash
 grep -RInE "localhost:11434|OLLAMA_HOST|/api/generate|/api/chat|/v1/chat|/v1/responses" \
-  apps packages tests 2>/dev/null || true
+  apps packages \
+  --exclude='*.md' --exclude='README*' 2>/dev/null || true
 
 grep -RInE "data/raw|/raw/|data/work|/work/|data/quarantine|/quarantine/" \
-  apps packages tests 2>/dev/null || true
+  apps packages \
+  --exclude='*.md' --exclude='README*' 2>/dev/null || true
+```
+
+Optional test-code probe, limited to common executable source extensions:
+
+```bash
+grep -RInE "localhost:11434|OLLAMA_HOST|/api/generate|/api/chat|/v1/chat|/v1/responses|data/raw|/raw/|data/work|/work/|data/quarantine|/quarantine/" \
+  tests/governed_api \
+  --include='*.py' --include='*.ts' --include='*.tsx' --include='*.js' --include='*.mjs' \
+  --exclude='*.md' 2>/dev/null || true
 ```
 
 ### 3. Run branch-native tests only after the runner is verified
@@ -257,14 +270,14 @@ python -m pytest tests/governed_api -q
 
 ### Working placement rule
 
-Put a test in `tests/governed_api/` when the proof needs the API boundary but not the full release/promotion system.
+Put a test in this lane when the proof needs the governed API boundary but not the full release/promotion system.
 
 | Main proof burden | Best home | Why |
 | --- | --- | --- |
 | Pure helper behavior | `../unit/` | cheapest convincing proof wins |
 | Object shape, required fields, valid/invalid examples | `../contracts/` | schema truth stays explicit |
 | Policy grammar, reason codes, allow/deny/abstain behavior | `../policy/` | decision logic stays isolated |
-| Real API boundary response behavior | `tests/governed_api/` | this lane owns governed API trust membrane proof |
+| Real API boundary response behavior | `./` | this lane owns governed API trust membrane proof |
 | Cross-component slice broader than one API boundary | `../integration/` | integration owns multi-component proof |
 | Full runtime/public behavior, release proof, or correction lineage | `../e2e/` | e2e owns broader release/runtime burden |
 | Digest stability or rerun equivalence | `../reproducibility/` | determinism has its own burden |
@@ -300,10 +313,10 @@ request fixture
 ```mermaid
 flowchart LR
     Request["request fixture<br/>claim/focus/release/export context"]
-    Contracts["schemas/contracts/v1<br/>runtime · evidence · policy · release"]
+    Contracts["contract lane<br/>runtime · evidence · policy · release<br/>(home NEEDS VERIFICATION)"]
     Policy["policy lane<br/>precheck / postcheck"]
     Evidence["evidence resolver<br/>EvidenceRef → EvidenceBundle"]
-    App["apps/governed_api<br/>route or app boundary<br/>(NEEDS VERIFICATION)"]
+    App["governed API app boundary<br/>apps/governed_api or apps/governed-api<br/>(NEEDS VERIFICATION)"]
     Tests["tests/governed_api<br/>boundary proof"]
     Envelope["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
     Sidecar["release/correction sidecar<br/>when response posture needs it"]
@@ -367,6 +380,7 @@ Use this checklist before merging this README or tests beneath it.
 - [ ] No test fixture contains raw sensitive data, credentials, provider tokens, or large source dumps.
 - [ ] No public route or fixture path reaches `RAW`, `WORK`, or `QUARANTINE`.
 - [ ] No direct model-client or provider URL is reachable from public/UI-facing tests.
+- [ ] Bypass scans exclude Markdown or separate documentation matches from executable-code matches.
 - [ ] Release/correction sidecar behavior is tested when a response depends on superseded, withdrawn, corrected, stale, or redacted state.
 - [ ] CI wiring is either verified or explicitly marked **NEEDS VERIFICATION**.
 - [ ] Rollback is simple: remove this leaf and any unreferenced tests without changing canonical schemas, policy, or published artifacts.
@@ -421,14 +435,18 @@ sed -n '1,260p' apps/governed-api/README.md 2>/dev/null || true
 
 sed -n '1,220p' schemas/contracts/v1/runtime/README.md 2>/dev/null || true
 sed -n '1,220p' schemas/contracts/v1/evidence/README.md 2>/dev/null || true
+sed -n '1,220p' schemas/contracts/v1/policy/README.md 2>/dev/null || true
 sed -n '1,220p' policy/README.md 2>/dev/null || true
 ```
 
 ### Search terms that matter
 
+Search executable paths first and keep documentation matches separate from code matches.
+
 ```bash
 grep -RInE "EvidenceRef|EvidenceBundle|RuntimeResponseEnvelope|DecisionEnvelope|PolicyDecision|ReleaseResponseSidecar|CorrectionNotice|RunReceipt|AIReceipt|ANSWER|ABSTAIN|DENY|ERROR|raw|quarantine|work|direct model|ModelAdapter|MockAdapter|CitationValidator" \
-  tests apps packages schemas policy data tools docs 2>/dev/null || true
+  tests apps packages schemas policy data tools docs \
+  --exclude='*.md' --exclude='README*' 2>/dev/null || true
 ```
 
 ### Promotion rule for this README
