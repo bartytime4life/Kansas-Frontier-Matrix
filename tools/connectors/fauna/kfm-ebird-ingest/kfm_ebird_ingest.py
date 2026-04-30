@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""Scaffold CLI for KFM eBird ingest Layer 1."""
+"""Scaffold CLI for KFM eBird ingest Layer 2."""
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 from typing import Any
+
+from packages.evidence.evidencebundle_hash import compute_spec_hash
 
 FIELD_MAPPING = {
     "sampling_event_identifier": "kfm:dataset_key",
@@ -27,63 +32,31 @@ def fail(message: str) -> None:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        prog="kfm-ebird-ingest",
-        description="Layer 1 scaffold for KFM eBird ingest adapter.",
-    )
+    parser = argparse.ArgumentParser(prog="kfm-ebird-ingest", description="Layer 2 scaffold for KFM eBird ingest adapter.")
     parser.add_argument("--ebd-file", required=True, help="Path to eBird EBD file")
-    parser.add_argument(
-        "--source-uri",
-        help="Optional source URI. Defaults to file://<ebd-file>",
-    )
+    parser.add_argument("--source-uri", help="Optional source URI. Defaults to file://<ebd-file>")
     parser.add_argument("--filter", required=True, dest="predicate", help="Filter predicate")
-    parser.add_argument(
-        "--aggregate",
-        required=True,
-        choices=("county", "huc12"),
-        help="Aggregation grain",
-    )
-    parser.add_argument(
-        "--suppression",
-        type=int,
-        default=10,
-        help="Suppression threshold (minimum 10)",
-    )
+    parser.add_argument("--aggregate", required=True, choices=("county", "huc12"), help="Aggregation grain")
+    parser.add_argument("--suppression", type=int, default=10, help="Suppression threshold (minimum 10)")
     parser.add_argument("--emit", required=True, help="Output path for scaffold artifact")
     parser.add_argument("--dry-run", action="store_true", help="Emit scaffold EvidenceBundle only")
     return parser.parse_args(argv)
 
 
-def canonical_json(value: dict[str, Any]) -> str:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-
-
-def compute_spec_hash(spec: dict[str, Any]) -> str:
-    digest = hashlib.sha256(canonical_json(spec).encode("utf-8")).hexdigest()
-    return f"sha256:{digest}"
-
-
-def build_spec(args: argparse.Namespace, source_uri: str) -> dict[str, Any]:
-    return {
-        "adapter": "kfm-ebird-ingest",
-        "aggregate": args.aggregate,
-        "mapping": FIELD_MAPPING,
-        "query_predicate": args.predicate,
-        "source_uri": source_uri,
-        "suppression": args.suppression,
-        "version": "v1",
-    }
-
-
-def build_evidence_bundle(spec: dict[str, Any], spec_hash: str) -> dict[str, Any]:
-    return {
+def build_evidence_bundle(args: argparse.Namespace, source_uri: str) -> dict[str, Any]:
+    bundle: dict[str, Any] = {
         "schema_version": "v1",
         "object_type": "EvidenceBundle",
-        "source_uri": spec["source_uri"],
-        "query_predicate": spec["query_predicate"],
-        "mapping": spec["mapping"],
-        "kfm:spec_hash": spec_hash,
+        "domain": "fauna",
+        "source": "ebird",
+        "source_uri": source_uri,
+        "query_predicate": args.predicate,
+        "aggregate": args.aggregate,
+        "suppression_min_n": args.suppression,
+        "mapping": FIELD_MAPPING,
     }
+    bundle["kfm:spec_hash"] = compute_spec_hash(bundle)
+    return bundle
 
 
 def main() -> None:
@@ -94,11 +67,9 @@ def main() -> None:
     source_uri = args.source_uri or Path(args.ebd_file).resolve().as_uri()
 
     if not args.dry_run:
-        fail("Layer 1 scaffold supports --dry-run only; full ingest not implemented")
+        fail("Layer scaffold supports --dry-run only; full ingest not implemented")
 
-    spec = build_spec(args, source_uri)
-    spec_hash = compute_spec_hash(spec)
-    bundle = build_evidence_bundle(spec, spec_hash)
+    bundle = build_evidence_bundle(args, source_uri)
 
     emit_path = Path(args.emit)
     emit_path.parent.mkdir(parents=True, exist_ok=True)
