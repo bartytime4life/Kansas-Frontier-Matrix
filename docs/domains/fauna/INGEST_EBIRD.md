@@ -58,3 +58,6 @@ Safety rules: no exact coordinates, no point/circle/heatmap/cluster eBird layers
 - `replay.json`
 
 It computes deterministic `run_id` from canonical hash inputs (source URI, input hash, predicate, aggregate mode, suppression threshold, optional regions hash, format, executable filter name), performs stage orchestration, and keeps restricted/public separation.
+
+## Layer 8 (Release Governance)
+Added release ops workflow: release candidate, approval indexes, rollback planning, retention planning, and synthetic smoke support via `kfm-ebird-release-ops`. No network calls or credentials are used. Public release artifacts remain aggregate-only and exact points stay restricted.
