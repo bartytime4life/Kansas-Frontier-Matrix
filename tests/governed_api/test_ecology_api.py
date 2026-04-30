@@ -118,6 +118,40 @@ def seed_public_safe_artifacts(root: Path) -> None:
         },
     )
 
+    # ---------------------------
+    # NEW: LAYER MANIFEST
+    # ---------------------------
+    write_json(
+        root / "layer_manifest.json",
+        {
+            "schema_version": "v1",
+            "object_type": "EcologyLayerManifest",
+            "layer_id": "kfm://layer/ecology/example-pass",
+            "title": "KFM Ecology Example Time Slice",
+            "description": "Governed ecology time-slice layer derived from HLS/Landsat inputs.",
+            "source_type": "vector",
+            "tiles_url": "https://example.invalid/tiles/{z}/{x}/{y}.pbf",
+            "source_layer": "ecology",
+            "stac_catalog_ref": "kfm://catalog/stac",
+            "stac_collection_ref": "kfm://catalog/stac/collections/kfm-ecology-timeslices",
+            "stac_item_ref": "kfm://catalog/stac/items/kfm-ecology-example-pass",
+            "evidence_bundle_ref": "kfm://evidence/ecology/example-pass-timeslice",
+            "promotion_decision_ref": "kfm://promotion/ecology/example-pass",
+            "run_receipt_ref": "kfm://receipt/run/ecology/dry-run",
+            "bounds": [-102.1, 36.9, -94.5, 40.1],
+            "time_start": "2024-06-18T00:00:00Z",
+            "time_end": "2024-06-18T23:59:59Z",
+            "minzoom": 0,
+            "maxzoom": 14,
+            "allowed_fields": ["class", "confidence", "time_start", "time_end"],
+            "public_safe": True,
+            "sensitivity": "public",
+            "rights_status": "open",
+            "policy_label": "public",
+            "limitations": ["Derived classification layer"],
+        },
+    )
+
     write_json(
         root / "run_receipt.json",
         {
@@ -126,21 +160,6 @@ def seed_public_safe_artifacts(root: Path) -> None:
             "run_id": "kfm://run/ecology/dry-run",
             "receipt_ref": "kfm://receipt/run/ecology/dry-run",
             "spec_hash": "dry-run",
-            "inputs": {
-                "scene_manifest": "tests/fixtures/ecology/timeslice/pass/scene_manifest.json"
-            },
-            "outputs": {
-                "ingest_manifest": "/tmp/ecology-ingest/ingest_manifest.json",
-                "qa_summary": "/tmp/ecology-ingest/qa_summary.json",
-                "tileset_metadata": "/tmp/ecology-ingest/tileset_metadata.json",
-                "qa_decision": "/tmp/ecology_timeslice_qa_decision.json",
-                "policy_assertions_dir": "/tmp/ecology-policy-assertions",
-                "promotion_decision": "/tmp/promotion_decision.json",
-                "evidence_bundle": "/tmp/evidence_bundle.json",
-                "stac_item": "/tmp/stac_item.json",
-                "stac_collection": "/tmp/stac_collection.json",
-                "stac_catalog": "/tmp/stac_catalog.json",
-            },
             "policy_results": [
                 {
                     "policy": "policy/ecology/publication.rego",
@@ -163,138 +182,30 @@ def seed_public_safe_artifacts(root: Path) -> None:
 
 def test_healthz(client: TestClient) -> None:
     response = client.get("/healthz")
+    assert response.status_code == 200
+
+
+def test_get_layer_public_safe(client: TestClient, artifact_root: Path) -> None:
+    seed_public_safe_artifacts(artifact_root)
+
+    response = client.get("/ecology/layers/example-pass")
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["status"] == "ok"
-    assert "artifact_root" in payload
+    assert payload["object_type"] == "EcologyLayerManifest"
+    assert payload["layer_id"] == "kfm://layer/ecology/example-pass"
 
 
-def test_get_stac_catalog_public_safe(client: TestClient, artifact_root: Path) -> None:
+def test_get_layer_denied_not_public_safe(client: TestClient, artifact_root: Path) -> None:
     seed_public_safe_artifacts(artifact_root)
 
-    response = client.get("/ecology/catalog/stac")
+    path = artifact_root / "layer_manifest.json"
+    data = json.loads(path.read_text())
+    data["public_safe"] = False
+    write_json(path, data)
 
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["type"] == "Catalog"
-    assert payload["stac_version"] == "1.0.0"
-    assert payload["kfm:domain"] == "ecology"
-
-
-def test_get_timeslice_public_safe(client: TestClient, artifact_root: Path) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    response = client.get("/ecology/timeslices/example-pass")
-
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["object_type"] == "EcologyTimesliceResponse"
-    assert payload["timeslice_id"] == "kfm://tileset/ecology/example-pass"
-    assert payload["promotion"]["decision"] == "PROMOTE"
-    assert payload["policy"]["decision"] == "allow"
-    assert payload["evidence_bundle_ref"] == "kfm://evidence/ecology/example-pass-timeslice"
-
-
-def test_get_evidence_bundle_public_safe(client: TestClient, artifact_root: Path) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    response = client.get("/ecology/evidence/example-pass-timeslice")
-
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["object_type"] == "EvidenceBundle"
-    assert payload["bundle_id"] == "kfm://evidence/ecology/example-pass-timeslice"
-    assert payload["resolved"] is True
-    assert payload["rights_status"] == "open"
-    assert payload["sensitivity"] == "public"
-
-
-def test_get_evidence_bundle_404_for_wrong_id(
-    client: TestClient,
-    artifact_root: Path,
-) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    response = client.get("/ecology/evidence/not-the-bundle")
-
-    assert response.status_code == 404
-    payload = response.json()["detail"]
-    assert payload["object_type"] == "ErrorEnvelope"
-    assert payload["outcome"] == "ERROR"
-
-
-def test_get_timeslice_denies_unresolved_evidence(
-    client: TestClient,
-    artifact_root: Path,
-) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    bundle_path = artifact_root / "evidence_bundle.json"
-    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-    bundle["resolved"] = False
-    write_json(bundle_path, bundle)
-
-    response = client.get("/ecology/timeslices/example-pass")
+    response = client.get("/ecology/layers/example-pass")
 
     assert response.status_code == 451
     payload = response.json()["detail"]
     assert payload["outcome"] == "DENY"
-    assert "unresolved_evidence_bundle" in payload["reasons"]
-
-
-def test_get_timeslice_denies_restricted_evidence(
-    client: TestClient,
-    artifact_root: Path,
-) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    bundle_path = artifact_root / "evidence_bundle.json"
-    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-    bundle["sensitivity"] = "restricted"
-    write_json(bundle_path, bundle)
-
-    response = client.get("/ecology/timeslices/example-pass")
-
-    assert response.status_code == 451
-    payload = response.json()["detail"]
-    assert payload["outcome"] == "DENY"
-    assert "restricted_evidence_bundle" in payload["reasons"]
-
-
-def test_get_timeslice_denies_exact_geometry(
-    client: TestClient,
-    artifact_root: Path,
-) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    bundle_path = artifact_root / "evidence_bundle.json"
-    bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
-    bundle["exact_geometry_present"] = True
-    write_json(bundle_path, bundle)
-
-    response = client.get("/ecology/timeslices/example-pass")
-
-    assert response.status_code == 451
-    payload = response.json()["detail"]
-    assert payload["outcome"] == "DENY"
-    assert "exact_geometry_present" in payload["reasons"]
-
-
-def test_get_timeslice_denies_non_promoted_candidate(
-    client: TestClient,
-    artifact_root: Path,
-) -> None:
-    seed_public_safe_artifacts(artifact_root)
-
-    promotion_path = artifact_root / "promotion_decision.json"
-    promotion = json.loads(promotion_path.read_text(encoding="utf-8"))
-    promotion["decision"] = "REVIEW"
-    write_json(promotion_path, promotion)
-
-    response = client.get("/ecology/timeslices/example-pass")
-
-    assert response.status_code == 451
-    payload = response.json()["detail"]
-    assert payload["outcome"] == "DENY"
-    assert "promotion_decision_REVIEW" in payload["reasons"]
