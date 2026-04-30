@@ -1,0 +1,21 @@
+name: USDA PLANTS Publish
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot_date: {description: "Snapshot date YYYY-MM-DD", required: true, default: "2026-04-30"}
+      requester_id: {description: "Publication requester ID", required: true, default: "flora-data-steward"}
+      approver_id: {description: "Publication approver ID", required: true, default: "flora-publication-steward"}
+      run_opa: {description: "Run OPA policy tests", required: false, default: "false", type: choice, options: ["true","false"]}
+permissions: {contents: read}
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: usda-plants-publication
+    env: {CI: "true", KFM_ALLOW_NETWORK: "0", KFM_ALLOW_SCHEDULED_OBSERVATION: "0"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.x"}
+      - name: Run USDA PLANTS publication tests
+        run: |
+          pytest tests/flora/test_usda_plants_publication_request_builder.py tests/flora/test_usda_plants_publication_approval_builder.py tests/flora/test_usda_plants_publication_execution_plan_builder.py tests/flora/test_usda_plants_publish_package.py tests/flora/test_usda_plants_publication_rollback_plan_builder.py tests/flora/test_usda_plants_publication_audit_ledger_builder.py tests/flora/test_usda_plants_publication_chain.py
