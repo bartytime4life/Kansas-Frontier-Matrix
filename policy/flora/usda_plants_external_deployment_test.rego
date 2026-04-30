@@ -1,0 +1,3 @@
+package kfm.flora.usda_plants_external_deployment
+
+test_allow_clean if { count(deny with input as {"approval":{"approver":"x","approver_type":"human"},"request":{"host_allowed":true},"plan":{"protected_environment":true},"refs":["site/flora/usda_plants/2026-01-01/static_site_bundle_manifest.json"],"claims":{"occurrence_coordinates":false,"secret_values":false,"unscoped_secret":false,"long_lived_secret_unapproved":false,"auto_merge":false},"hashes":{"registry_hash":"sha256:x","plan_hash":"sha256:x","provider_manifest_hash":"sha256:x","receipt_hash":"sha256:x","verification_hash":"sha256:x","ledger_hash":"sha256:x"},"attribution":"USDA PLANTS"})==0 }
