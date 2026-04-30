@@ -1,3 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
-python "$(dirname "$0")/kfm_ebird_run_pipeline.py" "$@"
+dir="$(dirname "$0")"
+if [[ "${1:-}" == "--version" ]]; then
+python - <<'PY'
+from pathlib import Path
+import json,sys
+sys.path.insert(0,str(Path('tools/connectors/fauna/kfm-ebird-ingest').resolve()))
+from kfm_ebird_contract import version_payload
+tool=Path(sys.argv[0]).name
+print(json.dumps(version_payload(tool, Path('tools/connectors/fauna/kfm-ebird-ingest/contract_lock.json')), indent=2, sort_keys=True))
+PY
+exit 0
+fi
+py="${0##*/}"; py="${py//-/_}.py"
+python "$dir/$py" "$@"
