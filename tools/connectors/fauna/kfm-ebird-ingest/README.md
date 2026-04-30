@@ -44,3 +44,19 @@ Safety guarantees:
 - requires `policy_label=public_aggregate`, `exact_points=restricted`, and `public_safe=true`
 - refuses to publish suppression receipts or restricted raw rows
 - deterministic run id from canonical hash inputs
+
+
+## Layer 6 Public View (`kfm-ebird-build-public-view`)
+Builds public-safe API artifacts from a promoted Layer 5 run: `features.jsonl/csv`, `feature_evidence_drawers.jsonl`, `layer_api_descriptor.json`, `api_manifest.json`, and aggregate-only MapLibre config. It validates spec-hash consistency, suppression/public-safe posture, and denies coordinate/geometry fields.
+
+Example (HUC12):
+```bash
+kfm-ebird-build-public-view --promotion-dir <promoted_run_dir> --aggregate huc12 --out-dir <promoted_run_dir>/api --maplibre-out data/published/fauna/maplibre/ebird_agg_huc12.json
+```
+
+Example (county):
+```bash
+kfm-ebird-build-public-view --promotion-dir <promoted_run_dir> --aggregate county --out-dir <promoted_run_dir>/api --maplibre-out data/published/fauna/maplibre/ebird_agg_county.json
+```
+
+Public API/UI artifacts never expose exact eBird coordinates and never serve restricted observations, quarantines, or suppression receipts.
