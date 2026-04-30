@@ -79,3 +79,6 @@ Safety: no downloads/credentials, no public exact coordinates, no restricted out
 
 ## Layer 8 release operations
 Use `kfm-ebird-release-ops` for candidate/compare/approve/rollback/retention governance on completed pipeline runs. This layer does not download eBird data, does not use credentials, and public artifacts never include exact coordinates or restricted/quarantine/suppression details.
+
+## Layer 9 observability
+Use `kfm-ebird-observe` for scan/trend/attest/evidence-pack/incident/report flows. See `docs/runbooks/fauna/EBIRD_OPERATIONS.md`.

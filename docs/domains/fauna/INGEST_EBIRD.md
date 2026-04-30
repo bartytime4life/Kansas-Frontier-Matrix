@@ -61,3 +61,6 @@ It computes deterministic `run_id` from canonical hash inputs (source URI, input
 
 ## Layer 8 (Release Governance)
 Added release ops workflow: release candidate, approval indexes, rollback planning, retention planning, and synthetic smoke support via `kfm-ebird-release-ops`. No network calls or credentials are used. Public release artifacts remain aggregate-only and exact points stay restricted.
+
+## Layer 9 observability
+Operational monitoring is implemented by `kfm-ebird-observe` with public-safety redaction and integrity checks. Runbook: `docs/runbooks/fauna/EBIRD_OPERATIONS.md`.
