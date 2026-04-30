@@ -1,0 +1,21 @@
+{
+  "id": "ebird_agg_huc12",
+  "domain": "fauna",
+  "source": "ebird",
+  "aggregate": "huc12",
+  "suppression_min_n": 10,
+  "policy_label": "public_aggregate",
+  "exact_points": "restricted",
+  "allowlist_fields": [
+    "huc12",
+    "taxonKey",
+    "occurrenceDate_month",
+    "checklist_count",
+    "observation_count_sum",
+    "species_count",
+    "kfm:spec_hash",
+    "evidence_bundle_uri"
+  ],
+  "minzoom": 0,
+  "maxzoom": 12
+}
