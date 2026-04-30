@@ -1,39 +1,20 @@
-# eBird ingest (Layer 2)
+# eBird ingest (Layer 3)
 
-## EvidenceBundle contract
+Layer 3 adds local EBD TSV streaming execution:
+- canonical restricted occurrence output (`jsonl` or `csv`)
+- quarantine receipts for rejected/malformed rows
+- run manifest with counts, hashes, and paths
+- EvidenceBundle emission/validation compatibility with Layer 2
 
-Layer 2 uses `schemas/contracts/v1/fauna/evidence_bundle.schema.json` with required fields:
-`schema_version`, `object_type`, `domain`, `source`, `source_uri`, `query_predicate`, `mapping`, and `kfm:spec_hash`.
+## Executable filter limitation
 
-## Deterministic hash recipe
+This adapter only executes the governed checklist QA predicate:
 
-`kfm:spec_hash` is computed as:
+`complete==TRUE && protocol_type!='Incidental' && duration_min>=5 && distance_km<=5 && number_observers<=10`
 
-`sha256:` + SHA-256 of canonical JSON (sorted keys, compact separators, no timestamps).
+Semantically different predicates are rejected.
 
-Hash input:
-- `EvidenceBundle.spec` when present, else a derived object with
-  `schema_version`, `object_type`, `domain`, `source`, `source_uri`, `query_predicate`,
-  `aggregate`, `suppression_min_n`, and `mapping`.
+## Restricted-output warning
 
-## Validator
-
-```bash
-python3 tools/validators/fauna/validate_evidencebundle.py --file /tmp/evidencebundle.json
-```
-
-## Policy gate summary
-
-`policy/fauna/ebird.rego` denies promotion when public-safety or governance controls fail:
-- missing `source_uri`, `query_predicate`, or malformed `kfm:spec_hash`
-- suppression threshold under 10
-- unsupported aggregate
-- public layers exposing exact coordinates
-- `exact_points` not `restricted`
-- best-effort query predicate quality checks for checklist completeness and effort filters
-
-## Public-safe posture
-
-- Exact points are restricted.
-- Aggregates require `suppression_min_n >= 10`.
-- Public eBird layers must not expose exact coordinate fields.
+Exact coordinates are only emitted to restricted local outputs and are blocked from `data/published`.
+No public exact-point publication is implemented in this layer.
