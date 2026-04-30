@@ -49,7 +49,7 @@ jobs:
     name: Validate PROV sidecars
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -70,7 +70,7 @@ jobs:
     name: Evaluate provenance policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
@@ -94,7 +94,7 @@ jobs:
     name: Validate DCAT exports
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -121,7 +121,7 @@ jobs:
     name: Evaluate DCAT policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
@@ -152,7 +152,7 @@ jobs:
     name: Validate STAC exports
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -185,7 +185,7 @@ jobs:
     name: Evaluate STAC policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
@@ -223,7 +223,7 @@ jobs:
     name: Validate CatalogMatrix
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -244,7 +244,7 @@ jobs:
     name: Validate ReleaseManifest closure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -265,7 +265,7 @@ jobs:
     name: Evaluate ReleaseManifest policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           CONFTEST_VERSION="0.56.0"
           curl -L \
@@ -289,7 +289,7 @@ jobs:
     name: Resolve ReleaseManifest closure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -316,7 +316,7 @@ jobs:
     name: Publish release dry run
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -346,7 +346,7 @@ jobs:
     name: Validate PublishReceipt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

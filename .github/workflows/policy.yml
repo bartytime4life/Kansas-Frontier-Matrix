@@ -30,7 +30,7 @@ jobs:
       KFM_POLICY_STRICT: ${{ github.event_name == 'workflow_dispatch' && inputs.strict || false }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
