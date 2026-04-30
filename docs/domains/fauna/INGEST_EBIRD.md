@@ -37,3 +37,14 @@ No public exact-point publication is implemented in this layer.
 - `promotion_receipt.json`
 
 Promotion is aggregate-only and never publishes exact coordinates, restricted observations, quarantines, or suppression-group details.
+
+
+## Layer 6: Public View Build
+`kfm-ebird-build-public-view` converts Layer 5 promoted aggregate outputs into static public API contracts:
+- PublicAggregateFeature DTOs
+- FeatureEvidenceDrawer DTOs
+- ApiManifest
+- LayerApiDescriptor
+- Aggregate-only MapLibre config
+
+Safety rules: no exact coordinates, no point/circle/heatmap/cluster eBird layers, no restricted observation/quarantine/suppression receipt serving. Boundary configuration references external public boundary datasets and does not bundle real HUC12/county boundaries.
