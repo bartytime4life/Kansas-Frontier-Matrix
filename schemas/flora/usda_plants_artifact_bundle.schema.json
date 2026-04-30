@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "bundle_id",
+    "domain",
+    "source_id",
+    "generated_at",
+    "artifact_name",
+    "artifact_only",
+    "publication_state",
+    "promotion_state",
+    "refs",
+    "status",
+    "reason_codes",
+    "bundle_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "object_type": {
+      "const": "usda_plants_artifact_bundle"
+    },
+    "bundle_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "source_id": {
+      "const": "usda_plants"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifact_name": {
+      "type": "string"
+    },
+    "artifact_only": {
+      "const": true
+    },
+    "publication_state": {
+      "const": "not_published"
+    },
+    "promotion_state": {
+      "const": "not_promoted"
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^(?!published/).+"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "warn",
+        "fail"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "bundle_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "queue_id",
+    "domain",
+    "source_id",
+    "generated_at",
+    "priority",
+    "review_status",
+    "reviewer_hint",
+    "alert_ref",
+    "observation_ref",
+    "suggested_next_commands",
+    "required_review_gates",
+    "blocked_actions",
+    "queue_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "object_type": {
+      "const": "usda_plants_reviewer_queue"
+    },
+    "queue_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "source_id": {
+      "const": "usda_plants"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "priority": {
+      "enum": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "review_status": {
+      "enum": [
+        "not_started",
+        "in_review",
+        "closed"
+      ]
+    },
+    "reviewer_hint": {
+      "type": "string"
+    },
+    "alert_ref": {
+      "type": "string"
+    },
+    "observation_ref": {
+      "type": "string"
+    },
+    "suggested_next_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_review_gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "queue_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}
