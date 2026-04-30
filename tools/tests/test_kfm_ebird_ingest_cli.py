@@ -8,6 +8,7 @@ from pathlib import Path
 
 SCRIPT = "tools/connectors/fauna/kfm-ebird-ingest/kfm_ebird_ingest.py"
 LAYER_REGISTRY = Path("data/published/fauna/layers/ebird_agg_huc12.json")
+VALIDATOR = "tools/validators/fauna/validate_evidencebundle.py"
 
 
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -74,3 +75,27 @@ def test_layer_registry_suppression_and_coordinate_safety() -> None:
     merged_fields = " ".join(layer["allowlist_fields"])
     for forbidden in ("decimalLatitude", "decimalLongitude", "latitude", "longitude"):
         assert forbidden not in merged_fields
+
+
+def test_dry_run_output_validates_with_evidencebundle_validator(tmp_path: Path) -> None:
+    out = tmp_path / "evidencebundle.json"
+    result = run_cli(
+        "--ebd-file",
+        "/tmp/ebd-EBD.txt",
+        "--filter",
+        "complete==TRUE && protocol_type!='Incidental' && duration_min>=5 && distance_km<=5 && number_observers<=10",
+        "--aggregate",
+        "huc12",
+        "--emit",
+        str(out),
+        "--dry-run",
+    )
+    assert result.returncode == 0
+
+    validate = subprocess.run(
+        [sys.executable, VALIDATOR, str(out)],
+        check=False,
+        text=True,
+        capture_output=True,
+    )
+    assert validate.returncode == 0
