@@ -82,3 +82,6 @@ Use `kfm-ebird-release-ops` for candidate/compare/approve/rollback/retention gov
 
 ## Layer 9 observability
 Use `kfm-ebird-observe` for scan/trend/attest/evidence-pack/incident/report flows. See `docs/runbooks/fauna/EBIRD_OPERATIONS.md`.
+
+## Layer 11 maintenance
+Use `kfm-ebird-maintain` and `kfm-ebird-migrate` for contract evolution and copy-on-write migrations.

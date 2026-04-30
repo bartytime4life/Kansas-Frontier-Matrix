@@ -1,0 +1,16 @@
+{
+  "adapter_version": "1.0.0",
+  "contracts": {
+    "suppression_min_n_default": 10,
+    "public_feature_dto": {
+      "required_fields": [
+        "source_uri",
+        "query_predicate",
+        "evidence_bundle_uri",
+        "kfm:spec_hash",
+        "suppression_min_n"
+      ]
+    }
+  },
+  "contract_hash": "sha256:d996ddc6da29ddd4edbb07e1a2f957b134a395b7a98947274f0de137a907db24"
+}
