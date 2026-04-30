@@ -164,6 +164,7 @@ docs/tracking/
 | `pipelines/kansas_biodiversity_etl/normalize/` | `ROADMAP_ONLY` | Runnable entrypoint + lane-local fixtures/tests or validator wiring. |
 | `pipelines/usgs-gage-watch/` | `ROADMAP_ONLY` | Runnable entrypoint + lane-local fixtures/tests or validator wiring. |
 | `pipelines/watchers/kansas_flora_watch/` | `ROADMAP_ONLY` | Runnable entrypoint + lane-local fixtures/tests or validator wiring. |
+| `pipelines/watchers/usda_plants_flora_no_network_slice/` | `ROADMAP_ONLY` | Runnable entrypoint + lane-local fixtures/tests or validator wiring. |
 | `pipelines/watchers/soil_air_quality/` | `ROADMAP_ONLY` | Runnable entrypoint + lane-local fixtures/tests or validator wiring. |
 
 The shared exit criteria are:
