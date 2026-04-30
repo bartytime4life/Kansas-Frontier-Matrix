@@ -99,3 +99,6 @@ Use `kfm-ebird-downloads` to build public-safe bundles and dictionaries, then `k
 ## Layer 16 certification/support
 - `kfm-ebird-certify` builds production certification and governance signoff packets from synthetic/local public-safe artifacts only.
 - `kfm-ebird-support` builds support workflow packs plus public correction/takedown workflows.
+
+## Layer 18 Red-Team
+Use `kfm-ebird-mutate` and `kfm-ebird-redteam` for synthetic adversarial safety regression. Never use real eBird data.
