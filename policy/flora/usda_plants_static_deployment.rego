@@ -9,3 +9,10 @@ deny[msg] { input.claims.long_lived_secrets == true; msg := "long-lived secret c
 deny[msg] { count(input.hashes) == 0; msg := "missing hashes" }
 deny[msg] { not contains(lower(input.attribution),"usda plants") ; msg := "bad attribution" }
 deny[msg] { input.claims.auto_merge == true; msg := "auto-merge claims" }
+
+deny[msg] { input.github_pages_manifest.environment == "github-pages"; input.github_pages_manifest.required_permissions.pages != "write"; msg := "github pages missing pages:write" }
+deny[msg] { input.github_pages_manifest.environment == "github-pages"; input.github_pages_manifest.required_permissions["id-token"] != "write"; msg := "github pages missing id-token:write" }
+deny[msg] { input.github_pages_manifest.environment == "github-pages"; input.github_pages_manifest.requires_environment_protection != true; msg := "github pages missing environment protection" }
+deny[msg] { input.github_pages_manifest.environment == "github-pages"; input.github_pages_manifest.uses_long_lived_secrets == true; msg := "github pages uses long-lived secrets" }
+deny[msg] { input.github_pages_manifest.environment == "github-pages"; input.github_pages_manifest.claims.auto_merge == true; msg := "github pages auto-merge claims" }
+deny[msg] { some r in input.github_pages_manifest.refs; contains(r,"/raw/") or contains(r,"/work/") or contains(r,"/quarantine/"); msg := "github pages raw/work/quarantine refs" }
