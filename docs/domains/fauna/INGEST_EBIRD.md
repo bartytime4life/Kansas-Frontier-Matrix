@@ -25,3 +25,15 @@ No public exact-point publication is implemented in this layer.
 - Restricted suppression receipt stores hashed suppressed group identifiers.
 - Region assignment order: observation field, then optional synthetic GeoJSON spatial join.
 - WARNING: public outputs must never contain exact coordinates.
+
+## Layer 5: Governed Promotion
+`kfm-ebird-promote` validates a Layer 4 aggregate + manifest + EvidenceBundle, computes deterministic `run_id`, and writes:
+- `aggregates.(jsonl|csv)`
+- `aggregate_manifest.json`
+- `evidencebundle.json`
+- `catalog_record.json`
+- `triplets.jsonl`
+- `evidence_drawer.json`
+- `promotion_receipt.json`
+
+Promotion is aggregate-only and never publishes exact coordinates, restricted observations, quarantines, or suppression-group details.

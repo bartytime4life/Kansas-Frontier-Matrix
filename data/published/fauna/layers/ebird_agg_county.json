@@ -1,11 +1,5 @@
 {
-  "id": "ebird_agg_county",
-  "domain": "fauna",
-  "source": "ebird",
   "aggregate": "county",
-  "suppression_min_n": 10,
-  "policy_label": "public_aggregate",
-  "exact_points": "restricted",
   "allowlist_fields": [
     "county_fips",
     "taxonKey",
@@ -18,9 +12,6 @@
     "kfm:spec_hash",
     "evidence_bundle_uri"
   ],
-  "minzoom": 0,
-  "maxzoom": 12,
-  "public_safe": true,
   "denied_fields": [
     "decimalLatitude",
     "decimalLongitude",
@@ -28,8 +19,24 @@
     "longitude",
     "lat",
     "lon",
+    "raw_latitude",
+    "raw_longitude",
     "point",
     "geom",
     "geometry"
-  ]
+  ],
+  "domain": "fauna",
+  "exact_points": "restricted",
+  "id": "ebird_agg_county",
+  "latest_catalog_record_path": "/tmp/tmp1fd597jq/data/published/fauna/ebird/county/5c63e496170fb9de/catalog_record.json",
+  "latest_evidence_drawer_path": "/tmp/tmp1fd597jq/data/published/fauna/ebird/county/5c63e496170fb9de/evidence_drawer.json",
+  "latest_output_path": "/tmp/tmp1fd597jq/data/published/fauna/ebird/county/5c63e496170fb9de/aggregates.jsonl",
+  "latest_output_sha256": "sha256:191399e41158d4fa38c410f31b649f003ea3cfe2f05e78b02bba4509598ca744",
+  "latest_run_id": "5c63e496170fb9de",
+  "maxzoom": 12,
+  "minzoom": 0,
+  "policy_label": "public_aggregate",
+  "public_safe": true,
+  "source": "ebird",
+  "suppression_min_n": 10
 }
