@@ -7,6 +7,7 @@ These lanes are intentionally marked **roadmap-only** until runnable entrypoints
 - `pipelines/kansas_biodiversity_etl/normalize/`
 - `pipelines/usgs-gage-watch/`
 - `pipelines/watchers/kansas_flora_watch/`
+- `pipelines/watchers/usda_plants_flora_no_network_slice/`
 - `pipelines/watchers/soil_air_quality/`
 
 Exit criteria:
