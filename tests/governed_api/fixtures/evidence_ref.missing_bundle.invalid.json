@@ -1,0 +1,6 @@
+{
+  "schema_version": "v1",
+  "object_type": "EvidenceRef",
+  "evidence_ref": "kfm://evidence/ref/ecology/missing-bundle",
+  "resolved": false
+}

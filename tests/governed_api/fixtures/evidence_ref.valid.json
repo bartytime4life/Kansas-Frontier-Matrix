@@ -1,0 +1,7 @@
+{
+  "schema_version": "v1",
+  "object_type": "EvidenceRef",
+  "evidence_ref": "kfm://evidence/ref/ecology/no-network-fixture",
+  "bundle_id": "kfm://evidence/ecology/example-pass-timeslice",
+  "resolved": true
+}
