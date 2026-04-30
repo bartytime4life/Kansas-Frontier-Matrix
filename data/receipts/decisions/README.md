@@ -233,12 +233,12 @@ Display:
 
 ```mermaid
 flowchart TD
-  A[EvidenceBundle] --> B[Policy Evaluation (OPA)]
-  B --> C[DecisionLog]
-  C --> D[run_receipt]
-  C --> E[Promotion Gate]
-  E --> F[ReleaseManifest]
-  F --> G[Published Layer/API]
+  A["EvidenceBundle"] --> B["Policy Evaluation (OPA)"]
+  B --> C["DecisionLog"]
+  C --> D["run_receipt"]
+  C --> E["Promotion Gate"]
+  E --> F["ReleaseManifest"]
+  F --> G["Published Layer/API"]
 ```
 
 ---
