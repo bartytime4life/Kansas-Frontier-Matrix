@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "network_mode": {
+            "const": "manual_enabled"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "operator_acknowledgement": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "ci_allowed": {
+      "type": "boolean"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "download_targets": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "file_name": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "role": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "url",
+          "file_name",
+          "required"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "guards": {
+      "additionalProperties": false,
+      "properties": {
+        "promotes": {
+          "const": false
+        },
+        "publishes": {
+          "const": false
+        },
+        "refuses_ci_by_default": {
+          "const": true
+        },
+        "requires_allow_network_flag": {
+          "const": true
+        },
+        "requires_operator_ack": {
+          "const": true
+        },
+        "writes_raw_only": {
+          "const": true
+        }
+      },
+      "required": [
+        "requires_allow_network_flag",
+        "requires_operator_ack",
+        "refuses_ci_by_default",
+        "writes_raw_only",
+        "publishes",
+        "promotes"
+      ],
+      "type": "object"
+    },
+    "network_mode": {
+      "enum": [
+        "disabled",
+        "manual_enabled"
+      ]
+    },
+    "object_type": {
+      "const": "usda_plants_live_fetch_plan"
+    },
+    "operator_acknowledgement": {
+      "type": "boolean"
+    },
+    "plan_hash": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "plan_id": {
+      "pattern": "^kfm\\.",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "snapshot_date": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "type": "string"
+    },
+    "source_id": {
+      "const": "usda_plants"
+    },
+    "source_uri": {
+      "type": "string"
+    },
+    "target_roles": {
+      "items": {
+        "enum": [
+          "checklist",
+          "state_distribution",
+          "county_distribution"
+        ]
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "object_type",
+    "plan_id",
+    "domain",
+    "source_id",
+    "source_uri",
+    "snapshot_date",
+    "generated_at",
+    "network_mode",
+    "operator_acknowledgement",
+    "ci_allowed",
+    "target_roles",
+    "download_targets",
+    "guards",
+    "reason_codes",
+    "plan_hash"
+  ],
+  "type": "object"
+}
