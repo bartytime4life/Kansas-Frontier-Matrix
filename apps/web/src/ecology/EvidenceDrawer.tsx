@@ -1,3 +1,4 @@
+import type { EcologyEvidenceDrawerEvidence } from "./evidenceBundle";
 import { TrustBadges, type TrustBadge } from "./trustBadges";
 
 export type EvidenceDrawerPayload = {
@@ -73,6 +74,8 @@ export type EvidenceDrawerProps = {
   onClose?: () => void;
   featureProperties?: Record<string, unknown>;
   layerMetadata?: EvidenceDrawerLayerMetadata;
+  evidence?: EcologyEvidenceDrawerEvidence;
+  evidenceStatus?: string;
 };
 
 function FieldList({ value }: { value?: string[] }) {
@@ -89,12 +92,18 @@ function FieldList({ value }: { value?: string[] }) {
   );
 }
 
+function EmptyNote({ children }: { children: string }) {
+  return <p style={{ color: "#666", fontStyle: "italic" }}>{children}</p>;
+}
+
 export default function EvidenceDrawer({
   payload,
   open = true,
   onClose,
   featureProperties,
-  layerMetadata
+  layerMetadata,
+  evidence,
+  evidenceStatus
 }: EvidenceDrawerProps) {
   if (!open) return null;
 
@@ -103,7 +112,7 @@ export default function EvidenceDrawer({
       style={{
         borderLeft: "1px solid #ddd",
         padding: 12,
-        width: 360,
+        width: 380,
         maxHeight: "100%",
         overflow: "auto",
         background: "white"
@@ -256,6 +265,140 @@ export default function EvidenceDrawer({
           <h4>Allowed fields</h4>
           <FieldList value={layerMetadata.allowedFields} />
         </>
+      ) : null}
+
+      <h4>Resolved EvidenceBundle</h4>
+
+      {evidenceStatus ? (
+        <p style={{ color: "#8a5a00" }}>{evidenceStatus}</p>
+      ) : null}
+
+      {evidence ? (
+        <>
+          <ul>
+            <li>
+              <strong>Bundle:</strong> {evidence.bundle_id}
+            </li>
+            <li>
+              <strong>Resolved:</strong> {String(evidence.resolved)}
+            </li>
+            <li>
+              <strong>Resolution:</strong> {evidence.resolution_state}
+            </li>
+            <li>
+              <strong>Visibility:</strong> {evidence.visibility}
+            </li>
+            <li>
+              <strong>Policy:</strong> {evidence.policy_label}
+            </li>
+            <li>
+              <strong>Rights:</strong> {evidence.rights_status}
+            </li>
+            <li>
+              <strong>Sensitivity:</strong> {evidence.sensitivity}
+            </li>
+            <li>
+              <strong>Spec hash:</strong> {evidence.spec_hash}
+            </li>
+          </ul>
+
+          <h4>Source refs</h4>
+          {evidence.source_refs.length ? (
+            <FieldList value={evidence.source_refs} />
+          ) : (
+            <EmptyNote>No source refs in bundle.</EmptyNote>
+          )}
+
+          <h4>Dataset refs</h4>
+          {evidence.dataset_refs.length ? (
+            <FieldList value={evidence.dataset_refs} />
+          ) : (
+            <EmptyNote>No dataset refs in bundle.</EmptyNote>
+          )}
+
+          <h4>Evidence refs</h4>
+          {evidence.evidence_refs.length ? (
+            <FieldList value={evidence.evidence_refs} />
+          ) : (
+            <EmptyNote>No evidence refs in bundle.</EmptyNote>
+          )}
+
+          <h4>Object refs</h4>
+          {evidence.object_refs.length ? (
+            <FieldList value={evidence.object_refs} />
+          ) : (
+            <EmptyNote>No object refs in bundle.</EmptyNote>
+          )}
+
+          {evidence.catalog_refs.length ? (
+            <>
+              <h4>Catalog refs</h4>
+              <FieldList value={evidence.catalog_refs} />
+            </>
+          ) : null}
+
+          {evidence.release_refs.length ? (
+            <>
+              <h4>Release refs</h4>
+              <FieldList value={evidence.release_refs} />
+            </>
+          ) : null}
+
+          {evidence.limitations.length ? (
+            <>
+              <h4>Evidence limitations</h4>
+              <ul>
+                {evidence.limitations.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          {evidence.warnings.length ? (
+            <>
+              <h4>Evidence warnings</h4>
+              <ul>
+                {evidence.warnings.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          {evidence.notes.length ? (
+            <>
+              <h4>Evidence notes</h4>
+              <ul>
+                {evidence.notes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          {evidence.artifacts.length ? (
+            <>
+              <h4>Artifacts</h4>
+              <ul>
+                {evidence.artifacts.map((artifact, index) => (
+                  <li key={`${artifact.role ?? "artifact"}-${index}`}>
+                    <strong>{artifact.role ?? "artifact"}:</strong>{" "}
+                    {artifact.uri ?? "UNKNOWN"}
+                    {artifact.digest ? (
+                      <>
+                        <br />
+                        <code>{artifact.digest}</code>
+                      </>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </>
+      ) : !evidenceStatus ? (
+        <EmptyNote>Click a governed ecology feature to resolve evidence.</EmptyNote>
       ) : null}
 
       {featureProperties ? (
