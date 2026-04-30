@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import maplibregl from "maplibre-gl";
+import maplibregl, { type MapMouseEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import EvidenceDrawer, {
+  type EvidenceDrawerLayerMetadata
+} from "./EvidenceDrawer";
 import { fetchEcologyLayerManifest } from "./layerManifest";
 import {
   ECOLOGY_LAYER_ID,
@@ -21,7 +24,13 @@ export function EcologyMap({
 }: EcologyMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+
   const [status, setStatus] = useState("Loading governed ecology layer...");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [featureProperties, setFeatureProperties] =
+    useState<Record<string, unknown>>();
+  const [layerMetadata, setLayerMetadata] =
+    useState<EvidenceDrawerLayerMetadata>();
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -64,6 +73,40 @@ export function EcologyMap({
           map.addLayer(buildEcologyFillLayer(manifest));
         }
 
+        const metadata: EvidenceDrawerLayerMetadata = {
+          layerId: manifest.layer_id,
+          evidenceBundleRef: manifest.evidence_bundle_ref,
+          promotionDecisionRef: manifest.promotion_decision_ref,
+          runReceiptRef: manifest.run_receipt_ref,
+          allowedFields: manifest.allowed_fields,
+          publicSafe: manifest.public_safe
+        };
+
+        setLayerMetadata(metadata);
+
+        map.on("mouseenter", ECOLOGY_LAYER_ID, () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+
+        map.on("mouseleave", ECOLOGY_LAYER_ID, () => {
+          map.getCanvas().style.cursor = "";
+        });
+
+        map.on("click", ECOLOGY_LAYER_ID, (event: MapMouseEvent) => {
+          const feature = event.features?.[0];
+          const rawProperties = feature?.properties ?? {};
+
+          const filteredProperties = Object.fromEntries(
+            Object.entries(rawProperties).filter(([key]) =>
+              manifest.allowed_fields.includes(key)
+            )
+          );
+
+          setFeatureProperties(filteredProperties);
+          setLayerMetadata(metadata);
+          setDrawerOpen(true);
+        });
+
         if (manifest.bounds) {
           map.fitBounds(
             [
@@ -76,7 +119,9 @@ export function EcologyMap({
 
         setStatus(`Loaded governed layer: ${manifest.title}`);
       } catch (error) {
-        setStatus(error instanceof Error ? error.message : "Failed to load ecology layer");
+        setStatus(
+          error instanceof Error ? error.message : "Failed to load ecology layer"
+        );
       }
     });
 
@@ -87,7 +132,7 @@ export function EcologyMap({
   }, [apiBase, layerId]);
 
   return (
-    <section>
+    <section style={{ position: "relative" }}>
       <div
         ref={mapContainerRef}
         style={{
@@ -97,6 +142,14 @@ export function EcologyMap({
           overflow: "hidden"
         }}
       />
+
+      <EvidenceDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        featureProperties={featureProperties}
+        layerMetadata={layerMetadata}
+      />
+
       <p>{status}</p>
     </section>
   );
