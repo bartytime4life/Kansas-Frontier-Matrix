@@ -92,3 +92,6 @@ See `docs/domains/fauna/EBIRD_FEDERATION.md` for federation index, discovery, se
 
 ## Layer 13 analytics/insights
 Use `kfm-ebird-analytics` and `kfm-ebird-insights` for public-safe descriptive indicator and insight artifacts built from public aggregate/federation outputs only.
+
+## Layer 14 portal/downloads
+Use `kfm-ebird-downloads` to build public-safe bundles and dictionaries, then `kfm-ebird-portal` to build static local-only public portal artifacts with CSP and safety reports.
