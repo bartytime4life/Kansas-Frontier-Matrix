@@ -63,3 +63,10 @@ This audit inspects files changed on 2026-04-30 from git history and validates c
 - Revert this file with:
   - `git revert <commit>` (if committed), or
   - `git rm docs/architecture/changed-file-audit-2026-04-30.md` before commit.
+
+## Suggested follow-up actions
+
+1. In CI or a provisioned local environment, install governed API test dependencies and run `pytest tests/governed_api -q`.
+2. Run schema validation for `data/published/ecology/dry-run/layer_manifest.json` against `schemas/contracts/v1/ecology/layer_manifest.schema.json`.
+3. Execute the web build/runtime checks (for example `npm --prefix apps/web test` and `npm --prefix apps/web run build`) and capture artifact links.
+4. Confirm `.github/workflows/*.yml` outcomes from today’s pipeline run artifacts and attach job IDs to this audit.
