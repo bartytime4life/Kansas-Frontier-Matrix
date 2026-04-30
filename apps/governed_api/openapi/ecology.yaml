@@ -15,6 +15,41 @@ tags:
     description: Governed ecology publication surfaces
 
 paths:
+  /ecology/layers/{id}:
+    get:
+      tags: [Ecology]
+      operationId: getEcologyLayerManifest
+      summary: Get a governed ecology layer manifest
+      description: >
+        Returns a public-safe layer manifest for a promoted ecology layer.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Layer identifier suffix.
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Governed ecology layer manifest.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcologyLayerManifest"
+        "404":
+          description: Layer manifest not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "451":
+          description: Denied by governance policy.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
   /ecology/timeslices/{id}:
     get:
       tags: [Ecology]
@@ -110,6 +145,96 @@ paths:
 
 components:
   schemas:
+    EcologyLayerManifest:
+      type: object
+      additionalProperties: false
+      required:
+        - schema_version
+        - object_type
+        - layer_id
+        - title
+        - source_type
+        - tiles_url
+        - source_layer
+        - stac_catalog_ref
+        - stac_collection_ref
+        - evidence_bundle_ref
+        - promotion_decision_ref
+        - run_receipt_ref
+        - minzoom
+        - maxzoom
+        - allowed_fields
+        - public_safe
+      properties:
+        schema_version:
+          type: string
+          const: v1
+        object_type:
+          type: string
+          const: EcologyLayerManifest
+        layer_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        source_type:
+          type: string
+          enum: [vector, raster, raster-dem, geojson]
+        tiles_url:
+          type: string
+        source_layer:
+          type: string
+        stac_catalog_ref:
+          type: string
+        stac_collection_ref:
+          type: string
+        stac_item_ref:
+          type: string
+        evidence_bundle_ref:
+          type: string
+        promotion_decision_ref:
+          type: string
+        run_receipt_ref:
+          type: string
+        minzoom:
+          type: integer
+          minimum: 0
+        maxzoom:
+          type: integer
+          minimum: 0
+        bounds:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: number
+        time_start:
+          type: string
+          format: date-time
+        time_end:
+          type: string
+          format: date-time
+        allowed_fields:
+          type: array
+          items:
+            type: string
+        public_safe:
+          type: boolean
+          const: true
+        sensitivity:
+          type: string
+          enum: [public, generalize]
+        rights_status:
+          type: string
+          enum: [public, open]
+        policy_label:
+          type: string
+        limitations:
+          type: array
+          items:
+            type: string
+
     EcologyTimesliceResponse:
       type: object
       additionalProperties: false
