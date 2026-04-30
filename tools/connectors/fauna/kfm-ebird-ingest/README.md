@@ -76,3 +76,6 @@ Examples:
 - Force rerun: `... --execute --force`
 
 Safety: no downloads/credentials, no public exact coordinates, no restricted outputs under `data/published`, no suppression receipts in public outputs.
+
+## Layer 8 release operations
+Use `kfm-ebird-release-ops` for candidate/compare/approve/rollback/retention governance on completed pipeline runs. This layer does not download eBird data, does not use credentials, and public artifacts never include exact coordinates or restricted/quarantine/suppression details.
