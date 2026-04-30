@@ -89,3 +89,6 @@ Use `kfm-ebird-maintain` and `kfm-ebird-migrate` for contract evolution and copy
 
 ## Layer 12 federation/export
 See `docs/domains/fauna/EBIRD_FEDERATION.md` for federation index, discovery, semantic graph, STAC-lite/RO-Crate-lite/warehouse/search exports, and public-safety constraints.
+
+## Layer 13 analytics/insights
+Use `kfm-ebird-analytics` and `kfm-ebird-insights` for public-safe descriptive indicator and insight artifacts built from public aggregate/federation outputs only.
