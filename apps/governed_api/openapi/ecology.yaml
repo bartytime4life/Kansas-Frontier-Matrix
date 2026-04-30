@@ -18,33 +18,31 @@ paths:
   /ecology/layers/{id}:
     get:
       tags: [Ecology]
-      operationId: getEcologyLayerManifest
+      operationId: getEcologyLayer
       summary: Get a governed ecology layer manifest
       description: >
-        Returns a public-safe layer manifest for a promoted ecology layer.
+        Returns a public-safe EcologyLayerManifest used to configure MapLibre layers.
       parameters:
         - name: id
           in: path
           required: true
-          description: Layer identifier suffix.
           schema:
             type: string
-            minLength: 1
       responses:
         "200":
-          description: Governed ecology layer manifest.
+          description: Ecology layer manifest
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/EcologyLayerManifest"
         "404":
-          description: Layer manifest not found.
+          description: Layer not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorEnvelope"
         "451":
-          description: Denied by governance policy.
+          description: Denied by governance policy
           content:
             application/json:
               schema:
@@ -199,10 +197,8 @@ components:
           type: string
         minzoom:
           type: integer
-          minimum: 0
         maxzoom:
           type: integer
-          minimum: 0
         bounds:
           type: array
           minItems: 4
@@ -224,10 +220,8 @@ components:
           const: true
         sensitivity:
           type: string
-          enum: [public, generalize]
         rights_status:
           type: string
-          enum: [public, open]
         policy_label:
           type: string
         limitations:
