@@ -1,0 +1,1 @@
+{"required_routes":["/health","/openapi.json","/soil/current","/soil/releases","/soil/releases/{release_id}/manifest","/soil/releases/{release_id}/publication-receipt","/soil/records","/soil/records/{bundle_or_safe_bundle_id}","/soil/focus-cards/{safe_bundle_id}","/soil/triplets/{safe_bundle_id}.nt","/soil/governance/retractions","/soil/governance/status"]}
