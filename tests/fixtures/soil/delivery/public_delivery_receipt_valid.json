@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","receipt_type":"PublicDeliveryReceipt","from_state":"PUBLIC_ROUTING_RECONCILED","to_state":"PUBLIC_DELIVERY_VERIFIED","decision":"pass","signatures":{"dsse":"PROPOSED-COSIGN"},"generated_artifacts":{}}
