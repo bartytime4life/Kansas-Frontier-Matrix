@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "cutover_observation_ref": {
+      "type": "string"
+    },
+    "deployment_rollback_plan_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "incident_record_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "post_deploy_gate_evaluation_ref": {
+      "type": "string"
+    },
+    "recommended_actions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rollback_decision": {
+      "enum": [
+        "no_rollback_fixture",
+        "rollback_candidate_prepared",
+        "rollback_required_fixture",
+        "request_more_evidence",
+        "production_rollback_blocked"
+      ]
+    },
+    "rollback_decision_id": {
+      "type": "string"
+    },
+    "rollback_triggers_observed": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_decision",
+        "candidate_decision",
+        "needs_review",
+        "blocked"
+      ]
+    },
+    "subject_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "rollback_decision_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "cutover_observation_ref",
+    "post_deploy_gate_evaluation_ref",
+    "deployment_rollback_plan_ref",
+    "incident_record_refs",
+    "rollback_decision",
+    "rollback_triggers_observed",
+    "evidence_refs",
+    "recommended_actions",
+    "status"
+  ],
+  "type": "object"
+}
