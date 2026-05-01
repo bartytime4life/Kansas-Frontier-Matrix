@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "verification_report_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "post_deploy_verification_refresh_plan_ref",
+    "deployment_refresh_execution_receipt_ref",
+    "checks",
+    "probe_results",
+    "slo_expectations",
+    "rollback_trigger_evaluation",
+    "incident_trigger_evaluation",
+    "result"
+  ],
+  "type": "object"
+}
