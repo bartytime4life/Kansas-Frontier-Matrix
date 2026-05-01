@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/contracts/v1/promotion_candidate.schema.json",
+  "title": "KFM PromotionCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "candidate_id",
+    "source_state",
+    "target_state",
+    "evidencebundle_ref",
+    "evidencebundle_spec_hash",
+    "run_receipt_ref",
+    "run_receipt_bundle_ref",
+    "rights_status",
+    "sensitivity",
+    "public_release",
+    "reviewer"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "v1"},
+    "object_type": {"type": "string", "const": "PromotionCandidate"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "source_state": {"type": "string", "minLength": 1},
+    "target_state": {"type": "string", "minLength": 1},
+    "evidencebundle_ref": {"type": "string", "minLength": 1},
+    "evidencebundle_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "run_receipt_ref": {"type": "string", "minLength": 1},
+    "run_receipt_bundle_ref": {"type": "string", "minLength": 1},
+    "rights_status": {
+      "type": "string",
+      "enum": ["known", "licensed", "restricted", "unknown"]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "restricted"]
+    },
+    "public_release": {"type": "boolean"},
+    "reviewer": {"type": "string"},
+    "cosign_receipt_verified": {"type": "boolean"},
+    "gatehouse_registration_posture": {
+      "type": "string",
+      "enum": ["registered", "pending", "unknown"]
+    }
+  }
+}
