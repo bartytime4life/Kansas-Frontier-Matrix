@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "assurance_baseline_rotation_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "candidate_artifact_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "candidate_read_model_refresh_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "etag_checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "hash_checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "non_mutation_checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "open_findings": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "path_safety_checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "postcheck_id": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "remediation_rollforward_plan_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "semantic_checks": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "sunset_delta_candidate_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "postcheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "remediation_rollforward_plan_ref",
+    "candidate_artifact_refresh_manifest_ref",
+    "candidate_read_model_refresh_ref",
+    "client_delivery_refresh_manifest_ref",
+    "sunset_delta_candidate_ref",
+    "assurance_baseline_rotation_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "non_mutation_checks",
+    "open_findings",
+    "result"
+  ],
+  "type": "object"
+}

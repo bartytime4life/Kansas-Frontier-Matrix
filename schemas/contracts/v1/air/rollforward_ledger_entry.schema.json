@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actor": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "artifact_hashes": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "details": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "entry_hash": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "entry_type": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "evidence_refs": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "ledger_entry_id": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "previous_entry_ref": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "subject_refs": {
+      "type": [
+        "string",
+        "boolean",
+        "array",
+        "object"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "ledger_entry_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "entry_type",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "artifact_hashes",
+    "previous_entry_ref",
+    "entry_hash",
+    "result",
+    "details"
+  ],
+  "type": "object"
+}
