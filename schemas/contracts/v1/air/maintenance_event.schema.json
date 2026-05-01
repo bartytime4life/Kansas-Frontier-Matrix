@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actor": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "event_type": {
+      "enum": [
+        "assurance_findings_collected",
+        "maintenance_authorization_created",
+        "maintenance_execution_plan_created",
+        "fixture_maintenance_simulated",
+        "maintenance_receipt_created",
+        "assurance_remediation_recorded",
+        "deprecation_review_created",
+        "client_sunset_plan_created",
+        "maintenance_postcheck_created",
+        "maintenance_blocked"
+      ]
+    },
+    "evidence_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "subject_refs": {
+      "items": {},
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "type": "object"
+}

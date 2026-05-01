@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "affected_artifacts": {
+      "items": {},
+      "type": "array"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "finding_id": {
+      "type": "string"
+    },
+    "finding_type": {
+      "enum": [
+        "missing_hash",
+        "hash_mismatch",
+        "unsafe_path",
+        "processed_path_exposure",
+        "active_retracted_record",
+        "fixture_public_truth_claim",
+        "runbook_update_needed",
+        "drift_detected",
+        "archive_integrity_warning",
+        "deprecation_review_needed",
+        "nowcast_label_error",
+        "aqs_window_error",
+        "secret_like_value",
+        "live_instruction",
+        "needs_manual_review"
+      ]
+    },
+    "recommended_action": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "source_ref": {
+      "type": "string"
+    },
+    "source_type": {
+      "enum": [
+        "archive_integrity_recheck",
+        "drift_observation_report",
+        "runbook_review_record",
+        "periodic_recertification_record",
+        "maintenance_window_plan",
+        "deprecation_candidate_record",
+        "continuous_assurance_summary",
+        "fixture"
+      ]
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "finding_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "source_ref",
+    "source_type",
+    "severity",
+    "finding_type",
+    "description",
+    "affected_artifacts",
+    "evidence_refs",
+    "recommended_action",
+    "status"
+  ],
+  "type": "object"
+}

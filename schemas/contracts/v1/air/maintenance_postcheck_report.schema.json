@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "assurance_remediation_record_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "checks": {
+      "items": {},
+      "type": "array"
+    },
+    "client_sunset_plan_ref": {
+      "type": "string"
+    },
+    "deprecation_review_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "etag_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "maintenance_execution_receipt_ref": {
+      "type": "string"
+    },
+    "open_findings": {
+      "items": {},
+      "type": "array"
+    },
+    "path_safety_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "postcheck_id": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "items": {},
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "postcheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "maintenance_execution_receipt_ref",
+    "assurance_remediation_record_refs",
+    "deprecation_review_ref",
+    "client_sunset_plan_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "open_findings",
+    "result"
+  ],
+  "type": "object"
+}

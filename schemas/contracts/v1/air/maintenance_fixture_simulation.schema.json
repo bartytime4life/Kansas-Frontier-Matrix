@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "etag_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "maintenance_authorization_ref": {
+      "type": "string"
+    },
+    "maintenance_execution_plan_ref": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "simulated_artifact_impacts": {
+      "items": {},
+      "type": "array"
+    },
+    "simulated_steps": {
+      "items": {},
+      "type": "array"
+    },
+    "simulation_id": {
+      "type": "string"
+    },
+    "source_assurance_refs": {
+      "items": {},
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "simulation_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "maintenance_authorization_ref",
+    "maintenance_execution_plan_ref",
+    "source_assurance_refs",
+    "simulated_steps",
+    "simulated_artifact_impacts",
+    "hash_checks",
+    "etag_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}
