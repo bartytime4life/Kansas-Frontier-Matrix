@@ -1,0 +1,15 @@
+{
+  "object_type": "run_receipt",
+  "schema_version": "v1",
+  "run_id": "run-001.revoked",
+  "spec_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "artifact_spec_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "consent_vc_id": "consent_vc_bd26f709e3aedd7e0a9fc21b",
+  "revoke_delta_id": "rvk_3f33c59388227375dae85657b9d480d4e41505c93c63eeca0f8d7f73ef11fb5e",
+  "obligations_snapshot": {
+    "obligations_snapshot_hash": "3d1c107ace15f20af58a027fc5dff8f77705cb4f36535d93f77c79104b3853b5"
+  },
+  "action": "suppress_or_recompute",
+  "status": "SUPPRESSED",
+  "timestamp": "2026-05-01T03:42:38Z"
+}
