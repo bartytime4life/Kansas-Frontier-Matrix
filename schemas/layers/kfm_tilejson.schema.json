@@ -1,1 +1,1 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"KFM TileJSON","type":"object","required":["tilejson","name","tiles","minzoom","maxzoom","vector_layers","kfm:spec_hash","kfm:release_manifest","kfm:policy_label","kfm:sensitivity"]}
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"kfm_tilejson","type":"object","required":["tilejson","name","tiles","minzoom","maxzoom","vector_layers","kfm:spec_hash","kfm:release_manifest","kfm:policy_label","kfm:sensitivity"]}
