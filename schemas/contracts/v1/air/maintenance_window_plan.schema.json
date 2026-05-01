@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "maintenance_plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "continuous_assurance_plan_ref",
+    "release_closure_dossier_ref",
+    "client_delivery_manifest_ref",
+    "maintenance_scope",
+    "planned_actions",
+    "preconditions",
+    "hold_points",
+    "rollback_preconditions",
+    "stakeholder_notice_refs",
+    "forbidden_actions",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "maintenance_plan_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_plan_ref": {
+      "type": "string"
+    },
+    "release_closure_dossier_ref": {
+      "type": "string"
+    },
+    "client_delivery_manifest_ref": {
+      "type": "string"
+    },
+    "maintenance_scope": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "planned_actions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "hold_points": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "rollback_preconditions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "stakeholder_notice_refs": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "safety_checks": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "status": {
+      "enum": [
+        "fixture_maintenance_plan",
+        "candidate_maintenance_plan",
+        "needs_review",
+        "blocked",
+        "production_maintenance_blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
