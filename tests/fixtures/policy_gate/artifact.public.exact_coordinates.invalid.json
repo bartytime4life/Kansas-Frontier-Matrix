@@ -1,0 +1,9 @@
+{
+  "aggregation_level": "county",
+  "artifact_id": "art_public_exact",
+  "coordinates_precision": "exact",
+  "derived": false,
+  "policy_label": "public",
+  "rights_status": "controlled",
+  "spec_hash": "a2"
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "release_manifest_id",
+    "artifacts",
+    "decision_envelope_ids",
+    "release_channel",
+    "created_at",
+    "manifest_hash",
+    "signature"
+  ],
+  "properties": {
+    "release_manifest_id": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "release_channel"
+        ],
+        "properties": {
+          "artifact_id": {
+            "type": "string"
+          },
+          "release_channel": {
+            "enum": [
+              "internal",
+              "controlled",
+              "public",
+              "export"
+            ]
+          }
+        }
+      }
+    },
+    "decision_envelope_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "release_channel": {
+      "enum": [
+        "internal",
+        "controlled",
+        "public",
+        "export"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "manifest_hash": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "string"
+    }
+  }
+}
