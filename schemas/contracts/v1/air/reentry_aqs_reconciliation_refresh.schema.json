@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_aqs_reconciliation_refresh",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "reconciliation_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "reentry_release_candidate_package_ref",
+    "reentry_qa_revalidation_report_ref",
+    "reentry_release_evidence_bundle_ref",
+    "aqs_validated_window",
+    "reconciled_at",
+    "method",
+    "status",
+    "differences",
+    "source_rows",
+    "staleness_check",
+    "safety_checks"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "status": {
+      "enum": [
+        "not_required",
+        "fixture_reconciled",
+        "candidate_reconciled",
+        "pending",
+        "conflict_detected",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
