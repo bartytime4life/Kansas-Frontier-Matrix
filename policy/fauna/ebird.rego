@@ -62,3 +62,28 @@ deny[msg] if {
   contains(lower(json.marshal(input)), "exact_private_locations")
   msg := "public takedown workflow requests exact private locations"
 }
+
+deny[msg] if {
+  object.get(input,"object_type","")=="KfmEbirdVerifierFindingQueueItem"
+  object.get(input,"severity","")=="critical"
+  object.get(input,"finding_type","")=="public_safety_finding"
+  object.get(input,"blocks_gate",false)!=true
+  msg := "critical public-safety finding must block gate"
+}
+
+deny[msg] if {
+  object.get(input,"object_type","")=="KfmEbirdVerifierFindingQueueItem"
+  object.get(input,"severity","")=="critical"
+  object.get(input,"finding_type","")=="public_safety_finding"
+  object.get(input,"blocks_public_transparency_pass",false)!=true
+  msg := "critical public-safety finding must block transparency"
+}
+
+deny[msg] if {
+  object.get(input,"object_type","")=="KfmEbirdAuditResponsePacket"
+  object.get(input,"status","")=="pass"
+  some f in object.get(input,"findings",[])
+  object.get(f,"severity","")=="critical"
+  object.get(f,"response_status","")!="resolved"
+  msg := "audit response packet pass while critical findings remain open"
+}

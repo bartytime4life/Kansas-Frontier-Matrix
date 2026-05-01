@@ -41,3 +41,11 @@ Both CLIs produce synthetic/public-safe governance artifacts, never call network
 ## Layer 32: Independent verification
 
 Use `kfm-ebird-verifier-kit` to build public-safe offline verification kits and `kfm-ebird-verify-offline` to run independent local checks. Both tools are local-only, require no credentials, perform no network calls, and only validate governance/public-safety artifacts (not ecological truth).
+
+## Layer 33: Audit intake and audit response
+
+New CLIs:
+- `kfm-ebird-audit-intake`
+- `kfm-ebird-audit-response`
+
+These tools create local governance artifacts only and public-safe summaries; they do not call network services or mutate release pointers.
