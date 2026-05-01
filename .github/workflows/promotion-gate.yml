@@ -1,0 +1,58 @@
+name: Promotion Gate
+
+on:
+  pull_request:
+    paths:
+      - "policy/**"
+      - "schemas/contracts/v1/**"
+      - "tests/fixtures/promotion/**"
+      - "tests/promotion/**"
+      - "tools/validators/promotion/**"
+      - ".github/workflows/promotion-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "policy/**"
+      - "schemas/contracts/v1/**"
+      - "tests/fixtures/promotion/**"
+      - "tests/promotion/**"
+      - "tools/validators/promotion/**"
+      - ".github/workflows/promotion-gate.yml"
+
+jobs:
+  promotion-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install jq and conftest
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          CONFT=conftest_0.59.0_Linux_x86_64.tar.gz
+          curl -sSL -o /tmp/${CONFT} https://github.com/open-policy-agent/conftest/releases/download/v0.59.0/${CONFT}
+          sudo tar -C /usr/local/bin -xzf /tmp/${CONFT} conftest
+
+      - name: Validate promotion fixtures
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/promotion-decisions
+          python tools/validators/promotion/validate_promotion_candidate.py tests/fixtures/promotion/valid/promotion_candidate.json > artifacts/promotion-decisions/valid.decision.json
+          python tools/validators/promotion/validate_promotion_candidate.py tests/fixtures/promotion/invalid/missing_receipt.json > artifacts/promotion-decisions/missing_receipt.decision.json || true
+          python tools/validators/promotion/validate_promotion_candidate.py tests/fixtures/promotion/invalid/restricted_public_geometry.json > artifacts/promotion-decisions/restricted_public_geometry.decision.json || true
+
+      - name: Conftest policy checks
+        run: |
+          set -euo pipefail
+          conftest test tests/fixtures/promotion/valid/promotion_candidate.json --policy policy/
+          ! conftest test tests/fixtures/promotion/invalid/missing_receipt.json --policy policy/
+          ! conftest test tests/fixtures/promotion/invalid/restricted_public_geometry.json --policy policy/
+
+      - name: Upload promotion decisions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promotion-decisions
+          path: artifacts/promotion-decisions/*.decision.json
+          if-no-files-found: ignore
