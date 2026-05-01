@@ -52,3 +52,8 @@ These tools create local governance artifacts only and public-safe summaries; th
 
 ## Layer 37 checkpoint/ledger
 - Added local-only CLIs: `kfm-ebird-checkpoint` and `kfm-ebird-ledger` for deterministic checkpoint manifests, proof bundles, and append-only hash-chain ledger workflows.
+
+## Layer 39: archive handoff and cold-start
+
+Use `kfm-ebird-archive-handoff` to build local public-safe archival handoff artifacts and `kfm-ebird-coldstart` to validate local cold-start reproducibility from those artifacts. Both tools are local-only, network-free, and preserve exact point restrictions.
+
