@@ -715,6 +715,13 @@ jobs:
             echo "No Python tests found; skipping pytest." | tee -a "$KFM_CI_ARTIFACT_DIR/python-ci.md"
           fi
 
+          if [ -d tests/soil ]; then
+            echo "Running soil validator pytest slice" | tee -a "$KFM_CI_ARTIFACT_DIR/python-ci.md"
+            python -m pytest -q tests/soil | tee -a "$KFM_CI_ARTIFACT_DIR/python-ci.md"
+          else
+            echo "No tests/soil slice found; skipping soil validator pytest." | tee -a "$KFM_CI_ARTIFACT_DIR/python-ci.md"
+          fi
+
           cat "$KFM_CI_ARTIFACT_DIR/python-ci.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload Python CI artifact
@@ -1209,4 +1216,3 @@ jobs:
           if bad:
               sys.exit(1)
           PY
-
