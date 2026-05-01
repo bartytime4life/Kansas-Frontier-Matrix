@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "forbidden_actions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "local_procedures": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "release_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "roles": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "runbook_activation_id": {
+      "type": "string"
+    },
+    "runbook_sections": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_runbook_candidate",
+        "candidate_runbook",
+        "needs_review",
+        "blocked",
+        "production_runbook_blocked"
+      ],
+      "type": "string"
+    },
+    "watch_window_plan_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "runbook_activation_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "operational_handoff_package_ref",
+    "watch_window_plan_ref",
+    "release_ledger_manifest_ref",
+    "runbook_sections",
+    "roles",
+    "local_procedures",
+    "forbidden_actions",
+    "evidence_refs",
+    "status"
+  ],
+  "type": "object"
+}
