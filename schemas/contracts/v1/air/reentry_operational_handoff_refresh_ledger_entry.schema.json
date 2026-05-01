@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "actor": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "artifact_hashes": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "details": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "entry_hash": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "entry_type": {
+      "enum": [
+        "operational_handoff_refresh_package_created",
+        "watch_window_refresh_plan_created",
+        "watch_window_refresh_evaluated",
+        "runbook_activation_refresh_candidate_created",
+        "stakeholder_notice_refresh_finalized_candidate",
+        "evidence_archive_refresh_manifest_created",
+        "release_closure_refresh_dossier_created",
+        "operational_handoff_refresh_manifest_created",
+        "operational_handoff_refresh_decided",
+        "operational_handoff_refresh_postcheck_created",
+        "operational_handoff_refresh_blocked"
+      ]
+    },
+    "evidence_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "ledger_entry_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "previous_entry_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "subject_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "ledger_entry_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "entry_type",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "artifact_hashes",
+    "previous_entry_ref",
+    "entry_hash",
+    "result",
+    "details"
+  ],
+  "type": "object"
+}
