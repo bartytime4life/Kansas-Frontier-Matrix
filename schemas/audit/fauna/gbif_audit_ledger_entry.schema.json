@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["audit_ledger_entry_id","entry_type","policy_version","decision","input_artifact_hashes","output_artifact_hashes","kfm:spec_hash"]}
