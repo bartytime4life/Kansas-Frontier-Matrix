@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "rollback_refresh_plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "current_client_delivery_refresh_manifest_ref",
+    "previous_client_delivery_manifest_ref",
+    "read_model_version_candidate_ref",
+    "rollback_steps",
+    "rollback_artifact_refs",
+    "validation_checks",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "rollback_refresh_plan_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "current_client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "previous_client_delivery_manifest_ref": {
+      "type": "string"
+    },
+    "read_model_version_candidate_ref": {
+      "type": "string"
+    },
+    "rollback_steps": {
+      "type": "string"
+    },
+    "rollback_artifact_refs": {
+      "type": "string"
+    },
+    "validation_checks": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_rollback_refresh_plan",
+        "candidate_rollback_refresh_plan",
+        "needs_review",
+        "blocked",
+        "production_rollback_refresh_blocked"
+      ]
+    }
+  }
+}

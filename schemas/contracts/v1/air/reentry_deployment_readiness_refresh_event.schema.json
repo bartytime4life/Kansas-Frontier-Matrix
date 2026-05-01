@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "deployment_environment_refresh_candidate_created",
+        "static_hosting_manifest_refresh_candidate_created",
+        "deployment_readiness_refresh_plan_created",
+        "synthetic_probe_refresh_spec_created",
+        "synthetic_probe_refresh_report_created",
+        "cache_invalidation_refresh_plan_created",
+        "deployment_rollback_refresh_plan_created",
+        "deployment_readiness_refresh_report_created",
+        "deployment_readiness_refresh_manifest_created",
+        "deployment_readiness_refresh_decided",
+        "deployment_readiness_refresh_ledger_created",
+        "deployment_readiness_refresh_postcheck_created",
+        "deployment_readiness_refresh_blocked"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "subject_refs": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "details": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "probe_spec_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "deployment_readiness_refresh_plan_ref",
+    "static_hosting_manifest_refresh_candidate_ref",
+    "client_delivery_refresh_manifest_ref",
+    "routes_under_test",
+    "expected_responses",
+    "fixtures",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "probe_spec_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "deployment_readiness_refresh_plan_ref": {
+      "type": "string"
+    },
+    "static_hosting_manifest_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "routes_under_test": {
+      "type": "string"
+    },
+    "expected_responses": {
+      "type": "string"
+    },
+    "fixtures": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_probe_refresh_spec",
+        "candidate_probe_refresh_spec",
+        "needs_review",
+        "blocked",
+        "production_probe_refresh_blocked"
+      ]
+    }
+  }
+}

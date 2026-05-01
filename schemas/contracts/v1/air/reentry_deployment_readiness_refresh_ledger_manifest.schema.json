@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "ledger_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "entry_refs",
+    "head_entry_ref",
+    "chain_hash",
+    "source_refs",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "ledger_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "entry_refs": {
+      "type": "string"
+    },
+    "head_entry_ref": {
+      "type": "string"
+    },
+    "chain_hash": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_deployment_readiness_refresh_ledger",
+        "candidate_deployment_readiness_refresh_ledger",
+        "production_ledger_blocked",
+        "blocked"
+      ]
+    }
+  }
+}
