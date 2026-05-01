@@ -83,6 +83,15 @@ class H(BaseHTTPRequestHandler):
             if rdir.exists():
                 for p in sorted(rdir.glob('*.retraction_notice.json')): items.append(public_safe_payload(load_json(p)))
             return self._write(200,{"retractions":items})
+        if path=='/soil/discovery' and getattr(self.server,'discovery_root',None):
+            from tools.validators.soil.discovery_check import main as dchk
+            if dchk(['--discovery-root',self.server.discovery_root])!=0: return self._err(503,'discovery invalid')
+            d=Path(self.server.discovery_root)/'discovery/soil';ptr=load_json(d/'current_discovery.json');rid=ptr['active_discovery_id'];return self._write(200,load_json(d/f'releases/{rid}/discovery_manifest.json'))
+        if path in ['/soil/discovery/schema.org','/soil/discovery/dcat','/soil/discovery/stac-collection','/soil/discovery/feed.json','/soil/discovery/sitemap.xml','/soil/discovery/robots.txt'] and getattr(self.server,'discovery_root',None):
+            d=Path(self.server.discovery_root)/'discovery/soil';ptr=load_json(d/'current_discovery.json');did=ptr['active_discovery_id'];m={'/soil/discovery/schema.org':'landing.schemaorg.jsonld','/soil/discovery/dcat':'dcat.dataset.jsonld','/soil/discovery/stac-collection':'stac_collection.json','/soil/discovery/feed.json':'feeds/soil.json','/soil/discovery/sitemap.xml':'sitemap.xml','/soil/discovery/robots.txt':'robots.txt'}
+            fp=d/f'releases/{did}/{m[path]}'
+            ct='application/json' if path.endswith('json') or 'schema.org' in path or 'dcat' in path else ('application/xml' if path.endswith('.xml') else 'text/plain')
+            return self._write(200, fp.read_text(), ct)
         if path=='/soil/governance/status':
             st={"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})}
             if getattr(self.server,'ops_root',None):
@@ -99,7 +108,7 @@ class H(BaseHTTPRequestHandler):
         return self._err(404,'not found')
 
 def main(argv=None):
-    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root')
+    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root'); ap.add_argument('--discovery-root')
     a=ap.parse_args(argv); root=Path(a.published_root)
     v=validate_service_release(root,a.release_id)
     if not v['valid']:
@@ -107,7 +116,7 @@ def main(argv=None):
     rel=root/'published/soil/releases'/v['release_id']
     for p in [load_json(rel/'manifest.json'),load_json(rel/'index.json'),load_json(rel/'publication_receipt.json')]:
         if scan_payload_for_forbidden_terms(p): print(json.dumps({"service_started":False,"reasons":["forbidden terms in public payload"]},sort_keys=True)); return 1
-    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root
+    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root; httpd.discovery_root=a.discovery_root
     print(json.dumps({"service_started":True,"host":a.host,"port":httpd.server_port,"release_id":v['release_id'],"audit_passed":True},sort_keys=True),flush=True)
     signal.signal(signal.SIGTERM, lambda *_: httpd.shutdown())
     try: httpd.serve_forever()
