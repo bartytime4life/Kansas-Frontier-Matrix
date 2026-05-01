@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "reentry_release_candidate_package_ref",
+    "reentry_qa_revalidation_report_ref",
+    "candidate_reentry_manifest_ref",
+    "candidate_artifact_refs",
+    "source_chain_refs",
+    "measurements",
+    "sources",
+    "provenance",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "bundle_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "reentry_release_candidate_package_ref": {
+      "type": "string"
+    },
+    "reentry_qa_revalidation_report_ref": {
+      "type": "string"
+    },
+    "candidate_reentry_manifest_ref": {
+      "type": "string"
+    },
+    "candidate_artifact_refs": {
+      "type": "string"
+    },
+    "source_chain_refs": {
+      "type": "string"
+    },
+    "measurements": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}
