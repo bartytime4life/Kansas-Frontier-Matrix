@@ -1,0 +1,20 @@
+{
+  "aqs_reconciliation_ref": "publication://pub-fixture-001/aqs_reconciliation.json",
+  "attestation_ref": "publication://pub-fixture-001/attestation.json",
+  "domain": "atmosphere.air",
+  "evidence_bundle_ref": "publication://pub-fixture-001/evidence_bundle.json",
+  "promotion_decision_ref": "publication://pub-fixture-001/promotion_decision.json",
+  "publication_id": "pub-fixture-001",
+  "published_artifacts": [
+    {
+      "artifact_type": "qa_summary",
+      "path": "data/processed/air/out.json",
+      "sha256": "abc",
+      "source_ref": "tests/fixtures/air/public_read_model/pass_fixture_candidate/qa_summary.json"
+    }
+  ],
+  "release_manifest_ref": "publication://pub-fixture-001/release_manifest.json",
+  "run_receipt_ref": "publication://pub-fixture-001/run_receipt.json",
+  "schema_version": "v1",
+  "status": "publication_candidate"
+}

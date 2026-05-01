@@ -1,0 +1,11 @@
+{
+  "catalog_refs": [
+    "catalog://air/stac/item1"
+  ],
+  "domain": "atmosphere.air",
+  "public_readiness": {
+    "status": "catalog_candidate"
+  },
+  "release_id": "rel-1",
+  "schema_version": "v1"
+}

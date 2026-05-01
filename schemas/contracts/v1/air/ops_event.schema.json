@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_type": {
+      "enum": [
+        "lineage_audit",
+        "slo_check",
+        "health_report",
+        "incident_opened",
+        "retraction_requested",
+        "audit_denied"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "actor",
+    "subject_refs",
+    "result",
+    "details"
+  ],
+  "type": "object"
+}
