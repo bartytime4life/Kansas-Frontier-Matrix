@@ -1,0 +1,9 @@
+source_system: GBIF
+source_uri: https://www.gbif.org/occurrence/search
+license_policy:
+  public_allowed: [CC0, CC-BY]
+  public_restricted: [CC-BY-NC]
+  fail_closed_on_unknown: true
+geoprivacy:
+  deny_exact_sensitive_public: true
+  suppression_min_n: 10

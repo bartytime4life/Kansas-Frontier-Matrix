@@ -1,0 +1,2 @@
+gbifID,datasetKey,scientificName,eventDate,decimalLatitude,decimalLongitude,basisOfRecord,coordinateUncertaintyInMeters,license
+1,,Panthera leo,2025-01-01,38.1234,-96.9911,HUMAN_OBSERVATION,30,CC-BY

@@ -1,0 +1,11 @@
+gbifID,datasetKey,scientificName,eventDate,decimalLatitude,decimalLongitude,basisOfRecord,coordinateUncertaintyInMeters,individualCount,license,isSensitive
+1,ds-sensitive,Felis concolor,2025-01-01,38.1234,-96.9911,HUMAN_OBSERVATION,5,1,CC-BY,true
+2,ds-sensitive,Felis concolor,2025-01-02,38.2234,-96.8911,HUMAN_OBSERVATION,5,1,CC-BY,true
+3,ds-sensitive,Felis concolor,2025-01-03,38.3234,-96.7911,HUMAN_OBSERVATION,5,1,CC-BY,true
+4,ds-sensitive,Felis concolor,2025-01-04,38.4234,-96.6911,HUMAN_OBSERVATION,5,1,CC-BY,true
+5,ds-sensitive,Felis concolor,2025-01-05,38.5234,-96.5911,HUMAN_OBSERVATION,5,1,CC-BY,true
+6,ds-sensitive,Felis concolor,2025-01-06,38.6234,-96.4911,HUMAN_OBSERVATION,5,1,CC-BY,true
+7,ds-sensitive,Felis concolor,2025-01-07,38.7234,-96.3911,HUMAN_OBSERVATION,5,1,CC-BY,true
+8,ds-sensitive,Felis concolor,2025-01-08,38.8234,-96.2911,HUMAN_OBSERVATION,5,1,CC-BY,true
+9,ds-sensitive,Felis concolor,2025-01-09,38.9234,-96.1911,HUMAN_OBSERVATION,5,1,CC-BY,true
+10,ds-sensitive,Felis concolor,2025-01-10,39.0234,-96.0911,HUMAN_OBSERVATION,5,1,CC-BY,true

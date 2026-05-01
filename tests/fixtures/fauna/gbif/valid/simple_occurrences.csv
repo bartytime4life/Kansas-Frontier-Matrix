@@ -1,0 +1,11 @@
+gbifID,datasetKey,scientificName,acceptedScientificName,eventDate,decimalLatitude,decimalLongitude,basisOfRecord,coordinateUncertaintyInMeters,individualCount,license,isSensitive
+1,ds-1,Panthera leo,,2025-01-01,38.1234,-96.9911,HUMAN_OBSERVATION,30,2,CC-BY,false
+2,ds-1,,Panthera tigris,2025-01-02,38.2234,-96.8911,HUMAN_OBSERVATION,50,1,CC0,false
+3,ds-2,Canis lupus,,2025-01-03,38.3234,-96.7911,HUMAN_OBSERVATION,100,3,CC-BY,false
+4,ds-2,Ursus arctos,,2025-01-04,38.4234,-96.6911,HUMAN_OBSERVATION,80,1,CC0,false
+5,ds-3,Bison bison,,2025-01-05,38.5234,-96.5911,HUMAN_OBSERVATION,20,7,CC-BY,false
+6,ds-3,Odocoileus virginianus,,2025-01-06,38.6234,-96.4911,HUMAN_OBSERVATION,20,4,CC0,false
+7,ds-4,Cervus canadensis,,2025-01-07,38.7234,-96.3911,HUMAN_OBSERVATION,20,2,CC-BY,false
+8,ds-4,Lynx rufus,,2025-01-08,38.8234,-96.2911,HUMAN_OBSERVATION,20,1,CC0,false
+9,ds-5,Vulpes vulpes,,2025-01-09,38.9234,-96.1911,HUMAN_OBSERVATION,20,2,CC-BY,false
+10,ds-5,Taxidea taxus,,2025-01-10,39.0234,-96.0911,HUMAN_OBSERVATION,20,1,CC0,false
