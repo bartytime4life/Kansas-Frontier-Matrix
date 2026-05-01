@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "reentry_release_candidate_package_ref",
+    "reentry_qa_revalidation_report_ref",
+    "reentry_release_evidence_bundle_ref",
+    "reentry_catalog_refresh_manifest_ref",
+    "reentry_release_manifest_ref",
+    "reentry_release_candidate_decision_ref",
+    "reentry_lineage_bridge_ref",
+    "reentry_release_candidate_postcheck_report_ref",
+    "reentry_release_candidate_ledger_manifest_ref",
+    "checks",
+    "hash_checks",
+    "qa_checks",
+    "catalog_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "non_mutation_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "reentry_release_candidate_package_ref": {
+      "type": "string"
+    },
+    "reentry_qa_revalidation_report_ref": {
+      "type": "string"
+    },
+    "reentry_release_evidence_bundle_ref": {
+      "type": "string"
+    },
+    "reentry_catalog_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "reentry_release_manifest_ref": {
+      "type": "string"
+    },
+    "reentry_release_candidate_decision_ref": {
+      "type": "string"
+    },
+    "reentry_lineage_bridge_ref": {
+      "type": "string"
+    },
+    "reentry_release_candidate_postcheck_report_ref": {
+      "type": "string"
+    },
+    "reentry_release_candidate_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "type": "string"
+    },
+    "qa_checks": {
+      "type": "string"
+    },
+    "catalog_checks": {
+      "type": "string"
+    },
+    "ledger_checks": {
+      "type": "string"
+    },
+    "lineage_checks": {
+      "type": "string"
+    },
+    "non_mutation_checks": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string"
+    }
+  }
+}
