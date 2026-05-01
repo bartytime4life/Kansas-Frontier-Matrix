@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {
+      "artifact_ref": "responses/index.json",
+      "etag": "\"bad\""
+    }
+  ]
+}
