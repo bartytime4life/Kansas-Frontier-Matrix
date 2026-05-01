@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "deployment_authorization_refresh_ref",
+    "release_manager_refresh_decision_ref",
+    "deployment_readiness_refresh_manifest_ref",
+    "static_hosting_manifest_refresh_candidate_ref",
+    "cache_invalidation_refresh_plan_ref",
+    "deployment_rollback_refresh_plan_ref",
+    "deployment_readiness_refresh_report_ref",
+    "synthetic_probe_refresh_report_ref",
+    "deployment_readiness_refresh_audit_report_ref",
+    "manual_steps",
+    "preconditions",
+    "hold_points",
+    "rollback_triggers",
+    "evidence_refs",
+    "forbidden_actions",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
