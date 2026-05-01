@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","object_type":"SoilSafeModeExitHandoffRequest","domain":"soil","exit_handoff_type":"remain_governance_only","closure_id":"soil-closure-test","public_message":"stay governance","evidence_refs":[],"required_future_workflow_refs":[],"active_public_delivery_recommended_after_handoff":false,"steward_review":{"required":true,"decision":"approved"}}
