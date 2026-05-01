@@ -1,0 +1,44 @@
+{
+  "id": "kfm-veg-public-v1",
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "collection": "kfm-map-layers",
+  "properties": {
+    "kfm:spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "kfm:policy_label": "public",
+    "kfm:sensitivity": "public",
+    "datetime": "2026-01-01T00:00:00Z",
+    "start_datetime": "2026-01-01T00:00:00Z",
+    "end_datetime": "2026-03-31T00:00:00Z"
+  },
+  "assets": {
+    "tilejson": {
+      "href": "data/published/tiles/kfm-veg-public-v1.tilejson.json",
+      "type": "application/json",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "pmtiles": {
+      "href": "data/published/tiles/kfm-veg-public-v1.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "links": [
+    {
+      "rel": "release_manifest",
+      "href": "manifests/kfm-veg-public-v1.sha256:1111111111111111111111111111111111111111111111111111111111111111.json"
+    },
+    {
+      "rel": "redaction_receipt",
+      "href": "data/receipts/public/redaction/kfm-veg-public-v1.json"
+    },
+    {
+      "rel": "generalization_receipt",
+      "href": "data/receipts/public/generalization/kfm-veg-public-v1.json"
+    }
+  ]
+}

@@ -1,1 +1,24 @@
-[]
+{
+  "id": "kfm-veg-public-v1",
+  "title": "KFM Vegetation Public Layer",
+  "release_state": "released",
+  "policy_label": "public",
+  "sensitivity": "public",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "source_pmtiles": "data/published/tiles/kfm-veg-public-v1.pmtiles",
+  "tilejson": "data/published/tiles/kfm-veg-public-v1.tilejson.json",
+  "fallback": {
+    "source": "data/published/tiles/kfm-veg-fallback.pmtiles",
+    "public_safe": true
+  },
+  "receipts": [
+    {
+      "type": "redaction_receipt",
+      "href": "data/receipts/public/redaction/kfm-veg-public-v1.json"
+    },
+    {
+      "type": "generalization_receipt",
+      "href": "data/receipts/public/generalization/kfm-veg-public-v1.json"
+    }
+  ]
+}
