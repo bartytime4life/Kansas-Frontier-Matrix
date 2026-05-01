@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "rollforward_acceptance_created",
+        "candidate_reentry_package_created",
+        "refresh_compatibility_gates_run",
+        "refreshed_baseline_recertified",
+        "sunset_review_queue_created",
+        "sunset_review_decision_recorded",
+        "candidate_reentry_promotion_decided",
+        "candidate_reentry_manifest_created",
+        "candidate_reentry_ledger_created",
+        "candidate_reentry_postcheck_created",
+        "candidate_reentry_blocked"
+      ]
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  }
+}

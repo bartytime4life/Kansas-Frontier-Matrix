@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "acceptance_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "maintenance_closure_record_ref",
+    "remediation_rollforward_plan_ref",
+    "candidate_artifact_refresh_manifest_ref",
+    "candidate_read_model_refresh_ref",
+    "client_delivery_refresh_manifest_ref",
+    "sunset_delta_candidate_ref",
+    "assurance_baseline_rotation_ref",
+    "rollforward_ledger_manifest_ref",
+    "rollforward_postcheck_report_ref",
+    "maintenance_rollforward_audit_report_ref",
+    "acceptance_decision",
+    "remaining_risks",
+    "required_followups",
+    "evidence_refs",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "acceptance_decision": {
+      "type": "string",
+      "enum": [
+        "accept_fixture_rollforward",
+        "accept_candidate_rollforward",
+        "request_more_evidence",
+        "block_rollforward",
+        "production_acceptance_blocked"
+      ]
+    },
+    "signature_type": {
+      "type": "string",
+      "enum": [
+        "fixture_signature",
+        "cosign",
+        "gpg",
+        "sigstore"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_accepted",
+        "candidate_accepted",
+        "needs_review",
+        "blocked",
+        "production_blocked"
+      ]
+    }
+  }
+}

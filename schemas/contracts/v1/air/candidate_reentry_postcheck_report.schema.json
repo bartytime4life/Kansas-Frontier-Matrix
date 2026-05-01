@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "postcheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "candidate_reentry_manifest_ref",
+    "candidate_reentry_package_ref",
+    "candidate_reentry_promotion_decision_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "route_checks",
+    "sunset_checks",
+    "baseline_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "non_mutation_checks",
+    "open_findings",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  }
+}

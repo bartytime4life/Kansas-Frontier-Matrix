@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "reentry_package_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "rollforward_acceptance_record_ref",
+    "candidate_artifact_refresh_manifest_ref",
+    "candidate_read_model_refresh_ref",
+    "client_delivery_refresh_manifest_ref",
+    "assurance_baseline_rotation_ref",
+    "source_chain_refs",
+    "candidate_artifact_refs",
+    "candidate_catalog_refs",
+    "candidate_delivery_refs",
+    "candidate_baseline_refs",
+    "reentry_objectives",
+    "non_mutation_guarantees",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "candidate_artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_type",
+          "path",
+          "sha256",
+          "source_ref",
+          "candidate_only"
+        ]
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_reentry_package",
+        "candidate_reentry_package",
+        "needs_review",
+        "blocked",
+        "production_reentry_blocked"
+      ]
+    }
+  }
+}

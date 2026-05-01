@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "queue_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "candidate_reentry_package_ref",
+    "sunset_delta_candidate_refs",
+    "client_sunset_notice_candidate_refs",
+    "items",
+    "summary",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "priority",
+          "reason",
+          "sunset_delta_candidate_ref",
+          "client_sunset_notice_candidate_ref",
+          "affected_routes",
+          "affected_records",
+          "replacement_refs",
+          "evidence_refs",
+          "recommended_action",
+          "fixture_backed"
+        ],
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": [
+              "info",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "empty",
+        "fixture_review_queue",
+        "candidate_review_queue",
+        "needs_review",
+        "blocked",
+        "production_review_blocked"
+      ]
+    }
+  }
+}
