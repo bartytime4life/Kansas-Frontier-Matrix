@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "cutover_observation_ref": {
+      "type": "string"
+    },
+    "deployment_authorization_ref": {
+      "type": "string"
+    },
+    "deployment_execution_receipt_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "gate_evaluation_id": {
+      "type": "string"
+    },
+    "gates": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hard_failures": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "incident_record_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "post_deploy_verification_report_ref": {
+      "type": "string"
+    },
+    "public_slo_report_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "synthetic_probe_report_ref": {
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "gate_evaluation_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "cutover_observation_ref",
+    "deployment_authorization_ref",
+    "deployment_execution_receipt_ref",
+    "post_deploy_verification_report_ref",
+    "synthetic_probe_report_ref",
+    "public_slo_report_refs",
+    "incident_record_refs",
+    "gates",
+    "hard_failures",
+    "warnings",
+    "result"
+  ],
+  "type": "object"
+}

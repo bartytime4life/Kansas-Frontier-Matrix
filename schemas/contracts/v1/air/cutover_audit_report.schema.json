@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "authorization_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "cutover_observation_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "gate_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "ledger_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "operational_acceptance_ref": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "post_deploy_gate_evaluation_ref": {
+      "type": "string"
+    },
+    "release_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ]
+    },
+    "rollback_decision_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "semantic_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "stakeholder_notice_draft_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "subject_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "cutover_observation_ref",
+    "post_deploy_gate_evaluation_ref",
+    "release_ledger_manifest_ref",
+    "operational_acceptance_ref",
+    "rollback_decision_ref",
+    "stakeholder_notice_draft_refs",
+    "checks",
+    "hash_checks",
+    "ledger_checks",
+    "authorization_checks",
+    "gate_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}

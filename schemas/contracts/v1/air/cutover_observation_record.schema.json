@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "change_control_handoff_ref": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "deployment_authorization_ref": {
+      "type": "string"
+    },
+    "deployment_execution_receipt_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "observation_id": {
+      "type": "string"
+    },
+    "observation_mode": {
+      "enum": [
+        "dry_run",
+        "fixture_simulation",
+        "manual_handoff_observed",
+        "production_observation_blocked"
+      ]
+    },
+    "observations": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "observed_environment": {
+      "enum": [
+        "local_fixture",
+        "staging_candidate",
+        "production_proposed",
+        "production"
+      ]
+    },
+    "post_deploy_verification_report_ref": {
+      "type": "string"
+    },
+    "release_cutover_checklist_ref": {
+      "type": "string"
+    },
+    "release_manager_decision_ref": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "object"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_observed",
+        "candidate_observed",
+        "blocked",
+        "needs_review",
+        "production_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "observation_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "deployment_authorization_ref",
+    "release_manager_decision_ref",
+    "change_control_handoff_ref",
+    "release_cutover_checklist_ref",
+    "deployment_execution_receipt_ref",
+    "post_deploy_verification_report_ref",
+    "observed_environment",
+    "observation_mode",
+    "observations",
+    "evidence_refs",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
