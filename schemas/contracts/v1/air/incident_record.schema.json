@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "status": {
+      "enum": [
+        "opened",
+        "triaged",
+        "retraction_requested",
+        "resolved",
+        "closed"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "incident_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "severity",
+    "trigger",
+    "affected_refs",
+    "evidence_refs",
+    "recommended_action",
+    "status"
+  ],
+  "type": "object"
+}
