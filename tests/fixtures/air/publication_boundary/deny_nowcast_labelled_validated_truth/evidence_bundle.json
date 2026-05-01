@@ -1,0 +1,25 @@
+{
+  "bundle_id": "eb-1",
+  "created_at": "2026-05-01T00:00:00Z",
+  "domain": "atmosphere.air",
+  "measurements": {
+    "averaging_window": "nowcast_hourly",
+    "nowcast_truth_status": "validated_aqs_truth",
+    "parameter": "pm25",
+    "units": "ug_m3"
+  },
+  "provenance": {
+    "method": "fixture",
+    "run_id": "run-1"
+  },
+  "qa_summary_ref": "qa_summary.json",
+  "run_receipt_ref": "run_receipt.json",
+  "schema_version": "v1",
+  "sources": [
+    {
+      "note": "fixture",
+      "source_class": "fixture",
+      "source_id": "fixture"
+    }
+  ]
+}
