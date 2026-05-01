@@ -1,0 +1,51 @@
+{
+  "api_version": "v1",
+  "as_of": "2026-04-30T00:00:00Z",
+  "cache_policy": {
+    "default_cache_control": "public, max-age=300, immutable"
+  },
+  "contract_id": "contract-46b24fe2ad64",
+  "delta_policy": {
+    "enabled": true
+  },
+  "domain": "atmosphere.air",
+  "generated_at": "2026-04-30T00:00:00Z",
+  "measurement_semantics": {
+    "aqs_validated_records_window": "24h_validated",
+    "nowcast_is_operational_evidence": true,
+    "nowcast_is_validated_aqs_truth": false,
+    "pm25_units": "ug_m3"
+  },
+  "provenance_policy": {
+    "required": true
+  },
+  "query_parameters": [
+    "record_id",
+    "publication_id",
+    "delta_cursor"
+  ],
+  "response_schemas": [
+    "PublicIndex",
+    "PublicApiRecord",
+    "PublicStatus",
+    "PublicProvenanceTrace",
+    "PublicDeltaFeed",
+    "ClientInvalidationNotice"
+  ],
+  "routes": [
+    "index_lookup",
+    "record_lookup",
+    "status_lookup",
+    "provenance_lookup",
+    "delta_lookup",
+    "invalidation_lookup"
+  ],
+  "safety_checks": {
+    "forbidden_paths_blocked": true
+  },
+  "schema_version": "v1",
+  "status": "fixture_contract",
+  "supported_read_model_versions": [
+    "v1"
+  ]
+}

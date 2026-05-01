@@ -1,0 +1,76 @@
+{
+  "as_of": "2026-04-30T00:00:00Z",
+  "client_delivery_contract_ref": "client_delivery_contract.json",
+  "domain": "atmosphere.air",
+  "generated_at": "2026-04-30T00:00:00Z",
+  "read_model_version_index_ref": "read_model_version_index.json",
+  "route_manifest_id": "routes-contract-46b24fe2ad64",
+  "routes": [
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/index",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/index.json",
+      "route_id": "index_lookup",
+      "source_artifact_ref": "public_index.json",
+      "visibility": "candidate_only"
+    },
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/status",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/status.json",
+      "route_id": "status_lookup",
+      "source_artifact_ref": "public_status.json",
+      "visibility": "candidate_only"
+    },
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/records/{record_id}",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/records/*.json",
+      "route_id": "record_lookup",
+      "source_artifact_ref": "public_api_records/*.json",
+      "visibility": "candidate_only"
+    },
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/provenance/{record_id}",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/provenance/*.json",
+      "route_id": "provenance_lookup",
+      "source_artifact_ref": "public_provenance_traces/*.json",
+      "visibility": "candidate_only"
+    },
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/delta",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/deltas/delta.json",
+      "route_id": "delta_lookup",
+      "source_artifact_ref": "public_delta_feed.json",
+      "visibility": "candidate_only"
+    },
+    {
+      "cache_policy_ref": "default",
+      "method": "GET",
+      "path_template": "/air/v1/invalidation-notices",
+      "produces": "application/json",
+      "response_artifact_ref": "responses/deltas/invalidation_notices.json",
+      "route_id": "invalidation_lookup",
+      "source_artifact_ref": "client_invalidation_notices/*.json",
+      "visibility": "candidate_only"
+    }
+  ],
+  "safety_checks": {
+    "fixture_public_routes_blocked": true
+  },
+  "schema_version": "v1",
+  "static_artifact_refs": [],
+  "status": "fixture_routes"
+}

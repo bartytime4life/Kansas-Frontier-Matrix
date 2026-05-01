@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "status": {
+      "enum": [
+        "fixture_probe_spec",
+        "candidate_probe_spec",
+        "production_probe_proposed_blocked",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "probe_spec_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "client_delivery_manifest_ref",
+    "routes_under_test",
+    "expected_responses",
+    "fixtures",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "environment": {
+      "enum": [
+        "local_fixture",
+        "staging_candidate",
+        "production_proposed",
+        "production"
+      ]
+    },
+    "environment_class": {
+      "enum": [
+        "fixture_only",
+        "candidate",
+        "production_controlled"
+      ]
+    },
+    "secret_policy": {
+      "properties": {
+        "no_secrets_present": {
+          "const": true
+        }
+      },
+      "required": [
+        "no_secrets_present"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "fixture_environment",
+        "candidate_environment",
+        "production_proposed_blocked",
+        "production_environment",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "environment_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "environment",
+    "environment_class",
+    "allowed_actions",
+    "forbidden_actions",
+    "artifact_roots",
+    "public_boundary_policy",
+    "secret_policy",
+    "status"
+  ],
+  "type": "object"
+}

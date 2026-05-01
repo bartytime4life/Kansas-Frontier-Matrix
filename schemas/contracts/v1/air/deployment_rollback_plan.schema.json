@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "status": {
+      "enum": [
+        "fixture_rollback_plan",
+        "candidate_rollback_plan",
+        "production_rollback_proposed_blocked",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "rollback_plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "current_delivery_manifest_ref",
+    "previous_delivery_manifest_ref",
+    "version_index_ref",
+    "rollback_steps",
+    "rollback_artifact_refs",
+    "validation_checks",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
