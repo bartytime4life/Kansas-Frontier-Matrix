@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "status": {
+      "enum": [
+        "fixture_hosting_candidate",
+        "staging_hosting_candidate",
+        "production_hosting_blocked",
+        "published_hosting",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "hosting_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "client_delivery_manifest_ref",
+    "route_manifest_ref",
+    "static_response_bundle_ref",
+    "cache_manifest_ref",
+    "hosted_routes",
+    "security_headers",
+    "artifact_refs",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

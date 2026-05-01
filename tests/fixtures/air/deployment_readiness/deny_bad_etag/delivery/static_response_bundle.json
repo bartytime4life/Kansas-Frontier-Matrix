@@ -1,0 +1,87 @@
+{
+  "as_of": "2026-04-30T00:00:00Z",
+  "bundle_id": "bundle-contract-46b24fe2ad64",
+  "domain": "atmosphere.air",
+  "generated_at": "2026-04-30T00:00:00Z",
+  "responses": [
+    {
+      "cache_metadata_ref": "cache:responses/index.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/index"
+      },
+      "response_id": "resp-6ecfea4f8d",
+      "response_ref": "responses/index.json",
+      "route_id": "index_lookup",
+      "sha256": "b51a5e682f6796e106194cc9771e2a07511244f1a437b673c4be68e1b504d453",
+      "status_code": 200
+    },
+    {
+      "cache_metadata_ref": "cache:responses/status.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/status"
+      },
+      "response_id": "resp-e2c16f803c",
+      "response_ref": "responses/status.json",
+      "route_id": "status_lookup",
+      "sha256": "d09f4c991bb5fe0afe5d2edb6ef5f91fb9684ed1c6f748a128d913e70969cc22",
+      "status_code": 200
+    },
+    {
+      "cache_metadata_ref": "cache:responses/records/rec-1.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/records/rec-1"
+      },
+      "response_id": "resp-494f37390e",
+      "response_ref": "responses/records/rec-1.json",
+      "route_id": "record_lookup",
+      "sha256": "98496c36ee9cc003cd40f2bf85ffb5191cdf17e885542ed16dba28192bdf8e31",
+      "status_code": 200
+    },
+    {
+      "cache_metadata_ref": "cache:responses/provenance/rec-1.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/provenance/rec-1"
+      },
+      "response_id": "resp-1db3082b11",
+      "response_ref": "responses/provenance/rec-1.json",
+      "route_id": "provenance_lookup",
+      "sha256": "2c4e8be065387e21633b63970d6111136f2a7427d8bb96fc08aabc975a156fec",
+      "status_code": 200
+    },
+    {
+      "cache_metadata_ref": "cache:responses/deltas/delta.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/delta"
+      },
+      "response_id": "resp-9db5435454",
+      "response_ref": "responses/deltas/delta.json",
+      "route_id": "delta_lookup",
+      "sha256": "3fbd2f72cefc19f7f77c3118b4142cecfdab4cf1c59ca2ea8d0bf8349b18f2df",
+      "status_code": 200
+    },
+    {
+      "cache_metadata_ref": "cache:responses/deltas/invalidation_notices.json",
+      "content_type": "application/json",
+      "request_example": {
+        "route": "/air/v1/invalidation-notices"
+      },
+      "response_id": "resp-df7284304d",
+      "response_ref": "responses/deltas/invalidation_notices.json",
+      "route_id": "invalidation_lookup",
+      "sha256": "6e29b249c9f9f40b0d3ac8f8d9b7f2ae2ee49b2ae4655078fdaa3d4f51d50c6f",
+      "status_code": 200
+    }
+  ],
+  "route_manifest_ref": "client_route_manifest.json",
+  "schema_version": "v1",
+  "source_read_model_refs": [
+    "public_index.json",
+    "public_status.json"
+  ],
+  "status": "fixture_bundle"
+}
