@@ -74,3 +74,22 @@ jobs:
           curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
           chmod +x opa
           ./opa test policy/tiles -v
+
+
+  test-kfm-delta-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest jsonschema
+      - name: Run delta apply tests
+        run: |
+          pytest -q tests/test_kfm_delta_apply.py
+      - name: Verify valid fixture
+        run: |
+          python tools/tiles/kfm_delta_apply.py verify --manifest tests/fixtures/tiles/delta_apply/valid/delta_manifest.json --base-store tests/fixtures/tiles/delta_apply/valid/base_tile_store.json --delta-store tests/fixtures/tiles/delta_apply/valid/delta_tile_store.json --ledger tests/fixtures/tiles/delta_apply/valid/applied_ledger.json
