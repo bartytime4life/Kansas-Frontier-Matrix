@@ -11,6 +11,7 @@ def main(argv=None):
  req=load_json(a.outcome); rid=a.remediation_id or load_current_remediation_handoff(a.remediation_root)['active_remediation_id']
  reg=load_errata_publication_registry(a.remediation_root,rid); receipt=load_remediation_handoff_receipt(a.remediation_root,rid); man=load_remediation_handoff_manifest(a.remediation_root,rid)
  reasons=[]
+ if receipt.get('receipt_type') and receipt.get('receipt_type')!='RemediationHandoffReceipt': reasons.append('invalid remediation_handoff_receipt')
  if req.get('steward_review',{}).get('decision')!='approved': reasons.append('missing steward approval')
  if req.get('outcome_status') not in {'published','superseded_by_successor','withdrawn','blocked'}: reasons.append('unknown outcome_status')
  if not validate_base_public_url(req.get('public_url')): reasons.append('invalid public_url')

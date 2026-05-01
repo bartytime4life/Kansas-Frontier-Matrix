@@ -14,11 +14,22 @@ def main(argv=None):
  if m.get('object_type')!='SoilRemediationOutcomeManifest': ok=False; reasons.append('bad manifest type')
  if r.get('receipt_type')!='RemediationOutcomeReceipt': ok=False; reasons.append('bad receipt type')
  for fn,h in m.get('artifact_hashes',{}).items():
+  if fn=='remediation_outcome_manifest.json': continue
   if sha256_file(c/fn)!=h.split(':',1)[-1]: ok=False; reasons.append('artifact hash mismatch'); break
- prev=None
+ prev=None; prev_ordinal=None
  for e in t.get('entries',[]):
   x=dict(e); eh=x.pop('entry_hash',None)
   if 'sha256:'+stable_payload_hash(x)!=eh: ok=False; reasons.append('bad log hash'); break
+  if prev is None:
+   if e.get('previous_entry_hash') not in (None,''): ok=False; reasons.append('bad previous entry hash'); break
+  else:
+   if e.get('previous_entry_hash')!=prev: ok=False; reasons.append('bad previous entry hash'); break
+  if 'ordinal' in e:
+   if prev_ordinal is None:
+    if e.get('ordinal')!=1: ok=False; reasons.append('bad log ordinal'); break
+   else:
+    if e.get('ordinal')!=prev_ordinal+1: ok=False; reasons.append('bad log ordinal'); break
+   prev_ordinal=e.get('ordinal')
   prev=eh
  if t.get('log_root')!=prev: ok=False; reasons.append('log root mismatch')
  out={'remediation_outcome_valid':ok,'outcome_cycle_id':oc,'remediation_id':m.get('remediation_id'),'registry_id':m.get('registry_id'),'release_id':m.get('release_id'),'outcome_state':m.get('outcome_state'),'failure_reasons':reasons}

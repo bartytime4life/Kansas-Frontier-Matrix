@@ -59,7 +59,7 @@ def load_certificate_event_receipts(root, registry_id):
 load_current_certification=lambda r:_lj(r,'certification/soil/current_certification.json')
 load_current_archive_package=lambda r:_lj(r,'archive/soil/current_archive_package.json')
 load_current_preservation=lambda r:_lj(r,'preservation/soil/current_preservation.json')
-load_current_reconciliation=lambda r:_lj(r,'federation/soil/reconciliation/current_reconciliation.json')
+load_current_reconciliation=lambda r:_lj(r,'federation/soil/current_reconciliation.json')
 load_current_federation=lambda r:_lj(r,'federation/soil/current_federation.json')
 load_current_discovery=lambda r:_lj(r,'discovery/soil/current_discovery.json')
 load_current_release=lambda r:_lj(r,'published/soil/current.json')
