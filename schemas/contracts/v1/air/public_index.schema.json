@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm/schemas/contracts/v1/air/public_index.schema.json",
+  "title": "KFM Air Public Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "index_id", "domain", "generated_at", "source_publication_manifest_refs", "entries", "public_boundary_checks", "status"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "index_id": {"type": "string"},
+    "domain": {"const": "atmosphere.air"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "source_publication_manifest_refs": {"type": "array", "items": {"type": "string"}},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entry_id", "publication_id", "artifact_refs", "catalog_refs", "provenance_ref", "qa_summary_ref", "measurement_summary", "visibility", "retraction_state"],
+        "properties": {
+          "entry_id": {"type": "string"},
+          "publication_id": {"type": "string"},
+          "artifact_refs": {"type": "array", "items": {"type": "object", "required": ["ref", "sha256"], "properties": {"ref": {"type": "string"}, "sha256": {"type": "string"}}, "additionalProperties": true}},
+          "catalog_refs": {"type": "array", "items": {"type": "string"}},
+          "provenance_ref": {"type": "string"},
+          "qa_summary_ref": {"type": "string"},
+          "measurement_summary": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pollutant", "units", "averaging_window", "nowcast_is_operational", "nowcast_is_validated_aqs_truth"],
+            "properties": {
+              "pollutant": {"type": "string"},
+              "units": {"const": "ug_m3"},
+              "averaging_window": {"enum": ["nowcast_hourly", "24h_validated"]},
+              "nowcast_is_operational": {"const": true},
+              "nowcast_is_validated_aqs_truth": {"const": false}
+            }
+          },
+          "visibility": {"enum": ["candidate_only", "public_readable", "retracted"]},
+          "retraction_state": {"type": "string"}
+        }
+      }
+    },
+    "public_boundary_checks": {"type": "object"},
+    "status": {"enum": ["fixture_candidate_index", "public_index_candidate", "public_index_published", "public_index_blocked"]}
+  }
+}
