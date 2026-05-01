@@ -1,0 +1,13 @@
+{
+  "layer_type": "huc12",
+  "huc12": "03130001010A",
+  "snapshot_id": "wbd-2026-01",
+  "nhd_snapshot_id": "nhdplushr-2026-01",
+  "spec_hash": "sha256:abcdef123456",
+  "run_receipt_url": "https://example.org/receipts/huc12-run-2026-01.json",
+  "run_receipt_url_verified": true,
+  "valid_from": "2026-01-01T00:00:00Z",
+  "valid_to": "2026-12-31T23:59:59Z",
+  "comid_crosswalk": "crosswalk.csv",
+  "crosswalk_digest": "sha256:dcd3b86216a11a590096b578eb2c3c17ac98ea6584133105e86df13308820ec1"
+}
