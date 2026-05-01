@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/contracts/v1/air/qa_summary.schema.json",
+  "title": "KFM Air QA Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source",
+    "time_window",
+    "aggregation",
+    "metrics",
+    "aqs_flags_summary",
+    "flags",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "v1"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "dataset"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "dataset": {"type": "string", "minLength": 1}
+      }
+    },
+    "time_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "string", "format": "date-time"},
+        "end": {"type": "string", "format": "date-time"}
+      }
+    },
+    "aggregation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter", "units", "averaging_window"],
+      "properties": {
+        "parameter": {"type": "string", "const": "pm25"},
+        "units": {"type": "string", "const": "ug_m3"},
+        "averaging_window": {
+          "type": "string",
+          "enum": ["nowcast_hourly", "24h_validated"]
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nowcast_max", "nowcast_vs_baseline_sigma", "station_coverage_pct"],
+      "properties": {
+        "nowcast_max": {"type": "number"},
+        "nowcast_vs_baseline_sigma": {"type": "number"},
+        "station_coverage_pct": {"type": "number", "minimum": 0, "maximum": 100}
+      }
+    },
+    "aqs_flags_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hard_denial_rows_in_baseline"],
+      "properties": {
+        "hard_denial_rows_in_baseline": {"type": "integer", "minimum": 0}
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_receipt_ref": {"type": "string", "minLength": 1},
+        "evidence_bundle_ref": {"type": "string", "minLength": 1}
+      }
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["candidate", "quarantine", "published_blocked"]
+    }
+  }
+}

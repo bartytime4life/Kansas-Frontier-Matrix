@@ -1,0 +1,10 @@
+{
+  "aggregation": {"averaging_window": "24h_validated", "parameter": "pm25", "units": "ug_m3"},
+  "aqs_flags_summary": {"hard_denial_rows_in_baseline": 3},
+  "decision": "candidate",
+  "flags": {"evidence_bundle_ref": "x", "run_receipt_ref": "y"},
+  "metrics": {"nowcast_max": 15.0, "nowcast_vs_baseline_sigma": 0.8, "station_coverage_pct": 95.0},
+  "schema_version": "v1",
+  "source": {"dataset": "no_network_fixture", "provider": "kfm_air_stub"},
+  "time_window": {"end": "2026-05-01T01:00:00Z", "start": "2026-05-01T00:00:00Z"}
+}
