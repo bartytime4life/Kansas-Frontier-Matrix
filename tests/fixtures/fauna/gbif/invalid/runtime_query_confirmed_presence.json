@@ -1,0 +1,13 @@
+{
+  "query_id": "query_BAD",
+  "query_type": "confirmed_presence",
+  "taxon_key": "TEST_TAXON_KEY",
+  "scientific_name": "Testus exampleus",
+  "geography_id": "KS-DOUGLAS",
+  "aggregation_unit": "county",
+  "request_public": true,
+  "include_geometry": false,
+  "include_ui_cards": true,
+  "created_at": "2026-01-01T00:00:00Z",
+  "kfm:spec_hash": "sha256:551ca1013825041a89570a953bcb3ad24a3eb6dc132106ef3e483303f49f6005"
+}

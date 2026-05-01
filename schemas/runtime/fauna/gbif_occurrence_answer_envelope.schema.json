@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "answer_id",
+    "query_id",
+    "answer_posture",
+    "claims",
+    "ui_cards",
+    "map_layers",
+    "answer_receipt_ref",
+    "kfm:spec_hash",
+    "created_at"
+  ],
+  "properties": {
+    "answer_id": {
+      "type": "string"
+    },
+    "query_id": {
+      "type": "string"
+    },
+    "source_system": {
+      "const": "GBIF"
+    },
+    "answer_posture": {
+      "enum": [
+        "cited_answer",
+        "abstain"
+      ]
+    },
+    "summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "claims": {
+      "type": "array"
+    },
+    "ui_cards": {
+      "type": "array"
+    },
+    "map_layers": {
+      "type": "array"
+    },
+    "limitations": {
+      "type": "array"
+    },
+    "abstain_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "answer_receipt_ref": {
+      "type": "string"
+    },
+    "kfm:spec_hash": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}
