@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "forbidden_actions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "incident_thresholds": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "local_checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "post_deploy_gate_evaluation_ref": {
+      "type": "string"
+    },
+    "public_slo_objectives": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rollback_thresholds": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_watch_plan",
+        "candidate_watch_plan",
+        "production_watch_plan_blocked",
+        "blocked"
+      ],
+      "type": "string"
+    },
+    "watch_plan_id": {
+      "type": "string"
+    },
+    "watch_window": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "watch_plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "operational_handoff_package_ref",
+    "post_deploy_gate_evaluation_ref",
+    "public_slo_objectives",
+    "watch_window",
+    "local_checks",
+    "incident_thresholds",
+    "rollback_thresholds",
+    "evidence_refs",
+    "forbidden_actions",
+    "status"
+  ],
+  "type": "object"
+}

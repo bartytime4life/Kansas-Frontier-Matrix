@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "archive_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_archive_manifest_ref": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "handoff_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "hash_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "ledger_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "notice_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "release_closure_dossier_ref": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ],
+      "type": "string"
+    },
+    "runbook_activation_candidate_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "semantic_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "stakeholder_notice_finalization_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "watch_window_checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "watch_window_evaluation_ref": {
+      "type": "string"
+    },
+    "watch_window_plan_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "operational_handoff_package_ref",
+    "watch_window_plan_ref",
+    "watch_window_evaluation_ref",
+    "runbook_activation_candidate_ref",
+    "release_closure_dossier_ref",
+    "evidence_archive_manifest_ref",
+    "stakeholder_notice_finalization_refs",
+    "checks",
+    "hash_checks",
+    "ledger_checks",
+    "handoff_checks",
+    "watch_window_checks",
+    "archive_checks",
+    "notice_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}

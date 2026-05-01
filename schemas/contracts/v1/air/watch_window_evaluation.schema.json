@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "breaches": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "checks": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "incident_record_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "public_slo_report_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "release_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ],
+      "type": "string"
+    },
+    "rollback_recommendation": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "watch_evaluation_id": {
+      "type": "string"
+    },
+    "watch_window_plan_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "watch_evaluation_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "watch_window_plan_ref",
+    "operational_handoff_package_ref",
+    "release_ledger_manifest_ref",
+    "public_slo_report_refs",
+    "incident_record_refs",
+    "checks",
+    "breaches",
+    "warnings",
+    "rollback_recommendation",
+    "result"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval_state": {
+      "enum": [
+        "draft_only",
+        "candidate_finalized",
+        "needs_review",
+        "blocked",
+        "production_send_blocked"
+      ],
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "finalization_id": {
+      "type": "string"
+    },
+    "forbidden_actions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "message_summary": {
+      "type": "string"
+    },
+    "notice_type": {
+      "enum": [
+        "fixture_cutover_summary",
+        "candidate_release_summary",
+        "rollback_prepared_notice",
+        "operation_blocked_notice",
+        "production_notice_blocked"
+      ],
+      "type": "string"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "public_safe_links": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "redactions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "release_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "stakeholder_notice_draft_ref": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_notice_finalized",
+        "candidate_notice_finalized",
+        "blocked"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "finalization_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "stakeholder_notice_draft_ref",
+    "release_ledger_manifest_ref",
+    "operational_handoff_package_ref",
+    "notice_type",
+    "message_summary",
+    "public_safe_links",
+    "redactions",
+    "approval_state",
+    "forbidden_actions",
+    "status"
+  ],
+  "type": "object"
+}
