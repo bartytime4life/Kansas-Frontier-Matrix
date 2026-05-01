@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "readiness_refresh_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "deployment_environment_refresh_candidate_ref",
+    "static_hosting_manifest_refresh_candidate_ref",
+    "deployment_readiness_refresh_plan_ref",
+    "deployment_readiness_refresh_report_ref",
+    "synthetic_probe_refresh_spec_ref",
+    "synthetic_probe_refresh_report_ref",
+    "cache_invalidation_refresh_plan_ref",
+    "deployment_rollback_refresh_plan_ref",
+    "client_delivery_refresh_manifest_ref",
+    "artifact_refs",
+    "source_chain_refs",
+    "next_lifecycle_target",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "readiness_refresh_manifest_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "deployment_environment_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "static_hosting_manifest_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "deployment_readiness_refresh_plan_ref": {
+      "type": "string"
+    },
+    "deployment_readiness_refresh_report_ref": {
+      "type": "string"
+    },
+    "synthetic_probe_refresh_spec_ref": {
+      "type": "string"
+    },
+    "synthetic_probe_refresh_report_ref": {
+      "type": "string"
+    },
+    "cache_invalidation_refresh_plan_ref": {
+      "type": "string"
+    },
+    "deployment_rollback_refresh_plan_ref": {
+      "type": "string"
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "artifact_refs": {
+      "type": "string"
+    },
+    "source_chain_refs": {
+      "type": "string"
+    },
+    "next_lifecycle_target": {
+      "type": "string",
+      "enum": [
+        "fixture_deployment_authorization_refresh_review",
+        "deployment_authorization_refresh_review",
+        "blocked"
+      ]
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_deployment_readiness_refresh_manifest",
+        "candidate_deployment_readiness_refresh_manifest",
+        "needs_review",
+        "blocked",
+        "production_deployment_readiness_refresh_blocked"
+      ]
+    }
+  }
+}

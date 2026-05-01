@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "environment_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "environment",
+    "environment_class",
+    "client_delivery_refresh_manifest_ref",
+    "allowed_actions",
+    "forbidden_actions",
+    "artifact_roots",
+    "public_boundary_policy",
+    "secret_policy",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "environment_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "local_fixture",
+        "staging_candidate",
+        "production_proposed",
+        "production"
+      ]
+    },
+    "environment_class": {
+      "type": "string",
+      "enum": [
+        "fixture_only",
+        "candidate",
+        "production_controlled"
+      ]
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "allowed_actions": {
+      "type": "string"
+    },
+    "forbidden_actions": {
+      "type": "string"
+    },
+    "artifact_roots": {
+      "type": "string"
+    },
+    "public_boundary_policy": {
+      "type": "string"
+    },
+    "secret_policy": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_environment_refresh",
+        "candidate_environment_refresh",
+        "production_environment_blocked",
+        "blocked"
+      ]
+    }
+  }
+}

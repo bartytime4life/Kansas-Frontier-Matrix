@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "hosting_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "deployment_environment_refresh_candidate_ref",
+    "client_delivery_refresh_manifest_ref",
+    "client_route_manifest_refresh_candidate_ref",
+    "static_response_bundle_refresh_candidate_ref",
+    "client_cache_manifest_refresh_candidate_ref",
+    "hosted_routes",
+    "security_headers",
+    "artifact_refs",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "hosting_manifest_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "deployment_environment_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "client_route_manifest_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "static_response_bundle_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "client_cache_manifest_refresh_candidate_ref": {
+      "type": "string"
+    },
+    "hosted_routes": {
+      "type": "string"
+    },
+    "security_headers": {
+      "type": "string"
+    },
+    "artifact_refs": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_hosting_refresh_candidate",
+        "candidate_hosting_refresh",
+        "needs_review",
+        "blocked",
+        "production_hosting_refresh_blocked"
+      ]
+    }
+  }
+}
