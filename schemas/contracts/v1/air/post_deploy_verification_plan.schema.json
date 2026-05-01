@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {},
+    "created_at": {},
+    "deployment_authorization_ref": {},
+    "deployment_execution_receipt_ref": {},
+    "domain": {},
+    "expected_evidence": {},
+    "incident_triggers": {},
+    "public_slo_objectives": {},
+    "rollback_triggers": {},
+    "schema_version": {},
+    "status": {},
+    "synthetic_probe_spec_ref": {},
+    "verification_plan_id": {},
+    "verification_steps": {}
+  },
+  "required": [
+    "schema_version",
+    "verification_plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "deployment_authorization_ref",
+    "deployment_execution_receipt_ref",
+    "synthetic_probe_spec_ref",
+    "public_slo_objectives",
+    "verification_steps",
+    "expected_evidence",
+    "rollback_triggers",
+    "incident_triggers",
+    "status"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {},
+    "change_control_handoff_ref": {},
+    "deployment_authorization_ref": {},
+    "domain": {},
+    "generated_at": {},
+    "release_cutover_checklist_ref": {},
+    "safety_checks": {},
+    "schema_version": {},
+    "simulated_cache_entries": {},
+    "simulated_probe_results": {},
+    "simulated_rollback_result": {},
+    "simulated_routes": {},
+    "simulation_id": {},
+    "source_delivery_refs": {},
+    "status": {}
+  },
+  "required": [
+    "schema_version",
+    "simulation_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "deployment_authorization_ref",
+    "change_control_handoff_ref",
+    "release_cutover_checklist_ref",
+    "source_delivery_refs",
+    "simulated_routes",
+    "simulated_cache_entries",
+    "simulated_probe_results",
+    "simulated_rollback_result",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
