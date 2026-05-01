@@ -1,0 +1,16 @@
+{
+  "stale_certification_days_warn": 150,
+  "stale_certification_days_fail": 180,
+  "require_reaudit_on_root_hash_change": true,
+  "require_reaudit_on_gate_decision_change": true,
+  "require_reaudit_on_sdk_major_change": true,
+  "require_reaudit_on_consumer_contract_major_change": true,
+  "require_reaudit_on_denied_fields_change": true,
+  "require_reaudit_on_public_route_change": true,
+  "require_reaudit_on_required_governance_fields_change": true,
+  "require_reaudit_on_public_safety_rule_change": true,
+  "require_recertification_on_public_safety_regression": true,
+  "require_revocation_review_on_failed_gate": true,
+  "max_certified_consumers_with_unknown_status_fail": 0,
+  "allow_go_with_warnings_for_consumer_notice": true
+}
