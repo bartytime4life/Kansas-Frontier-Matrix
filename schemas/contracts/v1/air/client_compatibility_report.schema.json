@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "breaking_changes": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "checked_versions": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "client_delivery_contract_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "compatibility_report_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "domain": {
+      "enum": [
+        "atmosphere.air"
+      ],
+      "type": "string"
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "read_model_version_index_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ],
+      "type": "string"
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    },
+    "warnings": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number",
+        "integer"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "compatibility_report_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "client_delivery_contract_ref",
+    "read_model_version_index_ref",
+    "checked_versions",
+    "checks",
+    "breaking_changes",
+    "warnings",
+    "result"
+  ],
+  "type": "object"
+}
