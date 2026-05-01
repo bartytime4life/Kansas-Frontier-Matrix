@@ -110,7 +110,12 @@ class H(BaseHTTPRequestHandler):
             mp={'/soil/assurance':'public_assurance_report.json','/soil/assurance/manifest':'assurance_manifest.json','/soil/assurance/registry-verification':'registry_verification_snapshot.json','/soil/assurance/control-recheck':'control_recheck_matrix.json','/soil/assurance/drift-report':'drift_report.json','/soil/assurance/certificate-lifecycle':'certificate_lifecycle_status.json','/soil/assurance/renewal-recommendation':'renewal_recommendation.json','/soil/assurance/public-report':'public_assurance_report.json','/soil/assurance/receipt':'assurance_receipt.json'}
             if path in mp: return self._write(200,load_json(cdir/mp[path]))
 
-        if path=='/soil/governance/status':
+        
+        if path.startswith('/soil/remediation') and getattr(self.server,'remediation_root',None):
+            rroot=Path(self.server.remediation_root)/'remediation/soil'; ptr=load_json(rroot/'current_remediation_handoff.json'); rid=ptr['active_remediation_id']; c=rroot/'cycles'/rid
+            mp={'/soil/remediation':'public_remediation_status_report.json','/soil/remediation/manifest':'remediation_handoff_manifest.json','/soil/remediation/errata-publications':'errata_publication_registry.json','/soil/remediation/certificate-events':'certificate_event_execution_tracker.json','/soil/remediation/successor-intakes':'successor_release_intake_bundle.json','/soil/remediation/retraction-intakes':'retraction_review_intake_bundle.json','/soil/remediation/ledger':'remediation_handoff_ledger.json','/soil/remediation/transparency-log':'remediation_transparency_log.json','/soil/remediation/public-report':'public_remediation_status_report.json','/soil/remediation/receipt':'remediation_handoff_receipt.json'}
+            if path in mp: return self._write(200,load_json(c/mp[path]))
+if path=='/soil/governance/status':
             st={"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})}
             if getattr(self.server,'ops_root',None):
                 sp=Path(self.server.ops_root)/'ops/soil/status/current_status.json'
@@ -126,7 +131,7 @@ class H(BaseHTTPRequestHandler):
         return self._err(404,'not found')
 
 def main(argv=None):
-    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root'); ap.add_argument('--discovery-root'); ap.add_argument('--certification-root'); ap.add_argument('--assurance-root')
+    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root'); ap.add_argument('--discovery-root'); ap.add_argument('--certification-root'); ap.add_argument('--assurance-root'); ap.add_argument('--remediation-root')
     a=ap.parse_args(argv); root=Path(a.published_root)
     v=validate_service_release(root,a.release_id)
     if not v['valid']:
@@ -134,7 +139,7 @@ def main(argv=None):
     rel=root/'published/soil/releases'/v['release_id']
     for p in [load_json(rel/'manifest.json'),load_json(rel/'index.json'),load_json(rel/'publication_receipt.json')]:
         if scan_payload_for_forbidden_terms(p): print(json.dumps({"service_started":False,"reasons":["forbidden terms in public payload"]},sort_keys=True)); return 1
-    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root; httpd.discovery_root=a.discovery_root; httpd.certification_root=a.certification_root; httpd.assurance_root=a.assurance_root
+    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root; httpd.discovery_root=a.discovery_root; httpd.certification_root=a.certification_root; httpd.assurance_root=a.assurance_root; httpd.remediation_root=a.remediation_root
     print(json.dumps({"service_started":True,"host":a.host,"port":httpd.server_port,"release_id":v['release_id'],"audit_passed":True},sort_keys=True),flush=True)
     signal.signal(signal.SIGTERM, lambda *_: httpd.shutdown())
     try: httpd.serve_forever()
