@@ -1,0 +1,54 @@
+name: tiles-pmtiles-governance
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/tiles/**'
+      - 'tools/validators/tiles/**'
+      - 'policy/tiles/**'
+      - 'tests/fixtures/tiles/pmtiles/**'
+      - 'tests/policy/tiles/**'
+      - '.github/workflows/tiles-pmtiles-governance.yml'
+  push:
+    branches: [work, main]
+    paths:
+      - 'schemas/tiles/**'
+      - 'tools/validators/tiles/**'
+      - 'policy/tiles/**'
+      - 'tests/fixtures/tiles/pmtiles/**'
+      - 'tests/policy/tiles/**'
+      - '.github/workflows/tiles-pmtiles-governance.yml'
+
+jobs:
+  pmtiles-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install jsonschema
+      - name: Validate valid fixtures
+        run: |
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/valid/pmtiles_manifest.pass.json
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/valid/pmtiles_manifest.review_with_attestation.json
+      - name: Validate invalid fixtures fail closed
+        run: |
+          set +e
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/invalid/pmtiles_manifest.incomplete.json; a=$?
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/invalid/pmtiles_manifest.masked_pct_reject.json; b=$?
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/invalid/pmtiles_manifest.missing_digest.json; c=$?
+          python tools/validators/tiles/validate_pmtiles_manifest.py tests/fixtures/tiles/pmtiles/invalid/pmtiles_manifest.missing_signature.json; d=$?
+          set -e
+          test $a -ne 0
+          test $b -ne 0
+          test $c -ne 0
+          test $d -ne 0
+      - name: OPA tests (if available)
+        run: |
+          if command -v opa >/dev/null 2>&1; then
+            opa test policy/tiles tests/policy/tiles -v
+          else
+            echo "opa not installed in runner image; skipped"
+          fi
