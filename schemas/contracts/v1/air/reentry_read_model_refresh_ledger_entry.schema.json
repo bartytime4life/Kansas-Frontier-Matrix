@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    }
+  },
+  "required": [
+    "schema_version",
+    "domain",
+    "refresh_plan_id",
+    "status",
+    "index_id",
+    "status",
+    "record_id",
+    "status",
+    "status_id",
+    "status",
+    "trace_id",
+    "status",
+    "delta_feed_id",
+    "status",
+    "notice_id",
+    "status",
+    "version_candidate_id",
+    "status",
+    "refresh_manifest_id",
+    "status",
+    "decision_id",
+    "decision",
+    "status",
+    "postcheck_id",
+    "result",
+    "ledger_entry_id",
+    "entry_type",
+    "result"
+  ]
+}
