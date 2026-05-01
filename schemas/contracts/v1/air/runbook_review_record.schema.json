@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "runbook_review_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "continuous_assurance_plan_ref",
+    "runbook_activation_candidate_ref",
+    "operational_handoff_package_ref",
+    "review_scope",
+    "checks",
+    "findings",
+    "recommended_updates",
+    "forbidden_actions",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "runbook_review_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_plan_ref": {
+      "type": "string"
+    },
+    "runbook_activation_candidate_ref": {
+      "type": "string"
+    },
+    "operational_handoff_package_ref": {
+      "type": "string"
+    },
+    "review_scope": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "recommended_updates": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "status": {
+      "enum": [
+        "fixture_review_passed",
+        "candidate_review_passed",
+        "needs_update",
+        "blocked",
+        "production_review_blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

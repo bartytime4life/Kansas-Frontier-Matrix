@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "summary_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "continuous_assurance_plan_ref",
+    "recertification_record_ref",
+    "archive_integrity_recheck_ref",
+    "runbook_review_record_ref",
+    "drift_observation_report_ref",
+    "maintenance_window_plan_ref",
+    "deprecation_candidate_refs",
+    "open_findings",
+    "blocked_items",
+    "recommended_next_actions",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "summary_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_plan_ref": {
+      "type": "string"
+    },
+    "recertification_record_ref": {
+      "type": "string"
+    },
+    "archive_integrity_recheck_ref": {
+      "type": "string"
+    },
+    "runbook_review_record_ref": {
+      "type": "string"
+    },
+    "drift_observation_report_ref": {
+      "type": "string"
+    },
+    "maintenance_window_plan_ref": {
+      "type": "string"
+    },
+    "deprecation_candidate_refs": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "open_findings": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "blocked_items": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "recommended_next_actions": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "safety_checks": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "object"
+        ]
+      }
+    },
+    "status": {
+      "enum": [
+        "fixture_assurance_passed",
+        "candidate_assurance_passed",
+        "warn",
+        "needs_review",
+        "blocked",
+        "production_assurance_blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
