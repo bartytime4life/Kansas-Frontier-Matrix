@@ -29,3 +29,11 @@ New local-only CLIs:
 - `kfm-ebird-consumer-pack`
 
 These generate synthetic/public-safe static artifacts only and never call remote control planes or networks.
+
+## Layer 31: Transparency + Governance Calendar
+
+Local-only CLIs:
+- `kfm-ebird-transparency`
+- `kfm-ebird-governance-calendar`
+
+Both CLIs produce synthetic/public-safe governance artifacts, never call network services, never send notifications, and keep exact points restricted.
