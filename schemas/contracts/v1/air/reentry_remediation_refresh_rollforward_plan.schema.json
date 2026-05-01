@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "rollforward_plan_id": {
+      "type": "string"
+    },
+    "maintenance_refresh_closure_record_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "assurance_refresh_remediation_record_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deprecation_refresh_review_ref": {
+      "type": "string"
+    },
+    "client_sunset_refresh_plan_ref": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_summary_ref": {
+      "type": "string"
+    },
+    "source_candidate_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "planned_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "change_id": {
+            "type": "string"
+          },
+          "change_type": {
+            "enum": [
+              "metadata_correction_refresh_candidate",
+              "path_redaction_refresh_candidate",
+              "hash_reference_refresh_candidate",
+              "runbook_metadata_refresh_candidate",
+              "archive_manifest_refresh_candidate",
+              "client_sunset_delta_refresh_candidate",
+              "read_model_refresh_candidate",
+              "delivery_refresh_candidate",
+              "assurance_baseline_refresh_candidate",
+              "no_op"
+            ]
+          },
+          "subject_ref": {
+            "type": "string"
+          },
+          "before_ref": {
+            "type": "string"
+          },
+          "after_candidate_ref": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "destructive": {
+            "const": false
+          }
+        },
+        "required": [
+          "change_id",
+          "change_type",
+          "subject_ref",
+          "before_ref",
+          "after_candidate_ref",
+          "reason",
+          "evidence_refs",
+          "destructive"
+        ]
+      }
+    },
+    "non_mutation_guarantees": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "safety_checks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "fixture_rollforward_refresh_plan",
+        "candidate_rollforward_refresh_plan",
+        "needs_review",
+        "blocked",
+        "production_rollforward_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "domain",
+    "created_at",
+    "as_of",
+    "rollforward_plan_id",
+    "maintenance_refresh_closure_record_ref",
+    "maintenance_refresh_ledger_manifest_ref",
+    "assurance_refresh_remediation_record_refs",
+    "deprecation_refresh_review_ref",
+    "client_sunset_refresh_plan_ref",
+    "continuous_assurance_refresh_summary_ref",
+    "source_candidate_refs",
+    "planned_changes",
+    "non_mutation_guarantees",
+    "safety_checks",
+    "status"
+  ]
+}
