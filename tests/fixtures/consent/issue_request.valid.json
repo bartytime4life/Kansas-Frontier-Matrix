@@ -1,0 +1,15 @@
+{
+  "subject_id": "person:abc",
+  "issued_at": "2026-05-01T00:00:00Z",
+  "obligations": {
+    "aggregation": "HUC12",
+    "exports": [
+      "GEDCOM",
+      "CSV"
+    ],
+    "retention": "P24M",
+    "public_exact_coordinates_disallowed": true,
+    "revoke_action": "suppress_or_recompute"
+  },
+  "obligations_url": "policy/consent/ecology.v1.md"
+}
