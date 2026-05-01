@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "artifact_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "cutover_observation_refresh_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "cutover_refresh_manifest_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "deployment_authorization_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "next_lifecycle_target": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "operational_acceptance_refresh_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "post_deploy_gate_refresh_evaluation_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "release_ledger_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "rollback_decision_refresh_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "safety_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "source_chain_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "stakeholder_notice_refresh_draft_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "status": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "cutover_refresh_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "cutover_observation_refresh_ref",
+    "post_deploy_gate_refresh_evaluation_ref",
+    "release_ledger_refresh_manifest_ref",
+    "operational_acceptance_refresh_ref",
+    "rollback_decision_refresh_ref",
+    "stakeholder_notice_refresh_draft_refs",
+    "deployment_authorization_refresh_manifest_ref",
+    "artifact_refs",
+    "source_chain_refs",
+    "next_lifecycle_target",
+    "safety_checks",
+    "status"
+  ],
+  "title": "reentry_cutover_observation_refresh_manifest.schema.json",
+  "type": "object"
+}
