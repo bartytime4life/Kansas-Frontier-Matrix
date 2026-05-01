@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    }
+  },
+  "$id": "https://kfm/schemas/contracts/v1/air/reentry_release_candidate_refresh_audit_report.schema.json",
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "release_candidate_refresh_manifest_ref",
+    "release_candidate_refresh_decision_ref",
+    "release_candidate_refresh_postcheck_report_ref",
+    "release_candidate_refresh_ledger_manifest_ref",
+    "checks",
+    "hash_checks",
+    "qa_checks",
+    "catalog_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "non_mutation_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ]
+}

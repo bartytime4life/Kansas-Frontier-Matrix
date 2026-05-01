@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    }
+  },
+  "$id": "https://kfm/schemas/contracts/v1/air/reentry_release_candidate_refresh_ledger_entry.schema.json",
+  "required": [
+    "schema_version",
+    "ledger_entry_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "entry_type",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "artifact_hashes",
+    "previous_entry_ref",
+    "entry_hash",
+    "result",
+    "details"
+  ]
+}
