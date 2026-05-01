@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Policy Gate API
+  version: v1
+paths:
+  /policy/evaluate:
+    post:
+      operationId: policyEvaluate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyEvaluateRequest'
+      responses:
+        '200':
+          description: Policy evaluation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyEvaluateResponse'
+  /release/check:
+    post:
+      operationId: releaseCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseCheckRequest'
+      responses:
+        '200':
+          description: Release check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseCheckResponse'
+  /release/register-decision:
+    post:
+      operationId: releaseRegisterDecision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionEnvelope'
+      responses:
+        '200':
+          description: Registered
+components:
+  schemas:
+    PolicyInputRef:
+      type: object
+      required: [path]
+      properties: {path: {type: string}}
+    ArtifactReleaseContext:
+      type: object
+      required: [artifact_id, release_channel]
+      properties:
+        artifact_id: {type: string}
+        release_channel: {type: string, enum: [internal, controlled, public, export]}
+        export_format: {type: string, nullable: true}
+    DecisionReason:
+      type: object
+      required: [code, detail]
+      properties: {code: {type: string}, detail: {type: string}}
+    DecisionEnvelope:
+      type: object
+      required: [object_type, schema_version, decision_id, decision, subject_artifact_id, release_channel, reasons, evaluated_at, evaluator, signature]
+      properties:
+        object_type: {type: string, const: DecisionEnvelope}
+        schema_version: {type: string, const: v1}
+        decision_id: {type: string}
+        decision: {type: string, enum: [allow, deny, suppress, recompute_required, quarantine]}
+        subject_artifact_id: {type: string}
+        release_channel: {type: string, enum: [internal, controlled, public, export]}
+        reasons: {type: array, items: {$ref: '#/components/schemas/DecisionReason'}}
+        evaluated_at: {type: string}
+        evaluator: {type: string}
+        signature: {type: string}
+    PolicyEvaluateRequest:
+      type: object
+      required: [artifact, evidence, receipt, policy, gate, channel]
+      properties:
+        artifact: {$ref: '#/components/schemas/PolicyInputRef'}
+        evidence: {$ref: '#/components/schemas/PolicyInputRef'}
+        receipt: {$ref: '#/components/schemas/PolicyInputRef'}
+        policy: {$ref: '#/components/schemas/PolicyInputRef'}
+        gate: {$ref: '#/components/schemas/PolicyInputRef'}
+        revoke_delta: {$ref: '#/components/schemas/PolicyInputRef'}
+        channel: {type: string}
+        export_format: {type: string, nullable: true}
+    PolicyEvaluateResponse:
+      type: object
+      required: [decision]
+      properties:
+        decision: {$ref: '#/components/schemas/DecisionEnvelope'}
+        result: {type: object}
+    ReleaseCheckRequest:
+      type: object
+      required: [manifest, decisions]
+      properties:
+        manifest: {$ref: '#/components/schemas/PolicyInputRef'}
+        decisions: {$ref: '#/components/schemas/PolicyInputRef'}
+    ReleaseCheckResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok: {type: boolean}
+        reasons: {type: array, items: {type: string}}
