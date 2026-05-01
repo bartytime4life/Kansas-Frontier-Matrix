@@ -49,3 +49,6 @@ New CLIs:
 - `kfm-ebird-audit-response`
 
 These tools create local governance artifacts only and public-safe summaries; they do not call network services or mutate release pointers.
+
+## Layer 37 checkpoint/ledger
+- Added local-only CLIs: `kfm-ebird-checkpoint` and `kfm-ebird-ledger` for deterministic checkpoint manifests, proof bundles, and append-only hash-chain ledger workflows.
