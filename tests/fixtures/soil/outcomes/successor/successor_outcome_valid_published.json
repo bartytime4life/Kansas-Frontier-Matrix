@@ -1,0 +1,16 @@
+{
+  "schema_version": "kfm.v1",
+  "object_type": "SoilSuccessorReleaseOutcomeRequest",
+  "domain": "soil",
+  "intake_id": "i1",
+  "work_order_id": "w1",
+  "outcome_status": "successor_published",
+  "successor_release_id": "rel2",
+  "successor_publication_receipt_ref": "ref",
+  "public_message": "msg",
+  "evidence_refs": [],
+  "steward_review": {
+    "required": true,
+    "decision": "approved"
+  }
+}
