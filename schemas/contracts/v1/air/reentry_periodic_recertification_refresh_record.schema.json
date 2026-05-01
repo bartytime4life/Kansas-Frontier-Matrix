@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "recertification_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "continuous_assurance_refresh_plan_ref",
+    "release_closure_refresh_dossier_ref",
+    "evidence_archive_refresh_manifest_ref",
+    "archive_integrity_refresh_recheck_ref",
+    "runbook_review_refresh_record_ref",
+    "drift_observation_refresh_report_ref",
+    "recertification_scope",
+    "checks",
+    "evidence_refs",
+    "findings",
+    "required_followups",
+    "decision",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "recertification_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_plan_ref": {
+      "type": "string"
+    },
+    "release_closure_refresh_dossier_ref": {
+      "type": "string"
+    },
+    "evidence_archive_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "archive_integrity_refresh_recheck_ref": {
+      "type": "string"
+    },
+    "runbook_review_refresh_record_ref": {
+      "type": "string"
+    },
+    "drift_observation_refresh_report_ref": {
+      "type": "string"
+    },
+    "recertification_scope": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "string"
+    },
+    "required_followups": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "recertify_fixture_refresh",
+        "recertify_candidate_refresh",
+        "request_more_evidence",
+        "suspend_candidate_refresh",
+        "block_recertification",
+        "production_recertification_blocked"
+      ]
+    },
+    "signature": {
+      "type": "string"
+    },
+    "signature_type": {
+      "type": "string",
+      "enum": [
+        "fixture_signature",
+        "cosign",
+        "gpg",
+        "sigstore"
+      ]
+    },
+    "fixture_backed": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_recertified",
+        "candidate_recertified",
+        "needs_review",
+        "blocked",
+        "production_blocked"
+      ]
+    }
+  }
+}

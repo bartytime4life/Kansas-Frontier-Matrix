@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "deprecation_candidate_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "continuous_assurance_refresh_plan_ref",
+    "periodic_recertification_refresh_record_ref",
+    "release_closure_refresh_dossier_ref",
+    "client_delivery_refresh_manifest_ref",
+    "reason",
+    "candidate_scope",
+    "affected_artifacts",
+    "replacement_refs",
+    "notice_requirements",
+    "risk_assessment",
+    "evidence_refs",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "deprecation_candidate_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_plan_ref": {
+      "type": "string"
+    },
+    "periodic_recertification_refresh_record_ref": {
+      "type": "string"
+    },
+    "release_closure_refresh_dossier_ref": {
+      "type": "string"
+    },
+    "client_delivery_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "candidate_scope": {
+      "type": "string"
+    },
+    "affected_artifacts": {
+      "type": "string"
+    },
+    "replacement_refs": {
+      "type": "string"
+    },
+    "notice_requirements": {
+      "type": "string"
+    },
+    "risk_assessment": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_deprecation_refresh_candidate",
+        "candidate_deprecation_refresh_review",
+        "needs_review",
+        "blocked",
+        "production_deprecation_refresh_blocked"
+      ]
+    }
+  }
+}

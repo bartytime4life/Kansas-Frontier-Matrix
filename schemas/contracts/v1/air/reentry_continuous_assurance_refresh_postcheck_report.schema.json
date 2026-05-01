@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "postcheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "continuous_assurance_refresh_manifest_ref",
+    "continuous_assurance_refresh_decision_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "archive_checks",
+    "runbook_checks",
+    "drift_checks",
+    "recertification_checks",
+    "maintenance_checks",
+    "deprecation_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "path_safety_checks",
+    "secret_checks",
+    "semantic_checks",
+    "non_mutation_checks",
+    "open_findings",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "postcheck_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_decision_ref": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "type": "string"
+    },
+    "etag_checks": {
+      "type": "string"
+    },
+    "archive_checks": {
+      "type": "string"
+    },
+    "runbook_checks": {
+      "type": "string"
+    },
+    "drift_checks": {
+      "type": "string"
+    },
+    "recertification_checks": {
+      "type": "string"
+    },
+    "maintenance_checks": {
+      "type": "string"
+    },
+    "deprecation_checks": {
+      "type": "string"
+    },
+    "ledger_checks": {
+      "type": "string"
+    },
+    "lineage_checks": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "type": "string"
+    },
+    "non_mutation_checks": {
+      "type": "string"
+    },
+    "open_findings": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  }
+}

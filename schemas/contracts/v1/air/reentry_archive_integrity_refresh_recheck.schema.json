@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "archive_recheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "continuous_assurance_refresh_plan_ref",
+    "evidence_archive_refresh_manifest_ref",
+    "release_closure_refresh_dossier_ref",
+    "source_chain_refs",
+    "hash_checks",
+    "path_safety_checks",
+    "redaction_checks",
+    "lifecycle_separation_checks",
+    "missing_artifacts",
+    "warnings",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "archive_recheck_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_plan_ref": {
+      "type": "string"
+    },
+    "evidence_archive_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "release_closure_refresh_dossier_ref": {
+      "type": "string"
+    },
+    "source_chain_refs": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "type": "string"
+    },
+    "redaction_checks": {
+      "type": "string"
+    },
+    "lifecycle_separation_checks": {
+      "type": "string"
+    },
+    "missing_artifacts": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  }
+}
