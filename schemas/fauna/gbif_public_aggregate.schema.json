@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "aggregate_id","source_system","source_evidence_bundle_id","download_key","query_predicate_hash",
+    "aggregation_unit","taxon_key","scientific_name","observation_count","record_count","date_range",
+    "geometry","geometry_role","kfm:spec_hash","rights_posture","sensitivity_posture",
+    "geoprivacy_receipt_ref","limitations"
+  ],
+  "properties": {
+    "aggregate_id": {"type": "string"},
+    "source_system": {"const": "GBIF"},
+    "source_evidence_bundle_id": {"type": "string"},
+    "download_key": {"type": "string"},
+    "query_predicate_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "aggregation_unit": {"enum": ["county", "huc12", "grid"]},
+    "taxon_key": {"type": "string"},
+    "scientific_name": {"type": "string"},
+    "observation_count": {"type": "integer", "minimum": 0},
+    "record_count": {"type": "integer", "minimum": 0},
+    "date_range": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {"start": {"type": "string", "format": "date"}, "end": {"type": "string", "format": "date"}}
+    },
+    "geometry": {"type": "object", "required": ["type", "coordinates"], "properties": {"type": {"enum": ["Polygon", "MultiPolygon"]}, "coordinates": {"type": "array"}}},
+    "geometry_role": {"const": "generalized_public_area"},
+    "kfm:spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "rights_posture": {"enum": ["public_allowed", "restricted", "quarantine"]},
+    "sensitivity_posture": {"enum": ["public_generalized", "restricted"]},
+    "geoprivacy_receipt_ref": {"type": "string"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

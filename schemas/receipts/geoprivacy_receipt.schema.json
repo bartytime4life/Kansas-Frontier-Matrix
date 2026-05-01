@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "source_evidence_bundle_id",
+    "transform_name",
+    "transform_version",
+    "input_record_count",
+    "output_aggregate_count",
+    "suppressed_count",
+    "suppression_threshold",
+    "removed_fields",
+    "generalized_geometry",
+    "reviewer_required",
+    "kfm:spec_hash",
+    "created_at"
+  ],
+  "properties": {
+    "receipt_id": {"type": "string"},
+    "source_evidence_bundle_id": {"type": "string"},
+    "transform_name": {"const": "kfm_gbif_public_aggregate"},
+    "transform_version": {"type": "string"},
+    "input_record_count": {"type": "integer", "minimum": 0},
+    "output_aggregate_count": {"type": "integer", "minimum": 0},
+    "suppressed_count": {"type": "integer", "minimum": 0},
+    "suppression_threshold": {"type": "integer", "minimum": 1},
+    "removed_fields": {"type": "array", "items": {"type": "string"}},
+    "generalized_geometry": {"type": "boolean"},
+    "reviewer_required": {"type": "boolean"},
+    "kfm:spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": true
+}
