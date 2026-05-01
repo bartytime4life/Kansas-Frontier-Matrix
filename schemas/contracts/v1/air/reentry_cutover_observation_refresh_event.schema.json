@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actor": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "details": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "event_type": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "evidence_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "result": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "subject_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "title": "reentry_cutover_observation_refresh_event.schema.json",
+  "type": "object"
+}

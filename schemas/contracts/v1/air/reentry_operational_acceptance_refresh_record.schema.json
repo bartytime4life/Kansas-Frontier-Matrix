@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "acceptance_conditions": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "acceptance_decision": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "acceptance_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "accepted_environment": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "cutover_observation_refresh_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "deployment_authorization_refresh_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "fixture_backed": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "post_deploy_gate_refresh_evaluation_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "release_ledger_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "required_followups": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "signature": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "signature_type": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    },
+    "status": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "acceptance_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "cutover_observation_refresh_ref",
+    "post_deploy_gate_refresh_evaluation_ref",
+    "release_ledger_refresh_manifest_ref",
+    "deployment_authorization_refresh_ref",
+    "accepted_environment",
+    "acceptance_decision",
+    "acceptance_conditions",
+    "required_followups",
+    "evidence_refs",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "status"
+  ],
+  "title": "reentry_operational_acceptance_refresh_record.schema.json",
+  "type": "object"
+}
