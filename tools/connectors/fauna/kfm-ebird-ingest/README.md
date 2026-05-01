@@ -20,3 +20,12 @@ New CLIs:
 
 Both CLIs are local-only, require no credentials, and perform no network calls.
 
+
+
+## Layer 26 (Consumer Integration)
+
+New local-only CLIs:
+- `kfm-ebird-mock-control-plane`
+- `kfm-ebird-consumer-pack`
+
+These generate synthetic/public-safe static artifacts only and never call remote control planes or networks.
