@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "chain_hash": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "entry_refs": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "head_entry_ref": {
+      "type": "string"
+    },
+    "ledger_id": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_publication_materialization_ledger",
+        "candidate_publication_materialization_ledger",
+        "production_ledger_blocked",
+        "blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "ledger_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "entry_refs",
+    "head_entry_ref",
+    "chain_hash",
+    "source_refs",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

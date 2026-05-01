@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "artifact_preview_manifest_ref": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "candidate_delta_seed_refs": {
+      "type": "string"
+    },
+    "candidate_invalidation_refs": {
+      "type": "string"
+    },
+    "candidate_publication_refs": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "forbidden_actions": {
+      "type": "string"
+    },
+    "preconditions": {
+      "type": "string"
+    },
+    "publication_manifest_finalization_candidate_ref": {
+      "type": "string"
+    },
+    "publication_receipt_candidate_ref": {
+      "type": "string"
+    },
+    "refresh_request_id": {
+      "type": "string"
+    },
+    "requested_refresh_scope": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_publication_candidate_manifest_ref": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_refresh_request",
+        "candidate_refresh_request",
+        "needs_review",
+        "blocked",
+        "production_refresh_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "refresh_request_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "publication_receipt_candidate_ref",
+    "artifact_preview_manifest_ref",
+    "publication_manifest_finalization_candidate_ref",
+    "source_publication_candidate_manifest_ref",
+    "requested_refresh_scope",
+    "candidate_publication_refs",
+    "candidate_delta_seed_refs",
+    "candidate_invalidation_refs",
+    "preconditions",
+    "forbidden_actions",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
