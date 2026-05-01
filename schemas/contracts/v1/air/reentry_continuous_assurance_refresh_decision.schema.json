@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "domain",
+    "decided_at",
+    "as_of",
+    "continuous_assurance_refresh_manifest_ref",
+    "continuous_assurance_refresh_summary_ref",
+    "periodic_recertification_refresh_record_ref",
+    "archive_integrity_refresh_recheck_ref",
+    "runbook_review_refresh_record_ref",
+    "drift_observation_refresh_report_ref",
+    "operational_handoff_refresh_postcheck_report_ref",
+    "operational_handoff_refresh_audit_report_ref",
+    "operational_handoff_refresh_ledger_manifest_ref",
+    "decision",
+    "gates",
+    "required_followups",
+    "evidence_refs",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "decision_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "decided_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_summary_ref": {
+      "type": "string"
+    },
+    "periodic_recertification_refresh_record_ref": {
+      "type": "string"
+    },
+    "archive_integrity_refresh_recheck_ref": {
+      "type": "string"
+    },
+    "runbook_review_refresh_record_ref": {
+      "type": "string"
+    },
+    "drift_observation_refresh_report_ref": {
+      "type": "string"
+    },
+    "operational_handoff_refresh_postcheck_report_ref": {
+      "type": "string"
+    },
+    "operational_handoff_refresh_audit_report_ref": {
+      "type": "string"
+    },
+    "operational_handoff_refresh_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "approved_for_fixture_maintenance_remediation_refresh_review",
+        "approved_for_maintenance_remediation_refresh_review",
+        "request_more_evidence",
+        "blocked",
+        "production_assurance_refresh_blocked"
+      ]
+    },
+    "gates": {
+      "type": "string"
+    },
+    "required_followups": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "signature_type": {
+      "type": "string",
+      "enum": [
+        "fixture_signature",
+        "cosign",
+        "gpg",
+        "sigstore"
+      ]
+    },
+    "fixture_backed": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_candidate_ready",
+        "candidate_ready",
+        "needs_review",
+        "blocked",
+        "production_blocked"
+      ]
+    }
+  }
+}

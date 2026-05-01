@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "assurance_refresh_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "continuous_assurance_refresh_plan_ref",
+    "archive_integrity_refresh_recheck_ref",
+    "runbook_review_refresh_record_ref",
+    "drift_observation_refresh_report_ref",
+    "periodic_recertification_refresh_record_ref",
+    "maintenance_window_refresh_plan_ref",
+    "deprecation_candidate_refresh_refs",
+    "continuous_assurance_refresh_summary_ref",
+    "operational_handoff_refresh_manifest_ref",
+    "release_closure_refresh_dossier_ref",
+    "artifact_refs",
+    "source_chain_refs",
+    "next_lifecycle_target",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "assurance_refresh_manifest_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_plan_ref": {
+      "type": "string"
+    },
+    "archive_integrity_refresh_recheck_ref": {
+      "type": "string"
+    },
+    "runbook_review_refresh_record_ref": {
+      "type": "string"
+    },
+    "drift_observation_refresh_report_ref": {
+      "type": "string"
+    },
+    "periodic_recertification_refresh_record_ref": {
+      "type": "string"
+    },
+    "maintenance_window_refresh_plan_ref": {
+      "type": "string"
+    },
+    "deprecation_candidate_refresh_refs": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_summary_ref": {
+      "type": "string"
+    },
+    "operational_handoff_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "release_closure_refresh_dossier_ref": {
+      "type": "string"
+    },
+    "artifact_refs": {
+      "type": "string"
+    },
+    "source_chain_refs": {
+      "type": "string"
+    },
+    "next_lifecycle_target": {
+      "type": "string",
+      "enum": [
+        "fixture_maintenance_remediation_refresh_review",
+        "maintenance_remediation_refresh_review",
+        "blocked"
+      ]
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "fixture_continuous_assurance_refresh_manifest",
+        "candidate_continuous_assurance_refresh_manifest",
+        "needs_review",
+        "blocked",
+        "production_assurance_refresh_blocked"
+      ]
+    }
+  }
+}
