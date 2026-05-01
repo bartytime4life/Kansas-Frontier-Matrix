@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","object_type":"SoilTrustCertificateEventRequest","domain":"soil","event_type":"suspend","reason_type":"administrative","severity":"low","reason":"fixture","public_message":"x","evidence_refs":[]}

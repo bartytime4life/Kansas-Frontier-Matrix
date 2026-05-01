@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","object_type":"SoilTrustCertificateEventRequest","domain":"soil","event_type":"tombstone","reason_type":"administrative","severity":"low","reason":"fixture","public_message":"fixture tombstone","evidence_refs":["e1"],"steward_review":{"required":true,"decision":"approved"}}
