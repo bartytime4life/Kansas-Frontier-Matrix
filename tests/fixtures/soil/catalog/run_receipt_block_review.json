@@ -1,0 +1,10 @@
+{
+  "run_receipt_id": "run_receipt:soil:block:review",
+  "artifacts": {"evidence_bundle_ref": "kfm://evidence/soil.bundle.block.review"},
+  "validation_summary": {"decision": "review"},
+  "metrics": {"masked_pct": 18.0, "zscore_30d_max": 0.6, "station_grid_residual_max": 0.03},
+  "rights_status": "open",
+  "policy_label": "public",
+  "sensitivity": "public",
+  "signatures": ["sig:review"]
+}

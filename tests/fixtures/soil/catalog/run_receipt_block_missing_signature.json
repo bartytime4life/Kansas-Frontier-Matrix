@@ -1,0 +1,10 @@
+{
+  "run_receipt_id": "run_receipt:soil:block:missing-signature",
+  "artifacts": {"evidence_bundle_ref": "kfm://evidence/soil.bundle.block.sig"},
+  "validation_summary": {"decision": "pass"},
+  "metrics": {"masked_pct": 4.0, "zscore_30d_max": 0.7, "station_grid_residual_max": 0.02},
+  "rights_status": "open",
+  "policy_label": "public",
+  "sensitivity": "public",
+  "signatures": []
+}

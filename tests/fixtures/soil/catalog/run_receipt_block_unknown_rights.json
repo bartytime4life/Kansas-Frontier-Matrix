@@ -1,0 +1,10 @@
+{
+  "run_receipt_id": "run_receipt:soil:block:unknown-rights",
+  "artifacts": {"evidence_bundle_ref": "kfm://evidence/soil.bundle.block.rights"},
+  "validation_summary": {"decision": "pass"},
+  "metrics": {"masked_pct": 4.0, "zscore_30d_max": 0.7, "station_grid_residual_max": 0.02},
+  "rights_status": "unknown",
+  "policy_label": "public",
+  "sensitivity": "public",
+  "signatures": ["sig:rights"]
+}
