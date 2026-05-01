@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "card_id",
+    "card_type",
+    "claim_refs",
+    "citations",
+    "kfm:spec_hash"
+  ],
+  "properties": {
+    "card_id": {
+      "type": "string"
+    },
+    "card_type": {
+      "const": "gbif_occurrence_aggregate_summary"
+    },
+    "claim_refs": {
+      "type": "array",
+      "minItems": 1
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1
+    },
+    "kfm:spec_hash": {
+      "type": "string"
+    }
+  }
+}
