@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/hydrology/huc12_comid_manifest.schema.json",
+  "title": "KFM HUC12 COMID Crosswalk Manifest",
+  "type": "object",
+  "required": [
+    "layer_type",
+    "huc12",
+    "snapshot_id",
+    "nhd_snapshot_id",
+    "spec_hash",
+    "run_receipt_url",
+    "valid_from",
+    "valid_to",
+    "comid_crosswalk",
+    "crosswalk_digest"
+  ],
+  "properties": {
+    "layer_type": {"const": "huc12"},
+    "huc12": {"type": "string", "pattern": "^[0-9]{12}$"},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "nhd_snapshot_id": {"type": "string", "minLength": 1},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "run_receipt_url": {"type": "string", "format": "uri"},
+    "run_receipt_url_verified": {"type": "boolean"},
+    "valid_from": {"type": "string", "format": "date-time"},
+    "valid_to": {"type": "string", "format": "date-time"},
+    "comid_crosswalk": {"type": "string", "minLength": 1},
+    "crosswalk_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"}
+  },
+  "additionalProperties": false
+}
