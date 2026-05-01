@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "lineage_checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "path_safety_checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rebuild_manifest_ref": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "rebuild_manifest_ref",
+    "checks",
+    "hash_checks",
+    "lineage_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}
