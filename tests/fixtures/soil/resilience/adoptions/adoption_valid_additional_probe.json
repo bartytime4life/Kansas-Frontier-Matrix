@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","object_type":"SoilResilienceControlAdoptionRequest","domain":"soil","control_id":"KFM-RESILIENCE-001","control_name":"probe","control_type":"additional_probe","adoption_status":"adopted","severity":"low","public_message":"ok","evidence_refs":[],"steward_review":{"required":true,"decision":"approved"}}
