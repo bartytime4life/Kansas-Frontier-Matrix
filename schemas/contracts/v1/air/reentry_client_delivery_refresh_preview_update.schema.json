@@ -1,18 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
   "additionalProperties": false,
   "properties": {
-    "schema_version": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
       "type": "string"
     },
     "domain": {
       "const": "atmosphere.air"
     },
-    "created_at": {
-      "type": "string"
+    "etag_refreshes": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
     },
-    "as_of": {
+    "schema_version": {
       "type": "string"
     }
   },
@@ -20,6 +25,8 @@
     "schema_version",
     "domain",
     "created_at",
-    "as_of"
-  ]
+    "as_of",
+    "etag_refreshes"
+  ],
+  "type": "object"
 }
