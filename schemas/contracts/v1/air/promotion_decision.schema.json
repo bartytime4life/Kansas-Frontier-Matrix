@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/contracts/v1/air/promotion_decision.schema.json",
+  "title": "KFM Air PromotionDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "domain",
+    "input_qa_summary_ref",
+    "input_evidence_bundle_ref",
+    "run_receipt_ref",
+    "decision",
+    "gates",
+    "decided_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "type": "string",
+      "const": "atmosphere.air"
+    },
+    "input_qa_summary_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_evidence_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "quarantine",
+        "published_blocked",
+        "approved_for_catalog"
+      ]
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "gate_a_nowcast_gt_35",
+        "gate_b_nowcast_vs_baseline_sigma_gt_2",
+        "gate_c_station_coverage_lt_75",
+        "gate_d_signed_attestation"
+      ],
+      "properties": {
+        "gate_a_nowcast_gt_35": {
+          "type": "object",
+          "required": [
+            "triggered"
+          ],
+          "properties": {
+            "triggered": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "gate_b_nowcast_vs_baseline_sigma_gt_2": {
+          "type": "object",
+          "required": [
+            "triggered"
+          ],
+          "properties": {
+            "triggered": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "gate_c_station_coverage_lt_75": {
+          "type": "object",
+          "required": [
+            "triggered"
+          ],
+          "properties": {
+            "triggered": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "gate_d_signed_attestation": {
+          "type": "object",
+          "required": [
+            "present"
+          ],
+          "properties": {
+            "present": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

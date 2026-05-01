@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/contracts/v1/air/release_manifest.schema.json",
+  "title": "KFM Air ReleaseManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_id", "domain", "promotion_decision_ref", "evidence_bundle_ref", "run_receipt_ref", "catalog_refs", "artifact_refs", "public_readiness"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "v1"},
+    "release_id": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "const": "atmosphere.air"},
+    "promotion_decision_ref": {"type": "string", "minLength": 1},
+    "evidence_bundle_ref": {"type": "string", "minLength": 1},
+    "run_receipt_ref": {"type": "string", "minLength": 1},
+    "catalog_refs": {"type": "array", "items": {"type": "string"}},
+    "artifact_refs": {"type": "array", "items": {"type": "string"}},
+    "public_readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attestation_required_for_published"],
+      "properties": {
+        "status": {"type": "string", "enum": ["not_public", "catalog_candidate", "published"]},
+        "attestation_required_for_published": {"type": "boolean", "const": true}
+      }
+    }
+  }
+}
