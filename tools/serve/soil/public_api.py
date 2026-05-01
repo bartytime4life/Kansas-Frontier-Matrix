@@ -92,6 +92,16 @@ class H(BaseHTTPRequestHandler):
             fp=d/f'releases/{did}/{m[path]}'
             ct='application/json' if path.endswith('json') or 'schema.org' in path or 'dcat' in path else ('application/xml' if path.endswith('.xml') else 'text/plain')
             return self._write(200, fp.read_text(), ct)
+        
+        if path.startswith('/soil/certification') and getattr(self.server,'certification_root',None):
+            croot=Path(self.server.certification_root)/'certification/soil'
+            ptr=load_json(croot/'current_certification.json'); cid=ptr['active_certification_id']; cdir=croot/'certifications'/cid
+            mapping={'/soil/certification':'public_trust_report.json','/soil/certification/manifest':'certification_manifest.json','/soil/certification/control-matrix':'control_matrix.json','/soil/certification/audit-dossier':'audit_dossier.json','/soil/certification/receipt-chain':'receipt_chain.json','/soil/certification/provenance-lineage':'provenance_lineage.jsonld','/soil/certification/dataset-bom':'dataset_bill_of_materials.json','/soil/certification/risk-register':'risk_register.json','/soil/certification/exception-ledger':'exception_ledger.json','/soil/certification/public-trust-report':'public_trust_report.json','/soil/certification/receipt':'certification_receipt.json'}
+            if path in mapping:
+                payload=load_json(cdir/mapping[path])
+                self.send_header('X-KFM-State','TRUST_CERTIFIED')
+                return self._write(200,payload)
+
         if path=='/soil/governance/status':
             st={"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})}
             if getattr(self.server,'ops_root',None):
@@ -108,7 +118,7 @@ class H(BaseHTTPRequestHandler):
         return self._err(404,'not found')
 
 def main(argv=None):
-    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root'); ap.add_argument('--discovery-root')
+    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root'); ap.add_argument('--discovery-root'); ap.add_argument('--certification-root')
     a=ap.parse_args(argv); root=Path(a.published_root)
     v=validate_service_release(root,a.release_id)
     if not v['valid']:
@@ -116,7 +126,7 @@ def main(argv=None):
     rel=root/'published/soil/releases'/v['release_id']
     for p in [load_json(rel/'manifest.json'),load_json(rel/'index.json'),load_json(rel/'publication_receipt.json')]:
         if scan_payload_for_forbidden_terms(p): print(json.dumps({"service_started":False,"reasons":["forbidden terms in public payload"]},sort_keys=True)); return 1
-    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root; httpd.discovery_root=a.discovery_root
+    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root; httpd.discovery_root=a.discovery_root; httpd.certification_root=a.certification_root
     print(json.dumps({"service_started":True,"host":a.host,"port":httpd.server_port,"release_id":v['release_id'],"audit_passed":True},sort_keys=True),flush=True)
     signal.signal(signal.SIGTERM, lambda *_: httpd.shutdown())
     try: httpd.serve_forever()
