@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actor": {},
+    "as_of": {},
+    "created_at": {},
+    "details": {},
+    "domain": {},
+    "event_id": {},
+    "event_type": {},
+    "evidence_refs": {},
+    "result": {},
+    "schema_version": {},
+    "subject_refs": {}
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {},
+    "change_control_handoff_ref": {},
+    "checklist_id": {},
+    "checks": {},
+    "created_at": {},
+    "deployment_authorization_ref": {},
+    "domain": {},
+    "go_no_go": {},
+    "hold_points": {},
+    "post_cutover_checks": {},
+    "rollback_preconditions": {},
+    "schema_version": {},
+    "status": {}
+  },
+  "required": [
+    "schema_version",
+    "checklist_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "deployment_authorization_ref",
+    "change_control_handoff_ref",
+    "checks",
+    "hold_points",
+    "go_no_go",
+    "rollback_preconditions",
+    "post_cutover_checks",
+    "status"
+  ],
+  "type": "object"
+}

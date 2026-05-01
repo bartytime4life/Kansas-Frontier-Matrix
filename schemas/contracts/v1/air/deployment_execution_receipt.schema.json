@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "actor": {},
+    "artifact_refs": {},
+    "as_of": {},
+    "change_control_handoff_ref": {},
+    "created_at": {},
+    "deployment_authorization_ref": {},
+    "domain": {},
+    "execution_mode": {},
+    "execution_receipt_id": {},
+    "hashes": {},
+    "local_deployment_simulation_ref": {},
+    "release_cutover_checklist_ref": {},
+    "result": {},
+    "schema_version": {},
+    "status": {},
+    "steps_observed": {}
+  },
+  "required": [
+    "schema_version",
+    "execution_receipt_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "execution_mode",
+    "deployment_authorization_ref",
+    "change_control_handoff_ref",
+    "release_cutover_checklist_ref",
+    "local_deployment_simulation_ref",
+    "actor",
+    "steps_observed",
+    "artifact_refs",
+    "hashes",
+    "result",
+    "status"
+  ],
+  "type": "object"
+}
