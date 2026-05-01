@@ -1,0 +1,20 @@
+{
+  "query": {
+    "taxon_key": "TEST_TAXON_KEY",
+    "geography_id": "KS-DOUGLAS",
+    "aggregation_unit": "county"
+  },
+  "data": {
+    "title": "Testus exampleus \u2014 Douglas County",
+    "subtitle": "GBIF-reported public occurrence aggregate",
+    "summary": "GBIF-reported public occurrence aggregate evidence exists.",
+    "presence_posture": "reported_occurrence_not_confirmed_presence",
+    "observation_count": 12,
+    "record_count": 12,
+    "date_range": {
+      "start": "2020-01-01",
+      "end": "2025-12-31"
+    },
+    "public_url_path": "/fauna/gbif/cards/gbif_card_TEST_001"
+  }
+}

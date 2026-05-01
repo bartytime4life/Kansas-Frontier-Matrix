@@ -1,0 +1,7 @@
+{
+  "release_registry_entry_id": "gbif_release_TEST_001",
+  "release_state": "published",
+  "rights_posture": "public_allowed",
+  "sensitivity_posture": "public_generalized",
+  "presence_posture": "reported_occurrence_not_confirmed_presence"
+}
