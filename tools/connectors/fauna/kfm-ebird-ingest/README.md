@@ -37,3 +37,7 @@ Local-only CLIs:
 - `kfm-ebird-governance-calendar`
 
 Both CLIs produce synthetic/public-safe governance artifacts, never call network services, never send notifications, and keep exact points restricted.
+
+## Layer 32: Independent verification
+
+Use `kfm-ebird-verifier-kit` to build public-safe offline verification kits and `kfm-ebird-verify-offline` to run independent local checks. Both tools are local-only, require no credentials, perform no network calls, and only validate governance/public-safety artifacts (not ecological truth).
