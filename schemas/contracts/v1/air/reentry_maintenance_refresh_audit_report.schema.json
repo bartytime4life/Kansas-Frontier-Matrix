@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "authorization_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "checks": {
+      "items": {},
+      "type": "array"
+    },
+    "deprecation_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "etag_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "ledger_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "lineage_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "maintenance_refresh_decision_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_postcheck_report_ref": {
+      "type": "string"
+    },
+    "non_mutation_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "path_safety_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "remediation_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "semantic_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "simulation_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "sunset_checks": {
+      "items": {},
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "maintenance_refresh_manifest_ref",
+    "maintenance_refresh_decision_ref",
+    "maintenance_refresh_postcheck_report_ref",
+    "maintenance_refresh_ledger_manifest_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "authorization_checks",
+    "simulation_checks",
+    "remediation_checks",
+    "deprecation_checks",
+    "sunset_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "non_mutation_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}

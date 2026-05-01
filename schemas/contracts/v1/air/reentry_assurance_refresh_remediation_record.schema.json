@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "after_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "assurance_refresh_finding_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "before_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "evidence_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "maintenance_refresh_authorization_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_execution_receipt_ref": {
+      "type": "string"
+    },
+    "remaining_risks": {
+      "items": {},
+      "type": "array"
+    },
+    "remediation_record_id": {
+      "type": "string"
+    },
+    "remediation_type": {
+      "enum": [
+        "metadata_correction_refresh_candidate",
+        "path_redaction_refresh_candidate",
+        "hash_reference_refresh_review",
+        "runbook_update_refresh_candidate",
+        "drift_review_refresh_candidate",
+        "archive_manifest_refresh_review",
+        "deprecation_review_refresh_candidate",
+        "needs_manual_review",
+        "no_op"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_remediation_recorded",
+        "candidate_remediation_recorded",
+        "needs_review",
+        "blocked",
+        "production_remediation_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "remediation_record_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "assurance_refresh_finding_refs",
+    "maintenance_refresh_authorization_ref",
+    "maintenance_refresh_execution_receipt_ref",
+    "remediation_type",
+    "before_refs",
+    "after_refs",
+    "evidence_refs",
+    "remaining_risks",
+    "status"
+  ],
+  "type": "object"
+}
