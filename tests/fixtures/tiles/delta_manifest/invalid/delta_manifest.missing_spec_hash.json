@@ -1,0 +1,30 @@
+{
+  "manifest_version": "v1",
+  "delta_id": "delta-missing-spec-hash",
+  "base_pmtiles": {
+    "url": "https://cdn.example.org/tiles/base.pmtiles"
+  },
+  "time_start": "2026-04-01T00:00:00Z",
+  "time_end": "2026-04-30T23:59:59Z",
+  "expected_tile_count": 1,
+  "produced_tile_count": 1,
+  "tiles": [
+    {
+      "tile_id": "z5x10y12",
+      "z": 5,
+      "x": 10,
+      "y": 12,
+      "quadkey": "02123",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "prior_digest": null,
+      "change_type": "added",
+      "masked_pct": 10,
+      "coverage_pct": 88,
+      "run_receipt_url": "https://receipts.example.org/run/2026-04-30-a"
+    }
+  ],
+  "qc": {
+    "masked_pct_pass_threshold": 15,
+    "masked_pct_review_threshold": 25
+  }
+}
