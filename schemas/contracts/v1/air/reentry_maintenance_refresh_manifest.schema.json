@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "artifact_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "assurance_refresh_finding_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "assurance_refresh_remediation_record_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "client_sunset_refresh_plan_ref": {
+      "type": "string"
+    },
+    "continuous_assurance_refresh_manifest_ref": {
+      "type": "string"
+    },
+    "deprecation_refresh_review_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "maintenance_refresh_authorization_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_execution_plan_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_execution_receipt_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_fixture_simulation_ref": {
+      "type": "string"
+    },
+    "maintenance_refresh_manifest_id": {
+      "type": "string"
+    },
+    "next_lifecycle_target": {
+      "enum": [
+        "fixture_maintenance_rollforward_refresh_review",
+        "maintenance_rollforward_refresh_review",
+        "blocked"
+      ]
+    },
+    "safety_checks": {
+      "items": {},
+      "type": "array"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_chain_refs": {
+      "items": {},
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "fixture_maintenance_refresh_manifest",
+        "candidate_maintenance_refresh_manifest",
+        "needs_review",
+        "blocked",
+        "production_maintenance_refresh_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "maintenance_refresh_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "maintenance_refresh_authorization_ref",
+    "maintenance_refresh_execution_plan_ref",
+    "maintenance_refresh_fixture_simulation_ref",
+    "maintenance_refresh_execution_receipt_ref",
+    "assurance_refresh_finding_refs",
+    "assurance_refresh_remediation_record_refs",
+    "deprecation_refresh_review_ref",
+    "client_sunset_refresh_plan_ref",
+    "continuous_assurance_refresh_manifest_ref",
+    "artifact_refs",
+    "source_chain_refs",
+    "next_lifecycle_target",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}
