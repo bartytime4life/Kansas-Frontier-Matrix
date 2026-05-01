@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "archive_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "as_of": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "audit_id": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "closure_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "etag_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "handoff_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "hash_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "ledger_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "lineage_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "non_mutation_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "notice_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "operational_handoff_refresh_decision_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "operational_handoff_refresh_ledger_manifest_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "operational_handoff_refresh_manifest_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "operational_handoff_refresh_postcheck_report_ref": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "path_safety_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ]
+    },
+    "runbook_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "schema_version": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "secret_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "semantic_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    },
+    "watch_window_checks": {
+      "type": [
+        "string",
+        "array",
+        "object",
+        "boolean",
+        "number"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "operational_handoff_refresh_manifest_ref",
+    "operational_handoff_refresh_decision_ref",
+    "operational_handoff_refresh_postcheck_report_ref",
+    "operational_handoff_refresh_ledger_manifest_ref",
+    "checks",
+    "hash_checks",
+    "etag_checks",
+    "handoff_checks",
+    "watch_window_checks",
+    "runbook_checks",
+    "archive_checks",
+    "closure_checks",
+    "notice_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "non_mutation_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}
