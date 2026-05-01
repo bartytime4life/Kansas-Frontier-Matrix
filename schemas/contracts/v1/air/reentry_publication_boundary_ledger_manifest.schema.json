@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_publication_boundary_ledger_manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "ledger_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "entry_refs",
+    "head_entry_ref",
+    "chain_hash",
+    "source_refs",
+    "safety_checks",
+    "status"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "status": {
+      "enum": [
+        "fixture_publication_boundary_ledger",
+        "candidate_publication_boundary_ledger",
+        "production_ledger_blocked",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

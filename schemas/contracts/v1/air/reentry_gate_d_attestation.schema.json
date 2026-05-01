@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_gate_d_attestation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "attestation_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "gate",
+    "subject_refs",
+    "attester",
+    "role",
+    "statement",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "production_use_allowed",
+    "status"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "signature_type": {
+      "enum": [
+        "fixture_signature",
+        "cosign",
+        "gpg",
+        "sigstore"
+      ]
+    },
+    "status": {
+      "enum": [
+        "fixture_attested",
+        "candidate_attested",
+        "needs_review",
+        "blocked",
+        "production_attestation_blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

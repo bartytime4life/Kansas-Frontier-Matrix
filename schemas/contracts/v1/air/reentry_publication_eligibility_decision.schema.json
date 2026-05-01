@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_publication_eligibility_decision",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "decision_id",
+    "domain",
+    "decided_at",
+    "as_of",
+    "reentry_publication_boundary_review_ref",
+    "reentry_gate_d_attestation_ref",
+    "reentry_aqs_reconciliation_refresh_ref",
+    "reentry_release_candidate_decision_ref",
+    "decision",
+    "gates",
+    "required_followups",
+    "evidence_refs",
+    "signature",
+    "signature_type",
+    "fixture_backed",
+    "status"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "decision": {
+      "enum": [
+        "approved_for_fixture_publication_candidate",
+        "approved_for_publication_candidate",
+        "request_more_evidence",
+        "blocked",
+        "production_publication_blocked"
+      ]
+    },
+    "signature_type": {
+      "enum": [
+        "fixture_signature",
+        "cosign",
+        "gpg",
+        "sigstore"
+      ]
+    },
+    "status": {
+      "enum": [
+        "fixture_candidate_ready",
+        "candidate_ready",
+        "needs_review",
+        "blocked",
+        "production_blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

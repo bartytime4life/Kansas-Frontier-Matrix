@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_publication_boundary_event",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "domain",
+    "event_type",
+    "created_at",
+    "as_of",
+    "actor",
+    "subject_refs",
+    "evidence_refs",
+    "result",
+    "details"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "event_type": {
+      "enum": [
+        "gate_d_attestation_created",
+        "aqs_reconciliation_refreshed",
+        "publication_boundary_review_created",
+        "publication_eligibility_decided",
+        "publication_candidate_manifest_created",
+        "publication_manifest_candidate_created",
+        "publication_lineage_bridge_created",
+        "publication_boundary_ledger_created",
+        "publication_boundary_postcheck_created",
+        "publication_boundary_blocked"
+      ]
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

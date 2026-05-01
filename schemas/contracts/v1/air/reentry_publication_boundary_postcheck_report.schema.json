@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reentry_publication_boundary_postcheck_report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "postcheck_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "reentry_publication_boundary_review_ref",
+    "reentry_publication_eligibility_decision_ref",
+    "reentry_publication_candidate_manifest_ref",
+    "reentry_publication_manifest_candidate_ref",
+    "reentry_publication_lineage_bridge_ref",
+    "checks",
+    "hash_checks",
+    "qa_checks",
+    "attestation_checks",
+    "aqs_reconciliation_checks",
+    "publication_boundary_checks",
+    "lineage_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "non_mutation_checks",
+    "open_findings",
+    "result"
+  ],
+  "properties": {
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "result": {
+      "enum": [
+        "pass_fixture",
+        "pass_candidate",
+        "warn",
+        "deny",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
