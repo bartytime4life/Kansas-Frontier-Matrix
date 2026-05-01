@@ -57,3 +57,7 @@ These tools create local governance artifacts only and public-safe summaries; th
 
 Use `kfm-ebird-archive-handoff` to build local public-safe archival handoff artifacts and `kfm-ebird-coldstart` to validate local cold-start reproducibility from those artifacts. Both tools are local-only, network-free, and preserve exact point restrictions.
 
+
+## Layer 41
+- `kfm-ebird-archive-renew`: local copy-on-write archive renewal planning/validation/packaging.
+- `kfm-ebird-preservation-supersede`: local supersession indexing and lineage updates (no delete/rewrite).
