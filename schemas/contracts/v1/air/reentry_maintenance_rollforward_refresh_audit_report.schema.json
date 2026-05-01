@@ -1,25 +1,29 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
   "additionalProperties": false,
   "properties": {
-    "schema_version": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
       "type": "string"
     },
     "domain": {
       "const": "atmosphere.air"
     },
-    "created_at": {
+    "schema_version": {
       "type": "string"
     },
-    "as_of": {
-      "type": "string"
+    "semantic_checks": {
+      "type": "object"
     }
   },
   "required": [
     "schema_version",
     "domain",
     "created_at",
-    "as_of"
-  ]
+    "as_of",
+    "semantic_checks"
+  ],
+  "type": "object"
 }
