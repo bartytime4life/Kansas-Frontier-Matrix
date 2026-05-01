@@ -115,7 +115,7 @@ class H(BaseHTTPRequestHandler):
             rroot=Path(self.server.remediation_root)/'remediation/soil'; ptr=load_json(rroot/'current_remediation_handoff.json'); rid=ptr['active_remediation_id']; c=rroot/'cycles'/rid
             mp={'/soil/remediation':'public_remediation_status_report.json','/soil/remediation/manifest':'remediation_handoff_manifest.json','/soil/remediation/errata-publications':'errata_publication_registry.json','/soil/remediation/certificate-events':'certificate_event_execution_tracker.json','/soil/remediation/successor-intakes':'successor_release_intake_bundle.json','/soil/remediation/retraction-intakes':'retraction_review_intake_bundle.json','/soil/remediation/ledger':'remediation_handoff_ledger.json','/soil/remediation/transparency-log':'remediation_transparency_log.json','/soil/remediation/public-report':'public_remediation_status_report.json','/soil/remediation/receipt':'remediation_handoff_receipt.json'}
             if path in mp: return self._write(200,load_json(c/mp[path]))
-if path=='/soil/governance/status':
+        if path=='/soil/governance/status':
             st={"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})}
             if getattr(self.server,'ops_root',None):
                 sp=Path(self.server.ops_root)/'ops/soil/status/current_status.json'
