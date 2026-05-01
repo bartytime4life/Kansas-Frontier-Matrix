@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"KFM Tile Release Manifest","type":"object","required":["manifest_type","manifest_version","layer_id","spec_hash","artifact_hashes","tilejson","source_pmtiles","catalog_records","receipts","fallback","policy_label","sensitivity","review_state","release_state","published_at","publisher","determinism","kfm_meta"]}
