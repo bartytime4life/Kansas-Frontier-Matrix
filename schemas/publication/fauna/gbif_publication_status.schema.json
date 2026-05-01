@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["publication_status_id","publication_package_id","current_state","kfm:spec_hash"]}
