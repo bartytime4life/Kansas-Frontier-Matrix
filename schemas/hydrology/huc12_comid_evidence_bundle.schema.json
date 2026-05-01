@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_type","bundle_id","manifest_id","timeslice_id","huc12","snapshot_id","nhd_snapshot_id","spec_hash","manifest_digest","crosswalk_digest","validator_result_digest","policy_result_digest","run_receipt_url","created_at","created_by","steward_review"],
+  "properties": {
+    "bundle_type": {"const": "huc12_comid_evidence_bundle"},
+    "bundle_id": {"type": "string", "minLength": 1},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "timeslice_id": {"type": "string", "minLength": 1},
+    "huc12": {"type": "string", "pattern": "^[0-9]{12}$"},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "nhd_snapshot_id": {"type": "string", "minLength": 1},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "manifest_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "crosswalk_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "validator_result_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "policy_result_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{6,}$"},
+    "run_receipt_url": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "created_by": {"type": "string", "minLength": 1},
+    "steward_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required","status","reviewer","reviewed_at","reason"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "status": {"enum": ["not_required", "approved", "rejected", "pending"]},
+        "reviewer": {"type": "string"},
+        "reviewed_at": {"type": "string"},
+        "reason": {"type": "string"}
+      }
+    }
+  }
+}
