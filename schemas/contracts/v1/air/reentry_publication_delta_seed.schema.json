@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "artifact_preview_manifest_ref": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "change_seeds": {
+      "items": {
+        "properties": {
+          "candidate_only": {
+            "type": "boolean"
+          },
+          "change_seed_id": {
+            "type": "string"
+          },
+          "change_type": {
+            "enum": [
+              "candidate_publication_added",
+              "candidate_publication_updated",
+              "candidate_publication_blocked",
+              "metadata_only"
+            ]
+          },
+          "publication_candidate_ref": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "record_ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "change_seed_id",
+          "change_type",
+          "publication_candidate_ref",
+          "record_ref",
+          "reason",
+          "candidate_only"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "delta_seed_id": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "public_safe_refs": {
+      "type": "string"
+    },
+    "publication_receipt_candidate_ref": {
+      "type": "string"
+    },
+    "redactions": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_publication_candidate_manifest_ref": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_delta_seed",
+        "candidate_delta_seed",
+        "needs_review",
+        "blocked",
+        "production_delta_seed_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "delta_seed_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "publication_receipt_candidate_ref",
+    "artifact_preview_manifest_ref",
+    "source_publication_candidate_manifest_ref",
+    "change_seeds",
+    "public_safe_refs",
+    "redactions",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

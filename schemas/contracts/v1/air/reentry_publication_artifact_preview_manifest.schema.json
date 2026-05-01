@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "copied_from_refs": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_algorithm": {
+      "type": "string"
+    },
+    "materialization_plan_ref": {
+      "type": "string"
+    },
+    "preview_artifacts": {
+      "items": {
+        "properties": {
+          "artifact_type": {
+            "type": "string"
+          },
+          "candidate_only": {
+            "type": "boolean"
+          },
+          "immutable_preview": {
+            "type": "boolean"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifact_type",
+          "path",
+          "sha256",
+          "source_ref",
+          "candidate_only",
+          "immutable_preview"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "preview_manifest_id": {
+      "type": "string"
+    },
+    "preview_root": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_publication_candidate_manifest_ref": {
+      "type": "string"
+    },
+    "source_publication_manifest_candidate_ref": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_preview_materialized",
+        "candidate_preview_materialized",
+        "needs_review",
+        "blocked",
+        "production_preview_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "preview_manifest_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "materialization_plan_ref",
+    "source_publication_candidate_manifest_ref",
+    "source_publication_manifest_candidate_ref",
+    "preview_root",
+    "preview_artifacts",
+    "copied_from_refs",
+    "hash_algorithm",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

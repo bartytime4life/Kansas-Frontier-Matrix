@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "aqs_reconciliation_checks": {
+      "type": "string"
+    },
+    "artifact_preview_manifest_ref": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "attestation_checks": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "hash_checks": {
+      "type": "string"
+    },
+    "ledger_checks": {
+      "type": "string"
+    },
+    "lineage_checks": {
+      "type": "string"
+    },
+    "materialization_ledger_manifest_ref": {
+      "type": "string"
+    },
+    "materialization_plan_ref": {
+      "type": "string"
+    },
+    "materialization_postcheck_report_ref": {
+      "type": "string"
+    },
+    "non_mutation_checks": {
+      "type": "string"
+    },
+    "path_safety_checks": {
+      "type": "string"
+    },
+    "public_read_model_refresh_request_ref": {
+      "type": "string"
+    },
+    "publication_delta_seed_ref": {
+      "type": "string"
+    },
+    "publication_manifest_finalization_candidate_ref": {
+      "type": "string"
+    },
+    "publication_receipt_candidate_ref": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "warn",
+        "deny"
+      ]
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "secret_checks": {
+      "type": "string"
+    },
+    "semantic_checks": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "materialization_plan_ref",
+    "artifact_preview_manifest_ref",
+    "publication_manifest_finalization_candidate_ref",
+    "publication_receipt_candidate_ref",
+    "public_read_model_refresh_request_ref",
+    "publication_delta_seed_ref",
+    "materialization_postcheck_report_ref",
+    "materialization_ledger_manifest_ref",
+    "checks",
+    "hash_checks",
+    "attestation_checks",
+    "aqs_reconciliation_checks",
+    "ledger_checks",
+    "lineage_checks",
+    "non_mutation_checks",
+    "secret_checks",
+    "path_safety_checks",
+    "semantic_checks",
+    "result"
+  ],
+  "type": "object"
+}

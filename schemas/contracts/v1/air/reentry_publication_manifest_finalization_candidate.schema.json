@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "finalization_id": {
+      "type": "string"
+    },
+    "finalized_manifest_preview_ref": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "public_boundary_checks": {
+      "type": "string"
+    },
+    "publication_mode": {
+      "enum": [
+        "fixture_preview_only",
+        "candidate_preview_only",
+        "production_blocked"
+      ]
+    },
+    "reentry_publication_artifact_preview_manifest_ref": {
+      "type": "string"
+    },
+    "reentry_publication_eligibility_decision_ref": {
+      "type": "string"
+    },
+    "reentry_publication_manifest_candidate_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "fixture_finalization_candidate",
+        "candidate_finalization_candidate",
+        "needs_review",
+        "blocked",
+        "production_finalization_blocked"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "finalization_id",
+    "domain",
+    "generated_at",
+    "as_of",
+    "reentry_publication_manifest_candidate_ref",
+    "reentry_publication_artifact_preview_manifest_ref",
+    "reentry_publication_eligibility_decision_ref",
+    "finalized_manifest_preview_ref",
+    "public_boundary_checks",
+    "publication_mode",
+    "status"
+  ],
+  "type": "object"
+}
