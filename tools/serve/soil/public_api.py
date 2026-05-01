@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, signal
+import argparse, json, signal, hashlib
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[3]
@@ -18,6 +18,15 @@ class H(BaseHTTPRequestHandler):
         self.send_header('X-KFM-Domain','soil'); self.send_header('X-KFM-State','PUBLISHED')
         self.send_header('X-KFM-Release-ID',self.server.release_id); self.send_header('X-KFM-Audit-Passed','true')
         self.send_header('ETag',sha256_bytes(data)); self.end_headers(); self.wfile.write(data)
+        if getattr(self.server,'access_log',None):
+            path=urlparse(self.path).path
+            rt=path
+            if path.startswith('/soil/records/'): rt='/soil/records/{id}'
+            if path.startswith('/soil/focus-cards/'): rt='/soil/focus-cards/{safe_bundle_id}'
+            if path.startswith('/soil/triplets/'): rt='/soil/triplets/{safe_bundle_id}.nt'
+            e={'schema_version':'kfm.v1','object_type':'SoilPublicApiAccessLogEntry','created':'','method':'GET','route_template':rt,'status':status,'release_id':self.server.release_id,'response_bytes':len(data),'request_id':hashlib.sha256((self.path+str(status)).encode()).hexdigest()[:16]}
+            lp=Path(self.server.access_log); lp.parent.mkdir(parents=True,exist_ok=True)
+            with lp.open('a',encoding='utf-8') as f: f.write(json.dumps(e,sort_keys=True)+'\n')
     def _err(self,status,reason): self._write(status,{"error":True,"status":status,"reason":reason})
     def do_GET(self):
         rel=self.server.release_root; rid=self.server.release_id
@@ -75,11 +84,22 @@ class H(BaseHTTPRequestHandler):
                 for p in sorted(rdir.glob('*.retraction_notice.json')): items.append(public_safe_payload(load_json(p)))
             return self._write(200,{"retractions":items})
         if path=='/soil/governance/status':
-            return self._write(200,{"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})})
+            st={"release_id":rid,"audit_passed":True,"retracted":False,"public_access_allowed":True,"policy_checks":load_json(rel/'publication_receipt.json').get('policy_checks',{})}
+            if getattr(self.server,'ops_root',None):
+                sp=Path(self.server.ops_root)/'ops/soil/status/current_status.json'
+                if sp.exists():
+                    cs=load_json(sp); st.update({'operational_status_ref':str(sp),'service_state':cs.get('service_state'),'latest_probe_id':cs.get('latest_probe_id'),'active_incident_count':len(cs.get('active_incidents',[])),'scheduled_maintenance_count':len(cs.get('scheduled_maintenance',[])),'public_access_allowed':cs.get('public_access_allowed',True)})
+            return self._write(200,st)
+        
+        if getattr(self.server,'access_log',None):
+            rt=path
+            if path.startswith('/soil/records/'): rt='/soil/records/{id}'
+            if path.startswith('/soil/focus-cards/'): rt='/soil/focus-cards/{safe_bundle_id}'
+            if path.startswith('/soil/triplets/'): rt='/soil/triplets/{safe_bundle_id}.nt'
         return self._err(404,'not found')
 
 def main(argv=None):
-    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765)
+    ap=argparse.ArgumentParser(); ap.add_argument('--published-root',required=True); ap.add_argument('--release-id'); ap.add_argument('--host',default='127.0.0.1'); ap.add_argument('--port',type=int,default=8765); ap.add_argument('--access-log'); ap.add_argument('--ops-root')
     a=ap.parse_args(argv); root=Path(a.published_root)
     v=validate_service_release(root,a.release_id)
     if not v['valid']:
@@ -87,7 +107,7 @@ def main(argv=None):
     rel=root/'published/soil/releases'/v['release_id']
     for p in [load_json(rel/'manifest.json'),load_json(rel/'index.json'),load_json(rel/'publication_receipt.json')]:
         if scan_payload_for_forbidden_terms(p): print(json.dumps({"service_started":False,"reasons":["forbidden terms in public payload"]},sort_keys=True)); return 1
-    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root
+    httpd=ThreadingHTTPServer((a.host,a.port),H); httpd.release_id=v['release_id']; httpd.release_root=rel; httpd.published_root=root; httpd.access_log=a.access_log; httpd.ops_root=a.ops_root
     print(json.dumps({"service_started":True,"host":a.host,"port":httpd.server_port,"release_id":v['release_id'],"audit_passed":True},sort_keys=True),flush=True)
     signal.signal(signal.SIGTERM, lambda *_: httpd.shutdown())
     try: httpd.serve_forever()
