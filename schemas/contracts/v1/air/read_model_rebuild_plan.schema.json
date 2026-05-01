@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "invalidation_notice_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "planned_changes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "after_visibility": {
+            "type": "string"
+          },
+          "before_visibility": {
+            "type": "string"
+          },
+          "change_id": {
+            "type": "string"
+          },
+          "change_type": {
+            "enum": [
+              "mark_retracted",
+              "mark_blocked",
+              "remove_from_active_index",
+              "add_delta_notice",
+              "redact_internal_path",
+              "no_op"
+            ]
+          },
+          "evidence_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "subject_ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "change_id",
+          "change_type",
+          "subject_ref",
+          "before_visibility",
+          "after_visibility",
+          "reason",
+          "evidence_refs"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "publication_manifest_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "remediation_package_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "safety_checks": {
+      "additionalProperties": false,
+      "properties": {
+        "no_direct_processed_exposure": {
+          "type": "boolean"
+        },
+        "no_fixture_real_public_promotion": {
+          "type": "boolean"
+        },
+        "no_raw_work_quarantine_refs": {
+          "type": "boolean"
+        },
+        "nowcast_not_validated_aqs_truth": {
+          "type": "boolean"
+        },
+        "nowcast_operational_label_present": {
+          "type": "boolean"
+        },
+        "sha256_present": {
+          "type": "boolean"
+        },
+        "steward_decision_present": {
+          "type": "boolean"
+        },
+        "tombstone_invalidation_present": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "no_raw_work_quarantine_refs",
+        "no_direct_processed_exposure",
+        "steward_decision_present",
+        "tombstone_invalidation_present",
+        "sha256_present",
+        "no_fixture_real_public_promotion",
+        "nowcast_operational_label_present",
+        "nowcast_not_validated_aqs_truth"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_read_model_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "approved_fixture_only",
+        "blocked",
+        "ready_for_rebuild"
+      ]
+    },
+    "steward_decision_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "tombstone_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "plan_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "source_read_model_refs",
+    "publication_manifest_refs",
+    "tombstone_refs",
+    "invalidation_notice_refs",
+    "steward_decision_refs",
+    "remediation_package_refs",
+    "planned_changes",
+    "safety_checks",
+    "status"
+  ],
+  "title": "air read model rebuild plan",
+  "type": "object"
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "applied_invalidation_notice_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "applied_tombstone_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "artifact_refs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "source_ref"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "delta_feed_ref": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "new_index_ref": {
+      "type": "string"
+    },
+    "provenance_trace_refs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rebuild_id": {
+      "type": "string"
+    },
+    "rebuild_plan_ref": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "object"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "source_index_ref": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "not_executed",
+        "rebuilt_fixture_only",
+        "rebuilt_candidate",
+        "blocked",
+        "production_proposed"
+      ]
+    },
+    "status_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "rebuild_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "rebuild_plan_ref",
+    "source_index_ref",
+    "new_index_ref",
+    "delta_feed_ref",
+    "status_ref",
+    "provenance_trace_refs",
+    "applied_tombstone_refs",
+    "applied_invalidation_notice_refs",
+    "artifact_refs",
+    "safety_checks",
+    "status"
+  ],
+  "type": "object"
+}

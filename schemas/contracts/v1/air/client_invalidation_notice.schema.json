@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "type": "string"
+    },
+    "client_notice_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "effective_at": {
+      "type": "string"
+    },
+    "public_delta_feed_ref": {
+      "type": "string"
+    },
+    "public_index_ref": {
+      "type": "string"
+    },
+    "publication_id": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "record_id": {
+      "type": "string"
+    },
+    "replacement_ref": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "fixture_candidate",
+        "public_safe",
+        "blocked"
+      ]
+    },
+    "visibility_change": {
+      "enum": [
+        "public_readable_to_retracted",
+        "candidate_to_blocked",
+        "candidate_to_retracted",
+        "public_readable_to_superseded"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "client_notice_id",
+    "domain",
+    "created_at",
+    "as_of",
+    "publication_id",
+    "record_id",
+    "reason",
+    "visibility_change",
+    "effective_at",
+    "replacement_ref",
+    "public_delta_feed_ref",
+    "public_index_ref",
+    "status"
+  ],
+  "type": "object"
+}
