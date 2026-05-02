@@ -1,0 +1,9 @@
+{
+  "object_type": "AirNowSnapshotPreservationCompletenessMatrix",
+  "records": [
+    {
+      "check": "required_inputs_present",
+      "pass": true
+    }
+  ]
+}

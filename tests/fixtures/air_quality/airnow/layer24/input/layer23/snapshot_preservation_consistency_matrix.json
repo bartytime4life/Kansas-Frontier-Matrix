@@ -1,0 +1,9 @@
+{
+  "object_type": "AirNowSnapshotPreservationConsistencyMatrix",
+  "records": [
+    {
+      "check": "no_execution",
+      "pass": true
+    }
+  ]
+}
