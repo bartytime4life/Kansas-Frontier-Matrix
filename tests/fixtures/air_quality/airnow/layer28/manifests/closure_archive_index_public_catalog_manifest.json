@@ -87,7 +87,7 @@
   "public_api_allowed": false,
   "public_api_requested": false,
   "public_catalog_allowed": false,
-  "public_catalog_requested": false,
+  "public_catalog_requested": true,
   "public_dashboard_allowed": false,
   "public_dashboard_requested": false,
   "publication_allowed": false,

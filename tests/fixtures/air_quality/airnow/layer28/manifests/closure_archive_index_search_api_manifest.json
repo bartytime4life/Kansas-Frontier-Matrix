@@ -95,7 +95,7 @@
   "regulatory_claims_allowed": false,
   "regulatory_claims_requested": false,
   "search_api_allowed": false,
-  "search_api_requested": false,
+  "search_api_requested": true,
   "snapshot_copy_allowed": false,
   "snapshot_copy_requested": false,
   "snapshot_export_execution_allowed": false,

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "resolved_closure_archive_index_manifest.airnow.v1.schema.json",
+  "type": "object",
+  "additionalProperties": true
+}

@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveLineageIndex",
+  "records": [
+    {
+      "edge": {
+        "from": "l24",
+        "to": "l27"
+      },
+      "lineage_index_id": "lidx_7a4a09447104f567"
+    }
+  ]
+}

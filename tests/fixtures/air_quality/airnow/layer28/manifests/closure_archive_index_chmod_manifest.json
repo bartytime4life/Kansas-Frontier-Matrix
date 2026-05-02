@@ -9,7 +9,7 @@
   "auto_execute_requested": false,
   "bulk_web_service_loop": false,
   "chmod_or_chattr_allowed": false,
-  "chmod_or_chattr_requested": false,
+  "chmod_or_chattr_requested": true,
   "closure_audit_action_allowed": false,
   "closure_audit_action_requested": false,
   "closure_execution_allowed": false,

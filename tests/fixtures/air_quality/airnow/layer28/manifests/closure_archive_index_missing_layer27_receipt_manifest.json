@@ -49,7 +49,6 @@
   },
   "layer27_inputs": {
     "preservation_closure_audit_exception_register_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_audit_exception_register.json",
-    "preservation_closure_audit_receipt_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_audit_receipt.json",
     "preservation_closure_caveat_registry_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_caveat_registry.json",
     "preservation_closure_completeness_matrix_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_completeness_matrix.json",
     "preservation_closure_consistency_matrix_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_consistency_matrix.json",

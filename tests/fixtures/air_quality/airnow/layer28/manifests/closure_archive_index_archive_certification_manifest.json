@@ -70,7 +70,7 @@
   "manifest_id": "m_layer28",
   "no_network": true,
   "official_archive_certification_allowed": false,
-  "official_archive_certification_requested": false,
+  "official_archive_certification_requested": true,
   "preliminary_data": true,
   "preservation_action_allowed": false,
   "preservation_action_requested": false,

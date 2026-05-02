@@ -2,7 +2,7 @@
   "archive_transfer_allowed": false,
   "archive_transfer_requested": false,
   "audit_closure_allowed": false,
-  "audit_closure_requested": false,
+  "audit_closure_requested": true,
   "auto_apply_allowed": false,
   "auto_apply_requested": false,
   "auto_execute_allowed": false,

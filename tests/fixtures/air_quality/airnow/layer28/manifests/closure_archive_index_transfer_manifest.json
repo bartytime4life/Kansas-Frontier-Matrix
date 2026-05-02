@@ -83,7 +83,7 @@
   "preservation_review_action_allowed": false,
   "preservation_review_action_requested": false,
   "preservation_transfer_allowed": false,
-  "preservation_transfer_requested": false,
+  "preservation_transfer_requested": true,
   "public_api_allowed": false,
   "public_api_requested": false,
   "public_catalog_allowed": false,

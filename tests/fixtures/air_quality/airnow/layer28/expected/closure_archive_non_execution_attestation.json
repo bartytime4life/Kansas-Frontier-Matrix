@@ -1,0 +1,9 @@
+{
+  "closure_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "database_write_executed": false,
+  "index_executed": false,
+  "object_type": "AirNowClosureArchiveNonExecutionAttestation",
+  "public_catalog_created": false,
+  "search_service_created": false
+}

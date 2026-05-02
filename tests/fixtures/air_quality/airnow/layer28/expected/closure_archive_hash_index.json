@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveHashIndex",
+  "records": [
+    {
+      "hash_id": "hash_09789a0ca5d2df20",
+      "sha256": "d7327301340e3b4fb8d648d6e41afbeaa9b563c31df3d91ee7025e0b75453915",
+      "source_record_id": "layer28inv_4e2394796bdaaedc"
+    },
+    {
+      "hash_id": "hash_0fe328ff89ba532d",
+      "sha256": "724552bf8b171b54352fb8efd3eb90178e9374e95edd62e99336a056dfa6f808",
+      "source_record_id": "layer28inv_7f12fbced7cd09c8"
+    },
+    {
+      "hash_id": "hash_26385716fc0f7c61",
+      "sha256": "8e69fa676b9c8b0546a4fa8bfa3e383361babbdfa3e6d72ef2947f1a1392ae09",
+      "source_record_id": "layer28inv_dd13c8db83e7f84b"
+    },
+    {
+      "hash_id": "hash_5809758e527bfb9c",
+      "sha256": "b3de5537765f8e57a53af10a52ff950e2b5d7a0e903424d1fe6d44b0cc816a4b",
+      "source_record_id": "layer28inv_1c5d816ae0d3b447"
+    },
+    {
+      "hash_id": "hash_674ca8b705b29710",
+      "sha256": "16a6a6604cc0a94de08511b856e201b1a307fc75d364de9a9714d94db558bb11",
+      "source_record_id": "layer28inv_edb954e108c5b79c"
+    },
+    {
+      "hash_id": "hash_758ab2826f434525",
+      "sha256": "7714c51a61eba9c6b6e546f3b617d40a50514be62a739e53c7b1f1d5b2703023",
+      "source_record_id": "layer28inv_9b81cc6ff815e541"
+    },
+    {
+      "hash_id": "hash_8dc72a8cd9797741",
+      "sha256": "c71a8cf2bd2b1ebc47c69ac96f965a0a04de35fa0ed89328e294c6c8292dedc3",
+      "source_record_id": "layer28inv_1330e1e09f7ee63f"
+    },
+    {
+      "hash_id": "hash_8eb6ec3fc8c85a98",
+      "sha256": "05d18acf09b796c544e51db61f5271ccc1f3848fae143a8b426cd41949394eb5",
+      "source_record_id": "layer28inv_3f2a5d48c533f781"
+    },
+    {
+      "hash_id": "hash_b8db8e9f99d345b6",
+      "sha256": "bdc56f556ad8c69b09ab1cdbff0fcb833b28c1b4e959f89876bc3a9ba0cc3297",
+      "source_record_id": "layer28inv_0ff8a60948bf327e"
+    },
+    {
+      "hash_id": "hash_ba4b7aeb5a29eaa2",
+      "sha256": "206d1fe633ee4317b7ff1add664bb4a9af7277241f41d097698b68694ef90a48",
+      "source_record_id": "layer28inv_ad02df58ea7591c6"
+    },
+    {
+      "hash_id": "hash_f5bd99901f997625",
+      "sha256": "a2907752118146f5f88917b5fdc2824041314f4da406dcec37a58bf2fea47353",
+      "source_record_id": "layer28inv_a7823d0420114b23"
+    },
+    {
+      "hash_id": "hash_f8c331af97633a05",
+      "sha256": "6c1db664439054b14cf5baade95beb5c1b194266ecf60003a2aab24c85fd8359",
+      "source_record_id": "layer28inv_168d4dde4b1c952c"
+    },
+    {
+      "hash_id": "hash_f9ba0dae4dd31bc9",
+      "sha256": "be3c0fd063a33bed7370c22c194961e7aad3cfe69dd57933ff9eb902dd69cb9c",
+      "source_record_id": "layer28inv_42b03d784fd8b923"
+    },
+    {
+      "hash_id": "hashchain_775b7be75e1cbb72",
+      "sha256": "abc123",
+      "source_record_id": "layer27_hash_chain"
+    }
+  ]
+}

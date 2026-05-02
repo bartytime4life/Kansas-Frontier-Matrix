@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveSearchKeyPlan",
+  "records": [
+    {
+      "record_id": "layer28inv_9b81cc6ff815e541",
+      "search_key": "internal::preservation_closure_final_internal_summary_json",
+      "search_key_id": "sk_01c3847c0bdce6c7"
+    },
+    {
+      "record_id": "layer28inv_a7823d0420114b23",
+      "search_key": "internal::preservation_closure_audit_receipt_json",
+      "search_key_id": "sk_0bf47dbf7f59d944"
+    },
+    {
+      "record_id": "layer28inv_dd13c8db83e7f84b",
+      "search_key": "internal::preservation_closure_hash_chain_json",
+      "search_key_id": "sk_25162f812f45feb5"
+    },
+    {
+      "record_id": "layer28inv_3f2a5d48c533f781",
+      "search_key": "internal::preservation_closure_decision_ledger_json",
+      "search_key_id": "sk_273d3c62b5c90c23"
+    },
+    {
+      "record_id": "layer28inv_ad02df58ea7591c6",
+      "search_key": "internal::preservation_closure_receipt_ledger_json",
+      "search_key_id": "sk_2c67c43e1122cc6f"
+    },
+    {
+      "record_id": "layer28inv_0ff8a60948bf327e",
+      "search_key": "internal::preservation_closure_caveat_registry_json",
+      "search_key_id": "sk_44a519c28045bc1a"
+    },
+    {
+      "record_id": "layer28inv_7f12fbced7cd09c8",
+      "search_key": "internal::preservation_closure_lineage_graph_json",
+      "search_key_id": "sk_707ec4398c5585a9"
+    },
+    {
+      "record_id": "layer28inv_4e2394796bdaaedc",
+      "search_key": "internal::preservation_closure_completeness_matrix_json",
+      "search_key_id": "sk_915f0fee7431a48a"
+    },
+    {
+      "record_id": "layer28inv_168d4dde4b1c952c",
+      "search_key": "internal::preservation_closure_audit_exception_register_json",
+      "search_key_id": "sk_91c5a637bba6a87b"
+    },
+    {
+      "record_id": "layer28inv_42b03d784fd8b923",
+      "search_key": "internal::preservation_closure_policy_ledger_json",
+      "search_key_id": "sk_a2bb530d40df8722"
+    },
+    {
+      "record_id": "layer28inv_1330e1e09f7ee63f",
+      "search_key": "internal::preservation_closure_consistency_matrix_json",
+      "search_key_id": "sk_c7576a62c7f98fd2"
+    },
+    {
+      "record_id": "layer28inv_edb954e108c5b79c",
+      "search_key": "internal::preservation_closure_non_execution_ledger_json",
+      "search_key_id": "sk_de600fc6f88c14c9"
+    },
+    {
+      "record_id": "layer28inv_1c5d816ae0d3b447",
+      "search_key": "internal::preservation_closure_evidence_ledger_json",
+      "search_key_id": "sk_fef7bd48b3145043"
+    }
+  ]
+}

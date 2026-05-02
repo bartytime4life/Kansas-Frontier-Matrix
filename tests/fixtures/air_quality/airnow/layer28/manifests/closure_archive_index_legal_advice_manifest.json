@@ -63,7 +63,7 @@
     "preservation_closure_receipt_ledger_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_receipt_ledger.json"
   },
   "legal_advice_allowed": false,
-  "legal_advice_requested": false,
+  "legal_advice_requested": true,
   "legal_hold_creation_allowed": false,
   "legal_hold_creation_requested": false,
   "local_file_only": true,

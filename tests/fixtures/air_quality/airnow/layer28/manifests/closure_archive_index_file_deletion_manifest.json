@@ -31,7 +31,7 @@
   "external_storage_allowed": false,
   "external_storage_requested": false,
   "file_deletion_allowed": false,
-  "file_deletion_requested": false,
+  "file_deletion_requested": true,
   "final_accession_execution_allowed": false,
   "final_accession_execution_requested": false,
   "git_push_allowed": false,
