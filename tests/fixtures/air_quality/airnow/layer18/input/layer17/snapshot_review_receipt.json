@@ -1,0 +1,17 @@
+{
+  "archive_transfer_allowed": false,
+  "commands_executed": false,
+  "file_deletion_allowed": false,
+  "final_accession_execution_allowed": false,
+  "legal_hold_creation_allowed": false,
+  "object_type": "AirNowSnapshotReviewReceipt",
+  "official_archive_certification_allowed": false,
+  "public_release_allowed": false,
+  "publication_allowed": false,
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "task_closure_allowed": false
+}

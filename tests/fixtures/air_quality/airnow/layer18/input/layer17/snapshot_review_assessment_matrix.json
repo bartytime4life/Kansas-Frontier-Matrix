@@ -1,0 +1,9 @@
+{
+  "object_type": "AirNowSnapshotReviewAssessmentMatrix",
+  "records": [
+    {
+      "item_id": "item-1",
+      "status": "PASS"
+    }
+  ]
+}
