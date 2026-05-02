@@ -1,0 +1,42 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "members": [
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:9061f601413ad814b1a6b986678b34f54b1db86fbec99d5080e0ff2588a37506",
+      "member_path": "internal/archival_acceptance_consolidation.json",
+      "source_input_id": "archival_acceptance_consolidation"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:6de79e5ea025b7728c98de0e4395493641ea64d8e2f269d33a198dfc6003afdd",
+      "member_path": "internal/archival_blocker_consolidation.json",
+      "source_input_id": "archival_blocker_consolidation"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:7a6d258dce78ab301dff1a3ee82a32e53185e9549b8914851a6eede00e480178",
+      "member_path": "internal/archival_caveat_continuity_register.json",
+      "source_input_id": "archival_caveat_continuity_register"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:a27db950b17275a36ed696321661600cdcd32812e42fcba485d1700a185560ac",
+      "member_path": "internal/archival_decision_candidate.json",
+      "source_input_id": "archival_decision_candidate"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:3bc41922f49b7308036c7a6c9ed56c391c519cdf359662031a8c64e9dc460bae",
+      "member_path": "internal/archival_finalization_receipt.json",
+      "source_input_id": "archival_finalization_receipt"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:19fd124fd5f54429cc4bcfc267ae2cf949e6b50ecd2887a2fee7acce34485011",
+      "member_path": "internal/archival_non_execution_attestation.json",
+      "source_input_id": "archival_non_execution_attestation"
+    },
+    {
+      "member_id": "kfm:airnow:snapshot_member:v1:79246067080fd0e8316bb8d70137bfb4e12ece102c6e12dff9f71e7c9a09d0b8",
+      "member_path": "internal/archival_policy_continuity_matrix.json",
+      "source_input_id": "archival_policy_continuity_matrix"
+    }
+  ],
+  "object_type": "AirNowSnapshotMemberPlan",
+  "schema_version": "v1"
+}
