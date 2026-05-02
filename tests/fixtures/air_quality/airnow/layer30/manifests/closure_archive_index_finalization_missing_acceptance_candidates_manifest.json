@@ -49,7 +49,7 @@
   "index_execution_allowed": false,
   "index_execution_requested": false,
   "layer29_inputs": {
-    "closure_archive_index_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_acceptance_candidates.jsonl",
+    "closure_archive_index_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer30/input/layer29/missing_candidates.jsonl",
     "closure_archive_index_item_satisfaction_matrix_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_item_satisfaction_matrix.json",
     "closure_archive_index_review_assessment_matrix_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_assessment_matrix.json",
     "closure_archive_index_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_caveat_register.json",

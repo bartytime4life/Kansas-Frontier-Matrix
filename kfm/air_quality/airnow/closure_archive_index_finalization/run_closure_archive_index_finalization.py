@@ -1,4 +1,6 @@
 import json
+import tarfile
+from hashlib import sha256
 from pathlib import Path
 from .checksums import sha256_path
 from .constants import L29_REQUIRED
@@ -9,6 +11,7 @@ from .manifest import validate_manifest, validate_path_safe
 REFS=["https://docs.airnowapi.org/","https://docs.airnowapi.org/webservices","https://docs.airnowapi.org/faq","https://docs.airnowapi.org/docs/AirNowAPIFactSheet.pdf","https://docs.airnowapi.org/docs/HourlyAQObsFactSheet.pdf","https://docs.airnowapi.org/docs/HourlyDataFactSheet.pdf","https://docs.airnowapi.org/docs/DailyDataFactSheet.pdf","https://www.airnowapi.org/docs/MonitoringSiteFactSheet.pdf","https://www.airnow.gov/about-the-data","https://docs.airnowapi.org/docs/DataUseGuidelines.pdf","https://www.epa.gov/outdoor-air-quality-data/download-daily-data"]
 
 FORBIDDEN_RCP_TRUE=["publication_allowed","public_release_allowed","index_executed","database_write_executed","search_service_created","public_catalog_created","closure_executed","task_closure_performed","audit_closure_performed","governance_closure_performed","preservation_actions_executed","preservation_copy_executed","preservation_transfer_executed","snapshot_export_executed","snapshot_copy_executed","snapshot_transfer_executed","snapshot_published","snapshot_released","archive_transfer_executed","file_deleted","legal_hold_created","official_archive_certified","commands_executed","final_accession_executed"]
+DENIED_CAPS=["network_access_requested","publication_allowed","commands_executed","closure_executed","database_write_executed","search_service_created","public_catalog_created","task_closure_performed","governance_closure_performed","audit_closure_performed","preservation_actions_executed","preservation_copy_executed","preservation_transfer_executed","snapshot_export_executed","snapshot_copy_executed","snapshot_transfer_executed","snapshot_published","snapshot_released","file_deleted","destruction_executed","chmod_requested","legal_hold_created","official_archive_certified","legal_advice_requested","auto_apply_requested","github_action_requested","allow_exact_coordinates","allow_secret_fields"]
 
 def _deny(m,out,created_at,errs):
     r={"object_type":"AirNowClosureArchiveIndexFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer30_closure_archive_index_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_FINALIZATION_DENIED_REQUESTED_CAPABILITY","validation_outcome":"FAIL","finite_outcome":"DENY","commands_executed":False,"finalization_actions_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(set(errs)),"output_hashes":{"closure_archive_index_finalization_packet_hash":None},"created_at":created_at}
@@ -17,6 +20,10 @@ def _deny(m,out,created_at,errs):
 def run_closure_archive_index_finalization(manifest_path,out_dir,created_at):
     m=loadj(manifest_path);out=Path(out_dir);out.mkdir(parents=True, exist_ok=True)
     errs=validate_manifest(m);l29=m.get("layer29_inputs",{})
+    requested=m.get("requested_capabilities",{})
+    for cap in DENIED_CAPS:
+        if requested.get(cap) is True or m.get("human_output_policy",{}).get(cap) is True or m.get("security_policy",{}).get(cap) is True:
+            errs.append(f"DENIED_REQUESTED_CAPABILITY:{cap}")
     for k in sorted(L29_REQUIRED):
         p=l29.get(k)
         if not p: errs.append(f"MISSING_REQUIRED_INPUT:{k}"); continue
@@ -56,5 +63,14 @@ def run_closure_archive_index_finalization(manifest_path,out_dir,created_at):
     wj(out/"closure_archive_index_finalization_status_board.json",{"object_type":"AirNowClosureArchiveIndexFinalizationStatusBoard","schema_version":"v1","board_status":"CLOSURE_ARCHIVE_INDEX_FINALIZATION_COMPLETE_INTERNAL_ONLY","created_at":created_at})
     (out/"closure_archive_index_finalization_status_board.md").write_text("# AirNow Layer 30 Closure Archive Index Finalization Status Board\n\nInternal finalization planning only. No index/database/search/catalog/closure execution; no public release.\n")
     (out/"closure_archive_index_finalization_report.md").write_text("# AirNow Layer 30 Closure Archive Index Finalization Report\n\nCompiled internal finalization ledger from Layer 29 review artifacts. References retained for provenance; no execution actions.\n")
-    rec={"object_type":"AirNowClosureArchiveIndexFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer30_closure_archive_index_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_FINALIZATION_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"finalization_actions_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"closure_archive_index_finalization_packet_hash":None},"created_at":created_at}
+    packet_hash=None
+    if m.get("finalization_policy",{}).get("include_packet") is True:
+        packet=out/"closure_archive_index_finalization_packet.tar.gz"
+        with tarfile.open(packet, "w:gz", format=tarfile.PAX_FORMAT) as tf:
+            for p in sorted(out.glob("*")):
+                if p.name==packet.name or not p.is_file(): continue
+                ti=tf.gettarinfo(str(p), arcname=p.name); ti.mtime=0; ti.uid=0; ti.gid=0; ti.uname=""; ti.gname=""
+                with p.open("rb") as fh: tf.addfile(ti,fh)
+        packet_hash=sha256(packet.read_bytes()).hexdigest()
+    rec={"object_type":"AirNowClosureArchiveIndexFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer30_closure_archive_index_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_FINALIZATION_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"finalization_actions_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"closure_archive_index_finalization_packet_hash":packet_hash},"created_at":created_at}
     wj(out/"closure_archive_index_finalization_receipt.json",rec); return rec

@@ -65,7 +65,7 @@
   "legal_hold_creation_requested": false,
   "local_file_only": true,
   "manifest_id": "m30-valid",
-  "no_network": false,
+  "no_network": true,
   "official_archive_certification_allowed": false,
   "official_archive_certification_requested": false,
   "preliminary_data": true,
@@ -108,5 +108,11 @@
   "task_closure_execution_requested": false,
   "task_closure_requested": false,
   "tiles_allowed": false,
-  "tiles_requested": false
+  "tiles_requested": false,
+  "finalization_policy": {
+    "include_packet": true
+  },
+  "requested_capabilities": {
+    "network_access_requested": true
+  }
 }

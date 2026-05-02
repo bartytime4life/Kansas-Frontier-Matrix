@@ -23,7 +23,7 @@
   "closure_review_action_allowed": false,
   "closure_review_action_requested": false,
   "command_execution_allowed": false,
-  "command_execution_requested": true,
+  "command_execution_requested": false,
   "database_write_allowed": false,
   "database_write_requested": false,
   "destruction_execution_allowed": false,
@@ -108,5 +108,11 @@
   "task_closure_execution_requested": false,
   "task_closure_requested": false,
   "tiles_allowed": false,
-  "tiles_requested": false
+  "tiles_requested": false,
+  "finalization_policy": {
+    "include_packet": true
+  },
+  "requested_capabilities": {
+    "closure_executed": true
+  }
 }

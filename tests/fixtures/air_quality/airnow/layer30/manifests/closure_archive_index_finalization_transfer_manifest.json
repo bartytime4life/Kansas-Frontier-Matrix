@@ -111,5 +111,8 @@
   "tiles_requested": false,
   "finalization_policy": {
     "include_packet": true
+  },
+  "requested_capabilities": {
+    "preservation_transfer_executed": true
   }
 }

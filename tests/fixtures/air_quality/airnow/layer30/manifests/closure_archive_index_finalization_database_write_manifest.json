@@ -111,5 +111,8 @@
   "tiles_requested": false,
   "finalization_policy": {
     "include_packet": true
+  },
+  "requested_capabilities": {
+    "database_write_executed": true
   }
 }
