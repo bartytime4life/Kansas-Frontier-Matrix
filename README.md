@@ -664,3 +664,41 @@ Examples: DataUseSpec.v1, DataUsePolicy.v1, UsageEventInventory.v1, UsageMeterin
 Exit codes: 0 success/planned, 5 dry-run, 10 warning, 20 compliance fail, 30 malformed input, 40 ledger fail, 50 metering fail, 60 obligation/purpose fail, 70 quota fail, 80 anomaly fail, 90 API/OpenAPI fail, 100 unsafe path/bind, 110 secret finding, 120 internal error.
 
 Warning: this layer reports accountability only; it does not grant/deny access, revoke trust objects, publish remotely, or mutate source ledgers.
+
+## Layer 28 Data Use Response Controller (soilgrids)
+
+`soilgrids_data_use_response.py` prepares **local-only** response planning artifacts and recommendation packets.
+It **does not** notify externally, mutate policies, change trust status, grant/deny access, or mutate Layer 27 evidence.
+
+### Invocation examples
+- full: `python soilgrids_data_use_response.py --data-use-response-spec data_use_response/data_use_response_spec_example.json --data-use-response-policy data_use_response/data_use_response_policy_default.json --data-use-run-root tests/fixtures/data_use_response --output-root /tmp/dur --mode full`
+- classify: `... --mode classify`
+- response-plan: `... --mode response-plan`
+- obligation-fulfillment: `... --mode obligation-fulfillment`
+- quota-response: `... --mode quota-response`
+- anomaly-response: `... --mode anomaly-response`
+- consumer-notification: `... --mode consumer-notification`
+- recommend-policy: `... --mode recommend-policy`
+- local-api: `... --mode local-api --host 127.0.0.1 --port 0`
+
+### Examples
+See:
+- `data_use_response/data_use_response_spec_example.json`
+- `data_use_response/data_use_response_policy_default.json`
+
+### Exit codes
+- `0`: success/planned
+- `5`: dry-run success
+- `10`: warning
+- `20`: blocked
+- `30`: malformed input
+- `40`: Layer 27 source validation failure
+- `50`: issue classification failure
+- `60`: response plan failure
+- `70`: packet generation failure
+- `80`: recommendation validation failure
+- `90`: API/OpenAPI failure
+- `100`: unsafe path/public bind failure
+- `110`: secret finding failure
+- `120`: ledger failure
+- `130`: internal error

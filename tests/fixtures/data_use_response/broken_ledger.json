@@ -1,0 +1,11 @@
+{
+  "schema": "DataUseResponseLedger.v1",
+  "entries": [
+    {
+      "entry_id": "1",
+      "response_entry_id": "r1",
+      "chain_hash": "bad"
+    }
+  ],
+  "latest_entry_id": "x"
+}

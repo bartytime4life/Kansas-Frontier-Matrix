@@ -1,0 +1,23 @@
+{
+  "schema": "Wrong.v1",
+  "data_use_response_id": "dur-1",
+  "dataset_id": "soilgrids",
+  "response_profile": "strict-local",
+  "response_policy": {
+    "default_decision": "plan_only",
+    "execute_external_notifications": false,
+    "require_approval_for_policy_recommendation": true
+  },
+  "issue_classification": {
+    "purpose_violation_severity": "high",
+    "obligation_missing_severity": "medium",
+    "quota_exceeded_severity": "warning",
+    "critical_anomaly_severity": "critical"
+  },
+  "redaction": {
+    "redact_subjects": true
+  },
+  "source": {
+    "require_data_use_receipt_success": true
+  }
+}

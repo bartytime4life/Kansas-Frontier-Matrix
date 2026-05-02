@@ -1,0 +1,9 @@
+{
+  "schema": "PurposeComplianceReport.v1",
+  "findings": [
+    {
+      "status": "missing_purpose",
+      "subject_id": "plain-subject"
+    }
+  ]
+}
