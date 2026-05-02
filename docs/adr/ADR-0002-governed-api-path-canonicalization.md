@@ -1,22 +1,85 @@
 # ADR-0002: Governed API path canonicalization (`governed_api` vs `governed-api`)
 
+One governed API implementation home; one legacy compatibility surface; no split-brain trust boundary.
+
 ![status](https://img.shields.io/badge/status-accepted-2ea44f)
 ![decision-area](https://img.shields.io/badge/decision%20area-repository%20structure-1f6feb)
 ![boundary](https://img.shields.io/badge/boundary-governed%20API-8250df)
 ![policy](https://img.shields.io/badge/policy-shim--only%20legacy-b60205)
+![implementation](https://img.shields.io/badge/implementation-needs%20verification-f0ad4e)
 
-- **Status:** accepted
-- **Date accepted:** 2026-04-25
-- **Last updated:** 2026-04-27
-- **Decision area:** repository structure / import boundaries / compatibility
-- **Primary owner:** governed API maintainer
-- **Applies to:** Python implementation paths under `apps/governed_api/...` and legacy file-path compatibility under `apps/governed-api/...`
-- **CI guard:** `tools/ci/check_governed_api_path_policy.py`
+| Field | Value |
+| --- | --- |
+| **Status** | accepted |
+| **Date accepted** | 2026-04-25 |
+| **Last updated** | 2026-04-27 |
+| **Decision area** | repository structure / import boundaries / compatibility |
+| **Primary owner** | governed API maintainer |
+| **Applies to** | Python implementation paths under `apps/governed_api/...` and legacy file-path compatibility under `apps/governed-api/...` |
+| **CI guard** | `tools/ci/check_governed_api_path_policy.py` |
+| **Suggested path** | `docs/adr/ADR-0002-governed-api-path-canonicalization.md` |
+| **Truth posture** | CONFIRMED ADR decision / NEEDS VERIFICATION for active-branch file presence and CI wiring |
 
 > [!IMPORTANT]
-> `apps/governed_api/...` is the canonical implementation path.
-> `apps/governed-api/...` is legacy compatibility only.
+> `apps/governed_api/...` is the canonical governed API implementation path.  
+> `apps/governed-api/...` is legacy compatibility only.  
 > Legacy files may re-export canonical modules, but they must not contain primary implementation logic.
+
+> [!NOTE]
+> This ADR records the accepted path policy. It does **not** by itself prove that every mapped file, test wrapper, workflow, or documentation update exists on the active branch. Those checks remain explicit open verification items in [Section 19](#19-open-verification-items).
+
+---
+
+## Quick navigation
+
+- [1. Decision summary](#1-decision-summary)
+- [2. Context](#2-context)
+- [3. Problem statement](#3-problem-statement)
+- [4. Decision](#4-decision)
+- [5. Scope](#5-scope)
+- [6. Canonical path rules](#6-canonical-path-rules)
+- [7. Accepted shim shapes](#7-accepted-shim-shapes)
+- [8. Enforced mapping](#8-enforced-mapping)
+- [9. CI enforcement requirements](#9-ci-enforcement-requirements)
+- [10. Recommended checker strategy](#10-recommended-checker-strategy)
+- [11. Contributor rules](#11-contributor-rules)
+- [12. Compatibility posture](#12-compatibility-posture)
+- [13. Relationship to KFM governance](#13-relationship-to-kfm-governance)
+- [14. Consequences](#14-consequences)
+- [15. Alternatives considered](#15-alternatives-considered)
+- [16. Validation](#16-validation)
+- [17. Rollback](#17-rollback)
+- [18. Documentation impact](#18-documentation-impact)
+- [19. Open verification items](#19-open-verification-items)
+- [20. Final rule](#20-final-rule)
+
+---
+
+## At a glance
+
+| Surface | Canonical | Legacy compatibility | Rule |
+| --- | --- | --- | --- |
+| Implementation home | `apps/governed_api/...` | `apps/governed-api/...` | New logic goes canonical only. |
+| Import posture | Python-importable dotted package path | File/path compatibility only | Do not import implementation from legacy. |
+| Documentation default | Use `apps/governed_api/...` | Label explicitly as legacy compatibility | Do not present legacy as canonical. |
+| CI policy | Check canonical files and shims | Enforce shim-only shape | Fail on primary logic in legacy files. |
+| Removal path | Not applicable | Requires later ADR or amendment | Do not silently delete compatibility. |
+
+```mermaid
+flowchart LR
+  client[Public / steward-facing clients]
+  api[Canonical governed API<br/>apps/governed_api/...]
+  legacy[Legacy compatibility files<br/>apps/governed-api/...]
+  evidence[EvidenceBundle / policy / review / release state]
+  published[Governed response envelopes<br/>released artifacts]
+
+  legacy -. shim-only re-export .-> api
+  client --> api
+  api --> evidence
+  evidence --> published
+
+  legacy -. no primary logic .-> deny{{DENY split implementation}}
+```
 
 ---
 
@@ -26,7 +89,11 @@ KFM will use `apps/governed_api/...` as the canonical governed API implementatio
 
 The historical hyphenated path, `apps/governed-api/...`, remains only as a compatibility surface for legacy path references, old documentation, migration notes, and narrowly scoped tooling that still expects those files to exist.
 
-The legacy path must not become a second implementation home. Any behavior, route handler, resolver, policy bridge, runtime adapter, evidence resolver, or DTO implementation belongs in the canonical underscore path.
+The legacy path must not become a second implementation home. Any behavior, route handler, resolver, policy bridge, runtime adapter, evidence resolver, DTO implementation, source access, validation, mutation, or persistence belongs in the canonical underscore path.
+
+The operating rule is intentionally simple:
+
+> Implementation goes in `apps/governed_api/...`; `apps/governed-api/...` only points back to it.
 
 ---
 
@@ -35,9 +102,9 @@ The legacy path must not become a second implementation home. Any behavior, rout
 The repository has used two near-identical governed API path spellings:
 
 | Path | Role | Import posture | Status |
-|---|---:|---:|---:|
-| `apps/governed_api/...` | canonical implementation | Python-importable dotted package path | authoritative |
-| `apps/governed-api/...` | legacy compatibility path | not a normal Python dotted import path because of the hyphen | shim-only |
+| --- | --- | --- | --- |
+| `apps/governed_api/...` | Canonical implementation | Python-importable dotted package path | authoritative |
+| `apps/governed-api/...` | Legacy compatibility path | not a normal Python dotted import path because of the hyphen | shim-only |
 
 This dual-path state creates maintenance risk unless one path is declared authoritative.
 
@@ -103,6 +170,9 @@ This ADR does not decide:
 - production deployment topology;
 - whether legacy path references in all historical documents are immediately rewritten.
 
+> [!NOTE]
+> The `contracts/` versus `schemas/` authority question remains separate. Do not use this ADR to create parallel schema authority or to resolve schema-home placement by implication.
+
 ---
 
 ## 6. Canonical path rules
@@ -123,7 +193,7 @@ A canonical file may contain:
 - response-envelope builders;
 - request/response DTO shaping;
 - integration with policy and citation validation;
-- tests fixtures or helper code if the repository’s app convention places them there;
+- test fixtures or helper code if the repository’s app convention places them there;
 - normal implementation code.
 
 A canonical file must not import implementation logic from the legacy path.
@@ -191,6 +261,7 @@ Importing from the legacy path is not allowed:
 
 ```python
 # Forbidden: legacy path must never be the implementation source.
+# This is not valid Python package syntax and must not be normalized into docs:
 # from apps.governed-api.ecology.routes import router
 ```
 
@@ -203,7 +274,7 @@ Because `governed-api` contains a hyphen, it is not a normal Python dotted packa
 The initial enforced mapping is:
 
 | Canonical implementation file | Legacy compatibility shim |
-|---|---|
+| --- | --- |
 | `apps/governed_api/ecology/evidencebundle_resolver.py` | `apps/governed-api/ecology/evidencebundle_resolver.py` |
 | `apps/governed_api/ecology/routes.py` | `apps/governed-api/ecology/routes.py` |
 | `apps/governed_api/ecology/fastapi_routes.py` | `apps/governed-api/ecology/fastapi_routes.py` |
@@ -211,6 +282,9 @@ The initial enforced mapping is:
 This list is a minimum enforcement set, not permission to add ungoverned logic elsewhere under `apps/governed-api/...`.
 
 When new legacy compatibility files are retained or created, the checker must be updated so CI knows the canonical counterpart and can verify the shim contract.
+
+> [!WARNING]
+> An unregistered Python file under `apps/governed-api/...` is not harmless. It is either a missing shim mapping, a migration mistake, or an attempted second implementation home.
 
 ---
 
@@ -240,10 +314,10 @@ Minimum recommended checks:
 - verify every canonical path exists;
 - verify every legacy shim path exists for the enforced mapping;
 - parse every legacy shim with `ast.parse`;
-- allow only docstrings, import statements, `__all__`, and simple alias/re-export assignments;
-- reject `FunctionDef`, `AsyncFunctionDef`, `ClassDef`, `If`, `For`, `While`, `With`, `Try`, `Call`-bearing executable logic, file I/O, and route decorators;
-- reject imports that reference `apps.governed-api` or other legacy modules as an implementation source;
-- scan canonical files for textual references to `apps/governed-api` except comments or ADR references;
+- allow only docstrings, import statements, `__all__`, comments, and simple alias/re-export assignments;
+- reject `FunctionDef`, `AsyncFunctionDef`, `ClassDef`, `If`, `For`, `While`, `With`, `Try`, route decorators, file I/O, and executable `Call`-bearing logic;
+- reject imports that reference `apps.governed-api`, `apps/governed-api`, or other legacy modules as implementation sources;
+- scan canonical files for references to `apps/governed-api` except comments, ADR text, migration notes, and checker mappings;
 - exit non-zero with file-specific reason codes.
 
 Reason-code examples:
@@ -256,6 +330,13 @@ legacy.bad_import
 canonical.imports_legacy
 legacy.unregistered_file
 docs.legacy_presented_as_canonical
+```
+
+Recommended checker output style:
+
+```text
+[legacy.non_shim_ast] apps/governed-api/ecology/routes.py: FunctionDef is not allowed in a legacy shim.
+[canonical.imports_legacy] apps/governed_api/ecology/routes.py: canonical module references legacy path.
 ```
 
 ---
@@ -426,7 +507,7 @@ git grep -n "apps/governed-api" -- . \
   ':!docs/adr/ADR-0002*' \
   ':!tools/ci/check_governed_api_path_policy.py'
 
-git grep -n "from apps\.governed-api\|import apps\.governed-api" -- '*.py'
+git grep -n -E "from apps[.]governed-api|import apps[.]governed-api" -- '*.py'
 ```
 
 Interpretation:
@@ -492,7 +573,9 @@ The following are not decided by this ADR and should be verified in the mounted 
 - whether a test wrapper exists for the checker;
 - whether CI workflow YAML already runs the checker;
 - whether docs still present `apps/governed-api/...` as canonical;
-- whether app route registration imports only canonical modules.
+- whether app route registration imports only canonical modules;
+- whether any downstream tooling still requires the legacy file path;
+- whether the repository has a documented ADR metadata convention that should wrap or supplement this file.
 
 ---
 
