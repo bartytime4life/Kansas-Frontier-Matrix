@@ -1,0 +1,11 @@
+{
+  "object_type": "PublicCorrectionIndex",
+  "schema_version": "v1",
+  "index_id": "idx-001",
+  "items": [
+    {
+      "event_id": "evt-corr-001",
+      "public_notice_path": "data/published/governance/corrections/evt-corr-001.json"
+    }
+  ]
+}

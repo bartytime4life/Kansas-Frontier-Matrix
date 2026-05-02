@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "object_type",
+    "schema_version",
+    "rollback_plan_id",
+    "requested_at",
+    "requested_by",
+    "target_release_id",
+    "target_public_path",
+    "source_promotion_registry_ref",
+    "prior_decision_log_ref",
+    "prior_run_receipt_ref",
+    "target_spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "RollbackPlan"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "rollback_plan_id": {
+      "type": "string"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_by": {
+      "type": "string"
+    },
+    "target_release_id": {
+      "type": "string"
+    },
+    "target_public_path": {
+      "type": "string"
+    },
+    "target_spec_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source_promotion_registry_ref": {
+      "type": "string"
+    },
+    "prior_decision_log_ref": {
+      "type": "string"
+    },
+    "prior_run_receipt_ref": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

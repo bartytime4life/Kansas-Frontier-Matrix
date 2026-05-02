@@ -97,3 +97,25 @@ jobs:
       - name: OPA promotion policy tests
         run: |
           if command -v opa >/dev/null 2>&1; then opa test policy/governance/promotion.rego policy/governance/promotion_test.rego -v; else echo "opa not found; skipping"; fi
+
+
+  correction-withdrawal-rollback-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install jsonschema pytest
+      - name: correction-withdrawal-rollback-governance
+        run: |
+          python -m json.tool schemas/governance/correction_notice.schema.json >/dev/null
+          python -m json.tool schemas/governance/withdrawal_notice.schema.json >/dev/null
+          python -m json.tool schemas/governance/rollback_plan.schema.json >/dev/null
+          python -m json.tool schemas/governance/rollback_execution_receipt.schema.json >/dev/null
+          python -m json.tool schemas/governance/promotion_correction_ledger.schema.json >/dev/null
+          python -m json.tool schemas/governance/public_correction_index.schema.json >/dev/null
+          for f in tests/fixtures/governance/corrections/valid/*.json; do python tools/validators/governance/validate_correction_governance.py "$f"; done
+          for f in tests/fixtures/governance/corrections/invalid/*.json; do ! python tools/validators/governance/validate_correction_governance.py "$f"; done
+          pytest -q tests/governance/test_promotion_rollback_planner.py tests/governance/test_correction_ledger.py tests/governance/test_correction_governance_validator.py
+          if command -v opa >/dev/null 2>&1; then opa test policy/governance/corrections.rego policy/governance/corrections_test.rego -v; else echo "opa not found; skipping"; fi
