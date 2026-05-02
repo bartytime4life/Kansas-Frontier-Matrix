@@ -8,6 +8,18 @@ on:
       - "tests/fixtures/promotion/**"
       - "tests/promotion/**"
       - "tools/validators/promotion/**"
+      - "tools/validators/governance/**"
+      - "tools/governance/**"
+      - "schemas/governance/**"
+      - "tests/fixtures/governance/promotion/**"
+      - "tests/governance/**"
+      - "policy/governance/**"
+      - "tools/validators/governance/**"
+      - "tools/governance/**"
+      - "schemas/governance/**"
+      - "tests/fixtures/governance/promotion/**"
+      - "tests/governance/**"
+      - "policy/governance/**"
       - ".github/workflows/promotion-gate.yml"
   push:
     branches: [main]
@@ -17,6 +29,12 @@ on:
       - "tests/fixtures/promotion/**"
       - "tests/promotion/**"
       - "tools/validators/promotion/**"
+      - "tools/validators/governance/**"
+      - "tools/governance/**"
+      - "schemas/governance/**"
+      - "tests/fixtures/governance/promotion/**"
+      - "tests/governance/**"
+      - "policy/governance/**"
       - ".github/workflows/promotion-gate.yml"
 
 jobs:
@@ -56,3 +74,26 @@ jobs:
           name: promotion-decisions
           path: artifacts/promotion-decisions/*.decision.json
           if-no-files-found: ignore
+
+
+  promotion-evidence-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install python deps
+        run: python -m pip install pytest jsonschema
+      - name: Schema sanity
+        run: |
+          python -m json.tool schemas/governance/promotion_evidence_registry.schema.json >/dev/null
+          python -m json.tool schemas/governance/promotion_replay_request.schema.json >/dev/null
+          python -m json.tool schemas/governance/promotion_replay_result.schema.json >/dev/null
+      - name: Validate fixtures
+        run: |
+          python tools/validators/governance/validate_promotion_registry.py tests/fixtures/governance/promotion/valid/minimal_registry.json
+          python tools/validators/governance/validate_promotion_registry.py tests/fixtures/governance/promotion/valid/full_registry.json
+          ! python tools/validators/governance/validate_promotion_registry.py tests/fixtures/governance/promotion/invalid/deny_decision.json
+      - name: Pytest replay slice
+        run: pytest -q tests/governance/test_promotion_registry_validator.py tests/governance/test_promotion_replay.py
+      - name: OPA promotion policy tests
+        run: |
+          if command -v opa >/dev/null 2>&1; then opa test policy/governance/promotion.rego policy/governance/promotion_test.rego -v; else echo "opa not found; skipping"; fi
