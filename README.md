@@ -593,3 +593,41 @@ stac/
 └── receipts/
     └── stac_registration_<spec_hash_12>.json
 ```
+
+## SoilGrids Layer 4 Promotion Gate
+
+CLI:
+
+```bash
+python soilgrids_promotion_gate.py \
+  --run-receipt raw/wcs/run_receipt.json \
+  --cog-receipt processed/cog/cog_receipt.json \
+  --stac-receipt stac/receipts/stac_registration.json \
+  --stac-item stac/item.json \
+  --stac-collection stac/collection.json \
+  --stac-catalog stac/catalog.json \
+  --policy-profile policies/soilgrids_promotion_policy.json \
+  --output-dir promotion/reports \
+  --decision-mode strict
+```
+
+Python:
+
+```python
+from soilgrids_promotion_gate import evaluate_promotion_gate
+
+decision, report, path = evaluate_promotion_gate(...)
+```
+
+Decisions:
+- `promote`: required checks pass.
+- `quarantine`: warning checks fail in strict mode.
+- `reject`: required checks fail or evidence malformed.
+
+Exit codes:
+- 0 promote
+- 10 quarantine
+- 20 reject
+- 30 malformed input
+- 40 internal error
+- 50 policy evaluation error
