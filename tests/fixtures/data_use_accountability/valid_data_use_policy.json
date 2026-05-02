@@ -1,0 +1,34 @@
+{
+  "schema": "DataUsePolicy.v1",
+  "allowed_actions": [
+    "read"
+  ],
+  "denied_actions": [
+    "redistribute_unapproved"
+  ],
+  "allowed_purposes": [
+    "research"
+  ],
+  "denied_purposes": [
+    "bad"
+  ],
+  "duties": [
+    {
+      "duty_id": "duty.attribution",
+      "required": true,
+      "evidence_field": "attribution_present"
+    },
+    {
+      "duty_id": "duty.citation",
+      "required": true,
+      "evidence_field": "citation_present"
+    }
+  ],
+  "prohibitions": [
+    {
+      "prohibition_id": "p1",
+      "action": "redistribute_unapproved",
+      "severity": "critical"
+    }
+  ]
+}
