@@ -1,0 +1,10 @@
+{
+  "acceptance_count": 1,
+  "blocker_count": 1,
+  "created_at": "2026-01-01T00:00:00Z",
+  "ledger_id": "69892077ff6566cb1024689ca2d49c9dd88d0106f95e0cd5e6234bc133f62bd4",
+  "manifest_id": "l22-valid",
+  "object_type": "AirNowSnapshotPreservationReviewFinalizationLedger",
+  "schema_version": "v1",
+  "validation_record_count": 1
+}

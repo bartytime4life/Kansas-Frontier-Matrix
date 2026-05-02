@@ -1,1 +1,5 @@
-{"readiness_status":"READY_FOR_MANUAL_INTERNAL_REVIEW"}
+{
+  "object_type": "x",
+  "schema_version": "v1",
+  "readiness_status": "READY_INTERNAL_ONLY"
+}
