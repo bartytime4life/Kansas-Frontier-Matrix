@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RuntimeResponseEnvelope.v1",
+  "type": "object",
+  "required": ["object_type","outcome","tile_ref","release_manifest_id","evidence_bundle_id","decision_ref","verification_status","policy_result","reason","spec_hash"],
+  "properties": {
+    "object_type": {"const": "RuntimeResponseEnvelope"},
+    "outcome": {"enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]},
+    "tile_ref": {"type":"object","required":["z","x","y"],"properties":{"z":{"type":"integer"},"x":{"type":"integer"},"y":{"type":"integer"}}},
+    "release_manifest_id": {"type":"string"},
+    "evidence_bundle_id": {"type":"string"},
+    "decision_ref": {"type":"string"},
+    "verification_status": {"enum":["verified","failed","unknown"]},
+    "policy_result": {"enum":["allow","deny"]},
+    "reason": {"type":"string"},
+    "spec_hash": {"type":"string"}
+  }
+}
