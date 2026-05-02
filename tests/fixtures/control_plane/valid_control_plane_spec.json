@@ -1,0 +1,32 @@
+{
+  "schema": "ControlPlaneSpec.v1",
+  "control_plane_id": "soilgrids-governed-control-plane",
+  "repository": {
+    "name": "Kansas-Frontier-Matrix",
+    "default_branch": "main",
+    "ci_provider": "github-actions"
+  },
+  "pipeline": {
+    "pipeline_spec_path": "pipeline_specs/soilgrids_pipeline_example.json",
+    "orchestrator_module": "soilgrids_pipeline_orchestrator.py",
+    "run_root": "pipeline_runs"
+  },
+  "profiles": {
+    "pull_request": {"mode": "ci-smoke", "network_profile": "offline-fixture", "mutation_profile": "local-only", "stage_range": "layer01:layer04"},
+    "main_branch": {"mode": "execute-local", "network_profile": "local-only", "mutation_profile": "local-only", "stage_range": "layer01:layer15"},
+    "release": {"mode": "certify", "require_reproducibility_report": true, "require_evidence_crate": true, "require_registry": true},
+    "scheduled_monitor": {"enabled": true, "cron": "17 6 * * *", "mode": "execute-local", "stage_range": "layer10:layer10", "network_profile": "controlled-remote", "allow_remote_network": false},
+    "remediation": {"enabled": true, "default_mode": "plan-only", "allow_execute_remote": false}
+  },
+  "workflow_policy": {
+    "permissions": {"contents": "read", "actions": "read"},
+    "forbid_pull_request_target": true,
+    "forbid_hardcoded_secrets": true,
+    "forbid_package_install": true,
+    "forbid_unpinned_actions": true,
+    "forbid_remote_mutation_by_default": true,
+    "require_timeout_minutes": true,
+    "require_concurrency_group": true
+  },
+  "exports": {"github_actions": true, "local_scripts": true, "operator_runbook": true, "release_checklist": true, "openlineage": true, "otel": true, "slsa": true}
+}
