@@ -4,20 +4,8 @@
   "domain": "soil",
   "restoration_type": "restore_active_delivery",
   "recommissioning_id": "soil-recommissioning-test",
-  "active_release_id": "soil-release-active",
   "prior_release_id": "soil-release-prior",
-  "public_message": "ok",
-  "evidence_refs": [
-    "e1"
-  ],
   "monitor_receipt_refs": [
     "m1"
-  ],
-  "safe_mode_exit_verification_ids": [
-    "s1"
-  ],
-  "steward_review": {
-    "required": true,
-    "decision": "approved"
-  }
+  ]
 }

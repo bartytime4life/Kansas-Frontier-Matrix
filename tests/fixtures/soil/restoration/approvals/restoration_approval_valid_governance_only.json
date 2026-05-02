@@ -1,1 +1,16 @@
-{"schema_version":"kfm.v1","object_type":"SoilDeliveryRestorationApprovalRequest","domain":"soil","restoration_type":"restore_active_delivery","recommissioning_id":"soil-recommissioning-test","active_release_id":"soil-release-test","prior_release_id":"soil-release-prior","public_message":"approved","evidence_refs":[],"monitor_receipt_refs":["m1"],"safe_mode_exit_verification_ids":[],"steward_review":{"required":true,"decision":"approved"}}
+{
+  "schema_version": "kfm.v1",
+  "object_type": "SoilDeliveryRestorationApprovalRequest",
+  "domain": "soil",
+  "restoration_type": "remain_governance_only",
+  "recommissioning_id": "soil-recommissioning-test",
+  "prior_release_id": "soil-release-prior",
+  "public_message": "ok",
+  "evidence_refs": [],
+  "monitor_receipt_refs": [],
+  "safe_mode_exit_verification_ids": [],
+  "steward_review": {
+    "required": true,
+    "decision": "approved"
+  }
+}
