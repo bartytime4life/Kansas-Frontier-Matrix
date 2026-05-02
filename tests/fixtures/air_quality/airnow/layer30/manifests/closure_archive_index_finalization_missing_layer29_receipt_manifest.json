@@ -55,7 +55,7 @@
     "closure_archive_index_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_caveat_register.json",
     "closure_archive_index_review_policy_attestation_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_policy_attestation.json",
     "closure_archive_index_review_readiness_summary_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_readiness_summary.json",
-    "closure_archive_index_review_receipt_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_receipt.json",
+    "closure_archive_index_review_receipt_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/missing_receipt.json",
     "closure_archive_index_review_validation_results_json": "tests/fixtures/air_quality/airnow/layer30/input/layer29/closure_archive_index_review_validation_results.json",
     "residual_closure_archive_index_blockers_jsonl": "tests/fixtures/air_quality/airnow/layer30/input/layer29/residual_closure_archive_index_blockers.jsonl"
   },

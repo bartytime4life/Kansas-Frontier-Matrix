@@ -110,6 +110,6 @@
   "tiles_allowed": false,
   "tiles_requested": false,
   "finalization_policy": {
-    "include_packet": true
+    "include_packet": false
   }
 }
