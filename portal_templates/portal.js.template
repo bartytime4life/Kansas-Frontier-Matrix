@@ -1,0 +1,1 @@
+(() => { fetch('portal_config.json').then(r=>r.json()).then(c=>{ document.getElementById('state').textContent = JSON.stringify(c,null,2); }); })();
