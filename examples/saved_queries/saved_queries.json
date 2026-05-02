@@ -1,0 +1,16 @@
+{
+  "schema": "RegistrySavedQueries.v1",
+  "queries": [
+    {
+      "description": "Returns latest monitor status summary.",
+      "expected_columns": ["status", "count"],
+      "max_rows_default": 100,
+      "parameters": [],
+      "query_id": "latest_remote_health",
+      "query_type": "sqlite",
+      "sparql": null,
+      "sql": "SELECT status, COUNT(*) AS count FROM monitor_snapshots GROUP BY status ORDER BY count DESC LIMIT 1",
+      "title": "Latest remote health"
+    }
+  ]
+}
