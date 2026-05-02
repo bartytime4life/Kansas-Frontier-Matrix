@@ -1,0 +1,13 @@
+{
+  "object_type": "RollbackPlan",
+  "schema_version": "v1",
+  "requested_at": "2026-04-03T00:00:00Z",
+  "requested_by": "steward-1",
+  "target_release_id": "rel-2026-02",
+  "target_public_path": "data/published/ecology/dry-run/layer_manifest.json",
+  "target_spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_promotion_registry_ref": "tests/fixtures/governance/promotion/valid/full_registry.json",
+  "prior_decision_log_ref": "data/receipts/decisions/decision.rel-2026-03.json",
+  "prior_run_receipt_ref": "data/receipts/air/run_receipt.example.json",
+  "rollback_plan_id": "01bb5ba5c72ae9ee"
+}

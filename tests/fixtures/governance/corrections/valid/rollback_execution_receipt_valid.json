@@ -1,0 +1,10 @@
+{
+  "object_type": "RollbackExecutionReceipt",
+  "schema_version": "v1",
+  "execution_id": "rbx-001",
+  "rollback_plan_id": "01bb5ba5c72ae9ee",
+  "executed_at": "2026-04-03T01:00:00Z",
+  "status": "simulated",
+  "prior_release_id": "rel-2026-03",
+  "rolled_back_to_release_id": "rel-2026-02"
+}
