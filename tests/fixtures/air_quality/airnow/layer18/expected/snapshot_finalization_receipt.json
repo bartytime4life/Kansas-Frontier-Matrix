@@ -1,0 +1,22 @@
+{
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finalization_actions_executed": false,
+  "finite_outcome": "ANSWER",
+  "manifest_id": "kfm-airnow-layer18-valid_manifest",
+  "object_type": "AirNowSnapshotFinalizationReceipt",
+  "output_hashes": {
+    "snapshot_finalization_packet_hash": "9a25a22d936b809cebaac632c737345c7822f38e04550faf767e11ad3cb819d8"
+  },
+  "public_release_allowed": false,
+  "schema_version": "v1",
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "SNAPSHOT_FINALIZATION_COMPLETE_INTERNAL_ONLY",
+  "workflow_runner": "airnow_layer18_snapshot_finalization"
+}

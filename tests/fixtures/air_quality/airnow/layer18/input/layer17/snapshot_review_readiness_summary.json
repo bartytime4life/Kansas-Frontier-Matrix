@@ -1,4 +1,3 @@
 {
-  "object_type": "AirNowSnapshotReviewReadinessSummary",
-  "readiness_status": "READY"
+  "readiness": "INTERNAL_ONLY"
 }

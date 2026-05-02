@@ -1,9 +1,9 @@
 {
   "caveats": [
-    {
-      "caveat_id": "c1",
-      "summary": "preliminary data"
-    }
-  ],
-  "object_type": "AirNowSnapshotReviewCaveatRegister"
+    "AIRNOW_PRELIMINARY_DATA",
+    "AIRNOW_NOT_AQS_REGULATORY_DATA",
+    "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP",
+    "SNAPSHOT_FINALIZATION_NOT_EXPORT_EXECUTION",
+    "SNAPSHOT_FINALIZATION_NOT_PUBLICATION"
+  ]
 }
