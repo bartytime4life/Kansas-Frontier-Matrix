@@ -4,30 +4,35 @@ title: KFM Architecture Decision Records
 type: standard
 version: v1
 status: draft
-owners: TODO: confirm architecture/documentation owners
+owners: OWNER_TBD_NEEDS_VERIFICATION
 created: 2026-04-27
-updated: 2026-04-27
-policy_label: TODO: confirm public/restricted label
-related: [docs/README.md, docs/registers/AUTHORITY_LADDER.md, docs/registers/SOURCE_LEDGER.md, docs/registers/VERIFICATION_BACKLOG.md, schemas/contracts/v1/]
-tags: [kfm, adr, documentation-control-plane, governance, architecture]
-notes: [Generated as repo-ready draft for docs/adr/README.md; related paths and owners need mounted-repo verification]
+updated: 2026-05-02
+policy_label: NEEDS VERIFICATION: public/restricted label
+related: [docs/README.md, docs/adr/ADR-TEMPLATE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0002-governed-api-path-canonicalization.md, contracts/README.md, schemas/README.md, policy/README.md]
+tags: [kfm, adr, documentation-control-plane, governance, architecture, decisions]
+notes: [Revised from attached docs/adr/README.md draft; public GitHub snapshot was used for directory inventory; active checkout, owners, policy label, CI wiring, platform settings, and runtime evidence remain NEEDS VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Architecture Decision Records
 
-Governed decisions that explain why KFM changes its architecture, policy, schema homes, source authority, and trust boundaries.
+Governed decision records that preserve why KFM changes architecture, policy, schema homes, source authority, publication gates, and trust boundaries.
 
 > [!IMPORTANT]
-> **Status:** experimental · **Owners:** TODO: confirm architecture/documentation owners · **Path:** `docs/adr/README.md`  
-> **Role:** directory README, ADR intake guide, and decision-record quality gate for Kansas Frontier Matrix.
+> **Status:** `experimental` README surface / `draft` content  
+> **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
+> **Path:** `docs/adr/README.md`  
+> **Role:** directory README, ADR index, decision-intake guide, and quality gate for Kansas Frontier Matrix.
 >
 > ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
-> ![Owners: TODO](https://img.shields.io/badge/owners-TODO-lightgrey)
-> ![Truth posture: evidence first](https://img.shields.io/badge/truth%20posture-evidence--first-blue)
+> ![Doc: draft](https://img.shields.io/badge/doc-draft-lightgrey)
+> ![Owners: needs verification](https://img.shields.io/badge/owners-needs%20verification-yellow)
+> ![Truth: evidence first](https://img.shields.io/badge/truth-evidence--first-blue)
 > ![Decision mode: governed](https://img.shields.io/badge/decisions-governed-blueviolet)
-> ![Repo fit: needs verification](https://img.shields.io/badge/repo%20fit-needs%20verification-yellow)
+> ![Runtime proof: unknown](https://img.shields.io/badge/runtime%20proof-unknown-lightgrey)
 >
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Decision flow](#decision-flow) · [ADR gates](#adr-gates) · [Template](#appendix-a--adr-template)
+> **Evidence mode for this revision:** `ATTACHED_MARKDOWN_REVISED` / `PUBLIC_GITHUB_SNAPSHOT_CHECKED` / `NO_LOCAL_MOUNTED_REPO` / `NO_RUNTIME_OR_PLATFORM_EVIDENCE`
+>
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory inventory](#directory-inventory) · [Quickstart](#quickstart) · [Decision flow](#decision-flow) · [ADR inventory](#adr-inventory) · [ADR gates](#adr-gates) · [Authority posture](#source-authority-posture) · [Maintenance](#maintenance) · [FAQ](#faq) · [Appendix](#appendix-a--maintainer-review-checklist)
 
 ---
 
@@ -35,17 +40,18 @@ Governed decisions that explain why KFM changes its architecture, policy, schema
 
 `docs/adr/` is the home for **Architecture Decision Records** that preserve consequential KFM decisions after review.
 
-An ADR belongs here when the decision changes, clarifies, or constrains one of KFM’s trust-bearing boundaries:
+An ADR belongs here when a decision changes, clarifies, constrains, or supersedes one of KFM’s trust-bearing boundaries:
 
-- source authority, canon, lineage, or exploratory intake
-- schema, contract, policy, fixture, validator, or proof-object homes
-- governed API, public UI, MapLibre, Cesium, Focus Mode, or AI boundaries
-- publication, promotion, correction, rollback, or withdrawal behavior
-- rights, sensitivity, redaction, generalization, or public-release posture
-- domain-lane architecture where the decision affects shared governance rules
+- source authority, canon, lineage, exploratory intake, or external-source activation
+- schema, contract, policy, fixture, validator, proof-object, receipt, or release-object homes
+- governed API, public UI, MapLibre, Cesium, Focus Mode, model-runtime, or AI boundaries
+- publication, promotion, correction, rollback, withdrawal, or supersession behavior
+- rights, sensitivity, exact-location exposure, redaction, generalization, embargo, or public-release posture
+- domain-lane architecture where a lane decision affects shared governance rules
+- local exposure, reverse proxy, VPN, trusted third-party access, or security posture
 
 > [!NOTE]
-> ADRs are not implementation proof. An accepted ADR records a reviewed decision and its consequences. It does not prove that routes, workflows, schemas, tests, dashboards, deployment settings, or runtime behavior already exist.
+> ADRs are not implementation proof. An accepted ADR records a reviewed decision and its consequences. It does not, by itself, prove that routes, workflows, schemas, tests, dashboards, deployment settings, branch protections, platform rules, emitted proof objects, or runtime behavior already exist.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -55,38 +61,39 @@ An ADR belongs here when the decision changes, clarifies, or constrains one of K
 
 This README is both a **directory landing page** and a **governance checkpoint** for decision records.
 
-| Direction | Link or path | Role | Status |
+| Direction | Link or path | Role | Current status |
 |---|---|---|---|
-| Current directory | `docs/adr/` | ADR index and templates | NEEDS VERIFICATION |
-| Upstream docs landing | [docs/README.md](../README.md) | Canonical documentation entry point | NEEDS VERIFICATION |
-| Upstream authority register | [docs/registers/AUTHORITY_LADDER.md](../registers/AUTHORITY_LADDER.md) | Source hierarchy and authority rules | NEEDS VERIFICATION |
-| Upstream source ledger | [docs/registers/SOURCE_LEDGER.md](../registers/SOURCE_LEDGER.md) | Source status and evidence continuity | NEEDS VERIFICATION |
-| Upstream verification backlog | [docs/registers/VERIFICATION_BACKLOG.md](../registers/VERIFICATION_BACKLOG.md) | Open proof gaps created by decisions | NEEDS VERIFICATION |
-| Downstream schemas | [schemas/contracts/v1/](../../schemas/contracts/v1/) | Machine-checkable shapes affected by ADRs | NEEDS VERIFICATION |
-| Downstream policy | [policy/](../../policy/) | Release/runtime admissibility and denial logic | NEEDS VERIFICATION |
-| Downstream fixtures | [tests/fixtures/](../../tests/fixtures/) | Valid/invalid examples required by decisions | NEEDS VERIFICATION |
-| Downstream receipts/proofs | [data/receipts/](../../data/receipts/) · [data/proofs/](../../data/proofs/) | Emitted process memory and validation proof | NEEDS VERIFICATION |
+| Current directory | `docs/adr/` | ADR index, decision template routing, and supersession surface | `CONFIRMED` in public GitHub snapshot / `NEEDS VERIFICATION` in active checkout |
+| ADR template | [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | Canonical local template surface for new ADRs | `CONFIRMED` file presence in public snapshot / content review still recommended |
+| Documentation hub | [`../README.md`](../README.md) | Documentation control-plane landing page | `CONFIRMED` public snapshot / active checkout recheck required |
+| Contracts lane | [`../../contracts/README.md`](../../contracts/README.md) | Human-facing object meaning, compatibility, and contract semantics | `CONFIRMED` public snapshot / schema-home authority remains guarded |
+| Schemas lane | [`../../schemas/README.md`](../../schemas/README.md) | Parent schema boundary and machine-shape routing | `CONFIRMED` public snapshot / canonical authority still requires ADR acceptance evidence |
+| Policy lane | [`../../policy/README.md`](../../policy/README.md) | Decision logic for rights, sensitivity, runtime trust, correction, and release admissibility | `CONFIRMED` public snapshot / enforcement proof requires tests and platform evidence |
+| Tests and fixtures | [`../../tests/`](../../tests/) | Executable verification and fixture evidence | `CONFIRMED` root path in public snapshot / detailed fixture status not reviewed here |
+| Receipts and proofs | [`../../data/receipts/`](../../data/receipts/) · [`../../data/proofs/`](../../data/proofs/) | Process memory and proof-bearing object families | `CONFIRMED` root lifecycle lanes in public snapshot / emitted artifact status not reviewed here |
+| Release surface | [`../../release/`](../../release/) | Release bundles, manifests, correction, withdrawal, and rollback references | `CONFIRMED` root path in public snapshot / release maturity not reviewed here |
 
 > [!WARNING]
-> The links above are repo-relative targets expected by current KFM doctrine and planning materials. Verify them in the mounted repository before publishing this README as `published`.
+> A public GitHub directory listing proves file/path presence for that public snapshot only. It does not prove the active branch under review, local checkout state, hosted branch protection, required checks, secrets, deployment approvals, CI execution, emitted proof objects, dashboards, logs, or runtime behavior.
 
 [Back to top](#kfm-architecture-decision-records)
 
 ---
 
-## Inputs
+## Accepted inputs
 
 Use `docs/adr/` for decisions with durable architectural consequences.
 
 | Accepted input | What belongs here | Minimum evidence |
 |---|---|---|
-| Schema-home decisions | Choosing between `contracts/`, `schemas/contracts/v1/`, or another canonical machine-contract home | Current repo tree, adjacent README files, affected schema users |
-| Source-authority decisions | Deciding how canon, lineage, exploratory packets, and current repo evidence relate | Source ledger, authority ladder, affected downstream docs |
-| Boundary decisions | Renderer, UI, API, AI, policy, review, promotion, or publication boundaries | Architecture docs, contract impacts, policy impacts, rollback path |
-| Security/sensitivity decisions | Redaction, generalization, private access, exact-location handling, local exposure posture | Rights/sensitivity evidence, policy obligations, fail-closed behavior |
-| Domain-lane decisions | Shared lane decisions that affect proof objects, source roles, public surfaces, or publication gates | Domain docs, fixture plan, validation plan, steward review needs |
+| Schema-home decisions | Choosing the canonical machine-contract home and defining how `contracts/`, `schemas/`, validators, fixtures, and docs relate | Current repo tree, adjacent READMEs, affected schema consumers, validation plan, and rollback path |
+| Source-authority decisions | Deciding how canon, lineage, exploratory packets, repo evidence, generated reports, and external standards relate | Source ledger, authority ladder, affected downstream docs, and explicit promotion criteria |
+| Boundary decisions | Renderer, UI, API, AI, policy, review, promotion, release, or publication boundaries | Architecture docs, contract impacts, policy impacts, tests, and rollback path |
+| Security and sensitivity decisions | Redaction, generalization, restricted access, exact-location handling, trusted-party exposure, local network exposure, or reverse-proxy posture | Rights/sensitivity evidence, policy obligations, steward/security review, and fail-closed behavior |
+| Domain-lane decisions | Shared lane decisions that affect proof objects, source roles, public surfaces, cross-domain joins, or publication gates | Domain docs, fixture plan, validation plan, source-role review, and steward review needs |
+| Correction and supersession decisions | Replacing, withdrawing, correcting, or rolling back a prior governing decision | Successor link, correction reason, downstream impact, validation, and no-loss lineage handling |
 
-Every ADR must state whether its claims are **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
+Every ADR must use the narrowest truthful labels where confidence matters: `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`, `CONFLICTED`, `LINEAGE`, or `SUPERSEDED`.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -98,35 +105,48 @@ Do not put ordinary implementation notes here.
 
 | Does not belong in `docs/adr/` | Put it here instead | Reason |
 |---|---|---|
-| Source inventories without a decision | `docs/registers/` or source registry docs | A ledger is not automatically an ADR |
-| Exploratory idea packets | `docs/intake/` or idea index | Ideas need promotion before becoming decision law |
-| JSON Schema files | `schemas/contracts/v1/` or repo-confirmed schema home | Schemas are executable shape, not decision rationale |
-| Policy rules | `policy/` | Policy is enforced separately from ADR prose |
-| Test fixtures | `tests/fixtures/` or repo-confirmed fixture home | Fixtures prove behavior; ADRs explain decisions |
-| Runtime logs, receipts, proof packs | `data/receipts/`, `data/proofs/`, or release artifacts | Emitted artifacts are evidence, not decisions |
+| Source inventories without a decision | `docs/registers/`, `data/registry/`, or source registry docs after path verification | A ledger is not automatically an ADR |
+| Exploratory idea packets | Verified idea-intake path, backlog, or source-intake register | Ideas need promotion before becoming decision law |
+| JSON Schema files | `schemas/contracts/v1/` or the repo-confirmed canonical schema home | Schemas are executable shape, not decision rationale |
+| Human-facing contract explanations | `contracts/` or adjacent contract docs | Contracts explain meaning; ADRs record why authority changed |
+| Policy rules | `policy/` plus policy tests | Policy is enforced separately from ADR prose |
+| Test fixtures | `tests/fixtures/`, `tests/contracts/`, or repo-confirmed fixture home | Fixtures prove behavior; ADRs explain decisions |
+| Runtime logs, receipts, proof packs | `data/receipts/`, `data/proofs/`, observability stores, or release artifacts | Emitted artifacts are evidence, not decisions |
 | Generic architecture essays | `docs/architecture/` | ADRs should record a decision, alternatives, consequences, and rollback |
 | Domain runbooks | `docs/runbooks/` | Runbooks guide operation; ADRs preserve why a path was chosen |
+| Free-form model output or private reasoning | Governed AI receipts, reviewed public-safe summaries, or no storage | AI is interpretive and evidence-subordinate |
+| Emergency or life-safety instructions | Official source guidance and official alerting systems | KFM must not convert ADR prose into operational emergency authority |
 
 [Back to top](#kfm-architecture-decision-records)
 
 ---
 
-## Directory tree
+## Directory inventory
 
-Actual contents are **NEEDS VERIFICATION** until the mounted repo is inspected.
+The public GitHub snapshot inspected for this revision shows the following `docs/adr/` files. Recheck the active checkout before merging edits.
 
 ```text
 docs/adr/
 ├── README.md
-├── ADR-0001-schema-home.md                  # PROPOSED / NEEDS VERIFICATION
-├── ADR-0002-source-ledger-authority.md      # PROPOSED / NEEDS VERIFICATION
-├── ADR-0003-policy-release-boundary.md      # OPTIONAL CANDIDATE
-├── ADR-0004-renderer-trust-boundary.md      # OPTIONAL CANDIDATE
-└── _archive/                                # OPTIONAL: superseded or withdrawn ADRs, if repo convention allows
+├── ADR-TEMPLATE.md
+├── ADR-0001-schema-home.md
+├── ADR-0002-governed-api-path-canonicalization.md
+├── ADR-0003-source-ledger-authority.md
+├── ADR-0004-evidencebundle-contract.md
+├── ADR-0005-promotion-gate.md
+├── ADR-0006-maplibre-layer-manifest.md
+├── ADR-0007-governed-ai-runtime-envelope.md
+├── ADR-0008-domain-lane-template.md
+├── ADR-0009-sensitive-location-policy.md
+├── ADR-0010-local-exposure-security.md
+├── ADR-0011-catalog-proof-release-separation.md
+├── ADR-0241-policy-obligation-engine-and-release-gate.md
+├── ADR-0427-consent-vc-and-revocation-delta.md
+└── ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md
 ```
 
 > [!TIP]
-> Keep accepted, superseded, withdrawn, and rejected ADRs visible. KFM values correction lineage; deletion should be rare and justified.
+> Keep accepted, superseded, withdrawn, rejected, deprecated, and corrected ADRs visible. KFM values correction lineage; deletion should be rare and justified by safety, privacy, rights, or security needs.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -134,19 +154,28 @@ docs/adr/
 
 ## Quickstart
 
-1. **Confirm the decision is ADR-worthy.** Use an ADR only when the decision affects architecture, governance, source authority, policy, publication, sensitivity, AI, UI trust, or shared domain-lane behavior.
+1. **Confirm the decision is ADR-worthy.** Use an ADR only when the decision affects architecture, governance, source authority, policy, publication, sensitivity, AI, UI trust, release, rollback, or shared domain-lane behavior.
 2. **Search existing canon first.** Do not create a new ADR if an existing accepted ADR or canonical architecture doc already answers the question.
-3. **Create a draft ADR.** Use the template in [Appendix A](#appendix-a--adr-template).
-4. **Label evidence precisely.** Separate current repo evidence from doctrine, lineage, exploratory pressure, and proposed implementation.
-5. **List downstream effects.** Name affected docs, schemas, contracts, policy files, fixtures, validators, release objects, UI/API surfaces, and rollback targets.
-6. **Review before acceptance.** Accepted ADRs should have a reviewer, a rollback or supersession path, and a verification plan.
+3. **Use the local template.** Start from [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md), not an improvised parallel template.
+4. **Label evidence precisely.** Separate current repo evidence from doctrine, lineage, exploratory pressure, public GitHub snapshot evidence, and proposed implementation.
+5. **List downstream effects.** Name affected docs, schemas, contracts, policy files, fixtures, validators, release objects, UI/API surfaces, receipts, proofs, and rollback targets.
+6. **Review before acceptance.** Accepted ADRs should have a reviewer, validation evidence, a rollback or supersession path, and linked follow-up work where proof is incomplete.
+7. **Update this README when the inventory changes.** The directory map should not lag behind actual ADR files.
 
-Example filenames:
+Read-only inspection commands from the repository root:
 
-```text
-docs/adr/ADR-0001-schema-home.md
-docs/adr/ADR-0002-source-ledger-authority.md
+```bash
+git status --short
+git branch --show-current
+git rev-parse --show-toplevel
+
+find docs/adr -maxdepth 1 -type f -name '*.md' | sort
+sed -n '1,120p' docs/adr/README.md
+sed -n '1,160p' docs/adr/ADR-TEMPLATE.md
 ```
+
+> [!CAUTION]
+> These commands prove only local checkout state. Hosted GitHub branch protection, required checks, Actions permissions, environment approvals, secrets, deployment settings, and runtime behavior need separate platform or runtime evidence.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -160,23 +189,27 @@ Create or update an ADR when a change would otherwise let maintainers disagree a
 
 | Trigger | ADR required? | Why |
 |---|---:|---|
-| Choosing canonical schema location | Yes | Prevents `contracts/` vs `schemas/` drift |
+| Choosing or changing canonical schema location | Yes | Prevents `contracts/` vs `schemas/` drift |
 | Introducing a source-authority rule | Yes | Prevents exploratory material from becoming accidental canon |
-| Adding a new public release pathway | Yes | Publication is a governed state transition |
-| Changing renderer, shell, or Focus Mode authority | Yes | UI and AI are downstream of evidence, policy, and release state |
-| Adding a live source connector | Usually | Source rights, role, cadence, and public-release rules matter |
+| Adding or changing a public release pathway | Yes | Publication is a governed state transition |
+| Changing governed API implementation path | Yes | Public clients must not split across trust-boundary implementations |
+| Changing renderer, shell, Evidence Drawer, or Focus Mode authority | Yes | UI and AI are downstream of evidence, policy, review, and release state |
+| Adding a live source connector | Usually | Source role, rights, cadence, terms, sensitivity, and release rules matter |
+| Defining sensitive-location release behavior | Yes | Archaeology, ecology, cultural, infrastructure, and private contexts fail closed |
 | Renaming a local helper script | Usually no | Not durable architecture unless it changes gates or authority |
 | Creating a one-off fixture | Usually no | Fixtures support a decision; they are not the decision itself |
+| Changing branch protection or workflow enforcement claims | Usually | Platform enforcement should be reviewable and not implied by YAML alone |
 
 ### Status values
 
 | Status | Meaning | Required handling |
 |---|---|---|
 | `proposed` | Draft decision under review | May guide discussion, not implementation law |
-| `accepted` | Current governing decision | Must be linked from affected docs or registers |
-| `superseded` | Replaced by a newer ADR | Keep visible; link successor |
-| `withdrawn` | Retired without replacement | Keep reason and safe-use note |
+| `accepted` | Current governing decision for stated scope | Must be linked from affected docs or registers |
 | `rejected` | Considered and declined | Preserve rationale when useful |
+| `superseded` | Replaced by a newer ADR or stronger evidence | Keep visible; link successor |
+| `withdrawn` | Retired without replacement or removed before governing | Keep reason and safe-use note |
+| `deprecated` | Historical decision should not be extended without a successor | Preserve lineage and migration notes |
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -186,42 +219,58 @@ Create or update an ADR when a change would otherwise let maintainers disagree a
 
 ```mermaid
 flowchart TD
-    A[Trigger: architecture, schema, source, policy, UI, AI, or publication question]
-    B{Existing canon answers it?}
-    C[Use existing canon; no new ADR]
-    D[Draft ADR with evidence labels, alternatives, impacts, and rollback]
-    E[Review against KFM invariants and affected object families]
-    F{Decision outcome}
-    G[Accepted ADR updates docs, registers, contracts, schemas, policy, tests, or backlog]
-    H[Rejected or withdrawn ADR retained as lineage]
-    I[Verification backlog tracks remaining proof gaps]
-    J[Supersession path links future replacement ADR]
+    A[Architecture, schema, source, policy, UI, AI, release, or exposure question]
+    B[Inventory evidence]
+    C{Existing accepted ADR or canon answers it?}
+    D[Use existing canon; update links or backlog only]
+    E[Draft or amend ADR from ADR-TEMPLATE.md]
+    F[Label evidence, options, impacts, policy risk, validation, and rollback]
+    G{Review outcome}
+    H[Accepted ADR updates affected docs, contracts, schemas, policy, tests, tooling, release, or backlog]
+    I[Rejected / withdrawn ADR retained as lineage]
+    J[Verification backlog tracks proof gaps]
+    K[Supersession path links future replacement]
 
     A --> B
-    B -- Yes --> C
-    B -- No --> D
-    D --> E
+    B --> C
+    C -- Yes --> D
+    C -- No --> E
     E --> F
-    F -- Accepted --> G
-    F -- Rejected or withdrawn --> H
-    G --> I
-    G --> J
+    F --> G
+    G -- Accepted --> H
+    G -- Rejected or withdrawn --> I
+    H --> J
+    H --> K
 ```
 
 [Back to top](#kfm-architecture-decision-records)
 
 ---
 
-## Candidate ADR registry
+## ADR inventory
 
-This table is a starter register, not proof that the files exist.
+This inventory reflects file presence in the public GitHub snapshot checked during this revision. It does not replace reading each ADR before relying on its status.
 
-| ADR | Decision area | Why it matters | Current posture |
-|---|---|---|---|
-| `ADR-0001-schema-home.md` | Schema and contract authority | KFM planning repeatedly flags schema-home ambiguity. A first ADR should decide how `contracts/`, `schemas/`, fixtures, validators, and docs relate. | PROPOSED / NEEDS VERIFICATION |
-| `ADR-0002-source-ledger-authority.md` | Source authority and source ledger | KFM needs visible separation among canon, lineage, exploratory material, repo evidence, emitted artifacts, and external standards. | PROPOSED / NEEDS VERIFICATION |
-| `ADR-0003-policy-release-boundary.md` | Promotion, proof, and release | Public release should remain a governed transition with receipts, proof objects, review state, and rollback. | OPTIONAL CANDIDATE |
-| `ADR-0004-renderer-trust-boundary.md` | MapLibre/Cesium/UI trust boundary | Renderer and shell decisions must preserve the trust membrane and keep UI/AI downstream of evidence. | OPTIONAL CANDIDATE |
+| ADR file | Decision area | Status signal for this README |
+|---|---|---|
+| [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Canonical schema home for machine contracts | File present; content reviewed as `proposed` / draft; acceptance evidence still required |
+| [`ADR-0002-governed-api-path-canonicalization.md`](./ADR-0002-governed-api-path-canonicalization.md) | Governed API path canonicalization | File present; content reviewed as `accepted`; implementation/CI proof still requires verification |
+| [`ADR-0003-source-ledger-authority.md`](./ADR-0003-source-ledger-authority.md) | Source ledger and authority posture | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0004-evidencebundle-contract.md`](./ADR-0004-evidencebundle-contract.md) | EvidenceBundle contract | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0005-promotion-gate.md`](./ADR-0005-promotion-gate.md) | Promotion gate and release transition | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0006-maplibre-layer-manifest.md`](./ADR-0006-maplibre-layer-manifest.md) | MapLibre layer manifest | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0007-governed-ai-runtime-envelope.md`](./ADR-0007-governed-ai-runtime-envelope.md) | Governed AI runtime envelope | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0008-domain-lane-template.md`](./ADR-0008-domain-lane-template.md) | Domain-lane template | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0009-sensitive-location-policy.md`](./ADR-0009-sensitive-location-policy.md) | Sensitive-location policy | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0010-local-exposure-security.md`](./ADR-0010-local-exposure-security.md) | Local exposure and security | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) | Catalog/proof/release separation | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0241-policy-obligation-engine-and-release-gate.md`](./ADR-0241-policy-obligation-engine-and-release-gate.md) | Policy obligation engine and release gate | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0427-consent-vc-and-revocation-delta.md`](./ADR-0427-consent-vc-and-revocation-delta.md) | Consent, verifiable credentials, and revocation delta | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md`](./ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md) | PROV/STAC/DCAT catalog mapping | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | ADR authoring template | File present; use for new ADRs unless superseded by an accepted template decision |
+
+> [!IMPORTANT]
+> Do not infer acceptance from filename, numbering, or presence. Read the ADR status, evidence basis, validation notes, and supersession fields before treating it as governing.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -233,14 +282,15 @@ An ADR is not ready for acceptance until it passes these checks.
 
 - [ ] Has one clear decision, not a bundle of unrelated preferences.
 - [ ] Uses KFM truth labels where confidence materially matters.
-- [ ] Identifies evidence basis and distinguishes doctrine from implementation proof.
-- [ ] Names affected object families such as `SourceDescriptor`, `EvidenceBundle`, `EvidenceRef`, `PolicyDecision`, `RuntimeResponseEnvelope`, `RunReceipt`, `LayerManifest`, `ReleaseManifest`, `CorrectionNotice`, or `ReviewRecord` when applicable.
-- [ ] Lists affected docs, schemas, contracts, policy, fixtures, validators, workflows, UI/API surfaces, and release artifacts.
-- [ ] States security, rights, sensitivity, or public-release consequences.
-- [ ] Defines validation needed before implementation or publication.
-- [ ] Defines rollback, withdrawal, or supersession path.
-- [ ] Does not claim route names, DTOs, workflows, tests, dashboards, deployment behavior, or emitted proof objects unless direct repo/runtime evidence supports them.
+- [ ] Identifies evidence basis and distinguishes doctrine, repo evidence, public snapshot evidence, lineage, exploratory input, external standards, and proposed implementation.
+- [ ] Names affected object families such as `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `PolicyDecision`, `RuntimeResponseEnvelope`, `DecisionEnvelope`, `RunReceipt`, `AIReceipt`, `LayerManifest`, `ReleaseManifest`, `CatalogMatrix`, `CorrectionNotice`, `WithdrawalNotice`, `RollbackReference`, or `ReviewRecord` when applicable.
+- [ ] Lists affected docs, contracts, schemas, policy, fixtures, validators, workflows, UI/API surfaces, receipts, proofs, release objects, and rollback records.
+- [ ] States security, rights, sensitivity, source-role, exact-location, or public-release consequences.
+- [ ] Defines validation needed before implementation, acceptance, or publication.
+- [ ] Defines rollback, withdrawal, correction, or supersession path.
+- [ ] Does not claim route names, DTOs, workflows, CI enforcement, branch protection, tests, dashboards, deployment behavior, or emitted proof objects unless direct evidence supports them.
 - [ ] Adds follow-up items to the verification backlog when proof is missing.
+- [ ] Updates this README and any affected index/register after merge.
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -248,20 +298,61 @@ An ADR is not ready for acceptance until it passes these checks.
 
 ## Source authority posture
 
-KFM ADRs follow this authority order:
+KFM ADRs follow this authority order when claims conflict.
 
 | Rank | Source class | How ADRs should use it |
 |---:|---|---|
-| 1 | Mounted repo evidence | Current files, tests, workflows, configs, schemas, logs, emitted artifacts, and runtime traces outrank prose for implementation claims |
-| 2 | Current KFM doctrine and canonical architecture | Governs meaning, invariants, trust posture, and decision standards |
-| 3 | Existing normative Markdown | Controls local conventions when directly inspected |
-| 4 | Domain-lane and subsystem reports | Supports lane-specific burdens and shared object-family pressure |
-| 5 | New Ideas and exploratory packets | Design pressure only until promoted through source intake, tests, review, and release state |
-| 6 | External official standards and source docs | Used for version-sensitive facts, standards, and source-system behavior |
-| 7 | General references | Conceptual support only; never project authority by itself |
+| 1 | Active mounted checkout and runtime evidence | Current files, tests, workflows, configs, schemas, logs, dashboards, emitted artifacts, branch state, and runtime traces outrank prose for implementation claims |
+| 2 | Accepted ADRs and current repo-native standards | Governing decisions and local conventions control their stated scope |
+| 3 | Current public GitHub snapshot | Useful for public-main file/path presence; still recheck active branch, platform settings, and runtime behavior |
+| 4 | Current KFM doctrine and canonical architecture docs | Governs meaning, invariants, trust posture, and decision standards |
+| 5 | Existing normative Markdown | Controls local conventions when directly inspected and not contradicted by stronger evidence |
+| 6 | Domain-lane and subsystem reports | Supports lane-specific burdens and shared object-family pressure |
+| 7 | New Ideas, prior PDFs, scaffold reports, and exploratory packets | Design pressure or lineage only until promoted through source intake, tests, review, and release state |
+| 8 | External official standards and source docs | Used for version-sensitive facts, standards, and source-system behavior |
+| 9 | General references | Conceptual support only; never project authority by itself |
 
 > [!CAUTION]
-> Repetition is not authority. A decision repeated in multiple PDFs is still not implementation proof unless a current repo file, test, workflow, emitted artifact, or runtime trace supports it.
+> Repetition is not authority. A decision repeated in multiple PDFs is still not implementation proof unless a current repo file, test, workflow, emitted artifact, platform setting, or runtime trace supports it.
+
+[Back to top](#kfm-architecture-decision-records)
+
+---
+
+## Maintenance
+
+Keep this README synchronized with the actual ADR lane.
+
+### Definition of done for this README
+
+- [ ] KFM Meta Block v2 is present and synchronized with title, status, owners, related links, tags, and notes.
+- [ ] Top impact block includes status, owners, path, evidence mode, badges, and quick links.
+- [ ] Repo fit lists confirmed or clearly bounded upstream/downstream surfaces.
+- [ ] Accepted inputs and exclusions are present.
+- [ ] Directory inventory matches the current ADR directory.
+- [ ] ADR inventory distinguishes file presence from acceptance.
+- [ ] Decision flow diagram is still accurate.
+- [ ] ADR gates match current template and governance expectations.
+- [ ] Source authority posture does not overstate implementation evidence.
+- [ ] Long appendix material is folded under `<details>`.
+- [ ] Link health is checked from `docs/adr/README.md`.
+- [ ] Owner and policy label placeholders are resolved or remain explicitly searchable.
+
+### Safe update loop
+
+```bash
+# Inspect current ADR files.
+find docs/adr -maxdepth 1 -type f -name '*.md' | sort
+
+# Check headings and likely status lines.
+for file in docs/adr/*.md; do
+  printf '\n--- %s ---\n' "$file"
+  sed -n '1,35p' "$file"
+done
+
+# Search for overclaims before merge.
+grep -RInE 'production|deployed|required checks|branch protection|runtime behavior|dashboard|emitted proof|CONFIRMED' docs/adr/*.md
+```
 
 [Back to top](#kfm-architecture-decision-records)
 
@@ -275,147 +366,46 @@ No. Architecture docs describe the system. ADRs record specific decisions, alter
 
 ### Can an ADR approve public release?
 
-No. An ADR can define or change a release rule. Actual publication still needs policy checks, evidence support, review state, receipts, proof objects, release manifests, and rollback readiness.
+No. An ADR can define or change a release rule. Actual publication still needs policy checks, evidence support, source-role support, sensitivity handling, review state, receipts, proof objects, release manifests, correction path, and rollback readiness.
 
 ### Can an ADR cite exploratory packets?
 
-Yes, but only as exploratory design pressure. The ADR must say what evidence promotes the idea into a decision and what remains unverified.
+Yes, but only as exploratory design pressure or lineage. The ADR must say what evidence promotes the idea into a decision and what remains unverified.
 
 ### Should every ADR include the KFM Meta Block?
 
-Yes for standard Markdown ADRs unless a stronger repo-local exception is verified. Keep the visible title synchronized with the meta block title.
+For standard Markdown ADRs, yes unless a stronger repo-local exception is accepted. Keep the visible title synchronized with the meta block title, filename, and ADR index entry.
 
 ### What happens when an ADR is wrong?
 
 Supersede, withdraw, or correct it visibly. Keep the old decision available as lineage unless removal is required for safety, privacy, rights, or security reasons.
 
-[Back to top](#kfm-architecture-decision-records)
+### Can the ADR template in this README replace `ADR-TEMPLATE.md`?
 
----
-
-## Appendix A — ADR template
-
-<details>
-<summary><strong>Copy this template into a new ADR file</strong></summary>
-
-```markdown
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-uuid
-title: ADR-0000 — <Decision Title>
-type: standard
-version: v1
-status: draft
-owners: TODO: confirm owner(s)
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: TODO: confirm public/restricted label
-related: [docs/adr/README.md]
-tags: [kfm, adr]
-notes: [Draft ADR; replace TODO values before acceptance]
-[/KFM_META_BLOCK_V2] -->
-
-# ADR-0000 — <Decision Title>
-
-One-sentence decision purpose.
-
-> [!IMPORTANT]
-> **Status:** proposed  
-> **Decision area:** docs / contracts / schemas / policy / workflow / release / UI / AI / domain lane  
-> **Owner(s):** TODO  
-> **Review state:** TODO  
-> **Supersedes:** none / ADR-####  
-> **Related:** `docs/adr/README.md`
-
-## Context
-
-What problem forces a decision?
-
-Use truth labels when confidence matters:
-
-- **CONFIRMED:** directly supported by current repo evidence, attached doctrine, or visible artifacts.
-- **INFERRED:** conservative synthesis from strong evidence.
-- **PROPOSED:** intended design or future implementation.
-- **UNKNOWN:** not verified.
-- **NEEDS VERIFICATION:** concrete check required.
-
-## Decision
-
-State the decision clearly.
-
-## Alternatives considered
-
-| Alternative | Why not chosen |
-|---|---|
-|  |  |
-
-## Evidence used
-
-| Evidence | Role | Truth label |
-|---|---|---|
-|  |  |  |
-
-## Consequences
-
-### Positive consequences
-
-- 
-
-### Tradeoffs and risks
-
-- 
-
-### Affected surfaces
-
-| Surface | Impact |
-|---|---|
-| Docs |  |
-| Contracts/schemas |  |
-| Policy |  |
-| Fixtures/tests |  |
-| Validators/CI |  |
-| API/UI/runtime |  |
-| Receipts/proofs/release |  |
-
-## Verification required
-
-- [ ] 
-- [ ] 
-
-## Rollback or supersession path
-
-How can this decision be reverted, superseded, or withdrawn without hiding lineage?
-
-## Acceptance checklist
-
-- [ ] Evidence basis is visible.
-- [ ] Repo/runtime claims are not over-stated.
-- [ ] Affected files and object families are listed.
-- [ ] Validation and rollback are defined.
-- [ ] Related docs/registers/backlog updates are identified.
-```
-
-</details>
+No. This README should point to `ADR-TEMPLATE.md`. A large inline template here would create template drift and a parallel authority surface. Use the appendix checklist below only as a maintainer review aid.
 
 [Back to top](#kfm-architecture-decision-records)
 
 ---
 
-## Appendix B — Maintainer review checklist
+## Appendix A — Maintainer review checklist
 
 <details>
 <summary><strong>Use this before merging a new or revised ADR</strong></summary>
 
 | Check | Pass condition |
 |---|---|
-| Decision clarity | One decision is stated in the `Decision` section |
-| Evidence separation | Doctrine, repo evidence, exploratory input, and external standards are not collapsed |
-| KFM invariants | Truth path, trust membrane, governed API, cite-or-abstain, policy, review, and rollback are preserved |
+| Decision clarity | One decision is stated clearly in the `Decision` section |
+| Evidence separation | Doctrine, active repo evidence, public snapshot evidence, implementation evidence, exploratory input, lineage, and external standards are not collapsed |
+| KFM invariants | Truth path, trust membrane, governed API, cite-or-abstain, policy, review, release, correction, and rollback are preserved |
 | Implementation restraint | No unverified implementation maturity claims |
-| Downstream updates | Affected docs/registers/contracts/schemas/policy/tests/backlog are listed |
-| Security and sensitivity | Rights, sovereignty, cultural sensitivity, exact location, private data, and local exposure are handled or marked `NEEDS VERIFICATION` |
-| Reversibility | Rollback, withdrawal, or supersession path exists |
-| Link hygiene | Relative links resolve after mounted-repo verification |
+| Downstream updates | Affected docs, registers, contracts, schemas, policy, tests, fixtures, validators, backlog, release objects, receipts, and proof lanes are listed |
+| Security and sensitivity | Rights, sovereignty, cultural sensitivity, exact location, private data, security exposure, and local access posture are handled or marked `NEEDS VERIFICATION` |
+| Reversibility | Rollback, withdrawal, correction, or supersession path exists |
+| Link hygiene | Relative links resolve from `docs/adr/` after active-checkout verification |
 | Meta block | KFM Meta Block v2 is present and synchronized with title/status/owners |
+| Template alignment | ADR uses `ADR-TEMPLATE.md` or explicitly explains a repo-local exception |
+| Acceptance evidence | Proposed decisions are not marked accepted until validation evidence and review state support the upgrade |
 
 </details>
 
