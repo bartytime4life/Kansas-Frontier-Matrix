@@ -1,0 +1,19 @@
+{
+  "bundle_name": "airnow_internal_review_bundle",
+  "created_at": "2026-01-01T00:00:00Z",
+  "manifest_id": "airnow-layer6-internal-bundle-fixture-001",
+  "object_type": "AirNowSchemaValidationSummary",
+  "overall_status": "PASS",
+  "schema_validation_summary_id": "x",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "validation_counts": {
+    "FAIL": 0,
+    "PASS": 3,
+    "SKIPPED": 0,
+    "WARN": 0
+  },
+  "validation_records": [],
+  "validator": "airnow_layer6_bundle",
+  "validator_version": "v1"
+}

@@ -1,0 +1,23 @@
+{
+  "bundle_classification": "internal_sensitive",
+  "bundle_name": "airnow_internal_review_bundle",
+  "created_at": "2026-01-01T00:00:00Z",
+  "denied_capabilities": [
+    "publication"
+  ],
+  "governance_attestation_id": "x",
+  "governance_checks": [
+    {
+      "check": "no_network",
+      "status": "PASS"
+    }
+  ],
+  "manifest_id": "airnow-layer6-internal-bundle-fixture-001",
+  "object_type": "AirNowBundleGovernanceAttestation",
+  "overall_status": "PASS",
+  "required_disclaimers": [
+    "AirNow data are preliminary and subject to change."
+  ],
+  "schema_version": "v1",
+  "source_id": "airnow"
+}
