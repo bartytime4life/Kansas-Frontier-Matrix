@@ -1,0 +1,10 @@
+{
+  "schema": "TransparencyLogPolicy.v1",
+  "policy_id": "soilgrids-transparency-default",
+  "allowed_packet_statuses": ["success", "warning"],
+  "allowed_disclosure_profiles": ["public-transparency", "auditor-full", "regulator", "internal-review"],
+  "public_portal": {"allow_local_paths": false, "allow_internal_hostnames": false, "allow_raw_logs": false, "allow_packet_downloads": false, "allow_external_links": false},
+  "redaction": {"require_redaction_report": true, "fail_on_secret_findings": true, "fail_on_approval_token_plaintext": true},
+  "claims": {"require_evidence_refs": true, "deny_unsupported_claims": true},
+  "signing": {"require_signed_tree_head": false, "allow_unsigned_tree_head": true}
+}

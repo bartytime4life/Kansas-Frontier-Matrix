@@ -1,0 +1,11 @@
+{
+  "schema": "TransparencyLogSpec.v1",
+  "transparency_log_id": "soilgrids-trust-transparency-log-v1",
+  "title": "SoilGrids Trust Packet Transparency Log",
+  "dataset_id": "soilgrids-v2",
+  "portal_profile": "public",
+  "log": {"algorithm": "sha256-rfc9162-style", "leaf_domain_separator": "00", "node_domain_separator": "01", "append_only": true, "allow_duplicate_packet_hash": false, "require_consistency_proofs": true, "require_inclusion_proofs": true},
+  "portal": {"build_static_portal": true, "include_claim_summaries": true, "include_redaction_summary": true, "include_packet_download_links": false, "include_verifier_api_contract": true, "include_openapi": true},
+  "proofs": {"sign_tree_head": false, "signing_backend": "unsigned", "write_intoto_statement": true, "write_vc_verifier_metadata": false},
+  "validation": {"require_disclosure_validation_success": true, "require_redaction_report_pass": true, "require_claim_evidence_links": true, "require_no_secrets": true}
+}
