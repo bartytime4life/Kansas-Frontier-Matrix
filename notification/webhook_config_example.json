@@ -1,0 +1,1 @@
+{"schema":"NotificationWebhookConfig.v1","allowlisted_hosts":["localhost","127.0.0.1"],"endpoints":{"default":"https://localhost/hooks/notify"}}

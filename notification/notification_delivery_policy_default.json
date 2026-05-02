@@ -1,0 +1,1 @@
+{"schema":"NotificationDeliveryPolicy.v1","policy_id":"soilgrids-notification-delivery-default","allowed_channels":["local_outbox","webhook"],"default_channel":"local_outbox"}

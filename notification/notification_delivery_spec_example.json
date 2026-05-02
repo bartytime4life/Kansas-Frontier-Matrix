@@ -1,0 +1,1 @@
+{"schema":"NotificationDeliverySpec.v1","notification_delivery_id":"nd_example","dataset_id":"soilgrids.v1","delivery":{"default_channel":"local_outbox","allowed_channels":["local_outbox"],"ack_deadline_hours":72},"recipients":{"allow_plaintext_recipient_ids":false},"exports":{"write_cloudevents":true}}
