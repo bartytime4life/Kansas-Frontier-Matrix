@@ -2,7 +2,7 @@
   "object_type": "AirNowSnapshotPreservationConsistencyMatrix",
   "records": [
     {
-      "check": "no_execution",
+      "check": "hash_consistency",
       "pass": true
     }
   ]

@@ -1,4 +1,5 @@
-import json,re
+import hashlib,json,re,tarfile
+from datetime import datetime,timezone
 from pathlib import Path
 from .constants import L23_INPUTS,FORBIDDEN_TEXT_TERMS,COORD_RE,REFS
 from .loaders import loadj
@@ -63,7 +64,18 @@ def run_preservation_closure_readiness(manifest_path,out_dir,created_at):
  if any(t in txt.lower() for t in FORBIDDEN_TEXT_TERMS): return _deny(m,out,created_at,['FORBIDDEN_LANGUAGE'])
  (out/'preservation_closure_status_board.md').write_text('# AirNow Layer 24 Preservation Closure Status Board\n\n'+txt+'\n')
  (out/'preservation_closure_report.md').write_text('# AirNow Layer 24 Preservation Closure Readiness Report\n\nInternal-only closure readiness planning from Layer 23 audit artifacts.\n')
- receipt={"object_type":"AirNowPreservationClosureReceipt","schema_version":"v1","workflow_runner":"airnow_layer24_preservation_closure_readiness","manifest_id":m.get('manifest_id'),"workflow_outcome":"PRESERVATION_CLOSURE_READY_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"references":REFS,"errors":[],"output_hashes":{"preservation_closure_packet_hash":None},"created_at":created_at}
+ packet_hash=None
+ if m.get("closure_policy",{}).get("include_packet") is True:
+  epoch=int(datetime.fromisoformat(created_at.replace("Z","+00:00")).replace(tzinfo=timezone.utc).timestamp())
+  packet=out/"preservation_closure_packet.tar.gz"
+  files=sorted([p for p in out.glob("*") if p.is_file() and p.name!="preservation_closure_packet.tar.gz"])
+  with tarfile.open(packet,"w:gz",format=tarfile.PAX_FORMAT) as tf:
+   for p in files:
+    if p.name.startswith("/") or ".." in p.parts: return _deny(m,out,created_at,["UNSAFE_PACKET_MEMBER_PATH"])
+    ti=tf.gettarinfo(str(p),arcname=p.name); ti.mtime=epoch; ti.uid=0; ti.gid=0; ti.uname=""; ti.gname=""
+    with p.open("rb") as fh: tf.addfile(ti,fh)
+  packet_hash=hashlib.sha256(packet.read_bytes()).hexdigest()
+ receipt={"object_type":"AirNowPreservationClosureReceipt","schema_version":"v1","workflow_runner":"airnow_layer24_preservation_closure_readiness","manifest_id":m.get('manifest_id'),"workflow_outcome":"PRESERVATION_CLOSURE_READY_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"references":REFS,"errors":[],"output_hashes":{"preservation_closure_packet_hash":packet_hash},"created_at":created_at}
  _wj(out/'preservation_closure_receipt.json',receipt); return receipt
 
 # alias builders

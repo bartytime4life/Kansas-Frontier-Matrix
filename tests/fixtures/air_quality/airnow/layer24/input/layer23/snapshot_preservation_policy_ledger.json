@@ -2,7 +2,7 @@
   "object_type": "AirNowSnapshotPreservationPolicyLedger",
   "records": [
     {
-      "id": "p1"
+      "policy": "local_only"
     }
   ]
 }
