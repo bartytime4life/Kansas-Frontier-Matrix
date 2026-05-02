@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "manifest_id",
+    "layer29_inputs",
+    "local_file_only",
+    "no_network"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string"
+    },
+    "layer29_inputs": {
+      "type": "object"
+    },
+    "local_file_only": {
+      "const": true
+    },
+    "no_network": {
+      "const": true
+    }
+  }
+}
