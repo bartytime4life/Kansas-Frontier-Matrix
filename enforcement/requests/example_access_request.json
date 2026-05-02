@@ -1,0 +1,11 @@
+{
+  "schema": "AccessRequest.v1",
+  "action": "read",
+  "target": {
+    "protected_resource_id": "pres_x"
+  },
+  "subject": {
+    "subject_id": "user-1",
+    "subject_type": "human"
+  }
+}

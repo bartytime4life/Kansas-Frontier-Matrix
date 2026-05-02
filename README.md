@@ -643,3 +643,15 @@ See:
 0 success/allow, 5 dry-run, 10 warn, 15 review, 20 block, 30 malformed input, 40 resolver validation, 50 request validation, 60 policy failure, 70 OPA failure, 80 SDK/API failure, 90 remote resolver failure, 100 unsafe path/local API failure, 110 secret finding failure, 120 internal error.
 
 > This layer only makes consumer trust decisions. It does not change trust status, revoke objects, publish remotely, or mutate source evidence.
+
+## Layer 26 Trust Enforcement Gateway + Usage Audit Ledger (Snippet)
+
+Modes: `plan-only`, `inventory-resources`, `enforce-once`, `batch-enforce`, `build-gateway`, `serve-local`, `replay-audit`.
+
+Example spec: `enforcement/enforcement_spec_example.json`.
+Example policy: `enforcement/enforcement_policy_default.json`.
+Example request: `enforcement/requests/example_access_request.json`.
+
+Exit codes: 0 success/planned, 5 dry-run, 10 warning, 15 review, 20 deny, 30 malformed, 40 resource, 50 decision, 60 policy, 70 audit, 80 gateway, 90 unsafe bind/path, 100 secret, 110 internal.
+
+This layer enforces consumer decisions only. It does not change trust status, publish remotely, authenticate users, or mutate protected resources.
