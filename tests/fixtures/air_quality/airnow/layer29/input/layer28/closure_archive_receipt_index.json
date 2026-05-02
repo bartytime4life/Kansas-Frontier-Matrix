@@ -1,3 +1,4 @@
 {
-  "object_type": "AirNowClosureArchiveReceiptIndex"
+  "object_type": "CLOSURE_ARCHIVE_RECEIPT_INDEX",
+  "created_at": "2026-01-01T00:00:00Z"
 }

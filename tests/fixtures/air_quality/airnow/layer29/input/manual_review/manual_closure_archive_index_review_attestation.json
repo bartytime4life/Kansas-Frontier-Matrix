@@ -1,4 +1,4 @@
 {
-  "object_type": "AirNowManualClosureArchiveIndexReviewAttestation",
-  "attestation": "internal-only"
+  "object_type": "ManualClosureArchiveIndexReviewAttestation",
+  "created_at": "2026-01-01T00:00:00Z"
 }

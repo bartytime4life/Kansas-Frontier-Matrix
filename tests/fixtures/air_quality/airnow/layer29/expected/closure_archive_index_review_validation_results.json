@@ -1,0 +1,10 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexReviewValidationResults",
+  "records": [
+    {
+      "validation_id": "val_e5a49d2582a7b5f4",
+      "validation_outcome": "PASS"
+    }
+  ]
+}

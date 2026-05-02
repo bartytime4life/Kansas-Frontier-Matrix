@@ -1,3 +1,4 @@
 {
-  "object_type": "AirNowClosureArchiveNonExecutionAttestation"
+  "object_type": "CLOSURE_ARCHIVE_NON_EXECUTION_ATTESTATION",
+  "created_at": "2026-01-01T00:00:00Z"
 }

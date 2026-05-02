@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexItemSatisfactionMatrix",
+  "records": [
+    {
+      "assessment_id": "assess_4fb711441a8bbcda",
+      "item_satisfaction_id": "sat_0651bab1a7b3081e",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_79ad61888bd680b9",
+      "item_satisfaction_id": "sat_11a0068fa08eee42",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_ca1e283a769b4ddd",
+      "item_satisfaction_id": "sat_237cbd5bc410beef",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_54ad9bdc420d280d",
+      "item_satisfaction_id": "sat_29d44a9e692e09bd",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_362c22c233683090",
+      "item_satisfaction_id": "sat_5fc4ef34089d5cb9",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_0bbca542d7f2ed37",
+      "item_satisfaction_id": "sat_83b3ff28f81b0c4b",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_780e4ef05420c0be",
+      "item_satisfaction_id": "sat_95814b5bb64c2821",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_c4c503b8242f9274",
+      "item_satisfaction_id": "sat_9a479d66913295e8",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_f35265114fa0affb",
+      "item_satisfaction_id": "sat_afdff326039c496c",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_9727319d39ccc18b",
+      "item_satisfaction_id": "sat_baf2dc697aea398e",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_c4cf9764e0631dd7",
+      "item_satisfaction_id": "sat_e7fb08306a517dea",
+      "satisfied": true
+    },
+    {
+      "assessment_id": "assess_132111cefc437043",
+      "item_satisfaction_id": "sat_ed1ed972e379d144",
+      "satisfied": true
+    }
+  ]
+}
