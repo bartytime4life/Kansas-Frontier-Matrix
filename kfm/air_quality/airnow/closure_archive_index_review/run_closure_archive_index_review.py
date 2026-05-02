@@ -1,4 +1,6 @@
 import json
+import tarfile
+from datetime import datetime, timezone
 from pathlib import Path
 from .checksums import sha256_path
 from .constants import REQUIRED_L28,FORBIDDEN_RECEIPT_TRUE,EVIDENCE_TYPES,INTERNAL_ONLY_DISCLAIMER,FORBIDDEN_TEXT,COORD,SOURCES
@@ -13,6 +15,22 @@ def _receipt(mid,created_at,errors):
     ok=not errors
     return {"object_type":"AirNowClosureArchiveIndexReviewReceipt","schema_version":"v1","workflow_runner":"airnow_layer29_closure_archive_index_review","manifest_id":mid,"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW" if ok else "CLOSURE_ARCHIVE_INDEX_REVIEW_DENIED","validation_outcome":"PASS" if ok else "FAIL","finite_outcome":"ANSWER" if ok else "DENY","commands_executed":False,"review_actions_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(errors),"output_hashes":{"closure_archive_index_review_packet_hash":None},"created_at":created_at}
 
+
+
+def _create_packet(out: Path, created_at: str):
+    packet=out/"closure_archive_index_review_packet.tar.gz"
+    ts=int(datetime(2026,1,1,tzinfo=timezone.utc).timestamp())
+    members=sorted([x for x in out.iterdir() if x.is_file() and x.name!=packet.name])
+    with tarfile.open(packet,"w:gz",format=tarfile.PAX_FORMAT) as tf:
+        for f in members:
+            rp=f.name
+            if ".." in rp or rp.startswith('/'):
+                raise ValueError(f"UNSAFE_PACKET_MEMBER:{rp}")
+            ti=tf.gettarinfo(str(f),arcname=rp)
+            ti.mtime=ts
+            with f.open('rb') as fh:
+                tf.addfile(ti,fh)
+    return packet
 def run_closure_archive_index_review(manifest_path,out_dir,created_at):
     m=loadj(manifest_path); out=Path(out_dir); out.mkdir(parents=True,exist_ok=True); e=[]
     e.extend(validate_manifest(m))
@@ -64,5 +82,8 @@ def run_closure_archive_index_review(manifest_path,out_dir,created_at):
     (out/"closure_archive_index_review_status_board.md").write_text("# AirNow Layer 29 Closure Archive Index Review Status Board\n\nInternal-only intake complete.\n",encoding="utf-8")
     (out/"closure_archive_index_review_report.md").write_text("# AirNow Layer 29 Closure Archive Index Review Report\n\nAccepted for manual internal index review only. No execution actions performed.\n",encoding="utf-8")
     r=_receipt(m.get("manifest_id"),created_at,[])
+    if m.get("review_policy",{}).get("include_packet") is True:
+        packet=_create_packet(out,created_at)
+        r["output_hashes"]["closure_archive_index_review_packet_hash"]=sha256_path(packet)
     _wj(out/"closure_archive_index_review_receipt.json",r)
     return r

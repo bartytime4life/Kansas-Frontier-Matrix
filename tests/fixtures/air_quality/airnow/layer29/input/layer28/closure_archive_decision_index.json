@@ -1,3 +1,4 @@
 {
-  "object_type": "AirNowClosureArchiveDecisionIndex"
+  "object_type": "CLOSURE_ARCHIVE_DECISION_INDEX",
+  "created_at": "2026-01-01T00:00:00Z"
 }
