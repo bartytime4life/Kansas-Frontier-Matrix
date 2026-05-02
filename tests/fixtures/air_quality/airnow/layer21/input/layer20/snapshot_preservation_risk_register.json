@@ -1,3 +1,5 @@
 {
-  "object_type": "AirNowSnapshotPreservationRiskRegister"
+  "object_type": "X",
+  "schema_version": "v1",
+  "name": "snapshot_preservation_risk_register.json"
 }

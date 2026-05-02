@@ -1,3 +1,5 @@
 {
-  "object_type": "AirNowSnapshotPreservationFixityPlan"
+  "object_type": "X",
+  "schema_version": "v1",
+  "name": "snapshot_preservation_fixity_plan.json"
 }

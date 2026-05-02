@@ -1,5 +1,5 @@
 {
-  "manifest_id": "airnow-layer21-fixture",
+  "manifest_id": "kfm-airnow-layer21-execution",
   "local_file_only": true,
   "no_network": true,
   "bulk_web_service_loop": false,
@@ -17,7 +17,7 @@
   "regulatory_claims_allowed": false,
   "exact_sensitive_overlay_requested": false,
   "exact_sensitive_overlay_allowed": false,
-  "command_execution_requested": true,
+  "command_execution_requested": false,
   "command_execution_allowed": false,
   "auto_execute_requested": false,
   "auto_execute_allowed": false,
@@ -59,7 +59,7 @@
   "snapshot_publication_allowed": false,
   "snapshot_release_requested": false,
   "snapshot_release_allowed": false,
-  "preservation_action_requested": false,
+  "preservation_action_requested": true,
   "preservation_action_allowed": false,
   "preservation_copy_requested": false,
   "preservation_copy_allowed": false,
@@ -68,31 +68,58 @@
   "preservation_review_action_requested": false,
   "preservation_review_action_allowed": false,
   "preliminary_data": true,
+  "review_policy": {
+    "include_packet": true
+  },
   "layer20_inputs": {
-    "snapshot_preservation_receipt": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_receipt.json",
-    "snapshot_preservation_scope_plan": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_scope_plan.json",
-    "snapshot_preservation_classification_matrix": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_classification_matrix.json",
-    "snapshot_preservation_fixity_plan": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_fixity_plan.json",
-    "snapshot_preservation_access_review_plan": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_access_review_plan.json",
-    "snapshot_preservation_minimization_review_plan": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_minimization_review_plan.json",
-    "snapshot_preservation_hold_candidate_plan": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_hold_candidate_plan.json",
-    "snapshot_preservation_risk_register": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_risk_register.json",
-    "snapshot_preservation_policy_continuity_matrix": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_policy_continuity_matrix.json",
-    "snapshot_preservation_caveat_register": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_caveat_register.json",
-    "snapshot_preservation_non_execution_attestation": "tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_non_execution_attestation.json"
+    "snapshot_preservation_scope_plan": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_scope_plan.json",
+    "snapshot_preservation_classification_matrix": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_classification_matrix.json",
+    "snapshot_preservation_fixity_plan": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_fixity_plan.json",
+    "snapshot_preservation_access_review_plan": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_access_review_plan.json",
+    "snapshot_preservation_minimization_review_plan": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_minimization_review_plan.json",
+    "snapshot_preservation_hold_candidate_plan": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_hold_candidate_plan.json",
+    "snapshot_preservation_risk_register": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_risk_register.json",
+    "snapshot_preservation_policy_continuity_matrix": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_policy_continuity_matrix.json",
+    "snapshot_preservation_caveat_register": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_caveat_register.json",
+    "snapshot_preservation_non_execution_attestation": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_non_execution_attestation.json",
+    "snapshot_preservation_receipt": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/layer20/snapshot_preservation_receipt.json"
   },
   "manual_evidence": [
     {
       "evidence_type": "SCOPE_REVIEW_NOTE",
-      "path": "tests/fixtures/air_quality/airnow/layer21/input/manual_review/scope_review_note.md"
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/scope_review_note.md"
     },
     {
       "evidence_type": "CLASSIFICATION_REVIEW_NOTE",
-      "path": "tests/fixtures/air_quality/airnow/layer21/input/manual_review/classification_review_note.md"
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/classification_review_note.md"
+    },
+    {
+      "evidence_type": "FIXITY_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/fixity_review_note.md"
+    },
+    {
+      "evidence_type": "LAYOUT_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/layout_review_note.md"
+    },
+    {
+      "evidence_type": "ACCESS_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/access_review_note.md"
+    },
+    {
+      "evidence_type": "MINIMIZATION_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/minimization_review_note.md"
+    },
+    {
+      "evidence_type": "HOLD_CANDIDATE_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/hold_candidate_review_note.md"
+    },
+    {
+      "evidence_type": "RISK_REVIEW_NOTE",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/risk_review_note.md"
     },
     {
       "evidence_type": "MANUAL_SNAPSHOT_PRESERVATION_REVIEW_ATTESTATION",
-      "path": "tests/fixtures/air_quality/airnow/layer21/input/manual_review/manual_snapshot_preservation_review_attestation.json"
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer21/input/manual_review/manual_snapshot_preservation_review_attestation.json"
     }
   ]
 }

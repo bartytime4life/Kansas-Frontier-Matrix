@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationReviewValidationResults",
+  "records": [
+    {
+      "status": "PASS",
+      "validation_id": "cc7d95c4c19d083444a9aae69e002f6eba616c8a9537916c6c2befdb487af186"
+    }
+  ],
+  "schema_version": "v1"
+}
