@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "object_type": {
+      "const": "AirNowSnapshotPreservationFinalizationReceipt"
+    }
+  },
+  "required": [
+    "object_type",
+    "workflow_runner",
+    "workflow_outcome",
+    "validation_outcome",
+    "finite_outcome"
+  ],
+  "type": "object"
+}
