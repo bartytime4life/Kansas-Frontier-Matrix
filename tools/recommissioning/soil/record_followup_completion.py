@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-import argparse,json,sys,uuid
+import argparse,json,sys
 from pathlib import Path
-import sys
 ROOT=Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path: sys.path.insert(0,str(ROOT))
 from tools.recommissioning.soil._recommissioning_common import *

@@ -2,7 +2,6 @@
 import argparse, json
 from pathlib import Path
 import sys
-from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 from _reentry_publication_boundary_refresh_lib import has_unsafe_obj
 ap=argparse.ArgumentParser(); ap.add_argument('dirs',nargs='+'); ap.add_argument('--out-dir'); ap.add_argument('--as-of')
