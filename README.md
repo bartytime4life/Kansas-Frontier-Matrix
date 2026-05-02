@@ -675,3 +675,13 @@ The validator checks HEAD metadata and range GET behavior (`206`, `Content-Range
 - `70`: internal error
 
 > Layer 6 validates serving only. It does **not** generate map tiles or PMTiles.
+
+## Layer 9 Remote Distribution Publisher
+
+- Use `soilgrids_distribution_publish.py` for dry-run, local-mirror, or s3-compatible target publication.
+- **Safety:** remote publish requires explicit `--allow-remote-network` in full implementation, and do not rely on ETag as SHA-256.
+
+Example dry-run:
+```bash
+python soilgrids_distribution_publish.py --release-manifest ... --publish-receipt ... --release-root ... --tile-package-manifest ... --tile-package-receipt ... --tile-package-root ... --viewer-manifest ... --viewer-receipt ... --viewer-root ... --distribution-root distributions --target dry-run
+```
