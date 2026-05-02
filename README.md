@@ -748,3 +748,12 @@ Example schemas are in:
 Exit codes: `0 success/planned/verified`, `5 dry-run`, `10 warning`, `20 blocked`, `30 malformed input`, `40 recommendation/ack`, `50 change request`, `60 impact/approval`, `70 regression`, `80 bundle/release gate`, `90 API/OpenAPI`, `100 unsafe path`, `110 secret`, `120 ledger`, `130 internal`.
 
 > Warning: this layer creates controlled policy release candidates only; it does **not** mutate source policy roots, deploy policies, change trust status, grant access, or send notifications.
+
+## Layer 31 Policy Activation (snippet)
+
+Plan-only:
+`python soilgrids_policy_activation.py --policy-activation-spec policy_activation/policy_activation_spec_example.json --output-root out --mode plan-only`
+
+Validate/install/shadow/compat/activate/rollback/verify/local-api modes are supported via `--mode` with local-only semantics.
+
+This layer activates **local policy bundles only** and does not deploy remotely, mutate source policies, change trust status, grant access, or commit repository changes.

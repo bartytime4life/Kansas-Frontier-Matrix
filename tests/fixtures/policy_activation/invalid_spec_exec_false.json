@@ -1,0 +1,1 @@
+{"schema":"PolicyActivationSpec.v1","policy_activation_id":"pa-1","dataset_id":"ds-1","activation_profile":"strict-local","activation":{"execute_flag_required":false},"policy_store":{"active_pointer_path":"active_policy_pointer.json"}}
