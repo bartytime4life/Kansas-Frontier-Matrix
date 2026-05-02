@@ -1,0 +1,9 @@
+{
+  "schema": "WatchtowerSpec.v1",
+  "watchtower_id": "soilgrids-watchtower-v1",
+  "dataset_id": "soilgrids-v2",
+  "log": {"algorithm": "sha256-rfc9162-style", "leaf_domain_separator": "00", "node_domain_separator": "01"},
+  "peers": {"minimum_witnesses": 2, "stale_after_hours": 168},
+  "gossip": {"enabled": true, "sign_envelopes": false, "allow_unsigned_envelopes": true, "require_envelope_hash": true},
+  "split_view": {"detect_incompatible_roots": true, "require_proof_for_equivocation": true}
+}

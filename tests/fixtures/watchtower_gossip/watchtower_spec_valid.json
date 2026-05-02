@@ -1,0 +1,13 @@
+{
+  "schema": "WatchtowerSpec.v1",
+  "watchtower_id": "wt",
+  "dataset_id": "soilgrids-v2",
+  "log": {
+    "algorithm": "sha256-rfc9162-style",
+    "leaf_domain_separator": "00",
+    "node_domain_separator": "01"
+  },
+  "peers": {
+    "minimum_witnesses": 2
+  }
+}

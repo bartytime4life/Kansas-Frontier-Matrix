@@ -1,0 +1,8 @@
+{
+  "schema": "SignedTreeHead.v1",
+  "tree_size": 10,
+  "root_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "signature": {
+    "type": "unsigned"
+  }
+}
