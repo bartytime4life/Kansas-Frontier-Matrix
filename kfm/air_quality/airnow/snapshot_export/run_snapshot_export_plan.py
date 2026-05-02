@@ -1,4 +1,4 @@
-import json
+import json, tarfile, zipfile
 from pathlib import Path
 from .checksums import sha256_bytes
 from .constants import DENY_SCHEMES,FORBIDDEN_MEMBER_TERMS
@@ -10,6 +10,30 @@ from .layer15_intake import validate_layer15_inputs
 def _unsafe_path(v:str)->bool:
  vv=v.lower()
  return (".." in Path(v).parts) or any(vv.startswith(s) for s in DENY_SCHEMES) or ("://" in vv)
+
+
+
+def _build_packet_if_enabled(manifest,out,created_at):
+ pol=manifest.get("snapshot_policy",{}) if isinstance(manifest.get("snapshot_policy"),dict) else {}
+ if not pol.get("include_packet",False):
+  return None
+ fmt=pol.get("packet_format","tar.gz")
+ members=sorted([p for p in out.iterdir() if p.is_file() and p.name!="snapshot_export_planning_packet.tar.gz" and p.name!="snapshot_export_planning_packet.zip"], key=lambda p:p.name)
+ if fmt=="zip":
+  ap=out/'snapshot_export_planning_packet.zip'
+  with zipfile.ZipFile(ap,'w',compression=zipfile.ZIP_DEFLATED) as zf:
+   for m in members:
+    zi=zipfile.ZipInfo(m.name)
+    zi.date_time=(1980,1,1,0,0,0)
+    zi.compress_type=zipfile.ZIP_DEFLATED
+    zf.writestr(zi,m.read_bytes())
+ else:
+  ap=out/'snapshot_export_planning_packet.tar.gz'
+  with tarfile.open(ap,'w:gz',format=tarfile.PAX_FORMAT) as tf:
+   for m in members:
+    ti=tarfile.TarInfo(name=m.name); b=m.read_bytes(); ti.size=len(b); ti.mtime=0; ti.uid=0; ti.gid=0; ti.uname=''; ti.gname=''
+    import io; tf.addfile(ti,io.BytesIO(b))
+ return sha256_bytes(ap.read_bytes())
 
 def run_snapshot_export_plan(manifest_path,out_dir,created_at):
  m=loadj(manifest_path); out=Path(out_dir); out.mkdir(parents=True,exist_ok=True)
@@ -55,6 +79,7 @@ def run_snapshot_export_plan(manifest_path,out_dir,created_at):
  wj(out/'snapshot_status_board.json',{"object_type":"AirNowSnapshotStatusBoard","schema_version":"v1","board_status":outcome,"created_at":created_at})
  (out/'snapshot_status_board.md').write_text("# AirNow Layer 16 Snapshot Export Status Board\n\nInternal planning only.\n")
  (out/'snapshot_export_report.md').write_text("# AirNow Layer 16 Snapshot Export Report\n\nPlanning-only workflow; no execution.\n")
- receipt={"object_type":"AirNowSnapshotExportReceipt","schema_version":"v1","workflow_runner":"airnow_layer16_snapshot_export_plan","manifest_id":m.get("manifest_id"),"workflow_outcome":outcome,"validation_outcome":val,"finite_outcome":finite,"commands_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(errs),"output_hashes":{"snapshot_export_planning_packet_hash":None},"created_at":created_at}
+ packet_hash=_build_packet_if_enabled(m,out,created_at)
+ receipt={"object_type":"AirNowSnapshotExportReceipt","schema_version":"v1","workflow_runner":"airnow_layer16_snapshot_export_plan","manifest_id":m.get("manifest_id"),"workflow_outcome":outcome,"validation_outcome":val,"finite_outcome":finite,"commands_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(errs),"output_hashes":{"snapshot_export_planning_packet_hash":packet_hash},"created_at":created_at}
  wj(out/'snapshot_export_receipt.json',receipt)
  return receipt
