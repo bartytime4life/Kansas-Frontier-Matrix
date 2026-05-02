@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "domain": {
+      "const": "atmosphere.air"
+    },
+    "reconciliation_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "release_candidate_refresh_package_ref": {
+      "type": "string"
+    },
+    "qa_revalidation_refresh_report_ref": {
+      "type": "string"
+    },
+    "release_evidence_bundle_refresh_ref": {
+      "type": "string"
+    },
+    "aqs_validated_window": {
+      "type": "object",
+      "properties": {
+        "averaging_window": {
+          "type": "string"
+        },
+        "pm25_units": {
+          "const": "ug_m3"
+        },
+        "nowcast_semantics": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "averaging_window",
+        "pm25_units",
+        "nowcast_semantics"
+      ]
+    },
+    "reconciled_at": {
+      "type": "string"
+    },
+    "method": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "not_required",
+        "fixture_reconciled",
+        "candidate_reconciled",
+        "pending",
+        "conflict_detected",
+        "blocked"
+      ]
+    },
+    "differences": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "source_rows": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "staleness_check": {
+      "type": "string"
+    },
+    "safety_checks": {
+      "type": "object"
+    },
+    "checks": {
+      "type": "object"
+    },
+    "gates": {
+      "type": "object"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hard_failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "domain",
+    "reconciliation_id",
+    "created_at",
+    "as_of",
+    "release_candidate_refresh_package_ref",
+    "qa_revalidation_refresh_report_ref",
+    "release_evidence_bundle_refresh_ref",
+    "aqs_validated_window",
+    "reconciled_at",
+    "method",
+    "status",
+    "differences",
+    "source_rows",
+    "staleness_check",
+    "safety_checks"
+  ]
+}
