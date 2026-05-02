@@ -1,1 +1,17 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["object_type","workflow_runner","workflow_outcome","validation_outcome"]}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AirNowSnapshotPreservationReviewReceipt",
+  "type": "object",
+  "required": [
+    "object_type",
+    "schema_version"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AirNowSnapshotPreservationReviewReceipt"
+    },
+    "schema_version": {
+      "const": "v1"
+    }
+  }
+}

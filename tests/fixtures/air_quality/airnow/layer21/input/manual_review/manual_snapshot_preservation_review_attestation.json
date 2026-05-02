@@ -1,1 +1,4 @@
-{"object_type":"AirNowManualSnapshotPreservationReviewAttestation","internal_only":true}
+{
+  "object_type": "Attestation",
+  "schema_version": "v1"
+}

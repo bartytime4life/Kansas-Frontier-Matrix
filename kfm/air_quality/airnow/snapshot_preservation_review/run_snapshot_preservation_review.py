@@ -1,4 +1,4 @@
-import json,re
+import hashlib, json, re, tarfile
 from pathlib import Path
 from .checksums import sha256_path
 from .constants import REQUIRED_LAYER20_KEYS,L20_DENIED_TRUE_FIELDS,EVIDENCE_TYPES,INTERNAL_DISCLAIMER,FORBIDDEN_TEXT_TERMS,COORD_RE,REFS
@@ -7,9 +7,26 @@ from .loaders import loadj,wj,wjl
 from .manifest import validate_manifest,validate_path_safe
 
 def _deny(m,out,created_at,errs):
- r={"object_type":"AirNowSnapshotPreservationReviewReceipt","schema_version":"v1","workflow_runner":"airnow_layer21_snapshot_preservation_review","manifest_id":m.get("manifest_id"),"workflow_outcome":"SNAPSHOT_PRESERVATION_REVIEW_DENIED_REQUESTED_CAPABILITY","validation_outcome":"FAIL","finite_outcome":"DENY","commands_executed":False,"review_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(set(errs)),"output_hashes":{"snapshot_preservation_review_packet_hash":None},"created_at":created_at}
+ r={"object_type":"AirNowSnapshotPreservationReviewReceipt","schema_version":"v1","workflow_runner":"airnow_layer21_snapshot_preservation_review","manifest_id":m.get("manifest_id"),"workflow_outcome":"SNAPSHOT_PRESERVATION_REVIEW_DENIED_REQUESTED_CAPABILITY","validation_outcome":"FAIL","finite_outcome":"DENY","commands_executed":False,"review_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(set(errs)),"output_hashes":{"snapshot_preservation_review_packet_hash":_maybe_packet(m,out)},"created_at":created_at}
  wj(out/'snapshot_preservation_review_receipt.json',r); return r
 
+
+
+def _maybe_packet(manifest, out):
+ rp=(manifest.get("review_policy") or {})
+ if not rp.get("include_packet", False):
+  return None
+ packet=out/"snapshot_preservation_review_packet.tar.gz"
+ members=sorted([p for p in out.iterdir() if p.is_file() and p.name!=packet.name])
+ with tarfile.open(packet,"w:gz",format=tarfile.PAX_FORMAT) as tf:
+  for fp in members:
+   rel=fp.name
+   if rel.startswith("/") or ".." in Path(rel).parts:
+    raise ValueError("PACKET_PATH_TRAVERSAL")
+   info=tf.gettarinfo(str(fp), arcname=rel)
+   info.mtime=0; info.uid=0; info.gid=0; info.uname=""; info.gname=""
+   with fp.open("rb") as f: tf.addfile(info,f)
+ return hashlib.sha256(packet.read_bytes()).hexdigest()
 def run_snapshot_preservation_review(manifest_path,out_dir,created_at):
  out=Path(out_dir); out.mkdir(parents=True,exist_ok=True); m=loadj(manifest_path); errs=validate_manifest(m)
  l20=m.get('layer20_inputs',{})
@@ -58,5 +75,5 @@ def run_snapshot_preservation_review(manifest_path,out_dir,created_at):
  wj(out/'snapshot_preservation_review_status_board.json',{"object_type":"AirNowSnapshotPreservationReviewStatusBoard","schema_version":"v1","board_status":"SNAPSHOT_PRESERVATION_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW","created_at":created_at})
  (out/'snapshot_preservation_review_status_board.md').write_text('# AirNow Layer 21 Snapshot Preservation Review Status Board\n\nInternal-only manual review intake complete.\n')
  (out/'snapshot_preservation_review_report.md').write_text('# AirNow Layer 21 Snapshot Preservation Review Report\n\nCandidate-only acceptance for manual internal preservation review; no execution.\n')
- r={"object_type":"AirNowSnapshotPreservationReviewReceipt","schema_version":"v1","workflow_runner":"airnow_layer21_snapshot_preservation_review","manifest_id":m.get("manifest_id"),"workflow_outcome":"SNAPSHOT_PRESERVATION_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"review_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"snapshot_preservation_review_packet_hash":None},"created_at":created_at}
+ r={"object_type":"AirNowSnapshotPreservationReviewReceipt","schema_version":"v1","workflow_runner":"airnow_layer21_snapshot_preservation_review","manifest_id":m.get("manifest_id"),"workflow_outcome":"SNAPSHOT_PRESERVATION_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"review_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"snapshot_preservation_review_packet_hash":_maybe_packet(m,out)},"created_at":created_at}
  wj(out/'snapshot_preservation_review_receipt.json',r); return r

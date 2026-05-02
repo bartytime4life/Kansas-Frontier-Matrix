@@ -1,0 +1,25 @@
+{
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "manifest_id": "kfm-airnow-layer21-valid",
+  "object_type": "AirNowSnapshotPreservationReviewReceipt",
+  "output_hashes": {
+    "snapshot_preservation_review_packet_hash": "67989b2dc2ebb68b9f43d963da24eec5e3b437c0ce22dfc3eb5fce3c4a903650"
+  },
+  "preservation_actions_executed": false,
+  "preservation_copy_executed": false,
+  "preservation_transfer_executed": false,
+  "public_release_allowed": false,
+  "review_actions_executed": false,
+  "schema_version": "v1",
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "SNAPSHOT_PRESERVATION_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW",
+  "workflow_runner": "airnow_layer21_snapshot_preservation_review"
+}
