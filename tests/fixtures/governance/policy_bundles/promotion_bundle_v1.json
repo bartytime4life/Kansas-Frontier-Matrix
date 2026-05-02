@@ -1,0 +1,16 @@
+{
+  "id": "kfm/promotion",
+  "version": "v1.0.0",
+  "rules": [
+    {
+      "if": {
+        "review_complete": true,
+        "risk_score_max": 20
+      },
+      "then": "allow"
+    },
+    {
+      "else": "deny"
+    }
+  ]
+}

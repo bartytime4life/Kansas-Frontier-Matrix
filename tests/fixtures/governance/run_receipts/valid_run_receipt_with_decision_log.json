@@ -1,0 +1,6 @@
+{
+  "run_receipt_id": "kfm://run/example",
+  "spec_hash": "sha256-13a9f577955862a7a3f271b4509593f37635dbb47ba3a29d1ff9dcd9e7cf0e4a",
+  "policy_bundle_hash": "sha256-9716042fd4a58221d5c0b98f747077c28afa7e63fad05faeced83f95422ea105",
+  "input_path": "tests/fixtures/governance/policy_inputs/promotion_allow_input.json"
+}
