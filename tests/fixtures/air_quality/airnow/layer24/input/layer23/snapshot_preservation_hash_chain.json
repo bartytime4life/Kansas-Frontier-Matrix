@@ -1,0 +1,9 @@
+{
+  "object_type": "AirNowSnapshotPreservationHashChain",
+  "records": [
+    {
+      "name": "x",
+      "sha256": "00"
+    }
+  ]
+}
