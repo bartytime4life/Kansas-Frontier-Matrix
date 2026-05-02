@@ -1,0 +1,45 @@
+{
+  "schema_version": "v1",
+  "object_type": "VerifiedTileReleaseEvidence",
+  "release_evidence_id": "kfm.tiles.release_evidence.1",
+  "hash_algorithm": "sha256",
+  "indexDigest": "sha256:ec68d7c2581952ba5cec6a35581e19ff826cc2c6a3d7e70a577fc1f3fde96175",
+  "result": "ALLOW",
+  "required_refs": {
+    "EvidenceBundle": "evidence_bundle.json",
+    "ReleaseManifest": "release_manifest.json",
+    "RunReceipt": "run_receipt.json",
+    "VerifierTrace": "trace.json"
+  },
+  "tiles": [
+    {
+      "tile_id": "0/0/0",
+      "digest": "sha256:18fbb55828a9cf2a24e1ee786e8f24abb793a331f0f6320cc7a8cc3b4edd4a53",
+      "prior_digest": null,
+      "change_type": "added",
+      "bytes_ref": "tiles/0_0_0.mvt"
+    }
+  ],
+  "public_artifacts": [
+    "published/tiles/0_0_0.mvt"
+  ],
+  "runtime_contract": {
+    "schema_version": "v1",
+    "object_type": "TileRuntimeVerificationContract",
+    "runtime_contract_id": "kfm.runtime.1",
+    "render_mode": "verified_only",
+    "allow_unverified_render": false
+  },
+  "trace": {
+    "changed_tile_verification_pct": 100,
+    "avg_tile_size_kb": 10,
+    "avg_fetch_verify_ms": 20,
+    "memory_mb": 12,
+    "masked_pct": 10,
+    "produced_tile_count_deviation_pct": 0
+  },
+  "rollback_ref": "docs/rollback.md",
+  "correction_ref": "docs/correction.md",
+  "sensitivity": "public_safe",
+  "rights": "public"
+}

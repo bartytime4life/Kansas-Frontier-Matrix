@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "object_type",
+    "failure_report_id",
+    "errors"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1"
+    },
+    "object_type": {
+      "const": "TileVerificationFailureReport"
+    },
+    "failure_report_id": {
+      "type": "string"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

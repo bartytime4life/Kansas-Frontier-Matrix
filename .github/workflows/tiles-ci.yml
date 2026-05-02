@@ -93,3 +93,41 @@ jobs:
       - name: Verify valid fixture
         run: |
           python tools/tiles/kfm_delta_apply.py verify --manifest tests/fixtures/tiles/delta_apply/valid/delta_manifest.json --base-store tests/fixtures/tiles/delta_apply/valid/base_tile_store.json --delta-store tests/fixtures/tiles/delta_apply/valid/delta_tile_store.json --ledger tests/fixtures/tiles/delta_apply/valid/applied_ledger.json
+
+
+  verified-tile-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema
+      - name: Validate verified release valid fixture
+        run: |
+          python tools/validators/tiles/validate_verified_tile_release.py tests/fixtures/tiles/verified_release/valid/verified_tile_release_evidence.json --fixture-root tests/fixtures/tiles/verified_release/valid --out ValidationReport.v1.json
+      - name: Validate verified release invalid fixtures fail
+        run: |
+          set +e
+          for f in tests/fixtures/tiles/verified_release/invalid/*.json; do python tools/validators/tiles/validate_verified_tile_release.py "$f" --fixture-root tests/fixtures/tiles/verified_release/valid --out ValidationReport.v1.json; test $? -ne 0 || exit 1; done
+          set -e
+      - name: Build promotion proof bundle
+        run: |
+          python tools/tiles/build_tile_promotion_proof_bundle.py --delta-manifest tests/fixtures/tiles/verified_release/valid/delta_manifest.json --trace tests/fixtures/tiles/verified_release/valid/trace.json --verified-tile-list tests/fixtures/tiles/verified_release/valid/verified_tile_list.json --release-manifest tests/fixtures/tiles/verified_release/valid/release_manifest.json --evidence-bundle tests/fixtures/tiles/verified_release/valid/evidence_bundle.json --run-receipt tests/fixtures/tiles/verified_release/valid/run_receipt.json --out-dir .
+      - name: OPA tests (if present)
+        run: |
+          if command -v opa >/dev/null 2>&1; then opa test policy/tiles/verified_tile_release*.rego -v; else echo "OPA not preinstalled; skipping"; fi
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-tile-release-artifacts
+          path: |
+            tile_promotion_proof_bundle.json
+            tile_verification_receipt.json
+            ValidationReport.v1.json
+            tests/fixtures/tiles/verified_release/valid/trace.json
+            tests/fixtures/tiles/verified_release/valid/verified_tile_list.json
+            tests/fixtures/tiles/verified_release/valid/delta_manifest.json
