@@ -1,4 +1,3 @@
 {
-  "object_type": "AirNowSnapshotReviewPolicyAttestation",
-  "status": "PASS"
+  "policy_status": "PASS"
 }

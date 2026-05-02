@@ -1,9 +1,7 @@
 {
-  "object_type": "AirNowSnapshotItemSatisfactionMatrix",
-  "records": [
+  "rows": [
     {
-      "item_id": "item-1",
-      "satisfied": true
+      "id": "s1"
     }
   ]
 }
