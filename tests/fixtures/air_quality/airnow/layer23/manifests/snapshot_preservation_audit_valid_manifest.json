@@ -1,5 +1,42 @@
 {
   "manifest_id": "m23",
+  "audit_policy": {
+    "include_packet": true
+  },
+  "layer20_inputs": {
+    "snapshot_preservation_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_receipt.json",
+    "snapshot_preservation_policy_continuity_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_policy_continuity_matrix.json",
+    "snapshot_preservation_caveat_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_caveat_register.json",
+    "snapshot_preservation_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_non_execution_attestation.json",
+    "snapshot_preservation_manifest_resolved_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_manifest.resolved.json",
+    "snapshot_preservation_input_inventory_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_input_inventory.json",
+    "snapshot_preservation_scope_plan_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_scope_plan.json",
+    "snapshot_preservation_classification_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_classification_matrix.json",
+    "snapshot_preservation_fixity_plan_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_fixity_plan.json",
+    "snapshot_preservation_readiness_summary_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_readiness_summary.json"
+  },
+  "layer21_inputs": {
+    "snapshot_preservation_review_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_receipt.json",
+    "snapshot_preservation_review_policy_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_policy_attestation.json",
+    "snapshot_preservation_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_caveat_register.json",
+    "snapshot_preservation_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_acceptance_candidates.jsonl",
+    "residual_snapshot_preservation_blockers_jsonl": "tests/fixtures/air_quality/airnow/layer23/input/layer21/residual_snapshot_preservation_blockers.jsonl",
+    "snapshot_preservation_review_manifest_resolved_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_manifest.resolved.json",
+    "snapshot_preservation_review_evidence_inventory_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_evidence_inventory.json",
+    "snapshot_preservation_review_assessment_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_assessment_matrix.json",
+    "snapshot_preservation_item_satisfaction_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_item_satisfaction_matrix.json",
+    "snapshot_preservation_review_readiness_summary_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_readiness_summary.json"
+  },
+  "layer22_inputs": {
+    "snapshot_preservation_finalization_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_finalization_receipt.json",
+    "snapshot_preservation_decision_candidate_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_decision_candidate.json",
+    "snapshot_preservation_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_non_execution_attestation.json",
+    "snapshot_preservation_policy_continuity_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_policy_continuity_matrix.json",
+    "snapshot_preservation_caveat_continuity_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_caveat_continuity_register.json",
+    "snapshot_preservation_finalization_manifest_resolved_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_finalization_manifest.resolved.json",
+    "snapshot_preservation_acceptance_consolidation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_acceptance_consolidation.json",
+    "snapshot_preservation_blocker_consolidation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_blocker_consolidation.json"
+  },
   "local_file_only": true,
   "no_network": true,
   "bulk_web_service_loop": false,
@@ -71,30 +108,5 @@
   "preservation_finalization_action_allowed": false,
   "preservation_audit_action_requested": false,
   "preservation_audit_action_allowed": false,
-  "preliminary_data": true,
-  "layer20_inputs": {
-    "snapshot_preservation_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_receipt.json",
-    "snapshot_preservation_scope_plan_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_scope_plan.json",
-    "snapshot_preservation_classification_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_classification_matrix.json",
-    "snapshot_preservation_fixity_plan_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_fixity_plan.json",
-    "snapshot_preservation_policy_continuity_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_policy_continuity_matrix.json",
-    "snapshot_preservation_caveat_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_caveat_register.json",
-    "snapshot_preservation_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer20/snapshot_preservation_non_execution_attestation.json"
-  },
-  "layer21_inputs": {
-    "snapshot_preservation_review_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_receipt.json",
-    "snapshot_preservation_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_acceptance_candidates.jsonl",
-    "residual_snapshot_preservation_blockers_jsonl": "tests/fixtures/air_quality/airnow/layer23/input/layer21/residual_snapshot_preservation_blockers.jsonl",
-    "snapshot_preservation_review_policy_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_policy_attestation.json",
-    "snapshot_preservation_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer21/snapshot_preservation_review_caveat_register.json"
-  },
-  "layer22_inputs": {
-    "snapshot_preservation_finalization_receipt_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_finalization_receipt.json",
-    "snapshot_preservation_decision_candidate_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_decision_candidate.json",
-    "snapshot_preservation_acceptance_consolidation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_acceptance_consolidation.json",
-    "snapshot_preservation_blocker_consolidation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_blocker_consolidation.json",
-    "snapshot_preservation_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_non_execution_attestation.json",
-    "snapshot_preservation_policy_continuity_matrix_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_policy_continuity_matrix.json",
-    "snapshot_preservation_caveat_continuity_register_json": "tests/fixtures/air_quality/airnow/layer23/input/layer22/snapshot_preservation_caveat_continuity_register.json"
-  }
+  "preliminary_data": true
 }

@@ -1,4 +1,4 @@
-import json,re
+import json,re,tarfile,hashlib,io
 from pathlib import Path
 from .checksums import sha256_path
 from .ids import sid,cjson
@@ -12,6 +12,22 @@ def _wjl(p,rows): Path(p).write_text("".join(cjson(r)+"\n" for r in rows))
 def _deny(m,out,created_at,errs):
  r={"object_type":"AirNowSnapshotPreservationAuditReceipt","schema_version":"v1","workflow_runner":"airnow_layer23_snapshot_preservation_audit","manifest_id":m.get("manifest_id"),"workflow_outcome":"SNAPSHOT_PRESERVATION_INTERNAL_AUDIT_DENIED_BY_POLICY","validation_outcome":"FAIL","finite_outcome":"DENY","commands_executed":False,"audit_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(set(errs)),"output_hashes":{"snapshot_preservation_audit_packet_hash":None},"created_at":created_at}
  _wj(out/"snapshot_preservation_audit_receipt.json",r); return r
+
+
+
+def _packet(out, created_at):
+ files=sorted([p for p in out.glob('*') if p.is_file() and p.name!='snapshot_preservation_audit_packet.tar.gz'])
+ packet=out/'snapshot_preservation_audit_packet.tar.gz'
+ with tarfile.open(packet,'w:gz',format=tarfile.PAX_FORMAT) as tf:
+  for f in files:
+   rel=f.name
+   if '..' in rel or rel.startswith('/'):
+    raise ValueError('PATH_TRAVERSAL')
+   data=f.read_bytes()
+   info=tarfile.TarInfo(name=rel)
+   info.size=len(data); info.mtime=0; info.uid=0; info.gid=0; info.uname=''; info.gname=''
+   tf.addfile(info, io.BytesIO(data))
+ return hashlib.sha256(packet.read_bytes()).hexdigest()
 
 def _chk_receipt(rcp,pfx,errs):
  for f in ["publication_allowed","public_release_allowed","preservation_action_allowed","preservation_copy_allowed","preservation_transfer_allowed","snapshot_export_execution_allowed","snapshot_copy_allowed","snapshot_transfer_allowed","snapshot_publication_allowed","snapshot_release_allowed","archive_transfer_allowed","file_deletion_allowed","legal_hold_creation_allowed","official_archive_certification_allowed","command_execution_allowed","final_accession_execution_allowed","task_closure_allowed"]:
@@ -67,5 +83,8 @@ def run_snapshot_preservation_audit(manifest_path,out_dir,created_at):
  if any(t in txt.lower() for t in FORBIDDEN_TEXT_TERMS): return _deny(m,out,created_at,['FORBIDDEN_LANGUAGE'])
  (out/'snapshot_preservation_audit_status_board.md').write_text('# AirNow Layer 23 Snapshot Preservation Audit Status Board\n\n'+txt+'\n')
  (out/'snapshot_preservation_audit_report.md').write_text('# AirNow Layer 23 Snapshot Preservation Audit Report\n\nInternal-only audit ledger compilation from Layers 20-22.\n')
- r={"object_type":"AirNowSnapshotPreservationAuditReceipt","schema_version":"v1","workflow_runner":"airnow_layer23_snapshot_preservation_audit","manifest_id":m.get('manifest_id'),"workflow_outcome":"SNAPSHOT_PRESERVATION_AUDIT_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"audit_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"snapshot_preservation_audit_packet_hash":None},"created_at":created_at}
+ packet_hash=None
+ if m.get('audit_policy',{}).get('include_packet'):
+  packet_hash=_packet(out,created_at)
+ r={"object_type":"AirNowSnapshotPreservationAuditReceipt","schema_version":"v1","workflow_runner":"airnow_layer23_snapshot_preservation_audit","manifest_id":m.get('manifest_id'),"workflow_outcome":"SNAPSHOT_PRESERVATION_AUDIT_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"audit_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"snapshot_preservation_audit_packet_hash":packet_hash},"created_at":created_at}
  _wj(out/'snapshot_preservation_audit_receipt.json',r); return r

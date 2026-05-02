@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "layer20": {
+    "caveats": [
+      "AIRNOW_PRELIMINARY_DATA"
+    ]
+  },
+  "layer21": {
+    "caveats": [
+      "AIRNOW_NOT_AQS_REGULATORY_DATA"
+    ]
+  },
+  "layer22": {
+    "caveats": [
+      "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP",
+      "SNAPSHOT_PRESERVATION_AUDIT_NOT_ACTION_EXECUTION",
+      "SNAPSHOT_PRESERVATION_AUDIT_NOT_PUBLICATION"
+    ]
+  },
+  "object_type": "AirNowSnapshotPreservationCaveatRegistry",
+  "schema_version": "v1"
+}
