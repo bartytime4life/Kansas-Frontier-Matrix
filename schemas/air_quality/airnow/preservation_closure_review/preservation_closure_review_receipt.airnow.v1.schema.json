@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "object_type": {
+      "const": "AirNowPreservationClosureReviewReceipt"
+    },
+    "validation_outcome": {
+      "type": "string"
+    },
+    "workflow_runner": {
+      "const": "airnow_layer25_preservation_closure_review"
+    }
+  },
+  "required": [
+    "object_type",
+    "workflow_runner",
+    "validation_outcome"
+  ],
+  "type": "object"
+}
