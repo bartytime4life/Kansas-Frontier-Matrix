@@ -1,36 +1,37 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: TODO: assign kfm://doc/<uuid>
+doc_id: kfm://doc/NEEDS-VERIFICATION
 title: Kansas Frontier Matrix
 type: standard
 version: v1
 status: draft
-owners: platform-governance (verify against CODEOWNERS)
+owners: OWNER_TBD_AFTER_CODEOWNERS_REVIEW
 created: 2026-04-26
-updated: 2026-04-29
-policy_label: policy/bundles/* + policy/catalog/* (repo-scoped)
-related: [.github/workflows/, policy/, schemas/contracts/v1/, apps/governed_api/, apps/web/, data/registry/]
+updated: 2026-05-02
+policy_label: public-doc-draft; policy homes NEEDS VERIFICATION
+related: [README.md, PATH_TBD_AFTER_REPO_INSPECTION]
 tags: [kfm, readme, governance, evidence, maps, temporal]
-notes: [Draft root README revised from corpus-only evidence; verify repository paths, owners, workflows, routes, package manager, license, release state, and public access posture before commit.]
+notes: [Repo-useful root README draft revised from supplied Markdown and KFM corpus; current repo implementation depth UNKNOWN; created date inherited from supplied draft; verify owners, IDs, links, license, workflows, routes, package manager, CI, release state, and public access posture before commit.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Kansas Frontier Matrix
 
+A governed, evidence-first, map-first, time-aware spatial knowledge and publication system for inspectable claims.
+
 <p align="center">
-  <strong>Evidence-first • map-first • time-aware • governed spatial knowledge and publication.</strong><br>
+  <strong>Evidence-first • map-first • time-aware • governed • auditable • reversible</strong><br>
   <sub>Maps, AI answers, tiles, graphs, dashboards, scenes, and stories are downstream evidence carriers — not sovereign truth.</sub>
 </p>
 
 <p align="center">
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Repo: mounted checkout" src="https://img.shields.io/badge/repo-mounted_checkout-brightgreen">
-  <img alt="Implementation: active" src="https://img.shields.io/badge/implementation-active-blue">
-  <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
-  <img alt="Policy: fail-closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
-  <img alt="Release: dry-run ready" src="https://img.shields.io/badge/release-dry--run_ready-yellow">
-  <img alt="Review: steward gates" src="https://img.shields.io/badge/review-steward_gates-blueviolet">
-  <img alt="CI: workflows present" src="https://img.shields.io/badge/ci-workflows_present-success">
+  <img alt="Status: experimental draft" src="https://img.shields.io/badge/status-experimental_draft-lightgrey">
+  <img alt="Repo depth: unknown" src="https://img.shields.io/badge/repo_depth-unknown-orange">
+  <img alt="Implementation: needs verification" src="https://img.shields.io/badge/implementation-needs_verification-yellow">
+  <img alt="Evidence posture: cite or abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
+  <img alt="Policy posture: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Release: not asserted" src="https://img.shields.io/badge/release-not_asserted-lightgrey">
+  <img alt="CI: needs verification" src="https://img.shields.io/badge/ci-needs_verification-yellow">
 </p>
 
 <p align="center">
@@ -44,47 +45,50 @@ notes: [Draft root README revised from corpus-only evidence; verify repository p
 </p>
 
 > [!IMPORTANT]
-> This README is evidence-bounded. Do **not** treat proposed paths, object families, validation commands, workflows, badges, API routes, UI components, or runtime behavior as current implementation until verified from current repository evidence.
+> **Status:** `experimental` README draft  
+> **Owner:** `OWNER_TBD_AFTER_CODEOWNERS_REVIEW`  
+> **Target path:** PROPOSED `README.md`  
+> **Truth posture:** CONFIRMED doctrine · PROPOSED file homes · UNKNOWN repo implementation depth  
+> **Commit rule:** verify paths, owners, links, workflows, license, package manager, release state, and public access posture before treating this file as authoritative.
 
 | Field | Value |
 |---|---|
-| Status | `draft` |
-| Owners | `.github/CODEOWNERS` present; primary ownership still needs human confirmation for external publication. |
-| Evidence mode | Repository-inspected README with doctrine + concrete path evidence from this checkout. |
-| Policy label | Policy bundles and catalog gates in `policy/bundles/*` and `policy/catalog/*`; release-specific gates in `policy/release/*`. |
-| Repo fit | Root landing file `README.md` with adjacent control surfaces in `docs/`, `schemas/`, `policy/`, `apps/`, `tools/`, and `tests/`. |
-| Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, source terms, or release state |
-| Implementation depth | Multi-surface implementation present: governed API, web shell, validators, fixtures, policy bundles, and CI workflows. |
-| Publication state | Release dry-run and manifest validation machinery present; production publication posture still policy-gated. |
+| Document review state | `draft` |
+| README lifecycle | `experimental` |
+| Evidence mode | Corpus-grounded README revision from supplied Markdown; current repository implementation depth remains `UNKNOWN`. |
+| Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, source terms, review state, or release state. |
+| Policy posture | Policy-aware by doctrine; exact policy homes and policy engine remain `NEEDS VERIFICATION`. |
+| Implementation depth | `UNKNOWN` until confirmed from mounted repo files, tests, workflows, manifests, dashboards, logs, or generated artifacts. |
+| Publication state | Not asserted. Promotion must be proven through governed release gates before any public or semi-public release. |
+
+> [!NOTE]
+> This README is designed as a root landing page draft. It should be merged only after maintainers verify current repository conventions and reconcile any existing root README anchors.
+
+---
 
 ## What this README is
 
 | This README does | This README does not |
 |---|---|
-| Provides a polished root orientation for KFM maintainers, reviewers, and trusted collaborators. | Prove the current repository already implements the described files, schemas, routes, tests, UI, CI, or runtime behavior. |
-| States the KFM trust posture, lifecycle, public-output boundaries, and documentation expectations. | Authorize public release of any source, claim, layer, scene, tile, summary, or AI answer. |
-| Preserves the project’s evidence-first, map-first, time-aware, governed doctrine. | Treat maps, AI, dashboards, vector stores, search indexes, or generated summaries as root truth. |
-| Lists safe next verification and build steps. | Replace repository inspection, source-rights review, policy review, release review, or rollback planning. |
-
-> [!NOTE]
-> This document is designed to be merged as a root README only after maintainers verify current repository conventions, owners, links, workflows, license, and release state.
+| Orient maintainers, reviewers, and trusted collaborators to KFM doctrine and safe next steps. | Prove current implementation, routes, DTOs, tests, workflows, CI behavior, dashboards, emitted proof objects, or deployment posture. |
+| Preserve the project’s evidence-first, map-first, time-aware, governed posture. | Authorize public release of any source, claim, layer, scene, tile, summary, dashboard, or AI answer. |
+| State the trust membrane, lifecycle, public-output boundaries, and verification expectations. | Treat maps, AI, dashboards, vector stores, search indexes, graph projections, or generated summaries as root truth. |
+| Identify repo-fit assumptions and verification gaps for maintainers. | Replace source-rights review, policy review, security review, release review, rollback planning, or repository inspection. |
 
 ---
 
 ## What KFM is
 
-Kansas Frontier Matrix, or KFM, is a governed spatial evidence and publication system. Its durable public unit of value is the **inspectable claim**: a public or semi-public statement that can be reconstructed to admissible evidence, spatial scope, temporal scope, source role, policy posture, review state, release state, and correction lineage.
+Kansas Frontier Matrix, or KFM, is a governed spatial evidence and publication system. Its durable public unit of value is the **inspectable claim**: a public or semi-public statement whose evidence, spatial scope, temporal scope, source role, policy posture, review state, release state, and correction lineage can be inspected.
 
-KFM is designed so maps, summaries, dashboards, tiles, graph projections, story exports, AI answers, and rendered scenes remain downstream carriers of evidence. They are useful surfaces, not sovereign truth.
-
-In this repository today, that doctrine is expressed not just in prose but in enforceable artifacts: JSON schemas, Rego bundles, fixture-driven policy parity tests, and bounded runtime envelopes that force finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`).
+KFM treats maps, summaries, dashboards, tiles, graph projections, story exports, AI answers, and rendered scenes as downstream carriers of evidence. They can help users navigate, compare, explain, and communicate. They do not replace evidence, policy, review, release state, or correction history.
 
 | KFM does | KFM does not |
 |---|---|
 | Builds traceable spatial claims from governed evidence. | Treat map polish as evidence. |
-| Keeps time, source role, review state, policy posture, and correction lineage visible. | Publish uncited or weakly supported claims as authoritative. |
-| Uses maps as primary navigation and inspection surfaces. | Let renderers, tiles, scenes, search indexes, or vector stores replace canonical truth. |
-| Supports review, rollback, redaction, and correction workflows. | Expose RAW, WORK, QUARANTINE, or unpublished candidate data to public clients. |
+| Keeps time, source role, review state, policy posture, release state, and correction lineage visible. | Publish uncited or weakly supported claims as authoritative. |
+| Uses maps as primary navigation and inspection surfaces. | Let renderers, tiles, scenes, search indexes, graph projections, vector stores, or model outputs replace canonical truth. |
+| Supports review, rollback, redaction, generalization, correction, and withdrawal workflows. | Expose RAW, WORK, QUARANTINE, or unpublished candidate data to public clients. |
 | Allows bounded AI synthesis over admissible evidence. | Allow direct public model traffic or model output as proof. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
@@ -93,28 +97,50 @@ In this repository today, that doctrine is expressed not just in prose but in en
 
 ## Repo fit
 
-This file is intended to serve as the repository landing page after maintainers verify the real checkout conventions.
+This file is a PROPOSED root README for KFM. The exact repository topology is `NEEDS VERIFICATION`.
 
-| Area | Current README posture |
-|---|---|
-| Root file | `README.md` — proposed root orientation |
-| Source registry | `data/registry/ecology/` with source, dataset, sensitivity, and map-layer registries. |
-| Schemas/contracts | `schemas/contracts/v1/` (plus ecology, evidence, runtime, correction, release families). |
-| Policy | Rego policy bundles in `policy/bundles/`, catalog gates in `policy/catalog/`, runtime/release fixtures in `policy/fixtures/`. |
-| Tests/fixtures | Pytest-style tests in `tests/` and app/tool test trees; extensive fixtures under `tests/fixtures/` and `policy/fixtures/`. |
-| UI shell | `apps/web/` + `ui/` with map pane, Evidence Drawer, Focus panel, and trust badge components. |
-| Release/proofs | `tools/proofs/`, `tools/receipts/`, `tools/release/`, `data/proofs/`, `data/receipts/`, and release policy gates. |
-| License | `TODO: verify repository license` |
+| Fit area | Draft posture | Verification needed |
+|---|---|---|
+| Target path | PROPOSED `README.md` | Confirm root README convention and stable anchors. |
+| Upstream doctrine | KFM doctrine corpus and living pipeline/manual family | Confirm canonical doc registry and successor relationships. |
+| Downstream docs | PROPOSED `docs/`, `docs/adr/`, `docs/runbooks/`, `docs/domains/` | Confirm actual directory structure before linking. |
+| Contracts / schemas | PROPOSED schema-home ADR before machine contract expansion | Resolve `schemas/` vs. `contracts/` authority. |
+| Policy | PROPOSED policy gates for source intake, runtime, release, redaction, and publication | Confirm policy engine, policy file homes, and fixture conventions. |
+| Apps / UI | PROPOSED governed API + map-first web shell | Confirm actual app paths, framework, routes, DTOs, and component names. |
+| Data / registry | PROPOSED source, dataset, layer, receipt, proof, catalog, and release registries | Confirm actual data lifecycle homes and artifact layout. |
+| Tests / CI | PROPOSED no-network fixtures, negative-path tests, and validation gates | Confirm test runner, package manager, CI workflow names, and branch protections. |
+| License | `TODO: verify repository license` | Confirm license file before adding a license badge or summary. |
+
+### PROPOSED control-surface map
+
+```text
+README.md                         # PROPOSED root orientation
+docs/                             # NEEDS VERIFICATION
+docs/adr/                         # PROPOSED ADR home
+docs/runbooks/                    # PROPOSED runbook home
+docs/domains/                     # PROPOSED domain-lane docs
+schemas/ or contracts/            # CONFLICTED / needs schema-home ADR
+policy/                           # NEEDS VERIFICATION
+data/registry/                    # NEEDS VERIFICATION
+data/receipts/                    # NEEDS VERIFICATION
+data/proofs/                      # NEEDS VERIFICATION
+data/catalog/                     # NEEDS VERIFICATION
+apps/                             # NEEDS VERIFICATION
+tools/                            # NEEDS VERIFICATION
+tests/                            # NEEDS VERIFICATION
+.github/workflows/                # NEEDS VERIFICATION
+```
 
 > [!WARNING]
-> If this repository already contains a stronger root README or documented README convention, preserve stable anchors and merge this content as a patch rather than replacing verified material wholesale.
+> If the real repository already contains a stronger root README or a documented README convention, preserve stable anchors and merge this content as a patch rather than replacing verified material wholesale.
 
 ### Maintainer start path
 
-1. Verify repository root, branch, package manager, workflow names, and stable README anchors.
-2. Resolve schema-home authority through an ADR before adding or moving machine contracts.
-3. Add or verify source ledger, source registry, core governance schemas, fixtures, validators, policy stubs, and one no-network proof slice.
-4. Only then expand live connectors, public layers, UI routes, AI provider adapters, broad tiles, or exposed deployment.
+1. Verify repository root, branch, package manager, workflow names, root README anchors, and license.
+2. Confirm owners through CODEOWNERS or the project’s documented ownership source.
+3. Resolve schema-home authority through an ADR before adding or moving machine contracts.
+4. Confirm source ledger, source registry, core governance schemas, fixtures, validators, policy stubs, and proof-object homes.
+5. Build one no-network proof slice before live connectors, public layers, UI route expansion, model-provider adapters, broad tiles, or exposed deployment.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -126,27 +152,27 @@ KFM input classes should be admitted only through source-aware, policy-aware int
 
 | Input class | Required posture |
 |---|---|
-| Authoritative or official source records | Verify source role, rights, temporal coverage, spatial support, update cadence, and release terms. |
+| Authoritative or official source records | Verify source role, rights, temporal coverage, spatial support, update cadence, attribution, and release terms. |
 | Archival, historical, field, or documentary evidence | Preserve provenance, interpretation status, uncertainty, and review trail. |
-| Sensor, observation, remote-sensing, or model-derived data | Keep observations, detections, models, regulatory layers, and derived products distinct. |
-| Human or steward-submitted contributions | Route through intake, review, rights, sensitivity, and correction controls. |
-| AI-assisted summaries or classifications | Treat as interpretive outputs requiring evidence, citation validation, and policy checks. |
+| Sensor, observation, remote-sensing, or model-derived data | Keep observations, detections, model fields, regulatory layers, and derived products distinct. |
+| Human or steward-submitted contributions | Route through intake, rights, sensitivity, review, correction, and release controls. |
+| AI-assisted summaries, classifications, or drafts | Treat as interpretive outputs requiring evidence resolution, citation validation, policy checks, and review. |
 
 ## Exclusions and fail-closed areas
 
-KFM should quarantine, deny, redact, generalize, delay, or stage access when evidence or policy is unresolved.
+KFM should quarantine, deny, redact, generalize, delay, or stage access when evidence or policy support is unresolved.
 
 | Exclusion / restricted class | Default handling |
 |---|---|
-| Unverified source terms, licenses, rights, or redistribution permissions | `ABSTAIN` or quarantine until resolved. |
+| Unverified source terms, licenses, rights, attribution, or redistribution permissions | `ABSTAIN` or quarantine until resolved. |
 | Exact locations for archaeology, sacred sites, burials, rare species, sensitive habitat, critical infrastructure, or private landowner exposure | Deny public exact exposure by default; require review and documented transforms. |
-| Living-person, DNA, genomic, or private genealogy material | Restrict by default; separate assertions from canonical records. |
+| Living-person, DNA, genomic, private genealogy, or sensitive family-history material | Restrict by default; separate assertions from canonical records. |
 | Assessor, tax, or parcel data used as title truth | Do not publish as title truth without appropriate source role and evidence. |
-| Direct model-runtime output, raw vector-search hits, or generated summaries | Never treat as proof. |
-| RAW, WORK, QUARANTINE, or unpublished candidate stores | Not available to public clients or ordinary UI surfaces. |
+| Direct model-runtime output, raw vector-search hits, generated summaries, or unreviewed AI drafts | Never treat as proof. |
+| RAW, WORK, QUARANTINE, unpublished candidate stores, private credentials, or internal maintenance surfaces | Not available to public clients or ordinary UI surfaces. |
 
 > [!CAUTION]
-> When rights, sovereignty, cultural sensitivity, living-person exposure, DNA/genomics, private landowner exposure, exact-location exposure, rare species, archaeology, critical infrastructure, credentials, private endpoints, or source terms are unclear, KFM should fail closed.
+> When rights, sovereignty, cultural sensitivity, living-person exposure, DNA/genomics, private landowner exposure, exact-location exposure, rare species, archaeology, critical infrastructure, credentials, private endpoints, or source terms are unclear, KFM should fail closed and preserve an auditable reason.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -166,7 +192,7 @@ flowchart LR
   API --> UI[Map / Evidence Drawer / Focus Mode]
 ```
 
-Core rule: public-facing surfaces should resolve evidence and policy posture before making consequential claims.
+Core rule: public-facing surfaces should resolve evidence, source role, policy posture, review state, and release state before making consequential claims.
 
 | Stage | What it is | Public-client posture |
 |---|---|---|
@@ -203,12 +229,12 @@ A consequential KFM claim should be reconstructable to the following support sur
 |---|---|
 | `EvidenceRef → EvidenceBundle` | Shows what evidence supports the claim. |
 | Spatial scope | Defines where the claim applies and with what geometric support. |
-| Temporal scope | Defines valid time, observed time, source time, or release time as applicable. |
-| Source role | Prevents confusing authority, context, observation, model, and interpretation. |
+| Temporal scope | Defines valid time, observed time, source time, release time, or correction time as applicable. |
+| Source role | Prevents confusing authority, context, observation, model, interpretation, and public communication. |
 | `PolicyDecision` | Shows rights, sensitivity, access, and publication posture. |
 | Review state | Separates draft, reviewed, released, corrected, withdrawn, or superseded claims. |
 | Release state | Connects the claim to a governed publication event. |
-| Correction lineage | Makes corrections, withdrawals, and rollback targets inspectable. |
+| Correction lineage | Makes corrections, withdrawals, supersessions, and rollback targets inspectable. |
 
 > [!IMPORTANT]
 > EvidenceBundle outranks generated language. If the evidence cannot be resolved, cite-or-abstain is the correct default.
@@ -225,10 +251,10 @@ KFM should use a map-first, time-aware shell where geography, time, evidence, po
 
 | Surface | Allowed role | Not allowed |
 |---|---|---|
-| MapLibre / map shell | Render released public-safe artifacts and interaction state. | Become the canonical store, policy authority, or publication gate. |
-| Cesium / 3D scene | Add 3D, terrain, globe, or vertical context when it carries real evidence burden. | Let visual realism imply evidentiary certainty. |
-| Tiles / COGs / PMTiles / 3D Tiles | Deliver rebuildable published artifacts. | Replace source, catalog, proof, or release objects. |
-| Evidence Drawer | Show resolved evidence, policy, review, release, and correction state. | Hide uncertainty or unresolved source posture. |
+| MapLibre / map shell | Render released public-safe artifacts and interaction state. | Become the canonical store, policy authority, citation authority, or publication gate. |
+| Cesium / 3D scene | Add 3D, terrain, globe, vertical, time-dynamic, line-of-sight, or story context when it carries real evidence burden. | Let visual realism imply evidentiary certainty or bypass the 2D trust shell. |
+| Tiles / COGs / PMTiles / 3D Tiles | Deliver rebuildable published artifacts. | Replace source, catalog, proof, release, or correction objects. |
+| Evidence Drawer | Show resolved evidence, policy, review, release, stale state, transform receipts, and correction lineage. | Hide uncertainty, source-role limits, rights gaps, or unresolved policy posture. |
 | Story exports / dashboards | Communicate released claims and context. | Publish unsupported claims as authoritative. |
 
 ### Governed AI / Focus Mode
@@ -268,7 +294,7 @@ These object families are preferred targets unless current repository evidence p
 | `RunReceipt` / `AIReceipt` / `RedactionReceipt` / `ValidationReport` | Process memory, validation, redaction, and runtime traceability. |
 | `PromotionDecision` / `ReleaseManifest` / `ProofPack` / `CatalogMatrix` | Publication readiness, release artifacts, and catalog closure. |
 | `CorrectionNotice` / `RollbackPlan` | Correction, withdrawal, supersession, and recovery path. |
-| `GeoManifest` | Spatial artifact integrity, layer metadata, and release linkage. |
+| `GeoManifest` / `LayerManifest` | Spatial artifact integrity, layer metadata, delivery posture, and release linkage. |
 
 > [!WARNING]
 > The table above is `PROPOSED` unless matching schemas, contracts, validators, fixtures, or emitted artifacts are confirmed in the mounted repository.
@@ -290,13 +316,13 @@ The smallest useful build should prove the trust path before adding broad data o
 
 ## Domain lanes
 
-KFM should grow through proof-bearing domain lanes rather than broad unreviewed expansion. Hydrology is a strong first proof lane because it can exercise source descriptors, temporal observations, regulated context, map delivery, Evidence Drawer payloads, policy checks, and release/rollback behavior without starting from the most sensitive domains.
+KFM should grow through proof-bearing domain lanes rather than broad unreviewed expansion. Hydrology remains a strong candidate first proof lane because it can exercise source descriptors, temporal observations, regulated context, map delivery, Evidence Drawer payloads, policy checks, and release/rollback behavior without starting from the most sensitive domains.
 
 | Lane family | Special caution |
 |---|---|
 | Hydrology, soils, geology, atmosphere, hazards | Keep observations, models, regulatory layers, operational context, and public summaries distinct. |
 | Habitat, fauna, flora, agriculture | Fail closed on sensitive locations and source-rights uncertainty. |
-| Roads, rail, settlements, infrastructure | Separate geometry, legal/administrative status, operator, restriction, and historical interpretation. |
+| Roads, rail, settlements, infrastructure | Separate geometry, legal/administrative status, operator, restriction, condition, and historical interpretation. |
 | Archaeology and cultural heritage | Deny public exact site locations by default; require steward/cultural review and public-safe transforms. |
 | People, genealogy, DNA, land ownership | Restrict living-person and DNA/genomic material; do not treat assessor/tax records as title truth. |
 | UI, MapLibre, 3D, governed AI | Treat as trust-visible interpretation and delivery surfaces, not root truth. |
@@ -317,6 +343,7 @@ KFM may be locally hosted and exposed through a home firewall, reverse proxy, or
 | Model runtimes | No direct public model endpoint; model adapters remain behind governed API and policy checks. |
 | Secrets and private endpoints | Never place in code, prompts, docs, fixtures, screenshots, or examples. |
 | Logs and receipts | Keep enough for review without exposing sensitive data. |
+| Reverse proxy / VPN exposure | Document access controls, allowed origins, audit logging, rollback, and emergency shutoff before exposure. |
 
 > [!CAUTION]
 > If authentication, authorization, source rights, private endpoint exposure, secret handling, or policy state is unclear, KFM should fail closed and preserve an auditable reason.
@@ -325,22 +352,21 @@ KFM may be locally hosted and exposed through a home firewall, reverse proxy, or
 
 ## Validation
 
-Validation commands must be verified against the actual repo. Until then, only repository-discovery commands are safe to show as generic orientation.
+Validation commands must be verified against the actual repo. Until then, show only repository-discovery commands as generic orientation and label implementation checks as `NEEDS VERIFICATION`.
 
 ```bash
 # Local checkout orientation — verify in the real repository before relying on results.
 git status --short
 git branch --show-current
-rg --files | sed -n '1,120p'
-pytest -q tests/policy/runtime_parity/test_runtime_parity.py
+git rev-parse --show-toplevel
 ```
 
-Expected validation surfaces after implementation:
+Implementation validation surfaces to confirm later:
 
 - [ ] Source descriptors validate source role, rights, terms, cadence, and access posture.
 - [ ] EvidenceRefs resolve to EvidenceBundles.
 - [ ] Citation validation fails unsupported claims.
-- [ ] Policy gates deny unresolved rights, unclear sensitivity, missing review state, or unsafe exact geometry.
+- [ ] Policy gates deny unresolved rights, unclear sensitivity, missing review state, unsafe exact geometry, and direct model-client bypass.
 - [ ] Promotion requires catalog/proof/release closure.
 - [ ] Public clients cannot access RAW, WORK, QUARANTINE, canonical/internal stores, or direct model output.
 - [ ] Correction and rollback references are recorded for published or semi-public releases.
@@ -349,7 +375,7 @@ Expected validation surfaces after implementation:
 
 - [ ] Unresolved `EvidenceRef`.
 - [ ] Unknown source role.
-- [ ] Unclear rights or license.
+- [ ] Unclear rights, license, or attribution.
 - [ ] Unclear sensitivity or exact sensitive geometry.
 - [ ] Missing review state or release state.
 - [ ] Invalid `spec_hash` or manifest mismatch.
@@ -382,7 +408,7 @@ A build-facing KFM change is not done until the relevant evidence, policy, valid
 ## Recommended first PR
 
 > [!TIP]
-> When the repository is mounted and conventions are verified, start with the smallest reversible trust-building slice instead of live data ingestion or UI polish.
+> When the repository is mounted and conventions are verified, start with the smallest reversible trust-building slice instead of live data ingestion, UI polish, model integration, or public publication.
 
 **PR-0001: Documentation Control Plane, Schema-Home ADR, Source Ledger Skeleton, Core Governance Schemas, Offline Fixtures, Validators, Policy Stubs, and One No-Network Public-Safe Proof Slice**
 
@@ -410,6 +436,7 @@ KFM publication should be reversible and correctable.
 | Incorrect claim | Correct or withdraw claim; preserve lineage from prior claim to replacement. |
 | Failed release | Roll back to prior `ReleaseManifest` or documented `RollbackPlan`. |
 | Policy drift | Re-evaluate affected public surfaces and release manifests. |
+| Schema-home conflict | Pause machine-file expansion; resolve through ADR and migration plan. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -419,11 +446,12 @@ KFM publication should be reversible and correctable.
 
 - [ ] Confirm actual root README conventions and stable anchors.
 - [ ] Verify repository path map, package manager, test runner, and CI workflow names.
+- [ ] Verify owner-of-record and CODEOWNERS.
 - [ ] Verify schema vs. contract authority and ADR conventions.
 - [ ] Verify policy engine, validator registry, source registry, and fixture homes.
 - [ ] Verify MapLibre shell, Evidence Drawer, Focus Mode, and governed API implementation paths.
 - [ ] Verify release, proof, receipt, catalog, correction, and rollback artifact homes.
-- [ ] Verify license, owners, CODEOWNERS, branch protection, deployment posture, and public access boundaries.
+- [ ] Verify license, branch protection, deployment posture, public access boundaries, and local exposure controls.
 - [ ] Verify whether this README should link to a documentation control plane, source authority register, or pipeline living manual.
 
 ---
@@ -439,12 +467,12 @@ KFM publication should be reversible and correctable.
 
 | Placeholder | Why it remains |
 |---|---|
-| `TODO: assign kfm://doc/<uuid>` | No repository document registry was verified in this session. |
-| `TODO: verify owner` | CODEOWNERS exists, but a human owner-of-record should still confirm external-facing ownership language. |
-| `TODO: verify policy label` | Policy bundles are present; a single externally advertised policy label still needs maintainer confirmation. |
-| `TODO: verify related paths` | Core related paths are now listed; final canonical doc graph should still be confirmed. |
+| `kfm://doc/NEEDS-VERIFICATION` | No repository document registry was verified in this session. |
+| `OWNER_TBD_AFTER_CODEOWNERS_REVIEW` | Ownership must be confirmed from CODEOWNERS or another project-owned source. |
+| `PATH_TBD_AFTER_REPO_INSPECTION` | Current repo topology was not mounted or verified for this revision. |
 | `TODO: verify repository license` | No repository license file was inspected. |
-| `TODO: verify workflow names` | Workflow files are present under `.github/workflows/`; naming can still be refined for public docs. |
+| `NEEDS VERIFICATION` policy homes | Policy directories, bundle names, catalog gates, and runtime policy surfaces are not confirmed. |
+| `NEEDS VERIFICATION` CI/test commands | Workflow names, package manager, test runner, and fixtures are not confirmed. |
 
 </details>
 
@@ -460,267 +488,43 @@ KFM publication should be reversible and correctable.
 | Promotion | Governed state transition from candidate material toward published output, not a file move. |
 | Derived surface | A map layer, tile, search index, vector store, summary, graph projection, scene, or dashboard that carries evidence but does not replace canonical truth. |
 | Focus Mode | Bounded AI-assisted interaction over admissible evidence, policy checks, citation validation, and finite outcomes. |
+| Trust membrane | The boundary preventing public or ordinary UI paths from bypassing evidence, policy, review, and release controls. |
+| Source role | A source’s permitted evidentiary role: authority, observation, context, model, interpretation, communication, or other governed category. |
 
 </details>
 
 <details>
 <summary>Appendix C — README pre-commit check</summary>
 
-- [ ] Metadata block values are verified or visibly marked `TODO`.
+- [ ] Metadata block values are verified or visibly marked `TODO` / `NEEDS VERIFICATION`.
 - [ ] Badge claims are static and truthful, or backed by verified real targets.
-- [ ] No fake CI, release, coverage, license, owner, security, or deployment status appears.
+- [ ] No fake CI, release, coverage, license, owner, security, implementation, or deployment status appears.
 - [ ] Mermaid diagrams reflect doctrine and do not imply unverified implementation.
-- [ ] Links are repo-relative or marked `TODO` / `NEEDS VERIFICATION`.
+- [ ] Relative links are valid from root or marked `NEEDS VERIFICATION`.
 - [ ] No secrets, private endpoints, credentials, or sensitive locations appear.
 - [ ] Unverified implementation behavior remains `UNKNOWN` or `PROPOSED`.
 - [ ] License text is not summarized until the actual repository license is verified.
+- [ ] SoilGrids or other lane-specific runbook material is moved out of the root README before commit.
 
 </details>
 
-## SoilGrids COG normalization (Layer 2)
+<details>
+<summary>Appendix D — Relocation note for SoilGrids material from the supplied draft</summary>
 
-CLI example:
+The supplied draft appended detailed SoilGrids layer commands for COG normalization, STAC registration, promotion gates, static serving validation, distribution publishing, and remote monitoring. That material is useful, but it is too lane-specific and implementation-claim-heavy for the root README.
 
-```bash
-python soilgrids_cog_normalize.py \
-  --input raw/soc_0-5cm_mean_subset.tif \
-  --output-dir processed/cog \
-  --compression DEFLATE \
-  --predictor 2 \
-  --blocksize 512 \
-  --bigtiff IF_SAFER \
-  --threads 1
-```
+Disposition: `RETAIN AS PROPOSED / MOVE AFTER REPO INSPECTION`.
 
-Python example:
+Recommended future homes, pending repo convention verification:
 
-```python
-from soilgrids_cog_normalize import normalize_to_cog
+| Material | PROPOSED destination |
+|---|---|
+| SoilGrids COG normalization | `docs/domains/soil/soilgrids-cog-normalization.md` or `tools/soilgrids/README.md` |
+| SoilGrids STAC registration | `docs/runbooks/soilgrids-stac-registration.md` |
+| SoilGrids promotion gate | `docs/runbooks/soilgrids-promotion-gate.md` |
+| Static serving and HTTP range validation | `docs/runbooks/static-serving-validation.md` |
+| Distribution publisher and remote monitor | `docs/runbooks/remote-distribution-monitoring.md` |
 
-receipt = normalize_to_cog(
-    input_path="raw/soc_0-5cm_mean_subset.tif",
-    output_dir="processed/cog",
-    compression="DEFLATE",
-    predictor=2,
-    blocksize=512,
-    bigtiff="IF_SAFER",
-    threads=1,
-)
-```
+Do not commit those CLI examples as implementation guidance until script names, module locations, policy profiles, receipt schemas, exit codes, STAC version, license posture, network flags, and artifact paths are verified in the actual repository.
 
-Expected receipt shape (`CogReceipt.v1`) includes:
-
-```json
-{
-  "schema": "CogReceipt.v1",
-  "status": "success | error",
-  "input_path": "...",
-  "output_path": "...",
-  "spec_hash": "...",
-  "creation_options": {
-    "FORMAT": "COG",
-    "COMPRESS": "DEFLATE",
-    "PREDICTOR": "2",
-    "BLOCKSIZE": "512",
-    "BIGTIFF": "IF_SAFER",
-    "NUM_THREADS": "1"
-  },
-  "validation": {
-    "input_valid": true,
-    "output_valid": true
-  },
-  "errors": []
-}
-```
-
-## SoilGrids STAC registration (Layer 3)
-
-CLI example:
-
-```bash
-python soilgrids_stac_register.py \
-  --cog-receipt processed/cog/soc_0-5cm_mean_cog_receipt.json \
-  --run-receipt raw/wcs/soc_0-5cm_mean_run_receipt.json \
-  --catalog-dir stac \
-  --catalog-id soilgrids-local \
-  --catalog-title "Local SoilGrids Catalog" \
-  --collection-id soilgrids-v2 \
-  --collection-title "SoilGrids v2.0 Derived Local Assets" \
-  --dataset-datetime 2020-01-01T00:00:00Z \
-  --license CC-BY-4.0 \
-  --property soc \
-  --depth 0-5cm \
-  --statistic mean \
-  --unit "g/kg" \
-  --asset-href-mode relative \
-  --stac-version 1.1.0
-```
-
-Python example:
-
-```python
-from soilgrids_stac_register import register_cog_to_stac
-
-receipt = register_cog_to_stac(
-    cog_receipt_path="processed/cog/soc_0-5cm_mean_cog_receipt.json",
-    run_receipt_path="raw/wcs/soc_0-5cm_mean_run_receipt.json",
-    catalog_dir="stac",
-    catalog_id="soilgrids-local",
-    catalog_title="Local SoilGrids Catalog",
-    collection_id="soilgrids-v2",
-    collection_title="SoilGrids v2.0 Derived Local Assets",
-    dataset_datetime="2020-01-01T00:00:00Z",
-    license="CC-BY-4.0",
-    property="soc",
-    depth="0-5cm",
-    statistic="mean",
-    unit="g/kg",
-    asset_href_mode="relative",
-    stac_version="1.1.0",
-)
-```
-
-Output tree:
-
-```text
-stac/
-├── catalog.json
-├── collections/
-│   └── soilgrids-v2/
-│       ├── collection.json
-│       └── items/
-│           └── <item_id>.json
-└── receipts/
-    └── stac_registration_<spec_hash_12>.json
-```
-
-## SoilGrids Layer 4 Promotion Gate
-
-CLI:
-
-```bash
-python soilgrids_promotion_gate.py \
-  --run-receipt raw/wcs/run_receipt.json \
-  --cog-receipt processed/cog/cog_receipt.json \
-  --stac-receipt stac/receipts/stac_registration.json \
-  --stac-item stac/item.json \
-  --stac-collection stac/collection.json \
-  --stac-catalog stac/catalog.json \
-  --policy-profile policies/soilgrids_promotion_policy.json \
-  --output-dir promotion/reports \
-  --decision-mode strict
-```
-
-Python:
-
-```python
-from soilgrids_promotion_gate import evaluate_promotion_gate
-
-decision, report, path = evaluate_promotion_gate(...)
-```
-
-Decisions:
-- `promote`: required checks pass.
-- `quarantine`: warning checks fail in strict mode.
-- `reject`: required checks fail or evidence malformed.
-
-Exit codes:
-- 0 promote
-- 10 quarantine
-- 20 reject
-- 30 malformed input
-- 40 internal error
-- 50 policy evaluation error
-
-## Layer 6: Static Serving + Access Contract Validator
-
-`soilgrids_serve_validate.py` validates that an immutable release is actually servable as static STAC + COG.
-
-### CLI (local static server)
-
-```bash
-python soilgrids_serve_validate.py \
-  --publish-receipt published/releases/<release_id>/publish_receipt.json \
-  --release-manifest published/releases/<release_id>/release_manifest.json \
-  --release-root published/releases/<release_id> \
-  --mode local-static-server \
-  --output-dir served/reports
-```
-
-### CLI (existing base URL)
-
-```bash
-python soilgrids_serve_validate.py \
-  --publish-receipt published/releases/<release_id>/publish_receipt.json \
-  --release-manifest published/releases/<release_id>/release_manifest.json \
-  --release-root published/releases/<release_id> \
-  --mode existing-base-url \
-  --base-url http://127.0.0.1:8080/releases/<release_id>/ \
-  --output-dir served/reports
-```
-
-### HTTP range contract
-
-The validator checks HEAD metadata and range GET behavior (`206`, `Content-Range`, byte-for-byte match with local COG slice), and writes `ServeValidationReport.v1` plus `ServeAccessReceipt.v1`.
-
-### Exit codes
-
-- `0`: success
-- `10`: warning
-- `20`: release evidence rejected
-- `30`: malformed input
-- `40`: HTTP contract failure
-- `50`: local server failure
-- `60`: unsafe URL/path
-- `70`: internal error
-
-> Layer 6 validates serving only. It does **not** generate map tiles or PMTiles.
-
-## Layer 9 Remote Distribution Publisher
-
-- Use `soilgrids_distribution_publish.py` for dry-run, local-mirror, or s3-compatible target publication.
-- **Safety:** remote publish requires explicit `--allow-remote-network` in full implementation, and do not rely on ETag as SHA-256.
-
-Example dry-run:
-```bash
-python soilgrids_distribution_publish.py --release-manifest ... --publish-receipt ... --release-root ... --tile-package-manifest ... --tile-package-receipt ... --tile-package-root ... --viewer-manifest ... --viewer-receipt ... --viewer-root ... --distribution-root distributions --target dry-run
-```
-
-## Layer 10: Remote Operations Monitor + Drift Ledger (SoilGrids)
-
-This repository includes `soilgrids_remote_monitor.py` for Layer 10 one-shot verification of a published remote distribution. The monitor is **detect-only** and never mutates remote state.
-
-### One-shot local-mock
-```bash
-python soilgrids_remote_monitor.py \
-  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
-  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
-  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
-  --output-dir monitoring/<distribution_id> \
-  --mode local-mock
-```
-
-### Existing remote
-```bash
-python soilgrids_remote_monitor.py \
-  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
-  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
-  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
-  --output-dir monitoring/<distribution_id> \
-  --mode existing-remote \
-  --allow-remote-network
-```
-
-### Dry-run
-```bash
-python soilgrids_remote_monitor.py \
-  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
-  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
-  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
-  --output-dir monitoring/<distribution_id> \
-  --mode dry-run
-```
-
-Artifacts: `MonitorPlan.v1`, `MonitorSnapshot.v1`, `DriftReport.v1`, `AlertEnvelope.v1`, `MonitorReceipt.v1`, append-only chain-hashed ledger entries, and optional metrics JSON.
-
-Exit codes: `0 healthy`, `5 dry-run`, `10 degraded`, `20 unhealthy`, `30 malformed input`, `40 policy failure`, `50 probe failure`, `60 unsafe URL`, `70 ledger failure`, `80 internal error`.
+</details>
