@@ -1,0 +1,13 @@
+{
+  "schema": "AssuranceSpec.v1",
+  "assurance_id": "soilgrids-assurance-v1",
+  "title": "SoilGrids governed pipeline assurance pack",
+  "dataset_id": "soilgrids-v2",
+  "system_name": "SoilGrids Governed Raster Pipeline",
+  "control_frameworks": ["soilgrids-internal", "nist-csf-2.0", "oscal-custom"],
+  "control_profile": {"include_controls": ["DATA.PROV-01", "SUPPLY.SBOM-01", "REPRO.REPLAY-01"], "exclude_controls": []},
+  "assessment_policy": {"fail_on_required_control_fail": true, "warning_controls_do_not_block": false, "minimum_evidence_items_per_required_control": 1, "allow_compensating_controls": true, "allow_manual_assertions": false},
+  "risk_policy": {"critical_if_no_evidence_for_required_control": true, "critical_if_supply_chain_gate_failed": true, "critical_if_reproducibility_failed": true, "warning_if_monitoring_degraded": true, "warning_if_unknown_license": true},
+  "oscal": {"write_catalog": true, "write_profile": true, "write_component_definition": true, "write_system_security_plan": true, "write_assessment_plan": true, "write_assessment_results": true, "write_poam": true},
+  "opa": {"enabled": false, "policy_dir": "assurance/policies", "query": "data.soilgrids.assurance.decision"}
+}
