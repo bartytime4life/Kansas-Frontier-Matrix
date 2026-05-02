@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "required": [
+    "object_type",
+    "workflow_runner",
+    "validation_outcome"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AirNowClosureArchiveIndexReviewReceipt"
+    },
+    "workflow_runner": {
+      "const": "airnow_layer29_closure_archive_index_review"
+    },
+    "validation_outcome": {
+      "type": "string"
+    }
+  }
+}
