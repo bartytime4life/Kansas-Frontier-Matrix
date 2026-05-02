@@ -109,7 +109,7 @@
   "task_closure_allowed": false,
   "task_closure_execution_allowed": false,
   "task_closure_execution_requested": false,
-  "task_closure_requested": false,
+  "task_closure_requested": true,
   "tiles_allowed": false,
   "tiles_requested": false
 }

@@ -21,7 +21,7 @@
   "command_execution_allowed": false,
   "command_execution_requested": false,
   "database_write_allowed": false,
-  "database_write_requested": false,
+  "database_write_requested": true,
   "destruction_execution_allowed": false,
   "destruction_execution_requested": false,
   "emergency_alert": false,

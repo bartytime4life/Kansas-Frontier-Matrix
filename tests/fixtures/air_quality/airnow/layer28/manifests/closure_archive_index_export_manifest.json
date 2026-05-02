@@ -99,7 +99,7 @@
   "snapshot_copy_allowed": false,
   "snapshot_copy_requested": false,
   "snapshot_export_execution_allowed": false,
-  "snapshot_export_execution_requested": false,
+  "snapshot_export_execution_requested": true,
   "snapshot_publication_allowed": false,
   "snapshot_publication_requested": false,
   "snapshot_release_allowed": false,

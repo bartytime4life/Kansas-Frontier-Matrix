@@ -27,7 +27,7 @@
   "emergency_alert": false,
   "emergency_alert_requested": false,
   "exact_sensitive_overlay_allowed": false,
-  "exact_sensitive_overlay_requested": false,
+  "exact_sensitive_overlay_requested": true,
   "external_storage_allowed": false,
   "external_storage_requested": false,
   "file_deletion_allowed": false,

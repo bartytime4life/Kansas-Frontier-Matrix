@@ -44,6 +44,9 @@
   "governance_closure_requested": false,
   "index_execution_allowed": false,
   "index_execution_requested": false,
+  "index_policy": {
+    "include_packet": true
+  },
   "layer27_inputs": {
     "preservation_closure_audit_exception_register_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_audit_exception_register.json",
     "preservation_closure_audit_receipt_json": "tests/fixtures/air_quality/airnow/layer28/input/layer27/preservation_closure_audit_receipt.json",

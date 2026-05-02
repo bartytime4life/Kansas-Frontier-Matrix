@@ -65,7 +65,7 @@
   "legal_advice_allowed": false,
   "legal_advice_requested": false,
   "legal_hold_creation_allowed": false,
-  "legal_hold_creation_requested": false,
+  "legal_hold_creation_requested": true,
   "local_file_only": true,
   "manifest_id": "m_layer28",
   "no_network": true,
