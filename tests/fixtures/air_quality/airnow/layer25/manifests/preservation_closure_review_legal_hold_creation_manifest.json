@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-legal_hold_creation",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -101,7 +101,7 @@
   "external_storage_allowed": false,
   "chmod_or_chattr_requested": false,
   "chmod_or_chattr_allowed": false,
-  "legal_hold_creation_requested": false,
+  "legal_hold_creation_requested": true,
   "legal_hold_creation_allowed": false,
   "official_archive_certification_requested": false,
   "official_archive_certification_allowed": false,

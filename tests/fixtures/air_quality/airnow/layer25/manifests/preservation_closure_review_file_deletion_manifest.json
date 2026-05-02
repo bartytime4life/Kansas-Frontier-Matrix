@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-file_deletion",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -91,7 +91,7 @@
   "github_pr_creation_allowed": false,
   "git_push_requested": false,
   "git_push_allowed": false,
-  "file_deletion_requested": false,
+  "file_deletion_requested": true,
   "file_deletion_allowed": false,
   "destruction_execution_requested": false,
   "destruction_execution_allowed": false,

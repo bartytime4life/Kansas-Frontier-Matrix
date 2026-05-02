@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-transfer",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -123,7 +123,7 @@
   "preservation_action_allowed": false,
   "preservation_copy_requested": false,
   "preservation_copy_allowed": false,
-  "preservation_transfer_requested": false,
+  "preservation_transfer_requested": true,
   "preservation_transfer_allowed": false,
   "preservation_review_action_requested": false,
   "preservation_review_action_allowed": false,

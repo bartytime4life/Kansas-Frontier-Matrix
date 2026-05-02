@@ -1,3 +1,3 @@
 Internal-only manual preservation closure review
 
-Evidence type: CLOSURE_CANDIDATE_REVIEW_NOTE
+Evidence type: POLICY_CONTINUITY_REVIEW_NOTE

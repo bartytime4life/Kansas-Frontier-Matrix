@@ -1,0 +1,77 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowPreservationClosureReviewEvidenceInventory",
+  "records": [
+    {
+      "byte_size": 95,
+      "evidence_id": "5404e6053f99023172a1d144bd16a70ebb9b99fc0611896ea237784abf45e6ac",
+      "evidence_type": "CAVEAT_CONTINUITY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/caveat_continuity_review_note.md",
+      "sha256": "8ebbdfd3756809589608642d1c8d1cf7d9c1fb0e70bdc7fbfc09f1c2b3093e58"
+    },
+    {
+      "byte_size": 95,
+      "evidence_id": "a61b70db6906bd68e6f1836feafb9c6e95e01a146cc2bda4856ccf4d0cd81c40",
+      "evidence_type": "CLOSURE_CANDIDATE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/closure_candidate_review_note.md",
+      "sha256": "fba197ce43e38757ebd4ed17cc46d84539393a91b536c94270dc89a49544ced1"
+    },
+    {
+      "byte_size": 95,
+      "evidence_id": "1ec7f2d8a198973d5dba84a1672e6328d540206f26bf6393573a4879b67d8bba",
+      "evidence_type": "CLOSURE_READINESS_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/closure_readiness_review_note.md",
+      "sha256": "dee8fa119b1b72e8565a6bc2bd631d09143a18dabc8d28c730afcfac65839917"
+    },
+    {
+      "byte_size": 94,
+      "evidence_id": "f8a59583fc750d99d4276e3330c36dca2e096d7bed7864c41d335a1a0883b90c",
+      "evidence_type": "EVIDENCE_SUMMARY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/evidence_summary_review_note.md",
+      "sha256": "3abf2f22059a1bc75f909544189bff3da1588c4456d83d1bbbeda15502a876f3"
+    },
+    {
+      "byte_size": 93,
+      "evidence_id": "1c0cb0bc381c6775ee12bc59cc5a0068090944cc2afeb8029c7174492e0b65df",
+      "evidence_type": "GOVERNANCE_GATE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/governance_gate_review_note.md",
+      "sha256": "c5a1a0b6c4fcccc0c58045fc1c1a98a14e3fb9d30652d8faa128cdd039d14949"
+    },
+    {
+      "byte_size": 139,
+      "evidence_id": "62cdad9209c1bdb5762e5e9dd2d5149aad8a39b8bcdb9aab6de2c5bb4de7703c",
+      "evidence_type": "MANUAL_PRESERVATION_CLOSURE_REVIEW_ATTESTATION",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/manual_preservation_closure_review_attestation.json",
+      "sha256": "42d8c703467f6dca2c0c59c60f38a6b6d7a7ff3ac60d49249056172b0d87f726"
+    },
+    {
+      "byte_size": 91,
+      "evidence_id": "128d4a68fc213a50cb2b6a4856d137bc0426d943b023f27e7416c01e308eb537",
+      "evidence_type": "NON_EXECUTION_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/non_execution_review_note.md",
+      "sha256": "e4276301f244f0abd08db94d9ff4c95fa3b182ef4117c57feb1fdbdcacc96e70"
+    },
+    {
+      "byte_size": 95,
+      "evidence_id": "20138b6a87b3f04137ce6b936dff5dc283205fdf3e99266a9edf6fa71e2e1656",
+      "evidence_type": "POLICY_CONTINUITY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/policy_continuity_review_note.md",
+      "sha256": "96dea2d7c1dcfa4390ba78073c706e4147976e8c38520178bb9a4ab32e7219f6"
+    },
+    {
+      "byte_size": 98,
+      "evidence_id": "ad0cc9b31290e603d9f2a6ab5c3475a90a8bb73be408dc6ec9463145fe17222e",
+      "evidence_type": "RECEIPT_VERIFICATION_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/receipt_verification_review_note.md",
+      "sha256": "9dc2ae8762690c784cde7948c176e2b97ffffe108b67916862e113106a4ebfc8"
+    },
+    {
+      "byte_size": 94,
+      "evidence_id": "fbf5b156656c88b7d061243f7ac849d1b1e5eaf4405be66ce0c2874dc0c22a35",
+      "evidence_type": "UNRESOLVED_ISSUE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/unresolved_issue_review_note.md",
+      "sha256": "29e30284623a9187ce2851eb361de91a7a6a35d327d538ba4d5db1ae75c6121a"
+    }
+  ],
+  "schema_version": "v1"
+}

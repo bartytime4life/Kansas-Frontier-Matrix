@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-missing-ev",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -53,10 +53,6 @@
     {
       "evidence_type": "NON_EXECUTION_REVIEW_NOTE",
       "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/non_execution_review_note.md"
-    },
-    {
-      "evidence_type": "MANUAL_PRESERVATION_CLOSURE_REVIEW_ATTESTATION",
-      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/manual_preservation_closure_review_attestation.json"
     }
   ],
   "review_policy": {

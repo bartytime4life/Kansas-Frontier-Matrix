@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-coordinate",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -20,7 +20,7 @@
   "manual_evidence": [
     {
       "evidence_type": "CLOSURE_READINESS_REVIEW_NOTE",
-      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/closure_readiness_review_note.md"
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/invalid_coordinate_leak_review_note.md"
     },
     {
       "evidence_type": "CLOSURE_CANDIDATE_REVIEW_NOTE",
