@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm/schemas/governance/publish_enforcement_report.schema.json",
+  "title": "PublishEnforcementReport.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "id", "spec_hash", "publish_decision", "receipt_chain", "public_artifact_scan", "queue_summary"],
+  "properties": {
+    "object_type": {"const": "PublishEnforcementReport"},
+    "schema_version": {"const": "v1"},
+    "id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "publish_decision": {"enum": ["ALLOW", "DENY", "BLOCK"]},
+    "receipt_chain": {"type": "array", "items": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}},
+    "public_artifact_scan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "forbidden_fields_present"],
+      "properties": {
+        "status": {"enum": ["PASS", "FAIL"]},
+        "forbidden_fields_present": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "queue_summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unresolved_count"],
+      "properties": {
+        "unresolved_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "opa_decision_log_ref": {"type": "string", "minLength": 1},
+    "run_attestation_ref": {"type": "string", "minLength": 1}
+  }
+}
