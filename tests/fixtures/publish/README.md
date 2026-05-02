@@ -1,0 +1,12 @@
+Example offline fixtures for Layer 5 publish tests:
+- decision_envelope_promote.json
+- decision_envelope_quarantine.json
+- decision_envelope_reject.json
+- validation_report_success.json
+- run_receipt_success.json
+- cog_receipt_success.json
+- stac_registration_receipt_success.json
+- stac_item.json
+- stac_collection.json
+- stac_catalog.json
+- tiny_fake_cog.tif

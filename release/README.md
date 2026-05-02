@@ -570,3 +570,47 @@ release/corrections/<correction_id>.notice.ref.json
 </details>
 
 [Back to top](#top)
+
+## SoilGrids Layer 5: Immutable Release Publisher
+
+CLI:
+
+```bash
+python soilgrids_release_publish.py \
+  --decision-envelope promotion/reports/decision_envelope.json \
+  --validation-report promotion/reports/validation_report.json \
+  --run-receipt raw/wcs/run_receipt.json \
+  --cog-receipt processed/cog/cog_receipt.json \
+  --stac-receipt stac/receipts/stac_registration.json \
+  --stac-item stac/collections/soilgrids-v2/items/item.json \
+  --stac-collection stac/collections/soilgrids-v2/collection.json \
+  --stac-catalog stac/catalog.json \
+  --publish-root published \
+  --mode immutable-release
+```
+
+Python:
+
+```python
+from pathlib import Path
+from soilgrids_release_publish import load_publish_inputs, publish_approved_bundle
+
+inputs = load_publish_inputs(...)
+receipt, exit_code, receipt_path = publish_approved_bundle(inputs, Path("published"), mode="immutable-release")
+```
+
+Modes:
+- `immutable-release`: commits staged bundle into `published/releases/<release_id>/` and updates mutable pointers/indexes.
+- `dry-run`: validates and computes deterministic IDs/hashes, writes only `.dry_run/publish_receipt_<hash>.json`.
+
+Warning: this layer is local-filesystem only and does **not** upload artifacts to cloud storage.
+
+Exit codes:
+- `0` published
+- `5` dry-run success
+- `20` gate rejected
+- `30` malformed input
+- `40` validation failure
+- `50` lock failure
+- `60` atomic commit failure
+- `70` internal error
