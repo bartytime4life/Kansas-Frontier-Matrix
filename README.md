@@ -559,3 +559,17 @@ This layer generates and validates repository automation only; it does **not** b
 
 ### Release gate
 `python soilgrids_control_plane.py --control-plane-spec control_plane/soilgrids_control_plane_example.json --pipeline-run-receipt pipeline_runs/<run_id>/pipeline_run_receipt.json --pipeline-certification-envelope pipeline_runs/<run_id>/pipeline_certification_envelope.json --automation-root repo_automation --mode release-gate`
+
+## Layer 17: Supply Chain Security (Snippet)
+
+```bash
+python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_spec_example.json --repo-root . --output-root supply_chain_runs --mode inventory-only --allow-unknown-files
+python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_spec_example.json --repo-root . --output-root supply_chain_runs --mode sbom --allow-unknown-files
+python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_spec_example.json --repo-root . --output-root supply_chain_runs --mode offline-vulnerability-scan --offline-advisory-db tests/fixtures/supply_chain/osv_fixture.json --allow-unknown-files
+python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_spec_example.json --repo-root . --output-root supply_chain_runs --mode attest --allow-unknown-files
+python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_spec_example.json --repo-root . --output-root supply_chain_runs --mode certify-supply-chain --allow-unknown-files
+```
+
+Outputs include `sbom/spdx.json`, `sbom/cyclonedx.json`, `supply_chain_gate_report.json`, and `supply_chain_receipt.json` under `supply_chain_runs/<run_id>/`.
+
+> This layer scans, verifies, and attests only. It does **not** install, update, or remediate dependencies.

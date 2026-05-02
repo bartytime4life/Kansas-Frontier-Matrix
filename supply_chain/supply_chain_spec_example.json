@@ -1,0 +1,10 @@
+{
+  "schema": "SupplyChainSpec.v1",
+  "supply_chain_id": "soilgrids-supply-chain-v1",
+  "inventory": {
+    "include_globs": ["*.py", "tests/**/*.py", "README.md"],
+    "exclude_globs": [".git/**", "__pycache__/**"]
+  },
+  "vulnerabilities": {"mode": "offline"},
+  "licenses": {"allowed": ["MIT"], "denied": ["GPL-3.0-only"], "unknown_license_policy": "warning"}
+}
