@@ -1,3 +1,4 @@
 {
-  "object_type": "AirNowSnapshotNonExecutionLedger"
+  "object_type": "snapshot_non_execution_ledger.json",
+  "schema_version": "v1"
 }

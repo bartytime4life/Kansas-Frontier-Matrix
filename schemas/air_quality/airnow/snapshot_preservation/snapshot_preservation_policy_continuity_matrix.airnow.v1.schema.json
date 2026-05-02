@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "snapshot_preservation_policy_continuity_matrix",
+  "type": "object",
+  "properties": {
+    "object_type": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "v1"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version"
+  ]
+}
