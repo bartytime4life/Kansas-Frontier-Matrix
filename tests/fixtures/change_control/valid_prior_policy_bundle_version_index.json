@@ -1,0 +1,9 @@
+{
+  "schema": "PolicyBundleVersionIndex.v1",
+  "bundles": [
+    {
+      "policy_bundle_id": "pb1",
+      "policy_bundle_hash": "h1"
+    }
+  ]
+}

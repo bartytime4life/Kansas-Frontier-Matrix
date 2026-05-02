@@ -1,0 +1,6 @@
+{
+  "schema": "TrustDecisionPolicy.v1",
+  "allow_statuses": [
+    "active"
+  ]
+}

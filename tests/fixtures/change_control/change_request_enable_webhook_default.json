@@ -1,0 +1,9 @@
+{
+  "schema": "ChangeRequest.v1",
+  "change_type": "notification_policy_change",
+  "target_policy": "notification_policy",
+  "current_sha256": "x",
+  "proposed_change": {
+    "external_delivery_default": true
+  }
+}

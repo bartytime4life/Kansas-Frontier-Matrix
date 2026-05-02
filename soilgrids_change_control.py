@@ -293,8 +293,8 @@ def append_change_control_ledger_entry(ledger_root: Path, change_control_id: str
     return ledger_file
 
 def validate_change_control_ledger(ledger: Dict[str, Any]) -> List[str]: return [] if ledger.get("schema") == "ChangeControlLedger.v1" else ["schema"]
-def build_change_control_api_contract(run_root: str) -> Dict[str, Any]: return {"schema": "ChangeControlApiContract.v1", "run_root": run_root, "endpoints": ["/change-requests", "/decisions", "/bundles", "/ledger"]}
-def build_change_control_openapi(contract: Dict[str, Any]) -> Dict[str, Any]: return {"openapi": "3.0.0", "info": {"title": "Local Change Control API", "version": "1.0.0"}, "paths": {ep: {"get": {"responses": {"200": {"description": "ok"}}}} for ep in contract.get("endpoints", [])}}
+def build_change_control_api_contract(run_root: str) -> Dict[str, Any]: return {"schema": "ChangeControlApiContract.v1", "run_root": run_root, "endpoints": ["/health", "/change-requests", "/decisions", "/bundles", "/release-candidates", "/ledger"]}
+def build_change_control_openapi(contract: Dict[str, Any]) -> Dict[str, Any]: return {"openapi": "3.1.1", "info": {"title": "Local Change Control API", "version": "1.0.0"}, "paths": {ep: {"get": {"responses": {"200": {"description": "ok"}}}} for ep in contract.get("endpoints", [])}, "components": {"schemas": {"ChangeRequest.v1": {}, "ChangeDecisionEnvelope.v1": {}, "PolicyBundleManifest.v1": {}, "PolicyReleaseCandidate.v1": {}, "PolicyReleaseGateReport.v1": {}}}}
 def build_local_change_control_api_server(host: str, port: int, payload: Dict[str, Any]): return {"host": host, "port": port, "status": "ready"}
 
 def build_change_control_validation_report(run_id: str, change_control_id: str, checks: List[Tuple[str, bool]]) -> Dict[str, Any]:
