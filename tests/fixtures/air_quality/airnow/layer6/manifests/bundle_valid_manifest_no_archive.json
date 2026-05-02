@@ -1,0 +1,93 @@
+{
+  "object_type": "AirNowBundleManifest",
+  "schema_version": "v1",
+  "manifest_id": "airnow-layer6-internal-bundle-fixture-001",
+  "source_id": "airnow",
+  "layer": "layer6_bundle",
+  "bundle_name": "airnow_internal_review_bundle",
+  "bundle_version": "v1",
+  "fixture_only": true,
+  "no_live_airnow_data": true,
+  "not_for_publication": true,
+  "local_file_only": true,
+  "no_network": true,
+  "bulk_web_service_loop": false,
+  "publication_allowed": false,
+  "public_dashboard_allowed": false,
+  "tiles_allowed": false,
+  "public_api_allowed": false,
+  "emergency_alert": false,
+  "regulatory_claims_allowed": false,
+  "exact_sensitive_overlay_allowed": false,
+  "preliminary_data": true,
+  "rights_status": "public_government_source_preliminary",
+  "bundle_policy": {
+    "bundle_audience": "internal_review",
+    "include_internal_raw_artifacts": true,
+    "include_human_readable_docs": true,
+    "include_schema_pack": true,
+    "include_receipt_chain": true,
+    "include_lineage_summary": true,
+    "include_replay_commands": true,
+    "include_archive": false,
+    "archive_format": "none",
+    "mark_internal_sensitive": true,
+    "redact_exact_coordinates_in_human_docs": true,
+    "deny_publication": true,
+    "deny_public_dashboard": true,
+    "deny_tiles": true,
+    "deny_public_api": true,
+    "deny_emergency_alerts": true,
+    "deny_regulatory_claims": true,
+    "deny_exact_sensitive_overlay": true,
+    "max_inventory_examples_per_type": 5
+  },
+  "artifacts": [
+    {
+      "artifact_id": "layer5_qa_receipt",
+      "layer": "layer5",
+      "artifact_role": "receipt",
+      "path": "tests/fixtures/air_quality/airnow/layer6/input/layer5/qa_receipt.json",
+      "required": true,
+      "expected_object_type": "AirNowQAReceipt",
+      "contains_exact_coordinates": false,
+      "human_readable": false
+    },
+    {
+      "artifact_id": "layer5_qa_report",
+      "layer": "layer5",
+      "artifact_role": "qa_report",
+      "path": "tests/fixtures/air_quality/airnow/layer6/input/layer5/qa_report.md",
+      "required": true,
+      "expected_media_type": "text/markdown",
+      "contains_exact_coordinates": false,
+      "human_readable": true
+    },
+    {
+      "artifact_id": "layer4_site_index",
+      "layer": "layer4",
+      "artifact_role": "internal_index",
+      "path": "tests/fixtures/air_quality/airnow/layer6/input/layer4/site_index.jsonl",
+      "required": true,
+      "expected_object_type": "AirNowSiteIndexRecord",
+      "contains_exact_coordinates": true,
+      "human_readable": false
+    }
+  ],
+  "receipt_chain": {
+    "layer1_receipt": "tests/fixtures/air_quality/airnow/layer6/input/layer1/intake_receipt.airnow.v1.json",
+    "layer2_receipt": "tests/fixtures/air_quality/airnow/layer6/input/layer2/normalization_receipt.json",
+    "layer3_receipts": [
+      "tests/fixtures/air_quality/airnow/layer6/input/layer3/parse_receipts/hourly_parse_receipt.json"
+    ],
+    "layer4_receipt": "tests/fixtures/air_quality/airnow/layer6/input/layer4/reconciliation_receipt.json",
+    "layer5_receipt": "tests/fixtures/air_quality/airnow/layer6/input/layer5/qa_receipt.json"
+  },
+  "schema_refs": [
+    "schemas/air_quality/airnow/bundle/bundle_manifest.airnow.v1.schema.json"
+  ],
+  "source_doc_refs": [
+    "https://docs.airnowapi.org/faq"
+  ],
+  "created_at": "2026-01-01T00:00:00Z"
+}
