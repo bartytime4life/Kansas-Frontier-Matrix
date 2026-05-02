@@ -757,3 +757,14 @@ Plan-only:
 Validate/install/shadow/compat/activate/rollback/verify/local-api modes are supported via `--mode` with local-only semantics.
 
 This layer activates **local policy bundles only** and does not deploy remotely, mutate source policies, change trust status, grant access, or commit repository changes.
+
+
+## Layer 32: Active Policy Distribution Publisher + Runtime Policy Resolver
+
+Plan-only:
+```bash
+python soilgrids_policy_distribution.py --policy-distribution-spec policy_distribution/policy_distribution_spec_example.json --policy-store-root /path/to/policy_store --output-root /tmp/policy_dist --mode plan-only
+```
+Local-mirror/build-resolver/s3-compatible/validate-remote/verify-distribution are supported via `--mode`.
+
+This layer publishes or mirrors active policy artifacts only. It does **not** activate policies, roll back policies, deploy to running services, or mutate source policy stores.

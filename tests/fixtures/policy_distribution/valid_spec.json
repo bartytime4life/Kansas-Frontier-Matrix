@@ -1,0 +1,1 @@
+{"schema":"PolicyDistributionSpec.v1","policy_distribution_id":"pd1","dataset_id":"ds1","resolver_profile":"static-readonly","distribution":{"layout":"local-resolver"},"cache":{"immutable_cache_control":"public, max-age=31536000, immutable","mutable_cache_control":"public, max-age=60"},"cors":{"allow_origin":"*"}}

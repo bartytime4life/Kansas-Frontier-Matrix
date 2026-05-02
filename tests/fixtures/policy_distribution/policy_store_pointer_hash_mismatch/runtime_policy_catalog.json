@@ -1,0 +1,1 @@
+{"schema":"RuntimePolicyCatalog.v1","policies":[{"policy_schema":"TrustDecisionPolicy.v1","path":"trust.json","sha256":"abc"}]}

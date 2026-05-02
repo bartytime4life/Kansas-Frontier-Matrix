@@ -1,0 +1,1 @@
+{"schema":"PolicyDistributionSpec.v1","policy_distribution_id":"soilgrids-active-policy","dataset_id":"soilgrids","resolver_profile":"static-readonly","distribution":{"layout":"local-resolver"}}
