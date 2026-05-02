@@ -1,0 +1,14 @@
+{
+  "publish_spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "published_artifacts": [
+    "stac/catalog.json"
+  ],
+  "release_id": "release",
+  "release_manifest_sha256": "bb282f20f35425d95e5c7713da40710d2f7b8efe79bf7453c8efc5c842634b11",
+  "release_path": "published/releases/release",
+  "schema": "PublishReceipt.v1",
+  "status": "success",
+  "validation": {
+    "final_release_valid": true
+  }
+}

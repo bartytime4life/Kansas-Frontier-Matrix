@@ -1,0 +1,14 @@
+{
+  "id": "cat",
+  "links": [
+    {
+      "href": "stac/catalog.json",
+      "rel": "self"
+    },
+    {
+      "href": "stac/collections/coll/collection.json",
+      "rel": "child"
+    }
+  ],
+  "type": "Catalog"
+}

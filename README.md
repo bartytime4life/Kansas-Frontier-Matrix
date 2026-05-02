@@ -631,3 +631,47 @@ Exit codes:
 - 30 malformed input
 - 40 internal error
 - 50 policy evaluation error
+
+## Layer 6: Static Serving + Access Contract Validator
+
+`soilgrids_serve_validate.py` validates that an immutable release is actually servable as static STAC + COG.
+
+### CLI (local static server)
+
+```bash
+python soilgrids_serve_validate.py \
+  --publish-receipt published/releases/<release_id>/publish_receipt.json \
+  --release-manifest published/releases/<release_id>/release_manifest.json \
+  --release-root published/releases/<release_id> \
+  --mode local-static-server \
+  --output-dir served/reports
+```
+
+### CLI (existing base URL)
+
+```bash
+python soilgrids_serve_validate.py \
+  --publish-receipt published/releases/<release_id>/publish_receipt.json \
+  --release-manifest published/releases/<release_id>/release_manifest.json \
+  --release-root published/releases/<release_id> \
+  --mode existing-base-url \
+  --base-url http://127.0.0.1:8080/releases/<release_id>/ \
+  --output-dir served/reports
+```
+
+### HTTP range contract
+
+The validator checks HEAD metadata and range GET behavior (`206`, `Content-Range`, byte-for-byte match with local COG slice), and writes `ServeValidationReport.v1` plus `ServeAccessReceipt.v1`.
+
+### Exit codes
+
+- `0`: success
+- `10`: warning
+- `20`: release evidence rejected
+- `30`: malformed input
+- `40`: HTTP contract failure
+- `50`: local server failure
+- `60`: unsafe URL/path
+- `70`: internal error
+
+> Layer 6 validates serving only. It does **not** generate map tiles or PMTiles.
