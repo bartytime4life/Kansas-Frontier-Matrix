@@ -1,0 +1,18 @@
+{
+  "schema": "VerifierPolicy.v1",
+  "policy_id": "soilgrids-independent-verifier-default",
+  "allowed_packet_statuses": ["success", "warning"],
+  "allowed_disclosure_validation_statuses": ["success", "warning"],
+  "allowed_redaction_statuses": ["pass", "warning"],
+  "allowed_transparency_receipt_statuses": ["success", "warning"],
+  "require_no_secrets": true,
+  "require_no_approval_token_plaintext": true,
+  "require_no_private_key_material": true,
+  "require_no_public_local_paths": true,
+  "allow_unsigned_tree_head": true,
+  "allow_unsigned_witness_statement": true,
+  "fail_on_unverified_inclusion_proof": true,
+  "fail_on_unverified_consistency_proof": true,
+  "fail_on_packet_hash_mismatch": true,
+  "fail_on_claim_without_evidence": true
+}

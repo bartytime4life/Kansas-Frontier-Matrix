@@ -573,3 +573,24 @@ python soilgrids_supply_chain.py --supply-chain-spec supply_chain/supply_chain_s
 Outputs include `sbom/spdx.json`, `sbom/cyclonedx.json`, `supply_chain_gate_report.json`, and `supply_chain_receipt.json` under `supply_chain_runs/<run_id>/`.
 
 > This layer scans, verifies, and attests only. It does **not** install, update, or remediate dependencies.
+
+## Layer 21: Independent Verifier + Witness Federation Toolkit
+
+### CLI examples
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --disclosure-packet-root disclosure_packets/<packet_id> --output-root verifier_runs --mode packet-verify`
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --transparency-log-snapshot transparency_portals/<portal_id>/log/transparency_log_snapshot.json --signed-tree-head transparency_portals/<portal_id>/log/signed_tree_head.json --trust-packet-index transparency_portals/<portal_id>/log/trust_packet_index.json --output-root verifier_runs --mode log-verify`
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --disclosure-packet-root disclosure_packets/<packet_id> --transparency-portal-root transparency_portals/<portal_id> --output-root verifier_runs --mode full-verify`
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --transparency-portal-root transparency_portals/<portal_id> --output-root verifier_runs --mode witness-tree-head --witness-id independent-auditor-01 --signing-backend unsigned`
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --witness-statement witness/a.json --witness-statement witness/b.json --transparency-log-snapshot transparency_portals/<portal_id>/log/transparency_log_snapshot.json --output-root verifier_runs --mode federation-verify`
+- `python soilgrids_independent_verifier.py --verifier-spec verifier/verifier_spec_example.json --challenge-request auditor/challenge_request.json --transparency-portal-root transparency_portals/<portal_id> --disclosure-packet-root disclosure_packets/<packet_id> --output-root verifier_runs --mode challenge-response`
+
+### Examples
+See `verifier/verifier_spec_example.json`, `verifier/verifier_policy_default.json`, and output report schemas in run outputs (`packet_verification_report.json`, `log_verification_report.json`, `proof_verification_report.json`, `witness_statement.json`, `federation_manifest.json`, `challenge_response.json`, and `verifier_receipt.json`).
+
+### Exit codes
+- `0`: success/verified
+- `5`: dry-run success
+- `10`: warning
+- `20..110`: fail-closed error classes
+
+> This layer only independently verifies and witnesses evidence; it does **not** publish, mutate packets, mutate logs, or provide legal certification.
