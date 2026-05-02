@@ -1,0 +1,9 @@
+{
+  "schema": "ChangeRequest.v1",
+  "change_type": "disable_audit_ledger",
+  "target_policy": "enforcement_policy",
+  "current_sha256": "x",
+  "proposed_change": {
+    "audit_ledger_required": false
+  }
+}

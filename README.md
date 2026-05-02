@@ -727,3 +727,24 @@ Local API:
 `python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode local-api --host 127.0.0.1 --port 0`
 
 This layer controls local delivery (or explicitly enabled webhook delivery) only. It does not mutate policy, trust status, access enforcement, or Layer 28 source evidence.
+
+## Layer 30 Governance Change Control (Snippet)
+
+Plan-only:
+```bash
+python soilgrids_change_control.py --change-control-spec change_control/change_control_spec_example.json --policy-root tests/fixtures/change_control/policy_root --output-root out --mode plan-only
+```
+Collect-requests / assess-impact / approve / regression-test / build-bundle / release-candidate / verify-bundle use `--mode` respectively.
+
+Example schemas are in:
+- `change_control/change_control_spec_example.json`
+- `change_control/requests/change_request_example.json`
+- `examples/bundles/policy_bundle_manifest_example.json`
+
+`ChangeControlLedger.v1` is append-only and chain-hashed for auditability.
+
+`ChangeControlReceipt.v1` is the compact run receipt and proof artifact.
+
+Exit codes: `0 success/planned/verified`, `5 dry-run`, `10 warning`, `20 blocked`, `30 malformed input`, `40 recommendation/ack`, `50 change request`, `60 impact/approval`, `70 regression`, `80 bundle/release gate`, `90 API/OpenAPI`, `100 unsafe path`, `110 secret`, `120 ledger`, `130 internal`.
+
+> Warning: this layer creates controlled policy release candidates only; it does **not** mutate source policy roots, deploy policies, change trust status, grant access, or send notifications.
