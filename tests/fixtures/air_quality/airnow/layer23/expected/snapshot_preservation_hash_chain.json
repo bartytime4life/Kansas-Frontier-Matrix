@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationHashChain",
+  "records": [
+    {
+      "name": "snapshot_preservation_audit_exception_register.json",
+      "sha256": "a891a62dc5d6b4065fc911b75ba45184bff0fe36e3d728d4b98aadd39e2fafa8"
+    },
+    {
+      "name": "snapshot_preservation_audit_input_inventory.json",
+      "sha256": "1df15152721ec583c2e0e52bb0b7a925efbf9bc82b0d875a729169f0075ca2eb"
+    },
+    {
+      "name": "snapshot_preservation_audit_manifest.resolved.json",
+      "sha256": "cafab73e98ffba3670bef32b44181b94fede96f5e1f8bd4f856663012a2cf43f"
+    },
+    {
+      "name": "snapshot_preservation_audit_receipt.json",
+      "sha256": "8e8e3f94937a2dbb681568c6d60708b2f0760f0df462965e87c06ece57a26d70"
+    },
+    {
+      "name": "snapshot_preservation_audit_rerun_plan.json",
+      "sha256": "3e77ba54aa5ee2c0cef167251b4094f152cfb466536c4e9cff44de9cce87032f"
+    },
+    {
+      "name": "snapshot_preservation_audit_status_board.json",
+      "sha256": "5d2d600cb08fdfcec21a5a6f94461101c4167077bcb6d598c090dd985f8eae54"
+    },
+    {
+      "name": "snapshot_preservation_caveat_registry.json",
+      "sha256": "86eb7d57ea83e976a2402b0e71cb834c36136d42a9ef5b9d45a711420dadf46f"
+    },
+    {
+      "name": "snapshot_preservation_completeness_matrix.json",
+      "sha256": "2c27914bfd10e294c294a8c9b641ee1e9f2648298e901ae05de3234d08478c10"
+    },
+    {
+      "name": "snapshot_preservation_consistency_matrix.json",
+      "sha256": "acd690f531568771d3bfc6e0f312307d905846d0e31016bcb6dd88371b0f9b4c"
+    },
+    {
+      "name": "snapshot_preservation_decision_ledger.json",
+      "sha256": "345515b5e2d434a0f1c9bf3bfea1c1ffc553a31e203b366e0cda376b8686d35f"
+    },
+    {
+      "name": "snapshot_preservation_evidence_ledger.json",
+      "sha256": "e70af41202eefb6faa4e561c79e4e5a5186e1fc12922ca7e746bc8e17c1aaed0"
+    },
+    {
+      "name": "snapshot_preservation_final_internal_summary.json",
+      "sha256": "1a4b3a3977c96e1384faa160b69be03687d3b5e1176c6a8893b19cc0dc436d0d"
+    },
+    {
+      "name": "snapshot_preservation_lineage_graph.json",
+      "sha256": "d6925438c3990788ef1e98d9c62e5d0126042a8a6173f2f37723e3a5b3814a36"
+    },
+    {
+      "name": "snapshot_preservation_non_execution_ledger.json",
+      "sha256": "24a2b2a91d31fe6ed8cd835e052687af2cbc2fabffc4215f94fec0520892fc06"
+    },
+    {
+      "name": "snapshot_preservation_policy_ledger.json",
+      "sha256": "196264138dbb552873c61257ab3cf906184e1e8fc5d1d8f62c3ee2c8ab6ae286"
+    },
+    {
+      "name": "snapshot_preservation_receipt_ledger.json",
+      "sha256": "0abab229a574b737c523090e643e2fe12114c2377636a741ba833b931fba2fed"
+    }
+  ],
+  "schema_version": "v1"
+}

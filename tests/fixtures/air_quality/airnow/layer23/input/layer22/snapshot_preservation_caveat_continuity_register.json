@@ -1,4 +1,7 @@
 {
-  "object_type": "L22caveat_continuity_register",
-  "id": "caveat_continuity_register"
+  "caveats": [
+    "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP",
+    "SNAPSHOT_PRESERVATION_AUDIT_NOT_ACTION_EXECUTION",
+    "SNAPSHOT_PRESERVATION_AUDIT_NOT_PUBLICATION"
+  ]
 }

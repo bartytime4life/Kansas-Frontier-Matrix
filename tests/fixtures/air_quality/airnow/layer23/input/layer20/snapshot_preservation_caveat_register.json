@@ -1,4 +1,5 @@
 {
-  "object_type": "L20caveat_register",
-  "id": "caveat_register"
+  "caveats": [
+    "AIRNOW_PRELIMINARY_DATA"
+  ]
 }
