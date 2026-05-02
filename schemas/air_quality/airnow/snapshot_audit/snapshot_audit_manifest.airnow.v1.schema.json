@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "manifest_id",
+    "layer16_inputs",
+    "layer17_inputs",
+    "layer18_inputs"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string"
+    },
+    "layer16_inputs": {
+      "type": "object"
+    },
+    "layer17_inputs": {
+      "type": "object"
+    },
+    "layer18_inputs": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}
