@@ -98,15 +98,25 @@ def compute_policy_resolver_index_hash(index): return _sha256_obj({k: v for k, v
 def compute_policy_distribution_hash(arts, resolver_index_hash, active_bundle_hash, active_policy_set_hash):
     return _sha256_obj([{"role": a["role"], "relative_path": a["relative_path"], "bytes": a["bytes"], "sha256": a["sha256"], "content_type": a["content_type"], "cache_control": a["cache_control"], "resolver_index_hash": resolver_index_hash, "active_bundle_hash": active_bundle_hash, "active_policy_set_hash": active_policy_set_hash} for a in arts])
 
-def load_policy_distribution_policy(_: Optional[Path]=None): return DEFAULT_POLICY
+def load_policy_distribution_policy(path: Optional[Path]=None):
+    if path is None:
+        return DEFAULT_POLICY
+    return _read_json(path)
 
 def validate_policy_distribution_spec(spec):
     e=[]
+    if not isinstance(spec, dict):
+        return ["malformed_policy_distribution_spec"]
     if spec.get("schema") != SUPPORTED_SPEC_SCHEMA: e.append("unsupported_schema")
     if not spec.get("policy_distribution_id"): e.append("missing_policy_distribution_id")
     if not spec.get("dataset_id"): e.append("missing_dataset_id")
     if spec.get("resolver_profile") not in {"static-readonly"}: e.append("unsupported_resolver_profile")
-    if spec.get("distribution",{}).get("layout") not in {"immutable-versioned","content-addressed","local-resolver"}: e.append("unsupported_layout")
+    dist=spec.get("distribution",{})
+    if dist.get("layout") not in {"immutable-versioned","content-addressed","local-resolver"}: e.append("unsupported_layout")
+    cache=spec.get("cache",{})
+    if cache and (not isinstance(cache,dict) or not cache.get("immutable_cache_control") or not cache.get("mutable_cache_control")): e.append("malformed_cache_policy")
+    cors=spec.get("cors",{})
+    if cors and not isinstance(cors.get("allow_origin","*"),str): e.append("malformed_cors_policy")
     return e
 
 def validate_active_policy_pointer(doc): return [] if doc.get("schema")=="ActivePolicyPointer.v1" and doc.get("active_bundle_id") else ["invalid_active_policy_pointer"]
@@ -216,12 +226,15 @@ def run_policy_distribution(args: argparse.Namespace) -> int:
     inputs=load_policy_distribution_inputs(Path(args.policy_distribution_spec), Path(args.policy_store_root) if args.policy_store_root else None)
     spec=inputs["spec"]; spec_hash=compute_policy_distribution_spec_hash(spec)
     errs=validate_policy_distribution_spec(spec)
-    policy=load_policy_distribution_policy(None)
+    policy=load_policy_distribution_policy(Path(args.policy_distribution_policy) if getattr(args,"policy_distribution_policy",None) else None)
     source_docs={}
     if args.mode not in {Mode.VALIDATE_REMOTE.value, Mode.VERIFY_DISTRIBUTION.value}:
-        source_docs, src_errs = validate_policy_store_source(Path(args.policy_store_root), spec); errs += src_errs
+        if not args.policy_store_root:
+            errs.append("missing_policy_store_root")
+        else:
+            source_docs, src_errs = validate_policy_store_source(Path(args.policy_store_root), spec); errs += src_errs
     if errs:
-        raise ValueError(";".join(errs))
+        raise ValueError(";".join(sorted(set(errs))))
     plan=build_policy_distribution_plan(spec,args.mode,spec_hash,source_docs.get("active_bundle_id"))
     if args.mode==Mode.PLAN_ONLY.value:
         out=Path(args.output_root); out.mkdir(parents=True, exist_ok=True)
@@ -276,6 +289,9 @@ def parse_args(argv: Optional[List[str]]=None) -> argparse.Namespace:
     p.add_argument("--public-base-url")
     p.add_argument("--allow-remote-network", action="store_true")
     p.add_argument("--allow-http", action="store_true")
+    p.add_argument("--policy-distribution-policy")
+    p.add_argument("--deterministic-run-id", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
     return p.parse_args(argv)
 
 if __name__ == "__main__":
