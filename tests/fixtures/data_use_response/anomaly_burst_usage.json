@@ -1,0 +1,9 @@
+{
+  "schema": "UsageAnomalyReport.v1",
+  "findings": [
+    {
+      "anomaly_type": "burst_usage",
+      "subject_hash": "subj#abc"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "schema": "QuotaComplianceReport.v1",
+  "findings": [
+    {
+      "status": "quota_exceeded",
+      "subject_hash": "subj#abc"
+    }
+  ]
+}
