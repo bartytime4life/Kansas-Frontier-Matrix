@@ -1,12 +1,11 @@
 {
+  "object_type": "AirNowPreservationClosureReviewCaveatRegister",
+  "schema_version": "v1",
   "caveats": [
     "AIRNOW_PRELIMINARY_DATA",
     "AIRNOW_NOT_AQS_REGULATORY_DATA",
     "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP",
-    "PRESERVATION_CLOSURE_REVIEW_NOT_ACTUAL_CLOSURE",
-    "PRESERVATION_CLOSURE_REVIEW_NOT_PUBLICATION"
-  ],
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowPreservationClosureReviewCaveatRegister",
-  "schema_version": "v1"
+    "PRESERVATION_CLOSURE_FINALIZATION_NOT_ACTUAL_CLOSURE",
+    "PRESERVATION_CLOSURE_FINALIZATION_NOT_PUBLICATION"
+  ]
 }

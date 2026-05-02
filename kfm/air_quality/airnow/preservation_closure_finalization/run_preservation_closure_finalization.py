@@ -1,4 +1,4 @@
-import hashlib, json, re
+import hashlib, json, re, tarfile
 from pathlib import Path
 from .constants import *
 from .ids import sid
@@ -12,6 +12,24 @@ def _deny(m, out, created_at, errs):
     wj(out / 'preservation_closure_finalization_receipt.json', r)
     return r
 
+
+
+
+def _packet(out: Path):
+    packet = out / 'preservation_closure_finalization_packet.tar.gz'
+    members = sorted([p for p in out.iterdir() if p.is_file() and p.name != packet.name])
+    with tarfile.open(packet, 'w:gz', format=tarfile.PAX_FORMAT) as tf:
+        for p in members:
+            rel = p.name
+            if rel.startswith('/') or '..' in Path(rel).parts:
+                raise ValueError(f'INVALID_PACKET_MEMBER:{rel}')
+            ti = tf.gettarinfo(str(p), arcname=rel)
+            ti.mtime = 0
+            ti.uid = ti.gid = 0
+            ti.uname = ti.gname = 'root'
+            with p.open('rb') as f:
+                tf.addfile(ti, f)
+    return packet
 
 def run_preservation_closure_finalization(manifest_path, out_dir, created_at):
     out = Path(out_dir); out.mkdir(parents=True, exist_ok=True); m = loadj(manifest_path); errs = validate_manifest(m)
@@ -28,6 +46,8 @@ def run_preservation_closure_finalization(manifest_path, out_dir, created_at):
         if r21.get(f) is True: errs.append(f"LAYER25_RECEIPT_DENIED_CAPABILITY_REQUIRED:{f}")
     ac = loadjl(inp['preservation_closure_acceptance_candidates']); bl = loadjl(inp['residual_preservation_closure_blockers'])
     val = loadj(inp['preservation_closure_review_validation_results']); pol = loadj(inp['preservation_closure_review_policy_attestation']); cav = loadj(inp['preservation_closure_review_caveat_register']); ready = loadj(inp['preservation_closure_review_readiness_summary'])
+    required_caveats = {"AIRNOW_PRELIMINARY_DATA", "AIRNOW_NOT_AQS_REGULATORY_DATA", "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP", "PRESERVATION_CLOSURE_FINALIZATION_NOT_ACTUAL_CLOSURE", "PRESERVATION_CLOSURE_FINALIZATION_NOT_PUBLICATION"}
+    if not required_caveats.issubset(set(cav.get('caveats', []))): errs.append('MISSING_REQUIRED_CAVEATS')
     for pth in [inp['preservation_closure_review_policy_attestation'], inp['preservation_closure_review_caveat_register']]:
         txt = Path(pth).read_text(errors='ignore').lower()
         if re.search(COORD_RE, txt): errs.append(f"COORDINATE_LEAK:{pth}")
@@ -60,5 +80,7 @@ def run_preservation_closure_finalization(manifest_path, out_dir, created_at):
     (out / 'preservation_closure_finalization_status_board.md').write_text('# AirNow Layer 26 Preservation Closure Finalization Status Board\n\nInternal-only finalization planning complete; no preservation/copy/transfer/export/release execution; no exact coordinates.\n')
     (out / 'preservation_closure_finalization_report.md').write_text('# AirNow Layer 26 Preservation Closure Finalization Report\n\nFinal internal ledger compiled from Layer 25 artifacts; no public release, no publication, no execution actions.\n')
     packet_hash = None
+    if m.get('finalization_policy', {}).get('include_packet') is True:
+        packet_hash = sha256_path(_packet(out))
     rec = {"object_type": "AirNowPreservationClosureFinalizationReceipt", "schema_version": "v1", "workflow_runner": "airnow_layer26_preservation_closure_finalization", "manifest_id": m.get("manifest_id"), "workflow_outcome": "PRESERVATION_CLOSURE_FINALIZATION_COMPLETE_INTERNAL_ONLY", "validation_outcome": "PASS", "finite_outcome": "ANSWER", "commands_executed": False, "finalization_actions_executed": False, "preservation_actions_executed": False, "preservation_copy_executed": False, "preservation_transfer_executed": False, "snapshot_export_executed": False, "snapshot_copy_executed": False, "snapshot_transfer_executed": False, "snapshot_published": False, "snapshot_released": False, "public_release_allowed": False, "errors": [], "output_hashes": {"preservation_closure_finalization_packet_hash": packet_hash}, "created_at": created_at}
     wj(out / 'preservation_closure_finalization_receipt.json', rec); return rec

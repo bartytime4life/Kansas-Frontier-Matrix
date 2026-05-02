@@ -1,5 +1,5 @@
 {
-  "manifest_id": "airnow-layer26-network",
+  "manifest_id": "l22-network",
   "local_file_only": true,
   "no_network": false,
   "bulk_web_service_loop": false,
@@ -69,6 +69,21 @@
   "preservation_review_action_allowed": false,
   "preservation_finalization_action_requested": false,
   "preservation_finalization_action_allowed": false,
+  "preliminary_data": true,
+  "finalization_policy": {
+    "include_packet": true
+  },
+  "layer25_inputs": {
+    "preservation_closure_review_receipt": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_receipt.json",
+    "preservation_closure_acceptance_candidates": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_acceptance_candidates.jsonl",
+    "residual_preservation_closure_blockers": "tests/fixtures/air_quality/airnow/layer26/input/layer25/residual_preservation_closure_blockers.jsonl",
+    "preservation_closure_review_assessment_matrix": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_assessment_matrix.json",
+    "preservation_closure_item_satisfaction_matrix": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_item_satisfaction_matrix.json",
+    "preservation_closure_review_validation_results": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_validation_results.json",
+    "preservation_closure_review_policy_attestation": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_policy_attestation.json",
+    "preservation_closure_review_caveat_register": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_caveat_register.json",
+    "preservation_closure_review_readiness_summary": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_readiness_summary.json"
+  },
   "preservation_audit_action_requested": false,
   "preservation_audit_action_allowed": false,
   "task_closure_execution_requested": false,
@@ -82,17 +97,5 @@
   "closure_review_action_requested": false,
   "closure_review_action_allowed": false,
   "closure_finalization_action_requested": false,
-  "closure_finalization_action_allowed": false,
-  "preliminary_data": true,
-  "layer25_inputs": {
-    "preservation_closure_review_receipt": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_receipt.json",
-    "preservation_closure_acceptance_candidates": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_acceptance_candidates.jsonl",
-    "residual_preservation_closure_blockers": "tests/fixtures/air_quality/airnow/layer26/input/layer25/residual_preservation_closure_blockers.jsonl",
-    "preservation_closure_review_assessment_matrix": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_assessment_matrix.json",
-    "preservation_closure_item_satisfaction_matrix": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_item_satisfaction_matrix.json",
-    "preservation_closure_review_validation_results": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_validation_results.json",
-    "preservation_closure_review_policy_attestation": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_policy_attestation.json",
-    "preservation_closure_review_caveat_register": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_caveat_register.json",
-    "preservation_closure_review_readiness_summary": "tests/fixtures/air_quality/airnow/layer26/input/layer25/preservation_closure_review_readiness_summary.json"
-  }
+  "closure_finalization_action_allowed": false
 }
