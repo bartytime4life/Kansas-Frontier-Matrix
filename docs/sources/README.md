@@ -512,3 +512,5 @@ A safe first PR for this directory should be documentation- and fixture-first:
 - [ ] Add rollback note: remove the docs PR or revert descriptor fixtures; no source data or public artifacts affected.
 
 </details>
+
+- AirNow Layer 1 intake foundation: `docs/sources/airnow/README.md`

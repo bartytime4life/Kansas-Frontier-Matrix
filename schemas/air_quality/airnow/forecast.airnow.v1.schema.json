@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm/air_quality/airnow/forecast.airnow.v1.schema.json",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["object_type", "schema_version", "source_id", "reporting_area", "state_code", "latitude", "longitude", "date_issue", "date_forecast", "parameter_name", "aqi", "category", "preliminary_data"],
+  "properties": {
+    "object_type": {"const": "AirNowForecast"},
+    "schema_version": {"const": "v1"},
+    "source_id": {"const": "airnow"},
+    "reporting_area": {"type": "string", "minLength": 1},
+    "state_code": {"type": "string", "minLength": 2, "maxLength": 2},
+    "latitude": {"type": "number"},
+    "longitude": {"type": "number"},
+    "date_issue": {"type": "string", "format": "date"},
+    "date_forecast": {"type": "string", "format": "date"},
+    "parameter_name": {"type": "string", "minLength": 1},
+    "aqi": {"type": "integer", "minimum": 0, "maximum": 500},
+    "category": {"type": "object", "required": ["number", "name"], "properties": {"number": {"type": "integer"}, "name": {"type": "string"}}},
+    "action_day": {"type": "boolean"},
+    "discussion": {"type": "string"},
+    "preliminary_data": {"const": true}
+  }
+}
