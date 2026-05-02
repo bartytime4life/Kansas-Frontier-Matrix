@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "assets/cog/data.tif",
+      "role": "asset"
+    },
+    {
+      "path": "stac/catalog.json",
+      "role": "stac_catalog"
+    },
+    {
+      "path": "stac/collections/coll/collection.json",
+      "role": "stac_collection"
+    },
+    {
+      "path": "stac/collections/coll/items/item1.json",
+      "role": "stac_item"
+    }
+  ],
+  "collection_id": "coll",
+  "item_id": "item1",
+  "publish_spec_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "release_id": "release",
+  "schema": "ReleaseManifest.v1"
+}
