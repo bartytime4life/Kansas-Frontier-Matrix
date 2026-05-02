@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationMinimizationReviewPlan",
+  "records": [
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_audit_input_inventory",
+      "public_access_allowed": false,
+      "record_id": "30df4c1e5cb777a649d42f0b"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_audit_receipt",
+      "public_access_allowed": false,
+      "record_id": "0d2f55d43261e875af98168a"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_caveat_registry",
+      "public_access_allowed": false,
+      "record_id": "06a4ba9602d0590703e191ed"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_decision_ledger",
+      "public_access_allowed": false,
+      "record_id": "b69512928b20148c4af5a5ef"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_final_internal_summary",
+      "public_access_allowed": false,
+      "record_id": "ecfc67965adf57049171d2c3"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_hash_chain",
+      "public_access_allowed": false,
+      "record_id": "c7666bd50393d0b72950dd82"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_non_execution_ledger",
+      "public_access_allowed": false,
+      "record_id": "f5383b33f7ec8e5fb16d6d7d"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_policy_ledger",
+      "public_access_allowed": false,
+      "record_id": "cc4d7fefa18032165f82d86b"
+    },
+    {
+      "execution_performed": false,
+      "input_id": "snapshot_receipt_ledger",
+      "public_access_allowed": false,
+      "record_id": "ffe2d21bb33b8ee9a3b1ea26"
+    }
+  ],
+  "schema_version": "v1"
+}

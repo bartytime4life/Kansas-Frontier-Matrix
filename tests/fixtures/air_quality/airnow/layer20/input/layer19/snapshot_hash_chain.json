@@ -1,4 +1,4 @@
 {
-  "object_type": "AirNowSnapshotHashChain",
-  "records": []
+  "object_type": "snapshot_hash_chain.json",
+  "schema_version": "v1"
 }

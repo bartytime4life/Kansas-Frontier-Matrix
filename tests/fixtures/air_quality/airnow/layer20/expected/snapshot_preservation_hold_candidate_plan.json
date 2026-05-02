@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationHoldCandidatePlan",
+  "records": [
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_audit_input_inventory",
+      "legal_hold_created": false,
+      "record_id": "d6ef9c64fde5d291c813cad1"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_audit_receipt",
+      "legal_hold_created": false,
+      "record_id": "ffdf62e522ee987f41ffceb2"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_caveat_registry",
+      "legal_hold_created": false,
+      "record_id": "ff74a443ef3c9bc7d197b296"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_decision_ledger",
+      "legal_hold_created": false,
+      "record_id": "1c053a2c7d1911f5aae465e4"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_final_internal_summary",
+      "legal_hold_created": false,
+      "record_id": "0d75218f64b0f98bc28d39f6"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_hash_chain",
+      "legal_hold_created": false,
+      "record_id": "87ae5a0761bd463ee809b630"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_non_execution_ledger",
+      "legal_hold_created": false,
+      "record_id": "f6c6b8008304f96485cc195d"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_policy_ledger",
+      "legal_hold_created": false,
+      "record_id": "8964ba3de77dc6d0e67e2ef1"
+    },
+    {
+      "candidate_only": true,
+      "input_id": "snapshot_receipt_ledger",
+      "legal_hold_created": false,
+      "record_id": "7822a6ab94990558fe64b696"
+    }
+  ],
+  "schema_version": "v1"
+}
