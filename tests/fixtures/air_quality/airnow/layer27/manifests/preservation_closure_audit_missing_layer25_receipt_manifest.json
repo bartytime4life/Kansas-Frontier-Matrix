@@ -1,5 +1,5 @@
 {
-  "manifest_id": "layer27-execution_manifest",
+  "manifest_id": "layer27-missing_layer25_receipt_manifest",
   "local_file_only": true,
   "no_network": true,
   "bulk_web_service_loop": false,
@@ -19,7 +19,7 @@
   "exact_sensitive_overlay_allowed": false,
   "command_execution_requested": false,
   "command_execution_allowed": false,
-  "auto_execute_requested": true,
+  "auto_execute_requested": false,
   "auto_execute_allowed": false,
   "auto_apply_requested": false,
   "auto_apply_allowed": false,
@@ -97,7 +97,6 @@
     "preservation_closure_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer27/input/layer24/preservation_closure_non_execution_attestation.json"
   },
   "layer25_inputs": {
-    "preservation_closure_review_receipt_json": "tests/fixtures/air_quality/airnow/layer27/input/layer25/preservation_closure_review_receipt.json",
     "preservation_closure_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer27/input/layer25/preservation_closure_acceptance_candidates.jsonl",
     "residual_preservation_closure_blockers_jsonl": "tests/fixtures/air_quality/airnow/layer27/input/layer25/residual_preservation_closure_blockers.jsonl",
     "preservation_closure_review_policy_attestation_json": "tests/fixtures/air_quality/airnow/layer27/input/layer25/preservation_closure_review_policy_attestation.json",

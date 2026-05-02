@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowPreservationClosureCompletenessMatrix",
+  "records": [
+    {
+      "check": "required_inputs_present",
+      "status": "PASS"
+    },
+    {
+      "check": "decision_candidate_present",
+      "status": "PASS"
+    }
+  ]
+}

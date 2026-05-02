@@ -1,0 +1,3 @@
+{"object_type":"AirNowPreservationClosureReceipt","receipt_id":"1f5e8b6c840bd89cfc1e275deccb71dc0c70d351a9b47617a132ab08f2b246b0","workflow_outcome":"OK"}
+{"object_type":"AirNowPreservationClosureReviewReceipt","receipt_id":"2accc74db2abb1d6182fbe8dacfe37d3733d08f22ddc69fd6c765b55c3a88d9c","workflow_outcome":"OK"}
+{"object_type":"AirNowPreservationClosureFinalizationReceipt","receipt_id":"c6057a81e95b40273649ff90531c18ecb6005b8c4d6f42afde82c94796329d78","workflow_outcome":"OK"}

@@ -1,4 +1,4 @@
-import json
+import json, tarfile, hashlib
 from pathlib import Path
 from .checksums import sha256_path
 from .constants import REQUIRED_L24, REQUIRED_L25, REQUIRED_L26, FORBIDDEN_TRUE
@@ -63,5 +63,16 @@ def run_preservation_closure_audit(manifest_path,out_dir,created_at):
     (out/'preservation_closure_audit_status_board.md').write_text('# AirNow Layer 27 Preservation Closure Audit Status Board\n\nInternal-only audit ledger generation complete.\n')
     (out/'preservation_closure_audit_report.md').write_text('# AirNow Layer 27 Preservation Closure Audit Report\n\nSources: docs.airnowapi.org, airnow.gov/about-the-data, epa.gov/outdoor-air-quality-data/download-daily-data.\n')
     receipt={"object_type":"AirNowPreservationClosureAuditReceipt","schema_version":"v1","workflow_runner":"airnow_layer27_preservation_closure_audit","manifest_id":m.get("manifest_id"),"workflow_outcome":"PRESERVATION_CLOSURE_AUDIT_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"audit_actions_executed":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"preservation_closure_audit_packet_hash":None},"created_at":created_at}
+    include_packet=bool(m.get("audit_policy",{}).get("include_packet"))
+    packet_hash=None
+    if include_packet:
+        packet_path=out/'preservation_closure_audit_packet.tar.gz'
+        with tarfile.open(packet_path,'w:gz',format=tarfile.PAX_FORMAT) as tf:
+            for fp in sorted([x for x in out.iterdir() if x.is_file() and x.name!='preservation_closure_audit_packet.tar.gz'], key=lambda x:x.name):
+                ti=tf.gettarinfo(str(fp),arcname=fp.name)
+                ti.uid=0; ti.gid=0; ti.uname=''; ti.gname=''; ti.mtime=0
+                with open(fp,'rb') as fh: tf.addfile(ti,fh)
+        packet_hash=sha256_path(packet_path)
+    receipt["output_hashes"]["preservation_closure_audit_packet_hash"]=packet_hash
     _wj(out/'preservation_closure_audit_receipt.json',receipt)
     return receipt

@@ -1,5 +1,5 @@
 {
-  "manifest_id": "layer27-execution_manifest",
+  "manifest_id": "layer27-missing_layer26_receipt_manifest",
   "local_file_only": true,
   "no_network": true,
   "bulk_web_service_loop": false,
@@ -19,7 +19,7 @@
   "exact_sensitive_overlay_allowed": false,
   "command_execution_requested": false,
   "command_execution_allowed": false,
-  "auto_execute_requested": true,
+  "auto_execute_requested": false,
   "auto_execute_allowed": false,
   "auto_apply_requested": false,
   "auto_apply_allowed": false,
@@ -104,7 +104,6 @@
     "preservation_closure_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer27/input/layer25/preservation_closure_review_caveat_register.json"
   },
   "layer26_inputs": {
-    "preservation_closure_finalization_receipt_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_finalization_receipt.json",
     "preservation_closure_decision_candidate_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_decision_candidate.json",
     "preservation_closure_acceptance_consolidation_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_acceptance_consolidation.json",
     "preservation_closure_blocker_consolidation_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_blocker_consolidation.json",

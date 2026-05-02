@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "edges": [
+    {
+      "from": "layer24",
+      "to": "layer27"
+    },
+    {
+      "from": "layer25",
+      "to": "layer27"
+    },
+    {
+      "from": "layer26",
+      "to": "layer27"
+    }
+  ],
+  "object_type": "AirNowPreservationClosureLineageGraph"
+}

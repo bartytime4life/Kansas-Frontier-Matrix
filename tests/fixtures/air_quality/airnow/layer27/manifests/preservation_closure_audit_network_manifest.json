@@ -1,5 +1,5 @@
 {
-  "manifest_id": "layer27-manifest",
+  "manifest_id": "layer27-network_manifest",
   "local_file_only": true,
   "no_network": false,
   "bulk_web_service_loop": false,
@@ -111,5 +111,8 @@
     "preservation_closure_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_non_execution_attestation.json",
     "preservation_closure_policy_continuity_matrix_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_policy_continuity_matrix.json",
     "preservation_closure_caveat_continuity_register_json": "tests/fixtures/air_quality/airnow/layer27/input/layer26/preservation_closure_caveat_continuity_register.json"
+  },
+  "audit_policy": {
+    "include_packet": true
   }
 }
