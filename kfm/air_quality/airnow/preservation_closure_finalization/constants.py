@@ -1,52 +1,42 @@
-DENY_SCHEMES=("http://","https://","ftp://","s3://","gs://","file://")
-MANIFEST_BOOL_GATES={
-"local_file_only":True,"no_network":True,"bulk_web_service_loop":False,
-"publication_requested":False,"publication_allowed":False,
-"public_dashboard_requested":False,"public_dashboard_allowed":False,
-"tiles_requested":False,"tiles_allowed":False,
-"public_api_requested":False,"public_api_allowed":False,
-"emergency_alert_requested":False,"emergency_alert":False,
-"regulatory_claims_requested":False,"regulatory_claims_allowed":False,
-"exact_sensitive_overlay_requested":False,"exact_sensitive_overlay_allowed":False,
-"command_execution_requested":False,"command_execution_allowed":False,
-"auto_execute_requested":False,"auto_execute_allowed":False,
-"auto_apply_requested":False,"auto_apply_allowed":False,
-"task_closure_requested":False,"task_closure_allowed":False,
-"github_issue_creation_requested":False,"github_issue_creation_allowed":False,
-"github_pr_creation_requested":False,"github_pr_creation_allowed":False,
-"git_push_requested":False,"git_push_allowed":False,
-"file_deletion_requested":False,"file_deletion_allowed":False,
-"destruction_execution_requested":False,"destruction_execution_allowed":False,
-"archive_transfer_requested":False,"archive_transfer_allowed":False,
-"external_storage_requested":False,"external_storage_allowed":False,
-"chmod_or_chattr_requested":False,"chmod_or_chattr_allowed":False,
-"legal_hold_creation_requested":False,"legal_hold_creation_allowed":False,
-"official_archive_certification_requested":False,"official_archive_certification_allowed":False,
-"legal_advice_requested":False,"legal_advice_allowed":False,
-"final_accession_execution_requested":False,"final_accession_execution_allowed":False,
-"snapshot_export_execution_requested":False,"snapshot_export_execution_allowed":False,
-"snapshot_copy_requested":False,"snapshot_copy_allowed":False,
-"snapshot_transfer_requested":False,"snapshot_transfer_allowed":False,
-"snapshot_publication_requested":False,"snapshot_publication_allowed":False,
-"snapshot_release_requested":False,"snapshot_release_allowed":False,
-"preservation_action_requested":False,"preservation_action_allowed":False,
-"preservation_copy_requested":False,"preservation_copy_allowed":False,
-"preservation_transfer_requested":False,"preservation_transfer_allowed":False,
+FORBIDDEN_PATH_TOKENS = {
+    "publish","release","upload","serve","dashboard","tiles","public_api","emergency_alert","regulatory_claim",
+    "external_storage","delete","destroy","shred","chmod","chattr","legal_hold","archive_certification",
+    "final_accession","snapshot_release","snapshot_publish","preserve_execute","preservation_transfer","closure_execute",
+}
+FORBIDDEN_MANIFEST_KEY_TOKENS = {
+    "api_key","token","secret","password","bearer","credential","authorization","private_key","session","webhook",
+    "publish_url","github_token","bucket","storage_account","connection_string","legal_hold_id","archive_endpoint",
+    "transfer_endpoint","snapshot_endpoint","preservation_endpoint","release_endpoint","closure_endpoint",
+}
+DENIED_SCHEMES=("http://","https://","ftp://","s3://","gs://","file://")
+GOVERNANCE_EXPECTED={
+"local_file_only":True,"no_network":True,"bulk_web_service_loop":False,"publication_requested":False,"publication_allowed":False,
+"public_dashboard_requested":False,"public_dashboard_allowed":False,"tiles_requested":False,"tiles_allowed":False,
+"public_api_requested":False,"public_api_allowed":False,"emergency_alert_requested":False,"emergency_alert":False,
+"regulatory_claims_requested":False,"regulatory_claims_allowed":False,"exact_sensitive_overlay_requested":False,"exact_sensitive_overlay_allowed":False,
+"command_execution_requested":False,"command_execution_allowed":False,"auto_execute_requested":False,"auto_execute_allowed":False,
+"auto_apply_requested":False,"auto_apply_allowed":False,"task_closure_requested":False,"task_closure_allowed":False,
+"github_issue_creation_requested":False,"github_issue_creation_allowed":False,"github_pr_creation_requested":False,"github_pr_creation_allowed":False,
+"git_push_requested":False,"git_push_allowed":False,"file_deletion_requested":False,"file_deletion_allowed":False,
+"destruction_execution_requested":False,"destruction_execution_allowed":False,"archive_transfer_requested":False,"archive_transfer_allowed":False,
+"external_storage_requested":False,"external_storage_allowed":False,"chmod_or_chattr_requested":False,"chmod_or_chattr_allowed":False,
+"legal_hold_creation_requested":False,"legal_hold_creation_allowed":False,"official_archive_certification_requested":False,"official_archive_certification_allowed":False,
+"legal_advice_requested":False,"legal_advice_allowed":False,"final_accession_execution_requested":False,"final_accession_execution_allowed":False,
+"snapshot_export_execution_requested":False,"snapshot_export_execution_allowed":False,"snapshot_copy_requested":False,"snapshot_copy_allowed":False,
+"snapshot_transfer_requested":False,"snapshot_transfer_allowed":False,"snapshot_publication_requested":False,"snapshot_publication_allowed":False,
+"snapshot_release_requested":False,"snapshot_release_allowed":False,"preservation_action_requested":False,"preservation_action_allowed":False,
+"preservation_copy_requested":False,"preservation_copy_allowed":False,"preservation_transfer_requested":False,"preservation_transfer_allowed":False,
 "preservation_review_action_requested":False,"preservation_review_action_allowed":False,
 "preservation_finalization_action_requested":False,"preservation_finalization_action_allowed":False,
 "preservation_audit_action_requested":False,"preservation_audit_action_allowed":False,
 "task_closure_execution_requested":False,"task_closure_execution_allowed":False,
-"audit_closure_requested":False,"audit_closure_allowed":False,
-"governance_closure_requested":False,"governance_closure_allowed":False,
-"closure_execution_requested":False,"closure_execution_allowed":False,
-"closure_review_action_requested":False,"closure_review_action_allowed":False,
-"closure_finalization_action_requested":False,"closure_finalization_action_allowed":False,
-"preliminary_data":True,
+"audit_closure_requested":False,"audit_closure_allowed":False,"governance_closure_requested":False,"governance_closure_allowed":False,
+"closure_execution_requested":False,"closure_execution_allowed":False,"closure_review_action_requested":False,"closure_review_action_allowed":False,
+"closure_finalization_action_requested":False,"closure_finalization_action_allowed":False,"preliminary_data":True,
 }
-MANIFEST_FORBIDDEN_KEY_TERMS=("api_key","token","secret","password","bearer","credential","authorization","private_key","session","webhook","publish_url","github_token","bucket","storage_account","connection_string","legal_hold_id","archive_endpoint","transfer_endpoint","snapshot_endpoint","preservation_endpoint","release_endpoint","closure_endpoint")
-FORBIDDEN_PATH_TERMS=("publish","release","upload","serve","dashboard","tiles","public_api","emergency_alert","regulatory_claim","external_storage","delete","destroy","shred","chmod","chattr","legal_hold","archive_certification","final_accession","snapshot_release","snapshot_publish","preserve_execute","preservation_transfer","closure_execute")
-L25_REQUIRED=["preservation_closure_review_receipt","preservation_closure_acceptance_candidates","residual_preservation_closure_blockers","preservation_closure_review_assessment_matrix","preservation_closure_item_satisfaction_matrix","preservation_closure_review_validation_results","preservation_closure_review_policy_attestation","preservation_closure_review_caveat_register","preservation_closure_review_readiness_summary"]
-L25_DENIED_TRUE_FIELDS=["publication_allowed","public_release_allowed","closure_execution_allowed","task_closure_allowed","audit_closure_allowed","governance_closure_allowed","preservation_actions_executed","preservation_copy_executed","preservation_transfer_executed","snapshot_export_executed","snapshot_copy_executed","snapshot_transfer_executed","snapshot_published","snapshot_released","archive_transfer_allowed","file_deletion_allowed","legal_hold_creation_allowed","official_archive_certification_allowed","command_execution_allowed","final_accession_execution_allowed"]
-FORBIDDEN_TEXT_TERMS=("preservation execution","preservation copy","preservation transfer","snapshot export","snapshot copy","snapshot transfer","publication approved","public release","file deletion","legal hold","official certification")
-COORD_RE='-?\d{1,3}\.\d{3,},\s*-?\d{1,3}\.\d{3,}'
-REFS=["https://docs.airnowapi.org/","https://docs.airnowapi.org/webservices","https://docs.airnowapi.org/faq","https://docs.airnowapi.org/docs/AirNowAPIFactSheet.pdf","https://docs.airnowapi.org/docs/HourlyAQObsFactSheet.pdf","https://docs.airnowapi.org/docs/HourlyDataFactSheet.pdf","https://docs.airnowapi.org/docs/DailyDataFactSheet.pdf","https://www.airnowapi.org/docs/MonitoringSiteFactSheet.pdf","https://www.airnow.gov/about-the-data","https://docs.airnowapi.org/docs/DataUseGuidelines.pdf","https://www.epa.gov/outdoor-air-quality-data/download-daily-data"]
+LAYER25_REQUIRED={
+    "preservation_closure_review_receipt_json","preservation_closure_acceptance_candidates_jsonl","residual_preservation_closure_blockers_jsonl",
+    "preservation_closure_review_assessment_matrix_json","preservation_closure_item_satisfaction_matrix_json",
+    "preservation_closure_review_validation_results_json","preservation_closure_review_policy_attestation_json",
+    "preservation_closure_review_caveat_register_json","preservation_closure_review_readiness_summary_json",
+}

@@ -1,9 +1,1 @@
-{
-  "object_type": "x",
-  "schema_version": "v1",
-  "records": [
-    {
-      "id": "v1"
-    }
-  ]
-}
+{"validation_outcome":"PASS"}
