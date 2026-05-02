@@ -1,0 +1,33 @@
+{
+  "schema": "VerifierSpec.v1",
+  "verifier_id": "soilgrids-independent-verifier-v1",
+  "title": "SoilGrids Independent Transparency Verifier",
+  "dataset_id": "soilgrids-v2",
+  "verification_profile": "strict-offline",
+  "requirements": {
+    "require_packet_checksums": true,
+    "require_redaction_report_pass": true,
+    "require_claim_evidence_links": true,
+    "require_trust_statement_shape": true,
+    "require_inclusion_proofs": true,
+    "require_consistency_proofs": true,
+    "require_signed_tree_head": false,
+    "require_witness_signature": false
+  },
+  "log": {
+    "algorithm": "sha256-rfc9162-style",
+    "leaf_domain_separator": "00",
+    "node_domain_separator": "01"
+  },
+  "witness": {
+    "enabled": false,
+    "witness_id": "independent-auditor-01",
+    "signing_backend": "unsigned",
+    "ledger_required": true
+  },
+  "federation": {
+    "minimum_witnesses": 1,
+    "require_same_tree_head": true,
+    "allow_unsigned_witnesses": true
+  }
+}
