@@ -685,3 +685,42 @@ Example dry-run:
 ```bash
 python soilgrids_distribution_publish.py --release-manifest ... --publish-receipt ... --release-root ... --tile-package-manifest ... --tile-package-receipt ... --tile-package-root ... --viewer-manifest ... --viewer-receipt ... --viewer-root ... --distribution-root distributions --target dry-run
 ```
+
+## Layer 10: Remote Operations Monitor + Drift Ledger (SoilGrids)
+
+This repository includes `soilgrids_remote_monitor.py` for Layer 10 one-shot verification of a published remote distribution. The monitor is **detect-only** and never mutates remote state.
+
+### One-shot local-mock
+```bash
+python soilgrids_remote_monitor.py \
+  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
+  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
+  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
+  --output-dir monitoring/<distribution_id> \
+  --mode local-mock
+```
+
+### Existing remote
+```bash
+python soilgrids_remote_monitor.py \
+  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
+  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
+  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
+  --output-dir monitoring/<distribution_id> \
+  --mode existing-remote \
+  --allow-remote-network
+```
+
+### Dry-run
+```bash
+python soilgrids_remote_monitor.py \
+  --distribution-manifest distributions/<distribution_id>/distribution_manifest.json \
+  --distribution-receipt distributions/<distribution_id>/distribution_receipt.json \
+  --remote-access-validation-report distributions/<distribution_id>/remote_access_validation_report.json \
+  --output-dir monitoring/<distribution_id> \
+  --mode dry-run
+```
+
+Artifacts: `MonitorPlan.v1`, `MonitorSnapshot.v1`, `DriftReport.v1`, `AlertEnvelope.v1`, `MonitorReceipt.v1`, append-only chain-hashed ledger entries, and optional metrics JSON.
+
+Exit codes: `0 healthy`, `5 dry-run`, `10 degraded`, `20 unhealthy`, `30 malformed input`, `40 policy failure`, `50 probe failure`, `60 unsafe URL`, `70 ledger failure`, `80 internal error`.
