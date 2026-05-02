@@ -1,0 +1,69 @@
+{
+  "obligations": [
+    {
+      "obligation_id": "obl-1",
+      "action": "SUPPRESS",
+      "scope": "HUC12",
+      "channel": "PUBLIC"
+    }
+  ],
+  "obligation_execution_receipts": [
+    {
+      "object_type": "ObligationExecutionReceipt",
+      "schema_version": "v1",
+      "id": "sha256:db6b180607a3f4ab5a5cc54e3d14b77fd8a1f6c7e7a07c0bcb80ed790f7e9b05",
+      "spec_hash": "sha256:fe2daf3fa8d8813c2a536c5a106d1e005402afba12f3b8fb3a0919591afb5fd0",
+      "obligation_ref": {
+        "obligation_id": "obl-1",
+        "action": "SUPPRESS",
+        "scope": "HUC12",
+        "channel": "PUBLIC"
+      },
+      "execution": {
+        "outcome": "SUPPRESSED",
+        "status": "PASS"
+      },
+      "receipt_refs": {
+        "run_receipt_id": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      }
+    }
+  ],
+  "recompute_queue_items": [],
+  "publish_enforcement_report": {
+    "object_type": "PublishEnforcementReport",
+    "schema_version": "v1",
+    "id": "sha256:8249a5f91ed09bc27204356c4a1a6e999bb8a1b2bc2a84396ed6be6bb7987fcc",
+    "spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "publish_decision": "ALLOW",
+    "receipt_chain": [
+      "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    ],
+    "public_artifact_scan": {
+      "status": "PASS",
+      "forbidden_fields_present": []
+    },
+    "queue_summary": {
+      "unresolved_count": 0
+    }
+  },
+  "revocation_impact_report": {
+    "object_type": "RevocationImpactReport",
+    "schema_version": "v1",
+    "id": "sha256:11932f8b724fc80cbfec630e418c5a93df4e234ba3302b5cb4f1cecab27def15",
+    "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "revocation_delta_id": "delta-0",
+    "impact_outcome": "NO_IMPACT",
+    "affected_subject_count": 0,
+    "recompute_queue_item_ids": []
+  },
+  "consent_revoked_subject_ids": [],
+  "retention_expired": true,
+  "public_artifact_fields": [
+    "county",
+    "huc12"
+  ],
+  "run_receipt": {
+    "signed": true,
+    "verified": true
+  }
+}
