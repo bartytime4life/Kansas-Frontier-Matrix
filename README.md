@@ -594,3 +594,17 @@ See `verifier/verifier_spec_example.json`, `verifier/verifier_policy_default.jso
 - `20..110`: fail-closed error classes
 
 > This layer only independently verifies and witnesses evidence; it does **not** publish, mutate packets, mutate logs, or provide legal certification.
+
+## Layer 22 Watchtower Gossip (Snippet)
+This layer monitors and gossips verification observations only; it does not publish remotely, mutate transparency logs, or provide legal certification.
+
+### CLI
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode scan-local`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode gossip-export`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode gossip-import --gossip-envelope examples/gossip/gossip_envelope_example.json`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode split-view-detect`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode quorum-check --witness-statement tests/fixtures/watchtower_gossip/witness_statement_valid.json`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode challenge-peers`
+- `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode build-dashboard --build-dashboard`
+
+Exit codes: 0 healthy/planned, 5 dry-run, 10 degraded, 20 critical, 30 malformed input.
