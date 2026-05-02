@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowPreservationReceiptClosureVerificationMatrix",
+  "records": [
+    {
+      "check": "layer23_receipt_type",
+      "pass": true
+    },
+    {
+      "check": "layer23_receipt_no_forbidden_flags",
+      "pass": true
+    }
+  ],
+  "schema_version": "v1"
+}
