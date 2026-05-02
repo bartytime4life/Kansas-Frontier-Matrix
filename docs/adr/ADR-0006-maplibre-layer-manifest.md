@@ -4,13 +4,13 @@ title: ADR-0006 — MapLibre Layer Manifest
 type: standard
 version: v1
 status: draft
-owners: NEEDS_VERIFICATION
-created: NEEDS_VERIFICATION
-updated: 2026-04-27
-policy_label: NEEDS_VERIFICATION
+owners: OWNER_TBD
+created: NEEDS VERIFICATION
+updated: 2026-05-02
+policy_label: NEEDS VERIFICATION
 related: [../architecture/maplibre/README.md, ../architecture/maplibre/CONTRACTS.md, ../architecture/maplibre/DELIVERY.md, ../architecture/maplibre/TEST_PLAN.md, ../../schemas/contracts/v1/maplibre/layer_manifest.schema.json, ../../schemas/contracts/v1/maplibre/style_manifest.schema.json, ../../schemas/contracts/v1/maplibre/tile_artifact_manifest.schema.json, ../../schemas/contracts/v1/maplibre/map_release_manifest.schema.json, ../../tests/fixtures/maplibre/]
 tags: [kfm, adr, maplibre, layer-manifest, evidence, governance, release]
-notes: [doc_id, owners, created date, policy_label, and related path existence need verification because no mounted repository was available in this session; schema paths are PROPOSED until the repo-native schema home is verified; this ADR is grounded in the attached KFM MapLibre operating manual, KFM UI doctrine, and KFM artifactization doctrine]
+notes: [doc_id, owners, created date, policy_label, ADR numbering, and related path existence need verification in the active repository; schema paths are PROPOSED until the repo-native schema home is verified; this ADR is grounded in KFM MapLibre operating doctrine, KFM UI doctrine, and KFM artifactization doctrine; updated date reflects this current-session revision, not a committed repository timestamp]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -22,16 +22,16 @@ Adopt `LayerManifest.v1` as the governed contract that tells the MapLibre shell 
 ![ADR status](https://img.shields.io/badge/ADR-PROPOSED-f59e0b?style=flat-square)
 ![doc status](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square)
 ![surface](https://img.shields.io/badge/surface-MapLibre%20layer%20contract-0969da?style=flat-square)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1?style=flat-square)
+![truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20PROPOSED%20contract%20%7C%20UNKNOWN%20repo%20depth-6f42c1?style=flat-square)
 ![posture](https://img.shields.io/badge/posture-renderer%20downstream%20of%20trust-b60205?style=flat-square)
 
 > [!IMPORTANT]
 > **ADR status:** `PROPOSED`  
 > **Target file:** `docs/adr/ADR-0006-maplibre-layer-manifest.md`  
 > **Primary decision:** KFM MapLibre layers must be loaded through a governed `LayerManifest.v1`, not through ad hoc style JSON, raw feature properties, direct canonical reads, or UI-local assumptions.  
-> **Implementation depth:** `UNKNOWN` until the real repository tree, schema home, tests, workflows, and runtime routes are inspected.
+> **Implementation depth:** `UNKNOWN` until the active repository tree, schema home, tests, workflows, policy tooling, emitted artifacts, and runtime routes are inspected.
 
-**Quick jumps:** [Decision](#decision) · [Context](#context) · [LayerManifest responsibilities](#layermanifest-responsibilities) · [Runtime flow](#runtime-flow) · [Contract shape](#contract-shape) · [Rejected alternatives](#rejected-alternatives) · [Consequences](#consequences) · [Validation gates](#validation-gates) · [Rollout](#rollout) · [Open verification](#open-verification)
+**Quick jumps:** [Decision](#decision) · [Status and evidence boundary](#status-and-evidence-boundary) · [Context](#context) · [LayerManifest responsibilities](#layermanifest-responsibilities) · [Runtime flow](#runtime-flow) · [Contract shape](#contract-shape) · [Rejected alternatives](#rejected-alternatives) · [Consequences](#consequences) · [Validation gates](#validation-gates) · [Rollout](#rollout) · [Follow-up documentation](#follow-up-documentation) · [Open verification](#open-verification)
 
 ---
 
@@ -42,14 +42,14 @@ KFM will treat `LayerManifest.v1` as the required layer contract for every publi
 A `LayerManifest` is not the tile, not the style, not the source of truth, and not the release authority. It is the map-layer-facing governance envelope that binds a released layer to:
 
 - source descriptors and source roles,
-- tile or raster artifact manifests,
+- tile, raster, or vector artifact manifests,
 - style manifests,
 - release state,
 - evidence policy,
 - geometry and sensitivity policy,
 - time model,
 - stale-source behavior,
-- trust badges,
+- trust badges and negative states,
 - Evidence Drawer resolution,
 - Focus Mode eligibility,
 - correction and rollback state.
@@ -61,7 +61,36 @@ A `LayerManifest` is not the tile, not the style, not the source of truth, and n
 >
 > `schemas/contracts/v1/maplibre/layer_manifest.schema.json`
 >
-> If the mounted repository proves a different canonical schema location, adapt through a follow-up schema-home ADR or migration note. Do not create parallel schema authorities.
+> If the active repository proves a different canonical schema location, adapt through a follow-up schema-home ADR or migration note. Do not create parallel schema authorities.
+
+[Back to top](#top)
+
+---
+
+## Status and evidence boundary
+
+This ADR is doctrine-grounded and implementation-bounded.
+
+| Claim area | Status | What can be stated safely |
+|---|---|---|
+| MapLibre role | `CONFIRMED doctrine` | MapLibre is a disciplined 2D renderer and interaction runtime downstream of KFM trust controls. |
+| Layer manifest decision | `PROPOSED` | `LayerManifest.v1` should become the layer-facing contract for public and semi-public MapLibre layers. |
+| Field names and schema home | `PROPOSED / NEEDS VERIFICATION` | Field families are implementation guidance until repo-native contract naming and schema home are verified. |
+| Actual repository implementation | `UNKNOWN` | This ADR does not prove checked-in routes, schemas, tests, validators, workflows, UI components, or emitted artifacts. |
+| Public publication readiness | `DENY by default` | No public layer should be promoted unless evidence, rights, sensitivity, policy, release, and rollback gates pass. |
+
+> [!CAUTION]
+> Prior KFM reports and implementation references may preserve strong lineage or report public-repo observations, but this ADR does not upgrade them into current active-checkout proof. Current implementation behavior must be verified from the repository, tests, workflows, manifests, logs, or emitted artifacts before this ADR is treated as implemented.
+
+### Evidence ledger
+
+| Source | Status | Supports | Limits |
+|---|---|---|---|
+| Attached `Pasted markdown.md` baseline | `CONFIRMED source` | Existing ADR decision, contract boundary, runtime flow, validation gates, rollout, and open verification posture. | Does not prove repository implementation. |
+| KFM MapLibre operating doctrine | `CONFIRMED doctrine / PROPOSED implementation` | MapLibre as downstream 2D renderer; minimal artifact set; click → resolver → Drawer → Focus thin-slice sequence. | Does not prove the active repo contains these files or tests. |
+| KFM UI and governed AI doctrine | `CONFIRMED doctrine / PROPOSED implementation` | Evidence Drawer and Focus Mode must remain evidence-bounded and policy-aware. | Does not prove UI route/component maturity. |
+| KFM artifactization and pipeline doctrine | `CONFIRMED doctrine / PROPOSED file plan` | SourceDescriptor, EvidenceBundle, DecisionEnvelope, ReleaseManifest, receipts, proof packs, correction, rollback, and finite outcomes. | Does not settle exact field names or schema placement. |
+| Current active repository checkout | `UNKNOWN` | Needed to verify path names, ADR numbering, owners, schema home, package manager, CI, tests, and runtime behavior. | Not available in this revision pass. |
 
 [Back to top](#top)
 
@@ -69,7 +98,7 @@ A `LayerManifest` is not the tile, not the style, not the source of truth, and n
 
 ## Context
 
-KFM’s map UI is part of the trust model, not decorative chrome. MapLibre is the disciplined 2D renderer and interaction runtime inside a governed shell. It may draw released artifacts, expose visual candidates, and return interaction context to governed services. It must not decide what is true, reviewed, public, cited, safe, corrected, or released.
+KFM’s map UI is part of the trust model, not decorative chrome. MapLibre may draw released artifacts, expose visual candidates, and return interaction context to governed services. It must not decide what is true, reviewed, public, cited, safe, corrected, or released.
 
 A normal MapLibre style or TileJSON endpoint can describe how to render a layer. It does not, by itself, answer KFM’s governance questions:
 
@@ -91,10 +120,10 @@ KFM therefore needs a layer-level contract between the publication system and th
 
 | Label | Applies here |
 |---|---|
-| `CONFIRMED` | KFM doctrine requires MapLibre to remain downstream of governed evidence, policy, review, and release state. |
+| `CONFIRMED` | KFM doctrine requires MapLibre to remain downstream of governed evidence, policy, review, release, and correction state. |
 | `PROPOSED` | `LayerManifest.v1` field names, schema home, validator names, fixture names, API route names, and release file locations. |
-| `UNKNOWN` | Actual checked-in schema location, route implementation, package manager, CI workflow, existing ADR numbering, and current repo ownership. |
-| `NEEDS VERIFICATION` | `doc_id`, owners, created date, policy label, related path existence, schema-home authority, and branch-enforced validation. |
+| `UNKNOWN` | Actual checked-in schema location, route implementation, package manager, CI workflow, existing ADR numbering, current owners, and current UI/API maturity. |
+| `NEEDS VERIFICATION` | `doc_id`, owners, created date, policy label, related path existence, schema-home authority, branch-enforced validation, and public-source rights. |
 
 [Back to top](#top)
 
@@ -163,11 +192,12 @@ flowchart LR
 
   classDef trust fill:#eef6ff,stroke:#0969da,stroke-width:1px;
   classDef runtime fill:#fff8c5,stroke:#9a6700,stroke-width:1px;
-  classDef deny fill:#ffebe9,stroke:#cf222e,stroke-width:1px;
 
   class A,B,C,D,E,F,G,J,K,L,M,N trust;
   class H,I runtime;
 ```
+
+Above: the flow shows MapLibre as a runtime surface between released layer catalogs and governed evidence resolution. The renderer can identify a visual candidate; it cannot turn that candidate into an authoritative claim without EvidenceBundle resolution and policy-aware UI output.
 
 **Runtime rule:** MapLibre may identify the candidate feature, layer ID, viewport, active time, and camera state. It must not read RAW, WORK, QUARANTINE, canonical evidence stores, review-only stores, steward-only stores, or model-runtime stores directly.
 
@@ -177,7 +207,7 @@ flowchart LR
 
 ## Contract shape
 
-The following shape is illustrative. It is not a complete JSON Schema and must not be copied into production without schema validation, policy review, and repo-native naming checks.
+The following shape is illustrative. It is not a complete JSON Schema and must not be copied into production without schema validation, policy review, source-rights review, and repo-native naming checks.
 
 ```json
 {
@@ -274,6 +304,8 @@ The following shape is illustrative. It is not a complete JSON Schema and must n
 | Time | Do not collapse source time, valid time, release time, stale time, and runtime interaction time. |
 | Policy | Policy references are auditable inputs. Policy decisions remain emitted objects, not hidden booleans. |
 | Negative states | Missing, stale, denied, restricted, generalized, withdrawn, and failed states must be visible to the shell. |
+| Accessibility | Trust states must not rely on color alone; badges need text or accessible labels. |
+| Sensitive geometry | Exact geometry is denied or generalized unless evidence and policy explicitly allow it. |
 
 [Back to top](#top)
 
@@ -290,6 +322,7 @@ The following shape is illustrative. It is not a complete JSON Schema and must n
 | Let the client infer policy from feature properties. | This bypasses the trust membrane and risks treating rendered properties as evidence authority. |
 | Make popups the primary evidence surface. | Popups are too small and too easy to overread. The Evidence Drawer remains the trust object. |
 | Load RAW or canonical stores directly in the browser. | Violates the KFM lifecycle and public-surface boundary. |
+| Let Focus Mode read raw layer properties. | AI synthesis must be evidence-bounded and citation-validated, not generated from renderer-local properties. |
 
 [Back to top](#top)
 
@@ -304,16 +337,17 @@ The following shape is illustrative. It is not a complete JSON Schema and must n
 - Evidence Drawer and Focus Mode eligibility are visible before runtime interaction.
 - Sensitive geometry, source rights, stale data, and correction state can fail closed.
 - Style edits that change meaning can be tied to release governance.
-- Release rollback can identify affected layers, styles, artifacts, and cache targets.
+- Release rollback can identify affected layers, styles, artifacts, caches, and dependent UI states.
 - Cross-domain layers can share one validation posture without flattening domain meaning.
 
 ### Costs and tradeoffs
 
-- Layer publication becomes slightly slower because manifests, fixtures, and validation are required.
+- Layer publication becomes slower because manifests, fixtures, and validation are required.
 - The UI cannot treat arbitrary MapLibre sources as authoritative layers.
 - Domain teams must preserve source-role and evidence state instead of emitting only tiles.
 - Schema-home ambiguity must be resolved before machine enforcement.
 - Existing layer configs, if present, may need migration into manifest-backed equivalents.
+- Some public layers may render less detail when sensitivity or rights state requires generalization.
 
 ### Risks if not adopted
 
@@ -345,7 +379,27 @@ The first implementation PR that introduces this ADR should include or explicitl
 | UI closure | The shell shows trust badges, negative states, time context, correction state, and Drawer link. | E2E smoke failure. |
 | No forbidden path | Browser cannot reach RAW, WORK, QUARANTINE, canonical stores, or direct model runtime. | CI failure. |
 | Accessibility closure | Non-color trust cues, keyboard access, focus order, contrast, text alternatives, and reduced-motion behavior pass smoke checks. | `HOLD` or CI failure depending on severity. |
+| Runtime receipt closure | Click, drawer resolution, Focus outcome, and negative states emit or link to auditable runtime receipts when required. | `ERROR` or test failure. |
 | Rollback closure | A bad layer release can be withdrawn/restored without deleting correction history. | `DENY` release until rollback target exists. |
+
+### Minimum fixture set
+
+A credible first slice should include:
+
+- one valid public-safe layer manifest,
+- one stale-source manifest fixture,
+- one sensitive-geometry deny fixture,
+- one missing-evidence fixture,
+- one withdrawn-release fixture,
+- one matching `TileArtifactManifest`,
+- one matching `StyleManifest`,
+- one matching `MapReleaseManifest`,
+- one `EvidenceBundle` fixture,
+- one `EvidenceDrawerPayload` fixture,
+- one `MapContextEnvelope` fixture,
+- one `FocusModeResponse` for each finite outcome: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`,
+- one rollback target fixture,
+- one no-public-raw-path test.
 
 [Back to top](#top)
 
@@ -360,14 +414,16 @@ Before implementation claims are made, inspect:
 - `git status`, branch, and dirty state,
 - actual `docs/adr/` pattern and ADR numbering,
 - existing ADR index, if any,
-- schema home: `schemas/contracts/v1/`, `contracts/`, or other,
+- schema home: `schemas/contracts/v1/`, `contracts/`, `jsonschema/`, or other,
 - MapLibre UI app path,
 - governed API path,
 - test framework,
 - CI workflow conventions,
 - policy tooling,
 - existing layer config and tile artifact conventions,
-- CODEOWNERS and reviewer rules.
+- CODEOWNERS and reviewer rules,
+- current source registry and source-rights process,
+- current release/proof/receipt artifact homes.
 
 ### Phase 1 — Contract and fixture slice
 
@@ -376,11 +432,11 @@ Create the smallest proof-bearing slice:
 | File family | Proposed home | Notes |
 |---|---|---|
 | ADR | `docs/adr/ADR-0006-maplibre-layer-manifest.md` | This file. |
-| Schema | `schemas/contracts/v1/maplibre/layer_manifest.schema.json` | PROPOSED until schema home is verified. |
+| Schema | `schemas/contracts/v1/maplibre/layer_manifest.schema.json` | `PROPOSED` until schema home is verified. |
 | Fixtures | `tests/fixtures/maplibre/layer_manifest.valid.json` and invalid variants | Include valid, stale, sensitive-deny, missing-evidence, and withdrawn-release examples. |
 | Validators | `tools/validators/maplibre/` or repo-native equivalent | Validate schema, source refs, artifacts, policies, release refs. |
 | Policy | `policy/maplibre/` or repo-native equivalent | No public raw path, sensitive geometry deny, stale source abstain. |
-| Release fixture | `data/published/maplibre/` or repo-native release fixture location | Use public-safe hydrology/HUC12-style fixture if available. |
+| Release fixture | `data/published/maplibre/` or repo-native release fixture location | Use a public-safe hydrology/HUC12-style fixture if available. |
 | UI smoke | `tests/e2e/maplibre/` or repo-native equivalent | Click → governed resolution → Drawer → optional Focus outcome. |
 
 ### Phase 2 — Governed layer catalog
@@ -407,7 +463,9 @@ paths:
 
 ### Phase 3 — UI binding
 
-The MapLibre shell may consume a layer manifest only through the governed catalog API or a released manifest bundle. The shell should display:
+The MapLibre shell may consume a layer manifest only through the governed catalog API or a released manifest bundle.
+
+The shell should display:
 
 - layer release badge,
 - evidence/citation badge,
@@ -451,6 +509,29 @@ Update or create these docs in the same PR wave when behavior changes:
 | `tests/fixtures/maplibre/README.md` | Describe valid and invalid fixture semantics. |
 | `policy/maplibre/README.md` | Document fail-closed policies. |
 
+> [!NOTE]
+> Paths above are `PROPOSED` until verified against the active checkout. Do not create duplicate documentation authority if a repo-native path already exists.
+
+[Back to top](#top)
+
+---
+
+## Rollback and correction behavior
+
+Rollback is not deletion. A bad layer release should leave correction history inspectable.
+
+| Event | Required response |
+|---|---|
+| Manifest schema failure before release | Block promotion with `ERROR`; keep validation report. |
+| Rights or sensitivity failure before release | `DENY` public release; keep source/policy decision evidence. |
+| Stale source discovered after release | Show stale badge; Focus Mode should `ABSTAIN` unless policy allows bounded historical context. |
+| Sensitive geometry exposure discovered after release | Withdraw or generalize public layer; emit correction notice and transform receipt. |
+| Style meaning-change discovered after release | Revert style or publish corrected release; preserve prior style ref and release lineage. |
+| EvidenceBundle mismatch after release | Withdraw affected layer interactions or force Drawer/Focus negative state until repaired. |
+| Cache contains withdrawn layer | Invalidate cache target and bind rollback to prior release manifest. |
+
+Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+
 [Back to top](#top)
 
 ---
@@ -461,15 +542,18 @@ Update or create these docs in the same PR wave when behavior changes:
 |---|---|---|
 | ADR numbering and title pattern | `NEEDS VERIFICATION` | `ADR-0006` may collide with an existing ADR if the repo has changed. |
 | `docs/adr/` index convention | `UNKNOWN` | This ADR may need index status, supersession links, or owner metadata. |
-| Schema home | `UNKNOWN / CONFLICTED` | Avoid parallel schema authority between `contracts/` and `schemas/`. |
+| Schema home | `UNKNOWN / CONFLICTED` | Avoid parallel schema authority between `contracts/`, `schemas/`, and any repo-specific schema home. |
 | Owners | `NEEDS VERIFICATION` | Meta block must not invent steward ownership. |
 | Policy label | `NEEDS VERIFICATION` | ADR appears public-safe, but repo label convention must be checked. |
 | MapLibre package/version target | `NEEDS VERIFICATION` | Version-sensitive runtime details must be pinned by implementation evidence. |
 | Existing layer config files | `UNKNOWN` | Migration plan depends on current implementation. |
 | Existing EvidenceBundle schema | `UNKNOWN` | Manifest references must match actual schema names. |
+| Existing ReleaseManifest / ProofPack schemas | `UNKNOWN` | Layer release binding must reuse established object families if present. |
 | Current policy engine | `UNKNOWN` | OPA/Rego, Conftest, or repo-native policy tooling affects gate design. |
 | Current CI enforcement | `UNKNOWN` | Validation gates require branch-real workflow wiring. |
 | Public source rights for first layer | `NEEDS VERIFICATION` | Public rendering must fail closed on unclear rights. |
+| Accessibility test path | `UNKNOWN` | Trust badges and negative states need non-color and keyboard verification. |
+| Runtime receipt pattern | `UNKNOWN` | Map interactions that support claims should be auditable. |
 
 [Back to top](#top)
 
