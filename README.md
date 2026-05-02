@@ -617,3 +617,29 @@ Plan-only:
 Local mirror/build resolver/S3-compatible/validate-remote modes are supported through `--mode`.
 
 This layer publishes or mirrors trust-status artifacts only. It does **not** change trust statuses, revoke objects, delete objects, or mutate source evidence.
+
+## Layer 25 Consumer Trust Decision Engine
+
+### Invocations
+- decide: `python tools/resolution/soil/soilgrids_trust_decision.py --trust-decision-spec trust_decision/trust_decision_spec_example.json --status-distribution-root tests/fixtures/trust_decision --request trust_decision/requests/example_request.json --output-root /tmp/td --mode decide`
+- resolve: `... --mode resolve`
+- batch-decide: `... --mode batch-decide`
+- compile-sdk: `... --mode compile-sdk`
+- validate-remote-resolver: `... --mode validate-remote-resolver --public-base-url http://127.0.0.1:8000 --allow-remote-network`
+- opa-eval: `... --mode opa-eval --opa-policy trust_decision/policies/consumer_policy_example.rego --opa-query data.consumer.decision`
+
+### Examples
+See:
+- `trust_decision/trust_decision_spec_example.json`
+- `trust_decision/trust_decision_policy_default.json`
+- `trust_decision/requests/example_request.json`
+- `examples/api/trust_decision_openapi_example.json`
+- `examples/sdk/soilgrids_trust_client_example.py`
+
+### Local API endpoints
+`GET /health`, `GET /policy`, `GET /resolve/{trust_object_id}`, `GET /decide/{trust_object_id}`, `GET /status-index`, `GET /revocations`, `GET /suspensions`
+
+### Exit codes
+0 success/allow, 5 dry-run, 10 warn, 15 review, 20 block, 30 malformed input, 40 resolver validation, 50 request validation, 60 policy failure, 70 OPA failure, 80 SDK/API failure, 90 remote resolver failure, 100 unsafe path/local API failure, 110 secret finding failure, 120 internal error.
+
+> This layer only makes consumer trust decisions. It does not change trust status, revoke objects, publish remotely, or mutate source evidence.

@@ -1,0 +1,1 @@
+{"schema":"TrustDecisionSpec.v1","trust_decision_id":"td-1","policy":{"active_status_decision":"allow"},"resolver":{"source":"local-status-distribution"}}
