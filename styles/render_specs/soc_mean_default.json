@@ -1,0 +1,24 @@
+{
+  "schema": "RenderSpec.v1",
+  "render_id": "soilgrids-soc-mean-default",
+  "property": "soc",
+  "statistic": "mean",
+  "unit": "g/kg",
+  "nodata": null,
+  "scale": {"mode": "linear", "min": 0, "max": 120, "clamp": true},
+  "color_ramp": [
+    {"value": 0, "rgba": [247, 252, 245, 255]},
+    {"value": 20, "rgba": [199, 233, 192, 255]},
+    {"value": 60, "rgba": [65, 171, 93, 255]},
+    {"value": 120, "rgba": [0, 68, 27, 255]}
+  ],
+  "nodata_rgba": [0, 0, 0, 0],
+  "resampling": "bilinear",
+  "tile_format": "PNG",
+  "tile_size": 256,
+  "scheme": "xyz",
+  "minzoom": 6,
+  "maxzoom": 6,
+  "bounds": [-98.0, 37.0, -97.9, 37.1],
+  "attribution": "SoilGrids © ISRIC, CC-BY-4.0"
+}
