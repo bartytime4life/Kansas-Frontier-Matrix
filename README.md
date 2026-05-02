@@ -476,3 +476,59 @@ KFM publication should be reversible and correctable.
 - [ ] License text is not summarized until the actual repository license is verified.
 
 </details>
+
+## SoilGrids COG normalization (Layer 2)
+
+CLI example:
+
+```bash
+python soilgrids_cog_normalize.py \
+  --input raw/soc_0-5cm_mean_subset.tif \
+  --output-dir processed/cog \
+  --compression DEFLATE \
+  --predictor 2 \
+  --blocksize 512 \
+  --bigtiff IF_SAFER \
+  --threads 1
+```
+
+Python example:
+
+```python
+from soilgrids_cog_normalize import normalize_to_cog
+
+receipt = normalize_to_cog(
+    input_path="raw/soc_0-5cm_mean_subset.tif",
+    output_dir="processed/cog",
+    compression="DEFLATE",
+    predictor=2,
+    blocksize=512,
+    bigtiff="IF_SAFER",
+    threads=1,
+)
+```
+
+Expected receipt shape (`CogReceipt.v1`) includes:
+
+```json
+{
+  "schema": "CogReceipt.v1",
+  "status": "success | error",
+  "input_path": "...",
+  "output_path": "...",
+  "spec_hash": "...",
+  "creation_options": {
+    "FORMAT": "COG",
+    "COMPRESS": "DEFLATE",
+    "PREDICTOR": "2",
+    "BLOCKSIZE": "512",
+    "BIGTIFF": "IF_SAFER",
+    "NUM_THREADS": "1"
+  },
+  "validation": {
+    "input_valid": true,
+    "output_valid": true
+  },
+  "errors": []
+}
+```
