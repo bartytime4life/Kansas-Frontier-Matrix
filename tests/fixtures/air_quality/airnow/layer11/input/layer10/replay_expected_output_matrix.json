@@ -1,0 +1,25 @@
+{
+  "object_type": "AirNowReplayExpectedOutputMatrix",
+  "records": [
+    {
+      "layer": "layer6",
+      "output_role": "bundle_receipt",
+      "expected_object_type": "AirNowBundleReceipt"
+    },
+    {
+      "layer": "layer7",
+      "output_role": "release_gate_receipt",
+      "expected_object_type": "AirNowReleaseGateReceipt"
+    },
+    {
+      "layer": "layer8",
+      "output_role": "remediation_receipt",
+      "expected_object_type": "AirNowRemediationReceipt"
+    },
+    {
+      "layer": "layer9",
+      "output_role": "manual_evidence_receipt",
+      "expected_object_type": "AirNowManualEvidenceReceipt"
+    }
+  ]
+}

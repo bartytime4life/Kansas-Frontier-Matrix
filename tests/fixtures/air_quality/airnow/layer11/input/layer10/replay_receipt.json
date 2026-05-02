@@ -1,0 +1,6 @@
+{
+  "object_type": "AirNowReplayReceipt",
+  "workflow_outcome": "REPLAY_PLAN_READY",
+  "commands_executed": false,
+  "replay_executed": false
+}

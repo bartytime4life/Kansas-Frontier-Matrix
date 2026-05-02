@@ -1,0 +1,7 @@
+{
+  "object_type": "AirNowReleaseGateReceipt",
+  "receipt_id": "layer7-id",
+  "validation_outcome": "PASS",
+  "finite_outcome": "ANSWER",
+  "public_release_allowed": false
+}
