@@ -1,0 +1,20 @@
+{
+  "object_type": "AirNowForecast",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "fixture_only": true,
+  "no_live_airnow_data": true,
+  "not_for_publication": true,
+  "reporting_area": "Wichita",
+  "state_code": "KS",
+  "latitude": 37.6872,
+  "longitude": -97.3301,
+  "date_issue": "2026-04-20",
+  "date_forecast": "2026-04-21",
+  "parameter_name": "OZONE",
+  "aqi": 88,
+  "category": {"number": 2, "name": "Moderate"},
+  "action_day": false,
+  "discussion": "Synthetic fixture for offline validation only.",
+  "preliminary_data": true
+}

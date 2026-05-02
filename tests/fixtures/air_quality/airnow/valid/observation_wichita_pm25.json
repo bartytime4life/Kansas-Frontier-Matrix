@@ -1,0 +1,22 @@
+{
+  "object_type": "AirNowObservation",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "fixture_only": true,
+  "no_live_airnow_data": true,
+  "not_for_publication": true,
+  "reporting_area": "Wichita",
+  "state_code": "KS",
+  "latitude": 37.6872,
+  "longitude": -97.3301,
+  "date_observed": "2026-04-20",
+  "hour_observed": 14,
+  "local_time_zone": "CST",
+  "parameter_name": "PM2.5",
+  "aqi": 42,
+  "category": {"number": 1, "name": "Good"},
+  "unit": "UG/M3",
+  "value": 10.2,
+  "provenance": {"source_doc_url": "https://docs.airnowapi.org/webservices"},
+  "preliminary_data": true
+}
