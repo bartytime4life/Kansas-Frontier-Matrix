@@ -2,41 +2,15 @@
 doc_id: kfm://doc/github-control-surface-readme
 title: GitHub Control Surface
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: @bartytime4life
 created: 2026-04-29
-updated: 2026-04-29
+updated: 2026-05-02
 policy_label: public
-intended_path: .github/README.md
-evidence_mode: REPO_CHECKOUT_INSPECTED (filesystem only) / NO_GITHUB_PLATFORM_SETTINGS_EVIDENCE
-truth_posture: CONFIRMED purpose and on-disk .github inventory; PARTIALLY_VERIFIED workflow files in checkout; UNKNOWN GitHub platform enforcement state
-related:
-  - ../README.md
-  - ../docs/README.md
-  - ../docs/standards/README.md
-  - ../contracts/README.md
-  - ../schemas/README.md
-  - ../policy/README.md
-  - ../tests/README.md
-  - ../tools/README.md
-  - ../data/README.md
-  - ../release/README.md
-  - ./CODEOWNERS
-  - ./PULL_REQUEST_TEMPLATE.md
-  - ./SECURITY.md
-  - ./workflows/README.md
-tags:
-  - kfm
-  - github
-  - ci
-  - governance
-  - documentation
-  - readme
-  - control-surface
-notes:
-  - Updated against mounted repository checkout on 2026-04-29 (filesystem evidence).
-  - GitHub platform settings (branch protection, required checks, environment approvals, Actions/repo permissions, and secret posture) remain NEEDS_VERIFICATION until checked in GitHub UI/API evidence.
+related: [../README.md, ../docs/README.md, ../docs/standards/README.md, ../contracts/README.md, ../schemas/README.md, ../policy/README.md, ../tests/README.md, ../tools/README.md, ../data/README.md, ../release/README.md, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./SECURITY.md, ./workflows/README.md]
+tags: [kfm, github, ci, governance, documentation, readme, control-surface]
+notes: [Revised from supplied Markdown on 2026-05-02. Source-supplied checkout snapshot dated 2026-04-29 remains NEEDS_RECHECK in the active repository. GitHub platform settings, branch protection, required checks, environment approvals, Actions permissions, secrets posture, and deployment posture remain NEEDS_VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -48,7 +22,8 @@ notes:
 </p>
 
 <p align="center">
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
+  <img alt="README status: experimental" src="https://img.shields.io/badge/status-experimental-orange">
+  <img alt="Doc status: draft" src="https://img.shields.io/badge/doc-draft-lightgrey">
   <img alt="Surface: .github" src="https://img.shields.io/badge/surface-.github-0b7285">
   <img alt="Truth: evidence first" src="https://img.shields.io/badge/truth-evidence--first-2ea043">
   <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
@@ -58,9 +33,10 @@ notes:
 <p align="center">
   <a href="#read-this-first">Read first</a> ·
   <a href="#scope">Scope</a> ·
-  <a href="#control-surface-map">Control map</a> ·
+  <a href="#repo-fit-and-control-surface-map">Repo fit</a> ·
   <a href="#accepted-inputs">Inputs</a> ·
   <a href="#exclusions">Exclusions</a> ·
+  <a href="#source-supplied-directory-snapshot">Snapshot</a> ·
   <a href="#operating-model">Operating model</a> ·
   <a href="#workflow-standards">Workflows</a> ·
   <a href="#validation">Validation</a> ·
@@ -73,22 +49,29 @@ notes:
 ## Read this first
 
 > [!IMPORTANT]
-> This README is **checkout-verified guidance**, but still not proof of active GitHub platform enforcement. Treat workflow names, owners, badges, branch-protection claims, required checks, environment approvals, secret posture, deployment rules, and platform settings as `NEEDS_VERIFICATION` until checked against the current repository and GitHub settings.
+> **Status:** `experimental` README surface / `draft` content  
+> **Owner:** `@bartytime4life`  
+> **Path:** `.github/README.md`  
+> **Truth posture:** `CONFIRMED` supplied Markdown baseline · `SOURCE-SUPPLIED` 2026-04-29 checkout snapshot · `UNKNOWN` current active repo and GitHub platform enforcement until rechecked  
+> **Public posture:** cite-or-abstain; fail closed where rights, sensitivity, source terms, release state, secrets, or exposure posture are unresolved.
+
+This README defines how `.github/` should support GitHub-native contribution intake, review routing, workflow orchestration, dependency automation, and repository hygiene for Kansas Frontier Matrix.
+
+It does **not** make `.github/` authoritative for KFM truth, policy, source authority, data lifecycle state, EvidenceBundle closure, release approval, AI authority, or publication.
 
 | Field | Value |
 |---|---|
-| Status | `draft` |
 | Intended path | `.github/README.md` |
 | Owners | `@bartytime4life` |
-| Evidence mode | `REPO_CHECKOUT_INSPECTED (filesystem only)` / `NO_GITHUB_PLATFORM_SETTINGS_EVIDENCE` |
+| Evidence mode for this revision | `SOURCE_MARKDOWN_REVISED` / `NO_CURRENT_REPO_REINSPECTION` / `NO_GITHUB_PLATFORM_SETTINGS_EVIDENCE` |
+| Source-supplied snapshot | Prior Markdown reports mounted-checkout filesystem evidence from `2026-04-29`; this revision treats that as `SOURCE-SUPPLIED` and `NEEDS_RECHECK`. |
 | Authority class | GitHub-native operational control surface |
 | Policy label | `public` |
-| Truth posture | `CONFIRMED` target purpose and on-disk inventory · `PARTIALLY_VERIFIED` workflow files in checkout · `UNKNOWN` platform enforcement state |
-| Public posture | Cite-or-abstain; fail closed where rights, sensitivity, release state, or source terms are unresolved |
+| Platform state | `UNKNOWN` until branch protection, required checks, environment approvals, Actions/repo permissions, secrets, and deployment settings are checked from GitHub UI/API evidence. |
 
 | What this document does | What it does not do |
 |---|---|
-| Defines how `.github/` should support contribution intake, review routing, CI orchestration, and GitHub-specific repository hygiene. | Does not prove current workflows, required checks, branch protection, owners, platform settings, secrets, deployments, or runtime behavior. |
+| Defines how `.github/` should support contribution intake, review routing, CI orchestration, GitHub-specific configuration, and repository hygiene. | Does not prove current workflows, required checks, branch protection, CODEOWNERS enforcement, secrets, deployments, or runtime behavior. |
 | Keeps GitHub automation subordinate to KFM evidence, policy, contracts, schemas, tests, and release objects. | Does not define canonical schemas, policy semantics, source authority, runtime behavior, publication approval, or AI authority. |
 | Gives maintainers a verification map, change playbook, workflow-risk model, and definition of done. | Does not authorize public release, direct model access, raw-data exposure, or promotion by file move. |
 
@@ -98,9 +81,9 @@ notes:
 
 | Allowed posture | Blocked posture |
 |---|---|
-| Run validators, tests, policy checks, docs lint, release dry runs, and review routing. | Define canonical truth, publish by file move, bypass policy, or route public clients to raw stores/model runtimes. |
+| Run validators, tests, policy checks, docs lint, release dry runs, dependency checks, and review routing. | Define canonical truth, publish by file move, bypass policy, or route public clients to raw stores/model runtimes. |
 | Ask contributors for evidence, truth labels, affected surfaces, and rollback notes. | Treat fluent summaries, workflow logs, or badges as proof of source authority. |
-| Emit reports or artifacts that other KFM gates can inspect. | Collapse receipts, proofs, manifests, catalogs, reviews, and releases into one unreviewed output. |
+| Emit reports or artifacts that other KFM gates can inspect. | Collapse receipts, proofs, manifests, catalogs, reviews, releases, and corrections into one unreviewed output. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -127,20 +110,20 @@ In KFM terms, this directory makes review and delivery expectations visible at t
 
 ---
 
-## Control surface map
+## Repo fit and control surface map
 
 `.github/` is a routing and orchestration layer beside the KFM trust system. It should point to the surfaces that own meaning, validation, policy, and release evidence instead of duplicating them.
 
 | Relationship | Target path | Current status | Role |
 |---|---|---:|---|
-| Upstream landing | `../README.md` | `NEEDS_VERIFICATION` | Root identity and repository orientation. |
-| Documentation standards | `../docs/README.md`, `../docs/standards/README.md` | `NEEDS_VERIFICATION` | Markdown, README, governance, and documentation-control standards. |
-| Machine meaning | `../contracts/README.md`, `../schemas/README.md` | `NEEDS_VERIFICATION` | Contract and schema homes; `.github/` must not duplicate these. |
-| Policy and release gates | `../policy/README.md` | `NEEDS_VERIFICATION` | Policy rules and release admissibility. Workflows may call checks; they do not own policy semantics. |
-| Tests and fixtures | `../tests/README.md` | `NEEDS_VERIFICATION` | Executable verification and fixture evidence. |
-| Tooling | `../tools/README.md` | `NEEDS_VERIFICATION` | Scripts and validators that workflows should invoke rather than reimplement inline. |
-| Evidence lifecycle | `../data/README.md`, `../release/` | `NEEDS_VERIFICATION` | Receipts, proofs, manifests, catalogs, review records, release bundles, correction notices, and rollback references. |
-| Local GitHub files | `./CODEOWNERS`, `./PULL_REQUEST_TEMPLATE.md`, `./SECURITY.md`, `./workflows/README.md` | `NEEDS_VERIFICATION` | Ownership routing, PR intake, security reporting, and workflow documentation. |
+| Upstream landing | `../README.md` | `NEEDS_RECHECK` | Root identity and repository orientation. |
+| Documentation standards | `../docs/README.md`, `../docs/standards/README.md` | `NEEDS_RECHECK` | Markdown, README, governance, and documentation-control standards. |
+| Machine meaning | `../contracts/README.md`, `../schemas/README.md` | `NEEDS_RECHECK` | Contract and schema homes; `.github/` must not duplicate these. |
+| Policy and release gates | `../policy/README.md` | `NEEDS_RECHECK` | Policy rules and release admissibility. Workflows may call checks; they do not own policy semantics. |
+| Tests and fixtures | `../tests/README.md` | `NEEDS_RECHECK` | Executable verification and fixture evidence. |
+| Tooling | `../tools/README.md` | `NEEDS_RECHECK` | Scripts and validators that workflows should invoke rather than reimplement inline. |
+| Evidence lifecycle | `../data/README.md`, `../release/` | `NEEDS_RECHECK` | Receipts, proofs, manifests, catalogs, review records, release bundles, correction notices, and rollback references. |
+| Local GitHub files | `./CODEOWNERS`, `./PULL_REQUEST_TEMPLATE.md`, `./SECURITY.md`, `./workflows/README.md` | `SOURCE-SUPPLIED / NEEDS_RECHECK` | Ownership routing, PR intake, security reporting, and workflow documentation. |
 
 ### Boundary contract
 
@@ -213,9 +196,29 @@ They should answer **when** and **why** GitHub calls a check. The check itself s
 
 ---
 
-## Directory map
+## Evidence boundary
 
-This map reflects the mounted repository checkout as inspected on **2026-04-29**. It confirms file presence only; behavior and platform enforcement still require GitHub settings evidence.
+This revision is grounded in the supplied Markdown file and KFM documentation doctrine. It did not inspect a mounted repository, workflow logs, GitHub platform settings, branch protection, deployment manifests, runtime dashboards, or emitted proof objects.
+
+| Claim class | Status in this README | What would strengthen it |
+|---|---|---|
+| Purpose of `.github/` | `CONFIRMED` from supplied Markdown and KFM doctrine. | Keep aligned with root README and documentation standards. |
+| Source-supplied `.github/` inventory | `SOURCE-SUPPLIED` snapshot dated `2026-04-29`; `NEEDS_RECHECK`. | Run inventory commands from the active repository root. |
+| Workflow file behavior | `UNKNOWN` beyond source-supplied filenames. | Inspect each `.github/workflows/*.yml` file, permissions, logs, and expected artifacts. |
+| Required checks / branch protection | `UNKNOWN`. | GitHub UI/API export, screenshot, settings record, or maintainer-confirmed platform evidence. |
+| CODEOWNERS enforcement | `UNKNOWN`. | Current `CODEOWNERS` plus branch protection requiring code-owner review. |
+| Policy enforcement | `UNKNOWN`. | Policy files, policy tests, workflow logs, failure fixtures, and tool versions. |
+| Release dry-run behavior | `UNKNOWN`. | Generated receipts, proofs, manifests, catalogs, review records, release dry-run logs, and rollback references. |
+| Local exposure posture | `UNKNOWN`. | Deployment docs, reverse proxy/VPN config, auth, firewall rules, CORS, logs, and secret boundaries. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Source-supplied directory snapshot
+
+> [!NOTE]
+> The source Markdown reported the following `.github/` filesystem inventory from a mounted repository checkout inspected on `2026-04-29`. This revision did **not** re-inspect that checkout. Treat this tree as a `SOURCE-SUPPLIED` snapshot and re-run the commands below before making stronger claims.
 
 ```text
 .github/
@@ -272,8 +275,7 @@ This map reflects the mounted repository checkout as inspected on **2026-04-29**
     └── verification-baseline.yml
 ```
 
-> [!TIP]
-> Regenerate this section from the active checkout whenever `.github/` files are added, removed, or moved.
+Regenerate this section from the active checkout whenever `.github/` files are added, removed, or moved.
 
 ```bash
 # Read-only inventory from repository root.
@@ -368,7 +370,7 @@ When editing `.github/`, use the smallest reversible change that preserves KFM�
 | Dependency automation | Updates remain reviewable and cannot bypass tests or policy. | Supply-chain posture, package-manager evidence, lockfile behavior. |
 | Linter/config change | Rules are documented and validated with fixtures where practical. | Avoid style-only churn; prefer trust and maintainability checks. |
 | Release-adjacent change | Promotion remains a governed state transition and proof objects stay distinct. | No file-move promotion; preserve receipts, manifests, review, correction, and rollback. |
-| Security-sensitive routing | Reports cannot leak secrets, exact sensitive geometry, or private source endpoints. | Restricted handling, disclosure discipline, auditability. |
+| Security-sensitive routing | Reports cannot leak secrets, exact sensitive geometry, private source endpoints, or private facts. | Restricted handling, disclosure discipline, auditability. |
 
 ### PR evidence prompts
 
@@ -566,7 +568,9 @@ find .github -maxdepth 3 -type f | sort
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) -print | sort
 
 # Inspect workflow permissions and risky triggers.
-grep -RInE '^(permissions:|[[:space:]]+permissions:|on:|[[:space:]]+pull_request_target:|[[:space:]]+workflow_run:|[[:space:]]+deployment:|[[:space:]]+id-token:|[[:space:]]+secrets:)' .github/workflows 2>/dev/null || true
+grep -RInE \
+  '^(permissions:|[[:space:]]+permissions:|on:|[[:space:]]+pull_request_target:|[[:space:]]+workflow_run:|[[:space:]]+deployment:|[[:space:]]+id-token:|[[:space:]]+secrets:)' \
+  .github/workflows 2>/dev/null || true
 
 # Look for KFM trust-surface vocabulary in GitHub-facing files.
 grep -RInE \
@@ -619,8 +623,8 @@ For `.github/` changes, rollback is usually a repository configuration or file r
 
 A `.github/` change is done enough to support stronger claims only when the checked items below are true in the active repository.
 
-- [ ] Metadata block has a real `doc_id`, verified owner, verified dates, verified policy label, and valid related paths.
-- [ ] `.github/` inventory is generated from the current checkout and reflected in [Directory map](#directory-map).
+- [ ] Metadata block has a verified `doc_id`, verified owner, verified dates, verified policy label, and valid related paths.
+- [ ] `.github/` inventory is generated from the current checkout and reflected in [Source-supplied directory snapshot](#source-supplied-directory-snapshot), or the section is renamed as current inventory after recheck.
 - [ ] `CODEOWNERS` coverage is verified for `.github/`, workflows, policy-significant templates, security-sensitive reporting, and release-adjacent files.
 - [ ] Each workflow has a documented purpose, trigger, permissions posture, expected artifacts, failure behavior, and rollback path.
 - [ ] Workflow YAML delegates substantive validation to `tools/`, `tests/`, `policy/`, `contracts/`, or `schemas/` instead of embedding complex logic inline.
@@ -677,7 +681,7 @@ Yes, when badges are static status/orientation labels or their targets are verif
 <details>
 <summary>Does this README prove the current repository has these files?</summary>
 
-No. This README is a draft control-surface contract. Current file presence, branch state, workflow behavior, branch protection, code-owner enforcement, deployment posture, and emitted artifacts remain `UNKNOWN` until verified in the active checkout and platform settings.
+No. This README is a draft control-surface contract. The directory tree is a source-supplied snapshot until rechecked. Current file presence, branch state, workflow behavior, branch protection, code-owner enforcement, deployment posture, and emitted artifacts remain `UNKNOWN` until verified in the active checkout and platform settings.
 
 </details>
 
@@ -710,9 +714,13 @@ No. This README is a draft control-surface contract. Current file presence, bran
 
 ```bash
 # Run from the mounted repository root. Read-only.
-printf 'repo=%s\nbranch=%s\n' "$(git rev-parse --show-toplevel 2>/dev/null || echo UNKNOWN)" "$(git branch --show-current 2>/dev/null || echo UNKNOWN)"
+printf 'repo=%s\nbranch=%s\n' \
+  "$(git rev-parse --show-toplevel 2>/dev/null || echo UNKNOWN)" \
+  "$(git branch --show-current 2>/dev/null || echo UNKNOWN)"
+
 find .github -maxdepth 3 -type f | sort
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) -print | sort
+
 [ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS || true
 [ -f .github/PULL_REQUEST_TEMPLATE.md ] && sed -n '1,240p' .github/PULL_REQUEST_TEMPLATE.md || true
 ```
@@ -732,6 +740,7 @@ find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \)
 | Finite outcome | A bounded result such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, rather than an ambiguous free-form state. |
 | Promotion | A governed state transition with validation, policy, review, provenance, release, correction, and rollback context; not a file move. |
 | Release-adjacent | A check, workflow, or artifact that can influence publication, deployment, or public interpretation even if it does not publish directly. |
+| Source-supplied snapshot | Inventory or status reported by the supplied source document but not re-verified in the current revision session. |
 
 </details>
 
