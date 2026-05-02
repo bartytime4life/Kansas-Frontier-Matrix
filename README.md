@@ -655,3 +655,12 @@ Example request: `enforcement/requests/example_access_request.json`.
 Exit codes: 0 success/planned, 5 dry-run, 10 warning, 15 review, 20 deny, 30 malformed, 40 resource, 50 decision, 60 policy, 70 audit, 80 gateway, 90 unsafe bind/path, 100 secret, 110 internal.
 
 This layer enforces consumer decisions only. It does not change trust status, publish remotely, authenticate users, or mutate protected resources.
+
+## Layer 27 Data Use Accountability (snippet)
+Full invocation, inventory-usage, meter-usage, evaluate-obligations, quota-check, anomaly-scan, consumer-statement, local-api are supported via `soilgrids_data_use_accountability.py --mode <mode>` with required `--data-use-spec --output-root`.
+
+Examples: DataUseSpec.v1, DataUsePolicy.v1, UsageEventInventory.v1, UsageMeteringSnapshot.v1, ObligationComplianceReport.v1, PurposeComplianceReport.v1, QuotaComplianceReport.v1, UsageAnomalyReport.v1, ConsumerUsageStatement.v1, DataUseReceipt.v1 are written under run output.
+
+Exit codes: 0 success/planned, 5 dry-run, 10 warning, 20 compliance fail, 30 malformed input, 40 ledger fail, 50 metering fail, 60 obligation/purpose fail, 70 quota fail, 80 anomaly fail, 90 API/OpenAPI fail, 100 unsafe path/bind, 110 secret finding, 120 internal error.
+
+Warning: this layer reports accountability only; it does not grant/deny access, revoke trust objects, publish remotely, or mutate source ledgers.

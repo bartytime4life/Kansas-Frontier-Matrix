@@ -1,0 +1,14 @@
+{
+  "schema": "UsageAuditEvent.v1",
+  "event_id": "e3",
+  "subject": {
+    "subject_hash": "h2",
+    "redacted": true
+  },
+  "action": "read",
+  "enforcement_action": "review_required",
+  "purpose": "research",
+  "bytes_served": 10,
+  "event_time_utc": "2026-01-01T00:00:00Z",
+  "event_hash": "055a1fa30568e9e75f2a29a3eec818402cbbc050475d390af979e314f5d8bde3"
+}
