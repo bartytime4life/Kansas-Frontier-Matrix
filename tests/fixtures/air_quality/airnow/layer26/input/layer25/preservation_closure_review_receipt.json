@@ -1,0 +1,29 @@
+{
+  "audit_closure_performed": false,
+  "closure_executed": false,
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "governance_closure_performed": false,
+  "manifest_id": "airnow-l25-valid-001",
+  "object_type": "AirNowPreservationClosureReviewReceipt",
+  "output_hashes": {
+    "preservation_closure_review_packet_hash": "c3408092cc870b8aa9e2639c358ba2b3b90c5203bc322c1315ca0b03602c1846"
+  },
+  "preservation_actions_executed": false,
+  "preservation_copy_executed": false,
+  "preservation_transfer_executed": false,
+  "public_release_allowed": false,
+  "review_actions_executed": false,
+  "schema_version": "v1",
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "task_closure_performed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "PRESERVATION_CLOSURE_REVIEW_ACCEPTED_FOR_INTERNAL_REVIEW",
+  "workflow_runner": "airnow_layer25_preservation_closure_review"
+}
