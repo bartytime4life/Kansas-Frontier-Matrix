@@ -6,43 +6,75 @@ version: v1
 status: draft
 owners: TODO: documentation steward + domain lane stewards
 created: 2026-04-27
-updated: 2026-04-27
+updated: 2026-05-02
 policy_label: TODO: public|restricted after policy review
-related: [NEEDS_VERIFICATION: docs/registers/AUTHORITY_LADDER.md, NEEDS_VERIFICATION: docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, NEEDS_VERIFICATION: docs/sources/SOURCE_DESCRIPTOR_STANDARD.md, NEEDS_VERIFICATION: schemas/contracts/v1/]
-tags: [kfm, adr, domain-lane, documentation-control-plane, evidence]
-notes: [Draft produced from attached KFM corpus and current-session workspace inspection; doc_id, owners, policy_label, ADR numbering, and related paths require repo verification before merge.]
+related: [NEEDS_VERIFICATION: docs/adr/ADR-0001-schema-home.md, NEEDS_VERIFICATION: docs/registers/AUTHORITY_LADDER.md, NEEDS_VERIFICATION: docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, NEEDS_VERIFICATION: docs/sources/SOURCE_DESCRIPTOR_STANDARD.md, NEEDS_VERIFICATION: schemas/contracts/v1/, NEEDS_VERIFICATION: contracts/]
+tags: [kfm, adr, domain-lane, documentation-control-plane, evidence, publication-governance]
+notes: [Revision of attached draft Markdown. doc_id, owners, policy_label, ADR numbering, schema-home authority, and related paths require repo verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0008 — Domain Lane Template
 
-A standard decision record for making every KFM domain lane evidence-bound, source-ledgered, policy-aware, map-ready, testable, and reversible.
+A standard decision record for making every KFM domain lane evidence-bound, source-ledgered, policy-aware, map-ready, testable, reversible, and safe to promote only through governed release controls.
 
 | Field | Value |
 |---|---|
-| **Target path** | `docs/adr/ADR-0008-domain-lane-template.md` |
+| **Proposed target path** | `docs/adr/ADR-0008-domain-lane-template.md` |
+| **Numbering status** | `CONFLICTED / NEEDS VERIFICATION`: the attached draft uses `ADR-0008`, while the visible pipeline ADR index lists `ADR-0007-domain-lane-template` and `ADR-0008-sensitive-location-policy`. |
 | **Status** | Draft — proposed standard |
-| **Decision type** | Documentation, architecture, contracts, source registry, validation, and publication governance |
+| **Decision type** | Documentation, architecture, contracts, source registry, validation, publication governance, and rollback discipline |
 | **Applies to** | Hydrology, habitat, fauna, flora, soil, agriculture, geology/natural resources, atmosphere/air, roads/rail/trade routes, settlements/infrastructure, archaeology, hazards, people/genealogy/DNA/land ownership, and future KFM lanes |
 | **Does not do** | Does not create live connectors, publish data, decide schema-home authority, assign owners, or claim implementation maturity |
 | **Rollback** | Revert this ADR before adoption; after adoption, supersede with a new ADR and retain this file as lineage |
 
 > [!IMPORTANT]
-> **NEEDS VERIFICATION — ADR numbering.** The requested path names this file `ADR-0008-domain-lane-template.md`. The attached pipeline manual also records a domain-lane-template ADR need, but its visible ADR index assigns `ADR-0007-domain-lane-template` and `ADR-0008-sensitive-location-policy`. Before merge, reconcile the ADR index, rename this file if needed, or record the numbering exception in the ADR register.
+> **NEEDS VERIFICATION — ADR numbering.** Do not merge this file under `ADR-0008` until the ADR register is checked. If the register already assigns `ADR-0007-domain-lane-template`, rename this file and update all inbound links. If maintainers intentionally keep `ADR-0008`, record the exception in the ADR register.
+
+> [!NOTE]
+> **Evidence boundary.** This ADR states KFM doctrine and a proposed lane template. Current implementation depth remains **UNKNOWN** where the mounted repo, tests, schemas, workflows, dashboards, runtime logs, or emitted proof objects have not been inspected in this session.
 
 ## Quick jumps
 
+- [Status](#status)
+- [Evidence basis and verification boundary](#evidence-basis-and-verification-boundary)
 - [Context](#context)
 - [Decision](#decision)
 - [Domain lane contract](#domain-lane-contract)
+- [Minimum lane package](#minimum-lane-package)
 - [Required file families](#required-file-families)
 - [Lifecycle and trust flow](#lifecycle-and-trust-flow)
 - [Lane burden tiers](#lane-burden-tiers)
 - [Growth and retention rules](#growth-and-retention-rules)
 - [Validation gates](#validation-gates)
+- [Alternatives considered](#alternatives-considered)
 - [Consequences](#consequences)
 - [Adoption plan](#adoption-plan)
 - [Open verification backlog](#open-verification-backlog)
 - [Appendix A — Copy/paste lane README skeleton](#appendix-a--copypaste-lane-readme-skeleton)
+- [Appendix B — ADR maintenance checklist](#appendix-b--adr-maintenance-checklist)
+
+## Status
+
+| Status item | Value |
+|---|---|
+| **ADR state** | `draft / PROPOSED` |
+| **Merge posture** | `HOLD` until ADR number, owners, policy label, related links, and repo conventions are verified |
+| **Truth posture** | `CONFIRMED` doctrine / `PROPOSED` template / `UNKNOWN` repo implementation depth |
+| **Release posture** | Documentation-only; no source activation, public publication, or runtime behavior implied |
+| **Review burden** | Documentation steward, domain lane stewards, schema/contract steward, policy/release reviewer |
+| **Primary risk** | A generic lane template could flatten sensitive domain burden unless burden tiers, policy gates, and exceptions remain explicit. |
+
+## Evidence basis and verification boundary
+
+| Source | Status | Supports | Limits |
+|---|---|---|---|
+| Attached draft `Pasted markdown.md` | `CONFIRMED` revision baseline | Existing ADR text, metadata, lifecycle diagram, file-family inventory, validation gates, and README skeleton | Does not prove repo paths, owners, ADR number, CI, schemas, or implementation behavior |
+| Pipeline Living Implementation Manual v0.3 | `LINEAGE / CONFIRMED source text` | KFM lifecycle law, proof-bearing implementation sequence, recurring object families, and the visible ADR-numbering conflict | Does not prove the mounted repo contains those ADR files |
+| Documentation Architecture passes | `CONFIRMED doctrine / LINEAGE` | ADR structure, source authority, canon/lineage/exploratory separation, schema-home ambiguity handling | Does not prove current repo state without mounted source inspection |
+| Domain lane PDFs | `LINEAGE` | Repeated cross-domain pressure for source registries, validators, fixtures, policies, proof packs, and rollback paths | Prior scaffold/report repetition is continuity, not implementation proof |
+| Current workspace inspection | `CONFIRMED` for this session | `/mnt/data` is not a mounted Git repository; no source tree was available for direct verification | Does not describe the state of any external or later-mounted repository |
+
+**Verification rule:** when this ADR conflicts with a mounted repo convention, the mounted repo convention wins for implementation paths, and this ADR must be updated or superseded rather than used to create parallel authority.
 
 ## Context
 
@@ -50,7 +82,9 @@ KFM domain reports repeat the same implementation pressure: each lane needs a hu
 
 Without a shared template, each domain risks inventing its own structure. That weakens source authority, makes review harder, creates duplicate schema homes, and lets exploratory packet material appear more authoritative than it is.
 
-Current-session repository evidence is limited. The authoring workspace did not expose a mounted KFM checkout, tests, workflows, schemas, dashboards, runtime logs, or emitted proof objects. Therefore this ADR standardizes a **proposed lane template**, not current implementation behavior.
+A shared template must not flatten domain nuance. Hydrology, soil, fauna, archaeology, hazards, land ownership, governed AI, and 3D story lanes do not carry identical public-risk burdens. The template sets the minimum control plane; lane burden tiers add the additional gates needed for sensitive, temporal, regulatory, runtime, 3D, and release-bearing work.
+
+Current implementation evidence is bounded. This authoring workspace did not expose a mounted KFM checkout, tests, workflows, schema registry, dashboards, runtime logs, branch protections, or emitted proof objects. Therefore this ADR standardizes a **proposed lane template**, not current implementation behavior.
 
 ## Decision
 
@@ -64,11 +98,11 @@ Every lane MUST:
    `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`;
 2. keep public clients and normal UI surfaces behind governed APIs or released artifacts;
 3. resolve consequential claims through `EvidenceRef -> EvidenceBundle`;
-4. record source role, rights, sensitivity, temporal scope, review state, release state, and correction lineage;
+4. record source role, rights, sensitivity, spatial scope, temporal scope, review state, release state, and correction lineage;
 5. fail closed when source terms, precision, sensitivity, ownership, review, or release state is unresolved;
 6. keep AI interpretive and evidence-subordinate;
-7. distinguish canonical records from derived tiles, search indexes, graph projections, summaries, scenes, and rendered pixels;
-8. define validation, policy, fixtures, acceptance gates, rollback, and supersession before live source activation.
+7. distinguish canonical records from derived tiles, search indexes, graph projections, summaries, scenes, dashboards, exports, screenshots, and rendered pixels;
+8. define validation, policy, fixtures, acceptance gates, rollback, correction, and supersession before live source activation.
 
 This ADR also establishes a **minimum lane package**. A lane may omit API, UI, graph, 3D, AI, or public-delivery surfaces only by explicitly marking them `OUT_OF_SCOPE`, `DEFERRED`, or `NEEDS VERIFICATION`.
 
@@ -78,57 +112,106 @@ This ADR also establishes a **minimum lane package**. A lane may omit API, UI, g
 
 Each lane MUST declare the following contract before it accepts live source data or public release candidates.
 
-| Contract area | Required answer | Truth label default |
+| Contract area | Required answer | Default truth posture |
 |---|---|---|
-| **Lane scope** | What belongs in this lane, what does not, and which neighboring lanes may reference it. | `PROPOSED` until steward-reviewed |
+| **Scope and exclusions** | What belongs in this lane, what does not, and which neighboring lanes may reference it. | `PROPOSED` until steward-reviewed |
 | **Source roles** | Which sources are authoritative, contextual, modeled, observational, regulatory, archival, aggregator, or exploratory. | `NEEDS VERIFICATION` until source descriptor review |
-| **Canonical object families** | The lane’s record, assertion, observation, event, geometry, layer, catalog, proof, and release objects. | `PROPOSED` until schema/fixture evidence exists |
+| **Canonical object families** | The lane’s record, assertion, observation, event, geometry, layer, catalog, proof, release, correction, and rollback objects. | `PROPOSED` until schema/fixture evidence exists |
+| **Identity and hashing** | Deterministic identifiers, version keys, geometry fingerprints, `spec_hash` or equivalent, and collision/ambiguity behavior. | `PROPOSED` |
 | **Temporal model** | Observation time, source time, valid time, transaction/ingest time, review time, release time, and correction time. | `PROPOSED` |
 | **Sensitivity posture** | Exact-location, living-person, DNA, archaeology, rare species, critical infrastructure, private land, cultural/sovereignty, and rights handling. | `DENY` or `HOLD` until reviewed |
 | **Publication model** | What can become public, what must be generalized, what remains restricted, and what proof pack is required. | `PROPOSED` |
-| **Map/UI model** | Layer IDs, evidence drawer payloads, trust badges, negative states, time controls, and export behavior. | `PROPOSED` until UI fixtures exist |
-| **Governed AI model** | What Focus Mode may answer, when it must abstain, and what evidence bundle it may consume. | `PROPOSED`; default deny direct model access |
+| **Map/UI model** | Layer IDs, Evidence Drawer payloads, trust badges, negative states, time controls, export behavior, and stale/correction indicators. | `PROPOSED` until UI fixtures exist |
+| **Governed AI model** | What Focus Mode may answer, when it must abstain, and what EvidenceBundle it may consume. | `PROPOSED`; default deny direct model access |
 | **Validation model** | Valid/invalid fixtures, source descriptor checks, schema validation, policy checks, no-network tests, and promotion dry-runs. | `PROPOSED` until tests pass |
-| **Rollback model** | How to withdraw, correct, regenerate, or supersede artifacts without erasing lineage. | `PROPOSED` until release fixtures exist |
+| **Rollback and correction model** | How to withdraw, correct, regenerate, supersede, or generalize artifacts without erasing lineage. | `PROPOSED` until release fixtures exist |
+| **Ownership and review model** | Steward roles, CODEOWNERS/review path, release approver, and policy reviewer. | `UNKNOWN` until repo evidence exists |
+
+## Minimum lane package
+
+A lane is not ready for live source activation or public release candidates until these package layers exist, or are explicitly deferred with a reason.
+
+| Package layer | Minimum required surfaces | Why it exists |
+|---|---|---|
+| **Human control plane** | Lane README, architecture note, runbook, verification backlog, ADRs for consequential decisions | Keeps scope, ownership, assumptions, and review burden inspectable |
+| **Source control plane** | Source registry, dataset registry, source-role matrix, rights/sensitivity notes | Prevents connectors and external feeds from becoming unreviewed authority |
+| **Contract plane** | Human object cards plus machine schemas or repo-confirmed equivalent | Keeps semantic meaning and executable validation aligned |
+| **Lifecycle plane** | Raw/work/quarantine/processed/catalog/triplet/published families or repo equivalent | Preserves the KFM trust membrane |
+| **Verification plane** | Fixtures, validators, policy tests, no-network checks, promotion dry-run | Turns doctrine into mergeable gates |
+| **Release plane** | ReleaseManifest, ProofPack, rollback card, correction path, catalog closure | Makes publication a governed state transition |
+| **Delivery plane** | Governed API contract, layer manifest, Evidence Drawer payload, Focus Mode envelope when in scope | Keeps UI, map, export, and AI surfaces downstream of evidence |
 
 ## Required file families
 
 All paths below are **template paths**. Use the repo-equivalent canonical location when a stronger checked-in convention is verified. Do not create duplicate homes to satisfy the template.
 
-| File family | Proposed path pattern | Purpose | Truth role | Update trigger |
-|---|---|---|---|---|
-| Lane landing doc | `docs/domains/<domain>/README.md` | Scope, owners, status, repo fit, accepted inputs, exclusions, quick links, and current evidence boundary. | Human control plane | New lane, scope change, owner change, release posture change |
-| Lane architecture | `docs/architecture/<domain>_architecture.md` or `docs/domains/<domain>/ARCHITECTURE.md` | End-to-end lane structure, object families, trust seams, public surfaces, and dependency map. | Human architecture | New object family, API/UI surface, lifecycle change, major source change |
-| Operations runbook | `docs/runbooks/<domain>_operations.md` | How to run validators, refresh registries, inspect fixtures, and perform dry-runs. | Operational support | Tooling, source refresh, CI, or validator change |
-| Rollback runbook | `docs/runbooks/<domain>_rollback.md` | Withdrawal, correction, rollback target, artifact regeneration, and release-state repair. | Operational support | Release, correction, or promotion-gate change |
-| Lane ADRs | `docs/adr/ADR-<number>-<domain>-*.md` | Decisions that change lane burden, schema homes, source role, policy, or publication model. | Normative decision | Any consequential architectural choice |
-| Verification backlog | `docs/backlog/<domain>_verification_backlog.md` | Concrete UNKNOWN / NEEDS VERIFICATION items and evidence required to retire them. | Review support | Any unresolved source, policy, rights, runtime, or repo question |
-| Expansion backlog | `docs/backlog/<domain>_expansion_backlog.md` | Deferred sublanes, connectors, UI features, analysis products, and proof slices. | Planning support | New idea intake, steward request, source opportunity |
-| Source registry | `data/registry/<domain>/sources.yaml` | SourceDescriptor instances and source-role assignments. | Source control surface | New source, source role change, rights/cadence change |
-| Dataset registry | `data/registry/<domain>/datasets.yaml` | Dataset families, versions, source links, status, and lifecycle mapping. | Source/data control surface | New dataset, new version, deprecation |
-| Layer registry | `data/registry/<domain>/layers.yaml` | Released layer IDs, display meaning, delivery class, evidence route, and trust badges. | Delivery control surface | New layer, style meaning change, time or policy change |
-| Sensitivity registry | `data/registry/<domain>/sensitivity_policies.yaml` | Domain-specific sensitivity classes, transforms, public-safe rules, and review obligations. | Policy input | New sensitivity class, steward rule, law/source-term change |
-| Registry backlog | `data/registry/<domain>/verification_backlog.yaml` | Machine-friendly registry-level unknowns. | Review support | Registry entry with missing proof |
-| Machine schemas | `schemas/contracts/v1/<domain>/*.schema.json` or repo-confirmed equivalent | Executable shape for lane objects, fixtures, and contracts. | Machine contract | Schema version, object family, validator change |
-| Human contracts | `contracts/<domain>/README.md` and/or object cards | Meaning, invariants, semantic field intent, lifecycle expectations. | Semantic contract | Object model or field meaning change |
-| Shared governance schemas | `schemas/contracts/v1/governance/*.schema.json` | Shared objects such as `EvidenceBundle`, `DecisionEnvelope`, `ReleaseManifest`, `ValidationReport`. | Machine contract | Shared object wave or cross-lane change |
-| Lifecycle storage | `data/raw/<domain>/`, `data/work/<domain>/`, `data/quarantine/<domain>/`, `data/processed/<domain>/` | Segregated lifecycle zones. | Data lifecycle | Source activation, processing, quarantine, promotion |
-| Catalog closure | `data/catalog/stac/<domain>/`, `data/catalog/dcat/<domain>/`, `data/catalog/prov/<domain>/` | Catalog and provenance artifacts for released or candidate data. | Publication support | Promotion, catalog change, provenance change |
-| Receipts | `data/receipts/<domain>/` | Process-memory records such as ingest, validation, run, AI, or transform receipts. | Audit support | Pipeline run or governed runtime run |
-| Proofs | `data/proofs/<domain>/` | Release-significant proof packs, validation reports, policy decisions, signatures, and promotion evidence. | Release proof | Promotion, release, correction, withdrawal |
-| Published artifacts | `data/published/<domain>/` | Public-safe released artifacts only. | Released output | Promotion or rollback |
-| Triplets/graph | `data/triplets/<domain>/` | Derived graph/triplet projection when in scope. | Rebuildable derivative | Graph projection or relation model change |
-| Policy rules | `policy/<domain>/*.rego` or repo-confirmed equivalent | Rights, sensitivity, source-role, publication, AI, and promotion decisions. | Normative policy | Source role, sensitivity, publication, or runtime rule change |
-| Policy tests | `policy/<domain>/tests/*.rego` | Positive/negative policy cases. | Verification support | Rule change or new reason/obligation code |
-| Validators | `tools/validators/<domain>/*` | Schema, source, lifecycle, catalog, proof, geoprivacy, and promotion validators. | Verification support | Schema, fixture, source, or gate change |
-| Diff tools | `tools/diff/<domain>/*` | Source refresh, backfill, and version comparison helpers. | Review support | Watcher/backfill/change-detection adoption |
-| CI workflow | `.github/workflows/<domain>-*.yml` | Optional lane-specific CI if repo convention supports it. | Merge gate | Validator/test suite becomes merge-blocking |
-| Fixtures | `tests/fixtures/<domain>/valid/*`, `tests/fixtures/<domain>/invalid/*`, `tests/fixtures/<domain>/policy/*` | Valid, invalid, and policy-focused examples. | Verification support | Schema, policy, validator, or object change |
-| Lane tests | `tests/<domain>/*` | Unit, integration, no-network, and regression tests. | Verification support | Validator, policy, pipeline, API/UI contract change |
-| API contract | `apps/governed_api/openapi/<domain>.openapi.yaml` or repo equivalent | Governed API surface definition when runtime/public access is in scope. | Runtime contract | New route, response, envelope, or public query |
-| API route | `apps/governed_api/routes/<domain>.*` or repo equivalent | Runtime implementation surface when verified. | Implementation | Framework-confirmed route work |
-| UI layer descriptors | `ui/<domain>/` or `web/<domain>/` repo equivalent | Layer descriptors, Evidence Drawer payload fixtures, trust-visible UI notes. | Product trust support | Public layer, drawer, Focus Mode, story, or export change |
-| Release lane | `release/<domain>/` or repo equivalent | Release manifest, rollback card, correction notice, publication bundle. | Release control | Promotion, withdrawal, correction, supersession |
+### Human control-plane files
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| Lane landing doc | `docs/domains/<domain>/README.md` | Scope, owners, status, repo fit, accepted inputs, exclusions, quick links, and current evidence boundary. | New lane, scope change, owner change, release posture change |
+| Lane architecture | `docs/architecture/<domain>_architecture.md` or `docs/domains/<domain>/ARCHITECTURE.md` | End-to-end lane structure, object families, trust seams, public surfaces, dependency map. | New object family, API/UI surface, lifecycle change, major source change |
+| Operations runbook | `docs/runbooks/<domain>_operations.md` | How to run validators, refresh registries, inspect fixtures, and perform dry-runs. | Tooling, source refresh, CI, or validator change |
+| Rollback runbook | `docs/runbooks/<domain>_rollback.md` | Withdrawal, correction, rollback target, artifact regeneration, and release-state repair. | Release, correction, or promotion-gate change |
+| Lane ADRs | `docs/adr/ADR-<number>-<domain>-*.md` | Decisions that change lane burden, schema homes, source role, policy, or publication model. | Any consequential architectural choice |
+| Verification backlog | `docs/backlog/<domain>_verification_backlog.md` | Concrete `UNKNOWN` / `NEEDS VERIFICATION` items and evidence required to retire them. | Any unresolved source, policy, rights, runtime, or repo question |
+| Expansion backlog | `docs/backlog/<domain>_expansion_backlog.md` | Deferred sublanes, connectors, UI features, analysis products, and proof slices. | New idea intake, steward request, source opportunity |
+
+### Registries and source-control files
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| Source registry | `data/registry/<domain>/sources.yaml` | SourceDescriptor instances and source-role assignments. | New source, source role change, rights/cadence change |
+| Dataset registry | `data/registry/<domain>/datasets.yaml` | Dataset families, versions, source links, status, and lifecycle mapping. | New dataset, new version, deprecation |
+| Layer registry | `data/registry/<domain>/layers.yaml` | Released layer IDs, display meaning, delivery class, evidence route, and trust badges. | New layer, style meaning change, time or policy change |
+| Sensitivity registry | `data/registry/<domain>/sensitivity_policies.yaml` | Domain-specific sensitivity classes, transforms, public-safe rules, and review obligations. | New sensitivity class, steward rule, law/source-term change |
+| Registry backlog | `data/registry/<domain>/verification_backlog.yaml` | Machine-friendly registry-level unknowns. | Registry entry with missing proof |
+
+### Contracts and schemas
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| Machine schemas | `schemas/contracts/v1/<domain>/*.schema.json` or repo-confirmed equivalent | Executable shape for lane objects, fixtures, and contracts. | Schema version, object family, validator change |
+| Human contracts | `contracts/<domain>/README.md` and/or object cards | Meaning, invariants, semantic field intent, lifecycle expectations. | Object model or field meaning change |
+| Shared governance schemas | `schemas/contracts/v1/governance/*.schema.json` or repo-confirmed equivalent | Shared objects such as `EvidenceBundle`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, `ReleaseManifest`, and `ValidationReport`. | Shared object wave or cross-lane change |
+
+> [!WARNING]
+> **Schema-home authority remains unresolved.** Do not maintain divergent definitions in both `contracts/` and `schemas/`. If both homes exist, resolve authority through the schema-home ADR and mark the non-authoritative home as explanatory, adapter-facing, or deprecated.
+
+### Lifecycle, catalog, proof, and release object families
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| Lifecycle storage | `data/raw/<domain>/`, `data/work/<domain>/`, `data/quarantine/<domain>/`, `data/processed/<domain>/` | Segregated lifecycle zones. | Source activation, processing, quarantine, promotion |
+| Catalog closure | `data/catalog/stac/<domain>/`, `data/catalog/dcat/<domain>/`, `data/catalog/prov/<domain>/` | Catalog and provenance artifacts for released or candidate data. | Promotion, catalog change, provenance change |
+| Receipts | `data/receipts/<domain>/` | Process-memory records such as ingest, validation, run, AI, or transform receipts. | Pipeline run or governed runtime run |
+| Proofs | `data/proofs/<domain>/` | Release-significant proof packs, validation reports, policy decisions, signatures, and promotion evidence. | Promotion, release, correction, withdrawal |
+| Published artifacts | `data/published/<domain>/` | Public-safe released artifacts only. | Promotion or rollback |
+| Triplets/graph | `data/triplets/<domain>/` | Derived graph/triplet projection when in scope. | Graph projection or relation model change |
+| Release lane | `release/<domain>/` or repo-equivalent | Release manifest, rollback card, correction notice, publication bundle. | Promotion, withdrawal, correction, supersession |
+
+### Policy, validation, and tests
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| Policy rules | `policy/<domain>/*.rego` or repo-confirmed equivalent | Rights, sensitivity, source-role, publication, AI, and promotion decisions. | Source role, sensitivity, publication, or runtime rule change |
+| Policy tests | `policy/<domain>/tests/*.rego` or repo-confirmed equivalent | Positive and negative policy cases. | Rule change or new reason/obligation code |
+| Validators | `tools/validators/<domain>/*` | Schema, source, lifecycle, catalog, proof, geoprivacy, and promotion validators. | Schema, fixture, source, or gate change |
+| Diff tools | `tools/diff/<domain>/*` | Source refresh, backfill, and version comparison helpers. | Watcher/backfill/change-detection adoption |
+| CI workflow | `.github/workflows/<domain>-*.yml` | Optional lane-specific CI if repo convention supports it. | Validator/test suite becomes merge-blocking |
+| Fixtures | `tests/fixtures/<domain>/valid/*`, `tests/fixtures/<domain>/invalid/*`, `tests/fixtures/<domain>/policy/*` | Valid, invalid, and policy-focused examples. | Schema, policy, validator, or object change |
+| Lane tests | `tests/<domain>/*` | Unit, integration, no-network, and regression tests. | Validator, policy, pipeline, API/UI contract change |
+
+### Runtime and delivery surfaces
+
+| File family | Proposed path pattern | Purpose | Update trigger |
+|---|---|---|---|
+| API contract | `apps/governed_api/openapi/<domain>.openapi.yaml` or repo-equivalent | Governed API surface definition when runtime/public access is in scope. | New route, response, envelope, or public query |
+| API route | `apps/governed_api/routes/<domain>.*` or repo-equivalent | Runtime implementation surface when verified. | Framework-confirmed route work |
+| UI layer descriptors | `ui/<domain>/` or `web/<domain>/` repo-equivalent | Layer descriptors, Evidence Drawer payload fixtures, trust-visible UI notes. | Public layer, drawer, Focus Mode, story, or export change |
+
+> [!NOTE]
+> Runtime path spelling is intentionally provisional. Prior KFM materials use both underscore and hyphen path forms for governed API homes. Use the mounted repo convention after inspection and record any migration or alias in an ADR.
 
 [Back to top](#adr-0008--domain-lane-template)
 
@@ -136,35 +219,38 @@ All paths below are **template paths**. Use the repo-equivalent canonical locati
 
 ```mermaid
 flowchart LR
-  A[SourceDescriptor<br/>source role + rights + cadence] --> B[RAW]
-  B --> C{Initial checks}
-  C -->|valid enough to work| D[WORK]
-  C -->|rights / shape / sensitivity unresolved| Q[QUARANTINE]
-  D --> E[ValidationReport<br/>schema + source + policy checks]
-  E --> F[PROCESSED]
-  F --> G[Catalog closure<br/>STAC / DCAT / PROV]
-  G --> H[EvidenceBundle<br/>claim support]
-  H --> I[DecisionEnvelope<br/>policy + review]
-  I -->|PASS / PROMOTE| J[PUBLISHED<br/>released artifact]
-  I -->|HOLD / DENY| Q
-  J --> K[Governed API<br/>EvidenceRef resolution]
-  K --> L[Map/UI<br/>Evidence Drawer]
-  K --> M[Focus Mode<br/>ANSWER / ABSTAIN / DENY / ERROR]
-  J --> N[ReleaseManifest + ProofPack]
-  N --> O[CorrectionNotice / Rollback target]
+  S[Source candidate] --> SD[SourceDescriptor<br/>role + rights + cadence + sensitivity]
+  SD --> R[RAW]
+  R --> T{Triage checks}
+  T -->|usable for work| W[WORK]
+  T -->|rights / shape / sensitivity unresolved| Q[QUARANTINE]
+  W --> V[ValidationReport<br/>schema + source + policy + fixture checks]
+  V -->|fail / hold| Q
+  V -->|pass| P[PROCESSED]
+  P --> C[CATALOG / TRIPLET<br/>STAC + DCAT + PROV + relation projection]
+  C --> EB[EvidenceBundle<br/>claim support + provenance]
+  EB --> D[DecisionEnvelope<br/>policy + review + release decision]
+  D -->|HOLD / DENY| Q
+  D -->|PROMOTE| PR[ProofPack + ReleaseManifest<br/>rollback target + correction path]
+  PR --> PUB[PUBLISHED<br/>released artifact]
+  PUB --> API[Governed API<br/>EvidenceRef resolution]
+  API --> UI[Map/UI<br/>Evidence Drawer]
+  API --> AI[Focus Mode<br/>ANSWER / ABSTAIN / DENY / ERROR]
+  PR --> CR[CorrectionNotice / Withdrawal / Rollback]
 ```
 
 ### Flow rules
 
 - `RAW`, `WORK`, and `QUARANTINE` are never normal public surfaces.
 - Public artifacts are released outputs, not canonical truth.
-- Tiles, scenes, indexes, summaries, graph projections, and AI responses are rebuildable derivatives or interpretive surfaces.
-- A rendered feature, popup, or Focus Mode answer is consequential only when it resolves to an admissible `EvidenceBundle` and passes policy/review checks.
+- Tiles, scenes, indexes, summaries, graph projections, dashboards, screenshots, and AI responses are rebuildable derivatives or interpretive surfaces.
+- A rendered feature, popup, export, story, or Focus Mode answer is consequential only when it resolves to an admissible `EvidenceBundle` and passes policy/review checks.
 - Promotion is a governed state transition, not a file move.
+- Rollback and correction paths are part of publication readiness, not afterthoughts.
 
 ## Lane burden tiers
 
-Not every lane carries the same risk. The template is constant, but the burden tier changes how much proof is required before publication.
+Not every lane carries the same risk. The template is constant, but the burden tier changes how much proof is required before publication. Burdens accumulate: a sensitive runtime lane must satisfy the sensitive-location, runtime/AI, and release-bearing gates that apply to it.
 
 | Tier | Typical lane examples | Required extra burden |
 |---|---|---|
@@ -185,28 +271,28 @@ A new source MUST NOT enter a lane as a connector first. It enters as a source d
 
 Required updates:
 
-1. `data/registry/<domain>/sources.yaml`
-2. source rights and sensitivity review
-3. source-role policy matrix
-4. source descriptor fixtures
-5. verification backlog entry for unresolved terms, cadence, quota, or schema behavior
-6. lane README and source registry docs
+1. `data/registry/<domain>/sources.yaml` or repo-equivalent;
+2. source rights and sensitivity review;
+3. source-role policy matrix;
+4. source descriptor fixtures;
+5. verification backlog entry for unresolved terms, cadence, quota, schema behavior, or attribution;
+6. lane README and source registry docs.
 
-### Schema versions
+### Schema and contract versions
 
 A schema version is additive or explicitly superseding. Silent field meaning changes are prohibited.
 
 Required updates:
 
-1. object card or human contract
-2. schema file and `$id` / version metadata
-3. valid and invalid fixtures
-4. validators
-5. API/UI payload contracts if exposed
-6. compatibility and migration notes
-7. ADR when semantics or authority changes materially
+1. object card or human contract;
+2. schema file and `$id` / version metadata;
+3. valid and invalid fixtures;
+4. validators;
+5. API/UI payload contracts if exposed;
+6. compatibility and migration notes;
+7. ADR when semantics or authority changes materially.
 
-### Backfills
+### Backfills and refreshes
 
 Backfills are governed runs, not invisible data repairs.
 
@@ -291,10 +377,11 @@ The first implementation of this ADR is not complete until the following gates p
 | **No-network gate** | Initial tests run without external network dependency. |
 | **Policy gate** | Unknown rights, unresolved sensitivity, exact sensitive location, and unsupported source roles fail closed. |
 | **Public path gate** | No UI/API/delivery surface reads `RAW`, `WORK`, `QUARANTINE`, canonical stores, proof-pack stores, or model runtime stores directly. |
-| **Evidence closure gate** | Consequential claims resolve `EvidenceRef -> EvidenceBundle`; otherwise runtime returns ABSTAIN, DENY, or ERROR. |
+| **Evidence closure gate** | Consequential claims resolve `EvidenceRef -> EvidenceBundle`; otherwise runtime returns `ABSTAIN`, `DENY`, or `ERROR`. |
 | **Release gate** | Published artifacts have ReleaseManifest, catalog closure, proof/receipt separation, rollback target, and correction path. |
 | **AI gate** | Focus Mode consumes governed evidence only and emits finite outcomes. |
 | **Lineage gate** | Superseded, deprecated, or migrated files retain successor/predecessor metadata. |
+| **Sensitive-burden gate** | Sensitive location, living-person, DNA, cultural, ecological, archaeological, title, or security-relevant claims fail closed unless the lane-specific burden is satisfied. |
 
 ## Alternatives considered
 
@@ -303,8 +390,9 @@ The first implementation of this ADR is not complete until the following gates p
 | **One bespoke architecture per domain** | Preserves nuance but increases drift, makes review uneven, and lets each lane invent its own trust seams. |
 | **One generic domain README only** | Easier to adopt but too weak for KFM’s source, policy, proof, release, and rollback obligations. |
 | **Machine schemas first, docs later** | Creates executable shapes before source authority, object meaning, rights, sensitivity, and review posture are settled. |
-| **Live source connector first** | Makes external source behavior, rights, quota, and sensitivity failures appear late, after implementation inertia exists. |
+| **Live source connector first** | Makes external source behavior, rights, quota, sensitivity, and attribution failures appear late, after implementation inertia exists. |
 | **UI/map proof first** | Risks treating rendered layers as truth before EvidenceBundle, policy, and release controls are proven. |
+| **AI/runtime proof first** | Risks making generated language the first public value surface rather than a downstream interpretation of released evidence. |
 
 ## Consequences
 
@@ -315,6 +403,7 @@ The first implementation of this ADR is not complete until the following gates p
 - Machine contracts and human semantics remain separate but linked.
 - Public-facing UI, API, Focus Mode, and export behavior stay downstream of governed evidence.
 - Corrections and rollback become designed surfaces rather than emergency repairs.
+- Exploratory packet pressure has a promotion path without becoming accidental authority.
 
 ### Costs
 
@@ -322,6 +411,7 @@ The first implementation of this ADR is not complete until the following gates p
 - Some fast demos will be delayed until source descriptors and no-network proof slices exist.
 - The schema-home conflict must be resolved instead of worked around.
 - Existing domain reports may require migration maps rather than direct replacement.
+- Lane stewards must maintain registries and verification backlogs as living control surfaces.
 
 ### Tradeoff
 
@@ -330,21 +420,22 @@ This ADR deliberately favors slower, more inspectable first slices over broad do
 ## Adoption plan
 
 1. **Verify the ADR index.** Reconcile the `ADR-0008` numbering issue before merge.
-2. **Verify repo conventions.** Inspect the mounted repo for existing ADR, docs, schema, policy, registry, test, and UI patterns.
-3. **Adopt as draft standard.** Merge this ADR only after owners and policy label are filled or explicitly left as reviewable TODOs.
-4. **Pilot on one low-risk lane.** Prefer a no-network hydrology or similarly public-safe fixture lane.
-5. **Publish companion docs.** Add or update lane README, source registry standard, schema-home ADR, and verification backlog.
-6. **Run a proof slice.** SourceDescriptor -> fixture -> validator -> EvidenceBundle -> ReleaseManifest -> Evidence Drawer payload.
-7. **Record deviations.** Any lane-specific exception gets an ADR, not an undocumented template fork.
-8. **Promote or supersede.** After one proof-bearing lane passes, move this ADR from draft to review/published or supersede it with the field-tested version.
+2. **Verify repo conventions.** Inspect the mounted repo for existing ADR, docs, schema, policy, registry, test, API, and UI patterns.
+3. **Resolve schema-home linkage.** Link this ADR to the schema-home ADR or update this ADR after the schema-home decision is accepted.
+4. **Fill owners and policy label.** Merge only after owners and policy label are filled or intentionally left as reviewable TODOs.
+5. **Adopt as draft standard.** Treat this ADR as a template standard only after the above gates are visible.
+6. **Pilot on one low-risk lane.** Prefer a no-network hydrology or similarly public-safe fixture lane.
+7. **Run a proof slice.** SourceDescriptor -> fixture -> validator -> EvidenceBundle -> ReleaseManifest -> Evidence Drawer payload.
+8. **Record deviations.** Any lane-specific exception gets an ADR, not an undocumented template fork.
+9. **Promote or supersede.** After one proof-bearing lane passes, move this ADR from draft to review/published or supersede it with the field-tested version.
 
 ## Open verification backlog
 
 | Item | Why it matters | Status |
 |---|---|---|
 | Confirm whether `ADR-0008` is available for this topic | Visible corpus suggests a numbering conflict. | `NEEDS VERIFICATION` |
-| Confirm owners | Owners cannot be inferred from attached PDFs. | `TODO` |
-| Confirm policy label | Public/restricted status depends on repo policy. | `TODO` |
+| Confirm owners | Owners cannot be inferred from attached PDFs. | `TODO(owner): documentation steward + domain lane stewards` |
+| Confirm policy label | Public/restricted status depends on repo policy. | `TODO(policy): public|restricted after policy review` |
 | Confirm ADR format convention | Existing repo ADR style was not inspectable in this session. | `UNKNOWN` |
 | Confirm schema-home authority | `contracts/` vs `schemas/contracts/v1/` remains a recurring conflict. | `CONFLICTED` |
 | Confirm CODEOWNERS / review path | Required for lane steward and contract/policy review. | `UNKNOWN` |
@@ -352,6 +443,8 @@ This ADR deliberately favors slower, more inspectable first slices over broad do
 | Confirm existing lane docs | Avoid overwriting stronger existing docs. | `UNKNOWN` |
 | Confirm generated artifact retention paths | Receipts, proofs, releases, and catalogs need actual repo homes. | `UNKNOWN` |
 | Confirm UI/API path names | Do not invent route/component paths before repo inspection. | `UNKNOWN` |
+| Confirm governed API spelling convention | Prior materials use underscore/hyphen variants. | `NEEDS VERIFICATION` |
+| Confirm public repo vs mounted repo divergence | Attached reports may describe public repo surfaces that were not mounted in this session. | `NEEDS VERIFICATION` |
 
 [Back to top](#adr-0008--domain-lane-template)
 
@@ -366,11 +459,11 @@ title: <Domain> Lane
 type: standard
 version: v1
 status: draft
-owners: TODO
+owners: TODO(owner): domain steward + documentation steward
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: TODO
-related: [docs/adr/ADR-0008-domain-lane-template.md]
+policy_label: TODO(policy): public|restricted after policy review
+related: [NEEDS_VERIFICATION: docs/adr/ADR-0008-domain-lane-template.md]
 tags: [kfm, domain-lane, <domain>]
 notes: [Replace TODO values after repo and steward verification.]
 [/KFM_META_BLOCK_V2] -->
@@ -379,20 +472,15 @@ notes: [Replace TODO values after repo and steward verification.]
 
 One-line purpose for this KFM domain lane.
 
-> ![Status](https://img.shields.io/badge/status-draft-lightgrey)
-> ![Truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%2F%20PROPOSED%20%2F%20UNKNOWN-blue)
-> ![Policy](https://img.shields.io/badge/policy-TODO-orange)
+![Status](https://img.shields.io/badge/status-draft-lightgrey)
+![Truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%2F%20PROPOSED%20%2F%20UNKNOWN-blue)
+![Policy](https://img.shields.io/badge/policy-TODO-orange)
 
-## Impact block
-
-| Field | Value |
-|---|---|
-| Status | draft |
-| Owners | TODO |
-| Path | `docs/domains/<domain>/README.md` |
-| Upstream | TODO: source registry, doctrine, adjacent lanes |
-| Downstream | TODO: schemas, validators, policy, API/UI, release |
-| Evidence boundary | State what is CONFIRMED, PROPOSED, UNKNOWN, or NEEDS VERIFICATION |
+> [!IMPORTANT]
+> **Status:** draft / PROPOSED  
+> **Owner:** TODO(owner): domain steward + documentation steward  
+> **Path:** `docs/domains/<domain>/README.md`  
+> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation / UNKNOWN repo depth
 
 ## Quick jumps
 
@@ -412,7 +500,11 @@ Define what the lane governs.
 
 ## Repo fit
 
-Explain where this lane sits in KFM and which upstream/downstream docs or objects it touches.
+| Direction | Link or object | Status |
+|---|---|---|
+| Upstream | TODO: doctrine, source registry, adjacent lanes | `NEEDS VERIFICATION` |
+| Downstream | TODO: schemas, validators, policy, API/UI, release | `NEEDS VERIFICATION` |
+| Related ADRs | TODO: schema-home, source-role, publication, sensitivity | `NEEDS VERIFICATION` |
 
 ## Accepted inputs
 
@@ -430,9 +522,15 @@ Link to `data/registry/<domain>/sources.yaml` or repo-equivalent.
 
 Show how lane data moves through `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`.
 
+Diagram omitted — NEEDS VERIFICATION until this lane's concrete source families, proof objects, and release surfaces are confirmed.
+
 ## Validation
 
-List validators, fixtures, policy tests, and no-network checks.
+- [ ] SourceDescriptor fixtures exist.
+- [ ] Valid and invalid object fixtures exist.
+- [ ] Policy fixtures cover allow, hold, deny, abstain, and error conditions where relevant.
+- [ ] No-network tests pass.
+- [ ] No public path reads RAW, WORK, QUARANTINE, canonical stores, or model stores directly.
 
 ## Release and rollback
 
@@ -446,8 +544,8 @@ Track concrete evidence still needed before stronger claims are allowed.
 ## Appendix B — ADR maintenance checklist
 
 - [ ] ADR number reconciled with ADR index.
-- [ ] Owners filled or intentionally marked `TODO`.
-- [ ] Policy label filled or intentionally marked `TODO`.
+- [ ] Owners filled or intentionally marked `TODO(owner): <reason>`.
+- [ ] Policy label filled or intentionally marked `TODO(policy): <reason>`.
 - [ ] Related paths verified or marked `NEEDS VERIFICATION`.
 - [ ] Schema-home conflict linked to the appropriate ADR.
 - [ ] Lane README skeleton reviewed by documentation steward.
@@ -455,5 +553,6 @@ Track concrete evidence still needed before stronger claims are allowed.
 - [ ] No section claims implementation behavior without evidence.
 - [ ] No live connector, public publication, or model runtime behavior implied.
 - [ ] Rollback path remains doc-only until implementation files are created.
+- [ ] All repo path assumptions are rechecked against a mounted checkout before merge.
 
 [Back to top](#adr-0008--domain-lane-template)
