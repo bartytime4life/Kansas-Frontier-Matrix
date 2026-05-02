@@ -543,3 +543,19 @@ python soilgrids_evidence_registry.py \
 ```
 
 This layer compiles a read-only, deterministic registry snapshot and does not mutate source evidence crates.
+
+## Layer 16 CI/CD Control Plane (Snippet)
+
+This layer generates and validates repository automation only; it does **not** bypass Layer 15 and does **not** mutate remote state by default.
+
+### Generate only
+`python soilgrids_control_plane.py --control-plane-spec control_plane/soilgrids_control_plane_example.json --pipeline-spec pipeline_specs/soilgrids_pipeline_example.json --automation-root repo_automation --mode generate-only`
+
+### Validate generated
+`python soilgrids_control_plane.py --control-plane-spec control_plane/soilgrids_control_plane_example.json --pipeline-spec pipeline_specs/soilgrids_pipeline_example.json --automation-root repo_automation --mode validate-generated`
+
+### Local smoke
+`python soilgrids_control_plane.py --control-plane-spec control_plane/soilgrids_control_plane_example.json --pipeline-spec pipeline_specs/soilgrids_pipeline_example.json --automation-root repo_automation --mode local-smoke --allow-local-execution`
+
+### Release gate
+`python soilgrids_control_plane.py --control-plane-spec control_plane/soilgrids_control_plane_example.json --pipeline-run-receipt pipeline_runs/<run_id>/pipeline_run_receipt.json --pipeline-certification-envelope pipeline_runs/<run_id>/pipeline_certification_envelope.json --automation-root repo_automation --mode release-gate`
