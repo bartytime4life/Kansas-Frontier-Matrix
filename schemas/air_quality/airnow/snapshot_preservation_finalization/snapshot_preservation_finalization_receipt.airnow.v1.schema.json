@@ -1,16 +1,17 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AirNowSnapshotPreservationFinalizationReceipt",
+  "type": "object",
+  "required": [
+    "object_type",
+    "schema_version"
+  ],
   "properties": {
     "object_type": {
       "const": "AirNowSnapshotPreservationFinalizationReceipt"
+    },
+    "schema_version": {
+      "const": "v1"
     }
-  },
-  "required": [
-    "object_type",
-    "workflow_runner",
-    "workflow_outcome",
-    "validation_outcome",
-    "finite_outcome"
-  ],
-  "type": "object"
+  }
 }

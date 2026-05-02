@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationBlockerConsolidation",
+  "records": [
+    {
+      "blocker_id": "b1",
+      "status": "OPEN"
+    }
+  ],
+  "residual_only": true,
+  "schema_version": "v1"
+}

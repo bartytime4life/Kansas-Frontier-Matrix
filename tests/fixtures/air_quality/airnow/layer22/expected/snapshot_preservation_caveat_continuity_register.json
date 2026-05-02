@@ -1,0 +1,12 @@
+{
+  "caveats": [
+    "AIRNOW_PRELIMINARY_DATA",
+    "AIRNOW_NOT_AQS_REGULATORY_DATA",
+    "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP",
+    "SNAPSHOT_PRESERVATION_FINALIZATION_NOT_ACTION_EXECUTION",
+    "SNAPSHOT_PRESERVATION_FINALIZATION_NOT_PUBLICATION"
+  ],
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationCaveatContinuityRegister",
+  "schema_version": "v1"
+}
