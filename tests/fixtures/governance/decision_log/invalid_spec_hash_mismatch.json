@@ -1,0 +1,25 @@
+{
+  "decision_id": "decision-001",
+  "timestamp": "2026-05-01T12:34:56Z",
+  "policy_query": "promotion.allow?input",
+  "input_ref": {
+    "run_receipt_id": "kfm://run/example",
+    "kfm": {
+      "spec_hash": "sha256-0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "policy_bundle": {
+    "name": "kfm/promotion",
+    "version": "v1.0.0",
+    "bundle_spec_hash": "sha256-9716042fd4a58221d5c0b98f747077c28afa7e63fad05faeced83f95422ea105"
+  },
+  "explain_trace": "fixture trace",
+  "signature": {
+    "dsse": {
+      "payloadType": "application/vnd.dsse.envelope",
+      "cosign_bundle_url": "fixtures://governance/decision_log/bundles/example.bundle"
+    }
+  },
+  "result": "allow",
+  "obligations": []
+}
