@@ -608,3 +608,12 @@ This layer monitors and gossips verification observations only; it does not publ
 - `python soilgrids_watchtower_gossip.py --watchtower-spec watchtower/watchtower_spec_example.json --output-root watchtower_runs --mode build-dashboard --build-dashboard`
 
 Exit codes: 0 healthy/planned, 5 dry-run, 10 degraded, 20 critical, 30 malformed input.
+
+## Layer 24: Trust Status Distribution Publisher
+
+Plan-only:
+`python soilgrids_status_distribution.py --status-distribution-spec status_distribution/status_distribution_spec_example.json --trust-status-run-root tests/fixtures/status_distribution/trust_status_run --output-root /tmp/out --mode plan-only`
+
+Local mirror/build resolver/S3-compatible/validate-remote modes are supported through `--mode`.
+
+This layer publishes or mirrors trust-status artifacts only. It does **not** change trust statuses, revoke objects, delete objects, or mutate source evidence.
