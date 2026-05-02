@@ -702,3 +702,28 @@ See:
 - `110`: secret finding failure
 - `120`: ledger failure
 - `130`: internal error
+
+## Layer 29: Controlled Notification Delivery + Acknowledgment Ledger
+
+Plan only:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode plan-only`
+
+Build outbox:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode build-outbox`
+
+Deliver local:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode deliver-local`
+
+Deliver webhook (explicitly gated; remote disabled by default):
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode deliver-webhook --execute-delivery --allow-remote-network --webhook-config notification/webhook_config_example.json`
+
+Import ack:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode import-ack --acknowledgment-record ack.json`
+
+Reconcile:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode reconcile-acks`
+
+Local API:
+`python soilgrids_notification_delivery.py --notification-delivery-spec notification/notification_delivery_spec_example.json --output-root ./out --mode local-api --host 127.0.0.1 --port 0`
+
+This layer controls local delivery (or explicitly enabled webhook delivery) only. It does not mutate policy, trust status, access enforcement, or Layer 28 source evidence.
