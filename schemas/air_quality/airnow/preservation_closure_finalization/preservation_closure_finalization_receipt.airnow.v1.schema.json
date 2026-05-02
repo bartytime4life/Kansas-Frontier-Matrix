@@ -1,18 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AirNowPreservationClosureFinalizationReceipt",
   "type": "object",
   "required": [
     "object_type",
-    "workflow_runner",
-    "workflow_outcome",
-    "validation_outcome"
+    "schema_version"
   ],
   "properties": {
     "object_type": {
       "const": "AirNowPreservationClosureFinalizationReceipt"
     },
-    "workflow_runner": {
-      "const": "airnow_layer26_preservation_closure_finalization"
+    "schema_version": {
+      "const": "v1"
     }
   }
 }

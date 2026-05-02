@@ -1,51 +1,9 @@
 {
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowPreservationClosureItemSatisfactionMatrix",
+  "object_type": "x",
+  "schema_version": "v1",
   "records": [
     {
-      "item_id": "preservation_caveat_closure_continuity_register",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_closure_candidate_ledger",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_closure_decision_candidate",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_closure_non_execution_attestation",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_closure_readiness_matrix",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_closure_receipt",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_evidence_closure_summary",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_governance_closure_gate",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_policy_closure_continuity_matrix",
-      "satisfied": true
-    },
-    {
-      "item_id": "preservation_receipt_closure_verification_matrix",
-      "satisfied": true
-    },
-    {
-      "item_id": "unresolved_preservation_issue_register",
-      "satisfied": true
+      "id": "r1"
     }
-  ],
-  "schema_version": "v1"
+  ]
 }
