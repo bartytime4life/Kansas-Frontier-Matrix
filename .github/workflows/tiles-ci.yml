@@ -131,3 +131,31 @@ jobs:
             tests/fixtures/tiles/verified_release/valid/trace.json
             tests/fixtures/tiles/verified_release/valid/verified_tile_list.json
             tests/fixtures/tiles/verified_release/valid/delta_manifest.json
+
+
+  tile-runtime-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest jsonschema
+      - name: Emit runtime governance artifacts (valid fixture)
+        run: |
+          node tools/mobile-emu/src/emit_runtime_receipt.ts --metrics tests/fixtures/tile_runtime/valid_metrics.json --trace tests/fixtures/tile_runtime/valid_trace_redacted.json --release-manifest-ref tests/fixtures/tile_runtime/valid_release_manifest_ref.json --evidence-refs tests/fixtures/tile_runtime/valid_evidence_refs.json --out-dir /tmp/tile-runtime
+      - name: Pytest tile runtime governance
+        run: |
+          pytest -q tests/tile_runtime
+      - name: Validate emitted runtime receipt
+        run: |
+          python tools/validators/tile_runtime/validate_tile_runtime_receipt.py --receipt /tmp/tile-runtime/tile_runtime_receipt.json --trace-manifest /tmp/tile-runtime/tile_runtime_trace_manifest.json --metrics tests/fixtures/tile_runtime/valid_metrics.json --trace tests/fixtures/tile_runtime/valid_trace_redacted.json --public-summary /tmp/tile-runtime/tile_runtime_public_summary.json
+      - name: OPA tests (optional)
+        run: |
+          if command -v opa >/dev/null 2>&1; then opa test policy/tile_runtime -v; else echo "OPA not preinstalled; NEEDS_VERIFICATION"; fi
