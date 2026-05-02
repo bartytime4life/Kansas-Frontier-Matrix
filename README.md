@@ -528,3 +528,18 @@ Recommended future homes, pending repo convention verification:
 Do not commit those CLI examples as implementation guidance until script names, module locations, policy profiles, receipt schemas, exit codes, STAC version, license posture, network flags, and artifact paths are verified in the actual repository.
 
 </details>
+
+## Layer 13: Evidence Registry + Semantic Query API Compiler
+
+Example local-registry invocation:
+
+```bash
+python soilgrids_evidence_registry.py \
+  --evidence-crate tests/fixtures/evidence_registry/valid_crate \
+  --registry-root registries \
+  --registry-mode local-registry \
+  --registry-title "SoilGrids Evidence Registry" \
+  --dataset-id soilgrids-v2
+```
+
+This layer compiles a read-only, deterministic registry snapshot and does not mutate source evidence crates.
