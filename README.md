@@ -532,3 +532,64 @@ Expected receipt shape (`CogReceipt.v1`) includes:
   "errors": []
 }
 ```
+
+## SoilGrids STAC registration (Layer 3)
+
+CLI example:
+
+```bash
+python soilgrids_stac_register.py \
+  --cog-receipt processed/cog/soc_0-5cm_mean_cog_receipt.json \
+  --run-receipt raw/wcs/soc_0-5cm_mean_run_receipt.json \
+  --catalog-dir stac \
+  --catalog-id soilgrids-local \
+  --catalog-title "Local SoilGrids Catalog" \
+  --collection-id soilgrids-v2 \
+  --collection-title "SoilGrids v2.0 Derived Local Assets" \
+  --dataset-datetime 2020-01-01T00:00:00Z \
+  --license CC-BY-4.0 \
+  --property soc \
+  --depth 0-5cm \
+  --statistic mean \
+  --unit "g/kg" \
+  --asset-href-mode relative \
+  --stac-version 1.1.0
+```
+
+Python example:
+
+```python
+from soilgrids_stac_register import register_cog_to_stac
+
+receipt = register_cog_to_stac(
+    cog_receipt_path="processed/cog/soc_0-5cm_mean_cog_receipt.json",
+    run_receipt_path="raw/wcs/soc_0-5cm_mean_run_receipt.json",
+    catalog_dir="stac",
+    catalog_id="soilgrids-local",
+    catalog_title="Local SoilGrids Catalog",
+    collection_id="soilgrids-v2",
+    collection_title="SoilGrids v2.0 Derived Local Assets",
+    dataset_datetime="2020-01-01T00:00:00Z",
+    license="CC-BY-4.0",
+    property="soc",
+    depth="0-5cm",
+    statistic="mean",
+    unit="g/kg",
+    asset_href_mode="relative",
+    stac_version="1.1.0",
+)
+```
+
+Output tree:
+
+```text
+stac/
+├── catalog.json
+├── collections/
+│   └── soilgrids-v2/
+│       ├── collection.json
+│       └── items/
+│           └── <item_id>.json
+└── receipts/
+    └── stac_registration_<spec_hash_12>.json
+```
