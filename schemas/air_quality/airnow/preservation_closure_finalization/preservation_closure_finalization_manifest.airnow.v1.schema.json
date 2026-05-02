@@ -1,16 +1,1 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": [
-    "manifest_id",
-    "layer25_inputs"
-  ],
-  "properties": {
-    "manifest_id": {
-      "type": "string"
-    },
-    "layer25_inputs": {
-      "type": "object"
-    }
-  }
-}
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"AirNow Preservation Closure Finalization Manifest v1","type":"object","required":["manifest_id","layer25_inputs","local_file_only","no_network"],"properties":{"manifest_id":{"type":"string"},"layer25_inputs":{"type":"object"},"local_file_only":{"const":true},"no_network":{"const":true}}}

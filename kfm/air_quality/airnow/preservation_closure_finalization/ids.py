@@ -1,3 +1,7 @@
-import hashlib,json
-def sid(ns,payload):
- s=json.dumps([ns,payload],sort_keys=True,separators=(",",":")); return hashlib.sha256(s.encode()).hexdigest()
+import hashlib, json
+
+def cjson(v):
+    return json.dumps(v, sort_keys=True, separators=(",",":"), ensure_ascii=False)
+
+def sid(prefix, v):
+    return f"{prefix}:{hashlib.sha256((v if isinstance(v, str) else cjson(v)).encode()).hexdigest()}"
