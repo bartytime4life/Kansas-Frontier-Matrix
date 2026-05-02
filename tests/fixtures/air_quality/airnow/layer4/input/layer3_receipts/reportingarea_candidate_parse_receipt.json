@@ -1,0 +1,26 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "input_file": "tests/fixtures/air_quality/airnow/layer3/input/reportingarea_candidate_valid.dat",
+  "input_hash": "b5c30dcb641d532b4f56e7ff53da64143bd6f8ccac8a588a19b71bd43efa66cb",
+  "input_record_count": 1,
+  "manifest_id": "m-report",
+  "object_type": "AirNowFileProductParseReceipt",
+  "outputs": {
+    "parsed_jsonl": "parsed_records.jsonl",
+    "quarantine_jsonl": "quarantine.jsonl"
+  },
+  "parsed_output_hash": "c5bf7dab2b5c219dc283c41fc199abf91fd4f125b0bdb381e4efc9c1e67a3d63",
+  "parsed_record_count": 1,
+  "parser": "airnow_layer3_file_products",
+  "parser_version": "v1",
+  "product_type": "reportingarea_candidate",
+  "quarantine_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "quarantined_record_count": 0,
+  "receipt_id": "kfm:air_quality:airnow:file_product:parse_receipt:v1:babb05ba1118bfa933571677aab6f091a4340318c944c4dd64b2ff745b0ed257",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "validation_outcome": "PASS",
+  "warnings": []
+}

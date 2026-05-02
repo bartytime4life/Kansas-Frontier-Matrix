@@ -1,0 +1,26 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "input_file": "tests/fixtures/air_quality/airnow/layer3/input/cityzipcodes_valid.csv",
+  "input_hash": "96293ef2b8606ba0f3692e826693aa73ddd6b0e704d722e498f8ce1e12502f80",
+  "input_record_count": 1,
+  "manifest_id": "m-city",
+  "object_type": "AirNowFileProductParseReceipt",
+  "outputs": {
+    "parsed_jsonl": "parsed_records.jsonl",
+    "quarantine_jsonl": "quarantine.jsonl"
+  },
+  "parsed_output_hash": "b7c712a6d63d3ca58454884a6aa1ad9e1edc4c97098785001d9e96c9c0c6e6b9",
+  "parsed_record_count": 1,
+  "parser": "airnow_layer3_file_products",
+  "parser_version": "v1",
+  "product_type": "cityzipcodes_lookup",
+  "quarantine_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "quarantined_record_count": 0,
+  "receipt_id": "kfm:air_quality:airnow:file_product:parse_receipt:v1:93c3367f5da1a10af034a72cb23824da3496638bc75616120559e5da42fe5a69",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "validation_outcome": "PASS",
+  "warnings": []
+}
