@@ -1,0 +1,15 @@
+{
+  "bundle_name": "airnow_internal_review_bundle",
+  "created_at": "2026-01-01T00:00:00Z",
+  "lineage_edges": [],
+  "lineage_nodes": [],
+  "lineage_status": "PASS",
+  "lineage_summary_id": "x",
+  "manifest_id": "airnow-layer6-internal-bundle-fixture-001",
+  "object_type": "AirNowBundleLineageSummary",
+  "schema_version": "v1",
+  "source_doc_refs": [
+    "https://docs.airnowapi.org/faq"
+  ],
+  "source_id": "airnow"
+}
