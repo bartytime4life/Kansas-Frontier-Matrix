@@ -1,0 +1,10 @@
+{
+  "schema": "TrustDecisionEnvelope.v1",
+  "decision": "block",
+  "policy_hash": "ph",
+  "target": {
+    "protected_resource_id": "pres_x"
+  },
+  "status": "active",
+  "decision_hash": "6eda15a45490b73d4a9bdadbe71da41bf03dbe53b72cd22db8f3d97cffc0bdb5"
+}
