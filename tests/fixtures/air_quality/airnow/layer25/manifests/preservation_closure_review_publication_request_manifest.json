@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-publication_request",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -63,7 +63,7 @@
     "include_packet": true,
     "packet_format": "tar.gz"
   },
-  "publication_requested": false,
+  "publication_requested": true,
   "publication_allowed": false,
   "public_dashboard_requested": false,
   "public_dashboard_allowed": false,

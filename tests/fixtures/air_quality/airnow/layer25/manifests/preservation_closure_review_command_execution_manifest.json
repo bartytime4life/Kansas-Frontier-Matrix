@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-command_execution",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -77,7 +77,7 @@
   "regulatory_claims_allowed": false,
   "exact_sensitive_overlay_requested": false,
   "exact_sensitive_overlay_allowed": false,
-  "command_execution_requested": false,
+  "command_execution_requested": true,
   "command_execution_allowed": false,
   "auto_execute_requested": false,
   "auto_execute_allowed": false,

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AirNowSnapshotPreservationReviewReceipt",
+  "title": "AirNowSnapshotPreservationReviewCaveatRegister",
   "type": "object",
   "required": [
     "object_type",
@@ -8,7 +8,7 @@
   ],
   "properties": {
     "object_type": {
-      "const": "AirNowSnapshotPreservationReviewReceipt"
+      "const": "AirNowSnapshotPreservationReviewCaveatRegister"
     },
     "schema_version": {
       "const": "v1"

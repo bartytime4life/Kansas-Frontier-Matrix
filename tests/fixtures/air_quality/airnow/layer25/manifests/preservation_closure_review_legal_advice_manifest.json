@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-legal_advice",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -105,7 +105,7 @@
   "legal_hold_creation_allowed": false,
   "official_archive_certification_requested": false,
   "official_archive_certification_allowed": false,
-  "legal_advice_requested": false,
+  "legal_advice_requested": true,
   "legal_advice_allowed": false,
   "final_accession_execution_requested": false,
   "final_accession_execution_allowed": false,

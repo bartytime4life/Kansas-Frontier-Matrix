@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-export",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -109,7 +109,7 @@
   "legal_advice_allowed": false,
   "final_accession_execution_requested": false,
   "final_accession_execution_allowed": false,
-  "snapshot_export_execution_requested": false,
+  "snapshot_export_execution_requested": true,
   "snapshot_export_execution_allowed": false,
   "snapshot_copy_requested": false,
   "snapshot_copy_allowed": false,

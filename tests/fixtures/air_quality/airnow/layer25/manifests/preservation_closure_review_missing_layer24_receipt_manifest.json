@@ -1,11 +1,10 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-missing-receipt",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
-    "preservation_closure_receipt": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_receipt.json",
     "preservation_closure_readiness_matrix": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_readiness_matrix.json",
     "preservation_closure_candidate_ledger": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_candidate_ledger.json",
     "unresolved_preservation_issue_register": "tests/fixtures/air_quality/airnow/layer25/input/layer24/unresolved_preservation_issue_register.json",

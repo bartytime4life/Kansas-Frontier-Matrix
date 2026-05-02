@@ -1,7 +1,7 @@
 {
-  "manifest_id": "airnow-l25-network",
+  "manifest_id": "airnow-l25-task_closure",
   "local_file_only": true,
-  "no_network": false,
+  "no_network": true,
   "bulk_web_service_loop": false,
   "preliminary_data": true,
   "layer24_inputs": {
@@ -83,7 +83,7 @@
   "auto_execute_allowed": false,
   "auto_apply_requested": false,
   "auto_apply_allowed": false,
-  "task_closure_requested": false,
+  "task_closure_requested": true,
   "task_closure_allowed": false,
   "github_issue_creation_requested": false,
   "github_issue_creation_allowed": false,

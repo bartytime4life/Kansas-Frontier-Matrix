@@ -1,3 +1,3 @@
 Internal-only manual preservation closure review
 
-Evidence type: CLOSURE_CANDIDATE_REVIEW_NOTE
+40.7128, -74.0060

@@ -1,2 +1,3 @@
 Internal-only manual preservation closure review
-Candidate-only review note.
+
+Evidence type: CLOSURE_READINESS_REVIEW_NOTE
