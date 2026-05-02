@@ -614,3 +614,20 @@ Exit codes:
 - `50` lock failure
 - `60` atomic commit failure
 - `70` internal error
+
+## Layer 7 Tile Package Builder (Snippet)
+
+Tiles are **visualization artifacts only**; the released COG remains the authoritative scientific asset.
+
+### CLI (XYZ only)
+```bash
+python soilgrids_tile_package.py --publish-receipt ... --release-manifest ... --serve-access-receipt ... --serve-validation-report ... --stac-item ... --cog-asset ... --render-spec styles/render_specs/soc_mean_default.json --tile-package-root tile_packages --package-mode xyz-directory
+```
+
+### CLI (all outputs)
+```bash
+python soilgrids_tile_package.py --publish-receipt ... --release-manifest ... --serve-access-receipt ... --serve-validation-report ... --stac-item ... --cog-asset ... --render-spec styles/render_specs/soc_mean_default.json --tile-package-root tile_packages --package-mode all
+```
+
+### Exit codes
+0 success, 10 warning, 20 evidence rejected, 30 malformed input, 40 render spec invalid, 50 tile failure, 60 MBTiles failure, 70 PMTiles failure, 80 unsafe path, 90 internal error.
