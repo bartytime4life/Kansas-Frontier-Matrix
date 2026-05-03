@@ -146,6 +146,17 @@ tests/                            # NEEDS VERIFICATION
 
 ---
 
+
+## Root organization opportunities
+
+Based on the current root layout, the following changes would improve maintainability:
+
+1. **Create a `docs/` home and move narrative policy/process docs there** (keep machine-enforced policy in `policy/` and machine contracts in `schemas/`).
+2. **Consolidate overlapping output/state directories** such as `runtime_outcome/`, `policy_distribution/`, and `data_use_response/` under a single `artifacts/` or `out/` convention.
+3. **Split `tools/` into clearer sub-domains** (for example `tools/policy/`, `tools/data/`, `tools/release/`, `tools/ops/`) to reduce discoverability friction across dozens of tool namespaces.
+4. **Add root-level ownership and contribution entrypoints** (`CODEOWNERS`, `CONTRIBUTING.md`, and `docs/ARCHITECTURE.md`) so new contributors can locate decision authority quickly.
+5. **Introduce a root index for major directory intent** (a small table in this README) mapping each top-level directory to purpose, primary maintainer group, and stability level.
+
 ## Accepted inputs
 
 KFM input classes should be admitted only through source-aware, policy-aware intake.
