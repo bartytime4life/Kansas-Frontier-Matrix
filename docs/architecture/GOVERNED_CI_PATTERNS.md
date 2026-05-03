@@ -1,22 +1,27 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-governed-ci-patterns
+doc_id: kfm://doc/NEEDS-VERIFICATION-governed-ci-patterns
 title: Governed CI/CD Patterns (KFM)
 type: standard
 version: v1
 status: draft
-owners: TODO: verify owner
-created: TODO: YYYY-MM-DD
-updated: 2026-04-30
-policy_label: TODO: verify policy label
+owners: OWNER_TBD — NEEDS VERIFICATION
+created: TODO(created): confirm original creation date
+updated: 2026-05-03
+policy_label: NEEDS VERIFICATION
 related:
-  - docs/architecture/CONTROL_PLANE_INDEX.md
-  - TODO: verify source registry path
-  - TODO: verify policy registry path
-  - TODO: verify release/promotion docs path
+  - docs/architecture/CONTROL_PLANE_INDEX.md — NEEDS VERIFICATION
+  - docs/registers/ — NEEDS VERIFICATION: source, schema, policy, and release registries
+  - docs/runbooks/ — NEEDS VERIFICATION: release and rollback runbooks
+  - .github/workflows/ — NEEDS VERIFICATION: CI provider and workflow home
+  - schemas/ — NEEDS VERIFICATION: machine-schema authority
+  - contracts/ — NEEDS VERIFICATION: interface-contract authority
+  - policy/ — NEEDS VERIFICATION: policy engine and policy home
+  - release/ — NEEDS VERIFICATION: release-candidate and publication object home
 tags: [kfm, ci, cd, governance, policy, evidence, publication]
 notes:
-  - Placement inferred; verify owners, dates, related links, CI provider, schema home, policy engine, signing toolchain, and workflow names.
+  - Placement inferred as docs/architecture/GOVERNED_CI_PATTERNS.md; verify against the mounted repository before commit.
   - Repo implementation depth is not asserted by this document.
+  - Workflow snippets are illustrative patterns until the CI provider, package manager, policy engine, command names, schema home, signing toolchain, and workflow names are verified.
 [/KFM_META_BLOCK_V2] -->
 
 # Governed CI/CD Patterns (KFM)
@@ -27,13 +32,15 @@ notes:
 
 <p align="center">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Evidence: cite-or-abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
-  <img alt="Policy: fail-closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
-  <img alt="Release: not published" src="https://img.shields.io/badge/release-not_published-lightgrey">
-  <img alt="CI: needs verification" src="https://img.shields.io/badge/ci-NEEDS_VERIFICATION-yellow">
+  <img alt="Owner: needs verification" src="https://img.shields.io/badge/owner-NEEDS_VERIFICATION-yellow">
+  <img alt="Repo depth: unknown" src="https://img.shields.io/badge/repo_depth-UNKNOWN-yellow">
+  <img alt="Evidence: cite or abstain" src="https://img.shields.io/badge/evidence-cite--or--abstain-blue">
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange">
+  <img alt="Release: no autopublish" src="https://img.shields.io/badge/release-no_autopublish-red">
 </p>
 
 <p align="center">
+  <a href="#evidence-boundary">Evidence boundary</a> ·
   <a href="#purpose">Purpose</a> ·
   <a href="#operating-law">Operating law</a> ·
   <a href="#core-patterns">Core patterns</a> ·
@@ -41,11 +48,12 @@ notes:
   <a href="#policy-gates">Policy gates</a> ·
   <a href="#reference-workflows">Workflows</a> ·
   <a href="#validation">Validation</a> ·
-  <a href="#rollback-and-correction">Rollback</a>
+  <a href="#rollback-and-correction">Rollback</a> ·
+  <a href="#maintainer-handoff">Handoff</a>
 </p>
 
 > [!IMPORTANT]
-> This document is repo-ready guidance, not proof of current implementation. Claims about actual files, tests, workflows, routes, badges, policy tooling, signing, dashboards, or runtime behavior remain `UNKNOWN` until verified from current repository evidence.
+> This document is governed CI/CD guidance, not proof of current implementation. Claims about actual files, tests, workflows, routes, badges, policy tooling, signing, dashboards, emitted proof objects, or runtime behavior remain `UNKNOWN` until verified from the mounted KFM repository or equivalent current implementation evidence.
 
 ---
 
@@ -54,15 +62,16 @@ notes:
 | Field | Value |
 |---|---|
 | Status | `draft` |
+| Document type | Standard architecture/control-plane guidance |
+| Proposed path | `docs/architecture/GOVERNED_CI_PATTERNS.md` — `NEEDS VERIFICATION` |
 | Scope | Cross-domain; applies to all governed KFM lanes unless a lane-specific policy is stricter |
-| Authority | Architectural guidance; not itself an executable pipeline |
-| Owners | `TODO: verify owner` |
-| Evidence mode | `CORPUS_ONLY / NO_LOCAL_REPO_EVIDENCE` until a mounted repo is inspected |
-| Policy label | `TODO: verify policy label` |
-| Proposed repo path | `docs/architecture/GOVERNED_CI_PATTERNS.md` |
-| Upstream | `docs/architecture/CONTROL_PLANE_INDEX.md` — `TODO: verify link target` |
-| Downstream | `TODO: verify policy registry, schema registry, workflow, release, and runbook links` |
-| Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, policy, review, or release state |
+| Authority | Guidance for governed CI/CD behavior; not itself an executable pipeline |
+| Owners | `OWNER_TBD — NEEDS VERIFICATION` |
+| Evidence mode | `CORPUS_ONLY / NO_LOCAL_REPO_EVIDENCE` for implementation behavior |
+| Policy label | `NEEDS VERIFICATION` |
+| Upstream | `docs/architecture/CONTROL_PLANE_INDEX.md` — `NEEDS VERIFICATION` |
+| Downstream | Policy registry, schema registry, source registry, release runbook, rollback runbook, workflow definitions — all `NEEDS VERIFICATION` |
+| Public posture | Cite-or-abstain; fail closed on unresolved rights, sensitivity, policy, review, release, or evidence state |
 
 ---
 
@@ -72,8 +81,34 @@ notes:
 |---|---|
 | CI/CD patterns for evidence-bearing KFM pipelines. | Prove that any workflow is already implemented. |
 | Required receipts, gates, review states, and release controls. | Authorize public release by itself. |
-| Example policy and workflow shapes for later implementation. | Replace source registry, schema registry, policy registry, or promotion records. |
 | A validation and rollback posture for governed publication. | Permit autonomous publication to `PUBLISHED`. |
+| Example policy and workflow shapes for later implementation. | Replace the source registry, schema registry, policy registry, promotion records, release manifests, or proof packs. |
+| Repo-useful placeholders for maintainers to verify. | Fabricate owners, package managers, workflow names, command names, badges, branch protections, or toolchain maturity. |
+
+---
+
+## Evidence boundary
+
+This file states KFM doctrine and CI/CD design requirements where supported by the project corpus. Current repository behavior remains bounded.
+
+| Claim area | Status | Evidence / next check |
+|---|---|---|
+| KFM lifecycle law | `CONFIRMED doctrine` | Preserve `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. |
+| CI/CD implementation | `UNKNOWN` | Mount the repo and inspect `.github/`, workflow provider config, scripts, tools, policies, tests, release objects, and logs. |
+| Schema and contract homes | `NEEDS VERIFICATION / potentially CONFLICTED` | Verify whether `schemas/`, `contracts/`, `jsonschema/`, or another registry is authoritative. Do not create parallel schema authority without an ADR. |
+| Policy engine | `NEEDS VERIFICATION` | Confirm OPA/Rego, Conftest, custom policy engine, or equivalent enforcement. |
+| Signing / attestation | `NEEDS VERIFICATION` | Confirm signing toolchain, artifact-digest policy, and release-gate requirements before claiming signed releases. |
+| CI provider | `NEEDS VERIFICATION` | GitHub Actions examples below are illustrative until the provider and workflow conventions are confirmed. |
+
+### Repo fit
+
+`PROPOSED` target path:
+
+```text
+docs/architecture/GOVERNED_CI_PATTERNS.md
+```
+
+This belongs in the architecture/control-plane documentation set because it governs cross-domain transitions, proof-bearing releases, CI guardrails, and publication safety. Link it from the control-plane index after the target path and owner are verified.
 
 ---
 
@@ -81,7 +116,7 @@ notes:
 
 Kansas Frontier Matrix CI/CD is a governed control system.
 
-It is designed to make every consequential build, intake, validation, transformation, promotion, and release inspectable after the fact.
+It is designed to make every consequential build, intake, validation, transformation, promotion, release, correction, and rollback inspectable after the fact.
 
 KFM pipelines must produce more than outputs. They must produce evidence that explains:
 
@@ -94,7 +129,7 @@ KFM pipelines must produce more than outputs. They must produce evidence that ex
 - what release state applies;
 - what rollback or correction path exists.
 
-The durable goal is not “green CI.” The goal is a release candidate whose claims can be traced to admissible evidence, policy posture, provenance, review, and correction lineage.
+The durable goal is not merely “green CI.” The goal is a release candidate whose claims can be traced to admissible evidence, policy posture, provenance, review state, release state, and correction lineage.
 
 ---
 
@@ -103,7 +138,7 @@ The durable goal is not “green CI.” The goal is a release candidate whose cl
 KFM CI/CD preserves this lifecycle by default:
 
 ```text
-RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
 Core rules:
@@ -111,11 +146,12 @@ Core rules:
 1. `RAW`, `WORK`, and `QUARANTINE` are not public release states.
 2. Promotion is a governed state transition, not a file move.
 3. Derived artifacts do not replace canonical truth.
-4. EvidenceBundle resolution outranks generated language, summaries, map styling, search hits, vector indexes, tiles, or scenes.
-5. Any public or semi-public output must pass evidence, rights, sensitivity, validation, policy, review, catalog, and release checks appropriate to risk.
-6. AI may assist review and anomaly detection, but AI output must not bypass policy, evidence, stewardship, or release gates.
-7. Any `deny` from policy-as-code fails the relevant transition.
+4. `EvidenceRef` resolution to `EvidenceBundle` outranks generated language, summaries, map styling, search hits, vector indexes, graph projections, tiles, dashboards, screenshots, or scenes.
+5. Any public or semi-public output must pass evidence, rights, sensitivity, validation, policy, review, catalog, release, and rollback checks appropriate to risk.
+6. AI may assist review, anomaly detection, and structured drafting, but AI output must not bypass policy, evidence, stewardship, citation validation, or release gates.
+7. Any `DENY` from policy-as-code, steward policy, release policy, or sensitivity policy fails the relevant transition.
 8. Autonomous promotion to `PUBLISHED` is forbidden.
+9. Public clients and normal UI surfaces use governed APIs and released artifacts, not internal lifecycle stores.
 
 > [!CAUTION]
 > KFM may be locally hosted and exposed through a firewall, reverse proxy, or VPN for trusted access. CI/CD must assume exposure risk: deny by default, preserve auditability, avoid secrets in code or fixtures, and keep public clients away from internal lifecycle states.
@@ -131,11 +167,12 @@ This standard applies to CI/CD workflows that touch any of the following:
 | Surface | Applies? | Notes |
 |---|---:|---|
 | Source intake | Yes | New or changed source objects enter through controlled intake. |
-| Schema and contract validation | Yes | Schemas, contracts, DTOs, and fixtures are implementation surfaces. |
+| Schema and contract validation | Yes | Schemas, contracts, DTOs, fixtures, and examples are implementation surfaces. |
 | Policy checks | Yes | Policy must be enforceable, not merely documented. |
 | Data transformation | Yes | Transformations must produce provenance and run receipts. |
+| Evidence resolution | Yes | Consequential claims require `EvidenceRef -> EvidenceBundle` closure. |
 | Catalog / triplet registration | Yes | Catalog closure is required before publication. |
-| Tile, layer, graph, search, summary, scene, or AI outputs | Yes | These are downstream carriers, not root truth. |
+| Tile, layer, graph, search, summary, dashboard, scene, or AI outputs | Yes | These are downstream carriers, not root truth. |
 | Release bundles | Yes | Release manifests and proof packs must be explicit. |
 | Rollback / correction | Yes | Publication must have a reversible or corrigible path. |
 
@@ -151,7 +188,7 @@ A governed CI/CD workflow may accept:
 - policy bundles and policy tests;
 - generated validation reports;
 - deterministic build inputs;
-- EvidenceRefs resolvable to EvidenceBundles;
+- `EvidenceRef` values resolvable to `EvidenceBundle` records;
 - review decisions and promotion records;
 - release candidate manifests;
 - correction or rollback requests.
@@ -164,11 +201,12 @@ A governed CI/CD workflow must not accept the following as sufficient for public
 - unverifiable scraped material;
 - direct model output;
 - vector/search/summary results without evidence closure;
-- map tile or scene rendering as proof;
+- map tile, dashboard, screenshot, or scene rendering as proof;
 - data with unknown rights or unresolved sensitivity;
 - exact sensitive locations without required review and public-safe transform;
 - release candidates missing receipts, policy results, or rollback references;
-- generated artifacts placed into canonical paths without verified repo convention.
+- generated artifacts placed into canonical paths without verified repo convention;
+- workflow success alone as proof of release readiness.
 
 ---
 
@@ -181,12 +219,12 @@ Periodic rebuilds verify that derived outputs remain reproducible.
 A rebuild should confirm:
 
 - stable content identity where practical;
-- stable `spec_hash` or equivalent deterministic input hash;
+- stable `spec_hash`, `content_spec_hash`, or equivalent deterministic input hash;
 - stable artifact digests for deterministic outputs;
 - validation behavior across repeated runs;
-- catalog and release-manifest consistency.
+- catalog, proof-pack, and release-manifest consistency.
 
-**Constraint:** scheduled rebuilds stage outputs to `WORK` or a release-candidate area. They do not publish directly.
+**Constraint:** scheduled rebuilds stage outputs to `WORK`, `PROCESSED`, or release-candidate areas. They do not publish directly.
 
 ---
 
@@ -195,7 +233,7 @@ A rebuild should confirm:
 All new source material enters through intake.
 
 ```text
-SOURCE EDGE → RAW → QUARANTINE → validation → WORK
+SOURCE EDGE -> RAW -> QUARANTINE -> validation -> WORK
 ```
 
 Rules:
@@ -205,7 +243,7 @@ Rules:
 - every intake produces a receipt;
 - every source role is explicit;
 - rights and sensitivity are resolved before public release;
-- live connectors are not activated until source terms, cadence, credentials, and release class are verified.
+- live connectors are not activated until source terms, cadence, credentials, endpoint behavior, and release class are verified.
 
 ---
 
@@ -219,19 +257,19 @@ A safe automation path:
 
 ```text
 source event
-  → snapshot
-  → receipt
-  → validation
-  → policy decision
-  → diff
-  → pull request
-  → human review
-  → promotion decision
-  → release candidate
+  -> snapshot
+  -> receipt
+  -> validation
+  -> policy decision
+  -> governed diff
+  -> pull request or review packet
+  -> human / steward review
+  -> promotion decision
+  -> release candidate
 ```
 
 > [!IMPORTANT]
-> Automation may open a PR with evidence. It must not merge, promote, or publish policy-significant release artifacts without the required review path.
+> Automation may open a PR or review packet with evidence. It must not merge, promote, or publish policy-significant release artifacts without the required review path.
 
 ---
 
@@ -248,7 +286,7 @@ AI systems may:
 
 AI systems must not:
 
-- assert truth without EvidenceBundle support;
+- assert truth without `EvidenceBundle` support;
 - receive direct public client traffic;
 - read `RAW`, `WORK`, `QUARANTINE`, or unpublished candidate stores directly;
 - bypass citation validation;
@@ -310,8 +348,8 @@ flowchart LR
     WORK -->|invalid / unsupported| QUARANTINE
 
     PROCESSED -->|catalog closure| CATALOG[CATALOG / TRIPLET]
-    CATALOG -->|promotion decision| RELEASE[Release candidate]
-    RELEASE -->|human sign-off + policy pass| PUBLISHED[PUBLISHED]
+    CATALOG -->|promotion dry run| RELEASE[Release candidate]
+    RELEASE -->|review sign-off + policy pass| PUBLISHED[PUBLISHED]
 
     PUBLISHED --> API[Governed API / released artifacts]
     API --> UI[Map / Evidence Drawer / Focus Mode]
@@ -319,6 +357,17 @@ flowchart LR
     PUBLISHED -->|correction| CORRECTION[CorrectionNotice]
     PUBLISHED -->|rollback| ROLLBACK[RollbackPlan]
 ```
+
+### State-transition guardrails
+
+| Transition | CI/CD must verify | Safe failure |
+|---|---|---|
+| `RAW -> QUARANTINE` | Source snapshot, source identifier, retrieval context, intake receipt. | Keep in `QUARANTINE`; emit failure disposition. |
+| `QUARANTINE -> WORK` | Source role, rights, sensitivity, basic schema, endpoint safety. | `DENY`, `ABSTAIN`, `ERROR`, or continued quarantine. |
+| `WORK -> PROCESSED` | Transform reproducibility, validation reports, receipts, provenance. | Return to `WORK` or `QUARANTINE`; do not publish partial output. |
+| `PROCESSED -> CATALOG / TRIPLET` | Evidence refs, catalog metadata, provenance, source role, temporal scope. | Hold as processed candidate; emit catalog-closure failure. |
+| `CATALOG / TRIPLET -> release candidate` | Manifest draft, proof-pack draft, policy precheck, rollback reference. | Hold candidate; open review issue or correction packet. |
+| `release candidate -> PUBLISHED` | PromotionDecision, policy pass, release manifest, proof pack, rollback target, public-safe transforms. | Block publication. |
 
 ---
 
@@ -336,6 +385,7 @@ flowchart LR
 | `ValidationReport` | Schema, contract, data, and fixture validation results. | Yes |
 | `PolicyDecision` | Machine-readable allow/deny/warn decision with reasons. | Yes |
 | `RunReceipt` | Execution record for a pipeline run. | Yes |
+| `TransformReceipt` | Transform-specific record for normalization, generalization, joins, and derived outputs. | Conditional |
 | `AIReceipt` | AI interaction trace where model assistance was used. | Conditional |
 | `RedactionReceipt` | Records geoprivacy, masking, generalization, or suppression transforms. | Conditional |
 | `PromotionDecision` | Steward or reviewer approval record. | Yes for `PUBLISHED` |
@@ -349,7 +399,7 @@ flowchart LR
 
 ## Policy gates
 
-All state transitions that matter must be controlled by policy-as-code or an equivalent enforceable gate.
+All state transitions that matter must be controlled by policy-as-code, steward policy, or an equivalent enforceable gate.
 
 ### Gate classes
 
@@ -357,14 +407,17 @@ All state transitions that matter must be controlled by policy-as-code or an equ
 |---|---|---|
 | Source gate | Admit source into controlled lifecycle. | Unknown rights, unknown source role, unsafe endpoint, missing descriptor. |
 | Schema gate | Validate shape and required fields. | Invalid contract, missing required evidence or state field. |
-| Evidence gate | Resolve EvidenceRef to EvidenceBundle. | Unresolved evidence, stale evidence, unsupported claim. |
+| Evidence gate | Resolve `EvidenceRef` to `EvidenceBundle`. | Unresolved evidence, stale evidence, unsupported claim. |
 | Sensitivity gate | Prevent unsafe exposure. | Exact sensitive geometry, restricted data in public scope. |
-| Policy gate | Apply release rules. | Any deny from policy-as-code. |
+| Policy gate | Apply release rules. | Any `DENY` from policy-as-code or release policy. |
 | Catalog gate | Ensure discoverability and provenance closure. | Missing STAC/DCAT/PROV or KFM catalog record where required. |
-| Review gate | Confirm steward approval. | Missing or invalid PromotionDecision. |
-| Release gate | Ensure release manifest and proof pack are complete. | Missing digest, receipt, rollback ref, or correction path. |
+| Review gate | Confirm steward approval. | Missing or invalid `PromotionDecision`. |
+| Release gate | Ensure release manifest and proof pack are complete. | Missing digest, receipt, rollback ref, correction path, or release state. |
 
 ### Example policy shape
+
+> [!NOTE]
+> This Rego is illustrative. Verify OPA/Rego version, syntax, package naming, input shape, and test conventions before copying it into the repository.
 
 ```rego
 package kfm.publish
@@ -415,7 +468,7 @@ allow {
 }
 ```
 
-**Rule:** any `deny` fails the transition.
+**Rule:** any `DENY` fails the transition.
 
 ---
 
@@ -427,21 +480,35 @@ allow {
 | `QUARANTINE` | Validate / classify / hold | Receipt + failure disposition | No |
 | `WORK` | Compute / inspect / repair | Tests + policy precheck | No |
 | `PROCESSED` | Transform / normalize / derive | Provenance + validation report | No |
-| `CATALOG / TRIPLET` | Register / index / relate | Catalog closure + evidence refs | Limited, if released |
+| `CATALOG / TRIPLET` | Register / index / relate | Catalog closure + evidence refs | Limited only if separately released |
 | Release candidate | Assemble proof-bearing bundle | Manifest + proof pack + rollback ref | No |
-| `PUBLISHED` | Release | Human sign-off + policy pass + manifest | Yes, through governed surfaces only |
+| `PUBLISHED` | Release | Human or steward sign-off + policy pass + release manifest | Yes, through governed surfaces only |
 
 ### Critical constraint
 
 > [!CAUTION]
-> Autonomous promotion to `PUBLISHED` is forbidden. Publication requires an approved PromotionDecision and policy-safe release manifest.
+> Autonomous promotion to `PUBLISHED` is forbidden. Publication requires an approved `PromotionDecision`, policy-safe `ReleaseManifest`, complete proof support, and a rollback or correction target.
 
 ---
 
 ## Reference workflows
 
 > [!NOTE]
-> The examples below are illustrative. Adapt names, tools, paths, permissions, runners, and commands to the verified repository and CI provider.
+> The examples below are illustrative. Adapt names, tools, paths, permissions, runners, and commands to the verified repository and CI provider. Do not use these snippets as evidence that GitHub Actions, Conftest, OPA, or the named scripts exist.
+
+### Workflow command contract
+
+Before implementing provider-specific YAML, define or verify the repo-native commands that perform the following actions:
+
+| Command role | Output expectation | Verification status |
+|---|---|---|
+| Compute deterministic hash | `spec_hash` / `content_spec_hash` / run hash output. | `NEEDS VERIFICATION` |
+| Validate schemas | `ValidationReport`. | `NEEDS VERIFICATION` |
+| Validate source descriptors | `ValidationReport` + intake disposition. | `NEEDS VERIFICATION` |
+| Evaluate policy | `PolicyDecision` with finite outcome. | `NEEDS VERIFICATION` |
+| Resolve evidence | `EvidenceBundle` resolution report. | `NEEDS VERIFICATION` |
+| Assemble proof pack | `ProofPack` reference and artifact digests. | `NEEDS VERIFICATION` |
+| Validate rollback | `RollbackPlan` validation result. | `NEEDS VERIFICATION` |
 
 ### Nightly deterministic rebuild
 
@@ -467,22 +534,27 @@ jobs:
 
       - name: Compute spec hash
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/spec_hash.sh input.json > work/spec_hash.txt
 
       - name: Validate schemas
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/validators/validate_schemas.sh
 
       - name: Run policy checks
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           conftest test .
 
       - name: Emit run receipt
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/evidence/emit_run_receipt.sh
 
       - name: Assemble proof pack
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/proofs/assemble_proof_pack.sh
 
       - name: Upload run evidence
@@ -520,26 +592,32 @@ jobs:
 
       - name: Snapshot source
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./connectors/snapshot.sh
 
       - name: Emit intake receipt
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/evidence/emit_source_intake_record.sh
 
       - name: Validate source descriptor
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/validators/validate_source_descriptor.sh
 
       - name: Run policy precheck
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           conftest test policy/intake
 
       - name: Compute governed diff
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/diff.sh
 
       - name: Open review PR
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/open_pr.sh
 ```
 
@@ -568,22 +646,27 @@ jobs:
 
       - name: Validate release manifest
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/validators/validate_release_manifest.sh "${{ inputs.release_candidate }}"
 
       - name: Resolve EvidenceBundles
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/evidence/resolve_release_evidence.sh "${{ inputs.release_candidate }}"
 
       - name: Evaluate release policy
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           conftest test "release/${{ inputs.release_candidate }}"
 
       - name: Verify rollback reference
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/validators/validate_rollback_ref.sh "${{ inputs.release_candidate }}"
 
       - name: Emit dry-run report
         run: |
+          # PROPOSED / NEEDS VERIFICATION
           ./tools/release/emit_dry_run_report.sh "${{ inputs.release_candidate }}"
 ```
 
@@ -595,18 +678,26 @@ jobs:
 
 | Job | Trigger | Blocks merge? | Blocks publication? | Evidence emitted |
 |---|---|---:|---:|---|
-| Metadata lint | PR | Yes | Yes | ValidationReport |
-| Schema validation | PR / release candidate | Yes | Yes | ValidationReport |
-| Fixture validation | PR | Yes | Yes | ValidationReport |
-| Policy tests | PR / release candidate | Yes | Yes | PolicyDecision |
-| Negative-path tests | PR | Yes | Yes | ValidationReport |
-| Source descriptor validation | Intake / PR | Yes | Yes | SourceIntakeRecord |
-| Evidence resolution | PR / release candidate | Yes | Yes | EvidenceBundle resolution report |
-| Catalog closure | Release candidate | No by default | Yes | CatalogMatrix |
-| Proof pack assembly | Release candidate | No by default | Yes | ProofPack |
+| Metadata lint | PR | Yes | Yes | `ValidationReport` |
+| Schema validation | PR / release candidate | Yes | Yes | `ValidationReport` |
+| Fixture validation | PR | Yes | Yes | `ValidationReport` |
+| Policy tests | PR / release candidate | Yes | Yes | `PolicyDecision` |
+| Negative-path tests | PR | Yes | Yes | `ValidationReport` |
+| Source descriptor validation | Intake / PR | Yes | Yes | `SourceIntakeRecord` |
+| Evidence resolution | PR / release candidate | Yes | Yes | `EvidenceBundle` resolution report |
+| Catalog closure | Release candidate | No by default | Yes | `CatalogMatrix` |
+| Proof pack assembly | Release candidate | No by default | Yes | `ProofPack` |
 | Signing / attestation | Release candidate | No by default | Yes when release policy requires | Signature / attestation ref |
-| Rollback drill | Release candidate / scheduled | No by default | Yes for high-risk release | RollbackPlan validation |
-| AI citation validation | PR / runtime fixture | Yes when AI output is release-relevant | Yes | CitationValidationReport + AIReceipt |
+| Rollback drill | Release candidate / scheduled | No by default | Yes for high-risk release | `RollbackPlan` validation |
+| AI citation validation | PR / runtime fixture | Yes when AI output is release-relevant | Yes | `CitationValidationReport` + `AIReceipt` |
+
+### Merge versus publication
+
+Passing PR checks does not equal permission to publish. CI should distinguish:
+
+- **merge readiness:** source code, docs, schemas, fixtures, and policies are valid enough to enter the repository;
+- **release-candidate readiness:** artifacts, receipts, proof packs, and manifests are complete enough for review;
+- **publication readiness:** policy, review, sensitivity, rights, catalog closure, release manifest, and rollback gates have passed.
 
 ---
 
@@ -615,15 +706,15 @@ jobs:
 Minimum validation expectations:
 
 - [ ] Required metadata fields are present.
-- [ ] SourceDescriptor exists for every source-backed artifact.
-- [ ] EvidenceRef resolves to EvidenceBundle.
+- [ ] `SourceDescriptor` exists for every source-backed artifact.
+- [ ] `EvidenceRef` resolves to `EvidenceBundle`.
 - [ ] Schema fixtures include valid and invalid examples.
 - [ ] Policy tests include allow and deny cases.
 - [ ] Rights and sensitivity fields are explicit.
-- [ ] Public release candidates include PromotionDecision.
-- [ ] ReleaseManifest includes artifact digests.
-- [ ] ProofPack references receipts and validation results.
-- [ ] RollbackPlan or correction path is recorded.
+- [ ] Public release candidates include `PromotionDecision`.
+- [ ] `ReleaseManifest` includes artifact digests.
+- [ ] `ProofPack` references receipts and validation results.
+- [ ] `RollbackPlan` or correction path is recorded.
 - [ ] AI-assisted outputs include citation validation and receipt where relevant.
 - [ ] No public path reads `RAW`, `WORK`, or `QUARANTINE`.
 - [ ] No public UI calls a model runtime directly.
@@ -633,7 +724,7 @@ Minimum validation expectations:
 
 Prefer explicit failing fixtures for:
 
-- unresolved EvidenceRef;
+- unresolved `EvidenceRef`;
 - stale evidence;
 - unknown source role;
 - unknown rights;
@@ -652,6 +743,21 @@ Prefer explicit failing fixtures for:
 - expired operational context;
 - publication before promotion.
 
+### Validation commands
+
+> [!NOTE]
+> Commands are placeholders until the mounted repo confirms the package manager, test runner, validator location, and policy engine.
+
+```bash
+# PROPOSED / NEEDS VERIFICATION
+./tools/validators/validate_schemas.sh
+./tools/validators/validate_source_descriptors.sh
+./tools/evidence/resolve_release_evidence.sh RELEASE_CANDIDATE_ID
+conftest test policy/
+./tools/validators/validate_release_manifest.sh RELEASE_CANDIDATE_ID
+./tools/validators/validate_rollback_ref.sh RELEASE_CANDIDATE_ID
+```
+
 ---
 
 ## Rollback and correction
@@ -661,18 +767,31 @@ Rollback and correction are part of the release design, not afterthoughts.
 | Scenario | Required action |
 |---|---|
 | Bad release manifest | Block publication; keep candidate in release-candidate state. |
-| Invalid published artifact | Withdraw or supersede artifact; emit CorrectionNotice. |
+| Invalid published artifact | Withdraw or supersede artifact; emit `CorrectionNotice`. |
 | Source rights change | Freeze affected release path; re-evaluate rights; issue correction if public meaning changes. |
-| Sensitivity issue discovered | Remove or generalize public artifact; emit RedactionReceipt and CorrectionNotice. |
+| Sensitivity issue discovered | Remove, suppress, or generalize public artifact; emit `RedactionReceipt` and `CorrectionNotice`. |
 | Broken derived layer | Invalidate derivative; preserve canonical evidence; rebuild from prior valid inputs. |
-| Failed model-assisted answer | Preserve AIReceipt if required; emit `ABSTAIN`, `DENY`, or `ERROR`; do not publish unsupported answer. |
+| Failed model-assisted answer | Preserve `AIReceipt` if required; emit `ABSTAIN`, `DENY`, or `ERROR`; do not publish unsupported answer. |
 | Pipeline regression | Roll back workflow change; preserve failed run receipts for diagnosis. |
+
+### Rollback triggers
+
+Rollback or withdrawal is required when a change:
+
+- weakens source integrity;
+- breaks EvidenceBundle resolution;
+- exposes restricted or sensitive information;
+- creates schema authority conflict;
+- bypasses policy or review gates;
+- publishes unsupported claims;
+- removes correction lineage;
+- breaks stable release-manifest or proof-pack references without a migration note.
 
 ---
 
 ## Security posture
 
-KFM CI/CD should default to a least-privilege posture.
+KFM CI/CD should default to least privilege.
 
 Required defaults:
 
@@ -683,7 +802,25 @@ Required defaults:
 - keep release credentials isolated from intake and validation jobs;
 - prefer read-only permissions for validation jobs;
 - require explicit elevated permissions for release assembly or publication;
-- preserve audit logs and receipts without leaking sensitive source data.
+- preserve audit logs and receipts without leaking sensitive source data;
+- fail closed when policy, rights, sensitivity, identity, or release state is unresolved.
+
+### Local exposure guardrail
+
+For local systems exposed through a home firewall, reverse proxy, or VPN, release and CI/CD design must assume boundary failure is possible. Avoid embedding internal lifecycle paths, secrets, private endpoints, steward-only source names, sensitive coordinates, or model-runtime URLs in public artifacts.
+
+---
+
+## Implementation sequence
+
+| Phase | Goal | Output | Stop condition |
+|---|---|---|---|
+| 0 | Verify repo reality | Path inventory, owner check, schema-home decision, policy-engine check, workflow-provider check. | Stop if repo conventions conflict; write ADR before adding parallel homes. |
+| 1 | Add or confirm documentation control plane | This standard linked from control-plane index; placeholders resolved where possible. | Stop if owner or policy label cannot be assigned. |
+| 2 | Add fixture-first validation | Valid/invalid fixtures, schema tests, policy tests, negative-path tests. | Stop if tests require live sources or secrets. |
+| 3 | Add proof-bearing dry run | Run receipts, validation reports, policy decisions, release-candidate manifest draft. | Stop if manifest lacks rollback or evidence closure. |
+| 4 | Add review/promotion gate | `PromotionDecision` and release review workflow. | Stop if publication can occur without review. |
+| 5 | Add publication path | Released artifacts only through governed API / released artifact surfaces. | Stop if public paths can read internal lifecycle states. |
 
 ---
 
@@ -713,14 +850,14 @@ This standard belongs in the control-plane architecture set because it governs c
 
 | Relationship | Target |
 |---|---|
-| Control-plane index | `docs/architecture/CONTROL_PLANE_INDEX.md` |
-| Policy registry | `TODO: verify policy registry path` |
-| Schema registry | `TODO: verify schema registry path` |
-| Source registry | `TODO: verify source registry path` |
-| Release runbook | `TODO: verify release runbook path` |
-| Rollback runbook | `TODO: verify rollback runbook path` |
-| Evidence object schemas | `TODO: verify EvidenceBundle / receipt schema path` |
-| CI workflows | `TODO: verify .github/workflows or actual CI provider path` |
+| Control-plane index | `docs/architecture/CONTROL_PLANE_INDEX.md` — `NEEDS VERIFICATION` |
+| Policy registry | `TODO(policy): verify policy registry path` |
+| Schema registry | `TODO(schema): verify schema registry path` |
+| Source registry | `TODO(source): verify source registry path` |
+| Release runbook | `TODO(release): verify release runbook path` |
+| Rollback runbook | `TODO(rollback): verify rollback runbook path` |
+| Evidence object schemas | `TODO(evidence): verify EvidenceBundle / receipt schema path` |
+| CI workflows | `TODO(ci): verify .github/workflows or actual CI provider path` |
 
 ---
 
@@ -739,7 +876,8 @@ Avoid or reject:
 - generated artifacts placed into canonical source paths without repo convention;
 - map polish used as a substitute for evidence, policy, review, or publication controls;
 - hidden correction or rollback requirements;
-- treating documentation alone as implementation proof.
+- treating documentation alone as implementation proof;
+- creating parallel `contracts/` and `schemas/` authority without an ADR.
 
 ---
 
@@ -754,8 +892,8 @@ A governed CI/CD change is done when:
 - [ ] Policy gates cover the relevant transition.
 - [ ] Validation commands are documented.
 - [ ] Receipts are emitted or explicitly marked `TODO`.
-- [ ] Release candidates include ReleaseManifest and rollback reference.
-- [ ] Human sign-off is required before `PUBLISHED`.
+- [ ] Release candidates include `ReleaseManifest` and rollback reference.
+- [ ] Human or steward sign-off is required before `PUBLISHED`.
 - [ ] Documentation reflects behavior changes.
 - [ ] Rollback and correction paths are documented.
 - [ ] No unsupported implementation claims appear.
@@ -765,20 +903,39 @@ A governed CI/CD change is done when:
 ## Checklist
 
 - [ ] Deterministic `spec_hash` generation is implemented or explicitly marked `TODO`.
-- [ ] SourceDescriptor exists for every source family.
-- [ ] EvidenceBundle is emitted or resolvable for consequential outputs.
-- [ ] RunReceipt is stored for pipeline runs.
-- [ ] ValidationReport is produced for schema and data checks.
-- [ ] PolicyDecision is produced for state transitions.
-- [ ] RedactionReceipt is produced for geoprivacy or sensitivity transforms.
-- [ ] PromotionDecision is required for publication.
-- [ ] ReleaseManifest is assembled before publication.
-- [ ] ProofPack references validation, policy, receipts, and artifact digests.
+- [ ] `SourceDescriptor` exists for every source family.
+- [ ] `EvidenceBundle` is emitted or resolvable for consequential outputs.
+- [ ] `RunReceipt` is stored for pipeline runs.
+- [ ] `ValidationReport` is produced for schema and data checks.
+- [ ] `PolicyDecision` is produced for state transitions.
+- [ ] `RedactionReceipt` is produced for geoprivacy or sensitivity transforms.
+- [ ] `PromotionDecision` is required for publication.
+- [ ] `ReleaseManifest` is assembled before publication.
+- [ ] `ProofPack` references validation, policy, receipts, and artifact digests.
 - [ ] Signing or attestation posture is verified where required.
 - [ ] Public access is blocked without steward approval.
 - [ ] Audit trail is preserved.
-- [ ] RollbackPlan and CorrectionNotice paths are defined.
+- [ ] `RollbackPlan` and `CorrectionNotice` paths are defined.
 - [ ] Workflow examples are adapted to verified repo conventions.
+
+---
+
+## Maintainer handoff
+
+Before this file is promoted from `draft`:
+
+- [ ] Verify actual owner.
+- [ ] Verify policy label.
+- [ ] Verify repo path.
+- [ ] Verify related links.
+- [ ] Verify CI provider and workflow path.
+- [ ] Verify schema home.
+- [ ] Verify policy engine and Rego compatibility.
+- [ ] Verify signing / attestation toolchain.
+- [ ] Verify release and rollback runbooks.
+- [ ] Replace illustrative command names with real repo commands.
+- [ ] Add or link actual fixtures once available.
+- [ ] Update the meta block after verification.
 
 ---
 
@@ -810,25 +967,25 @@ jq --sort-keys -c . "$input" | sha256sum | awk '{print $1}'
 
 ```json
 {
-  "release_id": "TODO",
+  "release_id": "TODO(release): assign stable release candidate ID",
   "release_state": "release_candidate",
-  "created_at": "TODO",
-  "spec_hash": "TODO",
+  "created_at": "TODO(date): use verified release-candidate creation timestamp",
+  "spec_hash": "TODO(hash): computed deterministic input hash",
   "artifacts": [
     {
-      "artifact_id": "TODO",
-      "path": "TODO",
-      "digest": "TODO",
-      "media_type": "TODO"
+      "artifact_id": "TODO(artifact): assign artifact ID",
+      "path": "TODO(path): verify repo or object-store path",
+      "digest": "TODO(hash): compute artifact digest",
+      "media_type": "TODO(media): verify media type"
     }
   ],
-  "evidence_refs": ["TODO"],
-  "validation_reports": ["TODO"],
-  "policy_decisions": ["TODO"],
-  "promotion_decision": "TODO",
-  "proof_pack": "TODO",
-  "rollback_ref": "TODO",
-  "correction_policy": "TODO"
+  "evidence_refs": ["TODO(evidence): add EvidenceRef IDs"],
+  "validation_reports": ["TODO(validation): add ValidationReport IDs"],
+  "policy_decisions": ["TODO(policy): add PolicyDecision IDs"],
+  "promotion_decision": "TODO(review): add PromotionDecision ID",
+  "proof_pack": "TODO(proof): add ProofPack ID",
+  "rollback_ref": "TODO(rollback): add RollbackPlan ID",
+  "correction_policy": "TODO(correction): add correction policy reference"
 }
 ```
 
@@ -836,21 +993,49 @@ jq --sort-keys -c . "$input" | sha256sum | awk '{print $1}'
 
 ---
 
-## Appendix C — Maintainer handoff
+## Appendix C — Minimal policy input shape
 
-Before this file is promoted from `draft`:
+<details>
+<summary>Illustrative policy input fields</summary>
 
-- [ ] Verify actual owner.
-- [ ] Verify policy label.
-- [ ] Verify repo path.
-- [ ] Verify related links.
-- [ ] Verify CI provider and workflow path.
-- [ ] Verify schema home.
-- [ ] Verify policy engine and Rego compatibility.
-- [ ] Verify signing / attestation toolchain.
-- [ ] Verify release and rollback runbooks.
-- [ ] Replace illustrative command names with real repo commands.
-- [ ] Add or link actual fixtures once available.
+```json
+{
+  "source_state": "PROCESSED",
+  "target_state": "PUBLISHED",
+  "output_scope": "public",
+  "rights": {
+    "status": "verified"
+  },
+  "sensitivity": "public_safe",
+  "evidence_bundle": {
+    "resolved": true,
+    "evidence_bundle_id": "kfm://evidence-bundle/NEEDS-VERIFICATION"
+  },
+  "promotion_decision": {
+    "approved": true,
+    "promotion_decision_id": "kfm://promotion/NEEDS-VERIFICATION"
+  },
+  "release_manifest": {
+    "release_id": "kfm://release/NEEDS-VERIFICATION",
+    "digest": "sha256:NEEDS_VERIFICATION"
+  }
+}
+```
+
+</details>
+
+---
+
+## Appendix D — Placeholder register
+
+| Placeholder | Why it remains unresolved |
+|---|---|
+| `OWNER_TBD` | No mounted repo owner or CODEOWNERS evidence was inspected. |
+| `TODO(created)` | Original creation date was not verified from repo history. |
+| `NEEDS VERIFICATION` related links | Adjacent doc paths were inferred from project doctrine, not current repo inspection. |
+| Workflow snippets | CI provider, toolchain, script names, and permissions are unverified. |
+| Rego example | Policy engine and Rego version are unverified. |
+| Release manifest fields | Canonical KFM schema names and required fields must be verified against schema/contract authority. |
 
 ---
 
