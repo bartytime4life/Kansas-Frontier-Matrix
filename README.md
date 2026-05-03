@@ -146,6 +146,19 @@ tests/                            # NEEDS VERIFICATION
 
 ---
 
+
+## Root organization opportunities
+
+Current root layout is powerful but hard to scan. Prioritize this cleanup sequence:
+
+| Priority | Action | Why it helps |
+|---|---|---|
+| 1 | Create a `docs/` home for narrative process and architecture docs. Keep enforcement assets in `policy/` and contracts in `schemas/`. | Makes policy/docs boundaries explicit and easier to navigate. |
+| 2 | Consolidate output/state folders (for example `runtime_outcome/`, `policy_distribution/`, `data_use_response/`) under one `artifacts/` or `out/` convention. | Reduces sprawl and clarifies what is generated vs source. |
+| 3 | Group `tools/` into a small set of stable domains (for example `tools/policy/`, `tools/data/`, `tools/release/`, `tools/ops/`). | Improves discoverability across many tool namespaces. |
+| 4 | Add root onboarding/ownership files: `CODEOWNERS`, `CONTRIBUTING.md`, and `docs/ARCHITECTURE.md`. | Shortens ramp-up time and clarifies authority. |
+| 5 | Add a root directory index table (path → purpose → owner → stability). | Gives contributors a fast “where does this belong?” map. |
+
 ## Accepted inputs
 
 KFM input classes should be admitted only through source-aware, policy-aware intake.
