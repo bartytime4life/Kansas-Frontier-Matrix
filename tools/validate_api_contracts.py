@@ -42,6 +42,7 @@ def main() -> int:
     if errors:
         print("FAIL", errors)
         return 1
+
     print("PASS", "api contract checks")
     return 0
 
