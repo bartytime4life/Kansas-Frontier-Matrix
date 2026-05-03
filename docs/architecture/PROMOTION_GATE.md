@@ -1,21 +1,60 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/NEEDS-VERIFICATION/promotion-gate
 title: Promotion Gate
 type: standard
 version: v1
-status: draft
+status: PROPOSED
+layer: Promotion Gate
+scope: Fixture-backed, no-network validation + policy checks in CI
 owners: OWNER_TBD
 created: NEEDS VERIFICATION
 updated: 2026-05-01
 policy_label: NEEDS VERIFICATION
-related: [docs/control-plane/promotion-gate.md, .github/workflows/promotion-gate.yml, schemas/contracts/v1/promotion/promotion_candidate.schema.json, schemas/contracts/v1/promotion/promotion_decision.schema.json]
-tags: [kfm, promotion, evidence-ci, policy, release, receipts]
-notes: [Source status is PROPOSED. Related paths are PROPOSED until verified in the mounted repository.]
+related:
+  - docs/control-plane/promotion-gate.md
+  - .github/workflows/promotion-gate.yml
+  - schemas/contracts/v1/promotion/promotion_candidate.schema.json
+  - schemas/contracts/v1/promotion/promotion_decision.schema.json
+tags:
+  - kfm
+  - promotion
+  - evidence-ci
+  - policy
+  - release
+  - receipts
+  - gatehouse
+notes:
+  - Source status is PROPOSED.
+  - Related paths are PROPOSED until verified in the mounted repository.
+  - Static badges summarize intended posture; they do not prove implementation.
 [/KFM_META_BLOCK_V2] -->
 
 # Promotion Gate
 
-A fixture-backed, no-network release gate that denies publication unless evidence, receipts, policy posture, and registration posture pass together.
+<p align="center">
+  <img alt="KFM status: proposed" src="https://img.shields.io/badge/status-PROPOSED-f2c94c?style=for-the-badge">
+  <img alt="Layer: promotion gate" src="https://img.shields.io/badge/layer-Promotion%20Gate-2f80ed?style=for-the-badge">
+  <img alt="Lifecycle: post evidence-ci" src="https://img.shields.io/badge/lifecycle-post%20evidence--ci-6fcf97?style=for-the-badge">
+  <img alt="Network: no-network fixtures" src="https://img.shields.io/badge/network-no--network%20fixtures-56ccf2?style=for-the-badge">
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-eb5757?style=for-the-badge">
+</p>
+
+<p align="center">
+  <img alt="Truth posture: doctrine confirmed" src="https://img.shields.io/badge/doctrine-CONFIRMED-27ae60?style=flat-square">
+  <img alt="Implementation posture: proposed" src="https://img.shields.io/badge/implementation-PROPOSED-f2994a?style=flat-square">
+  <img alt="Repo execution: unknown" src="https://img.shields.io/badge/repo%20execution-UNKNOWN-828282?style=flat-square">
+  <img alt="Artifact separation required" src="https://img.shields.io/badge/artifacts-separated-9b51e0?style=flat-square">
+  <img alt="Gatehouse registration required" src="https://img.shields.io/badge/gatehouse-registered%20required-2d9cdb?style=flat-square">
+  <img alt="Cosign receipt verification required for public release" src="https://img.shields.io/badge/cosign-public%20release%20required-bd7afc?style=flat-square">
+</p>
+
+<!--
+Enable this live workflow badge only after the workflow path is verified in the real repository:
+
+[![Promotion Gate](https://github.com/OWNER/REPO/actions/workflows/promotion-gate.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/promotion-gate.yml)
+-->
+
+A fixture-backed, no-network release gate that denies publication unless evidence, receipts, policy posture, rights posture, sensitivity posture, review posture, and registration posture pass together.
 
 > [!IMPORTANT]
 > **Status:** PROPOSED  
@@ -24,6 +63,42 @@ A fixture-backed, no-network release gate that denies publication unless evidenc
 > **Workflow path:** PROPOSED `.github/workflows/promotion-gate.yml`  
 > **Truth posture:** CONFIRMED doctrine / PROPOSED implementation / UNKNOWN repo execution depth
 
+---
+
+## Quick links
+
+| Area | Link |
+| --- | --- |
+| Purpose | [Purpose](#purpose) |
+| Operating law | [Operating law](#operating-law) |
+| Lifecycle placement | [Lifecycle placement](#lifecycle-placement) |
+| Inputs | [Inputs](#inputs) |
+| Outputs | [Outputs](#outputs) |
+| Deny rules | [Deny rules](#deny-rules) |
+| CI behavior | [CI behavior](#ci-behavior) |
+| Fixture plan | [Fixture plan](#fixture-plan) |
+| Artifact separation | [Artifact separation](#artifact-separation) |
+| Rollback and correction | [Rollback and correction](#rollback-and-correction) |
+| Verification checklist | [Verification checklist](#verification-checklist) |
+| Open questions | [Open questions](#open-questions) |
+
+---
+
+## At a glance
+
+| Field | Value |
+| --- | --- |
+| **Gate name** | `Promotion Gate` |
+| **Primary decision artifact** | `PromotionDecision` |
+| **Candidate artifact** | `PromotionCandidate` |
+| **Default posture** | Deny unless all required posture checks pass |
+| **Network posture** | No-network fixture-backed CI |
+| **Public release posture** | Requires reviewer, rights clarity, evidence hash, receipts, Cosign verification, and Gatehouse registration |
+| **Release effect** | Allows release manifest publication only after `APPROVE` |
+| **Correction effect** | Denied candidates remain non-published and require rerun after correction |
+
+---
+
 ## Purpose
 
 Promotion is a governed state transition.
@@ -31,6 +106,11 @@ Promotion is a governed state transition.
 The Promotion Gate prevents a candidate artifact, claim, layer, bundle, or release package from reaching `PUBLISHED` unless the candidate has enough evidence, receipts, policy support, rights posture, sensitivity posture, review posture, and registration posture for the requested release intent.
 
 This gate is intentionally conservative. A candidate that cannot prove its release posture is denied, not silently promoted.
+
+> [!CAUTION]
+> A `PromotionDecision` is not a receipt, manifest, catalog record, proof pack, source registry entry, or published object. It is a separate decision artifact.
+
+---
 
 ## Operating law
 
@@ -53,31 +133,41 @@ flowchart LR
 
     G -->|APPROVE| H[Release manifest publication]
     G -->|DENY| I[Correction path: remains non-published]
+
+    classDef safe fill:#e7f7ed,stroke:#27ae60,color:#111;
+    classDef risk fill:#fdecea,stroke:#eb5757,color:#111;
+    classDef gate fill:#edf4ff,stroke:#2f80ed,color:#111;
+
+    class C,D,E,F,G gate;
+    class H safe;
+    class I risk;
 ```
 
 > [!NOTE]
 > This diagram describes the intended gate flow. Current repository workflow execution, route names, validator names, and emitted artifact locations remain **UNKNOWN** until verified against the mounted repo.
 
+---
+
 ## Lifecycle placement
 
 The Promotion Gate runs after evidence-ci has produced candidate evidence, receipts, and validation outputs, and before release manifest publication.
 
-| Stage | Gate role |
+| Stage | Public release posture |
 | --- | --- |
-| `RAW` | Public release is denied. |
-| `WORK` | Public release is denied. |
-| `QUARANTINE` | Public release is denied. |
-| `PROCESSED` | Candidate may be evaluated, but publication still requires evidence, receipts, policy, review, and registration posture. |
-| `CATALOG / TRIPLET` | Candidate may be release-ready if supporting artifacts close correctly. |
-| `PUBLISHED` | Allowed only after an `APPROVE` `PromotionDecision`. |
+| `RAW` | Denied |
+| `WORK` | Denied |
+| `QUARANTINE` | Denied |
+| `PROCESSED` | Evaluatable, but not automatically publishable |
+| `CATALOG / TRIPLET` | Potentially release-ready if evidence, policy, review, receipts, and registration pass |
+| `PUBLISHED` | Allowed only after an `APPROVE` `PromotionDecision` |
+
+---
 
 ## Inputs
 
 The gate evaluates `PromotionCandidate` JSON fixtures.
 
 ### Required candidate posture
-
-A promotion candidate must provide enough structured information to evaluate:
 
 | Requirement | Expected candidate support |
 | --- | --- |
@@ -94,7 +184,8 @@ A promotion candidate must provide enough structured information to evaluate:
 | Cosign receipt verification | `cosign_receipt_verification` or equivalent verification adapter output. |
 | Gatehouse registration posture | `gatehouse_registration_posture`. |
 
-### PROPOSED minimal candidate shape
+<details>
+<summary><strong>PROPOSED minimal <code>PromotionCandidate</code> fixture</strong></summary>
 
 ```json
 {
@@ -103,7 +194,9 @@ A promotion candidate must provide enough structured information to evaluate:
   "target_state": "PUBLISHED",
   "public_release": true,
   "release_intent": "public",
-  "evidence_bundle_refs": ["kfm://evidence-bundle/example"],
+  "evidence_bundle_refs": [
+    "kfm://evidence-bundle/example"
+  ],
   "evidencebundle_spec_hash": "sha256:EXAMPLE",
   "run_receipt_ref": "kfm://receipt/run/example",
   "run_receipt_bundle_ref": "kfm://receipt-bundle/example",
@@ -118,8 +211,12 @@ A promotion candidate must provide enough structured information to evaluate:
 }
 ```
 
+</details>
+
 > [!NOTE]
 > The JSON above is an illustrative fixture shape, not proof of an existing schema. Field names should be aligned to the repository’s canonical promotion contract when that contract is verified.
+
+---
 
 ## Outputs
 
@@ -134,7 +231,8 @@ A `PromotionDecision` must not replace, merge into, or masquerade as a receipt, 
 | `APPROVE` | Candidate passed all required checks for the stated release intent. |
 | `DENY` | Candidate failed one or more checks and remains non-published. |
 
-### PROPOSED minimal decision shape
+<details>
+<summary><strong>PROPOSED minimal <code>PromotionDecision</code> artifact</strong></summary>
 
 ```json
 {
@@ -153,6 +251,10 @@ A `PromotionDecision` must not replace, merge into, or masquerade as a receipt, 
 }
 ```
 
+</details>
+
+---
+
 ## Deny rules
 
 The gate fails closed. Any rule below is sufficient to deny promotion.
@@ -169,6 +271,27 @@ The gate fails closed. Any rule below is sufficient to deny promotion.
 | Public release requires Cosign receipt verification | `DENY_PUBLIC_RELEASE_WITHOUT_COSIGN_VERIFICATION` | `public_release=true` and Cosign receipt verification is absent, false, or unresolved. |
 | Public release requires Gatehouse registration | `DENY_GATEHOUSE_NOT_REGISTERED` | `public_release=true` and `gatehouse_registration_posture` is not `registered`. |
 
+> [!WARNING]
+> Deny rules should be mirrored in both validator behavior and policy-as-code. UI badges alone must not become policy enforcement.
+
+---
+
+## Reason-code registry
+
+| Reason code | Severity | Public-release effect | Correction path |
+| --- | --- | --- | --- |
+| `DENY_PUBLIC_RELEASE_FROM_UNPUBLISHED_STATE` | High | Blocks public release | Move through governed lifecycle and rerun. |
+| `DENY_PUBLISHED_WITHOUT_REVIEWER` | High | Blocks `PUBLISHED` target | Attach reviewer posture and rerun. |
+| `DENY_RIGHTS_UNKNOWN` | High | Blocks release | Resolve rights or keep non-public. |
+| `DENY_RESTRICTED_PUBLIC_RELEASE` | High | Blocks public release | Redact, generalize, stage access, or deny public release. |
+| `DENY_MISSING_EVIDENCEBUNDLE_SPEC_HASH` | High | Blocks release | Add or repair contract hash and rerun. |
+| `DENY_MISSING_RUN_RECEIPT_REF` | High | Blocks release | Add run receipt ref and rerun. |
+| `DENY_MISSING_RUN_RECEIPT_BUNDLE_REF` | High | Blocks release | Add receipt bundle ref and rerun. |
+| `DENY_PUBLIC_RELEASE_WITHOUT_COSIGN_VERIFICATION` | High | Blocks public release | Repair receipt verification support and rerun. |
+| `DENY_GATEHOUSE_NOT_REGISTERED` | High | Blocks public release | Register candidate posture or deny public release. |
+
+---
+
 ## Registration posture
 
 Current accepted Gatehouse posture vocabulary:
@@ -183,8 +306,10 @@ registered | pending | unknown
 | `pending` | Deny public release. |
 | `unknown` | Deny public release. |
 
-> [!WARNING]
-> The Gatehouse posture vocabulary is intentionally narrow in this draft. Expanding it without policy and fixture coverage may create ambiguous release behavior.
+> [!TIP]
+> Keep Gatehouse vocabulary intentionally small until policy, fixtures, and UI display behavior are updated together.
+
+---
 
 ## CI behavior
 
@@ -200,20 +325,30 @@ The workflow should run the promotion validator and Conftest against fixture inp
 
 | Requirement | Expected behavior |
 | --- | --- |
-| No-network fixtures | CI must validate promotion posture using checked-in fixtures, not live source calls. |
-| Validator pass | Candidate JSON must match the promotion candidate contract. |
-| Policy pass | Conftest policy checks must pass. |
-| Deny fixture coverage | Each deny rule must have at least one negative fixture. |
-| Approval fixture coverage | At least one positive fixture should prove the happy path without network access. |
+| No-network fixtures | CI validates promotion posture using checked-in fixtures, not live source calls. |
+| Validator pass | Candidate JSON matches the promotion candidate contract. |
+| Policy pass | Conftest policy checks pass. |
+| Deny fixture coverage | Each deny rule has at least one negative fixture. |
+| Approval fixture coverage | At least one positive fixture proves the happy path without network access. |
 | Fail-closed behavior | Invalid or missing posture fails CI. |
 | Artifact separation | Decision output remains separate from receipts, manifests, catalogs, and published objects. |
+
+<details>
+<summary><strong>PROPOSED workflow badge block</strong></summary>
+
+```markdown
+<!-- Enable after workflow exists and repository path is verified. -->
+[![Promotion Gate](https://github.com/OWNER/REPO/actions/workflows/promotion-gate.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/promotion-gate.yml)
+```
+
+</details>
 
 > [!NOTE]
 > The workflow path and toolchain behavior are **PROPOSED** until repository inspection confirms the workflow exists and shows successful execution evidence.
 
-## Fixture plan
+---
 
-PROPOSED fixture families:
+## Fixture plan
 
 | Fixture family | Purpose |
 | --- | --- |
@@ -231,25 +366,31 @@ PROPOSED fixture families:
 | `invalid/public_gatehouse_pending.json` | Proves `pending` registration denies public release. |
 | `invalid/public_gatehouse_unknown.json` | Proves `unknown` registration denies public release. |
 
+---
+
 ## Artifact separation
 
 Promotion decisions are decision artifacts only.
 
 They must remain separate from:
 
-- run receipts
-- receipt bundles
-- proof packs
-- release manifests
-- catalog records
-- source descriptors
-- published objects
-- correction notices
-- rollback records
-- UI layer manifests
-- AI or runtime response envelopes
+```text
+run receipts
+receipt bundles
+proof packs
+release manifests
+catalog records
+source descriptors
+published objects
+correction notices
+rollback records
+UI layer manifests
+AI or runtime response envelopes
+```
 
 This separation preserves auditability. A denied promotion candidate should remain inspectable without being treated as released.
+
+---
 
 ## Rollback and correction
 
@@ -267,6 +408,19 @@ Correction requires an updated candidate posture and a fresh gate run. A correct
 | Gatehouse not registered | Register candidate posture or deny public release. |
 | Failed Cosign verification | Repair verification support or deny public release. |
 
+```mermaid
+stateDiagram-v2
+    [*] --> CandidateSubmitted
+    CandidateSubmitted --> Denied: deny rule matched
+    CandidateSubmitted --> Approved: all checks pass
+    Denied --> CorrectedCandidate: posture updated
+    CorrectedCandidate --> CandidateSubmitted: rerun gate
+    Approved --> ReleaseManifestPublication
+    ReleaseManifestPublication --> [*]
+```
+
+---
+
 ## Verification checklist
 
 - [ ] Confirm target document path.
@@ -282,6 +436,51 @@ Correction requires an updated candidate posture and a fresh gate run. A correct
 - [ ] Confirm promotion decisions are emitted as separate artifacts.
 - [ ] Confirm denied candidates cannot reach release manifest publication.
 - [ ] Confirm rollback and correction records remain separate.
+- [ ] Confirm static badges are not mistaken for live workflow evidence.
+- [ ] Enable live workflow badge only after `.github/workflows/promotion-gate.yml` is verified.
+
+---
+
+## Markdown niceties included
+
+| Feature | Purpose |
+| --- | --- |
+| Badge rail | Makes status, layer, network posture, and policy posture visible at the top. |
+| Commented workflow badge | Provides a safe live-badge placeholder without claiming workflow existence. |
+| Quick links | Improves navigation in GitHub-rendered docs. |
+| GitHub callouts | Highlights important trust, caution, warning, and note sections. |
+| Mermaid diagrams | Shows gate flow and correction loop. |
+| Collapsible details | Keeps JSON examples available without overwhelming the page. |
+| Task checklist | Makes verification work trackable. |
+| Reason-code registry | Turns policy outcomes into maintainable vocabulary. |
+| Glossary | Reduces ambiguity for future maintainers. |
+
+---
+
+## Glossary
+
+| Term | Meaning |
+| --- | --- |
+| `PromotionCandidate` | Candidate release object evaluated by the gate. |
+| `PromotionDecision` | Separate decision artifact emitted by the gate. |
+| `EvidenceBundle` | Evidence support object that outranks generated language or UI presentation. |
+| `evidencebundle_spec_hash` | Contract identity hash required to prove the candidate’s evidence contract posture. |
+| `run_receipt_ref` | Reference to the run receipt supporting the candidate. |
+| `run_receipt_bundle_ref` | Reference to the bundled run receipt support. |
+| `Cosign receipt verification` | Verification posture required for public release in this draft. |
+| `Gatehouse registration posture` | Registration state required before public release. |
+| `fail closed` | Default denial when required posture is missing, unknown, false, or unresolved. |
+
+---
+
+## Changelog
+
+| Date | Change |
+| --- | --- |
+| 2026-05-01 | Initial PROPOSED Promotion Gate draft. |
+| 2026-05-01 | Added badges, quick links, callouts, collapsible JSON examples, diagrams, reason-code registry, Markdown niceties, and badge safety notes. |
+
+---
 
 ## Open questions
 
