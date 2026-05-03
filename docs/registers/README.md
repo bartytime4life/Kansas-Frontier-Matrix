@@ -366,3 +366,10 @@ Use this template when adding a compact register row or expanding a row into a s
 </details>
 
 [Back to top](#top)
+
+## Reorg control-plane
+- `docs/registers/reorg/REORG_SPRINT_MANIFEST.md`
+- `docs/registers/domain_doc_index.md`
+- `docs/registers/domain_file_index.md`
+- `docs/registers/schema_authority_map.md`
+- `docs/registers/policy_authority_map.md`

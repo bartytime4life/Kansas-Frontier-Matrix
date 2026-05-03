@@ -1,6 +1,6 @@
 # Geology & Natural Resources Domain Index
 
-This index maps the documentation set for `docs/domains/geology-natural-resources/`.
+This index maps the documentation set for `docs/domains/geology/`.
 
 ## Core files
 

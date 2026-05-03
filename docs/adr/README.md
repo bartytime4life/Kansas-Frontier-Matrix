@@ -428,3 +428,8 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 </details>
 
 [Back to top](#kfm-architecture-decision-records)
+
+## Authority-sensitive homes (do not move without ADR)
+- `contracts/` vs `schemas/`
+- `policy/` vs `policies/`
+- lifecycle lanes under `data/`

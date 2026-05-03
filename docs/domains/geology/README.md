@@ -21,7 +21,7 @@ Governed entrypoint for Kansas-centered geology and non-biological natural-resou
 
 > [!NOTE]
 > **Status:** `experimental` · **Document status:** `draft` · **Owners:** `NEEDS_VERIFICATION`  
-> **Path:** `docs/domains/geology-natural-resources/README.md`  
+> **Path:** `docs/domains/geology/README.md`  
 > ![status: experimental](https://img.shields.io/badge/status-experimental-6f42c1) ![doc: draft](https://img.shields.io/badge/doc-draft-f59e0b) ![owners: needs verification](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-b60205) ![truth: bounded](https://img.shields.io/badge/truth-bounded-0a7ea4) ![lifecycle: governed](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-1f6feb) ![surface: map first](https://img.shields.io/badge/surface-map--first-2ea043)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Lifecycle](#governed-lifecycle) · [Boundaries](#semantic-boundaries) · [Quickstart](#quickstart) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -54,7 +54,7 @@ It exists to keep geology claims evidence-bound, scale-aware, temporally explici
 
 | Relationship | Path | Role | Status |
 |---|---|---|---|
-| Current file | `docs/domains/geology-natural-resources/README.md` | Domain landing page and contributor orientation. | `PROPOSED` until committed in a mounted repo. |
+| Current file | `docs/domains/geology/README.md` | Domain landing page and contributor orientation. | `PROPOSED` until committed in a mounted repo. |
 | Domain index | [`../README.md`](../README.md) | Parent directory landing page for domain lanes. | `NEEDS VERIFICATION` |
 | Docs landing | [`../../README.md`](../../README.md) | Canonical docs navigation and authority entrypoint. | `NEEDS VERIFICATION` |
 | Root landing | [`../../../README.md`](../../../README.md) | Project entrypoint. | `NEEDS VERIFICATION` |
@@ -113,7 +113,7 @@ These materials do **not** belong in this README directory as canonical geology 
 `PROPOSED` until a mounted repo confirms or corrects these homes.
 
 ```text
-docs/domains/geology-natural-resources/
+docs/domains/geology/
   README.md
   DOMAIN_INDEX.md
   FILE_MANIFEST.md

@@ -65,3 +65,6 @@ Each runbook in this directory should include:
 - explicit validation checks
 - failure/rollback or escalation path
 - named output artifacts/logs
+
+## Reorg note
+Use `docs/registers/reorg/rollback_plan.sh` for sprint rollback commands.
