@@ -149,13 +149,15 @@ tests/                            # NEEDS VERIFICATION
 
 ## Root organization opportunities
 
-Based on the current root layout, the following changes would improve maintainability:
+Current root layout is powerful but hard to scan. Prioritize this cleanup sequence:
 
-1. **Create a `docs/` home and move narrative policy/process docs there** (keep machine-enforced policy in `policy/` and machine contracts in `schemas/`).
-2. **Consolidate overlapping output/state directories** such as `runtime_outcome/`, `policy_distribution/`, and `data_use_response/` under a single `artifacts/` or `out/` convention.
-3. **Split `tools/` into clearer sub-domains** (for example `tools/policy/`, `tools/data/`, `tools/release/`, `tools/ops/`) to reduce discoverability friction across dozens of tool namespaces.
-4. **Add root-level ownership and contribution entrypoints** (`CODEOWNERS`, `CONTRIBUTING.md`, and `docs/ARCHITECTURE.md`) so new contributors can locate decision authority quickly.
-5. **Introduce a root index for major directory intent** (a small table in this README) mapping each top-level directory to purpose, primary maintainer group, and stability level.
+| Priority | Action | Why it helps |
+|---|---|---|
+| 1 | Create a `docs/` home for narrative process and architecture docs. Keep enforcement assets in `policy/` and contracts in `schemas/`. | Makes policy/docs boundaries explicit and easier to navigate. |
+| 2 | Consolidate output/state folders (for example `runtime_outcome/`, `policy_distribution/`, `data_use_response/`) under one `artifacts/` or `out/` convention. | Reduces sprawl and clarifies what is generated vs source. |
+| 3 | Group `tools/` into a small set of stable domains (for example `tools/policy/`, `tools/data/`, `tools/release/`, `tools/ops/`). | Improves discoverability across many tool namespaces. |
+| 4 | Add root onboarding/ownership files: `CODEOWNERS`, `CONTRIBUTING.md`, and `docs/ARCHITECTURE.md`. | Shortens ramp-up time and clarifies authority. |
+| 5 | Add a root directory index table (path → purpose → owner → stability). | Gives contributors a fast “where does this belong?” map. |
 
 ## Accepted inputs
 
