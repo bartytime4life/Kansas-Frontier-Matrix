@@ -768,3 +768,16 @@ python soilgrids_policy_distribution.py --policy-distribution-spec policy_distri
 Local-mirror/build-resolver/s3-compatible/validate-remote/verify-distribution are supported via `--mode`.
 
 This layer publishes or mirrors active policy artifacts only. It does **not** activate policies, roll back policies, deploy to running services, or mutate source policy stores.
+
+## Layer 33 Policy Subscription (snippet)
+- plan-only: `python soilgrids_policy_subscription.py --policy-subscription-spec policy_subscription/policy_subscription_spec_example.json --output-root out --mode plan-only`
+- verify-local: `... --mode verify-local --policy-distribution-root tests/fixtures/policy_subscription/policy_distribution_valid`
+- sync-local: `... --mode sync-local`
+- fetch-remote: `... --mode fetch-remote --public-base-url https://example.invalid --allow-remote-network`
+- lock: `... --mode lock --execute-lock`
+- bind-runtime: `... --mode bind-runtime`
+- drift-check: `... --mode drift-check`
+- rollback-lockfile: `... --mode rollback-lockfile --execute-lock`
+- local-api: `... --mode local-api --host 127.0.0.1`
+
+Warning: this layer only consumes and pins policy distributions; it does not activate policy stores, roll back Layer 31, deploy policies, or mutate Layer 32 distributions.
