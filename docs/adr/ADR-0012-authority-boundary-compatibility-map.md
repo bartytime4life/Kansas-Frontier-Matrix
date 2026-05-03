@@ -3,10 +3,19 @@
 - Status: proposed
 - Date: 2026-05-03
 - Deciders: KFM maintainers (pending CODEOWNERS confirmation)
+- Related: `docs/adr/ADR-0001-schema-home.md`, `docs/registers/REPO_ORGANIZATION_AUDIT.md`
 
 ## Context
 
 The repository currently contains both `contracts/` and `schemas/`, and both `policy/` and `policies/`. This creates a recurring risk of accidental dual authority.
+
+
+## Evidence posture
+
+- **CONFIRMED:** both `contracts/` and `schemas/` exist in this checkout; both `policy/` and `policies/` exist in this checkout.
+- **PROPOSED:** interim compatibility handling in this ADR until superseding acceptance decisions are made.
+- **CONFLICTED:** canonical authority between these paired homes is not yet fully settled by accepted, repo-verified follow-up ADRs.
+
 
 ## Decision (proposed)
 
@@ -26,6 +35,12 @@ The repository currently contains both `contracts/` and `schemas/`, and both `po
 |---|---|---|---|---|
 | Machine contract shape vs semantic contract docs | `schemas/` and `contracts/` | Cross-link both lanes and keep explicit pointers to canonical schema paths | Maintaining parallel machine-contract truth in both lanes | Accept/confirm ADR-0001 with repo-verified validators and fixtures |
 | Policy authority lane | `policy/` and `policies/` | Keep `policies/` as non-authoritative compatibility docs only | Treating both directories as simultaneous normative policy sources | Resolve via ADR-0013 (`policy/` canonical; `policies/` compatibility-only) |
+
+## Explicit prohibited actions (until superseded)
+
+1. Copying machine schemas between `schemas/` and `contracts/` as parallel normative stores.
+2. Treating `policy/` and `policies/` as equal runtime policy authorities.
+3. Using file moves alone as evidence of promotion, release, or review completion.
 
 ## Explicit prohibited actions (until superseded)
 

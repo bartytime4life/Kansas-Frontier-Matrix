@@ -123,7 +123,7 @@ Based on present README/index signals and directory occupation:
 ## 9) Suggested next PRs (smallest-first)
 
 1. Add explicit register entry linking this audit from `docs/registers/README.md`.
-2. Add path-boundary matrix doc for `contracts/schemas` and `policy/policies` (no moves).
+2. Add path-boundary matrix doc for `contracts/schemas` and `policy/policies` (no moves). **(Completed via `docs/adr/ADR-0012-authority-boundary-compatibility-map.md` on 2026-05-03.)**
 3. Add CI check(s) that assert canonical app build/test entrypoint(s).
 4. Decide and document handling of local `node_modules` artifacts (ignore hygiene) without changing governance artifacts.
 
