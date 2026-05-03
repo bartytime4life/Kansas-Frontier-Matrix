@@ -33,12 +33,12 @@ Governed domain landing page for Kansas movement-system evidence, public-safe tr
 > [!IMPORTANT]
 > **Status:** `experimental`  
 > **Owners:** `NEEDS VERIFICATION`  
-> **Path:** `docs/domains/roads-rail-trade-routes/README.md`  
+> **Path:** `docs/domains/roads_rail_trade_routes/README.md`  
 > **Implementation posture:** source-grounded README draft; exact repo topology, CODEOWNERS, schema home, CI, route names, and runtime behavior still need direct checkout verification.  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Evidence snapshot](#evidence-snapshot) · [Domain model](#domain-model) · [Lifecycle](#lifecycle) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Map/UI/AI boundaries](#map-ui-and-ai-boundaries) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!WARNING]
-> **Naming alignment needs verification.** The roads/rail/trade-routes architecture baseline uses `transport` as the machine-family shorthand and proposes `docs/domains/transport/README.md`. This file is authored at the explicit requested path, `docs/domains/roads-rail-trade-routes/README.md`. Treat `transport` below as the compact object-family and artifact prefix, not as a silent rename of the requested domain slug.
+> **Naming alignment needs verification.** The roads/rail/trade-routes architecture baseline uses `transport` as the machine-family shorthand and proposes `docs/domains/transport/README.md`. This file is authored at the explicit requested path, `docs/domains/roads_rail_trade_routes/README.md`. Treat `transport` below as the compact object-family and artifact prefix, not as a silent rename of the requested domain slug.
 
 ---
 
@@ -137,7 +137,7 @@ Material belongs here when it helps maintainers understand, review, or evolve th
 | KFM doctrine requires governed lifecycle movement from source edge through publication. | CONFIRMED doctrine | Repeated KFM pipeline and domain-lane doctrine. |
 | The roads/rail/trade-routes lane should be evidence-first, map-first, time-aware, reviewable, correctable, and rollback-capable. | CONFIRMED doctrine / PROPOSED lane design | Roads/rail/trade-routes architecture baseline. |
 | The durable value is not “a road layer,” but a governed transport-knowledge lane with inspectable claims. | CONFIRMED doctrine / PROPOSED lane design | Roads/rail/trade-routes baseline and KFM artifactization doctrine. |
-| This README’s requested path is `docs/domains/roads-rail-trade-routes/README.md`. | CONFIRMED request | Current task. |
+| This README’s requested path is `docs/domains/roads_rail_trade_routes/README.md`. | CONFIRMED request | Current task. |
 | The baseline plan proposed `docs/domains/transport/README.md` and `transport` object/artifact names. | CONFIRMED source detail | Roads/rail/trade-routes baseline. |
 | Current target repo files, owners, branch, package manager, workflow YAML, schema home, test runner, UI shell, route names, and runtime logs are verified. | UNKNOWN | No mounted checkout was available during this authoring pass. |
 | All source endpoints, licenses, terms, update cadence, steward roles, sensitive-location rules, signing toolchain, and public-release policy are current. | NEEDS VERIFICATION | Must be checked before source activation or publication. |
@@ -241,10 +241,10 @@ A public or steward-facing release must have:
 ## Directory tree
 
 > [!CAUTION]
-> This tree is **PROPOSED** until a real checkout confirms current conventions. It adapts the baseline `transport` family to the requested `roads-rail-trade-routes` documentation slug.
+> This tree is **PROPOSED** until a real checkout confirms current conventions. It adapts the baseline `transport` family to the requested `roads_rail_trade_routes` documentation slug.
 
 ```text
-docs/domains/roads-rail-trade-routes/
+docs/domains/roads_rail_trade_routes/
 ├── README.md
 ├── architecture.md
 ├── data_model.md
@@ -338,7 +338,7 @@ git status --short
 git branch --show-current || true
 
 # 2. Resolve the requested slug versus the baseline transport alias.
-find docs/domains -maxdepth 3 -type f | sort | grep -E 'roads-rail-trade-routes|transport' || true
+find docs/domains -maxdepth 3 -type f | sort | grep -E 'roads_rail_trade_routes|transport' || true
 
 # 3. Check for parent README and ownership surfaces.
 find docs .github -maxdepth 4 -type f | sort | grep -E 'docs/README.md|docs/domains/README.md|CODEOWNERS|workflows/README.md' || true
@@ -447,7 +447,7 @@ A first credible PR for this lane should satisfy this checklist.
 |---|---|---|
 | Mounted recursive repo tree | Confirms actual path reality and prevents duplicate docs. | Merge-ready path claims |
 | `CODEOWNERS` for this path | Confirms owners and review duties. | Owner field finalization |
-| Existing `docs/domains/transport` or `docs/domains/roads-rail-trade-routes` inventory | Determines whether this is a new doc, revision, alias, or migration. | Stable navigation |
+| Existing `docs/domains/transport` or `docs/domains/roads_rail_trade_routes` inventory | Determines whether this is a new doc, revision, alias, or migration. | Stable navigation |
 | Schema home: `schemas/`, `schemas/contracts/v1/`, or `contracts/` | Prevents divergent object definitions. | Machine contracts |
 | Policy engine and test runner | Determines Rego/OPA, Python, Node, or repo-native validators. | CI gates |
 | Source endpoints, terms, and data dictionaries | Required before live source activation. | SourceDescriptor promotion |
