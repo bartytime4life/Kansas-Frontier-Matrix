@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-import soilgrids_remote_monitor as m
+from tools.soilgrids import soilgrids_remote_monitor as m
 
 @pytest.fixture
 def valid_inputs(tmp_path):

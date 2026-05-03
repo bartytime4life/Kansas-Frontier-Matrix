@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import pytest
 
-import soilgrids_evidence_crate as mod
+from tools.soilgrids import soilgrids_evidence_crate as mod
 
 
 def _write(p: Path, obj):

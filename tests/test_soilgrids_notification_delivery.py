@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_notification_delivery as m
+from tools.soilgrids import soilgrids_notification_delivery as m
 
 
 def test_rejects_missing_notification_delivery_spec():

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_runtime_supervisor as m
+from tools.soilgrids import soilgrids_runtime_supervisor as m
 
 FX=Path(__file__).parent/'fixtures/runtime_supervisor'
 

@@ -1,7 +1,7 @@
 import json, hashlib
 from pathlib import Path
 import pytest
-import soilgrids_tile_package as m
+from tools.soilgrids import soilgrids_tile_package as m
 
 
 def _w(p,obj): p.parent.mkdir(parents=True,exist_ok=True); p.write_text(json.dumps(obj),encoding='utf-8')

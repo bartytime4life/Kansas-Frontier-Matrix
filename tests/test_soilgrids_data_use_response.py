@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-import soilgrids_data_use_response as m
+from tools.soilgrids import soilgrids_data_use_response as m
 
 FIX=Path('tests/fixtures/data_use_response')
 

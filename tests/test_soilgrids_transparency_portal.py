@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_transparency_portal as m
+from tools.soilgrids import soilgrids_transparency_portal as m
 
 
 def _mk_packet(root: Path, packet_id="p1"):

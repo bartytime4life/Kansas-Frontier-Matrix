@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_independent_verifier as m
+from tools.soilgrids import soilgrids_independent_verifier as m
 
 
 def test_rejects_missing_verifier_spec(tmp_path):

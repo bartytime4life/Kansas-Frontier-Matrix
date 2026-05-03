@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-import soilgrids_cog_normalize as m
+from tools.soilgrids import soilgrids_cog_normalize as m
 
 
 def _fake_translate(inp: Path, outp: Path, opts: dict[str, str]):

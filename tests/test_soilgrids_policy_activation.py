@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_policy_activation as m
+from tools.soilgrids import soilgrids_policy_activation as m
 
 FIX = Path('tests/fixtures/policy_activation')
 

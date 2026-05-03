@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import pytest
 
-import soilgrids_distribution_publish as m
+from tools.soilgrids import soilgrids_distribution_publish as m
 
 
 def mk(tmp_path: Path):

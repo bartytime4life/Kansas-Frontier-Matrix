@@ -1,6 +1,6 @@
 import json, hashlib
 from pathlib import Path
-import soilgrids_trust_enforcement as m
+from tools.soilgrids import soilgrids_trust_enforcement as m
 
 FIX=Path('tests/fixtures/trust_enforcement')
 

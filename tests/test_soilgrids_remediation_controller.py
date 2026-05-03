@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-import soilgrids_remediation_controller as m
+from tools.soilgrids import soilgrids_remediation_controller as m
 
 
 def _write(p, o):

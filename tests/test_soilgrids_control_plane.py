@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-import soilgrids_control_plane as m
+from tools.soilgrids import soilgrids_control_plane as m
 
 
 def valid_spec():

@@ -1,6 +1,6 @@
 import json, subprocess, sys
 from pathlib import Path
-import soilgrids_watchtower_gossip as m
+from tools.soilgrids import soilgrids_watchtower_gossip as m
 
 FX=Path("tests/fixtures/watchtower_gossip")
 
@@ -34,5 +34,5 @@ def test_mock_signed_gossip_envelope(): s=load("watchtower_spec_valid.json"); e=
 
 def test_watchtower_scan_report_written(tmp_path):
     out=tmp_path/'out'; out.mkdir(); spec=tmp_path/'spec.json'; spec.write_text((FX/'watchtower_spec_valid.json').read_text())
-    cp=subprocess.run([sys.executable,'soilgrids_watchtower_gossip.py','--watchtower-spec',str(spec),'--output-root',str(out),'--mode','scan-local'],capture_output=True,text=True)
+    cp=subprocess.run([sys.executable,'tools/soilgrids/soilgrids_watchtower_gossip.py','--watchtower-spec',str(spec),'--output-root',str(out),'--mode','scan-local'],capture_output=True,text=True)
     assert cp.returncode in (0,10,20)

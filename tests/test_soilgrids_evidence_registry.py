@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 import shutil
 
-import soilgrids_evidence_registry as reg
+from tools.soilgrids import soilgrids_evidence_registry as reg
 
 
 def test_rejects_missing_evidence_crate(tmp_path):

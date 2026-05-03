@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-import soilgrids_change_control as scc
+from tools.soilgrids import soilgrids_change_control as scc
 
 FIX = Path('tests/fixtures/change_control')
 
@@ -15,19 +15,19 @@ def _j(name):
 
 
 def _run(tmp_path, extra=None):
-    cmd = [sys.executable, 'soilgrids_change_control.py', '--change-control-spec', str(FIX / 'valid_change_control_spec.json'), '--policy-root', str(FIX / 'policy_root'), '--output-root', str(tmp_path), '--mode', 'release-candidate']
+    cmd = [sys.executable, 'tools/soilgrids/soilgrids_change_control.py', '--change-control-spec', str(FIX / 'valid_change_control_spec.json'), '--policy-root', str(FIX / 'policy_root'), '--output-root', str(tmp_path), '--mode', 'release-candidate']
     if extra:
         cmd.extend(extra)
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
 def test_rejects_missing_change_control_spec(tmp_path):
-    r = subprocess.run([sys.executable, 'soilgrids_change_control.py', '--output-root', str(tmp_path), '--mode', 'plan-only'], capture_output=True, text=True)
+    r = subprocess.run([sys.executable, 'tools/soilgrids/soilgrids_change_control.py', '--output-root', str(tmp_path), '--mode', 'plan-only'], capture_output=True, text=True)
     assert r.returncode != 0
 
 
 def test_rejects_malformed_change_control_spec(tmp_path):
-    r = subprocess.run([sys.executable, 'soilgrids_change_control.py', '--change-control-spec', str(FIX/'invalid_change_control_spec_malformed.json'), '--output-root', str(tmp_path), '--mode', 'plan-only'], capture_output=True, text=True)
+    r = subprocess.run([sys.executable, 'tools/soilgrids/soilgrids_change_control.py', '--change-control-spec', str(FIX/'invalid_change_control_spec_malformed.json'), '--output-root', str(tmp_path), '--mode', 'plan-only'], capture_output=True, text=True)
     assert r.returncode != 0
 
 

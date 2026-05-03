@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-import soilgrids_assurance_pack as mod
+from tools.soilgrids import soilgrids_assurance_pack as mod
 
 
 def _spec():

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-import soilgrids_supply_chain as sc
+from tools.soilgrids import soilgrids_supply_chain as sc
 
 
 def test_rejects_missing_supply_chain_spec(tmp_path):
