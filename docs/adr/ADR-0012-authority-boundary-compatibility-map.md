@@ -23,12 +23,24 @@ The repository currently contains both `contracts/` and `schemas/`, and both `po
 2. `policy/` is the active policy-authority lane in this repository revision. `policies/` is treated as compatibility/documentation-only until an explicit superseding ADR is accepted.
 3. Promotion remains a governed state transition; no directory move is treated as promotion evidence.
 
+## Truth labels used in this ADR
+
+- **CONFIRMED:** both path pairs exist in this repository revision: `contracts/` + `schemas/`, and `policy/` + `policies/`.
+- **PROPOSED:** authority assignment and interim compatibility posture below.
+- **PROHIBITED:** any change that creates dual machine-truth or dual policy-truth without explicit superseding ADR acceptance.
+
 ## Compatibility map
 
 | Boundary | Current homes (CONFIRMED) | Allowed interim use | Prohibited duplication | Next decision required |
 |---|---|---|---|---|
 | Machine contract shape vs semantic contract docs | `schemas/` and `contracts/` | Cross-link both lanes and keep explicit pointers to canonical schema paths | Maintaining parallel machine-contract truth in both lanes | Accept/confirm ADR-0001 with repo-verified validators and fixtures |
 | Policy authority lane | `policy/` and `policies/` | Keep `policies/` as non-authoritative compatibility docs only | Treating both directories as simultaneous normative policy sources | Accept follow-up ADR that either retires `policies/` or formalizes migration |
+
+## Explicit prohibited actions (until superseded)
+
+1. Copying machine schemas between `schemas/` and `contracts/` as parallel normative stores.
+2. Treating `policy/` and `policies/` as equal runtime policy authorities.
+3. Using file moves alone as evidence of promotion, release, or review completion.
 
 ## Consequences
 
