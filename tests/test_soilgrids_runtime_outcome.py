@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 ROOT=Path(__file__).resolve().parents[1]
-SCRIPT=ROOT/'soilgrids_runtime_outcome.py'
+SCRIPT=ROOT/'scripts/soilgrids_runtime_outcome.py'
 FIX=ROOT/'tests/fixtures/runtime_outcome'
 
 

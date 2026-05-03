@@ -27,6 +27,8 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 
 ## Directory map
 
+- [`../adr/README.md`](../adr/README.md): architecture decisions and authority boundaries that runbooks must obey.
+- [`../registers/README.md`](../registers/README.md): control-plane registers for drift, authority, and verification gaps.
 - [`publication.md`](./publication.md): promote and publish safely.
 - [`correction.md`](./correction.md): correct published errors with lineage.
 - [`stale_projection.md`](./stale_projection.md): handle stale derived/public projections.
@@ -36,6 +38,7 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 - [`foundation-strategy.md`](./foundation-strategy.md): strategic sequencing guidance.
 - [`markdown-remediation-plan.md`](./markdown-remediation-plan.md): docs cleanup process.
 - [`markdown-debt-backlog.md`](./markdown-debt-backlog.md): debt tracking and triage backlog.
+- [`validation-entrypoints.md`](./validation-entrypoints.md): quick validation command/index reference.
 
 ## Operating expectations
 
@@ -43,6 +46,14 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 2. Keep every runbook reversible and validation-backed.
 3. Preserve auditability: correction/supersession history must remain visible.
 4. Do not treat projections, summaries, or generated text as canonical truth.
+
+## Validation entrypoints (confirmed paths)
+
+- Python test discovery: [`../../pytest.ini`](../../pytest.ini)
+- Pytest suites: [`../../tests/`](../../tests/)
+- Web app tests (vitest script): [`../../apps/web/package.json`](../../apps/web/package.json)
+- Governance/policy tests: [`../../tests/policy/`](../../tests/policy/) and [`../../policy/tests/`](../../policy/tests/)
+- Consolidated validation quick reference: [`validation-entrypoints.md`](./validation-entrypoints.md)
 
 ## Minimum runbook shape
 

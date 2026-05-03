@@ -19,6 +19,23 @@ notes: [Generated as a repo-ready draft from the KFM documentation-architecture 
 
 Directory landing page for KFM’s documentation registers: the control-plane records that classify authority, canon status, drift, and verification gaps.
 
+## Confirmed register inventory (checkpoint 2026-05-03)
+
+The files below are present in this repository revision and are the primary register surfaces for docs control-plane navigation:
+
+- [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md)
+- [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md)
+- [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md)
+- [`PMTILES_MANIFEST_REGISTER.md`](./PMTILES_MANIFEST_REGISTER.md)
+- [`REPO_ORGANIZATION_AUDIT.md`](./REPO_ORGANIZATION_AUDIT.md)
+- [`SOURCE_LEDGER.md`](./SOURCE_LEDGER.md)
+- [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md)
+
+Related control-plane indexes:
+
+- [`../adr/README.md`](../adr/README.md)
+- [`../runbooks/README.md`](../runbooks/README.md)
+
 ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![Doc: README-like](https://img.shields.io/badge/doc-README--like-blue)
 ![Truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
@@ -135,6 +152,9 @@ docs/registers/
 ├── AUTHORITY_LADDER.md                   # P0: source hierarchy and conflict-resolution rules
 ├── CANONICAL_LINEAGE_EXPLORATORY.md      # P0: canon, lineage, exploratory, reference, superseded classes
 ├── DRIFT_REGISTER.md                     # P1: contradictions, overclaims, naming drift, authority gaps
+├── PMTILES_MANIFEST_REGISTER.md          # P1: map/tiles manifest lineage and drift tracking
+├── REPO_ORGANIZATION_AUDIT.md            # P1: repository structure observations and follow-up queue
+├── SOURCE_LEDGER.md                      # P0: source classes, authority role, and onboarding posture
 └── VERIFICATION_BACKLOG.md               # P1: exact evidence needed before stronger claims
 ```
 
