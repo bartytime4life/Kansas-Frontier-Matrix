@@ -1,3 +1,16 @@
 {
-  "object_type": "AirNowClosureArchiveIndexCaveatRegistry"
+  "created_at": "2026-01-01T00:00:00Z",
+  "layer28": {
+    "created_at": "2026-01-01T00:00:00Z",
+    "object_type": "AirNowClosureArchiveCaveatIndex"
+  },
+  "layer29": {
+    "caveats": [],
+    "object_type": "AirNowClosureArchiveIndexReviewCaveatRegister"
+  },
+  "layer30": {
+    "object_type": "AirNowClosureArchiveIndexCaveatContinuityRegister"
+  },
+  "object_type": "AirNowClosureArchiveIndexCaveatRegistry",
+  "schema_version": "v1"
 }

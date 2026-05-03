@@ -1,3 +1,227 @@
 {
-  "object_type": "AirNowClosureArchiveIndexAuditInputInventory"
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexAuditInputInventory",
+  "records": [
+    {
+      "byte_size": 95,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_caveat_index_json",
+      "input_record_id": "37a095f8ca03b70d5d048ba3345095f1b59783b8449da4836f561bf266602bc1",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_caveat_index.json",
+      "sha256": "9c7f982f4e1b7d56e1874b406bdc7e1f559e2cf59da69542da80f466cd769692"
+    },
+    {
+      "byte_size": 97,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_decision_index_json",
+      "input_record_id": "6df1ef5b706c7476a6fa583f6fc84d4619d503b891b44cb30a4c0b52b2167a1c",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_decision_index.json",
+      "sha256": "60f3179f119d193ecc8be1476b948d757c5563914e670cb311dbf1418053df6e"
+    },
+    {
+      "byte_size": 93,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_hash_index_json",
+      "input_record_id": "2a7479e9dbab242f12ba4bfa4e8468945f16c5ba04f97503267f6e40b9f979bd",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_hash_index.json",
+      "sha256": "f824d875f1185a4acbcea50904ea03fe79dd36c2acb7a504280f1e8106cbd73c"
+    },
+    {
+      "byte_size": 128,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_receipt_json",
+      "input_record_id": "7b3c1ca12a47e095265a3b082cc3a4ed0aa8521fc027061a423e5090d6529c8a",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_index_receipt.json",
+      "sha256": "a9b9a768ad8ca1ddbd53ea56a9275926891b6db9b5023098de5dc2fca87724e9"
+    },
+    {
+      "byte_size": 96,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_lineage_index_json",
+      "input_record_id": "ade6a49a9f055b9eefb85830a67be0a6d3163d27441deda98c1a784a3ea8e79a",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_lineage_index.json",
+      "sha256": "d5c0c41f519ed5d1cd8d5efaf49882435ba1833448a61779ab947cce9c550c3c"
+    },
+    {
+      "byte_size": 99,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_member_index_plan_json",
+      "input_record_id": "a8141ff11490991ef9220cf5333e32273f8141321de9a2f6542eda645c6f3b24",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_member_index_plan.json",
+      "sha256": "7a93d1f980bcdcc9a58ceafd045136240bdcef60bb1e21cbc68ce403608ce30b"
+    },
+    {
+      "byte_size": 107,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_non_execution_attestation_json",
+      "input_record_id": "23a1528d7a7d25c2a4cb6c6c72276353842b433468fccc42c36b4e1276e05d9d",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_non_execution_attestation.json",
+      "sha256": "de13ba72330c56fa40e007364917b9525bfa6b973e41503c73f998cf834b18ac"
+    },
+    {
+      "byte_size": 95,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_policy_index_json",
+      "input_record_id": "997e135a9b63aea9826b0cbbd8cd6fcf6ccd36239b28b8e7f6e7cf1f3bc0e7f8",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_policy_index.json",
+      "sha256": "e0c748f291b904b74ac6527cb6c032b7b88f8da6023f9bdcb53dd5cf6f7d9c31"
+    },
+    {
+      "byte_size": 96,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_receipt_index_json",
+      "input_record_id": "5c92565304c6001749f2a4662e23999ae7a93b9926f29d0680c0a3f6eb4765a9",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_receipt_index.json",
+      "sha256": "8b944d5b525b3cd0d379ed8e58d0dcf0553c4171d591138b5377b15f96ebd941"
+    },
+    {
+      "byte_size": 94,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_scope_index_json",
+      "input_record_id": "9cfedc45213d977a53db4f2a4e19672048811048e68dccc7e4b2454b2680a17b",
+      "layer": "layer28_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_scope_index.json",
+      "sha256": "9762f3b3a61e7e1f2c24d2e330644f4f2a39b701a3b6eaa494a7b6b4bf373b16"
+    },
+    {
+      "byte_size": 23,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_acceptance_candidates_jsonl",
+      "input_record_id": "231dab141cca24f8df7a3e245461c290bbfc3432cbe9a7887d0a5a889258d5ef",
+      "layer": "layer29_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer29/closure_archive_index_acceptance_candidates.jsonl",
+      "sha256": "f17ac86e8a7ceba05837fc10dfe558f0fb235105617c43e530b96bbca7a35708"
+    },
+    {
+      "byte_size": 86,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_review_caveat_register_json",
+      "input_record_id": "18471ffdd9cfd37d002a3460482ea8f1b607be464bb729f2593461205a8e397b",
+      "layer": "layer29_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer29/closure_archive_index_review_caveat_register.json",
+      "sha256": "9bf38481a9a2ae8e12e2a2ca7029e29c06160502dfa92999ac2984dbbeee2192"
+    },
+    {
+      "byte_size": 72,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_review_policy_attestation_json",
+      "input_record_id": "37baf46f76acc2038d70ae60d27a99c021f85088974ba2ea66f6a61a2efc956b",
+      "layer": "layer29_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer29/closure_archive_index_review_policy_attestation.json",
+      "sha256": "9e52988e11430e26d56e3a61b9c0f6aa41f1351e0e01938f4e45378f001fb16b"
+    },
+    {
+      "byte_size": 94,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_review_receipt_json",
+      "input_record_id": "cd728d4c03a65caea47515c179079e44e41c7a8dc4a3a24a979c5aab172883c0",
+      "layer": "layer29_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer29/closure_archive_index_review_receipt.json",
+      "sha256": "fbe65a1e9d66270666f311e38297ed32dcfd65fe8cd7439bb93c8d62b51e9a5f"
+    },
+    {
+      "byte_size": 0,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "residual_closure_archive_index_blockers_jsonl",
+      "input_record_id": "ffad9cea69cd3811bdfc0f2915afda11b476866366bf60d88900a32d8c449c1b",
+      "layer": "layer29_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer29/residual_closure_archive_index_blockers.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "byte_size": 72,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_acceptance_consolidation_json",
+      "input_record_id": "203d9d650a1184b45c475fb79137437deeda5b86b3a392665fc73d773b2b1820",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_acceptance_consolidation.json",
+      "sha256": "52c8053fc1e132a154c1ee88f5ffb43f3cf49356372a192a3f02a0522eeb5d7f"
+    },
+    {
+      "byte_size": 69,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_blocker_consolidation_json",
+      "input_record_id": "47c712912551533eae6cebeae26ae47e724a451b14ee5506ea08a76abf321ecb",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_blocker_consolidation.json",
+      "sha256": "d623d9e9722c97628542cc891a639646ad4644fd14b1ba93356d91384f9413f2"
+    },
+    {
+      "byte_size": 73,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_caveat_continuity_register_json",
+      "input_record_id": "2c1257fbbee3087cb355b11e7a9288f738f6eb62cb1fac5154f7e3f5a020ce71",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_caveat_continuity_register.json",
+      "sha256": "b84b7050265e75b7c3bcd96b233c3fa6820b4e841e1e18785d33cf3d93e744cc"
+    },
+    {
+      "byte_size": 66,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_decision_candidate_json",
+      "input_record_id": "1e84d80a0e21f605c8a836352da98c6118bab9bdd1e949ca6da5ced356168477",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_decision_candidate.json",
+      "sha256": "913715014a0abd5aaf465cea08e3960b43fdeee6deef895bacdd76ea7947a0b8"
+    },
+    {
+      "byte_size": 100,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_finalization_receipt_json",
+      "input_record_id": "79202c4ecdd6fb3867d862aa46806ad89a977a9a957c37e4852321047c6b2194",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_finalization_receipt.json",
+      "sha256": "604b344f1f78cf6a88a4e812831bf8db12ca79465c703be27372db5924900416"
+    },
+    {
+      "byte_size": 72,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_non_execution_attestation_json",
+      "input_record_id": "9a9308a12bec34d8fd628be30ab2dccad8ede7748aae1bce062a18619d902b7f",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_non_execution_attestation.json",
+      "sha256": "e10b198ece4da119b08547242cd904452278aea0e6b3a008fa56a6c63da0a506"
+    },
+    {
+      "byte_size": 71,
+      "created_at": "2026-01-01T00:00:00Z",
+      "exists": true,
+      "input_id": "closure_archive_index_policy_continuity_matrix_json",
+      "input_record_id": "3aea72d19d6d22b92f0bb66a2d678f7dc999d6af0c8ca70d2e9553cc438e2191",
+      "layer": "layer30_inputs",
+      "path_original": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_policy_continuity_matrix.json",
+      "sha256": "2e62d3f36a37d8e95ee6ed86884bdff8835be7e988c396e65956342315c820a3"
+    }
+  ],
+  "schema_version": "v1"
 }
