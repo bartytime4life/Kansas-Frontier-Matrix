@@ -13,3 +13,4 @@ jobs:
       - run: python tools/check_directory_rules.py
       - run: python tools/check_no_public_internal_paths.py
       - run: python -m unittest discover -s tests
+      - run: bash scripts/validate_all.sh
