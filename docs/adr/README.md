@@ -185,6 +185,17 @@ sed -n '1,160p' docs/adr/ADR-TEMPLATE.md
 
 [Back to top](#kfm-architecture-decision-records)
 
+## Authority-boundary ADR set
+
+The following ADRs should be reviewed together during reorganization work because they constrain where authority can live:
+
+- [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — schema-home authority for machine-checkable contracts.
+- [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) — keeps catalog, proof, and release object families distinct.
+- [`ADR-0012-authority-boundary-compatibility-map.md`](./ADR-0012-authority-boundary-compatibility-map.md) — compatibility guardrails for `contracts/` vs `schemas/` and `policy/` vs `policies/`.
+- [`ADR-0013-policy-home-authority.md`](./ADR-0013-policy-home-authority.md) — proposed canonical policy-home decision (`policy/`) and compatibility posture for `policies/`.
+
+If a proposed move or merge conflicts with these ADRs, treat that action as blocked pending explicit supersession.
+
 ---
 
 ## Usage
@@ -270,6 +281,7 @@ This inventory reflects file presence in the public GitHub snapshot checked duri
 | [`ADR-0009-sensitive-location-policy.md`](./ADR-0009-sensitive-location-policy.md) | Sensitive-location policy | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0010-local-exposure-security.md`](./ADR-0010-local-exposure-security.md) | Local exposure and security | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) | Catalog/proof/release separation | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0013-policy-home-authority.md`](./ADR-0013-policy-home-authority.md) | Canonical policy home authority (`policy/` vs `policies/`) | File present; status `proposed`; acceptance evidence still required |
 | [`ADR-0241-policy-obligation-engine-and-release-gate.md`](./ADR-0241-policy-obligation-engine-and-release-gate.md) | Policy obligation engine and release gate | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0427-consent-vc-and-revocation-delta.md`](./ADR-0427-consent-vc-and-revocation-delta.md) | Consent, verifiable credentials, and revocation delta | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md`](./ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md) | PROV/STAC/DCAT catalog mapping | File present; status `NEEDS REVIEW` before relying on it |
