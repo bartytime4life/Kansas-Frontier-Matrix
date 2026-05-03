@@ -92,3 +92,6 @@ See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` and `docs/registers/reorg/ro
 
 ## Domain Runbook Consolidation (2026-05-03)
 - Atmosphere air runbook slices moved to `docs/runbooks/domains/atmosphere_air/slices/`.
+
+## Reorg control-plane linkage
+- Reorg rollback: use `docs/registers/reorg/rollback_plan.sh` before broader lane-by-lane move execution.

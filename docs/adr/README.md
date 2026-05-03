@@ -466,3 +466,6 @@ Do not move machine schema files between `contracts/` and `schemas/`, or policy-
 ## Authority Boundary Note
 - Schema and policy authority maps are tracked in `docs/registers/schema_authority_map.md` and `docs/registers/policy_authority_map.md`.
 - Doc-only moves in this sprint intentionally avoided machine authority homes (`contracts/`, `schemas/`, `policy/`, `policies/`).
+
+## Reorg control-plane linkage
+- Reorg control: `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` tracks applied subset vs proposed large-scale moves.
