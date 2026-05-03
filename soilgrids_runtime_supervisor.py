@@ -395,9 +395,20 @@ def _arg_parser():
     p.add_argument("--supervised-arg", action="append")
     p.add_argument("--workspace", action="append")
     p.add_argument("--execute-supervised-command", action="store_true")
-    p.add_argument("--output-root", required=True)
-    p.add_argument("--mode", default="conformance-check", choices=sorted(ALLOWED_MODES))
     p.add_argument("--overwrite", action="store_true")
+    p.add_argument("--output-root", required=True)
+    p.add_argument("--mode", required=True, choices=sorted(ALLOWED_MODES))
+    p.add_argument("--working-directory")
+    p.add_argument("--timeout-seconds", type=int, default=3600)
+    p.add_argument("--host", default="127.0.0.1")
+    p.add_argument("--port", type=int, default=0)
+    p.add_argument("--serve-forever", action="store_true")
+    p.add_argument("--allow-public-bind", action="store_true")
+    p.add_argument("--allow-shell-command-string", action="store_true")
+    p.add_argument("--allow-package-manager-command", action="store_true")
+    p.add_argument("--allow-command-drift", action="store_true")
+    p.add_argument("--allow-remote-url-observation", action="store_true")
+    p.add_argument("--deterministic-run-id", action="store_true")
     return p
 
 if __name__=="__main__":

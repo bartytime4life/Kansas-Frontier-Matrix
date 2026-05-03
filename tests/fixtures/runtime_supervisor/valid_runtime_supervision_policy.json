@@ -1,0 +1,4 @@
+{
+  "schema": "RuntimeSupervisionPolicy.v1",
+  "fail_closed": true
+}

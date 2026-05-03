@@ -1,0 +1,4 @@
+{
+  "schema": "AdmissionDecisionEnvelope.v1",
+  "decision": "admit"
+}

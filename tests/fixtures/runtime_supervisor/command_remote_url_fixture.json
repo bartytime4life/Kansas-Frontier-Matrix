@@ -1,0 +1,6 @@
+{
+  "argv": [
+    "curl",
+    "https://example.com"
+  ]
+}
