@@ -795,3 +795,19 @@ Supervise-local / attach-observe / conformance-check / telemetry-export / attest
 Warning: this layer supervises admitted runtime execution only. It does **not** sandbox by default, reimplement Layer 15, change trust status, activate policies, or grant protected-resource access.
 
 Exit codes: 0 conformant/planned/verified, 5 dry-run, 10 warnings, 20 nonconformant, 30 malformed input, 40 context failure, 50 command failure, 60 filesystem failure, 70 network failure, 80 Layer15 failure, 90 telemetry/attestation failure, 100 API failure, 110 unsafe/public bind, 120 secret failure, 130 ledger failure, 140 internal error.
+
+## Layer 36 Runtime Outcome Acceptance Gate
+
+Example invocations:
+- `python soilgrids_runtime_outcome.py --outcome-acceptance-spec runtime_outcome/outcome_acceptance_spec_example.json --runtime-supervision-run-root tests/fixtures/runtime_outcome --output-root /tmp/out --mode plan-only`
+- `... --mode inventory-outputs`
+- `... --mode evaluate-acceptance`
+- `... --mode accept-local`
+- `... --mode quarantine-local`
+- `... --mode handoff-packet`
+- `... --mode verify-accepted`
+- `... --mode verify-quarantine`
+- `... --mode attest-outcome`
+- `... --mode local-api`
+
+This layer accepts/quarantines runtime outputs only. It does not mutate source outputs, delete artifacts, change trust status, grant access, or publish remotely.

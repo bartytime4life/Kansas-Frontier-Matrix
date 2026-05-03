@@ -1,0 +1,8 @@
+{
+  "schema": "RuntimeViolationReport.v1",
+  "violations": [
+    {
+      "severity": "critical"
+    }
+  ]
+}

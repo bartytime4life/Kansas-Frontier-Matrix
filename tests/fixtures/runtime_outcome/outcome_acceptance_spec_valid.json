@@ -1,0 +1,6 @@
+{
+  "schema": "OutcomeAcceptanceSpec.v1",
+  "outcome_acceptance_id": "oa1",
+  "dataset_id": "d1",
+  "acceptance_profile": "strict-local"
+}
