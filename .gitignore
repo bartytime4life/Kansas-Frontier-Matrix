@@ -3,6 +3,5 @@ __pycache__/
 *.pyc
 *.pyo
 
-# JavaScript dependencies (keep untracked local installs out of repo status)
+# JavaScript dependencies (matches node_modules directories repo-wide)
 node_modules/
-apps/*/node_modules/
