@@ -1,0 +1,1 @@
+{"openapi":"3.1.1","paths":{"/health":{"get":{"responses":{"200":{"description":"ok"}}}},"/binding":{"get":{"responses":{"200":{"description":"ok"}}}},"/decisions":{"get":{"responses":{"200":{"description":"ok"}}}},"/locks/{lock_id}":{"get":{"responses":{"200":{"description":"ok"}}}},"/ledger":{"get":{"responses":{"200":{"description":"ok"}}}}}

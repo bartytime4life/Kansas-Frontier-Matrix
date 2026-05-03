@@ -1,0 +1,1 @@
+{"schema":"RuntimeAdmissionRequest.v1","request_id":"req1","operation":{"operation_type":"run","stage_range":"layer01:layer02"},"runtime":{"network_profile":"offline","mutation_profile":"read_only"},"target":{"pipeline_id":"p1","workspace":"work","run_root":"run"},"requester":{"redacted":true}}
