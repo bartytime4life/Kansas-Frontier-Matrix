@@ -27,6 +27,8 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 
 ## Directory map
 
+- [`../adr/README.md`](../adr/README.md): architecture decisions and authority boundaries that runbooks must obey.
+- [`../registers/README.md`](../registers/README.md): control-plane registers for drift, authority, and verification gaps.
 - [`publication.md`](./publication.md): promote and publish safely.
 - [`correction.md`](./correction.md): correct published errors with lineage.
 - [`stale_projection.md`](./stale_projection.md): handle stale derived/public projections.

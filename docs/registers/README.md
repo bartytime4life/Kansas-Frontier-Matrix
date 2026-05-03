@@ -135,6 +135,9 @@ docs/registers/
 ├── AUTHORITY_LADDER.md                   # P0: source hierarchy and conflict-resolution rules
 ├── CANONICAL_LINEAGE_EXPLORATORY.md      # P0: canon, lineage, exploratory, reference, superseded classes
 ├── DRIFT_REGISTER.md                     # P1: contradictions, overclaims, naming drift, authority gaps
+├── PMTILES_MANIFEST_REGISTER.md          # P1: map/tiles manifest lineage and drift tracking
+├── REPO_ORGANIZATION_AUDIT.md            # P1: repository structure observations and follow-up queue
+├── SOURCE_LEDGER.md                      # P0: source classes, authority role, and onboarding posture
 └── VERIFICATION_BACKLOG.md               # P1: exact evidence needed before stronger claims
 ```
 
