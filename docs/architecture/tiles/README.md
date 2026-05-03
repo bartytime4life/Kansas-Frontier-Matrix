@@ -40,6 +40,14 @@ Purpose: define how Kansas Frontier Matrix tile artifacts are produced, governed
 
 ---
 
+
+## Companion documents
+
+- [PMTiles Delta Apply Engine](./delta_apply.md)
+- [Verified Tile Release (Governed Layer)](./verified-tile-release.md)
+
+---
+
 ## Scope
 
 This directory documents the **tile delivery architecture** for KFM’s governed map-first system.
