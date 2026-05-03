@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import soilgrids_pipeline_orchestrator as m
+from tools.soilgrids import soilgrids_pipeline_orchestrator as m
 
 
 def _spec(tmp_path: Path):

@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
-import soilgrids_promotion_gate as g
+from tools.soilgrids import soilgrids_promotion_gate as g
 
 
 def mk_bundle(tmp: Path):

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_data_use_accountability as m
+from tools.soilgrids import soilgrids_data_use_accountability as m
 
 FX=Path('tests/fixtures/data_use_accountability')
 

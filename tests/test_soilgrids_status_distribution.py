@@ -1,7 +1,7 @@
 import json, subprocess, sys
 from pathlib import Path
 import pytest
-import soilgrids_status_distribution as m
+from tools.soilgrids import soilgrids_status_distribution as m
 
 FIX=Path('tests/fixtures/status_distribution')
 
@@ -69,12 +69,12 @@ def test_existing_output_rejected_without_overwrite(tmp_path):
     with pytest.raises(FileExistsError): _run(tmp_path)
 
 def test_stdout_only_receipt_path_on_success(tmp_path):
-    out=tmp_path/'o'; out.mkdir(); cmd=[sys.executable,'soilgrids_status_distribution.py','--status-distribution-spec',str(FIX/'valid_status_distribution_spec.json'),'--output-root',str(out),'--mode','build-resolver','--trust-status-run-root',str(FIX/'trust_status_run')]
+    out=tmp_path/'o'; out.mkdir(); cmd=[sys.executable,'tools/soilgrids/soilgrids_status_distribution.py','--status-distribution-spec',str(FIX/'valid_status_distribution_spec.json'),'--output-root',str(out),'--mode','build-resolver','--trust-status-run-root',str(FIX/'trust_status_run')]
     r=subprocess.run(cmd,capture_output=True,text=True,check=False)
     assert r.returncode==0 and r.stdout.strip().endswith('status_distribution_receipt.json') and r.stderr.strip()==''
 
 def test_stderr_json_on_failure(tmp_path):
-    out=tmp_path/'o'; out.mkdir(); cmd=[sys.executable,'soilgrids_status_distribution.py','--status-distribution-spec',str(FIX/'valid_status_distribution_spec.json'),'--output-root',str(out),'--mode','build-resolver']
+    out=tmp_path/'o'; out.mkdir(); cmd=[sys.executable,'tools/soilgrids/soilgrids_status_distribution.py','--status-distribution-spec',str(FIX/'valid_status_distribution_spec.json'),'--output-root',str(out),'--mode','build-resolver']
     r=subprocess.run(cmd,capture_output=True,text=True,check=False)
     assert r.returncode==30 and json.loads(r.stderr)['status']=='error'
 

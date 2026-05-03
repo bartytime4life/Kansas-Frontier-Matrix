@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import soilgrids_stac_register as m
+from tools.soilgrids import soilgrids_stac_register as m
 
 
 def _cog_bytes() -> bytes:

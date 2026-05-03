@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_runtime_admission as ra
+from tools.soilgrids import soilgrids_runtime_admission as ra
 
 FIX=Path('tests/fixtures/runtime_admission')
 

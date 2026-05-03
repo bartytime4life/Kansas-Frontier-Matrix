@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import soilgrids_policy_subscription as m
+from tools.soilgrids import soilgrids_policy_subscription as m
 
 FX=Path(__file__).parent/'fixtures/policy_subscription'
 

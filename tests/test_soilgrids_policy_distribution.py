@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-import soilgrids_policy_distribution as m
+from tools.soilgrids import soilgrids_policy_distribution as m
 
 FIX = Path('tests/fixtures/policy_distribution')
 
