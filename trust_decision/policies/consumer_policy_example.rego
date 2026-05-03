@@ -1,3 +1,0 @@
-package consumer
-
-decision := "allow"
