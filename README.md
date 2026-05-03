@@ -799,7 +799,7 @@ Exit codes: 0 conformant/planned/verified, 5 dry-run, 10 warnings, 20 nonconform
 ## Layer 36 Runtime Outcome Acceptance Gate
 
 Example invocations:
-- `python soilgrids_runtime_outcome.py --outcome-acceptance-spec runtime_outcome/outcome_acceptance_spec_example.json --runtime-supervision-run-root tests/fixtures/runtime_outcome --output-root /tmp/out --mode plan-only`
+- `python scripts/soilgrids_runtime_outcome.py --outcome-acceptance-spec runtime_outcome/outcome_acceptance_spec_example.json --runtime-supervision-run-root tests/fixtures/runtime_outcome --output-root /tmp/out --mode plan-only`
 - `... --mode inventory-outputs`
 - `... --mode evaluate-acceptance`
 - `... --mode accept-local`
