@@ -394,3 +394,9 @@ Use this template when adding a compact register row or expanding a row into a s
 - `docs/registers/reorg/path_inventory.tsv` (tracked path inventory + family classification)
 - `docs/registers/reorg/move_plan.tsv` and `reference_update_plan.tsv`
 - `docs/registers/schema_authority_map.md` and `docs/registers/policy_authority_map.md`
+
+## Reorg Sprint Register
+- See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md`
+- See `docs/registers/schema_authority_map.md`
+- See `docs/registers/policy_authority_map.md`
+- See `docs/registers/domain_doc_index.md`
