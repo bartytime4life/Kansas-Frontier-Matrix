@@ -89,3 +89,6 @@ See `docs/registers/reorg/rollback_plan.sh` for repository-organization rollback
 
 ## Reorg sprint runbook linkage
 See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` and `docs/registers/reorg/rollback_plan.sh`.
+
+## Domain Runbook Consolidation (2026-05-03)
+- Atmosphere air runbook slices moved to `docs/runbooks/domains/atmosphere_air/slices/`.

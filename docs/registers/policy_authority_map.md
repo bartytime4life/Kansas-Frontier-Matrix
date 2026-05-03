@@ -7,3 +7,9 @@
 - Validator expectation: detect duplicate package names and unresolved split.
 - Decision owner/status: CONFLICTED, open.
 - Rollback risk: medium/high for gate behavior.
+
+## 2026-05-03 reorg checkpoint
+- Current homes: `policy/` (primary), `policies/` (compatibility lane).
+- Allowed interim use: docs may reference both; executable policy migration requires ADR-0013 approval.
+- Prohibited duplication: do not duplicate policy package names across homes.
+- Validator expectation: authority conflicts must be listed in `docs/registers/reorg/authority_conflicts.md`.
