@@ -35,6 +35,7 @@ Related control-plane indexes:
 
 - [`../adr/README.md`](../adr/README.md)
 - [`../runbooks/README.md`](../runbooks/README.md)
+- [`../runbooks/validation-entrypoints.md`](../runbooks/validation-entrypoints.md)
 
 ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![Doc: README-like](https://img.shields.io/badge/doc-README--like-blue)

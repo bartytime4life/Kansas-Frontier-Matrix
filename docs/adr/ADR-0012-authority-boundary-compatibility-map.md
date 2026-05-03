@@ -42,12 +42,6 @@ The repository currently contains both `contracts/` and `schemas/`, and both `po
 2. Treating `policy/` and `policies/` as equal runtime policy authorities.
 3. Using file moves alone as evidence of promotion, release, or review completion.
 
-## Explicit prohibited actions (until superseded)
-
-1. Copying machine schemas between `schemas/` and `contracts/` as parallel normative stores.
-2. Treating `policy/` and `policies/` as equal runtime policy authorities.
-3. Using file moves alone as evidence of promotion, release, or review completion.
-
 ## Consequences
 
 - Reduces ambiguity for contributors during reorganization.

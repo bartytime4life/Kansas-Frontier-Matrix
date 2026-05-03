@@ -281,6 +281,7 @@ This inventory reflects file presence in the public GitHub snapshot checked duri
 | [`ADR-0009-sensitive-location-policy.md`](./ADR-0009-sensitive-location-policy.md) | Sensitive-location policy | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0010-local-exposure-security.md`](./ADR-0010-local-exposure-security.md) | Local exposure and security | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) | Catalog/proof/release separation | File present; status `NEEDS REVIEW` before relying on it |
+| [`ADR-0013-policy-home-authority.md`](./ADR-0013-policy-home-authority.md) | Canonical policy home authority (`policy/` vs `policies/`) | File present; status `proposed`; acceptance evidence still required |
 | [`ADR-0241-policy-obligation-engine-and-release-gate.md`](./ADR-0241-policy-obligation-engine-and-release-gate.md) | Policy obligation engine and release gate | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-0427-consent-vc-and-revocation-delta.md`](./ADR-0427-consent-vc-and-revocation-delta.md) | Consent, verifiable credentials, and revocation delta | File present; status `NEEDS REVIEW` before relying on it |
 | [`ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md`](./ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md) | PROV/STAC/DCAT catalog mapping | File present; status `NEEDS REVIEW` before relying on it |
