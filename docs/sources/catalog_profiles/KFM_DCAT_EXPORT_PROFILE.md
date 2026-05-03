@@ -11,7 +11,7 @@ policy_label: public
 related: [
   docs/adr/ADR-0001-schema-home.md,
   docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md,
-  docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md,
+  docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md,
   contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json,
   contracts/v1/provenance/kfm_prov_sidecar.schema.json,
   contracts/v1/release/kfm_release_manifest.schema.json,
@@ -46,7 +46,7 @@ Public-safe DCAT JSON-LD export rules for KFM dataset discovery, rights, provena
 | Field | Value |
 | --- | --- |
 | **Status** | `draft` |
-| **Target path** | `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md` — **PROPOSED / NEEDS VERIFICATION** |
+| **Target path** | `docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md` — **PROPOSED / NEEDS VERIFICATION** |
 | **Owners** | `OWNER_TBD` |
 | **Policy label** | `public` |
 | **Primary schema** | `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` — **NEEDS VERIFICATION** |
@@ -178,9 +178,9 @@ Do not export DCAT records that contain or point to:
 
 | Concern | Expected KFM surface | Role | Status |
 | --- | --- | --- | --- |
-| This profile | `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md` | Human-readable normative export rules. | PROPOSED / NEEDS VERIFICATION |
+| This profile | `docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md` | Human-readable normative export rules. | PROPOSED / NEEDS VERIFICATION |
 | Schema-home ADR | `docs/adr/ADR-0001-schema-home.md` or successor ADR | Resolves whether machine schemas live under `contracts/`, `schemas/`, or another canonical home. | NEEDS VERIFICATION |
-| STAC profile | `docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md` | Spatial/temporal asset and item discovery companion. | NEEDS VERIFICATION |
+| STAC profile | `docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md` | Spatial/temporal asset and item discovery companion. | NEEDS VERIFICATION |
 | PROV sidecar schema | `contracts/v1/provenance/kfm_prov_sidecar.schema.json` | Machine-readable provenance validation target. | NEEDS VERIFICATION |
 | DCAT schema | `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` | Machine-readable DCAT export contract. | NEEDS VERIFICATION |
 | Release closure | `contracts/v1/release/kfm_release_manifest.schema.json` | Binds DCAT to artifact, evidence, PROV, STAC, and release state. | NEEDS VERIFICATION |
@@ -517,7 +517,7 @@ ERROR
       "dcat:accessURL": "https://example.invalid/artifact.ext",
       "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
       "dct:format": "application/octet-stream",
-      "dct:conformsTo": "docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md"
+      "dct:conformsTo": "docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md"
     }
   ]
 }
@@ -691,7 +691,7 @@ Minimum rollback action:
 <summary><strong>Items to verify before claiming enforcement</strong></summary>
 
 - Final `doc_id`, `owners`, and `created` metadata values.
-- Whether `docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md` is the correct target path.
+- Whether `docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md` is the correct target path.
 - Whether `docs/adr/ADR-0001-schema-home.md` or a successor ADR controls schema-home authority.
 - Whether `contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json` is the exact current mounted schema path.
 - Whether `contracts/v1/provenance/kfm_prov_sidecar.schema.json` is the exact current mounted provenance schema path.

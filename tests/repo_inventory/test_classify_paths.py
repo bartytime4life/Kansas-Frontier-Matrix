@@ -1,6 +1,6 @@
-from tools.repo_inventory.classify_paths import classify
+from tools.repo_inventory.classify_paths import cls
 
-def test_classify_core():
-    assert classify('apps/web/src/main.js')=='app_web'
-    assert classify('docs/domains/habitat/README.md')=='doc_domain'
-    assert classify('data/raw/a.txt')=='data_lifecycle_raw'
+def test_basic():
+    assert cls('apps/web/src/main.js')=='app_web'
+    assert cls('docs/adr/ADR-0001-schema-home.md')=='doc_adr'
+    assert cls('data/raw/x.txt')=='data_lifecycle_raw'

@@ -1,1 +1,2 @@
-reference_file	old_path	new_path	status	notes
+old_path	reference_scope	status
+all moved paths	README.md docs apps packages tools tests	UPDATED_WITH_SEARCH_REWRITE

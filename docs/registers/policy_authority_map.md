@@ -1,6 +1,9 @@
 # Policy Authority Map
-
-| Home | Family | Likely authority | Interim use | Prohibited | Migration rule | Validator expectation | Owner/status | Rollback risk |
-|---|---|---|---|---|---|---|---|---|
-| policy/ | policy | primary policy-as-code and policy docs | continue primary usage | silent duplication into policies/ | ADR-0013 gate required | ensure conflicts documented | Governance / CONFLICTED | high |
-| policies/ | policy | legacy/secondary policy examples | keep for compatibility only | introducing new canonical policy packages | converge by ADR | package-name collision detection | Governance / CONFLICTED | medium |
+- Current homes: `policy/` and `policies/`.
+- Likely authority: `policy/` as primary policy-as-code; `policies/` legacy/compatibility.
+- Interim use: dual-home read-only compatibility.
+- Prohibited duplication: duplicate policy package names across homes.
+- Migration rule: consolidate only via ADR-authorized plan.
+- Validator expectation: detect duplicate package names and unresolved split.
+- Decision owner/status: CONFLICTED, open.
+- Rollback risk: medium/high for gate behavior.

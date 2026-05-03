@@ -39,7 +39,7 @@
       "dcat:accessURL": "https://example.invalid/artifact.ext",
       "dct:license": "https://spdx.org/licenses/CC-BY-4.0.html",
       "dct:format": "application/octet-stream",
-      "dct:conformsTo": "docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md",
+      "dct:conformsTo": "docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md",
 
       "kfm:spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "kfm:provenance_ref": "https://example.invalid/artifact.prov.jsonld",

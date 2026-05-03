@@ -1,1 +1,8 @@
 old_path	new_path	reason	status
+/docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md	docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md	source-profile docs consolidated	APPLIED
+/docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md	docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md	source-profile docs consolidated	APPLIED
+/docs/governance/correction-withdrawal-rollback.md	docs/tracking/governance/correction-withdrawal-rollback.md	governance tracking doc family	APPLIED
+/docs/governance/decision-log.md	docs/tracking/governance/decision-log.md	governance tracking doc family	APPLIED
+/docs/governance/obligation-execution.md	docs/control-plane/obligation-execution.md	control-plane operation guidance	APPLIED
+/docs/governance/promotion-evidence-registry.md	docs/registers/promotion-evidence-registry.md	register content moved to registers	APPLIED
+/docs/runtime/tile-runtime-performance.md	docs/architecture/tiles/tile-runtime-performance.md	runtime architecture tile family	APPLIED

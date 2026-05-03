@@ -83,3 +83,6 @@ See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for current repository organ
 
 ## Reorg linkage
 - Reorg and authority maps: `docs/registers/reorg/` and `docs/registers/*authority_map.md`.
+
+## Reorg runbook references
+See `docs/registers/reorg/rollback_plan.sh` for repository-organization rollback commands.

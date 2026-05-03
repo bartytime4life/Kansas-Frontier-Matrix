@@ -1,5 +1,18 @@
-# Domain Documentation Index
-
-CONFIRMED domain homes under `docs/domains/`: agriculture, archaeology, atmosphere_air, ecology, fauna, flora, geology, habitat, hazards, hydrology, people-genealogy-dna-land, roads-rail-trade-routes, settlements-infrastructure, soil, ui-maplibre.
-
-See `domain_file_index.md` for file-level index artifact generated during reorg sprint.
+# Domain Doc Index
+- hydrology: `docs/domains/hydrology/` (CONFIRMED)
+- soil: `docs/domains/soil/` (CONFIRMED)
+- habitat: `docs/domains/habitat/` (CONFIRMED)
+- fauna: `docs/domains/fauna/` (CONFIRMED)
+- flora: `docs/domains/flora/` (CONFIRMED)
+- agriculture: `docs/domains/agriculture/` (CONFIRMED)
+- geology: `docs/domains/geology/` (CONFIRMED)
+- atmosphere_air: `docs/domains/air/` (CONFIRMED)
+- roads_rail_trade_routes: UNKNOWN
+- settlements_infrastructure: UNKNOWN
+- archaeology: `docs/domains/archaeology/` (CONFIRMED)
+- hazards: `docs/domains/hazards/` (CONFIRMED)
+- people_genealogy_dna_land: `docs/domains/people-genealogy-dna-land/` (CONFIRMED)
+- ui_maplibre: `docs/domains/ui-maplibre/` (CONFIRMED)
+- cesium_3d: `docs/domains/cesium-3d/` (CONFIRMED)
+- governed_ai: `docs/domains/governed-ai/` (CONFIRMED)
+- pipeline_control_plane: `docs/domains/pipeline-control-plane/` (CONFIRMED)
