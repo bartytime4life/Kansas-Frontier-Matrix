@@ -1,4 +1,5 @@
 from pathlib import Path
+import tarfile,hashlib
 from .constants import L33_REQUIRED,FORBIDDEN_RCP_TRUE,SOURCES
 from .ids import sid
 from .loaders import loadj,loadjl,wj,wjl
@@ -8,6 +9,22 @@ from .checksums import sha256_path
 def _deny(m,out,created_at,errs):
  r={"object_type":"AirNowClosureArchiveIndexPreservationFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer34_closure_archive_index_preservation_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION_DENIED","validation_outcome":"FAIL","finite_outcome":"DENY","commands_executed":False,"finalization_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":sorted(set(errs)),"output_hashes":{"closure_archive_index_preservation_finalization_packet_hash":None},"created_at":created_at}
  wj(out/"closure_archive_index_preservation_finalization_receipt.json",r);return r
+
+
+
+def _packet(out,created_at):
+ pkt=out/"closure_archive_index_preservation_finalization_packet.tar.gz"
+ files=sorted([x for x in out.iterdir() if x.is_file() and x.name!=pkt.name])
+ with tarfile.open(pkt,"w:gz",format=tarfile.PAX_FORMAT) as tf:
+  for f in files:
+   rel=f.relative_to(out)
+   if any(part==".." for part in rel.parts):
+    raise ValueError("PACKET_PATH_TRAVERSAL")
+   ti=tf.gettarinfo(str(f),arcname=str(rel).replace('\\','/'))
+   ti.mtime=0; ti.uid=0; ti.gid=0; ti.uname=""; ti.gname=""
+   with open(f,'rb') as fh: tf.addfile(ti,fh)
+ h=hashlib.sha256(pkt.read_bytes()).hexdigest()
+ return pkt.name,h
 
 def run_closure_archive_index_preservation_finalization(manifest_path,out_dir,created_at):
  m=loadj(manifest_path); out=Path(out_dir); out.mkdir(parents=True,exist_ok=True); errs=validate_manifest(m); l33=m.get("layer33_inputs",{})
@@ -48,5 +65,8 @@ def run_closure_archive_index_preservation_finalization(manifest_path,out_dir,cr
  wj(out/"closure_archive_index_preservation_finalization_status_board.json",{"object_type":"AirNowClosureArchiveIndexPreservationFinalizationStatusBoard","board_status":"CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION_COMPLETE_INTERNAL_ONLY","created_at":created_at})
  (out/"closure_archive_index_preservation_finalization_status_board.md").write_text("# AirNow Layer 34 Closure Archive Index Preservation Finalization Status Board\n\nInternal-only finalization planning complete.\n",encoding="utf-8")
  (out/"closure_archive_index_preservation_finalization_report.md").write_text("# AirNow Layer 34 Closure Archive Index Preservation Finalization Report\n\nCompiled internal finalization ledger from Layer 33 artifacts. No preservation/index/database/search/catalog/closure execution performed.\n",encoding="utf-8")
- rec={"object_type":"AirNowClosureArchiveIndexPreservationFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer34_closure_archive_index_preservation_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"finalization_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"closure_archive_index_preservation_finalization_packet_hash":None},"created_at":created_at}
+ packet_hash=None
+ if m.get("finalization_policy",{}).get("include_packet") is True:
+  _,packet_hash=_packet(out,created_at)
+ rec={"object_type":"AirNowClosureArchiveIndexPreservationFinalizationReceipt","schema_version":"v1","workflow_runner":"airnow_layer34_closure_archive_index_preservation_finalization","manifest_id":m.get("manifest_id"),"workflow_outcome":"CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION_COMPLETE_INTERNAL_ONLY","validation_outcome":"PASS","finite_outcome":"ANSWER","commands_executed":False,"finalization_actions_executed":False,"preservation_actions_executed":False,"preservation_copy_executed":False,"preservation_transfer_executed":False,"index_executed":False,"database_write_executed":False,"public_catalog_created":False,"search_service_created":False,"closure_executed":False,"task_closure_performed":False,"governance_closure_performed":False,"audit_closure_performed":False,"snapshot_export_executed":False,"snapshot_copy_executed":False,"snapshot_transfer_executed":False,"snapshot_published":False,"snapshot_released":False,"public_release_allowed":False,"errors":[],"output_hashes":{"closure_archive_index_preservation_finalization_packet_hash":packet_hash},"created_at":created_at}
  wj(out/"closure_archive_index_preservation_finalization_receipt.json",rec); return rec

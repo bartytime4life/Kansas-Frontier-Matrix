@@ -1,0 +1,31 @@
+{
+  "continuity_status": "PASS",
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexPreservationPolicyContinuityMatrix",
+  "policy_attestation": {
+    "object_type": "AirNowClosureArchiveIndexPreservationReviewPolicyAttestation",
+    "public_release_allowed": false
+  },
+  "references": [
+    "https://docs.airnowapi.org/",
+    "https://docs.airnowapi.org/webservices",
+    "https://docs.airnowapi.org/faq",
+    "https://docs.airnowapi.org/docs/AirNowAPIFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/HourlyAQObsFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/HourlyDataFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/DailyDataFactSheet.pdf",
+    "https://www.airnowapi.org/docs/MonitoringSiteFactSheet.pdf",
+    "https://www.airnow.gov/about-the-data",
+    "https://docs.airnowapi.org/docs/DataUseGuidelines.pdf",
+    "https://www.epa.gov/outdoor-air-quality-data/download-daily-data"
+  ],
+  "validation_results": {
+    "object_type": "AirNowClosureArchiveIndexPreservationReviewValidationResults",
+    "records": [
+      {
+        "validation_id": "v1",
+        "validation_outcome": "PASS"
+      }
+    ]
+  }
+}

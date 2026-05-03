@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "layer33_readiness": {
+    "object_type": "AirNowClosureArchiveIndexPreservationReviewReadinessSummary",
+    "status": "READY"
+  },
+  "object_type": "AirNowClosureArchiveIndexPreservationReadinessFinalSummary",
+  "readiness_status": "INTERNAL_CLOSURE_ARCHIVE_INDEX_PRESERVATION_REVIEW_READY"
+}
