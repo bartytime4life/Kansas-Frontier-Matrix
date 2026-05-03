@@ -10,7 +10,7 @@ updated: 2026-04-27
 policy_label: public
 related: [TODO:docs/registers/domain-file-index.md, TODO:docs/domains/settlements/README.md, TODO:docs/domains/infrastructure/README.md, TODO:schemas/contracts/v1/settlements/, TODO:schemas/contracts/v1/infrastructure/]
 tags: [kfm, domain, settlements, infrastructure, map-first, evidence, governance]
-notes: [doc_id and owners require repo registry verification; target path requested as docs/domains/settlements-infrastructure/README.md; source blueprint also proposes split settlements and infrastructure documentation homes]
+notes: [doc_id and owners require repo registry verification; target path requested as docs/domains/settlements_infrastructure/README.md; source blueprint also proposes split settlements and infrastructure documentation homes]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -30,7 +30,7 @@ Landing page for the KFM domain lane that keeps Kansas places, civic status, inf
 > [!IMPORTANT]
 > **Status:** experimental  
 > **Owners:** TODO — verify against repo CODEOWNERS, stewardship register, or domain ownership docs.  
-> **Path:** `docs/domains/settlements-infrastructure/README.md`  
+> **Path:** `docs/domains/settlements_infrastructure/README.md`  
 > **Posture:** **CONFIRMED** requested landing page path and companion docs landed in this directory; **NEEDS VERIFICATION** for owners, schema homes, runtime routes, and policy wiring.
 
 **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Lifecycle](#governed-lifecycle) · [Contracts](#contracts-and-object-families) · [Map/UI](#map-ui-and-focus-mode) · [Done](#definition-of-done) · [Verification](#verification-backlog)
@@ -59,7 +59,7 @@ It is not just a map layer catalog. It is the reviewable control surface for cla
 | Public delivery | Released layers, generalized geometries, governed API contracts, MapLibre layer descriptors, Evidence Drawer payloads, finite Focus outcomes | **CONFIRMED doctrine / PROPOSED lane realization** |
 
 > [!NOTE]
-> The current source blueprint proposes separate `docs/domains/settlements/` and `docs/domains/infrastructure/` documentation homes. This README is a combined landing page because the requested target path is `docs/domains/settlements-infrastructure/README.md`. If the mounted repo already uses split homes, keep this file as an index/orchestration page and route detailed docs to the verified split directories.
+> The current source blueprint proposes separate `docs/domains/settlements/` and `docs/domains/infrastructure/` documentation homes. This README is a combined landing page because the requested target path is `docs/domains/settlements_infrastructure/README.md`. If the mounted repo already uses split homes, keep this file as an index/orchestration page and route detailed docs to the verified split directories.
 
 [Back to top](#top)
 
@@ -69,7 +69,7 @@ It is not just a map layer catalog. It is the reviewable control surface for cla
 
 | Fit question | Answer |
 |---|---|
-| Target path | `docs/domains/settlements-infrastructure/README.md` |
+| Target path | `docs/domains/settlements_infrastructure/README.md` |
 | Role | README-like domain landing page and review entry point |
 | Upstream doctrine | KFM pipeline doctrine, documentation control plane, settlements/infrastructure blueprint, MapLibre UI doctrine, governed AI doctrine |
 | Upstream machine surfaces | `schemas/contracts/v1/settlements/` and `schemas/contracts/v1/infrastructure/` are **PROPOSED** until repo conventions are verified |
@@ -132,7 +132,7 @@ These do **not** belong in this README or companion documentation unless explici
 Current directory shape in this repository checkout.
 
 ```text
-docs/domains/settlements-infrastructure/
+docs/domains/settlements_infrastructure/
 ├── README.md                    # this landing page
 ├── data-model.md                # bounded contexts and field dictionary
 ├── source-registry.md           # source roles, rights posture, cadence
@@ -323,7 +323,7 @@ These commands are **NEEDS VERIFICATION** until repo tooling is inspected.
 
 ```bash
 # Documentation successor / orphan checks
-python tools/ci/check_docs_successors.py docs/domains/settlements-infrastructure/README.md
+python tools/ci/check_docs_successors.py docs/domains/settlements_infrastructure/README.md
 python tools/ci/check_domain_file_index.py docs/registers/domain-file-index.md
 
 # Schema and fixture tests

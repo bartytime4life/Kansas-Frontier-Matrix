@@ -1,8 +1,59 @@
-old_path	new_path	reason	status
-/docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md	docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md	source-profile docs consolidated	APPLIED
-/docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md	docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md	source-profile docs consolidated	APPLIED
-/docs/governance/correction-withdrawal-rollback.md	docs/tracking/governance/correction-withdrawal-rollback.md	governance tracking doc family	APPLIED
-/docs/governance/decision-log.md	docs/tracking/governance/decision-log.md	governance tracking doc family	APPLIED
-/docs/governance/obligation-execution.md	docs/control-plane/obligation-execution.md	control-plane operation guidance	APPLIED
-/docs/governance/promotion-evidence-registry.md	docs/registers/promotion-evidence-registry.md	register content moved to registers	APPLIED
-/docs/runtime/tile-runtime-performance.md	docs/architecture/tiles/tile-runtime-performance.md	runtime architecture tile family	APPLIED
+old_path	new_path	status
+docs/domains/atmosphere_air/slices/AIR_CANDIDATE_REENTRY_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_CANDIDATE_REENTRY_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_CLIENT_DELIVERY_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_CLIENT_DELIVERY_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_CONTINUOUS_ASSURANCE_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_CONTINUOUS_ASSURANCE_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_CUTOVER_OBSERVATION_RELEASE_LEDGER_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_CUTOVER_OBSERVATION_RELEASE_LEDGER_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_DELIVERY_DEPLOYMENT_READINESS_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_DELIVERY_DEPLOYMENT_READINESS_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_DEPLOYMENT_AUTHORIZATION_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_DEPLOYMENT_AUTHORIZATION_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_MAINTENANCE_REMEDIATION_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_MAINTENANCE_REMEDIATION_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_MAINTENANCE_ROLLFORWARD_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_MAINTENANCE_ROLLFORWARD_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_OPERATIONAL_HANDOFF_RELEASE_CLOSURE_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_OPERATIONAL_HANDOFF_RELEASE_CLOSURE_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_PUBLICATION_BOUNDARY_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLICATION_BOUNDARY_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_PUBLIC_OPS_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLIC_OPS_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_PUBLIC_READ_MODEL_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLIC_READ_MODEL_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_QA_PROMOTION_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_QA_PROMOTION_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_READ_MODEL_REBUILD_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_READ_MODEL_REBUILD_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_CONTINUOUS_ASSURANCE_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_CONTINUOUS_ASSURANCE_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_CUTOVER_OBSERVATION_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_CUTOVER_OBSERVATION_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_DEPLOYMENT_AUTHORIZATION_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_DEPLOYMENT_AUTHORIZATION_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_DEPLOYMENT_READINESS_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_DEPLOYMENT_READINESS_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_MAINTENANCE_REMEDIATION_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_MAINTENANCE_REMEDIATION_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_MAINTENANCE_ROLLFORWARD_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_MAINTENANCE_ROLLFORWARD_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_OPERATIONAL_HANDOFF_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_OPERATIONAL_HANDOFF_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_MATERIALIZATION_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_MATERIALIZATION_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_READ_MODEL_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_READ_MODEL_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_RELEASE_CANDIDATE_REFRESH_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_RELEASE_CANDIDATE_REFRESH_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_REENTRY_RELEASE_CANDIDATE_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_RELEASE_CANDIDATE_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_RELEASE_CANDIDATE_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_RELEASE_CANDIDATE_SLICE.md	PROPOSED
+docs/domains/atmosphere_air/slices/AIR_STEWARDSHIP_REMEDIATION_SLICE.md	docs/domains/atmosphere_air/runbooks/slices/AIR_STEWARDSHIP_REMEDIATION_SLICE.md	PROPOSED
+docs/domains/people-genealogy-dna-land/API_AND_UI.md	docs/domains/people_genealogy_dna_land/API_AND_UI.md	PROPOSED
+docs/domains/people-genealogy-dna-land/CHANGELOG.md	docs/domains/people_genealogy_dna_land/CHANGELOG.md	PROPOSED
+docs/domains/people-genealogy-dna-land/DECISIONS.md	docs/domains/people_genealogy_dna_land/DECISIONS.md	PROPOSED
+docs/domains/people-genealogy-dna-land/PRIVACY_AND_SENSITIVITY.md	docs/domains/people_genealogy_dna_land/PRIVACY_AND_SENSITIVITY.md	PROPOSED
+docs/domains/people-genealogy-dna-land/README.md	docs/domains/people_genealogy_dna_land/README.md	PROPOSED
+docs/domains/people-genealogy-dna-land/SOURCE_FAMILIES.md	docs/domains/people_genealogy_dna_land/SOURCE_FAMILIES.md	PROPOSED
+docs/domains/people-genealogy-dna-land/VALIDATION.md	docs/domains/people_genealogy_dna_land/VALIDATION.md	PROPOSED
+docs/domains/settlements-infrastructure/CHANGELOG.md	docs/domains/settlements_infrastructure/CHANGELOG.md	PROPOSED
+docs/domains/settlements-infrastructure/README.md	docs/domains/settlements_infrastructure/README.md	PROPOSED
+docs/domains/settlements-infrastructure/api.md	docs/domains/settlements_infrastructure/api.md	PROPOSED
+docs/domains/settlements-infrastructure/continuity.md	docs/domains/settlements_infrastructure/continuity.md	PROPOSED
+docs/domains/settlements-infrastructure/correction-log.md	docs/domains/settlements_infrastructure/correction-log.md	PROPOSED
+docs/domains/settlements-infrastructure/data-model.md	docs/domains/settlements_infrastructure/data-model.md	PROPOSED
+docs/domains/settlements-infrastructure/file-map.md	docs/domains/settlements_infrastructure/file-map.md	PROPOSED
+docs/domains/settlements-infrastructure/governance.md	docs/domains/settlements_infrastructure/governance.md	PROPOSED
+docs/domains/settlements-infrastructure/map-layers.md	docs/domains/settlements_infrastructure/map-layers.md	PROPOSED
+docs/domains/settlements-infrastructure/pipeline.md	docs/domains/settlements_infrastructure/pipeline.md	PROPOSED
+docs/domains/settlements-infrastructure/schema-registry.md	docs/domains/settlements_infrastructure/schema-registry.md	PROPOSED
+docs/domains/settlements-infrastructure/source-registry.md	docs/domains/settlements_infrastructure/source-registry.md	PROPOSED
+docs/domains/settlements-infrastructure/verification-backlog.md	docs/domains/settlements_infrastructure/verification-backlog.md	PROPOSED
+docs/domains/ui-maplibre/browser-sigstore-verify-before-render.md	docs/domains/ui_maplibre/browser-sigstore-verify-before-render.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER11_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER11_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER12_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER12_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER14_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER14_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER15_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER15_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER18_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER18_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER19_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER19_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER20_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER20_SNIPPET.md	PROPOSED
+docs/domains/ui-maplibre/readme_layers/README_LAYER8_SNIPPET.md	docs/domains/ui_maplibre/readme_layers/README_LAYER8_SNIPPET.md	PROPOSED

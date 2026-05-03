@@ -1,14 +1,62 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# reverse moves
-git mv docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md docs/catalog/dcat/KFM_DCAT_EXPORT_PROFILE.md
-git mv docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md docs/catalog/stac/KFM_STAC_EXTENSION_PROFILE.md
-git mv docs/tracking/governance/correction-withdrawal-rollback.md docs/governance/correction-withdrawal-rollback.md
-git mv docs/tracking/governance/decision-log.md docs/governance/decision-log.md
-git mv docs/control-plane/obligation-execution.md docs/governance/obligation-execution.md
-git mv docs/registers/promotion-evidence-registry.md docs/governance/promotion-evidence-registry.md
-git mv docs/architecture/tiles/tile-runtime-performance.md docs/runtime/tile-runtime-performance.md
-# remove new reorg tooling/files
-git rm -f tools/repo_inventory/classify_paths.py tools/repo_inventory/check_reorg_manifest.py tools/repo_inventory/check_doc_orphans.py tools/repo_inventory/check_public_path_boundaries.py
-git rm -f tests/repo_inventory/test_classify_paths.py tests/repo_inventory/test_check_reorg_manifest.py
-git rm -f docs/registers/reorg/REORG_SPRINT_MANIFEST.md docs/registers/reorg/path_inventory.tsv docs/registers/reorg/move_plan.tsv docs/registers/reorg/reference_update_plan.tsv docs/registers/reorg/authority_conflicts.md docs/registers/reorg/validation_report.md docs/registers/reorg/rollback_plan.sh
+# rollback generated 2026-05-03
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER8_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER8_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER20_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER20_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER19_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER19_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER18_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER18_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER15_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER15_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER14_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER14_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER12_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER12_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/readme_layers/README_LAYER11_SNIPPET.md" "docs/domains/ui-maplibre/readme_layers/README_LAYER11_SNIPPET.md"
+git mv "docs/domains/ui_maplibre/browser-sigstore-verify-before-render.md" "docs/domains/ui-maplibre/browser-sigstore-verify-before-render.md"
+git mv "docs/domains/settlements_infrastructure/verification-backlog.md" "docs/domains/settlements-infrastructure/verification-backlog.md"
+git mv "docs/domains/settlements_infrastructure/source-registry.md" "docs/domains/settlements-infrastructure/source-registry.md"
+git mv "docs/domains/settlements_infrastructure/schema-registry.md" "docs/domains/settlements-infrastructure/schema-registry.md"
+git mv "docs/domains/settlements_infrastructure/pipeline.md" "docs/domains/settlements-infrastructure/pipeline.md"
+git mv "docs/domains/settlements_infrastructure/map-layers.md" "docs/domains/settlements-infrastructure/map-layers.md"
+git mv "docs/domains/settlements_infrastructure/governance.md" "docs/domains/settlements-infrastructure/governance.md"
+git mv "docs/domains/settlements_infrastructure/file-map.md" "docs/domains/settlements-infrastructure/file-map.md"
+git mv "docs/domains/settlements_infrastructure/data-model.md" "docs/domains/settlements-infrastructure/data-model.md"
+git mv "docs/domains/settlements_infrastructure/correction-log.md" "docs/domains/settlements-infrastructure/correction-log.md"
+git mv "docs/domains/settlements_infrastructure/continuity.md" "docs/domains/settlements-infrastructure/continuity.md"
+git mv "docs/domains/settlements_infrastructure/api.md" "docs/domains/settlements-infrastructure/api.md"
+git mv "docs/domains/settlements_infrastructure/README.md" "docs/domains/settlements-infrastructure/README.md"
+git mv "docs/domains/settlements_infrastructure/CHANGELOG.md" "docs/domains/settlements-infrastructure/CHANGELOG.md"
+git mv "docs/domains/people_genealogy_dna_land/VALIDATION.md" "docs/domains/people-genealogy-dna-land/VALIDATION.md"
+git mv "docs/domains/people_genealogy_dna_land/SOURCE_FAMILIES.md" "docs/domains/people-genealogy-dna-land/SOURCE_FAMILIES.md"
+git mv "docs/domains/people_genealogy_dna_land/README.md" "docs/domains/people-genealogy-dna-land/README.md"
+git mv "docs/domains/people_genealogy_dna_land/PRIVACY_AND_SENSITIVITY.md" "docs/domains/people-genealogy-dna-land/PRIVACY_AND_SENSITIVITY.md"
+git mv "docs/domains/people_genealogy_dna_land/DECISIONS.md" "docs/domains/people-genealogy-dna-land/DECISIONS.md"
+git mv "docs/domains/people_genealogy_dna_land/CHANGELOG.md" "docs/domains/people-genealogy-dna-land/CHANGELOG.md"
+git mv "docs/domains/people_genealogy_dna_land/API_AND_UI.md" "docs/domains/people-genealogy-dna-land/API_AND_UI.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_STEWARDSHIP_REMEDIATION_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_STEWARDSHIP_REMEDIATION_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_RELEASE_CANDIDATE_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_RELEASE_CANDIDATE_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_RELEASE_CANDIDATE_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_RELEASE_CANDIDATE_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_RELEASE_CANDIDATE_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_RELEASE_CANDIDATE_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_READ_MODEL_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_READ_MODEL_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_MATERIALIZATION_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_MATERIALIZATION_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_PUBLICATION_BOUNDARY_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_OPERATIONAL_HANDOFF_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_OPERATIONAL_HANDOFF_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_MAINTENANCE_ROLLFORWARD_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_MAINTENANCE_ROLLFORWARD_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_MAINTENANCE_REMEDIATION_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_MAINTENANCE_REMEDIATION_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_DEPLOYMENT_READINESS_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_DEPLOYMENT_READINESS_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_DEPLOYMENT_AUTHORIZATION_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_DEPLOYMENT_AUTHORIZATION_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_CUTOVER_OBSERVATION_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_CUTOVER_OBSERVATION_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_REENTRY_CONTINUOUS_ASSURANCE_REFRESH_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_REENTRY_CONTINUOUS_ASSURANCE_REFRESH_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_READ_MODEL_REBUILD_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_READ_MODEL_REBUILD_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_QA_PROMOTION_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_QA_PROMOTION_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLIC_READ_MODEL_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_PUBLIC_READ_MODEL_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLIC_OPS_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_PUBLIC_OPS_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_PUBLICATION_BOUNDARY_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_PUBLICATION_BOUNDARY_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_OPERATIONAL_HANDOFF_RELEASE_CLOSURE_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_OPERATIONAL_HANDOFF_RELEASE_CLOSURE_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_MAINTENANCE_ROLLFORWARD_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_MAINTENANCE_ROLLFORWARD_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_MAINTENANCE_REMEDIATION_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_MAINTENANCE_REMEDIATION_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_DEPLOYMENT_AUTHORIZATION_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_DEPLOYMENT_AUTHORIZATION_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_DELIVERY_DEPLOYMENT_READINESS_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_DELIVERY_DEPLOYMENT_READINESS_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_CUTOVER_OBSERVATION_RELEASE_LEDGER_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_CUTOVER_OBSERVATION_RELEASE_LEDGER_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_CONTINUOUS_ASSURANCE_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_CONTINUOUS_ASSURANCE_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_CLIENT_DELIVERY_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_CLIENT_DELIVERY_SLICE.md"
+git mv "docs/domains/atmosphere_air/runbooks/slices/AIR_CANDIDATE_REENTRY_SLICE.md" "docs/domains/atmosphere_air/slices/AIR_CANDIDATE_REENTRY_SLICE.md"
+git checkout -- docs/registers/reorg docs/registers/domain_doc_index.md docs/registers/domain_file_index.md docs/registers/README.md docs/domains/README.md docs/adr/README.md docs/runbooks/README.md

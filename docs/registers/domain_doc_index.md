@@ -11,8 +11,14 @@
 - settlements_infrastructure: UNKNOWN
 - archaeology: `docs/domains/archaeology/` (CONFIRMED)
 - hazards: `docs/domains/hazards/` (CONFIRMED)
-- people_genealogy_dna_land: `docs/domains/people-genealogy-dna-land/` (CONFIRMED)
-- ui_maplibre: `docs/domains/ui-maplibre/` (CONFIRMED)
+- people_genealogy_dna_land: `docs/domains/people_genealogy_dna_land/` (CONFIRMED)
+- ui_maplibre: `docs/domains/ui_maplibre/` (CONFIRMED)
 - cesium_3d: `docs/domains/cesium-3d/` (CONFIRMED)
 - governed_ai: `docs/domains/governed-ai/` (CONFIRMED)
 - pipeline_control_plane: `docs/domains/pipeline-control-plane/` (CONFIRMED)
+
+## Path normalization update (2026-05-03)
+- `docs/domains/settlements_infrastructure/`
+- `docs/domains/people_genealogy_dna_land/`
+- `docs/domains/ui_maplibre/`
+- `docs/domains/atmosphere_air/runbooks/slices/`

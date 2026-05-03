@@ -156,7 +156,7 @@ Use the narrowest truthful label. Do not upgrade a planning statement into imple
 
 These links are orientation targets, not proof that directories currently exist:
 
-[Hydrology](./hydrology/README.md) · [Hazards](./hazards/README.md) · [Soil](./soil/README.md) · [Agriculture](./agriculture/README.md) · [Atmosphere / Air](./atmosphere_air/README.md) · [Geology & Natural Resources](./geology-natural-resources/README.md) · [Flora](./flora/README.md) · [Fauna](./fauna/README.md) · [Habitat](./habitat/README.md) · [Settlements & Infrastructure](./settlements-infrastructure/README.md) · [Roads / Rail / Trade Routes](./roads-rail-trade-routes/README.md) · [Archaeology](./archaeology/README.md) · [People / Genealogy / DNA / Land Ownership](./people-genealogy-dna-land/README.md)
+[Hydrology](./hydrology/README.md) · [Hazards](./hazards/README.md) · [Soil](./soil/README.md) · [Agriculture](./agriculture/README.md) · [Atmosphere / Air](./atmosphere_air/README.md) · [Geology & Natural Resources](./geology-natural-resources/README.md) · [Flora](./flora/README.md) · [Fauna](./fauna/README.md) · [Habitat](./habitat/README.md) · [Settlements & Infrastructure](./settlements_infrastructure/README.md) · [Roads / Rail / Trade Routes](./roads-rail-trade-routes/README.md) · [Archaeology](./archaeology/README.md) · [People / Genealogy / DNA / Land Ownership](./people_genealogy_dna_land/README.md)
 
 [Back to top](#top)
 
@@ -284,10 +284,10 @@ This registry is an orientation map, not an implementation inventory. Candidate 
 
 | Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
 |---|---|---|---|
-| Settlements & Infrastructure | `./settlements-infrastructure/README.md` | Settlements, cities, historic townsites, facilities, networks, service areas, operators, condition observations, dependencies. | Critical-infrastructure precision without review, facility as operator, legal municipality as historic settlement, or condition as design capacity. |
+| Settlements & Infrastructure | `./settlements_infrastructure/README.md` | Settlements, cities, historic townsites, facilities, networks, service areas, operators, condition observations, dependencies. | Critical-infrastructure precision without review, facility as operator, legal municipality as historic settlement, or condition as design capacity. |
 | Roads / Rail / Trade Routes | `./roads-rail-trade-routes/README.md` | Modern/historic movement networks, roads, rail corridors, trade/mobility routes, restrictions, facilities, temporal status. | Route geometry as legal designation, operator as owner, historic interpretation as surveyed alignment, or sensitive mobility corridors as precise public geometry. |
 | Archaeology | `./archaeology/README.md` | Sites, features, surveys, collections, remote-sensing candidates, cultural/steward review posture, public-safe generalized outputs. | Exact site locations by default, remote-sensing anomaly as confirmed site, or cultural/steward-sensitive material without review. |
-| People / Genealogy / DNA / Land Ownership | `./people-genealogy-dna-land/README.md` | Person assertions, relationship hypotheses, documentary evidence, land ownership assertions, parcel/title/assessor distinctions. | Living-person or DNA-derived public output by default, assessor/tax rows as title truth, or relationship hypotheses as canonical fact. |
+| People / Genealogy / DNA / Land Ownership | `./people_genealogy_dna_land/README.md` | Person assertions, relationship hypotheses, documentary evidence, land ownership assertions, parcel/title/assessor distinctions. | Living-person or DNA-derived public output by default, assessor/tax rows as title truth, or relationship hypotheses as canonical fact. |
 
 ### Suggested sequencing posture
 
@@ -729,3 +729,7 @@ Before publication, verify:
 
 ## Domain documentation register linkage
 See `docs/registers/domain_doc_index.md` and `docs/registers/domain_file_index.md`.
+
+## Path normalization
+- Settlements & Infrastructure path normalized to `settlements_infrastructure/`.
+- People/Genealogy/DNA/Land path normalized to `people_genealogy_dna_land/`.

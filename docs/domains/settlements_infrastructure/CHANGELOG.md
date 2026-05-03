@@ -2,7 +2,7 @@
 
 ## 2026-04-27
 
-- Added companion documentation set for `docs/domains/settlements-infrastructure/`:
+- Added companion documentation set for `docs/domains/settlements_infrastructure/`:
   - `data-model.md`
   - `source-registry.md`
   - `schema-registry.md`
