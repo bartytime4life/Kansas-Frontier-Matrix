@@ -454,3 +454,6 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 - `contracts/` vs `schemas/` machine files
 - `policy/` vs `policies/` policy packages
 - lifecycle artifact homes under `data/{raw,work,quarantine,processed,catalog,triplets,receipts,proofs,published}`
+
+## Authority-sensitive move guard
+Do not move machine schema files between `contracts/` and `schemas/`, or policy-as-code files between `policy/` and `policies/`, without explicit ADR authorization.

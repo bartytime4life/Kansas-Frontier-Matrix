@@ -400,3 +400,10 @@ Use this template when adding a compact register row or expanding a row into a s
 - See `docs/registers/schema_authority_map.md`
 - See `docs/registers/policy_authority_map.md`
 - See `docs/registers/domain_doc_index.md`
+
+## Reorg control-plane
+- `docs/registers/reorg/REORG_SPRINT_MANIFEST.md`
+- `docs/registers/schema_authority_map.md`
+- `docs/registers/policy_authority_map.md`
+- `docs/registers/domain_doc_index.md`
+- `docs/registers/domain_file_index.md`

@@ -726,3 +726,6 @@ Before publication, verify:
 </details>
 
 [Back to top](#top)
+
+## Domain documentation register linkage
+See `docs/registers/domain_doc_index.md` and `docs/registers/domain_file_index.md`.
