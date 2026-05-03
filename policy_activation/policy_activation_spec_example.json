@@ -1,1 +1,0 @@
-{"schema":"PolicyActivationSpec.v1","policy_activation_id":"pa-example","dataset_id":"soilgrids-kansas","activation_profile":"strict-local","activation":{"execute_flag_required":true},"policy_store":{"active_pointer_path":"active_policy_pointer.json"}}
