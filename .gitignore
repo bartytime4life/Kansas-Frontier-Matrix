@@ -2,3 +2,7 @@ baseline-report.txt
 __pycache__/
 *.pyc
 *.pyo
+
+# JavaScript dependencies (keep untracked local installs out of repo status)
+node_modules/
+apps/*/node_modules/
