@@ -1,9 +1,9 @@
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 
 FIXTURE = Path("fixtures/release/release_manifest.valid.json")
 OUTPUT = Path("release/dry_runs/promotion_dry_run_receipt.json")
+SYNTHETIC_TIMESTAMP_UTC = "1970-01-01T00:00:00+00:00"
 
 
 def main() -> int:
@@ -19,13 +19,13 @@ def main() -> int:
 
     receipt = {
         "id": "promotion-dry-run-001",
-        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "timestamp_utc": SYNTHETIC_TIMESTAMP_UTC,
         "source_manifest": str(FIXTURE),
         "result": "PASS" if not errors else "FAIL",
         "errors": errors,
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(receipt, indent=2))
+    OUTPUT.write_text(json.dumps(receipt, indent=2) + "\n")
 
     if errors:
         print("FAIL", errors)
