@@ -69,7 +69,7 @@
   "preservation_review_action_allowed": false,
   "preservation_finalization_action_requested": false,
   "preservation_finalization_action_allowed": false,
-  "preservation_audit_action_requested": false,
+  "preservation_audit_action_requested": true,
   "preservation_audit_action_allowed": false,
   "preliminary_data": true,
   "layer28_inputs": {

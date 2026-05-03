@@ -93,7 +93,7 @@
   },
   "layer30_inputs": {
     "closure_archive_index_finalization_receipt_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_finalization_receipt.json",
-    "closure_archive_index_decision_candidate_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_decision_candidate.json",
+    "closure_archive_index_decision_candidate_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/MISSING.json",
     "closure_archive_index_acceptance_consolidation_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_acceptance_consolidation.json",
     "closure_archive_index_blocker_consolidation_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_blocker_consolidation.json",
     "closure_archive_index_non_execution_attestation_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_non_execution_attestation.json",

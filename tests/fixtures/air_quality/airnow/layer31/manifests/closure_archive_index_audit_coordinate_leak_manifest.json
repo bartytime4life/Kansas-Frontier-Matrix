@@ -74,7 +74,7 @@
   "preliminary_data": true,
   "layer28_inputs": {
     "closure_archive_index_receipt_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_index_receipt.json",
-    "closure_archive_scope_index_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_scope_index.json",
+    "closure_archive_scope_index_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/../layer28/closure_archive_scope_index.json",
     "closure_archive_member_index_plan_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_member_index_plan.json",
     "closure_archive_hash_index_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_hash_index.json",
     "closure_archive_receipt_index_json": "tests/fixtures/air_quality/airnow/layer31/input/layer28/closure_archive_receipt_index.json",

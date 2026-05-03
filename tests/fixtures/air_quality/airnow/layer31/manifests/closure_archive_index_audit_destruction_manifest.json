@@ -33,7 +33,7 @@
   "git_push_allowed": false,
   "file_deletion_requested": false,
   "file_deletion_allowed": false,
-  "destruction_execution_requested": false,
+  "destruction_execution_requested": true,
   "destruction_execution_allowed": false,
   "archive_transfer_requested": false,
   "archive_transfer_allowed": false,

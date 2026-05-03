@@ -39,7 +39,7 @@
   "archive_transfer_allowed": false,
   "external_storage_requested": false,
   "external_storage_allowed": false,
-  "chmod_or_chattr_requested": false,
+  "chmod_or_chattr_requested": true,
   "chmod_or_chattr_allowed": false,
   "legal_hold_creation_requested": false,
   "legal_hold_creation_allowed": false,

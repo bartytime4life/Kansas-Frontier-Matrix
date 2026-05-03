@@ -61,7 +61,7 @@
   "snapshot_release_allowed": false,
   "preservation_action_requested": false,
   "preservation_action_allowed": false,
-  "preservation_copy_requested": false,
+  "preservation_copy_requested": true,
   "preservation_copy_allowed": false,
   "preservation_transfer_requested": false,
   "preservation_transfer_allowed": false,

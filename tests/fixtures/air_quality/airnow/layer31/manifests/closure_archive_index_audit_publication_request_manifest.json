@@ -3,7 +3,7 @@
   "local_file_only": true,
   "no_network": true,
   "bulk_web_service_loop": false,
-  "publication_requested": false,
+  "publication_requested": true,
   "publication_allowed": false,
   "public_dashboard_requested": false,
   "public_dashboard_allowed": false,

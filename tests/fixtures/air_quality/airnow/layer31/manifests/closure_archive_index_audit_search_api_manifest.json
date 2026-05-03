@@ -10,7 +10,7 @@
   "tiles_requested": false,
   "tiles_allowed": false,
   "public_api_requested": false,
-  "public_api_allowed": false,
+  "public_api_allowed": true,
   "emergency_alert_requested": false,
   "emergency_alert": false,
   "regulatory_claims_requested": false,

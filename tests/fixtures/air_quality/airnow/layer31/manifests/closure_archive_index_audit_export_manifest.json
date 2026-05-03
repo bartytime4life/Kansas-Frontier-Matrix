@@ -49,7 +49,7 @@
   "legal_advice_allowed": false,
   "final_accession_execution_requested": false,
   "final_accession_execution_allowed": false,
-  "snapshot_export_execution_requested": false,
+  "snapshot_export_execution_requested": true,
   "snapshot_export_execution_allowed": false,
   "snapshot_copy_requested": false,
   "snapshot_copy_allowed": false,

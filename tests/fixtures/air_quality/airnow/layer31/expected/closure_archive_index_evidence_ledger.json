@@ -1,0 +1,10 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexEvidenceLedger",
+  "records": [
+    {
+      "candidate_id": "c1"
+    }
+  ],
+  "schema_version": "v1"
+}

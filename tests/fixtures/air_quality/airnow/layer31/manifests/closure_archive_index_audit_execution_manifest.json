@@ -17,9 +17,9 @@
   "regulatory_claims_allowed": false,
   "exact_sensitive_overlay_requested": false,
   "exact_sensitive_overlay_allowed": false,
-  "command_execution_requested": true,
+  "command_execution_requested": false,
   "command_execution_allowed": false,
-  "auto_execute_requested": false,
+  "auto_execute_requested": true,
   "auto_execute_allowed": false,
   "auto_apply_requested": false,
   "auto_apply_allowed": false,
@@ -101,6 +101,6 @@
     "closure_archive_index_caveat_continuity_register_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_caveat_continuity_register.json"
   },
   "audit_policy": {
-    "include_packet": false
+    "include_packet": true
   }
 }
