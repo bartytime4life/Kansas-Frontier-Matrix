@@ -4,38 +4,38 @@ title: Catalog Documentation Hub
 type: standard
 version: v1
 status: draft
-owners: TODO: catalog/docs steward
+owners: TODO(owner): catalog/docs steward not confirmed in current session
 created: 2026-04-27
-updated: 2026-04-27
-policy_label: TODO-REVIEW-public-or-restricted
+updated: 2026-05-03
+policy_label: TODO(policy): confirm public vs restricted before publication
 related: [../README.md, ../standards/README.md, ../runbooks/README.md, ../../data/catalog/README.md, ../../data/catalog/stac/README.md, ../../data/catalog/dcat/README.md, ../../data/catalog/prov/README.md, ../../schemas/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tools/catalog/README.md]
 tags: [kfm, catalog, evidence, provenance, publication, documentation]
-notes: [Created from attached KFM doctrine; repo checkout unavailable in this session; verify owner, doc_id, policy label, and adjacent links before publication.]
+notes: [Revised from attached Markdown; repo checkout unavailable in this session; related paths remain NEEDS VERIFICATION; verify owner, doc_id, policy label, and adjacent links before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 # Catalog Documentation Hub
 
-Orient maintainers to KFM catalog doctrine, catalog-adjacent documentation, and the boundary between documentation guidance and catalog payloads.
+Orient maintainers to KFM catalog doctrine, catalog-adjacent documentation, and the line between human guidance and catalog payload authority.
 
 > [!IMPORTANT]
-> **Status:** experimental · **Document status:** draft · **Owners:** TODO: catalog/docs steward  
-> **Path:** `docs/catalog/README.md` · **Repo evidence:** NEEDS VERIFICATION in a mounted checkout  
+> **Status:** experimental · **Document status:** draft · **Owners:** TODO(owner): catalog/docs steward  
+> **Path:** `docs/catalog/README.md` · **Repo evidence:** UNKNOWN until verified in a mounted checkout  
 >
 > ![Status: experimental](https://img.shields.io/badge/status-experimental-yellow?style=flat-square)
 > ![Doc status: draft](https://img.shields.io/badge/doc-draft-lightgrey?style=flat-square)
 > ![Truth: evidence first](https://img.shields.io/badge/truth-evidence--first-blue?style=flat-square)
 > ![Surface: docs/catalog](https://img.shields.io/badge/surface-docs%2Fcatalog-informational?style=flat-square)
-> ![Policy: review needed](https://img.shields.io/badge/policy-NEEDS_VERIFICATION-orange?style=flat-square)
+> ![Policy: NEEDS VERIFICATION](https://img.shields.io/badge/policy-NEEDS_VERIFICATION-orange?style=flat-square)
 >
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Catalog boundary](#catalog-boundary) · [Operating model](#operating-model) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Catalog boundary](#catalog-boundary) · [Operating model](#operating-model) · [Catalog review matrix](#catalog-review-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 ---
 
 ## Scope
 
-`docs/catalog/` is the **documentation hub** for how KFM explains and governs catalog behavior.
+`docs/catalog/` is the **human documentation hub** for how KFM explains, reviews, and governs catalog behavior.
 
-It is not the catalog store. It should help maintainers understand how catalog documentation relates to source descriptors, catalog triplet closure, proof objects, promotion, public discovery, EvidenceBundle resolution, and map/runtime surfaces.
+It is **not** the catalog store, schema registry, proof store, receipt store, release manifest home, or publication gate. Its job is to help maintainers understand how catalog documentation relates to source descriptors, STAC/DCAT/PROV closure, CatalogMatrix checks, proof objects, promotion, public discovery, EvidenceBundle resolution, and map/runtime surfaces.
 
 **CONFIRMED doctrine:** KFM’s catalog posture is downstream of the governed lifecycle:
 
@@ -46,7 +46,23 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 **PROPOSED role for this directory:** keep catalog explanation, review guidance, profile notes, and maintainer-facing checklists close together without turning docs into machine authority.
 
 > [!WARNING]
-> Do not use this README to imply that catalog schemas, validators, proof bundles, workflow gates, or emitted artifacts exist. Those claims require mounted repo evidence, checked-in files, tests, workflows, or generated proof objects.
+> Do not use this README to imply that catalog schemas, validators, proof bundles, workflow gates, CI checks, or emitted artifacts already exist. Those claims require mounted repo evidence, checked-in files, tests, workflows, logs, dashboards, or generated proof objects.
+
+[Back to top](#catalog-documentation-hub)
+
+---
+
+## Evidence boundary
+
+This README states KFM doctrine where supported by project sources and the attached Markdown. Current implementation depth remains **UNKNOWN** where repo files, tests, workflows, dashboards, logs, runtime traces, source registries, validators, or emitted artifacts were not inspected in a mounted checkout.
+
+| Claim type | Posture in this README |
+|---|---|
+| KFM trust lifecycle and cite-or-abstain posture | **CONFIRMED doctrine** from the project corpus. |
+| `docs/catalog/README.md` as the target path | **PROPOSED / NEEDS VERIFICATION** until repo convention is checked. |
+| Adjacent links under `docs/`, `data/`, `schemas/`, `contracts/`, `policy/`, and `tools/` | **NEEDS VERIFICATION** before publication. |
+| Catalog validators, CI gates, proof packs, source registries, and workflow enforcement | **UNKNOWN implementation depth** until direct repo evidence confirms them. |
+| Suggested additional catalog docs | **PROPOSED** and should not be created unless they reduce confusion. |
 
 [Back to top](#catalog-documentation-hub)
 
@@ -71,7 +87,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 | Authority neighbor | [`../../policy/README.md`](../../policy/README.md) | Rights, sensitivity, release, and fail-closed policy posture. |
 | Helper lane | [`../../tools/catalog/README.md`](../../tools/catalog/README.md) | Catalog QA, link checks, closure checks, and reviewer helpers. |
 
-**NEEDS VERIFICATION:** link targets must be checked in the mounted repository before this file is published. If a target does not exist, keep the path as plain text, create the missing landing page, or record the gap in the verification backlog.
+**NEEDS VERIFICATION:** check all link targets in the mounted repository before this file is published. If a target does not exist, keep the path as plain text, create the missing landing page through a reviewed PR, or record the gap in the verification backlog.
 
 ### Upstream / downstream rule
 
@@ -79,7 +95,10 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 `data/catalog/` carries catalog records.  
 `schemas/` and `contracts/` define machine-checkable shapes.  
 `policy/` decides what may be released.  
-`data/proofs/`, `data/receipts/`, and release surfaces carry proof, process memory, and publication state.
+`data/proofs/`, `data/receipts/`, and `release/` carry proof, process memory, and publication state.
+
+> [!CAUTION]
+> A documentation page may describe catalog closure, but it must not become the closure artifact.
 
 [Back to top](#catalog-documentation-hub)
 
@@ -92,12 +111,13 @@ Put material here when it helps maintainers understand, review, or improve KFM c
 | Accepted here | Why it belongs |
 |---|---|
 | Catalog operating model notes | Explains what `CATALOG / TRIPLET` means in KFM without editing machine records. |
-| Catalog closure guidance | Helps reviewers decide whether STAC, DCAT, PROV, and CatalogMatrix expectations are complete. |
+| Catalog closure guidance | Helps reviewers decide whether STAC, DCAT, PROV, digest, release, and EvidenceBundle expectations are complete. |
 | STAC / DCAT / PROV relationship notes | Clarifies sibling roles without collapsing them into one generic metadata file. |
 | CatalogMatrix explanation | Documents how catalog closure is inspected before release. |
 | Reviewer checklists | Keeps promotion and release review consistent. |
-| Human-readable examples | Helps contributors understand expected shape, as long as examples are clearly non-production. |
+| Human-readable examples | Helps contributors understand expected shape, as long as examples are clearly illustrative and non-production. |
 | Crosswalk notes | Maps catalog docs to schemas, contracts, source descriptors, release manifests, EvidenceBundle behavior, and UI payloads. |
+| Verification backlog notes | Makes missing owners, links, validators, and object-family locations searchable and reviewable. |
 
 [Back to top](#catalog-documentation-hub)
 
@@ -117,9 +137,7 @@ Do not put these in `docs/catalog/`.
 | Run receipts, AI receipts, proof packs, attestations, or release manifests | `data/receipts/`, `data/proofs/`, `release/`, or confirmed repo equivalent. |
 | AI-generated summaries pretending to be catalog truth | Governed runtime surfaces only, after EvidenceBundle and policy checks. |
 | Sensitive exact-location catalog notes | Restricted docs or policy-controlled records; never public docs by default. |
-
-> [!CAUTION]
-> A documentation page may describe catalog closure, but it must not become the closure artifact.
+| Silent corrections to published catalog records | `CorrectionNotice`, release notes, rollback records, or confirmed correction workflow. |
 
 [Back to top](#catalog-documentation-hub)
 
@@ -155,18 +173,21 @@ docs/catalog/
 
 ## Catalog boundary
 
-KFM catalog surfaces are useful because they make evidence and release state inspectable. They are dangerous when treated as sovereign truth.
+KFM catalog surfaces are useful because they make evidence, provenance, release state, and correction lineage inspectable. They are dangerous when treated as sovereign truth.
 
 | Object / surface | KFM role | Must not become |
 |---|---|---|
-| `SourceDescriptor` | Records source identity, role, rights, cadence, and admissibility posture. | A substitute for source review. |
+| `SourceDescriptor` | Records source identity, source role, rights, cadence, scope, and admissibility posture. | A substitute for source review. |
+| `EvidenceRef` | Points to evidence that must be resolved before consequential claims are answered or published. | An unsupported pointer or citation-shaped decoration. |
 | `EvidenceBundle` | Resolves evidence references into inspectable support for claims. | Free-form prose or unverifiable summary. |
-| `CatalogMatrix` | Checks whether required catalog/proof/release relationships close. | A decorative spreadsheet or optional checklist. |
+| `CatalogMatrix` | Checks whether required catalog, proof, release, digest, and EvidenceBundle relationships close. | A decorative spreadsheet or optional checklist. |
 | STAC | Spatial-temporal asset metadata and discoverability. | Legal release authority by itself. |
 | DCAT | Dataset/distribution discovery metadata. | Provenance record by itself. |
 | PROV | Lineage/provenance metadata. | Policy decision by itself. |
-| `ReleaseManifest` | Defines the release scope and bound artifacts. | A replacement for validation and policy gates. |
-| `DecisionEnvelope` | Captures policy/review/runtime decision state. | A generic status string. |
+| `ReleaseManifest` | Defines release scope and bound artifacts. | A replacement for validation and policy gates. |
+| `DecisionEnvelope` | Captures policy, review, runtime, or promotion decision state. | A generic status string. |
+| `RunReceipt` / `AIReceipt` | Records process memory and model/runtime actions. | Release-grade proof by itself. |
+| `ProofPack` | Carries release-grade verification evidence. | A log dump or narrative assertion. |
 | `CorrectionNotice` | Carries correction, supersession, withdrawal, and rollback lineage. | Silent edits to previously published truth. |
 
 **PROPOSED catalog principle:** a public-facing catalog claim should be able to point backward to evidence and forward to release/correction state.
@@ -193,6 +214,7 @@ flowchart LR
   policy["policy + sensitivity rules"] --> matrix
   evidence["EvidenceBundle resolution"] --> proof
   ui["governed API / map / Evidence Drawer"] --> published
+  correction["CorrectionNotice / rollback"] --> published
 
   classDef doc fill:#eef,stroke:#557,stroke-width:1px;
   class docs doc;
@@ -200,11 +222,11 @@ flowchart LR
 
 ### Review rhythm
 
-1. **Locate the artifact.** Confirm whether the thing under review is source, work, processed output, catalog metadata, proof, receipt, or published artifact.
-2. **Check source role.** Verify source identity, source role, rights, sensitivity, and admissibility before cataloging it as support.
+1. **Locate the artifact.** Confirm whether the thing under review is source, work, processed output, catalog metadata, proof, receipt, release object, or published artifact.
+2. **Check source role.** Verify source identity, source role, rights, sensitivity, cadence, scope, and admissibility before cataloging it as support.
 3. **Check triplet closure.** STAC, DCAT, and PROV should agree where they overlap and remain distinct where they carry different responsibilities.
-4. **Check proof linkage.** Catalog records should connect to release scope, validation evidence, and provenance.
-5. **Check public posture.** Sensitive, restricted, culturally governed, rights-unclear, or exact-location-risk records fail closed.
+4. **Check proof linkage.** Catalog records should connect to release scope, validation evidence, provenance, checksums, and evidence references.
+5. **Check public posture.** Sensitive, restricted, culturally governed, rights-unclear, exact-location-risk, living-person, ecological, archaeological, infrastructure, or land/title-related records fail closed.
 6. **Record correction path.** Published catalog outputs need rollback or correction lineage before release.
 
 [Back to top](#catalog-documentation-hub)
@@ -216,7 +238,7 @@ flowchart LR
 Use these checks from the repository root after a real checkout is mounted.
 
 > [!NOTE]
-> Commands below are non-destructive inspection helpers. They are not proof that validators or workflow gates exist.
+> Commands below are non-destructive inspection helpers. They are not proof that validators, workflows, or policy gates exist.
 
 ```bash
 # Inspect catalog documentation and data-catalog surfaces.
@@ -225,7 +247,7 @@ find docs/catalog data/catalog -maxdepth 3 -type f 2>/dev/null | sort
 
 ```bash
 # Look for catalog closure and release-related object names.
-grep -RInE "CatalogMatrix|ReleaseManifest|EvidenceBundle|CorrectionNotice|STAC|DCAT|PROV" \
+grep -RInE "CatalogMatrix|ReleaseManifest|EvidenceBundle|EvidenceRef|CorrectionNotice|STAC|DCAT|PROV" \
   docs data schemas contracts policy tools tests 2>/dev/null | head -120
 ```
 
@@ -242,6 +264,14 @@ do
 done
 ```
 
+```bash
+# Check whether schema and contract homes are documented before adding catalog examples.
+for path in schemas/README.md contracts/README.md docs/adr/ADR-0001-schema-home.md
+do
+  test -f "$path" && echo "OK  $path" || echo "NEEDS VERIFICATION  $path"
+done
+```
+
 [Back to top](#catalog-documentation-hub)
 
 ---
@@ -250,14 +280,16 @@ done
 
 | Gate | Pass condition | Failure posture |
 |---|---|---|
-| Source identity | SourceDescriptor or equivalent source record exists and identifies source role. | HOLD until source identity is resolved. |
-| Rights | License, terms, redistribution posture, and attribution are clear enough for the target release. | DENY public release or quarantine. |
-| Sensitivity | Restricted, precise, cultural, living-person, rare-species, archaeology, or infrastructure risks are handled. | Fail closed; redact, generalize, restrict, or delay. |
-| Spatial / temporal scope | Catalog record states spatial extent, time range, version, and uncertainty where applicable. | HOLD; do not publish as authoritative. |
-| Triplet closure | STAC, DCAT, and PROV lanes are present or an explicit exception is recorded. | HOLD; CatalogMatrix remains open. |
-| Proof linkage | Catalog entries link to validation results, provenance, release scope, and evidence references. | HOLD; proof bundle incomplete. |
-| Release state | ReleaseManifest or equivalent release object binds what is public. | DENY publication as ungoverned. |
-| Correction path | CorrectionNotice / rollback procedure exists for published records. | HOLD for consequential public claims. |
+| Source identity | `SourceDescriptor` or equivalent source record exists and identifies source role. | **HOLD** until source identity is resolved. |
+| Rights | License, terms, redistribution posture, and attribution are clear enough for the target release. | **DENY** public release or quarantine. |
+| Sensitivity | Restricted, precise, cultural, living-person, rare-species, archaeology, infrastructure, or land/title risks are handled. | Fail closed; redact, generalize, restrict, or delay. |
+| Spatial / temporal scope | Catalog record states spatial extent, valid time, as-of time, version, and uncertainty where applicable. | **HOLD**; do not publish as authoritative. |
+| Triplet closure | STAC, DCAT, and PROV lanes are present or an explicit exception is recorded. | **HOLD**; CatalogMatrix remains open. |
+| Digest closure | Artifact digests/checksums align across catalog, manifest, and proof surfaces. | **HOLD**; investigate mismatch before release. |
+| Evidence linkage | Catalog entries link to EvidenceRef/EvidenceBundle support where claims are consequential. | **ABSTAIN** from unsupported claims. |
+| Proof linkage | Catalog entries link to validation results, provenance, release scope, and evidence references. | **HOLD**; proof bundle incomplete. |
+| Release state | `ReleaseManifest` or equivalent release object binds what is public. | **DENY** publication as ungoverned. |
+| Correction path | `CorrectionNotice`, rollback record, or equivalent correction procedure exists for published records. | **HOLD** for consequential public claims. |
 
 [Back to top](#catalog-documentation-hub)
 
@@ -271,12 +303,31 @@ This README is ready to publish when:
 - [ ] `owners` names the accountable steward or team.
 - [ ] `policy_label` is confirmed.
 - [ ] Adjacent links are checked in the mounted repository.
-- [ ] The repo has a confirmed answer for whether `docs/catalog/` is a documentation hub, a standards hub, or another local convention.
+- [ ] The repo has a confirmed answer for whether `docs/catalog/` is a documentation hub, standards hub, or another local convention.
 - [ ] `data/catalog/` sibling surfaces are verified or the missing surfaces are listed in the backlog.
 - [ ] Catalog object names match the repo’s current schema/contract vocabulary.
 - [ ] The schema-home relationship between `schemas/` and `contracts/` is not contradicted by this README.
 - [ ] Any examples added under this directory are clearly labeled illustrative and non-production.
+- [ ] Catalog validators, if referenced as real enforcement, are confirmed by source files, tests, workflows, or emitted reports.
 - [ ] A maintainer can use this page to decide what belongs here and what must go elsewhere.
+
+[Back to top](#catalog-documentation-hub)
+
+---
+
+## Rollback and correction
+
+Rollback this README change if it weakens the trust membrane, breaks established repo conventions, creates schema/contract authority conflict, implies validators or proof objects exist without evidence, or normalizes public release without policy and review gates.
+
+Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+
+| Trigger | Action |
+|---|---|
+| Link targets are wrong or misleading | Revert affected link rows or mark as `NEEDS VERIFICATION` until the target exists. |
+| Repo convention contradicts `docs/catalog/` role | Update this README to match local convention or move content through an ADR-backed doc relocation. |
+| Schema-home ADR contradicts this README | Revise all `schemas/` / `contracts/` language to match the ADR. |
+| Catalog object names change | Update vocabulary and add a migration note rather than silently renaming concepts. |
+| Sensitive catalog guidance is too public | Move details to restricted documentation and leave only safe public posture here. |
 
 [Back to top](#catalog-documentation-hub)
 
@@ -302,7 +353,11 @@ Treat the disagreement as a catalog closure issue. Do not smooth it over in pros
 
 ### What if a catalog item is useful but rights or sensitivity are unclear?
 
-Prefer quarantine, restricted access, redaction, generalization, or delayed publication. Record the reason and transformation rather than publishing weakly supported certainty.
+Prefer quarantine, restricted access, redaction, generalization, staged access, or delayed publication. Record the reason and transformation rather than publishing weakly supported certainty.
+
+### Can AI summarize catalog records?
+
+Only through governed runtime surfaces after EvidenceRef-to-EvidenceBundle resolution, policy checks, citation validation, and release-state checks. AI summaries are interpretive outputs, not catalog truth.
 
 [Back to top](#catalog-documentation-hub)
 
@@ -335,5 +390,7 @@ Add these only if they reduce confusion. Do not create files just to satisfy a t
 | Confirm proof, receipt, and release object locations. | Keep process memory, proof, and release state separate. |
 | Confirm owners/CODEOWNERS. | Make review responsibility real. |
 | Confirm publication policy for catalog docs. | Keep sensitive or restricted guidance out of public docs. |
+| Confirm STAC/DCAT/PROV profile expectations. | Prevent one metadata standard from being misused as another. |
+| Confirm rollback target for this README. | Make doc changes reversible. |
 
 </details>
