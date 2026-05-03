@@ -5,3 +5,6 @@ __pycache__/
 
 # JavaScript dependencies (matches node_modules directories repo-wide)
 node_modules/
+
+# Explicit local web dependencies
+apps/web/node_modules/

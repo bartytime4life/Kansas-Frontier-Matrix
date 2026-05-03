@@ -2,11 +2,16 @@
 
 Status labels: CONFIRMED / PROPOSED / UNKNOWN / CONFLICTED / BLOCKED
 
-- Total tracked files inventoried: **7478** (CONFIRMED).
-- Moves applied: **0** (BLOCKED by authority-safe/no-op move policy for this pass).
-- Reference rewrites: **0** (CONFIRMED no moved paths).
+- Total tracked files inventoried: **7478** (CONFIRMED via `git ls-files`).
+- Target-impact status: **BLOCKED** for high-volume move pass; repo already has mature doc homes and authority conflicts remain unresolved for `contracts/` vs `schemas/` and `policy/` vs `policies`.
+- Moves applied in this sprint: **0** (BLOCKED for safety).
+- Reference rewrites from moves: **0** (CONFIRMED no moved paths).
+- Validation/tooling edits: **CONFIRMED** (boundary-check hardening and ignore hygiene).
 
 ## Classification summary
+
+Derived from `docs/registers/reorg/path_inventory.tsv`.
+
 - app_api: 25
 - app_web: 78
 - app_worker: 7
@@ -44,11 +49,13 @@ Status labels: CONFIRMED / PROPOSED / UNKNOWN / CONFLICTED / BLOCKED
 - unknown: 784
 
 ## What not to move without ADR
-- `contracts/` <-> `schemas/` machine schemas
-- `policy/` <-> `policies/` rego/policy packages
-- lifecycle truth homes under `data/` state lanes
+
+- `contracts/` <-> `schemas/` machine schemas.
+- `policy/` <-> `policies/` rule packs.
+- lifecycle authority lanes under `data/` (`raw/work/quarantine/processed/catalog/triplets/receipts/proofs/published`).
 
 ## Artifacts
+
 - `path_inventory.tsv`
 - `move_plan.tsv`
 - `reference_update_plan.tsv`
