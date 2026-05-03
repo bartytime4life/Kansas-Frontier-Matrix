@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["object_type","manifest_id","layer32_inputs","manual_review_evidence"],"properties":{"object_type":{"const":"AirNowClosureArchiveIndexPreservationReviewManifest"},"manifest_id":{"type":"string"},"layer32_inputs":{"type":"object"},"manual_review_evidence":{"type":"array"}}}
