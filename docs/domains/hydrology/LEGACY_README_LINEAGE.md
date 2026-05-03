@@ -10,7 +10,7 @@ updated: TODO-VERIFY(YYYY-MM-DD)
 policy_label: TODO-VERIFY(public|restricted)
 related: [TODO-VERIFY:../README.md, TODO-VERIFY:../../README.md, TODO-VERIFY:../domains/hydrology/README.md, TODO-VERIFY:../../schemas/contracts/v1/hydrology/, TODO-VERIFY:../../data/registry/hydrology/sources/, TODO-VERIFY:../../policy/hydrology/, TODO-VERIFY:../../tests/]
 tags: [kfm, hydrology, water, evidence, map-first, time-aware, readme]
-notes: [Target path supplied by current task as docs/hydrology/README.md. Prior KFM materials also reference docs/domains/hydrology; path harmonization needs mounted-repo verification. Owner, doc_id, dates, policy label, and related links are placeholders until verified in the actual repository.]
+notes: [Target path supplied by current task as docs/domains/hydrology/LEGACY_README_LINEAGE.md. Prior KFM materials also reference docs/domains/hydrology; path harmonization needs mounted-repo verification. Owner, doc_id, dates, policy label, and related links are placeholders until verified in the actual repository.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -34,7 +34,7 @@ Governed orientation for KFM hydrology documentation, source intake, proof objec
 > |---|---|
 > | Status | `experimental` until the mounted repo confirms file homes, schemas, tests, workflows, and runtime behavior |
 > | Owners | `TODO-VERIFY(hydrology-steward, docs-steward)` |
-> | Target path | `docs/hydrology/README.md` |
+> | Target path | `docs/domains/hydrology/LEGACY_README_LINEAGE.md` |
 > | Path caution | Prior KFM materials also mention `docs/domains/hydrology/`; resolve through repo inspection before link wiring |
 > | Truth posture | Hydrology doctrine is strong; current implementation depth is **NEEDS VERIFICATION** |
 > | Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
@@ -73,7 +73,7 @@ The lane’s job is to make water-related spatial claims inspectable. A hydrolog
 
 ### Path
 
-`docs/hydrology/README.md`
+`docs/domains/hydrology/LEGACY_README_LINEAGE.md`
 
 ### How this directory should fit
 

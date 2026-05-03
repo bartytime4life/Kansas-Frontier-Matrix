@@ -8,9 +8,9 @@ owners: TODO-VERIFY: atmosphere-air domain steward, data steward, policy steward
 created: TODO-VERIFY-YYYY-MM-DD
 updated: 2026-04-22
 policy_label: TODO-VERIFY-public-or-restricted
-related: [docs/domains/atmosphere/README.md, schemas/contracts/v1/atmosphere/, data/registry/atmosphere/]
+related: [docs/domains/atmosphere-air/README.md, schemas/contracts/v1/atmosphere/, data/registry/atmosphere/]
 tags: [kfm, atmosphere-air, air-quality, evidence, map-first, time-aware, governed-domain]
-notes: [Target path requested as docs/domains/atmosphere-air/README.md; prior atmosphere architecture used docs/domains/atmosphere/ as the proposed domain path, so path reconciliation needs repo verification.]
+notes: [Target path requested as docs/domains/atmosphere-air/README.md; prior atmosphere architecture used docs/domains/atmosphere-air/ as the proposed domain path, so path reconciliation needs repo verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air Domain
@@ -72,7 +72,7 @@ This README does not claim that the repository already contains the files, schem
 | Surface | Status | Working path or relationship |
 |---|---:|---|
 | README requested by this task | PROPOSED | `docs/domains/atmosphere-air/README.md` |
-| Prior architecture path family | NEEDS VERIFICATION | `docs/domains/atmosphere/README.md` |
+| Prior architecture path family | NEEDS VERIFICATION | `docs/domains/atmosphere-air/README.md` |
 | Domain docs family | PROPOSED | `docs/domains/atmosphere-air/*.md` or repo-verified equivalent |
 | Machine schema home | PROPOSED | `schemas/contracts/v1/atmosphere/*.schema.json` |
 | Source registry | PROPOSED | `data/registry/atmosphere/sources.yaml` |
@@ -105,7 +105,7 @@ This README does not claim that the repository already contains the files, schem
 | Focus Mode | Produces bounded `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` outcomes over admissible evidence only. |
 
 > [!WARNING]
-> `docs/domains/atmosphere-air/` and `docs/domains/atmosphere/` must not silently diverge. If both exist in the mounted repository, reconcile them through an ADR and compatibility note before expanding this lane.
+> `docs/domains/atmosphere-air/` and `docs/domains/atmosphere-air/` must not silently diverge. If both exist in the mounted repository, reconcile them through an ADR and compatibility note before expanding this lane.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -378,7 +378,7 @@ conftest test build/atmosphere/dryrun/data/proofs/atmosphere \
 
 ## Definition of done for the first PR
 
-- [ ] CONFIRMED actual repo path convention for `docs/domains/atmosphere-air/` versus `docs/domains/atmosphere/`.
+- [ ] CONFIRMED actual repo path convention for `docs/domains/atmosphere-air/` versus `docs/domains/atmosphere-air/`.
 - [ ] Assigned real `doc_id`, owners, creation date, and policy label in the KFM Meta Block.
 - [ ] Added or linked the lane docs without duplicating schema authority.
 - [ ] Added source and parameter registry fixtures with UNKNOWN rights blocking public release by default.
@@ -424,7 +424,7 @@ Do not force reconciliation into one truth. Emit an atmosphere conflict record, 
 
 | Item | Status | Why it matters |
 |---|---:|---|
-| Actual target path | NEEDS VERIFICATION | User requested `docs/domains/atmosphere-air/README.md`; prior atmosphere plan used `docs/domains/atmosphere/`. |
+| Actual target path | NEEDS VERIFICATION | User requested `docs/domains/atmosphere-air/README.md`; prior atmosphere plan used `docs/domains/atmosphere-air/`. |
 | Owners | TODO | Required for review, source activation, and policy changes. |
 | Policy label | TODO | Determines public/restricted posture of this doc and downstream lane artifacts. |
 | Schema home | NEEDS VERIFICATION | Avoid divergent `contracts/` and `schemas/contracts/v1/` definitions. |

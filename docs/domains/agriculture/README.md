@@ -72,7 +72,7 @@ The target file is a README-like directory document. Because the repository tree
 | Documentation landing | `docs/README.md` | **NEEDS VERIFICATION** | Upstream entry point when verified. |
 | Adjacent domain: soil | `docs/domains/soil/README.md` | **NEEDS VERIFICATION** | Agriculture must not duplicate soil authority. |
 | Adjacent domain: hydrology | `docs/domains/hydrology/README.md` | **NEEDS VERIFICATION** | Useful for water/irrigation context, not a replacement. |
-| Adjacent domain: atmosphere/air | `docs/domains/atmosphere/README.md` | **NEEDS VERIFICATION** | Weather, climate, smoke, and EO context must keep knowledge-character labels. |
+| Adjacent domain: atmosphere/air | `docs/domains/atmosphere-air/README.md` | **NEEDS VERIFICATION** | Weather, climate, smoke, and EO context must keep knowledge-character labels. |
 | Source descriptors | `data/registry/agriculture/` | **PROPOSED** | Source activation starts here after rights and steward review. |
 | Machine contracts | `schemas/contracts/v1/agriculture/` or `contracts/agriculture/` | **CONFLICTED / NEEDS VERIFICATION** | Resolve with ADR before landing schemas. |
 | Policy | `policy/agriculture/` | **PROPOSED** | Deny/allow rules for rights, sensitivity, source role, promotion, and public precision. |

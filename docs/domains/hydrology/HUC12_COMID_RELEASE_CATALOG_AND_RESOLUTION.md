@@ -60,7 +60,7 @@ The goal is to make the HUC12⇄COMID bridge inspectable before it can become a 
 
 ## Repo fit
 
-**PROPOSED document home:** `docs/hydrology/huc12-comid-crosswalk-manifest.md`.
+**PROPOSED document home:** `docs/domains/hydrology/HUC12_COMID_CROSSWALK_MANIFEST_LEGACY.md`.
 
 This document belongs in the hydrology documentation lane beside the schema, policy, validator, and test fixtures that govern the manifest.
 

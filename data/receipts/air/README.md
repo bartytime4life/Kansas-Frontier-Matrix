@@ -8,7 +8,7 @@ owners: TODO: confirm data/steward owner
 created: 2026-05-01
 updated: 2026-05-01
 policy_label: TODO: confirm public|restricted label for receipt documentation and receipt contents
-related: [TODO: verify data/receipts/atmosphere/, TODO: verify docs/domains/atmosphere/, TODO: verify schemas/contracts/v1/atmosphere/]
+related: [TODO: verify data/receipts/atmosphere/, TODO: verify docs/domains/atmosphere-air/, TODO: verify schemas/contracts/v1/atmosphere/]
 tags: [kfm, receipts, air, atmosphere, provenance, process-memory]
 notes: [Target path supplied as data/receipts/air; KFM corpus more often uses atmosphere receipts. Confirm whether air is an alias, sublane, or migration target before automation.]
 [/KFM_META_BLOCK_V2] -->
@@ -65,7 +65,7 @@ Receipts do **not** answer “what is true?” on their own. KFM’s public valu
 | Proof objects | [`../../proofs/air/`](../../proofs/air/) | **PROPOSED** | Candidate `EvidenceBundle`, `CatalogMatrix`, `DecisionEnvelope`, and preservation proof objects. |
 | Catalog records | [`../../catalog/`](../../catalog/) | **PROPOSED** | STAC, DCAT, layer descriptors, and catalog closure surfaces. |
 | Published artifacts | [`../../published/air/`](../../published/air/) | **PROPOSED** | Released public-safe artifacts only after gates pass. |
-| Domain docs | [`../../../docs/domains/atmosphere/`](../../../docs/domains/atmosphere/) | **PROPOSED / NEEDS VERIFICATION** | Architecture, registries, runbook, promotion, rollback, and source-role documentation. |
+| Domain docs | [`../../../docs/domains/atmosphere-air/`](../../../docs/domains/atmosphere-air/) | **PROPOSED / NEEDS VERIFICATION** | Architecture, registries, runbook, promotion, rollback, and source-role documentation. |
 | Machine schemas | [`../../../schemas/contracts/v1/atmosphere/`](../../../schemas/contracts/v1/atmosphere/) | **PROPOSED / NEEDS VERIFICATION** | Expected schema family for Atmosphere / Air objects if repo conventions match the corpus. |
 
 ### Naming decision: `air` vs. `atmosphere`
