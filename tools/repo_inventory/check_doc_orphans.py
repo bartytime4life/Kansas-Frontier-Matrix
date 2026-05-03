@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-import subprocess,sys
-allowed=('docs/','README.md','.github/')
-orph=[]
-for p in subprocess.check_output(['git','ls-files','*.md'],text=True).splitlines():
-    if not p.startswith(allowed): orph.append(p)
-print(f'orphan_markdown_outside_allowed={len(orph)}')
-for p in orph[:50]: print(p)
-sys.exit(0)
+import subprocess
+allowed=('docs/adr/','docs/architecture/','docs/control-plane/','docs/domains/','docs/registers/','docs/runbooks/','docs/sources/','docs/standards/','docs/tracking/','docs/catalog/','docs/README.md')
+files=subprocess.check_output(['git','ls-files','docs/**'],text=True).splitlines()
+orph=[f for f in files if not any(f.startswith(a) or f==a for a in allowed)]
+print('\n'.join(orph[:50]))
+raise SystemExit(1 if orph else 0)

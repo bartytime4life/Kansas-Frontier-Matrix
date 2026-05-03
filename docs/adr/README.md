@@ -469,3 +469,7 @@ Do not move machine schema files between `contracts/` and `schemas/`, or policy-
 
 ## Reorg control-plane linkage
 - Reorg control: `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` tracks applied subset vs proposed large-scale moves.
+
+
+## REORG sprint (2026-05-03)
+- See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for manifest, move plan, reference plan, validation report, and rollback plan.
