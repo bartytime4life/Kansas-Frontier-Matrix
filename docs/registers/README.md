@@ -420,3 +420,6 @@ Use this template when adding a compact register row or expanding a row into a s
 ## Reorg Sprint 2026-05-03
 - Added reorg manifest artifacts in `docs/registers/reorg/`.
 - Updated domain indexes for atmosphere_air, archaeology, agriculture, and ui_maplibre path normalization.
+
+## Reorg control-plane linkage
+- `reorg/`: manifest-driven organization sprint artifacts (inventory, move/reference plans, authority conflicts, validation, rollback).
