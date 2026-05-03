@@ -192,6 +192,7 @@ The following ADRs should be reviewed together during reorganization work becaus
 - [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) — schema-home authority for machine-checkable contracts.
 - [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) — keeps catalog, proof, and release object families distinct.
 - [`ADR-0012-authority-boundary-compatibility-map.md`](./ADR-0012-authority-boundary-compatibility-map.md) — compatibility guardrails for `contracts/` vs `schemas/` and `policy/` vs `policies/`.
+- [`ADR-0013-policy-home-authority.md`](./ADR-0013-policy-home-authority.md) — proposed canonical policy-home decision (`policy/`) and compatibility posture for `policies/`.
 
 If a proposed move or merge conflicts with these ADRs, treat that action as blocked pending explicit supersession.
 
