@@ -16,6 +16,7 @@ The repository currently contains both `contracts/` and `schemas/`, and both `po
 - **PROPOSED:** interim compatibility handling in this ADR until superseding acceptance decisions are made.
 - **CONFLICTED:** canonical authority between these paired homes is not yet fully settled by accepted, repo-verified follow-up ADRs.
 
+
 ## Decision (proposed)
 
 1. `schemas/` is the machine-shape authority surface. `contracts/` is semantic/narrative authority unless a later ADR grants a specific machine-contract exception.
