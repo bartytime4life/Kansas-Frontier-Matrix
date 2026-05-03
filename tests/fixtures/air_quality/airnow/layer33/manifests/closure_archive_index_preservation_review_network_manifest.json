@@ -63,7 +63,7 @@
   "legal_hold_creation_allowed": false,
   "legal_hold_creation_requested": false,
   "local_file_only": true,
-  "manifest_id": "layer33_fixture_manifest",
+  "manifest_id": "layer33_network",
   "manual_review_evidence": [
     {
       "evidence_type": "SCOPE_REVIEW_NOTE",
@@ -122,5 +122,8 @@
   "task_closure_execution_requested": false,
   "task_closure_requested": false,
   "tiles_allowed": false,
-  "tiles_requested": false
+  "tiles_requested": false,
+  "review_policy": {
+    "include_packet": true
+  }
 }

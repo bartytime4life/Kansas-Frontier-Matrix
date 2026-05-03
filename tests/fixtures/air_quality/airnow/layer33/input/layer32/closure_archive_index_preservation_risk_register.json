@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_risk_register",
-  "status": "present"
+  "object_type": "X",
+  "name": "risk_register"
 }

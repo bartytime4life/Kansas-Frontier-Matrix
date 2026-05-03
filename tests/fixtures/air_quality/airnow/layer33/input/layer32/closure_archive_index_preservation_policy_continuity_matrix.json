@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_policy_continuity_matrix",
-  "status": "present"
+  "object_type": "X",
+  "name": "policy_continuity_matrix"
 }

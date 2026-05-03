@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_classification_matrix",
-  "status": "present"
+  "object_type": "X",
+  "name": "classification_matrix"
 }

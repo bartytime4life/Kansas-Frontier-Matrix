@@ -1,4 +1,5 @@
 import json
+import tarfile
 from pathlib import Path
 from .checksums import sha256_path
 from .constants import REQUIRED_L32,FORBIDDEN_RECEIPT_TRUE,EVIDENCE_TYPES,INTERNAL_ONLY_DISCLAIMER,FORBIDDEN_TEXT,COORD,SOURCES
@@ -8,6 +9,25 @@ from .manifest import validate_manifest,validate_path_safe
 
 def _wj(p,o): Path(p).write_text(json.dumps(o,indent=2,sort_keys=True)+"\n",encoding="utf-8")
 def _wjl(p,rows): Path(p).write_text("".join(cjson(r)+"\n" for r in rows),encoding="utf-8")
+
+
+def _packet(out: Path, created_at: str):
+ packet=out/"closure_archive_index_preservation_review_packet.tar.gz"
+ members=[]
+ for f in sorted(out.iterdir(), key=lambda x:x.name):
+  if f.name==packet.name or not f.is_file():
+   continue
+  rel=f.relative_to(out)
+  if any(part==".." for part in rel.parts):
+   raise ValueError("PACKET_PATH_TRAVERSAL")
+  members.append((f, rel.as_posix()))
+ with tarfile.open(packet,"w:gz",format=tarfile.PAX_FORMAT) as tf:
+  for f,arc in members:
+   ti=tf.gettarinfo(str(f), arcname=arc)
+   ti.uid=0; ti.gid=0; ti.uname=""; ti.gname=""; ti.mtime=0
+   with f.open("rb") as fh:
+    tf.addfile(ti,fh)
+ return packet
 
 def _receipt(mid,created_at,errors):
  ok=not errors
@@ -59,4 +79,10 @@ def run_closure_archive_index_preservation_review(manifest_path,out_dir,created_
  _wj(out/"closure_archive_index_preservation_review_status_board.json",{"object_type":"AirNowClosureArchiveIndexPreservationReviewStatusBoard","board_status":"CLOSURE_ARCHIVE_INDEX_PRESERVATION_REVIEW_INTAKE_COMPLETE_INTERNAL_ONLY","created_at":created_at})
  (out/"closure_archive_index_preservation_review_status_board.md").write_text("# AirNow Layer 33 Closure Archive Index Preservation Review Status Board\n\nInternal-only intake complete.\n",encoding="utf-8")
  (out/"closure_archive_index_preservation_review_report.md").write_text("# AirNow Layer 33 Closure Archive Index Preservation Review Report\n\nAccepted for manual internal preservation review only. No execution actions performed.\n",encoding="utf-8")
- r=_receipt(m.get("manifest_id"),created_at,[]); _wj(out/"closure_archive_index_preservation_review_receipt.json",r); return r
+ packet_hash=None
+ if m.get("review_policy",{}).get("include_packet") is True:
+  pkt=_packet(out,created_at)
+  packet_hash=sha256_path(pkt)
+ r=_receipt(m.get("manifest_id"),created_at,[])
+ r["output_hashes"]["closure_archive_index_preservation_review_packet_hash"]=packet_hash
+ _wj(out/"closure_archive_index_preservation_review_receipt.json",r); return r

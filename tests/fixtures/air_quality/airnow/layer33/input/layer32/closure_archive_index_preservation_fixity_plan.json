@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_fixity_plan",
-  "status": "present"
+  "object_type": "X",
+  "name": "fixity_plan"
 }

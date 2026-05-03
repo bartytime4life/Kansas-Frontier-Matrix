@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_access_review_plan",
-  "status": "present"
+  "object_type": "X",
+  "name": "access_review_plan"
 }
