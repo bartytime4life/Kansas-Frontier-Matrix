@@ -1,8 +1,0 @@
-#!/usr/bin/env python
-import argparse
-from _assurance_common import *
-p=argparse.ArgumentParser();[p.add_argument(x,required=True) for x in ('--assurance-plan','--archive-recheck','--runbook-review','--drift-report','--out-dir')];p.add_argument('--signature',default='fixture-signature');p.add_argument('--signature-type',default='fixture_signature');p.add_argument('--recertified-by',default='fixture-release-manager');p.add_argument('--role',default='release_manager');p.add_argument('--as-of');p.add_argument('--fixture-only',action='store_true');a=p.parse_args()
-ar,rr,dr=j(a.archive_recheck),j(a.runbook_review),j(a.drift_report)
-deny=ar.get('result')=='deny' or dr.get('result')=='deny' or rr.get('status') in ('blocked','production_review_blocked')
-out={"schema_version":"1.0.0","recertification_id":"rec-"+h(a.assurance_plan)[:12],"domain":"atmosphere.air","created_at":ts(a.as_of),"as_of":ts(a.as_of),"continuous_assurance_plan_ref":a.assurance_plan,"release_closure_dossier_ref":j(a.assurance_plan).get('release_closure_dossier_ref',''),"evidence_archive_manifest_ref":j(a.assurance_plan).get('evidence_archive_manifest_ref',''),"recertification_scope":["fixture"],"checks":[],"evidence_refs":[a.archive_recheck,a.runbook_review,a.drift_report],"findings":[],"required_followups":[],"decision":"block_recertification" if deny else "recertify_fixture","signature":a.signature+"-non-production","signature_type":a.signature_type,"fixture_backed":True,"status":"blocked" if deny else "fixture_recertified"}
-w(Path(a.out_dir)/'periodic_recertification_record.json',out);print('PASS' if not deny else 'DENY')
