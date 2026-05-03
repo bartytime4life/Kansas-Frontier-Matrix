@@ -1,8 +1,0 @@
-{
-  "changed_tile_verification_pct": 100,
-  "avg_tile_size_kb": 10,
-  "avg_fetch_verify_ms": 20,
-  "memory_mb": 12,
-  "masked_pct": 10,
-  "produced_tile_count_deviation_pct": 0
-}

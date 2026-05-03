@@ -1,9 +1,0 @@
-{"classification":"internal_governance_record","classification_id":"0692cda511e573433c562171","input_id":"snapshot_final_internal_summary"}
-{"classification":"internal_audit_core","classification_id":"0d4b286bb53614dd40c88a58","input_id":"snapshot_hash_chain"}
-{"classification":"internal_audit_core","classification_id":"0ed16d867029257812f3ba55","input_id":"snapshot_policy_ledger"}
-{"classification":"internal_audit_core","classification_id":"1b3ac06e8165ad01940dd91e","input_id":"snapshot_receipt_ledger"}
-{"classification":"internal_audit_core","classification_id":"3087e9814375255903ea054f","input_id":"snapshot_caveat_registry"}
-{"classification":"internal_governance_record","classification_id":"6a26f3c8f694a033dcb503e5","input_id":"snapshot_audit_input_inventory"}
-{"classification":"internal_audit_core","classification_id":"6baa24dbbdff51ebfcef2cb2","input_id":"snapshot_decision_ledger"}
-{"classification":"internal_governance_record","classification_id":"d1cf85ec0dfef24b4bcb00aa","input_id":"snapshot_non_execution_ledger"}
-{"classification":"internal_audit_core","classification_id":"ede2408954eba3033329f537","input_id":"snapshot_audit_receipt"}

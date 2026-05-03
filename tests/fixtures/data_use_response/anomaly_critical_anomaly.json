@@ -1,9 +1,0 @@
-{
-  "schema": "UsageAnomalyReport.v1",
-  "findings": [
-    {
-      "anomaly_type": "critical_anomaly",
-      "subject_hash": "subj#abc"
-    }
-  ]
-}

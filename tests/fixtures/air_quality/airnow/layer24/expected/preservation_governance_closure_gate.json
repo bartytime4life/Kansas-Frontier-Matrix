@@ -1,7 +1,0 @@
-{
-  "created_at": "2026-01-01T00:00:00Z",
-  "gate_status": "INTERNAL_GOVERNANCE_CLOSURE_REVIEW_READY",
-  "object_type": "AirNowPreservationGovernanceClosureGate",
-  "positive_outcome_ceiling": "INTERNAL_GOVERNANCE_CLOSURE_REVIEW_READY",
-  "schema_version": "v1"
-}

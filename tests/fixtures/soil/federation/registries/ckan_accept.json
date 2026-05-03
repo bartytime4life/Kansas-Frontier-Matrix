@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"MockFederationRegistry","target":"ckan","registry_id":"mock-ckan","accepts_public_only":true,"required_fields":["title","resources"],"decision":"accept"}

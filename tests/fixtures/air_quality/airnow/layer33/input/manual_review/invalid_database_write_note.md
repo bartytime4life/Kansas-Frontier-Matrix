@@ -1,2 +1,0 @@
-INTERNAL_ONLY / NOT FOR PUBLIC RELEASE
-database write this

@@ -1,8 +1,0 @@
-{
-  "object_type": "AirNowSnapshotPreservationPolicyLedger",
-  "records": [
-    {
-      "policy": "local_only"
-    }
-  ]
-}

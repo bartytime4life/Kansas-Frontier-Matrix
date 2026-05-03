@@ -1,9 +1,0 @@
-{
-  "candidate_outcome": "INTERNAL_SNAPSHOT_PRESERVATION_REVIEW_PARTIAL",
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowSnapshotPreservationReadinessFinalSummary",
-  "preservation_execution_approved": false,
-  "public_release_allowed": false,
-  "readiness_status": "READY_INTERNAL_ONLY",
-  "schema_version": "v1"
-}

@@ -1,7 +1,0 @@
-{
-  "schema": "DataUsePolicyChangeRequest.v1",
-  "evidence_refs": [
-    "ev:1"
-  ],
-  "requested_by_hash": "h"
-}

@@ -1,6 +1,0 @@
-{
-  "schema": "DataUsePolicy.v1",
-  "quota": {
-    "max": 100
-  }
-}

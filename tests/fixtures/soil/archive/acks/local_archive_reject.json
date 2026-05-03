@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"MockArchiveAcknowledgement","archive_target":"kfm_local_fixture_archive","ack_status":"rejected","archive_record_id":"mock-archive-soil-003","archive_record_url":"https://example.invalid/archive/soil/003","public_accessible":false,"created":"2026-05-01T00:00:00Z"}

@@ -1,1 +1,0 @@
-{"schema_version":"kfm.v1","object_type":"SoilPublicFeedbackSubmission","domain":"soil","feedback_type":"general","severity":"low","summary":"ok","public_message":"Looks good.","submitter_disclosure":{"anonymous":true,"public_name":null,"contact_included":false},"steward_review":{"required":true,"decision":"accepted_for_review"}}

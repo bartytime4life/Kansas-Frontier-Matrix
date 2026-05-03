@@ -1,7 +1,0 @@
-{
-  "schema_version": "v1",
-  "object_type": "RuntimeResponseEnvelope",
-  "outcome": "ERROR",
-  "request_id": "req-error-001",
-  "message": "Required artifact is missing: evidence_bundle.json"
-}

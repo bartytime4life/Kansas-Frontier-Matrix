@@ -1,8 +1,0 @@
-{
-  "object_type": "run_receipt",
-  "run_receipt_id": "run_receipt:soil_moisture_watch:fixture-allow",
-  "status": "ALLOW",
-  "subject": "soil-moisture:mesonet:ks:2026-04-20",
-  "content_spec_hash": "sha256:7ac90d0356cf361f38f0c642ec8abd75f8f95f4cbfe9d6300ce0cf4e509a509e",
-  "evaluated_at": "2026-04-20T18:01:00Z"
-}

@@ -1,9 +1,0 @@
-{
-  "schema": "UsageAnomalyReport.v1",
-  "findings": [
-    {
-      "anomaly_type": "repeated_blocked_access",
-      "subject_hash": "subj#abc"
-    }
-  ]
-}

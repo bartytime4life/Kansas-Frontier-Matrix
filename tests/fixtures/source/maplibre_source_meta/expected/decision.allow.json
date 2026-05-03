@@ -1,9 +1,0 @@
-{
-  "expected_outcome": "ALLOW",
-  "fixture": "source.vector_tilejson_min.valid.json",
-  "reason_codes": [
-    "source_type_present",
-    "source_layer_boundary_explicit",
-    "adapter_disclosure_explicit"
-  ]
-}

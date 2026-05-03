@@ -1,9 +1,0 @@
-{
-  "schema": "EnforcementPolicy.v1",
-  "rules": {
-    "secret_scanning_required": true,
-    "audit_ledger_required": true,
-    "public_bind_default": false,
-    "external_delivery_default": false
-  }
-}

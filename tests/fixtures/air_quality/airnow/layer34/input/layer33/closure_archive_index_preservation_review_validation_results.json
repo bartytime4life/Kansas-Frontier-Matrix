@@ -1,9 +1,0 @@
-{
-  "object_type": "AirNowClosureArchiveIndexPreservationReviewValidationResults",
-  "records": [
-    {
-      "validation_id": "v1",
-      "validation_outcome": "PASS"
-    }
-  ]
-}

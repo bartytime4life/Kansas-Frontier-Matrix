@@ -1,9 +1,0 @@
-{
-  "fixture_id": "soil-moisture-health-roster-loss",
-  "expected_station_count": 20,
-  "active_station_count": 13,
-  "loss_threshold_percent": 25,
-  "loss_percent": 35,
-  "status": "degraded",
-  "reason": "active_roster_drop_exceeds_threshold"
-}

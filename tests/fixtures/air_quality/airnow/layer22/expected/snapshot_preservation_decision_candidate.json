@@ -1,8 +1,0 @@
-{
-  "candidate_id": "2dda11c5085b2d356ef4543af1e6b689f9df347fa15583379b564525a84e58fa",
-  "candidate_outcome": "INTERNAL_SNAPSHOT_PRESERVATION_REVIEW_PARTIAL",
-  "created_at": "2026-01-01T00:00:00Z",
-  "object_type": "AirNowSnapshotPreservationDecisionCandidate",
-  "outcome_ceiling": "SNAPSHOT_PRESERVATION_FINALIZATION_COMPLETE_INTERNAL_ONLY",
-  "schema_version": "v1"
-}
