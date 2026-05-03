@@ -1,17 +1,42 @@
 # REORG Sprint Manifest
 
-## Scope
-- Deep functional manifest-driven organization sprint focused on doc-domain slug normalization and inventory tooling.
+## Truth Labels
+- CONFIRMED: inventory generated from `git ls-files`.
+- BLOCKED: high-volume file moves across authority-sensitive homes not executed without deeper ADR expansion.
 
-## Truth labels
-- **CONFIRMED**: tracked inventory generated from `git ls-files`; domain docs moved via `git mv`; reference rewrites applied.
-- **CONFLICTED**: schema and policy authority split remains open but documented by ADRs/maps.
-- **BLOCKED**: no machine-authority moves attempted due to ADR constraints.
-
-## Applied subset
-- Normalized domain doc folder `docs/domains/atmosphere-air/` -> `docs/domains/atmosphere_air/`.
-- Rewrote references to new path across docs/tests/register artifacts.
-- Added repo inventory tooling and manifest checker.
-
-## Artifacts
-- `path_inventory.tsv`, `move_plan.tsv`, `reference_update_plan.tsv`, `authority_conflicts.md`, `validation_report.md`, `rollback_plan.sh`.
+## Classification Summary
+- app_api: 25
+- app_web: 78
+- app_worker: 8
+- config: 31
+- connector: 6
+- data_lifecycle_catalog: 8
+- data_lifecycle_processed: 9
+- data_lifecycle_proof: 2
+- data_lifecycle_published: 8
+- data_lifecycle_quarantine: 2
+- data_lifecycle_raw: 2
+- data_lifecycle_receipt: 6
+- data_lifecycle_triplet: 2
+- data_lifecycle_work: 2
+- data_registry: 17
+- doc_adr: 18
+- doc_architecture: 20
+- doc_domain: 255
+- doc_register: 20
+- doc_runbook: 13
+- doc_source: 33
+- doc_tracking: 2
+- fixture: 79
+- infra: 12
+- migration: 3
+- package: 25
+- pipeline: 951
+- policy: 198
+- release: 2
+- root_meta: 4
+- schema_contract: 970
+- style: 3
+- test: 3676
+- tool_validator: 208
+- unknown: 780

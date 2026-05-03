@@ -1,3 +1,1 @@
-old_reference	new_reference	scope	status
-./atmosphere-air/	./atmosphere_air/	docs/domains and register indexes	CONFIRMED
-/docs/domains/atmosphere-air/	/docs/domains/atmosphere_air/	docs + tests	CONFIRMED
+reference_file	old_path	new_path	status	notes

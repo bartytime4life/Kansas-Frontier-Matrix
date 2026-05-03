@@ -80,3 +80,6 @@ See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for current repository organ
 ## Reorg operations
 - Use `docs/registers/reorg/rollback_plan.sh` for targeted path rollback during documentation-lane reorganizations.
 - Treat promotion and lifecycle transitions as governed events, never as plain file movement.
+
+## Reorg linkage
+- Reorg and authority maps: `docs/registers/reorg/` and `docs/registers/*authority_map.md`.

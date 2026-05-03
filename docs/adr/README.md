@@ -449,3 +449,8 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 - Do **not** move machine files across `contracts/` and `schemas/` without ADR-authorized plan.
 - Do **not** move policy code across `policy/` and `policies/` without ADR-authorized plan.
 - Lifecycle data homes remain governed state lanes and are not general reorg targets.
+
+## Authority-sensitive moves (Do not move without ADR)
+- `contracts/` vs `schemas/` machine files
+- `policy/` vs `policies/` policy packages
+- lifecycle artifact homes under `data/{raw,work,quarantine,processed,catalog,triplets,receipts,proofs,published}`

@@ -1,5 +1,5 @@
 # Authority Conflicts
 
-- **CONFLICTED**: `contracts/` vs `schemas/` both contain machine-shape material; ADR-0001 exists and must remain governing for any machine-file migration.
-- **CONFLICTED**: `policy/` vs `policies/` both exist; ADR-0013 defines policy-home authority and blocks direct machine policy migration without explicit follow-up.
-- **CONFIRMED**: this sprint only moved domain documentation paths; no machine schema/policy files moved.
+- CONFLICTED: `contracts/` vs `schemas/` both contain machine-shape adjacent artifacts; ADR-0001 exists but coexistence persists.
+- CONFLICTED: `policy/` vs `policies/` both active homes; ADR-0013 documents boundary but split remains.
+- PROPOSED: keep machine files in-place; only index/control docs updated in this sprint.
