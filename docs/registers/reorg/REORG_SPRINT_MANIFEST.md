@@ -1,22 +1,15 @@
 # REORG Sprint Manifest
+Status: CONFIRMED
+Date: 2026-05-03
+Scope: repo-wide inventory and domain documentation normalization.
 
-- Date: 2026-05-03
-- Truth labels used: CONFIRMED / PROPOSED / UNKNOWN / CONFLICTED / BLOCKED
-- Scope: tracked-file inventory regeneration + manifest consistency validation + authority conflict reaffirmation + rollback artifact refresh.
+## What changed
+- Generated full tracked path inventory with functional families.
+- Reorganized domain-lane docs into architecture/governance/operations/registers/tracking subhomes.
+- Added authority conflict records and compatibility maps.
+- Added repo-inventory validators and tests.
 
-## Phase status
-- Phase 0 (whole-repo classification manifest): CONFIRMED
-- Phase 1 (dependency clutter and ignore hygiene): CONFIRMED
-- Phase 2 (documentation-control expansion): CONFIRMED
-- Phase 3 (authority-boundary hardening): CONFIRMED
-- Phase 4 (domain-lane consolidation): BLOCKED (execution deferred; high-impact move plan kept as PROPOSED)
-- Phase 5 (organization validators): CONFIRMED
-- Phase 6 (reference rewrite/final pass): CONFIRMED for applied subset
-
-## Applied subset in this run
-- Regenerated tracked-file classification inventory (`path_inventory.tsv`).
-- Revalidated reorg manifest bundle integrity.
-- Updated validation/reporting artifacts with blocker evidence and safety boundaries.
-
-## Not applied in this run
-- `move_plan.tsv` entries remain PROPOSED and reversible; no additional file moves were executed in this run.
+## What not to move without ADR
+- `contracts/` <-> `schemas/` machine artifacts.
+- `policy/` <-> `policies/` executable policy artifacts.
+- data lifecycle roots (`data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published`, `data/receipts`, `data/proofs`).

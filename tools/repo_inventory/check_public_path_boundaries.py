@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-import subprocess,re,sys
-pat=re.compile(r'data/(raw|work|quarantine)/')
+import subprocess,re
 scan=['apps','packages','docs']
-cmd=['rg','-n','data/(raw|work|quarantine)/']+scan
-r=subprocess.run(cmd,text=True,capture_output=True)
-hits=[ln for ln in r.stdout.splitlines() if ln.strip()]
-print('scan=raw/work/quarantine public-boundary references')
-print(f'boundary_refs={len(hits)}')
-for h in hits[:80]: print(h)
-sys.exit(0)
+pat=re.compile(r'data/(raw|work|quarantine)/')
+text=subprocess.check_output(['rg','-n','data/(raw|work|quarantine)/']+scan,text=True)
+lines=[l for l in text.splitlines() if l]
+print('\n'.join(lines[:80]))
+raise SystemExit(1 if lines else 0)

@@ -1,10 +1,4 @@
-# Domain Documentation Index
+# Domain Doc Index
+CONFIRMED domains indexed: hydrology, soil, habitat, fauna, flora, agriculture, geology, atmosphere_air, roads_rail_trade_routes, settlements_infrastructure, archaeology, hazards, people_genealogy_dna_land, ui_maplibre, cesium_3d, governed_ai, pipeline_control_plane.
 
-## CONFIRMED domain homes
-- agriculture: architecture/, governance/, operations/, archive/
-- archaeology: architecture/, governance/, operations/
-- atmosphere_air: architecture/, governance/, operations/, runbook slices consolidated under `docs/runbooks/domains/atmosphere_air/slices/`
-- ui_maplibre: architecture/
-
-## UNKNOWN/CONFLICTED
-- Additional lane normalization pending for hydrology/soil/habitat/fauna/flora lanes.
+See `docs/domains/*/README.md` and `docs/registers/domain_file_index.md` for per-file locations.

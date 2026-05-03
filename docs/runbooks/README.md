@@ -95,3 +95,7 @@ See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` and `docs/registers/reorg/ro
 
 ## Reorg control-plane linkage
 - Reorg rollback: use `docs/registers/reorg/rollback_plan.sh` before broader lane-by-lane move execution.
+
+
+## REORG sprint (2026-05-03)
+- See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for manifest, move plan, reference plan, validation report, and rollback plan.

@@ -423,3 +423,7 @@ Use this template when adding a compact register row or expanding a row into a s
 
 ## Reorg control-plane linkage
 - `reorg/`: manifest-driven organization sprint artifacts (inventory, move/reference plans, authority conflicts, validation, rollback).
+
+
+## REORG sprint (2026-05-03)
+- See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for manifest, move plan, reference plan, validation report, and rollback plan.
