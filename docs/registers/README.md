@@ -19,6 +19,24 @@ notes: [Generated as a repo-ready draft from the KFM documentation-architecture 
 
 Directory landing page for KFM’s documentation registers: the control-plane records that classify authority, canon status, drift, and verification gaps.
 
+## Confirmed register inventory (checkpoint 2026-05-03)
+
+The files below are present in this repository revision and are the primary register surfaces for docs control-plane navigation:
+
+- [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md)
+- [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md)
+- [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md)
+- [`PMTILES_MANIFEST_REGISTER.md`](./PMTILES_MANIFEST_REGISTER.md)
+- [`REPO_ORGANIZATION_AUDIT.md`](./REPO_ORGANIZATION_AUDIT.md)
+- [`SOURCE_LEDGER.md`](./SOURCE_LEDGER.md)
+- [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md)
+
+Related control-plane indexes:
+
+- [`../adr/README.md`](../adr/README.md)
+- [`../runbooks/README.md`](../runbooks/README.md)
+- [`../runbooks/validation-entrypoints.md`](../runbooks/validation-entrypoints.md)
+
 ![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![Doc: README-like](https://img.shields.io/badge/doc-README--like-blue)
 ![Truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
