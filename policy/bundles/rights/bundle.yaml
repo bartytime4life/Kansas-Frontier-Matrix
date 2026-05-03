@@ -1,5 +1,0 @@
-bundle:
-  name: kfm.policy.rights
-  version: v0
-  entrypoint: data.kfm.policy.rights.decision
-  module: access_rights.rego

@@ -1,5 +1,0 @@
-bundle:
-  name: kfm.policy.admission
-  version: v0
-  entrypoint: data.kfm.policy.admission.decision
-  module: source_admission.rego

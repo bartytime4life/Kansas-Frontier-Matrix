@@ -1,5 +1,0 @@
-bundle:
-  name: kfm.policy.release
-  version: v0
-  entrypoint: data.kfm.policy.release.decision
-  module: publication_gate.rego
