@@ -1,0 +1,7 @@
+{
+  "database_write_allowed": false,
+  "index_execution_allowed": false,
+  "object_type": "AirNowClosureArchiveIndexAuditReceipt",
+  "public_release_allowed": false,
+  "publication_allowed": false
+}
