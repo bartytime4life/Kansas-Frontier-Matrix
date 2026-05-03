@@ -38,6 +38,9 @@
   "file_deletion_requested": false,
   "final_accession_execution_allowed": false,
   "final_accession_execution_requested": false,
+  "finalization_policy": {
+    "include_packet": true
+  },
   "git_push_allowed": false,
   "git_push_requested": false,
   "github_issue_creation_allowed": false,

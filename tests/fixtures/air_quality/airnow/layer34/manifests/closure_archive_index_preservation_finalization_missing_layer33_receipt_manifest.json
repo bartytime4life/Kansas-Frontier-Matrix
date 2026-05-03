@@ -58,7 +58,6 @@
     "closure_archive_index_preservation_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_caveat_register.json",
     "closure_archive_index_preservation_review_policy_attestation_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_policy_attestation.json",
     "closure_archive_index_preservation_review_readiness_summary_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_readiness_summary.json",
-    "closure_archive_index_preservation_review_receipt_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_receipt.json",
     "closure_archive_index_preservation_review_validation_results_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_validation_results.json",
     "residual_closure_archive_index_preservation_blockers_jsonl": "tests/fixtures/air_quality/airnow/layer34/input/layer33/residual_closure_archive_index_preservation_blockers.jsonl"
   },
@@ -67,8 +66,8 @@
   "legal_hold_creation_allowed": false,
   "legal_hold_creation_requested": false,
   "local_file_only": true,
-  "manifest_id": "airnow-layer34-network",
-  "no_network": false,
+  "manifest_id": "airnow-layer34-missing_layer33_receipt",
+  "no_network": true,
   "official_archive_certification_allowed": false,
   "official_archive_certification_requested": false,
   "preliminary_data": true,

@@ -52,7 +52,6 @@
   "index_execution_allowed": false,
   "index_execution_requested": false,
   "layer33_inputs": {
-    "closure_archive_index_preservation_acceptance_candidates_jsonl": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_acceptance_candidates.jsonl",
     "closure_archive_index_preservation_item_satisfaction_matrix_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_item_satisfaction_matrix.json",
     "closure_archive_index_preservation_review_assessment_matrix_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_assessment_matrix.json",
     "closure_archive_index_preservation_review_caveat_register_json": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_caveat_register.json",
@@ -67,8 +66,8 @@
   "legal_hold_creation_allowed": false,
   "legal_hold_creation_requested": false,
   "local_file_only": true,
-  "manifest_id": "airnow-layer34-network",
-  "no_network": false,
+  "manifest_id": "airnow-layer34-missing_acceptance_candidates",
+  "no_network": true,
   "official_archive_certification_allowed": false,
   "official_archive_certification_requested": false,
   "preliminary_data": true,
