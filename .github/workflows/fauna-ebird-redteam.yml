@@ -1,9 +1,0 @@
-name: fauna-ebird-redteam
-on: [push]
-jobs:
-  redteam:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: tools/connectors/fauna/kfm-ebird-ingest/kfm-ebird-mutate --mode generate --seed synthetic --force
-      - run: tools/connectors/fauna/kfm-ebird-ingest/kfm-ebird-redteam --mode run --fail-open blocked --out-dir /tmp/kfm-ebird-redteam/run
