@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/pmtiles/delta-manifest-v1
 title: PMTiles Delta Manifest
 type: standard
 version: v1
@@ -8,12 +8,37 @@ owners: OWNER_TBD
 created: TODO(date): original creation date not provided
 updated: 2026-05-01
 policy_label: NEEDS VERIFICATION: document access label not confirmed
-related: ["PROPOSED: contracts/kfm/delta_manifest.v1.json", "PROPOSED: tools/validators/tiles/validate_delta_manifest.py", "PROPOSED: policy/tiles/delta_manifest.rego", "PROPOSED: policy/tiles/delta_manifest_test.rego", "PROPOSED: tests/fixtures/tiles/delta_manifest/", "PROPOSED: .github/workflows/tiles-ci.yml"]
-tags: [kfm, pmtiles, tiles, delta, manifest, publication, rollback]
-notes: ["PROPOSED PMTiles time-sliced delta publication-control slice; implementation and CI wiring remain NEEDS VERIFICATION"]
+object_family: delta_manifest.v1
+scope: PMTiles time-sliced delta publication control slice
+related:
+  - PROPOSED: contracts/kfm/delta_manifest.v1.json
+  - PROPOSED: tools/validators/tiles/validate_delta_manifest.py
+  - PROPOSED: policy/tiles/delta_manifest.rego
+  - PROPOSED: policy/tiles/delta_manifest_test.rego
+  - PROPOSED: tests/fixtures/tiles/delta_manifest/
+  - PROPOSED: .github/workflows/tiles-ci.yml
+tags:
+  - kfm
+  - pmtiles
+  - tiles
+  - delta
+  - manifest
+  - publication
+  - rollback
+  - receipts
+  - policy
+notes:
+  - PROPOSED PMTiles time-sliced delta publication-control slice.
+  - Implementation, CI wiring, branch protection, signature execution, and production release behavior remain NEEDS VERIFICATION.
 [/KFM_META_BLOCK_V2] -->
 
 # PMTiles Delta Manifest
+
+[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#status)
+[![Truth posture: Proposed](https://img.shields.io/badge/truth%20posture-PROPOSED-orange)](#truth-posture)
+[![Object family: delta_manifest.v1](https://img.shields.io/badge/object%20family-delta__manifest.v1-blue)](#manifest-contract)
+[![Promotion: Fail closed](https://img.shields.io/badge/promotion-fail--closed-red)](#fail-closed-rules)
+[![KFM: Governed publication](https://img.shields.io/badge/KFM-governed%20publication-green)](#operating-law)
 
 A governed manifest contract for PMTiles delta slices, tile-level integrity checks, rollback posture, and receipt-linked publication control.
 
@@ -21,10 +46,14 @@ A governed manifest contract for PMTiles delta slices, tile-level integrity chec
 > **Status:** PROPOSED / draft  
 > **Object family:** `delta_manifest.v1`  
 > **Scope:** PMTiles time-sliced delta publication control slice  
-> **Implementation depth:** UNKNOWN until the target repo, schema, validator, policy, tests, CI workflow, receipts, and emitted artifacts are inspected.
+> **Implementation depth:** UNKNOWN until the target repo, schema, validator, policy, tests, CI workflow, receipts, release manifests, and emitted artifacts are inspected.
+
+---
 
 ## Quick navigation
 
+- [At a glance](#at-a-glance)
+- [Status](#status)
 - [Purpose](#purpose)
 - [Operating law](#operating-law)
 - [Lifecycle placement](#lifecycle-placement)
@@ -34,8 +63,42 @@ A governed manifest contract for PMTiles delta slices, tile-level integrity chec
 - [Rollback posture](#rollback-posture)
 - [Implementation references](#implementation-references)
 - [Illustrative manifest](#illustrative-manifest)
+- [Fixture matrix](#fixture-matrix)
 - [Verification checklist](#verification-checklist)
 - [Open verification backlog](#open-verification-backlog)
+
+---
+
+## At a glance
+
+| Item | Value |
+| --- | --- |
+| **Manifest version** | `v1` |
+| **Primary use** | Governed PMTiles delta publication control |
+| **Release posture** | Fail closed before public use |
+| **Canonical truth?** | No. This is a downstream publication-control artifact. |
+| **Requires receipts?** | Yes. Every tile change requires `run_receipt_url`. |
+| **Rollback safe by default?** | Only when rollback digests and receipts validate. |
+| **Public forbidden strata** | `RAW`, `WORK`, `QUARANTINE` |
+| **Primary outcomes** | `PASS`, `REVIEW`, `DENY`, `ERROR` |
+| **Current implementation status** | `UNKNOWN` until repo evidence confirms it |
+
+---
+
+## Status
+
+| Dimension | Label | Notes |
+| --- | --- | --- |
+| Source draft | CONFIRMED | This document is based on the supplied PMTiles delta-manifest draft. |
+| Manifest design | PROPOSED | The contract is design-ready, not implementation-confirmed. |
+| Schema path | PROPOSED / NEEDS VERIFICATION | `contracts/kfm/delta_manifest.v1.json` |
+| Validator path | PROPOSED / NEEDS VERIFICATION | `tools/validators/tiles/validate_delta_manifest.py` |
+| Rego policy path | PROPOSED / NEEDS VERIFICATION | `policy/tiles/delta_manifest.rego` |
+| Fixtures path | PROPOSED / NEEDS VERIFICATION | `tests/fixtures/tiles/delta_manifest/` |
+| CI workflow | PROPOSED / NEEDS VERIFICATION | `.github/workflows/tiles-ci.yml` |
+| Production enforcement | UNKNOWN | No branch protection, workflow run, release gate, or runtime evidence is asserted here. |
+
+---
 
 ## Purpose
 
@@ -50,6 +113,20 @@ A governed manifest contract for PMTiles delta slices, tile-level integrity chec
 - whether masked-area thresholds require review or denial before promotion.
 
 The manifest is a **publication-control object**, not the canonical spatial truth. PMTiles remains a map-delivery artifact downstream of source evidence, transforms, receipts, proof objects, catalog records, review state, and promotion decisions.
+
+---
+
+## What this file is and is not
+
+| This file is | This file is not |
+| --- | --- |
+| A proposed manifest contract for PMTiles deltas. | A claim that the manifest is already enforced in production. |
+| A publication and rollback control surface. | A replacement for EvidenceBundles, source descriptors, or release manifests. |
+| A fail-closed validation target. | A permissive client-side convenience format. |
+| A way to bind tile changes to receipts. | A way to publish uncited or unreviewed spatial claims. |
+| A downstream delivery artifact contract. | Canonical truth, policy authority, or source authority. |
+
+---
 
 ## Operating law
 
@@ -75,6 +152,8 @@ The delta manifest may support publication, rollback, and client verification, b
 > [!WARNING]
 > A PMTiles delta that cannot prove its base archive, tile digests, receipt linkage, path boundaries, masked-percentage posture, and rollback semantics must not be promoted for public use.
 
+---
+
 ## Lifecycle placement
 
 ```mermaid
@@ -84,10 +163,41 @@ flowchart LR
   C --> D["Semantic validation<br/>counts, digests, rollback, receipts"]
   D --> E["Policy gate<br/>forbidden strata + masked thresholds"]
   E --> F{"Promotion decision"}
-  F -- pass --> G["PUBLISHED delta manifest<br/>released artifact reference"]
-  F -- review --> H["Review queue<br/>masked_pct or policy-sensitive"]
-  F -- deny/error --> I["QUARANTINE / correction path<br/>receipt + validation report"]
+  F -- PASS --> G["PUBLISHED delta manifest<br/>released artifact reference"]
+  F -- REVIEW --> H["Review queue<br/>masked_pct or policy-sensitive"]
+  F -- DENY / ERROR --> I["QUARANTINE / correction path<br/>receipt + validation report"]
 ```
+
+---
+
+## Verification sequence
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Schema as Schema validator
+  participant Sem as Semantic validator
+  participant Policy as Policy gate
+  participant Receipts as Receipt resolver
+  participant Release as Promotion gate
+
+  Client->>Schema: validate manifest shape
+  Schema-->>Client: valid / invalid
+
+  Client->>Sem: check counts, digests, rollback semantics
+  Sem-->>Client: PASS / DENY / ERROR
+
+  Client->>Receipts: resolve run_receipt_url values
+  Receipts-->>Client: resolved / missing / forbidden
+
+  Client->>Policy: evaluate public path and masked_pct rules
+  Policy-->>Client: PASS / REVIEW / DENY
+
+  Client->>Release: submit promotion candidate
+  Release-->>Client: promoted / review-held / denied
+```
+
+---
 
 ## Definitions
 
@@ -103,6 +213,8 @@ flowchart LR
 | `run_receipt_url` | Link or governed artifact reference to the run receipt that explains how this tile change was produced. |
 | `masked_pct` | Percentage of the tile masked, generalized, redacted, or otherwise withheld for policy/sensitivity reasons. |
 | `signature` | Optional signature metadata. `cosign` is permitted as a manifest entry method, but execution policy remains `NEEDS VERIFICATION`. |
+
+---
 
 ## Manifest contract
 
@@ -137,7 +249,28 @@ flowchart LR
 | `masked_pct` | Yes | Number from 0 to 100. |
 | `run_receipt_url` | Yes | Non-empty governed receipt reference. Must not reference `RAW`, `WORK`, or `QUARANTINE`. |
 
-Recommended digest form for v1 is `sha256:<64 lowercase hex characters>` unless an existing KFM digest convention requires a different canonical digest format.
+Recommended digest form for v1 is:
+
+```text
+sha256:<64 lowercase hex characters>
+```
+
+unless an existing KFM digest convention requires a different canonical digest format.
+
+---
+
+## Tile action semantics
+
+| Action | `prior_digest` | `new_digest` | Rollback meaning |
+| --- | --- | --- | --- |
+| `added` | Must be null | Required | Remove or ignore the added tile in the rollback target. |
+| `modified` | Required | Required | Restore the previous tile state identified by `prior_digest`. |
+| `removed` | Required | Must be null | Restore the removed tile state identified by `prior_digest`. |
+
+> [!CAUTION]
+> `modified` and `removed` are not rollback-safe without `prior_digest`.
+
+---
 
 ## Canonical manifest hash
 
@@ -153,6 +286,15 @@ Recommended interim behavior:
 4. Store the resulting hash in the validation report, run receipt, proof pack, or promotion decision.
 5. Do not add an embedded self-referential hash field unless an ADR defines whether that field is excluded from the hash input.
 
+<details>
+<summary>Open question: should the manifest contain its own hash?</summary>
+
+A self-hash field is useful for client inspection, but dangerous without a formal exclusion rule. If `manifest_hash` is embedded in the same JSON object being hashed, the hash input must either exclude that field or use a two-pass convention. This requires an ADR before standardization.
+
+</details>
+
+---
+
 ## Client verification behavior
 
 Clients and policy gates should verify the manifest before public use.
@@ -163,19 +305,33 @@ Minimum behavior:
 2. Recompute canonical manifest hash from sorted-key canonical JSON.
 3. Confirm `base_pmtiles.spec_hash` is present and well-formed.
 4. Confirm `produced_tile_count == len(tiles[])`.
-5. Confirm tile coordinate identities are unique within the manifest.
-6. Enforce rollback-safety semantics:
+5. Confirm `expected_tile_count == produced_tile_count`.
+6. Confirm tile coordinate identities are unique within the manifest.
+7. Enforce rollback-safety semantics:
    - `modified` and `removed` require non-null `prior_digest`;
    - `added` requires null `prior_digest`;
    - `added` and `modified` require non-null `new_digest`;
    - `removed` requires null `new_digest`.
-7. Enforce receipt linkage:
+8. Enforce receipt linkage:
    - every tile requires non-empty `run_receipt_url`.
-8. Enforce public path boundaries:
+9. Enforce public path boundaries:
    - public references to `RAW`, `WORK`, or `QUARANTINE` are denied.
-9. Enforce masked-percentage QC:
+10. Enforce masked-percentage QC:
    - values above the review threshold fail promotion or require review according to policy.
-10. Return a finite validation result: `PASS`, `REVIEW`, `DENY`, or `ERROR`.
+11. Return a finite validation result: `PASS`, `REVIEW`, `DENY`, or `ERROR`.
+
+---
+
+## Validation outcome model
+
+| Outcome | Meaning | Public promotion allowed? |
+| --- | --- | ---: |
+| `PASS` | Schema, semantic, receipt, and policy checks passed. | Yes, if release gate also passes. |
+| `REVIEW` | Manifest is structurally valid but needs human or steward review. | No, not until review resolves. |
+| `DENY` | Manifest violates a hard rule. | No. |
+| `ERROR` | Validator, resolver, or policy gate could not complete safely. | No. |
+
+---
 
 ## Fail-closed rules
 
@@ -197,6 +353,8 @@ Validation fails closed when any of the following is true:
 | `masked_pct` exceeds `qc.masked_pct_review_threshold`. | `REVIEW` or `DENY`, depending on policy. |
 | Optional `cosign` signature metadata exists but required signature verification policy is enabled and cannot verify it. | `DENY` or `ERROR`, depending on failure type. |
 
+---
+
 ## Policy boundary
 
 The Rego policy should evaluate at least:
@@ -213,6 +371,23 @@ The Rego policy should evaluate at least:
 - public-release eligibility.
 
 Policy must treat forbidden storage strata as a hard denial for public output. A manifest may be useful for internal debugging and still be denied for publication.
+
+### Storage-strata deny pattern
+
+```text
+DENY public references containing:
+- /RAW/
+- /raw/
+- /WORK/
+- /work/
+- /QUARANTINE/
+- /quarantine/
+```
+
+> [!NOTE]
+> Exact path normalization is `NEEDS VERIFICATION`. Policy should handle casing, URL encoding, path traversal, query strings, and object-store aliases before this rule is considered complete.
+
+---
 
 ## Rollback posture
 
@@ -237,6 +412,8 @@ Rollback should emit a separate rollback receipt or rollback card that reference
 - timestamp;
 - reason for rollback.
 
+---
+
 ## Implementation references
 
 These paths are from the source draft and remain `PROPOSED / NEEDS VERIFICATION` until the target repo is inspected.
@@ -252,6 +429,50 @@ These paths are from the source draft and remain `PROPOSED / NEEDS VERIFICATION`
 
 > [!NOTE]
 > If the mounted repository proves that `schemas/` rather than `contracts/` is the canonical machine-schema home, do not create parallel authority. Resolve through an ADR and a compatibility note before landing machine-readable files.
+
+---
+
+## Proposed repository slice
+
+```text
+contracts/
+  kfm/
+    delta_manifest.v1.json
+
+policy/
+  tiles/
+    delta_manifest.rego
+    delta_manifest_test.rego
+
+tools/
+  validators/
+    tiles/
+      validate_delta_manifest.py
+
+tests/
+  fixtures/
+    tiles/
+      delta_manifest/
+        valid.modified.json
+        deny.missing-spec-hash.json
+        deny.bad-digest.json
+        deny.count-mismatch.json
+        deny.rollback-missing-prior-digest.json
+        deny.added-has-prior-digest.json
+        deny.removed-has-new-digest.json
+        deny.missing-receipt.json
+        deny.raw-path-reference.json
+        review.masked-pct-threshold.json
+
+.github/
+  workflows/
+    tiles-ci.yml
+```
+
+> [!TIP]
+> Start with fixtures before public release wiring. Fixtures make the contract inspectable before runtime assumptions harden.
+
+---
 
 ## Illustrative manifest
 
@@ -295,6 +516,49 @@ This example is illustrative. It is not evidence that a fixture exists in the re
 }
 ```
 
+---
+
+## Fixture matrix
+
+| Fixture | Expected result | Purpose |
+| --- | --- | --- |
+| `valid.modified.json` | `PASS` | Valid modified tile with prior and new digest. |
+| `deny.missing-spec-hash.json` | `DENY` | Confirms base archive identity is required. |
+| `deny.bad-digest.json` | `DENY` | Confirms digest format validation. |
+| `deny.count-mismatch.json` | `DENY` | Confirms tile count consistency. |
+| `deny.rollback-missing-prior-digest.json` | `DENY` | Confirms rollback digest is required for `modified` and `removed`. |
+| `deny.added-has-prior-digest.json` | `DENY` | Confirms `added` tiles cannot carry prior state. |
+| `deny.removed-has-new-digest.json` | `DENY` | Confirms removed tiles cannot carry new tile digest. |
+| `deny.missing-receipt.json` | `DENY` | Confirms receipt linkage is required. |
+| `deny.raw-path-reference.json` | `DENY` | Confirms forbidden storage strata are blocked. |
+| `review.masked-pct-threshold.json` | `REVIEW` | Confirms masked-percentage review routing. |
+
+---
+
+## CI expectations
+
+The proposed CI workflow should run, at minimum:
+
+```bash
+python tools/validators/tiles/validate_delta_manifest.py \
+  tests/fixtures/tiles/delta_manifest/valid.modified.json
+
+python tools/validators/tiles/validate_delta_manifest.py \
+  tests/fixtures/tiles/delta_manifest/deny.bad-digest.json \
+  --expect DENY
+```
+
+Policy tests should run through the repo-native Rego toolchain, if present.
+
+```bash
+opa test policy/tiles
+```
+
+> [!CAUTION]
+> These commands are PROPOSED. Do not claim they pass until the actual repo, dependencies, validator, policy engine, and fixtures are inspected or created and executed.
+
+---
+
 ## Compatibility and versioning
 
 `manifest_version = v1` is the only version defined by this document.
@@ -308,13 +572,28 @@ Breaking changes require one of:
 
 Non-breaking changes may include optional fields when they do not weaken rollback safety, path-boundary checks, receipt linkage, policy posture, or canonical hash behavior.
 
+---
+
+## ADR hooks
+
+| ADR topic | Why it matters |
+| --- | --- |
+| Schema home | Prevents divergent authority between `contracts/` and `schemas/`. |
+| Canonical hash embedding | Defines whether manifest hash is embedded, receipt-stored, proof-pack-stored, or all three. |
+| Digest format | Defines accepted algorithms, casing, prefixes, and future algorithm agility. |
+| Empty deltas | Decides whether no-op delta manifests are valid. |
+| Cosign verification | Defines signature verification execution, failure outcomes, and required tooling. |
+| Public path normalization | Defines how forbidden strata are detected across URLs, paths, object stores, and aliases. |
+
+---
+
 ## Verification checklist
 
 - [ ] Confirm target document path or create ADR-backed placement.
 - [ ] Confirm schema home: `contracts/` vs `schemas/`.
 - [ ] Confirm `contracts/kfm/delta_manifest.v1.json` exists or is created.
 - [ ] Confirm digest format and canonical JSON rule.
-- [ ] Confirm whether canonical manifest hash is embedded, receipt-stored, or proof-pack-stored.
+- [ ] Confirm whether canonical manifest hash is embedded, receipt-stored, proof-pack-stored, or all three.
 - [ ] Confirm validator rejects malformed digests.
 - [ ] Confirm validator rejects missing `base_pmtiles.spec_hash`.
 - [ ] Confirm validator rejects count mismatches.
@@ -327,6 +606,8 @@ Non-breaking changes may include optional fields when they do not weaken rollbac
 - [ ] Confirm CI workflow runs schema, semantic validator, and policy tests.
 - [ ] Confirm rollback receipt or rollback card behavior.
 - [ ] Confirm no client treats PMTiles as canonical evidence.
+
+---
 
 ## Rollback
 
@@ -341,7 +622,13 @@ Rollback is required when a promoted or candidate delta:
 - cannot prove signature state when signature verification is required;
 - causes public output to outrun review, policy, or release state.
 
-Rollback target: `ROLLBACK_TARGET_TBD_AFTER_RELEASE_MANIFEST_INSPECTION`
+Rollback target:
+
+```text
+ROLLBACK_TARGET_TBD_AFTER_RELEASE_MANIFEST_INSPECTION
+```
+
+---
 
 ## Open verification backlog
 
@@ -355,3 +642,53 @@ Rollback target: `ROLLBACK_TARGET_TBD_AFTER_RELEASE_MANIFEST_INSPECTION`
 | Masked percentage semantics | NEEDS VERIFICATION | Confirm whether `masked_pct` is per tile, per feature contribution, or per rendered tile payload. |
 | Empty deltas | NEEDS VERIFICATION | Decide whether no-op delta manifests are valid or denied. |
 | Tile coordinate bounds | NEEDS VERIFICATION | Confirm zoom/x/y coordinate constraints for supported PMTiles scheme. |
+| Branch protection | NEEDS VERIFICATION | Confirm whether tile CI is required before merge. |
+| Release manifest linkage | NEEDS VERIFICATION | Confirm how `delta_id` and manifest hash appear in release objects. |
+
+---
+
+## Maintainer notes
+
+<details>
+<summary>Suggested first implementation PR</summary>
+
+Smallest useful PR:
+
+1. Add schema.
+2. Add valid and deny fixtures.
+3. Add semantic validator.
+4. Add Rego policy and tests.
+5. Add CI workflow in dry-run or non-branch-protected mode.
+6. Add ADR for schema home and canonical hash handling.
+7. Add a rollback-card fixture.
+
+Do not wire public promotion until fixtures, validator, policy, receipts, and release-manifest linkage pass together.
+
+</details>
+
+<details>
+<summary>Suggested review questions</summary>
+
+- Does every public tile reference stay downstream of release state?
+- Can every changed tile resolve a receipt?
+- Can every rollback-required tile be restored?
+- Does the validator abstain or deny when base identity is missing?
+- Are masked/sensitive areas treated as policy-bearing, not cosmetic?
+- Can a client recompute a stable manifest hash?
+- Is signature metadata decorative, optional, or promotion-required?
+- Are PMTiles being treated as delivery artifacts rather than canonical truth?
+
+</details>
+
+---
+
+## Final posture
+
+This document is ready as a GitHub Markdown working draft, but it remains bounded:
+
+```text
+CONFIRMED: source draft content and KFM doctrine alignment
+PROPOSED: manifest contract, paths, validators, policy, fixtures, CI
+UNKNOWN: current repo implementation, production enforcement, runtime behavior
+NEEDS VERIFICATION: schema home, canonical hash rule, cosign execution, branch protection, release linkage
+```
