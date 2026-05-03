@@ -781,3 +781,17 @@ This layer publishes or mirrors active policy artifacts only. It does **not** ac
 - local-api: `... --mode local-api --host 127.0.0.1`
 
 Warning: this layer only consumes and pins policy distributions; it does not activate policy stores, roll back Layer 31, deploy policies, or mutate Layer 32 distributions.
+
+## Layer 35 Runtime Supervisor (Snippet)
+
+Plan-only:
+`python soilgrids_runtime_supervisor.py --runtime-supervision-spec runtime_supervision/runtime_supervision_spec_example.json --output-root out --mode plan-only`
+
+Verify-context:
+`python soilgrids_runtime_supervisor.py --runtime-supervision-spec runtime_supervision/runtime_supervision_spec_example.json --execution-context-lock tests/fixtures/runtime_supervisor/valid_execution_context_lock.json --runtime-input-lock tests/fixtures/runtime_supervisor/valid_runtime_input_lock.json --output-root out --mode verify-context`
+
+Supervise-local / attach-observe / conformance-check / telemetry-export / attest-execution / local-api are supported via `--mode` with the same required inputs.
+
+Warning: this layer supervises admitted runtime execution only. It does **not** sandbox by default, reimplement Layer 15, change trust status, activate policies, or grant protected-resource access.
+
+Exit codes: 0 conformant/planned/verified, 5 dry-run, 10 warnings, 20 nonconformant, 30 malformed input, 40 context failure, 50 command failure, 60 filesystem failure, 70 network failure, 80 Layer15 failure, 90 telemetry/attestation failure, 100 API failure, 110 unsafe/public bind, 120 secret failure, 130 ledger failure, 140 internal error.
