@@ -4,7 +4,7 @@
 Proposed
 
 ## Decision
-Use `docs/domains/atmosphere-air/` as the documentation lane while retaining machine schema slug compatibility under `atmosphere` until superseded.
+Use `docs/domains/atmosphere_air/` as the documentation lane while retaining machine schema slug compatibility under `atmosphere` until superseded.
 
 ## Consequences
 - Allows immediate lane documentation without schema path churn.

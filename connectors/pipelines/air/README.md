@@ -8,7 +8,7 @@ owners: NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION-YYYY-MM-DD
 updated: 2026-05-01
 policy_label: NEEDS_VERIFICATION-public-or-restricted
-related: [../README.md, ../../README.md, ../../../docs/domains/atmosphere-air/README.md, ../../../docs/domains/atmosphere-air/ARCHITECTURE.md, ../../../docs/domains/atmosphere-air/DATA_LIFECYCLE.md, ../../../docs/domains/atmosphere-air/API_CONTRACTS.md, ../../../docs/domains/atmosphere-air/PARAMETER_REGISTRY.md, ../../../docs/domains/atmosphere-air/SECURITY_AND_RIGHTS.md, ../../../data/processed/air/qa_summary.example.json, ../../../data/receipts/air/run_receipt.example.json]
+related: [../README.md, ../../README.md, ../../../docs/domains/atmosphere_air/README.md, ../../../docs/domains/atmosphere_air/ARCHITECTURE.md, ../../../docs/domains/atmosphere_air/DATA_LIFECYCLE.md, ../../../docs/domains/atmosphere_air/API_CONTRACTS.md, ../../../docs/domains/atmosphere_air/PARAMETER_REGISTRY.md, ../../../docs/domains/atmosphere_air/SECURITY_AND_RIGHTS.md, ../../../data/processed/air/qa_summary.example.json, ../../../data/receipts/air/run_receipt.example.json]
 tags: [kfm, connectors, pipelines, air, atmosphere-air, no-network, receipts, evidence, fail-closed]
 notes: [Target file was confirmed present but empty before this revision; owners, created date, policy label, CODEOWNERS routing, CI wiring, and live-source authority require verification; air_ingest.py and example processed/receipt artifacts were confirmed in repo-visible evidence.]
 [/KFM_META_BLOCK_V2] -->
@@ -78,7 +78,7 @@ This connector lane may prepare an air-quality candidate. It does **not** decide
 | Target path | `connectors/pipelines/air/README.md` |
 | Parent connector index | [`../README.md`](../README.md) |
 | Parent connectors boundary | [`../../README.md`](../../README.md) |
-| Domain doctrine | [`../../../docs/domains/atmosphere-air/README.md`](../../../docs/domains/atmosphere-air/README.md) |
+| Domain doctrine | [`../../../docs/domains/atmosphere_air/README.md`](../../../docs/domains/atmosphere_air/README.md) |
 | Primary script | [`air_ingest.py`](air_ingest.py) |
 | Current posture | `CONFIRMED` no-network example script and example artifacts; `NEEDS_VERIFICATION` owners, CI, tests, source descriptors, policy wiring, and complete proof closure |
 
@@ -90,12 +90,12 @@ This lane should read from or align with these upstream governance surfaces. It 
 |---|---|---|
 | Connector pipeline rules | [`../README.md`](../README.md) | Explains connector-local pipeline scope, fixture-first behavior, and source-admission boundaries. |
 | Connector edge rules | [`../../README.md`](../../README.md) | Explains descriptor-first source admission, connector gate posture, and no direct public path. |
-| Atmosphere/air domain | [`../../../docs/domains/atmosphere-air/README.md`](../../../docs/domains/atmosphere-air/README.md) | Defines lane scope, knowledge characters, accepted inputs, exclusions, and domain trust posture. |
-| Atmosphere architecture | [`../../../docs/domains/atmosphere-air/ARCHITECTURE.md`](../../../docs/domains/atmosphere-air/ARCHITECTURE.md) | Defines source-role, knowledge-character, release-only public delivery, and promotion boundaries. |
-| Data lifecycle | [`../../../docs/domains/atmosphere-air/DATA_LIFECYCLE.md`](../../../docs/domains/atmosphere-air/DATA_LIFECYCLE.md) | Defines RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PROOF, and PUBLISHED handling. |
-| Parameter registry | [`../../../docs/domains/atmosphere-air/PARAMETER_REGISTRY.md`](../../../docs/domains/atmosphere-air/PARAMETER_REGISTRY.md) | Defines parameter/unit discipline and guards against AQI/concentration drift. |
-| Security and rights | [`../../../docs/domains/atmosphere-air/SECURITY_AND_RIGHTS.md`](../../../docs/domains/atmosphere-air/SECURITY_AND_RIGHTS.md) | Blocks public release on unknown rights and forbids secrets in docs or public artifacts. |
-| API contracts | [`../../../docs/domains/atmosphere-air/API_CONTRACTS.md`](../../../docs/domains/atmosphere-air/API_CONTRACTS.md) | Requires finite outcomes, source roles, knowledge characters, freshness, and EvidenceRefs in governed payloads. |
+| Atmosphere/air domain | [`../../../docs/domains/atmosphere_air/README.md`](../../../docs/domains/atmosphere_air/README.md) | Defines lane scope, knowledge characters, accepted inputs, exclusions, and domain trust posture. |
+| Atmosphere architecture | [`../../../docs/domains/atmosphere_air/ARCHITECTURE.md`](../../../docs/domains/atmosphere_air/ARCHITECTURE.md) | Defines source-role, knowledge-character, release-only public delivery, and promotion boundaries. |
+| Data lifecycle | [`../../../docs/domains/atmosphere_air/DATA_LIFECYCLE.md`](../../../docs/domains/atmosphere_air/DATA_LIFECYCLE.md) | Defines RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PROOF, and PUBLISHED handling. |
+| Parameter registry | [`../../../docs/domains/atmosphere_air/PARAMETER_REGISTRY.md`](../../../docs/domains/atmosphere_air/PARAMETER_REGISTRY.md) | Defines parameter/unit discipline and guards against AQI/concentration drift. |
+| Security and rights | [`../../../docs/domains/atmosphere_air/SECURITY_AND_RIGHTS.md`](../../../docs/domains/atmosphere_air/SECURITY_AND_RIGHTS.md) | Blocks public release on unknown rights and forbids secrets in docs or public artifacts. |
+| API contracts | [`../../../docs/domains/atmosphere_air/API_CONTRACTS.md`](../../../docs/domains/atmosphere_air/API_CONTRACTS.md) | Requires finite outcomes, source roles, knowledge characters, freshness, and EvidenceRefs in governed payloads. |
 
 ### Downstream surfaces
 

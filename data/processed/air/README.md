@@ -8,7 +8,7 @@ owners: @bartytime4life
 created: 2026-05-01
 updated: 2026-05-01
 policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../../README.md, ../../raw/README.md, ../../work/README.md, ../../quarantine/README.md, ../../registry/README.md, ../../catalog/README.md, ../../receipts/README.md, ../../proofs/README.md, ../../published/README.md, ../../../docs/domains/atmosphere-air/README.md, ../../../schemas/contracts/v1/atmosphere/, ../../../policy/atmosphere/]
+related: [../README.md, ../../README.md, ../../raw/README.md, ../../work/README.md, ../../quarantine/README.md, ../../registry/README.md, ../../catalog/README.md, ../../receipts/README.md, ../../proofs/README.md, ../../published/README.md, ../../../docs/domains/atmosphere_air/README.md, ../../../schemas/contracts/v1/atmosphere/, ../../../policy/atmosphere/]
 tags: [kfm, data, processed, air, atmosphere, lifecycle, evidence, readme]
 notes: [Requested target is data/processed/air/README.md; attached KFM atmosphere doctrine usually uses the wider lane name atmosphere; live repo checkout was not mounted in this session; verify owner, policy label, related paths, and whether air is an alias or narrow processed leaf before merge.]
 [/KFM_META_BLOCK_V2] -->
@@ -106,7 +106,7 @@ Use it for **stable, versioned, replayable air artifacts** after source intake, 
 
 | Surface | Expected role | Verification state |
 | --- | --- | --- |
-| `../../../docs/domains/atmosphere-air/` | Atmosphere/air domain docs, runbooks, source-role boundaries, promotion/rollback notes. | **NEEDS VERIFICATION** |
+| `../../../docs/domains/atmosphere_air/` | Atmosphere/air domain docs, runbooks, source-role boundaries, promotion/rollback notes. | **NEEDS VERIFICATION** |
 | `../../../schemas/contracts/v1/atmosphere/` | Machine-readable schemas for atmosphere/air objects. | **NEEDS VERIFICATION** |
 | `../../../policy/atmosphere/` | Backend/CI policy gates and deny reason codes. | **NEEDS VERIFICATION** |
 | `../../../tests/atmosphere/` | Offline fixture, schema, policy, dryrun, and regression tests. | **NEEDS VERIFICATION** |
