@@ -443,3 +443,9 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 - `contracts/` vs `schemas/` machine authority boundaries.
 - `policy/` vs `policies/` policy-package authority boundaries.
 - Lifecycle homes under `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published`.
+
+
+## Authority boundaries not to move without ADR
+- Do **not** move machine files across `contracts/` and `schemas/` without ADR-authorized plan.
+- Do **not** move policy code across `policy/` and `policies/` without ADR-authorized plan.
+- Lifecycle data homes remain governed state lanes and are not general reorg targets.

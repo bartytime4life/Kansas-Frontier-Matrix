@@ -1,5 +1,5 @@
-from tools.repo_inventory.check_reorg_manifest import check
-from pathlib import Path
+import subprocess
 
-def test_check_manifest_exists():
-    assert check(Path('docs/registers/reorg')) in (0,1)
+def test_manifest_checker_runs():
+    p = subprocess.run(['python','tools/repo_inventory/check_reorg_manifest.py','docs/registers/reorg'],capture_output=True,text=True)
+    assert p.returncode == 0, p.stdout + p.stderr

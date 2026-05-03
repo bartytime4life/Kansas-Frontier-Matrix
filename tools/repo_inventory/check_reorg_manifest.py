@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-import argparse, pathlib, csv, sys
+from pathlib import Path
+import csv,sys
 
-def check(dirp:pathlib.Path)->int:
-    required=['REORG_SPRINT_MANIFEST.md','path_inventory.tsv','move_plan.tsv','reference_update_plan.tsv','authority_conflicts.md','validation_report.md','rollback_plan.sh']
-    missing=[f for f in required if not (dirp/f).exists()]
-    if missing:
-        print('MISSING', ','.join(missing)); return 1
-    inv=list(csv.DictReader((dirp/'path_inventory.tsv').open(), delimiter='\t'))
-    if not inv:
-        print('inventory empty'); return 1
-    for n in ['old_path','new_path','status']:
-        if n not in csv.DictReader((dirp/'move_plan.tsv').open(), delimiter='\t').fieldnames:
-            print('move_plan missing columns'); return 1
-    print(f'OK manifest_dir={dirp} inventory_rows={len(inv)}')
-    return 0
+def req(path):
+    p=Path(path)
+    return p.exists() and p.stat().st_size>0
 
-if __name__=='__main__':
-    ap=argparse.ArgumentParser(); ap.add_argument('manifest_dir')
-    args=ap.parse_args(); sys.exit(check(pathlib.Path(args.manifest_dir)))
+base=Path(sys.argv[1] if len(sys.argv)>1 else "docs/registers/reorg")
+required=["REORG_SPRINT_MANIFEST.md","path_inventory.tsv","move_plan.tsv","reference_update_plan.tsv","authority_conflicts.md","validation_report.md","rollback_plan.sh"]
+missing=[r for r in required if not req(base/r)]
+if missing:
+    print("MISSING:", ", ".join(missing))
+    sys.exit(1)
+# basic tsv shape
+for name,cols in [("path_inventory.tsv",2),("move_plan.tsv",4),("reference_update_plan.tsv",4)]:
+    with (base/name).open() as f:
+        rows=list(csv.reader(f,delimiter='\t'))
+    if not rows or any(len(r)<cols for r in rows[1:]):
+        print(f"INVALID {name}")
+        sys.exit(1)
+print("OK")

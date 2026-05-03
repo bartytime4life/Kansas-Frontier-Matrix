@@ -1,79 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
-git mv docs/domains/roads-rail-trade-routes/registers/verification_backlog.md docs/domains/roads-rail-trade-routes/verification_backlog.md
-git mv docs/domains/roads-rail-trade-routes/registers/ui_layer_inventory.md docs/domains/roads-rail-trade-routes/ui_layer_inventory.md
-git mv docs/domains/roads-rail-trade-routes/registers/test_matrix.md docs/domains/roads-rail-trade-routes/test_matrix.md
-git mv docs/domains/roads-rail-trade-routes/registers/source_registry.md docs/domains/roads-rail-trade-routes/source_registry.md
-git mv docs/domains/roads-rail-trade-routes/registers/schema_index.md docs/domains/roads-rail-trade-routes/schema_index.md
-git mv docs/domains/roads-rail-trade-routes/registers/rollback_and_corrections.md docs/domains/roads-rail-trade-routes/rollback_and_corrections.md
-git mv docs/domains/roads-rail-trade-routes/registers/pipeline_inventory.md docs/domains/roads-rail-trade-routes/pipeline_inventory.md
-git mv docs/domains/roads-rail-trade-routes/registers/lifecycle_and_promotion.md docs/domains/roads-rail-trade-routes/lifecycle_and_promotion.md
-git mv docs/domains/roads-rail-trade-routes/registers/focus_mode_behavior.md docs/domains/roads-rail-trade-routes/focus_mode_behavior.md
-git mv docs/domains/roads-rail-trade-routes/registers/fixture_inventory.md docs/domains/roads-rail-trade-routes/fixture_inventory.md
-git mv docs/domains/roads-rail-trade-routes/registers/file_inventory.md docs/domains/roads-rail-trade-routes/file_inventory.md
-git mv docs/domains/roads-rail-trade-routes/registers/extension_points.md docs/domains/roads-rail-trade-routes/extension_points.md
-git mv docs/domains/roads-rail-trade-routes/registers/evidence_drawer_payloads.md docs/domains/roads-rail-trade-routes/evidence_drawer_payloads.md
-git mv docs/domains/roads-rail-trade-routes/registers/data_model.md docs/domains/roads-rail-trade-routes/data_model.md
-git mv docs/domains/roads-rail-trade-routes/registers/ci_gate_matrix.md docs/domains/roads-rail-trade-routes/ci_gate_matrix.md
-git mv docs/domains/roads-rail-trade-routes/registers/change_log.md docs/domains/roads-rail-trade-routes/change_log.md
-git mv docs/domains/roads-rail-trade-routes/registers/catalog_and_proof_objects.md docs/domains/roads-rail-trade-routes/catalog_and_proof_objects.md
-git mv docs/domains/roads-rail-trade-routes/registers/architecture.md docs/domains/roads-rail-trade-routes/architecture.md
-git mv docs/domains/roads-rail-trade-routes/registers/api_surface.md docs/domains/roads-rail-trade-routes/api_surface.md
-git mv docs/domains/fauna/sources/gbif/GBIF_STEWARD_REVIEW_RELEASE_REGISTRY.md docs/domains/fauna/gbif/GBIF_STEWARD_REVIEW_RELEASE_REGISTRY.md
-git mv docs/domains/fauna/sources/gbif/GBIF_RUNTIME_ANSWER_SERVICE.md docs/domains/fauna/gbif/GBIF_RUNTIME_ANSWER_SERVICE.md
-git mv docs/domains/fauna/sources/gbif/GBIF_PUBLIC_DISTRIBUTION_SEARCH_MONITORING.md docs/domains/fauna/gbif/GBIF_PUBLIC_DISTRIBUTION_SEARCH_MONITORING.md
-git mv docs/domains/fauna/sources/gbif/GBIF_PUBLIC_AGGREGATES.md docs/domains/fauna/gbif/GBIF_PUBLIC_AGGREGATES.md
-git mv docs/domains/fauna/sources/gbif/GBIF_PUBLICATION_OPERATIONS.md docs/domains/fauna/gbif/GBIF_PUBLICATION_OPERATIONS.md
-git mv docs/domains/fauna/sources/gbif/GBIF_OCCURRENCE_INGESTION.md docs/domains/fauna/gbif/GBIF_OCCURRENCE_INGESTION.md
-git mv docs/domains/fauna/sources/gbif/GBIF_CATALOG_TRIPLET_READMODEL.md docs/domains/fauna/gbif/GBIF_CATALOG_TRIPLET_READMODEL.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_TRANSPARENCY_AND_GOVERNANCE_CALENDAR.md docs/domains/fauna/ebird/EBIRD_TRANSPARENCY_AND_GOVERNANCE_CALENDAR.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_REMEDIATION.md docs/domains/fauna/ebird/EBIRD_REMEDIATION.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_REDTEAM.md docs/domains/fauna/ebird/EBIRD_REDTEAM.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_QUALITY_AND_TRIAGE.md docs/domains/fauna/ebird/EBIRD_QUALITY_AND_TRIAGE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_PRESERVATION_AND_FIXITY.md docs/domains/fauna/ebird/EBIRD_PRESERVATION_AND_FIXITY.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_PORTAL.md docs/domains/fauna/ebird/EBIRD_PORTAL.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_MAINTENANCE.md docs/domains/fauna/ebird/EBIRD_MAINTENANCE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_INDEPENDENT_VERIFICATION.md docs/domains/fauna/ebird/EBIRD_INDEPENDENT_VERIFICATION.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_FEDERATION.md docs/domains/fauna/ebird/EBIRD_FEDERATION.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_DEVELOPER_GUIDE.md docs/domains/fauna/ebird/EBIRD_DEVELOPER_GUIDE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CONTRACTS.md docs/domains/fauna/ebird/EBIRD_CONTRACTS.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CONSUMER_INTEGRATION.md docs/domains/fauna/ebird/EBIRD_CONSUMER_INTEGRATION.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CONSUMER_CHANGE_MANAGEMENT.md docs/domains/fauna/ebird/EBIRD_CONSUMER_CHANGE_MANAGEMENT.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CONSUMER_CERTIFICATION.md docs/domains/fauna/ebird/EBIRD_CONSUMER_CERTIFICATION.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CONFORMANCE.md docs/domains/fauna/ebird/EBIRD_CONFORMANCE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_CHECKPOINT_RESTORE_AND_CONTINUITY.md docs/domains/fauna/ebird/EBIRD_CHECKPOINT_RESTORE_AND_CONTINUITY.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_AUDIT_RESPONSE.md docs/domains/fauna/ebird/EBIRD_AUDIT_RESPONSE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_ARCHITECTURE.md docs/domains/fauna/ebird/EBIRD_ARCHITECTURE.md
-git mv docs/domains/fauna/sources/ebird/EBIRD_ANALYTICS.md docs/domains/fauna/ebird/EBIRD_ANALYTICS.md
-git mv docs/sources/airnow/layers/LAYER9_MANUAL_EVIDENCE.md docs/sources/airnow/LAYER9_MANUAL_EVIDENCE.md
-git mv docs/sources/airnow/layers/LAYER8_REMEDIATION.md docs/sources/airnow/LAYER8_REMEDIATION.md
-git mv docs/sources/airnow/layers/LAYER7_RELEASE_GATE.md docs/sources/airnow/LAYER7_RELEASE_GATE.md
-git mv docs/sources/airnow/layers/LAYER6_BUNDLE.md docs/sources/airnow/LAYER6_BUNDLE.md
-git mv docs/sources/airnow/layers/LAYER5_QA.md docs/sources/airnow/LAYER5_QA.md
-git mv docs/sources/airnow/layers/LAYER4_RECONCILIATION.md docs/sources/airnow/LAYER4_RECONCILIATION.md
-git mv docs/sources/airnow/layers/LAYER3_FILE_PRODUCTS.md docs/sources/airnow/LAYER3_FILE_PRODUCTS.md
-git mv docs/sources/airnow/layers/LAYER34_CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION.md docs/sources/airnow/LAYER34_CLOSURE_ARCHIVE_INDEX_PRESERVATION_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER33_CLOSURE_ARCHIVE_INDEX_PRESERVATION_REVIEW.md docs/sources/airnow/LAYER33_CLOSURE_ARCHIVE_INDEX_PRESERVATION_REVIEW.md
-git mv docs/sources/airnow/layers/LAYER32_CLOSURE_ARCHIVE_INDEX_PRESERVATION.md docs/sources/airnow/LAYER32_CLOSURE_ARCHIVE_INDEX_PRESERVATION.md
-git mv docs/sources/airnow/layers/LAYER31_CLOSURE_ARCHIVE_INDEX_AUDIT.md docs/sources/airnow/LAYER31_CLOSURE_ARCHIVE_INDEX_AUDIT.md
-git mv docs/sources/airnow/layers/LAYER30_CLOSURE_ARCHIVE_INDEX_FINALIZATION.md docs/sources/airnow/LAYER30_CLOSURE_ARCHIVE_INDEX_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER2_NORMALIZATION.md docs/sources/airnow/LAYER2_NORMALIZATION.md
-git mv docs/sources/airnow/layers/LAYER29_CLOSURE_ARCHIVE_INDEX_REVIEW.md docs/sources/airnow/LAYER29_CLOSURE_ARCHIVE_INDEX_REVIEW.md
-git mv docs/sources/airnow/layers/LAYER28_CLOSURE_ARCHIVE_INDEX.md docs/sources/airnow/LAYER28_CLOSURE_ARCHIVE_INDEX.md
-git mv docs/sources/airnow/layers/LAYER27_PRESERVATION_CLOSURE_AUDIT.md docs/sources/airnow/LAYER27_PRESERVATION_CLOSURE_AUDIT.md
-git mv docs/sources/airnow/layers/LAYER26_PRESERVATION_CLOSURE_FINALIZATION.md docs/sources/airnow/LAYER26_PRESERVATION_CLOSURE_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER25_PRESERVATION_CLOSURE_REVIEW.md docs/sources/airnow/LAYER25_PRESERVATION_CLOSURE_REVIEW.md
-git mv docs/sources/airnow/layers/LAYER24_PRESERVATION_CLOSURE_READINESS.md docs/sources/airnow/LAYER24_PRESERVATION_CLOSURE_READINESS.md
-git mv docs/sources/airnow/layers/LAYER23_SNAPSHOT_PRESERVATION_AUDIT.md docs/sources/airnow/LAYER23_SNAPSHOT_PRESERVATION_AUDIT.md
-git mv docs/sources/airnow/layers/LAYER22_SNAPSHOT_PRESERVATION_FINALIZATION.md docs/sources/airnow/LAYER22_SNAPSHOT_PRESERVATION_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER21_SNAPSHOT_PRESERVATION_REVIEW.md docs/sources/airnow/LAYER21_SNAPSHOT_PRESERVATION_REVIEW.md
-git mv docs/sources/airnow/layers/LAYER20_SNAPSHOT_PRESERVATION.md docs/sources/airnow/LAYER20_SNAPSHOT_PRESERVATION.md
-git mv docs/sources/airnow/layers/LAYER18_SNAPSHOT_FINALIZATION.md docs/sources/airnow/LAYER18_SNAPSHOT_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER16_SNAPSHOT_EXPORT_PLAN.md docs/sources/airnow/LAYER16_SNAPSHOT_EXPORT_PLAN.md
-git mv docs/sources/airnow/layers/LAYER15_ARCHIVAL_FINALIZATION.md docs/sources/airnow/LAYER15_ARCHIVAL_FINALIZATION.md
-git mv docs/sources/airnow/layers/LAYER14_RETENTION_REVIEW.md docs/sources/airnow/LAYER14_RETENTION_REVIEW.md
-git mv docs/sources/airnow/layers/LAYER13_RETENTION_PLAN.md docs/sources/airnow/LAYER13_RETENTION_PLAN.md
-git mv docs/sources/airnow/layers/LAYER12_FINAL_AUDIT.md docs/sources/airnow/LAYER12_FINAL_AUDIT.md
-git mv docs/sources/airnow/layers/LAYER11_REPLAY_RESULTS.md docs/sources/airnow/LAYER11_REPLAY_RESULTS.md
-git mv docs/sources/airnow/layers/LAYER10_REPLAY_PLAN.md docs/sources/airnow/LAYER10_REPLAY_PLAN.md
-git checkout -- docs/registers/reorg docs/registers/README.md docs/adr/README.md docs/runbooks/README.md docs/registers/domain_doc_index.md docs/registers/domain_file_index.md
+
+# Whole-run rollback
+git reset --hard HEAD~1
+
+# Targeted rollback for moved hydrology docs
+git mv docs/domains/hydrology/architecture/API_CONTRACTS.md docs/domains/hydrology/API_CONTRACTS.md
+git mv docs/domains/hydrology/architecture/ARCHITECTURE.md docs/domains/hydrology/ARCHITECTURE.md
+git mv docs/domains/hydrology/architecture/IDENTITY_MODEL.md docs/domains/hydrology/IDENTITY_MODEL.md
+git mv docs/domains/hydrology/architecture/MAP_UI_CONTRACTS.md docs/domains/hydrology/MAP_UI_CONTRACTS.md
+git mv docs/domains/hydrology/registers/DATA_LIFECYCLE.md docs/domains/hydrology/DATA_LIFECYCLE.md
+git mv docs/domains/hydrology/registers/HUC12_COMID_CROSSWALK_MANIFEST.md docs/domains/hydrology/HUC12_COMID_CROSSWALK_MANIFEST.md
+git mv docs/domains/hydrology/registers/HUC12_COMID_RELEASE_CATALOG_AND_RESOLUTION.md docs/domains/hydrology/HUC12_COMID_RELEASE_CATALOG_AND_RESOLUTION.md
+git mv docs/domains/hydrology/registers/RELEASE_INDEX.md docs/domains/hydrology/RELEASE_INDEX.md
+git mv docs/domains/hydrology/registers/SOURCE_REGISTRY.md docs/domains/hydrology/SOURCE_REGISTRY.md
+git mv docs/domains/hydrology/tracking/EXPANSION_BACKLOG.md docs/domains/hydrology/EXPANSION_BACKLOG.md
+git mv docs/domains/hydrology/tracking/HYDROLOGY_CHANGELOG.md docs/domains/hydrology/HYDROLOGY_CHANGELOG.md
+git mv docs/domains/hydrology/tracking/VERIFICATION_BACKLOG.md docs/domains/hydrology/VERIFICATION_BACKLOG.md
+
+# Remove generated reorg artifacts
+rm -f docs/registers/reorg/REORG_SPRINT_MANIFEST.md docs/registers/reorg/path_inventory.tsv docs/registers/reorg/move_plan.tsv docs/registers/reorg/reference_update_plan.tsv docs/registers/reorg/authority_conflicts.md docs/registers/reorg/validation_report.md

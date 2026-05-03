@@ -8,7 +8,7 @@ owners: TODO: hydrology domain steward; documentation steward
 created: 2026-04-22
 updated: 2026-04-22
 policy_label: TODO-public-or-restricted
-related: [docs/domains/hydrology/ARCHITECTURE.md, docs/domains/hydrology/DATA_LIFECYCLE.md, docs/domains/hydrology/SOURCE_REGISTRY.md, docs/adr/ADR-0001-hydrology-schema-home.md]
+related: [docs/domains/hydrology/architecture/ARCHITECTURE.md, docs/domains/hydrology/registers/DATA_LIFECYCLE.md, docs/domains/hydrology/registers/SOURCE_REGISTRY.md, docs/adr/ADR-0001-hydrology-schema-home.md]
 tags: [kfm, hydrology, evidence-first, map-first, time-aware, governed]
 notes: [Repo availability and owners need verification before publish, Adjacent related paths are proposed until mounted repo inspection]
 [/KFM_META_BLOCK_V2] -->
@@ -66,12 +66,12 @@ This README is the landing page for `docs/domains/hydrology/`. It should orient 
 | Relationship | Link / path | Status |
 | --- | --- | --- |
 | This file | `docs/domains/hydrology/README.md` | PROPOSED_CREATE |
-| Architecture doc | [ARCHITECTURE.md](ARCHITECTURE.md) | PROPOSED_CREATE |
-| Identity rules | [IDENTITY_MODEL.md](IDENTITY_MODEL.md) | PROPOSED_CREATE |
-| Lifecycle rules | [DATA_LIFECYCLE.md](DATA_LIFECYCLE.md) | PROPOSED_CREATE |
-| Source registry guide | [SOURCE_REGISTRY.md](SOURCE_REGISTRY.md) | PROPOSED_CREATE |
-| API contract guide | [API_CONTRACTS.md](API_CONTRACTS.md) | PROPOSED_CREATE |
-| Map/UI contract guide | [MAP_UI_CONTRACTS.md](MAP_UI_CONTRACTS.md) | PROPOSED_CREATE |
+| Architecture doc | [architecture/ARCHITECTURE.md](architecture/ARCHITECTURE.md) | PROPOSED_CREATE |
+| Identity rules | [architecture/IDENTITY_MODEL.md](architecture/IDENTITY_MODEL.md) | PROPOSED_CREATE |
+| Lifecycle rules | [registers/DATA_LIFECYCLE.md](registers/DATA_LIFECYCLE.md) | PROPOSED_CREATE |
+| Source registry guide | [registers/SOURCE_REGISTRY.md](registers/SOURCE_REGISTRY.md) | PROPOSED_CREATE |
+| API contract guide | [architecture/API_CONTRACTS.md](architecture/API_CONTRACTS.md) | PROPOSED_CREATE |
+| Map/UI contract guide | [architecture/MAP_UI_CONTRACTS.md](architecture/MAP_UI_CONTRACTS.md) | PROPOSED_CREATE |
 | Schema-home decision | [../../adr/ADR-0001-hydrology-schema-home.md](../../adr/ADR-0001-hydrology-schema-home.md) | P0 / NEEDS VERIFICATION |
 | Hydrologic identity ADR | [../../adr/ADR-0002-hydrologic-identity-and-abstain.md](../../adr/ADR-0002-hydrologic-identity-and-abstain.md) | P0 / PROPOSED |
 | Flood source-role ADR | [../../adr/ADR-0003-flood-source-role-separation.md](../../adr/ADR-0003-flood-source-role-separation.md) | P0 / PROPOSED |
@@ -98,12 +98,12 @@ This README is the landing page for `docs/domains/hydrology/`. It should orient 
 | Accepted input | Belongs here | Notes |
 | --- | --- | --- |
 | Domain orientation | `README.md` | High-level maintainer entrypoint. |
-| Domain architecture | `ARCHITECTURE.md` | Bounded context, object families, trust surfaces, dependency seams. |
-| Identity discipline | `IDENTITY_MODEL.md` | Permanent Identifier, COMID compatibility, ambiguity handling, ABSTAIN rules. |
-| Lifecycle policy | `DATA_LIFECYCLE.md` | RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED. |
-| Source registry explanation | `SOURCE_REGISTRY.md` | Human guide to source descriptors; machine descriptors live under `data/registry/hydrology/`. |
-| API and UI explanations | `API_CONTRACTS.md`, `MAP_UI_CONTRACTS.md` | Human-facing contract documentation; machine contracts and fixtures live elsewhere. |
-| Verification backlog | `VERIFICATION_BACKLOG.md` | Open checks, current unknowns, source-rights reviews, repo convention follow-ups. |
+| Domain architecture | `architecture/ARCHITECTURE.md` | Bounded context, object families, trust surfaces, dependency seams. |
+| Identity discipline | `architecture/IDENTITY_MODEL.md` | Permanent Identifier, COMID compatibility, ambiguity handling, ABSTAIN rules. |
+| Lifecycle policy | `registers/DATA_LIFECYCLE.md` | RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED. |
+| Source registry explanation | `registers/SOURCE_REGISTRY.md` | Human guide to source descriptors; machine descriptors live under `data/registry/hydrology/`. |
+| API and UI explanations | `architecture/API_CONTRACTS.md`, `architecture/MAP_UI_CONTRACTS.md` | Human-facing contract documentation; machine contracts and fixtures live elsewhere. |
+| Verification backlog | `tracking/VERIFICATION_BACKLOG.md` | Open checks, current unknowns, source-rights reviews, repo convention follow-ups. |
 
 ### Inputs accepted by the hydrology lane
 
@@ -146,21 +146,21 @@ PROPOSED until verified in the mounted repository:
 ```text
 docs/domains/hydrology/
 ├── README.md
-├── ARCHITECTURE.md
-├── IDENTITY_MODEL.md
-├── DATA_LIFECYCLE.md
-├── SOURCE_REGISTRY.md
-├── API_CONTRACTS.md
-├── MAP_UI_CONTRACTS.md
+├── architecture/ARCHITECTURE.md
+├── architecture/IDENTITY_MODEL.md
+├── registers/DATA_LIFECYCLE.md
+├── registers/SOURCE_REGISTRY.md
+├── architecture/API_CONTRACTS.md
+├── architecture/MAP_UI_CONTRACTS.md
 ├── FILE_SYSTEM_PLAN.md
 ├── CANONICAL_PATHS.md
 ├── CONTINUITY_INVENTORY.md
 ├── PRESERVATION_MATRIX.md
 ├── MISSING_OR_PLANNED_FILES.md
-├── VERIFICATION_BACKLOG.md
-├── EXPANSION_BACKLOG.md
-├── HYDROLOGY_CHANGELOG.md
-├── RELEASE_INDEX.md
+├── tracking/VERIFICATION_BACKLOG.md
+├── tracking/EXPANSION_BACKLOG.md
+├── tracking/HYDROLOGY_CHANGELOG.md
+├── registers/RELEASE_INDEX.md
 └── HYDROLOGY_EXPANSION_PLAN.md
 ```
 
