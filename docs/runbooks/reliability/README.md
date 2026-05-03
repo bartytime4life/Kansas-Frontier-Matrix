@@ -74,7 +74,7 @@ This README is a **directory landing page**, not a release record and not a repl
 | CI workflows | `../../../.github/workflows/` | `NEEDS VERIFICATION` | Workflow maturity must be confirmed from actual files and runs. |
 
 > [!WARNING]
-> Link targets above are doctrine-aligned and repo-plausible, but this draft does not prove they exist in the current branch. Verify targets before merging or replace missing links with tracked TODOs.
+> Link targets above should be revalidated whenever files are moved or renamed. Keep this table synchronized with current repository paths.
 
 [Back to top](#top)
 
@@ -174,7 +174,7 @@ find .github docs contracts schemas policy data tools tests apps packages infra 
   -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,250p'
 
 # Look for reliability-relevant object families.
-grep -RInE \
+rg -n \
   'run_receipt|ReleaseManifest|EvidenceBundle|DecisionEnvelope|CorrectionNotice|ValidationReport|audit_ref|request_id|rollback|stale|ABSTAIN|DENY|ERROR' \
   docs contracts schemas policy data tools tests apps packages 2>/dev/null | sed -n '1,200p'
 ```

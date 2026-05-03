@@ -173,7 +173,7 @@ Use these checks before editing or reviewing this directory.
 find docs/registers -maxdepth 1 -type f | sort
 
 # Find unresolved review markers in this register surface.
-grep -RInE 'TODO|NEEDS VERIFICATION|UNKNOWN|CONFLICTED|PROPOSED' docs/registers || true
+rg -n 'TODO|NEEDS VERIFICATION|UNKNOWN|CONFLICTED|PROPOSED' docs/registers || true
 
 # Confirm this README has exactly one H1.
 grep -RIn '^# ' docs/registers/README.md
