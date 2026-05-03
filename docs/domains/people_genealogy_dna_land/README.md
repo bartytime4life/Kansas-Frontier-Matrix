@@ -58,7 +58,7 @@ The lane exists to keep sensitive human, genealogical, DNA, and land-tenure clai
 
 ## Repo fit
 
-**Target path:** `docs/domains/people-genealogy-dna-land/README.md`
+**Target path:** `docs/domains/people_genealogy_dna_land/README.md`
 
 This README is the domain landing page. It should orient maintainers, reviewers, and contributors before they touch contracts, schemas, policies, fixtures, source registries, ingest plans, APIs, UI payloads, or generated artifacts for this lane.
 
@@ -129,7 +129,7 @@ The following **do not belong** in this directory:
 Planned companion documentation should stay small, reviewable, and reversible.
 
 ```text
-docs/domains/people-genealogy-dna-land/
+docs/domains/people_genealogy_dna_land/
 ├── README.md                         # this landing page
 ├── DECISIONS.md                      # lane decisions and ADR cross-links (initial)
 ├── SOURCE_FAMILIES.md                # source-family notes and role boundaries (initial)
@@ -297,7 +297,7 @@ flowchart LR
 
 | Surface | Belongs there | Must not contain |
 |---|---|---|
-| `docs/domains/people-genealogy-dna-land/` | Domain explanation, source-role rules, sensitivity posture, review checklists, diagrams, links. | Raw records, DNA data, policy code, schemas, emitted proofs. |
+| `docs/domains/people_genealogy_dna_land/` | Domain explanation, source-role rules, sensitivity posture, review checklists, diagrams, links. | Raw records, DNA data, policy code, schemas, emitted proofs. |
 | `contracts/people_dna_land/` | Human object semantics, invariants, lifecycle expectations. | Machine schema as sole authority. |
 | `schemas/contracts/v1/people_dna_land/` | JSON Schema / OpenAPI-like shape, enums, structural constraints. | Narrative doctrine as sole authority. |
 | `policy/` | Allow / deny / abstain / obligation logic. | General domain prose or source files. |

@@ -86,3 +86,6 @@ See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for current repository organ
 
 ## Reorg runbook references
 See `docs/registers/reorg/rollback_plan.sh` for repository-organization rollback commands.
+
+## Reorg sprint runbook linkage
+See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` and `docs/registers/reorg/rollback_plan.sh`.

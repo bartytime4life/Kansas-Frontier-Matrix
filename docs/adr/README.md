@@ -457,3 +457,8 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 
 ## Authority-sensitive move guard
 Do not move machine schema files between `contracts/` and `schemas/`, or policy-as-code files between `policy/` and `policies/`, without explicit ADR authorization.
+
+## Authority-sensitive homes (do not move without ADR)
+- `contracts/` vs `schemas/` machine authority boundary.
+- `policy/` vs `policies/` policy authority boundary.
+- data lifecycle homes under `data/` RAW->WORK/QUARANTINE->PROCESSED->CATALOG/TRIPLET->PUBLISHED.

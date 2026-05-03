@@ -407,3 +407,12 @@ Use this template when adding a compact register row or expanding a row into a s
 - `docs/registers/policy_authority_map.md`
 - `docs/registers/domain_doc_index.md`
 - `docs/registers/domain_file_index.md`
+
+## Reorg control
+- `docs/registers/reorg/REORG_SPRINT_MANIFEST.md`
+- `docs/registers/reorg/path_inventory.tsv`
+- `docs/registers/reorg/move_plan.tsv`
+- `docs/registers/reorg/reference_update_plan.tsv`
+- `docs/registers/reorg/authority_conflicts.md`
+- `docs/registers/reorg/validation_report.md`
+- `docs/registers/reorg/rollback_plan.sh`
