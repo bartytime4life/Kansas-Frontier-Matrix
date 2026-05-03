@@ -1,21 +1,28 @@
-# Reorg validation report
+# Validation Report
 
-## CONFIRMED checks in this sprint
+## `python tools/repo_inventory/check_reorg_manifest.py docs/registers/reorg`
+exit=1
+```
+move_plan missing columns
 
-- Inventory regenerated from tracked files only (`git ls-files`).
-- `tools/repo_inventory/check_public_path_boundaries.py` hardened to scan only executable code extensions and fail non-zero by default.
-- Dependency clutter guard updated with explicit `apps/web/node_modules/` ignore rule.
-- No lifecycle or machine-authority moves were performed.
+```
+## `python tools/repo_inventory/check_doc_orphans.py`
+exit=0
+```
+OK no doc orphans in docs/
 
-## BLOCKED / CONFLICTED context
+```
+## `python tools/repo_inventory/check_public_path_boundaries.py`
+exit=1
+```
+BLOCKED direct raw/work/quarantine references detected:
+apps/web/src/__tests__/tileReleasePublisher.test.js
 
-- High-volume move target (>=75 path impacts) was BLOCKED by unresolved authority boundaries and low-confidence safe move candidates.
-- `contracts/` vs `schemas/` and `policy/` vs `policies/` remain CONFLICTED; no machine-authority file relocations were attempted.
+```
+## `pytest tests/repo_inventory -q`
+exit=0
+```
+....                                                                     [100%]
+4 passed in 0.23s
 
-## Validation command outcomes
-
-- `python tools/repo_inventory/classify_paths.py --tsv-out docs/registers/reorg/path_inventory.tsv` -> PASS.
-- `python tools/repo_inventory/check_reorg_manifest.py docs/registers/reorg` -> PASS.
-- `python tools/repo_inventory/check_doc_orphans.py` -> PASS.
-- `python tools/repo_inventory/check_public_path_boundaries.py --allow-fail` -> PASS (report mode).
-- `pytest tests/repo_inventory -q` -> PASS.
+```
