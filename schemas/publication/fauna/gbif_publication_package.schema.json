@@ -1,1 +1,0 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["publication_package_id","kfm:spec_hash","source_evidence_bundle_ids","download_keys","query_predicate_hashes","geoprivacy_receipt_refs","answer_receipt_refs"]}

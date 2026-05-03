@@ -1,1 +1,0 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["manifest_id","layer20_inputs","manual_evidence"]}

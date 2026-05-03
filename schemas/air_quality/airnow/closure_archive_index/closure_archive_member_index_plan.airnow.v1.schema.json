@@ -1,6 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "closure_archive_member_index_plan.airnow.v1.schema.json",
-  "type": "object",
-  "additionalProperties": true
-}
