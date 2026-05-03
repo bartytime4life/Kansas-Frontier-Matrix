@@ -7,7 +7,7 @@
 - flora: `docs/domains/flora/`
 - agriculture: `docs/domains/agriculture/`
 - geology: `docs/domains/geology/`
-- atmosphere_air: `docs/domains/atmosphere-air/`
+- atmosphere_air: `docs/domains/atmosphere_air/`
 - roads_rail_trade_routes: `docs/domains/roads-rail-trade-routes/`
 - settlements_infrastructure: UNKNOWN
 - archaeology: `docs/domains/archaeology/`

@@ -156,7 +156,7 @@ Use the narrowest truthful label. Do not upgrade a planning statement into imple
 
 These links are orientation targets, not proof that directories currently exist:
 
-[Hydrology](./hydrology/README.md) · [Hazards](./hazards/README.md) · [Soil](./soil/README.md) · [Agriculture](./agriculture/README.md) · [Atmosphere / Air](./atmosphere-air/README.md) · [Geology & Natural Resources](./geology-natural-resources/README.md) · [Flora](./flora/README.md) · [Fauna](./fauna/README.md) · [Habitat](./habitat/README.md) · [Settlements & Infrastructure](./settlements-infrastructure/README.md) · [Roads / Rail / Trade Routes](./roads-rail-trade-routes/README.md) · [Archaeology](./archaeology/README.md) · [People / Genealogy / DNA / Land Ownership](./people-genealogy-dna-land/README.md)
+[Hydrology](./hydrology/README.md) · [Hazards](./hazards/README.md) · [Soil](./soil/README.md) · [Agriculture](./agriculture/README.md) · [Atmosphere / Air](./atmosphere_air/README.md) · [Geology & Natural Resources](./geology-natural-resources/README.md) · [Flora](./flora/README.md) · [Fauna](./fauna/README.md) · [Habitat](./habitat/README.md) · [Settlements & Infrastructure](./settlements-infrastructure/README.md) · [Roads / Rail / Trade Routes](./roads-rail-trade-routes/README.md) · [Archaeology](./archaeology/README.md) · [People / Genealogy / DNA / Land Ownership](./people-genealogy-dna-land/README.md)
 
 [Back to top](#top)
 
@@ -220,7 +220,7 @@ docs/domains/
 │   └── README.md
 ├── agriculture/
 │   └── README.md
-├── atmosphere-air/
+├── atmosphere_air/
 │   └── README.md
 ├── geology-natural-resources/
 │   └── README.md
@@ -269,7 +269,7 @@ This registry is an orientation map, not an implementation inventory. Candidate 
 
 | Lane | Candidate README | May claim when supported | Must not claim without stronger proof |
 |---|---|---|---|
-| Atmosphere / Air | `./atmosphere-air/README.md` | Air quality, weather, climate, smoke, EO-derived fields, source freshness, and knowledge character. | Observations, public AQI reports, regulatory archives, model fields, smoke masks, and anomaly surfaces as interchangeable truth. |
+| Atmosphere / Air | `./atmosphere_air/README.md` | Air quality, weather, climate, smoke, EO-derived fields, source freshness, and knowledge character. | Observations, public AQI reports, regulatory archives, model fields, smoke masks, and anomaly surfaces as interchangeable truth. |
 | Geology & Natural Resources | `./geology-natural-resources/README.md` | Geologic units, stratigraphy, wells/cores, geophysics/geochemistry references, resource estimates, extraction/reclamation context. | Physical geology, interpretation, resource administration, production records, and legal/resource status as one collapsed layer. |
 | Habitat | `./habitat/README.md` | Habitat classes, models, patches, corridors, condition, land-cover context, public-safe generalized products. | Habitat/model support as occurrence truth or exact habitat-sensitive outputs without policy review. |
 

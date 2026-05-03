@@ -1,15 +1,17 @@
 # REORG Sprint Manifest
 
 ## Scope
-- CONFIRMED full tracked-file inventory and family classification from `git ls-files`.
-- CONFIRMED applied reversible hydrology domain documentation consolidation.
-- CONFIRMED generated move/reference/authority/validation/rollback artifacts.
+- Deep functional manifest-driven organization sprint focused on doc-domain slug normalization and inventory tooling.
+
+## Truth labels
+- **CONFIRMED**: tracked inventory generated from `git ls-files`; domain docs moved via `git mv`; reference rewrites applied.
+- **CONFLICTED**: schema and policy authority split remains open but documented by ADRs/maps.
+- **BLOCKED**: no machine-authority moves attempted due to ADR constraints.
 
 ## Applied subset
-- `docs/domains/hydrology/*` reorganized into `architecture/`, `registers/`, and `tracking/` homes.
-- References rewritten in hydrology README and register indexes.
+- Normalized domain doc folder `docs/domains/atmosphere-air/` -> `docs/domains/atmosphere_air/`.
+- Rewrote references to new path across docs/tests/register artifacts.
+- Added repo inventory tooling and manifest checker.
 
-## Authority-sensitive boundaries
-- Do not move machine schema files between `contracts/` and `schemas/` without ADR-authorized migration.
-- Do not move policy code between `policy/` and `policies/` without ADR-authorized migration.
-- Do not move lifecycle artifacts (`data/raw`, `work`, `quarantine`, `processed`, `catalog`, `triplets`, `published`, `receipts`, `proofs`) in this sprint.
+## Artifacts
+- `path_inventory.tsv`, `move_plan.tsv`, `reference_update_plan.tsv`, `authority_conflicts.md`, `validation_report.md`, `rollback_plan.sh`.

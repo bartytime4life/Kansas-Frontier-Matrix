@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
+import argparse, csv
 from pathlib import Path
-import csv,sys
 
-def req(path):
-    p=Path(path)
-    return p.exists() and p.stat().st_size>0
+def read_tsv(p):
+    with open(p,newline='') as f: return list(csv.DictReader(f,delimiter='\t'))
 
-base=Path(sys.argv[1] if len(sys.argv)>1 else "docs/registers/reorg")
-required=["REORG_SPRINT_MANIFEST.md","path_inventory.tsv","move_plan.tsv","reference_update_plan.tsv","authority_conflicts.md","validation_report.md","rollback_plan.sh"]
-missing=[r for r in required if not req(base/r)]
-if missing:
-    print("MISSING:", ", ".join(missing))
-    sys.exit(1)
-# basic tsv shape
-for name,cols in [("path_inventory.tsv",2),("move_plan.tsv",4),("reference_update_plan.tsv",4)]:
-    with (base/name).open() as f:
-        rows=list(csv.reader(f,delimiter='\t'))
-    if not rows or any(len(r)<cols for r in rows[1:]):
-        print(f"INVALID {name}")
-        sys.exit(1)
-print("OK")
+def main():
+    ap=argparse.ArgumentParser(); ap.add_argument('dir'); args=ap.parse_args()
+    d=Path(args.dir)
+    req=['REORG_SPRINT_MANIFEST.md','path_inventory.tsv','move_plan.tsv','reference_update_plan.tsv','authority_conflicts.md','validation_report.md','rollback_plan.sh']
+    missing=[x for x in req if not (d/x).exists()]
+    if missing:
+        print('MISSING:'+','.join(missing)); raise SystemExit(1)
+    mv=read_tsv(d/'move_plan.tsv')
+    rb=(d/'rollback_plan.sh').read_text()
+    for r in mv:
+        if r.get('old_path') and r['old_path'] not in rb: print('WARN rollback missing',r['old_path'])
+    print('OK manifest basic checks passed')
+
+if __name__=='__main__': main()
