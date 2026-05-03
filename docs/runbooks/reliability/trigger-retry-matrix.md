@@ -8,7 +8,7 @@ owners: TODO-reliability-ops-owner (NEEDS VERIFICATION)
 created: 2026-04-28
 updated: 2026-04-28
 policy_label: public
-related: [TODO: docs/runbooks/README.md, TODO: policy/README.md, TODO: schemas/README.md, TODO: tools/validators/README.md]
+related: [docs/runbooks/README.md, docs/runbooks/reliability/README.md, policy/README.md, schemas/README.md]
 tags: [kfm, runbook, reliability, triggers, retries, idempotency, provenance]
 notes: [Repo checkout was not mounted in this session; owner, doc_id, adjacent links, workflow names, and CI commands require verification before commit.]
 [/KFM_META_BLOCK_V2] -->

@@ -8,7 +8,7 @@ owners: NEEDS-VERIFICATION
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: NEEDS-VERIFICATION
-related: [docs/runbooks/PROMOTION_GATE.md, docs/runbooks/CORRECTION_AND_ROLLBACK.md, docs/registers/VERIFICATION_BACKLOG.md, data/receipts/, data/proofs/, policy/]
+related: [docs/runbooks/publication.md, docs/runbooks/correction.md, docs/runbooks/rollback.md, docs/registers/VERIFICATION_BACKLOG.md, data/receipts/, data/proofs/, policy/]
 tags: [kfm, runbook, reliability, operations, observability, rollback]
 notes: [Repo-ready draft generated from attached KFM doctrine. Actual doc_id, owners, dates, policy label, adjacent paths, workflows, dashboards, emitted artifacts, and runtime maturity remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
@@ -65,8 +65,8 @@ This README is a **directory landing page**, not a release record and not a repl
 | Local path | `docs/runbooks/reliability/README.md` | `PROPOSED` | Target file requested for this run. |
 | Docs landing | [`../../README.md`](../../README.md) | `NEEDS VERIFICATION` | Should orient readers to canonical docs, registers, and runbooks. |
 | Runbooks landing | [`../README.md`](../README.md) | `NEEDS VERIFICATION` | Should list operational runbooks as a family. |
-| Promotion gate | [`../PROMOTION_GATE.md`](../PROMOTION_GATE.md) | `PROPOSED / NEEDS VERIFICATION` | Release reliability depends on promotion evidence, not deployment success alone. |
-| Correction and rollback | [`../CORRECTION_AND_ROLLBACK.md`](../CORRECTION_AND_ROLLBACK.md) | `PROPOSED / NEEDS VERIFICATION` | Reliability recovery must preserve visible lineage. |
+| Promotion gate | [`../publication.md`](../publication.md) | `CONFIRMED path / content status may vary` | Release reliability depends on promotion evidence, not deployment success alone. |
+| Correction and rollback | [`../correction.md`](../correction.md) + [`../rollback.md`](../rollback.md) | `CONFIRMED path / content status may vary` | Reliability recovery must preserve visible lineage. |
 | Verification backlog | [`../../registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) | `NEEDS VERIFICATION` | Unverified reliability surfaces should become concrete checks. |
 | Policy | [`../../../policy/README.md`](../../../policy/README.md) | `NEEDS VERIFICATION` | Deny, abstain, release, sensitivity, and rights decisions should stay executable. |
 | Receipts | [`../../../data/receipts/README.md`](../../../data/receipts/README.md) | `NEEDS VERIFICATION` | Process memory belongs with emitted receipt surfaces, not in prose only. |
@@ -74,7 +74,7 @@ This README is a **directory landing page**, not a release record and not a repl
 | CI workflows | `../../../.github/workflows/` | `NEEDS VERIFICATION` | Workflow maturity must be confirmed from actual files and runs. |
 
 > [!WARNING]
-> Link targets above are doctrine-aligned and repo-plausible, but this draft does not prove they exist in the current branch. Verify targets before merging or replace missing links with tracked TODOs.
+> Link targets above should be revalidated whenever files are moved or renamed. Keep this table synchronized with current repository paths.
 
 [Back to top](#top)
 
@@ -174,7 +174,7 @@ find .github docs contracts schemas policy data tools tests apps packages infra 
   -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,250p'
 
 # Look for reliability-relevant object families.
-grep -RInE \
+rg -n \
   'run_receipt|ReleaseManifest|EvidenceBundle|DecisionEnvelope|CorrectionNotice|ValidationReport|audit_ref|request_id|rollback|stale|ABSTAIN|DENY|ERROR' \
   docs contracts schemas policy data tools tests apps packages 2>/dev/null | sed -n '1,200p'
 ```

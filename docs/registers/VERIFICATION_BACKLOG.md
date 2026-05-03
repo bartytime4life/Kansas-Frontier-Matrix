@@ -8,7 +8,7 @@ owners: TODO-NEEDS-VERIFICATION
 created: 2026-04-28
 updated: 2026-04-28
 policy_label: TODO-NEEDS-VERIFICATION
-related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/registers/DRIFT_REGISTER.md, docs/intake/IDEA_INTAKE.md, docs/runbooks/PROMOTION_GATE.md, docs/runbooks/CORRECTION_AND_ROLLBACK.md, contracts/OBJECT_MAP.md, schemas/README.md, policy/README.md, tests/README.md]
+related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/registers/DRIFT_REGISTER.md, docs/intake/IDEA_INTAKE.md, docs/runbooks/publication.md, docs/runbooks/correction.md, docs/runbooks/rollback.md, contracts/OBJECT_MAP.md, schemas/README.md, policy/README.md, tests/README.md]
 tags: [kfm, verification, backlog, governance, evidence, control-plane]
 notes: [Draft register for docs/registers/VERIFICATION_BACKLOG.md. doc_id, owners, policy_label, active-branch path existence, and related-link validity require direct repo verification before merge. created/updated dates reflect draft generation date and should be reconciled with commit history if different.]
 [/KFM_META_BLOCK_V2] -->
@@ -68,8 +68,8 @@ It exists to prevent three failure modes:
 | Sibling | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Classifies canon, lineage, exploratory inputs, emitted artifacts, and proof families. |
 | Sibling | `docs/registers/DRIFT_REGISTER.md` | Records contradictions, naming drift, source drift, schema drift, and path drift. |
 | Upstream | `docs/intake/IDEA_INTAKE.md` | Sends `REPO VERIFY`, `EVIDENCE GAP`, and `ADR CANDIDATE` items here. |
-| Upstream | `docs/runbooks/PROMOTION_GATE.md` | Uses this backlog to block release claims that still lack proof. |
-| Upstream | `docs/runbooks/CORRECTION_AND_ROLLBACK.md` | Uses this backlog when withdrawal, supersession, or rollback exposes unresolved proof gaps. |
+| Upstream | `docs/runbooks/publication.md` | Uses this backlog to block release claims that still lack proof. |
+| Upstream | `docs/runbooks/correction.md` and `docs/runbooks/rollback.md` | Uses this backlog when withdrawal, supersession, or rollback exposes unresolved proof gaps. |
 | Downstream | `contracts/OBJECT_MAP.md` | Retires object-family ambiguity by defining semantic objects and lifecycle roles. |
 | Downstream | `schemas/README.md` | Retires executable shape and schema-home ambiguity. |
 | Downstream | `policy/README.md` | Retires fail-closed, rights, sensitivity, AI-runtime, and promotion-policy uncertainty. |
@@ -200,7 +200,7 @@ flowchart LR
 | `VFY-002` | CODEOWNERS, branch protection, rulesets, environments, and required checks | `NEEDS VERIFICATION` | `B0` ownership and enforcement claims | Inspect `.github/CODEOWNERS`, repository rulesets, branch protections, environments, and required check settings. | Governance evidence note; update authority/ownership docs. |
 | `VFY-003` | Workflow YAML inventory and merge-gate reality | `NEEDS VERIFICATION` | `B1` automation claims | Inventory `.github/workflows/*.yml` or `*.yaml`; distinguish active, drafted, historical, and README-only workflows. | Workflow inventory table plus CI run evidence where available. |
 | `VFY-004` | Package manager, language stack, and test runner | `UNKNOWN` | `B1` executable instructions | Inspect lockfiles, package files, CI configs, Makefile, test configs, and app/package boundaries. | Runtime/tooling summary in repo map or relevant README. |
-| `VFY-005` | Schema-home authority: `contracts/` vs `schemas/` vs `schemas/contracts/v1/` | `CONFLICTED` | `B1` contract/schema claims | Inspect current tree and docs; decide semantic vs executable authority. | ADR and updated `contracts/OBJECT_MAP.md` / schema README. |
+| `VFY-005` | Schema/policy authority closure: `contracts/` vs `schemas/` and `policy/` vs `policies/` | `CONFLICTED` | `B1` contract/schema/policy claims | Inspect current tree and docs; decide semantic vs executable authority and policy home. | Accepted ADR-0001 + ADR-0013, updated `contracts/OBJECT_MAP.md`/schema README, and documented policy-home compatibility map. |
 | `VFY-006` | Public clients cannot reach `RAW`, `WORK`, `QUARANTINE`, canonical stores, or direct model runtime | `NEEDS VERIFICATION` | `B0` trust membrane | Inspect routes, client code, deployment config, CORS/proxy rules, and tests. | No-forbidden-path test or security boundary note. |
 | `VFY-007` | Source of truth for promotion state | `NEEDS VERIFICATION` | `B0` publication claims | Inspect promotion gate docs, release manifests, policy inputs, review records, and emitted decision objects. | Promotion-state ADR or runbook update. |
 | `VFY-008` | Correction and rollback mechanics preserve history | `NEEDS VERIFICATION` | `B0` release/correction claims | Inspect correction tests, rollback references, release history, cache invalidation, and withdrawal flow. | Correction drill evidence or rollback runbook update. |
