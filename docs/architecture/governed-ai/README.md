@@ -1,16 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO: assign UUID after repo registration>
+doc_id: kfm://doc/NEEDS-VERIFICATION-governed-ai-architecture
 title: Governed AI Architecture
 type: standard
 version: v1
 status: draft
-owners: <TODO: confirm governed-ai owners>
+owners: OWNER_TBD_NEEDS_VERIFICATION
 created: 2026-04-22
-updated: 2026-04-22
-policy_label: <TODO: confirm policy label>
-related: [<TODO: verify adjacent repo links after mounting KFM repo>]
+updated: 2026-05-03
+policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
+related: [PATH_TBD_AFTER_REPO_INSPECTION]
 tags: [kfm, governed-ai, evidence, policy, focus-mode]
-notes: [Generated as repo-ready draft for docs/architecture/governed-ai/README.md; repo checkout, owners, policy label, and adjacent links NEED VERIFICATION]
+notes: [Repo-useful revised draft for PROPOSED docs/architecture/governed-ai/README.md; current drafting pass had no mounted KFM repo; owners, policy label, related links, schema homes, route names, and implementation depth NEED VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
 
 # Governed AI Architecture
@@ -26,28 +26,32 @@ Evidence-bounded architecture for using AI inside KFM without letting model outp
 
 > [!IMPORTANT]
 > **Status:** experimental  
-> **Owners:** `<TODO: confirm governed-ai owners>`  
-> **Path:** `docs/architecture/governed-ai/README.md`  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Architecture flow](#architecture-flow) · [Contracts](#contract-and-object-map) · [Validation](#validation-and-review-gates) · [Open verification](#open-verification-backlog)
+> **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
+> **Proposed path:** `docs/architecture/governed-ai/README.md`  
+> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation / UNKNOWN current repo depth  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Architecture flow](#architecture-flow) · [Contracts](#contract-and-object-map) · [Validation](#validation-and-review-gates) · [Rollback](#rollback) · [Open verification](#open-verification-backlog)
+
+> [!NOTE]
+> This README states KFM doctrine where supported by the project corpus and marks implementation-shaped details as **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**. The current drafting pass did not inspect a mounted repository tree, tests, workflows, dashboards, runtime logs, source registries, emitted receipts, or deployed services.
 
 ---
 
 ## Scope
 
-This directory documents how Kansas Frontier Matrix admits model-assisted synthesis, retrieval support, evaluator output, and local/private model runtimes **without weakening the KFM truth path**.
+This README documents how Kansas Frontier Matrix admits model-assisted synthesis, retrieval support, evaluator output, and local or private model runtimes **without weakening the KFM truth path**.
 
 The governing rule is simple:
 
 > [!IMPORTANT]
-> AI is an interpretive layer. `EvidenceBundle`, policy state, source authority, review state, and release state outrank generated language.
+> AI is an interpretive layer. `EvidenceBundle`, policy state, source authority, review state, release state, and correction lineage outrank generated language.
 
-This README is for maintainers working on:
+This document is for maintainers working on:
 
 - provider-neutral AI runtime boundaries;
 - Focus Mode response envelopes;
 - Evidence Drawer obligations for AI-assisted claims;
 - citation validation and policy postchecks;
-- AI receipts, run receipts, evaluator reports, and rollback controls;
+- AI receipts, run receipts, evaluator reports, rollback controls, and review artifacts;
 - local/private runtime hardening when KFM is exposed through a home firewall, reverse proxy, or VPN.
 
 It is **not** a chatbot spec, prompt collection, model benchmark page, provider setup guide, or proof that any runtime is already implemented.
@@ -56,53 +60,54 @@ It is **not** a chatbot spec, prompt collection, model benchmark page, provider 
 
 | Field | Value |
 | --- | --- |
-| Target path | `docs/architecture/governed-ai/README.md` |
-| Document role | Architecture README for bounded AI, Focus Mode, adapters, citations, policy, receipts, and trust-surface integration |
-| Upstream doctrine | `<TODO: verify links>` KFM pipeline/lifecycle manual, governed-AI architecture report, MapLibre UI doctrine, documentation architecture/source-ledger materials |
-| Downstream surfaces | `<TODO: verify links>` `schemas/contracts/v1/`, `contracts/runtime/`, `policy/`, `tools/validators/`, `apps/governed-api/`, `apps/web/`, `tests/`, `release/` |
-| Primary readers | Architecture, policy, API, UI, QA, source-ledger, release, and operations maintainers |
-| Update trigger | Any material change to model adapters, Focus Mode, Evidence Drawer payloads, citation validation, policy gates, runtime exposure, receipts, or release behavior |
+| Proposed target path | `docs/architecture/governed-ai/README.md` |
+| Document type | README-like architecture doc with KFM Meta Block v2 |
+| Document role | Governed-AI orientation surface for bounded synthesis, Focus Mode, adapters, citations, policy, receipts, trust-surface integration, and rollback |
+| Upstream doctrine | `NEEDS VERIFICATION`: pipeline/lifecycle manual, governed-AI architecture report, MapLibre UI doctrine, documentation/source-ledger materials |
+| Downstream surfaces | `NEEDS VERIFICATION`: `schemas/contracts/v1/`, `contracts/runtime/`, `policy/`, `tools/validators/`, `apps/governed-api/`, `apps/web/`, `tests/`, `release/` |
+| Primary readers | Architecture, policy, API, UI, QA, source-ledger, release, security, and operations maintainers |
+| Update trigger | Any material change to model adapters, Focus Mode, Evidence Drawer payloads, citation validation, policy gates, runtime exposure, receipts, release behavior, or rollback behavior |
 
-> [!NOTE]
-> Repo-relative links are intentionally left as verification placeholders because the mounted checkout was not available during this drafting pass. Convert the path candidates above into live relative links after the real repo tree is inspected.
+> [!WARNING]
+> The path and adjacent surfaces above are **PROPOSED** until the real repository is mounted and inspected. Do not create duplicate schema, contract, policy, or runtime homes until existing repo convention or an ADR resolves authority.
 
 ## Inputs
 
 Content belongs here when it describes **architecture or governance** for KFM AI behavior.
 
-Accepted inputs include:
-
 | Accepted input | Belongs here when it answers |
 | --- | --- |
 | Runtime boundary notes | Where may a model runtime sit, and what must it never access? |
-| Adapter decisions | How does KFM keep provider choice internal and replaceable? |
+| Adapter decisions | How does KFM keep provider choice internal, replaceable, and testable? |
 | Focus Mode contracts | What does a bounded answer, abstain, deny, or error need to carry? |
-| Evidence/citation rules | How does generated text prove its support or fail safely? |
-| Policy gate notes | Which checks happen before and after synthesis? |
-| Receipt/proof distinctions | What is process memory, what is release proof, and what is review support? |
+| Evidence and citation rules | How does generated text prove its support or fail safely? |
+| Policy gate notes | Which checks happen before synthesis, after synthesis, and before display/export? |
+| Receipt and proof distinctions | What is process memory, what is release proof, and what is review support? |
 | UI trust obligations | What must Evidence Drawer, Focus, export, and review surfaces expose? |
 | Local/private exposure guidance | What prevents a home-hosted model endpoint from becoming a public bypass? |
+| Validator and fixture notes | How can governed-AI behavior be tested without live providers or live source connectors? |
 
 ## Exclusions
 
-Do not place operational secrets, runtime state, raw data, or machine-contract source of truth in this README.
+Do not place operational secrets, runtime state, raw data, or machine-contract authority in this README.
 
 | Exclusion | Why it does not belong | Preferred home |
 | --- | --- | --- |
-| Model weights, GGUF files, downloaded model blobs | Large runtime artifacts are not documentation and may carry licensing/storage risks. | Outside repo or ops-managed artifact store — `NEEDS VERIFICATION` |
-| API keys, provider tokens, VPN secrets, `.env` values | Secrets must never be committed. | Secret manager or local `.env`, with safe `.env.example` only |
-| Prompt experiments without evidence contracts | Prompt text is not proof and can drift from policy. | `packages/ai/prompts/` or test fixtures, if repo convention confirms |
+| Model weights, GGUF files, downloaded model blobs | Large runtime artifacts are not documentation and may carry licensing, storage, or operations risk. | Outside repo or ops-managed artifact store — `NEEDS VERIFICATION` |
+| API keys, provider tokens, VPN secrets, `.env` values | Secrets must never be committed or exposed through documentation. | Secret manager or local `.env`, with safe `.env.example` only |
+| Prompt experiments without evidence contracts | Prompt text is not proof and can drift from policy. | Prompt/test fixture home only after repo convention confirms it |
 | Chain-of-thought or hidden reasoning logs | Hidden reasoning is not a KFM truth object and should not be stored as provenance. | Do not persist; store bounded receipt metadata only |
-| RAW / WORK / QUARANTINE data | Public and AI surfaces must not read lifecycle stages directly. | `data/raw/`, `data/work/`, `data/quarantine/` behind governed lifecycle controls |
-| Vector indexes, summaries, tiles, scenes | Rebuildable derivatives are not sovereign truth. | Derived-data homes after release/catelog policy is verified |
-| Live provider setup instructions | Provider commands are version-sensitive and operational. | `docs/runbooks/` after official-provider recheck |
-| Source-rights decisions | Rights and sensitivity are source-governance decisions, not AI convenience settings. | Source registry / source intake records |
+| `RAW`, `WORK`, or `QUARANTINE` data | Public and AI surfaces must not read lifecycle stages directly. | Governed lifecycle stores behind access controls |
+| Vector indexes, summaries, tiles, scenes, screenshots | Rebuildable derivatives are not sovereign truth. | Derived-data homes after release/catalog policy is verified |
+| Live provider setup instructions | Provider commands are version-sensitive and operational. | Runbooks after official-provider and environment checks |
+| Source-rights decisions | Rights and sensitivity are source-governance decisions, not AI convenience settings. | Source registry and source intake records |
+| Public route names or DTOs not inspected in repo | Route names and DTOs can become false implementation claims. | Contract docs after mounted repo verification |
 
 <p align="right"><a href="#governed-ai-architecture">Back to top ↑</a></p>
 
 ## Directory tree
 
-Current requested target:
+Current proposed target:
 
 ```text
 docs/architecture/governed-ai/
@@ -127,24 +132,28 @@ tests/
 release/
 ```
 
-> [!WARNING]
-> The adjacent tree is a **PROPOSED placement map**, not a claim that these paths exist in the current checkout. Do not create duplicate schema or contract homes until schema authority is resolved by ADR or existing repo convention.
+> [!CAUTION]
+> The adjacent tree is a **placement map**, not a claim that these paths exist. If the mounted repository proves different conventions, adapt through an ADR and migration note rather than forcing parallel homes.
 
 ## Architecture flow
 
 ```mermaid
 flowchart LR
-    U[User / UI surface] --> G[Governed API boundary]
+    U[User / governed UI surface] --> G[Governed API boundary]
 
-    G --> S[Scope resolver<br/>place · time · role · release]
-    S --> P1[Policy precheck]
-    P1 --> R[EvidenceRef resolver]
-    R --> B[EvidenceBundle<br/>released · reviewed · policy-aware]
+    subgraph Trust_Precheck["Trust precheck"]
+      G --> S[Scope resolver<br/>place · time · role · release]
+      S --> P1[Policy precheck]
+      P1 --> R[EvidenceRef resolver]
+      R --> B[EvidenceBundle<br/>released · reviewed · policy-aware]
+    end
 
-    B --> A[ModelAdapter<br/>Mock first · provider-neutral]
-    A --> C[Citation validation]
-    C --> P2[Policy postcheck]
-    P2 --> E[RuntimeResponseEnvelope]
+    subgraph AI_Runtime["Evidence-subordinate AI runtime"]
+      B --> A[ModelAdapter<br/>Mock first · provider-neutral]
+      A --> C[Citation validation]
+      C --> P2[Policy postcheck]
+      P2 --> E[RuntimeResponseEnvelope]
+    end
 
     E -->|ANSWER| F[Focus Mode]
     E -->|ABSTAIN| F
@@ -177,17 +186,17 @@ Provider-specific runtimes such as Ollama, OpenAI-compatible endpoints, or futur
 
 ### 3. Make negative outcomes first-class
 
-A refusal is not a product failure when evidence, rights, sensitivity, source authority, or runtime health is insufficient.
+A refusal is not a product failure when evidence, rights, sensitivity, source authority, release state, or runtime health is insufficient.
 
 | Outcome | Meaning | Required posture |
 | --- | --- | --- |
 | `ANSWER` | Evidence and policy support a bounded response. | Include citations, scope echo, receipt/audit reference, and drawer link. |
 | `ABSTAIN` | Evidence is missing, unresolved, stale, ambiguous, or too weak. | Explain the evidence gap without inventing. |
-| `DENY` | Policy, rights, sensitivity, safety, release state, or role constraints block the response. | Explain the class of restriction without leaking protected detail. |
+| `DENY` | Policy, rights, sensitivity, safety, release state, or role constraints block the response. | Explain the restriction class without leaking protected detail. |
 | `ERROR` | Runtime, validation, resolver, policy, or contract failure occurred. | Fail closed; do not show raw model output. |
 
 > [!NOTE]
-> Some KFM materials also discuss `HOLD` in review/promotion contexts. This README treats runtime Focus outcomes as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` until the mounted repo confirms a broader shared enum.
+> Some KFM materials discuss `HOLD` in review or promotion contexts. This README treats runtime Focus outcomes as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` until the mounted repo confirms a broader shared enum.
 
 ### 4. Never persist hidden reasoning as proof
 
@@ -206,13 +215,23 @@ Store bounded metadata, not hidden reasoning:
 
 A run receipt records that a process happened. A proof pack supports release-significant trust. A catalog record improves discovery. None of those should silently replace the others.
 
+### 6. Preserve the KFM trust membrane
+
+The governed-AI path must preserve the lifecycle boundary:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+Public clients, Focus Mode, Evidence Drawer, exports, and normal UI surfaces use governed APIs and released artifacts. They do not use canonical/internal stores as the ordinary public path.
+
 ## Contract and object map
 
 | Object family | Truth role | AI-specific use | Status |
 | --- | --- | --- | --- |
 | `SourceDescriptor` | Source governance | Describes source identity, role, rights, sensitivity, access, citation obligations, and activation state. | PROPOSED unless repo confirms |
 | `EvidenceRef` | Evidence pointer | Points to a released/candidate artifact under a claim scope. | PROPOSED unless repo confirms |
-| `EvidenceBundle` | Resolved evidence support | Supplies the admissible context a model may use. | CONFIRMED doctrine / PROPOSED implementation |
+| `EvidenceBundle` | Resolved evidence support | Supplies admissible context a model may use. | CONFIRMED doctrine / PROPOSED implementation |
 | `PolicyDecision` | Governance result | Records allow, deny, abstain, scope, rights, sensitivity, and release-state decisions. | PROPOSED unless repo confirms |
 | `CitationValidationReport` | Citation gate | Validates that consequential claims resolve to evidence refs in the bundle. | PROPOSED unless repo confirms |
 | `RuntimeResponseEnvelope` | Runtime output contract | Carries `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` plus evidence, policy, and audit references. | PROPOSED unless repo confirms |
@@ -233,13 +252,13 @@ A run receipt records that a process happened. A proof pack supports release-sig
 | `MockAdapter` | Deterministic test adapter | CI, fixtures, contract tests, finite-outcome proof | First implementation target |
 | `NullAdapter` | Explicit disabled/non-answer adapter | Safe offline mode, feature flag off, runtime unavailable | Pair with `MockAdapter` |
 | `OllamaAdapter` | Local/private model runtime adapter | Only behind governed API, after contracts/tests pass | Deferred |
-| `OpenAICompatibleAdapter` | Provider-compatible remote or private endpoint | Same internal contract, no provider-specific public behavior | Deferred |
+| `OpenAICompatibleAdapter` | Provider-compatible remote or private endpoint | Same internal contract; no provider-specific public behavior | Deferred |
 | Future adapters | Replaceable internal implementations | Must satisfy the same envelope, policy, citation, and receipt rules | Deferred |
 
 Provider adapters must not:
 
 - receive browser or public client traffic directly;
-- read RAW, WORK, QUARANTINE, unpublished, private, or canonical stores directly;
+- read `RAW`, `WORK`, `QUARANTINE`, unpublished, private, or canonical stores directly;
 - publish uncited answers;
 - persist hidden reasoning as source evidence;
 - make source-rights or sensitivity decisions by inference;
@@ -261,7 +280,7 @@ A compliant Focus response carries:
 | Audit | Request ID, receipt ID, citation validation report ID, safe trace reference |
 | UI hooks | Evidence Drawer route, map re-highlight targets, export trust cue eligibility |
 
-Focus must abstain or deny when the evidence pool cannot support the question. It must not “fill in” missing support with fluent synthesis.
+Focus must abstain or deny when the evidence pool cannot support the question. It must not fill missing support with fluent synthesis.
 
 ## Evidence Drawer behavior
 
@@ -321,7 +340,7 @@ find policy tools tests schemas contracts -maxdepth 4 -type f 2>/dev/null | sort
 ```
 
 > [!CAUTION]
-> The grep patterns above are discovery aids, not enforcement by themselves. Convert them into repo-native validators or CI checks only after package manager, test runner, and policy tooling are confirmed.
+> The grep patterns above are discovery aids, not enforcement by themselves. Convert them into repo-native validators or CI checks only after package manager, test runner, policy tooling, and directory conventions are confirmed.
 
 ## Validation and review gates
 
@@ -340,7 +359,7 @@ Minimum gate checklist:
 - [ ] Evidence Drawer can show source role, rights, sensitivity, freshness, review, correction, and audit state.
 - [ ] AIReceipt and RunReceipt are emitted where AI materially contributes.
 - [ ] No direct browser-to-model call exists.
-- [ ] No RAW, WORK, QUARANTINE, unpublished, private, or canonical-store access is available to the model adapter.
+- [ ] No `RAW`, `WORK`, `QUARANTINE`, unpublished, private, or canonical-store access is available to the model adapter.
 - [ ] Tests cover at least one valid answer and one negative path.
 - [ ] Documentation, ADRs, or runbooks are updated for any behavior change.
 - [ ] Rollback path is defined before provider integration is enabled.
@@ -366,7 +385,7 @@ Build the smallest proof-bearing slice before adding any live provider runtime.
 
 | Anti-pattern | Why it breaks KFM |
 | --- | --- |
-| “Chat first, evidence later” | Reverses the trust path and turns fluency into apparent authority. |
+| Chat first, evidence later | Reverses the trust path and turns fluency into apparent authority. |
 | Browser calls local model endpoint directly | Bypasses governed API, policy, citations, receipts, and audit. |
 | Model reads canonical stores | Collapses interpretation into root truth access. |
 | Vector index treated as evidence | Rebuildable retrieval acceleration becomes false authority. |
@@ -394,6 +413,21 @@ Update this README when any of these change:
 
 Material behavior changes should also update the corresponding ADR, runbook, contract schema, fixtures, tests, and release notes once those homes are verified.
 
+## Rollback
+
+Rollback is required when a governed-AI change weakens source integrity, breaks stable links, creates schema authority conflict, bypasses policy gates, exposes sensitive data, permits direct model-client traffic, or publishes unsupported claims.
+
+| Rollback trigger | Immediate response |
+| --- | --- |
+| Direct browser-to-model path detected | Disable feature flag or route; remove public access; file review note. |
+| Evidence resolver unavailable | Force `ERROR` or `ABSTAIN`; do not fall back to raw model answers. |
+| Policy engine unavailable | Force `DENY` or `ERROR`; do not allow by default. |
+| Citation validation failure | Block display/export; preserve validation report for review. |
+| Rights/sensitivity uncertainty | Generalize, redact, quarantine, or deny until source governance clears it. |
+| Provider/runtime drift | Disable provider adapter; keep `MockAdapter` tests active. |
+
+Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+
 ## Open verification backlog
 
 | Item | Status | Why it matters |
@@ -410,6 +444,7 @@ Material behavior changes should also update the corresponding ADR, runbook, con
 | Source ledger files | UNKNOWN | Needed for citations to project source IDs and source-status control. |
 | Focus and Evidence Drawer components | UNKNOWN | UI doctrine is strong; mounted implementation is unverified. |
 | Local exposure hardening | NEEDS VERIFICATION | Firewall, reverse proxy, VPN, TLS, rate limits, and auth are environment-sensitive. |
+| Badge targets | NEEDS VERIFICATION | Do not imply CI, coverage, release, or deployment status without evidence. |
 
 <details>
 <summary>Appendix A — Review vocabulary</summary>
@@ -418,7 +453,7 @@ Material behavior changes should also update the corresponding ADR, runbook, con
 | --- | --- |
 | `CONFIRMED` | Verified from current-session evidence or attached doctrine. |
 | `PROPOSED` | Recommended architecture or file placement not verified in mounted implementation. |
-| `UNKNOWN` | Not verifiable without repo, runtime, logs, workflows, or platform evidence. |
+| `UNKNOWN` | Not verifiable without repo, runtime, logs, workflows, dashboards, or platform evidence. |
 | `NEEDS VERIFICATION` | Check required before treating as current fact or implementation instruction. |
 | `EvidenceRef` | Pointer to evidence under a claim scope. |
 | `EvidenceBundle` | Resolved evidence set with source refs, policy/review state, citation support, and bundle hash. |
@@ -444,7 +479,7 @@ Material behavior changes should also update the corresponding ADR, runbook, con
 - [ ] Local/private exposure posture is fail-closed.
 - [ ] Validation checklist includes no-direct-model-client and no-raw/work/quarantine access.
 - [ ] Commands are safe/read-only and marked as requiring repo verification.
-- [ ] Open verification backlog captures owners, policy label, schema authority, repo tree, runtime, and UI unknowns.
+- [ ] Open verification backlog captures owners, policy label, schema authority, repo tree, runtime, UI, and badge unknowns.
 - [ ] No claim says implementation exists without evidence.
 - [ ] No section encourages model output as source truth.
 
