@@ -3,10 +3,19 @@
 - Status: proposed
 - Date: 2026-05-03
 - Deciders: KFM maintainers (pending CODEOWNERS confirmation)
+- Related: `docs/adr/ADR-0001-schema-home.md`, `docs/registers/REPO_ORGANIZATION_AUDIT.md`
 
 ## Context
 
 The repository currently contains both `contracts/` and `schemas/`, and both `policy/` and `policies/`. This creates a recurring risk of accidental dual authority.
+
+
+## Evidence posture
+
+- **CONFIRMED:** both `contracts/` and `schemas/` exist in this checkout; both `policy/` and `policies/` exist in this checkout.
+- **PROPOSED:** interim compatibility handling in this ADR until superseding acceptance decisions are made.
+- **CONFLICTED:** canonical authority between these paired homes is not yet fully settled by accepted, repo-verified follow-up ADRs.
+
 
 ## Decision (proposed)
 

@@ -63,15 +63,15 @@ This README is both a **directory landing page** and a **governance checkpoint**
 
 | Direction | Link or path | Role | Current status |
 |---|---|---|---|
-| Current directory | `docs/adr/` | ADR index, decision template routing, and supersession surface | `CONFIRMED` in public GitHub snapshot / `NEEDS VERIFICATION` in active checkout |
-| ADR template | [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | Canonical local template surface for new ADRs | `CONFIRMED` file presence in public snapshot / content review still recommended |
-| Documentation hub | [`../README.md`](../README.md) | Documentation control-plane landing page | `CONFIRMED` public snapshot / active checkout recheck required |
-| Contracts lane | [`../../contracts/README.md`](../../contracts/README.md) | Human-facing object meaning, compatibility, and contract semantics | `CONFIRMED` public snapshot / schema-home authority remains guarded |
-| Schemas lane | [`../../schemas/README.md`](../../schemas/README.md) | Parent schema boundary and machine-shape routing | `CONFIRMED` public snapshot / canonical authority still requires ADR acceptance evidence |
-| Policy lane | [`../../policy/README.md`](../../policy/README.md) | Decision logic for rights, sensitivity, runtime trust, correction, and release admissibility | `CONFIRMED` public snapshot / enforcement proof requires tests and platform evidence |
-| Tests and fixtures | [`../../tests/`](../../tests/) | Executable verification and fixture evidence | `CONFIRMED` root path in public snapshot / detailed fixture status not reviewed here |
-| Receipts and proofs | [`../../data/receipts/`](../../data/receipts/) · [`../../data/proofs/`](../../data/proofs/) | Process memory and proof-bearing object families | `CONFIRMED` root lifecycle lanes in public snapshot / emitted artifact status not reviewed here |
-| Release surface | [`../../release/`](../../release/) | Release bundles, manifests, correction, withdrawal, and rollback references | `CONFIRMED` root path in public snapshot / release maturity not reviewed here |
+| Current directory | `docs/adr/` | ADR index, decision template routing, and supersession surface | `CONFIRMED` in active checkout (2026-05-03) |
+| ADR template | [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | Canonical local template surface for new ADRs | `CONFIRMED` file presence in active checkout / content review still recommended |
+| Documentation hub | [`../README.md`](../README.md) | Documentation control-plane landing page | `CONFIRMED` in active checkout / keep branch-specific recheck in review |
+| Contracts lane | [`../../contracts/README.md`](../../contracts/README.md) | Human-facing object meaning, compatibility, and contract semantics | `CONFIRMED` in active checkout / schema-home authority remains guarded |
+| Schemas lane | [`../../schemas/README.md`](../../schemas/README.md) | Parent schema boundary and machine-shape routing | `CONFIRMED` in active checkout / canonical authority still requires ADR acceptance evidence |
+| Policy lane | [`../../policy/README.md`](../../policy/README.md) | Decision logic for rights, sensitivity, runtime trust, correction, and release admissibility | `CONFIRMED` in active checkout / enforcement proof requires tests and platform evidence |
+| Tests and fixtures | [`../../tests/`](../../tests/) | Executable verification and fixture evidence | `CONFIRMED` root path in active checkout / detailed fixture status not reviewed here |
+| Receipts and proofs | [`../../data/receipts/`](../../data/receipts/) · [`../../data/proofs/`](../../data/proofs/) | Process memory and proof-bearing object families | `CONFIRMED` root lifecycle lanes in active checkout / emitted artifact status not reviewed here |
+| Release surface | [`../../release/`](../../release/) | Release bundles, manifests, correction, withdrawal, and rollback references | `CONFIRMED` root path in active checkout / release maturity not reviewed here |
 
 > [!WARNING]
 > A public GitHub directory listing proves file/path presence for that public snapshot only. It does not prove the active branch under review, local checkout state, hosted branch protection, required checks, secrets, deployment approvals, CI execution, emitted proof objects, dashboards, logs, or runtime behavior.
@@ -128,7 +128,7 @@ Do not put ordinary implementation notes here.
 
 ## Directory inventory
 
-The public GitHub snapshot inspected for this revision shows the following `docs/adr/` files. Recheck the active checkout before merging edits.
+The active checkout inspected for this revision shows the following `docs/adr/` files (as of 2026-05-03 UTC). Recheck before merging if branch contents change.
 
 ```text
 docs/adr/
@@ -163,7 +163,7 @@ docs/adr/
 1. **Confirm the decision is ADR-worthy.** Use an ADR only when the decision affects architecture, governance, source authority, policy, publication, sensitivity, AI, UI trust, release, rollback, or shared domain-lane behavior.
 2. **Search existing canon first.** Do not create a new ADR if an existing accepted ADR or canonical architecture doc already answers the question.
 3. **Use the local template.** Start from [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md), not an improvised parallel template.
-4. **Label evidence precisely.** Separate current repo evidence from doctrine, lineage, exploratory pressure, public GitHub snapshot evidence, and proposed implementation.
+4. **Label evidence precisely.** Separate current repo evidence from doctrine, lineage, exploratory pressure, and proposed implementation.
 5. **List downstream effects.** Name affected docs, schemas, contracts, policy files, fixtures, validators, release objects, UI/API surfaces, receipts, proofs, and rollback targets.
 6. **Review before acceptance.** Accepted ADRs should have a reviewer, validation evidence, a rollback or supersession path, and linked follow-up work where proof is incomplete.
 7. **Update this README when the inventory changes.** The directory map should not lag behind actual ADR files.
