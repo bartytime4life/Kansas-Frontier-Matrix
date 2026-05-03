@@ -68,3 +68,6 @@ Each runbook in this directory should include:
 
 ## Reorg note
 Use `docs/registers/reorg/rollback_plan.sh` for sprint rollback commands.
+
+## Reorg runbook note
+- Use `docs/registers/reorg/rollback_plan.sh` for targeted documentation move rollback.

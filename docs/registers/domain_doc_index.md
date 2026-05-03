@@ -1,19 +1,4 @@
-# Domain Doc Index
+# Domain Documentation Index
 
-- .gitkeep: 1 files
-- README.md: 1 files
-- agriculture: 12 files
-- archaeology: 15 files
-- atmosphere-air: 49 files
-- ecology: 5 files
-- fauna: 36 files
-- flora: 26 files
-- geology: 11 files
-- habitat: 7 files
-- hazards: 16 files
-- hydrology: 21 files
-- people-genealogy-dna-land: 7 files
-- roads-rail-trade-routes: 20 files
-- settlements-infrastructure: 13 files
-- soil: 6 files
-- ui-maplibre: 9 files
+- CONFIRMED lanes: atmosphere-air, fauna, flora, hydrology, soil, habitat, geology, agriculture, archaeology, hazards, roads-rail-trade-routes, settlements-infrastructure, people-genealogy-dna-land, ui-maplibre.
+- Reorg grouped slice/provider-specific files into subfolders for atmosphere-air/fauna/flora/ui-maplibre.

@@ -433,3 +433,7 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 - `contracts/` vs `schemas/`
 - `policy/` vs `policies/`
 - lifecycle lanes under `data/`
+
+## Reorg authority protection notes
+- Do not move machine schema files between `contracts/` and `schemas/` without accepted ADR.
+- Do not move executable policy files between `policy/` and `policies/` without accepted ADR.
