@@ -437,3 +437,9 @@ No. This README should point to `ADR-TEMPLATE.md`. A large inline template here 
 ## Reorg authority protection notes
 - Do not move machine schema files between `contracts/` and `schemas/` without accepted ADR.
 - Do not move executable policy files between `policy/` and `policies/` without accepted ADR.
+
+## Authority-sensitive homes (do not move without ADR)
+
+- `contracts/` vs `schemas/` machine authority boundaries.
+- `policy/` vs `policies/` policy-package authority boundaries.
+- Lifecycle homes under `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published`.
