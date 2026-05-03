@@ -38,6 +38,7 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 - [`foundation-strategy.md`](./foundation-strategy.md): strategic sequencing guidance.
 - [`markdown-remediation-plan.md`](./markdown-remediation-plan.md): docs cleanup process.
 - [`markdown-debt-backlog.md`](./markdown-debt-backlog.md): debt tracking and triage backlog.
+- [`validation-entrypoints.md`](./validation-entrypoints.md): quick validation command/index reference.
 
 ## Operating expectations
 
@@ -52,6 +53,7 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 - Pytest suites: [`../../tests/`](../../tests/)
 - Web app tests (vitest script): [`../../apps/web/package.json`](../../apps/web/package.json)
 - Governance/policy tests: [`../../tests/policy/`](../../tests/policy/) and [`../../policy/tests/`](../../policy/tests/)
+- Consolidated validation quick reference: [`validation-entrypoints.md`](./validation-entrypoints.md)
 
 ## Minimum runbook shape
 
