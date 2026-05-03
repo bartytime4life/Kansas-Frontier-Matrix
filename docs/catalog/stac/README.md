@@ -6,84 +6,102 @@ version: v1
 status: draft
 owners: NEEDS_VERIFICATION
 created: 2026-04-27
-updated: 2026-04-27
+updated: 2026-05-03
 policy_label: NEEDS_VERIFICATION
-related: [NEEDS_VERIFICATION: docs/catalog/README.md, NEEDS_VERIFICATION: data/catalog/stac/README.md, NEEDS_VERIFICATION: docs/catalog/dcat/README.md, NEEDS_VERIFICATION: docs/catalog/prov/README.md, NEEDS_VERIFICATION: CatalogClosure schema, NEEDS_VERIFICATION: ReleaseManifest schema, NEEDS_VERIFICATION: EvidenceBundle schema]
-tags: [kfm, catalog, stac, metadata, publication, evidence]
-notes: [Target repo was not mounted in the current workspace; doc_id, owners, policy label, adjacent paths, schema homes, validator commands, and emitted artifact paths require branch-local verification.]
+related: [NEEDS_VERIFICATION: docs/catalog/README.md, NEEDS_VERIFICATION: docs/catalog/stac/README.md, NEEDS_VERIFICATION: data/catalog/stac/README.md, NEEDS_VERIFICATION: docs/catalog/dcat/README.md, NEEDS_VERIFICATION: docs/catalog/prov/README.md, NEEDS_VERIFICATION: CatalogClosure schema, NEEDS_VERIFICATION: CatalogMatrix schema, NEEDS_VERIFICATION: ReleaseManifest schema, NEEDS_VERIFICATION: EvidenceBundle schema]
+tags: [kfm, catalog, stac, metadata, publication, evidence, release]
+notes: [Bounded revision of an attached Markdown draft. Target repo was not mounted in the current workspace; doc_id, owners, policy label, adjacent paths, schema homes, validator commands, emitted artifact paths, and public-main placement require branch-local verification. The updated date reflects this revision run, not a verified commit date.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM STAC Catalog Documentation
 
-Defines how Kansas Frontier Matrix documents STAC as a governed outward catalog surface—not canonical truth, release approval, or evidence proof by itself.
+Defines STAC as a governed outward catalog surface for KFM spatiotemporal assets—not canonical truth, release approval, policy authority, or evidence proof by itself.
 
 <div align="center">
 
-![status: experimental](https://img.shields.io/badge/status-experimental-yellow)
+![status: draft](https://img.shields.io/badge/status-draft-yellow)
 ![truth: evidence-first](https://img.shields.io/badge/truth-evidence--first-blue)
 ![release: fail-closed](https://img.shields.io/badge/release-fail--closed-red)
+![STAC Core: target 1.1.0](https://img.shields.io/badge/STAC_Core-target_1.1.0-0A7BBB)
 ![repo evidence: needs verification](https://img.shields.io/badge/repo_evidence-needs_verification-lightgrey)
 
 </div>
 
-> **Status:** experimental / draft  
-> **Owners:** `NEEDS_VERIFICATION`  
-> **Path:** `docs/catalog/stac/README.md`  
-> **Authority:** documentation and profile guidance for KFM STAC usage  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Lifecycle](#lifecycle) · [Validation gates](#validation-gates) · [FAQ](#faq) · [Appendix](#appendix)
-
 > [!IMPORTANT]
-> STAC helps KFM expose **spatiotemporal assets for discovery**. It does not approve a release, settle rights, prove evidence support, replace `EvidenceBundle`, or make a derived layer authoritative.
+> **Status:** `draft / NEEDS_VERIFICATION`  
+> **Owners:** `OWNER_TBD`  
+> **Proposed path:** `docs/catalog/stac/README.md`  
+> **Path conflict to resolve:** `data/catalog/stac/README.md` may be the emitted catalog-lane README if the active repo confirms that layout.  
+> **Authority:** human-readable STAC profile guidance and release-gate documentation.  
+> **Truth posture:** CONFIRMED KFM doctrine / PROPOSED path and implementation details / UNKNOWN mounted repo implementation depth.
+
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Lifecycle](#lifecycle) · [STAC role inside KFM](#stac-role-inside-kfm) · [Required KFM linkage](#required-kfm-linkage) · [Validation gates](#validation-gates) · [Usage guidance](#usage-guidance) · [Maintainer checklist](#maintainer-checklist) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!NOTE]
+> This document states KFM doctrine where supported by the project corpus. Current implementation depth remains **UNKNOWN** where repo files, tests, workflows, dashboards, logs, emitted STAC records, validator outputs, or proof artifacts were not inspected.
 
 ---
 
 ## Scope
 
-This directory documents the **KFM STAC profile and operating rules** for catalog-facing spatiotemporal assets.
+This README documents the **KFM STAC profile and operating rules** for catalog-facing spatiotemporal assets.
 
-Use this README when you need to answer:
+Use this document to answer:
 
-- which STAC surfaces KFM can expose,
+- which STAC surfaces KFM may expose,
 - what KFM governance objects must exist before STAC publication,
-- how STAC relates to `CatalogClosure`, DCAT, PROV, `ReleaseManifest`, and `EvidenceBundle`,
-- what fields and links are expected for KFM-specific trust traceability,
-- what must fail closed before any STAC object becomes public.
+- how STAC relates to `CatalogClosure`, `CatalogMatrix`, DCAT, PROV, `ReleaseManifest`, and `EvidenceBundle`,
+- which KFM references and review states should be available for trust drill-through,
+- what fails closed before any STAC object becomes public or semi-public.
 
 ### What this README is authoritative for
 
 | Area | Posture | Rule |
 |---|---:|---|
 | STAC documentation role | **CONFIRMED doctrine / PROPOSED local doc home** | STAC is outward catalog metadata for spatiotemporal assets. |
-| KFM catalog closure | **CONFIRMED doctrine** | STAC belongs beside DCAT and PROV inside `CatalogClosure`. |
-| Release eligibility | **CONFIRMED doctrine** | STAC visibility requires release, policy, sensitivity, evidence, and review closure. |
-| Exact repo implementation | **UNKNOWN** | No mounted checkout was available to prove current validators, routes, schemas, or emitted files. |
+| Catalog closure | **CONFIRMED doctrine** | STAC belongs beside DCAT and PROV inside catalog closure, not as an isolated metadata island. |
+| Release eligibility | **CONFIRMED doctrine** | STAC visibility requires rights, sensitivity, evidence, policy, review, release, and rollback support appropriate to significance. |
+| Exact repo implementation | **UNKNOWN** | Mounted checkout evidence was unavailable; validators, routes, schema homes, and emitted artifacts require repo-side verification. |
+
+### Non-goals
+
+This README does not:
+
+- define a live STAC API route,
+- prove that STAC artifacts are emitted by the current repo,
+- settle `schemas/` versus `contracts/` authority,
+- approve any source or asset for publication,
+- create a KFM STAC extension by itself,
+- make generated catalog metadata authoritative truth.
+
+[Back to top](#kfm-stac-catalog-documentation)
 
 ---
 
 ## Repo fit
 
-### Path role
+### Proposed path role
 
-`docs/catalog/stac/` is the **human-readable documentation home** for the STAC profile.
+`docs/catalog/stac/README.md` is the **PROPOSED human-readable documentation home** for KFM STAC profile guidance.
 
-It should not become the emitted STAC catalog itself. Generated or released STAC JSON belongs in the repo’s catalog artifact lane after branch-local verification.
+It should not become the emitted STAC catalog itself. Generated or released STAC JSON belongs in the catalog artifact lane after branch-local verification.
+
+> [!WARNING]
+> Do not maintain two competing STAC authorities. If the active repo already uses `data/catalog/stac/README.md` as the catalog-lane README, keep this file as documentation/profile guidance only, or merge the content through an ADR-backed placement decision.
 
 ### Upstream and downstream links
 
 | Direction | Candidate surface | Status | Why it matters |
 |---|---|---:|---|
-| Parent docs | [`../README.md`](../README.md) | **NEEDS VERIFICATION** | Catalog documentation index, if present. |
-| Docs index | [`../../README.md`](../../README.md) | **NEEDS VERIFICATION** | Repo-wide documentation entry point, if present. |
-| Emitted STAC artifacts | [`../../../data/catalog/stac/`](../../../data/catalog/stac/) | **NEEDS VERIFICATION** | Likely generated/released catalog home, not a docs home. |
-| DCAT companion | [`../dcat/README.md`](../dcat/README.md) | **NEEDS VERIFICATION** | Dataset/distribution discovery companion. |
-| PROV companion | [`../prov/README.md`](../prov/README.md) | **NEEDS VERIFICATION** | Provenance and lineage companion. |
-| Release proofs | [`../../../data/proofs/`](../../../data/proofs/) | **NEEDS VERIFICATION** | Release-significant proof, not ordinary catalog metadata. |
-| Receipts | [`../../../data/receipts/`](../../../data/receipts/) | **NEEDS VERIFICATION** | Process memory and validation reports. |
-
-> [!NOTE]
-> These links are intentionally marked review-pending because the current workspace exposed the PDF source corpus, not the active KFM repository tree.
-
-[Back to top](#kfm-stac-catalog-documentation)
+| Parent catalog docs | [`../README.md`](../README.md) | **NEEDS_VERIFICATION** | Catalog documentation index, if present. |
+| Docs index | [`../../README.md`](../../README.md) | **NEEDS_VERIFICATION** | Repo-wide documentation entry point, if present. |
+| Emitted STAC artifacts | [`../../../data/catalog/stac/`](../../../data/catalog/stac/) | **NEEDS_VERIFICATION** | Likely generated/released STAC artifact home, not a docs home. |
+| DCAT companion | [`../dcat/README.md`](../dcat/README.md) | **NEEDS_VERIFICATION** | Dataset/distribution discovery companion. |
+| PROV companion | [`../prov/README.md`](../prov/README.md) | **NEEDS_VERIFICATION** | Provenance and lineage companion. |
+| Release proofs | [`../../../data/proofs/`](../../../data/proofs/) | **NEEDS_VERIFICATION** | Release-significant proof objects, not ordinary catalog metadata. |
+| Receipts | [`../../../data/receipts/`](../../../data/receipts/) | **NEEDS_VERIFICATION** | Process memory, validation reports, and run records. |
+| Policy home | [`../../../policy/`](../../../policy/) | **NEEDS_VERIFICATION** | Publication decisions must stay executable and reviewable. |
+| Schema / contract home | [`../../../schemas/`](../../../schemas/) or [`../../../contracts/`](../../../contracts/) | **CONFLICTED / NEEDS_VERIFICATION** | Avoid parallel machine-contract authority. |
 
 ---
 
@@ -96,9 +114,10 @@ Accepted material for this directory:
 | STAC profile guidance | Yes | Version pinning, required fields, extension stance, and KFM-specific linkage rules. |
 | STAC validation checklist | Yes | Human-readable checklist for release reviewers and maintainers. |
 | Profile examples | Yes, if labeled | Examples must be clearly marked `illustrative` unless generated from a real release. |
-| STAC/DCAT/PROV crosswalk notes | Yes | Keep closure semantics readable and stable. |
+| STAC/DCAT/PROV crosswalk notes | Yes | Keep catalog closure semantics readable and stable. |
 | ADRs for catalog-profile choices | Yes | Version pins, extension choices, and namespace decisions should be reviewable. |
 | Validator command documentation | Yes, if verified | Use placeholders until the real validator entrypoint is inspected. |
+| Catalog release review notes | Yes, if non-sensitive | Notes must not expose private source URLs, credentials, restricted locations, or unreleased records. |
 
 ### Minimum example posture
 
@@ -112,7 +131,8 @@ Any checked-in example under this docs path should declare its status:
     "active schema registry",
     "active validator command",
     "release manifest",
-    "catalog closure policy"
+    "catalog closure policy",
+    "rights and sensitivity review"
   ]
 }
 ```
@@ -135,15 +155,18 @@ Do **not** place these in `docs/catalog/stac/`:
 | AI summaries or raw model output | Governed runtime envelope / review surface | Generated text is not catalog truth. |
 | PMTiles, COGs, GeoParquet, 3D Tiles | Released artifact homes | STAC references assets; it is not the asset store. |
 | Credentials, tokens, private source URLs | Never in docs | Publication and source access must stay least-privilege. |
+| Sensitive exact locations | Restricted release or generalized public-safe derivative lane | Discovery must not create exposure risk. |
 
 > [!CAUTION]
-> A “STAC-looking” document that lacks release, evidence, policy, sensitivity, and correction linkage can make weak claims look publishable. Treat that as a governance defect, not a formatting issue.
+> A “STAC-looking” document that lacks release, evidence, policy, sensitivity, correction, and rollback linkage can make weak claims look publishable. Treat that as a governance defect, not a formatting issue.
+
+[Back to top](#kfm-stac-catalog-documentation)
 
 ---
 
 ## Directory tree
 
-Current file requested:
+Current requested file:
 
 ```text
 docs/catalog/stac/
@@ -158,12 +181,14 @@ docs/catalog/stac/
 ├── profile.md                         # PROPOSED: KFM STAC profile details
 ├── validation.md                      # PROPOSED: validator and reviewer checklist
 ├── extensions.md                      # PROPOSED: approved extension / namespace stance
+├── crosswalk.md                       # PROPOSED: STAC/DCAT/PROV/KFM object mapping
 ├── examples/
 │   ├── README.md                      # PROPOSED: example status and safety rules
 │   ├── collection.example.json         # PROPOSED: illustrative only
 │   └── item.example.json               # PROPOSED: illustrative only
 └── decisions/
-    └── ADR-stac-profile-version.md     # PROPOSED: version pin and toolchain decision
+    ├── ADR-stac-profile-version.md     # PROPOSED: version pin and toolchain decision
+    └── ADR-stac-doc-vs-artifact-home.md # PROPOSED: resolve docs/catalog/stac vs data/catalog/stac
 ```
 
 Adjacent emitted-artifact structure to verify later:
@@ -176,8 +201,6 @@ data/catalog/
 └── matrix/                            # CatalogMatrix closure checks
 ```
 
-[Back to top](#kfm-stac-catalog-documentation)
-
 ---
 
 ## Lifecycle
@@ -186,23 +209,26 @@ STAC enters KFM only after upstream governance has done enough work to make outw
 
 ```mermaid
 flowchart LR
-    A[SourceDescriptor<br/>source role + rights + cadence] --> B[RAW<br/>source-native capture]
+    A[SourceDescriptor<br/>role + rights + cadence + sensitivity] --> B[RAW<br/>source-native capture]
     B --> C[WORK / QUARANTINE<br/>normalize, validate, hold]
-    C --> D[DatasetVersion<br/>candidate or promoted subject set]
-    D --> E[CatalogClosure<br/>STAC + DCAT + PROV]
-    E --> F[CatalogMatrix<br/>identifier + checksum + release closure]
-    F --> G[ReleaseManifest / ProofPack<br/>public-safe release scope]
-    G --> H[PUBLISHED<br/>governed surfaces]
-    H --> I[Governed API]
-    I --> J[Map / story / export / Focus consumer]
-    J --> K[EvidenceBundle drill-through]
+    C --> D[PROCESSED<br/>validated candidate outputs]
+    D --> E[DatasetVersion<br/>candidate or promoted subject set]
+    E --> F[CATALOG / TRIPLET<br/>STAC + DCAT + PROV]
+    F --> G[CatalogClosure<br/>cross-catalog consistency]
+    G --> H[CatalogMatrix<br/>IDs + checksums + release refs]
+    H --> I[ReleaseManifest / ProofPack<br/>public-safe release scope]
+    I --> J[PUBLISHED<br/>governed surfaces]
+    J --> K[Governed API]
+    K --> L[Map / story / export / Focus consumer]
+    L --> M[EvidenceBundle drill-through]
 
-    C -. ValidationReport / RunReceipt .-> F
-    G -. rollback target .-> L[CorrectionNotice]
-    L -. visible lineage .-> H
+    C -. ValidationReport / RunReceipt .-> H
+    I -. rollback target .-> N[CorrectionNotice]
+    N -. visible lineage .-> J
 
-    B -. no public direct path .-> J
-    C -. no public direct path .-> J
+    B -. no public direct path .-> L
+    C -. no public direct path .-> L
+    D -. no silent authority .-> L
 ```
 
 ### Reading rule
@@ -211,17 +237,25 @@ flowchart LR
 
 Upstream of it, KFM is still handling admission, validation, quarantine, source roles, rights, sensitivity, and review. Downstream of it, KFM can expose outward discovery surfaces only if release closure is complete.
 
+[Back to top](#kfm-stac-catalog-documentation)
+
 ---
 
 ## STAC role inside KFM
 
 | STAC surface | KFM role | Must not be mistaken for |
 |---|---|---|
-| `Catalog` | Navigation structure for released or release-candidate STAC resources | Canonical store, policy gate, or evidence bundle |
-| `Collection` | Stable grouping for a dataset family or released asset family | Source authority or release approval |
+| `Catalog` | Navigation structure for released or release-candidate STAC resources | Canonical store, policy gate, release approval, or evidence bundle |
+| `Collection` | Stable grouping for a dataset family or released asset family | Source authority, steward approval, or proof that all assets are publishable |
 | `Item` | Spatiotemporal asset footprint and metadata | Proof that a claim is true |
 | `Asset` | Link to a file or deliverable such as COG, GeoParquet, PMTiles, imagery, vector, or derived artifact | The artifact itself, unless separately resolved and hashed |
 | STAC API | Optional dynamic discovery/query surface | Raw/internal query path or governed API replacement |
+
+### Static catalog first
+
+KFM should prefer **static, release-bundled STAC** for early catalog slices because it is easier to hash, review, sign, publish, mirror, and roll back.
+
+Dynamic STAC API behavior is **OPTIONAL / NEEDS_VERIFICATION** and must not route users into RAW, WORK, QUARANTINE, unpublished canonical stores, or private source material.
 
 ---
 
@@ -232,6 +266,7 @@ KFM STAC records should carry or resolve to the following references once the pr
 | KFM reference | Expected purpose | Status |
 |---|---|---:|
 | `kfm:catalog_closure_ref` | Connects record to STAC/DCAT/PROV closure set | **PROPOSED** |
+| `kfm:catalog_matrix_ref` | Connects IDs, hashes, release refs, and provenance refs | **PROPOSED** |
 | `kfm:dataset_version_ref` | Identifies the candidate or promoted subject set | **PROPOSED** |
 | `kfm:release_ref` | Connects catalog visibility to released scope | **PROPOSED** |
 | `kfm:evidence_ref` | Allows drill-through to support where appropriate | **PROPOSED** |
@@ -245,6 +280,18 @@ KFM STAC records should carry or resolve to the following references once the pr
 > [!IMPORTANT]
 > KFM-specific members should be declared through a reviewed profile or extension stance. Do not silently add ad hoc custom fields to released STAC without a validator and profile note.
 
+### Minimum profile constraints
+
+| Constraint | Requirement | Status |
+|---|---|---:|
+| STAC Core version | Pin before release and validate against that version | **NEEDS_VERIFICATION** |
+| Extension allowlist | Declare every extension used by released records | **NEEDS_VERIFICATION** |
+| Stable IDs | Item and Collection IDs must be deterministic or documented | **PROPOSED** |
+| Asset roles | Asset keys and roles should be stable enough for automation | **PROPOSED** |
+| Media types | Asset `type` values must be explicit when known | **PROPOSED** |
+| Geometry safety | Geometry must match release audience and sensitivity policy | **CONFIRMED doctrine / PROPOSED implementation** |
+| Cross-catalog closure | STAC/DCAT/PROV references must agree before publication | **CONFIRMED doctrine / PROPOSED implementation** |
+
 ---
 
 ## Illustrative STAC Item fragment
@@ -255,6 +302,9 @@ This example is intentionally incomplete and non-release-bearing. It shows the k
 {
   "type": "Feature",
   "stac_version": "1.1.0",
+  "stac_extensions": [
+    "NEEDS_VERIFICATION_KFM_EXTENSION_URI"
+  ],
   "id": "illustrative-kfm-item",
   "collection": "illustrative-kfm-collection",
   "bbox": [-102.1, 36.9, -94.5, 40.1],
@@ -269,25 +319,30 @@ This example is intentionally incomplete and non-release-bearing. It shows the k
     ]]
   },
   "properties": {
-    "datetime": "2026-04-27T00:00:00Z",
+    "datetime": "2026-05-03T00:00:00Z",
     "kfm:catalog_closure_ref": "kfm://catalog-closure/NEEDS_VERIFICATION",
+    "kfm:catalog_matrix_ref": "kfm://catalog-matrix/NEEDS_VERIFICATION",
     "kfm:dataset_version_ref": "kfm://dataset-version/NEEDS_VERIFICATION",
     "kfm:release_ref": "kfm://release/NEEDS_VERIFICATION",
     "kfm:evidence_ref": "kfm://evidence/NEEDS_VERIFICATION",
     "kfm:decision_ref": "kfm://decision/NEEDS_VERIFICATION",
+    "kfm:review_ref": "kfm://review/NEEDS_VERIFICATION",
     "kfm:sensitivity": "public",
     "kfm:spec_hash": "NEEDS_VERIFICATION"
   },
   "assets": {
     "data": {
-      "href": "NEEDS_VERIFICATION",
-      "type": "application/octet-stream",
+      "href": "NEEDS_VERIFICATION_RELEASED_ASSET_URI",
+      "type": "NEEDS_VERIFICATION_MEDIA_TYPE",
       "roles": ["data"]
     }
   },
   "links": []
 }
 ```
+
+> [!WARNING]
+> Do not copy this fragment into a release bundle. It contains review placeholders and a placeholder extension URI.
 
 ---
 
@@ -297,15 +352,15 @@ A STAC record is not public-ready merely because it validates against STAC JSON 
 
 | Gate | Requirement | Fail-closed result |
 |---|---|---|
-| Source role | SourceDescriptor exists and states role, rights, cadence, sensitivity, and validation plan | Hold in WORK / QUARANTINE |
+| Source role | `SourceDescriptor` exists and states role, rights, cadence, sensitivity, and validation plan | Hold in WORK / QUARANTINE |
 | Schema validity | STAC Core and declared extensions validate | Block catalog closure |
 | Rights | License / redistribution posture is resolved and not overstated | Block release |
-| Sensitivity | Public geometry and properties are safe for the intended audience | Redact, generalize, metadata-only, or deny |
-| Evidence | EvidenceRef resolves where the STAC object supports a consequential claim | Abstain from claim or block release |
-| Policy | DecisionEnvelope allows the intended publication action | Deny publication |
-| Review | ReviewRecord exists when lane burden requires steward or human review | Hold release |
-| Closure | CatalogMatrix closes STAC/DCAT/PROV/internal IDs and hashes | Block publication |
-| Release | ReleaseManifest / ProofPack includes rollback target and correction posture | Block publication |
+| Sensitivity | Public geometry and properties are safe for the intended audience | Redact, generalize, metadata-only, restrict, or deny |
+| Evidence | `EvidenceRef` resolves where the STAC object supports a consequential claim | Abstain from claim or block release |
+| Policy | `DecisionEnvelope` allows the intended publication action | Deny publication |
+| Review | `ReviewRecord` exists when lane burden requires steward or human review | Hold release |
+| Closure | `CatalogMatrix` closes STAC/DCAT/PROV/internal IDs and hashes | Block publication |
+| Release | `ReleaseManifest` / `ProofPack` includes rollback target and correction posture | Block publication |
 | Correction | Superseded or withdrawn records remain visibly traceable | Block silent overwrite |
 
 ### Pseudocode validation sequence
@@ -322,14 +377,28 @@ kfm catalog validate \
   --fail-closed
 ```
 
+### Negative-path checks
+
+At minimum, validators should reject or hold examples where:
+
+- `stac_extensions` references are undeclared or missing for KFM-specific profile material,
+- an asset has no resolvable release or checksum reference,
+- a public item points to restricted exact geometry,
+- `kfm:evidence_ref` is required but unresolved,
+- STAC/DCAT/PROV identifiers disagree,
+- a prior item is silently replaced without a `CorrectionNotice`,
+- a dynamic STAC endpoint exposes non-published lifecycle states.
+
 ---
 
 ## Version and standards posture
 
 | Standard surface | Current working target | Repo posture |
 |---|---:|---|
-| STAC Core | `1.1.0` | **NEEDS VERIFICATION** against toolchain and schemas |
-| STAC API | `1.0.0` | **OPTIONAL / NEEDS VERIFICATION** |
+| STAC Core | `1.1.0` | **NEEDS_VERIFICATION** against active toolchain and schemas |
+| STAC API | `1.0.0` | **OPTIONAL / NEEDS_VERIFICATION** |
+| DCAT companion | DCAT Version 3 | **NEEDS_VERIFICATION** against emitted records |
+| PROV companion | PROV-O / PROV JSON-LD profile | **NEEDS_VERIFICATION** against emitted records |
 | Extension allowlist | `NEEDS_VERIFICATION` | Must be declared before release use |
 | KFM namespace / extension | `NEEDS_VERIFICATION` | Must not drift into informal custom fields |
 | JSON Schema profile | `NEEDS_VERIFICATION` | Confirm schema home and draft before merge |
@@ -363,25 +432,39 @@ Do not use STAC as the primary carrier for:
 - a runtime answer,
 - a correction decision,
 - a person/genealogy/DNA assertion,
-- sensitive precise locations whose release posture is unresolved,
+- restricted archaeological, ecological, cultural, sovereignty-related, title, living-person, or precise-location records,
 - any object where discovery would imply authority that KFM has not earned.
+
+### Sensitive discovery posture
+
+| Case | Default STAC behavior |
+|---|---|
+| Public-safe released asset | Include with released asset links and closure refs. |
+| Restricted precise location | Generalize, metadata-only, restricted access, or deny. |
+| Rights unresolved | Hold; do not publish. |
+| Evidence unresolved | Do not support a consequential claim; abstain or block release. |
+| Steward review required | Hold until review state is recorded. |
+| Withdrawal or correction | Preserve visible correction lineage; no silent overwrite. |
+
+[Back to top](#kfm-stac-catalog-documentation)
 
 ---
 
-## Maintainer task list
+## Maintainer checklist
 
 Before this README is considered healthy in the target repo:
 
 - [ ] Replace `doc_id`, owners, policy label, and related placeholders with repo-confirmed values.
 - [ ] Verify whether `docs/catalog/stac/` is the intended documentation home.
-- [ ] Verify whether generated STAC artifacts live under `data/catalog/stac/`.
-- [ ] Confirm the active schema home: `schemas/`, `contracts/`, or another accepted path.
+- [ ] Verify whether `data/catalog/stac/README.md` already exists and should be the artifact-lane README.
+- [ ] Confirm whether generated STAC artifacts live under `data/catalog/stac/`.
+- [ ] Confirm the active schema home: `schemas/`, `contracts/`, `jsonschema/`, or another accepted path.
 - [ ] Confirm the repo-native validator command and update the pseudocode block.
 - [ ] Pin STAC Core / STAC API versions through an ADR.
 - [ ] Create or link a KFM extension / namespace decision for `kfm:*` fields.
 - [ ] Add at least one real generated STAC record after a release dry run.
 - [ ] Add a closure example showing STAC/DCAT/PROV consistency.
-- [ ] Confirm that release, proof, receipt, policy, and evidence lanes stay distinct.
+- [ ] Confirm that release, proof, receipt, policy, review, correction, and evidence lanes stay distinct.
 - [ ] Verify all relative links against the active checkout.
 
 ### Definition of done
@@ -389,13 +472,27 @@ Before this README is considered healthy in the target repo:
 This README is ready for review when it:
 
 - keeps STAC as outward discovery, not sovereign truth,
-- makes `CatalogClosure` the visible STAC/DCAT/PROV seam,
+- makes `CatalogClosure` and `CatalogMatrix` visible seams,
 - states accepted inputs and exclusions clearly,
-- links STAC visibility to rights, sensitivity, evidence, review, and release gates,
+- links STAC visibility to rights, sensitivity, evidence, review, policy, release, and rollback gates,
 - avoids unverified implementation claims,
 - names every remaining branch-local verification item.
 
-[Back to top](#kfm-stac-catalog-documentation)
+---
+
+## Rollback
+
+Rollback is required if this document:
+
+- creates a parallel schema or catalog authority,
+- causes docs and emitted artifact homes to conflict,
+- implies public readiness from STAC schema validity alone,
+- weakens RAW / WORK / QUARANTINE / PROCESSED / CATALOG / PUBLISHED separation,
+- normalizes direct public access to internal stores,
+- publishes sensitive discovery metadata without policy and review support,
+- breaks existing adjacent README anchors without migration notes.
+
+Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
 
 ---
 
@@ -421,6 +518,19 @@ Only after the intended audience, rights, sensitivity, and steward review postur
 
 No. It describes profile and documentation posture. STAC API routes are optional and must be verified against the governed API boundary before implementation claims are made.
 
+### What should happen if `docs/catalog/stac/` and `data/catalog/stac/` both exist?
+
+Use an ADR to separate roles. A safe split is:
+
+| Path | Safe role |
+|---|---|
+| `docs/catalog/stac/` | Human-readable profile and guidance. |
+| `data/catalog/stac/` | Generated or release-bearing STAC artifacts, plus artifact-lane README if repo convention uses one. |
+
+Do not let both paths define competing profile rules.
+
+[Back to top](#kfm-stac-catalog-documentation)
+
 ---
 
 ## Appendix
@@ -432,14 +542,27 @@ No. It describes profile and documentation posture. STAC API routes are optional
 |---|---|
 | STAC Core version pinned | Version and schema source are declared. |
 | Extension allowlist declared | Every extension is named and validated. |
+| KFM profile / extension stance declared | `kfm:*` members are not ad hoc. |
 | `CatalogClosure` exists | STAC/DCAT/PROV refs agree. |
 | `CatalogMatrix` passes | IDs, hashes, release refs, and provenance refs close. |
 | `ReleaseManifest` exists | Release scope, rollback target, and correction posture are visible. |
 | `DecisionEnvelope` allows release | Rights and sensitivity are machine-readable. |
 | `ReviewRecord` exists if required | Steward/human review burden is met. |
-| Geometry is public-safe | Exact, generalized, or metadata-only posture is explicit. |
+| Geometry is public-safe | Exact, generalized, restricted, or metadata-only posture is explicit. |
 | Evidence refs resolve | Consequential claims can drill through to support. |
 | Corrections are visible | Supersession and withdrawal do not silently overwrite. |
+
+</details>
+
+<details>
+<summary><strong>Evidence boundary for this revision</strong></summary>
+
+| Source | Status | Supports | Does not prove |
+|---|---|---|---|
+| Attached Markdown baseline | **CONFIRMED** | Existing structure, meta block, title, scope, repo-fit assumptions, STAC/KFM linkage draft, validation gates. | Current repo path, owners, validators, emitted artifacts, or release maturity. |
+| Current workspace scan | **CONFIRMED** | `/mnt/data` is not a mounted Git repo in this session. | Public repo branch state or current remote implementation. |
+| KFM doctrine corpus | **CONFIRMED doctrine / LINEAGE implementation** | STAC/DCAT/PROV closure, inspectable-claim posture, proof/receipt/release separation, fail-closed governance. | Active file presence unless repo files are inspected. |
+| External standards pages | **CONFIRMED external / NEEDS_VERIFICATION for toolchain pins** | Current public standard anchors for STAC, DCAT, and PROV. | KFM’s active package versions, validators, or emitted conformance. |
 
 </details>
 
@@ -451,6 +574,8 @@ No. It describes profile and documentation posture. STAC API routes are optional
 - [OGC STAC API Community Standard 1.0.0][ogc-stac-api]
 - [STAC overview and tutorials][stac-overview]
 - [STAC specification repository][stac-spec-repo]
+- [W3C DCAT Version 3][w3c-dcat]
+- [W3C PROV-O][w3c-prov-o]
 
 </details>
 
@@ -459,5 +584,7 @@ No. It describes profile and documentation posture. STAC API routes are optional
 [ogc-stac-api]: https://docs.ogc.org/cs/25-005/25-005.html
 [stac-overview]: https://stacspec.org/en/tutorials/intro-to-stac/
 [stac-spec-repo]: https://github.com/radiantearth/stac-spec
+[w3c-dcat]: https://www.w3.org/TR/vocab-dcat-3/
+[w3c-prov-o]: https://www.w3.org/TR/prov-o/
 
 [Back to top](#kfm-stac-catalog-documentation)
