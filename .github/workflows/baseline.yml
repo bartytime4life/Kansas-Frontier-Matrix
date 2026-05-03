@@ -9,6 +9,7 @@ jobs:
         with: {python-version: "3.11"}
       - run: python tools/validate_repo.py
       - run: python tools/validate_fixtures.py
+      - run: python tools/validate_schema_conformance.py
       - run: python tools/check_directory_rules.py
       - run: python tools/check_no_public_internal_paths.py
       - run: python -m unittest discover -s tests
