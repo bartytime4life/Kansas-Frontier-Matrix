@@ -29,6 +29,20 @@ Mode: SAFE_REORG_WITH_REPORT
 - `sed -n '1,220p' apps/web/package.json`
 - `sed -n '1,220p' pytest.ini`
 
+
+## 2b) Baseline command outputs (captured)
+
+- `pwd` -> `/workspace/Kansas-Frontier-Matrix`
+- `git rev-parse --show-toplevel` -> `/workspace/Kansas-Frontier-Matrix`
+- `git branch --show-current` -> `work`
+- `git status --short` (baseline) -> `?? apps/web/node_modules/`
+- `git ls-files | wc -l` -> `7452`
+
+## 2c) Repo stack and validation entrypoints (CONFIRMED)
+
+- **Python/pytest stack present:** `pytest.ini` at repo root and extensive `tests/` tree.
+- **Node/Vite app stack present:** `apps/web/package.json` with `vite` and `vitest` scripts.
+- **Makefile present in pipeline scope:** `pipelines/kansas_biodiversity_etl/Makefile` (pipeline-local, not asserted as repo-root default).
 ## 3) Current repo map (evidence-grounded)
 
 ### Top-level families checked
