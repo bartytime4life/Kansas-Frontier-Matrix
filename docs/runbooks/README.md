@@ -71,3 +71,7 @@ Use `docs/registers/reorg/rollback_plan.sh` for sprint rollback commands.
 
 ## Reorg runbook note
 - Use `docs/registers/reorg/rollback_plan.sh` for targeted documentation move rollback.
+
+## Reorg sprint linkage
+
+See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for current repository organization controls and rollback plan.

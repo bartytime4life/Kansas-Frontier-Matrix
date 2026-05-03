@@ -1,12 +1,6 @@
-# Policy Authority Map
+# Policy authority map
 
-- Status: CONFLICTED
-- Current homes: `policy/`, `policies/`.
-- File families found: README, rego/json policy artifacts.
-- Likely authority: `policy/` appears primary; `policies/` retained as compatibility lane pending ADR.
-- Allowed interim use: docs-only indexing and explicit split disclosure.
-- Prohibited duplication: duplicate policy package ownership across both homes.
-- Migration rule: require ADR before relocating executable policy files.
-- Validator expectation: detect unresolved split entry in authority map.
-- Owner/status: UNKNOWN owner; OPEN.
-- Rollback risk: medium/high if executable policy files are moved.
+| Home | Family | Likely authority | Interim use | Prohibited duplication | Migration rule | Validator expectation | Owner/status | Rollback risk |
+|---|---|---|---|---|---|---|---|---|
+| `policy/` | rego bundles + policy docs | policy authority | canonical | duplicate package names in `policies/` | no cross-home move without ADR | conflict noted in reorg report | Policy owners / CONFLICTED | high |
+| `policies/` | legacy/compat docs + rule files | compatibility lane | temporary | authoritative split | converge via ADR-0013 follow-up | ensure authority map present | Policy owners / CONFLICTED | medium |

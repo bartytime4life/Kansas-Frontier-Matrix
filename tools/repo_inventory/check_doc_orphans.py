@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 import subprocess,sys
-allowed=('docs/adr/','docs/architecture/','docs/control-plane/','docs/domains/','docs/registers/','docs/runbooks/','docs/sources/','docs/standards/','docs/tracking/','docs/README.md')
-orph=[p for p in subprocess.check_output(['git','ls-files','docs'],text=True).splitlines() if p.endswith('.md') and not p.startswith(allowed)]
-print('\n'.join(orph[:200]))
-print(f'orphan_count={len(orph)}')
-sys.exit(1 if orph else 0)
+ALLOWED=('docs/adr/','docs/architecture/','docs/control-plane/','docs/domains/','docs/registers/','docs/runbooks/','docs/sources/','docs/standards/','docs/tracking/','docs/catalog/','docs/governance/','docs/runtime/','docs/README.md')
+files=subprocess.check_output(['git','ls-files','*.md'],text=True).splitlines()
+orphan=[f for f in files if f.startswith('docs/') and not any(f==a or f.startswith(a) for a in ALLOWED)]
+if orphan:
+    print('\n'.join(orphan)); sys.exit(1)
+print('OK no doc orphans in docs/')

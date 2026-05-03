@@ -1,7 +1,13 @@
-# Authority Conflicts
+# Authority conflicts
 
-## Schema authority
-- CONFLICTED: both `contracts/` and `schemas/` contain machine-facing schema/contract materials; no move performed.
+## Schema homes (`contracts/` vs `schemas/` vs `jsonschema/`)
+- **Status:** CONFLICTED
+- **Observed:** All three homes exist and are populated.
+- **Interim rule:** Keep semantic contracts in `contracts/`; machine validation schemas in `schemas/`; Python helper package in `jsonschema/`.
+- **Prohibited:** Moving machine schema files between `contracts/` and `schemas/` without ADR authority.
 
-## Policy authority
-- CONFLICTED: both `policy/` and `policies/` are active homes; no machine policy files moved.
+## Policy homes (`policy/` vs `policies/`)
+- **Status:** CONFLICTED
+- **Observed:** Both homes exist and contain policy artifacts/readmes.
+- **Interim rule:** `policy/` is canonical rule-pack home; `policies/` treated compatibility lane until ADR closure.
+- **Prohibited:** Cross-home moves of Rego/rule files without ADR.
