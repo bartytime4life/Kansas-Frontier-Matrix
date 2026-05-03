@@ -1,17 +1,14 @@
-# REORG SPRINT MANIFEST
+# REORG Sprint Manifest
 
-## Truth labels
-- **CONFIRMED:** inventory regenerated from `git ls-files`; 20 docs moved with `git mv`; references updated where found.
-- **BLOCKED:** no machine-authority moves between `contracts/` and `schemas/`, or `policy/` and `policies/`.
+- Date: 2026-05-03
+- Truth labels used: CONFIRMED/PROPOSED/UNKNOWN/CONFLICTED/BLOCKED
+- Scope: tracked-file manifest generation, doc-lane consolidation, reference planning, authority mapping, rollback plan.
 
-## Scope
-- Functional, manifest-driven docs lane normalization for domain slug consistency.
-- Rebuilt reorg control artifacts under `docs/registers/reorg/`.
-
-## Artifacts
-- `path_inventory.tsv`
-- `move_plan.tsv`
-- `reference_update_plan.tsv`
-- `authority_conflicts.md`
-- `validation_report.md`
-- `rollback_plan.sh`
+## Phase status
+- Phase 0: CONFIRMED
+- Phase 1: CONFIRMED
+- Phase 2: CONFIRMED
+- Phase 3: CONFIRMED
+- Phase 4: CONFIRMED
+- Phase 5: CONFIRMED
+- Phase 6: CONFIRMED

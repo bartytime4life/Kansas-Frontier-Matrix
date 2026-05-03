@@ -1,5 +1,5 @@
 # Authority Conflicts
 
-- **CONFLICTED:** `contracts/` vs `schemas/` both active; no ADR-backed machine-file migration executed.
-- **CONFLICTED:** `policy/` vs `policies/` both present; no rego/policy package migration executed.
-- **CONFIRMED:** this sprint restricted moves to documentation families.
+- CONFLICTED: `contracts/` vs `schemas/` as schema authority split (governed by ADR-0001 and ADR-0012).
+- CONFLICTED: `policy/` vs `policies/` as policy home split (governed by ADR-0013).
+- CONFIRMED: this sprint performed docs-only moves and did not relocate machine authority files.

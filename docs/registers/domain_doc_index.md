@@ -1,24 +1,10 @@
-# Domain Doc Index
-- hydrology: `docs/domains/hydrology/` (CONFIRMED)
-- soil: `docs/domains/soil/` (CONFIRMED)
-- habitat: `docs/domains/habitat/` (CONFIRMED)
-- fauna: `docs/domains/fauna/` (CONFIRMED)
-- flora: `docs/domains/flora/` (CONFIRMED)
-- agriculture: `docs/domains/agriculture/` (CONFIRMED)
-- geology: `docs/domains/geology/` (CONFIRMED)
-- atmosphere_air: `docs/domains/air/` (CONFIRMED)
-- roads_rail_trade_routes: UNKNOWN
-- settlements_infrastructure: UNKNOWN
-- archaeology: `docs/domains/archaeology/` (CONFIRMED)
-- hazards: `docs/domains/hazards/` (CONFIRMED)
-- people_genealogy_dna_land: `docs/domains/people_genealogy_dna_land/` (CONFIRMED)
-- ui_maplibre: `docs/domains/ui_maplibre/` (CONFIRMED)
-- cesium_3d: `docs/domains/cesium-3d/` (CONFIRMED)
-- governed_ai: `docs/domains/governed-ai/` (CONFIRMED)
-- pipeline_control_plane: `docs/domains/pipeline-control-plane/` (CONFIRMED)
+# Domain Documentation Index
 
-## Path normalization update (2026-05-03)
-- `docs/domains/settlements_infrastructure/`
-- `docs/domains/people_genealogy_dna_land/`
-- `docs/domains/ui_maplibre/`
-- `docs/domains/atmosphere_air/runbooks/slices/`
+## CONFIRMED domain homes
+- agriculture: architecture/, governance/, operations/, archive/
+- archaeology: architecture/, governance/, operations/
+- atmosphere_air: architecture/, governance/, operations/, runbook slices consolidated under `docs/runbooks/domains/atmosphere_air/slices/`
+- ui_maplibre: architecture/
+
+## UNKNOWN/CONFLICTED
+- Additional lane normalization pending for hydrology/soil/habitat/fauna/flora lanes.

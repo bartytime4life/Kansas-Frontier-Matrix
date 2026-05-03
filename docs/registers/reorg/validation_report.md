@@ -1,5 +1,5 @@
 # Validation Report
 
-- CONFIRMED inventory regenerated via `python tools/repo_inventory/classify_paths.py --output docs/registers/reorg/path_inventory.tsv`.
-- CONFIRMED manifest consistency check executed via `python tools/repo_inventory/check_reorg_manifest.py docs/registers/reorg`.
-- CONFIRMED doc-orphan and boundary checks executed via repo validators.
+- CONFIRMED: `path_inventory.tsv` regenerated from tracked files.
+- CONFIRMED: move plan + reference update plan + rollback plan regenerated from git rename state.
+- CONFIRMED: doc-only moves preserved lifecycle/data authority boundaries.

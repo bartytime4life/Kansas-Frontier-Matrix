@@ -462,3 +462,7 @@ Do not move machine schema files between `contracts/` and `schemas/`, or policy-
 - `contracts/` vs `schemas/` machine authority boundary.
 - `policy/` vs `policies/` policy authority boundary.
 - data lifecycle homes under `data/` RAW->WORK/QUARANTINE->PROCESSED->CATALOG/TRIPLET->PUBLISHED.
+
+## Authority Boundary Note
+- Schema and policy authority maps are tracked in `docs/registers/schema_authority_map.md` and `docs/registers/policy_authority_map.md`.
+- Doc-only moves in this sprint intentionally avoided machine authority homes (`contracts/`, `schemas/`, `policy/`, `policies/`).

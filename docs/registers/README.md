@@ -416,3 +416,7 @@ Use this template when adding a compact register row or expanding a row into a s
 - `docs/registers/reorg/authority_conflicts.md`
 - `docs/registers/reorg/validation_report.md`
 - `docs/registers/reorg/rollback_plan.sh`
+
+## Reorg Sprint 2026-05-03
+- Added reorg manifest artifacts in `docs/registers/reorg/`.
+- Updated domain indexes for atmosphere_air, archaeology, agriculture, and ui_maplibre path normalization.
