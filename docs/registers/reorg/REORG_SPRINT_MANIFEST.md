@@ -1,7 +1,5 @@
 # REORG Sprint Manifest
 
-Status: CONFIRMED
-
-- Scope: repo-wide tracked inventory and docs-domain consolidation.
-- Applied move batch: 51 documentation file moves via `git mv`.
-- Authority-sensitive machine files (`contracts/`, `schemas/`, `policy/`, `policies/`) were NOT moved.
+- Truth labels: CONFIRMED/PROPOSED/UNKNOWN/CONFLICTED/BLOCKED used.
+- CONFIRMED: 75 documentation file moves grouped into stable domain family subfolders.
+- CONFLICTED: schema and policy authority splits remain unresolved; documented in authority maps.

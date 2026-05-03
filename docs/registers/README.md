@@ -373,3 +373,7 @@ Use this template when adding a compact register row or expanding a row into a s
 - `docs/registers/domain_file_index.md`
 - `docs/registers/schema_authority_map.md`
 - `docs/registers/policy_authority_map.md`
+
+## Reorg Sprint (2026-05-03)
+- Added `docs/registers/reorg/` manifest set, move plan, validation report, and rollback script.
+- Added authority maps: `schema_authority_map.md` and `policy_authority_map.md`.

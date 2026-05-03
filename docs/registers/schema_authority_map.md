@@ -1,9 +1,11 @@
 # Schema Authority Map
-- current homes: `schemas/`, `contracts/`, `jsonschema/`.
-- likely authority: contracts=semantic meaning; schemas/jsonschema=machine validation.
-- allowed interim use: dual-home with ADR-0001/0012 references.
-- prohibited duplication: duplicate schema IDs across homes.
-- migration rule: no cross-home machine moves without ADR.
-- validator expectation: detect duplicate IDs and undocumented homes.
-- decision owner/status: CONFLICTED / pending maintainer decision.
-- rollback risk: high (runtime/API breakage).
+
+- Status: CONFLICTED
+- Current homes: `schemas/`, `contracts/`, `jsonschema/`.
+- Likely authority: `schemas/` for machine validation schemas; `contracts/` for semantic contracts; `jsonschema/` library/runtime support.
+- Allowed interim use: keep existing references, no cross-home machine-file moves.
+- Prohibited duplication: duplicate schema IDs across homes.
+- Migration rule: require ADR authorization before moving machine schema files.
+- Validator expectation: detect duplicate `$id` and home divergence.
+- Owner/status: UNKNOWN owner; PROPOSED for architecture review.
+- Rollback risk: high if machine files moved without ADR.

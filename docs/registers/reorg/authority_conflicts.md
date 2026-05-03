@@ -1,4 +1,7 @@
 # Authority Conflicts
 
-- CONFLICTED: `policy/` and `policies/` both contain policy materials; ADR-0013 exists but split still present.
-- CONFLICTED: `contracts/` and `schemas/` both active; ADR-0001 defines boundary but compatibility cleanup remains.
+## Schema authority
+- CONFLICTED: both `contracts/` and `schemas/` contain machine-facing schema/contract materials; no move performed.
+
+## Policy authority
+- CONFLICTED: both `policy/` and `policies/` are active homes; no machine policy files moved.
