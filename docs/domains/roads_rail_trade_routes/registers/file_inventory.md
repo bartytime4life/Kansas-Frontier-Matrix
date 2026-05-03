@@ -1,6 +1,6 @@
 # File Inventory
 
-Inventory and purpose map for docs in `docs/domains/roads-rail-trade-routes/`.
+Inventory and purpose map for docs in `docs/domains/roads_rail_trade_routes/`.
 
 ## Present files
 - `README.md` domain landing and posture.
