@@ -76,6 +76,11 @@ This README is both a **directory landing page** and a **governance checkpoint**
 > [!WARNING]
 > A public GitHub directory listing proves file/path presence for that public snapshot only. It does not prove the active branch under review, local checkout state, hosted branch protection, required checks, secrets, deployment approvals, CI execution, emitted proof objects, dashboards, logs, or runtime behavior.
 
+### Related control-plane indexes
+
+- [`../registers/README.md`](../registers/README.md): register hub for authority ladder, drift, and verification backlog tracking.
+- [`../runbooks/README.md`](../runbooks/README.md): operator procedures for publication, correction, stale projection, and rollback actions.
+
 [Back to top](#kfm-architecture-decision-records)
 
 ---
@@ -140,6 +145,7 @@ docs/adr/
 ├── ADR-0009-sensitive-location-policy.md
 ├── ADR-0010-local-exposure-security.md
 ├── ADR-0011-catalog-proof-release-separation.md
+├── ADR-0012-authority-boundary-compatibility-map.md
 ├── ADR-0241-policy-obligation-engine-and-release-gate.md
 ├── ADR-0427-consent-vc-and-revocation-delta.md
 └── ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md
