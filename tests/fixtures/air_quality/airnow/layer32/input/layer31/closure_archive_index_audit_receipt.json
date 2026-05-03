@@ -1,7 +1,33 @@
 {
-  "database_write_allowed": false,
-  "index_execution_allowed": false,
+  "audit_actions_executed": false,
+  "audit_closure_performed": false,
+  "closure_executed": false,
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "database_write_executed": false,
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "governance_closure_performed": false,
+  "index_executed": false,
+  "manifest_id": "m31",
   "object_type": "AirNowClosureArchiveIndexAuditReceipt",
+  "output_hashes": {
+    "closure_archive_index_audit_packet_hash": "a938b5b548dd7ea106bb4299b982a0c0c5a92b785277149c1ae06e020bdb763a"
+  },
+  "preservation_actions_executed": false,
+  "preservation_copy_executed": false,
+  "preservation_transfer_executed": false,
+  "public_catalog_created": false,
   "public_release_allowed": false,
-  "publication_allowed": false
+  "schema_version": "v1",
+  "search_service_created": false,
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "task_closure_performed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "CLOSURE_ARCHIVE_INDEX_AUDIT_COMPLETE_INTERNAL_ONLY",
+  "workflow_runner": "airnow_layer31_closure_archive_index_audit"
 }

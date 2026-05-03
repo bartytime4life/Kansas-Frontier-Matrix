@@ -1,3 +1,15 @@
 {
-  "object_type": "AirNowClosureArchiveIndexPolicyLedger"
+  "created_at": "2026-01-01T00:00:00Z",
+  "layer28": {
+    "created_at": "2026-01-01T00:00:00Z",
+    "object_type": "AirNowClosureArchivePolicyIndex"
+  },
+  "layer29": {
+    "object_type": "AirNowClosureArchiveIndexReviewPolicyAttestation"
+  },
+  "layer30": {
+    "object_type": "AirNowClosureArchiveIndexPolicyContinuityMatrix"
+  },
+  "object_type": "AirNowClosureArchiveIndexPolicyLedger",
+  "schema_version": "v1"
 }

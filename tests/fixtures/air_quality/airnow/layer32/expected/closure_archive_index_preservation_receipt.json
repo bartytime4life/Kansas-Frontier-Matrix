@@ -1,0 +1,30 @@
+{
+  "audit_closure_performed": false,
+  "closure_executed": false,
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "database_write_executed": false,
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "governance_closure_performed": false,
+  "index_executed": false,
+  "object_type": "AirNowClosureArchiveIndexPreservationReceipt",
+  "output_hashes": {
+    "closure_archive_index_preservation_packet_hash": "a49ab01a815570553af7d2835863732136028c9f6b467caf48ec360be7a94d66"
+  },
+  "preservation_actions_executed": false,
+  "preservation_copy_executed": false,
+  "preservation_transfer_executed": false,
+  "public_catalog_created": false,
+  "public_release_allowed": false,
+  "search_service_created": false,
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "task_closure_performed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "CLOSURE_ARCHIVE_INDEX_PRESERVATION_PLAN_COMPLETE_INTERNAL_ONLY",
+  "workflow_runner": "airnow_layer32_closure_archive_index_preservation"
+}

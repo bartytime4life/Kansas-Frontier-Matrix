@@ -1,3 +1,31 @@
 {
-  "object_type": "AirNowClosureArchiveIndexHashChain"
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexHashChain",
+  "records": [
+    {
+      "name": "closure_archive_index_audit_input_inventory.json",
+      "sha256": "4f2188ea642e73d1b9e016b1de1502eaa7f1eff98d90be69d5f4ac61d677587f"
+    },
+    {
+      "name": "closure_archive_index_audit_manifest.resolved.json",
+      "sha256": "49d98e5274fd598ed8c79d77f55b554c80c335ce8cfc4c2b6921ca8fa788adb6"
+    },
+    {
+      "name": "closure_archive_index_decision_ledger.json",
+      "sha256": "86c09d9f3a9191efe3828731ee0023551b1f5dd7cbee0c6f82ae047c994352ef"
+    },
+    {
+      "name": "closure_archive_index_evidence_ledger.json",
+      "sha256": "8cfb85dd22e071adc6b6b7873a152b30882c1d24efc6efb6af24abdc7281286c"
+    },
+    {
+      "name": "closure_archive_index_lineage_graph.json",
+      "sha256": "ced7adcf1b77156f3281b65b56d4171a84fabb2ebb16b19b409cfffc752331e6"
+    },
+    {
+      "name": "closure_archive_index_receipt_ledger.json",
+      "sha256": "a07b2d6e63d5e2fb8b6b19b10615eef293aa6f4f95b41827e4afcbe338d09ebd"
+    }
+  ],
+  "schema_version": "v1"
 }
