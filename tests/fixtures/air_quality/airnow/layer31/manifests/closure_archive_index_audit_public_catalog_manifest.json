@@ -5,7 +5,7 @@
   "bulk_web_service_loop": false,
   "publication_requested": false,
   "publication_allowed": false,
-  "public_dashboard_requested": false,
+  "public_dashboard_requested": true,
   "public_dashboard_allowed": false,
   "tiles_requested": false,
   "tiles_allowed": false,

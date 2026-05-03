@@ -17,7 +17,7 @@
   "regulatory_claims_allowed": false,
   "exact_sensitive_overlay_requested": false,
   "exact_sensitive_overlay_allowed": false,
-  "command_execution_requested": false,
+  "command_execution_requested": true,
   "command_execution_allowed": false,
   "auto_execute_requested": false,
   "auto_execute_allowed": false,

@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "edges": [
+    {
+      "from": "layer28",
+      "to": "layer29"
+    },
+    {
+      "from": "layer29",
+      "to": "layer30"
+    },
+    {
+      "from": "layer30",
+      "to": "layer31"
+    }
+  ],
+  "object_type": "AirNowClosureArchiveIndexLineageGraph",
+  "schema_version": "v1"
+}

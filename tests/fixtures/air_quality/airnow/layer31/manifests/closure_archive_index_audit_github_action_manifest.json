@@ -27,7 +27,7 @@
   "task_closure_allowed": false,
   "github_issue_creation_requested": false,
   "github_issue_creation_allowed": false,
-  "github_pr_creation_requested": false,
+  "github_pr_creation_requested": true,
   "github_pr_creation_allowed": false,
   "git_push_requested": false,
   "git_push_allowed": false,

@@ -31,7 +31,7 @@
   "github_pr_creation_allowed": false,
   "git_push_requested": false,
   "git_push_allowed": false,
-  "file_deletion_requested": false,
+  "file_deletion_requested": true,
   "file_deletion_allowed": false,
   "destruction_execution_requested": false,
   "destruction_execution_allowed": false,

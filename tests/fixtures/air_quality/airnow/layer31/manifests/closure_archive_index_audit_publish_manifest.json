@@ -55,7 +55,7 @@
   "snapshot_copy_allowed": false,
   "snapshot_transfer_requested": false,
   "snapshot_transfer_allowed": false,
-  "snapshot_publication_requested": false,
+  "snapshot_publication_requested": true,
   "snapshot_publication_allowed": false,
   "snapshot_release_requested": false,
   "snapshot_release_allowed": false,

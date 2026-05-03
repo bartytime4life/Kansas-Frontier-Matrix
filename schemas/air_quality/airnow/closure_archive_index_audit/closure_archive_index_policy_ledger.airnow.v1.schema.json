@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "closure_archive_index_policy_ledger",
+  "type": "object",
+  "properties": {
+    "object_type": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "created_at"
+  ],
+  "additionalProperties": true
+}

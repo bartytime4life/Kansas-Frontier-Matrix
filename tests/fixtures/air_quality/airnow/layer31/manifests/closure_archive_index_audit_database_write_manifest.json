@@ -9,7 +9,7 @@
   "public_dashboard_allowed": false,
   "tiles_requested": false,
   "tiles_allowed": false,
-  "public_api_requested": false,
+  "public_api_requested": true,
   "public_api_allowed": false,
   "emergency_alert_requested": false,
   "emergency_alert": false,

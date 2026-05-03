@@ -67,7 +67,7 @@
   "preservation_transfer_allowed": false,
   "preservation_review_action_requested": false,
   "preservation_review_action_allowed": false,
-  "preservation_finalization_action_requested": false,
+  "preservation_finalization_action_requested": true,
   "preservation_finalization_action_allowed": false,
   "preservation_audit_action_requested": false,
   "preservation_audit_action_allowed": false,

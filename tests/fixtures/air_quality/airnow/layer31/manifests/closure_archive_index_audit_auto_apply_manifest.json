@@ -21,7 +21,7 @@
   "command_execution_allowed": false,
   "auto_execute_requested": false,
   "auto_execute_allowed": false,
-  "auto_apply_requested": false,
+  "auto_apply_requested": true,
   "auto_apply_allowed": false,
   "task_closure_requested": false,
   "task_closure_allowed": false,

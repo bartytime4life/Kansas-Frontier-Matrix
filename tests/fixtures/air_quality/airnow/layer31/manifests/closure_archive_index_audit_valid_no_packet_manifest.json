@@ -101,6 +101,6 @@
     "closure_archive_index_caveat_continuity_register_json": "tests/fixtures/air_quality/airnow/layer31/input/layer30/closure_archive_index_caveat_continuity_register.json"
   },
   "audit_policy": {
-    "include_packet": true
+    "include_packet": false
   }
 }
