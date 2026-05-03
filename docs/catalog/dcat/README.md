@@ -8,9 +8,9 @@ owners: NEEDS-VERIFICATION
 created: 2026-04-27
 updated: 2026-04-27
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../../README.md, ../../standards/KFM_DCAT_PROFILE.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/prov/README.md]
-tags: [kfm, catalog, dcat, metadata, catalog-closure]
-notes: [Target path is docs/catalog/dcat/README.md. Owner, policy label, doc_id, parent links, sibling links, and active-branch file inventory require checkout verification before publication.]
+related: [../README.md, ../../README.md, ../../../README.md, ../../standards/KFM_DCAT_PROFILE.md, ../../../data/catalog/README.md, ../../../data/catalog/dcat/README.md, ../../../data/catalog/stac/README.md, ../../../data/catalog/prov/README.md]
+tags: [kfm, catalog, dcat, metadata, catalog-closure, discovery]
+notes: [Target path is docs/catalog/dcat/README.md. Owner, policy label, doc_id, parent links, sibling links, active-branch file inventory, validator presence, and profile authority require checkout verification before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -23,46 +23,53 @@ Documentation guide for KFM’s DCAT-facing catalog lane: dataset and distributi
 > **Status:** experimental  
 > **Owners:** `NEEDS-VERIFICATION`  
 > **Path:** `docs/catalog/dcat/README.md`  
-> **Repo fit:** documentation surface for the DCAT side of KFM catalog closure; expected downstream data lane is [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md), with sibling discovery and lineage surfaces in [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) and [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md).  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Truth posture:** CONFIRMED documentation role / PROPOSED path authority / UNKNOWN active-branch implementation depth  
+> **Repo fit:** documentation surface for the DCAT side of KFM catalog closure. Expected downstream catalog-data lane: [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md). Expected sibling discovery and lineage lanes: [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) and [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md).  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Review gates](#review-gates) · [FAQ](#faq) · [Appendix](#appendix)
 
-![status](https://img.shields.io/badge/status-experimental-orange)
-![doc](https://img.shields.io/badge/doc-standard%20README--like-blue)
-![catalog](https://img.shields.io/badge/catalog-DCAT%20%2B%20STAC%20%2B%20PROV-0A7BBB)
-![truth](https://img.shields.io/badge/truth-evidence--bounded-6A5ACD)
-![policy](https://img.shields.io/badge/policy-fail--closed-lightgrey)
-![owner](https://img.shields.io/badge/owner-NEEDS--VERIFICATION-red)
+![status](https://img.shields.io/badge/status-experimental-orange?style=flat-square)
+![doc](https://img.shields.io/badge/doc-standard%20README--like-blue?style=flat-square)
+![catalog](https://img.shields.io/badge/catalog-DCAT%20%2B%20STAC%20%2B%20PROV-0A7BBB?style=flat-square)
+![truth](https://img.shields.io/badge/truth-evidence--bounded-6A5ACD?style=flat-square)
+![policy](https://img.shields.io/badge/policy-fail--closed-lightgrey?style=flat-square)
+![owner](https://img.shields.io/badge/owner-NEEDS--VERIFICATION-red?style=flat-square)
 
 > [!NOTE]
-> This README is intentionally **documentation-facing**. DCAT JSON-LD payloads, if present, belong under the data catalog lane, not under this docs path.
+> This README is intentionally **documentation-facing**. DCAT JSON-LD payloads, emitted catalog records, fixtures, manifests, and proof-bearing outputs belong under the data catalog, contract, test, proof, or release lanes that the active checkout verifies.
 
 > [!CAUTION]
-> Use **profile fit** language by default. Do not claim DCAT conformance, emitted catalog coverage, validator enforcement, or release-gate adoption unless the active checkout contains reviewable records, fixtures, validators, and promotion evidence.
+> Use **profile fit** language by default. Do not claim DCAT conformance, emitted catalog coverage, validator enforcement, CI enforcement, or release-gate adoption unless the active checkout contains reviewable records, fixtures, validators, workflow evidence, and promotion artifacts.
 
 ---
 
 ## Scope
 
-`docs/catalog/dcat/` explains how KFM should document and review the **DCAT side of catalog closure**.
+`docs/catalog/dcat/` explains how KFM documents and reviews the **DCAT side of catalog closure**.
 
 In KFM terms, DCAT is the outward-facing dataset and distribution discovery vocabulary. It helps people and systems understand what a released or release-candidate dataset is, how it can be accessed, what rights posture applies, and how it relates to sibling catalog and provenance surfaces.
 
 This documentation lane exists so maintainers can keep DCAT practice:
 
 - downstream of `PROCESSED`,
-- tied to `ReleaseManifest`, `ProofPack`, and `CatalogMatrix` expectations,
+- tied to `ReleaseManifest`, `ProofPack`, `CatalogMatrix`, and review expectations,
 - cross-linked with STAC and PROV instead of competing with them,
-- explicit about rights, access, temporal scope, and public-safe spatial scope,
+- explicit about rights, access, temporal scope, source role, and public-safe spatial scope,
+- clear about correction, supersession, withdrawal, and rollback lineage,
 - and honest about what is **CONFIRMED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ### What this README is for
 
-Use this file to answer four questions quickly:
+Use this file to answer five questions quickly:
 
 1. What does KFM mean by DCAT in the catalog-closure layer?
 2. What belongs in this documentation lane versus the data catalog lane?
 3. What must be checked before a DCAT record can support public discovery?
-4. How should DCAT stay aligned with STAC, PROV, release state, policy state, and correction lineage?
+4. How should DCAT stay aligned with STAC, PROV, release state, policy state, proof state, and correction lineage?
+5. What should reviewers deny, abstain from, or send back to quarantine?
+
+### What this README is not
+
+This file is not the KFM DCAT profile, not a JSON-LD fixture, not an emitted catalog record, not a policy file, not a proof pack, and not implementation evidence.
 
 [Back to top](#top)
 
@@ -77,14 +84,16 @@ Use this file to answer four questions quickly:
 | This documentation lane | `docs/catalog/dcat/README.md` | **PROPOSED / target file** | Explains DCAT operating posture, field expectations, review checks, and documentation boundaries. |
 | Parent catalog docs | [`../README.md`](../README.md) | **NEEDS VERIFICATION** | Should define the wider catalog documentation boundary. |
 | Docs root | [`../../README.md`](../../README.md) | **NEEDS VERIFICATION** | Should define broader documentation conventions and navigation. |
+| Repo root | [`../../../README.md`](../../../README.md) | **NEEDS VERIFICATION** | Should provide project-wide orientation and the public trust posture. |
 | KFM DCAT profile | [`../../standards/KFM_DCAT_PROFILE.md`](../../standards/KFM_DCAT_PROFILE.md) | **NEEDS VERIFICATION** | Expected profile authority for field-level and conformance language. |
-| DCAT data lane | [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md) | **NEEDS VERIFICATION in active checkout** | Expected home for emitted dataset/distribution records, not this docs lane. |
-| STAC sibling | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) | **NEEDS VERIFICATION in active checkout** | Asset, item, collection, and spatiotemporal discovery should remain distinct from DCAT. |
-| PROV sibling | [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | **NEEDS VERIFICATION in active checkout** | Lineage, activity, and agent traceability should remain distinct from DCAT. |
+| Catalog data parent | [`../../../data/catalog/README.md`](../../../data/catalog/README.md) | **NEEDS VERIFICATION** | Expected parent for emitted catalog object families. |
+| DCAT data lane | [`../../../data/catalog/dcat/README.md`](../../../data/catalog/dcat/README.md) | **NEEDS VERIFICATION** | Expected home for emitted dataset/distribution records, not this docs lane. |
+| STAC sibling | [`../../../data/catalog/stac/README.md`](../../../data/catalog/stac/README.md) | **NEEDS VERIFICATION** | Asset, item, collection, and spatiotemporal discovery should remain distinct from DCAT. |
+| PROV sibling | [`../../../data/catalog/prov/README.md`](../../../data/catalog/prov/README.md) | **NEEDS VERIFICATION** | Lineage, activity, and agent traceability should remain distinct from DCAT. |
 | Data lifecycle | [`../../../data/README.md`](../../../data/README.md) | **NEEDS VERIFICATION** | Should preserve the `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` boundary. |
-| Contract / schema authority | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md) | **NEEDS VERIFICATION** | DCAT documentation may reference declared shapes but must not silently define machine-contract authority. |
-| Policy authority | [`../../../policy/README.md`](../../../policy/README.md) | **NEEDS VERIFICATION** | Rights, sensitivity, and publication denial rules belong in policy, even when DCAT exposes their consequences. |
-| Catalog helper / tests | [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md), [`../../../tests/catalog/README.md`](../../../tests/catalog/README.md) | **NEEDS VERIFICATION** | Helpers and tests should prove cross-link behavior rather than letting README prose stand in for validation. |
+| Contract / schema authority | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md) | **NEEDS VERIFICATION / possibly CONFLICTED** | DCAT docs may reference declared shapes but must not silently define machine-contract authority. |
+| Policy authority | [`../../../policy/README.md`](../../../policy/README.md) | **NEEDS VERIFICATION** | Rights, sensitivity, denial, and publication rules belong in policy, even when DCAT exposes their consequences. |
+| Catalog helpers / tests | [`../../../tools/catalog/README.md`](../../../tools/catalog/README.md), [`../../../tests/catalog/README.md`](../../../tests/catalog/README.md) | **NEEDS VERIFICATION** | Helpers and tests should prove cross-link behavior rather than letting README prose stand in for validation. |
 
 ### Operating boundary
 
@@ -96,12 +105,13 @@ DCAT in KFM should describe **released or release-candidate discovery scope**. I
 - a proof pack,
 - a runtime API envelope,
 - an AI evidence bundle,
-- or a workaround for release review.
+- a release approval record,
+- or a workaround for review.
 
 > [!TIP]
 > Keep the KFM trust split visible:
 >
-> **catalog metadata ≠ canonical payload ≠ proof ≠ policy ≠ publication**
+> **catalog metadata ≠ canonical payload ≠ evidence bundle ≠ proof ≠ policy ≠ publication**
 
 [Back to top](#top)
 
@@ -109,21 +119,21 @@ DCAT in KFM should describe **released or release-candidate discovery scope**. I
 
 ## Accepted inputs
 
-The following belong in `docs/catalog/dcat/` when they remain documentation, guidance, examples, or review scaffolding.
+The following belong in `docs/catalog/dcat/` only when they remain documentation, guidance, examples, or review scaffolding.
 
 | Accepted input | Belongs here when… | Status |
 | --- | --- | --- |
 | `README.md` orientation | it explains the lane, boundaries, links, review checks, and uncertainty clearly | **CONFIRMED for this output** |
 | DCAT profile guidance | it summarizes or links to the project’s DCAT profile without replacing the profile | **PROPOSED / NEEDS VERIFICATION** |
-| Field mapping notes | they explain how KFM release, rights, provenance, access, and correction concepts map into DCAT-facing records | **PROPOSED** |
+| Field mapping notes | they explain how KFM release, rights, provenance, access, correction, and temporal concepts map into DCAT-facing records | **PROPOSED** |
 | Review checklists | they help reviewers verify release linkage, rights posture, access posture, spatial/temporal scope, and sibling catalog closure | **PROPOSED** |
 | Illustrative JSON-LD snippets | they are labeled as examples or pseudocode and do not claim emitted fixture status | **PROPOSED** |
-| Crosswalk tables | they clarify relationships among DCAT, STAC, PROV, `ReleaseManifest`, `CatalogMatrix`, and `EvidenceBundle` | **PROPOSED** |
+| Crosswalk tables | they clarify relationships among DCAT, STAC, PROV, `ReleaseManifest`, `CatalogMatrix`, `ProofPack`, and `EvidenceBundle` | **PROPOSED** |
 | Open verification notes | they identify what must be checked in the active branch before publication claims are made | **CONFIRMED documentation pattern** |
 
 ### What “accepted” means in KFM terms
 
-Accepted documentation here should make discovery safer and easier to review. It should never downgrade proof, policy, provenance, or release state into prose-only advice.
+Accepted documentation here should make discovery safer and easier to review. It should never downgrade proof, policy, provenance, validation, or release state into prose-only advice.
 
 [Back to top](#top)
 
@@ -143,12 +153,12 @@ Accepted documentation here should make discovery safer and easier to review. It
 | Run receipts and process memory | `data/receipts/` | Receipts may be linked but are not DCAT records. |
 | Release proofs, attestations, and proof packs | `data/proofs/` | Proof artifacts remain first-class and reviewable. |
 | Policy rules or reason registries | `policy/` | Policy should be executable and independently reviewable. |
-| JSON Schema / OpenAPI / machine contracts | `contracts/` or `schemas/` | Documentation can reference contracts but must not become the contract authority. |
+| JSON Schema / OpenAPI / machine contracts | `contracts/` or `schemas/` | Documentation can reference contracts but must not become contract authority. |
 | Runtime API envelopes, Evidence Drawer payloads, or Focus Mode answers | governed API / app surfaces | Runtime trust objects are not catalog metadata. |
 | AI summaries or generated prose | governed AI surfaces with EvidenceBundle references | AI is interpretive only and must not become source truth. |
 
 > [!WARNING]
-> If a proposed DCAT record would expose unresolved rights, unreleased scope, exact-location-sensitive detail, or an access point that is not public-safe, it should fail closed and stay out of public discovery.
+> If a proposed DCAT record would expose unresolved rights, unreleased scope, exact-location-sensitive detail, living-person sensitivity, cultural sensitivity, ecological sensitivity, archaeological sensitivity, or an access point that is not public-safe, it should fail closed and stay out of public discovery.
 
 [Back to top](#top)
 
@@ -234,20 +244,21 @@ rg -n "DCAT|dcat:Dataset|dcat:Distribution|CatalogMatrix|CatalogClosure|ReleaseM
 
 ```bash
 find tools scripts tests contracts schemas -maxdepth 4 -type f 2>/dev/null | sort
+
 rg -n "validate.*dcat|dcat.*validate|catalog.*crosslink|CatalogMatrix|catalog closure" \
   tools scripts tests contracts schemas .github 2>/dev/null || true
 ```
 
-### 5. Add examples only as examples
+### 5. Add records only after gate checks
 
 ```bash
-# Example only: verify active branch conventions before creating payload files.
-mkdir -p data/catalog/dcat/datasets
-$EDITOR data/catalog/dcat/datasets/<dataset>__<version>.jsonld
+# PROPOSED only: verify active branch conventions, profile authority,
+# release linkage, rights posture, proof objects, and tests before creating
+# any payload-bearing catalog record.
 ```
 
 > [!TIP]
-> The safest first DCAT change is usually **docs + profile + fixtures + tests**, not a standalone JSON-LD record with no release, proof, or cross-link evidence.
+> The safest first DCAT change is usually **docs + profile + fixtures + tests**, not a standalone JSON-LD record with no release, proof, policy, or cross-link evidence.
 
 [Back to top](#top)
 
@@ -265,7 +276,8 @@ DCAT-facing material should remain:
 - **rights-visible**, not silent on access posture,
 - **public-safe**, not accidentally precise or sensitive,
 - **cross-linked**, not isolated from STAC and PROV,
-- and **correction-friendly**, not lineage-erasing.
+- **correction-friendly**, not lineage-erasing,
+- and **evidence-subordinate**, not a source of truth by itself.
 
 ### Profile-aligned example shape
 
@@ -285,6 +297,7 @@ The following is an **illustrative JSON-LD sketch**, not proof of an emitted fix
   "dct:description": "TODO(release-linked description)",
   "dct:license": { "@id": "TODO(resolvable-license-iri)" },
   "dct:rights": "TODO(rights/access posture)",
+  "dct:accessRights": "TODO(public|restricted|staged|denied)",
   "dct:spatial": {
     "@type": "dct:Location",
     "dcat:bbox": "TODO(public-safe bbox or profile-approved geometry)"
@@ -308,14 +321,15 @@ The following is an **illustrative JSON-LD sketch**, not proof of an emitted fix
     { "@id": "TODO(release-manifest-ref)" },
     { "@id": "TODO(stac-record-ref)" },
     { "@id": "TODO(prov-bundle-ref)" },
-    { "@id": "TODO(catalog-matrix-ref)" }
+    { "@id": "TODO(catalog-matrix-ref)" },
+    { "@id": "TODO(correction-or-supersession-ref-if-any)" }
   ],
   "dct:provenance": { "@id": "TODO(prov-bundle-ref)" },
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
       "dct:identifier": "TODO(distribution-id)",
-      "dct:title": "TODO(distribution title)",
+      "dct:title": "TODO(downloadable artifact distribution)",
       "dcat:mediaType": "TODO(media type)",
       "dcat:downloadURL": { "@id": "TODO(actual-downloadable-artifact-url)" },
       "spdx:checksum": {
@@ -323,12 +337,18 @@ The following is an **illustrative JSON-LD sketch**, not proof of an emitted fix
         "spdx:algorithm": "spdx:checksumAlgorithm_sha256",
         "spdx:checksumValue": "TODO(sha256 digest)"
       }
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dct:identifier": "TODO(service-distribution-id)",
+      "dct:title": "TODO(mediated service or viewer access)",
+      "dcat:accessURL": { "@id": "TODO(mediated-access-url)" }
     }
   ]
 }
 ```
 
-Use `dcat:downloadURL` only for an actual downloadable artifact. Use `dcat:accessURL` when the outward object is a service, viewer, or mediated access point.
+Use `dcat:downloadURL` only for an actual downloadable artifact. Use `dcat:accessURL` when the outward object is a service, viewer, mediated access point, or other non-downloadable discovery surface.
 
 [Back to top](#top)
 
@@ -344,37 +364,48 @@ flowchart TD
     D --> E[ReleaseManifest]
     D --> F[EvidenceBundle]
     D --> G[ProofPack]
-    E --> H[CatalogMatrix / catalog closure]
-    F --> H
-    G --> H
+    D --> H[PolicyDecision]
+    D --> I[ReviewState]
 
-    H --> I[data/catalog/dcat/]
-    H --> J[data/catalog/stac/]
-    H --> K[data/catalog/prov/]
+    E --> J[CatalogMatrix / catalog closure]
+    F --> J
+    G --> J
+    H --> J
+    I --> J
 
-    L[docs/catalog/dcat/] --> I
-    L --> M[KFM DCAT profile]
-    L --> N[review checklist]
+    J --> K[data/catalog/dcat/]
+    J --> L[data/catalog/stac/]
+    J --> M[data/catalog/prov/]
 
-    I --> O[Dataset / distribution discovery]
-    J --> P[Asset / time discovery]
-    K --> Q[Lineage / activity / agent traceability]
+    N[docs/catalog/dcat/] --> K
+    N --> O[KFM DCAT profile]
+    N --> P[review checklist]
 
-    O --> R[Governed public discovery]
-    P --> R
-    Q --> R
+    K --> Q[Dataset / distribution discovery]
+    L --> R[Asset / time discovery]
+    M --> S[Lineage / activity / agent traceability]
 
-    R --> S[Governed API / UI / Evidence Drawer]
-    S --> T[ANSWER / ABSTAIN / DENY / ERROR]
+    Q --> T[Governed public discovery]
+    R --> T
+    S --> T
+
+    T --> U[Governed API / UI / Evidence Drawer]
+    U --> V[ANSWER / ABSTAIN / DENY / ERROR]
+
+    W[CorrectionNotice / Withdrawal / Supersession] --> J
+    W --> T
 
     classDef lifecycle fill:#eef6ff,stroke:#4a74a8,stroke-width:1.5px,color:#1f2d3d;
     classDef proof fill:#fff7e6,stroke:#c9871a,stroke-width:1.5px,color:#5c3b00;
+    classDef policy fill:#fff1f1,stroke:#b42318,stroke-width:1.5px,color:#5f1010;
     classDef doc fill:#f4f0ff,stroke:#6f42c1,stroke-width:1.5px,color:#2d124f;
     classDef catalog fill:#eef9ef,stroke:#3d8b50,stroke-width:1.5px,color:#183d23;
+
     class A,B,C,D lifecycle;
-    class E,F,G,H proof;
-    class L,M,N doc;
-    class I,J,K,O,P,Q,R catalog;
+    class E,F,G,J,W proof;
+    class H,I policy;
+    class N,O,P doc;
+    class K,L,M,Q,R,S,T,U,V catalog;
 ```
 
 [Back to top](#top)
@@ -401,11 +432,20 @@ flowchart TD
 | Profile reference | `dct:conformsTo` | Validators and reviewers need explicit profile pins. |
 | Rights posture | `dct:license`, `dct:rights`, `dct:accessRights` | Unknown or restricted rights should block public discovery. |
 | Public-safe spatial scope | `dct:spatial`, profile-approved geometry/bounds | Discovery should communicate scope without leaking unsafe precision. |
-| Time basis | `dct:temporal`, profile-approved temporal fields | KFM is time-aware; catalog records should not hide observation, validity, or publication time. |
+| Time basis | `dct:temporal`, profile-approved temporal fields | KFM is time-aware; catalog records should not hide observation, validity, access, or publication time. |
 | Distribution class | `dcat:distribution` | Different artifact classes should not be flattened into one ambiguous distribution. |
 | Download vs access | `dcat:downloadURL` / `dcat:accessURL` | URL type must match the actual outward surface. |
 | Provenance continuation | `dct:provenance` and sibling PROV links | Discovery should continue into lineage instead of stopping at a catalog title. |
 | Correction visibility | relation to correction/supersession/withdrawal records | Public discovery must preserve visible change lineage. |
+
+### Gate outcomes
+
+| Outcome | Use when | DCAT consequence |
+| --- | --- | --- |
+| **ANSWER** | release, proof, rights, review, policy, and catalog closure support discovery | DCAT record may participate in public discovery. |
+| **ABSTAIN** | support is insufficient or identifiers/cross-links are ambiguous | Do not publish a stronger claim; keep review note visible. |
+| **DENY** | rights, sensitivity, source role, review state, or policy blocks public discovery | Keep the record unpublished, restricted, generalized, or quarantined. |
+| **ERROR** | validation, parsing, resolver, manifest, or workflow failure occurs | Do not publish; emit or update process evidence according to repo convention. |
 
 ### Avoid patterns
 
@@ -417,29 +457,44 @@ flowchart TD
 | Letting DCAT, STAC, and PROV disagree on identifiers or release scope | Catalog closure stops being trustworthy when the triplet drifts. |
 | Minting ad hoc extension terms in README prose | Extension drift becomes catalog drift. |
 | Hiding services behind `downloadURL` | Consumers need to know whether a distribution is a downloadable artifact or mediated access point. |
+| Treating AI summaries as DCAT support | AI can interpret released evidence; it cannot replace EvidenceBundle resolution. |
 
 [Back to top](#top)
 
 ---
 
-## Task list / definition of done
+## Review gates
 
 Use this checklist for changes to this documentation lane or the downstream DCAT data lane.
 
 - [ ] Active checkout confirms whether `docs/catalog/dcat/README.md` exists or is new.
 - [ ] KFM Meta Block V2 remains present and synchronized with the visible title.
-- [ ] Owner, policy label, created date, and related links have been verified or explicitly left as placeholders.
+- [ ] Owner, policy label, created date, updated date, and related links have been verified or explicitly left as placeholders.
 - [ ] This documentation lane remains separate from `data/catalog/dcat/`.
 - [ ] Any example is labeled as illustrative unless emitted fixture evidence exists.
 - [ ] Any referenced profile path is checked in and linked correctly from this file.
 - [ ] Any new DCAT record links to release state or release-candidate state.
-- [ ] STAC, DCAT, PROV, `ReleaseManifest`, and `CatalogMatrix` identifiers are aligned where catalog closure is claimed.
+- [ ] STAC, DCAT, PROV, `ReleaseManifest`, `ProofPack`, `EvidenceBundle`, and `CatalogMatrix` identifiers are aligned where catalog closure is claimed.
 - [ ] Rights, access, sensitivity, and public-safe spatial scope are visible.
 - [ ] `downloadURL` and `accessURL` are used according to actual distribution type.
 - [ ] Correction, supersession, withdrawal, or rollback references are visible when relevant.
 - [ ] Validator, fixture, and CI claims are grounded in active-branch files.
-- [ ] No README prose claims public release, publication, conformance, or enforcement without proof.
+- [ ] No README prose claims public release, publication, conformance, enforcement, or runtime behavior without proof.
 - [ ] Rollback path is documented for any public-facing catalog change.
+
+### Rollback triggers
+
+Rollback or withdrawal review is required when a DCAT-facing change:
+
+- exposes unreleased or rights-uncertain material,
+- points public users to an access surface that policy has not allowed,
+- presents sensitive geometry more precisely than release policy permits,
+- breaks STAC/DCAT/PROV identity closure,
+- loses correction, supersession, or withdrawal lineage,
+- claims validator, profile, CI, or release-gate behavior not backed by current evidence,
+- or causes public discovery to bypass governed APIs or released artifacts.
+
+Rollback target: `ROLLBACK_TARGET_NEEDS_VERIFICATION`
 
 [Back to top](#top)
 
@@ -453,7 +508,7 @@ No. This is the documentation guide at `docs/catalog/dcat/`. DCAT JSON-LD payloa
 
 ### Does a DCAT record make a dataset published?
 
-No. Publication is a governed state transition. A DCAT record may participate in discovery after release gates pass, but it does not replace release approval, proof objects, policy decisions, or rollback records.
+No. Publication is a governed state transition. A DCAT record may participate in discovery after release gates pass, but it does not replace release approval, proof objects, policy decisions, review records, or rollback records.
 
 ### Can DCAT replace STAC or PROV?
 
@@ -461,11 +516,15 @@ No. KFM uses the catalog triplet because each standard carries a different burde
 
 ### Can Focus Mode answer from DCAT alone?
 
-No. Focus Mode must resolve admissible evidence through governed backend flow. DCAT can help point to released scope, but `EvidenceBundle` and policy state outrank catalog prose.
+No. Focus Mode must resolve admissible evidence through governed backend flow. DCAT can help point to released scope, but `EvidenceBundle`, policy state, review state, and release state outrank catalog prose.
 
 ### What should happen when rights or sensitivity are unclear?
 
-The record should stay out of public discovery or be redacted/generalized until rights, review, and sensitivity posture are resolved.
+The record should stay out of public discovery or be redacted, generalized, delayed, staged, or restricted until rights, review, and sensitivity posture are resolved.
+
+### When should the README say “conforms to DCAT”?
+
+Only after the active checkout contains the profile, fixtures, validator evidence, and release or catalog records needed to support that claim. Until then, use **profile fit**, **profile-aligned**, or **PROPOSED** language.
 
 [Back to top](#top)
 
@@ -482,7 +541,9 @@ The record should stay out of public discovery or be redacted/generalized until 
 | **INFERRED** | Strongly suggested by project doctrine or adjacent docs, but not proven as current implementation. |
 | **PROPOSED** | Recommended target behavior or structure that still needs implementation evidence. |
 | **UNKNOWN** | Not verified strongly enough to claim. |
-| **NEEDS VERIFICATION** | Specific branch, owner, path, policy, tool, validator, rights, or runtime detail that should be checked before merge. |
+| **NEEDS VERIFICATION** | Specific branch, owner, path, policy, tool, validator, rights, source, or runtime detail that should be checked before merge. |
+| **DENY** | Output, discovery, publication, source activation, or access should not proceed under current evidence/policy conditions. |
+| **ABSTAIN** | A stronger claim cannot be answered or published because support is insufficient. |
 
 </details>
 
@@ -494,9 +555,10 @@ The record should stay out of public discovery or be redacted/generalized until 
 - Are rights, access posture, and public-safe geometry visible?
 - Are STAC and PROV cross-links present where catalog closure is claimed?
 - Are `ReleaseManifest`, `ProofPack`, `EvidenceBundle`, and `CatalogMatrix` still first-class?
-- Are policy and validation claims backed by files, tests, or workflow evidence?
+- Are policy and validation claims backed by files, tests, workflow evidence, or emitted artifacts?
 - Would a public user understand whether a URL is a direct download, a service, or a mediated access point?
 - Is correction lineage visible if a release was replaced, withdrawn, or superseded?
+- Does any public-facing path bypass the governed interface or released-artifact boundary?
 
 </details>
 
@@ -508,6 +570,8 @@ The record should stay out of public discovery or be redacted/generalized until 
 - [W3C PROV-O][w3c-prov-o]
 
 These anchors support vocabulary alignment only. KFM publication readiness still depends on KFM evidence, policy, review, release, proof, and catalog-closure gates.
+
+NEEDS VERIFICATION before claiming implementation conformance: exact profile version, validator behavior, fixture coverage, release records, and active-branch file paths.
 
 </details>
 
