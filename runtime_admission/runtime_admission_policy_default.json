@@ -1,1 +1,0 @@
-{"schema":"RuntimeAdmissionPolicy.v1","policy_id":"p1","allowed_decisions":["admit","admit_with_warnings","deny","review_required","planned","dry_run"],"required_checks":["policy.lockfile.valid"],"deny_reasons":["x"],"warning_reasons":["w"],"fail_closed":true}
