@@ -387,3 +387,10 @@ Use this template when adding a compact register row or expanding a row into a s
 - `docs/registers/reorg/authority_conflicts.md`
 - `docs/registers/reorg/validation_report.md`
 - `docs/registers/reorg/rollback_plan.sh`
+
+
+## Reorg register
+- `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` (CONFIRMED sprint manifest)
+- `docs/registers/reorg/path_inventory.tsv` (tracked path inventory + family classification)
+- `docs/registers/reorg/move_plan.tsv` and `reference_update_plan.tsv`
+- `docs/registers/schema_authority_map.md` and `docs/registers/policy_authority_map.md`

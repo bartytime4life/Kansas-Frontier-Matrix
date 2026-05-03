@@ -1,7 +1,9 @@
-# Schema authority map
-
-| Home | Family | Likely authority | Interim use | Prohibited duplication | Migration rule | Validator expectation | Owner/status | Rollback risk |
-|---|---|---|---|---|---|---|---|---|
-| `contracts/` | semantic contracts | object meaning | stable | duplicate machine schema IDs | no machine-schema move without ADR | manifest records conflict | Architecture / CONFLICTED | medium |
-| `schemas/` | JSON schemas | machine shape authority | stable | duplicate schema IDs across homes | keep IDs stable | add duplicate-id checks later | Architecture / CONFLICTED | high |
-| `jsonschema/` | python helper package | runtime helper | compatible | shadowing canonical schema registries | keep package-only | lint path ownership | Tools / PROPOSED | low |
+# Schema Authority Map
+- Current homes: `contracts/`, `schemas/`, `jsonschema/`.
+- Likely authority: `contracts/` semantic contract meaning; `schemas/` machine validation authority; `jsonschema/` compatibility package.
+- Interim use: allowed with explicit cross-reference and no duplicate IDs.
+- Prohibited: duplicate canonical schema IDs across homes.
+- Migration rule: ADR-0001 + ADR-0012 first, then validator-gated migrations.
+- Validator expectation: detect duplicate `$id` and same logical object in multiple homes.
+- Decision owner/status: CONFLICTED, owner TBD, status open.
+- Rollback risk: high for runtime and CI consumers.

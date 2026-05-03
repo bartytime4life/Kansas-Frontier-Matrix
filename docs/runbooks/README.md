@@ -75,3 +75,8 @@ Use `docs/registers/reorg/rollback_plan.sh` for sprint rollback commands.
 ## Reorg sprint linkage
 
 See `docs/registers/reorg/REORG_SPRINT_MANIFEST.md` for current repository organization controls and rollback plan.
+
+
+## Reorg operations
+- Use `docs/registers/reorg/rollback_plan.sh` for targeted path rollback during documentation-lane reorganizations.
+- Treat promotion and lifecycle transitions as governed events, never as plain file movement.

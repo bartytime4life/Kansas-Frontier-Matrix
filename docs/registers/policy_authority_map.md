@@ -1,6 +1,9 @@
-# Policy authority map
-
-| Home | Family | Likely authority | Interim use | Prohibited duplication | Migration rule | Validator expectation | Owner/status | Rollback risk |
-|---|---|---|---|---|---|---|---|---|
-| `policy/` | rego bundles + policy docs | policy authority | canonical | duplicate package names in `policies/` | no cross-home move without ADR | conflict noted in reorg report | Policy owners / CONFLICTED | high |
-| `policies/` | legacy/compat docs + rule files | compatibility lane | temporary | authoritative split | converge via ADR-0013 follow-up | ensure authority map present | Policy owners / CONFLICTED | medium |
+# Policy Authority Map
+- Current homes: `policy/`, `policies/`.
+- Likely authority: `policy/` primary executable policy lane per ADR-0013; `policies/` compatibility/examples lane.
+- Interim use: permitted only with explicit pointers from `policies/` back to canonical `policy/` modules.
+- Prohibited: divergent policy packages with same intent in both homes.
+- Migration rule: single-home consolidation with ADR and regression tests.
+- Validator expectation: duplicate package-name detection across homes.
+- Decision owner/status: CONFLICTED, owner TBD, status open.
+- Rollback risk: medium-high (admission/promotion gate drift).
