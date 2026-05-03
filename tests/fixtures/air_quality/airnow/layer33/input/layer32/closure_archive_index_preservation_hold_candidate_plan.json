@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_hold_candidate_plan",
-  "status": "present"
+  "object_type": "X",
+  "name": "hold_candidate_plan"
 }

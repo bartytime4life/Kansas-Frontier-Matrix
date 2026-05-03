@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_scope_plan",
-  "status": "present"
+  "object_type": "X",
+  "name": "scope_plan"
 }

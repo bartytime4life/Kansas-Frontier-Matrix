@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_non_execution_attestation",
-  "status": "present"
+  "object_type": "X",
+  "public_release_allowed": false
 }

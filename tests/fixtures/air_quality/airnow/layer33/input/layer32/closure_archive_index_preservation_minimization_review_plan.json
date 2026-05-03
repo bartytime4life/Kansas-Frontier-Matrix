@@ -1,4 +1,4 @@
 {
-  "object_type": "fixture_minimization_review_plan",
-  "status": "present"
+  "object_type": "X",
+  "name": "minimization_review_plan"
 }
