@@ -1,41 +1,43 @@
 import sys
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT))
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
 from apps.api.kfm_mock_api import focus_decision, get_drawer, get_evidence_bundle
 
 OUTCOMES = {"ANSWER", "ABSTAIN", "DENY", "ERROR"}
 
 
+def check(condition: bool, message: str, errors: list[str]) -> None:
+    if not condition:
+        errors.append(message)
+
+
 def main() -> int:
-    errors = []
+    errors: list[str] = []
 
     payload, code = get_evidence_bundle("evb-hydro-001")
-    if code != 200 or payload.get("id") != "evb-hydro-001":
-        errors.append("known evidence contract mismatch")
+    check(code == 200 and payload.get("id") == "evb-hydro-001", "known evidence contract mismatch", errors)
 
     payload, code = get_evidence_bundle("missing")
-    if code != 404 or payload.get("outcome") != "ABSTAIN":
-        errors.append("missing evidence should ABSTAIN/404")
+    check(code == 404 and payload.get("outcome") == "ABSTAIN", "missing evidence should ABSTAIN/404", errors)
 
     payload, code = get_drawer("missing")
-    if code != 404 or payload.get("outcome") != "ABSTAIN":
-        errors.append("missing drawer should ABSTAIN/404")
+    check(code == 404 and payload.get("outcome") == "ABSTAIN", "missing drawer should ABSTAIN/404", errors)
 
-    payload, code = focus_decision({"question": "Hydrology"})
-    if code != 200 or payload.get("outcome") != "ANSWER" or not payload.get("citations"):
-        errors.append("focus ANSWER requires citations")
+    answer_payload, answer_code = focus_decision({"question": "Hydrology"})
+    check(answer_code == 200 and answer_payload.get("outcome") == "ANSWER", "focus answer outcome mismatch", errors)
+    check(bool(answer_payload.get("citations")), "focus ANSWER requires citations", errors)
 
-    payload, code = focus_decision({"question": "sensitive route"})
-    if code != 200 or payload.get("outcome") != "DENY":
-        errors.append("sensitive focus should DENY")
+    deny_payload, deny_code = focus_decision({"question": "sensitive route"})
+    check(deny_code == 200 and deny_payload.get("outcome") == "DENY", "sensitive focus should DENY", errors)
 
-    payload, code = focus_decision({"question": "   "})
-    if code != 400 or payload.get("outcome") != "ABSTAIN":
-        errors.append("empty focus should ABSTAIN/400")
+    abstain_payload, abstain_code = focus_decision({"question": "   "})
+    check(abstain_code == 400 and abstain_payload.get("outcome") == "ABSTAIN", "empty focus should ABSTAIN/400", errors)
 
-    if any(o.get("outcome") not in OUTCOMES for o in [focus_decision({"question":"Hydrology"})[0], focus_decision({"question":"sensitive route"})[0], focus_decision({"question":" "})[0]]):
-        errors.append("non-finite outcome returned")
+    for payload in [answer_payload, deny_payload, abstain_payload]:
+        check(payload.get("outcome") in OUTCOMES, "non-finite outcome returned", errors)
 
     if errors:
         print("FAIL", errors)
