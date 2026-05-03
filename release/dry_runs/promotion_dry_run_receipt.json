@@ -1,0 +1,7 @@
+{
+  "id": "promotion-dry-run-001",
+  "timestamp_utc": "2026-05-03T21:26:06.527189+00:00",
+  "source_manifest": "fixtures/release/release_manifest.valid.json",
+  "result": "PASS",
+  "errors": []
+}

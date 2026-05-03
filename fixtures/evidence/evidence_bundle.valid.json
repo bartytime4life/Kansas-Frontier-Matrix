@@ -1,0 +1,7 @@
+{
+  "id": "evb-hydro-001",
+  "evidence_refs": [
+    "evr-001"
+  ],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
