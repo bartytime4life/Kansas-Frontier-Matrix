@@ -8,7 +8,7 @@ owners: TODO-NEEDS-VERIFICATION
 created: 2026-04-28
 updated: 2026-04-28
 policy_label: TODO-NEEDS-VERIFICATION
-related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/registers/DRIFT_REGISTER.md, docs/intake/IDEA_INTAKE.md, docs/runbooks/PROMOTION_GATE.md, docs/runbooks/CORRECTION_AND_ROLLBACK.md, contracts/OBJECT_MAP.md, schemas/README.md, policy/README.md, tests/README.md]
+related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md, docs/registers/DRIFT_REGISTER.md, docs/intake/IDEA_INTAKE.md, docs/runbooks/publication.md, docs/runbooks/correction.md, docs/runbooks/rollback.md, contracts/OBJECT_MAP.md, schemas/README.md, policy/README.md, tests/README.md]
 tags: [kfm, verification, backlog, governance, evidence, control-plane]
 notes: [Draft register for docs/registers/VERIFICATION_BACKLOG.md. doc_id, owners, policy_label, active-branch path existence, and related-link validity require direct repo verification before merge. created/updated dates reflect draft generation date and should be reconciled with commit history if different.]
 [/KFM_META_BLOCK_V2] -->
@@ -68,8 +68,8 @@ It exists to prevent three failure modes:
 | Sibling | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Classifies canon, lineage, exploratory inputs, emitted artifacts, and proof families. |
 | Sibling | `docs/registers/DRIFT_REGISTER.md` | Records contradictions, naming drift, source drift, schema drift, and path drift. |
 | Upstream | `docs/intake/IDEA_INTAKE.md` | Sends `REPO VERIFY`, `EVIDENCE GAP`, and `ADR CANDIDATE` items here. |
-| Upstream | `docs/runbooks/PROMOTION_GATE.md` | Uses this backlog to block release claims that still lack proof. |
-| Upstream | `docs/runbooks/CORRECTION_AND_ROLLBACK.md` | Uses this backlog when withdrawal, supersession, or rollback exposes unresolved proof gaps. |
+| Upstream | `docs/runbooks/publication.md` | Uses this backlog to block release claims that still lack proof. |
+| Upstream | `docs/runbooks/correction.md` and `docs/runbooks/rollback.md` | Uses this backlog when withdrawal, supersession, or rollback exposes unresolved proof gaps. |
 | Downstream | `contracts/OBJECT_MAP.md` | Retires object-family ambiguity by defining semantic objects and lifecycle roles. |
 | Downstream | `schemas/README.md` | Retires executable shape and schema-home ambiguity. |
 | Downstream | `policy/README.md` | Retires fail-closed, rights, sensitivity, AI-runtime, and promotion-policy uncertainty. |

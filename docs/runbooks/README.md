@@ -46,6 +46,13 @@ Operator playbooks for trust-critical operational actions in Kansas Frontier Mat
 3. Preserve auditability: correction/supersession history must remain visible.
 4. Do not treat projections, summaries, or generated text as canonical truth.
 
+## Validation entrypoints (confirmed paths)
+
+- Python test discovery: [`../../pytest.ini`](../../pytest.ini)
+- Pytest suites: [`../../tests/`](../../tests/)
+- Web app tests (vitest script): [`../../apps/web/package.json`](../../apps/web/package.json)
+- Governance/policy tests: [`../../tests/policy/`](../../tests/policy/) and [`../../policy/tests/`](../../policy/tests/)
+
 ## Minimum runbook shape
 
 Each runbook in this directory should include:
