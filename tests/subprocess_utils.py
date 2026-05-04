@@ -24,4 +24,11 @@ def assert_python_ok(
     except subprocess.TimeoutExpired as exc:
         testcase.fail(f"python subprocess timed out after {timeout_seconds}s for args={list(args)}: {exc}")
         return
-    testcase.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+
+    if result.returncode != 0:
+        testcase.fail(
+            "python subprocess failed"
+            f" (rc={result.returncode}, args={list(args)}):\n"
+            f"stdout:\n{result.stdout}\n"
+            f"stderr:\n{result.stderr}"
+        )

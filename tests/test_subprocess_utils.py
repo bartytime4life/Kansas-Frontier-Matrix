@@ -26,3 +26,11 @@ class SubprocessUtilsTests(unittest.TestCase):
     def test_assert_python_ok_nonzero_exit_surfaces_assertion(self):
         with self.assertRaises(AssertionError):
             assert_python_ok(self, ["-c", "import sys; print('boom'); sys.exit(3)"])
+
+    def test_assert_python_ok_nonzero_message_includes_context(self):
+        with self.assertRaises(AssertionError) as ctx:
+            assert_python_ok(self, ["-c", "import sys; print('boom'); sys.exit(3)"])
+        msg = str(ctx.exception)
+        self.assertIn("rc=3", msg)
+        self.assertIn("boom", msg)
+        self.assertIn("args=", msg)
