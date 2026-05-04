@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "knowledge_character": {
+      "enum": [
+        "OBSERVED",
+        "DOCUMENTARY",
+        "DERIVED",
+        "MODELED",
+        "GENERALIZED",
+        "SOURCE_DEPENDENT",
+        "SYNTHETIC_TEST"
+      ]
+    }
+  },
+  "required": [
+    "id"
+  ]
+}
