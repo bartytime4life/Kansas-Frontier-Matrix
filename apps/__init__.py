@@ -1,0 +1,1 @@
+"""KFM application package namespace."""
