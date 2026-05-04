@@ -16,6 +16,13 @@ class SubprocessUtilsTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             assert_python_ok(self, ["-c", "import time; time.sleep(0.2)"], timeout_seconds=0.01)
 
+    def test_assert_python_ok_timeout_message_includes_context(self):
+        with self.assertRaises(AssertionError) as ctx:
+            assert_python_ok(self, ["-c", "import time; time.sleep(0.2)"], timeout_seconds=0.01)
+        msg = str(ctx.exception)
+        self.assertIn("timed out", msg)
+        self.assertIn("0.01s", msg)
+
     def test_assert_python_ok_nonzero_exit_surfaces_assertion(self):
         with self.assertRaises(AssertionError):
             assert_python_ok(self, ["-c", "import sys; print('boom'); sys.exit(3)"])
