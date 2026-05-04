@@ -26,9 +26,27 @@ REQUIRED_PATHS = [
 ]
 
 REQUIRED_DIRS = [
-    "docs", "control_plane", "contracts", "schemas", "policy", "tests", "fixtures", "tools", "scripts",
-    "apps", "packages", "connectors", "pipelines", "pipeline_specs", "data", "release", "runtime",
-    "infra", "configs", "migrations", "examples",
+    "docs",
+    "control_plane",
+    "contracts",
+    "schemas",
+    "policy",
+    "tests",
+    "fixtures",
+    "tools",
+    "scripts",
+    "apps",
+    "packages",
+    "connectors",
+    "pipelines",
+    "pipeline_specs",
+    "data",
+    "release",
+    "runtime",
+    "infra",
+    "configs",
+    "migrations",
+    "examples",
 ]
 
 
@@ -48,7 +66,3 @@ def main() -> int:
 
     print("PASS", "required repository skeleton present")
     return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
