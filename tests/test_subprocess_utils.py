@@ -13,6 +13,8 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertEqual(cmd[0], sys.executable)
         self.assertEqual(cmd[1:], ["-c", "print('ok')"])
 
+    def test_build_python_cmd_without_args(self):
+        self.assertEqual(build_python_cmd([]), [sys.executable])
 
     def test_format_python_args_includes_interpreter(self):
         rendered = format_python_args(["-c", "print('ok')"])
@@ -85,5 +87,4 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertIn("boom", msg)
         self.assertIn("cmd=", msg)
         self.assertIn("stdout:", msg)
-
         self.assertIn("stderr:", msg)
