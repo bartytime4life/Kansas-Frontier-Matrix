@@ -1,14 +1,8 @@
-import subprocess
-import sys
 import unittest
+
+from tests.subprocess_utils import assert_python_ok
 
 
 class SourceLedgerTests(unittest.TestCase):
-    def test_source_ledger_check(self):
-        result = subprocess.run(
-            [sys.executable, "tools/check_source_ledger.py"],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+    def test_check_source_ledger(self):
+        assert_python_ok(self, ["tools/check_source_ledger.py"])
