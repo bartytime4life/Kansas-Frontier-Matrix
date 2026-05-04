@@ -11,6 +11,11 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertIn("-c", rendered)
         self.assertIn("print", rendered)
 
+    def test_format_python_args_handles_spaces(self):
+        rendered = format_python_args(["-c", "print('hello world')"])
+        self.assertIn("hello world", rendered)
+        self.assertIn("'", rendered)
+
     def test_run_python_success(self):
         result = run_python(["-c", "print('ok')"])
         self.assertEqual(result.returncode, 0)
