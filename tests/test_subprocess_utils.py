@@ -1,5 +1,7 @@
 import shlex
+import subprocess
 import sys
+import tempfile
 import unittest
 
 from tests.subprocess_utils import assert_python_ok, format_python_args, run_python
@@ -30,6 +32,16 @@ class SubprocessUtilsTests(unittest.TestCase):
         result = run_python(["-c", "print('ok')"])
         self.assertEqual(result.returncode, 0)
         self.assertIn("ok", result.stdout)
+
+    def test_run_python_honors_cwd(self):
+        with tempfile.TemporaryDirectory() as td:
+            result = run_python(["-c", "import os; print(os.getcwd())"], cwd=td)
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(result.stdout.strip(), td)
+
+    def test_run_python_timeout_raises(self):
+        with self.assertRaises(subprocess.TimeoutExpired):
+            run_python(["-c", "import time; time.sleep(0.2)"], timeout_seconds=0.01)
 
     def test_assert_python_ok_success(self):
         assert_python_ok(self, ["-c", "print('ok')"])

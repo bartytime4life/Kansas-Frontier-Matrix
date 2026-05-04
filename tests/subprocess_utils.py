@@ -2,6 +2,7 @@ import shlex
 import subprocess
 import sys
 import unittest
+from pathlib import Path
 from typing import Sequence
 
 
@@ -10,7 +11,11 @@ def format_python_args(args: Sequence[str]) -> str:
     return shlex.join([sys.executable, *args])
 
 
-def run_python(args: Sequence[str], timeout_seconds: float = 30.0) -> subprocess.CompletedProcess[str]:
+def run_python(
+    args: Sequence[str],
+    timeout_seconds: float = 30.0,
+    cwd: str | Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     """Run a Python subprocess with captured output and timeout."""
     return subprocess.run(
         [sys.executable, *args],
@@ -18,6 +23,7 @@ def run_python(args: Sequence[str], timeout_seconds: float = 30.0) -> subprocess
         capture_output=True,
         text=True,
         timeout=timeout_seconds,
+        cwd=cwd,
     )
 
 
@@ -25,11 +31,12 @@ def assert_python_ok(
     testcase: unittest.TestCase,
     args: Sequence[str],
     timeout_seconds: float = 30.0,
+    cwd: str | Path | None = None,
 ) -> None:
     """Assert that a Python subprocess succeeds, otherwise fail with rich context."""
     cmd = format_python_args(args)
     try:
-        result = run_python(args, timeout_seconds=timeout_seconds)
+        result = run_python(args, timeout_seconds=timeout_seconds, cwd=cwd)
     except subprocess.TimeoutExpired as exc:
         testcase.fail(f"python subprocess timed out after {timeout_seconds}s for cmd={cmd}: {exc}")
         return
