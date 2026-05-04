@@ -1,0 +1,23 @@
+{
+  "fetch_policy_decision_id": "fpd-usgs_water_data.mock_allow_simulation",
+  "fetch_plan_id": "plan-usgs_water_data.mock_allow_simulation",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "activation_gate_decision_ids": [
+    "gate-usgs_water_data-manual-review"
+  ],
+  "rights_status": "UNKNOWN",
+  "terms_review_status": "NEEDS_VERIFICATION",
+  "source_role_status": "NEEDS_VERIFICATION",
+  "connector_enabled": false,
+  "data_fetch_allowed": false,
+  "no_network": true,
+  "transport": "offline_mock",
+  "policy_rules_evaluated": [
+    "no_live_fetch"
+  ],
+  "denied_rules": [],
+  "abstain_reasons": [],
+  "blockers": [],
+  "finite_result": "ALLOW_SIMULATION"
+}

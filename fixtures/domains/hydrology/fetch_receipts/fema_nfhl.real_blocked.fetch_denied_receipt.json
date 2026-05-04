@@ -1,0 +1,16 @@
+{
+  "fetch_denied_receipt_id": "fd-fema_nfhl",
+  "fetch_plan_id": "plan-fema_nfhl.real_blocked",
+  "connector_id": "connector-fema_nfhl",
+  "source_id": "fema-nfhl",
+  "denial_reason": "blocked by gate",
+  "denied_rules": [
+    "live_fetch_blocked"
+  ],
+  "activation_gate_decision_ids": [
+    "gate-fema_nfhl-manual-review"
+  ],
+  "policy_decision_id": "fetch-policy-fema_nfhl",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_state": "DENY"
+}
