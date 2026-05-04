@@ -26,9 +26,27 @@ REQUIRED_PATHS = [
 ]
 
 REQUIRED_DIRS = [
-    "docs", "control_plane", "contracts", "schemas", "policy", "tests", "fixtures", "tools", "scripts",
-    "apps", "packages", "connectors", "pipelines", "pipeline_specs", "data", "release", "runtime",
-    "infra", "configs", "migrations", "examples",
+    "docs",
+    "control_plane",
+    "contracts",
+    "schemas",
+    "policy",
+    "tests",
+    "fixtures",
+    "tools",
+    "scripts",
+    "apps",
+    "packages",
+    "connectors",
+    "pipelines",
+    "pipeline_specs",
+    "data",
+    "release",
+    "runtime",
+    "infra",
+    "configs",
+    "migrations",
+    "examples",
 ]
 
 
