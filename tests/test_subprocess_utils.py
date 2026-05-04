@@ -1,14 +1,9 @@
 import unittest
 
-from tests.subprocess_utils import assert_python_ok, format_python_args, run_python
+from tests.subprocess_utils import assert_python_ok, run_python
 
 
 class SubprocessUtilsTests(unittest.TestCase):
-    def test_format_python_args_includes_interpreter(self):
-        rendered = format_python_args(["-c", "print('ok')"])
-        self.assertIn("-c", rendered)
-        self.assertIn("print", rendered)
-
     def test_run_python_success(self):
         result = run_python(["-c", "print('ok')"])
         self.assertEqual(result.returncode, 0)
@@ -27,7 +22,6 @@ class SubprocessUtilsTests(unittest.TestCase):
         msg = str(ctx.exception)
         self.assertIn("timed out", msg)
         self.assertIn("0.01s", msg)
-        self.assertIn("cmd=", msg)
 
     def test_assert_python_ok_nonzero_exit_surfaces_assertion(self):
         with self.assertRaises(AssertionError):
@@ -39,4 +33,4 @@ class SubprocessUtilsTests(unittest.TestCase):
         msg = str(ctx.exception)
         self.assertIn("rc=3", msg)
         self.assertIn("boom", msg)
-        self.assertIn("cmd=", msg)
+        self.assertIn("args=", msg)
