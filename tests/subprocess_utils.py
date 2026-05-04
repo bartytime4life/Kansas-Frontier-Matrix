@@ -5,19 +5,21 @@ import unittest
 from pathlib import Path
 from typing import Sequence
 
+PythonArgs = Sequence[str]
 
-def build_python_cmd(args: Sequence[str]) -> list[str]:
+
+def build_python_cmd(args: PythonArgs) -> list[str]:
     """Build the Python command argv used by subprocess helpers."""
     return [sys.executable, *args]
 
 
-def format_python_args(args: Sequence[str]) -> str:
+def format_python_args(args: PythonArgs) -> str:
     """Render the python command used by subprocess helpers."""
     return shlex.join(build_python_cmd(args))
 
 
 def run_python(
-    args: Sequence[str],
+    args: PythonArgs,
     timeout_seconds: float = 30.0,
     cwd: str | Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
@@ -34,7 +36,7 @@ def run_python(
 
 def assert_python_ok(
     testcase: unittest.TestCase,
-    args: Sequence[str],
+    args: PythonArgs,
     timeout_seconds: float = 30.0,
     cwd: str | Path | None = None,
 ) -> None:
