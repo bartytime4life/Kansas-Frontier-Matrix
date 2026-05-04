@@ -4,10 +4,16 @@ import sys
 import tempfile
 import unittest
 
-from tests.subprocess_utils import assert_python_ok, format_python_args, run_python
+from tests.subprocess_utils import assert_python_ok, build_python_cmd, format_python_args, run_python
 
 
 class SubprocessUtilsTests(unittest.TestCase):
+    def test_build_python_cmd_prefixes_interpreter(self):
+        cmd = build_python_cmd(["-c", "print('ok')"])
+        self.assertEqual(cmd[0], sys.executable)
+        self.assertEqual(cmd[1:], ["-c", "print('ok')"])
+
+
     def test_format_python_args_includes_interpreter(self):
         rendered = format_python_args(["-c", "print('ok')"])
         self.assertTrue(rendered.startswith(sys.executable))
@@ -78,4 +84,6 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertIn("rc=3", msg)
         self.assertIn("boom", msg)
         self.assertIn("cmd=", msg)
+        self.assertIn("stdout:", msg)
+
         self.assertIn("stderr:", msg)

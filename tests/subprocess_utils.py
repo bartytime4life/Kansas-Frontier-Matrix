@@ -6,9 +6,14 @@ from pathlib import Path
 from typing import Sequence
 
 
+def build_python_cmd(args: Sequence[str]) -> list[str]:
+    """Build the Python command argv used by subprocess helpers."""
+    return [sys.executable, *args]
+
+
 def format_python_args(args: Sequence[str]) -> str:
     """Render the python command used by subprocess helpers."""
-    return shlex.join([sys.executable, *args])
+    return shlex.join(build_python_cmd(args))
 
 
 def run_python(
@@ -18,7 +23,7 @@ def run_python(
 ) -> subprocess.CompletedProcess[str]:
     """Run a Python subprocess with captured output and timeout."""
     return subprocess.run(
-        [sys.executable, *args],
+        build_python_cmd(args),
         check=False,
         capture_output=True,
         text=True,
