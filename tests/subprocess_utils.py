@@ -1,10 +1,17 @@
+import shlex
 import subprocess
 import sys
 import unittest
 from typing import Sequence
 
 
+def format_python_args(args: Sequence[str]) -> str:
+    """Render the python command used by subprocess helpers."""
+    return shlex.join([sys.executable, *args])
+
+
 def run_python(args: Sequence[str], timeout_seconds: float = 30.0) -> subprocess.CompletedProcess[str]:
+    """Run a Python subprocess with captured output and timeout."""
     return subprocess.run(
         [sys.executable, *args],
         check=False,
@@ -19,16 +26,18 @@ def assert_python_ok(
     args: Sequence[str],
     timeout_seconds: float = 30.0,
 ) -> None:
+    """Assert that a Python subprocess succeeds, otherwise fail with rich context."""
+    cmd = format_python_args(args)
     try:
         result = run_python(args, timeout_seconds=timeout_seconds)
     except subprocess.TimeoutExpired as exc:
-        testcase.fail(f"python subprocess timed out after {timeout_seconds}s for args={list(args)}: {exc}")
+        testcase.fail(f"python subprocess timed out after {timeout_seconds}s for cmd={cmd}: {exc}")
         return
 
     if result.returncode != 0:
         testcase.fail(
             "python subprocess failed"
-            f" (rc={result.returncode}, args={list(args)}):\n"
+            f" (rc={result.returncode}, cmd={cmd}):\n"
             f"stdout:\n{result.stdout}\n"
             f"stderr:\n{result.stderr}"
         )
