@@ -1,0 +1,36 @@
+{
+  "activation_gate_decision_id": "gate-usgs_3dep-manual-review",
+  "source_id": "usgs-3dep",
+  "descriptor_id": "usgs-3dep",
+  "documentation_check_ids": [
+    "doccheck-usgs_3dep"
+  ],
+  "verification_receipt_ids": [
+    "svr-usgs_3dep"
+  ],
+  "terms_review_note_ids": [
+    "terms-usgs_3dep"
+  ],
+  "source_role_review_note_ids": [
+    "role-usgs_3dep"
+  ],
+  "policy_decision_id": "policy-usgs_3dep-blocked",
+  "rights_status": "UNKNOWN",
+  "terms_review_status": "NEEDS_VERIFICATION",
+  "source_role_status": "NEEDS_VERIFICATION",
+  "connector_enabled": false,
+  "data_fetch_allowed": false,
+  "public_release_allowed": false,
+  "no_network_validation_required": true,
+  "activation_status_before": "blocked_needs_verification",
+  "activation_status_after": "ready_for_manual_review",
+  "blockers": [
+    "manual_steward_review_required"
+  ],
+  "required_next_reviews": [
+    "steward",
+    "legal"
+  ],
+  "rollback_target": "descriptor_only",
+  "finite_result": "READY_FOR_MANUAL_REVIEW"
+}

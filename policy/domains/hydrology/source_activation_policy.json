@@ -1,0 +1,15 @@
+{
+  "policy_name": "hydrology_source_activation_policy",
+  "version": "1",
+  "rules": [
+    "DENY if source_role missing",
+    "DENY if source_authority_level missing",
+    "BLOCKED if official docs not checked",
+    "DENY if rights UNKNOWN and public_release_allowed true",
+    "DENY if terms UNKNOWN and data_fetch_allowed true",
+    "DENY if activation_status active in PR-003",
+    "DENY if WBD used for streamflow observations",
+    "DENY if NFHL used for observed flood events",
+    "DENY if 3DEP used for streamflow/flood observation evidence"
+  ]
+}

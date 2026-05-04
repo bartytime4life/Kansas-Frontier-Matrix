@@ -1,0 +1,19 @@
+{
+  "fetch_receipt_id": "fr-1",
+  "fetch_plan_id": "plan-usgs_water_data.mock_allowed",
+  "connector_id": "connector-usgs_water_data",
+  "source_id": "usgs-water-data",
+  "transport": "offline_mock",
+  "simulation": true,
+  "no_network": true,
+  "no_credentials_used": true,
+  "no_data_fetched_from_source": true,
+  "mock_response_fixture": "usgs_water_data.synthetic_streamflow_response.json",
+  "output_object_ids": [
+    "sim-1"
+  ],
+  "output_lifecycle_target": "WORK",
+  "evidence_boundary": "not EvidenceBundle",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_state": "SIMULATED"
+}

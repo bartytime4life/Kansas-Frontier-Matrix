@@ -1,0 +1,36 @@
+{
+  "activation_gate_decision_id": "gate-usgs_nhdplus_hr-manual-review",
+  "source_id": "usgs-nhdplus-hr",
+  "descriptor_id": "usgs-nhdplus-hr",
+  "documentation_check_ids": [
+    "doccheck-usgs_nhdplus_hr"
+  ],
+  "verification_receipt_ids": [
+    "svr-usgs_nhdplus_hr"
+  ],
+  "terms_review_note_ids": [
+    "terms-usgs_nhdplus_hr"
+  ],
+  "source_role_review_note_ids": [
+    "role-usgs_nhdplus_hr"
+  ],
+  "policy_decision_id": "policy-usgs_nhdplus_hr-blocked",
+  "rights_status": "UNKNOWN",
+  "terms_review_status": "NEEDS_VERIFICATION",
+  "source_role_status": "NEEDS_VERIFICATION",
+  "connector_enabled": false,
+  "data_fetch_allowed": false,
+  "public_release_allowed": false,
+  "no_network_validation_required": true,
+  "activation_status_before": "blocked_needs_verification",
+  "activation_status_after": "ready_for_manual_review",
+  "blockers": [
+    "manual_steward_review_required"
+  ],
+  "required_next_reviews": [
+    "steward",
+    "legal"
+  ],
+  "rollback_target": "descriptor_only",
+  "finite_result": "READY_FOR_MANUAL_REVIEW"
+}
