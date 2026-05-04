@@ -19,3 +19,17 @@ sources:
     status: NEEDS VERIFICATION
   - id: SRC-HYDROLOGY
     status: NEEDS VERIFICATION
+hydrology_sources:
+  - source_id: usgs-water-data
+    source_family: usgs_water_data
+    source_role: observed_hydrology_source
+    source_authority_level: official_federal
+    allowed_claim_types: [observed_streamflow_time_series]
+    disallowed_claim_types: [unverified_public_claim]
+    activation_status: blocked_needs_verification
+    review_status: NEEDS_VERIFICATION
+    descriptor_path: data/registry/sources/hydrology/usgs-water-data.source_descriptor.json
+    verification_receipt_ids: [svr-usgs-water-data]
+    last_reviewed_at: null
+    next_review_required: manual_doc_check
+    finite_gate_state: BLOCKED

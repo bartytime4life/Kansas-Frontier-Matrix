@@ -1,0 +1,19 @@
+{
+  "source_verification_receipt_id": "svr-fema-nfhl",
+  "source_id": "fema-nfhl",
+  "checked": false,
+  "checked_at": null,
+  "check_method": "manual_doc_review",
+  "checked_urls": [
+    "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+  ],
+  "result": "NOT_CHECKED_NEEDS_VERIFICATION",
+  "evidence_collected": [],
+  "limitations": [
+    "No network doc verification in this run"
+  ],
+  "reviewer": "codex",
+  "no_data_fetched": true,
+  "network_required_for_recheck": true,
+  "finite_state": "NOT_CHECKED_NEEDS_VERIFICATION"
+}
