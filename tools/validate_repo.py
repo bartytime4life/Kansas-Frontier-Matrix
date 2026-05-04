@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 
 REQUIRED_PATHS = [
     "README.md",
@@ -14,6 +15,7 @@ REQUIRED_PATHS = [
     "fixtures/source/source_descriptor.valid.json",
     "tools/validate_fixtures.py",
     "tools/validate_schema_conformance.py",
+    "tools/validate_fixture_schema_mapping.py",
     "tools/validate_api_contracts.py",
     "apps/api/kfm_mock_api.py",
     "apps/web/index.html",
@@ -54,6 +56,12 @@ def main() -> int:
 
     if missing:
         print("FAIL", missing)
+        return 1
+
+    # Compose with directory-rules gate so validate_repo is a complete entry check.
+    dir_rules = subprocess.run(["python", "tools/check_directory_rules.py"]).returncode
+    if dir_rules != 0:
+        print("FAIL", "directory rules check failed")
         return 1
 
     print("PASS", "required repository skeleton present")
