@@ -1,4 +1,3 @@
-import subprocess
 import unittest
 
 from tests.subprocess_utils import assert_python_ok, run_python
