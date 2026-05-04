@@ -2,7 +2,17 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-FORBIDDEN = ["data/raw/", "data/work/", "data/quarantine/", "canonical", "proof-pack", "direct_model"]
+FORBIDDEN = [
+    "data/raw/",
+    "data/work/",
+    "data/quarantine/",
+    "canonical",
+    "proof-pack",
+    "direct_model",
+    "unpublished",
+    "review-only",
+    "steward-only",
+]
 TARGETS = [
     "fixtures/ui/evidence_drawer_payload.valid.json",
     "fixtures/ai/focus_mode_response.answer.valid.json",

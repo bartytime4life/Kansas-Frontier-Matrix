@@ -1,0 +1,7 @@
+{
+  "claim_id": "claim-hydro-synth-001",
+  "text": "Sample HUC12 HYDRO_SYNTH_001 has a synthetic streamflow observation for 2026-04-20.",
+  "evidence_ref": "evr-hydro-synth-001",
+  "synthetic_label": "SYNTHETIC_TEST",
+  "knowledge_character": "SYNTHETIC_TEST"
+}

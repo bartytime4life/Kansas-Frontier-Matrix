@@ -1,5 +1,6 @@
 {
-  "id": "evr-001",
-  "bundle_id": "evb-hydro-001",
+  "id": "evr-hydro-synth-001",
+  "bundle_id": "evb-hydro-synth-001",
+  "claim_id": "claim-hydro-synth-001",
   "knowledge_character": "SYNTHETIC_TEST"
 }
