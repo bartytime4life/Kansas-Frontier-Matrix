@@ -1,0 +1,7 @@
+{
+  "id": "evb-hydro-synth-invalid",
+  "evidence_refs": [],
+  "source_descriptor_id": "src-hydro-synth-001",
+  "closure_status": "INCOMPLETE",
+  "knowledge_character": "SYNTHETIC_TEST"
+}
