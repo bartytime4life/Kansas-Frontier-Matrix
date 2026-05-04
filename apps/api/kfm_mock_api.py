@@ -33,6 +33,10 @@ def focus_decision(request: dict) -> tuple[dict, int]:
 
 
 class Handler(BaseHTTPRequestHandler):
+    def log_message(self, format: str, *args) -> None:
+        # Keep validation/test output clean in synthetic baseline runs.
+        return
+
     def _json(self, payload: dict, code: int = 200) -> None:
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
