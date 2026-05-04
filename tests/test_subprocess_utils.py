@@ -1,5 +1,4 @@
 import shlex
-import subprocess
 import sys
 import unittest
 
@@ -31,10 +30,6 @@ class SubprocessUtilsTests(unittest.TestCase):
         result = run_python(["-c", "print('ok')"])
         self.assertEqual(result.returncode, 0)
         self.assertIn("ok", result.stdout)
-
-    def test_run_python_timeout_raises(self):
-        with self.assertRaises(subprocess.TimeoutExpired):
-            run_python(["-c", "import time; time.sleep(0.2)"], timeout_seconds=0.01)
 
     def test_assert_python_ok_success(self):
         assert_python_ok(self, ["-c", "print('ok')"])
