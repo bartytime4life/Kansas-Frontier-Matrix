@@ -4,6 +4,7 @@ python tools/validate_repo.py
 python tools/validate_fixtures.py
 python tools/validate_schema_conformance.py
 python tools/validate_fixture_schema_mapping.py
+python tools/validate_docs_truth_labels.py
 python tools/check_directory_rules.py
 python tools/check_no_public_internal_paths.py
 python tools/validate_api_contracts.py

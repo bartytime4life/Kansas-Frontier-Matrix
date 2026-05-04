@@ -11,6 +11,7 @@ jobs:
       - run: python tools/validate_fixtures.py
       - run: python tools/validate_schema_conformance.py
       - run: python tools/validate_fixture_schema_mapping.py
+      - run: python tools/validate_docs_truth_labels.py
       - run: python tools/check_directory_rules.py
       - run: python tools/check_no_public_internal_paths.py
       - run: python tools/validate_api_contracts.py
