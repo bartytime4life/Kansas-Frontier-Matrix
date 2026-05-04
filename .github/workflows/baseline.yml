@@ -1,0 +1,21 @@
+name: baseline
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python tools/validate_repo.py
+      - run: python tools/validate_fixtures.py
+      - run: python tools/validate_schema_conformance.py
+      - run: python tools/validate_fixture_schema_mapping.py
+      - run: python tools/validate_docs_truth_labels.py
+      - run: python tools/check_directory_rules.py
+      - run: python tools/check_no_public_internal_paths.py
+      - run: python tools/validate_api_contracts.py
+      - run: python tools/check_promotion_receipt_determinism.py
+      - run: python tools/validate_release_manifest_consistency.py
+      - run: python -m unittest discover -s tests
+      - run: bash scripts/validate_all.sh
