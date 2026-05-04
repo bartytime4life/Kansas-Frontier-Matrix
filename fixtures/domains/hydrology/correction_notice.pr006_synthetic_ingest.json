@@ -1,0 +1,14 @@
+{
+  "correction_notice_id": "corr-pr006",
+  "affected_raw_capture_id": "raw-1",
+  "affected_work_candidate_id": "work-1",
+  "affected_quarantine_record_id": "qr-1",
+  "affected_promotion_dry_run_decision_id": "pd-1",
+  "correction_type": "WITHDRAW",
+  "reason": "synthetic ingest drill correction path",
+  "replacement_candidate_id": null,
+  "evidence_ref": null,
+  "review_status": "OPEN",
+  "issued_at": "2026-05-04T00:00:00Z",
+  "finite_state": "CORRECTION_PENDING"
+}

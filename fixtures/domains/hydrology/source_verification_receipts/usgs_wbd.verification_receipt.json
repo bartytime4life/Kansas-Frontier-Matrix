@@ -1,0 +1,24 @@
+{
+  "source_verification_receipt_id": "svr-usgs_wbd",
+  "source_id": "usgs-wbd",
+  "documentation_check_ids": [
+    "doccheck-usgs_wbd"
+  ],
+  "checked": false,
+  "checked_at": null,
+  "check_method": "network_unavailable_or_not_run",
+  "checked_urls": [],
+  "result": "NOT_CHECKED_NEEDS_VERIFICATION",
+  "evidence_collected": [],
+  "limitations": [
+    "docs not checked"
+  ],
+  "reviewer": "codex",
+  "no_data_fetched": true,
+  "no_dataset_downloaded": true,
+  "no_api_records_queried": true,
+  "no_tiles_requested": true,
+  "no_credentials_used": true,
+  "network_required_for_recheck": true,
+  "finite_state": "NOT_CHECKED_NEEDS_VERIFICATION"
+}

@@ -1,0 +1,42 @@
+{
+  "ingest_plan_id": "ingest-plan-raw",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "fetch_plan_id": "plan-usgs_water_data.mock_allowed",
+  "fetch_receipt_id": "fr-1",
+  "source_descriptor_id": "usgs-water-data",
+  "activation_gate_decision_ids": [
+    "gate-usgs_water_data-manual-review"
+  ],
+  "input_object_ids": [
+    "sim-1"
+  ],
+  "input_object_paths": [
+    "fixtures/domains/hydrology/mock_fetch_responses/usgs_water_data.synthetic_streamflow_response.json"
+  ],
+  "input_object_hashes": [
+    "hash-sim-1"
+  ],
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "target_lifecycle_stage": "RAW",
+  "allowed_target_lifecycle_stages": [
+    "RAW",
+    "QUARANTINE"
+  ],
+  "prohibited_target_lifecycle_stages": [
+    "PUBLISHED"
+  ],
+  "public_release_allowed": false,
+  "evidence_boundary": "not EvidenceBundle",
+  "required_receipts": [
+    "fetch"
+  ],
+  "required_validators": [
+    "ingest"
+  ],
+  "blockers": [],
+  "rollback_target": "internal",
+  "finite_state": "PLAN_READY_FOR_SYNTHETIC_RAW_CAPTURE"
+}

@@ -1,0 +1,21 @@
+{
+  "source_terms_review_note_id": "terms-usgs_water_data",
+  "source_id": "usgs-water-data",
+  "documentation_check_ids": [
+    "doccheck-usgs_water_data"
+  ],
+  "terms_review_status": "NEEDS_VERIFICATION",
+  "rights_status": "UNKNOWN",
+  "attribution_requirements": "NEEDS VERIFICATION",
+  "redistribution_notes": "NEEDS VERIFICATION",
+  "public_release_allowed": false,
+  "data_fetch_allowed": false,
+  "connector_enabled": false,
+  "unresolved_terms_questions": [
+    "License/terms verification pending"
+  ],
+  "required_legal_or_steward_review": true,
+  "reviewed_by": "codex",
+  "reviewed_at": null,
+  "finite_state": "BLOCKED"
+}

@@ -1,0 +1,41 @@
+{
+  "rollback_card_id": "rollback-pr006",
+  "affected_ingest_plan_ids": [
+    "ingest-plan-raw",
+    "ingest-plan-quarantine"
+  ],
+  "affected_raw_capture_ids": [
+    "raw-1"
+  ],
+  "affected_quarantine_record_ids": [
+    "qr-1"
+  ],
+  "affected_work_candidate_ids": [
+    "work-1"
+  ],
+  "affected_receipt_ids": [
+    "rcr-1",
+    "qrec-1",
+    "wr-1"
+  ],
+  "affected_validation_report_ids": [
+    "vr-1"
+  ],
+  "affected_promotion_dry_run_decision_ids": [
+    "pd-1"
+  ],
+  "affected_correction_notice_ids": [
+    "corr-pr006"
+  ],
+  "rollback_target": "internal",
+  "rollback_reason": "synthetic drill rollback",
+  "required_actions": [
+    "revert fixtures"
+  ],
+  "affected_public_surfaces": [
+    "governed_api"
+  ],
+  "no_published_artifacts_affected": true,
+  "no_real_source_data_fetched": true,
+  "finite_state": "ROLLBACK_READY"
+}

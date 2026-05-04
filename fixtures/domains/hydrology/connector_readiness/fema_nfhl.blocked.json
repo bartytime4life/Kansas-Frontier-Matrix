@@ -1,0 +1,22 @@
+{
+  "connector_readiness_report_id": "crr-fema_nfhl",
+  "source_id": "fema-nfhl",
+  "connector_id": "connector-fema_nfhl",
+  "descriptor_status": "present",
+  "documentation_status": "needs_verification",
+  "terms_review_status": "blocked",
+  "source_role_status": "blocked",
+  "activation_gate_status": "manual_review_required",
+  "connector_contract_status": "ready",
+  "fetch_policy_status": "blocked_or_sim_only",
+  "offline_simulation_status": "blocked",
+  "live_fetch_status": "blocked",
+  "public_release_status": "blocked",
+  "blockers": [
+    "connector_disabled"
+  ],
+  "required_next_reviews": [
+    "steward"
+  ],
+  "finite_state": "BLOCKED_CONNECTOR_DISABLED"
+}

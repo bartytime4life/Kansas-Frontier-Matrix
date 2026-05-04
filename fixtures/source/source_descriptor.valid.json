@@ -1,0 +1,16 @@
+{
+  "source_id": "src-hydro-synth-001",
+  "source_name": "Synthetic Hydrology Generator",
+  "source_role": "synthetic_observation_authority",
+  "source_type": "synthetic",
+  "rights_status": "GRANTED_SYNTHETIC",
+  "public_release_allowed": true,
+  "synthetic_generation_time": "2026-04-20T00:00:00Z",
+  "no_network": true,
+  "activation_status": "synthetic_only",
+  "synthetic_label": "SYNTHETIC_TEST",
+  "live_source_activation": "NEEDS VERIFICATION",
+  "id": "src-hydro-001",
+  "knowledge_character": "SYNTHETIC_TEST",
+  "sensitivity": "PUBLIC_SAFE"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "focus-res-ans",
+  "outcome": "ANSWER",
+  "citations": [
+    "evr-hydro-synth-001",
+    "evb-hydro-synth-001"
+  ],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
