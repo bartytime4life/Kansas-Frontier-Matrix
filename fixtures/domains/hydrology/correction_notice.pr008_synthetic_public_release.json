@@ -1,0 +1,21 @@
+{
+  "correction_notice_id": "correction-pr008-hydro-synth-001",
+  "affected_claim_id": "claim-hydro-synth-001",
+  "affected_evidence_bundle_id": "evb-hydro-synth-001",
+  "affected_release_candidate_id": "release-candidate-hydro-synth-001",
+  "affected_release_manifest_id": "release-manifest-hydro-synth-public-001",
+  "affected_published_artifact_ids": [
+    "pub-artifact-hydro-claim-001",
+    "pub-artifact-hydro-layer-001",
+    "pub-artifact-hydro-evidence-drawer-001",
+    "pub-artifact-hydro-focus-001"
+  ],
+  "correction_type": "SYNTHETIC_DRILL_CORRECTION",
+  "reason": "Drill rollback preparedness",
+  "replacement_claim_id": null,
+  "evidence_ref": "evr-hydro-synth-001",
+  "review_status": "REVIEWED",
+  "issued_at": "2026-05-04T00:00:00Z",
+  "finite_state": "CORRECTION_READY",
+  "synthetic": true
+}

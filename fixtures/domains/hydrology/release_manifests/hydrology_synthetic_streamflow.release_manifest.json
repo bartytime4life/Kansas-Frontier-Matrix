@@ -1,0 +1,84 @@
+{
+  "release_manifest_id": "release-manifest-hydro-synth-public-001",
+  "domain": "hydrology",
+  "release_title": "PR-008 synthetic release drill",
+  "release_candidate_id": "release-candidate-hydro-synth-001",
+  "release_scope": "synthetic_public_safe",
+  "release_class": "synthetic_public_safe",
+  "lifecycle_stage": "PUBLISHED",
+  "content_spec_hash": "spechash-pr008",
+  "release_hash": "releasehash-pr008",
+  "public_artifact_ids": [
+    "pub-artifact-hydro-claim-001",
+    "pub-artifact-hydro-layer-001",
+    "pub-artifact-hydro-evidence-drawer-001",
+    "pub-artifact-hydro-focus-001"
+  ],
+  "included_claim_ids": [
+    "claim-hydro-synth-001"
+  ],
+  "included_evidence_bundle_ids": [
+    "evb-hydro-synth-001"
+  ],
+  "included_catalog_record_ids": [
+    "catalog-hydro-synth-001"
+  ],
+  "included_triplet_delta_ids": [
+    "triplet-hydro-synth-001"
+  ],
+  "included_layer_manifest_ids": [
+    "layer-manifest-hydro-synth-public-001"
+  ],
+  "included_policy_decision_ids": [
+    "policy-hydro-synth-allow-001"
+  ],
+  "included_review_record_ids": [
+    "review-hydro-synth-public-001"
+  ],
+  "included_validation_report_ids": [
+    "release-validation-pr008-hydro-synth-001"
+  ],
+  "release_receipt_ids": [
+    "release-receipt-hydro-synth-public-001"
+  ],
+  "correction_notice_ids": [
+    "correction-pr008-hydro-synth-001"
+  ],
+  "rollback_card_ids": [
+    "rollback-pr008-hydro-synth-001"
+  ],
+  "public_surface_ids": [
+    "public_api",
+    "mock_ui",
+    "evidence_drawer",
+    "focus"
+  ],
+  "rights_status": "SYNTHETIC_PUBLIC_SAFE",
+  "sensitivity_status": "SYNTHETIC_PUBLIC_SAFE",
+  "release_status": "PUBLISHED_SYNTHETIC",
+  "published_at": "2026-05-04T00:00:00Z",
+  "prohibited_source_paths": [
+    "blocked://raw/",
+    "blocked://work/",
+    "blocked://quarantine/",
+    "blocked://processed/",
+    "connectors/",
+    "data/proofs/",
+    "review_only/",
+    "steward_only/",
+    "model_runtime_output/"
+  ],
+  "prohibited_object_types": [
+    "RawCaptureReceipt",
+    "WorkNormalizationReceipt",
+    "FetchReceipt",
+    "SourceDescriptor"
+  ],
+  "evidence_boundary": "ReleaseManifest is not EvidenceBundle",
+  "correction_path": "correction-pr008-hydro-synth-001",
+  "rollback_target": "rollback-pr008-hydro-synth-001",
+  "finite_state": "PUBLISHED_SYNTHETIC",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true
+}

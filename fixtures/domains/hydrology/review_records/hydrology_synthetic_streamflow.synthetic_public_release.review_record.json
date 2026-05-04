@@ -1,0 +1,67 @@
+{
+  "review_record_id": "review-hydro-synth-public-001",
+  "domain": "hydrology",
+  "review_scope": "synthetic_public_safe_hydrology_release",
+  "reviewed_object_ids": [
+    "release-candidate-hydro-synth-001",
+    "evb-hydro-synth-001",
+    "claim-hydro-synth-001"
+  ],
+  "reviewed_object_types": [
+    "ReleaseCandidate",
+    "EvidenceBundle",
+    "HydrologyClaim"
+  ],
+  "claim_ids": [
+    "claim-hydro-synth-001"
+  ],
+  "evidence_bundle_ids": [
+    "evb-hydro-synth-001"
+  ],
+  "catalog_record_ids": [
+    "catalog-hydro-synth-001"
+  ],
+  "layer_manifest_ids": [
+    "layer-manifest-hydro-synth-public-001"
+  ],
+  "release_candidate_ids": [
+    "release-candidate-hydro-synth-001"
+  ],
+  "policy_decision_ids": [
+    "policy-hydro-synth-allow-001"
+  ],
+  "validation_report_ids": [
+    "release-validation-pr008-hydro-synth-001"
+  ],
+  "reviewer_role": "human_steward",
+  "reviewer_id": "reviewer.synthetic.001",
+  "review_method": "manual_fixture_review",
+  "rights_review_status": "PASS_SYNTHETIC_ONLY",
+  "sensitivity_review_status": "PASS_SYNTHETIC_ONLY",
+  "evidence_review_status": "PASS",
+  "policy_review_status": "PASS",
+  "release_scope": "synthetic_drill_only",
+  "approved_public_surfaces": [
+    "public_api",
+    "mock_ui",
+    "evidence_drawer",
+    "focus"
+  ],
+  "denied_public_surfaces": [
+    "real_source_activation",
+    "production_deploy"
+  ],
+  "limitations": [
+    "SYNTHETIC only"
+  ],
+  "required_caveats": [
+    "Not official source data"
+  ],
+  "correction_path": "correction-pr008-hydro-synth-001",
+  "rollback_target": "rollback-pr008-hydro-synth-001",
+  "reviewed_at": "2026-05-04T00:00:00Z",
+  "finite_state": "APPROVED_SYNTHETIC_PUBLIC_RELEASE",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true
+}

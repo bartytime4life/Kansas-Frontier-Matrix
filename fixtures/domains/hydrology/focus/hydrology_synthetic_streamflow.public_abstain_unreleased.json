@@ -1,0 +1,38 @@
+{
+  "focus_response_id": "focus-hydro-synth-abstain-001",
+  "question": "What does the synthetic hydrology record say about HYDRO_SYNTH_001 on 2026-04-20?",
+  "finite_state": "ABSTAIN",
+  "answer_text": "",
+  "claim_ids": [
+    "claim-hydro-synth-001"
+  ],
+  "evidence_refs": [
+    "evr-hydro-synth-001"
+  ],
+  "evidence_bundle_ids": [
+    "evb-hydro-synth-001"
+  ],
+  "release_manifest_ids": [],
+  "published_artifact_ids": [],
+  "policy_decision_ids": [
+    "policy-hydro-synth-allow-001"
+  ],
+  "review_record_ids": [],
+  "correction_notice_ids": [],
+  "rollback_card_ids": [],
+  "citations": [],
+  "caveats": [
+    "ABSTAIN"
+  ],
+  "abstain_reasons": [
+    "release_not_ready"
+  ],
+  "deny_reasons": [],
+  "error_refs": [],
+  "model_runtime_used": false,
+  "direct_model_output_used": false,
+  "created_at": "2026-05-04T00:00:00Z",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true
+}

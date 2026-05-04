@@ -1,0 +1,46 @@
+{
+  "rollback_card_id": "rollback-pr008-hydro-synth-001",
+  "affected_review_record_ids": [
+    "review-hydro-synth-public-001"
+  ],
+  "affected_release_manifest_id": "release-manifest-hydro-synth-public-001",
+  "affected_release_receipt_ids": [
+    "release-receipt-hydro-synth-public-001"
+  ],
+  "affected_published_artifact_ids": [
+    "pub-artifact-hydro-claim-001",
+    "pub-artifact-hydro-layer-001",
+    "pub-artifact-hydro-evidence-drawer-001",
+    "pub-artifact-hydro-focus-001"
+  ],
+  "affected_public_api_response_ids": [
+    "public-api-hydro-synth-answer-001"
+  ],
+  "affected_public_layer_manifest_ids": [
+    "layer-manifest-hydro-synth-public-001"
+  ],
+  "affected_evidence_drawer_payload_ids": [
+    "evidence-drawer-hydro-synth-trust-ready-001"
+  ],
+  "affected_focus_response_ids": [
+    "focus-hydro-synth-answer-001"
+  ],
+  "affected_correction_notice_ids": [
+    "correction-pr008-hydro-synth-001"
+  ],
+  "rollback_target": "withdraw_pr008_synthetic_public_artifacts",
+  "rollback_reason": "Synthetic drill closure",
+  "required_actions": [
+    "mark artifacts superseded",
+    "set public_display_allowed false"
+  ],
+  "affected_public_surfaces": [
+    "public_api",
+    "mock_ui",
+    "evidence_drawer",
+    "focus"
+  ],
+  "no_real_source_data_fetched": true,
+  "synthetic_release_only": true,
+  "finite_state": "ROLLBACK_READY"
+}
