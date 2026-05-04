@@ -46,6 +46,10 @@ class SubprocessUtilsTests(unittest.TestCase):
     def test_assert_python_ok_success(self):
         assert_python_ok(self, ["-c", "print('ok')"])
 
+    def test_assert_python_ok_honors_cwd(self):
+        with tempfile.TemporaryDirectory() as td:
+            assert_python_ok(self, ["-c", "import os; print(os.getcwd())"], cwd=td)
+
     def test_assert_python_ok_timeout_surfaces_assertion(self):
         with self.assertRaises(AssertionError):
             assert_python_ok(self, ["-c", "import time; time.sleep(0.2)"], timeout_seconds=0.01)
