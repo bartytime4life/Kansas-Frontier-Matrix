@@ -22,6 +22,10 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertIn("-c", rendered)
         self.assertIn("print", rendered)
 
+    def test_format_python_args_matches_built_command(self):
+        args = ["-c", "print('ok')"]
+        self.assertEqual(shlex.split(format_python_args(args)), build_python_cmd(args))
+
     def test_format_python_args_without_extra_args(self):
         rendered = format_python_args([])
         self.assertEqual(shlex.split(rendered), [sys.executable])
