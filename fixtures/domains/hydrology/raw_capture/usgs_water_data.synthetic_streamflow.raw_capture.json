@@ -1,0 +1,33 @@
+{
+  "raw_capture_id": "raw-1",
+  "ingest_plan_id": "ingest-plan-raw",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "fetch_receipt_id": "fr-1",
+  "mock_response_fixture_id": "usgs_water_data.synthetic_streamflow_response",
+  "lifecycle_stage": "RAW",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "captured_at": "2026-05-04T00:00:00Z",
+  "source_time": null,
+  "observed_time": null,
+  "retrieval_time": null,
+  "content_type": "application/json",
+  "content_encoding": "utf-8",
+  "content_hash": "hash-raw",
+  "raw_payload_ref": "fixtures/...",
+  "raw_payload_summary": "synthetic test payload",
+  "rights_status": "UNKNOWN",
+  "public_release_allowed": false,
+  "evidence_boundary": "not EvidenceBundle",
+  "next_allowed_transitions": [
+    "WORK",
+    "QUARANTINE"
+  ],
+  "prohibited_transitions": [
+    "PUBLISHED",
+    "PUBLIC_API"
+  ],
+  "finite_state": "RAW_CAPTURED"
+}

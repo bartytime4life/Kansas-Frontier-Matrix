@@ -1,0 +1,36 @@
+{
+  "work_candidate_id": "work-1",
+  "raw_capture_id": "raw-1",
+  "raw_capture_receipt_id": "rcr-1",
+  "ingest_plan_id": "ingest-plan-raw",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "lifecycle_stage": "WORK",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "normalized_shape_version": "v1",
+  "normalized_fields": [
+    "value"
+  ],
+  "field_mapping_summary": "synthetic",
+  "dropped_fields": [],
+  "unit_normalization": "none",
+  "temporal_normalization": "none",
+  "spatial_scope": "synthetic",
+  "source_role_assertion": "context_only",
+  "validation_report_ids": [
+    "vr-1"
+  ],
+  "public_release_allowed": false,
+  "evidence_boundary": "not EvidenceBundle",
+  "next_allowed_transitions": [
+    "PROCESSED",
+    "QUARANTINE"
+  ],
+  "prohibited_transitions": [
+    "PUBLISHED",
+    "PUBLIC_API"
+  ],
+  "finite_state": "WORK_CANDIDATE_READY"
+}

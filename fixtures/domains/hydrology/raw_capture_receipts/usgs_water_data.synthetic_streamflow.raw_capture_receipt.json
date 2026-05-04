@@ -1,0 +1,19 @@
+{
+  "raw_capture_receipt_id": "rcr-1",
+  "raw_capture_id": "raw-1",
+  "ingest_plan_id": "ingest-plan-raw",
+  "fetch_receipt_id": "fr-1",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "synthetic": true,
+  "no_network": true,
+  "no_credentials_used": true,
+  "no_data_fetched_from_source": true,
+  "content_hash": "hash-raw",
+  "lifecycle_stage": "RAW",
+  "stored_path": "data/raw/hydrology/synthetic/raw-1.json",
+  "validation_status": "PASS",
+  "created_at": "2026-05-04T00:00:00Z",
+  "evidence_boundary": "not EvidenceBundle",
+  "finite_state": "RAW_RECEIPT_RECORDED"
+}
