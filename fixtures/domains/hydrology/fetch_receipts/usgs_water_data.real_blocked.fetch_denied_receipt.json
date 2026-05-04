@@ -1,0 +1,16 @@
+{
+  "fetch_denied_receipt_id": "fd-usgs_water_data",
+  "fetch_plan_id": "plan-usgs_water_data.real_blocked",
+  "connector_id": "connector-usgs_water_data",
+  "source_id": "usgs-water-data",
+  "denial_reason": "blocked by gate",
+  "denied_rules": [
+    "live_fetch_blocked"
+  ],
+  "activation_gate_decision_ids": [
+    "gate-usgs_water_data-manual-review"
+  ],
+  "policy_decision_id": "fetch-policy-usgs_water_data",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_state": "DENY"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "evb-hydro-synth-001",
+  "evidence_refs": ["evr-hydro-synth-001"],
+  "source_descriptor_id": "src-hydro-synth-001",
+  "closure_status": "COMPLETE",
+  "knowledge_character": "SYNTHETIC_TEST"
+}

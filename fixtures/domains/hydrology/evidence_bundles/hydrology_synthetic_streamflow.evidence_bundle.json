@@ -1,0 +1,73 @@
+{
+  "evidence_bundle_id": "eb-1",
+  "domain": "hydrology",
+  "claim_ids": [
+    "claim-1"
+  ],
+  "evidence_refs": [
+    "eref-1"
+  ],
+  "support_object_ids": [
+    "proc-obs-1",
+    "proc-rec-1",
+    "vr-pr007",
+    "cat-1",
+    "trip-1"
+  ],
+  "support_object_types": [
+    "ProcessedHydrologyObservation",
+    "ProcessedArtifactReceipt",
+    "HydrologyValidationReport",
+    "CatalogRecord",
+    "TripletDelta"
+  ],
+  "admissible_support_types": [
+    "ProcessedHydrologyObservation",
+    "ProcessedArtifactReceipt",
+    "HydrologyValidationReport",
+    "CatalogRecord",
+    "TripletDelta"
+  ],
+  "prohibited_support_types": [
+    "RawCapture",
+    "WorkCandidate",
+    "QuarantineRecord"
+  ],
+  "source_ids": [
+    "usgs-water-data"
+  ],
+  "processed_observation_ids": [
+    "proc-obs-1"
+  ],
+  "processed_receipt_ids": [
+    "proc-rec-1"
+  ],
+  "validation_report_ids": [
+    "vr-pr007"
+  ],
+  "catalog_record_ids": [
+    "cat-1"
+  ],
+  "triplet_delta_ids": [
+    "trip-1"
+  ],
+  "rights_status": "synthetic-ok",
+  "policy_decision_ids": [
+    "pd-pr007"
+  ],
+  "review_status": "READY_FOR_REVIEW",
+  "release_status": "RELEASE_NOT_READY",
+  "correction_notice_ids": [
+    "corr-pr007"
+  ],
+  "rollback_card_ids": [
+    "rb-pr007"
+  ],
+  "evidence_limitations": [
+    "internal_only"
+  ],
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "finite_state": "EVIDENCE_BUNDLE_READY_INTERNAL"
+}

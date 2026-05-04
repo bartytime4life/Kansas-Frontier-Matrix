@@ -1,0 +1,13 @@
+{
+  "quarantine_receipt_id": "qrec-1",
+  "quarantine_record_id": "qr-1",
+  "quarantine_decision_id": "qd-1",
+  "ingest_plan_id": "ingest-plan-quarantine",
+  "source_id": "usgs-water-data",
+  "failed_validators": [
+    "schema"
+  ],
+  "stored_path": "internal_object_ref",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_state": "QUARANTINE_RECEIPT_RECORDED"
+}

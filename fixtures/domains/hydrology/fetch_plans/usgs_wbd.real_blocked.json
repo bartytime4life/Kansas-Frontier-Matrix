@@ -1,0 +1,35 @@
+{
+  "fetch_plan_id": "plan-usgs_wbd.real_blocked",
+  "connector_id": "connector-usgs_wbd",
+  "source_id": "usgs-wbd",
+  "source_descriptor_id": "usgs-wbd",
+  "source_verification_receipt_ids": [
+    "svr-usgs_wbd"
+  ],
+  "source_terms_review_note_ids": [
+    "terms-usgs_wbd"
+  ],
+  "source_role_review_note_ids": [
+    "role-usgs_wbd"
+  ],
+  "activation_gate_decision_ids": [
+    "gate-usgs_wbd-manual-review"
+  ],
+  "requested_operation": "fetch_metadata",
+  "requested_time_range": null,
+  "requested_spatial_scope": "synthetic",
+  "requested_parameters": {},
+  "source_role_assertion": "context_only",
+  "no_network": true,
+  "transport": "offline_mock",
+  "credentials_required": false,
+  "credentials_present": false,
+  "policy_decision_id": "fetch-policy-usgs_wbd.real_blocked",
+  "expected_output_type": "FetchSimulationResult",
+  "expected_lifecycle_target": "WORK",
+  "evidence_boundary": "not EvidenceBundle",
+  "blockers": [
+    "live_fetch_blocked"
+  ],
+  "finite_state": "DENY"
+}

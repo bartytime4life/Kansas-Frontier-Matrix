@@ -1,0 +1,36 @@
+{
+  "validation_report_id": "vr-1",
+  "subject_ids": [
+    "raw-1",
+    "work-1",
+    "qr-1"
+  ],
+  "subject_lifecycle_stages": [
+    "RAW",
+    "WORK",
+    "QUARANTINE"
+  ],
+  "validators_run": [
+    "ingest",
+    "lifecycle"
+  ],
+  "passed_validators": [
+    "no_network"
+  ],
+  "failed_validators": [],
+  "warnings": [
+    "internal_only"
+  ],
+  "blocked_transitions": [
+    "RAW->PUBLISHED"
+  ],
+  "allowed_transitions": [
+    "RAW->WORK"
+  ],
+  "evidence_boundary_result": "not claim evidence",
+  "public_surface_result": "internal only",
+  "connector_activation_result": "disabled",
+  "no_network_result": "PASS",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_result": "VALIDATION_PASSED_INTERNAL_ONLY"
+}

@@ -1,0 +1,50 @@
+{
+  "processed_observation_id": "proc-obs-1",
+  "work_candidate_id": "work-1",
+  "work_normalization_receipt_id": "work-receipt-1",
+  "source_id": "usgs-water-data",
+  "connector_id": "connector-usgs_water_data",
+  "lifecycle_stage": "PROCESSED",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "processed_at": "2026-05-04T00:00:00Z",
+  "processing_method_id": "synthetic-streamflow-norm",
+  "processing_method_version": "1.0.0",
+  "content_spec_hash": "hash-pr007",
+  "input_hashes": [
+    "hash-sim-1"
+  ],
+  "output_hash": "hash-proc-1",
+  "canonical_feature_id": "HYDRO_SYNTH_001",
+  "huc12_id": "HYDRO_SYNTH_HUC12_001",
+  "observed_time": "2026-04-20T00:00:00Z",
+  "source_time": "2026-04-20T00:00:00Z",
+  "retrieval_time": "2026-04-20T01:00:00Z",
+  "metric_type": "synthetic_streamflow",
+  "metric_value": 12.3,
+  "metric_unit": "cfs",
+  "normalized_value": 12.3,
+  "normalized_unit": "cfs",
+  "temporal_scope": "daily",
+  "spatial_scope": "huc12",
+  "quality_flags": [
+    "synthetic"
+  ],
+  "uncertainty_class": "LOW_SYNTHETIC",
+  "source_role_assertion": "reference-only",
+  "rights_status": "synthetic-ok",
+  "public_release_allowed": false,
+  "evidence_boundary": "PROCESSED internal support only; not public truth by itself",
+  "next_allowed_transitions": [
+    "CATALOG",
+    "TRIPLET",
+    "EVIDENCE_BUNDLE_CANDIDATE",
+    "RELEASE_CANDIDATE"
+  ],
+  "prohibited_transitions": [
+    "PUBLISHED",
+    "PUBLIC_API"
+  ],
+  "finite_state": "PROCESSED_CANDIDATE_READY"
+}

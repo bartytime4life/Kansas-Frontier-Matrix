@@ -1,0 +1,32 @@
+{
+  "release_dry_run_decision_id": "rdr-pr007",
+  "release_candidate_id": "rc-pr007",
+  "requested_target_stage": "PUBLISHED",
+  "evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "validation_report_ids": [
+    "vr-pr007"
+  ],
+  "policy_decision_ids": [
+    "pd-pr007"
+  ],
+  "review_record_ids": [],
+  "release_manifest_id": null,
+  "denial_reasons": [
+    "no release manifest",
+    "no review record",
+    "public release not approved"
+  ],
+  "abstain_reasons": [],
+  "blocked_transitions": [
+    "READY_FOR_MANUAL_REVIEW->PUBLISHED"
+  ],
+  "required_next_actions": [
+    "manual review",
+    "release manifest"
+  ],
+  "correction_path": "corr-pr007",
+  "rollback_target": "rb-pr007",
+  "finite_result": "DENY"
+}

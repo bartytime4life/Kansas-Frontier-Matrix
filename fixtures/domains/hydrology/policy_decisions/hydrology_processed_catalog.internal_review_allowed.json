@@ -1,0 +1,25 @@
+{
+  "policy_decision_id": "pd-pr007",
+  "subject_ids": [
+    "claim-1"
+  ],
+  "policy_rules_evaluated": [
+    "evidence_closure",
+    "release_gate"
+  ],
+  "allowed_rules": [
+    "internal_review"
+  ],
+  "denied_rules": [
+    "public_release"
+  ],
+  "abstain_reasons": [],
+  "rights_status": "ok",
+  "source_role_status": "reference_only",
+  "lifecycle_stage_status": "internal_only",
+  "evidence_closure_status": "closed_internal",
+  "review_status": "READY_FOR_REVIEW",
+  "release_status": "RELEASE_NOT_READY",
+  "public_release_allowed": false,
+  "finite_result": "ALLOW_INTERNAL_REVIEW"
+}
