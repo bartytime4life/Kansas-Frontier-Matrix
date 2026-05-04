@@ -1,0 +1,12 @@
+{
+  "id": "bad-geom",
+  "sensitivity": "RESTRICTED",
+  "geometry": {
+    "coordinates": [
+      [
+        -96.1234,
+        39.1234
+      ]
+    ]
+  }
+}
