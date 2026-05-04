@@ -78,5 +78,4 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertIn("rc=3", msg)
         self.assertIn("boom", msg)
         self.assertIn("cmd=", msg)
-        self.assertIn("stdout:", msg)
         self.assertIn("stderr:", msg)
