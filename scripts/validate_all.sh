@@ -11,4 +11,5 @@ python tools/validate_api_contracts.py
 python tools/check_source_ledger.py
 python tools/promotion_dry_run.py
 python tools/check_promotion_receipt_determinism.py
+python tools/validate_release_manifest_consistency.py
 python -m unittest discover -s tests
