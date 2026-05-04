@@ -7,7 +7,7 @@
   "failed_validators": [
     "schema"
   ],
-  "stored_path": "internal_object_ref",
+  "stored_path": "data/quarantine/hydrology/synthetic/qr-1.json",
   "created_at": "2026-05-04T00:00:00Z",
   "finite_state": "QUARANTINE_RECEIPT_RECORDED"
 }
