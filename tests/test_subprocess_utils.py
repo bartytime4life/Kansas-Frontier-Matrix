@@ -1,3 +1,4 @@
+import shlex
 import sys
 import unittest
 
@@ -10,6 +11,15 @@ class SubprocessUtilsTests(unittest.TestCase):
         self.assertTrue(rendered.startswith(sys.executable))
         self.assertIn("-c", rendered)
         self.assertIn("print", rendered)
+
+    def test_format_python_args_without_extra_args(self):
+        rendered = format_python_args([])
+        self.assertEqual(shlex.split(rendered), [sys.executable])
+
+    def test_format_python_args_round_trips_with_shlex_split(self):
+        args = ["-c", "print('hello world')"]
+        rendered = format_python_args(args)
+        self.assertEqual(shlex.split(rendered)[1:], args)
 
     def test_format_python_args_handles_spaces(self):
         rendered = format_python_args(["-c", "print('hello world')"])
