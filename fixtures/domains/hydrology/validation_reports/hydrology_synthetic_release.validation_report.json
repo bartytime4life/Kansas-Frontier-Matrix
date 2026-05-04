@@ -1,0 +1,40 @@
+{
+  "release_validation_report_id": "release-validation-pr008-hydro-synth-001",
+  "release_manifest_id": "release-manifest-hydro-synth-public-001",
+  "release_candidate_id": "release-candidate-hydro-synth-001",
+  "review_record_ids": [
+    "review-hydro-synth-public-001"
+  ],
+  "evidence_bundle_ids": [
+    "evb-hydro-synth-001"
+  ],
+  "public_artifact_ids": [
+    "pub-artifact-hydro-claim-001",
+    "pub-artifact-hydro-layer-001",
+    "pub-artifact-hydro-evidence-drawer-001",
+    "pub-artifact-hydro-focus-001"
+  ],
+  "validators_run": [
+    "validate_hydrology_synthetic_release_review",
+    "validate_hydrology_release_manifest",
+    "validate_hydrology_public_artifacts",
+    "validate_hydrology_public_focus_answer"
+  ],
+  "passed_validators": [
+    "all"
+  ],
+  "failed_validators": [],
+  "warnings": [],
+  "evidence_closure_result": "PASS",
+  "policy_result": "PASS",
+  "review_result": "PASS",
+  "release_manifest_result": "PASS",
+  "public_surface_result": "PASS",
+  "correction_result": "PASS",
+  "rollback_result": "PASS",
+  "connector_activation_result": "PASS_DISABLED",
+  "no_network_result": "PASS",
+  "prohibited_refs_found": [],
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_result": "RELEASE_VALIDATION_PASSED_SYNTHETIC"
+}
