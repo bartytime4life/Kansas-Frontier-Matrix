@@ -38,4 +38,3 @@
 - Preserved existing repository structure and conventions.
 - Verified baseline governance membrane and hydrology synthetic slice via local no-network validators/tests.
 - Kept implementation posture evidence-first, map-first, time-aware, fail-closed, and release-auditable.
-

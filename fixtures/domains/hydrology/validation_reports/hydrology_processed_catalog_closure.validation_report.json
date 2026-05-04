@@ -1,0 +1,37 @@
+{
+  "validation_report_id": "vr-pr007",
+  "subject_ids": [
+    "proc-obs-1"
+  ],
+  "subject_lifecycle_stages": [
+    "PROCESSED"
+  ],
+  "validators_run": [
+    "processed",
+    "catalog",
+    "triplet",
+    "evidence"
+  ],
+  "passed_validators": [
+    "no_network",
+    "no_public_internal_paths"
+  ],
+  "failed_validators": [],
+  "warnings": [
+    "internal_only"
+  ],
+  "blocked_transitions": [
+    "PROCESSED->PUBLISHED"
+  ],
+  "allowed_transitions": [
+    "PROCESSED->CATALOG",
+    "PROCESSED->TRIPLET"
+  ],
+  "evidence_boundary_result": "internal_only",
+  "catalog_closure_result": "pass_internal_only",
+  "public_surface_result": "no_internal_leak",
+  "connector_activation_result": "blocked",
+  "no_network_result": "pass",
+  "created_at": "2026-05-04T00:00:00Z",
+  "finite_result": "VALIDATION_PASSED_INTERNAL_ONLY"
+}

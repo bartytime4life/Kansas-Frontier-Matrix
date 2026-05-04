@@ -1,0 +1,38 @@
+{
+  "layer_manifest_id": "lm-1",
+  "layer_id": "layer-synth-streamflow",
+  "domain": "hydrology",
+  "layer_title": "Synthetic Streamflow Candidate",
+  "layer_kind": "vector",
+  "source_catalog_record_ids": [
+    "cat-1"
+  ],
+  "evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "policy_decision_ids": [
+    "pd-pr007"
+  ],
+  "release_candidate_ids": [
+    "rc-pr007"
+  ],
+  "spatial_scope": "huc12",
+  "temporal_scope": "daily",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "renderer_target": "map_shell",
+  "tile_or_feature_source": "fixtures/map/layer_manifest.valid.json",
+  "public_release_allowed": false,
+  "release_status": "RELEASE_NOT_READY",
+  "stale_status": "fresh",
+  "correction_status": "none",
+  "evidence_drawer_payload_ids": [
+    "ed-1"
+  ],
+  "prohibited_source_paths": [
+    "internal_path_blocked"
+  ],
+  "evidence_boundary": "LayerManifest is not EvidenceBundle",
+  "finite_state": "RELEASE_NOT_READY"
+}

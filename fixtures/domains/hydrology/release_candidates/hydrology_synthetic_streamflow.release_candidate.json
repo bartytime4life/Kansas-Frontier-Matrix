@@ -1,0 +1,44 @@
+{
+  "release_candidate_id": "rc-pr007",
+  "domain": "hydrology",
+  "candidate_title": "Synthetic processed/catalog closure candidate",
+  "candidate_object_ids": [
+    "cat-1",
+    "trip-1",
+    "eb-1",
+    "lm-1"
+  ],
+  "candidate_object_types": [
+    "CatalogRecord",
+    "TripletDelta",
+    "EvidenceBundle",
+    "LayerManifestCandidate"
+  ],
+  "content_spec_hash": "hash-pr007",
+  "catalog_record_ids": [
+    "cat-1"
+  ],
+  "triplet_delta_ids": [
+    "trip-1"
+  ],
+  "evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "layer_manifest_ids": [
+    "lm-1"
+  ],
+  "validation_report_ids": [
+    "vr-pr007"
+  ],
+  "policy_decision_ids": [
+    "pd-pr007"
+  ],
+  "review_record_ids": [],
+  "run_receipt_id": "run-pr007",
+  "correction_path": "corr-pr007",
+  "rollback_target": "rb-pr007",
+  "public_release_requested": true,
+  "public_release_allowed": false,
+  "release_status": "RELEASE_NOT_READY",
+  "finite_state": "READY_FOR_MANUAL_REVIEW"
+}

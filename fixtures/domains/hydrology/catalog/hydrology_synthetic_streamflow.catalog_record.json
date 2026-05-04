@@ -1,0 +1,60 @@
+{
+  "catalog_record_id": "cat-1",
+  "catalog_record_type": "hydrology_processed_index",
+  "domain": "hydrology",
+  "subject_ids": [
+    "HYDRO_SYNTH_001"
+  ],
+  "source_ids": [
+    "usgs-water-data"
+  ],
+  "lifecycle_stage": "CATALOG",
+  "synthetic": true,
+  "no_network": true,
+  "not_official_source_data": true,
+  "title": "Synthetic streamflow catalog entry",
+  "description": "DERIVED catalog metadata",
+  "spatial_scope": "huc12",
+  "temporal_scope": "daily",
+  "observed_time_range": [
+    "2026-04-20",
+    "2026-04-20"
+  ],
+  "source_time_range": [
+    "2026-04-20",
+    "2026-04-20"
+  ],
+  "retrieval_time_range": [
+    "2026-04-20",
+    "2026-04-20"
+  ],
+  "rights_status": "synthetic-ok",
+  "attribution_requirements": "synthetic",
+  "public_release_allowed": false,
+  "evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "validation_report_ids": [
+    "vr-pr007"
+  ],
+  "processed_receipt_ids": [
+    "proc-rec-1"
+  ],
+  "catalog_closure_report_id": "ccr-1",
+  "release_candidate_ids": [
+    "rc-pr007"
+  ],
+  "correction_notice_ids": [
+    "corr-pr007"
+  ],
+  "rollback_card_ids": [
+    "rb-pr007"
+  ],
+  "derived_from_lifecycle_stages": [
+    "PROCESSED"
+  ],
+  "prohibited_public_paths": [
+    "internal_path_blocked"
+  ],
+  "finite_state": "CATALOG_RECORD_INTERNAL_ONLY"
+}

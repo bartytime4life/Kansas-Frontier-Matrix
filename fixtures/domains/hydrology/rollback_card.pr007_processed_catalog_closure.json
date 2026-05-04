@@ -1,0 +1,39 @@
+{
+  "rollback_card_id": "rb-pr007",
+  "affected_processed_observation_ids": [
+    "proc-obs-1"
+  ],
+  "affected_catalog_record_ids": [
+    "cat-1"
+  ],
+  "affected_triplet_delta_ids": [
+    "trip-1"
+  ],
+  "affected_evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "affected_layer_manifest_ids": [
+    "lm-1"
+  ],
+  "affected_release_candidate_ids": [
+    "rc-pr007"
+  ],
+  "affected_receipt_ids": [
+    "proc-rec-1"
+  ],
+  "affected_validation_report_ids": [
+    "vr-pr007"
+  ],
+  "rollback_target": "internal-fixture-revert",
+  "rollback_reason": "synthetic drill rollback",
+  "required_actions": [
+    "revert fixtures",
+    "rerun validators"
+  ],
+  "affected_public_surfaces": [
+    "none_published"
+  ],
+  "no_published_artifacts_affected": true,
+  "no_real_source_data_fetched": true,
+  "finite_state": "ROLLBACK_READY"
+}

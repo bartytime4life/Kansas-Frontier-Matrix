@@ -1,0 +1,37 @@
+{
+  "catalog_closure_report_id": "ccr-1",
+  "domain": "hydrology",
+  "processed_observation_ids": [
+    "proc-obs-1"
+  ],
+  "catalog_record_ids": [
+    "cat-1"
+  ],
+  "triplet_delta_ids": [
+    "trip-1"
+  ],
+  "evidence_bundle_ids": [
+    "eb-1"
+  ],
+  "validation_report_ids": [
+    "vr-pr007"
+  ],
+  "closure_checks": [
+    "no_raw_public",
+    "no_work_public",
+    "no_quarantine_public",
+    "release_not_published"
+  ],
+  "passed_checks": [
+    "no_raw_public",
+    "no_work_public",
+    "no_quarantine_public"
+  ],
+  "failed_checks": [],
+  "unresolved_refs": [],
+  "prohibited_refs_found": [],
+  "public_surface_leak_check": "pass",
+  "release_readiness": "ready_for_review_only",
+  "no_network_result": "pass",
+  "finite_result": "CATALOG_CLOSURE_PASSED_INTERNAL_ONLY"
+}

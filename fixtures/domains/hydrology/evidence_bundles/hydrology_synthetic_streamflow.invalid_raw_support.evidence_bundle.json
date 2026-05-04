@@ -1,0 +1,17 @@
+{
+  "evidence_bundle_id": "eb-invalid-raw",
+  "domain": "hydrology",
+  "claim_ids": [
+    "claim-invalid"
+  ],
+  "evidence_refs": [
+    "eref-invalid"
+  ],
+  "support_object_ids": [
+    "raw-1"
+  ],
+  "support_object_types": [
+    "RawCapture"
+  ],
+  "finite_state": "DENY"
+}

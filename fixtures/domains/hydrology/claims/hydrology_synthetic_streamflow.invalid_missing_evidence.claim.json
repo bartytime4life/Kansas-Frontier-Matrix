@@ -1,0 +1,6 @@
+{
+  "claim_id": "claim-invalid",
+  "domain": "hydrology",
+  "evidence_ref": "eref-missing",
+  "finite_state": "ABSTAIN"
+}
