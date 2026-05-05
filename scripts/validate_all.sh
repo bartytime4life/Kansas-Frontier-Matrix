@@ -17,3 +17,5 @@ python tools/check_source_probe_receipts.py
 python tools/check_source_activation.py
 python tools/check_source_semantics.py
 python -m unittest discover -s tests
+
+python tools/probe_wbd_metadata.py --dry-run
