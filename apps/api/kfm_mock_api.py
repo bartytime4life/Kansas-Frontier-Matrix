@@ -50,6 +50,25 @@ def get_drawer(drawer_id: str) -> tuple[dict, int]:
     return drawer, 200
 
 
+
+
+def get_mock_policy() -> tuple[dict, int]:
+    return {
+        "id": "mock-policy-001",
+        "mode": "SYNTHETIC_NO_NETWORK",
+        "decision": "ABSTAIN",
+        "reason": "PAYLOAD_ONLY",
+    }, 200
+
+
+def get_mock_focus() -> tuple[dict, int]:
+    return {
+        "id": "mock-focus-001",
+        "outcome": "ABSTAIN",
+        "reason": "MISSING_EVIDENCE",
+        "citations": [],
+    }, 200
+
 def focus_decision(request: dict) -> tuple[dict, int]:
     question = str(request.get("question", "")).strip().lower()
     if not question:
@@ -93,6 +112,12 @@ class Handler(BaseHTTPRequestHandler):
         if self.path.startswith("/v1/drawer/"):
             drawer_id = self.path.rsplit("/", 1)[-1]
             payload, code = get_drawer(drawer_id)
+            return self._json(payload, code)
+        if self.path == "/v1/mock/policy":
+            payload, code = get_mock_policy()
+            return self._json(payload, code)
+        if self.path == "/v1/mock/focus":
+            payload, code = get_mock_focus()
             return self._json(payload, code)
         return self._json({"outcome": "ERROR", "reason": "NOT_FOUND"}, 404)
 
