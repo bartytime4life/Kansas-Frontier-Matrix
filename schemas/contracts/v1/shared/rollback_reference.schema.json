@@ -3,7 +3,9 @@
   "title": "RollbackReference",
   "type": "object",
   "properties": {
-    "id": { "type": "string" }
+    "id": { "type": "string" },
+    "rollback_target": { "type": "string" },
+    "decision": { "enum": ["ALLOW", "ABSTAIN", "DENY", "ERROR"] }
   },
-  "required": ["id"]
+  "required": ["id", "rollback_target", "decision"]
 }
