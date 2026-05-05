@@ -1,0 +1,65 @@
+{
+  "id": "synthetic-release-dry-run-001",
+  "mode": "SYNTHETIC_NO_NETWORK",
+  "publish_decision": "REFUSE",
+  "result": "PASS",
+  "gates": [
+    {
+      "gate": "tools/validate_fixtures.py",
+      "returncode": 0,
+      "stdout": "PASS valid fixtures pass and invalid fixtures remain intentionally invalid",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/validate_schema_conformance.py",
+      "returncode": 0,
+      "stdout": "PASS validated schema-conformance checks for 7 fixture contracts",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/validate_api_contracts.py",
+      "returncode": 0,
+      "stdout": "PASS api contract checks",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/check_directory_rules.py",
+      "returncode": 0,
+      "stdout": "PASS directory rules satisfied",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/check_no_public_internal_paths.py",
+      "returncode": 0,
+      "stdout": "PASS no prohibited internal/public-surface path or sensitivity leakage",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/validators/validate_evidence_closure.py",
+      "returncode": 0,
+      "stdout": "PASS evidence closure validated",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/validators/validate_activation_decisions.py",
+      "returncode": 0,
+      "stdout": "PASS source activation decisions validated",
+      "stderr": "",
+      "status": "PASS"
+    },
+    {
+      "gate": "tools/validators/validate_source_terms.py",
+      "returncode": 0,
+      "stdout": "PASS source terms fixtures validated",
+      "stderr": "",
+      "status": "PASS"
+    }
+  ],
+  "reason": "DRY_RUN_ONLY_REFUSES_PUBLISH"
+}
