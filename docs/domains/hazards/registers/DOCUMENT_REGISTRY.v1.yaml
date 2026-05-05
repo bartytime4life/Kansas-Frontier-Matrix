@@ -1,0 +1,52 @@
+version: v1
+surface: docs/domains/hazards
+status: proposed
+owners:
+  - TODO-NEEDS-OWNER
+updated: 2026-04-27
+documents:
+  - path: docs/domains/hazards/README.md
+    role: landing
+    status: draft
+  - path: docs/domains/hazards/ARCHITECTURE.md
+    role: architecture
+    status: draft
+  - path: docs/domains/hazards/FILE_MAP.md
+    role: map
+    status: draft
+  - path: docs/domains/hazards/SOURCE_INDEX.md
+    role: source-index
+    status: draft
+  - path: docs/domains/hazards/SOURCE_ROLES.md
+    role: taxonomy
+    status: draft
+  - path: docs/domains/hazards/TIME_SEMANTICS.md
+    role: semantics
+    status: draft
+  - path: docs/domains/hazards/PROMOTION.md
+    role: governance
+    status: draft
+  - path: docs/domains/hazards/UI_AND_EVIDENCE_DRAWER.md
+    role: ui-contract
+    status: draft
+  - path: docs/domains/hazards/ROLLBACK_AND_CORRECTION.md
+    role: operations
+    status: draft
+  - path: docs/domains/hazards/CANON_AND_LINEAGE_RULES.md
+    role: canon-rules
+    status: draft
+  - path: docs/domains/hazards/GENERATED_ARTIFACT_RULES.md
+    role: generated-artifact-rules
+    status: draft
+  - path: docs/domains/hazards/NAMING_AND_SUPERSESSION_RULES.md
+    role: naming-rules
+    status: draft
+  - path: docs/domains/hazards/CHANGE_SURFACES_MATRIX.md
+    role: change-impact
+    status: draft
+  - path: docs/domains/hazards/VERIFICATION_BACKLOG.md
+    role: backlog
+    status: draft
+  - path: docs/domains/hazards/OPEN_QUESTIONS.md
+    role: questions
+    status: draft
