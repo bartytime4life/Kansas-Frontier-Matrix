@@ -1,0 +1,50 @@
+{
+  "schema_version": "v1",
+  "profile_id": "kfm:run_profile:ecology-minimal:v1",
+  "description": "Governed ingestion/attestation proof slice for ecology/hydrology fixtures.",
+  "limits": {
+    "max_changes_per_run": 10,
+    "batch_size": 5,
+    "worker_concurrency": 4
+  },
+  "rate_limits": {
+    "per_source_token_bucket": {
+      "rate": "1/s",
+      "burst": 5
+    }
+  },
+  "retry_policy": {
+    "attempts": 3,
+    "backoff": {
+      "kind": "exponential",
+      "base": "2s",
+      "max": "60s"
+    },
+    "dlq_after_failed_attempts": 3
+  },
+  "fail_closed": {
+    "upstream_http_status_gte": 500,
+    "network_error": true,
+    "emit_partial_evidencebundles": false
+  },
+  "metadata_triggers": [
+    "ETag",
+    "Last-Modified",
+    "kfm:spec_hash",
+    "async downloadKey status==SUCCEEDED"
+  ],
+  "finite_validator_outcomes": [
+    "ANSWER",
+    "ABSTAIN",
+    "DENY",
+    "ERROR"
+  ],
+  "publication_lanes": [
+    "released-artifacts",
+    "governed-tile-service"
+  ],
+  "forbidden_public_lanes": [
+    "RAW",
+    "WORK"
+  ]
+}
