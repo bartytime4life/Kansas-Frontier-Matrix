@@ -1,0 +1,8 @@
+{
+  "id": "HPS-USGSWD-001",
+  "source_id": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
+  "discharge_class": "future_gated",
+  "stage_class": "future_gated",
+  "not_current_claim_evidence": true,
+  "knowledge_character": "SYNTHETIC_TEST"
+}

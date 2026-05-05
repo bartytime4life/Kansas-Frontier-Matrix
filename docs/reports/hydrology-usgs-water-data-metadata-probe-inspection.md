@@ -1,0 +1,11 @@
+# USGS Water Data Metadata Probe Inspection
+- Prompts 1-5 present: CONFIRMED
+- WBD candidate exists/inactive: CONFIRMED
+- USGS Water Data candidate preexists: CONFIRMED
+- network mode: DISABLED
+- official metadata checked live: no (ABSTAIN)
+- observation/site/time-series query: none
+- ingestion: none
+- geometry: none
+- public release: none
+- PDFs: NEEDS VERIFICATION

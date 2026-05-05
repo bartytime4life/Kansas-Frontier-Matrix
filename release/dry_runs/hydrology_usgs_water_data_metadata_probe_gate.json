@@ -1,0 +1,21 @@
+{
+  "release_state": "DRAFT",
+  "no_live_observation_ingestion": true,
+  "no_station_site_query": true,
+  "no_time_series_query": true,
+  "no_observation_values_stored": true,
+  "no_geometry_stored": true,
+  "no_public_release": true,
+  "source_candidate": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
+  "metadata_probe_status": "ABSTAIN",
+  "rights_status": "UNKNOWN",
+  "attribution_status": "NEEDS_VERIFICATION",
+  "publication_eligibility_decision": "NOT_ELIGIBLE",
+  "policy_decision": "DENY",
+  "activation_decision": "VERIFIED_INACTIVE",
+  "rollback_target": "release/dry_runs/hydrology_wbd_terms_rights_gate.json",
+  "correction_route": "contracts/correction/correction_notice.md",
+  "validation_report_reference": "fixtures/data_validation_report.valid.json",
+  "no_public_internal_path_assertion": true,
+  "no_direct_model_client_assertion": true
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SRC-HYD-NHDPLUSHR-CANDIDATE",
+  "knowledge_character": "SYNTHETIC_TEST",
+  "source_role": "NETWORK_IDENTITY",
+  "authority_scope": "Kansas hydrology context",
+  "public_release_allowed": false,
+  "verification_status": "NEEDS_VERIFICATION",
+  "rights_status": "UNKNOWN"
+}

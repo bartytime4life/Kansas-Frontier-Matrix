@@ -1,0 +1,10 @@
+{
+  "terms_review_id": "STR-WBD-001",
+  "source_id": "SRC-HYD-WBD-CANDIDATE",
+  "terms_review_kind": "TERMS_RIGHTS_ONLY",
+  "rights_status": "NEEDS_LEGAL_REVIEW",
+  "terms_status": "UNKNOWN",
+  "attribution_status": "NEEDS_VERIFICATION",
+  "public_release_allowed": false,
+  "validation_result": "ABSTAIN"
+}
