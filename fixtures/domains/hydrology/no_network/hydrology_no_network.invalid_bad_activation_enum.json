@@ -1,0 +1,12 @@
+{
+  "id": "HYDRO-NONET-INVALID-ACTIVATION-001",
+  "network_mode": "DISABLED",
+  "source_activation_decision": "MAYBE",
+  "focus_outcome": "ABSTAIN",
+  "reason": "MISSING_EVIDENCE",
+  "evidence_resolved": false,
+  "citations": [
+    "evr-hydro-synth-001"
+  ],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
