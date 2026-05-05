@@ -1,0 +1,27 @@
+# Required paths surfaced as "current" in README thin-slice docs.
+scripts/README.md
+scripts/bootstrap.sh
+scripts/dev_up.sh
+scripts/sample_ingest.sh
+scripts/validate_schemas.py
+scripts/catalog_validate.py
+tools/ci/README.md
+tools/ci/verify_baseline.sh
+tools/ci/test_verify_baseline.sh
+tools/ci/render_promotion_summary.py
+tools/ci/render_promotion_bundle_summary.py
+tools/ci/render_diff_summary.py
+tools/ci/render_bundle_diff_policy_summary.py
+tools/ci/render_promotion_review_handoff.py
+tools/ci/validate_renderer_fixtures.py
+tools/ci/run_repo_baseline_local.sh
+tests/ci/README.md
+tests/ci/test_render_diff_summary.py
+tests/ci/test_render_bundle_diff_policy_summary.py
+tests/ci/test_render_promotion_review_handoff.py
+tests/ci/test_validate_renderer_fixtures.py
+schemas/contracts/v1/runtime/renderers/diff_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/diff_policy_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/promotion_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/promotion_bundle_summary_input.schema.json
+schemas/contracts/v1/runtime/renderers/review_handoff_inputs.schema.json
