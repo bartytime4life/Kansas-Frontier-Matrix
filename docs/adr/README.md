@@ -1,3 +1,7 @@
-# adr
+# Architecture Decision Records (ADR)
 
-CONFIRMED: baseline scaffold created in this Codex session.
+This directory stores accepted architecture decisions for repository structure and governance.
+
+## Foundational layout decisions
+- `ADR-0001-schema-home.md` — canonical schema home.
+- `ADR-0002-responsibility-root-monorepo.md` — responsibility-root top-level layout.
