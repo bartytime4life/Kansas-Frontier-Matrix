@@ -10,6 +10,7 @@ python tools/check_root_surface_register.py
 python tools/check_schema_home.py
 python tools/check_no_public_internal_paths.py
 python tools/validate_api_contracts.py
+python tools/validate_focus_citations.py
 python tools/check_source_ledger.py
 python tools/promotion_dry_run.py
 python tools/check_promotion_receipt_determinism.py

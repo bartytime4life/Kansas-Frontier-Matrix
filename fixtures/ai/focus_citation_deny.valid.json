@@ -1,0 +1,7 @@
+{
+  "id": "focus-cite-deny-001",
+  "outcome": "DENY",
+  "reason": "DENIED_BY_POLICY",
+  "citations": [],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
