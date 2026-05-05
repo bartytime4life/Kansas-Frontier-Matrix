@@ -1,0 +1,143 @@
+version: 1
+allowed_classes:
+  - canonical
+  - compatibility
+  - transitional
+  - generated
+  - data-lifecycle
+  - release/proof
+  - runtime
+  - policy
+  - UNKNOWN
+
+roots:
+  .github:
+    class: canonical
+    notes: CI/workflow definitions.
+  apps:
+    class: canonical
+    notes: Application surfaces (API + web).
+  artifacts:
+    class: generated
+    notes: Generated build/publication artifacts.
+  configs:
+    class: canonical
+    notes: Runtime/configuration inputs.
+  connectors:
+    class: compatibility
+    notes: Connector interfaces and offline adapters.
+  contracts:
+    class: canonical
+    notes: Human-readable contract specs.
+  control_plane:
+    class: policy
+    notes: Governance registers and controls.
+  data:
+    class: data-lifecycle
+    notes: Raw/work/quarantine/processed/catalog/triplets/published lifecycle roots.
+  docs:
+    class: canonical
+    notes: Human documentation, ADRs, runbooks, reports.
+  examples:
+    class: compatibility
+    notes: Example walkthroughs and reference slices.
+  fixtures:
+    class: compatibility
+    notes: Test and mock payload fixtures.
+  infra:
+    class: compatibility
+    notes: Infrastructure support files.
+  migrations:
+    class: transitional
+    notes: Migration-specific transition assets.
+  packages:
+    class: canonical
+    notes: Package/library roots.
+  pipeline_specs:
+    class: canonical
+    notes: Pipeline specification definitions.
+  pipelines:
+    class: canonical
+    notes: Pipeline implementations and domain flows.
+  policy:
+    class: policy
+    notes: Policy definitions and tests.
+  release:
+    class: release/proof
+    notes: Dry-run and release proof artifacts.
+  runtime:
+    class: runtime
+    notes: Runtime envelopes/receipts and interfaces.
+  schemas:
+    class: canonical
+    notes: Canonical schema home.
+  scripts:
+    class: canonical
+    notes: Local orchestration and check scripts.
+  tests:
+    class: canonical
+    notes: Automated test suite.
+  tools:
+    class: canonical
+    notes: Validation, probing, and governance tools.
+  .git:
+    class: generated
+    notes: Git metadata directory.
+
+cross_links:
+  .github:
+    related:
+      - docs
+      - control_plane
+  docs:
+    related:
+      - control_plane
+      - contracts
+      - schemas
+      - policy
+  control_plane:
+    related:
+      - docs
+      - policy
+  contracts:
+    related:
+      - schemas
+      - docs
+  schemas:
+    related:
+      - contracts
+      - docs
+  policy:
+    related:
+      - control_plane
+      - docs
+  policies:
+    related:
+      - policy
+      - docs
+    class: compatibility
+  ui:
+    related:
+      - apps
+      - docs
+    class: transitional
+  web:
+    related:
+      - apps
+      - docs
+    class: compatibility
+  jsonschema:
+    related:
+      - schemas
+      - contracts
+    class: compatibility
+  styles:
+    related:
+      - apps
+      - docs
+    class: compatibility
+  viewer_templates:
+    related:
+      - apps
+      - docs
+    class: compatibility
