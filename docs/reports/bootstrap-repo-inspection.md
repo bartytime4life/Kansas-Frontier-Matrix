@@ -1,40 +1,46 @@
-# Bootstrap Repo Inspection
+# Bootstrap Repo Inspection (Prompt 1 Reconciliation)
 
-## Truth posture
-- **CONFIRMED**: Command outputs captured in this Codex session.
-- **NEEDS VERIFICATION**: PDF corpus was not directly inspectable in mounted workspace.
+Truth posture: **CONFIRMED** for commands and repository state observed in this Codex session on 2026-05-05 (UTC).
 
 ## Commands run
-1. `pwd`
-2. `git status --short || true`
-3. `git branch --show-current || true`
-4. `git rev-parse --show-toplevel || true`
-5. `find . -maxdepth 2 -type f | sort | head -200`
-6. `find . -maxdepth 2 -type d | sort | head -200`
-7. `find . -maxdepth 3 \( -name package.json -o -name pyproject.toml -o -name go.mod -o -name Cargo.toml -o -name Makefile -o -name README.md \) -print`
-8. `find . -maxdepth 4 -type f \( -path "*/docs/*" -o -path "*/schemas/*" -o -path "*/contracts/*" -o -path "*/policy/*" -o -path "*/tests/*" -o -path "*/apps/*" -o -path "*/packages/*" \) | sort | head -300`
 
-## Results (abridged)
-- `pwd` => `/workspace/Kansas-Frontier-Matrix`.
-- Branch => `work`.
-- Git toplevel => `/workspace/Kansas-Frontier-Matrix`.
-- `git status --short` => clean working tree at inspection time.
-- Repository is **existing**, not empty: governance/control-plane/docs/schemas/contracts/tests/apps/tools already present.
+```bash
+pwd
+git status --short || true
+git branch --show-current || true
+git rev-parse --show-toplevel || true
+find . -maxdepth 2 -type f | sort | head -200
+find . -maxdepth 2 -type d | sort | head -200
+find . -maxdepth 3 \( -name package.json -o -name pyproject.toml -o -name go.mod -o -name Cargo.toml -o -name Makefile -o -name README.md \) -print
+find . -maxdepth 4 -type f \( -path '*/docs/*' -o -path '*/schemas/*' -o -path '*/contracts/*' -o -path '*/policy/*' -o -path '*/tests/*' -o -path '*/apps/*' -o -path '*/packages/*' \) | sort | head -300
+```
+
+## Results summary
+
+- Repository path: `/workspace/Kansas-Frontier-Matrix` (**CONFIRMED**).
+- Branch: `work` (**CONFIRMED**).
+- Repository type: **existing repository**, not empty (**CONFIRMED**).
+- Existing structure already includes responsibility roots required by KFM baseline (`docs/`, `control_plane/`, `contracts/`, `schemas/`, `policy/`, `data/`, `tests/`, `tools/`, etc.) (**CONFIRMED**).
+- Existing Prompt 2+ implementation artifacts are present (mock API, fixtures, hydrology synthetic lane docs/tests). These were preserved and not removed (**CONFIRMED**).
 
 ## Package manager / stack evidence
-- Python stdlib-based validation and unittest baseline is present (`tools/*.py`, `tests/*.py`).
-- `pyproject.toml` exists for lightweight project metadata.
-- No internet-required baseline dependency was needed for validation in this run.
+
+- `pyproject.toml` exists (**CONFIRMED**).
+- Python-based tooling and tests exist under `tools/` and `tests/` (**CONFIRMED**).
+- No mandatory network-dependent bootstrap step was executed in this reconciliation (**CONFIRMED**).
 
 ## Source PDF availability
-- The requested KFM PDFs were **not directly inspected** in this mounted workspace during this session.
-- Source-ledger entries should remain **NEEDS VERIFICATION** for those IDs until files are mounted and checked.
 
-## Unknowns
-- Whether the referenced PDFs exist outside currently mounted paths.
-- Whether external source terms/rights constraints are complete for live connector activation.
+- The prompt-listed PDF corpus was **not directly inspected** in this Codex run (**NEEDS VERIFICATION**).
+- Reconciliation proceeded using repository contents plus prompt constraints; no direct quotes were produced from uninspected PDFs (**CONFIRMED**).
 
-## Adaptation taken
-- Preserved existing repository structure and conventions.
-- Verified baseline governance membrane and hydrology synthetic slice via local no-network validators/tests.
-- Kept implementation posture evidence-first, map-first, time-aware, fail-closed, and release-auditable.
+## Unknowns / needs verification
+
+- Whether all source PDFs are mounted and byte-identical to intended canon (**UNKNOWN**).
+- Whether prior commits fully reflect every line of the latest PDF corpus (**NEEDS VERIFICATION**).
+
+## Adaptation approach
+
+- Followed “inspect before writing” commands first.
+- Preserved existing files and conventions because repository is not greenfield-empty.
+- Performed a minimal reconciliation update focused on inspection evidence capture in this report.
