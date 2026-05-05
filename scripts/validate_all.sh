@@ -19,3 +19,8 @@ python tools/check_source_semantics.py
 python -m unittest discover -s tests
 
 python tools/probe_wbd_metadata.py --dry-run
+
+python tools/check_source_terms_reviews.py
+python tools/check_source_attribution.py
+python tools/check_publication_eligibility.py
+python tools/review_wbd_terms_rights.py --dry-run
