@@ -1,0 +1,18 @@
+{
+  "profile_id": "HOSP-USGSWD-001",
+  "source_id": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
+  "source_role": "OBSERVATION_METADATA_CANDIDATE",
+  "metadata_only": true,
+  "candidate_observation_classes": [
+    "OBSERVED_DISCHARGE",
+    "OBSERVED_STAGE"
+  ],
+  "denied_observation_classes": [
+    "OBSERVED_INUNDATION"
+  ],
+  "parameter_semantics_profile_id": "HPS-USGSWD-001",
+  "public_release_allowed": false,
+  "activation_state": "VERIFIED_INACTIVE",
+  "validation_result": "ABSTAIN",
+  "knowledge_character": "SYNTHETIC_TEST"
+}

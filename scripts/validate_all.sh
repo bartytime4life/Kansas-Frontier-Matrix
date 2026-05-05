@@ -24,3 +24,8 @@ python tools/check_source_terms_reviews.py
 python tools/check_source_attribution.py
 python tools/check_publication_eligibility.py
 python tools/review_wbd_terms_rights.py --dry-run
+python tools/check_source_probes.py
+python tools/check_hydrology_source_profiles.py
+python tools/check_hydrology_observation_semantics.py
+python tools/check_no_observation_ingestion.py
+python tools/probe_usgs_water_data_metadata.py --dry-run

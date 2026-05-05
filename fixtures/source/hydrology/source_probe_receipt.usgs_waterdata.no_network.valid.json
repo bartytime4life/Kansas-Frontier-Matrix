@@ -1,0 +1,15 @@
+{
+  "receipt_id": "SPR-USGSWD-NONET-001",
+  "source_id": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
+  "probe_kind": "OFFICIAL_METADATA_ONLY",
+  "network_mode": "DISABLED",
+  "validation_result": "ABSTAIN",
+  "response_body_stored": false,
+  "no_observation_values_assertion": true,
+  "no_station_inventory_assertion": true,
+  "no_site_query_assertion": true,
+  "no_time_series_assertion": true,
+  "no_geometry_assertion": true,
+  "no_publication_assertion": true,
+  "knowledge_character": "SYNTHETIC_TEST"
+}
