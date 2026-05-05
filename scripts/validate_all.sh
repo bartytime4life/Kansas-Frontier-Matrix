@@ -6,6 +6,8 @@ python tools/validate_schema_conformance.py
 python tools/validate_fixture_schema_mapping.py
 python tools/validate_docs_truth_labels.py
 python tools/check_directory_rules.py
+python tools/check_root_surface_register.py
+python tools/check_schema_home.py
 python tools/check_no_public_internal_paths.py
 python tools/validate_api_contracts.py
 python tools/check_source_ledger.py

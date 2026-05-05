@@ -1,0 +1,9 @@
+{
+  "id": "rdr-hydro-deny-prepublish-001",
+  "knowledge_character": "SYNTHETIC_TEST",
+  "decision": "DENY",
+  "reason": "MISSING_RELEASE_MANIFEST_OR_ROLLBACK_REFERENCE",
+  "release_manifest_present": false,
+  "rollback_reference_present": false,
+  "publish_attempted": false
+}
