@@ -6,7 +6,7 @@ missing=sorted(req-set(obj))
 if missing:
  print("FAIL",missing); raise SystemExit(1)
 print("PASS probe receipt fields present")
-p=Path('fixtures/source/hydrology/source_probe_receipt.usgs_waterdata.no_network.valid.json')
+p=Path('fixtures/source/hydrology/source_probe_receipt.valid.json')
 o=json.loads(p.read_text())
 ok=o.get('verification_status') in {'NEEDS_VERIFICATION','VERIFIED','FAILED','EXPIRED','SUPERSEDED','UNCHECKED'}
 print('PASS probe receipt status recorded' if ok else 'FAIL invalid probe status')
