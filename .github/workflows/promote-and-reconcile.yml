@@ -1,1 +1,104 @@
+name: promote-and-reconcile
 
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/promote-and-reconcile.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "fixtures/**"
+      - "release/**"
+      - "tools/**"
+      - "tests/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/promote-and-reconcile.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "fixtures/**"
+      - "release/**"
+      - "tools/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  promote-and-reconcile:
+    name: Promotion dry run and release reconciliation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate repository and governed boundaries
+        run: |
+          python tools/validate_repo.py
+          python tools/check_directory_rules.py
+          python tools/check_no_public_internal_paths.py
+          python tools/validate_api_contracts.py
+
+      - name: Validate release and publication gates
+        run: |
+          python tools/validate_release_manifest_consistency.py
+          python tools/check_publication_eligibility.py
+          python tools/validators/validate_hydrology_release_manifest.py
+          python tools/validators/validate_hydrology_proof_slice.py
+          python tools/validators/validate_hydrology_public_focus_answer.py
+
+      - name: Run promotion dry run
+        run: python tools/promotion_dry_run.py
+
+      - name: Check promotion receipt determinism
+        run: python tools/check_promotion_receipt_determinism.py
+
+      - name: Reconcile generated dry-run receipts with tracked state
+        run: |
+          set -euo pipefail
+          WATCHED_PATHS=(
+            "release/dry_runs"
+            "fixtures/domains/hydrology/release_dry_runs"
+            "fixtures/domains/hydrology/release_receipts"
+            "fixtures/domains/hydrology/validation_reports"
+          )
+          status="$(git status --short -- "${WATCHED_PATHS[@]}")"
+          if [[ -n "$status" ]]; then
+            echo "Promotion/reconciliation drift detected. Commit the updated governed receipt/proof artifacts or fix the generator." >&2
+            echo "$status" >&2
+            exit 1
+          fi
+
+      - name: Run release-focused unit tests
+        run: python -m unittest discover -s tests -p "*release*.py"
+
+      - name: Upload promotion and reconciliation receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promotion-and-reconciliation-receipts
+          if-no-files-found: ignore
+          path: |
+            release/dry_runs/*.json
+            fixtures/domains/hydrology/release_dry_runs/*.json
+            fixtures/domains/hydrology/release_receipts/*.json
+            fixtures/domains/hydrology/validation_reports/*.json
