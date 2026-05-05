@@ -33,3 +33,120 @@ hydrology_sources:
     last_reviewed_at: null
     next_review_required: manual_doc_check
     finite_gate_state: BLOCKED
+
+- source_id: SRC-HYD-WBD-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-USGS-WATERDATA-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-NHDPLUSHR-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-3DHP-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-FEMA-NFHL-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-3DEP-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-STAC-STANDARD-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-DCAT-STANDARD-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]
+
+- source_id: SRC-HYD-PROV-STANDARD-CANDIDATE
+  status: CANDIDATE
+  source_role: NEEDS_VERIFICATION
+  authority_scope: hydrology
+  public_release_allowed: false
+  verification_status: NEEDS_VERIFICATION
+  rights_status: UNKNOWN
+  sensitivity_notes: fail-closed
+  source_terms_review_id: null
+  latest_probe_receipt_id: null
+  activation_decision_id: null
+  open_verification_items: [terms,probe,policy]

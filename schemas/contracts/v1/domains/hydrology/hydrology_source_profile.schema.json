@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_role": {
+      "enum": [
+        "BOUNDARY_CONTEXT",
+        "OBSERVATION",
+        "REGULATORY_CONTEXT",
+        "TERRAIN_CONTEXT",
+        "NETWORK_IDENTITY",
+        "CATALOG_STANDARD",
+        "PROVENANCE_STANDARD",
+        "DERIVED_CONTEXT"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "source_id",
+    "source_role"
+  ]
+}
