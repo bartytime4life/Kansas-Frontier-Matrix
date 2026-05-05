@@ -21,9 +21,10 @@ BACKOFF_MAX ?= 60s
 .PHONY: all install-dev test watch run run-signed \
 	demo-unsigned demo-signed \
 	validate validate-ecology validate-basic negative refresh fingerprint \
-	sign verify-signatures promote-guard print-run-profile clean-dlq clean
+	sign verify-signatures promote-guard print-run-profile clean-dlq clean \
+	gate-a gate-b gate-c gate-d gate-e gate-f gate-g promotion-gates
 
-all: validate-ecology negative fingerprint
+all: validate negative fingerprint
 
 install-dev:
 	$(PYTHON) -m pip install -e '.[dev]'
@@ -78,6 +79,29 @@ demo-signed:
 
 promote-guard:
 	$(PYTHON) -m tools.ingest.promote_guard $(RECEIPTS) --require-signatures
+
+gate-a:
+	tools/validators/run_gate.sh A
+
+gate-b:
+	tools/validators/run_gate.sh B
+
+gate-c:
+	tools/validators/run_gate.sh C
+
+gate-d:
+	tools/validators/run_gate.sh D
+
+gate-e:
+	tools/validators/run_gate.sh E
+
+gate-f:
+	tools/validators/run_gate.sh F
+
+gate-g:
+	tools/validators/run_gate.sh G
+
+promotion-gates: gate-a gate-b gate-c gate-d gate-e gate-f gate-g
 
 print-run-profile:
 	@echo "max_changes_per_run=$(MAX_CHANGES_PER_RUN)"
