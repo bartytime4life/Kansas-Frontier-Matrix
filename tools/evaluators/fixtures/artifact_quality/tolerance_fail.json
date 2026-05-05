@@ -1,0 +1,33 @@
+{
+  "fixture_type": "kfm.evaluator_fixture.v1",
+  "fixture_id": "artifact.tolerance_fail.v1",
+  "fixture_category": "edge",
+  "subject_ref": "tests/fixtures/artifacts/edge/ecology_metrics_tolerance_fail.json",
+  "subject_type": "artifact",
+  "expected_outcome": "DENY",
+  "artifact_spec_hash": "sha256:7878787878787878787878787878787878787878787878787878787878787878",
+  "metric_results": [
+    {
+      "name": "numeric_tolerance",
+      "score": 0,
+      "passed": false,
+      "reason_code": "TOLERANCE_EXCEEDED",
+      "severity": "blocking",
+      "explanation": {
+        "summary": "Observed value exceeded allowed tolerance window.",
+        "matched_spans": [
+          "expected=0.95 observed=0.81 tolerance=0.05"
+        ]
+      }
+    },
+    {
+      "name": "artifact_schema_valid",
+      "score": 1,
+      "passed": true,
+      "reason_code": "SCHEMA_VALID",
+      "explanation": {
+        "summary": "Artifact structure remained valid despite tolerance failure."
+      }
+    }
+  ]
+}
