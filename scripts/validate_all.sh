@@ -12,4 +12,15 @@ python tools/check_source_ledger.py
 python tools/promotion_dry_run.py
 python tools/check_promotion_receipt_determinism.py
 python tools/validate_release_manifest_consistency.py
+python tools/check_source_rights.py
+python tools/check_source_probe_receipts.py
+python tools/check_source_activation.py
+python tools/check_source_semantics.py
 python -m unittest discover -s tests
+
+python tools/probe_wbd_metadata.py --dry-run
+
+python tools/check_source_terms_reviews.py
+python tools/check_source_attribution.py
+python tools/check_publication_eligibility.py
+python tools/review_wbd_terms_rights.py --dry-run

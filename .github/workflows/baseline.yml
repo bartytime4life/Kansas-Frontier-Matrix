@@ -14,8 +14,17 @@ jobs:
       - run: python tools/validate_docs_truth_labels.py
       - run: python tools/check_directory_rules.py
       - run: python tools/check_no_public_internal_paths.py
+      - run: python tools/check_source_rights.py
+      - run: python tools/check_source_probe_receipts.py
+      - run: python tools/check_source_activation.py
+      - run: python tools/check_source_semantics.py
       - run: python tools/validate_api_contracts.py
       - run: python tools/check_promotion_receipt_determinism.py
       - run: python tools/validate_release_manifest_consistency.py
+      - run: python tools/probe_wbd_metadata.py --dry-run
+      - run: python tools/check_source_terms_reviews.py
+      - run: python tools/check_source_attribution.py
+      - run: python tools/check_publication_eligibility.py
+      - run: python tools/review_wbd_terms_rights.py --dry-run
       - run: python -m unittest discover -s tests
       - run: bash scripts/validate_all.sh

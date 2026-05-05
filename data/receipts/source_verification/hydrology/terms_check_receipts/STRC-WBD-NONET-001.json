@@ -1,0 +1,9 @@
+{
+  "receipt_id": "STRC-WBD-NONET-001",
+  "source_id": "SRC-HYD-WBD-CANDIDATE",
+  "check_kind": "TERMS_RIGHTS_ONLY",
+  "network_mode": "DISABLED",
+  "validation_result": "ABSTAIN",
+  "response_body_stored": false,
+  "response_body_storage_policy": "HASH_ONLY"
+}

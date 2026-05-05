@@ -1,0 +1,10 @@
+{
+  "id": "HPD-HYD-001",
+  "knowledge_character": "SYNTHETIC_TEST",
+  "parameters": [
+    {
+      "name": "synthetic_discharge_cfs",
+      "character": "SYNTHETIC_TEST"
+    }
+  ]
+}
