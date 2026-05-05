@@ -1,35 +1,110 @@
 name: baseline
-on: [push, pull_request]
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: "3.11"}
-      - run: python tools/validate_repo.py
-      - run: python tools/validate_fixtures.py
-      - run: python tools/validate_schema_conformance.py
-      - run: python tools/validate_fixture_schema_mapping.py
-      - run: python tools/validate_docs_truth_labels.py
-      - run: python tools/check_directory_rules.py
-      - run: python tools/check_no_public_internal_paths.py
-      - run: python tools/check_source_rights.py
-      - run: python tools/check_source_probe_receipts.py
-      - run: python tools/check_source_activation.py
-      - run: python tools/check_source_semantics.py
-      - run: python tools/validate_api_contracts.py
-      - run: python tools/check_promotion_receipt_determinism.py
-      - run: python tools/validate_release_manifest_consistency.py
-      - run: python tools/probe_wbd_metadata.py --dry-run
-      - run: python tools/check_source_terms_reviews.py
-      - run: python tools/check_source_attribution.py
-      - run: python tools/check_publication_eligibility.py
-      - run: python tools/review_wbd_terms_rights.py --dry-run
-      - run: python tools/check_source_probes.py
-      - run: python tools/check_hydrology_source_profiles.py
-      - run: python tools/check_hydrology_observation_semantics.py
-      - run: python tools/check_no_observation_ingestion.py
-      - run: python tools/probe_usgs_water_data_metadata.py --dry-run
-      - run: python -m unittest discover -s tests
-      - run: bash scripts/validate_all.sh
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate repository structure
+        run: python tools/validate_repo.py
+
+      - name: Validate fixtures
+        run: python tools/validate_fixtures.py
+
+      - name: Validate schema conformance
+        run: python tools/validate_schema_conformance.py
+
+      - name: Validate fixture-to-schema mapping
+        run: python tools/validate_fixture_schema_mapping.py
+
+      - name: Validate documentation truth labels
+        run: python tools/validate_docs_truth_labels.py
+
+      - name: Check directory rules
+        run: python tools/check_directory_rules.py
+
+      - name: Check public surfaces for internal paths
+        run: python tools/check_no_public_internal_paths.py
+
+      - name: Check source rights
+        run: python tools/check_source_rights.py
+
+      - name: Check source probe receipts
+        run: python tools/check_source_probe_receipts.py
+
+      - name: Check source activation
+        run: python tools/check_source_activation.py
+
+      - name: Check source semantics
+        run: python tools/check_source_semantics.py
+
+      - name: Validate API contracts
+        run: python tools/validate_api_contracts.py
+
+      - name: Check promotion receipt determinism
+        run: python tools/check_promotion_receipt_determinism.py
+
+      - name: Validate release manifest consistency
+        run: python tools/validate_release_manifest_consistency.py
+
+      - name: Probe WBD metadata dry run
+        run: python tools/probe_wbd_metadata.py --dry-run
+
+      - name: Check source terms reviews
+        run: python tools/check_source_terms_reviews.py
+
+      - name: Check source attribution
+        run: python tools/check_source_attribution.py
+
+      - name: Check publication eligibility
+        run: python tools/check_publication_eligibility.py
+
+      - name: Review WBD terms and rights dry run
+        run: python tools/review_wbd_terms_rights.py --dry-run
+
+      - name: Check source probes
+        run: python tools/check_source_probes.py
+
+      - name: Check hydrology source profiles
+        run: python tools/check_hydrology_source_profiles.py
+
+      - name: Check hydrology observation semantics
+        run: python tools/check_hydrology_observation_semantics.py
+
+      - name: Check no observation ingestion
+        run: python tools/check_no_observation_ingestion.py
+
+      - name: Probe USGS Water Data metadata dry run
+        run: python tools/probe_usgs_water_data_metadata.py --dry-run
+
+      - name: Run unittest suite
+        run: python -m unittest discover -s tests
+
+      - name: Run aggregate validation script
+        run: bash scripts/validate_all.sh
