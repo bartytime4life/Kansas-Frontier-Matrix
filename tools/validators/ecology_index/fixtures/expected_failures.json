@@ -1,0 +1,47 @@
+{
+  "manifest_id": "kfm.ecology_index.expected_failures.v1",
+  "truth_posture": "PROPOSED",
+  "schema_target": "schemas/ecology/kfm_eco_index.schema.json",
+  "invalid": [
+    {
+      "fixture": "invalid/missing_spec_hash.json",
+      "expected_rule": "ECO_INDEX_SPEC_HASH_REQUIRED",
+      "expected_message": "spec_hash is required"
+    },
+    {
+      "fixture": "invalid/huc12_missing_watershed_id.json",
+      "expected_rule": "ECO_INDEX_HUC12_WATERSHED_REQUIRED",
+      "expected_message": "geometry_type huc12 requires join_keys.watershed_id"
+    },
+    {
+      "fixture": "invalid/fauna_without_taxon_or_obs.json",
+      "expected_rule": "ECO_INDEX_TAXON_OR_OBS_REQUIRED",
+      "expected_message": "flora/fauna rows require join_keys.taxon_id or join_keys.obs_id"
+    },
+    {
+      "fixture": "invalid/evidence_refs_empty.json",
+      "expected_rule": "ECO_INDEX_EVIDENCE_REQUIRED",
+      "expected_message": "evidence_refs must contain at least one item"
+    },
+    {
+      "fixture": "invalid/unknown_domain.json",
+      "expected_rule": "ECO_INDEX_UNKNOWN_DOMAIN",
+      "expected_message": "unknown domain: unknown_domain"
+    },
+    {
+      "fixture": "invalid/hydrology_without_required_join_key.json",
+      "expected_rule": "ECO_INDEX_HYDROLOGY_KEY_REQUIRED",
+      "expected_message": "hydrology rows require watershed_id, reach_id, or station_id"
+    },
+    {
+      "fixture": "invalid/soil_without_required_join_key.json",
+      "expected_rule": "ECO_INDEX_SOIL_KEY_REQUIRED",
+      "expected_message": "soil rows require soil_id or station_id"
+    },
+    {
+      "fixture": "invalid/vegetation_without_required_join_key.json",
+      "expected_rule": "ECO_INDEX_VEGETATION_KEY_REQUIRED",
+      "expected_message": "vegetation rows require layer_id or landcover_class"
+    }
+  ]
+}

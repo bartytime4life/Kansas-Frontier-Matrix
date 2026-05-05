@@ -1,0 +1,11 @@
+{
+  "index_id": "kfm.eco_index.invalid.fauna_without_taxon_or_obs",
+  "geom_id": "GRID:KS_10KM_206",
+  "geometry_type": "grid",
+  "time_bucket": "2024_annual",
+  "spec_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "domains": ["fauna"],
+  "join_keys": {"habitat_id": "kfm.habitat.tallgrass.v1"},
+  "evidence_refs": [{"domain": "fauna", "evidence_ref": "kfm:evidence:fauna:gbif:2492488"}],
+  "status": "valid"
+}
