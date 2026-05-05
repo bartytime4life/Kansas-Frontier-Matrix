@@ -1,0 +1,19 @@
+{
+  "id": "HYDRO-NONET-VALID-001",
+  "network_mode": "DISABLED",
+  "source_activation_decision": "ABSTAIN",
+  "focus_outcome": "ABSTAIN",
+  "reason": "MISSING_EVIDENCE",
+  "evidence_resolved": false,
+  "citations": [
+    "evr-hydro-synth-001"
+  ],
+  "http_facts": [
+    {
+      "kind": "NO_NETWORK_ASSERTION",
+      "observed": true,
+      "detail": "No external HTTP request executed in synthetic baseline mode"
+    }
+  ],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
