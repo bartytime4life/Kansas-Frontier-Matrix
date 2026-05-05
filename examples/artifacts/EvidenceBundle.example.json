@@ -1,0 +1,28 @@
+{
+  "bundle_id": "example-bundle",
+  "version": "1.0.0",
+  "created_at": "2026-05-05T00:00:00Z",
+  "producer": "example-ci",
+  "subject": {
+    "id": "example-subject"
+  },
+  "artifacts": [
+    {
+      "path": "dist/example.tgz",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "rights": {
+    "license_id": "internal-use",
+    "allowed_uses": [
+      "promotion",
+      "audit"
+    ],
+    "prohibited_uses": [],
+    "sensitivity_level": "internal"
+  },
+  "obligations": {
+    "redaction_required": false
+  },
+  "spec_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+}

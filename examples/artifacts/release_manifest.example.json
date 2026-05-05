@@ -1,0 +1,15 @@
+{
+  "release_id": "REL-0001",
+  "version": "1.0.0",
+  "target_env": "staging",
+  "spec_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "artifacts": [
+    {
+      "path": "dist/example.tgz",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "evidence_bundle_ref": "artifacts/EvidenceBundle.json",
+  "decision_log_ref": "artifacts/decision_log.json",
+  "publish_approved": true
+}
