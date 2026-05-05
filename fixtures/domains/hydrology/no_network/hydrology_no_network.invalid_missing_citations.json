@@ -1,0 +1,10 @@
+{
+  "id": "HYDRO-NONET-INVALID-CITATIONS-001",
+  "network_mode": "DISABLED",
+  "source_activation_decision": "ABSTAIN",
+  "focus_outcome": "ABSTAIN",
+  "reason": "MISSING_EVIDENCE",
+  "evidence_resolved": false,
+  "citations": [],
+  "knowledge_character": "SYNTHETIC_TEST"
+}
