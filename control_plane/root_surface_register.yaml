@@ -62,6 +62,9 @@ roots:
   policy:
     class: policy
     notes: Policy definitions and tests.
+  policies:
+    class: transitional
+    notes: Compatibility/transitional policy mirror surface.
   release:
     class: release/proof
     notes: Dry-run and release proof artifacts.
