@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "kfm-evidence-watcher-poc"
+name = "kfm-governed-ingestion-starter"
 version = "0.1.0"
-description = "Evented source watcher and batched micro-runner for cosign-signed EvidenceBundles"
+description = "KFM ecology/hydrology governed-ingestion starter kit with an evented source watcher and batched micro-runner for cosign-signed EvidenceBundles"
 requires-python = ">=3.11"
 dependencies = []
 
@@ -20,3 +20,6 @@ include = ["tools*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
