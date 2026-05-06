@@ -1,0 +1,310 @@
+version: 1
+last_updated: '2026-05-06'
+owning_responsibility_root: .github/workflows
+workflows:
+- workflow_file: .github/workflows/baseline.yml
+  workflow_name: baseline
+  trigger:
+  - push
+  - pull_request
+  jobs:
+  - test
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts:
+  - scripts/validate_all.sh
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - tools
+  - tests
+  - scripts
+  required_secrets_or_github_context:
+  - github.ref
+  - github.workflow
+  - github.workspace
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Does not evaluate branch protection, required-check
+    policy, or Actions permission enforcement.
+  status: PASS
+- workflow_file: .github/workflows/incremental-stac-watcher.yml
+  workflow_name: incremental-stac-watcher
+  trigger:
+  - schedule
+  - workflow_dispatch
+  jobs:
+  - watcher
+  required_actions:
+  - actions/checkout@v4
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - data/catalog/stac
+  - tools
+  required_secrets_or_github_context:
+  - github.event
+  - github.event_name
+  - github.ref
+  - github.token
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Scheduled trigger timing and token scopes require
+    execution in GitHub-hosted Actions.
+  status: NEEDS VERIFICATION
+- workflow_file: .github/workflows/promote-and-reconcile.yml
+  workflow_name: promote-and-reconcile
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - promote-and-reconcile
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - contracts
+  - schemas
+  - fixtures
+  - release
+  - tools
+  - tests
+  required_secrets_or_github_context:
+  - github.ref
+  - github.workflow
+  - github.workspace
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Artifact retention, PR annotations, and branch policy
+    checks require GitHub runtime.
+  status: PASS
+- workflow_file: .github/workflows/rehearse-rollback-and-correction.yml
+  workflow_name: Rehearse rollback and correction
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - dry-run-rehearsal
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  required_repo_paths:
+  - release
+  - data/receipts
+  - tools
+  required_secrets_or_github_context:
+  - github.event
+  - github.ref
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Commenting/status APIs and hosted runner environment
+    are GitHub-only.
+  status: FAIL
+- workflow_file: .github/workflows/release-evidence.yml
+  workflow_name: release-evidence
+  trigger:
+  - workflow_dispatch
+  - pull_request
+  - push
+  - release
+  jobs:
+  - assemble-release-evidence
+  required_actions:
+  - actions/checkout@v4
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - release
+  - data/proofs
+  - data/catalog
+  - data/receipts
+  required_secrets_or_github_context:
+  - github.event_name
+  - github.ref
+  - github.run_id
+  - github.workflow
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Release event semantics and tag protection cannot
+    be validated locally.
+  status: FAIL
+- workflow_file: .github/workflows/runtime-proof-soil-moisture.yml
+  workflow_name: Runtime Proof - Soil Moisture
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - runtime-proof-soil-moisture
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - tools
+  - contracts
+  - schemas
+  - data
+  required_secrets_or_github_context:
+  - github.event
+  - github.ref
+  - github.run_attempt
+  - github.run_id
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: OIDC/provenance and workflow summary rendering behavior
+    require GitHub execution.
+  status: NEEDS VERIFICATION
+- workflow_file: .github/workflows/synthetic-release-dry-run.yml
+  workflow_name: synthetic-release-dry-run
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - dry-run
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - release
+  - tools
+  - tests
+  required_secrets_or_github_context:
+  - github.ref
+  - github.workflow
+  - github.workspace
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Actions summary annotations and artifacts are not
+    reproducible in local shell.
+  status: PASS
+- workflow_file: .github/workflows/verify-contracts-and-policy.yml
+  workflow_name: verify-contracts-and-policy
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - verify-contracts-and-policy
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - contracts
+  - schemas
+  - policy
+  - tools
+  - tests
+  required_secrets_or_github_context:
+  - github.ref
+  - github.workflow
+  - github.workspace
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Repository security policy checks depend on GitHub
+    environment and branch configuration.
+  status: PASS
+- workflow_file: .github/workflows/verify-docs.yml
+  workflow_name: verify-docs
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - verify-docs
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts:
+  - tools/ci/check_readme_paths.sh
+  required_package_managers:
+  - bash
+  required_repo_paths:
+  - docs
+  - tools/ci
+  required_secrets_or_github_context:
+  - github.ref
+  - github.workflow
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: PR annotation rendering and required-check gating
+    are platform-level.
+  status: PASS
+- workflow_file: .github/workflows/verify-runtime.yml
+  workflow_name: verify-runtime
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - verify-runtime
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - python
+  required_repo_paths:
+  - apps/api
+  - contracts/runtime
+  - schemas/contracts/v1/runtime
+  - tools/ci
+  - tests
+  required_secrets_or_github_context:
+  - github.event
+  - github.event_name
+  - github.ref
+  - github.sha
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: End-to-end runner parity and merge-gate enforcement
+    require GitHub Actions context.
+  status: FAIL
+- workflow_file: .github/workflows/verify-tests-and-reproducibility.yml
+  workflow_name: Verify tests and reproducibility
+  trigger:
+  - pull_request
+  - push
+  - workflow_dispatch
+  jobs:
+  - verify
+  required_actions:
+  - actions/checkout@v4
+  - actions/setup-python@v5
+  required_scripts: []
+  required_package_managers:
+  - bash
+  - npm
+  - pnpm
+  - python
+  - yarn
+  required_repo_paths:
+  - tests
+  - tools
+  - scripts
+  required_secrets_or_github_context:
+  - github.ref
+  - github.run_id
+  - github.workflow
+  local_validation_command: python tools/ci/validate_workflow_dependency_register.py
+  github_only_validation_limits: Reproducibility attestation uploads and job-summary
+    links are GitHub-only.
+  status: PASS

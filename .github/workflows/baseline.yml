@@ -34,6 +34,9 @@ jobs:
       - name: Validate repository structure
         run: python tools/validate_repo.py
 
+      - name: Validate workflow dependency register
+        run: python tools/ci/validate_workflow_dependency_register.py
+
       - name: Validate fixtures
         run: python tools/validate_fixtures.py
 
