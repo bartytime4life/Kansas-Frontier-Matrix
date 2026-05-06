@@ -1,0 +1,6 @@
+{
+  "board_status": "SNAPSHOT_PRESERVATION_AUDIT_COMPLETE_INTERNAL_ONLY",
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationAuditStatusBoard",
+  "schema_version": "v1"
+}
