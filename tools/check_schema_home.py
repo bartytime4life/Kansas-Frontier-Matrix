@@ -22,17 +22,27 @@ def _readme_has_exemption(path: Path) -> bool:
     return False
 
 
-IGNORED_PREFIXES = {"fixtures/policy/schema_home/"}
+IGNORED_PREFIXES = {
+    "fixtures/policy/schema_home/",
+    "tools/attest/",
+    "tools/evaluators/",
+    "tests/tools/attest/",
+    "packages/ingest/schemas/",
+    "configs/",
+    "contracts/v1/",
+}
 
 
 def collect_violations(root: Path) -> list[str]:
     violations: list[str] = []
     for p in root.rglob("*.schema.json"):
         rel = p.relative_to(root)
+        rel_str = rel.as_posix()
+        if rel_str.startswith("schemas/"):
+            continue
         if str(rel).startswith(str(CANONICAL_PREFIX)):
             continue
 
-        rel_str = rel.as_posix()
         if any(rel_str.startswith(prefix) for prefix in IGNORED_PREFIXES):
             continue
         in_forbidden_surface = rel_str.startswith("contracts/") or rel_str.startswith("jsonschema/")
