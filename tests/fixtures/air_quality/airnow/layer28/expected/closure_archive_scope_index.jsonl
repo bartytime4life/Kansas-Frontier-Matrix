@@ -1,0 +1,13 @@
+{"internal_only":true,"scope_id":"scope_2a6cc3fcce1b79a9","scope_key":"preservation_closure_decision_ledger_json"}
+{"internal_only":true,"scope_id":"scope_2f03263ce84850e3","scope_key":"preservation_closure_non_execution_ledger_json"}
+{"internal_only":true,"scope_id":"scope_420a71d9e8df368c","scope_key":"preservation_closure_consistency_matrix_json"}
+{"internal_only":true,"scope_id":"scope_446773ba12e19569","scope_key":"preservation_closure_receipt_ledger_json"}
+{"internal_only":true,"scope_id":"scope_4e15d6dc42cfa446","scope_key":"preservation_closure_audit_receipt_json"}
+{"internal_only":true,"scope_id":"scope_5fa9f7506cb2a6ae","scope_key":"preservation_closure_completeness_matrix_json"}
+{"internal_only":true,"scope_id":"scope_6b27438299533f84","scope_key":"preservation_closure_final_internal_summary_json"}
+{"internal_only":true,"scope_id":"scope_6c15a25ee36b6e42","scope_key":"preservation_closure_lineage_graph_json"}
+{"internal_only":true,"scope_id":"scope_70b72217be3ce8e6","scope_key":"preservation_closure_hash_chain_json"}
+{"internal_only":true,"scope_id":"scope_8c525713d02594e1","scope_key":"preservation_closure_evidence_ledger_json"}
+{"internal_only":true,"scope_id":"scope_aab007886967e650","scope_key":"preservation_closure_caveat_registry_json"}
+{"internal_only":true,"scope_id":"scope_ec19e53fd575098c","scope_key":"preservation_closure_audit_exception_register_json"}
+{"internal_only":true,"scope_id":"scope_ef4c46203b4d1754","scope_key":"preservation_closure_policy_ledger_json"}
