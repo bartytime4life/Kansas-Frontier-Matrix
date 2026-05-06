@@ -1,0 +1,14 @@
+{
+  "schema": "DisclosureSpec.v1",
+  "disclosure_id": "soilgrids-public-disclosure-v1",
+  "title": "SoilGrids governed pipeline trust packet",
+  "dataset_id": "soilgrids-v2",
+  "audience": "public",
+  "packet_profile": "public-transparency",
+  "source": {"assurance_pack_root": "assurance_packs/example"},
+  "claims": {"include_assurance_gate": true},
+  "redaction": {"redaction_marker": "[REDACTED]"},
+  "packet": {"write_zip": false, "write_tar_gz": false, "include_payloads": false, "include_raw_logs": false},
+  "proofs": {"write_verifiable_trust_statement": true, "sign_trust_statement": false},
+  "verification": {"write_verification_instructions": true, "include_checksums": true, "include_claim_evidence_links": true}
+}
