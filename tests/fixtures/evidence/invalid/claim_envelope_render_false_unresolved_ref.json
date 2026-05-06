@@ -1,0 +1,18 @@
+{
+  "claim_id": "kfm:claim:hydrology:huc12:102600080305:render_false",
+  "claim_text": "Claim with unresolved composed-claim ref cannot render.",
+  "evidence_refs": [
+    {
+      "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305",
+      "domain": "hydrology",
+      "ref": "data/catalog/hydrology/huc12/102600080305.json",
+      "release_state": "PUBLISHED",
+      "sensitivity": "public"
+    }
+  ],
+  "composed_claim_refs": [
+    "kfm:claim:unresolved:does:not:exist"
+  ],
+  "render": false,
+  "decision": "abstain"
+}

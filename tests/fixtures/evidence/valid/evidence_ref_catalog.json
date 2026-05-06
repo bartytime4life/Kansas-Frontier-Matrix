@@ -1,0 +1,8 @@
+{
+  "evidence_ref_id": "kfm:evidence:flora:taxon:POPR",
+  "domain": "flora",
+  "ref": "data/catalog/flora/taxon/POPR.json",
+  "release_state": "CATALOG",
+  "sensitivity": "public",
+  "review_state": "approved"
+}

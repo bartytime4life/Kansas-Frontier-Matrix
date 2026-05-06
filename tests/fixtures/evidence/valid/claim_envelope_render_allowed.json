@@ -1,0 +1,22 @@
+{
+  "claim_id": "kfm:claim:hydrology:huc12:102600080305:render_allowed",
+  "claim_text": "HUC12 102600080305 has documented hydrology evidence supporting ecological assessment.",
+  "evidence_refs": [
+    {
+      "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305",
+      "domain": "hydrology",
+      "ref": "data/catalog/hydrology/huc12/102600080305.json",
+      "release_state": "PUBLISHED",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sensitivity": "public",
+      "review_state": "approved"
+    }
+  ],
+  "render": true,
+  "review_state": "approved",
+  "decision": "cite",
+  "uncertainty": {
+    "status": "declared",
+    "summary": "Uncertainty inherited from proof-pack evidence."
+  }
+}

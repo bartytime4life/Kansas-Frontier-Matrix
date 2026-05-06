@@ -1,0 +1,21 @@
+{
+  "claim_id": "kfm:claim:ecology:composed:multi_domain:render_allowed",
+  "claim_text": "Multi-domain ecological assessment for HUC12 102600080305 with flora and hydrology support.",
+  "evidence_refs": [
+    {
+      "evidence_ref_id": "kfm:evidence:hydrology:huc12:102600080305",
+      "domain": "hydrology",
+      "ref": "data/catalog/hydrology/huc12/102600080305.json",
+      "release_state": "PUBLISHED",
+      "sensitivity": "public",
+      "review_state": "approved"
+    }
+  ],
+  "composed_claim_refs": [
+    "kfm:claim:hydrology:huc12:102600080305:render_allowed",
+    "kfm:claim:flora:taxon:POPR:render_allowed"
+  ],
+  "render": true,
+  "review_state": "approved",
+  "decision": "cite"
+}
