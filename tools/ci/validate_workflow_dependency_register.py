@@ -23,10 +23,14 @@ def load_yaml(path: Path):
 def collect_from_workflow(path: Path):
     data = load_yaml(path)
     txt = path.read_text()
+    # Ignore heredoc-embedded scripts (e.g., python <<'PY') when collecting
+    # repo path literals; these blocks often contain generated temp-output paths
+    # or example names that are not required checkout files.
+    txt_for_paths = re.sub(r"<<'?[A-Za-z_][A-Za-z0-9_]*'?\n.*?\n[A-Za-z_][A-Za-z0-9_]*", "", txt, flags=re.DOTALL)
     scripts, cfgs, pms = set(), set(), set()
     for m in SCRIPT_RE.finditer(txt):
         scripts.add(m.group(1).lstrip("./"))
-    for m in PATH_RE.finditer(txt):
+    for m in PATH_RE.finditer(txt_for_paths):
         candidate = m.group(1).lstrip("./")
         if candidate.startswith("github"):
             continue
