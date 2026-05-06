@@ -1,62 +1,81 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-UUID
-title: Ecology Governed API Tests
+doc_id: kfm://doc/NEEDS-VERIFICATION-apps-api-ecology-tests-readme
+title: Ecology API Tests
 type: standard
 version: v1
 status: draft
 owners: <NEEDS_VERIFICATION_OWNER>
 created: 2026-04-24
-updated: 2026-04-24
+updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
-related: [../README.md, ../../README.md, ../../../../schemas/contracts/v1/ecology/README.md, ../../../../policy/ecology/README.md, ../../../../tools/validators/ecology/README.md, ../../../../tests/e2e/runtime_proof/ecology/README.md]
-tags: [kfm, ecology, governed-api, tests, fixtures, evidence, policy]
-notes: [Target path supplied by task; active repository checkout was not available during generation; owners, policy label, doc_id, adjacent README links, and exact test runner require verification before commit.]
+related: [../README.md, ../../README.md, ../../openapi/ecology.yaml, ../../../../docs/adr/ADR-0202-governed-api-path-canonicalization.md, ../../../../docs/adr/ADR-0001-schema-home.md, ../../../../docs/domains/ecology/SENSITIVITY_AND_GEOPRIVACY.md, ../../../../policy/ecology/publication.rego, ../../../../schemas/ecology/ecology_proof_pack.schema.json, ../../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json]
+tags: [kfm, ecology, api, governed-api, tests, pytest, evidencebundle, focus-mode, runtime-envelope, cite-or-abstain, geoprivacy]
+notes: [Target file path is confirmed as apps/api/ecology/tests/README.md in the accessible repository. Owners and policy label still need authoritative repo verification. The physical apps/api path and imported apps.governed_api namespace remain a documented path-governance verification item.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Ecology Governed API Tests
+# Ecology API Tests
 
-Test boundary for ecology-facing governed API behavior: evidence resolution, policy decisions, finite runtime outcomes, and public-safe response contracts.
+App-local tests for the ecology API trust boundary: proof-pack resolution, cite-or-abstain behavior, FastAPI route wiring, Focus Mode envelopes, and schema compatibility.
 
-> [!NOTE]
-> **Status:** `experimental` · **Document status:** `draft`  
-> **Owners:** `<NEEDS_VERIFICATION_OWNER>`  
-> **Path:** `apps/governed_api/ecology/tests/README.md`  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Test matrix](#test-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+<div align="left">
 
-![status: experimental](https://img.shields.io/badge/status-experimental-orange)
-![doc: draft](https://img.shields.io/badge/doc-draft-lightgrey)
-![owners: needs verification](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-6f42c1)
-![surface: governed api tests](https://img.shields.io/badge/surface-governed__api__tests-0b7285)
-![posture: fail closed](https://img.shields.io/badge/posture-fail--closed-b60205)
-![network: no live sources](https://img.shields.io/badge/network-no__live__sources-1f6feb)
+![Status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
+![Doc: draft](https://img.shields.io/badge/doc-draft-lightgrey)
+![Owners: needs verification](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-yellow)
+![Path: apps/api/ecology/tests](https://img.shields.io/badge/path-apps%2Fapi%2Fecology%2Ftests-0a7ea4)
+![Runner: pytest](https://img.shields.io/badge/runner-pytest-1f6feb)
+![Posture: cite or abstain](https://img.shields.io/badge/posture-cite--or--abstain-2ea043)
+![Network: no live sources](https://img.shields.io/badge/network-no_live_sources-b60205)
+
+</div>
+
+| Field | Value |
+|---|---|
+| **Status** | `experimental` |
+| **Owners** | `<NEEDS_VERIFICATION_OWNER>` |
+| **Path** | `apps/api/ecology/tests/README.md` |
+| **Repo fit** | app-local pytest suite for ecology API behavior and governed runtime seams |
+| **Quick jumps** | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Test matrix](#test-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
+
+> [!IMPORTANT]
+> These tests are part of the trust membrane. They should prove that ecology API responses are bounded by evidence, policy, release state, schema shape, and finite runtime outcomes. They must not become a second source of ecological truth.
+
+> [!WARNING]
+> The target file lives under `apps/api/ecology/tests/`, while several test modules import `apps.governed_api.ecology`. That mismatch is a **NEEDS VERIFICATION** path-governance item. Do not “fix” it from this README alone; check the accepted ADR, import shims, CI path-policy checker, and active package layout first.
 
 ---
 
 ## Scope
 
-This directory is for tests that prove the ecology-facing governed API does **not** bypass KFM’s trust path.
+This directory covers app-local tests for ecology API behavior that is close to route/runtime code.
 
-In this README, **ecology** is treated as a governed API acceptance boundary for public-safe ecological claims and derived ecology relationships, especially where habitat, fauna, flora, source rights, sensitivity, policy, and Evidence Drawer payloads meet at runtime.
+It focuses on four seams:
 
-**CONFIRMED:** the target path is `apps/governed-api/ecology/tests/README.md`, because it was supplied by the task.
+1. **EvidenceBundle resolution** from ecology proof packs.
+2. **Cite-or-abstain responses** when proof packs are complete, missing, malformed, stale, or mismatched.
+3. **FastAPI route behavior** for ecology evidence-bundle and Focus Mode endpoints.
+4. **Schema/runtime compatibility** for response envelopes and route payloads.
 
-**NEEDS VERIFICATION:** the active repository was not mounted during this drafting pass, so this README does not confirm that the surrounding directory, app framework, schemas, validators, fixtures, or CI workflow already exist.
+The tests should preserve KFM’s operating law:
 
-**PROPOSED test role:** this directory should cover ecology API behavior that must be visible to maintainers before any public or semi-public ecological output is trusted:
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED -> governed API -> trust-visible UI
+```
 
-- `EvidenceRef -> EvidenceBundle` closure
-- `DecisionEnvelope` / `PolicyDecision` outcomes
-- `RuntimeResponseEnvelope` finite outcomes: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`
-- public-safe geometry and sensitivity handling
-- source-role and rights checks
-- Evidence Drawer payload compatibility
-- Focus Mode compatibility, where Focus consumes only evidence-backed outputs
-- rollback, correction, and release-state visibility
+### What this suite should prove
 
-> [!IMPORTANT]
-> The tests here should prove outward behavior. They should not become the source of canonical ecological truth.
+| Proof burden | Current local expression |
+|---|---|
+| Missing proof packs do not produce unsupported claims. | Resolver and route tests expect `abstain` with reason/error code. |
+| Valid proof packs can produce a citeable response. | Resolver tests synthesize a proof pack with receipts and PROV refs. |
+| FastAPI ecology evidence-bundle route is registered. | Route adapter test calls `/v1/ecology/evidence-bundles/{candidate_id}`. |
+| Focus Mode is bounded by the API runtime boundary. | Focus app tests call `/ecology/focus` and assert runtime/error wrapping. |
+| Runtime payloads stay schema-compatible. | Runtime-envelope and route-response schema tests validate payload shape. |
+
+> [!NOTE]
+> This README documents the test boundary. It does not claim that CI currently blocks merges, that every referenced schema exists, or that runtime deployment is active.
 
 [Back to top](#top)
 
@@ -64,19 +83,30 @@ In this README, **ecology** is treated as a governed API acceptance boundary for
 
 ## Repo fit
 
-| Relationship | Relative link from this file | Role | Status |
-|---|---|---|---|
-| Current README | [`./README.md`](./README.md) | Local orientation for ecology governed API tests. | **CONFIRMED target** |
-| Ecology API package | [`../README.md`](../README.md) | Expected parent app/module README for ecology API behavior. | **NEEDS VERIFICATION** |
-| Governed API app | [`../../README.md`](../../README.md) | Expected app-level boundary for governed API routes, middleware, and runtime envelopes. | **NEEDS VERIFICATION** |
-| Repo root | [`../../../../README.md`](../../../../README.md) | Expected repository orientation and KFM doctrine entry point. | **NEEDS VERIFICATION** |
-| Ecology schemas | [`../../../../schemas/contracts/v1/ecology/README.md`](../../../../schemas/contracts/v1/ecology/README.md) | Expected schema/contract home for ecology runtime objects. | **NEEDS VERIFICATION** |
-| Ecology policy | [`../../../../policy/ecology/README.md`](../../../../policy/ecology/README.md) | Expected policy home for rights, sensitivity, publication, and negative-outcome rules. | **NEEDS VERIFICATION** |
-| Ecology validators | [`../../../../tools/validators/ecology/README.md`](../../../../tools/validators/ecology/README.md) | Expected validator home for reusable checks invoked by tests and CI. | **NEEDS VERIFICATION** |
-| Runtime proof tests | [`../../../../tests/e2e/runtime_proof/ecology/README.md`](../../../../tests/e2e/runtime_proof/ecology/README.md) | Expected cross-app runtime proof home, if the repo keeps E2E tests outside app packages. | **NEEDS VERIFICATION** |
+`apps/api/ecology/tests/` sits next to the ecology API implementation and below broader app/API, schema, policy, and documentation control surfaces.
 
-> [!WARNING]
-> The task path uses `apps/governed-api/...`. Prior KFM lineage has used both `apps/governed-api` and `apps/governed_api` in proposed plans. Do **not** maintain both app roots. Verify the active checkout and record an ADR or migration note before normalizing this path.
+| Relationship | Relative link | Role | Status |
+|---|---|---|---|
+| Parent ecology API README | [`../README.md`](../README.md) | Documents ecology EvidenceBundle resolver and API boundary. | **CONFIRMED file** |
+| Parent API README | [`../../README.md`](../../README.md) | Describes governed API posture, route-family expectations, and finite outcomes. | **CONFIRMED file** |
+| Ecology OpenAPI contract | [`../../openapi/ecology.yaml`](../../openapi/ecology.yaml) | Documents ecology layer, time-slice, evidence, and STAC routes. | **CONFIRMED file** |
+| Ecology route wrapper | [`../routes.py`](../routes.py) | Calls the EvidenceBundle resolver and applies include/exclude response flags. | **CONFIRMED file** |
+| FastAPI adapter | [`../fastapi_routes.py`](../fastapi_routes.py) | Registers `/v1/ecology/evidence-bundles/{candidate_id}`. | **CONFIRMED file** |
+| EvidenceBundle resolver | [`../evidencebundle_resolver.py`](../evidencebundle_resolver.py) | Loads proof packs, validates schema, returns cite or abstain responses. | **CONFIRMED file** |
+| Focus Mode runtime | [`../focus_mode.py`](../focus_mode.py) | Reads released ecology artifacts and emits finite Focus Mode outcomes. | **CONFIRMED file** |
+| FastAPI app | [`../app.py`](../app.py) | Includes ecology router and exposes `/ecology/focus`. | **CONFIRMED file** |
+| Governed API path ADR | [`../../../../docs/adr/ADR-0202-governed-api-path-canonicalization.md`](../../../../docs/adr/ADR-0202-governed-api-path-canonicalization.md) | Decides canonical `apps/governed_api/...` path and legacy shim posture. | **CONFIRMED file / path relationship still needs verification** |
+| Schema-home ADR | [`../../../../docs/adr/ADR-0001-schema-home.md`](../../../../docs/adr/ADR-0001-schema-home.md) | Proposes `schemas/contracts/v1/` for machine-checkable contract schemas. | **CONFIRMED file / decision still proposed** |
+| Ecology geoprivacy doc | [`../../../../docs/domains/ecology/SENSITIVITY_AND_GEOPRIVACY.md`](../../../../docs/domains/ecology/SENSITIVITY_AND_GEOPRIVACY.md) | Defines public/generalize/restricted/review-required sensitivity posture. | **CONFIRMED file** |
+| Ecology publication policy | [`../../../../policy/ecology/publication.rego`](../../../../policy/ecology/publication.rego) | Fail-closed public publication policy for ecology objects. | **CONFIRMED file** |
+
+### Upstream
+
+These tests consume or mirror expectations from schemas, proof packs, policy, OpenAPI contracts, sensitivity docs, and route/runtime code.
+
+### Downstream
+
+Passing tests should give maintainers review evidence that the ecology API does not produce public-facing ecological claims without proof-pack closure, schema compatibility, policy-safe status, and governed runtime outcomes.
 
 [Back to top](#top)
 
@@ -84,18 +114,18 @@ In this README, **ecology** is treated as a governed API acceptance boundary for
 
 ## Accepted inputs
 
-Only test-grade, reviewable inputs belong here.
+Only small, deterministic, reviewable test inputs belong here.
 
-| Input family | Accepted when | Required proof posture |
+| Accepted input | Belongs here when | Required posture |
 |---|---|---|
-| Contract fixtures | They are minimal valid/invalid examples for ecology API request/response objects. | Schema validation must identify pass/fail reason codes. |
-| Source descriptor fixtures | They model source role, citation, rights, cadence, and scope without activating live connectors. | Missing rights, citation, source role, or `spec_hash` must fail closed. |
-| Evidence fixtures | They resolve `EvidenceRef` into a bounded `EvidenceBundle`. | Unsupported or stale evidence must produce `ABSTAIN`, `DENY`, or `ERROR`, not uncited `ANSWER`. |
-| Policy fixtures | They exercise rights, sensitivity, public geometry, release state, and review obligations. | Negative cases must be explicit and machine-checkable. |
-| Runtime envelope snapshots | They prove finite governed API outcomes. | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` must each have valid examples. |
-| Evidence Drawer payload fixtures | They prove the UI can display citations, freshness, policy, rights, provenance, review state, and correction state. | Missing trust fields must block the payload. |
-| Controlled synthetic ecology data | It is public-safe, local, deterministic, and intentionally small. | It must not imply production source activation. |
-| Regression fixtures | They preserve prior behavior across schema, policy, route, or payload changes. | Every regression fixture needs a reason for existence and expected outcome. |
+| Synthetic proof-pack JSON | It is created inside a test temporary directory. | Must include required receipts, catalog refs, status, candidate ID, and `spec_hash`. |
+| Minimal proof-pack schema | It is scoped to resolver behavior in a test. | Must be explicit about required fields and negative cases. |
+| Missing proof-pack candidate IDs | They exercise abstention behavior. | Must assert reason and error code. |
+| Malformed or non-object JSON | It exercises invalid proof-pack handling. | Must produce `abstain`, not an exception surfaced as a claim. |
+| Spec-hash mismatch inputs | They prove deterministic identity checks matter. | Must produce `ECO_EB_SPEC_HASH_MISMATCH` or equivalent governed negative state. |
+| FastAPI test clients | They call local route adapters without live source access. | FastAPI availability may be optional via `pytest.importorskip`. |
+| Runtime-envelope fixtures | They validate response compatibility with machine schemas. | Schema path and payload shape must be verified before claiming CI enforcement. |
+| Monkeypatched Focus Mode responses | They isolate API app error wrapping and route behavior. | Must not call a model provider or live ecological source. |
 
 [Back to top](#top)
 
@@ -105,14 +135,15 @@ Only test-grade, reviewable inputs belong here.
 
 | Does **not** belong here | Goes instead | Reason |
 |---|---|---|
-| Live GBIF, eBird, iNaturalist, KDWP, NatureServe, USFWS, NLCD, NWI, LANDFIRE, or other source fetches | Source connector tests or source-specific validator suites after rights verification | This directory should remain no-network by default. |
-| RAW, WORK, or QUARANTINE source payloads | `data/raw/`, `data/work/`, `data/quarantine/`, or source-specific fixtures | Public API tests must not normalize direct access to pre-publication stores. |
-| Canonical ecological records | Domain data packages and processed/catalog layers | Tests prove behavior; they are not canonical truth stores. |
-| Sensitive exact species locations | Restricted fixtures with explicit geoprivacy controls, or no public fixture at all | Exact locations can expose protected taxa, nest/den/roost sites, or steward-controlled records. |
-| UI components | UI package paths such as `web/`, `ui/`, or equivalent repo-native homes | This directory may validate payload shape, not render UI. |
-| Policy source of truth | `policy/ecology/` or equivalent policy bundle | Tests assert policy behavior; they do not replace policy. |
-| Schema source of truth | `schemas/contracts/v1/ecology/` or repo-confirmed schema home | Tests consume schemas; they do not define schema authority. |
-| Promotion or release artifacts | `data/proofs/`, `data/receipts/`, `data/published/`, or equivalent release homes | Test snapshots may reference proof objects, but must not masquerade as release state. |
+| Live GBIF, eBird, iNaturalist, KDWP, NatureServe, USFWS, NLCD, LANDFIRE, NWI, HLS, or provider fetches | `pipelines/`, connector tests, or source-specific integration suites | App-local tests should remain no-network by default. |
+| RAW, WORK, or QUARANTINE payloads | `data/raw/`, `data/work/`, `data/quarantine/`, or controlled fixture lanes | Public API tests must not normalize pre-publication access. |
+| Canonical ecological records | Domain data lifecycle roots | Tests prove behavior; they do not store truth. |
+| Production proof packs | `data/proofs/ecology/` | Tests may synthesize proof packs, but production proof custody belongs in data/proof lanes. |
+| Production receipts | `data/receipts/` | Tests may use tiny synthetic receipt snippets only. |
+| Policy source of truth | `policy/ecology/` | Tests assert policy behavior; they do not govern it. |
+| Machine-schema source of truth | `schemas/` or ADR-confirmed schema home | Tests consume schemas; they do not define schema authority. |
+| UI rendering tests | `apps/web/`, `apps/ui/`, or E2E/UI test lanes | This suite validates API payload behavior, not visual rendering. |
+| Free-form AI/model outputs | Governed AI runtime tests with receipts and citation validation | Focus Mode remains evidence-bounded and finite-outcome. |
 
 [Back to top](#top)
 
@@ -120,40 +151,34 @@ Only test-grade, reviewable inputs belong here.
 
 ## Directory tree
 
-**PROPOSED / NEEDS VERIFICATION:** this tree is a recommended shape for the target directory, not proof that files currently exist.
+**CONFIRMED in accessible repository search:** the current app-local ecology test directory contains this README plus six pytest files.
 
 ```text
-apps/governed_api/ecology/tests/
+apps/api/ecology/tests/
 ├── README.md
-├── fixtures/
-│   ├── api_outcomes/
-│   │   ├── answer.valid.json
-│   │   ├── abstain.valid.json
-│   │   ├── deny.valid.json
-│   │   └── error.valid.json
-│   ├── evidence_bundles/
-│   │   ├── minimal.valid.json
-│   │   └── missing_citation.invalid.json
-│   ├── evidence_drawer/
-│   │   ├── payload.answer.valid.json
-│   │   └── payload.missing_policy.invalid.json
-│   ├── source_descriptors/
-│   │   ├── controlled_fixture.valid.json
-│   │   └── missing_rights.invalid.json
-│   └── sensitivity/
-│       ├── public_safe.valid.json
-│       └── exact_sensitive_location.invalid.json
-├── test_ecology_api_outcomes.py
-├── test_ecology_evidence_bundle_closure.py
-├── test_ecology_evidence_drawer_payload.py
-├── test_ecology_policy_fail_closed.py
-├── test_ecology_source_descriptor_fixtures.py
-└── test_no_raw_or_live_source_access.py
+├── test_evidencebundle_resolver.py
+├── test_fastapi_routes.py
+├── test_focus_app.py
+├── test_route_response_contract_schema.py
+├── test_routes.py
+└── test_runtime_envelope_compatibility.py
 ```
 
-### Placement rule
+Nearby implementation files tested by this directory:
 
-Keep tests near the route/runtime code **only if** the repo convention supports app-local tests. If the active checkout centralizes runtime proof under `tests/e2e/runtime_proof/`, mirror these tests there and keep this README as a pointer rather than duplicating suites.
+```text
+apps/api/ecology/
+├── __init__.py
+├── app.py
+├── evidencebundle_resolver.py
+├── fastapi_routes.py
+├── focus_mode.py
+├── routes.py
+└── tests/
+```
+
+> [!CAUTION]
+> The file tree above is a repository snapshot from the accessible GitHub connector. Re-check the active branch before using it as merge evidence.
 
 [Back to top](#top)
 
@@ -161,46 +186,53 @@ Keep tests near the route/runtime code **only if** the repo convention supports 
 
 ## Quickstart
 
-### 1. Inspect before trusting this README
-
-Run from the repository root after the real checkout is available:
+Run from the repository root after checking out the active branch.
 
 ```bash
 git status --short
 git branch --show-current
-git rev-parse --show-toplevel
-
-find apps/governed-api/ecology -maxdepth 4 -type f 2>/dev/null | sort
-find apps/governed_api/ecology -maxdepth 4 -type f 2>/dev/null | sort
-find schemas contracts policy tools tests .github -maxdepth 4 -type f 2>/dev/null | sort
 ```
 
-### 2. Run the local ecology API tests
-
-**NEEDS VERIFICATION:** command depends on the repo’s package manager and test runner.
+Run the app-local ecology API tests:
 
 ```bash
-python -m pytest apps/governed-api/ecology/tests -q
+python -m pytest apps/api/ecology/tests -q
 ```
 
-### 3. Run the validator bundle
-
-**PROPOSED:** use repo-native validator commands if they differ.
+Run the resolver-focused tests:
 
 ```bash
-python tools/validators/ecology/run_all.py --root . --scope governed-api
+python -m pytest apps/api/ecology/tests/test_evidencebundle_resolver.py -q
 ```
 
-### 4. Confirm no live-source access
+Run the FastAPI-related tests:
 
 ```bash
-grep -RInE \
-  'requests\.|httpx\.|urllib|fetch\(|GBIF|eBird|iNaturalist|NatureServe|KDWP|USFWS|NLCD|LANDFIRE|NWI' \
-  apps/governed-api/ecology/tests 2>/dev/null || true
+python -m pytest \
+  apps/api/ecology/tests/test_fastapi_routes.py \
+  apps/api/ecology/tests/test_focus_app.py \
+  -q
 ```
 
-> [!CAUTION]
-> A no-match grep result is only a quick screen. The real gate should be an executable test or policy check that fails if app-local ecology tests call network endpoints or read RAW/WORK/QUARANTINE paths.
+Run schema/runtime compatibility tests:
+
+```bash
+python -m pytest \
+  apps/api/ecology/tests/test_route_response_contract_schema.py \
+  apps/api/ecology/tests/test_runtime_envelope_compatibility.py \
+  -q
+```
+
+> [!WARNING]
+> Some tests depend on optional packages such as `fastapi`, `fastapi.testclient`, or `jsonschema`. Do not interpret skipped tests as proof of runtime enforcement.
+
+### Quick health checks before editing
+
+```bash
+find apps/api/ecology -maxdepth 3 -type f | sort
+find schemas policy docs/adr docs/domains/ecology -maxdepth 4 -type f 2>/dev/null | sort
+grep -RInE 'GBIF|eBird|iNaturalist|NatureServe|KDWP|USFWS|requests\.|httpx\.|urllib' apps/api/ecology/tests || true
+```
 
 [Back to top](#top)
 
@@ -208,26 +240,28 @@ grep -RInE \
 
 ## Usage
 
-### Add a new ecology governed API test
+### Add or revise a test
 
-1. Identify the trust seam: source admission, evidence closure, policy decision, runtime envelope, Evidence Drawer payload, correction/rollback, or no-raw-access.
-2. Add one valid fixture and at least one invalid fixture.
-3. Assert a finite result: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-4. Include reason codes and obligations for negative outcomes.
-5. Keep the fixture no-network and public-safe.
-6. Link the test to the schema, policy, validator, or route it exercises.
-7. Update this README when a new fixture family, route contract, or gate becomes real.
+1. Identify the trust seam: resolver, route wrapper, FastAPI adapter, Focus Mode app, schema contract, or runtime envelope.
+2. Add one positive case and at least one negative case where practical.
+3. Use synthetic, local-only inputs.
+4. Assert the governed result explicitly: `cite`, `abstain`, `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
+5. Preserve reason codes for negative outcomes.
+6. Avoid live source calls and provider calls.
+7. Update this README if a new test family, route, schema, or proof object becomes part of the suite.
 
-### Naming pattern
-
-Use names that describe the failed obligation, not just the fixture shape.
+### Naming guidance
 
 | Prefer | Avoid |
 |---|---|
-| `test_missing_rights_denies_public_answer` | `test_bad_payload` |
-| `test_unresolved_evidence_abstains` | `test_error_case` |
-| `test_exact_sensitive_location_never_public` | `test_species_location` |
-| `test_runtime_envelope_allows_only_finite_outcomes` | `test_api_response` |
+| `test_resolver_abstains_on_spec_hash_mismatch` | `test_bad_hash` |
+| `test_focus_app_wraps_runtime_errors` | `test_exception` |
+| `test_route_cite_payload_matches_contract_schema` | `test_schema` |
+| `test_abstain_response_matches_runtime_envelope` | `test_payload` |
+
+### Keep tests local
+
+These tests should not fetch source systems, invoke model runtimes, generate production proofs, or mutate lifecycle data. They should create temporary proof-pack and schema files where they need controlled behavior.
 
 [Back to top](#top)
 
@@ -237,24 +271,35 @@ Use names that describe the failed obligation, not just the fixture shape.
 
 ```mermaid
 flowchart LR
-    SD[SourceDescriptor fixture] --> VF[Validator test]
-    VF --> EB[EvidenceBundle closure]
-    EB --> PD[PolicyDecision / DecisionEnvelope]
-    PD --> RR[RuntimeResponseEnvelope]
-    RR --> OUT[ANSWER / ABSTAIN / DENY / ERROR]
-    RR --> ED[EvidenceDrawerPayload]
-    RR --> FM[Focus Mode input]
+  T[pytest app-local tests] --> R[apps/api/ecology/routes.py]
+  T --> FAPI[apps/api/ecology/fastapi_routes.py]
+  T --> FAPP[apps/api/ecology/app.py]
+  T --> FM[apps/api/ecology/focus_mode.py]
 
-    RAW[RAW / WORK / QUARANTINE] -. blocked .-> RR
-    LIVE[Live source APIs] -. blocked in app-local tests .-> VF
-    GEN[AI-generated language] -. not root truth .-> RR
+  R --> RES[EvidenceBundle resolver]
+  FAPI --> R
+  FAPP --> FM
 
-    EB --> CIT[Citation and provenance checks]
-    PD --> OBL[Reason codes and obligations]
-    ED --> TRUST[Trust-visible UI fields]
+  RES --> PP[Proof pack lookup<br/>data/proofs/ecology]
+  RES --> SCHEMA[Proof-pack schema<br/>schemas/ecology/...]
+  RES --> CITE{valid proof pack?}
+
+  CITE -->|yes| BUNDLE[cite response<br/>resolved EvidenceBundle]
+  CITE -->|no| ABSTAIN[abstain response<br/>reason + error_code]
+
+  FM --> TRIPLET[data/triplets/ecology]
+  FM --> PROCESSED[data/processed/ecology]
+  FM --> PUBLISHED[data/published/ecology]
+  FM --> OUTCOME[ANSWER / ABSTAIN / DENY / ERROR]
+
+  POLICY[policy/ecology/publication.rego] -. expected fail-closed posture .-> OUTCOME
+  GEO[docs/domains/ecology/SENSITIVITY_AND_GEOPRIVACY.md] -. sensitivity posture .-> OUTCOME
+
+  LIVE[Live source APIs] -. blocked in this suite .-> T
+  RAW[RAW / WORK / QUARANTINE] -. not normal public path .-> T
 ```
 
-The testing obligation is simple: every outward ecology claim must be reconstructable to evidence, policy, review, release, and correction state, or it must return a governed negative outcome.
+The suite should keep the outward contract clear: a missing or invalid proof path is not an invitation to improvise; it is a governed negative result.
 
 [Back to top](#top)
 
@@ -262,17 +307,24 @@ The testing obligation is simple: every outward ecology claim must be reconstruc
 
 ## Test matrix
 
-| Test seam | Must prove | Positive case | Negative case | Gate posture |
-|---|---|---|---|---|
-| Source descriptor | Source role, rights, citation, cadence, and `spec_hash` are present. | Controlled local fixture passes. | Missing rights/citation/source role fails closed. | Blocking |
-| Evidence closure | `EvidenceRef` resolves into a complete `EvidenceBundle`. | Bundle contains source, scope, support, and citation refs. | Missing citation, stale support, or unresolved ref returns `ABSTAIN` or `DENY`. | Blocking |
-| Sensitivity and geoprivacy | Public outputs do not leak restricted exact locations. | Public-safe generalized fixture passes. | Exact sensitive coordinate fails or is redacted with receipt. | Blocking |
-| Policy decision | Runtime result carries reasons and obligations. | Allowed public-safe request returns `ANSWER`. | Unknown rights, unresolved sensitivity, or missing review returns `DENY` or `ABSTAIN`. | Blocking |
-| Runtime envelope | API returns only finite outcomes. | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` snapshots validate. | Unknown enum member or uncited answer fails. | Blocking |
-| Evidence Drawer payload | UI trust payload contains citations, freshness, policy, rights, provenance, publication, and correction state. | Payload renders all required trust fields. | Missing evidence/policy/correction field fails. | Blocking |
-| No raw/live access | App-local tests do not call live sources or pre-publication stores. | Tests use local fixtures only. | Direct network call or RAW/WORK read fails. | Blocking |
-| Rollback/correction visibility | Changed published claim can point to correction or rollback refs. | Corrected fixture carries prior release ref. | Silent replacement fails. | Blocking |
-| Focus compatibility | Focus consumes only evidence-backed, policy-safe context. | Focus input points to resolved evidence and runtime envelope. | Uncited generated output fails. | Blocking when Focus integration exists |
+| Test file | Current proof burden | Key expected behavior | Review pressure |
+|---|---|---|---|
+| `test_evidencebundle_resolver.py` | Pure resolver behavior over synthetic proof packs and schemas. | Valid proof pack returns `decision: cite`; missing, malformed, non-object, schema-failed, mismatched, missing-PROV, or incomplete-status proof packs return `decision: abstain`. | Keep negative cases broad and explicit. |
+| `test_routes.py` | Route-adjacent wrapper defaults and missing proof-pack behavior. | `DEFAULT_SCHEMA_PATH` exists; missing candidate abstains with `ECO_EB_PROOF_PACK_MISSING`. | Confirm default schema path stays valid. |
+| `test_fastapi_routes.py` | FastAPI router registration for evidence bundles. | `/v1/ecology/evidence-bundles/not_found` returns `200` with `decision: abstain`. | Confirm route remains intentional and documented in OpenAPI if public. |
+| `test_focus_app.py` | FastAPI app boundary for Focus Mode. | `/ecology/focus` returns runtime payload from `answer_focus_request`; runtime exceptions become HTTP `500`. | Confirm runtime errors do not leak sensitive details in production mode. |
+| `test_route_response_contract_schema.py` | Route response schema compatibility. | Cite and abstain payloads match expected contract; missing `candidate_id` is rejected. | Verify referenced response schema exists and is authoritative. |
+| `test_runtime_envelope_compatibility.py` | Runtime envelope compatibility for resolver outputs. | Cite and abstain resolver payloads validate against the runtime envelope schema. | Reconcile runtime schema requirements with actual resolver payload fields. |
+
+### Known verification pressure
+
+| Item | Status | Why it matters |
+|---|---:|---|
+| Physical path vs import namespace | **NEEDS VERIFICATION** | Tests import `apps.governed_api.ecology`, while the target files are under `apps/api/ecology`. This must be resolved through path policy, package shims, or migration notes. |
+| `schemas/contracts/v1/runtime/ecology_evidence_bundle_response.schema.json` | **NEEDS VERIFICATION** | A test references this path. Confirm it exists or update the test/contract path before claiming jsonschema-backed enforcement. |
+| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | **NEEDS VERIFICATION** | Runtime envelope tests depend on the schema matching resolver payloads. |
+| CI workflow coverage | **UNKNOWN** | File-level tests exist, but merge-blocking workflow enforcement was not verified in this README pass. |
+| Owner and policy label | **NEEDS VERIFICATION** | Meta block placeholders should be replaced from CODEOWNERS or a repo governance register. |
 
 [Back to top](#top)
 
@@ -280,21 +332,21 @@ The testing obligation is simple: every outward ecology claim must be reconstruc
 
 ## Definition of done
 
-A change touching this directory is review-ready when all applicable items are true:
+A change touching `apps/api/ecology/tests/` is review-ready when the relevant boxes are true.
 
-- [ ] Active repo path confirmed: `apps/governed-api` versus `apps/governed_api` ambiguity resolved.
-- [ ] Test runner confirmed and documented.
-- [ ] No app-local test calls live external sources.
-- [ ] No app-local test reads RAW, WORK, or QUARANTINE stores as a normal public path.
-- [ ] Every new fixture has a valid and invalid companion where practical.
-- [ ] Every outward response validates against `RuntimeResponseEnvelope`.
-- [ ] Every public claim resolves `EvidenceRef -> EvidenceBundle`.
-- [ ] Every negative outcome includes reason codes and obligations.
-- [ ] Rights and sensitivity failures deny, abstain, quarantine, or redact; they do not silently pass.
-- [ ] Evidence Drawer payload tests include citations, freshness, policy, rights, provenance, publication state, review state, and correction state.
-- [ ] Focus Mode tests, if present, prove Focus does not invent ecological claims.
-- [ ] Rollback/correction references are visible for changed published fixtures.
-- [ ] README links, related docs, and meta block placeholders are updated or deliberately left as `NEEDS VERIFICATION`.
+- [ ] Tests run locally with the repo-native Python environment.
+- [ ] Optional-dependency skips are understood and documented in PR notes.
+- [ ] No default app-local test uses live network access.
+- [ ] No default app-local test reads RAW, WORK, or QUARANTINE as a normal public path.
+- [ ] Positive resolver cases require complete synthetic proof packs.
+- [ ] Negative resolver cases preserve governed reasons and error codes.
+- [ ] FastAPI route tests are aligned with the documented OpenAPI route family or deliberately marked test-only.
+- [ ] Focus Mode tests assert finite outcomes or explicit HTTP error behavior.
+- [ ] Schema paths referenced by tests are confirmed or marked for correction.
+- [ ] Runtime-envelope tests match the current canonical schema, not stale assumptions.
+- [ ] Ecology sensitivity and publication policy expectations are not weakened.
+- [ ] Path-governance impact is checked when imports or app paths change.
+- [ ] README related links, meta block placeholders, and test matrix entries are updated with behavior changes.
 
 [Back to top](#top)
 
@@ -302,21 +354,25 @@ A change touching this directory is review-ready when all applicable items are t
 
 ## FAQ
 
-### Can these tests fetch live ecology sources?
+### Can these tests call live ecology sources?
 
-No. This directory should default to local fixtures only. Live source activation belongs behind source descriptor review, rights verification, connector tests, and policy gates.
+No. Keep default app-local tests no-network. Live source behavior belongs in source connector or integration suites with rights, credentials, fixture replay, and policy gates.
 
-### Can a test fixture stand in for production evidence?
+### Why does a missing proof pack return `abstain` instead of `404`?
 
-No. A fixture can prove shape, behavior, and regression expectations. It does not become an authoritative ecological record.
+The resolver-level contract treats missing proof evidence as an evidence-resolution outcome. HTTP route behavior may still be revised, but the current tested behavior is cite-or-abstain inside the response payload.
 
-### What happens when evidence is incomplete?
+### Are synthetic proof packs authoritative?
 
-Return `ABSTAIN`, `DENY`, or `ERROR` as appropriate. Do not manufacture an `ANSWER`.
+No. Synthetic proof packs are fixtures used to prove behavior. They do not become production evidence, release proofs, or canonical ecology records.
 
-### Should habitat, fauna, and flora collapse into one ecology truth object?
+### Can Focus Mode answer without evidence?
 
-No. Ecology API tests may verify cross-domain behavior, but habitat surfaces, occurrence records, flora records, sensitivity decisions, and derived assignments should remain distinguishable and evidence-bound.
+Focus Mode should remain bounded by released, policy-safe evidence. Tests may monkeypatch its function to isolate FastAPI behavior, but production behavior should not bypass evidence and policy checks.
+
+### Should this README resolve `apps/api` vs `apps/governed_api`?
+
+No. This README records the mismatch and points reviewers to the ADR and path-policy checks. Code movement or import canonicalization requires repo-wide verification.
 
 [Back to top](#top)
 
@@ -325,34 +381,35 @@ No. Ecology API tests may verify cross-domain behavior, but habitat surfaces, oc
 ## Appendix
 
 <details>
-<summary>Suggested fixture families</summary>
+<summary><strong>Glossary</strong></summary>
 
-| Fixture family | Purpose | Notes |
-|---|---|---|
-| `api_outcomes/` | Golden runtime envelope examples. | Include all finite outcomes. |
-| `evidence_bundles/` | Evidence closure and citation validation. | Keep bundles small and reviewable. |
-| `evidence_drawer/` | UI trust payload compatibility. | Do not test UI rendering here unless repo convention requires it. |
-| `source_descriptors/` | Source role, rights, cadence, and citation behavior. | Use controlled local fixture sources first. |
-| `sensitivity/` | Geoprivacy, public-safe geometry, and restricted-location behavior. | Exact sensitive coordinates should be synthetic or absent. |
-| `rollback/` | Correction and rollback visibility. | Useful when release fixtures exist. |
-| `focus/` | Bounded Focus Mode input/output behavior. | Only if Focus integration is present. |
+| Term | Meaning in this directory |
+|---|---|
+| `candidate_id` | Resolver input used to locate an ecology proof pack. |
+| Proof pack | Test or production object expected to contain candidate metadata, `spec_hash`, receipts, catalog refs, generated time, and complete proof status. |
+| `spec_hash` | Deterministic identity check used to detect mismatch between request and proof material. |
+| `cite` | Resolver decision for complete, valid, catalog-backed proof material. |
+| `abstain` | Resolver decision for missing, invalid, mismatched, incomplete, or unresolved proof material. |
+| Runtime envelope | Governed response shape expected to remain finite, inspectable, and schema-compatible. |
+| Focus Mode | Evidence-bounded synthesis endpoint; not a free-form ecological truth source. |
+| Geoprivacy | Publication-safe handling of sensitive ecological geometry and location precision. |
 
 </details>
 
 <details>
-<summary>Open verification backlog</summary>
+<summary><strong>Open verification backlog</strong></summary>
 
-- Confirm target path exists in active checkout.
-- Confirm owner or CODEOWNERS coverage for `apps/governed-api/ecology/tests/`.
-- Confirm whether ecology tests are app-local or centralized under `tests/e2e/runtime_proof/`.
-- Confirm schema home: `schemas/contracts/v1/ecology/`, `contracts/ecology/`, or another repo-native convention.
-- Confirm policy home and policy engine: Rego/OPA/Conftest, Python parity validators, or repo-native equivalent.
-- Confirm route names and framework.
-- Confirm runtime envelope schema location.
-- Confirm Evidence Drawer payload contract location.
-- Confirm whether Focus Mode ecology tests exist or remain future work.
-- Confirm CI workflow names and required checks.
-- Confirm sensitive-location policy before any real species, habitat, or occurrence source is admitted.
+- Replace `doc_id` with a registry-backed identifier.
+- Confirm owner from CODEOWNERS, governance register, or maintainer assignment.
+- Confirm `policy_label`.
+- Confirm whether this suite is expected to live permanently under `apps/api/ecology/tests/`.
+- Confirm import namespace behavior for `apps.governed_api.ecology`.
+- Confirm whether ADR-0202’s canonical path decision has been enforced for ecology API runtime code.
+- Confirm existence and authority of `schemas/contracts/v1/runtime/ecology_evidence_bundle_response.schema.json`.
+- Confirm runtime response schema compatibility with resolver outputs.
+- Confirm CI workflow names and whether this test directory is merge-blocking.
+- Confirm whether OpenAPI route paths and implemented FastAPI paths intentionally differ.
+- Confirm production error-wrapping behavior for `/ecology/focus`.
 
 </details>
 
