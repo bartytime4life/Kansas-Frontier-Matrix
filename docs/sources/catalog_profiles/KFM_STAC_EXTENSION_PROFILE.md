@@ -10,7 +10,7 @@ updated: 2026-05-03
 policy_label: public
 related: [
   docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md,
-  docs/adr/ADR-schema-home.md,
+  docs/adr/ADR-0001-schema-home.md,
   docs/sources/catalog_profiles/KFM_DCAT_EXPORT_PROFILE.md,
   SCHEMA_HOME_TBD_AFTER_REPO_INSPECTION/catalog/stac/kfm_stac_item.schema.json,
   SCHEMA_HOME_TBD_AFTER_REPO_INSPECTION/provenance/kfm_prov_sidecar.schema.json,
@@ -133,7 +133,7 @@ A STAC record may make an artifact discoverable. It must never become the proof 
 | Surface | Status | Proposed path | Role |
 | --- | --- | --- | --- |
 | STAC profile doc | PROPOSED | `docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md` | Human-readable profile for KFM public-safe STAC publication. |
-| Schema-home ADR | PROPOSED | `docs/adr/ADR-schema-home.md` | Resolves whether machine contracts live under `contracts/`, `schemas/contracts/v1/`, or another repo-native home. |
+| Schema-home ADR | PROPOSED | `docs/adr/ADR-0001-schema-home.md` | Resolves whether machine contracts live under `contracts/`, `schemas/contracts/v1/`, or another repo-native home. |
 | STAC/DCAT/PROV mapping ADR | PROPOSED | `docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md` | Defines catalog closure, identity mapping, and link relation conventions. |
 | STAC schema | PROPOSED | `SCHEMA_HOME_TBD_AFTER_REPO_INSPECTION/catalog/stac/kfm_stac_item.schema.json` | Machine-readable KFM STAC Item profile. |
 | STAC validator | PROPOSED | `tools/validators/catalog/validate_stac_item.py` | Enforces schema, KFM governance rules, and public-safe publication gates. |
