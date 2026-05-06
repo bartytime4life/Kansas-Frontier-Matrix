@@ -8,9 +8,9 @@ owners: OWNER_TBD_NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION-YYYY-MM-DD
 updated: 2026-05-06
 policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
-related: [docs/adr/0002-promotion-contract.md, docs/governance/gates/PROMOTION_CONTRACT.md, docs/runbooks/promotion-gates.md, tools/validators/check_spec_hash.py, tools/validators/run_gate.sh, tools/validators/build_gate_input.py, tools/compute_spec_hash.py]
+related: [docs/adr/ADR-0015-promotion-contract.md, docs/governance/gates/PROMOTION_CONTRACT.md, docs/runbooks/promotion-gates.md, tools/validators/check_spec_hash.py, tools/validators/run_gate.sh, tools/validators/build_gate_input.py, tools/compute_spec_hash.py]
 tags: [kfm, adr, spec_hash, evidencebundle, promotion, gate-a, canonical-json, evidence-integrity]
-notes: [ADR decision status remains Accepted. Meta status is review because this revised Markdown still needs doc_id, owners, created date, policy_label, document-registry linkage, and workflow/contract-path verification before publication. Target path confirmed as docs/adr/0003-spec-hash.md from current GitHub evidence.]
+notes: [ADR decision status remains Accepted. Meta status is review because this revised Markdown still needs doc_id, owners, created date, policy_label, document-registry linkage, and workflow/contract-path verification before publication. Target path confirmed as docs/adr/ADR-0016-spec-hash.md from current GitHub evidence.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -21,7 +21,7 @@ Defines the reproducible KFM `EvidenceBundle` digest used by promotion Gate `A` 
 
 > [!IMPORTANT]
 > **Decision status:** `Accepted`  
-> **Target path:** `docs/adr/0003-spec-hash.md`  
+> **Target path:** `docs/adr/ADR-0016-spec-hash.md`  
 > **Decision area:** evidence integrity, release-candidate hashing, Gate `A`, and downstream receipt alignment  
 > **Truth posture:** `CONFIRMED` algorithm and validator path where current repository evidence supports them; `NEEDS VERIFICATION` for owners, document registry metadata, CI workflow enforcement, and promotion-contract path alignment.
 
@@ -67,7 +67,7 @@ This ADR is governing for the `canonical-json-v1` `spec_hash` algorithm unless a
 | Scope | Release-candidate evidence integrity; Gate `A`; `EvidenceBundle` content hashing |
 | Primary validator | [`../../tools/validators/check_spec_hash.py`](../../tools/validators/check_spec_hash.py) |
 | Generated receipt | `.promotion/spec_hash_check.json` |
-| Related ADR | [`./0002-promotion-contract.md`](./0002-promotion-contract.md) |
+| Related ADR | [`./ADR-0015-promotion-contract.md`](./ADR-0015-promotion-contract.md) |
 | Rollback target | Prior accepted state of this ADR plus aligned validator, runbook, fixtures, and promotion-gate behavior |
 
 > [!NOTE]
@@ -83,12 +83,12 @@ This revision preserves the existing ADR substance and adds reviewable evidence 
 
 | Evidence item | What it supports | Status | Limit |
 | --- | --- | --- | --- |
-| `docs/adr/0003-spec-hash.md` | Existing ADR path and current accepted decision text | `CONFIRMED` | Does not by itself prove CI enforcement. |
+| `docs/adr/ADR-0016-spec-hash.md` | Existing ADR path and current accepted decision text | `CONFIRMED` | Does not by itself prove CI enforcement. |
 | `tools/validators/check_spec_hash.py` | Normative implementation of `canonical-json-v1`, root-only exclusions, SHA-256 digest, and receipt fields | `CONFIRMED` | Does not prove all callers use it. |
 | `tools/validators/run_gate.sh` | Gate `A` invokes `check_spec_hash.py` and writes `.promotion/spec_hash_check.json` | `CONFIRMED / NEEDS ALIGNMENT` | Current default contract path requires alignment with ADR 0002 unless an override is used. |
 | `tools/validators/build_gate_input.py` | Gate inputs are normalized before Conftest policy evaluation | `CONFIRMED` | Does not prove the machine promotion contract file is present. |
 | `tools/compute_spec_hash.py` | Generic JSON hash helper exists | `CONFIRMED` | It does not implement this ADR’s root-key exclusions or Gate `A` receipt behavior. |
-| `docs/adr/0002-promotion-contract.md` | Gate `A` is the evidence-integrity gate and uses canonical `spec_hash` verification | `CONFIRMED` | Some implementation surfaces still need alignment. |
+| `docs/adr/ADR-0015-promotion-contract.md` | Gate `A` is the evidence-integrity gate and uses canonical `spec_hash` verification | `CONFIRMED` | Some implementation surfaces still need alignment. |
 | `docs/runbooks/promotion-gates.md` | Operational instructions say Gate `A` runs canonical `spec_hash` validation | `CONFIRMED` | Runbook expectations must be checked against actual workflow and contract files. |
 | `docs/governance/gates/PROMOTION_CONTRACT.md` | Human promotion contract maps Gate `A` to canonical `spec_hash` | `CONFIRMED / CONFLICTED` | Machine-contract path wording needs alignment with ADR 0002. |
 | `.github/workflows/promotion.yml` | CI promotion enforcement | `NEEDS VERIFICATION` | Not verified by this revision. |
@@ -98,7 +98,7 @@ This revision preserves the existing ADR substance and adds reviewable evidence 
 
 | Surface | Finding | Status |
 | --- | --- | --- |
-| Target ADR path | `docs/adr/0003-spec-hash.md` is the current target ADR path. | `CONFIRMED` |
+| Target ADR path | `docs/adr/ADR-0016-spec-hash.md` is the current target ADR path. | `CONFIRMED` |
 | ADR template / metadata convention | KFM ADR template uses `KFM_META_BLOCK_V2` and truth-label guidance. | `CONFIRMED` |
 | Markdown protocol | KFM standard docs require evidence-grounded metadata and visible uncertainty. | `CONFIRMED` |
 | Directory rule basis | ADRs belong under the human-facing governance/control-plane responsibility root `docs/adr/`. | `CONFIRMED` |
@@ -289,7 +289,7 @@ This ADR does not make generated text, map tiles, search indexes, graph projecti
 
 | Surface | Expected relationship to this ADR | Current alignment status |
 | --- | --- | --- |
-| [`./0002-promotion-contract.md`](./0002-promotion-contract.md) | Gate `A` uses canonical `spec_hash` verification as its evidence-integrity check. | `CONFIRMED` |
+| [`./ADR-0015-promotion-contract.md`](./ADR-0015-promotion-contract.md) | Gate `A` uses canonical `spec_hash` verification as its evidence-integrity check. | `CONFIRMED` |
 | [`../governance/gates/PROMOTION_CONTRACT.md`](../governance/gates/PROMOTION_CONTRACT.md) | Human contract should identify Gate `A` as canonical `spec_hash` validation and should align machine-contract path wording with ADR 0002. | `CONFIRMED / CONFLICTED` on machine-contract path wording |
 | [`../runbooks/promotion-gates.md`](../runbooks/promotion-gates.md) | Operational instructions must tell maintainers that Gate `A` runs canonical `spec_hash` validation. | `CONFIRMED` |
 | [`../../tools/validators/check_spec_hash.py`](../../tools/validators/check_spec_hash.py) | Normative implementation of `canonical-json-v1`. | `CONFIRMED` |
@@ -476,7 +476,7 @@ Rollback of this ADR's file content is allowed only if `tools/validators/check_s
 - [ ] Confirm any `EvidenceBundle` schema documents the optional embedded `spec_hash` field and the `canonical-json-v1` algorithm id.
 - [ ] Confirm release manifests or proof packs record enough information to replay the hash calculation.
 - [ ] Confirm KFM meta block values: `doc_id`, owners, created date, policy label, related links, and document-registry entry.
-- [ ] Add or update ADR index entries so `0003-spec-hash.md` is discoverable from `docs/adr/README.md`.
+- [ ] Add or update ADR index entries so `ADR-0016-spec-hash.md` is discoverable from `docs/adr/README.md`.
 
 [Back to top](#top)
 
@@ -486,7 +486,7 @@ Rollback of this ADR's file content is allowed only if `tools/validators/check_s
 
 | Path | Relationship | Status |
 | --- | --- | --- |
-| [`./0002-promotion-contract.md`](./0002-promotion-contract.md) | Defines Gate `A` as evidence integrity and binds promotion gates `A` through `G`. | `CONFIRMED` |
+| [`./ADR-0015-promotion-contract.md`](./ADR-0015-promotion-contract.md) | Defines Gate `A` as evidence integrity and binds promotion gates `A` through `G`. | `CONFIRMED` |
 | [`../governance/gates/PROMOTION_CONTRACT.md`](../governance/gates/PROMOTION_CONTRACT.md) | Human promotion contract; should remain aligned with ADR 0002 and this ADR. | `CONFIRMED / NEEDS ALIGNMENT` |
 | [`../runbooks/promotion-gates.md`](../runbooks/promotion-gates.md) | Operational runbook for local and CI gate execution. | `CONFIRMED` |
 | [`../../tools/validators/check_spec_hash.py`](../../tools/validators/check_spec_hash.py) | Normative `canonical-json-v1` validator. | `CONFIRMED` |

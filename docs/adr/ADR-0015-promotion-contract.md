@@ -326,7 +326,7 @@ Do not roll back one surface at a time.
 A safe rollback must revert or supersede these surfaces together:
 
 ```text
-docs/adr/0002-promotion-contract.md
+docs/adr/ADR-0015-promotion-contract.md
 docs/governance/gates/PROMOTION_CONTRACT.md
 docs/runbooks/promotion-gates.md
 control_plane/promotion_contract.json
