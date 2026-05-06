@@ -1,0 +1,6 @@
+{
+  "layer_id": "ks-habitat-candidate",
+  "source_id": "ks-habitat-fixture",
+  "support_resolution_m": 30,
+  "crs": "EPSG:4326"
+}

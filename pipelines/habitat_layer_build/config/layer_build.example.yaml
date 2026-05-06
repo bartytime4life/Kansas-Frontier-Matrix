@@ -1,0 +1,11 @@
+run_id: fixture-habitat-layer-build
+layer_id: ks-habitat-candidate
+source_id: ks-habitat-fixture
+source_role: habitat_reference
+support_resolution_m: 30
+aoi:
+  type: bbox
+  bbox: [-102.051744, 36.993016, -94.588413, 40.003162]
+inputs:
+  - path: pipelines/habitat_layer_build/fixtures/good/habitat_layer_candidate.valid.json
+output_dir: data/work/habitat_layer_build/runs
