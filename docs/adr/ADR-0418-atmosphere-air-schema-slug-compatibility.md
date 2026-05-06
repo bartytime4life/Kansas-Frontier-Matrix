@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-ASSIGN-UUID-adr-0418-atmosphere-air-schema-slug-compatibility
+doc_id: kfm://doc/TODO-VERIFY-adr-0418-atmosphere-air-schema-slug-compatibility
 title: ADR-0418: Atmosphere-Air Schema Slug Compatibility
 type: standard
 version: v1
@@ -8,36 +8,44 @@ owners: TODO-VERIFY: atmosphere-air domain steward, schema steward, policy stewa
 created: TODO-VERIFY-YYYY-MM-DD
 updated: 2026-05-06
 policy_label: TODO-VERIFY-public-or-restricted
-related: [./ADR-0001-schema-home.md, ./ADR-0002-responsibility-root-monorepo.md, ./README.md, ../domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md, ../domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md, ../domains/atmosphere_air/README.md, ../domains/atmosphere_air/governance/SOURCE_REGISTRY.md, ../../pipelines/normalize/domains/atmosphere/README.md, ../../connectors/pipelines/air/README.md, ../../tools/validators/air/validate_air_qa.py, ../../tools/publishers/air/build_air_release_candidate.py, ../../tools/publishers/air/publish_air_release.py, ../../data/processed/air/qa_summary.example.json, ../../data/receipts/air/run_receipt.example.json]
-tags: [kfm, adr, atmosphere-air, schema-compatibility, schema-slug, source-role, knowledge-character, evidence, release, rollback]
-notes: [Unique renamed path proposed for the ADR directory: docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md., Exact candidate path was checked through the GitHub connector and returned Not Found on main., This supersedes the requested ADR-0002 filename because docs/adr/ADR-0002-responsibility-root-monorepo.md already exists., Existing domain-local docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md should become lineage or a pointer after this ADR is accepted., Owners, created date, policy label, complete schema inventory, CI enforcement, and schema file existence remain NEEDS VERIFICATION.]
+related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0002-responsibility-root-monorepo.md, ../domains/atmosphere_air/README.md, ../domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md, ../domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md, ../domains/atmosphere_air/governance/SOURCE_REGISTRY.md, ../runbooks/domains/atmosphere_air/slices/AIR_QA_PROMOTION_SLICE.md, ../../connectors/pipelines/air/README.md, ../../pipelines/normalize/domains/atmosphere/README.md, ../../tools/validators/air/validate_air_qa.py, ../../tools/publishers/air/build_air_release_candidate.py, ../../tools/publishers/air/publish_air_release.py, ../../data/processed/air/qa_summary.example.json, ../../data/receipts/air/run_receipt.example.json]
+tags: [kfm, adr, atmosphere-air, air, atmosphere, schema-slug, schema-compatibility, evidence, policy, release, rollback]
+notes: [This revision keeps the repo-wide ADR-0418 path and corrects stale not-found language from earlier draft text. Owners, created date, policy label, schema inventory, CI run status, branch protection, CODEOWNERS routing, and accepted canonical schema family remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0418: Atmosphere-Air Schema Slug Compatibility
 
-Rename and govern the Atmosphere / Air schema-compatibility decision without colliding with the existing ADR directory.
+Govern the compatibility boundary between the `atmosphere_air` documentation lane, the `air` implementation slice, and any future `atmosphere` whole-domain schema family.
 
-<div align="center">
+<p align="center">
+  <img alt="ADR status: proposed" src="https://img.shields.io/badge/ADR-proposed-orange">
+  <img alt="revision: v1 draft" src="https://img.shields.io/badge/revision-v1--draft-blue">
+  <img alt="owners: needs verification" src="https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-ffb000">
+  <img alt="schema slug: compatibility bridge" src="https://img.shields.io/badge/schema%20slug-compatibility%20bridge-6f42c1">
+  <img alt="policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-b60205">
+  <img alt="publication: not authorized" src="https://img.shields.io/badge/publication-not%20authorized-lightgrey">
+</p>
 
-![ADR status](https://img.shields.io/badge/ADR-proposed-orange)
-![Revision](https://img.shields.io/badge/revision-renamed%20draft-blue)
-![Owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey)
-![File](https://img.shields.io/badge/file-ADR--0418-6f42c1)
-![Policy](https://img.shields.io/badge/policy-fail--closed-red)
-![Publication](https://img.shields.io/badge/publication-not%20authorized-lightgrey)
-
-</div>
+<p align="center">
+  <a href="#decision-summary">Decision</a> ·
+  <a href="#evidence-boundary">Evidence</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#compatibility-map">Compatibility map</a> ·
+  <a href="#invariants">Invariants</a> ·
+  <a href="#validation-matrix">Validation</a> ·
+  <a href="#acceptance-criteria">Acceptance</a> ·
+  <a href="#rollback-and-supersession">Rollback</a> ·
+  <a href="#open-verification">Open verification</a>
+</p>
 
 > [!IMPORTANT]
-> **Renamed target path:** `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`  
-> **Unique name:** `ADR-0418: Atmosphere-Air Schema Slug Compatibility`  
-> **Prior requested path:** `docs/domains/ADR/ADR-0002-atmosphere-schema-compatibility.md` — `NEEDS VERIFICATION`; no current repo-visible evidence confirms this as an accepted ADR home.  
-> **Existing lineage file:** `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` — `CONFIRMED`; keep as lineage or replace with a pointer after this ADR is accepted.  
-> **Decision posture:** `PROPOSED`; this ADR does not claim full schema, policy, test, CI, or release enforcement.
-
-**Quick jumps:** [Decision summary](#decision-summary) · [Evidence boundary](#evidence-boundary) · [Repo fit](#repo-fit) · [Decision](#decision) · [Compatibility map](#compatibility-map) · [Object-family bridge](#object-family-bridge) · [Enforcement](#enforcement-model) · [Validation](#validation-matrix) · [Acceptance](#acceptance-criteria) · [Rollback](#rollback-and-supersession) · [Open verification](#open-verification)
+> **ADR status:** `PROPOSED`.
+>
+> **This file does not authorize publication, live source activation, schema migration, UI/API binding, or release.**
+>
+> This ADR records a compatibility decision and the review burden around it. Enforcement still requires schema inventory, validators, fixtures, policy checks, CI/run evidence, release checks, and rollback evidence.
 
 ---
 
@@ -45,295 +53,311 @@ Rename and govern the Atmosphere / Air schema-compatibility decision without col
 
 | Field | Determination |
 |---|---|
-| ADR status | `PROPOSED` |
-| Renamed file | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` |
-| Unique decision name | **Atmosphere-Air Schema Slug Compatibility** |
-| Current domain documentation lane | `docs/domains/atmosphere_air/` |
-| Current thin-slice implementation slug | `air` |
-| Proposed whole-domain schema slug | `atmosphere` |
-| Global schema-home dependency | Governed by `docs/adr/ADR-0001-schema-home.md` or successor |
-| Root-layout dependency | Governed by `docs/adr/ADR-0002-responsibility-root-monorepo.md` or successor |
-| Primary risk addressed | Silent drift between `atmosphere_air`, `atmosphere`, and `air` surfaces |
-| Fail-safe rule | Ambiguous schema or slug resolution must `DENY`, `ABSTAIN`, or `ERROR`; it must not guess |
-| Publication effect | None. This ADR authorizes no public release, no live connector, and no public layer by itself |
+| ADR | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` |
+| Decision status | `PROPOSED` |
+| Current documentation lane | `docs/domains/atmosphere_air/` |
+| Current connector/tooling slice | `air` |
+| Whole-domain concept | `atmosphere` |
+| Current implementation pressure | `tools/validators/air/`, `tools/publishers/air/`, `connectors/pipelines/air/`, `data/processed/air/`, `data/receipts/air/` |
+| Known naming friction | `atmosphere_air` docs, `air` tooling/artifacts, `atmosphere` normalization/docs plan |
+| Schema-home dependency | `ADR-0001: Canonical Schema Home for Machine Contracts` |
+| Root-layout dependency | `ADR-0002: Responsibility-Root Monorepo Layout` |
+| Primary risk | Silent drift between documentation, schema family, tooling, tests, receipts, release candidates, and public-surface names |
+| Required failure posture | unresolved or ambiguous schema/slug resolution must `DENY`, `ABSTAIN`, or `ERROR`; it must not guess |
 
-**Proposed decision:** Use `ADR-0418-atmosphere-air-schema-slug-compatibility.md` as the non-colliding ADR-directory filename for the Atmosphere / Air schema-slug compatibility decision.
+### Proposed decision
 
-This ADR preserves the current `docs/domains/atmosphere_air/` documentation lane, treats current `air` implementation files as a compatibility thin slice, and requires explicit alias/migration fixtures before any rename, schema-family consolidation, route binding, publication, or public UI exposure.
+KFM should keep all three names visible, bounded, and testable:
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+1. Use `docs/domains/atmosphere_air/` for the current human-facing Atmosphere / Air documentation lane.
+2. Treat `air` as the current no-network implementation and test slice for PM2.5/AQI-style QA, receipts, release-candidate tooling, and publication-boundary checks.
+3. Treat `atmosphere` as the whole-domain conceptual family for future schemas and normalization only after schema-home inventory and ADR-backed migration prove the target convention.
+4. Do not silently rename, collapse, alias, or publish across these surfaces.
+5. Require an explicit compatibility alias record, fixture coverage, validator coverage, migration note, and rollback target before any consumer moves from `air` to `atmosphere` or from `atmosphere` to `air`.
+
+### Final authority sentence
+
+> `atmosphere_air` is the current docs lane, `air` is the current implementation slice, and `atmosphere` is a proposed whole-domain schema concept until the schema-home ADR, inventory, fixtures, validators, and release checks prove otherwise.
+
+[Back to top](#top)
 
 ---
 
 ## Evidence boundary
 
-This ADR separates repo-visible evidence from proposed governance.
+This ADR is grounded in repo-visible GitHub evidence plus KFM doctrine. A mounted local checkout was not available in this ChatGPT workspace, so local test execution, branch protections, workflow status, and runtime behavior remain unverified.
 
-| Evidence class | Status | What it supports | What it does not prove |
+| Evidence item | Status | Supports | Does not prove |
 |---|---:|---|---|
-| Candidate renamed ADR path | `CONFIRMED ABSENT BY EXACT FETCH` | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` returned Not Found on `main` in the GitHub connector. | A complete future inventory after branch changes. |
-| Repo-wide ADR directory | `CONFIRMED` | `docs/adr/` is the repo-visible ADR home and already contains repo-wide ADRs. | That every domain decision must live only there. |
-| Existing `ADR-0002` in repo-wide ADR directory | `CONFIRMED` | `docs/adr/ADR-0002-responsibility-root-monorepo.md` already uses `ADR-0002`; do not collide. | That all numbering collisions are resolved. |
-| Current repo-visible domain ADR | `CONFIRMED` | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` exists and records a thin proposed compatibility decision. | It does not prove alias registry, schema files, tests, CI, owners, or release enforcement. |
-| Atmosphere / Air domain README | `CONFIRMED` | Domain documentation uses `docs/domains/atmosphere_air/`; it distinguishes observations, AQI reports, model fields, remote-sensing masks, fusion products, advisories, and network/site context. | It does not prove all proposed companion files or schemas exist. |
-| Atmosphere-Air lane ADR-0001 | `CONFIRMED` | The lane decision uses `docs/domains/atmosphere_air/` for documentation and retains `atmosphere` schema slug compatibility until superseded. | It does not decide all schema names or implementation paths. |
-| Source registry doc | `CONFIRMED` | Source descriptors must carry `source_id`, `source_role`, `knowledge_character`, publisher, rights, verification, public-release flag, and verification date. | It does not activate live sources. |
-| Air connector and artifacts | `CONFIRMED` | A no-network `air` slice writes a QA-summary candidate and run receipt. | Candidate artifacts are not public truth, proof closure, or release authorization. |
-| Air validator and publisher tools | `CONFIRMED` | Air tooling references `schemas/contracts/v1/air/*` schema paths and enforces some fail-closed public-boundary rules. | It does not prove every referenced schema exists or that CI currently runs the tools. |
-| Requested path `docs/domains/ADR/...` | `NEEDS VERIFICATION` | It was requested as the original target. | No current repo-visible evidence confirms it as an existing or accepted home. |
+| This ADR path | `CONFIRMED` | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` is repo-visible on `main`. | That the ADR is accepted or enforced. |
+| ADR index | `CONFIRMED` | `docs/adr/README.md` is the ADR directory guide and treats ADRs as a decision ledger, not implementation proof. | Complete ADR coverage or CI enforcement. |
+| Schema-home ADR | `CONFIRMED / PROPOSED decision` | `ADR-0001` proposes `schemas/contracts/v1/` as machine-schema home while `contracts/` remains semantic. | Final accepted schema-family target for Atmosphere / Air. |
+| Responsibility-root ADR | `CONFIRMED / ACCEPTED decision` | `ADR-0002` accepts responsibility-root layout and rejects root-level domain topic folders by default. | Every subpath convention or root README coverage. |
+| Domain README | `CONFIRMED` | `docs/domains/atmosphere_air/README.md` defines Atmosphere / Air scope, knowledge characters, lifecycle caution, and public-boundary expectations. | Schema or policy enforcement. |
+| Domain lane ADR | `CONFIRMED / PROPOSED` | `docs/domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md` keeps `docs/domains/atmosphere_air/` while retaining schema slug compatibility. | Final schema path decision. |
+| Domain-local compatibility ADR | `CONFIRMED / PROPOSED / LINEAGE` | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` records a thin compatibility decision. | Repo-wide compatibility resolution. |
+| Source registry posture | `CONFIRMED` | `SOURCE_REGISTRY.md` requires `source_id`, `source_role`, `knowledge_character`, publisher, rights, verification status, public-release flag, and last verification. | Source activation or public release. |
+| Air connector README | `CONFIRMED` | `connectors/pipelines/air/README.md` describes a no-network connector that emits candidates and receipts without publication. | Live source activation. |
+| Air validator | `CONFIRMED` | `tools/validators/air/validate_air_qa.py` defaults to `schemas/contracts/v1/air/qa_summary.schema.json` and policy checks under `policy/air/air_qa.rego`. | That referenced schema files exist or tests pass. |
+| Air release tooling | `CONFIRMED` | publisher tools reference `schemas/contracts/v1/air/*`, `domain: atmosphere.air`, candidate release objects, publication denials, fixture limits, and no raw/work/quarantine public references. | Successful publication or production deployment. |
+| Air no-network artifacts | `CONFIRMED` | `data/processed/air/qa_summary.example.json` and `data/receipts/air/run_receipt.example.json` exist as example candidate/process-memory artifacts. | Public truth, release proof, or EvidenceBundle closure. |
+| Air runbook slice | `CONFIRMED` | `AIR_QA_PROMOTION_SLICE.md` records no-network PM2.5/NowCast/AQS/Mesonet gate posture and states live connectors are `PROPOSED / NEEDS_VERIFICATION`. | Enforcement beyond documented slice. |
+| Air tests | `CONFIRMED` | Tests exist that expect `schemas/contracts/v1/air/` schema files for reentry release/deployment readiness slices. | Passing test status or all schema files existing. |
+| Direct schema file fetch for `schemas/contracts/v1/air/qa_summary.schema.json` | `NEEDS VERIFICATION` | Connector fetch did not confirm this specific schema file in this session. | Absence from the repository as a whole or another branch. |
 
 ### Truth labels used here
 
-| Label | Meaning in this ADR |
+| Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from current repo connector evidence or supplied KFM doctrine. |
-| `PROPOSED` | Decision, file path, alias, validator, migration, or enforcement rule not yet proven as accepted/enforced implementation. |
-| `UNKNOWN` | Not verified strongly enough from visible repo evidence. |
-| `NEEDS VERIFICATION` | A concrete check must be run before treating the claim as current fact. |
-| `DENY`, `ABSTAIN`, `ERROR` | System outcomes for fail-closed behavior, not rhetorical emphasis. |
+| `CONFIRMED` | Verified from current repo-visible evidence or supplied KFM doctrine. |
+| `PROPOSED` | Recommended decision, path behavior, validator, alias, migration, or enforcement rule not proven as accepted/enforced implementation. |
+| `NEEDS VERIFICATION` | A specific check can retire uncertainty. |
+| `UNKNOWN` | Not verified strongly enough in this session. |
+| `LINEAGE` | Existing or prior material that should be preserved as history but not treated as current governing enforcement. |
+| `DENY`, `ABSTAIN`, `ERROR` | System outcomes used to fail closed, not rhetorical labels. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Repo fit
 
+`docs/adr/` is the correct responsibility root for this decision because the decision crosses domain docs, schema-home rules, validator references, publication tooling, release boundaries, and compatibility behavior.
+
 | Relationship | Path | Status | Role |
 |---|---|---:|---|
-| This renamed ADR | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` | `PROPOSED / EXACT PATH NOT FOUND ON MAIN` | Non-colliding repo-wide ADR for schema-slug compatibility. |
-| ADR index | `docs/adr/README.md` | `CONFIRMED` | Repo-wide ADR navigation and governance rules. |
-| Schema-home ADR | `docs/adr/ADR-0001-schema-home.md` | `CONFIRMED` | Controls canonical machine-schema placement. |
-| Responsibility-root ADR | `docs/adr/ADR-0002-responsibility-root-monorepo.md` | `CONFIRMED` | Controls root and responsibility-boundary placement. |
-| Domain lane ADR | `docs/domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md` | `CONFIRMED` | Establishes `atmosphere_air` as docs lane and retains schema slug compatibility. |
-| Existing domain-local compatibility ADR | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | `CONFIRMED / LINEAGE AFTER RENAME` | Thin predecessor decision; keep or replace with pointer. |
-| Domain README | `docs/domains/atmosphere_air/README.md` | `CONFIRMED` | Lane scope, knowledge-character, validation, public-safety, and source-role doctrine. |
-| Source registry posture | `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md` | `CONFIRMED` | Required source fields and activation posture. |
-| Connector thin slice | `connectors/pipelines/air/` | `CONFIRMED` | No-network candidate producer. |
-| Normalization docs | `pipelines/normalize/domains/atmosphere/README.md` | `CONFIRMED` | Execution-near normalization guidance. |
-| Air validator/publisher tooling | `tools/validators/air/`, `tools/publishers/air/` | `CONFIRMED` | Current implementation pressure for `air` schema references. |
-
-### Why the ADR was renamed
-
-`ADR-0002` is already used in the repo-wide ADR directory for responsibility-root monorepo layout. Reusing `ADR-0002` for Atmosphere / Air schema compatibility would create ambiguous decision identity. The new name, `ADR-0418-atmosphere-air-schema-slug-compatibility.md`, avoids that collision and clearly states the decision’s scope.
+| This ADR | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` | `CONFIRMED / PROPOSED decision` | Repo-wide compatibility decision. |
+| ADR index | `docs/adr/README.md` | `CONFIRMED` | ADR navigation and review discipline. |
+| Schema-home dependency | `docs/adr/ADR-0001-schema-home.md` | `CONFIRMED / PROPOSED decision` | Defines proposed machine-schema home split. |
+| Responsibility-root dependency | `docs/adr/ADR-0002-responsibility-root-monorepo.md` | `CONFIRMED / ACCEPTED decision` | Governs root and domain placement. |
+| Domain docs lane | `docs/domains/atmosphere_air/README.md` | `CONFIRMED` | Domain scope, knowledge characters, and public-safety posture. |
+| Domain lane ADR | `docs/domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md` | `CONFIRMED / PROPOSED` | Local lane boundary. |
+| Domain-local compatibility ADR | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | `CONFIRMED / LINEAGE` | Thin predecessor compatibility record. |
+| Source registry posture | `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md` | `CONFIRMED` | Source role and knowledge-character requirements. |
+| No-network air connector | `connectors/pipelines/air/README.md` | `CONFIRMED` | Source-facing candidate/receipt producer. |
+| Atmosphere normalize lane | `pipelines/normalize/domains/atmosphere/README.md` | `CONFIRMED` | Execution-near normalization documentation. |
+| Air validator | `tools/validators/air/validate_air_qa.py` | `CONFIRMED` | Current validator path and schema-reference pressure. |
+| Air release candidate builder | `tools/publishers/air/build_air_release_candidate.py` | `CONFIRMED` | Candidate catalog/proof/release-object pressure. |
+| Air publisher | `tools/publishers/air/publish_air_release.py` | `CONFIRMED` | Publication-denial and public-boundary checks. |
+| QA candidate example | `data/processed/air/qa_summary.example.json` | `CONFIRMED / candidate only` | Processed example; not public truth. |
+| Run receipt example | `data/receipts/air/run_receipt.example.json` | `CONFIRMED / process memory only` | Receipt; not proof or release. |
 
 ### Placement rule
 
-This ADR is repo-wide enough to live under `docs/adr/` because it affects schema-home compatibility, domain-lane naming, validator references, release tooling, and potential migration behavior across responsibility roots.
+Keep the repo-wide compatibility decision here:
+
+```text
+docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
+```
+
+Keep the domain-local ADR only as local lineage or a short pointer:
+
+```text
+docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md
+```
 
 > [!NOTE]
-> The existing domain-local ADR can remain as historical lineage. The same PR that adds this renamed ADR should either update `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` into a short pointer or mark it superseded by this file.
+> Do not create a parallel `docs/domains/ADR/` decision home. Domain decisions that affect shared schema, source, release, policy, UI, or lifecycle behavior should be visible from `docs/adr/`.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Why this ADR exists
 
-The Atmosphere / Air lane is especially prone to overclaim because many products can look similar once rendered on a map:
+Atmosphere / Air is vulnerable to overclaim because many artifacts look similar once they become a map layer, tile, chart, or summary. KFM must keep the following knowledge objects distinct:
 
-- PM2.5 concentration;
-- AQI or NowCast report;
-- regulatory archive;
-- low-cost sensor reading;
-- model field;
-- smoke plume mask;
-- AOD or visibility context;
-- climate anomaly surface;
-- advisory text;
-- derived fusion product.
-
-KFM must keep those knowledge characters distinct. A schema rename or path cleanup must not collapse them into one “air layer.”
-
-This ADR protects four boundaries:
-
-| Boundary | Protected rule |
+| Surface | Must not be collapsed into |
 |---|---|
-| Documentation boundary | Domain documentation can use `atmosphere_air` without forcing immediate schema or implementation churn. |
-| Schema boundary | Machine-checkable schemas must remain under the repo-accepted schema home and cannot be duplicated through prose. |
-| Implementation boundary | Existing `air` no-network candidate, receipt, validator, and publisher tooling remain valid compatibility surfaces until intentionally migrated. |
-| Publication boundary | No slug, schema, or path compatibility decision authorizes public release, direct UI access, or emergency/life-safety behavior. |
+| PM2.5 / PM10 concentration | AQI, AOD, smoke mask, model field, advisory |
+| AQI / NowCast report | raw concentration |
+| AQS-like archive | live state |
+| Kansas Mesonet or meteorological context | air-quality concentration unless source-backed |
+| model field | observed sensor reading |
+| smoke plume / AOD / remote-sensing mask | surface PM2.5 exposure measurement |
+| fusion or consensus product | canonical source observation |
+| advisory or alert text | sensor observation, model field, or emergency alerting authority |
+| run receipt | EvidenceBundle, proof pack, ReleaseManifest, or publication decision |
+| processed candidate | public truth |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+The slug decision matters because path names can mislead maintainers. `air` feels narrow but is implementation-real. `atmosphere` feels whole-domain but is not yet proven as the canonical schema family. `atmosphere_air` matches current documentation but is not a machine-schema slug. This ADR prevents the names from silently changing epistemic meaning.
 
----
-
-## Scope
-
-### In scope
-
-- Compatibility rules between `atmosphere_air`, `atmosphere`, and `air`.
-- Rules for documenting and testing alias paths.
-- Guardrails for schema-family migration.
-- Public-boundary implications of schema compatibility.
-- Acceptance criteria before this ADR can move from `PROPOSED` to `ACCEPTED`.
-- Rollback and supersession behavior for rename or schema-family migration.
-- Supersession relationship to the thin domain-local `ADR-0002-atmosphere-schema-compatibility.md`.
-
-### Out of scope
-
-- Accepting a new global schema-home decision.
-- Creating or moving schema files by this document alone.
-- Publishing air or atmosphere artifacts.
-- Activating live AirNow, AQS, OpenAQ, PurpleAir, Kansas Mesonet, NOAA, NASA, or model-field connectors.
-- Deciding all API route names, UI component names, CI workflow names, or release commands.
-- Treating run receipts as release proof.
-- Treating QA summary examples as public truth.
-
-> [!WARNING]
-> This ADR is a bridge. Bridges must carry traffic safely; they must not become a second destination. The final authority remains the accepted schema-home ADR, source registry, validators, policy gates, proof objects, release manifests, and rollback records.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Decision
-
-### Proposed decision statement
-
-KFM should preserve the existing Atmosphere / Air naming surfaces as follows:
-
-1. **Human-facing lane docs:** use `docs/domains/atmosphere_air/` as the current domain documentation lane.
-2. **Repo-wide ADR identity:** use `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` for this compatibility decision.
-3. **Existing domain-local ADR:** preserve `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` as lineage or replace it with a supersession pointer.
-4. **Whole-domain schemas:** use the repo-accepted schema home for atmosphere-wide object families. The proposed whole-domain family is `atmosphere`, but it remains subject to the schema-home ADR and repo inventory.
-5. **Early implementation slice:** preserve the existing `air` implementation family as a compatibility slice for current PM2.5/AQI candidate, receipt, validator, and release-boundary tooling.
-6. **No silent renames:** any migration from `air` to `atmosphere`, or from `atmosphere` to `air`, requires an alias registry, backward fixtures, validator coverage, documentation update, migration note, and rollback path.
-7. **Fail closed:** if a schema consumer cannot resolve the intended canonical schema, alias, and knowledge character, it must fail with `DENY`, `ABSTAIN`, or `ERROR`.
-8. **Public clients stay downstream:** no public client, MapLibre surface, Evidence Drawer, Focus Mode response, tile, export, or publication tool may read RAW, WORK, QUARANTINE, internal canonical stores, or connector-private outputs directly.
-
-### Decision diagram
-
-```mermaid
-flowchart TD
-  A[Atmosphere / Air change] --> B{What surface changes?}
-
-  B -->|Repo-wide ADR identity| ADR[docs/adr/ADR-0418]
-  B -->|Docs| D[docs/domains/atmosphere_air]
-  B -->|Whole-domain schema| S[repo-accepted schema home<br/>proposed family: atmosphere]
-  B -->|Existing thin slice| I[air compatibility family]
-
-  ADR --> X[Update ADR index + domain-local supersession pointer]
-  D --> C{Does it affect machine contracts?}
-  C -->|No| DR[Update docs + lineage note]
-  C -->|Yes| M[Require schema-home check + compatibility map]
-
-  S --> M
-  I --> M
-
-  M --> V[Alias registry + backward fixtures + validators]
-  V --> P{Public exposure possible?}
-  P -->|Yes| G[Policy + EvidenceBundle + release + rollback gates]
-  P -->|No| T[Candidate / internal only]
-
-  G --> Y{Gate passes?}
-  Y -->|No| F[DENY / ABSTAIN / ERROR]
-  Y -->|Yes| R[Released downstream artifact only]
-
-  T --> N[No public truth claim]
-```
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Compatibility map
 
-| Surface | Path / slug | Status | Authority role | Compatibility rule |
-|---|---|---:|---|---|
-| Renamed repo-wide ADR | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` | `PROPOSED / EXACT PATH NOT FOUND ON MAIN` | Governing compatibility decision after acceptance | Add to ADR index and point old domain-local ADR here. |
-| Domain docs lane | `docs/domains/atmosphere_air/` | `CONFIRMED` | Human-facing lane docs and domain governance | Keep as current doc lane unless superseded by ADR. |
-| Existing domain-local ADR | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | `CONFIRMED / LINEAGE` | Predecessor compatibility decision | Preserve as history or replace body with supersession pointer. |
-| Requested path | `docs/domains/ADR/ADR-0002-atmosphere-schema-compatibility.md` | `NEEDS VERIFICATION` | User-requested target | Do not create as a parallel ADR home without path review. |
-| Repo-wide ADR home | `docs/adr/` | `CONFIRMED` | Repo-wide decision ledger | Use non-colliding `ADR-0418`. |
-| Global schema home | `schemas/contracts/v1/` | `CONFIRMED as ADR-0001 proposal / NEEDS VERIFICATION for enforcement` | Machine-checkable schema root | Use accepted schema-home ADR; do not duplicate in `contracts/`. |
-| Whole-domain schema family | `schemas/contracts/v1/atmosphere/` | `PROPOSED / NEEDS VERIFICATION` | Full atmosphere-domain contracts | Preferred conceptual family for station observations, AQI reports, models, masks, fusion, advisory, and site context if accepted. |
-| Current air tool schema references | `schemas/contracts/v1/air/` | `REFERENCED BY REPO TOOLING / NEEDS VERIFICATION FOR FILE EXISTENCE` | Current thin-slice schema family expected by tools | Treat as compatibility implementation family until inventoried and reconciled. |
-| Current connector slice | `connectors/pipelines/air/` | `CONFIRMED` | No-network candidate writer | Preserve until migration fixtures prove safe. |
-| Current normalization lane | `pipelines/normalize/domains/atmosphere/` | `CONFIRMED` | Execution-near normalization documentation | Use as transform-stage documentation; not source authority or schema authority. |
-| Current processed candidate path | `data/processed/air/` | `CONFIRMED` | Candidate processed examples | Not public truth; not release proof. |
-| Current receipt path | `data/receipts/air/` | `CONFIRMED` | Run receipt process memory | Not proof pack; not publication authorization. |
-| Current air validators/publishers | `tools/validators/air/`, `tools/publishers/air/` | `CONFIRMED` | Tooling that expects `air` slice inputs | Preserve until path migration is tested. |
+| Surface | Current name | Status | Compatibility rule |
+|---|---|---:|---|
+| Human-facing docs lane | `atmosphere_air` | `CONFIRMED` | Keep unless a successor ADR migrates docs. |
+| Current no-network implementation slice | `air` | `CONFIRMED` | Preserve as candidate/tooling slice until migration tests prove otherwise. |
+| Current domain string in air tools | `atmosphere.air` | `CONFIRMED` | Keep as explicit bridge label while slug inventory is reconciled. |
+| Whole-domain schema concept | `atmosphere` | `PROPOSED / NEEDS VERIFICATION` | Do not treat as canonical machine family until schema-home inventory proves it. |
+| Current validator schema reference | `schemas/contracts/v1/air/qa_summary.schema.json` | `CONFIRMED reference / NEEDS VERIFICATION file existence` | Treat as unresolved schema-reference pressure; do not claim schema exists without inventory. |
+| Current release tooling references | `schemas/contracts/v1/air/*` | `CONFIRMED reference / NEEDS VERIFICATION file existence` | Must be reconciled before accepting schema migration. |
+| Domain-local compatibility ADR | `ADR-0002-atmosphere-schema-compatibility.md` | `LINEAGE` | Preserve or replace with pointer to this ADR. |
+| Future alias registry | TODO-VERIFY path | `PROPOSED` | Required before any old/new schema path resolves automatically. |
 
-> [!NOTE]
-> `CONFIRMED` here means the surface was visible in inspected repository evidence. It does not mean the surface is mature, complete, CI-enforced, public-safe, or release-authorized.
+### Naming state diagram
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+```mermaid
+flowchart TD
+  A[Atmosphere / Air lane change] --> B{Affected surface}
 
----
+  B -->|Human docs| D[docs/domains/atmosphere_air]
+  B -->|No-network connector/tooling| I[air]
+  B -->|Normalization docs| N[pipelines/normalize/domains/atmosphere]
+  B -->|Machine schema| S{Schema home inventory}
 
-## Object-family bridge
+  S -->|air family verified| AIR[schemas/contracts/v1/air]
+  S -->|atmosphere family verified| ATM[schemas/contracts/v1/atmosphere]
+  S -->|conflict or missing files| FAIL[ERROR / NEEDS VERIFICATION]
 
-The compatibility bridge should be expressed at the object-family level, not only as folder names.
+  AIR --> ALIAS{Migration wanted?}
+  ATM --> ALIAS
 
-| Object family | Current `air` slice signal | Whole-lane `atmosphere` expectation | Migration rule |
-|---|---|---|---|
-| QA summary | `qa_summary.example.json`; expected schema path `schemas/contracts/v1/air/qa_summary.schema.json` | Could become `atmosphere_aqi_report`, `atmosphere_observation_summary`, or a dedicated QA summary object if accepted | Do not rename until fixtures prove equivalent meaning. |
-| Run receipt | `data/receipts/air/run_receipt.example.json` | `atmosphere_run_receipt` or shared `run_receipt` object | Receipt remains process memory, not proof. |
-| Evidence bundle | Referenced by QA summary and release-candidate tooling | `atmosphere_evidence_bundle` or shared `EvidenceBundle` | Must resolve before consequential public claims. |
-| Promotion decision | `promotion_decision.json` emitted by release-candidate builder | `PromotionDecision` / `DecisionEnvelope` family | Must remain separate from ReleaseManifest. |
-| Release manifest | `release_manifest.json` emitted by release-candidate builder | `ReleaseManifest` family | Candidate release is not publication. |
-| Publication manifest | emitted by publication tooling when gates pass or block | publication / release surface | Must deny fixture-backed truth and internal-stage references. |
-| AQS reconciliation | publication tooling checks optional reconciliation | regulatory archive / reconciliation support | Must not imply live state by default. |
-| Attestation | publication tooling can require attestation | proof/release integrity support | Fixture attestation cannot authorize real publication. |
-| Layer / UI payload | not decided by this ADR | LayerManifest / Evidence Drawer payload | Must consume released evidence via governed API only. |
+  ALIAS -->|No| KEEP[Keep current slug and document boundary]
+  ALIAS -->|Yes| GATE[Alias registry + valid/invalid fixtures + validator + migration note + rollback target]
 
-### Compatibility alias record
+  GATE --> OK{All gates pass?}
+  OK -->|No| DENY[DENY / ERROR]
+  OK -->|Yes| MIGRATE[Accept migration through successor ADR or ADR-0418 update]
 
-If maintainers keep both `air` and `atmosphere` schema families during migration, each alias must be explicit.
-
-```yaml
-# PROPOSED registry shape — adapt to the repo's accepted control-plane or schema-alias convention.
-schema_compatibility_aliases:
-  - alias_id: atmos-air-qa-summary-v1
-    status: proposed
-    alias_path: schemas/contracts/v1/air/qa_summary.schema.json
-    canonical_target: TODO-VERIFY: schemas/contracts/v1/atmosphere/<accepted-object>.schema.json
-    governing_adr: docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
-    domain_docs: docs/domains/atmosphere_air/
-    object_family: qa_summary
-    compatibility_reason: Preserve current no-network air QA thin slice while whole-lane atmosphere schemas are reconciled.
-    allowed_for:
-      - fixture_validation
-      - backward_compatibility_tests
-      - release_candidate_replay
-    denied_for:
-      - silent_publication
-      - schema_generation_without_review
-      - direct_public_ui_binding
-    owner: TODO-VERIFY
-    created: TODO-VERIFY-YYYY-MM-DD
-    review_by: TODO-VERIFY-YYYY-MM-DD
-    required_tests:
-      - TODO-VERIFY: backward fixture for current qa_summary.example.json
-      - TODO-VERIFY: invalid fixture for AQI-as-concentration
-      - TODO-VERIFY: invalid fixture for AOD-as-PM2.5
-      - TODO-VERIFY: invalid fixture for model-as-observation
-      - TODO-VERIFY: invalid fixture for public internal-stage reference
-    rollback_note: Remove alias only after all consumers resolve canonical schema and release replay passes.
+  D --> DOC[Docs update only unless machine contract changes]
+  I --> CAND[Candidate artifacts only]
+  N --> CAND
+  CAND --> PUB{Public exposure?}
+  PUB -->|Yes| RELEASE[EvidenceBundle + policy + PromotionDecision + ReleaseManifest + rollback]
+  PUB -->|No| HOLD[Remain candidate/internal]
 ```
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
-## Compatibility invariants
+## Invariants
 
-These invariants apply to every schema, validator, policy, public-operation, publication, and UI change touching this lane.
+These invariants apply to every future schema, validator, policy, migration, public operation, release candidate, UI payload, and Focus Mode answer touching this lane.
 
 | Invariant | Required behavior |
 |---|---|
-| Source role preserved | Every consequential record must retain source role or source descriptor reference. |
-| Knowledge character preserved | Observation, AQI/report, regulatory archive, model field, mask, fusion, advisory, and site context must not collapse. |
-| Raw and normalized units preserved | Concentration, AQI/index, AOD, visibility, and model units must remain distinct. |
-| Candidate remains candidate | No-network examples and processed candidates must not become public truth by path or naming. |
-| Receipt/proof separation | Run receipts do not replace EvidenceBundle, proof pack, ReleaseManifest, or rollback card. |
-| Public path governed | Public clients use governed API, released artifacts, and EvidenceBundle resolution only. |
-| Alias explicit | Any compatibility alias must be dated, owned, tested, and reviewable. |
-| Rename reversible | Every rename or relocation must preserve migration history, fixture compatibility, and rollback. |
-| AI subordinate | Focus Mode may summarize admissible evidence; it cannot turn model language into release truth. |
-| Emergency boundary preserved | Atmosphere/Air and hazards-adjacent contexts must not become emergency alerting or life-safety instruction. |
+| Documentation is not schema authority | `docs/domains/atmosphere_air/` explains domain posture but does not define machine shape. |
+| Schema validity is not policy permission | A valid schema instance can still be denied by source role, rights, sensitivity, review, release, or stale-state policy. |
+| Candidate is not publication | `data/processed/air/*` and no-network outputs stay candidate/internal until promoted. |
+| Receipt is not proof | `RunReceipt` preserves process memory; it does not replace EvidenceBundle, catalog closure, proof pack, or ReleaseManifest. |
+| Source role survives migration | Any alias or rename must preserve `source_role`. |
+| Knowledge character survives migration | Observation, AQI report, regulatory archive, model field, remote-sensing mask, fusion product, advisory, and site context must remain distinct. |
+| Unit semantics survive migration | AQI/index, concentration, AOD, visibility, and model units must not be silently converted. |
+| Public surfaces stay downstream | Public API, MapLibre, Evidence Drawer, Focus Mode, exports, and tiles consume governed released artifacts only. |
+| Unknown rights deny public release | Unknown or unresolved rights, terms, quota, or source role blocks publication. |
+| Fixture truth is denied | Fixture-backed artifacts may support tests and candidates; they cannot authorize real public truth. |
+| Alias is temporary and owned | Any compatibility alias must have an owner, status, target, tests, review date, and rollback note. |
+| Rename is reversible | Every slug migration needs lineage, compatibility, migration notes, and rollback. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
+
+---
+
+## Decision rules
+
+### Keep
+
+Keep these as current, evidence-supported surfaces:
+
+- `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`;
+- `docs/domains/atmosphere_air/`;
+- `connectors/pipelines/air/`;
+- `tools/validators/air/`;
+- `tools/publishers/air/`;
+- `data/processed/air/`;
+- `data/receipts/air/`;
+- `pipelines/normalize/domains/atmosphere/` as normalization documentation, not schema authority.
+
+### Do not claim yet
+
+Do not claim these without further verification:
+
+- `schemas/contracts/v1/air/qa_summary.schema.json` exists;
+- `schemas/contracts/v1/atmosphere/` is canonical;
+- tests pass;
+- CI enforces the slug split;
+- public release is authorized;
+- live AirNow, AQS, OpenAQ, PurpleAir, Kansas Mesonet, NOAA, NASA, or model connectors are active;
+- Evidence Drawer, Focus Mode, MapLibre, or public API consumes this lane in production.
+
+### Require ADR update or successor ADR
+
+Require a revision to this ADR or a successor ADR for:
+
+- moving current `air` tooling to `atmosphere`;
+- making `air` the canonical schema family;
+- making `atmosphere` the canonical schema family;
+- retiring `atmosphere_air` docs lane;
+- introducing an alias registry;
+- allowing generated schema mirrors;
+- binding public UI/API surfaces to Atmosphere / Air release outputs;
+- publishing real-world Atmosphere / Air artifacts.
+
+[Back to top](#top)
+
+---
+
+## Compatibility alias record
+
+If both `air` and `atmosphere` schema paths are temporarily supported, the alias must be explicit and test-covered.
+
+```yaml
+# PROPOSED registry shape — final path and schema need verification.
+schema_slug_alias:
+  alias_id: atmos-air-schema-slug-bridge-v1
+  governing_adr: docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
+  status: proposed
+  owner: TODO-VERIFY
+  created: TODO-VERIFY-YYYY-MM-DD
+  review_by: TODO-VERIFY-YYYY-MM-DD
+
+  from:
+    slug: air
+    path_prefix: schemas/contracts/v1/air/
+    current_role: no-network implementation and release-candidate slice
+    evidence_status: referenced_by_repo_tooling_and_tests
+
+  to:
+    slug: TODO-VERIFY: atmosphere-or-air
+    path_prefix: TODO-VERIFY
+    intended_role: canonical machine schema family after schema-home inventory
+    evidence_status: NEEDS_VERIFICATION
+
+  allowed_for:
+    - fixture_validation
+    - backward_compatibility_tests
+    - release_candidate_replay
+    - migration_dry_run
+
+  denied_for:
+    - silent_publication
+    - direct_public_ui_binding
+    - source_activation
+    - schema_generation_without_review
+    - raw_work_quarantine_public_access
+
+  required_tests:
+    - valid_current_air_qa_candidate
+    - invalid_aqi_as_concentration
+    - invalid_aod_as_pm25
+    - invalid_model_as_observation
+    - invalid_fixture_backed_publication
+    - invalid_internal_lifecycle_public_reference
+    - alias_missing_target_fails_closed
+
+  rollback_note: Preserve alias record after retirement; do not delete lineage.
+```
+
+> [!WARNING]
+> Aliases are migration tools, not a second schema authority.
+
+[Back to top](#top)
 
 ---
 
@@ -343,24 +367,24 @@ These invariants apply to every schema, validator, policy, public-operation, pub
 
 | Gate | Required check | Failure outcome |
 |---|---|---|
-| ADR identity | New decision does not collide with existing ADR filename or number. | `ERROR` |
-| Path resolution | Consumer resolves either a canonical schema or approved compatibility alias. | `ERROR` |
-| Source role | Candidate carries source role or source descriptor reference before consequential use. | `DENY` |
-| Knowledge character | Candidate states observed/report/model/mask/fusion/advisory/site context. | `DENY` |
-| AQI/concentration split | AQI/report index is not treated as raw concentration. | `DENY` |
-| AOD/PM2.5 split | AOD or optical context is not treated as PM2.5 without governed model assumptions. | `DENY` |
-| Model/observation split | Model fields are not labeled as observations. | `DENY` |
-| EvidenceRefs | Consequential public candidate has EvidenceRefs that resolve to EvidenceBundle. | `ABSTAIN` or `DENY` |
+| ADR identity | `ADR-0418` remains uniquely linked in ADR index. | `ERROR` |
+| Schema path resolution | Consumer resolves to verified canonical schema or approved alias. | `ERROR` |
+| Schema file existence | Referenced schema files exist on the active branch. | `ERROR` |
+| Source role | Candidate has source role or source descriptor reference before consequential use. | `DENY` |
+| Knowledge character | Candidate identifies observation/report/model/mask/fusion/advisory/site context. | `DENY` |
+| Unit discipline | AQI/index, concentration, AOD, visibility, and model units stay distinct. | `DENY` |
+| Evidence closure | Consequential public claim resolves EvidenceRef to EvidenceBundle. | `ABSTAIN` or `DENY` |
 | Receipt/proof split | Run receipt is not promoted as proof by itself. | `DENY` |
-| Public internal-stage access | Public path does not reference RAW, WORK, QUARANTINE, internal canonical stores, or unpromoted processed candidates. | `DENY` |
-| Unknown rights | Unknown rights or unresolved source terms block public release. | `DENY` |
-| Fixture truth | Fixture-backed artifacts cannot be published as real-world truth. | `DENY` |
+| Candidate/public split | Fixture or no-network candidate is not published as real-world truth. | `DENY` |
+| Internal lifecycle boundary | Public manifest or UI/API path does not reference RAW, WORK, QUARANTINE, or unpromoted processed data. | `DENY` |
+| Unknown rights | Unknown rights, terms, or verification status blocks public release. | `DENY` |
+| Stale live-state support | Stale or unsupported live-state claims do not proceed. | `ABSTAIN` |
 
-### Illustrative compatibility check
+### Illustrative schema-slug resolver
 
 ```python
 # Illustrative only — adapt to repo-native validator conventions.
-# Purpose: fail closed when air/atmosphere schema slugs are unresolved.
+# Purpose: fail closed when Atmosphere / Air schema slug resolution is ambiguous.
 
 from __future__ import annotations
 
@@ -368,184 +392,218 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-@dataclass(frozen=True)
-class SchemaAlias:
-    alias_path: str
-    canonical_path: str
-    status: str
-    object_family: str
-    governing_adr: str
-
-
-APPROVED_STATUSES = {"active", "deprecated_with_tests"}
 GOVERNING_ADR = "docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md"
+ALLOWED_ALIAS_STATUSES = {"active", "deprecated_with_tests"}
 
 
-def resolve_schema_path(path: str, aliases: list[SchemaAlias]) -> tuple[bool, str]:
+@dataclass(frozen=True)
+class SchemaSlugAlias:
+    alias_prefix: str
+    canonical_prefix: str
+    status: str
+    governing_adr: str
+    owner: str
+
+
+def resolve_schema_path(path: str, aliases: list[SchemaSlugAlias]) -> tuple[bool, str]:
     normalized = path.replace("\\", "/")
 
+    # Whole-domain path is only accepted when a real file inventory proves the file exists.
     if normalized.startswith("schemas/contracts/v1/atmosphere/"):
         return True, normalized
 
     for alias in aliases:
-        if normalized == alias.alias_path and alias.status in APPROVED_STATUSES:
-            if alias.governing_adr != GOVERNING_ADR:
-                return False, "alias_missing_governing_adr_0418"
-            if not alias.canonical_path:
-                return False, "alias_missing_canonical_target"
-            return True, alias.canonical_path
+        if not normalized.startswith(alias.alias_prefix):
+            continue
+
+        if alias.status not in ALLOWED_ALIAS_STATUSES:
+            return False, "alias_not_active_or_tested"
+
+        if alias.governing_adr != GOVERNING_ADR:
+            return False, "alias_missing_adr_0418"
+
+        if not alias.owner or alias.owner.startswith("TODO"):
+            return False, "alias_owner_unverified"
+
+        return True, normalized.replace(alias.alias_prefix, alias.canonical_prefix, 1)
 
     if normalized.startswith("schemas/contracts/v1/air/"):
-        return False, "air_schema_path_requires_approved_alias"
+        return False, "air_schema_path_requires_verified_file_or_approved_alias"
 
-    return False, "unknown_schema_home"
+    return False, "unknown_atmosphere_air_schema_path"
 
 
-def validate_consumer_schema_refs(paths: list[str], aliases: list[SchemaAlias]) -> list[str]:
+def validate_schema_refs(paths: list[str], aliases: list[SchemaSlugAlias]) -> list[str]:
     failures: list[str] = []
 
     for path in paths:
         ok, resolved = resolve_schema_path(path, aliases)
         if not ok:
             failures.append(f"{path}: {resolved}")
+            continue
+
+        # In a real validator, resolve from repo root and check existence.
+        if not Path(resolved).exists():
+            failures.append(f"{path}: resolved target missing: {resolved}")
 
     return failures
 ```
 
-> [!NOTE]
-> This code is a design sketch. The real validator must use the repository’s accepted package manager, fixture layout, schema registry, and CI conventions.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Validation matrix
 
-| Test | Minimum fixture | Expected result |
+| Test | Minimum fixture or evidence | Expected result |
 |---|---|---|
-| ADR filename uniqueness | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` | Pass when exact path does not already exist and ADR index updates. |
-| Existing domain-local ADR remains lineage | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | Pass when it links to or is superseded by ADR-0418. |
-| Existing no-network QA summary remains valid candidate | `data/processed/air/qa_summary.example.json` | Pass as candidate; fail if treated as public truth. |
-| Existing run receipt remains process memory | `data/receipts/air/run_receipt.example.json` | Pass as receipt; fail if treated as proof or release. |
-| `air` schema consumer without alias | tool references `schemas/contracts/v1/air/*.schema.json` | `NEEDS VERIFICATION` or fail until alias is registered. |
-| `atmosphere` schema consumer with canonical path | tool references accepted `schemas/contracts/v1/atmosphere/*.schema.json` | Pass after schema inventory confirms file exists. |
-| AQI-as-concentration | AQI/report object with concentration semantics | Deny. |
-| Model-as-observation | model field labeled `OBSERVED_SENSOR` | Deny. |
-| AOD-as-PM2.5 | AOD context converted without model assumptions | Deny. |
+| ADR path present | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` | Pass. |
+| ADR index link | `docs/adr/README.md` includes this ADR | Pass after update. |
+| Domain-local ADR lineage | `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | Pass when it points to this ADR or is marked superseded/lineage. |
+| Domain docs lane preserved | `docs/domains/atmosphere_air/README.md` | Pass; no docs migration required by this ADR alone. |
+| Air connector candidate remains candidate | `data/processed/air/qa_summary.example.json` | Pass as candidate; fail if treated as public truth. |
+| Run receipt remains process memory | `data/receipts/air/run_receipt.example.json` | Pass as receipt; fail if treated as proof. |
+| `air` schema reference without verified file or alias | tool references `schemas/contracts/v1/air/*.schema.json` | Fail closed or `NEEDS VERIFICATION`. |
+| `atmosphere` schema reference without verified file | consumer references `schemas/contracts/v1/atmosphere/*.schema.json` | Fail closed or `NEEDS VERIFICATION`. |
+| AQI-as-concentration | report/index object used as raw concentration | Deny. |
+| AOD-as-PM2.5 | AOD/optical context used as PM2.5 without model assumptions | Deny. |
+| Model-as-observation | model field labeled observed | Deny. |
+| Fixture-backed publication | fixture or no-network source requests `published` status | Deny. |
+| Public internal-stage reference | public manifest references RAW, WORK, QUARANTINE, or unpromoted processed candidate | Deny. |
 | Missing EvidenceRefs | consequential candidate lacks EvidenceRefs | Abstain or deny. |
-| Unknown rights public | source rights unresolved but public release requested | Deny. |
-| Internal-stage public reference | public manifest references RAW, WORK, QUARANTINE, or unpromoted processed data | Deny. |
-| Fixture-backed publication | fixture source tries to become published truth | Deny. |
-| Rename with missing rollback | path migration lacks alias, fixture, migration note, or rollback target | Error. |
-| Stale operational evidence | stale PM2.5/AQI context supports live-state claim | Abstain. |
+| Unknown rights public release | source rights or terms unresolved | Deny. |
+| Missing rollback | migration has no rollback note or alias retirement plan | Error. |
 
-### Suggested command checklist
+### Suggested read-only checks before accepting this ADR
 
 ```bash
-# Read-only inventory before accepting this ADR.
 git status --short
 git branch --show-current
 
-# Confirm renamed ADR path remains unique before adding it.
-test ! -e docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
-
+# ADR and documentation inventory.
 find docs/adr -maxdepth 1 -type f -name 'ADR-*.md' | sort
 find docs/domains/atmosphere_air -maxdepth 3 -type f | sort
-find schemas/contracts/v1 -maxdepth 3 -type f 2>/dev/null | sort | grep -E '/(air|atmosphere)/' || true
-find tools/validators/air tools/publishers/air connectors/pipelines/air pipelines/normalize/domains/atmosphere -maxdepth 3 -type f 2>/dev/null | sort
 
+# Schema family inventory.
+find schemas/contracts/v1 -maxdepth 3 -type f 2>/dev/null \
+  | sort \
+  | grep -E '/(air|atmosphere)/' || true
+
+# Current implementation-slice inventory.
+find connectors/pipelines/air tools/validators/air tools/publishers/air pipelines/normalize/domains/atmosphere \
+  -maxdepth 3 -type f 2>/dev/null | sort
+
+# Candidate examples parse.
 python -m json.tool data/processed/air/qa_summary.example.json > /dev/null
 python -m json.tool data/receipts/air/run_receipt.example.json > /dev/null
-
-# Repo-native test command goes here after package/test conventions are verified.
-# Example only:
-python tools/validators/air/validate_air_qa.py data/processed/air/qa_summary.example.json
 ```
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+> [!NOTE]
+> Do not convert these checks into acceptance claims until they have been run on the active branch and their output is captured in PR notes, a validation report, or a repo-native receipt.
+
+[Back to top](#top)
+
+---
+
+## Migration plan
+
+A migration from the current mixed naming state should proceed in small, reversible steps.
+
+| Phase | Action | Output | Do not do |
+|---|---|---|---|
+| 0 | Inventory current consumers of `air`, `atmosphere`, and `atmosphere_air`. | Consumer inventory and conflict list. | Do not rename files. |
+| 1 | Update this ADR and ADR index. | Repo-wide decision visible. | Do not mark accepted until validation evidence exists. |
+| 2 | Add or update domain-local ADR pointer. | `ADR-0002-atmosphere-schema-compatibility.md` becomes lineage/pointer. | Do not delete history. |
+| 3 | Confirm schema files and schema-home decision. | Schema family inventory. | Do not assume `air` or `atmosphere` is canonical from docs alone. |
+| 4 | Add alias registry only if needed. | Explicit alias records. | Do not allow implicit aliases. |
+| 5 | Add valid/invalid fixtures. | Fixture coverage for candidate, denial, alias, and migration cases. | Do not rely on positive fixtures only. |
+| 6 | Wire validators. | Fail-closed slug/schema resolver. | Do not make public release depend on path existence alone. |
+| 7 | Re-run air tools and tests. | Captured validation/test output. | Do not claim CI enforcement without workflow evidence. |
+| 8 | Decide acceptance or successor ADR. | Accepted ADR or narrowed successor decision. | Do not merge broad schema migrations without rollback. |
+
+[Back to top](#top)
 
 ---
 
 ## Required documentation updates
 
-Any PR that adds this renamed ADR must update or verify these surfaces.
+Any PR that changes this ADR should update or verify these surfaces.
 
-| Surface | Update trigger | Required action |
-|---|---|---|
-| `docs/adr/README.md` | new repo-wide ADR | Add `ADR-0418-atmosphere-air-schema-slug-compatibility.md` to the ADR inventory. |
-| `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | this ADR added | Mark superseded by ADR-0418 or replace with a pointer. |
-| `docs/domains/atmosphere_air/README.md` | scope, slug, source-role, knowledge-character, or public-boundary change | Keep lane docs aligned with this ADR. |
-| `docs/domains/atmosphere_air/ADR-0001-atmosphere-air-lane.md` | lane slug or docs path changes | Update successor/compatibility note. |
-| `docs/adr/ADR-0001-schema-home.md` | canonical schema-home changes | Reconcile machine-schema authority. |
-| `docs/adr/ADR-0002-responsibility-root-monorepo.md` | path relocation or new root/domain ADR home | Preserve responsibility-root discipline. |
-| `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md` | source role or knowledge-character changes | Update source registry field expectations. |
-| `pipelines/normalize/domains/atmosphere/README.md` | normalization contract changes | Keep candidate/normalization semantics aligned. |
-| `connectors/pipelines/air/README.md` | connector output or fixture posture changes | Keep no-network candidate posture visible. |
-| validator docs or runbooks | new alias, rename, denial code, schema path, or fixture | Add command and expected failure behavior. |
-| release / rollback docs | release candidate or publication behavior changes | Add rollback target and tombstone/correction behavior. |
+| Surface | Required action |
+|---|---|
+| `docs/adr/README.md` | Link this ADR and record current status. |
+| `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` | Mark as lineage/superseded by ADR-0418 or convert to pointer. |
+| `docs/domains/atmosphere_air/README.md` | Keep `atmosphere_air`, `air`, and `atmosphere` naming split visible. |
+| `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md` | Preserve source-role and knowledge-character requirements. |
+| `docs/runbooks/domains/atmosphere_air/slices/AIR_QA_PROMOTION_SLICE.md` | Keep no-network/live-source boundaries aligned. |
+| `connectors/pipelines/air/README.md` | Keep candidate/receipt-only status aligned. |
+| `pipelines/normalize/domains/atmosphere/README.md` | Keep normalization-not-publication boundary aligned. |
+| `tools/validators/air/` docs or comments | Update schema-path/alias expectations when validators change. |
+| `tools/publishers/air/` docs or comments | Update release candidate and publication-denial expectations when schema paths change. |
+| Schema/fixture/test docs | Add compatibility alias and slug-denial cases if aliases are introduced. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Acceptance criteria
 
-This ADR may move from `PROPOSED` to `ACCEPTED` only after all applicable checks pass.
+This ADR can move from `draft/proposed` to `accepted` only when these checks pass.
 
-- [ ] Maintainers confirm final landing path: `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`.
-- [ ] Maintainers confirm `ADR-0418` does not collide with the active ADR directory or registry.
-- [ ] `docs/domains/ADR/` is either rejected as a parallel home or accepted through a documented path decision.
-- [ ] `docs/domains/atmosphere_air/ADR-0002-atmosphere-schema-compatibility.md` is preserved as lineage or updated as a supersession pointer.
-- [ ] Owners are assigned for atmosphere-air docs, schema compatibility, policy, and release tooling.
-- [ ] Policy label is set.
-- [ ] Complete inventory exists for `schemas/contracts/v1/air/` and `schemas/contracts/v1/atmosphere/`.
-- [ ] Current schema consumers are listed: validators, publishers, tests, workflows, docs, generated artifacts, UI/API contracts.
-- [ ] Alias registry or compatibility map is added if both `air` and `atmosphere` schema paths remain in use.
-- [ ] Backward fixtures cover current `qa_summary.example.json` and `run_receipt.example.json`.
-- [ ] Negative fixtures cover AQI-as-concentration, AOD-as-PM2.5, model-as-observed, unknown-rights-public, missing EvidenceRefs, and public internal-stage reference.
-- [ ] Validator or CI fails when a consumer references an unresolved `air`/`atmosphere` schema path.
-- [ ] Release-candidate tooling cannot publish fixture-backed truth.
-- [ ] Documentation updates land with the behavior change.
-- [ ] Rollback or supersession path is documented.
-- [ ] Validation evidence is attached to the PR, receipt, or review notes.
+- [ ] Owners and reviewer routing are verified.
+- [ ] `docs/adr/README.md` links this ADR.
+- [ ] Domain-local `ADR-0002-atmosphere-schema-compatibility.md` is marked lineage, superseded, or pointer-only.
+- [ ] Active-branch inventory lists every `air`, `atmosphere`, and `atmosphere_air` consumer relevant to schemas, tools, tests, docs, data examples, release candidates, public operations, and UI/API surfaces.
+- [ ] Schema-home relationship to `ADR-0001` is explicit.
+- [ ] Referenced `schemas/contracts/v1/air/*` files are either confirmed present or mapped through approved aliases.
+- [ ] Referenced `schemas/contracts/v1/atmosphere/*` files are either confirmed present or mapped through approved aliases.
+- [ ] Valid/invalid fixtures cover candidate status, AQI/concentration split, AOD/PM2.5 denial, model-as-observation denial, unknown-rights denial, fixture-publication denial, and internal-stage public-reference denial.
+- [ ] Validators fail closed on unresolved schema slugs.
+- [ ] Air publisher and release-candidate tools are updated or explicitly documented as current `air` compatibility consumers.
+- [ ] Run receipts remain process memory and do not replace EvidenceBundle/proof/release objects.
+- [ ] Public release remains blocked unless EvidenceBundle, policy, PromotionDecision, ReleaseManifest, and rollback target are all present.
+- [ ] CI or repo-native test output is captured, or enforcement remains manual/`NEEDS VERIFICATION`.
+- [ ] Rollback plan is recorded before any path migration.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
+
+---
+
+## Risks and mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| `air` tooling references missing schemas. | Validators/publishers may fail or drift. | Inventory schema files and add approved aliases or missing schemas through a dedicated PR. |
+| `atmosphere` docs imply schema authority too early. | Maintainers may write untested whole-domain schemas. | Keep `atmosphere` as proposed until schema-home and tests verify. |
+| Domain-local ADR and repo-wide ADR disagree. | Duplicate authority. | Mark domain-local ADR as lineage/pointer. |
+| AQI, PM2.5, AOD, smoke, model, and fusion semantics collapse. | Public claims become misleading. | Enforce knowledge-character and unit-denial tests. |
+| Fixture outputs look publishable. | No-network slice becomes false public truth. | Keep fixture-publication denial in publisher/tests. |
+| Run receipt is mistaken for proof. | Process memory replaces evidence closure. | Require EvidenceBundle/proof/release separation. |
+| Alias lives forever. | Dual authority returns. | Add owner, review date, status, retirement plan, and tests. |
+| CI presence is overstated. | Documentation claims enforcement without run evidence. | Mark workflow/test status `NEEDS VERIFICATION` until run output is captured. |
+
+[Back to top](#top)
 
 ---
 
 ## Rollback and supersession
 
-If this bridge proves wrong or incomplete:
+If this ADR or a slug migration is wrong, rollback must preserve lineage.
 
-1. Preserve this ADR as lineage.
-2. Create a successor ADR with a unique name and non-colliding number.
-3. Record a compatibility map from old paths to new paths.
-4. Keep existing `air` fixture and release-candidate replay tests until all consumers migrate.
-5. Do not delete receipts, QA summaries, promotion decisions, publication manifests, tombstones, or proof candidates.
-6. Retire aliases only after validation proves no active consumer uses them.
-7. Update source registry, schema registry, docs, validators, tests, release tooling, and runbooks together.
-8. Rehearse rollback before any public artifact depends on the renamed family.
+1. Preserve this ADR as history.
+2. Create a successor ADR or update this ADR with explicit supersession notes.
+3. Restore previous consumer paths or aliases through a migration record.
+4. Keep valid/invalid fixtures for both old and new slugs until retirement is proven.
+5. Re-run validators, publishers, and relevant tests.
+6. Block public release during ambiguity.
+7. Record any affected release candidate, publication manifest, correction notice, or rollback reference.
+8. Do not delete the domain-local ADR without a pointer or documented replacement.
+9. Do not remove alias records simply because the tree looks cleaner.
 
-### Supersession note template
+> [!WARNING]
+> A rollback that hides prior authority weakens KFM. Slug cleanup must preserve compatibility evidence.
 
-```markdown
-> [!IMPORTANT]
-> Superseded by: `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`
->
-> Reason:
-> - `ADR-0002` is already used in the repo-wide ADR directory.
-> - Atmosphere / Air schema-slug compatibility affects schema consumers and release tooling.
->
-> Preserved compatibility:
-> - `air` fixtures replayed through `<test path>`
-> - `atmosphere_air` docs linked to `<new docs path>`
-> - `<old schema>` mapped to `<new schema>`
->
-> Rollback:
-> - `<rollback card or runbook path>`
-```
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -553,40 +611,25 @@ If this bridge proves wrong or incomplete:
 
 | Item | Status | Why it matters |
 |---|---:|---|
-| Renamed candidate path | `CONFIRMED ABSENT BY EXACT FETCH` | `docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md` was not present on `main` when checked. |
-| Full ADR inventory after branch changes | `NEEDS VERIFICATION` | Exact-path absence is strong for this candidate, but the active branch should still be inventoried before commit. |
-| Requested path `docs/domains/ADR/...` | `NEEDS VERIFICATION` | No current repo-visible evidence confirms it as an accepted home. |
-| Existing domain-local compatibility ADR | `CONFIRMED` | Should be retained as lineage or converted into a pointer. |
-| Owners | `NEEDS VERIFICATION` | Required before acceptance and enforcement. |
-| Policy label | `NEEDS VERIFICATION` | Required before public or restricted classification is asserted. |
-| Full schema inventory | `NEEDS VERIFICATION` | Tooling references `schemas/contracts/v1/air/*`; proposed docs mention `schemas/contracts/v1/atmosphere/*`. Exact files must be inventoried. |
-| CI enforcement | `UNKNOWN` | No workflow execution evidence is included in this ADR. |
-| Schema alias registry home | `NEEDS VERIFICATION` | Could live in `control_plane/`, `schemas/`, docs, or another accepted registry home. |
-| Compatibility fixtures | `NEEDS VERIFICATION` | Required before safe rename or consolidation. |
-| Public API/UI consumers | `UNKNOWN` | Any public binding must consume governed release artifacts only. |
-| Live source rights | `UNKNOWN` | Public release fails closed until rights and terms are verified. |
-| AQS reconciliation behavior | `NEEDS VERIFICATION` | Publication tooling references reconciliation; production policy must be reviewed. |
-| Attestation behavior | `NEEDS VERIFICATION` | Fixture attestations must not authorize real publication. |
+| Owners | `NEEDS VERIFICATION` | Acceptance requires accountable review. |
+| Created date | `NEEDS VERIFICATION` | Existing file date was not independently verified. |
+| Policy label | `NEEDS VERIFICATION` | Public/restricted status must be deliberate. |
+| CODEOWNERS routing | `NEEDS VERIFICATION` | Schema, policy, and atmosphere-air changes need steward review. |
+| Active schema inventory | `NEEDS VERIFICATION` | Tooling references `schemas/contracts/v1/air/*`, but file existence must be confirmed. |
+| Canonical schema target | `NEEDS VERIFICATION` | `air` vs `atmosphere` cannot be resolved by prose alone. |
+| CI/test run status | `UNKNOWN` | Test files exist, but passing status was not inspected. |
+| Branch protections | `UNKNOWN` | Cannot claim enforcement without repo settings or run evidence. |
+| Alias registry home | `NEEDS VERIFICATION` | Do not invent a parallel registry home without ADR/register alignment. |
+| Public API / UI binding | `UNKNOWN` | No claim of public Atmosphere / Air route or MapLibre binding is made here. |
+| Live source activation | `UNKNOWN / blocked` | Live source rights, terms, quotas, schemas, and source descriptors must be verified first. |
+| Release/proof implementation maturity | `NEEDS VERIFICATION` | Candidate objects exist in tooling, but release authorization is not proven. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
-## Final decision
+## Maintainer note
 
-`PROPOSED`: Rename the Atmosphere / Air schema-compatibility decision to:
+This ADR should make future cleanup less exciting.
 
-```text
-docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
-```
-
-Use **ADR-0418: Atmosphere-Air Schema Slug Compatibility** as the governing compatibility record for the current Atmosphere / Air naming split.
-
-- Keep `docs/domains/atmosphere_air/` as the current human-facing lane.
-- Preserve current `air` implementation artifacts and tools as compatibility thin-slice surfaces.
-- Treat `atmosphere` as the proposed whole-domain schema family only after schema-home inventory and acceptance.
-- Preserve or pointer-update the existing domain-local `ADR-0002-atmosphere-schema-compatibility.md`.
-- Require explicit aliases, backward fixtures, validators, release-boundary checks, and rollback notes before any rename.
-- Fail closed on unresolved schema paths, unknown rights, missing evidence, or public internal-stage access.
-
-The bridge is successful when maintainers can rename, consolidate, or keep the lane split without losing evidence, source role, knowledge character, release posture, or rollback lineage.
+The goal is not to pick the prettiest slug. The goal is to keep evidence, source role, knowledge character, unit semantics, policy posture, release state, and rollback visible while the Atmosphere / Air lane grows from a narrow `air` slice into a governed whole-domain capability.
