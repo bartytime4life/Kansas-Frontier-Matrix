@@ -213,7 +213,7 @@ find data/receipts/atmosphere -maxdepth 3 -type f | sort 2>/dev/null || true
 # PROPOSED validation shape only.
 # Replace with repo-native validator once schema and tool locations are confirmed.
 python tools/validators/atmosphere/validate_receipts.py data/receipts/air
-pytest -q tests/atmosphere
+pytest -q tests/air
 ```
 
 ```bash
