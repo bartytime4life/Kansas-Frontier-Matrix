@@ -340,7 +340,7 @@ disclosure/disclosure_policy_default.json	unknown
 disclosure/disclosure_spec_example.json	unknown
 docs/README.md	unknown
 docs/adr/ADR-0001-schema-home.md	doc_adr
-docs/adr/ADR-0002-governed-api-path-canonicalization.md	doc_adr
+docs/adr/ADR-0202-governed-api-path-canonicalization.md	doc_adr
 docs/adr/ADR-0003-source-ledger-authority.md	doc_adr
 docs/adr/ADR-0004-evidencebundle-contract.md	doc_adr
 docs/adr/ADR-0005-promotion-gate.md	doc_adr
