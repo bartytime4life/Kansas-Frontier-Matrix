@@ -1,21 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr-0004-hydrology-first-proof-lane
-title: ADR-0305: Hydrology-First Proof Lane
-type: adr
-version: v1.0
-status: accepted
-owners: TODO: architecture steward; hydrology domain steward; release steward; documentation steward
-created: NEEDS_VERIFICATION
+doc_id: kfm://doc/NEEDS-VERIFICATION-adr-0304-hydrology-first-proof-lane
+title: ADR-0304: Hydrology-First Proof Lane
+type: standard
+version: v1.1-review
+status: review
+owners: OWNER_TBD_NEEDS_VERIFICATION: architecture steward; hydrology domain steward; release steward; documentation steward
+created: NEEDS_VERIFICATION-YYYY-MM-DD
 updated: 2026-05-06
 policy_label: internal-draft
 related: [
-  docs/adr/README.md,
-  docs/adr/ADR-0001-schema-home.md,
-  docs/adr/ADR-0005-promotion-gate.md,
-  docs/runbooks/foundation-strategy.md,
-  docs/domains/hydrology/README.md,
-  docs/domains/hydrology/architecture/ARCHITECTURE.md,
-  fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json
+  ./README.md,
+  ./ADR-0001-schema-home.md,
+  ./ADR-0005-promotion-gate.md,
+  ../runbooks/foundation-strategy.md,
+  ../domains/hydrology/README.md,
+  ../domains/hydrology/architecture/ARCHITECTURE.md,
+  ../../fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json
 ]
 tags: [
   kfm,
@@ -32,22 +32,22 @@ tags: [
   rollback
 ]
 notes: [
-  Replaces the prior stub: "# ADR-0305 / Hydrology-first synthetic proof slice in first PR.",
-  Decision is accepted for sequencing and proof-lane priority; implementation maturity remains evidence-bounded by current repo artifacts.",
-  Hydrology is selected as the first proof-bearing lane because it can exercise the KFM trust path with public-safe, spatial, temporal, evidence-resolving material before higher-sensitivity domains.",
-  This ADR does not promote live source connectors, emergency alerting, hydrologic simulation, direct public RAW/WORK/QUARANTINE access, or direct model-runtime access."
+  Decision status is accepted for sequencing; document status remains review until owner, created-date, policy-label, ADR-index, and enforcement evidence are verified.
+  This revision normalizes the visible ADR number to the target path ADR-0304 and preserves prior hydrology-first decision lineage.
+  Hydrology is selected as the first proof-bearing lane because it can exercise KFM trust behavior with public-safe spatial-temporal fixture evidence before higher-sensitivity domains.
+  This ADR does not authorize live connectors, emergency alerting, direct public internal-stage access, public raw model output, or real-source publication without source, rights, policy, catalog, proof, review, correction, and rollback closure.
 ]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# ADR-0305: Hydrology-First Proof Lane
+# ADR-0304: Hydrology-First Proof Lane
 
 Hydrology is KFM’s first proof-bearing domain lane for exercising the governed path from source-aware fixture evidence to published, inspectable, rollback-capable public surfaces.
 
 <p align="center">
-  <img alt="ADR status: accepted" src="https://img.shields.io/badge/ADR-accepted-2ea043">
-  <img alt="implementation: partial" src="https://img.shields.io/badge/implementation-partial%20%7C%20evidence--bounded-orange">
+  <img alt="ADR decision: accepted" src="https://img.shields.io/badge/ADR%20decision-accepted-2ea043">
+  <img alt="document status: review" src="https://img.shields.io/badge/document-review-ffb000">
   <img alt="domain: hydrology" src="https://img.shields.io/badge/domain-hydrology-blue">
   <img alt="proof mode: synthetic no-network" src="https://img.shields.io/badge/proof-synthetic%20no--network-6f42c1">
   <img alt="posture: fail closed" src="https://img.shields.io/badge/posture-fail--closed-b60205">
@@ -56,10 +56,12 @@ Hydrology is KFM’s first proof-bearing domain lane for exercising the governed
 <p align="center">
   <a href="#decision">Decision</a> ·
   <a href="#context">Context</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
   <a href="#evidence-basis">Evidence basis</a> ·
   <a href="#why-hydrology-first">Why hydrology first</a> ·
   <a href="#scope">Scope</a> ·
   <a href="#proof-lane-contract">Proof-lane contract</a> ·
+  <a href="#minimum-first-slice">First slice</a> ·
   <a href="#implementation-sequence">Implementation</a> ·
   <a href="#validation-and-acceptance">Validation</a> ·
   <a href="#rollback">Rollback</a>
@@ -67,11 +69,12 @@ Hydrology is KFM’s first proof-bearing domain lane for exercising the governed
 
 > [!IMPORTANT]
 > **Decision status:** `accepted` for KFM build sequencing.  
-> **Implementation status:** `partial / evidence-bounded`. The repository contains hydrology documentation and a synthetic release manifest fixture, but this ADR does not claim that live hydrology connectors, production promotion, public services, branch protections, dashboards, or runtime behavior are complete.  
-> **Target path:** `docs/adr/ADR-0304-hydrology-first-proof-lane.md`.
+> **Document status:** `review` because ownership, created date, ADR index coverage, policy label, CI enforcement, branch protections, and runtime behavior still need verification.  
+> **Target path:** `docs/adr/ADR-0304-hydrology-first-proof-lane.md`.  
+> **Primary rule:** hydrology proves the trust path first; it does not bypass the trust path.
 
 > [!WARNING]
-> This ADR authorizes a **synthetic, no-network, public-safe proof lane first**. It does **not** authorize live source fetching, emergency alerting, direct public access to internal lifecycle stores, direct model-runtime access, or public promotion of real-world hydrology data without source, rights, policy, review, catalog, proof, and rollback closure.
+> This ADR authorizes a **synthetic, no-network, public-safe proof lane first**. It does **not** authorize live source fetching, emergency alerting, direct public access to internal lifecycle stores, direct model-runtime access, or public promotion of real-world hydrology data without source, rights, policy, review, catalog, proof, correction, and rollback closure.
 
 ---
 
@@ -81,14 +84,13 @@ KFM will use **hydrology** as the first proof-bearing domain lane.
 
 The first hydrology slice must prove the KFM trust path with synthetic or pinned no-network fixtures before live connectors, broad UI expansion, model-runtime integration, or high-sensitivity domain releases.
 
-The decision establishes this build order:
-
 ```text
 documentation control plane
   -> schema/source/release authority
   -> hydrology no-network fixtures
   -> validators and fail-closed policy checks
-  -> EvidenceBundle and DecisionEnvelope closure
+  -> EvidenceRef -> EvidenceBundle closure
+  -> finite runtime and promotion outcomes
   -> ReleaseManifest dry run
   -> governed API / MapLibre / Evidence Drawer / Focus Mode payloads
   -> synthetic public-safe published drill
@@ -97,13 +99,24 @@ documentation control plane
 
 ### Accepted rule
 
-Hydrology is the first lane because it can exercise the whole KFM publication spine while staying comparatively public-safe and technically legible:
+Hydrology is first because it can exercise the whole KFM publication spine while staying comparatively public-safe and technically legible:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
 Promotion remains a governed state transition, not a file move.
+
+### Outcome vocabulary
+
+| Surface | Machine outcomes | Use in this ADR |
+|---|---|---|
+| Runtime answer / Focus Mode | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Governs request-time responses over released fixture evidence. |
+| Policy decision | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | Governs admissibility and release constraints. |
+| Promotion decision | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | Governs whether a release candidate can become published. |
+| Validation gate | `PASS`, `FAIL`, `ABSTAIN`, `ERROR` | Governs per-check validator results. |
+
+`PROMOTE` may be used as a human verb. The machine decision that permits promotion is `ALLOW` unless a later accepted ADR changes the enum.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -113,30 +126,40 @@ Promotion remains a governed state transition, not a file move.
 
 KFM is a Kansas-first, map-first, time-aware, evidence-first, governed spatial knowledge and publication system. The durable unit of value is the inspectable claim, not the map tile, graph edge, generated answer, dashboard, or fixture alone.
 
-The foundation strategy directs the project to build from the governance and proof spine outward. The hydrology domain README identifies hydrology as the first governed proof lane, and the hydrology architecture defines the lane around source intake, normalization, validation, proof assembly, and governed delivery.
+The foundation strategy directs the project to build from the governance and proof spine outward. The hydrology domain docs identify hydrology as the first governed proof lane, and the hydrology architecture defines the lane around source intake, normalization, validation, proof assembly, and governed delivery.
 
-The repository also contains a synthetic hydrology release manifest fixture with a synthetic public-safe scope, `no_network: true`, `not_official_source_data: true`, explicit prohibited source paths, evidence boundary notes, correction path, rollback target, and synthetic published status. This fixture is implementation evidence of a synthetic drill shape, not proof that live hydrology publication is complete.
+The repository also contains a synthetic hydrology release manifest fixture with a synthetic public-safe scope, `no_network: true`, `not_official_source_data: true`, explicit prohibited source paths, evidence boundary notes, correction path, rollback target, and synthetic published status. That fixture is implementation evidence of a synthetic drill shape. It is not proof that live hydrology publication is complete.
 
-### Existing repo signal
+### Numbering and lineage note
 
-| Evidence | Current repo signal | Interpretation |
-|---|---|---|
-| `docs/adr/ADR-0304-hydrology-first-proof-lane.md` | Prior stub exists. | This ADR expands the stub into a reviewable decision record. |
-| `docs/domains/hydrology/README.md` | Hydrology is described as KFM’s first governed proof lane. | Supports the accepted sequencing decision. |
-| `docs/domains/hydrology/architecture/ARCHITECTURE.md` | Defines source intake, normalization, validation, proof assembly, and governed delivery. | Supports the proof-lane architecture. |
-| `fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json` | Synthetic, no-network, public-safe published drill fixture exists. | Supports synthetic release-drill semantics, not live-source maturity. |
-| `docs/runbooks/foundation-strategy.md` | Recommends governance/proof spine first and no-network hydrology proof slice before live activation. | Supports the implementation order. |
-| `docs/adr/ADR-0005-promotion-gate.md` | Defines promotion as a governed state transition with finite outcomes and rollback posture. | Hydrology proof must use promotion semantics, not file movement. |
-
-### Numbering note
-
-The repository may contain ADR number reuse or lane-specific ADR files. This document uses the full path as its stable identity:
+This file’s stable target path is:
 
 ```text
 docs/adr/ADR-0304-hydrology-first-proof-lane.md
 ```
 
-If ADR numbering is later normalized, preserve this file as lineage and add a supersession note rather than deleting history.
+A prior revision at this path carried an `ADR-0305` visible title/metadata mismatch. This revision normalizes the visible title and document identity to `ADR-0304` while preserving the hydrology-first decision lineage. If the ADR registry later adopts a different canonical numbering scheme, add a supersession note rather than deleting this file.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Repo fit
+
+| Relationship | Path | Status | Role |
+|---|---|---:|---|
+| This ADR | `docs/adr/ADR-0304-hydrology-first-proof-lane.md` | `CONFIRMED target path / revised here` | Governs hydrology-first sequencing and proof-lane acceptance burden. |
+| ADR index | [`./README.md`](./README.md) | `CONFIRMED / coverage NEEDS VERIFICATION` | ADR directory navigation, naming, evidence labels, review, rollback, and supersession discipline. |
+| Schema-home ADR | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | `CONFIRMED / proposed decision` | Controls `schemas/contracts/v1/` versus `contracts/` authority before schema-bearing hydrology files multiply. |
+| Promotion Gate ADR | [`./ADR-0005-promotion-gate.md`](./ADR-0005-promotion-gate.md) | `CONFIRMED / draft decision` | Defines promotion as governed release-state transition using finite outcomes. |
+| Foundation strategy | [`../runbooks/foundation-strategy.md`](../runbooks/foundation-strategy.md) | `CONFIRMED / draft runbook` | Requires governance and proof spine before live-source activation, UI expansion, or runtime work. |
+| Hydrology domain landing page | [`../domains/hydrology/README.md`](../domains/hydrology/README.md) | `CONFIRMED / draft` | Defines hydrology as first governed proof lane. |
+| Hydrology architecture | [`../domains/hydrology/architecture/ARCHITECTURE.md`](../domains/hydrology/architecture/ARCHITECTURE.md) | `CONFIRMED / draft` | Names hydrology source intake, normalization, validation, proof assembly, and governed delivery components. |
+| Synthetic release manifest fixture | [`../../fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json`](../../fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json) | `CONFIRMED fixture` | Proves synthetic no-network release-drill shape, not live-source maturity. |
+
+### Directory Rules basis
+
+`docs/adr/` is the right responsibility-root home because this is a human-facing architecture decision. Hydrology-specific schemas, fixtures, policies, validators, source descriptors, receipts, proofs, and published artifacts remain under their responsibility roots, not as new root-level hydrology folders.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -144,21 +167,23 @@ If ADR numbering is later normalized, preserve this file as lineage and add a su
 
 ## Evidence basis
 
-| Source | Status | Supports | Limits |
+| Evidence | Label | Supports | Limits |
 |---|---:|---|---|
-| Current target ADR stub | CONFIRMED | Existing file path and original two-line decision stub. | Does not provide rationale, scope, validation, or rollback. |
-| Directory rules | CONFIRMED doctrine | `docs/adr/` is the correct responsibility-root home for architecture decisions; hydrology-specific files should stay under responsibility roots, not root-level domain folders. | Does not prove runtime behavior. |
-| Hydrology README | CONFIRMED repo evidence | Hydrology is the first governed proof lane and should prove the RAW → PUBLISHED trust path. | Some adjacent paths and owners remain placeholders. |
-| Hydrology architecture | CONFIRMED repo evidence | Source intake, normalization, validation, proof assembly, and governed delivery are lane components. | It is documentation evidence, not runtime proof. |
-| Synthetic release manifest fixture | CONFIRMED repo evidence | Synthetic public-safe release drill shape, no-network posture, prohibited source paths, correction path, rollback target. | It is synthetic and explicitly not official source data. |
-| Foundation strategy runbook | CONFIRMED repo evidence | Governance/proof spine first; no-network hydrology proof before live connector activation. | It remains a draft runbook, not platform enforcement proof. |
-| Promotion Gate ADR | CONFIRMED repo evidence | Publication is a governed state transition with finite promotion decisions. | Adjacent implementation details still need validation. |
+| Current target ADR path | `CONFIRMED` | Existing file path and hydrology-first decision surface. | Prior visible numbering/metadata needed correction. |
+| Directory Rules | `CONFIRMED doctrine` | ADR belongs under `docs/adr/`; domains live under responsibility roots. | Does not prove runtime behavior. |
+| ADR index | `CONFIRMED repo evidence` | ADRs are KFM’s decision ledger; ADRs record decisions and review burden separate from enforcement. | Complete ADR inventory and owner coverage remain `NEEDS VERIFICATION`. |
+| Hydrology README | `CONFIRMED repo evidence` | Hydrology is KFM’s first governed proof lane and should prove the RAW → PUBLISHED trust path. | Some owner/path/policy maturity remains draft or placeholder. |
+| Hydrology architecture | `CONFIRMED repo evidence` | Source intake, normalization, validation, proof assembly, and governed delivery are lane components. | Documentation evidence, not runtime proof. |
+| Synthetic release manifest fixture | `CONFIRMED repo evidence` | Synthetic public-safe release drill shape, no-network posture, prohibited source paths, correction path, rollback target. | Explicitly synthetic and not official source data. |
+| Foundation strategy runbook | `CONFIRMED repo evidence` | Governance/proof spine first; no-network hydrology proof before live activation. | Draft runbook, not platform enforcement proof. |
+| Schema-home ADR | `CONFIRMED repo evidence / proposed decision` | Machine schemas should converge under the accepted schema-home rule before hydrology schema expansion. | Acceptance and enforcement remain `NEEDS VERIFICATION`. |
+| Promotion Gate ADR | `CONFIRMED repo evidence / draft decision` | Promotion is release-state governance with finite outcomes and rollback posture. | Full evaluator, fixtures, CI enforcement, and branch protections remain `NEEDS VERIFICATION`. |
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from current repo files, supplied doctrine, or current-session evidence. |
+| `CONFIRMED` | Verified from current repo evidence, supplied doctrine, or current-session inspection. |
 | `PROPOSED` | A recommended implementation, path, gate, fixture, or workflow not yet proven complete. |
 | `NEEDS VERIFICATION` | Checkable before acceptance, activation, or public release. |
 | `UNKNOWN` | Not verified from repo files, tests, workflows, logs, dashboards, branch settings, deployment settings, or emitted proof objects. |
@@ -175,9 +200,9 @@ Hydrology is selected first because it is the strongest public-safe proof lane f
 | Reason | Why it matters for KFM |
 |---|---|
 | Spatially legible | Watersheds, sites, stream networks, and flood context are naturally map-first. |
-| Time-aware | Observations, source retrieval, valid-time, release-time, and freshness can all be exercised. |
+| Time-aware | Observed time, source retrieval time, valid time, release time, and freshness can all be exercised. |
 | Evidence-rich | Source descriptors, observations, catalog records, EvidenceBundles, and release manifests are meaningful in a small slice. |
-| Public-safe when synthetic/pinned | A no-network fixture can prove the trust path without exposing sensitive locations or private data. |
+| Public-safe when synthetic or pinned | A no-network fixture can prove the trust path without exposing sensitive locations or private data. |
 | Failure states are obvious | Ambiguous identity, missing source role, unresolved EvidenceRef, NFHL mislabeling, and missing rollback can produce clear `ABSTAIN`, `DENY`, or `ERROR`. |
 | Cross-domain leverage | Hydrology later connects to soils, hazards, agriculture, habitat, settlements, infrastructure, and climate without requiring those lanes to be first. |
 | Governance burden is useful but bounded | Hydrology exercises rights, policy, catalog, release, proof, rollback, and map/UI trust without starting in archaeology, DNA, rare species, or critical infrastructure. |
@@ -196,13 +221,14 @@ This ADR applies to the first proof-bearing hydrology lane and its synthetic rel
 
 | In scope | Required posture |
 |---|---|
-| Pinned or synthetic hydrology fixtures | Small, reviewable, public-safe, no-network. |
+| Synthetic or pinned hydrology fixtures | Small, reviewable, public-safe, no-network. |
 | HUC / watershed fixture logic | Source-aware, geometry/content fingerprinted, catalogable. |
 | Hydrologic identity and crosswalk tests | Ambiguity must be visible and may produce `ABSTAIN`. |
 | USGS-style observation fixture shape | Parameter, unit, timestamp, qualifier/provisional state, no-data handling. |
-| FEMA NFHL role separation fixture | Regulatory flood context only, never observed inundation. |
-| EvidenceBundle closure | Claims must resolve to evidence support. |
-| DecisionEnvelope / RuntimeResponseEnvelope behavior | Runtime surfaces use finite outcomes: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. |
+| FEMA NFHL role separation fixture | Regulatory flood context only; never observed inundation. |
+| Evidence closure | Consequential claims resolve `EvidenceRef -> EvidenceBundle`. |
+| Runtime response behavior | Public request-time surfaces use `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
+| Promotion decision behavior | Release-state decisions use `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR`. |
 | ReleaseManifest dry run | Release identity, artifacts, catalogs, proof refs, policy decisions, correction path, rollback target. |
 | MapLibre / Evidence Drawer / Focus Mode payload contracts | Downstream of governed release state and evidence closure. |
 | Rollback drill | Alias movement and correction lineage without deleting immutable artifacts. |
@@ -234,9 +260,12 @@ flowchart LR
 
   PROCESSED --> CATALOG["CATALOG / TRIPLET<br/>STAC · DCAT · PROV · graph delta"]
   CATALOG --> EVIDENCE["EvidenceBundle<br/>resolved support"]
-  EVIDENCE --> DECISION["DecisionEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
-  DECISION --> RELEASE["ReleaseManifest<br/>synthetic dry run"]
-  RELEASE --> PUBLISHED["PUBLISHED_SYNTHETIC<br/>public-safe drill"]
+  EVIDENCE --> RUNTIME["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
+  EVIDENCE --> POLICY["PolicyDecision<br/>ALLOW · ABSTAIN · DENY · ERROR"]
+  POLICY --> RELEASE["ReleaseManifest<br/>synthetic dry run"]
+  RELEASE --> PROMOTION["PromotionDecision<br/>ALLOW · ABSTAIN · DENY · ERROR"]
+  PROMOTION -->|ALLOW| PUBLISHED["PUBLISHED_SYNTHETIC<br/>public-safe drill"]
+  PROMOTION -->|ABSTAIN / DENY / ERROR| HOLD["Hold / repair / quarantine<br/>no public reliance"]
 
   PUBLISHED --> API["Governed API"]
   API --> MAP["MapLibre layer"]
@@ -249,9 +278,9 @@ flowchart LR
 
 ### Required invariant
 
-A hydrology feature, claim, or layer must not become public merely because it exists as a file, can be drawn on a map, validates against a schema, or appears in a fixture. It becomes externally relyable only after the promotion path produces release state, evidence closure, policy posture, review state, correction path, and rollback target.
+A hydrology feature, claim, or layer must not become public merely because it exists as a file, can be drawn on a map, validates against a schema, or appears in a fixture. It becomes externally reliable only after the promotion path produces release state, evidence closure, policy posture, review state, correction path, and rollback target.
 
-### Finite outcomes
+### Finite runtime outcomes
 
 | Outcome | Hydrology proof-lane use |
 |---|---|
@@ -259,6 +288,15 @@ A hydrology feature, claim, or layer must not become public merely because it ex
 | `ABSTAIN` | Identity, evidence, source role, freshness, or support is insufficient, but no hard violation is proven. |
 | `DENY` | A required rule fails: missing EvidenceBundle, source-role violation, rights/sensitivity problem, NFHL mislabeling, direct public internal-stage access, or unsafe geometry exposure. |
 | `ERROR` | Evaluator, schema, resolver, catalog, policy, proof verifier, or runtime step fails before a trustworthy outcome can be produced. |
+
+### Promotion outcomes
+
+| Outcome | Hydrology proof-lane use |
+|---|---|
+| `ALLOW` | Candidate may become the named synthetic published release target because required gates and obligations are satisfied. |
+| `ABSTAIN` | Candidate remains unpublished because support, review, evidence, source role, or release readiness is unresolved. |
+| `DENY` | Candidate remains unpublished because a required rule is confirmed to fail. |
+| `ERROR` | Candidate remains unpublished because the evaluator, resolver, validator, policy engine, or release tooling failed. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -276,7 +314,8 @@ The first hydrology proof slice should remain narrow.
 | Observation fixture | Site, parameter, unit, value, timestamp, qualifier/provisional state, no-data reason. | Missing unit, time, qualifier, or no-data reason must fail or abstain by policy. |
 | NFHL context fixture | Regulatory flood context labeling. | Any “observed inundation” label from NFHL must `DENY`. |
 | EvidenceBundle fixture | Resolved EvidenceRefs, limitations, catalog/provenance refs, and integrity refs. | Unresolved EvidenceRef must `DENY`. |
-| DecisionEnvelope fixture | Finite runtime outcome with reason codes and obligations. | Unknown outcome or missing reason code must fail. |
+| RuntimeResponseEnvelope fixture | Finite runtime outcome with reason codes and citations where required. | Unknown outcome or missing reason code must fail. |
+| PromotionDecision fixture | Finite promotion outcome with gate results and release obligations. | Unknown outcome or missing gate reason must fail. |
 | ReleaseManifest fixture | Synthetic release ID, content/release hash, artifact IDs, public surface IDs, correction path, rollback target. | Missing rollback/correction path must block promotion. |
 | Layer / Evidence Drawer payload | Released layer ID, source role, freshness, proof refs, correction state. | Raw/work/quarantine/proof-only/internal refs must be blocked from public payloads. |
 | Focus Mode payload | Evidence-bounded answer or abstention. | Uncited claim must `ABSTAIN`, `DENY`, or `ERROR`. |
@@ -291,19 +330,19 @@ This ADR does not require every artifact to be created in this file’s PR. It r
 
 | Family | Responsibility root | Status in this ADR |
 |---|---|---|
-| Domain orientation docs | `docs/domains/hydrology/` | CONFIRMED present, still maturing. |
-| ADRs and runbooks | `docs/adr/`, `docs/runbooks/` | CONFIRMED present for this ADR family; completeness varies. |
-| Machine schemas | `schemas/contracts/v1/` or accepted schema home | PROPOSED / depends on schema-home ADR. |
-| Narrative contracts | `contracts/` | PROPOSED companion role where needed. |
-| Source registry | `data/registry/` or accepted registry home | PROPOSED / must not be bypassed. |
-| Fixtures | `fixtures/` and/or repo-accepted fixture root | CONFIRMED hydrology release-manifest fixture exists. |
-| Validators | `tools/validators/` or repo-native validator root | PROPOSED / NEEDS VERIFICATION. |
-| Policy | `policy/` or repo-native policy root | PROPOSED / NEEDS VERIFICATION. |
-| Receipts | `data/receipts/` | PROPOSED / required before real promotion. |
-| Proofs | `data/proofs/` | PROPOSED / required before real promotion. |
-| Catalog/provenance | `data/catalog/`, `data/prov/`, or accepted homes | PROPOSED / required before real promotion. |
-| Published artifacts | `data/published/` or accepted release root | PROPOSED for real data; synthetic fixture already declares published synthetic state. |
-| Runtime/API/UI surfaces | `apps/`, `packages/`, or accepted app roots | PROPOSED / downstream only. |
+| Domain orientation docs | `docs/domains/hydrology/` | `CONFIRMED present / still maturing` |
+| ADRs and runbooks | `docs/adr/`, `docs/runbooks/` | `CONFIRMED present for core decisions / completeness varies` |
+| Machine schemas | `schemas/contracts/v1/` or accepted schema home | `PROPOSED / depends on schema-home ADR` |
+| Narrative contracts | `contracts/` | `PROPOSED companion role where needed` |
+| Source registry | `data/registry/` or accepted registry home | `PROPOSED / must not be bypassed` |
+| Fixtures | `fixtures/` and/or repo-accepted fixture root | `CONFIRMED hydrology release-manifest fixture exists` |
+| Validators | `tools/validators/` or repo-native validator root | `PROPOSED / NEEDS VERIFICATION` |
+| Policy | `policy/` or repo-native policy root | `PROPOSED / NEEDS VERIFICATION` |
+| Receipts | `data/receipts/` | `PROPOSED / required before real promotion` |
+| Proofs | `data/proofs/` | `PROPOSED / required before real promotion` |
+| Catalog/provenance | `data/catalog/`, `data/prov/`, or accepted homes | `PROPOSED / required before real promotion` |
+| Published artifacts | `data/published/` or accepted release root | `PROPOSED for real data / synthetic fixture already declares synthetic published state` |
+| Runtime/API/UI surfaces | `apps/`, `packages/`, or accepted app roots | `PROPOSED / downstream only` |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -363,7 +402,7 @@ A ReleaseManifest or layer file is not public authority by itself. Promotion and
 
 ### Phase 1 — No-network proof fixtures
 
-- [ ] Add or confirm small hydrology fixtures for watershed identity, source descriptor, observation, NFHL role separation, EvidenceBundle, DecisionEnvelope, ReleaseManifest, and rollback target.
+- [ ] Add or confirm small hydrology fixtures for watershed identity, source descriptor, observation, NFHL role separation, EvidenceBundle, RuntimeResponseEnvelope, PromotionDecision, ReleaseManifest, and rollback target.
 - [ ] Mark all source-derived claims as synthetic or fixture-backed.
 - [ ] Keep live connector activation off.
 
@@ -380,7 +419,7 @@ A ReleaseManifest or layer file is not public authority by itself. Promotion and
 
 - [ ] Produce catalog/provenance closure or fixture equivalents.
 - [ ] Produce ReleaseManifest dry-run output.
-- [ ] Produce PromotionDecision or DecisionEnvelope output.
+- [ ] Produce PromotionDecision output.
 - [ ] Produce rollback drill output.
 - [ ] Do not promote real-world source data.
 
@@ -421,19 +460,21 @@ Live source activation may be proposed only after:
 | Temporal validation | Observation/retrieval/release/freshness time fields stay distinct. | `ABSTAIN`, `DENY`, or `ERROR` by field severity. |
 | Public path validation | Public payloads avoid RAW, WORK, QUARANTINE, internal stores, proof-only stores, model outputs. | `DENY` direct public bypass. |
 | Catalog closure | Catalog/provenance refs align with release artifacts. | `ABSTAIN` or `DENY` incomplete closure. |
+| Runtime envelope | Public request-time answers use finite runtime outcomes. | `ERROR` unknown outcome. |
 | Promotion decision | Release state uses finite promotion outcome. | `ERROR` unknown outcome. |
 | Rollback drill | Prior release/alias/correction path is reversible and auditable. | Block promotion until rollback target exists. |
 
 ### Acceptance checklist
 
-This ADR is accepted as a sequencing decision. The hydrology proof lane is accepted as implementation-ready only when the checks below pass.
+This ADR is accepted as a sequencing decision. The hydrology proof lane is implementation-ready only when the checks below pass.
 
 - [ ] Hydrology proof-lane docs and ADR links are indexed.
 - [ ] No-network hydrology fixtures exist for success and failure cases.
 - [ ] Fixture data is synthetic, public-safe, or rights-reviewed pinned data.
 - [ ] Live connectors are disabled until source activation gates pass.
 - [ ] EvidenceBundle validation has positive and negative tests.
-- [ ] DecisionEnvelope / RuntimeResponseEnvelope has finite outcomes.
+- [ ] RuntimeResponseEnvelope uses finite request-time outcomes.
+- [ ] PromotionDecision uses finite release-state outcomes.
 - [ ] ReleaseManifest dry run has correction path and rollback target.
 - [ ] Promotion Gate blocks publication when evidence, rights, policy, catalog, proof, review, or rollback is incomplete.
 - [ ] MapLibre layer manifests consume only governed release payloads.
@@ -484,7 +525,7 @@ KFM accepts slower initial feature delivery in exchange for a proof-bearing arch
 | Live connector lands too early. | Rights, schema, cadence, availability, or policy failure can leak into public surfaces. | Keep connectors inactive until source descriptor and policy gates pass. |
 | Ambiguous identity is silently resolved. | False hydrologic relationships enter catalog/UI/AI. | Require `ABSTAIN` and reason codes for ambiguity. |
 | Rollback is not ready. | Published error cannot be corrected cleanly. | Block promotion until rollback target and correction path exist. |
-| ADR numbering conflict obscures authority. | Maintainers may cite the wrong ADR-0305. | Use full path as identity and update ADR index. |
+| ADR numbering conflict obscures authority. | Maintainers may cite the wrong decision record. | Use full path as identity and update ADR index. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -523,18 +564,18 @@ If this ADR expansion is rejected, revert this file only. Do not remove existing
 
 | Item | Status | Closure path |
 |---|---:|---|
-| ADR owner/steward list | NEEDS VERIFICATION | Check CODEOWNERS, docs registry, or maintainer assignment. |
-| Created date for original ADR stub | UNKNOWN | Use git history if needed. |
-| ADR index completeness | NEEDS VERIFICATION | Update `docs/adr/README.md` to include this ADR and status. |
-| ADR numbering reuse | NEEDS VERIFICATION | Inventory ADR filenames and decide whether lane-specific numbering needs an index rule. |
-| Hydrology architecture duplicate/legacy path handling | NEEDS VERIFICATION | Reconcile `docs/domains/hydrology/ARCHITECTURE.md` and `docs/domains/hydrology/architecture/ARCHITECTURE.md` if both remain. |
-| Canonical schema home | NEEDS VERIFICATION | Apply or update `ADR-0001-schema-home.md`. |
-| Validator command names | UNKNOWN | Inspect package manager and existing validator tooling. |
-| Policy engine and deny reason vocabulary | UNKNOWN | Inspect `policy/`, tests, and CI. |
-| Promotion Gate implementation | NEEDS VERIFICATION | Confirm `ADR-0306` acceptance, schemas, fixtures, and workflow enforcement. |
-| Live hydrology connector readiness | UNKNOWN / DENY by default | Require source descriptor, rights review, policy, fixtures, validators, and dry run. |
-| Public runtime behavior | UNKNOWN | Verify API/UI tests, deployed routes, logs, and dashboards before claiming. |
-| Branch protection / CI enforcement | UNKNOWN | Verify GitHub settings and workflow runs. |
+| ADR owner/steward list | `NEEDS VERIFICATION` | Check CODEOWNERS, docs registry, or maintainer assignment. |
+| Created date for original ADR stub | `UNKNOWN` | Use git history if needed. |
+| ADR index completeness | `NEEDS VERIFICATION` | Update `docs/adr/README.md` to include this ADR and status. |
+| ADR numbering reuse | `NEEDS VERIFICATION` | Inventory ADR filenames and decide whether lane-specific numbering needs an index rule. |
+| Hydrology architecture duplicate/legacy path handling | `NEEDS VERIFICATION` | Reconcile `docs/domains/hydrology/ARCHITECTURE.md` and `docs/domains/hydrology/architecture/ARCHITECTURE.md` if both exist. |
+| Canonical schema home | `NEEDS VERIFICATION` | Apply or update `ADR-0001-schema-home.md`. |
+| Validator command names | `UNKNOWN` | Inspect package manager and existing validator tooling. |
+| Policy engine and deny reason vocabulary | `UNKNOWN` | Inspect `policy/`, tests, and CI. |
+| Promotion Gate implementation | `NEEDS VERIFICATION` | Confirm `ADR-0005` acceptance, schemas, fixtures, and workflow enforcement. |
+| Live hydrology connector readiness | `UNKNOWN / DENY by default` | Require source descriptor, rights review, policy, fixtures, validators, and dry run. |
+| Public runtime behavior | `UNKNOWN` | Verify API/UI tests, deployed routes, logs, and dashboards before claiming. |
+| Branch protection / CI enforcement | `UNKNOWN` | Verify GitHub settings and workflow runs. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
