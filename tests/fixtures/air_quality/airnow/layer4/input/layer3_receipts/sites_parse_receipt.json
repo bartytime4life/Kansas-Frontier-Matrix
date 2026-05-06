@@ -1,0 +1,26 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "input_file": "tests/fixtures/air_quality/airnow/layer3/input/monitoring_site_locations_valid.dat",
+  "input_hash": "eae51e8b7fff2a78b7b6c6bf5127cc22433ec645c9464843a1a52bbddbba85f7",
+  "input_record_count": 1,
+  "manifest_id": "m-sites",
+  "object_type": "AirNowFileProductParseReceipt",
+  "outputs": {
+    "parsed_jsonl": "parsed_records.jsonl",
+    "quarantine_jsonl": "quarantine.jsonl"
+  },
+  "parsed_output_hash": "27de631597c8ff3beec0a9a0686586580e0c5820a08a0b01eb1825f1f9555859",
+  "parsed_record_count": 1,
+  "parser": "airnow_layer3_file_products",
+  "parser_version": "v1",
+  "product_type": "monitoring_site_locations",
+  "quarantine_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "quarantined_record_count": 0,
+  "receipt_id": "kfm:air_quality:airnow:file_product:parse_receipt:v1:6009cec0c1e9cc761e45fda3416f9ba286ec4bdd4f2e048c9f00f6414167fd33",
+  "schema_version": "v1",
+  "source_id": "airnow",
+  "validation_outcome": "PASS",
+  "warnings": []
+}

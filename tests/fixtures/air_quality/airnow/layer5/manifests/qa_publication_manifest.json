@@ -1,0 +1,55 @@
+{
+  "object_type": "AirNowQAManifest",
+  "schema_version": "v1",
+  "manifest_id": "airnow-layer5-qa-fixture-001",
+  "source_id": "airnow",
+  "layer": "layer5_qa",
+  "fixture_only": true,
+  "no_live_airnow_data": true,
+  "not_for_publication": true,
+  "local_file_only": true,
+  "no_network": true,
+  "bulk_web_service_loop": false,
+  "publication_allowed": true,
+  "emergency_alert": false,
+  "regulatory_claims_allowed": false,
+  "exact_sensitive_overlay_allowed": false,
+  "preliminary_data": true,
+  "rights_status": "public_government_source_preliminary",
+  "inputs": {
+    "site_index_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/site_index.jsonl",
+    "site_parameter_index_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/site_parameter_index.jsonl",
+    "reporting_area_index_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/reporting_area_index.jsonl",
+    "zip_reporting_area_index_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/zip_reporting_area_index.jsonl",
+    "relationship_edges_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/relationship_edges.jsonl",
+    "conflicts_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/conflicts.jsonl",
+    "quarantine_jsonl": "tests/fixtures/air_quality/airnow/layer5/input/quarantine.jsonl",
+    "reconciliation_receipt_json": "tests/fixtures/air_quality/airnow/layer5/input/reconciliation_receipt.json"
+  },
+  "qa_policy": {
+    "deny_publication": true,
+    "deny_public_dashboard": true,
+    "deny_tiles": true,
+    "deny_public_api": true,
+    "deny_emergency_alerts": true,
+    "deny_regulatory_claims": true,
+    "deny_exact_sensitive_overlay": true,
+    "redact_exact_coordinates_in_report": true,
+    "max_report_examples_per_section": 5
+  },
+  "thresholds": {
+    "max_quarantine_ratio_warn": 0.1,
+    "max_conflict_ratio_warn": 0.05,
+    "max_orphan_site_ratio_warn": 0.05,
+    "min_site_parameter_linkage_ratio_warn": 0.8,
+    "min_zip_reporting_area_linkage_ratio_warn": 0.9,
+    "freshness_reference_at": "2026-01-01T00:00:00Z",
+    "hourly_recent_window_hours": 72,
+    "daily_recent_window_days": 7
+  },
+  "source_doc_refs": [
+    "https://docs.airnowapi.org/",
+    "https://docs.airnowapi.org/faq"
+  ],
+  "created_at": "2026-01-01T00:00:00Z"
+}
