@@ -1,0 +1,17 @@
+{
+  "schema": "ChangeControlSpec.v1",
+  "change_control_id": "cc1",
+  "dataset_id": "ds1",
+  "change_profile": "strict-local",
+  "source": {
+    "policy_roots": [
+      "tests/fixtures/change_control/policy_root"
+    ],
+    "require_acknowledgment_for_high_risk": true
+  },
+  "bundle": {
+    "bundle_format": "directory",
+    "sign_bundle": false,
+    "signing_backend": "unsigned"
+  }
+}

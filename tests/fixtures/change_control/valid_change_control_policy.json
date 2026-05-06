@@ -1,0 +1,22 @@
+{
+  "schema": "ChangeControlPolicy.v1",
+  "allowed_change_types": [
+    "quota_policy_change"
+  ],
+  "blocked_change_types": [
+    "disable_audit_ledger"
+  ],
+  "approval_required_risk_levels": [
+    "medium",
+    "high",
+    "critical"
+  ],
+  "regression_required_risk_levels": [
+    "medium",
+    "high",
+    "critical"
+  ],
+  "forbidden_policy_effects": [
+    "grant_revoked_objects"
+  ]
+}
