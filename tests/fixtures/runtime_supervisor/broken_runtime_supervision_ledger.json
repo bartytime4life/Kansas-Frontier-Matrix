@@ -1,0 +1,11 @@
+{
+  "schema": "RuntimeSupervisionLedger.v1",
+  "entries": [
+    {
+      "entry_id": "a"
+    },
+    {
+      "entry_id": "a"
+    }
+  ]
+}

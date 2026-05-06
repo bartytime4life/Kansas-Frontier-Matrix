@@ -1,0 +1,18 @@
+{
+  "id": "coll",
+  "links": [
+    {
+      "href": "stac/collections/coll/collection.json",
+      "rel": "self"
+    },
+    {
+      "href": "stac/catalog.json",
+      "rel": "root"
+    },
+    {
+      "href": "stac/collections/coll/items/item1.json",
+      "rel": "item"
+    }
+  ],
+  "type": "Collection"
+}
