@@ -66,7 +66,7 @@ It applies to:
 
 The trust membrane is not a single middleware file, UI panel, backend package, data folder, or model adapter. It is the doctrine rule that public and semi-public outputs must remain downstream of the KFM truth path.
 
-> KFM public value is not “the map rendered” or “the model answered.” KFM public value is an inspectable claim whose support, policy posture, release state, and correction lineage can be examined.
+> KFM public value is not “the map rendered” or “the model answered.” KFM public value is an inspectable claim, the public unit of value whose support, policy posture, release state, and correction lineage can be examined.
 
 [Back to top](#top)
 
