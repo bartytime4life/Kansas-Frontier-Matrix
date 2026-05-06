@@ -39,11 +39,11 @@ tags: [
   fail-closed
 ]
 notes: [
-  Expands the prior stub: "Decision: add synthetic lifecycle drill for RAW/WORK/QUARANTINE with no-network ingest simulation and promotion denial. Consequence: lifecycle receipts remain non-evidence and internal-only.",
-  Decision is accepted for the synthetic ingest lifecycle boundary; implementation evidence is partial and fixture-backed.",
-  Current repo evidence confirms RAW and QUARANTINE synthetic ingest-plan fixtures; WORK lifecycle drill coverage remains NEEDS_VERIFICATION unless a matching fixture or validator is added.",
-  This ADR does not authorize live source activation, public release from ingest stages, direct public RAW/WORK/QUARANTINE access, or treating receipts as EvidenceBundles.",
-  ADR numbering collisions exist in the repository; use this full file path as the stable identity until ADR indexing is normalized."
+  Decision is accepted for the synthetic ingest lifecycle boundary; enforcement maturity remains partial and fixture-backed.
+  Existing doc_id is retained from current repo evidence even though it does not match ADR-0308 numbering; doc_id/ADR-number normalization remains NEEDS_VERIFICATION.
+  Current repo evidence confirms RAW and QUARANTINE synthetic ingest-plan fixtures; WORK lifecycle drill coverage remains NEEDS_VERIFICATION until a matching fixture, receipt, validator, or test is present.
+  This ADR does not authorize live source activation, public release from ingest stages, direct public RAW/WORK/QUARANTINE access, or treating receipts as EvidenceBundles.
+  ADR index coverage and ADR numbering collisions remain NEEDS_VERIFICATION; use this full file path as the stable identity until ADR indexing is normalized.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,7 +51,7 @@ notes: [
 
 # ADR-0308: Hydrology Synthetic Ingest Lifecycle Boundary
 
-Synthetic hydrology ingest may exercise `RAW`, `WORK`, and `QUARANTINE`, but it cannot publish, prove evidence, activate live sources, or bypass the Promotion Gate.
+Synthetic hydrology ingest may exercise internal lifecycle discipline, but it cannot publish, prove public evidence, activate live sources, or bypass the Promotion Gate.
 
 <p align="center">
   <img alt="ADR status: accepted" src="https://img.shields.io/badge/ADR-accepted-2ea043">
@@ -64,6 +64,7 @@ Synthetic hydrology ingest may exercise `RAW`, `WORK`, and `QUARANTINE`, but it 
 <p align="center">
   <a href="#decision">Decision</a> ·
   <a href="#context">Context</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
   <a href="#evidence-basis">Evidence basis</a> ·
   <a href="#boundary-model">Boundary model</a> ·
   <a href="#scope">Scope</a> ·
@@ -76,18 +77,18 @@ Synthetic hydrology ingest may exercise `RAW`, `WORK`, and `QUARANTINE`, but it 
 </p>
 
 > [!IMPORTANT]
-> **Decision status:** `accepted` for the synthetic ingest lifecycle boundary.  
-> **Implementation status:** `partial / fixture-backed`. The repository confirms synthetic RAW and QUARANTINE ingest-plan fixtures. A WORK-stage synthetic drill is decision-scoped but remains **NEEDS_VERIFICATION** until matching fixture, receipt, or validator evidence is present.  
-> **Target path:** `docs/adr/ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md`.
+> **Decision status:** `accepted` for the lifecycle-boundary rule.  
+> **Implementation status:** `partial / fixture-backed`. The repository confirms synthetic `RAW` and `QUARANTINE` ingest-plan fixtures. The `WORK` normalization drill is decision-scoped but remains **NEEDS_VERIFICATION** until a matching fixture, receipt, validator, or test is present.  
+> **Stable path identity:** `docs/adr/ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md`.
 
 > [!WARNING]
-> This ADR authorizes an **internal, no-network, synthetic ingest drill** only. It does **not** authorize live connector activation, public publication from ingest stages, public reliance on lifecycle receipts, direct UI access to RAW/WORK/QUARANTINE, or treating `FetchReceipt`, `RawCaptureReceipt`, `WorkNormalizationReceipt`, or `SourceDescriptor` objects as public evidence.
+> This ADR authorizes an **internal, no-network, synthetic ingest drill** only. It does **not** authorize live connector activation, public publication from ingest stages, public reliance on lifecycle receipts, direct UI/API access to `RAW`, `WORK`, or `QUARANTINE`, or treating `FetchReceipt`, `RawCaptureReceipt`, `WorkNormalizationReceipt`, or `SourceDescriptor` objects as public evidence.
 
 ---
 
 ## Decision
 
-KFM will preserve and expand the hydrology synthetic ingest lifecycle drill as an internal governance test for the early lifecycle boundary:
+KFM preserves and expands the hydrology synthetic ingest lifecycle drill as an internal governance test for the early lifecycle boundary:
 
 ```text
 RAW -> WORK / QUARANTINE
@@ -95,28 +96,27 @@ RAW -> WORK / QUARANTINE
 
 The drill may simulate source fetch, raw capture, work normalization, quarantine routing, receipt emission, validation failure, and internal rollback.
 
-It must not cross into:
+It must not cross into public or release-authoritative stages:
 
 ```text
 PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-unless a separate, governed validation and promotion path authorizes that transition.
+unless a separate governed validation, evidence, catalog, review, release, correction, and rollback path authorizes that transition.
 
 ### Accepted boundary
 
-Synthetic ingest plans must declare all of the following:
-
-| Requirement | Required value or behavior |
+| Boundary requirement | Required behavior |
 |---|---|
-| Source mode | `synthetic: true` |
-| Network posture | `no_network: true` |
-| Source-data caveat | `not_official_source_data: true` |
-| Public release | `public_release_allowed: false` |
-| Evidence boundary | lifecycle receipts are `not EvidenceBundle` |
-| Promotion boundary | `PUBLISHED` is prohibited as an ingest target |
-| Rollback posture | internal rollback target only |
-| Public surface posture | no direct public read of RAW, WORK, QUARANTINE, source connectors, proof-only stores, review-only stores, steward-only stores, or model-runtime output |
+| Source mode | Synthetic fixtures only unless a later source-activation ADR approves live source use. |
+| Network posture | `no_network: true` for the synthetic drill. |
+| Official-data caveat | `not_official_source_data: true`. |
+| Public release | `public_release_allowed: false` for ingest-stage plans. |
+| Evidence boundary | Lifecycle receipts are process memory, not `EvidenceBundle`. |
+| Promotion boundary | Ingest plans may not target `PUBLISHED`. |
+| Current fixture coverage | `RAW` and `QUARANTINE` are CONFIRMED; `WORK` is NEEDS_VERIFICATION. |
+| Rollback posture | Internal rollback target only unless a separate release drill declares public rollback. |
+| Public surface posture | No direct public read of `RAW`, `WORK`, `QUARANTINE`, source connectors, proof-only stores, review-only stores, steward-only stores, or model-runtime output. |
 
 ### One-sentence rule
 
@@ -131,29 +131,55 @@ Synthetic ingest can prove lifecycle discipline. It cannot prove public truth.
 KFM’s governing lifecycle is:
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+SOURCE EDGE -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Hydrology is KFM’s first proof-bearing lane, but the first hydrology work must be public-safe, no-network, synthetic or pinned, and visibly separated from live source activation.
+Hydrology is KFM’s first proof-bearing lane, but the early lane must be public-safe, no-network, synthetic or pinned, and visibly separated from live source activation.
 
-The repository already contains two hydrology ingest-plan fixtures that make this boundary concrete:
+The repository currently contains two hydrology ingest-plan fixtures that make this boundary concrete:
 
 | Fixture | Confirmed target stage | Key posture |
 |---|---:|---|
 | `fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_raw_capture.plan.json` | `RAW` | synthetic, no-network, not official source data, public release disallowed, `PUBLISHED` prohibited |
 | `fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_quarantine.plan.json` | `QUARANTINE` | synthetic, no-network, not official source data, schema blocker, `finite_state: BLOCKED`, public release disallowed |
 
-This ADR expands the existing stub into the governance record for that boundary.
+This ADR records the boundary those fixtures enforce and the additional checks needed before the drill is considered complete.
 
 ### Numbering note
 
-The repository currently has more than one ADR file numbered `ADR-0308`. Until the ADR index is normalized, this document’s stable identity is the full path:
+The ADR index still needs normalization work. Until ADR numbering and index coverage are verified, this document’s stable identity is its full path:
 
 ```text
 docs/adr/ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md
 ```
 
-If ADR numbering is later repaired, preserve this file as lineage and add a supersession note rather than deleting history.
+If ADR numbering is later repaired, preserve this file as lineage and add a supersession note rather than deleting decision history.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Repo fit
+
+`docs/adr/` is the correct responsibility-root home for this decision because the file governs a cross-cutting architecture boundary: lifecycle stage semantics, evidence posture, publication denial, public-client separation, validation, and rollback.
+
+| Relationship | Relative link | Status in this ADR |
+|---|---|---:|
+| ADR index | [README.md](README.md) | CONFIRMED path; index coverage for this ADR remains NEEDS_VERIFICATION |
+| Schema-home ADR | [ADR-0001-schema-home.md](ADR-0001-schema-home.md) | CONFIRMED path; schema-home decision remains draft/proposed |
+| Hydrology-first ADR | [ADR-0304-hydrology-first-proof-lane.md](ADR-0304-hydrology-first-proof-lane.md) | CONFIRMED related sequencing decision |
+| Promotion Gate ADR | [ADR-0005-promotion-gate.md](ADR-0005-promotion-gate.md) | CONFIRMED path; enforcement remains NEEDS_VERIFICATION |
+| Hydrology README | [../domains/hydrology/README.md](../domains/hydrology/README.md) | CONFIRMED domain orientation |
+| Hydrology architecture | [../domains/hydrology/architecture/ARCHITECTURE.md](../domains/hydrology/architecture/ARCHITECTURE.md) | CONFIRMED architecture doc |
+| RAW ingest fixture | [../../fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_raw_capture.plan.json](../../fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_raw_capture.plan.json) | CONFIRMED fixture |
+| QUARANTINE ingest fixture | [../../fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_quarantine.plan.json](../../fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_quarantine.plan.json) | CONFIRMED fixture |
+| Synthetic release manifest | [../../fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json](../../fixtures/domains/hydrology/release_manifests/hydrology_synthetic_streamflow.release_manifest.json) | CONFIRMED release-drill fixture; not ingest authority |
+| Synthetic release review | [../../fixtures/domains/hydrology/review_records/hydrology_synthetic_streamflow.synthetic_public_release.review_record.json](../../fixtures/domains/hydrology/review_records/hydrology_synthetic_streamflow.synthetic_public_release.review_record.json) | CONFIRMED review fixture |
+| Public internal-path checker | [../../tools/check_no_public_internal_paths.py](../../tools/check_no_public_internal_paths.py) | CONFIRMED script |
+| Synthetic review validator | [../../tools/validators/validate_hydrology_synthetic_release_review.py](../../tools/validators/validate_hydrology_synthetic_release_review.py) | CONFIRMED script |
+
+> [!NOTE]
+> This ADR belongs under `docs/adr/`; it does not create a hydrology root folder. Domain-specific fixtures remain under the fixture responsibility root, and hydrology documentation remains under `docs/domains/hydrology/`.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -163,24 +189,26 @@ If ADR numbering is later repaired, preserve this file as lineage and add a supe
 
 | Evidence | Status | Supports | Limit |
 |---|---:|---|---|
-| Current target ADR stub | CONFIRMED repo evidence | Existing decision and consequence: synthetic lifecycle drill with promotion denial; receipts are non-evidence and internal-only. | Stub lacked rationale, scope, validation, fixture mapping, and rollback rules. |
-| Hydrology-first ADR | CONFIRMED repo evidence | Hydrology is the first proof-bearing lane and must start with synthetic/no-network proof before live connector activation. | Does not define this ingest-stage boundary in detail. |
-| Promotion Gate ADR | CONFIRMED repo evidence | `PUBLISHED` requires governed promotion; file movement or release-manifest presence alone is not publication authority. | Some promotion implementation details remain verification-dependent. |
-| Hydrology README | CONFIRMED repo evidence | Hydrology proof lane must preserve RAW → PUBLISHED trust path, source role, evidence closure, map/UI boundaries, and no-network first slice. | Several adjacent paths and owners remain placeholders. |
+| Target ADR file | CONFIRMED repo evidence | This ADR path exists and already carries the accepted boundary decision. | ADR index coverage and doc ID normalization remain NEEDS_VERIFICATION. |
+| ADR directory README | CONFIRMED repo evidence | ADRs are the decision ledger and must separate decisions from enforcement. | The visible inventory does not yet prove this ADR is indexed. |
+| Directory Rules | CONFIRMED doctrine | ADRs belong under `docs/adr/`; domain materials belong under responsibility roots, not root-level domain folders. | Does not prove runtime behavior. |
+| Hydrology-first ADR | CONFIRMED repo evidence | Hydrology is the first proof-bearing lane and begins synthetic/no-network before live activation. | Does not complete this ingest-stage boundary by itself. |
+| Promotion Gate ADR | CONFIRMED repo evidence | Publication is a governed state transition with finite decisions and rollback posture. | Some implementation details remain NEEDS_VERIFICATION. |
+| Hydrology README | CONFIRMED repo evidence | Hydrology proof lane must preserve the RAW → PUBLISHED trust path, source role, evidence closure, map/UI boundaries, and no-network first slice. | Owners, status labels, and adjacent path maturity vary. |
 | Hydrology architecture doc | CONFIRMED repo evidence | Hydrology components include source intake, normalization, validation, proof assembly, and governed delivery. | Documentation evidence, not full runtime proof. |
-| RAW ingest-plan fixture | CONFIRMED repo evidence | Synthetic raw-capture plan targets `RAW`, permits `RAW`/`QUARANTINE`, prohibits `PUBLISHED`, and denies public release. | Fixture is synthetic and not official source data. |
-| QUARANTINE ingest-plan fixture | CONFIRMED repo evidence | Synthetic quarantine plan targets `QUARANTINE`, records schema blocker, and denies public release. | Fixture is synthetic and not official source data. |
-| Synthetic release manifest fixture | CONFIRMED repo evidence | Later synthetic public release artifacts can exist only as separate release objects with prohibited internal source paths and correction/rollback references. | ReleaseManifest is explicitly not EvidenceBundle. |
-| Public internal-path checker | CONFIRMED repo evidence | Repository has a validator that checks public fixtures for internal path exposure tokens and restricted sensitivity leakage. | Exact CI enforcement remains NEEDS_VERIFICATION. |
-| Review validator and review record | CONFIRMED repo evidence | Synthetic hydrology public release review fixture requires synthetic/no-network/not-official-source-data posture. | Does not prove production review workflow maturity. |
-| Directory Rules | CONFIRMED doctrine | `docs/adr/` is a responsibility-root home for architecture decisions; domain names should not become root folders. | Does not prove runtime behavior. |
+| RAW ingest-plan fixture | CONFIRMED repo evidence | Synthetic raw-capture plan targets `RAW`, permits `RAW`/`QUARANTINE`, prohibits `PUBLISHED`, denies public release, and marks evidence boundary as not EvidenceBundle. | Fixture is synthetic and not official source data. |
+| QUARANTINE ingest-plan fixture | CONFIRMED repo evidence | Synthetic quarantine plan targets `QUARANTINE`, records schema blocker, prohibits `PUBLISHED`, denies public release, and marks `finite_state: BLOCKED`. | Fixture is synthetic and not official source data. |
+| Synthetic release manifest fixture | CONFIRMED repo evidence | Later public-safe synthetic release drills declare release artifacts, prohibited internal source paths, correction path, rollback target, and EvidenceBundle boundary. | ReleaseManifest is explicitly not EvidenceBundle and does not authorize ingest-stage publication. |
+| Synthetic public-release review record | CONFIRMED repo evidence | Review fixture requires synthetic/no-network/not-official-source-data posture and denies real source activation/production deploy. | Does not prove production review workflow maturity. |
+| Public internal-path checker | CONFIRMED repo evidence | Public fixtures are scanned for internal path exposure tokens and restricted sensitivity leakage. | CI enforcement remains NEEDS_VERIFICATION. |
+| Synthetic review validator | CONFIRMED repo evidence | Validator asserts required review fields and synthetic/no-network/not-official-source-data posture. | Narrow validator; does not validate the full ingest lifecycle. |
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from current repo connector evidence, supplied doctrine, or current-session file evidence. |
-| `PROPOSED` | A recommended path, fixture, validator, gate, or workflow not yet proven complete. |
+| `CONFIRMED` | Verified from current repository connector evidence, supplied KFM doctrine, or current-session workspace evidence. |
+| `PROPOSED` | Recommended path, fixture, validator, gate, or workflow not yet proven complete. |
 | `NEEDS_VERIFICATION` | Checkable before acceptance, activation, promotion, or public release. |
 | `UNKNOWN` | Not verified from repo files, tests, workflows, logs, dashboards, branch settings, deployment settings, or emitted proof objects. |
 | `DENY` / `ABSTAIN` / `ERROR` | System outcomes, not rhetorical labels. |
@@ -195,20 +223,20 @@ Synthetic ingest lives on the internal side of the trust membrane.
 
 ```mermaid
 flowchart LR
-  subgraph Internal_Lifecycle["Internal lifecycle drill"]
+  subgraph Internal_Lifecycle["Internal synthetic ingest drill"]
     MOCK["mock fetch response<br/>synthetic · no_network"] --> PLAN["ingest plan"]
     PLAN --> RECEIPT["fetch / ingest receipt<br/>process memory only"]
-    RECEIPT --> RAW["RAW<br/>synthetic raw capture"]
-    RECEIPT --> QUAR["QUARANTINE<br/>blocked / invalid / ambiguous"]
-    RAW --> WORK["WORK<br/>normalization candidate<br/>(NEEDS VERIFICATION fixture)"]
+    RECEIPT --> RAW["RAW<br/>synthetic raw capture<br/>CONFIRMED fixture"]
+    RECEIPT --> QUAR["QUARANTINE<br/>blocked / invalid / ambiguous<br/>CONFIRMED fixture"]
+    RAW --> WORK["WORK<br/>normalization candidate<br/>NEEDS VERIFICATION"]
     WORK --> QUAR
   end
 
-  subgraph Governed_Later_Path["Separate governed path"]
+  subgraph Governed_Later_Path["Separate governed proof/release path"]
     WORK -->|validator + policy + evidence closure| PROC["PROCESSED"]
     PROC --> CAT["CATALOG / TRIPLET"]
     CAT --> GATE["Promotion Gate"]
-    GATE -->|PROMOTE only| PUB["PUBLISHED"]
+    GATE -->|ALLOW only| PUB["PUBLISHED"]
   end
 
   PLAN -. prohibited .-> PUB
@@ -234,7 +262,7 @@ The earliest public-safe surface is downstream of evidence closure and promotion
 ReleaseCandidate -> PromotionDecision -> ReleaseManifest -> governed API / MapLibre / Evidence Drawer / Focus Mode
 ```
 
-The ingest drill can feed later proof exercises, but it is not itself a proof of public release.
+The ingest drill may feed later proof exercises, but it is not itself proof of public release.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -254,7 +282,7 @@ The ingest drill can feed later proof exercises, but it is not itself a proof of
 | Source descriptor reference | May identify the simulated source family; must not become public evidence. |
 | Activation-gate references | May show that source activation is gated; must not activate live source. |
 | Internal rollback target | May undo or replay synthetic lifecycle state internally. |
-| Negative-path tests | Must prove invalid/malformed input does not promote. |
+| Negative-path tests | Must prove invalid or malformed input does not promote. |
 | Public-bypass checks | Must reject internal lifecycle paths in public-facing fixtures and payloads. |
 
 ### Out of scope
@@ -279,7 +307,7 @@ The ingest drill can feed later proof exercises, but it is not itself a proof of
 |---|---|
 | `Synthetic ingest` | A no-network fixture-driven ingest simulation used to test lifecycle, receipt, validator, and failure behavior. |
 | `RAW` | Source-native or simulated source-native capture state. For this ADR, synthetic RAW is internal-only. |
-| `WORK` | Normalization or transformation candidate state. For this ADR, synthetic WORK is internal-only and remains NEEDS_VERIFICATION until fixture evidence exists. |
+| `WORK` | Normalization or transformation candidate state. For this ADR, synthetic WORK is internal-only and remains NEEDS_VERIFICATION until fixture/validator evidence exists. |
 | `QUARANTINE` | Fail-closed hold state for invalid, ambiguous, unsupported, or blocked data. |
 | `Lifecycle receipt` | Process-memory object recording fetch, capture, normalization, validation, or routing behavior. It is not evidence by itself. |
 | `EvidenceBundle` | Resolved evidence support bundle for consequential claims. It is distinct from receipts, source descriptors, and release manifests. |
@@ -298,11 +326,12 @@ The ingest drill can feed later proof exercises, but it is not itself a proof of
 Synthetic ingest plans must stay inside lifecycle drill space until a separate governed release path evaluates them.
 
 ```text
-allowed ingest targets: RAW, WORK, QUARANTINE
-prohibited ingest targets: PROCESSED, CATALOG, TRIPLET, PUBLISHED
+decision-scoped ingest stages: RAW, WORK, QUARANTINE
+confirmed fixture stages: RAW, QUARANTINE
+prohibited direct publication target: PUBLISHED
 ```
 
-Current repo fixture evidence confirms `RAW` and `QUARANTINE`. `WORK` is part of the decision boundary but requires fixture or validator confirmation before it can be claimed implemented.
+Current repo fixture evidence confirms `RAW` and `QUARANTINE`. `WORK` is part of this ADR’s boundary model but requires fixture or validator confirmation before it can be claimed implemented.
 
 ### Rule 2 — No network, no official data
 
@@ -345,7 +374,9 @@ Public claims still need EvidenceBundle closure.
 
 ### Rule 6 — QUARANTINE is a success state for failure behavior
 
-Malformed, ambiguous, blocked, or unsupported synthetic data should route to `QUARANTINE` with reason codes or blockers. That is a successful test of fail-closed behavior.
+Malformed, ambiguous, blocked, or unsupported synthetic data should route to `QUARANTINE` with reason codes or blockers.
+
+That is a successful test of fail-closed behavior.
 
 ### Rule 7 — Promotion is separate
 
@@ -420,8 +451,8 @@ The existing RAW and QUARANTINE ingest-plan fixtures establish the minimum contr
 | `synthetic` | Must be `true`. |
 | `no_network` | Must be `true`. |
 | `not_official_source_data` | Must be `true`. |
-| `target_lifecycle_stage` | Must be `RAW`, `WORK`, or `QUARANTINE`. |
-| `allowed_target_lifecycle_stages` | Must not include `PUBLISHED`. |
+| `target_lifecycle_stage` | Must be `RAW`, `WORK`, or `QUARANTINE`; current confirmed fixtures use `RAW` and `QUARANTINE`. |
+| `allowed_target_lifecycle_stages` | Must be compatible with this ADR and must not enable publication. |
 | `prohibited_target_lifecycle_stages` | Must include `PUBLISHED`. |
 | `public_release_allowed` | Must be `false`. |
 | `evidence_boundary` | Must state that the plan/receipt is not an EvidenceBundle. |
@@ -509,7 +540,7 @@ Public and semi-public surfaces must consume governed release payloads only.
 | Synthetic flag validation | Ingest plans are synthetic. | `DENY` or `ERROR` if absent or false. |
 | No-network validation | Ingest plans cannot perform live fetch. | `DENY` if network dependence is required. |
 | Official-data caveat validation | Fixture is not official source data. | `DENY` if caveat is missing. |
-| Target-stage validation | Only `RAW`, `WORK`, or `QUARANTINE` are ingest targets. | `DENY` if `PROCESSED`, `CATALOG`, `TRIPLET`, or `PUBLISHED` is targeted. |
+| Target-stage validation | Ingest targets stay within the lifecycle drill boundary. | `DENY` if `PUBLISHED` is targeted; `ABSTAIN` or `DENY` if non-ingest stages are requested without a separate promotion path. |
 | Public-release validation | `public_release_allowed` is false for ingest. | `DENY` if true. |
 | Evidence-boundary validation | Lifecycle receipts are not EvidenceBundles. | `DENY` if receipts are used as evidence; `ERROR` if validator cannot decide. |
 | Quarantine validation | Malformed fixture routes to `QUARANTINE` with blockers. | `DENY` if invalid input is treated as promotable. |
@@ -517,11 +548,42 @@ Public and semi-public surfaces must consume governed release payloads only.
 | Review validation | Synthetic public release review requires synthetic/no-network/not-official-source-data posture. | `ERROR` if required review fields are missing. |
 | Promotion validation | Ingest-stage objects do not become `PUBLISHED`. | `DENY` promotion. |
 
+### Confirmed lightweight checks
+
+These scripts exist in the repository and are relevant to this boundary:
+
+```bash
+python tools/check_no_public_internal_paths.py
+python tools/validators/validate_hydrology_synthetic_release_review.py
+```
+
+They are useful but not sufficient to prove the entire ingest lifecycle boundary.
+
+### Future validation checks
+
+These checks are PROPOSED until matching repo-native validator or test evidence exists:
+
+```bash
+# PROPOSED: validate ingest plan fixture shape and target-stage rules.
+python tools/validators/hydrology/validate_synthetic_ingest_plan.py \
+  fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_raw_capture.plan.json
+
+python tools/validators/hydrology/validate_synthetic_ingest_plan.py \
+  fixtures/domains/hydrology/ingest_plans/usgs_water_data.synthetic_quarantine.plan.json
+
+# PROPOSED: ensure ingest-stage objects cannot be promoted directly.
+python tools/validators/hydrology/validate_ingest_promotion_denial.py \
+  fixtures/domains/hydrology/ingest_plans/
+```
+
+> [!WARNING]
+> Do not treat the proposed commands above as confirmed runnable commands until the repository’s validator layout, package manager, test runner, and CI workflow are verified.
+
 ### Acceptance checklist
 
 This ADR is accepted as a boundary decision when:
 
-- [x] Target ADR stub exists and states the synthetic lifecycle drill decision.
+- [x] Target ADR exists and states the synthetic lifecycle drill decision.
 - [x] RAW synthetic ingest-plan fixture exists.
 - [x] QUARANTINE synthetic ingest-plan fixture exists.
 - [x] Ingest plans declare synthetic, no-network, and not-official-source-data posture.
@@ -532,7 +594,7 @@ This ADR is accepted as a boundary decision when:
 - [x] Synthetic release manifest declares prohibited internal source paths, correction path, rollback target, and EvidenceBundle boundary.
 - [x] Synthetic review validator/review record exists for synthetic public release fixture posture.
 - [ ] WORK-stage synthetic normalization fixture is confirmed or added.
-- [ ] ADR index records this path and duplicate ADR-0308 numbering is reconciled.
+- [ ] ADR index records this path and duplicate/omitted ADR numbering is reconciled.
 - [ ] CI enforcement for these checks is verified.
 - [ ] Owner/steward and policy label are verified.
 - [ ] Promotion Gate implementation is verified against ingest-stage denial cases.
@@ -546,8 +608,9 @@ This ADR is accepted as a boundary decision when:
 ### Phase 0 — ADR and index hygiene
 
 - [ ] Update `docs/adr/README.md` to include this file.
-- [ ] Record duplicate ADR-0308 filenames and decide whether the repo uses lane-specific numbering or needs renumbering.
+- [ ] Record ADR-0308 indexing status and any numbering collisions or omissions.
 - [ ] Preserve this file path as stable identity during any renumbering.
+- [ ] Decide whether the existing `doc_id` mismatch is retained as lineage or normalized by successor ADR.
 
 ### Phase 1 — Fixture completeness
 
@@ -601,7 +664,7 @@ This ADR is accepted as a boundary decision when:
 
 - Requires extra fixtures and validators before live hydrology data adds product value.
 - Requires maintainers to distinguish ingest drill, proof drill, release drill, and public release.
-- Requires ADR index cleanup because ADR numbering is currently ambiguous.
+- Requires ADR index cleanup because ADR coverage and numbering remain ambiguous.
 - Requires a WORK-stage fixture or explicit deferral to complete the full RAW/WORK/QUARANTINE drill.
 
 ### Tradeoff accepted
@@ -621,7 +684,7 @@ KFM accepts slower live-source activation in exchange for a clearer lifecycle bo
 | Ingest plan targets `PUBLISHED`. | Lifecycle law is bypassed. | Deny any ingest-stage promotion or public release. |
 | QUARANTINE failure is treated as pipeline failure. | Teams may remove negative-path tests. | Treat QUARANTINE as successful fail-closed behavior for invalid input. |
 | WORK stage remains undocumented. | RAW/WORK/QUARANTINE drill is incomplete. | Add a synthetic WORK fixture or mark WORK as deferred in ADR index. |
-| ADR-0308 collisions confuse reviewers. | Wrong ADR cited or updated. | Use full path identity and update ADR index. |
+| ADR index omission or numbering conflict confuses reviewers. | Wrong ADR cited or updated. | Use full path identity and update ADR index. |
 | Public fixtures leak internal path tokens. | Public clients could learn or depend on internal lifecycle stores. | Keep and enforce public internal-path checker. |
 | Live connector is activated early. | Rights, cadence, schema, or policy gap reaches public surfaces. | Keep live source activation denied until source descriptor and Promotion Gate close. |
 | Synthetic release manifest is read as ingest proof. | Release and ingest boundaries collapse. | Document ReleaseManifest/EvidenceBundle/receipt split and keep release drill separate. |
@@ -640,25 +703,25 @@ If a synthetic ingest drill fails or produces misleading state:
 
 1. Revert the fixture or validator change.
 2. Preserve the failing fixture if it is useful as a negative test.
-3. Record blocker and reason code.
-4. Do not delete receipt lineage if the repo stores receipts.
-5. Do not promote the candidate.
-6. Do not publish correction notices unless a public synthetic release was affected.
+3. Record blockers and reason codes.
+4. Do not delete receipts needed to understand the failure.
+5. Do not publish or alias the ingest-stage candidate.
+6. Update this ADR or the ADR index if the boundary changed.
 
-### Public synthetic release rollback
+### Public release rollback
 
-If a downstream synthetic public release drill is affected:
+If a later synthetic release drill incorrectly exposes ingest-stage data:
 
-1. Verify the release manifest and prior rollback target.
-2. Emit rollback receipt or repo-native equivalent.
-3. Emit or update correction notice.
-4. Remove or update public alias only through the governed release path.
-5. Preserve prior release, proof, catalog, review, correction, and rollback artifacts.
-6. Update Evidence Drawer, Focus Mode, MapLibre, and API fixtures to show correction state where applicable.
+1. Remove or redirect the public alias through the release/rollback mechanism.
+2. Preserve the incorrect release manifest, proof refs, receipts, and review state as history.
+3. Emit or update a correction notice if a public or semi-public surface was affected.
+4. Rebuild downstream UI/API payloads from the corrected release state.
+5. Verify public surfaces no longer reference internal lifecycle paths or receipt-as-evidence objects.
+6. Keep the ingest fixtures; do not erase the negative lesson.
 
 ### Revert path for this file
 
-If this ADR expansion is rejected, revert only this ADR file. Do not remove existing hydrology ingest-plan fixtures, hydrology-first ADR, Promotion Gate ADR, release manifest, review record, or public internal-path checker without a separate preservation and migration decision.
+If this ADR revision is rejected, revert this file only. Do not remove the confirmed RAW and QUARANTINE fixtures, hydrology README, architecture doc, release fixture, review record, public path checker, or review validator without a separate preservation and migration decision.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -668,18 +731,19 @@ If this ADR expansion is rejected, revert only this ADR file. Do not remove exis
 
 | Item | Status | Closure path |
 |---|---:|---|
-| ADR owner/steward list | NEEDS_VERIFICATION | Check CODEOWNERS, document registry, or maintainer assignment. |
-| Created date for original target stub | UNKNOWN | Use git history if needed. |
-| ADR index completeness | NEEDS_VERIFICATION | Update `docs/adr/README.md`. |
-| Duplicate ADR-0308 files | NEEDS_VERIFICATION | Inventory ADR filenames and decide numbering policy. |
-| WORK-stage synthetic fixture | NEEDS_VERIFICATION | Add or locate matching `WORK` ingest/normalization fixture. |
-| Ingest-plan schema | UNKNOWN | Confirm schema file and validator coverage. |
-| Receipt schema and receipt storage path | UNKNOWN | Inspect `schemas/`, `contracts/`, `data/receipts/`, and test fixtures. |
-| Promotion denial tests for ingest-stage candidates | NEEDS_VERIFICATION | Confirm tests or add invalid fixture. |
-| CI enforcement | UNKNOWN | Verify workflow files and branch protection. |
-| Public internal-path checker enforcement | NEEDS_VERIFICATION | Confirm workflow or test invokes `tools/check_no_public_internal_paths.py`. |
-| Live source activation posture | DENY by default / NEEDS_VERIFICATION | Require source descriptor, rights review, policy, validators, and dry-run release. |
-| Public API/UI runtime behavior | UNKNOWN | Verify API/UI tests, deployed routes, logs, and dashboards before claiming. |
+| ADR owner/steward list | NEEDS_VERIFICATION | Check CODEOWNERS, docs registry, or maintainer assignment. |
+| Created date for original ADR stub | UNKNOWN | Use git history if needed. |
+| Existing `doc_id` mismatch | NEEDS_VERIFICATION | Decide whether to retain as lineage or normalize via successor note. |
+| ADR index coverage | NEEDS_VERIFICATION | Update `docs/adr/README.md` to include this ADR and status. |
+| ADR numbering reuse or omission | NEEDS_VERIFICATION | Inventory ADR filenames and decide whether lane-specific numbering needs an index rule. |
+| WORK-stage fixture | NEEDS_VERIFICATION | Add or confirm `WORK` synthetic normalization plan and failure fixture. |
+| Canonical schema home | NEEDS_VERIFICATION | Apply or update `ADR-0001-schema-home.md`. |
+| Validator command names | UNKNOWN | Inspect package manager and existing validator tooling. |
+| Policy engine and deny reason vocabulary | UNKNOWN | Inspect `policy/`, tests, and CI. |
+| Promotion Gate enforcement | NEEDS_VERIFICATION | Confirm schemas, fixtures, validator behavior, workflow enforcement, and negative-path tests. |
+| Live hydrology connector readiness | UNKNOWN / DENY by default | Require source descriptor, rights review, policy, fixtures, validators, and dry run. |
+| Public runtime behavior | UNKNOWN | Verify API/UI tests, deployed routes, logs, dashboards, and release payloads before claiming. |
+| Branch protection / CI enforcement | UNKNOWN | Verify GitHub settings and workflow runs. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -689,13 +753,13 @@ If this ADR expansion is rejected, revert only this ADR file. Do not remove exis
 
 | Alternative | Decision | Reason |
 |---|---:|---|
-| Let synthetic ingest publish directly. | Rejected | Violates lifecycle law and Promotion Gate doctrine. |
-| Treat receipts as evidence. | Rejected | Receipts are process memory, not support bundles. |
-| Activate live USGS source during first ingest drill. | Rejected | Source rights, cadence, schema, network behavior, and release policy must be verified first. |
-| Skip QUARANTINE fixture. | Rejected | Negative-path behavior is essential to fail-closed governance. |
-| Make synthetic release manifest prove ingest maturity. | Rejected | ReleaseManifest, EvidenceBundle, and lifecycle receipts are separate object families. |
-| Treat ADR-0308 number as globally unique without checking. | Rejected | Repo evidence shows duplicate ADR-0308 filenames; full path is safer. |
-| Start with UI map rendering only. | Rejected | A map can look authoritative while bypassing evidence and lifecycle boundaries. |
+| Start with live hydrology connectors | Rejected for this boundary | Live sources require rights, source descriptor, cadence, schema, policy, review, and runtime gates. |
+| Treat synthetic ingest as publishable because it is synthetic | Rejected | Synthetic data can still train bad habits and leak internal-stage assumptions. |
+| Treat receipts as EvidenceBundle support | Rejected | Receipts record process memory; EvidenceBundle resolves support for claims. |
+| Treat ReleaseManifest as EvidenceBundle | Rejected | ReleaseManifest declares release state; EvidenceBundle declares evidence support. |
+| Treat QUARANTINE as failure to avoid | Rejected | QUARANTINE is required fail-closed behavior for ambiguous or invalid material. |
+| Omit WORK until later | Accepted only as current implementation fact | WORK is decision-scoped but must remain NEEDS_VERIFICATION until fixture/validator evidence exists. |
+| Use a root-level hydrology ADR folder | Rejected | KFM uses responsibility roots; ADRs belong under `docs/adr/`. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -705,23 +769,23 @@ If this ADR expansion is rejected, revert only this ADR file. Do not remove exis
 
 This ADR may be updated when:
 
-- ADR numbering is normalized;
-- WORK-stage fixture evidence is added;
-- ingest-plan schema location is accepted;
-- receipt schema or receipt storage path changes;
-- Promotion Gate outcome grammar changes;
-- public internal-path checker changes;
-- live hydrology source activation gates are accepted;
-- release/correction/rollback behavior changes.
+- a WORK synthetic fixture is added;
+- ingest-plan schemas or validators land;
+- Promotion Gate enforcement changes;
+- public internal-path checks change;
+- release manifest and review fixture semantics change;
+- source activation gates are accepted;
+- ADR numbering/index policy is normalized;
+- hydrology live connectors are admitted by a separate source activation decision.
 
 Every material update must preserve:
 
-- `synthetic`, `no_network`, and `not_official_source_data` caveats for synthetic ingest;
-- public-release denial for ingest stages;
-- receipt/EvidenceBundle separation;
-- RAW/WORK/QUARANTINE internal boundary;
-- Promotion Gate requirement before `PUBLISHED`;
+- lifecycle law;
+- evidence boundary;
 - public-client governed-interface rule;
+- receipt/EvidenceBundle separation;
+- fail-closed policy posture;
+- finite outcomes;
 - correction and rollback visibility.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
