@@ -1,0 +1,15 @@
+{
+  "schema": "kfm.ui.accessibility.v1",
+  "non_color_trust_indicators": true,
+  "keyboard_navigation": {
+    "enabled": true,
+    "skip_links": true
+  },
+  "motion": {
+    "respect_prefers_reduced_motion": true,
+    "map_animation": "minimal"
+  },
+  "text_alternatives": {
+    "required_for_icons": true
+  }
+}

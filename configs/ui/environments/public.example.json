@@ -1,0 +1,7 @@
+{
+  "schema": "kfm.ui.environment.v1",
+  "name": "public",
+  "feature_flag_overrides": {
+    "enable_diagnostics_surface": false
+  }
+}

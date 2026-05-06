@@ -1,0 +1,14 @@
+{
+  "schema": "kfm.ui.maplibre.defaults.v1",
+  "renderer": "maplibre",
+  "style_manifest_ref": "kfm.style.public.default",
+  "allowed_source_types": ["vector", "raster", "geojson"],
+  "initial_viewport": {
+    "zoom": 4,
+    "center": [-98.5795, 39.8283]
+  },
+  "interactions": {
+    "drag_rotate": false,
+    "keyboard": true
+  }
+}
