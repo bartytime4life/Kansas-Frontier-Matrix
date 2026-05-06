@@ -1,0 +1,10 @@
+{
+  "run_receipt_id": "run_receipt:soil:pass:minimal",
+  "artifacts": {"evidence_bundle_ref": "kfm://evidence/soil.bundle.pass.minimal"},
+  "validation_summary": {"decision": "pass"},
+  "metrics": {"masked_pct": 3.0, "zscore_30d_max": 0.8, "station_grid_residual_max": 0.02},
+  "rights_status": "open",
+  "policy_label": "public",
+  "sensitivity": "public",
+  "signatures": ["sig:min"]
+}

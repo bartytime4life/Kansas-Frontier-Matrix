@@ -1,0 +1,18 @@
+{
+  "schema_version": "kfm.v1",
+  "object_type": "SoilActiveReleasePointerTransitionApprovalRequest",
+  "domain": "soil",
+  "prior_release_id": "soil-prior",
+  "source_lineage_decision_id": "ld1",
+  "reason_type": "no_change",
+  "severity": "low",
+  "public_message": "ok",
+  "evidence_refs": [
+    "e1"
+  ],
+  "steward_review": {
+    "required": true,
+    "decision": "approved"
+  },
+  "transition_type": "activate_successor"
+}

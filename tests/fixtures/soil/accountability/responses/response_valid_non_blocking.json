@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","object_type":"SoilAccountabilityResponseSubmission","domain":"soil","target_type":"feedback","target_id":"t1","response_type":"acknowledgement","public_message":"thanks","evidence_refs":[],"recommended_action":"none","steward_review":{"required":true,"decision":"approved"}}
