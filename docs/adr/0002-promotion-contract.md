@@ -1,4 +1,21 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: TODO(assign kfm://doc UUID)
+title: ADR 0002: Promotion Contract
+type: standard
+version: v1
+status: published
+owners: TODO(verify ADR owner / release governance steward)
+created: TODO(verify original ADR creation date)
+updated: TODO(verify commit date for this revision)
+policy_label: TODO(verify public/restricted label)
+related: [../governance/gates/PROMOTION_CONTRACT.md, ../runbooks/promotion-gates.md, ../../control_plane/promotion_contract.json, ../../control_plane/policy_gate_register.yaml]
+tags: [kfm, adr, promotion, release-governance, policy-gates]
+notes: [ADR status is Accepted; metadata placeholders require maintainer verification before merge.]
+[/KFM_META_BLOCK_V2] -->
+
 # ADR 0002: Promotion Contract
+
+Promotion is a governed release transition, not a file move.
 
 ## Status
 
@@ -7,6 +24,20 @@ Accepted
 ## Decision area
 
 Release governance, promotion gates, policy enforcement, artifact integrity, and publication control.
+
+## Quick map
+
+| Surface | Role | Expected path |
+| --- | --- | --- |
+| Human contract | Binding narrative contract for gate semantics | [`../governance/gates/PROMOTION_CONTRACT.md`](../governance/gates/PROMOTION_CONTRACT.md) |
+| Machine contract | Gate map used by validators and CI | [`../../control_plane/promotion_contract.json`](../../control_plane/promotion_contract.json) |
+| Existing control-plane gate register | Compatibility or transition register until reconciled | [`../../control_plane/policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) |
+| Operator runbook | Local and CI operating instructions | [`../runbooks/promotion-gates.md`](../runbooks/promotion-gates.md) |
+| Gate input builder | Normalizes candidate artifacts before policy evaluation | [`../../tools/validators/build_gate_input.py`](../../tools/validators/build_gate_input.py) |
+| Gate runner | Standard local wrapper for gates `A` through `G` | [`../../tools/validators/run_gate.sh`](../../tools/validators/run_gate.sh) |
+
+> [!IMPORTANT]
+> This ADR defines the release-control decision. It does not by itself prove that every required file, workflow, policy pack, or validator has already been implemented on every branch. Implementation alignment is tracked in [Open verification](#open-verification).
 
 ## Context
 
@@ -29,6 +60,14 @@ PUBLISHED public-safe artifact
         ↓
 CorrectionNotice / RollbackPlan
 ```
+
+The release path also preserves KFM’s lifecycle law:
+
+```text
+RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
+```
+
+Public release must never be treated as a direct copy from a candidate folder into a public location.
 
 ## Decision
 
@@ -59,6 +98,21 @@ control_plane/promotion_contract.json
 
 Older references to a root-level `promotion-contract.json` are compatibility references only. Tooling may temporarily support that legacy path through an explicit environment variable, but the governed control-plane home is `control_plane/promotion_contract.json`.
 
+If the repository uses an existing YAML gate register such as:
+
+```text
+control_plane/policy_gate_register.yaml
+```
+
+then that YAML register must be explicitly classified as one of:
+
+- compatibility source
+- generated mirror
+- transition register
+- deprecated legacy register
+
+It must not diverge from `control_plane/promotion_contract.json`.
+
 > [!IMPORTANT]
 > `artifacts/` is only a release-candidate staging input for gate evaluation. It is not the canonical home for long-lived receipts, proofs, release authority, or published truth. Canonical release decisions belong under `release/`; lifecycle receipts and proofs belong under `data/receipts/` and `data/proofs/`; public-safe outputs belong under `data/published/`.
 
@@ -73,6 +127,25 @@ Older references to a root-level `promotion-contract.json` are compatibility ref
 | `E` | Stewardship approvals | Confirms required review, steward, or domain approval exists. | `policy/approvals` | decision/review log | Policy decision |
 | `F` | Deploy preflight | Confirms public exposure, deployment, and release readiness checks are satisfied. | `policy/preflight` | preflight report | Policy decision |
 | `G` | Final publish and archive | Confirms release manifest, attestations, signatures, and artifact hashes are complete before publication. | `policy/release` | `ReleaseManifest`, release signature bundle, attestations | Artifact hash verification and signature verification |
+
+## Gate sequence
+
+```mermaid
+flowchart TD
+  A["Gate A<br/>Evidence integrity"]
+  B["Gate B<br/>Run provenance"]
+  C["Gate C<br/>Rights + sensitivity"]
+  D["Gate D<br/>Obligations applied"]
+  E["Gate E<br/>Stewardship approvals"]
+  F["Gate F<br/>Deploy preflight"]
+  G["Gate G<br/>Final publish + archive"]
+
+  A --> B --> C --> D --> E --> F --> G
+  G --> P["PUBLISHED public-safe artifact"]
+  P --> CR["CorrectionNotice / RollbackPlan"]
+
+  Q["Any missing artifact, malformed input, deny, hash mismatch, invalid signature, missing approval, missing correction path, or missing rollback target"] -. "fail closed" .-> STOP["STOP promotion"]
+```
 
 ## Gate execution model
 
@@ -93,7 +166,7 @@ Then the gate runs the relevant policy pack:
 conftest test .promotion/gate_A.json --policy policy/evidence
 ```
 
-The standard wrapper is:
+The required end-state wrapper behavior is:
 
 ```bash
 tools/validators/run_gate.sh A
@@ -103,6 +176,12 @@ tools/validators/run_gate.sh D
 tools/validators/run_gate.sh E
 tools/validators/run_gate.sh F
 tools/validators/run_gate.sh G
+```
+
+During migration, if `run_gate.sh` still defaults to a legacy root-level `promotion-contract.json`, operators must use the explicit override:
+
+```bash
+PROMOTION_CONTRACT=control_plane/promotion_contract.json tools/validators/run_gate.sh A
 ```
 
 `.promotion/` is disposable generated validator material. It must not be treated as release evidence unless a later ADR explicitly changes that rule.
@@ -164,6 +243,7 @@ Costs and obligations:
 - compatibility references to root-level `promotion-contract.json` must be migrated or explicitly documented
 - every new gate field must include fixtures and negative-path tests
 - release candidates must carry enough artifacts for policy and validators to make an auditable decision
+- existing YAML gate registers must either generate, mirror, or be reconciled with the canonical machine-readable contract
 
 ## Alternatives considered
 
@@ -174,17 +254,20 @@ Costs and obligations:
 | Put the machine contract at repo root only | Rejected | Promotion governance is a machine-readable control-plane concern; the canonical home is `control_plane/`. |
 | Treat `artifacts/` as canonical release authority | Rejected | `artifacts/` may stage candidates, but canonical release authority belongs to `release/`, with receipts/proofs under lifecycle roots. |
 | Allow final publish after CI success alone | Rejected | CI success without release manifest, proof closure, correction path, and rollback target is insufficient. |
+| Allow YAML and JSON gate maps to drift independently | Rejected | A split machine contract creates policy ambiguity and makes gate failures harder to audit. |
 
 ## Compatibility and migration
 
 The expected compatibility sequence is:
 
 1. Create or confirm `control_plane/promotion_contract.json`.
-2. Update `tools/validators/run_gate.sh` so its default contract path is `control_plane/promotion_contract.json`.
-3. Preserve support for `PROMOTION_CONTRACT=<path>` as an explicit override.
-4. Update documentation references that still point to root-level `promotion-contract.json`.
-5. Ensure `.github/workflows/promotion.yml` calls the same local gate commands.
-6. Add tests proving missing contract paths fail with a clear `ERROR`.
+2. Classify `control_plane/policy_gate_register.yaml` as canonical input, generated mirror, compatibility source, or deprecated register.
+3. Update `tools/validators/run_gate.sh` so its default contract path is `control_plane/promotion_contract.json`, or document a deliberate YAML-to-JSON bridge.
+4. Preserve support for `PROMOTION_CONTRACT=<path>` as an explicit override.
+5. Update documentation references that still point to root-level `promotion-contract.json`.
+6. Ensure `.github/workflows/promotion.yml` calls the same local gate commands.
+7. Add tests proving missing contract paths fail with a clear `ERROR`.
+8. Add drift tests proving YAML and JSON gate maps cannot disagree if both are retained.
 
 During migration, any root-level `promotion-contract.json` must be treated as one of:
 
@@ -203,6 +286,7 @@ Required validation surfaces:
 | --- | --- |
 | Human contract | `docs/governance/gates/PROMOTION_CONTRACT.md` matches gate names, policy packs, required artifacts, and failure semantics. |
 | Machine contract | `control_plane/promotion_contract.json` validates against the promotion-contract schema. |
+| Gate register bridge | `control_plane/policy_gate_register.yaml`, if retained, reconciles with or generates the canonical JSON contract. |
 | Runbook | `docs/runbooks/promotion-gates.md` documents the current operational commands. |
 | Gate input builder | `tools/validators/build_gate_input.py` emits gate input with required/optional paths and file descriptions. |
 | Gate runner | `tools/validators/run_gate.sh <A-G>` builds input, runs Conftest, and executes gate-specific integrity checks. |
@@ -246,6 +330,7 @@ docs/adr/0002-promotion-contract.md
 docs/governance/gates/PROMOTION_CONTRACT.md
 docs/runbooks/promotion-gates.md
 control_plane/promotion_contract.json
+control_plane/policy_gate_register.yaml
 tools/validators/build_gate_input.py
 tools/validators/run_gate.sh
 policy/
@@ -258,8 +343,13 @@ Partial rollback is denied because it can create disagreement between documentat
 
 ## Open verification
 
+Implementation alignment must be verified on the target branch before treating this ADR as fully enforced.
+
 - [ ] Confirm `control_plane/promotion_contract.json` exists on the target branch.
+- [ ] Confirm whether `control_plane/policy_gate_register.yaml` remains canonical, transitional, generated, or deprecated.
 - [ ] Confirm whether any root-level `promotion-contract.json` remains and classify it as compatibility, generated, deprecated, or absent.
+- [ ] Confirm `tools/validators/run_gate.sh` defaults to `control_plane/promotion_contract.json`, or explicitly documents the compatibility override.
+- [ ] Confirm `docs/governance/gates/PROMOTION_CONTRACT.md` no longer points to a root-level machine contract unless that path is a documented compatibility shim.
 - [ ] Confirm `.github/workflows/promotion.yml` exists and runs gates `A` through `G`.
 - [ ] Confirm every policy pack in the machine contract has positive and negative tests.
 - [ ] Confirm Gate `A` catches `spec_hash` mismatch.
@@ -267,6 +357,7 @@ Partial rollback is denied because it can create disagreement between documentat
 - [ ] Confirm Gate `G` catches release manifest hash mismatch.
 - [ ] Confirm publish/archive jobs cannot run unless Gate `G` succeeds.
 - [ ] Confirm rollback target and correction path are required before public publication.
+- [ ] Confirm `.promotion/` is ignored or otherwise prevented from becoming release evidence.
 
 ## Related files
 
@@ -274,6 +365,7 @@ Partial rollback is denied because it can create disagreement between documentat
 docs/governance/gates/PROMOTION_CONTRACT.md
 docs/runbooks/promotion-gates.md
 control_plane/promotion_contract.json
+control_plane/policy_gate_register.yaml
 tools/validators/build_gate_input.py
 tools/validators/run_gate.sh
 .github/workflows/promotion.yml
@@ -282,4 +374,6 @@ release/
 data/receipts/
 data/proofs/
 data/published/
+tests/policy/
+tests/validators/
 ```
