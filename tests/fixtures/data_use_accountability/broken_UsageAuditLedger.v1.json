@@ -1,0 +1,20 @@
+{
+  "schema": "UsageAuditLedger.v1",
+  "entries": [
+    {
+      "entry_id": "en1",
+      "event_id": "e1",
+      "chain_hash": "5a863029e047e47a2bbda05fd8417fb1c3d04c96f70dafce344bd788392a1ed3"
+    },
+    {
+      "entry_id": "en2",
+      "event_id": "e2",
+      "chain_hash": "bad"
+    },
+    {
+      "entry_id": "en3",
+      "event_id": "e3",
+      "chain_hash": "828ef9d60eafe1b07a239bd5dc6e8bcac5edf9b2ec7855ac267b256181b9696f"
+    }
+  ]
+}

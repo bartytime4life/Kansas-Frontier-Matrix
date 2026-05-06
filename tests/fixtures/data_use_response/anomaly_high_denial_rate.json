@@ -1,0 +1,9 @@
+{
+  "schema": "UsageAnomalyReport.v1",
+  "findings": [
+    {
+      "anomaly_type": "high_denial_rate",
+      "subject_hash": "subj#abc"
+    }
+  ]
+}

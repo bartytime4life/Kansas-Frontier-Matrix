@@ -1,0 +1,11 @@
+{
+  "schema": "PurposeComplianceReport.v1",
+  "findings": [
+    {
+      "status": "denied_purpose",
+      "message": "denied",
+      "subject_hash": "subj#abc",
+      "resource_key": "res1"
+    }
+  ]
+}

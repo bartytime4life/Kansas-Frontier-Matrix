@@ -1,0 +1,9 @@
+{
+  "schema": "ObligationComplianceReport.v1",
+  "findings": [
+    {
+      "status": "missing_attribution",
+      "subject_hash": "subj#abc"
+    }
+  ]
+}
