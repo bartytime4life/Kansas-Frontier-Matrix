@@ -10,14 +10,14 @@ updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
 related: [docs/adr/README.md, docs/adr/ADR-TEMPLATE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0004-evidencebundle-contract.md, docs/adr/ADR-0005-promotion-gate.md, docs/adr/ADR-0007-governed-ai-runtime-envelope.md, docs/adr/ADR-0009-sensitive-location-policy.md, docs/adr/ADR-0011-catalog-proof-release-separation.md, docs/adr/ADR-0012-authority-boundary-compatibility-map.md, docs/adr/ADR-0013-policy-home-authority.md]
 tags: [kfm, adr, truth-path, trust-membrane, evidence, publication, governance, public-safety, governed-ai]
-notes: [Rebuilt from existing docs/adr/0001-truth-path.md draft, ADR number remains NEEDS VERIFICATION because docs/adr/README.md assigns ADR-0001 to schema-home, No repository files were modified by this rebuild artifact]
+notes: [Rebuilt from existing docs/adr/ADR-0014-truth-path.md draft, ADR number remains NEEDS VERIFICATION because docs/adr/README.md assigns ADR-0001 to schema-home, No repository files were modified by this rebuild artifact]
 [/KFM_META_BLOCK_V2] -->
 
 # ADR: KFM Truth Path and Public Trust Membrane
 
 > [!IMPORTANT]
 > **Status:** `proposed` / `draft`  
-> **Current repo file:** `docs/adr/0001-truth-path.md` — `CONFIRMED` existing file in the GitHub connector.  
+> **Current repo file:** `docs/adr/ADR-0014-truth-path.md` — `CONFIRMED` existing file in the GitHub connector.  
 > **ADR number:** `NEEDS VERIFICATION` — the ADR index names `ADR-0001-schema-home.md` as the foundational `ADR-0001`, so this truth-path decision must not be treated as accepted `ADR-0001` until the index is reconciled.  
 > **Owning root:** `docs/` — human-facing architecture decision and governance explanation.  
 > **Decision confidence:** `CONFIRMED` KFM doctrine / `PROPOSED` governing decision / `UNKNOWN` enforcement maturity until tests, policies, schemas, release manifests, runtime routes, and UI behavior are verified.
@@ -91,7 +91,7 @@ This ADR makes those failure modes visible and gives reviewers a testable decisi
 
 | Evidence item | Source / path / artifact | What it supports | Truth label |
 |---|---|---|---|
-| Current draft | `docs/adr/0001-truth-path.md` | Existing draft contains the core truth-path substance and should be preserved rather than replaced by generic prose. | `CONFIRMED` file via GitHub connector |
+| Current draft | `docs/adr/ADR-0014-truth-path.md` | Existing draft contains the core truth-path substance and should be preserved rather than replaced by generic prose. | `CONFIRMED` file via GitHub connector |
 | ADR directory index | `docs/adr/README.md` | `docs/adr/` is the ADR home; the index lists `ADR-0001-schema-home.md` as foundational `ADR-0001`. | `CONFIRMED` file via GitHub connector |
 | ADR template | `docs/adr/ADR-TEMPLATE.md` | ADRs must separate evidence, scope, policy impact, validation, rollback, and supersession; ADRs are not implementation proof. | `CONFIRMED` file via GitHub connector |
 | Directory discipline | `Directory Rules.pdf` | `docs/` is the human-facing control plane; root folders are responsibility boundaries; domain work should live under responsibility roots rather than new root-level domain folders. | `CONFIRMED` supplied doctrine |
@@ -350,7 +350,7 @@ When rights, source terms, cultural stewardship, sovereignty, living-person stat
 
 | Area | Required update if this ADR is accepted | Status |
 |---|---|---|
-| `docs/adr/` | Reconcile ADR number/name, update ADR index, and preserve or redirect current `docs/adr/0001-truth-path.md`. | `NEEDS VERIFICATION` |
+| `docs/adr/` | Reconcile ADR number/name, update ADR index, and preserve or redirect current `docs/adr/ADR-0014-truth-path.md`. | `NEEDS VERIFICATION` |
 | `docs/doctrine/` | Add or confirm lifecycle, truth-posture, trust-membrane, and AI-boundary docs. | `NEEDS VERIFICATION` |
 | `contracts/` | Confirm semantic contracts for evidence, source, runtime, release, correction, and rollback objects. | `NEEDS VERIFICATION` |
 | `schemas/` | Add or confirm machine-checkable schemas in the accepted schema home. | `NEEDS VERIFICATION` |
@@ -426,7 +426,7 @@ python -m pytest tests/
 
 ### Adoption path
 
-This rebuild is a drop-in content replacement for the existing draft at `docs/adr/0001-truth-path.md`. It deliberately does **not** claim acceptance as `ADR-0001`.
+This rebuild is a drop-in content replacement for the existing draft at `docs/adr/ADR-0014-truth-path.md`. It deliberately does **not** claim acceptance as `ADR-0001`.
 
 Before merge, maintainers should choose one of these paths:
 
@@ -439,7 +439,7 @@ Before merge, maintainers should choose one of these paths:
 ### Rollback of this document-only change
 
 ```bash
-git checkout -- docs/adr/0001-truth-path.md
+git checkout -- docs/adr/ADR-0014-truth-path.md
 ```
 
 If related docs, registers, schemas, policies, tests, or indexes are changed in the same PR, revert them in the same rollback PR unless maintainers explicitly split rollback scope.

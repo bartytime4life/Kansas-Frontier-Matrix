@@ -71,7 +71,7 @@ notes: [
 | Field | Value |
 | --- | --- |
 | **Status** | `draft` |
-| **Target path** | `docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` |
+| **Target path** | `docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md` |
 | **Decision type** | Catalog / provenance / release-closure ADR |
 | **Evidence mode** | `NO_MOUNTED_CHECKOUT / ATTACHED_REPO_REPORT_LINEAGE` |
 | **Owners** | `OWNER_TBD` |
@@ -222,7 +222,7 @@ Public clients, map popups, Evidence Drawer payloads, Focus Mode answers, story 
 
 | Surface | Proposed path | Upstream / downstream role |
 | --- | --- | --- |
-| ADR | `docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` | Governs profile, schema, validator, policy, and workflow alignment. |
+| ADR | `docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md` | Governs profile, schema, validator, policy, and workflow alignment. |
 | Schema-home ADR | `docs/adr/ADR-0001-schema-home.md` | Confirms whether `contracts/`, `schemas/`, `jsonschema/`, or another path is authoritative. |
 | PROV schema | `contracts/v1/provenance/kfm_prov_sidecar.schema.json` | Shapes provenance sidecars consumed by validators and policy gates. |
 | STAC schema | `contracts/v1/catalog/stac/kfm_stac_item.schema.json` | Shapes public-safe STAC item exports. |
