@@ -10,72 +10,72 @@ updated: 2026-05-06
 policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
 related: [../../README.md, ./README.md, ../adr/ADR-0001-schema-home.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../tools/validators/README.md]
 tags: [kfm, architecture, contracts, schemas, policy, validation, governance, evidence, release]
-notes: [Expanded replacement for the prior thin split note; target path is CONFIRMED in the accessible GitHub repository, but owners, policy label, created date, CI enforcement, schema-home acceptance, validator behavior, branch protections, and runtime maturity remain NEEDS VERIFICATION.]
+notes: [Target path is confirmed in the accessible GitHub repository; owners, created date, policy label, ADR acceptance, validator enforcement, workflow run status, branch protection, and release/runtime maturity remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Contract, Schema, and Policy Split
 
-Contracts explain meaning; schemas validate shape; policy decides release/public behavior.
+Contracts explain meaning; schemas validate shape; policy decides release and runtime admissibility.
 
 <p align="left">
   <img alt="status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="truth posture: evidence first" src="https://img.shields.io/badge/truth-evidence--first-blue">
-  <img alt="contract role: meaning" src="https://img.shields.io/badge/contracts-meaning-5319e7">
-  <img alt="schema role: shape" src="https://img.shields.io/badge/schemas-shape-0a7ea4">
-  <img alt="policy role: decisions" src="https://img.shields.io/badge/policy-decisions-b60205">
+  <img alt="contracts: meaning" src="https://img.shields.io/badge/contracts-meaning-5319e7">
+  <img alt="schemas: shape" src="https://img.shields.io/badge/schemas-shape-0a7ea4">
+  <img alt="policy: decisions" src="https://img.shields.io/badge/policy-decisions-b60205">
   <img alt="posture: fail closed" src="https://img.shields.io/badge/posture-fail--closed-critical">
 </p>
 
 > [!IMPORTANT]
 > **Status:** `draft`  
 > **Path:** `docs/architecture/contract-schema-policy-split.md`  
-> **Owning root:** `docs/` as the human-facing architecture and control-plane surface.  
-> **Truth posture:** CONFIRMED doctrine and repo placement / PROPOSED enforcement model / NEEDS VERIFICATION for active CI, validators, branch protections, release gates, and runtime behavior.  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [The split](#the-split-at-a-glance) · [Architecture flow](#architecture-flow) · [Responsibility seams](#responsibility-seams) · [Object families](#object-family-placement-map) · [Change workflow](#change-workflow) · [Gates](#gates-and-definition-of-done) · [Anti-patterns](#anti-patterns-to-reject) · [Open verification](#open-verification-backlog)
+> **Owning root:** `docs/` — human-facing architecture and governance documentation.  
+> **Truth posture:** `CONFIRMED` project doctrine and repository placement / `PROPOSED` operating split where not yet accepted by ADR or enforcement proof / `NEEDS VERIFICATION` for owners, policy label, active workflow results, branch protections, and runtime behavior.  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Split at a glance](#split-at-a-glance) · [Architecture flow](#architecture-flow) · [Responsibility seams](#responsibility-seams) · [Known repo signals](#known-repo-signals) · [Object placement](#object-family-placement-map) · [Change workflow](#change-workflow) · [Gates](#gates-and-definition-of-done) · [Anti-patterns](#anti-patterns-to-reject) · [Open verification](#open-verification-backlog)
 
 > [!NOTE]
-> This architecture note does **not** accept or supersede `ADR-0001` by itself. It documents the operating split that KFM should preserve while ADRs, validators, fixtures, and CI decide the exact enforcement mechanics.
+> This document explains the operating split. It does **not** accept `ADR-0001` by itself, prove CI enforcement, or make any schema, policy, validator, release, or runtime surface authoritative without current repository evidence.
 
 ---
 
 ## Scope
 
-This document explains how KFM keeps three trust-critical surfaces separate without letting them drift:
+This architecture note keeps three trust-critical surfaces separate without letting them drift:
 
 | Surface | Short rule | Consequence |
 |---|---|---|
-| `contracts/` | Define meaning. | A maintainer can understand what an object is for, what its fields mean, and what compatibility promises it carries. |
-| `schemas/` | Validate shape. | A tool can check whether an object is structurally valid for a versioned contract family. |
-| `policy/` | Decide admissibility. | A rule can allow, deny, restrict, abstain, hold, generalize, embargo, correct, or block release/runtime behavior. |
+| `contracts/` | Define meaning. | Maintainers can review what an object is for, what fields mean, and what compatibility promises downstream systems may rely on. |
+| `schemas/` | Validate shape. | Tools can check whether an object instance is structurally valid for a versioned object family. |
+| `policy/` | Decide admissibility. | Rules can allow, deny, restrict, hold, abstain, generalize, embargo, correct, or block release/runtime behavior. |
 
-This document is for architecture, documentation, schema, policy, validator, API, UI, release, and domain-lane maintainers. It is not a schema registry, policy bundle, validator implementation, release manifest, or proof pack.
+This file is for architecture, documentation, schema, policy, validator, API, UI, release, and domain-lane maintainers.
+
+It is not a schema registry, policy bundle, validator implementation, test suite, release manifest, receipt, proof pack, or runtime contract.
 
 ### Accepted content
 
-Content belongs in this architecture note when it clarifies:
+Content belongs here when it clarifies:
 
-- how contract meaning, machine schema shape, and policy decisions relate;
-- which adjacent lane owns validation, fixtures, receipts, proofs, release records, or runtime behavior;
-- how reviewers should detect split-authority drift;
+- how contract meaning, schema shape, and policy decisions relate;
+- which adjacent root owns validation, fixtures, receipts, proofs, release records, or runtime behavior;
+- how reviewers should detect authority drift;
 - how object-family changes should move through contracts, schemas, policy, tests, validators, release, and docs;
-- what must be verified before calling a split “enforced.”
+- what must be verified before saying the split is enforced.
 
 ### Exclusions
 
-Do **not** use this document to store or define:
-
-| Exclusion | Proper home |
+| Do not define or store here | Proper home |
 |---|---|
 | JSON Schema bodies | `../../schemas/` or the ADR-approved schema home |
-| Object semantics as machine schemas only | `../../contracts/` plus schema references |
+| Object semantics as machine schema only | `../../contracts/` plus schema references |
 | Policy allow/deny logic | `../../policy/` |
-| Valid/invalid fixtures | `../../tests/` or the ADR-approved fixture home |
-| Validator code | `../../tools/validators/` |
-| Receipts, proofs, manifests, rollback cards, or catalog records | lifecycle, proof, release, or catalog homes after repo verification |
-| API handlers, UI conditionals, or model adapters | app/package/runtime homes after repo verification |
-| Claims that tests, workflows, or runtime enforcement exist | only with current repo, CI, log, receipt, proof, or workflow evidence |
+| Valid/invalid fixtures | `../../fixtures/`, `../../tests/`, or the ADR-approved fixture home |
+| Validator code | `../../tools/validators/`, `../../tools/`, or `../../scripts/` after repo convention verification |
+| Receipts, proofs, manifests, rollback cards, or catalog records | Lifecycle, proof, release, or catalog homes after repo verification |
+| API handlers, UI conditionals, or model adapters | App/package/runtime homes after repo verification |
+| Claims that tests, workflows, or runtime gates passed | Only with current workflow, test, log, receipt, proof, or release evidence |
 
 [Back to top](#top)
 
@@ -86,37 +86,38 @@ Do **not** use this document to store or define:
 | Field | Value |
 |---|---|
 | Target file | `docs/architecture/contract-schema-policy-split.md` |
-| Document role | Architecture note that keeps `contracts/`, `schemas/`, `policy/`, tests, validators, receipts, proofs, release, and runtime boundaries legible. |
-| Owning root | `docs/` because this is human-facing architecture and governance guidance. |
+| Document role | Cross-cutting architecture note for the contract/schema/policy boundary. |
+| Directory Rules basis | `docs/architecture/` is the human-facing home for cross-domain system architecture; domains and machine artifacts remain under their responsibility roots. |
 | Upstream orientation | [`../../README.md`](../../README.md), [`./README.md`](./README.md), [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) |
 | Primary adjacent roots | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md) |
-| Verification roots | [`../../tests/README.md`](../../tests/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md) |
-| Update trigger | Any material change to object-family meaning, schema-home authority, policy gates, fixture homes, validator behavior, runtime envelopes, release proof, correction, or rollback. |
+| Verification roots | [`../../tests/README.md`](../../tests/README.md), [`../../tools/validators/README.md`](../../tools/validators/README.md), `../../scripts/` when repo-native scripts own a check |
+| Update trigger | Any material change to object meaning, machine shape, policy decisions, fixture mapping, validator behavior, runtime envelopes, release proof, correction, rollback, or schema-home authority. |
 
 > [!WARNING]
-> `docs/architecture/` explains the split. It does not create machine authority. Enforcement lives in the verified combination of ADRs, schema files, fixtures, validators, policy tests, workflow checks, release receipts, and review state.
+> Architecture prose is not machine authority. Enforcement lives in the verified combination of ADRs, schemas, fixtures, validators, policy tests, workflow checks, release receipts, review state, and branch protection.
 
 [Back to top](#top)
 
 ---
 
-## The split at a glance
+## Split at a glance
 
-### One governing sentence
+### Governing sentence
 
-> Contracts explain meaning; schemas validate shape; policy decides release/public behavior.
+> Contracts explain meaning; schemas validate shape; policy decides release and runtime admissibility.
 
 ### Division of labor
 
 | Lane | Owns | Must not silently own | Typical review question |
 |---|---|---|---|
-| `contracts/` | Object meaning, field intent, lifecycle semantics, compatibility rules, human-readable examples. | Machine validation as the only source of truth; policy decisions; emitted instances. | “Does this prose define what downstream systems may rely on?” |
-| `schemas/` | Versioned machine-checkable shape, `$id`/version discipline, structural constraints, schema fixtures when approved. | Source authority, policy permission, release readiness, steward review. | “Can tools validate the object without guessing?” |
-| `policy/` | Allow/deny/restrict/hold/abstain logic, obligations, reason codes, sensitivity, rights, review, release, correction, runtime admissibility. | Object meaning, schema storage, data lifecycle storage, UI-only trust state. | “What is permitted, blocked, generalized, or held, and why?” |
-| `tests/` / fixtures | Positive and negative proof that the split behaves as claimed. | Contract authority, schema authority, policy authority. | “Can the happy path and failure path both be demonstrated?” |
-| `tools/validators/` | Deterministic checks over schemas, fixtures, links, manifests, evidence, citations, and release candidates. | Policy law, publication, signing, receipt storage, proof custody. | “Can the validator fail closed with stable reasons?” |
-| data / release / proof lanes | Instances, receipts, proof packs, manifests, published pointers, correction and rollback records. | Contract/schema/policy definitions. | “Can the published state be audited and reversed?” |
-| apps / packages | Runtime consumers and implementations. | Hidden contract, schema, or policy authority. | “Does runtime consume the governed split instead of replacing it?” |
+| `contracts/` | Object meaning, field intent, lifecycle semantics, compatibility rules, human-readable examples. | Machine validation as the only truth; policy decisions; emitted instances. | “Does this define what downstream systems may rely on?” |
+| `schemas/` | Versioned machine-checkable shape, `$id` discipline, structural constraints, machine-readable vocabularies where approved. | Source authority, policy permission, release readiness, steward review. | “Can tools validate the object without guessing?” |
+| `policy/` | Allow, deny, restrict, hold, abstain, obligations, reason codes, sensitivity, rights, review, release, correction, and runtime admissibility. | Object meaning, schema storage, lifecycle storage, UI-only trust state. | “What is permitted, blocked, generalized, held, or denied — and why?” |
+| `fixtures/` / `tests/` | Positive and negative proof that the split behaves as claimed. | Contract authority, schema authority, policy authority. | “Can the happy path and failure path both be demonstrated?” |
+| `tools/` / `scripts/` | Deterministic checks over schemas, fixtures, links, hashes, citations, manifests, evidence, and release candidates. | Policy law, publication approval, proof custody. | “Can the check fail closed with stable reasons?” |
+| `data/receipts/` | Process memory and run history. | Normative definitions or release-grade proof. | “What happened, when, and with what inputs?” |
+| `data/proofs/` / `release/` | Proof packs, release manifests, promotion decisions, rollback cards, correction objects. | Source-native raw data or schema definitions. | “Can this release be audited, corrected, and rolled back?” |
+| `apps/` / `packages/` | Runtime consumers and implementations. | Hidden contract, schema, or policy authority. | “Does runtime consume the governed split instead of replacing it?” |
 
 ### What “valid” does not mean
 
@@ -133,7 +134,7 @@ schema-valid
 ≠ correction-ready
 ```
 
-A KFM object becomes public-safe only when meaning, shape, evidence, policy, review, release, and rollback all line up.
+A KFM object becomes public-safe only when meaning, shape, evidence, policy, review, release, correction, and rollback all line up.
 
 [Back to top](#top)
 
@@ -145,9 +146,9 @@ A KFM object becomes public-safe only when meaning, shape, evidence, policy, rev
 flowchart LR
     D[Doctrine / domain need / source rule] --> C[contracts/<br/>meaning and compatibility]
     C --> S[schemas/<br/>versioned machine shape]
-    C --> T[tests + fixtures<br/>valid and invalid examples]
-    S --> V[tools/validators/<br/>shape, links, hashes, citations, closure]
-    T --> V
+    C --> F[fixtures + tests<br/>valid and invalid examples]
+    S --> V[tools + scripts<br/>shape, links, hashes, citations, closure]
+    F --> V
 
     V --> P[policy/<br/>allow, deny, restrict, hold, abstain, obligations]
     P --> R[review + promotion<br/>state transition]
@@ -185,12 +186,12 @@ Examples:
 
 - a field’s interpretation changes;
 - a new object family is introduced;
-- a lifecycle meaning changes;
+- lifecycle meaning changes;
 - compatibility promises change;
 - a runtime surface relies on a new trust-bearing field;
 - a release or correction workflow depends on a new semantic link.
 
-A contract change should usually trigger a schema, fixture, validator, policy, and docs review.
+A contract change should usually trigger schema, fixture, validator, policy, and docs review.
 
 ### Schema seam
 
@@ -200,12 +201,12 @@ Examples:
 
 - required fields change;
 - enum members change;
-- `$id` or versioning changes;
+- `$id`, `$schema`, or versioning changes;
 - cross-object `$ref` targets change;
 - a fixture starts passing or failing differently;
 - machine consumers need a new structural guarantee.
 
-A schema change should not define public permission. It should give validators and tests the shape they need.
+A schema change should not define public permission. It gives validators and tests the structure they need.
 
 ### Policy seam
 
@@ -228,10 +229,10 @@ A validator change is needed when enforceable **checking behavior** changes.
 
 Examples:
 
-- a new schema must compile;
-- a new fixture family must pass/fail;
+- a schema must compile;
+- a fixture family must pass or fail;
 - `EvidenceRef` must resolve to `EvidenceBundle`;
-- a `ReleaseManifest` must prove rollback closure;
+- `ReleaseManifest` must prove rollback closure;
 - a runtime envelope must reject non-finite outcomes.
 
 Validators operationalize the split. They do not replace it.
@@ -240,26 +241,47 @@ Validators operationalize the split. They do not replace it.
 
 ---
 
+## Known repo signals
+
+The repository exposes signals that are useful for implementation review. These signals do not prove enforcement unless the checks are run and their results are reviewed.
+
+| Signal | Status | Safe interpretation |
+|---|---:|---|
+| `docs/adr/ADR-0001-schema-home.md` | `CONFIRMED path` | The schema-home question is actively documented; the ADR remains draft/proposed unless accepted by maintainer evidence. |
+| `contracts/README.md` | `CONFIRMED path` | `contracts/` is the semantic contract lane. |
+| `schemas/README.md` | `CONFIRMED path` | `schemas/` is a real schema parent lane, but schema-home authority still needs explicit resolution. |
+| `policy/README.md` | `CONFIRMED path` | `policy/` is the decision/admissibility lane. |
+| `scripts/validate_schemas.py` | `CONFIRMED path` | A script targets first-wave schemas under `schemas/contracts/v1/`; pass/fail result still needs a current run. |
+| `tools/validate_fixture_schema_mapping.py` | `CONFIRMED path` | Fixture-to-schema mapping exists for proof-slice artifacts; mapping completeness and run status still need verification. |
+| `.github/workflows/baseline.yml` | `CONFIRMED path` | A baseline workflow invokes validators and tests; branch-protection and successful-run status remain separate verification items. |
+
+> [!IMPORTANT]
+> File presence is not enforcement proof. A workflow file can exist without being branch-protected, current, passing, required, or complete.
+
+[Back to top](#top)
+
+---
+
 ## Object-family placement map
 
-The table below is a placement guide, not a claim that every file already exists or is enforcement-grade. Exact paths, aliases, and versioning must follow the active ADR and repository evidence.
+This table is a placement guide, not a claim that every file already exists or is enforcement-grade. Exact paths, aliases, and versioning must follow the active ADR and repository evidence.
 
 | Object family | Contract meaning home | Machine shape home | Policy touchpoint | Proof pressure |
 |---|---|---|---|---|
 | `SourceDescriptor` | `contracts/source/` | `schemas/contracts/v1/source/` | source role, rights, terms, cadence, sensitivity | source registry fixtures; source admission checks |
 | `EvidenceRef` | `contracts/evidence/` | `schemas/contracts/v1/evidence/` | citation eligibility, evidence admissibility | resolver tests; unresolved-ref negative cases |
 | `EvidenceBundle` | `contracts/evidence/` | `schemas/contracts/v1/evidence/` | public support, rights, review, release state | bundle composition fixtures; Evidence Drawer payload checks |
-| `DecisionEnvelope` | `contracts/runtime/` or policy contract lane | `schemas/contracts/v1/policy/` or runtime family | allow, deny, abstain, hold, obligations | finite outcome fixtures |
+| `DecisionEnvelope` | `contracts/runtime/` or `contracts/policy/` | `schemas/contracts/v1/policy/` or runtime family | allow, deny, abstain, hold, obligations | finite outcome fixtures |
 | `RuntimeResponseEnvelope` | `contracts/runtime/` | `schemas/contracts/v1/runtime/` | cite-or-abstain, public response permission | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` fixtures |
 | `ValidationReport` | `contracts/data/` or validation contract lane | `schemas/contracts/v1/data/` | policy consumes validator result | pass/fail report fixtures |
 | `PolicyDecision` | `contracts/policy/` or policy contract lane | `schemas/contracts/v1/policy/` | policy result itself | reason-code and obligation-code tests |
 | `ReleaseManifest` | `contracts/release/` | `schemas/contracts/v1/release/` | publication state, release scope, rollback target | release closure tests |
-| `ProofPack` | `contracts/release/` | `schemas/contracts/v1/release/` | promotion and public support | proof closure tests |
+| `ProofPack` | `contracts/release/` | `schemas/contracts/v1/release/` or release schema lane after ADR | promotion and public support | proof closure tests |
 | `CorrectionNotice` | `contracts/correction/` | `schemas/contracts/v1/correction/` | supersession, withdrawal, correction propagation | correction and rollback drills |
-| `AIReceipt` / `RunReceipt` | `contracts/runtime/` or receipt contract lane | `schemas/contracts/v1/runtime/` | runtime audit, no-hidden-truth posture | process-memory fixture tests |
+| `AIReceipt` / `RunReceipt` | `contracts/runtime/` or receipt contract lane | `schemas/contracts/v1/runtime/` or receipt schema lane after ADR | runtime audit, no-hidden-truth posture | process-memory fixture tests |
 
 > [!NOTE]
-> If `contracts/` and `schemas/` both appear to contain normative machine definitions for the same object, stop and resolve the authority path before adding another file. Do not maintain divergent definitions in parallel.
+> If `contracts/` and `schemas/` both appear to contain normative machine definitions for the same object, stop and resolve authority before adding another file. Do not maintain divergent definitions in parallel.
 
 [Back to top](#top)
 
@@ -273,10 +295,10 @@ Use this workflow whenever a new trust-bearing object or rule appears.
 1. Name the object family or policy seam.
 2. Define or update contract meaning.
 3. Define or update machine schema shape.
-4. Add valid and invalid fixtures.
+4. Add or update valid and invalid fixtures.
 5. Add or update validators.
 6. Add or update policy rules when release/public/runtime behavior changes.
-7. Add reviewer-facing tests or CI summaries.
+7. Add reviewer-facing test or CI summaries.
 8. Update docs, ADRs, runbooks, and registers.
 9. Confirm release, correction, and rollback impact.
 10. Merge only with a visible validation and rollback story.
@@ -306,7 +328,7 @@ A change that affects this split is not done until the relevant boxes are true.
 
 ### Architecture gate
 
-- [ ] The owning surface is explicit: `contracts/`, `schemas/`, `policy/`, `tests/`, `tools/validators/`, data/proof/release, or runtime.
+- [ ] The owning surface is explicit: `contracts/`, `schemas/`, `policy/`, `fixtures/`, `tests/`, `tools/`, `scripts/`, data/proof/release, or runtime.
 - [ ] No domain-specific shortcut creates a new root-level authority.
 - [ ] The change preserves the RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED lifecycle boundary.
 - [ ] Public clients remain downstream of governed APIs and released artifacts.
@@ -315,7 +337,7 @@ A change that affects this split is not done until the relevant boxes are true.
 
 - [ ] Contract meaning and schema shape agree.
 - [ ] Schema-home authority follows the active ADR or is visibly marked `NEEDS VERIFICATION`.
-- [ ] Valid fixtures prove the intended shape.
+- [ ] Valid fixtures prove intended shape.
 - [ ] Invalid fixtures prove fail-closed behavior.
 - [ ] Compatibility impact is marked: additive, breaking, deprecated, alias-backed, or docs-only.
 
@@ -329,7 +351,7 @@ A change that affects this split is not done until the relevant boxes are true.
 
 ### Validator/test gate
 
-- [ ] Validators consume contracts/schemas/policy rather than redefining them.
+- [ ] Validators consume contracts, schemas, and policy rather than redefining them.
 - [ ] Tests include at least one negative path for consequential behavior.
 - [ ] No test or validator silently reads RAW, WORK, QUARANTINE, unpublished candidates, secrets, or direct model outputs.
 - [ ] CI/workflow claims are made only after workflow evidence is checked.
@@ -350,7 +372,7 @@ A change that affects this split is not done until the relevant boxes are true.
 | Anti-pattern | Why it is unsafe |
 |---|---|
 | “It validates, so it can publish.” | Shape validation does not prove evidence, rights, policy, review, release, or rollback. |
-| Contract meaning only in JSON Schema descriptions. | Human-readable doctrine becomes hidden inside machine files and hard to review. |
+| Contract meaning only inside JSON Schema descriptions. | Human-readable doctrine becomes hidden in machine files and hard to review. |
 | Policy logic in UI conditionals. | Public behavior drifts from backend, release, and review gates. |
 | Validators deciding release by themselves. | Validators verify; policy and promotion decide. |
 | Receipts treated as proof packs. | Process memory is not release-grade proof. |
@@ -366,19 +388,19 @@ A change that affects this split is not done until the relevant boxes are true.
 
 ## Reviewer quickstart
 
-Run these from a real checkout before reviewing a split-sensitive change. Adapt to repo-native tools after confirming the package manager and CI conventions.
+Run these from a real checkout before reviewing a split-sensitive change. Adapt to repo-native tools after confirming package manager, CI, and branch conventions.
 
 ```bash
 git status --short
 git branch --show-current || true
 git rev-parse --show-toplevel || true
 
-find docs/architecture docs/adr contracts schemas policy tests tools/validators \
+find docs/architecture docs/adr contracts schemas policy fixtures tests tools scripts \
   -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,300p'
 
 git grep -nE \
   'contract-schema-policy|schema home|canonical schema|EvidenceBundle|DecisionEnvelope|RuntimeResponseEnvelope|PolicyDecision|ReleaseManifest|CorrectionNotice|ABSTAIN|DENY|fail closed|RAW|QUARANTINE' \
-  -- docs contracts schemas policy tests tools 2>/dev/null || true
+  -- docs contracts schemas policy fixtures tests tools scripts 2>/dev/null || true
 ```
 
 ### Review questions
@@ -400,17 +422,17 @@ git grep -nE \
 
 | Item | Status | Why it matters |
 |---|---:|---|
-| `OWNER_TBD_NEEDS_VERIFICATION` | NEEDS VERIFICATION | The document needs owner review routing before publication. |
-| `policy_label` | NEEDS VERIFICATION | Public/restricted status must match repo policy. |
-| Created date | NEEDS VERIFICATION | Existing file did not carry a meta block; creation lineage needs maintainer confirmation. |
-| `ADR-0001` acceptance state | NEEDS VERIFICATION | This note should not claim schema-home law until ADR status and acceptance evidence are confirmed. |
-| Schema-home aliases | NEEDS VERIFICATION | If old paths exist, aliases must be explicit, tested, and dated. |
-| Canonical fixture home | NEEDS VERIFICATION | `schemas/tests/fixtures/` and repo-wide `tests/` must not fork proof authority. |
-| Validator enforcement | UNKNOWN until current tests/workflows are inspected | README presence does not prove merge-blocking validation. |
-| Policy engine and runner | UNKNOWN | OPA/Conftest or equivalent enforcement cannot be claimed without tool evidence. |
-| Runtime/API consumers | UNKNOWN | Route names, DTOs, and runtime behavior require source inspection. |
-| Branch protections and CI status | UNKNOWN | Workflow files alone do not prove enforcement. |
-| Release/proof artifacts | UNKNOWN | Release manifests, proof packs, receipts, and rollback objects require emitted artifact evidence. |
+| Document owner | `NEEDS VERIFICATION` | Owner review routing must be confirmed before publication. |
+| Policy label | `NEEDS VERIFICATION` | Public/restricted status must match the document registry or policy-label standard. |
+| Created date | `NEEDS VERIFICATION` | Creation lineage needs maintainer or git-history confirmation. |
+| `ADR-0001` acceptance state | `NEEDS VERIFICATION` | This note should not claim final schema-home law until ADR status and acceptance evidence are confirmed. |
+| Schema-home aliases | `NEEDS VERIFICATION` | Old paths, if any, must be explicit, tested, and dated. |
+| Canonical fixture home | `NEEDS VERIFICATION` | `schemas/tests/fixtures/`, root `fixtures/`, and repo-wide `tests/` must not fork proof authority. |
+| Validator enforcement | `NEEDS VERIFICATION` | Scripts and tools exist, but current run output and branch requirements must be checked. |
+| Baseline workflow result | `NEEDS VERIFICATION` | Workflow YAML exists, but successful run status and branch protection were not verified here. |
+| Policy engine and runner | `UNKNOWN` | OPA/Conftest or equivalent enforcement cannot be claimed without tool evidence. |
+| Runtime/API consumers | `UNKNOWN` | Route names, DTOs, and runtime behavior require source inspection and tests. |
+| Release/proof artifacts | `UNKNOWN` | Release manifests, proof packs, receipts, and rollback objects require emitted artifact evidence. |
 
 [Back to top](#top)
 
@@ -445,13 +467,14 @@ git grep -nE \
 - [x] Purpose line appears directly below the title.
 - [x] Badges and quick jumps are present.
 - [x] Repo fit is explicit.
+- [x] Accepted content and exclusions are explicit.
 - [x] Contract/schema/policy roles are separate.
-- [x] Mermaid diagram is meaningful and grounded.
+- [x] Mermaid diagram is meaningful and grounded in KFM lifecycle and trust boundaries.
 - [x] Tables clarify responsibility seams and object placement.
 - [x] Code fences are language-tagged.
 - [x] Long reference content is wrapped in `<details>`.
 - [x] Unknowns and placeholders are visible.
-- [ ] Owners, policy label, created date, ADR status, validator behavior, CI enforcement, and release proof are verified by maintainers before promotion.
+- [ ] Owners, policy label, created date, ADR status, validator run results, workflow enforcement, branch protection, and release proof are verified by maintainers before promotion.
 
 </details>
 
