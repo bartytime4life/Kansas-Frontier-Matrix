@@ -1,0 +1,32 @@
+{
+  "schema_version": "v1",
+  "object_type": "ReleaseManifest",
+  "release_id": "kfm://release/ecology/demo-001",
+  "title": "Ecology demo public-safe generalized release 001",
+  "surface": "public",
+  "release_state": "published",
+  "policy_pass": true,
+  "published_at": "2026-04-28T12:00:00Z",
+  "objects": [
+    "kfm://evidence/ecology/demo-001",
+    "kfm://decision/ecology/demo-001",
+    "kfm://claim/ecology/demo-001"
+  ],
+  "catalog_refs": [
+    "kfm://catalog/stac/ecology/derived-veg-layer-valid-001",
+    "kfm://catalog/prov/ecology/derived-veg-layer-valid-001",
+    "kfm://catalog/dcat/ecology/derived-veg-layer-valid-001"
+  ],
+  "receipt_refs": [
+    "kfm://receipt/redaction/ecology/observation-plot-valid-001"
+  ],
+  "correction_lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "limitations": [
+    "Release contains generalized public-safe ecology context.",
+    "No exact sensitive coordinates are authorized for public exposure."
+  ],
+  "spec_hash": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+}

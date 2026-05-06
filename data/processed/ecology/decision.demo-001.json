@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "object_type": "DecisionEnvelope",
+  "decision_id": "kfm://decision/ecology/demo-001",
+  "bundle_ref": "kfm://evidence/ecology/demo-001",
+  "policy_id": "ecology_sensitive_occurrence_publication",
+  "surface": "public",
+  "decision": "generalize",
+  "allow": false,
+  "deny_reasons": [],
+  "generalize_reasons": [
+    "generalization_required",
+    "public_visibility_generalized_with_receipt"
+  ],
+  "redaction_receipt_ref": "kfm://receipt/redaction/ecology/observation-plot-valid-001",
+  "evaluated_at": "2026-04-28T12:00:00Z",
+  "spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+}
