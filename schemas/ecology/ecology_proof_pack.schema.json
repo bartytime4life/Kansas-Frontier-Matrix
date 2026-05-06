@@ -1,0 +1,124 @@
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/ecology/ecology_proof_pack.schema.json",
+  "title": "KFM Ecology Proof Pack",
+  "description": "Proposed schema for release-significant ecology proof packs generated from validated receipt manifests and catalog references.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proof_pack_id",
+    "candidate_id",
+    "candidate_type",
+    "spec_hash",
+    "manifest_ref",
+    "receipts",
+    "catalog_refs",
+    "generated_at",
+    "status"
+  ],
+  "properties": {
+    "proof_pack_id": {
+      "type": "string",
+      "pattern": "^kfm\\.proof\\.ecology\\.[a-zA-Z0-9_.:-]+$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_type": {
+      "type": "string",
+      "enum": [
+        "eco_index",
+        "ecological_claim",
+        "map_layer",
+        "processed_artifact"
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "manifest_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "receipt_type",
+          "receipt_ref",
+          "decision",
+          "generated_at"
+        ],
+        "properties": {
+          "receipt_type": {
+            "type": "string"
+          },
+          "validator": {
+            "type": "string"
+          },
+          "receipt_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "type": "string",
+            "const": "pass"
+          },
+          "spec_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "catalog_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dcat",
+        "stac",
+        "prov"
+      ],
+      "properties": {
+        "dcat": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stac": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prov": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "const": "proof_complete"
+    }
+  }
+}
+```
