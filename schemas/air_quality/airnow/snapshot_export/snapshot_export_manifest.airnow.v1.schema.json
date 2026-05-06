@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "object_type",
+    "manifest_id",
+    "layer15_inputs"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AirNowSnapshotExportManifest"
+    },
+    "manifest_id": {
+      "type": "string"
+    },
+    "layer15_inputs": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}
