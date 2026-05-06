@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/contracts/v1/release/kfm_release_manifest.schema.json",
+  "title": "KFM ReleaseManifest",
+  "description": "KFM release closure manifest binding artifacts, EvidenceBundles, PROV sidecars, STAC items, DCAT exports, receipts, and attestations.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "manifest_id",
+    "release_id",
+    "created_at",
+    "policy_label",
+    "review_state",
+    "artifacts"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy_label": {
+      "const": "public"
+    },
+    "review_state": {
+      "type": "string",
+      "enum": ["reviewed", "published"]
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "artifact_ref",
+        "spec_hash",
+        "evidence_ref",
+        "provenance_ref",
+        "stac_ref",
+        "dcat_ref",
+        "policy_label",
+        "review_state"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "provenance_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "stac_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "dcat_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "attestation_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "redaction_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ai_receipt_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "policy_label": {
+          "const": "public"
+        },
+        "review_state": {
+          "type": "string",
+          "enum": ["reviewed", "published"]
+        },
+        "sensitivity": {
+          "type": "string",
+          "enum": ["public"]
+        }
+      }
+    }
+  }
+}
