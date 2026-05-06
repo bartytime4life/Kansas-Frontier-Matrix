@@ -8,6 +8,9 @@ name: promote-and-reconcile
       - "schemas/**"
       - "fixtures/**"
       - "release/**"
+      - "data/catalog/**"
+      - "data/receipts/**"
+      - "data/proofs/**"
       - "tools/**"
       - "tests/**"
   push:
@@ -19,6 +22,9 @@ name: promote-and-reconcile
       - "schemas/**"
       - "fixtures/**"
       - "release/**"
+      - "data/catalog/**"
+      - "data/receipts/**"
+      - "data/proofs/**"
       - "tools/**"
       - "tests/**"
   workflow_dispatch:
@@ -33,6 +39,9 @@ concurrency:
 defaults:
   run:
     shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
 
 jobs:
   promote-and-reconcile:
@@ -49,10 +58,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Record promotion/reconciliation scope
+        run: |
+          set -euo pipefail
+          {
+            echo "## Promotion and reconciliation scope"
+            echo ""
+            echo "- Workflow: $GITHUB_WORKFLOW"
+            echo "- Event: $GITHUB_EVENT_NAME"
+            echo "- Ref: $GITHUB_REF"
+            echo "- SHA: $GITHUB_SHA"
+            echo "- Permission posture: contents: read"
+            echo "- Publication posture: dry-run / reconciliation only"
+            echo "- Public path posture: no RAW, WORK, QUARANTINE, or unpublished candidate publication"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Validate repository and governed boundaries
         run: |
+          set -euo pipefail
           python tools/validate_repo.py
           python tools/check_directory_rules.py
           python tools/check_no_public_internal_paths.py
@@ -60,26 +85,45 @@ jobs:
 
       - name: Validate release and publication gates
         run: |
+          set -euo pipefail
           python tools/validate_release_manifest_consistency.py
           python tools/check_publication_eligibility.py
           python tools/validators/validate_hydrology_release_manifest.py
           python tools/validators/validate_hydrology_proof_slice.py
           python tools/validators/validate_hydrology_public_focus_answer.py
+          python tools/validators/validate_hydrology_synthetic_ingest_drill.py
 
       - name: Run promotion dry run
-        run: python tools/promotion_dry_run.py
+        run: |
+          set -euo pipefail
+          python tools/promotion_dry_run.py
 
       - name: Check promotion receipt determinism
-        run: python tools/check_promotion_receipt_determinism.py
+        run: |
+          set -euo pipefail
+          python tools/check_promotion_receipt_determinism.py
+
+      - name: Run release-focused unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p "*release*.py"
+
+      - name: Run promotion-focused unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p "*promotion*.py"
 
       - name: Reconcile generated dry-run receipts with tracked state
         run: |
           set -euo pipefail
           WATCHED_PATHS=(
             "release/dry_runs"
+            "fixtures/domains/hydrology/promotion_dry_runs"
             "fixtures/domains/hydrology/release_dry_runs"
             "fixtures/domains/hydrology/release_receipts"
             "fixtures/domains/hydrology/validation_reports"
+            "data/receipts"
+            "data/proofs"
           )
           status="$(git status --short -- "${WATCHED_PATHS[@]}")"
           if [[ -n "$status" ]]; then
@@ -87,9 +131,21 @@ jobs:
             echo "$status" >&2
             exit 1
           fi
+          echo "No promotion or reconciliation drift detected."
 
-      - name: Run release-focused unit tests
-        run: python -m unittest discover -s tests -p "*release*.py"
+      - name: Write promotion and reconciliation summary
+        if: always()
+        run: |
+          {
+            echo ""
+            echo "## Promotion and reconciliation result"
+            echo ""
+            echo "- Job status: ${{ job.status }}"
+            echo "- Release dry-run receipt path: release/dry_runs/promotion_dry_run_receipt.json"
+            echo "- Hydrology promotion denial fixtures: fixtures/domains/hydrology/promotion_dry_runs/*.json"
+            echo "- Reconciliation policy: generated receipt/proof drift fails closed"
+            echo "- Rollback: revert workflow or generator change, preserve CI logs and uploaded artifacts"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload promotion and reconciliation receipts
         if: always()
@@ -97,8 +153,12 @@ jobs:
         with:
           name: promotion-and-reconciliation-receipts
           if-no-files-found: ignore
+          retention-days: 14
           path: |
             release/dry_runs/*.json
+            fixtures/domains/hydrology/promotion_dry_runs/*.json
             fixtures/domains/hydrology/release_dry_runs/*.json
             fixtures/domains/hydrology/release_receipts/*.json
             fixtures/domains/hydrology/validation_reports/*.json
+            data/receipts/**/*.json
+            data/proofs/**/*.json
