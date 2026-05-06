@@ -1,1 +1,259 @@
+# Kansas Frontier Matrix CODEOWNERS
+#
+# Purpose:
+#   GitHub-native review routing for KFM responsibility roots, trust-critical
+#   governance surfaces, release evidence, data lifecycle paths, and compatibility roots.
+#
+# Status:
+#   active baseline / conservative coverage
+#
+# CONFIRMED:
+#   .github/CODEOWNERS exists on main and was blank before this revision.
+#
+# PROPOSED:
+#   Route all paths to @bartytime4life until maintainer teams, domain stewards,
+#   CODEOWNERS review enforcement, branch rulesets, and protected environments are verified.
+#
+# NEEDS VERIFICATION:
+#   Replace or narrow these rules only after team slugs are confirmed to exist,
+#   have write access, and are backed by branch protection or repository rulesets.
+#
+# IMPORTANT:
+#   CODEOWNERS is GitHub configuration, not Markdown. Do not add KFM_META_BLOCK_V2 here.
+#   This file routes review only. It does not approve publication, release, policy
+#   override, source authority, sensitivity posture, or rollback state.
+#
+# Ordering rule:
+#   Keep broad coverage first. Place narrower, trust-critical surfaces later so
+#   future verified teams can replace individual owner lines without losing fallback coverage.
 
+# ---------------------------------------------------------------------------
+# Repository-wide fallback
+# ---------------------------------------------------------------------------
+
+* @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Root documents and contributor / security posture
+# ---------------------------------------------------------------------------
+
+/README.md @bartytime4life
+/CHANGELOG.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+/SECURITY.md @bartytime4life
+/LICENSE @bartytime4life
+/LICENSE.md @bartytime4life
+/NOTICE @bartytime4life
+/NOTICE.md @bartytime4life
+/CODE_OF_CONDUCT.md @bartytime4life
+
+# Root validation, package, and project configuration.
+/pytest.ini @bartytime4life
+/pyproject.toml @bartytime4life
+/package.json @bartytime4life
+/package-lock.json @bartytime4life
+/pnpm-lock.yaml @bartytime4life
+/yarn.lock @bartytime4life
+/requirements.txt @bartytime4life
+/Makefile @bartytime4life
+/.gitignore @bartytime4life
+/.gitmessage @bartytime4life
+
+# ---------------------------------------------------------------------------
+# GitHub gatehouse
+# ---------------------------------------------------------------------------
+
+/.github/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+/.github/README.md @bartytime4life
+/.github/PULL_REQUEST_TEMPLATE.md @bartytime4life
+/.github/ISSUE_TEMPLATE/ @bartytime4life
+/.github/workflows/ @bartytime4life
+/.github/actions/ @bartytime4life
+/.github/watchers/ @bartytime4life
+/.github/dependabot.yml @bartytime4life
+/.github/SECURITY.md @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Human-facing governance and doctrine
+# ---------------------------------------------------------------------------
+
+/docs/ @bartytime4life
+/docs/README.md @bartytime4life
+/docs/doctrine/ @bartytime4life
+/docs/architecture/ @bartytime4life
+/docs/adr/ @bartytime4life
+/docs/registers/ @bartytime4life
+/docs/runbooks/ @bartytime4life
+/docs/security/ @bartytime4life
+/docs/governance/ @bartytime4life
+/docs/control-plane/ @bartytime4life
+/docs/standards/ @bartytime4life
+/docs/sources/ @bartytime4life
+/docs/tracking/ @bartytime4life
+/docs/catalog/ @bartytime4life
+/docs/domains/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Machine-readable governance maps
+# ---------------------------------------------------------------------------
+
+/control_plane/ @bartytime4life
+/control_plane/document_registry.yaml @bartytime4life
+/control_plane/source_authority_register.yaml @bartytime4life
+/control_plane/object_family_register.yaml @bartytime4life
+/control_plane/domain_lane_register.yaml @bartytime4life
+/control_plane/policy_gate_register.yaml @bartytime4life
+/control_plane/release_state_register.yaml @bartytime4life
+/control_plane/verification_backlog.yaml @bartytime4life
+/control_plane/contradiction_register.yaml @bartytime4life
+/control_plane/deprecation_register.yaml @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Contracts, schemas, policy, and authority-sensitive compatibility roots
+# ---------------------------------------------------------------------------
+
+/contracts/ @bartytime4life
+/schemas/ @bartytime4life
+/policy/ @bartytime4life
+
+# Compatibility / transitional roots that must not silently become canonical.
+/jsonschema/ @bartytime4life
+/policies/ @bartytime4life
+
+# Cross-cutting contract and schema trust surfaces.
+/contracts/source/ @bartytime4life
+/contracts/evidence/ @bartytime4life
+/contracts/runtime/ @bartytime4life
+/contracts/release/ @bartytime4life
+/contracts/correction/ @bartytime4life
+/contracts/governance/ @bartytime4life
+/contracts/domains/ @bartytime4life
+
+/schemas/contracts/ @bartytime4life
+/schemas/contracts/v1/ @bartytime4life
+/schemas/contracts/v1/common/ @bartytime4life
+/schemas/contracts/v1/source/ @bartytime4life
+/schemas/contracts/v1/evidence/ @bartytime4life
+/schemas/contracts/v1/runtime/ @bartytime4life
+/schemas/contracts/v1/policy/ @bartytime4life
+/schemas/contracts/v1/release/ @bartytime4life
+/schemas/contracts/v1/correction/ @bartytime4life
+/schemas/contracts/v1/domains/ @bartytime4life
+/schemas/tests/ @bartytime4life
+
+/policy/domains/ @bartytime4life
+/policy/crosswalk/ @bartytime4life
+/policy/data/ @bartytime4life
+/policy/waivers/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Tests, fixtures, validators, and operator-facing scripts
+# ---------------------------------------------------------------------------
+
+/tests/ @bartytime4life
+/fixtures/ @bartytime4life
+/tools/ @bartytime4life
+/scripts/ @bartytime4life
+
+/tests/contracts/ @bartytime4life
+/tests/policy/ @bartytime4life
+/tests/validators/ @bartytime4life
+/tests/e2e/ @bartytime4life
+/tests/domains/ @bartytime4life
+/tests/fixtures/ @bartytime4life
+
+/fixtures/domains/ @bartytime4life
+/fixtures/valid/ @bartytime4life
+/fixtures/invalid/ @bartytime4life
+/fixtures/golden/ @bartytime4life
+
+/tools/ci/ @bartytime4life
+/tools/validators/ @bartytime4life
+/tools/attest/ @bartytime4life
+/tools/probes/ @bartytime4life
+/tools/diff/ @bartytime4life
+/tools/catalog/ @bartytime4life
+/tools/docs/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Deployable systems, shared packages, connectors, and pipelines
+# ---------------------------------------------------------------------------
+
+/apps/ @bartytime4life
+/packages/ @bartytime4life
+/connectors/ @bartytime4life
+/pipelines/ @bartytime4life
+/pipeline_specs/ @bartytime4life
+
+/apps/api/ @bartytime4life
+/apps/governed-api/ @bartytime4life
+/apps/governed_api/ @bartytime4life
+/apps/web/ @bartytime4life
+/apps/explorer-web/ @bartytime4life
+/apps/review-console/ @bartytime4life
+/apps/workers/ @bartytime4life
+/apps/cli/ @bartytime4life
+
+/packages/policy/ @bartytime4life
+/packages/ui/ @bartytime4life
+/packages/domains/ @bartytime4life
+
+# Compatibility / transitional UI roots.
+/ui/ @bartytime4life
+/web/ @bartytime4life
+/styles/ @bartytime4life
+/viewer_templates/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Lifecycle data, registries, receipts, proofs, and release material
+# ---------------------------------------------------------------------------
+
+/data/ @bartytime4life
+/data/raw/ @bartytime4life
+/data/work/ @bartytime4life
+/data/quarantine/ @bartytime4life
+/data/processed/ @bartytime4life
+/data/catalog/ @bartytime4life
+/data/triplets/ @bartytime4life
+/data/registry/ @bartytime4life
+/data/receipts/ @bartytime4life
+/data/proofs/ @bartytime4life
+/data/published/ @bartytime4life
+
+/release/ @bartytime4life
+/release/candidates/ @bartytime4life
+/release/manifests/ @bartytime4life
+/release/promotion_decisions/ @bartytime4life
+/release/rollback_cards/ @bartytime4life
+/release/dry_runs/ @bartytime4life
+
+# Optional / compatibility artifact root. Must not replace canonical receipts,
+# proofs, release manifests, or published data without an ADR.
+/artifacts/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Runtime, infrastructure, configuration, migrations, and examples
+# ---------------------------------------------------------------------------
+
+/runtime/ @bartytime4life
+/infra/ @bartytime4life
+/configs/ @bartytime4life
+/migrations/ @bartytime4life
+/examples/ @bartytime4life
+
+# ---------------------------------------------------------------------------
+# Publication-sensitive and fail-closed surfaces
+# ---------------------------------------------------------------------------
+
+/data/quarantine/ @bartytime4life
+/data/receipts/ @bartytime4life
+/data/proofs/ @bartytime4life
+/data/published/ @bartytime4life
+/release/ @bartytime4life
+/policy/ @bartytime4life
+/policies/ @bartytime4life
+/contracts/ @bartytime4life
+/schemas/ @bartytime4life
+/.github/workflows/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
