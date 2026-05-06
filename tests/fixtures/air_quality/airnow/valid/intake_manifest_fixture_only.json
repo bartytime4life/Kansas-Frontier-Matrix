@@ -1,0 +1,25 @@
+{
+  "object_type": "AirNowIntakeManifest",
+  "manifest_id": "airnow-manifest-fixture-001",
+  "source_id": "airnow",
+  "fixture_only": true,
+  "no_live_airnow_data": true,
+  "not_for_publication": true,
+  "intake_mode": "fixture_only",
+  "requested_area": "Wichita,KS",
+  "requested_at": "2026-04-20T12:00:00Z",
+  "source_doc_refs": [
+    "https://docs.airnowapi.org/",
+    "https://docs.airnowapi.org/webservices",
+    "https://docs.airnowapi.org/faq"
+  ],
+  "fixture_refs": [
+    "tests/fixtures/air_quality/airnow/valid/observation_wichita_pm25.json",
+    "tests/fixtures/air_quality/airnow/valid/forecast_wichita_ozone.json"
+  ],
+  "rights_status": "public_docs_reference_only",
+  "sensitivity": "exact-sensitive-overlay-deny",
+  "lifecycle_stage": "raw_source_intake_planning_only",
+  "no_network": true,
+  "bulk_loop_prohibited": true
+}

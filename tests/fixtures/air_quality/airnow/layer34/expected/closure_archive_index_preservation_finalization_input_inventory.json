@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexPreservationFinalizationInputInventory",
+  "records": [
+    {
+      "byte_size": 75,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_acceptance_candidates_jsonl",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:7b61ce9d4c839a892763373a23a83221880db2ab8853c5f27376e1351285abb3",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_acceptance_candidates.jsonl",
+      "sha256": "afb3ae250c37875f10511dbfd854a2f6111dba46e8a215cf2c3e9a538b859ad5"
+    },
+    {
+      "byte_size": 175,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_item_satisfaction_matrix_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:54084731e5ce6e3f6ba3b7257b0755db1c9a1c1f0219799a3ac44f9a40aa6ad9",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_item_satisfaction_matrix.json",
+      "sha256": "f8402634c82cbec66f11f7fdfc7e654eaee3850c9e1391a57b6c6ac631dcf4be"
+    },
+    {
+      "byte_size": 143,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_assessment_matrix_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:a49d2c0b15c7b2b712c0ed3e978e1b112dea4ccab300be6128d102a197d43c75",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_assessment_matrix.json",
+      "sha256": "515e3bfa589f31b23d7cfdc5681c98256974c7c02cf7b8fa6c1b284d4e15cb8d"
+    },
+    {
+      "byte_size": 121,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_caveat_register_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:31c6f104e756f0b76facc2fae5b6fe6e4818c76adf8c607664aa42aadf1ac453",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_caveat_register.json",
+      "sha256": "71239cf835509a77248d7f4828b754eeb63d37afca09fe4b212012062372632d"
+    },
+    {
+      "byte_size": 119,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_policy_attestation_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:f49248bef8dbee2c85a6db432677a86c9eee83132bad2ae3c22a479dc7b14337",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_policy_attestation.json",
+      "sha256": "44782aa5f74bd124aa76eabd608e75fe582067655a6b14215950b34bc44115a4"
+    },
+    {
+      "byte_size": 104,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_readiness_summary_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:3879fa1f97b5d04c54aa2a341a76e73c6ba881f5437dd6e218029cc8b31d96e0",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_readiness_summary.json",
+      "sha256": "8af71be49ad1a435f1028c04e63f006c51ad2b539871357f694ed182c0db0373"
+    },
+    {
+      "byte_size": 141,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_receipt_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:5bbe1cfe03b32c8229e7adf1e43011da519a2048583fb3f94138974d1e8aa898",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_receipt.json",
+      "sha256": "bf043b67badaab58fc62579e75a259c8ceafa8ad21e9ba31150f8a9423d96b87"
+    },
+    {
+      "byte_size": 180,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "closure_archive_index_preservation_review_validation_results_json",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:bd0f89211d34053a7699a82c8a7a432e1d85bba848dbab13b6599275be9612b2",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/closure_archive_index_preservation_review_validation_results.json",
+      "sha256": "02d248b5e2119af32adce20c464e2dc5e6333cdd16da1bbcb515cd19d3bceab4"
+    },
+    {
+      "byte_size": 0,
+      "created_at": "2026-01-01T00:00:00Z",
+      "input_id": "residual_closure_archive_index_preservation_blockers_jsonl",
+      "input_inventory_record_id": "kfm:air_quality:airnow:layer34_input:d0246d9c967ca826cbe14c2e7866f12055bae3110e9096f0203fb3eeab51399d",
+      "path_original": "tests/fixtures/air_quality/airnow/layer34/input/layer33/residual_closure_archive_index_preservation_blockers.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
