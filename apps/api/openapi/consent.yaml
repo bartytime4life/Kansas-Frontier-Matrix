@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: KFM Consent API (stub)
+  version: v1
+paths:
+  /consent/issue:
+    post:
+      operationId: issueConsent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueRequest'
+      responses:
+        '200':
+          description: issued consent placeholder VC
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+  /consent/revoke:
+    post:
+      operationId: revokeConsent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeRequest'
+      responses:
+        '200':
+          description: generated deterministic revoke delta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeResponse'
+components:
+  schemas:
+    ConsentRef:
+      type: object
+      required: [consent_vc_id, obligations_snapshot_hash]
+      properties:
+        consent_vc_id: {type: string}
+        obligations_snapshot_hash: {type: string, pattern: '^[a-f0-9]{64}$'}
+        obligations_url: {type: string}
+    RevokeDelta:
+      type: object
+      required: [object_type, schema_version, revoke_delta_id, consent_vc_id, prior_spec_hash, delta_timestamp, obligations_action, signature]
+      properties:
+        object_type: {type: string, enum: [RevokeDelta]}
+        schema_version: {type: string, enum: [v1]}
+        revoke_delta_id: {type: string}
+        consent_vc_id: {type: string}
+        prior_spec_hash: {type: string, pattern: '^[a-f0-9]{64}$'}
+        delta_timestamp: {type: string, format: date-time}
+        obligations_action: {type: string, enum: [suppress_or_recompute]}
+        signature: {type: string}
+    IssueRequest:
+      type: object
+      required: [subject_id, obligations]
+      properties:
+        subject_id: {type: string}
+        obligations: {type: object, additionalProperties: true}
+    IssueResponse:
+      type: object
+      required: [consent_vc_id, obligations_snapshot_hash, issued_at, signature]
+      properties:
+        consent_vc_id: {type: string}
+        obligations_snapshot_hash: {type: string, pattern: '^[a-f0-9]{64}$'}
+        issued_at: {type: string, format: date-time}
+        signature: {type: string}
+    RevokeRequest:
+      type: object
+      required: [consent_vc_id, prior_spec_hash, delta_timestamp]
+      properties:
+        consent_vc_id: {type: string}
+        revocation_token: {type: string}
+        revoke_vc_jwt: {type: string}
+        prior_spec_hash: {type: string, pattern: '^[a-f0-9]{64}$'}
+        delta_timestamp: {type: string, format: date-time}
+      oneOf:
+        - required: [revocation_token]
+        - required: [revoke_vc_jwt]
+    RevokeResponse:
+      type: object
+      required: [revoke_delta]
+      properties:
+        revoke_delta:
+          $ref: '#/components/schemas/RevokeDelta'

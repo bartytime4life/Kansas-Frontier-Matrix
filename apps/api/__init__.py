@@ -1,1 +1,1 @@
-"""KFM governed mock API package."""
+"""Importable Python package for governed API helpers."""
