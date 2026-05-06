@@ -1,38 +1,31 @@
----
+<!-- [KFM_META_BLOCK_V2]
 meta:
   schema: meta-block-v2
   standard_id: ADR-0004-META-BLOCK-V2
   title: Meta Block V2
   version: 1.0.0
   status: accepted
-  owner: "TODO(kfm-verify): confirm governance/documentation owner"
-  steward: "TODO(kfm-verify): confirm governance steward"
+  owner: TODO(kfm-verify): confirm owner
+  steward: TODO(kfm-verify): confirm steward
   effective_date: 2026-05-05
   review_due_date: 2026-11-05
   sensitivity: internal
   rights:
     license_id: internal-use
-    allowed_uses: [promotion, audit, validation, review]
+    allowed_uses: [promotion, audit]
     prohibited_uses: []
   obligations:
     redaction_required: false
   evidence_bundle_ref: artifacts/EvidenceBundle.json
   decision_log_ref: artifacts/decision_log.json
-  spec_hash: "6d021d904332f3534cbfc2e7fe0463c06741322ec111aac07f143faadfde71db"
+  spec_hash: "<64-char-sha256>"
   supersedes: null
-  references:
-    - docs/adr/ADR-0004-evidencebundle-contract.md
-    - docs/adr/ADR-0005-promotion-gate.md
-    - docs/runbooks/promotion-gates.md
-    - .github/actions/metadata-validate/README.md
+  references: []
   changelog:
     - version: 1.0.0
       date: 2026-05-05
-      summary: Initial accepted Meta Block V2 decision; revised with explicit metadata, enforcement boundaries, and verification notes.
----
-<!-- [KFM_META_BLOCK_V2] -->
-
-<a id="top"></a>
+      summary: Initial version
+[/KFM_META_BLOCK_V2] -->
 
 # ADR 0004: Meta Block V2
 
