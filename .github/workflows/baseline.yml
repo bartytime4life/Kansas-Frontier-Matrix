@@ -49,8 +49,32 @@ jobs:
       - name: Check directory rules
         run: python tools/check_directory_rules.py
 
+      - name: Check root surface register
+        run: python tools/check_root_surface_register.py
+
+      - name: Check schema home
+        run: python tools/check_schema_home.py
+
       - name: Check public surfaces for internal paths
         run: python tools/check_no_public_internal_paths.py
+
+      - name: Validate API contracts
+        run: python tools/validate_api_contracts.py
+
+      - name: Validate Focus Mode citations
+        run: python tools/validate_focus_citations.py
+
+      - name: Check source ledger
+        run: python tools/check_source_ledger.py
+
+      - name: Promotion dry run
+        run: python tools/promotion_dry_run.py
+
+      - name: Check promotion receipt determinism
+        run: python tools/check_promotion_receipt_determinism.py
+
+      - name: Validate release manifest consistency
+        run: python tools/validate_release_manifest_consistency.py
 
       - name: Check source rights
         run: python tools/check_source_rights.py
@@ -63,15 +87,6 @@ jobs:
 
       - name: Check source semantics
         run: python tools/check_source_semantics.py
-
-      - name: Validate API contracts
-        run: python tools/validate_api_contracts.py
-
-      - name: Check promotion receipt determinism
-        run: python tools/check_promotion_receipt_determinism.py
-
-      - name: Validate release manifest consistency
-        run: python tools/validate_release_manifest_consistency.py
 
       - name: Probe WBD metadata dry run
         run: python tools/probe_wbd_metadata.py --dry-run
