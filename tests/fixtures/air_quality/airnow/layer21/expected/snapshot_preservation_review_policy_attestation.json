@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationReviewPolicyAttestation",
+  "policy_status": "CONTINUED",
+  "references": [
+    "https://docs.airnowapi.org/",
+    "https://docs.airnowapi.org/webservices",
+    "https://docs.airnowapi.org/faq",
+    "https://docs.airnowapi.org/docs/AirNowAPIFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/HourlyAQObsFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/HourlyDataFactSheet.pdf",
+    "https://docs.airnowapi.org/docs/DailyDataFactSheet.pdf",
+    "https://www.airnowapi.org/docs/MonitoringSiteFactSheet.pdf",
+    "https://www.airnow.gov/about-the-data",
+    "https://docs.airnowapi.org/docs/DataUseGuidelines.pdf",
+    "https://www.epa.gov/outdoor-air-quality-data/download-daily-data"
+  ],
+  "schema_version": "v1"
+}

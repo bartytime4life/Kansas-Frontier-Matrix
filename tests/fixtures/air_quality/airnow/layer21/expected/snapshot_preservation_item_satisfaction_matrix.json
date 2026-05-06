@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPreservationItemSatisfactionMatrix",
+  "records": [
+    {
+      "item_id": "snapshot_preservation_access_review_plan",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_caveat_register",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_classification_matrix",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_fixity_plan",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_hold_candidate_plan",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_minimization_review_plan",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_non_execution_attestation",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_policy_continuity_matrix",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_receipt",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_risk_register",
+      "satisfied": true
+    },
+    {
+      "item_id": "snapshot_preservation_scope_plan",
+      "satisfied": true
+    }
+  ],
+  "schema_version": "v1"
+}
