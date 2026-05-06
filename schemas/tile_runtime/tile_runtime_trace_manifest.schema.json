@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.dev/schemas/tile_runtime/tile_runtime_trace_manifest.schema.json",
+  "title": "TileRuntimeTraceManifest.v1",
+  "type": "object",
+  "required": ["schema_version","trace_manifest_id","run_id","trace_artifact_ref","trace_sha256","metrics_artifact_ref","metrics_sha256","redaction_profile","redaction_receipt_ref","contains_raw_urls","contains_internal_paths","contains_sensitive_geometry","public_safe","policy_label","spec_hash"],
+  "properties": {
+    "schema_version": {"const": "TileRuntimeTraceManifest.v1"},
+    "trace_manifest_id": {"type": "string", "pattern": "^trtm_[a-f0-9]{16}$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "trace_artifact_ref": {"type": "string", "minLength": 1},
+    "trace_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "metrics_artifact_ref": {"type": "string", "minLength": 1},
+    "metrics_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "redaction_profile": {"type": "string"},
+    "redaction_receipt_ref": {"type": "string", "minLength": 1},
+    "contains_raw_urls": {"type": "boolean"},
+    "contains_internal_paths": {"type": "boolean"},
+    "contains_sensitive_geometry": {"type": "boolean"},
+    "public_safe": {"type": "boolean"},
+    "policy_label": {"type": "string"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

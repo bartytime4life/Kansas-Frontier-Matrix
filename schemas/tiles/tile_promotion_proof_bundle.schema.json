@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "object_type",
+    "proof_bundle_id",
+    "result",
+    "inputs",
+    "rollback_ref",
+    "correction_ref"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1"
+    },
+    "object_type": {
+      "const": "TilePromotionProofBundle"
+    },
+    "proof_bundle_id": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "ALLOW",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref",
+          "sha256"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "rollback_ref": {
+      "type": "string"
+    },
+    "correction_ref": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
