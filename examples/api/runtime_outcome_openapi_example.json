@@ -1,0 +1,1 @@
+{"openapi":"3.1.1","paths":{"/health":{"get":{}},"/inventory":{"get":{}},"/decision":{"get":{}},"/accepted":{"get":{}},"/quarantine":{"get":{}},"/handoff":{"get":{}},"/ledger":{"get":{}}}}
