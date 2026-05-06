@@ -1,0 +1,13 @@
+{
+  "schema": "DisclosurePolicy.v1",
+  "policy_id": "soilgrids-disclosure-default",
+  "profiles": {
+    "public-transparency": {"allowed_schemas": ["AssuranceGateReport.v1"], "denied_schemas": ["EnvironmentFingerprint.v1"], "allow_raw_logs": false, "allow_local_paths": false, "allow_internal_hostnames": false, "allow_secrets": false, "allow_approval_artifacts": false},
+    "auditor-full": {"allowed_schemas": ["*"], "denied_schemas": [], "allow_raw_logs": false, "allow_local_paths": false, "allow_internal_hostnames": false, "allow_secrets": false, "allow_approval_artifacts": false},
+    "internal-review": {"allowed_schemas": ["*"], "denied_schemas": [], "allow_raw_logs": true, "allow_local_paths": true, "allow_internal_hostnames": true, "allow_secrets": false, "allow_approval_artifacts": false}
+  },
+  "required_redactions": ["secret_patterns"],
+  "required_claim_evidence_links": true,
+  "require_checksums": true,
+  "require_redaction_report": true
+}
