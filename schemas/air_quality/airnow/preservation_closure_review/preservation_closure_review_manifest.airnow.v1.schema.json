@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "layer24_inputs": {
+      "type": "object"
+    },
+    "manifest_id": {
+      "type": "string"
+    },
+    "manual_evidence": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "manifest_id",
+    "layer24_inputs",
+    "manual_evidence"
+  ],
+  "type": "object"
+}
