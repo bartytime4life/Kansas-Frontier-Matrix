@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: TODO(kfm-verify): assign kfm://doc/<uuid>
-title: ADR-0004 — EvidenceBundle Contract
+title: ADR-0305 — EvidenceBundle Contract
 type: standard
 version: v1
 status: draft
@@ -8,20 +8,20 @@ owners: TODO(kfm-verify): confirm architecture/data-governance owners
 created: 2026-04-27
 updated: 2026-05-02
 policy_label: TODO(kfm-verify): confirm public|restricted
-related: [TODO(kfm-verify): docs/adr/ADR-0001-schema-home.md, TODO(kfm-verify): docs/adr/ADR-0002-source-ledger-authority.md, TODO(kfm-verify): docs/adr/ADR-0003-evidencebundle-contract.md, TODO(kfm-verify): docs/adr/ADR-0004-promotion-gate.md, TODO(kfm-verify): docs/adr/ADR-0006-governed-ai-runtime-envelope.md]
+related: [TODO(kfm-verify): docs/adr/ADR-0001-schema-home.md, TODO(kfm-verify): docs/adr/ADR-0202-source-ledger-authority.md, TODO(kfm-verify): docs/adr/ADR-0303-evidencebundle-contract.md, TODO(kfm-verify): docs/adr/ADR-0305-promotion-gate.md, TODO(kfm-verify): docs/adr/ADR-0308-governed-ai-runtime-envelope.md]
 tags: [kfm, adr, evidencebundle, evidenceref, contracts, governance, cite-or-abstain]
-notes: [NEEDS VERIFICATION: ADR numbering conflicts with corpus ADR index where EvidenceBundle is listed as ADR-0003 and ADR-0004 is promotion-gate; doc_id owners policy_label related links target path and physical schema home require repo inspection; current mounted repo implementation depth remains UNKNOWN.]
+notes: [NEEDS VERIFICATION: ADR numbering conflicts with corpus ADR index where EvidenceBundle is listed as ADR-0303 and ADR-0305 is promotion-gate; doc_id owners policy_label related links target path and physical schema home require repo inspection; current mounted repo implementation depth remains UNKNOWN.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# ADR-0004 — EvidenceBundle Contract
+# ADR-0305 — EvidenceBundle Contract
 
 Define the resolved evidence package that every consequential KFM claim, map drill-through, export preview, story node, Evidence Drawer payload, and Focus Mode answer must be able to inspect.
 
 > [!WARNING]
 > **NEEDS VERIFICATION — ADR numbering conflict.**  
-> The supplied draft targets `docs/adr/ADR-0004-evidencebundle-contract.md`. Current corpus evidence also lists `ADR-0003-evidencebundle-contract` and `ADR-0004-promotion-gate`. Keep this draft at the requested path only for review. Reconcile the ADR index before publication, schema generation, or contract adoption.
+> The supplied draft targets `docs/adr/ADR-0204-evidencebundle-contract.md`. Current corpus evidence also lists `ADR-0303-evidencebundle-contract` and `ADR-0305-promotion-gate`. Keep this draft at the requested path only for review. Reconcile the ADR index before publication, schema generation, or contract adoption.
 
 ---
 
@@ -49,8 +49,8 @@ Define the resolved evidence package that every consequential KFM claim, map dri
 | Field | Value |
 | --- | --- |
 | Status | **DRAFT / PROPOSED** |
-| Requested draft path | `docs/adr/ADR-0004-evidencebundle-contract.md` |
-| ADR index conflict | **CONFLICTED / NEEDS VERIFICATION** — corpus ADR index also maps EvidenceBundle to `ADR-0003` |
+| Requested draft path | `docs/adr/ADR-0204-evidencebundle-contract.md` |
+| ADR index conflict | **CONFLICTED / NEEDS VERIFICATION** — corpus ADR index also maps EvidenceBundle to `ADR-0303` |
 | Decision owner | `TODO(kfm-verify): confirm architecture/data-governance owners` |
 | Reviewers | `TODO(kfm-verify): architecture, data governance, policy, API, UI, release` |
 | Decision date | `2026-04-27` |
@@ -480,7 +480,7 @@ python tools/ci/no_direct_model_client_check.py --root .
 | 0.2 | Confirm owners and policy label for this ADR. | **NEEDS VERIFICATION** |
 | 0.3 | Resolve schema-home ADR or verify current repo convention. | **NEEDS VERIFICATION** |
 | 0.4 | Add/update source-ledger and object-family index entries. | **PROPOSED** |
-| 0.5 | Add supersession note if this draft is renamed to `ADR-0003`. | **PROPOSED** |
+| 0.5 | Add supersession note if this draft is renamed to `ADR-0303`. | **PROPOSED** |
 
 ### Slice 1 — Contract and fixtures
 
@@ -565,7 +565,7 @@ If a published claim used a bad bundle:
 | Item | Status | Why it matters |
 | --- | --- | --- |
 | Target repo mounted? | **UNKNOWN** | No current repo files, package manager, tests, workflows, or target ADR file were verified. |
-| ADR number | **CONFLICTED / NEEDS VERIFICATION** | Corpus ADR index maps EvidenceBundle to ADR-0003 and promotion gate to ADR-0004. |
+| ADR number | **CONFLICTED / NEEDS VERIFICATION** | Corpus ADR index maps EvidenceBundle to ADR-0303 and promotion gate to ADR-0305. |
 | Schema home | **CONFLICTED / NEEDS VERIFICATION** | Corpus references both `contracts/**` and `schemas/contracts/v1/**`; avoid duplicate authority. |
 | Owners | **UNKNOWN** | Meta block must be updated before publication. |
 | Policy label | **UNKNOWN** | Confirm whether this ADR is public or restricted. |

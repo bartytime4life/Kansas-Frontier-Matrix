@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0002
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0202
 title: ADR-0002: Responsibility-Root Monorepo Layout
 type: standard
 version: v1.1-review
@@ -98,13 +98,13 @@ The responsibility-root layout lets domain lanes grow deeply without turning the
 
 ## Evidence boundary
 
-This ADR is grounded in KFM directory doctrine, adjacent ADR style, the current root README orientation, and the existing short ADR-0002 decision text. It deliberately separates **layout law** from **implementation proof**.
+This ADR is grounded in KFM directory doctrine, adjacent ADR style, the current root README orientation, and the existing short ADR-0202 decision text. It deliberately separates **layout law** from **implementation proof**.
 
 | Evidence class | Status | What it supports | What it does not prove |
 |---|---|---|---|
-| Existing ADR-0002 file | `CONFIRMED` | ADR status, date, accepted responsibility-root decision, domain-root prohibition. | CI enforcement, root inventory completeness, or downstream compliance. |
-| ADR directory index | `CONFIRMED` | `docs/adr/` is the ADR home and lists ADR-0002 as a foundational layout decision. | Acceptance evidence beyond the file listing. |
-| ADR-0001 style | `CONFIRMED` | KFM ADRs may use a meta block, badges, truth labels, acceptance blockers, and explicit evidence boundaries. | Exact owners or enforcement status for ADR-0002. |
+| Existing ADR-0202 file | `CONFIRMED` | ADR status, date, accepted responsibility-root decision, domain-root prohibition. | CI enforcement, root inventory completeness, or downstream compliance. |
+| ADR directory index | `CONFIRMED` | `docs/adr/` is the ADR home and lists ADR-0202 as a foundational layout decision. | Acceptance evidence beyond the file listing. |
+| ADR-0001 style | `CONFIRMED` | KFM ADRs may use a meta block, badges, truth labels, acceptance blockers, and explicit evidence boundaries. | Exact owners or enforcement status for ADR-0202. |
 | Root README | `CONFIRMED` | KFM trust law, responsibility roots, domain-lane caution, and compatibility-root warning language. | That every listed root exists or is fully enforced. |
 | Directory Rules doctrine | `CONFIRMED doctrine` | Root folders are responsibility boundaries; domain names belong under responsibility roots; compatibility roots require README/ADR status. | Current implementation maturity, CI behavior, or complete root README coverage. |
 
@@ -514,7 +514,7 @@ This ADR is accepted as layout doctrine. Enforcement maturity remains `NEEDS VER
 
 ```bash
 # Illustrative only — adapt to repo-native CI and validator conventions.
-# This is not evidence that CI currently enforces ADR-0002.
+# This is not evidence that CI currently enforces ADR-0202.
 
 allowed_roots='^(\.github|docs|control_plane|contracts|schemas|policy|tests|fixtures|tools|scripts|apps|packages|connectors|pipelines|pipeline_specs|data|release|runtime|infra|configs|migrations|examples|artifacts|jsonschema|policies|ui|web|styles|viewer_templates)$'
 

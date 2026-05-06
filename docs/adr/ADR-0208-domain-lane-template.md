@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/TODO-uuid-domain-lane-template
-title: ADR-0008 — Domain Lane Template
+title: ADR-0311 — Domain Lane Template
 type: standard
 version: v1
 status: draft
@@ -13,14 +13,14 @@ tags: [kfm, adr, domain-lane, documentation-control-plane, evidence, publication
 notes: [Revision of attached draft Markdown. doc_id, owners, policy_label, ADR numbering, schema-home authority, and related paths require repo verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0008 — Domain Lane Template
+# ADR-0311 — Domain Lane Template
 
 A standard decision record for making every KFM domain lane evidence-bound, source-ledgered, policy-aware, map-ready, testable, reversible, and safe to promote only through governed release controls.
 
 | Field | Value |
 |---|---|
-| **Proposed target path** | `docs/adr/ADR-0008-domain-lane-template.md` |
-| **Numbering status** | `CONFLICTED / NEEDS VERIFICATION`: the attached draft uses `ADR-0008`, while the visible pipeline ADR index lists `ADR-0007-domain-lane-template` and `ADR-0008-sensitive-location-policy`. |
+| **Proposed target path** | `docs/adr/ADR-0208-domain-lane-template.md` |
+| **Numbering status** | `CONFLICTED / NEEDS VERIFICATION`: the attached draft uses `ADR-0311`, while the visible pipeline ADR index lists `ADR-0310-domain-lane-template` and `ADR-0311-sensitive-location-policy`. |
 | **Status** | Draft — proposed standard |
 | **Decision type** | Documentation, architecture, contracts, source registry, validation, publication governance, and rollback discipline |
 | **Applies to** | Hydrology, habitat, fauna, flora, soil, agriculture, geology/natural resources, atmosphere/air, roads/rail/trade routes, settlements/infrastructure, archaeology, hazards, people/genealogy/DNA/land ownership, and future KFM lanes |
@@ -28,7 +28,7 @@ A standard decision record for making every KFM domain lane evidence-bound, sour
 | **Rollback** | Revert this ADR before adoption; after adoption, supersede with a new ADR and retain this file as lineage |
 
 > [!IMPORTANT]
-> **NEEDS VERIFICATION — ADR numbering.** Do not merge this file under `ADR-0008` until the ADR register is checked. If the register already assigns `ADR-0007-domain-lane-template`, rename this file and update all inbound links. If maintainers intentionally keep `ADR-0008`, record the exception in the ADR register.
+> **NEEDS VERIFICATION — ADR numbering.** Do not merge this file under `ADR-0311` until the ADR register is checked. If the register already assigns `ADR-0310-domain-lane-template`, rename this file and update all inbound links. If maintainers intentionally keep `ADR-0311`, record the exception in the ADR register.
 
 > [!NOTE]
 > **Evidence boundary.** This ADR states KFM doctrine and a proposed lane template. Current implementation depth remains **UNKNOWN** where the mounted repo, tests, schemas, workflows, dashboards, runtime logs, or emitted proof objects have not been inspected in this session.
@@ -419,7 +419,7 @@ This ADR deliberately favors slower, more inspectable first slices over broad do
 
 ## Adoption plan
 
-1. **Verify the ADR index.** Reconcile the `ADR-0008` numbering issue before merge.
+1. **Verify the ADR index.** Reconcile the `ADR-0311` numbering issue before merge.
 2. **Verify repo conventions.** Inspect the mounted repo for existing ADR, docs, schema, policy, registry, test, API, and UI patterns.
 3. **Resolve schema-home linkage.** Link this ADR to the schema-home ADR or update this ADR after the schema-home decision is accepted.
 4. **Fill owners and policy label.** Merge only after owners and policy label are filled or intentionally left as reviewable TODOs.
@@ -433,7 +433,7 @@ This ADR deliberately favors slower, more inspectable first slices over broad do
 
 | Item | Why it matters | Status |
 |---|---|---|
-| Confirm whether `ADR-0008` is available for this topic | Visible corpus suggests a numbering conflict. | `NEEDS VERIFICATION` |
+| Confirm whether `ADR-0311` is available for this topic | Visible corpus suggests a numbering conflict. | `NEEDS VERIFICATION` |
 | Confirm owners | Owners cannot be inferred from attached PDFs. | `TODO(owner): documentation steward + domain lane stewards` |
 | Confirm policy label | Public/restricted status depends on repo policy. | `TODO(policy): public|restricted after policy review` |
 | Confirm ADR format convention | Existing repo ADR style was not inspectable in this session. | `UNKNOWN` |
@@ -463,7 +463,7 @@ owners: TODO(owner): domain steward + documentation steward
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: TODO(policy): public|restricted after policy review
-related: [NEEDS_VERIFICATION: docs/adr/ADR-0008-domain-lane-template.md]
+related: [NEEDS_VERIFICATION: docs/adr/ADR-0208-domain-lane-template.md]
 tags: [kfm, domain-lane, <domain>]
 notes: [Replace TODO values after repo and steward verification.]
 [/KFM_META_BLOCK_V2] -->

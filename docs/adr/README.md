@@ -161,8 +161,8 @@ Do **not** use `docs/adr/` as the primary home for the following:
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
 | `ADR-0002-pr-002-evidence-closure.md` | Evidence closure | `SURFACED / NEEDS VERIFICATION` | Verify whether it is PR-specific or still active governance. |
-| `ADR-0003-source-ledger-authority.md` | Source ledger authority | `SURFACED / NEEDS VERIFICATION` | Verify source-ledger canonical home and successor links. |
-| `ADR-0004-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema/contract/policy alignment. |
+| `ADR-0203-source-ledger-authority.md` | Source ledger authority | `SURFACED / NEEDS VERIFICATION` | Verify source-ledger canonical home and successor links. |
+| `ADR-0204-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema/contract/policy alignment. |
 | `ADR-0005-promotion-gate.md` | Promotion gate | `SURFACED / NEEDS VERIFICATION` | Verify relation to release manifests and policy obligation gates. |
 | `ADR-0011-catalog-proof-release-separation.md` | Catalog / proof / release separation | `SURFACED / NEEDS VERIFICATION` | Should remain prominent because KFM separates proof, release, and publication. |
 | `ADR-0018-prov-stac-dcat-catalog-mapping.md` | Catalog standards mapping | `SURFACED / NEEDS VERIFICATION` | Verify current STAC/DCAT/PROV profile alignment. |
@@ -172,10 +172,10 @@ Do **not** use `docs/adr/` as the primary home for the following:
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0002-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Possible numbering collision with responsibility-root ADR; verify status and supersession. |
+| `ADR-0202-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Possible numbering collision with responsibility-root ADR; verify status and supersession. |
 | `ADR-0009-sensitive-location-policy.md` | Sensitive location policy | `SURFACED / NEEDS VERIFICATION` | High-risk public exposure decision; verify policy and domain links. |
 | `ADR-0010-local-exposure-security.md` | Local exposure security | `SURFACED / NEEDS VERIFICATION` | Verify runtime/security docs and enforcement evidence. |
-| `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0002-policy-home.md`. |
+| `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0202-policy-home.md`. |
 | `ADR-0427-consent-vc-and-revocation-delta.md` | Consent, VC, revocation delta | `SURFACED / NEEDS VERIFICATION` | Sensitive governance area; verify owners and policy label before public use. |
 
 ### UI, map, runtime, and governed-AI ADRs
@@ -183,26 +183,26 @@ Do **not** use `docs/adr/` as the primary home for the following:
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
 | `ADR-0003-maplibre-renderer-boundary.md` | MapLibre renderer boundary | `SURFACED / NEEDS VERIFICATION` | Verify relationship to MapLibre operating architecture docs. |
-| `ADR-0006-maplibre-layer-manifest.md` | LayerManifest / MapLibre layer governance | `SURFACED / NEEDS VERIFICATION` | Verify schema and layer registry links. |
-| `ADR-0007-governed-ai-runtime-envelope.md` | Governed AI runtime envelope | `SURFACED / NEEDS VERIFICATION` | Verify runtime envelope schema, citation validation, and AI receipt links. |
+| `ADR-0206-maplibre-layer-manifest.md` | LayerManifest / MapLibre layer governance | `SURFACED / NEEDS VERIFICATION` | Verify schema and layer registry links. |
+| `ADR-0207-governed-ai-runtime-envelope.md` | Governed AI runtime envelope | `SURFACED / NEEDS VERIFICATION` | Verify runtime envelope schema, citation validation, and AI receipt links. |
 
 ### Hydrology proof-lane ADRs
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0003-hydrology-source-descriptor-activation-gates.md` | Hydrology source activation gates | `SURFACED / NEEDS VERIFICATION` | Verify source registry and rights gate links. |
-| `ADR-0004-hydrology-first-proof-lane.md` | Hydrology as first proof lane | `SURFACED / NEEDS VERIFICATION` | Verify relation to current proof-slice docs. |
-| `ADR-0004-hydrology-source-documentation-verification.md` | Hydrology source documentation verification | `SURFACED / NEEDS VERIFICATION` | Number collision with proof-lane ADR; verify intent and status. |
-| `ADR-0005-hydrology-connector-contract-and-offline-simulation.md` | Hydrology connector and offline simulation | `SURFACED / NEEDS VERIFICATION` | Verify connector test evidence and fixture homes. |
-| `ADR-0006-hydrology-wbd-metadata-probe.md` | WBD metadata probe | `SURFACED / NEEDS VERIFICATION` | Verify whether current source probes supersede it. |
-| `ADR-0007-hydrology-wbd-terms-rights-review.md` | WBD rights review | `SURFACED / NEEDS VERIFICATION` | Verify current rights/source terms. |
-| `ADR-0008-hydrology-synthetic-release-governance.md` | Synthetic hydrology release governance | `SURFACED / NEEDS VERIFICATION` | Verify release/proof/published-data guardrails. |
+| `ADR-0303-hydrology-source-descriptor-activation-gates.md` | Hydrology source activation gates | `SURFACED / NEEDS VERIFICATION` | Verify source registry and rights gate links. |
+| `ADR-0304-hydrology-first-proof-lane.md` | Hydrology as first proof lane | `SURFACED / NEEDS VERIFICATION` | Verify relation to current proof-slice docs. |
+| `ADR-0305-hydrology-source-documentation-verification.md` | Hydrology source documentation verification | `SURFACED / NEEDS VERIFICATION` | Number collision with proof-lane ADR; verify intent and status. |
+| `ADR-0306-hydrology-connector-contract-and-offline-simulation.md` | Hydrology connector and offline simulation | `SURFACED / NEEDS VERIFICATION` | Verify connector test evidence and fixture homes. |
+| `ADR-0307-hydrology-wbd-metadata-probe.md` | WBD metadata probe | `SURFACED / NEEDS VERIFICATION` | Verify whether current source probes supersede it. |
+| `ADR-0310-hydrology-wbd-terms-rights-review.md` | WBD rights review | `SURFACED / NEEDS VERIFICATION` | Verify current rights/source terms. |
+| `ADR-0311-hydrology-synthetic-release-governance.md` | Synthetic hydrology release governance | `SURFACED / NEEDS VERIFICATION` | Verify release/proof/published-data guardrails. |
 
 ### Templates and domain-lane governance
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0008-domain-lane-template.md` | Domain-lane ADR template | `SURFACED / NEEDS VERIFICATION` | Verify whether this is active or superseded by `ADR-TEMPLATE.md`. |
+| `ADR-0208-domain-lane-template.md` | Domain-lane ADR template | `SURFACED / NEEDS VERIFICATION` | Verify whether this is active or superseded by `ADR-TEMPLATE.md`. |
 
 [Back to top](#top)
 
@@ -218,7 +218,7 @@ KFM ADR filenames currently show multiple patterns. Treat numbers as helpful lab
 | Numeric-only legacy prefix | `0001-truth-path.md` (renamed to `ADR-0014-truth-path.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
 | Topic-specific ADR prefix | `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` (renamed to `ADR-0018-prov-stac-dcat-catalog-mapping.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
 | Date-ish or packet-derived ID | `ADR-0427-consent-vc-and-revocation-delta.md` | `SURFACED / NEEDS VERIFICATION` | Verify whether ID encodes date, packet, or decision family. |
-| Duplicate numeric prefixes | multiple `ADR-0002`, `ADR-0004`, etc. | `SURFACED / CONFLICT WATCH` | Do not assume number uniqueness until a registry resolves collisions. |
+| Duplicate numeric prefixes | multiple `ADR-0202`, `ADR-0305`, etc. | `SURFACED / CONFLICT WATCH` | Do not assume number uniqueness until a registry resolves collisions. |
 
 ### New ADR naming rule
 

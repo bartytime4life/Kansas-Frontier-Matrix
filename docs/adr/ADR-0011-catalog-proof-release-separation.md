@@ -8,7 +8,7 @@ owners: NEEDS-VERIFICATION
 created: 2026-04-27
 updated: 2026-05-02
 policy_label: NEEDS-VERIFICATION
-related: [NEEDS-VERIFICATION:docs/adr/ADR-0003-evidencebundle-contract.md, NEEDS-VERIFICATION:docs/adr/ADR-0004-promotion-gate.md, NEEDS-VERIFICATION:docs/adr/ADR-0010-catalog-proof-release-separation.md, NEEDS-VERIFICATION:data/receipts/README.md, NEEDS-VERIFICATION:data/proofs/README.md, NEEDS-VERIFICATION:data/catalog/README.md, NEEDS-VERIFICATION:data/published/README.md, NEEDS-VERIFICATION:contracts/README.md, NEEDS-VERIFICATION:schemas/README.md, NEEDS-VERIFICATION:policy/README.md, NEEDS-VERIFICATION:tests/README.md]
+related: [NEEDS-VERIFICATION:docs/adr/ADR-0303-evidencebundle-contract.md, NEEDS-VERIFICATION:docs/adr/ADR-0305-promotion-gate.md, NEEDS-VERIFICATION:docs/adr/ADR-0010-catalog-proof-release-separation.md, NEEDS-VERIFICATION:data/receipts/README.md, NEEDS-VERIFICATION:data/proofs/README.md, NEEDS-VERIFICATION:data/catalog/README.md, NEEDS-VERIFICATION:data/published/README.md, NEEDS-VERIFICATION:contracts/README.md, NEEDS-VERIFICATION:schemas/README.md, NEEDS-VERIFICATION:policy/README.md, NEEDS-VERIFICATION:tests/README.md]
 tags: [kfm, adr, catalog, proof, release, receipts, promotion, evidencebundle, publication]
 notes: [Requested target path is docs/adr/ADR-0011-catalog-proof-release-separation.md; ADR numbering conflicts with planning lineage that also names ADR-0010 for this decision family; owners, policy label, related links, schema home, emitted proof examples, and workflow bindings require repo-backed verification before merge.]
 [/KFM_META_BLOCK_V2] -->

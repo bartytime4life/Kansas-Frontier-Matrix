@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0006-hydrology-wbd-metadata-probe
-title: ADR-0006: Hydrology WBD Metadata Probe Gate
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0308-hydrology-wbd-metadata-probe
+title: ADR-0308: Hydrology WBD Metadata Probe Gate
 type: adr
 version: v1.0
 status: accepted-with-public-release-blocked
@@ -10,8 +10,8 @@ updated: 2026-05-06
 policy_label: NEEDS-VERIFICATION
 related: [
   ./README.md,
-  ./ADR-0003-hydrology-source-descriptor-activation-gates.md,
-  ./ADR-0005-hydrology-connector-contract-and-offline-simulation.md,
+  ./ADR-0303-hydrology-source-descriptor-activation-gates.md,
+  ./ADR-0306-hydrology-connector-contract-and-offline-simulation.md,
   ../domains/hydrology/README.md,
   ../runbooks/hydrology-wbd-metadata-probe.md,
   ../reports/hydrology-wbd-metadata-probe-inspection.md,
@@ -25,7 +25,7 @@ related: [
 ]
 tags: [kfm, adr, hydrology, wbd, source-probe, metadata-only, no-network, abstain, fail-closed, no-ingestion, public-release-blocked]
 notes: [
-  Expands the prior ADR-0006 stub: "Adds metadata-only probing gate; never activates public-safe release by probe alone.",
+  Expands the prior ADR-0308 stub: "Adds metadata-only probing gate; never activates public-safe release by probe alone.",
   Decision accepts a metadata-only WBD source verification gate, not live source activation or public release.",
   Default behavior is ABSTAIN with network disabled; optional real metadata probing requires explicit environment gates and remains non-ingesting.",
   WBD probe receipts are process/source-verification memory, not EvidenceBundle claim support, not connector activation, and not publication authority.",
@@ -35,7 +35,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0006: Hydrology WBD Metadata Probe Gate
+# ADR-0308: Hydrology WBD Metadata Probe Gate
 
 WBD metadata probes may verify source metadata readiness only; they must not fetch features, store geometry, ingest data, activate connectors, or make public release eligible by themselves.
 
@@ -75,7 +75,7 @@ KFM accepts a **metadata-only WBD source verification gate** for the hydrology p
 
 The prior stub is preserved and expanded:
 
-| Prior stub element | Expanded ADR-0006 rule |
+| Prior stub element | Expanded ADR-0308 rule |
 |---|---|
 | “Adds metadata-only probing gate.” | WBD probing is restricted to service or layer metadata checks only. |
 | “Never activates public-safe release by probe alone.” | Probe success cannot enable connector activation, data ingestion, public release, map publication, Evidence Drawer support, or Focus Mode claim support. |
@@ -110,9 +110,9 @@ This ADR prevents that drift.
 
 ### Current repository signal
 
-| Surface | Current role | ADR-0006 interpretation |
+| Surface | Current role | ADR-0308 interpretation |
 |---|---|---|
-| `docs/adr/ADR-0006-hydrology-wbd-metadata-probe.md` | Prior two-line stub. | This file expands the decision without changing the core rule. |
+| `docs/adr/ADR-0307-hydrology-wbd-metadata-probe.md` | Prior two-line stub. | This file expands the decision without changing the core rule. |
 | `tools/probe_wbd_metadata.py` | Dry-run/default probe tool with environment gates and `ABSTAIN` behavior. | Supports guarded metadata-probe shape; does not prove a real network probe ran. |
 | `policy/domains/hydrology/wbd_metadata_probe_policy.yaml` | Probe policy fixture allowing only metadata-style `f=json` / `f=pjson` query params. | Supports narrow policy intent. |
 | `docs/runbooks/hydrology-wbd-metadata-probe.md` | Runbook stub naming required environment gates. | Supports manual operator boundary. |
@@ -127,7 +127,7 @@ This ADR prevents that drift.
 ADR numbers are not enough to identify this decision. Use the full path as the stable identity:
 
 ```text
-docs/adr/ADR-0006-hydrology-wbd-metadata-probe.md
+docs/adr/ADR-0307-hydrology-wbd-metadata-probe.md
 ```
 
 If ADR numbering is normalized later, preserve this file as lineage and add a supersession note instead of deleting decision history.
@@ -213,7 +213,7 @@ where=
 
 ### Boundary summary
 
-| Action | ADR-0006 result |
+| Action | ADR-0308 result |
 |---|---:|
 | Check source descriptor identity | Allowed |
 | Dry-run metadata probe with network disabled | Allowed, returns `ABSTAIN` |
@@ -344,10 +344,10 @@ A WBD metadata probe dry-run gate must keep public release blocked.
 
 | ADR | Relationship |
 |---|---|
-| [`ADR-0003-hydrology-source-descriptor-activation-gates.md`](./ADR-0003-hydrology-source-descriptor-activation-gates.md) | WBD remains a candidate source descriptor until activation gates pass. ADR-0006 cannot override source activation. |
-| [`ADR-0005-hydrology-connector-contract-and-offline-simulation.md`](./ADR-0005-hydrology-connector-contract-and-offline-simulation.md) | Connector contracts and offline simulation remain blocked/non-live. ADR-0006 does not approve live connector execution. |
-| [`ADR-0005-promotion-gate.md`](./ADR-0005-promotion-gate.md) | Publication requires governed promotion. ADR-0006 cannot make a release public by probe success. |
-| [`ADR-0004-hydrology-first-proof-lane.md`](./ADR-0004-hydrology-first-proof-lane.md) | Hydrology-first proof lane starts no-network/public-safe. ADR-0006 provides a narrow WBD metadata verification gate within that posture. |
+| [`ADR-0303-hydrology-source-descriptor-activation-gates.md`](./ADR-0303-hydrology-source-descriptor-activation-gates.md) | WBD remains a candidate source descriptor until activation gates pass. ADR-0308 cannot override source activation. |
+| [`ADR-0306-hydrology-connector-contract-and-offline-simulation.md`](./ADR-0306-hydrology-connector-contract-and-offline-simulation.md) | Connector contracts and offline simulation remain blocked/non-live. ADR-0308 does not approve live connector execution. |
+| [`ADR-0005-promotion-gate.md`](./ADR-0005-promotion-gate.md) | Publication requires governed promotion. ADR-0308 cannot make a release public by probe success. |
+| [`ADR-0304-hydrology-first-proof-lane.md`](./ADR-0304-hydrology-first-proof-lane.md) | Hydrology-first proof lane starts no-network/public-safe. ADR-0308 provides a narrow WBD metadata verification gate within that posture. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -357,7 +357,7 @@ A WBD metadata probe dry-run gate must keep public release blocked.
 
 ### Repository enforcement surfaces
 
-| Surface | Current role | ADR-0006 expectation |
+| Surface | Current role | ADR-0308 expectation |
 |---|---|---|
 | `tools/probe_wbd_metadata.py` | Emits `ABSTAIN` unless environment gates are set; dry run always abstains. | Keep default fail-closed. Expand URL-token enforcement before any real metadata network run is accepted. |
 | `policy/domains/hydrology/wbd_metadata_probe_policy.yaml` | Declares metadata-only WBD source ID, probe kind, and allowed query params. | Keep allowed query params narrow and review any expansion. |
@@ -473,7 +473,7 @@ KFM accepts slower source activation in exchange for a safer hydrology proof lan
 
 ## Rollback
 
-Rollback for ADR-0006 should be straightforward because WBD metadata probing must not ingest or publish data.
+Rollback for ADR-0308 should be straightforward because WBD metadata probing must not ingest or publish data.
 
 ### Rollback rules
 
@@ -497,7 +497,7 @@ If this ADR expansion is rejected, revert only this file. Do not delete WBD sour
 
 ## Acceptance checklist
 
-ADR-0006 is accepted as a metadata-probe boundary decision. Implementation maturity can be upgraded only when the following are verified.
+ADR-0308 is accepted as a metadata-probe boundary decision. Implementation maturity can be upgraded only when the following are verified.
 
 - [x] Target ADR path exists.
 - [x] WBD candidate source descriptor exists.

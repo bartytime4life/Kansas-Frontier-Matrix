@@ -18,7 +18,7 @@ notes: [Target path docs/adr/ADR-0005-promotion-gate.md; target file presence wa
 Make publication a governed, evidence-bearing state transition rather than a file move.
 
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
-![ADR](https://img.shields.io/badge/ADR-0005-blue)
+![ADR](https://img.shields.io/badge/ADR-0306-blue)
 ![Decision](https://img.shields.io/badge/decision-proposed-orange)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-0a7ea4)
 ![Scope](https://img.shields.io/badge/scope-release%20promotion-6f42c1)
@@ -474,7 +474,7 @@ Rollback must not:
 
 The following items remain NEEDS VERIFICATION before this ADR can be treated as accepted implementation guidance:
 
-- active ADR numbering and whether `ADR-0005` is available;
+- active ADR numbering and whether `ADR-0306` is available;
 - `docs/adr/` local formatting conventions;
 - CODEOWNERS or steward owner for promotion governance;
 - current schema home: `contracts/`, `schemas/contracts/v1/`, or another repo convention;

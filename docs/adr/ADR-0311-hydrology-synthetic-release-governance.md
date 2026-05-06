@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0008-hydrology-synthetic-release-governance
-title: ADR-0008: Hydrology Synthetic Release Governance
+title: ADR-0311: Hydrology Synthetic Release Governance
 type: adr
 version: v1.0
 status: accepted
@@ -10,7 +10,7 @@ updated: 2026-05-06
 policy_label: internal-draft
 related: [
   docs/adr/README.md,
-  docs/adr/ADR-0004-hydrology-first-proof-lane.md,
+  docs/adr/ADR-0304-hydrology-first-proof-lane.md,
   docs/adr/ADR-0005-promotion-gate.md,
   docs/runbooks/foundation-strategy.md,
   docs/domains/hydrology/README.md,
@@ -49,7 +49,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0008: Hydrology Synthetic Release Governance
+# ADR-0311: Hydrology Synthetic Release Governance
 
 Govern synthetic hydrology review-and-release drills so KFM can test public-safe publication surfaces without fetching real source data, using live credentials, or activating real-world public release.
 
@@ -76,7 +76,7 @@ Govern synthetic hydrology review-and-release drills so KFM can test public-safe
 > [!IMPORTANT]
 > **Decision status:** `accepted` for a synthetic hydrology release governance drill.  
 > **Implementation status:** `partial / evidence-bounded`. The repository has synthetic release fixtures, but this ADR does not claim production release automation, live hydrology connectors, public API deployment, branch protection, dashboarding, or full CI enforcement.  
-> **Target path:** `docs/adr/ADR-0008-hydrology-synthetic-release-governance.md`.
+> **Target path:** `docs/adr/ADR-0311-hydrology-synthetic-release-governance.md`.
 
 > [!WARNING]
 > This ADR authorizes **synthetic, no-network, public-safe release governance only**. It does **not** authorize live source harvesting, credential use, official-source hydrology publication, emergency alerting, hydrologic simulation, direct model-runtime output, or direct public access to internal lifecycle stores.
@@ -122,9 +122,9 @@ The synthetic release is a test of governance mechanics, not a claim that:
 
 ## Context
 
-KFM’s hydrology lane is the first proof-bearing lane. ADR-0004 selects hydrology because it can exercise KFM’s trust path with public-safe, spatial, temporal, evidence-resolving material before higher-sensitivity domains.
+KFM’s hydrology lane is the first proof-bearing lane. ADR-0305 selects hydrology because it can exercise KFM’s trust path with public-safe, spatial, temporal, evidence-resolving material before higher-sensitivity domains.
 
-This ADR is narrower than ADR-0004. It does not decide that hydrology is first. It decides how the **synthetic hydrology release drill** is allowed to behave once the lane has fixture-backed release objects.
+This ADR is narrower than ADR-0305. It does not decide that hydrology is first. It decides how the **synthetic hydrology release drill** is allowed to behave once the lane has fixture-backed release objects.
 
 The current synthetic fixture family centers on the PR-008-style streamflow drill:
 
@@ -454,7 +454,7 @@ python tools/validators/hydrology/validate_synthetic_release_governance.py \
 
 ### Acceptance checklist
 
-- [ ] ADR index lists ADR-0008 and its synthetic-drill scope.
+- [ ] ADR index lists ADR-0311 and its synthetic-drill scope.
 - [ ] Owners and policy label are confirmed.
 - [ ] Synthetic release manifest validates against an accepted schema or accepted synthetic extension.
 - [ ] Synthetic release receipt validates against an accepted schema or accepted synthetic extension.
@@ -536,7 +536,7 @@ A synthetic release rollback must:
 
 ### Rolling back this ADR
 
-If ADR-0008 is superseded:
+If ADR-0311 is superseded:
 
 1. create a successor ADR;
 2. keep this file as lineage;
@@ -562,7 +562,7 @@ Do not remove the synthetic hydrology fixtures without a separate fixture preser
 | Original creation date | UNKNOWN | Inspect git history for the ADR stub. |
 | Owners / CODEOWNERS | NEEDS VERIFICATION | Check `CODEOWNERS`, document registry, or maintainer assignment. |
 | Policy label | NEEDS VERIFICATION | Confirm document classification policy. |
-| ADR index coverage | NEEDS VERIFICATION | Update `docs/adr/README.md` to include ADR-0008 and synthetic-drill scope. |
+| ADR index coverage | NEEDS VERIFICATION | Update `docs/adr/README.md` to include ADR-0311 and synthetic-drill scope. |
 | Complete PR-008 fixture schema coverage | NEEDS VERIFICATION | Add or verify schema mappings for release manifest, release receipt, layer manifest, public claim artifact, public layer artifact, Evidence Drawer artifact, and Focus artifact. |
 | Generic release manifest schema sufficiency | NEEDS VERIFICATION | Review whether `schemas/contracts/v1/release/release_manifest.schema.json` covers synthetic drill fields or needs extension. |
 | Validator command names | UNKNOWN | Confirm repo-native validation tooling and package manager conventions. |
@@ -589,7 +589,7 @@ Do not remove the synthetic hydrology fixtures without a separate fixture preser
 | Allow Focus Mode output from model runtime fixture. | Rejected | AI is interpretive and downstream; model output is prohibited as public source material. |
 | Treat ReleaseManifest as evidence. | Rejected | Release packaging is not evidence support. |
 | Omit rollback/correction for synthetic data. | Rejected | The drill’s purpose is to test governance, including correction and rollback. |
-| Keep ADR-0008 as a one-line stub. | Rejected | The existing fixture family needs a reviewable decision record with scope, rules, validation, and rollback. |
+| Keep ADR-0311 as a one-line stub. | Rejected | The existing fixture family needs a reviewable decision record with scope, rules, validation, and rollback. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 

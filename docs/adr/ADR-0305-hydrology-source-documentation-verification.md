@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0004-HYDROLOGY-SOURCE-DOCUMENTATION
-title: ADR-0004: Hydrology Source Documentation Verification
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0305-HYDROLOGY-SOURCE-DOCUMENTATION
+title: ADR-0305: Hydrology Source Documentation Verification
 type: standard
 version: v1.0-review
 status: review
@@ -19,7 +19,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0004: Hydrology Source Documentation Verification
+# ADR-0305: Hydrology Source Documentation Verification
 
 <p align="center">
   <strong>Hydrology source documentation may prepare a source for review. It must never become claim evidence.</strong>
@@ -50,7 +50,7 @@ notes: [
 > **Preserved consequence:** connectors remain disabled; documentation checks are never claim evidence.
 
 > [!WARNING]
-> **NEEDS VERIFICATION:** Repository inspection found another ADR using the `ADR-0004` number. Do not resolve that numbering conflict silently. Keep this file at its requested path unless maintainers intentionally renumber through an ADR index update or migration note.
+> **NEEDS VERIFICATION:** Repository inspection found another ADR using the `ADR-0305` number. Do not resolve that numbering conflict silently. Keep this file at its requested path unless maintainers intentionally renumber through an ADR index update or migration note.
 
 ---
 
@@ -58,7 +58,7 @@ notes: [
 
 | Field | Determination |
 |---|---|
-| ADR path | `docs/adr/ADR-0004-hydrology-source-documentation-verification.md` |
+| ADR path | `docs/adr/ADR-0305-hydrology-source-documentation-verification.md` |
 | Decision | Add hydrology source documentation verification artifacts and a manual review packet. |
 | Connector posture | **Blocked by default.** No live connector is activated by this ADR alone. |
 | Evidence posture | Source documentation checks support source-readiness review only; they are not evidence for hydrologic claims. |
@@ -590,7 +590,7 @@ Rollback must not turn documentation review into untracked source activation.
 
 | Item | Status | Why it matters |
 |---|---|---|
-| ADR numbering collision with another `ADR-0004` | `CONFLICTED / NEEDS VERIFICATION` | ADR history and references should not collide silently. |
+| ADR numbering collision with another `ADR-0305` | `CONFLICTED / NEEDS VERIFICATION` | ADR history and references should not collide silently. |
 | Created date | `NEEDS VERIFICATION` | Existing short file did not include metadata. |
 | Owners/stewards | `NEEDS VERIFICATION` | Review burden must be explicit before acceptance. |
 | Policy label | `NEEDS VERIFICATION` | Public/restricted posture of source review packets may depend on source terms. |

@@ -8,7 +8,7 @@ owners: OWNER_TBD_NEEDS_VERIFICATION
 created: DATE_TBD_FROM_GIT_OR_DOC_REGISTRY
 updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
-related: [docs/adr/README.md, docs/adr/ADR-TEMPLATE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0004-evidencebundle-contract.md, docs/adr/ADR-0005-promotion-gate.md, docs/adr/ADR-0007-governed-ai-runtime-envelope.md, docs/adr/ADR-0009-sensitive-location-policy.md, docs/adr/ADR-0011-catalog-proof-release-separation.md, docs/adr/ADR-0012-authority-boundary-compatibility-map.md, docs/adr/ADR-0013-policy-home-authority.md]
+related: [docs/adr/README.md, docs/adr/ADR-TEMPLATE.md, docs/adr/ADR-0001-schema-home.md, docs/adr/ADR-0204-evidencebundle-contract.md, docs/adr/ADR-0005-promotion-gate.md, docs/adr/ADR-0207-governed-ai-runtime-envelope.md, docs/adr/ADR-0009-sensitive-location-policy.md, docs/adr/ADR-0011-catalog-proof-release-separation.md, docs/adr/ADR-0012-authority-boundary-compatibility-map.md, docs/adr/ADR-0013-policy-home-authority.md]
 tags: [kfm, adr, truth-path, trust-membrane, evidence, publication, governance, public-safety, governed-ai]
 notes: [Rebuilt from existing docs/adr/ADR-0014-truth-path.md draft, ADR number remains NEEDS VERIFICATION because docs/adr/README.md assigns ADR-0001 to schema-home, No repository files were modified by this rebuild artifact]
 [/KFM_META_BLOCK_V2] -->

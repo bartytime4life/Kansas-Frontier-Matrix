@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0007 Hydrology Processed/Catalog Closure Boundary
+title: ADR-0310 Hydrology Processed/Catalog Closure Boundary
 type: standard
 version: v1
 status: draft
@@ -12,7 +12,7 @@ related: [
   docs/adr/README.md,
   docs/adr/ADR-TEMPLATE.md,
   docs/adr/ADR-0005-promotion-gate.md,
-  docs/adr/ADR-0006-maplibre-layer-manifest.md,
+  docs/adr/ADR-0206-maplibre-layer-manifest.md,
   docs/adr/ADR-0011-catalog-proof-release-separation.md,
   docs/domains/hydrology/ARCHITECTURE.md,
   data/registry/layers/README.md
@@ -20,12 +20,12 @@ related: [
 tags: [kfm, adr, hydrology, lifecycle, catalog, triplet, publication, evidence-bundle]
 notes: [
   Draft revision for the user-requested target path.
-  ADR number needs verification because public-main ADR inventory also contains ADR-0007-governed-ai-runtime-envelope.md.
+  ADR number needs verification because public-main ADR inventory also contains ADR-0207-governed-ai-runtime-envelope.md.
   This ADR records a boundary decision; it is not implementation proof.
 ]
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0007: Hydrology Processed/Catalog Closure Boundary
+# ADR-0310: Hydrology Processed/Catalog Closure Boundary
 
 Define the boundary that prevents hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` objects from becoming standalone public truth.
 
@@ -44,7 +44,7 @@ Define the boundary that prevents hydrology `PROCESSED`, `CATALOG`, and `TRIPLET
 > [!WARNING]
 > **ADR numbering needs verification before merge.**
 >
-> The requested target path is `docs/adr/ADR-0007-hydrology-processed-catalog-closure-boundary.md`, while the public ADR directory snapshot also lists `ADR-0007-governed-ai-runtime-envelope.md`. Do not rely on ADR number alone until the ADR index is reconciled.
+> The requested target path is `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md`, while the public ADR directory snapshot also lists `ADR-0207-governed-ai-runtime-envelope.md`. Do not rely on ADR number alone until the ADR index is reconciled.
 
 **Quick jumps:** [Status](#status) · [Decision](#decision) · [Context](#context) · [Boundary model](#boundary-model) · [Hydrology closure rules](#hydrology-closure-rules) · [Options considered](#options-considered) · [Impact map](#impact-map) · [Validation](#validation-plan) · [Rollback](#rollback-and-correction) · [Open verification](#open-verification)
 
@@ -58,14 +58,14 @@ It should not be treated as accepted implementation law until ADR numbering, own
 
 | Field | Value |
 |---|---|
-| Target path | `docs/adr/ADR-0007-hydrology-processed-catalog-closure-boundary.md` |
+| Target path | `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md` |
 | Decision family | Hydrology lifecycle closure, catalog closure, triplet projection, public release boundary |
 | Current decision status | `proposed` |
 | Doctrine confidence | `CONFIRMED` from KFM lifecycle and publication doctrine |
 | Current implementation depth | `UNKNOWN` without active checkout/runtime proof |
 | Merge posture | Hold as `draft` until open verification items are closed |
 | Public release posture | `DENY` unless a valid promotion path binds evidence, policy, catalog, proof, release, review, correction, and rollback state |
-| Numbering posture | `NEEDS VERIFICATION` because another public ADR uses `ADR-0007` |
+| Numbering posture | `NEEDS VERIFICATION` because another public ADR uses `ADR-0310` |
 
 ### Evidence boundary
 
@@ -277,7 +277,7 @@ The safe reading is simple: **closure can support release; closure is not releas
 
 | Area | Required update | Status |
 |---|---|---|
-| `docs/adr/` | Add or revise this ADR; reconcile numbering conflict with existing `ADR-0007-governed-ai-runtime-envelope.md` | `NEEDS VERIFICATION` |
+| `docs/adr/` | Add or revise this ADR; reconcile numbering conflict with existing `ADR-0207-governed-ai-runtime-envelope.md` | `NEEDS VERIFICATION` |
 | `docs/adr/README.md` | Add this ADR to inventory or choose successor filename/number | `NEEDS VERIFICATION` |
 | `docs/domains/hydrology/ARCHITECTURE.md` | Link this ADR from hydrology boundaries / lifecycle closure | `PROPOSED` |
 | `docs/runbooks/hydrology/` | Add processed/catalog/triplet closure checks to promotion and rollback runbooks if those runbooks exist | `PROPOSED / NEEDS VERIFICATION` |
@@ -422,7 +422,7 @@ A successor ADR may narrow, expand, or replace this decision only if it preserve
 
 | Question | Why it matters | Verification path | Owner |
 |---|---|---|---|
-| Should this ADR remain `ADR-0007` or be renumbered? | Public ADR inventory also lists another `ADR-0007` | Inspect active `docs/adr/` index and branch history | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Should this ADR remain `ADR-0310` or be renumbered? | Public ADR inventory also lists another `ADR-0310` | Inspect active `docs/adr/` index and branch history | `OWNER_TBD_NEEDS_VERIFICATION` |
 | Is the current one-line target draft already committed in the active branch? | Determines whether this is a revision or new file | Inspect active checkout and git history | `OWNER_TBD_NEEDS_VERIFICATION` |
 | Which schema home is accepted for hydrology closure objects? | Prevents duplicate `contracts/` vs `schemas/` authority | Read accepted schema-home ADR and active schema tree | `OWNER_TBD_NEEDS_VERIFICATION` |
 | Where do hydrology proof packs, EvidenceBundles, and release manifests live in the active repo? | Prevents wrong impact map | Inspect `data/proofs/`, `release/`, `schemas/`, `contracts/`, and tests | `OWNER_TBD_NEEDS_VERIFICATION` |

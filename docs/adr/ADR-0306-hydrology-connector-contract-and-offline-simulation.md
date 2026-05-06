@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0005-hydrology-connector-contract-and-offline-simulation
-title: ADR-0005: Hydrology Connector Contract and Offline Simulation
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0306-hydrology-connector-contract-and-offline-simulation
+title: ADR-0306: Hydrology Connector Contract and Offline Simulation
 type: adr
 version: v1.0
 status: accepted-with-live-fetch-blocked
@@ -8,7 +8,7 @@ owners: @bartytime4life NEEDS_VERIFICATION; hydrology-domain-steward NEEDS_VERIF
 created: NEEDS_VERIFICATION
 updated: 2026-05-06
 policy_label: NEEDS-VERIFICATION
-related: [./README.md, ./ADR-0003-hydrology-source-descriptor-activation-gates.md, ./ADR-0004-hydrology-first-proof-lane.md, ./ADR-0005-promotion-gate.md, ../domains/hydrology/README.md, ../runbooks/hydrology-offline-fetch-simulation.md, ../../tools/connectors/offline_mock_transport.py, ../../tools/validators/validate_hydrology_connector_contracts.py, ../../tools/validators/validate_hydrology_fetch_simulation.py, ../../tests/domains/hydrology/test_hydrology_offline_mock_transport.py, ../../fixtures/domains/hydrology/connector_contracts/, ../../fixtures/domains/hydrology/fetch_plans/, ../../fixtures/domains/hydrology/fetch_receipts/, ../../data/registry/sources/hydrology/]
+related: [./README.md, ./ADR-0303-hydrology-source-descriptor-activation-gates.md, ./ADR-0304-hydrology-first-proof-lane.md, ./ADR-0005-promotion-gate.md, ../domains/hydrology/README.md, ../runbooks/hydrology-offline-fetch-simulation.md, ../../tools/connectors/offline_mock_transport.py, ../../tools/validators/validate_hydrology_connector_contracts.py, ../../tools/validators/validate_hydrology_fetch_simulation.py, ../../tests/domains/hydrology/test_hydrology_offline_mock_transport.py, ../../fixtures/domains/hydrology/connector_contracts/, ../../fixtures/domains/hydrology/fetch_plans/, ../../fixtures/domains/hydrology/fetch_receipts/, ../../data/registry/sources/hydrology/]
 tags: [kfm, adr, hydrology, connector-contract, offline-simulation, no-network, source-descriptor, fixture, fail-closed, evidence-boundary]
 notes: [
   Expands the previous stub decision for hydrology connector contracts and offline simulation.
@@ -20,7 +20,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0005: Hydrology Connector Contract and Offline Simulation
+# ADR-0306: Hydrology Connector Contract and Offline Simulation
 
 Hydrology connector contracts may exist as guarded, fixture-backed interface records, but they must stay offline, non-fetching, non-public, and evidence-subordinate until separate activation, evidence, policy, promotion, and rollback gates pass.
 
@@ -108,7 +108,7 @@ The repository already has implementation-shaped evidence for this boundary:
 This repository also contains a separate `docs/adr/ADR-0005-promotion-gate.md`. This file’s stable identity is the full path:
 
 ```text
-docs/adr/ADR-0005-hydrology-connector-contract-and-offline-simulation.md
+docs/adr/ADR-0306-hydrology-connector-contract-and-offline-simulation.md
 ```
 
 If ADR numbering is normalized later, preserve this file as lineage and add a supersession note rather than deleting history.
@@ -153,7 +153,7 @@ If ADR numbering is normalized later, preserve this file as lineage and add a su
 
 | Evidence | Status | What it supports | Limits |
 |---|---|---|---|
-| Existing ADR-0005 connector stub | CONFIRMED repository file | Original decision: introduce connector contracts and offline simulation while keeping real connectors disabled. | Stub did not define contract fields, finite states, flow, validation, promotion boundary, or rollback detail. |
+| Existing ADR-0306 connector stub | CONFIRMED repository file | Original decision: introduce connector contracts and offline simulation while keeping real connectors disabled. | Stub did not define contract fields, finite states, flow, validation, promotion boundary, or rollback detail. |
 | Hydrology source descriptor activation ADR | CONFIRMED repository file | Candidate official hydrology sources are descriptor-first, blocked, non-fetching, and non-public until manual gates pass. | Governs source activation, not connector simulation details. |
 | Hydrology-first proof lane ADR | CONFIRMED repository file | Hydrology is the first proof lane and must begin with synthetic/no-network public-safe fixtures. | Does not by itself approve connector activation. |
 | Promotion Gate ADR | CONFIRMED repository file | Publication is a governed state transition, not a file move or successful fixture. | Separate ADR; duplicate ADR number requires path-specific citation. |
@@ -516,7 +516,7 @@ This ADR is accepted as a connector-boundary decision. Implementation maturity c
 - [x] Real-source blocked fetch plan exists.
 - [x] Simulation receipt fixture exists.
 - [ ] ADR index includes this file with path-specific identity.
-- [ ] Duplicate ADR-0005 numbering is resolved or documented in ADR index.
+- [ ] Duplicate ADR-0306 numbering is resolved or documented in ADR index.
 - [ ] Latest connector contract validator output is attached or linked.
 - [ ] Latest fetch simulation validator output is attached or linked.
 - [ ] Latest unit test output is attached or linked.
@@ -539,7 +539,7 @@ This ADR is accepted as a connector-boundary decision. Implementation maturity c
 | Owners/stewards | Needed for acceptance and future changes. | NEEDS VERIFICATION |
 | Policy label | Needed for publication classification. | NEEDS VERIFICATION |
 | ADR index update | Needed for discoverability. | NEEDS VERIFICATION |
-| ADR numbering collision | Repository has another ADR-0005; path identity must remain clear. | NEEDS VERIFICATION |
+| ADR numbering collision | Repository has another ADR-0306; path identity must remain clear. | NEEDS VERIFICATION |
 | Latest validator/test execution | File presence does not prove latest passing behavior. | NEEDS VERIFICATION |
 | CI/workflow enforcement | Needed before claiming automated governance. | UNKNOWN |
 | Live connector activation gates | Required before any real source fetch. | DENY by default |
