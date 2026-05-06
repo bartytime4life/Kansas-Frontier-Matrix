@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0310 Hydrology Processed/Catalog Closure Boundary
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0309-HYDROLOGY-PROCESSED-CATALOG-CLOSURE
+title: ADR-0309: Hydrology Processed/Catalog Closure Boundary
 type: standard
 version: v1
 status: draft
@@ -9,157 +9,198 @@ created: DATE_TBD_FROM_GIT_OR_DOC_REGISTRY
 updated: 2026-05-06
 policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
 related: [
-  docs/adr/README.md,
-  docs/adr/ADR-TEMPLATE.md,
-  docs/adr/ADR-0005-promotion-gate.md,
-  docs/adr/ADR-0206-maplibre-layer-manifest.md,
-  docs/adr/ADR-0011-catalog-proof-release-separation.md,
-  docs/domains/hydrology/ARCHITECTURE.md,
-  data/registry/layers/README.md
+  ./README.md,
+  ./ADR-TEMPLATE.md,
+  ./ADR-0001-schema-home.md,
+  ./ADR-0011-catalog-proof-release-separation.md,
+  ./ADR-0206-maplibre-layer-manifest.md,
+  ./ADR-0304-hydrology-first-proof-lane.md,
+  ./ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md,
+  ./ADR-0310-hydrology-wbd-terms-rights-review.md,
+  ../domains/hydrology/ARCHITECTURE.md,
+  ../../data/registry/layers/README.md,
+  ../../data/catalog/README.md,
+  ../../data/proofs/README.md,
+  ../../data/published/README.md,
+  ../../release/README.md
 ]
-tags: [kfm, adr, hydrology, lifecycle, catalog, triplet, publication, evidence-bundle]
+tags: [kfm, adr, hydrology, lifecycle, processed, catalog, triplet, evidence-bundle, promotion, release, rollback]
 notes: [
-  Draft revision for the user-requested target path.
-  ADR number needs verification because public-main ADR inventory also contains ADR-0207-governed-ai-runtime-envelope.md.
+  Revises the existing target file so the metadata, H1, anchors, and decision identity align with ADR-0309 and the target path.
   This ADR records a boundary decision; it is not implementation proof.
+  Distinct ADR-0310 WBD terms/rights review remains a separate hydrology source-activation and rights decision.
+  Owners, created date, policy label, ADR index entry, schema-home acceptance, validator paths, CI execution, release artifacts, and runtime behavior remain NEEDS VERIFICATION.
 ]
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0310: Hydrology Processed/Catalog Closure Boundary
+<a id="top"></a>
 
-Define the boundary that prevents hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` objects from becoming standalone public truth.
+# ADR-0309: Hydrology Processed/Catalog Closure Boundary
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![decision](https://img.shields.io/badge/decision-PROPOSED-blue)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20UNKNOWN%20runtime-6f42c1)
-![domain](https://img.shields.io/badge/domain-hydrology-0b7285)
-![posture](https://img.shields.io/badge/posture-cite--or--abstain-informational)
-![release](https://img.shields.io/badge/publication-promotion%20required-critical)
+Define the boundary that prevents hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` artifacts from becoming standalone public truth.
+
+<p align="center">
+  <img alt="ADR status: draft" src="https://img.shields.io/badge/ADR-draft-ffb000">
+  <img alt="decision: proposed" src="https://img.shields.io/badge/decision-PROPOSED-4051b5">
+  <img alt="domain: hydrology" src="https://img.shields.io/badge/domain-hydrology-0a7ea4">
+  <img alt="boundary: closure is not release" src="https://img.shields.io/badge/boundary-closure%20%E2%89%A0%20release-b60205">
+  <img alt="trust: cite or abstain" src="https://img.shields.io/badge/trust-cite--or--abstain-0a7d5a">
+</p>
+
+<p align="center">
+  <a href="#status">Status</a> ·
+  <a href="#decision">Decision</a> ·
+  <a href="#context">Context</a> ·
+  <a href="#boundary-model">Boundary model</a> ·
+  <a href="#authority-map">Authority map</a> ·
+  <a href="#hydrology-rules">Hydrology rules</a> ·
+  <a href="#validation-plan">Validation</a> ·
+  <a href="#rollback-and-correction">Rollback</a> ·
+  <a href="#open-verification">Open verification</a> ·
+  <a href="#review-checklist">Checklist</a>
+</p>
 
 > [!IMPORTANT]
-> This ADR is a **boundary decision**, not proof that hydrology schemas, validators, policy gates, workflows, receipts, proof packs, catalog matrices, release manifests, or published artifacts already exist.
+> This ADR is a **boundary decision**, not proof that hydrology schemas, validators, source connectors, catalog records, graph projections, proof packs, release manifests, workflow gates, dashboards, or runtime surfaces are already complete.
 >
-> Treat implementation maturity as `UNKNOWN` unless the active checkout, tests, emitted artifacts, workflow logs, release records, or runtime evidence prove otherwise.
+> Treat enforcement maturity as `NEEDS VERIFICATION` until current repository files, executed tests, workflow logs, emitted artifacts, release records, or runtime evidence prove it.
 
 > [!WARNING]
-> **ADR numbering needs verification before merge.**
->
-> The requested target path is `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md`, while the public ADR directory snapshot also lists `ADR-0207-governed-ai-runtime-envelope.md`. Do not rely on ADR number alone until the ADR index is reconciled.
-
-**Quick jumps:** [Status](#status) · [Decision](#decision) · [Context](#context) · [Boundary model](#boundary-model) · [Hydrology closure rules](#hydrology-closure-rules) · [Options considered](#options-considered) · [Impact map](#impact-map) · [Validation](#validation-plan) · [Rollback](#rollback-and-correction) · [Open verification](#open-verification)
+> A rendered map layer, clean `data/processed/` object, catalog entry, graph triple, or fluent Focus Mode answer can look authoritative before it is actually releasable. This ADR blocks that shortcut.
 
 ---
 
 ## Status
 
-**PROPOSED / draft.** This ADR is suitable for review as a hydrology boundary decision.
-
-It should not be treated as accepted implementation law until ADR numbering, owner, policy label, related links, schema-home references, validation commands, and hydrology proof-slice evidence are verified in the active repository.
-
 | Field | Value |
 |---|---|
+| ADR ID | `ADR-0309` |
 | Target path | `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md` |
-| Decision family | Hydrology lifecycle closure, catalog closure, triplet projection, public release boundary |
-| Current decision status | `proposed` |
-| Doctrine confidence | `CONFIRMED` from KFM lifecycle and publication doctrine |
-| Current implementation depth | `UNKNOWN` without active checkout/runtime proof |
-| Merge posture | Hold as `draft` until open verification items are closed |
-| Public release posture | `DENY` unless a valid promotion path binds evidence, policy, catalog, proof, release, review, correction, and rollback state |
-| Numbering posture | `NEEDS VERIFICATION` because another public ADR uses `ADR-0310` |
+| Status | `draft` |
+| Decision state | `PROPOSED` until review accepts this boundary |
+| Enforcement state | `NEEDS VERIFICATION` |
+| Domain | Hydrology |
+| Protected lifecycle seam | `PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` |
+| Primary invariant | Publication is a governed state transition, not a file move or artifact placement. |
+| Public default | `DENY` public use from closure artifacts alone |
+| Related source-activation ADR | [`ADR-0310-hydrology-wbd-terms-rights-review.md`](./ADR-0310-hydrology-wbd-terms-rights-review.md) |
+| Related ingest-boundary ADR | [`ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md`](./ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md) |
 
-### Evidence boundary
+### Revision note
 
-| Evidence surface | Status | Supports | Does not prove |
-|---|---:|---|---|
-| Current target one-line draft | `CONFIRMED` draft lineage | Existing intent: `PROCESSED` / `CATALOG` / `TRIPLET` are derived internal closure artifacts; `EvidenceRef -> EvidenceBundle` and policy/release gates remain required; PR-007 keeps live connectors disabled | Acceptance, merge status, runtime enforcement, tests, or PR state |
-| KFM lifecycle doctrine | `CONFIRMED doctrine` | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` and promotion as governed state transition | Current file contents, branch state, or generated artifacts |
-| Hydrology architecture docs | `CONFIRMED public-main doc snapshot` / `NEEDS REVIEW` for active branch | Hydrology proof lane, source intake, normalization, validation, proof assembly, governed delivery, no emergency alerting | Full implementation maturity |
-| Catalog/proof/release ADR family | `CONFIRMED public-main doc snapshot` / `NEEDS REVIEW` for active branch | Catalog, proof, release, receipt, and promotion must remain separate trust surfaces | That all object schemas and gates are implemented |
-| Active repository tests, logs, release artifacts | `UNKNOWN` in this authoring pass | Nothing until inspected | Enforcement maturity |
+This file is intentionally identified as **ADR-0309**. A distinct ADR-0310 exists for WBD terms and rights review, so this document should not carry an ADR-0310 title, metadata title, or back-to-top anchor.
+
+### Current maturity split
+
+| Claim | Label | Review note |
+|---|---:|---|
+| KFM lifecycle law requires `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. | `CONFIRMED doctrine` | This ADR applies that law to hydrology closure artifacts. |
+| The target file exists in the accessible repository at `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md`. | `CONFIRMED repo evidence` | This revision is a replacement-ready body for that path. |
+| The current body needed title/path synchronization. | `CONFIRMED repo evidence` | Existing body identified itself as ADR-0310 despite the ADR-0309 path. |
+| Hydrology domain documentation currently signals a synthetic first slice. | `CONFIRMED repo evidence / thin implementation signal` | The visible hydrology architecture doc is short; this ADR adds boundary specificity without claiming runtime maturity. |
+| Validators, CI, proof packs, release manifests, and public API behavior enforce this ADR. | `UNKNOWN / NEEDS VERIFICATION` | Must be proven in the active checkout. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Decision
 
-KFM will treat hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` outputs as **derived internal closure artifacts** unless and until they are bound into a governed publication transition.
+Hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` outputs are **derived closure artifacts**. They may support publication, review, discovery, graph navigation, and release assembly, but they do **not** by themselves authorize public claims, map layers, exports, Evidence Drawer payloads, Focus Mode answers, Story Nodes, or governed API responses.
 
-A hydrology claim, layer, graph edge, API payload, Evidence Drawer panel, Focus Mode answer, Story Node, export, or map popup is public only when it can resolve:
+A hydrology object becomes public or semi-public only when the release path can resolve the full trust chain:
 
 ```text
-EvidenceRef
+Claim or layer
+  -> EvidenceRef
   -> EvidenceBundle
   -> policy decision
   -> catalog / triplet closure where applicable
-  -> proof and release manifest
+  -> proof pack or release-grade validation evidence
+  -> release manifest
   -> promotion decision
-  -> rollback / correction path
+  -> rollback and correction path
 ```
 
-Moving hydrology bytes into `data/processed/`, emitting catalog metadata, or materializing graph triples is not publication.
+### One-line rule
 
-### Decision rules
-
-1. **`PROCESSED` is a normalized candidate state.**  
-   It may contain validated, versioned, and lineage-bearing hydrology candidates. It is not public truth by itself.
-
-2. **`CATALOG` is closure and discovery, not approval.**  
-   Catalog records, STAC/DCAT/PROV mappings, catalog matrices, and hydrology catalog indexes may make assets discoverable and crosswalkable. They do not prove policy, review, release, or promotion.
-
-3. **`TRIPLET` is a derived graph projection.**  
-   Hydrology triples may support navigation, relationship reasoning, and query acceleration. They must not become canonical hydrology truth or claim support without evidence links.
-
-4. **`EvidenceBundle` outranks derived surfaces.**  
-   Consequential hydrology claims must resolve `EvidenceRef -> EvidenceBundle` before public display, answer, export, or publication.
-
-5. **Promotion changes public release state.**  
-   A `PromotionDecision`, tied to a release manifest, proof pack, catalog closure, review state, policy decision, and rollback target, is required before a candidate is treated as `PUBLISHED`.
-
-6. **PR-007 or equivalent hydrology proof work remains no-live-connector unless separately approved.**  
-   Any hydrology proof slice governed by this ADR should remain fixture-first and no-network by default. Live connectors require source descriptors, rights checks, activation review, and separate validation evidence.
-
-7. **Negative outcomes are first-class.**  
-   Missing evidence, open catalog closure, unresolved source role, unknown rights, stale source posture, or missing release binding must produce `ABSTAIN`, `DENY`, `ERROR`, `hold`, or `quarantine` behavior rather than public-looking output.
-
-### Decision rule
-
-> Hydrology `PROCESSED`, `CATALOG`, and `TRIPLET` artifacts may support publication, but they cannot by themselves authorize public claims, map layers, AI answers, exports, or story surfaces.
+> Closure can support release; closure is not release.
 
 ### Boundary rule
 
-> Public clients, normal UI surfaces, map popups, Evidence Drawer, Focus Mode, exports, and Story Nodes must consume released artifacts and governed API payloads. They must not read `RAW`, `WORK`, `QUARANTINE`, unpublished `PROCESSED` candidates, catalog-only draft records, internal triples, or canonical/internal stores directly.
+> Public clients, ordinary UI surfaces, map popups, Evidence Drawer, Focus Mode, exports, story surfaces, and governed API payloads must consume released artifacts and governed response envelopes. They must not read `RAW`, `WORK`, `QUARANTINE`, unpublished `PROCESSED` candidates, catalog-only draft records, internal triples, proof-only stores, receipt-only stores, direct source connectors, canonical/internal stores, or direct model outputs as public truth.
+
+### Decision rules
+
+1. **`PROCESSED` is candidate state.**  
+   A processed hydrology artifact may be normalized, validated, hashed, and lineage-bearing. It is still upstream of publication.
+
+2. **`CATALOG` is discovery and closure.**  
+   Catalog records, STAC/DCAT/PROV mappings, catalog matrices, and release-catalog indexes make objects discoverable and inspectable. They do not prove review, policy, release, or promotion.
+
+3. **`TRIPLET` is derived graph projection.**  
+   Hydrology triples may help search, navigation, joins, relationship exploration, and reasoning. They are not canonical hydrology truth and must not carry unsupported claim authority.
+
+4. **`EvidenceBundle` is required for consequential claims.**  
+   Any hydrology claim that matters to public interpretation must resolve from `EvidenceRef` to `EvidenceBundle` before display, answer, export, release, or story use.
+
+5. **`PromotionDecision` changes public state.**  
+   Publication requires a governed state transition tied to proof, catalog closure, release manifest, policy, review, correction, and rollback evidence.
+
+6. **Negative outcomes are first-class.**  
+   Missing evidence, open catalog closure, unknown rights, stale source posture, unsupported triples, unresolved release state, or missing rollback target must produce `ABSTAIN`, `DENY`, `ERROR`, `hold`, or `quarantine` behavior rather than public-looking output.
+
+7. **No live connector activation is authorized by this ADR.**  
+   Hydrology proof work governed by this decision should remain fixture-first or no-network unless a separate source-activation decision, rights review, validation record, and release path explicitly allow live-source use.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Context
 
-KFM is a governed, Kansas-first, map-first, time-aware, evidence-first, trust-visible spatial knowledge and publication system. Its public unit of value is the **inspectable claim**: a statement whose source role, evidence, spatial scope, temporal scope, policy posture, review state, release state, correction lineage, and rollback path can be inspected.
+KFM is a governed, Kansas-first, map-first, time-aware, evidence-first spatial knowledge and publication system. Its durable public unit is the **inspectable claim**: a statement whose evidence, source role, spatial scope, temporal scope, policy posture, review state, release state, correction lineage, and rollback path can be inspected.
 
-Hydrology is a strong first proof lane because it is public-safe, place-and-time rich, and naturally suited to proving:
+Hydrology is a strong proof lane because it is place-rich, time-aware, public-relevant, and well suited to testing:
 
-- source descriptors and source-role separation,
-- HUC / hydrologic identity handling,
-- observation and crosswalk normalization,
-- catalog closure,
-- layer manifests,
-- Evidence Drawer drill-through,
-- finite runtime outcomes,
-- release dry-runs,
+- source descriptors and source-role separation;
+- hydrologic identity and watershed boundaries;
+- observation, fixture, and crosswalk normalization;
+- processed candidate validation;
+- catalog closure;
+- graph/triplet projections;
+- layer manifests and map rendering;
+- Evidence Drawer drill-through;
+- finite runtime outcomes;
+- promotion denial and release dry runs;
 - correction and rollback.
 
-That strength also creates a risk. Hydrology pipelines can quickly produce normalized records, catalog metadata, triples, tiles, and maps that look publishable before the trust membrane is complete. This ADR blocks that shortcut.
+That same strength creates a risk: hydrology pipelines can quickly produce clean outputs that look publishable before KFM’s trust membrane is complete. This ADR establishes the closure boundary between **well-formed internal artifacts** and **publicly admissible released knowledge**.
 
 ### Architecture pressure
 
-Without an explicit closure boundary, future contributors may confuse:
-
-| Looks like truth | Actual KFM role |
+| Looks like public truth | Actual KFM role |
 |---|---|
-| A clean `data/processed/hydrology/...` output | Normalized candidate, not publication |
-| A STAC/DCAT/PROV catalog entry | Discovery and provenance surface, not release approval |
-| A hydrology graph triple | Derived relation projection, not canonical proof |
-| A map layer that renders correctly | Visual derivative, not release state |
-| A Focus Mode answer with fluent text | Runtime interpretation, not evidence authority |
-| A `data/published/...` path | Materialized outward scope only if promotion records support it |
+| A clean file under `data/processed/hydrology/` | Normalized candidate, not publication |
+| A STAC/DCAT/PROV catalog entry | Discovery/provenance surface, not release approval |
+| A hydrology triple or graph edge | Derived relation projection, not canonical proof |
+| A rendered map layer | Visual derivative, not release state |
+| A Focus Mode answer | Runtime interpretation, not evidence authority |
+| A path under `data/published/` | Materialized outward surface only if promotion records support it |
+| A receipt showing a successful process | Process memory, not release proof |
+| A source descriptor with high trust | Source role signal, not public claim evidence |
+
+### Related decisions
+
+| ADR | Relationship |
+|---|---|
+| [`ADR-0011-catalog-proof-release-separation.md`](./ADR-0011-catalog-proof-release-separation.md) | Establishes that catalog, proof, receipts, release manifests, and promotion decisions have separate authority. |
+| [`ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md`](./ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md) | Governs synthetic ingest before the processed/catalog/triplet seam. |
+| [`ADR-0310-hydrology-wbd-terms-rights-review.md`](./ADR-0310-hydrology-wbd-terms-rights-review.md) | Governs WBD/HUC12 terms, rights, and source-activation posture. |
+| [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Proposes `schemas/contracts/v1/` for machine schemas while `contracts/` defines meaning. |
+| [`ADR-0206-maplibre-layer-manifest.md`](./ADR-0206-maplibre-layer-manifest.md) | Related downstream layer-manifest boundary for MapLibre surfaces. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -167,231 +208,276 @@ Without an explicit closure boundary, future contributors may confuse:
 
 ```mermaid
 flowchart LR
-    RAW["RAW<br/>source-native hydrology capture"]
-    WORK["WORK<br/>normalize + QA"]
-    Q["QUARANTINE<br/>blocked / unresolved"]
-    PROC["PROCESSED<br/>normalized candidate"]
-    CAT["CATALOG<br/>STAC / DCAT / PROV / CatalogMatrix"]
-    TRI["TRIPLET<br/>derived graph projection"]
-    EB["EvidenceBundle<br/>claim support"]
-    PP["ProofPack<br/>release-grade checks"]
-    RM["ReleaseManifest<br/>released artifact inventory"]
-    PD["PromotionDecision<br/>state transition"]
-    PUB["PUBLISHED<br/>governed outward materialization"]
-    API["Governed API<br/>finite envelopes"]
-    UI["MapLibre / Evidence Drawer / Focus Mode<br/>trust-visible clients"]
-    RB["Rollback / Correction<br/>visible lineage"]
+  RAW["RAW<br/>source-native or fixture capture"]
+  WORK["WORK<br/>transform + QA"]
+  Q["QUARANTINE<br/>blocked / unresolved / unsafe"]
+  PROC["PROCESSED<br/>normalized hydrology candidate"]
+  CAT["CATALOG<br/>catalog record / CatalogMatrix"]
+  TRI["TRIPLET<br/>derived graph projection"]
+  EB["EvidenceBundle<br/>claim support"]
+  PP["ProofPack<br/>release-grade checks"]
+  RM["ReleaseManifest<br/>release inventory"]
+  PD["PromotionDecision<br/>governed state transition"]
+  PUB["PUBLISHED<br/>governed outward materialization"]
+  API["Governed API<br/>finite envelopes"]
+  UI["MapLibre / Evidence Drawer / Focus Mode<br/>trust-visible clients"]
+  RB["Rollback / Correction<br/>visible lineage"]
 
-    RAW --> WORK
-    WORK --> Q
-    WORK --> PROC
-    PROC --> CAT
-    PROC --> TRI
-    PROC --> EB
-    CAT --> PP
-    TRI --> PP
-    EB --> PP
-    PP --> RM
-    RM --> PD
-    PD -->|promote| PUB
-    PD -->|hold / deny / quarantine| Q
-    PUB --> API
-    API --> UI
-    PD --> RB
-    PUB --> RB
+  RAW --> WORK
+  WORK --> Q
+  WORK --> PROC
+  PROC --> CAT
+  PROC --> TRI
+  PROC --> EB
+  CAT --> PP
+  TRI --> PP
+  EB --> PP
+  PP --> RM
+  RM --> PD
+  PD -->|promote| PUB
+  PD -->|hold / deny / abstain / error| Q
+  PUB --> API
+  API --> UI
+  PD --> RB
+  PUB --> RB
 
-    classDef internal fill:#fff7ed,stroke:#f97316,color:#111827;
-    classDef closure fill:#eef2ff,stroke:#6366f1,color:#111827;
-    classDef release fill:#ecfdf5,stroke:#059669,color:#111827;
-    classDef blocked fill:#fef2f2,stroke:#dc2626,color:#111827;
+  classDef internal fill:#fff7ed,stroke:#d97706,color:#111827;
+  classDef closure fill:#eef2ff,stroke:#4f46e5,color:#111827;
+  classDef release fill:#ecfdf5,stroke:#059669,color:#111827;
+  classDef blocked fill:#fef2f2,stroke:#dc2626,color:#111827;
 
-    class RAW,WORK,PROC internal;
-    class CAT,TRI,EB,PP closure;
-    class RM,PD,PUB,API,UI,RB release;
-    class Q blocked;
+  class RAW,WORK,PROC internal;
+  class CAT,TRI,EB,PP closure;
+  class RM,PD,PUB,API,UI,RB release;
+  class Q blocked;
 ```
 
-The safe reading is simple: **closure can support release; closure is not release.**
+### Safe reading
+
+`PROCESSED`, `CATALOG`, and `TRIPLET` are useful only when downstream gates preserve the evidence chain. They are not themselves public truth states.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Hydrology closure rules
+## Authority map
 
-### Object-family boundary map
-
-| Object family | Hydrology role | Public-use condition | Must not become |
+| Object family | Hydrology role | May support public use when... | Must not become |
 |---|---|---|---|
-| `SourceDescriptor` | Defines hydrology source identity, role, rights, cadence, access, and citation posture | Source role and rights must allow intended use | A live connector authorization by itself |
-| `IntakeReceipt` / `RunReceipt` | Records fetch, fixture run, transform, validation, or dry-run context | May support audit and replay after redaction/review | Release approval |
-| `DatasetVersion` / processed candidate | Stable normalized hydrology candidate | Must pass validation, evidence, policy, catalog, proof, and promotion gates | Public truth merely because it is normalized |
-| `EvidenceRef` | Pointer from claim/layer/record to evidence support | Must resolve to `EvidenceBundle` before consequential public claim | A dangling citation string |
-| `EvidenceBundle` | Resolved claim support, caveats, rights, source role, review, and release posture | Required for public hydrology claims and answer support | Release approval by itself |
-| `CatalogRecord` / `CatalogMatrix` | Discovery, STAC/DCAT/PROV/internal closure | Must close over artifact ids, evidence refs, manifests, and digests before promotion | Policy or proof substitute |
-| `Triplet` / graph edge | Derived relation projection for navigation and reasoning | Must cite evidence and remain marked as derived | Canonical hydrology store |
-| `LayerManifest` | Layer-facing control object for map rendering | Must reference release, artifact, evidence, time, geometry, sensitivity, stale, and correction state | Tile bytes or policy engine |
-| `ProofPack` | Release-grade evidence, policy, validation, sensitivity, catalog, digest, review, and rollback closure | Required before release | Catalog-only metadata |
-| `ReleaseManifest` | Public/steward release inventory and digest binding | Must bind proof, catalog, rollback, correction, and release state | Canonical truth |
-| `PromotionDecision` | Governed state transition | Required before `PUBLISHED` meaning changes | File movement |
-| `CorrectionNotice` / `RollbackReference` | Visible release lineage and recovery path | Required when meaning changes after release | Silent overwrite |
+| `SourceDescriptor` | Defines source identity, role, rights, cadence, access, caveats, and citation posture. | Source role, rights, and activation state support the intended use. | EvidenceBundle, release approval, or live connector authorization by itself. |
+| `RunReceipt` / `TransformReceipt` | Records process execution, fixture run, transform, validation, or dry-run behavior. | Used as audit/process memory inside proof assembly. | Proof by itself or public claim support. |
+| `DatasetVersion` / processed candidate | Stores normalized candidate hydrology data. | Bound to evidence, catalog, policy, proof, release, promotion, and rollback. | Public truth merely because it is normalized. |
+| `EvidenceRef` | Points from claim, layer, record, or edge to support evidence. | It resolves to an EvidenceBundle. | A dangling citation string. |
+| `EvidenceBundle` | Resolves claim support, limitations, source refs, rights, and review/release posture. | Required for consequential hydrology claims. | Promotion decision or release inventory. |
+| `CatalogRecord` / `CatalogMatrix` | Supports discovery, provenance, catalog closure, and STAC/DCAT/PROV mapping. | Closed over release IDs, artifact refs, evidence refs, and digests. | Policy decision, proof pack, or publication approval. |
+| `Triplet` / graph edge | Supports navigation, relation browsing, crosswalk reasoning, and query acceleration. | Marked derived and backed by evidence refs where it supports a claim. | Canonical hydrology truth. |
+| `LayerManifest` | Controls map-layer identity, release binding, evidence policy, time, stale state, sensitivity, and correction behavior. | Bound to released artifacts and governed API resolution. | Tile bytes, policy engine, or proof pack. |
+| `ProofPack` | Assembles release-grade validation, policy, evidence, sensitivity, catalog, integrity, review, and rollback checks. | Complete and linked to release manifest and promotion decision. | Catalog-only metadata or storage location. |
+| `ReleaseManifest` | Inventories released artifacts, digests, public aliases, correction refs, and rollback refs. | Linked to proof, policy, review, catalog closure, and promotion decision. | Canonical truth or proof by itself. |
+| `PromotionDecision` | Changes admissible public release state. | Finite decision over candidate, evidence, proof, policy, release, and rollback. | File movement or path rename. |
+| `CorrectionNotice` / `RollbackReference` | Preserves public lineage after correction, supersession, withdrawal, narrowing, redaction, or rollback. | Linked to affected releases and visible to the proper audience. | Silent replacement. |
 
-### Required hydrology behavior
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Hydrology rules
+
+### Required behavior
 
 | Condition | Required outcome |
 |---|---|
-| Processed hydrology candidate has no `EvidenceRef` | `ABSTAIN` for public claim; hold candidate |
+| Processed hydrology candidate has no `EvidenceRef` | `ABSTAIN` for public claim; hold release candidate |
 | `EvidenceRef` does not resolve to `EvidenceBundle` | `ABSTAIN` or `ERROR`, depending on failure mode |
-| Catalog entry exists but catalog closure is open | Hold release; do not promote |
-| Triplet exists without evidence-backed relation | Reject or quarantine triplet projection |
-| Source rights or source role is unknown | `DENY` or `QUARANTINE` public use |
+| Catalog record exists but closure is open | Hold release; do not promote |
+| Triplet relation lacks evidence support and would be used as a claim | Reject, quarantine, or mark non-claiming derived context |
+| Source rights, source role, or activation state is unknown | `DENY`, `ABSTAIN`, or `QUARANTINE` public use |
 | Release manifest lacks rollback target | Hold release |
-| Public UI attempts to read `RAW`, `WORK`, `QUARANTINE`, or unpublished `PROCESSED` data directly | `DENY` and create follow-up validation item |
-| Focus Mode receives unresolved or unreleased hydrology context | `ABSTAIN`, `DENY`, or `ERROR`; never fluent unsupported answer |
-| Hydrology source becomes stale | Mark stale, abstain on freshness-sensitive claims, or require refresh/review |
-| Published hydrology meaning changes | Emit correction, supersession, withdrawal, or rollback lineage |
+| Public UI attempts direct read of `RAW`, `WORK`, `QUARANTINE`, unpublished `PROCESSED`, catalog-only draft records, or internal triples | `DENY` and open a validation item |
+| Focus Mode receives unresolved or unreleased hydrology context | `ABSTAIN`, `DENY`, or `ERROR`; never unsupported answer |
+| Hydrology source becomes stale | Mark stale and abstain on freshness-sensitive claims until refreshed/reviewed |
+| Published hydrology meaning changes | Emit correction, supersession, withdrawal, narrowing, generalization, or rollback lineage |
+
+### Accepted inputs for this boundary
+
+The following belong in the processed/catalog/triplet closure discussion when they are properly labeled, validated, and reviewable:
+
+- processed candidate records;
+- source refs and source-role summaries;
+- EvidenceRefs and EvidenceBundles;
+- catalog records and catalog matrices;
+- graph/triplet relation projections;
+- layer manifest references;
+- validation reports and proof-pack inputs;
+- release-candidate manifests;
+- promotion decisions;
+- rollback references and correction notices;
+- negative-path fixtures proving fail-closed behavior.
+
+### Exclusions
+
+This ADR does **not** authorize:
+
+| Exclusion | Reason |
+|---|---|
+| Live hydrology connector activation | Requires separate source activation, source terms, rights, cadence, receipt, and policy review. |
+| Public release from `RAW`, `WORK`, or `QUARANTINE` | Governed by earlier lifecycle boundary; those stages remain internal. |
+| Public release from `PROCESSED` alone | Normalization is not publication. |
+| Public release from catalog metadata alone | Catalog is discovery/provenance, not approval. |
+| Public release from graph triples alone | Triples are derived projections, not canonical truth. |
+| Receipts as public evidence | Receipts are process memory. |
+| AI output as evidence or release proof | AI is interpretive and evidence-subordinate. |
+| Emergency or life-safety guidance | KFM is not an emergency alerting system. |
+| Silent overwrite of public hydrology outputs | Corrections and rollback must remain visible. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Options considered
 
-| Option | Description | Benefits | Risks / costs | Evidence posture | Outcome |
-|---|---|---|---|---|---|
-| A. Treat `PROCESSED` as public-ready | Normalized hydrology candidates become public after validation | Fastest path to visible maps and exports | Collapses lifecycle, skips evidence/release, creates false authority | Conflicts with KFM lifecycle doctrine | Rejected |
-| B. Treat catalog closure as publication | Catalog record or STAC/DCAT/PROV entry authorizes public use | Makes metadata central and easy to inspect | Confuses discovery/provenance with policy/review/release | Conflicts with catalog/proof/release separation | Rejected |
-| C. Treat triples as graph truth | Hydrology graph projection becomes a claim source | Useful for query speed and relation browsing | Turns derived graph into canonical truth; risks evidence-free edges | Conflicts with derivative-not-truth doctrine | Rejected |
-| D. Require promotion over evidence, policy, catalog, proof, release, and rollback | Closure supports publication but does not replace it | Preserves trust membrane and reversible publication | More fields, fixtures, and validators required | Best aligned with KFM doctrine | **Chosen** |
+| Option | Description | Benefit | Risk | Outcome |
+|---|---|---|---|---|
+| Treat `PROCESSED` as public-ready | Normalized hydrology candidates become public after validation. | Fastest visible maps and exports. | Collapses lifecycle and skips release state. | Rejected |
+| Treat catalog closure as publication | Catalog record or STAC/DCAT/PROV entry authorizes public use. | Makes metadata central. | Confuses discovery with policy/review/release. | Rejected |
+| Treat triples as graph truth | Hydrology graph projection becomes claim source. | Useful for query speed. | Turns derived graph into canonical truth. | Rejected |
+| Require promotion over evidence, policy, catalog, proof, release, and rollback | Closure supports publication but does not replace it. | Preserves trust membrane and reversibility. | Requires more fixtures, validators, and review. | **Chosen** |
 
 ### Rejected shortcuts
 
 | Shortcut | Why rejected | What could reopen discussion |
 |---|---|---|
-| Public map layer from `data/processed/hydrology/` | Rendering is not release | A successor ADR proving a governed released artifact adapter, not a direct path |
-| Public claim from catalog metadata alone | Catalog is discovery/closure, not evidence support or policy approval | Stronger release profile that still requires `PromotionDecision` |
-| Focus Mode answer from catalog snippets only | AI is interpretive and evidence-subordinate | Citation validator plus resolved `EvidenceBundle` and finite envelope |
-| Graph query answer from internal triples alone | Triples are derived projections | Evidence-linked graph profile with explicit support and release state |
+| Public map layer from `data/processed/hydrology/` | Rendering is not release. | A governed adapter that consumes released artifact manifests, not internal paths. |
+| Public claim from catalog snippets | Catalog prose is not EvidenceBundle support. | EvidenceBundle closure and citation validation. |
+| Focus Mode answer from catalog-only context | AI cannot turn metadata into proof. | Resolved EvidenceBundle plus runtime envelope and policy checks. |
+| Graph answer from internal triples alone | Triples are derived. | Evidence-linked graph profile with explicit release state. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Impact map
 
-### File and documentation impact
+### Documentation and file impact
 
 | Area | Required update | Status |
 |---|---|---|
-| `docs/adr/` | Add or revise this ADR; reconcile numbering conflict with existing `ADR-0207-governed-ai-runtime-envelope.md` | `NEEDS VERIFICATION` |
-| `docs/adr/README.md` | Add this ADR to inventory or choose successor filename/number | `NEEDS VERIFICATION` |
-| `docs/domains/hydrology/ARCHITECTURE.md` | Link this ADR from hydrology boundaries / lifecycle closure | `PROPOSED` |
-| `docs/runbooks/hydrology/` | Add processed/catalog/triplet closure checks to promotion and rollback runbooks if those runbooks exist | `PROPOSED / NEEDS VERIFICATION` |
-| `data/registry/layers/` | Ensure hydrology layer entries reference release state and EvidenceBundle requirements | `PROPOSED / NEEDS VERIFICATION` |
-| `data/processed/hydrology/` | Keep as candidate/derived state, not public authority | `PROPOSED / NEEDS VERIFICATION` |
-| `data/catalog/` | Keep catalog closure distinct from proof and release approval | `PROPOSED / NEEDS VERIFICATION` |
-| `data/triplets/hydrology/` | Require evidence-backed relation refs and derived status | `PROPOSED / NEEDS VERIFICATION` |
-| `data/proofs/` | Store or reference EvidenceBundles / proof packs if repo conventions confirm this home | `PROPOSED / NEEDS VERIFICATION` |
-| `release/` | Bind release manifests, promotion decisions, rollback targets, and correction notices | `PROPOSED / NEEDS VERIFICATION` |
-| `schemas/contracts/v1/` | Add/verify schemas for closure-bearing objects without duplicating schema authority | `PROPOSED / NEEDS VERIFICATION` |
-| `policy/` | Add/verify policy rules that deny public use of open closure, unknown rights, direct internal reads, and missing evidence | `PROPOSED / NEEDS VERIFICATION` |
-| `tests/` / `fixtures/` | Add no-network valid/invalid hydrology closure fixtures | `PROPOSED / NEEDS VERIFICATION` |
-| `.github/workflows/` | Add or update thin CI jobs only after repo-native workflow conventions are verified | `PROPOSED / NEEDS VERIFICATION` |
-
-### Lifecycle impact
-
-| Lifecycle stage | Decision effect | Guardrail |
-|---|---|---|
-| Source edge | No live hydrology connector activation by this ADR | Require source descriptor and activation review |
-| RAW | Captures source-native input only | No public or Focus Mode access |
-| WORK | Supports transform and QA | Fail to `QUARANTINE` on unresolved state |
-| QUARANTINE | Holds blocked or unsafe material | Public outputs denied |
-| PROCESSED | Holds normalized candidates | Not public truth |
-| CATALOG | Holds discovery/provenance/closure | Not release approval |
-| TRIPLET | Holds derived relation projection | Evidence-backed and derived only |
-| PUBLISHED | Only after promotion | Release manifest, proof, review, rollback, correction path |
+| `docs/adr/ADR-0309-hydrology-processed-catalog-closure-boundary.md` | Synchronize meta title, H1, badges, anchors, decision identity, and body with ADR-0309. | `PROPOSED revision` |
+| `docs/adr/README.md` | Add or verify ADR-0309 inventory entry and clarify relationship to ADR-0308 and ADR-0310. | `NEEDS VERIFICATION` |
+| `docs/domains/hydrology/ARCHITECTURE.md` | Link this ADR from hydrology lifecycle/closure boundary notes. | `PROPOSED` |
+| `data/registry/layers/README.md` | Keep layer entries release-aware and EvidenceBundle-bound. | `PROPOSED / NEEDS VERIFICATION` |
+| `data/catalog/README.md` | Keep catalog closure distinct from release approval. | `PROPOSED / NEEDS VERIFICATION` |
+| `data/triplets/` or repo-native graph projection home | Require hydrology triples to stay derived and evidence-linked when claim-bearing. | `PROPOSED / NEEDS VERIFICATION` |
+| `data/proofs/` | Store or reference proof packs and EvidenceBundles if repo conventions confirm this home. | `PROPOSED / NEEDS VERIFICATION` |
+| `release/` | Bind ReleaseManifest, PromotionDecision, rollback, and correction objects. | `PROPOSED / NEEDS VERIFICATION` |
+| `schemas/contracts/v1/` | Add or verify closure-bearing schemas without duplicating schema authority. | `PROPOSED / NEEDS VERIFICATION` |
+| `policy/` | Deny public use from open closure, unknown rights, missing evidence, direct internal reads, and missing rollback. | `PROPOSED / NEEDS VERIFICATION` |
+| `tests/` / `fixtures/` | Add no-network positive and negative hydrology closure fixtures. | `PROPOSED / NEEDS VERIFICATION` |
+| `.github/workflows/` | Add or update CI only after repo-native workflow conventions and successful execution are verified. | `PROPOSED / NEEDS VERIFICATION` |
 
 ### Trust-surface impact
 
 | Surface | Effect | Required check |
 |---|---|---|
-| Governed API | Must serve finite outcomes over released hydrology evidence only | Contract and negative-path fixture |
-| MapLibre shell | May render only release-backed or clearly internal/dry-run layers | Layer manifest and release binding |
-| Evidence Drawer | Must show evidence, source role, time, policy, release, stale, correction, and rollback context | Drawer payload fixture |
-| Focus Mode / governed AI | Must use resolved EvidenceBundle and finite runtime envelope | Citation validation and policy pre/postcheck |
-| Public exports / Story Nodes | Must reference release manifest and correction state | Release and catalog closure |
-| Catalog / search / graph projections | Must be marked as discovery or derived surfaces | CatalogMatrix / triplet validation |
+| Governed API | Serve only release-backed hydrology payloads or finite negative outcomes. | Contract and negative-path fixtures |
+| MapLibre shell | Render only release-backed or clearly internal/dry-run layers. | LayerManifest and release binding |
+| Evidence Drawer | Show source role, evidence, time, policy, release, stale, correction, and rollback state. | Drawer payload fixture |
+| Focus Mode | Answer only from resolved EvidenceBundle and finite runtime envelope. | Citation validation and policy pre/postcheck |
+| Catalog / search | Stay discovery/provenance surfaces. | CatalogMatrix validation |
+| Graph / triplets | Stay derived and evidence-linked when claim-bearing. | Triplet evidence validator |
+| Public exports / stories | Reference ReleaseManifest and correction state. | Release and rollback fixture |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Policy, rights, and sensitivity
 
-| Question | Answer | Status |
+Hydrology is usually a safer proof lane than archaeology, rare species, living-person data, DNA, or critical infrastructure. It is still not risk-free.
+
+| Question | Decision posture | Status |
 |---|---|---|
-| Does this decision affect public release eligibility? | Yes. It blocks public release from processed/catalog/triplet state alone. | `CONFIRMED doctrine / PROPOSED enforcement` |
-| Does it affect exact location exposure? | Indirectly. Hydrology is usually public-safe, but infrastructure, private, hazard, or sensitive join contexts may require restriction. | `NEEDS VERIFICATION` |
-| Does it affect emergency or life-safety behavior? | Yes. Hydrology products must not become emergency alerting or life-safety instruction surfaces. | `CONFIRMED doctrine` |
-| Does it affect governed AI? | Yes. Focus Mode must not answer from unresolved hydrology closure artifacts. | `PROPOSED enforcement` |
-| Does it require steward or policy review? | Yes, before acceptance and before live source activation or public release. | `NEEDS VERIFICATION` |
-| Does it change correction, withdrawal, or rollback behavior? | It requires visible correction/rollback lineage before promotion. | `PROPOSED enforcement` |
+| Does this ADR affect public release eligibility? | Yes. It blocks release from `PROCESSED`, `CATALOG`, or `TRIPLET` state alone. | `CONFIRMED doctrine / PROPOSED enforcement` |
+| Does it affect exact location exposure? | Indirectly. Hydrology joined with infrastructure, hazard, private, or stewardship context may require restriction or generalization. | `NEEDS VERIFICATION` |
+| Does it affect emergency or life-safety behavior? | Yes. Hydrology surfaces must not become emergency alerting or life-safety instruction. | `CONFIRMED doctrine` |
+| Does it affect governed AI? | Yes. Focus Mode must not answer from unresolved closure artifacts. | `PROPOSED enforcement` |
+| Does it require steward or policy review? | Yes, before acceptance and before public release behavior relies on it. | `NEEDS VERIFICATION` |
+| Does it change correction or rollback behavior? | It requires rollback and correction paths before promotion. | `PROPOSED enforcement` |
 
 > [!CAUTION]
-> When rights, source role, freshness, identity, evidence closure, release state, or rollback target is unclear, hydrology public surfaces should fail closed through `ABSTAIN`, `DENY`, `ERROR`, `hold`, or `quarantine`.
+> When rights, source role, freshness, identity, evidence closure, catalog closure, release state, or rollback target is unclear, hydrology public surfaces should fail closed through `ABSTAIN`, `DENY`, `ERROR`, `hold`, or `quarantine`.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Validation plan
 
-The commands below are **review targets**, not confirmed current repo commands. Replace with repo-native tooling after the active checkout is inspected.
+The commands below are **candidate review targets**, not confirmed current repo commands. Replace them with repo-native commands after the active checkout is inspected.
 
 ### Required checks
 
 | Check | Candidate command / artifact | Expected result | Status |
 |---|---|---|---|
-| ADR inventory check | `find docs/adr -maxdepth 1 -type f -name 'ADR-*.md' \| sort` | Numbering conflict is resolved or documented | `NEEDS VERIFICATION` |
-| Hydrology closure fixture validation | `python tools/validators/hydrology/validate_closure.py --fixtures tests/fixtures/hydrology/closure` | Valid fixtures pass; open closure fails | `PROPOSED` |
-| Direct public internal-read check | `grep -RInE "data/(raw|work|quarantine|processed/hydrology)" apps packages docs data/registry 2>/dev/null` | Public/runtime paths do not bypass governed API and release state | `PROPOSED` |
-| Catalog closure negative test | `python tools/validators/promotion_gate/run.py tests/fixtures/hydrology/fail/catalog_open.json` | Outcome is `DENY`, `hold`, or `ERROR` with reason | `PROPOSED` |
-| Evidence closure test | `python tools/validators/evidence/resolve_bundle.py --fixture tests/fixtures/hydrology/evidence_ref.json` | `EvidenceRef` resolves to `EvidenceBundle`; unresolved refs fail | `PROPOSED` |
-| Triplet evidence test | `python tools/validators/triplets/validate_edges.py --domain hydrology` | Edges without evidence refs fail | `PROPOSED` |
-| Release dry run | `python tools/validators/promotion_gate/run.py tests/fixtures/hydrology/pass/release_candidate.json` | Promotion passes only when evidence, policy, catalog, proof, manifest, review, and rollback close | `PROPOSED` |
-| Focus Mode negative test | Repo-native runtime fixture | Missing EvidenceBundle produces `ABSTAIN` or `DENY`, not an answer | `PROPOSED` |
+| ADR inventory | `find docs/adr -maxdepth 1 -type f -name 'ADR-*.md' \| sort` | ADR-0309 appears and does not collide with ADR-0310. | `NEEDS VERIFICATION` |
+| ADR link sync | `grep -RIn "ADR-0309-hydrology-processed-catalog" docs data release policy tests tools 2>/dev/null` | Related docs link to this ADR where relevant. | `PROPOSED` |
+| Evidence closure | `python tools/validators/evidence/resolve_bundle.py --fixture tests/fixtures/hydrology/evidence_ref.json` | `EvidenceRef` resolves to `EvidenceBundle`; unresolved refs fail. | `PROPOSED` |
+| Catalog closure | `python tools/validators/catalog/validate_catalog_matrix.py --domain hydrology` | CatalogMatrix closes over artifacts, manifests, evidence, and digests. | `PROPOSED` |
+| Triplet support | `python tools/validators/triplets/validate_edges.py --domain hydrology` | Claim-bearing edges without evidence refs fail. | `PROPOSED` |
+| Promotion gate | `python tools/validators/promotion_gate/run.py tests/fixtures/hydrology/release_candidate.json` | Promotion passes only when evidence, policy, catalog, proof, manifest, review, and rollback close. | `PROPOSED` |
+| Direct public internal-read check | `grep -RInE "data/(raw|work|quarantine|processed/hydrology)" apps packages data/registry docs 2>/dev/null` | Public/runtime surfaces do not bypass governed API and release state. | `PROPOSED` |
+| Focus Mode negative fixture | Repo-native runtime fixture | Missing EvidenceBundle produces `ABSTAIN`, `DENY`, or `ERROR`, not an answer. | `PROPOSED` |
+| Release rollback check | Release fixture without rollback target | Fails release or promotion gate. | `PROPOSED` |
 
-### Negative-path behavior
+### Negative-path fixture matrix
 
-| Failure condition | Expected outcome | Test posture |
+| Failure condition | Expected outcome | Fixture requirement |
 |---|---|---|
-| `PROCESSED` candidate has no evidence refs | `ABSTAIN` public claim; hold release | Required negative fixture |
-| Catalog record exists but release manifest missing | Hold release | Required negative fixture |
-| Triplet relation lacks evidence support | Reject or quarantine projection | Required negative fixture |
-| Source rights unknown | `DENY` or `QUARANTINE` | Required policy fixture |
-| Public UI bypasses governed API | `DENY` and open defect | Required static check |
-| Rollback target missing | Hold release | Required release fixture |
+| `PROCESSED` candidate has no EvidenceRef | `ABSTAIN` public claim; hold release | Required |
+| EvidenceRef is dangling | `ABSTAIN` or `ERROR` | Required |
+| Catalog record exists but CatalogMatrix is open | Hold release | Required |
+| Triplet relation lacks evidence support | Reject, quarantine, or mark non-claiming | Required |
+| Unknown source rights or source role | `DENY` or `QUARANTINE` | Required |
+| Public client attempts direct internal read | `DENY` and validation failure | Required |
+| ReleaseManifest lacks rollback target | Hold release | Required |
+| AI answer is based only on catalog/triplet text | `ABSTAIN` or `DENY` | Required |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Rollback and correction
 
+If this ADR conflicts with stronger repository evidence or a later accepted decision, preserve the file as lineage and supersede it explicitly.
+
 ### Rollback plan
 
-If this decision causes implementation friction or conflicts with stronger repo evidence:
-
-1. Mark this ADR `CONFLICTED` or `superseded`.
+1. Mark this ADR `CONFLICTED`, `superseded`, `withdrawn`, or `deprecated`.
 2. Add a successor ADR or correction note.
 3. Preserve the original rationale and target path for lineage.
-4. Update ADR index, hydrology architecture links, runbooks, validators, schemas, and layer registry references.
-5. Do not delete emitted receipts, proof packs, release manifests, catalog records, or correction notices unless safety, privacy, rights, or security review requires removal.
+4. Update ADR index, hydrology docs, layer registry references, validators, schemas, policies, fixtures, release docs, and runbooks.
+5. Disable public hydrology outputs that relied on invalid closure logic.
+6. Preserve receipts, proof packs, release manifests, catalog records, correction notices, and rollback records unless safety, privacy, rights, or security review requires removal.
 
 ### Rollback triggers
 
 | Trigger | Required action |
 |---|---|
-| ADR number conflict blocks merge | Rename or supersede using verified ADR numbering policy |
-| Existing accepted ADR already governs this exact boundary | Link to it and withdraw this draft |
-| Schema-home decision contradicts path references | Update impact map; do not duplicate schema authority |
-| Policy-home decision contradicts path references | Update policy references; do not maintain parallel rules |
-| Live hydrology connector is enabled without source activation review | Disable connector, quarantine outputs, issue correction/rollback if public surface was affected |
-| Public hydrology output bypasses EvidenceBundle or promotion | Withdraw output, issue correction notice, add negative test |
+| ADR number/title conflict reappears | Correct title/meta/index or supersede with verified naming. |
+| Existing accepted ADR already governs this exact boundary | Link to it and withdraw this draft. |
+| Schema-home decision contradicts path references | Update impact map; do not duplicate schema authority. |
+| Policy-home decision contradicts path references | Update policy references; do not maintain parallel rules. |
+| Live hydrology connector is enabled without source activation review | Disable connector, quarantine outputs, and issue correction if public surface was affected. |
+| Public hydrology output bypasses EvidenceBundle or PromotionDecision | Withdraw output, issue correction notice, add negative test. |
+| Catalog or triplet projection becomes public proof | Reclassify as derived context, repair evidence links, and add denial fixture. |
 
 ### Supersession rule
 
 A successor ADR may narrow, expand, or replace this decision only if it preserves the core invariant:
 
 > Derived hydrology closure artifacts remain downstream of evidence and upstream of governed publication; they do not become public truth by themselves.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -401,55 +487,73 @@ A successor ADR may narrow, expand, or replace this decision only if it preserve
 
 - Prevents normalized hydrology candidates from being mistaken for release-approved truth.
 - Keeps catalog metadata useful without turning metadata into policy or release authority.
-- Keeps graph/triplet projections evidence-backed and visibly derived.
+- Keeps graph/triplet projections evidence-linked and visibly derived.
 - Protects Evidence Drawer and Focus Mode from unsupported hydrology claims.
-- Gives PR-007 or equivalent hydrology proof work a clear no-live-connector, no-publication shortcut boundary.
+- Keeps ADR-0310 focused on WBD rights/source activation rather than closure authority.
+- Gives hydrology proof work a clear no-shortcut boundary after synthetic ingest.
 - Makes rollback and correction part of the release burden before public exposure.
 
-### Tradeoffs and risks
+### Tradeoffs
 
-| Risk | Mitigation | Residual status |
-|---|---|---|
-| More gates slow early visible demos | Use tiny no-network hydrology fixtures and dry-run release candidates | Acceptable |
-| Contributors may still conflate catalog and proof | Link this ADR from hydrology docs, catalog docs, and promotion runbooks | `NEEDS VERIFICATION` |
-| ADR numbering conflict creates confusion | Reconcile ADR index before acceptance | `NEEDS VERIFICATION` |
-| Exact validator paths are unknown | Mark commands as candidate checks and adapt to repo-native tooling | `UNKNOWN` |
-| Hydrology closure terms may drift from shared object-family vocabulary | Keep object families aligned with contracts/schemas ADRs | `NEEDS VERIFICATION` |
+| Tradeoff | Mitigation |
+|---|---|
+| More gates slow early visible demos. | Use tiny no-network fixtures and release dry-runs. |
+| More object families increase review burden. | Keep authority table explicit and add negative-path fixtures. |
+| Contributors may still confuse catalog and proof. | Link this ADR from catalog, hydrology, layer registry, and release docs. |
+| Exact validator paths are not confirmed. | Mark candidate commands as `PROPOSED` and adapt to repo-native tooling. |
+| Existing content may have ADR-0310 references. | Synchronize metadata, H1, anchors, ADR index, and related links. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Open verification
 
-| Question | Why it matters | Verification path | Owner |
+| Item | Why it matters | Verification path | Owner |
 |---|---|---|---|
-| Should this ADR remain `ADR-0310` or be renumbered? | Public ADR inventory also lists another `ADR-0310` | Inspect active `docs/adr/` index and branch history | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Is the current one-line target draft already committed in the active branch? | Determines whether this is a revision or new file | Inspect active checkout and git history | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Which schema home is accepted for hydrology closure objects? | Prevents duplicate `contracts/` vs `schemas/` authority | Read accepted schema-home ADR and active schema tree | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Where do hydrology proof packs, EvidenceBundles, and release manifests live in the active repo? | Prevents wrong impact map | Inspect `data/proofs/`, `release/`, `schemas/`, `contracts/`, and tests | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Does PR-007 exist, and what exactly does it change? | Target draft references PR-007 | Inspect PR metadata or local branch commit history | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Are live hydrology connectors disabled in the proof slice? | This ADR assumes fixture-first/no-network behavior | Inspect connectors, config defaults, CI, and runtime logs | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Which tests enforce processed/catalog/triplet non-public behavior? | Converts ADR from doctrine to enforceable behavior | Inspect tests and CI results | `OWNER_TBD_NEEDS_VERIFICATION` |
-| Are there existing hydrology layer manifests that need migration? | Avoids silent breakage | Inspect `data/registry/layers/` and hydrology layer fixtures | `OWNER_TBD_NEEDS_VERIFICATION` |
+| ADR-0309 appears in ADR index | The target file exists, but the index must list it for navigation and governance. | Inspect and update `docs/adr/README.md`. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Created date | Avoid fabricated metadata. | Inspect git history or document registry. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Owners and policy label | Review and release burden must be explicit. | Verify CODEOWNERS, document registry, or maintainer assignment. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Schema-home acceptance | Prevents duplicate contract/schema authority. | Confirm ADR-0001 status and active schema tree. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Hydrology proof-slice status | Distinguishes doctrine from implementation. | Inspect fixtures, validators, workflows, release dry-runs, and test output. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| PR-007 or legacy PR reference | Existing draft language referenced PR-007; existence and scope were not verified in this revision pass. | Inspect PR metadata or branch history. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Live connector defaults | This ADR assumes no live connector activation by itself. | Inspect connectors, configs, CI, and runtime logs. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Catalog closure implementation | Converts catalog boundary from doctrine to enforcement. | Inspect catalog schemas, fixtures, validators, and workflow results. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Triplet evidence enforcement | Prevents graph projections from becoming truth. | Inspect triplet schemas, graph loaders, validators, and tests. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Focus Mode negative behavior | Prevents unsupported fluent answers. | Inspect runtime envelope fixtures and citation validation tests. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Public internal-read denial | Protects trust membrane. | Inspect public API/UI/static-path tests. | `OWNER_TBD_NEEDS_VERIFICATION` |
+| Release and rollback artifacts | Required before publication. | Inspect `release/`, `data/proofs/`, `data/catalog/`, `data/published/`, and emitted artifacts. | `OWNER_TBD_NEEDS_VERIFICATION` |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Review checklist
 
-- [ ] ADR number and filename are reconciled with the active ADR index.
-- [ ] Meta block placeholders are replaced or deliberately left as searchable `NEEDS VERIFICATION` values.
-- [ ] Hydrology architecture links to this ADR or explains why not.
-- [ ] Catalog/proof/release separation ADR remains consistent with this boundary.
-- [ ] Schema-home and policy-home references do not create parallel authority.
-- [ ] `PROCESSED`, `CATALOG`, and `TRIPLET` are documented as derived/internal closure surfaces unless promoted.
-- [ ] Public clients are blocked from `RAW`, `WORK`, `QUARANTINE`, unpublished `PROCESSED`, catalog-only draft records, and internal triples.
-- [ ] EvidenceRef-to-EvidenceBundle closure is tested for hydrology public claims.
-- [ ] Open catalog closure blocks promotion.
-- [ ] Triplet edges without evidence are rejected, quarantined, or marked non-claiming.
-- [ ] Unknown rights/source roles fail closed.
-- [ ] Release dry run includes proof, manifest, promotion, rollback, and correction references.
-- [ ] Focus Mode fixture cannot answer from unresolved hydrology closure artifacts.
-- [ ] No live hydrology connector is enabled by this ADR.
+<details>
+<summary>Pre-merge checklist</summary>
+
+- [ ] KFM meta block title, H1, target path, badges, and back-to-top anchor all identify ADR-0309.
+- [ ] ADR-0309 appears in `docs/adr/README.md`.
+- [ ] ADR-0310 remains the distinct WBD terms/rights review decision.
+- [ ] ADR-0308 remains the distinct synthetic ingest lifecycle decision.
+- [ ] Truth labels distinguish doctrine, repo evidence, proposals, unknowns, and verification items.
+- [ ] No implementation enforcement is claimed without current evidence.
+- [ ] `PROCESSED`, `CATALOG`, and `TRIPLET` are described as closure artifacts, not public truth.
+- [ ] EvidenceRef-to-EvidenceBundle closure is required for consequential hydrology claims.
+- [ ] Catalog closure is not treated as release approval.
+- [ ] Triplet projections are marked derived and evidence-linked when claim-bearing.
+- [ ] Unknown rights, stale state, unresolved evidence, missing rollback, or open catalog closure fail closed.
+- [ ] Public clients are denied direct access to internal lifecycle stores and unpublished candidates.
+- [ ] Focus Mode cannot answer from unresolved hydrology closure artifacts.
+- [ ] Release manifests and promotion decisions are required before public use.
 - [ ] Rollback and correction behavior is visible and testable.
+- [ ] Schema, policy, validator, fixture, and workflow paths are marked `PROPOSED` or `NEEDS VERIFICATION` unless directly verified.
+- [ ] Related docs, layer registry, catalog docs, proof docs, release docs, and hydrology architecture are updated or listed as follow-up.
+
+</details>
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -457,29 +561,31 @@ A successor ADR may narrow, expand, or replace this decision only if it preserve
 
 | Term | Meaning in this ADR |
 |---|---|
-| `PROCESSED` | Normalized, candidate hydrology state downstream of work/quarantine and upstream of catalog/release |
-| `CATALOG` | Discovery/provenance/closure metadata, including STAC/DCAT/PROV-like records and `CatalogMatrix` |
-| `TRIPLET` | Derived graph relation projection for navigation and reasoning |
-| `EvidenceRef` | Reference from a claim, layer, record, or edge to support evidence |
-| `EvidenceBundle` | Resolved, inspectable support package that outranks generated language |
-| `ProofPack` | Release-grade validation, evidence, policy, sensitivity, catalog, integrity, review, and rollback proof surface |
-| `ReleaseManifest` | Inventory and digest binding for one release |
-| `PromotionDecision` | Governed state transition that changes admissible public meaning |
-| `CorrectionNotice` | Visible record of correction, supersession, withdrawal, narrowing, or generalization |
-| `RollbackReference` | Link to a safe prior release or reversible target |
+| `PROCESSED` | Normalized hydrology candidate state downstream of work/quarantine and upstream of catalog/release. |
+| `CATALOG` | Discovery, provenance, distribution, and closure metadata such as STAC/DCAT/PROV mappings and CatalogMatrix records. |
+| `TRIPLET` | Derived graph relation projection for navigation, joining, query, and reasoning. |
+| `EvidenceRef` | Reference from a claim, layer, record, or edge to support evidence. |
+| `EvidenceBundle` | Resolved, inspectable support package for a claim or public-facing statement. |
+| `ProofPack` | Release-grade validation, evidence, policy, sensitivity, catalog, integrity, review, and rollback proof surface. |
+| `ReleaseManifest` | Inventory and digest binding for one release or release candidate. |
+| `PromotionDecision` | Governed state transition that changes admissible public meaning. |
+| `CorrectionNotice` | Visible record of correction, supersession, withdrawal, narrowing, generalization, or redaction. |
+| `RollbackReference` | Link to prior safe release state or reversible target. |
+
+---
 
 ## Appendix B — Placeholder standard used here
+
+These placeholders are intentional and should remain searchable until direct evidence replaces them:
 
 - `OWNER_TBD_NEEDS_VERIFICATION`
 - `DATE_TBD_FROM_GIT_OR_DOC_REGISTRY`
 - `POLICY_LABEL_TBD_NEEDS_VERIFICATION`
-- `kfm://doc/NEEDS-VERIFICATION`
+- `kfm://doc/NEEDS-VERIFICATION-*`
 - `NEEDS VERIFICATION`
 - `UNKNOWN`
 - `PROPOSED`
 
-These placeholders are intentional. They should be replaced only after active repository, owner, policy, and document-registry evidence is inspected.
+Do not replace placeholders with inferred owners, dates, doc IDs, policy labels, test commands, or release paths.
 
----
-
-[Back to top](#adr-0007-hydrology-processedcatalog-closure-boundary)
+<p align="right"><a href="#top">Back to top ↑</a></p>
