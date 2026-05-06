@@ -1,0 +1,79 @@
+{
+  "name": "@kfm/web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Governed web shell for Kansas Frontier Matrix public-safe map, evidence, and catalog surfaces",
+  "type": "module",
+  "license": "UNLICENSED",
+  "packageManager": "npm@10",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173",
+    "dev:host": "vite --host 0.0.0.0 --port 4173",
+    "dev:static": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "start": "npm run preview",
+    "serve": "npm run preview",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "preview:host": "vite preview --host 0.0.0.0 --port 4173",
+    "preview:static": "python3 -m http.server 4173 --bind 127.0.0.1 --directory dist",
+    "check": "npm run check:package && npm run check:syntax && npm run format:check",
+    "check:package": "node -e \"JSON.parse(require('node:fs').readFileSync('package.json','utf8')); console.log('package.json ok')\"",
+    "check:syntax": "node --check src/main.js && node --check scripts_build.mjs",
+    "check:dist": "test -d dist && test -f dist/index.html",
+    "lint": "npm run check:syntax",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests",
+    "build": "vite build",
+    "build:static": "node scripts_build.mjs",
+    "build:clean": "rm -rf dist",
+    "rebuild": "npm run build:clean && npm run build",
+    "clean": "rm -rf dist coverage .vite .vitest node_modules/.vite",
+    "format:check": "prettier --check . --ignore-unknown",
+    "format:write": "prettier --write . --ignore-unknown",
+    "audit": "npm audit --audit-level=moderate",
+    "doctor": "npm run check && npm run test && npm run build && npm run check:dist",
+    "kfm:publish-tile-layer": "node ../../scripts/publish_kfm_tile_layer.mjs"
+  },
+  "dependencies": {
+    "maplibre-gl": "5.24.0",
+    "pmtiles": "4.4.1"
+  },
+  "devDependencies": {
+    "prettier": "3.8.3",
+    "vite": "8.0.10",
+    "vitest": "4.1.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0",
+    "npm": ">=10"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Edge versions",
+    "last 2 Safari versions",
+    "not dead"
+  ],
+  "prettier": {
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "printWidth": 100
+  },
+  "keywords": [
+    "kfm",
+    "kansas-frontier-matrix",
+    "gis",
+    "maplibre",
+    "pmtiles",
+    "stac",
+    "spatial",
+    "temporal",
+    "evidence",
+    "governance",
+    "public-safe"
+  ],
+  "sideEffects": [
+    "*.css"
+  ]
+}
