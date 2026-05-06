@@ -1,0 +1,11 @@
+{
+  "tiles": [
+    {
+      "tile_id": "0/0/0",
+      "digest": "sha256:18fbb55828a9cf2a24e1ee786e8f24abb793a331f0f6320cc7a8cc3b4edd4a53",
+      "prior_digest": null,
+      "change_type": "added"
+    }
+  ],
+  "indexDigest": "sha256:ec68d7c2581952ba5cec6a35581e19ff826cc2c6a3d7e70a577fc1f3fde96175"
+}

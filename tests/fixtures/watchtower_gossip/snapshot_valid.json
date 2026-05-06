@@ -1,0 +1,6 @@
+{
+  "schema": "TransparencyLogSnapshot.v1",
+  "transparency_log_id": "log1",
+  "tree_size": 10,
+  "root_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

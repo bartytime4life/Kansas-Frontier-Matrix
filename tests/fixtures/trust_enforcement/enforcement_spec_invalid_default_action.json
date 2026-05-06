@@ -1,0 +1,17 @@
+{
+  "schema": "EnforcementSpec.v1",
+  "enforcement_id": "enf-1",
+  "dataset_id": "ds-1",
+  "enforcement": {
+    "default_action": "allow"
+  },
+  "decision_source": {
+    "mode": "trust-decision-envelope"
+  },
+  "gateway": {
+    "loopback_only": true
+  },
+  "audit": {
+    "write_usage_audit_ledger": true
+  }
+}

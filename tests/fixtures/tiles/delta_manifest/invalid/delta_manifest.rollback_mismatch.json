@@ -1,0 +1,44 @@
+{
+  "manifest_version": "v1",
+  "delta_id": "delta-rollback-mismatch",
+  "base_pmtiles": {
+    "url": "https://cdn.example.org/tiles/base.pmtiles",
+    "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "time_start": "2026-04-01T00:00:00Z",
+  "time_end": "2026-04-30T23:59:59Z",
+  "expected_tile_count": 2,
+  "produced_tile_count": 2,
+  "tiles": [
+    {
+      "tile_id": "z5x11y12",
+      "z": 5,
+      "x": 11,
+      "y": 12,
+      "quadkey": "02132",
+      "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "prior_digest": null,
+      "change_type": "modified",
+      "masked_pct": 20,
+      "coverage_pct": 92,
+      "run_receipt_url": "https://receipts.example.org/run/2026-04-30-b"
+    },
+    {
+      "tile_id": "z5x12y12",
+      "z": 5,
+      "x": 12,
+      "y": 12,
+      "quadkey": "02133",
+      "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "prior_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "change_type": "added",
+      "masked_pct": 18,
+      "coverage_pct": 89,
+      "run_receipt_url": "https://receipts.example.org/run/2026-04-30-c"
+    }
+  ],
+  "qc": {
+    "masked_pct_pass_threshold": 15,
+    "masked_pct_review_threshold": 25
+  }
+}
