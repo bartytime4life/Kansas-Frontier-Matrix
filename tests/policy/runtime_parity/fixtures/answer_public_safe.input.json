@@ -1,0 +1,18 @@
+{
+  "case_id": "answer_public_safe",
+  "policy_input_ref": "tests/policy/runtime_parity/fixtures/answer_public_safe.input.json",
+  "expected_policy_result": "allow",
+  "expected_runtime_outcome": "ANSWER",
+  "reason_codes": [
+    "ALLOWED_PUBLIC_EVIDENCE"
+  ],
+  "obligation_codes": [
+    "REQUIRE_CITATION",
+    "RECORD_AUDIT"
+  ],
+  "evidence_state": "resolved",
+  "contract_refs": [
+    "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+  ],
+  "notes": "Happy-path parity case where policy allow remains a governed answer."
+}

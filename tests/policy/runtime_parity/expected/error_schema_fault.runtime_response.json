@@ -1,0 +1,11 @@
+{
+  "kind": "RuntimeResponseEnvelope",
+  "outcome": "ERROR",
+  "reason_codes": [
+    "RUNTIME_SCHEMA_VALIDATION_FAILED"
+  ],
+  "obligation_codes": [
+    "RECORD_AUDIT"
+  ],
+  "audit_ref": "audit:runtime_parity:error_schema_fault"
+}
