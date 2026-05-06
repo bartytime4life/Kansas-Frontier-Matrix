@@ -1,0 +1,21 @@
+{
+  "schema_version": "v1",
+  "object_type": "GeospatialReviewActionResponse",
+  "request_id": "kfm://request/review-action/geo-promote-2026-04-28-001",
+  "ok": false,
+  "status": "expected_mismatch",
+  "errors": [
+    {
+      "code": "EXPECTED_STATE_MISMATCH",
+      "field": "expected.target_state",
+      "expected": "promoted",
+      "actual": "abstain",
+      "message": "Promotion target state does not match the runtime decision."
+    }
+  ],
+  "meta": {
+    "review_action": "promote",
+    "reviewer_role": "steward",
+    "completed_at": "2026-04-28T12:01:15Z"
+  }
+}

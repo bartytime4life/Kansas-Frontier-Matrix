@@ -1,0 +1,19 @@
+{
+  "schema_version": "v1",
+  "object_type": "GeospatialReviewActionResponse",
+  "request_id": "kfm://request/review-action/geo-promote-2026-04-28-001",
+  "ok": true,
+  "status": "promoted",
+  "data": {
+    "candidate_id": "kfm://candidate/ecology-layer/chase-county-tallgrass-v3",
+    "promotion_receipt_ref": "kfm://receipt/promotion/chase-county-tallgrass-v3",
+    "proof_pack_ref": "kfm://proof-pack/chase-county-tallgrass-v3",
+    "release_manifest_ref": "kfm://release-manifest/ecology/chase-county-tallgrass-v3"
+  },
+  "meta": {
+    "review_action": "promote",
+    "reviewer_role": "steward",
+    "completed_at": "2026-04-28T12:01:15Z",
+    "latency_ms": 221
+  }
+}
