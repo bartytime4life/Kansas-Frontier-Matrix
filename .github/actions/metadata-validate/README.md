@@ -6,77 +6,126 @@ version: v1
 status: draft
 owners: TODO: owner not verified
 created: TODO: YYYY-MM-DD
-updated: TODO: YYYY-MM-DD
+updated: 2026-05-06
 policy_label: TODO: public
-related: [.github/actions/README.md, .github/workflows/README.md, scripts/validate_all.sh, tools/validate_docs_truth_labels.py]
-tags: [kfm, github-actions, metadata, validation]
-notes: [README expanded from action.yml and src/validate.sh; unresolved metadata placeholders require maintainer review]
+related: [
+  ../README.md,
+  ../metadata-validate-v2/README.md,
+  ../../README.md,
+  ../../workflows/README.md,
+  ../../../README.md,
+  ../../../scripts/validate_all.sh,
+  ../../../tools/validate_docs_truth_labels.py,
+  ../../../tools/check_directory_rules.py,
+  ../../../tools/check_schema_home.py,
+  ../../../tools/check_no_public_internal_paths.py,
+  ../../../contracts/README.md,
+  ../../../schemas/README.md,
+  ../../../policy/README.md,
+  ../../../tests/README.md,
+  ../../../fixtures/README.md
+]
+tags: [kfm, github-actions, metadata, validation, markdown, ci, trust-spine]
+notes: [
+  "This action validates literal metadata-token presence only; it does not validate full metadata-block shape, truth, ownership, policy, or release readiness.",
+  "owners, created date, policy label, executable-bit status, workflow caller inventory, required-check status, and branch/ruleset enforcement remain NEEDS VERIFICATION.",
+  "Revision preserves the action as a thin .github/actions wrapper and keeps contract, schema, policy, test, proof, and release authority in their owning roots."
+]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Metadata Validate Action
 
-Composite GitHub Action for checking that Markdown files carry the required KFM metadata token.
+Composite GitHub Action for checking that Markdown files contain a required KFM metadata token.
 
 > [!NOTE]
-> **Status:** `draft`  
+> **Status:** `active` action surface / `draft` README  
 > **Owners:** `TODO: owner not verified`  
-> **Authority:** `CONFIRMED` for the local action contract; `NEEDS VERIFICATION` for current workflow callers and merge-gate enforcement  
 > **Repo fit:** `.github/actions/metadata-validate/README.md`  
-> **Review burden:** workflow, documentation, and governance maintainers should review changes because this action can block documentation updates and can create false confidence if treated as full metadata validation.
+> **Authority:** `CONFIRMED` for the documented token-check contract; `NEEDS VERIFICATION` for workflow callers, executable mode, and merge-gate enforcement  
+> **Review burden:** workflow, documentation, schema, policy, and release reviewers should keep this action narrow: it can block missing-token docs, but it must not become a hidden metadata, policy, proof, or publication authority.
 
-![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
-![surface: .github/actions](https://img.shields.io/badge/surface-.github%2Factions-4051b5)
-![action: metadata--validate](https://img.shields.io/badge/action-metadata--validate-0a7ea4)
-![posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-b60205)
+![status: active action / draft doc](https://img.shields.io/badge/status-active%20action%20%2F%20draft%20doc-orange)
+![surface: .github/actions](https://img.shields.io/badge/surface-.github%2Factions-24292f)
+![gate: metadata token](https://img.shields.io/badge/gate-metadata%20token-0969da)
 ![token: KFM_META_BLOCK_V2](https://img.shields.io/badge/token-KFM__META__BLOCK__V2-6f42c1)
+![posture: fail closed](https://img.shields.io/badge/posture-fail--closed-b60205)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Outputs](#outputs) · [Behavior contract](#behavior-contract) · [Usage](#usage) · [Validation](#validation) · [Exclusions](#exclusions) · [Review checklist](#review-checklist) · [Open verification](#open-verification) · [Rollback](#rollback)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Outputs](#outputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Behavior contract](#behavior-contract) · [Usage](#usage) · [Local validation](#local-validation) · [Diagram](#diagram) · [Review gates](#review-gates) · [Rollback](#rollback) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-`metadata-validate` is a narrow CI step wrapper. It checks whether selected Markdown files contain a required literal token, defaulting to `[KFM_META_BLOCK_V2]`.
+`metadata-validate` is a small repo-local GitHub Action that checks Markdown files for a literal required token.
 
-It is useful as an early guard for KFM documentation hygiene. It is not a substitute for schema validation, policy review, link checking, truth-label review, publication review, or EvidenceBundle closure.
+By default, the token is:
 
-### Current verified snapshot
+```text
+[KFM_META_BLOCK_V2]
+```
 
-| Surface | Verified behavior | Notes |
-| --- | --- | --- |
-| `action.yml` | Defines a composite action with `files` and `required-token` inputs. | The default required token is `[KFM_META_BLOCK_V2]`. |
-| `src/validate.sh` | Checks files with `grep -qF` and fails when one or more checked files lack the required token. | Missing explicitly listed files are warned and skipped, not counted as failures. |
-| `README.md` | This file documents the action’s repo fit, safe usage, boundaries, and verification burden. | This README should itself include the token so the default check can validate it. |
+Use this action as an early documentation-hygiene guard. It helps KFM keep README-like and standard Markdown documents visible to the metadata discipline, especially where CI needs a fast fail-closed signal.
 
 > [!IMPORTANT]
-> Passing this action means only that the required token is present. It does **not** prove that the metadata block is complete, truthful, well-formed, current, owner-approved, policy-reviewed, or release-ready.
+> Passing this action proves **token presence only**. It does not prove that a metadata block is complete, truthful, well-formed, current, owner-approved, policy-reviewed, schema-valid, release-ready, or publication-safe.
 
-[Back to top](#metadata-validate-action)
+### What this action is responsible for
+
+| Responsibility | Status | Boundary |
+| --- | --- | --- |
+| Scan selected Markdown files | `CONFIRMED` | Uses caller-supplied file list or whole-repo Markdown discovery. |
+| Require a literal token | `CONFIRMED` | Defaults to `[KFM_META_BLOCK_V2]`, overridable by input. |
+| Count checked files | `CONFIRMED` | Emits `checked-count` through action outputs. |
+| Count missing-token files | `CONFIRMED` | Emits `missing-count` and fails when non-zero. |
+| Warn on missing listed paths | `CONFIRMED` | Skips missing paths rather than treating them as missing-token failures. |
+| Validate full metadata fields | `EXCLUDED` | Belongs in schemas, validators, tests, and review. |
+| Decide publication readiness | `EXCLUDED` | Belongs in governed release, proof, policy, review, correction, and rollback lanes. |
+
+[Back to top](#top)
 
 ---
 
 ## Repo fit
 
-| Relationship | Path | Why it matters |
+| Direction | Surface | Relationship |
 | --- | --- | --- |
-| This action | `./` | Local composite action surface for Markdown metadata-token checks. |
-| Action metadata | [`./action.yml`](./action.yml) | Declares inputs, outputs, and the composite step that invokes the validator script. |
-| Validator script | [`./src/validate.sh`](./src/validate.sh) | Implements the token scan and fail-closed missing-token result. |
-| Parent action lane | [`../README.md`](../README.md) | Should explain local action boundaries and keep reusable action wrappers discoverable. |
-| Workflow lane | [`../../workflows/README.md`](../../workflows/README.md) | Workflows may call this action, but workflow orchestration and permissions belong there. |
-| GitHub gatehouse | [`../../README.md`](../../README.md) | `.github/` is the repository-side control-plane surface for review and automation. |
-| Root posture | [`../../../README.md`](../../../README.md) | Defines KFM as evidence-first, map-first, time-aware, governed, auditable, and reversible. |
-| Documentation truth-label validation | [`../../../tools/validate_docs_truth_labels.py`](../../../tools/validate_docs_truth_labels.py) | A neighboring validation layer; this action does not replace truth-label checks. |
-| Directory-rule validation | [`../../../tools/check_directory_rules.py`](../../../tools/check_directory_rules.py) | Path and root-boundary checks belong in repo-wide tools, not this token gate. |
-| Repo-wide validation script | [`../../../scripts/validate_all.sh`](../../../scripts/validate_all.sh) | Broader validation orchestration can run this action’s checks indirectly or beside it. |
-| Schema-home ADR | [`../../../docs/adr/ADR-0001-schema-home.md`](../../../docs/adr/ADR-0001-schema-home.md) | Schema authority decisions remain outside this action. |
-| Contract / schema / policy / test surfaces | [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../tests/README.md`](../../../tests/README.md) | This action reports on documentation tokens; it does not own semantic meaning, machine shape, policy decisions, or proof burden. |
+| This README | `./README.md` | Action-specific contract, usage, review, and rollback guide. |
+| Action metadata | [`./action.yml`](./action.yml) | Declares the composite action interface and output mapping. |
+| Validator script | [`./src/validate.sh`](./src/validate.sh) | Implements literal-token scanning and fail-closed missing-token behavior. |
+| Parent action lane | [`../README.md`](../README.md) | Explains `.github/actions/` as thin repo-local step wrappers. |
+| Versioned sibling | [`../metadata-validate-v2/README.md`](../metadata-validate-v2/README.md) | Documents the broader proposed schema/policy metadata gate; keep this v1 token gate distinct. |
+| GitHub gatehouse | [`../../README.md`](../../README.md) | Places actions under repo-wide GitHub governance. |
+| Workflow orchestration | [`../../workflows/README.md`](../../workflows/README.md) | Workflow callers belong here; this action is only a reusable step. |
+| Root posture | [`../../../README.md`](../../../README.md) | Defines KFM as governed, evidence-first, map-first, time-aware, auditable, and reversible. |
+| Documentation truth labels | [`../../../tools/validate_docs_truth_labels.py`](../../../tools/validate_docs_truth_labels.py) | Adjacent validation layer; this action does not replace truth-label checks. |
+| Directory-rule checks | [`../../../tools/check_directory_rules.py`](../../../tools/check_directory_rules.py) | Path/root-boundary validation belongs in repo-wide tools. |
+| Schema-home checks | [`../../../tools/check_schema_home.py`](../../../tools/check_schema_home.py) | Schema authority checks are outside this action. |
+| Public/internal path checks | [`../../../tools/check_no_public_internal_paths.py`](../../../tools/check_no_public_internal_paths.py) | Public-surface trust checks are broader than token presence. |
+| Aggregate validation | [`../../../scripts/validate_all.sh`](../../../scripts/validate_all.sh) | Broader CI validation entrypoint that may run beside or above this action. |
+| Semantic meaning | [`../../../contracts/README.md`](../../../contracts/README.md) | Contracts explain object meaning. |
+| Machine shape | [`../../../schemas/README.md`](../../../schemas/README.md) | Schemas validate structured fields. |
+| Policy decisions | [`../../../policy/README.md`](../../../policy/README.md) | Policy owns allow, deny, restrict, abstain, rights, and sensitivity logic. |
+| Regression proof | [`../../../tests/README.md`](../../../tests/README.md), [`../../../fixtures/README.md`](../../../fixtures/README.md) | Tests and fixtures prove behavior across positive and negative paths. |
 
 ### Placement decision
 
-`.github/actions/metadata-validate/` is a valid control-plane/action location because `.github/` is a repo-wide automation and review surface. The action must stay a thin wrapper around reviewable logic and must not become a hidden schema, policy, source, proof, release, or publication authority.
+`.github/actions/metadata-validate/` is the right responsibility root for this file because it is GitHub Actions step-wrapper glue. It must stay thin and reviewable.
 
-[Back to top](#metadata-validate-action)
+It must not become a competing home for:
+
+- metadata schema authority;
+- policy law;
+- semantic contract meaning;
+- source descriptors;
+- release manifests;
+- proof packs;
+- receipts;
+- published data;
+- domain-lane documentation.
+
+[Back to top](#top)
 
 ---
 
@@ -84,31 +133,88 @@ It is useful as an early guard for KFM documentation hygiene. It is not a substi
 
 | Input | Required | Default | Meaning |
 | --- | ---: | --- | --- |
-| `files` | No | `""` | Newline-delimited list of Markdown files to check. If empty, the script scans all `*.md` files under the repository except `.git/`. |
+| `files` | No | `""` | Newline-delimited list of Markdown file paths to check. When empty, the script scans all `*.md` files under the repository except `.git/`. |
 | `required-token` | No | `[KFM_META_BLOCK_V2]` | Literal token that must appear in each checked Markdown file. |
 
 ### Input rules
 
-1. Prefer explicit file lists when validating changed files in a pull request.
-2. Prefer whole-repo scans when validating release candidates or documentation migrations.
-3. Keep `required-token` stable unless a reviewed KFM metadata-block migration is underway.
-4. Do not pass raw logs, directories, globs, or generated text as if they were resolved Markdown file paths unless the caller expands them first.
-5. Treat skipped missing file paths as `NEEDS VERIFICATION`; the script warns and continues.
+1. Prefer explicit file lists for pull-request changed-file checks.
+2. Prefer whole-repo scans for release candidates, documentation migrations, or periodic hygiene checks.
+3. Keep `required-token` stable unless a reviewed metadata-block migration is underway.
+4. Treat workflow-provided paths as untrusted until the script has verified that each listed path exists and is a file.
+5. Treat skipped missing paths as `NEEDS VERIFICATION`; this action warns and skips them.
 
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
 
 ---
 
 ## Outputs
 
-| Output | Meaning |
-| --- | --- |
-| `checked-count` | Number of existing Markdown files checked. |
-| `missing-count` | Number of checked Markdown files missing the required token. |
+| Output | Script key | Meaning |
+| --- | --- | --- |
+| `checked-count` | `checked_count` | Number of existing Markdown files checked. |
+| `missing-count` | `missing_count` | Number of checked Markdown files missing the required token. |
 
-A successful run exits with status `0`. A run with one or more checked files missing the token emits a GitHub Actions error and exits non-zero.
+A successful run exits with status `0`.
 
-[Back to top](#metadata-validate-action)
+A run with one or more checked files missing the required token emits a GitHub Actions error and exits non-zero.
+
+[Back to top](#top)
+
+---
+
+## Exclusions
+
+| Does not belong in this action | Better home | Why |
+| --- | --- | --- |
+| Full metadata-block schema validation | `schemas/`, `tools/validators/`, `tests/`, `fixtures/` | This action checks literal token presence only. |
+| Metadata field truth review | `docs/`, `control_plane/`, review records, CODEOWNERS-backed review | Ownership, dates, policy labels, and related links need human/governance review. |
+| Semantic object definitions | `contracts/` | Contracts define meaning and invariants. |
+| Policy allow/deny logic | `policy/` | Policy owns admissibility, rights, sensitivity, and release posture. |
+| Source rights or source activation checks | `data/registry/`, `control_plane/`, source validators | Source authority is not a Markdown-token issue. |
+| Release, promotion, rollback, or correction decisions | `release/`, `data/proofs/`, `data/receipts/`, promotion validators | Publication is a governed state transition, not a token pass. |
+| Workflow permissions and job orchestration | `.github/workflows/` | Workflows decide when and how this action runs. |
+| Large reusable validators | `tools/validators/`, `tools/`, `packages/` | Composite actions should remain thin wrappers. |
+| Documentation style, link, and accessibility checks | `tools/`, `tests/` | Those checks are adjacent, not this action’s core contract. |
+
+[Back to top](#top)
+
+---
+
+## Directory tree
+
+### Current expected action shape
+
+```text
+.github/actions/metadata-validate/
+├── README.md
+├── action.yml
+└── src/
+    └── validate.sh
+```
+
+| Path | Role | Status |
+| --- | --- | --- |
+| `README.md` | Action documentation and review boundary | `draft` |
+| `action.yml` | Composite action interface | `CONFIRMED` by repo evidence; re-check before merge |
+| `src/validate.sh` | Bash token-check implementation | `CONFIRMED` by repo evidence; executable bit `NEEDS VERIFICATION` |
+
+### Neighboring action-family context
+
+```text
+.github/actions/
+├── README.md
+├── metadata-validate/
+├── metadata-validate-v2/
+├── opa-gate/
+├── provenance-guard/
+├── sbom-produce-and-sign/
+└── src/
+```
+
+This action is the narrow token gate. `metadata-validate-v2/` is the place to document or implement a deeper schema/policy gate if maintainers choose to keep both versions.
+
+[Back to top](#top)
 
 ---
 
@@ -116,17 +222,19 @@ A successful run exits with status `0`. A run with one or more checked files mis
 
 | Condition | Result | Trust interpretation |
 | --- | --- | --- |
-| `files` is empty | Find all `*.md` files outside `.git/` and check them. | Broad hygiene check; may be slower on large trees. |
-| `files` contains newline-delimited paths | Check only existing listed files. | Good for pull-request changed-file gates. |
-| A listed file is missing | Emit a warning and skip it. | Not strict enough for required changed-file existence by itself. |
-| A checked file contains `required-token` | Count it as checked and passing. | Token presence only; metadata quality remains unproven. |
-| A checked file lacks `required-token` | Increment missing count and fail the action. | Fail-closed for missing metadata token. |
-| `GITHUB_OUTPUT` is unset during local script execution | Local run may fail because the script writes outputs there. | Use a temporary `GITHUB_OUTPUT` for local tests. |
+| `files` is empty | Find all `*.md` files outside `.git/` and check them. | Broad hygiene check. |
+| `files` contains newline-delimited paths | Check only existing listed files. | Good for pull-request changed-file checks. |
+| A listed path is empty text | Ignore it. | Supports clean multiline inputs. |
+| A listed file does not exist | Emit `::warning::` and skip it. | Missing-file strictness must be handled elsewhere if needed. |
+| A checked file contains `required-token` | Count as checked and passing. | Token presence only. |
+| A checked file lacks `required-token` | Increment missing count. | Missing metadata-token gate failure. |
+| One or more checked files lack the token | Emit `::error::` and exit `1`. | Fail-closed for missing metadata token. |
+| `GITHUB_OUTPUT` is unset | Script cannot write outputs reliably. | Local runs should set `GITHUB_OUTPUT="$(mktemp)"`. |
 
 > [!CAUTION]
-> The action should not be described as “metadata validation” without the word “token” nearby. It validates token presence, not full metadata truth.
+> Do not describe this action as “full metadata validation” without qualification. The precise phrase is **metadata-token validation**.
 
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
 
 ---
 
@@ -139,10 +247,10 @@ A successful run exits with status `0`. A run with one or more checked files mis
   uses: ./.github/actions/metadata-validate
 ```
 
-### Changed-file or targeted scan
+### Targeted Markdown token scan
 
 ```yaml
-- name: Validate KFM metadata tokens for selected files
+- name: Validate selected KFM metadata tokens
   uses: ./.github/actions/metadata-validate
   with:
     files: |
@@ -152,7 +260,7 @@ A successful run exits with status `0`. A run with one or more checked files mis
     required-token: "[KFM_META_BLOCK_V2]"
 ```
 
-### Read outputs in a later step
+### Read action outputs
 
 ```yaml
 - name: Validate KFM metadata tokens
@@ -162,11 +270,40 @@ A successful run exits with status `0`. A run with one or more checked files mis
 - name: Report metadata token counts
   shell: bash
   run: |
+    set -euo pipefail
     echo "checked=${{ steps.metadata.outputs.checked-count }}"
     echo "missing=${{ steps.metadata.outputs.missing-count }}"
 ```
 
-[Back to top](#metadata-validate-action)
+### Changed-file caller sketch
+
+```yaml
+- name: Collect changed Markdown files
+  id: changed-md
+  shell: bash
+  run: |
+    set -euo pipefail
+    git fetch origin "${{ github.base_ref }}" --depth=1
+    git diff --name-only "origin/${{ github.base_ref }}"...HEAD \
+      | grep -E '\.md$' \
+      | tee changed-md.txt || true
+
+    {
+      echo "files<<EOF"
+      cat changed-md.txt
+      echo "EOF"
+    } >> "$GITHUB_OUTPUT"
+
+- name: Validate metadata tokens on changed Markdown
+  uses: ./.github/actions/metadata-validate
+  with:
+    files: ${{ steps.changed-md.outputs.files }}
+```
+
+> [!NOTE]
+> The changed-file sketch is illustrative. Reuse only after verifying the workflow trigger, checkout depth, fork behavior, and baseline ref logic for the target workflow.
+
+[Back to top](#top)
 
 ---
 
@@ -187,23 +324,67 @@ GITHUB_OUTPUT="$(mktemp)" \
   ".github/actions/metadata-validate/README.md" \
   "[KFM_META_BLOCK_V2]"
 
-# Confirm the script can be executed the same way action.yml invokes it.
+# Confirm executable mode when action.yml invokes the script by path.
 git ls-files -s .github/actions/metadata-validate/src/validate.sh
 ```
 
-### Repo-wide companion checks
+### Positive and negative smoke checks
 
 ```bash
-# Adjacent validation and governance checks.
+# Positive case.
+positive_file="$(mktemp --suffix=.md)"
+cat > "$positive_file" <<'MD'
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/TODO
+title: Positive
+type: standard
+version: v1
+status: draft
+owners: TODO
+created: TODO
+updated: TODO
+policy_label: TODO
+related: []
+tags: [kfm]
+notes: [test fixture]
+[/KFM_META_BLOCK_V2] -->
+
+# Positive
+MD
+
+GITHUB_OUTPUT="$(mktemp)" \
+  bash .github/actions/metadata-validate/src/validate.sh \
+  "$positive_file" \
+  "[KFM_META_BLOCK_V2]"
+
+# Negative case. This is expected to exit non-zero.
+negative_file="$(mktemp --suffix=.md)"
+printf '# Missing metadata token\n' > "$negative_file"
+
+set +e
+GITHUB_OUTPUT="$(mktemp)" \
+  bash .github/actions/metadata-validate/src/validate.sh \
+  "$negative_file" \
+  "[KFM_META_BLOCK_V2]"
+status="$?"
+set -e
+
+test "$status" -ne 0
+```
+
+### Companion repo-wide checks
+
+```bash
 python tools/validate_docs_truth_labels.py
 python tools/check_directory_rules.py
+python tools/check_schema_home.py
 python tools/check_no_public_internal_paths.py
 bash scripts/validate_all.sh
 ```
 
 Use repo-native workflows or `scripts/validate_all.sh` for broader proof. This action is only one documentation-token gate.
 
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
 
 ---
 
@@ -211,67 +392,94 @@ Use repo-native workflows or `scripts/validate_all.sh` for broader proof. This a
 
 ```mermaid
 flowchart LR
-  Inputs["files + required-token"] --> Action["action.yml"]
-  Action --> Script["src/validate.sh"]
-  Script --> Selection{"files provided?"}
-  Selection -- "yes" --> Listed["check listed existing files"]
-  Selection -- "no" --> Find["find all *.md outside .git"]
-  Listed --> Grep["grep -qF required token"]
-  Find --> Grep
-  Grep --> Pass["checked-count"]
-  Grep --> Missing["missing-count"]
-  Missing --> Error{"missing-count > 0?"}
-  Error -- "no" --> OK["exit 0"]
-  Error -- "yes" --> Fail["::error:: + exit 1"]
+  Caller[Workflow caller] --> Inputs["files + required-token"]
+  Inputs --> Action[action.yml]
+  Action --> Script[src/validate.sh]
+
+  Script --> Select{files input empty?}
+  Select -- yes --> WholeRepo["find all *.md outside .git/"]
+  Select -- no --> Listed["read newline-delimited paths"]
+
+  WholeRepo --> Existing{file exists?}
+  Listed --> Existing
+
+  Existing -- no --> Warn["::warning:: skip missing path"]
+  Existing -- yes --> Grep["grep -qF required token"]
+
+  Grep -- token present --> CountPass["checked-count"]
+  Grep -- token missing --> CountMissing["missing-count"]
+
+  CountMissing --> Fail{missing-count > 0?}
+  Fail -- no --> OK["exit 0"]
+  Fail -- yes --> Error["::error:: + exit 1"]
+
+  OK --> Review["reviewer-visible hygiene signal"]
+  Error --> Review
 ```
 
-This flow is intentionally small. The action checks for a literal token and returns counts; higher-order KFM validation remains in tools, tests, policy, contracts, schemas, and review workflows.
+This action intentionally stops at a small boundary: token present or token missing. Higher-order KFM validation remains in `tools/`, `tests/`, `schemas/`, `contracts/`, `policy/`, `release/`, and review workflows.
 
-[Back to top](#metadata-validate-action)
-
----
-
-## Exclusions
-
-| Does not belong here | Better home | Why |
-| --- | --- | --- |
-| Full metadata-block schema validation | `schemas/contracts/v1/` plus `tests/contracts/` and relevant validators | This action checks a literal token only. |
-| Semantic contract meaning | `contracts/` | Contract docs define object meaning and invariants. |
-| Policy allow/deny logic | `policy/` | Policy owns decisions, reasons, obligations, and fail-closed behavior. |
-| Source rights and activation checks | `data/registry/`, `control_plane/`, and source validators | Source authority is not a Markdown token issue. |
-| Publication, promotion, rollback, or correction decisions | `release/`, `data/proofs/`, `data/receipts/`, and promotion validators | Publication is a governed state transition, not a Markdown token pass. |
-| Workflow permissions and orchestration | `.github/workflows/` | Workflow security and sequencing should stay visible at the workflow boundary. |
-| Large reusable validators | `tools/validators/` or `packages/` | Composite actions should remain thin and reviewable. |
-| Documentation style, link, or accessibility checks | `tools/` and `tests/` | Those checks are adjacent, not this action’s core contract. |
-
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
 
 ---
 
-## Review checklist
+## Review gates
 
 Before changing this action or README, verify:
 
 - [ ] `action.yml` input names still match this README.
+- [ ] `action.yml` output names still map to script output keys.
 - [ ] `src/validate.sh` behavior still matches the behavior table.
-- [ ] The default required token is still `[KFM_META_BLOCK_V2]`.
-- [ ] This README still includes `[KFM_META_BLOCK_V2]`.
+- [ ] The default token is still `[KFM_META_BLOCK_V2]`, or the metadata migration is documented and reviewed.
+- [ ] This README still contains `[KFM_META_BLOCK_V2]`.
 - [ ] Relative links resolve from `.github/actions/metadata-validate/`.
 - [ ] Changes do not imply full metadata validation when only token presence is checked.
-- [ ] Any new workflow caller is documented in `.github/workflows/README.md` or the relevant workflow file.
+- [ ] Workflow callers, if any, are documented in `.github/workflows/README.md` or the relevant workflow file.
 - [ ] Missing-file behavior is still acceptable for the intended caller.
 - [ ] Local execution guidance still accounts for `GITHUB_OUTPUT`.
 - [ ] Broader validation remains in `tools/`, `tests/`, `schemas/`, `contracts/`, and `policy/`.
+- [ ] Any relationship to `metadata-validate-v2/` is explained instead of silently overlapping responsibilities.
 
 ### Definition of done
 
-A change is ready when a reviewer can answer three questions without reading the script first:
+A change is ready when a reviewer can answer these questions without reading the script first:
 
 1. What files are checked?
 2. What exact token is required?
-3. What does a pass **not** prove?
+3. What outputs are emitted?
+4. What happens when a file is missing?
+5. What does a pass **not** prove?
 
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
+
+---
+
+## Rollback
+
+README-only rollback is straightforward:
+
+```bash
+git checkout -- .github/actions/metadata-validate/README.md
+```
+
+Behavior rollback should revert `action.yml` and `src/validate.sh` together, then run positive and negative smoke checks.
+
+```bash
+# Inspect likely callers before reverting behavior.
+grep -R "metadata-validate" -n .github/workflows .github/actions scripts tools 2>/dev/null || true
+```
+
+| Change type | Safe rollback |
+| --- | --- |
+| README-only clarification | Revert this README and re-run token validation. |
+| Script behavior change | Revert `src/validate.sh`, confirm output keys, run smoke checks. |
+| Action interface change | Revert `action.yml` and any caller workflows together. |
+| Workflow caller change | Revert caller workflow first if CI is blocking incorrectly. |
+| Token migration | Restore old token requirement or keep both gates temporarily with a migration note. |
+
+Do not delete workflow logs, receipts, proof packs, release manifests, or correction records merely because an action changed. Those artifacts may be audit evidence.
+
+[Back to top](#top)
 
 ---
 
@@ -279,49 +487,57 @@ A change is ready when a reviewer can answer three questions without reading the
 
 | Item | Status | Why it matters |
 | --- | --- | --- |
-| Dedicated owner for this action lane | `TODO` | Repository ownership does not prove review ownership for this path. |
-| Current workflow caller inventory | `NEEDS VERIFICATION` | This README does not claim that a checked workflow currently invokes this action. |
-| Executable bit on `src/validate.sh` | `NEEDS VERIFICATION` | `action.yml` invokes the script by path, so executable mode matters unless callers use `bash`. |
+| Dedicated owner for this action lane | `TODO` | Repository ownership is not the same as path review ownership. |
+| `created` date | `TODO` | Needs git history or document registry evidence. |
+| `policy_label` | `TODO` | Needs governance review. |
+| Current workflow caller inventory | `NEEDS VERIFICATION` | No README should claim merge-blocking behavior without workflow and platform evidence. |
+| Executable bit on `src/validate.sh` | `NEEDS VERIFICATION` | `action.yml` invokes the script by path, so mode matters unless the caller uses `bash`. |
 | Missing-file policy | `NEEDS VERIFICATION` | Skipping missing listed files may be too permissive for strict changed-file gates. |
 | Full metadata-block validation | `PROPOSED` | Token presence is useful but insufficient for complete metadata governance. |
-| Badge status | `NEEDS VERIFICATION` | Badges are documentation hints, not CI proof. |
+| Required-check / branch-protection status | `NEEDS VERIFICATION` | Platform settings are not proven by repository files. |
+| Badge truth | `NEEDS VERIFICATION` | Badges are documentation hints, not CI proof. |
+| v1/v2 coexistence plan | `NEEDS VERIFICATION` | `metadata-validate` and `metadata-validate-v2` should not drift into overlapping authority. |
 
-[Back to top](#metadata-validate-action)
+[Back to top](#top)
+
+---
+
+## FAQ
+
+### Does this validate KFM metadata?
+
+Only at the token-presence level. It checks whether the required literal token appears in Markdown files.
+
+### Why not validate the full metadata block here?
+
+Because KFM separates responsibilities. Token scanning can live in a thin composite action. Full field shape belongs in machine schemas and validators; semantic truth belongs in contracts and review; admissibility belongs in policy; release readiness belongs in promotion and release gates.
+
+### Should this action run on every Markdown file?
+
+Whole-repo scans are useful for periodic hygiene and release candidates. Pull-request workflows may prefer changed-file scans to reduce noise.
+
+### What happens if a listed file no longer exists?
+
+The script warns and skips it. A caller that requires strict changed-file existence should add that check before invoking this action.
+
+### Is this action a publication gate?
+
+No. It can block missing metadata tokens, but publication remains a governed state transition with evidence closure, policy review, release manifest, correction path, and rollback target.
+
+### How does this differ from `metadata-validate-v2`?
+
+`metadata-validate` is the narrow token gate. `metadata-validate-v2` is the expected home for a broader schema/policy metadata gate if the repo keeps both action versions.
+
+[Back to top](#top)
 
 ---
 
-## Rollback
-
-To roll back a README-only documentation update, revert the README change and re-run the local validation commands above.
-
-To roll back behavior changes, revert `action.yml` and `src/validate.sh` together. Then run a positive case and a negative case:
-
-```bash
-# Positive case: this README should contain the token.
-GITHUB_OUTPUT="$(mktemp)" \
-  bash .github/actions/metadata-validate/src/validate.sh \
-  ".github/actions/metadata-validate/README.md" \
-  "[KFM_META_BLOCK_V2]"
-
-# Negative case: a temp file without the token should fail.
-tmpfile="$(mktemp --suffix=.md)"
-printf '# Missing metadata token\n' > "$tmpfile"
-GITHUB_OUTPUT="$(mktemp)" \
-  bash .github/actions/metadata-validate/src/validate.sh \
-  "$tmpfile" \
-  "[KFM_META_BLOCK_V2]"
-```
-
-The negative case is expected to exit non-zero. Do not use it in a chained shell command without isolating the expected failure.
-
-[Back to top](#metadata-validate-action)
-
----
+## Appendix
 
 <details>
-<summary>Appendix: minimal metadata block reminder</summary>
+<summary><strong>Minimal metadata block reminder</strong></summary>
 
-This action checks for token presence, not block correctness. Still, docs that require KFM metadata should use the reviewed block format expected by the repository’s documentation rules.
+This action checks for token presence, not block correctness. Standard docs that require KFM metadata should use the reviewed block format expected by project documentation rules.
 
 ```markdown
 <!-- [KFM_META_BLOCK_V2]
@@ -340,6 +556,43 @@ notes: [TODO: unverified metadata requires maintainer review]
 [/KFM_META_BLOCK_V2] -->
 ```
 
-Do not fill owner, dates, policy labels, or related records unless they have been verified.
+Do not fill owners, dates, policy labels, identifiers, or related records unless they have been verified.
 
 </details>
+
+<details>
+<summary><strong>Why token presence still matters</strong></summary>
+
+Token presence is not enough, but it is still useful because it makes missing-document metadata visible early. It is a low-cost gate that helps reviewers find docs that skipped the KFM metadata discipline entirely.
+
+Use it as the first rung, not the whole ladder.
+
+```text
+token present
+  -> metadata block parse
+  -> field shape validation
+  -> truth-label review
+  -> link and path validation
+  -> source / policy / rights checks where relevant
+  -> release and correction checks where publication is affected
+```
+
+</details>
+
+<details>
+<summary><strong>Known anti-patterns</strong></summary>
+
+Reject these patterns during review:
+
+- calling this “full metadata validation”;
+- treating a passing token scan as release approval;
+- adding policy decisions inside `validate.sh`;
+- adding schema definitions inside `.github/actions/metadata-validate/`;
+- printing secrets or restricted data in workflow logs;
+- silently changing the default token without migration notes;
+- letting v1 and v2 metadata gates diverge without a caller inventory;
+- using successful CI as proof that owners, dates, policy labels, or evidence links are true.
+
+</details>
+
+[Back to top](#top)
