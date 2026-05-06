@@ -1,0 +1,9 @@
+{
+  "object_type": "AirNowSnapshotPreservationConsistencyMatrix",
+  "records": [
+    {
+      "check": "hash_consistency",
+      "pass": true
+    }
+  ]
+}

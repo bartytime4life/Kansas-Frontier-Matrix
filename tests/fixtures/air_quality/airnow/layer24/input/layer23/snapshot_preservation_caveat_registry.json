@@ -1,0 +1,20 @@
+{
+  "object_type": "AirNowSnapshotPreservationCaveatRegistry",
+  "records": [
+    {
+      "caveat_id": "AIRNOW_PRELIMINARY_DATA"
+    },
+    {
+      "caveat_id": "AIRNOW_NOT_AQS_REGULATORY_DATA"
+    },
+    {
+      "caveat_id": "AIRNOW_NO_BULK_ZIP_WEB_SERVICE_LOOP"
+    },
+    {
+      "caveat_id": "PRESERVATION_CLOSURE_NOT_ACTUAL_CLOSURE"
+    },
+    {
+      "caveat_id": "PRESERVATION_CLOSURE_NOT_PUBLICATION"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "object_type": "AirNowSnapshotPreservationAuditReceipt",
+  "publication_allowed": false,
+  "public_release_allowed": false,
+  "preservation_action_allowed": false,
+  "preservation_copy_allowed": false,
+  "preservation_transfer_allowed": false,
+  "snapshot_export_execution_allowed": false,
+  "snapshot_copy_allowed": false,
+  "snapshot_transfer_allowed": false,
+  "snapshot_publication_allowed": false,
+  "snapshot_release_allowed": false,
+  "archive_transfer_allowed": false,
+  "file_deletion_allowed": false,
+  "legal_hold_creation_allowed": false,
+  "official_archive_certification_allowed": false,
+  "command_execution_allowed": false,
+  "final_accession_execution_allowed": false,
+  "task_closure_allowed": false,
+  "audit_closure_allowed": false
+}
