@@ -3,7 +3,7 @@
 Source of truth: `control_plane/root_surface_register.yaml`.
 
 ## Purpose
-Classify each repository root surface for governance and compatibility handling.
+Classify each repository root surface for governance and compatibility handling, including enforcement roots.
 
 ## Allowed classes
 - canonical

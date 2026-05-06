@@ -38,6 +38,9 @@ roots:
   docs:
     class: canonical
     notes: Human documentation, ADRs, runbooks, reports.
+  enforcement:
+    class: policy
+    notes: Enforcement logic and policy execution surfaces.
   examples:
     class: compatibility
     notes: Example walkthroughs and reference slices.
