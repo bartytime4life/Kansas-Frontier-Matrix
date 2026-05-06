@@ -1,3 +1,3 @@
-# tests
+# Policy tests
 
-CONFIRMED: baseline scaffold created in this Codex session.
+Top-level test seam for policy-specific assertions.
