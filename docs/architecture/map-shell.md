@@ -8,16 +8,16 @@ owners: OWNER_TBD_NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION
 updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
-related: [../../README.md, ./README.md, ../adr/README.md, ../adr/ADR-0003-maplibre-renderer-boundary.md, ../adr/ADR-0206-maplibre-layer-manifest.md, ../../apps/web/README.md, ../../apps/web/package.json]
-tags: [kfm, architecture, map-shell, maplibre, evidence-drawer, focus-mode, governed-api, layer-manifest]
-notes: [Expands the prior docs/architecture/map-shell.md stub; owners, created date, policy label, doc UUID, runtime enforcement, and CI coverage remain NEEDS VERIFICATION.]
+related: [../../README.md, ./README.md, ../adr/README.md, ../adr/ADR-0001-schema-home.md, ../adr/ADR-0003-maplibre-renderer-boundary.md, ../adr/ADR-0206-maplibre-layer-manifest.md, ../../apps/web/README.md, ../../apps/web/package.json, ../../data/registry/layers/README.md]
+tags: [kfm, architecture, map-shell, maplibre, evidence-drawer, focus-mode, governed-api, layer-manifest, release, rollback, public-safe]
+notes: [Revised from the existing docs/architecture/map-shell.md using current GitHub connector evidence on main plus attached KFM MapLibre and Directory Rules doctrine. Local mounted repository, branch state, runtime logs, workflow run status, deployment posture, owner routing, doc UUID, created date, and policy label remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # KFM Map Shell Architecture
 
-Map-first browser architecture for rendering released KFM artifacts while keeping truth, evidence, policy, review, release, correction, and AI boundaries visible.
+Map-first browser architecture for rendering released KFM artifacts while keeping truth, evidence, policy, review, release, correction, rollback, and AI boundaries visible.
 
 <p align="left">
   <img alt="status: draft" src="https://img.shields.io/badge/status-draft-f59f00">
@@ -25,16 +25,19 @@ Map-first browser architecture for rendering released KFM artifacts while keepin
   <img alt="renderer: MapLibre" src="https://img.shields.io/badge/renderer-MapLibre-2ea44f">
   <img alt="truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-0a60ff">
   <img alt="policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-b60205">
-  <img alt="implementation: needs verification" src="https://img.shields.io/badge/enforcement-NEEDS%20VERIFICATION-f59f00">
+  <img alt="repo evidence: GitHub connector inspected" src="https://img.shields.io/badge/repo%20evidence-GitHub%20connector%20inspected-6f42c1">
+  <img alt="enforcement: needs verification" src="https://img.shields.io/badge/enforcement-NEEDS%20VERIFICATION-f59f00">
 </p>
 
 <p align="left">
   <a href="#status">Status</a> ·
+  <a href="#evidence-boundary">Evidence boundary</a> ·
   <a href="#scope">Scope</a> ·
   <a href="#repo-fit">Repo fit</a> ·
   <a href="#operating-law">Operating law</a> ·
   <a href="#runtime-flow">Runtime flow</a> ·
   <a href="#shell-surfaces">Shell surfaces</a> ·
+  <a href="#current-implementation-signals">Implementation signals</a> ·
   <a href="#contracts">Contracts</a> ·
   <a href="#validation">Validation</a> ·
   <a href="#rollback">Rollback</a> ·
@@ -43,28 +46,60 @@ Map-first browser architecture for rendering released KFM artifacts while keepin
 
 > [!IMPORTANT]
 > **Core rule:** the map shell is a trust-visible operating field, not a truth source.  
-> MapLibre may render released artifacts and identify visual candidates. The governed API must resolve evidence, policy, review, release, correction, and finite AI outcomes before the shell presents consequential claims.
+> MapLibre may render released artifacts and identify visual candidates. KFM’s governed API, evidence resolver, policy gates, release records, correction lineage, and rollback targets decide what a user may safely read, cite, export, compare, or ask Focus Mode to synthesize.
 
 > [!CAUTION]
-> This document records architecture and review burden. It does **not** prove current runtime behavior, deployed routes, CI enforcement, release maturity, policy execution, Evidence Drawer implementation, Focus Mode implementation, or rollback execution.
+> This document records architecture and review burden. It does **not** prove deployed behavior, branch protections, passing workflow runs, production headers, runtime logs, dashboard state, full release maturity, full Evidence Drawer maturity, or complete Focus Mode maturity.
 
 ---
 
 ## Status
 
-This file replaces the prior `docs/architecture/map-shell.md` stub, which recorded the MapLibre shell as a proposed binding and the current static prototype as no-dependency.
+This file is the cross-domain architecture document for the KFM browser map shell. The path is appropriate because `docs/architecture/` is the human-facing home for system design that applies across domains, while code, schemas, policies, fixtures, receipts, proofs, release records, and lifecycle data remain in their own responsibility roots.
 
-Current repository evidence confirms a richer adjacent surface than the stub expressed:
-
-| Evidence area | Status | What this document may safely say |
+| Area | Status | What can be said safely |
 |---|---:|---|
-| Target file exists | `CONFIRMED` | `docs/architecture/map-shell.md` exists and is thin enough to replace with this architecture document. |
-| Architecture root exists | `CONFIRMED` | `docs/architecture/README.md` exists but is minimal. |
-| Renderer boundary ADR exists | `CONFIRMED` | `ADR-0003-maplibre-renderer-boundary.md` records the renderer-not-truth rule. |
-| Layer manifest ADR exists | `CONFIRMED` | `ADR-0206-maplibre-layer-manifest.md` proposes `LayerManifest.v1` as the governed layer contract. |
-| Web app package evidence | `CONFIRMED` | `apps/web/package.json` declares `maplibre-gl`, `pmtiles`, Vite, Vitest, npm scripts, and npm as package manager. |
-| Runtime enforcement | `UNKNOWN` | Route behavior, UI component behavior, policy enforcement, release manifests, and proof objects must be verified separately. |
-| Public deployment posture | `UNKNOWN` | Firewall, reverse proxy, CSP/CORS, auth, branch protections, runtime logs, and dashboards are not proven by this file. |
+| Target file | `CONFIRMED` | `docs/architecture/map-shell.md` exists in the GitHub repository and is the target of this revision. |
+| Directory placement | `CONFIRMED doctrine / CONFIRMED path` | Directory Rules place `map-shell.md` under `docs/architecture/`, not under a domain root or app root. |
+| Renderer boundary | `CONFIRMED repo doc / NEEDS VERIFICATION enforcement` | `ADR-0003-maplibre-renderer-boundary.md` records that MapLibre is downstream of trust. |
+| Layer contract boundary | `CONFIRMED repo doc / PROPOSED decision` | `ADR-0206-maplibre-layer-manifest.md` records `LayerManifest.v1` as the governed layer-contract direction. |
+| Web package evidence | `CONFIRMED repo file` | `apps/web/package.json` declares `maplibre-gl`, `pmtiles`, Vite, Vitest, npm scripts, and `npm@10`. |
+| Ecology map slice | `CONFIRMED repo source` | An ecology-specific MapLibre slice exists and uses a manifest, Evidence Drawer, and EvidenceBundle fetcher. |
+| Baseline workflow file | `CONFIRMED repo file / UNKNOWN run status` | `.github/workflows/baseline.yml` contains KFM validation steps, but successful workflow execution was not verified here. |
+| Full shell maturity | `UNKNOWN` | The complete production map shell, deployed routes, runtime receipts, cache invalidation, release manifests, and dashboard behavior require further verification. |
+
+[Back to top](#top)
+
+---
+
+## Evidence boundary
+
+This revision uses two kinds of evidence:
+
+1. **Project doctrine and directory law**: KFM requires a governed, evidence-first, map-first, time-aware shell where the interface is part of the trust model, not decorative chrome.
+2. **Current repository connector evidence**: selected files on `main` were inspected through the GitHub connector. The local workspace did not expose a mounted Git checkout, so local branch state and local test output are not claimed.
+
+### Current repository evidence snapshot
+
+| Evidence | Status | Supports | Does not prove |
+|---|---:|---|---|
+| `README.md` | `CONFIRMED` | KFM identity, lifecycle law, inspectable-claim posture, public-client trust membrane. | Full implementation maturity. |
+| `docs/architecture/README.md` | `CONFIRMED` | `docs/architecture/` is cross-domain system architecture, not runtime or schema authority. | Complete architecture inventory. |
+| `docs/adr/ADR-0003-maplibre-renderer-boundary.md` | `CONFIRMED` | Renderer-not-truth rule. | CI/runtime enforcement. |
+| `docs/adr/ADR-0206-maplibre-layer-manifest.md` | `CONFIRMED / PROPOSED` | Layer manifests as governed layer contract. | Accepted schema, validators, or release readiness. |
+| `docs/adr/ADR-0001-schema-home.md` | `CONFIRMED / PROPOSED` | Proposed `schemas/contracts/v1/` machine-schema home; `contracts/` and `policy/` remain separate. | Accepted schema-home enforcement. |
+| `data/registry/layers/README.md` | `CONFIRMED` | Layer registry boundary and release-aware layer-manifest posture. | Existing layer entries or validator pass. |
+| `apps/web/package.json` | `CONFIRMED` | Package metadata for MapLibre, PMTiles, npm, Vite, Vitest, and app scripts. | Installed dependencies, production build, or deployment. |
+| `apps/web/src/ecology/EcologyMap.tsx` | `CONFIRMED` | An ecology slice loads a layer manifest, renders MapLibre, filters feature properties, opens Evidence Drawer, and fetches EvidenceBundle. | Complete reusable map shell or cross-domain adapter. |
+| `apps/web/src/ecology/EvidenceDrawer.tsx` | `CONFIRMED` | A Drawer component and payload shape exist for ecology trust display. | Universal Drawer contract or accessibility completeness. |
+| `apps/web/src/ecology/layerManifest.ts` | `CONFIRMED` | Ecology layer manifest client validates object type and `public_safe`. | Final `LayerManifest.v1` schema enforcement. |
+| `apps/web/src/ecology/evidenceBundle.ts` | `CONFIRMED` | Ecology EvidenceBundle client uses finite outcomes and public-only visibility logic. | Full global evidence resolver. |
+| `apps/web/src/ecology/FocusPanel.tsx` | `CONFIRMED / partial` | A Focus panel exists for ecology UI demo flow. | Complete finite-envelope parity; current local response type omits `ERROR`. |
+| `apps/api/ecology/focus_mode.py` | `CONFIRMED / minimal runtime` | No-network ecology Focus runtime reads released artifacts and emits finite outcomes. | Full governed AI platform or production route behavior. |
+| `.github/workflows/baseline.yml` | `CONFIRMED file` | Baseline validation workflow is checked in. | Passing run status, branch protection, or production release enforcement. |
+
+> [!NOTE]
+> Repo files are stronger evidence for current implementation than prior PDF plans. Attached KFM doctrine is stronger evidence for KFM operating law than generic web-map practice. Where doctrine and current implementation maturity differ, this document preserves doctrine and labels implementation gaps.
 
 [Back to top](#top)
 
@@ -77,13 +112,13 @@ The map shell is the browser-facing operating field where users inspect place, t
 It coordinates these responsibilities:
 
 - render released public-safe map artifacts;
-- preserve stable geography, time, layer, role, and release context;
-- expose trust cues where meaning changes;
+- preserve stable geography, time, layer, role, audience, and release context;
+- expose trust cues at the point where meaning changes;
 - route feature selection through governed evidence resolution;
 - open the Evidence Drawer for consequential support;
-- pass bounded scope to Focus Mode through a governed runtime envelope;
-- preserve denial, abstention, stale, restricted, generalized, superseded, withdrawn, and error states;
-- keep exports and shared views attached to provenance, release, and correction context.
+- pass bounded map context to Focus Mode through governed runtime envelopes;
+- make denial, abstention, stale, restricted, generalized, superseded, withdrawn, and error states visible;
+- keep exports and shared views attached to provenance, release, correction, and generalization context.
 
 ### Non-goals
 
@@ -95,6 +130,7 @@ The map shell is not:
 - the publication system;
 - the release authority;
 - the correction authority;
+- the rollback authority;
 - a direct model client;
 - a raw data browser;
 - a hidden steward bypass path;
@@ -106,29 +142,30 @@ The map shell is not:
 
 ## Repo fit
 
-`docs/architecture/map-shell.md` belongs under `docs/architecture/` because it is human-facing architecture doctrine for a cross-domain UI trust boundary. It does not define machine schemas, policy-as-code, source data, emitted receipts, or application code.
+`docs/architecture/map-shell.md` belongs under `docs/architecture/` because it explains a cross-domain system boundary: how KFM’s map-first browser shell preserves evidence, policy, release, correction, and AI boundaries.
 
 | Relationship | Path | Status | Role |
 |---|---|---:|---|
-| Project landing page | [`../../README.md`](../../README.md) | `CONFIRMED file` | KFM identity, trust law, responsibility roots, and public orientation. |
-| Architecture directory index | [`./README.md`](./README.md) | `CONFIRMED file / minimal` | Local architecture directory landing page. |
-| ADR index | [`../adr/README.md`](../adr/README.md) | `CONFIRMED file / NEEDS VERIFICATION coverage` | ADR navigation and decision-review discipline. |
-| Renderer boundary ADR | [`../adr/ADR-0003-maplibre-renderer-boundary.md`](../adr/ADR-0003-maplibre-renderer-boundary.md) | `CONFIRMED file` | MapLibre renderer boundary and no-truth-authority rule. |
-| Layer manifest ADR | [`../adr/ADR-0206-maplibre-layer-manifest.md`](../adr/ADR-0206-maplibre-layer-manifest.md) | `CONFIRMED file / PROPOSED decision` | Layer-facing governed contract posture. |
-| Web shell README | [`../../apps/web/README.md`](../../apps/web/README.md) | `CONFIRMED file / draft` | Browser shell orientation and runtime-boundary notes. |
-| Web package manifest | [`../../apps/web/package.json`](../../apps/web/package.json) | `CONFIRMED file` | Package manager, scripts, MapLibre/PMTiles dependency declarations. |
+| Project landing page | [`../../README.md`](../../README.md) | `CONFIRMED` | KFM identity, lifecycle law, public-client trust membrane. |
+| Architecture directory | [`./README.md`](./README.md) | `CONFIRMED` | Cross-domain architecture home. |
+| Schema-home ADR | [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) | `CONFIRMED / PROPOSED` | Contract/schema/policy split and schema-home burden. |
+| Renderer boundary ADR | [`../adr/ADR-0003-maplibre-renderer-boundary.md`](../adr/ADR-0003-maplibre-renderer-boundary.md) | `CONFIRMED` | Renderer-not-truth decision. |
+| Layer manifest ADR | [`../adr/ADR-0206-maplibre-layer-manifest.md`](../adr/ADR-0206-maplibre-layer-manifest.md) | `CONFIRMED / PROPOSED` | Governed layer-manifest decision. |
+| Layer registry | [`../../data/registry/layers/README.md`](../../data/registry/layers/README.md) | `CONFIRMED` | Release-aware layer registry boundary. |
+| Web shell README | [`../../apps/web/README.md`](../../apps/web/README.md) | `CONFIRMED / draft` | Browser shell orientation. |
+| Web package manifest | [`../../apps/web/package.json`](../../apps/web/package.json) | `CONFIRMED` | Package manager, scripts, MapLibre/PMTiles dependency declarations. |
 
 ### Accepted inputs
 
-The map shell may consume these inputs only through governed, verified, or no-network fixture paths:
+The map shell may consume these inputs only through governed, verified, released, or no-network fixture paths:
 
 | Input | Accepted when | Must preserve |
 |---|---|---|
-| `LayerManifest` | Released or fixture-backed layer contract is valid. | Release id, source refs, evidence policy, sensitivity posture, stale policy, correction state. |
-| `StyleManifest` / style asset | Style is versioned and reviewed where meaning changes. | Style id, digest, sprite/glyph/font posture, accessibility notes. |
-| Tile, PMTiles, raster, or vector artifact manifest | Artifact is public-safe and release-bound. | Digest, bounds, format, cache policy, rollback relation. |
+| `LayerManifest` | Released, release-candidate, authorized steward, or fixture-backed layer contract is valid. | Release id, source refs, evidence policy, sensitivity posture, stale policy, correction state. |
+| `StyleManifest` or style asset | Style is versioned and reviewed where meaning changes. | Style id, digest, symbol meaning, accessibility notes. |
+| Tile, PMTiles, raster, vector, or GeoJSON artifact manifest | Artifact is public-safe, integrity-bound, and release-aware. | Digest, bounds, media type, cache policy, rollback relation. |
 | `EvidenceDrawerPayload` | Returned by governed resolver or no-network fixture. | EvidenceRef/EvidenceBundle, source role, policy, review, release, correction, audit linkage. |
-| `RuntimeResponseEnvelope` | Returned by governed API for Focus Mode. | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, citations or reason codes, audit ref. |
+| `RuntimeResponseEnvelope` or Focus response | Returned by governed API or verified fixture. | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; citations or reason codes; audit ref. |
 | Shell state | Browser-owned runtime state only. | Viewport, selected candidate, active time, layer toggles, open panels, display preferences. |
 
 ### Exclusions
@@ -149,7 +186,7 @@ The map shell may consume these inputs only through governed, verified, or no-ne
 
 ## Operating law
 
-The map shell exists downstream of the KFM truth path:
+The map shell exists downstream of KFM’s governed truth path:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -213,7 +250,7 @@ flowchart LR
   MAP --> HIT[Visual candidate<br/>hit-test + viewport + active time]
   HIT --> API[Governed evidence resolver]
   API --> DRAWER[EvidenceDrawerPayload]
-  API --> FOCUS[RuntimeResponseEnvelope]
+  API --> FOCUS[RuntimeResponseEnvelope / Focus response]
   API --> RECEIPT[MapRuntimeReceipt]
   REL --> CORR[CorrectionNotice / RollbackCard]
 
@@ -229,7 +266,7 @@ flowchart LR
 2. The shell renders only manifest-backed public-safe layers.
 3. MapLibre identifies the active layer, feature candidate, camera state, viewport, and active time.
 4. The shell sends candidate context to the governed resolver.
-5. The resolver returns a Drawer payload or finite negative state.
+5. The resolver returns a Drawer payload, finite Focus response, or finite negative state.
 6. Focus Mode may ask bounded questions only over the active evidence scope.
 7. Export/share previews preserve trust cues, source support, release id, correction state, and generalization context.
 8. Receipts or audit references are emitted or linked where implementation requires them.
@@ -312,6 +349,27 @@ KFM time is not a single timestamp. The map shell should keep these axes separat
 
 ---
 
+## Current implementation signals
+
+The repository now exposes a concrete ecology UI/API slice that partially exercises the map-shell doctrine. Treat it as implementation evidence for that slice, not as proof that every cross-domain map-shell obligation is complete.
+
+| Path | CONFIRMED signal | Architecture consequence | Remaining gap |
+|---|---|---|---|
+| [`../../apps/web/src/ecology/EcologyMap.tsx`](../../apps/web/src/ecology/EcologyMap.tsx) | Uses `maplibre-gl`, fetches an ecology layer manifest, renders a vector layer, filters displayed feature fields by `allowed_fields`, opens Evidence Drawer, and fetches an EvidenceBundle. | Confirms a manifest-bound MapLibre + Drawer slice exists. | Cross-domain shell abstraction, production route behavior, and full release/cache behavior remain `NEEDS VERIFICATION`. |
+| [`../../apps/web/src/ecology/EvidenceDrawer.tsx`](../../apps/web/src/ecology/EvidenceDrawer.tsx) | Defines and renders an ecology Drawer payload with decision, visible outcome, source roles, evidence refs, policy flags, redaction refs, freshness, and spec hash. | Confirms a trust-visible Drawer implementation exists for ecology. | Universal Drawer contract, accessibility coverage, and all-domain reuse remain `NEEDS VERIFICATION`. |
+| [`../../apps/web/src/ecology/layerManifest.ts`](../../apps/web/src/ecology/layerManifest.ts) | Defines `EcologyLayerManifest`, fetches `/api/ecology/layers/{id}`, and rejects non-public-safe manifests. | Confirms layer-manifest style client enforcement in ecology. | Not the final `LayerManifest.v1` schema and not proof of registry/release closure. |
+| [`../../apps/web/src/ecology/evidenceBundle.ts`](../../apps/web/src/ecology/evidenceBundle.ts) | Validates ecology EvidenceBundle shape, exposes finite outcomes, classifies HTTP failure into `DENY`, `ABSTAIN`, or `ERROR`, and blocks restricted/review-required bundles under `publicOnly`. | Confirms an evidence-bounded client state machine exists. | Global EvidenceBundle schema, citation validation, and release-wide resolver behavior remain `NEEDS VERIFICATION`. |
+| [`../../apps/web/src/ecology/FocusPanel.tsx`](../../apps/web/src/ecology/FocusPanel.tsx) | Posts a demo `FocusModeRequest` and displays answer, evidence refs, decision refs, and reasons. | Confirms Focus UI work exists. | Current local response type omits `ERROR`; full finite-envelope parity should be verified. |
+| [`../../apps/api/ecology/focus_mode.py`](../../apps/api/ecology/focus_mode.py) | Minimal no-network ecology Focus runtime reads released ecology artifacts only and emits `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. | Confirms backend Focus logic exists for a bounded ecology slice. | Full governed AI runtime, provider adapters, route wiring, citations, receipts, and deployment remain `NEEDS VERIFICATION`. |
+| [`../../.github/workflows/baseline.yml`](../../.github/workflows/baseline.yml) | Baseline workflow contains repository, schema, fixture, truth-label, directory-rules, internal-path, source-rights, API-contract, release-manifest, publication, and unittest checks. | Confirms validation wiring exists as a checked-in workflow file. | Workflow run success and branch protection were not verified in this session. |
+
+> [!IMPORTANT]
+> The ecology slice is valuable because it turns shell doctrine into code-shaped evidence. It should not be silently generalized into a claim that KFM’s full production map shell is complete.
+
+[Back to top](#top)
+
+---
+
 ## Contracts
 
 The map shell is a consumer of trust-bearing contracts. Exact schema homes and field names must follow the accepted repository convention.
@@ -320,13 +378,13 @@ The map shell is a consumer of trust-bearing contracts. Exact schema homes and f
 |---|---|---:|
 | `LayerManifest` | Declares what a released layer may render, cite, withhold, badge, time-scope, and resolve. | `PROPOSED / partially documented by ADR` |
 | `StyleManifest` | Binds visual treatment to reviewed style assets and meaning-change controls. | `PROPOSED` |
-| `TileArtifactManifest` | Identifies tile, PMTiles, raster, or vector artifacts and digests. | `PROPOSED` |
+| `TileArtifactManifest` | Identifies tile, PMTiles, raster, vector, or GeoJSON artifacts and digests. | `PROPOSED` |
 | `MapReleaseManifest` | Groups layer, style, artifact, proof, release, correction, and rollback context. | `PROPOSED` |
 | `EvidenceRef` | Points from map candidate or claim to evidence support. | `NEEDS VERIFICATION` |
-| `EvidenceBundle` | Supplies resolved support for Drawer and Focus. | `NEEDS VERIFICATION` |
-| `EvidenceDrawerPayload` | Drives user-visible evidence, policy, review, release, correction, and audit state. | `PROPOSED` |
+| `EvidenceBundle` | Supplies resolved support for Drawer and Focus. | `CONFIRMED ecology client / NEEDS VERIFICATION global contract` |
+| `EvidenceDrawerPayload` | Drives user-visible evidence, policy, review, release, correction, and audit state. | `CONFIRMED ecology payload / NEEDS VERIFICATION global contract` |
 | `MapContextEnvelope` | Carries active place, time, layer, feature candidate, role, and release context. | `PROPOSED` |
-| `RuntimeResponseEnvelope` | Carries finite Focus outcomes. | `NEEDS VERIFICATION` |
+| `RuntimeResponseEnvelope` | Carries finite Focus outcomes. | `CONFIRMED doctrine / NEEDS VERIFICATION full UI parity` |
 | `MapRuntimeReceipt` | Records auditable runtime resolution events where required. | `PROPOSED` |
 | `CorrectionNotice` / `RollbackCard` | Makes correction and reversal inspectable. | `NEEDS VERIFICATION` |
 
@@ -370,39 +428,6 @@ The shape below is illustrative, not a production schema.
 
 ---
 
-## Implementation boundary
-
-Repository evidence currently supports these narrow implementation claims:
-
-| Claim | Status |
-|---|---:|
-| `apps/web/package.json` declares `npm@10` as package manager. | `CONFIRMED` |
-| `apps/web/package.json` declares `maplibre-gl` and `pmtiles` dependencies. | `CONFIRMED` |
-| `apps/web/package.json` declares `dev`, `preview`, `check`, `test`, `build`, and `doctor` scripts. | `CONFIRMED` |
-| `apps/web/README.md` describes a governed web shell and no-bypass posture. | `CONFIRMED file / draft` |
-| The map shell runtime is fully implemented. | `UNKNOWN` |
-| Evidence Drawer exists as a working component. | `UNKNOWN` |
-| Focus Mode exists as a governed API-backed working component. | `UNKNOWN` |
-| CI enforces no public raw path or no direct model client. | `UNKNOWN` |
-| Release manifests and rollback cards are emitted for map layers. | `UNKNOWN` |
-
-### Repo-native commands
-
-The package manifest declares these app-level commands. Run them only in a real checkout and record actual output before making test claims.
-
-```bash
-cd apps/web
-
-npm run check
-npm run test
-npm run build
-npm run doctor
-```
-
-[Back to top](#top)
-
----
-
 ## Validation
 
 A credible map-shell implementation should fail closed in negative paths before it expands visual scope.
@@ -422,9 +447,23 @@ A credible map-shell implementation should fail closed in negative paths before 
 | Export preservation | Exports keep trust cues, citations, release id, and correction state. | Export blocked. |
 | Accessibility | Trust cues are keyboard-accessible, screen-reader-labeled, and not color-only. | Hold or CI failure. |
 
+### Repo-native commands to verify before claiming success
+
+The package manifest declares these app-level commands. Run them in a real checkout and record actual output before making test claims.
+
+```bash
+cd apps/web
+
+npm run check
+npm run test
+npm run build
+npm run doctor
+```
+
 ### No-network fixture checklist
 
 - [ ] Valid public-safe hydrology `LayerManifest`.
+- [ ] Valid ecology `LayerManifest` fixture aligned with the current ecology slice.
 - [ ] Stale source fixture.
 - [ ] Sensitive geometry denial fixture.
 - [ ] Missing evidence fixture.
@@ -463,8 +502,9 @@ Map-shell rollback must restore safe public behavior without deleting trust hist
 | Browser bypasses governed API | Disable affected route/component; block public release; add no-bypass regression test. |
 | Sensitive geometry appears publicly | Withdraw or generalize layer; emit correction/transform receipt; invalidate cache. |
 | Focus Mode calls a model runtime directly | Disable Focus entry point; require governed API mediation. |
+| Focus Mode omits a finite outcome branch | Disable affected UI path or downgrade to `ERROR` until envelope parity is proven. |
 | Popup shows unsupported claim | Remove claim text; force Drawer-backed resolution. |
-| Style change alters meaning without review | Revert style or hold release until StyleManifest / LayerManifest review passes. |
+| Style change alters meaning without review | Revert style or hold release until `StyleManifest` / `LayerManifest` review passes. |
 | Evidence Drawer cannot resolve candidate | Show `ABSTAIN` or `ERROR`; preserve map context. |
 | Cache serves withdrawn release | Invalidate cache and bind shell to rollback target. |
 | Export strips trust cues | Disable export path until provenance and release context are restored. |
@@ -515,17 +555,18 @@ Rollback must preserve:
 | Confirm document owners / CODEOWNERS. | `NEEDS VERIFICATION` | UI, architecture, API, policy, release reviewers. |
 | Confirm policy label. | `NEEDS VERIFICATION` | Public/restricted classification convention. |
 | Confirm `created` date. | `NEEDS VERIFICATION` | Commit history or documentation register. |
-| Confirm current app framework and runtime entrypoints. | `NEEDS VERIFICATION` | `apps/web` source tree. |
-| Confirm MapLibre adapter implementation path. | `UNKNOWN` | `apps/web/src`, `packages/`, or repo-native UI path. |
-| Confirm Evidence Drawer implementation. | `UNKNOWN` | UI components, contracts, fixtures, tests. |
-| Confirm Focus Mode implementation and API mediation. | `UNKNOWN` | Governed API and web client code. |
-| Confirm no-public-raw-path enforcement. | `UNKNOWN` | Tests, validators, workflows. |
-| Confirm no-direct-model-client enforcement. | `UNKNOWN` | Static checks, UI tests, workflows. |
-| Confirm LayerManifest schema home. | `NEEDS VERIFICATION` | ADR-0001-compatible schema authority. |
+| Confirm full architecture directory inventory. | `NEEDS VERIFICATION` | Complete checkout scan. |
+| Confirm MapLibre adapter abstraction path. | `NEEDS VERIFICATION` | `apps/web/src/map`, ecology slice, and any shared package. |
+| Confirm universal Evidence Drawer contract. | `NEEDS VERIFICATION` | UI components, contracts, fixtures, tests. |
+| Confirm Focus Mode finite-envelope parity in UI. | `NEEDS VERIFICATION` | `FocusPanel`, Focus API, OpenAPI, fixtures, tests. |
+| Confirm no-public-raw-path enforcement. | `NEEDS VERIFICATION` | Tests, validators, workflows, and workflow run evidence. |
+| Confirm no-direct-model-client enforcement. | `NEEDS VERIFICATION` | Static checks, UI tests, workflow run evidence. |
+| Confirm `LayerManifest.v1` schema home. | `NEEDS VERIFICATION` | ADR-0001-compatible schema authority. |
 | Confirm release, proof, receipt, correction, and rollback object homes. | `NEEDS VERIFICATION` | `data/`, `release/`, `runtime/`, or accepted repo convention. |
-| Confirm accessibility tests for trust cues. | `UNKNOWN` | App test stack. |
+| Confirm accessibility tests for trust cues. | `UNKNOWN` | App test stack and workflow run output. |
 | Confirm public deployment posture. | `UNKNOWN` | Runtime, infra, headers, reverse proxy, auth, CSP/CORS. |
-| Confirm CI status and branch protections. | `UNKNOWN` | GitHub Actions and repo settings. |
+| Confirm CI status and branch protections. | `UNKNOWN` | GitHub Actions run history and repo settings. |
+| Confirm map-shell runtime receipts and cache invalidation behavior. | `UNKNOWN` | Runtime code, release artifacts, logs, dashboards. |
 
 [Back to top](#top)
 
