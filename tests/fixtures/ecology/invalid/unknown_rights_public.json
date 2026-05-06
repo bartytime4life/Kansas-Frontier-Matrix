@@ -1,0 +1,42 @@
+{
+  "schema_version": "v1",
+  "object_type": "EvidenceBundle",
+  "bundle_id": "kfm://evidence/ecology/test/unknown-rights-public",
+
+  "source_refs": ["usgs_landfire"],
+  "dataset_refs": ["lf2024_evc"],
+
+  "policy_id": "ecology_publication_policy_v1",
+  "policy_label": "public",
+
+  "rights_status": "unknown",
+  "sensitivity": "public",
+
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+
+  "evidence_refs": [
+    "kfm://evidence/source/lf2024/evc"
+  ],
+  "object_refs": [],
+
+  "resolved": true,
+  "evidence_bundle_resolved": true,
+
+  "surface": "public",
+  "publication_state": "published",
+
+  "source_role": "AUTHORITATIVE",
+
+  "catalog_closure": true,
+
+  "assets": [
+    {
+      "asset_id": "evc_cog",
+      "type": "raster",
+      "format": "COG",
+      "href": "s3://kfm/test/ecology/unknown-rights.tif",
+      "checksum": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "public_safe": true
+    }
+  ]
+}

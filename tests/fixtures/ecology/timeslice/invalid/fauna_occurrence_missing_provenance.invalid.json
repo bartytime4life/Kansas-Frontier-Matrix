@@ -1,0 +1,10 @@
+{
+  "fixture_id": "fauna_occurrence.missing_provenance.invalid",
+  "status": "invalid",
+  "reason": "provenance_ref missing",
+  "occurrence": {
+    "observation_id": "obs-ks-2024-0100",
+    "taxon": "Spiza americana",
+    "observed_at": "2024-05-13T15:30:00Z"
+  }
+}

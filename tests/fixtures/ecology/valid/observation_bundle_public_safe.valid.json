@@ -1,0 +1,32 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyObservationBundle",
+  "bundle_id": "kfm://bundle/ecology/observation-valid-001",
+  "source_refs": [
+    "kfs_field_plots"
+  ],
+  "dataset_refs": [
+    "ecology.observation_plot.v1"
+  ],
+  "catalog_refs": [
+    "kfm://catalog/stac/ecology/observation-plot-valid-001",
+    "kfm://catalog/prov/ecology/observation-plot-valid-001",
+    "kfm://catalog/dcat/ecology/observation-plot-valid-001"
+  ],
+  "policy_id": "ecology_sensitive_occurrence_publication",
+  "policy_label": "restricted",
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "public_visibility": "generalized",
+  "public_geometry_policy": "deny_exact_generalize_required",
+  "exact_geometry_present": false,
+  "redaction_receipt_ref": "kfm://receipt/redaction/ecology/observation-valid-001",
+  "publication_state": "reviewed",
+  "surface": "public",
+  "catalog_closure": true,
+  "evidence_bundle_resolved": true,
+  "spec_hash": "sha256:5baf7c4ecff82f0f08cfe4129fa4f2ff6f5f5b6fcc813ab0d0777e2af56f7f3a",
+  "evidence_refs": [
+    "kfm://evidence/ecology/obs-001"
+  ]
+}

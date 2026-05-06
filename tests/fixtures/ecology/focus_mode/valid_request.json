@@ -1,0 +1,29 @@
+{
+  "schema_version": "v1",
+  "object_type": "FocusModeRequest",
+  "request_id": "kfm://request/ecology/demo-001",
+
+  "query": "What ecology claim can be answered for the demo release?",
+  "surface": "public",
+
+  "policy_label": "public",
+  "sensitivity": "public",
+  "rights_status": "public",
+
+  "spec_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+
+  "taxon_ref": "kfm://taxon/asclepias-syriaca",
+
+  "claim_refs": [
+    "kfm://claim/ecology/demo-001"
+  ],
+
+  "evidence_bundle_refs": [
+    "kfm://evidence/ecology/demo-001"
+  ],
+
+  "options": {
+    "allow_inference": false,
+    "require_evidence": true
+  }
+}

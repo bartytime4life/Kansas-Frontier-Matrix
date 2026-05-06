@@ -1,0 +1,13 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyRuntimeEnvelope",
+  "fixture_id": "kfm://fixture/ecology/malformed/runtime/malformed_envelope_missing_reason_code",
+  "malformed_reason": "runtime_reason_code_missing",
+  "outcome": "ERROR",
+  "reason": {
+    "message": "Missing reason.code in runtime error envelope"
+  },
+  "audit": {
+    "fixture_ref": "kfm://fixture/ecology/malformed/runtime/malformed_envelope_missing_reason_code"
+  }
+}

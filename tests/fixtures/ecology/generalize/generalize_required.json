@@ -1,0 +1,44 @@
+{
+  "object_type": "EvidenceBundle",
+  "bundle_id": "kfm://evidence/ecology/test/generalize-required",
+
+  "source_refs": ["usgs_landfire"],
+  "dataset_refs": ["lf2024_evc"],
+
+  "policy_label": "public",
+  "rights_status": "public",
+  "sensitivity": "generalize",
+
+  "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+
+  "evidence_refs": [
+    "kfm://evidence/source/lf2024/evc"
+  ],
+  "object_refs": [],
+
+  "resolved": true,
+  "evidence_bundle_resolved": true,
+
+  "surface": "public",
+  "publication_state": "published",
+
+  "source_role": "AUTHORITATIVE",
+
+  "exact_geometry_present": false,
+
+  "public_visibility": "generalized",
+  "redaction_receipt_ref": "kfm://receipts/geoprivacy/test/generalize-required",
+
+  "catalog_closure": true,
+
+  "assets": [
+    {
+      "asset_id": "generalized_cog",
+      "type": "raster",
+      "format": "COG",
+      "href": "s3://kfm/test/ecology/generalized.tif",
+      "checksum": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "public_safe": true
+    }
+  ]
+}

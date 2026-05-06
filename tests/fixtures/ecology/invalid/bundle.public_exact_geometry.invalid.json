@@ -1,0 +1,20 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyObservationBundle",
+  "bundle_id": "kfm://bundle/ecology/public-exact-geometry",
+  "source_refs": ["kfs_field_plots"],
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "policy_id": "ecology_sensitive_occurrence_publication",
+  "policy_label": "restricted",
+  "sensitivity": "restricted",
+  "rights_status": "controlled",
+  "public_visibility": "withheld",
+  "public_geometry_policy": "deny_exact_generalize_required",
+  "exact_geometry_present": true,
+  "publication_state": "reviewed",
+  "surface": "public",
+  "catalog_closure": true,
+  "evidence_bundle_resolved": true,
+  "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "evidence_refs": ["kfm://evidence/ecology/public-exact-geometry"]
+}

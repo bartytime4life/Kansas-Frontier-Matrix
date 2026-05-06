@@ -1,0 +1,10 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyRightsSupport",
+  "fixture_id": "kfm://fixture/ecology/malformed/rights/redistribution_posture_missing",
+  "malformed_reason": "redistribution_posture_missing",
+  "rights_status": "controlled",
+  "license": "CC-BY-4.0",
+  "expected_outcome": "DENY",
+  "notes": "Intentionally omits redistribution_posture required for publication decisions."
+}

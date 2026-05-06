@@ -1,0 +1,6 @@
+{
+  "schema_version": "v1",
+  "object_type": "MalformedFixture",
+  "reason": "intentional_error_case_for_runner_contract",
+  "payload": "expected object payload is intentionally missing required structure"
+}

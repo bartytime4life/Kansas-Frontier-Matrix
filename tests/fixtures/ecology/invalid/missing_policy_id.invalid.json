@@ -1,0 +1,23 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyObservationBundle",
+  "bundle_id": "ecology-bundle-invalid-001",
+  "source_refs": [
+    "kfs_field_plots"
+  ],
+  "dataset_refs": [
+    "ecology.observation_plot.v1"
+  ],
+  "catalog_refs": [
+    "catalog://ecology/observation_plot/v1"
+  ],
+  "sensitivity": "generalize",
+  "rights_status": "controlled",
+  "public_visibility": "generalized",
+  "exact_geometry_present": false,
+  "spec_hash": "sha256:ee02607e43ff9cff69f08a2260dfa51155f4c4aca5f0f4d65ca57f9f5380af42",
+  "evidence_refs": [
+    "evidence://bundle/obs-002"
+  ],
+  "expected_failure_reason": "missing_policy_id"
+}

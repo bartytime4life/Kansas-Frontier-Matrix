@@ -1,0 +1,11 @@
+{
+  "schema_version": "v1",
+  "object_type": "EcologyOccurrenceSupport",
+  "fixture_id": "kfm://fixture/ecology/malformed/occurrence/missing_provenance",
+  "malformed_reason": "missing_provenance",
+  "occurrence_id": "occ-malformed-001",
+  "source_role": "observed_occurrence",
+  "spec_hash": "sha256:17be3f6afb89ef2e95f4c7a41d833913f2e8eb3e5e2ca2258ab54ec4e2a643d5",
+  "expected_outcome": "ERROR",
+  "notes": "Intentionally omits source_uri, retrieved_at, source_record_id, and source_dataset_id."
+}

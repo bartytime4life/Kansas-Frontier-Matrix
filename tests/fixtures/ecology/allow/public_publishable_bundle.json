@@ -1,0 +1,44 @@
+{
+  "object_type": "EvidenceBundle",
+  "bundle_id": "kfm://evidence/ecology/test/public-publishable-bundle",
+
+  "source_refs": ["usgs_landfire"],
+  "dataset_refs": ["lf2024_evc"],
+
+  "policy_label": "public",
+  "rights_status": "public",
+  "sensitivity": "public",
+
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+
+  "evidence_refs": [
+    "kfm://evidence/source/lf2024/evc"
+  ],
+  "object_refs": [],
+
+  "resolved": true,
+  "evidence_bundle_resolved": true,
+
+  "surface": "public",
+  "publication_state": "published",
+
+  "source_role": "AUTHORITATIVE",
+
+  "catalog_closure": true,
+  "catalog_refs": {
+    "stac": "kfm://catalog/stac/ecology/test/public-publishable-bundle",
+    "dcat": "kfm://catalog/dcat/ecology/test/public-publishable-bundle",
+    "prov": "kfm://catalog/prov/ecology/test/public-publishable-bundle"
+  },
+
+  "assets": [
+    {
+      "asset_id": "public_cog",
+      "type": "raster",
+      "format": "COG",
+      "href": "s3://kfm/test/ecology/public-publishable-bundle.tif",
+      "checksum": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "public_safe": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "case_id": "ecology-policy-unknown-rights-policy-001",
+  "object_type": "observation_plot",
+  "source_role": "OBSERVATION_PLOT",
+  "dataset_refs": ["ecology.observation_plot.v1"],
+  "catalog_refs": ["catalog://ecology/observation_plot/v1"],
+  "policy_id": "eco-generalize-v1",
+  "policy_label": "public",
+  "sensitivity": "generalize",
+  "rights_status": "unknown",
+  "public_visibility": "generalized",
+  "public_geometry_policy": "deny_exact_generalize_required",
+  "exact_geometry_present": false,
+  "evidence_refs": ["evidence://ecology/policy/unknown-rights-policy-001"],
+  "evidence_bundle_resolved": true,
+  "expected_decision": "DENY",
+  "expected_reasons": ["unknown_rights"]
+}
