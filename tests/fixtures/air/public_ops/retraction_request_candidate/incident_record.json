@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "incident_id": "inc-high-1",
+  "domain": "atmosphere.air",
+  "created_at": "2026-04-30T00:00:00Z",
+  "as_of": "2026-04-30T00:00:00Z",
+  "severity": "high",
+  "trigger": "hash_mismatch",
+  "affected_refs": [
+    "publication_manifest.json"
+  ],
+  "evidence_refs": [
+    "evidence_bundle.json"
+  ],
+  "recommended_action": "prepare_retraction_candidate",
+  "status": "opened"
+}
