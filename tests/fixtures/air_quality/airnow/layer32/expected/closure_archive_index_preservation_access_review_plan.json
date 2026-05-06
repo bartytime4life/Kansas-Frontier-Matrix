@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexPreservationAccessReviewPlan",
+  "records": [
+    {
+      "access_id": "0e7f7d4f517465ba9a31305558a3ed82555713e1c42b34351092aeb76cad4be0",
+      "input_id": "closure_archive_index_audit_input_inventory",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "210f53da04dd9310a8ea08b3a5e685390369b47ee6ac8b3ef3c35921d2224aa7",
+      "input_id": "closure_archive_index_lineage_graph",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "2454bbf92862375248ad5ab531f6d950b883c160a5bce874e19b5c0d7f0c1df8",
+      "input_id": "closure_archive_index_final_internal_summary",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "3ce558f39e9f510ace2eeabd37cdbeaa431f8bf9dccffb2d920cec4115268b90",
+      "input_id": "closure_archive_index_hash_chain",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "4ae1a9157e30097f05a89b64c3b0c7565ac10953ee2b417f2bfd8072a7b28fe2",
+      "input_id": "closure_archive_index_non_execution_ledger",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "51d1fbe4c55e1329c129a7814408912f3fe2e6be5fe58739ae37ada5949a0648",
+      "input_id": "closure_archive_index_caveat_registry",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "95b39e97eaf7fb273892b6b37634dd7d43a9b80e9b4909851786b1d2e9cfdbea",
+      "input_id": "closure_archive_index_receipt_ledger",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "9af7835d60865ef1aa37af938b4fa62ffae5dab871bd37992a6d97e00e453933",
+      "input_id": "closure_archive_index_audit_receipt",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "a71d574484c5ecc51a06ea1652115b735b975ce081ac76c1a1169829be13630a",
+      "input_id": "closure_archive_index_evidence_ledger",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "e4f7dc80a6936626acaf04731fb8a3569ef7aa754b351854d492c062df32a82f",
+      "input_id": "closure_archive_index_policy_ledger",
+      "public_access_allowed": false
+    },
+    {
+      "access_id": "f2675a30f8df76ed77fa4725e3e1881c1304895f3361fea8a516cd12c6fce0ff",
+      "input_id": "closure_archive_index_decision_ledger",
+      "public_access_allowed": false
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexPreservationScopePlan",
+  "records": [
+    {
+      "input_id": "closure_archive_index_evidence_ledger",
+      "scope_id": "09da06ccba8366f2893062622dba24b2b255a5d45e8772902aa317ee51848680"
+    },
+    {
+      "input_id": "closure_archive_index_lineage_graph",
+      "scope_id": "2828c9f819d7e8b4c13035d2d4339bb043de51c6cc042dcc0b400233fa27841b"
+    },
+    {
+      "input_id": "closure_archive_index_audit_input_inventory",
+      "scope_id": "326ffa9bf839425c94c021071b5531f0ca738ac8c74921e045335aa7a023635b"
+    },
+    {
+      "input_id": "closure_archive_index_receipt_ledger",
+      "scope_id": "46385f6d0ae4b0d87d25c3ba5c0360a8590a9249f030fe43c48c1b18a973ec24"
+    },
+    {
+      "input_id": "closure_archive_index_audit_receipt",
+      "scope_id": "49d5b0dd447a01305594b9826331422be39a0b680a80c8c1810fdcdc9574f4f9"
+    },
+    {
+      "input_id": "closure_archive_index_hash_chain",
+      "scope_id": "643ad5cf8968713c44b682db2f3bae7467c5d2121698b20f0afaa4b962021ea4"
+    },
+    {
+      "input_id": "closure_archive_index_caveat_registry",
+      "scope_id": "9da9239cc5ca75a2c6bc18a7cffc28fa910777dfe2c127a6f5266e41ced2c136"
+    },
+    {
+      "input_id": "closure_archive_index_decision_ledger",
+      "scope_id": "a0ec63a98394daa24ca178c3da6d3db58c92fb8af1a4f6e816d578651e15aa03"
+    },
+    {
+      "input_id": "closure_archive_index_policy_ledger",
+      "scope_id": "c51d9354392b5b88922c4a10034eff965f1bf9a4fa48a0bb16fa121b9989850f"
+    },
+    {
+      "input_id": "closure_archive_index_non_execution_ledger",
+      "scope_id": "ebe317ed7737a06269de5529dd2b5b5bf5bd8d553dfc2217e3437664679117f8"
+    },
+    {
+      "input_id": "closure_archive_index_final_internal_summary",
+      "scope_id": "fb50c323e726534c11c7a45c74c94fa768064713077993cb73b34e982a7c79ee"
+    }
+  ]
+}

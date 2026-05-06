@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowClosureArchiveIndexPreservationInputInventory",
+  "records": [
+    {
+      "byte_size": 1182,
+      "input_id": "closure_archive_index_audit_receipt",
+      "object_type_detected": "AirNowClosureArchiveIndexAuditReceipt",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_audit_receipt.json",
+      "sha256": "bb5fb42c74ae0b3b46ce63f12c20d0d773b6507f0cae5f6943fa701d6c2d5af3"
+    },
+    {
+      "byte_size": 11173,
+      "input_id": "closure_archive_index_audit_input_inventory",
+      "object_type_detected": "AirNowClosureArchiveIndexAuditInputInventory",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_audit_input_inventory.json",
+      "sha256": "4f2188ea642e73d1b9e016b1de1502eaa7f1eff98d90be69d5f4ac61d677587f"
+    },
+    {
+      "byte_size": 524,
+      "input_id": "closure_archive_index_receipt_ledger",
+      "object_type_detected": "AirNowClosureArchiveIndexReceiptLedger",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_receipt_ledger.json",
+      "sha256": "a07b2d6e63d5e2fb8b6b19b10615eef293aa6f4f95b41827e4afcbe338d09ebd"
+    },
+    {
+      "byte_size": 227,
+      "input_id": "closure_archive_index_decision_ledger",
+      "object_type_detected": "AirNowClosureArchiveIndexDecisionLedger",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_decision_ledger.json",
+      "sha256": "86c09d9f3a9191efe3828731ee0023551b1f5dd7cbee0c6f82ae047c994352ef"
+    },
+    {
+      "byte_size": 188,
+      "input_id": "closure_archive_index_evidence_ledger",
+      "object_type_detected": "AirNowClosureArchiveIndexEvidenceLedger",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_evidence_ledger.json",
+      "sha256": "8cfb85dd22e071adc6b6b7873a152b30882c1d24efc6efb6af24abdc7281286c"
+    },
+    {
+      "byte_size": 324,
+      "input_id": "closure_archive_index_lineage_graph",
+      "object_type_detected": "AirNowClosureArchiveIndexLineageGraph",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_lineage_graph.json",
+      "sha256": "ced7adcf1b77156f3281b65b56d4171a84fabb2ebb16b19b409cfffc752331e6"
+    },
+    {
+      "byte_size": 1090,
+      "input_id": "closure_archive_index_hash_chain",
+      "object_type_detected": "AirNowClosureArchiveIndexHashChain",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_hash_chain.json",
+      "sha256": "52dd41ab19de7d489518c57a14b21bd4925e1b50ca000e3952f9948ab0ddb64a"
+    },
+    {
+      "byte_size": 421,
+      "input_id": "closure_archive_index_policy_ledger",
+      "object_type_detected": "AirNowClosureArchiveIndexPolicyLedger",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_policy_ledger.json",
+      "sha256": "c9749dc27c02a70e0190f2a97a29564fc8d29c5b583a28229b1d4e8ca1b12bec"
+    },
+    {
+      "byte_size": 441,
+      "input_id": "closure_archive_index_caveat_registry",
+      "object_type_detected": "AirNowClosureArchiveIndexCaveatRegistry",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_caveat_registry.json",
+      "sha256": "59ca60bed3e92404e4b39a5ae356d0facda8b5ab80a3e7ada6eaa0e8f3c8655c"
+    },
+    {
+      "byte_size": 361,
+      "input_id": "closure_archive_index_non_execution_ledger",
+      "object_type_detected": "AirNowClosureArchiveIndexNonExecutionLedger",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_non_execution_ledger.json",
+      "sha256": "4200e0afff2c9b89aec0979259448fb906540fb4c7a61813565d8c06a24831a9"
+    },
+    {
+      "byte_size": 925,
+      "input_id": "closure_archive_index_final_internal_summary",
+      "object_type_detected": "AirNowClosureArchiveIndexFinalInternalSummary",
+      "path": "/workspace/Kansas-Frontier-Matrix/tests/fixtures/air_quality/airnow/layer32/input/layer31/closure_archive_index_final_internal_summary.json",
+      "sha256": "d5ecf32dd13eaf98e1cd4d35582c16ed055383a0a96f0014c32006432ecaccc3"
+    }
+  ]
+}
