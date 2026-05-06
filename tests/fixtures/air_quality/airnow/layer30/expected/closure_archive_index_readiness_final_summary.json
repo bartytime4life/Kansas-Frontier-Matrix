@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "layer29_readiness": {
+    "readiness_status": "READY"
+  },
+  "object_type": "AirNowClosureArchiveIndexReadinessFinalSummary",
+  "readiness_status": "INTERNAL_CLOSURE_ARCHIVE_INDEX_REVIEW_READY",
+  "schema_version": "v1"
+}
