@@ -1,21 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/TODO-NEEDS-VERIFICATION
 title: Tile Delta Update Model
 type: standard
 version: v1
 status: draft
-owners: OWNER_TBD
-created: CREATED_DATE_TBD_AFTER_REPO_INSPECTION
-updated: 2026-05-03
-policy_label: POLICY_LABEL_TBD_AFTER_REPO_INSPECTION
-related: [docs/architecture/tiles/README.md, docs/architecture/tiles/TILE_MANIFEST_SPEC.md, docs/architecture/tiles/VERIFIABLE_TILE_RENDERING.md]
-tags: [kfm, tiles, delta-update, tile-manifest, map-release]
-notes: [Local repo unavailable during revision; source-supplied target path and related links need maintainer verification; no runtime implementation is claimed.]
+owners: TODO-NEEDS-VERIFICATION
+created: TODO-NEEDS-VERIFICATION
+updated: 2026-05-06
+policy_label: TODO-NEEDS-VERIFICATION
+related: [docs/architecture/tiles/README.md, docs/architecture/tiles/TILE_MANIFEST_SPEC.md, docs/architecture/tiles/VERIFIABLE_TILE_RENDERING.md, docs/architecture/PMTILES_DELTA_MANIFEST.md, docs/architecture/PMTILES_DELTA_CLIENT_VERIFIER.md]
+tags: [kfm, architecture, tiles, delta-update, map-release, rollback]
+notes: [doc_id, owners, created date, and policy label require repository verification; public GitHub evidence showed the target path and sibling tile docs, but active branch state remains needs verification]
 [/KFM_META_BLOCK_V2] -->
 
 # Tile Delta Update Model
 
-Purpose: define how KFM updates tile-backed map surfaces without letting incremental delivery bypass evidence, policy, release state, or rollback.
+Purpose: define how KFM updates tile-backed map surfaces without letting incremental delivery bypass evidence, policy, release state, correction lineage, or rollback.
 
 ![Status: draft](https://img.shields.io/badge/status-draft-yellow)
 ![Type: standard doc](https://img.shields.io/badge/type-standard%20doc-blue)
@@ -23,26 +23,28 @@ Purpose: define how KFM updates tile-backed map surfaces without letting increme
 ![Truth: evidence first](https://img.shields.io/badge/truth-evidence--first-blue)
 ![Repo: needs verification](https://img.shields.io/badge/repo-needs%20verification-orange)
 
-**Quick navigation:** [Core rule](#core-rule) · [Evidence boundary](#truth-posture-and-evidence-boundary) · [Scope](#scope) · [Repo fit](#repo-fit) · [Lifecycle fit](#lifecycle-fit) · [Delta model](#delta-model) · [State machine](#state-machine) · [Update decisions](#update-decisions) · [Records](#record-families) · [Validation gates](#validation-gates) · [Runtime behavior](#runtime-behavior) · [Rollback](#rollback-and-correction) · [Examples](#illustrative-examples) · [Done](#definition-of-done) · [Backlog](#open-verification-backlog)
+**Quick navigation:** [Core rule](#core-rule) · [Evidence boundary](#truth-posture-and-evidence-boundary) · [Scope](#scope) · [Repo fit](#repo-fit) · [Lifecycle fit](#lifecycle-fit) · [Delta model](#delta-model) · [State machine](#state-machine) · [Update decisions](#update-decisions) · [Record families](#record-families) · [Validation gates](#validation-gates) · [Runtime behavior](#runtime-behavior) · [Rollback](#rollback-and-correction) · [Examples](#illustrative-examples) · [Done](#definition-of-done) · [Backlog](#open-verification-backlog)
 
 ---
 
 ## Core rule
 
 > [!IMPORTANT]
-> A tile delta is an update proposal, not publication. Public users may see only release-bound tile artifacts, styles, layers, and governed API responses whose evidence, policy, integrity, cache, review, correction, and rollback state can be inspected.
+> A tile delta is an update proposal, not publication.
 
-Delta delivery can reduce rebuild or transfer cost. It must not reduce KFM’s burden to prove:
+Public users may see only release-bound tile artifacts, styles, layers, and governed API responses whose evidence, policy, integrity, cache, review, correction, and rollback state can be inspected.
+
+Delta delivery may reduce rebuild time, transfer size, or cache churn. It must not reduce KFM’s burden to prove:
 
 - what changed;
 - why it changed;
-- which sources, processed artifacts, and evidence bundles support the change;
-- whether rights, sensitivity, review, source role, and access class permit the intended audience;
+- which sources, processed artifacts, receipts, and evidence bundles support the change;
+- whether rights, sensitivity, review, source role, stale state, and access class permit the intended audience;
 - which map release owns the visible result;
 - how stale, denied, missing-evidence, generalized, superseded, withdrawn, or corrected states appear;
 - how the prior public release can be restored without erasing correction history.
 
-A delta is allowed to be small. The release obligation is not.
+**A delta may be small. The release obligation is not.**
 
 [Back to top](#tile-delta-update-model)
 
@@ -52,28 +54,28 @@ A delta is allowed to be small. The release obligation is not.
 
 | Claim area | Status | Meaning for this file |
 |---|---:|---|
-| Document role | `CONFIRMED source material` | The attached Markdown is a draft architecture document titled **Tile Delta Update Model**. |
-| Target path | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | Source material names `docs/architecture/tiles/DELTA_UPDATE_MODEL.md`; current local checkout was not mounted during this revision. |
-| Adjacent tile docs | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | `README.md`, `TILE_MANIFEST_SPEC.md`, and `VERIFIABLE_TILE_RENDERING.md` are source-supplied related links, not verified from a mounted repo in this session. |
-| KFM doctrine | `CONFIRMED corpus doctrine` | KFM doctrine requires evidence-first, map-first, time-aware, governed publication; public outputs remain downstream of evidence, policy, review, and release state. |
-| Delta object names | `PROPOSED` | `TileDeltaUpdateRecord`, `DeltaEvaluationReport`, `TileDeltaPackage`, and `CacheInvalidationPlan` are proposed names until repo schema conventions are verified. |
-| Runtime implementation | `UNKNOWN` | No route handlers, CI jobs, validator scripts, emitted delta receipts, cache rules, dashboards, logs, or release automation are claimed here. |
+| Document role | `CONFIRMED` | Standard architecture document for tile-delta semantics. |
+| Target path | `CONFIRMED in public GitHub main / NEEDS VERIFICATION in active checkout` | Public GitHub evidence showed `docs/architecture/tiles/DELTA_UPDATE_MODEL.md`; branch-local state must still be verified before commit. |
+| Adjacent tile docs | `CONFIRMED in public GitHub main / NEEDS VERIFICATION in active checkout` | Public GitHub evidence showed sibling docs including `README.md`, `TILE_MANIFEST_SPEC.md`, and `VERIFIABLE_TILE_RENDERING.md`. |
+| KFM doctrine | `CONFIRMED corpus doctrine` | KFM requires evidence-first, map-first, time-aware, governed publication; public outputs remain downstream of evidence, policy, review, and release state. |
+| Delta object names | `PROPOSED` | `TileDeltaUpdateRecord`, `DeltaEvaluationReport`, `TileDeltaPackage`, and `CacheInvalidationPlan` are proposed names until repo schemas/contracts are reconciled. |
+| Runtime implementation | `UNKNOWN` | No route handlers, CI jobs, validator scripts, emitted receipts, cache rules, dashboards, logs, or release automation are claimed here. |
 | Public release posture | `CONFIRMED doctrine / PROPOSED implementation` | Delta updates must fail closed when evidence, rights, sensitivity, integrity, release, review, or rollback cannot be proven. |
 
 This document uses `MUST`, `SHOULD`, and `MAY` as architecture requirement keywords.
 
 > [!NOTE]
-> This file states KFM doctrine and proposes implementation contracts. Current implementation depth remains **UNKNOWN** where repo files, tests, workflows, manifests, dashboards, logs, or emitted artifacts were not inspected.
+> This file states KFM doctrine and proposes implementation contracts. Current implementation depth remains `UNKNOWN` where repository files, tests, workflows, manifests, dashboards, logs, or emitted artifacts have not been inspected.
 
 ### Evidence ledger
 
 | Source | Status | Supports | Limits |
 |---|---:|---|---|
-| `Pasted markdown.md` | `CONFIRMED source material` | Existing tile-delta doctrine, proposed flow, records, gates, runtime rules, rollback language, examples, and backlog. | Does not prove current repo path, owners, schema home, validators, or runtime behavior. |
+| Public GitHub tree | `CONFIRMED public-main evidence` | Target path, sibling tile docs, and surrounding architecture directory are visible in public main. | Does not prove private branch state, local dirty state, branch protection, runtime wiring, owners, or workflow enforcement. |
 | `Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf` | `CONFIRMED doctrine / PROPOSED realization` | Core lifecycle, governed recompilation, release gates, proof objects, and no-autopublish posture. | Does not prove tile-delta implementation exists. |
 | `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` | `CONFIRMED doctrine / PROPOSED realization` | MapLibre as downstream renderer, governed API boundary, Evidence Drawer, Focus Mode, runtime receipts, rollback tests. | Version-sensitive implementation details and repo paths remain unverified here. |
-| `KFM_Components_Pass_24_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf` | `CONFIRMED corpus synthesis` | Inspectable-claim center of gravity and artifact families such as EvidenceBundle, ReleaseManifest, CatalogMatrix, LayerManifest, receipts, proofs, and rollback. | Source synthesis is not direct runtime proof. |
-| Current workspace command probe | `CONFIRMED session evidence` | `/mnt/data` was not a Git repository during revision. | Does not speak for the public repository or any unavailable checkout. |
+| `KFM_Components_Pass_24_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf` | `CONFIRMED corpus synthesis` | Inspectable-claim center of gravity and artifact families such as `EvidenceBundle`, `ReleaseManifest`, `CatalogMatrix`, `LayerManifest`, receipts, proofs, and rollback. | Source synthesis is not direct runtime proof. |
+| Current local workspace probe | `CONFIRMED session evidence` | No mounted local KFM Git checkout was available during this authoring pass. | Does not speak for unavailable branches or hosted platform settings. |
 
 [Back to top](#tile-delta-update-model)
 
@@ -85,10 +87,10 @@ This file defines the KFM architecture model for incremental updates to tile-bac
 
 It covers:
 
-- source-change, policy, style, review, cache, and correction signals that affect tile releases;
+- source-change, policy, style, review, cache, correction, and withdrawal signals that affect tile releases;
 - delta candidates for `PMTiles`, `MVT`, raster tiles, COG-backed tile views, small `GeoJSON`, and server-mediated tile services;
 - release identity, artifact integrity, cache invalidation, rollback, correction, and supersession lineage;
-- how deltas interact with `SourceDescriptor`, `TileManifest`, `TileArtifactManifest`, `LayerManifest`, `StyleManifest`, `MapReleaseManifest`, `EvidenceBundle`, `PolicyDecision`, and runtime receipts;
+- how deltas interact with `SourceDescriptor`, `TileManifest`, `TileArtifactManifest`, `LayerManifest`, `StyleManifest`, `MapReleaseManifest`, `EvidenceBundle`, `PolicyDecision`, `DecisionEnvelope`, and runtime receipts;
 - validation gates that decide whether an update may publish, abstain, deny, remain quarantined, or fail as an implementation error.
 
 ### Accepted inputs
@@ -104,9 +106,10 @@ It covers:
 
 ### Exclusions
 
-| Excluded item | Why excluded | Home |
+| Excluded item | Why excluded | Correct home |
 |---|---|---|
 | Canonical domain truth | Tiles and deltas are derived artifacts. | Domain stores, source registries, dataset versions, and EvidenceBundle-producing pipelines. |
+| RAW, WORK, or QUARANTINE data | Delta docs must not become a bypass around governed lifecycle stages. | Lifecycle data homes after repository verification. |
 | Raw source polling logic | Source activation needs rights, cadence, source-role, and connector discipline. | Source registry, connectors, pipelines, and domain runbooks. |
 | Tiler-specific implementation | Tooling must not define truth or publication. | Repo-native tools, validators, and pipeline scripts after verification. |
 | Style semantics alone | A visual edit can change meaning but cannot approve itself. | `StyleManifest`, release review, and accessibility checks. |
@@ -122,17 +125,19 @@ It covers:
 
 | Relationship | Path or target | Status | Notes |
 |---|---|---:|---|
-| Suggested target document | `docs/architecture/tiles/DELTA_UPDATE_MODEL.md` | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | Standard architecture doc for tile-delta semantics. Verify in a mounted checkout before committing. |
-| Directory landing page | [`./README.md`](./README.md) | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | Expected to define tile delivery scope, accepted inputs, exclusions, lifecycle, gates, and delivery posture. |
-| Manifest spec | [`./TILE_MANIFEST_SPEC.md`](./TILE_MANIFEST_SPEC.md) | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | Expected to define governed sidecar contracts for tile artifacts. |
-| Verifiable rendering | [`./VERIFIABLE_TILE_RENDERING.md`](./VERIFIABLE_TILE_RENDERING.md) | `SOURCE-SUPPLIED / NEEDS VERIFICATION` | Expected to define renderability, trust flow, object families, gates, runtime rules, and failure states. |
+| This document | `docs/architecture/tiles/DELTA_UPDATE_MODEL.md` | `CONFIRMED public-main path / NEEDS VERIFICATION active checkout` | Standard architecture doc for tile-delta semantics. |
+| Directory landing page | [`./README.md`](./README.md) | `CONFIRMED public-main path / NEEDS VERIFICATION active checkout` | Defines tile delivery scope, accepted inputs, exclusions, lifecycle, gates, and delivery posture. |
+| Manifest spec | [`./TILE_MANIFEST_SPEC.md`](./TILE_MANIFEST_SPEC.md) | `CONFIRMED public-main path / NEEDS VERIFICATION active checkout` | Defines governed sidecar contracts for tile artifacts. |
+| Verifiable rendering | [`./VERIFIABLE_TILE_RENDERING.md`](./VERIFIABLE_TILE_RENDERING.md) | `CONFIRMED public-main path / NEEDS VERIFICATION active checkout` | Defines renderability, trust flow, object families, gates, runtime rules, and failure states. |
+| PMTiles delta manifest | [`../PMTILES_DELTA_MANIFEST.md`](../PMTILES_DELTA_MANIFEST.md) | `NEEDS VERIFICATION` | Architecture listing indicated this related file; link and content should be checked in the active checkout. |
+| PMTiles client verifier | [`../PMTILES_DELTA_CLIENT_VERIFIER.md`](../PMTILES_DELTA_CLIENT_VERIFIER.md) | `NEEDS VERIFICATION` | Architecture listing indicated this related file; link and content should be checked in the active checkout. |
 | Schema home | `schemas/contracts/v1/tiles/` or repo-native equivalent | `NEEDS VERIFICATION` | Do not create a parallel schema dialect without ADR review. |
-| Fixtures | `tests/fixtures/tiles/delta_update/` or repo-native equivalent | `PROPOSED` | Should include valid, stale, denied, generalized, rollback, and digest-mismatch examples. |
+| Fixtures | `tests/fixtures/tiles/delta_update/` or repo-native equivalent | `PROPOSED` | Should include valid, stale, denied, generalized, rollback, digest-mismatch, and missing-evidence examples. |
 | Validators | `tools/validators/tiles/` or repo-native equivalent | `PROPOSED` | Should validate delta records, manifest closure, release identity, evidence impact, policy impact, and cache invalidation plans. |
 | Release artifacts | `data/published/`, `data/proofs/`, `data/receipts/`, `release/`, or repo-native equivalent | `NEEDS VERIFICATION` | Published homes must never expose RAW, WORK, QUARANTINE, canonical, review-only, or model-runtime paths. |
 
 > [!WARNING]
-> If the mounted repository proves different homes for schemas, contracts, fixtures, receipts, proofs, or release bundles, preserve the semantics here and adapt the paths through an ADR. Do not create duplicate tile-delta object families.
+> If the active repository proves different homes for schemas, contracts, fixtures, receipts, proofs, release bundles, or PMTiles-specific docs, preserve the semantics here and adapt paths through an ADR. Do not create duplicate tile-delta object families.
 
 [Back to top](#tile-delta-update-model)
 
@@ -149,13 +154,14 @@ flowchart LR
   PROC --> CAT["CATALOG / TRIPLET<br/>evidence · policy · review"]
   CAT --> REL["RELEASE ASSEMBLY<br/>manifest · proof · rollback"]
   REL --> PUB["PUBLISHED<br/>released artifacts only"]
+
   PUB --> TILES["Tile / style / layer artifacts<br/>derived delivery"]
-  TILES --> UI["Map shell<br/>released rendering"]
+  TILES --> UI["Map shell<br/>release-bound rendering"]
   UI --> API["Governed API<br/>feature/evidence resolution"]
   API --> EB["EvidenceBundle<br/>PolicyDecision<br/>RuntimeReceipt"]
 ```
 
-A tile delta may accelerate the move from a processed or release candidate state to a new released delivery artifact. It does not bypass source admission, evidence resolution, rights/sensitivity review, policy decision, release closure, or rollback.
+A tile delta may accelerate the move from a processed or release-candidate state to a new released delivery artifact. It does not bypass source admission, evidence resolution, rights/sensitivity review, policy decision, release closure, or rollback.
 
 [Back to top](#tile-delta-update-model)
 
@@ -181,6 +187,7 @@ flowchart LR
   SD["SourceDescriptor<br/>role · rights · cadence · sensitivity"] --> DS["Delta signal"]
   DS --> DC["Delta candidate<br/>what changed?"]
   DC --> DER["DeltaEvaluationReport<br/>integrity · evidence · policy · rollback"]
+
   DER -->|PASS| BUILD["Build or materialize<br/>new tile/style/layer state"]
   DER -->|ABSTAIN| HOLD["Hold<br/>visible no-publication state"]
   DER -->|DENY| Q["QUARANTINE / denied candidate"]
@@ -190,6 +197,7 @@ flowchart LR
   TM --> MRM["MapReleaseManifest<br/>release id · prior release · rollback"]
   MRM --> CIP["CacheInvalidationPlan"]
   MRM --> PUB["PUBLISHED map state"]
+
   PUB --> ML["Map shell<br/>released artifacts only"]
   ML --> API["Governed API<br/>feature candidate resolution"]
   API --> EB["EvidenceBundle"]
@@ -202,7 +210,7 @@ flowchart LR
 
 ### Operating interpretation
 
-A delta may be efficient internally, but the public map must still behave as a coherent release. The browser should not need hidden knowledge of unpublished diffs to decide what is true, public, safe, current, cited, generalized, stale, or corrected.
+A delta may be efficient internally, but the public map must still behave as a coherent release. The browser should not need hidden knowledge of unpublished diffs to decide what is true, public, safe, current, cited, generalized, stale, withdrawn, or corrected.
 
 [Back to top](#tile-delta-update-model)
 
@@ -215,20 +223,27 @@ Delta handling is a governed state transition. It is not a silent file overwrite
 ```mermaid
 stateDiagram-v2
   [*] --> DETECTED
+
   DETECTED --> PROPOSED: source/policy/style/review/correction/cache signal
   PROPOSED --> QUARANTINED: unresolved rights, sensitivity, evidence, or integrity
   PROPOSED --> CANDIDATE: minimum descriptor and base release present
+
   QUARANTINED --> PROPOSED: issue resolved with receipt
+
   CANDIDATE --> VALIDATED: gates pass for requested access class
   CANDIDATE --> ABSTAINED: support incomplete or stale
-  CANDIDATE --> DENIED: policy/integrity/right/sensitivity failure
+  CANDIDATE --> DENIED: policy/integrity/rights/sensitivity failure
   CANDIDATE --> ERROR: validator/runtime defect
+
   VALIDATED --> PROMOTED: PromotionDecision approved
   PROMOTED --> PUBLISHED: MapReleaseManifest closed
+
   PUBLISHED --> SUPERSEDED: later release promoted
   PUBLISHED --> WITHDRAWN: release unsafe or invalid
   WITHDRAWN --> ROLLED_BACK: prior release restored
+
   ERROR --> PROPOSED: implementation fixed
+
   ROLLED_BACK --> [*]
   SUPERSEDED --> [*]
   ABSTAINED --> [*]
@@ -257,11 +272,11 @@ stateDiagram-v2
 
 ## Update decisions
 
-KFM prefers complete, digest-addressed release state for public surfaces. Incremental deltas are allowed only when they improve delivery without weakening verification, review, or rollback.
+KFM prefers complete, digest-addressed release state for public surfaces. Incremental deltas are allowed only when they improve delivery without weakening verification, review, accessibility, correction, or rollback.
 
 | Update type | Preferred public posture | Delta may be used when… | Must not happen |
 |---|---|---|---|
-| `PMTiles` snapshot | Publish a new immutable artifact and release ID. | Internal build can update only affected inputs, then materialize a full release artifact. | In-place mutation of a public PMTiles URI without new digest and release state. |
+| `PMTiles` snapshot | Publish a new immutable artifact and release ID. | Internal build can update affected inputs, then materialize a full release artifact. | In-place mutation of a public PMTiles URI without new digest and release state. |
 | `MVT` service | Serve versioned release scope or snapshot descriptor. | Per-tile invalidation and service snapshot identity are manifest-bound. | Browser fetches unmanifested or unreleased tile URLs. |
 | Martin/PostGIS-style serving | Server-mediated, release-aware, policy-aware serving. | Freshness, steward access, or dynamic slicing needs backend control. | Dynamic tile output becomes undocumented canonical truth. |
 | COG-backed raster view | Keep COG/source artifact stronger than derived tiles. | Tile facade points to verified COG/version and render profile. | Pixel interpretation is upgraded to claim truth without evidence. |
@@ -458,11 +473,30 @@ Delta state must be visible without relying only on color or hover behavior.
 
 Minimum UI obligations:
 
-- trust state text labels for stale, denied, generalized, withdrawn, missing-evidence, digest-mismatch, and correction states;
+- trust-state text labels for stale, denied, generalized, withdrawn, missing-evidence, digest-mismatch, and correction states;
 - keyboard access to feature selection, Evidence Drawer, and error/correction details;
 - non-color indicators for generalized or withheld detail;
 - screen-reader-readable release and layer state where supported by the UI shell;
 - Focus Mode answers only after governed evidence resolution and citation validation.
+
+[Back to top](#tile-delta-update-model)
+
+---
+
+## Cache and publication posture
+
+Cache behavior is part of release governance. It is not an operations afterthought.
+
+| Strategy | Use when | Required proof |
+|---|---|---|
+| Immutable release URL | Public artifact can be replaced by pointer update or new release route. | New release ID, artifact digest, manifest digest, previous release, rollback target. |
+| Mutable public pointer | Existing public route must stay stable. | Pointer manifest, digest closure, invalidation receipt, rollback behavior. |
+| Purge/invalidate | CDN or cache layer may keep stale public bytes. | Purge key list, execution receipt, verification check, fallback release. |
+| Service snapshot descriptor | Dynamic service mediates tile output. | Snapshot ID, query profile, release scope, policy decision, source/version refs. |
+| Offline bundle | Steward, field, or disconnected review needs packaged release. | Bundle digest, access class, evidence/proof refs, expiry/stale policy. |
+
+> [!CAUTION]
+> Cache invalidation must not be used to hide a withdrawal, correction, or rollback. If old bytes remain addressable for rollback, their release status must still be inspectable.
 
 [Back to top](#tile-delta-update-model)
 
@@ -476,7 +510,7 @@ Rollback is a governed state transition, not a cache trick.
 |---|---|
 | Prior `MapReleaseManifest` | Defines the exact release state to restore. |
 | Withdrawn or superseded manifest | Explains what changed and why it is no longer active. |
-| `CacheInvalidationPlan` and execution receipt | Shows how stale bytes were removed or bypassed. |
+| `CacheInvalidationPlan` and execution receipt | Shows how stale bytes were removed, bypassed, or deliberately retained. |
 | `CorrectionNotice` | Prevents history erasure. |
 | `DeltaEvaluationReport` | Keeps failed, abstained, or denied update reasoning inspectable. |
 | Evidence and policy refs | Allows future reviewers to audit the release decision. |
@@ -490,9 +524,15 @@ A delta update cannot be considered release-ready unless the previous public map
 
 A correction delta differs from a routine source delta. It must identify the public-facing claim, layer, artifact, or release state being corrected and must preserve user-visible correction context where the prior state could have affected interpretation.
 
-### Cache rule
+### Rollback drill
 
-Cache invalidation must not be used to hide a withdrawal, correction, or rollback. If old bytes remain addressable for rollback, their release status must still be inspectable.
+1. Mark the active target release `withdrawn` or `rollback_required`.
+2. Restore the prior release pointer or immutable release URL.
+3. Verify the prior `TileManifest` and `MapReleaseManifest`.
+4. Execute or verify the cache invalidation plan.
+5. Publish or update the `CorrectionNotice`.
+6. Preserve failed delta receipts and evaluation reports.
+7. Re-run runtime boundary checks and Evidence Drawer smoke checks.
 
 [Back to top](#tile-delta-update-model)
 
@@ -510,7 +550,7 @@ This is a proposed sequence. Adapt to repo-native conventions after checkout ins
 | 3 | Add validators and policy tests. | Finite outcomes and fail-closed policy gates. |
 | 4 | Add manifest/release closure checks. | Base release, target release, rollback target, cache plan, artifact digests. |
 | 5 | Add runtime boundary tests. | No public access to raw/work/quarantine/canonical/review/model-runtime paths. |
-| 6 | Add UI/Evidence Drawer test fixture. | Click/select -> governed API -> EvidenceBundle/PolicyDecision -> trust-visible UI. |
+| 6 | Add UI/Evidence Drawer test fixture. | Click/select → governed API → EvidenceBundle/PolicyDecision → trust-visible UI. |
 | 7 | Add rollback drill. | Restore previous release and preserve correction notice. |
 | 8 | Update docs and release notes. | Cross-links to related tile docs, validators, fixtures, and ADRs. |
 
@@ -522,8 +562,7 @@ This is a proposed sequence. Adapt to repo-native conventions after checkout ins
 
 The examples below are contract sketches, not production schemas.
 
-<details>
-<summary>Example: TileDeltaUpdateRecord</summary>
+### Example: `TileDeltaUpdateRecord`
 
 ```json
 {
@@ -557,10 +596,39 @@ The examples below are contract sketches, not production schemas.
 }
 ```
 
-</details>
+### Example: `DeltaEvaluationReport`
 
-<details>
-<summary>Example: CacheInvalidationPlan</summary>
+```json
+{
+  "schema": "kfm.map.delta_evaluation_report.v1",
+  "report_id": "delta_eval_huc12_2026_04_demo_001",
+  "update_id": "tile_delta_huc12_2026_04_demo_001",
+  "base_release_id": "maprelease_hydrology_huc12_demo_v1",
+  "candidate_release_id": "maprelease_hydrology_huc12_demo_v2",
+  "requested_action": "public_publish",
+  "outcome": "ABSTAIN",
+  "reason_codes": [
+    "RIGHTS_STATE_NEEDS_VERIFICATION",
+    "CACHE_INVALIDATION_RECEIPT_MISSING"
+  ],
+  "checks": [
+    {
+      "gate": "D1_BASE_RELEASE",
+      "result": "PASS",
+      "details": "Base release and rollback target are present."
+    },
+    {
+      "gate": "D5_POLICY_SENSITIVITY",
+      "result": "ABSTAIN",
+      "details": "Rights state is not cleared for public release."
+    }
+  ],
+  "policy_decision_refs": ["decision_delta_huc12_public_NEEDS_VERIFICATION"],
+  "review_requirements": ["verify_source_rights", "emit_cache_invalidation_receipt"]
+}
+```
+
+### Example: `CacheInvalidationPlan`
 
 ```json
 {
@@ -585,14 +653,10 @@ The examples below are contract sketches, not production schemas.
 }
 ```
 
-</details>
-
-<details>
-<summary>Example: proposed validation commands</summary>
+### Example: proposed validation commands
 
 ```bash
 # PROPOSED — adapt to repo-native task runner after checkout inspection.
-
 make validate-tile-delta-records
 make validate-delta-evaluation-reports
 make validate-cache-invalidation-plans
@@ -602,8 +666,6 @@ make test-tile-delta-rollback
 make test-tile-delta-evidence-resolution
 make test-no-unreleased-tile-load
 ```
-
-</details>
 
 [Back to top](#tile-delta-update-model)
 
@@ -636,7 +698,7 @@ A tile delta update model change is not done until every applicable item passes.
 
 | Item | Label | Why it matters |
 |---|---:|---|
-| Confirm target path and whether the file is currently a placeholder | `NEEDS VERIFICATION` | Prevents replacing a newer in-repo version or misplacing the doc. |
+| Confirm target path and active-branch file content | `NEEDS VERIFICATION` | Prevents replacing a newer in-repo version or misplacing the doc. |
 | Confirm owners / CODEOWNERS for `docs/architecture/tiles/*` | `NEEDS VERIFICATION` | Required for review routing. |
 | Confirm related tile docs and stable internal links | `NEEDS VERIFICATION` | Keeps docs navigable and avoids broken anchors. |
 | Confirm schema home for tile delta objects | `NEEDS VERIFICATION` | Avoids parallel schema dialects. |
