@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0006 — MapLibre Layer Manifest
+title: ADR-0308 — MapLibre Layer Manifest
 type: standard
 version: v1
 status: draft
@@ -15,7 +15,7 @@ notes: [doc_id, owners, created date, policy_label, ADR numbering, and related p
 
 <a id="top"></a>
 
-# ADR-0006 — MapLibre Layer Manifest
+# ADR-0308 — MapLibre Layer Manifest
 
 Adopt `LayerManifest.v1` as the governed contract that tells the MapLibre shell what a released layer may render, cite, withhold, badge, time-scope, and resolve.
 
@@ -27,7 +27,7 @@ Adopt `LayerManifest.v1` as the governed contract that tells the MapLibre shell 
 
 > [!IMPORTANT]
 > **ADR status:** `PROPOSED`  
-> **Target file:** `docs/adr/ADR-0006-maplibre-layer-manifest.md`  
+> **Target file:** `docs/adr/ADR-0206-maplibre-layer-manifest.md`  
 > **Primary decision:** KFM MapLibre layers must be loaded through a governed `LayerManifest.v1`, not through ad hoc style JSON, raw feature properties, direct canonical reads, or UI-local assumptions.  
 > **Implementation depth:** `UNKNOWN` until the active repository tree, schema home, tests, workflows, policy tooling, emitted artifacts, and runtime routes are inspected.
 
@@ -431,7 +431,7 @@ Create the smallest proof-bearing slice:
 
 | File family | Proposed home | Notes |
 |---|---|---|
-| ADR | `docs/adr/ADR-0006-maplibre-layer-manifest.md` | This file. |
+| ADR | `docs/adr/ADR-0206-maplibre-layer-manifest.md` | This file. |
 | Schema | `schemas/contracts/v1/maplibre/layer_manifest.schema.json` | `PROPOSED` until schema home is verified. |
 | Fixtures | `tests/fixtures/maplibre/layer_manifest.valid.json` and invalid variants | Include valid, stale, sensitive-deny, missing-evidence, and withdrawn-release examples. |
 | Validators | `tools/validators/maplibre/` or repo-native equivalent | Validate schema, source refs, artifacts, policies, release refs. |
@@ -504,7 +504,7 @@ Update or create these docs in the same PR wave when behavior changes:
 | `docs/architecture/maplibre/CONTRACTS.md` | Add `LayerManifest.v1` field map and cross-object relationships. |
 | `docs/architecture/maplibre/DELIVERY.md` | Explain how layer manifests bind to MVT, PMTiles, MLT, COG, or Martin delivery. |
 | `docs/architecture/maplibre/TEST_PLAN.md` | Add validation gates from this ADR. |
-| `docs/adr/README.md` | Add ADR-0006 once ADR index conventions are verified. |
+| `docs/adr/README.md` | Add ADR-0308 once ADR index conventions are verified. |
 | `schemas/contracts/v1/maplibre/README.md` | Document schema family if this path becomes canonical. |
 | `tests/fixtures/maplibre/README.md` | Describe valid and invalid fixture semantics. |
 | `policy/maplibre/README.md` | Document fail-closed policies. |
@@ -540,7 +540,7 @@ Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
 
 | Item | Status | Why it matters |
 |---|---|---|
-| ADR numbering and title pattern | `NEEDS VERIFICATION` | `ADR-0006` may collide with an existing ADR if the repo has changed. |
+| ADR numbering and title pattern | `NEEDS VERIFICATION` | `ADR-0308` may collide with an existing ADR if the repo has changed. |
 | `docs/adr/` index convention | `UNKNOWN` | This ADR may need index status, supersession links, or owner metadata. |
 | Schema home | `UNKNOWN / CONFLICTED` | Avoid parallel schema authority between `contracts/`, `schemas/`, and any repo-specific schema home. |
 | Owners | `NEEDS VERIFICATION` | Meta block must not invent steward ownership. |

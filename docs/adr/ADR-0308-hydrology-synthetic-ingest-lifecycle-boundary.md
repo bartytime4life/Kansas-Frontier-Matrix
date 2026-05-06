@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0006-hydrology-synthetic-ingest-lifecycle-boundary
-title: ADR-0006: Hydrology Synthetic Ingest Lifecycle Boundary
+title: ADR-0308: Hydrology Synthetic Ingest Lifecycle Boundary
 type: adr
 version: v1.0
 status: accepted
@@ -11,7 +11,7 @@ policy_label: internal-draft
 related: [
   docs/adr/README.md,
   docs/adr/ADR-0001-schema-home.md,
-  docs/adr/ADR-0004-hydrology-first-proof-lane.md,
+  docs/adr/ADR-0304-hydrology-first-proof-lane.md,
   docs/adr/ADR-0005-promotion-gate.md,
   docs/runbooks/foundation-strategy.md,
   docs/domains/hydrology/README.md,
@@ -49,7 +49,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0006: Hydrology Synthetic Ingest Lifecycle Boundary
+# ADR-0308: Hydrology Synthetic Ingest Lifecycle Boundary
 
 Synthetic hydrology ingest may exercise `RAW`, `WORK`, and `QUARANTINE`, but it cannot publish, prove evidence, activate live sources, or bypass the Promotion Gate.
 
@@ -78,7 +78,7 @@ Synthetic hydrology ingest may exercise `RAW`, `WORK`, and `QUARANTINE`, but it 
 > [!IMPORTANT]
 > **Decision status:** `accepted` for the synthetic ingest lifecycle boundary.  
 > **Implementation status:** `partial / fixture-backed`. The repository confirms synthetic RAW and QUARANTINE ingest-plan fixtures. A WORK-stage synthetic drill is decision-scoped but remains **NEEDS_VERIFICATION** until matching fixture, receipt, or validator evidence is present.  
-> **Target path:** `docs/adr/ADR-0006-hydrology-synthetic-ingest-lifecycle-boundary.md`.
+> **Target path:** `docs/adr/ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md`.
 
 > [!WARNING]
 > This ADR authorizes an **internal, no-network, synthetic ingest drill** only. It does **not** authorize live connector activation, public publication from ingest stages, public reliance on lifecycle receipts, direct UI access to RAW/WORK/QUARANTINE, or treating `FetchReceipt`, `RawCaptureReceipt`, `WorkNormalizationReceipt`, or `SourceDescriptor` objects as public evidence.
@@ -147,10 +147,10 @@ This ADR expands the existing stub into the governance record for that boundary.
 
 ### Numbering note
 
-The repository currently has more than one ADR file numbered `ADR-0006`. Until the ADR index is normalized, this document’s stable identity is the full path:
+The repository currently has more than one ADR file numbered `ADR-0308`. Until the ADR index is normalized, this document’s stable identity is the full path:
 
 ```text
-docs/adr/ADR-0006-hydrology-synthetic-ingest-lifecycle-boundary.md
+docs/adr/ADR-0308-hydrology-synthetic-ingest-lifecycle-boundary.md
 ```
 
 If ADR numbering is later repaired, preserve this file as lineage and add a supersession note rather than deleting history.
@@ -532,7 +532,7 @@ This ADR is accepted as a boundary decision when:
 - [x] Synthetic release manifest declares prohibited internal source paths, correction path, rollback target, and EvidenceBundle boundary.
 - [x] Synthetic review validator/review record exists for synthetic public release fixture posture.
 - [ ] WORK-stage synthetic normalization fixture is confirmed or added.
-- [ ] ADR index records this path and duplicate ADR-0006 numbering is reconciled.
+- [ ] ADR index records this path and duplicate ADR-0308 numbering is reconciled.
 - [ ] CI enforcement for these checks is verified.
 - [ ] Owner/steward and policy label are verified.
 - [ ] Promotion Gate implementation is verified against ingest-stage denial cases.
@@ -546,7 +546,7 @@ This ADR is accepted as a boundary decision when:
 ### Phase 0 — ADR and index hygiene
 
 - [ ] Update `docs/adr/README.md` to include this file.
-- [ ] Record duplicate ADR-0006 filenames and decide whether the repo uses lane-specific numbering or needs renumbering.
+- [ ] Record duplicate ADR-0308 filenames and decide whether the repo uses lane-specific numbering or needs renumbering.
 - [ ] Preserve this file path as stable identity during any renumbering.
 
 ### Phase 1 — Fixture completeness
@@ -621,7 +621,7 @@ KFM accepts slower live-source activation in exchange for a clearer lifecycle bo
 | Ingest plan targets `PUBLISHED`. | Lifecycle law is bypassed. | Deny any ingest-stage promotion or public release. |
 | QUARANTINE failure is treated as pipeline failure. | Teams may remove negative-path tests. | Treat QUARANTINE as successful fail-closed behavior for invalid input. |
 | WORK stage remains undocumented. | RAW/WORK/QUARANTINE drill is incomplete. | Add a synthetic WORK fixture or mark WORK as deferred in ADR index. |
-| ADR-0006 collisions confuse reviewers. | Wrong ADR cited or updated. | Use full path identity and update ADR index. |
+| ADR-0308 collisions confuse reviewers. | Wrong ADR cited or updated. | Use full path identity and update ADR index. |
 | Public fixtures leak internal path tokens. | Public clients could learn or depend on internal lifecycle stores. | Keep and enforce public internal-path checker. |
 | Live connector is activated early. | Rights, cadence, schema, or policy gap reaches public surfaces. | Keep live source activation denied until source descriptor and Promotion Gate close. |
 | Synthetic release manifest is read as ingest proof. | Release and ingest boundaries collapse. | Document ReleaseManifest/EvidenceBundle/receipt split and keep release drill separate. |
@@ -671,7 +671,7 @@ If this ADR expansion is rejected, revert only this ADR file. Do not remove exis
 | ADR owner/steward list | NEEDS_VERIFICATION | Check CODEOWNERS, document registry, or maintainer assignment. |
 | Created date for original target stub | UNKNOWN | Use git history if needed. |
 | ADR index completeness | NEEDS_VERIFICATION | Update `docs/adr/README.md`. |
-| Duplicate ADR-0006 files | NEEDS_VERIFICATION | Inventory ADR filenames and decide numbering policy. |
+| Duplicate ADR-0308 files | NEEDS_VERIFICATION | Inventory ADR filenames and decide numbering policy. |
 | WORK-stage synthetic fixture | NEEDS_VERIFICATION | Add or locate matching `WORK` ingest/normalization fixture. |
 | Ingest-plan schema | UNKNOWN | Confirm schema file and validator coverage. |
 | Receipt schema and receipt storage path | UNKNOWN | Inspect `schemas/`, `contracts/`, `data/receipts/`, and test fixtures. |
@@ -694,7 +694,7 @@ If this ADR expansion is rejected, revert only this ADR file. Do not remove exis
 | Activate live USGS source during first ingest drill. | Rejected | Source rights, cadence, schema, network behavior, and release policy must be verified first. |
 | Skip QUARANTINE fixture. | Rejected | Negative-path behavior is essential to fail-closed governance. |
 | Make synthetic release manifest prove ingest maturity. | Rejected | ReleaseManifest, EvidenceBundle, and lifecycle receipts are separate object families. |
-| Treat ADR-0006 number as globally unique without checking. | Rejected | Repo evidence shows duplicate ADR-0006 filenames; full path is safer. |
+| Treat ADR-0308 number as globally unique without checking. | Rejected | Repo evidence shows duplicate ADR-0308 filenames; full path is safer. |
 | Start with UI map rendering only. | Rejected | A map can look authoritative while bypassing evidence and lifecycle boundaries. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

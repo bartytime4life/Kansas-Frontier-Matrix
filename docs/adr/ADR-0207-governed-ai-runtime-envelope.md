@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0007: Governed AI Runtime Envelope
+title: ADR-0310: Governed AI Runtime Envelope
 type: standard
 version: v1
 status: draft
@@ -15,14 +15,14 @@ notes: [Revision of attached Markdown. Current workspace exposes uploaded docume
 
 <a id="top"></a>
 
-# ADR-0007: Governed AI Runtime Envelope
+# ADR-0310: Governed AI Runtime Envelope
 
 Define the finite, evidence-bound response envelope for KFM AI-assisted runtime surfaces.
 
 > [!IMPORTANT]
 > **Status:** `draft`  
 > **Decision posture:** `PROPOSED` until the ADR index, schema home, API routes, policy engine, tests, and workflow gates are verified in the mounted repository.  
-> **Proposed target path:** `docs/adr/ADR-0007-governed-ai-runtime-envelope.md`  
+> **Proposed target path:** `docs/adr/ADR-0207-governed-ai-runtime-envelope.md`  
 > **Owner:** `NEEDS-VERIFICATION`  
 > **Policy label:** `NEEDS-VERIFICATION`  
 > **Primary contract family:** `RuntimeResponseEnvelope`  
@@ -113,14 +113,14 @@ Without a governed runtime envelope, KFM risks allowing:
 | KFM doctrine | `CONFIRMED` from attached project corpus | Used as governing architecture. |
 | Mounted repo tree | `UNKNOWN` in this session | No current implementation, path, route, test, workflow, or schema presence is claimed. |
 | Target file path | `INFERRED` from attached Markdown | Proposed path is preserved for continuity until the real ADR index is inspected. |
-| ADR number | `NEEDS VERIFICATION` | Preserve `ADR-0007` from the attached Markdown; reconcile against the real ADR index before publish. |
+| ADR number | `NEEDS VERIFICATION` | Preserve `ADR-0310` from the attached Markdown; reconcile against the real ADR index before publish. |
 | Owners | `NEEDS VERIFICATION` | Confirm from `CODEOWNERS`, steward records, or repo governance. |
 | Policy label | `NEEDS VERIFICATION` | Confirm from documentation policy registry or repo convention. |
 | Schema home | `NEEDS VERIFICATION / possibly CONFLICTED` | Do not create parallel authority between `contracts/`, `schemas/`, and `schemas/contracts/v1/`; resolve through an ADR or existing repo convention. |
 
 ### Numbering note
 
-**NEEDS VERIFICATION:** The attached Markdown records possible ADR-number ambiguity for the governed-AI runtime-envelope decision. This revision preserves the requested `ADR-0007` title and filename as continuity, but publication must inspect the real `docs/adr/` index before renumbering, overwriting, or cross-linking adjacent ADRs.
+**NEEDS VERIFICATION:** The attached Markdown records possible ADR-number ambiguity for the governed-AI runtime-envelope decision. This revision preserves the requested `ADR-0310` title and filename as continuity, but publication must inspect the real `docs/adr/` index before renumbering, overwriting, or cross-linking adjacent ADRs.
 
 [Back to top](#top)
 
@@ -512,7 +512,7 @@ All paths are **PROPOSED / NEEDS VERIFICATION** until the real repo is mounted a
 
 | Surface | Proposed file or family | Status |
 |---|---|---:|
-| ADR | `docs/adr/ADR-0007-governed-ai-runtime-envelope.md` | this file, proposed path |
+| ADR | `docs/adr/ADR-0207-governed-ai-runtime-envelope.md` | this file, proposed path |
 | ADR index | `docs/adr/README.md` or repo-native ADR index | `NEEDS VERIFICATION` |
 | Runtime schema | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `NEEDS VERIFICATION` |
 | Runtime examples | `schemas/contracts/v1/runtime/examples/*.json` | `PROPOSED` |

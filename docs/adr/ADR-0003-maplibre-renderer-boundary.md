@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/ADR-0003-maplibre-renderer-boundary
+doc_id: kfm://adr/ADR-0303-maplibre-renderer-boundary
 title: ADR-0003: MapLibre Renderer Boundary
 type: architecture-decision-record
 version: v1.0-review
@@ -11,11 +11,11 @@ policy_label: NEEDS_VERIFICATION
 related: [
   ./README.md,
   ./ADR-0001-schema-home.md,
-  ./ADR-0002-policy-home.md,
+  ./ADR-0202-policy-home.md,
   ./ADR-0002-responsibility-root-monorepo.md,
-  ./ADR-0003-source-ledger-authority.md,
-  ./ADR-0006-maplibre-layer-manifest.md,
-  ./ADR-0007-governed-ai-runtime-envelope.md,
+  ./ADR-0203-source-ledger-authority.md,
+  ./ADR-0206-maplibre-layer-manifest.md,
+  ./ADR-0207-governed-ai-runtime-envelope.md,
   ../../apps/web/README.md,
   ../../apps/web/package.json
 ]
@@ -36,9 +36,9 @@ tags: [
   fail-closed
 ]
 notes: [
-  Expands the existing ADR-0003 renderer-boundary stub while preserving its core rule: Map renderer cannot be truth authority.
-  ADR acceptance state remains NEEDS VERIFICATION because docs/adr/README.md index alignment and ADR-0003 numbering collision require cleanup.
-  ADR-0006 remains the companion LayerManifest.v1 decision record.
+  Expands the existing ADR-0303 renderer-boundary stub while preserving its core rule: Map renderer cannot be truth authority.
+  ADR acceptance state remains NEEDS VERIFICATION because docs/adr/README.md index alignment and ADR-0303 numbering collision require cleanup.
+  ADR-0308 remains the companion LayerManifest.v1 decision record.
   This ADR records architecture doctrine and expected validation gates; it does not claim current runtime, CI, policy, UI, release, cache, or workflow enforcement.
 ]
 [/KFM_META_BLOCK_V2] -->
@@ -94,7 +94,7 @@ All consequential map claims must flow through governed KFM objects and interfac
 | ADR file state | `review` |
 | Decision posture | `CONFIRMED doctrine / NEEDS VERIFICATION for ADR index acceptance state` |
 | Core boundary | Renderer is downstream of evidence, policy, review, release, correction, and rollback. |
-| Companion ADR | `ADR-0006-maplibre-layer-manifest.md` |
+| Companion ADR | `ADR-0206-maplibre-layer-manifest.md` |
 | Public posture | Fail closed when evidence, rights, sensitivity, release state, source role, review state, or correction state is unclear. |
 | Primary risk avoided | Polished maps, tiles, popups, or client feature properties being mistaken for authoritative KFM claims. |
 | Implementation proof | `UNKNOWN` until repo tests, workflows, runtime logs, validators, manifests, or emitted proof objects confirm enforcement. |
@@ -111,7 +111,7 @@ This ADR separates repository evidence, KFM doctrine, companion decisions, and i
 |---|---|---|---|
 | Existing target file | `CONFIRMED repository file` | `docs/adr/ADR-0003-maplibre-renderer-boundary.md` exists and records the terse rule: “Map renderer cannot be truth authority.” | Full rationale, enforcement, CI, runtime behavior, or ADR index status. |
 | ADR template | `CONFIRMED repository file` | KFM ADRs should record evidence, scope, policy impact, validation, rollback, supersession, and explicit implementation-proof boundaries. | That this ADR is currently enforced. |
-| `ADR-0006-maplibre-layer-manifest.md` | `CONFIRMED repository file / companion decision` | `LayerManifest.v1` is the companion layer-facing contract decision. | That layer manifests are fully implemented, validated, or release-enforced. |
+| `ADR-0206-maplibre-layer-manifest.md` | `CONFIRMED repository file / companion decision` | `LayerManifest.v1` is the companion layer-facing contract decision. | That layer manifests are fully implemented, validated, or release-enforced. |
 | `apps/web/package.json` | `CONFIRMED repository file` | The web app package currently declares MapLibre and PMTiles dependencies. | Runtime maturity, public deployment behavior, branch protection, or UI trust enforcement. |
 | `apps/web/README.md` | `CONFIRMED repository file / draft` | The web shell is described as governed, map-first, and not a truth source. | That all described shell behavior is implemented. |
 | Directory Rules / responsibility-root doctrine | `CONFIRMED doctrine` | ADRs belong under `docs/adr/`; repo roots are responsibility boundaries; compatibility roots require explicit status. | Runtime behavior or enforcement maturity. |
@@ -150,10 +150,10 @@ This ADR governs:
 
 This ADR does **not** decide:
 
-- The complete `LayerManifest.v1` schema. See `ADR-0006-maplibre-layer-manifest.md`.
+- The complete `LayerManifest.v1` schema. See `ADR-0206-maplibre-layer-manifest.md`.
 - Canonical schema home. See `ADR-0001-schema-home.md`.
-- Canonical policy home. See `ADR-0002-policy-home.md`.
-- Source-ledger authority. See `ADR-0003-source-ledger-authority.md` or its renumbered successor after ADR cleanup.
+- Canonical policy home. See `ADR-0202-policy-home.md`.
+- Source-ledger authority. See `ADR-0203-source-ledger-authority.md` or its renumbered successor after ADR cleanup.
 - Exact MapLibre package version, upgrade cadence, or security pinning.
 - Full UI component tree, route names, backend framework, test runner, CI workflow, or deployment topology.
 - Cesium, 3D, globe, terrain, or story-scene admission beyond the same renderer-not-truth principle.
@@ -253,9 +253,9 @@ flowchart LR
 
 ## Relationship to LayerManifest
 
-`ADR-0006-maplibre-layer-manifest.md` governs the narrower layer contract. This ADR governs the broader renderer boundary.
+`ADR-0206-maplibre-layer-manifest.md` governs the narrower layer contract. This ADR governs the broader renderer boundary.
 
-| Question | This ADR | ADR-0006 |
+| Question | This ADR | ADR-0308 |
 |---|---|---|
 | Can MapLibre be truth authority? | No. Renderer is downstream of trust. | Assumes renderer is downstream. |
 | What admits a layer to the shell? | A governed catalog or released manifest path. | `LayerManifest.v1` is the layer-facing contract. |
@@ -392,9 +392,9 @@ rg -n "new maplibregl.Map|addSource|addLayer" apps/web/src
 | Area | Expected update | Status |
 |---|---|---|
 | `docs/adr/ADR-0003-maplibre-renderer-boundary.md` | Replace terse stub with this full ADR. | `PROPOSED change` |
-| `docs/adr/README.md` | Add this ADR and reconcile duplicate `ADR-0003` numbering. | `NEEDS VERIFICATION` |
-| `docs/adr/ADR-0003-source-ledger-authority.md` | Renumber, supersede, or index explicitly to remove collision. | `NEEDS VERIFICATION` |
-| `docs/adr/ADR-0006-maplibre-layer-manifest.md` | Cross-link as companion ADR. | `PROPOSED` |
+| `docs/adr/README.md` | Add this ADR and reconcile duplicate `ADR-0303` numbering. | `NEEDS VERIFICATION` |
+| `docs/adr/ADR-0203-source-ledger-authority.md` | Renumber, supersede, or index explicitly to remove collision. | `NEEDS VERIFICATION` |
+| `docs/adr/ADR-0206-maplibre-layer-manifest.md` | Cross-link as companion ADR. | `PROPOSED` |
 | `apps/web/README.md` | Reference this renderer-boundary rule in runtime boundaries and no-bypass sections. | `PROPOSED` |
 | `apps/web/package.json` | No immediate change required by this ADR; dependency upgrades should respect this boundary. | `CONFIRMED file / no direct change required` |
 | `schemas/` | Add or verify schemas for manifest, drawer payload, focus envelope, and runtime receipts if not present. | `NEEDS VERIFICATION` |
@@ -471,7 +471,7 @@ This ADR may be superseded only by a later ADR that preserves or strengthens the
 | Item | Status | Why it matters |
 |---|---|---|
 | ADR index listing | `NEEDS VERIFICATION` | `docs/adr/README.md` should list this ADR or its renumbered successor. |
-| Duplicate `ADR-0003` numbering | `NEEDS VERIFICATION` | `ADR-0003-source-ledger-authority.md` also exists and must be reconciled. |
+| Duplicate `ADR-0303` numbering | `NEEDS VERIFICATION` | `ADR-0203-source-ledger-authority.md` also exists and must be reconciled. |
 | Final owners / CODEOWNERS | `NEEDS VERIFICATION` | UI, API, policy, release, and documentation reviewers may differ. |
 | Runtime adapter path | `UNKNOWN` | Need to verify where MapLibre adapter code lives. |
 | Governed API route names | `UNKNOWN` | Do not invent route names without current API evidence. |
@@ -496,8 +496,8 @@ This ADR may be superseded only by a later ADR that preserves or strengthens the
 <summary>Pre-merge checklist</summary>
 
 - [ ] ADR title, file name, meta block title, and ADR index entry are aligned.
-- [ ] Duplicate `ADR-0003` numbering is addressed or explicitly tracked.
-- [ ] This ADR is cross-linked to `ADR-0006-maplibre-layer-manifest.md`.
+- [ ] Duplicate `ADR-0303` numbering is addressed or explicitly tracked.
+- [ ] This ADR is cross-linked to `ADR-0206-maplibre-layer-manifest.md`.
 - [ ] No section claims runtime behavior without repo/test/workflow/artifact evidence.
 - [ ] Renderer is described as downstream of trust, not as policy/evidence/release authority.
 - [ ] Public-client boundary excludes RAW, WORK, QUARANTINE, canonical/internal, steward-only, and model-runtime stores.

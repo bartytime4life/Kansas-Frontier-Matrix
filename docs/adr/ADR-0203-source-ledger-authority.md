@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0003: Source Ledger Authority
+title: ADR-0303: Source Ledger Authority
 type: standard
 version: v1
 status: draft
@@ -10,12 +10,12 @@ updated: 2026-05-02
 policy_label: NEEDS-VERIFICATION
 related: [docs/adr/NEEDS-VERIFICATION, docs/registers/NEEDS-VERIFICATION, schemas/contracts/v1/NEEDS-VERIFICATION, data/registry/NEEDS-VERIFICATION]
 tags: [kfm, adr, source-ledger, authority, evidence, governance, provenance]
-notes: [Revised from attached draft for proposed path docs/adr/ADR-0003-source-ledger-authority.md; repo checkout, ADR index, owners, policy label, related links, schema home, validator home, and implementation depth remain NEEDS VERIFICATION before publication.]
+notes: [Revised from attached draft for proposed path docs/adr/ADR-0203-source-ledger-authority.md; repo checkout, ADR index, owners, policy label, related links, schema home, validator home, and implementation depth remain NEEDS VERIFICATION before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# ADR-0003: Source Ledger Authority
+# ADR-0303: Source Ledger Authority
 
 Decide how KFM ranks, records, cites, promotes, supersedes, and blocks source material so source authority remains inspectable instead of implied.
 
@@ -28,14 +28,14 @@ Decide how KFM ranks, records, cites, promotes, supersedes, and blocks source ma
 > [!IMPORTANT]
 > **Status:** `draft`  
 > **Decision state:** `PROPOSED`  
-> **Path assumption:** `docs/adr/ADR-0003-source-ledger-authority.md`  
+> **Path assumption:** `docs/adr/ADR-0203-source-ledger-authority.md`  
 > **Owners:** `NEEDS-VERIFICATION`  
 > **Repo implementation depth:** `UNKNOWN` until the current checkout, tests, workflows, manifests, proof objects, and release artifacts are inspected.  
 > **Applies to:** documentation, source descriptors, EvidenceRef resolution, EvidenceBundle construction, promotion gates, proof objects, governed AI context, map/scene/UI claims, and public-facing publication surfaces.  
 > **Quick jumps:** [Decision](#decision) · [Context](#context) · [Authority model](#authority-model) · [Ledger record contract](#ledger-record-contract) · [Lifecycle](#lifecycle-and-promotion) · [Validation](#validation-gates) · [Repo surfaces](#expected-repo-surfaces) · [Rollback](#rollback-and-correction) · [Open verification](#open-verification)
 
 > [!WARNING]
-> **NEEDS VERIFICATION:** the visible KFM corpus also references source-ledger authority under another proposed ADR number. This draft preserves the requested `ADR-0003` path assumption, but publication must first reconcile the ADR index, filename, cross-links, and any predecessor `ADR-0002-source-ledger-authority.md` reference.
+> **NEEDS VERIFICATION:** the visible KFM corpus also references source-ledger authority under another proposed ADR number. This draft preserves the requested `ADR-0303` path assumption, but publication must first reconcile the ADR index, filename, cross-links, and any predecessor `ADR-0202-source-ledger-authority.md` reference.
 
 ---
 
@@ -522,7 +522,7 @@ These paths are **PROPOSED** until repo conventions are verified. If the mounted
 
 | Surface | Proposed or preferred home | Role | Verification note |
 |---|---|---|---|
-| This ADR | `docs/adr/ADR-0003-source-ledger-authority.md` | Decision record for source-ledger authority. | ADR number and index require verification. |
+| This ADR | `docs/adr/ADR-0203-source-ledger-authority.md` | Decision record for source-ledger authority. | ADR number and index require verification. |
 | Human-readable source ledger | `docs/registers/SOURCE_LEDGER.md` | Reviewable source authority register. | Verify existing register home first. |
 | Authority ladder register | `docs/registers/AUTHORITY_LADDER.md` or this ADR | Ranked source-class rules. | Avoid duplicate authority if this ADR remains governing. |
 | Canon / lineage / exploratory register | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Document/source-status map. | Verify whether a document registry already carries this role. |

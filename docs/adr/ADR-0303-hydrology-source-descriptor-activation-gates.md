@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/ADR-0003-hydrology-source-descriptor-activation-gates
-title: ADR-0003: Hydrology Source Descriptor Activation Gates
+doc_id: kfm://adr/ADR-0303-hydrology-source-descriptor-activation-gates
+title: ADR-0303: Hydrology Source Descriptor Activation Gates
 type: architecture-decision-record
 version: v1.0
 status: accepted-with-activation-blocked
@@ -8,10 +8,10 @@ owners: @bartytime4life; hydrology-domain-steward NEEDS_VERIFICATION; policy-ste
 created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: 2026-05-06
 policy_label: public
-related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0002-policy-home.md, ../runbooks/hydrology-source-activation-gates.md, ../domains/hydrology/README.md, ../../contracts/objects/source-descriptor/README.md, ../../data/registry/sources/hydrology/, ../../tools/validators/validate_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_role_policy.py]
+related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0202-policy-home.md, ../runbooks/hydrology-source-activation-gates.md, ../domains/hydrology/README.md, ../../contracts/objects/source-descriptor/README.md, ../../data/registry/sources/hydrology/, ../../tools/validators/validate_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_role_policy.py]
 tags: [kfm, adr, hydrology, source-descriptor, source-activation, source-rights, fail-closed, descriptor-first, no-network, governance]
 notes: [
-  Replaces the thin ADR-0003 note with a full decision record while preserving the original decision: candidate official hydrology sources are descriptor-only, blocked, and non-fetching.
+  Replaces the thin ADR-0303 note with a full decision record while preserving the original decision: candidate official hydrology sources are descriptor-only, blocked, and non-fetching.
   Current repository evidence includes hydrology source descriptor JSON files, a validator, tests, and a source activation runbook; test execution and CI enforcement still need verification in this revision context.
   This ADR governs activation gates only; it does not approve live connectors, public release, data fetch, claim evidence, or publication.
 ]
@@ -19,7 +19,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0003: Hydrology Source Descriptor Activation Gates
+# ADR-0303: Hydrology Source Descriptor Activation Gates
 
 <p align="center">
   <strong>Candidate hydrology sources may be registered before they are activated, but they must remain descriptor-only, non-fetching, non-public, and blocked until manual verification gates pass.</strong>
@@ -57,9 +57,9 @@ notes: [
 
 KFM accepts the descriptor-first activation model for official hydrology source families.
 
-The original ADR-0003 decision is preserved and expanded:
+The original ADR-0303 decision is preserved and expanded:
 
-| Original decision element | Expanded ADR-0003 rule |
+| Original decision element | Expanded ADR-0303 rule |
 |---|---|
 | Register candidate official hydrology sources as descriptor-only. | Source descriptors may be committed under the repository’s hydrology source registry before activation. |
 | Keep them blocked. | Candidate descriptors must remain in a blocked or manual-review state until all activation gates pass. |
@@ -91,7 +91,7 @@ That proof lane becomes unsafe if source registration is confused with source ac
 
 ### Failure modes prevented
 
-| Failure mode | What would go wrong | ADR-0003 response |
+| Failure mode | What would go wrong | ADR-0303 response |
 |---|---|---|
 | Descriptor becomes connector approval | A JSON record silently enables live fetch. | Descriptors must keep `connector_enabled=false` until an activation decision changes state. |
 | Unknown rights leak into public output | Source terms or redistribution rights are unresolved. | Unknown rights block public release and activation. |
@@ -123,7 +123,7 @@ That proof lane becomes unsafe if source registration is confused with source ac
 - Approving public release of source data or derived artifacts.
 - Defining every `SourceDescriptor` schema field.
 - Deciding canonical schema home. See `ADR-0001-schema-home.md`.
-- Deciding canonical policy home. See `ADR-0002-policy-home.md`.
+- Deciding canonical policy home. See `ADR-0202-policy-home.md`.
 - Replacing the hydrology domain README, source activation runbook, source descriptor contract object, or validator implementation.
 - Proving CI enforcement, workflow execution, production runtime behavior, or deployment posture without current execution evidence.
 
@@ -135,7 +135,7 @@ That proof lane becomes unsafe if source registration is confused with source ac
 
 | Evidence | Status | What it supports | Limits |
 |---|---|---|---|
-| Existing ADR-0003 file | CONFIRMED repository file | Minimal decision, consequence, and rollback statement for descriptor-only blocked hydrology source registration. | Existing file was thin and did not define gates, state machine, or enforcement detail. |
+| Existing ADR-0303 file | CONFIRMED repository file | Minimal decision, consequence, and rollback statement for descriptor-only blocked hydrology source registration. | Existing file was thin and did not define gates, state machine, or enforcement detail. |
 | `docs/runbooks/hydrology-source-activation-gates.md` | CONFIRMED repository file | Activation requires descriptor, verification receipt, policy, and gate decision; PR-003 allowed results are `BLOCKED` or `READY_FOR_MANUAL_REVIEW`; promotion remains governed state transition. | Does not prove CI/runtime enforcement by itself. |
 | `contracts/objects/source-descriptor/README.md` | CONFIRMED repository file | SourceDescriptor is the source-admission object; it is not ingestion, publication, or claim proof. | The README labels several schema/owner/runtime items as needing verification. |
 | Hydrology source descriptor JSON files | CONFIRMED repository files | Candidate hydrology source descriptors exist with blocked, non-fetching, non-public posture. | Documentation URL checks, rights, terms, attribution, steward, and review are still unresolved in the descriptors. |
@@ -161,7 +161,7 @@ That proof lane becomes unsafe if source registration is confused with source ac
 
 ## Source families covered
 
-ADR-0003 applies to hydrology source families registered as candidate official external descriptors.
+ADR-0303 applies to hydrology source families registered as candidate official external descriptors.
 
 | Descriptor | Source role | Allowed claim character | Public release | Connector / fetch |
 |---|---|---|---:|---:|
@@ -190,7 +190,7 @@ ADR-0003 applies to hydrology source families registered as candidate official e
 
 ## Activation state machine
 
-ADR-0003 defines descriptor activation as a governed state transition. File presence is not activation.
+ADR-0303 defines descriptor activation as a governed state transition. File presence is not activation.
 
 ```mermaid
 stateDiagram-v2
@@ -293,7 +293,7 @@ A candidate descriptor can inform source review and registry visibility. It cann
 
 ### Repository enforcement surfaces
 
-| Surface | Confirmed role | ADR-0003 expectation |
+| Surface | Confirmed role | ADR-0303 expectation |
 |---|---|---|
 | `tools/validators/validate_hydrology_source_descriptors.py` | Checks required descriptor keys, allowed activation states, and false connector/fetch/public flags. | Continue to fail closed for missing fields or any candidate descriptor that enables fetch, connector, or public release. |
 | `tests/domains/hydrology/test_hydrology_source_descriptors.py` | Invokes the descriptor validator. | Should remain a fast no-network regression check. |
@@ -383,7 +383,7 @@ A manual review packet should include:
 
 ## Public claim policy
 
-ADR-0003 blocks all public claims that rely only on a candidate source descriptor.
+ADR-0303 blocks all public claims that rely only on a candidate source descriptor.
 
 | Public-surface action | Candidate descriptor result |
 |---|---|
@@ -428,7 +428,7 @@ ADR-0003 blocks all public claims that rely only on a candidate source descripto
 
 | File | Required update |
 |---|---|
-| `docs/adr/README.md` | Add ADR-0003 to the ADR index and clarify status. |
+| `docs/adr/README.md` | Add ADR-0303 to the ADR index and clarify status. |
 | `docs/runbooks/hydrology-source-activation-gates.md` | Link this ADR and expand manual review packet fields. |
 | `docs/domains/hydrology/README.md` | Link this ADR where source descriptors and inactive-by-default posture are described. |
 | `contracts/objects/source-descriptor/README.md` | Link this ADR as a hydrology-domain activation example. |
@@ -442,7 +442,7 @@ ADR-0003 blocks all public claims that rely only on a candidate source descripto
 
 ## Acceptance and verification criteria
 
-ADR-0003 is accepted for decision posture. The following items determine whether implementation maturity can be upgraded.
+ADR-0303 is accepted for decision posture. The following items determine whether implementation maturity can be upgraded.
 
 - [x] ADR file exists in `docs/adr/`.
 - [x] Hydrology source activation runbook exists.
@@ -450,7 +450,7 @@ ADR-0003 is accepted for decision posture. The following items determine whether
 - [x] Validator file exists for blocked candidate descriptor posture.
 - [x] Test file exists that invokes the validator.
 - [x] Source-role policy test exists for selected hydrology source-role distinctions.
-- [ ] ADR index includes ADR-0003.
+- [ ] ADR index includes ADR-0303.
 - [ ] Latest validator execution output is attached or linked.
 - [ ] Latest CI/workflow status proves the validator/test is enforced.
 - [ ] Rights and terms review receipts exist for each candidate source.
@@ -466,7 +466,7 @@ ADR-0003 is accepted for decision posture. The following items determine whether
 
 ## Rollback or supersession
 
-Rollback for ADR-0003-compatible source registration is intentionally low-risk because candidate descriptors do not fetch, publish, or enable connectors.
+Rollback for ADR-0303-compatible source registration is intentionally low-risk because candidate descriptors do not fetch, publish, or enable connectors.
 
 ### Rollback rules
 

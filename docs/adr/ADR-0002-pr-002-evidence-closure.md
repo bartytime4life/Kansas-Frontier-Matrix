@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr/ADR-0002-pr-002-evidence-closure
-title: ADR-0002 PR-002: Evidence Closure Gate for Public Hydrology Claims
+doc_id: kfm://doc/adr/ADR-0202-pr-002-evidence-closure
+title: ADR-0202 PR-002: Evidence Closure Gate for Public Hydrology Claims
 type: adr
 version: v1.1
 status: accepted-supplemental
@@ -45,7 +45,7 @@ notes:
 
 <a id="top"></a>
 
-# ADR-0002 PR-002: Evidence Closure Gate for Public Hydrology Claims
+# ADR-0202 PR-002: Evidence Closure Gate for Public Hydrology Claims
 
 <p align="center">
   <strong>Public hydrology claims must cite resolved evidence or refuse to speak.</strong>
@@ -142,7 +142,7 @@ This ADR is grounded in repository files that currently encode the PR-002 synthe
 | Evidence item | Status | What it supports | Limit |
 |---|---|---|---|
 | `docs/adr/README.md` | CONFIRMED | `docs/adr/` is the current ADR home and lists foundational ADRs. | It does not yet explain this supplemental ADR naming collision. |
-| `docs/adr/ADR-0002-responsibility-root-monorepo.md` | CONFIRMED | Responsibility-root layout is accepted; domain content belongs under responsibility roots, not root-level domain folders. | It is a different ADR despite the shared `ADR-0002` prefix. |
+| `docs/adr/ADR-0002-responsibility-root-monorepo.md` | CONFIRMED | Responsibility-root layout is accepted; domain content belongs under responsibility roots, not root-level domain folders. | It is a different ADR despite the shared `ADR-0202` prefix. |
 | `tools/validators/validate_evidence_closure.py` | CONFIRMED | Evidence closure currently checks `evidence_ref.bundle_id == evidence_bundle.id` and verifies the ref is listed in the bundle. | It is a minimal semantic validator, not a full evidence resolver. |
 | `fixtures/evidence/evidence_ref.valid.json` | CONFIRMED | Synthetic hydrology `EvidenceRef` carries `id`, `bundle_id`, `claim_id`, and `knowledge_character`. | Fixture is synthetic and not live-source proof. |
 | `fixtures/evidence/evidence_bundle.valid.json` | CONFIRMED | Synthetic hydrology `EvidenceBundle` carries `closure_status: COMPLETE` and includes the evidence ref. | Schema currently checks only minimal shape unless paired with validators. |

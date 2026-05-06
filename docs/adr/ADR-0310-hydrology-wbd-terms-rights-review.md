@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0007-HYDROLOGY-WBD-TERMS-RIGHTS
-title: ADR-0007: Hydrology WBD Terms and Rights Review
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0310-HYDROLOGY-WBD-TERMS-RIGHTS
+title: ADR-0310: Hydrology WBD Terms and Rights Review
 type: standard
 version: v1.0-review
 status: review
@@ -8,10 +8,10 @@ owners: TODO: hydrology domain steward; documentation steward; policy steward; r
 created: NEEDS-VERIFICATION
 updated: 2026-05-06
 policy_label: restricted-draft
-related: [./README.md, ./ADR-0004-hydrology-source-documentation-verification.md, ./ADR-0006-hydrology-wbd-metadata-probe.md, ../domains/hydrology/README.md, ../../data/registry/crosswalk/sources.yaml, ../../schemas/contracts/v1/source/source_activation_decision.schema.json, ../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json, ../../release/dry_runs/hydrology_wbd_terms_rights_gate.json, ../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json]
+related: [./README.md, ./ADR-0305-hydrology-source-documentation-verification.md, ./ADR-0307-hydrology-wbd-metadata-probe.md, ../domains/hydrology/README.md, ../../data/registry/crosswalk/sources.yaml, ../../schemas/contracts/v1/source/source_activation_decision.schema.json, ../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json, ../../release/dry_runs/hydrology_wbd_terms_rights_gate.json, ../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json]
 tags: [kfm, adr, hydrology, wbd, huc12, rights, terms, source-activation, verified-inactive, public-release, fail-closed]
 notes: [
-  Preserves the existing ADR-0007 short-form decision: terms/rights hardening keeps WBD VERIFIED_INACTIVE and non-public.
+  Preserves the existing ADR-0310 short-form decision: terms/rights hardening keeps WBD VERIFIED_INACTIVE and non-public.
   This ADR distinguishes external public-domain source status from KFM publication eligibility.
   External USGS source facts were checked on 2026-05-06, but KFM publication remains blocked until repo-native source descriptors, attribution text, validation receipts, policy gates, release manifests, and rollback references are accepted.
   Owners, created date, policy steward, legal/risk reviewer, CI enforcement, and full activation-review workflow remain NEEDS VERIFICATION.
@@ -20,7 +20,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0007: Hydrology WBD Terms and Rights Review
+# ADR-0310: Hydrology WBD Terms and Rights Review
 
 <p align="center">
   <strong>Public-domain source material is not the same thing as KFM public-release eligibility.</strong>
@@ -59,7 +59,7 @@ notes: [
 
 | Field | Determination |
 |---|---|
-| ADR path | `docs/adr/ADR-0007-hydrology-wbd-terms-rights-review.md` |
+| ADR path | `docs/adr/ADR-0310-hydrology-wbd-terms-rights-review.md` |
 | Decision | Keep WBD/HUC12 source candidate `VERIFIED_INACTIVE` and not eligible for public release. |
 | Source family | USGS Watershed Boundary Dataset / HUC12 |
 | KFM source candidate | `SRC-HYD-WBD-CANDIDATE` |
@@ -118,9 +118,9 @@ This ADR is grounded in current repository evidence and current official USGS so
 
 | Evidence | Status | Supports | Does not prove |
 |---|---|---|---|
-| Existing ADR-0007 file | `CONFIRMED` | Existing short-form decision: WBD remains `VERIFIED_INACTIVE` and non-public after terms/rights hardening. | Full rationale, owners, acceptance, workflow enforcement, or release readiness. |
-| ADR-0004 source documentation verification | `CONFIRMED repo doc` | Source documentation review is prerequisite support only and must not become claim evidence. | Connector activation or public publication. |
-| ADR-0006 WBD metadata probe | `CONFIRMED repo doc` | Metadata-only probing must not activate public-safe release by itself. | Terms/rights closure or live ingestion approval. |
+| Existing ADR-0310 file | `CONFIRMED` | Existing short-form decision: WBD remains `VERIFIED_INACTIVE` and non-public after terms/rights hardening. | Full rationale, owners, acceptance, workflow enforcement, or release readiness. |
+| ADR-0305 source documentation verification | `CONFIRMED repo doc` | Source documentation review is prerequisite support only and must not become claim evidence. | Connector activation or public publication. |
+| ADR-0308 WBD metadata probe | `CONFIRMED repo doc` | Metadata-only probing must not activate public-safe release by itself. | Terms/rights closure or live ingestion approval. |
 | Hydrology domain README | `CONFIRMED repo doc / draft` | Hydrology is first proof lane; WBD/HUC is hydrologic-unit framing; fixture-first/no-network posture. | That all adjacent hydrology paths, owners, or commands are enforced. |
 | Source activation decision schema | `CONFIRMED repo schema` | `VERIFIED_INACTIVE` is an allowed source activation state; finite decisions are `ALLOW`, `ABSTAIN`, `DENY`, `ERROR`. | That all consumers enforce the schema. |
 | WBD verified-inactive fixture | `CONFIRMED repo fixture` | The WBD source candidate has a valid `ABSTAIN` + `VERIFIED_INACTIVE` fixture. | Public-release eligibility. |
@@ -174,7 +174,7 @@ KFM still keeps WBD `VERIFIED_INACTIVE` because KFM publication requires more th
 
 ### Rights decision table
 
-| Question | Answer for ADR-0007 |
+| Question | Answer for ADR-0310 |
 |---|---|
 | Can WBD remain in the source registry as a candidate hydrologic boundary source? | Yes. |
 | Can WBD be called public domain in KFM docs? | Only with official-source citation and review timestamp. |
@@ -266,7 +266,7 @@ stateDiagram-v2
   VERIFIED_INACTIVE --> RETIRED: candidate rejected or replaced
 
   note right of VERIFIED_INACTIVE
-    Current ADR-0007 state.
+    Current ADR-0310 state.
     No public release.
     No live ingestion.
     No WBD geometry or feature attributes stored.
@@ -381,9 +381,9 @@ A later PR may advance the WBD candidate only by adding or updating an inactive 
 
 ## Acceptance criteria
 
-ADR-0007 may move beyond `review` only when the following are true.
+ADR-0310 may move beyond `review` only when the following are true.
 
-- [ ] ADR index lists ADR-0007 with status and decision summary.
+- [ ] ADR index lists ADR-0310 with status and decision summary.
 - [ ] Owners/stewards for hydrology, documentation, policy, and rights review are named or explicitly placeholdered.
 - [ ] Source activation decision schema is referenced by the ADR and any fixtures validate against it.
 - [ ] WBD verified-inactive fixture remains valid and uses `ABSTAIN` + `VERIFIED_INACTIVE`.
@@ -415,7 +415,7 @@ ADR-0007 may move beyond `review` only when the following are true.
 
 Any PR that changes WBD activation or publication status must include:
 
-1. Updated ADR-0007 or successor decision.
+1. Updated ADR-0310 or successor decision.
 2. Updated source activation decision record.
 3. Updated SourceDescriptor or source registry entry.
 4. Rights/terms review packet with source URLs and retrieval date.
@@ -471,7 +471,7 @@ Rollback must protect the evidence chain and must not convert a terms review int
 |---|---|---|
 | Created date | `NEEDS VERIFICATION` | Existing file did not include metadata. |
 | Owners/stewards | `NEEDS VERIFICATION` | Rights, hydrology, policy, and documentation review burden must be explicit. |
-| ADR index status | `NEEDS VERIFICATION` | `docs/adr/README.md` should list ADR-0007. |
+| ADR index status | `NEEDS VERIFICATION` | `docs/adr/README.md` should list ADR-0310. |
 | Exact legal/risk reviewer | `NEEDS VERIFICATION` | This ADR is not legal advice; a reviewer must own final rights posture. |
 | WBD source descriptor path | `NEEDS VERIFICATION` | Avoid parallel source-registry homes. |
 | Exact attribution text | `NEEDS VERIFICATION` | Required before publication. |

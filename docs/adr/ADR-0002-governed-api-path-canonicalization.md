@@ -1,4 +1,4 @@
-# ADR-0002: Governed API path canonicalization (`governed_api` vs `governed-api`)
+# ADR-0202: Governed API path canonicalization (`governed_api` vs `governed-api`)
 
 One governed API implementation home; one legacy compatibility surface; no split-brain trust boundary.
 
@@ -17,7 +17,7 @@ One governed API implementation home; one legacy compatibility surface; no split
 | **Primary owner** | governed API maintainer |
 | **Applies to** | Python implementation paths under `apps/governed_api/...` and legacy file-path compatibility under `apps/governed-api/...` |
 | **CI guard** | `tools/ci/check_governed_api_path_policy.py` |
-| **Suggested path** | `docs/adr/ADR-0002-governed-api-path-canonicalization.md` |
+| **Suggested path** | `docs/adr/ADR-0202-governed-api-path-canonicalization.md` |
 | **Truth posture** | CONFIRMED ADR decision / NEEDS VERIFICATION for active-branch file presence and CI wiring |
 
 > [!IMPORTANT]
@@ -504,7 +504,7 @@ Before opening a PR that touches either path, run:
 python tools/ci/check_governed_api_path_policy.py
 
 git grep -n "apps/governed-api" -- . \
-  ':!docs/adr/ADR-0002*' \
+  ':!docs/adr/ADR-0202*' \
   ':!tools/ci/check_governed_api_path_policy.py'
 
 git grep -n -E "from apps[.]governed-api|import apps[.]governed-api" -- '*.py'
@@ -556,7 +556,7 @@ Required documentation updates:
 Suggested ADR filename:
 
 ```text
-docs/adr/ADR-0002-governed-api-path-canonicalization.md
+docs/adr/ADR-0202-governed-api-path-canonicalization.md
 ```
 
 If the repository uses a different ADR home, place the file in the existing ADR convention and preserve the ADR number.
