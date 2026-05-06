@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-04-30T00:00:00Z",
+  "created_at": "2026-04-30T00:00:00Z",
+  "cursor_id": "cursor-1",
+  "cursor_semantics": "public_safe_monotonic_cursor",
+  "cursor_value": "cursor:e05069306614",
+  "delta_feed_ref": "public_delta_feed.json",
+  "domain": "atmosphere.air",
+  "from_index_ref": "public_index.json",
+  "schema_version": "v1",
+  "status": "fixture_cursor",
+  "to_index_ref": "public_index.json",
+  "visible_changes": 0
+}
