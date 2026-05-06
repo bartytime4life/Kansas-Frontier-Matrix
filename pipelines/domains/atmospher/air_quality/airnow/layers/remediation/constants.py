@@ -1,0 +1,4 @@
+OUTCOMES={"ready":"REMEDIATION_SCAFFOLD_READY","warn":"REMEDIATION_SCAFFOLD_WARNINGS_ONLY","needs":"REMEDIATION_SCAFFOLD_NEEDS_INPUT","deny":"REMEDIATION_SCAFFOLD_DENIED_REQUESTED_CAPABILITY","error":"REMEDIATION_SCAFFOLD_ERROR"}
+DENIED_FIELDS=["publication_requested","public_dashboard_requested","tiles_requested","public_api_requested","emergency_alert_requested","regulatory_claims_requested","exact_sensitive_overlay_requested","auto_apply_requested","github_issue_creation_requested","github_pr_creation_requested","git_push_requested"]
+SECRET_KEYS=("api_key","token","secret","password","bearer","credential","authorization","client_secret","access_key","refresh_token","private_key","session","deploy_key","webhook","publish_url","github_token","git_remote","ssh_key","signing_key")
+FORBIDDEN_SCHEMES=("http://","https://","ftp://","s3://","gs://","file://")
