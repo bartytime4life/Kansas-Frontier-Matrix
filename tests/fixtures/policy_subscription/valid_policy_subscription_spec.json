@@ -1,0 +1,16 @@
+{
+  "schema": "PolicySubscriptionSpec.v1",
+  "policy_subscription_id": "psub1",
+  "dataset_id": "ds1",
+  "subscription_profile": "strict",
+  "resolver": {
+    "source": "local",
+    "allow_remote_network": false
+  },
+  "lockfile": {
+    "write_lockfile": true,
+    "execute_flag_required": true
+  },
+  "cache": {},
+  "api": {}
+}

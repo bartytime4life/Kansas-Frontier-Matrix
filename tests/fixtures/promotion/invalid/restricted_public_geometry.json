@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "object_type": "PromotionCandidate",
+  "candidate_id": "promo:flora:2026-05-01:003",
+  "source_state": "WORK",
+  "target_state": "PUBLISHED",
+  "evidencebundle_ref": "evidence://bundle/flora/2026-05-01/003",
+  "evidencebundle_spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "run_receipt_ref": "receipt://runs/2026-05-01/003",
+  "run_receipt_bundle_ref": "receipt-bundle://runs/2026-05-01/003",
+  "rights_status": "unknown",
+  "sensitivity": "restricted",
+  "public_release": true,
+  "reviewer": "",
+  "cosign_receipt_verified": false,
+  "gatehouse_registration_posture": "pending"
+}

@@ -1,0 +1,23 @@
+{
+  "manifest_id": "kfm://release-manifest/minimal-fixture",
+  "release_id": "kfm://release/minimal-fixture",
+  "created_at": "2026-04-27T00:00:00Z",
+  "policy_label": "public",
+  "review_state": "reviewed",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "artifacts": [
+    {
+      "artifact_ref": "https://example.invalid/artifact.ext",
+      "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_ref": "kfm://evidence/minimal-fixture",
+      "provenance_ref": "https://example.invalid/artifact.prov.jsonld",
+      "stac_ref": "kfm://catalog/stac/minimal-fixture",
+      "dcat_ref": "kfm://catalog/dcat/minimal-fixture",
+      "attestation_ref": "https://example.invalid/artifact.bundle.json",
+      "run_receipt_ref": "kfm://receipt/run/minimal-fixture",
+      "policy_label": "public",
+      "review_state": "reviewed",
+      "sensitivity": "public"
+    }
+  ]
+}

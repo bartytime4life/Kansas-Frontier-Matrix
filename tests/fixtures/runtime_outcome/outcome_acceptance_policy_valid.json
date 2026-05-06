@@ -1,0 +1,20 @@
+{
+  "schema": "OutcomeAcceptancePolicy.v1",
+  "fail_closed": true,
+  "allowed_decisions": [
+    "accepted",
+    "accepted_with_warnings",
+    "review_required",
+    "quarantined",
+    "rejected"
+  ],
+  "decision_map": {
+    "conformant": "accepted",
+    "conformant_with_warnings": "review_required",
+    "nonconformant": "quarantined",
+    "error": "rejected"
+  },
+  "required_checks": [
+    "supervision.receipt.valid"
+  ]
+}

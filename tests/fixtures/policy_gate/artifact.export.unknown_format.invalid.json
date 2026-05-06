@@ -1,0 +1,9 @@
+{
+  "aggregation_level": "state",
+  "artifact_id": "art_export_bad",
+  "coordinates_precision": "aggregated",
+  "derived": false,
+  "policy_label": "public",
+  "rights_status": "controlled",
+  "spec_hash": "a4"
+}

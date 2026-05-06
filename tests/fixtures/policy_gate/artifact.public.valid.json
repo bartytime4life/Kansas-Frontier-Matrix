@@ -1,0 +1,9 @@
+{
+  "aggregation_level": "county",
+  "artifact_id": "art_public_ok",
+  "coordinates_precision": "aggregated",
+  "derived": false,
+  "policy_label": "public",
+  "rights_status": "controlled",
+  "spec_hash": "a1"
+}
