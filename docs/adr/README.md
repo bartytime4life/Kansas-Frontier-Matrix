@@ -10,7 +10,7 @@ updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
 related: [../../README.md, ../README.md, ./ADR-TEMPLATE.md, ./ADR-0001-schema-home.md, ./ADR-0002-responsibility-root-monorepo.md, ../registers/DRIFT_REGISTER.md]
 tags: [kfm, adr, architecture-decision, governance, evidence, rollback, supersession]
-notes: [Directory README for KFM Architecture Decision Records. Existing index was thin and listed only two foundational ADRs; connector evidence surfaced additional ADR files, so inventory completeness remains NEEDS VERIFICATION. Owners, created date, policy label, ADR numbering policy, CODEOWNERS, and CI enforcement must be verified before marking this index stable.]
+notes: [Directory README for KFM Architecture Decision Records. Live repository inventory, owners, created date, policy label, ADR numbering policy, CODEOWNERS, and CI enforcement remain NEEDS VERIFICATION before this index is marked stable.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -31,11 +31,11 @@ Directory index and governance guide for Kansas Frontier Matrix architecture dec
 </div>
 
 > [!IMPORTANT]
-> **Path:** `docs/adr/README.md`  
+> **Target path:** `docs/adr/README.md`  
 > **Status:** active directory index / coverage `NEEDS VERIFICATION`  
 > **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
 > **Primary job:** help maintainers find, write, review, supersede, and reconcile KFM Architecture Decision Records without turning proposed designs into implementation proof.  
-> **Do not use this index as proof that a decision is enforced.** ADRs record architecture decisions and review burden; enforcement still requires repository files, validators, fixtures, workflows, receipts, proofs, runtime evidence, or release artifacts.
+> **Trust rule:** an ADR records a decision and review burden. Enforcement still requires repository evidence such as validators, fixtures, workflows, receipts, proofs, release artifacts, runtime logs, or directly inspected implementation files.
 
 ## Quick jumps
 
@@ -50,7 +50,9 @@ Directory index and governance guide for Kansas Frontier Matrix architecture dec
 
 ## Scope
 
-`docs/adr/` stores KFM Architecture Decision Records: durable decisions that materially affect repository structure, source authority, evidence flow, contracts, schemas, policies, public-client boundaries, release posture, correction lineage, rollback behavior, UI trust surfaces, governed AI boundaries, or other architecture-significant choices.
+`docs/adr/` is the human-facing decision ledger for KFM architecture choices.
+
+Use this directory for durable decisions that materially affect repository structure, source authority, evidence flow, contracts, schemas, policy homes, public-client boundaries, release posture, correction lineage, rollback behavior, UI trust surfaces, governed AI boundaries, or other architecture-significant choices.
 
 ADRs in KFM should answer five questions clearly:
 
@@ -71,13 +73,17 @@ ADRs in KFM should answer five questions clearly:
 
 | Relationship | Path | Status | Role |
 |---|---|---:|---|
-| This index | `docs/adr/README.md` | `CONFIRMED path / revised content PROPOSED` | Directory landing page for ADR navigation and review rules. |
-| Project landing page | [`../../README.md`](../../README.md) | `CONFIRMED` | KFM identity, trust law, responsibility roots, proof-slice posture. |
-| Docs root | [`../README.md`](../README.md) | `CONFIRMED` | Minimal docs scaffold; should link back here when expanded. |
-| ADR template | [`./ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | `CONFIRMED` | Standard ADR structure and review checklist. |
-| Schema-home decision | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | `CONFIRMED` | Machine-schema authority proposal and acceptance gates. |
-| Responsibility-root decision | [`./ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md) | `CONFIRMED` | Accepted root-layout decision. |
-| Drift register | [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | `CONFIRMED by connector search / NEEDS VERIFICATION for current use` | Useful destination for unresolved authority drift. |
+| This index | `docs/adr/README.md` | `TARGET / NEEDS VERIFICATION IN ACTIVE CHECKOUT` | Directory landing page for ADR navigation and review rules. |
+| Project landing page | [`../../README.md`](../../README.md) | `NEEDS VERIFICATION` | Should explain KFM identity, trust law, responsibility roots, and proof-slice posture. |
+| Docs root | [`../README.md`](../README.md) | `NEEDS VERIFICATION` | Should link to this ADR index if the docs root is active. |
+| ADR template | [`./ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | `LISTED / NEEDS VERIFICATION` | Standard ADR structure and review checklist if present and current. |
+| Schema-home decision | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | `LISTED / NEEDS VERIFICATION` | Machine-schema authority decision or proposal. |
+| Responsibility-root decision | [`./ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md) | `LISTED / NEEDS VERIFICATION` | Responsibility-root layout decision if present and accepted. |
+| Drift register | [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | `LISTED / NEEDS VERIFICATION` | Useful destination for unresolved authority drift if active. |
+
+### Why ADRs belong under `docs/`
+
+Directory discipline in KFM treats root folders as responsibility boundaries, not topic buckets. ADRs are human-facing governance records, so they belong under `docs/adr/` rather than as a new root-level decision folder.
 
 ### Upstream inputs
 
@@ -85,9 +91,9 @@ This directory is downstream of:
 
 - KFM doctrine and trust law;
 - Directory Rules and responsibility-root discipline;
-- project-wide source authority, policy, schema, release, and correction doctrine;
 - current repository evidence;
-- accepted ADRs and successor ADRs.
+- accepted ADRs and successor ADRs;
+- source authority, policy, schema, release, correction, and rollback doctrine.
 
 ### Downstream consumers
 
@@ -127,7 +133,7 @@ Do **not** use `docs/adr/` as the primary home for the following:
 |---|---|---|
 | Machine-checkable schemas | `schemas/` or the ADR-accepted schema home | ADR prose is not machine validation authority. |
 | Semantic contract docs | `contracts/` | Contracts explain object meaning and compatibility. |
-| Policy rules | `policy/` | Policy must remain executable or policy-owned. |
+| Policy rules | `policy/` or the verified policy home | Policy must remain executable or policy-owned. |
 | Source descriptors and source registries | `data/registry/`, `control_plane/`, or verified source registry homes | Source authority needs structured records. |
 | Receipts, proofs, release manifests, rollback cards | `data/receipts/`, `data/proofs/`, `release/`, or verified proof/release homes | Emitted trust objects are not ADR text. |
 | Runtime code, app code, validators, scripts | `apps/`, `packages/`, `tools/`, `scripts/` | ADRs decide; implementation belongs in implementation roots. |
@@ -139,46 +145,90 @@ Do **not** use `docs/adr/` as the primary home for the following:
 
 ---
 
+## Directory tree
+
+> [!WARNING]
+> This tree is an **expected directory shape**, not proof of the active checkout. Re-run [inventory commands](#inventory-commands) before treating any file as present.
+
+```text
+docs/adr/
+├── README.md
+├── ADR-TEMPLATE.md
+├── ADR-0001-schema-home.md
+├── ADR-0002-responsibility-root-monorepo.md
+└── ADR-*.md
+```
+
+### Minimum healthy state
+
+A healthy ADR directory has:
+
+- one index that clearly distinguishes decision state from enforcement state;
+- one template or documented local ADR structure;
+- successor links for superseded decisions;
+- a naming or numbering policy;
+- a way to reconcile ADRs with registers, schemas, contracts, policies, fixtures, tests, receipts, proofs, and release notes.
+
+[Back to top](#top)
+
+---
+
+## Maintainer quickstart
+
+Run these steps before adding, editing, accepting, or superseding an ADR.
+
+1. **Inventory current ADRs.** Do not trust a stale index.
+2. **Check adjacent authority.** Look for related docs, registers, schemas, contracts, policies, tests, and release artifacts.
+3. **Label truth narrowly.** Separate accepted decision, proposed implementation, and verified enforcement.
+4. **Map impact.** Identify affected roots and trust boundaries.
+5. **Define validation.** State what would prove the decision is implemented.
+6. **Define rollback.** State how the decision can be reversed without deleting history.
+7. **Update this index.** Keep navigation and supersession visible.
+
+[Back to top](#top)
+
+---
+
 ## ADR inventory
 
 > [!WARNING]
-> This inventory is **not yet guaranteed exhaustive**. The previous index listed only `ADR-0001-schema-home.md` and `ADR-0002-responsibility-root-monorepo.md`; connector search surfaced additional ADR files and naming patterns. Re-run the inventory commands below against the active checkout before marking coverage complete.
+> This inventory is **not guaranteed exhaustive**. Treat entries below as `LISTED` or `SURFACED` until the active checkout is inspected. Do not mark coverage complete until the commands in [Inventory commands](#inventory-commands) have been run on the branch where this README will be committed.
 
-### Foundational and directory-control ADRs
+### Foundation and directory control
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | ADR authoring standard | `CONFIRMED` | Use as the default ADR structure unless an accepted local convention supersedes it. |
-| [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Canonical schema home | `CONFIRMED / proposed-draft decision` | Proposes `schemas/contracts/v1/` as canonical machine-contract home; acceptance gates remain visible. |
-| [`ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md) | Responsibility-root layout | `CONFIRMED / accepted decision` | Establishes that root folders are repo-wide responsibility boundaries, not topic buckets. |
-| `ADR-0014-truth-path.md` | Truth path | `SURFACED / NEEDS VERIFICATION` | Verify title, status, and relationship to current trust-law docs. |
-| `ADR-0015-promotion-contract.md` | Promotion contract | `SURFACED / NEEDS VERIFICATION` | Verify whether superseded by promotion-gate or release ADRs. |
-| `ADR-0016-spec-hash.md` | Deterministic spec hash | `SURFACED / NEEDS VERIFICATION` | Verify relationship to receipt/proof/release hashing docs. |
+| [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | ADR authoring standard | `LISTED / NEEDS VERIFICATION` | Use as the default ADR structure only if it is present and not superseded. |
+| [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Canonical schema home | `LISTED / NEEDS VERIFICATION` | Verify decision status and acceptance gates before treating schema placement as enforced. |
+| [`ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md) | Responsibility-root layout | `LISTED / NEEDS VERIFICATION` | Verify that it is accepted and current before using it as placement authority. |
+| `ADR-0014-truth-path.md` | Truth path | `SURFACED / NEEDS VERIFICATION` | Verify title, file existence, status, and relationship to current trust-law docs. |
+| `ADR-0015-promotion-contract.md` | Promotion contract | `SURFACED / NEEDS VERIFICATION` | Verify whether this is active, superseded, or merged into release-gate ADRs. |
+| `ADR-0016-spec-hash.md` | Deterministic spec hash | `SURFACED / NEEDS VERIFICATION` | Verify relationship to receipt, proof, release, and content-hash docs. |
 | `ADR-0017-meta-block-v2.md` | KFM Meta Block v2 | `SURFACED / NEEDS VERIFICATION` | Verify whether it governs all standard docs or only selected docs. |
 
-### Core trust-object and publication ADRs
+### Core trust objects and publication
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
 | `ADR-0002-pr-002-evidence-closure.md` | Evidence closure | `SURFACED / NEEDS VERIFICATION` | Verify whether it is PR-specific or still active governance. |
 | `ADR-0203-source-ledger-authority.md` | Source ledger authority | `SURFACED / NEEDS VERIFICATION` | Verify source-ledger canonical home and successor links. |
-| `ADR-0204-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema/contract/policy alignment. |
+| `ADR-0204-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema, contract, policy, and EvidenceRef alignment. |
 | `ADR-0005-promotion-gate.md` | Promotion gate | `SURFACED / NEEDS VERIFICATION` | Verify relation to release manifests and policy obligation gates. |
-| `ADR-0011-catalog-proof-release-separation.md` | Catalog / proof / release separation | `SURFACED / NEEDS VERIFICATION` | Should remain prominent because KFM separates proof, release, and publication. |
+| `ADR-0011-catalog-proof-release-separation.md` | Catalog / proof / release separation | `SURFACED / NEEDS VERIFICATION` | Keep prominent because KFM separates catalog, proof, release, publication, and rollback. |
 | `ADR-0018-prov-stac-dcat-catalog-mapping.md` | Catalog standards mapping | `SURFACED / NEEDS VERIFICATION` | Verify current STAC/DCAT/PROV profile alignment. |
 | `ADR-0241-policy-obligation-engine-and-release-gate.md` | Policy obligation and release gate | `SURFACED / NEEDS VERIFICATION` | Verify whether this supersedes older policy-home or promotion-gate decisions. |
 
-### Policy, security, sensitivity, and consent ADRs
+### Policy, security, sensitivity, and consent
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0202-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Possible numbering collision with responsibility-root ADR; verify status and supersession. |
+| `ADR-0202-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Possible numbering collision with other `ADR-0202` usage; verify status and supersession. |
 | `ADR-0009-sensitive-location-policy.md` | Sensitive location policy | `SURFACED / NEEDS VERIFICATION` | High-risk public exposure decision; verify policy and domain links. |
-| `ADR-0010-local-exposure-security.md` | Local exposure security | `SURFACED / NEEDS VERIFICATION` | Verify runtime/security docs and enforcement evidence. |
+| `ADR-0010-local-exposure-security.md` | Local exposure security | `SURFACED / NEEDS VERIFICATION` | Verify runtime, security docs, and enforcement evidence. |
 | `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0202-policy-home.md`. |
 | `ADR-0427-consent-vc-and-revocation-delta.md` | Consent, VC, revocation delta | `SURFACED / NEEDS VERIFICATION` | Sensitive governance area; verify owners and policy label before public use. |
 
-### UI, map, runtime, and governed-AI ADRs
+### UI, map, runtime, and governed AI
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
@@ -186,17 +236,17 @@ Do **not** use `docs/adr/` as the primary home for the following:
 | `ADR-0206-maplibre-layer-manifest.md` | LayerManifest / MapLibre layer governance | `SURFACED / NEEDS VERIFICATION` | Verify schema and layer registry links. |
 | `ADR-0207-governed-ai-runtime-envelope.md` | Governed AI runtime envelope | `SURFACED / NEEDS VERIFICATION` | Verify runtime envelope schema, citation validation, and AI receipt links. |
 
-### Hydrology proof-lane ADRs
+### Hydrology proof lane
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
 | `ADR-0303-hydrology-source-descriptor-activation-gates.md` | Hydrology source activation gates | `SURFACED / NEEDS VERIFICATION` | Verify source registry and rights gate links. |
 | `ADR-0304-hydrology-first-proof-lane.md` | Hydrology as first proof lane | `SURFACED / NEEDS VERIFICATION` | Verify relation to current proof-slice docs. |
-| `ADR-0305-hydrology-source-documentation-verification.md` | Hydrology source documentation verification | `SURFACED / NEEDS VERIFICATION` | Number collision with proof-lane ADR; verify intent and status. |
+| `ADR-0305-hydrology-source-documentation-verification.md` | Hydrology source documentation verification | `SURFACED / NEEDS VERIFICATION` | Verify whether this collides with another `ADR-0305` or is a distinct successor. |
 | `ADR-0306-hydrology-connector-contract-and-offline-simulation.md` | Hydrology connector and offline simulation | `SURFACED / NEEDS VERIFICATION` | Verify connector test evidence and fixture homes. |
 | `ADR-0307-hydrology-wbd-metadata-probe.md` | WBD metadata probe | `SURFACED / NEEDS VERIFICATION` | Verify whether current source probes supersede it. |
 | `ADR-0310-hydrology-wbd-terms-rights-review.md` | WBD rights review | `SURFACED / NEEDS VERIFICATION` | Verify current rights/source terms. |
-| `ADR-0311-hydrology-synthetic-release-governance.md` | Synthetic hydrology release governance | `SURFACED / NEEDS VERIFICATION` | Verify release/proof/published-data guardrails. |
+| `ADR-0311-hydrology-synthetic-release-governance.md` | Synthetic hydrology release governance | `SURFACED / NEEDS VERIFICATION` | Verify release, proof, and published-data guardrails. |
 
 ### Templates and domain-lane governance
 
@@ -210,19 +260,19 @@ Do **not** use `docs/adr/` as the primary home for the following:
 
 ## Naming and numbering
 
-KFM ADR filenames currently show multiple patterns. Treat numbers as helpful labels, not as the sole source of identity, until the ADR registry is verified.
+KFM ADR filenames may show multiple patterns. Treat numbers as helpful labels, not as the sole source of identity, until the ADR registry is verified.
 
 | Pattern | Example | Status | Guidance |
 |---|---|---:|---|
-| Canonical ADR prefix | `ADR-0001-schema-home.md` | `CONFIRMED` | Preferred for new repo-wide ADRs unless a newer convention is accepted. |
-| Numeric-only legacy prefix | `0001-truth-path.md` (renamed to `ADR-0014-truth-path.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
-| Topic-specific ADR prefix | `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` (renamed to `ADR-0018-prov-stac-dcat-catalog-mapping.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
+| Canonical ADR prefix | `ADR-0001-schema-home.md` | `LISTED / NEEDS VERIFICATION` | Preferred for new repo-wide ADRs only if no newer convention is accepted. |
+| Numeric-only legacy prefix | `0001-truth-path.md` | `SURFACED / NEEDS VERIFICATION` | Do not rename without successor links and migration notes. |
+| Topic-specific ADR prefix | `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` | `SURFACED / NEEDS VERIFICATION` | Preserve until a verified successor or registry entry resolves it. |
 | Date-ish or packet-derived ID | `ADR-0427-consent-vc-and-revocation-delta.md` | `SURFACED / NEEDS VERIFICATION` | Verify whether ID encodes date, packet, or decision family. |
 | Duplicate numeric prefixes | multiple `ADR-0202`, `ADR-0305`, etc. | `SURFACED / CONFLICT WATCH` | Do not assume number uniqueness until a registry resolves collisions. |
 
 ### New ADR naming rule
 
-Use the verified repository convention. If no newer convention is accepted, use:
+Use the verified repository convention. If no newer convention is accepted, use this conservative form:
 
 ```text
 docs/adr/ADR-<nnnn>-<short-kebab-title>.md
@@ -231,7 +281,7 @@ docs/adr/ADR-<nnnn>-<short-kebab-title>.md
 For cross-domain, policy-significant, or source-sensitive ADRs, keep the title short and put nuance inside the ADR body rather than the filename.
 
 > [!CAUTION]
-> Do not rename existing ADR files just to normalize style. ADR names are link targets. Renames require successor links, migration notes, and index updates.
+> Do not rename existing ADR files just to normalize style. ADR filenames are link targets. Renames require successor links, migration notes, index updates, and reviewer approval.
 
 [Back to top](#top)
 
@@ -286,7 +336,7 @@ flowchart TD
 | Status | Meaning | Minimum review burden |
 |---|---|---|
 | `proposed` | Decision is under review and not yet governing. | Evidence basis, options, risks, and open verification. |
-| `accepted` | Decision governs its stated scope. | Review approval plus impact map and rollback path. |
+| `accepted` | Decision governs its stated scope. | Review approval plus impact map, validation plan, and rollback path. |
 | `rejected` | Decision was considered and declined. | Rejected rationale and reopen conditions. |
 | `superseded` | Replaced by a newer ADR or stronger evidence. | Successor link and migration/compatibility notes. |
 | `withdrawn` | Removed before governing or because scope changed. | Reason and historical note. |
@@ -298,49 +348,22 @@ flowchart TD
 
 ## When a change needs an ADR
 
-Create or update an ADR when a change affects any of these KFM trust boundaries:
+Create or update an ADR when a change affects a KFM trust boundary.
 
 | Decision area | ADR usually required? | Examples |
 |---|---:|---|
 | Root layout or responsibility roots | Yes | New top-level root, compatibility-root migration, domain-root exception. |
-| Schema, contract, or policy authority | Yes | Schema home, contract home, policy home, object-family authority. |
-| Evidence flow | Yes | `EvidenceRef`, `EvidenceBundle`, source ledger, citation validation, evidence closure. |
-| Publication and rollback | Yes | Promotion gates, release manifests, catalog/proof/release separation, correction lineage. |
-| Public-client access | Yes | Governed API boundary, UI shell trust state, public tile admission, Focus Mode behavior. |
-| AI or model runtime behavior | Yes | Runtime envelopes, AI receipts, citation validation, local model exposure. |
-| Source activation | Usually | New authoritative source family, rights-sensitive connector, stewardship review path. |
-| Sensitive public exposure | Yes | Archaeology, rare species, infrastructure, living persons, DNA/genomics, land/title, cultural or precise-location data. |
-| Domain thin slice with repo-wide effects | Usually | Hydrology proof lane, habitat/fauna crossovers, source-role patterns reused across domains. |
-| Routine typo or formatting fix | Usually no | Use normal doc review unless it changes meaning or status. |
+| Canonical schema, contract, or policy home | Yes | Moving machine schemas, splitting `contracts/` and `schemas/`, policy-home changes. |
+| Evidence closure or citation behavior | Yes | EvidenceBundle shape, EvidenceRef resolution rules, cite-or-abstain behavior. |
+| Publication, release, proof, or rollback | Yes | Promotion gates, ReleaseManifest, proof pack, rollback card, correction lineage. |
+| Public-client trust boundary | Yes | Public API access pattern, map shell truth states, Evidence Drawer, Focus Mode. |
+| Sensitive data release posture | Yes | Rare species, archaeology, living-person data, DNA/genomic data, critical infrastructure, exact locations. |
+| Runtime AI boundary | Yes | Model adapters, runtime envelopes, citation validation, AI receipts, direct model access. |
+| Domain-lane internal modeling only | Sometimes | Required if it changes shared governance, public surfaces, source authority, or lifecycle behavior. |
+| Small copy edit | Usually no | Typo, link fix, wording improvement with no decision change. |
 
-[Back to top](#top)
-
----
-
-## Inventory commands
-
-Run these from the repository root before changing this index.
-
-```bash
-# Current ADR file inventory.
-find docs/adr -maxdepth 1 -type f -name '*.md' | sort
-
-# Fast title/status scan.
-grep -nE '^(# |title: |status: |updated: |owners: |policy_label: )' docs/adr/*.md
-
-# Find possible successor/supersession links.
-grep -nE 'supersed|withdrawn|deprecated|replaced|successor|rollback|CONFLICTED|NEEDS VERIFICATION' docs/adr/*.md
-
-# Find duplicate numeric labels in filenames.
-find docs/adr -maxdepth 1 -type f -name '*.md' \
-  | sed -E 's#.*/(ADR-)?([0-9]{4}).*#\2#' \
-  | sort \
-  | uniq -c \
-  | sort -nr
-```
-
-> [!NOTE]
-> These commands inspect files; they do not prove decision enforcement. Pair them with validator, CI, fixture, policy, release, and runtime evidence when making implementation claims.
+> [!TIP]
+> When in doubt, write an ADR stub with `proposed` status and a short evidence gap. It is safer to close a stub than to hide an architecture-significant decision in a casual README edit.
 
 [Back to top](#top)
 
@@ -348,39 +371,26 @@ find docs/adr -maxdepth 1 -type f -name '*.md' \
 
 ## Review checklist
 
-Use this checklist for ADR additions, ADR revisions, and changes to this index.
+Before accepting an ADR, reviewers should be able to check every box.
 
-### ADR quality bar
-
-- [ ] ADR has one clear decision.
-- [ ] Evidence basis separates `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`, `CONFLICTED`, and `LINEAGE`.
-- [ ] The ADR does not treat prior reports, repeated proposals, or generated plans as current implementation proof.
-- [ ] Options considered and rejected options are preserved.
-- [ ] KFM lifecycle impact is stated.
-- [ ] Public-client and governed API boundary impact is stated.
-- [ ] Policy, rights, sensitivity, release, correction, and rollback impacts are checked.
-- [ ] Validation plan includes negative-path behavior where material.
-- [ ] Supersession and rollback path is explicit.
-- [ ] Related READMEs, registries, docs, contracts, schemas, policies, fixtures, tests, receipts, proofs, and release artifacts are updated or listed as follow-up.
-- [ ] Placeholders are searchable and specific, not vague `TBD`.
-
-### Index quality bar
-
+- [ ] Decision scope is explicit.
+- [ ] Evidence basis is listed and truth-labeled.
+- [ ] Unsupported claims are marked `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
+- [ ] Affected responsibility roots are named.
+- [ ] KFM lifecycle impact is described: `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`.
+- [ ] Public-client and UI trust impact is described when relevant.
+- [ ] Policy, rights, sensitivity, sovereignty, living-person, cultural, infrastructure, or exact-location risks are considered when relevant.
+- [ ] Validation plan names concrete evidence that would prove enforcement.
+- [ ] Rollback or supersession path is described.
+- [ ] Related registers, docs, schemas, contracts, policies, fixtures, tests, receipts, proofs, release manifests, or correction notes are listed.
 - [ ] New ADR appears in [ADR inventory](#adr-inventory).
-- [ ] Status is updated without overstating enforcement.
-- [ ] Duplicate numbering or naming collisions are marked.
-- [ ] Superseded or deprecated ADRs remain discoverable.
-- [ ] Relative links work from `docs/adr/README.md`.
-- [ ] The index does not claim complete coverage unless a current inventory was run.
-- [ ] The index does not claim CI, policy, validator, or release enforcement unless direct evidence is linked.
+- [ ] Superseded ADRs keep lineage and successor links.
 
 [Back to top](#top)
 
 ---
 
 ## Rollback and supersession
-
-ADRs should be reversible as governance records even when the implementation they describe is not immediately reversible.
 
 ### Supersession rules
 
@@ -397,7 +407,7 @@ When a decision is replaced:
 
 When an ADR-backed implementation must be rolled back:
 
-1. Identify the release, proof, receipt, schema, policy, or source artifact affected.
+1. Identify the release, proof, receipt, schema, policy, source artifact, or public surface affected.
 2. Preserve rollback evidence.
 3. Avoid silent file moves that hide prior authority.
 4. Restore or block public surfaces before repairing internal conveniences.
@@ -410,20 +420,53 @@ When an ADR-backed implementation must be rolled back:
 
 ---
 
+## Inventory commands
+
+Run these from the repository root on the branch where the ADR index will be committed.
+
+```bash
+# Confirm repository context.
+git rev-parse --show-toplevel
+git status --short
+git branch --show-current
+
+# List ADR files.
+find docs/adr -maxdepth 1 -type f -name '*.md' | sort
+
+# Show ADR status-like lines.
+grep -RInE '^(status:|Status:|## Status|# ADR|title:|superseded|Superseded|decision|Decision)' docs/adr || true
+
+# Find incoming ADR links from docs.
+grep -RInE 'docs/adr/|ADR-[0-9A-Za-z_-]+\.md|ADR-TEMPLATE\.md' README.md docs contracts schemas policy tests tools data release 2>/dev/null || true
+
+# Look for likely numbering collisions.
+find docs/adr -maxdepth 1 -type f -name 'ADR-*.md' \
+  | sed -E 's#.*/(ADR-[0-9]{4}).*#\1#' \
+  | sort \
+  | uniq -d
+```
+
+If the repository uses a different search tool or file layout, adapt the commands and record the adaptation in [Open verification](#open-verification).
+
+[Back to top](#top)
+
+---
+
 ## Open verification
 
 | Item | Status | Why it matters |
 |---|---:|---|
 | ADR owners / CODEOWNERS | `NEEDS VERIFICATION` | Review burden should be explicit before this index is stable. |
-| Complete ADR inventory | `NEEDS VERIFICATION` | Connector search surfaced more ADRs than the prior index listed. |
-| ADR numbering policy | `NEEDS VERIFICATION` | Duplicate numeric prefixes were surfaced and need registry treatment. |
+| Complete ADR inventory | `NEEDS VERIFICATION` | The supplied draft lists surfaced ADRs, but active-checkout coverage is not proven here. |
+| ADR numbering policy | `NEEDS VERIFICATION` | Duplicate numeric prefixes may exist and need registry treatment. |
 | ADR status registry | `NEEDS VERIFICATION` | Individual files may use different status blocks and maturity language. |
-| Supersession map | `NEEDS VERIFICATION` | Policy-home, promotion, hydrology, and evidence closure ADRs may overlap. |
+| Supersession map | `NEEDS VERIFICATION` | Policy-home, promotion, hydrology, and evidence-closure ADRs may overlap. |
 | CI enforcement | `UNKNOWN` | ADR-backed checks must be proven by workflow/test evidence before claimed. |
-| Metadata block policy | `NEEDS VERIFICATION` | ADRs use KFM Meta Block v2, but directory README requirements should be confirmed. |
+| Metadata block policy | `NEEDS VERIFICATION` | ADRs may use KFM Meta Block v2, but directory README requirements should be confirmed. |
 | Policy label for this index | `NEEDS VERIFICATION` | Do not infer public/restricted classification from path alone. |
 | Related registers | `NEEDS VERIFICATION` | Drift, authority, object-family, and source-ledger registers should cross-link if active. |
 | Current branch inventory | `NEEDS VERIFICATION` | Re-run inventory on the branch where this README will be committed. |
+| Relative links in this README | `NEEDS VERIFICATION` | Links should be checked against the active checkout before commit. |
 
 [Back to top](#top)
 
