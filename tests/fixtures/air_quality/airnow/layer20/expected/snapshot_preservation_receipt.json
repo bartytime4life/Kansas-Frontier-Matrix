@@ -1,0 +1,24 @@
+{
+  "commands_executed": false,
+  "created_at": "2026-01-01T00:00:00Z",
+  "errors": [],
+  "finite_outcome": "ANSWER",
+  "manifest_id": "kfm-airnow-layer20-test",
+  "object_type": "AirNowSnapshotPreservationReceipt",
+  "output_hashes": {
+    "snapshot_preservation_packet_hash": "3e9ddcce0b23f3a4149b733aedad85ec8395ffcf5c29cb4189260bc58cd2166c"
+  },
+  "preservation_actions_executed": false,
+  "preservation_copy_executed": false,
+  "preservation_transfer_executed": false,
+  "public_release_allowed": false,
+  "schema_version": "v1",
+  "snapshot_copy_executed": false,
+  "snapshot_export_executed": false,
+  "snapshot_published": false,
+  "snapshot_released": false,
+  "snapshot_transfer_executed": false,
+  "validation_outcome": "PASS",
+  "workflow_outcome": "SNAPSHOT_PRESERVATION_PLAN_COMPLETE_INTERNAL_ONLY",
+  "workflow_runner": "airnow_layer20_snapshot_preservation"
+}
