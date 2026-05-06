@@ -1,99 +1,108 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0005-promotion-gate
 title: ADR-0005: Promotion Gate
 type: standard
-version: v1
+version: v1.1-draft
 status: draft
-owners: TODO-NEEDS-CODEOWNERS
-created: TODO-NEEDS-CREATED-DATE
-updated: 2026-05-02
-policy_label: TODO-NEEDS-POLICY-LABEL
-related: [docs/adr/README.md, docs/governance/promotion-gate.md, docs/architecture/evidence-flow.md, docs/governance/cite-or-abstain.md, schemas/contracts/v1/promotion/promotion_decision.schema.json, schemas/contracts/v1/release/release_manifest.schema.json, schemas/contracts/v1/evidence/evidence_bundle.schema.json, schemas/contracts/v1/catalog/catalog_matrix.schema.json, policy/promotion/README.md, tools/validators/promotion_gate/README.md, data/receipts/README.md, data/proofs/README.md]
-tags: [kfm, adr, promotion, governance, release, evidence, proof, rollback]
-notes: [Target path docs/adr/ADR-0005-promotion-gate.md; target file presence was not verified in the current workspace; related paths are doctrine-derived and need checkout verification; doc_id, owners, created date, and policy label remain review placeholders; revised to preserve the Promotion Gate doctrine while tightening outcome semantics, evidence boundaries, schema-home cautions, validation fixtures, and rollback obligations.]
+owners: OWNER_TBD_NEEDS_VERIFICATION
+created: DATE_TBD_FROM_GIT_OR_DOC_REGISTRY
+updated: 2026-05-06
+policy_label: NEEDS_VERIFICATION
+related: [./README.md, ./ADR-TEMPLATE.md, ./ADR-0001-schema-home.md, ./ADR-0014-truth-path.md, ./ADR-0011-catalog-proof-release-separation.md, ../runbooks/publication.md, ../standards/finite-outcomes.md, ../../examples/promotion/README.md, ../../schemas/contracts/v1/shared/promotion_decision.schema.json, ../../contracts/v1/release/kfm_release_manifest.schema.json, ../../tools/validators/release/validate_release_manifest.py, ../../policy/crosswalk/rights-sensitivity-release.md]
+tags: [kfm, adr, promotion, release, publication, evidence, policy, proof, rollback, finite-outcomes]
+notes: [Target path docs/adr/ADR-0005-promotion-gate.md is CONFIRMED through GitHub connector evidence, but no local mounted checkout was available in this session; owners, created date, policy label, CODEOWNERS coverage, workflow enforcement, branch protections, and full Promotion Gate implementation remain NEEDS VERIFICATION; this revision aligns the final promotion decision vocabulary with the currently visible finite-outcomes standard and shared promotion_decision schema: ALLOW, ABSTAIN, DENY, ERROR; PROMOTE is retained only as a human verb or display alias for ALLOW unless a future schema ADR changes the machine enum; previous draft references to docs/governance/promotion-gate.md were not retained as confirmed related links because that path returned 404 through the GitHub connector in this session.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0005: Promotion Gate
 
-Make publication a governed, evidence-bearing state transition rather than a file move.
+Make publication an explicit, evidence-bearing state transition from release candidate to released KFM meaning.
 
-![Status](https://img.shields.io/badge/status-draft-lightgrey)
-![ADR](https://img.shields.io/badge/ADR-0306-blue)
-![Decision](https://img.shields.io/badge/decision-proposed-orange)
-![Posture](https://img.shields.io/badge/posture-fail--closed-0a7ea4)
-![Scope](https://img.shields.io/badge/scope-release%20promotion-6f42c1)
+<p align="center">
+  <img alt="ADR status: draft" src="https://img.shields.io/badge/ADR-draft-lightgrey">
+  <img alt="target path: confirmed via GitHub connector" src="https://img.shields.io/badge/path-confirmed%20via%20GitHub-2ea44f">
+  <img alt="decision posture: proposed" src="https://img.shields.io/badge/decision-proposed-ffb000">
+  <img alt="finite outcomes: aligned" src="https://img.shields.io/badge/finite%20outcomes-ALLOW%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0a7ea4">
+  <img alt="publication posture: fail closed" src="https://img.shields.io/badge/posture-fail--closed-b60205">
+</p>
+
+<p align="center">
+  <a href="#decision-summary">Decision</a> ·
+  <a href="#context-and-problem">Context</a> ·
+  <a href="#scope">Scope</a> ·
+  <a href="#outcome-grammar">Outcomes</a> ·
+  <a href="#gate-model">Gate model</a> ·
+  <a href="#trust-object-split">Trust objects</a> ·
+  <a href="#promotion-flow">Flow</a> ·
+  <a href="#implementation-contract">Implementation</a> ·
+  <a href="#validation-plan">Validation</a> ·
+  <a href="#rollback-correction-and-withdrawal">Rollback</a> ·
+  <a href="#acceptance-checklist">Acceptance</a>
+</p>
 
 > [!IMPORTANT]
-> **Status:** draft / NEEDS VERIFICATION  
+> **Status:** `draft` / `PROPOSED decision`  
 > **Target path:** `docs/adr/ADR-0005-promotion-gate.md`  
-> **Decision posture:** PROPOSED until the active repository confirms ADR numbering, owners, schema homes, workflow names, validator behavior, and promotion tooling.  
-> **Truth boundary:** This ADR states KFM doctrine and proposed implementation contracts. It does not prove current repository behavior.
-
-## Quick jumps
-
-[Decision](#decision) · [Context](#context) · [Definitions](#definitions) · [Scope](#scope) · [Decision summary](#decision-summary) · [Gate model](#gate-model) · [Outcome grammar](#outcome-grammar) · [Trust object split](#trust-object-split) · [Promotion flow](#promotion-flow) · [Implementation contract](#implementation-contract) · [Validation](#validation) · [Rollback](#rollback) · [Consequences](#consequences) · [Evidence basis](#evidence-basis) · [Open verification](#open-verification) · [Acceptance checklist](#acceptance-checklist)
-
----
-
-## Decision
-
-KFM adopts a **Promotion Gate** as the mandatory governance membrane between release candidates and the `PUBLISHED` state.
-
-Promotion is not a copy operation, a successful build, a UI action, a model answer, a signature event, a human comment, or a file move. Promotion is a controlled state transition that evaluates whether a candidate artifact, claim surface, layer, dataset, bundle, or release object may become externally relied upon.
-
-The Promotion Gate must produce one finite promotion decision:
-
-| Decision | Meaning |
-|---|---|
-| `PROMOTE` | Required gates pass, obligations are satisfied, and the candidate may become the active published release. |
-| `ABSTAIN` | The gate lacks enough support to promote or deny safely; the candidate remains unpublished until obligations are resolved. |
-| `DENY` | A required gate violation is confirmed because the candidate conflicts with policy, rights, evidence, integrity, sensitivity, review, or release requirements. |
-| `ERROR` | The evaluator, schema, contract, runtime, catalog resolver, proof verifier, or policy step failed before a trustworthy decision could be made. |
+> **Confirmed in GitHub connector:** this file exists at the target path on the accessible repository.  
+> **Not confirmed locally:** no mounted checkout, workflow run, branch protection, runtime log, dashboard, release packet, or full promotion-gate execution evidence was available in this session.  
+> **Key revision:** the final machine decision vocabulary is aligned to the visible KFM finite-outcomes standard and shared `PromotionDecision` schema: `ALLOW`, `ABSTAIN`, `DENY`, `ERROR`.
 
 > [!NOTE]
-> Runtime answer outcomes such as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are not promotion outcomes. Promotion governs publication state. Runtime envelopes govern user-facing response behavior.
+> “Promotion” remains the architectural verb for moving a release candidate into `PUBLISHED`. The machine decision that permits that movement is `ALLOW`, unless a later accepted schema/ADR changes the canonical enum.
 
 ---
 
-## Context
+## Decision summary
 
-KFM’s core truth path is:
+KFM adopts a **Promotion Gate** as the required governance membrane between release candidates and the `PUBLISHED` state.
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+A release candidate may become public or semi-public only when the Promotion Gate emits a reviewable promotion decision with `decision: "ALLOW"` and the required evidence, policy, catalog, proof, review, release, correction, and rollback obligations are satisfied.
 
-The Promotion Gate protects the final transition into `PUBLISHED`.
-
-A release candidate may already be useful, indexed, rendered, reviewed internally, or included in a catalog preview before promotion. That does not make it public truth. `PROCESSED` artifacts remain unpublished. `CATALOG` and `TRIPLET` surfaces provide discoverability and linkage. `PUBLISHED` is the release state where outward-facing clients, maps, Focus Mode, Evidence Drawer payloads, exports, and semi-public users may rely on the artifact or claim.
-
-### Why this ADR exists
-
-KFM needs a stable answer to five recurring design pressures:
-
-1. How does a release candidate become public without bypassing evidence?
-2. What blocks promotion when evidence, rights, sensitivity, review, or policy is incomplete?
-3. How do receipts, proofs, manifests, catalogs, and decisions stay distinct?
-4. How does rollback happen without deleting evidence or hiding correction lineage?
-5. How do UI and AI surfaces know whether a claim is release-safe?
-
-This ADR makes the release boundary explicit and reviewable.
-
----
-
-## Definitions
-
-| Term | Definition in this ADR |
+| Field | Determination |
 |---|---|
-| **Release candidate** | A candidate artifact, bundle, layer, claim surface, manifest, or dataset version being evaluated for publication. |
-| **Published release** | A release target that has passed the Promotion Gate and may be served through governed public or semi-public interfaces. |
-| **Promotion Gate** | The finite decision process that evaluates a release candidate against identity, integrity, spatial/temporal, rights, sensitivity, evidence, catalog, review, rollback, and policy requirements. |
-| **PromotionDecision** | The machine-readable decision object emitted by the gate. |
-| **ReleaseManifest** | The release candidate’s declared artifact set, digests, source references, evidence links, catalog/proof links, and release target. |
-| **EvidenceBundle** | The reviewable support bundle that resolves EvidenceRefs and provides inspectable evidence for consequential claims. |
-| **Proof pack** | Release-grade proof or attestation package supporting integrity, validation, and review assertions. |
-| **Receipt** | Process memory, such as run receipts, validation receipts, transform receipts, correction receipts, or rollback receipts. Receipts support audit and replay but are not proof by themselves. |
-| **Catalog closure** | Alignment between release metadata, STAC/DCAT/PROV records, CatalogMatrix references, evidence links, and release artifacts. |
+| ADR | `ADR-0005: Promotion Gate` |
+| Target path | `docs/adr/ADR-0005-promotion-gate.md` |
+| Owning root | `docs/` |
+| Path status | `CONFIRMED` through GitHub connector; local checkout still unavailable |
+| ADR status | `draft` |
+| Decision posture | `PROPOSED` until owner, policy label, enforcement, workflow, and fixture coverage are verified |
+| Governing lifecycle seam | `CATALOG / TRIPLET -> PUBLISHED` |
+| Final machine decision enum | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` |
+| Gate-level status enum | `PASS`, `FAIL`, `ABSTAIN`, `ERROR` |
+| Runtime answer enum | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Release action after `ALLOW` | Promotion to the named published release target |
+| Fail-safe rule | No uncertain candidate silently publishes |
+| Public client rule | Public clients use governed APIs and released artifacts, not RAW / WORK / QUARANTINE / internal stores / direct model output |
+
+### Final authority sentence
+
+> Promotion is a governed state transition. It is not a file move, a successful validator run, a rendered map layer, a model answer, a signed blob, a dashboard refresh, a human comment, or a path under a folder named `published`.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Context and problem
+
+Kansas Frontier Matrix is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. Its durable public unit is the **inspectable claim**: a public or semi-public statement whose evidence, source role, spatial scope, temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
+
+Without a promotion boundary, KFM risks allowing convenient intermediate artifacts to harden into public truth:
+
+| Failure pressure | What can go wrong |
+|---|---|
+| Folder-path promotion | A copied artifact under `data/published/` is treated as released even though evidence, policy, proof, review, and rollback are incomplete. |
+| CI-as-publication | A successful build or schema pass is treated as permission to publish. |
+| Map-as-proof | A rendered layer or tile is treated as evidence authority. |
+| Receipt/proof confusion | Process memory is mistaken for release-grade proof. |
+| Catalog/release confusion | Discovery metadata is mistaken for publication approval. |
+| AI-as-authority | Generated language is mistaken for evidence, review, or release decision. |
+| Rights/sensitivity gaps | Unknown rights, source terms, cultural sensitivity, living-person data, rare-species locations, archaeology, critical infrastructure, or exact-location exposure leak outward. |
+| Silent correction | A public artifact is overwritten or narrowed without correction lineage or rollback target. |
+
+The Promotion Gate exists to stop those failures at the release boundary.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -101,207 +110,182 @@ This ADR makes the release boundary explicit and reviewable.
 
 ### Applies to
 
-The Promotion Gate applies to release-significant objects and surfaces, including:
+The Promotion Gate applies whenever KFM material would become outward-facing, release-significant, or relied on as published meaning.
 
-- dataset releases;
-- overlay releases;
-- map layer descriptors;
-- PMTiles / COG / GeoParquet / other spatial artifacts;
-- source-derived public products;
-- Evidence Drawer payloads that support consequential claims;
-- release manifests;
-- catalog matrices and provenance closures;
-- runtime fixtures when they assert published behavior;
-- public-safe derived surfaces;
-- rollback, withdrawal, correction, and supersession transitions.
-
-### Does not apply to
-
-The Promotion Gate is not a substitute for:
-
-- source intake validation;
-- raw ingest quarantine rules;
-- schema validation during development;
-- local preview rendering;
-- model inference;
-- human review alone;
-- CI success alone;
-- signing alone;
-- emergency alerting or operational life-safety systems.
-
-Those may feed the gate, but they do not replace it.
-
-> [!WARNING]
-> KFM hazard, emergency, medical, legal, financial, title, cultural, archaeological, ecological, living-person, DNA, private-land, security-relevant, and sensitive-location outputs require stricter policy handling than ordinary public layers. The Promotion Gate must fail closed or abstain when release safety is unresolved.
-
----
-
-## Decision summary
-
-| Area | Decision |
+| Candidate type | Promotion relevance |
 |---|---|
-| Promotion boundary | `PUBLISHED` requires an explicit Promotion Gate decision. |
-| Candidate identity | Every candidate must have stable identity anchored by `spec_hash` or an equivalent approved canonical hash. |
-| Gate shape | Use Gates A–G as the default cross-lane promotion model. |
-| Decision object | Emit a machine-readable `PromotionDecision` / `DecisionEnvelope`-compatible object. |
-| Evidence posture | EvidenceRefs must resolve to EvidenceBundles before consequential publication. |
-| Catalog posture | STAC / DCAT / PROV / ReleaseManifest closure must be checked where relevant. |
-| Policy posture | Missing policy labels, unknown rights, unresolved sensitivity, invalid source roles, or policy-engine failure cannot silently promote. |
-| Receipt/proof split | Receipts record process memory; proofs support release trust. They are not interchangeable. |
-| Rollback | Rollback emits new receipt and correction lineage; it never deletes prior proof, catalog, release, or decision objects. |
-| UI / AI boundary | UI and AI consume only governed, released, policy-safe promotion outputs. |
-| Public path rule | Public clients and ordinary UI surfaces use governed APIs and released artifacts, not RAW, WORK, QUARANTINE, canonical/internal stores, or model runtimes directly. |
+| Dataset release | Moves processed data into released public or restricted state. |
+| Layer / tile / PMTiles / COG / GeoParquet artifact | Makes a map or spatial artifact outward-visible. |
+| Catalog / STAC / DCAT / PROV surface | Makes discovery or provenance public or semi-public. |
+| Evidence Drawer payload | Lets users inspect support for a consequential claim. |
+| Focus Mode / governed AI surface | Answers from released evidence and must cite or abstain. |
+| Export, story node, report, screenshot, or dossier | Widens reuse beyond the original internal context. |
+| Domain-lane public-safe derivative | Publishes a transformed, generalized, aggregated, or redacted artifact. |
+| Correction, withdrawal, supersession, or rollback | Changes public meaning or release state after publication. |
 
----
+### Does not replace
 
-## Gate model
+The Promotion Gate does not replace earlier lifecycle checks.
 
-The default KFM promotion membrane uses **Gates A–G**.
-
-| Gate | Name | What it checks | Minimum evidence |
-|---|---|---|---|
-| **A** | Identity & closure | Stable candidate ID, canonical `spec_hash`, required identity fields, deterministic release target, no floating blob. | Candidate ID, canonical spec bytes, declared hash, release subject identity. |
-| **B** | Asset & schema integrity | Required schemas validate; every declared asset exists, is checksummed, and matches reviewed bytes. | Asset manifest, checksums, schema report, STAC / manifest asset linkage where relevant. |
-| **C** | Spatial, geometry, and CRS invariants | Geometry validity, CRS allowlist, bbox consistency, deterministic transforms, sane geometry summaries, public-safe geometry where required. | Geometry-bearing assets, CRS metadata, bbox, transform/generalization parameters, public-safe transform receipt when applicable. |
-| **D** | Temporal and coverage semantics | Valid intervals, coherent temporal/spatial coverage, source-aligned scope, freshness declarations where policy requires them. | Time fields, coverage metadata, source date, retrieved date, valid-time statement, freshness metadata. |
-| **E** | Rights, sensitivity, and policy | License, rights posture, policy label, source role, sensitivity class, obligations, and deny-by-default handling for unknowns. | Rights metadata, policy label, source descriptor, sensitivity classification, policy decision. |
-| **F** | Evidence, provenance, proofs, and receipts | EvidenceRefs resolve; EvidenceBundles exist; receipts are present; proofs and attestations verify when configured; catalog/provenance closure is coherent. | EvidenceBundle, run receipt, validation report, proof pack, attestation refs, catalog refs, PROV/STAC/DCAT closure. |
-| **G** | Review, rollback, and correction readiness | Steward review is recorded; prior release reference exists when replacing; rollback target is verifiable; correction path is visible. | Review record, prior `spec_hash`, rollback card or rollback receipt plan, correction notice posture, immutable version/tag intent. |
+| Not replaced | Why |
+|---|---|
+| Source intake | Source role, rights, cadence, terms, and sensitivity must be handled before release. |
+| RAW / WORK validation | Processing must still validate shape, geometry, time, transforms, and integrity. |
+| Quarantine | Unsafe or unclear material remains held until resolved. |
+| Policy-as-code | The gate consumes policy decisions; it does not erase the policy lane. |
+| Human / steward review | Required review remains required and must be recorded. |
+| Runtime envelopes | Runtime answers are downstream of release and have separate finite outcomes. |
+| Emergency or life-safety systems | KFM is not an official alerting system. |
 
 > [!WARNING]
-> A `verified: true` field is not trusted by itself. Verification must be backed by the actual verification step, report, proof reference, or explicit `ABSTAIN` / obligation when verification infrastructure is unavailable.
+> Higher-risk domains require stricter release handling. Archaeology, rare species, habitat precision, living-person data, DNA/genomic material, private land, land/title claims, cultural or sovereign sensitivity, critical infrastructure, hazards, and operational safety contexts default to `ABSTAIN`, `DENY`, `RESTRICT`, `GENERALIZE`, `METADATA_ONLY`, `EMBARGO`, or `QUARANTINE` until review and policy support are resolved.
 
-### Gate-level result posture
-
-A gate evaluator may record per-gate results such as `PASS`, `ABSTAIN`, `DENY`, or `ERROR`.
-
-`HOLD` may be used only if the active repository already defines it or a follow-up ADR adopts it. Until then, `HOLD` should be treated as a display alias for `ABSTAIN`, not as a separate final promotion decision.
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Outcome grammar
 
-The gate collapses per-gate results into one final promotion decision.
+### Final promotion decisions
 
-| Gate condition | Final decision | Release effect |
-|---|---:|---|
-| All applicable required gates pass and obligations are satisfied. | `PROMOTE` | Candidate may become the active published release. |
-| A required gate violation is confirmed due to policy, rights, evidence, sensitivity, integrity, catalog, proof, review, or rollback defect. | `DENY` | Candidate remains unpublished; correction, quarantine, or rework path is required. |
-| Support is insufficient, source authority is unresolved, rights are unknown, reviewer obligations remain, or evidence is not yet adequate but no contradiction is confirmed. | `ABSTAIN` | Candidate remains unpublished; obligations are recorded. |
-| Schema, validator, evaluator, catalog resolver, proof verifier, policy engine, or runtime step fails before a trustworthy decision can be formed. | `ERROR` | Candidate remains unpublished; evaluator or contract must be fixed first. |
+Use these final values for Promotion Gate decisions.
 
-### DENY vs ABSTAIN rule
+| Decision | Meaning | Release effect |
+|---|---|---|
+| `ALLOW` | Required gates pass and obligations are satisfied for the named release scope. | Candidate may be promoted to the active published release target. |
+| `ABSTAIN` | Support is insufficient, unresolved, stale, incomplete, or review-dependent, but no confirmed violation is established. | Candidate remains unpublished; obligations or review tasks are recorded. |
+| `DENY` | A required condition is confirmed to fail: policy, rights, sensitivity, evidence, integrity, catalog, proof, review, rollback, or public-path rule. | Candidate remains unpublished; may require quarantine, rework, correction, withdrawal, or replacement. |
+| `ERROR` | Schema, evaluator, resolver, policy engine, verifier, runtime, fixture, or tool failure prevents a trustworthy decision. | Candidate remains unpublished; the process or contract must be repaired first. |
 
-Use `DENY` when the gate can prove a required release condition failed.
+### Gate-level statuses
 
-Use `ABSTAIN` when the gate cannot safely establish enough support to promote, but the available evidence does not prove a release violation.
+Use these per gate.
 
-Examples:
+| Gate status | Meaning | Collapse behavior |
+|---|---|---|
+| `PASS` | Gate passed for the requested release scope. | Contributes to `ALLOW` only if all required gates pass. |
+| `FAIL` | Gate found a confirmed violation. | Collapses final decision to `DENY` unless an earlier `ERROR` prevents evaluation. |
+| `ABSTAIN` | Gate lacks enough support to pass or deny safely. | Collapses final decision to `ABSTAIN` unless another gate produces `FAIL` or `ERROR`. |
+| `ERROR` | Gate could not evaluate reliably. | Collapses final decision to `ERROR`. |
 
-| Situation | Preferred final decision | Reason |
-|---|---:|---|
-| EvidenceRefs are declared but do not resolve to required EvidenceBundles. | `DENY` | Required evidence closure failed. |
-| Evidence source role is unresolved and no release-safe authority can be established. | `ABSTAIN` | Publication support is insufficient; obligations must be resolved. |
-| Rights metadata explicitly forbids redistribution. | `DENY` | Confirmed rights conflict. |
-| Rights metadata is missing or source terms are unverified. | `ABSTAIN` or `DENY` by policy | Default should fail closed; active policy decides whether unresolved rights are abstention obligations or denial. |
-| Proof verifier crashes before evaluating signatures. | `ERROR` | Tool failure prevents a trustworthy decision. |
+### Decision precedence
 
-### Required decision fields
+When multiple conditions appear, choose the narrowest safe decision.
 
-A promotion decision should include, at minimum:
+| Priority | Trigger | Final bias |
+|---:|---|---|
+| 1 | Evaluator, schema, policy engine, resolver, or verifier fails before a trustworthy gate result exists. | `ERROR` |
+| 2 | Public candidate references RAW, WORK, QUARANTINE, internal canonical stores, direct model output, secrets, or review-only stores. | `DENY` |
+| 3 | Rights, sensitivity, evidence closure, proof integrity, source role, or release manifest violation is confirmed. | `DENY` |
+| 4 | Required support is unresolved but not contradicted. | `ABSTAIN` |
+| 5 | All required gates pass and obligations are satisfied. | `ALLOW` |
 
-| Field | Purpose |
-|---|---|
-| `decision` | One of `PROMOTE`, `ABSTAIN`, `DENY`, `ERROR`. |
-| `candidate_id` | Stable subject of the decision. |
-| `candidate_type` | Dataset, overlay, layer, bundle, claim surface, release, or other approved type. |
-| `spec_hash` | Canonical identity anchor for the candidate. |
-| `prior_spec_hash` | Rollback / supersession anchor when replacing an existing release. |
-| `reason_codes` | Explicit failure, abstention, or error reasons. |
-| `obligations` | Required follow-up actions before promotion can continue. |
-| `gates` | Per-gate results for reviewer and CI visibility. |
-| `policy_ref` | Policy decision or policy evaluation report reference. |
-| `proof_ref` | Proof pack, attestation, or verification report reference. |
-| `release_ref` | ReleaseManifest or release candidate reference. |
-| `audit_ref` | Audit, receipt, or review trail reference. |
-| `generated_at` | Time the decision was produced. |
+### Runtime and policy vocabulary split
 
-<details>
-<summary>Illustrative PromotionDecision skeleton</summary>
+| Surface | Allowed values | Notes |
+|---|---|---|
+| Runtime answer envelope | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Governs request-time answer behavior. |
+| Policy decision | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | Governs admissibility decisions. |
+| Promotion decision | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | Governs release promotion. |
+| Rollback decision | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | Governs state reversal or release pointer change. |
+| Validation report | `PASS`, `FAIL`, `ABSTAIN`, `ERROR` | Governs validator result posture. |
 
-```json
-{
-  "decision": "ABSTAIN",
-  "candidate_id": "release-candidate:hydrology:example",
-  "candidate_type": "dataset_release",
-  "spec_hash": "sha256:SOURCE_ID_TBD",
-  "prior_spec_hash": "sha256:PRIOR_SOURCE_ID_TBD",
-  "reason_codes": ["SOURCE_ROLE_NEEDS_VERIFICATION"],
-  "obligations": [
-    {
-      "code": "CONFIRM_SOURCE_ROLE",
-      "owner": "OWNER_TBD",
-      "due": "TODO(date): confirm review date source"
-    }
-  ],
-  "gates": {
-    "A_identity_closure": "PASS",
-    "B_asset_schema_integrity": "PASS",
-    "C_spatial_geometry_crs": "PASS",
-    "D_temporal_coverage": "PASS",
-    "E_rights_sensitivity_policy": "ABSTAIN",
-    "F_evidence_provenance_proofs": "PASS",
-    "G_review_rollback_correction": "ABSTAIN"
-  },
-  "policy_ref": "kfm://policy/NEEDS-VERIFICATION",
-  "proof_ref": "kfm://proof/NEEDS-VERIFICATION",
-  "release_ref": "kfm://release/NEEDS-VERIFICATION",
-  "audit_ref": "kfm://receipt/NEEDS-VERIFICATION",
-  "generated_at": "TODO(date): replace with gate runtime timestamp"
-}
+> [!CAUTION]
+> The previous `PROMOTE` term may remain as a prose verb or display alias for `ALLOW`. It should not appear as the canonical machine value unless the shared finite-outcomes standard and `PromotionDecision` schema are intentionally revised.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Gate model
+
+The default Promotion Gate uses seven cross-lane gates.
+
+| Gate | Name | What it checks | Minimum support |
+|---|---|---|---|
+| **A** | Identity, lifecycle, and candidate closure | Stable candidate ID, lifecycle state, release subject, deterministic `spec_hash` or approved equivalent, candidate type, no mutable “latest” ambiguity. | Candidate ID, release subject, canonical hash, lifecycle state, prior release ref when replacing. |
+| **B** | Asset, schema, and integrity closure | Required schemas validate; artifacts exist; digests match; no malformed payload; release manifest shape is coherent. | Schema report, asset manifest, artifact checksums, release manifest, validation report. |
+| **C** | Spatial, temporal, CRS, and coverage invariants | Geometry validity, CRS allowlist, bbox consistency, public-safe precision, temporal scope, freshness, coverage declarations. | Geometry/temporal validation reports, transform receipt, redaction/generalization receipt if applicable. |
+| **D** | Evidence and source-role closure | Consequential claims resolve `EvidenceRef -> EvidenceBundle`; source role supports the claim being made; citations are present where required. | EvidenceBundle refs, SourceDescriptor refs, citation validation report, source-role report. |
+| **E** | Rights, sensitivity, and policy closure | Rights, source terms, access class, sensitivity, exact-location handling, policy label, embargo, obligations, public-safe release posture. | PolicyDecision, rights/sensitivity review, source terms snapshot, steward review where required. |
+| **F** | Catalog, proof, receipt, and release closure | STAC/DCAT/PROV/CatalogMatrix alignment; ProofPack; receipts retained as process memory; release manifest links all required artifacts. | Catalog refs, proof refs, receipt refs, ReleaseManifest, validation reports, attestation refs when configured. |
+| **G** | Review, rollback, and correction readiness | Required reviews complete; rollback target exists; correction/withdrawal path is defined; prior release can be verified when replacing. | ReviewRecord, RollbackReference, CorrectionNotice posture, prior spec hash, release alias plan. |
+
+### Collapse rule
+
+```text
+IF any required gate returns ERROR:
+  final_decision = ERROR
+
+ELSE IF any required gate returns FAIL:
+  final_decision = DENY
+
+ELSE IF any required gate returns ABSTAIN:
+  final_decision = ABSTAIN
+
+ELSE:
+  final_decision = ALLOW
 ```
 
-</details>
+> [!NOTE]
+> Optional domain-specific gates may be added by domain ADRs or runbooks, but they must not weaken Gates A–G. Domain-specific gates should fail closed and preserve the same final decision vocabulary.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Trust object split
 
-KFM keeps trust surfaces separate so that one object family cannot masquerade as another.
+KFM keeps trust-bearing object families distinct so that one surface cannot masquerade as another.
 
-| Surface | Role | Must not become |
+| Object family | Role | Must not become |
 |---|---|---|
-| `data/receipts/` | Process memory: run receipts, validation reports, replay/correction references. | Release proof by itself. |
-| `data/proofs/` | Release-grade trust artifacts, proof packs, attestations, verification reports. | Raw source truth or mutable log storage. |
-| `data/catalog/` | Discoverability, linkage, STAC/DCAT/PROV closure, CatalogMatrix. | Authorization to publish. |
-| `schemas/` / `contracts/` | Machine-readable authority for object shape and interface contracts. | Runtime policy decision. |
-| `policy/` | Release and runtime decision logic. | Evidence source. |
-| `ReleaseManifest` | Release artifact set, digests, source refs, catalog/proof links. | Proof pack by itself. |
-| `EvidenceBundle` | Reviewable evidence support bundle resolving EvidenceRefs. | AI summary or UI popup. |
-| `PromotionDecision` | Governed state-transition decision. | File move, CI pass, signature, or human comment. |
-| `CorrectionNotice` | User-visible correction / supersession record where release state changes. | Silent mutation of published history. |
-| `ReviewRecord` | Recorded steward or reviewer action. | Automatic promotion authority by itself. |
+| `SourceDescriptor` | Defines source identity, source role, steward, rights, cadence, access, sensitivity, geography, time, and activation posture. | Evidence proof, policy approval, or release manifest. |
+| `EvidenceRef` | Points from a claim, layer, candidate, or artifact to supporting evidence. | Evidence itself. |
+| `EvidenceBundle` | Resolves evidence, source roles, scope, provenance, citations, and support sufficient for review. | Generated summary, UI popup, or model answer. |
+| `ValidationReport` | Records schema, geometry, temporal, source-role, evidence, catalog, release, or policy validation results. | Release approval. |
+| `PolicyDecision` | Records allow, abstain, deny, or error disposition with reasons and obligations. | Evidence source or schema definition. |
+| `RunReceipt` / `TransformReceipt` / `AIReceipt` | Records process memory: what ran, what changed, hashes, tool identity, inputs, outputs, failures. | ProofPack by itself. |
+| `ProofPack` | Assembles release-significant proof support. | Receipt store, raw source, or catalog. |
+| `CatalogMatrix` / STAC / DCAT / PROV | Provides catalog, provenance, distribution, and discovery closure. | Publication approval. |
+| `ReleaseManifest` | Declares released artifacts, digests, evidence/proof/catalog refs, policy/review state, release target, rollback target. | Policy decision or evidence bundle. |
+| `PromotionDecision` | Records the final state-transition decision for a candidate. | A file move, CI pass, signature, or human comment. |
+| `CorrectionNotice` | Records public correction, narrowing, withdrawal, replacement, or supersession. | Silent mutation. |
+| `RollbackReference` | Identifies safe prior release target and rollback obligations. | Deletion of history. |
+| `RuntimeResponseEnvelope` | Wraps outward request-time response with finite outcome, evidence, policy, release, and correction state. | Release authority. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Promotion flow
 
 ```mermaid
-flowchart LR
-    RAW[RAW] --> WORK[WORK]
-    RAW --> QUARANTINE[QUARANTINE]
-    WORK --> PROCESSED[PROCESSED]
-    QUARANTINE --> PROCESSED
-    PROCESSED --> CATALOG[CATALOG / TRIPLET]
-    CATALOG --> RC[Release candidate]
-    RC --> GATE[Promotion Gate A-G]
-    GATE -->|PROMOTE| PUBLISHED[PUBLISHED]
-    GATE -->|ABSTAIN| OBLIGATIONS[Obligations / rework]
-    GATE -->|DENY| BLOCKED[Blocked / quarantine / correction]
-    GATE -->|ERROR| REPAIR[Fix evaluator or contract]
-    PUBLISHED --> API[Governed API]
-    API --> UI[Map / Evidence Drawer / Focus Mode / Export]
+flowchart TD
+  A[Release candidate] --> B{Lifecycle state valid?}
+  B -->|RAW / WORK / QUARANTINE| X[DENY or ABSTAIN<br/>not publishable]
+  B -->|PROCESSED or catalog candidate| C[Gate A<br/>identity + lifecycle]
+
+  C --> D[Gate B<br/>schema + asset integrity]
+  D --> E[Gate C<br/>spatial + temporal invariants]
+  E --> F[Gate D<br/>EvidenceRef -> EvidenceBundle]
+  F --> G[Gate E<br/>rights + sensitivity + policy]
+  G --> H[Gate F<br/>catalog + proof + receipt + release closure]
+  H --> I[Gate G<br/>review + rollback + correction]
+
+  I --> J{PromotionDecision}
+  J -->|ALLOW| K[PUBLISHED<br/>release pointer / public-safe artifact]
+  J -->|ABSTAIN| L[Obligations<br/>review or missing support]
+  J -->|DENY| M[Blocked<br/>quarantine / rework / correction]
+  J -->|ERROR| N[Repair evaluator<br/>schema / tool / resolver / policy]
+
+  K --> O[Governed API<br/>released artifacts only]
+  O --> P[Map shell<br/>Evidence Drawer<br/>Focus Mode<br/>exports]
+  K --> Q[Observation<br/>freshness / correction / withdrawal]
+  Q --> R[CorrectionNotice<br/>or RollbackReference]
 ```
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
@@ -309,201 +293,417 @@ flowchart LR
 
 ### Required invariants
 
-1. **Promotion is explicit.** A candidate does not become published without a promotion decision.
-2. **Identity is deterministic.** Candidate identity is anchored by canonical bytes and `spec_hash` or an approved equivalent.
-3. **Evidence is resolvable.** EvidenceRefs used by the candidate must resolve to EvidenceBundles before release.
-4. **Policy fails closed.** Unknown rights, missing source role, missing policy label, unresolved sensitivity, or policy engine failure cannot silently promote.
-5. **Catalog closure is checked.** ReleaseManifest, CatalogMatrix, and STAC/DCAT/PROV records must align where relevant.
-6. **Receipts are not proofs.** Process receipts can support audit and replay; they cannot replace proof packs or release manifests.
-7. **UI and AI are downstream.** Map surfaces, Evidence Drawer payloads, and Focus Mode may consume released artifacts; they do not decide promotion.
-8. **Rollback is governed.** Rollback is another state transition with its own receipt, review, correction notice, and proof linkage.
-9. **Prior artifacts are retained.** Correction and rollback never delete prior proofs, receipts, catalogs, release manifests, or decisions.
-10. **No hidden bypass.** Public clients and ordinary UI surfaces must not read RAW, WORK, QUARANTINE, internal canonical stores, proof-only stores, review-only stores, or model runtimes directly.
+1. **Promotion is explicit.** No candidate becomes published without a `PromotionDecision`.
+2. **Final machine decision uses the shared enum.** `ALLOW`, `ABSTAIN`, `DENY`, `ERROR`.
+3. **Identity is stable.** Candidate identity is anchored by `spec_hash` or an approved canonical identity rule.
+4. **Evidence is resolvable.** Consequential claims resolve `EvidenceRef -> EvidenceBundle`.
+5. **Policy fails closed.** Unknown rights, source-role ambiguity, unresolved sensitivity, missing review, missing policy label, or policy engine failure cannot silently publish.
+6. **Receipts and proofs are distinct.** Receipts support audit and replay; ProofPacks support release trust.
+7. **Catalog closure is checked.** STAC, DCAT, PROV, CatalogMatrix, evidence refs, release manifest, and artifact refs must not contradict each other.
+8. **Review is recorded.** Required steward, domain, rights, policy, cultural, security, or release review cannot be implied.
+9. **Rollback is planned.** Release manifests must identify rollback targets or an explicitly reviewed compensating control.
+10. **Correction is visible.** Material public changes require correction, withdrawal, or supersession lineage.
+11. **Public clients are downstream.** Public APIs, map layers, Evidence Drawer, Focus Mode, exports, search, graph, story, and dashboard surfaces consume released/governed payloads only.
+12. **No hidden bypass.** No ordinary public path reaches RAW, WORK, QUARANTINE, internal canonical stores, review-only stores, proof-only stores, direct source-system side effects, credentials, or model runtimes.
 
-### Proposed file surfaces
+### Current confirmed implementation-adjacent signals
 
-The exact file homes require active-repo verification.
-
-| Surface | Proposed path | Status |
+| Surface | Confirmed signal | ADR reading |
 |---|---|---|
-| ADR | `docs/adr/ADR-0005-promotion-gate.md` | NEEDS VERIFICATION |
-| Human governance doc | `docs/governance/promotion-gate.md` | PROPOSED |
-| Promotion decision schema | `schemas/contracts/v1/promotion/promotion_decision.schema.json` | PROPOSED |
-| Release manifest schema | `schemas/contracts/v1/release/release_manifest.schema.json` | PROPOSED |
-| EvidenceBundle schema | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | PROPOSED |
-| CatalogMatrix schema | `schemas/contracts/v1/catalog/catalog_matrix.schema.json` | PROPOSED |
-| Promotion policy | `policy/promotion/` | PROPOSED |
-| Gate validator | `tools/validators/promotion_gate/` | PROPOSED |
-| Promotion fixtures | `tests/fixtures/promotion/` | PROPOSED |
-| Receipt output | `data/receipts/promotions/` | PROPOSED |
-| Proof output | `data/proofs/promotions/` | PROPOSED |
-| Release output | `data/releases/` | PROPOSED |
-| Correction notices | `data/releases/corrections/` | PROPOSED |
+| Shared finite outcome standard | `docs/standards/finite-outcomes.md` names `promotion_decision.schema.json` under `schemas/contracts/v1/shared/` and uses `ALLOW / ABSTAIN / DENY / ERROR` for policy/promotion/rollback. | Use `ALLOW` as final machine decision. |
+| Shared promotion decision schema | `schemas/contracts/v1/shared/promotion_decision.schema.json` exists and requires `id`, `decision`, `reason`. | Minimal current schema exists; richer gate fields are `PROPOSED`. |
+| Release manifest schema | `contracts/v1/release/kfm_release_manifest.schema.json` exists. | ReleaseManifest closure is partly represented outside the currently proposed schema-home path. |
+| Release manifest validator | `tools/validators/release/validate_release_manifest.py` exists. | Release validation exists for public ReleaseManifest closure; full Promotion Gate evaluator remains `NEEDS VERIFICATION`. |
+| Publication runbook | `docs/runbooks/publication.md` exists. | Publication doctrine exists; exact enum and gate normalization still require reconciliation. |
+| Promotion examples | `examples/promotion/README.md` exists. | Examples are non-authoritative and useful for reviewer education. |
+| Rights/sensitivity crosswalk | `policy/crosswalk/rights-sensitivity-release.md` exists. | Policy vocabulary and release posture exist as draft crosswalk; enforcement remains `NEEDS VERIFICATION`. |
 
-> [!CAUTION]
-> Do not create parallel schema homes if the active repository already treats a different path as canonical. Resolve schema-home authority through the existing ADR process before landing machine-contract files.
+### Proposed expanded `PromotionDecision` fields
 
-### Implementation sequence
+The current shared schema is minimal. A future compatible expansion or companion schema should consider:
 
-1. Verify ADR numbering, target path, owner, policy label, and adjacent ADR format.
-2. Resolve or explicitly defer schema-home authority before adding machine-readable contracts.
-3. Add or confirm `PromotionDecision`, `ReleaseManifest`, `EvidenceBundle`, and `CatalogMatrix` schemas.
-4. Add positive and negative fixtures before wiring the gate to any release process.
-5. Implement a no-network promotion dry run.
-6. Add policy tests for rights, source role, sensitivity, evidence closure, and public path constraints.
-7. Add rollback and correction fixtures.
-8. Wire release promotion only after dry-run behavior and negative fixtures pass.
-9. Document rollback target and correction lineage before the first real release candidate is promoted.
+| Field | Purpose | Status |
+|---|---|---|
+| `id` | Decision identity. | `CONFIRMED` in current minimal schema |
+| `decision` | `ALLOW`, `ABSTAIN`, `DENY`, or `ERROR`. | `CONFIRMED` in current minimal schema |
+| `reason` | Human-readable reason. | `CONFIRMED` in current minimal schema |
+| `candidate_id` | Stable release candidate identity. | `PROPOSED` |
+| `candidate_type` | Dataset, layer, tile, catalog, story, export, Focus answer, etc. | `PROPOSED` |
+| `spec_hash` | Canonical candidate hash. | `PROPOSED` |
+| `prior_spec_hash` | Prior release hash when replacing or rolling back. | `PROPOSED` |
+| `gate_results` | Gates A–G with `PASS`, `FAIL`, `ABSTAIN`, `ERROR`. | `PROPOSED` |
+| `reason_codes` | Stable machine-readable reasons. | `PROPOSED` |
+| `obligations` | Required follow-up actions for `ABSTAIN`, `DENY`, or conditional release. | `PROPOSED` |
+| `evidence_refs` | EvidenceBundle references checked by the gate. | `PROPOSED` |
+| `policy_ref` | PolicyDecision reference. | `PROPOSED` |
+| `release_manifest_ref` | ReleaseManifest reference. | `PROPOSED` |
+| `proof_refs` | ProofPack / attestation / validation report refs. | `PROPOSED` |
+| `catalog_refs` | STAC/DCAT/PROV/CatalogMatrix refs. | `PROPOSED` |
+| `review_refs` | ReviewRecord refs. | `PROPOSED` |
+| `rollback_ref` | RollbackReference or rollback card. | `PROPOSED` |
+| `correction_notice_ref` | CorrectionNotice when replacing, narrowing, withdrawing, or superseding. | `PROPOSED` |
+| `generated_at` | Timestamp produced by the evaluator. | `PROPOSED` |
+| `audit_ref` | Receipt, validation report, or review handoff reference. | `PROPOSED` |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Validation
+## Proposed file surfaces
 
-Promotion validation must include positive and negative fixtures.
+> [!WARNING]
+> This table distinguishes confirmed accessible paths from proposed or unresolved paths. Do not create parallel schema, contract, policy, proof, release, or validator homes without resolving authority through ADR review.
 
-| Fixture | Expected decision | Purpose |
-|---|---:|---|
-| `valid_promote_release_candidate` | `PROMOTE` | Proves complete evidence, policy, catalog, proof, review, and rollback readiness. |
-| `deny_missing_evidence_bundle` | `DENY` | EvidenceRefs do not resolve where EvidenceBundle support is required. |
-| `deny_unresolved_rights` | `DENY` or policy-defined `ABSTAIN` | Proves rights handling fails closed and does not silently publish. |
+| Surface | Path | Status |
+|---|---|---|
+| This ADR | `docs/adr/ADR-0005-promotion-gate.md` | `CONFIRMED` path via GitHub connector |
+| ADR index | `docs/adr/README.md` | `CONFIRMED` |
+| ADR template | `docs/adr/ADR-TEMPLATE.md` | `CONFIRMED` |
+| Truth-path ADR | `docs/adr/ADR-0014-truth-path.md` | `CONFIRMED` |
+| Publication runbook | `docs/runbooks/publication.md` | `CONFIRMED` |
+| Finite outcomes standard | `docs/standards/finite-outcomes.md` | `CONFIRMED` |
+| Promotion examples | `examples/promotion/README.md` | `CONFIRMED` |
+| Shared PromotionDecision schema | `schemas/contracts/v1/shared/promotion_decision.schema.json` | `CONFIRMED` |
+| ReleaseManifest schema | `contracts/v1/release/kfm_release_manifest.schema.json` | `CONFIRMED`, but schema-home relationship `NEEDS VERIFICATION` |
+| ReleaseManifest validator | `tools/validators/release/validate_release_manifest.py` | `CONFIRMED` |
+| Rights/sensitivity crosswalk | `policy/crosswalk/rights-sensitivity-release.md` | `CONFIRMED` draft |
+| Full Promotion Gate evaluator | `tools/validators/promotion_gate/` | `NEEDS VERIFICATION` |
+| Promotion fixtures | `tests/fixtures/promotion/` or repo-accepted fixture home | `NEEDS VERIFICATION` |
+| Promotion receipts | `data/receipts/promotions/` or repo-accepted receipt home | `NEEDS VERIFICATION` |
+| Promotion proofs | `data/proofs/promotions/` or repo-accepted proof home | `NEEDS VERIFICATION` |
+| Release manifests | `release/`, `data/releases/`, or repo-accepted release home | `NEEDS VERIFICATION` |
+| Correction notices | release/correction home after repo verification | `NEEDS VERIFICATION` |
+| Previously referenced governance doc | `docs/governance/promotion-gate.md` | `NOT CONFIRMED` in this session; connector fetch returned 404 |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Validation plan
+
+Promotion validation must prove both positive and negative behavior.
+
+### Required fixture families
+
+| Fixture | Expected final decision | Purpose |
+|---|---|---|
+| `valid_public_release_candidate` | `ALLOW` | Complete evidence, rights, sensitivity, catalog, proof, review, ReleaseManifest, and rollback closure. |
+| `abstain_missing_review` | `ABSTAIN` | Required review is not complete, but no contradiction is confirmed. |
+| `abstain_source_role_unresolved` | `ABSTAIN` | Source support may exist, but source role is not strong enough for the claim. |
+| `deny_raw_public_ref` | `DENY` | Public candidate references RAW / WORK / QUARANTINE or internal stores. |
+| `deny_rights_no_redistribution` | `DENY` | Rights prohibit requested outward release. |
 | `deny_sensitive_exact_geometry_public` | `DENY` | Public release would expose restricted exact geometry. |
-| `deny_signature_mismatch` | `DENY` | Verification fails where signature infrastructure is configured. |
-| `abstain_policy_unresolved` | `ABSTAIN` | Evidence is not contradictory, but policy obligations remain unresolved. |
-| `error_malformed_candidate` | `ERROR` | Candidate shape prevents trustworthy evaluation. |
-| `error_policy_engine_unavailable` | `ERROR` | Policy could not be evaluated. |
-| `rollback_to_prior_spec_hash` | `PROMOTE` or `ABSTAIN` | Proves rollback verifies prior proof bundle and emits correction lineage. |
+| `deny_missing_evidence_bundle` | `DENY` | Consequential claim cannot resolve EvidenceBundle. |
+| `deny_release_manifest_without_rollback` | `DENY` | Release would lack rollback target. |
+| `error_malformed_candidate` | `ERROR` | Candidate cannot be evaluated reliably. |
+| `error_policy_engine_unavailable` | `ERROR` | Policy cannot be evaluated. |
+| `rollback_to_prior_release` | `ALLOW` or `ABSTAIN` | Proves prior release verification and correction lineage. |
 
-### Illustrative validation command
+### Confirmed release validator command
+
+The release validator path is confirmed, but runnable behavior was not executed in this session.
 
 ```bash
-# PROPOSED: adapt names, runners, paths, and tools to the active repository.
-python tools/validators/promotion_gate/promotion_gate.py \
-  tests/fixtures/promotion/valid_release_candidate.json \
-  --out build/promotion/decision.json
-
-python tools/validators/promotion_gate/validate_decision_envelope.py \
-  build/promotion/decision.json
-
-conftest test build/promotion/decision.json \
-  --policy policy/promotion
+python tools/validators/release/validate_release_manifest.py \
+  path/to/kfm_release_manifest.json
 ```
 
-> [!NOTE]
-> These commands are illustrative. Do not commit them as required commands until the active repository confirms Python tooling, validator names, fixture paths, and OPA / Conftest availability.
+### Proposed full Promotion Gate command
+
+This command shape is `PROPOSED` until the repository confirms the promotion gate package or script.
+
+```bash
+python -m tools.validators.promotion_gate \
+  path/to/release-candidate-or-release-bundle.json \
+  --out build/promotion/promotion_decision.json
+```
+
+### Minimum validation reports
+
+A promotion review packet should include:
+
+| Report | Required evidence |
+|---|---|
+| Schema validation report | Candidate, ReleaseManifest, PromotionDecision, and referenced object shapes validate. |
+| Asset integrity report | Artifact refs exist and digests match. |
+| Evidence closure report | EvidenceRefs resolve to EvidenceBundles. |
+| Source-role report | Source role supports the claims being made. |
+| Rights/sensitivity policy report | Rights, sensitivity, and release class pass or fail closed. |
+| Catalog closure report | STAC/DCAT/PROV/CatalogMatrix references align. |
+| Proof report | ProofPack / attestation / receipt refs are present and non-conflicting. |
+| Review report | Required reviews are complete or obligations recorded. |
+| Rollback report | Prior release target and correction path are verified. |
+| Public path guard report | No RAW / WORK / QUARANTINE / internal / direct model path leaks into public payload. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Rollback
+## Rollback, correction, and withdrawal
 
-Rollback is a governed transition from one published release target to another previously verified release target.
+Rollback is a governed state transition to a previously verified release target. It is not a deletion, silent overwrite, or manual restoration from memory.
 
-Rollback must:
+### Rollback must
 
-1. select a prior immutable `spec_hash`;
-2. verify the prior ReleaseManifest, EvidenceBundle, CatalogMatrix, and proof pack;
-3. emit a rollback receipt;
-4. emit or update a correction notice when user-visible state changes;
-5. run policy over the rollback decision;
-6. update the current alias or release pointer only after verification;
-7. preserve prior artifacts;
-8. expose correction state through governed public surfaces when applicable.
+1. identify the active release being rolled back;
+2. identify the prior release target;
+3. verify prior ReleaseManifest, artifact digests, evidence refs, catalog refs, proof refs, and policy state;
+4. emit rollback receipt or rollback reference;
+5. update release pointer or alias only after policy and review permit it;
+6. emit `CorrectionNotice` when public meaning changes;
+7. preserve old receipts, proofs, release manifests, catalog records, and decisions;
+8. rebuild downstream derivatives only from the selected released state;
+9. expose correction state through governed public surfaces when relevant.
 
-Rollback must not:
+### Rollback must not
 
-- delete prior receipts, proofs, catalogs, release manifests, or decision objects;
-- silently rewrite published history;
-- bypass policy because the prior artifact was previously published;
-- hide the correction reason from downstream Evidence Drawer, API payloads, export manifests, or review surfaces when the change is consequential.
+- delete prior release history;
+- hide public correction lineage;
+- bypass policy because the prior release was once allowed;
+- restore an artifact whose rights or sensitivity posture is no longer public-safe;
+- update only the map layer while leaving catalog, Evidence Drawer, Focus Mode, export, or search stale.
 
-### Rollback trigger examples
+### Withdrawal and supersession
 
-| Trigger | Required posture |
+| Case | Required posture |
 |---|---|
-| ReleaseManifest digest mismatch | `DENY` new promotion; consider rollback after prior release verifies. |
-| Sensitive exact geometry accidentally promoted | Withdraw or rollback; emit correction notice and redaction/generalization receipt. |
-| EvidenceBundle later found unsupported | Withdraw, correct, or rollback; preserve prior proof and correction lineage. |
-| Catalog closure broken after dependency change | `ABSTAIN` or `DENY` dependent releases until closure is restored. |
-| Policy engine unavailable during rollback | `ERROR`; do not update release pointer. |
+| Published claim unsupported by evidence | Withdraw, correct, or supersede; emit correction lineage. |
+| Sensitive geometry accidentally released | Withdraw or replace with generalized artifact; preserve redaction receipt and correction notice. |
+| Source rights change | Re-run policy; restrict, withdraw, or supersede as required. |
+| Catalog closure breaks | Hold dependent release surfaces until closure is restored. |
+| Rollback target invalid | `ERROR`; do not change release pointer. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Consequences
 
-### Positive
+### Positive consequences
 
-- Makes publication inspectable and reversible.
-- Keeps evidence, policy, proof, catalog, review, and release state connected.
-- Prevents convenient intermediate files from becoming public truth.
-- Gives CI, reviewers, UI, and AI a shared release decision object.
-- Makes rollback and correction part of trust rather than signs of failure.
-- Gives downstream surfaces a finite release state instead of inferring readiness from file location.
+- Makes publication inspectable instead of implied.
+- Aligns release decisions with KFM finite-outcome standards.
+- Keeps public surfaces downstream of evidence, policy, release, correction, and rollback.
+- Distinguishes receipts, proofs, catalogs, release manifests, and decisions.
+- Makes negative outcomes visible and reviewable.
+- Gives domain lanes one reusable promotion membrane.
+- Gives UI and governed AI stable release-state inputs.
+- Preserves rollback and correction as first-class trust features.
 
-### Costs
+### Costs and tradeoffs
 
-- Adds contract, fixture, validator, and policy work before public release.
-- Slows early publication until proof-object and catalog closure are real.
-- Requires strict source-role, rights, sensitivity, and review data that may not exist for every source.
-- Requires maintaining negative fixtures and correction drills.
-- Requires ADR discipline where schema homes or object-family authority are unresolved.
+| Cost | Why accepted |
+|---|---|
+| More contracts, schemas, fixtures, validators, and review burden before publication. | KFM prioritizes evidence, policy, rollback, and public trust over speed. |
+| Early release may be slower. | Fail-closed release is preferable to publishing unsupported claims. |
+| Existing docs may need enum cleanup. | Current visible finite-outcome standard and shared schema should control machine values. |
+| Some release-significant candidates will return `ABSTAIN` or `DENY`. | Negative outcomes are valid governance outcomes. |
+| Schema-home ambiguity remains visible. | Hiding unresolved authority would create future drift. |
 
 ### Rejected alternatives
 
 | Alternative | Rejection reason |
 |---|---|
-| Treat file movement into `published/` as promotion. | Bypasses evidence, policy, proof, and review. |
-| Treat CI success as publication authority. | CI can validate mechanics but cannot replace policy or review. |
-| Treat signatures as sufficient proof. | Signatures prove integrity or identity, not rights, sensitivity, evidence completeness, or source role. |
-| Let UI or Focus Mode decide publishability. | UI and AI are downstream interpretive layers, not governance authorities. |
-| Use manual review only. | Review must be recorded and machine-checkable enough to support audit, rollback, and repeatable gates. |
-| Use model confidence as a promotion signal. | AI is interpretive only; EvidenceBundle, policy, review, and release state outrank generated language. |
+| Treat file movement into `published/` as promotion. | Bypasses evidence, policy, proof, review, and rollback. |
+| Treat CI pass as publication authority. | CI validates mechanics; it cannot replace policy and review. |
+| Treat signature or digest as sufficient release proof. | Integrity does not establish rights, sensitivity, evidence, or source role. |
+| Let UI or Focus Mode decide release eligibility. | UI and AI are downstream interpretive surfaces. |
+| Let model confidence influence promotion. | Generated language is not evidence or release authority. |
+| Use `PROMOTE` as a second machine outcome beside `ALLOW`. | Current visible finite-outcome standard and schema use `ALLOW` for promotion decisions. |
+| Use manual review only. | Review must be recorded and testable enough for audit, correction, and rollback. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Evidence basis
+## Adoption plan
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Attached ADR draft, `Pasted markdown.md` | CONFIRMED baseline | Existing ADR structure, target path assumption, Promotion Gate doctrine, Gates A–G, finite outcomes, trust object split, validation fixtures, rollback obligations. | Does not prove active repo path, owner, ADR number availability, schema home, or implemented validator behavior. |
-| Current workspace inspection | CONFIRMED evidence boundary | The current session did not expose a mounted repository tree, tests, workflows, dashboards, logs, or runtime evidence. | Does not disprove implementation elsewhere; it only bounds this revision. |
-| KFM pipeline / components / UI doctrine | CONFIRMED doctrine / LINEAGE implementation where not repo-verified | KFM lifecycle, inspectable-claim posture, EvidenceBundle priority, ReleaseManifest/CatalogMatrix/PromotionDecision vocabulary, governed UI and Focus Mode boundaries. | Prior reports and manuals are not current implementation proof without mounted repo evidence. |
-| External standards named in KFM corpus, including STAC/DCAT/PROV patterns | NEEDS VERIFICATION for active versions and repo usage | Catalog and provenance closure concepts. | This ADR does not pin versions or prove tool availability. |
+### Phase 0 — Keep this ADR honest
+
+- Keep status `draft`.
+- Keep owner, policy label, created date, and enforcement maturity as `NEEDS VERIFICATION`.
+- Keep `ALLOW / ABSTAIN / DENY / ERROR` as the final machine vocabulary.
+- Treat `PROMOTE` as a prose verb or display alias only.
+
+### Phase 1 — Normalize adjacent docs
+
+- Update `docs/runbooks/publication.md` if it still treats `PROMOTE` or `HOLD` as canonical machine values.
+- Update `examples/promotion/README.md` examples if they use non-canonical final decision values.
+- Update ADR index entry for `ADR-0005`.
+- Confirm whether `docs/governance/promotion-gate.md` should be created, removed from old metadata, or replaced by the publication runbook.
+
+### Phase 2 — Wire minimal enforcement
+
+- Confirm schema-home authority.
+- Confirm fixture-home authority.
+- Confirm whether a full `tools/validators/promotion_gate/` evaluator exists.
+- Add or update promotion fixtures.
+- Ensure `tools/validators/release/validate_release_manifest.py` and any promotion gate validator produce compatible outcomes.
+- Add public-path guard checks for RAW / WORK / QUARANTINE / direct model / internal-store leakage.
+
+### Phase 3 — Promote only with proof
+
+- Assemble ReleaseManifest, EvidenceBundle, PolicyDecision, CatalogMatrix, ProofPack, ReviewRecord, CorrectionNotice posture, and RollbackReference.
+- Emit a `PromotionDecision`.
+- Change public release aliases only after `decision: "ALLOW"`.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Open verification
+## Impact map
 
-The following items remain NEEDS VERIFICATION before this ADR can be treated as accepted implementation guidance:
+| Area | Required update or check | Status |
+|---|---|---|
+| `docs/adr/README.md` | Ensure ADR-0005 entry reflects this decision, enum alignment, and draft status. | `NEEDS VERIFICATION` |
+| `docs/adr/ADR-TEMPLATE.md` | No change required unless ADR template wants promotion-specific guidance. | `NEEDS VERIFICATION` |
+| `docs/adr/ADR-0001-schema-home.md` | Confirm schema-home implications before adding richer promotion schemas. | `NEEDS VERIFICATION` |
+| `docs/adr/ADR-0014-truth-path.md` | Keep lifecycle and public trust membrane aligned with this ADR. | `NEEDS VERIFICATION` |
+| `docs/runbooks/publication.md` | Normalize `PROMOTE` / `HOLD` wording to `ALLOW` / `ABSTAIN` or explicitly mark display aliases. | `PROPOSED` |
+| `docs/standards/finite-outcomes.md` | Keep as enum source for runtime, policy/promotion/rollback, and validation statuses. | `CONFIRMED` path |
+| `examples/promotion/README.md` | Keep examples non-authoritative and aligned to canonical enum. | `PROPOSED` |
+| `schemas/contracts/v1/shared/promotion_decision.schema.json` | Current minimal schema exists; richer fields need schema review. | `CONFIRMED` path / expansion `PROPOSED` |
+| `contracts/v1/release/kfm_release_manifest.schema.json` | Confirm relation to schema-home ADR and release validation expectations. | `CONFIRMED` path / authority `NEEDS VERIFICATION` |
+| `tools/validators/release/validate_release_manifest.py` | Use as confirmed narrower ReleaseManifest validator; do not overclaim full gate enforcement. | `CONFIRMED` path |
+| `policy/crosswalk/rights-sensitivity-release.md` | Align policy crosswalk reason/obligation codes with promotion decisions. | `NEEDS VERIFICATION` |
+| `data/receipts/`, `data/proofs/`, `release/` | Confirm emitted object homes and separation. | `NEEDS VERIFICATION` |
+| `.github/workflows/` | Confirm whether promotion gate or release validation is merge-blocking. | `UNKNOWN` |
 
-- active ADR numbering and whether `ADR-0306` is available;
-- `docs/adr/` local formatting conventions;
-- CODEOWNERS or steward owner for promotion governance;
-- current schema home: `contracts/`, `schemas/contracts/v1/`, or another repo convention;
-- whether `PromotionDecision`, `DecisionEnvelope`, or both are canonical;
-- existing promotion gate tooling and workflow names;
-- OPA / Conftest / Cosign / attestation availability and pinned versions;
-- release manifest storage location;
-- proof pack storage location;
-- catalog matrix storage location;
-- correction notice storage location;
-- whether a `HOLD` display state exists locally, and whether it maps to `ABSTAIN` or requires a separate ADR;
-- whether any already-published artifact has a rollback/correction fixture that this ADR must preserve;
-- whether UI and API payloads already expose promotion state, release ID, correction state, and rollback target.
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Open verification backlog
+
+| Item | Status | Why it matters |
+|---|---:|---|
+| Owner / CODEOWNERS coverage | `NEEDS VERIFICATION` | Acceptance requires accountable release, policy, and schema review. |
+| Created date | `NEEDS VERIFICATION` | Use git history or document registry, not guesswork. |
+| Policy label | `NEEDS VERIFICATION` | Promotion governance may be public, restricted, or steward-facing. |
+| Branch protection and CI status | `UNKNOWN` | Cannot claim enforcement without workflow/status evidence. |
+| Full Promotion Gate evaluator path | `NEEDS VERIFICATION` | `tools/validators/release/` exists, but full A–G gate evaluator was not proven. |
+| Promotion fixtures | `NEEDS VERIFICATION` | Positive and negative fixture coverage is required before acceptance. |
+| Schema-home reconciliation | `NEEDS VERIFICATION` | Current release schema appears under `contracts/v1/release/`; PromotionDecision schema appears under `schemas/contracts/v1/shared/`. |
+| Final enum reconciliation in docs | `NEEDS VERIFICATION` | Some adjacent runbook/example language may still use `PROMOTE` / `HOLD`. |
+| Release object storage | `NEEDS VERIFICATION` | Need accepted homes for ReleaseManifest, ProofPack, PromotionDecision, CorrectionNotice, RollbackReference. |
+| Public path guard | `NEEDS VERIFICATION` | Need tests proving public paths cannot reach RAW, WORK, QUARANTINE, internal stores, or direct model output. |
+| UI / API exposure of release state | `UNKNOWN` | Evidence Drawer, Focus Mode, exports, and map layers must show release/correction state. |
+| `docs/governance/promotion-gate.md` old related path | `NOT CONFIRMED` | Previous draft referenced it, but connector fetch returned 404 in this session. |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Acceptance checklist
 
-- [ ] ADR path and numbering verified.
-- [ ] Owner and policy label confirmed.
-- [ ] Schema-home conflict resolved or explicitly deferred.
-- [ ] Promotion decision schema has positive and negative fixtures.
-- [ ] Gate A–G evaluator emits finite outcomes.
-- [ ] EvidenceRef-to-EvidenceBundle resolution is tested.
-- [ ] Catalog closure is tested.
-- [ ] Rights, sensitivity, and source-role policy denials are tested.
-- [ ] Receipts and proofs remain separate.
-- [ ] Rollback drill emits receipt and correction lineage.
-- [ ] Correction notice behavior is documented for user-visible changes.
-- [ ] UI and AI surfaces consume only governed release decisions.
-- [ ] Public clients cannot reach RAW, WORK, QUARANTINE, internal canonical stores, or model runtimes directly.
-- [ ] Documentation links are verified from `docs/adr/`.
+This ADR should not be marked `accepted` until the following are complete or explicitly waived by a successor ADR.
+
+- [ ] ADR owner confirmed.
+- [ ] Policy label confirmed.
+- [ ] Created date confirmed from git history or document registry.
+- [ ] ADR index updated.
+- [ ] `ALLOW / ABSTAIN / DENY / ERROR` confirmed as final machine enum for promotion.
+- [ ] Adjacent docs using `PROMOTE` or `HOLD` are normalized or documented as display aliases.
+- [ ] Schema-home implications resolved.
+- [ ] PromotionDecision schema either accepted as minimal or expanded through reviewed schema work.
+- [ ] ReleaseManifest schema authority reconciled with schema-home ADR.
+- [ ] Positive and negative promotion fixtures added.
+- [ ] ReleaseManifest validator execution evidence captured.
+- [ ] Full Promotion Gate evaluator exists or ADR clearly scopes acceptance to release-manifest validation only.
+- [ ] EvidenceRef-to-EvidenceBundle closure tested.
+- [ ] Rights, sensitivity, and source-role denial/abstention fixtures tested.
+- [ ] Catalog/STAC/DCAT/PROV closure tested where relevant.
+- [ ] Receipts and proofs remain separate in docs and tests.
+- [ ] Rollback target validation tested.
+- [ ] CorrectionNotice behavior tested for material public changes.
+- [ ] Public path guard prevents RAW / WORK / QUARANTINE / internal-store / direct-model leakage.
+- [ ] UI/API/Focus surfaces consume governed release state only.
+- [ ] Rollback plan for this ADR and any enum migration is documented.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Appendix A — Minimal review packet
+
+A promotion review packet should include, at minimum:
+
+```text
+candidate_id
+candidate_type
+spec_hash
+prior_spec_hash when replacing
+lifecycle_state
+source_descriptor_refs
+evidence_bundle_refs
+validation_report_refs
+policy_decision_ref
+catalog_refs
+proof_refs
+receipt_refs
+release_manifest_ref
+review_record_refs
+rollback_ref
+correction_notice_ref when applicable
+promotion_decision
+reason_codes
+obligations
+audit_ref
+```
+
+## Appendix B — Illustrative PromotionDecision shape
+
+> [!WARNING]
+> This shape is illustrative and richer than the currently visible minimal shared schema. Do not treat it as canonical until schema review updates or accepts it.
+
+```json
+{
+  "id": "kfm://promotion-decision/NEEDS-VERIFICATION",
+  "decision": "ABSTAIN",
+  "reason": "Required steward review is not complete.",
+  "candidate_id": "kfm://candidate/NEEDS-VERIFICATION",
+  "candidate_type": "dataset_release",
+  "spec_hash": "sha256:NEEDSVERIFICATION000000000000000000000000000000000000000000",
+  "prior_spec_hash": "sha256:NEEDSVERIFICATION111111111111111111111111111111111111111111",
+  "gate_results": [
+    {
+      "gate": "A",
+      "name": "identity_lifecycle_candidate_closure",
+      "status": "PASS",
+      "reason_codes": []
+    },
+    {
+      "gate": "G",
+      "name": "review_rollback_correction_readiness",
+      "status": "ABSTAIN",
+      "reason_codes": ["review.required"]
+    }
+  ],
+  "obligations": [
+    {
+      "code": "STEWARD_REVIEW",
+      "owner": "OWNER_TBD_NEEDS_VERIFICATION"
+    }
+  ],
+  "release_manifest_ref": "kfm://release-manifest/NEEDS-VERIFICATION",
+  "policy_ref": "kfm://policy-decision/NEEDS-VERIFICATION",
+  "rollback_ref": "kfm://rollback-reference/NEEDS-VERIFICATION",
+  "audit_ref": "kfm://receipt/NEEDS-VERIFICATION",
+  "generated_at": "DATE_TBD_FROM_GATE_RUNTIME"
+}
+```
+
+## Appendix C — Migration note for `PROMOTE`
+
+If prior docs, examples, tests, or packets use `PROMOTE`, apply this migration rule:
+
+| Legacy term | Canonical machine value | Notes |
+|---|---|---|
+| `PROMOTE` | `ALLOW` | Preserve “promotion” as the verb; use `ALLOW` in `PromotionDecision.decision`. |
+| `HOLD` | `ABSTAIN` | Use `ABSTAIN` unless a future ADR adds `HOLD` as a distinct machine state. |
+| `BLOCK` | `DENY` | Use `DENY` when a required condition is confirmed failed. |
+| tool/evaluator failure | `ERROR` | Use when no trustworthy decision can be formed. |
+
+## Appendix D — Maintainer shorthand
+
+> **No evidence, no promotion. No policy, no promotion. No rollback, no promotion. No public path from internal stores. No model output as proof.**
