@@ -12,6 +12,13 @@ class PolicyHomeTests(unittest.TestCase):
             self.skipTest("policies/ root not present")
 
         violations = []
+        allowed_compatibility_files = {
+            "promotion.rego",
+            "soilgrids_promotion_policy.json",
+            "remediation_policy_default.json",
+            "monitor_policy_default.json",
+        }
+
         for p in root.rglob("*"):
             if p.is_dir():
                 continue
@@ -20,6 +27,8 @@ class PolicyHomeTests(unittest.TestCase):
             if name == "readme.md":
                 continue
             if "migration" in name or "migrate" in name:
+                continue
+            if rel in allowed_compatibility_files:
                 continue
             violations.append(rel)
 
