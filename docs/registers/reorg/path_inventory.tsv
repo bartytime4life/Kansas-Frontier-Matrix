@@ -354,7 +354,7 @@ docs/adr/ADR-0012-authority-boundary-compatibility-map.md	doc_adr
 docs/adr/ADR-0013-policy-home-authority.md	doc_adr
 docs/adr/ADR-0241-policy-obligation-engine-and-release-gate.md	doc_adr
 docs/adr/ADR-0427-consent-vc-and-revocation-delta.md	doc_adr
-docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md	doc_adr
+docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md	doc_adr
 docs/adr/ADR-TEMPLATE.md	doc_adr
 docs/adr/README.md	doc_adr
 docs/architecture/CLIENT_VERIFICATION.md	doc_architecture
