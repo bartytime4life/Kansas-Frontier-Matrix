@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "object_type",
+    "workflow_runner",
+    "workflow_outcome",
+    "validation_outcome"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AirNowClosureArchiveIndexFinalizationReceipt"
+    },
+    "workflow_runner": {
+      "const": "airnow_layer30_closure_archive_index_finalization"
+    },
+    "workflow_outcome": {
+      "type": "string"
+    },
+    "validation_outcome": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    }
+  }
+}
