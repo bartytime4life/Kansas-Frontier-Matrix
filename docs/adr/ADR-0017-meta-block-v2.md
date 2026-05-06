@@ -30,7 +30,7 @@ meta:
 # ADR 0004: Meta Block V2
 
 > **Status:** Accepted  
-> **Repo path:** `docs/adr/0004-meta-block-v2.md`  
+> **Repo path:** `docs/adr/ADR-0017-meta-block-v2.md`  
 > **Owner/steward:** `NEEDS VERIFICATION`  
 > **Implementation posture:** Metadata standard accepted; full repository enforcement remains staged.
 
@@ -307,7 +307,7 @@ If Meta Block V2 enforcement blocks necessary work because the linter is wrong o
 | `evidence_bundle_ref` physical path | NEEDS VERIFICATION | `artifacts/EvidenceBundle.json` follows the supplied ADR example but may need alignment with the repo artifact/release layout. |
 | `decision_log_ref` physical path | NEEDS VERIFICATION | `artifacts/decision_log.json` must resolve before strict release gating. |
 | `spec_hash` canonicalization rule | NEEDS VERIFICATION | This draft uses a documented normative-profile hash; repo-wide reproducibility rules should be standardized. |
-| ADR numbering namespace | NEEDS VERIFICATION | The repo contains both `docs/adr/0004-meta-block-v2.md` and `docs/adr/ADR-0004-evidencebundle-contract.md`; keep both discoverable until the ADR index resolves the naming convention. |
+| ADR numbering namespace | NEEDS VERIFICATION | The repo contains both `docs/adr/ADR-0017-meta-block-v2.md` and `docs/adr/ADR-0004-evidencebundle-contract.md`; keep both discoverable until the ADR index resolves the naming convention. |
 | Full linter implementation | PROPOSED | Existing token checks are useful but insufficient for complete Meta Block V2 enforcement. |
 
 ---
