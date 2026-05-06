@@ -1,72 +1,91 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR-0303: Source Ledger Authority
+doc_id: kfm://doc/NEEDS-VERIFICATION-adr-0203-source-ledger-authority
+title: ADR-0203: Source Ledger Authority
 type: standard
 version: v1
 status: draft
-owners: NEEDS-VERIFICATION
+owners: OWNER_TBD_NEEDS_VERIFICATION
 created: 2026-04-27
-updated: 2026-05-02
+updated: 2026-05-06
 policy_label: NEEDS-VERIFICATION
-related: [docs/adr/NEEDS-VERIFICATION, docs/registers/NEEDS-VERIFICATION, schemas/contracts/v1/NEEDS-VERIFICATION, data/registry/NEEDS-VERIFICATION]
-tags: [kfm, adr, source-ledger, authority, evidence, governance, provenance]
-notes: [Revised from attached draft for proposed path docs/adr/ADR-0203-source-ledger-authority.md; repo checkout, ADR index, owners, policy label, related links, schema home, validator home, and implementation depth remain NEEDS VERIFICATION before publication.]
+related: [../../README.md, ./README.md, ./ADR-0001-schema-home.md, ../registers/SOURCE_LEDGER.md, ../sources/SOURCE_LEDGER.md, ../../tools/check_source_ledger.py, ../../tests/test_source_ledger.py, ../../scripts/validate_all.sh]
+tags: [kfm, adr, source-ledger, source-authority, evidence, governance, provenance, validation]
+notes: [Path confirmed in accessible GitHub connector as docs/adr/ADR-0203-source-ledger-authority.md. Title corrected from existing ADR-0303 mismatch to ADR-0203 to match filename and ADR index. Owner, policy label, created-date provenance, acceptance state, CODEOWNERS routing, and enforcement maturity remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# ADR-0303: Source Ledger Authority
+# ADR-0203: Source Ledger Authority
 
 Decide how KFM ranks, records, cites, promotes, supersedes, and blocks source material so source authority remains inspectable instead of implied.
 
-![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
+<div align="center">
+
+![ADR status: draft](https://img.shields.io/badge/ADR-draft-lightgrey)
 ![decision: proposed](https://img.shields.io/badge/decision-PROPOSED-f4c430)
 ![truth: evidence bounded](https://img.shields.io/badge/truth-evidence--bounded-2b6cb0)
-![scope: source authority](https://img.shields.io/badge/scope-source--authority-0b7285)
-![implementation: unknown](https://img.shields.io/badge/implementation-UNKNOWN-red)
+![ledger: authority](https://img.shields.io/badge/source%20ledger-authority-0b7285)
+![validation: partial](https://img.shields.io/badge/validation-partial%20repo%20signals-orange)
+![release: fail closed](https://img.shields.io/badge/release-fail--closed-critical)
+
+</div>
+
+<div align="center">
+
+[Decision](#decision) ·
+[Context](#context) ·
+[Evidence boundary](#evidence-boundary) ·
+[Authority model](#authority-model) ·
+[Ledger contract](#ledger-record-contract) ·
+[Lifecycle](#lifecycle-and-promotion) ·
+[Repo surfaces](#repo-surfaces-and-placement) ·
+[Validation](#validation-gates) ·
+[Rollback](#rollback-and-correction) ·
+[Open verification](#open-verification)
+
+</div>
 
 > [!IMPORTANT]
-> **Status:** `draft`  
-> **Decision state:** `PROPOSED`  
-> **Path assumption:** `docs/adr/ADR-0203-source-ledger-authority.md`  
-> **Owners:** `NEEDS-VERIFICATION`  
-> **Repo implementation depth:** `UNKNOWN` until the current checkout, tests, workflows, manifests, proof objects, and release artifacts are inspected.  
-> **Applies to:** documentation, source descriptors, EvidenceRef resolution, EvidenceBundle construction, promotion gates, proof objects, governed AI context, map/scene/UI claims, and public-facing publication surfaces.  
-> **Quick jumps:** [Decision](#decision) · [Context](#context) · [Authority model](#authority-model) · [Ledger record contract](#ledger-record-contract) · [Lifecycle](#lifecycle-and-promotion) · [Validation](#validation-gates) · [Repo surfaces](#expected-repo-surfaces) · [Rollback](#rollback-and-correction) · [Open verification](#open-verification)
-
-> [!WARNING]
-> **NEEDS VERIFICATION:** the visible KFM corpus also references source-ledger authority under another proposed ADR number. This draft preserves the requested `ADR-0303` path assumption, but publication must first reconcile the ADR index, filename, cross-links, and any predecessor `ADR-0202-source-ledger-authority.md` reference.
+> **Decision status:** `PROPOSED / draft`  
+> **Target path:** `docs/adr/ADR-0203-source-ledger-authority.md`  
+> **Current implementation signal:** source-ledger files, a source-ledger checker, a unit-test wrapper, and aggregate validation script references are visible in the accessible GitHub repository.  
+> **Current enforcement state:** `NEEDS VERIFICATION`; this ADR records authority rules, but passing CI/workflow evidence, branch protections, owner routing, release-gate behavior, and runtime enforcement were not verified in this session.  
+> **Numbering repair:** the existing file content used `ADR-0303` in title metadata while the path and ADR index point to `ADR-0203`. This revision standardizes the visible title and metadata to `ADR-0203`.
 
 ---
 
 ## Decision
 
-**PROPOSED:** KFM will maintain a source ledger as the governing register for source identity, source status, source authority, claim support, source role, rights posture, sensitivity posture, freshness, lineage, supersession, unresolved references, and promotion eligibility.
+**PROPOSED:** KFM will treat the source ledger as the governing register for source identity, source status, source authority, claim-support limits, source role, rights posture, sensitivity posture, freshness, lineage, supersession, implementation-proof status, unresolved references, and release eligibility.
 
-The source ledger is **not a bibliography** and **not a substitute for EvidenceBundle resolution**. It is a control surface that determines whether a source may participate in a governed claim, release, map layer, AI response, proof pack, or publication artifact.
+The source ledger is **not a bibliography**. It is also **not a replacement for EvidenceBundle resolution**.
+
+Instead, it answers a narrower and earlier question:
+
+> Is this source allowed to support this kind of claim, surface, release, map layer, AI response, proof object, or public artifact?
 
 ### Decision rule
 
-A KFM claim, EvidenceBundle, ReleaseManifest, runtime response, map layer, scene, Story/Focus payload, dashboard, export, or public UI statement must resolve its source references to ledgered source records before it is treated as publishable or authoritative.
+Any consequential KFM claim, EvidenceBundle, ReleaseManifest, runtime response, map layer, scene, Story/Focus payload, dashboard, export, or public UI statement must resolve its source references to ledgered source records before it is treated as publishable or authoritative.
 
-When a source reference cannot be resolved, or when source status does not support the requested use, the correct outcome is one of the following finite results:
+When a source reference cannot be resolved, or when source status does not support the requested use, KFM must fail closed.
 
 | Outcome | Use when | Release effect |
 |---|---|---|
-| `ABSTAIN` | Evidence is insufficient, ambiguous, stale, unresolved, or outside source scope. | Do not answer or publish the claim. |
-| `DENY` | Policy, rights, sensitivity, safety, review state, or release state blocks use. | Block release and record the reason. |
-| `ERROR` | Required source resolution, validation, or policy evaluation failed. | Fail closed until repaired. |
-| `NEEDS VERIFICATION` | Human review or a concrete source check is required. | Hold in review/backlog; do not promote. |
+| `ABSTAIN` | Evidence is insufficient, ambiguous, stale, conflicted, unresolved, or outside source scope. | Do not answer or publish the claim. |
+| `DENY` | Policy, rights, sensitivity, safety, steward review, release state, or source status blocks use. | Block release and record the reason. |
+| `ERROR` | Required source resolution, validation, policy evaluation, or ledger access failed. | Fail closed until repaired. |
+| `NEEDS VERIFICATION` | Human review or a concrete source check is required before use. | Hold in review/backlog; do not promote. |
 
 ### What changes when this ADR is adopted
 
 | Area | Before this ADR | After this ADR |
 |---|---|---|
-| Source authority | Can be implied by tone, detail, repetition, or proximity. | Must be recorded in a ledgered source record. |
-| Planning PDFs and prior reports | Can be accidentally treated as implementation proof. | Default to `LINEAGE` or `PROPOSED` unless repo evidence confirms implementation. |
+| Source authority | Can be implied by tone, detail, repetition, recency, or proximity. | Must be recorded in a ledgered source record. |
+| Planning PDFs and prior reports | Can be accidentally treated as implementation proof. | Default to `LINEAGE` or `PROPOSED` unless repo/runtime evidence confirms implementation. |
 | New Ideas packets | Can blur into doctrine. | Remain `EXPLORATORY` until intake, review, and promotion. |
-| External source facts | Can become stale silently. | Require freshness status and dated verification for version-sensitive use. |
-| AI/map/UI output | Can look authoritative because it is polished. | Must resolve cited sources and policy before consequential claims are emitted. |
+| External source facts | Can become stale silently. | Require dated verification for version-sensitive use. |
+| AI/map/UI output | Can look authoritative because it is polished. | Must resolve citations, source roles, policy, review, and release state before consequential output. |
 | Rollback | Can remove or overwrite history. | Preserves lineage, aliases, supersession, correction notes, and dependent-release impact. |
 
 [Back to top](#top)
@@ -77,7 +96,7 @@ When a source reference cannot be resolved, or when source status does not suppo
 
 KFM is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. Its durable public unit of value is the **inspectable claim**: a claim whose evidence, source role, spatial and temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
 
-KFM’s source corpus is intentionally broad. It includes doctrine, ADRs, architecture manuals, domain-lane plans, source atlases, source descriptors, technical references, implementation sketches, generated reports, exploratory idea packets, external standards, official source-system pages, and runtime artifacts.
+KFM’s source corpus is intentionally broad. It includes doctrine, ADRs, architecture manuals, domain-lane plans, source atlases, source descriptors, technical references, implementation sketches, generated reports, exploratory idea packets, external standards, official source-system pages, runtime artifacts, and public-facing docs.
 
 That breadth is useful only when KFM can tell reviewers and public surfaces what each source is allowed to prove.
 
@@ -90,7 +109,40 @@ That breadth is useful only when KFM can tell reviewers and public surfaces what
 | External standards and source-system pages | Version-sensitive facts can become stale but still sound current. |
 | Generated summaries, AI answers, maps, tiles, dashboards, and scenes | Derived views can be mistaken for sovereign truth. |
 
-This ADR establishes the source ledger as a required authority-control surface. It does **not** claim that the target repo already contains the registers, schemas, validators, fixtures, workflows, dashboards, release manifests, or emitted proof objects named below. Those implementation surfaces remain **UNKNOWN / NEEDS VERIFICATION** until direct repo and runtime evidence confirm them.
+This ADR establishes the source ledger as a required authority-control surface. It does **not** claim that every named register, schema, validator, workflow, dashboard, release manifest, or emitted proof object is complete or enforced.
+
+[Back to top](#top)
+
+---
+
+## Evidence boundary
+
+This ADR is grounded in the accessible GitHub repository evidence, KFM Directory Rules, root README doctrine, adjacent ADR patterns, source-ledger files, source-ledger validation hooks, and attached KFM source-ledger/governed-AI doctrine.
+
+### Current repo evidence used
+
+| Evidence item | Status | Supports | Does not prove |
+|---|---:|---|---|
+| `docs/adr/ADR-0203-source-ledger-authority.md` | `CONFIRMED` via connector | Target path exists. | Decision is accepted, enforced, or correctly numbered in all metadata. |
+| `docs/adr/README.md` | `CONFIRMED` | ADR directory is the human-facing decision ledger and lists `ADR-0203-source-ledger-authority.md`. | Complete ADR coverage or owner routing. |
+| `docs/registers/SOURCE_LEDGER.md` | `CONFIRMED` | Richer project source ledger exists under registers. | It is complete, current, or machine-enforced. |
+| `docs/sources/SOURCE_LEDGER.md` | `CONFIRMED` | Minimal source-ledger file exists and is the current checker target. | It is sufficient as the canonical authority ledger. |
+| `tools/check_source_ledger.py` | `CONFIRMED` | Source-ledger checker exists and looks for verification posture. | Full source-ledger contract validation. |
+| `tests/test_source_ledger.py` | `CONFIRMED` | Test wrapper exists for the source-ledger checker. | That the test passed in current CI. |
+| `scripts/validate_all.sh` | `CONFIRMED` | Aggregate validation script invokes `tools/check_source_ledger.py`. | That aggregate validation ran or passes. |
+| `README.md` | `CONFIRMED` | Root doctrine states KFM trust law and source/evidence posture. | Final policy labels, owners, or release maturity. |
+| `ADR-0001-schema-home.md` | `CONFIRMED` | Adjacent ADR style separates decisions from enforcement and uses KFM Meta Block v2. | This ADR’s acceptance state. |
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from current connector evidence, local workspace inspection, or supplied KFM doctrine. |
+| `PROPOSED` | Recommended decision, implementation rule, path behavior, validator behavior, or process not yet proven as active enforcement. |
+| `NEEDS VERIFICATION` | A concrete check must pass before this ADR can be treated as accepted or enforced. |
+| `UNKNOWN` | Not verified strongly enough in this session. |
+| `CONFLICTED` | Multiple authority signals exist and must not be normalized silently. |
+| `LINEAGE` | Prior material preserved for continuity, not treated as current implementation proof. |
 
 [Back to top](#top)
 
@@ -101,12 +153,12 @@ This ADR establishes the source ledger as a required authority-control surface. 
 This ADR governs source authority for:
 
 - KFM doctrine, ADRs, standards, contracts, schemas, and policy documents;
-- source descriptors, source-intake records, and source registries;
+- source descriptors, source-intake records, source ledgers, source registries, and source aliases;
 - EvidenceRef → EvidenceBundle resolution;
 - source roles, claim-support limits, rights, sensitivity, freshness, and review state;
 - receipts, proof packs, manifests, catalog records, release artifacts, and correction records;
 - MapLibre/Cesium layer manifests, scene manifests, Evidence Drawer payloads, and Story/Focus payloads;
-- governed AI runtime context, citation validation, and finite response envelopes;
+- governed AI runtime context, citation validation, finite response envelopes, and AI receipts;
 - domain-lane source registries and cross-domain references;
 - New Ideas intake and promotion;
 - external official-source checks when current facts matter.
@@ -115,16 +167,14 @@ This ADR governs source authority for:
 
 This ADR does not:
 
-- settle the canonical schema home between `contracts/`, `schemas/`, or `schemas/contracts/v1/`;
+- settle the canonical schema home beyond respecting accepted schema-home ADRs;
 - define the complete EvidenceBundle contract;
-- define all SourceDescriptor fields;
-- approve a promotion-gate implementation;
+- define every SourceDescriptor field;
 - activate live source connectors;
 - make any attached PDF a current implementation proof;
-- authorize public release of sensitive, restricted, unpublished, culturally sensitive, ecological, archaeological, living-person, title/ownership, security-relevant, or rights-unclear sources;
-- require deletion of lineage material that has been superseded.
-
-Those decisions belong in separate ADRs, contracts, policies, source descriptors, review records, and promotion gates.
+- approve public release of sensitive, restricted, unpublished, culturally sensitive, ecological, archaeological, living-person, title/ownership, security-relevant, or rights-unclear sources;
+- require deletion of lineage material that has been superseded;
+- prove that CI, workflow, branch protection, dashboard, release-gate, or runtime enforcement exists.
 
 [Back to top](#top)
 
@@ -156,7 +206,7 @@ KFM must distinguish **doctrine authority**, **implementation evidence**, **rele
 | Question being asked | Preferred evidence | Required label when not verified |
 |---|---|---|
 | “What does KFM require?” | Accepted ADRs, canonical docs, doctrine manuals | `PROPOSED` or `UNKNOWN` if not accepted |
-| “What does the repo contain?” | Current checkout file evidence | `UNKNOWN` if checkout was not inspected |
+| “What does the repo contain?” | Current checkout or connector file evidence | `UNKNOWN` if not inspected |
 | “What does the system do at runtime?” | Tests, logs, manifests, dashboards, run receipts, emitted artifacts | `UNKNOWN` without runtime/proof evidence |
 | “What can this source prove?” | Ledger record + source descriptor + claim-support fields | `NEEDS VERIFICATION` until ledgered |
 | “Can this be released?” | EvidenceBundle closure + rights/sensitivity/policy/review/release gates | `DENY` or `ABSTAIN` when unresolved |
@@ -261,7 +311,7 @@ A source-ledger record must be stable enough for machine validation and readable
 
 ## Example record shape
 
-This example is illustrative. It is not a claim that this exact schema file or source record exists.
+This example is illustrative. It is not a claim that this exact schema or record exists.
 
 ```yaml
 source_id: SRC-KFM-DOC-ARCH
@@ -284,7 +334,7 @@ claims_not_supported:
 source_role: doctrine-lineage
 implementation_proof_status: NO
 rights_status: NEEDS-VERIFICATION
-sensitivity_status: public-or-restricted-NEEDS-VERIFICATION
+sensitivity_status: NEEDS-VERIFICATION
 freshness_status: dated-corpus-source
 retrieved_or_observed_at: 2026-04-27
 digest: NEEDS-VERIFICATION
@@ -299,7 +349,7 @@ related_objects:
 owner_or_steward: NEEDS-VERIFICATION
 verification_notes:
   - verify exact repo-native canon home
-  - verify whether current source ledger register already exists
+  - verify whether current source ledger register is complete
   - verify rights and policy label before public publication
 ```
 
@@ -371,26 +421,26 @@ A source does not become canonical because it is detailed, repeated, technically
 
 ```mermaid
 flowchart LR
-    A[Candidate source] --> B[Source intake record]
-    B --> C[Source ledger entry]
-    C --> D{Authority classification}
+  A[Candidate source] --> B[Source intake record]
+  B --> C[Source ledger entry]
+  C --> D{Authority classification}
 
-    D -->|CANONICAL / CURRENT / DOCTRINE| E[Allowed governed use within scope]
-    D -->|LINEAGE| F[Archive + lineage links]
-    D -->|EXPLORATORY| G[Intake backlog]
-    D -->|UNKNOWN / CONFLICTED / NEEDS VERIFICATION| H[Verification backlog]
-    D -->|QUARANTINED / DENY| I[Blocked use]
+  D -->|CANONICAL / CURRENT / DOCTRINE| E[Allowed governed use within scope]
+  D -->|LINEAGE| F[Archive + lineage links]
+  D -->|EXPLORATORY| G[Intake backlog]
+  D -->|UNKNOWN / CONFLICTED / NEEDS VERIFICATION| H[Verification backlog]
+  D -->|QUARANTINED / DENY| I[Blocked use]
 
-    E --> J[EvidenceRef resolution]
-    J --> K[EvidenceBundle]
-    K --> L[Policy + rights + sensitivity + review checks]
-    L --> M[PromotionDecision]
-    M --> N[ReleaseManifest / published surface]
+  E --> J[EvidenceRef resolution]
+  J --> K[EvidenceBundle]
+  K --> L[Policy + rights + sensitivity + review checks]
+  L --> M[PromotionDecision]
+  M --> N[ReleaseManifest / published surface]
 
-    F --> C
-    G --> B
-    H --> C
-    I --> O[Correction / withdrawal / staged access]
+  F --> C
+  G --> B
+  H --> C
+  I --> O[Correction / withdrawal / staged access]
 ```
 
 ### Promotion rule
@@ -415,7 +465,7 @@ This ADR reinforces the KFM lifecycle:
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Public clients and ordinary UI surfaces must consume governed APIs, released artifacts, source-ledger-aware EvidenceBundles, and release manifests. They must not use raw, work, quarantine, or unpublished canonical/internal stores as the normal public path.
+Public clients and ordinary UI surfaces must consume governed APIs, released artifacts, source-ledger-aware EvidenceBundles, and release manifests. They must not use raw, work, quarantine, unpublished candidates, or canonical/internal stores as the normal public path.
 
 [Back to top](#top)
 
@@ -462,9 +512,49 @@ The source ledger is upstream of EvidenceBundle resolution and downstream of sou
 
 ---
 
+## Repo surfaces and placement
+
+Directory discipline in KFM treats root folders as responsibility boundaries, not topic buckets. ADRs belong under `docs/adr/` because they are human-facing governance records.
+
+### Source-ledger surface reconciliation
+
+The current accessible repository exposes more than one source-ledger surface. This ADR does not erase that history. It requires a reconciliation path so duplicate surfaces cannot become divergent authority.
+
+| Surface | Current status | ADR treatment |
+|---|---:|---|
+| `docs/adr/ADR-0203-source-ledger-authority.md` | `CONFIRMED` | This decision record; title and metadata should match ADR-0203. |
+| `docs/registers/SOURCE_LEDGER.md` | `CONFIRMED` | Preferred human-readable project source ledger after review because it is register-shaped and richer than the minimal source file. |
+| `docs/sources/SOURCE_LEDGER.md` | `CONFIRMED` | Compatibility or source-directory landing surface until validator and docs decide whether to keep, redirect, or retire it. |
+| `tools/check_source_ledger.py` | `CONFIRMED` | Existing minimal checker; should be expanded or superseded to validate the adopted ledger contract. |
+| `tests/test_source_ledger.py` | `CONFIRMED` | Existing unit-test wrapper; execution status remains `NEEDS VERIFICATION`. |
+| `scripts/validate_all.sh` | `CONFIRMED` | Aggregate validation script invokes source-ledger checking; successful run status remains `NEEDS VERIFICATION`. |
+| `data/registry/sources/` | `PROPOSED / NEEDS VERIFICATION` | Candidate machine-readable source registry home only if current repo inventory and ADRs confirm it. |
+
+### Placement rules after adoption
+
+| Content | Preferred home | Notes |
+|---|---|---|
+| Source-ledger authority decision | `docs/adr/ADR-0203-source-ledger-authority.md` | This ADR. |
+| Human-readable project source ledger | `docs/registers/SOURCE_LEDGER.md` | Must not drift from machine records. |
+| Source-directory landing page or compatibility note | `docs/sources/SOURCE_LEDGER.md` | Keep only if it explains relationship to the register. |
+| Machine source records | `data/registry/sources/` or repo-verified equivalent | Do not create until current repo convention is verified. |
+| Source-ledger schema | `schemas/contracts/v1/source/` or ADR-accepted equivalent | Must follow schema-home ADR. |
+| Source policy | `policy/source/` or repo-verified equivalent | Policy decides admissibility; it does not define shape. |
+| Source validators | `tools/` / `scripts/` or repo-native validator lane | Must fail closed on missing or blocked records. |
+| Fixtures | `tests/fixtures/` or repo-native fixture lane | Must include valid and invalid cases. |
+| Runbook | `docs/runbooks/source-ledger.md` | Create only after parent convention is verified. |
+
+[Back to top](#top)
+
+---
+
 ## Validation gates
 
-The first implementation should be small, reversible, and no-network.
+The first enforcement pass should be small, deterministic, and reversible.
+
+### Existing signal
+
+`tools/check_source_ledger.py` currently performs a minimal posture check against `docs/sources/SOURCE_LEDGER.md`. That is useful as a smoke check, but it is not enough to prove source-ledger authority, source-status taxonomy, alias resolution, rights/sensitivity posture, release eligibility, or source coverage.
 
 ### Required checks
 
@@ -505,34 +595,18 @@ Use repo-native commands when confirmed. Until then, this command block is illus
 
 ```bash
 : "PROPOSED / NEEDS VERIFICATION: adapt to repo-native tooling after inspection."
-python tools/validators/sources/validate_source_ledger.py \
-  --ledger docs/registers/SOURCE_LEDGER.md \
-  --registry data/registry/sources \
+
+python tools/check_source_ledger.py
+
+python -m unittest tests.test_source_ledger
+
+# Future expanded shape after source-ledger contract fixtures exist.
+python tools/validators/source_ledger/validate_source_ledger.py \
+  --human-ledger docs/registers/SOURCE_LEDGER.md \
+  --compat-ledger docs/sources/SOURCE_LEDGER.md \
   --schemas schemas/contracts/v1/source \
-  --fixtures tests/fixtures/source
+  --fixtures tests/fixtures/source-ledger
 ```
-
-[Back to top](#top)
-
----
-
-## Expected repo surfaces
-
-These paths are **PROPOSED** until repo conventions are verified. If the mounted repo uses different homes, update this ADR, parent READMEs, and source-ledger records rather than creating parallel authority.
-
-| Surface | Proposed or preferred home | Role | Verification note |
-|---|---|---|---|
-| This ADR | `docs/adr/ADR-0203-source-ledger-authority.md` | Decision record for source-ledger authority. | ADR number and index require verification. |
-| Human-readable source ledger | `docs/registers/SOURCE_LEDGER.md` | Reviewable source authority register. | Verify existing register home first. |
-| Authority ladder register | `docs/registers/AUTHORITY_LADDER.md` or this ADR | Ranked source-class rules. | Avoid duplicate authority if this ADR remains governing. |
-| Canon / lineage / exploratory register | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` | Document/source-status map. | Verify whether a document registry already carries this role. |
-| Verification backlog | `docs/registers/VERIFICATION_BACKLOG.md` | Source references blocked pending proof. | May belong in existing drift or verification register. |
-| Machine source records | `data/registry/sources/` | SourceDescriptor and source-instance records. | Verify singular/plural and registry layout. |
-| Source schema family | `schemas/contracts/v1/source/` **or repo-native equivalent after schema-home ADR** | Machine validation for source records. | Do not create both `source/` and `sources/` without ADR. |
-| Source fixtures | `tests/fixtures/source/` or repo-native contract fixture lane | Valid/invalid examples. | Align with existing fixture convention. |
-| Source validators | `tools/validators/source/` or repo-native validator lane | Ledger, alias, source-coverage, and status-policy checks. | Tooling language remains `UNKNOWN`. |
-| Source policy | `policy/source/` or repo-native policy home | Source-role, rights, freshness, sensitivity, publication gates. | Policy engine remains `UNKNOWN`. |
-| Source runbook | `docs/runbooks/source-ledger.md` | Maintenance, correction, rollback, and release-check procedure. | Create only if runbook convention exists or parent README accepts it. |
 
 [Back to top](#top)
 
@@ -542,13 +616,15 @@ These paths are **PROPOSED** until repo conventions are verified. If the mounted
 
 | Phase | Action | Exit condition |
 |---:|---|---|
-| 0 | Inspect current repo checkout, ADR index, CODEOWNERS, docs/registers, schemas/contracts, policy, tests, tools, release artifacts. | Implementation depth and path homes are no longer `UNKNOWN`. |
-| 1 | Reconcile ADR number and source-ledger register home. | ADR path and parent links are valid. |
-| 2 | Add or update source-ledger record schema and status taxonomy in repo-native schema home. | Required fields and finite status values validate. |
-| 3 | Add valid/invalid no-network fixtures. | Fixture suite covers missing fields, duplicate IDs, blocked statuses, unresolved refs, and planning-PDF misuse. |
-| 4 | Add source-ledger validator and policy check. | Validator fails closed on blocked source use. |
-| 5 | Wire EvidenceBundle and ReleaseManifest checks to source-ledger resolution. | Release candidate with unresolved or blocked source dependencies fails. |
-| 6 | Add documentation/runbook links and maintenance responsibilities. | Maintainers can update, correct, supersede, and roll back ledger entries. |
+| 0 | Inspect current checkout, ADR index, CODEOWNERS, docs/registers, docs/sources, schemas/contracts, policy, tests, tools, workflows, release artifacts. | Implementation depth and path homes are no longer `UNKNOWN`. |
+| 1 | Reconcile ADR number and title. | Metadata, H1, ADR index, and filename all say `ADR-0203`. |
+| 2 | Reconcile `docs/registers/SOURCE_LEDGER.md` and `docs/sources/SOURCE_LEDGER.md`. | One surface is canonical or both have explicit non-divergent roles. |
+| 3 | Add or update source-ledger schema and status taxonomy in the repo-native schema home. | Required fields and finite status values validate. |
+| 4 | Add valid/invalid no-network fixtures. | Fixture suite covers missing fields, duplicate IDs, blocked statuses, unresolved refs, and planning-PDF misuse. |
+| 5 | Expand or supersede the current source-ledger checker. | Validator fails closed on blocked source use and unresolved refs. |
+| 6 | Wire EvidenceBundle and ReleaseManifest checks to source-ledger resolution. | Release candidate with unresolved or blocked source dependencies fails. |
+| 7 | Add documentation/runbook links and maintenance responsibilities. | Maintainers can update, correct, supersede, and roll back ledger entries. |
+| 8 | Attach execution evidence. | Source-ledger tests, aggregate validation, or CI workflow evidence is recorded before acceptance. |
 
 [Back to top](#top)
 
@@ -556,54 +632,25 @@ These paths are **PROPOSED** until repo conventions are verified. If the mounted
 
 ## Consequences
 
-### Positive
+### Positive consequences
 
-- Source authority becomes visible instead of implied.
-- KFM can preserve lineage without treating lineage as current authority.
-- New Ideas can be retained without becoming accidental canon.
-- EvidenceBundle resolution gains a clear upstream source-status check.
-- Source rights, sensitivity, freshness, and review state become release blockers rather than afterthoughts.
-- Public claims become easier to audit, correct, withdraw, and roll back.
-- Map, scene, AI, dashboard, and export surfaces remain downstream of governed evidence.
-
-### Tradeoffs
-
-- Maintainers must keep the ledger current.
-- Some fast-moving work will be blocked until source status is resolved.
-- External current facts require dated verification.
-- Validation and policy gates add implementation work before public polish.
-- ADR numbering, schema home, source-registry homes, and fixture homes must be reconciled before publication.
-- The ledger can create false confidence if validators are absent, optional, or not tied to release gates.
-
-### Failure modes this ADR is intended to prevent
-
-| Failure mode | Required prevention |
+| Consequence | Why it matters |
 |---|---|
-| A planning PDF is cited as proof of repo implementation. | Mark `implementation_proof_status` explicitly and fail validation when misused. |
-| A New Ideas packet becomes canon without review. | Keep `EXPLORATORY` blocked from authoritative claims. |
-| A source is renamed and old references break. | Preserve aliases and stable `source_id`. |
-| A public map cites unreviewed raw/work/quarantine data. | Enforce no-public-raw-path and release-state checks. |
-| AI answers cite unsupported context. | Require source-ledger resolution and citation validation. |
-| A stale external version fact persists. | Require freshness status and dated re-verification. |
-| A derived tile, scene, or graph edge replaces canonical truth. | Treat derived products as downstream and rebuildable. |
-| Sensitive locations or restricted records become public by default. | Fail closed; require redaction/generalization/staged access and receipts. |
+| Source authority becomes visible. | Maintainers can review what a source can and cannot prove. |
+| Lineage can be preserved safely. | Prior PDFs, reports, and ideas remain useful without becoming accidental canon. |
+| EvidenceBundle closure gets a stronger upstream check. | Evidence cannot cite unknown or blocked sources. |
+| AI and UI trust surfaces become easier to audit. | Generated explanations, map popups, and story nodes must carry source-state constraints. |
+| Release and rollback become safer. | Dependent source IDs, aliases, and supersession chains remain traceable. |
 
-[Back to top](#top)
+### Costs and tradeoffs
 
----
-
-## Security, rights, and sensitivity posture
-
-Source-ledger authority is part of KFM’s publication safety model.
-
-| Risk | Required posture |
+| Cost | Mitigation |
 |---|---|
-| Rights unclear | `DENY` public release until rights are verified or release class is restricted. |
-| Sensitive location | Generalize, redact, stage access, or deny; record transform receipts. |
-| Archaeological/cultural sensitivity | Fail closed pending steward review and policy decision. |
-| Living-person, DNA, land/title, or ownership source | Restrict by default; do not infer public release from availability. |
-| Security-relevant infrastructure or local exposure details | Publish only public-safe summaries; preserve auditability without exposing sensitive operational detail. |
-| External source terms or API behavior change | Mark `NEEDS-VERIFICATION` and require dated recheck before activation or release. |
+| More fields per source record. | Keep minimal valid records small and reserve conditional fields for source classes that need them. |
+| Existing source-ledger surfaces must be reconciled. | Treat one as canonical or make one a compatibility landing page; do not let both drift. |
+| Validators need expansion beyond the current smoke check. | Add no-network fixtures and grow validator coverage incrementally. |
+| External source facts require dated checks. | Store `retrieved_or_observed_at`, freshness status, and source cadence. |
+| Some attractive public claims will abstain. | KFM’s cite-or-abstain posture protects trust more than fluent but unsupported output. |
 
 [Back to top](#top)
 
@@ -611,41 +658,51 @@ Source-ledger authority is part of KFM’s publication safety model.
 
 ## Rollback and correction
 
-Source-ledger rollback must preserve auditability.
+Source-ledger rollback must preserve lineage. It must not delete history to make the tree look tidy.
 
-| Scenario | Required action |
+### Rollback rules
+
+When source-ledger authority or source status changes:
+
+1. Preserve the previous ledger entry or record version.
+2. Add `superseded_by`, `supersedes`, or correction notes.
+3. Preserve aliases even after they are retired.
+4. Recompute or invalidate dependent EvidenceBundles, ReleaseManifests, LayerManifests, AI receipts, catalog records, and public artifacts as needed.
+5. If public claims were affected, emit or update a CorrectionNotice.
+6. Prefer pointer/release rollback over mutating published artifacts in place.
+7. Keep unresolved references visible until verified, retired, or quarantined.
+
+### Correction triggers
+
+| Trigger | Required response |
 |---|---|
-| Incorrect source promotion | Change status to `QUARANTINED` or `CONFLICTED`, record reason, and identify dependent claims/releases. |
-| Wrong authority rank | Correct ledger entry, add correction note, and rerun source-coverage checks. |
-| Broken alias | Add alias mapping and rerun unresolved-reference validation. |
-| Source superseded | Set `superseded_by`, keep old source available as lineage, and update dependent EvidenceBundles where needed. |
-| Rights or sensitivity reversal | Deny publication, withdraw or correct affected outputs, and record policy decision. |
-| External freshness failure | Mark affected source facts `NEEDS-VERIFICATION`, block new releases, and re-run source checks. |
-| Validator false positive | Quarantine affected validation result, add fixture, fix validator, and rerun release checks. |
-| ADR replaced | Mark this ADR superseded, link the replacement, and keep this file for lineage. |
-
-No rollback should delete lineage material merely because it is no longer current authority.
+| Source rights were overstated. | Quarantine affected source use; update release and correction state. |
+| Planning PDF was used as implementation proof. | Correct ledger status and affected docs; mark implementation claim `UNKNOWN` or `NEEDS VERIFICATION`. |
+| Source was superseded. | Link successor, keep predecessor as lineage, re-evaluate dependent claims. |
+| Source contained sensitive exact locations. | Deny, restrict, generalize, embargo, or stage access; record transform reason. |
+| AI or UI cited a blocked source. | Convert affected response to `ABSTAIN`, `DENY`, or `ERROR`; preserve receipt. |
+| Validator missed unresolved refs. | Add regression fixture and correction note. |
 
 [Back to top](#top)
 
 ---
 
-## Acceptance criteria
+## Review checklist
 
-This ADR is ready for review when:
+Before this ADR is accepted, reviewers should be able to check every box.
 
-- [ ] ADR numbering is reconciled against the repo ADR index.
-- [ ] Owners are verified.
-- [ ] Policy label is verified.
-- [ ] Related paths are replaced with verified repo-relative links.
-- [ ] Source-ledger home is confirmed or corrected.
-- [ ] Schema-home dependency is linked to the accepted schema-home ADR.
-- [ ] Source status taxonomy is reviewed by documentation, data, policy, release, UI, and AI stewards.
-- [ ] Source role and claim-support fields are reviewed against existing SourceDescriptor conventions.
-- [ ] Validation fixture names are aligned to the repo’s test conventions.
-- [ ] Parent README files reference this ADR where appropriate.
-- [ ] EvidenceBundle and ReleaseManifest validation requirements are linked to this ADR or a successor contract.
-- [ ] No statement claims current implementation behavior without direct repo or runtime evidence.
+- [ ] ADR filename, metadata title, H1, and ADR index all use `ADR-0203`.
+- [ ] Owner or steward review is assigned.
+- [ ] Policy label is confirmed.
+- [ ] `docs/registers/SOURCE_LEDGER.md` and `docs/sources/SOURCE_LEDGER.md` relationship is resolved.
+- [ ] The current source-ledger checker either validates the accepted ledger surface or has a planned successor.
+- [ ] Source statuses are finite and documented.
+- [ ] Ledger record required fields are represented in schema, fixtures, or validator tests.
+- [ ] Planning PDFs and generated reports cannot pass as implementation proof.
+- [ ] EvidenceBundle, ReleaseManifest, LayerManifest, and AI/runtime citations fail on unknown or blocked source refs.
+- [ ] Rights, sensitivity, source role, freshness, review state, and release state are checked before public use.
+- [ ] Rollback and correction behavior preserves lineage.
+- [ ] Validation output or CI evidence is recorded before status moves from `draft` to `accepted`.
 
 [Back to top](#top)
 
@@ -653,19 +710,29 @@ This ADR is ready for review when:
 
 ## Open verification
 
-| Item | Status | Why it matters | Required check |
-|---|---|---|---|
-| ADR number | `NEEDS VERIFICATION` | Visible corpus mentions source-ledger authority under another ADR number. | Inspect `docs/adr/` and ADR index. |
-| Owners | `NEEDS VERIFICATION` | Governance docs need accountable stewards. | Inspect CODEOWNERS and repo docs ownership convention. |
-| Policy label | `NEEDS VERIFICATION` | Release/publication posture is unknown. | Inspect repo policy labels and doc metadata rules. |
-| Source-ledger register home | `NEEDS VERIFICATION` | Prevents duplicate source authority surfaces. | Inspect `docs/registers/`, `data/registry/`, parent READMEs, and current document registry. |
-| Machine schema home | `CONFLICTED / NEEDS VERIFICATION` | Prior materials reference `contracts/`, `schemas/`, and `schemas/contracts/v1/`. | Resolve through accepted schema-home ADR and update this ADR. |
-| Singular/plural source schema lane | `NEEDS VERIFICATION` | `source/` and `sources/` could create parallel authority. | Inspect existing schema family names and choose one. |
-| Existing SourceDescriptor schema | `UNKNOWN` | This ADR should extend, not duplicate, existing contracts. | Inspect schema/contract files and fixtures. |
-| Existing validators | `UNKNOWN` | Validation claims require tool evidence. | Inspect `tools/validators/`, tests, and CI workflows. |
-| Existing release/proof artifacts | `UNKNOWN` | Proof-object maturity cannot be inferred from doctrine. | Inspect generated artifacts, manifests, receipts, proof packs, and release folders. |
-| Existing AI/runtime citation checks | `UNKNOWN` | Governed AI claims require enforcement evidence. | Inspect runtime response envelope contracts, adapters, tests, and logs. |
-| External source verification policy | `NEEDS VERIFICATION` | Version-sensitive source facts need current official checks. | Inspect source-descriptor and source-refresh standards. |
-| Sensitive-source publication policy | `NEEDS VERIFICATION` | Source-ledger use must fail closed for high-risk domains. | Inspect policy source, release, sensitivity, and redaction rules. |
+| Item | Status | Why it matters |
+|---|---:|---|
+| ADR owner / CODEOWNERS routing | `NEEDS VERIFICATION` | Acceptance needs accountable review. |
+| Policy label | `NEEDS VERIFICATION` | Source-ledger contents may include restricted or rights-sensitive material. |
+| Created-date provenance | `NEEDS VERIFICATION` | Existing file metadata carried `2026-04-27`; verify before publication. |
+| ADR acceptance state | `NEEDS VERIFICATION` | This document is a proposed decision until accepted. |
+| Full ADR index consistency | `NEEDS VERIFICATION` | The file previously used `ADR-0303` title text. |
+| Relationship between `docs/registers/SOURCE_LEDGER.md` and `docs/sources/SOURCE_LEDGER.md` | `CONFLICTED / NEEDS VERIFICATION` | Two visible source-ledger surfaces can drift. |
+| Source-ledger schema home | `NEEDS VERIFICATION` | Must align with accepted schema-home ADR. |
+| Source-ledger machine registry home | `NEEDS VERIFICATION` | `data/registry/sources/` is a candidate home, not confirmed by this ADR. |
+| Current test execution | `NEEDS VERIFICATION` | Test files exist, but no run status was inspected. |
+| CI/workflow enforcement | `UNKNOWN` | Aggregate script exists, but successful workflow behavior was not verified. |
+| Branch protections | `UNKNOWN` | Cannot claim merge-blocking enforcement. |
+| Release/proof integration | `UNKNOWN` | ReleaseManifest, ProofPack, and CatalogMatrix integration were not verified from runtime artifacts. |
+| External source freshness policy | `NEEDS VERIFICATION` | Version-sensitive facts require dated official-source checks. |
+| Source rights and sensitivity coverage | `NEEDS VERIFICATION` | Public release must fail closed when rights or sensitivity are unclear. |
 
 [Back to top](#top)
+
+---
+
+## Maintainer note
+
+Source authority is a trust surface. Keep it boring, explicit, and reversible.
+
+A polished claim with an unresolved source is still unresolved. A repeated proposal is still a proposal. A generated summary is still generated. A map layer is still downstream. Let the ledger carry the source truth, let EvidenceBundle carry claim support, and let policy decide whether KFM may speak.
