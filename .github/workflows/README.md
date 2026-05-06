@@ -4,10 +4,10 @@ title: .github/workflows
 type: standard
 version: v1
 status: draft
-owners: TODO-NEEDS-VERIFICATION
-created: TODO-NEEDS-VERIFICATION
-updated: TODO-NEEDS-VERIFICATION
-policy_label: TODO-NEEDS-VERIFICATION
+owners: NEEDS_VERIFICATION
+created: NEEDS_VERIFICATION
+updated: 2026-05-06
+policy_label: NEEDS_VERIFICATION
 related: [
   ../README.md,
   ../CODEOWNERS,
@@ -15,23 +15,24 @@ related: [
   ../actions/README.md,
   ../watchers/README.md,
   ../../README.md,
-  ../../CONTRIBUTING.md,
   ../../SECURITY.md,
   ../../contracts/README.md,
   ../../schemas/README.md,
   ../../policy/README.md,
   ../../tests/README.md,
-  ../../tools/ci/README.md,
-  ../../tools/validators/README.md,
+  ../../fixtures/README.md,
+  ../../tools/ci/verify_baseline.sh,
+  ../../scripts/validate_all.sh,
+  ../../scripts/check_synthetic_release_local.sh,
   ../../data/receipts/README.md,
   ../../data/proofs/README.md,
   ../../release/README.md
 ]
-tags: [kfm, github, workflows, ci-cd, validation, runtime-proof, release-evidence, rollback, correction]
+tags: [kfm, github, workflows, ci-cd, validation, release-evidence, promotion, rollback, correction]
 notes: [
-  "This README defines the governed role of .github/workflows/ as workflow orchestration, not as a truth, policy, release, or proof authority.",
-  "All workflow filenames in this document are proposed starter lanes unless verified by the active checkout.",
-  "Owners, branch rulesets, required checks, GitHub environment approvals, OIDC wiring, exact workflow inventory, and platform enforcement posture need maintainer verification before publication."
+  "Revision updates the README from a proposed lane map to a repo-evidence-aware workflow directory guide.",
+  "Observed workflow inventory on main: baseline.yml, promote-and-reconcile.yml, synthetic-release-dry-run.yml.",
+  "Owners, CODEOWNERS routing, PR template content, branch rulesets, required checks, protected environments, artifact retention, and Actions platform settings remain NEEDS_VERIFICATION."
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -39,42 +40,41 @@ notes: [
 
 # `.github/workflows`
 
-Governed GitHub Actions orchestration for KFM validation, runtime proof, release evidence, and rollback-ready review handoff.
+GitHub Actions orchestration for KFM validation, promotion dry-runs, synthetic release checks, and reviewable trust-spine evidence.
 
 > [!NOTE]
-> **Status:** `draft`  
-> **Owners:** `TODO: owner not verified`  
-> **Authority:** `PROPOSED` workflow-lane contract; current repo implementation is `NEEDS VERIFICATION`  
-> **Repo fit:** `.github/workflows/README.md` under the GitHub gatehouse root  
-> **Review burden:** repo steward, CI maintainer, policy steward, and any affected domain steward must confirm that workflows are fail-closed, no-network by default where appropriate, and do not bypass KFM release governance.
+> **Status:** `active` workflow directory / `draft` README  
+> **Owners:** `NEEDS_VERIFICATION`  
+> **Observed workflow inventory:** `CONFIRMED` on `main` at revision time; re-verify before changing required checks  
+> **Repo fit:** `.github/workflows/README.md` under the `.github/` gatehouse root  
+> **Review burden:** CI, policy, contract/schema, release, and affected domain reviewers should verify that workflow changes remain least-privilege, fail-closed, receipt-aware, and non-publishing unless a governed promotion path explicitly applies.
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![authority](https://img.shields.io/badge/authority-PROPOSED-8250df)
+![status](https://img.shields.io/badge/status-active%20directory%20%2F%20draft%20doc-orange)
+![authority](https://img.shields.io/badge/authority-CONFIRMED%20inventory%20%2F%20NEEDS%20VERIFICATION-yellow)
 ![surface](https://img.shields.io/badge/surface-.github%2Fworkflows-0969da)
-![posture](https://img.shields.io/badge/posture-fail--closed-b60205)
-![publication](https://img.shields.io/badge/publication-governed%20transition-0a7d5a)
+![permissions](https://img.shields.io/badge/default-permissions%3A%20contents%3Aread-0a7d5a)
+![publication](https://img.shields.io/badge/publication-governed%20state%20transition-b60205)
 
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Workflow lanes](#workflow-lanes) · [Operating rules](#operating-rules) · [Quickstart](#quickstart) · [Review gates](#review-gates) · [Rollback](#rollback) · [Open verification](#open-verification)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current workflow inventory](#current-workflow-inventory) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Workflow model](#workflow-model) · [Operating rules](#operating-rules) · [Quickstart](#quickstart) · [Changing workflows](#changing-workflows) · [Review gates](#review-gates) · [Rollback](#rollback) · [Open verification](#open-verification)
 
 ---
 
 ## Scope
 
-`.github/workflows/` is the orchestration surface for GitHub Actions workflows that help maintain KFM’s trust spine.
+`.github/workflows/` owns **GitHub Actions workflow orchestration** for the repository.
 
-It may coordinate checks over docs, contracts, schemas, policy, tests, fixtures, runtime envelopes, receipts, release candidates, proof references, and rollback rehearsals. It does **not** own the meaning of those objects.
+It may run validation scripts, fixture checks, schema checks, policy checks, source-rights checks, hydrology proof-slice checks, promotion dry-runs, synthetic release dry-runs, and reviewer-visible artifact uploads. It does **not** own KFM truth, source authority, semantic contracts, machine schemas, policy meaning, release approval, proof-pack authority, or public publication.
 
-In KFM terms, this directory helps answer:
+KFM’s workflow lane exists to keep this trust spine testable:
 
-- Did the changed files pass the right validation gates?
-- Did tests run against deterministic, no-network fixtures where expected?
-- Did policy checks fail closed when evidence, rights, sensitivity, release state, or review state were missing?
-- Did runtime proof produce governed envelopes rather than raw model or internal-store output?
-- Did release evidence remain separate from process receipts?
-- Is rollback or correction rehearsed before publication-significant changes are trusted?
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+A passing workflow can make a change **reviewable**. It does not, by itself, make a claim published, authoritative, or public-safe.
 
 > [!IMPORTANT]
-> A passing workflow is not a publication decision. Promotion is a governed state transition that requires evidence, policy, review, release manifest, correction path, and rollback target.
+> Promotion is a governed state transition, not a file move. A workflow may assemble release evidence or run a promotion dry-run, but publication still requires evidence closure, policy posture, review state, release state, correction path, and rollback target.
 
 [Back to top](#top)
 
@@ -86,12 +86,48 @@ In KFM terms, this directory helps answer:
 | --- | --- |
 | Path | `.github/workflows/README.md` |
 | Owning root | `.github/` |
-| Responsibility | repo-wide CI/CD orchestration and review automation |
-| Authority level | `PROPOSED` until active workflow YAML, CODEOWNERS, required checks, and branch rules are verified |
-| Upstream surfaces to verify | `../README.md`, `../CODEOWNERS`, `../PULL_REQUEST_TEMPLATE.md`, `../actions/README.md`, `../watchers/README.md`, `../../README.md`, `../../CONTRIBUTING.md`, `../../SECURITY.md` |
-| Downstream surfaces checked by workflows | `../../docs/`, `../../contracts/`, `../../schemas/`, `../../policy/`, `../../tests/`, `../../fixtures/`, `../../tools/`, `../../data/`, `../../release/`, `../../apps/`, `../../packages/` |
+| Root responsibility | Repo-wide automation, CI orchestration, validation entrypoints, and review handoff |
+| Upstream governance | [`../README.md`](../README.md), [`../actions/README.md`](../actions/README.md), [`../watchers/README.md`](../watchers/README.md), [`../CODEOWNERS`](../CODEOWNERS), [`../PULL_REQUEST_TEMPLATE.md`](../PULL_REQUEST_TEMPLATE.md), [`../../README.md`](../../README.md) |
+| Downstream surfaces checked or invoked | `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `tools/`, `scripts/`, `release/`, `data/receipts/`, `data/proofs/`, `apps/`, `packages/` |
+| Current authority | `CONFIRMED` workflow-file inventory; `NEEDS_VERIFICATION` platform enforcement and owner routing |
+| Directory Rules basis | `.github/` is a repo-wide governance and validation root; domain knowledge belongs under responsibility roots, not here |
 
-Directory placement is justified because GitHub workflow orchestration is a repo-wide validation and runtime-operation responsibility. Domain workflows may exist here, but domain knowledge belongs under the proper responsibility roots such as `docs/domains/<domain>/`, `schemas/contracts/v1/domains/<domain>/`, `policy/domains/<domain>/`, `tests/domains/<domain>/`, `fixtures/domains/<domain>/`, `pipelines/domains/<domain>/`, and lifecycle data under `data/<stage>/<domain>/`.
+Domain-specific workflow checks may be orchestrated here, but domain meaning belongs elsewhere:
+
+| Concern | Correct home |
+| --- | --- |
+| Domain doctrine | `docs/domains/<domain>/` |
+| Semantic contracts | `contracts/domains/<domain>/` or verified contract home |
+| Machine schemas | `schemas/contracts/v1/domains/<domain>/` or verified schema home |
+| Policy rules | `policy/domains/<domain>/` |
+| Tests and fixtures | `tests/domains/<domain>/`, `fixtures/domains/<domain>/` |
+| Lifecycle data | `data/raw/<domain>/`, `data/work/<domain>/`, `data/quarantine/<domain>/`, `data/processed/<domain>/`, `data/catalog/<domain>/`, `data/published/<domain>/` |
+| Release candidates | `release/` and verified release-candidate homes |
+
+[Back to top](#top)
+
+---
+
+## Current workflow inventory
+
+The active `main` branch inventory observed during this revision contains three workflow YAML files.
+
+```text
+.github/workflows/
+├── README.md
+├── baseline.yml
+├── promote-and-reconcile.yml
+└── synthetic-release-dry-run.yml
+```
+
+| Workflow | Triggers | Permissions | Main job | What it currently does | Verification posture |
+| --- | --- | --- | --- | --- | --- |
+| [`baseline.yml`](./baseline.yml) | `push`, `pull_request` | `contents: read` | `test` | Sets up Python 3.11, runs repository structure, fixture, schema, docs truth-label, directory-rule, source, API contract, promotion receipt, release-manifest, hydrology profile, and unit-test checks; ends with [`../../scripts/validate_all.sh`](../../scripts/validate_all.sh). | `CONFIRMED` file content; required-check enforcement `NEEDS_VERIFICATION` |
+| [`promote-and-reconcile.yml`](./promote-and-reconcile.yml) | `pull_request` and `push` to `main` for `contracts/**`, `schemas/**`, `fixtures/**`, `release/**`, `tools/**`, `tests/**`, plus `workflow_dispatch` | `contents: read` | `promote-and-reconcile` | Runs repository/governed-boundary checks, release/publication gates, hydrology release validators, `tools/promotion_dry_run.py`, promotion receipt determinism, drift reconciliation, release-focused unit tests, and uploads promotion/reconciliation receipts. | `CONFIRMED` file content; human promotion authority `NEEDS_VERIFICATION` |
+| [`synthetic-release-dry-run.yml`](./synthetic-release-dry-run.yml) | `pull_request`, `push` on all branches | `NEEDS_VERIFICATION` because no explicit `permissions` block is present in the observed file | `dry-run` | Sets up Python 3.11 and runs [`../../scripts/check_synthetic_release_local.sh`](../../scripts/check_synthetic_release_local.sh), which validates fixtures, source terms, activation decisions, evidence closure, public path guards, and synthetic release dry-run behavior. | `CONFIRMED` file content; add explicit least-privilege permissions as `PROPOSED` hardening |
+
+> [!WARNING]
+> Do not infer branch protection, required checks, protected environments, artifact-retention policy, or release approval behavior from YAML alone. Those GitHub platform settings must be inspected separately.
 
 [Back to top](#top)
 
@@ -99,18 +135,19 @@ Directory placement is justified because GitHub workflow orchestration is a repo
 
 ## Accepted inputs
 
-Workflows in this directory may consume:
+Workflows in this directory may consume repository-local files and GitHub event context when those inputs are scoped, reviewable, and safe for CI logs.
 
-| Input | Expected source | Rule |
+| Input | Accepted from | Required behavior |
 | --- | --- | --- |
-| Pull request diff | GitHub event payload | Treat as candidate change, not proof. |
-| Repo-local contracts and schemas | `contracts/`, `schemas/` | Validate shape and meaning without creating parallel authority. |
-| Policy rules and fixtures | `policy/`, `tests/`, `fixtures/` | Fail closed on unclear rights, sensitivity, release state, or evidence. |
-| Test fixtures | `fixtures/`, `tests/fixtures/` | Prefer deterministic no-network fixtures in PR CI. |
-| Runtime proof outputs | `apps/`, `packages/`, `tests/e2e/`, `tools/ci/` | Public-facing runtime outputs must use governed envelopes. |
-| Receipts | `data/receipts/` | Receipts are process memory; they are not release proof. |
-| Proof and release candidates | `data/proofs/`, `release/` | Release proof remains separate from receipts and requires review. |
-| Review summaries | `tools/ci/`, `GITHUB_STEP_SUMMARY` | Summaries must not expose secrets, RAW data, restricted geometry, or direct model output. |
+| Pull request or push diff | GitHub event payload | Treat as candidate change, not publication proof. |
+| Contracts and schemas | `contracts/`, `schemas/` | Validate meaning and machine shape without creating parallel authority. |
+| Policy rules and policy fixtures | `policy/`, `tests/`, `fixtures/` | Fail closed on missing policy, missing deny fixtures, unclear rights, or sensitivity gaps. |
+| Test fixtures | `fixtures/`, `tests/fixtures/`, domain fixture homes | Prefer deterministic no-network fixtures for PR CI. |
+| Validator and helper scripts | `tools/`, `scripts/` | Keep real logic in reviewable repo roots; workflows orchestrate. |
+| Release candidates and dry-runs | `release/`, `fixtures/**/release_*`, `release/dry_runs/` | Keep promotion dry-run distinct from publication. |
+| Receipts and validation reports | `data/receipts/`, `fixtures/**/validation_reports/`, verified receipt homes | Treat as process memory, not proof by default. |
+| Proof references | `data/proofs/`, verified proof homes | Require reviewable linkage to release evidence before publication claims. |
+| Workflow artifacts | GitHub Actions artifact upload | Do not expose secrets, restricted geometry, RAW/WORK/QUARANTINE payloads, or direct model output. |
 
 [Back to top](#top)
 
@@ -118,103 +155,22 @@ Workflows in this directory may consume:
 
 ## Exclusions
 
-Do not put these responsibilities in `.github/workflows/`:
+Do not place these responsibilities in `.github/workflows/`.
 
-| Excluded material | Correct home |
-| --- | --- |
-| Domain doctrine or architecture | `docs/domains/<domain>/` |
-| Semantic object definitions | `contracts/` |
-| Machine-checkable schemas | `schemas/` |
-| Policy-as-code and policy rationale | `policy/` |
-| Reusable validator implementation | `tools/validators/` or `packages/` |
-| Reusable CI summary helpers | `tools/ci/` |
-| Source connectors | `connectors/` |
-| Pipeline logic | `pipelines/`, `pipeline_specs/` |
-| Lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/published/` |
-| Release manifests and release operations | `release/` |
-| Proof packs | `data/proofs/` or release-specific proof home |
-| Secrets, credentials, tokens, private keys | GitHub secret store or deployment secret manager; never committed |
-| Direct AI/model runtime behavior | governed API and runtime packages; never direct public workflow output as truth |
-
-[Back to top](#top)
-
----
-
-## Workflow lanes
-
-The table below is a proposed lane map. Verify actual checked-in YAML before claiming that any lane is active.
-
-| Proposed workflow | Purpose | Required fail-closed behavior | Status |
-| --- | --- | --- | --- |
-| `verify-docs.yml` | Check KFM Meta Block v2, one H1, relative links, placeholders, and doc structure. | Fail on broken required structure or unreviewed placeholder leakage in publication-facing docs. | `PROPOSED` |
-| `verify-contracts-and-policy.yml` | Validate schemas, contract fixtures, policy fixtures, and policy-deny cases. | Fail if invalid fixtures pass, expected pass fixtures fail, or policy cannot evaluate. | `PROPOSED` |
-| `verify-tests-and-reproducibility.yml` | Run deterministic unit, contract, policy, validator, and reproducibility checks. | Fail on unexplained drift, missing fixtures, or tests that depend on live source systems without explicit approval. | `PROPOSED` |
-| `verify-runtime.yml` | Confirm governed API/runtime outputs use finite envelopes and do not expose internal stores. | Fail on RAW/WORK/QUARANTINE refs, uncited public claims, direct model output, or missing envelope fields. | `PROPOSED` |
-| `runtime-proof-soil-moisture.yml` | Prove the first public-safe runtime slice, if soil moisture is the active thin-slice lane. | Fail if runtime output lacks EvidenceBundle linkage, policy decision, receipt reference, or finite outcome. | `PROPOSED / NEEDS VERIFICATION` |
-| `incremental-stac-watcher.yml` | Exercise watcher-style source/candidate detection and receipt emission. | Fail if a watcher attempts auto-publication or treats a receipt as proof. | `PROPOSED / NEEDS VERIFICATION` |
-| `release-evidence.yml` | Assemble release-candidate evidence reports and proof references. | Fail if catalog/proof/release references are missing, mismatched, or not reviewable. | `PROPOSED` |
-| `promote-and-reconcile.yml` | Support review handoff for a PromotionDecision candidate. | Fail if promotion is modeled as a file copy or if rollback/correction paths are absent. | `PROPOSED` |
-| `rehearse-rollback-and-correction.yml` | Rebuild rollback cards, correction notices, and withdrawal/repointing drills. | Fail if published history would be deleted instead of superseded, corrected, or repointed. | `PROPOSED` |
-
-> [!TIP]
-> Add a new workflow only when it has a clear KFM trust purpose, explicit blocking conditions, minimal permissions, and a documented rollback or correction consequence.
-
-[Back to top](#top)
-
----
-
-## Operating rules
-
-### 1. Preserve the lifecycle boundary
-
-Workflows may inspect candidates and emitted artifacts, but public-facing outputs must preserve the KFM lifecycle:
-
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
-
-Public docs, public APIs, map popups, Evidence Drawer payloads, Focus Mode answers, exports, and release summaries must not read directly from `data/raw/`, `data/work/`, `data/quarantine/`, unpublished candidates, internal canonical stores, source-system side effects, direct model runtime outputs, secrets, or credentials.
-
-### 2. Use finite outcome language
-
-Workflow summaries should use bounded outcomes:
-
-| Outcome | Use |
-| --- | --- |
-| `PASS` | Required checks passed for the declared scope. |
-| `REVIEWABLE PASS` | Drift or warning is explicitly bounded and requires reviewer attention. |
-| `DENY` | Policy, rights, sensitivity, role, release state, or access posture blocks the change. |
-| `ABSTAIN` | Evidence is insufficient to support the claim or output. |
-| `ERROR` | The check failed due to tool, configuration, malformed input, or missing required artifact. |
-
-### 3. Keep receipts and proofs separate
-
-Receipts record process memory: what ran, when, with what input, and with what outcome. Proof objects support release-grade claims. A workflow may emit or upload both, but it must not call a receipt a proof pack.
-
-### 4. Keep permissions minimal
-
-Start with read-only permissions unless the workflow must write.
-
-```yaml
-permissions:
-  contents: read
-```
-
-Only add write permissions for tightly scoped jobs such as draft PR creation, release-candidate upload, or signed attestation, and document why the permission is needed.
-
-### 5. Avoid live source calls in PR CI by default
-
-Pull request workflows should use deterministic fixtures. Live source connectors, external API calls, publication jobs, destructive cleanup, or mutable release actions require explicit workflow dispatch, environment approval, or a separately reviewed release lane.
-
-### 6. Do not leak sensitive content
-
-Workflow logs and summaries must not expose:
-
-- secrets or tokens
-- restricted exact coordinates
-- living-person, DNA, archaeology, rare-species, critical-infrastructure, or other sensitive data
-- RAW, WORK, QUARANTINE, unpublished candidate payloads
-- direct model prompts or direct model output used as truth
+| Excluded material | Why | Correct home |
+| --- | --- | --- |
+| KFM doctrine or architecture | Workflows should not become doctrine | `docs/` |
+| Semantic object definitions | Workflow YAML is not a contract surface | `contracts/` |
+| Machine-checkable schemas | Schema authority must remain executable and versioned | `schemas/` |
+| Policy-as-code | Workflows call policy; they do not own policy | `policy/` |
+| Reusable validator implementation | Large logic hidden in YAML is hard to review | `tools/validators/`, `tools/`, `packages/` |
+| Broad orchestration scripts | Shell/Python orchestration should be reviewable outside YAML | `scripts/`, `tools/` |
+| Source connectors | Connector logic must carry source rights and source-role review | `connectors/` |
+| Pipeline logic | Workflow orchestration is not pipeline semantics | `pipelines/`, `pipeline_specs/` |
+| Lifecycle data | CI must not become a data store | `data/` |
+| Receipts, proofs, release manifests | These are emitted trust objects, not workflow definitions | `data/receipts/`, `data/proofs/`, `release/` |
+| Secrets, tokens, private keys | Never commit credentials | GitHub secrets, environments, OIDC, approved secret manager |
+| Public model or AI truth outputs | AI is interpretive and evidence-subordinate | Governed API/runtime packages and released EvidenceBundles only |
 
 [Back to top](#top)
 
@@ -224,29 +180,88 @@ Workflow logs and summaries must not expose:
 
 ```mermaid
 flowchart TD
-    A[Pull request or manual dispatch] --> B[Inventory changed paths]
-    B --> C[Docs / contracts / schemas checks]
-    B --> D[Policy and validator checks]
-    B --> E[Tests and reproducibility checks]
-    C --> F{All required gates pass?}
+    A[Push / pull request / manual dispatch] --> B[Checkout + Python setup]
+    B --> C[baseline.yml<br/>broad validation suite]
+    B --> D[promote-and-reconcile.yml<br/>release and promotion dry-run]
+    B --> E[synthetic-release-dry-run.yml<br/>synthetic release refusal check]
+
+    C --> F{Validation result}
     D --> F
     E --> F
 
-    F -->|No| G[DENY / ABSTAIN / ERROR summary]
-    F -->|Yes| H[Runtime proof or release-candidate checks]
+    F -->|tool/config failure| G[ERROR]
+    F -->|policy / rights / sensitivity block| H[DENY]
+    F -->|evidence insufficient| I[ABSTAIN]
+    F -->|checks pass| J[Reviewer-visible PASS]
 
-    H --> I{Publication-significant?}
-    I -->|No| J[Reviewer-readable PASS summary]
-    I -->|Yes| K[Release evidence + review handoff]
+    J --> K{Publication-significant?}
+    K -->|no| L[Merge review may continue]
+    K -->|yes| M[Release evidence + PromotionDecision review]
 
-    K --> L{PromotionDecision reviewed?}
-    L -->|No| M[Hold candidate; no PUBLISHED transition]
-    L -->|Yes| N[PUBLISHED through governed release path]
+    M --> N{Governed promotion approved?}
+    N -->|no| O[Hold candidate; preserve receipts]
+    N -->|yes| P[PUBLISHED through release path]
 
-    G --> O[Correction or rollback note when needed]
-    M --> O
-    N --> P[Rollback target retained]
+    O --> Q[Correction / rollback path retained]
+    P --> Q
 ```
+
+This model describes the intended boundary. It does not prove that branch settings currently require these workflows before merge.
+
+[Back to top](#top)
+
+---
+
+## Operating rules
+
+### 1. Keep workflows as orchestration
+
+Workflow YAML should stay small enough to review. Durable logic should live in `tools/`, `scripts/`, `packages/`, `tests/`, `policy/`, or the relevant responsibility root.
+
+### 2. Default to least privilege
+
+Use explicit read-only permissions unless a job genuinely needs write access.
+
+```yaml
+permissions:
+  contents: read
+```
+
+`baseline.yml` and `promote-and-reconcile.yml` already declare `contents: read`. `synthetic-release-dry-run.yml` should be hardened with an explicit permissions block unless maintainers intentionally require inherited defaults.
+
+### 3. Keep PR CI deterministic
+
+Pull request checks should prefer no-network fixtures and dry-runs. Live source calls, destructive operations, mutable publication, release signing, environment writes, and deployment require explicit review and platform controls.
+
+### 4. Distinguish outcomes
+
+Use finite outcome language in workflow summaries, PR comments, and artifacts.
+
+| Outcome | Meaning |
+| --- | --- |
+| `PASS` | Declared checks passed for the declared scope. |
+| `REVIEWABLE_PASS` | Checks passed but a reviewer must inspect bounded drift or warnings. |
+| `DENY` | Policy, rights, sensitivity, source role, release state, or access posture blocks the change. |
+| `ABSTAIN` | Evidence is insufficient to support the output or claim. |
+| `ERROR` | Tooling, malformed input, missing required artifact, or configuration failure. |
+
+### 5. Separate receipts from proofs
+
+Receipts record process memory. Proof objects support release-grade claims. Workflows may upload receipts, but must not relabel receipts as proof packs.
+
+### 6. Do not leak sensitive material
+
+Workflow logs, summaries, and uploaded artifacts must not expose:
+
+- secrets or tokens
+- restricted exact coordinates
+- living-person, DNA/genomic, archaeology, rare-species, critical-infrastructure, or steward-restricted data
+- RAW, WORK, QUARANTINE, or unpublished candidate payloads
+- direct model prompts or direct model output presented as truth
+
+### 7. Treat dry-runs as dry-runs
+
+`promote-and-reconcile.yml` and `synthetic-release-dry-run.yml` are valuable because they keep promotion and release testing reviewable without asserting public publication. Preserve that distinction.
 
 [Back to top](#top)
 
@@ -254,64 +269,66 @@ flowchart TD
 
 ## Quickstart
 
-Use this inspection loop before changing workflows.
+Run from the repository root before changing workflows.
 
 ```bash
-# 1. Confirm you are in the intended checkout.
-pwd
+# Confirm checkout and branch.
 git status --short
 git branch --show-current || true
 git rev-parse --show-toplevel || true
 
-# 2. Inspect workflow inventory.
+# Inventory workflows.
 find .github/workflows -maxdepth 1 -type f | sort
 
-# 3. Inspect parent GitHub governance.
+# Inspect workflow definitions.
+sed -n '1,260p' .github/workflows/baseline.yml
+sed -n '1,260p' .github/workflows/promote-and-reconcile.yml
+sed -n '1,180p' .github/workflows/synthetic-release-dry-run.yml
+
+# Inspect neighboring GitHub governance surfaces.
 sed -n '1,260p' .github/README.md 2>/dev/null || true
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 sed -n '1,260p' .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || true
 sed -n '1,240p' .github/actions/README.md 2>/dev/null || true
 sed -n '1,240p' .github/watchers/README.md 2>/dev/null || true
 
-# 4. Inspect trust-bearing surfaces before wiring checks.
-find contracts schemas policy tests fixtures tools data release apps packages \
-  -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,500p'
-
-# 5. Search for KFM trust vocabulary.
-grep -RInE \
-  'EvidenceBundle|EvidenceRef|DecisionEnvelope|RuntimeResponseEnvelope|SourceDescriptor|ReleaseManifest|PromotionDecision|Rollback|CorrectionNotice|spec_hash|run_receipt|AIReceipt|RAW|QUARANTINE|PROCESSED|PUBLISHED' \
-  docs contracts schemas policy tests fixtures tools data release apps packages .github 2>/dev/null || true
-
-# 6. Inspect workflow history before restoring or renaming lanes.
-git log --name-status -- .github/workflows 2>/dev/null | sed -n '1,160p' || true
+# Inspect workflow helper scripts.
+sed -n '1,260p' scripts/validate_all.sh 2>/dev/null || true
+sed -n '1,220p' scripts/check_synthetic_release_local.sh 2>/dev/null || true
+sed -n '1,220p' tools/ci/verify_baseline.sh 2>/dev/null || true
 ```
+
+Run the broad local validation entrypoints when the active checkout has the required tools:
+
+```bash
+python -m unittest discover -s tests
+bash scripts/validate_all.sh
+bash scripts/check_synthetic_release_local.sh
+```
+
+Do not report test or workflow success unless the command actually ran on the active checkout.
 
 [Back to top](#top)
 
 ---
 
-## Adding or changing a workflow
+## Changing workflows
 
-Before adding a workflow YAML file, fill this review card in the PR body or an adjacent runbook.
+Use this review card for workflow changes.
 
 | Question | Required answer |
 | --- | --- |
-| What trust gap does this workflow close? | Must name the validation, runtime, policy, release, correction, or rollback risk. |
-| What root owns the objects being checked? | Example: `schemas/`, `policy/`, `tests/`, `data/receipts/`, `release/`. |
-| What inputs are accepted? | Must exclude secrets and unsafe lifecycle stages unless the job is explicitly restricted. |
-| What does the workflow emit? | Summary, report, receipt, proof reference, artifact, annotation, or release candidate. |
-| What is the failure mode? | `DENY`, `ABSTAIN`, `ERROR`, or reviewer-held `REVIEWABLE PASS`. |
-| Does it call live sources? | Default answer should be no for PR CI. If yes, document approval and cache/freshness policy. |
-| Does it publish? | Default answer should be no. Publication requires promotion governance. |
-| How is rollback handled? | Revert workflow PR, disable job, or repoint release alias while preserving receipts/proofs. |
+| What trust gap does this workflow close? | Name the validation, source, policy, runtime, release, correction, or rollback risk. |
+| Which responsibility roots does it touch? | Identify `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `tools/`, `release/`, `data/`, or domain paths. |
+| What triggers it? | `push`, `pull_request`, path filters, `workflow_dispatch`, schedule, or other event. |
+| What permissions does it request? | Start at `contents: read`; justify any write scope. |
+| What does it emit? | Summary, report, receipt, validation report, artifact, proof reference, or release candidate. |
+| What can fail closed? | Required failure mode should be `DENY`, `ABSTAIN`, or `ERROR`, not silent warning. |
+| Does it call live sources? | Default should be no for PR CI. Document approval if yes. |
+| Does it publish? | Default should be no. Publication requires governed release state. |
+| How is rollback handled? | Revert, disable, rerun receipts/proofs, or mark affected release candidate blocked. |
 
-[Back to top](#top)
-
----
-
-## Minimal workflow template
-
-Use this only as a starting point after the repo toolchain is verified.
+### Minimal hardened workflow shape
 
 ```yaml
 name: verify-example
@@ -323,22 +340,34 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Inspect scope
-        run: |
-          git status --short
-          find .github/workflows -maxdepth 1 -type f | sort
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Run repo-native validation
         run: |
-          echo "TODO: replace with verified repo-native command"
-          echo "Expected examples: make test, pytest, pnpm test, schema validator, or policy test harness"
+          set -euo pipefail
+          echo "Replace with verified repo-native command."
 
       - name: Write reviewer summary
         if: always()
@@ -346,16 +375,13 @@ jobs:
           {
             echo "## KFM workflow summary"
             echo ""
-            echo "- Outcome: TODO"
-            echo "- Scope: TODO"
-            echo "- Receipts: TODO"
-            echo "- Proof refs: TODO"
-            echo "- Rollback note: TODO"
+            echo "- Outcome: NEEDS_VERIFICATION"
+            echo "- Scope: workflow template only"
+            echo "- Receipts: none"
+            echo "- Proof refs: none"
+            echo "- Rollback: revert workflow change"
           } >> "$GITHUB_STEP_SUMMARY"
 ```
-
-> [!WARNING]
-> Do not copy this template into an active merge-blocking lane until the package manager, test runner, schema validator, policy engine, artifact retention, and required checks have been verified.
 
 [Back to top](#top)
 
@@ -363,19 +389,22 @@ jobs:
 
 ## Review gates
 
-A workflow change is not ready unless reviewers can answer “yes” to each applicable gate.
+A workflow PR is not ready until reviewers can answer every applicable item.
 
-- [ ] Directory placement is justified under `.github/workflows/`.
-- [ ] The workflow does not create a new schema, policy, source, release, proof, or registry authority home.
-- [ ] Permissions are minimal and documented.
-- [ ] PR CI uses deterministic fixtures unless live source access is explicitly approved.
-- [ ] Failure is fail-closed, not warning-only, for trust-bearing checks.
-- [ ] Workflow output distinguishes receipts from proof objects.
-- [ ] Workflow summaries avoid secrets, restricted geometry, RAW/WORK/QUARANTINE, and direct model output.
-- [ ] Runtime checks use governed envelopes and finite outcomes.
-- [ ] Publication-significant jobs require release evidence, review, correction path, and rollback target.
-- [ ] Rollback for the workflow change itself is documented.
-- [ ] Any new required check is coordinated with branch protection and maintainer ownership.
+- [ ] Active workflow inventory was rechecked.
+- [ ] The workflow belongs in `.github/workflows/` and does not create a new authority home.
+- [ ] Triggers are scoped to the intended risk surface.
+- [ ] Permissions are explicit and least-privilege.
+- [ ] External actions are justified and version-pinned or otherwise reviewed.
+- [ ] PR CI behavior is deterministic unless live-source access is explicitly approved.
+- [ ] The workflow calls repo-owned scripts or tools rather than burying complex logic in YAML.
+- [ ] Failure is fail-closed for trust-bearing gates.
+- [ ] Logs and artifacts avoid secrets, restricted geometry, RAW/WORK/QUARANTINE, and direct model output.
+- [ ] Receipts and proof objects remain distinct.
+- [ ] Promotion or release jobs remain dry-run or review-gated unless a governed release path is explicitly invoked.
+- [ ] Rollback or disablement path is documented.
+- [ ] Required-check and branch-protection impacts are verified outside the repo files.
+- [ ] Adjacent docs are updated when contributor behavior changes.
 
 [Back to top](#top)
 
@@ -383,19 +412,22 @@ A workflow change is not ready unless reviewers can answer “yes” to each app
 
 ## Rollback
 
-For a workflow-only change:
+Workflow rollback should preserve audit evidence.
+
+| Situation | Response |
+| --- | --- |
+| Bad workflow-only change | Revert the workflow commit. |
+| Noisy or unsafe workflow after merge | Disable the workflow in GitHub Actions or revert the file, then preserve logs and artifacts. |
+| Bad promotion dry-run output | Mark the candidate blocked, preserve the receipt trail, fix the generator or fixture, and rerun reconciliation. |
+| Bad release-significant artifact | Open or update the relevant correction notice or rollback card; do not delete audit history. |
+| Permission overreach | Revert permission expansion first, then inspect Actions logs for unexpected write behavior. |
+| Required check misconfiguration | Update branch/ruleset settings through GitHub platform controls and document the platform-side change. |
+
+For a workflow-only revert:
 
 ```bash
 git revert <workflow-change-commit>
 ```
-
-For an unsafe or noisy workflow after merge:
-
-1. Disable the workflow in GitHub Actions or revert the workflow file.
-2. Preserve run logs and uploaded artifacts needed for audit.
-3. Open a correction issue if the workflow produced misleading status, summaries, receipts, proof references, or release-candidate output.
-4. If a release candidate depended on the bad workflow, mark the candidate blocked and rerun release evidence after the workflow is fixed.
-5. If published material was affected, use the governed correction and rollback path rather than deleting published history.
 
 [Back to top](#top)
 
@@ -403,44 +435,74 @@ For an unsafe or noisy workflow after merge:
 
 ## Open verification
 
-These items must be checked in the active repository before this README is treated as authoritative:
+These items must be verified before this README can move beyond `draft`.
 
-| Item | Status |
-| --- | --- |
-| Exact checked-in workflow YAML inventory | `NEEDS VERIFICATION` |
-| `.github/CODEOWNERS` coverage for `.github/workflows/` | `NEEDS VERIFICATION` |
-| Required checks and branch/ruleset enforcement | `NEEDS VERIFICATION` |
-| GitHub environment approvals for release or promotion jobs | `NEEDS VERIFICATION` |
-| OIDC, signing, artifact retention, and attestation wiring | `NEEDS VERIFICATION` |
-| Repo package manager and test runners | `NEEDS VERIFICATION` |
-| Schema validator, policy engine, and workflow-local actions | `NEEDS VERIFICATION` |
-| Whether soil-moisture runtime proof is still the active first proof lane | `NEEDS VERIFICATION` |
-| Whether watcher workflows are docs-only or live orchestration | `NEEDS VERIFICATION` |
-| Whether generated summaries are reviewed by humans before promotion | `NEEDS VERIFICATION` |
+| Item | Status | Why it matters |
+| --- | --- | --- |
+| `doc_id` | `NEEDS_VERIFICATION` | Required for stable document identity. |
+| Owners for `.github/workflows/` | `NEEDS_VERIFICATION` | Observed CODEOWNERS file is not enough to prove reviewer routing. |
+| CODEOWNERS content and coverage | `NEEDS_VERIFICATION` | The observed file exists but owner coverage must be populated or intentionally documented. |
+| PR template content | `NEEDS_VERIFICATION` | The observed file exists but reviewer checklist content must be populated or intentionally documented. |
+| Branch protection and required checks | `NEEDS_VERIFICATION` | Not stored in workflow YAML. |
+| GitHub environment approvals | `NEEDS_VERIFICATION` | Needed before release or promotion behavior can be claimed. |
+| Artifact retention and log-retention policy | `NEEDS_VERIFICATION` | Determines audit durability. |
+| OIDC, signing, and attestation wiring | `NEEDS_VERIFICATION` | Required before claiming provenance or signing maturity. |
+| Whether `synthetic-release-dry-run.yml` should add explicit `permissions: contents: read` | `PROPOSED` | Aligns with least-privilege workflow posture. |
+| Whether `synthetic-release-dry-run.yml` should add concurrency and timeout | `PROPOSED` | Aligns with existing baseline workflow hygiene. |
+| Whether workflow success is merge-blocking | `NEEDS_VERIFICATION` | Requires platform settings, not just files. |
+| Whether generated receipts/proofs are sufficient for release review | `NEEDS_VERIFICATION` | Requires emitted artifacts and reviewer expectations. |
 
 [Back to top](#top)
 
 ---
 
 <details>
-<summary>Appendix: starter reconstitution shape</summary>
+<summary><strong>Appendix: observed command and helper map</strong></summary>
 
-The following shape is a proposed starter map for a mature workflow directory. Do not create these files all at once. Add only the smallest useful lane with tests, ownership, failure behavior, and rollback.
+### `baseline.yml` helper families
 
-```text
-.github/workflows/
-├── README.md
-├── verify-docs.yml
-├── verify-contracts-and-policy.yml
-├── verify-tests-and-reproducibility.yml
-├── verify-runtime.yml
-├── runtime-proof-soil-moisture.yml
-├── incremental-stac-watcher.yml
-├── release-evidence.yml
-├── promote-and-reconcile.yml
-└── rehearse-rollback-and-correction.yml
+`baseline.yml` currently calls broad validation families, including:
+
+- repository structure
+- fixture validation
+- schema conformance
+- fixture-to-schema mapping
+- documentation truth labels
+- directory rules
+- public/internal path guards
+- source rights, probes, activation, attribution, and semantics
+- API contracts
+- promotion receipt determinism
+- release manifest consistency
+- hydrology source profiles and observation semantics
+- dry-run metadata probes
+- Python unittest discovery
+- aggregate validation through `scripts/validate_all.sh`
+
+### `promote-and-reconcile.yml` helper families
+
+`promote-and-reconcile.yml` currently checks:
+
+- repository and governed boundaries
+- release and publication gates
+- hydrology release manifest and proof-slice validators
+- public Focus answer validation
+- promotion dry-run output
+- promotion receipt determinism
+- drift in tracked dry-run receipt/proof fixture paths
+- release-focused unit tests
+- receipt artifact upload
+
+### `synthetic-release-dry-run.yml` helper path
+
+`synthetic-release-dry-run.yml` runs:
+
+```bash
+bash scripts/check_synthetic_release_local.sh
 ```
 
-Design rule: grow this directory only when a workflow has a clear doctrinal basis, explicit blocking conditions, and a documented rollback or correction consequence.
+That script currently runs fixture, source-terms, activation, evidence-closure, public-path guard, and synthetic release dry-run validators, then prints that publish remains refused by dry-run policy.
 
 </details>
+
+[Back to top](#top)
