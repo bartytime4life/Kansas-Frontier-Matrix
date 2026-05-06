@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix
 
-A governed, evidence-first, map-first, time-aware spatial knowledge and publication system for inspectable Kansas-centered claims.
+A governed, evidence-first, map-first, time-aware spatial knowledge and publication system for inspectable Kansas-first claims.
 
 > [!NOTE]
 > **Status:** `draft`  
@@ -43,7 +43,7 @@ A governed, evidence-first, map-first, time-aware spatial knowledge and publicat
 
 Kansas Frontier Matrix, or KFM, is a governed spatial evidence system. It is designed to help people inspect how evidence becomes a map feature, a story, a dashboard value, an API response, a release artifact, or a bounded AI answer.
 
-The durable unit of value is the **inspectable claim**: a public or semi-public statement whose evidence, source role, spatial scope, temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
+The durable and auditable public unit of value is the **inspectable claim**: a public or semi-public statement whose evidence, source role, spatial scope, temporal scope, policy posture, review state, release state, and correction lineage can be inspected.
 
 KFM is **not** just a map viewer, database, AI assistant, graph, report generator, tile server, or GIS exercise. Maps, tiles, graphs, summaries, vector indexes, scenes, dashboards, exports, and AI answers are carriers of evidence. They are not sovereign truth.
 
