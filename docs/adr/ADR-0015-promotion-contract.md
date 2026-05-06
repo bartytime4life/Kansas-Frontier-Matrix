@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: TODO(assign kfm://doc UUID)
-title: ADR 0002: Promotion Contract
+title: ADR 0015: Promotion Contract
 type: standard
 version: v1
 status: published
@@ -13,7 +13,7 @@ tags: [kfm, adr, promotion, release-governance, policy-gates]
 notes: [ADR status is Accepted; metadata placeholders require maintainer verification before merge.]
 [/KFM_META_BLOCK_V2] -->
 
-# ADR 0002: Promotion Contract
+# ADR 0015: Promotion Contract
 
 Promotion is a governed release transition, not a file move.
 

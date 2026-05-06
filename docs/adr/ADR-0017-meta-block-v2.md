@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 meta:
   schema: meta-block-v2
-  standard_id: ADR-0004-META-BLOCK-V2
+  standard_id: ADR-0017-META-BLOCK-V2
   title: Meta Block V2
   version: 1.0.0
   status: accepted
@@ -27,7 +27,7 @@ meta:
       summary: Initial version
 [/KFM_META_BLOCK_V2] -->
 
-# ADR 0004: Meta Block V2
+# ADR 0017: Meta Block V2
 
 > **Status:** Accepted  
 > **Repo path:** `docs/adr/ADR-0017-meta-block-v2.md`  

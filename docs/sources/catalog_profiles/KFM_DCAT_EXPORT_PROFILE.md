@@ -10,7 +10,7 @@ updated: 2026-05-03
 policy_label: public
 related: [
   docs/adr/ADR-0001-schema-home.md,
-  docs/adr/ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md,
+  docs/adr/ADR-0018-prov-stac-dcat-catalog-mapping.md,
   docs/sources/catalog_profiles/KFM_STAC_EXTENSION_PROFILE.md,
   contracts/v1/catalog/dcat/kfm_dcat_dataset.schema.json,
   contracts/v1/provenance/kfm_prov_sidecar.schema.json,

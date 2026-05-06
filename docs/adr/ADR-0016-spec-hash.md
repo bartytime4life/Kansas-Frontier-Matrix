@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS-VERIFICATION
-title: ADR 0003: Canonical spec_hash
+title: ADR 0016: Canonical spec_hash
 type: standard
 version: v1
 status: review
@@ -15,7 +15,7 @@ notes: [ADR decision status remains Accepted. Meta status is review because this
 
 <a id="top"></a>
 
-# ADR 0003: Canonical `spec_hash`
+# ADR 0016: Canonical `spec_hash`
 
 Defines the reproducible KFM `EvidenceBundle` digest used by promotion Gate `A` to verify release-candidate evidence integrity.
 
@@ -57,7 +57,7 @@ This ADR is governing for the `canonical-json-v1` `spec_hash` algorithm unless a
 
 | Field | Value |
 | --- | --- |
-| ADR ID | `0003` |
+| ADR ID | `0016` |
 | Title | Canonical `spec_hash` |
 | Status | `Accepted` |
 | Decision confidence | `CONFIRMED` for the algorithm as written in this ADR and implemented by `tools/validators/check_spec_hash.py`; `NEEDS VERIFICATION` for CI enforcement and promotion-contract path alignment |

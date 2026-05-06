@@ -151,10 +151,10 @@ Do **not** use `docs/adr/` as the primary home for the following:
 | [`ADR-TEMPLATE.md`](./ADR-TEMPLATE.md) | ADR authoring standard | `CONFIRMED` | Use as the default ADR structure unless an accepted local convention supersedes it. |
 | [`ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | Canonical schema home | `CONFIRMED / proposed-draft decision` | Proposes `schemas/contracts/v1/` as canonical machine-contract home; acceptance gates remain visible. |
 | [`ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md) | Responsibility-root layout | `CONFIRMED / accepted decision` | Establishes that root folders are repo-wide responsibility boundaries, not topic buckets. |
-| `0001-truth-path.md` | Truth path | `SURFACED / NEEDS VERIFICATION` | Verify title, status, and relationship to current trust-law docs. |
-| `0002-promotion-contract.md` | Promotion contract | `SURFACED / NEEDS VERIFICATION` | Verify whether superseded by promotion-gate or release ADRs. |
-| `0003-spec-hash.md` | Deterministic spec hash | `SURFACED / NEEDS VERIFICATION` | Verify relationship to receipt/proof/release hashing docs. |
-| `0004-meta-block-v2.md` | KFM Meta Block v2 | `SURFACED / NEEDS VERIFICATION` | Verify whether it governs all standard docs or only selected docs. |
+| `ADR-0014-truth-path.md` | Truth path | `SURFACED / NEEDS VERIFICATION` | Verify title, status, and relationship to current trust-law docs. |
+| `ADR-0015-promotion-contract.md` | Promotion contract | `SURFACED / NEEDS VERIFICATION` | Verify whether superseded by promotion-gate or release ADRs. |
+| `ADR-0016-spec-hash.md` | Deterministic spec hash | `SURFACED / NEEDS VERIFICATION` | Verify relationship to receipt/proof/release hashing docs. |
+| `ADR-0017-meta-block-v2.md` | KFM Meta Block v2 | `SURFACED / NEEDS VERIFICATION` | Verify whether it governs all standard docs or only selected docs. |
 
 ### Core trust-object and publication ADRs
 
@@ -165,7 +165,7 @@ Do **not** use `docs/adr/` as the primary home for the following:
 | `ADR-0004-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema/contract/policy alignment. |
 | `ADR-0005-promotion-gate.md` | Promotion gate | `SURFACED / NEEDS VERIFICATION` | Verify relation to release manifests and policy obligation gates. |
 | `ADR-0011-catalog-proof-release-separation.md` | Catalog / proof / release separation | `SURFACED / NEEDS VERIFICATION` | Should remain prominent because KFM separates proof, release, and publication. |
-| `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` | Catalog standards mapping | `SURFACED / NEEDS VERIFICATION` | Verify current STAC/DCAT/PROV profile alignment. |
+| `ADR-0018-prov-stac-dcat-catalog-mapping.md` | Catalog standards mapping | `SURFACED / NEEDS VERIFICATION` | Verify current STAC/DCAT/PROV profile alignment. |
 | `ADR-0241-policy-obligation-engine-and-release-gate.md` | Policy obligation and release gate | `SURFACED / NEEDS VERIFICATION` | Verify whether this supersedes older policy-home or promotion-gate decisions. |
 
 ### Policy, security, sensitivity, and consent ADRs
@@ -215,8 +215,8 @@ KFM ADR filenames currently show multiple patterns. Treat numbers as helpful lab
 | Pattern | Example | Status | Guidance |
 |---|---|---:|---|
 | Canonical ADR prefix | `ADR-0001-schema-home.md` | `CONFIRMED` | Preferred for new repo-wide ADRs unless a newer convention is accepted. |
-| Numeric-only legacy prefix | `0001-truth-path.md` | `SURFACED / NEEDS VERIFICATION` | Preserve as lineage; do not silently rename without migration notes. |
-| Topic-specific ADR prefix | `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` | `SURFACED / NEEDS VERIFICATION` | Keep if already linked; consider registry entry for discoverability. |
+| Numeric-only legacy prefix | `0001-truth-path.md` (renamed to `ADR-0014-truth-path.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
+| Topic-specific ADR prefix | `ADR-PROV-STAC-DCAT-CATALOG-MAPPING.md` (renamed to `ADR-0018-prov-stac-dcat-catalog-mapping.md`) | `RENAMED` | Renamed to canonical `ADR-00NN` prefix with migration notes in this index. |
 | Date-ish or packet-derived ID | `ADR-0427-consent-vc-and-revocation-delta.md` | `SURFACED / NEEDS VERIFICATION` | Verify whether ID encodes date, packet, or decision family. |
 | Duplicate numeric prefixes | multiple `ADR-0002`, `ADR-0004`, etc. | `SURFACED / CONFLICT WATCH` | Do not assume number uniqueness until a registry resolves collisions. |
 
