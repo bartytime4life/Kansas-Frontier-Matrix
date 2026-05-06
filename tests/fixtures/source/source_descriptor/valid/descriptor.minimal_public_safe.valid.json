@@ -1,0 +1,47 @@
+{
+  "version": "v1",
+  "kind": "SourceDescriptor",
+  "identity": {
+    "source_id": "example_public_source",
+    "title": "Example Public Source",
+    "provider": "Example Provider"
+  },
+  "role_and_scope": {
+    "source_role": "direct_observation_measurement",
+    "primary_lane": "reference",
+    "publication_intent": "fixture_only"
+  },
+  "access": {
+    "mode": "documented_public_http",
+    "auth_model": "none_documented",
+    "preferred_surfaces": [
+      "https://example.org/data"
+    ]
+  },
+  "rights_and_sensitivity": {
+    "public_use_with_citation": true,
+    "redistribution_posture": "public_metadata_only",
+    "sensitivity_posture": "public_safe_fixture_only"
+  },
+  "support": {
+    "temporal": {
+      "basis": "observation_time",
+      "documented_intervals": [
+        "daily"
+      ]
+    },
+    "spatial": {
+      "crs": "EPSG:4326",
+      "precision_served": "generalized_fixture"
+    }
+  },
+  "validation": {
+    "required_checks": [
+      "source_identity_present",
+      "source_role_present",
+      "documented_access_mode",
+      "rights_posture_present",
+      "temporal_support_explicit"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "run_id": "run-fixture-001",
+  "budget_decision": "allow",
+  "failure_reasons": [],
+  "public_safe": true,
+  "tile_url_redaction": "redacted",
+  "contains_sensitive_geometry": false
+}

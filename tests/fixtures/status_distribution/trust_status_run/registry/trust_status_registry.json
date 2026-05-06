@@ -1,0 +1,1 @@
+{"registry_hash":"rh1","objects":[{"trust_object_id":"obj1","current_status":"active"},{"trust_object_id":"obj2","current_status":"revoked"},{"trust_object_id":"obj3","current_status":"suspended"}]}

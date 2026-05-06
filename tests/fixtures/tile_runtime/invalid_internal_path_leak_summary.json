@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "tile_id": "z4x2y7",
+      "verify": "ok",
+      "decode_ms": 17
+    },
+    {
+      "tile_id": "z4x2y8",
+      "verify": "ok",
+      "decode_ms": 31
+    },
+    {
+      "path": "/workspace/Kansas-Frontier-Matrix/private"
+    }
+  ],
+  "redacted": true
+}
