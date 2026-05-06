@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["correction_receipt_id","publication_package_id","corrected_publication_package_id","changed_fields","kfm:spec_hash"]}

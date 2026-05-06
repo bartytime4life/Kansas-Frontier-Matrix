@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "object_type",
+    "schema_version",
+    "index_id",
+    "items"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "PublicCorrectionIndex"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "index_id": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "event_id",
+          "public_notice_path"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string"
+          },
+          "public_notice_path": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}

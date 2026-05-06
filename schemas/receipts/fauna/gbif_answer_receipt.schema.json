@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "query_id",
+    "answer_id",
+    "policy_version",
+    "rights_posture_checked",
+    "sensitivity_posture_checked",
+    "geoprivacy_checked",
+    "kfm:spec_hash",
+    "created_at"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string"
+    },
+    "query_id": {
+      "type": "string"
+    },
+    "answer_id": {
+      "type": "string"
+    },
+    "policy_version": {
+      "type": "string"
+    },
+    "rights_posture_checked": {
+      "const": true
+    },
+    "sensitivity_posture_checked": {
+      "const": true
+    },
+    "geoprivacy_checked": {
+      "const": true
+    },
+    "kfm:spec_hash": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}
