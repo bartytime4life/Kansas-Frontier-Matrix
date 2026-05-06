@@ -1,0 +1,26 @@
+{
+  "bundle_classification": "internal_sensitive",
+  "checksum_status": "PASS",
+  "created_at": "2026-01-01T00:00:00Z",
+  "disclaimer_status": "PASS",
+  "gate_readiness_summary_id": "kfm:air_quality:airnow:gate_readiness_summary:v1:f6f9192409387716bbe52d914516632e358675811feaa46e3cfe05b3cc93871a",
+  "governance_status": "PASS",
+  "human_docs_coordinate_redaction_status": "PASS",
+  "internal_review_status": "DENY",
+  "manifest_id": "airnow-layer7-release-gate-fixture-001",
+  "object_type": "AirNowGateReadinessSummary",
+  "positive_decision_ceiling": "ALLOW_INTERNAL_REVIEW_ONLY",
+  "public_release_status": "DENIED_BY_POLICY",
+  "readiness_status": "NEEDS_REMEDIATION",
+  "receipt_chain_status": "PASS",
+  "required_check_counts": {
+    "ABSTAIN": 0,
+    "DENY": 0,
+    "FAIL": 1,
+    "PASS": 35,
+    "WARN": 0
+  },
+  "schema_validation_status": "PASS",
+  "schema_version": "v1",
+  "source_id": "airnow"
+}
