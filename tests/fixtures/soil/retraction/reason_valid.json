@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","reason_type":"errata","severity":"medium","requested_by":"steward","reason":"Deterministic test correction","evidence_refs":["kfm://evidence/test/1"],"steward_review":{"required":true,"decision":"approved"}}

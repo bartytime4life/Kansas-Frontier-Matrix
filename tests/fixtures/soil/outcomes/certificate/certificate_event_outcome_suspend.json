@@ -1,0 +1,17 @@
+{
+  "schema_version": "kfm.v1",
+  "object_type": "SoilCertificateEventOutcomeRequest",
+  "domain": "soil",
+  "execution_id": "x1",
+  "dispatch_id": "d1",
+  "event_type": "suspend",
+  "event_status": "confirmed",
+  "certificate_status_after": "suspended",
+  "certificate_event_receipt_ref": "r1",
+  "public_message": "msg",
+  "evidence_refs": [],
+  "steward_review": {
+    "required": true,
+    "decision": "approved"
+  }
+}

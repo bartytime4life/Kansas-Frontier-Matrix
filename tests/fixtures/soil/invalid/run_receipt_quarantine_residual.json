@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "validation_summary": {"decision": "quarantine"},
+  "metrics": {"masked_pct": 8, "zscore_30d_max": 1.2, "station_grid_residual_max": 0.13},
+  "flags": {"zscore_flag": false, "residual_sustained": true},
+  "decision": "quarantine",
+  "evidence_bundle_ref": "kfm://evidence/soil/run-003",
+  "signatures": ["sig-1"],
+  "policy_label": "public"
+}

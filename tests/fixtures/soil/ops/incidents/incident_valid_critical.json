@@ -1,0 +1,1 @@
+{"schema_version":"kfm.v1","incident_type":"availability","severity":"critical","status":"investigating","affected_release_id":"soil-test-release","summary":"major outage","public_message":"Service disruption under investigation.","evidence_refs":[],"steward_review":{"required":true,"decision":"approved"}}
