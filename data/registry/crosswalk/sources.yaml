@@ -1,0 +1,27 @@
+version: v1
+updated: "2026-04-28"
+status: draft
+policy_posture: fail_closed
+
+sources:
+  - source_id: usgs_wbd_huc12
+    title: USGS Watershed Boundary Dataset (HUC12)
+    source_role: HYDROLOGIC_BOUNDARY
+    steward: USGS
+    rights_default: public
+    cadence: periodic
+    trust_tier: high
+    notes:
+      - Canonical hydrologic unit source for HUC12 geometry.
+      - Use snapshot/version metadata in run receipts and spec hashing.
+
+  - source_id: census_tiger
+    title: US Census TIGER administrative boundaries
+    source_role: ADMINISTRATIVE_BOUNDARY
+    steward: US Census Bureau
+    rights_default: public
+    cadence: annual
+    trust_tier: high
+    notes:
+      - Administrative boundary source used for county and related geographies.
+      - Must not be interpreted as hydrologic truth.

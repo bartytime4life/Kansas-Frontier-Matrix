@@ -1,0 +1,124 @@
+version: v1
+updated: "2026-04-28"
+status: draft
+policy_posture: fail_closed
+
+policies:
+  - policy_id: ecology_public_taxon_publication
+    legacy_policy_id: eco-public-v1
+    applies_to:
+      - public
+      - TaxonRecord
+    decision: allow
+    surface: public
+    requires:
+      - rights_status in [public, open]
+      - policy_label is public
+      - evidence_refs present
+      - evidence_bundle_resolved true
+      - spec_hash valid
+    denies:
+      - unknown_rights
+      - missing_evidence_refs
+      - unresolved_evidence_bundle
+      - invalid_spec_hash
+    notes:
+      - "Public taxon records are naming authority context, not occurrence proof."
+
+  - policy_id: ecology_public_derived_layer_publication
+    legacy_policy_id: eco-public-v1
+    applies_to:
+      - public_after_catalog_closure
+      - DerivedVegetationLayer
+      - HabitatAssignment
+    decision: allow
+    surface: public
+    requires:
+      - rights_status in [public, open]
+      - policy_label in [public, public_after_catalog_closure]
+      - catalog_closure true
+      - catalog_refs present
+      - derived/model context label preserved
+      - evidence_refs present
+      - evidence_bundle_resolved true
+      - spec_hash valid
+    denies:
+      - derived_layer_as_confirmed_truth
+      - derived_layer_missing_catalog_closure
+      - unknown_rights
+      - missing_evidence_refs
+      - unresolved_evidence_bundle
+      - invalid_spec_hash
+    notes:
+      - "Derived outputs must remain labeled as derived/model context."
+
+  - policy_id: ecology_sensitive_occurrence_publication
+    legacy_policy_ids:
+      - eco-generalize-v1
+      - eco-restricted-v1
+      - eco-review-required-v1
+    applies_to:
+      - generalize
+      - restricted
+      - review_required
+      - ObservationPlot
+      - SensitiveOccurrenceRecord
+      - EcologyObservationBundle
+    decision: generalize_or_hold_or_deny
+    surface: public
+    requires:
+      - no exact coordinates in public outputs
+      - redaction_receipt_ref present when public_visibility is generalized
+      - public_geometry_policy present when geometry is sensitive
+      - evidence_refs present
+      - evidence_bundle_resolved true
+      - rights_status not unknown
+      - spec_hash valid
+    denies:
+      - sensitive_exact_geometry_not_publishable
+      - restricted_exact_geometry_not_allowed
+      - exact_geometry_requires_generalization
+      - missing_redaction_receipt
+      - unknown_rights
+      - unresolved_evidence_bundle
+      - internal_only_not_publishable
+    holds:
+      - requires_steward_review
+    notes:
+      - "Exact sensitive occurrence geometry is restricted by default."
+      - "Public release requires suppression, generalization, or another reviewed geoprivacy transform."
+
+  - policy_id: eco-public-v1
+    status: legacy_alias
+    applies_to:
+      - public
+    decision: allow
+    requires:
+      - rights_status in [public, open]
+      - evidence_refs present
+
+  - policy_id: eco-generalize-v1
+    status: legacy_alias
+    applies_to:
+      - generalize
+    decision: generalize
+    requires:
+      - generalization_method present
+      - precision_served not exact
+      - evidence_refs present
+
+  - policy_id: eco-restricted-v1
+    status: legacy_alias
+    applies_to:
+      - restricted
+    decision: deny
+    requires:
+      - no exact coordinates in public outputs
+
+  - policy_id: eco-review-required-v1
+    status: legacy_alias
+    applies_to:
+      - review_required
+    decision: hold
+    requires:
+      - explicit reviewer decision before publication

@@ -1,0 +1,98 @@
+version: v1
+updated: "2026-04-28"
+status: draft
+policy_posture: fail_closed
+
+datasets:
+  - dataset_id: ecology.taxon_record.v1
+    title: Normalized ecological taxon records
+    source_refs:
+      - usda_plants
+      - gbif_occurrence
+    schema_ref: schemas/contracts/v1/ecology/taxon_record.schema.json
+    object_type: TaxonRecord
+    sensitivity_default: public
+    rights_default: public
+    policy_label: public
+    policy_id: ecology_public_taxon_publication
+    publication_state: published
+    evidence_bundle_required: true
+    spec_hash_required: true
+    notes:
+      - "Taxonomic backbone dataset; distribution context is not direct occurrence proof."
+
+  - dataset_id: ecology.observation_plot.v1
+    title: Plot-level ecological observations
+    source_refs:
+      - kfs_field_plots
+      - usfs_fia
+    schema_ref: schemas/contracts/v1/ecology/observation_plot.schema.json
+    object_type: ObservationPlot
+    sensitivity_default: review_required
+    rights_default: controlled
+    policy_label: restricted_until_reviewed
+    policy_id: ecology_sensitive_occurrence_publication
+    publication_state: reviewed
+    evidence_bundle_required: true
+    spec_hash_required: true
+    geoprivacy_review_required: true
+    notes:
+      - "Plot-level geometry must not be public unless explicitly reviewed or generalized."
+
+  - dataset_id: ecology.derived_vegetation_layer.v1
+    title: Derived vegetation layer descriptors
+    source_refs:
+      - ndvi_derived_layers
+      - landfire_evt_evc_evh
+    schema_ref: schemas/contracts/v1/ecology/derived_vegetation_layer.schema.json
+    object_type: DerivedVegetationLayer
+    sensitivity_default: public
+    rights_default: open
+    policy_label: public_after_catalog_closure
+    policy_id: ecology_public_derived_layer_publication
+    publication_state: published
+    catalog_closure_required: true
+    evidence_bundle_required: true
+    spec_hash_required: true
+    notes:
+      - "Derived/model layers must remain labeled as derived context, not confirmed observation."
+
+  - dataset_id: ecology.sensitive_occurrence_record.v1
+    title: Restricted sensitive occurrence records
+    source_refs:
+      - gbif_occurrence
+      - kfs_field_plots
+      - heritage_natureserve
+    schema_ref: schemas/contracts/v1/ecology/sensitive_occurrence_record.schema.json
+    object_type: SensitiveOccurrenceRecord
+    sensitivity_default: restricted
+    rights_default: controlled
+    policy_label: restricted
+    policy_id: ecology_sensitive_occurrence_publication
+    publication_state: restricted
+    geoprivacy_review_required: true
+    redaction_receipt_required: true
+    evidence_bundle_required: true
+    spec_hash_required: true
+    notes:
+      - "Exact sensitive occurrence geometry is restricted by default."
+      - "Public outputs require reviewed suppression or generalization."
+
+  - dataset_id: habitat_assignment_demo
+    title: Demo habitat assignment fixtures
+    source_refs:
+      - ndvi_derived_layers
+      - kfs_field_plots
+    schema_ref: schemas/contracts/v1/ecology/habitat_assignment.schema.json
+    object_type: HabitatAssignment
+    sensitivity_default: public
+    rights_default: open
+    policy_label: public
+    policy_id: ecology_public_derived_layer_publication
+    publication_state: published
+    catalog_closure_required: true
+    evidence_bundle_required: true
+    spec_hash_required: true
+    notes:
+      - "Fixture-facing dataset ID used by HabitatAssignment valid examples."
+      - "Derived context only; must not imply confirmed occurrence truth."

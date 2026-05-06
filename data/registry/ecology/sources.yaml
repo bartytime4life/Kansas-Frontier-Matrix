@@ -1,0 +1,195 @@
+version: v1
+updated: "2026-04-28"
+status: draft
+policy_posture: fail_closed
+
+sources:
+  - source_id: gbif_occurrence
+    title: Global Biodiversity Information Facility (GBIF) occurrences
+    source_role: AGGREGATOR
+    steward: GBIF Secretariat
+    rights_default: mixed
+    cadence: daily
+    trust_tier: medium
+    default_lifecycle_entry: raw
+    default_policy_label: restricted_until_record_review
+    sensitivity_class: variable
+    public_release_allowed: conditional
+    publication_requirements:
+      - upstream_attribution_required
+      - per_record_rights_required
+      - sensitivity_review_required
+      - evidence_bundle_required
+      - source_descriptor_required
+    quarantine_triggers:
+      - missing_attribution
+      - unknown_rights
+      - sensitive_coordinates
+      - schema_failure
+    notes:
+      - "Upstream attribution must be preserved per record."
+      - "Sensitivity class must be evaluated prior to publication."
+      - "Do not treat aggregated occurrence data as confirmed KFM truth without review."
+
+  - source_id: usda_plants
+    title: USDA PLANTS taxonomy and distribution reference
+    source_role: TAXONOMIC_AUTHORITY
+    steward: USDA NRCS
+    rights_default: public
+    cadence: periodic
+    trust_tier: high
+    default_lifecycle_entry: raw
+    default_policy_label: public
+    sensitivity_class: low
+    public_release_allowed: true
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - spec_hash_required
+      - image_rights_review_if_used
+    quarantine_triggers:
+      - missing_source_snapshot
+      - unknown_rights
+      - schema_failure
+    notes:
+      - "Preferred authority for standardized plant naming in this lane."
+      - "Use as taxonomic backbone; distribution context is not direct field confirmation."
+
+  - source_id: kfs_field_plots
+    title: Kansas field survey plot observations
+    source_role: OBSERVATION_SYSTEM
+    steward: Kansas Frontier Matrix partners
+    rights_default: controlled
+    cadence: seasonal
+    trust_tier: high
+    default_lifecycle_entry: raw
+    default_policy_label: restricted_until_reviewed
+    sensitivity_class: moderate_to_high
+    public_release_allowed: conditional
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - geometry_review_required
+      - access_rights_review_required
+      - temporal_scope_required
+    quarantine_triggers:
+      - sensitive_coordinates
+      - private_access_site
+      - missing_collection_date
+      - missing_units
+      - unknown_rights
+      - schema_failure
+    notes:
+      - "Can contain sensitive coordinates and private-access sites."
+      - "Exact plot locations must not be public unless explicitly cleared."
+
+  - source_id: ndvi_derived_layers
+    title: NDVI-based vegetation derivatives
+    source_role: DERIVED_MODEL_LAYER
+    steward: KFM ecological modeling
+    rights_default: internal
+    cadence: monthly
+    trust_tier: medium
+    default_lifecycle_entry: work
+    default_policy_label: internal
+    sensitivity_class: low_to_moderate
+    public_release_allowed: conditional
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - derived_label_required
+      - model_or_processing_spec_required
+      - spec_hash_required
+      - catalog_closure_required
+    quarantine_triggers:
+      - missing_processing_spec
+      - missing_input_lineage
+      - missing_model_version
+      - schema_failure
+      - unknown_rights
+    notes:
+      - "Model output should be labeled as derived context, not direct occurrence evidence."
+      - "Do not publish as confirmed ecological condition without supporting evidence."
+
+  - source_id: usfs_fia
+    title: USFS Forest Inventory and Analysis / FIADB
+    source_role: OBSERVATION_SYSTEM
+    steward: USDA Forest Service
+    rights_default: public_or_controlled_by_table
+    cadence: annual_periodic
+    trust_tier: high
+    default_lifecycle_entry: raw
+    default_policy_label: restricted_until_reviewed
+    sensitivity_class: moderate
+    public_release_allowed: conditional
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - geometry_review_required
+      - temporal_scope_required
+      - sampling_limitations_required
+    quarantine_triggers:
+      - unresolved_plot_geometry_policy
+      - missing_measurement_date
+      - missing_units
+      - schema_failure
+      - unknown_rights
+    notes:
+      - "Treat as systematic forest observation evidence."
+      - "Plot geometry and sampling limitations require review before public exposure."
+
+  - source_id: landfire_evt_evc_evh
+    title: LANDFIRE Existing Vegetation Type / Cover / Height
+    source_role: DERIVED_MODEL_LAYER
+    steward: LANDFIRE
+    rights_default: public
+    cadence: periodic
+    trust_tier: medium
+    default_lifecycle_entry: raw
+    default_policy_label: public_after_catalog_closure
+    sensitivity_class: low
+    public_release_allowed: conditional
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - catalog_closure_required
+      - derived_label_required
+      - model_version_required
+      - spec_hash_required
+    quarantine_triggers:
+      - missing_model_version
+      - missing_raster_metadata
+      - missing_processing_lineage
+      - schema_failure
+      - unknown_rights
+    notes:
+      - "Must remain labeled as modeled or derived."
+      - "Must not be promoted as confirmed field observation without additional evidence."
+
+  - source_id: heritage_natureserve
+    title: Kansas Natural Heritage Inventory / NatureServe-style occurrence data
+    source_role: SENSITIVE_OCCURRENCE
+    steward: Kansas Natural Heritage / NatureServe affiliate
+    rights_default: restricted_or_dua_required
+    cadence: controlled
+    trust_tier: high
+    default_lifecycle_entry: quarantine
+    default_policy_label: restricted
+    sensitivity_class: high
+    public_release_allowed: false_for_exact_geometry
+    publication_requirements:
+      - evidence_bundle_required
+      - source_descriptor_required
+      - data_use_agreement_required
+      - geoprivacy_transform_required
+      - redaction_receipt_required
+      - reviewer_approval_required
+    quarantine_triggers:
+      - exact_sensitive_coordinates
+      - missing_data_use_agreement
+      - missing_redaction_receipt
+      - unknown_rights
+      - schema_failure
+    notes:
+      - "Exact locations are restricted by default."
+      - "Public outputs require reviewed generalization, suppression, or another geoprivacy transform."
