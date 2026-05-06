@@ -98,6 +98,7 @@ workflows:
   required_scripts: []
   required_package_managers:
   - bash
+  - python
   required_repo_paths:
   - release
   - data/receipts
