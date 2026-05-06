@@ -1,0 +1,12 @@
+{
+  "object_type": "AirNowArchivalFinalizationReceipt",
+  "publication_allowed": false,
+  "public_release_allowed": false,
+  "snapshot_export_execution_allowed": false,
+  "archive_transfer_allowed": false,
+  "file_deletion_allowed": false,
+  "legal_hold_creation_allowed": false,
+  "official_archive_certification_allowed": false,
+  "command_execution_allowed": false,
+  "final_accession_execution_allowed": false
+}

@@ -1,0 +1,6 @@
+{
+  "created_at": "2026-01-01T00:00:00Z",
+  "object_type": "AirNowSnapshotPolicyContinuityMatrix",
+  "policy_status": "CONTINUED",
+  "schema_version": "v1"
+}
