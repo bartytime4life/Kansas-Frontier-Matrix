@@ -1,71 +1,78 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-TEMPLATE
 title: ADR Template
 type: standard
 version: v1
 status: draft
 owners: OWNER_TBD_NEEDS_VERIFICATION
-created: NEEDS_VERIFICATION-YYYY-MM-DD
-updated: NEEDS_VERIFICATION-YYYY-MM-DD
+created: DATE_TBD_FROM_GIT_OR_DOC_REGISTRY
+updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
-related: [NEEDS_VERIFICATION:docs/adr/README.md, NEEDS_VERIFICATION:docs/registers/AUTHORITY_LADDER.md]
+related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0002-responsibility-root-monorepo.md, ./ADR-0017-meta-block-v2.md, ../doctrine/authority-ladder.md, ../registers/AUTHORITY_LADDER.md, ../registers/DRIFT_REGISTER.md, ../registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, adr, governance, architecture-decision, evidence, template]
-notes: [Standard template for KFM Architecture Decision Records. Verify doc_id, target path, owners, dates, policy label, and related links against the mounted repository and document registry before publishing.]
+notes: [Template for KFM Architecture Decision Records. Verify doc_id, created date, owners, policy label, CODEOWNERS coverage, ADR numbering policy, and registry links before publishing.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR Template
 
-> **Purpose:** Use this template to record Kansas Frontier Matrix architecture decisions with evidence, scope, policy impact, validation, rollback, and supersession visible at review time.
+Use this template to record Kansas Frontier Matrix architecture decisions with evidence, scope, policy impact, validation, rollback, and supersession visible at review time.
 
-KFM Architecture Decision Records are part of the governance surface. They should make decisions inspectable, not merely memorable.
+<p align="center">
+  <img alt="document: ADR template" src="https://img.shields.io/badge/document-ADR%20template-4051b5">
+  <img alt="status: draft" src="https://img.shields.io/badge/status-draft-ffb000">
+  <img alt="owners: needs verification" src="https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-b60205">
+  <img alt="truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-0a7ea4">
+  <img alt="rollback: required" src="https://img.shields.io/badge/rollback-required-5319e7">
+</p>
+
+<p align="center">
+  <a href="#template-fit">Template fit</a> ·
+  <a href="#when-to-use-this-template">Use</a> ·
+  <a href="#copy-protocol">Copy</a> ·
+  <a href="#decision-flow">Flow</a> ·
+  <a href="#adr-header">Header</a> ·
+  <a href="#evidence-basis">Evidence</a> ·
+  <a href="#decision">Decision</a> ·
+  <a href="#impact-map">Impact</a> ·
+  <a href="#validation-plan">Validation</a> ·
+  <a href="#rollback-and-supersession">Rollback</a> ·
+  <a href="#review-checklist">Checklist</a>
+</p>
 
 > [!IMPORTANT]
-> An ADR is **not implementation proof**. It records a decision, the evidence basis for that decision, the risks accepted or avoided, and the validation required to make the decision safe. Do not use an ADR to imply that repo files, schemas, workflows, tests, dashboards, runtime behavior, or proof objects already exist unless direct evidence is cited in the ADR.
+> An ADR is **not implementation proof**. It records a decision, the evidence basis for that decision, the tradeoffs accepted or rejected, and the validation required to make the decision safe. Do not use an ADR to imply that repo files, schemas, workflows, tests, dashboards, runtime behavior, releases, or proof objects exist unless direct evidence is cited inside the ADR.
 
 > [!NOTE]
-> This template is repo-useful but placement-bounded. Until the target repository, ADR index, document registry, owners, policy label, and related links are verified, path and ownership values remain `NEEDS VERIFICATION`.
-
-## Quick links
-
-- [When to use this template](#when-to-use-this-template)
-- [Copy protocol](#copy-protocol)
-- [Decision flow](#decision-flow)
-- [ADR header](#adr-header)
-- [Decision summary](#decision-summary)
-- [Context and problem](#context-and-problem)
-- [Evidence basis](#evidence-basis)
-- [Requirements and constraints](#requirements-and-constraints)
-- [Options considered](#options-considered)
-- [Decision](#decision)
-- [Impact map](#impact-map)
-- [Policy, rights, and sensitivity](#policy-rights-and-sensitivity)
-- [Validation plan](#validation-plan)
-- [Rollback and supersession](#rollback-and-supersession)
-- [Consequences](#consequences)
-- [Open questions](#open-questions)
-- [Review checklist](#review-checklist)
-- [Appendices](#appendix-a--minimal-adr-quality-bar)
+> This template is intentionally evidence-heavy. KFM decisions must remain inspectable because public-facing claims, map layers, runtime answers, generated summaries, release artifacts, and rollback paths depend on the same trust spine.
 
 ---
 
-## When to use this template
+## Template fit
 
-Use an ADR when a decision materially affects KFM’s trust posture, architecture, lifecycle, publication model, contracts, schemas, policies, UI surfaces, AI boundaries, source activation, data packaging, validation, security, or rollback behavior.
-
-Use the narrowest decision record that can preserve the reasoning. An ADR should be large enough to prevent future ambiguity and small enough to review.
+| Field | Value |
+|---|---|
+| Target path | `docs/adr/ADR-TEMPLATE.md` |
+| Document role | Standard template for Architecture Decision Records |
+| Upstream doctrine | KFM trust law, authority ladder, Directory Rules, accepted ADRs, current repo evidence |
+| Downstream users | ADR authors, maintainers, reviewers, policy stewards, domain-lane implementers, release reviewers |
+| Related index | [`./README.md`](./README.md) |
+| Related decisions | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md), [`./ADR-0002-responsibility-root-monorepo.md`](./ADR-0002-responsibility-root-monorepo.md), [`./ADR-0017-meta-block-v2.md`](./ADR-0017-meta-block-v2.md) |
+| Related doctrine/registers | [`../doctrine/authority-ladder.md`](../doctrine/authority-ladder.md), [`../registers/AUTHORITY_LADDER.md`](../registers/AUTHORITY_LADDER.md), [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md), [`../registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) |
 
 ### Accepted inputs
 
-This template accepts decisions about:
+Use this template for decisions about:
 
-- schema-home, contract-home, policy-home, or registry authority;
-- source registry, source-role, rights, sensitivity, or activation rules;
-- governed API boundaries and public-client access paths;
-- `EvidenceRef`, `EvidenceBundle`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, `ReleaseManifest`, `LayerManifest`, `GeoManifest`, receipt, proof, rollback, correction, or withdrawal object families;
-- MapLibre, Cesium, tile, graph, search, catalog, export, or delivery-layer admission;
-- governed AI, Focus Mode, model adapter, citation validation, runtime-envelope, or AI receipt behavior;
-- CI, validator, fixture, promotion, release, rollback, correction, withdrawal, and review gates;
-- local exposure boundaries, reverse proxy posture, VPN posture, or deny-by-default access rules.
+- responsibility roots, compatibility roots, schema homes, contract homes, policy homes, source registries, and authority boundaries;
+- public-client and governed API boundaries;
+- `EvidenceRef`, `EvidenceBundle`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, `SourceDescriptor`, `ReleaseManifest`, `PromotionDecision`, `CorrectionNotice`, `RollbackCard`, receipts, proofs, layer manifests, and related object families;
+- MapLibre, Cesium, tile, graph, search, catalog, export, story, review-console, or delivery-layer admission;
+- governed AI, Focus Mode, model adapters, citation validation, runtime envelopes, and AI receipts;
+- CI, validator, fixture, promotion, release, rollback, correction, withdrawal, review, and policy gates;
+- local exposure, reverse proxy, VPN, deny-by-default access, and security posture;
+- domain-lane decisions that affect shared governance, source authority, policy, public surfaces, lifecycle state, or release posture.
 
 ### Exclusions
 
@@ -73,15 +80,43 @@ Do **not** use an ADR as the primary home for:
 
 | Excluded item | Put it here instead |
 |---|---|
-| Exploratory packet notes | `docs/intake/` or the project’s verified idea-intake path |
-| Implementation logs | Run receipts, validation reports, CI logs, or verified runtime artifacts |
-| Source-specific rights summaries | Source descriptors and source registry records |
-| Executable schemas | The verified schema home, not ADR prose |
-| Policy rules | The verified policy home, not ADR prose |
-| User-facing narrative explanation | Domain docs, runbooks, Evidence Drawer copy, or published documentation |
+| Machine-checkable schemas | The accepted schema home, currently expected to be `schemas/contracts/v1/` unless superseded |
+| Semantic contract docs | `contracts/` |
+| Policy rules | `policy/` |
+| Source descriptors or source registries | `data/registry/`, `control_plane/`, or the accepted source registry home |
+| Receipts, proofs, release manifests, rollback cards | `data/receipts/`, `data/proofs/`, `release/`, or accepted proof/release homes |
+| Runtime code, app code, validators, scripts | `apps/`, `packages/`, `tools/`, or `scripts/` |
+| Exploratory idea packets | `docs/intake/`, `docs/reports/`, or an accepted intake/archive home |
+| Emergency or life-safety instructions | Official source guidance, not KFM ADRs |
+| Private chain-of-thought or direct model prompts | Governed AI contracts, public-safe summaries, and receipts only |
 | Unresolved implementation guesses | Mark `UNKNOWN` or `NEEDS VERIFICATION` and add a verification task |
-| Emergency or life-safety instructions | Official source guidance, not KFM narrative or AI output |
-| Direct model prompts or private reasoning | Governed AI contracts, receipts, and public-safe summaries only |
+
+[Back to top](#top)
+
+---
+
+## When to use this template
+
+Use an ADR when a decision materially affects KFM’s trust posture, architecture, lifecycle, publication model, contracts, schemas, policies, UI surfaces, AI boundaries, source activation, data packaging, validation, security, review, correction, or rollback behavior.
+
+Use the narrowest decision record that can preserve the reasoning. An ADR should be large enough to prevent future ambiguity and small enough to review.
+
+### ADR-worthy pressure signals
+
+| Signal | Usually needs an ADR? | Why |
+|---|---:|---|
+| A new root-level directory is proposed | Yes | Root folders are authority boundaries. |
+| A schema, contract, policy, source, proof, or release home is being changed | Yes | Authority drift weakens validation and publication. |
+| Public clients gain a new access path | Yes | Public paths must stay behind governed interfaces and released artifacts. |
+| A domain lane changes source authority, sensitivity, or public exposure | Yes | Rights, review, and public-safety posture must fail closed. |
+| AI/runtime output is introduced or expanded | Yes | Generated language cannot replace evidence, policy, review, or release state. |
+| A map, layer, tile, graph, search, or catalog surface changes truth state | Yes | Derivatives must stay downstream of evidence and release. |
+| A small typo or wording fix has no decision impact | Usually no | Keep ADRs for architecture-significant decisions. |
+
+> [!TIP]
+> When uncertain, draft a short ADR with `proposed` status and explicit evidence gaps. It is safer to close or supersede a small ADR than to bury a governance-significant decision in a casual README edit.
+
+[Back to top](#top)
 
 ---
 
@@ -89,19 +124,19 @@ Do **not** use an ADR as the primary home for:
 
 1. Copy this file to the repo’s verified ADR path.
 
-   Proposed filename pattern until repo convention is verified:
-
    ```text
-   docs/adr/ADR-<YYYYMMDD>-<short-kebab-title>.md
+   docs/adr/ADR-<nnnn>-<short-kebab-title>.md
    ```
 
-2. Replace every placeholder value, including the KFM meta block.
+2. Replace every placeholder in the copied file, including the KFM meta block.
 
-3. Keep the visible title synchronized with:
+3. Keep these synchronized:
    - meta block `title`;
+   - H1 title;
    - ADR header `Title`;
    - filename;
-   - ADR index entry, when an index exists.
+   - ADR index entry;
+   - related ADR links and successor links.
 
 4. Use the narrowest truthful label available:
    - `CONFIRMED`
@@ -112,15 +147,20 @@ Do **not** use an ADR as the primary home for:
    - `CONFLICTED`
    - `LINEAGE`
    - `SUPERSEDED`
+   - `DENY`
+   - `ABSTAIN`
+   - `ERROR`
 
 5. Cite or link the evidence that supports implementation claims. If evidence is missing, say so.
 
-6. Update related docs, registers, schemas, policies, tests, runbooks, receipts, proofs, release manifests, and rollback records listed in [Impact map](#impact-map), or explain why no update is required.
+6. Update related docs, registers, schemas, contracts, policies, tests, fixtures, validators, receipts, proofs, release records, and rollback records listed in [Impact map](#impact-map), or explain why no update is required.
 
 7. Keep rejected options. They prevent repeat debates unless new evidence appears.
 
 > [!CAUTION]
-> If the mounted repository already has a different ADR numbering, naming, status, or review convention, follow the repo convention and revise this template through a separate ADR-template update. Do not create a parallel ADR authority.
+> If the active repository already has a different ADR numbering, naming, status, or review convention, follow the accepted repo convention and revise this template through a separate template update. Do not create a parallel ADR authority.
+
+[Back to top](#top)
 
 ---
 
@@ -136,14 +176,16 @@ flowchart TD
   E --> F
   F --> G[Decision]
   G --> H[Impact map]
-  H --> I[Policy, rights, and sensitivity check]
+  H --> I[Policy, rights, sensitivity, and public exposure check]
   I --> J[Validation plan]
   J --> K{Governance risk?}
   K -->|Low| L[Review and merge]
   K -->|Material| M[Policy, rights, security, sensitivity, steward, or domain review]
   M --> L
-  L --> N[Supersession, rollback, correction, and follow-up tracking]
+  L --> N[Update index, registers, supersession, rollback, and follow-up tracking]
 ```
+
+[Back to top](#top)
 
 ---
 
@@ -154,10 +196,10 @@ flowchart TD
 | ADR ID | `<ADR-ID-NEEDS-VERIFICATION>` |
 | Title | `<Decision title>` |
 | Status | `<proposed \| accepted \| rejected \| superseded \| withdrawn \| deprecated>` |
-| Decision date | `<YYYY-MM-DD or NEEDS VERIFICATION>` |
+| Decision date | `<YYYY-MM-DD or DATE_TBD_FROM_GIT_OR_DOC_REGISTRY>` |
 | Authors / owners | `<names, team, or OWNER_TBD_NEEDS_VERIFICATION>` |
 | Reviewers | `<names, team, or REVIEWER_TBD_NEEDS_VERIFICATION>` |
-| Policy label | `<public \| restricted \| sensitive \| NEEDS VERIFICATION>` |
+| Policy label | `<public \| restricted \| sensitive \| POLICY_LABEL_TBD_NEEDS_VERIFICATION>` |
 | Scope | `<repo-wide \| domain \| source \| API \| UI \| AI \| data lifecycle \| security \| other>` |
 | Affected paths | `<paths or PATH_TBD_AFTER_REPO_INSPECTION>` |
 | Related ADRs | `<ADR links, kfm:// IDs, or none>` |
@@ -174,9 +216,14 @@ flowchart TD
 | `proposed` | Decision is under review and not yet governing. |
 | `accepted` | Decision is governing for its stated scope. |
 | `rejected` | Decision was considered and declined. |
-| `superseded` | Decision was replaced by a newer ADR or stronger repo evidence. |
+| `superseded` | Decision was replaced by a newer ADR or stronger evidence. |
 | `withdrawn` | Decision was removed before becoming governing or because scope changed. |
 | `deprecated` | Decision remains historical but should not be extended without a successor ADR. |
+
+> [!NOTE]
+> A decision can be `accepted` while enforcement remains `NEEDS VERIFICATION`. Keep decision state, implementation state, validation state, and release state separate.
+
+[Back to top](#top)
 
 ---
 
@@ -193,6 +240,16 @@ Write one compact paragraph that answers:
 
 > `<Write the decision summary here. Keep it specific enough that a maintainer can understand the decision without reading the full ADR.>`
 
+### One-line decision rule
+
+> `<Example: Machine-readable schemas live in the accepted schema home unless a future ADR supersedes this decision after repo inspection and migration proof.>`
+
+### One-line boundary rule
+
+> `<Example: This decision must not allow public clients to bypass governed APIs or read canonical/internal stores directly.>`
+
+[Back to top](#top)
+
 ---
 
 ## Context and problem
@@ -205,11 +262,13 @@ Describe the architectural pressure without turning the ADR into a broad essay.
 
 ### Problem
 
-`<Describe the problem this decision resolves. Include why the existing state is ambiguous, risky, fragmented, or insufficient.>`
+`<Describe the problem this decision resolves. Include why the current state is ambiguous, risky, fragmented, or insufficient.>`
 
 ### Why this is architecture-significant
 
-`<Explain why this cannot be handled as a routine implementation detail. Tie the explanation to trust, lifecycle, contracts, schemas, public-client boundaries, policy, evidence, release, rollback, or review state.>`
+`<Explain why this cannot be handled as a routine implementation detail. Tie the explanation to trust, lifecycle, contracts, schemas, public-client boundaries, policy, evidence, release, rollback, correction, or review state.>`
+
+[Back to top](#top)
 
 ---
 
@@ -223,7 +282,7 @@ Every ADR must separate doctrine, current repo evidence, implementation evidence
 
 ### Evidence rules
 
-- Use `CONFIRMED` only for surfaced project documents, current repo files, current command output, tests, logs, schemas, workflows, manifests, dashboards, generated artifacts, or direct source content.
+- Use `CONFIRMED` only for surfaced project documents, current repo files, command output, tests, logs, schemas, workflows, manifests, dashboards, generated artifacts, or direct source content.
 - Use `INFERRED` for conservative synthesis strongly implied by evidence but not directly proven.
 - Use `PROPOSED` for recommended design not verified as current implementation.
 - Use `UNKNOWN` where direct evidence is missing.
@@ -241,6 +300,8 @@ Every ADR must separate doctrine, current repo evidence, implementation evidence
 |---|---|---|---|
 | `<source/path/title>` | `<CONFIRMED / LINEAGE / PROPOSED / UNKNOWN>` | `<what this source supports>` | `<what this source does not prove>` |
 
+[Back to top](#top)
+
 ---
 
 ## Requirements and constraints
@@ -255,7 +316,7 @@ Every ADR must separate doctrine, current repo evidence, implementation evidence
 | Promotion is a governed state transition, not a file move | `<impact>` | `<status>` |
 | AI is interpretive and subordinate to evidence, policy, review, and release state | `<impact>` | `<status>` |
 | Derived surfaces do not replace canonical truth | `<impact>` | `<status>` |
-| Rights, sensitivity, and policy checks fail closed where risk matters | `<impact>` | `<status>` |
+| Rights, sensitivity, source-role, and policy checks fail closed where risk matters | `<impact>` | `<status>` |
 | Receipts, proofs, release manifests, reviews, corrections, and rollback records remain separate | `<impact>` | `<status>` |
 | Rollback and correction are planned before publication | `<impact>` | `<status>` |
 | Sensitive location, living-person, DNA, land/title, cultural, ecological, archaeological, and security-relevant surfaces fail closed unless allowed | `<impact>` | `<status>` |
@@ -274,6 +335,8 @@ List what this decision intentionally does **not** decide.
 |---|---|---|---|
 | `<assumption>` | `<reason>` | `<PROPOSED / UNKNOWN / NEEDS VERIFICATION>` | `<specific check>` |
 
+[Back to top](#top)
+
 ---
 
 ## Options considered
@@ -291,6 +354,8 @@ Document rejected options clearly enough that future contributors do not repeat 
 |---|---|---|
 | `<option>` | `<reason>` | `<evidence or condition>` |
 
+[Back to top](#top)
+
 ---
 
 ## Decision
@@ -303,17 +368,24 @@ Document rejected options clearly enough that future contributors do not repeat 
 
 `<Explain why this option best preserves KFM trust, buildability, reversibility, and evidence discipline.>`
 
-### Decision rule
+### Operating rule
 
-State the rule future maintainers should apply.
-
-> `<Example: Machine-readable schemas live in the verified schema home unless a future ADR supersedes this decision after repo inspection.>`
+> `<State the rule future maintainers should apply.>`
 
 ### Boundary rule
 
-State what this decision must **not** allow.
+> `<State what this decision must not allow.>`
 
-> `<Example: This decision must not allow public clients to bypass governed APIs or read canonical/internal stores directly.>`
+### Acceptance signal
+
+| Required signal | Evidence |
+|---|---|
+| Decision reviewed | `<review record, PR, ADR status update, or OWNER_TBD_NEEDS_VERIFICATION>` |
+| Implementation path verified | `<repo inspection, file evidence, or PATH_TBD_AFTER_REPO_INSPECTION>` |
+| Validation evidence captured | `<test output, receipt, validation report, or NEEDS VERIFICATION>` |
+| Rollback target known | `<rollback card, prior ADR, prior release, or ROLLBACK_TARGET_TBD>` |
+
+[Back to top](#top)
 
 ---
 
@@ -329,15 +401,15 @@ State what this decision must **not** allow.
 | `contracts/` | `<semantic contract impact>` | `<status>` |
 | `schemas/` | `<machine-checkable schema impact>` | `<status>` |
 | `policy/` | `<policy or release admissibility impact>` | `<status>` |
-| `tests/fixtures/` | `<valid/invalid fixtures>` | `<status>` |
-| `tools/validators/` | `<validator impact>` | `<status>` |
+| `tests/` / `fixtures/` | `<valid/invalid fixtures>` | `<status>` |
+| `tools/` / `scripts/` | `<validator or command impact>` | `<status>` |
 | `data/registry/` | `<source descriptor or registry impact>` | `<status>` |
 | `data/receipts/` | `<receipt impact>` | `<status>` |
 | `data/proofs/` | `<proof-pack impact>` | `<status>` |
 | `release/` | `<release manifest or promotion impact>` | `<status>` |
 | `apps/` / `packages/` | `<API/UI/runtime impact>` | `<status>` |
 | `.github/workflows/` | `<CI impact>` | `<status>` |
-| `README` / index surfaces | `<navigation and link updates>` | `<status>` |
+| README / index surfaces | `<navigation and link updates>` | `<status>` |
 
 ### Lifecycle impact
 
@@ -365,6 +437,8 @@ State what this decision must **not** allow.
 | Public exports / story nodes | `<effect>` | `<check>` |
 | Catalog / search / graph projections | `<effect>` | `<check>` |
 
+[Back to top](#top)
+
 ---
 
 ## Policy, rights, and sensitivity
@@ -380,7 +454,9 @@ State what this decision must **not** allow.
 | Does it affect external source rights, terms, quotas, licenses, or attribution? | `<yes/no/unknown>` | `<status>` |
 
 > [!WARNING]
-> If rights, sensitivity, source role, source authority, or public-release eligibility is unclear, the safe default is `QUARANTINE`, `ABSTAIN`, `DENY`, redaction, generalization, staged access, or delayed publication until review retires the uncertainty.
+> If rights, sensitivity, source role, source authority, or public-release eligibility is unclear, the safe default is `QUARANTINE`, `ABSTAIN`, `DENY`, redaction, generalization, staged access, delayed publication, or review hold until the uncertainty is retired.
+
+[Back to top](#top)
 
 ---
 
@@ -411,6 +487,7 @@ Every architecture-significant ADR should define at least one expected failure m
 | Unknown rights or sensitivity | `<QUARANTINE / DENY / delayed publication>` | `<test or review artifact>` |
 | Source-role mismatch | `<DENY / ABSTAIN / blocked promotion>` | `<test or review artifact>` |
 | Broken rollback target | `<blocked release / review failure>` | `<test or review artifact>` |
+| Public-client bypass | `<DENY / rollback / security review>` | `<test or review artifact>` |
 
 ### Evidence that moves this ADR forward
 
@@ -420,6 +497,8 @@ Every architecture-significant ADR should define at least one expected failure m
 | `<NEEDS VERIFICATION>` | `<specific check>` | `<owner>` |
 | `<PROPOSED>` | `<artifact, test, PR, approval, or implementation evidence>` | `<owner>` |
 | `<CONFLICTED>` | `<ADR, repo inspection, maintainer decision, or migration proof>` | `<owner>` |
+
+[Back to top](#top)
 
 ---
 
@@ -448,6 +527,11 @@ Every architecture-significant ADR should define at least one expected failure m
 
 `<Describe compatibility aliases, migration windows, deprecation notices, downstream changes, or public communication requirements.>`
 
+> [!CAUTION]
+> A rollback that deletes decision history weakens KFM. Preserve decision lineage even when implementation is reverted.
+
+[Back to top](#top)
+
 ---
 
 ## Consequences
@@ -470,6 +554,8 @@ Every architecture-significant ADR should define at least one expected failure m
 |---|---|---|---|
 | `<task>` | `<owner>` | `<date, event, or trigger>` | `<status>` |
 
+[Back to top](#top)
+
 ---
 
 ## Open questions
@@ -477,6 +563,8 @@ Every architecture-significant ADR should define at least one expected failure m
 | Question | Why it matters | Verification path | Owner |
 |---|---|---|---|
 | `<question>` | `<reason>` | `<how to resolve>` | `<owner>` |
+
+[Back to top](#top)
 
 ---
 
@@ -495,7 +583,7 @@ Every architecture-significant ADR should define at least one expected failure m
 - [ ] Governed API / public-client boundary is checked.
 - [ ] `EvidenceRef -> EvidenceBundle` impact is checked.
 - [ ] Rights, sensitivity, source-role, review-state, release-state, correction, and rollback effects are checked.
-- [ ] AI impact is bounded and does not create direct model-client or raw-store access.
+- [ ] AI impact is bounded and does not create direct model-client, raw-store, unpublished-candidate, or canonical-store access.
 - [ ] Derived surfaces remain separate from canonical truth.
 - [ ] Required docs, contracts, schemas, policies, validators, fixtures, registries, receipts, proofs, release artifacts, and rollback records are listed.
 - [ ] Validation plan includes negative-path behavior.
@@ -504,9 +592,11 @@ Every architecture-significant ADR should define at least one expected failure m
 - [ ] Related ADRs, registers, README/index files, and runbooks are updated or listed as follow-up.
 - [ ] No unresolved sensitive public-release path remains hidden in prose.
 - [ ] Stable anchors were preserved where practical.
-- [ ] This ADR does not create parallel contract, schema, policy, source, proof, or publication authority without naming the conflict.
+- [ ] This ADR does not create parallel contract, schema, policy, source, proof, release, or publication authority without naming the conflict.
 
 </details>
+
+[Back to top](#top)
 
 ---
 
@@ -537,7 +627,7 @@ An ADR is ready for review when a maintainer can answer all of the following wit
 | `CONFLICTED` | Evidence layers, terms, paths, authorities, or source families materially disagree. |
 | `LINEAGE` | Historically important prior material that explains current work but is not current implementation proof. |
 | `SUPERSEDED` | Earlier material replaced by newer doctrine, repo evidence, or a later ADR. |
-| `DENY` | Output, publication, source activation, or access path should not proceed under current policy/evidence conditions. |
+| `DENY` | Output, publication, source activation, release, or access path should not proceed under current policy/evidence conditions. |
 | `ABSTAIN` | A claim cannot be answered or published because support is insufficient. |
 | `ERROR` | A process failed due to tool, input, environment, validation, or execution failure. |
 
@@ -548,6 +638,7 @@ Use searchable placeholders that explain what is missing.
 Preferred forms:
 
 - `OWNER_TBD_NEEDS_VERIFICATION`
+- `REVIEWER_TBD_NEEDS_VERIFICATION`
 - `PATH_TBD_AFTER_REPO_INSPECTION`
 - `DATE_TBD_FROM_GIT_OR_DOC_REGISTRY`
 - `POLICY_LABEL_TBD_NEEDS_VERIFICATION`
@@ -562,16 +653,30 @@ Avoid vague placeholders such as `TBD` without a reason.
 
 ## Appendix D — ADR update behavior
 
-When this ADR changes after acceptance:
-
 | Change type | Required behavior |
 |---|---|
 | Minor typo or formatting repair | Update in place and keep title/status unchanged. |
 | Clarification that does not change decision | Update in place and note the clarification if material. |
-| Material change to scope, authority, lifecycle, public path, policy, schema, or release posture | Create a successor ADR or revision note. |
+| Material change to scope, authority, lifecycle, public path, policy, schema, release, or rollback posture | Create a successor ADR or revision note. |
 | Decision reversal | Mark this ADR `superseded`, `withdrawn`, or `deprecated`; add successor link and rollback/correction notes. |
 | Repo evidence contradicts the ADR | Mark `CONFLICTED`, update the evidence basis, and open a follow-up decision or correction path. |
 
----
+## Appendix E — Fast author prompt
 
-[Back to top](#adr-template)
+<details>
+<summary>Questions to answer before drafting</summary>
+
+- What pressure forced this decision now?
+- What is the smallest decision that resolves the pressure?
+- What evidence was inspected?
+- What evidence was unavailable?
+- What KFM trust boundary is protected?
+- Which paths or roots are affected?
+- Which source, policy, schema, contract, release, correction, or rollback records are affected?
+- What is the expected negative-path behavior?
+- What would prove this decision is implemented?
+- What would trigger rollback or supersession?
+
+</details>
+
+[Back to top](#top)
