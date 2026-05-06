@@ -1,0 +1,13 @@
+reason_codes:
+  - code: catalog_missing_required_ref
+    family: closure
+    description: Required catalog cross-reference is missing.
+  - code: catalog_rights_not_releasable
+    family: rights
+    description: Rights posture does not allow release-linked publication.
+  - code: catalog_visibility_not_public_safe
+    family: visibility
+    description: Record is not eligible for public discovery.
+  - code: catalog_correction_incomplete
+    family: correction
+    description: Supersession, withdrawal, or rollback metadata is incomplete.

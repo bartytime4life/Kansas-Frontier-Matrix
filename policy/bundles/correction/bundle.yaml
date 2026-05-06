@@ -1,0 +1,5 @@
+bundle:
+  name: kfm.policy.correction
+  version: v0
+  entrypoint: data.kfm.policy.correction.decision
+  module: correction_propagation.rego

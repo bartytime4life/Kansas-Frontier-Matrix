@@ -1,0 +1,8 @@
+bundle:
+  name: kfm.policy.runtime
+  version: v0
+  entrypoint: data.kfm.runtime.decision
+  modules:
+    - finite_outcomes.rego
+    - runtime_denials.rego
+    - proof_quartet.rego
