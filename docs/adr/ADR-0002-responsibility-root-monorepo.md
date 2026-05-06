@@ -1,19 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0202
+doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0002
 title: ADR-0002: Responsibility-Root Monorepo Layout
 type: standard
-version: v1.1-review
+version: v1.2-review
 status: review
-owners: TODO: owners not verified
+owners: OWNER_TBD_NEEDS_VERIFICATION
 created: 2026-05-05
 updated: 2026-05-06
 policy_label: NEEDS-VERIFICATION
-related: [../../README.md, ./README.md, ./ADR-0001-schema-home.md]
+related: [../../README.md, ./README.md, ./ADR-0001-schema-home.md, ../registers/REPO_ORGANIZATION_AUDIT.md]
 tags: [kfm, adr, monorepo, responsibility-root, directory-rules, governance, lifecycle, domains]
 notes: [
-  Existing ADR decision status is accepted; this revision expands rationale, governance, compatibility-root handling, and enforcement guidance.
-  Owners, CODEOWNERS, full root inventory, CI enforcement, compatibility-root status, and root README coverage remain NEEDS VERIFICATION.
-  This ADR governs root-level responsibility boundaries; it does not decide every subdirectory convention or prove runtime enforcement.
+  ADR decision status is accepted; this document revision status remains review until owners, CODEOWNERS, CI enforcement, compatibility-root status, and root README coverage are verified.
+  This ADR governs root-level responsibility boundaries. It does not decide every subdirectory convention or prove enforcement.
+  Compatibility roots require explicit README or ADR status before being treated as canonical.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -21,35 +21,33 @@ notes: [
 
 # ADR-0002: Responsibility-Root Monorepo Layout
 
+KFM root folders are authority boundaries, not topic buckets.
+
 <p align="center">
-  <strong>KFM root folders are authority boundaries, not topic buckets.</strong>
+  <img alt="ADR status: accepted" src="https://img.shields.io/badge/ADR-accepted-2ea44f">
+  <img alt="revision status: review" src="https://img.shields.io/badge/revision-review-0a60ff">
+  <img alt="owners: needs verification" src="https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-ffb000">
+  <img alt="layout: responsibility root" src="https://img.shields.io/badge/layout-responsibility--root-5319e7">
+  <img alt="policy posture: fail closed" src="https://img.shields.io/badge/policy-fail--closed-b60205">
 </p>
 
 <p align="center">
-  <img alt="ADR status: accepted" src="https://img.shields.io/badge/ADR-accepted-success">
-  <img alt="revision status: review" src="https://img.shields.io/badge/revision-review-blue">
-  <img alt="owners: needs verification" src="https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-yellow">
-  <img alt="policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-red">
-  <img alt="layout: responsibility root" src="https://img.shields.io/badge/layout-responsibility--root-informational">
-</p>
-
-<p align="center">
-  <a href="#decision-summary">Decision summary</a> ·
-  <a href="#why-this-adr-exists">Why this exists</a> ·
-  <a href="#root-admission-rule">Root admission rule</a> ·
+  <a href="#decision-summary">Decision</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#root-admission-rule">Root rule</a> ·
   <a href="#approved-root-policy">Approved roots</a> ·
   <a href="#domain-placement-rule">Domain placement</a> ·
   <a href="#compatibility-roots">Compatibility roots</a> ·
   <a href="#enforcement-and-review">Enforcement</a> ·
-  <a href="#open-verification-backlog">Verification backlog</a>
+  <a href="#open-verification-backlog">Open verification</a>
 </p>
 
 > [!IMPORTANT]
 > **ADR decision status:** `accepted`.
 >
-> **Revision status:** `review`. This expanded version preserves the accepted decision and adds governance detail, review gates, examples, and verification boundaries.
+> **Document revision status:** `review`.
 >
-> **Scope boundary:** This ADR decides **where root-level responsibilities belong**. It does not prove that every root currently has a README, that CI enforces root hygiene, that all compatibility roots are migrated, or that every downstream package already follows this rule.
+> This ADR decides how KFM admits and governs **top-level repository roots**. It does not prove that every root currently has a README, that CI enforces root hygiene, that compatibility roots are migrated, or that every downstream package already follows this rule.
 
 ---
 
@@ -57,68 +55,110 @@ notes: [
 
 | Field | Determination |
 |---|---|
-| ADR | `ADR-0002-responsibility-root-monorepo.md` |
+| ADR | `docs/adr/ADR-0002-responsibility-root-monorepo.md` |
 | Decision | Use a **responsibility-root monorepo**. |
-| Status | `accepted` |
-| Date | `2026-05-05` |
+| ADR status | `accepted` |
+| Document revision status | `review` |
 | Core rule | A root directory is allowed only when it owns a repo-wide responsibility. |
 | Domain rule | Domain names must not become greenfield top-level roots. |
-| Compatibility rule | Existing or transitional roots such as `ui/`, `web/`, `jsonschema/`, `policies/`, `styles/`, `viewer_templates/`, and `artifacts/` require README/ADR status before they are treated as canonical. |
+| Compatibility rule | Transitional roots such as `ui/`, `web/`, `jsonschema/`, `policies/`, `styles/`, `viewer_templates/`, and tightly scoped `artifacts/` require explicit README or ADR status. |
 | Enforcement posture | Fail closed on ambiguous root authority, duplicated responsibility, or domain-root sprawl. |
-| Implementation evidence boundary | Root layout enforcement, CI coverage, owners, CODEOWNERS, and full root README coverage remain `NEEDS VERIFICATION` unless verified in the current checkout. |
+| Enforcement evidence | `NEEDS VERIFICATION` unless proven by active checkout tests, workflows, root READMEs, CODEOWNERS, or validation output. |
 
-**Accepted decision:** KFM uses responsibility roots such as `docs/`, `schemas/`, `contracts/`, `policy/`, `tests/`, `apps/`, `packages/`, `pipelines/`, `data/`, and `release/`. New domain-specific top-level folders such as `hydrology/`, `fauna/`, `roads/`, `archaeology/`, or `agriculture/` are not allowed by default.
+**Accepted decision:** KFM uses responsibility roots such as `docs/`, `control_plane/`, `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `apps/`, `packages/`, `connectors/`, `pipelines/`, `data/`, and `release/`. New domain-specific top-level folders such as `hydrology/`, `fauna/`, `roads/`, `archaeology/`, or `agriculture/` are not allowed by default.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
+
+---
+
+## Repo fit
+
+| Relationship | Path | Status | Role |
+|---|---|---:|---|
+| This ADR | `docs/adr/ADR-0002-responsibility-root-monorepo.md` | `CONFIRMED path / review revision` | Governs root-level responsibility boundaries. |
+| ADR index | [`./README.md`](./README.md) | `CONFIRMED path / NEEDS VERIFICATION coverage` | ADR navigation, status, and review discipline. |
+| Schema-home ADR | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | `CONFIRMED path / proposed decision` | Separates machine schema authority from semantic contract docs. |
+| Root README | [`../../README.md`](../../README.md) | `CONFIRMED path / draft authority` | Public landing page; states KFM trust law and responsibility-root posture. |
+| Repo organization audit | [`../registers/REPO_ORGANIZATION_AUDIT.md`](../registers/REPO_ORGANIZATION_AUDIT.md) | `CONFIRMED path / audit lineage` | Records observed root families and authority conflicts from a prior audit. |
+
+### Upstream inputs
+
+This ADR is downstream of:
+
+- Directory Rules and responsibility-root doctrine;
+- KFM lifecycle law: `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`;
+- ADR-0001 schema-home work;
+- root README trust-law language;
+- repo organization audit evidence;
+- KFM doctrine that public clients use governed interfaces and released artifacts.
+
+### Downstream consumers
+
+This ADR should inform:
+
+- root and directory READMEs;
+- ADR index entries;
+- `control_plane/` root and authority registers;
+- schema, contract, policy, fixture, test, validator, release, and data lifecycle placement;
+- PR review cards;
+- root hygiene checks;
+- migration plans for compatibility roots.
+
+[Back to top](#top)
 
 ---
 
 ## Why this ADR exists
 
-KFM is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. Its repo layout must preserve the same trust membrane as the data lifecycle:
+KFM is a governed, evidence-first, map-first, time-aware spatial knowledge and publication system. The repository layout must preserve the same trust membrane as the data lifecycle:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-The repository can grow many domain lanes, but the root must remain boring, stable, and governed. Without a responsibility-root decision, KFM risks four kinds of drift:
+The repository can grow many domain lanes, but the root must remain stable, inspectable, and boring. Without a responsibility-root decision, KFM risks four kinds of drift:
 
 | Drift risk | Failure mode | ADR response |
 |---|---|---|
 | Root domain sprawl | `hydrology/`, `soil/`, `fauna/`, `archaeology/`, and similar topic folders accumulate at root. | Domain work goes under responsibility roots. |
 | Authority collision | `contracts/`, `schemas/`, `policy/`, `release/`, and `data/proofs/` blur their roles. | Each root owns one responsibility class. |
-| UI shell fragmentation | `ui/`, `web/`, `apps/explorer-web/`, and `packages/ui/` become competing homes. | Compatibility roots require explicit status and migration rules. |
-| Proof / artifact confusion | `artifacts/`, `data/proofs/`, `data/receipts/`, `release/`, and `data/published/` mix trust-bearing objects. | Proofs, receipts, releases, and published material stay in their governed homes. |
+| UI shell fragmentation | `ui/`, `web/`, `apps/web/`, `apps/ui/`, and `packages/ui/` become competing homes. | Compatibility roots require explicit status and migration rules. |
+| Proof / artifact confusion | `artifacts/`, `data/proofs/`, `data/receipts/`, `release/`, and `data/published/` mix trust-bearing objects. | Proofs, receipts, releases, and published material stay in governed homes. |
 
 The responsibility-root layout lets domain lanes grow deeply without turning the repository root into a pile of subject folders.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Evidence boundary
 
-This ADR is grounded in KFM directory doctrine, adjacent ADR style, the current root README orientation, and the existing short ADR-0202 decision text. It deliberately separates **layout law** from **implementation proof**.
+This ADR records a layout decision and the review burden around it. It does not, by itself, prove enforcement.
 
 | Evidence class | Status | What it supports | What it does not prove |
 |---|---|---|---|
-| Existing ADR-0202 file | `CONFIRMED` | ADR status, date, accepted responsibility-root decision, domain-root prohibition. | CI enforcement, root inventory completeness, or downstream compliance. |
-| ADR directory index | `CONFIRMED` | `docs/adr/` is the ADR home and lists ADR-0202 as a foundational layout decision. | Acceptance evidence beyond the file listing. |
-| ADR-0001 style | `CONFIRMED` | KFM ADRs may use a meta block, badges, truth labels, acceptance blockers, and explicit evidence boundaries. | Exact owners or enforcement status for ADR-0202. |
+| Existing ADR-0002 path | `CONFIRMED` | Target file exists in `docs/adr/`; decision area is already present. | CI enforcement, owner approval, or full root conformance. |
+| ADR directory index | `CONFIRMED` | `docs/adr/` is the ADR home and lists ADR-0002 as a foundational layout decision. | Complete ADR inventory or acceptance evidence beyond file content. |
+| ADR template | `CONFIRMED` | KFM ADRs should expose evidence, truth labels, validation, rollback, and supersession. | That this ADR’s enforcement exists. |
 | Root README | `CONFIRMED` | KFM trust law, responsibility roots, domain-lane caution, and compatibility-root warning language. | That every listed root exists or is fully enforced. |
-| Directory Rules doctrine | `CONFIRMED doctrine` | Root folders are responsibility boundaries; domain names belong under responsibility roots; compatibility roots require README/ADR status. | Current implementation maturity, CI behavior, or complete root README coverage. |
+| Repo organization audit | `CONFIRMED as repo document` | Broad root families exist and several authority conflicts are known. | Current branch runtime behavior or final canonicalization. |
+| Directory Rules doctrine | `CONFIRMED doctrine` | Root folders are responsibility boundaries; domain names belong under responsibility roots; compatibility roots require status. | Current implementation maturity, CI behavior, or complete README coverage. |
 
-### Truth labels in this ADR
+### Truth labels used in this ADR
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from current-session repository connector evidence or supplied KFM doctrine. |
-| `ACCEPTED` | The architecture decision is accepted as repo doctrine. |
-| `PROPOSED` | Implementation, validator, checklist, or migration guidance not proven as current enforcement. |
-| `NEEDS VERIFICATION` | Checkable item that must be verified before treating it as implemented or enforced. |
-| `UNKNOWN` | Not verified strongly enough in this session. |
+| `CONFIRMED` | Verified from repository connector evidence, repository files, or supplied KFM doctrine. |
+| `ACCEPTED` | The architecture decision is accepted as KFM repository doctrine. |
+| `PROPOSED` | Implementation, validator, checklist, or migration guidance not proven as active enforcement. |
+| `NEEDS VERIFICATION` | A concrete check must pass before treating the claim as implemented or enforced. |
+| `UNKNOWN` | Not verified strongly enough in the active checkout. |
+| `CONFLICTED` | Authority signals overlap or disagree and require explicit resolution. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+> [!NOTE]
+> An ADR can be accepted while enforcement remains `NEEDS VERIFICATION`. Keep decision state and implementation proof separate.
+
+[Back to top](#top)
 
 ---
 
@@ -126,7 +166,7 @@ This ADR is grounded in KFM directory doctrine, adjacent ADR style, the current 
 
 A folder belongs at repository root only when it owns a **repo-wide responsibility**.
 
-### The five-part admission test
+### Five-part admission test
 
 A proposed root must satisfy at least one of these responsibilities and must not duplicate an existing root:
 
@@ -142,18 +182,18 @@ A proposed root must satisfy at least one of these responsibilities and must not
 
 Reject a new root when it is primarily:
 
-- a domain topic,
-- a convenience bucket,
-- a duplicate of an existing responsibility,
-- a generated-output dumping ground,
-- a temporary working folder,
-- an ungoverned mirror,
-- a second home for contracts, schemas, policy, proofs, releases, or UI shell code.
+- a domain topic;
+- a convenience bucket;
+- a duplicate of an existing responsibility;
+- a generated-output dumping ground;
+- a temporary working folder;
+- an ungoverned mirror;
+- a second home for contracts, schemas, policy, proofs, releases, receipts, or UI shell code.
 
 > [!CAUTION]
 > A root folder name can look harmless and still weaken governance. If a proposed root can be expressed as a subdirectory under an existing responsibility root, it should not be added at repository root without an ADR.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -161,28 +201,28 @@ Reject a new root when it is primarily:
 
 This ADR recognizes three root classes:
 
-1. **Canonical responsibility roots** — expected to own stable repo-wide responsibilities.
-2. **Compatibility or transitional roots** — allowed only when their status is documented and they do not become competing authority.
+1. **Canonical responsibility roots** — stable homes for repo-wide responsibilities.
+2. **Compatibility or transitional roots** — allowed only when status is documented and they do not become competing authority.
 3. **Rejected greenfield roots** — not allowed without a superseding ADR.
 
 ### Canonical responsibility roots
 
 | Root | Responsibility | Accepted contents | Exclusions |
 |---|---|---|---|
-| `.github/` | Repository automation and GitHub workflow surface. | Workflows, issue templates, PR templates, repository automation. | Domain-specific source data or proof objects. |
-| `docs/` | Human-facing control plane. | Doctrine, ADRs, architecture, runbooks, standards, domain docs, source docs, registers. | Machine schema authority, raw data, runtime secrets. |
-| `control_plane/` | Machine-readable or semi-machine-readable governance maps. | Document registry, object-family registry, source authority register, policy gate register. | Source-native data, app code, policy rule implementation. |
-| `contracts/` | Semantic meaning and narrative contract explanations. | Object-family meaning, API/object vocabulary, domain contract docs. | Machine-checkable schema authority unless explicitly allowed by ADR. |
-| `schemas/` | Machine-checkable shape. | JSON Schemas, schema tests, valid/invalid schema fixtures. | Narrative-only contract prose. |
+| `.github/` | Repository automation and GitHub workflow surface. | Workflows, issue templates, PR templates, CODEOWNERS, repository automation. | Domain source data, proof objects, release truth, secrets. |
+| `docs/` | Human-facing control plane. | Doctrine, ADRs, architecture, runbooks, standards, domain docs, source docs, registers. | Machine schema authority, raw data, runtime secrets, proof packs as release truth. |
+| `control_plane/` | Machine-readable or semi-machine-readable governance maps. | Document registry, object-family registry, source authority register, policy gate register. | Source-native data, app code, policy implementation. |
+| `contracts/` | Semantic meaning and narrative contract explanations. | Object-family meaning, API/object vocabulary, compatibility notes, domain contract docs. | Primary machine-checkable schemas unless an ADR explicitly permits a bridge. |
+| `schemas/` | Machine-checkable shape. | JSON Schemas, schema tests, valid/invalid schema fixtures, schema indexes. | Narrative-only contract prose or policy permission. |
 | `policy/` | Admissibility and release rules. | Rights, sensitivity, promotion, runtime, domain, and release policy. | Schema definitions as primary authority. |
 | `tests/` | Enforceable verification. | Unit, integration, contract, policy, reproducibility, API, UI, e2e, and regression tests. | Production data or generated proof stores. |
-| `fixtures/` | Test evidence and synthetic examples. | Valid, invalid, golden, synthetic, and no-network fixtures. | Public truth, live-source output, or unreviewed sensitive data. |
-| `tools/` | Governed helper implementations. | Validators, attestation helpers, source probes, diff tools, local proof tooling. | App runtime code that belongs in `apps/` or `packages/`. |
-| `scripts/` | Thin operator entrypoints. | Small wrappers for contributor-visible commands. | Hidden business logic or long-lived domain processing. |
+| `fixtures/` | Test evidence and synthetic examples. | Valid, invalid, golden, synthetic, and no-network fixtures. | Public truth, live-source output, unreviewed sensitive data. |
+| `tools/` | Governed helper implementations. | Validators, attestation helpers, source probes, diff tools, local proof tooling. | Deployable app entrypoints or hidden policy authority. |
+| `scripts/` | Thin operator entrypoints. | Explicit wrappers for contributor-visible commands. | Long-lived domain processing or hidden business logic. |
 | `apps/` | Deployable systems. | Governed API, explorer web app, review console, CLI, workers, admin surfaces. | Shared libraries or canonical data. |
 | `packages/` | Shared implementation packages. | Evidence resolver, hashing, validators, source utilities, domain helpers, UI packages. | Deployable app entrypoints unless repo convention explicitly permits. |
-| `connectors/` | Source access adapters. | Source-specific connectors with rights, cadence, and policy boundaries. | Canonical data, raw captures, or public claims. |
-| `pipelines/` | Processing and orchestration implementation. | Ingest, transform, validation, cataloging, tiling, receipt, and dry-run flows. | Pipeline specifications if `pipeline_specs/` is the accepted home. |
+| `connectors/` | Source access adapters. | Source-specific connectors with rights, cadence, provenance, and policy boundaries. | Canonical data, raw captures, public claims. |
+| `pipelines/` | Processing and orchestration implementation. | Ingest, transform, validation, cataloging, tiling, receipt, and dry-run flows. | Pipeline specifications if `pipeline_specs/` is the accepted declarative home. |
 | `pipeline_specs/` | Declarative processing specifications. | Domain and cross-domain pipeline declarations. | Executable implementation that belongs in `pipelines/` or `tools/`. |
 | `data/` | Lifecycle data and operational memory. | `raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `triplets/`, `registry/`, `receipts/`, `proofs/`, `published/`. | Runtime secrets or unclassified generated clutter. |
 | `release/` | Release operations. | Release candidates, release manifests, promotion decisions, rollback cards. | Raw data, receipts, proofs, or arbitrary build output. |
@@ -190,20 +230,23 @@ This ADR recognizes three root classes:
 | `infra/` | Infrastructure. | Infrastructure-as-code, deployment topology, environment scaffolding. | App code, data lifecycle content. |
 | `configs/` | Shared configuration. | Repo-wide or environment-scoped configuration. | Secrets or source-native data. |
 | `migrations/` | Migration operations. | Database, schema, data, and compatibility migrations. | New canonical schema definitions unless linked to `schemas/`. |
-| `examples/` | Public-safe examples. | Demonstrations, tiny teaching fixtures, sample integrations. | Unreviewed source data, sensitive data, or canonical proof objects. |
+| `examples/` | Public-safe examples. | Demonstrations, tiny teaching fixtures, sample integrations. | Unreviewed source data, sensitive data, canonical proof objects. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+> [!IMPORTANT]
+> A root’s presence is not enough to prove authority. Canonical roots need purpose, accepted inputs, exclusions, validation, and review burden documented in root READMEs, ADRs, or registers.
+
+[Back to top](#top)
 
 ---
 
 ## Compatibility roots
 
-Compatibility roots are allowed only when they declare their authority status. They must not silently compete with canonical responsibility roots.
+Compatibility roots are allowed only when they declare authority status. They must not silently compete with canonical responsibility roots.
 
 | Compatibility root | Allowed status | Required rule |
 |---|---|---|
-| `artifacts/` | Optional / compatibility / generated | Must explain whether it stores build, docs, QA, temporary, or compatibility outputs. It must not hold canonical receipts, proofs, release manifests, or published data. |
-| `jsonschema/` | Transitional / mirror / deprecated | Must explain whether it mirrors `schemas/contracts/v1/` or is retired. Canonical machine schemas belong under `schemas/`. |
+| `artifacts/` | Optional / compatibility / generated | Must explain whether it stores build, docs, QA, temporary, or compatibility outputs. It must not hold canonical receipts, proofs, release manifests, or published data unless a later ADR says so. |
+| `jsonschema/` | Transitional / mirror / deprecated | Must explain whether it mirrors `schemas/contracts/v1/` or is retired. Canonical machine schemas belong under `schemas/` after ADR-0001 acceptance. |
 | `policies/` | Legacy / mirror / deprecated / export | Must not evolve independently from `policy/`. |
 | `ui/` | Compatibility / legacy / shared UI transition | Must state whether canonical UI implementation belongs in `apps/`, `packages/ui/`, or this root. |
 | `web/` | Compatibility / legacy web surface | Must state whether it is canonical, legacy, generated, or migrating to `apps/`. |
@@ -212,21 +255,21 @@ Compatibility roots are allowed only when they declare their authority status. T
 
 ### Compatibility-root requirements
 
-Every compatibility root must have a `README.md` or ADR-backed status declaration with:
+Every compatibility root must have a `README.md`, register entry, or ADR-backed status declaration with:
 
-- authority level,
-- canonical replacement if any,
-- accepted inputs,
-- prohibited contents,
-- migration or retirement plan,
-- review owner or owner placeholder,
-- validation expectations,
+- authority level;
+- canonical replacement if any;
+- accepted inputs;
+- prohibited contents;
+- migration or retirement plan;
+- review owner or owner placeholder;
+- validation expectations;
 - relationship to canonical roots.
 
 > [!WARNING]
 > A compatibility root without a status file is not evidence of canonical authority. Treat it as `NEEDS VERIFICATION` until its role is documented.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -262,15 +305,13 @@ land/
 
 ### Domain work belongs under responsibility roots
 
-Use this pattern instead:
-
 | Domain responsibility | Responsibility-root placement |
 |---|---|
 | Human-facing domain docs | `docs/domains/<domain>/` |
 | Domain runbooks | `docs/runbooks/<domain>/` or repo-confirmed runbook convention |
 | Domain ADRs | `docs/adr/ADR-<nnnn>-<topic>.md` or domain ADR index if accepted |
 | Semantic domain contracts | `contracts/domains/<domain>/` or repo-confirmed contract convention |
-| Machine domain schemas | `schemas/contracts/v1/.../<domain>/` under the ADR-0001-compatible schema convention |
+| Machine domain schemas | `schemas/contracts/v1/domains/<domain>/` or ADR-0001-compatible schema convention |
 | Domain policy | `policy/domains/<domain>/` or repo-confirmed policy convention |
 | Domain tests | `tests/domains/<domain>/` or repo-confirmed test convention |
 | Domain fixtures | `fixtures/domains/<domain>/` or repo-confirmed fixture convention |
@@ -291,7 +332,7 @@ Use this pattern instead:
 > [!NOTE]
 > This ADR forbids domain roots. It does not settle every domain subpath. Subpath conventions must remain aligned with ADR-0001, registry files, schema indexes, and current repository evidence.
 
-### Example: wrong vs right
+### Wrong vs right
 
 ```text
 # Wrong: topic-root layout
@@ -303,7 +344,7 @@ hydrology/
 
 # Right: responsibility-root layout
 docs/domains/hydrology/
-schemas/contracts/v1/.../hydrology/
+schemas/contracts/v1/domains/hydrology/
 policy/domains/hydrology/
 tests/domains/hydrology/
 fixtures/domains/hydrology/
@@ -322,7 +363,7 @@ data/published/hydrology/
 release/candidates/hydrology/
 ```
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -371,17 +412,18 @@ flowchart TB
   C --> styles[styles/]
   C --> vt[viewer_templates/]
 
-  domain[Domain lane: hydrology, fauna, archaeology, etc.]
-  domain -.documents .-> docs
-  domain -.schemas .-> schemas
-  domain -.policy .-> policy
-  domain -.fixtures/tests .-> tests
-  domain -.lifecycle data .-> data
-  domain -.release .-> release
-  domain -.apps/packages .-> I
+  domain[Domain lane]
+  domain -. docs .-> docs
+  domain -. semantic contracts .-> contracts
+  domain -. machine schemas .-> schemas
+  domain -. policy .-> policy
+  domain -. fixtures/tests .-> tests
+  domain -. lifecycle data .-> data
+  domain -. release .-> release
+  domain -. implementation .-> I
 ```
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -435,11 +477,9 @@ Contracts, schemas, policy, tests, data, release, docs, apps, or packages links.
 CONFIRMED / PROPOSED / UNKNOWN / LEGACY / DEPRECATED.
 ```
 
-### Why root READMEs matter
+Root READMEs are not decorative. They prevent maintainers from having to infer authority from folder names.
 
-Root READMEs are not decorative. They prevent maintainers from having to infer authority from folder names. They also make root hygiene reviewable in Git.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -449,16 +489,16 @@ A new top-level directory requires a root admission review.
 
 ### Required review steps
 
-1. **State the proposed root name.**
-2. **Identify the repo-wide responsibility it owns.**
-3. **Show why no existing root can own the content.**
-4. **Classify authority level:** canonical, compatibility, generated, archive, exploratory, or deprecated.
-5. **Identify accepted inputs and prohibited contents.**
-6. **Identify emitted outputs and downstream consumers.**
-7. **Identify validation and review burden.**
-8. **Update root README and directory documentation.**
-9. **Add or update CI / validation if root hygiene is enforceable.**
-10. **Create an ADR when the root changes governance, policy, release, contract, schema, public UI, or lifecycle boundaries.**
+1. State the proposed root name.
+2. Identify the repo-wide responsibility it owns.
+3. Show why no existing root can own the content.
+4. Classify authority level: canonical, compatibility, generated, archive, exploratory, or deprecated.
+5. Identify accepted inputs and prohibited contents.
+6. Identify emitted outputs and downstream consumers.
+7. Identify validation and review burden.
+8. Update root README and directory documentation.
+9. Add or update CI / validation if root hygiene is enforceable.
+10. Create an ADR when the root changes governance, policy, release, contract, schema, public UI, or lifecycle boundaries.
 
 ### New-root decision record template
 
@@ -490,7 +530,7 @@ root_decision:
     - "remove or migrate root with lineage-preserving notes"
 ```
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -504,17 +544,17 @@ This ADR is accepted as layout doctrine. Enforcement maturity remains `NEEDS VER
 |---|---|
 | Root allowlist | New roots must match approved responsibility roots or documented compatibility roots. |
 | Domain-root denylist | Domain names at root fail unless an accepted ADR grants an exception. |
-| Compatibility-root check | Compatibility roots must have README/ADR status. |
+| Compatibility-root check | Compatibility roots must have README, register, or ADR status. |
 | Root README check | Major roots should declare purpose, authority, inputs, exclusions, validation, and review burden. |
 | Authority-collision check | Roots must not duplicate contracts, schemas, policy, release, receipts, proofs, or UI shell authority. |
 | Lifecycle check | Public-facing paths must not read directly from RAW, WORK, QUARANTINE, unpublished candidates, or internal canonical stores. |
-| Documentation sync | Root README, ADR index, and relevant directory docs must link or summarize this ADR. |
+| Documentation sync | Root README, ADR index, relevant directory docs, and registers must link or summarize this ADR. |
 
 ### Illustrative root hygiene check
 
 ```bash
 # Illustrative only — adapt to repo-native CI and validator conventions.
-# This is not evidence that CI currently enforces ADR-0202.
+# This is not evidence that CI currently enforces ADR-0002.
 
 allowed_roots='^(\.github|docs|control_plane|contracts|schemas|policy|tests|fixtures|tools|scripts|apps|packages|connectors|pipelines|pipeline_specs|data|release|runtime|infra|configs|migrations|examples|artifacts|jsonschema|policies|ui|web|styles|viewer_templates)$'
 
@@ -531,7 +571,45 @@ find . -mindepth 1 -maxdepth 1 -type d \
 > [!NOTE]
 > Treat the snippet as an implementation sketch. The real check should use the repository’s current root inventory, compatibility-root registry, package manager, CI conventions, and review process.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
+
+---
+
+## Accepted inputs
+
+This ADR accepts:
+
+- root folder proposals;
+- root README updates;
+- compatibility-root status declarations;
+- directory validation rules;
+- root hygiene test fixtures;
+- docs/ADR updates;
+- responsibility-root placement decisions;
+- domain placement migration notes;
+- rollback or supersession plans for root-level layout changes.
+
+## Exclusions
+
+This ADR does not accept:
+
+- live source data;
+- raw, work, quarantine, or unpublished candidate material;
+- generated proof bundles;
+- release manifests;
+- policy implementation rules;
+- JSON Schemas;
+- deployable app code;
+- package source code;
+- root-level domain folders;
+- route definitions;
+- UI component implementations;
+- runtime secrets;
+- model-runtime outputs.
+
+Those belong under the appropriate responsibility roots.
+
+[Back to top](#top)
 
 ---
 
@@ -559,45 +637,7 @@ find . -mindepth 1 -maxdepth 1 -type d \
 
 KFM accepts a slightly more distributed domain implementation model in exchange for stronger lifecycle separation, clearer authority boundaries, and safer public-release governance.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Accepted inputs
-
-This ADR accepts:
-
-- root folder proposals,
-- root README updates,
-- compatibility-root status declarations,
-- directory validation rules,
-- root hygiene test fixtures,
-- docs/ADR updates,
-- responsibility-root placement decisions,
-- domain placement migration notes,
-- rollback or supersession plans for root-level layout changes.
-
-## Exclusions
-
-This ADR does not accept:
-
-- live source data,
-- raw/work/quarantine material,
-- generated proof bundles,
-- release manifests,
-- policy implementation rules,
-- JSON Schemas,
-- deployable app code,
-- package source code,
-- root-level domain folders,
-- route definitions,
-- UI component implementations,
-- runtime secrets,
-- model-runtime outputs.
-
-Those belong under the appropriate responsibility roots.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -612,15 +652,15 @@ Use this checklist for any PR that changes root-level layout.
 - [ ] Root README declares authority level and accepted inputs.
 - [ ] Root README declares exclusions and common mistakes.
 - [ ] Compatibility root status is explicit.
-- [ ] Root README, ADR index, and project README are synchronized where needed.
-- [ ] Contract/schema/policy/release/proof authority is not duplicated.
+- [ ] Root README, ADR index, project README, and relevant registers are synchronized where needed.
+- [ ] Contract, schema, policy, release, receipt, and proof authority is not duplicated.
 - [ ] Data lifecycle boundaries are preserved.
 - [ ] Public clients and normal UI surfaces remain downstream of governed APIs and released artifacts.
 - [ ] Validation or CI impact is documented.
 - [ ] Rollback or migration path is documented.
 - [ ] No implementation maturity is claimed without evidence.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
@@ -639,14 +679,14 @@ If this ADR is superseded:
 
 A rollback that deletes layout history is not acceptable. KFM layout changes should preserve lineage and explain compatibility.
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
 ## Open verification backlog
 
 | Item | Status | Why it matters |
-|---|---|---|
+|---|---:|---|
 | Full current root inventory | `NEEDS VERIFICATION` | Required before claiming complete repository conformance. |
 | Root README coverage | `NEEDS VERIFICATION` | Required before saying every root declares authority. |
 | Compatibility-root status | `NEEDS VERIFICATION` | `ui/`, `web/`, `jsonschema/`, `policies/`, `styles/`, `viewer_templates/`, and `artifacts/` must not become silent authorities. |
@@ -654,10 +694,12 @@ A rollback that deletes layout history is not acceptable. KFM layout changes sho
 | Owners / CODEOWNERS | `NEEDS VERIFICATION` | Root-level review burden must be assigned. |
 | Domain schema subpath convention | `NEEDS VERIFICATION` | ADR-0001 governs schema home; this ADR must not conflict with schema registry conventions. |
 | Root README template adoption | `NEEDS VERIFICATION` | Required for consistent authority declarations. |
-| Migration plan for legacy roots | `NEEDS VERIFICATION` | Compatibility roots need explicit retire/mirror/canonical decisions. |
-| Downstream docs sync | `NEEDS VERIFICATION` | Root README, ADR index, and directory docs should reference this ADR consistently. |
+| Migration plan for legacy roots | `NEEDS VERIFICATION` | Compatibility roots need explicit retire, mirror, canonical, or generated decisions. |
+| Downstream docs sync | `NEEDS VERIFICATION` | Root README, ADR index, directory docs, and registers should reference this ADR consistently. |
+| Policy/policies authority split | `CONFLICTED / NEEDS VERIFICATION` | Repo evidence shows both `policy/` and `policies/` have existed as populated roots; authority must not drift. |
+| UI/web/app canonical surface | `CONFLICTED / NEEDS VERIFICATION` | `apps/web`, `apps/ui`, `ui/`, and `web/` must not become competing runtime authorities. |
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#top)
 
 ---
 
