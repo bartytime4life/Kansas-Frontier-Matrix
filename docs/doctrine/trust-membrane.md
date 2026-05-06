@@ -10,14 +10,14 @@ updated: 2026-05-06
 policy_label: NEEDS_VERIFICATION
 related: [../../README.md, ./README.md, ./authority-ladder.md, ./truth-posture.md, ./lifecycle-law.md, ../adr/ADR-0014-truth-path.md, ../architecture/governed-api.md, ../../policy/README.md]
 tags: [kfm, doctrine, trust-membrane, inspectable-claim, evidence, governed-api, lifecycle, publication, correction, rollback, governed-ai]
-notes: [Revises the existing docs/doctrine/trust-membrane.md scaffold stub into repo-ready doctrine, doc_id owner created date and policy label remain NEEDS VERIFICATION, enforcement maturity remains UNKNOWN until schemas policies validators tests workflows release objects and runtime behavior are verified]
+notes: [Revises docs/doctrine/trust-membrane.md as doctrine, not implementation proof; doc_id owners created date and policy label remain NEEDS VERIFICATION; enforcement maturity remains UNKNOWN until matching schemas policies validators tests workflows release objects runtime traces and UI states are verified]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Trust Membrane
 
-The doctrine boundary that keeps KFM public surfaces downstream of evidence, policy, review, release, correction, and rollback.
+The doctrine boundary that keeps every KFM public or semi-public output downstream of evidence, policy, review, release, correction, and rollback.
 
 <p align="left">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-orange">
@@ -33,39 +33,40 @@ The doctrine boundary that keeps KFM public surfaces downstream of evidence, pol
 > **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
 > **Path:** `docs/doctrine/trust-membrane.md`  
 > **Owning root:** `docs/` — human-facing doctrine and architecture control plane.  
-> **Doctrine confidence:** `CONFIRMED` from KFM corpus and adjacent repo doctrine.  
-> **Implementation confidence:** `UNKNOWN / NEEDS VERIFICATION` until route guards, policy gates, schemas, validators, tests, workflows, release manifests, proof packs, and runtime traces are inspected.
+> **Doctrine confidence:** `CONFIRMED` from KFM doctrine and adjacent repo docs.  
+> **Implementation confidence:** `UNKNOWN / NEEDS VERIFICATION` until route guards, policy gates, schemas, validators, fixtures, tests, workflows, release manifests, proof packs, runtime traces, and UI states are inspected together.
 
 ## Quick jumps
 
-| Doctrine | Boundaries | Review |
+| Doctrine | Crossing rules | Review |
 |---|---|---|
-| [Scope](#scope) | [Membrane layers](#membrane-layers) | [Validation targets](#validation-targets) |
-| [Repo fit](#repo-fit) | [Allowed crossings](#allowed-crossings) | [Definition of done](#definition-of-done) |
-| [Core rule](#core-rule) | [Denied crossings](#denied-crossings) | [Open verification](#open-verification) |
-| [Inspectable claim](#inspectable-claim) | [Runtime outcomes](#runtime-outcomes) | [Appendix](#appendix) |
+| [Scope](#scope) | [Allowed crossings](#allowed-crossings) | [Validation targets](#validation-targets) |
+| [Repo fit](#repo-fit) | [Denied crossings](#denied-crossings) | [Definition of done](#definition-of-done) |
+| [Core rule](#core-rule) | [Runtime outcomes](#runtime-outcomes) | [Open verification](#open-verification) |
+| [Inspectable claim](#inspectable-claim) | [Sensitive material](#sensitive-and-rights-uncertain-material) | [Appendix](#appendix) |
 | [Lifecycle relationship](#lifecycle-relationship) | [Diagram](#diagram) | [Related doctrine](#related-doctrine) |
 
 ---
 
 ## Scope
 
-The **trust membrane** is the boundary between KFM’s internal truth-making machinery and every outward-facing surface that might persuade a person, system, reviewer, or model.
+The **trust membrane** is KFM’s boundary between internal truth-making machinery and outward-facing surfaces that can persuade a person, reviewer, system, map user, or model.
 
 It applies to:
 
-- public APIs;
-- steward-facing review surfaces;
-- map layers and popups;
+- governed APIs;
+- public and steward-facing map surfaces;
+- map popups and layer manifests;
 - Evidence Drawer payloads;
 - Focus Mode and governed AI responses;
-- exports, stories, reports, dashboards, and dossiers;
-- tile services, search indexes, graph projections, and summaries;
+- review-console actions;
+- exports, stories, reports, dossiers, and dashboards;
+- tile services, graph projections, search indexes, vector indexes, and summaries;
 - release, correction, withdrawal, supersession, and rollback workflows.
 
-The trust membrane is not a single service, folder, middleware file, or UI panel. It is a doctrine rule:
+The trust membrane is not a single middleware file, UI panel, backend package, data folder, or model adapter. It is the doctrine rule that public and semi-public outputs must remain downstream of the KFM truth path.
 
-> KFM public and semi-public outputs may carry evidence, but they must never bypass the governed path that makes evidence inspectable, policy-aware, release-aware, correctable, and reversible.
+> KFM public value is not “the map rendered” or “the model answered.” KFM public value is an inspectable claim whose support, policy posture, release state, and correction lineage can be examined.
 
 [Back to top](#top)
 
@@ -73,37 +74,37 @@ The trust membrane is not a single service, folder, middleware file, or UI panel
 
 ## Repo fit
 
-`docs/doctrine/trust-membrane.md` belongs under `docs/doctrine/` because it states stable, human-readable operating law. It should guide ADRs, contracts, schemas, policy, validators, route design, UI behavior, release review, and correction practice without becoming any of those surfaces itself.
+`docs/doctrine/trust-membrane.md` belongs under `docs/doctrine/` because it states durable, human-readable operating law. It should guide ADRs, contracts, schemas, policy, validators, route design, UI behavior, release review, correction practice, and rollback drills without becoming any of those surfaces itself.
 
 | Relationship | Path | Status | Role |
 |---|---|---:|---|
-| This document | `docs/doctrine/trust-membrane.md` | `draft` | Trust-boundary doctrine for public and semi-public surfaces. |
-| Doctrine index | [`./README.md`](./README.md) | `CONFIRMED` | Local doctrine navigation and input/exclusion rules. |
-| Authority ladder | [`./authority-ladder.md`](./authority-ladder.md) | `CONFIRMED` | Decides what outranks what when evidence, doctrine, repo state, policy, or external facts conflict. |
-| Truth posture | [`./truth-posture.md`](./truth-posture.md) | `CONFIRMED / THIN` | Truth labels and finite negative outcomes. |
-| Lifecycle law | [`./lifecycle-law.md`](./lifecycle-law.md) | `CONFIRMED` | Canonical state path from source capture to publication. |
-| Truth-path ADR | [`../adr/ADR-0014-truth-path.md`](../adr/ADR-0014-truth-path.md) | `CONFIRMED draft` | Architecture decision for lifecycle and public trust membrane. |
-| Governed API architecture | [`../architecture/governed-api.md`](../architecture/governed-api.md) | `CONFIRMED` | Runtime-facing boundary where clients receive release-aware, evidence-resolving, policy-checked responses. |
-| Policy root | [`../../policy/README.md`](../../policy/README.md) | `CONFIRMED` | Deny-by-default policy decision surface for rights, sensitivity, release, correction, and runtime trust. |
-| Root orientation | [`../../README.md`](../../README.md) | `CONFIRMED` | Repository-level KFM identity and trust-law orientation. |
+| This document | `docs/doctrine/trust-membrane.md` | `draft` | Doctrine for public and semi-public trust boundaries. |
+| Doctrine index | [`./README.md`](./README.md) | `CONFIRMED` | Local doctrine navigation, accepted inputs, and exclusions. |
+| Authority ladder | [`./authority-ladder.md`](./authority-ladder.md) | `CONFIRMED` | Decides what outranks what by claim type. |
+| Truth posture | [`./truth-posture.md`](./truth-posture.md) | `CONFIRMED` | Defines truth labels and finite outcomes. |
+| Lifecycle law | [`./lifecycle-law.md`](./lifecycle-law.md) | `CONFIRMED` | Defines the source-to-publication truth path. |
+| Truth-path ADR | [`../adr/ADR-0014-truth-path.md`](../adr/ADR-0014-truth-path.md) | `CONFIRMED / draft` | Architecture decision for the truth path and public trust membrane. |
+| Governed API architecture | [`../architecture/governed-api.md`](../architecture/governed-api.md) | `CONFIRMED` | Runtime boundary where clients should receive governed responses. |
+| Policy root | [`../../policy/README.md`](../../policy/README.md) | `CONFIRMED` | Decision surface for rights, sensitivity, release, correction, and deny-by-default behavior. |
+| Root orientation | [`../../README.md`](../../README.md) | `CONFIRMED` | Repository-level KFM identity, lifecycle law, and inspectable-claim posture. |
 
 ### Accepted inputs
 
-Use this document to reason about:
+Use this doctrine for stable, repo-wide trust-boundary rules.
 
 | Input | Belongs here when... |
 |---|---|
-| Public exposure doctrine | A map, API, Focus Mode answer, export, or story needs a trust boundary. |
-| Evidence closure rules | A public claim must resolve `EvidenceRef -> EvidenceBundle`. |
-| Internal-stage access rules | A client might reach `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, canonical stores, or direct model runtimes. |
-| Derived-product boundaries | Tiles, graphs, indexes, dashboards, summaries, scenes, or model outputs could be mistaken for proof. |
-| Release posture | Promotion, publication, correction, withdrawal, supersession, or rollback needs a membrane crossing rule. |
-| Negative outcomes | `ABSTAIN`, `DENY`, `ERROR`, quarantine, restriction, generalization, stale state, or withdrawal should remain visible. |
+| Public exposure doctrine | A map, API, Focus Mode answer, export, story, or dashboard needs a public boundary rule. |
+| Evidence closure rules | A public or semi-public claim must resolve `EvidenceRef -> EvidenceBundle`. |
+| Internal-stage access rules | A client might reach `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, internal stores, or direct model runtimes. |
+| Derived-product boundaries | Tiles, graphs, indexes, summaries, dashboards, reports, scenes, or AI answers could be mistaken for proof. |
+| Release posture | Promotion, publication, correction, withdrawal, supersession, or rollback needs a crossing rule. |
+| Runtime outcomes | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, stale, withdrawn, restricted, generalized, or quarantined states need shared meaning. |
 | Sensitivity defaults | Rights uncertainty, living-person data, DNA/genomics, rare species, archaeology, infrastructure, cultural stewardship, or precise location exposure requires fail-closed treatment. |
 
 ### Exclusions
 
-This doctrine file must not become:
+This doctrine file must not become a catch-all.
 
 | Do not put here | Put it here instead | Why |
 |---|---|---|
@@ -113,7 +114,7 @@ This doctrine file must not become:
 | Validator implementation | `tools/validators/` or repo-native equivalent | Validators prove shape, linkage, lifecycle, release, and evidence closure. |
 | Runtime route handlers | `apps/` or accepted runtime home | Route code enforces the membrane; this file defines it. |
 | Source descriptors | `data/registry/`, `control_plane/`, or accepted source registry home | Source authority needs structured records. |
-| Receipts, proof packs, release manifests, rollback cards | `data/receipts/`, `data/proofs/`, `release/`, or accepted emitted-object homes | Emitted trust objects are audit artifacts, not doctrine pages. |
+| Receipts, proof packs, release manifests, rollback cards | `data/receipts/`, `data/proofs/`, `release/`, or accepted emitted-object homes | Emitted trust objects are audit artifacts. |
 | UI component code | `apps/`, `packages/`, `ui/`, `web/`, or accepted compatibility roots | UI displays trust state; it does not own doctrine. |
 | Private chain-of-thought | Do not store as KFM truth material | Generated reasoning is not a governed evidence object. |
 
@@ -124,21 +125,22 @@ This doctrine file must not become:
 ## Core rule
 
 ```text
-Public surfaces cross the trust membrane only through governed evidence, policy, review, release, correction, and rollback state.
+Public and semi-public surfaces cross the trust membrane only through governed evidence, policy, review, release, correction, and rollback state.
 ```
 
-KFM must not let the fastest or most persuasive surface become the truth authority.
+KFM must not let the fastest or most persuasive carrier become the truth authority.
 
-| Surface | Useful role | Not allowed to become |
+| Carrier | Useful role | Not allowed to become |
 |---|---|---|
 | Map layer | Visual carrier of released, public-safe artifacts. | Canonical evidence or publication authority. |
 | Tile / PMTiles / raster | Rebuildable public-safe derivative. | Proof by itself. |
 | Graph / triplet | Evidence-backed relation projection. | Canonical record store. |
-| Search or vector index | Retrieval acceleration. | Source authority. |
+| Search or vector index | Retrieval acceleration. | Source authority or citation substitute. |
 | Dashboard | Trust-visible summary of governed state. | Release gate. |
 | Export or story | Released evidence carrier. | Silent replacement for citations and evidence. |
-| Focus Mode / AI answer | Evidence-bounded explanation. | Truth, policy, rights, sensitivity, or release decision. |
+| Focus Mode / AI answer | Evidence-bounded explanation. | Truth, policy, rights, sensitivity, review, or release decision. |
 | Review console | Steward-facing decision surface. | Unlogged admin bypass. |
+| Receipt | Process memory and audit support. | Canonical truth by itself. |
 
 ### One-line failure rule
 
@@ -159,7 +161,7 @@ An inspectable claim is a public or semi-public statement whose support can be i
 | Evidence | `EvidenceRef -> EvidenceBundle` closure or a visible reason for `ABSTAIN`. |
 | Source role | What the source is allowed to prove, and what it cannot prove. |
 | Spatial scope | Geometry, scale, precision, generalization, and public-safe transform state. |
-| Temporal scope | Valid time, observed time, retrieval time, release time, stale state, and correction time where material. |
+| Temporal scope | Valid time, observed time, source time, retrieval time, release time, stale state, and correction time where material. |
 | Policy posture | Rights, sensitivity, access role, obligations, and decision reason. |
 | Review state | Whether review is approved, pending, denied, not required, or unknown. |
 | Release state | Release manifest, layer manifest, catalog/proof closure, or visible absence. |
@@ -183,7 +185,7 @@ InspectableClaim
 ```
 
 > [!NOTE]
-> Not every surface needs to show every object in full. Every surface that makes or displays a consequential claim must be able to point to enough support for its consequence level.
+> Not every UI surface needs to display every object in full. Every surface that makes or displays a consequential claim must be able to point to enough support for its consequence level.
 
 [Back to top](#top)
 
@@ -191,7 +193,7 @@ InspectableClaim
 
 ## Lifecycle relationship
 
-The trust membrane sits downstream of KFM’s lifecycle law:
+The trust membrane protects KFM’s lifecycle law:
 
 ```text
 SOURCE EDGE -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
@@ -218,7 +220,7 @@ The membrane is crossed only after public-safe release conditions are met.
 
 ## Membrane layers
 
-The trust membrane has several layers. A public or semi-public crossing should pass through the layers that matter to the request.
+A public or semi-public crossing should pass through the layers that matter to the request.
 
 | Layer | Question it answers | Default failure outcome |
 |---|---|---|
@@ -226,7 +228,7 @@ The trust membrane has several layers. A public or semi-public crossing should p
 | Lifecycle layer | Is the material downstream of the correct lifecycle state? | `DENY` internal-stage access. |
 | Evidence layer | Can the claim resolve `EvidenceRef -> EvidenceBundle`? | `ABSTAIN` or `ERROR`. |
 | Policy layer | Do rights, sensitivity, access role, and obligations allow exposure? | `DENY`, `RESTRICT`, `GENERALIZE`, or `HOLD`. |
-| Review layer | Is the necessary steward, domain, policy, release, or security review complete? | `HOLD` or `DENY`. |
+| Review layer | Is the required steward, domain, policy, release, or security review complete? | `HOLD` or `DENY`. |
 | Release layer | Is there a release manifest, layer manifest, catalog/proof closure, and rollback target? | Block publication. |
 | Runtime layer | Does the response use finite outcomes and avoid direct model/internal-store bypass? | `DENY` or `ERROR`. |
 | UI trust layer | Does the user see source role, release state, stale state, uncertainty, correction, or denial where material? | Hide, downgrade, or show negative state. |
@@ -242,13 +244,13 @@ A surface may cross the trust membrane only when it uses governed interfaces and
 
 | Crossing | Allowed when | Expected trust payload |
 |---|---|---|
-| Public API answer | Claim is released or public-safe, evidence resolves, policy allows, and finite outcome is emitted. | `DecisionEnvelope` or `RuntimeResponseEnvelope` with evidence, policy, release, and correction refs. |
+| Public API answer | Claim is released or public-safe, evidence resolves, policy allows, and a finite outcome is emitted. | `DecisionEnvelope` or `RuntimeResponseEnvelope` with evidence, policy, release, and correction refs. |
 | Map layer render | Layer is release-backed and public-safe. | `LayerManifest`, release ref, source/evidence refs, stale/correction state. |
 | Map popup | Feature or claim resolves to evidence appropriate to the displayed statement. | Claim ID, evidence ref, source role, temporal/spatial scope, policy label. |
 | Evidence Drawer | Evidence is public-safe or role-authorized. | `EvidenceBundle`, source list, limitations, review/release state, correction lineage. |
 | Focus Mode answer | Question is scoped to admissible released evidence and citation validation passes. | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` envelope. |
 | Export / story / dossier | Output inherits release, evidence, rights, sensitivity, and correction state. | Cited claims, release refs, public-safe caveats, rollback/correction refs. |
-| Review console action | Actor is authorized and action is auditable. | Review record, policy decision, receipt, affected release/correction refs. |
+| Review console action | Actor is authorized and the action is auditable. | Review record, policy decision, receipt, affected release/correction refs. |
 | Diagnostic status | Status is safe to expose and does not leak secrets, internal paths, restricted records, or raw data. | Bounded status envelope with no internal truth bypass. |
 
 [Back to top](#top)
@@ -462,7 +464,7 @@ This doctrine can move beyond `draft` only when:
 - [ ] `docs/adr/ADR-0014-truth-path.md` and this doctrine do not contradict each other.
 - [ ] `docs/architecture/governed-api.md` uses the same membrane vocabulary.
 - [ ] Policy docs and tests preserve deny-by-default posture for rights, sensitivity, public exposure, and direct model/runtime access.
-- [ ] Any implementation-enforcement claim is backed by inspected schemas, validators, tests, workflows, route guards, release objects, or runtime evidence.
+- [ ] Any implementation-enforcement claim is backed by inspected schemas, validators, tests, workflows, route guards, release objects, runtime traces, or generated proof artifacts.
 - [ ] Negative outcomes are covered in examples, fixtures, or backlog.
 - [ ] Correction and rollback are represented as first-class membrane requirements.
 
