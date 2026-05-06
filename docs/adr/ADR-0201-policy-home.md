@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/ADR-0202-policy-home
-title: ADR-0202: Policy Home
+doc_id: kfm://adr/ADR-0201-policy-home
+title: ADR-0201: Policy Home
 type: architecture-decision-record
 version: v1.1
 status: accepted-with-numbering-cleanup-needed
@@ -21,7 +21,7 @@ notes: [
 
 <a id="top"></a>
 
-# ADR-0202: Policy Home
+# ADR-0201: Policy Home
 
 <p align="center">
   <strong>Make <code>policy/</code> the canonical home for KFM policy semantics, while treating <code>policies/</code> as compatibility-only unless a later ADR says otherwise.</strong>
@@ -123,7 +123,7 @@ Without this ADR, maintainers could accidentally split policy law across both ro
 | Evidence | Status | What it supports | Limits |
 |---|---|---|---|
 | Directory Rules | CONFIRMED doctrine | `policy/` is a responsibility root; compatibility roots such as `policies/` should explain canonical/legacy/generated/mirrored status. | Does not prove every policy rule is implemented. |
-| Existing `docs/adr/ADR-0202-policy-home.md` | CONFIRMED repository file | The policy-home ADR already exists and marks the decision accepted. | Existing file is minimal and does not address duplicate ADR numbering or enforcement details. |
+| Existing `docs/adr/ADR-0201-policy-home.md` | CONFIRMED repository file | The policy-home ADR already exists and marks the decision accepted. | Existing file is minimal and does not address duplicate ADR numbering or enforcement details. |
 | Existing `docs/adr/ADR-0002-responsibility-root-monorepo.md` | CONFIRMED repository file | A second accepted ADR currently uses the same ADR number. | Numbering conflict requires cleanup; it does not invalidate the policy-home decision. |
 | Existing `policy/README.md` | CONFIRMED repository file | `policy/` exists as the singular policy root in the current repository. | Current README is minimal and does not prove bundle/test/runtime maturity. |
 | Existing `policies/README.md` | CONFIRMED repository file | `policies/` already declares transitional compatibility status and points to `policy/`. | Does not prove no other files exist under `policies/` without inventory. |
@@ -302,7 +302,7 @@ A compatibility bridge must name:
 
 The policy-home decision is accepted. The cleanup work is not complete until:
 
-- [ ] `docs/adr/README.md` lists `ADR-0202-policy-home.md` or a renumbered successor.
+- [ ] `docs/adr/README.md` lists `ADR-0201-policy-home.md` or a renumbered successor.
 - [ ] The duplicate `ADR-0202` numbering is resolved by renumbering, ADR index note, or accepted numbering exception.
 - [ ] `policy/README.md` states the canonical policy-home decision and links this ADR.
 - [ ] `policies/README.md` remains clear that `policies/` is compatibility/transitional only.
@@ -393,7 +393,7 @@ Rollback must not hide prior policy authority. A rollback that leaves both roots
 ## Open verification items
 
 - Exact final ADR numbering strategy.
-- Whether `docs/adr/ADR-0202-policy-home.md` should remain `ADR-0202` or be renumbered.
+- Whether `docs/adr/ADR-0201-policy-home.md` should remain `ADR-0201` (already renumbered).
 - Current full inventory under `policy/` and `policies/`.
 - Whether policy bundles use OPA/Rego, JSON policy data, Python validators, or mixed tooling in the active branch.
 - Whether `policy/fixtures/`, `policy/tests/`, `tests/policy/`, and `packages/policy/` exist and how mature they are.
