@@ -8,9 +8,9 @@ owners: OWNER_TBD_NEEDS_VERIFICATION
 created: NEEDS VERIFICATION
 updated: 2026-05-06
 policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
-related: [../../README.md, ../README.md, ../adr/ADR-0001-schema-home.md, ./governed-ai/README.md, ./tiles/README.md, ../../policy/README.md, ../../apps/web/README.md]
-tags: [kfm, architecture, governance, evidence, map-first, time-aware]
-notes: [Repo-ready revision for docs/architecture/README.md; local workspace had no mounted repository, but GitHub connector inspection confirmed this path and selected adjacent docs; owners, created date, policy label, and full architecture inventory need maintainer verification]
+related: [../../README.md, ../README.md, ../adr/ADR-0001-schema-home.md, ./contract-schema-policy-split.md, ./governed-api.md, ./governed-ai/README.md, ./tiles/README.md, ../../policy/README.md, ../../apps/web/README.md, ../../apps/web/package.json]
+tags: [kfm, architecture, governance, evidence, map-first, time-aware, governed-api, governed-ai, tiles]
+notes: [Repo-ready revision for docs/architecture/README.md; mounted workspace had no local Git checkout, but GitHub connector inspection confirmed this path and selected adjacent repo files; owners, created date, policy label, full architecture inventory, CI enforcement, runtime behavior, release proof, and branch protections need maintainer verification]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -29,11 +29,11 @@ Cross-cutting architecture home for KFM’s governed, evidence-first, map-first,
 > **Status:** `active` directory / `draft` README  
 > **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
 > **Path:** `docs/architecture/README.md`  
-> **Current revision posture:** `CONFIRMED` selected repo paths through GitHub connector inspection; `UNKNOWN` full implementation depth, CI enforcement, deployed runtime behavior, dashboards, and branch protections.  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Architecture spine](#architecture-spine) · [Architecture boundaries](#architecture-boundaries) · [Change gates](#change-gates) · [Quickstart](#quickstart) · [Open verification](#open-verification-backlog)
+> **Current revision posture:** `CONFIRMED` selected repo paths through GitHub connector inspection; `CONFIRMED` local workspace was not a mounted Git checkout; `UNKNOWN` full implementation depth, CI enforcement, deployed runtime behavior, dashboards, release proof, and branch protections.  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Evidence snapshot](#current-evidence-snapshot) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Architecture spine](#architecture-spine) · [Architecture boundaries](#architecture-boundaries) · [Change gates](#change-gates) · [Quickstart](#quickstart) · [Open verification](#open-verification-backlog)
 
 > [!NOTE]
-> This README replaces a thin scaffold with a repo-ready architecture landing page. It intentionally avoids claiming that routes, schemas, policy gates, tests, workflows, proof packs, dashboards, or runtime behavior exist unless they are verified in the current checkout.
+> This README is a repository landing page for architecture review and navigation. It intentionally avoids claiming that routes, schemas, policy gates, tests, workflows, proof packs, dashboards, or runtime behavior exist unless verified from current repo evidence.
 
 ---
 
@@ -60,7 +60,7 @@ This directory should explain the architecture of:
 - security, local exposure, and no-public-bypass posture;
 - cross-domain architecture that applies to more than one lane.
 
-It should not become a bucket for every domain model, every emitted artifact, every schema, every policy rule, or every implementation file.
+It should not become a bucket for every domain model, emitted artifact, schema, policy rule, fixture, validator, or implementation file.
 
 [Back to top](#top)
 
@@ -71,13 +71,16 @@ It should not become a bucket for every domain model, every emitted artifact, ev
 | Relationship | Path | Status | Purpose |
 |---|---|---:|---|
 | This file | `docs/architecture/README.md` | `CONFIRMED path` / revised here | Architecture landing page and navigation surface. |
-| Repo landing page | [`../../README.md`](../../README.md) | `CONFIRMED` | Repo-wide KFM purpose, trust law, responsibility roots, and contributor posture. |
+| Repo landing page | [`../../README.md`](../../README.md) | `CONFIRMED` | Repo-wide KFM purpose, trust law, responsibility roots, object families, and contributor posture. |
 | Docs landing page | [`../README.md`](../README.md) | `CONFIRMED` / currently thin | Human-facing documentation root. |
-| Schema-home ADR | [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) | `CONFIRMED` | Proposed canonical machine-schema authority and contract/schema split. |
+| Schema-home ADR | [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) | `CONFIRMED` / `draft` | Proposed canonical machine-schema authority and contract/schema split. |
+| Contract/schema/policy split | [`./contract-schema-policy-split.md`](./contract-schema-policy-split.md) | `CONFIRMED` | Architecture note for contracts as meaning, schemas as shape, and policy as admissibility. |
+| Governed API architecture | [`./governed-api.md`](./governed-api.md) | `CONFIRMED` | Trust membrane for public, steward, map, Focus Mode, export, review, and diagnostic clients. |
 | Governed AI architecture | [`./governed-ai/README.md`](./governed-ai/README.md) | `CONFIRMED` | AI boundary, Focus Mode, citations, receipts, and finite runtime outcomes. |
 | Tile delivery architecture | [`./tiles/README.md`](./tiles/README.md) | `CONFIRMED` | Tile artifacts, layer manifests, release manifests, and renderer delivery boundaries. |
-| Policy root | [`../../policy/README.md`](../../policy/README.md) | `CONFIRMED` | Deny-by-default policy posture, rights, sensitivity, release, correction, and runtime admissibility. |
+| Policy root | [`../../policy/README.md`](../../policy/README.md) | `CONFIRMED` | Deny-by-default policy posture, rights, sensitivity, review, release, correction, and runtime admissibility. |
 | Web shell | [`../../apps/web/README.md`](../../apps/web/README.md) | `CONFIRMED` | Browser-facing map-first shell that renders governed outputs without becoming truth. |
+| Web package metadata | [`../../apps/web/package.json`](../../apps/web/package.json) | `CONFIRMED` | Package-level signal for web shell tooling and map/tile dependencies; execution status remains unverified here. |
 
 ### Upstream sources
 
@@ -97,10 +100,35 @@ Architecture docs should help maintainers update or review:
 - policy gates and reason-code families;
 - validators, fixtures, and CI checks;
 - governed API, runtime, MapLibre, Evidence Drawer, Focus Mode, export, review, and release surfaces;
-- runbooks, ADRs, registers, and rollback procedures.
+- runbooks, ADRs, registers, correction procedures, and rollback procedures.
 
 > [!WARNING]
-> Do not use architecture prose as a substitute for machine validation, source-rights review, policy evaluation, proof-pack closure, or release approval.
+> Architecture prose must not substitute for machine validation, source-rights review, policy evaluation, proof-pack closure, release approval, or rollback readiness.
+
+[Back to top](#top)
+
+---
+
+## Current evidence snapshot
+
+This snapshot records what was checked for this revision. It is not a complete repository audit.
+
+| Evidence area | Status | What it supports | What remains unresolved |
+|---|---:|---|---|
+| Local mounted repository | `CONFIRMED unavailable` | `/mnt/data` contained uploaded PDFs and no mounted Git checkout in the inspected workspace. | Local branch state, dirty state, local tests, local workflows, local runtime logs. |
+| GitHub repository metadata | `CONFIRMED connector inspected` | Repository access and default-branch inspection were available through the GitHub connector. | Branch protections, latest workflow success, deployment settings, runtime status. |
+| Existing target file | `CONFIRMED` | `docs/architecture/README.md` exists and already uses KFM Meta Block v2, badges, quick jumps, truth labels, diagrams, and verification backlog conventions. | Maintainer acceptance of this revised text and inbound anchor compatibility. |
+| Root README | `CONFIRMED` | Root README defines KFM as governed, evidence-first, map-first, time-aware, and centered on inspectable claims. | Whether root README has moved beyond draft/proposed status. |
+| `docs/README.md` | `CONFIRMED thin` | The docs root exists but is currently minimal. | Final documentation-root navigation and owner model. |
+| ADR-0001 | `CONFIRMED draft` | Schema-home decision is documented as draft/proposed; `schemas/contracts/v1/` is proposed as machine-schema home. | Whether ADR-0001 is accepted, enforced, or superseded. |
+| Governed API docs | `CONFIRMED` | A governed API architecture file exists and links the trust membrane to API, UI, contracts, fixtures, ADRs, and checks. | Full route inventory, test coverage, runtime deployment, and CI enforcement. |
+| Governed AI docs | `CONFIRMED` | Governed AI is documented as evidence-subordinate and finite-outcome based. | Model adapters, citation validator execution, and production readiness. |
+| Tile docs | `CONFIRMED` | Tile delivery has a documented architecture surface and adjacent tile-manifest docs. | Production release maturity, signing posture, proof-pack closure, and live emitted artifacts. |
+| Policy docs | `CONFIRMED` | Policy README defines policy as a deny-by-default decision surface. | Policy-as-code coverage, toolchain, branch protection, and actual enforcement. |
+| Web app package | `CONFIRMED file` | `apps/web/package.json` declares `npm@10`, Vite, MapLibre GL, PMTiles, Vitest, and a tile-publisher script. | Dependency install state, test success, build success, deployment, and runtime behavior. |
+
+> [!IMPORTANT]
+> File presence is not enforcement proof. A workflow file, package script, schema, validator, or API file can exist without proving branch protection, successful execution, production deployment, or release readiness.
 
 [Back to top](#top)
 
@@ -112,10 +140,10 @@ Content belongs in `docs/architecture/` when it describes cross-cutting system d
 
 | Accepted input | Belongs here when it explains… | Typical companion homes |
 |---|---|---|
-| System context | How KFM components relate across source, pipeline, catalog, API, UI, release, and review boundaries. | `docs/`, `control_plane/`, `contracts/` |
+| System context | How KFM components relate across source, pipeline, catalog, API, UI, release, correction, and review boundaries. | `docs/`, `control_plane/`, `contracts/` |
 | Lifecycle architecture | How material moves through governed stages and what can fail closed. | `pipelines/`, `data/`, `release/`, `policy/` |
 | Governed API architecture | How public and internal clients receive finite, evidence-bounded envelopes. | `apps/`, `contracts/api/`, `schemas/contracts/v1/` |
-| Map shell architecture | How MapLibre and UI surfaces render released artifacts and inspect trust state. | `apps/web/`, `docs/domains/ui_maplibre/` |
+| Map shell architecture | How MapLibre and UI surfaces render released artifacts and inspect trust state. | `apps/web/`, `docs/domains/`, `contracts/runtime/` |
 | Governed AI architecture | How Focus Mode, model adapters, citations, and receipts remain subordinate to evidence. | `contracts/runtime/`, `policy/`, `tests/` |
 | Tile and layer architecture | How tiles, styles, layer manifests, and releases remain derived and rollback-capable. | `release/`, `data/published/`, `schemas/` |
 | Security and exposure architecture | How public, steward, admin, and local/private exposure paths are separated. | `docs/security/`, `infra/`, `configs/` |
@@ -132,7 +160,7 @@ Content belongs in `docs/architecture/` when it describes cross-cutting system d
 | Machine schemas | Architecture can reference shape, but should not become validation authority. | `schemas/contracts/v1/` |
 | Semantic object contracts | Architecture can link to meaning, but should not fork object definitions. | `contracts/` |
 | Policy-as-code | Architecture can explain seams; policy decides admissibility. | `policy/` |
-| Validator implementations | Architecture can define gates; tools enforce them. | `tools/validators/` |
+| Validator implementations | Architecture can define gates; tools enforce them. | `tools/validators/`, `tools/`, or `scripts/` after repo convention verification |
 | Tests and fixtures | Architecture can define expected proof; tests prove behavior. | `tests/`, `fixtures/` |
 | RAW, WORK, QUARANTINE, or unpublished data | Public docs must not expose internal-stage material or create bypass paths. | `data/raw/`, `data/work/`, `data/quarantine/` with access controls |
 | Receipts, proof packs, and release manifests as live instances | These are emitted evidence-bearing objects, not architecture prose. | `data/receipts/`, `data/proofs/`, `release/` |
@@ -148,12 +176,14 @@ Content belongs in `docs/architecture/` when it describes cross-cutting system d
 
 ## Directory map
 
-### Current architecture surfaces verified for this revision
+### Architecture surfaces verified for this revision
 
 | Path | Status | Role |
 |---|---:|---|
 | [`README.md`](./README.md) | `CONFIRMED target` | Architecture landing page. |
-| [`governed-ai/README.md`](./governed-ai/README.md) | `CONFIRMED` | Governed AI, Focus Mode, citations, receipts, and model-adapter boundary. |
+| [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | `CONFIRMED` | Contract/schema/policy responsibility boundary. |
+| [`governed-api.md`](./governed-api.md) | `CONFIRMED` | Governed API trust membrane. |
+| [`governed-ai/README.md`](./governed-ai/README.md) | `CONFIRMED` | Evidence-subordinate AI and Focus Mode boundary. |
 | [`tiles/README.md`](./tiles/README.md) | `CONFIRMED` | Tile delivery architecture and released map-artifact posture. |
 | [`tiles/TILE_MANIFEST_SPEC.md`](./tiles/TILE_MANIFEST_SPEC.md) | `CONFIRMED path surfaced` / `contents not fully re-reviewed here` | Tile manifest specification companion. |
 | [`tiles/DELTA_UPDATE_MODEL.md`](./tiles/DELTA_UPDATE_MODEL.md) | `CONFIRMED path surfaced` / `contents not fully re-reviewed here` | Tile delta update model companion. |
@@ -161,16 +191,16 @@ Content belongs in `docs/architecture/` when it describes cross-cutting system d
 
 ### Directory Rules target shape
 
-Directory Rules identify `docs/architecture/` as the home for cross-cutting system design. A mature architecture directory may grow toward this shape:
+Directory Rules identify `docs/architecture/` as the home for cross-cutting system design. A mature architecture directory may grow toward this shape after repo conventions, ADRs, and inbound links are checked:
 
 ```text
 docs/
 └── architecture/
     ├── README.md
-    ├── system-context.md
-    ├── deployment-topology.md
+    ├── system-context.md                    # PROPOSED target from Directory Rules
+    ├── deployment-topology.md               # PROPOSED target from Directory Rules
     ├── governed-api.md
-    ├── map-shell.md
+    ├── map-shell.md                         # PROPOSED target from Directory Rules
     ├── contract-schema-policy-split.md
     ├── governed-ai/
     │   └── README.md
@@ -182,7 +212,7 @@ docs/
 ```
 
 > [!IMPORTANT]
-> New files in this directory should be cross-domain. Domain-specific architecture usually belongs under `docs/domains/<domain>/architecture/` or the repo-native domain-lane convention.
+> New files in this directory should be cross-domain. Domain-specific architecture usually belongs under `docs/domains/<domain>/` or the repo-native domain-lane convention.
 
 [Back to top](#top)
 
@@ -285,7 +315,7 @@ A non-trivial architecture change is ready for review when it satisfies the gate
 
 - [ ] The target file path follows Directory Rules and nearby repo conventions.
 - [ ] Existing adjacent docs and stable anchors were checked before rewriting.
-- [ ] The change does not create a parallel schema, contract, policy, source, release, proof, or fixture authority.
+- [ ] The change does not create a parallel schema, contract, policy, source, release, proof, receipt, or fixture authority.
 - [ ] Material implementation claims are backed by repo evidence or explicitly labeled.
 - [ ] Cross-domain architecture is separated from domain-lane burden.
 - [ ] Public clients remain behind governed APIs and released artifacts.
@@ -404,6 +434,7 @@ It must preserve KFM trust law, link to upstream/downstream surfaces, separate c
 | Runtime behavior | `UNKNOWN` | Verify through source code, tests, logs, dashboards, or emitted artifacts. |
 | Release/proof object existence | `UNKNOWN` | Inspect `release/`, `data/proofs/`, `data/receipts/`, CI outputs, and generated artifacts. |
 | Schema-home ADR status | `draft / NEEDS VERIFICATION` | Confirm whether ADR-0001 has been accepted, superseded, or remains proposed. |
+| Tile subdoc contents | `NEEDS VERIFICATION` | Re-review tile subdocs before claiming contents beyond surfaced paths. |
 
 [Back to top](#top)
 
