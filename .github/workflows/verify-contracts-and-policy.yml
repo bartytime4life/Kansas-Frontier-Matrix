@@ -1,1 +1,70 @@
+name: verify-contracts-and-policy
 
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/verify-contracts-and-policy.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "policy/**"
+      - "tools/**"
+      - "tests/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/verify-contracts-and-policy.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "policy/**"
+      - "tools/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify-contracts-and-policy:
+    name: Verify contracts, schemas, and policy gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate contract and schema surfaces
+        run: |
+          set -euo pipefail
+          python tools/validate_repo.py
+          python tools/validate_api_contracts.py
+          python tools/validate_schema_conformance.py
+          python tools/validate_fixture_schema_mapping.py
+
+      - name: Validate policy and governance boundaries
+        run: |
+          set -euo pipefail
+          python tools/check_directory_rules.py
+          python tools/check_no_public_internal_paths.py
+          python tools/check_publication_eligibility.py
+
+      - name: Run policy-focused unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p "*policy*.py"
