@@ -2,19 +2,19 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION-ADR-0310-HYDROLOGY-WBD-TERMS-RIGHTS
 title: ADR-0310: Hydrology WBD Terms and Rights Review
 type: standard
-version: v1.0-review
+version: v1
 status: review
 owners: TODO: hydrology domain steward; documentation steward; policy steward; rights reviewer
 created: NEEDS-VERIFICATION
 updated: 2026-05-06
 policy_label: restricted-draft
-related: [./README.md, ./ADR-0305-hydrology-source-documentation-verification.md, ./ADR-0307-hydrology-wbd-metadata-probe.md, ../domains/hydrology/README.md, ../../data/registry/crosswalk/sources.yaml, ../../schemas/contracts/v1/source/source_activation_decision.schema.json, ../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json, ../../release/dry_runs/hydrology_wbd_terms_rights_gate.json, ../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json]
+related: [./README.md, ./ADR-0303-hydrology-source-descriptor-activation-gates.md, ./ADR-0305-hydrology-source-documentation-verification.md, ./ADR-0307-hydrology-wbd-metadata-probe.md, ./ADR-0311-hydrology-synthetic-release-governance.md, ../domains/hydrology/README.md, ../reports/hydrology-wbd-terms-rights-inspection.md, ../../data/registry/crosswalk/sources.yaml, ../../data/registry/sources/hydrology/source_descriptors/SRC-HYD-WBD-CANDIDATE.json, ../../schemas/contracts/v1/source/source_activation_decision.schema.json, ../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json, ../../release/dry_runs/hydrology_wbd_terms_rights_gate.json, ../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json]
 tags: [kfm, adr, hydrology, wbd, huc12, rights, terms, source-activation, verified-inactive, public-release, fail-closed]
 notes: [
-  Preserves the existing ADR-0310 short-form decision: terms/rights hardening keeps WBD VERIFIED_INACTIVE and non-public.
-  This ADR distinguishes external public-domain source status from KFM publication eligibility.
-  External USGS source facts were checked on 2026-05-06, but KFM publication remains blocked until repo-native source descriptors, attribution text, validation receipts, policy gates, release manifests, and rollback references are accepted.
-  Owners, created date, policy steward, legal/risk reviewer, CI enforcement, and full activation-review workflow remain NEEDS VERIFICATION.
+  Preserves the existing ADR-0310 decision: WBD/HUC12 remains VERIFIED_INACTIVE and non-public after terms and rights review.
+  Distinguishes external public-domain/public-access source posture from KFM publication eligibility.
+  Official USGS source pages were checked during this revision; repo-native dry-run artifacts still keep KFM rights, attribution, activation, and public release blocked.
+  Owners, created date, final legal/risk reviewer, policy steward approval, branch protection, CI enforcement, and full promotion workflow remain NEEDS VERIFICATION.
 ]
 [/KFM_META_BLOCK_V2] -->
 
@@ -22,21 +22,19 @@ notes: [
 
 # ADR-0310: Hydrology WBD Terms and Rights Review
 
-<p align="center">
-  <strong>Public-domain source material is not the same thing as KFM public-release eligibility.</strong>
-</p>
+Public-domain source material is not the same thing as KFM public-release eligibility.
 
 <p align="center">
   <img alt="ADR status: review" src="https://img.shields.io/badge/ADR-review-blue">
   <img alt="source state: verified inactive" src="https://img.shields.io/badge/source-VERIFIED__INACTIVE-orange">
-  <img alt="public release: no" src="https://img.shields.io/badge/public%20release-no-red">
+  <img alt="public release: denied" src="https://img.shields.io/badge/public%20release-denied-red">
   <img alt="policy decision: deny" src="https://img.shields.io/badge/policy-DENY-red">
   <img alt="rights: needs verification" src="https://img.shields.io/badge/rights-NEEDS%20VERIFICATION-yellow">
 </p>
 
 <p align="center">
   <a href="#decision-summary">Decision</a> ·
-  <a href="#why-this-adr-exists">Why</a> ·
+  <a href="#repo-fit-and-placement">Repo fit</a> ·
   <a href="#evidence-boundary">Evidence</a> ·
   <a href="#terms-and-rights-determination">Terms & rights</a> ·
   <a href="#state-model">State model</a> ·
@@ -46,12 +44,12 @@ notes: [
 </p>
 
 > [!IMPORTANT]
-> **Preserved decision:** Terms and rights hardening keeps the WBD/HUC12 source candidate in `VERIFIED_INACTIVE` state and keeps WBD-derived KFM material **non-public** until KFM-specific review, attribution, source-descriptor, validation, policy, release, and rollback gates are accepted.
+> **Decision preserved:** WBD/HUC12 remains `VERIFIED_INACTIVE`.
 >
-> **Meaning of “non-public” here:** KFM must not publish WBD geometry, WBD feature attributes, public aliases, map layers, API payloads, Evidence Drawer payloads, or Focus Mode answers from this source candidate merely because the source is publicly accessible or public domain.
+> This ADR does not activate live WBD ingestion, does not store WBD geometry, does not store WBD feature attributes, does not publish a public map layer, and does not allow public API, Evidence Drawer, or Focus Mode use of WBD-derived KFM outputs.
 
 > [!NOTE]
-> This ADR does **not** say WBD is legally private. Official USGS material indicates WBD is a public-domain/public-access source family. This ADR says KFM has not yet completed the governed release burden required to expose WBD-derived artifacts through KFM public surfaces.
+> This ADR does **not** say WBD is legally private. Official USGS source material supports a public-domain/public-access external posture. The KFM decision is narrower: public release through KFM remains blocked until KFM-specific source descriptor, rights, attribution, validation, policy, release, correction, and rollback gates are accepted.
 
 ---
 
@@ -60,20 +58,90 @@ notes: [
 | Field | Determination |
 |---|---|
 | ADR path | `docs/adr/ADR-0310-hydrology-wbd-terms-rights-review.md` |
+| Owning root | `docs/` |
+| Local responsibility | `docs/adr/` human-facing decision ledger |
 | Decision | Keep WBD/HUC12 source candidate `VERIFIED_INACTIVE` and not eligible for public release. |
 | Source family | USGS Watershed Boundary Dataset / HUC12 |
 | KFM source candidate | `SRC-HYD-WBD-CANDIDATE` |
-| Source role | `HYDROLOGIC_BOUNDARY` / hydrologic-unit boundary and watershed packaging context |
-| Runtime decision | `ABSTAIN` for source activation until review closes |
+| Source role | `HYDROLOGIC_BOUNDARY` / hydrologic-unit boundary context |
+| Runtime decision | `ABSTAIN` for activation until review closes |
 | Policy decision | `DENY` for public publication until KFM release gates pass |
 | Release posture | `DRAFT`; no public release, no public alias, no live source ingestion |
 | Data handling posture | No WBD geometry or WBD feature attributes stored by this ADR |
-| Rights posture | External public-domain support exists; KFM rights and attribution review remains `NEEDS VERIFICATION` for publication |
+| External rights posture | Official source checks support public-domain/public-access source status |
+| KFM rights posture | `NEEDS VERIFICATION` for attribution, source descriptor, snapshot identity, release, and publication |
 | Rollback target | `release/dry_runs/hydrology_wbd_metadata_probe_gate.json` |
 | Correction route | `contracts/correction/correction_notice.md` |
 | Public-surface rule | Governed API, MapLibre, Evidence Drawer, and Focus Mode must not expose WBD-derived KFM outputs until a later accepted release decision permits it. |
 
-**Final decision:** WBD may be documented and reviewed as a high-value hydrology source candidate, but WBD-derived KFM outputs remain internal review material only until a later promotion decision proves rights, terms, attribution, validation, evidence closure, release state, and rollback.
+**Final decision:** WBD may remain a high-trust hydrologic boundary source candidate, but WBD-derived KFM outputs remain non-public review material until a later promotion decision proves the full KFM chain.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Repo fit and placement
+
+`docs/adr/ADR-0310-hydrology-wbd-terms-rights-review.md` belongs under `docs/adr/` because it records a governance-significant architecture decision.
+
+| Placement question | Answer |
+|---|---|
+| Why under `docs/`? | ADRs are human-facing governance records and part of the documentation control plane. |
+| Why under `docs/adr/`? | This decision affects source activation, rights posture, public release eligibility, rollback, and downstream UI/API/AI trust boundaries. |
+| Why not under `docs/domains/hydrology/` only? | The source is hydrology-specific, but the decision affects cross-cutting KFM publication governance. |
+| Why not under `schemas/`, `policy/`, `release/`, or `data/`? | This file decides and explains. Machine schemas, executable policy, release dry-runs, and receipts remain in their responsibility roots. |
+| Directory Rules basis | Root folders are authority boundaries. Domain work belongs under the appropriate responsibility root, not as new root-level domain folders. |
+
+### Upstream and downstream links
+
+| Relationship | Path | Role |
+|---|---|---|
+| ADR index | [`./README.md`](./README.md) | Navigation, ADR status, naming, review, rollback, and supersession discipline. |
+| Source activation gates | [`./ADR-0303-hydrology-source-descriptor-activation-gates.md`](./ADR-0303-hydrology-source-descriptor-activation-gates.md) | Source admission and activation state discipline. |
+| Source documentation verification | [`./ADR-0305-hydrology-source-documentation-verification.md`](./ADR-0305-hydrology-source-documentation-verification.md) | Source docs are prerequisite support only, not claim evidence. |
+| WBD metadata probe | [`./ADR-0307-hydrology-wbd-metadata-probe.md`](./ADR-0307-hydrology-wbd-metadata-probe.md) | Metadata-only probe gate; never public release by probe alone. |
+| Hydrology domain landing page | [`../domains/hydrology/README.md`](../domains/hydrology/README.md) | Hydrology proof-lane doctrine and source-role boundaries. |
+| WBD source descriptor | [`../../data/registry/sources/hydrology/source_descriptors/SRC-HYD-WBD-CANDIDATE.json`](../../data/registry/sources/hydrology/source_descriptors/SRC-HYD-WBD-CANDIDATE.json) | Candidate source descriptor; public release blocked. |
+| Crosswalk source registry | [`../../data/registry/crosswalk/sources.yaml`](../../data/registry/crosswalk/sources.yaml) | Draft source-family registry; `rights_default: public` is not release eligibility. |
+| Source activation schema | [`../../schemas/contracts/v1/source/source_activation_decision.schema.json`](../../schemas/contracts/v1/source/source_activation_decision.schema.json) | Machine shape for finite activation decisions. |
+| Verified-inactive fixture | [`../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json`](../../fixtures/source/hydrology/source_activation_decision.wbd.verified_inactive.valid.json) | Valid `ABSTAIN` + `VERIFIED_INACTIVE` fixture. |
+| Activation receipt | [`../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json`](../../data/receipts/source_verification/hydrology/activation_decisions/SAD-WBD-ABSTAIN-001.json) | Process memory for current activation abstention. |
+| Terms/rights dry-run | [`../../release/dry_runs/hydrology_wbd_terms_rights_gate.json`](../../release/dry_runs/hydrology_wbd_terms_rights_gate.json) | Release dry-run artifact preserving `DENY`, `UNKNOWN` rights, and `VERIFIED_INACTIVE`. |
+| Terms/rights inspection report | [`../reports/hydrology-wbd-terms-rights-inspection.md`](../reports/hydrology-wbd-terms-rights-inspection.md) | Records prior no-network inspection posture and open verification. |
+
+> [!CAUTION]
+> `rights_default: public` in a registry is a useful source-review hint. It does **not** override a release dry-run that says `rights_status: UNKNOWN`, `policy_decision: DENY`, and `publication_eligibility_decision: NOT_ELIGIBLE`.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## What this ADR decides
+
+This ADR decides that WBD/HUC12 remains admissible for **source review** but not for **KFM public publication**.
+
+| Decision | Status |
+|---|---|
+| Keep WBD source candidate in KFM tracking | `ALLOW` as candidate/review material |
+| Keep source activation state | `VERIFIED_INACTIVE` |
+| Keep activation decision | `ABSTAIN` |
+| Keep public release blocked | `DENY` |
+| Keep terms and attribution review open | `NEEDS VERIFICATION` |
+| Treat official source checks as source-review evidence only | `ALLOW` |
+| Use source documentation as hydrologic claim evidence | `DENY` |
+| Store WBD geometry in this ADR | `DENY` |
+| Store WBD feature attributes in this ADR | `DENY` |
+| Publish map/API/UI/AI outputs from WBD through this ADR | `DENY` |
+
+### What this ADR does not decide
+
+| Not decided here | Required later |
+|---|---|
+| Whether to fetch WBD data | Source activation decision, retrieval receipt, storage policy, and validation plan. |
+| Whether to store WBD geometry | Geometry storage policy, lifecycle destination, schema, validation, receipt, and rollback plan. |
+| Which WBD attributes are allowed | Attribute minimization policy and schema review. |
+| Whether any WBD-derived layer can become public | ReleaseManifest, catalog/proof closure, rights/attribution review, policy pass, review state, correction path, and rollback target. |
+| Whether Focus Mode may answer WBD questions | EvidenceBundle resolution, citation validation, finite runtime envelope, and public-release permission. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -81,15 +149,15 @@ notes: [
 
 ## Why this ADR exists
 
-WBD/HUC12 is an attractive first hydrology proof source because it provides hydrologic-unit boundaries and a clear HUC hierarchy. That also makes it easy to over-promote.
+WBD/HUC12 is attractive for the hydrology proof lane because it provides hydrologic-unit boundaries and a clear HUC hierarchy. That also makes it easy to over-promote.
 
-KFM must prevent three different ideas from collapsing into one:
+KFM must keep three ideas separate:
 
 | Thing | What it means | What it does **not** mean |
 |---|---|---|
 | External source accessibility | USGS WBD can be found through official source pages, data catalog entries, downloads, or services. | KFM can publish derived geometry immediately. |
-| External rights posture | Official USGS pages indicate public-domain/public-access status and credit expectations. | KFM attribution, source descriptor, release, policy, and rollback gates are complete. |
-| KFM source activation | KFM has admitted a source into a governed lifecycle state. | A public map/API/AI answer can expose it without release proof. |
+| External rights posture | Official USGS pages support a public-domain/public-access source posture and credit expectations. | KFM attribution, source descriptor, release, policy, correction, and rollback gates are complete. |
+| KFM source activation | KFM has admitted a source candidate into a governed lifecycle state. | Public map/API/AI surfaces may expose it without release proof. |
 
 This ADR prevents “public domain” from becoming a shortcut around KFM’s trust membrane.
 
@@ -100,7 +168,7 @@ official WBD source documentation
 → KFM source documentation review
 → inactive SourceDescriptor candidate
 → no-network fixture and metadata probe
-→ rights and attribution review
+→ terms, rights, and attribution review
 → validation and policy
 → EvidenceBundle / ReleaseManifest
 → governed public surface
@@ -114,31 +182,38 @@ Any shortcut from official source documentation directly to public KFM surface i
 
 ## Evidence boundary
 
-This ADR is grounded in current repository evidence and current official USGS source checks, but it does not claim full CI or policy enforcement unless linked artifacts prove that enforcement.
+This ADR is grounded in repository evidence, attached KFM doctrine, and official USGS source checks. It does not claim branch protection, CI enforcement, legal approval, or public-release readiness.
 
 | Evidence | Status | Supports | Does not prove |
 |---|---|---|---|
-| Existing ADR-0310 file | `CONFIRMED` | Existing short-form decision: WBD remains `VERIFIED_INACTIVE` and non-public after terms/rights hardening. | Full rationale, owners, acceptance, workflow enforcement, or release readiness. |
-| ADR-0305 source documentation verification | `CONFIRMED repo doc` | Source documentation review is prerequisite support only and must not become claim evidence. | Connector activation or public publication. |
-| ADR-0308 WBD metadata probe | `CONFIRMED repo doc` | Metadata-only probing must not activate public-safe release by itself. | Terms/rights closure or live ingestion approval. |
-| Hydrology domain README | `CONFIRMED repo doc / draft` | Hydrology is first proof lane; WBD/HUC is hydrologic-unit framing; fixture-first/no-network posture. | That all adjacent hydrology paths, owners, or commands are enforced. |
-| Source activation decision schema | `CONFIRMED repo schema` | `VERIFIED_INACTIVE` is an allowed source activation state; finite decisions are `ALLOW`, `ABSTAIN`, `DENY`, `ERROR`. | That all consumers enforce the schema. |
-| WBD verified-inactive fixture | `CONFIRMED repo fixture` | The WBD source candidate has a valid `ABSTAIN` + `VERIFIED_INACTIVE` fixture. | Public-release eligibility. |
-| WBD terms/rights dry run | `CONFIRMED repo artifact` | Records `no_public_release`, `policy_decision: DENY`, `rights_status: UNKNOWN`, and `activation_decision: VERIFIED_INACTIVE`. | That CI enforces this dry run. |
-| Source registry crosswalk entry | `CONFIRMED repo registry` | Lists `usgs_wbd_huc12` as high-trust, public-default, hydrologic boundary source. | KFM publication eligibility or final rights review. |
-| Official USGS WBD and policy pages | `EXTERNALLY CHECKED` | WBD source meaning, public-domain/public-access support, credit expectations. | KFM-specific source activation or release acceptance. |
+| Existing ADR-0310 file | `CONFIRMED` | Existing decision and structure were preserved. | Final owner approval or enforcement. |
+| ADR index | `CONFIRMED repo doc / NEEDS VERIFICATION coverage` | ADRs belong under `docs/adr/`; decisions require evidence labels, validation, rollback, and supersession. | Complete ADR inventory or current CI enforcement. |
+| Hydrology domain README | `CONFIRMED repo doc / draft` | Hydrology is first proof lane; WBD/HUC is hydrologic-unit framing; fixture-first/no-network posture. | That all adjacent proposed hydrology paths are implemented. |
+| WBD source descriptor | `CONFIRMED repo data` | `SRC-HYD-WBD-CANDIDATE` exists, has `source_role: BOUNDARY_CONTEXT`, `public_release_allowed: false`, and `verification_status: NEEDS_VERIFICATION`. | Public release eligibility. |
+| Source activation decision schema | `CONFIRMED repo schema` | Finite activation decisions are `ALLOW`, `ABSTAIN`, `DENY`, `ERROR`; valid states include `VERIFIED_INACTIVE`. | That every consumer enforces the schema. |
+| WBD verified-inactive fixture | `CONFIRMED repo fixture` | WBD source activation fixture uses `ABSTAIN` + `VERIFIED_INACTIVE`. | Public release eligibility. |
+| Activation receipt | `CONFIRMED repo receipt` | Preserves `SAD-WBD-ABSTAIN-001` process memory. | Final activation approval. |
+| Terms/rights dry-run | `CONFIRMED repo artifact` | Records `no_public_release: true`, `rights_status: UNKNOWN`, `policy_decision: DENY`, and `activation_decision: VERIFIED_INACTIVE`. | That CI enforces the dry-run. |
+| Source registry crosswalk | `CONFIRMED repo registry` | Lists `usgs_wbd_huc12` as high-trust, periodic, public-default hydrologic boundary source. | Release readiness or final rights review. |
+| Hydrology WBD terms/rights inspection report | `CONFIRMED repo report` | Prior inspection kept network disabled, no ingestion, no geometry/attributes stored, and terms pages `ABSTAIN`. | Current external terms closure or release approval. |
+| Official USGS WBD and policy pages | `EXTERNALLY CHECKED` | WBD meaning, public-domain/public-access signals, and credit expectations. | KFM-specific source activation, publication, or legal signoff. |
+| Attached KFM doctrine | `CONFIRMED doctrine / PROPOSED implementation where applicable` | Lifecycle, source-role, fail-closed, EvidenceBundle, ReleaseManifest, and rollback posture. | Current branch behavior unless repo evidence proves it. |
+
+### Naming drift watch
+
+`docs/adr/ADR-0307-hydrology-wbd-metadata-probe.md` is the path referenced by this ADR. The fetched file title currently says `ADR-0308: Hydrology WBD Metadata Probe Gate`. Treat this as `NEEDS VERIFICATION` naming drift and preserve path identity until the ADR index is reconciled.
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from current repository evidence or official external source checks during this revision. |
-| `EXTERNALLY CHECKED` | Checked against official source pages in this session; still version-sensitive over time. |
+| `CONFIRMED` | Verified from repository evidence, current source checks, or attached KFM doctrine during this revision. |
+| `EXTERNALLY CHECKED` | Checked against official source pages; version-sensitive over time. |
 | `PROPOSED` | Rule, gate, path, checklist, or implementation step not proven as enforced. |
-| `NEEDS VERIFICATION` | Checkable item still requiring maintainer, rights, policy, CI, source, or release evidence. |
-| `UNKNOWN` | Not verified strongly enough in this session. |
+| `NEEDS VERIFICATION` | Checkable item requiring maintainer, rights, policy, CI, source, or release evidence. |
+| `UNKNOWN` | Not verified strongly enough in this revision. |
 | `DENY` | Safe negative outcome when policy blocks publication or activation. |
-| `ABSTAIN` | Safe negative outcome when source support or release eligibility is not complete enough to answer/activate. |
+| `ABSTAIN` | Safe negative outcome when source support or release eligibility is incomplete. |
 | `ERROR` | Required artifact or validation state is missing or malformed. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
@@ -149,11 +224,12 @@ This ADR is grounded in current repository evidence and current official USGS so
 
 Official source checks support a strong **external** starting posture:
 
-- USGS WBD is an official national hydrologic-unit dataset.
-- WBD/HUC boundaries are hydrologic units arranged in a nested hierarchy and complete nationally to the 12-digit unit.
-- USGS pages identify WBD media/source usage as public domain.
-- The USGS Science Data Catalog lists WBD access as public and license as the USA.gov public-domain label.
-- USGS asks users to provide appropriate credit when using USGS information.
+- USGS describes WBD as a seamless national hydrologic-unit dataset.
+- WBD hydrologic units organize, collect, manage, and report hydrologic information through a nested HUC hierarchy.
+- WBD is complete nationally to the 12-digit hydrologic unit.
+- USGS WBD media/source notes identify WBD material as public domain.
+- The USGS Science Data Catalog lists WBD access as public and its license as the USA.gov public-domain label.
+- USGS asks users to provide proper credit when using USGS information.
 
 KFM still keeps WBD `VERIFIED_INACTIVE` because KFM publication requires more than external public-domain status.
 
@@ -164,7 +240,7 @@ KFM still keeps WBD `VERIFIED_INACTIVE` because KFM publication requires more th
 | Official source citation | `NEEDS VERIFICATION` | Exact citation text and source page(s) recorded in SourceDescriptor or release notes. |
 | Attribution text | `NEEDS VERIFICATION` | Display/metadata attribution pattern accepted by documentation and policy stewards. |
 | Terms snapshot | `NEEDS VERIFICATION` | Review timestamp, source URLs, and rights summary preserved. |
-| SourceDescriptor | `PROPOSED / NEEDS VERIFICATION` | Inactive descriptor with source role, rights, terms, cadence, caveats, scope, and steward. |
+| SourceDescriptor | `CONFIRMED candidate / NEEDS VERIFICATION for release` | Descriptor must carry source role, rights, terms, cadence, caveats, scope, and steward review. |
 | Data snapshot identity | `NEEDS VERIFICATION` | Download/service endpoint, snapshot date/version, digest, and retrieval receipt. |
 | Geometry storage decision | `DENY for this ADR` | Later PR must decide whether and where WBD geometry may be captured. |
 | Feature attribute storage decision | `DENY for this ADR` | Later PR must decide allowed attributes, minimization, and release class. |
@@ -177,12 +253,11 @@ KFM still keeps WBD `VERIFIED_INACTIVE` because KFM publication requires more th
 | Question | Answer for ADR-0310 |
 |---|---|
 | Can WBD remain in the source registry as a candidate hydrologic boundary source? | Yes. |
-| Can WBD be called public domain in KFM docs? | Only with official-source citation and review timestamp. |
+| Can WBD be described as public-domain/public-access source material in KFM docs? | Yes, when the statement is tied to official source links and a review date. |
 | Can KFM treat WBD as public-release-ready because it is public domain? | No. |
 | Can this ADR store WBD geometry? | No. |
 | Can this ADR store WBD feature attributes? | No. |
 | Can this ADR create a public map layer or public alias? | No. |
-| Can this ADR support a future inactive SourceDescriptor update? | Yes. |
 | Can this ADR activate live WBD ingestion? | No. |
 | Can this ADR support public claims through EvidenceBundle? | No; a later release decision must do that. |
 
@@ -207,7 +282,7 @@ The WBD source candidate remains:
 }
 ```
 
-This state means the source candidate has enough review structure to be tracked, but not enough release closure to become active for public use.
+This state means the source candidate is tracked and reviewable, but not active for public use.
 
 ### 2. Keep publication blocked
 
@@ -224,13 +299,13 @@ For this ADR:
 }
 ```
 
-### 3. Treat registry `rights_default: public` as a starting hint, not release proof
+### 3. Treat `rights_default: public` as a source-review hint
 
-The crosswalk source registry may identify `usgs_wbd_huc12` as public-default and high trust. That does not supersede the dry-run release gate. For public-facing KFM use, the stricter release artifact wins until a later accepted decision says otherwise.
+The source registry may identify `usgs_wbd_huc12` as high-trust and public-default. That does not supersede the stricter release dry-run. For public-facing KFM use, the stricter release artifact wins until a later accepted decision says otherwise.
 
-### 4. Keep source docs out of claim evidence
+### 4. Keep source documentation out of claim evidence
 
-Source pages and terms checks may support source documentation review and SourceDescriptor drafting. They do not support public hydrologic claims.
+Source pages and terms checks may support source documentation review and SourceDescriptor drafting. They do not support public hydrologic claims by themselves.
 
 ### 5. Require explicit attribution handling
 
@@ -244,7 +319,7 @@ Before public release, KFM must decide where USGS credit appears:
 | Map UI | Trust-visible source chip or attribution panel if the layer is published. |
 | Evidence Drawer | Source role, source citation, limitations, and release state. |
 | Export/download | Attribution and license/public-domain notice when public export is allowed. |
-| ReleaseManifest | Explicit rights/attribution review status and reviewer trace. |
+| ReleaseManifest | Rights/attribution review status and reviewer trace. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -256,11 +331,11 @@ Before public release, KFM must decide where USGS credit appears:
 stateDiagram-v2
   [*] --> CANDIDATE
   CANDIDATE --> DRAFT: source docs identified
-  DRAFT --> VERIFIED_INACTIVE: terms/rights review structured
-  VERIFIED_INACTIVE --> ACTIVE_INTERNAL_ONLY: later PR with inactive descriptor + fixture + rights review + policy pass
-  ACTIVE_INTERNAL_ONLY --> ACTIVE_PUBLIC_SAFE: later promotion with ReleaseManifest + rollback + public attribution
-  VERIFIED_INACTIVE --> SUSPENDED: source terms or source identity unresolved
-  ACTIVE_INTERNAL_ONLY --> SUSPENDED: source terms change or validation fails
+  DRAFT --> VERIFIED_INACTIVE: source review structured
+  VERIFIED_INACTIVE --> ACTIVE_INTERNAL_ONLY: later PR with descriptor + rights packet + policy pass
+  ACTIVE_INTERNAL_ONLY --> ACTIVE_PUBLIC_SAFE: later promotion with ReleaseManifest + rollback
+  VERIFIED_INACTIVE --> SUSPENDED: terms, attribution, identity, or review unresolved
+  ACTIVE_INTERNAL_ONLY --> SUSPENDED: validation fails or source terms change
   ACTIVE_PUBLIC_SAFE --> SUSPENDED: public release withdrawn
   SUSPENDED --> RETIRED: superseded source or deprecated use
   VERIFIED_INACTIVE --> RETIRED: candidate rejected or replaced
@@ -277,8 +352,8 @@ stateDiagram-v2
 
 | Transition | Allowed by this ADR? | Required evidence |
 |---|---:|---|
-| `VERIFIED_INACTIVE` → `ACTIVE_INTERNAL_ONLY` | No; later PR only | Inactive SourceDescriptor, no-network fixture, source terms packet, attribution plan, validation report, policy decision, rollback target. |
-| `VERIFIED_INACTIVE` → `ACTIVE_PUBLIC_SAFE` | No | Must pass `ACTIVE_INTERNAL_ONLY` first, then promotion/release. |
+| `VERIFIED_INACTIVE` → `ACTIVE_INTERNAL_ONLY` | No; later PR only | SourceDescriptor, no-network fixture, source terms packet, attribution plan, validation report, policy decision, rollback target. |
+| `VERIFIED_INACTIVE` → `ACTIVE_PUBLIC_SAFE` | No | Must pass internal activation and release gates first. |
 | `VERIFIED_INACTIVE` → `SUSPENDED` | Yes | Source terms changed, source identity unclear, attribution cannot be resolved, or reviewer blocks use. |
 | `VERIFIED_INACTIVE` → `RETIRED` | Yes | Candidate rejected, source superseded, or hydrology source strategy changes. |
 
@@ -297,7 +372,7 @@ stateDiagram-v2
 | Attribute guard | No WBD feature attributes stored by this ADR. | `DENY` |
 | Publication guard | No public alias, published artifact, API payload, tile, or map layer. | `DENY` |
 | Attribution guard | No publication without exact attribution/citation plan. | `DENY` |
-| Source-descriptor guard | No activation without inactive SourceDescriptor and review state. | `DENY` or `ERROR` |
+| Source-descriptor guard | No activation without SourceDescriptor and review state. | `DENY` or `ERROR` |
 | Evidence guard | Source docs cannot be used as hydrologic claim evidence. | `DENY` |
 | AI guard | No direct model-client use and no uncited Focus Mode answer. | `DENY` |
 | Rollback guard | No release without rollback target and correction route. | `ERROR` |
@@ -322,7 +397,7 @@ stateDiagram-v2
 
 ## Required fields for the next SourceDescriptor review
 
-A later PR may advance the WBD candidate only by adding or updating an inactive source descriptor with the fields below.
+A later PR may advance the WBD candidate only by adding or updating a source descriptor with the fields below.
 
 | Field | Requirement |
 |---|---|
@@ -358,12 +433,12 @@ A later PR may advance the WBD candidate only by adding or updating an inactive 
 - Source activation decision fixtures.
 - Dry-run release gate records.
 - Review checklists.
-- Rollback/supersession notes.
+- Rollback and supersession notes.
 - Non-public source-descriptor drafts.
 
 ### Excluded by this ADR
 
-| Excluded material | Where it belongs instead |
+| Excluded material | Where it goes instead |
 |---|---|
 | WBD geometry | Later governed source-ingest PR after terms, receipt, and storage policy approval. |
 | WBD feature attributes | Later governed source-ingest PR with attribute minimization and schema review. |
@@ -372,7 +447,7 @@ A later PR may advance the WBD candidate only by adding or updating an inactive 
 | MapLibre source/layer registration | Later UI/map PR after release eligibility. |
 | Evidence Drawer public payload | Later release/UI PR after EvidenceBundle closure. |
 | Focus Mode public answer | Later governed AI/API PR after EvidenceBundle and citation validation. |
-| Live connector | Later activation ADR or source-activation decision. |
+| Live connector | Later activation ADR or source activation decision. |
 | Emergency or life-safety guidance | Out of scope; KFM is not an emergency alert system. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
@@ -385,8 +460,9 @@ ADR-0310 may move beyond `review` only when the following are true.
 
 - [ ] ADR index lists ADR-0310 with status and decision summary.
 - [ ] Owners/stewards for hydrology, documentation, policy, and rights review are named or explicitly placeholdered.
-- [ ] Source activation decision schema is referenced by the ADR and any fixtures validate against it.
+- [ ] Source activation decision schema is referenced by this ADR and any fixtures validate against it.
 - [ ] WBD verified-inactive fixture remains valid and uses `ABSTAIN` + `VERIFIED_INACTIVE`.
+- [ ] Activation receipt preserves `SAD-WBD-ABSTAIN-001` or accepted successor process memory.
 - [ ] WBD terms/rights dry-run artifact remains `DRAFT`, non-public, and policy-denied unless superseded by a later accepted release decision.
 - [ ] Source registry language distinguishes `rights_default: public` from KFM public-release eligibility.
 - [ ] Official source rights/credit pages are recorded with retrieval date.
@@ -400,12 +476,12 @@ ADR-0310 may move beyond `review` only when the following are true.
 
 ### Definition of done for this documentation revision
 
-- [ ] Existing one-line decision is preserved and expanded, not replaced by generic rights language.
-- [ ] External WBD public-domain/public-access status is acknowledged without weakening KFM release gates.
-- [ ] Current repo artifacts are linked with relative paths.
-- [ ] Remaining verification items are explicit.
-- [ ] Rollback path is visible.
-- [ ] No implementation enforcement is claimed unless backed by cited repo artifacts.
+- [x] Existing decision is preserved and expanded rather than replaced by generic rights language.
+- [x] External WBD public-domain/public-access status is acknowledged without weakening KFM release gates.
+- [x] Current repo artifacts are linked with relative paths where verified or already referenced.
+- [x] Remaining verification items are explicit.
+- [x] Rollback path is visible.
+- [x] No implementation enforcement is claimed without current repository evidence.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -469,19 +545,20 @@ Rollback must protect the evidence chain and must not convert a terms review int
 
 | Item | Status | Why it matters |
 |---|---|---|
-| Created date | `NEEDS VERIFICATION` | Existing file did not include metadata. |
+| Created date | `NEEDS VERIFICATION` | Existing file did not include a verified creation date. |
 | Owners/stewards | `NEEDS VERIFICATION` | Rights, hydrology, policy, and documentation review burden must be explicit. |
-| ADR index status | `NEEDS VERIFICATION` | `docs/adr/README.md` should list ADR-0310. |
-| Exact legal/risk reviewer | `NEEDS VERIFICATION` | This ADR is not legal advice; a reviewer must own final rights posture. |
-| WBD source descriptor path | `NEEDS VERIFICATION` | Avoid parallel source-registry homes. |
+| ADR index status | `NEEDS VERIFICATION` | `docs/adr/README.md` should list ADR-0310 with current status. |
+| ADR-0307 / ADR-0308 title drift | `NEEDS VERIFICATION` | Preserve path identity until the ADR registry resolves naming drift. |
+| Legal/risk reviewer | `NEEDS VERIFICATION` | This ADR is not legal advice; a reviewer must own final rights posture. |
 | Exact attribution text | `NEEDS VERIFICATION` | Required before publication. |
 | Exact source snapshot/version/digest | `NEEDS VERIFICATION` | Required before geometry/attribute capture. |
 | Geometry storage policy | `NEEDS VERIFICATION` | Required before any WBD geometry enters lifecycle data. |
 | Attribute minimization policy | `NEEDS VERIFICATION` | Required before any WBD feature attributes enter lifecycle data. |
-| CI enforcement | `NEEDS VERIFICATION` | Do not claim workflow enforcement without current run evidence. |
+| CI enforcement | `NEEDS VERIFICATION` | Workflow file presence is not proof of enforced checks. |
+| Branch protection | `UNKNOWN` | Required before claiming checks are mandatory. |
 | Policy implementation | `NEEDS VERIFICATION` | Dry-run JSON records policy posture; policy-as-code enforcement must be verified separately. |
-| Public release class | `DENY until accepted` | Prevents public surface bypass. |
 | ReleaseManifest successor | `UNKNOWN` | Needed before public map/API/UI/AI use. |
+| Current source terms at activation time | `NEEDS VERIFICATION` | Terms and source pages are version-sensitive. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -493,7 +570,7 @@ These references support source-rights review only. They do not activate WBD in 
 
 | Reference | Use in this ADR |
 |---|---|
-| [USGS Watershed Boundary Dataset][usgs-wbd] | WBD description, HUC hierarchy, source/public-domain notes, authoritative snapshot note. |
+| [USGS Watershed Boundary Dataset][usgs-wbd] | WBD description, HUC hierarchy, public-domain source note, and authoritative snapshot note. |
 | [USGS WBD Science Data Catalog entry][usgs-wbd-sdc] | Public access and public-domain license signal. |
 | [USGS Copyrights and Credits][usgs-copyrights] | USGS public-domain and credit expectations. |
 | [Acknowledging or Crediting USGS][usgs-crediting] | Example credit language and attribution patterns. |
@@ -509,7 +586,7 @@ These references support source-rights review only. They do not activate WBD in 
 
 KFM keeps WBD/HUC12 in `VERIFIED_INACTIVE` state.
 
-WBD may remain a high-trust hydrologic boundary source candidate, and official USGS source facts may support a future rights review. But this ADR does not publish WBD-derived material, does not store WBD geometry or attributes, does not activate a live connector, and does not allow public map/API/UI/AI exposure.
+WBD may remain a high-trust hydrologic boundary source candidate, and official USGS source facts may support a future rights review. This ADR does not publish WBD-derived material, does not store WBD geometry or attributes, does not activate a live connector, and does not allow public map/API/UI/AI exposure.
 
 The safe current outcome is:
 
