@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "object_type": {
+      "const": "AirNowSnapshotPreservationReceipt"
+    },
+    "workflow_runner": {
+      "const": "airnow_layer20_snapshot_preservation"
+    }
+  },
+  "required": [
+    "object_type",
+    "workflow_runner",
+    "workflow_outcome",
+    "validation_outcome"
+  ],
+  "type": "object"
+}
