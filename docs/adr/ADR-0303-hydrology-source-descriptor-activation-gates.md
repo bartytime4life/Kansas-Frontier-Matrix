@@ -8,7 +8,7 @@ owners: @bartytime4life; hydrology-domain-steward NEEDS_VERIFICATION; policy-ste
 created: NEEDS_VERIFICATION__YYYY-MM-DD
 updated: 2026-05-06
 policy_label: public
-related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0202-policy-home.md, ../runbooks/hydrology-source-activation-gates.md, ../domains/hydrology/README.md, ../../contracts/objects/source-descriptor/README.md, ../../data/registry/sources/hydrology/, ../../tools/validators/validate_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_role_policy.py]
+related: [./README.md, ./ADR-0001-schema-home.md, ./ADR-0201-policy-home.md, ../runbooks/hydrology-source-activation-gates.md, ../domains/hydrology/README.md, ../../contracts/objects/source-descriptor/README.md, ../../data/registry/sources/hydrology/, ../../tools/validators/validate_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_descriptors.py, ../../tests/domains/hydrology/test_hydrology_source_role_policy.py]
 tags: [kfm, adr, hydrology, source-descriptor, source-activation, source-rights, fail-closed, descriptor-first, no-network, governance]
 notes: [
   Replaces the thin ADR-0303 note with a full decision record while preserving the original decision: candidate official hydrology sources are descriptor-only, blocked, and non-fetching.
@@ -123,7 +123,7 @@ That proof lane becomes unsafe if source registration is confused with source ac
 - Approving public release of source data or derived artifacts.
 - Defining every `SourceDescriptor` schema field.
 - Deciding canonical schema home. See `ADR-0001-schema-home.md`.
-- Deciding canonical policy home. See `ADR-0202-policy-home.md`.
+- Deciding canonical policy home. See `ADR-0201-policy-home.md`.
 - Replacing the hydrology domain README, source activation runbook, source descriptor contract object, or validator implementation.
 - Proving CI enforcement, workflow execution, production runtime behavior, or deployment posture without current execution evidence.
 

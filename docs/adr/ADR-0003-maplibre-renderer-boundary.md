@@ -546,7 +546,7 @@ policy_label: NEEDS_VERIFICATION
 related: [
   ./README.md,
   ./ADR-0001-schema-home.md,
-  ./ADR-0202-policy-home.md,
+  ./ADR-0201-policy-home.md,
   ./ADR-0002-responsibility-root-monorepo.md,
   ./ADR-0203-source-ledger-authority.md,
   ./ADR-0206-maplibre-layer-manifest.md,
@@ -687,7 +687,7 @@ This ADR does **not** decide:
 
 - The complete `LayerManifest.v1` schema. See `ADR-0206-maplibre-layer-manifest.md`.
 - Canonical schema home. See `ADR-0001-schema-home.md`.
-- Canonical policy home. See `ADR-0202-policy-home.md`.
+- Canonical policy home. See `ADR-0201-policy-home.md`.
 - Source-ledger authority. See `ADR-0203-source-ledger-authority.md` or its renumbered successor after ADR cleanup.
 - Exact MapLibre package version, upgrade cadence, or security pinning.
 - Full UI component tree, route names, backend framework, test runner, CI workflow, or deployment topology.

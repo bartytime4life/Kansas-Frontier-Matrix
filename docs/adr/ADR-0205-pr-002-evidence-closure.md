@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/adr/ADR-0202-pr-002-evidence-closure
-title: ADR-0202 PR-002: Evidence Closure Gate for Public Hydrology Claims
+doc_id: kfm://doc/adr/ADR-0205-pr-002-evidence-closure
+title: ADR-0205 PR-002: Evidence Closure Gate for Public Hydrology Claims
 type: adr
 version: v1.1
 status: accepted-supplemental
@@ -45,7 +45,7 @@ notes:
 
 <a id="top"></a>
 
-# ADR-0202 PR-002: Evidence Closure Gate for Public Hydrology Claims
+# ADR-0205 PR-002: Evidence Closure Gate for Public Hydrology Claims
 
 <p align="center">
   <strong>Public hydrology claims must cite resolved evidence or refuse to speak.</strong>

@@ -210,7 +210,7 @@ Run these steps before adding, editing, accepting, or superseding an ADR.
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0202-pr-002-evidence-closure.md` | Evidence closure | `SURFACED / NEEDS VERIFICATION` | Verify whether it is PR-specific or still active governance. |
+| `ADR-0205-pr-002-evidence-closure.md` | Evidence closure | `SURFACED / NEEDS VERIFICATION` | Verify whether it is PR-specific or still active governance. |
 | `ADR-0203-source-ledger-authority.md` | Source ledger authority | `SURFACED / NEEDS VERIFICATION` | Verify source-ledger canonical home and successor links. |
 | `ADR-0204-evidencebundle-contract.md` | EvidenceBundle contract | `SURFACED / NEEDS VERIFICATION` | Verify schema, contract, policy, and EvidenceRef alignment. |
 | `ADR-0005-promotion-gate.md` | Promotion gate | `SURFACED / NEEDS VERIFICATION` | Verify relation to release manifests and policy obligation gates. |
@@ -222,10 +222,10 @@ Run these steps before adding, editing, accepting, or superseding an ADR.
 
 | ADR | Decision area | Status in this index | Notes |
 |---|---|---:|---|
-| `ADR-0202-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Possible numbering collision with other `ADR-0202` usage; verify status and supersession. |
+| `ADR-0201-policy-home.md` | Policy home | `SURFACED / NEEDS VERIFICATION` | Renumbered to restore sequence before ADR-0202; verify status and supersession links are current. |
 | `ADR-0009-sensitive-location-policy.md` | Sensitive location policy | `SURFACED / NEEDS VERIFICATION` | High-risk public exposure decision; verify policy and domain links. |
 | `ADR-0010-local-exposure-security.md` | Local exposure security | `SURFACED / NEEDS VERIFICATION` | Verify runtime, security docs, and enforcement evidence. |
-| `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0202-policy-home.md`. |
+| `ADR-0013-policy-home-authority.md` | Policy-home authority | `SURFACED / NEEDS VERIFICATION` | Verify relationship to `ADR-0201-policy-home.md`. |
 | `ADR-0427-consent-vc-and-revocation-delta.md` | Consent, VC, revocation delta | `SURFACED / NEEDS VERIFICATION` | Sensitive governance area; verify owners and policy label before public use. |
 
 ### UI, map, runtime, and governed AI
