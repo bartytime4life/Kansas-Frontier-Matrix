@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IngestDecisionEnvelope.v1",
+  "type": "object",
+  "required": [
+    "object_type","schema_version","decision_id","source_id","decision","change_detected","materiality","policy_decision","spec_hash_current","decision_reason","created_at","deterministic"
+  ],
+  "properties": {
+    "object_type": {"const": "IngestDecisionEnvelope"},
+    "schema_version": {"const": "v1"},
+    "decision": {"enum": ["INGEST","SKIP","QUARANTINE","ABSTAIN","ERROR"]},
+    "materiality": {"enum": ["MATERIAL","IMMATERIAL","UNKNOWN"]},
+    "deterministic": {"const": true}
+  }
+}
