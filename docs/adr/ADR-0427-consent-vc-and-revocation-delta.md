@@ -6,504 +6,566 @@ version: v1
 status: draft
 owners: governance/policy/runtime
 created: 2026-05-01
-updated: 2026-05-02
+updated: 2026-05-06
 policy_label: TODO-NEEDS-POLICY-LABEL
-related: [docs/adr/README.md, schemas/governance/consent_vc.v1.json, schemas/governance/revoke_delta.v1.json, schemas/evidence/EvidenceBundle.v1.json, schemas/receipts/run_receipt.v1.json]
-tags: [kfm, adr, governance, policy, consent, revocation, receipts, evidence]
-notes: [Target path and related schema homes are PROPOSED pending mounted-repo verification. Generic EvidenceBundle and run_receipt schema authority remains NEEDS VERIFICATION. This revision preserves the local-only/no-network posture and adds ADR structure, alternatives, validation, rollback, and implementation-gate clarity.]
+related: [docs/adr/README.md, docs/control-plane/CONSENT_AND_REVOCATION.md, docs/control-plane/obligation-execution.md, docs/adr/ADR-0001-schema-home.md, apps/api/openapi/consent.yaml, tools/consent/issue_consent.py, tools/consent/revoke_consent.py, tools/consent/canonical_json.py, tools/consent/signing_stub.py, policy/governance/obligation_execution.rego, policy/governance/obligation_execution_test.rego, tools/validators/governance/validate_obligation_execution.py]
+tags: [kfm, adr, governance, policy, consent, revocation, vc-placeholder, receipts, evidence]
+notes: [doc_id and policy_label remain unresolved. Owners are carried forward from the existing ADR draft but still need CODEOWNERS or governance-register verification. This revision is grounded in accessible GitHub repository evidence on main plus supplied KFM doctrine. It preserves local-only/no-network v1 posture, clarifies confirmed adjacent surfaces, removes the stale proposed target-path mismatch, and separates external VC standards from KFM local placeholder behavior.]
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # ADR-0427: Consent VC + Revocation Delta v1
 
-Local-only consent issuance placeholder, deterministic revocation delta derivation, and downstream suppression/recompute signaling for KFM governance flows.
+Local-only consent placeholder issuance, deterministic revocation delta derivation, and receipt-backed suppression/recompute signaling for KFM governed publication flows.
 
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Decision](https://img.shields.io/badge/decision-PROPOSED-orange)
-![Network](https://img.shields.io/badge/network-local--only-blue)
-![Secrets](https://img.shields.io/badge/revocation__token-never__serialized-red)
-![Owners](https://img.shields.io/badge/owners-governance%2Fpolicy%2Fruntime-6f42c1)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![decision](https://img.shields.io/badge/decision-PROPOSED-orange)
+![path](https://img.shields.io/badge/path-confirmed_on_main-2ea44f)
+![network](https://img.shields.io/badge/network-local--only-blue)
+![secret](https://img.shields.io/badge/revocation__token-never__serialized-red)
+![trust](https://img.shields.io/badge/trust-evidence--first-6f42c1)
 
 > [!IMPORTANT]
 > **ADR status:** `draft`  
-> **Decision posture:** `PROPOSED` until schema homes, validator fixtures, and policy gates are ratified.  
-> **Target path:** `docs/adr/ADR-0427-consent-vc-revocation-delta-v1.md` *(PROPOSED; verify against mounted repo conventions)*  
-> **Core rule:** Consent and revocation objects are local, deterministic, auditable, no-network, and fail-closed. A KFM `Consent VC` in this ADR is a **local placeholder**, not an externally verified credential.
+> **Decision posture:** `PROPOSED` until owners, policy label, schema-home authority, validator fixtures, and CI enforcement are verified.  
+> **Target path:** `docs/adr/ADR-0427-consent-vc-and-revocation-delta.md`  
+> **Core rule:** KFM v1 uses a **local-only Consent VC placeholder**, not a standards-grade external VC network integration. Revocation must be deterministic, auditable, receipt-backed, and fail-closed.
 
-**Quick jumps:** [Decision](#decision) · [Context](#context) · [Operating law](#operating-law) · [Artifact boundaries](#artifact-boundaries) · [Deterministic derivation](#deterministic-derivation) · [Validation gates](#validation-gates) · [Suppression and recompute](#suppression-and-recompute-signaling) · [Rollback](#rollback-and-correction) · [Implementation slice](#proposed-implementation-slice) · [NEEDS VERIFICATION](#needs-verification)
-
----
-
-## Evidence boundary
-
-This ADR states KFM doctrine and a proposed implementation contract. It does **not** claim that the target repository already contains the named schemas, validators, policy files, receipt objects, or runtime behavior.
-
-| Claim area | Truth posture | Boundary |
-|---|---|---|
-| KFM trust posture | CONFIRMED doctrine | KFM preserves evidence-first, map-first, time-aware, governed publication behavior. |
-| This ADR file path | PROPOSED | Verify actual ADR naming and numbering in the mounted repo before landing. |
-| Schema homes | NEEDS VERIFICATION | Do not create parallel authority between `contracts/`, `schemas/`, or `schemas/contracts/v1/` without an ADR. |
-| Runtime behavior | UNKNOWN | No route names, DTOs, policy engine, test runner, CI workflow, or deployed behavior is claimed here. |
-| External VC behavior | DENY for v1 | No live DID, OIDC, Sigstore, transparency log, or VC status-list dependency is admitted by this ADR. |
+**Quick jumps:** [Decision](#decision) · [Repo fit](#repo-fit) · [Context](#context) · [Operating law](#operating-law) · [Artifact model](#artifact-model) · [Deterministic derivation](#deterministic-derivation) · [Policy gates](#policy-gates) · [Suppression and recompute](#suppression-and-recompute) · [Validation](#validation-and-fixtures) · [Rollback](#rollback-and-correction) · [Future ADRs](#future-adrs)
 
 ---
 
 ## Decision
 
-KFM will adopt a **local-only Consent VC + Revocation Delta v1 posture** for deterministic testing and governed downstream suppression/recompute behavior.
+KFM will retain a **local-only Consent VC + Revocation Delta v1** posture for the first consent/revocation slice.
 
-This ADR defines three stable object families:
+The selected design is intentionally narrow:
 
-| Object family | Required identifier | Purpose | Status |
-|---|---|---|---|
-| Consent VC placeholder | `consent_vc_<hex>` | Represents locally issued consent and its obligations snapshot without contacting any external VC, DID, OIDC, Sigstore, transparency-log, or status-list service. | PROPOSED |
-| Obligations snapshot | `sha256(canonical_json(obligations_snapshot))` | Carries the exact obligations burden into evidence, receipts, policy checks, and downstream review. | PROPOSED |
-| Revocation Delta | `rvk_<hmac_hex>` | Deterministically represents a revocation event derived from a private token and revocation inputs. | PROPOSED |
+| Decision area | ADR-0427 v1 decision | Status |
+|---|---|---:|
+| Consent representation | Use a KFM-local `consent_vc_id` and obligation snapshot hash as a **Consent VC placeholder**. | `PROPOSED / implementation-adjacent surfaces CONFIRMED` |
+| Revocation representation | Use a deterministic `rvk_<hmac_hex>` Revocation Delta derived from secret input and stable revocation inputs. | `PROPOSED / helper CONFIRMED` |
+| Network posture | No live DID, OIDC, Sigstore, transparency-log, or VC status-list dependency in v1. | `PROPOSED / DENY for v1` |
+| Secret handling | `revocation_token` is a secret input only and must never appear in public artifacts. | `REQUIRED` |
+| Downstream behavior | Revocation emits suppression/recompute obligations and blocks unsafe publication until receipts, queue state, policy, and review close. | `PROPOSED / policy-adjacent surfaces CONFIRMED` |
+| Public UI / AI behavior | Evidence Drawer and Focus Mode may show public-safe state; they must not receive token or secret-bearing context. | `PROPOSED` |
 
-**Core decision:** consent and revocation objects are local, deterministic, auditable, and fail-closed. They support KFM governance and testability without pretending that a live verifiable credential network or external trust service is present.
+This ADR does **not** make a claim of W3C Verifiable Credentials conformance. A future standards-grade integration must be handled by a separate ADR with source review, threat model, migration plan, network boundary, and negative-path tests.
 
-**Decision outcome:** `PROPOSED / draft`
+[Back to top](#top)
 
-This ADR becomes stronger only after:
+---
 
-- schema-home authority is ratified;
-- no-network fixtures pass;
-- token non-serialization tests pass;
-- policy gates deny unsafe publication;
-- downstream receipts show suppress/recompute behavior;
-- evidence, receipt, runtime, UI, and governed-AI owners confirm field placement.
+## Repo fit
+
+`docs/adr/` is the correct responsibility root for this file because ADRs are human-facing governance records. The decision affects consent governance, policy, evidence references, receipts, runtime boundaries, public-client safety, and rollback/correction behavior.
+
+| Relationship | Path | Status | Role |
+|---|---|---:|---|
+| This ADR | `docs/adr/ADR-0427-consent-vc-and-revocation-delta.md` | `CONFIRMED` | Decision record for local Consent VC placeholder and deterministic Revocation Delta v1. |
+| ADR index | [`./README.md`](./README.md) | `CONFIRMED` | ADR directory governance, naming, truth labels, review, rollback, and supersession guidance. |
+| Schema-home ADR | [`./ADR-0001-schema-home.md`](./ADR-0001-schema-home.md) | `CONFIRMED / PROPOSED decision` | Proposed canonical split: `contracts/` explains meaning, `schemas/contracts/v1/` validates shape, `policy/` decides admissibility. |
+| Control-plane standard | [`../control-plane/CONSENT_AND_REVOCATION.md`](../control-plane/CONSENT_AND_REVOCATION.md) | `CONFIRMED` | Cross-domain standard that operationalizes this ADR. |
+| Obligation execution | [`../control-plane/obligation-execution.md`](../control-plane/obligation-execution.md) | `CONFIRMED` | Recompute queue, publish enforcement, receipts, and fail-closed publication behavior. |
+| Consent OpenAPI stub | [`../../apps/api/openapi/consent.yaml`](../../apps/api/openapi/consent.yaml) | `CONFIRMED` | Stub issue/revoke API contract. |
+| Consent issue helper | [`../../tools/consent/issue_consent.py`](../../tools/consent/issue_consent.py) | `CONFIRMED` | Local consent placeholder helper. |
+| Revocation helper | [`../../tools/consent/revoke_consent.py`](../../tools/consent/revoke_consent.py) | `CONFIRMED` | Deterministic revoke delta helper. |
+| Canonical JSON helper | [`../../tools/consent/canonical_json.py`](../../tools/consent/canonical_json.py) | `CONFIRMED` | Local canonical JSON helper used for hashing in consent helpers. |
+| Signing stub | [`../../tools/consent/signing_stub.py`](../../tools/consent/signing_stub.py) | `CONFIRMED` | Local HMAC signing stub; not external proof. |
+| Obligation policy | [`../../policy/governance/obligation_execution.rego`](../../policy/governance/obligation_execution.rego) | `CONFIRMED` | Rego deny/allow policy for obligations, consent revocation, recompute queue, public fields, and run receipt state. |
+| Obligation policy tests | [`../../policy/governance/obligation_execution_test.rego`](../../policy/governance/obligation_execution_test.rego) | `CONFIRMED` | Rego test surface; CI/runtime enforcement still needs verification. |
+| Obligation validator | [`../../tools/validators/governance/validate_obligation_execution.py`](../../tools/validators/governance/validate_obligation_execution.py) | `CONFIRMED` | Validator for obligation/recompute/publish/revocation impact bundles. |
+
+> [!WARNING]
+> This ADR must not create a parallel contract, schema, policy, source, proof, or release authority. If future JSON Schemas for `ConsentVC` or `RevokeDelta` are added, their location must follow the accepted schema-home decision or an explicit successor ADR.
+
+[Back to top](#top)
+
+---
+
+## Evidence boundary
+
+This ADR can state current repository **file presence** for the paths inspected through the GitHub connector. It cannot claim deployed route behavior, CI enforcement, branch protections, workflow success, runtime logs, production key handling, or public release readiness.
+
+| Claim area | Truth posture | Boundary |
+|---|---:|---|
+| ADR path exists on accessible `main` branch | `CONFIRMED` | The file was fetched from `docs/adr/ADR-0427-consent-vc-and-revocation-delta.md`. |
+| Adjacent control-plane consent doc exists | `CONFIRMED` | The control-plane standard links back to this ADR and lists confirmed adjacent surfaces. |
+| API issue/revoke contract exists | `CONFIRMED` | OpenAPI stub exists; deployed API route behavior is `UNKNOWN`. |
+| Local consent/revoke helpers exist | `CONFIRMED` | Helper files exist; production use, packaging, CLI exposure, or test execution remain `NEEDS VERIFICATION`. |
+| Rego policy and test surfaces exist | `CONFIRMED` | Policy files exist; OPA/Conftest/CI enforcement remains `NEEDS VERIFICATION`. |
+| Governance schemas for obligation/recompute/publish/revocation impact exist | `CONFIRMED` for inspected files | Consent VC and Revoke Delta standalone JSON Schema files were not confirmed in this inspection. |
+| W3C VC external status behavior is active | `DENY for v1` | Future live VC, DID, OIDC, status-list, or transparency-log integration requires separate ADR. |
+| This ADR is accepted and enforced | `NEEDS VERIFICATION` | Status remains `draft`; owner, policy label, schema-home, fixture, and CI evidence are incomplete. |
+
+[Back to top](#top)
 
 ---
 
 ## Context
 
-KFM needs a governance slice that can issue consent as a **verifiable-credential-style local placeholder**, carry consent obligations into evidence and receipts, and deterministically derive revocation deltas without live network dependencies.
+Consent and revocation are governance controls that can change what KFM may expose, cite, render, aggregate, export, or answer.
 
-Consent and revocation are not decorative metadata. They can change what downstream users are allowed to see, cite, recompute, publish, suppress, generalize, withdraw, or explain.
+KFM needs a deterministic first slice because consent-related material may affect high-risk domains: living-person data, genealogy, DNA/genomics, land ownership, private residence exposure, culturally sensitive places, exact archaeological locations, rare species, and other public-safety-sensitive evidence. The first implementation must therefore prove fail-closed behavior before any external identity network or public credential-verification surface is introduced.
 
 ### Problem pressure
 
-| Pressure | KFM risk if ignored | ADR response |
+| Pressure | Failure mode if ignored | ADR response |
 |---|---|---|
-| Consent must be inspectable | Public outputs could cite or publish claims without visible obligations. | Persist `consent_vc_id` and `obligations_snapshot_hash` in governed artifacts. |
-| Revocation must be deterministic | Tests and replay become fragile or dependent on external services. | Use local HMAC derivation for `revoke_delta_id`. |
-| Secrets must not leak | `revocation_token` exposure weakens consent governance and can create replay/correlation risk. | Treat token as secret input only; deny serialization in public artifacts. |
-| External identity networks are not admitted | DID/OIDC/Sigstore/status-list behavior could be implied without implementation proof. | Explicit local-only/no-network posture. |
-| Suppression and recompute need receipts | Revocation could look like deletion instead of a governed state transition. | Emit receipt-backed suppression/recompute signals. |
-| AI and map surfaces may stale out | Focus Mode, Evidence Drawer, map popups, and derived tiles could keep showing revoked evidence. | Downstream consumers must ABSTAIN, DENY, suppress, mark stale, or recompute as policy requires. |
+| Consent must be inspectable | Evidence-dependent outputs may lose the obligation burden that made use permissible. | Carry `consent_vc_id` and `obligations_snapshot_hash` into consent-dependent evidence and receipts. |
+| Revocation must be replayable | Revocation behavior becomes fragile, time-dependent, or tied to external services during tests. | Use deterministic HMAC-derived `revoke_delta_id`. |
+| Secrets must not leak | Public artifacts may expose `revocation_token` or token-derived intermediates. | Token is secret input only; public outputs carry IDs, hashes, state, and receipt refs. |
+| Derived artifacts can stale out | Tiles, graph projections, Focus Mode context, story nodes, and exports can continue to use revoked evidence. | Trigger suppression/recompute queue and block publication until closed. |
+| VC terminology can overclaim | A local KFM placeholder could be mistaken for externally verifiable VC compliance. | Explicitly define `Consent VC` as a local placeholder for v1. |
+| Policy enforcement can be partial | A Rego file or validator can exist without active CI or release enforcement. | Keep enforcement `NEEDS VERIFICATION` until workflow/run evidence exists. |
+
+[Back to top](#top)
 
 ---
 
 ## Operating law
 
-### What this ADR admits
+### Admitted by this ADR
 
-This ADR admits a **local deterministic stub** for consent issuance and revocation delta derivation.
+ADR-0427 admits only a local deterministic v1 slice:
 
-It may be used for:
-
+- local consent placeholder issuance;
+- local HMAC signing stub;
+- canonical JSON hashing using the current helper or accepted successor;
+- deterministic revocation delta derivation;
 - no-network fixtures;
-- local runtime tests;
-- schema and validator development;
-- proof-of-flow demonstrations;
-- deterministic replay;
-- downstream suppression/recompute signaling;
-- policy gate development for revoked, uncertain, or obligation-changed evidence.
+- no-network helper tests;
+- receipt-backed suppression/recompute signaling;
+- policy gates for revoked consent and unresolved recompute;
+- public-safe Evidence Drawer and Focus Mode state.
 
-### What this ADR does not admit
+### Denied by this ADR
 
-This ADR does **not** admit:
+ADR-0427 does **not** admit:
 
 - live DID resolution;
 - live OIDC identity exchange;
 - live Sigstore, Cosign, or transparency-log calls;
-- live VC status-list calls;
+- live W3C Bitstring Status List lookup;
 - public serialization of `revocation_token`;
-- public serialization of private signing material;
-- automatic publication of revoked or recomputed artifacts;
-- treating generated language as consent authority;
-- treating a consent placeholder as externally verifiable proof;
-- direct client access to secret-bearing, RAW, WORK, QUARANTINE, or unpublished revocation material.
-
-> [!WARNING]
-> `Consent VC` in this ADR means **KFM local placeholder**, not externally verified W3C VC compliance. Any future standards-grade VC integration requires a separate ADR, source review, policy gate, migration plan, network/security threat model, and testable failure behavior.
-
----
-
-## Decision record
-
-| Field | Value |
-|---|---|
-| ADR number | `ADR-0427` |
-| Title | `Consent VC + Revocation Delta v1` |
-| Status | `draft` |
-| Selected option | Local-only deterministic consent placeholder with HMAC-derived revocation delta. |
-| Rejected default | Live external VC/status-list integration in v1. |
-| Primary risk controlled | Secret leakage, unverifiable external trust claims, stale downstream public artifacts. |
-| Required follow-up | Schema-home ADR or ratification note; policy label decision; validator fixtures; receipt field placement review. |
-
-### Alternatives considered
-
-| Option | Disposition | Reason |
-|---|---|---|
-| Plain boolean consent flag | REJECTED | Too weak. It does not preserve obligations, provenance, revocation lineage, or recompute/suppression burden. |
-| Silent deletion on revocation | REJECTED | Violates KFM auditability and correction lineage. Revocation is a governed state transition, not erasure. |
-| Live VC/DID/OIDC/status-list integration now | DEFERRED | Requires external trust, network dependency, credentials, policy review, threat model, and implementation evidence not admitted by this ADR. |
-| Non-deterministic revocation IDs | REJECTED | Weakens replay, fixture stability, receipt matching, and rollback inspection. |
-| Local deterministic placeholder | SELECTED / PROPOSED | Supports deterministic tests, fail-closed policy development, local-only runtime, and downstream recompute/suppression proof. |
-
----
-
-## Architecture sketch
+- public serialization of signing secrets;
+- direct public client access to secret-bearing consent material;
+- direct model access to token or raw consent context;
+- treating a local signing stub as external proof;
+- treating a generated answer as consent authority;
+- silent deletion of revoked material.
 
 ```mermaid
 flowchart LR
-    A[ConsentIssueSpec] --> B[Canonical obligations snapshot]
-    B --> C[obligations_snapshot_hash]
-    C --> D[Consent VC placeholder]
-    D --> E[EvidenceBundle refs]
-    D --> F[RunReceipt refs]
+  A[Issue request] --> B[Canonical obligations snapshot]
+  B --> C[obligations_snapshot_hash]
+  C --> D[Consent VC placeholder]
+  D --> E[ConsentRef in evidence / receipts]
 
-    R[Private revocation_token] -. secret input only .-> H[HMAC derivation]
-    G[prior_spec_hash + delta_timestamp] --> H
-    H --> I[RevokeDelta]
-    I --> J[Suppression signal]
-    I --> K[Recompute signal]
-    J --> L[New receipt]
-    K --> L
+  R[revocation_token or revoke_vc_jwt] -. secret input only .-> H[HMAC derive local key]
+  H --> I[Revocation Delta]
+  I --> J[RevocationImpactReport]
+  I --> K[RecomputeQueueItem]
+  J --> L[PublishEnforcementReport]
+  K --> L
+  L --> M{Publish safe?}
+  M -->|ALLOW after gates| N[PUBLISHED public-safe artifact]
+  M -->|DENY / BLOCK / ERROR| O[QUARANTINE / review / correction]
 
-    L --> M[Review / policy decision]
-    M --> N[Released public-safe artifact or ABSTAIN/DENY]
-
-    R -. never serialized .-> X((Denied in public artifacts))
+  R -. never serialized .-> X((Denied in public artifacts))
 ```
 
-The renderer, UI, AI layer, catalog, graph projection, tile output, story export, and published surfaces remain downstream of this governance flow. They may display or consume public-safe identifiers, hashes, reason codes, and review states. They must not receive the private `revocation_token`.
+[Back to top](#top)
 
 ---
 
-## Artifact boundaries
+## Artifact model
 
-### Consent VC placeholder v1
+### Consent issue response
 
-A `ConsentVC` artifact records the issued placeholder and its obligation burden.
+The current local helper and OpenAPI stub align around a compact issue response.
 
-| Field | Required | Notes |
+```json
+{
+  "consent_vc_id": "consent_vc_<24 lowercase hex chars from current helper>",
+  "obligations_snapshot_hash": "<64 lowercase hex chars>",
+  "issued_at": "YYYY-MM-DDThh:mm:ssZ",
+  "obligations_url": "policy/consent/ecology.v1.md",
+  "signature": "stubsig_<64 lowercase hex chars>"
+}
+```
+
+| Field | Source posture | Notes |
 |---|---:|---|
-| `schema_version` | yes | Fixed to `consent_vc.v1` for this ADR. |
-| `consent_vc_id` | yes | Stable identifier in the form `consent_vc_<hex>`. Exact minting inputs remain NEEDS VERIFICATION unless the schema defines them. |
-| `issued_at` | yes | ISO-8601 timestamp; canonical precision must be defined by schema. |
-| `issuer_ref` | yes | Policy-safe issuer reference. |
-| `subject_ref` | yes | Policy-safe subject reference; no unnecessary PII. |
-| `consent_scope` | yes | What the consent covers. |
-| `obligations_snapshot` | yes | Canonical obligation payload. |
-| `obligations_snapshot_hash` | yes | `sha256(canonical_json(obligations_snapshot))`. |
-| `evidence_refs` | yes | Evidence references supporting issuance authority, where applicable. |
-| `local_signature_stub` | yes | Deterministic local-only signing stub; not an external signature. |
-| `status` | yes | Suggested finite values: `active`, `superseded`, `revoked`. |
+| `consent_vc_id` | `CONFIRMED helper field` | Current helper derives it from `subject_id`, `obligations_snapshot_hash`, and `issued_at`, then truncates SHA-256 to 24 hex chars. |
+| `obligations_snapshot_hash` | `CONFIRMED helper field` | Current helper uses canonical JSON hashing over `obligations`. |
+| `issued_at` | `CONFIRMED helper field` | Defaults to current UTC timestamp with second precision in helper. |
+| `obligations_url` | `CONFIRMED helper field` | Defaults to `policy/consent/ecology.v1.md` if absent. |
+| `signature` | `CONFIRMED helper field` | Local `stubsig_` HMAC signature; not external proof. |
 
-> [!NOTE]
-> `consent_vc_id` generation is intentionally bounded here. The ADR fixes the identifier **shape and role**. The schema or implementation helper must ratify the canonical input set before KFM treats the ID derivation as authoritative.
+### ConsentRef
 
-### RevokeDelta v1
+Downstream artifacts should carry public-safe consent references rather than embedding secret-bearing material.
 
-A `RevokeDelta` artifact records a deterministic revocation event without exposing the secret token.
+```json
+{
+  "consent_ref": {
+    "consent_vc_id": "consent_vc_<hex>",
+    "obligations_snapshot_hash": "<64 lowercase hex chars>",
+    "obligations_url": "policy/consent/ecology.v1.md",
+    "status": "active"
+  }
+}
+```
 
-| Field | Required | Notes |
-|---|---:|---|
-| `schema_version` | yes | Fixed to `revoke_delta.v1`. |
-| `revoke_delta_id` | yes | Deterministic `rvk_<hmac_hex>` derived below. |
-| `consent_vc_id` | yes | Consent placeholder affected by the delta. |
-| `prior_spec_hash` | yes | Prior consent/evidence/release spec hash to revoke or suppress. |
-| `delta_timestamp` | yes | Timestamp used in the HMAC message. |
-| `obligations_snapshot_hash` | yes | Links revocation to the obligation burden known at issuance or latest ratified update. |
-| `reason_code` | yes | Policy reason for revocation. Suggested examples: `consent_withdrawn`, `obligation_changed`, `sensitivity_reclassified`, `rights_uncertain`. |
-| `suppression_actions` | yes | Public-safe actions requested downstream. |
-| `recompute_targets` | yes | Derived artifacts that need rebuild, recheck, or withdrawal review. |
-| `local_signature_stub` | yes | Deterministic local-only stub. |
+| Field | Required for consent-dependent evidence? | Public-safe? | Status |
+|---|---:|---:|---:|
+| `consent_vc_id` | yes | yes | `CONFIRMED in OpenAPI ConsentRef` |
+| `obligations_snapshot_hash` | yes | yes | `CONFIRMED in OpenAPI ConsentRef` |
+| `obligations_url` | optional | conditional | `CONFIRMED in OpenAPI ConsentRef` |
+| `status` | recommended | yes | `PROPOSED` |
+| `revocation_token` | never | no | `DENY` |
 
-### RevokeManifest v1
+### RevokeRequest
 
-A `RevokeManifest` groups one or more revocation deltas for downstream action. Its exact schema home remains **NEEDS VERIFICATION**.
+The current OpenAPI stub allows either `revocation_token` or `revoke_vc_jwt` as secret-like input.
 
-| Field | Required | Notes |
-|---|---:|---|
-| `schema_version` | yes | Suggested `revoke_manifest.v1`; final name NEEDS VERIFICATION. |
-| `manifest_id` | yes | Deterministic or receipt-linked identifier; derivation not set by this ADR. |
-| `revoke_delta_ids` | yes | One or more `rvk_<hmac_hex>` identifiers. |
-| `affected_artifacts` | yes | Evidence, catalog, graph, tile, layer, story, AI, or release candidate refs. |
-| `required_actions` | yes | Suppress, recompute, withdraw, require review, or no public action. |
-| `receipt_refs` | yes | Receipts proving action, denial, or abstention. |
-| `review_state` | yes | Review status for downstream publication or withdrawal. |
+```json
+{
+  "consent_vc_id": "consent_vc_<hex>",
+  "revocation_token": "<secret input only>",
+  "prior_spec_hash": "<64 lowercase hex chars>",
+  "delta_timestamp": "YYYY-MM-DDThh:mm:ssZ"
+}
+```
 
-### EvidenceBundle and run receipt references
+```json
+{
+  "consent_vc_id": "consent_vc_<hex>",
+  "revoke_vc_jwt": "<local input only for v1>",
+  "prior_spec_hash": "<64 lowercase hex chars>",
+  "delta_timestamp": "YYYY-MM-DDThh:mm:ssZ"
+}
+```
 
-This ADR requires downstream artifacts to carry consent obligation references, but it does not claim that canonical generic schemas already exist in the mounted repo.
+> [!CAUTION]
+> `revoke_vc_jwt` is accepted by the current stub as an input alternative. ADR-0427 v1 still denies live external VC verification. Treat the JWT value as secret-bearing local input unless a successor ADR says otherwise.
 
-| Artifact | Required consent fields | Placement status |
+### RevokeDelta
+
+The current helper and OpenAPI stub align around this object shape.
+
+```json
+{
+  "object_type": "RevokeDelta",
+  "schema_version": "v1",
+  "revoke_delta_id": "rvk_<64 lowercase hex chars>",
+  "consent_vc_id": "consent_vc_<hex>",
+  "prior_spec_hash": "<64 lowercase hex chars>",
+  "delta_timestamp": "YYYY-MM-DDThh:mm:ssZ",
+  "obligations_action": "suppress_or_recompute",
+  "signature": "stubsig_<64 lowercase hex chars>"
+}
+```
+
+### Governance impact objects
+
+The current governance layer already has machine-readable schemas for adjacent publication-safety objects.
+
+| Object | Confirmed schema | Role |
 |---|---|---|
-| `EvidenceBundle.v1` | `consent_vc_id`, `obligations_snapshot_hash`, optional `revoke_delta_id` when applicable | PROPOSED under `schemas/evidence/EvidenceBundle.v1.json` pending schema-home ratification. |
-| `run_receipt.v1` | `consent_vc_id`, `obligations_snapshot_hash`, `revoke_delta_id`, `suppression_or_recompute_action` | PROPOSED under `schemas/receipts/run_receipt.v1.json` pending schema-home ratification. |
-| `AIReceipt.v1` | no token; may record consent/revocation state that constrained output | PROPOSED; exact home NEEDS VERIFICATION. |
-| `LayerManifest.v1` | public-safe revocation, stale, suppress, or recompute state only | PROPOSED; exact home NEEDS VERIFICATION. |
-| `RuntimeResponseEnvelope.v1` | finite outcome such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` when consent state affects response | PROPOSED; exact home NEEDS VERIFICATION. |
+| `ObligationExecutionReceipt.v1` | [`../../schemas/governance/obligation_execution_receipt.schema.json`](../../schemas/governance/obligation_execution_receipt.schema.json) | Receipt for obligation action execution. |
+| `RecomputeQueueItem.v1` | [`../../schemas/governance/recompute_queue_item.schema.json`](../../schemas/governance/recompute_queue_item.schema.json) | Tracks recompute/suppression/re-evaluation backlog. |
+| `RevocationImpactReport.v1` | [`../../schemas/governance/revocation_impact_report.schema.json`](../../schemas/governance/revocation_impact_report.schema.json) | Summarizes revocation impact and affected recompute items. |
+| `PublishEnforcementReport.v1` | [`../../schemas/governance/publish_enforcement_report.schema.json`](../../schemas/governance/publish_enforcement_report.schema.json) | Final allow/deny/block report before promotion. |
+
+[Back to top](#top)
 
 ---
 
 ## Deterministic derivation
 
-### Obligations snapshot hash
+### Canonical obligations hash
 
-`obligations_snapshot_hash` is the SHA-256 hash of the canonical JSON obligations snapshot.
+The current helper canonicalizes JSON with sorted keys and compact separators, then SHA-256 hashes the UTF-8 bytes.
 
 ```text
-obligations_snapshot_hash = sha256(canonical_json(obligations_snapshot)).hex()
+obligations_snapshot_hash =
+  sha256(json.dumps(obligations, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")).hexdigest()
 ```
 
-**Canonicalization rule:** use the repo-approved canonical JSON helper if present. If no helper exists, this ADR proposes a strict canonical JSON profile for v1 and marks that profile **NEEDS VERIFICATION** before broad adoption.
+> [!NOTE]
+> This is the current helper behavior. If KFM later adopts RFC 8785 JSON Canonicalization Scheme or another canonical profile repo-wide, this ADR needs a successor note or migration plan.
 
-### Revocation delta ID
+### Consent ID derivation
 
-Revocation ID derivation is fixed by this ADR. The following is pseudocode, not a repo implementation claim.
+The current helper derives the consent placeholder ID from subject, obligations hash, and issue timestamp.
 
 ```text
-prk = HMAC(key="kfm:revoke:v1", message=revocation_token)
+consent_vc_id =
+  "consent_vc_" + sha256(subject_id + "|" + obligations_snapshot_hash + "|" + issued_at).hexdigest()[0:24]
+```
+
+This is useful for deterministic fixture replay only when `issued_at` is fixed. Tests that omit `issued_at` should not expect a stable ID across runs.
+
+### Revocation Delta ID derivation
+
+The current revocation helper derives the revocation ID as follows.
+
+```text
+prk = HMAC(key="kfm:revoke:v1", message=revocation_token_or_revoke_vc_jwt)
 k = HMAC(key=prk, message="kfm:revoke:v1:id")
 message = prior_spec_hash + "|" + delta_timestamp
 revoke_delta_id = "rvk_" + HMAC(key=k, message=message).hex()
 ```
 
-Implementation notes:
-
-- HMAC output is lower-case hexadecimal.
-- String inputs must be UTF-8 encoded before HMAC.
-- `revocation_token` is a secret byte/string input and must not be serialized.
-- `delta_timestamp` must be canonical and stable for deterministic replay.
-- The delimiter is the literal ASCII pipe character: `|`.
-- Fixture tests should prove deterministic sameness for identical inputs and expected divergence for changed token/spec/timestamp inputs.
+Illustrative Python, matching current helper behavior:
 
 ```python
+import hashlib
 import hmac
-from hashlib import sha256
-
-
-def hmac_sha256(key: bytes, message: bytes) -> bytes:
-    return hmac.new(key, message, sha256).digest()
 
 
 def derive_revoke_delta_id(
-    revocation_token: str,
+    secret_input: str,
     prior_spec_hash: str,
     delta_timestamp: str,
 ) -> str:
-    """Illustrative helper only. Adapt to the repo-approved crypto/canonicalization helper."""
-    prk = hmac_sha256(b"kfm:revoke:v1", revocation_token.encode("utf-8"))
-    key = hmac_sha256(prk, b"kfm:revoke:v1:id")
+    prk = hmac.new(
+        b"kfm:revoke:v1",
+        secret_input.encode("utf-8"),
+        hashlib.sha256,
+    ).digest()
+
+    key = hmac.new(
+        prk,
+        b"kfm:revoke:v1:id",
+        hashlib.sha256,
+    ).digest()
+
     message = f"{prior_spec_hash}|{delta_timestamp}".encode("utf-8")
-    return "rvk_" + hmac_sha256(key, message).hex()
+    return "rvk_" + hmac.new(key, message, hashlib.sha256).hexdigest()
 ```
 
----
+### Determinism requirements
 
-## No-network posture
-
-The v1 implementation posture is local-only.
-
-| Surface | Allowed | Denied |
-|---|---|---|
-| Issuance | Deterministic local signing stub. | DID, OIDC, remote VC issuer, Sigstore, transparency log. |
-| Revocation | Deterministic local HMAC delta. | VC status-list lookup, remote revocation registry, live network callback. |
-| Tests | Local fixtures only. | External service dependency or internet-required CI. |
-| Public output | IDs, hashes, reason codes, receipts, review states. | `revocation_token`, private signing key material, raw secret-bearing fixtures. |
-| UI / map / Focus Mode | Public-safe revocation state, stale/suppressed/recompute state, and finite outcomes. | Direct token, secret-bearing consent material, or unreviewed revocation internals. |
-
-A network attempt during issuance or revocation validation is a test failure unless a later ADR explicitly admits that integration.
-
----
-
-## Privacy and secret handling
-
-`revocation_token` is a secret and is never a KFM public artifact.
-
-It must be excluded from:
-
-- `ConsentVC`;
-- `EvidenceBundle`;
-- `run_receipt`;
-- `AIReceipt`;
-- `RevokeDelta`;
-- `RevokeManifest`;
-- catalog records;
-- graph/triplet projections;
-- MapLibre layer manifests;
-- Evidence Drawer payloads;
-- Focus Mode context;
-- exported story or report artifacts;
-- public fixtures;
-- public or semi-public logs.
-
-Test fixtures may use a fake token only when clearly labeled as fixture-only and never reused for production.
-
-> [!CAUTION]
-> A redacted token is still risky if it enables correlation or replay. Public outputs should carry `revoke_delta_id`, not token-derived intermediate values, unless the schema and policy team explicitly ratify them.
-
----
-
-## Suppression and recompute signaling
-
-Revocation is a governed state transition, not a file move and not silent deletion.
-
-When a `RevokeDelta` is accepted:
-
-1. identify affected EvidenceBundle, catalog, layer, graph, tile, summary, Focus Mode, and release artifacts;
-2. emit suppression and/or recompute candidates;
-3. block public publication until policy and review state are known;
-4. emit a run receipt that references `revoke_delta_id`;
-5. record recompute targets and derivative invalidation reasons;
-6. keep correction and rollback lineage inspectable.
-
-### Minimum affected surfaces
-
-| Surface | Required behavior after revocation |
+| Test | Expected result |
 |---|---|
-| EvidenceBundle | Mark applicable consent/revocation state and obligation hash. |
-| Catalog / release candidate | Block or mark stale until review and recompute complete. |
-| Derived tiles / layers | Suppress or invalidate public-safe derivatives as required. |
-| Graph/triplet projection | Rebuild derived projection if revoked claim participates in public graph. |
-| Evidence Drawer | Show revoked/suppressed/recompute state, not stale confidence. |
-| Focus Mode | ABSTAIN or DENY when consent state invalidates the evidence context. |
-| Receipts | Preserve the revocation action and downstream decision trail. |
-| Public exports | Prevent stale or revoked outputs unless review explicitly allows a public-safe correction notice. |
+| Same fixed obligations payload produces same `obligations_snapshot_hash`. | `PASS` |
+| Same fixed `subject_id`, obligations hash, and `issued_at` produces same `consent_vc_id`. | `PASS` |
+| Same secret input, prior spec hash, and delta timestamp produces same `revoke_delta_id`. | `PASS` |
+| Changed secret input changes `revoke_delta_id`. | `PASS` |
+| Changed prior spec hash changes `revoke_delta_id`. | `PASS` |
+| Changed delta timestamp changes `revoke_delta_id`. | `PASS` |
+| Token or JWT input appears in output, receipt, public artifact, log, or fixture. | `ERROR / DENY` |
 
-### Suggested finite downstream actions
+[Back to top](#top)
 
-```yaml
-proposal_note: illustrative enum proposal; schema ratification required
-suppression_or_recompute_action:
-  - suppress_public_output
-  - recompute_derivative
-  - withdraw_release_candidate
-  - require_review
-  - mark_stale_pending_review
-  - no_public_action_required
+---
+
+## Policy gates
+
+The current Rego policy already denies several unsafe publication states.
+
+| Condition | Required outcome | Current evidence posture |
+|---|---|---:|
+| Missing obligations | `DENY` | `CONFIRMED policy rule` |
+| Missing obligation execution receipt | `DENY` | `CONFIRMED policy rule` |
+| Retention expired with publish `ALLOW` | `DENY` | `CONFIRMED policy rule` |
+| Revoked consent with publish `ALLOW` | `DENY` | `CONFIRMED policy rule` |
+| Forbidden public field present | `DENY` | `CONFIRMED policy rule` |
+| Recompute queue unresolved with publish `ALLOW` | `DENY` | `CONFIRMED policy rule` |
+| Run receipt unsigned or unverified | `DENY` | `CONFIRMED policy rule` |
+| `revocation_token` serialized | `ERROR / DENY` | `PROPOSED explicit rule; token-like fields partially covered by validator` |
+| Live VC/status-list network dependency attempted in v1 | `ERROR / DENY` | `PROPOSED explicit rule` |
+
+### Current policy gap to close
+
+The Rego policy checks generic revoked-subject state and forbidden fields. The validator also treats `token` as forbidden. A dedicated consent/revocation follow-up should add explicit negative tests for:
+
+- `revocation_token`;
+- `revoke_vc_jwt`;
+- local signing stub key material;
+- token-derived intermediate values;
+- Focus Mode context containing token material;
+- Evidence Drawer payload containing token material;
+- public fixture containing token material;
+- live network call attempted during v1 validation.
+
+[Back to top](#top)
+
+---
+
+## Suppression and recompute
+
+Revocation is a governed state transition. It is not a deletion shortcut.
+
+When a revocation delta is accepted, KFM should:
+
+1. determine affected consent-dependent evidence, receipts, catalog records, graph projections, layers, tiles, exports, stories, and runtime contexts;
+2. emit or update a `RevocationImpactReport.v1`;
+3. open `RecomputeQueueItem.v1` records when affected derivatives must be rebuilt or re-evaluated;
+4. emit `ObligationExecutionReceipt.v1` records for suppression, generalization, deletion, or recompute-required actions;
+5. emit `PublishEnforcementReport.v1`;
+6. block promotion if queue state, receipts, public-field scans, or run receipt state are unsafe;
+7. update Evidence Drawer and Focus Mode payloads to show public-safe revoked/stale/suppressed/recompute state;
+8. preserve correction and rollback lineage.
+
+```mermaid
+stateDiagram-v2
+  [*] --> ConsentActive
+  ConsentActive --> RevocationDeltaAccepted: revoke helper emits RevokeDelta
+  RevocationDeltaAccepted --> ImpactReported: RevocationImpactReport
+  ImpactReported --> Suppressed: SUPPRESS / GENERALIZE / DELETE receipt
+  ImpactReported --> RecomputeOpen: RecomputeQueueItem OPEN
+  RecomputeOpen --> RecomputeResolved: recompute receipt
+  Suppressed --> PublishChecked: PublishEnforcementReport
+  RecomputeResolved --> PublishChecked
+  PublishChecked --> PublishedSafe: ALLOW + release gates
+  PublishChecked --> Blocked: DENY / BLOCK / ERROR
+  PublishedSafe --> Corrected: correction / rollback if later issue found
 ```
 
----
+### Minimum downstream responses
 
-## Validation gates
-
-Validators must fail closed.
-
-| Gate | PASS condition | FAIL condition |
-|---|---|---|
-| `consent.id.shape` | `consent_vc_id` matches `^consent_vc_[0-9a-f]+$`. | Missing ID, wrong prefix, non-hex suffix. |
-| `obligations.hash.match` | Hash equals SHA-256 of canonical obligations snapshot. | Hash mismatch or non-canonical input. |
-| `revoke.id.shape` | `revoke_delta_id` matches `^rvk_[0-9a-f]{64}$`. | Missing ID, wrong prefix, non-hex suffix, wrong length. |
-| `revoke.id.deterministic` | Same token + `prior_spec_hash` + `delta_timestamp` yields same `revoke_delta_id`. | Non-deterministic output. |
-| `revoke.id.separation` | Changed token/spec/timestamp changes derived ID in controlled fixtures. | Unexpected equality for varied fixture inputs. |
-| `secret.no_serialize` | `revocation_token` absent from public artifacts, receipts, manifests, logs, and fixtures. | Token appears anywhere outside secret input channel. |
-| `network.local_only` | No network calls are made. | DNS, HTTP, OIDC, DID, Sigstore, status-list, or transparency-log call. |
-| `receipt.references.delta` | Suppression/recompute receipt references applicable `revoke_delta_id`. | Revocation action lacks receipt linkage. |
-| `publication.fail_closed` | Revoked or uncertain artifacts cannot publish without review decision. | Public release proceeds without policy/review state. |
-| `ai.context.safe` | Focus Mode receives public-safe revocation state only. | Focus Mode receives token or secret-bearing context. |
-| `layer.state.safe` | Layer manifests show public-safe stale/suppressed/recompute state only. | Map layer continues to present revoked evidence as current. |
-
----
-
-## Policy expectations
-
-Policy must treat revoked, uncertain, missing, or mismatched consent as public-release blocking unless a reviewed exception exists.
-
-| Condition | Default outcome |
+| Surface | Required response |
 |---|---|
-| Missing `consent_vc_id` where consent is required | DENY publication or ABSTAIN from consequential answer. |
-| Missing `obligations_snapshot_hash` | DENY publication or require review. |
-| Hash mismatch | DENY and quarantine affected candidate. |
-| `revocation_token` found in public artifact | ERROR, quarantine artifact, require security review. |
-| Accepted `RevokeDelta` affects released artifact | Suppress, mark stale, withdraw candidate, or recompute according to policy. |
-| Future live VC integration requested | DENY in this ADR; require separate ADR. |
+| EvidenceBundle | Carry consent/revocation refs where consent-dependent. |
+| RunReceipt | Reference consent/revocation action without secrets. |
+| Catalog / release candidate | Block or mark stale until suppression/recompute/review closes. |
+| LayerManifest / tiles | Suppress, invalidate, or rebuild public-safe derivatives. |
+| Graph/triplet projection | Rebuild if revoked evidence participates in public graph. |
+| Evidence Drawer | Show public-safe consent state, revoked/stale/suppressed state, and receipt refs. |
+| Focus Mode | Return `ABSTAIN`, `DENY`, `ERROR`, or safe stale/recompute state when consent invalidates context. |
+| Public export | Prevent stale revoked output unless reviewed correction notice allows safe explanation. |
+
+[Back to top](#top)
+
+---
+
+## Contract and schema impact
+
+This ADR consumes existing repo surfaces and identifies unresolved machine-schema work.
+
+| Surface | Current state | ADR-0427 impact |
+|---|---:|---|
+| `apps/api/openapi/consent.yaml` | `CONFIRMED` | Keep issue/revoke contract aligned with this ADR and control-plane standard. |
+| `tools/consent/*.py` | `CONFIRMED` | Keep helper behavior deterministic and no-network. |
+| `schemas/governance/*obligation*/*recompute*/*publish*/*revocation_impact*` | `CONFIRMED` | Use as adjacent governance object family; do not overload them as Consent VC schemas. |
+| `schemas/governance/consent_vc.v1.json` | `NOT CONFIRMED` | Add only after schema-home acceptance or explicit placement decision. |
+| `schemas/governance/revoke_delta.v1.json` | `NOT CONFIRMED` | Add only after schema-home acceptance or explicit placement decision. |
+| `schemas/evidence/EvidenceBundle.v1.json` consent refs | `NEEDS VERIFICATION` | Update only through shared EvidenceBundle owner/schema path. |
+| `schemas/receipts/run_receipt.v1.json` revocation refs | `NEEDS VERIFICATION` | Update only through shared receipt owner/schema path. |
+| `policy/governance/obligation_execution.rego` | `CONFIRMED` | Add explicit token/JWT and local-only v1 negative cases if not covered elsewhere. |
+| `tools/validators/governance/validate_obligation_execution.py` | `CONFIRMED` | Keep revocation impact/public-field checks aligned with ADR-0427. |
+
+[Back to top](#top)
+
+---
+
+## Validation and fixtures
+
+### Required fixture classes
+
+| Fixture class | Expected result | Status |
+|---|---|---:|
+| Valid consent issue request with fixed `issued_at` | deterministic ID/hash/signature | `PROPOSED` |
+| Consent issue request missing obligations | fail closed | `PROPOSED` |
+| Revoke request with `revocation_token` | deterministic `RevokeDelta` | `PROPOSED` |
+| Revoke request with `revoke_vc_jwt` | deterministic `RevokeDelta` without live VC lookup | `PROPOSED` |
+| Revoke request without token or JWT | fail closed | `CONFIRMED helper behavior / fixture PROPOSED` |
+| Public artifact containing `revocation_token` | `ERROR / DENY` | `PROPOSED explicit negative fixture` |
+| Revoked consent with publish `ALLOW` | `DENY` | `CONFIRMED policy intent / fixture coverage NEEDS VERIFICATION` |
+| Unresolved recompute queue with publish `ALLOW` | `DENY` | `CONFIRMED policy intent / fixture coverage NEEDS VERIFICATION` |
+| Evidence Drawer payload containing token | `DENY` | `PROPOSED` |
+| Focus Mode context containing token | `DENY / ABSTAIN` | `PROPOSED` |
+| Network call attempted during v1 validation | `ERROR / DENY` | `PROPOSED` |
+
+### Review commands
+
+Run from the repository root after checking the active branch.
+
+```bash
+# Inspect confirmed ADR/control-plane/policy/helper surfaces.
+find docs/adr docs/control-plane apps/api/openapi tools/consent policy/governance schemas/governance tools/validators/governance \
+  -maxdepth 2 \
+  -type f \
+  | sort \
+  | grep -E 'ADR-0427|CONSENT_AND_REVOCATION|obligation-execution|consent|obligation_execution|recompute_queue|revocation_impact|publish_enforcement'
+```
+
+```bash
+# Run Rego tests only when OPA is installed and the branch is ready.
+opa test \
+  policy/governance/obligation_execution.rego \
+  policy/governance/obligation_execution_test.rego
+```
+
+```bash
+# Proposed future no-network helper tests.
+python3 -m pytest -q tests/governance/test_consent_revocation.py
+```
+
+```bash
+# Proposed future validator pass over consent/revocation fixtures.
+python3 tools/validators/governance/validate_consent_revocation.py \
+  --fixture tests/fixtures/governance/consent_revocation/valid/revoke_delta.json
+```
+
+> [!WARNING]
+> Do not claim these commands pass until they have been executed in the active checkout. This ADR currently records required validation, not test results.
+
+[Back to top](#top)
+
+---
+
+## Security and privacy posture
+
+| Risk | Default | Required mitigation |
+|---|---|---|
+| `revocation_token` leak | `ERROR / DENY` | Secret input channel only; public-field scans and negative tests. |
+| `revoke_vc_jwt` leak | `ERROR / DENY` | Treat as secret-bearing input in v1. |
+| Stub signature mistaken for proof | `DENY external proof claim` | Label as local stub; future external proof requires ADR. |
+| Token-derived intermediate exposure | `DENY` | Publish only stable public-safe `revoke_delta_id` when appropriate. |
+| Revoked evidence remains visible | `DENY / BLOCK` | Suppression/recompute queue and Evidence Drawer stale state. |
+| Focus Mode answers from revoked evidence | `ABSTAIN / DENY` | Runtime envelope must reflect consent/revocation state. |
+| Exact living-person, DNA, archaeology, rare-species, or infrastructure exposure | `DENY by default` | Domain policy, evidence closure, rights/sensitivity review, redaction/generalization receipts. |
+| Live external status integration in v1 | `DENY` | Separate ADR with network/security model. |
+
+[Back to top](#top)
 
 ---
 
 ## Rollback and correction
 
-Rollback is performed by replaying prior non-revoked specs and emitting a new receipt.
-
-A rollback receipt must reference:
-
-- the applicable `revoke_delta_id`;
-- the prior non-revoked `spec_hash`;
-- the recompute or suppression action;
-- the review decision that authorizes rollback;
-- any artifacts rebuilt, suppressed, or withdrawn;
-- the resulting publication state.
-
-Rollback must not erase the revoked state. It records a new governed transition over prior evidence.
+Rollback must preserve history. It must not delete the revocation event just to restore prior output.
 
 ### Rollback triggers
 
-Rollback or withdrawal review is required when:
+| Trigger | Required action |
+|---|---|
+| Token or JWT appears in a public artifact | Quarantine artifact, block release, security review, correction notice if exposed. |
+| Revoked consent still yields publish `ALLOW` | Block promotion, fix policy/validator, recompute affected artifacts. |
+| Recompute queue unresolved but release proceeds | Withdraw or correct release candidate; emit rollback card and corrected enforcement report. |
+| Evidence Drawer or Focus Mode leaks token material | Disable affected public surface, correct payload contract, add negative fixture. |
+| Consent helper ID/hash changes without migration note | Freeze release, add migration/supersession note, update fixtures. |
+| Future live VC integration sneaks into v1 | Revert integration or supersede this ADR through formal review. |
 
-- token material appears in a public artifact;
-- revoked evidence remains visible as current;
-- a recompute target was missed;
-- a consent obligation hash mismatch reaches a release candidate;
-- a schema-home conflict creates parallel definitions;
-- a validator permits network dependency in v1;
-- Focus Mode answers from revoked evidence instead of ABSTAIN/DENY.
+### Rollback path
 
-Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+1. Stop promotion for affected artifacts.
+2. Identify affected `consent_vc_id`, `revoke_delta_id`, `prior_spec_hash`, and release candidate.
+3. Re-run no-network helper and policy fixtures.
+4. Emit corrected `RevocationImpactReport.v1`, `RecomputeQueueItem.v1`, and `PublishEnforcementReport.v1` as applicable.
+5. Recompute or suppress affected derivatives.
+6. Update Evidence Drawer, Focus Mode, catalog, layer, graph, and release references.
+7. Preserve original revocation and faulty decision as lineage.
+8. Link correction/rollback records from the release or candidate that was affected.
 
----
+Rollback target remains `ROLLBACK_TARGET_TBD_AFTER_RELEASE_OBJECT_REVIEW`.
 
-## Contracts and schema impact
-
-> [!IMPORTANT]
-> This ADR must not create parallel schema authority. If the mounted repo already has canonical `contracts/`, `schemas/`, `jsonschema/`, or `schemas/contracts/v1/` conventions, follow the existing authority or record a schema-home ADR before landing machine files.
-
-| Contract or schema | Change type | Status |
-|---|---|---|
-| `schemas/governance/consent_vc.v1.json` | Add | PROPOSED |
-| `schemas/governance/revoke_delta.v1.json` | Add | PROPOSED |
-| `schemas/evidence/EvidenceBundle.v1.json` | Add/update consent fields | PROPOSED / NEEDS VERIFICATION |
-| `schemas/receipts/run_receipt.v1.json` | Add/update revocation action fields | PROPOSED / NEEDS VERIFICATION |
-| `schemas/governance/revoke_manifest.v1.json` | Add if grouped revocation actions are required | PROPOSED / exact home NEEDS VERIFICATION |
-| policy rule for token serialization | Add | PROPOSED |
-| policy rule for no-network v1 | Add | PROPOSED |
-| policy rule for revoked evidence publication | Add | PROPOSED |
-| UI/Evidence Drawer payload fields | Add public-safe state only | PROPOSED |
-| Runtime/Focus response envelope | Add consent/revocation constraint state | PROPOSED |
-
----
-
-## Proposed implementation slice
-
-This is the smallest useful implementation slice for this ADR.
-
-| Step | File or surface | Status |
-|---:|---|---|
-| 1 | `docs/adr/ADR-0427-consent-vc-revocation-delta-v1.md` | PROPOSED |
-| 2 | `schemas/governance/consent_vc.v1.json` | PROPOSED; schema home NEEDS VERIFICATION |
-| 3 | `schemas/governance/revoke_delta.v1.json` | PROPOSED; schema home NEEDS VERIFICATION |
-| 4 | `schemas/evidence/EvidenceBundle.v1.json` consent/revocation fields | PROPOSED; cross-lane ratification required |
-| 5 | `schemas/receipts/run_receipt.v1.json` revocation action fields | PROPOSED; cross-lane ratification required |
-| 6 | `tests/fixtures/governance/consent_vc/` | PROPOSED; no-network fixtures only |
-| 7 | `tools/validators/governance/validate_consent_revocation.py` or repo-native equivalent | PROPOSED |
-| 8 | Policy rule: deny token serialization | PROPOSED |
-| 9 | Policy rule: deny network dependency for v1 | PROPOSED |
-| 10 | Receipt fixture proving suppress/recompute path | PROPOSED |
-| 11 | Runtime fixture proving revoked evidence returns `ABSTAIN`, `DENY`, suppress, stale, or recompute state | PROPOSED |
-
-### Definition of done for v1 fixtures
-
-- [ ] Deterministic `obligations_snapshot_hash` fixture passes.
-- [ ] Deterministic `revoke_delta_id` fixture passes.
-- [ ] Negative fixture proves token cannot appear in public artifacts.
-- [ ] Network attempt fixture fails closed.
-- [ ] Revoked evidence fixture causes downstream ABSTAIN, DENY, suppress, stale, or recompute state.
-- [ ] Receipt fixture references `revoke_delta_id` and action.
-- [ ] EvidenceBundle fixture includes consent obligation references without token material.
-- [ ] Layer/UI fixture shows public-safe revoked/stale/suppressed state.
-- [ ] Schema-home ADR or ratification note records why the chosen paths are canonical.
+[Back to top](#top)
 
 ---
 
@@ -511,74 +573,95 @@ This is the smallest useful implementation slice for this ADR.
 
 ### Positive
 
-- Preserves proof, receipt, evidence, and revoke-manifest separation.
-- Enables deterministic local tests and replay.
-- Keeps revocation tokens private.
-- Allows downstream suppression and recompute behavior to be validated before live identity integrations.
-- Makes consent obligations inspectable without making model output, map layers, graph edges, or summaries sovereign.
-- Gives UI and governed-AI surfaces clear finite behavior when consent state changes.
+- Keeps v1 deterministic and testable without external identity infrastructure.
+- Makes consent obligations inspectable through hashes and references.
+- Keeps revocation tokens out of public artifacts.
+- Connects revocation to suppression/recompute, not silent deletion.
+- Aligns consent and revocation with KFM’s evidence, policy, receipt, release, correction, and rollback posture.
+- Prevents local placeholder language from becoming an accidental W3C VC compliance claim.
 
 ### Tradeoffs
 
-- A local placeholder is not an externally verifiable credential.
-- Schema-home ambiguity must be resolved before broad reuse.
-- Deterministic stubs are suitable for tests and controlled local flows, not proof of external trust.
-- A future live VC/status-list integration will require a separate threat model, policy review, network boundary, and migration plan.
-- Revocation receipts preserve history; they do not erase prior states.
+| Tradeoff | Why accepted |
+|---|---|
+| Local placeholder is not externally verifiable. | KFM needs deterministic no-network proof first. |
+| Stub signature is not production trust. | It provides local fixture stability while external proof remains deferred. |
+| Consent JSON Schemas are not yet confirmed. | Schema-home authority must be resolved before adding parallel definitions. |
+| CI enforcement is not claimed. | Existing files do not prove required checks, branch protections, or workflow runs. |
+| Future standards integration needs a new ADR. | External VC/status infrastructure changes trust, network, privacy, and migration burden. |
+
+[Back to top](#top)
 
 ---
 
-## NEEDS VERIFICATION
+## Definition of done
 
-| Item | Why it matters | Proposed resolver |
-|---|---|---|
-| Canonical schema authority for `EvidenceBundle.v1.json` | This ADR proposes generic evidence schema files, but repo authority is not confirmed here. | Cross-lane schema-home ADR and mounted repo inspection. |
-| Canonical schema authority for `run_receipt.v1.json` | Receipts recur across KFM doctrine, but exact canonical home is not confirmed here. | Cross-lane schema-home ADR and receipt object map. |
-| Exact canonical JSON profile | Hash determinism depends on canonicalization. | Ratify repo helper or schema profile. |
-| `consent_vc_id` derivation inputs | ADR defines ID shape, not final canonical minting input set. | `consent_vc.v1` schema and validator fixture. |
-| Policy label for this ADR | Consent governance may be public-safe as doctrine or restricted as policy detail. | Governance/policy owner decision. |
-| Secret input storage | Token handling must not leak through logs or fixtures. | Runtime/security review. |
-| Test runner and validator language | No mounted repo evidence confirms stack. | Adapt to repo-native test framework after inspection. |
-| Future live VC integration | Local placeholder must not become accidental standards claim. | Separate ADR before any live DID/OIDC/status-list/Sigstore dependency. |
-| Review ownership | Current owners come from the draft source and are not independently repo-confirmed here. | Confirm maintainers/CODEOWNERS after repo inspection. |
-| Rollback target | Actual rollback target depends on repo release/proof conventions. | Confirm release/correction object family in repo. |
+ADR-0427 can move from `draft` to `review` only when:
 
----
+- [ ] `doc_id`, owners, CODEOWNERS or governance owner, and policy label are verified.
+- [ ] The ADR index accurately reflects this ADR’s status.
+- [ ] `docs/control-plane/CONSENT_AND_REVOCATION.md` and this ADR remain synchronized.
+- [ ] Schema-home decision for any Consent VC / RevokeDelta JSON Schemas is resolved or explicitly deferred.
+- [ ] Fixed-input consent issue fixture proves deterministic hash/ID/signature.
+- [ ] Fixed-input revoke fixture proves deterministic `revoke_delta_id`.
+- [ ] Negative fixture proves missing token/JWT fails closed.
+- [ ] Negative fixture proves `revocation_token` and `revoke_vc_jwt` cannot appear in public artifacts.
+- [ ] Policy denies revoked consent with publish `ALLOW`.
+- [ ] Policy denies unresolved recompute queue with publish `ALLOW`.
+- [ ] Run receipt / enforcement report fixtures reference consent and revocation state without secrets.
+- [ ] Evidence Drawer payload fixture exposes only public-safe consent/revocation state.
+- [ ] Focus Mode/runtime envelope fixture returns `ABSTAIN`, `DENY`, `ERROR`, or safe stale/recompute state when consent invalidates evidence.
+- [ ] No-network behavior is covered by tests.
+- [ ] Rollback/correction target object family is verified.
+- [ ] CI enforcement claims are backed by workflow and run evidence, or remain `NEEDS VERIFICATION`.
 
-## Review checklist
-
-- [ ] Owners confirm this ADR remains `draft` until schema-home and validator decisions are ratified.
-- [ ] Governance confirms `revocation_token` never appears in public outputs.
-- [ ] Policy confirms fail-closed behavior for revoked or uncertain consent state.
-- [ ] Runtime confirms no-network issuance/revocation tests.
-- [ ] Evidence/receipts owners confirm field names and schema homes.
-- [ ] UI/AI surfaces confirm revoked consent produces visible ABSTAIN, DENY, suppress, stale, or recompute state.
-- [ ] Security confirms token handling, fixture labeling, and log exclusion.
-- [ ] Documentation owner confirms related ADR index and successor links.
-- [ ] Release owner confirms rollback target and correction notice behavior.
+[Back to top](#top)
 
 ---
 
-## Supersession and future ADRs
+## Open verification backlog
 
-This ADR is intentionally narrow.
+| Item | Status | Why it matters |
+|---|---:|---|
+| ADR owner / CODEOWNERS | `NEEDS VERIFICATION` | Governance, policy, runtime, security, and evidence owners must be accountable. |
+| Policy label | `NEEDS VERIFICATION` | Consent/revocation details may be public as doctrine but restricted as operational security. |
+| Consent VC JSON Schema home | `NEEDS VERIFICATION` | Avoid parallel schema authority. |
+| RevokeDelta JSON Schema home | `NEEDS VERIFICATION` | OpenAPI component exists; standalone machine schema was not confirmed. |
+| EvidenceBundle consent fields | `NEEDS VERIFICATION` | Consent-dependent evidence needs shared contract placement. |
+| RunReceipt consent/revocation fields | `NEEDS VERIFICATION` | Suppression/recompute must be receipt-backed. |
+| CI enforcement | `NEEDS VERIFICATION` | Policy/test files exist, but merge-blocking behavior is not proven. |
+| OPA / Conftest availability | `NEEDS VERIFICATION` | Do not claim policy tests pass without tool/run evidence. |
+| No-network test harness | `NEEDS VERIFICATION` | Required before external VC/status calls can be safely denied in automation. |
+| Token leak scan | `NEEDS VERIFICATION` | Must include `revocation_token`, `revoke_vc_jwt`, generic `token`, signing stub key material, and payload contexts. |
+| External VC standards migration | `FUTURE ADR` | W3C VC and Bitstring Status List integration is out of v1 scope. |
+| Rollback object home | `NEEDS VERIFICATION` | Actual release/correction/rollback storage must be inspected before claiming rollback execution. |
 
-A future ADR is required for:
+[Back to top](#top)
 
-- externally verifiable W3C VC behavior;
+---
+
+## Future ADRs
+
+A successor ADR is required before any of the following are admitted:
+
+- standards-grade W3C Verifiable Credentials conformance claim;
 - DID resolution;
 - OIDC identity exchange;
 - Sigstore/Cosign/transparency-log-backed issuance;
-- remote VC status lists;
+- W3C Bitstring Status List or other remote status-list dependency;
 - production key management;
-- public verification UX;
+- public credential verification UX;
 - cross-organization trust federation;
-- migration from local placeholder IDs to externally verifiable credentials.
+- migration from local placeholder IDs to externally verifiable credentials;
+- external revocation registry or webhook;
+- public audit transparency service.
 
-Until such an ADR is accepted, this ADR admits only the local-only placeholder and deterministic revocation delta behavior described here.
+Until then, ADR-0427 v1 remains local-only, deterministic, no-network, evidence-bound, receipt-backed, and fail-closed.
 
 ---
 
 ## Summary
 
-ADR-0427 gives KFM a deterministic, local-only consent and revocation control slice that can be tested before external identity infrastructure exists. It preserves KFM’s evidence-first posture by carrying obligations into evidence and receipts, deriving revocation deltas without network calls, suppressing or recomputing downstream derivatives through receipts, and treating revocation tokens as private secret inputs rather than public artifacts.
+ADR-0427 gives KFM a small, reversible consent and revocation governance slice. Consent-dependent evidence carries public-safe consent references and obligation hashes. Revocation is represented by deterministic deltas, not silent deletion. Downstream artifacts suppress, recompute, abstain, deny, or block publication until receipts, policy, review, and release state close. The local Consent VC placeholder is useful for KFM governance tests, but it is not an external VC compliance claim.
+
+[Back to top](#top)
