@@ -1,217 +1,174 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-ASSIGN-UUID
+doc_id: kfm://doc/NEEDS-VERIFICATION-tile-manifest-spec
 title: Tile Manifest Specification
 type: standard
 version: v1
 status: draft
-owners: TODO-VERIFY
+owners: OWNER_TBD_NEEDS_VERIFICATION
 created: 2026-04-30
-updated: 2026-05-03
-policy_label: TODO-VERIFY
-related: [NEEDS VERIFICATION: docs/architecture/tiles/, NEEDS VERIFICATION: schemas/contracts/v1/tiles/, NEEDS VERIFICATION: docs/adr/]
-tags: [kfm, tiles, manifests, maplibre, evidence, publication]
-notes: [Revised from attached Markdown; doc_id, owners, policy_label, related paths, schema home, validator home, and current implementation depth need repository confirmation.]
+updated: 2026-05-06
+policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
+related: [docs/architecture/tiles/README.md, docs/architecture/tiles/DELTA_UPDATE_MODEL.md, docs/architecture/tiles/GOVERNED_TILE_RELEASE_PUBLISHER.md, docs/adr/ADR-0001-schema-home.md, schemas/contracts/v1/tiles/NEEDS_VERIFICATION]
+tags: [kfm, tiles, manifests, maplibre, evidence, publication, release]
+notes: [Target path confirmed through accessible GitHub repository evidence; local mounted checkout unavailable during this revision. Owners, policy_label, doc_id, schema home acceptance, validator home, CODEOWNERS routing, workflow enforcement, and emitted runtime artifacts need verification.]
 [/KFM_META_BLOCK_V2] -->
-
-# Tile Manifest Specification
-
-Defines the governed manifest contract for KFM tile delivery artifacts so rendered map surfaces remain traceable to release state, evidence, policy, provenance, integrity checks, and rollback lineage.
-
-![Status: draft](https://img.shields.io/badge/status-draft-yellow)
-![KFM: governed tiles](https://img.shields.io/badge/KFM-governed%20tiles-blue)
-![Truth posture: evidence first](https://img.shields.io/badge/truth-evidence--first-blue)
-![Implementation: needs verification](https://img.shields.io/badge/implementation-needs%20verification-orange)
 
 <a id="top"></a>
 
-## Quick navigation
+# Tile Manifest Specification
 
-- [Purpose](#purpose)
-- [Evidence boundary](#evidence-boundary)
-- [Truth posture](#truth-posture)
-- [Repo fit](#repo-fit)
-- [Scope](#scope)
-- [Operating law](#operating-law)
-- [Tile manifest in the KFM object family](#tile-manifest-in-the-kfm-object-family)
-- [Required manifest shape](#required-manifest-shape)
-- [Canonicalization and digest rules](#canonicalization-and-digest-rules)
-- [Validation gates](#validation-gates)
-- [UI and Evidence Drawer behavior](#ui-and-evidence-drawer-behavior)
-- [Examples](#examples)
-- [Proposed validator behavior](#proposed-validator-behavior)
-- [Anti-patterns](#anti-patterns)
-- [Implementation sequence](#implementation-sequence)
-- [Acceptance checklist](#acceptance-checklist)
-- [Open verification backlog](#open-verification-backlog)
-- [Review-ready decision](#review-ready-decision)
+Defines the governed manifest contract for KFM tile delivery artifacts so rendered map surfaces remain traceable to release state, evidence, policy, provenance, integrity checks, correction lineage, and rollback targets.
 
----
-
-## Purpose
-
-A `TileManifest` is a small, reviewable, machine-checkable sidecar object for a released or candidate tile delivery artifact.
-
-It answers five questions before a tile layer can become a trusted KFM public or steward-facing surface:
-
-1. **What bytes, service snapshot, or delivery descriptor are being rendered?**
-2. **Which release, source descriptors, receipts, dataset versions, and evidence support that delivery artifact?**
-3. **What policy, sensitivity, rights, review, and promotion decisions govern it?**
-4. **Can the artifact and manifest be verified deterministically?**
-5. **How does the UI show trust, staleness, correction, rollback, denial, and abstention states?**
+<p>
+  <img alt="status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="surface: tiles" src="https://img.shields.io/badge/surface-tiles-blue">
+  <img alt="truth: evidence first" src="https://img.shields.io/badge/truth-evidence--first-blue">
+  <img alt="lifecycle: governed" src="https://img.shields.io/badge/lifecycle-governed-success">
+  <img alt="schema home: needs verification" src="https://img.shields.io/badge/schema%20home-needs%20verification-orange">
+</p>
 
 > [!IMPORTANT]
-> A tile manifest does **not** make tiles authoritative. Tiles, PMTiles, raster tiles, search views, graph projections, summaries, and scenes are downstream carriers. KFM truth remains upstream in governed evidence, catalog, policy, review, and release objects.
+> **Status:** `draft`  
+> **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
+> **Path:** `docs/architecture/tiles/TILE_MANIFEST_SPEC.md`  
+> **Current evidence posture:** `CONFIRMED` target path and selected adjacent docs through accessible GitHub repository inspection; `UNKNOWN` active local checkout, workflow enforcement, branch protection, emitted proof objects, dashboards, runtime behavior, and production tile-manifest validation.  
+> **Primary rule:** A tile manifest makes a delivery artifact inspectable. It does **not** make tiles authoritative.
 
-The manifest is useful because it makes a delivery artifact inspectable. It binds rendered map surfaces to release state, artifact identity, source lineage, policy posture, catalog closure, verification state, and rollback targets without pretending that the renderer, tile archive, style JSON, or popup text is the truth system.
-
----
-
-## Evidence boundary
-
-> [!NOTE]
-> This specification states KFM doctrine and proposes a contract shape. Current repository implementation depth remains **UNKNOWN** where live repo files, schemas, tests, workflows, dashboards, logs, emitted artifacts, or runtime behavior have not been inspected in this session.
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Attached `Pasted markdown.md` | CONFIRMED source being revised | Original tile-manifest structure, field families, examples, validation gates, and acceptance checklist | Does not prove repo path, validator, schema, UI, or CI implementation |
-| KFM MapLibre operating and UI manuals | CONFIRMED doctrine / PROPOSED realization | Renderer boundary, governed shell, Evidence Drawer, Focus Mode, PMTiles/MVT decision posture, no raw-public path, rollback testing | Does not prove current repo package pins, app paths, or runtime behavior |
-| KFM pipeline and Pass 24 corpus | CONFIRMED doctrine / LINEAGE | RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED, artifactization, spec hashes, receipts, release manifests, catalog matrix, finite outcomes | Does not prove current implementation without repo evidence |
-| Current repository tree, tests, workflows, dashboards, logs | UNKNOWN in this session | Would confirm paths, owners, schemas, validators, CI, emitted proof objects, and runtime behavior | Not inspected here |
-
-This document therefore uses `CONFIRMED` for source-grounded doctrine, `PROPOSED` for contract and path recommendations, `CONFLICTED` where naming or schema-home authority may need ADR resolution, and `UNKNOWN` where current implementation evidence is missing.
-
----
-
-## Truth posture
-
-| Claim area | Status | Meaning for this file |
-|---|---:|---|
-| Target path | PROPOSED | The existing draft names `docs/architecture/tiles/TILE_MANIFEST_SPEC.md`; no mounted repo path was verified here. |
-| KFM doctrine | CONFIRMED | The attached corpus consistently requires governed lifecycle, evidence-first posture, public-client boundaries, derived-layer caution, and traceable publication. |
-| Machine schema home | CONFLICTED / NEEDS VERIFICATION | `schemas/contracts/v1/tiles/tile_manifest.schema.json` is proposed only after schema-home confirmation or ADR. Do not create parallel authority in `contracts/` and `schemas/`. |
-| Object name | PROPOSED / NEEDS VERIFICATION | This doc uses `TileManifest`. Some related KFM material may use `TileArtifactManifest`; reconcile aliases before implementation. |
-| Validator implementation | PROPOSED | Validator names, commands, reports, fixtures, and gate IDs below are target contracts, not verified current repo behavior. |
-| Runtime behavior | UNKNOWN | No runtime, route tree, CI workflow, dashboard, log, emitted proof object, or MapLibre integration was directly inspected. |
-| Field names in this spec | PROPOSED | Names are intended to stabilize KFM tile-manifest semantics and should be reconciled with existing repo convention before commit. |
-
-This specification uses `MUST`, `SHOULD`, and `MAY` as requirement keywords for the proposed contract. Those keywords become enforceable only after the schema, validator, policy, and review gates are accepted by the repository.
-
----
-
-## Repo fit
-
-| Item | Determination |
-|---|---|
-| Standard doc path | PROPOSED: `docs/architecture/tiles/TILE_MANIFEST_SPEC.md` |
-| Machine schema home | PROPOSED: `schemas/contracts/v1/tiles/tile_manifest.schema.json` after schema-home verification |
-| Schema-home ADR | PROPOSED: `docs/adr/ADR-tiles-schema-home.md` or repo-native ADR number |
-| Valid fixtures | PROPOSED: `tests/fixtures/tiles/tile_manifest/valid/` |
-| Invalid fixtures | PROPOSED: `tests/fixtures/tiles/tile_manifest/invalid/` |
-| Validator | PROPOSED: `tools/validators/tile_manifest_validator.*` or repo-native equivalent |
-| Related object families | `SourceDescriptor`, `DatasetVersion`, `ProjectionBuildReceipt`, `LayerManifest`, `StyleManifest`, `EvidenceBundle`, `DecisionEnvelope`, `ReleaseManifest`, `ReleaseProofPack`, `CatalogMatrix`, `CorrectionNotice` |
-| Public UI consumer | PROPOSED: governed MapLibre shell, Evidence Drawer, Review Console, Focus Mode |
-| Current implementation proof | UNKNOWN / NEEDS VERIFICATION |
-
-> [!WARNING]
-> If the mounted repository later proves a different schema, validator, fixture, or ADR convention, preserve the semantics here and adapt file homes through an ADR. Do not create a second tile-manifest dialect to satisfy this draft.
-
-[Back to top](#top)
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Operating law](#operating-law) · [Object-family map](#object-family-map) · [Manifest contract](#manifest-contract) · [Digest rules](#canonicalization-and-digest-rules) · [Validation gates](#validation-gates) · [UI behavior](#ui-and-evidence-drawer-behavior) · [Examples](#examples) · [Implementation sequence](#implementation-sequence) · [Definition of done](#definition-of-done) · [Open verification](#open-verification-backlog)
 
 ---
 
 ## Scope
 
-### Accepted manifest subjects
+A `TileManifest` is a small, reviewable, machine-checkable sidecar object for one governed tile delivery artifact or one coherent tile delivery bundle.
 
-A `TileManifest` may describe one governed tile delivery artifact or one coherent tile delivery bundle.
+It answers five questions before a tile-backed layer can be trusted on a public, steward, review, export, or Focus Mode surface:
 
-| Delivery form | Use in KFM | Notes |
+1. **What bytes, service snapshot, or delivery descriptor are being rendered?**
+2. **Which release, source descriptors, receipts, dataset versions, transforms, and evidence support that delivery artifact?**
+3. **What policy, sensitivity, rights, review, promotion, correction, and rollback decisions govern it?**
+4. **Can the artifact and manifest be verified deterministically?**
+5. **How must the UI display trust, staleness, generalization, correction, withdrawal, denial, abstention, and digest failure states?**
+
+> [!NOTE]
+> The manifest binds a map-delivery artifact to KFM’s proof spine. It does not replace `EvidenceBundle`, `DecisionEnvelope`, `ReleaseManifest`, `CatalogMatrix`, `ReviewRecord`, `PromotionDecision`, `CorrectionNotice`, or `RollbackCard`.
+
+### Delivery forms covered
+
+| Delivery form | KFM use | Minimum posture |
 |---|---|---|
-| `pmtiles` | Released semistatic vector/raster tile archive, offline package, object-store/CDN-style delivery | Strong first target for immutable, digest-addressed tile releases. |
-| `mvt_service` | Server-mediated vector tile service | Requires service snapshot/version identity and policy-mediated access. |
-| `raster_tile_service` | Server-mediated raster tile service | Requires source raster, derivation, freshness, and support metadata. |
-| `cog_backed_tile_service` | Tile facade over a stronger COG raster source | The COG remains the stronger raster object; the tile service is delivery. |
-| `mbtiles` | Local or server-side archive | Public browser exposure depends on an approved serving adapter. |
-| `tilejson` | Adapter metadata for a tile source | TileJSON can be referenced, but it is not a trust object by itself. |
+| `pmtiles` | Stable public-safe or steward-safe immutable tile archives. | Strong candidate for digest-addressed release bundles. |
+| `mvt_service` | Server-mediated vector tile service. | Requires service snapshot/version identity and policy-mediated access. |
+| `raster_tile_service` | Server-mediated raster tile delivery. | Requires source raster version, render profile, freshness, and policy state. |
+| `cog_backed_tile_service` | Tile facade over a stronger COG source artifact. | COG/source object remains stronger than the display facade. |
+| `mbtiles` | Local/server archive or packaging intermediate. | Public browser exposure requires approved serving adapter and access posture. |
+| `tilejson` | Source adapter metadata for a tile source. | Useful descriptor, not a proof object by itself. |
 
-### Exclusions
+[Back to top](#top)
 
-This spec does **not** define:
+---
 
-| Excluded thing | Where it belongs instead |
+## Repo fit
+
+| Relationship | Path or object | Status | Notes |
+|---|---|---:|---|
+| This specification | `docs/architecture/tiles/TILE_MANIFEST_SPEC.md` | `CONFIRMED path` / `draft content` | Target path exists in the accessible GitHub repository. |
+| Tile directory landing page | [`./README.md`](./README.md) | `CONFIRMED path` | Defines tile delivery architecture, accepted inputs, exclusions, lifecycle, and delivery posture. |
+| Tile delta companion | [`./DELTA_UPDATE_MODEL.md`](./DELTA_UPDATE_MODEL.md) | `CONFIRMED path` | Defines incremental update posture without bypassing release or rollback. |
+| Tile release companion | [`./GOVERNED_TILE_RELEASE_PUBLISHER.md`](./GOVERNED_TILE_RELEASE_PUBLISHER.md) | `CONFIRMED path` | Defines deterministic no-network publication-slice posture for tile release candidates. |
+| Architecture landing page | [`../README.md`](../README.md) | `CONFIRMED path` | Places tiles under cross-cutting architecture rather than a domain root. |
+| Schema-home ADR | [`../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) | `CONFIRMED path` / `draft proposed decision` | Proposes `schemas/contracts/v1/` as machine-schema home while `contracts/` preserves semantic meaning. |
+| Machine schema | `../../../schemas/contracts/v1/tiles/tile_manifest.schema.json` | `PROPOSED / NEEDS VERIFICATION` | Target schema home only after ADR acceptance and repo-native convention verification. |
+| Fixtures | `../../../tests/fixtures/tiles/tile_manifest/` or repo-native equivalent | `PROPOSED / NEEDS VERIFICATION` | Valid, invalid, stale, denied, generalized, rollback, digest-mismatch, and missing-evidence fixtures. |
+| Validator | `../../../tools/validators/tiles/` or repo-native equivalent | `PROPOSED / NEEDS VERIFICATION` | Should emit finite outcomes and/or `DecisionEnvelope` references. |
+| Release instances | `../../../release/`, `../../../data/published/`, `../../../data/proofs/`, `../../../data/receipts/` or repo-native equivalents | `NEEDS VERIFICATION` | Instance artifacts must remain separate from schema and contract definitions. |
+
+> [!WARNING]
+> If the active checkout proves a different canonical schema, validator, fixture, or release-artifact convention, preserve the semantics here and adapt file homes through an ADR or migration note. Do **not** create a second tile-manifest dialect.
+
+---
+
+## Accepted inputs
+
+| Input | Required posture |
 |---|---|
-| Canonical datasets | Domain schemas, dataset versions, source registries, and governed stores |
-| Map style paint/layout rules | `StyleManifest` and MapLibre style assets |
-| Layer binding and draw order | `LayerManifest` or layer registry |
-| Feature claim evidence | `EvidenceBundle` and Evidence Drawer payload contracts |
-| Full release assembly | `ReleaseManifest` / `ReleaseProofPack` |
-| Human approval | `ReviewRecord` and `PromotionDecision` |
-| Policy rules | Policy bundles and `DecisionEnvelope` outputs |
-| Runtime AI response shape | `RuntimeResponseEnvelope` and governed Focus Mode contracts |
-| Emergency, life-safety, or operational alerting | Official source systems and KFM contextual-not-alerting posture |
+| Released or candidate tile artifact | Must identify artifact role, delivery form, URI, media type, extent, zoom/time scope, and digest subject where applicable. |
+| Service snapshot descriptor | Required when the delivery artifact is a dynamic or server-mediated service rather than immutable bytes. |
+| `SourceDescriptor` references | Must identify source role, rights, cadence, authority, access method, caveats, and sensitivity implications. |
+| Dataset and projection build references | Must identify source-normalized dataset versions and tile/materialization build receipts. |
+| Evidence references | Required when the layer or artifact supports consequential public or steward-facing claims. |
+| Policy and review references | Must carry rights, sensitivity, access class, review state, and promotion/publication decision references. |
+| Catalog closure references | Should connect STAC/DCAT/PROV/checksum closure where those surfaces are used. |
+| Release references | Must identify the owning release, prior release when applicable, rollback target, correction notices, and publication state. |
+| UI trust contract | Must identify layer binding, Evidence Drawer behavior, negative states, and Focus Mode eligibility. |
 
-### Naming note
+---
 
-`TileManifest` is the term used in this document. If the repository already uses `TileArtifactManifest`, that name may be retained as the implementation class or schema title. The ADR should decide whether:
+## Exclusions
 
-- `TileManifest` is the user-facing doc term and `TileArtifactManifest` is a machine alias;
-- `TileArtifactManifest` supersedes this title; or
-- both are retained with explicit compatibility mapping.
+| Excluded item | Why excluded | Home or surface instead |
+|---|---|---|
+| Canonical source or domain records | Tiles are rebuildable delivery artifacts, not canonical truth. | Domain stores, dataset versions, source registries, and evidence-producing pipelines. |
+| RAW, WORK, QUARANTINE, unpublished candidates | Public tile surfaces must not bypass KFM lifecycle gates. | Lifecycle data homes with proper access controls. |
+| Map style paint/layout semantics | Style is related but distinct from tile artifact identity. | `StyleManifest` and style assets. |
+| Layer ordering and interaction contract | Layer binding is distinct from artifact integrity. | `LayerManifest` or layer registry. |
+| Feature claim support | Tile attributes can carry handles but do not prove claims. | `EvidenceBundle` and Evidence Drawer payloads. |
+| Full release assembly | A manifest can be part of a release; it is not the release itself. | `ReleaseManifest`, `ReleaseProofPack`, and release registry. |
+| Human approval | Approval is a governed review/promotion act, not a manifest field alone. | `ReviewRecord` and `PromotionDecision`. |
+| Policy rules | The manifest records policy refs and outcomes; it does not own policy law. | `policy/` and `DecisionEnvelope`. |
+| Runtime AI response shape | Focus Mode must resolve evidence through governed services. | `RuntimeResponseEnvelope`, Focus Mode contracts, and AI receipts. |
+| Emergency or life-safety alerting | KFM may provide contextual evidence, not official emergency instructions. | Official alerting and emergency systems. |
 
-Do not allow two names to drift into different contract meanings.
+[Back to top](#top)
 
 ---
 
 ## Operating law
 
-KFM tile manifests sit downstream of the canonical evidence path and upstream of map rendering.
+KFM tile manifests sit downstream of source validation, catalog closure, policy, review, and release state. They sit upstream of map rendering, layer selection, Evidence Drawer inspection, exports, and Focus Mode context.
 
 ```mermaid
 flowchart LR
-  RAW["RAW"] --> WORK["WORK / QUARANTINE"]
-  WORK --> PROCESSED["PROCESSED"]
-  PROCESSED --> CATALOG["CATALOG / TRIPLET"]
-  CATALOG --> PROMOTION["Promotion gates"]
-  PROMOTION --> PUBLISHED["PUBLISHED release"]
-  PUBLISHED --> TILEMANIFEST["TileManifest"]
-  TILEMANIFEST --> TILEARTIFACT["Tile artifact / service"]
-  TILEMANIFEST --> GOVERNEDAPI["Governed API"]
-  GOVERNEDAPI --> DRAWER["Evidence Drawer"]
-  TILEARTIFACT --> MAP["MapLibre shell"]
-  DRAWER --> MAP
+  RAW["RAW<br/>source-native capture"] --> WQ["WORK / QUARANTINE<br/>validation · rights · sensitivity"]
+  WQ --> P["PROCESSED<br/>normalized candidate"]
+  P --> C["CATALOG / TRIPLET<br/>evidence · provenance · graph projection"]
+  C --> G["Promotion gates<br/>policy · review · proof · rollback"]
+  G --> R["ReleaseManifest<br/>published or candidate state"]
+  R --> TM["TileManifest<br/>delivery sidecar"]
+  TM --> TA["Tile artifact / service"]
+  TM --> LR["LayerManifest / StyleManifest"]
+  TA --> MAP["MapLibre shell"]
+  LR --> MAP
+  MAP --> API["Governed API"]
+  API --> ED["Evidence Drawer"]
+  API --> FM["Focus Mode"]
 ```
-
-The renderer mental model is:
-
-```text
-source -> delivery -> style -> renderer -> UX
-```
-
-KFM governance controls the chain. MapLibre may render, hit-test, and expose interaction state. It does not decide evidence, rights, sensitivity, review, citation, promotion, correction, or rollback.
 
 ### Rules
 
 1. **Public-client rule**  
-   Public and normal UI clients MUST use released artifacts, governed APIs, catalog records, tile services, and EvidenceBundle resolution. They MUST NOT read `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, canonical/internal stores, or direct model output.
+   Public and normal UI clients must use governed APIs, released artifacts, catalog records, tile services, and `EvidenceBundle` resolution. They must not read `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, canonical/internal stores, proof-pack internals, review-only stores, or direct model output.
 
 2. **Derived-layer rule**  
-   A tile artifact is a delivery surface. It MUST NOT become the source of truth for a claim unless a separate EvidenceBundle and release chain support that claim.
+   Tiles, PMTiles, MVT services, TileJSON, raster tiles, graph projections, search views, summaries, screenshots, and scenes are downstream carriers. They are not sovereign truth.
 
 3. **Cite-or-abstain rule**  
-   If a tile-facing claim cannot resolve to admissible evidence, the UI MUST show an abstention or unavailable-evidence state rather than imply support.
+   If a tile-facing claim cannot resolve to admissible evidence, the UI must show an abstention or unavailable-evidence state rather than imply support.
 
 4. **Promotion rule**  
-   Publication is a governed state transition. A tile manifest may be referenced by promotion outputs, but it MUST NOT bypass review, policy, rights, sensitivity, catalog closure, proof, rollback, or correction handling.
+   Publication is a governed state transition. A tile manifest may be referenced by release outputs, but it must not bypass review, policy, rights, sensitivity, catalog closure, proof, rollback, or correction handling.
 
 5. **Fail-closed rule**  
-   Missing manifest, digest mismatch, invalid signature, unresolved source descriptor, missing EvidenceBundle, unknown rights, unresolved sensitivity, or public exposure of internal paths MUST block public promotion. Steward/debug surfaces MAY show the failure state with explicit labeling.
+   Missing manifest, digest mismatch, invalid signature, unresolved source descriptor, missing `EvidenceBundle`, unknown rights, unresolved sensitivity, missing rollback target, or public exposure of internal paths blocks public promotion.
 
 6. **Thin-browser rule**  
-   Browser logic SHOULD remain thin for trust-bearing decisions. The browser may display trust state, request governed resolution, and show evidence payloads; it SHOULD NOT assemble consequential truth from tiles, style expressions, graph projections, or summaries alone.
+   Browser logic may display trust state, request governed resolution, and show evidence payloads. It must not assemble consequential truth from tiles, style expressions, graph projections, or summaries alone.
+
+[Back to top](#top)
 
 ---
 
-## Tile manifest in the KFM object family
+## Object-family map
 
 A `TileManifest` is a bridge object. It connects delivery bytes or service descriptors to the proof spine without replacing the proof spine.
 
@@ -224,12 +181,14 @@ flowchart TB
   PBR --> TM["TileManifest"]
   TM --> TA["Tile artifact / service"]
   TM --> LM["LayerManifest"]
+  TM --> SM["StyleManifest"]
   TM --> RM["ReleaseManifest"]
   TM --> CM["CatalogMatrix"]
-  TM --> EB["EvidenceBundle"]
+  TM --> EB["EvidenceBundle refs"]
   TM --> DE["DecisionEnvelope"]
   TM --> RPP["ReleaseProofPack / signature bundle"]
   LM --> MAP["MapLibre layer"]
+  SM --> MAP
   RM --> PUB["Published surface"]
   EB --> DRAWER["Evidence Drawer"]
   DE --> DRAWER
@@ -237,42 +196,40 @@ flowchart TB
   DRAWER --> MAP
 ```
 
-### Boundary distinctions
-
-| Object | Governs | Must not be confused with |
+| Object | Owns | Must not silently own |
 |---|---|---|
-| `TileManifest` | Delivery artifact identity, integrity, provenance refs, catalog refs, UI trust hints | Canonical dataset, policy decision, EvidenceBundle |
-| `LayerManifest` | Map layer binding, source/layer IDs, display metadata, drawer payload refs | Tile artifact proof |
-| `StyleManifest` | Style JSON, sprites, glyphs, icons, visual versioning | Evidence, rights, or review state |
-| `ReleaseManifest` | Release set, publication state, proof refs, rollback posture | Individual tile bytes only |
-| `EvidenceBundle` | Support for claim, feature, export, story, or Focus answer | Tile archive metadata |
-| `DecisionEnvelope` | Machine-readable policy result | Human-readable badge text |
-| `ProjectionBuildReceipt` | Proof that a derived layer was built from a known release scope | Public release proof |
-| `CatalogMatrix` | Cross-surface closure across catalogs, checksums, release IDs, and proof refs | A metadata catalog alone |
-
-[Back to top](#top)
+| `TileManifest` | Delivery artifact identity, integrity refs, provenance refs, catalog refs, release refs, UI trust hints. | Canonical dataset truth, policy law, review approval, or EvidenceBundle content. |
+| `LayerManifest` | Map layer binding, layer/source IDs, interaction behavior, drawer payload refs. | Tile artifact proof or canonical data semantics. |
+| `StyleManifest` | Style JSON, sprites, glyphs, icons, visual versioning, meaning-change review needs. | Evidence, rights, sensitivity, or correction state. |
+| `ReleaseManifest` | Release set, publication state, promoted artifacts, proof refs, rollback posture. | Individual tile bytes alone. |
+| `EvidenceBundle` | Support for claim, feature, story, export, or Focus answer. | Tile archive metadata. |
+| `DecisionEnvelope` | Machine-readable policy outcome and reason codes. | Human-readable badge text alone. |
+| `ProjectionBuildReceipt` | Proof that a derived layer was built from known release/materialization inputs. | Public release approval. |
+| `CatalogMatrix` | Cross-surface closure across catalog records, digests, release IDs, and proof refs. | A metadata catalog alone. |
+| `CorrectionNotice` | Public or steward-visible correction, supersession, withdrawal, and affected claim/layer context. | Silent file replacement. |
+| `RollbackCard` | Planned and auditable safe restoration path. | Deletion of history. |
 
 ---
 
-## Required manifest shape
+## Manifest contract
 
-The following shape is the proposed v1 contract. Exact field names, enum vocabularies, and URI forms remain **NEEDS VERIFICATION** until reconciled with repository conventions.
+The following v1 shape is the proposed contract for `TileManifest`. Exact schema IDs, enum vocabulary, path IDs, URI schemes, and validator behavior remain `NEEDS VERIFICATION` until reconciled with repo-native schema and validator conventions.
 
-### Top-level object
+### Top-level fields
 
 | Field | Required | Type | Purpose |
 |---|---:|---|---|
-| `schema_version` | Yes | string | MUST be `kfm.tile_manifest.v1` for this spec. |
-| `manifest_id` | Yes | string | Stable KFM ID. SHOULD include release or artifact identity. |
-| `manifest_role` | Yes | string | MUST be `tile_manifest`. |
+| `schema_version` | Yes | string | Must be `kfm.tile_manifest.v1` for this spec. |
+| `manifest_id` | Yes | string | Stable KFM manifest ID. Should include release or artifact identity. |
+| `manifest_role` | Yes | enum | Must be `tile_manifest`. |
 | `status` | Yes | enum | `draft`, `candidate`, `published`, `withdrawn`, or `superseded`. |
-| `release_ref` | Yes | object | Links to release and promotion state. |
-| `artifact` | Yes | object | Describes the tile bytes, service snapshot, or governed tile service. |
+| `release_ref` | Yes | object | Links to release, promotion, and publication state. |
+| `artifact` | Yes | object | Describes tile bytes, service snapshot, or governed tile service. |
 | `spec_identity` | Yes | object | Declares deterministic identity and materialization inputs. |
-| `provenance` | Yes | object | Connects source, dataset, receipt, and derivation references. |
-| `governance` | Yes | object | Carries policy, review, sensitivity, rights, and decision refs. |
-| `catalog_closure` | Yes | object | Links STAC/DCAT/PROV/checksum closure surfaces. |
-| `verification` | Yes | object | Carries manifest digest, artifact digest, signature, and gate results. |
+| `provenance` | Yes | object | Connects source, dataset, receipt, validation, and derivation refs. |
+| `governance` | Yes | object | Carries policy, review, sensitivity, rights, access, and decision refs. |
+| `catalog_closure` | Yes | object | Links STAC/DCAT/PROV/checksum closure surfaces when present. |
+| `verification` | Yes | object | Carries manifest digest, artifact digest, signature/bundle refs, and gate results. |
 | `ui` | Yes | object | Provides safe UI binding and trust-badge behavior. |
 | `lineage` | Yes | object | Supports supersession, rollback, withdrawal, and correction. |
 
@@ -281,10 +238,11 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 | Field | Required | Notes |
 |---|---:|---|
 | `release_id` | Yes | Stable release identifier. |
-| `release_manifest_ref` | Yes | Reference to `ReleaseManifest`; exact URI scheme NEEDS VERIFICATION. |
+| `release_manifest_ref` | Yes | Reference to `ReleaseManifest`; exact URI scheme needs verification. |
 | `promotion_id` | Yes | Promotion transition or candidate ID. |
 | `publication_state` | Yes | `candidate`, `published`, `withdrawn`, `superseded`, or `rollback_candidate`. |
 | `published_at` | Conditional | Required when `publication_state` is `published`. |
+| `previous_release_id` | Conditional | Required when a prior public/steward release exists. |
 
 ### `artifact`
 
@@ -293,12 +251,12 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 | `artifact_id` | Yes | Stable artifact identity within the release. |
 | `artifact_role` | Yes | `map_delivery`, `preview`, `offline_bundle`, `steward_restricted_delivery`, or `proof_attachment`. |
 | `delivery_form` | Yes | `pmtiles`, `mvt_service`, `raster_tile_service`, `cog_backed_tile_service`, `mbtiles`, or `tilejson`. |
-| `uri` | Yes | Public manifests MUST NOT expose internal raw/work/quarantine URIs. |
-| `media_type` | Yes | Must match approved media-type registry. |
+| `uri` | Yes | Public manifests must not expose RAW/WORK/QUARANTINE/internal URIs. |
+| `media_type` | Yes | Must match an approved media-type registry or documented repo convention. |
 | `byte_size` | Conditional | Required for immutable file artifacts; optional for dynamic services. |
-| `artifact_digest` | Conditional | Required for immutable file artifacts; required for service snapshot descriptors when feasible. |
-| `digest_subject` | Conditional | Required when `artifact_digest` is present; `bytes`, `service_snapshot_descriptor`, or `tilejson_descriptor`. |
-| `service_snapshot_ref` | Conditional | Required for service-mediated artifacts unless `artifact_digest` covers an immutable snapshot descriptor. |
+| `artifact_digest` | Conditional | Required for immutable artifacts; required for service snapshot descriptors when feasible. |
+| `digest_subject` | Conditional | Required when `artifact_digest` is present: `bytes`, `service_snapshot_descriptor`, or `tilejson_descriptor`. |
+| `service_snapshot_ref` | Conditional | Required for service-mediated artifacts unless the digest covers an immutable snapshot descriptor. |
 | `tilejson_ref` | Optional | Reference to adapter metadata. |
 | `minzoom` | Conditional | Required for tiled map delivery. |
 | `maxzoom` | Conditional | Required for tiled map delivery. |
@@ -306,7 +264,7 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 | `center_wgs84` | Optional | UI hint only. |
 | `crs` | Yes | Coordinate reference system or tile matrix CRS. |
 | `tile_matrix_set` | Conditional | Required if non-default or service-mediated. |
-| `time_range` | Conditional | Required for time-aware or epoch-specific layers. |
+| `time_range` | Conditional | Required for time-aware, epoch-specific, or freshness-sensitive layers. |
 | `generated_at` | Yes | Build timestamp. |
 | `stale_after` | Conditional | Required for time-sensitive or operational-context layers. |
 
@@ -315,8 +273,8 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 | Field | Required | Notes |
 |---|---:|---|
 | `spec_hash` | Yes | Deterministic identity anchor for materialization inputs. |
-| `spec_hash_algorithm` | Yes | PROPOSED: `sha256:kfm.jcs.detached_manifest_digest.v1`. Exact profile NEEDS VERIFICATION. |
-| `spec_inputs` | Yes | Array of input references used to compute `spec_hash`. |
+| `spec_hash_algorithm` | Yes | Proposed: `sha256:kfm.jcs.detached_manifest_digest.v1`; exact profile needs verification. |
+| `spec_inputs` | Yes | Array of input refs used to compute `spec_hash`. |
 | `materialization_reason` | Yes | Human-readable reason for this tile build. |
 | `materialization_profile` | Yes | Build profile name, such as `public_vector_tiles_v1`. |
 | `profile_version` | Yes | Version of materialization profile. |
@@ -325,10 +283,10 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 
 | Field | Required | Notes |
 |---|---:|---|
-| `source_descriptor_refs` | Yes | MUST reference source descriptors, not raw files alone. |
+| `source_descriptor_refs` | Yes | Must reference source descriptors, not raw files alone. |
 | `dataset_version_refs` | Yes | Released or candidate dataset versions used. |
 | `projection_build_receipt_ref` | Yes | Receipt for derived tile build. |
-| `run_receipt_refs` | Yes | Build/fetch/transform receipts. |
+| `run_receipt_refs` | Yes | Build, fetch, transform, and validation process receipts. |
 | `validation_report_refs` | Yes | Validation evidence for this artifact. |
 | `transform_receipt_refs` | Conditional | Required when redaction, generalization, interpolation, rasterization, aggregation, masking, or sensitivity transforms occurred. |
 | `evidence_bundle_refs` | Conditional | Required for consequential layer claims. |
@@ -338,15 +296,15 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 
 | Field | Required | Notes |
 |---|---:|---|
-| `policy_label` | Yes | Public/restricted/steward/etc.; exact vocabulary NEEDS VERIFICATION. |
+| `policy_label` | Yes | Public/restricted/steward/etc.; exact vocabulary needs verification. |
 | `rights_state` | Yes | `cleared`, `restricted`, `unknown`, `no_public_release`, or repo-approved equivalent. |
-| `sensitivity_state` | Yes | MUST reflect exact-location, cultural, ecological, infrastructure, living-person, and steward constraints where relevant. |
+| `sensitivity_state` | Yes | Must reflect exact-location, cultural, ecological, infrastructure, living-person, and steward constraints where relevant. |
 | `review_state` | Yes | `unreviewed`, `reviewed`, `approved`, `denied`, `escalated`, or `withdrawn`. |
 | `promotion_decision_ref` | Conditional | Required before publication. |
 | `decision_envelope_ref` | Yes | Machine-readable policy result. |
-| `public_release_allowed` | Yes | Boolean gate; false blocks public use. |
+| `public_release_allowed` | Yes | Boolean gate; `false` blocks public use. |
 | `access_class` | Yes | `public`, `steward`, `restricted`, `offline`, or `internal`. |
-| `obligations` | Optional | Required attribution, masking, access, or display obligations. |
+| `obligations` | Optional | Required attribution, masking, access, retention, or display obligations. |
 
 ### `catalog_closure`
 
@@ -363,15 +321,15 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 
 | Field | Required | Notes |
 |---|---:|---|
-| `manifest_digest` | Yes | Digest of canonicalized manifest subject. See [canonicalization](#canonicalization-and-digest-rules). |
+| `manifest_digest` | Yes | Digest of canonicalized manifest subject. |
 | `artifact_digest` | Conditional | Must match `artifact.artifact_digest` when present. |
 | `signature_ref` | Conditional | Required for published public artifacts unless policy explicitly exempts. |
 | `dsse_bundle_ref` | Conditional | Required when signature bundle is used. |
-| `attestation_refs` | Optional | Additional provenance or SLSA/in-toto-style references if supported. |
+| `attestation_refs` | Optional | Additional provenance, SLSA, or in-toto-style refs if supported. |
 | `verification_status` | Yes | `unverified`, `verified`, `invalid`, `missing_bundle`, `digest_mismatch`, or `error`. |
 | `verified_at` | Conditional | Required when `verification_status` is `verified` or `invalid`. |
 | `verifier` | Conditional | Tool or service that produced verification. |
-| `gate_h_integrity_ref` | Conditional | Required if artifact integrity gate is implemented. |
+| `gate_h_integrity_ref` | Conditional | Required if broader promotion gates use Gate H naming. |
 
 ### `ui`
 
@@ -384,9 +342,9 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 | `feature_evidence_ref_property` | Conditional | Required when `evidence_binding_mode` is `feature`. |
 | `evidence_drawer_payload_ref` | Conditional | Required for consequential public layers. |
 | `trust_badge_policy` | Yes | Defines badge display and failure behavior. |
-| `popup_claims_allowed` | Yes | False unless per-feature or layer EvidenceBundle support is available. |
-| `focus_mode_allowed` | Yes | False unless Focus can resolve scope and evidence through governed API. |
-| `negative_states` | Yes | UI states for missing evidence, stale data, policy denial, invalid signature, digest mismatch, and abstention. |
+| `popup_claims_allowed` | Yes | `false` unless per-feature or layer `EvidenceBundle` support is available. |
+| `focus_mode_allowed` | Yes | `false` unless Focus can resolve scope and evidence through governed API. |
+| `negative_states` | Yes | UI states for missing evidence, stale data, policy denial, invalid signature, digest mismatch, withdrawal, and abstention. |
 
 ### `lineage`
 
@@ -394,7 +352,7 @@ The following shape is the proposed v1 contract. Exact field names, enum vocabul
 |---|---:|---|
 | `supersedes` | Yes | Array; empty for first release. |
 | `superseded_by` | Yes | Array; empty unless superseded. |
-| `rollback_target_ref` | Optional | Prior verified manifest/release ref. |
+| `rollback_target_ref` | Conditional | Required before public release unless explicitly exempted by policy. |
 | `correction_notice_refs` | Yes | Array; empty if no corrections. |
 | `withdrawal_reason` | Conditional | Required when `status` is `withdrawn`. |
 
@@ -408,21 +366,24 @@ Manifest digests are trust-critical and easy to get wrong.
 
 ### Required digest posture
 
-1. `artifact.artifact_digest` MUST be computed over tile artifact bytes or over an approved immutable service snapshot descriptor.
-2. `verification.manifest_digest` MUST be computed over a deterministic canonical manifest subject.
-3. The canonical manifest subject MUST exclude the digest value being computed, or normalize it to `null`, according to a named digest profile.
-4. Signature fields MUST NOT alter the manifest digest subject unless the profile explicitly includes detached signature metadata.
-5. `spec_identity.spec_hash` MUST identify the materialization specification and inputs, not merely the final tile bytes.
-6. Validators MUST reject ambiguous digest profiles.
-7. `content_spec_hash`, `run_hash`, and `artifact_digest` SHOULD remain distinct when the repository supports all three: the first identifies declared content inputs, the second identifies a process execution, and the third identifies produced bytes or immutable service descriptor content.
+1. `artifact.artifact_digest` must be computed over tile artifact bytes or over an approved immutable service snapshot descriptor.
+2. `verification.manifest_digest` must be computed over a deterministic canonical manifest subject.
+3. The canonical manifest subject must exclude the digest value being computed, or normalize it to `null`, according to a named digest profile.
+4. Signature fields must not alter the manifest digest subject unless the profile explicitly includes detached signature metadata.
+5. `spec_identity.spec_hash` must identify materialization specification and inputs, not merely the final tile bytes.
+6. Validators must reject ambiguous digest profiles.
+7. `content_spec_hash`, `run_hash`, and `artifact_digest` should remain distinct when the repository supports all three:
+   - `content_spec_hash` identifies declared content inputs.
+   - `run_hash` identifies a process execution.
+   - `artifact_digest` identifies produced bytes or an immutable service descriptor.
 
-### PROPOSED digest profiles
+### Proposed digest profiles
 
 | Profile | Use | Status |
 |---|---|---|
-| `kfm.jcs.detached_manifest_digest.v1` | Compute digest over canonical manifest with `verification.manifest_digest`, `verification.signature_ref`, `verification.dsse_bundle_ref`, and `verification.attestation_refs` omitted. | PROPOSED |
-| `kfm.jcs.null_manifest_digest.v1` | Compute digest over canonical manifest with `verification.manifest_digest` set to `null`. | PROPOSED |
-| `kfm.external_signed_envelope.v1` | Keep digest/signature in a detached proof object rather than embedding self-referential values. | PROPOSED |
+| `kfm.jcs.detached_manifest_digest.v1` | Compute digest over canonical manifest with `verification.manifest_digest`, `verification.signature_ref`, `verification.dsse_bundle_ref`, and `verification.attestation_refs` omitted. | `PROPOSED` |
+| `kfm.jcs.null_manifest_digest.v1` | Compute digest over canonical manifest with `verification.manifest_digest` set to `null`. | `PROPOSED` |
+| `kfm.external_signed_envelope.v1` | Keep digest/signature in a detached proof object rather than embedding self-referential values. | `PROPOSED` |
 
 > [!WARNING]
 > A manifest that contains its own digest can become recursively unstable unless the emitting pipeline and validator use the exact same canonicalization profile. Do not treat ad hoc `json.dumps(sort_keys=True)` behavior as final KFM law without a repo-approved canonicalization profile.
@@ -436,7 +397,9 @@ Manifest digests are trust-critical and easy to get wrong.
 | `mvt_service` | Immutable service snapshot descriptor | Must include service version, query/profile, source release, cache behavior, and access class. |
 | `raster_tile_service` | Immutable service snapshot descriptor | Must include source raster version, tile matrix, resampling rules, and freshness. |
 | `cog_backed_tile_service` | COG digest plus facade descriptor | COG remains stronger source object; tile facade is delivery. |
-| `tilejson` | TileJSON descriptor and referenced delivery artifact | TileJSON alone is not sufficient for proof. |
+| `tilejson` | TileJSON descriptor and referenced delivery artifact | TileJSON alone is insufficient for proof. |
+
+[Back to top](#top)
 
 ---
 
@@ -446,31 +409,31 @@ A tile manifest should be validated before promotion and revalidated before publ
 
 | Gate | Name | Required checks | Outcome |
 |---:|---|---|---|
-| T0 | Schema and required fields | Valid JSON, schema version, required fields, enum values, URI shape, media type | `PASS` / `ERROR` |
-| T1 | Artifact integrity | Artifact digest present and matches bytes or immutable snapshot descriptor | `PASS` / `DENY` / `ABSTAIN` |
-| T2 | Manifest integrity | Manifest digest matches canonicalization profile | `PASS` / `DENY` / `ERROR` |
-| T3 | Signature and bundle | Signature/bundle present where required; signature verifies | `PASS` / `DENY` / `ABSTAIN` |
-| T4 | Provenance closure | Source descriptors, receipts, validation reports, dataset versions, and derivation refs resolve | `PASS` / `ABSTAIN` / `DENY` |
-| T5 | Catalog closure | STAC/DCAT/PROV/checksum refs align through `CatalogMatrix` | `PASS` / `ABSTAIN` / `DENY` |
-| T6 | Policy and sensitivity | Rights/sensitivity/review/promotion states permit requested access class | `PASS` / `DENY` |
-| T7 | UI trust contract | Evidence Drawer and negative states exist for consequential surfaces | `PASS` / `ABSTAIN` |
-| T8 | Public-boundary check | Public manifest does not expose RAW/WORK/QUARANTINE/internal URIs | `PASS` / `DENY` |
-| T9 | Rollback and correction readiness | Supersession/correction/rollback references are coherent | `PASS` / `ABSTAIN` |
+| T0 | Schema and required fields | Valid JSON, schema version, required fields, enum values, URI shape, media type. | `PASS` / `ERROR` |
+| T1 | Artifact integrity | Artifact digest present and matches bytes or immutable snapshot descriptor. | `PASS` / `DENY` / `ABSTAIN` |
+| T2 | Manifest integrity | Manifest digest matches canonicalization profile. | `PASS` / `DENY` / `ERROR` |
+| T3 | Signature and bundle | Signature/bundle present where required; signature verifies. | `PASS` / `DENY` / `ABSTAIN` |
+| T4 | Provenance closure | Source descriptors, receipts, validation reports, dataset versions, and derivation refs resolve. | `PASS` / `ABSTAIN` / `DENY` |
+| T5 | Catalog closure | STAC/DCAT/PROV/checksum refs align through `CatalogMatrix`. | `PASS` / `ABSTAIN` / `DENY` |
+| T6 | Policy and sensitivity | Rights/sensitivity/review/promotion states permit requested access class. | `PASS` / `DENY` |
+| T7 | UI trust contract | Evidence Drawer and negative states exist for consequential surfaces. | `PASS` / `ABSTAIN` |
+| T8 | Public-boundary check | Public manifest does not expose RAW/WORK/QUARANTINE/internal URIs. | `PASS` / `DENY` |
+| T9 | Rollback and correction readiness | Supersession/correction/rollback references are coherent. | `PASS` / `ABSTAIN` |
 
 ### Gate H alignment
 
-KFM packet lineage calls the artifact-integrity gate **Gate H — Artifact Integrity & Signature**. This spec maps that concept to `T1`, `T2`, and `T3`, and records the combined result as `verification.gate_h_integrity_ref` when the broader promotion system uses Gate H naming.
+Some KFM planning materials call the artifact-integrity gate **Gate H — Artifact Integrity & Signature**. This spec maps that concept to `T1`, `T2`, and `T3`, and records the combined result as `verification.gate_h_integrity_ref` when the broader promotion system uses Gate H naming.
 
 ### Finite validator outcomes
 
 | Result | Meaning |
 |---|---|
 | `PASS` | Checks succeeded for the requested action and access class. |
-| `ABSTAIN` | The validator cannot prove safety or completeness; do not publish or claim verification. |
+| `ABSTAIN` | The validator cannot prove safety, completeness, freshness, review state, or release eligibility. |
 | `DENY` | Policy, integrity, sensitivity, rights, or boundary rule failed. |
 | `ERROR` | Validator, schema, environment, or artifact access failed in a way that prevents evaluation. |
 
-Validator reports SHOULD emit or reference a `DecisionEnvelope`.
+Validator reports should emit or reference a `DecisionEnvelope`.
 
 ---
 
@@ -483,45 +446,47 @@ A tile manifest is not only a CI artifact. It becomes part of the visible trust 
 | Badge state | Meaning | Public behavior |
 |---|---|---|
 | `verified` | Manifest digest, artifact digest, signature, provenance, catalog closure, and policy checks passed for this access class. | Layer may render with verified trust cue. |
-| `unverified` | Verification has not run. | Public layer SHOULD NOT render as trusted; steward/debug view may show warning. |
+| `unverified` | Verification has not run. | Public layer should not render as trusted; steward/debug view may show warning. |
 | `missing_bundle` | Required signature or verification bundle is missing. | Public promotion blocked unless policy explicitly exempts. |
 | `invalid_signature` | Signature check failed. | Public render blocked; show denial state. |
 | `digest_mismatch` | Artifact or manifest digest mismatch. | Public render blocked; show drift/tamper state. |
-| `evidence_unavailable` | EvidenceBundle or drawer payload does not resolve. | Render may be blocked for consequential layers; claim UI must abstain. |
+| `evidence_unavailable` | `EvidenceBundle` or drawer payload does not resolve. | Claim UI must abstain; consequential layer rendering may be blocked. |
 | `policy_denied` | Policy prohibits requested access or display. | Do not render restricted details. |
 | `stale` | `stale_after` exceeded or source freshness unknown. | Show stale badge; consequential claims require freshness note or abstention. |
+| `withdrawn` | Release is no longer valid for the requested surface. | Public render blocked or redirected to safe rollback/correction state. |
+| `generalized` | Public geometry or attributes were transformed for safety. | Show transform/withheld-accounting cue. |
 
 ### Evidence Drawer minimum payload
 
-When a user opens layer evidence, the UI SHOULD show:
+When a user opens layer evidence, the UI should show:
 
 | Drawer section | Required content |
 |---|---|
-| Identity | `manifest_id`, `artifact_id`, `artifact_digest`, `manifest_digest`, `spec_hash`, release ID |
-| Provenance | Source descriptors, dataset versions, derivation receipt, run receipts, build timestamp |
-| Verification | Signature status, bundle status, digest status, validator result, offline-verifiable flag |
-| Governance | Policy label, rights state, sensitivity state, review state, promotion decision |
-| Catalog | STAC/DCAT/PROV refs and closure state |
-| Lineage | Supersession, correction notices, rollback target |
-| Limits | Evidence-binding mode, stale-after, support/resolution caveats |
+| Identity | `manifest_id`, `artifact_id`, `artifact_digest`, `manifest_digest`, `spec_hash`, release ID. |
+| Provenance | Source descriptors, dataset versions, derivation receipt, run receipts, build timestamp. |
+| Verification | Signature status, bundle status, digest status, validator result, offline-verifiable flag. |
+| Governance | Policy label, rights state, sensitivity state, review state, promotion decision. |
+| Catalog | STAC/DCAT/PROV refs and closure state. |
+| Lineage | Supersession, correction notices, withdrawal state, rollback target. |
+| Limits | Evidence-binding mode, stale-after, support/resolution caveats. |
 
 ### Per-feature claims
 
 If a tile contains clickable features and the UI presents consequential claims:
 
-- `ui.evidence_binding_mode` MUST be `feature`, `layer`, or `pixel_aggregate`.
-- For `feature`, each feature MUST carry a resolvable property named by `ui.feature_evidence_ref_property`.
-- The popup MUST NOT infer claim support from rendered geometry alone.
-- Focus Mode MUST use governed API resolution, not raw tile attributes, as its evidence source.
+- `ui.evidence_binding_mode` must be `feature`, `layer`, or `pixel_aggregate`.
+- For `feature`, each feature must carry a resolvable property named by `ui.feature_evidence_ref_property`.
+- Popups must not infer claim support from rendered geometry alone.
+- Focus Mode must use governed API resolution, not raw tile attributes, as its evidence source.
 
 ### Focus Mode behavior
 
-Focus Mode MAY use a tile manifest as context, but it MUST resolve evidence through governed services before answering. A Focus response over a tile-backed layer MUST return one of the finite outcomes:
+Focus Mode may use a tile manifest as context, but it must resolve evidence through governed services before answering.
 
 | Outcome | Required behavior |
 |---|---|
 | `ANSWER` | Cite resolved evidence and echo scope/time. |
-| `ABSTAIN` | State that support is insufficient, stale, unresolved, or out of scope. |
+| `ABSTAIN` | State that support is insufficient, stale, unresolved, conflicted, or out of scope. |
 | `DENY` | State policy-safe denial category without leaking restricted detail. |
 | `ERROR` | State runtime or validation error category and preserve map context. |
 
@@ -534,145 +499,117 @@ Focus Mode MAY use a tile manifest as context, but it MUST resolve evidence thro
 The examples below are illustrative target shapes. They are not proof that these files, IDs, validators, or paths currently exist.
 
 <details>
-<summary><strong>Example: candidate PMTiles tile manifest awaiting public verification</strong></summary>
+<summary><strong>Example: candidate PMTiles TileManifest awaiting public verification</strong></summary>
 
 ```json
 {
   "schema_version": "kfm.tile_manifest.v1",
-  "manifest_id": "kfm://tile-manifest/hydrology/huc12-streamflow/sha256-1111111111111111111111111111111111111111111111111111111111111111",
+  "manifest_id": "kfm://tile-manifest/hydrology/huc12-demo/sha256-1111111111111111111111111111111111111111111111111111111111111111",
   "manifest_role": "tile_manifest",
   "status": "candidate",
   "release_ref": {
-    "release_id": "kfm://release/hydrology/huc12-streamflow/2026-04-30",
-    "release_manifest_ref": "kfm://release-manifest/hydrology/huc12-streamflow/2026-04-30",
-    "promotion_id": "promo-2026-04-30-huc12-streamflow",
+    "release_id": "kfm://release/hydrology/huc12-demo/2026-05-06",
+    "release_manifest_ref": "kfm://release-manifest/hydrology/huc12-demo/2026-05-06",
+    "promotion_id": "kfm://promotion/hydrology/huc12-demo/2026-05-06",
     "publication_state": "candidate",
-    "published_at": null
+    "previous_release_id": "kfm://release/hydrology/huc12-demo/previous"
   },
   "artifact": {
-    "artifact_id": "kfm://artifact/hydrology/huc12-streamflow.pmtiles",
+    "artifact_id": "kfm://artifact/tiles/hydrology/huc12-demo.pmtiles",
     "artifact_role": "map_delivery",
     "delivery_form": "pmtiles",
-    "uri": "https://example.invalid/kfm/published/hydrology/huc12-streamflow/huc12-streamflow.pmtiles",
+    "uri": "published/tiles/hydrology/huc12-demo.pmtiles",
     "media_type": "application/vnd.pmtiles",
-    "byte_size": 48293423,
-    "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "byte_size": 1234567,
+    "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
     "digest_subject": "bytes",
-    "service_snapshot_ref": null,
-    "tilejson_ref": "https://example.invalid/kfm/published/hydrology/huc12-streamflow/tilejson.json",
     "minzoom": 0,
     "maxzoom": 12,
-    "bounds_wgs84": [-102.1, 36.9, -94.6, 40.1],
+    "bounds_wgs84": [-102.1, 36.9, -94.5, 40.1],
     "center_wgs84": [-98.4, 38.5],
     "crs": "EPSG:3857",
     "tile_matrix_set": "WebMercatorQuad",
     "time_range": {
-      "valid_start": "2026-04-01T00:00:00Z",
-      "valid_end": "2026-04-30T23:59:59Z"
+      "valid_time": "2024-01-01/..",
+      "release_time": "2026-05-06T00:00:00Z"
     },
-    "generated_at": "2026-04-30T18:00:00Z",
-    "stale_after": "2026-05-31T23:59:59Z"
+    "generated_at": "2026-05-06T00:00:00Z",
+    "stale_after": "2026-11-06T00:00:00Z"
   },
   "spec_identity": {
-    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
     "spec_hash_algorithm": "sha256:kfm.jcs.detached_manifest_digest.v1",
     "spec_inputs": [
-      "kfm://source-descriptor/usgs-waterdata",
-      "kfm://dataset-version/hydrology/huc12/2026-04-30",
-      "kfm://policy-bundle/public-hydrology-v1",
-      "kfm://materialization-profile/public-vector-tiles-v1"
+      "kfm://dataset-version/hydrology/huc12-demo/2026-05-06",
+      "kfm://materialization-profile/public_vector_tiles_v1"
     ],
-    "materialization_reason": "Public-safe hydrology map delivery for reviewed HUC12 streamflow context.",
-    "materialization_profile": "public-vector-tiles-v1",
+    "materialization_reason": "Public-safe HUC12 demonstration tile build.",
+    "materialization_profile": "public_vector_tiles_v1",
     "profile_version": "v1"
   },
   "provenance": {
-    "source_descriptor_refs": [
-      "kfm://source-descriptor/usgs-waterdata",
-      "kfm://source-descriptor/usgs-wbd"
-    ],
-    "dataset_version_refs": [
-      "kfm://dataset-version/hydrology/huc12/2026-04-30"
-    ],
-    "projection_build_receipt_ref": "kfm://receipt/projection-build/hydrology/huc12-streamflow/2026-04-30",
-    "run_receipt_refs": [
-      "kfm://receipt/run/hydrology/huc12-streamflow/build-2026-04-30"
-    ],
-    "validation_report_refs": [
-      "kfm://validation-report/hydrology/huc12-streamflow/2026-04-30"
-    ],
+    "source_descriptor_refs": ["kfm://source/usgs-wbd-huc12-demo"],
+    "dataset_version_refs": ["kfm://dataset-version/hydrology/huc12-demo/2026-05-06"],
+    "projection_build_receipt_ref": "kfm://receipt/projection-build/huc12-demo/2026-05-06",
+    "run_receipt_refs": ["kfm://receipt/run/huc12-demo/2026-05-06"],
+    "validation_report_refs": ["kfm://validation-report/huc12-demo/2026-05-06"],
     "transform_receipt_refs": [],
-    "evidence_bundle_refs": [
-      "kfm://evidence-bundle/hydrology/huc12-streamflow/layer"
-    ],
-    "lineage_summary": "Derived candidate PMTiles layer built from reviewed hydrology release inputs."
+    "evidence_bundle_refs": ["kfm://evidence-bundle/huc12-demo/layer"],
+    "lineage_summary": "Illustrative public-safe HUC12 tile artifact built from governed fixture data."
   },
   "governance": {
-    "policy_label": "public-candidate",
+    "policy_label": "public",
     "rights_state": "cleared",
-    "sensitivity_state": "public_safe_generalized",
-    "review_state": "reviewed",
-    "promotion_decision_ref": "kfm://promotion-decision/promo-2026-04-30-huc12-streamflow",
-    "decision_envelope_ref": "kfm://decision-envelope/promo-2026-04-30-huc12-streamflow/public-release",
-    "public_release_allowed": false,
+    "sensitivity_state": "public_safe",
+    "review_state": "approved",
+    "promotion_decision_ref": "kfm://promotion-decision/huc12-demo/2026-05-06",
+    "decision_envelope_ref": "kfm://decision-envelope/huc12-demo/2026-05-06",
+    "public_release_allowed": true,
     "access_class": "public",
-    "obligations": [
-      "verify_signature_before_publication",
-      "show_source_attribution",
-      "show_stale_after"
-    ]
+    "obligations": ["show_attribution", "show_evidence_drawer"]
   },
   "catalog_closure": {
-    "stac_refs": [
-      "kfm://stac-item/hydrology/huc12-streamflow/2026-04-30"
-    ],
-    "dcat_refs": [
-      "kfm://dcat-distribution/hydrology/huc12-streamflow/2026-04-30"
-    ],
-    "prov_refs": [
-      "kfm://prov-entity/hydrology/huc12-streamflow.pmtiles"
-    ],
-    "catalog_matrix_ref": "kfm://catalog-matrix/hydrology/huc12-streamflow/2026-04-30",
+    "stac_refs": ["kfm://stac/item/huc12-demo/2026-05-06"],
+    "dcat_refs": ["kfm://dcat/distribution/huc12-demo/2026-05-06"],
+    "prov_refs": ["kfm://prov/activity/huc12-demo/2026-05-06"],
+    "catalog_matrix_ref": "kfm://catalog-matrix/huc12-demo/2026-05-06",
     "checksum_closure": "closed",
     "closure_notes": []
   },
   "verification": {
-    "manifest_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "signature_ref": "https://example.invalid/kfm/published/hydrology/huc12-streamflow/tile_manifest.sig",
-    "dsse_bundle_ref": "https://example.invalid/kfm/published/hydrology/huc12-streamflow/tile_manifest.bundle",
+    "manifest_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "signature_ref": "kfm://signature/huc12-demo/2026-05-06",
+    "dsse_bundle_ref": "kfm://dsse/huc12-demo/2026-05-06",
     "attestation_refs": [],
-    "verification_status": "unverified",
-    "verified_at": null,
-    "verifier": null,
-    "gate_h_integrity_ref": null
+    "verification_status": "verified",
+    "verified_at": "2026-05-06T00:00:00Z",
+    "verifier": "tile_manifest_validator",
+    "gate_h_integrity_ref": "kfm://gate-h/huc12-demo/2026-05-06"
   },
   "ui": {
-    "layer_id": "hydrology.huc12_streamflow",
-    "map_source_id": "src-hydrology-huc12-streamflow",
-    "map_layer_ids": [
-      "lyr-hydrology-huc12-streamflow-fill",
-      "lyr-hydrology-huc12-streamflow-line"
-    ],
+    "layer_id": "hydrology.huc12.demo.public.v1",
+    "map_source_id": "src-hydrology-huc12-demo",
+    "map_layer_ids": ["lyr-hydrology-huc12-fill", "lyr-hydrology-huc12-outline"],
     "evidence_binding_mode": "layer",
     "feature_evidence_ref_property": null,
-    "evidence_drawer_payload_ref": "kfm://drawer-payload/hydrology/huc12-streamflow/layer",
-    "trust_badge_policy": "require_verified_for_public",
+    "evidence_drawer_payload_ref": "kfm://drawer-payload/huc12-demo/layer",
+    "trust_badge_policy": "show_verified_or_block",
     "popup_claims_allowed": false,
     "focus_mode_allowed": true,
     "negative_states": [
-      "missing_manifest",
-      "invalid_signature",
-      "digest_mismatch",
       "evidence_unavailable",
       "policy_denied",
-      "stale"
+      "stale",
+      "digest_mismatch",
+      "invalid_signature",
+      "withdrawn"
     ]
   },
   "lineage": {
     "supersedes": [],
     "superseded_by": [],
-    "rollback_target_ref": null,
+    "rollback_target_ref": "kfm://release/hydrology/huc12-demo/previous",
     "correction_notice_refs": [],
     "withdrawal_reason": null
   }
@@ -682,45 +619,25 @@ The examples below are illustrative target shapes. They are not proof that these
 </details>
 
 <details>
-<summary><strong>Example: validation report shape</strong></summary>
+<summary><strong>Example: denial case for unsafe public path</strong></summary>
 
 ```json
 {
-  "schema_version": "kfm.tile_manifest_validation_report.v1",
-  "report_id": "kfm://validation-report/tile-manifest/hydrology/huc12-streamflow/2026-04-30",
-  "manifest_id": "kfm://tile-manifest/hydrology/huc12-streamflow/sha256-1111111111111111111111111111111111111111111111111111111111111111",
-  "checked_at": "2026-04-30T18:10:00Z",
-  "requested_action": "public_publish",
-  "result": "ABSTAIN",
+  "schema_version": "kfm.tile_manifest.validation_result.v1",
+  "manifest_id": "kfm://tile-manifest/example/unsafe-path",
+  "outcome": "DENY",
   "reason_codes": [
-    "SIGNATURE_NOT_VERIFIED",
-    "GATE_H_NOT_EMITTED"
+    "public_manifest_contains_internal_lifecycle_path",
+    "release_boundary_violation"
   ],
-  "checks": [
-    {
-      "gate": "T0",
-      "name": "schema",
-      "result": "PASS",
-      "details": "Manifest conforms to kfm.tile_manifest.v1 target shape."
-    },
-    {
-      "gate": "T1",
-      "name": "artifact_digest",
-      "result": "PASS",
-      "details": "Artifact digest matched declared sha256."
-    },
-    {
-      "gate": "T3",
-      "name": "signature_bundle",
-      "result": "ABSTAIN",
-      "details": "Bundle reference present but verification was not executed."
-    }
+  "failed_gates": ["T8"],
+  "unsafe_paths": [
+    "data/work/example/internal.pmtiles",
+    "data/quarantine/example/rejected.pmtiles"
   ],
-  "decision_envelope_ref": "kfm://decision-envelope/tile-manifest/hydrology/huc12-streamflow/2026-04-30",
-  "obligations": [
-    "verify_signature_before_publication",
-    "emit_gate_h_integrity_result"
-  ]
+  "public_release_allowed": false,
+  "decision_envelope_ref": "kfm://decision-envelope/example/unsafe-path",
+  "required_action": "Replace public URI with release-bound artifact ref or keep candidate out of public release."
 }
 ```
 
@@ -728,181 +645,179 @@ The examples below are illustrative target shapes. They are not proof that these
 
 ---
 
-## Proposed validator behavior
+## Implementation sequence
 
-Validator implementations should be repo-native after conventions are verified.
+This sequence is `PROPOSED` and should be adapted to repo-native conventions after active-checkout inspection.
 
-```bash
-# PROPOSED only — adapt to actual repo tooling.
-python -m tools.validators.tile_manifest_validator \
-  --manifest data/published/hydrology/huc12-streamflow/tile_manifest.json \
-  --schema schemas/contracts/v1/tiles/tile_manifest.schema.json \
-  --report out/tile_manifest.validation.json
-```
+| Step | Change | Output |
+|---:|---|---|
+| 0 | Inspect active checkout, branch, owners, adjacent docs, schema home, validator home, release storage, package runner, and workflow state. | Verification notes and updated placeholders. |
+| 1 | Confirm or create schema-home decision for tiles. | ADR update or schema-home decision reference. |
+| 2 | Add machine schema after ADR alignment. | `tile_manifest.schema.json` or repo-native equivalent. |
+| 3 | Add no-network fixtures. | Valid PMTiles manifest, service descriptor manifest, digest mismatch, missing evidence, denied policy, stale source, withdrawn release, unsafe path. |
+| 4 | Add validator. | Finite `PASS` / `ABSTAIN` / `DENY` / `ERROR` outcome report. |
+| 5 | Wire policy checks. | Rights, sensitivity, review, public-release, stale, and no-public-raw-path checks. |
+| 6 | Add catalog/proof closure checks. | STAC/DCAT/PROV/checksum and release-manifest consistency. |
+| 7 | Add UI payload fixture. | Map click or layer inspect resolves to Evidence Drawer payload and trust badges. |
+| 8 | Add Focus Mode fixture. | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` cases over tile-backed context. |
+| 9 | Add rollback drill. | Prior release restored without deleting correction or failure lineage. |
+| 10 | Update docs together. | Tile README, delta model, release publisher, ADRs, schema docs, validator docs, and test docs stay synchronized. |
 
-```python
-# Pseudocode: not an implementation claim.
-def validate_tile_manifest(manifest, artifact_resolver, policy_engine, catalog_resolver):
-    schema_result = validate_schema(manifest, "kfm.tile_manifest.v1")
-    if schema_result.error:
-        return decision("ERROR", ["SCHEMA_ERROR"])
+---
 
-    if exposes_raw_or_work_uri(manifest):
-        return decision("DENY", ["PUBLIC_BOUNDARY_VIOLATION"])
+## Definition of done
 
-    if immutable_artifact(manifest):
-        digest_result = verify_artifact_digest(manifest, artifact_resolver)
-        if not digest_result.ok:
-            return decision("DENY", ["ARTIFACT_DIGEST_MISMATCH"])
-    else:
-        snapshot_result = verify_service_snapshot_descriptor(manifest)
-        if not snapshot_result.ok:
-            return decision("ABSTAIN", ["SERVICE_SNAPSHOT_NOT_VERIFIED"])
+A tile-manifest change is not done until every applicable item is checked.
 
-    manifest_digest_result = verify_manifest_digest_profile(manifest)
-    if not manifest_digest_result.ok:
-        return decision("DENY", ["MANIFEST_DIGEST_MISMATCH"])
-
-    signature_result = verify_signature_if_required(manifest)
-    if signature_result.required and not signature_result.ok:
-        return decision("ABSTAIN", ["SIGNATURE_NOT_VERIFIED"])
-
-    provenance_result = resolve_provenance(manifest)
-    if not provenance_result.closed:
-        return decision("ABSTAIN", ["PROVENANCE_NOT_CLOSED"])
-
-    catalog_result = catalog_resolver.check_closure(manifest["catalog_closure"])
-    if not catalog_result.closed:
-        return decision("ABSTAIN", ["CATALOG_NOT_CLOSED"])
-
-    policy_result = policy_engine.evaluate(manifest)
-    if policy_result.deny:
-        return decision("DENY", policy_result.reason_codes)
-
-    return decision("PASS", [])
-```
+- [ ] Target path and adjacent docs inspected in the active checkout.
+- [ ] Owners or reviewer roles verified.
+- [ ] Policy label verified.
+- [ ] Schema-home and contract-home ambiguity resolved or explicitly deferred by ADR.
+- [ ] Machine schema exists or this doc remains clearly `PROPOSED`.
+- [ ] Valid and invalid fixtures cover immutable artifact, service descriptor, missing evidence, stale, denied, unsafe path, digest mismatch, invalid signature, generalized, withdrawn, and rollback cases.
+- [ ] Validator emits finite outcomes.
+- [ ] Manifest digest profile is deterministic and documented.
+- [ ] Artifact digest subject is explicit.
+- [ ] Source descriptors, dataset versions, receipts, validation reports, and transform receipts resolve.
+- [ ] Catalog closure is present or the absence is explicitly justified.
+- [ ] Policy, rights, sensitivity, review, promotion, correction, and rollback refs are present for public release.
+- [ ] Public clients cannot reach RAW, WORK, QUARANTINE, canonical, proof-pack, steward-only, review-only, or direct model-runtime paths.
+- [ ] Evidence Drawer payload resolves or shows a visible negative state.
+- [ ] Focus Mode is evidence-bounded and returns finite outcomes only.
+- [ ] Rollback restores the previous safe release without erasing correction history.
+- [ ] Documentation, schemas, fixtures, policies, validators, and tests update together when behavior changes.
 
 [Back to top](#top)
 
 ---
 
-## Anti-patterns
+## Anti-patterns to reject
 
-| Anti-pattern | Why it fails KFM |
-|---|---|
-| Treating PMTiles as canonical truth | PMTiles are delivery artifacts; they do not replace source descriptors, dataset versions, evidence, or proof. |
-| Hiding evidence semantics in MapLibre paint expressions | Business meaning belongs in contracts and metadata registries, not visual styling alone. |
-| Publishing tiles without a manifest | Public users cannot inspect integrity, provenance, policy, or review state. |
-| Signing bytes but skipping rights/sensitivity review | Signature proves identity/integrity, not permission or safety. |
-| Missing source descriptors | Provenance cannot resolve to admissible source roles. |
-| Hashing large artifacts on the main UI thread | Degrades the map surface and mixes rendering with trust-bearing work. |
-| Silent fallback to unverified tiles | Converts uncertainty into false confidence. |
-| Tag-only artifact references | Tags can support UX, but immutable truth needs digests. |
-| Public manifest exposes internal storage paths | Breaks the public-client boundary. |
-| Per-feature popups with no EvidenceRef | Encourages unsupported feature claims. |
-| Catalog metadata checksums diverge from manifest checksums | Breaks catalog closure and should produce `DENY` or `ABSTAIN`. |
-| Exact sensitive geometry shipped publicly and hidden by style | Style hiding is not redaction; public-safe transforms must occur before release. |
-| Direct AI answers over tile attributes | Focus Mode must resolve EvidenceBundle support through governed APIs. |
-
----
-
-## Implementation sequence
-
-The next useful implementation should be small, reversible, and proof-bearing.
-
-1. **Verify repo conventions.** Inspect target path, schema home, validator tooling, fixture layout, ADR numbering, policy engine, CI, UI app path, and existing object names.
-2. **Create or update schema-home ADR.** Resolve `schemas/` vs `contracts/`, and resolve `TileManifest` vs `TileArtifactManifest` naming.
-3. **Add machine schema and fixtures.** Include one valid PMTiles candidate, one service-mediated descriptor fixture, and invalid cases for each blocking gate.
-4. **Add validator dry run.** Emit finite outcomes and a `DecisionEnvelope`-compatible validation report.
-5. **Bind one governed layer.** Use a public-safe hydrology/HUC12-style fixture or another already approved non-sensitive fixture.
-6. **Add Evidence Drawer payload.** Prove layer-level evidence resolution before feature-level claims.
-7. **Add Focus Mode fixture.** Prove `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` over manifest-bound map context.
-8. **Run rollback drill.** Restore previous release manifest, invalidate caches/aliases, and show rollback target in drawer payload.
-
-### Rollback
-
-Rollback is required when a tile-manifest change weakens source integrity, breaks stable links, creates schema authority conflict, bypasses policy gates, publishes unsupported claims, exposes internal URIs, or allows unverified artifacts to render as trusted.
-
-Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
-
----
-
-## Acceptance checklist
-
-Use this before treating the spec, schema, or implementation slice as ready for review.
-
-### Documentation
-
-- [ ] KFM Meta Block v2 values are verified or intentionally marked as placeholders.
-- [ ] Related docs and ADRs are linked after repo paths are confirmed.
-- [ ] This spec is referenced from the relevant architecture index or directory README.
-- [ ] Any local naming convention conflict is resolved through an ADR.
-- [ ] Naming decision is recorded for `TileManifest` vs `TileArtifactManifest` if both appear in the repo or corpus.
-
-### Schema and fixtures
-
-- [ ] Machine schema home is verified.
-- [ ] `tile_manifest.schema.json` exists or this doc remains clearly PROPOSED.
-- [ ] At least one valid PMTiles fixture exists.
-- [ ] At least one service-mediated fixture has a snapshot descriptor.
-- [ ] Invalid fixtures cover missing manifest digest, mismatched artifact digest, missing source descriptor, unknown rights, policy denial, raw URI exposure, catalog mismatch, missing EvidenceBundle, stale artifact, and missing rollback target.
-- [ ] Canonicalization profile is implemented consistently in emitter and validator.
-
-### Validation and CI
-
-- [ ] Validator emits finite outcomes: `PASS`, `ABSTAIN`, `DENY`, `ERROR`.
-- [ ] Validator report can reference or emit a `DecisionEnvelope`.
-- [ ] Gate H / artifact-integrity result is emitted where promotion uses Gate H naming.
-- [ ] No public publication proceeds with missing signature where signature is required.
-- [ ] No public publication proceeds with unknown rights or unresolved sensitivity.
-- [ ] No public manifest exposes `RAW`, `WORK`, `QUARANTINE`, or internal-only URIs.
-- [ ] CI covers at least one no-public-raw-path test and one sensitive-geometry-deny fixture.
-
-### UI
-
-- [ ] MapLibre layer IDs are stable and manifest-bound.
-- [ ] Evidence Drawer payload resolves for consequential layers.
-- [ ] Trust badge states include verified, unverified, missing bundle, invalid signature, digest mismatch, evidence unavailable, policy denied, and stale.
-- [ ] Focus Mode uses governed API evidence resolution, not raw tile attributes.
-- [ ] Large-artifact verification is worker/background-safe.
-- [ ] Popup claims are disabled unless evidence binding is proven.
-
-### Release and rollback
-
-- [ ] Tile manifest is referenced from the release manifest.
-- [ ] CatalogMatrix closes STAC/DCAT/PROV/checksum references.
-- [ ] CorrectionNotice path is defined for withdrawn or superseded tile releases.
-- [ ] Rollback target is a previously verified manifest/release, not an unverified alias.
-- [ ] Current aliases point to immutable digest-addressed releases.
-- [ ] Cache invalidation or alias update behavior is documented and tested.
+- Treating `PMTiles`, `MVT`, raster tiles, `TileJSON`, or style JSON as canonical truth.
+- Letting MapLibre feature properties become citation authority.
+- Shipping a public tile bundle before rights, sensitivity, evidence support, and release state are known.
+- Using browser-only filters to hide restricted features.
+- Publishing tiles without a prior release and rollback target.
+- Embedding policy logic only in style expressions or popup templates.
+- Letting Focus Mode answer from tile attributes alone.
+- Using unmanifested sprites, glyphs, fonts, plugins, or external URLs in production.
+- Creating duplicate schema homes because repository convention was not inspected.
+- Treating receipts, proofs, catalogs, release manifests, and correction notices as interchangeable object families.
+- Silently overwriting a public tile artifact without supersession, digest, cache, and correction lineage.
 
 ---
 
 ## Open verification backlog
 
-| Item | Status | Why it matters |
+| Item | Status | How to close |
 |---|---:|---|
-| Actual target path | NEEDS VERIFICATION | Prevents broken links and wrong doc placement. |
-| Actual schema home | CONFLICTED / NEEDS VERIFICATION | Prevents `contracts/` vs `schemas/` split. |
-| `TileManifest` vs `TileArtifactManifest` naming | NEEDS VERIFICATION | Prevents two object names from becoming separate dialects. |
-| Actual validator language/toolchain | UNKNOWN | Avoids inventing Python/Node/Go conventions. |
-| Exact media-type registry | NEEDS VERIFICATION | Prevents lane-specific packaging dialects. |
-| Canonicalization profile | NEEDS VERIFICATION | Required for stable manifest digests. |
-| Signature tooling and version pins | NEEDS VERIFICATION | Required before claiming offline verification. |
-| Public/steward access vocabulary | NEEDS VERIFICATION | Required for access-class policy. |
-| Evidence Drawer payload contract | PROPOSED | Required for trust-visible UI. |
-| MapLibre adapter path | UNKNOWN | Required to bind layer IDs safely. |
-| CatalogMatrix schema | PROPOSED | Required for STAC/DCAT/PROV/checksum closure. |
-| Gate H naming and placement | PROPOSED | Must align with existing promotion gate names if present. |
-| Owners/CODEOWNERS | UNKNOWN | Needed for durable maintenance and review. |
-| Related doc paths | UNKNOWN | Meta block and cross-links need repo confirmation. |
+| Owner / CODEOWNERS routing for this file | `NEEDS VERIFICATION` | Inspect `CODEOWNERS`, document registry, or maintainer assignment. |
+| Document `doc_id` | `NEEDS VERIFICATION` | Assign through repo/document registry convention. |
+| Policy label | `NEEDS VERIFICATION` | Confirm from document registry or policy-label standard. |
+| Schema home acceptance | `NEEDS VERIFICATION` | Confirm ADR-0001 status and schema consumers. |
+| Tile manifest schema file | `UNKNOWN / NEEDS VERIFICATION` | Add or locate `tile_manifest.schema.json` under accepted schema home. |
+| Validator implementation | `UNKNOWN / NEEDS VERIFICATION` | Add or locate repo-native tile manifest validator. |
+| Fixture home | `NEEDS VERIFICATION` | Confirm where tile-manifest valid/invalid fixtures should live. |
+| Release artifact storage | `NEEDS VERIFICATION` | Confirm `release/`, `data/published/`, `data/proofs/`, `data/receipts/`, or repo-native equivalent. |
+| Workflow enforcement | `UNKNOWN` | Inspect workflow run evidence, branch protection, and validator output. |
+| Runtime/API binding | `UNKNOWN` | Inspect governed API, web shell, layer registry, Evidence Drawer, and Focus Mode code/tests. |
+| Media-type registry | `NEEDS VERIFICATION` | Confirm approved media types for PMTiles, MVT, TileJSON, MBTiles, and raster services. |
+| Signature/attestation policy | `NEEDS VERIFICATION` | Confirm DSSE/Sigstore/Cosign or repo-native signing requirements. |
+| Cache invalidation / immutable URL strategy | `NEEDS VERIFICATION` | Confirm release publisher and delta-update conventions. |
+| Sensitive-geometry categories | `NEEDS VERIFICATION` | Confirm cross-domain policy and transform receipts for exact-location safety. |
 
 ---
 
-## Review-ready decision
+<details>
+<summary>Appendix A — Maintainer review card</summary>
 
-This document is ready to use as a **draft standard** for KFM tile manifests.
+Use this in PRs that create, modify, or consume a `TileManifest`.
 
-It is not yet proof that the target repository contains the schema, validators, fixtures, CI gates, release objects, or UI runtime described here. The next smallest safe implementation step is a schema-home ADR plus one offline PMTiles fixture with a valid manifest, invalid manifest cases, and a validator that emits a finite `DecisionEnvelope`-compatible report.
+```markdown
+## TileManifest review card
+
+Target path:
+
+Owning root:
+- [ ] docs/architecture
+- [ ] schemas/contracts/v1
+- [ ] policy
+- [ ] tests/fixtures
+- [ ] tools/validators
+- [ ] release / data published
+- [ ] apps / packages
+
+Directory Rules basis:
+
+Upstream evidence:
+- SourceDescriptor refs:
+- DatasetVersion refs:
+- Receipts:
+- Validation reports:
+- EvidenceBundle refs:
+- Policy / DecisionEnvelope refs:
+- Review / Promotion refs:
+- Release refs:
+
+Truth labels:
+- CONFIRMED:
+- PROPOSED:
+- UNKNOWN:
+- NEEDS VERIFICATION:
+
+Artifact identity:
+- artifact_id:
+- delivery_form:
+- URI:
+- artifact_digest:
+- digest_subject:
+- manifest_digest profile:
+
+Public exposure:
+- [ ] public
+- [ ] steward
+- [ ] restricted
+- [ ] offline
+- [ ] internal
+
+Policy/sensitivity:
+- rights_state:
+- sensitivity_state:
+- access_class:
+- public_release_allowed:
+
+UI behavior:
+- Evidence Drawer payload:
+- Trust badges:
+- Negative states:
+- Focus Mode outcomes:
+
+Validation run:
+
+Rollback target:
+
+Correction or supersession impact:
+```
+
+</details>
+
+<details>
+<summary>Appendix B — Glossary</summary>
+
+| Term | KFM meaning |
+|---|---|
+| `TileManifest` | Governed sidecar for a tile delivery artifact or delivery bundle. |
+| `TileArtifactManifest` | Possible repo alias or implementation name for tile artifact manifest semantics; must be reconciled if present. |
+| `LayerManifest` | Layer binding, source/layer IDs, interaction contract, and Evidence Drawer references. |
+| `StyleManifest` | Style JSON, sprite/glyph/font assets, visual versioning, and meaning-change review posture. |
+| `MapReleaseManifest` / `ReleaseManifest` | Release identity, promoted artifacts, proof refs, prior release, rollback, correction state. |
+| `EvidenceBundle` | Evidence-resolving object that outranks generated language and rendered pixels. |
+| `Evidence Drawer` | UI trust surface that exposes evidence, citations, policy state, transforms, withheld counts, and correction lineage. |
+| `Focus Mode` | Evidence-bounded AI surface with finite outcomes: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. |
+| `Public-safe` | Passed rights, sensitivity, review, source-role, geometry, and release checks for intended audience. |
+| `Withheld accounting` | Count or explanation of restricted/suppressed features without exposing sensitive details. |
+| `Derived artifact` | Rebuildable product downstream of canonical evidence, such as tiles, search views, graph projections, summaries, scenes, and exports. |
+
+</details>
 
 [Back to top](#top)
