@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "domain": {
+      "const": "flora"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "geometry_source_ref": {
+      "type": "string"
+    },
+    "input_files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "media_type": {
+            "const": "application/geo+json"
+          },
+          "path": {
+            "type": "string"
+          },
+          "role": {
+            "const": "county_geojson"
+          },
+          "sha256": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "path",
+          "media_type",
+          "sha256",
+          "size_bytes",
+          "status"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "intake_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "intake_id": {
+      "type": "string"
+    },
+    "missing_roles": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "network_mode": {
+      "enum": [
+        "disabled",
+        "manual_enabled"
+      ]
+    },
+    "object_type": {
+      "const": "usda_plants_county_geometry_intake"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "required_roles": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "snapshot_date": {
+      "format": "date",
+      "type": "string"
+    },
+    "source_id": {
+      "const": "usda_plants"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "object_type",
+    "intake_id",
+    "domain",
+    "source_id",
+    "geometry_source_ref",
+    "snapshot_date",
+    "generated_at",
+    "input_files",
+    "required_roles",
+    "missing_roles",
+    "network_mode",
+    "status",
+    "reason_codes",
+    "intake_hash"
+  ],
+  "type": "object"
+}

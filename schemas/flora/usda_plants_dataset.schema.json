@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/flora/usda_plants_dataset.schema.json",
+  "title": "KFM USDA PLANTS Dataset Slice",
+  "description": "No-network fixture and processed-record contract for USDA PLANTS checklist and distribution slices in the Flora lane.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "id",
+    "domain",
+    "spec_hash",
+    "source",
+    "properties",
+    "distributions",
+    "provenance",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "object_type": { "type": "string", "const": "usda_plants_dataset" },
+    "id": { "type": "string", "pattern": "^kfm\\.dataset\\.flora\\.usda_plants\\.[A-Z0-9]+$" },
+    "domain": { "type": "string", "const": "flora" },
+    "spec_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_type", "source_name", "source_descriptor_ref", "source_uri"],
+      "properties": {
+        "source_id": { "type": "string", "const": "usda_plants" },
+        "source_type": { "type": "string", "const": "usda_plants_bulk" },
+        "source_name": { "type": "string", "const": "USDA PLANTS Database" },
+        "source_descriptor_ref": { "type": "string", "minLength": 1 },
+        "source_uri": { "type": "string", "pattern": "^https://plants\\.sc\\.egov\\.usda\\.gov/downloads" }
+      }
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plants:symbol", "scientificName", "family", "license", "rightsHolder", "datasetID", "policy_label", "kfm:spec_hash"],
+      "properties": {
+        "plants:symbol": { "type": "string", "pattern": "^[A-Z0-9]+$" },
+        "scientificName": { "type": "string", "minLength": 1 },
+        "nationalCommonName": { "type": "string" },
+        "family": { "type": "string", "minLength": 1 },
+        "nativeStatus": { "type": "string" },
+        "growthHabit": { "type": "array", "items": { "type": "string" } },
+        "wetlandStatus": { "type": "string" },
+        "license": { "type": "string", "const": "USDA / U.S. Public Domain" },
+        "rightsHolder": { "type": "string", "const": "United States Department of Agriculture" },
+        "datasetID": { "type": "string", "const": "USDA_PLANTS" },
+        "policy_label": { "type": "string", "const": "public" },
+        "kfm:spec_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+    "distributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "county"],
+      "properties": {
+        "state": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["state", "presence"],
+            "properties": {
+              "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
+              "presence": { "type": "string", "enum": ["present", "not_present", "reported", "unknown"] }
+            }
+          }
+        },
+        "county": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["fips", "presence", "first_observed"],
+            "properties": {
+              "fips": { "type": "string", "pattern": "^[0-9]{5}$" },
+              "presence": { "type": "string", "enum": ["present", "not_present", "reported", "unknown"] },
+              "first_observed": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_uri", "snapshot_date", "raw_refs", "receipt_refs"],
+      "properties": {
+        "source_uri": { "type": "string" },
+        "snapshot_date": { "type": "string", "format": "date" },
+        "raw_refs": { "type": "array", "items": { "type": "string" } },
+        "receipt_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validator_id", "result", "reason_codes"],
+      "properties": {
+        "validator_id": { "type": "string", "const": "usda_plants_dataset_validator@v1" },
+        "result": { "type": "string", "enum": ["pass", "fail", "not_run"] },
+        "reason_codes": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

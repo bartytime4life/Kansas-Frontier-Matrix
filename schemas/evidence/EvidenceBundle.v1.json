@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvidenceBundle.v1",
+  "type": "object",
+  "required": ["object_type", "schema_version", "bundle_id", "spec_hash"],
+  "properties": {
+    "object_type": {"type": "string", "const": "EvidenceBundle"},
+    "schema_version": {"type": "string", "const": "v1"},
+    "bundle_id": {"type": "string"},
+    "spec_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "consent": {
+      "type": "object",
+      "required": ["consent_vc_id", "obligations_url", "obligations_snapshot_hash"],
+      "properties": {
+        "consent_vc_id": {"type": "string"},
+        "obligations_url": {"type": "string"},
+        "obligations_snapshot_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}
