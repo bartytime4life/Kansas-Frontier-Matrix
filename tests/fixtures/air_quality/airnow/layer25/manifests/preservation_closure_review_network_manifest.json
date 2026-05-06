@@ -1,0 +1,144 @@
+{
+  "manifest_id": "airnow-l25-network",
+  "local_file_only": true,
+  "no_network": false,
+  "bulk_web_service_loop": false,
+  "preliminary_data": true,
+  "layer24_inputs": {
+    "preservation_closure_receipt": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_receipt.json",
+    "preservation_closure_readiness_matrix": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_readiness_matrix.json",
+    "preservation_closure_candidate_ledger": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_candidate_ledger.json",
+    "unresolved_preservation_issue_register": "tests/fixtures/air_quality/airnow/layer25/input/layer24/unresolved_preservation_issue_register.json",
+    "preservation_governance_closure_gate": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_governance_closure_gate.json",
+    "preservation_receipt_closure_verification_matrix": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_receipt_closure_verification_matrix.json",
+    "preservation_evidence_closure_summary": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_evidence_closure_summary.json",
+    "preservation_policy_closure_continuity_matrix": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_policy_closure_continuity_matrix.json",
+    "preservation_caveat_closure_continuity_register": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_caveat_closure_continuity_register.json",
+    "preservation_closure_non_execution_attestation": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_non_execution_attestation.json",
+    "preservation_closure_decision_candidate": "tests/fixtures/air_quality/airnow/layer25/input/layer24/preservation_closure_decision_candidate.json"
+  },
+  "manual_evidence": [
+    {
+      "evidence_type": "CLOSURE_READINESS_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/closure_readiness_review_note.md"
+    },
+    {
+      "evidence_type": "CLOSURE_CANDIDATE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/closure_candidate_review_note.md"
+    },
+    {
+      "evidence_type": "UNRESOLVED_ISSUE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/unresolved_issue_review_note.md"
+    },
+    {
+      "evidence_type": "GOVERNANCE_GATE_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/governance_gate_review_note.md"
+    },
+    {
+      "evidence_type": "RECEIPT_VERIFICATION_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/receipt_verification_review_note.md"
+    },
+    {
+      "evidence_type": "EVIDENCE_SUMMARY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/evidence_summary_review_note.md"
+    },
+    {
+      "evidence_type": "POLICY_CONTINUITY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/policy_continuity_review_note.md"
+    },
+    {
+      "evidence_type": "CAVEAT_CONTINUITY_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/caveat_continuity_review_note.md"
+    },
+    {
+      "evidence_type": "NON_EXECUTION_REVIEW_NOTE",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/non_execution_review_note.md"
+    },
+    {
+      "evidence_type": "MANUAL_PRESERVATION_CLOSURE_REVIEW_ATTESTATION",
+      "path": "tests/fixtures/air_quality/airnow/layer25/input/manual_review/manual_preservation_closure_review_attestation.json"
+    }
+  ],
+  "review_policy": {
+    "include_packet": true,
+    "packet_format": "tar.gz"
+  },
+  "publication_requested": false,
+  "publication_allowed": false,
+  "public_dashboard_requested": false,
+  "public_dashboard_allowed": false,
+  "tiles_requested": false,
+  "tiles_allowed": false,
+  "public_api_requested": false,
+  "public_api_allowed": false,
+  "emergency_alert_requested": false,
+  "emergency_alert": false,
+  "regulatory_claims_requested": false,
+  "regulatory_claims_allowed": false,
+  "exact_sensitive_overlay_requested": false,
+  "exact_sensitive_overlay_allowed": false,
+  "command_execution_requested": false,
+  "command_execution_allowed": false,
+  "auto_execute_requested": false,
+  "auto_execute_allowed": false,
+  "auto_apply_requested": false,
+  "auto_apply_allowed": false,
+  "task_closure_requested": false,
+  "task_closure_allowed": false,
+  "github_issue_creation_requested": false,
+  "github_issue_creation_allowed": false,
+  "github_pr_creation_requested": false,
+  "github_pr_creation_allowed": false,
+  "git_push_requested": false,
+  "git_push_allowed": false,
+  "file_deletion_requested": false,
+  "file_deletion_allowed": false,
+  "destruction_execution_requested": false,
+  "destruction_execution_allowed": false,
+  "archive_transfer_requested": false,
+  "archive_transfer_allowed": false,
+  "external_storage_requested": false,
+  "external_storage_allowed": false,
+  "chmod_or_chattr_requested": false,
+  "chmod_or_chattr_allowed": false,
+  "legal_hold_creation_requested": false,
+  "legal_hold_creation_allowed": false,
+  "official_archive_certification_requested": false,
+  "official_archive_certification_allowed": false,
+  "legal_advice_requested": false,
+  "legal_advice_allowed": false,
+  "final_accession_execution_requested": false,
+  "final_accession_execution_allowed": false,
+  "snapshot_export_execution_requested": false,
+  "snapshot_export_execution_allowed": false,
+  "snapshot_copy_requested": false,
+  "snapshot_copy_allowed": false,
+  "snapshot_transfer_requested": false,
+  "snapshot_transfer_allowed": false,
+  "snapshot_publication_requested": false,
+  "snapshot_publication_allowed": false,
+  "snapshot_release_requested": false,
+  "snapshot_release_allowed": false,
+  "preservation_action_requested": false,
+  "preservation_action_allowed": false,
+  "preservation_copy_requested": false,
+  "preservation_copy_allowed": false,
+  "preservation_transfer_requested": false,
+  "preservation_transfer_allowed": false,
+  "preservation_review_action_requested": false,
+  "preservation_review_action_allowed": false,
+  "preservation_finalization_action_requested": false,
+  "preservation_finalization_action_allowed": false,
+  "preservation_audit_action_requested": false,
+  "preservation_audit_action_allowed": false,
+  "task_closure_execution_requested": false,
+  "task_closure_execution_allowed": false,
+  "audit_closure_requested": false,
+  "audit_closure_allowed": false,
+  "governance_closure_requested": false,
+  "governance_closure_allowed": false,
+  "closure_execution_requested": false,
+  "closure_execution_allowed": false,
+  "closure_review_action_requested": false,
+  "closure_review_action_allowed": false
+}
