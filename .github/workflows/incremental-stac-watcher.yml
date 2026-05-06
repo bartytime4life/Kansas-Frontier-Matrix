@@ -63,6 +63,7 @@ env:
 
 jobs:
   watcher:
+    if: ${{ github.event_name != 'schedule' || vars.KFM_STAC_SOURCE_URL != '' }}
     name: Run receipts-first incremental STAC watcher
     runs-on: ubuntu-latest
     timeout-minutes: 30
