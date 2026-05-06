@@ -1,488 +1,496 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION-governed-ai-architecture
-title: Governed AI Architecture
+doc_id: kfm://doc/NEEDS_VERIFICATION__docs_architecture_governed_api
+title: Governed API
 type: standard
 version: v1
 status: draft
-owners: OWNER_TBD_NEEDS_VERIFICATION
-created: 2026-04-22
-updated: 2026-05-03
-policy_label: POLICY_LABEL_TBD_NEEDS_VERIFICATION
-related: [PATH_TBD_AFTER_REPO_INSPECTION]
-tags: [kfm, governed-ai, evidence, policy, focus-mode]
-notes: [Repo-useful revised draft for PROPOSED docs/architecture/governed-ai/README.md; current drafting pass had no mounted KFM repo; owners, policy label, related links, schema homes, route names, and implementation depth NEED VERIFICATION]
+owners: NEEDS_VERIFICATION__governed_api_owner
+created: NEEDS_VERIFICATION__YYYY-MM-DD
+updated: 2026-05-06
+policy_label: NEEDS_VERIFICATION__public_or_restricted
+related: [../../README.md, ../adr/ADR-0202-governed-api-path-canonicalization.md, ../adr/ADR-0014-truth-path.md, ../adr/ADR-0207-governed-ai-runtime-envelope.md, ../../contracts/api/README.md, ../../contracts/runtime/governed_api_mock_payloads.md, ../../fixtures/api/governed_api_mock_payloads.json, ../../apps/api/README.md, ../../apps/api/server.py, ../../apps/web/src/api/governedClient.js, ../../tools/ci/check_governed_api_path_policy.py]
+tags: [kfm, architecture, governed-api, evidence, policy, runtime-envelope, trust-membrane]
+notes: [Revises existing thin docs/architecture/governed-api.md, GitHub connector confirmed the target file currently exists and contains only a short two-line statement, owners created date policy label and final doc_id require repo governance verification]
 [/KFM_META_BLOCK_V2] -->
 
-# Governed AI Architecture
+<a id="top"></a>
 
-Evidence-bounded architecture for using AI inside KFM without letting model output become truth.
+# Governed API
 
-<p>
-  <img alt="Status: experimental" src="https://img.shields.io/badge/status-experimental-orange" />
-  <img alt="Truth posture: evidence first" src="https://img.shields.io/badge/truth-evidence--first-blue" />
-  <img alt="AI boundary: governed" src="https://img.shields.io/badge/AI-governed-purple" />
-  <img alt="Repo evidence: needs verification" src="https://img.shields.io/badge/repo-needs%20verification-lightgrey" />
+The governed API is KFM’s trust membrane: the boundary where public, steward-facing, map, Focus Mode, review, export, and diagnostic clients receive release-aware, evidence-resolving, policy-checked responses instead of raw data, direct model output, or unpublished project state.
+
+<p align="center">
+  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey" />
+  <img alt="Surface: governed API" src="https://img.shields.io/badge/surface-governed%20API-1f6feb" />
+  <img alt="Trust: cite or abstain" src="https://img.shields.io/badge/trust-cite--or--abstain-blue" />
+  <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail--closed-orange" />
+  <img alt="Outcomes: finite" src="https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-8250df" />
+</p>
+
+<p align="center">
+  <a href="#architecture-rule">Architecture rule</a> ·
+  <a href="#repo-fit">Repo fit</a> ·
+  <a href="#current-evidence-snapshot">Evidence snapshot</a> ·
+  <a href="#inputs-and-exclusions">Inputs & exclusions</a> ·
+  <a href="#trust-flow">Trust flow</a> ·
+  <a href="#contract-surface">Contract surface</a> ·
+  <a href="#runtime-outcomes">Runtime outcomes</a> ·
+  <a href="#route-families">Route families</a> ·
+  <a href="#validation-gates">Validation gates</a> ·
+  <a href="#open-verification">Open verification</a>
 </p>
 
 > [!IMPORTANT]
-> **Status:** experimental  
-> **Owners:** `OWNER_TBD_NEEDS_VERIFICATION`  
-> **Proposed path:** `docs/architecture/governed-ai/README.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED implementation / UNKNOWN current repo depth  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Architecture flow](#architecture-flow) · [Contracts](#contract-and-object-map) · [Validation](#validation-and-review-gates) · [Rollback](#rollback) · [Open verification](#open-verification-backlog)
-
-> [!NOTE]
-> This README states KFM doctrine where supported by the project corpus and marks implementation-shaped details as **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**. The current drafting pass did not inspect a mounted repository tree, tests, workflows, dashboards, runtime logs, source registries, emitted receipts, or deployed services.
+> **CONFIRMED:** this file belongs under `docs/architecture/`, the human-facing architecture control plane.  
+> **CONFIRMED:** KFM doctrine requires public clients and normal UI surfaces to use governed interfaces and released artifacts.  
+> **CONFIRMED:** the repo contains API, contract, fixture, client, ADR, and CI-path-policy materials related to governed API behavior.  
+> **NEEDS VERIFICATION:** owners, policy label, active runtime deployment, workflow enforcement, branch protections, route coverage, full schema coverage, and production readiness.
 
 ---
 
-## Scope
+## Architecture rule
 
-This README documents how Kansas Frontier Matrix admits model-assisted synthesis, retrieval support, evaluator output, and local or private model runtimes **without weakening the KFM truth path**.
-
-The governing rule is simple:
-
-> [!IMPORTANT]
-> AI is an interpretive layer. `EvidenceBundle`, policy state, source authority, review state, release state, and correction lineage outrank generated language.
-
-This document is for maintainers working on:
-
-- provider-neutral AI runtime boundaries;
-- Focus Mode response envelopes;
-- Evidence Drawer obligations for AI-assisted claims;
-- citation validation and policy postchecks;
-- AI receipts, run receipts, evaluator reports, rollback controls, and review artifacts;
-- local/private runtime hardening when KFM is exposed through a home firewall, reverse proxy, or VPN.
-
-It is **not** a chatbot spec, prompt collection, model benchmark page, provider setup guide, or proof that any runtime is already implemented.
-
-## Repo fit
-
-| Field | Value |
-| --- | --- |
-| Proposed target path | `docs/architecture/governed-ai/README.md` |
-| Document type | README-like architecture doc with KFM Meta Block v2 |
-| Document role | Governed-AI orientation surface for bounded synthesis, Focus Mode, adapters, citations, policy, receipts, trust-surface integration, and rollback |
-| Upstream doctrine | `NEEDS VERIFICATION`: pipeline/lifecycle manual, governed-AI architecture report, MapLibre UI doctrine, documentation/source-ledger materials |
-| Downstream surfaces | `NEEDS VERIFICATION`: `schemas/contracts/v1/`, `contracts/runtime/`, `policy/`, `tools/validators/`, `apps/governed-api/`, `apps/web/`, `tests/`, `release/` |
-| Primary readers | Architecture, policy, API, UI, QA, source-ledger, release, security, and operations maintainers |
-| Update trigger | Any material change to model adapters, Focus Mode, Evidence Drawer payloads, citation validation, policy gates, runtime exposure, receipts, release behavior, or rollback behavior |
-
-> [!WARNING]
-> The path and adjacent surfaces above are **PROPOSED** until the real repository is mounted and inspected. Do not create duplicate schema, contract, policy, or runtime homes until existing repo convention or an ADR resolves authority.
-
-## Inputs
-
-Content belongs here when it describes **architecture or governance** for KFM AI behavior.
-
-| Accepted input | Belongs here when it answers |
-| --- | --- |
-| Runtime boundary notes | Where may a model runtime sit, and what must it never access? |
-| Adapter decisions | How does KFM keep provider choice internal, replaceable, and testable? |
-| Focus Mode contracts | What does a bounded answer, abstain, deny, or error need to carry? |
-| Evidence and citation rules | How does generated text prove its support or fail safely? |
-| Policy gate notes | Which checks happen before synthesis, after synthesis, and before display/export? |
-| Receipt and proof distinctions | What is process memory, what is release proof, and what is review support? |
-| UI trust obligations | What must Evidence Drawer, Focus, export, and review surfaces expose? |
-| Local/private exposure guidance | What prevents a home-hosted model endpoint from becoming a public bypass? |
-| Validator and fixture notes | How can governed-AI behavior be tested without live providers or live source connectors? |
-
-## Exclusions
-
-Do not place operational secrets, runtime state, raw data, or machine-contract authority in this README.
-
-| Exclusion | Why it does not belong | Preferred home |
-| --- | --- | --- |
-| Model weights, GGUF files, downloaded model blobs | Large runtime artifacts are not documentation and may carry licensing, storage, or operations risk. | Outside repo or ops-managed artifact store — `NEEDS VERIFICATION` |
-| API keys, provider tokens, VPN secrets, `.env` values | Secrets must never be committed or exposed through documentation. | Secret manager or local `.env`, with safe `.env.example` only |
-| Prompt experiments without evidence contracts | Prompt text is not proof and can drift from policy. | Prompt/test fixture home only after repo convention confirms it |
-| Chain-of-thought or hidden reasoning logs | Hidden reasoning is not a KFM truth object and should not be stored as provenance. | Do not persist; store bounded receipt metadata only |
-| `RAW`, `WORK`, or `QUARANTINE` data | Public and AI surfaces must not read lifecycle stages directly. | Governed lifecycle stores behind access controls |
-| Vector indexes, summaries, tiles, scenes, screenshots | Rebuildable derivatives are not sovereign truth. | Derived-data homes after release/catalog policy is verified |
-| Live provider setup instructions | Provider commands are version-sensitive and operational. | Runbooks after official-provider and environment checks |
-| Source-rights decisions | Rights and sensitivity are source-governance decisions, not AI convenience settings. | Source registry and source intake records |
-| Public route names or DTOs not inspected in repo | Route names and DTOs can become false implementation claims. | Contract docs after mounted repo verification |
-
-<p align="right"><a href="#governed-ai-architecture">Back to top ↑</a></p>
-
-## Directory tree
-
-Current proposed target:
-
-```text
-docs/architecture/governed-ai/
-└── README.md
-```
-
-Adjacent repo surfaces to verify before linking:
-
-```text
-docs/adr/
-docs/runbooks/
-docs/registers/
-schemas/contracts/v1/
-contracts/runtime/
-policy/
-tools/validators/
-packages/ai/
-packages/evidence/
-apps/governed-api/
-apps/web/
-tests/
-release/
-```
-
-> [!CAUTION]
-> The adjacent tree is a **placement map**, not a claim that these paths exist. If the mounted repository proves different conventions, adapt through an ADR and migration note rather than forcing parallel homes.
-
-## Architecture flow
-
-```mermaid
-flowchart LR
-    U[User / governed UI surface] --> G[Governed API boundary]
-
-    subgraph Trust_Precheck["Trust precheck"]
-      G --> S[Scope resolver<br/>place · time · role · release]
-      S --> P1[Policy precheck]
-      P1 --> R[EvidenceRef resolver]
-      R --> B[EvidenceBundle<br/>released · reviewed · policy-aware]
-    end
-
-    subgraph AI_Runtime["Evidence-subordinate AI runtime"]
-      B --> A[ModelAdapter<br/>Mock first · provider-neutral]
-      A --> C[Citation validation]
-      C --> P2[Policy postcheck]
-      P2 --> E[RuntimeResponseEnvelope]
-    end
-
-    E -->|ANSWER| F[Focus Mode]
-    E -->|ABSTAIN| F
-    E -->|DENY| F
-    E -->|ERROR| F
-
-    E --> D[Evidence Drawer]
-    E --> Q[AIReceipt / RunReceipt]
-
-    X1[RAW / WORK / QUARANTINE] -. forbidden .-> A
-    X2[Browser direct model call] -. forbidden .-> A
-    X3[Canonical/internal stores] -. forbidden .-> A
-```
-
-The model adapter never becomes the trust surface. It receives only scoped, policy-safe, resolved evidence context and returns structured output that must survive citation validation, policy postcheck, and finite-envelope emission before any user-facing surface can render it.
-
-## Core operating rules
-
-### 1. Resolve evidence before synthesis
-
-`EvidenceRef` is a pointer. `EvidenceBundle` is the resolved, reviewable, policy-aware support surface.
-
-A Focus response, map popup, export, story node, or AI-assisted explanation must not cite a bare pointer that has not been resolved under the current release and policy state.
-
-### 2. Keep provider choice internal
-
-KFM should expose a stable internal model adapter contract, not public behavior tied to one provider.
-
-Provider-specific runtimes such as Ollama, OpenAI-compatible endpoints, or future local runtimes are implementation details behind the governed boundary.
-
-### 3. Make negative outcomes first-class
-
-A refusal is not a product failure when evidence, rights, sensitivity, source authority, release state, or runtime health is insufficient.
-
-| Outcome | Meaning | Required posture |
-| --- | --- | --- |
-| `ANSWER` | Evidence and policy support a bounded response. | Include citations, scope echo, receipt/audit reference, and drawer link. |
-| `ABSTAIN` | Evidence is missing, unresolved, stale, ambiguous, or too weak. | Explain the evidence gap without inventing. |
-| `DENY` | Policy, rights, sensitivity, safety, release state, or role constraints block the response. | Explain the restriction class without leaking protected detail. |
-| `ERROR` | Runtime, validation, resolver, policy, or contract failure occurred. | Fail closed; do not show raw model output. |
-
-> [!NOTE]
-> Some KFM materials discuss `HOLD` in review or promotion contexts. This README treats runtime Focus outcomes as `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` until the mounted repo confirms a broader shared enum.
-
-### 4. Never persist hidden reasoning as proof
-
-Store bounded metadata, not hidden reasoning:
-
-- model or adapter ID;
-- runtime version or build reference when available;
-- prompt/template digest;
-- evidence bundle IDs and digests;
-- policy decisions;
-- citation validation report ID;
-- output digest;
-- receipt IDs.
-
-### 5. Separate receipts from proofs
-
-A run receipt records that a process happened. A proof pack supports release-significant trust. A catalog record improves discovery. None of those should silently replace the others.
-
-### 6. Preserve the KFM trust membrane
-
-The governed-AI path must preserve the lifecycle boundary:
+The governed API is not a generic backend. It is a policy-conscious, evidence-resolving boundary that protects KFM’s core lifecycle:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Public clients, Focus Mode, Evidence Drawer, exports, and normal UI surfaces use governed APIs and released artifacts. They do not use canonical/internal stores as the ordinary public path.
+Normal public and ordinary UI clients must use governed APIs, released artifacts, catalog records, tile services, and `EvidenceBundle` resolution. They must not directly read:
 
-## Contract and object map
+- `RAW`, `WORK`, or `QUARANTINE` lifecycle stores;
+- unpublished candidate data;
+- canonical or restricted internal stores;
+- source-system side effects;
+- vector/search indexes as truth;
+- graph projections as canonical records;
+- direct model runtime output;
+- secrets, local paths, or internal service handles.
 
-| Object family | Truth role | AI-specific use | Status |
-| --- | --- | --- | --- |
-| `SourceDescriptor` | Source governance | Describes source identity, role, rights, sensitivity, access, citation obligations, and activation state. | PROPOSED unless repo confirms |
-| `EvidenceRef` | Evidence pointer | Points to a released/candidate artifact under a claim scope. | PROPOSED unless repo confirms |
-| `EvidenceBundle` | Resolved evidence support | Supplies admissible context a model may use. | CONFIRMED doctrine / PROPOSED implementation |
-| `PolicyDecision` | Governance result | Records allow, deny, abstain, scope, rights, sensitivity, and release-state decisions. | PROPOSED unless repo confirms |
-| `CitationValidationReport` | Citation gate | Validates that consequential claims resolve to evidence refs in the bundle. | PROPOSED unless repo confirms |
-| `RuntimeResponseEnvelope` | Runtime output contract | Carries `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` plus evidence, policy, and audit references. | PROPOSED unless repo confirms |
-| `FocusModePayload` | UI contract | Renders bounded synthesis and negative states without raw model output. | PROPOSED unless repo confirms |
-| `EvidenceDrawerPayload` | Trust surface contract | Shows support, source role, rights, sensitivity, freshness, review, correction, and audit links. | PROPOSED unless repo confirms |
-| `AIReceipt` | AI process memory | Records model-adapter participation without storing hidden reasoning. | PROPOSED unless repo confirms |
-| `RunReceipt` | Pipeline/runtime process memory | Records run metadata and deterministic execution context. | PROPOSED unless repo confirms |
-| `EvaluatorReport` | Review support | Captures evaluator or test outcomes for proposed model-assisted artifacts. | PROPOSED unless repo confirms |
-| `ProofPack` | Release proof | Bundles validation, policy, promotion, integrity, and release evidence. | PROPOSED unless repo confirms |
-| `ReleaseManifest` | Published release state | Declares released artifacts, digests, rollback target, and publication scope. | PROPOSED unless repo confirms |
+The governing principle is simple:
 
-<p align="right"><a href="#governed-ai-architecture">Back to top ↑</a></p>
+> A KFM response may make a consequential public or semi-public claim only when it is downstream of evidence, source role, policy, review, release state, correction lineage, and rollback support appropriate to the consequence of the claim.
 
-## Runtime adapter strategy
+[Back to top](#top)
 
-| Adapter | Role | Allowed use | Default maturity |
-| --- | --- | --- | --- |
-| `MockAdapter` | Deterministic test adapter | CI, fixtures, contract tests, finite-outcome proof | First implementation target |
-| `NullAdapter` | Explicit disabled/non-answer adapter | Safe offline mode, feature flag off, runtime unavailable | Pair with `MockAdapter` |
-| `OllamaAdapter` | Local/private model runtime adapter | Only behind governed API, after contracts/tests pass | Deferred |
-| `OpenAICompatibleAdapter` | Provider-compatible remote or private endpoint | Same internal contract; no provider-specific public behavior | Deferred |
-| Future adapters | Replaceable internal implementations | Must satisfy the same envelope, policy, citation, and receipt rules | Deferred |
+---
 
-Provider adapters must not:
+## Repo fit
 
-- receive browser or public client traffic directly;
-- read `RAW`, `WORK`, `QUARANTINE`, unpublished, private, or canonical stores directly;
-- publish uncited answers;
-- persist hidden reasoning as source evidence;
-- make source-rights or sensitivity decisions by inference;
-- change public response shape based on provider quirks.
+**Path:** `docs/architecture/governed-api.md`  
+**Owning root:** `docs/`  
+**Role:** repository architecture note for the governed API trust membrane  
+**Audience:** maintainers, API implementers, UI engineers, policy reviewers, domain-lane authors, release reviewers, and governed-AI contributors
 
-## Focus Mode behavior
+`docs/architecture/governed-api.md` explains the system boundary. It does not own route code, machine schemas, policy rules, source data, release artifacts, or UI implementation.
 
-Focus Mode is bounded synthesis inside the governed shell, not a detached assistant.
+| Direction | Path | Relationship | Status |
+|---|---|---|---|
+| Parent architecture index | [`README.md`](README.md) | Local architecture directory index. | CONFIRMED file exists; content is currently thin. |
+| Project orientation | [`../../README.md`](../../README.md) | Root trust law, responsibility roots, object families, proof-slice posture. | CONFIRMED file exists. |
+| API contract lane | [`../../contracts/api/README.md`](../../contracts/api/README.md) | Human-readable governed API request/response semantics. | CONFIRMED file exists. |
+| Mock payload contract | [`../../contracts/runtime/governed_api_mock_payloads.md`](../../contracts/runtime/governed_api_mock_payloads.md) | Documents fixture-backed mock API payload examples. | CONFIRMED file exists. |
+| Mock payload fixture | [`../../fixtures/api/governed_api_mock_payloads.json`](../../fixtures/api/governed_api_mock_payloads.json) | Synthetic no-network examples for health, Focus, and Evidence Drawer payloads. | CONFIRMED file exists. |
+| Runtime API surface | [`../../apps/api/README.md`](../../apps/api/README.md) | Runtime boundary README currently written with strong verification caveats. | CONFIRMED file exists. |
+| Current API file | [`../../apps/api/server.py`](../../apps/api/server.py) | Minimal FastAPI-style ecology/public-safe dry-run server evidence. | CONFIRMED file exists; runtime execution not verified here. |
+| Web API client | [`../../apps/web/src/api/governedClient.js`](../../apps/web/src/api/governedClient.js) | Browser-side governed client wrapper for ecology layer manifest, evidence, and Focus calls. | CONFIRMED file exists. |
+| Path policy ADR | [`../adr/ADR-0202-governed-api-path-canonicalization.md`](../adr/ADR-0202-governed-api-path-canonicalization.md) | Settles `apps/governed_api/...` as canonical and `apps/governed-api/...` as legacy shim-only. | CONFIRMED file exists. |
+| Trust path ADR | [`../adr/ADR-0014-truth-path.md`](../adr/ADR-0014-truth-path.md) | Defines lifecycle and public trust membrane posture. | CONFIRMED file exists; decision status still draft/proposed. |
+| Runtime envelope ADR | [`../adr/ADR-0207-governed-ai-runtime-envelope.md`](../adr/ADR-0207-governed-ai-runtime-envelope.md) | Defines finite AI-assisted runtime outcomes and envelope expectations. | CONFIRMED file exists; decision status still draft/proposed. |
+| CI path-policy checker | [`../../tools/ci/check_governed_api_path_policy.py`](../../tools/ci/check_governed_api_path_policy.py) | Enforces canonical governed API path and legacy shim policy. | CONFIRMED file exists; CI wiring still NEEDS VERIFICATION. |
 
-A compliant Focus response carries:
+> [!NOTE]
+> This file intentionally lives in `docs/architecture/`, not under a new root-level API or domain folder. Directory discipline treats root folders as responsibility boundaries, while `docs/` is the human-facing control plane.
 
-| Field group | Minimum expectation |
-| --- | --- |
-| Scope | Place, time, role/audience, release window, and active layer/evidence context |
-| Evidence | `evidence_bundle_ref`, cited evidence refs, bundle freshness, unresolved refs if any |
-| Outcome | One finite runtime outcome and a human-readable reason |
-| Policy | Policy decision ID, obligations, redaction/generalization notes where applicable |
-| Citations | Inline citations to resolved evidence; no decorative citation strings |
-| Audit | Request ID, receipt ID, citation validation report ID, safe trace reference |
-| UI hooks | Evidence Drawer route, map re-highlight targets, export trust cue eligibility |
+[Back to top](#top)
 
-Focus must abstain or deny when the evidence pool cannot support the question. It must not fill missing support with fluent synthesis.
+---
 
-## Evidence Drawer behavior
+## Current evidence snapshot
 
-The Evidence Drawer is the mandatory trust object for consequential claims, layers, exports, and Focus outputs.
+The current repo evidence supports a stronger architecture document than the prior two-line file, but it does not support overclaiming production maturity.
 
-Minimum drawer groups:
+| Evidence | What it confirms | What remains unverified |
+|---|---|---|
+| `docs/architecture/governed-api.md` | The target architecture file exists, but is only a short statement in the current repository. | Whether maintainers have already accepted this expanded architecture text. |
+| `apps/api/server.py` | A current file defines public-safe ecology API behavior, including health, layer manifest, time-slice, evidence, and STAC catalog routes, with fail-closed public-safety checks. | Whether the server is deployed, CI-tested on the active branch, production-bound, or complete for all domains. |
+| `apps/web/src/api/governedClient.js` | The web app has a governed client wrapper for layer manifest, evidence drawer payload, and Focus outcome calls. | Whether all rendered UI states and error paths are fully covered by tests. |
+| `contracts/runtime/governed_api_mock_payloads.md` and `fixtures/api/governed_api_mock_payloads.json` | Mock payloads exist for `healthz_response`, `focus_mode_request`, `focus_mode_response`, and `evidence_drawer_response`. | Whether those examples are enforced by schema tests or runtime contract tests. |
+| `docs/adr/ADR-0202-governed-api-path-canonicalization.md` | The repo records an accepted canonical path policy: `apps/governed_api/...` is canonical; `apps/governed-api/...` is shim-only legacy compatibility. | Whether every mapped file is present, every shim is present, and every CI workflow runs the checker. |
+| `tools/ci/check_governed_api_path_policy.py` | The repo contains a checker for canonical governed API files and legacy shims. | Whether the checker currently passes in CI and whether all target canonical files exist in `main`. |
 
-| Group | What users must be able to inspect |
-| --- | --- |
-| Claim header | Claim title, evidence state, policy state, review state, freshness, correction state |
-| Support | Support summary, knowledge character, source role, source authority |
-| Identity | `EvidenceBundle`, `EvidenceRef`, object ID, dataset/release version |
-| Scope | Place/geometry, time basis, opened-from surface |
-| Rights and sensitivity | Rights class, sensitivity posture, transform/redaction/generalization reason |
-| Freshness and review | Freshness timestamp/class, review state, promotion or correction state |
-| Transform and provenance | Transform summary, lineage note, resolver/rule version, safe upstream pointers |
-| Audit linkage | Receipt, trace, validation, correction, or review route references |
+### Current implementation posture
 
-> [!TIP]
-> Treat the drawer payload as a pure contract. It should be testable without a live model, live source connector, or map renderer.
+- **CONFIRMED file evidence:** governed API-related docs, mock payloads, client wrapper, server file, ADRs, and checker are present.
+- **NEEDS VERIFICATION:** active branch route inventory, framework/package status, CI wiring, test pass state, release-state integration, proof-pack linkage, production exposure, and domain coverage.
+- **PROPOSED architecture:** use this document as the stable architecture guide that ties those files into one inspectable trust boundary.
 
-## Local/private exposure posture
+[Back to top](#top)
 
-KFM may be locally hosted and exposed through a home firewall, VPN, or reverse proxy for trusted third-party access. Governed AI increases the risk of accidental bypass, so default posture is strict.
+---
 
-| Risk | Required boundary |
-| --- | --- |
-| Direct model access | No browser-to-model calls. No public traffic to a model runtime endpoint. |
-| Raw source leakage | Model adapters receive resolved, released, policy-safe evidence context only. |
-| Secret leakage | Provider keys, tokens, VPN secrets, and runtime credentials stay outside repo and receipts. |
-| Overbroad logging | Logs record request IDs, policy decisions, adapter metadata, citation report refs, and receipt IDs; not hidden reasoning or raw sensitive evidence. |
-| Runtime drift | Provider/runtime facts are version-sensitive and must be rechecked before operational docs are pinned. |
-| Admin exposure | Debug, model-health, source-ledger, proof, and admin routes require authentication and authorization. |
-| Policy outage | Policy engine unavailable means `ERROR` or `DENY`, not allow-by-default. |
+## Inputs and exclusions
 
-## Quickstart for reviewers
+### Accepted inputs
 
-Use this only after the real repository is mounted. Commands are read-only unless adapted.
+The governed API may accept only bounded, reviewable request context. Typical accepted inputs include:
 
-```bash
-# From the repo root after checkout verification.
-git status --short
+| Input | Required guardrail |
+|---|---|
+| Stable IDs such as `claim_id`, `layer_id`, `release_id`, `bundle_id`, `source_id`, or domain subject IDs | Must resolve to released or explicitly review-authorized scope. |
+| `EvidenceRef` or `EvidenceBundle` references | Must resolve server-side or return `ABSTAIN`, `DENY`, or `ERROR`. |
+| Map/timeline selection state | Must be treated as selection context, not proof. |
+| Focus Mode question | Must be scoped to admissible evidence, policy state, and release context. |
+| Review action requests | Must be authenticated/authorized, auditable, and role-sensitive. |
+| Export/story/dossier requests | Must inherit release state, citation posture, and correction lineage. |
+| Health/status requests | Must not leak internal stores, paths, secrets, or restricted source state. |
 
-# Confirm this README exists.
-test -f docs/architecture/governed-ai/README.md
+### Exclusions
 
-# Locate current governed-AI object families, if implemented.
-grep -RInE "EvidenceBundle|RuntimeResponseEnvelope|AIReceipt|CitationValidationReport|FocusModePayload" \
-  docs schemas contracts packages apps tests 2>/dev/null | head -80
+The following do not belong on normal governed API public paths:
 
-# Check for forbidden direct browser/model coupling candidates.
-grep -RInE "localhost:11434|/api/generate|ollama" \
-  apps web ui packages 2>/dev/null | head -80
+| Excluded | Reason |
+|---|---|
+| RAW / WORK / QUARANTINE payloads | These are pre-publication lifecycle states. |
+| Unpublished candidates | Candidate material lacks release authority. |
+| Canonical/internal stores as direct public payloads | Public interfaces must cross evidence/policy/release checks. |
+| Direct model runtime calls | AI is interpretive and must sit behind governed API mediation. |
+| Direct vector-store or graph-store answers | Retrieval and projection layers are derivatives, not truth. |
+| Source connector side effects | Source activation belongs behind intake, validation, rights, and policy review. |
+| Exact sensitive location material | Sensitive locations fail closed unless a release transform explicitly allows safe exposure. |
+| Living-person, DNA/genomic, archaeology, rare species, cultural, infrastructure, or unclear-rights details | High-risk material requires domain-specific review and staged access rules. |
+| Chain-of-thought or private reasoning | Receipts may record inputs, outputs, hashes, decisions, and refs, not private reasoning traces. |
 
-# Locate policy or validator homes, if implemented.
-find policy tools tests schemas contracts -maxdepth 4 -type f 2>/dev/null | sort | head -160
+[Back to top](#top)
+
+---
+
+## Trust flow
+
+```mermaid
+flowchart LR
+  subgraph Lifecycle["KFM lifecycle"]
+    Source["SOURCE EDGE"] --> Raw["RAW"]
+    Raw --> Work["WORK"]
+    Work --> Quarantine["QUARANTINE"]
+    Work --> Processed["PROCESSED"]
+    Processed --> Catalog["CATALOG"]
+    Processed --> Triplet["TRIPLET / GRAPH PROJECTION"]
+    Catalog --> Published["PUBLISHED"]
+    Triplet --> Published
+  end
+
+  subgraph Trust["Trust closure"]
+    Published --> Release["ReleaseManifest"]
+    Published --> Evidence["EvidenceRef → EvidenceBundle"]
+    Evidence --> Policy["PolicyDecision"]
+    Policy --> Review["ReviewRecord"]
+    Review --> Proof["ProofPack / ValidationReport"]
+    Proof --> Correction["Correction / Rollback refs"]
+  end
+
+  subgraph Boundary["Governed API boundary"]
+    Release --> API["Governed API"]
+    Evidence --> API
+    Policy --> API
+    Review --> API
+    Correction --> API
+    API --> Envelope["DecisionEnvelope / RuntimeResponseEnvelope"]
+  end
+
+  subgraph Clients["Allowed clients"]
+    Envelope --> Map["Map shell"]
+    Envelope --> Drawer["Evidence Drawer"]
+    Envelope --> Focus["Focus Mode"]
+    Envelope --> Export["Export / story / dossier"]
+    Envelope --> ReviewUI["Review console"]
+  end
+
+  Raw -. denied .-> API
+  Work -. denied .-> API
+  Quarantine -. denied .-> API
+  Model["Model runtime"] -. no direct public/browser path .-> Focus
 ```
 
-> [!CAUTION]
-> The grep patterns above are discovery aids, not enforcement by themselves. Convert them into repo-native validators or CI checks only after package manager, test runner, policy tooling, and directory conventions are confirmed.
+The governed API should make trust state visible rather than hiding it. `ABSTAIN`, `DENY`, and `ERROR` are part of the product contract, not embarrassing edge cases.
 
-## Validation and review gates
+[Back to top](#top)
 
-A governed-AI change is not ready just because it produces a useful answer.
+---
 
-Minimum gate checklist:
+## Contract surface
 
-- [ ] Evidence refs resolve to an `EvidenceBundle`.
-- [ ] The evidence bundle is released, public-safe for the request context, and policy-compatible.
-- [ ] Policy precheck runs before model invocation.
-- [ ] Model adapter receives only scoped, released, policy-safe context.
-- [ ] Adapter output is structured, deterministic where tests require, and schema-valid.
-- [ ] Citation validation runs after synthesis and before display.
-- [ ] Policy postcheck confirms the output did not exceed scope or leak blocked material.
-- [ ] Runtime response uses a finite outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
-- [ ] Evidence Drawer can show source role, rights, sensitivity, freshness, review, correction, and audit state.
-- [ ] AIReceipt and RunReceipt are emitted where AI materially contributes.
-- [ ] No direct browser-to-model call exists.
-- [ ] No `RAW`, `WORK`, `QUARANTINE`, unpublished, private, or canonical-store access is available to the model adapter.
-- [ ] Tests cover at least one valid answer and one negative path.
-- [ ] Documentation, ADRs, or runbooks are updated for any behavior change.
-- [ ] Rollback path is defined before provider integration is enabled.
+The governed API sits at the intersection of several KFM object families.
 
-## Recommended first slice
+| Object family | API obligation |
+|---|---|
+| `SourceDescriptor` | Preserve source role, authority limits, rights, cadence, scale, caveats, and activation state where relevant. |
+| `EvidenceRef` | Accept as a reference only; do not treat it as resolved support until the resolver succeeds. |
+| `EvidenceBundle` | Use as the inspectable support package for claims, layers, Focus answers, and Evidence Drawer payloads. |
+| `PolicyDecision` | Carry allow, deny, restrict, abstain, review-needed, or error state with reason codes and obligations. |
+| `DecisionEnvelope` | Emit finite non-AI or general decision outcomes where policy/release/evidence state matters. |
+| `RuntimeResponseEnvelope` | Emit finite AI-assisted/runtime outcomes for Focus Mode and model-mediated surfaces. |
+| `LayerManifest` | Bind map-visible layers to release, evidence, source, sensitivity transform, time, and style state. |
+| `ReleaseManifest` | Prevent public payloads from outrunning promotion, proof, correction, and rollback. |
+| `RunReceipt` / `AIReceipt` | Preserve process memory and audit joins without treating receipts as truth. |
+| `CorrectionNotice` / `RollbackCard` | Keep supersession, withdrawal, public correction, and rollback paths inspectable. |
 
-Build the smallest proof-bearing slice before adding any live provider runtime.
+### Envelope shape
 
-| Step | Slice element | Acceptance signal |
-| --- | --- | --- |
-| 1 | Tiny public-safe `EvidenceBundle` fixture | Fixture is released/public-safe and contains resolvable evidence refs. |
-| 2 | Policy precheck | Unpublished, sensitive, raw/work/quarantine, missing-ledger, or rights-unknown inputs deny/abstain. |
-| 3 | `MockAdapter` | Deterministic structured output; no network; no model dependency. |
-| 4 | Citation validator | Consequential claims resolve to evidence refs in the bundle. |
-| 5 | Policy postcheck | Output remains in scope and honors rights/sensitivity obligations. |
-| 6 | `RuntimeResponseEnvelope` | Valid fixtures for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. |
-| 7 | Evidence Drawer payload | Drawer shows support, source, freshness, review, policy, and audit fields. |
-| 8 | Receipts | AIReceipt and RunReceipt record bounded process metadata. |
-| 9 | Static no-bypass check | Browser/UI does not call model runtime directly. |
-| 10 | Review note | Maintainer can inspect why the slice answered, abstained, denied, or errored. |
+The exact machine schema belongs in the accepted schema home. Until schema-home authority is fully verified, this document treats the field set below as architecture-level guidance.
 
-## Anti-patterns to reject
+```json
+{
+  "outcome": "ANSWER | ABSTAIN | DENY | ERROR",
+  "reason_code": "EVIDENCE_BUNDLE_NOT_RESOLVED",
+  "message": "Safe human-readable summary",
+  "scope": {
+    "request_kind": "map | evidence_drawer | focus | review | export | diagnostic",
+    "spatial_scope": "NEEDS_VERIFICATION",
+    "temporal_scope": "NEEDS_VERIFICATION"
+  },
+  "evidence_refs": [],
+  "evidence_bundle_refs": [],
+  "policy_decision_ref": "kfm://policy-decision/NEEDS_VERIFICATION",
+  "release_ref": "kfm://release/NEEDS_VERIFICATION",
+  "review_state": "approved | pending | denied | not_required | unknown",
+  "freshness_state": "current | stale | unknown | not_applicable",
+  "correction_state": "current | corrected | superseded | withdrawn | unknown",
+  "receipt_refs": [],
+  "limitations": [],
+  "obligations": []
+}
+```
 
-| Anti-pattern | Why it breaks KFM |
-| --- | --- |
-| Chat first, evidence later | Reverses the trust path and turns fluency into apparent authority. |
-| Browser calls local model endpoint directly | Bypasses governed API, policy, citations, receipts, and audit. |
-| Model reads canonical stores | Collapses interpretation into root truth access. |
-| Vector index treated as evidence | Rebuildable retrieval acceleration becomes false authority. |
-| Citation strings without resolver validation | Creates decorative citations that cannot support correction or audit. |
-| One-off prompts outside contracts | Makes behavior untestable and hard to review. |
-| Receipts treated as proof packs | Confuses process memory with release-significant proof. |
-| Public answer on unknown rights | Violates fail-closed rights and sensitivity posture. |
-| Hidden admin truth path | Creates a second system of record with weaker evidence law. |
+[Back to top](#top)
 
-## Documentation update rules
+---
 
-Update this README when any of these change:
+## Runtime outcomes
 
-- model adapter contract;
-- Focus response envelope;
-- Evidence Drawer AI field requirements;
-- citation validation behavior;
-- policy precheck or postcheck behavior;
-- receipt fields;
-- runtime exposure posture;
-- provider integration policy;
-- source-ledger or evidence resolver expectations;
-- finite outcome grammar;
-- rollback behavior.
+| Outcome | Meaning | Required behavior |
+|---|---|---|
+| `ANSWER` | The request is supported by released or review-authorized evidence, policy allows it, citations/support validate, and scope is sufficiently bounded. | Return the bounded payload plus evidence, policy, release, freshness, review, correction, and audit references where material. |
+| `ABSTAIN` | KFM cannot support a safe answer because evidence is missing, unresolved, stale, conflicted, insufficient, outside scope, or source-role-inadequate. | Return no unsupported answer. Include safe reason codes and narrowing guidance where appropriate. |
+| `DENY` | KFM may not provide the requested content because policy, rights, sensitivity, access role, release state, or public safety blocks it. | Return no restricted content. Include only policy-safe reason and obligation metadata. |
+| `ERROR` | A system, schema, adapter, resolver, validator, policy, release, or runtime failure prevents reliable handling. | Fail closed; do not substitute model prose, raw properties, or partial truth. |
 
-Material behavior changes should also update the corresponding ADR, runbook, contract schema, fixtures, tests, and release notes once those homes are verified.
+### Runtime examples currently present
 
-## Rollback
+The repository’s mock fixture currently models:
 
-Rollback is required when a governed-AI change weakens source integrity, breaks stable links, creates schema authority conflict, bypasses policy gates, exposes sensitive data, permits direct model-client traffic, or publishes unsupported claims.
+- `healthz_response` with `status`, `service`, and `mode`;
+- `focus_mode_request` with `question`, `scope`, and `trace_id`;
+- `focus_mode_response` returning `ABSTAIN` for `MISSING_EVIDENCE`;
+- `evidence_drawer_response` with `ui_trust_state`, `release_status`, `evidence_ref`, and `evidence_bundle_id`.
 
-| Rollback trigger | Immediate response |
-| --- | --- |
-| Direct browser-to-model path detected | Disable feature flag or route; remove public access; file review note. |
-| Evidence resolver unavailable | Force `ERROR` or `ABSTAIN`; do not fall back to raw model answers. |
-| Policy engine unavailable | Force `DENY` or `ERROR`; do not allow by default. |
-| Citation validation failure | Block display/export; preserve validation report for review. |
-| Rights/sensitivity uncertainty | Generalize, redact, quarantine, or deny until source governance clears it. |
-| Provider/runtime drift | Disable provider adapter; keep `MockAdapter` tests active. |
+These examples are useful as a no-network fixture baseline. They should not be treated as complete runtime coverage until schema and test enforcement are verified.
 
-Rollback target: `ROLLBACK_TARGET_TBD_AFTER_REPO_INSPECTION`
+[Back to top](#top)
 
-## Open verification backlog
+---
 
-| Item | Status | Why it matters |
-| --- | --- | --- |
-| Mounted repo tree | UNKNOWN | Cannot confirm existing docs, adjacent README patterns, route names, tests, workflows, owners, or schema homes. |
-| Owners | NEEDS VERIFICATION | Metadata and review routing need confirmed responsible maintainers. |
-| Policy label | NEEDS VERIFICATION | Public/restricted status must match repo policy. |
-| Schema authority | NEEDS VERIFICATION | Avoid split authority between `contracts/` and `schemas/contracts/v1/`. |
-| Package manager/test runner | UNKNOWN | Validation commands must be adapted to real tooling. |
-| Policy engine | UNKNOWN | OPA/Conftest or equivalent must be confirmed before enforcement claims. |
-| Provider runtime deployment | UNKNOWN | Do not claim Ollama, OpenAI-compatible, or other runtime integration exists. |
-| Runtime route names | UNKNOWN | Do not document concrete API paths until implementation is inspected. |
-| Evidence resolver implementation | UNKNOWN | Doctrine requires it; current mounted behavior is unverified. |
-| Source ledger files | UNKNOWN | Needed for citations to project source IDs and source-status control. |
-| Focus and Evidence Drawer components | UNKNOWN | UI doctrine is strong; mounted implementation is unverified. |
-| Local exposure hardening | NEEDS VERIFICATION | Firewall, reverse proxy, VPN, TLS, rate limits, and auth are environment-sensitive. |
-| Badge targets | NEEDS VERIFICATION | Do not imply CI, coverage, release, or deployment status without evidence. |
+## Route families
 
-<details>
-<summary>Appendix A — Review vocabulary</summary>
+KFM should document and test route families by responsibility, not by whatever path happens to exist first.
 
-| Term | Meaning in this README |
-| --- | --- |
-| `CONFIRMED` | Verified from current-session evidence or attached doctrine. |
-| `PROPOSED` | Recommended architecture or file placement not verified in mounted implementation. |
-| `UNKNOWN` | Not verifiable without repo, runtime, logs, workflows, dashboards, or platform evidence. |
-| `NEEDS VERIFICATION` | Check required before treating as current fact or implementation instruction. |
-| `EvidenceRef` | Pointer to evidence under a claim scope. |
-| `EvidenceBundle` | Resolved evidence set with source refs, policy/review state, citation support, and bundle hash. |
-| `Trust membrane` | Boundary preventing public clients, UI, AI, and exports from bypassing governed APIs and released artifacts. |
-| `Focus Mode` | Evidence-bounded interpretive mode returning finite outcomes through governed runtime envelopes. |
-| `AIReceipt` | Bounded record of AI participation; not hidden reasoning and not release proof. |
-| `ProofPack` | Release-significant proof package; separate from receipts and catalogs. |
+| Route family | Typical clients | Must prove | Current repo evidence |
+|---|---|---|---|
+| Health / status | Operators, local checks | No secret, path, source, raw data, or restricted state leakage. | `apps/api/server.py` defines `/healthz` and `/api/healthz`; runtime execution still needs verification. |
+| Layer manifest | Map shell | Released/public-safe layer state, evidence support, rights/sensitivity posture, correction and release refs. | `apps/web/src/api/governedClient.js` calls `/ecology/layer-manifest`; `apps/api/server.py` defines `/api/layers/manifest`. |
+| Evidence drawer payload | Evidence Drawer, map popups, Focus | `EvidenceBundle` resolution, support state, release state, policy posture, source list or safe abstention. | `apps/web/src/api/governedClient.js` calls `/ecology/evidence/{claimId}`; mock payload fixture includes `evidence_drawer_response`. |
+| Domain read surfaces | Map shell, dashboards, exports | Released domain scope, temporal scope, public-safe geometry, policy, and release state. | `apps/api/server.py` includes ecology time-slice route examples. |
+| Catalog / STAC-style discovery | Catalog views, map shell, export tools | Catalog closure, release linkage, public-safe metadata. | `apps/api/server.py` includes `/api/ecology/catalog/stac`. |
+| Focus Mode | Focus panel, map shell | Scoped evidence, policy precheck, citation validation, finite runtime envelope, no direct model-client path. | Web client includes `getFocusOutcome`; mock fixture returns `ABSTAIN` for missing evidence. |
+| Review / steward action | Review console, maintainers | Actor role, target hash/version, policy obligations, review receipt, rollback path. | NEEDS VERIFICATION. |
+| Export / story / dossier | Public/steward export tools | Release scope, citation state, policy state, correction state, and reproducible artifact refs. | NEEDS VERIFICATION. |
 
-</details>
+> [!WARNING]
+> Route names above are architecture categories. Do not infer production route coverage beyond inspected files and passing tests.
 
-<details>
-<summary>Appendix B — Pre-publish checklist</summary>
+[Back to top](#top)
 
-- [ ] KFM meta block is present and reviewable.
-- [ ] Status, owners placeholder, badges, and quick jumps are present.
-- [ ] Purpose line is directly below the H1.
-- [ ] Repo fit includes target path and upstream/downstream placeholders.
-- [ ] Accepted inputs and exclusions are explicit.
-- [ ] Directory tree is present and truth-labeled.
-- [ ] Mermaid diagram reflects governed-AI flow, not decoration.
-- [ ] Finite outcomes are documented.
-- [ ] Contracts/object families are separated from implementation claims.
-- [ ] Local/private exposure posture is fail-closed.
-- [ ] Validation checklist includes no-direct-model-client and no-raw/work/quarantine access.
-- [ ] Commands are safe/read-only and marked as requiring repo verification.
-- [ ] Open verification backlog captures owners, policy label, schema authority, repo tree, runtime, UI, and badge unknowns.
-- [ ] No claim says implementation exists without evidence.
-- [ ] No section encourages model output as source truth.
+---
 
-</details>
+## Canonical implementation path
 
-<p align="right"><a href="#governed-ai-architecture">Back to top ↑</a></p>
+KFM has a documented path distinction:
+
+| Path | Role |
+|---|---|
+| `apps/governed_api/...` | Canonical governed API implementation home. |
+| `apps/governed-api/...` | Legacy compatibility surface only; shim-only if retained. |
+| `apps/api/...` | Current visible API app path with confirmed files; relationship to the canonical `apps/governed_api/...` decision needs active-branch reconciliation. |
+
+The accepted path-policy rule is:
+
+> Implementation goes in `apps/governed_api/...`; `apps/governed-api/...` only points back to it.
+
+Because the current repo also contains `apps/api/...` API materials, maintainers should verify whether `apps/api/...` is the active runtime app, a transitional app, a domain-specific API app, or a compatibility surface. This document does not silently collapse those homes.
+
+[Back to top](#top)
+
+---
+
+## Focus Mode and governed AI
+
+Focus Mode is an evidence-bounded API consumer, not a free-form chatbot.
+
+A safe Focus flow is:
+
+```text
+User question / map scope
+-> governed API
+-> scope resolver
+-> policy precheck
+-> released evidence retrieval
+-> EvidenceRef -> EvidenceBundle resolution
+-> bounded context assembly
+-> provider-neutral adapter, if allowed
+-> structured output validation
+-> citation validation
+-> policy postcheck
+-> RuntimeResponseEnvelope
+-> Focus UI state
+-> receipts / audit joins
+```
+
+### AI boundary rules
+
+- Model adapters are replaceable implementation details.
+- `MockAdapter` and fixture-backed tests should precede live provider integration.
+- The browser must not call Ollama, OpenAI-compatible endpoints, vector stores, graph internals, or model runtimes directly.
+- Models may receive only released, policy-safe, bounded evidence context.
+- Generated text is never proof.
+- Citation validation must pass before `ANSWER`.
+- Missing evidence should produce `ABSTAIN`, not plausible prose.
+- Policy blocks should produce `DENY`, not softened summaries.
+- Adapter or validation failures should produce `ERROR`, not fallback answer text.
+
+[Back to top](#top)
+
+---
+
+## Map shell and Evidence Drawer integration
+
+The governed API should feed the MapLibre shell and Evidence Drawer with trust-visible payloads.
+
+| UI surface | Governed API responsibility |
+|---|---|
+| Map shell | Return only release-backed, public-safe layer manifests and feature payloads. |
+| Timeline / time filter | Preserve valid time, observed time, retrieval time, release time, stale state, and correction state when material. |
+| Evidence Drawer | Resolve and display evidence support, source roles, rights, sensitivity, review state, release state, and correction lineage. |
+| Focus Mode | Use finite runtime envelopes and citation validation. |
+| Review console | Submit review decisions through authenticated, auditable, role-aware endpoints. |
+| Exports / story nodes | Carry citations, release refs, correction refs, and policy context into outward artifacts. |
+
+Renderer rule:
+
+> MapLibre renders released evidence carriers and interaction state. It is not the canonical store, policy engine, citation authority, publication authority, or AI authority.
+
+[Back to top](#top)
+
+---
+
+## Security and exposure posture
+
+The governed API should fail closed around public exposure.
+
+| Risk | Required default |
+|---|---|
+| Unknown rights | `DENY` public release. |
+| Unknown sensitivity | `DENY` or restrict. |
+| Unresolved evidence | `ABSTAIN` or `ERROR`. |
+| Direct public raw/work/quarantine access | `DENY`. |
+| Direct browser model access | `DENY`. |
+| Exact sensitive geometry | `DENY` unless a reviewed public-safe transform allows exposure. |
+| Internal path disclosure | `ERROR` envelope with safe artifact names only. |
+| CORS / browser access | Explicit allowlist; no broad public mutation surface by default. |
+| Review/steward actions | Authenticated, authorized, audited, and reversible. |
+| Runtime logs and receipts | Store audit-safe refs, hashes, outcomes, and decisions; avoid secrets and private reasoning. |
+
+[Back to top](#top)
+
+---
+
+## Validation gates
+
+A governed API change is not ready just because it returns JSON.
+
+| Gate | Minimum evidence |
+|---|---|
+| Directory placement | Directory Rules, ADRs, and current repo evidence support the path. |
+| Contract alignment | Human-readable contract and machine schema agree, or the gap is explicit. |
+| Schema validation | Valid and invalid fixtures cover the route/envelope. |
+| Policy validation | Rights, sensitivity, access, release, stale, source-role, and exact-location checks fail closed. |
+| Evidence closure | Consequential `ANSWER` responses resolve to `EvidenceBundle`. |
+| Negative outcomes | `ABSTAIN`, `DENY`, and `ERROR` have tests and UI-visible payload states. |
+| No raw-public path | API tests/static checks prevent public RAW/WORK/QUARANTINE access. |
+| No direct model client | Browser and public clients do not call model/provider runtimes directly. |
+| Release linkage | Public payloads include release or publication state when material. |
+| Correction / rollback | Public or semi-public outputs can identify correction, supersession, withdrawal, or rollback state. |
+| Documentation sync | Architecture, contracts, schemas, policy, tests, runbooks, and ADR links are updated or gaps are labeled. |
+
+### Suggested local checks
+
+Run these only after confirming the repo-native toolchain and active branch.
+
+```bash
+git status --short
+git branch --show-current || true
+
+python tools/ci/check_governed_api_path_policy.py
+
+find docs/architecture docs/adr contracts schemas policy fixtures tests tools apps -maxdepth 4 -type f | sort
+
+grep -RInE "RAW|WORK|QUARANTINE|localhost:11434|OLLAMA_HOST|/api/generate|/api/chat" apps packages tools tests 2>/dev/null || true
+```
+
+> [!NOTE]
+> Commands beyond the confirmed checker are review aids. Do not report them as passing until they are actually run on the target branch.
+
+[Back to top](#top)
+
+---
+
+## Definition of done
+
+A governed API architecture or implementation change is reviewable when:
+
+- [ ] the affected path is verified against Directory Rules and active ADRs;
+- [ ] public/steward/internal exposure class is explicit;
+- [ ] request and response contracts are documented or linked;
+- [ ] machine schemas exist or are marked `NEEDS VERIFICATION`;
+- [ ] valid and invalid fixtures exist for the changed envelope or route family;
+- [ ] `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` behavior is tested where applicable;
+- [ ] evidence resolution requirements are explicit;
+- [ ] policy decision and obligation behavior is explicit;
+- [ ] rights and sensitivity behavior fails closed;
+- [ ] no public route exposes raw/work/quarantine/internal stores;
+- [ ] no public/browser path calls model runtimes directly;
+- [ ] releases, corrections, withdrawals, supersessions, and rollback targets remain inspectable;
+- [ ] docs, ADRs, contracts, schemas, policy, fixtures, tests, and runbooks are updated or gaps are listed;
+- [ ] runtime behavior is not claimed unless directly verified.
+
+[Back to top](#top)
+
+---
+
+## Open verification
+
+| Item | Status | Verification path |
+|---|---|---|
+| Owner and policy label for this doc | NEEDS VERIFICATION | Confirm from CODEOWNERS, document registry, or governance index. |
+| Created date and stable `doc_id` | NEEDS VERIFICATION | Confirm from Git history or document registry. |
+| Whether `apps/api/...` or `apps/governed_api/...` is the active runtime home | NEEDS VERIFICATION | Inspect active branch, ADRs, imports, app entrypoints, tests, and workflows. |
+| Whether the path-policy checker runs in CI | NEEDS VERIFICATION | Inspect `.github/workflows/` and recent CI results. |
+| Whether every canonical governed API file in ADR-0202 exists | NEEDS VERIFICATION | Run the checker and inspect canonical/legacy paths. |
+| Full route inventory | NEEDS VERIFICATION | Inspect app route registration and OpenAPI outputs. |
+| Schema-home authority | NEEDS VERIFICATION | Follow accepted schema-home ADR and active schema tree. |
+| Runtime envelope schema enforcement | NEEDS VERIFICATION | Inspect `schemas/`, fixtures, validators, and tests. |
+| Focus Mode citation validation | NEEDS VERIFICATION | Inspect Focus contracts, runtime tests, and emitted validation reports. |
+| Evidence Drawer payload coverage | NEEDS VERIFICATION | Inspect UI tests, fixtures, and contracts. |
+| Production deployment posture | UNKNOWN | Inspect deployment manifests, runtime config, access controls, logs, and dashboards. |
+| Branch protections and release gates | UNKNOWN | Inspect GitHub settings, workflow requirements, and release artifacts. |
+
+[Back to top](#top)
