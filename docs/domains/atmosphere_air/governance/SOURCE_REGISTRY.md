@@ -1,86 +1,85 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-VERIFY-UUID-atmosphere-air-source-registry
+doc_id: kfm://doc/TODO-VERIFY-atmosphere-air-source-registry
 title: Atmosphere / Air Source Registry
 type: standard
 version: v1
 status: draft
-owners: TODO-VERIFY: @bartytime4life; atmosphere-air domain steward; source steward; policy steward; release steward
+owners: TODO-VERIFY: atmosphere-air domain steward; source steward; data steward; policy steward
 created: TODO-VERIFY-YYYY-MM-DD
 updated: 2026-05-06
-policy_label: public-draft-NEEDS_VERIFICATION
-related: [../README.md, ./SECURITY_AND_RIGHTS.md, ./VALIDATION_STATUS.md, ../architecture/ARCHITECTURE.md, ../architecture/KNOWLEDGE_CHARACTER.md, ../architecture/UNIT_CONVERSIONS.md, ../../../adr/ADR-0312-atmosphere-air-source-role-boundaries.md, ../../../adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md, ../../../../data/processed/air/qa_summary.example.json, ../../../../data/receipts/air/run_receipt.example.json, ../../../../policy/air/air_qa.rego, ../../../../tools/validators/air/validate_air_qa.py]
-tags: [kfm, atmosphere-air, source-registry, source-role, knowledge-character, rights, verification, public-release, evidence]
-notes: [doc_id, owners, created date, and final policy_label remain TODO/NEEDS VERIFICATION; this registry revises a thin repo-visible source registry without claiming live source activation, source rights clearance, CI enforcement, EvidenceBundle closure, release approval, or public publication.]
+policy_label: TODO-VERIFY-public-or-restricted
+related: [docs/domains/atmosphere_air/README.md, docs/domains/atmosphere_air/architecture/ARCHITECTURE.md, docs/domains/atmosphere_air/architecture/KNOWLEDGE_CHARACTER.md, docs/domains/atmosphere_air/architecture/PARAMETER_REGISTRY.md, docs/adr/ADR-0312-atmosphere-air-source-role-boundaries.md, docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md, connectors/pipelines/air/README.md, contracts/source/kansas_mesonet_source_descriptor.md, policy/crosswalk/domain-lane-policy-map.md]
+tags: [kfm, atmosphere-air, source-registry, source-role, knowledge-character, evidence, rights, policy, governed-domain]
+notes: [Revises existing repo-visible docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md. doc_id, owners, created date, final policy label, machine registry home, source-rights verification, CI enforcement, release behavior, and live-source activation remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Atmosphere / Air Source Registry
 
-Human-readable governance registry for Atmosphere / Air source families, source roles, knowledge characters, rights posture, verification state, and public-release gates.
+Human-readable governance registry for atmosphere and air-source admission: source identity, source role, knowledge character, rights posture, verification state, activation state, and public-release constraints.
 
 <p align="center">
   <img alt="status: draft" src="https://img.shields.io/badge/status-draft-f59f00">
-  <img alt="lane: atmosphere air" src="https://img.shields.io/badge/lane-atmosphere%20%2F%20air-6f42c1">
-  <img alt="activation: blocked" src="https://img.shields.io/badge/source_activation-blocked-b60205">
-  <img alt="rights: noassertion" src="https://img.shields.io/badge/rights-NOASSERTION-lightgrey">
-  <img alt="public release: false by default" src="https://img.shields.io/badge/public_release-false%20by%20default-0a7ea4">
+  <img alt="source role required" src="https://img.shields.io/badge/source_role-required-2ea44f">
+  <img alt="knowledge character required" src="https://img.shields.io/badge/knowledge_character-required-6f42c1">
+  <img alt="rights fail closed" src="https://img.shields.io/badge/rights-fail--closed-b60205">
+  <img alt="publication not authorized" src="https://img.shields.io/badge/publication-not_authorized-lightgrey">
 </p>
 
 <p align="center">
-  <a href="#status-snapshot">Status</a> ·
-  <a href="#scope">Scope</a> ·
+  <a href="#purpose">Purpose</a> ·
   <a href="#repo-fit">Repo fit</a> ·
-  <a href="#operating-law">Operating law</a> ·
-  <a href="#required-fields">Fields</a> ·
+  <a href="#accepted-inputs">Inputs</a> ·
+  <a href="#required-descriptor-fields">Descriptor fields</a> ·
   <a href="#source-roles">Source roles</a> ·
-  <a href="#knowledge-characters">Knowledge characters</a> ·
-  <a href="#candidate-source-family-register">Source families</a> ·
-  <a href="#activation-gates">Activation gates</a> ·
-  <a href="#machine-registry-shape">Machine shape</a> ·
-  <a href="#open-verification">Open verification</a>
+  <a href="#seed-source-family-register">Seed register</a> ·
+  <a href="#activation-states">Activation states</a> ·
+  <a href="#governed-source-flow">Flow</a> ·
+  <a href="#validation-and-policy-gates">Validation</a> ·
+  <a href="#definition-of-done">Done</a>
 </p>
 
 > [!IMPORTANT]
-> This registry does **not** activate sources. Every source family listed here is blocked from public release until a source descriptor, rights review, source-role review, evidence closure, validation, policy decision, review state, release manifest, correction path, and rollback target prove otherwise.
+> This file is a **human-facing source-registry posture document**. It is not a live connector, source credential store, proof pack, release manifest, public layer, API route, scheduler, or source-rights approval.
+
+> [!CAUTION]
+> Sources with unresolved rights, terms, verification status, source role, knowledge character, freshness, or public-release permission remain **inactive for public release**. KFM should `DENY`, `ABSTAIN`, `ERROR`, `HOLD`, or quarantine rather than publish a polished but weakly supported air/atmosphere claim.
 
 ---
 
-## Status snapshot
+## Purpose
 
-| Field | Status |
+The Atmosphere / Air source registry answers five review questions before a source can support a candidate, map layer, Evidence Drawer payload, Focus Mode answer, release candidate, or public export:
+
+| Question | Registry answer |
 |---|---|
-| Target file | `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md` |
-| Document role | Human-facing source registry and activation posture for the Atmosphere / Air lane. |
-| Current revision | Expands the prior thin source-registry stub into a reviewable governance registry. |
-| Repo path | CONFIRMED repo-visible through GitHub connector; local checkout was **not** mounted in the workspace. |
-| Public release | BLOCKED by default for all listed source families. |
-| Live source activation | BLOCKED; no live fetch, credentialed access, automation, or publication is authorized by this file. |
-| Machine registry | NEEDS VERIFICATION: mirror into `data/registry/atmosphere/sources.yaml`, `data/registry/air/sources.yaml`, or repo-native equivalent only after schema-home and slug compatibility are verified. |
-| Enforcement maturity | PARTIAL / NEEDS VERIFICATION: adjacent docs, ADRs, policy fragments, validators, and no-network candidates exist, but this file does not prove current CI enforcement or runtime behavior. |
+| What source is this? | Stable `source_id`, display name, publisher/steward, access surfaces, and source descriptor reference. |
+| What can it support? | `source_role`, source authority boundaries, parameter support, spatial/temporal support, and known limitations. |
+| What kind of knowledge does it produce? | `knowledge_character`, such as observed sensor, public AQI report, model field, remote-sensing mask, advisory context, or derived fusion. |
+| May KFM use it publicly? | Rights, attribution, terms, verification state, public-release flag, policy label, and review obligations. |
+| What downstream gates apply? | Required fixtures, validators, EvidenceRefs, receipts, proofs, release manifests, correction paths, and rollback targets. |
 
----
+This registry exists to prevent source sprawl and false certainty. Atmosphere/Air data can look visually similar after mapping, but a PM2.5 observation, AQI report, AOD product, smoke plume mask, model field, regulatory archive, advisory, low-cost sensor candidate, and fusion product carry different truth burdens.
 
-## Scope
+### This file governs
 
-This registry governs how maintainers describe, review, and activate Atmosphere / Air sources before they can support KFM claims.
+- human-readable source-registry posture for the Atmosphere / Air lane;
+- source-family review status and activation posture;
+- required source-descriptor fields;
+- source role and knowledge-character expectations;
+- source onboarding and update triggers;
+- fail-closed public-release rules.
 
-It covers:
+### This file does not govern
 
-- source-family candidates;
-- required source descriptor fields;
-- source-role and knowledge-character discipline;
-- source rights, terms, attribution, automation, access, and redistribution posture;
-- public-release defaults;
-- candidate source-family seed rows;
-- fail-closed activation gates;
-- update triggers and review checks.
-
-It does **not** define executable schemas, policy-as-code, connector implementations, raw data storage, release manifests, or deployed API/UI behavior. Those belong under their responsibility roots and must link back here when source posture changes.
-
-### One-sentence rule
-
-A source may be visible in this registry before it is trusted, but it may not become public KFM evidence until source role, knowledge character, rights, evidence, policy, review, release, correction, and rollback are all inspectable.
+- final machine-readable source registry shape;
+- live source connectors or schedules;
+- executable Rego/OPA policy;
+- final JSON Schemas;
+- proof packs, EvidenceBundles, ReleaseManifests, or public artifacts;
+- MapLibre layer publication;
+- Focus Mode runtime behavior.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -88,119 +87,153 @@ A source may be visible in this registry before it is trusted, but it may not be
 
 ## Repo fit
 
-This document belongs in `docs/` because it is human-facing source governance. It should guide machine registries, validators, policy, connectors, and release records without becoming those systems.
+**Target file:** `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md`
 
-| Neighbor / dependency | Relative link | Status | Relationship |
+This file belongs under `docs/domains/atmosphere_air/governance/` because it is a human-facing domain-governance document. It should point to machine registries, policies, schemas, fixtures, and release objects without becoming those authority surfaces itself.
+
+| Surface | Path | Status | Role |
 |---|---|---:|---|
-| Domain landing page | [`../README.md`](../README.md) | CONFIRMED repo-visible | Lane scope, accepted inputs, exclusions, governed flow, first-PR discipline. |
-| Security and rights | [`./SECURITY_AND_RIGHTS.md`](./SECURITY_AND_RIGHTS.md) | CONFIRMED repo-visible | Rights, access, public-release, and exposure guardrails. |
-| Validation status | [`./VALIDATION_STATUS.md`](./VALIDATION_STATUS.md) | CONFIRMED repo-visible | Current validation inventory and publication-blocked status. |
-| Governance index | [`./README.md`](./README.md) | CONFIRMED repo-visible / EMPTY | Should index this registry, validation, rights, promotion, drift, and rollback docs. |
-| Architecture | [`../architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) | CONFIRMED repo-visible | Trust path, source-role boundary, current no-network slice, public-surface contract. |
-| Knowledge-character boundary | [`../architecture/KNOWLEDGE_CHARACTER.md`](../architecture/KNOWLEDGE_CHARACTER.md) | CONFIRMED repo-visible | Anti-collapse taxonomy that source descriptors must preserve. |
-| Source-role ADR | [`../../../adr/ADR-0312-atmosphere-air-source-role-boundaries.md`](../../../adr/ADR-0312-atmosphere-air-source-role-boundaries.md) | CONFIRMED repo-visible / draft | Repo-wide source-role and knowledge-character decision boundary. |
-| Slug compatibility ADR | [`../../../adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`](../../../adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md) | CONFIRMED repo-visible / proposed | Compatibility boundary for `atmosphere_air`, `air`, and `atmosphere`. |
-| No-network QA candidate | [`../../../../data/processed/air/qa_summary.example.json`](../../../../data/processed/air/qa_summary.example.json) | REPO-REFERENCED | Candidate-only processed output; not public truth. |
-| No-network run receipt | [`../../../../data/receipts/air/run_receipt.example.json`](../../../../data/receipts/air/run_receipt.example.json) | REPO-REFERENCED | Process memory; not proof or release authority. |
-| QA policy fragment | [`../../../../policy/air/air_qa.rego`](../../../../policy/air/air_qa.rego) | REPO-REFERENCED / NEEDS VERIFICATION | Current air QA denial pressure; not complete whole-domain source policy. |
-| QA validator | [`../../../../tools/validators/air/validate_air_qa.py`](../../../../tools/validators/air/validate_air_qa.py) | REPO-REFERENCED / NEEDS VERIFICATION | Validator pressure; full schema inventory and run status must be verified. |
+| Domain landing page | [`../README.md`](../README.md) | CONFIRMED adjacent doc | Lane scope, accepted inputs, exclusions, denial posture, and public-safe boundaries. |
+| Lane architecture | [`../architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) | CONFIRMED adjacent doc | Trust path from source admission through public surfaces. |
+| Knowledge characters | [`../architecture/KNOWLEDGE_CHARACTER.md`](../architecture/KNOWLEDGE_CHARACTER.md) | CONFIRMED adjacent doc | Taxonomy and anti-collapse rules for atmosphere/air knowledge. |
+| Parameter registry | [`../architecture/PARAMETER_REGISTRY.md`](../architecture/PARAMETER_REGISTRY.md) | CONFIRMED adjacent doc | Parameter identity, units, bounds, caveats, and unit discipline. |
+| Source-role ADR | [`../../../adr/ADR-0312-atmosphere-air-source-role-boundaries.md`](../../../adr/ADR-0312-atmosphere-air-source-role-boundaries.md) | CONFIRMED repo-wide ADR | Mandatory source-role and knowledge-character boundary. |
+| Slug compatibility ADR | [`../../../adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md`](../../../adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md) | CONFIRMED repo-wide ADR | Keeps `atmosphere_air`, `air`, and `atmosphere` compatibility explicit. |
+| No-network air connector | [`../../../../connectors/pipelines/air/README.md`](../../../../connectors/pipelines/air/README.md) | CONFIRMED repo-visible lane | Candidate/receipt producer; not public release. |
+| Kansas Mesonet descriptor draft | [`../../../../contracts/source/kansas_mesonet_source_descriptor.md`](../../../../contracts/source/kansas_mesonet_source_descriptor.md) | CONFIRMED repo-visible draft | Source-admission draft; not activated connector or release artifact. |
+| Policy crosswalk | [`../../../../policy/crosswalk/domain-lane-policy-map.md`](../../../../policy/crosswalk/domain-lane-policy-map.md) | CONFIRMED repo-visible crosswalk | Lane burden, not an executable policy engine. |
+| Machine registry | `data/registry/atmosphere/sources.yaml` or repo-equivalent | PROPOSED / NEEDS VERIFICATION | Machine-readable source registry after repo convention review. |
+| Machine schemas | `schemas/contracts/v1/air/` and/or `schemas/contracts/v1/atmosphere/` | NEEDS VERIFICATION | Schema family must follow ADR-0418 and schema-home decision. |
+| Policy rules | `policy/air/` or `policy/atmosphere/` | NEEDS VERIFICATION | Executable admissibility and release gates. |
 
-> [!WARNING]
-> `atmosphere_air` is the current documentation lane, `air` is the current no-network implementation/tooling slice, and `atmosphere` is a proposed whole-domain schema concept. Do not silently rename, collapse, alias, or publish across those surfaces without ADR-backed migration, fixtures, validators, policy checks, and rollback.
+### Responsibility-root rule
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Operating law
-
-### Registry law
-
-| Rule | Required behavior |
+| Root | Registry relationship |
 |---|---|
-| Descriptor first | Every source family begins as a `SourceDescriptor` candidate before ingest, normalization, analysis, map delivery, or Focus Mode use. |
-| Role and character required | `source_role` and `knowledge_character` are mandatory trust-bearing fields. |
-| Unknown rights block release | `rights_spdx: NOASSERTION`, unknown source terms, unknown attribution, unknown automation permission, or unknown redistribution posture blocks public release. |
-| Public release is explicit | `public_release_allowed` defaults to `false`; only review-backed source descriptors may change it. |
-| Registry is not evidence | A row in this registry does not support a public claim by itself. Claims still require EvidenceBundle closure and release state. |
-| Candidate is not publication | A no-network fixture, processed candidate, run receipt, QA summary, layer draft, or release candidate is not public truth. |
-| Derived products stay derived | Model, mask, advisory, fusion, interpolation, and index/report products must expose source role, method, uncertainty, and input evidence. |
-| Live-state claims require freshness | Current or live wording requires source cadence, retrieval time, observation/model/report time, issue/expiry time where applicable, and freshness state. |
-| Rollback must be possible | Any source activation that affects public artifacts must have a correction and rollback path. |
+| `docs/` | Explains source governance and review expectations. |
+| `contracts/` | Defines semantic object meaning, such as `SourceDescriptor`. |
+| `schemas/` | Defines machine-checkable shape. |
+| `policy/` | Decides admissibility, denial, abstention, redaction, and release posture. |
+| `connectors/` | Performs source-facing acquisition or no-network candidate generation. |
+| `pipelines/` | Performs transformation and normalization. |
+| `data/` | Stores lifecycle data, receipts, proofs, catalogs, and published artifacts. |
+| `release/` | Stores or references release decisions, manifests, rollback cards, and correction state when repo convention confirms. |
 
-### Source lifecycle
-
-```mermaid
-flowchart LR
-  intake["Candidate source family"] --> descriptor["SourceDescriptor<br/>role + character + rights"]
-  descriptor --> rights{"Rights / terms<br/>verified?"}
-  rights -->|No| blocked["BLOCKED<br/>public_release_allowed=false"]
-  rights -->|Yes| fixture["No-network fixture<br/>or limited probe"]
-  fixture --> validation{"Schema + policy<br/>validation"}
-  validation -->|Fail| quarantine["HOLD / QUARANTINE<br/>reason-coded failure"]
-  validation -->|Pass| evidence{"EvidenceBundle<br/>closure"}
-  evidence -->|Unresolved| abstain["ABSTAIN / DENY"]
-  evidence -->|Resolved| release{"PromotionDecision<br/>release + rollback"}
-  release -->|Blocked| blocked
-  release -->|Approved| published["PUBLISHED<br/>governed public surface"]
-
-  blocked -. no public release .-> descriptor
-  quarantine -. corrective action .-> descriptor
-```
+> [!NOTE]
+> `atmosphere_air` is the current documentation lane, `air` is the current no-network implementation/test slice, and `atmosphere` is a proposed whole-domain schema/normalization concept until schema inventory and ADR-backed migration prove otherwise.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Required fields
+## Current registry posture
 
-Every source descriptor for this lane must carry or resolve the fields below.
+| Registry surface | Status | Meaning |
+|---|---:|---|
+| Human source registry file | CONFIRMED | This repo-visible Markdown file is the human-facing source-registry posture for the lane. |
+| Prior registry content | CONFIRMED | The prior file identified required fields and role expectations but did not provide source-family rows, activation states, or onboarding workflow. |
+| Machine source registry | NEEDS VERIFICATION | A future `sources.yaml` or equivalent must be confirmed against active repo conventions before being treated as canonical. |
+| Kansas Mesonet descriptor | CONFIRMED draft | Repo-visible source-admission draft exists, but it does not activate a connector or public release. |
+| No-network `air` slice | CONFIRMED candidate lane | Repo-visible connector and example artifacts exist as candidate/process-memory surfaces, not proof or public truth. |
+| Live source activation | UNKNOWN / NOT AUTHORIZED HERE | This registry does not activate AirNow, AQS, OpenAQ, PurpleAir, NOAA/NWS, NASA, Mesonet, model, smoke, or advisory sources. |
+| Public release | DENY by default | Public release is blocked until rights, evidence, policy, review, catalog/proof, release manifest, correction path, and rollback target close. |
+| CI enforcement | NEEDS VERIFICATION | Tests, workflows, branch rules, and policy engine execution must be checked in the active repo before enforcement claims. |
 
-| Field | Required | Purpose | Public-release effect |
+---
+
+## Accepted inputs
+
+| Input | Accepted here? | Required handling |
+|---|---:|---|
+| Source-family candidate | Yes | Add as a row with `verification_status: UNKNOWN` and `public_release_allowed: false` until verified. |
+| SourceDescriptor draft | Yes | Link or summarize; descriptor remains source admission, not proof or release. |
+| Official source documentation reference | Yes | Record access surface and verification date; do not infer undocumented endpoints. |
+| Rights / terms / attribution review note | Yes | Required before public-release consideration. |
+| Source-role decision | Yes | Must state what the source is competent to support. |
+| Knowledge-character mapping | Yes | Must state what kind of object the source may produce. |
+| Parameter-support note | Yes | Must align with the parameter registry and unit rules. |
+| Offline fixture plan | Yes | Use fixture rows to support validators without live source activation. |
+| Run receipt reference | Yes | Process memory only; do not treat as proof. |
+| EvidenceBundle or proof references | Reference only | Proof objects live under proof/release surfaces, not in this registry. |
+| Source conflict or limitation note | Yes | Record as caveat, review requirement, or blocker. |
+
+---
+
+## Exclusions
+
+Do **not** put these in this registry:
+
+- API keys, tokens, cookies, credentials, secrets, `.env` values, or private endpoint details;
+- raw source payloads, bulk downloads, or source mirrors;
+- scheduled live-ingest authorization;
+- production connector credentials or runtime config;
+- proof packs, EvidenceBundles, ReleaseManifests, or public layer descriptors;
+- MapLibre style JSON or public tiles;
+- Focus Mode prompts or model output;
+- public claims that bypass EvidenceBundle resolution;
+- source-family rows that silently collapse AQI, concentration, AOD, smoke masks, model fields, advisories, and fusion products;
+- machine schemas or policy rules that should live under `schemas/` or `policy/`;
+- broad renames from `air` to `atmosphere` or vice versa without ADR-backed migration and rollback.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Required descriptor fields
+
+Every source descriptor or source-registry row should carry the following fields before supporting candidate generation, validation, Evidence Drawer payloads, Focus Mode context, or release review.
+
+| Field | Required | Purpose | Fail-closed rule |
 |---|---:|---|---|
-| `source_id` | yes | Stable source-family identity. | Missing value blocks all use. |
-| `display_name` | yes | Human-readable source name. | Missing value blocks review. |
-| `source_family_status` | yes | `candidate`, `blocked`, `review`, `fixture_only`, `release_candidate`, `published`, `deprecated`, `withdrawn`, or `quarantined`. | Anything below `published` is not public truth. |
-| `source_role` | yes | What the source is competent to support. | Missing/unknown value denies publication. |
-| `knowledge_character` | yes | What kind of knowledge the source contributes. | Missing/unknown value denies publication. |
-| `publisher` | yes | Publisher, steward, or responsible organization. | Missing value blocks activation. |
-| `jurisdiction_or_scope` | yes | Geographic, institutional, or thematic scope. | Required for scoped claims. |
-| `access_url` | yes, when known | Source home or access surface. | Missing value keeps descriptor in review. |
-| `api_docs_url` | yes, when applicable | API or service documentation. | Missing value blocks automation. |
-| `rights_spdx` | yes | SPDX value or `NOASSERTION`. | `NOASSERTION` blocks public release. |
-| `terms_url` | yes, when available | Source terms, API terms, or data-use policy. | Missing/unknown value blocks public release. |
-| `attribution` | yes | Attribution/citation requirement. | Missing/unknown value blocks public release. |
-| `redistribution_allowed` | yes | Whether KFM can redistribute derived/public artifacts. | `false` or `unknown` blocks public release. |
-| `automation_allowed` | yes | Whether automated access is permitted. | `false` or `unknown` blocks live connector activation. |
-| `auth_required` | yes | `none`, `api_key`, `account`, `restricted`, or `unknown`. | Credentialed sources require secret-handling review. |
-| `rate_limit_notes` | yes, when known | Request cadence and operational limits. | Unknown value blocks automation until reviewed. |
-| `freshness_expectation` | yes, when current-state claims are possible | Expected cadence and stale-state logic. | Missing value blocks live/current wording. |
-| `spatial_support` | yes | Point, grid, polygon, raster, text region, county/state, or other spatial support. | Required for map delivery. |
-| `temporal_support` | yes | Observation, model valid, issue/expiry, retrieval, release, or archive time basis. | Required for time-aware claims. |
-| `parameters_supported` | yes | Parameters, variables, indicators, or classes. | Required for parameter registry and unit validation. |
-| `known_limitations` | yes | Caveats, exclusions, quality flags, interpretation warnings. | Material caveats must surface in Evidence Drawer. |
-| `evidence_requirements` | yes | EvidenceBundle and citation support needed before claims. | Missing value blocks promotion. |
-| `public_release_allowed` | yes | Explicit public-release posture. | Defaults to `false`. |
-| `verification_status` | yes | Current verification state. | `UNKNOWN` or `NEEDS_VERIFICATION` blocks public release. |
-| `last_verified_at` | yes, nullable | Date/time of last source review. | Null means unverified. |
-| `review_owner` | yes | Steward responsible for review. | TODO owner blocks activation. |
-| `rollback_notes` | yes | How to disable, withdraw, or roll back source-derived public artifacts. | Missing rollback notes block publication. |
+| `source_id` | Yes | Stable identifier for registry, fixtures, evidence, and receipts. | Missing ID blocks source admission. |
+| `display_name` | Yes | Human-readable source title. | Missing title blocks review clarity. |
+| `source_role` | Yes | What the source is competent to support. | Missing role returns `ATMOS_MISSING_SOURCE_ROLE`. |
+| `knowledge_character` | Yes | What kind of knowledge the source contributes. | Missing character returns `ATMOS_MISSING_KNOWLEDGE_CHARACTER`. |
+| `publisher` | Yes | Responsible publisher, steward, or provider. | Unknown publisher routes to review. |
+| `access_url` | Yes, when public | Human landing page or source access point. | Undocumented access fails source review. |
+| `api_docs_url` | When applicable | Documented API/service reference. | No private or inferred endpoint activation. |
+| `rights_spdx` | Yes | SPDX-like rights/license value or `NOASSERTION`. | Unknown rights block public release. |
+| `attribution` | Yes | Required public attribution or citation text. | Missing attribution blocks release. |
+| `rate_limit_notes` | When applicable | Quotas, cadence, limits, and throttling. | Unknown rate limits block live automation. |
+| `auth_required` | Yes | Whether credentials, keys, or approval are required. | Credential needs route to restricted config, not docs. |
+| `freshness_expectation` | Yes | Expected update cadence or stale threshold. | Missing freshness blocks current-state claims. |
+| `spatial_support` | Yes | Station, grid, polygon, region, mask, raster, or report area support. | Ambiguous support blocks map claims. |
+| `temporal_support` | Yes | Observation, valid, report, run, retrieval, effective, or archive time support. | Missing time support returns `ABSTAIN` for time-sensitive claims. |
+| `parameters_supported` | Yes | Parameter IDs or families supported by the source. | Unknown parameter support blocks normalization. |
+| `known_limitations` | Yes | Caveats, QA/QC limits, representativeness, uncertainty. | Hidden caveats block public release. |
+| `public_release_allowed` | Yes | Boolean default for public exposure. | `false` blocks public release. |
+| `default_policy_label` | Yes | Default access/policy posture. | Missing label routes to review. |
+| `raw_retention_policy` | Yes | Whether and how source-native payloads are retained. | Missing retention blocks evidence closure. |
+| `last_verified_at` | Yes | Date source terms/shape were verified. | Missing date keeps `verification_status: UNKNOWN`. |
+| `verification_status` | Yes | `UNKNOWN`, `NEEDS_VERIFICATION`, `VERIFIED`, `DEPRECATED`, `BLOCKED`, or equivalent. | Anything except a reviewed allow-state blocks public release. |
 
-### Recommended verification status enum
+### Minimal source row template
 
-| Status | Meaning | Public release |
-|---|---|---:|
-| `UNKNOWN` | Not reviewed or not enough evidence. | no |
-| `NEEDS_VERIFICATION` | Review task exists but is incomplete. | no |
-| `DESCRIPTOR_VERIFIED` | Identity, role, character, and access have been reviewed. | no |
-| `RIGHTS_VERIFIED` | Rights, terms, attribution, automation, and redistribution have been reviewed. | no by itself |
-| `FIXTURE_VALIDATED` | No-network fixture validates and produces safe candidate/receipt output. | no by itself |
-| `POLICY_CHECKED` | Policy gates pass for the bounded scope. | no by itself |
-| `RELEASE_CANDIDATE` | Candidate has proof/release material but is not public. | no |
-| `PUBLISHED` | Released through governed promotion with rollback target. | yes, only for release scope |
-| `DEPRECATED` | Source family retained for lineage but not new use. | no |
-| `WITHDRAWN` | Source family or release was withdrawn. | no |
-| `QUARANTINED` | Source family is unsafe, conflicted, or unsuitable for use. | no |
+```yaml
+source_id: TODO-VERIFY
+display_name: TODO-VERIFY
+source_role: TODO-VERIFY
+knowledge_character:
+  - TODO-VERIFY
+publisher: TODO-VERIFY
+access_url: TODO-VERIFY
+api_docs_url: TODO-VERIFY
+rights_spdx: NOASSERTION
+attribution: TODO-VERIFY
+rate_limit_notes: TODO-VERIFY
+auth_required: TODO-VERIFY
+freshness_expectation: TODO-VERIFY
+spatial_support: TODO-VERIFY
+temporal_support: TODO-VERIFY
+parameters_supported: []
+known_limitations: []
+public_release_allowed: false
+default_policy_label: restricted-until-reviewed
+raw_retention_policy: TODO-VERIFY
+last_verified_at: TODO-VERIFY-YYYY-MM-DD
+verification_status: UNKNOWN
+activation_state: proposed
+```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -208,322 +241,341 @@ Every source descriptor for this lane must carry or resolve the fields below.
 
 ## Source roles
 
-The source-role vocabulary below is the human-facing registry vocabulary. Machine enums must be verified against active schemas before enforcement is claimed.
+The source-role vocabulary below is the human-facing registry vocabulary for this lane. Machine enum names must be verified against the active schema family before enforcement claims.
 
-| Source role | Use when | Must not support by itself |
+| Source role | Use when the source is competent to support… | Must not be used as… |
 |---|---|---|
-| `observation_provider` | Publisher provides station, sensor, or monitor observations. | AQI/report semantics, model fields, or derived/fused products. |
-| `observation_aggregator` | Platform aggregates observations from multiple providers. | Source-owner rights or provider-level authority unless separately resolved. |
-| `regulatory_archive` | Source is a quality-assured or regulatory archive. | Live/current state by default. |
-| `public_index_report` | Source provides AQI, NowCast, index, or public-report objects. | Raw concentration or regulatory archive truth. |
-| `alert_advisory_issuer` | Source issues watches, warnings, advisories, health messages, or public notices. | KFM emergency instruction or observed concentration. |
-| `low_cost_sensor_network` | Source includes consumer/community/low-cost sensor records. | Regulatory truth without correction, caveats, and rights review. |
-| `model_field_provider` | Source publishes forecast, analysis, reanalysis, hindcast, chemistry, smoke, or aerosol model fields. | Observed measurements. |
-| `model_forecast` | Source is specifically a forecast model family. | Observation or archive truth. |
-| `remote_sensing_classification` | Source publishes smoke, plume, aerosol, fire, haze, cloud, or other classification masks. | Exposure or surface concentration without model support. |
-| `remote_sensing_fire` | Source publishes active fire or hotspot context. | Exposure measurement. |
-| `remote_sensing_optical` | Source publishes AOD, visibility, aerosol optical, or imagery-derived context. | PM2.5 concentration without governed model assumptions. |
-| `meteorological_context_provider` | Source provides weather context: wind, temperature, humidity, pressure, precipitation, boundary-layer support. | Air-quality concentration unless measured as such. |
-| `network_site_context_provider` | Source provides station, network, site, instrument, cadence, or health metadata. | Measurement values by itself. |
-| `derived_fusion_provider` | Source or KFM process produces interpolation, consensus, bias correction, ensemble, or fused outputs. | Canonical source observation. |
-| `baseline_context_provider` | Source provides normals, baselines, anomaly support, persistence windows, or temporal support. | Live event/alert by itself. |
-| `internal_fixture_generator` | Source is an internal no-network fixture, stub, or test generator. | Real-world public truth. |
+| `OBSERVATION_PROVIDER` | Station, instrument, or ground observations with site/time context. | Model provider, AQI report, or regulatory archive unless explicitly source-backed. |
+| `PUBLIC_REPORTING_PROVIDER` | Public AQI, NowCast-style reports, area reports, or agency index objects. | Raw concentration source. |
+| `REGULATORY_ARCHIVE_PROVIDER` | Quality-assured or regulatory archive evidence. | Live/current source by default. |
+| `LOW_COST_SENSOR_PROVIDER` | Contributor, consumer, or low-cost sensor readings needing correction/caveats. | Regulatory truth or unrestricted public observation. |
+| `MODEL_PROVIDER` | Forecast, reanalysis, hindcast, transport, chemistry, aerosol, smoke, or climate model fields. | Observed measurement provider. |
+| `REMOTE_SENSING_PROVIDER` | Satellite, aerial, fire, smoke, AOD, haze, plume, cloud, or classification/mask products. | Surface exposure or concentration provider by default. |
+| `DERIVED_PRODUCT_GENERATOR` | Interpolation, bias correction, fusion, ensemble, consensus, anomaly, or derived surface products. | Canonical source observation provider. |
+| `ADVISORY_ISSUER` | Official public messages, advisories, alerts, or health recommendations. | KFM emergency instruction authority. |
+| `NETWORK_METADATA_PROVIDER` | Station/network roster, health, cadence, active state, instruments, and siting context. | Measurement value provider. |
+| `CLIMATE_CONTEXT_PROVIDER` | Normals, baselines, anomaly context, downscaling, and temporal support. | Live hazard or emergency alert source. |
+| `INTERNAL_FIXTURE_PROVIDER` | KFM no-network synthetic or example candidate material. | Real-world source or public truth. |
+
+> [!TIP]
+> A source can produce more than one object family, but each object should still carry a precise source role and knowledge character. Do not let one source row authorize every interpretation a map can visually imply.
 
 ---
 
 ## Knowledge characters
 
-Each source descriptor must declare the kind of knowledge it can contribute.
+Each source row must identify the knowledge character(s) it may produce or support.
 
-| Knowledge character | Registry boundary | Public handling |
+| Knowledge character | Source-registry meaning | Public-release caution |
 |---|---|---|
-| `OBSERVED_SENSOR` | Measured station/ground observation with site/instrument context. | Governed evidence only; raw and normalized units preserved. |
-| `PUBLIC_AQI_REPORT` | AQI, NowCast, public index, or agency report. | Report/index semantics; never raw concentration. |
-| `REGULATORY_ARCHIVE` | Quality-assured or regulatory archive evidence. | Historical/regulatory evidence with temporal caveats. |
-| `LOW_COST_SENSOR` | Contributor/consumer sensor network requiring correction and caveats. | Deny public release until correction, confidence, rights, and limitations are explicit. |
-| `ATMOSPHERIC_MODEL_FIELD` | Forecast, reanalysis, hindcast, smoke, aerosol, transport, or chemistry model field. | Label as modeled and expose model identity, valid time, uncertainty, and caveats. |
-| `REMOTE_SENSING_MASK` | Smoke, AOD, fire, aerosol, haze, cloud, plume, or classification product. | Context/classification; not exposure or PM concentration by default. |
-| `CLIMATE_ANOMALY_CONTEXT` | Normals, anomalies, downscaling, hindcasts, baselines. | Context; not live emergency alerting. |
-| `DERIVED_FUSION` | Interpolation, consensus, bias correction, ensemble, fused grid/product. | Expose all input EvidenceRefs, method, uncertainty, and transform identity. |
-| `METEOROLOGICAL_CONTEXT` | Wind, temperature, humidity, pressure, transport, boundary-layer support. | Interpretation support; not air-quality concentration unless source-backed. |
-| `VISIBILITY_AND_AEROSOL_CONTEXT` | Visibility, haze, AOD, opacity, optical aerosol burden. | Do not treat as PM without model assumptions. |
-| `FIRE_AND_EMISSIONS_CONTEXT` | Fire hotspots, source indicators, inventories, emissions context. | Not exposure measurement. |
-| `ALERT_AND_ADVISORY_CONTEXT` | Agency notices, advisories, public health messages, warnings. | Preserve issuer and scope; KFM is not a life-safety alerting authority. |
-| `NETWORK_AND_SITE_CONTEXT` | Station metadata, provider IDs, cadence, instrument state, health, siting caveats. | Context only. |
-| `BASELINE_AND_TEMPORAL_SUPPORT` | Climatology, rolling baseline, persistence, hysteresis, freshness support. | Supports scoped claims; not standalone proof. |
+| `OBSERVED_SENSOR` | Ground/station/instrument measurement. | Needs site, instrument, unit, time, QA/QC, source payload hash, and EvidenceRefs. |
+| `PUBLIC_AQI_REPORT` | AQI, NowCast-style index, public report, or agency index object. | Never raw concentration by default. |
+| `REGULATORY_ARCHIVE` | Quality-assured, historical, or regulatory archive evidence. | Not live/current by default. |
+| `LOW_COST_SENSOR` | Contributor or consumer sensor record needing correction and caveats. | Requires correction method, limitations, confidence, and rights review. |
+| `ATMOSPHERIC_MODEL_FIELD` | Forecast, reanalysis, hindcast, transport, chemistry, aerosol, or smoke model field. | Must remain modeled and expose uncertainty/model-card support. |
+| `REMOTE_SENSING_MASK` | Smoke, AOD, fire, aerosol, haze, cloud, or plume classification/support product. | Not exposure or concentration by default. |
+| `CLIMATE_ANOMALY_CONTEXT` | Normals, anomalies, baselines, downscaling, or climate context. | Not a live emergency alert. |
+| `DERIVED_FUSION` | Interpolation, bias correction, ensemble, consensus, or fused surface. | Must expose inputs, method, transform hash, and uncertainty. |
+| `METEOROLOGICAL_CONTEXT` | Wind, temperature, humidity, pressure, boundary layer, or transport support. | Not air-quality concentration unless source-backed. |
+| `VISIBILITY_AND_AEROSOL_CONTEXT` | Visibility, haze, AOD, opacity, or optical aerosol context. | Not PM concentration without governed model assumptions. |
+| `FIRE_AND_EMISSIONS_CONTEXT` | Fire hotspots, emissions inventories, smoke-source indicators, or source attribution context. | Not exposure measurement. |
+| `ALERT_AND_ADVISORY_CONTEXT` | Public agency notice, recommendation, advisory, or message. | Not KFM life-safety instruction. |
+| `NETWORK_AND_SITE_CONTEXT` | Station metadata, cadence, active state, instruments, siting caveats, health events. | Not measurement value. |
+| `BASELINE_AND_TEMPORAL_SUPPORT` | Climatology, rolling baseline, persistence, hysteresis, or freshness support. | Not standalone claim without scoped evidence. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Candidate source-family register
+## Seed source-family register
 
-All rows below are **candidate** rows. They are not public-release approvals.
+This table is a **source-family backlog and review register**, not an activation table. Unless a row explicitly says otherwise, `public_release_allowed` remains `false`.
 
-| `source_id` | Source family | Source role | Knowledge character | Current registry posture | KFM handling |
-|---|---|---|---|---:|---|
-| `epa_aqs` | [EPA AQS / AirData API](https://aqs.epa.gov/aqsweb/documents/data_api.html) | `regulatory_archive` | `REGULATORY_ARCHIVE` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Archive/regulatory evidence. Do not treat as real-time state. Source-specific terms, API key handling, timeliness, fields, and QA semantics must be reviewed. |
-| `airnow_api` | [AirNow API](https://docs.airnowapi.org/about) | `public_index_report` / `alert_advisory_issuer` | `PUBLIC_AQI_REPORT` / `ALERT_AND_ADVISORY_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | AQI/reporting context. Never treat AQI as raw concentration. Preliminary/forecast/report caveats must surface. |
-| `nws_alerts_api` | [NWS Alerts Web Service](https://www.weather.gov/documentation/services-web-alerts) | `alert_advisory_issuer` | `ALERT_AND_ADVISORY_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Advisory context only. KFM must not become an emergency alerting system or EAS activation source. |
-| `kansas_mesonet_context` | [Kansas Mesonet RESTful Services](https://mesonet.k-state.edu/rest/) + [Data Usage Policy](https://mesonet.k-state.edu/about/usage/) | `meteorological_context_provider` / `network_site_context_provider` | `METEOROLOGICAL_CONTEXT` / `NETWORK_AND_SITE_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Kansas weather/site context. Automated ingest requires written consent; citation and preliminary-data caveats required. |
-| `openaq_v3` | [OpenAQ API](https://docs.openaq.org/) | `observation_aggregator` | `OBSERVED_SENSOR` / guarded `LOW_COST_SENSOR` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Aggregated ground-level measurements. Provider provenance, owner/source terms, attribution, parameter mappings, and redistribution posture must be reviewed per provider. |
-| `purpleair_like` | [PurpleAir API use guidance](https://community.purpleair.com/t/api-use-guidelines/1589) or equivalent low-cost sensor network | `low_cost_sensor_network` | `LOW_COST_SENSOR` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Low-cost sensor candidate only. Requires correction method, caveats, attribution, API access review, and limitations before any public use. |
-| `noaa_hrrr_smoke` | [NOAA/NCEP HRRR](https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/hrrr.php) / HRRR-Smoke family | `model_forecast` | `ATMOSPHERIC_MODEL_FIELD` / `FIRE_AND_EMISSIONS_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Forecast/model context. Do not label as observed. Expose model run, valid time, forecast horizon, variable dictionary, and uncertainty/caveats. |
-| `noaa_hms_smoke` | [NOAA HMS Fire and Smoke Product](https://www.ospo.noaa.gov/products/land/hms.html) | `remote_sensing_classification` | `REMOTE_SENSING_MASK` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Smoke plume classification/mask. Do not treat as surface PM concentration or exposure. Preserve analyst/product caveats and observation time. |
-| `nasa_firms_active_fire` | [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/) | `remote_sensing_fire` | `FIRE_AND_EMISSIONS_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Active fire/hotspot context. Not exposure measurement. RT/NRT/science-quality differences and login/API terms must be reviewed. |
-| `noaa_goes_aerosol_smoke` | [NOAA/NESDIS STAR Aerosol Products](https://www.star.nesdis.noaa.gov/smcd/emb/aerosols/products_geo.php) | `remote_sensing_optical` | `VISIBILITY_AND_AEROSOL_CONTEXT` / `REMOTE_SENSING_MASK` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | AOD/optical/aerosol context. Do not convert to PM2.5 without governed model assumptions and EvidenceBundle support. |
-| `cams_global_atmosphere` | [Copernicus Atmosphere Monitoring Service](https://www.copernicus.eu/en/copernicus-services/atmosphere) | `model_field_provider` | `ATMOSPHERIC_MODEL_FIELD` / `CLIMATE_ANOMALY_CONTEXT` | `NEEDS_VERIFICATION`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Global atmospheric composition model/analysis/forecast context. Requires access, license, attribution, variables, uncertainty, and domain-fit review. |
-| `kfm_no_network_air_fixture` | KFM internal no-network fixture family | `internal_fixture_generator` | `OBSERVED_SENSOR` / test-scoped `BASELINE_AND_TEMPORAL_SUPPORT` | `FIXTURE_ONLY`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Test and validator fixture only. Must never be treated as real-world public truth. |
-| `kfm_climate_anomaly_context` | KFM proposed anomaly/baseline context family | `baseline_context_provider` / `derived_fusion_provider` | `CLIMATE_ANOMALY_CONTEXT` / `BASELINE_AND_TEMPORAL_SUPPORT` | `PROPOSED`; `public_release_allowed=false`; `rights_spdx=NOASSERTION` | Proposed internal derived context. Requires model card, source inputs, baseline definition, evidence closure, review, release, and rollback. |
+| Source family | Candidate `source_id` | Role / character | Verification | Public release | Next review action |
+|---|---|---|---:|---:|---|
+| KFM no-network air fixture | `kfm_air_no_network_stub` | `INTERNAL_FIXTURE_PROVIDER` / `OBSERVED_SENSOR` candidate | CONFIRMED repo-visible candidate slice | `false` | Keep fixture-only; never treat as real-world public truth. |
+| Kansas Mesonet | `kansas_mesonet` | `OBSERVATION_PROVIDER`, `NETWORK_METADATA_PROVIDER` / `OBSERVED_SENSOR`, `METEOROLOGICAL_CONTEXT`, `NETWORK_AND_SITE_CONTEXT` | DRAFT descriptor; rights/automation NEEDS VERIFICATION | `false` | Confirm permitted use, automation consent, cadence, station support, attribution, and fixture scope. |
+| EPA AQS-like archive | `epa_aqs_candidate` | `REGULATORY_ARCHIVE_PROVIDER` / `REGULATORY_ARCHIVE` | NEEDS VERIFICATION | `false` | Verify endpoint, license/terms, parameter mapping, QA status, and archive temporal semantics. |
+| AirNow-like public AQI | `airnow_candidate` | `PUBLIC_REPORTING_PROVIDER` / `PUBLIC_AQI_REPORT`, `ALERT_AND_ADVISORY_CONTEXT` | NEEDS VERIFICATION | `false` | Verify report semantics, freshness, attribution, rights, and “AQI is not concentration” tests. |
+| OpenAQ-like aggregator | `openaq_candidate` | NEEDS VERIFICATION aggregator role / mixed knowledge support | NEEDS VERIFICATION | `false` | Determine whether aggregator can support source authority or only secondary discovery. |
+| Low-cost sensor network | `low_cost_sensor_network_candidate` | `LOW_COST_SENSOR_PROVIDER` / `LOW_COST_SENSOR` | UNKNOWN | `false` | Require correction method, caveats, confidence, rights, and public-release review before fixtures. |
+| NOAA/NWS advisory context | `noaa_nws_advisory_candidate` | `ADVISORY_ISSUER` / `ALERT_AND_ADVISORY_CONTEXT`, `METEOROLOGICAL_CONTEXT` | NEEDS VERIFICATION | `false` | Verify official-source routing, issue/expiry/retrieval times, and non-emergency KFM posture. |
+| NOAA HMS smoke-like product | `noaa_hms_smoke_candidate` | `REMOTE_SENSING_PROVIDER` / `REMOTE_SENSING_MASK`, `FIRE_AND_EMISSIONS_CONTEXT` | NEEDS VERIFICATION | `false` | Verify product caveats, classification support, freshness, and “mask is not exposure” tests. |
+| NASA FIRMS-like fire hotspot | `nasa_firms_candidate` | `REMOTE_SENSING_PROVIDER` / `FIRE_AND_EMISSIONS_CONTEXT`, `REMOTE_SENSING_MASK` | NEEDS VERIFICATION | `false` | Verify access, auth/quota, confidence fields, time support, and fire-context caveats. |
+| Smoke / chemistry / transport model | `smoke_model_candidate` | `MODEL_PROVIDER` / `ATMOSPHERIC_MODEL_FIELD`, `FIRE_AND_EMISSIONS_CONTEXT` | NEEDS VERIFICATION | `false` | Verify model identity, run/valid time, variable dictionary, grid support, model card, uncertainty. |
+| Climate normals / anomaly context | `climate_context_candidate` | `CLIMATE_CONTEXT_PROVIDER` / `CLIMATE_ANOMALY_CONTEXT`, `BASELINE_AND_TEMPORAL_SUPPORT` | NEEDS VERIFICATION | `false` | Verify baseline periods, anomaly method, downscaling/model support, and not-alert posture. |
+| Emissions inventory context | `emissions_inventory_candidate` | `FIRE_AND_EMISSIONS_CONTEXT` source role NEEDS VERIFICATION / `FIRE_AND_EMISSIONS_CONTEXT` | NEEDS VERIFICATION | `false` | Verify source role, legal/rights posture, temporal support, pollutant mapping, and uncertainty. |
 
-> [!CAUTION]
-> Do not change `public_release_allowed` to `true` in this human registry alone. Public release must be made through the repo’s governed source descriptor, policy, proof, promotion, and release mechanism.
+### Register reading rules
+
+1. `CONFIRMED repo-visible candidate slice` means a KFM fixture/candidate lane exists, not that public release is allowed.
+2. `NEEDS VERIFICATION` means a concrete review can retire uncertainty.
+3. `UNKNOWN` means the current session did not verify source facts strongly enough to act on them.
+4. `public_release_allowed: false` is the default safe posture.
+5. A source-family row is not a `SourceDescriptor`, proof object, or release decision by itself.
+
+---
+
+## Activation states
+
+| State | Meaning | Public release allowed? | Promotion behavior |
+|---|---|---:|---|
+| `proposed` | Candidate source family identified. | No | Create review row only. |
+| `draft_descriptor` | SourceDescriptor draft exists but is not approved. | No | Fixtures may be planned; live source remains blocked. |
+| `fixture_only` | No-network fixture or synthetic example exists. | No | Used for tests and validators only. |
+| `internal_candidate` | Candidate artifacts can be produced internally. | No | May enter WORK/PROCESSED candidate states; no public surface. |
+| `quarantined` | Rights, role, shape, evidence, sensitivity, or policy failed. | No | Hold for correction or denial. |
+| `review_ready` | Required metadata, fixtures, and validator results are assembled. | No | Human/steward review may proceed. |
+| `active_internal` | Connector/source use approved for internal candidate generation. | No by default | Still requires evidence, policy, proof, and release gates for public exposure. |
+| `release_candidate` | Candidate has proof/release bundle for review. | Not yet | PromotionDecision decides. |
+| `published_source_allowed` | Public use has been reviewed and released for a defined scope. | Yes, scoped | Only released artifacts and governed API envelopes may serve public clients. |
+| `deprecated` | Source should not be used for new releases. | No new release | Preserve lineage, receipts, supersession, and rollback paths. |
+| `blocked` | Source is barred by rights, sensitivity, quality, or policy. | No | Record reason codes and route to archive or quarantine. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Activation gates
+## Governed source flow
 
-A source family becomes active only through gates, not by appearing in a table.
+```mermaid
+flowchart LR
+  idea["Source family idea<br/>or source-intake request"] --> registry["Human source registry row<br/>this file"]
+  registry --> descriptor["SourceDescriptor draft<br/>contracts/source or data registry"]
+  descriptor --> review{"Rights + source_role +<br/>knowledge_character + cadence<br/>verified?"}
+
+  review -->|no| hold["HOLD / DENY / QUARANTINE<br/>public_release_allowed: false"]
+  review -->|yes, fixture only| fixture["No-network fixture<br/>or bounded example"]
+  review -->|yes, internal only| connector["Connector candidate<br/>not public"]
+
+  fixture --> work["WORK / validation<br/>fixtures + policy tests"]
+  connector --> raw["RAW / source-native capture<br/>not public"]
+  raw --> work
+
+  work --> processed{"Shape + evidence +<br/>policy gates pass?"}
+  processed -->|no| hold
+  processed -->|yes| candidate["PROCESSED candidate<br/>not public truth"]
+
+  candidate --> proof["EvidenceBundle + catalog/proof<br/>release-candidate assembly"]
+  proof --> promo{"PromotionDecision<br/>review + rollback target"}
+  promo -->|blocked| hold
+  promo -->|approved| published["PUBLISHED scoped release"]
+  published --> api["Governed API<br/>finite envelope"]
+  api --> ui["MapLibre shell<br/>Evidence Drawer<br/>Focus Mode"]
+
+  registry -. "not proof" .-> ui
+  descriptor -. "not proof" .-> ui
+  fixture -. "not public truth" .-> ui
+  raw -. "forbidden public bypass" .-> ui
+  work -. "forbidden public bypass" .-> ui
+```
+
+### Flow rules
+
+- Source admission is not publication.
+- A registry row is not an EvidenceBundle.
+- A source descriptor constrains a source; it does not prove a claim by itself.
+- A run receipt is process memory; it is not proof or a release manifest.
+- Public clients consume released artifacts and governed API envelopes only.
+- Unknown rights, missing evidence, or missing review block public release.
+
+---
+
+## Validation and policy gates
+
+The registry should support validator and policy gates with stable reason codes.
 
 | Gate | Required proof | Failure outcome |
 |---|---|---|
-| G0 — Source identity | Stable `source_id`, display name, publisher/steward, access surface, source role, knowledge character. | `DENY` |
-| G1 — Rights and terms | `rights_spdx` or reviewed rights label, terms URL, attribution, redistribution, automation, access/auth posture. | `DENY` |
-| G2 — Source semantics | Parameters, units, spatial support, temporal support, quality flags, limitations, cadence, known caveats. | `HOLD` / `DENY` |
-| G3 — No-network fixture | Representative valid/invalid fixtures; no live network required for tests. | `ERROR` / `HOLD` |
-| G4 — Schema validation | Descriptor and fixture validate against the active schema home or approved alias. | `ERROR` |
-| G5 — Policy validation | Rights, source-role, knowledge-character, internal-stage, and anti-collapse denials pass. | `DENY` |
-| G6 — Evidence closure | Consequential claims resolve EvidenceRefs to EvidenceBundle. | `ABSTAIN` / `DENY` |
-| G7 — Review state | Source steward, policy steward, and domain steward review is recorded. | `HOLD` |
-| G8 — Release candidate | ReleaseManifest, PromotionDecision, correction path, rollback target, hashes, and catalog/proof closure exist. | `DENY` |
-| G9 — Public publication | Public scope is explicitly approved and bounded to a release. | `PUBLISHED` only for the approved release scope |
+| Source identity | `source_id`, display name, publisher, access surface. | `DENY` / source admission hold. |
+| Source role | `source_role` present and competent for the requested claim. | `ATMOS_MISSING_SOURCE_ROLE`. |
+| Knowledge character | Accepted `knowledge_character` present. | `ATMOS_MISSING_KNOWLEDGE_CHARACTER`. |
+| Rights | `rights_spdx`, attribution, terms, and public-release posture known. | `ATMOS_MISSING_RIGHTS` or `ATMOS_UNKNOWN_RIGHTS_PUBLIC`. |
+| EvidenceRefs | Consequential records carry EvidenceRefs. | `ATMOS_MISSING_EVIDENCE_REFS`. |
+| Source payload hash | Normalized records can trace to source-native payloads. | `ATMOS_MISSING_SOURCE_PAYLOAD_HASH`. |
+| Transform identity | Derived/fusion/model/normalization records carry transform/spec hash. | `ATMOS_MISSING_TRANSFORM_HASH`. |
+| Public-release flag | `public_release_allowed` is true for the defined scope. | `ATMOS_PUBLIC_RELEASE_FALSE`. |
+| Low-cost sensor caveats | Correction method, caveats, limitations, confidence, rights. | `ATMOS_LOW_COST_NO_CORRECTION`. |
+| Model/observation split | Model field is not labeled observed. | `ATMOS_MODEL_AS_OBSERVED`. |
+| AQI/concentration split | AQI/report index is not treated as raw concentration. | `ATMOS_AQI_AS_CONCENTRATION`. |
+| AOD/PM2.5 split | AOD is not converted to PM2.5 without governed model support. | `ATMOS_AOD_AS_PM25`. |
+| Anomaly/alert split | Climate anomaly is not treated as emergency alert. | `ATMOS_ANOMALY_AS_ALERT`. |
+| Public lifecycle boundary | Public surface does not request RAW, WORK, QUARANTINE, internal, or unpublished candidate paths. | `ATMOS_PUBLIC_INTERNAL_ACCESS`. |
 
-### Activation state machine
+### Minimum offline tests
 
-```mermaid
-stateDiagram-v2
-  [*] --> candidate
-  candidate --> blocked: missing role / character / rights
-  candidate --> descriptor_review: descriptor drafted
-  descriptor_review --> terms_review: source identity accepted
-  terms_review --> blocked: unknown or denied terms
-  terms_review --> fixture_only: rights/automation sufficient for offline fixture
-  fixture_only --> validated_candidate: schemas + fixtures + policy pass
-  validated_candidate --> release_candidate: evidence + catalog + review assembled
-  release_candidate --> published: promotion decision approved
-  release_candidate --> blocked: promotion denied
-  published --> deprecated: superseded
-  published --> withdrawn: correction / rights / evidence issue
-  blocked --> descriptor_review: corrected descriptor
-```
+| Test family | Required cases |
+|---|---|
+| Descriptor completeness | Missing `source_id`, `source_role`, `knowledge_character`, rights, and freshness fail closed. |
+| Source-role compatibility | AQI source cannot support raw concentration claim. |
+| Knowledge-character compatibility | Model, mask, report, observation, advisory, and fusion records remain distinct. |
+| Rights posture | `UNKNOWN`, `NOASSERTION`, or missing rights block public release. |
+| Low-cost sensor gate | Missing correction/caveat/confidence blocks public release. |
+| Freshness gate | Stale or missing current-state support returns `ABSTAIN` or visibly stale context. |
+| Public boundary | Public API/UI/Focus payloads cannot reference internal lifecycle zones. |
+| Fixture truth denial | No-network fixtures cannot become public truth. |
+| Receipt/proof split | Run receipt cannot substitute for EvidenceBundle or ReleaseManifest. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Machine registry shape
+## Machine-readable source sketch
 
-The machine-readable source registry should live in the repo-native data registry home after schema-home and slug compatibility are verified. Until then, this example is illustrative.
+This sketch is illustrative. Adapt field names to the active schema and registry home after the schema-home and slug-compatibility decisions are verified.
 
 ```yaml
-# Illustrative only. Do not commit as active source truth without schema, policy,
-# fixture, rights, review, and rollback evidence.
+schema_version: kfm.source_descriptor.v1_PROPOSED
+kind: SourceDescriptor
 
-source_id: epa_aqs
-display_name: EPA Air Quality System API
-source_family_status: candidate
-source_role: regulatory_archive
-knowledge_character:
-  - REGULATORY_ARCHIVE
-publisher: US Environmental Protection Agency
-jurisdiction_or_scope: United States ambient air monitoring archive
-access_url: https://www.epa.gov/aqs
-api_docs_url: https://aqs.epa.gov/aqsweb/documents/data_api.html
-rights_spdx: NOASSERTION
-terms_url: TODO-VERIFY
-attribution: TODO-VERIFY
-redistribution_allowed: unknown
-automation_allowed: unknown
-auth_required: api_key
-rate_limit_notes: TODO-VERIFY
-freshness_expectation: archive_not_live_by_default
-spatial_support:
-  - monitoring_site
-  - point
-temporal_support:
-  - sample_time
-  - summary_time
-  - retrieval_time
-parameters_supported:
-  - TODO-VERIFY: ozone
-  - TODO-VERIFY: pm25
-  - TODO-VERIFY: pm10
-known_limitations:
-  - AQS is archive/regulatory support, not live state by default.
-  - Data interpretation requires source-specific field and QA knowledge.
+identity:
+  source_id: kansas_mesonet
+  display_name: Kansas Mesonet
+  publisher: Kansas Mesonet / Kansas State University
+  registry_status: draft_descriptor
+  last_verified_at: TODO-VERIFY-YYYY-MM-DD
+  verification_status: NEEDS_VERIFICATION
+
+role_and_character:
+  source_role:
+    - OBSERVATION_PROVIDER
+    - NETWORK_METADATA_PROVIDER
+  knowledge_character:
+    - OBSERVED_SENSOR
+    - METEOROLOGICAL_CONTEXT
+    - NETWORK_AND_SITE_CONTEXT
+  not_authoritative_for:
+    - regulatory_air_quality_archive
+    - public_aqi_report
+    - emergency_alerting
+    - modeled_surface_truth
+    - legal_or_regulatory_determination
+
+access:
+  access_url: TODO-VERIFY
+  api_docs_url: TODO-VERIFY
+  auth_required: TODO-VERIFY
+  rate_limit_notes: TODO-VERIFY
+  documented_surfaces_only: true
+
+rights:
+  rights_spdx: NOASSERTION
+  attribution: TODO-VERIFY
+  public_release_allowed: false
+  default_policy_label: restricted-until-reviewed
+  automation_status: not_activated
+
+support:
+  spatial_support:
+    kind: station_points
+    caveats:
+      - Station context does not imply statewide surface truth.
+  temporal_support:
+    observed_time_required: true
+    retrieved_at_required: true
+    freshness_expectation: TODO-VERIFY
+  parameters_supported:
+    - air_temperature
+    - relative_humidity
+    - wind_speed
+    - wind_direction
+    - TODO-VERIFY
+
 evidence_requirements:
-  - source_payload_hash
-  - evidence_refs
-  - source_descriptor_review
-public_release_allowed: false
-verification_status: NEEDS_VERIFICATION
-last_verified_at: null
-review_owner: TODO-VERIFY
-rollback_notes: Public artifacts derived from this source require ReleaseManifest rollback target and CorrectionNotice path.
+  source_payload_hash: required_for_records
+  transform_spec_hash: required_for_normalized_or_derived_records
+  evidence_refs: required_for_consequential_claims
+  run_receipt_ref: required_for_connector_candidates
+
+release_constraints:
+  activation_state: draft_descriptor
+  public_release_allowed: false
+  required_before_public_release:
+    - rights_review
+    - source_role_review
+    - knowledge_character_review
+    - parameter_registry_alignment
+    - valid_fixture
+    - invalid_fixture
+    - policy_denial_tests
+    - EvidenceBundle_resolution
+    - PromotionDecision
+    - ReleaseManifest
+    - rollback_target
+    - correction_path
 ```
 
-### Descriptor validation expectations
-
-A valid descriptor must fail when:
-
-- `source_role` is missing;
-- `knowledge_character` is missing;
-- `rights_spdx` is missing or `NOASSERTION` for public release;
-- source terms are unknown for public release;
-- automation is unknown for a live connector;
-- public release is requested without EvidenceBundle closure;
-- an internal fixture source is marked public;
-- a model/mask/report source is allowed to support an observed-concentration claim.
-
 ---
 
-## Denial and hold codes
+## Maintainer workflow
 
-These reason codes should remain stable across source registry review, validators, policy, release records, API envelopes, Evidence Drawer payloads, and Focus Mode.
+Use this sequence when adding or materially changing a source family.
 
-| Code | Condition | Outcome |
-|---|---|---:|
-| `ATMOS_SOURCE_NOT_REGISTERED` | Artifact references an unknown `source_id`. | `DENY` |
-| `ATMOS_MISSING_SOURCE_ROLE` | Source descriptor or artifact lacks `source_role`. | `DENY` |
-| `ATMOS_MISSING_KNOWLEDGE_CHARACTER` | Source descriptor or artifact lacks `knowledge_character`. | `DENY` |
-| `ATMOS_MISSING_RIGHTS` | Rights or source terms are absent. | `DENY` |
-| `ATMOS_UNKNOWN_RIGHTS_PUBLIC` | Public output requested while rights remain `NOASSERTION`, `UNKNOWN`, or unreviewed. | `DENY` |
-| `ATMOS_PUBLIC_RELEASE_FALSE` | Descriptor blocks public release. | `DENY` |
-| `ATMOS_AUTOMATION_NOT_ALLOWED` | Live fetch or automated ingest requested where automation is prohibited or unknown. | `DENY` |
-| `ATMOS_ATTRIBUTION_MISSING` | Public release lacks required attribution or citation text. | `DENY` |
-| `ATMOS_RATE_LIMIT_UNKNOWN` | Automation requested without reviewed rate/cadence obligations. | `HOLD` |
-| `ATMOS_STALE_SOURCE_VERIFICATION` | `last_verified_at` is stale or null for publication. | `HOLD` |
-| `ATMOS_FIXTURE_PUBLIC_TRUTH` | Internal fixture or no-network stub treated as real public evidence. | `DENY` |
-| `ATMOS_RECEIPT_AS_PROOF` | Run receipt used as EvidenceBundle, proof pack, or ReleaseManifest. | `DENY` |
-| `ATMOS_MODEL_AS_OBSERVED` | Model field labeled as observed. | `DENY` |
-| `ATMOS_AQI_AS_CONCENTRATION` | AQI/report object treated as raw concentration. | `DENY` |
-| `ATMOS_AOD_AS_PM25` | AOD/optical context treated as PM2.5 without governed model support. | `DENY` |
-| `ATMOS_MASK_AS_EXPOSURE` | Smoke/plume/remote mask treated as exposure measurement. | `DENY` |
-| `ATMOS_FUSION_INPUTS_HIDDEN` | Fusion product hides inputs, method, uncertainty, or transform identity. | `DENY` |
-| `ATMOS_PUBLIC_INTERNAL_ACCESS` | Public surface targets RAW, WORK, QUARANTINE, connector-private, or unpublished candidate material. | `DENY` |
-| `ATMOS_MISSING_ROLLBACK_TARGET` | Public release candidate lacks rollback target. | `HOLD` / `DENY` |
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Review workflow
-
-### Add a new source family
-
-1. Add a candidate row to this file with `public_release_allowed=false`.
-2. Add a source descriptor candidate in the repo-native registry home.
-3. Add a source-rights review card or equivalent governance record.
-4. Add valid and invalid no-network fixtures.
-5. Add or update parameter/unit definitions.
-6. Add schema tests and policy-denial tests.
-7. Add evidence-closure expectations.
-8. Add update to `SECURITY_AND_RIGHTS.md` and `VALIDATION_STATUS.md`.
-9. Keep live fetch and public publication disabled until promotion gates pass.
-
-### Change a source role or knowledge character
-
-1. Update this registry.
-2. Update ADR references if the change affects source-role or knowledge-character meaning.
-3. Update schemas/enums if machine values change.
-4. Add backward compatibility fixtures.
-5. Add migration notes and rollback behavior.
-6. Run source registry, schema, policy, and domain tests.
-7. Update Evidence Drawer and Focus payload documentation if public display changes.
-
-### Deprecate or withdraw a source family
-
-1. Mark `source_family_status` as `deprecated`, `withdrawn`, or `quarantined`.
-2. Record reason, reviewer, date, affected artifacts, and replacement if any.
-3. Emit or reference CorrectionNotice where public material was affected.
-4. Add rollback or withdrawal target.
-5. Ensure public UI and API surfaces expose the changed source state.
-
----
-
-## Safe check commands
-
-Run these from a real checkout before relying on this registry. Commands are read-only or validation-oriented; adapt to repo-native tooling.
-
-```bash
-# Confirm repo state.
-git status --short
-git branch --show-current
-
-# Inspect the source registry and adjacent governance docs.
-sed -n '1,260p' docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md
-sed -n '1,220p' docs/domains/atmosphere_air/governance/SECURITY_AND_RIGHTS.md
-sed -n '1,220p' docs/domains/atmosphere_air/governance/VALIDATION_STATUS.md
-
-# Inspect source-role and slug-compatibility decisions.
-sed -n '1,260p' docs/adr/ADR-0312-atmosphere-air-source-role-boundaries.md
-sed -n '1,220p' docs/adr/ADR-0418-atmosphere-air-schema-slug-compatibility.md
-
-# Locate any machine-readable source registries without assuming the canonical home.
-find data control_plane schemas contracts policy tools tests -maxdepth 5 -type f 2>/dev/null \
-  | sort \
-  | grep -Ei 'air|atmosphere|source|registry|descriptor' || true
-
-# Confirm current no-network candidate artifacts still parse.
-python -m json.tool data/processed/air/qa_summary.example.json >/dev/null 2>&1 || true
-python -m json.tool data/receipts/air/run_receipt.example.json >/dev/null 2>&1 || true
-
-# Run only after required schema files and validator dependencies are verified.
-python tools/validators/air/validate_air_qa.py \
-  data/processed/air/qa_summary.example.json
-```
-
-> [!WARNING]
-> Do not run live source fetchers, store credentials, publish public artifacts, or mark a source as active from this file alone.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+1. **Open an intake item.** Record source title, intended use, source family, and why the source belongs in Atmosphere / Air.
+2. **Add or update the source row in this file.** Keep `verification_status: UNKNOWN` and `public_release_allowed: false`.
+3. **Classify source role and knowledge character.** Link to the knowledge-character and source-role ADRs.
+4. **Verify rights and terms.** Record attribution, license/rights, automation restrictions, redistribution constraints, cadence, and freshness.
+5. **Create or update a SourceDescriptor.** Use `contracts/source/`, `data/registry/`, or the repo-verified canonical source registry.
+6. **Add fixtures.** Include one valid fixture and at least one negative fixture for expected denial behavior.
+7. **Wire validators and policy.** Ensure reason codes are stable and machine-readable.
+8. **Generate candidate receipts only.** Keep run receipts separate from proof, catalog, and release objects.
+9. **Assemble evidence and proof candidates.** Resolve EvidenceRefs to EvidenceBundle before consequential claims.
+10. **Review promotion.** Require policy, review state, release manifest, correction path, and rollback target before public exposure.
+11. **Update dependent docs.** Touch the domain README, architecture, parameter registry, source registry, policy docs, schema docs, runbooks, and ADRs when their responsibilities change.
+12. **Preserve lineage.** Deprecated or renamed source IDs must remain findable with successor links and rollback notes.
 
 ---
 
 ## Update triggers
 
-Update this registry whenever any of the following changes.
+| Trigger | Required registry action | Also update |
+|---|---|---|
+| New source family proposed | Add row with `verification_status: UNKNOWN` and `public_release_allowed: false`. | Intake record, source descriptor draft, verification backlog. |
+| Source terms or license changes | Update rights, attribution, verification date, and release posture. | Policy tests, source descriptor, affected release notes. |
+| Source endpoint or schema changes | Update access surfaces, limitations, and fixture expectations. | Connector docs, schemas, validators, fixtures, receipts. |
+| New parameter accepted | Update `parameters_supported` and caveats. | Parameter registry, unit conversions, fixtures, validation tests. |
+| New knowledge character needed | Do not invent inline. Propose through ADR or taxonomy update. | Knowledge-character doc, schemas, policy, tests. |
+| Live connector proposed | Keep source row inactive until activation review closes. | Connector README, source descriptor, policy, runbook, CI plan. |
+| Public layer proposed | Confirm public source permission and EvidenceBundle support. | Map layer docs, Evidence Drawer payloads, release manifest, rollback. |
+| Source conflict detected | Add limitation or conflict note; block smoothing. | Conflict register, Evidence Drawer payload, policy tests. |
+| Source deprecated | Mark deprecated with successor, reason, and date. | Source descriptor, release notes, rollback/correction docs. |
+| Source ID renamed | Preserve alias and migration note. | ADR, fixtures, validators, link checks, compatibility tests. |
 
-| Trigger | Required update |
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Public-surface rules
+
+| Public surface | Source-registry obligation |
 |---|---|
-| New source family proposed | Add candidate row, default `public_release_allowed=false`, owner, review task, rights task, and source-role/knowledge-character mapping. |
-| Source terms change | Update `rights_spdx`, terms URL, attribution, redistribution, automation, public-release state, and `last_verified_at`. |
-| Source endpoint or API changes | Update access/API docs, rate limit notes, auth posture, fixtures, validators, and source descriptor. |
-| New parameter/unit added | Update parameter registry, unit conversion rules, fixtures, and tests. |
-| Knowledge-character boundary changes | Update ADR, this registry, schemas/enums, validators, policy, and Evidence Drawer/Focus docs. |
-| Source promoted to release candidate | Add evidence closure, policy decision, review state, release manifest ref, correction path, and rollback target. |
-| Source public release approved | Update source descriptor and registry only after promotion evidence exists. |
-| Source becomes stale or broken | Mark source `HOLD`, `QUARANTINED`, `DEPRECATED`, or `WITHDRAWN`; update validation status and public-facing correction state. |
-| Public artifact withdrawn | Add CorrectionNotice and rollback/withdrawal reference. |
+| Map layer | Must show source role, knowledge character, freshness, release state, caveats, and Evidence Drawer route. |
+| Popup | Must state what the source supports and what it does not support. |
+| Evidence Drawer | Must expose source identity, rights, source role, knowledge character, evidence, hashes, transforms, review state, release state, caveats, and conflicts. |
+| Focus Mode | Must synthesize only over admissible, EvidenceBundle-backed context and return `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
+| Export | Must include source attribution, evidence route, release manifest reference, caveats, and correction path. |
+| Advisory display | Must preserve issuer, effective/expiry time, official-source context, and KFM non-emergency posture. |
 
 ---
 
 ## Definition of done
 
-This source registry is ready to support implementation work when:
+This source registry is ready for review when:
 
-- [ ] KFM Meta Block placeholders are resolved or intentionally left as tracked TODOs.
-- [ ] `governance/README.md` indexes this file and adjacent governance docs.
-- [ ] Each source family has an owner or `TODO-VERIFY` owner.
-- [ ] Machine-readable source descriptor home is verified or intentionally deferred.
-- [ ] Every source family defaults to `public_release_allowed=false` until a governed activation decision exists.
-- [ ] `source_role` and `knowledge_character` values are compatible with ADR-0312 and active schemas.
-- [ ] Rights, terms, automation, attribution, redistribution, and rate/cadence fields are explicit.
-- [ ] Invalid fixtures cover unknown rights, missing role, missing character, fixture-as-public-truth, model-as-observed, AQI-as-concentration, AOD-as-PM2.5, smoke-mask-as-exposure, and public internal-stage access.
-- [ ] `SECURITY_AND_RIGHTS.md` and `VALIDATION_STATUS.md` are updated with any changed source posture.
-- [ ] Release candidates include EvidenceBundle closure, PromotionDecision, ReleaseManifest, correction path, and rollback target before any public use.
+- [ ] KFM Meta Block values are assigned or intentionally left as reviewable placeholders.
+- [ ] Owners and policy label are verified.
+- [ ] Relative links resolve from `docs/domains/atmosphere_air/governance/SOURCE_REGISTRY.md`.
+- [ ] Every seed row has `source_id`, source role, knowledge character, verification status, and public-release posture.
+- [ ] Unverified sources default to `public_release_allowed: false`.
+- [ ] Machine registry home is verified or explicitly marked `NEEDS VERIFICATION`.
+- [ ] Valid and invalid fixtures exist for at least one source family.
+- [ ] Unknown-rights public release is denied in policy tests.
+- [ ] AQI/concentration, AOD/PM2.5, smoke-mask/exposure, model/observation, and receipt/proof splits are covered by negative tests.
+- [ ] Connector candidates cannot write directly to `data/published/`.
+- [ ] EvidenceRefs resolve to EvidenceBundle before consequential public claims.
+- [ ] Public UI/API/Focus surfaces cannot read RAW, WORK, QUARANTINE, connector-private, normalize-stage, or unpublished candidate artifacts.
+- [ ] Source deprecation and rename behavior preserve lineage, aliases, rollback, and successor notes.
+- [ ] Release notes, correction path, and rollback target are required before public exposure.
 
 ---
 
@@ -531,64 +583,81 @@ This source registry is ready to support implementation work when:
 
 | Item | Status | Why it matters |
 |---|---:|---|
-| Final `doc_id` | TODO / NEEDS VERIFICATION | Required by KFM Meta Block V2. |
-| Created date | TODO / NEEDS VERIFICATION | Must come from repo history or governance record. |
-| Owners | TODO / NEEDS VERIFICATION | Required for source activation and review routing. |
-| Policy label | TODO / NEEDS VERIFICATION | Determines public/restricted posture of this governance doc. |
-| Governance README | CONFIRMED EMPTY / TODO | Local navigation is incomplete. |
-| Machine registry home | NEEDS VERIFICATION | Avoid divergent `data/registry/atmosphere`, `data/registry/air`, or control-plane descriptors. |
-| Active source descriptor schema | NEEDS VERIFICATION | Required before descriptor validation can be claimed. |
-| Source rights and terms | UNKNOWN until reviewed source-by-source | Public release remains blocked. |
-| Automation permission | UNKNOWN until reviewed source-by-source | Live connectors remain blocked. |
-| Source-specific rate limits | UNKNOWN until reviewed source-by-source | Automation and CI probes must not overload or violate terms. |
-| EvidenceBundle closure | NEEDS VERIFICATION | Registry rows are not evidence. |
-| Release manifests and rollback cards | NEEDS VERIFICATION | Public publication requires release and rollback proof. |
-| CI enforcement | UNKNOWN | Workflow existence does not prove required checks passed or are branch-protected. |
-| Public API / MapLibre / Focus binding | UNKNOWN | This registry does not prove runtime or UI behavior. |
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+| `doc_id` | TODO | Required for stable document identity. |
+| Owners | TODO | Required for review, source activation, and policy changes. |
+| Created date | TODO | Existing thin file did not confirm creation metadata. |
+| Policy label | TODO | Determines whether this registry is public, restricted, or mixed. |
+| Machine source registry home | NEEDS VERIFICATION | Avoid duplicate authority between docs, data registry, and contracts. |
+| Machine schema family | NEEDS VERIFICATION | ADR-0418 keeps `air`, `atmosphere`, and `atmosphere_air` compatibility unresolved until inventory/tests prove it. |
+| Current source descriptor inventory | NEEDS VERIFICATION | Kansas Mesonet draft is visible, but complete source-descriptor set is not confirmed here. |
+| Live connector status | UNKNOWN / NOT AUTHORIZED HERE | This file must not imply live source activation. |
+| CI and validator enforcement | NEEDS VERIFICATION | Reason codes and gates must be run in repo-native tests before enforcement claims. |
+| Source rights and terms | UNKNOWN for most seed rows | Unknown rights block public release. |
+| Public release artifacts | UNKNOWN | No ReleaseManifest, PromotionDecision, or rollback proof is claimed here. |
+| Evidence Drawer / Focus binding | NEEDS VERIFICATION | This file defines obligations, not UI/runtime implementation. |
 
 ---
 
-<details>
-<summary><strong>Appendix: compact source-family template</strong></summary>
+## Appendix: source-row review card
 
-```yaml
-source_id: TODO-VERIFY
-display_name: TODO-VERIFY
-source_family_status: candidate
-source_role: TODO-VERIFY
-knowledge_character:
-  - TODO-VERIFY
-publisher: TODO-VERIFY
-jurisdiction_or_scope: TODO-VERIFY
-access_url: TODO-VERIFY
-api_docs_url: TODO-VERIFY
-rights_spdx: NOASSERTION
-terms_url: TODO-VERIFY
-attribution: TODO-VERIFY
-redistribution_allowed: unknown
-automation_allowed: unknown
-auth_required: unknown
-rate_limit_notes: TODO-VERIFY
-freshness_expectation: TODO-VERIFY
-spatial_support:
-  - TODO-VERIFY
-temporal_support:
-  - TODO-VERIFY
-parameters_supported:
-  - TODO-VERIFY
-known_limitations:
-  - TODO-VERIFY
-evidence_requirements:
-  - source_descriptor_review
-  - source_payload_hash
-  - evidence_refs
-public_release_allowed: false
-verification_status: NEEDS_VERIFICATION
-last_verified_at: null
-review_owner: TODO-VERIFY
-rollback_notes: TODO-VERIFY
+<details>
+<summary>Copyable source-row review card</summary>
+
+```markdown
+### Source review card: <source_id>
+
+| Field | Value |
+|---|---|
+| Display name | TODO |
+| Source role | TODO |
+| Knowledge character | TODO |
+| Publisher / steward | TODO |
+| Access surface | TODO |
+| Rights / SPDX | TODO |
+| Attribution | TODO |
+| Auth required | TODO |
+| Cadence / freshness | TODO |
+| Spatial support | TODO |
+| Temporal support | TODO |
+| Parameters supported | TODO |
+| Known limitations | TODO |
+| Verification status | UNKNOWN |
+| Public release allowed | false |
+| Activation state | proposed |
+| Last verified | TODO-VERIFY-YYYY-MM-DD |
+| Reviewer | TODO |
+| Next action | TODO |
 ```
 
 </details>
+
+---
+
+## Appendix: reason-code glossary
+
+<details>
+<summary>Atmosphere / Air source-registry denial codes</summary>
+
+| Code | Condition |
+|---|---|
+| `ATMOS_MISSING_KNOWLEDGE_CHARACTER` | Source or artifact lacks accepted knowledge character. |
+| `ATMOS_MISSING_SOURCE_ROLE` | Source or artifact lacks source role or source descriptor reference. |
+| `ATMOS_MISSING_RIGHTS` | Rights or source terms absent. |
+| `ATMOS_UNKNOWN_RIGHTS_PUBLIC` | Public output requested while rights are unknown. |
+| `ATMOS_MISSING_EVIDENCE_REFS` | Consequential source-backed record lacks EvidenceRefs. |
+| `ATMOS_MISSING_SOURCE_PAYLOAD_HASH` | Normalized record cannot be traced to source-native payload. |
+| `ATMOS_MISSING_TRANSFORM_HASH` | Derived or normalized record lacks transform/spec identity. |
+| `ATMOS_PUBLIC_RELEASE_FALSE` | Source descriptor or policy blocks public release. |
+| `ATMOS_LOW_COST_NO_CORRECTION` | Low-cost sensor lacks correction method, caveats, confidence, or rights. |
+| `ATMOS_MODEL_AS_OBSERVED` | Model field is labeled or presented as observed measurement. |
+| `ATMOS_AQI_AS_CONCENTRATION` | AQI/report index is treated as raw concentration. |
+| `ATMOS_AOD_AS_PM25` | AOD/optical context is treated as PM2.5 without governed model support. |
+| `ATMOS_MASK_AS_EXPOSURE` | Smoke/plume/remote-sensing mask is treated as exposure measurement. |
+| `ATMOS_ANOMALY_AS_ALERT` | Climate anomaly is promoted as emergency alert or life-safety instruction. |
+| `ATMOS_PUBLIC_INTERNAL_ACCESS` | Public surface attempts internal lifecycle or candidate access. |
+| `ATMOS_RECEIPT_AS_PROOF` | Run receipt is used as EvidenceBundle, proof pack, or release manifest. |
+| `ATMOS_STALE_CONTEXT_UNLABELED` | Stale/expired context lacks visible stale posture. |
+
+</details>
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
