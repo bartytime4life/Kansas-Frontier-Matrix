@@ -1,5 +1,4 @@
-<!--
-KFM Meta Block V2
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/NEEDS_VERIFICATION
 title: County Connector README
 type: standard
@@ -11,12 +10,12 @@ updated: 2026-05-07
 policy_label: restricted
 related: [kfm://doc/NEEDS_VERIFICATION]
 tags: [kfm, connector, county]
-notes: [Combined, repo-ready README for the County Connector module; reconciles prior drafts, aligned with KFM Directory Rules, evidence-first, and governance posture]
--->
+notes: [Repo-ready README for County Connector module; reconciles prior drafts, aligned with KFM Directory Rules, evidence-first, hydrology-first audit posture; all paths and IDs PROPOSED pending repo verification]
+[/KFM_META_BLOCK_V2] -->
 
 # County Connector README
 
-> **Purpose:** Ingest and harmonize county-level geospatial datasets into KFM with fully auditable, evidence-resolved joins and lifecycle governance.
+> **Purpose:** Ingest, harmonize, and audit county-level geospatial datasets into KFM, preserving reproducible spatial joins, lifecycle governance, and traceable evidence lineage.
 
 ---
 
@@ -35,11 +34,12 @@ notes: [Combined, repo-ready README for the County Connector module; reconciles 
 
 ## ⚡ Impact Block
 
-- **Integration:** Aligns county geographies (parcels, roads, hydrology, admin boundaries) into KFM.
-- **Deterministic Joins:** Official crosswalks first, spatial overlays second, centroids/outlet snaps as fallbacks.
-- **Governance:** Logs dataset version, join method, tolerance, and EvidenceBundle reference for audit.
-- **Auditability:** Supports DecisionEnvelope tracking for manual overrides or exceptions.
-- **Public Safety:** Deny-by-default for sensitive data (living persons, rare species, critical infrastructure).
+- **Integration:** Aligns county geographies (parcels, roads, hydrology, admin boundaries) into KFM.  
+- **Deterministic Joins:** Official crosswalks first; spatial overlays second; centroids/outlet snaps as last resort.  
+- **Governance:** Dataset version, join method, tolerance, and EvidenceBundle reference logged for full audit.  
+- **Auditability:** DecisionEnvelope supports manual overrides and exceptions.  
+- **Public Safety:** DENY-by-default for sensitive sources (living persons, rare species, critical infrastructure).  
+- **Hydrology-First:** All new county layers start downstream of hydrology/ecology proof lanes for safe audit sequencing.
 
 ---
 
@@ -48,15 +48,15 @@ notes: [Combined, repo-ready README for the County Connector module; reconciles 
 The **County Connector** implements hierarchical, deterministic spatial joins:
 
 1. **Official Crosswalks**  
-   COMID ⇄ HUC12 mappings from NHDPlus V2.1 or equivalent trusted sources.
+   - COMID ⇄ HUC12 mappings from NHDPlus V2.1 or trusted equivalents.  
 2. **Catchment–Polygon Overlay**  
-   Polygon-to-polygon spatial joins where official mappings are missing.
+   - Polygon-to-polygon spatial joins where official mappings are absent.  
 3. **Centroid Fallback**  
-   Assign points to the containing HUC/county polygon when overlaps are ambiguous.
+   - Assign points to containing HUC/county polygon when overlaps are ambiguous.  
 4. **Outlet Snap (Pour Point)**  
-   Last-resort assignment based on pour point proximity to hydrography.
+   - Last-resort assignment based on pour point proximity to hydrography.
 
-> **Audit Note:** All join tolerances, snap distances, and dataset versions must be recorded in the EvidenceBundle.
+> **Audit Note:** Record all join tolerances, snap distances, and dataset versions in the EvidenceBundle for reproducibility.
 
 ---
 
@@ -74,13 +74,13 @@ The **County Connector** implements hierarchical, deterministic spatial joins:
 
 ## ✅ Governance Checklist
 
-* [ ] Verify official crosswalks are current
-* [ ] Spatial overlay tolerances recorded
-* [ ] Centroid and snap fallback logged
-* [ ] EvidenceBundle and DecisionEnvelope linked
-* [ ] Policy and rights checks enforced
-* [ ] Sensitive or restricted data DENY-by-default
-* [ ] Lifecycle (RAW → WORK → PROCESSED → CATALOG → PUBLISHED) respected:contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}:contentReference[oaicite:2]{index=2}
+* [ ] Official crosswalks are current and verified.  
+* [ ] Spatial overlay tolerances recorded.  
+* [ ] Centroid and snap fallback documented.  
+* [ ] EvidenceBundle and DecisionEnvelope linked.  
+* [ ] Policy and rights enforcement checked.  
+* [ ] Sensitive/restricted data DENY-by-default.  
+* [ ] Lifecycle respected: `RAW → WORK → PROCESSED → CATALOG → PUBLISHED`:contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}.
 
 ---
 
@@ -90,7 +90,7 @@ The **County Connector** implements hierarchical, deterministic spatial joins:
 # Run ingest for a specific county
 python ingest/run_county_ingest.py --county FIPS_CODE
 
-# Validate preflight for a specific layer
+# Preflight validation for a specific layer
 python preflight/checks.py --layer parcels_sedgwick
 
 # Example CLI with EvidenceBundle logging
@@ -102,9 +102,10 @@ python connect_county.py \
 
 **Notes:**
 
-- Every output must reference the **EvidenceBundle** used.  
-- Manual overrides or exceptions must be captured in **DecisionEnvelope**.  
-- All layers progress through KFM lifecycle states; direct RAW/WORK/QUARANTINE access is prohibited:contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}.
+- Every output **must reference the EvidenceBundle** used.  
+- Manual overrides or exceptions are captured in **DecisionEnvelope**.  
+- Direct RAW/WORK/QUARANTINE access is prohibited; all layers follow the KFM lifecycle.  
+- All spatial joins **must be reproducible** for audit and review.
 
 ---
 
@@ -124,22 +125,23 @@ connectors/
     └── fixtures/
 ```
 
-> Placement aligns with KFM Directory Rules: domain folders remain under `connectors/` while preserving lifecycle, governance, and evidence lineage:contentReference[oaicite:5]{index=5}:contentReference[oaicite:6]{index=6}.
+> This layout follows KFM Directory Rules: domain folders stay under `connectors/` with lifecycle, governance, and evidence lineage preserved:contentReference[oaicite:2]{index=2}.
 
 ---
 
 ## 🎯 Quickstart
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Configure county sources in `config.yaml`
-3. Run ingest: `python ingest/run_county_ingest.py --county FIPS_CODE`
-4. Validate: `python preflight/checks.py --layer <layer_name>`
-5. Promote to CATALOG after QA passes
+1. Install dependencies: `pip install -r requirements.txt`  
+2. Configure county sources in `config.yaml`  
+3. Run ingest: `python ingest/run_county_ingest.py --county FIPS_CODE`  
+4. Validate: `python preflight/checks.py --layer <layer_name>`  
+5. Promote to **CATALOG** after QA passes  
 
 ---
 
 ## 📌 KFM Notes
 
-- Always start with **hydrology or ecology proof lanes** before integrating sensitive county layers:contentReference[oaicite:7]{index=7}:contentReference[oaicite:8]{index=8}.  
-- Any new dataset must first pass **EvidenceBundle resolution** and **policy gates**.  
-- Connector design ensures **reproducible spatial joins** and full **audit trail** for every county.
+- Start with **hydrology or ecology proof lanes** before integrating sensitive county layers:contentReference[oaicite:3]{index=3}.  
+- New datasets must pass **EvidenceBundle resolution** and **policy gates** before ingest.  
+- Connector ensures reproducible spatial joins, full audit trail, and governance compliance.  
+- Layered fallback ensures deterministic assignment for unaligned geometries.
